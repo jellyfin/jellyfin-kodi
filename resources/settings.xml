@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+	<category label="30014"> <!-- MediaBrowser -->
+		<setting id="ipaddress" type="text" label="30000" default="" visible="true" enable="true" />
+		<setting id="port" type="text" label="30030" default="8096" visible="true" enable="true" />
+		<setting type="sep" />
+		<setting id="username" type="text" label="30024" />
+		<setting id="password" type="text" option="hidden" label="30025" />
+	</category>
+	
+	<category label="30022"> <!-- Advanced -->
+		<setting id="logLevel" type="enum" label="30004" values="None|Info|Debug" default="0" />
+		<setting id="profile" type="bool" label="30010" default="false" visible="true" enable="true" />
+        <setting id="reportMetrics" type="bool" label="30224" default="true" visible="true" enable="true" />
+		<setting id="skinMessageIgnored" type="bool" label="30233" default="false" visible="true" enable="true" />
+	</category>
+</settings>
