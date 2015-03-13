@@ -12,6 +12,7 @@ import urllib
 from datetime import datetime, timedelta, time
 import urllib2
 import os
+
 from xml.etree.ElementTree import Element, SubElement, Comment, tostring
 from xml.etree import ElementTree
 from xml.dom import minidom
@@ -198,11 +199,11 @@ class LibrarySync():
         
         root = Element("movie")
         SubElement(root, "id").text = item["Id"]
-        SubElement(root, "tag").text = item["Id"]
+        SubElement(root, "tag").text = "all mediabrowser movies" # TODO --> use tags to assign user view 
         SubElement(root, "thumb").text = downloadUtils.getArtwork(item, "poster")
-        SubElement(root, "fanart").text = timeInfo.get('Backdrop')
+        SubElement(root, "fanart").text = downloadUtils.getArtwork(item, "Backdrop")
         SubElement(root, "title").text = item["Name"].encode('utf-8').decode('utf-8')
-        SubElement(root, "originaltitle").text = item["Id"]
+        SubElement(root, "originaltitle").text = item["Name"].encode('utf-8').decode('utf-8')
         
         SubElement(root, "year").text = str(item.get("ProductionYear"))
         SubElement(root, "runtime").text = str(timeInfo.get('Duration'))
@@ -210,14 +211,14 @@ class LibrarySync():
         fileinfo = SubElement(root, "fileinfo")
         streamdetails = SubElement(fileinfo, "streamdetails")
         video = SubElement(streamdetails, "video")
-        SubElement(video, "duration").text = str(timeInfo.get('totaltime'))
-        SubElement(video, "aspect").text = timeInfo.get('aspectratio')
-        SubElement(video, "codec").text = timeInfo.get('videocodec')
-        SubElement(video, "width").text = str(timeInfo.get('width'))
-        SubElement(video, "height").text = str(timeInfo.get('height'))
+        SubElement(video, "duration").text = str(mediaStreams.get('totaltime'))
+        SubElement(video, "aspect").text = mediaStreams.get('aspectratio')
+        SubElement(video, "codec").text = mediaStreams.get('videocodec')
+        SubElement(video, "width").text = str(mediaStreams.get('width'))
+        SubElement(video, "height").text = str(mediaStreams.get('height'))
         audio = SubElement(streamdetails, "audio")
-        SubElement(audio, "codec").text = timeInfo.get('audiocodec')
-        SubElement(audio, "channels").text = timeInfo.get('channels')
+        SubElement(audio, "codec").text = mediaStreams.get('audiocodec')
+        SubElement(audio, "channels").text = mediaStreams.get('channels')
        
         SubElement(root, "plot").text = API().getOverview(item).decode('utf-8')
 

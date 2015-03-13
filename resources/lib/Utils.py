@@ -8,6 +8,8 @@ import xbmcaddon
 import xbmcvfs
 import json
 import os
+
+import sqlite3
 import inspect
 from xml.etree.ElementTree import Element, SubElement, Comment, tostring
 from xml.etree import ElementTree
@@ -70,10 +72,10 @@ def checkKodiSources():
     
     rebootRequired = False
     if not "mediabrowser_movies" in allKodiSources:
-        addKodiSource("mediabrowser_movies",movieLibrary)
+        addKodiSource("mediabrowser_movies",movieLibrary,"movies")
         rebootRequired = True
     if not "mediabrowser_tvshows" in allKodiSources:
-        addKodiSource("mediabrowser_tvshows",tvLibrary)
+        addKodiSource("mediabrowser_tvshows",tvLibrary,"tvshows")
         rebootRequired = True        
     
     if rebootRequired:
@@ -81,7 +83,7 @@ def checkKodiSources():
         if ret:
             xbmc.executebuiltin("RestartApp")
         
-def addKodiSource(name, path):
+def addKodiSource(name, path, type):
     userDataPath = xbmc.translatePath( "special://profile" )
     sourcesFile = os.path.join(userDataPath,'sources.xml')
     
@@ -103,8 +105,19 @@ def addKodiSource(name, path):
     source = SubElement(videosources,'source')
     SubElement(source, "name").text = name
     SubElement(source, "path").text = path
-
     tree.write(sourcesFile)
+    
+    #add new source to database
+    dbPath = xbmc.translatePath("special://userdata/Database/MyVideos90.db")
+    connection = sqlite3.connect(dbPath)
+    cursor = connection.cursor( )
+    cursor.execute("select coalesce(max(idPath),0) as pathId from path")
+    pathId =  cursor.fetchone()[0]
+    pathId = pathId + 1
+    pathsql="insert into path(idPath, strPath, strContent, strScraper, strHash, scanRecursive) values(?, ?, ?, ?, ?, ?)"
+    cursor.execute(pathsql, (pathId,path + "\\",type,"metadata.local",None,2147483647))
+    connection.commit()
+    cursor.close()
 
 def checkAuthentication():
     #check authentication
