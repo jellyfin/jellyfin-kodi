@@ -18,6 +18,8 @@ import KodiMonitor
 import Utils as utils
 from LibrarySync import LibrarySync
 from Player import Player
+from DownloadUtils import DownloadUtils
+from ConnectionManager import ConnectionManager
 librarySync = LibrarySync()
 
 class Service():
@@ -32,6 +34,8 @@ class Service():
     
             
     def ServiceEntryPoint(self):
+        
+        ConnectionManager().checkServer()
         
         player = Player()
         lastProgressUpdate = datetime.today()
@@ -76,7 +80,7 @@ class Service():
                     pass
             else:
                 # background worker for database sync
-                if WINDOW.getProperty("mb3_authenticated") == "true":
+                if DownloadUtils().authenticate(retreive=False) != "":
             
                     #full sync
                     if((interval_FullSync >= cur_seconds_fullsync)):
@@ -91,8 +95,6 @@ class Service():
                         cur_seconds_incrsync = interval_IncrementalSync
                     else:
                         cur_seconds_incrsync -= 1
-                else:
-                    utils.checkAuthentication()
         
         utils.logMsg("MB3 Sync Service" "stopping Service",0)
         
