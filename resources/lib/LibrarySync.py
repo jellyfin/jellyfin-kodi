@@ -7,6 +7,7 @@ import xbmcgui
 import xbmcaddon
 import xbmcvfs
 import json
+import sqlite3
 import threading
 import urllib
 from datetime import datetime, timedelta, time
@@ -84,9 +85,15 @@ class LibrarySync():
                 if kodiItem != None:
                     if kodiItem['playcount'] != int(userData.get("PlayCount")):
                         xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "playcount": %i}, "id": 1 }' %(kodiItem['movieid'], int(userData.get("PlayCount"))))
-                    if kodiItem['playcount'] != int(userData.get("PlayCount")):
-                        xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "playcount": %i}, "id": 1 }' %(kodiItem['movieid'], int(userData.get("PlayCount"))))
-            
+                    
+                    kodiresume = int(round(kodiItem['resume'].get("position")))
+                    resume = int(round(float(timeInfo.get("ResumeTime"))))*60
+                    total = int(round(float(timeInfo.get("TotalTime"))))*60
+                    if kodiresume != resume:
+                        print "kodiresume -->" + str(kodiresume)
+                        print "mb3_resume -->" + str(resume)
+                        print "total -->" + str(total)
+                        self.setKodiResumePoint(kodiItem['movieid'],resume,total)
             
         WINDOW.clearProperty("librarysync")
     
@@ -169,9 +176,11 @@ class LibrarySync():
     
     def updateArtWork(self,KodiItem,artWorkName,artworkValue):
         if KodiItem['art'].has_key(artWorkName):
-            if KodiItem['art'][artWorkName] != artworkValue and artworkValue != None:
+            curValue = urllib.unquote(KodiItem['art'][artWorkName]).decode('utf8')
+            if not artworkValue in curValue:
                 xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "%s": "%s" }}, "id": 1 }' %(KodiItem['movieid'], artWorkName, artworkValue))
-                
+        elif artworkValue != None:
+            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "%s": "%s" }}, "id": 1 }' %(KodiItem['movieid'], artWorkName, artworkValue))
     
     def createSTRM(self,id):
         
@@ -257,8 +266,29 @@ class LibrarySync():
         path = os.path.join(movieLibrary,id)
         xbmcvfs.rmdir(path)
     
+    def setKodiResumePoint(self, id, resume_seconds, total_seconds):
+        #use sqlite to set the resume point while json api doesn't support this yet
+        #todo --> submit PR to kodi team to get this added to the jsonrpc api
+        dbPath = xbmc.translatePath("special://userdata/Database/MyVideos90.db")
+        connection = sqlite3.connect(dbPath)
+        cursor = connection.cursor( )
+        
+        #cursor.execute("SELECT idBookmark FROM bookmark WHERE idFile = ?", (id,))
+        #bmid=cursor.fetchone()[0]
+        #if bmid != None:
+            #cursor.execute("delete FROM bookmark WHERE idBookmark = ?", (bmid,))
+        
+        cursor.execute("delete FROM bookmark WHERE idFile = ?", (id,))
+        cursor.execute("select coalesce(max(idBookmark),0) as bookmarkId from bookmark")
+        bookmarkId =  cursor.fetchone()[0]
+        bookmarkId = bookmarkId + 1
+        bookmarksql="insert into bookmark(idBookmark, idFile, timeInSeconds, totalTimeInSeconds, thumbNailImage, player, playerState, type) values(?, ?, ?, ?, ?, ?, ?, ?)"
+        cursor.execute(bookmarksql, (bookmarkId,id,resume_seconds,total_seconds,None,"DVDPlayer",None,1))
+        connection.commit()
+        cursor.close()
+    
     def getKodiMovie(self, id):
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties" : ["art", "rating", "thumbnail", "runtime", "year", "plot", "playcount", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}')
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties" : ["art", "rating", "thumbnail", "resume", "runtime", "year", "plot", "playcount", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         movie = None
        
