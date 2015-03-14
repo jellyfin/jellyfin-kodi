@@ -22,25 +22,18 @@ import xml.etree.cElementTree as ET
 from API import API
 import Utils as utils
 from DownloadUtils import DownloadUtils
-downloadUtils = DownloadUtils()
 
-addon       = xbmcaddon.Addon(id='plugin.video.mb3sync')
-addondir   = xbmc.translatePath( addon.getAddonInfo('profile') )
+addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
 dataPath = os.path.join(addondir,"library")
-movieLibrary        = os.path.join(dataPath,'movies')
-tvLibrary           = os.path.join(dataPath,'tvshows')
-
-WINDOW = xbmcgui.Window( 10000 )
-port = addon.getSetting('port')
-host = addon.getSetting('ipaddress')
-server = host + ":" + port
-userid = downloadUtils.getUserId()
-
+movieLibrary = os.path.join(dataPath,'movies')
+tvLibrary = os.path.join(dataPath,'tvshows')
 
 class LibrarySync():   
         
     def syncDatabase(self):
-               
+        
+        WINDOW = xbmcgui.Window( 10000 )
         WINDOW.setProperty("librarysync", "busy")       
         updateNeeded = False    
         
@@ -48,7 +41,7 @@ class LibrarySync():
         movieData = self.getMovies(True)
         
         if(movieData == None):
-            return
+            return False
             
         for item in movieData:
             if not item.get('IsFolder'):
@@ -76,15 +69,18 @@ class LibrarySync():
             xbmc.executebuiltin("UpdateLibrary(video)")
         
         WINDOW.clearProperty("librarysync")
+        
+        return True
                               
     def updatePlayCounts(self):
         #update all playcounts from MB3 to Kodi library
         
+        WINDOW = xbmcgui.Window( 10000 )
         WINDOW.setProperty("librarysync", "busy")
 
         movieData = self.getMovies(True)
         if(movieData == None):
-            return        
+            return False    
         
         for item in movieData:
             if not item.get('IsFolder'):
@@ -102,9 +98,20 @@ class LibrarySync():
                         self.setKodiResumePoint(kodiItem['movieid'],resume,total)
             
         WINDOW.clearProperty("librarysync")
+        
+        return True
     
     def getMovies(self, fullinfo = False):
         result = None
+        
+        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port
+        
+        downloadUtils = DownloadUtils()
+        userid = downloadUtils.getUserId()        
+        
         if fullinfo:
             url = server + '/mediabrowser/Users/' + userid + '/Items?&SortBy=SortName&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Movie&format=json&ImageTypeLimit=1'
         else:
@@ -120,6 +127,14 @@ class LibrarySync():
     
     def updatePlayCountFromKodi(self, id, playcount=0):
         #when user marks item watched from kodi interface update this to MB3
+        
+        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port        
+        downloadUtils = DownloadUtils()
+        userid = downloadUtils.getUserId()           
+        
         json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovieDetails", "params": { "movieid": ' + str(id) + ', "properties" : ["playcount", "file"] }, "id": "1"}')
         if json_response != None:
             jsonobject = json.loads(json_response.decode('utf-8','replace'))  
@@ -131,7 +146,7 @@ class LibrarySync():
                     filename = moviedetails.get("file").rpartition('\\')[2]
                     mb3Id = filename.replace(".strm","")
 
-                    watchedurl = 'http://' + host + ':' + port + '/mediabrowser/Users/' + userid + '/PlayedItems/' + mb3Id
+                    watchedurl = 'http://' + server + '/mediabrowser/Users/' + userid + '/PlayedItems/' + mb3Id
                     print "watchedurl -->" + watchedurl
                     if playcount != 0:
                         downloadUtils.downloadUrl(watchedurl, postBody="", type="POST")
@@ -139,6 +154,12 @@ class LibrarySync():
                         downloadUtils.downloadUrl(watchedurl, type="DELETE")
         
     def updateMovieToKodiLibrary( self, MBitem, KodiItem ):
+        
+        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port        
+        downloadUtils = DownloadUtils()
         
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
@@ -382,6 +403,8 @@ class LibrarySync():
     def AddActorsToMedia(self, KodiItem, people, mediatype):
         #use sqlite to set add the actors while json api doesn't support this yet
         #todo --> submit PR to kodi team to get this added to the jsonrpc api
+        
+        downloadUtils = DownloadUtils()
         
         id = KodiItem["movieid"]
         dbPath = xbmc.translatePath("special://userdata/Database/MyVideos90.db")

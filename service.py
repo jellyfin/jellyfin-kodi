@@ -84,18 +84,28 @@ class Service():
             
                     #full sync
                     if(cur_seconds_fullsync >= interval_FullSync):
-                        librarySync.syncDatabase()
-                        cur_seconds_fullsync = 0
+                        xbmc.log("Doing_Db_Sync: syncDatabase")
+                        worked = librarySync.syncDatabase()
+                        if(worked):
+                            cur_seconds_fullsync = 0
+                        else:
+                            cur_seconds_fullsync = interval_FullSync - 10
                     else:
                         cur_seconds_fullsync += 1
                     
                     #incremental sync
                     if(cur_seconds_incrsync >= interval_IncrementalSync):
-                        librarySync.updatePlayCounts()
-                        cur_seconds_incrsync = 0
+                        xbmc.log("Doing_Db_Sync: updatePlayCounts")
+                        worked = librarySync.updatePlayCounts()
+                        if(worked):
+                            cur_seconds_incrsync = 0
+                        else:
+                            cur_seconds_incrsync = interval_IncrementalSync - 10
                     else:
                         cur_seconds_incrsync += 1
-        
+                else:
+                    xbmc.log("Not authenticated yet")
+                    
         utils.logMsg("MB3 Sync Service" "stopping Service",0)
         
        
