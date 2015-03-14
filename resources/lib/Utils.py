@@ -49,12 +49,12 @@ def checkKodiSources():
     tvLibrary           = os.path.join(dataPath,'tvshows')
     
     rebootRequired = False
-    if not xbmcvfs.exists(dataPath + "\\"):
+    if not xbmcvfs.exists(dataPath + os.sep):
         xbmcvfs.mkdir(dataPath)
-    if not xbmcvfs.exists(movieLibrary + "\\"):
+    if not xbmcvfs.exists(movieLibrary + os.sep):
         xbmcvfs.mkdir(movieLibrary)
         rebootRequired = addKodiSource("mediabrowser_movies",movieLibrary,"movies")        
-    if not xbmcvfs.exists(tvLibrary + "\\"):
+    if not xbmcvfs.exists(tvLibrary + os.sep):
         xbmcvfs.mkdir(tvLibrary)
         rebootRequired = addKodiSource("mediabrowser_tvshows",tvLibrary,"tvshows")
        
@@ -78,7 +78,7 @@ def addKodiSource(name, path, type):
             pathId =  cursor.fetchone()[0]
             pathId = pathId + 1
             pathsql="insert into path(idPath, strPath, strContent, strScraper, strHash, scanRecursive) values(?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (pathId,path + "\\",type,"metadata.local",None,2147483647))
+            cursor.execute(pathsql, (pathId,path + os.sep,type,"metadata.local",None,2147483647))
             connection.commit()
             cursor.close()
         except:
