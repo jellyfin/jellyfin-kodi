@@ -49,8 +49,8 @@ class Service():
         interval_FullSync = 120
         interval_IncrementalSync = 30
         
-        cur_seconds_fullsync = 0
-        cur_seconds_incrsync = 0
+        cur_seconds_fullsync = interval_FullSync
+        cur_seconds_incrsync = interval_IncrementalSync
         
         while not xbmc.abortRequested:
             
@@ -83,18 +83,18 @@ class Service():
                 if DownloadUtils().authenticate(retreive=False) != "":
             
                     #full sync
-                    if((interval_FullSync >= cur_seconds_fullsync)):
+                    if(cur_seconds_fullsync >= interval_FullSync):
                         librarySync.syncDatabase()
-                        cur_seconds_fullsync = interval_FullSync
+                        cur_seconds_fullsync = 0
                     else:
-                        cur_seconds_fullsync -= 1
+                        cur_seconds_fullsync += 1
                     
                     #incremental sync
-                    if((interval_IncrementalSync >= cur_seconds_incrsync)):
+                    if(cur_seconds_incrsync >= interval_IncrementalSync):
                         librarySync.updatePlayCounts()
-                        cur_seconds_incrsync = interval_IncrementalSync
+                        cur_seconds_incrsync = 0
                     else:
-                        cur_seconds_incrsync -= 1
+                        cur_seconds_incrsync += 1
         
         utils.logMsg("MB3 Sync Service" "stopping Service",0)
         
