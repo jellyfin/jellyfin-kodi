@@ -138,6 +138,7 @@ class LibrarySync():
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
         people = API().getPeople(MBitem)
+        genre = API().getGenre(MBitem)
         mediaStreams=API().getMediaStreams(MBitem)
         
         thumbPath = downloadUtils.getArtwork(MBitem, "Primary")
@@ -160,6 +161,35 @@ class LibrarySync():
         #update year
         if KodiItem['year'] != MBitem.get("ProductionYear") and MBitem.get("ProductionYear") != None:
             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "year": %s}, "id": 1 }' %(KodiItem['movieid'], MBitem.get("ProductionYear")))
+        
+        #update writer
+        if KodiItem['writer'] != MBitem.get("Writer") and MBitem.get("Writer") != None:
+            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "writer": "%s"}, "id": 1 }' %(KodiItem['movieid'], MBitem.get("Writer")))
+        
+        #update mpaa
+        if KodiItem['mpaa'] != MBitem.get("OfficialRating") and MBitem.get("OfficialRating") != None:
+            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "mpaa": "%s"}, "id": 1 }' %(KodiItem['movieid'], MBitem.get("OfficialRating")))
+        
+        #update rating
+        if KodiItem['rating'] != MBitem.get("CommunityRating") and MBitem.get("CommunityRating") != None:
+            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "rating": "%s"}, "id": 1 }' %(KodiItem['movieid'], int(MBitem.get("CommunityRating"))))
+        
+        
+        #trailer link
+        trailerUrl = None
+        if MBitem.get("LocalTrailerCount") != None and MBitem.get("LocalTrailerCount") > 0:
+            itemTrailerUrl = "http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + MBitem.get("Id") + "/LocalTrailers?format=json"
+            jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=True, popup=0 ) 
+            trailerItem = json.loads(jsonData)
+            trailerUrl = "plugin://plugin.video.mb3sync/?id=" + trailerItem[0].get("Id") + '&mode=play'
+        if KodiItem['trailer'] != trailerUrl and trailerUrl != None:
+            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "trailer": "%s"}, "id": 1 }' %(KodiItem['movieid'], trailerUrl))
+        
+        
+        #update genre
+        if KodiItem['genre'] != MBitem.get("Genres") and MBitem.get("Genres") != None:
+            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "genre": %s}, "id": 1 }' %(KodiItem['movieid'], "\"{koekoek,pannekoek} \""))
+        
         
         #update strm file - TODO: only update strm when path has changed
         self.createSTRM(MBitem["Id"])
@@ -288,7 +318,7 @@ class LibrarySync():
         cursor.close()
     
     def getKodiMovie(self, id):
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties" : ["art", "rating", "thumbnail", "resume", "runtime", "year", "plot", "playcount", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}')
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties" : ["art", "rating", "thumbnail", "resume", "runtime", "year", "genre", "cast", "trailer", "country", "studio", "set", "mpaa", "tagline", "plotoutline","plot", "writer", "playcount", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         movie = None
        
