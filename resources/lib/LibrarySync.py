@@ -134,7 +134,6 @@ class LibrarySync():
         
     def updateMovieToKodiLibrary( self, MBitem, KodiItem ):
         
-        #TODO: only update the info if something is actually changed
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
         people = API().getPeople(MBitem)
@@ -146,35 +145,21 @@ class LibrarySync():
         utils.logMsg("Updating item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
         
         #update artwork
-        self.updateArtWork(KodiItem,"poster", downloadUtils.getArtwork(MBitem, "poster"))
-        self.updateArtWork(KodiItem,"clearlogo", downloadUtils.getArtwork(MBitem, "Logo"))
-        self.updateArtWork(KodiItem,"banner", downloadUtils.getArtwork(MBitem, "Banner"))
-        self.updateArtWork(KodiItem,"landscape", downloadUtils.getArtwork(MBitem, "Thumb"))
-        self.updateArtWork(KodiItem,"discart", downloadUtils.getArtwork(MBitem, "Disc"))
-        self.updateArtWork(KodiItem,"fanart", downloadUtils.getArtwork(MBitem, "Backdrop"))
+        self.updateArtWork(KodiItem,"poster", downloadUtils.getArtwork(MBitem, "poster"),"movie")
+        self.updateArtWork(KodiItem,"clearlogo", downloadUtils.getArtwork(MBitem, "Logo"),"movie")
+        self.updateArtWork(KodiItem,"banner", downloadUtils.getArtwork(MBitem, "Banner"),"movie")
+        self.updateArtWork(KodiItem,"landscape", downloadUtils.getArtwork(MBitem, "Thumb"),"movie")
+        self.updateArtWork(KodiItem,"discart", downloadUtils.getArtwork(MBitem, "Disc"),"movie")
+        self.updateArtWork(KodiItem,"fanart", downloadUtils.getArtwork(MBitem, "Backdrop"),"movie")
         
-        #update duration
+        #update common properties
         duration = (int(timeInfo.get('Duration'))*60)
-        if KodiItem['runtime'] != duration:
-            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "runtime": %s}, "id": 1 }' %(KodiItem['movieid'], duration))
-               
-        #update year
-        if KodiItem['year'] != MBitem.get("ProductionYear") and MBitem.get("ProductionYear") != None:
-            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "year": %s}, "id": 1 }' %(KodiItem['movieid'], MBitem.get("ProductionYear")))
-        
-        #update writer
-        if KodiItem['writer'] != MBitem.get("Writer") and MBitem.get("Writer") != None:
-            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "writer": "%s"}, "id": 1 }' %(KodiItem['movieid'], MBitem.get("Writer")))
-        
-        #update mpaa
-        if KodiItem['mpaa'] != MBitem.get("OfficialRating") and MBitem.get("OfficialRating") != None:
-            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "mpaa": "%s"}, "id": 1 }' %(KodiItem['movieid'], MBitem.get("OfficialRating")))
-        
-        #update rating
-        if KodiItem['rating'] != MBitem.get("CommunityRating") and MBitem.get("CommunityRating") != None:
-            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "rating": "%s"}, "id": 1 }' %(KodiItem['movieid'], int(MBitem.get("CommunityRating"))))
-        
-        
+        self.updateProperty(KodiItem,"runtime",duration,"movie")
+        self.updateProperty(KodiItem,"year",MBitem.get("ProductionYear"),"movie")
+        self.updateProperty(KodiItem,"writer",MBitem.get("Writer"),"movie")
+        self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"movie")
+        self.updateProperty(KodiItem,"rating",MBitem.get("CommunityRating"),"movie")
+
         #trailer link
         trailerUrl = None
         if MBitem.get("LocalTrailerCount") != None and MBitem.get("LocalTrailerCount") > 0:
@@ -182,10 +167,9 @@ class LibrarySync():
             jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=True, popup=0 ) 
             trailerItem = json.loads(jsonData)
             trailerUrl = "plugin://plugin.video.mb3sync/?id=" + trailerItem[0].get("Id") + '&mode=play'
-        if KodiItem['trailer'] != trailerUrl and trailerUrl != None:
-            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "trailer": "%s"}, "id": 1 }' %(KodiItem['movieid'], trailerUrl))
+            self.updateProperty(KodiItem,"trailer",trailerUrl,"movie")
         
-        
+       
         #update genre
         if KodiItem['genre'] != MBitem.get("Genres") and MBitem.get("Genres") != None:
             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "genre": %s}, "id": 1 }' %(KodiItem['movieid'], "\"{koekoek,pannekoek} \""))
@@ -203,14 +187,42 @@ class LibrarySync():
         if KodiItem['playcount'] != int(userData.get("PlayCount")):
             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "playcount": %i}, "id": 1 }' %(KodiItem['movieid'], int(userData.get("PlayCount"))))         
     
-    
-    def updateArtWork(self,KodiItem,artWorkName,artworkValue):
+
+    # adds or updates artwork to the given Kodi file in database
+    def updateArtWork(self,KodiItem,artWorkName,artworkValue, fileType="movie"):
+        if fileType == "tvshow":
+            method = "VideoLibrary.SetTVShowDetails"
+        elif fileType == "episode":
+            method = "VideoLibrary.SetEpisodeDetails"
+        elif fileType == "musicvideo":
+            method = "VideoLibrary.SetMusicVideoDetails"
+        else:
+            method = "VideoLibrary.SetMovieDetails"
+
         if KodiItem['art'].has_key(artWorkName):
             curValue = urllib.unquote(KodiItem['art'][artWorkName]).decode('utf8')
             if not artworkValue in curValue:
-                xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "%s": "%s" }}, "id": 1 }' %(KodiItem['movieid'], artWorkName, artworkValue))
+                xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "%s", "params": { "movieid": %i, "art": { "%s": "%s" }}, "id": 1 }' %(method,KodiItem['movieid'], artWorkName, artworkValue))
         elif artworkValue != None:
-            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "%s": "%s" }}, "id": 1 }' %(KodiItem['movieid'], artWorkName, artworkValue))
+            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "%s", "params": { "movieid": %i, "art": { "%s": "%s" }}, "id": 1 }' %(method,KodiItem['movieid'], artWorkName, artworkValue))
+    
+    # adds or updates the given property on the videofile in Kodi database
+    def updateProperty(self,KodiItem,propertyName,propertyValue,fileType="movie"):
+        if fileType == "tvshow":
+            method = "VideoLibrary.SetTVShowDetails"
+        elif fileType == "episode":
+            method = "VideoLibrary.SetEpisodeDetails"
+        elif fileType == "musicvideo":
+            method = "VideoLibrary.SetMusicVideoDetails"
+        else:
+            method = "VideoLibrary.SetMovieDetails"
+
+        if not propertyValue in KodiItem[propertyName]:
+            if type(propertyValue) is int:
+                xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "%s", "params": { "movieid": %i, "%s": %i}, "id": 1 }' %(method,KodiItem['movieid'], propertyName, propertyValue))
+            else:
+                xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "%s", "params": { "movieid": %i, "%s": "%s"}, "id": 1 }' %(method,KodiItem['movieid'], propertyName, propertyValue))
+
     
     def createSTRM(self,id):
         
