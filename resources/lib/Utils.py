@@ -44,7 +44,7 @@ def logMsg(title, msg, level = 1):
 def checkKodiSources():
     addon       = xbmcaddon.Addon(id='plugin.video.mb3sync')
     addondir   = xbmc.translatePath( addon.getAddonInfo('profile') )
-    dataPath = os.path.join(addondir,"library\\")
+    dataPath = os.path.join(addondir,"library")
     movieLibrary        = os.path.join(dataPath,'movies')
     tvLibrary           = os.path.join(dataPath,'tvshows')
     
