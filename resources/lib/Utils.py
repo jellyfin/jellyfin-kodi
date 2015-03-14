@@ -45,16 +45,16 @@ def checkKodiSources():
     addon       = xbmcaddon.Addon(id='plugin.video.mb3sync')
     addondir   = xbmc.translatePath( addon.getAddonInfo('profile') )
     dataPath = os.path.join(addondir,"library\\")
-    movieLibrary        = os.path.join(dataPath,'movies\\')
-    tvLibrary           = os.path.join(dataPath,'tvshows\\')
+    movieLibrary        = os.path.join(dataPath,'movies')
+    tvLibrary           = os.path.join(dataPath,'tvshows')
     
     rebootRequired = False
-    if not xbmcvfs.exists(dataPath):
+    if not xbmcvfs.exists(dataPath + "\\"):
         xbmcvfs.mkdir(dataPath)
-    if not xbmcvfs.exists(movieLibrary):
+    if not xbmcvfs.exists(movieLibrary + "\\"):
         xbmcvfs.mkdir(movieLibrary)
         rebootRequired = addKodiSource("mediabrowser_movies",movieLibrary,"movies")        
-    if not xbmcvfs.exists(tvLibrary):
+    if not xbmcvfs.exists(tvLibrary + "\\"):
         xbmcvfs.mkdir(tvLibrary)
         rebootRequired = addKodiSource("mediabrowser_tvshows",tvLibrary,"tvshows")
        
