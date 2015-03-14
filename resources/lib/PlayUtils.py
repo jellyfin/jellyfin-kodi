@@ -145,7 +145,9 @@ class PlayUtils():
            return '100000'
         elif (videoQuality == "18"):
            return '1000000'
-       
+        else:
+            return '10000000'
+            
     def fileExists(self, result):
         path=result.get("Path").encode('utf-8')
         if os.path.exists(path) == True:
