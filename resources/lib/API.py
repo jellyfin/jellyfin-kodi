@@ -2,8 +2,36 @@
 # This class helps translate more complex cases from the MediaBrowser API to the XBMC API
 
 from datetime import datetime
+import xbmc
+import xbmcgui
+import xbmcaddon
 
 class API():
+    logLevel = 0
+    addonSettings = None
+    getString = None
+    LogCalls = False
+    TrackLog = ""
+    TotalUrlCalls = 0
+
+    def __init__(self, *args):
+        self.addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        self.getString = self.addonSettings.getLocalizedString
+        level = self.addonSettings.getSetting('logLevel')        
+        self.logLevel = 0
+        if(level != None and level != ""):
+            self.logLevel = int(level)
+        if(self.logLevel == 2):
+            self.LogCalls = True
+            
+    def logMsg(self, msg, level = 1):
+        if(self.logLevel >= level):
+            try:
+                xbmc.log("mb3sync DownloadUtils -> " + str(msg))
+            except UnicodeEncodeError:
+                try:
+                    xbmc.log("mb3sync DownloadUtils -> " + str(msg.encode('utf-8')))
+                except: pass    
     
     def getPeople(self, item):
         # Process People
@@ -237,7 +265,7 @@ class API():
                  'Episode'          :   tempEpisode,
                  'SeriesName'       :   SeriesName
                  }
-    def getDate(self, item):
+    def getDateCreated(self, item):
         tempDate = item.get("DateCreated")
         if tempDate != None:
             tempDate = tempDate.split("T")[0]
@@ -246,3 +274,102 @@ class API():
         else:
             tempDate = "01.01.2000"
         return tempDate
+
+    def getArtwork(self, data, type, index = "0", userParentInfo = False):
+
+        id = data.get("Id")
+        getSeriesData = False
+        userData = data.get("UserData") 
+
+        if type == "tvshow.poster": # Change the Id to the series to get the overall series poster
+            if data.get("Type") == "Season" or data.get("Type")== "Episode":
+                id = data.get("SeriesId")
+                getSeriesData = True
+        elif type == "poster" and data.get("Type") == "Episode" and self.addonSettings.getSetting('useSeasonPoster')=='true': # Change the Id to the Season to get the season poster
+            id = data.get("SeasonId")
+        if type == "poster" or type == "tvshow.poster": # Now that the Ids are right, change type to MB3 name
+            type="Primary"
+        if data.get("Type") == "Season":  # For seasons: primary (poster), thumb and banner get season art, rest series art
+            if type != "Primary" and type != "Primary2" and type != "Primary3" and type != "Primary4" and type != "Thumb" and type != "Banner" and type!="Thumb3":
+                id = data.get("SeriesId")
+                getSeriesData = True
+        if data.get("Type") == "Episode":  # For episodes: primary (episode thumb) gets episode art, rest series art. 
+            if type != "Primary" and type != "Primary2" and type != "Primary3" and type != "Primary4":
+                id = data.get("SeriesId")
+                getSeriesData = True
+            if type =="Primary2" or type=="Primary3" or type=="Primary4":
+                id = data.get("SeasonId")
+                getSeriesData = True
+                if  data.get("SeasonUserData") != None:
+                    userData = data.get("SeasonUserData")
+        if id == None:
+            id=data.get("Id")
+                
+        imageTag = "e3ab56fe27d389446754d0fb04910a34" # a place holder tag, needs to be in this format
+        originalType = type
+        if type == "Primary2" or type == "Primary3" or type == "Primary4" or type=="SeriesPrimary":
+            type = "Primary"
+        if type == "Backdrop2" or type=="Backdrop3" or type=="BackdropNoIndicators":
+            type = "Backdrop"
+        if type == "Thumb2" or type=="Thumb3":
+            type = "Thumb"
+        if(data.get("ImageTags") != None and data.get("ImageTags").get(type) != None):
+            imageTag = data.get("ImageTags").get(type)   
+
+        if (data.get("Type") == "Episode" or data.get("Type") == "Season") and type=="Logo":
+            imageTag = data.get("ParentLogoImageTag")
+        if (data.get("Type") == "Episode" or data.get("Type") == "Season") and type=="Art":
+            imageTag = data.get("ParentArtImageTag")
+        if (data.get("Type") == "Episode") and originalType=="Thumb3":
+            imageTag = data.get("SeriesThumbImageTag")
+        if (data.get("Type") == "Season") and originalType=="Thumb3" and imageTag=="e3ab56fe27d389446754d0fb04910a34" :
+            imageTag = data.get("ParentThumbImageTag")
+            id = data.get("SeriesId")
+     
+        query = ""
+        height = "10000"
+        width = "10000"
+        played = "0"
+        totalbackdrops = 0
+
+        if originalType =="BackdropNoIndicators" and index == "0" and data.get("BackdropImageTags") != None:
+            totalbackdrops = len(data.get("BackdropImageTags"))
+            if totalbackdrops != 0:
+                index = str(randrange(0,totalbackdrops))
+        # use the local image proxy server that is made available by this addons service
+        
+        port = self.addonSettings.getSetting('port')
+        host = self.addonSettings.getSetting('ipaddress')
+        server = host + ":" + port
+        
+        if self.addonSettings.getSetting('compressArt')=='true':
+            query = query + "&Quality=90"
+        
+        if imageTag == None:
+            imageTag = "e3ab56fe27d389446754d0fb04910a34"
+        artwork = "http://" + server + "/mediabrowser/Items/" + str(id) + "/Images/" + type + "/" + index + "/" + imageTag + "/original/" + width + "/" + height + "/" + played + "?" + query
+        if self.addonSettings.getSetting('disableCoverArt')=='true':
+            artwork = artwork + "&EnableImageEnhancers=false"
+        
+        self.logMsg("getArtwork : " + artwork, level=2)
+        
+        # do not return non-existing images
+        if (    (type!="Backdrop" and imageTag=="e3ab56fe27d389446754d0fb04910a34") |  #Remember, this is the placeholder tag, meaning we didn't find a valid tag
+                (type=="Backdrop" and data.get("BackdropImageTags") != None and len(data.get("BackdropImageTags")) == 0) | 
+                (type=="Backdrop" and data.get("BackdropImageTag") != None and len(data.get("BackdropImageTag")) == 0)                
+                ):
+            if type != "Backdrop" or (type=="Backdrop" and getSeriesData==True and data.get("ParentBackdropImageTags") == None) or (type=="Backdrop" and getSeriesData!=True):
+                artwork=''        
+        
+        return artwork
+    
+    def getUserArtwork(self, data, type, index = "0"):
+
+        id = data.get("Id")
+        port = self.addonSettings.getSetting('port')
+        host = self.addonSettings.getSetting('ipaddress')
+        server = host + ":" + port
+        artwork = "http://" + server + "/mediabrowser/Users/" + str(id) + "/Images/" + type  + "?Format=original"
+       
+        return artwork                  
+        

@@ -138,18 +138,18 @@ class LibrarySync():
         studios = API().getStudios(MBitem)
         mediaStreams=API().getMediaStreams(MBitem)
         
-        thumbPath = downloadUtils.getArtwork(MBitem, "Primary")
+        thumbPath = API().getArtwork(MBitem, "Primary")
         
         utils.logMsg("Updating item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
         
         #update artwork
-        self.updateArtWork(KodiItem,"poster", downloadUtils.getArtwork(MBitem, "poster"),"movie")
-        self.updateArtWork(KodiItem,"clearlogo", downloadUtils.getArtwork(MBitem, "Logo"),"movie")
-        self.updateArtWork(KodiItem,"clearart", downloadUtils.getArtwork(MBitem, "Art"),"movie")
-        self.updateArtWork(KodiItem,"banner", downloadUtils.getArtwork(MBitem, "Banner"),"movie")
-        self.updateArtWork(KodiItem,"landscape", downloadUtils.getArtwork(MBitem, "Thumb"),"movie")
-        self.updateArtWork(KodiItem,"discart", downloadUtils.getArtwork(MBitem, "Disc"),"movie")
-        self.updateArtWork(KodiItem,"fanart", downloadUtils.getArtwork(MBitem, "Backdrop"),"movie")
+        self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "poster"),"movie")
+        self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"movie")
+        self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"movie")
+        self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"movie")
+        self.updateArtWork(KodiItem,"landscape", API().getArtwork(MBitem, "Thumb"),"movie")
+        self.updateArtWork(KodiItem,"discart", API().getArtwork(MBitem, "Disc"),"movie")
+        self.updateArtWork(KodiItem,"fanart", API().getArtwork(MBitem, "Backdrop"),"movie")
         
         #update common properties
         duration = (int(timeInfo.get('Duration'))*60)
@@ -291,8 +291,8 @@ class LibrarySync():
         root = Element("movie")
         SubElement(root, "id").text = item["Id"]
         SubElement(root, "tag").text = "all mediabrowser movies" # TODO --> use tags to assign user view 
-        SubElement(root, "thumb").text = downloadUtils.getArtwork(item, "poster")
-        SubElement(root, "fanart").text = downloadUtils.getArtwork(item, "Backdrop")
+        SubElement(root, "thumb").text = API().getArtwork(item, "poster")
+        SubElement(root, "fanart").text = API().getArtwork(item, "Backdrop")
         SubElement(root, "title").text = item["Name"].encode('utf-8').decode('utf-8')
         SubElement(root, "originaltitle").text = item["Name"].encode('utf-8').decode('utf-8')
         
@@ -314,12 +314,12 @@ class LibrarySync():
         SubElement(root, "plot").text = API().getOverview(item).decode('utf-8')
 
         art = SubElement(root, "art")
-        SubElement(art, "poster").text = downloadUtils.getArtwork(item, "poster")
-        SubElement(art, "fanart").text = downloadUtils.getArtwork(item, "Backdrop")
-        SubElement(art, "landscape").text = downloadUtils.getArtwork(item, "Thumb")
-        SubElement(art, "clearlogo").text = downloadUtils.getArtwork(item, "Logo")
-        SubElement(art, "discart").text = downloadUtils.getArtwork(item, "Disc")
-        SubElement(art, "banner").text = downloadUtils.getArtwork(item, "Banner")
+        SubElement(art, "poster").text = API().getArtwork(item, "poster")
+        SubElement(art, "fanart").text = API().getArtwork(item, "Backdrop")
+        SubElement(art, "landscape").text = API().getArtwork(item, "Thumb")
+        SubElement(art, "clearlogo").text = API().getArtwork(item, "Logo")
+        SubElement(art, "discart").text = API().getArtwork(item, "Disc")
+        SubElement(art, "banner").text = API().getArtwork(item, "Banner")
         
         ET.ElementTree(root).write(nfoFile, encoding="utf-8", xml_declaration=True)
     
