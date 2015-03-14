@@ -7,24 +7,24 @@ class API():
     
     def getPeople(self, item):
         # Process People
-        director=''
-        writer=''
+        director=[]
+        writer=[]
         cast=[]
         people = item.get("People")
         if(people != None):
             for person in people:
                 if(person.get("Type") == "Director"):
-                    director = director + person.get("Name") + ' ' 
+                    director.append(person.get("Name")) 
                 if(person.get("Type") == "Writing"):
-                    writer = person.get("Name")
+                    writer.append(person.get("Name"))
                 if(person.get("Type") == "Writer"):
-                    writer = person.get("Name")                 
-                    if(person.get("Type") == "Actor"):
-                        Name = person.get("Name")
-                        Role = person.get("Role")
-                        if Role == None:
-                            Role = ''
-                        cast.append(Name)
+                    writer.append(person.get("Name"))                 
+                if(person.get("Type") == "Actor"):
+                    Name = person.get("Name")
+                    Role = person.get("Role")
+                    if Role == None:
+                        Role = ''
+                    cast.append(Name)
         return  {'Director'  : director, 
                 'Writer'    : writer,
                 'Cast'      : cast
@@ -60,19 +60,17 @@ class API():
                 'ResumeTime'    : str(resume)
                }
 
-    def getStudio(self, item):
+    def getStudios(self, item):
         # Process Studio
-        studio = "" 
+        studios = [] 
         if item.get("SeriesStudio") != None and item.get("SeriesStudio") != '':
-            studio = item.get("SeriesStudio")
-        if studio == "":        
-            studios = item.get("Studios")
-            if(studios != None):
-                for studio_string in studios:
-                    if studio=="": #Just take the first one
-                        temp=studio_string.get("Name")
-                        studio=temp.encode('utf-8')
-        return studio
+            studios.append(item.get("SeriesStudio"))
+        else:        
+            if(item.get("Studios") != None):
+                for studio_string in item.get("Studios"):
+                    temp=studio_string.get("Name").encode('utf-8')
+                    studios.append(temp)
+        return studios
 
     def getMediaStreams(self, item, mediaSources=False):    
         # Process MediaStreams

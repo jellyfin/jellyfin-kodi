@@ -85,14 +85,11 @@ class LibrarySync():
                 if kodiItem != None:
                     if kodiItem['playcount'] != int(userData.get("PlayCount")):
                         xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "playcount": %i}, "id": 1 }' %(kodiItem['movieid'], int(userData.get("PlayCount"))))
-                    
+              
                     kodiresume = int(round(kodiItem['resume'].get("position")))
                     resume = int(round(float(timeInfo.get("ResumeTime"))))*60
                     total = int(round(float(timeInfo.get("TotalTime"))))*60
                     if kodiresume != resume:
-                        print "kodiresume -->" + str(kodiresume)
-                        print "mb3_resume -->" + str(resume)
-                        print "total -->" + str(total)
                         self.setKodiResumePoint(kodiItem['movieid'],resume,total)
             
         WINDOW.clearProperty("librarysync")
@@ -100,7 +97,7 @@ class LibrarySync():
     def getMovies(self, fullinfo = False):
         result = None
         if fullinfo:
-            url = server + '/mediabrowser/Users/' + userid + '/Items?&SortBy=SortName&Fields=Path,Genres,Studios,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Movie&format=json&ImageTypeLimit=1'
+            url = server + '/mediabrowser/Users/' + userid + '/Items?&SortBy=SortName&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Movie&format=json&ImageTypeLimit=1'
         else:
             url = server + '/mediabrowser/Users/' + userid + '/Items?&SortBy=SortName&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Movie&format=json&ImageTypeLimit=1'
         
@@ -138,6 +135,7 @@ class LibrarySync():
         userData=API().getUserData(MBitem)
         people = API().getPeople(MBitem)
         genre = API().getGenre(MBitem)
+        studios = API().getStudios(MBitem)
         mediaStreams=API().getMediaStreams(MBitem)
         
         thumbPath = downloadUtils.getArtwork(MBitem, "Primary")
@@ -147,6 +145,7 @@ class LibrarySync():
         #update artwork
         self.updateArtWork(KodiItem,"poster", downloadUtils.getArtwork(MBitem, "poster"),"movie")
         self.updateArtWork(KodiItem,"clearlogo", downloadUtils.getArtwork(MBitem, "Logo"),"movie")
+        self.updateArtWork(KodiItem,"clearart", downloadUtils.getArtwork(MBitem, "Art"),"movie")
         self.updateArtWork(KodiItem,"banner", downloadUtils.getArtwork(MBitem, "Banner"),"movie")
         self.updateArtWork(KodiItem,"landscape", downloadUtils.getArtwork(MBitem, "Thumb"),"movie")
         self.updateArtWork(KodiItem,"discart", downloadUtils.getArtwork(MBitem, "Disc"),"movie")
@@ -156,10 +155,31 @@ class LibrarySync():
         duration = (int(timeInfo.get('Duration'))*60)
         self.updateProperty(KodiItem,"runtime",duration,"movie")
         self.updateProperty(KodiItem,"year",MBitem.get("ProductionYear"),"movie")
-        self.updateProperty(KodiItem,"writer",MBitem.get("Writer"),"movie")
         self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"movie")
-        self.updateProperty(KodiItem,"rating",MBitem.get("CommunityRating"),"movie")
-
+        
+        if MBitem.get("CriticRating") != None:
+            self.updateProperty(KodiItem,"rating",int(MBitem.get("CriticRating"))/10,"movie")
+        
+        self.updateProperty(KodiItem,"plotoutline",MBitem.get("ShortOverview"),"movie")
+        self.updateProperty(KodiItem,"set",MBitem.get("TmdbCollectionName"),"movie")
+        self.updateProperty(KodiItem,"sorttitle",MBitem.get("SortName"),"movie")
+        
+        if MBitem.get("ProviderIds") != None:
+            if MBitem.get("ProviderIds").get("Imdb") != None:
+                self.updateProperty(KodiItem,"imdbnumber",MBitem.get("ProviderIds").get("Imdb"),"movie")
+        
+        # FIXME --> Taglines not returned by MB3 server !?
+        if MBitem.get("TagLines") != None:
+            self.updateProperty(KodiItem,"tagline",MBitem.get("TagLines")[0],"movie")      
+        
+        self.updatePropertyArray(KodiItem,"writer",people.get("Writer"),"movie")
+        self.updatePropertyArray(KodiItem,"director",people.get("Director"),"movie")
+        self.updatePropertyArray(KodiItem,"genre",MBitem.get("Genres"),"movie")
+        self.updatePropertyArray(KodiItem,"studio",studios,"movie")
+        
+        # FIXME --> ProductionLocations not returned by MB3 server !?
+        self.updatePropertyArray(KodiItem,"country",MBitem.get("ProductionLocations"),"movie")
+        
         #trailer link
         trailerUrl = None
         if MBitem.get("LocalTrailerCount") != None and MBitem.get("LocalTrailerCount") > 0:
@@ -168,12 +188,12 @@ class LibrarySync():
             trailerItem = json.loads(jsonData)
             trailerUrl = "plugin://plugin.video.mb3sync/?id=" + trailerItem[0].get("Id") + '&mode=play'
             self.updateProperty(KodiItem,"trailer",trailerUrl,"movie")
-            
-        #update genres
-        self.updateGenres(KodiItem,MBitem.get("Genres"),"movie")
-        
+
         #update strm file - TODO: only update strm when path has changed
         self.createSTRM(MBitem["Id"])
+        
+        #add actors
+        self.AddActorsToMedia(KodiItem,MBitem.get("People"),"movie")
         
         #create nfo file if not exists
         nfoFile = os.path.join(movieLibrary,MBitem["Id"],MBitem["Id"] + ".nfo")
@@ -215,13 +235,14 @@ class LibrarySync():
             method = "VideoLibrary.SetMovieDetails"
 
         if propertyValue != KodiItem[propertyName]:
-            if type(propertyValue) is int:
-                xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "%s", "params": { "movieid": %i, "%s": %i}, "id": 1 }' %(method,KodiItem['movieid'], propertyName, propertyValue))
-            else:
-                xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "%s", "params": { "movieid": %i, "%s": "%s"}, "id": 1 }' %(method,KodiItem['movieid'], propertyName, propertyValue))
+            if propertyValue != None:
+                if type(propertyValue) is int:
+                    xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "%s", "params": { "movieid": %i, "%s": %i}, "id": 1 }' %(method,KodiItem['movieid'], propertyName, propertyValue))
+                else:
+                    xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "%s", "params": { "movieid": %i, "%s": "%s"}, "id": 1 }' %(method,KodiItem['movieid'], propertyName, propertyValue.encode('utf-8')))
 
-    # adds or updates the genres on the videofile in Kodi database
-    def updateGenres(self,KodiItem,genreCollection,fileType="movie"):
+    # adds or updates the property-array on the videofile in Kodi database
+    def updatePropertyArray(self,KodiItem,propertyName,propertyCollection,fileType="movie"):
         if fileType == "tvshow":
             method = "VideoLibrary.SetTVShowDetails"
         elif fileType == "episode":
@@ -232,17 +253,16 @@ class LibrarySync():
             method = "VideoLibrary.SetMovieDetails"
         
         pendingChanges = False
-        if genreCollection != None:
-            currentgenres = set(KodiItem["genre"])
+        if propertyCollection != None:
+            currentvalues = set(KodiItem[propertyName])
             genrestring = ""
-            for genre in genreCollection:
-                if not genre in currentgenres:
+            for item in propertyCollection:
+                if not item in currentvalues:
                     pendingChanges = True
-                    json_genres = json.dumps(genreCollection)
+                    json_array = json.dumps(propertyCollection)
             
             if pendingChanges:
-                print genreCollection
-                xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "%s", "params": { "movieid": %i, "genre": %s}, "id": 1 }' %(method,KodiItem['movieid'],json_genres))    
+                xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "%s", "params": { "movieid": %i, "%s": %s}, "id": 1 }' %(method,KodiItem['movieid'],propertyName,json_array))    
             
     def createSTRM(self,id):
         
@@ -349,8 +369,53 @@ class LibrarySync():
         connection.commit()
         cursor.close()
     
+    def AddActorsToMedia(self, KodiItem, people, mediatype):
+        #use sqlite to set add the actors while json api doesn't support this yet
+        #todo --> submit PR to kodi team to get this added to the jsonrpc api
+        
+        id = KodiItem["movieid"]
+        dbPath = xbmc.translatePath("special://userdata/Database/MyVideos90.db")
+        connection = sqlite3.connect(dbPath)
+        cursor = connection.cursor()
+        
+        currentcast = list()
+        if KodiItem["cast"] != None:
+            for cast in KodiItem["cast"]:
+                currentcast.append(cast["name"])
+
+        if(people != None):
+            for person in people:              
+                if(person.get("Type") == "Actor"):
+                    if person.get("Name") not in currentcast:
+                        Name = person.get("Name")
+                        Role = person.get("Role")
+                        actorid = None
+                        Thumb = downloadUtils.imageUrl(person.get("Id"), "Primary", 0, 400, 400)
+                        cursor.execute("SELECT idActor as actorid FROM actors WHERE strActor = ?",(Name,))
+                        result = cursor.fetchone()
+                        if result != None:
+                            actorid = result[0]
+                        if actorid == None:
+                            cursor.execute("select coalesce(max(idActor),0) as actorid from actors")
+                            actorid = cursor.fetchone()[0]
+                            actorid = actorid + 1
+                            peoplesql="insert into actors(idActor, strActor, strThumb) values(?, ?, ?)"
+                            cursor.execute(peoplesql, (actorid,Name,Thumb))
+                        
+                        if mediatype == "movie":
+                            peoplesql="INSERT OR REPLACE into actorlinkmovie(idActor, idMovie, strRole, iOrder) values(?, ?, ?, ?)"
+                        if mediatype == "tvshow":
+                            peoplesql="INSERT OR REPLACE into actorlinktvshow(idActor, idShow, strRole, iOrder) values(?, ?, ?, ?)"
+                        if mediatype == "episode":
+                            peoplesql="INSERT OR REPLACE into actorlinkepisode(idActor, idEpisode, strRole, iOrder) values(?, ?, ?, ?)"
+                        cursor.execute(peoplesql, (actorid,id,Role,None))
+        
+        connection.commit()
+        cursor.close()
+    
+    
     def getKodiMovie(self, id):
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties" : ["art", "rating", "thumbnail", "resume", "runtime", "year", "genre", "cast", "trailer", "country", "studio", "set", "mpaa", "tagline", "plotoutline","plot", "writer", "playcount", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}')
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties" : ["art", "rating", "thumbnail", "resume", "runtime", "year", "genre", "cast", "trailer", "country", "studio", "set", "imdbnumber", "mpaa", "tagline", "plotoutline","plot", "sorttitle", "director", "writer", "playcount", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         movie = None
        
