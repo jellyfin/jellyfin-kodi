@@ -45,7 +45,12 @@ class LibrarySync():
         updateNeeded = False    
         
         allMovies = list()
-        for item in self.getMovies(True):
+        movieData = self.getMovies(True)
+        
+        if(movieData == None):
+            return
+            
+        for item in movieData:
             if not item.get('IsFolder'):
                 kodiItem = self.getKodiMovie(item["Id"])
                 allMovies.append(item["Id"])
@@ -77,7 +82,11 @@ class LibrarySync():
         
         WINDOW.setProperty("librarysync", "busy")
 
-        for item in self.getMovies(False):
+        movieData = self.getMovies(True)
+        if(movieData == None):
+            return        
+        
+        for item in movieData:
             if not item.get('IsFolder'):
                 kodiItem = self.getKodiMovie(item["Id"])
                 userData=API().getUserData(item)
@@ -102,7 +111,7 @@ class LibrarySync():
             url = server + '/mediabrowser/Users/' + userid + '/Items?&SortBy=SortName&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Movie&format=json&ImageTypeLimit=1'
         
         jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
-        if jsonData != None:
+        if jsonData != None and jsonData != "":
             result = json.loads(jsonData)
             if(result.has_key('Items')):
                 result = result['Items']
@@ -184,10 +193,11 @@ class LibrarySync():
         trailerUrl = None
         if MBitem.get("LocalTrailerCount") != None and MBitem.get("LocalTrailerCount") > 0:
             itemTrailerUrl = "http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + MBitem.get("Id") + "/LocalTrailers?format=json"
-            jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=True, popup=0 ) 
-            trailerItem = json.loads(jsonData)
-            trailerUrl = "plugin://plugin.video.mb3sync/?id=" + trailerItem[0].get("Id") + '&mode=play'
-            self.updateProperty(KodiItem,"trailer",trailerUrl,"movie")
+            jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=True, popup=0 )
+            if(jsonData != ""):
+                trailerItem = json.loads(jsonData)
+                trailerUrl = "plugin://plugin.video.mb3sync/?id=" + trailerItem[0].get("Id") + '&mode=play'
+                self.updateProperty(KodiItem,"trailer",trailerUrl,"movie")
 
         #update strm file - TODO: only update strm when path has changed
         self.createSTRM(MBitem["Id"])
