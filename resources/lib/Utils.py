@@ -72,52 +72,52 @@ def checkKodiSources():
     
     rebootRequired = False
     if not "mediabrowser_movies" in allKodiSources:
-        addKodiSource("mediabrowser_movies",movieLibrary,"movies")
-        rebootRequired = True
+        rebootRequired = addKodiSource("mediabrowser_movies",movieLibrary,"movies")
     if not "mediabrowser_tvshows" in allKodiSources:
-        addKodiSource("mediabrowser_tvshows",tvLibrary,"tvshows")
-        rebootRequired = True        
-    
+        rebootRequired = addKodiSource("mediabrowser_tvshows",tvLibrary,"tvshows")        
     if rebootRequired:
-        ret = xbmcgui.Dialog().yesno(heading="MediaBrowser Sync service", line1="A restart of Kodi is needed to apply changes. Do you want to reboot now ?")
+        ret = xbmcgui.Dialog().yesno(heading="MediaBrowser Sync service", line1="A restart of Kodi is needed to apply changes. After the reboot you need to manually assign the MediaBrowser sources to your library. See documentation. Do you want to reboot now ?")
         if ret:
             xbmc.executebuiltin("RestartApp")
         
 def addKodiSource(name, path, type):
-    userDataPath = xbmc.translatePath( "special://profile" )
-    sourcesFile = os.path.join(userDataPath,'sources.xml')
-    
-    print "####parsing sources file #####" + sourcesFile
-    
-    tree = ET.ElementTree(file=sourcesFile)
-    root = tree.getroot()
-
-    videosources = root.find("video")
-    
-    #remove any existing entries
-    allsources = videosources.findall("source")
-    if allsources != None:
-        for source in allsources:
-            if source.find("name").text == name:
-                videosources.remove(source)
-           
-    # add new source
-    source = SubElement(videosources,'source')
-    SubElement(source, "name").text = name
-    SubElement(source, "path").text = path
-    tree.write(sourcesFile)
-    
-    #add new source to database
+    #add new source to database, common way is to add it directly to the Kodi DB. Fallback to adding it to the sources.xml
+    #return boolean wether a manual reboot is required.
+    #todo: Do feature request with Kodi team to get support for adding a source by the json API
     dbPath = xbmc.translatePath("special://userdata/Database/MyVideos90.db")
-    connection = sqlite3.connect(dbPath)
-    cursor = connection.cursor( )
-    cursor.execute("select coalesce(max(idPath),0) as pathId from path")
-    pathId =  cursor.fetchone()[0]
-    pathId = pathId + 1
-    pathsql="insert into path(idPath, strPath, strContent, strScraper, strHash, scanRecursive) values(?, ?, ?, ?, ?, ?)"
-    cursor.execute(pathsql, (pathId,path + "\\",type,"metadata.local",None,2147483647))
-    connection.commit()
-    cursor.close()
+    if xbmcvfs.exists(dbPath):
+        connection = sqlite3.connect(dbPath)
+        cursor = connection.cursor( )
+        cursor.execute("select coalesce(max(idPath),0) as pathId from path")
+        pathId =  cursor.fetchone()[0]
+        pathId = pathId + 1
+        pathsql="insert into path(idPath, strPath, strContent, strScraper, strHash, scanRecursive) values(?, ?, ?, ?, ?, ?)"
+        cursor.execute(pathsql, (pathId,path + "\\",type,"metadata.local",None,2147483647))
+        connection.commit()
+        cursor.close()
+        
+        return False
+    else:
+        # if adding to the database failed, manually add it to sources.xml
+        sourcesFile = xbmc.translatePath( "special://profile/sources.xml" )
+        if xbmcvfs.exists(sourcesFile):
+            tree = ET.ElementTree(file=sourcesFile)
+            root = tree.getroot()
+            videosources = root.find("video")
+            #remove any existing entries for this path
+            allsources = videosources.findall("source")
+            if allsources != None:
+                for source in allsources:
+                    if source.find("name").text == name:
+                        videosources.remove(source)
+            # add the new source
+            source = SubElement(videosources,'source')
+            SubElement(source, "name").text = name
+            SubElement(source, "path").text = path
+            tree.write(sourcesFile)
+        return True
+        
+        
 
 def checkAuthentication():
     #check authentication
@@ -143,7 +143,6 @@ def doKodiCleanup():
             movies = result['movies']
             for movie in movies:
                 if (xbmcvfs.exists(movie["file"]) == False) or ("plugin.video.xbmb3c" in movie["file"]):
-                    print "deleting --> " + movie["file"]
                     xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveMovie", "params": { "movieid": %i}, "id": 1 }' %(movie["movieid"]))
    
     
@@ -169,7 +168,6 @@ def get_params( paramstring ):
                         param[splitparams[0]]=splitparams[1]
                 elif (len(splitparams))==3:
                         param[splitparams[0]]=splitparams[1]+"="+splitparams[2]
-    xbmc.log("XBMB3C -> Detected parameters: " + str(param))
     return param
 
  
