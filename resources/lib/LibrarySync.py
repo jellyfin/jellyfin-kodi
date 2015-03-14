@@ -52,6 +52,21 @@ class LibrarySync():
                     updateNeeded = True
                 else:
                     self.updateMovieToKodiLibrary(item, kodiItem)
+        
+        allTVShows = list()
+        tvShowData = self.getTVShows(True)
+        
+        if (tvShowData == None):
+            return
+        for item in tvShowData:
+            if item.get('IsFolder'):
+                kodiItem = self.getKodiTVShow(item["Id"])
+                allTVShows.append(item["Id"])
+                if kodiItem == None:
+                    self.addTVShowToKodiLibrary(item)
+                    updateNeeded = True
+                else:
+                    self.updateTVShowToKodiLibrary(item, kodiItem)
                 
         cleanNeeded = False
         # process deletes
@@ -62,6 +77,13 @@ class LibrarySync():
                 self.deleteMovieFromKodiLibrary(dir)
                 cleanneeded = True
         
+        allLocaldirs, filesTVShows = xbmcvfs.listdir(tvLibrary)
+        allMB3TVShows = set(allTVShows)
+        for dir in allLocaldirs:
+            if not dir in allMB3TVShows:
+                self.deleteTVShowFromKodiLibrary(dir)
+                cleanneeded = True
+                
         if cleanNeeded:
             xbmc.executebuiltin("CleanLibrary(video)")
         
@@ -116,6 +138,30 @@ class LibrarySync():
             url = server + '/mediabrowser/Users/' + userid + '/Items?&SortBy=SortName&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Movie&format=json&ImageTypeLimit=1'
         else:
             url = server + '/mediabrowser/Users/' + userid + '/Items?&SortBy=SortName&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Movie&format=json&ImageTypeLimit=1'
+        
+        jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
+        if jsonData != None and jsonData != "":
+            result = json.loads(jsonData)
+            if(result.has_key('Items')):
+                result = result['Items']
+
+        return result
+    
+    def getTVShows(self, fullinfo = False):
+        result = None
+        
+        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port
+        
+        downloadUtils = DownloadUtils()
+        userid = downloadUtils.getUserId()   
+        
+        if fullinfo:
+            url = server + '/mediabrowser/Users/' + userid + '/Items?&SortBy=SortName&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1'
+        else:
+            url = server + '/mediabrowser/Users/' + userid + '/Items?&SortBy=SortName&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1'
         
         jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
         if jsonData != None and jsonData != "":
@@ -235,6 +281,76 @@ class LibrarySync():
         if KodiItem['playcount'] != int(userData.get("PlayCount")):
             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "playcount": %i}, "id": 1 }' %(KodiItem['movieid'], int(userData.get("PlayCount"))))         
     
+    def updateTVShowToKodiLibrary( self, MBitem, KodiItem ):
+        
+        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port        
+        downloadUtils = DownloadUtils()
+        
+        timeInfo = API().getTimeInfo(MBitem)
+        userData=API().getUserData(MBitem)
+        people = API().getPeople(MBitem)
+        genre = API().getGenre(MBitem)
+        studios = API().getStudios(MBitem)
+        mediaStreams=API().getMediaStreams(MBitem)
+        
+        thumbPath = API().getArtwork(MBitem, "Primary")
+        
+        utils.logMsg("Updating item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
+        
+        #update artwork
+        self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "poster"),"tvshow")
+        self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"tvshow")
+        self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"tvshow")
+        self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"tvshow")
+        self.updateArtWork(KodiItem,"landscape", API().getArtwork(MBitem, "Thumb"),"tvshow")
+        self.updateArtWork(KodiItem,"discart", API().getArtwork(MBitem, "Disc"),"tvshow")
+        self.updateArtWork(KodiItem,"fanart", API().getArtwork(MBitem, "Backdrop"),"tvshow")
+        
+        #update common properties
+        duration = (int(timeInfo.get('Duration'))*60)
+        self.updateProperty(KodiItem,"runtime",duration,"tvshow")
+        self.updateProperty(KodiItem,"year",MBitem.get("ProductionYear"),"tvshow")
+        self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"tvshow")
+        
+        if MBitem.get("CriticRating") != None:
+            self.updateProperty(KodiItem,"rating",int(MBitem.get("CriticRating"))/10,"tvshow")
+        
+        self.updateProperty(KodiItem,"plotoutline",MBitem.get("ShortOverview"),"tvshow")
+        self.updateProperty(KodiItem,"sorttitle",MBitem.get("SortName"),"tvshow")
+        
+        if MBitem.get("ProviderIds") != None:
+            if MBitem.get("ProviderIds").get("Imdb") != None:
+                self.updateProperty(KodiItem,"imdbnumber",MBitem.get("ProviderIds").get("Imdb"),"tvshow")
+        
+        # FIXME --> Taglines not returned by MB3 server !?
+        if MBitem.get("TagLines") != None:
+            self.updateProperty(KodiItem,"tagline",MBitem.get("TagLines")[0],"tvshow")      
+        
+        self.updatePropertyArray(KodiItem,"writer",people.get("Writer"),"tvshow")
+        self.updatePropertyArray(KodiItem,"director",people.get("Director"),"tvshow")
+        self.updatePropertyArray(KodiItem,"genre",MBitem.get("Genres"),"tvshow")
+        self.updatePropertyArray(KodiItem,"studio",studios,"tvshow")
+        
+        # FIXME --> ProductionLocations not returned by MB3 server !?
+        self.updatePropertyArray(KodiItem,"country",MBitem.get("ProductionLocations"),"tvshow")
+
+        #update strm file - TODO: only update strm when path has changed
+        self.createSTRM(MBitem["Id"])
+        
+        #add actors
+        self.AddActorsToMedia(KodiItem,MBitem.get("People"),"tvshow")
+        
+        #create nfo file if not exists
+        nfoFile = os.path.join(tvLibrary,MBitem["Id"],MBitem["Id"] + ".nfo")
+        if not xbmcvfs.exists(nfoFile):
+            self.createTVNFO(MBitem)
+        
+        #update playcounts
+        if KodiItem['playcount'] != int(userData.get("PlayCount")):
+            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "playcount": %i}, "id": 1 }' %(KodiItem['tvshowid'], int(userData.get("PlayCount"))))         
 
     # adds or updates artwork to the given Kodi file in database
     def updateArtWork(self,KodiItem,artWorkName,artworkValue, fileType="movie"):
@@ -378,6 +494,31 @@ class LibrarySync():
         
         path = os.path.join(movieLibrary,id)
         xbmcvfs.rmdir(path)
+        
+    def addTVShowToKodiLibrary( self, item ):
+        itemPath = os.path.join(tvLibrary,item["Id"])
+        strmFile = os.path.join(itemPath,item["Id"] + ".strm")
+
+        utils.logMsg("Adding item to Kodi Library",item["Id"] + " - " + item["Name"])
+        
+        #create path if not exists
+        if not xbmcvfs.exists(itemPath):
+            xbmcvfs.mkdir(itemPath)
+            
+        #create nfo file
+        self.createTVNFO(item)
+        
+        # create strm file
+        self.createSTRM(item["Id"])
+        
+    def deleteTVShowFromKodiLibrary(self, id ):
+        kodiItem = self.getKodiTVShow(id)
+        utils.logMsg("deleting tvshow from Kodi library",id)
+        if kodiItem != None:
+            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveTVShow", "params": { "tvshowid": %i}, "id": 1 }' %(kodiItem["tvshowid"]))
+        
+        path = os.path.join(tvLibrary,id)
+        xbmcvfs.rmdir(path)
     
     def setKodiResumePoint(self, id, resume_seconds, total_seconds):
         #use sqlite to set the resume point while json api doesn't support this yet
@@ -459,3 +600,16 @@ class LibrarySync():
                 movie = movies[0]
 
         return movie
+    
+    def getKodiTVShow(self, id):
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties" : ["art", "rating", "thumbnail", "resume", "runtime", "year", "genre", "cast", "trailer", "country", "studio", "set", "imdbnumber", "mpaa", "tagline", "plotoutline","plot", "sorttitle", "director", "writer", "playcount", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}')
+        jsonobject = json.loads(json_response.decode('utf-8','replace'))  
+        tvshow = None
+       
+        if(jsonobject.has_key('result')):
+            result = jsonobject['result']
+            if(result.has_key('tvshows')):
+                tvshows = result['tvshows']
+                tvshow = tvshows[0]
+
+        return tvshow
