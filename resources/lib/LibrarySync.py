@@ -168,17 +168,14 @@ class LibrarySync():
             trailerItem = json.loads(jsonData)
             trailerUrl = "plugin://plugin.video.mb3sync/?id=" + trailerItem[0].get("Id") + '&mode=play'
             self.updateProperty(KodiItem,"trailer",trailerUrl,"movie")
-        
-       
-        #update genre
-        if KodiItem['genre'] != MBitem.get("Genres") and MBitem.get("Genres") != None:
-            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "genre": %s}, "id": 1 }' %(KodiItem['movieid'], "\"{koekoek,pannekoek} \""))
-        
+            
+        #update genres
+        self.updateGenres(KodiItem,MBitem.get("Genres"),"movie")
         
         #update strm file - TODO: only update strm when path has changed
         self.createSTRM(MBitem["Id"])
         
-        #update nfo file - needed for testing
+        #create nfo file if not exists
         nfoFile = os.path.join(movieLibrary,MBitem["Id"],MBitem["Id"] + ".nfo")
         if not xbmcvfs.exists(nfoFile):
             self.createNFO(MBitem)
@@ -217,13 +214,36 @@ class LibrarySync():
         else:
             method = "VideoLibrary.SetMovieDetails"
 
-        if not propertyValue in KodiItem[propertyName]:
+        if propertyValue != KodiItem[propertyName]:
             if type(propertyValue) is int:
                 xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "%s", "params": { "movieid": %i, "%s": %i}, "id": 1 }' %(method,KodiItem['movieid'], propertyName, propertyValue))
             else:
                 xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "%s", "params": { "movieid": %i, "%s": "%s"}, "id": 1 }' %(method,KodiItem['movieid'], propertyName, propertyValue))
 
-    
+    # adds or updates the genres on the videofile in Kodi database
+    def updateGenres(self,KodiItem,genreCollection,fileType="movie"):
+        if fileType == "tvshow":
+            method = "VideoLibrary.SetTVShowDetails"
+        elif fileType == "episode":
+            method = "VideoLibrary.SetEpisodeDetails"
+        elif fileType == "musicvideo":
+            method = "VideoLibrary.SetMusicVideoDetails"
+        else:
+            method = "VideoLibrary.SetMovieDetails"
+        
+        pendingChanges = False
+        if genreCollection != None:
+            currentgenres = set(KodiItem["genre"])
+            genrestring = ""
+            for genre in genreCollection:
+                if not genre in currentgenres:
+                    pendingChanges = True
+                    json_genres = json.dumps(genreCollection)
+            
+            if pendingChanges:
+                print genreCollection
+                xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "%s", "params": { "movieid": %i, "genre": %s}, "id": 1 }' %(method,KodiItem['movieid'],json_genres))    
+            
     def createSTRM(self,id):
         
         itemPath = os.path.join(movieLibrary,id)
