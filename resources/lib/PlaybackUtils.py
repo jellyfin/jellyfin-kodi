@@ -57,7 +57,7 @@ class PlaybackUtils():
         
         playurl = PlayUtils().getPlayUrl(server, id, result)
         xbmc.log("Play URL: " + playurl)    
-        thumbPath = downloadUtils.getArtwork(result, "Primary")
+        thumbPath = API.getArtwork(result, "Primary")
         listItem = xbmcgui.ListItem(path=playurl, iconImage=thumbPath, thumbnailImage=thumbPath)
 
         self.setListItemProps(server, id, listItem, result)    
@@ -129,15 +129,15 @@ class PlaybackUtils():
             eppNum = result.get("IndexNumber")
             tvshowTitle = result.get("SeriesName")
             
-        self.setArt(listItem,'poster', downloadUtils.getArtwork(result, "Primary"))
-        self.setArt(listItem,'tvshow.poster', downloadUtils.getArtwork(result, "SeriesPrimary"))
-        self.setArt(listItem,'clearart', downloadUtils.getArtwork(result, "Art"))
-        self.setArt(listItem,'tvshow.clearart', downloadUtils.getArtwork(result, "Art"))    
-        self.setArt(listItem,'clearlogo', downloadUtils.getArtwork(result, "Logo"))
-        self.setArt(listItem,'tvshow.clearlogo', downloadUtils.getArtwork(result, "Logo"))    
-        self.setArt(listItem,'discart', downloadUtils.getArtwork(result, "Disc"))  
-        self.setArt(listItem,'fanart_image', downloadUtils.getArtwork(result, "Backdrop"))
-        self.setArt(listItem,'landscape', downloadUtils.getArtwork(result, "Thumb"))   
+        self.setArt(listItem,'poster', API.getArtwork(result, "Primary"))
+        self.setArt(listItem,'tvshow.poster', API.getArtwork(result, "SeriesPrimary"))
+        self.setArt(listItem,'clearart', API.getArtwork(result, "Art"))
+        self.setArt(listItem,'tvshow.clearart', API.getArtwork(result, "Art"))    
+        self.setArt(listItem,'clearlogo', API.getArtwork(result, "Logo"))
+        self.setArt(listItem,'tvshow.clearlogo', API.getArtwork(result, "Logo"))    
+        self.setArt(listItem,'discart', API.getArtwork(result, "Disc"))  
+        self.setArt(listItem,'fanart_image', API.getArtwork(result, "Backdrop"))
+        self.setArt(listItem,'landscape', API.getArtwork(result, "Thumb"))   
         
         listItem.setProperty('IsPlayable', 'true')
         listItem.setProperty('IsFolder', 'false')
