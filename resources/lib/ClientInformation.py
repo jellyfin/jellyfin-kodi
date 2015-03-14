@@ -2,7 +2,8 @@ from uuid import uuid4 as uuid4
 import xbmc
 import xbmcaddon
 import xbmcgui
-
+import os
+from Lock import Lock
 
 class ClientInformation():
 
@@ -11,21 +12,39 @@ class ClientInformation():
         WINDOW = xbmcgui.Window( 10000 )
         
         clientId = WINDOW.getProperty("client_id")
-        self.addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
-        if(clientId == None or clientId == ""):
-            xbmc.log("CLIENT_ID - > No Client ID in WINDOW")
-            clientId = self.addonSettings.getSetting('client_id')
+        if(clientId != None and clientId != ""):
+            return clientId
+            
+        # we need to load and or generate a client machine id    
+        __addon__ = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        __addondir__ = xbmc.translatePath( __addon__.getAddonInfo('path'))
+        machine_guid_lock_path = os.path.join(__addondir__, "machine_guid.lock")
+        machine_guid_path = os.path.join(__addondir__, "machine_guid")
+        clientId = ""
         
-            if(clientId == None or clientId == ""):
-                xbmc.log("CLIENT_ID - > No Client ID in SETTINGS")
-                uuid = uuid4()
-                clientId = str("%012X" % uuid)
+        try:
+            lock = Lock(machine_guid_lock_path)
+            locked = lock.acquire()
+            
+            if(locked == True):
+            
+                fd = os.open(machine_guid_path, os.O_CREAT|os.O_RDWR)
+                clientId = os.read(fd, 256)
+                
+                if(len(clientId) == 0):
+                    uuid = uuid4()
+                    clientId = str("%012X" % uuid)
+                    xbmc.log("CLIENT_ID - > Client ID saved to FILE : " + clientId)                    
+                    os.write(fd, clientId)
+                    os.fsync(fd)
+                    
+                os.close(fd)
+                
+                xbmc.log("CLIENT_ID - > Client ID saved to WINDOW : " + clientId)
                 WINDOW.setProperty("client_id", clientId)
-                self.addonSettings.setSetting('client_id', clientId)
-                xbmc.log("CLIENT_ID - > New Client ID : " + clientId)
-            else:
-                WINDOW.setProperty('client_id', clientId)
-                xbmc.log("CLIENT_ID - > Client ID saved to WINDOW from Settings : " + clientId)
+                 
+        finally: 
+            lock.release()
                 
         return clientId
         

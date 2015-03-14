@@ -102,12 +102,10 @@ class ConnectionManager():
         if(return_value > -1):
             selected_user = userList[return_value]
             self.printDebug("Setting Selected User : " + selected_user)
-            if self.addonSettings.getSetting("port") != server_port:
-                self.addonSettings.setSetting("port", server_port)
-            if self.addonSettings.getSetting("ipaddress") != server_address:        
-                self.addonSettings.setSetting("ipaddress", server_address)        
-            if self.addonSettings.getSetting("username") != selected_user:          
-                self.addonSettings.setSetting("username", selected_user)
+            self.addonSettings.setSetting("port", server_port)
+            self.addonSettings.setSetting("ipaddress", server_address)        
+            self.addonSettings.setSetting("username", selected_user)
+            downloadUtils.authenticate()
                 
     def getServerDetails(self):
 
