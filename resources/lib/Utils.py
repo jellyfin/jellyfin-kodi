@@ -53,7 +53,7 @@ def checkKodiSources():
         xbmcvfs.mkdir(dataPath)
     if not xbmcvfs.exists(movieLibrary + os.sep):
         xbmcvfs.mkdir(movieLibrary)
-        rebootRequired = addKodiSource("mediabrowser_movies",movieLibrary,"movies")        
+        rebootRequired = addKodiSource("mediabrowser_movies",movieLibrary,"movies")
     if not xbmcvfs.exists(tvLibrary + os.sep):
         xbmcvfs.mkdir(tvLibrary)
         rebootRequired = addKodiSource("mediabrowser_tvshows",tvLibrary,"tvshows")
@@ -86,31 +86,33 @@ def addKodiSource(name, path, type):
     else:
         error = True
     
-    if error:    
-        # if adding to the database failed, manually add it to sources.xml
-        sourcesFile = xbmc.translatePath( "special://profile/sources.xml" )
-        if xbmcvfs.exists(sourcesFile):
-            tree = ET.ElementTree(file=sourcesFile)
-            root = tree.getroot()
-            videosources = root.find("video")
-            #remove any existing entries for this path
-            allsources = videosources.findall("source")
-            if allsources != None:
-                for source in allsources:
-                    if source.find("name").text == name:
-                        videosources.remove(source)
-            # add the new source
-            source = SubElement(videosources,'source')
-            SubElement(source, "name").text = name
-            SubElement(source, "path").text = path
-            tree.write(sourcesFile)
+    # add it to sources.xml
+    sourcesFile = xbmc.translatePath( "special://profile/sources.xml" )
+    
+    # add an emply sources file to work with
+    if xbmcvfs.exists(sourcesFile) == False:
+        sources = Element("sources")
+        video = SubElement(sources, "video")
+        ET.ElementTree(sources).write(sourcesFile)
+    
+    if xbmcvfs.exists(sourcesFile):
+        tree = ET.ElementTree(file=sourcesFile)
+        root = tree.getroot()
+        videosources = root.find("video")
+        #remove any existing entries for this path
+        allsources = videosources.findall("source")
+        if allsources != None:
+            for source in allsources:
+                if source.find("name").text == name:
+                    videosources.remove(source)
+        # add the new source
+        source = SubElement(videosources,'source')
+        SubElement(source, "name").text = name
+        SubElement(source, "path").text = path
+        tree.write(sourcesFile)
         #return bool that reboot is needed and manual add of path to kodi
-        return True
-    else:
-        #return false that no reboot is needed
-        return False
-        
-        
+        #return True
+       
 
 def checkAuthentication():
     #check authentication
