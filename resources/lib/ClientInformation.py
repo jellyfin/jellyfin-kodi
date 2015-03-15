@@ -1,12 +1,36 @@
-from uuid import uuid4 as uuid4
+################################################################
+#       CLIENTINFORMATION: centralized client data
+#       -------------------------------
+#       addonId, addon version, clientId, platform
+################################################################
+#       USER: centralized Userdata
+#       -------------------------------
+#       username, userId, token, server, Loglvl
+################################################################
+
 import xbmc
 import xbmcaddon
 import xbmcgui
 import os
+from uuid import uuid4 as uuid4
 from Lock import Lock
 
 class ClientInformation():
 
+    def __init__(self):
+        addonId = self.getAddonId()
+        self.addon = xbmcaddon.Addon(id=addonId)
+    
+    def getAddonId(self):
+        # To use when declaring xbmcaddon.Addon(id=addonId)
+        addonId = "plugin.video.mb3sync"
+        return addonId
+    
+    def getVersion(self):
+        
+        version = self.addon.getAddonInfo('version')
+        return version
+    
     def getMachineId(self):
     
         WINDOW = xbmcgui.Window( 10000 )
@@ -16,7 +40,7 @@ class ClientInformation():
             return clientId
             
         # we need to load and or generate a client machine id    
-        __addon__ = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        __addon__ = self.addon
         __addondir__ = xbmc.translatePath( __addon__.getAddonInfo('path'))
         machine_guid_lock_path = os.path.join(__addondir__, "machine_guid.lock")
         machine_guid_path = os.path.join(__addondir__, "machine_guid")
@@ -48,11 +72,6 @@ class ClientInformation():
                 
         return clientId
         
-    def getVersion(self):
-        version = xbmcaddon.Addon(id="plugin.video.mb3sync").getAddonInfo("version")
-        return version
-        
-        
     def getPlatform(self):
 
         if xbmc.getCondVisibility('system.platform.osx'):
@@ -69,3 +88,36 @@ class ClientInformation():
             return "Linux/Android"
 
         return "Unknown"
+
+
+class User(ClientInformation):
+    
+    def __init__(self):
+        addonId = self.getAddonId()
+        self.addon = xbmcaddon.Addon(id=addonId)
+    
+    def getUsername(self):
+        
+        username = self.addon.getSetting('username')
+        return username
+    
+    def getUserId(self):
+        
+        userId = self.addon.getSetting('userId')
+        return userId
+    
+    def getToken(self):
+        
+        token = self.addon.getSetting('token')
+        return token
+    
+    def getServer(self):
+        
+        host = self.addon.getSetting('ipaddress')
+        port = self.addon.getSetting('port')
+        return host + ":" + port
+    
+    def getLoglvl(self):
+        
+        level = self.addon.getSetting('loglevel')
+        return level
