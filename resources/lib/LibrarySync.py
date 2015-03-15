@@ -37,6 +37,7 @@ class LibrarySync():
         WINDOW.setProperty("librarysync", "busy")       
         updateNeeded = False    
         
+        #process full movies sync
         allMovies = list()
         movieData = self.getMovies(True)
         
@@ -53,7 +54,9 @@ class LibrarySync():
                 else:
                     self.updateMovieToKodiLibrary(item, kodiItem)
         
+        #process full tv shows sync
         allTVShows = list()
+        allEpisodes = list()
         tvShowData = self.getTVShows(True)
         
         if (tvShowData == None):
@@ -68,8 +71,41 @@ class LibrarySync():
                 else:
                     self.updateTVShowToKodiLibrary(item, kodiItem)
                 
-        cleanNeeded = False
+        
+        #process episodes (will only be possible when tv show is scanned to library)   
+        #TODO --> maybe pull full info only when needed ?
+        allEpisodes = list()
+        
+        for tvshow in allTVShows:
+            
+            episodeData = self.getEpisodes(tvshow,True)
+            kodiEpisodes = self.getKodiEpisodes(tvshow)
+
+            #we have to compare the lists somehow
+            for item in episodeData:
+                xbmc.sleep(500) # sleep to not overload system --> can this be replaced by moving the sync to a different thread ?
+                comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
+                matchFound = False
+                if kodiEpisodes != None:
+                    for KodiItem in kodiEpisodes:
+                        
+                        allEpisodes.append(KodiItem["episodeid"])
+                        comparestring2 = str(KodiItem["season"]) + "-" + str(KodiItem["episode"])
+                        if comparestring1 == comparestring2:
+                            #match found - update episode
+                            self.updateEpisodeToKodiLibrary(item,KodiItem,tvshow)
+                            matchFound = True
+
+                if not matchFound:
+                    #no match so we have to create it
+                    print "episode not found...creating it: "
+                    self.addEpisodeToKodiLibrary(item,tvshow)
+                    updateNeeded = True
+
+        
         # process deletes
+        # TODO --> process deletes for episodes !!!
+        cleanNeeded = False
         allLocaldirs, filesMovies = xbmcvfs.listdir(movieLibrary)
         allMB3Movies = set(allMovies)
         for dir in allLocaldirs:
@@ -99,8 +135,9 @@ class LibrarySync():
         
         WINDOW = xbmcgui.Window( 10000 )
         WINDOW.setProperty("librarysync", "busy")
-
-        movieData = self.getMovies(True)
+        
+        #process movies
+        movieData = self.getMovies(False)
         if(movieData == None):
             return False    
         
@@ -117,8 +154,34 @@ class LibrarySync():
                     resume = int(round(float(timeInfo.get("ResumeTime"))))*60
                     total = int(round(float(timeInfo.get("TotalTime"))))*60
                     if kodiresume != resume:
-                        self.setKodiResumePoint(kodiItem['movieid'],resume,total)
+                        self.setKodiResumePoint(kodiItem['movieid'],resume,total,"movie")
+        
+        #process Tv shows
+        tvshowData = self.getTVShows(False)
+        if (tvshowData == None):
+            return False    
+        
+        for item in tvshowData:
+            episodeData = self.getEpisodes(item["Id"], False)
             
+            if (episodeData == None):
+                return False    
+        
+            for episode in episodeData:
+                kodiItem = self.getKodiEpisodeByMbItem(episode)
+                userData=API().getUserData(episode)
+                timeInfo = API().getTimeInfo(episode)
+                if kodiItem != None:
+                    if kodiItem['playcount'] != int(userData.get("PlayCount")):
+                        xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "playcount": %i}, "id": 1 }' %(kodiItem['episodeid'], int(userData.get("PlayCount"))))
+              
+                    kodiresume = int(round(kodiItem['resume'].get("position")))
+                    resume = int(round(float(timeInfo.get("ResumeTime"))))*60
+                    total = int(round(float(timeInfo.get("TotalTime"))))*60
+                    if kodiresume != resume:
+                        self.setKodiResumePoint(kodiItem['episodeid'],resume,total,"episode")
+
+        
         WINDOW.clearProperty("librarysync")
         
         return True
@@ -185,14 +248,14 @@ class LibrarySync():
         if fullinfo:
             url = server + '/mediabrowser/Users/' + userid + '/Items?ParentId=' + showId + '&SortBy=SortName&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1'
         else:
-            url = server + '/mediabrowser/Users/' + userid + '/Items?ParentId=' + showId + '&SortBy=SortName&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1'
+            url = server + '/mediabrowser/Users/' + userid + '/Items?ParentId=' + showId + '&SortBy=SortName&Fields=Name,SortName,CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1'
         
         jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
+        
         if jsonData != None and jsonData != "":
             result = json.loads(jsonData)
             if(result.has_key('Items')):
                 result = result['Items']
-
         return result
     
     def updatePlayCountFromKodi(self, id, playcount=0):
@@ -205,6 +268,7 @@ class LibrarySync():
         downloadUtils = DownloadUtils()
         userid = downloadUtils.getUserId()           
         
+        # TODO --> extend support for episodes
         json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovieDetails", "params": { "movieid": ' + str(id) + ', "properties" : ["playcount", "file"] }, "id": "1"}')
         if json_response != None:
             jsonobject = json.loads(json_response.decode('utf-8','replace'))  
@@ -291,16 +355,11 @@ class LibrarySync():
                 trailerUrl = "plugin://plugin.video.mb3sync/?id=" + trailerItem[0].get("Id") + '&mode=play'
                 self.updateProperty(KodiItem,"trailer",trailerUrl,"movie")
 
-        #update strm file - TODO: only update strm when path has changed
-        self.createSTRM(MBitem["Id"])
-        
         #add actors
         self.AddActorsToMedia(KodiItem,MBitem.get("People"),"movie")
         
-        #create nfo file if not exists
-        nfoFile = os.path.join(movieLibrary,MBitem["Id"],MBitem["Id"] + ".nfo")
-        if not xbmcvfs.exists(nfoFile):
-            self.createNFO(MBitem)
+        self.createSTRM(MBitem)
+        self.createNFO(MBitem)
         
         #update playcounts
         if KodiItem['playcount'] != int(userData.get("PlayCount")):
@@ -357,21 +416,62 @@ class LibrarySync():
         
         #add actors
         self.AddActorsToMedia(KodiItem,MBitem.get("People"),"tvshow")
+
+        self.createNFO(MBitem)
+                    
+    def updateEpisodeToKodiLibrary( self, MBitem, KodiItem, tvshowId ):
         
-        #create nfo file if not exists
-        nfoFile = os.path.join(tvLibrary,MBitem["Id"],"tvshow.nfo")
-        if not xbmcvfs.exists(nfoFile):
-            self.createNFO(MBitem)
+        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port        
+        downloadUtils = DownloadUtils()
+        userid = downloadUtils.getUserId()
         
-        episodes = self.getEpisodes(MBitem["Id"])
+        timeInfo = API().getTimeInfo(MBitem)
+        people = API().getPeople(MBitem)
+        genre = API().getGenre(MBitem)
+        studios = API().getStudios(MBitem)
+        mediaStreams=API().getMediaStreams(MBitem)
+        userData=API().getUserData(MBitem)
         
+        thumbPath = API().getArtwork(MBitem, "Primary")
+        
+        utils.logMsg("Updating item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
+        
+        #update artwork
+        self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "poster"),"episode")
+        self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"episode")
+        self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"episode")
+        self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"episode")
+        self.updateArtWork(KodiItem,"landscape", API().getArtwork(MBitem, "Thumb"),"episode")
+        self.updateArtWork(KodiItem,"discart", API().getArtwork(MBitem, "Disc"),"episode")
+        self.updateArtWork(KodiItem,"fanart", API().getArtwork(MBitem, "Backdrop"),"episode")
+        
+        #update common properties
+        duration = (int(timeInfo.get('Duration'))*60)
+        self.updateProperty(KodiItem,"runtime",duration,"episode")
+        self.updateProperty(KodiItem,"firstaired",MBitem.get("ProductionYear"),"episode")
+        
+        if MBitem.get("CriticRating") != None:
+            self.updateProperty(KodiItem,"rating",int(MBitem.get("CriticRating"))/10,"episode")
+   
+        
+        self.updatePropertyArray(KodiItem,"writer",people.get("Writer"),"episode")
+
+        #add actors
+        self.AddActorsToMedia(KodiItem,MBitem.get("People"),"episode")
+        
+        self.createNFO(MBitem, tvshowId)
+        self.createSTRM(MBitem, tvshowId)
         
         #update playcounts
         if KodiItem['playcount'] != int(userData.get("PlayCount")):
-            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "playcount": %i}, "id": 1 }' %(KodiItem['tvshowid'], int(userData.get("PlayCount"))))         
-
+            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "playcount": %i}, "id": 1 }' %(KodiItem['episodeid'], int(userData.get("PlayCount"))))         
+    
+    
     # adds or updates artwork to the given Kodi file in database
-    def updateArtWork(self,KodiItem,artWorkName,artworkValue, fileType="movie"):
+    def updateArtWork(self,KodiItem,artWorkName,artworkValue, fileType):
         if fileType == "tvshow":
             id = KodiItem['tvshowid']
             jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "%s": "%s" }}, "id": 1 }'
@@ -394,7 +494,7 @@ class LibrarySync():
             xbmc.executeJSONRPC(jsoncommand %(id, artWorkName, artworkValue))
     
     # adds or updates the given property on the videofile in Kodi database
-    def updateProperty(self,KodiItem,propertyName,propertyValue,fileType="movie"):
+    def updateProperty(self,KodiItem,propertyName,propertyValue,fileType):
         if fileType == "tvshow":
             id = KodiItem['tvshowid']
             jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "%s": %i}, "id": 1 }'
@@ -420,7 +520,7 @@ class LibrarySync():
                     xbmc.executeJSONRPC(jsoncommand_s %(id, propertyName, propertyValue.encode('utf-8')))
 
     # adds or updates the property-array on the videofile in Kodi database
-    def updatePropertyArray(self,KodiItem,propertyName,propertyCollection,fileType="movie"):
+    def updatePropertyArray(self,KodiItem,propertyName,propertyCollection,fileType):
         if fileType == "tvshow":
             id = KodiItem['tvshowid']   
             jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "%s": %s}, "id": 1 }'
@@ -446,21 +546,36 @@ class LibrarySync():
             if pendingChanges:
                 xbmc.executeJSONRPC(jsoncommand %(id,propertyName,json_array))    
             
-    def createSTRM(self,id):
+    def createSTRM(self,item,parentId=None):
         
-        itemPath = os.path.join(movieLibrary,id)
-        if not xbmcvfs.exists(itemPath):
-            xbmcvfs.mkdir(itemPath)
-        
-        strmFile = os.path.join(itemPath,id + ".strm")
-        text_file = open(strmFile, "w")
-        
-        playUrl = "plugin://plugin.video.mb3sync/?id=" + id + '&mode=play'
+        item_type=str(item.get("Type")).encode('utf-8')
+        if item_type == "Movie":
+            itemPath = os.path.join(movieLibrary,item["Id"])
+            strmFile = os.path.join(itemPath,item["Id"] + ".strm")
 
-        text_file.writelines(playUrl)
-        text_file.close()
-    
-    def createNFO(self,item):
+        if item_type == "MusicVideo":
+            itemPath = os.path.join(musicVideoLibrary,item["Id"])
+            strmFile = os.path.join(itemPath,item["Id"] + ".strm")
+
+        if item_type == "Episode":
+            itemPath = os.path.join(tvLibrary,parentId)
+            if str(item.get("IndexNumber")) != None:
+                filenamestr = item.get("SeriesName").encode('utf-8') + " S" + str(item.get("ParentIndexNumber")) + "E" + str(item.get("IndexNumber")) + ".strm"
+            else:
+                filenamestr = item.get("SeriesName").encode('utf-8') + " S0E0 " + item["Name"].encode('utf-8').decode('utf-8') + ".strm"
+            strmFile = os.path.join(itemPath,filenamestr)
+        
+        if not xbmcvfs.exists(strmFile):
+            xbmcvfs.mkdir(itemPath)
+            text_file = open(strmFile, "w")
+            
+            playUrl = "plugin://plugin.video.mb3sync/?id=" + item["Id"] + '&mode=play'
+
+            text_file.writelines(playUrl)
+            text_file.close()
+
+            
+    def createNFO(self,item, parentId=None):
         timeInfo = API().getTimeInfo(item)
         userData=API().getUserData(item)
         people = API().getPeople(item)
@@ -476,44 +591,55 @@ class LibrarySync():
             nfoFile = os.path.join(itemPath,"tvshow.nfo")
             rootelement = "tvshow"
         if item_type == "Episode":
-            itemPath = os.path.join(tvLibrary,item["Id"])
-            nfoFile = os.path.join(itemPath,item["Id"] + ".nfo")
+            itemPath = os.path.join(tvLibrary,parentId)
+            if str(item.get("ParentIndexNumber")) != None:
+                filenamestr = item.get("SeriesName").encode('utf-8') + " S" + str(item.get("ParentIndexNumber")) + "E" + str(item.get("IndexNumber")) + ".nfo"
+            else:
+                filenamestr = item.get("SeriesName").encode('utf-8') + " S0E0 " + item["Name"].encode('utf-8').decode('utf-8') + ".nfo"
+            nfoFile = os.path.join(itemPath,filenamestr)
             rootelement = "episodedetails"
-               
-        root = Element(rootelement)
-        SubElement(root, "id").text = item["Id"]
-        #SubElement(root, "tag").text = # TODO --> use tags to assign user view 
-        SubElement(root, "thumb").text = API().getArtwork(item, "poster")
-        SubElement(root, "fanart").text = API().getArtwork(item, "Backdrop")
-        SubElement(root, "title").text = item["Name"].encode('utf-8').decode('utf-8')
-        SubElement(root, "originaltitle").text = item["Name"].encode('utf-8').decode('utf-8')
         
-        SubElement(root, "year").text = str(item.get("ProductionYear"))
-        SubElement(root, "runtime").text = str(timeInfo.get('Duration'))
-        
-        fileinfo = SubElement(root, "fileinfo")
-        streamdetails = SubElement(fileinfo, "streamdetails")
-        video = SubElement(streamdetails, "video")
-        SubElement(video, "duration").text = str(mediaStreams.get('totaltime'))
-        SubElement(video, "aspect").text = mediaStreams.get('aspectratio')
-        SubElement(video, "codec").text = mediaStreams.get('videocodec')
-        SubElement(video, "width").text = str(mediaStreams.get('width'))
-        SubElement(video, "height").text = str(mediaStreams.get('height'))
-        audio = SubElement(streamdetails, "audio")
-        SubElement(audio, "codec").text = mediaStreams.get('audiocodec')
-        SubElement(audio, "channels").text = mediaStreams.get('channels')
-       
-        SubElement(root, "plot").text = API().getOverview(item).decode('utf-8')
+        if not xbmcvfs.exists(nfoFile):
+            xbmcvfs.mkdir(itemPath)        
+            root = Element(rootelement)
+            SubElement(root, "id").text = item["Id"]
+            #SubElement(root, "tag").text = # TODO --> use tags to assign user view 
+            SubElement(root, "thumb").text = API().getArtwork(item, "poster")
+            SubElement(root, "fanart").text = API().getArtwork(item, "Backdrop")
+            SubElement(root, "title").text = item["Name"].encode('utf-8').decode('utf-8')
+            SubElement(root, "originaltitle").text = item["Name"].encode('utf-8').decode('utf-8')
+            
+            if item_type == "Episode":
+                SubElement(root, "season").text = str(item.get("ParentIndexNumber"))
+                SubElement(root, "episode").text = str(item.get("IndexNumber"))
+                SubElement(root, "aired").text = str(item.get("ProductionYear"))
+                
+            SubElement(root, "year").text = str(item.get("ProductionYear"))
+            SubElement(root, "runtime").text = str(timeInfo.get('Duration'))
+            
+            fileinfo = SubElement(root, "fileinfo")
+            streamdetails = SubElement(fileinfo, "streamdetails")
+            video = SubElement(streamdetails, "video")
+            SubElement(video, "duration").text = str(mediaStreams.get('totaltime'))
+            SubElement(video, "aspect").text = mediaStreams.get('aspectratio')
+            SubElement(video, "codec").text = mediaStreams.get('videocodec')
+            SubElement(video, "width").text = str(mediaStreams.get('width'))
+            SubElement(video, "height").text = str(mediaStreams.get('height'))
+            audio = SubElement(streamdetails, "audio")
+            SubElement(audio, "codec").text = mediaStreams.get('audiocodec')
+            SubElement(audio, "channels").text = mediaStreams.get('channels')
+           
+            SubElement(root, "plot").text = API().getOverview(item).decode('utf-8')
 
-        art = SubElement(root, "art")
-        SubElement(art, "poster").text = API().getArtwork(item, "poster")
-        SubElement(art, "fanart").text = API().getArtwork(item, "Backdrop")
-        SubElement(art, "landscape").text = API().getArtwork(item, "Thumb")
-        SubElement(art, "clearlogo").text = API().getArtwork(item, "Logo")
-        SubElement(art, "discart").text = API().getArtwork(item, "Disc")
-        SubElement(art, "banner").text = API().getArtwork(item, "Banner")
-        
-        ET.ElementTree(root).write(nfoFile, encoding="utf-8", xml_declaration=True)
+            art = SubElement(root, "art")
+            SubElement(art, "poster").text = API().getArtwork(item, "poster")
+            SubElement(art, "fanart").text = API().getArtwork(item, "Backdrop")
+            SubElement(art, "landscape").text = API().getArtwork(item, "Thumb")
+            SubElement(art, "clearlogo").text = API().getArtwork(item, "Logo")
+            SubElement(art, "discart").text = API().getArtwork(item, "Disc")
+            SubElement(art, "banner").text = API().getArtwork(item, "Banner")
+            
+            ET.ElementTree(root).write(nfoFile, encoding="utf-8", xml_declaration=True)
     
     def addMovieToKodiLibrary( self, item ):
         itemPath = os.path.join(movieLibrary,item["Id"])
@@ -529,8 +655,19 @@ class LibrarySync():
         self.createNFO(item)
         
         # create strm file
-        self.createSTRM(item["Id"])
+        self.createSTRM(item)
+    
+    def addEpisodeToKodiLibrary(self, item, tvshowId):
+
+        utils.logMsg("Adding item to Kodi Library",item["Id"] + " - " + item["Name"])
             
+        #create nfo file
+        self.createNFO(item, tvshowId)
+        
+        # create strm file
+        self.createSTRM(item, tvshowId)
+
+    
     def deleteMovieFromKodiLibrary(self, id ):
         kodiItem = self.getKodiMovie(id)
         utils.logMsg("deleting movie from Kodi library",id)
@@ -559,19 +696,28 @@ class LibrarySync():
         path = os.path.join(tvLibrary,id)
         xbmcvfs.rmdir(path)
     
-    def setKodiResumePoint(self, id, resume_seconds, total_seconds):
+    def setKodiResumePoint(self, id, resume_seconds, total_seconds, fileType):
         #use sqlite to set the resume point while json api doesn't support this yet
         #todo --> submit PR to kodi team to get this added to the jsonrpc api
         dbPath = xbmc.translatePath("special://userdata/Database/MyVideos90.db")
         connection = sqlite3.connect(dbPath)
         cursor = connection.cursor( )
-               
-        cursor.execute("delete FROM bookmark WHERE idFile = ?", (id,))
+        
+        if fileType == "episode":
+            cursor.execute("SELECT idFile as fileidid FROM episode WHERE idEpisode = ?",(id,))
+            result = cursor.fetchone()
+            fileid = result[0]
+        if fileType == "movie":
+            cursor.execute("SELECT idFile as fileidid FROM movie WHERE idMovie = ?",(id,))
+            result = cursor.fetchone()
+            fileid = result[0]       
+        
+        cursor.execute("delete FROM bookmark WHERE idFile = ?", (fileid,))
         cursor.execute("select coalesce(max(idBookmark),0) as bookmarkId from bookmark")
         bookmarkId =  cursor.fetchone()[0]
         bookmarkId = bookmarkId + 1
         bookmarksql="insert into bookmark(idBookmark, idFile, timeInSeconds, totalTimeInSeconds, thumbNailImage, player, playerState, type) values(?, ?, ?, ?, ?, ?, ?, ?)"
-        cursor.execute(bookmarksql, (bookmarkId,id,resume_seconds,total_seconds,None,"DVDPlayer",None,1))
+        cursor.execute(bookmarksql, (bookmarkId,fileid,resume_seconds,total_seconds,None,"DVDPlayer",None,1))
         connection.commit()
         cursor.close()
     
@@ -650,5 +796,51 @@ class LibrarySync():
             if(result.has_key('tvshows')):
                 tvshows = result['tvshows']
                 tvshow = tvshows[0]
-                print str(tvshow)
         return tvshow
+    
+    def getKodiEpisodes(self, id):
+        episodes = None
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "rating", "thumbnail", "playcount", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
+        jsonobject = json.loads(json_response.decode('utf-8','replace'))  
+        tvshow = None
+        if(jsonobject.has_key('result')):
+            result = jsonobject['result']
+            if(result.has_key('tvshows')):
+                tvshows = result['tvshows']
+                tvshow = tvshows[0]
+                
+                json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["title", "playcount", "plot", "season", "episode", "showtitle", "file", "lastplayed", "rating", "resume", "art", "streamdetails", "firstaired", "runtime", "writer", "cast", "dateadded"], "sort": {"method": "episode"}}, "id": 1}' %tvshow['tvshowid'])
+                jsonobject = json.loads(json_response.decode('utf-8','replace'))  
+                episodes = None
+                if(jsonobject.has_key('result')):
+                    result = jsonobject['result']
+                    if(result.has_key('episodes')):
+                        episodes = result['episodes']
+        return episodes
+        
+    def getKodiEpisodeByMbItem(self, MBitem):
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "is", "field": "title", "value": "' + MBitem.get("SeriesName").encode('utf-8') + '"} }, "id": "libTvShows"}')
+        jsonobject = json.loads(json_response.decode('utf-8','replace'))  
+        episode = None
+        if(jsonobject.has_key('result')):
+            result = jsonobject['result']
+            if(result.has_key('tvshows')):
+                tvshows = result['tvshows']
+                tvshow = tvshows[0]
+
+                # find the episode by combination of season and episode
+                json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["playcount","season", "resume", "episode"], "sort": {"method": "episode"}}, "id": 1}' %tvshow['tvshowid'])
+                jsonobject = json.loads(json_response.decode('utf-8','replace'))  
+                episodes = None
+                if(jsonobject.has_key('result')):
+                    result = jsonobject['result']
+                    if(result.has_key('episodes')):
+                        episodes = result['episodes']
+                        
+                        comparestring1 = str(MBitem.get("ParentIndexNumber")) + "-" + str(MBitem.get("IndexNumber"))
+                        for item in episodes:
+                            comparestring2 = str(item["season"]) + "-" + str(item["episode"])
+                            if comparestring1 == comparestring2:
+                                episode = item
+
+        return episode
