@@ -90,7 +90,7 @@ class Player( xbmc.Player ):
                 currentFile = data.get("currentfile")
                 
                 if(refresh_id != None):
-                    #todo: trigger update of single item from MB3, for now trigger full playcounts update
+                    #TODO: trigger update of single item, for now trigger full playcounts update
                     librarySync.updatePlayCounts()
                 
                 if(currentPosition != None and self.hasData(runtime)):

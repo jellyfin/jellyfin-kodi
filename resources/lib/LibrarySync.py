@@ -83,7 +83,7 @@ class LibrarySync():
 
             #we have to compare the lists somehow
             for item in episodeData:
-                xbmc.sleep(500) # sleep to not overload system --> can this be replaced by moving the sync to a different thread ?
+                xbmc.sleep(150) # sleep to not overload system --> can this be replaced by moving the sync to a different thread ?
                 comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
                 matchFound = False
                 if kodiEpisodes != None:
