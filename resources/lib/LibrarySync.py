@@ -206,6 +206,7 @@ class LibrarySync():
         host = addon.getSetting('ipaddress')
         server = host + ":" + port        
         downloadUtils = DownloadUtils()
+        userid = downloadUtils.getUserId()
         
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
@@ -430,14 +431,24 @@ class LibrarySync():
         userData=API().getUserData(item)
         people = API().getPeople(item)
         mediaStreams=API().getMediaStreams(item)
+        item_type=str(item.get("Type")).encode('utf-8')
         
-        #todo: change path if type is not movie
-        itemPath = os.path.join(movieLibrary,item["Id"])
-        nfoFile = os.path.join(itemPath,item["Id"] + ".nfo")
-        
-        root = Element("movie")
+        if item_type == "Movie":
+            itemPath = os.path.join(movieLibrary,item["Id"])
+            nfoFile = os.path.join(itemPath,item["Id"] + ".nfo")
+            rootelement = "movie"
+        if item_type == "Series":
+            itemPath = os.path.join(tvLibrary,item["Id"])
+            nfoFile = os.path.join(itemPath,"tvshow.nfo")
+            rootelement = "tvshow"
+        if item_type == "Episode":
+            itemPath = os.path.join(tvLibrary,item["Id"])
+            nfoFile = os.path.join(itemPath,item["Id"] + ".nfo")
+            rootelement = "episodedetails"
+               
+        root = Element(rootelement)
         SubElement(root, "id").text = item["Id"]
-        SubElement(root, "tag").text = "all mediabrowser movies" # TODO --> use tags to assign user view 
+        #SubElement(root, "tag").text = # TODO --> use tags to assign user view 
         SubElement(root, "thumb").text = API().getArtwork(item, "poster")
         SubElement(root, "fanart").text = API().getArtwork(item, "Backdrop")
         SubElement(root, "title").text = item["Name"].encode('utf-8').decode('utf-8')
@@ -477,7 +488,7 @@ class LibrarySync():
         utils.logMsg("Adding item to Kodi Library",item["Id"] + " - " + item["Name"])
         
         #create path if not exists
-        if not xbmcvfs.exists(itemPath):
+        if not xbmcvfs.exists(itemPath + os.sep):
             xbmcvfs.mkdir(itemPath)
             
         #create nfo file
@@ -497,19 +508,14 @@ class LibrarySync():
         
     def addTVShowToKodiLibrary( self, item ):
         itemPath = os.path.join(tvLibrary,item["Id"])
-        strmFile = os.path.join(itemPath,item["Id"] + ".strm")
-
         utils.logMsg("Adding item to Kodi Library",item["Id"] + " - " + item["Name"])
         
         #create path if not exists
-        if not xbmcvfs.exists(itemPath):
+        if not xbmcvfs.exists(itemPath + os.sep):
             xbmcvfs.mkdir(itemPath)
             
         #create nfo file
-        self.createTVNFO(item)
-        
-        # create strm file
-        self.createSTRM(item["Id"])
+        self.createNFO(item)
         
     def deleteTVShowFromKodiLibrary(self, id ):
         kodiItem = self.getKodiTVShow(id)
@@ -526,12 +532,7 @@ class LibrarySync():
         dbPath = xbmc.translatePath("special://userdata/Database/MyVideos90.db")
         connection = sqlite3.connect(dbPath)
         cursor = connection.cursor( )
-        
-        #cursor.execute("SELECT idBookmark FROM bookmark WHERE idFile = ?", (id,))
-        #bmid=cursor.fetchone()[0]
-        #if bmid != None:
-            #cursor.execute("delete FROM bookmark WHERE idBookmark = ?", (bmid,))
-        
+               
         cursor.execute("delete FROM bookmark WHERE idFile = ?", (id,))
         cursor.execute("select coalesce(max(idBookmark),0) as bookmarkId from bookmark")
         bookmarkId =  cursor.fetchone()[0]
