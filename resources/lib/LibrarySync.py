@@ -133,7 +133,6 @@ class LibrarySync():
         
         downloadUtils = DownloadUtils()
         userid = downloadUtils.getUserId()        
-        
         if fullinfo:
             url = server + '/mediabrowser/Users/' + userid + '/Items?&SortBy=SortName&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Movie&format=json&ImageTypeLimit=1'
         else:
@@ -614,3 +613,32 @@ class LibrarySync():
                 tvshow = tvshows[0]
 
         return tvshow
+
+    def getCollections(self):
+        #Build a list of the user views
+        userid = DownloadUtils().getUserId()  
+        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port
+        
+        viewsUrl = server + "/mediabrowser/Users/" + userid + "/Views?format=json&ImageTypeLimit=1"
+        jsonData = DownloadUtils().downloadUrl(viewsUrl, suppress=True, popup=0 )
+        
+        if(jsonData != ""):
+            views = json.loads(jsonData)
+            views = views.get("Items")
+            collections=[]
+            for view in views:
+                if(view.get("ChildCount") != 0):
+                    Name =(view.get("Name")).encode('utf-8')
+            
+                total = str(view.get("ChildCount"))
+                type = view.get("CollectionType")
+                if type == None:
+                    type = "None" # User may not have declared the type
+                if type == "movies" or type == "tvshows":
+                    collections.append( {'title'      : Name,
+                            'type'           : type,
+                            'id'             : view.get("Id")})
+        return collections
