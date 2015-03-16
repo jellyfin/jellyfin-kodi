@@ -84,8 +84,9 @@ class Service():
             
                     #full sync
                     if(cur_seconds_fullsync >= interval_FullSync):
-                        xbmc.log("Doing_Db_Sync: syncDatabase")
+                        xbmc.log("Doing_Db_Sync: syncDatabase (Started)")
                         worked = librarySync.syncDatabase()
+                        xbmc.log("Doing_Db_Sync: syncDatabase (Finished) " + str(worked))
                         if(worked):
                             cur_seconds_fullsync = 0
                         else:
@@ -95,8 +96,9 @@ class Service():
                     
                     #incremental sync
                     if(cur_seconds_incrsync >= interval_IncrementalSync):
-                        xbmc.log("Doing_Db_Sync: updatePlayCounts")
+                        xbmc.log("Doing_Db_Sync: updatePlayCounts (Started)")
                         worked = librarySync.updatePlayCounts()
+                        xbmc.log("Doing_Db_Sync: updatePlayCounts (Finished) "  + str(worked))
                         if(worked):
                             cur_seconds_incrsync = 0
                         else:
