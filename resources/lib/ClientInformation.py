@@ -1,12 +1,12 @@
-################################################################
+#######################################################################
 #       CLIENTINFORMATION: centralized client data
 #       -------------------------------
-#       addonId, addon version, clientId, platform
-################################################################
+#       addonId, addonName, addon version, clientId, platform       
+#######################################################################
 #       USER: centralized Userdata
 #       -------------------------------
-#       username, userId, token, server, Loglvl
-################################################################
+#       username, userId, token, server, http prefix, LogLevel
+#######################################################################
 
 import xbmc
 import xbmcaddon
@@ -20,11 +20,39 @@ class ClientInformation():
     def __init__(self):
         addonId = self.getAddonId()
         self.addon = xbmcaddon.Addon(id=addonId)
+        self.WINDOW = xbmcgui.Window( 10000 )
+
+        level = User().getLogLevel()     
+        self.logLevel = 0
+        
+        if (level != None and level != ""):
+            self.logLevel = int(level)
+        
+        if (self.logLevel == 2):
+            self.LogCalls = True
+
+    def logMsg(self, msg, level = 1):
+
+        addonName = self.getAddonName()
+        className = self.__class__.__name__
+        
+        if (self.logLevel >= level):
+            try:
+                xbmc.log("%s %s -> %s" % (addonName, className, str(msg)))
+            except UnicodeEncodeError:
+                try:
+                    xbmc.log("%s %s -> %s" % (addonName, className, str(msg.encode('utf-8'))))
+                except: pass
     
     def getAddonId(self):
         # To use when declaring xbmcaddon.Addon(id=addonId)
         addonId = "plugin.video.mb3sync"
         return addonId
+
+    def getAddonName(self):
+        # Useful for logging
+        addonName = self.addon.getAddonInfo('name').upper()
+        return addonName
     
     def getVersion(self):
         
@@ -33,7 +61,7 @@ class ClientInformation():
     
     def getMachineId(self):
     
-        WINDOW = xbmcgui.Window( 10000 )
+        WINDOW = self.WINDOW
         
         clientId = WINDOW.getProperty("client_id")
         if(clientId != None and clientId != ""):
@@ -58,13 +86,13 @@ class ClientInformation():
                 if(len(clientId) == 0):
                     uuid = uuid4()
                     clientId = str("%012X" % uuid)
-                    xbmc.log("CLIENT_ID - > Client ID saved to FILE : " + clientId)                    
+                    self.logMsg("ClientId saved to FILE : %s" % clientId)                    
                     os.write(fd, clientId)
                     os.fsync(fd)
                     
                 os.close(fd)
                 
-                xbmc.log("CLIENT_ID - > Client ID saved to WINDOW : " + clientId)
+                self.logMsg("ClientId saved to WINDOW : %s" % clientId)
                 WINDOW.setProperty("client_id", clientId)
                  
         finally: 
@@ -95,6 +123,29 @@ class User(ClientInformation):
     def __init__(self):
         addonId = self.getAddonId()
         self.addon = xbmcaddon.Addon(id=addonId)
+        self.WINDOW = xbmcgui.Window( 10000 )
+
+        level = self.getLogLevel()     
+        self.logLevel = 0
+        
+        if (level != None and level != ""):
+            self.logLevel = int(level)
+        
+        if (self.logLevel == 2):
+            self.LogCalls = True
+
+    def logMsg(self, msg, level = 1):
+
+        addonName = ClientInformation().getAddonName()
+        className = self.__class__.__name__
+        
+        if (self.logLevel >= level):
+            try:
+                xbmc.log("%s %s -> %s" % (addonName, className, str(msg)))
+            except UnicodeEncodeError:
+                try:
+                    xbmc.log("%s %s -> %s" % (addonName, className, str(msg.encode('utf-8'))))
+                except: pass
     
     def getUsername(self):
         
@@ -103,21 +154,56 @@ class User(ClientInformation):
     
     def getUserId(self):
         
-        userId = self.addon.getSetting('userId')
-        return userId
+        username = self.getUsername()
+        w_userId = self.WINDOW.getProperty('userId%s' % username)
+        s_userId = self.addon.getSetting('userId%s' % username)
+
+        # Verify if userId is saved to Window
+        if (w_userId != ""):
+            self.logMsg("Returning saved (WINDOW) UserId for user: %s UserId: %s" % (username, w_userId))
+            return w_userId
+        # Verify if userId is saved in settings
+        elif (s_userId != ""):
+            self.logMsg("Returning saved (SETTINGS) UserId for user: %s UserId: %s" % (username, s_userId))
+            self.WINDOW.setProperty('userId%s' % username, s_userId)
+            return s_userId
+        else:
+            return ""
     
     def getToken(self):
         
-        token = self.addon.getSetting('token')
-        return token
+        username = self.getUsername()
+        w_token = self.WINDOW.getProperty('AccessToken%s' % username)
+        s_token = self.addon.getSetting('AccessToken%s' % username)
+        
+        # Verify if token is saved to Window
+        if (w_token != ""):
+            self.logMsg("Returning saved (WINDOW) AccessToken for user: %s Token: %s" % (username, w_token))
+            return w_token
+        # Verify if token is saved in settings
+        elif (s_token != ""):
+            self.logMsg("Returning saved (SETTINGS) AccessToken for user: %s Token: %s" % (username, s_token))
+            self.WINDOW.setProperty('AccessToken%s' % username, s_token)
+            return s_token
+        else:
+            self.logMsg("User is not authenticated.")
+            return ""
     
     def getServer(self):
         
         host = self.addon.getSetting('ipaddress')
         port = self.addon.getSetting('port')
         return host + ":" + port
+
+    def getHTTPprefix(self):
+        # For https support
+        prefix = self.addon.getSetting('prefix')
+        if prefix:
+            return "https://" 
+        else:
+            return "http://"
     
-    def getLoglvl(self):
+    def getLogLevel(self):
         
-        level = self.addon.getSetting('loglevel')
+        level = self.addon.getSetting('logLevel')
         return level
