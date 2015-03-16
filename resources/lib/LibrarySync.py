@@ -8,6 +8,7 @@ import xbmcaddon
 import xbmcvfs
 import json
 import sqlite3
+import inspect
 import threading
 import urllib
 from datetime import datetime, timedelta, time
@@ -261,7 +262,7 @@ class LibrarySync():
                         timeInfo = API().getTimeInfo(item)
                         if kodiItem != None:
                             if kodiItem['playcount'] != int(userData.get("PlayCount")):
-                                xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "playcount": %i}, "id": 1 }' %(kodiItem['movieid'], int(userData.get("PlayCount"))))
+                                self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "playcount": %i}, "id": 1 }' %(kodiItem['movieid'], int(userData.get("PlayCount"))))
                   
                             kodiresume = int(round(kodiItem['resume'].get("position")))
                             resume = int(round(float(timeInfo.get("ResumeTime"))))*60
@@ -303,7 +304,7 @@ class LibrarySync():
                         timeInfo = API().getTimeInfo(episode)
                         if kodiItem != None:
                             if kodiItem['playcount'] != int(userData.get("PlayCount")):
-                                xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "playcount": %i}, "id": 1 }' %(kodiItem['episodeid'], int(userData.get("PlayCount"))))
+                                self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "playcount": %i}, "id": 1 }' %(kodiItem['episodeid'], int(userData.get("PlayCount"))))
                       
                             kodiresume = int(round(kodiItem['resume'].get("position")))
                             resume = int(round(float(timeInfo.get("ResumeTime"))))*60
@@ -410,7 +411,7 @@ class LibrarySync():
         userid = downloadUtils.getUserId()           
         
         # TODO --> extend support for episodes
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovieDetails", "params": { "movieid": ' + str(id) + ', "properties" : ["playcount", "file"] }, "id": "1"}')
+        json_response = self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovieDetails", "params": { "movieid": ' + str(id) + ', "properties" : ["playcount", "file"] }, "id": "1"}')
         if json_response != None:
             jsonobject = json.loads(json_response.decode('utf-8','replace'))  
             movie = None
@@ -503,7 +504,7 @@ class LibrarySync():
         self.createNFO(MBitem)
         #update playcounts
         if KodiItem['playcount'] != int(userData.get("PlayCount")):
-            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "playcount": %i}, "id": 1 }' %(KodiItem['movieid'], int(userData.get("PlayCount"))))         
+            self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "playcount": %i}, "id": 1 }' %(KodiItem['movieid'], int(userData.get("PlayCount"))))         
     
     def updateTVShowToKodiLibrary( self, MBitem, KodiItem ):
         
@@ -607,7 +608,7 @@ class LibrarySync():
         
         #update playcounts
         if KodiItem['playcount'] != int(userData.get("PlayCount")):
-            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "playcount": %i}, "id": 1 }' %(KodiItem['episodeid'], int(userData.get("PlayCount"))))         
+            self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "playcount": %i}, "id": 1 }' %(KodiItem['episodeid'], int(userData.get("PlayCount"))))         
     
     
     # adds or updates artwork to the given Kodi file in database
@@ -629,9 +630,9 @@ class LibrarySync():
         if KodiItem['art'].has_key(artWorkName):
             curValue = urllib.unquote(KodiItem['art'][artWorkName]).decode('utf8')
             if not artworkValue in curValue:
-                xbmc.executeJSONRPC(jsoncommand %(id, artWorkName, artworkValue))
+                self.executeJSONRPC(jsoncommand %(id, artWorkName, artworkValue))
         elif artworkValue != None:
-            xbmc.executeJSONRPC(jsoncommand %(id, artWorkName, artworkValue))
+            self.executeJSONRPC(jsoncommand %(id, artWorkName, artworkValue))
     
     # adds or updates the given property on the videofile in Kodi database
     def updateProperty(self,KodiItem,propertyName,propertyValue,fileType):
@@ -655,9 +656,9 @@ class LibrarySync():
         if propertyValue != KodiItem[propertyName]:
             if propertyValue != None:
                 if type(propertyValue) is int:
-                    xbmc.executeJSONRPC(jsoncommand_i %(id, propertyName, propertyValue))
+                    self.executeJSONRPC(jsoncommand_i %(id, propertyName, propertyValue))
                 else:
-                    xbmc.executeJSONRPC(jsoncommand_s %(id, propertyName, propertyValue.encode('utf-8')))
+                    self.executeJSONRPC(jsoncommand_s %(id, propertyName, propertyValue.encode('utf-8')))
 
     # adds or updates the property-array on the videofile in Kodi database
     def updatePropertyArray(self,KodiItem,propertyName,propertyCollection,fileType):
@@ -684,7 +685,7 @@ class LibrarySync():
                     json_array = json.dumps(propertyCollection)
             
             if pendingChanges:
-                xbmc.executeJSONRPC(jsoncommand %(id,propertyName,json_array))    
+                self.executeJSONRPC(jsoncommand %(id,propertyName,json_array))    
     
     def CleanName(self, name):
         name = name.replace(":", "-")
@@ -817,7 +818,7 @@ class LibrarySync():
         kodiItem = self.getKodiMovie(id)
         utils.logMsg("deleting movie from Kodi library",id)
         if kodiItem != None:
-            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveMovie", "params": { "movieid": %i}, "id": 1 }' %(kodiItem["movieid"]))
+            self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveMovie", "params": { "movieid": %i}, "id": 1 }' %(kodiItem["movieid"]))
         
         path = os.path.join(movieLibrary,id)
         xbmcvfs.rmdir(path)
@@ -837,7 +838,7 @@ class LibrarySync():
         kodiItem = self.getKodiTVShow(id)
         utils.logMsg("deleting tvshow from Kodi library",id)
         if kodiItem != None:
-            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveTVShow", "params": { "tvshowid": %i}, "id": 1 }' %(kodiItem["tvshowid"]))
+            self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveTVShow", "params": { "tvshowid": %i}, "id": 1 }' %(kodiItem["tvshowid"]))
         path = os.path.join(tvLibrary,id)
         xbmcvfs.rmdir(path)
     
@@ -920,7 +921,7 @@ class LibrarySync():
     
     
     def getKodiMovie(self, id):
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties" : ["art", "rating", "thumbnail", "resume", "runtime", "year", "genre", "cast", "trailer", "country", "studio", "set", "imdbnumber", "mpaa", "tagline", "plotoutline","plot", "sorttitle", "director", "writer", "playcount", "tag", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}')
+        json_response = self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties" : ["art", "rating", "thumbnail", "resume", "runtime", "year", "genre", "cast", "trailer", "country", "studio", "set", "imdbnumber", "mpaa", "tagline", "plotoutline","plot", "sorttitle", "director", "writer", "playcount", "tag", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         movie = None
        
@@ -933,7 +934,7 @@ class LibrarySync():
         return movie
     
     def getKodiTVShow(self, id):
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "rating", "thumbnail", "playcount", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
+        json_response = self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "rating", "thumbnail", "playcount", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         tvshow = None
         if(jsonobject.has_key('result')):
@@ -945,7 +946,7 @@ class LibrarySync():
     
     def getKodiEpisodes(self, id):
         episodes = None
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "rating", "thumbnail", "playcount", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
+        json_response = self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "rating", "thumbnail", "playcount", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         tvshow = None
         if(jsonobject.has_key('result')):
@@ -954,7 +955,7 @@ class LibrarySync():
                 tvshows = result['tvshows']
                 tvshow = tvshows[0]
                 
-                json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["title", "playcount", "plot", "season", "episode", "showtitle", "file", "lastplayed", "rating", "resume", "art", "streamdetails", "firstaired", "runtime", "writer", "cast", "dateadded"], "sort": {"method": "episode"}}, "id": 1}' %tvshow['tvshowid'])
+                json_response = self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["title", "playcount", "plot", "season", "episode", "showtitle", "file", "lastplayed", "rating", "resume", "art", "streamdetails", "firstaired", "runtime", "writer", "cast", "dateadded"], "sort": {"method": "episode"}}, "id": 1}' %tvshow['tvshowid'])
                 jsonobject = json.loads(json_response.decode('utf-8','replace'))  
                 episodes = None
                 if(jsonobject.has_key('result')):
@@ -964,7 +965,7 @@ class LibrarySync():
         return episodes
         
     def getKodiEpisodeByMbItem(self, MBitem):
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "is", "field": "title", "value": "' + MBitem.get("SeriesName").encode('utf-8') + '"} }, "id": "libTvShows"}')
+        json_response = self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "is", "field": "title", "value": "' + MBitem.get("SeriesName").encode('utf-8') + '"} }, "id": "libTvShows"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         episode = None
         if(jsonobject.has_key('result')):
@@ -974,7 +975,7 @@ class LibrarySync():
                 tvshow = tvshows[0]
 
                 # find the episode by combination of season and episode
-                json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["playcount","season", "resume", "episode"], "sort": {"method": "episode"}}, "id": 1}' %tvshow['tvshowid'])
+                json_response = self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["playcount","season", "resume", "episode"], "sort": {"method": "episode"}}, "id": 1}' %tvshow['tvshowid'])
                 jsonobject = json.loads(json_response.decode('utf-8','replace'))  
                 episodes = None
                 if(jsonobject.has_key('result')):
@@ -1025,7 +1026,11 @@ class LibrarySync():
             return True
         else:
             return False
-        
+
+    def executeJSONRPC(self, command):
+        print "ExecuteJSONRPC called!"
+        print inspect.stack()[1][3]
+        return xbmc.executeJSONRPC(command)
         
         
         
