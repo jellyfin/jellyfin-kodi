@@ -648,7 +648,7 @@ class LibrarySync():
                     xbmc.executeJSONRPC(jsoncommand_i %(id, propertyName, propertyValue))
                 else:
                     xbmc.sleep(sleepVal)
-                    utils.logMsg("MB3 Sync","updating property..." + str(propertyName) + ": " + str(propertyValue))
+                    utils.logMsg("MB3 Sync","updating property..." + str(propertyName) + ": " + propertyValue)
                     xbmc.executeJSONRPC(jsoncommand_s %(id, propertyName, propertyValue.encode('utf-8')))
 
     # adds or updates the property-array on the videofile in Kodi database
