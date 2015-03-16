@@ -30,7 +30,7 @@ dataPath = os.path.join(addondir,"library")
 movieLibrary = os.path.join(dataPath,'movies')
 tvLibrary = os.path.join(dataPath,'tvshows')
 
-sleepVal = 25
+sleepVal = 10
 showProgress = True
 
 processMovies = True
@@ -75,6 +75,7 @@ class LibrarySync():
                         count = 1
                     
                     for item in movieData:
+                        xbmc.sleep(sleepVal)
                         if not item.get('IsFolder'):
                             kodiItem = self.getKodiMovie(item["Id"])
                             allMovies.append(item["Id"])
@@ -116,6 +117,7 @@ class LibrarySync():
                     count = 0
                     
                 for item in tvShowData:
+                    xbmc.sleep(sleepVal)
                     if item.get('IsFolder'):
                         kodiItem = self.getKodiTVShow(item["Id"])
                         allTVShows.append(item["Id"])
@@ -157,6 +159,7 @@ class LibrarySync():
 
                     #we have to compare the lists somehow
                     for item in episodeData:
+                        xbmc.sleep(sleepVal)
                         comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
                         matchFound = False
                         progMessage = "Processing"
@@ -544,7 +547,7 @@ class LibrarySync():
         self.updateArtWork(KodiItem,"fanart", API().getArtwork(MBitem, "Backdrop"),"tvshow")
         
         #update common properties
-        self.updateProperty(KodiItem,"year",MBitem.get("ProductionYear"),"tvshow")
+        self.updateProperty(KodiItem,"year",str(MBitem.get("ProductionYear")),"tvshow")
         
         self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"tvshow")
         
@@ -602,7 +605,7 @@ class LibrarySync():
         #update common properties
         duration = (int(timeInfo.get('Duration'))*60)
         self.updateProperty(KodiItem,"runtime",duration,"episode")
-        self.updateProperty(KodiItem,"firstaired",MBitem.get("ProductionYear"),"episode")
+        self.updateProperty(KodiItem,"firstaired",str(MBitem.get("ProductionYear")),"episode")
         
         if MBitem.get("CriticRating") != None:
             self.updateProperty(KodiItem,"rating",int(MBitem.get("CriticRating"))/10,"episode")
@@ -665,12 +668,12 @@ class LibrarySync():
             if propertyValue != None:
                 if type(propertyValue) is int:
                     xbmc.sleep(sleepVal)
-                    utils.logMsg("MB3 Sync","updating property..." + str(propertyName)
+                    utils.logMsg("MB3 Sync","updating property..." + str(propertyName))
                     utils.logMsg("MB3 Sync","kodi value:" + str(KodiItem[propertyName]) + " MB value: " + str(propertyValue))
                     xbmc.executeJSONRPC(jsoncommand_i %(id, propertyName, propertyValue))
                 else:
                     xbmc.sleep(sleepVal)
-                    utils.logMsg("MB3 Sync","updating property..." + str(propertyName) + ": " + propertyValue)
+                    utils.logMsg("MB3 Sync","updating property..." + str(propertyName))
                     utils.logMsg("MB3 Sync","kodi value:" + KodiItem[propertyName] + " MB value: " + propertyValue)
                     xbmc.executeJSONRPC(jsoncommand_s %(id, propertyName, propertyValue.encode('utf-8')))
 
@@ -940,6 +943,9 @@ class LibrarySync():
     def setKodiResumePoint(self, id, resume_seconds, total_seconds, fileType):
         #use sqlite to set the resume point while json api doesn't support this yet
         #todo --> submit PR to kodi team to get this added to the jsonrpc api
+        
+        utils.logMsg("MB3 Sync","setting resume point in kodi db..." + fileType + ": " + str(id))
+        
         dbPath = xbmc.translatePath("special://userdata/Database/MyVideos90.db")
         connection = sqlite3.connect(dbPath)
         cursor = connection.cursor( )
