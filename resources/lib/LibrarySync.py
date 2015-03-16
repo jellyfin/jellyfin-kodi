@@ -462,6 +462,7 @@ class LibrarySync():
         self.updateProperty(KodiItem,"runtime",duration,"movie")
         self.updateProperty(KodiItem,"year",MBitem.get("ProductionYear"),"movie")
         self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"movie")
+        self.updateProperty(KodiItem,"tag",MBitem.get("Tag"),"movie")
         
         if MBitem.get("CriticRating") != None:
             self.updateProperty(KodiItem,"rating",int(MBitem.get("CriticRating"))/10,"movie")
@@ -502,7 +503,7 @@ class LibrarySync():
         self.createNFO(MBitem)
         #update playcounts
         if KodiItem['playcount'] != int(userData.get("PlayCount")):
-            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "tag": "%s", "playcount": %i}, "id": 1 }' %(KodiItem['movieid'], MBitem.get("Tag"), int(userData.get("PlayCount"))))         
+            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "playcount": %i}, "id": 1 }' %(KodiItem['movieid'], int(userData.get("PlayCount"))))         
     
     def updateTVShowToKodiLibrary( self, MBitem, KodiItem ):
         
@@ -919,7 +920,7 @@ class LibrarySync():
     
     
     def getKodiMovie(self, id):
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties" : ["art", "rating", "thumbnail", "resume", "runtime", "year", "genre", "cast", "trailer", "country", "studio", "set", "imdbnumber", "mpaa", "tagline", "plotoutline","plot", "sorttitle", "director", "writer", "playcount", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}')
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties" : ["art", "rating", "thumbnail", "resume", "runtime", "year", "genre", "cast", "trailer", "country", "studio", "set", "imdbnumber", "mpaa", "tagline", "plotoutline","plot", "sorttitle", "director", "writer", "playcount", "tag", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         movie = None
        
