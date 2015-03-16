@@ -39,7 +39,14 @@ def logMsg(title, msg, level = 1):
                 xbmc.log(title + " -> " + str(msg))
             except UnicodeEncodeError:
                 xbmc.log(title + " -> " + str(msg.encode('utf-8')))
-                
+
+def convertEncoding(data):
+    #nasty hack to make sure we have a unicode string
+    try:
+        return data.decode('utf-8')
+    except:
+        return data
+          
 
 def checkKodiSources():
     addon       = xbmcaddon.Addon(id='plugin.video.mb3sync')

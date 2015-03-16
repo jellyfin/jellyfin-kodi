@@ -41,7 +41,7 @@ class ClientInformation():
                 xbmc.log("%s %s -> %s" % (addonName, className, str(msg)))
             except UnicodeEncodeError:
                 try:
-                    xbmc.log("%s %s -> %s" % (addonName, className, str(msg.encode('utf-8'))))
+                    xbmc.log("%s %s -> %s" % (addonName, className, str(msg)))
                 except: pass
     
     def getAddonId(self):
@@ -144,7 +144,7 @@ class User(ClientInformation):
                 xbmc.log("%s %s -> %s" % (addonName, className, str(msg)))
             except UnicodeEncodeError:
                 try:
-                    xbmc.log("%s %s -> %s" % (addonName, className, str(msg.encode('utf-8'))))
+                    xbmc.log("%s %s -> %s" % (addonName, className, str(msg)))
                 except: pass
     
     def getUsername(self):
