@@ -6,13 +6,10 @@ import threading
 import json
 from datetime import datetime
 
-
 addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
 cwd = addonSettings.getAddonInfo('path')
 BASE_RESOURCE_PATH = xbmc.translatePath( os.path.join( cwd, 'resources', 'lib' ) )
 sys.path.append(BASE_RESOURCE_PATH)
-
-WINDOW = xbmcgui.Window( 10000 )
 
 import KodiMonitor
 import Utils as utils
@@ -105,6 +102,17 @@ class Service():
                             cur_seconds_incrsync = interval_IncrementalSync - 10
                     else:
                         cur_seconds_incrsync += 1
+                        
+                    # check if we need to run lib updates
+                    WINDOW = xbmcgui.Window( 10000 )
+                    if(WINDOW.getProperty("cleanNeeded") == "true"):
+                        xbmc.executebuiltin("CleanLibrary(video)")
+                        WINDOW.clearProperty("cleanNeeded")
+                    
+                    if(WINDOW.getProperty("updateNeeded") == "true"):
+                        xbmc.executebuiltin("UpdateLibrary(video)")
+                        WINDOW.clearProperty("updateNeeded")                    
+                    
                 else:
                     xbmc.log("Not authenticated yet")
                     

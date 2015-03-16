@@ -140,7 +140,6 @@ class LibrarySync():
 
                 #we have to compare the lists somehow
                 for item in episodeData:
-                    #xbmc.sleep(150) # sleep to not overload system --> can this be replaced by moving the sync to a different thread ?
                     comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
                     matchFound = False
                     progMessage = "Processing"
@@ -169,8 +168,8 @@ class LibrarySync():
                     if(pDialog != None):
                         percentage = int(((float(count) / float(total)) * 100))
                         pDialog.update(percentage, message=progMessage + " Episode: " + str(count))
-                        count += 1                           
-
+                        count += 1    
+                    
             # process deletes
             # TODO --> process deletes for episodes !!!
             if(pDialog != None):
@@ -201,10 +200,10 @@ class LibrarySync():
                 return False
                         
             if cleanNeeded:
-                xbmc.executebuiltin("CleanLibrary(video)")
+                WINDOW.setProperty("cleanNeeded", "true")
             
             if updateNeeded:
-                xbmc.executebuiltin("UpdateLibrary(video)")
+                WINDOW.setProperty("updateNeeded", "true")
         
         finally:
             WINDOW.clearProperty("librarysync")
@@ -263,7 +262,7 @@ class LibrarySync():
                         percentage = int(((float(count) / float(totalCount)) * 100))
                         pDialog.update(percentage, message="Updating Movie: " + str(count))
                         count += 1                              
-            
+                    
             #process Tv shows
             tvshowData = self.getTVShows(False)
             
@@ -303,7 +302,7 @@ class LibrarySync():
                         if(pDialog != None):
                             percentage = int(((float(count) / float(totalCount)) * 100))
                             pDialog.update(percentage, message="Updating Episode: " + str(count))
-                            count += 1                              
+                            count += 1       
 
         finally:
             WINDOW.clearProperty("librarysync")
