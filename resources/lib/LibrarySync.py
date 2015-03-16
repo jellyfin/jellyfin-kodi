@@ -515,7 +515,7 @@ class LibrarySync():
         utils.logMsg("Updating item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
         
         #update artwork
-        self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "poster"),"tvshow")
+        self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "Primary"),"tvshow")
         self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"tvshow")
         self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"tvshow")
         self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"tvshow")
@@ -568,6 +568,15 @@ class LibrarySync():
         
         utils.logMsg("Updating item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
         
+        self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "Primary"),"episode")
+        self.updateArtWork(KodiItem,"fanart", API().getArtwork(MBitem, "Backdrop"),"episode")
+        #self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"episode")
+        #self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"episode")
+        #self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"episode")
+        #self.updateArtWork(KodiItem,"landscape", API().getArtwork(MBitem, "Thumb"),"episode")
+        #self.updateArtWork(KodiItem,"discart", API().getArtwork(MBitem, "Disc"),"episode")
+        
+        
         #update common properties
         duration = (int(timeInfo.get('Duration'))*60)
         self.updateProperty(KodiItem,"runtime",duration,"episode")
@@ -605,6 +614,7 @@ class LibrarySync():
             curValue = urllib.unquote(KodiItem['art'][artWorkName]).decode('utf8')
             if not artworkValue in curValue:
                 xbmc.sleep(sleepVal)
+                utils.logMsg("updating artwork..." + str(artworkValue) + " - " + str(curValue))
                 xbmc.executeJSONRPC(jsoncommand %(id, artWorkName, artworkValue))
         elif artworkValue != None:
             xbmc.sleep(sleepVal)
@@ -666,6 +676,7 @@ class LibrarySync():
             
             if pendingChanges:
                 xbmc.sleep(sleepVal)
+                utils.logMsg("updating propertyarray..." + str(propertyName) + ": " + str(json_array))
                 xbmc.executeJSONRPC(jsoncommand %(id,propertyName,json_array))    
     
     def CleanName(self, name):
