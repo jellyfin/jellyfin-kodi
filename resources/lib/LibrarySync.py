@@ -30,7 +30,7 @@ dataPath = os.path.join(addondir,"library")
 movieLibrary = os.path.join(dataPath,'movies')
 tvLibrary = os.path.join(dataPath,'tvshows')
 
-sleepVal = 10
+sleepVal = 25
 showProgress = True
 
 processMovies = True
@@ -545,6 +545,7 @@ class LibrarySync():
         
         #update common properties
         self.updateProperty(KodiItem,"year",MBitem.get("ProductionYear"),"tvshow")
+        
         self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"tvshow")
         
         if MBitem.get("CriticRating") != None:
@@ -588,13 +589,14 @@ class LibrarySync():
         
         utils.logMsg("Updating item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
         
-        self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "Primary"),"episode")
+        # TODO --> set season poster instead of show poster ?
+        self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "tvshow.poster"),"episode")
         self.updateArtWork(KodiItem,"fanart", API().getArtwork(MBitem, "Backdrop"),"episode")
-        #self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"episode")
-        #self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"episode")
-        #self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"episode")
-        #self.updateArtWork(KodiItem,"landscape", API().getArtwork(MBitem, "Thumb"),"episode")
-        #self.updateArtWork(KodiItem,"discart", API().getArtwork(MBitem, "Disc"),"episode")
+        self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"episode")
+        self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"episode")
+        self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"episode")
+        self.updateArtWork(KodiItem,"landscape", API().getArtwork(MBitem, "Thumb"),"episode")
+        self.updateArtWork(KodiItem,"discart", API().getArtwork(MBitem, "Disc"),"episode")
         
         
         #update common properties
@@ -663,11 +665,13 @@ class LibrarySync():
             if propertyValue != None:
                 if type(propertyValue) is int:
                     xbmc.sleep(sleepVal)
-                    utils.logMsg("MB3 Sync","updating property..." + str(propertyName) + ": " + str(propertyValue))
+                    utils.logMsg("MB3 Sync","updating property..." + str(propertyName)
+                    utils.logMsg("MB3 Sync","kodi value:" + str(KodiItem[propertyName]) + " MB value: " + str(propertyValue))
                     xbmc.executeJSONRPC(jsoncommand_i %(id, propertyName, propertyValue))
                 else:
                     xbmc.sleep(sleepVal)
                     utils.logMsg("MB3 Sync","updating property..." + str(propertyName) + ": " + propertyValue)
+                    utils.logMsg("MB3 Sync","kodi value:" + KodiItem[propertyName] + " MB value: " + propertyValue)
                     xbmc.executeJSONRPC(jsoncommand_s %(id, propertyName, propertyValue.encode('utf-8')))
 
     # adds or updates the property-array on the videofile in Kodi database
@@ -804,6 +808,7 @@ class LibrarySync():
                 SubElement(root, "aired").text = str(item.get("ProductionYear"))
                 
             SubElement(root, "year").text = str(item.get("ProductionYear"))
+            SubElement(root, "firstaired").text = str(item.get("ProductionYear"))
             SubElement(root, "runtime").text = str(timeInfo.get('Duration'))
             
             SubElement(root, "plot").text = utils.convertEncoding(API().getOverview(item))
@@ -1036,7 +1041,7 @@ class LibrarySync():
     
     def getKodiEpisodes(self, id):
         episodes = None
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "rating", "thumbnail", "playcount", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["sorttitle", "title", "originaltitle", "playcount", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         tvshow = None
         if(jsonobject.has_key('result')):
