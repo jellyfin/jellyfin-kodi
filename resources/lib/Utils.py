@@ -118,9 +118,30 @@ def addKodiSource(name, path, type):
         SubElement(source, "path").text = path
         tree.write(sourcesFile)
         #return bool that reboot is needed and manual add of path to kodi
-        #return True
+        return KodiAdvancedSettingsCheck()
        
-
+def KodiAdvancedSettingsCheck():
+    #setting that kodi should import watched state and resume points from the nfo files
+    settingsFile = xbmc.translatePath( "special://profile/advancedsettings.xml" )
+    # add an empty sources file to work with
+    if xbmcvfs.exists(settingsFile) == False:
+        sources = Element("advancedsettings")
+        video = SubElement(sources, "videolibrary")
+        ET.ElementTree(sources).write(settingsFile)
+    
+    if xbmcvfs.exists(settingsFile):
+        tree = ET.ElementTree(file=settingsFile)
+        root = tree.getroot()
+        video = root.find("videolibrary")
+        if video == None:
+            video = SubElement(sources, "videolibrary")
+        # add the settings
+        SubElement(video, "importwatchedstate").text = "true"
+        SubElement(video, "importresumepoint").text = "true"
+        tree.write(settingsFile)
+        #return bool that reboot is needed and manual add of path to kodi
+        return True
+       
 def checkAuthentication():
     #check authentication
     if addonSettings.getSetting('username') != "" and addonSettings.getSetting('ipaddress') != "":
