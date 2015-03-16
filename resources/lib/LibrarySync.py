@@ -51,41 +51,46 @@ class LibrarySync():
             
             #process full movies sync
             allMovies = list()
-            movieData = self.getMovies(True)
             
-            if(self.ShouldStop()):
-                return True            
+            views = self.getCollections("movies")
+            for view in views:
+        
+                movieData = self.getMovies(view.get('id'), True)
             
-            if(movieData == None):
-                return False
+                if(self.ShouldStop()):
+                    return True            
             
-            if(pDialog != None):
-                pDialog.update(0, "Sync DB : Processing Movies")
-                total = len(movieData) + 1
-                count = 1
+                if(movieData == None):
+                    return False
+            
+                if(pDialog != None):
+                    pDialog.update(0, "Sync DB : Processing " + view.get('title'))
+                    total = len(movieData) + 1
+                    count = 1
                 
-            for item in movieData:
-                if not item.get('IsFolder'):
-                    xbmc.sleep(sleepVal)
-                    kodiItem = self.getKodiMovie(item["Id"])
-                    allMovies.append(item["Id"])
-                    progMessage = "Processing"
-                    if kodiItem == None:
-                        self.addMovieToKodiLibrary(item)
-                        updateNeeded = True
-                        progMessage = "Adding"
-                    else:
-                        self.updateMovieToKodiLibrary(item, kodiItem)
-                        progMessage = "Updating"
+                for item in movieData:
+                    if not item.get('IsFolder'):
+                        xbmc.sleep(sleepVal)
+                        kodiItem = self.getKodiMovie(item["Id"])
+                        allMovies.append(item["Id"])
+                        progMessage = "Processing"
+                        item['Tag'] = view.get('title')
+                        if kodiItem == None:
+                            self.addMovieToKodiLibrary(item)
+                            updateNeeded = True
+                            progMessage = "Adding"
+                        else:
+                            self.updateMovieToKodiLibrary(item, kodiItem)
+                            progMessage = "Updating"
                     
-                    if(self.ShouldStop()):
-                        return True
+                        if(self.ShouldStop()):
+                            return True
                     
-                    # update progress bar
-                    if(pDialog != None):
-                        percentage = int(((float(count) / float(total)) * 100))
-                        pDialog.update(percentage, message=progMessage + " Movie: " + str(count))
-                        count += 1
+                        # update progress bar
+                        if(pDialog != None):
+                            percentage = int(((float(count) / float(total)) * 100))
+                            pDialog.update(percentage, message=progMessage + " Movie: " + str(count))
+                            count += 1
                     
             #process full tv shows sync
             allTVShows = list()
@@ -233,43 +238,45 @@ class LibrarySync():
                 pDialog.create('Sync PlayCounts', 'Sync PlayCounts')        
         
             #process movies
-            movieData = self.getMovies(False)
+            views = self.getCollections("movies")
+            for view in views:
+                movieData = self.getMovies(view.get('id'),False)
             
-            if(self.ShouldStop()):
-                return True
+                if(self.ShouldStop()):
+                    return True
                         
-            if(movieData == None):
-                return False    
+                if(movieData == None):
+                    return False    
             
-            if(pDialog != None):
-                pDialog.update(0, "Sync PlayCounts: Processing Movies")
-                totalCount = len(movieData) + 1
-                count = 1            
+                if(pDialog != None):
+                    pDialog.update(0, "Sync PlayCounts: Processing Movies")
+                    totalCount = len(movieData) + 1
+                    count = 1            
             
-            for item in movieData:
-                if not item.get('IsFolder'):
-                    xbmc.sleep(sleepVal)
-                    kodiItem = self.getKodiMovie(item["Id"])
-                    userData=API().getUserData(item)
-                    timeInfo = API().getTimeInfo(item)
-                    if kodiItem != None:
-                        if kodiItem['playcount'] != int(userData.get("PlayCount")):
-                            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "playcount": %i}, "id": 1 }' %(kodiItem['movieid'], int(userData.get("PlayCount"))))
+                for item in movieData:
+                    if not item.get('IsFolder'):
+                        xbmc.sleep(sleepVal)
+                        kodiItem = self.getKodiMovie(item["Id"])
+                        userData=API().getUserData(item)
+                        timeInfo = API().getTimeInfo(item)
+                        if kodiItem != None:
+                            if kodiItem['playcount'] != int(userData.get("PlayCount")):
+                                xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "playcount": %i}, "id": 1 }' %(kodiItem['movieid'], int(userData.get("PlayCount"))))
                   
-                        kodiresume = int(round(kodiItem['resume'].get("position")))
-                        resume = int(round(float(timeInfo.get("ResumeTime"))))*60
-                        total = int(round(float(timeInfo.get("TotalTime"))))*60
-                        if kodiresume != resume:
-                            self.setKodiResumePoint(kodiItem['movieid'],resume,total,"movie")
+                            kodiresume = int(round(kodiItem['resume'].get("position")))
+                            resume = int(round(float(timeInfo.get("ResumeTime"))))*60
+                            total = int(round(float(timeInfo.get("TotalTime"))))*60
+                            if kodiresume != resume:
+                                self.setKodiResumePoint(kodiItem['movieid'],resume,total,"movie")
                             
-                    if(self.ShouldStop()):
-                        return True
+                        if(self.ShouldStop()):
+                            return True
                         
-                    # update progress bar
-                    if(pDialog != None):
-                        percentage = int(((float(count) / float(totalCount)) * 100))
-                        pDialog.update(percentage, message="Updating Movie: " + str(count))
-                        count += 1                              
+                        # update progress bar
+                        if(pDialog != None):
+                            percentage = int(((float(count) / float(totalCount)) * 100))
+                            pDialog.update(percentage, message="Updating Movie: " + str(count))
+                            count += 1                              
                     
             #process Tv shows
             tvshowData = self.getTVShows(False)
@@ -320,7 +327,7 @@ class LibrarySync():
         
         return True
     
-    def getMovies(self, fullinfo = False):
+    def getMovies(self, id, fullinfo = False):
         result = None
         
         addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
@@ -332,9 +339,9 @@ class LibrarySync():
         userid = downloadUtils.getUserId()        
         
         if fullinfo:
-            url = server + '/mediabrowser/Users/' + userid + '/Items?&SortBy=SortName&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Movie&format=json&ImageTypeLimit=1'
+            url = server + '/mediabrowser/Users/' + userid + '/items?ParentId=' + id + '&SortBy=SortName&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Movie&format=json&ImageTypeLimit=1'
         else:
-            url = server + '/mediabrowser/Users/' + userid + '/Items?&SortBy=SortName&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Movie&format=json&ImageTypeLimit=1'
+            url = server + '/mediabrowser/Users/' + userid + '/items?ParentId=' + id + '&SortBy=SortName&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Movie&format=json&ImageTypeLimit=1'
         
         jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
         if jsonData != None and jsonData != "":
@@ -475,7 +482,6 @@ class LibrarySync():
         self.updatePropertyArray(KodiItem,"director",people.get("Director"),"movie")
         self.updatePropertyArray(KodiItem,"genre",MBitem.get("Genres"),"movie")
         self.updatePropertyArray(KodiItem,"studio",studios,"movie")
-        
         # FIXME --> ProductionLocations not returned by MB3 server !?
         self.updatePropertyArray(KodiItem,"country",MBitem.get("ProductionLocations"),"movie")
         
@@ -488,16 +494,15 @@ class LibrarySync():
                 trailerItem = json.loads(jsonData)
                 trailerUrl = "plugin://plugin.video.mb3sync/?id=" + trailerItem[0].get("Id") + '&mode=play'
                 self.updateProperty(KodiItem,"trailer",trailerUrl,"movie")
-
+        
         #add actors
         self.AddActorsToMedia(KodiItem,MBitem.get("People"),"movie")
         
         self.createSTRM(MBitem)
         self.createNFO(MBitem)
-        
         #update playcounts
         if KodiItem['playcount'] != int(userData.get("PlayCount")):
-            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "playcount": %i}, "id": 1 }' %(KodiItem['movieid'], int(userData.get("PlayCount"))))         
+            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "tag": "%s", "playcount": %i}, "id": 1 }' %(KodiItem['movieid'], MBitem.get("Tag"), int(userData.get("PlayCount"))))         
     
     def updateTVShowToKodiLibrary( self, MBitem, KodiItem ):
         
@@ -741,7 +746,8 @@ class LibrarySync():
             xbmcvfs.mkdir(itemPath)        
             root = Element(rootelement)
             SubElement(root, "id").text = item["Id"]
-            #SubElement(root, "tag").text = # TODO --> use tags to assign user view 
+            if item.get("Tag") != None:
+                SubElement(root, "tag").text = item.get("Tag")# TODO --> fix for TV etc
             SubElement(root, "thumb").text = API().getArtwork(item, "poster")
             SubElement(root, "fanart").text = API().getArtwork(item, "Backdrop")
             SubElement(root, "title").text = item["Name"].encode('utf-8').decode('utf-8')
@@ -984,7 +990,7 @@ class LibrarySync():
         return episode
 
     
-    def getCollections(self):
+    def getCollections(self, type):
         #Build a list of the user views
         userid = DownloadUtils().getUserId()  
         addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
@@ -1007,7 +1013,7 @@ class LibrarySync():
                 type = view.get("CollectionType")
                 if type == None:
                     type = "None" # User may not have declared the type
-                if type == "movies" or type == "tvshows":
+                if type == type:
                     collections.append( {'title'      : Name,
                             'type'           : type,
                             'id'             : view.get("Id")})
