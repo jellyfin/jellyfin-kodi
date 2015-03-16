@@ -26,7 +26,7 @@ language = addonSettings.getLocalizedString
 def logMsg(title, msg, level = 1):
     
     #todo --> get this from a setting
-    logLevel = 0
+    logLevel = 1
     
     if(logLevel >= level):
         if(logLevel == 1):

@@ -33,6 +33,10 @@ tvLibrary = os.path.join(dataPath,'tvshows')
 sleepVal = 10
 showProgress = True
 
+processMovies = True
+processTvShows = True
+
+
 class LibrarySync():   
         
     def syncDatabase(self):
@@ -51,137 +55,140 @@ class LibrarySync():
             updateNeeded = False    
             
             #process full movies sync
-            allMovies = list()
+            if processMovies:
+                allMovies = list()
+                
+                views = self.getCollections("movies")
+                for view in views:
             
-            views = self.getCollections("movies")
-            for view in views:
-        
-                movieData = self.getMovies(view.get('id'), True)
-            
+                    movieData = self.getMovies(view.get('id'), True)
+                
+                    if(self.ShouldStop()):
+                        return True            
+                
+                    if(movieData == None):
+                        return False
+                
+                    if(pDialog != None):
+                        pDialog.update(0, "Sync DB : Processing " + view.get('title'))
+                        total = len(movieData) + 1
+                        count = 1
+                    
+                    for item in movieData:
+                        if not item.get('IsFolder'):
+                            kodiItem = self.getKodiMovie(item["Id"])
+                            allMovies.append(item["Id"])
+                            progMessage = "Processing"
+                            item['Tag'] = []
+                            item['Tag'].append(view.get('title'))
+                            if kodiItem == None:
+                                self.addMovieToKodiLibrary(item)
+                                updateNeeded = True
+                                progMessage = "Adding"
+                            else:
+                                self.updateMovieToKodiLibrary(item, kodiItem)
+                                progMessage = "Updating"
+                        
+                            if(self.ShouldStop()):
+                                return True
+                        
+                            # update progress bar
+                            if(pDialog != None):
+                                percentage = int(((float(count) / float(total)) * 100))
+                                pDialog.update(percentage, message=progMessage + " Movie: " + str(count))
+                                count += 1
+                        
+            #process full tv shows sync
+            if processTvShows:
+                allTVShows = list()
+                allEpisodes = list()
+                tvShowData = self.getTVShows(True)
+                
                 if(self.ShouldStop()):
                     return True            
-            
-                if(movieData == None):
-                    return False
-            
-                if(pDialog != None):
-                    pDialog.update(0, "Sync DB : Processing " + view.get('title'))
-                    total = len(movieData) + 1
-                    count = 1
                 
-                for item in movieData:
-                    if not item.get('IsFolder'):
-                        kodiItem = self.getKodiMovie(item["Id"])
-                        allMovies.append(item["Id"])
+                if (tvShowData == None):
+                    return
+                    
+                if(pDialog != None):
+                    pDialog.update(0, "Sync DB : Processing TV Shows")
+                    total = len(tvShowData) + 1
+                    count = 0
+                    
+                for item in tvShowData:
+                    if item.get('IsFolder'):
+                        kodiItem = self.getKodiTVShow(item["Id"])
+                        allTVShows.append(item["Id"])
                         progMessage = "Processing"
-                        item['Tag'] = view.get('title')
                         if kodiItem == None:
-                            self.addMovieToKodiLibrary(item)
+                            self.addTVShowToKodiLibrary(item)
                             updateNeeded = True
                             progMessage = "Adding"
                         else:
-                            self.updateMovieToKodiLibrary(item, kodiItem)
+                            self.updateTVShowToKodiLibrary(item, kodiItem)
                             progMessage = "Updating"
-                    
+                            
                         if(self.ShouldStop()):
                             return True
-                    
+                            
                         # update progress bar
                         if(pDialog != None):
                             percentage = int(((float(count) / float(total)) * 100))
-                            pDialog.update(percentage, message=progMessage + " Movie: " + str(count))
-                            count += 1
-                    
-            #process full tv shows sync
-            allTVShows = list()
-            allEpisodes = list()
-            tvShowData = self.getTVShows(True)
-            
-            if(self.ShouldStop()):
-                return True            
-            
-            if (tvShowData == None):
-                return
-                
-            if(pDialog != None):
-                pDialog.update(0, "Sync DB : Processing TV Shows")
-                total = len(tvShowData) + 1
-                count = 0
-                
-            for item in tvShowData:
-                if item.get('IsFolder'):
-                    kodiItem = self.getKodiTVShow(item["Id"])
-                    allTVShows.append(item["Id"])
-                    progMessage = "Processing"
-                    if kodiItem == None:
-                        self.addTVShowToKodiLibrary(item)
-                        updateNeeded = True
-                        progMessage = "Adding"
-                    else:
-                        self.updateTVShowToKodiLibrary(item, kodiItem)
-                        progMessage = "Updating"
+                            pDialog.update(percentage, message=progMessage + " Tv Show: " + str(count))
+                            count += 1                        
                         
+                
+                #process episodes (will only be possible when tv show is scanned to library)   
+                #TODO --> maybe pull full info only when needed ?
+                allEpisodes = list()
+                
+                for tvshow in allTVShows:
+                    
+                    episodeData = self.getEpisodes(tvshow,True)
+                    kodiEpisodes = self.getKodiEpisodes(tvshow)
+                    
                     if(self.ShouldStop()):
-                        return True
-                        
-                    # update progress bar
-                    if(pDialog != None):
-                        percentage = int(((float(count) / float(total)) * 100))
-                        pDialog.update(percentage, message=progMessage + " Tv Show: " + str(count))
-                        count += 1                        
+                        return True                
                     
-            
-            #process episodes (will only be possible when tv show is scanned to library)   
-            #TODO --> maybe pull full info only when needed ?
-            allEpisodes = list()
-            
-            for tvshow in allTVShows:
-                
-                episodeData = self.getEpisodes(tvshow,True)
-                kodiEpisodes = self.getKodiEpisodes(tvshow)
-                
-                if(self.ShouldStop()):
-                    return True                
-                
-                if(pDialog != None):
-                    pDialog.update(0, "Sync DB : Processing Episodes")
-                    total = len(episodeData) + 1
-                    count = 0         
+                    if(pDialog != None):
+                        pDialog.update(0, "Sync DB : Processing Episodes")
+                        total = len(episodeData) + 1
+                        count = 0         
 
-                #we have to compare the lists somehow
-                for item in episodeData:
-                    comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
-                    matchFound = False
-                    progMessage = "Processing"
-                    if kodiEpisodes != None:
-                        for KodiItem in kodiEpisodes:
+                    #we have to compare the lists somehow
+                    for item in episodeData:
+                        comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
+                        matchFound = False
+                        progMessage = "Processing"
+                        if kodiEpisodes != None:
+                            for KodiItem in kodiEpisodes:
+                                
+                                allEpisodes.append(KodiItem["episodeid"])
+                                comparestring2 = str(KodiItem["season"]) + "-" + str(KodiItem["episode"])
+                                if comparestring1 == comparestring2:
+                                    #match found - update episode
+                                    self.updateEpisodeToKodiLibrary(item,KodiItem,tvshow)
+                                    matchFound = True
+                                    progMessage = "Updating"
+
+                        if not matchFound:
+                            #no match so we have to create it
+                            print "episode not found...creating it: "
+                            self.addEpisodeToKodiLibrary(item,tvshow)
+                            updateNeeded = True
+                            progMessage = "Adding"
                             
-                            allEpisodes.append(KodiItem["episodeid"])
-                            comparestring2 = str(KodiItem["season"]) + "-" + str(KodiItem["episode"])
-                            if comparestring1 == comparestring2:
-                                #match found - update episode
-                                self.updateEpisodeToKodiLibrary(item,KodiItem,tvshow)
-                                matchFound = True
-                                progMessage = "Updating"
-
-                    if not matchFound:
-                        #no match so we have to create it
-                        print "episode not found...creating it: "
-                        self.addEpisodeToKodiLibrary(item,tvshow)
-                        updateNeeded = True
-                        progMessage = "Adding"
-                        
-                    if(self.ShouldStop()):
-                        return True                        
-                        
-                    # update progress bar
-                    if(pDialog != None):
-                        percentage = int(((float(count) / float(total)) * 100))
-                        pDialog.update(percentage, message=progMessage + " Episode: " + str(count))
-                        count += 1    
+                        if(self.ShouldStop()):
+                            return True                        
+                            
+                        # update progress bar
+                        if(pDialog != None):
+                            percentage = int(((float(count) / float(total)) * 100))
+                            pDialog.update(percentage, message=progMessage + " Episode: " + str(count))
+                            count += 1    
                     
-            # process deletes
-            # TODO --> process deletes for episodes !!!
+            
+            
             if(pDialog != None):
                 pDialog.update(0, message="Removing Deleted Items")
             
@@ -189,22 +196,28 @@ class LibrarySync():
                 return True            
             
             cleanNeeded = False
-            allLocaldirs, filesMovies = xbmcvfs.listdir(movieLibrary)
-            allMB3Movies = set(allMovies)
-            for dir in allLocaldirs:
-                if not dir in allMB3Movies:
-                    self.deleteMovieFromKodiLibrary(dir)
-                    cleanneeded = True
             
-            if(self.ShouldStop()):
-                return True            
+            # process deletes for movies
+            if processMovies:
+                allLocaldirs, filesMovies = xbmcvfs.listdir(movieLibrary)
+                allMB3Movies = set(allMovies)
+                for dir in allLocaldirs:
+                    if not dir in allMB3Movies:
+                        self.deleteMovieFromKodiLibrary(dir)
+                        cleanneeded = True
+                
+                if(self.ShouldStop()):
+                    return True            
             
-            allLocaldirs, filesTVShows = xbmcvfs.listdir(tvLibrary)
-            allMB3TVShows = set(allTVShows)
-            for dir in allLocaldirs:
-                if not dir in allMB3TVShows:
-                    self.deleteTVShowFromKodiLibrary(dir)
-                    cleanneeded = True
+            # process deletes for episodes
+            if processTvShows:
+                # TODO --> process deletes for episodes !!!
+                allLocaldirs, filesTVShows = xbmcvfs.listdir(tvLibrary)
+                allMB3TVShows = set(allTVShows)
+                for dir in allLocaldirs:
+                    if not dir in allMB3TVShows:
+                        self.deleteTVShowFromKodiLibrary(dir)
+                        cleanneeded = True
                     
             if(self.ShouldStop()):
                 return True
@@ -236,83 +249,86 @@ class LibrarySync():
                 pDialog.create('Sync PlayCounts', 'Sync PlayCounts')        
         
             #process movies
-            views = self.getCollections("movies")
-            for view in views:
-                movieData = self.getMovies(view.get('id'),False)
-            
+            if processMovies:
+                views = self.getCollections("movies")
+                for view in views:
+                    movieData = self.getMovies(view.get('id'),False)
+                
+                    if(self.ShouldStop()):
+                        return True
+                            
+                    if(movieData == None):
+                        return False    
+                
+                    if(pDialog != None):
+                        pDialog.update(0, "Sync PlayCounts: Processing Movies")
+                        totalCount = len(movieData) + 1
+                        count = 1            
+                
+                    for item in movieData:
+                        if not item.get('IsFolder'):
+                            kodiItem = self.getKodiMovie(item["Id"])
+                            userData=API().getUserData(item)
+                            timeInfo = API().getTimeInfo(item)
+                            if kodiItem != None:
+                                self.updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"movie")
+                      
+                                kodiresume = int(round(kodiItem['resume'].get("position")))
+                                resume = int(round(float(timeInfo.get("ResumeTime"))))*60
+                                total = int(round(float(timeInfo.get("TotalTime"))))*60
+                                if kodiresume != resume:
+                                    print "updating resumepoint for movie " + str(kodiItem['movieid'])
+                                    self.setKodiResumePoint(kodiItem['movieid'],resume,total,"movie")
+                                
+                            if(self.ShouldStop()):
+                                return True
+                            
+                            # update progress bar
+                            if(pDialog != None):
+                                percentage = int(((float(count) / float(totalCount)) * 100))
+                                pDialog.update(percentage, message="Updating Movie: " + str(count))
+                                count += 1                              
+                        
+            #process Tv shows
+            if processTvShows:
+                tvshowData = self.getTVShows(False)
+                
                 if(self.ShouldStop()):
                     return True
-                        
-                if(movieData == None):
-                    return False    
-            
-                if(pDialog != None):
-                    pDialog.update(0, "Sync PlayCounts: Processing Movies")
-                    totalCount = len(movieData) + 1
-                    count = 1            
-            
-                for item in movieData:
-                    if not item.get('IsFolder'):
-                        kodiItem = self.getKodiMovie(item["Id"])
-                        userData=API().getUserData(item)
-                        timeInfo = API().getTimeInfo(item)
-                        if kodiItem != None:
-                            self.updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode")
-                  
-                            kodiresume = int(round(kodiItem['resume'].get("position")))
-                            resume = int(round(float(timeInfo.get("ResumeTime"))))*60
-                            total = int(round(float(timeInfo.get("TotalTime"))))*60
-                            if kodiresume != resume:
-                                self.setKodiResumePoint(kodiItem['movieid'],resume,total,"movie")
                             
-                        if(self.ShouldStop()):
-                            return True
-                        
-                        # update progress bar
-                        if(pDialog != None):
-                            percentage = int(((float(count) / float(totalCount)) * 100))
-                            pDialog.update(percentage, message="Updating Movie: " + str(count))
-                            count += 1                              
+                if (tvshowData == None):
+                    return False    
+                
+                for item in tvshowData:
+                    episodeData = self.getEpisodes(item["Id"], False)
                     
-            #process Tv shows
-            tvshowData = self.getTVShows(False)
-            
-            if(self.ShouldStop()):
-                return True
-                        
-            if (tvshowData == None):
-                return False    
-            
-            for item in tvshowData:
-                episodeData = self.getEpisodes(item["Id"], False)
-                
-                if (episodeData != None):
-                    if(pDialog != None):
-                        pDialog.update(0, "Sync PlayCounts: Processing Episodes")
-                        totalCount = len(episodeData) + 1
-                        count = 1                  
-                
-                    for episode in episodeData:
-                        kodiItem = self.getKodiEpisodeByMbItem(episode)
-                        userData=API().getUserData(episode)
-                        timeInfo = API().getTimeInfo(episode)
-                        if kodiItem != None:
-                            if kodiItem['playcount'] != int(userData.get("PlayCount")):
-                                self.updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode")
-                            kodiresume = int(round(kodiItem['resume'].get("position")))
-                            resume = int(round(float(timeInfo.get("ResumeTime"))))*60
-                            total = int(round(float(timeInfo.get("TotalTime"))))*60
-                            if kodiresume != resume:
-                                self.setKodiResumePoint(kodiItem['episodeid'],resume,total,"episode")
-                                
-                        if(self.ShouldStop()):
-                            return True
-                        
-                        # update progress bar
+                    if (episodeData != None):
                         if(pDialog != None):
-                            percentage = int(((float(count) / float(totalCount)) * 100))
-                            pDialog.update(percentage, message="Updating Episode: " + str(count))
-                            count += 1       
+                            pDialog.update(0, "Sync PlayCounts: Processing Episodes")
+                            totalCount = len(episodeData) + 1
+                            count = 1                  
+                    
+                        for episode in episodeData:
+                            kodiItem = self.getKodiEpisodeByMbItem(episode)
+                            userData=API().getUserData(episode)
+                            timeInfo = API().getTimeInfo(episode)
+                            if kodiItem != None:
+                                if kodiItem['playcount'] != int(userData.get("PlayCount")):
+                                    self.updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode")
+                                kodiresume = int(round(kodiItem['resume'].get("position")))
+                                resume = int(round(float(timeInfo.get("ResumeTime"))))*60
+                                total = int(round(float(timeInfo.get("TotalTime"))))*60
+                                if kodiresume != resume:
+                                    self.setKodiResumePoint(kodiItem['episodeid'],resume,total,"episode")
+                                    
+                            if(self.ShouldStop()):
+                                return True
+                            
+                            # update progress bar
+                            if(pDialog != None):
+                                percentage = int(((float(count) / float(totalCount)) * 100))
+                                pDialog.update(percentage, message="Updating Episode: " + str(count))
+                                count += 1       
 
         finally:
             WINDOW.clearProperty("librarysync")
@@ -403,8 +419,10 @@ class LibrarySync():
         downloadUtils = DownloadUtils()
         userid = downloadUtils.getUserId()           
         
+        print "updateplaycount called!"
+        
         # TODO --> extend support for episodes
-        json_response = self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovieDetails", "params": { "movieid": ' + str(id) + ', "properties" : ["playcount", "file"] }, "id": "1"}')
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovieDetails", "params": { "movieid": ' + str(id) + ', "properties" : ["playcount", "file"] }, "id": "1"}')
         if json_response != None:
             jsonobject = json.loads(json_response.decode('utf-8','replace'))  
             movie = None
@@ -456,7 +474,8 @@ class LibrarySync():
         self.updateProperty(KodiItem,"runtime",duration,"movie")
         self.updateProperty(KodiItem,"year",MBitem.get("ProductionYear"),"movie")
         self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"movie")
-        self.updateProperty(KodiItem,"tag",MBitem.get("Tag"),"movie")
+        
+        self.updatePropertyArray(KodiItem,"tag",MBitem.get("Tag"),"movie")
         
         if MBitem.get("CriticRating") != None:
             self.updateProperty(KodiItem,"rating",int(MBitem.get("CriticRating"))/10,"movie")
@@ -748,7 +767,8 @@ class LibrarySync():
             root = Element(rootelement)
             SubElement(root, "id").text = item["Id"]
             if item.get("Tag") != None:
-                SubElement(root, "tag").text = item.get("Tag")# TODO --> fix for TV etc
+                for tag in item.get("Tag"):
+                    SubElement(root, "tag").text = tag
             
             SubElement(root, "thumb").text = API().getArtwork(item, "Primary")
             SubElement(root, "fanart").text = API().getArtwork(item, "Backdrop")
@@ -888,7 +908,7 @@ class LibrarySync():
         kodiItem = self.getKodiMovie(id)
         utils.logMsg("deleting movie from Kodi library",id)
         if kodiItem != None:
-            self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveMovie", "params": { "movieid": %i}, "id": 1 }' %(kodiItem["movieid"]))
+            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveMovie", "params": { "movieid": %i}, "id": 1 }' %(kodiItem["movieid"]))
         
         path = os.path.join(movieLibrary,id)
         xbmcvfs.rmdir(path)
@@ -908,7 +928,7 @@ class LibrarySync():
         kodiItem = self.getKodiTVShow(id)
         utils.logMsg("deleting tvshow from Kodi library",id)
         if kodiItem != None:
-            self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveTVShow", "params": { "tvshowid": %i}, "id": 1 }' %(kodiItem["tvshowid"]))
+            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveTVShow", "params": { "tvshowid": %i}, "id": 1 }' %(kodiItem["tvshowid"]))
         path = os.path.join(tvLibrary,id)
         xbmcvfs.rmdir(path)
     
@@ -991,7 +1011,7 @@ class LibrarySync():
     
     
     def getKodiMovie(self, id):
-        json_response = self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties" : ["art", "rating", "thumbnail", "resume", "runtime", "year", "genre", "cast", "trailer", "country", "studio", "set", "imdbnumber", "mpaa", "tagline", "plotoutline","plot", "sorttitle", "director", "writer", "playcount", "tag", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}')
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties" : ["art", "rating", "thumbnail", "resume", "runtime", "year", "genre", "cast", "trailer", "country", "studio", "set", "imdbnumber", "mpaa", "tagline", "plotoutline","plot", "sorttitle", "director", "writer", "playcount", "tag", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         movie = None
        
@@ -1004,7 +1024,7 @@ class LibrarySync():
         return movie
     
     def getKodiTVShow(self, id):
-        json_response = self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "rating", "thumbnail", "playcount", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "rating", "thumbnail", "playcount", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         tvshow = None
         if(jsonobject.has_key('result')):
@@ -1016,7 +1036,7 @@ class LibrarySync():
     
     def getKodiEpisodes(self, id):
         episodes = None
-        json_response = self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "rating", "thumbnail", "playcount", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "rating", "thumbnail", "playcount", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         tvshow = None
         if(jsonobject.has_key('result')):
@@ -1025,7 +1045,7 @@ class LibrarySync():
                 tvshows = result['tvshows']
                 tvshow = tvshows[0]
                 
-                json_response = self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["title", "playcount", "plot", "season", "episode", "showtitle", "file", "lastplayed", "rating", "resume", "art", "streamdetails", "firstaired", "runtime", "writer", "cast", "dateadded"], "sort": {"method": "episode"}}, "id": 1}' %tvshow['tvshowid'])
+                json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["title", "playcount", "plot", "season", "episode", "showtitle", "file", "lastplayed", "rating", "resume", "art", "streamdetails", "firstaired", "runtime", "writer", "cast", "dateadded"], "sort": {"method": "episode"}}, "id": 1}' %tvshow['tvshowid'])
                 jsonobject = json.loads(json_response.decode('utf-8','replace'))  
                 episodes = None
                 if(jsonobject.has_key('result')):
@@ -1035,7 +1055,7 @@ class LibrarySync():
         return episodes
         
     def getKodiEpisodeByMbItem(self, MBitem):
-        json_response = self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "is", "field": "title", "value": "' + MBitem.get("SeriesName").encode('utf-8') + '"} }, "id": "libTvShows"}')
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "is", "field": "title", "value": "' + MBitem.get("SeriesName").encode('utf-8') + '"} }, "id": "libTvShows"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         episode = None
         if(jsonobject.has_key('result')):
@@ -1045,7 +1065,7 @@ class LibrarySync():
                 tvshow = tvshows[0]
 
                 # find the episode by combination of season and episode
-                json_response = self.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["playcount","season", "resume", "episode"], "sort": {"method": "episode"}}, "id": 1}' %tvshow['tvshowid'])
+                json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["playcount","season", "resume", "episode"], "sort": {"method": "episode"}}, "id": 1}' %tvshow['tvshowid'])
                 jsonobject = json.loads(json_response.decode('utf-8','replace'))  
                 episodes = None
                 if(jsonobject.has_key('result')):

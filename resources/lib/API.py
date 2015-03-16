@@ -96,7 +96,7 @@ class API():
         else:        
             if(item.get("Studios") != None):
                 for studio_string in item.get("Studios"):
-                    temp=studio_string.get("Name").encode('utf-8')
+                    temp=studio_string.get("Name")
                     studios.append(temp)
         return studios
 
