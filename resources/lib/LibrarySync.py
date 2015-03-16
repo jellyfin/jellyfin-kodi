@@ -416,7 +416,7 @@ class LibrarySync():
                     mb3Id = filename.replace(".strm","")
 
                     watchedurl = 'http://' + server + '/mediabrowser/Users/' + userid + '/PlayedItems/' + mb3Id
-                    utils.logMsg("watchedurl -->" + watchedurl)
+                    utils.logMsg("MB3 Sync","watchedurl -->" + watchedurl)
                     if playcount != 0:
                         downloadUtils.downloadUrl(watchedurl, postBody="", type="POST")
                     else:
@@ -615,7 +615,7 @@ class LibrarySync():
             curValue = urllib.unquote(KodiItem['art'][artWorkName]).decode('utf8')
             if not artworkValue in curValue:
                 xbmc.sleep(sleepVal)
-                utils.logMsg("updating artwork..." + str(artworkValue) + " - " + str(curValue))
+                utils.logMsg("MB3 Syncer","updating artwork..." + str(artworkValue) + " - " + str(curValue))
                 xbmc.executeJSONRPC(jsoncommand %(id, artWorkName, artworkValue))
         elif artworkValue != None:
             xbmc.sleep(sleepVal)
@@ -644,11 +644,11 @@ class LibrarySync():
             if propertyValue != None:
                 if type(propertyValue) is int:
                     xbmc.sleep(sleepVal)
-                    utils.logMsg("updating property..." + str(propertyName) + ": " + str(propertyValue))
+                    utils.logMsg("MB3 Sync","updating property..." + str(propertyName) + ": " + str(propertyValue))
                     xbmc.executeJSONRPC(jsoncommand_i %(id, propertyName, propertyValue))
                 else:
                     xbmc.sleep(sleepVal)
-                    utils.logMsg("updating property..." + str(propertyName) + ": " + str(propertyValue))
+                    utils.logMsg("MB3 Sync","updating property..." + str(propertyName) + ": " + str(propertyValue))
                     xbmc.executeJSONRPC(jsoncommand_s %(id, propertyName, propertyValue.encode('utf-8')))
 
     # adds or updates the property-array on the videofile in Kodi database
@@ -677,7 +677,7 @@ class LibrarySync():
             
             if pendingChanges:
                 xbmc.sleep(sleepVal)
-                utils.logMsg("updating propertyarray..." + str(propertyName) + ": " + str(json_array))
+                utils.logMsg("MB3 Sync","updating propertyarray..." + str(propertyName) + ": " + str(json_array))
                 xbmc.executeJSONRPC(jsoncommand %(id,propertyName,json_array))    
     
     def CleanName(self, name):
@@ -861,7 +861,7 @@ class LibrarySync():
         itemPath = os.path.join(movieLibrary,item["Id"])
         strmFile = os.path.join(itemPath,item["Id"] + ".strm")
 
-        utils.logMsg("Adding item to Kodi Library",item["Id"] + " - " + item["Name"])
+        utils.logMsg("MB3 Sync","Adding item to Kodi Library",item["Id"] + " - " + item["Name"])
         
         #create path if not exists
         if not xbmcvfs.exists(itemPath + os.sep):
@@ -875,7 +875,7 @@ class LibrarySync():
     
     def addEpisodeToKodiLibrary(self, item, tvshowId):
 
-        utils.logMsg("Adding item to Kodi Library",item["Id"] + " - " + item["Name"])
+        utils.logMsg("MB3 Sync","Adding item to Kodi Library",item["Id"] + " - " + item["Name"])
             
         #create nfo file
         self.createNFO(item, tvshowId)
