@@ -136,7 +136,7 @@ class User(ClientInformation):
 
     def logMsg(self, msg, level = 1):
 
-        addonName = ClientInformation().getAddonName()
+        addonName = self.getAddonName()
         className = self.__class__.__name__
         
         if (self.logLevel >= level):
