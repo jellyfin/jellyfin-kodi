@@ -679,7 +679,11 @@ class LibrarySync():
             
             if pendingChanges:
                 xbmc.executeJSONRPC(jsoncommand %(id,propertyName,json_array))    
-            
+    
+    def CleanName(self, name):
+        name = name.replace(":", "-")
+        return name
+        
     def createSTRM(self,item,parentId=None):
         
         item_type=str(item.get("Type")).encode('utf-8')
@@ -694,9 +698,9 @@ class LibrarySync():
         if item_type == "Episode":
             itemPath = os.path.join(tvLibrary,parentId)
             if str(item.get("IndexNumber")) != None:
-                filenamestr = item.get("SeriesName").encode('utf-8') + " S" + str(item.get("ParentIndexNumber")) + "E" + str(item.get("IndexNumber")) + ".strm"
+                filenamestr = self.CleanName(item.get("SeriesName")).encode('utf-8') + " S" + str(item.get("ParentIndexNumber")) + "E" + str(item.get("IndexNumber")) + ".strm"
             else:
-                filenamestr = item.get("SeriesName").encode('utf-8') + " S0E0 " + item["Name"].encode('utf-8').decode('utf-8') + ".strm"
+                filenamestr = self.CleanName(item.get("SeriesName")).encode('utf-8') + " S0E0 " + item["Name"].encode('utf-8').decode('utf-8') + ".strm"
             strmFile = os.path.join(itemPath,filenamestr)
         
         if not xbmcvfs.exists(strmFile):
@@ -727,9 +731,9 @@ class LibrarySync():
         if item_type == "Episode":
             itemPath = os.path.join(tvLibrary,parentId)
             if str(item.get("ParentIndexNumber")) != None:
-                filenamestr = item.get("SeriesName").encode('utf-8') + " S" + str(item.get("ParentIndexNumber")) + "E" + str(item.get("IndexNumber")) + ".nfo"
+                filenamestr = self.CleanName(item.get("SeriesName")).encode('utf-8') + " S" + str(item.get("ParentIndexNumber")) + "E" + str(item.get("IndexNumber")) + ".nfo"
             else:
-                filenamestr = item.get("SeriesName").encode('utf-8') + " S0E0 " + item["Name"].encode('utf-8').decode('utf-8') + ".nfo"
+                filenamestr = self.CleanName(item.get("SeriesName")).encode('utf-8') + " S0E0 " + item["Name"].encode('utf-8').decode('utf-8') + ".nfo"
             nfoFile = os.path.join(itemPath,filenamestr)
             rootelement = "episodedetails"
         
