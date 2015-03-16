@@ -440,7 +440,7 @@ class LibrarySync():
         utils.logMsg("Updating item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
         
         #update artwork
-        self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "poster"),"episode")
+        self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "tvshow.poster"),"episode")
         self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"episode")
         self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"episode")
         self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"episode")
