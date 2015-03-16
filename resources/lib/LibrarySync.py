@@ -49,6 +49,9 @@ class LibrarySync():
             allMovies = list()
             movieData = self.getMovies(True)
             
+            if(self.ShouldStop()):
+                return False            
+            
             if(movieData == None):
                 return False
             
@@ -70,6 +73,9 @@ class LibrarySync():
                         self.updateMovieToKodiLibrary(item, kodiItem)
                         progMessage = "Updating"
                     
+                    if(self.ShouldStop()):
+                        return False
+                    
                     # update progress bar
                     if(pDialog != None):
                         percentage = int(((float(count) / float(total)) * 100))
@@ -80,6 +86,9 @@ class LibrarySync():
             allTVShows = list()
             allEpisodes = list()
             tvShowData = self.getTVShows(True)
+            
+            if(self.ShouldStop()):
+                return False            
             
             if (tvShowData == None):
                 return
@@ -102,6 +111,9 @@ class LibrarySync():
                         self.updateTVShowToKodiLibrary(item, kodiItem)
                         progMessage = "Updating"
                         
+                    if(self.ShouldStop()):
+                        return False
+                        
                     # update progress bar
                     if(pDialog != None):
                         percentage = int(((float(count) / float(total)) * 100))
@@ -117,6 +129,9 @@ class LibrarySync():
                 
                 episodeData = self.getEpisodes(tvshow,True)
                 kodiEpisodes = self.getKodiEpisodes(tvshow)
+                
+                if(self.ShouldStop()):
+                    return False                
                 
                 if(pDialog != None):
                     pDialog.update(0, "Sync DB : Processing Episodes")
@@ -147,6 +162,9 @@ class LibrarySync():
                         updateNeeded = True
                         progMessage = "Adding"
                         
+                    if(self.ShouldStop()):
+                        return False                        
+                        
                     # update progress bar
                     if(pDialog != None):
                         percentage = int(((float(count) / float(total)) * 100))
@@ -158,6 +176,9 @@ class LibrarySync():
             if(pDialog != None):
                 pDialog.update(0, message="Removing Deleted Items")
             
+            if(self.ShouldStop()):
+                return False            
+            
             cleanNeeded = False
             allLocaldirs, filesMovies = xbmcvfs.listdir(movieLibrary)
             allMB3Movies = set(allMovies)
@@ -166,6 +187,9 @@ class LibrarySync():
                     self.deleteMovieFromKodiLibrary(dir)
                     cleanneeded = True
             
+            if(self.ShouldStop()):
+                return False            
+            
             allLocaldirs, filesTVShows = xbmcvfs.listdir(tvLibrary)
             allMB3TVShows = set(allTVShows)
             for dir in allLocaldirs:
@@ -173,6 +197,9 @@ class LibrarySync():
                     self.deleteTVShowFromKodiLibrary(dir)
                     cleanneeded = True
                     
+            if(self.ShouldStop()):
+                return False
+                        
             if cleanNeeded:
                 xbmc.executebuiltin("CleanLibrary(video)")
             
@@ -201,6 +228,10 @@ class LibrarySync():
         
             #process movies
             movieData = self.getMovies(False)
+            
+            if(self.ShouldStop()):
+                return False
+                        
             if(movieData == None):
                 return False    
             
@@ -224,6 +255,9 @@ class LibrarySync():
                         if kodiresume != resume:
                             self.setKodiResumePoint(kodiItem['movieid'],resume,total,"movie")
                             
+                    if(self.ShouldStop()):
+                        return False
+                        
                     # update progress bar
                     if(pDialog != None):
                         percentage = int(((float(count) / float(totalCount)) * 100))
@@ -232,6 +266,10 @@ class LibrarySync():
             
             #process Tv shows
             tvshowData = self.getTVShows(False)
+            
+            if(self.ShouldStop()):
+                return False
+                        
             if (tvshowData == None):
                 return False    
                 
@@ -258,6 +296,9 @@ class LibrarySync():
                             if kodiresume != resume:
                                 self.setKodiResumePoint(kodiItem['episodeid'],resume,total,"episode")
                                 
+                        if(self.ShouldStop()):
+                            return False
+                        
                         # update progress bar
                         if(pDialog != None):
                             percentage = int(((float(count) / float(totalCount)) * 100))
@@ -960,7 +1001,11 @@ class LibrarySync():
                             'id'             : view.get("Id")})
         return collections
         
-        
+    def ShouldStop(self):
+        if(xbmc.Player().isPlaying() or xbmc.abortRequested):
+            return True
+        else:
+            return False
         
         
         
