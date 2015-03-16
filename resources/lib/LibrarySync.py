@@ -29,6 +29,9 @@ dataPath = os.path.join(addondir,"library")
 movieLibrary = os.path.join(dataPath,'movies')
 tvLibrary = os.path.join(dataPath,'tvshows')
 
+sleepVal = 10
+showProgress = True
+
 class LibrarySync():   
         
     def syncDatabase(self):
@@ -39,7 +42,8 @@ class LibrarySync():
         
         try:
         
-            pDialog = xbmcgui.DialogProgressBG()
+            if(showProgress):
+                pDialog = xbmcgui.DialogProgressBG()
             if(pDialog != None):
                 pDialog.create('Sync DB', 'Sync DB')
                 
@@ -50,7 +54,7 @@ class LibrarySync():
             movieData = self.getMovies(True)
             
             if(self.ShouldStop()):
-                return False            
+                return True            
             
             if(movieData == None):
                 return False
@@ -62,6 +66,7 @@ class LibrarySync():
                 
             for item in movieData:
                 if not item.get('IsFolder'):
+                    xbmc.sleep(sleepVal)
                     kodiItem = self.getKodiMovie(item["Id"])
                     allMovies.append(item["Id"])
                     progMessage = "Processing"
@@ -74,7 +79,7 @@ class LibrarySync():
                         progMessage = "Updating"
                     
                     if(self.ShouldStop()):
-                        return False
+                        return True
                     
                     # update progress bar
                     if(pDialog != None):
@@ -88,7 +93,7 @@ class LibrarySync():
             tvShowData = self.getTVShows(True)
             
             if(self.ShouldStop()):
-                return False            
+                return True            
             
             if (tvShowData == None):
                 return
@@ -100,6 +105,7 @@ class LibrarySync():
                 
             for item in tvShowData:
                 if item.get('IsFolder'):
+                    xbmc.sleep(sleepVal)
                     kodiItem = self.getKodiTVShow(item["Id"])
                     allTVShows.append(item["Id"])
                     progMessage = "Processing"
@@ -112,7 +118,7 @@ class LibrarySync():
                         progMessage = "Updating"
                         
                     if(self.ShouldStop()):
-                        return False
+                        return True
                         
                     # update progress bar
                     if(pDialog != None):
@@ -131,7 +137,7 @@ class LibrarySync():
                 kodiEpisodes = self.getKodiEpisodes(tvshow)
                 
                 if(self.ShouldStop()):
-                    return False                
+                    return True                
                 
                 if(pDialog != None):
                     pDialog.update(0, "Sync DB : Processing Episodes")
@@ -140,6 +146,7 @@ class LibrarySync():
 
                 #we have to compare the lists somehow
                 for item in episodeData:
+                    xbmc.sleep(sleepVal)
                     comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
                     matchFound = False
                     progMessage = "Processing"
@@ -162,7 +169,7 @@ class LibrarySync():
                         progMessage = "Adding"
                         
                     if(self.ShouldStop()):
-                        return False                        
+                        return True                        
                         
                     # update progress bar
                     if(pDialog != None):
@@ -176,7 +183,7 @@ class LibrarySync():
                 pDialog.update(0, message="Removing Deleted Items")
             
             if(self.ShouldStop()):
-                return False            
+                return True            
             
             cleanNeeded = False
             allLocaldirs, filesMovies = xbmcvfs.listdir(movieLibrary)
@@ -187,7 +194,7 @@ class LibrarySync():
                     cleanneeded = True
             
             if(self.ShouldStop()):
-                return False            
+                return True            
             
             allLocaldirs, filesTVShows = xbmcvfs.listdir(tvLibrary)
             allMB3TVShows = set(allTVShows)
@@ -197,7 +204,7 @@ class LibrarySync():
                     cleanneeded = True
                     
             if(self.ShouldStop()):
-                return False
+                return True
                         
             if cleanNeeded:
                 WINDOW.setProperty("cleanNeeded", "true")
@@ -220,8 +227,8 @@ class LibrarySync():
         pDialog = None
         
         try:
-        
-            pDialog = xbmcgui.DialogProgressBG()
+            if(showProgress):
+                pDialog = xbmcgui.DialogProgressBG()
             if(pDialog != None):
                 pDialog.create('Sync PlayCounts', 'Sync PlayCounts')        
         
@@ -229,7 +236,7 @@ class LibrarySync():
             movieData = self.getMovies(False)
             
             if(self.ShouldStop()):
-                return False
+                return True
                         
             if(movieData == None):
                 return False    
@@ -241,6 +248,7 @@ class LibrarySync():
             
             for item in movieData:
                 if not item.get('IsFolder'):
+                    xbmc.sleep(sleepVal)
                     kodiItem = self.getKodiMovie(item["Id"])
                     userData=API().getUserData(item)
                     timeInfo = API().getTimeInfo(item)
@@ -255,7 +263,7 @@ class LibrarySync():
                             self.setKodiResumePoint(kodiItem['movieid'],resume,total,"movie")
                             
                     if(self.ShouldStop()):
-                        return False
+                        return True
                         
                     # update progress bar
                     if(pDialog != None):
@@ -267,21 +275,22 @@ class LibrarySync():
             tvshowData = self.getTVShows(False)
             
             if(self.ShouldStop()):
-                return False
+                return True
                         
             if (tvshowData == None):
                 return False    
-                
-            if(pDialog != None):
-                pDialog.update(0, "Sync PlayCounts: Processing Episodes")
-                totalCount = len(movieData) + 1
-                count = 1                  
             
             for item in tvshowData:
                 episodeData = self.getEpisodes(item["Id"], False)
                 
                 if (episodeData != None):
+                    if(pDialog != None):
+                        pDialog.update(0, "Sync PlayCounts: Processing Episodes")
+                        totalCount = len(episodeData) + 1
+                        count = 1                  
+                
                     for episode in episodeData:
+                        xbmc.sleep(sleepVal)
                         kodiItem = self.getKodiEpisodeByMbItem(episode)
                         userData=API().getUserData(episode)
                         timeInfo = API().getTimeInfo(episode)
@@ -296,7 +305,7 @@ class LibrarySync():
                                 self.setKodiResumePoint(kodiItem['episodeid'],resume,total,"episode")
                                 
                         if(self.ShouldStop()):
-                            return False
+                            return True
                         
                         # update progress bar
                         if(pDialog != None):
