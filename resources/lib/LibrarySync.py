@@ -710,7 +710,7 @@ class LibrarySync():
             
             if pendingChanges:
                 xbmc.sleep(sleepVal)
-                utils.logMsg("MB3 Sync","updating propertyarray..." + str(propertyName) + ": " + str(json_array))
+                utils.logMsg("MB3 Sync","updating propertyarray... Name:" + str(propertyName) + " Current:" + str(currentvalues) + " New:" + str(json_array))
                 xbmc.executeJSONRPC(jsoncommand %(id,propertyName,json_array))    
     
     def CleanName(self, name):
@@ -823,7 +823,9 @@ class LibrarySync():
                 premieredate = premieredatelist[0]
                 SubElement(root, "firstaired").text = premieredate
                 SubElement(root, "premieredate").text = premieredate
-            SubElement(root, "runtime").text = str(timeInfo.get('Duration'))
+                
+            if(timeInfo.get('Duration') != "0"):
+                SubElement(root, "runtime").text = str(timeInfo.get('Duration'))
             
             SubElement(root, "plot").text = utils.convertEncoding(API().getOverview(item))
             
