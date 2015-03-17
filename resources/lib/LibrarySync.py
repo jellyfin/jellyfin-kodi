@@ -269,6 +269,7 @@ class LibrarySync():
                         count = 1            
                 
                     for item in movieData:
+                        xbmc.sleep(sleepVal)
                         if not item.get('IsFolder'):
                             kodiItem = self.getKodiMovie(item["Id"])
                             userData=API().getUserData(item)
@@ -303,6 +304,7 @@ class LibrarySync():
                     return False    
                 
                 for item in tvshowData:
+                    xbmc.sleep(sleepVal)
                     episodeData = self.getEpisodes(item["Id"], False)
                     
                     if (episodeData != None):
@@ -312,6 +314,7 @@ class LibrarySync():
                             count = 1                  
                     
                         for episode in episodeData:
+                            xbmc.sleep(sleepVal)
                             kodiItem = self.getKodiEpisodeByMbItem(episode)
                             userData=API().getUserData(episode)
                             timeInfo = API().getTimeInfo(episode)
