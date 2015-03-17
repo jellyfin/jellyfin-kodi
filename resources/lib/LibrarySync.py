@@ -1161,9 +1161,19 @@ class LibrarySync():
             views = views.get("Items")
             collections=[]
             for view in views:
+                if view.get("Type") == 'UserView': # Need to grab the real main node
+                    newViewsUrl = server + '/mediabrowser/Users/' + userid + '/items?ParentId=' + view.get("Id") + '&SortBy=SortName&SortOrder=Ascending&format=json&ImageTypeLimit=1'
+                    jsonData = DownloadUtils().downloadUrl(newViewsUrl, suppress=True, popup=0 )
+                    if(jsonData != ""):
+                        newViews = json.loads(jsonData)
+                        newViews = newViews.get("Items")
+                        for newView in newViews:
+                            # There are multiple nodes in here like 'Latest', 'NextUp' - below we grab the full node.
+                            if newView.get("CollectionType") == "MovieMovies" or newView.get("CollectionType") == "TvShowSeries":
+                                view=newView
                 if(view.get("ChildCount") != 0):
                     Name =(view.get("Name")).encode('utf-8')
-            
+                    
                 total = str(view.get("ChildCount"))
                 type = view.get("CollectionType")
                 if type == None:
