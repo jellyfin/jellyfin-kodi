@@ -547,7 +547,10 @@ class LibrarySync():
         self.updateArtWork(KodiItem,"fanart", API().getArtwork(MBitem, "Backdrop"),"tvshow")
         
         #update common properties
-        self.updateProperty(KodiItem,"premiered",str(MBitem.get("ProductionYear")),"tvshow")
+        if MBitem.get("PremiereDate") != None:
+            premieredatelist = (MBitem.get("PremiereDate")).split("T")
+            premieredate = premieredatelist[0]
+            self.updateProperty(KodiItem,"premiered",premieredate,"tvshow")
         
         self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"tvshow")
         
@@ -605,7 +608,11 @@ class LibrarySync():
         #update common properties
         duration = (int(timeInfo.get('Duration'))*60)
         self.updateProperty(KodiItem,"runtime",duration,"episode")
-        self.updateProperty(KodiItem,"firstaired",str(MBitem.get("ProductionYear")),"episode")
+        
+        if MBitem.get("PremiereDate") != None:
+            premieredatelist = (MBitem.get("PremiereDate")).split("T")
+            premieredate = premieredatelist[0]
+            self.updateProperty(KodiItem,"firstaired",premieredate,"episode")
         
         if MBitem.get("CriticRating") != None:
             self.updateProperty(KodiItem,"rating",int(MBitem.get("CriticRating"))/10,"episode")
@@ -811,7 +818,11 @@ class LibrarySync():
                 SubElement(root, "aired").text = str(item.get("ProductionYear"))
                 
             SubElement(root, "year").text = str(item.get("ProductionYear"))
-            SubElement(root, "firstaired").text = str(item.get("ProductionYear"))
+            if item.get("PremiereDate") != None:
+                premieredatelist = (item.get("PremiereDate")).split("T")
+                premieredate = premieredatelist[0]
+                SubElement(root, "firstaired").text = premieredate
+                SubElement(root, "premieredate").text = premieredate
             SubElement(root, "runtime").text = str(timeInfo.get('Duration'))
             
             SubElement(root, "plot").text = utils.convertEncoding(API().getOverview(item))
