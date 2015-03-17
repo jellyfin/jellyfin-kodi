@@ -19,6 +19,7 @@ from API import API
 import Utils as utils
 from DownloadUtils import DownloadUtils
 from ReadEmbyDB import ReadEmbyDB
+from ReadKodiDB import ReadKodiDB
 from CreateFiles import CreateFiles
 
 addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
@@ -74,7 +75,7 @@ class LibrarySync():
                     for item in movieData:
                         xbmc.sleep(sleepVal)
                         if not item.get('IsFolder'):
-                            kodiItem = self.getKodiMovie(item["Id"])
+                            kodiItem = ReadKodiDB().getKodiMovie(item["Id"])
                             allMovies.append(item["Id"])
                             progMessage = "Processing"
                             item['Tag'] = []
@@ -116,7 +117,7 @@ class LibrarySync():
                 for item in tvShowData:
                     xbmc.sleep(sleepVal)
                     if item.get('IsFolder'):
-                        kodiItem = self.getKodiTVShow(item["Id"])
+                        kodiItem = ReadKodiDB().getKodiTVShow(item["Id"])
                         allTVShows.append(item["Id"])
                         progMessage = "Processing"
                         if kodiItem == None:
@@ -144,7 +145,7 @@ class LibrarySync():
                 for tvshow in allTVShows:
                     
                     episodeData = ReadEmbyDB().getEpisodes(tvshow,True)
-                    kodiEpisodes = self.getKodiEpisodes(tvshow)
+                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(tvshow)
                     
                     if(self.ShouldStop()):
                         return True                
@@ -268,7 +269,7 @@ class LibrarySync():
                     for item in movieData:
                         xbmc.sleep(sleepVal)
                         if not item.get('IsFolder'):
-                            kodiItem = self.getKodiMovie(item["Id"])
+                            kodiItem = ReadKodiDB().getKodiMovie(item["Id"])
                             userData=API().getUserData(item)
                             timeInfo = API().getTimeInfo(item)
                             if kodiItem != None:
@@ -312,7 +313,7 @@ class LibrarySync():
                     
                         for episode in episodeData:
                             xbmc.sleep(sleepVal)
-                            kodiItem = self.getKodiEpisodeByMbItem(episode)
+                            kodiItem = ReadKodiDB().getKodiEpisodeByMbItem(episode)
                             userData=API().getUserData(episode)
                             timeInfo = API().getTimeInfo(episode)
                             if kodiItem != None:
@@ -700,7 +701,7 @@ class LibrarySync():
             utils.logMsg("MB3 Sync","Added episode to Kodi Library",item["Id"] + " - " + item["Name"])
     
     def deleteMovieFromKodiLibrary(self, id ):
-        kodiItem = self.getKodiMovie(id)
+        kodiItem = ReadKodiDB().getKodiMovie(id)
         utils.logMsg("deleting movie from Kodi library",id)
         if kodiItem != None:
             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveMovie", "params": { "movieid": %i}, "id": 1 }' %(kodiItem["movieid"]))
@@ -724,7 +725,7 @@ class LibrarySync():
             utils.logMsg("Added TV Show to Kodi Library ",item["Id"] + " - " + item["Name"])
         
     def deleteTVShowFromKodiLibrary(self, id ):
-        kodiItem = self.getKodiTVShow(id)
+        kodiItem = ReadKodiDB().getKodiTVShow(id)
         utils.logMsg("deleting tvshow from Kodi library",id)
         if kodiItem != None:
             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveTVShow", "params": { "tvshowid": %i}, "id": 1 }' %(kodiItem["tvshowid"]))
@@ -812,87 +813,12 @@ class LibrarySync():
         cursor.close()
     
     
-    def getKodiMovie(self, id):
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties" : ["art", "rating", "thumbnail", "resume", "runtime", "year", "genre", "cast", "trailer", "country", "studio", "set", "imdbnumber", "mpaa", "tagline", "plotoutline","plot", "sorttitle", "director", "writer", "playcount", "tag", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}')
-        jsonobject = json.loads(json_response.decode('utf-8','replace'))  
-        movie = None
-       
-        if(jsonobject.has_key('result')):
-            result = jsonobject['result']
-            if(result.has_key('movies')):
-                movies = result['movies']
-                movie = movies[0]
-
-        return movie
-    
-    def getKodiTVShow(self, id):
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "premiered", "rating", "thumbnail", "playcount", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
-        jsonobject = json.loads(json_response.decode('utf-8','replace'))  
-        tvshow = None
-        if(jsonobject.has_key('result')):
-            result = jsonobject['result']
-            if(result.has_key('tvshows')):
-                tvshows = result['tvshows']
-                tvshow = tvshows[0]
-        return tvshow
-    
-    def getKodiEpisodes(self, id):
-        episodes = None
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["sorttitle", "title", "originaltitle", "playcount", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
-        jsonobject = json.loads(json_response.decode('utf-8','replace'))  
-        tvshow = None
-        if(jsonobject.has_key('result')):
-            result = jsonobject['result']
-            if(result.has_key('tvshows')):
-                tvshows = result['tvshows']
-                tvshow = tvshows[0]
-                
-                json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["title", "playcount", "plot", "season", "episode", "showtitle", "file", "lastplayed", "rating", "resume", "art", "streamdetails", "firstaired", "runtime", "writer", "cast", "dateadded"], "sort": {"method": "episode"}}, "id": 1}' %tvshow['tvshowid'])
-                jsonobject = json.loads(json_response.decode('utf-8','replace'))  
-                episodes = None
-                if(jsonobject.has_key('result')):
-                    result = jsonobject['result']
-                    if(result.has_key('episodes')):
-                        episodes = result['episodes']
-        return episodes
-        
-    def getKodiEpisodeByMbItem(self, MBitem):
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "is", "field": "title", "value": "' + MBitem.get("SeriesName").encode('utf-8') + '"} }, "id": "libTvShows"}')
-        jsonobject = json.loads(json_response.decode('utf-8','replace'))  
-        episode = None
-        if(jsonobject.has_key('result')):
-            result = jsonobject['result']
-            if(result.has_key('tvshows')):
-                tvshows = result['tvshows']
-                tvshow = tvshows[0]
-
-                # find the episode by combination of season and episode
-                json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["playcount","season", "resume", "episode"], "sort": {"method": "episode"}}, "id": 1}' %tvshow['tvshowid'])
-                jsonobject = json.loads(json_response.decode('utf-8','replace'))  
-                episodes = None
-                if(jsonobject.has_key('result')):
-                    result = jsonobject['result']
-                    if(result.has_key('episodes')):
-                        episodes = result['episodes']
-                        
-                        comparestring1 = str(MBitem.get("ParentIndexNumber")) + "-" + str(MBitem.get("IndexNumber"))
-                        for item in episodes:
-                            comparestring2 = str(item["season"]) + "-" + str(item["episode"])
-                            if comparestring1 == comparestring2:
-                                episode = item
-
-        return episode
-    
     def ShouldStop(self):
         if(xbmc.Player().isPlaying() or xbmc.abortRequested):
             return True
         else:
             return False
 
-    def executeJSONRPC(self, command):
-        print "ExecuteJSONRPC called!"
-        print inspect.stack()[1][3]
-        return xbmc.executeJSONRPC(command)
         
         
         

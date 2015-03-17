@@ -193,4 +193,9 @@ def get_params( paramstring ):
                         param[splitparams[0]]=splitparams[1]+"="+splitparams[2]
     return param
 
+def executeJSONRPC(self, command):
+    print "ExecuteJSONRPC called!"
+    print inspect.stack()[1][3]
+    return xbmc.executeJSONRPC(command)    
+   
  
