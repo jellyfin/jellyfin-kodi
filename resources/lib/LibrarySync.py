@@ -547,7 +547,7 @@ class LibrarySync():
         self.updateArtWork(KodiItem,"fanart", API().getArtwork(MBitem, "Backdrop"),"tvshow")
         
         #update common properties
-        self.updateProperty(KodiItem,"year",str(MBitem.get("ProductionYear")),"tvshow")
+        self.updateProperty(KodiItem,"premiered",str(MBitem.get("ProductionYear")),"tvshow")
         
         self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"tvshow")
         
@@ -1035,7 +1035,7 @@ class LibrarySync():
         return movie
     
     def getKodiTVShow(self, id):
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "rating", "thumbnail", "playcount", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "premiered", "rating", "thumbnail", "playcount", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         tvshow = None
         if(jsonobject.has_key('result')):
