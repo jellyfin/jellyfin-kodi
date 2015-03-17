@@ -24,9 +24,9 @@ class ReadEmbyDB():
         userid = downloadUtils.getUserId()        
         
         if fullinfo:
-            url = server + '/mediabrowser/Users/' + userid + '/items?ParentId=' + id + '&SortBy=SortName&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Movie&format=json&ImageTypeLimit=1'
+            url = server + '/mediabrowser/Users/' + userid + '/items?ParentId=' + id + '&SortBy=SortName&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Movie&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1'
         else:
-            url = server + '/mediabrowser/Users/' + userid + '/items?ParentId=' + id + '&SortBy=SortName&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Movie&format=json&ImageTypeLimit=1'
+            url = server + '/mediabrowser/Users/' + userid + '/items?ParentId=' + id + '&SortBy=SortName&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Movie&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1'
         
         jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
         if jsonData != None and jsonData != "":
