@@ -461,44 +461,44 @@ class LibrarySync():
         
         thumbPath = API().getArtwork(MBitem, "Primary")
         
-        utils.logMsg("Updating item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
+        changes = False
         
         #update artwork
-        self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "poster"),"movie")
-        self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"movie")
-        self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"movie")
-        self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"movie")
-        self.updateArtWork(KodiItem,"landscape", API().getArtwork(MBitem, "Thumb"),"movie")
-        self.updateArtWork(KodiItem,"discart", API().getArtwork(MBitem, "Disc"),"movie")
-        self.updateArtWork(KodiItem,"fanart", API().getArtwork(MBitem, "Backdrop"),"movie")
+        changes = self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "poster"),"movie")
+        changes = self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"movie")
+        changes = self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"movie")
+        changes = self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"movie")
+        changes = self.updateArtWork(KodiItem,"landscape", API().getArtwork(MBitem, "Thumb"),"movie")
+        changes = self.updateArtWork(KodiItem,"discart", API().getArtwork(MBitem, "Disc"),"movie")
+        changes = self.updateArtWork(KodiItem,"fanart", API().getArtwork(MBitem, "Backdrop"),"movie")
         
         #update common properties
         duration = (int(timeInfo.get('Duration'))*60)
-        self.updateProperty(KodiItem,"runtime",duration,"movie")
-        self.updateProperty(KodiItem,"year",MBitem.get("ProductionYear"),"movie")
-        self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"movie")
+        changes = self.updateProperty(KodiItem,"runtime",duration,"movie")
+        changes = self.updateProperty(KodiItem,"year",MBitem.get("ProductionYear"),"movie")
+        changes = self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"movie")
         
-        self.updatePropertyArray(KodiItem,"tag",MBitem.get("Tag"),"movie")
+        changes = self.updatePropertyArray(KodiItem,"tag",MBitem.get("Tag"),"movie")
         
         if MBitem.get("CriticRating") != None:
-            self.updateProperty(KodiItem,"rating",int(MBitem.get("CriticRating"))/10,"movie")
+            changes = self.updateProperty(KodiItem,"rating",int(MBitem.get("CriticRating"))/10,"movie")
         
-        self.updateProperty(KodiItem,"plotoutline",MBitem.get("ShortOverview"),"movie")
-        self.updateProperty(KodiItem,"set",MBitem.get("TmdbCollectionName"),"movie")
-        self.updateProperty(KodiItem,"sorttitle",MBitem.get("SortName"),"movie")
+        changes = self.updateProperty(KodiItem,"plotoutline",MBitem.get("ShortOverview"),"movie")
+        changes = self.updateProperty(KodiItem,"set",MBitem.get("TmdbCollectionName"),"movie")
+        changes = self.updateProperty(KodiItem,"sorttitle",MBitem.get("SortName"),"movie")
         
         if MBitem.get("ProviderIds") != None:
             if MBitem.get("ProviderIds").get("Imdb") != None:
-                self.updateProperty(KodiItem,"imdbnumber",MBitem.get("ProviderIds").get("Imdb"),"movie")
+                changes = self.updateProperty(KodiItem,"imdbnumber",MBitem.get("ProviderIds").get("Imdb"),"movie")
         
         # FIXME --> Taglines not returned by MB3 server !?
         if MBitem.get("TagLines") != None:
-            self.updateProperty(KodiItem,"tagline",MBitem.get("TagLines")[0],"movie")      
+            changes = self.updateProperty(KodiItem,"tagline",MBitem.get("TagLines")[0],"movie")      
         
-        self.updatePropertyArray(KodiItem,"writer",people.get("Writer"),"movie")
-        self.updatePropertyArray(KodiItem,"director",people.get("Director"),"movie")
-        self.updatePropertyArray(KodiItem,"genre",MBitem.get("Genres"),"movie")
-        self.updatePropertyArray(KodiItem,"studio",studios,"movie")
+        changes = self.updatePropertyArray(KodiItem,"writer",people.get("Writer"),"movie")
+        changes = self.updatePropertyArray(KodiItem,"director",people.get("Director"),"movie")
+        changes = self.updatePropertyArray(KodiItem,"genre",MBitem.get("Genres"),"movie")
+        changes = self.updatePropertyArray(KodiItem,"studio",studios,"movie")
         # FIXME --> ProductionLocations not returned by MB3 server !?
         self.updatePropertyArray(KodiItem,"country",MBitem.get("ProductionLocations"),"movie")
         
@@ -510,13 +510,16 @@ class LibrarySync():
             if(jsonData != ""):
                 trailerItem = json.loads(jsonData)
                 trailerUrl = "plugin://plugin.video.mb3sync/?id=" + trailerItem[0].get("Id") + '&mode=play'
-                self.updateProperty(KodiItem,"trailer",trailerUrl,"movie")
+                changes = self.updateProperty(KodiItem,"trailer",trailerUrl,"movie")
         
         #add actors
         self.AddActorsToMedia(KodiItem,MBitem.get("People"),"movie")
         
         self.createSTRM(MBitem)
         self.createNFO(MBitem)
+        
+        if changes:
+            utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
         
     def updateTVShowToKodiLibrary( self, MBitem, KodiItem ):
         
@@ -535,45 +538,49 @@ class LibrarySync():
         
         thumbPath = API().getArtwork(MBitem, "Primary")
         
-        utils.logMsg("Updating item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
+        changes = False
         
         #update artwork
-        self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "Primary"),"tvshow")
-        self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"tvshow")
-        self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"tvshow")
-        self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"tvshow")
-        self.updateArtWork(KodiItem,"landscape", API().getArtwork(MBitem, "Thumb"),"tvshow")
-        self.updateArtWork(KodiItem,"discart", API().getArtwork(MBitem, "Disc"),"tvshow")
-        self.updateArtWork(KodiItem,"fanart", API().getArtwork(MBitem, "Backdrop"),"tvshow")
+        changes = self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "Primary"),"tvshow")
+        changes = self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"tvshow")
+        changes = self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"tvshow")
+        changes = self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"tvshow")
+        changes = self.updateArtWork(KodiItem,"landscape", API().getArtwork(MBitem, "Thumb"),"tvshow")
+        changes = self.updateArtWork(KodiItem,"discart", API().getArtwork(MBitem, "Disc"),"tvshow")
+        changes = self.updateArtWork(KodiItem,"fanart", API().getArtwork(MBitem, "Backdrop"),"tvshow")
         
         #update common properties
         if MBitem.get("PremiereDate") != None:
             premieredatelist = (MBitem.get("PremiereDate")).split("T")
             premieredate = premieredatelist[0]
-            self.updateProperty(KodiItem,"premiered",premieredate,"tvshow")
+            changes = self.updateProperty(KodiItem,"premiered",premieredate,"tvshow")
         
-        self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"tvshow")
+        changes = self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"tvshow")
         
         if MBitem.get("CriticRating") != None:
-            self.updateProperty(KodiItem,"rating",int(MBitem.get("CriticRating"))/10,"tvshow")
+            changes = self.updateProperty(KodiItem,"rating",int(MBitem.get("CriticRating"))/10,"tvshow")
         
-        self.updateProperty(KodiItem,"sorttitle",MBitem.get("SortName"),"tvshow")
+        changes = self.updateProperty(KodiItem,"sorttitle",MBitem.get("SortName"),"tvshow")
         
         if MBitem.get("ProviderIds") != None:
             if MBitem.get("ProviderIds").get("Imdb") != None:
-                self.updateProperty(KodiItem,"imdbnumber",MBitem.get("ProviderIds").get("Imdb"),"tvshow")
+                changes = self.updateProperty(KodiItem,"imdbnumber",MBitem.get("ProviderIds").get("Imdb"),"tvshow")
         
 
-        self.updatePropertyArray(KodiItem,"genre",MBitem.get("Genres"),"tvshow")
-        self.updatePropertyArray(KodiItem,"studio",studios,"tvshow")
+        changes = self.updatePropertyArray(KodiItem,"genre",MBitem.get("Genres"),"tvshow")
+        changes = self.updatePropertyArray(KodiItem,"studio",studios,"tvshow")
         
         # FIXME --> ProductionLocations not returned by MB3 server !?
-        self.updatePropertyArray(KodiItem,"country",MBitem.get("ProductionLocations"),"tvshow")
+        changes = self.updatePropertyArray(KodiItem,"country",MBitem.get("ProductionLocations"),"tvshow")
         
         #add actors
-        self.AddActorsToMedia(KodiItem,MBitem.get("People"),"tvshow")
-
+        changes = self.AddActorsToMedia(KodiItem,MBitem.get("People"),"tvshow")
+        
         self.createNFO(MBitem)
+        
+        if changes:
+            utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
+        
                     
     def updateEpisodeToKodiLibrary( self, MBitem, KodiItem, tvshowId ):
         
@@ -593,38 +600,45 @@ class LibrarySync():
         
         thumbPath = API().getArtwork(MBitem, "Primary")
         
-        utils.logMsg("Updating item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
-        
+        changes = False
+
         # TODO --> set season poster instead of show poster ?
-        self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "tvshow.poster"),"episode")
-        self.updateArtWork(KodiItem,"fanart", API().getArtwork(MBitem, "Backdrop"),"episode")
-        self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"episode")
-        self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"episode")
-        self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"episode")
-        self.updateArtWork(KodiItem,"landscape", API().getArtwork(MBitem, "Thumb"),"episode")
-        self.updateArtWork(KodiItem,"discart", API().getArtwork(MBitem, "Disc"),"episode")
+        changes = self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "tvshow.poster"),"episode")
+        changes = self.updateArtWork(KodiItem,"fanart", API().getArtwork(MBitem, "Backdrop"),"episode")
+        changes = self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"episode")
+        changes = self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"episode")
+        changes = self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"episode")
+        changes = self.updateArtWork(KodiItem,"landscape", API().getArtwork(MBitem, "Thumb"),"episode")
+        changes = self.updateArtWork(KodiItem,"discart", API().getArtwork(MBitem, "Disc"),"episode")
         
         
         #update common properties
         duration = (int(timeInfo.get('Duration'))*60)
-        self.updateProperty(KodiItem,"runtime",duration,"episode")
+        changes = self.updateProperty(KodiItem,"runtime",duration,"episode")
         
         if MBitem.get("PremiereDate") != None:
             premieredatelist = (MBitem.get("PremiereDate")).split("T")
             premieredate = premieredatelist[0]
-            self.updateProperty(KodiItem,"firstaired",premieredate,"episode")
+            premieretime = premieredatelist[1].split(".")[0]
+            firstaired = premieredate + " " + premieretime
+            # for Helix we use the whole time string, for kodi 15 we have to change to only the datestring
+            # see: http://forum.kodi.tv/showthread.php?tid=218743
+            if KodiItem["firstaired"] != premieredate:
+                self.updateProperty(KodiItem,"firstaired",firstaired,"episode")
         
         if MBitem.get("CriticRating") != None:
-            self.updateProperty(KodiItem,"rating",int(MBitem.get("CriticRating"))/10,"episode")
-   
-        
-        self.updatePropertyArray(KodiItem,"writer",people.get("Writer"),"episode")
+            changes = self.updateProperty(KodiItem,"rating",int(MBitem.get("CriticRating"))/10,"episode")
+
+        changes = self.updatePropertyArray(KodiItem,"writer",people.get("Writer"),"episode")
 
         #add actors
-        self.AddActorsToMedia(KodiItem,MBitem.get("People"),"episode")
+        changes = self.AddActorsToMedia(KodiItem,MBitem.get("People"),"episode")
         
         self.createNFO(MBitem, tvshowId)
         self.createSTRM(MBitem, tvshowId)
+        
+        if changes:
+            utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
     
     # adds or updates artwork to the given Kodi file in database
     def updateArtWork(self,KodiItem,artWorkName,artworkValue, fileType):
@@ -641,16 +655,20 @@ class LibrarySync():
             id = KodiItem['movieid']
             jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "%s": "%s" }}, "id": 1 }'
         
-
+        changes = False
         if KodiItem['art'].has_key(artWorkName):
             curValue = urllib.unquote(KodiItem['art'][artWorkName]).decode('utf8')
             if not artworkValue in curValue:
                 xbmc.sleep(sleepVal)
                 utils.logMsg("MB3 Syncer","updating artwork..." + str(artworkValue) + " - " + str(curValue))
                 xbmc.executeJSONRPC(jsoncommand %(id, artWorkName, artworkValue))
+                changes = True
         elif artworkValue != None:
             xbmc.sleep(sleepVal)
             xbmc.executeJSONRPC(jsoncommand %(id, artWorkName, artworkValue))
+            changes = True
+            
+        return changes
     
     # adds or updates the given property on the videofile in Kodi database
     def updateProperty(self,KodiItem,propertyName,propertyValue,fileType):
@@ -670,7 +688,8 @@ class LibrarySync():
             id = KodiItem['movieid']
             jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": %i}, "id": 1 }'
             jsoncommand_s = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": "%s"}, "id": 1 }'
-
+        
+        changes = False
         if propertyValue != KodiItem[propertyName]:
             if propertyValue != None:
                 if type(propertyValue) is int:
@@ -678,11 +697,15 @@ class LibrarySync():
                     utils.logMsg("MB3 Sync","updating property..." + str(propertyName))
                     utils.logMsg("MB3 Sync","kodi value:" + str(KodiItem[propertyName]) + " MB value: " + str(propertyValue))
                     xbmc.executeJSONRPC(jsoncommand_i %(id, propertyName, propertyValue))
+                    changes = True
                 else:
                     xbmc.sleep(sleepVal)
                     utils.logMsg("MB3 Sync","updating property..." + str(propertyName))
                     utils.logMsg("MB3 Sync","kodi value:" + KodiItem[propertyName] + " MB value: " + propertyValue)
                     xbmc.executeJSONRPC(jsoncommand_s %(id, propertyName, propertyValue.encode('utf-8')))
+                    changes = True
+                    
+        return changes
 
     # adds or updates the property-array on the videofile in Kodi database
     def updatePropertyArray(self,KodiItem,propertyName,propertyCollection,fileType):
@@ -699,6 +722,7 @@ class LibrarySync():
             id = KodiItem['movieid']   
             jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": %s}, "id": 1 }'
         
+        
         pendingChanges = False
         if propertyCollection != None:
             currentvalues = set(KodiItem[propertyName])
@@ -711,7 +735,9 @@ class LibrarySync():
             if pendingChanges:
                 xbmc.sleep(sleepVal)
                 utils.logMsg("MB3 Sync","updating propertyarray..." + str(propertyName) + ": " + str(json_array))
-                xbmc.executeJSONRPC(jsoncommand %(id,propertyName,json_array))    
+                xbmc.executeJSONRPC(jsoncommand %(id,propertyName,json_array))
+
+        return pendingChanges
     
     def CleanName(self, name):
         name = name.replace(":", "-")
@@ -736,7 +762,9 @@ class LibrarySync():
                 filenamestr = self.CleanName(item.get("SeriesName")).encode('utf-8') + " S0E0 " + item["Name"].decode('utf-8') + ".strm"
             strmFile = os.path.join(itemPath,filenamestr)
         
+        changes = False
         if not xbmcvfs.exists(strmFile):
+            changes = True
             xbmcvfs.mkdir(itemPath)
             text_file = open(strmFile, "w")
             
@@ -744,7 +772,8 @@ class LibrarySync():
 
             text_file.writelines(playUrl)
             text_file.close()
-
+            
+        return changes
             
     def createNFO(self,item, parentId=None):
         downloadUtils = DownloadUtils()
@@ -776,7 +805,10 @@ class LibrarySync():
             nfoFile = os.path.join(itemPath,filenamestr)
             rootelement = "episodedetails"
         
+        changes = False
         if not xbmcvfs.exists(nfoFile):
+            changes = True
+            utils.logMsg("MB3 Syncer","creating NFO file " + nfoFile)
             xbmcvfs.mkdir(itemPath)        
             root = Element(rootelement)
             SubElement(root, "id").text = item["Id"]
@@ -890,38 +922,41 @@ class LibrarySync():
                         SubElement(actor_elem, "name").text = utils.convertEncoding(actor.get("Name"))
                         SubElement(actor_elem, "type").text = utils.convertEncoding(actor.get("Role"))
                         SubElement(actor_elem, "thumb").text = downloadUtils.imageUrl(actor.get("Id"), "Primary", 0, 400, 400)
-                            
-                    
-            
+
             ET.ElementTree(root).write(nfoFile, xml_declaration=True)
-    
+        return changes
     
     def addMovieToKodiLibrary( self, item ):
         itemPath = os.path.join(movieLibrary,item["Id"])
         strmFile = os.path.join(itemPath,item["Id"] + ".strm")
-
-        utils.logMsg("MB3 Sync","Adding item to Kodi Library",item["Id"] + " - " + item["Name"])
+        
+        changes = False
         
         #create path if not exists
         if not xbmcvfs.exists(itemPath + os.sep):
             xbmcvfs.mkdir(itemPath)
-            
+        
         #create nfo file
-        self.createNFO(item)
+        changes = self.createNFO(item)
         
         # create strm file
-        self.createSTRM(item)
+        changes = self.createSTRM(item)
+        
+        if changes:
+            utils.logMsg("MB3 Sync","Added movie to Kodi Library",item["Id"] + " - " + item["Name"])
     
     def addEpisodeToKodiLibrary(self, item, tvshowId):
+        
+        changes = False
 
-        utils.logMsg("MB3 Sync","Adding item to Kodi Library",item["Id"] + " - " + item["Name"])
-            
         #create nfo file
-        self.createNFO(item, tvshowId)
+        changes = self.createNFO(item, tvshowId)
         
         # create strm file
-        self.createSTRM(item, tvshowId)
-
+        changes = self.createSTRM(item, tvshowId)
+        
+        if changes:
+            utils.logMsg("MB3 Sync","Added episode to Kodi Library",item["Id"] + " - " + item["Name"])
     
     def deleteMovieFromKodiLibrary(self, id ):
         kodiItem = self.getKodiMovie(id)
@@ -934,14 +969,18 @@ class LibrarySync():
         
     def addTVShowToKodiLibrary( self, item ):
         itemPath = os.path.join(tvLibrary,item["Id"])
-        utils.logMsg("Adding item to Kodi Library",item["Id"] + " - " + item["Name"])
+        
+        changes = False
         
         #create path if not exists
         if not xbmcvfs.exists(itemPath + os.sep):
             xbmcvfs.mkdir(itemPath)
             
         #create nfo file
-        self.createNFO(item)
+        changes = self.createNFO(item)
+        
+        if changes:
+            utils.logMsg("Added TV Show to Kodi Library ",item["Id"] + " - " + item["Name"])
         
     def deleteTVShowFromKodiLibrary(self, id ):
         kodiItem = self.getKodiTVShow(id)
