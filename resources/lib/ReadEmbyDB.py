@@ -111,7 +111,7 @@ class ReadEmbyDB():
                             if newView.get("CollectionType") == "MovieMovies" or newView.get("CollectionType") == "TvShowSeries":
                                 view=newView
                 if(view.get("ChildCount") != 0):
-                    Name =(view.get("Name")).encode('utf-8')
+                    Name =(view.get("Name")) 
                     
                 total = str(view.get("ChildCount"))
                 type = view.get("CollectionType")
