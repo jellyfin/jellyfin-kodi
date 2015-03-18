@@ -79,7 +79,7 @@ class ReadKodiDB():
                     filepath = filepath.split(os.sep)[0]
                     id = filepath
                 else:
-                    id = str(kodimovie["movieid"])
+                    id = str(kodishow["tvshowid"])
                 allKodiTvShowsIds.append(id)
         
         return allKodiTvShowsIds
@@ -94,11 +94,11 @@ class ReadKodiDB():
             json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.mb3sync"}, "properties": ["sorttitle", "title", "playcount", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         tvshows = None
-       
+
         if(jsonobject.has_key('result')):
             result = jsonobject['result']
             if(result.has_key('tvshows')):
-                movies = result['tvshows']
+                tvshows = result['tvshows']
 
         return tvshows
     

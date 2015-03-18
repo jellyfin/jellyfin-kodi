@@ -214,22 +214,23 @@ class LibrarySync():
             
             # incremental sync --> new episodes only
             if not fullsync:
-                latestMBEpisodes = ReadEmbyDB().getTVShows(True,True)
-                allKodiTvShowsIds = set(ReadKodiDB().getKodiTvShowsIds())
-
+                latestMBEpisodes = ReadEmbyDB().getLatestEpisodes(True)
+                allKodiTvShowsIds = set(ReadKodiDB().getKodiTvShowsIds(True))
+                
+                updateNeeded = False
+                
+                # process new episodes
                 for tvshow in latestMBEpisodes:
-                    
-                    if tvshow["ParentId"] in allKodiTvShowsIds:
+                    if tvshow["SeriesId"] in allKodiTvShowsIds:
                         #only process tvshows that already exist in the db at incremental updates
-
-                        kodiEpisodes = ReadKodiDB().getKodiEpisodes(tvshow["ParentId"])
+                        kodiEpisodes = ReadKodiDB().getKodiEpisodes(tvshow["SeriesId"])
                         
                         if(self.ShouldStop()):
                             return True                
                         
                         if(pDialog != None):
                             pDialog.update(0, "Sync DB : Processing Episodes")
-                            total = len(episodeData) + 1
+                            total = len(latestMBEpisodes) + 1
                             count = 0         
 
                         #we have to compare the lists somehow
@@ -240,30 +241,67 @@ class LibrarySync():
                         if kodiEpisodes != None:
                             for KodiItem in kodiEpisodes:
                                 
-                                allEpisodes.append(KodiItem["episodeid"])
                                 comparestring2 = str(KodiItem["season"]) + "-" + str(KodiItem["episode"])
                                 if comparestring1 == comparestring2:
-                                    #match found - update episode
-                                    WriteKodiDB().updateEpisodeToKodiLibrary(tvshow,KodiItem,tvshow)
                                     matchFound = True
-                                    progMessage = "Updating"
 
                         if not matchFound:
                             #no match so we have to create it
-                            print "episode not found...creating it: "
                             WriteKodiDB().addEpisodeToKodiLibrary(tvshow,tvshow)
                             updateNeeded = True
                             progMessage = "Adding"
                             
                         if(self.ShouldStop()):
                             return True                        
-                            
+                        
                         # update progress bar
                         if(pDialog != None):
                             percentage = int(((float(count) / float(total)) * 100))
                             pDialog.update(percentage, message=progMessage + " Episode: " + str(count))
                             count += 1    
                 
+                #initiate library update and wait for finish before processing any updates
+                if updateNeeded:
+                    self.doKodiLibraryUpdate()
+                    updateNeeded = False
+                
+                #process updates
+                for tvshow in latestMBEpisodes:
+                    if tvshow["SeriesId"] in allKodiTvShowsIds:
+                        #only process tvshows that already exist in the db at incremental updates
+                        kodiEpisodes = ReadKodiDB().getKodiEpisodes(tvshow["SeriesId"])
+                        
+                        if(self.ShouldStop()):
+                            return True                
+                        
+                        if(pDialog != None):
+                            pDialog.update(0, "Sync DB : Processing Episodes")
+                            total = len(latestMBEpisodes) + 1
+                            count = 0         
+
+                        #we have to compare the lists somehow
+                        xbmc.sleep(sleepVal)
+                        comparestring1 = str(tvshow.get("ParentIndexNumber")) + "-" + str(tvshow.get("IndexNumber"))
+                        progMessage = "Processing"
+                        if kodiEpisodes != None:
+                            for KodiItem in kodiEpisodes:
+                                comparestring2 = str(KodiItem["season"]) + "-" + str(KodiItem["episode"])
+                                if comparestring1 == comparestring2:
+                                    #match found - update episode
+
+                                    progMessage = "Updating"
+                            
+                        if(self.ShouldStop()):
+                            return True                        
+                        
+
+                        # update progress bar
+                        if(pDialog != None):
+                            percentage = int(((float(count) / float(total)) * 100))
+                            pDialog.update(percentage, message=progMessage + " Episode: " + str(count))
+                            count += 1    
+                
+            
             # full sync --> Tv shows and Episodes
             if fullsync:
                 allTVShows = list()

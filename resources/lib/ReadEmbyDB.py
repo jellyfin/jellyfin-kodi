@@ -107,9 +107,9 @@ class ReadEmbyDB():
         userid = downloadUtils.getUserId()   
         
         if fullinfo:
-            url = server + '/mediabrowser/Users/' + userid + '/Items?Limit=20&SortBy=DateCreated&IsVirtualUnaired=false&IsMissing=False&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1'
+            url = server + '/mediabrowser/Users/' + userid + '/Items?Limit=20&SortBy=DateCreated&IsVirtualUnaired=false&IsMissing=False&Fields=ParentId,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1'
         else:
-            url = server + '/mediabrowser/Users/' + userid + '/Items?Limit=20&SortBy=DateCreated&IsVirtualUnaired=false&IsMissing=False&Fields=Name,SortName,CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1'
+            url = server + '/mediabrowser/Users/' + userid + '/Items?Limit=20&SortBy=DateCreated&IsVirtualUnaired=false&IsMissing=False&Fields=ParentId,Name,SortName,CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1'
         
         jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
         
