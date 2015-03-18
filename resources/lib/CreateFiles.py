@@ -215,4 +215,9 @@ class CreateFiles():
         name = name.replace(":", "-")
         name = name.replace("\\", "-")
         name = name.replace("/", "-")
+        name = name.replace("*", "-")
+        name = name.replace("?", "-")
+        name = name.replace("<", "-")
+        name = name.replace(">", "-")
+        name = name.replace("|", "-")
         return name    
