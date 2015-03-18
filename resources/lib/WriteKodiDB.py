@@ -126,7 +126,12 @@ class WriteKodiDB():
         changes = self.updatePropertyArray(KodiItem,"writer",people.get("Writer"),"movie")
         changes = self.updatePropertyArray(KodiItem,"director",people.get("Director"),"movie")
         changes = self.updatePropertyArray(KodiItem,"genre",MBitem.get("Genres"),"movie")
-        changes = self.updatePropertyArray(KodiItem,"studio",studios,"movie")
+        
+        if(studios != None):
+            for x in range(0, len(studios)):
+                studios[x] = studios[x].replace("/", "&")
+            changes = self.updatePropertyArray(KodiItem,"studio",studios,"movie")
+            
         # FIXME --> ProductionLocations not returned by MB3 server !?
         self.updatePropertyArray(KodiItem,"country",MBitem.get("ProductionLocations"),"movie")
         
@@ -196,7 +201,11 @@ class WriteKodiDB():
         
 
         changes = self.updatePropertyArray(KodiItem,"genre",MBitem.get("Genres"),"tvshow")
-        changes = self.updatePropertyArray(KodiItem,"studio",studios,"tvshow")
+        
+        if(studios != None):
+            for x in range(0, len(studios)):
+                studios[x] = studios[x].replace("/", "&")
+            changes = self.updatePropertyArray(KodiItem,"studio",studios,"tvshow")
         
         # FIXME --> ProductionLocations not returned by MB3 server !?
         changes = self.updatePropertyArray(KodiItem,"country",MBitem.get("ProductionLocations"),"tvshow")
@@ -349,10 +358,9 @@ class WriteKodiDB():
         elif fileType == "movie":
             id = KodiItem['movieid']   
             jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": %s}, "id": 1 }'
-        
-        
+
         pendingChanges = False
-        if propertyCollection != None:
+        if propertyCollection != None:   
             currentvalues = set(KodiItem[propertyName])
             genrestring = ""
             for item in propertyCollection:

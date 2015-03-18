@@ -29,9 +29,9 @@ class Kodi_Monitor(xbmc.Monitor):
             # and when the playcount is updated byt he sync it just sends the same data back to the server
             # if you add this back in you will never be able to trigger a play status update while the sync is running
             
-            xbmc.log("Kodi_Monitor -> onNotification -> VideoLibrary.OnUpdate : " + str(data))
             jsondata = json.loads(data)
             if jsondata != None:
+                xbmc.log("Kodi_Monitor -> onNotification -> VideoLibrary.OnUpdate : " + str(data))
                 playcount = None
                 playcount = jsondata.get("playcount")
                 item = jsondata.get("item").get("id")
