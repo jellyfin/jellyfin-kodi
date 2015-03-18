@@ -94,12 +94,10 @@ class API():
         if item.get("SeriesStudio") != None and item.get("SeriesStudio") != '':
             studios.append(item.get("SeriesStudio"))
         else:        
-            if(item.get("Studios") != [] and item.get("Studios") != None):
+            if(item.get("Studios") != []):
                 for studio_string in item.get("Studios"):
                     temp=studio_string.get("Name")
                     studios.append(temp)
-            else:
-                studios.append("")
         return studios
 
     def getMediaStreams(self, item, mediaSources=False):    

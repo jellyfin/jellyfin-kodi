@@ -144,7 +144,10 @@ class PlaybackUtils():
         
         # Process Studios
         studios = API().getStudios(result)
-        studio = studios[0]
+        if studios == []:
+            studio = ""
+        else:
+            studio = studios[0]
         listItem.setInfo('video', {'studio' : studio})    
 
         # play info
