@@ -139,7 +139,7 @@ class CreateFiles():
                 premieredatelist = (item.get("PremiereDate")).split("T")
                 premieredate = premieredatelist[0]
                 SubElement(root, "firstaired").text = premieredate
-                SubElement(root, "premieredate").text = premieredate
+                SubElement(root, "premiered").text = premieredate
                 
             if(timeInfo.get('Duration') != "0"):
                 SubElement(root, "runtime").text = str(timeInfo.get('Duration'))

@@ -309,6 +309,8 @@ class LibrarySync():
                 #FIXME --> for now pull all tv shows and use the incremental update only at episode level
                 tvShowData = ReadEmbyDB().getTVShows(True,True)
                 
+                updateNeeded = False
+                
                 if(self.ShouldStop()):
                     return True            
                 
