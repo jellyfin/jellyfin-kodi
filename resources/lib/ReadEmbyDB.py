@@ -41,7 +41,7 @@ class ReadEmbyDB():
 
         return result
     
-    def getTVShows(self, fullinfo = False):
+    def getTVShows(self, fullinfo = False, fullSync = False):
         result = None
         
         addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
@@ -50,12 +50,18 @@ class ReadEmbyDB():
         server = host + ":" + port
         
         downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()   
+        userid = downloadUtils.getUserId()
+
+        if not fullSync:
+            sortstring = "&Limit=20&SortBy=DateCreated"
+        else:
+            sortstring = "&SortBy=SortName"
+        
         
         if fullinfo:
-            url = server + '/mediabrowser/Users/' + userid + '/Items?&SortBy=SortName&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1'
+            url = server + '/mediabrowser/Users/' + userid + '/Items?' + sortstring + '&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1'
         else:
-            url = server + '/mediabrowser/Users/' + userid + '/Items?&SortBy=SortName&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1'
+            url = server + '/mediabrowser/Users/' + userid + '/Items?' + sortstring + '&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1'
         
         jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
         if jsonData != None and jsonData != "":
@@ -64,7 +70,7 @@ class ReadEmbyDB():
                 result = result['Items']
 
         return result
-    
+
     def getEpisodes(self, showId, fullinfo = False):
         result = None
         
@@ -88,6 +94,31 @@ class ReadEmbyDB():
             if(result.has_key('Items')):
                 result = result['Items']
         return result
+    
+    def getLatestEpisodes(self,fullinfo = False):
+        result = None
+        
+        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port
+        
+        downloadUtils = DownloadUtils()
+        userid = downloadUtils.getUserId()   
+        
+        if fullinfo:
+            url = server + '/mediabrowser/Users/' + userid + '/Items?Limit=20&SortBy=DateCreated&IsVirtualUnaired=false&IsMissing=False&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1'
+        else:
+            url = server + '/mediabrowser/Users/' + userid + '/Items?Limit=20&SortBy=DateCreated&IsVirtualUnaired=false&IsMissing=False&Fields=Name,SortName,CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1'
+        
+        jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
+        
+        if jsonData != None and jsonData != "":
+            result = json.loads(jsonData)
+            if(result.has_key('Items')):
+                result = result['Items']
+        return result
+    
     
     def getCollections(self, type):
         #Build a list of the user views
