@@ -23,16 +23,20 @@ class Kodi_Monitor(xbmc.Monitor):
         if method == "VideoLibrary.OnUpdate":
             
             #check windowprop if the sync is busy to prevent any false updates
-            WINDOW = xbmcgui.Window( 10000 )
-            if WINDOW.getProperty("librarysync") != "busy":
-                xbmc.log("Kodi_Monitor -> onNotification -> VideoLibrary.OnUpdate : " + str(data))
-                jsondata = json.loads(data)
-                if jsondata != None:
-                    playcount = None
-                    playcount = jsondata.get("playcount")
-                    item = jsondata.get("item").get("id")
-                    type = jsondata.get("item").get("type")
-                    
-                    if playcount != None:
-                        WriteKodiDB().updatePlayCountFromKodi(item, type, playcount)
+            #WINDOW = xbmcgui.Window( 10000 )
+            #if WINDOW.getProperty("librarysync") != "busy":
+            # I don't thing we need this, the playcount is not present in updates that don't touch that
+            # and when the playcount is updated byt he sync it just sends the same data back to the server
+            # if you add this back in you will never be able to trigger a play status update while the sync is running
+            
+            xbmc.log("Kodi_Monitor -> onNotification -> VideoLibrary.OnUpdate : " + str(data))
+            jsondata = json.loads(data)
+            if jsondata != None:
+                playcount = None
+                playcount = jsondata.get("playcount")
+                item = jsondata.get("item").get("id")
+                type = jsondata.get("item").get("type")
+                
+                if playcount != None:
+                    WriteKodiDB().updatePlayCountFromKodi(item, type, playcount)
 

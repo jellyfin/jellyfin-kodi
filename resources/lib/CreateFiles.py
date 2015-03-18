@@ -91,7 +91,7 @@ class CreateFiles():
         changes = False
         if not xbmcvfs.exists(nfoFile):
             changes = True
-            utils.logMsg("MB3 Syncer","creating NFO file " + nfoFile)
+            #utils.logMsg("MB3 Syncer","creating NFO file " + nfoFile)
             xbmcvfs.mkdir(itemPath)        
             root = Element(rootelement)
             SubElement(root, "id").text = item["Id"]
