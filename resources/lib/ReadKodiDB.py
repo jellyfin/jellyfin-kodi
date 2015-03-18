@@ -7,9 +7,17 @@ import xbmc
 import xbmcgui
 import xbmcaddon
 import json
+import os
+
+addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
+dataPath = os.path.join(addondir,"library")
+movieLibrary = os.path.join(dataPath,'movies')
+tvLibrary = os.path.join(dataPath,'tvshows')
 
 class ReadKodiDB():   
     def getKodiMovie(self, id):
+        #returns a single movie from Kodi db selected on MB item ID
         json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties" : ["art", "rating", "thumbnail", "resume", "runtime", "year", "genre", "cast", "trailer", "country", "studio", "set", "imdbnumber", "mpaa", "tagline", "plotoutline","plot", "sorttitle", "director", "writer", "playcount", "tag", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         movie = None
@@ -21,6 +29,43 @@ class ReadKodiDB():
                 movie = movies[0]
 
         return movie
+    
+    def getKodiMovies(self,fullInfo = False):
+        #returns all movies in Kodi db inserted by MB
+        if fullInfo:
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.mb3sync"}, "properties" : ["art", "rating", "thumbnail", "resume", "runtime", "year", "genre", "cast", "trailer", "country", "studio", "set", "imdbnumber", "mpaa", "tagline", "plotoutline","plot", "sorttitle", "director", "writer", "playcount", "tag", "file"] }, "id": "libMovies"}')
+        else:
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.mb3sync"}, "properties" : ["resume", "playcount", "file"] }, "id": "libMovies"}')
+        jsonobject = json.loads(json_response.decode('utf-8','replace'))  
+        movies = None
+       
+        if(jsonobject.has_key('result')):
+            result = jsonobject['result']
+            if(result.has_key('movies')):
+                movies = result['movies']
+
+        return movies
+    
+    def getKodiMoviesIds(self,returnMB3Ids = False):
+        # returns a list of movieIds or MB3 Id's from all movies currently in the Kodi library
+        allKodiMovies = self.getKodiMovies(False)
+        allKodiMovieIds = list()
+        
+        if allKodiMovies != None:
+            for kodimovie in allKodiMovies:
+                if returnMB3Ids:
+                    filepath = kodimovie["file"]
+                    filepath = filepath.replace(movieLibrary + os.sep, "")
+                    filepath = filepath.replace(".strm", "")
+                    filepath = filepath.split(os.sep)[0]
+                    id = filepath
+                else:
+                    id = str(kodimovie["movieid"])
+                allKodiMovieIds.append(id)
+        
+        return allKodiMovieIds
+    
+    
     
     def getKodiTVShow(self, id):
         json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "premiered", "rating", "thumbnail", "playcount", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')

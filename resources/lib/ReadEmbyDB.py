@@ -12,7 +12,7 @@ from DownloadUtils import DownloadUtils
 addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
 
 class ReadEmbyDB():   
-    def getMovies(self, id, fullinfo = False):
+    def getMovies(self, id, fullinfo = False, fullSync = True):
         result = None
         
         addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
@@ -21,12 +21,17 @@ class ReadEmbyDB():
         server = host + ":" + port
         
         downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()        
+        userid = downloadUtils.getUserId()
+
+        if not fullSync:
+            sortstring = "?Limit=20&SortBy=DateCreated"
+        else:
+            sortstring = "&SortBy=SortName"
         
         if fullinfo:
-            url = server + '/mediabrowser/Users/' + userid + '/items?ParentId=' + id + '&SortBy=SortName&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Movie&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1'
+            url = server + '/mediabrowser/Users/' + userid + '/items?ParentId=' + id + sortstring + '&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=Movie&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1'
         else:
-            url = server + '/mediabrowser/Users/' + userid + '/items?ParentId=' + id + '&SortBy=SortName&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Movie&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1'
+            url = server + '/mediabrowser/Users/' + userid + '/items?ParentId=' + id + sortstring + '&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Movie&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1'
         
         jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
         if jsonData != None and jsonData != "":

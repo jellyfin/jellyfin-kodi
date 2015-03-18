@@ -29,11 +29,11 @@ dataPath = os.path.join(addondir,"library")
 movieLibrary = os.path.join(dataPath,'movies')
 tvLibrary = os.path.join(dataPath,'tvshows')
 
-sleepVal = 10
+sleepVal = 20
 showProgress = True
 
 processMovies = True
-processTvShows = True
+processTvShows = False
 
 
 class LibrarySync():   
@@ -43,153 +43,125 @@ class LibrarySync():
         WINDOW = xbmcgui.Window( 10000 )
         WINDOW.setProperty("librarysync", "busy")
         pDialog = None
+
+        #set some variable to check if this is the first run
+        startupDone = False
+        startupStr = WINDOW.getProperty("startup")
+        if startupStr == "done":
+            startupDone = True
+        
+        #are we running startup sync or background sync ?
+        if not startupDone:
+            syncOption = addon.getSetting("syncSettingStartup")
+        else:
+            syncOption = addon.getSetting("syncSettingBackground")
+        
+        #what sync method to perform ?
+        if syncOption == "Full Sync":
+            self.MoviesSync(True)
+        if syncOption == "Incremental Sync":
+            self.MoviesSync(False)
+        
+        WINDOW.setProperty("startup", "done")
+                        
+              
+    
+    def MoviesSync(self, fullsync=True):
+        
+        WINDOW = xbmcgui.Window( 10000 )
+        WINDOW.setProperty("librarysync", "busy")
+        pDialog = None
         
         try:
         
-            if(showProgress):
+            if(addon.getSetting("enableProgressFullSync")):
                 pDialog = xbmcgui.DialogProgressBG()
             if(pDialog != None):
                 pDialog.create('Sync DB', 'Sync DB')
                 
-            updateNeeded = False    
+            allEmbyMovieIds = list()
+                
+            views = ReadEmbyDB().getCollections("movies")
+
+            for view in views:
+                
+                updateNeeded = False
+                
+                #process new movies
+                allMB3Movies = ReadEmbyDB().getMovies(view.get('id'), True, fullsync)
+                allKodiIds = set(ReadKodiDB().getKodiMoviesIds(True))
             
-            #process full movies sync
-            if processMovies:
-                allMovies = list()
-                
-                views = ReadEmbyDB().getCollections("movies")
-                for view in views:
-            
-                    movieData = ReadEmbyDB().getMovies(view.get('id'), True)
-                
-                    if(self.ShouldStop()):
-                        return True            
-                
-                    if(movieData == None):
-                        return False
-                
-                    if(pDialog != None):
-                        pDialog.update(0, "Sync DB : Processing " + view.get('title'))
-                        total = len(movieData) + 1
-                        count = 1
-                    
-                    for item in movieData:
-                        xbmc.sleep(sleepVal)
-                        if not item.get('IsFolder'):
-                            kodiItem = ReadKodiDB().getKodiMovie(item["Id"])
-                            allMovies.append(item["Id"])
-                            progMessage = "Processing"
-                            item['Tag'] = []
-                            item['Tag'].append(view.get('title'))
-                            if kodiItem == None:
-                                WriteKodiDB().addMovieToKodiLibrary(item)
-                                updateNeeded = True
-                                progMessage = "Adding"
-                            else:
-                                WriteKodiDB().updateMovieToKodiLibrary(item, kodiItem)
-                                progMessage = "Updating"
-                        
-                            if(self.ShouldStop()):
-                                return True
-                        
-                            # update progress bar
-                            if(pDialog != None):
-                                percentage = int(((float(count) / float(total)) * 100))
-                                pDialog.update(percentage, message=progMessage + " Movie: " + str(count))
-                                count += 1
-                        
-            #process full tv shows sync
-            if processTvShows:
-                allTVShows = list()
-                allEpisodes = list()
-                tvShowData = ReadEmbyDB().getTVShows(True)
-                
                 if(self.ShouldStop()):
                     return True            
-                
-                if (tvShowData == None):
-                    return
-                    
+            
+                if(allMB3Movies == None):
+                    return False
+            
                 if(pDialog != None):
-                    pDialog.update(0, "Sync DB : Processing TV Shows")
-                    total = len(tvShowData) + 1
-                    count = 0
+                    pDialog.update(0, "Sync DB : Processing " + view.get('title'))
+                    total = len(allMB3Movies) + 1
+                    count = 1
+                
+                for item in allMB3Movies:
                     
-                for item in tvShowData:
-                    xbmc.sleep(sleepVal)
-                    if item.get('IsFolder'):
-                        kodiItem = ReadKodiDB().getKodiTVShow(item["Id"])
-                        allTVShows.append(item["Id"])
-                        progMessage = "Processing"
-                        if kodiItem == None:
-                            WriteKodiDB().addTVShowToKodiLibrary(item)
+                    if not item.get('IsFolder'):
+                        allEmbyMovieIds.append(item["Id"])
+                        progMessage = "Updating movies"
+                        item['Tag'] = []
+                        item['Tag'].append(view.get('title'))
+                        
+                        if item["Id"] not in allKodiIds:
+                            xbmc.sleep(sleepVal)
+                            WriteKodiDB().addMovieToKodiLibrary(item)
                             updateNeeded = True
                             progMessage = "Adding"
-                        else:
-                            WriteKodiDB().updateTVShowToKodiLibrary(item, kodiItem)
-                            progMessage = "Updating"
-                            
+                        
                         if(self.ShouldStop()):
                             return True
-                            
-                        # update progress bar
-                        if(pDialog != None):
-                            percentage = int(((float(count) / float(total)) * 100))
-                            pDialog.update(percentage, message=progMessage + " Tv Show: " + str(count))
-                            count += 1                        
-                        
-                
-                #process episodes (will only be possible when tv show is scanned to library)   
-                #TODO --> maybe pull full info only when needed ?
-                allEpisodes = list()
-                
-                for tvshow in allTVShows:
-                    
-                    episodeData = ReadEmbyDB().getEpisodes(tvshow,True)
-                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(tvshow)
-                    
-                    if(self.ShouldStop()):
-                        return True                
-                    
-                    if(pDialog != None):
-                        pDialog.update(0, "Sync DB : Processing Episodes")
-                        total = len(episodeData) + 1
-                        count = 0         
-
-                    #we have to compare the lists somehow
-                    for item in episodeData:
-                        xbmc.sleep(sleepVal)
-                        comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
-                        matchFound = False
-                        progMessage = "Processing"
-                        if kodiEpisodes != None:
-                            for KodiItem in kodiEpisodes:
-                                
-                                allEpisodes.append(KodiItem["episodeid"])
-                                comparestring2 = str(KodiItem["season"]) + "-" + str(KodiItem["episode"])
-                                if comparestring1 == comparestring2:
-                                    #match found - update episode
-                                    WriteKodiDB().updateEpisodeToKodiLibrary(item,KodiItem,tvshow)
-                                    matchFound = True
-                                    progMessage = "Updating"
-
-                        if not matchFound:
-                            #no match so we have to create it
-                            print "episode not found...creating it: "
-                            WriteKodiDB().addEpisodeToKodiLibrary(item,tvshow)
-                            updateNeeded = True
-                            progMessage = "Adding"
-                            
+                                               
                         if(self.ShouldStop()):
-                            return True                        
-                            
+                            return True
+                    
                         # update progress bar
                         if(pDialog != None):
                             percentage = int(((float(count) / float(total)) * 100))
-                            pDialog.update(percentage, message=progMessage + " Episode: " + str(count))
-                            count += 1    
+                            pDialog.update(percentage, message=progMessage + " Movie: " + str(count))
+                            count += 1
+                
+                #initiate library update and wait for finish before processing any updates
+                if updateNeeded:
+                    self.doKodiLibraryUpdate()  
+                
+                if(self.ShouldStop()):
+                    return True
+                
+                #process updates
+                allKodiMovies = ReadKodiDB().getKodiMovies(True)
+                for item in allMB3Movies:
                     
-            
+                    if not item.get('IsFolder'):
+                        progMessage = "Updating movies"
+                        item['Tag'] = []
+                        item['Tag'].append(view.get('title'))
+                        
+                        progMessage = "Updating"
+                        
+                        for kodimovie in allKodiMovies:
+                            if item["Id"] in kodimovie["file"]:
+                                WriteKodiDB().updateMovieToKodiLibrary(item,kodimovie)
+                                break
+                        
+                        if(self.ShouldStop()):
+                            return True
+                                               
+                        if(self.ShouldStop()):
+                            return True
+                    
+                        # update progress bar
+                        if(pDialog != None):
+                            percentage = int(((float(count) / float(total)) * 100))
+                            pDialog.update(percentage, message=progMessage + " Movie: " + str(count))
+                            count += 1
             
             if(pDialog != None):
                 pDialog.update(0, message="Removing Deleted Items")
@@ -199,36 +171,26 @@ class LibrarySync():
             
             cleanNeeded = False
             
-            # process deletes for movies
-            if processMovies:
-                allLocaldirs, filesMovies = xbmcvfs.listdir(movieLibrary)
-                allMB3Movies = set(allMovies)
-                for dir in allLocaldirs:
-                    if not dir in allMB3Movies:
+            # process any deletes only at fullsync
+            if fullsync:
+                allKodiIds = ReadKodiDB().getKodiMoviesIds(True)
+                allEmbyMovieIds = set(allEmbyMovieIds)
+                for kodiId in allKodiIds:
+                    if not kodiId in allEmbyMovieIds:
+                        xbmc.sleep(sleepVal)
+                        print "delete needed for: " + kodiId
                         WriteKodiDB().deleteMovieFromKodiLibrary(dir)
-                        cleanneeded = True
-                
-                if(self.ShouldStop()):
-                    return True            
+                        cleanNeeded = True
             
-            # process deletes for episodes
-            if processTvShows:
-                # TODO --> process deletes for episodes !!!
-                allLocaldirs, filesTVShows = xbmcvfs.listdir(tvLibrary)
-                allMB3TVShows = set(allTVShows)
-                for dir in allLocaldirs:
-                    if not dir in allMB3TVShows:
-                        WriteKodiDB().deleteTVShowFromKodiLibrary(dir)
-                        cleanneeded = True
+            if(self.ShouldStop()):
+                return True            
+            
+            #initiate library clean and wait for finish before processing any updates
+            if cleanNeeded:
+                doKodiLibraryUpdate(True)
                     
             if(self.ShouldStop()):
                 return True
-                        
-            if cleanNeeded:
-                WINDOW.setProperty("cleanNeeded", "true")
-            
-            if updateNeeded:
-                WINDOW.setProperty("updateNeeded", "true")
         
         finally:
             WINDOW.clearProperty("librarysync")
@@ -236,7 +198,19 @@ class LibrarySync():
                 pDialog.close()
         
         return True
-                              
+    
+    def doKodiLibraryUpdate(self,clean=False):
+        #initiate library update and wait for finish before processing any updates
+        if clean:
+            xbmc.executebuiltin("CleanLibrary(video)")
+        else:
+            xbmc.executebuiltin("UpdateLibrary(video)")
+        xbmc.sleep(1000)
+        while (xbmc.getCondVisibility("Library.IsScanningVideo")):
+            if(self.ShouldStop()):
+                return True
+            xbmc.sleep(250)
+    
     def updatePlayCounts(self):
         #update all playcounts from MB3 to Kodi library
         
@@ -245,7 +219,7 @@ class LibrarySync():
         pDialog = None
         
         try:
-            if(showProgress):
+            if(addon.getSetting("enableProgressPlayCountSync")):
                 pDialog = xbmcgui.DialogProgressBG()
             if(pDialog != None):
                 pDialog.create('Sync PlayCounts', 'Sync PlayCounts')        
@@ -254,20 +228,20 @@ class LibrarySync():
             if processMovies:
                 views = ReadEmbyDB().getCollections("movies")
                 for view in views:
-                    movieData = ReadEmbyDB().getMovies(view.get('id'),False)
+                    allMB3Movies = ReadEmbyDB().getMovies(view.get('id'),False)
                 
                     if(self.ShouldStop()):
                         return True
                             
-                    if(movieData == None):
+                    if(allMB3Movies == None):
                         return False    
                 
                     if(pDialog != None):
                         pDialog.update(0, "Sync PlayCounts: Processing Movies")
-                        totalCount = len(movieData) + 1
+                        totalCount = len(allMB3Movies) + 1
                         count = 1            
                 
-                    for item in movieData:
+                    for item in allMB3Movies:
                         xbmc.sleep(sleepVal)
                         if not item.get('IsFolder'):
                             kodiItem = ReadKodiDB().getKodiMovie(item["Id"])

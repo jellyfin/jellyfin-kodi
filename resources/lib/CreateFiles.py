@@ -101,6 +101,8 @@ class CreateFiles():
             
             SubElement(root, "thumb").text = API().getArtwork(item, "Primary")
             SubElement(root, "fanart").text = API().getArtwork(item, "Backdrop")
+            
+            
             SubElement(root, "title").text = utils.convertEncoding(item["Name"])
             SubElement(root, "originaltitle").text = utils.convertEncoding(item["Name"])
             SubElement(root, "sorttitle").text = utils.convertEncoding(item["SortName"])
@@ -168,7 +170,7 @@ class CreateFiles():
             
             if studios != None:
                 for studio in studios:
-                    SubElement(root, "studio").text = utils.convertEncoding(studio)
+                    SubElement(root, "studio").text = utils.convertEncoding(studio).replace("/", "&")
                     
             if item.get("ProductionLocations") != None:
                 for country in item.get("ProductionLocations"):
