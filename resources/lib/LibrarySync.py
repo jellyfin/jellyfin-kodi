@@ -68,6 +68,7 @@ class LibrarySync():
     
     def MoviesSync(self, fullsync=True):
         
+        
         WINDOW = xbmcgui.Window( 10000 )
         WINDOW.setProperty("librarysync", "busy")
         pDialog = None
@@ -85,46 +86,7 @@ class LibrarySync():
 
             for view in views:
                 
-<<<<<<< HEAD
                 updateNeeded = False
-=======
-                    if(pDialog != None):
-                        pDialog.update(0, "Sync DB : Processing " + view.get('title'))
-                        total = len(movieData) + 1
-                        count = 1
-                    
-                    for item in movieData:
-                        xbmc.sleep(sleepVal)
-                        if not item.get('IsFolder'):
-                            kodiItem = ReadKodiDB().getKodiMovie(item["Id"])
-                            allMovies.append(item["Id"])
-                            progMessage = "Processing"
-                            item['Tag'] = []
-                            item['Tag'].append(view.get('title'))
-                            if kodiItem == None:
-                                WriteKodiDB().addMovieToKodiLibrary(item)
-                                updateNeeded = True
-                                progMessage = "Adding"
-                            else:
-                                WriteKodiDB().updateMovieToKodiLibrary(item, kodiItem)
-                                progMessage = "Updating"
-                        
-                            if(self.ShouldStop()):
-                                return True
-                        
-                            # update progress bar
-                            if(pDialog != None):
-                                percentage = int(((float(count) / float(total)) * 100))
-                                if count % 10 == 0:
-                                    pDialog.update(percentage, message=progMessage + " Movie: " + str(count))
-                                count += 1
-                        
-            #process full tv shows sync
-            if processTvShows:
-                allTVShows = list()
-                allEpisodes = list()
-                tvShowData = ReadEmbyDB().getTVShows(True)
->>>>>>> 5127a770b59a941a51bae652ab239fafa77591b3
                 
                 #process new movies
                 allMB3Movies = ReadEmbyDB().getMovies(view.get('id'), True, fullsync)
@@ -164,15 +126,8 @@ class LibrarySync():
                         # update progress bar
                         if(pDialog != None):
                             percentage = int(((float(count) / float(total)) * 100))
-<<<<<<< HEAD
                             pDialog.update(percentage, message=progMessage + " Movie: " + str(count))
                             count += 1
-=======
-                            if count % 10 == 0:
-                                pDialog.update(percentage, message=progMessage + " Tv Show: " + str(count))
-                            count += 1                        
-                        
->>>>>>> 5127a770b59a941a51bae652ab239fafa77591b3
                 
                 #initiate library update and wait for finish before processing any updates
                 if updateNeeded:
@@ -206,16 +161,8 @@ class LibrarySync():
                         # update progress bar
                         if(pDialog != None):
                             percentage = int(((float(count) / float(total)) * 100))
-<<<<<<< HEAD
                             pDialog.update(percentage, message=progMessage + " Movie: " + str(count))
                             count += 1
-=======
-                            if count % 10 == 0:
-                                pDialog.update(percentage, message=progMessage + " Episode: " + str(count))
-                            count += 1    
-                    
-            
->>>>>>> 5127a770b59a941a51bae652ab239fafa77591b3
             
             if(pDialog != None):
                 pDialog.update(0, message="Removing Deleted Items")
@@ -317,8 +264,7 @@ class LibrarySync():
                             # update progress bar
                             if(pDialog != None):
                                 percentage = int(((float(count) / float(totalCount)) * 100))
-                                if count % 10 == 0:
-                                    pDialog.update(percentage, message="Updating Movie: " + str(count))
+                                pDialog.update(percentage, message="Updating Movie: " + str(count))
                                 count += 1                              
                         
             #process Tv shows
@@ -361,8 +307,7 @@ class LibrarySync():
                             # update progress bar
                             if(pDialog != None):
                                 percentage = int(((float(count) / float(totalCount)) * 100))
-                                if count % 10 == 0:
-                                    pDialog.update(percentage, message="Updating Episode: " + str(count))
+                                pDialog.update(percentage, message="Updating Episode: " + str(count))
                                 count += 1       
 
         finally:
