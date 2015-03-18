@@ -95,7 +95,8 @@ class LibrarySync():
                             # update progress bar
                             if(pDialog != None):
                                 percentage = int(((float(count) / float(total)) * 100))
-                                pDialog.update(percentage, message=progMessage + " Movie: " + str(count))
+                                if count % 10 == 0:
+                                    pDialog.update(percentage, message=progMessage + " Movie: " + str(count))
                                 count += 1
                         
             #process full tv shows sync
@@ -135,7 +136,8 @@ class LibrarySync():
                         # update progress bar
                         if(pDialog != None):
                             percentage = int(((float(count) / float(total)) * 100))
-                            pDialog.update(percentage, message=progMessage + " Tv Show: " + str(count))
+                            if count % 10 == 0:
+                                pDialog.update(percentage, message=progMessage + " Tv Show: " + str(count))
                             count += 1                        
                         
                 
@@ -186,7 +188,8 @@ class LibrarySync():
                         # update progress bar
                         if(pDialog != None):
                             percentage = int(((float(count) / float(total)) * 100))
-                            pDialog.update(percentage, message=progMessage + " Episode: " + str(count))
+                            if count % 10 == 0:
+                                pDialog.update(percentage, message=progMessage + " Episode: " + str(count))
                             count += 1    
                     
             
@@ -289,7 +292,8 @@ class LibrarySync():
                             # update progress bar
                             if(pDialog != None):
                                 percentage = int(((float(count) / float(totalCount)) * 100))
-                                pDialog.update(percentage, message="Updating Movie: " + str(count))
+                                if count % 10 == 0:
+                                    pDialog.update(percentage, message="Updating Movie: " + str(count))
                                 count += 1                              
                         
             #process Tv shows
@@ -332,7 +336,8 @@ class LibrarySync():
                             # update progress bar
                             if(pDialog != None):
                                 percentage = int(((float(count) / float(totalCount)) * 100))
-                                pDialog.update(percentage, message="Updating Episode: " + str(count))
+                                if count % 10 == 0:
+                                    pDialog.update(percentage, message="Updating Episode: " + str(count))
                                 count += 1       
 
         finally:
