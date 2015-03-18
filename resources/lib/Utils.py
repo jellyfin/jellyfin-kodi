@@ -24,9 +24,8 @@ addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
 language = addonSettings.getLocalizedString   
  
 def logMsg(title, msg, level = 1):
-    
-    #todo --> get this from a setting
-    logLevel = 1
+
+    logLevel = int(addonSettings.getSetting("logLevel"))
     
     if(logLevel >= level):
         if(logLevel == 1):

@@ -65,17 +65,18 @@ class LibrarySync():
         
         WINDOW.setProperty("startup", "done")
                         
-              
+        return True      
     
     def MoviesSync(self, fullsync=True):
-        
         
         WINDOW = xbmcgui.Window( 10000 )
         pDialog = None
         
         try:
-        
-            if(addon.getSetting("enableProgressFullSync")):
+            enableProgress = False
+            if addon.getSetting("enableProgressFullSync") == 'true':
+                enableProgress = True
+            if(enableProgress):
                 pDialog = xbmcgui.DialogProgressBG()
             if(pDialog != None):
                 pDialog.create('Sync DB', 'Sync DB')
@@ -193,6 +194,8 @@ class LibrarySync():
             if(self.ShouldStop()):
                 return True
         
+        except Exception, msg:
+            print "Exception in MoviesSync --> " + str(msg)
         finally:
             if(pDialog != None):
                 pDialog.close()
@@ -205,12 +208,13 @@ class LibrarySync():
         pDialog = None
         
         try:
-        
-            if(addon.getSetting("enableProgressFullSync")):
+            enableProgress = False
+            if addon.getSetting("enableProgressFullSync") == 'true':
+                enableProgress = True
+            if(enableProgress):
                 pDialog = xbmcgui.DialogProgressBG()
             if(pDialog != None):
                 pDialog.create('Sync DB', 'Sync DB')
-            
             
             # incremental sync --> new episodes only
             if not fullsync:
@@ -432,6 +436,8 @@ class LibrarySync():
             if(self.ShouldStop()):
                 return True
         
+        except Exception, msg:
+            print "Exception in TvShowsSync --> " + str(msg)
         finally:
             if(pDialog != None):
                 pDialog.close()
@@ -458,7 +464,10 @@ class LibrarySync():
         pDialog = None
         
         try:
-            if(addon.getSetting("enableProgressPlayCountSync")):
+            enableProgress = False
+            if addon.getSetting("enableProgressPlayCountSync") == 'true':
+                enableProgress = True
+            if(enableProgress):
                 pDialog = xbmcgui.DialogProgressBG()
             if(pDialog != None):
                 pDialog.create('Sync PlayCounts', 'Sync PlayCounts')        
@@ -547,7 +556,10 @@ class LibrarySync():
                                 percentage = int(((float(count) / float(totalCount)) * 100))
                                 pDialog.update(percentage, message="Updating Episode: " + str(count))
                                 count += 1       
-
+        
+        except Exception, msg:
+            print "Exception in updatePlaycounts --> " + str(msg)
+        
         finally:
             if(pDialog != None):
                 pDialog.close()            
