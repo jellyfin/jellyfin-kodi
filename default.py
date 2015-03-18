@@ -19,9 +19,13 @@ from PlaybackUtils import PlaybackUtils
 
 # get the actions... 
 params=utils.get_params(sys.argv[2])
+
 mode = params.get('mode',"")
 id = params.get('id',"")
 
 if mode == "play":
     PlaybackUtils().PLAY(id)
+    
+else:
+    xbmc.executebuiltin('Addon.OpenSettings(plugin.video.mb3sync)')
 

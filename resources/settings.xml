@@ -8,9 +8,9 @@
 	</category>
 	
 	<category label="Automatic sync"> <!-- Auto sync optionss -->
-		<setting id="enablePlayCountSync" type="bool" label="Enable watched/resume status sync" default="true" visible="false" enable="true" />
+		<setting id="enablePlayCountSync" type="bool" label="Enable watched/resume status sync" default="true" visible="true" enable="true" />
 		<setting id="syncSettingStartup" type="labelenum" label="Run at startup:" values="Full Sync|Incremental Sync|None" default="Full Sync" />
-		<setting id="syncSettingBackground" type="enum" label="Enable continuous background sync:" values="Full Sync|Incremental Sync|None" default="Incremental Sync" visible="true" enable="true" />
+		<setting id="syncSettingBackground" type="labelenum" label="Enable continuous background sync:" values="Full Sync|Incremental Sync|None" default="Incremental Sync" visible="true" enable="true" />
 		<setting type="lsep"/>
 		<setting label="[B]Full Sync:[/B] Performs full compare including deletes" type="lsep"/>
 		<setting label="[B]Incremental Sync:[/B] Processes only new items" type="lsep"/>
@@ -26,13 +26,12 @@
 		<setting id="username" type="text" label="30024" />
 		<setting id="password" type="text" option="hidden" label="30025" />
 	</category>
-	
-	
+
 	
 	<category label="30022"> <!-- Advanced -->
 		<setting id="logLevel" type="enum" label="30004" values="None|Info|Debug" default="0" />
-		<setting id="enableProgressPlayCountSync" type="bool" label="Show load progress for Watched/resume status sync" default="true" visible="false" enable="true" />
-		<setting id="enableProgressFullSync" type="bool" label="Show load progress for full/incremental sync" default="true" visible="true" enable="true" />
+		<setting id="enableProgressPlayCountSync" type="bool" label="Show load progress for Watched/resume status sync" default="false" visible="false" enable="true" />
+		<setting id="enableProgressFullSync" type="bool" label="Show load progress for full/incremental sync" default="false" visible="true" enable="true" />
 	</category>
 	
 
