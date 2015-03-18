@@ -9,11 +9,7 @@ import xbmcaddon
 import json
 
 import Utils as utils
-from LibrarySync import LibrarySync
-
-librarySync = LibrarySync()
-
-WINDOW = xbmcgui.Window( 10000 )
+from WriteKodiDB import WriteKodiDB
 
 class Kodi_Monitor(xbmc.Monitor):
     def __init__(self, *args, **kwargs):
@@ -27,14 +23,16 @@ class Kodi_Monitor(xbmc.Monitor):
         if method == "VideoLibrary.OnUpdate":
             
             #check windowprop if the sync is busy to prevent any false updates
+            WINDOW = xbmcgui.Window( 10000 )
             if WINDOW.getProperty("librarysync") != "busy":
-            
+                xbmc.log("Kodi_Monitor -> onNotification -> VideoLibrary.OnUpdate : " + str(data))
                 jsondata = json.loads(data)
                 if jsondata != None:
                     playcount = None
                     playcount = jsondata.get("playcount")
                     item = jsondata.get("item").get("id")
+                    type = jsondata.get("item").get("type")
                     
                     if playcount != None:
-                        librarySync.updatePlayCountFromKodi(item, playcount)
+                        WriteKodiDB().updatePlayCountFromKodi(item, type, playcount)
 

@@ -39,11 +39,11 @@ class CreateFiles():
         if item_type == "Episode":
             itemPath = os.path.join(tvLibrary,parentId)
             if str(item.get("IndexNumber")) != None:
-                filenamestr = self.CleanName(item.get("SeriesName")).encode('utf-8') + " S" + str(item.get("ParentIndexNumber")) + "E" + str(item.get("IndexNumber")) + ".strm"
+                filenamestr = self.CleanName(item.get("SeriesName")).encode('utf-8') + " S" + str(item.get("ParentIndexNumber")) + "E" + str(item.get("IndexNumber")) + " (" + item["Id"] + ").strm"
             else:
-                filenamestr = self.CleanName(item.get("SeriesName")).encode('utf-8') + " S0E0 " + item["Name"].decode('utf-8') + ".strm"
+                filenamestr = self.CleanName(item.get("SeriesName")).encode('utf-8') + " S0E0 " + self.CleanName(item["Name"].decode('utf-8')) + " (" + item["Id"] + ").strm"
             strmFile = os.path.join(itemPath,filenamestr)
-        
+
         changes = False
         if not xbmcvfs.exists(strmFile):
             changes = True
@@ -81,12 +81,13 @@ class CreateFiles():
         if item_type == "Episode":
             itemPath = os.path.join(tvLibrary,parentId)
             if str(item.get("ParentIndexNumber")) != None:
-                filenamestr = self.CleanName(item.get("SeriesName")).encode('utf-8') + " S" + str(item.get("ParentIndexNumber")) + "E" + str(item.get("IndexNumber")) + ".nfo"
+                filenamestr = self.CleanName(item.get("SeriesName")).encode('utf-8') + " S" + str(item.get("ParentIndexNumber")) + "E" + str(item.get("IndexNumber")) + " (" + item["Id"] + ").nfo"
             else:
-                filenamestr = self.CleanName(item.get("SeriesName")).encode('utf-8') + " S0E0 " + item["Name"].decode('utf-8') + ".nfo"
+                filenamestr = self.CleanName(item.get("SeriesName")).encode('utf-8') + " S0E0 " + self.CleanName(item["Name"].decode('utf-8')) + " (" + item["Id"] + ").nfo"
             nfoFile = os.path.join(itemPath,filenamestr)
             rootelement = "episodedetails"
-        
+            
+            
         changes = False
         if not xbmcvfs.exists(nfoFile):
             changes = True
@@ -212,4 +213,6 @@ class CreateFiles():
         
     def CleanName(self, name):
         name = name.replace(":", "-")
+        name = name.replace("\\", "-")
+        name = name.replace("/", "-")
         return name    
