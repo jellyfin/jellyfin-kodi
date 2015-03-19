@@ -558,9 +558,8 @@ class LibrarySync():
                         count = 1            
                 
                     for item in allMB3Movies:
-                        xbmc.sleep(sleepVal)
+                        
                         if not item.get('IsFolder'):
-                            
                             kodiItem = None
                             for kodimovie in allKodiMovies:
                                 if item["Id"] in kodimovie["file"]:
@@ -571,11 +570,11 @@ class LibrarySync():
                             timeInfo = API().getTimeInfo(item)
                             if kodiItem != None:
                                 WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"movie")
-                      
                                 kodiresume = int(round(kodiItem['resume'].get("position")))
                                 resume = int(round(float(timeInfo.get("ResumeTime"))))*60
                                 total = int(round(float(timeInfo.get("TotalTime"))))*60
                                 if kodiresume != resume:
+                                    xbmc.sleep(sleepVal)
                                     print "updating resumepoint for movie " + str(kodiItem['movieid'])
                                     WriteKodiDB().setKodiResumePoint(kodiItem['movieid'],resume,total,"movie")
                                 
@@ -604,8 +603,9 @@ class LibrarySync():
                 showCurrent = 1                    
                 
                 for item in tvshowData:
-                    xbmc.sleep(sleepVal)
+                    
                     episodeData = ReadEmbyDB().getEpisodes(item["Id"], False)
+                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(item["Id"],False)
                     
                     if (episodeData != None):
                         if(pDialog != None):
@@ -614,8 +614,17 @@ class LibrarySync():
                             count = 1                  
                     
                         for episode in episodeData:
-                            xbmc.sleep(sleepVal)
-                            kodiItem = ReadKodiDB().getKodiEpisodeByMbItem(episode)
+
+                            kodiItem = None
+                            comparestring1 = str(episode.get("ParentIndexNumber")) + "-" + str(episode.get("IndexNumber"))
+                            matchFound = False
+                            if kodiEpisodes != None:
+                                for KodiEpisode in kodiEpisodes:
+                                    comparestring2 = str(KodiEpisode["season"]) + "-" + str(KodiEpisode["episode"])
+                                    if comparestring1 == comparestring2:
+                                        kodiItem = KodiEpisode
+                                        break
+
                             userData=API().getUserData(episode)
                             timeInfo = API().getTimeInfo(episode)
                             if kodiItem != None:
@@ -625,6 +634,7 @@ class LibrarySync():
                                 resume = int(round(float(timeInfo.get("ResumeTime"))))*60
                                 total = int(round(float(timeInfo.get("TotalTime"))))*60
                                 if kodiresume != resume:
+                                    xbmc.sleep(sleepVal)
                                     WriteKodiDB().setKodiResumePoint(kodiItem['episodeid'],resume,total,"episode")
                                     
                             if(self.ShouldStop()):
