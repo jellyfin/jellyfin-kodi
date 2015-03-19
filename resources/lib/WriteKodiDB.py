@@ -219,7 +219,7 @@ class WriteKodiDB():
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
         
                     
-    def updateEpisodeToKodiLibrary( self, MBitem, KodiItem, tvshowId ):
+    def updateEpisodeToKodiLibrary( self, MBitem, KodiItem ):
         
         addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
         port = addon.getSetting('port')
@@ -271,8 +271,8 @@ class WriteKodiDB():
         #add actors
         changes = self.AddActorsToMedia(KodiItem,MBitem.get("People"),"episode")
         
-        CreateFiles().createNFO(MBitem, tvshowId)
-        CreateFiles().createSTRM(MBitem, tvshowId)
+        CreateFiles().createNFO(MBitem)
+        CreateFiles().createSTRM(MBitem)
         
         if changes:
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
@@ -394,15 +394,15 @@ class WriteKodiDB():
         if changes:
             utils.logMsg("MB3 Sync","Added movie to Kodi Library",item["Id"] + " - " + item["Name"])
     
-    def addEpisodeToKodiLibrary(self, item, tvshowId):
+    def addEpisodeToKodiLibrary(self, item):
         
         changes = False
 
         #create nfo file
-        changes = CreateFiles().createNFO(item, tvshowId)
+        changes = CreateFiles().createNFO(item)
         
         # create strm file
-        changes = CreateFiles().createSTRM(item, tvshowId)
+        changes = CreateFiles().createSTRM(item)
         
         if changes:
             utils.logMsg("MB3 Sync","Added episode to Kodi Library",item["Id"] + " - " + item["Name"])

@@ -245,17 +245,17 @@ class LibrarySync():
                         count = 1                     
                     
                     # process new episodes
-                    for tvshow in latestMBEpisodes:
-                        if tvshow["SeriesId"] in allKodiTvShowsIds:
+                    for episode in latestMBEpisodes:
+                        if episode["SeriesId"] in allKodiTvShowsIds:
                             #only process tvshows that already exist in the db at incremental updates
-                            kodiEpisodes = ReadKodiDB().getKodiEpisodes(tvshow["SeriesId"])
+                            kodiEpisodes = ReadKodiDB().getKodiEpisodes(episode["SeriesId"])
                             
                             if(self.ShouldStop()):
                                 return True                
 
                             #we have to compare the lists somehow
                             xbmc.sleep(sleepVal)
-                            comparestring1 = str(tvshow.get("ParentIndexNumber")) + "-" + str(tvshow.get("IndexNumber"))
+                            comparestring1 = str(episode.get("ParentIndexNumber")) + "-" + str(episode.get("IndexNumber"))
                             matchFound = False
                             if kodiEpisodes != None:
                                 for KodiItem in kodiEpisodes:
@@ -266,7 +266,7 @@ class LibrarySync():
 
                             if not matchFound:
                                 #no match so we have to create it
-                                WriteKodiDB().addEpisodeToKodiLibrary(tvshow,tvshow)
+                                WriteKodiDB().addEpisodeToKodiLibrary(episode)
                                 updateNeeded = True
                                 
                             if(self.ShouldStop()):
@@ -289,26 +289,24 @@ class LibrarySync():
                         total = len(latestMBEpisodes) + 1
                         count = 1
                                 
-                    for tvshow in latestMBEpisodes:
-                        if tvshow["SeriesId"] in allKodiTvShowsIds:
+                    for episode in latestMBEpisodes:
+                        if episode["SeriesId"] in allKodiTvShowsIds:
                             #only process tvshows that already exist in the db at incremental updates
-                            kodiEpisodes = ReadKodiDB().getKodiEpisodes(tvshow["SeriesId"])
+                            kodiEpisodes = ReadKodiDB().getKodiEpisodes(episode["SeriesId"])
                             
                             if(self.ShouldStop()):
                                 return True                
 
                             #we have to compare the lists somehow
                             xbmc.sleep(sleepVal)
-                            comparestring1 = str(tvshow.get("ParentIndexNumber")) + "-" + str(tvshow.get("IndexNumber"))
+                            comparestring1 = str(episode.get("ParentIndexNumber")) + "-" + str(episode.get("IndexNumber"))
 
                             if kodiEpisodes != None:
                                 for KodiItem in kodiEpisodes:
                                     comparestring2 = str(KodiItem["season"]) + "-" + str(KodiItem["episode"])
                                     if comparestring1 == comparestring2:
                                         #match found - update episode
-                                        #WriteKodiDB().updateEpisodeToKodiLibrary(tvshow,KodiItem,tvshow)
-                                        #TODO not sure but how to update the show
-                                        print "TODO: Actual do the update"
+                                        WriteKodiDB().updateEpisodeToKodiLibrary(episode,KodiItem)
                                         
                                         
                             if(self.ShouldStop()):
@@ -402,14 +400,14 @@ class LibrarySync():
                                 comparestring2 = str(KodiItem["season"]) + "-" + str(KodiItem["episode"])
                                 if comparestring1 == comparestring2:
                                     #match found - update episode
-                                    WriteKodiDB().updateEpisodeToKodiLibrary(item,KodiItem,tvshow)
+                                    WriteKodiDB().updateEpisodeToKodiLibrary(item,KodiItem)
                                     matchFound = True
                                     progMessage = "Updating"
 
                         if not matchFound:
                             #no match so we have to create it
                             print "episode not found...creating it: "
-                            WriteKodiDB().addEpisodeToKodiLibrary(item,tvshow)
+                            WriteKodiDB().addEpisodeToKodiLibrary(item)
                             updateNeeded = True
                             progMessage = "Adding"
                             

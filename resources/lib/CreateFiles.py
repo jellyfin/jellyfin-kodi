@@ -25,7 +25,7 @@ movieLibrary = os.path.join(dataPath,'movies')
 tvLibrary = os.path.join(dataPath,'tvshows')
 
 class CreateFiles():   
-    def createSTRM(self,item,parentId=None):
+    def createSTRM(self,item):
         
         item_type=str(item.get("Type")).encode('utf-8')
         if item_type == "Movie":
@@ -37,7 +37,7 @@ class CreateFiles():
             strmFile = os.path.join(itemPath,item["Id"] + ".strm")
 
         if item_type == "Episode":
-            itemPath = os.path.join(tvLibrary,parentId)
+            itemPath = os.path.join(tvLibrary,item["SeriesId"])
             if str(item.get("IndexNumber")) != None:
                 filenamestr = self.CleanName(item.get("SeriesName")).encode('utf-8') + " S" + str(item.get("ParentIndexNumber")) + "E" + str(item.get("IndexNumber")) + " (" + item["Id"] + ").strm"
             else:
@@ -57,7 +57,7 @@ class CreateFiles():
             
         return changes
             
-    def createNFO(self,item, parentId=None):
+    def createNFO(self,item):
         downloadUtils = DownloadUtils()
         timeInfo = API().getTimeInfo(item)
         userData=API().getUserData(item)
@@ -79,7 +79,7 @@ class CreateFiles():
             nfoFile = os.path.join(itemPath,"tvshow.nfo")
             rootelement = "tvshow"
         if item_type == "Episode":
-            itemPath = os.path.join(tvLibrary,parentId)
+            itemPath = os.path.join(tvLibrary,item["SeriesId"])
             if str(item.get("ParentIndexNumber")) != None:
                 filenamestr = self.CleanName(item.get("SeriesName")).encode('utf-8') + " S" + str(item.get("ParentIndexNumber")) + "E" + str(item.get("IndexNumber")) + " (" + item["Id"] + ").nfo"
             else:
