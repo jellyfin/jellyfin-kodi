@@ -516,7 +516,7 @@ class LibrarySync():
                 viewCount = len(views)
                 viewCurrent = 1
                 for view in views:
-                    allMB3Movies = ReadEmbyDB().getMovies(view.get('id'),True)
+                    allMB3Movies = ReadEmbyDB().getMovies(view.get('id'), fullinfo = False, fullSync = True)
                     allKodiMovies = ReadKodiDB().getKodiMovies(False)
                     
                     if(self.ShouldStop()):
@@ -565,7 +565,7 @@ class LibrarySync():
                     
             #process Tv shows
             if processTvShows:
-                tvshowData = ReadEmbyDB().getTVShows(True)
+                tvshowData = ReadEmbyDB().getTVShows(fullinfo = False, fullSync = True)
                 
                 if(self.ShouldStop()):
                     return True
