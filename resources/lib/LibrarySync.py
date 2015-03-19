@@ -541,13 +541,17 @@ class LibrarySync():
                 viewCurrent = 1
                 for view in views:
                     allMB3Movies = ReadEmbyDB().getMovies(view.get('id'),False)
-                
+                    allKodiMovies = ReadKodiDB().getKodiMovies(False)
+                    
                     if(self.ShouldStop()):
                         return True
                             
                     if(allMB3Movies == None):
                         return False    
-                
+                    
+                    if(allKodiMovies == None):
+                        return False    
+                        
                     if(pDialog != None):
                         pDialog.update(0, "Sync PlayCounts: Processing " + view.get('title') + " " + str(viewCurrent) + " of " + str(viewCount))
                         totalCount = len(allMB3Movies) + 1
@@ -556,7 +560,13 @@ class LibrarySync():
                     for item in allMB3Movies:
                         xbmc.sleep(sleepVal)
                         if not item.get('IsFolder'):
-                            kodiItem = ReadKodiDB().getKodiMovie(item["Id"])
+                            
+                            kodiItem = None
+                            for kodimovie in allKodiMovies:
+                                if item["Id"] in kodimovie["file"]:
+                                    kodiItem = kodimovie
+                                    break
+                            
                             userData=API().getUserData(item)
                             timeInfo = API().getTimeInfo(item)
                             if kodiItem != None:
