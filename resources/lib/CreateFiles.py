@@ -6,8 +6,13 @@ import xbmc
 import xbmcgui
 import xbmcaddon
 import xbmcvfs
-import os
+import os, sys
 import json
+import time
+from calendar import timegm
+from datetime import datetime
+
+
 
 from xml.etree.ElementTree import Element, SubElement, Comment, tostring
 from xml.etree import ElementTree
@@ -17,6 +22,7 @@ import xml.etree.cElementTree as ET
 from DownloadUtils import DownloadUtils
 from API import API
 import Utils as utils
+from ReadEmbyDB import ReadEmbyDB
 
 addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
 addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
@@ -55,6 +61,13 @@ class CreateFiles():
             text_file.writelines(playUrl)
             text_file.close()
             
+            #set timestamp on file - this will make sure that the dateadded field is properly set
+            if item.get("DateCreated") != None:
+                try:
+                    timestamp = time.mktime(datetime.strptime(item.get("DateCreated").split(".")[0]+"GMT", "%Y-%m-%dT%H:%M:%S%Z").timetuple())
+                    os.utime(strmFile,(timestamp,timestamp))
+                except:
+                    pass
         return changes
             
     def createNFO(self,item):
@@ -91,7 +104,7 @@ class CreateFiles():
         changes = False
         if not xbmcvfs.exists(nfoFile):
             changes = True
-            #utils.logMsg("MB3 Syncer","creating NFO file " + nfoFile)
+            utils.logMsg("MB3 Syncer","creating NFO file " + nfoFile,2)
             xbmcvfs.mkdir(itemPath)        
             root = Element(rootelement)
             SubElement(root, "id").text = item["Id"]
@@ -115,7 +128,9 @@ class CreateFiles():
                 SubElement(root, "rating").text = str(rating)
             
             if item.get("DateCreated") != None:
-                SubElement(root, "dateadded").text = item["DateCreated"]
+                dateadded = item["DateCreated"].replace("T"," ")
+                dateadded = dateadded.replace(".0000000Z","")
+                SubElement(root, "dateadded").text = dateadded
             
             if userData.get("PlayCount") != None:
                 SubElement(root, "playcount").text = userData.get("PlayCount")
@@ -211,6 +226,7 @@ class CreateFiles():
                         SubElement(actor_elem, "thumb").text = downloadUtils.imageUrl(actor.get("Id"), "Primary", 0, 400, 400)
 
             ET.ElementTree(root).write(nfoFile, xml_declaration=True)
+
         return changes
         
     def CleanName(self, name):
