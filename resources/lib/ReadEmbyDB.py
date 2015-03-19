@@ -24,7 +24,7 @@ class ReadEmbyDB():
         userid = downloadUtils.getUserId()
 
         if not fullSync:
-            sortstring = "?Limit=20&SortBy=DateCreated"
+            sortstring = "&Limit=20&SortBy=DateCreated"
         else:
             sortstring = "&SortBy=SortName"
         
