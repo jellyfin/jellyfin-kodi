@@ -120,7 +120,7 @@ class ReadKodiDB():
                 tvshow = tvshows[0]
         return tvshow
     
-    def getKodiEpisodes(self, id,fullInfo = True):
+    def getKodiEpisodes(self, id, fullInfo = True):
         xbmc.sleep(sleepVal)
         episodes = None
         json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["title", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
@@ -141,7 +141,15 @@ class ReadKodiDB():
                     result = jsonobject['result']
                     if(result.has_key('episodes')):
                         episodes = result['episodes']
-        return episodes
+                        
+        episodeMap = None
+        if(episodes != None):
+            episodeMap = {}
+            for KodiItem in episodes:
+                key = str(KodiItem["season"]) + "-" + str(KodiItem["episode"])
+                episodeMap[key] = KodiItem
+                        
+        return episodeMap
         
     def getKodiEpisodeByMbItem(self, MBitem):
         xbmc.sleep(sleepVal)

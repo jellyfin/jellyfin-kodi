@@ -244,11 +244,9 @@ class LibrarySync():
                             comparestring1 = str(episode.get("ParentIndexNumber")) + "-" + str(episode.get("IndexNumber"))
                             matchFound = False
                             if kodiEpisodes != None:
-                                for KodiItem in kodiEpisodes:
-                                    comparestring2 = str(KodiItem["season"]) + "-" + str(KodiItem["episode"])
-                                    if comparestring1 == comparestring2:
-                                        matchFound = True
-                                        break
+                                KodiItem = kodiEpisodes.get(comparestring1, None)
+                                if(KodiItem != None): 
+                                    matchFound = True
 
                             if not matchFound:
                                 #no match so we have to create it
@@ -287,12 +285,9 @@ class LibrarySync():
                             comparestring1 = str(episode.get("ParentIndexNumber")) + "-" + str(episode.get("IndexNumber"))
 
                             if kodiEpisodes != None:
-                                for KodiItem in kodiEpisodes:
-                                    comparestring2 = str(KodiItem["season"]) + "-" + str(KodiItem["episode"])
-                                    if comparestring1 == comparestring2:
-                                        #match found - update episode
-                                        WriteKodiDB().updateEpisodeToKodiLibrary(episode,KodiItem)
-                                        
+                                KodiItem = kodiEpisodes.get(comparestring1, None)
+                                if(KodiItem != None): 
+                                    WriteKodiDB().updateEpisodeToKodiLibrary(episode, KodiItem)
                                         
                             if(self.ShouldStop()):
                                 return True                        
@@ -385,14 +380,9 @@ class LibrarySync():
                         comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
                         matchFound = False
                         if kodiEpisodes != None:
-                            for KodiItem in kodiEpisodes:
-                                allEpisodes.append(KodiItem["episodeid"])
-                                comparestring2 = str(KodiItem["season"]) + "-" + str(KodiItem["episode"])
-                                if comparestring1 == comparestring2:
-                                    #match found - update episode
-                                    WriteKodiDB().updateEpisodeToKodiLibrary(item,KodiItem)
-                                    matchFound = True
-                                    break
+                            KodiItem = kodiEpisodes.get(comparestring1, None)
+                            if(KodiItem != None):
+                                matchFound = True
 
                         if not matchFound:
                             #no match so we have to create it
@@ -442,13 +432,9 @@ class LibrarySync():
                         comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
                         matchFound = False
                         if kodiEpisodes != None:
-                            for KodiItem in kodiEpisodes:
-                                allEpisodes.append(KodiItem["episodeid"])
-                                comparestring2 = str(KodiItem["season"]) + "-" + str(KodiItem["episode"])
-                                if comparestring1 == comparestring2:
-                                    #match found - update episode
-                                    WriteKodiDB().updateEpisodeToKodiLibrary(item,KodiItem)
-                                    break
+                            KodiItem = kodiEpisodes.get(comparestring1, None)
+                            if(KodiItem != None):
+                                WriteKodiDB().updateEpisodeToKodiLibrary(item, KodiItem)
                             
                         if(self.ShouldStop()):
                             return True                        
@@ -530,7 +516,7 @@ class LibrarySync():
                 viewCount = len(views)
                 viewCurrent = 1
                 for view in views:
-                    allMB3Movies = ReadEmbyDB().getMovies(view.get('id'),False)
+                    allMB3Movies = ReadEmbyDB().getMovies(view.get('id'),True)
                     allKodiMovies = ReadKodiDB().getKodiMovies(False)
                     
                     if(self.ShouldStop()):
@@ -579,7 +565,7 @@ class LibrarySync():
                     
             #process Tv shows
             if processTvShows:
-                tvshowData = ReadEmbyDB().getTVShows(False)
+                tvshowData = ReadEmbyDB().getTVShows(True)
                 
                 if(self.ShouldStop()):
                     return True
@@ -607,11 +593,7 @@ class LibrarySync():
                             comparestring1 = str(episode.get("ParentIndexNumber")) + "-" + str(episode.get("IndexNumber"))
                             matchFound = False
                             if kodiEpisodes != None:
-                                for KodiEpisode in kodiEpisodes:
-                                    comparestring2 = str(KodiEpisode["season"]) + "-" + str(KodiEpisode["episode"])
-                                    if comparestring1 == comparestring2:
-                                        kodiItem = KodiEpisode
-                                        break
+                                kodiItem = kodiEpisodes.get(comparestring1, None)
 
                             userData=API().getUserData(episode)
                             timeInfo = API().getTimeInfo(episode)
