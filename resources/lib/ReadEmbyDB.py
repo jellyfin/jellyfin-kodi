@@ -87,6 +87,27 @@ class ReadEmbyDB():
                 result = result['Items']
 
         return result
+    
+    def getTVShowSeasons(self, tvShowId):
+        result = None
+        
+        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port
+        
+        downloadUtils = DownloadUtils()
+        userid = downloadUtils.getUserId()
+
+        url = 'http://' + server + '/Shows/' + tvShowId + '/Seasons?UserId=' + userid + '&format=json&ImageTypeLimit=1'
+        
+        jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
+        if jsonData != None and jsonData != "":
+            result = json.loads(jsonData)
+            if(result.has_key('Items')):
+                result = result['Items']
+
+        return result
 
     def getEpisodes(self, showId, fullinfo = False):
         result = None

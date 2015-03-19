@@ -113,6 +113,12 @@ class CreateFiles():
                     SubElement(root, "tag").text = tag
             
             SubElement(root, "thumb").text = API().getArtwork(item, "Primary")
+            if item_type == 'Series':
+               seasonData = ReadEmbyDB().getTVShowSeasons(item["Id"])
+               if seasonData != None:
+                  for season in seasonData:
+                     SubElement(root, "thumb",{"type":"season","season":str(season["IndexNumber"])}).text = API().getArtwork(season, "Primary")
+           
             SubElement(root, "fanart").text = API().getArtwork(item, "Backdrop")
             
             
