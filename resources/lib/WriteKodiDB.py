@@ -94,49 +94,49 @@ class WriteKodiDB():
         changes = False
         
         #update artwork
-        changes = self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "poster"),"movie")
-        changes = self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"movie")
-        changes = self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"movie")
-        changes = self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"movie")
-        changes = self.updateArtWork(KodiItem,"landscape", API().getArtwork(MBitem, "Thumb"),"movie")
-        changes = self.updateArtWork(KodiItem,"discart", API().getArtwork(MBitem, "Disc"),"movie")
-        changes = self.updateArtWork(KodiItem,"fanart", API().getArtwork(MBitem, "Backdrop"),"movie")
-        
+        changes |= self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "poster"),"movie")
+        changes |= self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"movie")
+        changes |= self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"movie")
+        changes |= self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"movie")
+        changes |= self.updateArtWork(KodiItem,"landscape", API().getArtwork(MBitem, "Thumb"),"movie")
+        changes |= self.updateArtWork(KodiItem,"discart", API().getArtwork(MBitem, "Disc"),"movie")
+        changes |= self.updateArtWork(KodiItem,"fanart", API().getArtwork(MBitem, "Backdrop"),"movie")
+
         #update common properties
         duration = (int(timeInfo.get('Duration'))*60)
-        changes = self.updateProperty(KodiItem,"runtime",duration,"movie")
-        changes = self.updateProperty(KodiItem,"year",MBitem.get("ProductionYear"),"movie")
-        changes = self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"movie")
-        
-        changes = self.updatePropertyArray(KodiItem,"tag",MBitem.get("Tag"),"movie")
+        changes |= self.updateProperty(KodiItem,"runtime",duration,"movie")
+        changes |= self.updateProperty(KodiItem,"year",MBitem.get("ProductionYear"),"movie")
+        changes |= self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"movie")
+
+        changes |= self.updatePropertyArray(KodiItem,"tag",MBitem.get("Tag"),"movie")
         
         if MBitem.get("CriticRating") != None:
-            changes = self.updateProperty(KodiItem,"rating",int(MBitem.get("CriticRating"))/10,"movie")
-        
-        changes = self.updateProperty(KodiItem,"plotoutline",MBitem.get("ShortOverview"),"movie")
-        changes = self.updateProperty(KodiItem,"set",MBitem.get("TmdbCollectionName"),"movie")
-        changes = self.updateProperty(KodiItem,"sorttitle",MBitem.get("SortName"),"movie")
-        
+            changes |= self.updateProperty(KodiItem,"rating",int(MBitem.get("CriticRating"))/10,"movie")
+
+        changes |= self.updateProperty(KodiItem,"plotoutline",MBitem.get("ShortOverview"),"movie")
+        changes |= self.updateProperty(KodiItem,"set",MBitem.get("TmdbCollectionName"),"movie")
+        changes |= self.updateProperty(KodiItem,"sorttitle",MBitem.get("SortName"),"movie")
+
         if MBitem.get("ProviderIds") != None:
             if MBitem.get("ProviderIds").get("Imdb") != None:
-                changes = self.updateProperty(KodiItem,"imdbnumber",MBitem.get("ProviderIds").get("Imdb"),"movie")
-        
+                changes |= self.updateProperty(KodiItem,"imdbnumber",MBitem.get("ProviderIds").get("Imdb"),"movie")
+
         # FIXME --> Taglines not returned by MB3 server !?
         if MBitem.get("TagLines") != None:
-            changes = self.updateProperty(KodiItem,"tagline",MBitem.get("TagLines")[0],"movie")      
+            changes |= self.updateProperty(KodiItem,"tagline",MBitem.get("TagLines")[0],"movie")      
         
-        changes = self.updatePropertyArray(KodiItem,"writer",people.get("Writer"),"movie")
-        changes = self.updatePropertyArray(KodiItem,"director",people.get("Director"),"movie")
-        changes = self.updatePropertyArray(KodiItem,"genre",MBitem.get("Genres"),"movie")
-        
+        changes |= self.updatePropertyArray(KodiItem,"writer",people.get("Writer"),"movie")
+        changes |= self.updatePropertyArray(KodiItem,"director",people.get("Director"),"movie")
+        changes |= self.updatePropertyArray(KodiItem,"genre",MBitem.get("Genres"),"movie")
+
         if(studios != None):
             for x in range(0, len(studios)):
                 studios[x] = studios[x].replace("/", "&")
-            changes = self.updatePropertyArray(KodiItem,"studio",studios,"movie")
+            changes |= self.updatePropertyArray(KodiItem,"studio",studios,"movie")
             
         # FIXME --> ProductionLocations not returned by MB3 server !?
-        self.updatePropertyArray(KodiItem,"country",MBitem.get("ProductionLocations"),"movie")
-        
+        changes |= self.updatePropertyArray(KodiItem,"country",MBitem.get("ProductionLocations"),"movie")
+
         #trailer link
         trailerUrl = None
         if MBitem.get("LocalTrailerCount") != None and MBitem.get("LocalTrailerCount") > 0:
@@ -145,10 +145,10 @@ class WriteKodiDB():
             if(jsonData != ""):
                 trailerItem = json.loads(jsonData)
                 trailerUrl = "plugin://plugin.video.mb3sync/?id=" + trailerItem[0].get("Id") + '&mode=play'
-                changes = self.updateProperty(KodiItem,"trailer",trailerUrl,"movie")
-        
+                changes |= self.updateProperty(KodiItem,"trailer",trailerUrl,"movie")
+
         #add actors
-        self.AddActorsToMedia(KodiItem,MBitem.get("People"),"movie")
+        changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"),"movie")
         
         CreateFiles().createSTRM(MBitem)
         CreateFiles().createNFO(MBitem)
@@ -299,14 +299,15 @@ class WriteKodiDB():
             curValue = urllib.unquote(KodiItem['art'][artWorkName]).decode('utf8')
             if not artworkValue in curValue:
                 xbmc.sleep(sleepVal)
-                utils.logMsg("MB3 Syncer","updating artwork..." + str(artworkValue) + " - " + str(curValue))
+                utils.logMsg("MB3 Syncer", "updating artwork..." + str(artworkValue) + " - " + str(curValue))
                 xbmc.executeJSONRPC(jsoncommand %(id, artWorkName, artworkValue))
                 changes = True
-        elif artworkValue != None:
+        elif artworkValue != None and artworkValue != "":
             xbmc.sleep(sleepVal)
+            utils.logMsg("MB3 Syncer", "updating artwork..." + str(artworkValue) + " - " + str(artWorkName))
             xbmc.executeJSONRPC(jsoncommand %(id, artWorkName, artworkValue))
             changes = True
-            
+
         return changes
     
     # adds or updates the given property on the videofile in Kodi database
@@ -391,7 +392,7 @@ class WriteKodiDB():
         changes = CreateFiles().createNFO(item)
         
         # create strm file
-        changes = CreateFiles().createSTRM(item)
+        changes |= CreateFiles().createSTRM(item)
         
         if changes:
             utils.logMsg("MB3 Sync","Added movie to Kodi Library",item["Id"] + " - " + item["Name"])
@@ -404,7 +405,7 @@ class WriteKodiDB():
         changes = CreateFiles().createNFO(item)
         
         # create strm file
-        changes = CreateFiles().createSTRM(item)
+        changes |= CreateFiles().createSTRM(item)
         
         if changes:
             utils.logMsg("MB3 Sync","Added episode to Kodi Library",item["Id"] + " - " + item["Name"])
@@ -482,7 +483,6 @@ class WriteKodiDB():
         if mediatype == "episode":
             id = KodiItem["episodeid"]
 
-        
         dbPath = xbmc.translatePath("special://userdata/Database/MyVideos90.db")
         connection = sqlite3.connect(dbPath)
         cursor = connection.cursor()
@@ -491,7 +491,9 @@ class WriteKodiDB():
         if KodiItem["cast"] != None:
             for cast in KodiItem["cast"]:
                 currentcast.append(cast["name"])
-
+                
+        changes = False
+        
         if(people != None):
             for person in people:              
                 if(person.get("Type") == "Actor"):
@@ -518,6 +520,8 @@ class WriteKodiDB():
                         if mediatype == "episode":
                             peoplesql="INSERT OR REPLACE into actorlinkepisode(idActor, idEpisode, strRole, iOrder) values(?, ?, ?, ?)"
                         cursor.execute(peoplesql, (actorid,id,Role,None))
+                        changes = True
         
         connection.commit()
         cursor.close()
+        return changes

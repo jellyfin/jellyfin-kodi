@@ -8,7 +8,9 @@ import xbmcaddon
 import xbmcvfs
 import json
 import os
-
+import cProfile
+import pstats
+import time
 import sqlite3
 import inspect
 from xml.etree.ElementTree import Element, SubElement, Comment, tostring
@@ -24,11 +26,9 @@ addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
 language = addonSettings.getLocalizedString   
  
 def logMsg(title, msg, level = 1):
-
     logLevel = int(addonSettings.getSetting("logLevel"))
-    
     if(logLevel >= level):
-        if(logLevel == 1):
+        if(logLevel == 2): # inspect.stack() is expensive
             try:
                 xbmc.log(title + " -> " + inspect.stack()[1][3] + " : " + str(msg))
             except UnicodeEncodeError:
@@ -194,6 +194,36 @@ def get_params( paramstring ):
                 elif (len(splitparams))==3:
                         param[splitparams[0]]=splitparams[1]+"="+splitparams[2]
     return param
+
+def startProfiling():
+    pr = cProfile.Profile()
+    pr.enable()
+    return pr
+    
+def stopProfiling(pr, profileName):
+    pr.disable()
+    ps = pstats.Stats(pr)
+    
+    addondir = xbmc.translatePath(xbmcaddon.Addon(id='plugin.video.mb3sync').getAddonInfo('profile'))    
+    
+    fileTimeStamp = time.strftime("%Y-%m-%d %H-%M-%S")
+    tabFileNamepath = os.path.join(addondir, "profiles")
+    tabFileName = os.path.join(addondir, "profiles" , profileName + "_profile_(" + fileTimeStamp + ").tab")
+    
+    if not xbmcvfs.exists(tabFileNamepath):
+        xbmcvfs.mkdir(tabFileNamepath)
+    
+    f = open(tabFileName, 'wb')
+    f.write("NumbCalls\tTotalTime\tCumulativeTime\tFunctionName\tFileName\r\n")
+    for (key, value) in ps.stats.items():
+        (filename, count, func_name) = key
+        (ccalls, ncalls, total_time, cumulative_time, callers) = value
+        try:
+            f.write(str(ncalls) + "\t" + "{:10.4f}".format(total_time) + "\t" + "{:10.4f}".format(cumulative_time) + "\t" + func_name + "\t" + filename + "\r\n")
+        except ValueError:
+            f.write(str(ncalls) + "\t" + "{0}".format(total_time) + "\t" + "{0}".format(cumulative_time) + "\t" + func_name + "\t" + filename + "\r\n")
+    f.close()
+
 
    
  
