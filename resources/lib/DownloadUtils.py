@@ -61,13 +61,13 @@ class DownloadUtils():
         userid = WINDOW.getProperty("userid" + userName)
 
         if(userid != None and userid != ""):
-            self.logMsg("DownloadUtils -> Returning saved (WINDOW) UserID : " + userid + "UserName: " + userName)
+            self.logMsg("DownloadUtils -> Returning saved (WINDOW) UserID : " + userid + "UserName: " + userName,2)
             return userid
             
         userid = self.addonSettings.getSetting("userid" + userName)
         if(userid != None and userid != ""):
             WINDOW.setProperty("userid" + userName, userid)
-            self.logMsg("DownloadUtils -> Returning saved (SETTING) UserID : " + userid + "UserName: " + userName)
+            self.logMsg("DownloadUtils -> Returning saved (SETTING) UserID : " + userid + "UserName: " + userName,2)
             return userid
     
         self.logMsg("Looking for user name: " + userName)
@@ -130,13 +130,13 @@ class DownloadUtils():
         
         token = WINDOW.getProperty("AccessToken" + username)
         if(token != None and token != ""):
-            self.logMsg("DownloadUtils -> Returning saved (WINDOW) AccessToken for user:" + username + " token:" + token)
+            self.logMsg("DownloadUtils -> Returning saved (WINDOW) AccessToken for user:" + username + " token:" + token,2)
             return token
         
         token = self.addonSettings.getSetting("AccessToken" + username)
         if(token != None and token != ""):
             WINDOW.setProperty("AccessToken" + username, token)
-            self.logMsg("DownloadUtils -> Returning saved (SETTINGS) AccessToken for user:" + username + " token:" + token)
+            self.logMsg("DownloadUtils -> Returning saved (SETTINGS) AccessToken for user:" + username + " token:" + token,2)
             return token        
         
         port = self.addonSettings.getSetting("port")
@@ -234,11 +234,11 @@ class DownloadUtils():
             if(authToken != ""):
                 headers["X-MediaBrowser-Token"] = authToken
                     
-            self.logMsg("Authentication Header : " + str(headers))
+            self.logMsg("Authentication Header : " + str(headers),2)
             return headers
         
     def downloadUrl(self, url, suppress=False, postBody=None, type="GET", popup=0, authenticate=True ):
-        self.logMsg("== ENTER: getURL ==")
+        self.logMsg("== ENTER: getURL ==",2)
 
         if(authenticate == True and suppress == True):
             token = self.authenticate(retreive=False)
@@ -267,16 +267,16 @@ class DownloadUtils():
             server = url.split('/')[serversplit]
             urlPath = "/"+"/".join(url.split('/')[urlsplit:])
 
-            self.logMsg("DOWNLOAD_URL = " + url)
-            self.logMsg("server = " + str(server))
-            self.logMsg("urlPath = " + str(urlPath))
+            self.logMsg("DOWNLOAD_URL = " + url,2)
+            self.logMsg("server = " + str(server),2)
+            self.logMsg("urlPath = " + str(urlPath),2)
             
             if(server[0:1] == ":" or server[-1:] == ":"):
                 self.logMsg("No server host or port set in url")
                 return ""
             
             head = self.getAuthHeader(authenticate)
-            self.logMsg("HEADERS : " + str(head), level=1)
+            self.logMsg("HEADERS : " + str(head), level=2)
             
             conn = httplib.HTTPConnection(server, timeout=5)
 
@@ -284,7 +284,7 @@ class DownloadUtils():
             if(postBody != None):
                 head["Content-Type"] = "application/x-www-form-urlencoded"
                 head["Content-Length"] = str(len(postBody))
-                self.logMsg("POST DATA : " + postBody)
+                self.logMsg("POST DATA : " + postBody,2)
                 conn.request(method=type, url=urlPath, body=postBody, headers=head)
             else:
                 conn.request(method=type, url=urlPath, headers=head)

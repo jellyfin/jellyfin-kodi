@@ -386,7 +386,6 @@ class LibrarySync():
 
                         if not matchFound:
                             #no match so we have to create it
-                            print "episode not found...creating it: "
                             WriteKodiDB().addEpisodeToKodiLibrary(item)
                             updateNeeded = True
                             

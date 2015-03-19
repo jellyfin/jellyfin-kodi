@@ -91,8 +91,7 @@ class Player( xbmc.Player ):
                 type = data.get("Type")
                 
                 if(refresh_id != None):
-                    #TODO: trigger update of single item, for now trigger full playcounts update
-                    xbmc.log("Invoking refresh of playcounts")
+                    #report updates playcount and resume status to Kodi and MB3
                     librarySync.updatePlayCount(item_id,type)
                 
                 if(currentPosition != None and self.hasData(runtime)):

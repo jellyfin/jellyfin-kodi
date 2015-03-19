@@ -86,13 +86,13 @@ class ClientInformation():
                 if(len(clientId) == 0):
                     uuid = uuid4()
                     clientId = str("%012X" % uuid)
-                    self.logMsg("ClientId saved to FILE : %s" % clientId)                    
+                    self.logMsg("ClientId saved to FILE : %s" % clientId,1)                    
                     os.write(fd, clientId)
                     os.fsync(fd)
                     
                 os.close(fd)
                 
-                self.logMsg("ClientId saved to WINDOW : %s" % clientId)
+                self.logMsg("ClientId saved to WINDOW : %s" % clientId,1)
                 WINDOW.setProperty("client_id", clientId)
                  
         finally: 
@@ -160,11 +160,11 @@ class User(ClientInformation):
 
         # Verify if userId is saved to Window
         if (w_userId != ""):
-            self.logMsg("Returning saved (WINDOW) UserId for user: %s UserId: %s" % (username, w_userId))
+            self.logMsg("Returning saved (WINDOW) UserId for user: %s UserId: %s" % (username, w_userId),2)
             return w_userId
         # Verify if userId is saved in settings
         elif (s_userId != ""):
-            self.logMsg("Returning saved (SETTINGS) UserId for user: %s UserId: %s" % (username, s_userId))
+            self.logMsg("Returning saved (SETTINGS) UserId for user: %s UserId: %s" % (username, s_userId),2)
             self.WINDOW.setProperty('userId%s' % username, s_userId)
             return s_userId
         else:
@@ -178,11 +178,11 @@ class User(ClientInformation):
         
         # Verify if token is saved to Window
         if (w_token != ""):
-            self.logMsg("Returning saved (WINDOW) AccessToken for user: %s Token: %s" % (username, w_token))
+            self.logMsg("Returning saved (WINDOW) AccessToken for user: %s Token: %s" % (username, w_token),2)
             return w_token
         # Verify if token is saved in settings
         elif (s_token != ""):
-            self.logMsg("Returning saved (SETTINGS) AccessToken for user: %s Token: %s" % (username, s_token))
+            self.logMsg("Returning saved (SETTINGS) AccessToken for user: %s Token: %s" % (username, s_token),2)
             self.WINDOW.setProperty('AccessToken%s' % username, s_token)
             return s_token
         else:
