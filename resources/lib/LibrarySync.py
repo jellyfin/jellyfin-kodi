@@ -629,8 +629,7 @@ class LibrarySync():
         #process movie
         if type=='Movie':
             MB3Movie = ReadEmbyDB().getItem(itemID)
-            kodiItem = ReadKodiDB().getKodiMovie(itemID)
-            print MB3Movie        
+            kodiItem = ReadKodiDB().getKodiMovie(itemID)      
             if(self.ShouldStop()):
                 return True
                             

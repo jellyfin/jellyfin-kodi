@@ -56,7 +56,6 @@ class PlaybackUtils():
 
         
         playurl = PlayUtils().getPlayUrl(server, id, result)
-        xbmc.log("Play URL: " + playurl)    
         thumbPath = API().getArtwork(result, "Primary")
         listItem = xbmcgui.ListItem(path=playurl, iconImage=thumbPath, thumbnailImage=thumbPath)
 

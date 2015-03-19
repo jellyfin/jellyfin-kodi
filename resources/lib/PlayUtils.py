@@ -27,7 +27,6 @@ class PlayUtils():
       addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
       # if the path is local and depending on the video quality play we can direct play it do so-
       if self.isDirectPlay(result) == True:
-          xbmc.log("mb3sync getPlayUrl -> Direct Play")
           playurl = result.get("Path")
           if playurl != None:
             #We have a path to play so play it
@@ -58,7 +57,6 @@ class PlayUtils():
   
       else:
           #No path or has a path but not sufficient network so transcode
-          xbmc.log("mb3sync getPlayUrl -> Transcode")
           if result.get("Type") == "Audio":
             playurl = 'http://' + server + '/mediabrowser/Audio/' + id + '/stream.mp3'
           else:
@@ -92,14 +90,14 @@ class PlayUtils():
         if(mediaSources != None):
           if mediaSources[0].get('Bitrate') != None:
              if settingsVideoBitRate < int(mediaSources[0].get('Bitrate')):
-               xbmc.log("mb3sync isNetworkQualitySufficient -> FALSE bit rate - settingsVideoBitRate: " + str(settingsVideoBitRate) + " mediasource bitrate: " + str(mediaSources[0].get('Bitrate')))   
+               #xbmc.log("mb3sync isNetworkQualitySufficient -> FALSE bit rate - settingsVideoBitRate: " + str(settingsVideoBitRate) + " mediasource bitrate: " + str(mediaSources[0].get('Bitrate')))   
                return False
              else:
-               xbmc.log("mb3sync isNetworkQualitySufficient -> TRUE bit rate")   
+               #xbmc.log("mb3sync isNetworkQualitySufficient -> TRUE bit rate")   
                return True
            
         # Any thing else is ok
-        xbmc.log("mb3sync isNetworkQualitySufficient -> TRUE default")
+        #xbmc.log("mb3sync isNetworkQualitySufficient -> TRUE default")
         return True
       
        

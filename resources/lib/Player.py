@@ -31,7 +31,7 @@ class Player( xbmc.Player ):
             self.logLevel = int(self.settings.getSetting('logLevel'))   
         except:
             pass        
-        self.printDebug("mb3sync Service -> starting playback monitor service")
+        self.printDebug("mb3sync Service -> starting playback monitor service",1)
         self.played_information = {}
         pass    
         
@@ -51,7 +51,7 @@ class Player( xbmc.Player ):
     def deleteItem (self, url):
         return_value = xbmcgui.Dialog().yesno(__language__(30091),__language__(30092))
         if return_value:
-            self.printDebug('Deleting via URL: ' + url)
+            self.printDebug('Deleting via URL: ' + url,1)
             progress = xbmcgui.DialogProgress()
             progress.create(__language__(30052), __language__(30053))
             self.downloadUtils.downloadUrl(url, type="DELETE")
@@ -79,8 +79,8 @@ class Player( xbmc.Player ):
             data = self.played_information.get(item_url)
             
             if(data != None):
-                self.printDebug("mb3sync Service -> item_url  : " + item_url)
-                self.printDebug("mb3sync Service -> item_data : " + str(data))
+                self.printDebug("mb3sync Service -> item_url  : " + item_url,2)
+                self.printDebug("mb3sync Service -> item_data : " + str(data),2)
                 
                 deleteurl = data.get("deleteurl")
                 runtime = data.get("runtime")
@@ -96,17 +96,17 @@ class Player( xbmc.Player ):
                 
                 if(currentPosition != None and self.hasData(runtime)):
                     runtimeTicks = int(runtime)
-                    self.printDebug("mb3sync Service -> runtimeticks:" + str(runtimeTicks))
+                    self.printDebug("mb3sync Service -> runtimeticks:" + str(runtimeTicks),2)
                     percentComplete = (currentPosition * 10000000) / runtimeTicks
                     markPlayedAt = float(90) / 100    
 
-                    self.printDebug("mb3sync Service -> Percent Complete:" + str(percentComplete) + " Mark Played At:" + str(markPlayedAt))
+                    self.printDebug("mb3sync Service -> Percent Complete:" + str(percentComplete) + " Mark Played At:" + str(markPlayedAt),2)
                     self.stopPlayback(data)
                     
                     if (percentComplete > markPlayedAt):
                         gotDeleted = 0
                         if(deleteurl != None and deleteurl != ""):
-                            self.printDebug("mb3sync Service -> Offering Delete:" + str(deleteurl))
+                            self.printDebug("mb3sync Service -> Offering Delete:" + str(deleteurl),2)
                             gotDeleted = self.deleteItem(deleteurl)
 
             
@@ -148,7 +148,7 @@ class Player( xbmc.Player ):
     
     
     def reportPlayback(self):
-        self.printDebug("reportPlayback Called")
+        self.printDebug("reportPlayback Called",2)
         
         currentFile = xbmc.Player().getPlayingFile()
         
@@ -192,20 +192,20 @@ class Player( xbmc.Player ):
     
     def onPlayBackPaused( self ):
         currentFile = xbmc.Player().getPlayingFile()
-        self.printDebug("PLAYBACK_PAUSED : " + currentFile)
+        self.printDebug("PLAYBACK_PAUSED : " + currentFile,2)
         if(self.played_information.get(currentFile) != None):
             self.played_information[currentFile]["paused"] = "true"
         self.reportPlayback()
     
     def onPlayBackResumed( self ):
         currentFile = xbmc.Player().getPlayingFile()
-        self.printDebug("PLAYBACK_RESUMED : " + currentFile)
+        self.printDebug("PLAYBACK_RESUMED : " + currentFile,2)
         if(self.played_information.get(currentFile) != None):
             self.played_information[currentFile]["paused"] = "false"
         self.reportPlayback()
     
     def onPlayBackSeek( self, time, seekOffset ):
-        self.printDebug("PLAYBACK_SEEK")
+        self.printDebug("PLAYBACK_SEEK",2)
         self.reportPlayback()
         
     def onPlayBackStarted( self ):
@@ -216,7 +216,7 @@ class Player( xbmc.Player ):
         
         if xbmc.Player().isPlaying():
             currentFile = xbmc.Player().getPlayingFile()
-            self.printDebug("mb3sync Service -> onPlayBackStarted" + currentFile)
+            self.printDebug("mb3sync Service -> onPlayBackStarted" + currentFile,2)
             
             # grab all the info about this item from the stored windows props
             # only ever use the win props here, use the data map in all other places
@@ -265,8 +265,8 @@ class Player( xbmc.Player ):
             data["Type"] = itemType
             self.played_information[currentFile] = data
             
-            self.printDebug("mb3sync Service -> ADDING_FILE : " + currentFile)
-            self.printDebug("mb3sync Service -> ADDING_FILE : " + str(self.played_information))
+            self.printDebug("mb3sync Service -> ADDING_FILE : " + currentFile,2)
+            self.printDebug("mb3sync Service -> ADDING_FILE : " + str(self.played_information),2)
 
             # log some playback stats
             if(itemType != None):
@@ -291,12 +291,12 @@ class Player( xbmc.Player ):
         
     def onPlayBackEnded( self ):
         # Will be called when xbmc stops playing a file
-        self.printDebug("mb3sync Service -> onPlayBackEnded")
+        self.printDebug("mb3sync Service -> onPlayBackEnded",2)
         self.stopAll()
 
     def onPlayBackStopped( self ):
         # Will be called when user stops xbmc playing a file
-        self.printDebug("mb3sync Service -> onPlayBackStopped")
+        self.printDebug("mb3sync Service -> onPlayBackStopped",2)
         self.stopAll()
 
     def seekToPosition(self, seekTo):
