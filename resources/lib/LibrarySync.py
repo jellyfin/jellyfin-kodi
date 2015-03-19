@@ -447,7 +447,7 @@ class LibrarySync():
                                 comparestring2 = str(KodiItem["season"]) + "-" + str(KodiItem["episode"])
                                 if comparestring1 == comparestring2:
                                     #match found - update episode
-                                    WriteKodiDB().updateEpisodeToKodiLibrary(item,KodiItem,tvshow)
+                                    WriteKodiDB().updateEpisodeToKodiLibrary(item,KodiItem)
                                     break
                             
                         if(self.ShouldStop()):
