@@ -106,6 +106,7 @@ class PlaybackUtils():
 
         #this launches the playback
         xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
+        xbmc.Player().play(playurl,listItem)
     
 
     def setArt(self, list,name,path):
