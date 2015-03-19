@@ -672,7 +672,6 @@ class LibrarySync():
                 comparestring1 = str(MB3Episode.get("ParentIndexNumber")) + "-" + str(MB3Episode.get("IndexNumber"))
                 matchFound = False
                 if kodiEpisodes != None:
-                    xbmc.log("episode playcount kodiepisodes found")
                     kodiItem = kodiEpisodes.get(comparestring1, None)
 
                 userData=API().getUserData(MB3Episode)
