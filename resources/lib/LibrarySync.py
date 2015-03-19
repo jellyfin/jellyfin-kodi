@@ -28,8 +28,6 @@ dataPath = os.path.join(addondir,"library")
 movieLibrary = os.path.join(dataPath,'movies')
 tvLibrary = os.path.join(dataPath,'tvshows')
 
-sleepVal = 20
-
 class LibrarySync():   
         
     def syncDatabase(self):
@@ -113,7 +111,6 @@ class LibrarySync():
                         item['Tag'].append(view.get('title'))
                         
                         if item["Id"] not in allKodiIds:
-                            xbmc.sleep(sleepVal)
                             WriteKodiDB().addMovieToKodiLibrary(item)
                             updateNeeded = True
                         
@@ -185,8 +182,6 @@ class LibrarySync():
                 allEmbyMovieIds = set(allEmbyMovieIds)
                 for kodiId in allKodiIds:
                     if not kodiId in allEmbyMovieIds:
-                        xbmc.sleep(sleepVal)
-                        print "delete needed for: " + kodiId
                         WriteKodiDB().deleteMovieFromKodiLibrary(dir)
                         cleanNeeded = True
             
@@ -246,7 +241,6 @@ class LibrarySync():
                                 return True                
 
                             #we have to compare the lists somehow
-                            xbmc.sleep(sleepVal)
                             comparestring1 = str(episode.get("ParentIndexNumber")) + "-" + str(episode.get("IndexNumber"))
                             matchFound = False
                             if kodiEpisodes != None:
@@ -290,7 +284,6 @@ class LibrarySync():
                                 return True                
 
                             #we have to compare the lists somehow
-                            xbmc.sleep(sleepVal)
                             comparestring1 = str(episode.get("ParentIndexNumber")) + "-" + str(episode.get("IndexNumber"))
 
                             if kodiEpisodes != None:
@@ -332,7 +325,6 @@ class LibrarySync():
                     count = 1
                     
                 for item in tvShowData:
-                    xbmc.sleep(sleepVal)
                     if item.get('IsFolder'):
                         kodiItem = ReadKodiDB().getKodiTVShow(item["Id"])
                         allTVShows.append(item["Id"])
@@ -390,7 +382,6 @@ class LibrarySync():
 
                     #we have to compare the lists somehow
                     for item in episodeData:
-                        xbmc.sleep(sleepVal)
                         comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
                         matchFound = False
                         if kodiEpisodes != None:
@@ -448,7 +439,6 @@ class LibrarySync():
 
                     #we have to compare the lists somehow
                     for item in episodeData:
-                        xbmc.sleep(sleepVal)
                         comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
                         matchFound = False
                         if kodiEpisodes != None:
@@ -574,8 +564,6 @@ class LibrarySync():
                                 resume = int(round(float(timeInfo.get("ResumeTime"))))*60
                                 total = int(round(float(timeInfo.get("TotalTime"))))*60
                                 if kodiresume != resume:
-                                    xbmc.sleep(sleepVal)
-                                    print "updating resumepoint for movie " + str(kodiItem['movieid'])
                                     WriteKodiDB().setKodiResumePoint(kodiItem['movieid'],resume,total,"movie")
                                 
                             if(self.ShouldStop()):
@@ -634,7 +622,6 @@ class LibrarySync():
                                 resume = int(round(float(timeInfo.get("ResumeTime"))))*60
                                 total = int(round(float(timeInfo.get("TotalTime"))))*60
                                 if kodiresume != resume:
-                                    xbmc.sleep(sleepVal)
                                     WriteKodiDB().setKodiResumePoint(kodiItem['episodeid'],resume,total,"episode")
                                     
                             if(self.ShouldStop()):

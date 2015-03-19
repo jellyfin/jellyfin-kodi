@@ -23,12 +23,14 @@ addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
 dataPath = os.path.join(addondir,"library")
 movieLibrary = os.path.join(dataPath,'movies')
 tvLibrary = os.path.join(dataPath,'tvshows')
-sleepVal = 10
+
+sleepVal = 20
 
 class WriteKodiDB():
 
     def updatePlayCountFromKodi(self, id, type, playcount=0):
         #when user marks item watched from kodi interface update this in MB3
+        xbmc.sleep(sleepVal)
         xbmc.log("WriteKodiDB -> updatePlayCountFromKodi Called")
         
         mb3Id = None
@@ -432,6 +434,7 @@ class WriteKodiDB():
             utils.logMsg("Added TV Show to Kodi Library ",item["Id"] + " - " + item["Name"])
         
     def deleteTVShowFromKodiLibrary(self, id ):
+        xbmc.sleep(sleepVal)
         kodiItem = ReadKodiDB().getKodiTVShow(id)
         utils.logMsg("deleting tvshow from Kodi library",id)
         if kodiItem != None:
@@ -444,7 +447,7 @@ class WriteKodiDB():
         #todo --> submit PR to kodi team to get this added to the jsonrpc api
         
         utils.logMsg("MB3 Sync","setting resume point in kodi db..." + fileType + ": " + str(id))
-        
+        xbmc.sleep(sleepVal)
         dbPath = xbmc.translatePath("special://userdata/Database/MyVideos90.db")
         connection = sqlite3.connect(dbPath)
         cursor = connection.cursor( )
@@ -470,7 +473,7 @@ class WriteKodiDB():
     def AddActorsToMedia(self, KodiItem, people, mediatype):
         #use sqlite to set add the actors while json api doesn't support this yet
         #todo --> submit PR to kodi team to get this added to the jsonrpc api
-        
+        xbmc.sleep(sleepVal)
         downloadUtils = DownloadUtils()
         if mediatype == "movie":
             id = KodiItem["movieid"]
