@@ -622,6 +622,75 @@ class LibrarySync():
         
         return True
     
+    def updatePlayCount(self,itemID,type):
+        #update playcount of the itemID from MB3 to Kodi library
+        
+        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        WINDOW = xbmcgui.Window( 10000 )
+        #process movie
+        if type=='Movie':
+            MB3Movie = ReadEmbyDB().getItem(itemID)
+            allKodiMovies = ReadKodiDB().getKodiMovies(False)
+                    
+            if(self.ShouldStop()):
+                return True
+                            
+            if(MB3Movie == None):
+                return False    
+                    
+            if(allKodiMovies == None):
+                return False               
+                
+            kodiItem = None
+            for kodimovie in allKodiMovies:
+                if itemID in kodimovie["file"]:
+                    kodiItem = kodimovie
+                    break
+                            
+            userData=API().getUserData(MB3Movie)
+            timeInfo = API().getTimeInfo(MB3Movie)
+            if kodiItem != None:
+                WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"movie")
+                kodiresume = int(round(kodiItem['resume'].get("position")))
+                resume = int(round(float(timeInfo.get("ResumeTime"))))*60
+                total = int(round(float(timeInfo.get("TotalTime"))))*60
+                if kodiresume != resume:
+                    WriteKodiDB().setKodiResumePoint(kodiItem['movieid'],resume,total,"movie")
+                                
+            if(self.ShouldStop()):
+                return True 
+                    
+        #process episode
+        elif type=='Episode':
+            if(self.ShouldStop()):
+                return True                   
+                    
+            MB3Episode = ReadEmbyDB().getItem(itemID)
+            kodiEpisodes = ReadKodiDB().getKodiEpisodes(MB3Episode.get("SeriesId"),False)
+            if (MB3Episode != None):
+                kodiItem = None
+                comparestring1 = str(MB3Episode.get("ParentIndexNumber")) + "-" + str(MB3Episode.get("IndexNumber"))
+                matchFound = False
+                if kodiEpisodes != None:
+                    xbmc.log("episode playcount kodiepisodes found")
+                    kodiItem = kodiEpisodes.get(comparestring1, None)
+
+                userData=API().getUserData(MB3Episode)
+                timeInfo = API().getTimeInfo(MB3Episode)
+                if kodiItem != None:
+                    if kodiItem['playcount'] != int(userData.get("PlayCount")):
+                        WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode")
+                    kodiresume = int(round(kodiItem['resume'].get("position")))
+                    resume = int(round(float(timeInfo.get("ResumeTime"))))*60
+                    total = int(round(float(timeInfo.get("TotalTime"))))*60
+                    if kodiresume != resume:
+                        WriteKodiDB().setKodiResumePoint(kodiItem['episodeid'],resume,total,"episode")
+                                    
+                if(self.ShouldStop()):
+                    return True          
+        
+        return True
+    
     def ShouldStop(self):
         if(xbmc.Player().isPlaying() or xbmc.abortRequested):
             return True

@@ -88,10 +88,12 @@ class Player( xbmc.Player ):
                 item_id = data.get("item_id")
                 refresh_id = data.get("refresh_id")
                 currentFile = data.get("currentfile")
+                type = data.get("Type")
                 
                 if(refresh_id != None):
                     #TODO: trigger update of single item, for now trigger full playcounts update
-                    librarySync.updatePlayCounts()
+                    xbmc.log("Invoking refresh of playcounts")
+                    librarySync.updatePlayCount(item_id,type)
                 
                 if(currentPosition != None and self.hasData(runtime)):
                     runtimeTicks = int(runtime)
