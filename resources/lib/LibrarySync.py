@@ -630,7 +630,7 @@ class LibrarySync():
         #process movie
         if type=='Movie':
             MB3Movie = ReadEmbyDB().getItem(itemID)
-            allKodiMovies = ReadKodiDB().getKodiMovies(False)
+            kodiItem = ReadKodiDB().getKodiMovie(itemID)
                     
             if(self.ShouldStop()):
                 return True
@@ -640,12 +640,6 @@ class LibrarySync():
                     
             if(allKodiMovies == None):
                 return False               
-                
-            kodiItem = None
-            for kodimovie in allKodiMovies:
-                if itemID in kodimovie["file"]:
-                    kodiItem = kodimovie
-                    break
                             
             userData=API().getUserData(MB3Movie)
             timeInfo = API().getTimeInfo(MB3Movie)
@@ -666,14 +660,8 @@ class LibrarySync():
                 return True                   
                     
             MB3Episode = ReadEmbyDB().getItem(itemID)
-            kodiEpisodes = ReadKodiDB().getKodiEpisodes(MB3Episode.get("SeriesId"),False)
+            kodiItem = ReadKodiDB().getKodiEpisodeByMbItem(MB3Episode)
             if (MB3Episode != None):
-                kodiItem = None
-                comparestring1 = str(MB3Episode.get("ParentIndexNumber")) + "-" + str(MB3Episode.get("IndexNumber"))
-                matchFound = False
-                if kodiEpisodes != None:
-                    kodiItem = kodiEpisodes.get(comparestring1, None)
-
                 userData=API().getUserData(MB3Episode)
                 timeInfo = API().getTimeInfo(MB3Episode)
                 if kodiItem != None:
