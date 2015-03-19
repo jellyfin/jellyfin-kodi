@@ -31,12 +31,12 @@ class Kodi_Monitor(xbmc.Monitor):
             
             jsondata = json.loads(data)
             if jsondata != None:
-                xbmc.log("Kodi_Monitor -> onNotification -> VideoLibrary.OnUpdate : " + str(data))
+                
                 playcount = None
                 playcount = jsondata.get("playcount")
                 item = jsondata.get("item").get("id")
                 type = jsondata.get("item").get("type")
-                
                 if playcount != None:
+                    xbmc.log("Kodi_Monitor -> onNotification -> VideoLibrary.OnUpdate : " + str(data))
                     WriteKodiDB().updatePlayCountFromKodi(item, type, playcount)
 
