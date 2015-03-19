@@ -310,7 +310,7 @@ class WriteKodiDB():
         return changes
     
     # adds or updates the given property on the videofile in Kodi database
-    def updateProperty(self,KodiItem,propertyName,propertyValue,fileType):
+    def updateProperty(self,KodiItem,propertyName,propertyValue,fileType,forced=False):
         if fileType == "tvshow":
             id = KodiItem['tvshowid']
             jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "%s": %i}, "id": 1 }'
@@ -329,7 +329,7 @@ class WriteKodiDB():
             jsoncommand_s = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": "%s"}, "id": 1 }'
         
         changes = False
-        if propertyValue != KodiItem[propertyName]:
+        if ((propertyValue != KodiItem[propertyName]) or forced):
             if propertyValue != None:
                 if type(propertyValue) is int:
                     xbmc.sleep(sleepVal)

@@ -630,26 +630,27 @@ class LibrarySync():
         if type=='Movie':
             MB3Movie = ReadEmbyDB().getItem(itemID)
             kodiItem = ReadKodiDB().getKodiMovie(itemID)
-                    
+            print MB3Movie        
             if(self.ShouldStop()):
                 return True
                             
             if(MB3Movie == None):
                 return False    
                     
-            if(allKodiMovies == None):
+            if(kodiItem == None):
                 return False               
                             
             userData=API().getUserData(MB3Movie)
             timeInfo = API().getTimeInfo(MB3Movie)
             if kodiItem != None:
-                WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"movie")
+                
                 kodiresume = int(round(kodiItem['resume'].get("position")))
                 resume = int(round(float(timeInfo.get("ResumeTime"))))*60
                 total = int(round(float(timeInfo.get("TotalTime"))))*60
                 if kodiresume != resume:
                     WriteKodiDB().setKodiResumePoint(kodiItem['movieid'],resume,total,"movie")
-                                
+                #write property forced will refresh the item in the list so playcount change is immediately visible
+                WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"movie",True)
             if(self.ShouldStop()):
                 return True 
                     
@@ -664,14 +665,13 @@ class LibrarySync():
                 userData=API().getUserData(MB3Episode)
                 timeInfo = API().getTimeInfo(MB3Episode)
                 if kodiItem != None:
-                    if kodiItem['playcount'] != int(userData.get("PlayCount")):
-                        WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode")
                     kodiresume = int(round(kodiItem['resume'].get("position")))
                     resume = int(round(float(timeInfo.get("ResumeTime"))))*60
                     total = int(round(float(timeInfo.get("TotalTime"))))*60
                     if kodiresume != resume:
                         WriteKodiDB().setKodiResumePoint(kodiItem['episodeid'],resume,total,"episode")
-                                    
+                    #write property forced will refresh the item in the list so playcount change is immediately visible
+                    WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode",True)             
                 if(self.ShouldStop()):
                     return True          
         
