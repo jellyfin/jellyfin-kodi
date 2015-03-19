@@ -55,19 +55,29 @@ def checkKodiSources():
     tvLibrary           = os.path.join(dataPath,'tvshows')
     
     rebootRequired = False
+    
     if not xbmcvfs.exists(dataPath + os.sep):
         xbmcvfs.mkdir(dataPath)
     if not xbmcvfs.exists(movieLibrary + os.sep):
         xbmcvfs.mkdir(movieLibrary)
-        rebootRequired = addKodiSource("mediabrowser_movies",movieLibrary,"movies")
+        rebootRequired = True
+        addKodiSource("mediabrowser_movies",movieLibrary,"movies")
     if not xbmcvfs.exists(tvLibrary + os.sep):
         xbmcvfs.mkdir(tvLibrary)
-        rebootRequired = addKodiSource("mediabrowser_tvshows",tvLibrary,"tvshows")
-       
+        rebootRequired = True
+        addKodiSource("mediabrowser_tvshows",tvLibrary,"tvshows")
+    
+    rebootRequired = KodiAdvancedSettingsCheck()
+    
     if rebootRequired:
-        ret = xbmcgui.Dialog().yesno(heading="MediaBrowser Sync service", line1="A restart of Kodi is needed to apply changes. After the reboot you need to manually assign the MediaBrowser sources to your library. See documentation. Do you want to reboot now ?")
+        ret = xbmcgui.Dialog().yesno(heading="Emby Sync service", line1="A restart of Kodi is needed to apply changes.", line2="Synchronisation will not start before the reboot.", line3="Do you want to reboot now ?")
         if ret:
             xbmc.executebuiltin("RestartApp")
+        else:
+            return False
+    
+    return True
+            
         
 def addKodiSource(name, path, type):
     #add new source to database, common way is to add it directly to the Kodi DB. Fallback to adding it to the sources.xml
@@ -116,8 +126,6 @@ def addKodiSource(name, path, type):
         SubElement(source, "name").text = name
         SubElement(source, "path").text = path
         tree.write(sourcesFile)
-        #return bool that reboot is needed and manual add of path to kodi
-        return KodiAdvancedSettingsCheck()
        
 def KodiAdvancedSettingsCheck():
     #setting that kodi should import watched state and resume points from the nfo files
@@ -128,6 +136,7 @@ def KodiAdvancedSettingsCheck():
         video = SubElement(sources, "videolibrary")
         ET.ElementTree(sources).write(settingsFile)
     
+    writeNeeded = False
     if xbmcvfs.exists(settingsFile):
         tree = ET.ElementTree(file=settingsFile)
         root = tree.getroot()
@@ -135,11 +144,18 @@ def KodiAdvancedSettingsCheck():
         if video == None:
             video = SubElement(sources, "videolibrary")
         # add the settings
-        SubElement(video, "importwatchedstate").text = "true"
-        SubElement(video, "importresumepoint").text = "true"
-        tree.write(settingsFile)
-        #return bool that reboot is needed and manual add of path to kodi
-        return True
+        if video.find("importwatchedstate") == None:
+            writeNeeded = True
+            SubElement(video, "importwatchedstate").text = "true"
+        if video.find("importresumepoint") == None:
+            writeNeeded = True
+            SubElement(video, "importresumepoint").text = "true"
+        
+        if writeNeeded:
+            tree.write(settingsFile)
+            return True
+        else:
+            return False
        
 def checkAuthentication():
     #check authentication
@@ -154,19 +170,6 @@ def prettifyXml(elem):
     rough_string = etree.tostring(elem, "utf-8")
     reparsed = minidom.parseString(rough_string)
     return reparsed.toprettyxml(indent="\t")        
-    
-def doKodiCleanup():
-    #remove old testdata and remove missing files
-    json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"properties" : ["file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMovies"}')
-    jsonobject = json.loads(json_response.decode('utf-8','replace'))  
-    if(jsonobject.has_key('result')):
-        result = jsonobject['result']
-        if(result.has_key('movies')):
-            movies = result['movies']
-            for movie in movies:
-                if (xbmcvfs.exists(movie["file"]) == False) or ("plugin.video.xbmb3c" in movie["file"]):
-                    xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveMovie", "params": { "movieid": %i}, "id": 1 }' %(movie["movieid"]))
-   
     
 def get_params( paramstring ):
     xbmc.log("Parameter string: " + paramstring)
