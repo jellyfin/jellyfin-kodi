@@ -129,8 +129,6 @@ class LibrarySync():
                             pDialog.update(percentage, message = "Adding Movie: " + str(count))
                             count += 1
                 
-
-                
                 #initiate library update and wait for finish before processing any updates
                 if updateNeeded:
                     if(pDialog != None):
@@ -162,9 +160,6 @@ class LibrarySync():
                                 WriteKodiDB().updateMovieToKodiLibrary(item,kodimovie)
                                 break
                         
-                        if(self.ShouldStop()):
-                            return True
-                                               
                         if(self.ShouldStop()):
                             return True
                     
@@ -201,9 +196,6 @@ class LibrarySync():
             #initiate library clean and wait for finish before processing any updates
             if cleanNeeded:
                 self.doKodiLibraryUpdate(True)
-                    
-            if(self.ShouldStop()):
-                return True
         
         finally:
             if(pDialog != None):
@@ -366,8 +358,16 @@ class LibrarySync():
                         
                 #initiate library update and wait for finish before processing any updates
                 if updateNeeded:
+                
+                    if(pDialog != None):
+                        pDialog.close()
+                        
                     self.doKodiLibraryUpdate()
                     updateNeeded = False
+                    
+                    if(pDialog != None):
+                        pDialog.create('Sync DB', 'Sync DB')                    
+                   
                     
                 #process episodes (will only be possible when tv show is scanned to library)   
                 #TODO --> maybe pull full info only when needed ?
@@ -376,6 +376,7 @@ class LibrarySync():
                 showTotal = len(allTVShows)
                 showCurrent = 1
                 
+                # do episode adds
                 for tvshow in allTVShows:
                     
                     episodeData = ReadEmbyDB().getEpisodes(tvshow,True)
@@ -394,24 +395,19 @@ class LibrarySync():
                         xbmc.sleep(sleepVal)
                         comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
                         matchFound = False
-                        progMessage = "Processing"
                         if kodiEpisodes != None:
                             for KodiItem in kodiEpisodes:
-                                
                                 allEpisodes.append(KodiItem["episodeid"])
                                 comparestring2 = str(KodiItem["season"]) + "-" + str(KodiItem["episode"])
                                 if comparestring1 == comparestring2:
-                                    #match found - update episode
-                                    WriteKodiDB().updateEpisodeToKodiLibrary(item,KodiItem,tvshow)
                                     matchFound = True
-                                    progMessage = "Updating"
+                                    break
 
                         if not matchFound:
                             #no match so we have to create it
                             print "episode not found...creating it: "
                             WriteKodiDB().addEpisodeToKodiLibrary(item,tvshow)
                             updateNeeded = True
-                            progMessage = "Adding"
                             
                         if(self.ShouldStop()):
                             return True                        
@@ -419,14 +415,61 @@ class LibrarySync():
                         # update progress bar
                         if(pDialog != None):
                             percentage = int(((float(count) / float(total)) * 100))
-                            pDialog.update(percentage, message=progMessage + " Episode: " + str(count))
+                            pDialog.update(percentage, message="Adding Episode: " + str(count))
                             count += 1
                             
                     showCurrent += 1
                     
                 #initiate library update and wait for finish before processing any updates
                 if updateNeeded:
-                    self.doKodiLibraryUpdate()  
+                    if(pDialog != None):
+                        pDialog.close()
+                        
+                    self.doKodiLibraryUpdate()
+                    updateNeeded = False
+                    
+                    if(pDialog != None):
+                        pDialog.create('Sync DB', 'Sync DB')                      
+                    
+                # do episode updates
+                showCurrent = 1
+                for tvshow in allTVShows:
+                    
+                    episodeData = ReadEmbyDB().getEpisodes(tvshow,True)
+                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(tvshow)
+                    
+                    if(self.ShouldStop()):
+                        return True                
+                    
+                    if(pDialog != None):
+                        pDialog.update(0, "Sync DB : Processing Tv Show " + str(showCurrent) + " of " + str(showTotal))
+                        total = len(episodeData) + 1
+                        count = 0         
+
+                    #we have to compare the lists somehow
+                    for item in episodeData:
+                        xbmc.sleep(sleepVal)
+                        comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
+                        matchFound = False
+                        if kodiEpisodes != None:
+                            for KodiItem in kodiEpisodes:
+                                allEpisodes.append(KodiItem["episodeid"])
+                                comparestring2 = str(KodiItem["season"]) + "-" + str(KodiItem["episode"])
+                                if comparestring1 == comparestring2:
+                                    #match found - update episode
+                                    WriteKodiDB().updateEpisodeToKodiLibrary(item,KodiItem,tvshow)
+                                    break
+                            
+                        if(self.ShouldStop()):
+                            return True                        
+                            
+                        # update progress bar
+                        if(pDialog != None):
+                            percentage = int(((float(count) / float(total)) * 100))
+                            pDialog.update(percentage, message="Updating Episode: " + str(count))
+                            count += 1
+                            
+                    showCurrent += 1                  
                 
                 if(pDialog != None):
                     pDialog.update(0, message="Removing Deleted Items")
@@ -452,10 +495,7 @@ class LibrarySync():
                 #initiate library clean and wait for finish before processing any updates
                 if cleanNeeded:
                     self.doKodiLibraryUpdate(True)
-                    
-            if(self.ShouldStop()):
-                return True
-        
+          
         finally:
             if(pDialog != None):
                 pDialog.close()
@@ -497,6 +537,8 @@ class LibrarySync():
             #process movies
             if processMovies:
                 views = ReadEmbyDB().getCollections("movies")
+                viewCount = len(views)
+                viewCurrent = 1
                 for view in views:
                     allMB3Movies = ReadEmbyDB().getMovies(view.get('id'),False)
                 
@@ -507,7 +549,7 @@ class LibrarySync():
                         return False    
                 
                     if(pDialog != None):
-                        pDialog.update(0, "Sync PlayCounts: Processing Movies")
+                        pDialog.update(0, "Sync PlayCounts: Processing " + view.get('title') + " " + str(viewCurrent) + " of " + str(viewCount))
                         totalCount = len(allMB3Movies) + 1
                         count = 1            
                 
@@ -534,8 +576,10 @@ class LibrarySync():
                             if(pDialog != None):
                                 percentage = int(((float(count) / float(totalCount)) * 100))
                                 pDialog.update(percentage, message="Updating Movie: " + str(count))
-                                count += 1                              
-                        
+                                count += 1   
+                                
+                    viewCurrent += 1
+                    
             #process Tv shows
             if processTvShows:
                 tvshowData = ReadEmbyDB().getTVShows(False)
@@ -544,7 +588,10 @@ class LibrarySync():
                     return True
                             
                 if (tvshowData == None):
-                    return False    
+                    return False
+                    
+                showTotal = len(tvshowData)
+                showCurrent = 1                    
                 
                 for item in tvshowData:
                     xbmc.sleep(sleepVal)
@@ -552,7 +599,7 @@ class LibrarySync():
                     
                     if (episodeData != None):
                         if(pDialog != None):
-                            pDialog.update(0, "Sync PlayCounts: Processing Episodes")
+                            pDialog.update(0, "Sync PlayCounts: Processing TV Show " + str(showCurrent) + " of " + str(showTotal))
                             totalCount = len(episodeData) + 1
                             count = 1                  
                     
@@ -577,8 +624,9 @@ class LibrarySync():
                             if(pDialog != None):
                                 percentage = int(((float(count) / float(totalCount)) * 100))
                                 pDialog.update(percentage, message="Updating Episode: " + str(count))
-                                count += 1       
-        
+                                count += 1
+                                
+                        showCurrent += 1
         finally:
             if(pDialog != None):
                 pDialog.close()            

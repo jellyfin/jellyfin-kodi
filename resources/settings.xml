@@ -10,7 +10,7 @@
 	<category label="Automatic sync"> <!-- Auto sync optionss -->
 		<setting id="enablePlayCountSync" type="bool" label="Enable watched/resume status sync" default="true" visible="true" enable="true" />
 		<setting id="syncSettingStartup" type="labelenum" label="Run at startup:" values="Full Sync|Incremental Sync|None" default="Full Sync" />
-		<setting id="syncSettingBackground" type="labelenum" label="Enable continuous background sync:" values="Full Sync|Incremental Sync|None" default="Incremental Sync" visible="true" enable="true" />
+		<setting id="syncSettingBackground" type="labelenum" label="Enable continuous background sync:" values="Full Sync|Incremental Sync|None" default="Full Sync" visible="true" enable="true" />
 		<setting type="lsep"/>
 		<setting label="[B]Full Sync:[/B] Performs full compare including deletes" type="lsep"/>
 		<setting label="[B]Incremental Sync:[/B] Processes only new items" type="lsep"/>
