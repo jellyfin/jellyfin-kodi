@@ -251,7 +251,7 @@ class LibrarySync():
                     for episode in latestMBEpisodes:
                         if episode["SeriesId"] in allKodiTvShowsIds:
                             #only process tvshows that already exist in the db at incremental updates
-                            kodiEpisodes = ReadKodiDB().getKodiEpisodes(episode["SeriesId"])
+                            kodiEpisodes = ReadKodiDB().getKodiEpisodes(episode["SeriesId"],True,True)
                             
                             if(self.ShouldStop(pDialog)):
                                 return True                
@@ -295,7 +295,7 @@ class LibrarySync():
                     for episode in latestMBEpisodes:
                         if episode["SeriesId"] in allKodiTvShowsIds:
                             #only process tvshows that already exist in the db at incremental updates
-                            kodiEpisodes = ReadKodiDB().getKodiEpisodes(episode["SeriesId"])
+                            kodiEpisodes = ReadKodiDB().getKodiEpisodes(episode["SeriesId"],True,True)
                             
                             if(self.ShouldStop(pDialog)):
                                 return True                
@@ -321,8 +321,9 @@ class LibrarySync():
             # full sync --> Tv shows and Episodes
             if fullsync:
                 allTVShows = list()
-                allEpisodes = list()
-                #FIXME --> for now pull all tv shows and use the incremental update only at episode level
+                allMB3EpisodeIds = list() #for use with deletions
+                allKodiEpisodeIds = [] # for use with deletions
+
                 tvShowData = ReadEmbyDB().getTVShows(True,True)
                 allKodiIds = set(ReadKodiDB().getKodiTvShowsIds(True))
                 updateNeeded = False
@@ -366,7 +367,7 @@ class LibrarySync():
                 for tvshow in allTVShows:
                     
                     episodeData = ReadEmbyDB().getEpisodes(tvshow,True)
-                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(tvshow)
+                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(tvshow,True,True)
                     
                     if(self.ShouldStop(pDialog)):
                         return True                
@@ -458,7 +459,7 @@ class LibrarySync():
                 for tvshow in allTVShows:
                     
                     episodeData = ReadEmbyDB().getEpisodes(tvshow,True)
-                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(tvshow)
+                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(tvshow,True,True)
                     
                     if(self.ShouldStop(pDialog)):
                         return True                
@@ -471,6 +472,10 @@ class LibrarySync():
 
                     #we have to compare the lists somehow
                     for item in episodeData:
+                        
+                        #add episodeId to the list of all episodes for use later on the deletes
+                        allMB3EpisodeIds.append(item["Id"])
+                        
                         comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
                         matchFound = False
                         if kodiEpisodes != None:
@@ -486,7 +491,14 @@ class LibrarySync():
                             percentage = int(((float(count) / float(total)) * 100))
                             pDialog.update(percentage, progressTitle, "Updating Episode: " + str(count))
                             count += 1
-                            
+                    
+                    
+                    #add all kodi episodes to a list with episodes for use later on to delete episodes
+                    #the mediabrowser ID is set as uniqueID in the NFO... for some reason this has key 'unknown' in the json response
+                    for episode in ReadKodiDB().getKodiEpisodes(tvshow,False,False):
+                        dict = {'mbid': str(episode["uniqueid"]["unknown"]),'kodiid': str(episode["episodeid"])}
+                        allKodiEpisodeIds.append(dict)
+                    
                     showCurrent += 1                  
                 
                 if(pDialog != None):
@@ -499,6 +511,11 @@ class LibrarySync():
                 cleanNeeded = False
                 
                 # process any deletes only at fullsync
+                allMB3EpisodeIds = set(allMB3EpisodeIds)
+                for episode in allKodiEpisodeIds:
+                    if episode.get('mbid') not in allMB3EpisodeIds:
+                        WriteKodiDB().deleteEpisodeFromKodiLibrary(episode.get('kodiid'))
+                
                 # TODO --> process deletes for episodes !!!
                 if fullsync:
                     allLocaldirs, filesTVShows = xbmcvfs.listdir(tvLibrary)
@@ -631,7 +648,7 @@ class LibrarySync():
                 for item in tvshowData:
                     
                     episodeData = ReadEmbyDB().getEpisodes(item["Id"], False)
-                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(item["Id"],False)
+                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(item["Id"],False,True)
                     
                     if (episodeData != None):
                         if(pDialog != None):

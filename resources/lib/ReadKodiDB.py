@@ -134,7 +134,7 @@ class ReadKodiDB():
                 tvshow = tvshows[0]
         return tvshow
     
-    def getKodiEpisodes(self, id, fullInfo = True):
+    def getKodiEpisodes(self, id, fullInfo = True, returnmap = True):
         xbmc.sleep(sleepVal)
         episodes = None
         json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["title", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
@@ -146,24 +146,25 @@ class ReadKodiDB():
                 tvshows = result['tvshows']
                 tvshow = tvshows[0]
                 if fullInfo:
-                    json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["title", "playcount", "plot", "season", "episode", "showtitle", "file", "lastplayed", "rating", "resume", "art", "streamdetails", "firstaired", "runtime", "writer", "cast", "dateadded"], "sort": {"method": "episode"}}, "id": 1}' %tvshow['tvshowid'])
+                    json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["title", "playcount", "plot", "season", "episode", "showtitle", "file", "lastplayed", "rating", "resume", "art", "streamdetails", "firstaired", "runtime", "writer", "cast", "dateadded","uniqueid"], "sort": {"method": "episode"}}, "id": 1}' %tvshow['tvshowid'])
                 else:
-                    json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["title", "playcount", "season", "episode", "lastplayed", "resume"], "sort": {"method": "episode"}}, "id": 1}' %tvshow['tvshowid'])
+                    json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["title", "playcount", "season", "episode", "lastplayed", "resume","file","uniqueid"], "sort": {"method": "episode"}}, "id": 1}' %tvshow['tvshowid'])
                 jsonobject = json.loads(json_response.decode('utf-8','replace'))  
                 episodes = None
                 if(jsonobject.has_key('result')):
                     result = jsonobject['result']
                     if(result.has_key('episodes')):
                         episodes = result['episodes']
-                        
-        episodeMap = None
-        if(episodes != None):
-            episodeMap = {}
-            for KodiItem in episodes:
-                key = str(KodiItem["season"]) + "-" + str(KodiItem["episode"])
-                episodeMap[key] = KodiItem
-                        
-        return episodeMap
+        if returnmap:                 
+            episodeMap = None
+            if(episodes != None):
+                episodeMap = {}
+                for KodiItem in episodes:
+                    key = str(KodiItem["season"]) + "-" + str(KodiItem["episode"])
+                    episodeMap[key] = KodiItem    
+            return episodeMap
+        else:
+            return episodes
         
     def getKodiEpisodeByMbItem(self, MBitem):
         xbmc.sleep(sleepVal)

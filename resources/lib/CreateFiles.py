@@ -108,6 +108,8 @@ class CreateFiles():
             xbmcvfs.mkdir(itemPath)        
             root = Element(rootelement)
             SubElement(root, "id").text = item["Id"]
+            SubElement(root, "uniqueid").text = item["Id"]
+
             if item.get("Tag") != None:
                 for tag in item.get("Tag"):
                     SubElement(root, "tag").text = tag
