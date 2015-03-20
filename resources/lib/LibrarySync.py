@@ -165,7 +165,8 @@ class LibrarySync():
                         
                         kodimovie = allKodiMovies.get(item["Id"], None)
                         if(kodimovie != None):
-                            WriteKodiDB().updateMovieToKodiLibrary(item,kodimovie)
+                            #WriteKodiDB().updateMovieToKodiLibrary(item, kodimovie)
+                            WriteKodiDB().updateMovieToKodiLibrary_Batched(item, kodimovie)
                         
                         if(self.ShouldStop(pDialog)):
                             return True

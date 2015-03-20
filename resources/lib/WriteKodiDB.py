@@ -74,7 +74,101 @@ class WriteKodiDB():
             else:
                 downloadUtils.downloadUrl(watchedurl, type="DELETE")
         
-    def updateMovieToKodiLibrary( self, MBitem, KodiItem ):
+    def updateMovieToKodiLibrary_Batched(self, MBitem, KodiItem):
+        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port
+        downloadUtils = DownloadUtils()
+        userid = downloadUtils.getUserId()
+        
+        timeInfo = API().getTimeInfo(MBitem)
+        userData=API().getUserData(MBitem)
+        people = API().getPeople(MBitem)
+        genre = API().getGenre(MBitem)
+        studios = API().getStudios(MBitem)
+        mediaStreams=API().getMediaStreams(MBitem)
+        
+        thumbPath = API().getArtwork(MBitem, "Primary")
+        
+        params = list()
+        
+        self.getArtworkParam_Batched(KodiItem, MBitem, params)
+
+        #update common properties
+        duration = (int(timeInfo.get('Duration'))*60)
+        self.getPropertyParam_Batched(KodiItem, "runtime", duration, params)
+        self.getPropertyParam_Batched(KodiItem, "year", MBitem.get("ProductionYear"), params)
+        self.getPropertyParam_Batched(KodiItem, "mpaa", MBitem.get("OfficialRating"), params)
+
+        self.getPropertyParamArray_Batched(KodiItem, "tag", MBitem.get("Tag"), params)
+        
+        if MBitem.get("CriticRating") != None:
+            self.getPropertyParam_Batched(KodiItem, "rating", int(MBitem.get("CriticRating"))/10, params)
+
+        self.getPropertyParam_Batched(KodiItem, "plotoutline", MBitem.get("ShortOverview"), params)
+        self.getPropertyParam_Batched(KodiItem, "set", MBitem.get("TmdbCollectionName"), params)
+        self.getPropertyParam_Batched(KodiItem, "sorttitle", MBitem.get("SortName"), params)
+
+        if MBitem.get("ProviderIds") != None:
+            if MBitem.get("ProviderIds").get("Imdb") != None:
+                self.getPropertyParam_Batched(KodiItem, "imdbnumber", MBitem.get("ProviderIds").get("Imdb"), params)
+
+        # FIXME --> Taglines not returned by MB3 server !?
+        if MBitem.get("TagLines") != None:
+            self.getPropertyParam_Batched(KodiItem, "tagline", MBitem.get("TagLines")[0], params)      
+        
+        self.getPropertyParamArray_Batched(KodiItem, "writer", people.get("Writer"), params)
+        self.getPropertyParamArray_Batched(KodiItem, "director", people.get("Director"), params)
+        self.getPropertyParamArray_Batched(KodiItem, "genre", MBitem.get("Genres"), params)
+
+        if(studios != None):
+            for x in range(0, len(studios)):
+                studios[x] = studios[x].replace("/", "&")
+            self.getPropertyParamArray_Batched(KodiItem, "studio", studios, params)
+            
+        # FIXME --> ProductionLocations not returned by MB3 server !?
+        self.getPropertyParamArray_Batched(KodiItem, "country", MBitem.get("ProductionLocations"), params)
+
+        #trailer link
+        trailerUrl = None
+        if MBitem.get("LocalTrailerCount") != None and MBitem.get("LocalTrailerCount") > 0:
+            itemTrailerUrl = "http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + MBitem.get("Id") + "/LocalTrailers?format=json"
+            jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=True, popup=0 )
+            if(jsonData != ""):
+                trailerItem = json.loads(jsonData)
+                trailerUrl = "plugin://plugin.video.mb3sync/?id=" + trailerItem[0].get("Id") + '&mode=play'
+                self.getPropertyParam_Batched(KodiItem, "trailer", trailerUrl, params)
+
+        changes = False
+        # if there were movies changes then send the update via JSONRPC
+        if(len(params) > 0):
+            changes |= True
+            utils.logMsg("UpdateMovieParams", str(params), level = 0)
+            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, %s}, "id": 1 }'
+            paramString = ""
+            paramLen = len(params)
+            for x in range(0, paramLen):
+                param = params[x]
+                paramString += param
+                if(x < paramLen-1):
+                    paramString += ", "
+            jsoncommand = jsoncommand %(KodiItem['movieid'], paramString)
+            utils.logMsg("executeJSONRPC : ", jsoncommand, level = 0)
+            xbmc.sleep(sleepVal)
+            result = xbmc.executeJSONRPC(jsoncommand)
+            
+        #add actors
+        changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"), "movie")
+        
+        CreateFiles().createSTRM(MBitem)
+        CreateFiles().createNFO(MBitem)
+        
+        if(changes):
+            utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"], level=0)
+            
+        
+    def updateMovieToKodiLibrary(self, MBitem, KodiItem):
         
         addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
         port = addon.getSetting('port')
@@ -263,6 +357,56 @@ class WriteKodiDB():
         if changes:
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
     
+    def getArtworkParam_Batched(self, KodiItem, MBitem, params):
+
+        '''
+        item_type=str(MBitem.get("Type"))
+        if item_type == "Series":
+            id = KodiItem['tvshowid']
+            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": %s}, "id": 1 }'
+        elif item_type == "Episode":
+            # episodes don't have any artwork - they derrive this from the tv show
+            return False
+        elif item_type == "MusicVideo":
+            id = KodiItem['musicvideoid']
+            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { musicvideoid": %i, "art": %s}, "id": 1 }'
+        elif item_type == "Movie":
+            id = KodiItem['movieid']
+            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": %s}, "id": 1 }'
+        '''
+        
+        #update artwork
+        changes = False
+        
+        artwork = {}
+        artwork["poster"] = API().getArtwork(MBitem, "Primary")
+        artwork["banner"] = API().getArtwork(MBitem, "Banner")
+        artwork["clearlogo"] = API().getArtwork(MBitem, "Logo")
+        artwork["clearart"] = API().getArtwork(MBitem, "Art")
+        artwork["landscape"] = API().getArtwork(MBitem, "Thumb")
+        artwork["discart"] = API().getArtwork(MBitem, "Disc")
+        artwork["fanart"] = API().getArtwork(MBitem, "Backdrop")
+        
+        for art in artwork:
+            if artwork.get(art) != "":
+                if KodiItem["art"].has_key(art):
+                    curValue = urllib.unquote(KodiItem['art'][art]).decode('utf8')
+                    if not artwork.get(art) in curValue:
+                        KodiItem["art"][art] = artwork.get(art)
+                        changes = True
+                else:
+                    KodiItem["art"][art] = artwork.get(art)
+                    changes = True
+        
+        if len(KodiItem["art"]) == 0:
+            changes = False
+        
+        if changes:
+            json_array = json.dumps(KodiItem["art"])
+            params.append("\"art\": " + json_array)
+            #result = xbmc.executeJSONRPC(jsoncommand %(id, json_array))
+        return changes
+        
     # adds or updates artwork to the given Kodi file in database
     def updateArtWork(self,KodiItem,MBitem):
         
@@ -312,6 +456,47 @@ class WriteKodiDB():
             result = xbmc.executeJSONRPC(jsoncommand %(id, json_array))
         return changes
     
+    def getPropertyParam_Batched(self,KodiItem, propertyName, propertyValue, params, forced = False):
+    
+        '''
+        if fileType == "tvshow":
+            id = KodiItem['tvshowid']
+            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "%s": %i}, "id": 1 }'
+            jsoncommand_s = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "%s": "%s"}, "id": 1 }'
+        elif fileType == "episode":
+            id = KodiItem['episodeid']  
+            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "%s": %i}, "id": 1 }'            
+            jsoncommand_s = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "%s": "%s"}, "id": 1 }'
+        elif fileType == "musicvideo":
+            id = KodiItem['musicvideoid']
+            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { "musicvideoid": %i, "%s": %i}, "id": 1 }'
+            jsoncommand_s = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { "musicvideoid": %i, "%s": "%s"}, "id": 1 }'
+        elif fileType == "movie":
+            id = KodiItem['movieid']
+            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": %i}, "id": 1 }'
+            jsoncommand_s = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": "%s"}, "id": 1 }'
+        '''
+        
+        changes = False
+        if ((propertyValue != KodiItem[propertyName]) or forced):
+            if propertyValue != None:
+                if type(propertyValue) is int:
+                    #xbmc.sleep(sleepVal)
+                    utils.logMsg("MB3 Sync","updating property..." + str(propertyName))
+                    utils.logMsg("MB3 Sync","kodi value:" + str(KodiItem[propertyName]) + " MB value: " + str(propertyValue))
+                    params.append("\"" + propertyName + "\": " + str(propertyValue))
+                    #xbmc.executeJSONRPC(jsoncommand_i %(id, propertyName, propertyValue))
+                    changes = True
+                else:
+                    #xbmc.sleep(sleepVal)
+                    utils.logMsg("MB3 Sync","updating property..." + str(propertyName))
+                    utils.logMsg("MB3 Sync","kodi value:" + KodiItem[propertyName] + " MB value: " + propertyValue)
+                    params.append("\"" + propertyName + "\": \"" + str(propertyValue) + "\"")
+                    #xbmc.executeJSONRPC(jsoncommand_s %(id, propertyName, propertyValue.encode('utf-8')))
+                    changes = True
+                    
+        return changes
+        
     # adds or updates the given property on the videofile in Kodi database
     def updateProperty(self,KodiItem,propertyName,propertyValue,fileType,forced=False):
         if fileType == "tvshow":
@@ -349,6 +534,38 @@ class WriteKodiDB():
                     
         return changes
 
+    def getPropertyParamArray_Batched(self, KodiItem, propertyName, propertyCollection, params):
+        '''
+        if fileType == "tvshow":
+            id = KodiItem['tvshowid']   
+            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "%s": %s}, "id": 1 }'
+        elif fileType == "episode":
+            id = KodiItem['episodeid']   
+            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "%s": %s}, "id": 1 }'
+        elif fileType == "musicvideo":
+            id = KodiItem['musicvideoid']   
+            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { "musicvideoid": %i, "%s": %s}, "id": 1 }'
+        elif fileType == "movie":
+            id = KodiItem['movieid']   
+            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": %s}, "id": 1 }'
+        '''
+        
+        pendingChanges = False
+        if propertyCollection != None:   
+            currentvalues = set(KodiItem[propertyName])
+            for item in propertyCollection:
+                if not item in currentvalues:
+                    pendingChanges = True
+                    json_array = json.dumps(propertyCollection)
+            
+            if pendingChanges:
+                #xbmc.sleep(sleepVal)
+                utils.logMsg("MB3 Sync","updating propertyarray... Name:" + str(propertyName) + " Current:" + str(currentvalues) + " New:" + str(json_array))
+                params.append("\"" + propertyName + "\": " + json_array)
+                #xbmc.executeJSONRPC(jsoncommand %(id,propertyName,json_array))
+
+        return pendingChanges        
+        
     # adds or updates the property-array on the videofile in Kodi database
     def updatePropertyArray(self,KodiItem,propertyName,propertyCollection,fileType):
         if fileType == "tvshow":
