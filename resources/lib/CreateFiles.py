@@ -113,15 +113,15 @@ class CreateFiles():
                     SubElement(root, "tag").text = tag
             
             SubElement(root, "thumb").text = API().getArtwork(item, "Primary")
+            
             if item_type == 'Series':
                seasonData = ReadEmbyDB().getTVShowSeasons(item["Id"])
                if seasonData != None:
                   for season in seasonData:
-                     SubElement(root, "thumb",{"type":"season","season":str(season["IndexNumber"])}).text = API().getArtwork(season, "Primary")
-           
+                    if season.has_key("IndexNumber"):
+                        SubElement(root, "thumb",{"type":"season","season":str(season["IndexNumber"])}).text = API().getArtwork(season, "Primary")
+            
             SubElement(root, "fanart").text = API().getArtwork(item, "Backdrop")
-            
-            
             SubElement(root, "title").text = utils.convertEncoding(item["Name"])
             SubElement(root, "originaltitle").text = utils.convertEncoding(item["Name"])
             SubElement(root, "sorttitle").text = utils.convertEncoding(item["SortName"])
@@ -153,7 +153,6 @@ class CreateFiles():
             if item_type == "Episode":
                 SubElement(root, "season").text = str(item.get("ParentIndexNumber"))
                 SubElement(root, "episode").text = str(item.get("IndexNumber"))
-                SubElement(root, "aired").text = str(item.get("ProductionYear"))
                 
             SubElement(root, "year").text = str(item.get("ProductionYear"))
             if item.get("PremiereDate") != None:
@@ -161,6 +160,7 @@ class CreateFiles():
                 premieredate = premieredatelist[0]
                 SubElement(root, "firstaired").text = premieredate
                 SubElement(root, "premiered").text = premieredate
+                SubElement(root, "aired").text = premieredate
                 
             if(timeInfo.get('Duration') != "0"):
                 SubElement(root, "runtime").text = str(timeInfo.get('Duration'))
@@ -168,7 +168,7 @@ class CreateFiles():
             SubElement(root, "plot").text = utils.convertEncoding(API().getOverview(item))
             
             if item.get("ShortOverview") != None:
-                SubElement(root, "plotoutline").text = utils.convertEncoding(item.get("ShortOverview"))
+                SubElement(root, "outline").text = utils.convertEncoding(item.get("ShortOverview"))
             
             if item.get("TmdbCollectionName") != None:
                 SubElement(root, "set").text = item.get("TmdbCollectionName")
@@ -179,7 +179,7 @@ class CreateFiles():
             
             if people.get("Writer") != None:
                 for writer in people.get("Writer"):
-                    SubElement(root, "writer").text = utils.convertEncoding(writer)
+                    SubElement(root, "credits").text = utils.convertEncoding(writer)
             
             if people.get("Director") != None:
                 for director in people.get("Director"):
