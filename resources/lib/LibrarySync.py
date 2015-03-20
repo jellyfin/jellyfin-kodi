@@ -344,7 +344,7 @@ class LibrarySync():
                         allTVShows.append(item["Id"])
                         progMessage = "Processing"
                         if item["Id"] not in allKodiIds:
-                            WriteKodiDB().addMovieToKodiLibrary(item)
+                            WriteKodiDB().addTVShowToKodiLibrary(item)
                             updateNeeded = True
                             
                         if(self.ShouldStop(pDialog)):
