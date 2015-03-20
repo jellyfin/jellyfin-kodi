@@ -282,6 +282,7 @@ class WriteKodiDB():
         
         artwork = {}
         artwork["poster"] = API().getArtwork(MBitem, "Primary")
+        artwork["banner"] = API().getArtwork(MBitem, "Banner")
         artwork["clearlogo"] = API().getArtwork(MBitem, "Logo")
         artwork["clearart"] = API().getArtwork(MBitem, "Art")
         artwork["landscape"] = API().getArtwork(MBitem, "Thumb")
@@ -438,6 +439,14 @@ class WriteKodiDB():
             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveTVShow", "params": { "tvshowid": %i}, "id": 1 }' %(kodiItem["tvshowid"]))
         path = os.path.join(tvLibrary,id)
         xbmcvfs.rmdir(path)
+    
+    
+    def updateSeasonDetails(self,MBitem, KodiItem):
+        #use sqlite to set the season artwork because with NFO it sets the poster as banner
+        pass
+        
+        
+        
     
     def setKodiResumePoint(self, id, resume_seconds, total_seconds, fileType):
         #use sqlite to set the resume point while json api doesn't support this yet

@@ -120,11 +120,14 @@ class CreateFiles():
                     for season in seasonData:
                         if season.has_key("IndexNumber"):
                             seasonart = API().getArtwork(season, "Primary")
-                            if seasonart == None:
-                                seasonart = API().getArtwork(item, "Primary")
-                            SubElement(root, "thumb",{"type":"season","season":str(season["IndexNumber"])}).text = seasonart
-                SubElement(root, "thumb",{"type":"season","season":"0"}).text = API().getArtwork(item, "Primary")
-            
+                            if seasonart != None:
+                                SubElement(root, "thumb",{"type":"season","aspect":"poster","season":str(season["IndexNumber"])}).text = seasonart
+                            seasonart2 = API().getArtwork(season, "Banner")
+                            if seasonart2 != None:
+                                SubElement(root, "thumb",{"type":"season","aspect":"banner","season":str(season["IndexNumber"])}).text = seasonart2
+                            seasonart3 = API().getArtwork(season, "Thumb")
+                            if seasonart2 != None:
+                                SubElement(root, "thumb",{"type":"season","aspect":"landscape","season":str(season["IndexNumber"])}).text = seasonart3
             SubElement(root, "fanart").text = API().getArtwork(item, "Backdrop")
             SubElement(root, "title").text = utils.convertEncoding(item["Name"])
             SubElement(root, "originaltitle").text = utils.convertEncoding(item["Name"])
