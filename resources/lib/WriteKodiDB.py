@@ -421,9 +421,9 @@ class WriteKodiDB():
         xbmcvfs.rmdir(path)
     
     def deleteEpisodeFromKodiLibrary(self, episodeid ):
-        utils.logMsg("deleting movie from Kodi library",id)
+        utils.logMsg("deleting episode from Kodi library",episodeid)
         
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodeDetails", "params": { "episodeid": %i}, "properties" : ["file","episodeid"] }, "id": "libTvShows"}' %(int(episodeid)))
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodeDetails", "params": { "episodeid": %i}, "properties" : ["file","episodeid"] }, "id": 1}' %(int(episodeid)))
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         
         print jsonobject
