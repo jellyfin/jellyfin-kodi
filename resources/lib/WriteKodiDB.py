@@ -276,8 +276,7 @@ class WriteKodiDB():
         elif item_type == "Movie":
             id = KodiItem['movieid']
             jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": %s}, "id": 1 }'
-        
-        
+
         #update artwork
         changes = False
         
@@ -289,12 +288,12 @@ class WriteKodiDB():
         artwork["landscape"] = API().getArtwork(MBitem, "Thumb")
         artwork["discart"] = API().getArtwork(MBitem, "Disc")
         artwork["fanart"] = API().getArtwork(MBitem, "Backdrop")
-
         
         for art in artwork:
-            if artwork.get(art) != None:
+            if artwork.get(art) != "":
                 if KodiItem["art"].has_key(art):
-                    if KodiItem["art"][art] != artwork.get(art):
+                    curValue = urllib.unquote(KodiItem['art'][art]).decode('utf8')
+                    if not artwork.get(art) in curValue:
                         KodiItem["art"][art] = artwork.get(art)
                         changes = True
                 else:
@@ -307,7 +306,6 @@ class WriteKodiDB():
         if changes:
             json_array = json.dumps(KodiItem["art"])
             result = xbmc.executeJSONRPC(jsoncommand %(id, json_array))
-            print result
         return changes
     
     # adds or updates the given property on the videofile in Kodi database
