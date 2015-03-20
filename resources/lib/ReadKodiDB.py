@@ -94,9 +94,7 @@ class ReadKodiDB():
                 allKodiTvShowsIds.append(id)
         
         return allKodiTvShowsIds
-    
-    
-    
+        
     def getKodiTvShows(self,fullInfo = False):
         #returns all tvshows in Kodi db inserted by MB
         xbmc.sleep(sleepVal)
