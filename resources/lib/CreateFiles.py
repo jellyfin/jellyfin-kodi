@@ -120,7 +120,7 @@ class CreateFiles():
                     for season in seasonData:
                         if season.has_key("IndexNumber"):
                             SubElement(root, "thumb",{"type":"season","season":str(season["IndexNumber"])}).text = API().getArtwork(season, "Primary")
-                SubElement(root, "thumb",{"type":"season","season":"0")}).text = API().getArtwork(item, "Primary")
+                SubElement(root, "thumb",{"type":"season","season":"0"}).text = API().getArtwork(item, "Primary")
             
             SubElement(root, "fanart").text = API().getArtwork(item, "Backdrop")
             SubElement(root, "title").text = utils.convertEncoding(item["Name"])
