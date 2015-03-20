@@ -178,9 +178,8 @@ class CreateFiles():
                     SubElement(root, "imdbnumber").text = item
             
             if people.get("Writer") != None:
-                credits = SubElement(root, "credits")
                 for writer in people.get("Writer"):
-                    SubElement(credits, "writer").text = utils.convertEncoding(writer)
+                    SubElement(root, "credits").text = utils.convertEncoding(writer)
             
             if people.get("Director") != None:
                 for director in people.get("Director"):
