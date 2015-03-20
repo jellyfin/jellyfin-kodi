@@ -268,8 +268,8 @@ class WriteKodiDB():
             id = KodiItem['tvshowid']
             jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": %s}, "id": 1 }'
         elif item_type == "Episode":
-            id = KodiItem['episodeid']
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "art": %s}, "id": 1 }'
+            # episodes don't have any artwork - they derrive this from the tv show
+            return False
         elif item_type == "MusicVideo":
             id = KodiItem['musicvideoid']
             jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { musicvideoid": %i, "art": %s}, "id": 1 }'
@@ -284,7 +284,6 @@ class WriteKodiDB():
         artwork["poster"] = API().getArtwork(MBitem, "Primary")
         artwork["clearlogo"] = API().getArtwork(MBitem, "Logo")
         artwork["clearart"] = API().getArtwork(MBitem, "Art")
-        artwork["banner"] = API().getArtwork(MBitem, "Banner")
         artwork["landscape"] = API().getArtwork(MBitem, "Thumb")
         artwork["discart"] = API().getArtwork(MBitem, "Disc")
         artwork["fanart"] = API().getArtwork(MBitem, "Backdrop")

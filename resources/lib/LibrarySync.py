@@ -356,44 +356,7 @@ class LibrarySync():
                             pDialog.update(percentage, progressTitle, "Adding Tv Show: " + str(count))
                             count += 1                        
                         
-                #initiate library update and wait for finish before processing any updates
-                if updateNeeded:
-                
-                    if(pDialog != None and type(pDialog) == xbmcgui.DialogProgressBG):
-                        pDialog.close()
-                        
-                    self.doKodiLibraryUpdate(False, pDialog)
-                    updateNeeded = False
-                    
-                    if(pDialog != None and type(pDialog) == xbmcgui.DialogProgressBG):
-                        pDialog.create('Sync DB', 'Sync DB')
-                   
-                if(pDialog != None):
-                    progressTitle = "Sync DB : Processing TV Shows"
-                    pDialog.update(0, progressTitle, "")
-                    total = len(allTVShows) + 1
-                    count = 1                    
-                
-                #process updates at TV Show level
-                allKodiTVShows = ReadKodiDB().getKodiTvShows(True)
-                for item in tvShowData:
-                    if item.get('IsFolder'):
-
-                        kodishow = allKodiTVShows.get(item["Id"],None)
-                        
-                        if(kodishow != None):
-                            WriteKodiDB().updateTVShowToKodiLibrary(item,kodishow)
-                            
-                        if(self.ShouldStop(pDialog)):
-                            return True
-                            
-                        # update progress bar
-                        if(pDialog != None):
-                            percentage = int(((float(count) / float(total)) * 100))
-                            pDialog.update(percentage, progressTitle, "Updating Tv Show: " + str(count))
-                            count += 1                        
-
-                #process episodes
+                #process episodes first before updating tvshows
                 allEpisodes = list()
                 
                 showTotal = len(allTVShows)
@@ -452,6 +415,44 @@ class LibrarySync():
                     if(pDialog != None and type(pDialog) == xbmcgui.DialogProgressBG):
                         pDialog.create('Sync DB', 'Sync DB')                      
                     
+                
+                #initiate library update and wait for finish before processing any updates
+                if updateNeeded:
+                
+                    if(pDialog != None and type(pDialog) == xbmcgui.DialogProgressBG):
+                        pDialog.close()
+                        
+                    self.doKodiLibraryUpdate(False, pDialog)
+                    updateNeeded = False
+                    
+                    if(pDialog != None and type(pDialog) == xbmcgui.DialogProgressBG):
+                        pDialog.create('Sync DB', 'Sync DB')
+                   
+                if(pDialog != None):
+                    progressTitle = "Sync DB : Processing TV Shows"
+                    pDialog.update(0, progressTitle, "")
+                    total = len(allTVShows) + 1
+                    count = 1                    
+                
+                #process updates at TV Show level
+                allKodiTVShows = ReadKodiDB().getKodiTvShows(True)
+                for item in tvShowData:
+                    if item.get('IsFolder'):
+
+                        kodishow = allKodiTVShows.get(item["Id"],None)
+                        
+                        if(kodishow != None):
+                            WriteKodiDB().updateTVShowToKodiLibrary(item,kodishow)
+                            
+                        if(self.ShouldStop(pDialog)):
+                            return True
+                            
+                        # update progress bar
+                        if(pDialog != None):
+                            percentage = int(((float(count) / float(total)) * 100))
+                            pDialog.update(percentage, progressTitle, "Updating Tv Show: " + str(count))
+                            count += 1                        
+
                 # do episode updates
                 showCurrent = 1
                 for tvshow in allTVShows:
