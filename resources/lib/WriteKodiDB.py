@@ -176,7 +176,7 @@ class WriteKodiDB():
         changes = False
         
         #update artwork
-        changes = self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "Primary"),"tvshow")
+        #changes = self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "Primary"),"tvshow")
         changes = self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"tvshow")
         changes = self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"tvshow")
         changes = self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"tvshow")
