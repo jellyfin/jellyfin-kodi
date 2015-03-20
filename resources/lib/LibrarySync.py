@@ -371,7 +371,7 @@ class LibrarySync():
                 if(pDialog != None):
                     progressTitle = "Sync DB : Processing TV Shows"
                     pDialog.update(0, progressTitle, "")
-                    total = len(allMB3Movies) + 1
+                    total = len(allTVShows) + 1
                     count = 1                    
                 
                 #process updates at TV Show level
