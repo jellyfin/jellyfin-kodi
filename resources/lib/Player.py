@@ -5,6 +5,7 @@ import xbmcgui
 import os
 import threading
 import json
+import inspect
 import KodiMonitor
 import Utils as utils
 from DownloadUtils import DownloadUtils
