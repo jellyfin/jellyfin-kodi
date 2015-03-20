@@ -93,14 +93,8 @@ class WriteKodiDB():
         
         changes = False
         
-        #update artwork
-        changes |= self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "poster"),"movie")
-        changes |= self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"movie")
-        changes |= self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"movie")
-        changes |= self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"movie")
-        changes |= self.updateArtWork(KodiItem,"landscape", API().getArtwork(MBitem, "Thumb"),"movie")
-        changes |= self.updateArtWork(KodiItem,"discart", API().getArtwork(MBitem, "Disc"),"movie")
-        changes |= self.updateArtWork(KodiItem,"fanart", API().getArtwork(MBitem, "Backdrop"),"movie")
+        #update/check all artwork
+        changes |= self.updateArtWork(KodiItem,MBitem)
 
         #update common properties
         duration = (int(timeInfo.get('Duration'))*60)
@@ -175,14 +169,8 @@ class WriteKodiDB():
         
         changes = False
         
-        #update artwork
-        changes |= self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "Primary"),"tvshow")
-        changes |= self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"tvshow")
-        changes |= self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"tvshow")
-        changes |= self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"tvshow")
-        changes |= self.updateArtWork(KodiItem,"landscape", API().getArtwork(MBitem, "Thumb"),"tvshow")
-        changes |= self.updateArtWork(KodiItem,"discart", API().getArtwork(MBitem, "Disc"),"tvshow")
-        changes |= self.updateArtWork(KodiItem,"fanart", API().getArtwork(MBitem, "Backdrop"),"tvshow")
+        #update/check all artwork
+        changes |= self.updateArtWork(KodiItem,MBitem)
         
         #update common properties
         if MBitem.get("PremiereDate") != None:
@@ -218,8 +206,7 @@ class WriteKodiDB():
         
         if changes:
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
-        
-                    
+                  
     def updateEpisodeToKodiLibrary( self, MBitem, KodiItem ):
         
         addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
@@ -240,14 +227,8 @@ class WriteKodiDB():
         
         changes = False
 
-        # TODO --> set season poster instead of show poster ?
-        changes |= self.updateArtWork(KodiItem,"poster", API().getArtwork(MBitem, "tvshow.poster"),"episode")
-        changes |= self.updateArtWork(KodiItem,"fanart", API().getArtwork(MBitem, "Backdrop"),"episode")
-        changes |= self.updateArtWork(KodiItem,"clearlogo", API().getArtwork(MBitem, "Logo"),"episode")
-        changes |= self.updateArtWork(KodiItem,"clearart", API().getArtwork(MBitem, "Art"),"episode")
-        changes |= self.updateArtWork(KodiItem,"banner", API().getArtwork(MBitem, "Banner"),"episode")
-        changes |= self.updateArtWork(KodiItem,"landscape", API().getArtwork(MBitem, "Thumb"),"episode")
-        changes |= self.updateArtWork(KodiItem,"discart", API().getArtwork(MBitem, "Disc"),"episode")
+        #update/check all artwork
+        changes |= self.updateArtWork(KodiItem,MBitem)
         
         
         #update common properties
@@ -279,34 +260,54 @@ class WriteKodiDB():
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
     
     # adds or updates artwork to the given Kodi file in database
-    def updateArtWork(self,KodiItem,artWorkName,artworkValue, fileType):
-        if fileType == "tvshow":
-            id = KodiItem['tvshowid']
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": { "%s": "%s" }}, "id": 1 }'
-        elif fileType == "episode":
-            id = KodiItem['episodeid']
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "art": { "%s": "%s" }}, "id": 1 }'
-        elif fileType == "musicvideo":
-            id = KodiItem['musicvideoid']
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { musicvideoid": %i, "art": { "%s": "%s" }}, "id": 1 }'
-        elif fileType == "movie":
-            id = KodiItem['movieid']
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": { "%s": "%s" }}, "id": 1 }'
+    def updateArtWork(self,KodiItem,MBitem):
         
+        item_type=str(MBitem.get("Type"))
+        
+        if item_type == "Series":
+            id = KodiItem['tvshowid']
+            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": %s}, "id": 1 }'
+        elif item_type == "Episode":
+            id = KodiItem['episodeid']
+            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "art": %s}, "id": 1 }'
+        elif item_type == "MusicVideo":
+            id = KodiItem['musicvideoid']
+            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { musicvideoid": %i, "art": %s}, "id": 1 }'
+        elif item_type == "Movie":
+            id = KodiItem['movieid']
+            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": %s}, "id": 1 }'
+        
+        
+        #update artwork
         changes = False
-        if KodiItem['art'].has_key(artWorkName):
-            curValue = urllib.unquote(KodiItem['art'][artWorkName]).decode('utf8')
-            if not artworkValue in curValue:
-                xbmc.sleep(sleepVal)
-                utils.logMsg("MB3 Syncer", "updating artwork..." + str(artworkValue) + " - " + str(curValue))
-                xbmc.executeJSONRPC(jsoncommand %(id, artWorkName, artworkValue))
-                changes = True
-        elif artworkValue != None and artworkValue != "":
-            xbmc.sleep(sleepVal)
-            utils.logMsg("MB3 Syncer", "updating artwork..." + str(artworkValue) + " - " + str(artWorkName))
-            xbmc.executeJSONRPC(jsoncommand %(id, artWorkName, artworkValue))
-            changes = True
+        
+        artwork = {}
+        artwork["poster"] = API().getArtwork(MBitem, "Primary")
+        artwork["clearlogo"] = API().getArtwork(MBitem, "Logo")
+        artwork["clearart"] = API().getArtwork(MBitem, "Art")
+        artwork["banner"] = API().getArtwork(MBitem, "Banner")
+        artwork["landscape"] = API().getArtwork(MBitem, "Thumb")
+        artwork["discart"] = API().getArtwork(MBitem, "Disc")
+        artwork["fanart"] = API().getArtwork(MBitem, "Backdrop")
 
+        
+        for art in artwork:
+            if artwork.get(art) != None:
+                if KodiItem["art"].has_key(art):
+                    if KodiItem["art"][art] != artwork.get(art):
+                        KodiItem["art"][art] = artwork.get(art)
+                        changes = True
+                else:
+                    KodiItem["art"][art] = artwork.get(art)
+                    changes = True
+        
+        if len(KodiItem["art"]) == 0:
+            changes = False
+        
+        if changes:
+            json_array = json.dumps(KodiItem["art"])
+            result = xbmc.executeJSONRPC(jsoncommand %(id, json_array))
+            print result
         return changes
     
     # adds or updates the given property on the videofile in Kodi database
@@ -364,7 +365,6 @@ class WriteKodiDB():
         pendingChanges = False
         if propertyCollection != None:   
             currentvalues = set(KodiItem[propertyName])
-            genrestring = ""
             for item in propertyCollection:
                 if not item in currentvalues:
                     pendingChanges = True
