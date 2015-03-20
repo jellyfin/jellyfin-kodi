@@ -159,10 +159,9 @@ class LibrarySync():
                         item['Tag'] = []
                         item['Tag'].append(view.get('title'))
                         
-                        for kodimovie in allKodiMovies:
-                            if item["Id"] in kodimovie["file"]:
-                                WriteKodiDB().updateMovieToKodiLibrary(item,kodimovie)
-                                break
+                        kodimovie = allKodiMovies.get(item["Id"], None)
+                        if(kodimovie != None):
+                            WriteKodiDB().updateMovieToKodiLibrary(item,kodimovie)
                         
                         if(self.ShouldStop()):
                             return True
@@ -541,15 +540,12 @@ class LibrarySync():
                 
                     for item in allMB3Movies:
                         
-                        if not item.get('IsFolder'):
-                            kodiItem = None
-                            for kodimovie in allKodiMovies:
-                                if item["Id"] in kodimovie["file"]:
-                                    kodiItem = kodimovie
-                                    break
+                        if not item.get('IsFolder'):                           
+                            kodiItem = allKodiMovies.get(item["Id"], None)
                             
-                            userData=API().getUserData(item)
+                            userData = API().getUserData(item)
                             timeInfo = API().getTimeInfo(item)
+                            
                             if kodiItem != None:
                                 WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"movie")
                                 kodiresume = int(round(kodiItem['resume'].get("position")))

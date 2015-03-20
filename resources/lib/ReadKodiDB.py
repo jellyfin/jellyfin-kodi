@@ -49,26 +49,32 @@ class ReadKodiDB():
             if(result.has_key('movies')):
                 movies = result['movies']
 
-        return movies
+        kodiMovieMap = None
+        if(movies != None and len(movies) > 0):
+            kodiMovieMap = {}
+            for kodimovie in movies:
+                key = kodimovie["file"][-37:-5] #extract the id from the file name
+                kodiMovieMap[key] = kodimovie
+                
+        return kodiMovieMap
     
     def getKodiMoviesIds(self,returnMB3Ids = False):
         # returns a list of movieIds or MB3 Id's from all movies currently in the Kodi library
         allKodiMovies = self.getKodiMovies(False)
-        allKodiMovieIds = list()
         
-        if allKodiMovies != None:
-            for kodimovie in allKodiMovies:
-                if returnMB3Ids:
-                    filepath = kodimovie["file"]
-                    filepath = filepath.replace(movieLibrary + os.sep, "")
-                    filepath = filepath.replace(".strm", "")
-                    filepath = filepath.split(os.sep)[0]
-                    id = filepath
-                else:
-                    id = str(kodimovie["movieid"])
+        if(allKodiMovies == None):
+            return list()
+        
+        if(returnMB3Ids):
+            allKodiMovieIds = list(allKodiMovies.keys())
+            return allKodiMovieIds
+        else:
+            allKodiMovieIds = list()
+            for kodimovie in allKodiMovies.values():
+                id = str(kodimovie["movieid"])
                 allKodiMovieIds.append(id)
         
-        return allKodiMovieIds
+            return allKodiMovieIds
     
     def getKodiTvShowsIds(self,returnMB3Ids = False):
         # returns a list of tvshowIds or MB3 Id's from all tvshows currently in the Kodi library
