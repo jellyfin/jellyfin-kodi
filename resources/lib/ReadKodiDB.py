@@ -79,21 +79,20 @@ class ReadKodiDB():
     def getKodiTvShowsIds(self,returnMB3Ids = False):
         # returns a list of tvshowIds or MB3 Id's from all tvshows currently in the Kodi library
         allKodiTvShows = self.getKodiTvShows(False)
-        allKodiTvShowsIds = list()
         
-        if allKodiTvShows != None:
-            for kodishow in allKodiTvShows:
-                if returnMB3Ids:
-                    filepath = kodishow["file"]
-                    filepath = filepath.replace(tvLibrary + os.sep, "")
-                    filepath = filepath.replace(".strm", "")
-                    filepath = filepath.split(os.sep)[0]
-                    id = filepath
-                else:
-                    id = str(kodishow["tvshowid"])
+        if allKodiTvShows == None:
+            return list()
+        
+        if(returnMB3Ids):
+            allKodiTvShowsIds = list(allKodiTvShows.keys())
+            return allKodiTvShowsIds
+        else:
+            allKodiTvShowsIds = list()
+            for kodishow in allKodiTvShows.values():
+                id = str(kodishow["tvshowid"])
                 allKodiTvShowsIds.append(id)
         
-        return allKodiTvShowsIds
+            return allKodiTvShowsIds
         
     def getKodiTvShows(self,fullInfo = False):
         #returns all tvshows in Kodi db inserted by MB
@@ -110,7 +109,18 @@ class ReadKodiDB():
             if(result.has_key('tvshows')):
                 tvshows = result['tvshows']
 
-        return tvshows
+        kodiShowMap = None
+        if(tvshows != None and len(tvshows) > 0):
+            kodiShowMap = {}
+            for kodishow in tvshows:
+                filepath = kodishow["file"]
+                filepath = filepath.replace(tvLibrary + os.sep, "")
+                filepath = filepath.replace(".strm", "")
+                filepath = filepath.split(os.sep)[0]
+                key = filepath #extract the id from the file path
+                kodiShowMap[key] = kodishow
+                
+        return kodiShowMap
     
     def getKodiTVShow(self, id):
         xbmc.sleep(sleepVal)
