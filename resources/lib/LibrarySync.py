@@ -495,9 +495,11 @@ class LibrarySync():
                     
                     #add all kodi episodes to a list with episodes for use later on to delete episodes
                     #the mediabrowser ID is set as uniqueID in the NFO... for some reason this has key 'unknown' in the json response
-                    for episode in ReadKodiDB().getKodiEpisodes(tvshow,False,False):
-                        dict = {'mbid': str(episode["uniqueid"]["unknown"]),'kodiid': str(episode["episodeid"])}
-                        allKodiEpisodeIds.append(dict)
+                    show = ReadKodiDB().getKodiEpisodes(tvshow,False,False)
+                    if show != None:
+                        for episode in show:
+                            dict = {'mbid': str(episode["uniqueid"]["unknown"]),'kodiid': str(episode["episodeid"])}
+                            allKodiEpisodeIds.append(dict)
                     
                     showCurrent += 1                  
                 

@@ -424,21 +424,22 @@ class WriteKodiDB():
         utils.logMsg("deleting episode from Kodi library",episodeid)
         
         json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodeDetails", "params": { "episodeid": %i}, "properties" : ["file","episodeid"] }, "id": 1}' %(int(episodeid)))
-        jsonobject = json.loads(json_response.decode('utf-8','replace'))  
+        if json_response != None and json_response != "" and json_response != []:
+            jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         
-        print jsonobject
-        if(jsonobject.has_key('result')):
-            result = jsonobject['result']
-            if(result.has_key('episodedetails')):
-                episodedetails = result['episodedetails']
+            print jsonobject
+            if(jsonobject.has_key('result')):
+                result = jsonobject['result']
+                if(result.has_key('episodedetails')):
+                    episodedetails = result['episodedetails']
                 
-            strmfile = episodedetails["file"]
-            nfofile = strmfile.replace(".strm",".nfo")
+                strmfile = episodedetails["file"]
+                nfofile = strmfile.replace(".strm",".nfo")
             
-            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveEpisode", "params": { "episodeid": %i}, "id": 1 }' %(int(episodeid)))
+                xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveEpisode", "params": { "episodeid": %i}, "id": 1 }' %(int(episodeid)))
 
-            xbmcvfs.delete(strmfile)
-            xbmcvfs.delete(nfofile)
+                xbmcvfs.delete(strmfile)
+                xbmcvfs.delete(nfofile)
     
     def addTVShowToKodiLibrary( self, item ):
         itemPath = os.path.join(tvLibrary,item["Id"])
