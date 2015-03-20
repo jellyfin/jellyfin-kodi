@@ -15,6 +15,7 @@ import os
 from DownloadUtils import DownloadUtils
 from CreateFiles import CreateFiles
 from ReadKodiDB import ReadKodiDB
+from ReadEmbyDB import ReadEmbyDB
 from API import API
 import Utils as utils
 
@@ -201,6 +202,9 @@ class WriteKodiDB():
         
         #add actors
         changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"),"tvshow")
+        
+        #update season artwork
+        self.updateSeasonArtwork(MBitem, KodiItem)
         
         CreateFiles().createNFO(MBitem)
         
@@ -441,10 +445,34 @@ class WriteKodiDB():
         xbmcvfs.rmdir(path)
     
     
-    def updateSeasonDetails(self,MBitem, KodiItem):
-        #use sqlite to set the season artwork because with NFO it sets the poster as banner
-        pass
+    def updateSeasonArtwork(self,MBitem, KodiItem):
+        #use sqlite to set the season artwork because no method in API available for this
+        #season poster and banner are set by the nfo. landscape image is filled by this method
+        #if wanted this feature can be extended to also update the other artwork
+        tvshowid = KodiItem["tvshowid"]
         
+        dbPath = xbmc.translatePath("special://userdata/Database/MyVideos90.db")
+        connection = sqlite3.connect(dbPath)
+        cursor = connection.cursor( )
+        
+        seasonData = ReadEmbyDB().getTVShowSeasons(MBitem["Id"])
+        if seasonData != None:
+            for season in seasonData:
+                if season.has_key("IndexNumber"):
+                    MB3landscape = API().getArtwork(season, "Thumb")
+                    if MB3landscape != "":
+                        cursor.execute("SELECT idSeason as seasonid FROM seasons WHERE idShow = ? and season = ?",(tvshowid,season["IndexNumber"]))
+                        result = cursor.fetchone()
+                        if result != None:
+                            seasonid = result[0]
+                            cursor.execute("SELECT art_id as art_id FROM art WHERE media_id = ? and media_type = ? and type = ?",(seasonid,"season","landscape"))
+                            result = cursor.fetchone()
+                            if result == None:
+                                sql="INSERT into art(media_id, media_type, type, url) values(?, ?, ?, ?)"
+                                cursor.execute(sql, (seasonid,"season","landscape",MB3landscape))
+
+        connection.commit()
+        cursor.close()
         
         
     

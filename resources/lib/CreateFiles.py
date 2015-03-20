@@ -125,9 +125,7 @@ class CreateFiles():
                             seasonart2 = API().getArtwork(season, "Banner")
                             if seasonart2 != None:
                                 SubElement(root, "thumb",{"type":"season","aspect":"banner","season":str(season["IndexNumber"])}).text = seasonart2
-                            seasonart3 = API().getArtwork(season, "Thumb")
-                            if seasonart2 != None:
-                                SubElement(root, "thumb",{"type":"season","aspect":"landscape","season":str(season["IndexNumber"])}).text = seasonart3
+            
             SubElement(root, "fanart").text = API().getArtwork(item, "Backdrop")
             SubElement(root, "title").text = utils.convertEncoding(item["Name"])
             SubElement(root, "originaltitle").text = utils.convertEncoding(item["Name"])
