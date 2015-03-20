@@ -51,11 +51,14 @@ class LibrarySync():
         #what sync method to perform ?
         if syncOption == "Full Sync":
         
-            pr = utils.startProfiling()
+            #pr = utils.startProfiling()
             self.MoviesSync(True)
-            utils.stopProfiling(pr, "MoviesSync(True)")
+            #utils.stopProfiling(pr, "MoviesSync(True)")
             
+            #pr = utils.startProfiling()
             self.TvShowsSync(True)
+            #utils.stopProfiling(pr, "TvShowsSync(True)")
+            
         if syncOption == "Incremental Sync":
             self.MoviesSync(False)
             self.TvShowsSync(False)
