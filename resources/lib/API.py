@@ -7,31 +7,6 @@ import xbmcgui
 import xbmcaddon
 
 class API():
-    logLevel = 0
-    addonSettings = None
-    getString = None
-    LogCalls = False
-    TrackLog = ""
-    TotalUrlCalls = 0
-
-    def __init__(self, *args):
-        self.addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
-        self.getString = self.addonSettings.getLocalizedString
-        level = self.addonSettings.getSetting('logLevel')        
-        self.logLevel = 0
-        if(level != None and level != ""):
-            self.logLevel = int(level)
-        if(self.logLevel == 2):
-            self.LogCalls = True
-            
-    def logMsg(self, msg, level = 1):
-        if(self.logLevel >= level):
-            try:
-                xbmc.log("mb3sync DownloadUtils -> " + str(msg))
-            except UnicodeEncodeError:
-                try:
-                    xbmc.log("mb3sync DownloadUtils -> " + str(msg.encode('utf-8')))
-                except: pass    
     
     def getPeople(self, item):
         # Process People
@@ -277,6 +252,7 @@ class API():
 
     def getArtwork(self, data, type, index = "0", userParentInfo = False):
 
+        addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
         id = data.get("Id")
         getSeriesData = False
         userData = data.get("UserData") 
@@ -285,7 +261,7 @@ class API():
             if data.get("Type") == "Season" or data.get("Type")== "Episode":
                 id = data.get("SeriesId")
                 getSeriesData = True
-        elif type == "poster" and data.get("Type") == "Episode" and self.addonSettings.getSetting('useSeasonPoster')=='true': # Change the Id to the Season to get the season poster
+        elif type == "poster" and data.get("Type") == "Episode" and addonSettings.getSetting('useSeasonPoster')=='true': # Change the Id to the Season to get the season poster
             id = data.get("SeasonId")
         if type == "poster" or type == "tvshow.poster": # Now that the Ids are right, change type to MB3 name
             type="Primary"
@@ -338,20 +314,18 @@ class API():
                 index = str(randrange(0,totalbackdrops))
         # use the local image proxy server that is made available by this addons service
         
-        port = self.addonSettings.getSetting('port')
-        host = self.addonSettings.getSetting('ipaddress')
+        port = addonSettings.getSetting('port')
+        host = addonSettings.getSetting('ipaddress')
         server = host + ":" + port
         
-        if self.addonSettings.getSetting('compressArt')=='true':
+        if addonSettings.getSetting('compressArt')=='true':
             query = query + "&Quality=90"
         
         if imageTag == None:
             imageTag = "e3ab56fe27d389446754d0fb04910a34"
         artwork = "http://" + server + "/mediabrowser/Items/" + str(id) + "/Images/" + type + "/" + index + "/" + imageTag + "/original/" + width + "/" + height + "/" + played + "?" + query
-        if self.addonSettings.getSetting('disableCoverArt')=='true':
+        if addonSettings.getSetting('disableCoverArt')=='true':
             artwork = artwork + "&EnableImageEnhancers=false"
-        
-        self.logMsg("getArtwork : " + artwork, level=2)
         
         # do not return non-existing images
         if (    (type!="Backdrop" and imageTag=="e3ab56fe27d389446754d0fb04910a34") |  #Remember, this is the placeholder tag, meaning we didn't find a valid tag
@@ -365,9 +339,10 @@ class API():
     
     def getUserArtwork(self, data, type, index = "0"):
 
+        addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
         id = data.get("Id")
-        port = self.addonSettings.getSetting('port')
-        host = self.addonSettings.getSetting('ipaddress')
+        port = addonSettings.getSetting('port')
+        host = addonSettings.getSetting('ipaddress')
         server = host + ":" + port
         artwork = "http://" + server + "/mediabrowser/Users/" + str(id) + "/Images/" + type  + "?Format=original"
        
