@@ -25,7 +25,7 @@ class Service():
     def __init__(self, *args ):
         self.KodiMonitor = KodiMonitor.Kodi_Monitor()
 
-        utils.logMsg("MB3 Sync Service" "starting Monitor",0)
+        utils.logMsg("MB3 Sync Service", "starting Monitor",0)
         
         pass  
     
@@ -115,7 +115,7 @@ class Service():
                     else:
                         xbmc.log("Not authenticated yet")
                         
-            utils.logMsg("MB3 Sync Service" "stopping Service",0)
+            utils.logMsg("MB3 Sync Service", "stopping Service",0)
         
        
 #start the service
