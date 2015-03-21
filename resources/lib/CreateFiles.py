@@ -12,8 +12,6 @@ import time
 from calendar import timegm
 from datetime import datetime
 
-
-
 from xml.etree.ElementTree import Element, SubElement, Comment, tostring
 from xml.etree import ElementTree
 from xml.dom import minidom
@@ -23,6 +21,7 @@ from DownloadUtils import DownloadUtils
 from API import API
 import Utils as utils
 from ReadEmbyDB import ReadEmbyDB
+
 
 addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
 addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
@@ -237,8 +236,15 @@ class CreateFiles():
                         SubElement(actor_elem, "name").text = utils.convertEncoding(actor.get("Name"))
                         SubElement(actor_elem, "type").text = utils.convertEncoding(actor.get("Role"))
                         SubElement(actor_elem, "thumb").text = downloadUtils.imageUrl(actor.get("Id"), "Primary", 0, 400, 400)
-
-            ET.ElementTree(root).write(nfoFile, xml_declaration=True)
+            
+            # Some devices such as Mac are using an older version of python
+            try:
+                 # 2.7 and greater
+                ET.ElementTree(root).write(nfoFile, xml_declaration=True)
+            except:
+                 # <2.7
+                ET.ElementTree(root).write(nfoFile)
+           
 
         return changes
         
