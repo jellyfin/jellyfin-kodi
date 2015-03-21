@@ -166,31 +166,21 @@ class ReadKodiDB():
         else:
             return episodes
         
-    def getKodiEpisodeByMbItem(self, MBitem):
+    def getKodiEpisodeByMbItem(self, episodeid, tvshowid):
         xbmc.sleep(sleepVal)
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "is", "field": "title", "value": "' + MBitem.get("SeriesName").encode('utf-8') + '"} }, "id": "libTvShows"}')
-        jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         episode = None
-        if(jsonobject.has_key('result')):
-            result = jsonobject['result']
-            if(result.has_key('tvshows')):
-                tvshows = result['tvshows']
-                tvshow = tvshows[0]
-
-                # find the episode by combination of season and episode
-                json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["playcount","season", "resume", "episode"], "sort": {"method": "episode"}}, "id": 1}' %tvshow['tvshowid'])
-                jsonobject = json.loads(json_response.decode('utf-8','replace'))  
-                episodes = None
-                if(jsonobject.has_key('result')):
-                    result = jsonobject['result']
-                    if(result.has_key('episodes')):
-                        episodes = result['episodes']
-                        
-                        comparestring1 = str(MBitem.get("ParentIndexNumber")) + "-" + str(MBitem.get("IndexNumber"))
-                        for item in episodes:
-                            comparestring2 = str(item["season"]) + "-" + str(item["episode"])
-                            if comparestring1 == comparestring2:
-                                episode = item
+        tvshow = self.getKodiTVShow(tvshowid)
+        
+        if tvshow != None:
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": ' + str(tvshow['tvshowid']) + ', "properties": ["playcount","season", "resume", "episode", "uniqueid", "file"], "sort": {"method": "episode"}}, "id": 1}')
+            jsonobject = json.loads(json_response.decode('utf-8','replace'))  
+            if(jsonobject.has_key('result')):
+                result = jsonobject['result']
+                if(result.has_key('episodes')):
+                    episodes = result['episodes']
+                    for ep in episodes:
+                        if ep["uniqueid"]["unknown"] == episodeid:
+                            episode = ep
+                            break
 
         return episode
-    

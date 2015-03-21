@@ -489,7 +489,7 @@ class LibrarySync():
                     show = ReadKodiDB().getKodiEpisodes(tvshow,False,False)
                     if show != None:
                         for episode in show:
-                            dict = {'mbid': str(episode["uniqueid"]["unknown"]),'kodiid': str(episode["episodeid"])}
+                            dict = {'episodeid': str(episode["uniqueid"]["unknown"]),'tvshowid': tvshow}
                             allKodiEpisodeIds.append(dict)
                     
                     showCurrent += 1                  
@@ -507,8 +507,8 @@ class LibrarySync():
                 # process any deletes only at fullsync
                 allMB3EpisodeIds = set(allMB3EpisodeIds)
                 for episode in allKodiEpisodeIds:
-                    if episode.get('mbid') not in allMB3EpisodeIds:
-                        WriteKodiDB().deleteEpisodeFromKodiLibrary(episode.get('kodiid'))
+                    if episode.get('episodeid') not in allMB3EpisodeIds:
+                        WriteKodiDB().deleteEpisodeFromKodiLibrary(episode.get('episodeid'),episode.get('tvshowid'))
                 
                 # DELETES -- TV SHOWS
                 if fullsync:
@@ -727,7 +727,7 @@ class LibrarySync():
                 return True                   
                     
             MB3Episode = ReadEmbyDB().getItem(itemID)
-            kodiItem = ReadKodiDB().getKodiEpisodeByMbItem(MB3Episode)
+            kodiItem = ReadKodiDB().getKodiEpisodeByMbItem(MB3Episode["Id"], MB3Episode["SeriesId"])
             if (MB3Episode != None):
                 userData=API().getUserData(MB3Episode)
                 timeInfo = API().getTimeInfo(MB3Episode)

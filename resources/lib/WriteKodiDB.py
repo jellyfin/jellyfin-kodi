@@ -637,37 +637,21 @@ class WriteKodiDB():
         path = os.path.join(movieLibrary,id)
         allDirs, allFiles = xbmcvfs.listdir(path)
         for dir in allDirs:
-            xbmcvfs.rmdir(dir)
+            xbmcvfs.rmdir(os.path.join(path,dir))
         for file in allFiles:
-            xbmcvfs.delete(file)
+            xbmcvfs.delete(os.path.join(path,file))
         xbmcvfs.rmdir(path)   
 
         
-    def deleteEpisodeFromKodiLibrary(self, episodeid ):
+    def deleteEpisodeFromKodiLibrary(self, episodeid, tvshowid ):
         utils.logMsg("deleting episode from Kodi library",episodeid)
-        
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodeDetails", "params": { "episodeid": %s}, "properties": ["file","originaltitle"] }, "id": 1}' %(str(episodeid)))
-        
-        print "episodedetails --> " + json_response
-        
-        if json_response != None and json_response != "" and json_response != []:
-            jsonobject = json.loads(json_response.decode('utf-8','replace'))  
-        
-            print "episodedetails --> " + jsonobject
-            if(jsonobject.has_key('result')):
-                result = jsonobject['result']
-                if(result.has_key('episodedetails')):
-                    episodedetails = result['episodedetails']
-                
-                strmfile = episodedetails["file"]
-                nfofile = strmfile.replace(".strm",".nfo")
-                print "strmfile -->" + strmfile
-                print "nfofile -->" + nfofile
-                
-                xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveEpisode", "params": { "episodeid": %i}, "id": 1 }' %(int(episodeid)))
-
-                xbmcvfs.delete(strmfile)
-                xbmcvfs.delete(nfofile)
+        episode = ReadKodiDB().getKodiEpisodeByMbItem(episodeid, tvshowid)
+        if episode != None:
+            strmfile = episode["file"]
+            nfofile = strmfile.replace(".strm",".nfo")
+            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveEpisode", "params": { "episodeid": %i}, "id": 1 }' %(episode["episodeid"]))
+            xbmcvfs.delete(strmfile)
+            xbmcvfs.delete(nfofile)
     
     def addTVShowToKodiLibrary( self, item ):
         itemPath = os.path.join(tvLibrary,item["Id"])
@@ -698,7 +682,9 @@ class WriteKodiDB():
             xbmcvfs.rmdir(os.path.join(path,dir))
         for file in allFiles:
             xbmcvfs.delete(os.path.join(path,file))
-        xbmcvfs.rmdir(path)   
+        succes = xbmcvfs.rmdir(path)
+        if not succes:
+            utils.logMsg("Error deleting TV show with ID ",id)
     
     def updateSeasonArtwork(self,MBitem, KodiItem):
         #use sqlite to set the season artwork because no method in API available for this
