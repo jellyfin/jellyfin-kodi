@@ -144,7 +144,7 @@ class WriteKodiDB():
         # if there were movies changes then send the update via JSONRPC
         if(len(params) > 0):
             changes |= True
-            utils.logMsg("UpdateMovieParams", str(params), level = 0)
+            utils.logMsg("UpdateMovieParams", str(params), level = 2)
             jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, %s}, "id": 1 }'
             paramString = ""
             paramLen = len(params)
@@ -154,7 +154,7 @@ class WriteKodiDB():
                 if(x < paramLen-1):
                     paramString += ", "
             jsoncommand = jsoncommand %(KodiItem['movieid'], paramString)
-            utils.logMsg("executeJSONRPC : ", jsoncommand, level = 0)
+            utils.logMsg("executeJSONRPC : ", jsoncommand, level = 2)
             xbmc.sleep(sleepVal)
             result = xbmc.executeJSONRPC(jsoncommand)
             

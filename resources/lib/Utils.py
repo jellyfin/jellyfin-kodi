@@ -70,7 +70,7 @@ def checkKodiSources():
     rebootRequired = KodiAdvancedSettingsCheck()
     
     if rebootRequired:
-        ret = xbmcgui.Dialog().yesno(heading="Emby Sync service", line1="A restart of Kodi is needed to apply changes.", line2="Synchronisation will not start before the reboot.", line3="Do you want to reboot now ?")
+        ret = xbmcgui.Dialog().yesno(heading="Emby Sync service", line1="A restart of Kodi is needed to apply changes.", line2="Synchronisation will not start before the restart.", line3="Do you want to restart now?")
         if ret:
             xbmc.executebuiltin("RestartApp")
         else:

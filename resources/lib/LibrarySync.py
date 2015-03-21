@@ -136,7 +136,7 @@ class LibrarySync():
                 #initiate library update and wait for finish before processing any updates
                 if updateNeeded:
                     if(pDialog != None):
-                        pDialog.update(0, "Processing Movie Updates", "Importing STRM Files")
+                        pDialog.update(0, "Processing New Items", "Importing STRM Files")
                     
                     if(pDialog != None and type(pDialog) == xbmcgui.DialogProgressBG):
                         pDialog.close()
@@ -408,6 +408,9 @@ class LibrarySync():
                     
                 #initiate library update and wait for finish before processing any updates
                 if updateNeeded:
+                    if(pDialog != None):
+                        pDialog.update(0, "Processing New Items", "Importing STRM Files")
+
                     if(pDialog != None and type(pDialog) == xbmcgui.DialogProgressBG):
                         pDialog.close()
                         
@@ -416,20 +419,7 @@ class LibrarySync():
                     
                     if(pDialog != None and type(pDialog) == xbmcgui.DialogProgressBG):
                         pDialog.create('Sync DB', 'Sync DB')                      
-                    
-                
-                #initiate library update and wait for finish before processing any updates
-                if updateNeeded:
-                
-                    if(pDialog != None and type(pDialog) == xbmcgui.DialogProgressBG):
-                        pDialog.close()
-                        
-                    self.doKodiLibraryUpdate(False, pDialog)
-                    updateNeeded = False
-                    
-                    if(pDialog != None and type(pDialog) == xbmcgui.DialogProgressBG):
-                        pDialog.create('Sync DB', 'Sync DB')
-                   
+                                      
                 if(pDialog != None):
                     progressTitle = "Sync DB : Processing TV Shows"
                     pDialog.update(0, progressTitle, "")
