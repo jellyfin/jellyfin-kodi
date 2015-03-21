@@ -503,13 +503,14 @@ class LibrarySync():
                 
                 cleanNeeded = False
                 
+                # DELETES -- EPISODES
                 # process any deletes only at fullsync
                 allMB3EpisodeIds = set(allMB3EpisodeIds)
                 for episode in allKodiEpisodeIds:
                     if episode.get('mbid') not in allMB3EpisodeIds:
                         WriteKodiDB().deleteEpisodeFromKodiLibrary(episode.get('kodiid'))
                 
-                # TODO --> process deletes for episodes !!!
+                # DELETES -- TV SHOWS
                 if fullsync:
                     allLocaldirs, filesTVShows = xbmcvfs.listdir(tvLibrary)
                     allMB3TVShows = set(allTVShows)
