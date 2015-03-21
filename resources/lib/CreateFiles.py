@@ -28,17 +28,17 @@ addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
 dataPath = os.path.join(addondir,"library")
 movieLibrary = os.path.join(dataPath,'movies')
 tvLibrary = os.path.join(dataPath,'tvshows')
+musicvideoLibrary = os.path.join(dataPath,'musicvideos')
 
 class CreateFiles():   
     def createSTRM(self,item):
-        
         item_type=str(item.get("Type")).encode('utf-8')
         if item_type == "Movie":
             itemPath = os.path.join(movieLibrary,item["Id"])
             strmFile = os.path.join(itemPath,item["Id"] + ".strm")
 
         if item_type == "MusicVideo":
-            itemPath = os.path.join(musicVideoLibrary,item["Id"])
+            itemPath = os.path.join(musicvideoLibrary,item["Id"])
             strmFile = os.path.join(itemPath,item["Id"] + ".strm")
 
         if item_type == "Episode":
@@ -86,6 +86,10 @@ class CreateFiles():
             itemPath = os.path.join(movieLibrary,item["Id"])
             nfoFile = os.path.join(itemPath,item["Id"] + ".nfo")
             rootelement = "movie"
+        if item_type == "MusicVideo":
+            itemPath = os.path.join(musicvideoLibrary,item["Id"])
+            nfoFile = os.path.join(itemPath,item["Id"] + ".nfo")
+            rootelement = "musicvideo"
         if item_type == "Series":
             itemPath = os.path.join(tvLibrary,item["Id"])
             nfoFile = os.path.join(itemPath,"tvshow.nfo")
@@ -131,6 +135,12 @@ class CreateFiles():
             SubElement(root, "title").text = utils.convertEncoding(item["Name"])
             SubElement(root, "originaltitle").text = utils.convertEncoding(item["Name"])
             SubElement(root, "sorttitle").text = utils.convertEncoding(item["SortName"])
+            
+            if item.has_key("Album"):
+                SubElement(root, "album").text = item["Album"]
+                
+            if item.has_key("Artist"):
+                SubElement(root, "artist").text = item["Artist"][0]
             
             if item.has_key("OfficialRating"):
                 SubElement(root, "mpaa").text = item["OfficialRating"]

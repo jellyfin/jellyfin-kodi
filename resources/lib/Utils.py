@@ -53,6 +53,7 @@ def checkKodiSources():
     dataPath = os.path.join(addondir,"library")
     movieLibrary        = os.path.join(dataPath,'movies')
     tvLibrary           = os.path.join(dataPath,'tvshows')
+    musicvideoLibrary = os.path.join(dataPath,'musicvideos')
     
     rebootRequired = False
     
@@ -66,6 +67,10 @@ def checkKodiSources():
         xbmcvfs.mkdir(tvLibrary)
         rebootRequired = True
         addKodiSource("mediabrowser_tvshows",tvLibrary,"tvshows")
+    if not xbmcvfs.exists(musicvideoLibrary + os.sep):
+        xbmcvfs.mkdir(musicvideoLibrary)
+        rebootRequired = True
+        addKodiSource("mediabrowser_musicvideos",musicvideoLibrary,"musicvideos")
     
     rebootRequired = KodiAdvancedSettingsCheck()
     
@@ -105,7 +110,7 @@ def addKodiSource(name, path, type):
     # add it to sources.xml
     sourcesFile = xbmc.translatePath( "special://profile/sources.xml" )
     
-    # add an emply sources file to work with
+    # add an empty sources file to work with
     if xbmcvfs.exists(sourcesFile) == False:
         sources = Element("sources")
         video = SubElement(sources, "video")

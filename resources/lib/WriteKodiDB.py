@@ -24,6 +24,7 @@ addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
 dataPath = os.path.join(addondir,"library")
 movieLibrary = os.path.join(dataPath,'movies')
 tvLibrary = os.path.join(dataPath,'tvshows')
+musicvideoLibrary = os.path.join(dataPath,'musicvideos')
 
 sleepVal = 20
 
@@ -167,7 +168,65 @@ class WriteKodiDB():
         if(changes):
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"], level=0)
             
+    def updateMusicVideoToKodiLibrary_Batched(self, MBitem, KodiItem):
+        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port
+        downloadUtils = DownloadUtils()
+        userid = downloadUtils.getUserId()
         
+        timeInfo = API().getTimeInfo(MBitem)
+        userData=API().getUserData(MBitem)
+        people = API().getPeople(MBitem)
+        genre = API().getGenre(MBitem)
+        studios = API().getStudios(MBitem)
+        mediaStreams=API().getMediaStreams(MBitem)
+        
+        thumbPath = API().getArtwork(MBitem, "Primary")
+        
+        params = list()
+        
+        self.getArtworkParam_Batched(KodiItem, MBitem, params)
+
+        #update common properties
+        duration = (int(timeInfo.get('Duration'))*60)
+        self.getPropertyParam_Batched(KodiItem, "runtime", duration, params)
+        self.getPropertyParam_Batched(KodiItem, "year", MBitem.get("ProductionYear"), params)
+        self.getPropertyParamArray_Batched(KodiItem, "director", people.get("Director"), params)
+        self.getPropertyParamArray_Batched(KodiItem, "genre", MBitem.get("Genres"), params)
+        self.getPropertyParamArray_Batched(KodiItem, "artist", MBitem.get("Artist"), params)
+        self.getPropertyParamArray_Batched(KodiItem, "album", MBitem.get("Album"), params)
+
+        if(studios != None):
+            for x in range(0, len(studios)):
+                studios[x] = studios[x].replace("/", "&")
+            self.getPropertyParamArray_Batched(KodiItem, "studio", studios, params)
+
+        changes = False
+        # if there were movies changes then send the update via JSONRPC
+        if(len(params) > 0):
+            changes |= True
+            utils.logMsg("UpdateMovieParams", str(params), level = 2)
+            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { "musicvideoid": %i, %s}, "id": 1 }'
+            paramString = ""
+            paramLen = len(params)
+            for x in range(0, paramLen):
+                param = params[x]
+                paramString += param
+                if(x < paramLen-1):
+                    paramString += ", "
+            jsoncommand = jsoncommand %(KodiItem['musicvideoid'], paramString)
+            utils.logMsg("executeJSONRPC : ", jsoncommand, level = 2)
+            xbmc.sleep(sleepVal)
+            result = xbmc.executeJSONRPC(jsoncommand)
+        
+        CreateFiles().createSTRM(MBitem)
+        CreateFiles().createNFO(MBitem)
+        
+        if(changes):
+            utils.logMsg("Updated musicvideo to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"], level=0)
+            
     def updateMovieToKodiLibrary(self, MBitem, KodiItem):
         
         addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
@@ -615,6 +674,25 @@ class WriteKodiDB():
         if changes:
             utils.logMsg("MB3 Sync","Added movie to Kodi Library",item["Id"] + " - " + item["Name"])
     
+    def addMusicVideoToKodiLibrary( self, item ):
+        itemPath = os.path.join(musicvideoLibrary,item["Id"])
+        strmFile = os.path.join(itemPath,item["Id"] + ".strm")
+        
+        changes = False
+        
+        #create path if not exists
+        if not xbmcvfs.exists(itemPath + os.sep):
+            xbmcvfs.mkdir(itemPath)
+        
+        #create nfo file
+        changes = CreateFiles().createNFO(item)
+        
+        # create strm file
+        changes |= CreateFiles().createSTRM(item)
+        
+        if changes:
+            utils.logMsg("MB3 Sync","Added musicvideo to Kodi Library",item["Id"] + " - " + item["Name"])
+    
     def addEpisodeToKodiLibrary(self, item):
         
         changes = False
@@ -641,8 +719,21 @@ class WriteKodiDB():
         for file in allFiles:
             xbmcvfs.delete(os.path.join(path,file))
         xbmcvfs.rmdir(path)   
-
+    
+    def deleteMusicVideoFromKodiLibrary(self, id ):
+        utils.logMsg("deleting musicvideo from Kodi library",id)
+        kodiItem = ReadKodiDB().getKodiMusicVideo(id)
+        if kodiItem != None:
+            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveMusicVideo", "params": { "musicvideoid": %i}, "id": 1 }' %(kodiItem["musicvideoid"]))
         
+        path = os.path.join(musicvideoLibrary,id)
+        allDirs, allFiles = xbmcvfs.listdir(path)
+        for dir in allDirs:
+            xbmcvfs.rmdir(os.path.join(path,dir))
+        for file in allFiles:
+            xbmcvfs.delete(os.path.join(path,file))
+        xbmcvfs.rmdir(path)   
+         
     def deleteEpisodeFromKodiLibrary(self, episodeid, tvshowid ):
         utils.logMsg("deleting episode from Kodi library",episodeid)
         episode = ReadKodiDB().getKodiEpisodeByMbItem(episodeid, tvshowid)
@@ -713,9 +804,7 @@ class WriteKodiDB():
                                 cursor.execute(sql, (seasonid,"season","landscape",MB3landscape))
 
         connection.commit()
-        cursor.close()
-        
-        
+        cursor.close()   
     
     def setKodiResumePoint(self, id, resume_seconds, total_seconds, fileType):
         #use sqlite to set the resume point while json api doesn't support this yet

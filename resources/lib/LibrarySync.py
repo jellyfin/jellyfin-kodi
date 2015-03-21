@@ -59,9 +59,14 @@ class LibrarySync():
             self.TvShowsSync(True)
             #utils.stopProfiling(pr, "TvShowsSync(True)")
             
+            #pr = utils.startProfiling()
+            self.MusicVideosSync(True)
+            #utils.stopProfiling(pr, "MusicVideosSync(True)")
+            
         if syncOption == "Incremental Sync":
             self.MoviesSync(False)
             self.TvShowsSync(False)
+            self.MusicVideosSync(False)
         
         WINDOW.setProperty("startup", "done")
                         
@@ -194,7 +199,7 @@ class LibrarySync():
                 allEmbyMovieIds = set(allEmbyMovieIds)
                 for kodiId in allKodiIds:
                     if not kodiId in allEmbyMovieIds:
-                        WriteKodiDB().deleteMovieFromKodiLibrary(dir)
+                        WriteKodiDB().deleteMovieFromKodiLibrary(kodiId)
                         cleanNeeded = True
             
             if(self.ShouldStop(pDialog)):
@@ -533,6 +538,141 @@ class LibrarySync():
                 pDialog.close()
         
         return True
+    
+    def MusicVideosSync(self, fullsync=True):
+        
+        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        WINDOW = xbmcgui.Window( 10000 )
+        pDialog = None
+        
+        try:
+            enableProgress = False
+            if addon.getSetting("enableProgressFullSync") == 'true':
+                enableProgress = True
+                
+            if(addon.getSetting("SyncFirstMusicVideoRunDone") != 'true'):
+                pDialog = xbmcgui.DialogProgress()
+            elif(enableProgress):
+                pDialog = xbmcgui.DialogProgressBG()
+            
+            if(pDialog != None):
+                pDialog.create('Sync DB', 'Sync DB')
+                
+            allEmbyMusicVideoIds = list()
+
+            progressTitle = ""
+            
+            updateNeeded = False
+            
+            #process new musicvideos
+            allMB3MusicVideos = ReadEmbyDB().getMusicVideos(True, fullsync)
+            allKodiIds = set(ReadKodiDB().getKodiMusicVideoIds(True))
+        
+            if(self.ShouldStop(pDialog)):
+                return True            
+        
+            if(allMB3MusicVideos == None):
+                return False
+        
+            if(pDialog != None):
+                progressTitle = "Sync DB : Processing Musicvideos"
+                pDialog.update(0, progressTitle)
+                total = len(allMB3MusicVideos) + 1
+                count = 1
+            
+            for item in allMB3MusicVideos:
+                
+                if not item.get('IsFolder'):
+                    allEmbyMusicVideoIds.append(item["Id"])
+                    
+                    if item["Id"] not in allKodiIds:
+                        WriteKodiDB().addMusicVideoToKodiLibrary(item)
+                        updateNeeded = True
+                    
+                    if(self.ShouldStop(pDialog)):
+                        return True
+                
+                    # update progress bar
+                    if(pDialog != None):
+                        percentage = int(((float(count) / float(total)) * 100))
+                        pDialog.update(percentage, progressTitle, "Adding Musicvideo: " + str(count))
+                        count += 1
+            
+            #initiate library update and wait for finish before processing any updates
+            if updateNeeded:
+                if(pDialog != None):
+                    pDialog.update(0, "Processing New Items", "Importing STRM Files")
+                
+                if(pDialog != None and type(pDialog) == xbmcgui.DialogProgressBG):
+                    pDialog.close()
+                    
+                self.doKodiLibraryUpdate(False, pDialog)
+                
+                if(pDialog != None and type(pDialog) == xbmcgui.DialogProgressBG):
+                    pDialog.create('Sync DB', 'Sync DB')
+            
+            if(self.ShouldStop(pDialog)):
+                return True
+
+            if(pDialog != None):
+                progressTitle = "Sync DB : Processing musicvideos"
+                pDialog.update(0, progressTitle, "")
+                total = len(allMB3MusicVideos) + 1
+                count = 1                    
+            
+            #process updates
+            allKodiMusicVideos = ReadKodiDB().getKodiMusicVideos(True)
+            for item in allMB3MusicVideos:
+                
+                if not item.get('IsFolder'):
+
+                    kodimusicvideo = allKodiMusicVideos.get(item["Id"], None)
+                    if(kodimusicvideo != None):
+                        #WriteKodiDB().updateMusicVideoToKodiLibrary(item, kodimusicvideo)
+                        WriteKodiDB().updateMusicVideoToKodiLibrary_Batched(item, kodimusicvideo)
+                    
+                    if(self.ShouldStop(pDialog)):
+                        return True
+                
+                    # update progress bar
+                    if(pDialog != None):
+                        percentage = int(((float(count) / float(total)) * 100))
+                        pDialog.update(percentage, progressTitle, "Updating MusicVideo: " + str(count))
+                        count += 1
+
+                
+            if(pDialog != None):
+                progressTitle = "Removing Deleted Items"
+                pDialog.update(0, progressTitle, "")
+            
+            if(self.ShouldStop(pDialog)):
+                return True            
+            
+            cleanNeeded = False
+            
+            # process any deletes only at fullsync
+            if fullsync:
+                allKodiIds = ReadKodiDB().getKodiMusicVideoIds(True)
+                allEmbyMusicVideoIds = set(allEmbyMusicVideoIds)
+                for kodiId in allKodiIds:
+                    if not kodiId in allEmbyMusicVideoIds:
+                        WriteKodiDB().deleteMusicVideoFromKodiLibrary(kodiId)
+                        cleanNeeded = True
+            
+            if(self.ShouldStop(pDialog)):
+                return True            
+            
+            #initiate library clean and wait for finish before processing any updates
+            if cleanNeeded:
+                self.doKodiLibraryUpdate(True, pDialog)
+        
+            addon.setSetting("SyncFirstMusicVideoRunDone", "true")
+            
+        finally:
+            if(pDialog != None):
+                pDialog.close()
+        
+        return True  
     
     def doKodiLibraryUpdate(self, clean, prog):
         #initiate library update and wait for finish before processing any updates

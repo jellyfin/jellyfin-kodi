@@ -14,6 +14,7 @@ addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
 dataPath = os.path.join(addondir,"library")
 movieLibrary = os.path.join(dataPath,'movies')
 tvLibrary = os.path.join(dataPath,'tvshows')
+musicvideoLibrary = os.path.join(dataPath,'musicvideos')
 
 #sleepval is used to throttle the calls to the xbmc json API
 sleepVal = 15
@@ -184,3 +185,61 @@ class ReadKodiDB():
                             break
 
         return episode
+        
+    def getKodiMusicVideo(self, id):
+        #returns a single musicvideo from Kodi db selected on MB item ID
+        xbmc.sleep(sleepVal)
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideos", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties" : ["art", "thumbnail", "resume", "runtime", "year", "genre", "studio", "artist", "album", "track","plot", "director", "playcount", "tag", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMusicVideos"}')
+        print json_response
+        jsonobject = json.loads(json_response.decode('utf-8','replace'))  
+        musicvideo = None
+       
+        if(jsonobject.has_key('result')):
+            result = jsonobject['result']
+            if(result.has_key('musicvideos')):
+                musicvideos = result['musicvideos']
+                musicvideo = musicvideos[0]
+
+        return musicvideo
+    
+    def getKodiMusicVideos(self,fullInfo = False):
+        #returns all musicvideos in Kodi db inserted by MB
+        xbmc.sleep(sleepVal)
+        if fullInfo:
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideos", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.mb3sync"}, "properties" : ["art", "thumbnail", "resume", "runtime", "year", "genre", "studio", "artist", "album", "track","plot", "director", "playcount", "tag", "file"] }, "id": "libMusicVideos"}')
+        else:
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideos", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.mb3sync"}, "properties" : ["resume", "playcount", "file"] }, "id": "libMusicVideos"}')
+        jsonobject = json.loads(json_response.decode('utf-8','replace'))  
+        musicvideos = None
+        if(jsonobject.has_key('result')):
+            result = jsonobject['result']
+            if(result.has_key('musicvideos')):
+                musicvideos = result['musicvideos']
+
+        kodiMusicVideoMap = None
+        if(musicvideos != None and len(musicvideos) > 0):
+            kodiMusicVideoMap = {}
+            for kodivideo in musicvideos:
+                key = kodivideo["file"][-37:-5] #extract the id from the file name
+                kodiMusicVideoMap[key] = kodivideo
+                
+        return kodiMusicVideoMap
+    
+    def getKodiMusicVideoIds(self,returnMB3Ids = False):
+        # returns a list of movieIds or MB3 Id's from all movies currently in the Kodi library
+        allKodiMusicVideos = self.getKodiMusicVideos(False)
+        
+        if(allKodiMusicVideos == None):
+            return list()
+        
+        if(returnMB3Ids):
+            allKodiMusicVideoIds = list(allKodiMusicVideos.keys())
+            return allKodiMusicVideoIds
+        else:
+            allKodiMusicVideoIds = list()
+            for kodivideo in allKodiMusicVideos.values():
+                id = str(kodivideo["musicvideoid"])
+                allKodiMusicVideoIds.append(id)
+        
+            return allKodiMusicVideoIds
+        
