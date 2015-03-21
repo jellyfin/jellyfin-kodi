@@ -44,9 +44,9 @@ class CreateFiles():
         if item_type == "Episode":
             itemPath = os.path.join(tvLibrary,item["SeriesId"])
             if str(item.get("IndexNumber")) != None:
-                filenamestr = self.CleanName(item.get("SeriesName")).encode('utf-8') + " S" + str(item.get("ParentIndexNumber")) + "E" + str(item.get("IndexNumber")) + " (" + item["Id"] + ").strm"
+                filenamestr = self.CleanName(utils.convertEncoding(item.get("SeriesName"))) + " S" + str(item.get("ParentIndexNumber")) + "E" + str(item.get("IndexNumber")) + " (" + item["Id"] + ").strm"
             else:
-                filenamestr = self.CleanName(item.get("SeriesName")).encode('utf-8') + " S0E0 " + self.CleanName(item["Name"].decode('utf-8')) + " (" + item["Id"] + ").strm"
+                filenamestr = self.CleanName(utils.convertEncoding(item.get("SeriesName"))) + " S0E0 " + self.CleanName(utils.convertEncoding(item.get("Name"))) + " (" + item["Id"] + ").strm"
             strmFile = os.path.join(itemPath,filenamestr)
 
         changes = False
