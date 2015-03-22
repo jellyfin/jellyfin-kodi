@@ -27,7 +27,9 @@ class DownloadUtils():
     TotalUrlCalls = 0
 
     def __init__(self, *args):
-        self.addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addonId = ClientInformation().getAddonId()
+        self.addonSettings = xbmcaddon.Addon(id=addonId)
+        self.addon = xbmcaddon.Addon(id=addonId)
         self.getString = self.addonSettings.getLocalizedString
         level = self.addonSettings.getSetting('logLevel')        
         self.logLevel = 0
@@ -45,10 +47,30 @@ class DownloadUtils():
                     xbmc.log("mb3sync DownloadUtils -> " + str(msg.encode('utf-8')))
                 except: pass
 
-    def getServer(self):
-        port = self.addonSettings.getSetting('port')
-        host = self.addonSettings.getSetting('ipaddress')    
-        return host + ":" + port
+    def getServer(self, prefix=True):
+        
+        # For https support
+        addon = self.addon
+        HTTPS = addon.getSetting('https')
+        host = addon.getSetting('ipaddress')
+        port = addon.getSetting('port')
+        server = host + ":" + port
+
+        if len(server) < 2:
+            self.logMsg("No server information saved.")
+            return ""
+
+        # If https is true
+        if prefix and (HTTPS == "true"):
+            server = "https://%s" % server
+            return server
+        # If https is false
+        elif prefix and (HTTPS == "false"):
+            server = "http://%s" % server
+            return server
+        # If only the host:port is required
+        elif (prefix == False):
+            return server
     
     def getUserId(self, suppress=True):
 
