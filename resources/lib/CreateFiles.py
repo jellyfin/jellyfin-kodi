@@ -220,8 +220,9 @@ class CreateFiles():
                 jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=True, popup=0 )
                 if(jsonData != ""):
                     trailerItem = json.loads(jsonData)
-                    trailerUrl = "plugin://plugin.video.mb3sync/?id=" + trailerItem[0].get("Id") + '&mode=play'
-                    SubElement(root, "trailer").text = trailerUrl
+                    if trailerItem[0].get("LocationType") == "FileSystem":
+                        trailerUrl = "plugin://plugin.video.mb3sync/?id=" + trailerItem[0].get("Id") + '&mode=play'
+                        SubElement(root, "trailer").text = trailerUrl
             
             #add streamdetails
             fileinfo = SubElement(root, "fileinfo")
