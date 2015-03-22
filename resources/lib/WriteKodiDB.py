@@ -138,8 +138,10 @@ class WriteKodiDB():
             jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=True, popup=0 )
             if(jsonData != ""):
                 trailerItem = json.loads(jsonData)
-                trailerUrl = "plugin://plugin.video.mb3sync/?id=" + trailerItem[0].get("Id") + '&mode=play'
-                self.getPropertyParam_Batched(KodiItem, "trailer", trailerUrl, params)
+                if trailerItem[0].get("LocationType") == "FileSystem":
+                    trailerUrl = "plugin://plugin.video.mb3sync/?id=" + trailerItem[0].get("Id") + '&mode=play'
+                    self.getPropertyParam_Batched(KodiItem, "trailer", trailerUrl, params)
+                
 
         changes = False
         # if there were movies changes then send the update via JSONRPC
