@@ -215,9 +215,10 @@ class Player( xbmc.Player ):
         WINDOW = xbmcgui.Window( 10000 )
         self.stopAll()
         addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        xbmcplayer = xbmc.Player()
         
-        if xbmc.Player().isPlaying():
-            currentFile = xbmc.Player().getPlayingFile()
+        if xbmcplayer.isPlaying():
+            currentFile = xbmcplayer.getPlayingFile()
             self.printDebug("mb3sync Service -> onPlayBackStarted" + currentFile,2)
                        
             # grab all the info about this item from the stored windows props
@@ -260,12 +261,12 @@ class Player( xbmc.Player ):
             data["runtime"] = runtime
             data["item_id"] = item_id
             data["refresh_id"] = refresh_id
-            data["currentfile"] = xbmc.Player().getPlayingFile()
+            data["currentfile"] = xbmcplayer.getPlayingFile()
             data["AudioStreamIndex"] = audioindex
             data["SubtitleStreamIndex"] = subtitleindex
             data["playmethod"] = playMethod
             data["Type"] = itemType
-            self.played_information[xbmc.Player().getPlayingFile()] = data
+            self.played_information[xbmcplayer.getPlayingFile()] = data
             
             self.printDebug("mb3sync Service -> ADDING_FILE : " + currentFile,2)
             self.printDebug("mb3sync Service -> ADDING_FILE : " + str(self.played_information),2)
