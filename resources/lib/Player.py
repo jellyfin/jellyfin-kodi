@@ -252,9 +252,7 @@ class Player( xbmc.Player ):
             if(subtitleindex != None and subtitleindex!=""):
               url = url + "&SubtitleStreamIndex=" + subtitleindex
             
-            self.downloadUtils.downloadUrl(url, postBody="", type="POST")
-            
-            jsonData = downloadUtils.downloadUrl("http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + id + "?format=json&ImageTypeLimit=1", suppress=False, popup=1 )     
+            self.downloadUtils.downloadUrl(url, postBody="", type="POST")   
             
             # save data map for updates and position calls
             data = {}
