@@ -228,11 +228,10 @@ class ReadEmbyDB():
                 type = item.get("CollectionType")
                 if type == None:
                     type = "None" # User may not have declared the type
-                if type == type:
+                if type == type and item.get("Name") != "Collections":
                     collections.append( {'title'      : item.get("Name"),
                             'type'           : type,
                             'id'             : item.get("Id")})
-        print "paco!" + str (collections)
         return collections
     
     def getViewCollections(self, type):
