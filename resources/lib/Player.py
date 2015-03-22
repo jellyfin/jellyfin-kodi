@@ -91,9 +91,7 @@ class Player( xbmc.Player ):
                 currentFile = data.get("currentfile")
                 type = data.get("Type")
                 
-                if(refresh_id != None):
-                    #report updates playcount and resume status to Kodi and MB3
-                    librarySync.updatePlayCount(item_id,type)
+                
                 
                 if(currentPosition != None and self.hasData(runtime)):
                     runtimeTicks = int(runtime)
@@ -109,7 +107,10 @@ class Player( xbmc.Player ):
                         if(deleteurl != None and deleteurl != ""):
                             self.printDebug("mb3sync Service -> Offering Delete:" + str(deleteurl),2)
                             gotDeleted = self.deleteItem(deleteurl)
-
+                
+                if(refresh_id != None):
+                    #report updates playcount and resume status to Kodi and MB3
+                    librarySync.updatePlayCount(item_id,type)
             
         self.played_information.clear()
 
@@ -118,7 +119,7 @@ class Player( xbmc.Player ):
         txt_mac = clientInfo.getMachineId()
         url = ("http://%s:%s/mediabrowser/Videos/ActiveEncodings" % (addonSettings.getSetting('ipaddress'), addonSettings.getSetting('port')))  
         url = url + '?DeviceId=' + txt_mac
-        self.downloadUtils.downloadUrl(url, type="DELETE")
+        self.downloadUtils.downloadUrl(url, type="DELETE")           
     
     def stopPlayback(self, data):
         addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
@@ -218,7 +219,7 @@ class Player( xbmc.Player ):
         if xbmc.Player().isPlaying():
             currentFile = xbmc.Player().getPlayingFile()
             self.printDebug("mb3sync Service -> onPlayBackStarted" + currentFile,2)
-            
+                       
             # grab all the info about this item from the stored windows props
             # only ever use the win props here, use the data map in all other places
             deleteurl = WINDOW.getProperty(currentFile + "deleteurl")
@@ -253,18 +254,20 @@ class Player( xbmc.Player ):
             
             self.downloadUtils.downloadUrl(url, postBody="", type="POST")
             
+            jsonData = downloadUtils.downloadUrl("http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + id + "?format=json&ImageTypeLimit=1", suppress=False, popup=1 )     
+            
             # save data map for updates and position calls
             data = {}
             data["deleteurl"] = deleteurl
             data["runtime"] = runtime
             data["item_id"] = item_id
             data["refresh_id"] = refresh_id
-            data["currentfile"] = currentFile
+            data["currentfile"] = xbmc.Player().getPlayingFile()
             data["AudioStreamIndex"] = audioindex
             data["SubtitleStreamIndex"] = subtitleindex
             data["playmethod"] = playMethod
             data["Type"] = itemType
-            self.played_information[currentFile] = data
+            self.played_information[xbmc.Player().getPlayingFile()] = data
             
             self.printDebug("mb3sync Service -> ADDING_FILE : " + currentFile,2)
             self.printDebug("mb3sync Service -> ADDING_FILE : " + str(self.played_information),2)
@@ -293,6 +296,25 @@ class Player( xbmc.Player ):
     def onPlayBackEnded( self ):
         # Will be called when xbmc stops playing a file
         self.printDebug("mb3sync Service -> onPlayBackEnded",2)
+        
+        #workaround when strm files are launched through the addon - mark watched when finished playing
+        #TODO --> mark watched when 95% is played of the file
+        WINDOW = xbmcgui.Window( 10000 )
+        if WINDOW.getProperty("virtualstrm") != "":
+            try:
+                id = WINDOW.getProperty("virtualstrm")
+                type = WINDOW.getProperty("virtualstrmtype")
+                addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+                port = addon.getSetting('port')
+                host = addon.getSetting('ipaddress')
+                server = host + ":" + port        
+                userid = self.downloadUtils.getUserId()
+                watchedurl = 'http://' + server + '/mediabrowser/Users/' + userid + '/PlayedItems/' + id
+                self.downloadUtils.downloadUrl(watchedurl, postBody="", type="POST")
+                librarySync.updatePlayCount(id,type)
+            except: pass
+        WINDOW.clearProperty("virtualstrm")
+            
         self.stopAll()
 
     def onPlayBackStopped( self ):

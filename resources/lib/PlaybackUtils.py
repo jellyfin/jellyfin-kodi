@@ -15,8 +15,11 @@ downloadUtils = DownloadUtils()
 from PlayUtils import PlayUtils
 from API import API
 import Utils as utils
+import os
+import xbmcvfs
 
 addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
 language = addon.getLocalizedString   
 
 WINDOW = xbmcgui.Window( 10000 )
@@ -56,9 +59,23 @@ class PlaybackUtils():
 
         
         playurl = PlayUtils().getPlayUrl(server, id, result)
+        
+        isStrmFile = False
         thumbPath = API().getArtwork(result, "Primary")
-        listItem = xbmcgui.ListItem(path=playurl, iconImage=thumbPath, thumbnailImage=thumbPath)
+        
+        #workaround for when the file to play is a strm file itself
+        if playurl.endswith(".strm"):
+            isStrmFile = True
+            tempPath = os.path.join(addondir,"library","temp.strm")
+            xbmcvfs.copy(playurl, tempPath)
+            sfile = open(tempPath, 'r')
+            playurl = sfile.readline()
+            sfile.close()
+            xbmcvfs.delete(tempPath)
+            WINDOW.setProperty("virtualstrm", id)
+            WINDOW.setProperty("virtualstrmtype", result.get("Type"))
 
+        listItem = xbmcgui.ListItem(path=playurl, iconImage=thumbPath, thumbnailImage=thumbPath)
         self.setListItemProps(server, id, listItem, result)    
 
         # Can not play virtual items
@@ -105,8 +122,11 @@ class PlaybackUtils():
 
         #this launches the playback
         #artwork only works with both resolvedurl and player command
-        xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
-        xbmc.Player().play(playurl,listItem)
+        if isStrmFile:
+            xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
+        else:
+            xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
+            xbmc.Player().play(playurl,listItem)
 
     def setArt(self, list,name,path):
         if name=='thumb' or name=='fanart_image' or name=='small_poster' or name=='tiny_poster'  or name == "medium_landscape" or name=='medium_poster' or name=='small_fanartimage' or name=='medium_fanartimage' or name=='fanart_noindicators':
@@ -114,6 +134,7 @@ class PlaybackUtils():
         else:
             list.setArt({name:path})
         return list
+    
     
     def setListItemProps(self, server, id, listItem, result):
         # set up item and item info
