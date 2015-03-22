@@ -110,8 +110,7 @@ class DownloadUtils():
         playableMediaTypes = "Audio,Video,Photo"
         supportedCommands = "Play,Playstate,DisplayContent,GoHome,SendString,GoToSettings,DisplayMessage,PlayNext"
         
-        url = "http://" + mb3Host + ":" + mb3Port + "/mediabrowser/Sessions/Capabilities?Id=" + sessionId + "&PlayableMediaTypes=" + playableMediaTypes + "&SupportedCommands=" + supportedCommands
-  + "&SupportsMediaControl=True"
+        url = "http://" + mb3Host + ":" + mb3Port + "/mediabrowser/Sessions/Capabilities?Id=" + sessionId + "&PlayableMediaTypes=" + playableMediaTypes + "&SupportedCommands=" + supportedCommands + "&SupportsMediaControl=True"
         postData = {}
         #postData["Id"] = sessionId;
         #postData["PlayableMediaTypes"] = "Video";
