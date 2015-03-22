@@ -186,8 +186,56 @@ class ReadEmbyDB():
                 result = result['Items']
         return result
     
-    
     def getCollections(self, type):
+        #Build a list of the user views
+        userid = DownloadUtils().getUserId()  
+        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port
+        downloadUtils = DownloadUtils()
+        
+        try:
+            jsonData = downloadUtils.downloadUrl("http://" + server + "/mediabrowser/Users/" + userid + "/Items/Root?format=json")
+        except Exception, msg:
+            error = "Get connect : " + str(msg)
+            xbmc.log (error)
+            return []
+        
+        if(jsonData == ""):
+            return []
+            
+        result = json.loads(jsonData)
+        
+        parentid = result.get("Id")
+        
+        htmlpath = ("http://%s/mediabrowser/Users/" % server)
+        jsonData = downloadUtils.downloadUrl(htmlpath + userid + "/items?ParentId=" + parentid + "&Sortby=SortName&format=json")
+        collections=[]
+        
+        if(jsonData == ""):
+            printDebug("No Json data")
+            return []
+        
+        result = json.loads(jsonData)
+        result = result.get("Items")
+        
+        for item in result:
+            if(item.get("RecursiveItemCount") != 0):
+                Temp = item.get("Name")
+                Name = Temp.encode('utf-8')
+                section = item.get("CollectionType")
+                type = item.get("CollectionType")
+                if type == None:
+                    type = "None" # User may not have declared the type
+                if type == type:
+                    collections.append( {'title'      : item.get("Name"),
+                            'type'           : type,
+                            'id'             : item.get("Id")})
+        print "paco!" + str (collections)
+        return collections
+    
+    def getViewCollections(self, type):
         #Build a list of the user views
         userid = DownloadUtils().getUserId()  
         addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
