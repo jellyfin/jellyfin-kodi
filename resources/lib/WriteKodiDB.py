@@ -170,6 +170,8 @@ class WriteKodiDB():
         if(changes):
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"], level=0)
             
+        return changes
+        
     def updateMusicVideoToKodiLibrary_Batched(self, MBitem, KodiItem):
         addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
         port = addon.getSetting('port')
@@ -365,6 +367,8 @@ class WriteKodiDB():
         
         if changes:
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
+            
+        return changes
                   
     def updateEpisodeToKodiLibrary( self, MBitem, KodiItem ):
         
@@ -418,6 +422,8 @@ class WriteKodiDB():
         if changes:
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
     
+        return changes
+        
     def getArtworkParam_Batched(self, KodiItem, MBitem, params):
 
         '''

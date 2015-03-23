@@ -79,18 +79,20 @@ class LibrarySync():
         pDialog = None
         
         try:
-            enableProgress = False
-            if addon.getSetting("enableProgressFullSync") == 'true':
-                enableProgress = True
+            dbSyncIndication = addon.getSetting("dbSyncIndication")
                 
             if(addon.getSetting("SyncFirstMovieRunDone") != 'true'):
                 pDialog = xbmcgui.DialogProgress()
-            elif(enableProgress):
+            elif(dbSyncIndication == "Progress"):
                 pDialog = xbmcgui.DialogProgressBG()
             
             if(pDialog != None):
                 pDialog.create('Sync DB', 'Sync DB')
                 
+            totalItemsAdded = 0
+            totalItemsUpdated = 0
+            totalItemsDeleted = 0
+            
             allEmbyMovieIds = list()
                 
             views = ReadEmbyDB().getCollections("movies")
@@ -128,6 +130,7 @@ class LibrarySync():
                         if item["Id"] not in allKodiIds:
                             WriteKodiDB().addMovieToKodiLibrary(item)
                             updateNeeded = True
+                            totalItemsAdded += 1
                         
                         if(self.ShouldStop(pDialog)):
                             return True
@@ -171,7 +174,9 @@ class LibrarySync():
                         kodimovie = allKodiMovies.get(item["Id"], None)
                         if(kodimovie != None):
                             #WriteKodiDB().updateMovieToKodiLibrary(item, kodimovie)
-                            WriteKodiDB().updateMovieToKodiLibrary_Batched(item, kodimovie)
+                            updated = WriteKodiDB().updateMovieToKodiLibrary_Batched(item, kodimovie)
+                            if(updated):
+                                totalItemsUpdated += 1
                         
                         if(self.ShouldStop(pDialog)):
                             return True
@@ -201,6 +206,7 @@ class LibrarySync():
                     if not kodiId in allEmbyMovieIds:
                         WriteKodiDB().deleteMovieFromKodiLibrary(kodiId)
                         cleanNeeded = True
+                        totalItemsDeleted += 1
             
             if(self.ShouldStop(pDialog)):
                 return True            
@@ -211,6 +217,18 @@ class LibrarySync():
         
             addon.setSetting("SyncFirstMovieRunDone", "true")
             
+            if(dbSyncIndication == "Notification"):
+                notificationString = ""
+                if(totalItemsAdded > 0):
+                    notificationString += "Added:" + str(totalItemsAdded) + " "
+                if(totalItemsUpdated > 0):
+                    notificationString += "Updated:" + str(totalItemsUpdated) + " "                    
+                if(totalItemsDeleted > 0):
+                    notificationString += "Deleted:" + str(totalItemsDeleted) + " "
+                if(notificationString == ""):
+                    notificationString = "Done"
+                xbmc.executebuiltin("XBMC.Notification(Movie Sync: " + notificationString + ",)")
+                    
         finally:
             if(pDialog != None):
                 pDialog.close()
@@ -224,17 +242,19 @@ class LibrarySync():
         pDialog = None
         
         try:
-            enableProgress = False
-            if addon.getSetting("enableProgressFullSync") == 'true':
-                enableProgress = True
+            dbSyncIndication = addon.getSetting("dbSyncIndication")
                 
             if(addon.getSetting("SyncFirstTVRunDone") != 'true'):
                 pDialog = xbmcgui.DialogProgress()
-            elif(enableProgress):
+            elif(dbSyncIndication == "Progress"):
                 pDialog = xbmcgui.DialogProgressBG()
                 
             if(pDialog != None):
                 pDialog.create('Sync DB', 'Sync DB')
+                
+            totalItemsAdded = 0
+            totalItemsUpdated = 0
+            totalItemsDeleted = 0                
             
             progressTitle = "Sync DB : Processing Episodes"
             
@@ -276,6 +296,7 @@ class LibrarySync():
                                 WriteKodiDB().addEpisodeToKodiLibrary(episode)
                                 updateNeeded = True
                                 progressAction = "Adding"
+                                totalItemsAdded += 1
                                 
                             if(self.ShouldStop(pDialog)):
                                 return True                        
@@ -353,6 +374,7 @@ class LibrarySync():
                         if item["Id"] not in allKodiIds:
                             WriteKodiDB().addTVShowToKodiLibrary(item)
                             updateNeeded = True
+                            totalItemsAdded += 1
                             
                         if(self.ShouldStop(pDialog)):
                             return True
@@ -399,6 +421,7 @@ class LibrarySync():
                             WriteKodiDB().addEpisodeToKodiLibrary(item)
                             updateNeeded = True
                             progressAction = "Adding"
+                            totalItemsAdded += 1
                             
                         if(self.ShouldStop(pDialog)):
                             return True                        
@@ -439,7 +462,9 @@ class LibrarySync():
                         kodishow = allKodiTVShows.get(item["Id"],None)
                         
                         if(kodishow != None):
-                            WriteKodiDB().updateTVShowToKodiLibrary(item,kodishow)
+                            updated = WriteKodiDB().updateTVShowToKodiLibrary(item,kodishow)
+                            if(updated):
+                                totalItemsUpdated += 1
                             
                         if(self.ShouldStop(pDialog)):
                             return True
@@ -477,7 +502,9 @@ class LibrarySync():
                         if kodiEpisodes != None:
                             KodiItem = kodiEpisodes.get(comparestring1, None)
                             if(KodiItem != None):
-                                WriteKodiDB().updateEpisodeToKodiLibrary(item, KodiItem)
+                                updated = WriteKodiDB().updateEpisodeToKodiLibrary(item, KodiItem)
+                                if(updated):
+                                    totalItemsUpdated += 1                                
                             
                         if(self.ShouldStop(pDialog)):
                             return True                        
@@ -514,6 +541,8 @@ class LibrarySync():
                 for episode in allKodiEpisodeIds:
                     if episode.get('episodeid') not in allMB3EpisodeIds:
                         WriteKodiDB().deleteEpisodeFromKodiLibrary(episode.get('episodeid'),episode.get('tvshowid'))
+                        cleanneeded = True
+                        totalItemsDeleted += 1
                 
                 # DELETES -- TV SHOWS
                 if fullsync:
@@ -523,6 +552,7 @@ class LibrarySync():
                         if not dir in allMB3TVShows:
                             WriteKodiDB().deleteTVShowFromKodiLibrary(dir)
                             cleanneeded = True
+                            totalItemsDeleted += 1
             
                 if(self.ShouldStop(pDialog)):
                     return True            
@@ -532,6 +562,18 @@ class LibrarySync():
                     self.doKodiLibraryUpdate(True, pDialog)
           
             addon.setSetting("SyncFirstTVRunDone", "true")
+            
+            if(dbSyncIndication == "Notification"):
+                notificationString = ""
+                if(totalItemsAdded > 0):
+                    notificationString += "Added:" + str(totalItemsAdded) + " "
+                if(totalItemsUpdated > 0):
+                    notificationString += "Updated:" + str(totalItemsUpdated) + " "                    
+                if(totalItemsDeleted > 0):
+                    notificationString += "Deleted:" + str(totalItemsDeleted) + " "
+                if(notificationString == ""):
+                    notificationString = "Done"
+                xbmc.executebuiltin("XBMC.Notification(TV Sync: " + notificationString + ",)")            
             
         finally:
             if(pDialog != None):
@@ -546,13 +588,11 @@ class LibrarySync():
         pDialog = None
         
         try:
-            enableProgress = False
-            if addon.getSetting("enableProgressFullSync") == 'true':
-                enableProgress = True
+            dbSyncIndication = addon.getSetting("dbSyncIndication")
                 
             if(addon.getSetting("SyncFirstMusicVideoRunDone") != 'true'):
                 pDialog = xbmcgui.DialogProgress()
-            elif(enableProgress):
+            elif(dbSyncIndication == "Progress"):
                 pDialog = xbmcgui.DialogProgressBG()
             
             if(pDialog != None):
@@ -697,18 +737,19 @@ class LibrarySync():
         processTvShows = True
         
         try:
-            enableProgress = False
-            if addon.getSetting("enableProgressPlayCountSync") == 'true':
-                enableProgress = True
+            playCountSyncIndication = addon.getSetting("playCountSyncIndication")
                 
             if(addon.getSetting("SyncFirstCountsRunDone") != 'true'):
                 pDialog = xbmcgui.DialogProgress()
-            elif(enableProgress):
+            elif(playCountSyncIndication == "Progress"):
                 pDialog = xbmcgui.DialogProgressBG()
                 
             if(pDialog != None):
                 pDialog.create('Sync PlayCounts', 'Sync PlayCounts')        
         
+            totalCountsUpdated = 0
+            totalPositionsUpdated = 0
+            
             #process movies
             if processMovies:
                 if(pDialog != None):
@@ -734,7 +775,7 @@ class LibrarySync():
                         progressTitle = "Sync PlayCounts: Processing " + view.get('title') + " " + str(viewCurrent) + " of " + str(viewCount)
                         pDialog.update(0, progressTitle)
                         totalCount = len(allMB3Movies) + 1
-                        count = 1            
+                        count = 1
                 
                     for item in allMB3Movies:
                         
@@ -745,12 +786,15 @@ class LibrarySync():
                             timeInfo = API().getTimeInfo(item)
                             
                             if kodiItem != None:
-                                WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"movie")
+                                updated = WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")), "movie")
+                                if(updated):
+                                    totalCountsUpdated += 1
                                 kodiresume = int(round(kodiItem['resume'].get("position")))
                                 resume = int(round(float(timeInfo.get("ResumeTime"))))*60
                                 total = int(round(float(timeInfo.get("TotalTime"))))*60
                                 if kodiresume != resume:
                                     WriteKodiDB().setKodiResumePoint(kodiItem['movieid'],resume,total,"movie")
+                                    totalPositionsUpdated += 1
                                 
                             if(self.ShouldStop(pDialog)):
                                 return True
@@ -803,12 +847,15 @@ class LibrarySync():
                             timeInfo = API().getTimeInfo(episode)
                             if kodiItem != None:
                                 if kodiItem['playcount'] != int(userData.get("PlayCount")):
-                                    WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode")
+                                    updated = WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode")
+                                    if(updated):
+                                        totalCountsUpdated += 1
                                 kodiresume = int(round(kodiItem['resume'].get("position")))
                                 resume = int(round(float(timeInfo.get("ResumeTime"))))*60
                                 total = int(round(float(timeInfo.get("TotalTime"))))*60
                                 if kodiresume != resume:
                                     WriteKodiDB().setKodiResumePoint(kodiItem['episodeid'],resume,total,"episode")
+                                    totalPositionsUpdated += 1
                                     
                             if(self.ShouldStop(pDialog)):
                                 return True
@@ -822,6 +869,16 @@ class LibrarySync():
                         showCurrent += 1
                         
             addon.setSetting("SyncFirstCountsRunDone", "true")
+            
+            if(playCountSyncIndication == "Notification"):
+                notificationString = ""
+                if(totalPositionsUpdated > 0):
+                    notificationString += "Pos:" + str(totalPositionsUpdated) + " "
+                if(totalCountsUpdated > 0):
+                    notificationString += "Counts:" + str(totalCountsUpdated) + " "
+                if(notificationString == ""):
+                    notificationString = "Done"
+                xbmc.executebuiltin("XBMC.Notification(Play Sync: " + notificationString + ",)")
             
         finally:
             if(pDialog != None):

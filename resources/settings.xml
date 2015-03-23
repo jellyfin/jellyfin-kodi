@@ -9,14 +9,10 @@
 	
 	<category label="Automatic sync"> <!-- Auto sync optionss -->
 		<setting id="enablePlayCountSync" type="bool" label="Enable watched/resume status sync" default="true" visible="true" enable="true" />
-		<setting id="syncSettingStartup" type="labelenum" label="Run at startup:" values="Full Sync|Incremental Sync|None" default="Full Sync" />
-		<setting id="syncSettingBackground" type="labelenum" label="Enable continuous background sync:" values="Full Sync|Incremental Sync|None" default="Full Sync" visible="true" enable="true" />
-		<setting type="lsep"/>
-		<setting label="[B]Full Sync:[/B] Performs full compare including deletes" type="lsep"/>
-		<setting label="[B]Incremental Sync:[/B] Processes only new items" type="lsep"/>
-		<setting label="Watched/resume status is always synced in the background." type="lsep"/>
-		<setting type="lsep"/>
-		<setting label="Run manual full sync now" type="action" action="RunScript(plugin.video.mbsync, fullsync)" />
+		<setting id="syncSettingStartup" type="labelenum" label="Startup Sync:" values="Full Sync|Incremental Sync|None" default="Full Sync" />
+		<setting id="syncSettingBackground" type="labelenum" label="Scheduled Sync:" values="Full Sync|Incremental Sync|None" default="Full Sync" visible="true" enable="true" />
+        <setting id="dbSyncIndication" type="labelenum" label="DB Sync Indication:" values="None|Notification|Progress" default="None" />
+        <setting id="playCountSyncIndication" type="labelenum" label="Play Count Sync Indication:" values="None|Notification|Progress" default="None" />
 	</category>
 
 	<category label="30014"> <!-- MediaBrowser -->
@@ -27,9 +23,7 @@
 	</category>
 
 	<category label="30022"> <!-- Advanced -->
-		<setting id="logLevel" type="enum" label="30004" values="None|Info|Debug" default="0" />
-		<setting id="enableProgressPlayCountSync" type="bool" label="Show load progress for Watched/resume status sync" default="false" visible="true" enable="true" />
-		<setting id="enableProgressFullSync" type="bool" label="Show load progress for full/incremental sync" default="false" visible="true" enable="true" />
+		<setting id="logLevel" type="enum" label="30004" values="None|Info|Debug" default="0" />       
 		<setting id="smbusername" type="text" label="30007" default="" visible="true" enable="true" />
 		<setting id="smbpassword" type="text" label="30008" default="" option="hidden" visible="true" enable="true" />
 	</category>
