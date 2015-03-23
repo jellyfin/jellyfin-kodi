@@ -61,7 +61,7 @@ class Service():
                         currentFile = xbmc.Player().getPlayingFile()
                         
                         if(player.played_information.get(currentFile) != None):
-                            player.played_information[currentFile]["currentPossition"] = playTime
+                            player.played_information[currentFile]["currentPosition"] = playTime
                         
                         # send update
                         td = datetime.today() - lastProgressUpdate
