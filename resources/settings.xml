@@ -11,8 +11,8 @@
 		<setting id="enablePlayCountSync" type="bool" label="Enable watched/resume status sync" default="true" visible="true" enable="true" />
 		<setting id="syncSettingStartup" type="labelenum" label="Startup Sync:" values="Full Sync|Incremental Sync|None" default="Full Sync" />
 		<setting id="syncSettingBackground" type="labelenum" label="Scheduled Sync:" values="Full Sync|Incremental Sync|None" default="Full Sync" visible="true" enable="true" />
-        <setting id="dbSyncIndication" type="labelenum" label="DB Sync Indication:" values="None|Notification|Progress" default="None" />
-        <setting id="playCountSyncIndication" type="labelenum" label="Play Count Sync Indication:" values="None|Notification|Progress" default="None" />
+        <setting id="dbSyncIndication" type="labelenum" label="DB Sync Indication:" values="None|Notify OnChange|Notify OnFinish|BG Progress|Dialog Progress" default="None" />
+        <setting id="playCountSyncIndication" type="labelenum" label="Play Count Sync Indication:" values="None|Notify OnChange|Notify OnFinish|BG Progress|Dialog Progress" default="None" />
 	</category>
 
 	<category label="30014"> <!-- MediaBrowser -->
