@@ -130,8 +130,10 @@ class DownloadUtils():
         self.logMsg("Session Id : " + str(sessionId))
         
         # post capability data
-        playableMediaTypes = "Audio,Video,Photo"
-        supportedCommands = "Play,Playstate,DisplayContent,GoHome,SendString,GoToSettings,DisplayMessage,PlayNext"
+        #playableMediaTypes = "Audio,Video,Photo"
+        playableMediaTypes = "Audio,Video"
+        #supportedCommands = "Play,Playstate,DisplayContent,GoHome,SendString,GoToSettings,DisplayMessage,PlayNext"
+        supportedCommands = "Play,Playstate,SendString,DisplayMessage,PlayNext"
         
         url = "http://" + mb3Host + ":" + mb3Port + "/mediabrowser/Sessions/Capabilities?Id=" + sessionId + "&PlayableMediaTypes=" + playableMediaTypes + "&SupportedCommands=" + supportedCommands + "&SupportsMediaControl=True"
         postData = {}
