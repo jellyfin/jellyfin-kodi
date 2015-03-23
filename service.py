@@ -17,6 +17,7 @@ from LibrarySync import LibrarySync
 from Player import Player
 from DownloadUtils import DownloadUtils
 from ConnectionManager import ConnectionManager
+from WebSocketClient import WebSocketThread
 librarySync = LibrarySync()
 
 class Service():
@@ -37,6 +38,8 @@ class Service():
         player = Player()
         lastProgressUpdate = datetime.today()
         
+        newWebSocketThread = WebSocketThread()
+        newWebSocketThread.start()        
         
         # check kodi library sources
         mayRun = utils.checkKodiSources()
@@ -116,6 +119,9 @@ class Service():
                         xbmc.log("Not authenticated yet")
                         
             utils.logMsg("MB3 Sync Service", "stopping Service",0)
+            
+            if(newWebSocketThread != None):
+                newWebSocketThread.stopClient()                
         
        
 #start the service

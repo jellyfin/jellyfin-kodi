@@ -55,7 +55,8 @@ class DownloadUtils():
         host = addon.getSetting('ipaddress')
         port = addon.getSetting('port')
         server = host + ":" + port
-
+        return server
+        '''
         if len(server) < 2:
             self.logMsg("No server information saved.")
             return ""
@@ -71,7 +72,7 @@ class DownloadUtils():
         # If only the host:port is required
         elif (prefix == False):
             return server
-    
+        '''
     def getUserId(self, suppress=True):
 
         WINDOW = xbmcgui.Window( 10000 )
