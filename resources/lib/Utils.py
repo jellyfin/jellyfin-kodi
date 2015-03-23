@@ -23,7 +23,8 @@ from PlayUtils import PlayUtils
 from DownloadUtils import DownloadUtils
 downloadUtils = DownloadUtils()
 addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
-language = addonSettings.getLocalizedString   
+language = addonSettings.getLocalizedString
+DATABASE_VERSION_HELIX = "90"   
  
 def logMsg(title, msg, level = 1):
     logLevel = int(addonSettings.getSetting("logLevel"))
@@ -88,7 +89,7 @@ def addKodiSource(name, path, type):
     #add new source to database, common way is to add it directly to the Kodi DB. Fallback to adding it to the sources.xml
     #return boolean wether a manual reboot is required.
     #todo: Do feature request with Kodi team to get support for adding a source by the json API
-    dbPath = xbmc.translatePath("special://userdata/Database/MyVideos90.db")
+    dbPath = xbmc.translatePath("special://userdata/Database/MyVideos%s.db" % DATABASE_VERSION_HELIX)
     
     error = False
     if xbmcvfs.exists(dbPath):

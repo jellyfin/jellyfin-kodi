@@ -791,7 +791,7 @@ class WriteKodiDB():
         #if wanted this feature can be extended to also update the other artwork
         tvshowid = KodiItem["tvshowid"]
         
-        dbPath = xbmc.translatePath("special://userdata/Database/MyVideos90.db")
+        dbPath = xbmc.translatePath("special://userdata/Database/MyVideos%s.db" % utils.DATABASE_VERSION_HELIX)
         connection = sqlite3.connect(dbPath)
         cursor = connection.cursor( )
         
@@ -820,7 +820,7 @@ class WriteKodiDB():
         
         utils.logMsg("MB3 Sync","setting resume point in kodi db..." + fileType + ": " + str(id))
         xbmc.sleep(sleepVal)
-        dbPath = xbmc.translatePath("special://userdata/Database/MyVideos90.db")
+        dbPath = xbmc.translatePath("special://userdata/Database/MyVideos%s.db" % utils.DATABASE_VERSION_HELIX)
         connection = sqlite3.connect(dbPath)
         cursor = connection.cursor( )
         
@@ -874,7 +874,8 @@ class WriteKodiDB():
         
         xbmc.sleep(sleepVal)
         
-        dbPath = xbmc.translatePath("special://userdata/Database/MyVideos90.db")
+        dbPath = xbmc.translatePath("special://userdata/Database/MyVideos%s.db" % utils.DATABASE_VERSION_HELIX)
+        
         connection = sqlite3.connect(dbPath)
         cursor = connection.cursor()
         
