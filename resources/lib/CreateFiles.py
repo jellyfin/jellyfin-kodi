@@ -167,9 +167,10 @@ class CreateFiles():
             if timeInfo.get("ResumeTime") != None:
                 resume_sec = int(round(float(timeInfo.get("ResumeTime"))))*60
                 total_sec = int(round(float(timeInfo.get("TotalTime"))))*60
-                resume = SubElement(root, "resume")
-                SubElement(resume, "position").text = str(resume_sec)
-                SubElement(resume, "total").text = str(total_sec)
+                if resume_sec != 0:
+                    resume = SubElement(root, "resume")
+                    SubElement(resume, "position").text = str(resume_sec)
+                    SubElement(resume, "total").text = str(total_sec)
             
             if item_type == "Episode":
                 SubElement(root, "season").text = str(item.get("ParentIndexNumber"))
