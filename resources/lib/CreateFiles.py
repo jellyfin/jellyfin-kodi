@@ -136,6 +136,11 @@ class CreateFiles():
             SubElement(root, "originaltitle").text = utils.convertEncoding(item["Name"])
             SubElement(root, "sorttitle").text = utils.convertEncoding(item["SortName"])
             
+            if userData.get("LastPlayedDate") != None:
+                SubElement(root, "lastplayed").text = userData.get("LastPlayedDate")
+            else:
+                SubElement(root, "lastplayed").text = ""
+
             if item.has_key("Album"):
                 SubElement(root, "album").text = item["Album"]
                 

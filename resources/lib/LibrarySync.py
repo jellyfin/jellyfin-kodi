@@ -817,6 +817,7 @@ class LibrarySync():
                             
                             if kodiItem != None:
                                 updated = WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")), "movie")
+                                updated = WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "movie")
                                 if(updated):
                                     totalCountsUpdated += 1
                                 kodiresume = int(round(kodiItem['resume'].get("position")))
@@ -880,6 +881,7 @@ class LibrarySync():
                                 WINDOW.setProperty("episodeid" + str(kodiItem['episodeid']), episode.get('Name') + ";;" + episode.get('Id'))
                                 if kodiItem['playcount'] != int(userData.get("PlayCount")):
                                     updated = WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode")
+                                    updated = WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "episode")
                                     if(updated):
                                         totalCountsUpdated += 1
                                 kodiresume = int(round(kodiItem['resume'].get("position")))
@@ -957,6 +959,7 @@ class LibrarySync():
                     WriteKodiDB().setKodiResumePoint(kodiItem['movieid'],resume,total,"movie")
                 #write property forced will refresh the item in the list so playcount change is immediately visible
                 WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"movie",True)
+                WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "movie")
             if(self.ShouldStop(None)):
                 return True 
                     
@@ -977,7 +980,8 @@ class LibrarySync():
                     if kodiresume != resume:
                         WriteKodiDB().setKodiResumePoint(kodiItem['episodeid'],resume,total,"episode")
                     #write property forced will refresh the item in the list so playcount change is immediately visible
-                    WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode",True)             
+                    WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode",True)
+                    WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "episode")                    
                 if(self.ShouldStop(None)):
                     return True          
         

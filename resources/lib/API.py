@@ -139,6 +139,14 @@ class API():
                 UnplayedItemCount = userData.get('UnplayedItemCount')
             else:
                 UnplayedItemCount = "0"
+            if userData.get('LastPlayedDate') != None:
+                #TODO--> is there some other way to do this ?
+                datestring = userData.get('LastPlayedDate').split('T')[0]
+                timestring = userData.get('LastPlayedDate').split('T')[1]
+                timestring = timestring.split('.')[0]
+                LastPlayedDate = datestring + " " + timestring
+            else:
+                LastPlayedDate = None
             if userData.get('PlaybackPositionTicks') != None:
                 PlaybackPositionTicks = userData.get('PlaybackPositionTicks')
             else:
@@ -146,6 +154,7 @@ class API():
         return  {'Watched'  :   watched,
                  'Favorite' :   favorite,
                  'PlayCount':   playcount,
+                 'LastPlayedDate':  LastPlayedDate,
                  'UnplayedItemCount' : UnplayedItemCount,
                  'PlaybackPositionTicks' : str(PlaybackPositionTicks)
                 }

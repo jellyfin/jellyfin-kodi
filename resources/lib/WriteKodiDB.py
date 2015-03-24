@@ -101,6 +101,7 @@ class WriteKodiDB():
         self.getPropertyParam_Batched(KodiItem, "runtime", duration, params)
         self.getPropertyParam_Batched(KodiItem, "year", MBitem.get("ProductionYear"), params)
         self.getPropertyParam_Batched(KodiItem, "mpaa", MBitem.get("OfficialRating"), params)
+        self.getPropertyParam_Batched(KodiItem, "lastplayed", userData.get("LastPlayedDate"), params)
 
         self.getPropertyParamArray_Batched(KodiItem, "tag", MBitem.get("Tag"), params)
         
@@ -201,6 +202,7 @@ class WriteKodiDB():
         self.getPropertyParamArray_Batched(KodiItem, "genre", MBitem.get("Genres"), params)
         self.getPropertyParamArray_Batched(KodiItem, "artist", MBitem.get("Artist"), params)
         self.getPropertyParamArray_Batched(KodiItem, "album", MBitem.get("Album"), params)
+        self.getPropertyParam_Batched(KodiItem, "lastplayed", userData.get("LastPlayedDate"), params)
 
         if(studios != None):
             for x in range(0, len(studios)):
@@ -259,7 +261,7 @@ class WriteKodiDB():
         changes |= self.updateProperty(KodiItem,"runtime",duration,"movie")
         changes |= self.updateProperty(KodiItem,"year",MBitem.get("ProductionYear"),"movie")
         changes |= self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"movie")
-
+        changes |= self.updateProperty(KodiItem,"lastplayed",MBitem.get("LastPlayedDate"),"movie")
         changes |= self.updatePropertyArray(KodiItem,"tag",MBitem.get("Tag"),"movie")
         
         if MBitem.get("CriticRating") != None:
@@ -337,6 +339,7 @@ class WriteKodiDB():
             changes |= self.updateProperty(KodiItem,"premiered",premieredate,"tvshow")
         
         changes |= self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"tvshow")
+        changes |= self.updateProperty(KodiItem,"lastplayed",MBitem.get("LastPlayedDate"),"tvshow")
         
         if MBitem.get("CriticRating") != None:
             changes |= self.updateProperty(KodiItem,"rating",int(MBitem.get("CriticRating"))/10,"tvshow")
@@ -397,7 +400,8 @@ class WriteKodiDB():
         #update common properties
         duration = (int(timeInfo.get('Duration'))*60)
         changes |= self.updateProperty(KodiItem,"runtime",duration,"episode")
-        
+        changes |= self.updateProperty(KodiItem,"lastplayed",userData.get("LastPlayedDate"),"episode")
+
         if MBitem.get("PremiereDate") != None:
             premieredatelist = (MBitem.get("PremiereDate")).split("T")
             premieredate = premieredatelist[0]
