@@ -868,6 +868,8 @@ class LibrarySync():
                             userData=API().getUserData(episode)
                             timeInfo = API().getTimeInfo(episode)
                             if kodiItem != None:
+                                WINDOW = xbmcgui.Window( 10000 )
+                                WINDOW.setProperty("episodeid" + str(kodiItem['episodeid']), episode.get('Name') + ";;" + episode.get('Id'))
                                 if kodiItem['playcount'] != int(userData.get("PlayCount")):
                                     updated = WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode")
                                     if(updated):
