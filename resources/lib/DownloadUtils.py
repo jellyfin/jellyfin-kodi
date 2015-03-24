@@ -270,8 +270,6 @@ class DownloadUtils():
                 self.logMsg("No auth info set and suppress is true so returning no data!")
                 return ""
         
-        suppress = False
-        
         self.TotalUrlCalls = self.TotalUrlCalls + 1
         if(self.LogCalls):
             stackString = ""

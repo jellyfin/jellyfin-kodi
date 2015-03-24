@@ -20,6 +20,7 @@ class Kodi_Monitor(xbmc.Monitor):
         pass
     
     #this library monitor is used to detect a watchedstate change by the user through the library
+    #as well as detect when a library item has been deleted to pass the delete to the Emby server
     def onNotification  (self,sender,method,data):
         addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
         port = addon.getSetting('port')
@@ -45,12 +46,14 @@ class Kodi_Monitor(xbmc.Monitor):
                     episodeid = jsondata.get("id")
                     WINDOW = xbmcgui.Window( 10000 )
                     MBlist = WINDOW.getProperty("episodeid" + str(episodeid)).split(";;")
-                    #NEED TO CHECK IF ITEM STILL EXISTS ON EMBY SERVER
-                    #return_value = xbmcgui.Dialog().yesno("Confirm Delete", "Delete: "+ MBlist[0] + "\n on Emby Server?\nEmbyID: " + MBlist[1])
-                    #if return_value:
-                    #    url='http://' + server + '/mediabrowser/Items/' + MBlist[1]
-                    #    xbmc.log('Deleting via URL: ' + url)
-                    #    DownloadUtils().downloadUrl(url, type="DELETE")
+                    url='http://' + server + '/mediabrowser/Items?Ids=' + MBlist[1] + '&format=json'
+                    data = DownloadUtils().downloadUrl(url=url, suppress=True, popup=0)
+                    if data != "":
+                        return_value = xbmcgui.Dialog().yesno("Confirm Delete", "Delete: "+ MBlist[0] + "\n on Emby Server?\nEmbyID: " + MBlist[1])
+                        if return_value:
+                            url='http://' + server + '/mediabrowser/Items/' + MBlist[1]
+                            xbmc.log('Deleting via URL: ' + url)
+                            DownloadUtils().downloadUrl(url, type="DELETE")
                 
                 
 
