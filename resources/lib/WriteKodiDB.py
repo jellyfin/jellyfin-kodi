@@ -683,6 +683,9 @@ class WriteKodiDB():
         # create strm file
         changes |= CreateFiles().createSTRM(item)
         
+        #add theme music
+        CreateFiles().copyThemeMusic(item)
+        
         if changes:
             utils.logMsg("MB3 Sync","Added movie to Kodi Library",item["Id"] + " - " + item["Name"])
     
@@ -767,6 +770,9 @@ class WriteKodiDB():
             
         #create nfo file
         changes = CreateFiles().createNFO(item)
+        
+        #add theme music
+        CreateFiles().copyThemeMusic(item)
         
         if changes:
             utils.logMsg("Added TV Show to Kodi Library ",item["Id"] + " - " + item["Name"])
@@ -972,4 +978,5 @@ class WriteKodiDB():
     def updateBoxsetToKodiLibrary(self, boxsetmovie, boxset):
         strSet = boxset["Name"]
         kodiMovie = ReadKodiDB().getKodiMovie(boxsetmovie["Id"])
-        WriteKodiDB().updateProperty(kodiMovie,"set",strSet,"movie",True)
+        if kodiMovie != None:
+            WriteKodiDB().updateProperty(kodiMovie,"set",strSet,"movie",True)

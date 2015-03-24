@@ -264,6 +264,37 @@ class CreateFiles():
            
 
         return changes
+    
+    def copyThemeMusic(self,item):
+        downloadUtils = DownloadUtils()
+        userid = downloadUtils.getUserId()
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port  
+        item_type=str(item.get("Type"))
+        
+        if item_type == "Movie":
+            itemPath = os.path.join(movieLibrary,item["Id"])
+            themeFile = os.path.join(itemPath,"theme.mp3")
+        if item_type == "Series":
+            itemPath = os.path.join(tvLibrary,item["Id"])
+            themeFile = os.path.join(itemPath,"theme.mp3")
+            
+            
+        if not xbmcvfs.exists(themeFile):
+            utils.logMsg("MB3 Syncer","creating Theme file " + themeFile,2)
+            #theme music link
+            themeMusicUrl = "http://" + server + "/mediabrowser/Items/" + item["Id"] + "/ThemeSongs?format=json"
+            jsonData = downloadUtils.downloadUrl(themeMusicUrl, suppress=True, popup=0 )
+            if(jsonData != ""):
+                themeMusic = json.loads(jsonData)           
+                if(themeMusic != None and themeMusic["TotalRecordCount"] > 0):
+                    themeItems = themeMusic["Items"]
+                    if themeItems[0] != None:
+                        mediasources = themeItems[0]["MediaSources"]
+                        if mediasources[0]["Container"] == "mp3":
+                            themeUrl =  PlayUtils().getPlayUrl(server,themeItems[0]["Id"],themeItems[0])
+                            xbmcvfs.copy(themeUrl,themeFile)
         
     def CleanName(self, name):
         name = name.replace(":", "-")
