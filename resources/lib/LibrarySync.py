@@ -816,17 +816,16 @@ class LibrarySync():
                             timeInfo = API().getTimeInfo(item)
                             
                             if kodiItem != None:
-                                updated = WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")), "movie")
-                                updated = WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "movie")
-                                if(updated):
-                                    totalCountsUpdated += 1
                                 kodiresume = int(round(kodiItem['resume'].get("position")))
                                 resume = int(round(float(timeInfo.get("ResumeTime"))))*60
                                 total = int(round(float(timeInfo.get("TotalTime"))))*60
                                 if kodiresume != resume:
                                     WriteKodiDB().setKodiResumePoint(kodiItem['movieid'],resume,total,"movie")
                                     totalPositionsUpdated += 1
-                                
+                                updated = WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")), "movie")
+                                updated = WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "movie")
+                                if(updated):
+                                    totalCountsUpdated += 1
                             if(self.ShouldStop(pDialog)):
                                 return True
                             
@@ -879,18 +878,17 @@ class LibrarySync():
                             if kodiItem != None:
                                 WINDOW = xbmcgui.Window( 10000 )
                                 WINDOW.setProperty("episodeid" + str(kodiItem['episodeid']), episode.get('Name') + ";;" + episode.get('Id'))
-                                if kodiItem['playcount'] != int(userData.get("PlayCount")):
-                                    updated = WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode")
-                                    updated = WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "episode")
-                                    if(updated):
-                                        totalCountsUpdated += 1
                                 kodiresume = int(round(kodiItem['resume'].get("position")))
                                 resume = int(round(float(timeInfo.get("ResumeTime"))))*60
                                 total = int(round(float(timeInfo.get("TotalTime"))))*60
                                 if kodiresume != resume:
                                     WriteKodiDB().setKodiResumePoint(kodiItem['episodeid'],resume,total,"episode")
                                     totalPositionsUpdated += 1
-                                    
+                                
+                                updated = WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode")
+                                updated = WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "episode")
+                                if(updated):
+                                    totalCountsUpdated += 1    
                             if(self.ShouldStop(pDialog)):
                                 return True
                             
