@@ -164,6 +164,14 @@ class LibrarySync():
                     total = len(allMB3Movies) + 1
                     count = 1                    
                 
+                # process box sets - TODO cope with movies removed from a set
+                boxsets = ReadEmbyDB().getBoxSets()
+                for boxset in boxsets:
+                    boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
+                    WriteKodiDB().addBoxsetToKodiLibrary(boxset)
+                    for boxsetMovie in boxsetMovies:
+                        WriteKodiDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset)
+                
                 #process updates
                 allKodiMovies = ReadKodiDB().getKodiMovies(True)
                 for item in allMB3Movies:
