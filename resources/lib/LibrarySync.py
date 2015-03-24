@@ -77,13 +77,14 @@ class LibrarySync():
         addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
         WINDOW = xbmcgui.Window( 10000 )
         pDialog = None
+        startedSync = datetime.today()
         
         try:
             dbSyncIndication = addon.getSetting("dbSyncIndication")
                 
-            if(addon.getSetting("SyncFirstMovieRunDone") != 'true'):
+            if(addon.getSetting("SyncFirstMovieRunDone") != "true" or dbSyncIndication == "Dialog Progress"):
                 pDialog = xbmcgui.DialogProgress()
-            elif(dbSyncIndication == "Progress"):
+            elif(dbSyncIndication == "BG Progress"):
                 pDialog = xbmcgui.DialogProgressBG()
             
             if(pDialog != None):
@@ -163,6 +164,14 @@ class LibrarySync():
                     total = len(allMB3Movies) + 1
                     count = 1                    
                 
+                # process box sets - TODO cope with movies removed from a set
+                boxsets = ReadEmbyDB().getBoxSets()
+                for boxset in boxsets:
+                    boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
+                    WriteKodiDB().addBoxsetToKodiLibrary(boxset)
+                    for boxsetMovie in boxsetMovies:
+                        WriteKodiDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset)
+                
                 #process updates
                 allKodiMovies = ReadKodiDB().getKodiMovies(True)
                 for item in allMB3Movies:
@@ -217,18 +226,28 @@ class LibrarySync():
         
             addon.setSetting("SyncFirstMovieRunDone", "true")
             
-            if(dbSyncIndication == "Notification"):
-                notificationString = ""
-                if(totalItemsAdded > 0):
-                    notificationString += "Added:" + str(totalItemsAdded) + " "
-                if(totalItemsUpdated > 0):
-                    notificationString += "Updated:" + str(totalItemsUpdated) + " "                    
-                if(totalItemsDeleted > 0):
-                    notificationString += "Deleted:" + str(totalItemsDeleted) + " "
+            # display notification if set up
+            notificationString = ""
+            if(totalItemsAdded > 0):
+                notificationString += "Added:" + str(totalItemsAdded) + " "
+            if(totalItemsUpdated > 0):
+                notificationString += "Updated:" + str(totalItemsUpdated) + " "
+            if(totalItemsDeleted > 0):
+                notificationString += "Deleted:" + str(totalItemsDeleted) + " "
+                
+            timeTaken = datetime.today() - startedSync
+            timeTakenString = str(int(timeTaken.seconds / 60)) + ":" + str(timeTaken.seconds % 60)
+            utils.logMsg("Sync Movies", "Finished " + timeTakenString + " " + notificationString, 0)
+            
+            if(dbSyncIndication == "Notify OnChange" and notificationString != ""):
+                notificationString = "(" + timeTakenString + ") " + notificationString
+                xbmc.executebuiltin("XBMC.Notification(Movie Sync: " + notificationString + ",)")
+            elif(dbSyncIndication == "Notify OnFinish"):
                 if(notificationString == ""):
                     notificationString = "Done"
+                notificationString = "(" + timeTakenString + ") " + notificationString
                 xbmc.executebuiltin("XBMC.Notification(Movie Sync: " + notificationString + ",)")
-                    
+
         finally:
             if(pDialog != None):
                 pDialog.close()
@@ -240,13 +259,14 @@ class LibrarySync():
         addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
         WINDOW = xbmcgui.Window( 10000 )
         pDialog = None
+        startedSync = datetime.today()
         
         try:
             dbSyncIndication = addon.getSetting("dbSyncIndication")
                 
-            if(addon.getSetting("SyncFirstTVRunDone") != 'true'):
+            if(addon.getSetting("SyncFirstTVRunDone") != "true" or dbSyncIndication == "Dialog Progress"):
                 pDialog = xbmcgui.DialogProgress()
-            elif(dbSyncIndication == "Progress"):
+            elif(dbSyncIndication == "BG Progress"):
                 pDialog = xbmcgui.DialogProgressBG()
                 
             if(pDialog != None):
@@ -562,19 +582,29 @@ class LibrarySync():
                     self.doKodiLibraryUpdate(True, pDialog)
           
             addon.setSetting("SyncFirstTVRunDone", "true")
+
+            # display notification if set up
+            notificationString = ""
+            if(totalItemsAdded > 0):
+                notificationString += "Added:" + str(totalItemsAdded) + " "
+            if(totalItemsUpdated > 0):
+                notificationString += "Updated:" + str(totalItemsUpdated) + " "
+            if(totalItemsDeleted > 0):
+                notificationString += "Deleted:" + str(totalItemsDeleted) + " "
+                
+            timeTaken = datetime.today() - startedSync
+            timeTakenString = str(int(timeTaken.seconds / 60)) + ":" + str(timeTaken.seconds % 60)
+            utils.logMsg("Sync Episodes", "Finished " + timeTakenString + " " + notificationString, 0)
             
-            if(dbSyncIndication == "Notification"):
-                notificationString = ""
-                if(totalItemsAdded > 0):
-                    notificationString += "Added:" + str(totalItemsAdded) + " "
-                if(totalItemsUpdated > 0):
-                    notificationString += "Updated:" + str(totalItemsUpdated) + " "                    
-                if(totalItemsDeleted > 0):
-                    notificationString += "Deleted:" + str(totalItemsDeleted) + " "
+            if(dbSyncIndication == "Notify OnChange" and notificationString != ""):
+                notificationString = "(" + timeTakenString + ") " + notificationString
+                xbmc.executebuiltin("XBMC.Notification(Episode Sync: " + notificationString + ",)")
+            elif(dbSyncIndication == "Notify OnFinish"):
                 if(notificationString == ""):
                     notificationString = "Done"
-                xbmc.executebuiltin("XBMC.Notification(TV Sync: " + notificationString + ",)")            
-            
+                notificationString = "(" + timeTakenString + ") " + notificationString
+                xbmc.executebuiltin("XBMC.Notification(Episode Sync: " + notificationString + ",)")
+
         finally:
             if(pDialog != None):
                 pDialog.close()
@@ -590,9 +620,9 @@ class LibrarySync():
         try:
             dbSyncIndication = addon.getSetting("dbSyncIndication")
                 
-            if(addon.getSetting("SyncFirstMusicVideoRunDone") != 'true'):
+            if(addon.getSetting("SyncFirstMusicVideoRunDone") != "true" or dbSyncIndication == "Dialog Progress"):
                 pDialog = xbmcgui.DialogProgress()
-            elif(dbSyncIndication == "Progress"):
+            elif(dbSyncIndication == "BG Progress"):
                 pDialog = xbmcgui.DialogProgressBG()
             
             if(pDialog != None):
@@ -732,16 +762,16 @@ class LibrarySync():
         addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
         WINDOW = xbmcgui.Window( 10000 )
         pDialog = None
-        
+        startedSync = datetime.today()
         processMovies = True
         processTvShows = True
         
         try:
             playCountSyncIndication = addon.getSetting("playCountSyncIndication")
                 
-            if(addon.getSetting("SyncFirstCountsRunDone") != 'true'):
+            if(addon.getSetting("SyncFirstCountsRunDone") != "true" or playCountSyncIndication == "Dialog Progress"):
                 pDialog = xbmcgui.DialogProgress()
-            elif(playCountSyncIndication == "Progress"):
+            elif(playCountSyncIndication == "BG Progress"):
                 pDialog = xbmcgui.DialogProgressBG()
                 
             if(pDialog != None):
@@ -846,6 +876,8 @@ class LibrarySync():
                             userData=API().getUserData(episode)
                             timeInfo = API().getTimeInfo(episode)
                             if kodiItem != None:
+                                WINDOW = xbmcgui.Window( 10000 )
+                                WINDOW.setProperty("episodeid" + str(kodiItem['episodeid']), episode.get('Name') + ";;" + episode.get('Id'))
                                 if kodiItem['playcount'] != int(userData.get("PlayCount")):
                                     updated = WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode")
                                     if(updated):
@@ -869,17 +901,27 @@ class LibrarySync():
                         showCurrent += 1
                         
             addon.setSetting("SyncFirstCountsRunDone", "true")
+                
+            # display notification if set up
+            notificationString = ""
+            if(totalPositionsUpdated > 0):
+                notificationString += "Pos:" + str(totalPositionsUpdated) + " "
+            if(totalCountsUpdated > 0):
+                notificationString += "Counts:" + str(totalCountsUpdated) + " "
+                
+            timeTaken = datetime.today() - startedSync
+            timeTakenString = str(int(timeTaken.seconds / 60)) + ":" + str(timeTaken.seconds % 60)
+            utils.logMsg("Sync PlayCount", "Finished " + timeTakenString + " " + notificationString, 0)
             
-            if(playCountSyncIndication == "Notification"):
-                notificationString = ""
-                if(totalPositionsUpdated > 0):
-                    notificationString += "Pos:" + str(totalPositionsUpdated) + " "
-                if(totalCountsUpdated > 0):
-                    notificationString += "Counts:" + str(totalCountsUpdated) + " "
+            if(playCountSyncIndication == "Notify OnChange" and notificationString != ""):
+                notificationString = "(" + timeTakenString + ") " + notificationString
+                xbmc.executebuiltin("XBMC.Notification(PlayCount Sync: " + notificationString + ",)")
+            elif(playCountSyncIndication == "Notify OnFinish"):
                 if(notificationString == ""):
                     notificationString = "Done"
-                xbmc.executebuiltin("XBMC.Notification(Play Sync: " + notificationString + ",)")
-            
+                notificationString = "(" + timeTakenString + ") " + notificationString
+                xbmc.executebuiltin("XBMC.Notification(PlayCount Sync: " + notificationString + ",)")
+
         finally:
             if(pDialog != None):
                 pDialog.close()            

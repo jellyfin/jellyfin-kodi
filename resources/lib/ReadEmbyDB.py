@@ -273,4 +273,46 @@ class ReadEmbyDB():
                             'type'           : type,
                             'id'             : view.get("Id")})
         return collections
+    
+    def getBoxSets(self):
+        result = None
+        
+        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port
+        
+        downloadUtils = DownloadUtils()
+        userid = downloadUtils.getUserId()   
+        
+        url = server + '/mediabrowser/Users/' + userid + '/Items?SortBy=SortName&IsVirtualUnaired=false&IsMissing=False&Fields=Name,SortName,CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=BoxSet&format=json&ImageTypeLimit=1'
+        
+        jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
+        
+        if jsonData != None and jsonData != "":
+            result = json.loads(jsonData)
+            if(result.has_key('Items')):
+                result = result['Items']
+        return result
+    
+    def getMoviesInBoxSet(self,boxsetId):
+        result = None
+        
+        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port
+        
+        downloadUtils = DownloadUtils()
+        userid = downloadUtils.getUserId()   
+        
+        url = server + '/mediabrowser/Users/' + userid + '/Items?ParentId=' + boxsetId + '&Fields=ItemCounts&format=json&ImageTypeLimit=1'
+        
+        jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
+        
+        if jsonData != None and jsonData != "":
+            result = json.loads(jsonData)
+            if(result.has_key('Items')):
+                result = result['Items']
+        return result
         
