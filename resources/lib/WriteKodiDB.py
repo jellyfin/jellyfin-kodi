@@ -942,7 +942,7 @@ class WriteKodiDB():
             artwork["discart"] = API().getArtwork(boxset, "Disc")
             artwork["fanart"] = API().getArtwork(boxset, "Backdrop")
            
-            art_types = {'poster','fanart','landscape','clearlogo','clearart','banner','discart'}
+            art_types = ['poster','fanart','landscape','clearlogo','clearart','banner','discart']
             for update_type in art_types:
                 if ( update_type in existing_type_map ):
                     if ( existing_type_map[update_type] != artwork[update_type] ) and artwork[update_type] != '':
