@@ -422,6 +422,9 @@ class LibrarySync():
                     episodeData = ReadEmbyDB().getEpisodes(tvshow,True)
                     kodiEpisodes = ReadKodiDB().getKodiEpisodes(tvshow,True,True)
                     
+                    if episodeData == None:
+                        return
+                    
                     if(self.ShouldStop(pDialog)):
                         return True                
                     
