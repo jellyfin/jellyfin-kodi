@@ -171,6 +171,10 @@ class WriteKodiDB():
         #add theme music
         if addon.getSetting("syncThemeMusic") == "true":
             CreateFiles().copyThemeMusic(MBitem)
+            
+        #add extra fanart
+        if addon.getSetting("syncExtraFanart") == "true":
+           CreateFiles().copyExtraFanart(MBitem)
         
         if(changes):
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"], level=0)
@@ -314,6 +318,10 @@ class WriteKodiDB():
         #add theme music
         if addon.getSetting("syncThemeMusic") == "true":
             CreateFiles().copyThemeMusic(MBitem)
+            
+        #add extra fanart
+        if addon.getSetting("syncExtraFanart") == "true":
+           CreateFiles().copyExtraFanart(MBitem)
         
         if changes:
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
@@ -379,6 +387,10 @@ class WriteKodiDB():
         #add theme music
         if addon.getSetting("syncThemeMusic") == "true":
             CreateFiles().copyThemeMusic(MBitem)
+        
+        #add extra fanart
+        if addon.getSetting("syncExtraFanart") == "true":
+           CreateFiles().copyExtraFanart(MBitem)
         
         if changes:
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])

@@ -87,6 +87,23 @@ class ReadEmbyDB():
 
         return result
     
+    def getFullItem(self, id):
+        result = None
+        
+        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port
+        
+        downloadUtils = DownloadUtils()
+        userid = downloadUtils.getUserId()
+
+        jsonData = downloadUtils.downloadUrl("http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + id + "?format=json", suppress=False, popup=1 )     
+        if jsonData != None and jsonData != "":
+            result = json.loads(jsonData)
+
+        return result
+    
     def getTVShows(self, fullinfo = False, fullSync = False):
         result = None
         

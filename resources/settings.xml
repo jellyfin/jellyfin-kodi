@@ -27,7 +27,7 @@
 	
 	<category label="30235"> <!-- Extra Sync options -->
 		<setting id="syncThemeMusic" type="bool" label="30236" default="false" visible="true" enable="true" />
-		<!--  <setting id="syncExtraFanart" type="bool" label="30237" default="false" visible="true" enable="true" /> -->
+		<setting id="syncExtraFanart" type="bool" label="30237" default="false" visible="true" enable="true" />
 	</category>
 
 	<category label="30022"> <!-- Advanced -->

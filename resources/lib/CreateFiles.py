@@ -299,6 +299,32 @@ class CreateFiles():
                         if mediasources[0]["Container"] == "mp3":
                             themeUrl =  PlayUtils().getPlayUrl(server,themeItems[0]["Id"],themeItems[0])
                             xbmcvfs.copy(themeUrl,themeFile)
+                            
+    def copyExtraFanart(self,item):
+        downloadUtils = DownloadUtils()
+        userid = downloadUtils.getUserId()
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port  
+        item_type=str(item.get("Type"))
+        
+        if item_type == "Movie":
+            itemPath = os.path.join(movieLibrary,item["Id"])
+            fanartDir = os.path.join(itemPath,"extrafanart" + os.sep)
+        if item_type == "Series":
+            itemPath = os.path.join(tvLibrary,item["Id"])
+            fanartDir = os.path.join(itemPath,"extrafanart" + os.sep)
+            
+        if not xbmcvfs.exists(fanartDir):
+            utils.logMsg("MB3 Syncer","creating extrafanart directory ",2)
+            xbmcvfs.mkdir(fanartDir)
+            fullItem = ReadEmbyDB().getFullItem(item["Id"])
+            if(fullItem != None and fullItem["BackdropImageTags"] != None and len(fullItem["BackdropImageTags"]) > 1):
+                  totalbackdrops = len(fullItem["BackdropImageTags"])
+                  for index in range(1,totalbackdrops):
+                      backgroundUrl =  API().getArtwork(fullItem, "Backdrop",str(index))
+                      fanartFile = os.path.join(fanartDir,"fanart" + str(index) + ".jpg")
+                      xbmcvfs.copy(backgroundUrl,fanartFile)
         
     def CleanName(self, filename):
         validFilenameChars = "-_.() %s%s" % (string.ascii_letters, string.digits)
