@@ -422,17 +422,16 @@ class LibrarySync():
                     episodeData = ReadEmbyDB().getEpisodes(tvshow,True)
                     kodiEpisodes = ReadKodiDB().getKodiEpisodes(tvshow,True,True)
                     
-                    if episodeData == None:
-                        return
-                    
-                    if(self.ShouldStop(pDialog)):
-                        return True                
-                    
-                    if(pDialog != None):
-                        progressTitle = "Sync DB : Processing Tv Show " + str(showCurrent) + " of " + str(showTotal)
-                        pDialog.update(0, progressTitle)
-                        total = len(episodeData) + 1
-                        count = 0         
+                    if episodeData != None:
+                        
+                        if(self.ShouldStop(pDialog)):
+                            return True                
+                        
+                        if(pDialog != None):
+                            progressTitle = "Sync DB : Processing Tv Show " + str(showCurrent) + " of " + str(showTotal)
+                            pDialog.update(0, progressTitle)
+                            total = len(episodeData) + 1
+                            count = 0         
 
                     #we have to compare the lists somehow
                     for item in episodeData:
