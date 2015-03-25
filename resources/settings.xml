@@ -22,7 +22,7 @@
 		<setting type="sep" />
 		<setting id="username" type="text" label="30024" />
         <setting type="sep" />
-        <setting id="deviceName" type="text" label="30024" default="Kodi"/>
+        <setting id="deviceName" type="text" label="30016" default="Kodi"/>
 	</category>
 
 	<category label="30022"> <!-- Advanced -->
