@@ -22,7 +22,7 @@ class Kodi_Monitor(xbmc.Monitor):
     #this library monitor is used to detect a watchedstate change by the user through the library
     #as well as detect when a library item has been deleted to pass the delete to the Emby server
     def onNotification  (self,sender,method,data):
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port

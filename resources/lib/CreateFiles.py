@@ -27,7 +27,7 @@ import Utils as utils
 from ReadEmbyDB import ReadEmbyDB
 
 
-addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+addon = xbmcaddon.Addon(id='plugin.video.emby')
 addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
 dataPath = os.path.join(addondir,"library")
 movieLibrary = os.path.join(dataPath,'movies')
@@ -59,7 +59,7 @@ class CreateFiles():
             xbmcvfs.mkdir(itemPath)
             text_file = open(strmFile, "w")
             
-            playUrl = "plugin://plugin.video.mb3sync/?id=" + item["Id"] + '&mode=play'
+            playUrl = "plugin://plugin.video.emby/?id=" + item["Id"] + '&mode=play'
 
             text_file.writelines(playUrl)
             text_file.close()
@@ -231,7 +231,7 @@ class CreateFiles():
                 if(jsonData != ""):
                     trailerItem = json.loads(jsonData)
                     if trailerItem[0].get("LocationType") == "FileSystem":
-                        trailerUrl = "plugin://plugin.video.mb3sync/?id=" + trailerItem[0].get("Id") + '&mode=play'
+                        trailerUrl = "plugin://plugin.video.emby/?id=" + trailerItem[0].get("Id") + '&mode=play'
                         SubElement(root, "trailer").text = trailerUrl
             
             #add streamdetails

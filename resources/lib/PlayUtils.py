@@ -24,7 +24,7 @@ class PlayUtils():
 
     def getPlayUrl(self, server, id, result):
     
-      addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
+      addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
       # if the path is local and depending on the video quality play we can direct play it do so-
       if self.isDirectPlay(result) == True:
           playurl = result.get("Path")
@@ -90,20 +90,20 @@ class PlayUtils():
         if(mediaSources != None):
           if mediaSources[0].get('Bitrate') != None:
              if settingsVideoBitRate < int(mediaSources[0].get('Bitrate')):
-               #xbmc.log("mb3sync isNetworkQualitySufficient -> FALSE bit rate - settingsVideoBitRate: " + str(settingsVideoBitRate) + " mediasource bitrate: " + str(mediaSources[0].get('Bitrate')))   
+               #xbmc.log("emby isNetworkQualitySufficient -> FALSE bit rate - settingsVideoBitRate: " + str(settingsVideoBitRate) + " mediasource bitrate: " + str(mediaSources[0].get('Bitrate')))   
                return False
              else:
-               #xbmc.log("mb3sync isNetworkQualitySufficient -> TRUE bit rate")   
+               #xbmc.log("emby isNetworkQualitySufficient -> TRUE bit rate")   
                return True
            
         # Any thing else is ok
-        #xbmc.log("mb3sync isNetworkQualitySufficient -> TRUE default")
+        #xbmc.log("emby isNetworkQualitySufficient -> TRUE default")
         return True
       
        
     # get the addon video quality
     def getVideoBitRate(self):
-        addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
         videoQuality = addonSettings.getSetting('videoBitRate')  
         if (videoQuality == "0"):
             return '664'

@@ -19,7 +19,7 @@ from ReadEmbyDB import ReadEmbyDB
 from API import API
 import Utils as utils
 
-addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+addon = xbmcaddon.Addon(id='plugin.video.emby')
 addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
 dataPath = os.path.join(addondir,"library")
 movieLibrary = os.path.join(dataPath,'movies')
@@ -61,7 +61,7 @@ class WriteKodiDB():
                         mb3Id = filename[-38:-6]
 
         if(mb3Id != None):
-            addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+            addon = xbmcaddon.Addon(id='plugin.video.emby')
             port = addon.getSetting('port')
             host = addon.getSetting('ipaddress')
             server = host + ":" + port        
@@ -76,7 +76,7 @@ class WriteKodiDB():
                 downloadUtils.downloadUrl(watchedurl, type="DELETE")
         
     def updateMovieToKodiLibrary_Batched(self, MBitem, KodiItem):
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
@@ -140,7 +140,7 @@ class WriteKodiDB():
             if(jsonData != ""):
                 trailerItem = json.loads(jsonData)
                 if trailerItem[0].get("LocationType") == "FileSystem":
-                    trailerUrl = "plugin://plugin.video.mb3sync/?id=" + trailerItem[0].get("Id") + '&mode=play'
+                    trailerUrl = "plugin://plugin.video.emby/?id=" + trailerItem[0].get("Id") + '&mode=play'
                     self.getPropertyParam_Batched(KodiItem, "trailer", trailerUrl, params)
                 
 
@@ -182,7 +182,7 @@ class WriteKodiDB():
         return changes
         
     def updateMusicVideoToKodiLibrary_Batched(self, MBitem, KodiItem):
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
@@ -243,7 +243,7 @@ class WriteKodiDB():
             
     def updateMovieToKodiLibrary(self, MBitem, KodiItem):
         
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port        
@@ -306,7 +306,7 @@ class WriteKodiDB():
             jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=False, popup=0 )
             if(jsonData != ""):
                 trailerItem = json.loads(jsonData)
-                trailerUrl = "plugin://plugin.video.mb3sync/?id=" + trailerItem[0].get("Id") + '&mode=play'
+                trailerUrl = "plugin://plugin.video.emby/?id=" + trailerItem[0].get("Id") + '&mode=play'
                 changes |= self.updateProperty(KodiItem,"trailer",trailerUrl,"movie")
 
         #add actors
@@ -328,7 +328,7 @@ class WriteKodiDB():
         
     def updateTVShowToKodiLibrary( self, MBitem, KodiItem ):
         
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port        
@@ -399,7 +399,7 @@ class WriteKodiDB():
                   
     def updateEpisodeToKodiLibrary( self, MBitem, KodiItem ):
         
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port        

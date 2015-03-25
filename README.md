@@ -1,2 +1,2 @@
-# plugin.video.mb3sync
+# plugin.video.emby
 MediaBrowser Syncer

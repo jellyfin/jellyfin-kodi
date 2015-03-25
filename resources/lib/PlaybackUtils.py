@@ -19,7 +19,7 @@ import Utils as utils
 import os
 import xbmcvfs
 
-addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+addon = xbmcaddon.Addon(id='plugin.video.emby')
 addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
 language = addon.getLocalizedString   
 

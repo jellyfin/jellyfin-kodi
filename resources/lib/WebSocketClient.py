@@ -24,23 +24,23 @@ class WebSocketThread(threading.Thread):
     keepRunning = True
     
     def __init__(self, *args):
-        addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
         level = addonSettings.getSetting('logLevel')        
         self.logLevel = 0
         if(level != None):
             self.logLevel = int(level)           
     
-        xbmc.log("MB3SYNC WebSocketThread -> Log Level:" +  str(self.logLevel))
+        xbmc.log("emby WebSocketThread -> Log Level:" +  str(self.logLevel))
         
         threading.Thread.__init__(self, *args)
     
     def logMsg(self, msg, level = 1):
         if(self.logLevel >= level):
             try:
-                xbmc.log("MB3SYNC WebSocketThread -> " + str(msg))
+                xbmc.log("emby WebSocketThread -> " + str(msg))
             except UnicodeEncodeError:
                 try:
-                    xbmc.log("MB3SYNC WebSocketThread -> " + str(msg.encode('utf-8')))
+                    xbmc.log("emby WebSocketThread -> " + str(msg.encode('utf-8')))
                 except: pass
             
     '''
@@ -191,7 +191,7 @@ class WebSocketThread(threading.Thread):
         messageData = {}
         messageData["MessageType"] = "Identity"
         
-        addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
         deviceName = addonSettings.getSetting('deviceName')
         deviceName = deviceName.replace("\"", "_")
     
@@ -225,7 +225,7 @@ class WebSocketThread(threading.Thread):
 
     def run(self):
     
-        addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
         mb3Host = addonSettings.getSetting('ipaddress')
         mb3Port = addonSettings.getSetting('port')
         

@@ -46,7 +46,7 @@ class ClientInformation():
     
     def getAddonId(self):
         # To use when declaring xbmcaddon.Addon(id=addonId)
-        addonId = "plugin.video.mb3sync"
+        addonId = "plugin.video.emby"
         return addonId
 
     def getAddonName(self):

@@ -20,7 +20,7 @@ logLevel = 1
 class ConnectionManager():
     
     addonSettings = None
-    __addon__       = xbmcaddon.Addon(id='plugin.video.mb3sync')
+    __addon__       = xbmcaddon.Addon(id='plugin.video.emby')
     __addondir__    = xbmc.translatePath( __addon__.getAddonInfo('profile') ) 
     __language__     = __addon__.getLocalizedString
     
@@ -28,44 +28,44 @@ class ConnectionManager():
         if(logLevel >= level):
             if(logLevel == 2):
                 try:
-                    xbmc.log("mb3sync " + str(level) + " -> " + inspect.stack()[1][3] + " : " + str(msg))
+                    xbmc.log("emby " + str(level) + " -> " + inspect.stack()[1][3] + " : " + str(msg))
                 except UnicodeEncodeError:
-                    xbmc.log("mb3sync " + str(level) + " -> " + inspect.stack()[1][3] + " : " + str(msg.encode('utf-8')))
+                    xbmc.log("emby " + str(level) + " -> " + inspect.stack()[1][3] + " : " + str(msg.encode('utf-8')))
             else:
                 try:
-                    xbmc.log("mb3sync " + str(level) + " -> " + str(msg))
+                    xbmc.log("emby " + str(level) + " -> " + str(msg))
                 except UnicodeEncodeError:
-                    xbmc.log("mb3sync " + str(level) + " -> " + str(msg.encode('utf-8')))
+                    xbmc.log("emby " + str(level) + " -> " + str(msg.encode('utf-8')))
 
     def checkServer(self):
         
         WINDOW = xbmcgui.Window( 10000 )
         WINDOW.setProperty("Server_Checked", "True")
         
-        self.printDebug ("mb3sync Connection Manager Called")
-        self.addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        self.printDebug ("emby Connection Manager Called")
+        self.addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
         port = self.addonSettings.getSetting('port')
         host = self.addonSettings.getSetting('ipaddress')
         
         if(len(host) != 0 and host != "<none>"):
-            self.printDebug ("mb3sync server already set")
+            self.printDebug ("emby server already set")
             return
         
         serverInfo = self.getServerDetails()
         
         if(serverInfo == None):
-            self.printDebug ("mb3sync getServerDetails failed")
+            self.printDebug ("emby getServerDetails failed")
             return
             
         index = serverInfo.find(":")
         
         if(index <= 0):
-            self.printDebug ("mb3sync getServerDetails data not correct : " + serverInfo)
+            self.printDebug ("emby getServerDetails data not correct : " + serverInfo)
             return
         
         server_address = serverInfo[:index]
         server_port = serverInfo[index+1:]
-        self.printDebug ("mb3sync detected server info " + server_address + " : " + server_port)
+        self.printDebug ("emby detected server info " + server_address + " : " + server_port)
         
         xbmcgui.Dialog().ok(self.__language__(30167), self.__language__(30168), self.__language__(30169) + server_address, self.__language__(30030) + server_port)
     

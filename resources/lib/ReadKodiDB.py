@@ -9,7 +9,7 @@ import xbmcaddon
 import json
 import os
 
-addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+addon = xbmcaddon.Addon(id='plugin.video.emby')
 addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
 dataPath = os.path.join(addondir,"library")
 movieLibrary = os.path.join(dataPath,'movies')
@@ -39,9 +39,9 @@ class ReadKodiDB():
         #returns all movies in Kodi db inserted by MB
         xbmc.sleep(sleepVal)
         if fullInfo:
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.mb3sync"}, "properties" : ["art", "rating", "thumbnail", "resume", "runtime", "year", "genre", "cast", "trailer", "country", "lastplayed", "studio", "set", "imdbnumber", "mpaa", "tagline", "plotoutline","plot", "sorttitle", "director", "writer", "playcount", "tag", "file"] }, "id": "libMovies"}')
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.emby"}, "properties" : ["art", "rating", "thumbnail", "resume", "runtime", "year", "genre", "cast", "trailer", "country", "lastplayed", "studio", "set", "imdbnumber", "mpaa", "tagline", "plotoutline","plot", "sorttitle", "director", "writer", "playcount", "tag", "file"] }, "id": "libMovies"}')
         else:
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.mb3sync"}, "properties" : ["resume", "playcount", "lastplayed", "file"] }, "id": "libMovies"}')
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.emby"}, "properties" : ["resume", "playcount", "lastplayed", "file"] }, "id": "libMovies"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         movies = None
        
@@ -99,9 +99,9 @@ class ReadKodiDB():
         #returns all tvshows in Kodi db inserted by MB
         xbmc.sleep(sleepVal)
         if fullInfo:
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.mb3sync"}, "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "premiered", "rating", "thumbnail", "playcount", "lastplayed", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.emby"}, "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "premiered", "rating", "thumbnail", "playcount", "lastplayed", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
         else:
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.mb3sync"}, "properties": ["sorttitle", "title", "playcount", "lastplayed", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.emby"}, "properties": ["sorttitle", "title", "playcount", "lastplayed", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         tvshows = None
 
@@ -206,9 +206,9 @@ class ReadKodiDB():
         #returns all musicvideos in Kodi db inserted by MB
         xbmc.sleep(sleepVal)
         if fullInfo:
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideos", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.mb3sync"}, "properties" : ["art", "thumbnail", "resume", "runtime", "year", "genre", "studio", "artist", "album", "track", "lastplayed", "plot", "director", "playcount", "tag", "file"] }, "id": "libMusicVideos"}')
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideos", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.emby"}, "properties" : ["art", "thumbnail", "resume", "runtime", "year", "genre", "studio", "artist", "album", "track", "lastplayed", "plot", "director", "playcount", "tag", "file"] }, "id": "libMusicVideos"}')
         else:
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideos", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.mb3sync"}, "properties" : ["resume", "playcount", "lastplayed", "file"] }, "id": "libMusicVideos"}')
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideos", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.emby"}, "properties" : ["resume", "playcount", "lastplayed", "file"] }, "id": "libMusicVideos"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         musicvideos = None
         if(jsonobject.has_key('result')):

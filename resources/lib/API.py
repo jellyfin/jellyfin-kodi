@@ -261,7 +261,7 @@ class API():
 
     def getArtwork(self, data, type, index = "0", userParentInfo = False):
 
-        addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
         id = data.get("Id")
         getSeriesData = False
         userData = data.get("UserData") 
@@ -348,7 +348,7 @@ class API():
     
     def getUserArtwork(self, data, type, index = "0"):
 
-        addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
         id = data.get("Id")
         port = addonSettings.getSetting('port')
         host = addonSettings.getSetting('ipaddress')

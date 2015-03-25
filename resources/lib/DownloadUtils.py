@@ -41,10 +41,10 @@ class DownloadUtils():
     def logMsg(self, msg, level = 1):
         if(self.logLevel >= level):
             try:
-                xbmc.log("mb3sync DownloadUtils -> " + str(msg))
+                xbmc.log("emby DownloadUtils -> " + str(msg))
             except UnicodeEncodeError:
                 try:
-                    xbmc.log("mb3sync DownloadUtils -> " + str(msg.encode('utf-8')))
+                    xbmc.log("emby DownloadUtils -> " + str(msg.encode('utf-8')))
                 except: pass
 
     def getServer(self, prefix=True):
@@ -76,7 +76,7 @@ class DownloadUtils():
     def getUserId(self, suppress=True):
 
         WINDOW = xbmcgui.Window( 10000 )
-        self.addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        self.addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
         port = self.addonSettings.getSetting('port')
         host = self.addonSettings.getSetting('ipaddress')
         userName = self.addonSettings.getSetting('username')
@@ -149,7 +149,7 @@ class DownloadUtils():
     def authenticate(self, retreive=True):
     
         WINDOW = xbmcgui.Window(10000)
-        self.addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        self.addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
         username = self.addonSettings.getSetting('username')
         
         token = WINDOW.getProperty("AccessToken" + username)

@@ -6,7 +6,7 @@ import threading
 import json
 from datetime import datetime
 
-cwd = xbmcaddon.Addon(id='plugin.video.mb3sync').getAddonInfo('path')
+cwd = xbmcaddon.Addon(id='plugin.video.emby').getAddonInfo('path')
 BASE_RESOURCE_PATH = xbmc.translatePath( os.path.join( cwd, 'resources', 'lib' ) )
 sys.path.append(BASE_RESOURCE_PATH)
 

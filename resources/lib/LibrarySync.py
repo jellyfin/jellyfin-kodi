@@ -23,7 +23,7 @@ from ReadKodiDB import ReadKodiDB
 from WriteKodiDB import WriteKodiDB
 from CreateFiles import CreateFiles
 
-addondir = xbmc.translatePath(xbmcaddon.Addon(id='plugin.video.mb3sync').getAddonInfo('profile'))
+addondir = xbmc.translatePath(xbmcaddon.Addon(id='plugin.video.emby').getAddonInfo('profile'))
 dataPath = os.path.join(addondir,"library")
 movieLibrary = os.path.join(dataPath,'movies')
 tvLibrary = os.path.join(dataPath,'tvshows')
@@ -32,7 +32,7 @@ class LibrarySync():
         
     def syncDatabase(self):
         
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         WINDOW = xbmcgui.Window( 10000 )
         pDialog = None
 
@@ -80,7 +80,7 @@ class LibrarySync():
         startedSync = datetime.today()
         
         try:
-            addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+            addon = xbmcaddon.Addon(id='plugin.video.emby')
             dbSyncIndication = addon.getSetting("dbSyncIndication")
             dbSyncFirstRun = addon.getSetting("SyncFirstMovieRunDone")
                 
@@ -227,7 +227,7 @@ class LibrarySync():
                 self.doKodiLibraryUpdate(True, pDialog)
         
             if(dbSyncFirstRun != "true"):
-                addon = xbmcaddon.Addon(id='plugin.video.mb3sync') #force a new instance of the addon
+                addon = xbmcaddon.Addon(id='plugin.video.emby') #force a new instance of the addon
                 addon.setSetting("SyncFirstMovieRunDone", "true")
             
             # display notification if set up
@@ -260,7 +260,7 @@ class LibrarySync():
         
     def TvShowsSync(self, fullsync=True):
 
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         WINDOW = xbmcgui.Window( 10000 )
         pDialog = None
         startedSync = datetime.today()
@@ -589,7 +589,7 @@ class LibrarySync():
                     self.doKodiLibraryUpdate(True, pDialog)
           
             if(dbSyncFirstRun != "true"):
-                addon = xbmcaddon.Addon(id='plugin.video.mb3sync') #force a new instance of the addon
+                addon = xbmcaddon.Addon(id='plugin.video.emby') #force a new instance of the addon
                 addon.setSetting("SyncFirstTVRunDone", "true")          
 
             # display notification if set up
@@ -622,7 +622,7 @@ class LibrarySync():
     
     def MusicVideosSync(self, fullsync=True):
         
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         WINDOW = xbmcgui.Window( 10000 )
         pDialog = None
         
@@ -747,7 +747,7 @@ class LibrarySync():
                 self.doKodiLibraryUpdate(True, pDialog)
         
             if(dbSyncFirstRun != "true"):
-                addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+                addon = xbmcaddon.Addon(id='plugin.video.emby')
                 addon.setSetting("SyncFirstMusicVideoRunDone", "true")
             
         finally:
@@ -771,7 +771,7 @@ class LibrarySync():
     def updatePlayCounts(self):
         #update all playcounts from MB3 to Kodi library
         
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         WINDOW = xbmcgui.Window( 10000 )
         pDialog = None
         startedSync = datetime.today()
@@ -914,7 +914,7 @@ class LibrarySync():
                         showCurrent += 1
              
             if(playCountSyncFirstRun != "true"):
-                addon = xbmcaddon.Addon(id='plugin.video.mb3sync')                  
+                addon = xbmcaddon.Addon(id='plugin.video.emby')                  
                 addon.setSetting("SyncFirstCountsRunDone", "true")
                 
             # display notification if set up
@@ -946,7 +946,7 @@ class LibrarySync():
     def updatePlayCount(self,itemID,type):
         #update playcount of the itemID from MB3 to Kodi library
         
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         WINDOW = xbmcgui.Window( 10000 )
         #process movie
         if type=='Movie':

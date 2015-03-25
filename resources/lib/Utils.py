@@ -22,7 +22,7 @@ from API import API
 from PlayUtils import PlayUtils
 from DownloadUtils import DownloadUtils
 downloadUtils = DownloadUtils()
-addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
+addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
 language = addonSettings.getLocalizedString
 DATABASE_VERSION_HELIX = "90"   
  
@@ -49,7 +49,7 @@ def convertEncoding(data):
           
 
 def checkKodiSources():
-    addon       = xbmcaddon.Addon(id='plugin.video.mb3sync')
+    addon       = xbmcaddon.Addon(id='plugin.video.emby')
     addondir   = xbmc.translatePath( addon.getAddonInfo('profile') )
     dataPath = os.path.join(addondir,"library")
     movieLibrary        = os.path.join(dataPath,'movies')
@@ -210,7 +210,7 @@ def stopProfiling(pr, profileName):
     pr.disable()
     ps = pstats.Stats(pr)
     
-    addondir = xbmc.translatePath(xbmcaddon.Addon(id='plugin.video.mb3sync').getAddonInfo('profile'))    
+    addondir = xbmc.translatePath(xbmcaddon.Addon(id='plugin.video.emby').getAddonInfo('profile'))    
     
     fileTimeStamp = time.strftime("%Y-%m-%d %H-%M-%S")
     tabFileNamepath = os.path.join(addondir, "profiles")

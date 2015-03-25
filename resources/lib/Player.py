@@ -26,13 +26,13 @@ class Player( xbmc.Player ):
     
     def __init__( self, *args ):
         
-        self.settings = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        self.settings = xbmcaddon.Addon(id='plugin.video.emby')
         self.downloadUtils = DownloadUtils()
         try:
             self.logLevel = int(self.settings.getSetting('logLevel'))   
         except:
             pass        
-        self.printDebug("mb3sync Service -> starting playback monitor service",1)
+        self.printDebug("emby Service -> starting playback monitor service",1)
         self.played_information = {}
         pass    
         
@@ -40,14 +40,14 @@ class Player( xbmc.Player ):
         if(self.logLevel >= level):
             if(self.logLevel == 2):
                 try:
-                    xbmc.log("mb3sync " + str(level) + " -> " + inspect.stack()[1][3] + " : " + str(msg))
+                    xbmc.log("emby " + str(level) + " -> " + inspect.stack()[1][3] + " : " + str(msg))
                 except UnicodeEncodeError:
-                    xbmc.log("mb3sync " + str(level) + " -> " + inspect.stack()[1][3] + " : " + str(msg.encode('utf-8')))
+                    xbmc.log("emby " + str(level) + " -> " + inspect.stack()[1][3] + " : " + str(msg.encode('utf-8')))
             else:
                 try:
-                    xbmc.log("mb3sync " + str(level) + " -> " + str(msg))
+                    xbmc.log("emby " + str(level) + " -> " + str(msg))
                 except UnicodeEncodeError:
-                    xbmc.log("mb3sync " + str(level) + " -> " + str(msg.encode('utf-8')))        
+                    xbmc.log("emby " + str(level) + " -> " + str(msg.encode('utf-8')))        
     
     def hasData(self, data):
         if(data == None or len(data) == 0 or data == "None"):
@@ -60,15 +60,15 @@ class Player( xbmc.Player ):
         if(len(self.played_information) == 0):
             return 
             
-        addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
-        self.printDebug("mb3sync Service -> played_information : " + str(self.played_information))
+        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
+        self.printDebug("emby Service -> played_information : " + str(self.played_information))
         
         for item_url in self.played_information:
             data = self.played_information.get(item_url)
             
             if(data != None):
-                self.printDebug("mb3sync Service -> item_url  : " + item_url)
-                self.printDebug("mb3sync Service -> item_data : " + str(data))
+                self.printDebug("emby Service -> item_url  : " + item_url)
+                self.printDebug("emby Service -> item_data : " + str(data))
                 
                 runtime = data.get("runtime")
                 currentPosition = data.get("currentPosition")
@@ -79,11 +79,11 @@ class Player( xbmc.Player ):
 
                 if(currentPosition != None and self.hasData(runtime)):
                     runtimeTicks = int(runtime)
-                    self.printDebug("mb3sync Service -> runtimeticks:" + str(runtimeTicks))
+                    self.printDebug("emby Service -> runtimeticks:" + str(runtimeTicks))
                     percentComplete = (currentPosition * 10000000) / runtimeTicks
                     markPlayedAt = float(90) / 100    
 
-                    self.printDebug("mb3sync Service -> Percent Complete:" + str(percentComplete) + " Mark Played At:" + str(markPlayedAt))
+                    self.printDebug("emby Service -> Percent Complete:" + str(percentComplete) + " Mark Played At:" + str(markPlayedAt))
                     self.stopPlayback(data)
                     
                 if(refresh_id != None):
@@ -101,7 +101,7 @@ class Player( xbmc.Player ):
     
     def stopPlayback(self, data):
         self.printDebug("stopPlayback called")
-        addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
         
         item_id = data.get("item_id")
         audioindex = data.get("AudioStreamIndex")
@@ -138,9 +138,9 @@ class Player( xbmc.Player ):
         
         data = self.played_information.get(currentFile)
         
-        # only report playback if mb3sync has initiated the playback (item_id has value)
+        # only report playback if emby has initiated the playback (item_id has value)
         if(data != None and data.get("item_id") != None):
-            addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
+            addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
             
             item_id = data.get("item_id")
             audioindex = data.get("AudioStreamIndex")
@@ -193,12 +193,12 @@ class Player( xbmc.Player ):
         # Will be called when xbmc starts playing a file
         WINDOW = xbmcgui.Window( 10000 )
         self.stopAll()
-        addonSettings = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
         xbmcplayer = xbmc.Player()
         
         if xbmcplayer.isPlaying():
             currentFile = xbmcplayer.getPlayingFile()
-            self.printDebug("mb3sync Service -> onPlayBackStarted" + currentFile,2)
+            self.printDebug("emby Service -> onPlayBackStarted" + currentFile,2)
                        
             # grab all the info about this item from the stored windows props
             # only ever use the win props here, use the data map in all other places
@@ -245,8 +245,8 @@ class Player( xbmc.Player ):
             data["Type"] = itemType
             self.played_information[currentFile] = data
             
-            self.printDebug("mb3sync Service -> ADDING_FILE : " + currentFile)
-            self.printDebug("mb3sync Service -> ADDING_FILE : " + str(self.played_information))
+            self.printDebug("emby Service -> ADDING_FILE : " + currentFile)
+            self.printDebug("emby Service -> ADDING_FILE : " + str(self.played_information))
 
             # log some playback stats
             if(itemType != None):
@@ -271,7 +271,7 @@ class Player( xbmc.Player ):
         
     def onPlayBackEnded( self ):
         # Will be called when xbmc stops playing a file
-        self.printDebug("mb3sync Service -> onPlayBackEnded")
+        self.printDebug("emby Service -> onPlayBackEnded")
         
         #workaround when strm files are launched through the addon - mark watched when finished playing
         #TODO --> mark watched when 95% is played of the file
@@ -280,7 +280,7 @@ class Player( xbmc.Player ):
             try:
                 id = WINDOW.getProperty("virtualstrm")
                 type = WINDOW.getProperty("virtualstrmtype")
-                addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+                addon = xbmcaddon.Addon(id='plugin.video.emby')
                 port = addon.getSetting('port')
                 host = addon.getSetting('ipaddress')
                 server = host + ":" + port        
@@ -295,7 +295,7 @@ class Player( xbmc.Player ):
 
     def onPlayBackStopped( self ):
         # Will be called when user stops xbmc playing a file
-        self.printDebug("mb3sync Service -> onPlayBackStopped")
+        self.printDebug("emby Service -> onPlayBackStopped")
         self.stopAll()
 
     def seekToPosition(self, seekTo):

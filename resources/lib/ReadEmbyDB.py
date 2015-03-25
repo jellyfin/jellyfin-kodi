@@ -9,13 +9,13 @@ import json
 
 from DownloadUtils import DownloadUtils
 
-addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+addon = xbmcaddon.Addon(id='plugin.video.emby')
 
 class ReadEmbyDB():   
     def getMovies(self, id, fullinfo = False, fullSync = True):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
@@ -44,7 +44,7 @@ class ReadEmbyDB():
     def getMusicVideos(self, fullinfo = False, fullSync = True):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
@@ -73,7 +73,7 @@ class ReadEmbyDB():
     def getItem(self, id):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
@@ -90,7 +90,7 @@ class ReadEmbyDB():
     def getFullItem(self, id):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
@@ -107,7 +107,7 @@ class ReadEmbyDB():
     def getTVShows(self, fullinfo = False, fullSync = False):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
@@ -137,7 +137,7 @@ class ReadEmbyDB():
     def getTVShowSeasons(self, tvShowId):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
@@ -158,7 +158,7 @@ class ReadEmbyDB():
     def getEpisodes(self, showId, fullinfo = False):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
@@ -182,7 +182,7 @@ class ReadEmbyDB():
     def getLatestEpisodes(self,fullinfo = False):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
@@ -206,7 +206,7 @@ class ReadEmbyDB():
     def getCollections(self, type):
         #Build a list of the user views
         userid = DownloadUtils().getUserId()  
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
@@ -253,7 +253,7 @@ class ReadEmbyDB():
     def getViewCollections(self, type):
         #Build a list of the user views
         userid = DownloadUtils().getUserId()  
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
@@ -293,7 +293,7 @@ class ReadEmbyDB():
     def getBoxSets(self):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
@@ -314,7 +314,7 @@ class ReadEmbyDB():
     def getMoviesInBoxSet(self,boxsetId):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
