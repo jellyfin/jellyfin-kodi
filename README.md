@@ -1,9 +1,7 @@
-### Welcome to Emby Sync* Alpha! 
+### Welcome to Emby for Kodi
 **A whole new way to manage and view your media library.**
 
-EmbySync combines the best of Kodi - ultra smooth navigation, beautiful UIs and playback of any file under the sun, and Emby - the most powerful fully open source multi-client media metadata indexer and server.
-
-*The name for the project hasn't been decided yet. For now we use EmbySync as a workname but this may confuse users with the new sync feature in the Emby server. Have any suggestions? Please let us know!
+The Emby addon for Kodi combines the best of Kodi - ultra smooth navigation, beautiful UIs and playback of any file under the sun, and Emby - the most powerful fully open source multi-client media metadata indexer and server.
 
 **What does it do?**
 
@@ -12,7 +10,7 @@ With our current MediaBrowser addon for Kodi we have a couple of issues because 
 - Speed: when browsing the data has to be retrieved from the server. Especially on slower devices this can take too much time.
 - All kinds of workaround were needed to get the best experience on Kodi clients
 
-EmbySync synchronizes your media on your MediaBrowser (Emby) server to the native Kodi database. Because we use the native Kodi database with this new approach the above limitations are gone! You can browse your media full speed and all other Kodi addons will be able to "see" your media.
+The Emby addon synchronizes your media on your MediaBrowser (Emby) server to the native Kodi database. Because we use the native Kodi database with this new approach the above limitations are gone! You can browse your media full speed and all other Kodi addons will be able to "see" your media.
 
 **What is currently supported ?**
 
