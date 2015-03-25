@@ -433,34 +433,34 @@ class LibrarySync():
                             total = len(episodeData) + 1
                             count = 0         
 
-                    #we have to compare the lists somehow
-                    for item in episodeData:
-                        comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
-                        matchFound = False
-                        if kodiEpisodes != None:
-                            KodiItem = kodiEpisodes.get(comparestring1, None)
-                            if(KodiItem != None):
-                                matchFound = True
+                        #we have to compare the lists somehow
+                        for item in episodeData:
+                            comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
+                            matchFound = False
+                            if kodiEpisodes != None:
+                                KodiItem = kodiEpisodes.get(comparestring1, None)
+                                if(KodiItem != None):
+                                    matchFound = True
 
-                        progressAction = "Checking"
-                        if not matchFound:
-                            #no match so we have to create it
-                            WriteKodiDB().addEpisodeToKodiLibrary(item)
-                            updateNeeded = True
-                            progressAction = "Adding"
-                            totalItemsAdded += 1
-                            
-                        if(self.ShouldStop(pDialog)):
-                            return True                        
-                            
-                        # update progress bar
-                        if(pDialog != None):
-                            percentage = int(((float(count) / float(total)) * 100))
-                            pDialog.update(percentage, progressTitle, progressAction + " Episode: " + str(count))
-                            count += 1
-                            
-                    showCurrent += 1
-                    
+                            progressAction = "Checking"
+                            if not matchFound:
+                                #no match so we have to create it
+                                WriteKodiDB().addEpisodeToKodiLibrary(item)
+                                updateNeeded = True
+                                progressAction = "Adding"
+                                totalItemsAdded += 1
+                                
+                            if(self.ShouldStop(pDialog)):
+                                return True                        
+                                
+                            # update progress bar
+                            if(pDialog != None):
+                                percentage = int(((float(count) / float(total)) * 100))
+                                pDialog.update(percentage, progressTitle, progressAction + " Episode: " + str(count))
+                                count += 1
+                                
+                        showCurrent += 1
+                        
                 #initiate library update and wait for finish before processing any updates
                 if updateNeeded:
                     if(pDialog != None):
