@@ -231,7 +231,6 @@ class ReadEmbyDB():
         collections=[]
         
         if(jsonData == ""):
-            printDebug("No Json data")
             return []
         
         result = json.loads(jsonData)
