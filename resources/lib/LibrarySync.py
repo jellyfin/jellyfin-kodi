@@ -215,6 +215,7 @@ class LibrarySync():
                 allEmbyMovieIds = set(allEmbyMovieIds)
                 for kodiId in allKodiIds:
                     if not kodiId in allEmbyMovieIds:
+                        WINDOW.setProperty(kodiId,"deleted")
                         WriteKodiDB().deleteMovieFromKodiLibrary(kodiId)
                         cleanNeeded = True
                         totalItemsDeleted += 1
@@ -567,6 +568,7 @@ class LibrarySync():
                 allMB3EpisodeIds = set(allMB3EpisodeIds)
                 for episode in allKodiEpisodeIds:
                     if episode.get('episodeid') not in allMB3EpisodeIds:
+                        WINDOW.setProperty(episode.get('episodeid'),"deleted")
                         WriteKodiDB().deleteEpisodeFromKodiLibrary(episode.get('episodeid'),episode.get('tvshowid'))
                         cleanneeded = True
                         totalItemsDeleted += 1

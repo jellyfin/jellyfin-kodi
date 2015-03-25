@@ -45,15 +45,17 @@ class Kodi_Monitor(xbmc.Monitor):
                 if jsondata.get("type") == "episode":
                     episodeid = jsondata.get("id")
                     WINDOW = xbmcgui.Window( 10000 )
-                    MBlist = WINDOW.getProperty("episodeid" + str(episodeid)).split(";;")
-                    url='http://' + server + '/mediabrowser/Items?Ids=' + MBlist[1] + '&format=json'
-                    data = DownloadUtils().downloadUrl(url=url, suppress=True, popup=0)
-                    if data != "":
-                        return_value = xbmcgui.Dialog().yesno("Confirm Delete", "Delete: "+ MBlist[0] + "\n on Emby Server?\nEmbyID: " + MBlist[1])
-                        if return_value:
-                            url='http://' + server + '/mediabrowser/Items/' + MBlist[1]
-                            xbmc.log('Deleting via URL: ' + url)
-                            DownloadUtils().downloadUrl(url, type="DELETE")
+                    #ignore if the item has just been deleted by the background sync
+                    if not WINDOW.getProperty(episodeid,"deleted"):
+                        MBlist = WINDOW.getProperty("episodeid" + str(episodeid)).split(";;")
+                        url='http://' + server + '/mediabrowser/Items?Ids=' + MBlist[1] + '&format=json'
+                        data = DownloadUtils().downloadUrl(url=url, suppress=True, popup=0)
+                        if data != "":
+                            return_value = xbmcgui.Dialog().yesno("Confirm Delete", "Delete: "+ MBlist[0] + "\n on Emby Server?\nEmbyID: " + MBlist[1])
+                            if return_value:
+                                url='http://' + server + '/mediabrowser/Items/' + MBlist[1]
+                                xbmc.log('Deleting via URL: ' + url)
+                                DownloadUtils().downloadUrl(url, type="DELETE")
                 
                 
 
