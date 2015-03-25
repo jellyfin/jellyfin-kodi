@@ -100,7 +100,7 @@ class CreateFiles():
             if str(item.get("ParentIndexNumber")) != None:
                 filenamestr = self.CleanName(utils.convertEncoding(item.get("SeriesName"))) + " S" + str(item.get("ParentIndexNumber")) + "E" + str(item.get("IndexNumber")) + " (" + item["Id"] + ").nfo"
             else:
-                filenamestr = self.CleanName(utils.convertEncoding(item.get("SeriesName"))) + " S0E0 " + utils.convertEncoding(self.CleanName(item["Name"])) + " (" + item["Id"] + ").nfo"
+                filenamestr = self.CleanName(utils.convertEncoding(item.get("SeriesName"))) + " S0E0 " + self.CleanName(utils.convertEncoding(item["Name"])) + " (" + item["Id"] + ").nfo"
             nfoFile = os.path.join(itemPath,filenamestr)
             rootelement = "episodedetails"
             
@@ -297,13 +297,8 @@ class CreateFiles():
                             themeUrl =  PlayUtils().getPlayUrl(server,themeItems[0]["Id"],themeItems[0])
                             xbmcvfs.copy(themeUrl,themeFile)
         
-    def CleanName(self, name):
-        name = name.replace(":", "-")
-        name = name.replace("\\", "-")
-        name = name.replace("/", "-")
-        name = name.replace("*", "-")
-        name = name.replace("?", "-")
-        name = name.replace("<", "-")
-        name = name.replace(">", "-")
-        name = name.replace("|", "-")
-        return name    
+    def CleanName(self, filename):
+        validFilenameChars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+        cleanedFilename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore')
+        return ''.join(c for c in cleanedFilename if c in validFilenameChars)
+ 
