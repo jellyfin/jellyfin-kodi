@@ -33,7 +33,7 @@ class ReadEmbyDB():
         else:
             url = server + '/mediabrowser/Users/' + userid + '/items?ParentId=' + id + sortstring + '&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Movie&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1'
         
-        jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
+        jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=0)
         if jsonData != None and jsonData != "":
             result = json.loads(jsonData)
             if(result.has_key('Items')):
@@ -62,7 +62,7 @@ class ReadEmbyDB():
         else:
             url = server + '/mediabrowser/Users/' + userid + '/items?' + sortstring + '&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=MusicVideo&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1'
         
-        jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
+        jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=0)
         if jsonData != None and jsonData != "":
             result = json.loads(jsonData)
             if(result.has_key('Items')):
@@ -109,7 +109,7 @@ class ReadEmbyDB():
         else:
             url = server + '/mediabrowser/Users/' + userid + '/Items?' + sortstring + '&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1'
         
-        jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
+        jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=0)
         if jsonData != None and jsonData != "":
             result = json.loads(jsonData)
             if(result.has_key('Items')):
@@ -130,7 +130,7 @@ class ReadEmbyDB():
 
         url = 'http://' + server + '/Shows/' + tvShowId + '/Seasons?UserId=' + userid + '&format=json&ImageTypeLimit=1'
         
-        jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
+        jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=0)
         if jsonData != None and jsonData != "":
             result = json.loads(jsonData)
             if(result.has_key('Items')):
@@ -154,7 +154,7 @@ class ReadEmbyDB():
         else:
             url = server + '/mediabrowser/Users/' + userid + '/Items?ParentId=' + showId + '&IsVirtualUnaired=false&IsMissing=False&SortBy=SortName&Fields=Name,SortName,CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1'
         
-        jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
+        jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=0)
         
         if jsonData != None and jsonData != "":
             result = json.loads(jsonData)
@@ -178,7 +178,7 @@ class ReadEmbyDB():
         else:
             url = server + '/mediabrowser/Users/' + userid + '/Items?Limit=20&SortBy=DateCreated&IsVirtualUnaired=false&IsMissing=False&Fields=ParentId,Name,SortName,CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1'
         
-        jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
+        jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=0)
         
         if jsonData != None and jsonData != "":
             result = json.loads(jsonData)
@@ -243,7 +243,7 @@ class ReadEmbyDB():
         server = host + ":" + port
         
         viewsUrl = server + "/mediabrowser/Users/" + userid + "/Views?format=json&ImageTypeLimit=1"
-        jsonData = DownloadUtils().downloadUrl(viewsUrl, suppress=True, popup=0 )
+        jsonData = DownloadUtils().downloadUrl(viewsUrl, suppress=False, popup=0 )
         collections=[]
         
         if(jsonData != ""):
@@ -253,7 +253,7 @@ class ReadEmbyDB():
             for view in views:
                 if view.get("Type") == 'UserView': # Need to grab the real main node
                     newViewsUrl = server + '/mediabrowser/Users/' + userid + '/items?ParentId=' + view.get("Id") + '&SortBy=SortName&SortOrder=Ascending&format=json&ImageTypeLimit=1'
-                    jsonData = DownloadUtils().downloadUrl(newViewsUrl, suppress=True, popup=0 )
+                    jsonData = DownloadUtils().downloadUrl(newViewsUrl, suppress=False, popup=0 )
                     if(jsonData != ""):
                         newViews = json.loads(jsonData)
                         newViews = newViews.get("Items")
@@ -287,7 +287,7 @@ class ReadEmbyDB():
         
         url = server + '/mediabrowser/Users/' + userid + '/Items?SortBy=SortName&IsVirtualUnaired=false&IsMissing=False&Fields=Name,SortName,CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=BoxSet&format=json&ImageTypeLimit=1'
         
-        jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
+        jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=0)
         
         if jsonData != None and jsonData != "":
             result = json.loads(jsonData)
@@ -308,7 +308,7 @@ class ReadEmbyDB():
         
         url = server + '/mediabrowser/Users/' + userid + '/Items?ParentId=' + boxsetId + '&Fields=ItemCounts&format=json&ImageTypeLimit=1'
         
-        jsonData = downloadUtils.downloadUrl(url, suppress=True, popup=0)
+        jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=0)
         
         if jsonData != None and jsonData != "":
             result = json.loads(jsonData)

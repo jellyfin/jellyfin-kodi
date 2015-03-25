@@ -136,7 +136,7 @@ class WriteKodiDB():
         trailerUrl = None
         if MBitem.get("LocalTrailerCount") != None and MBitem.get("LocalTrailerCount") > 0:
             itemTrailerUrl = "http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + MBitem.get("Id") + "/LocalTrailers?format=json"
-            jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=True, popup=0 )
+            jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=False, popup=0 )
             if(jsonData != ""):
                 trailerItem = json.loads(jsonData)
                 if trailerItem[0].get("LocationType") == "FileSystem":
@@ -299,7 +299,7 @@ class WriteKodiDB():
         trailerUrl = None
         if MBitem.get("LocalTrailerCount") != None and MBitem.get("LocalTrailerCount") > 0:
             itemTrailerUrl = "http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + MBitem.get("Id") + "/LocalTrailers?format=json"
-            jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=True, popup=0 )
+            jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=False, popup=0 )
             if(jsonData != ""):
                 trailerItem = json.loads(jsonData)
                 trailerUrl = "plugin://plugin.video.mb3sync/?id=" + trailerItem[0].get("Id") + '&mode=play'

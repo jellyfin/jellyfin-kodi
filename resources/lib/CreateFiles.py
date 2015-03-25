@@ -227,7 +227,7 @@ class CreateFiles():
             trailerUrl = None
             if item.get("LocalTrailerCount") != None and item.get("LocalTrailerCount") > 0:
                 itemTrailerUrl = "http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + item.get("Id") + "/LocalTrailers?format=json"
-                jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=True, popup=0 )
+                jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=False, popup=0 )
                 if(jsonData != ""):
                     trailerItem = json.loads(jsonData)
                     if trailerItem[0].get("LocationType") == "FileSystem":
@@ -289,7 +289,7 @@ class CreateFiles():
             utils.logMsg("MB3 Syncer","creating Theme file " + themeFile,2)
             #theme music link
             themeMusicUrl = "http://" + server + "/mediabrowser/Items/" + item["Id"] + "/ThemeSongs?format=json"
-            jsonData = downloadUtils.downloadUrl(themeMusicUrl, suppress=True, popup=0 )
+            jsonData = downloadUtils.downloadUrl(themeMusicUrl, suppress=False, popup=0 )
             if(jsonData != ""):
                 themeMusic = json.loads(jsonData)           
                 if(themeMusic != None and themeMusic["TotalRecordCount"] > 0):

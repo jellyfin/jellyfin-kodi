@@ -211,7 +211,7 @@ class WebSocketThread(threading.Thread):
         userUrl = "http://" + host + ":" + port + "/mediabrowser/System/Info?format=json"
          
         downloadUtils = DownloadUtils()
-        jsonData = downloadUtils.downloadUrl(userUrl, suppress=True, popup=1 )
+        jsonData = downloadUtils.downloadUrl(userUrl, suppress=False, popup=1 )
         if(jsonData == ""):
             return -1
             
