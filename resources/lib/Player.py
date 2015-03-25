@@ -49,21 +49,6 @@ class Player( xbmc.Player ):
                 except UnicodeEncodeError:
                     xbmc.log("mb3sync " + str(level) + " -> " + str(msg.encode('utf-8')))        
     
-    def deleteItem (self, url):
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
-        __language__ = addon.getLocalizedString
-        return_value = xbmcgui.Dialog().yesno(__language__(30091),__language__(30092))
-        if return_value:
-            self.printDebug('Deleting via URL: ' + url,1)
-            progress = xbmcgui.DialogProgress()
-            progress.create(__language__(30052), __language__(30053))
-            self.downloadUtils.downloadUrl(url, type="DELETE")
-            progress.close()
-            xbmc.executebuiltin("Container.Refresh")
-            return 1
-        else:
-            return 0
-        
     def hasData(self, data):
         if(data == None or len(data) == 0 or data == "None"):
             return False
@@ -85,7 +70,6 @@ class Player( xbmc.Player ):
                 self.printDebug("mb3sync Service -> item_url  : " + item_url)
                 self.printDebug("mb3sync Service -> item_data : " + str(data))
                 
-                deleteurl = data.get("deleteurl")
                 runtime = data.get("runtime")
                 currentPosition = data.get("currentPosition")
                 item_id = data.get("item_id")
@@ -102,12 +86,6 @@ class Player( xbmc.Player ):
                     self.printDebug("mb3sync Service -> Percent Complete:" + str(percentComplete) + " Mark Played At:" + str(markPlayedAt))
                     self.stopPlayback(data)
                     
-                    if (percentComplete > markPlayedAt):
-                        gotDeleted = 0
-                        if(deleteurl != None and deleteurl != ""):
-                            self.printDebug("mb3sync Service -> Offering Delete:" + str(deleteurl))
-                            gotDeleted = self.deleteItem(deleteurl)
-                
                 if(refresh_id != None):
                     #report updates playcount and resume status to Kodi and MB3
                     librarySync.updatePlayCount(item_id,type)
@@ -224,7 +202,6 @@ class Player( xbmc.Player ):
                        
             # grab all the info about this item from the stored windows props
             # only ever use the win props here, use the data map in all other places
-            deleteurl = WINDOW.getProperty(currentFile + "deleteurl")
             runtime = WINDOW.getProperty(currentFile + "runtimeticks")
             item_id = WINDOW.getProperty(currentFile + "item_id")
             refresh_id = WINDOW.getProperty(currentFile + "refresh_id")
@@ -258,7 +235,6 @@ class Player( xbmc.Player ):
             
             # save data map for updates and position calls
             data = {}
-            data["deleteurl"] = deleteurl
             data["runtime"] = runtime
             data["item_id"] = item_id
             data["refresh_id"] = refresh_id
