@@ -50,6 +50,8 @@ class Player( xbmc.Player ):
                     xbmc.log("mb3sync " + str(level) + " -> " + str(msg.encode('utf-8')))        
     
     def deleteItem (self, url):
+        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        __language__ = addon.getLocalizedString
         return_value = xbmcgui.Dialog().yesno(__language__(30091),__language__(30092))
         if return_value:
             self.printDebug('Deleting via URL: ' + url,1)
