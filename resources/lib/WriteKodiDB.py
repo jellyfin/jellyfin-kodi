@@ -168,6 +168,10 @@ class WriteKodiDB():
         CreateFiles().createSTRM(MBitem)
         CreateFiles().createNFO(MBitem)
         
+        #add theme music
+        if addon.getSetting("syncThemeMusic") == "true":
+            CreateFiles().copyThemeMusic(MBitem)
+        
         if(changes):
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"], level=0)
             
@@ -307,6 +311,10 @@ class WriteKodiDB():
         CreateFiles().createSTRM(MBitem)
         CreateFiles().createNFO(MBitem)
         
+        #add theme music
+        if addon.getSetting("syncThemeMusic") == "true":
+            CreateFiles().copyThemeMusic(MBitem)
+        
         if changes:
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
         
@@ -367,6 +375,10 @@ class WriteKodiDB():
         self.updateSeasonArtwork(MBitem, KodiItem)
         
         CreateFiles().createNFO(MBitem)
+        
+        #add theme music
+        if addon.getSetting("syncThemeMusic") == "true":
+            CreateFiles().copyThemeMusic(MBitem)
         
         if changes:
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
@@ -683,9 +695,6 @@ class WriteKodiDB():
         # create strm file
         changes |= CreateFiles().createSTRM(item)
         
-        #add theme music
-        CreateFiles().copyThemeMusic(item)
-        
         if changes:
             utils.logMsg("MB3 Sync","Added movie to Kodi Library",item["Id"] + " - " + item["Name"])
     
@@ -770,9 +779,6 @@ class WriteKodiDB():
             
         #create nfo file
         changes = CreateFiles().createNFO(item)
-        
-        #add theme music
-        CreateFiles().copyThemeMusic(item)
         
         if changes:
             utils.logMsg("Added TV Show to Kodi Library ",item["Id"] + " - " + item["Name"])

@@ -12,7 +12,7 @@
     <string id="30010">Enable Performance Profiling</string>
     <string id="30011">Local caching system</string>
 
-    <string id="30014">MediaBrowser</string>
+    <string id="30014">Emby</string>
     <string id="30015">Network</string>    
     <string id="30016">Device Name</string>        
 
@@ -232,6 +232,10 @@
     <string id="30232">http://tinyurl.com/knfus2x</string>
     <string id="30233">Don't Show Skin Compatibility Message</string>
     <string id="30234">Add Show Name (Season + Episode)</string>
+    
+    <string id="30235">Extras</string>
+    <string id="30236">Sync Theme Music</string>
+    <string id="30237">Sync Extra Fanart</string>
     
 	<!-- Default views -->
     <string id="30300">Active</string>              
