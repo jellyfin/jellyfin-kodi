@@ -14,6 +14,7 @@ from DownloadUtils import DownloadUtils
 downloadUtils = DownloadUtils()
 from PlayUtils import PlayUtils
 from ReadKodiDB import ReadKodiDB
+from ReadEmbyDB import ReadEmbyDB
 from API import API
 import Utils as utils
 import os
@@ -50,11 +51,17 @@ class PlaybackUtils():
         resume_result = 0
         seekTime = 0
         
-        #get the resume point from Kodi DB
+        #get the resume point from Kodi DB for a Movie
         kodiItem = ReadKodiDB().getKodiMovie(id)
         if kodiItem != None:
             seekTime = int(round(kodiItem['resume'].get("position")))
-
+        else:
+            #get the resume point from Kodi DB for an episode
+            episodeItem = ReadEmbyDB().getItem(id)
+            kodiItem = ReadKodiDB().getKodiEpisodeByMbItem(id,episodeItem["SeriesId"])
+            if kodiItem != None:
+                seekTime = int(round(kodiItem['resume'].get("position")))
+        
         playurl = PlayUtils().getPlayUrl(server, id, result)
         
         isStrmFile = False

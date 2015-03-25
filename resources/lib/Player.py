@@ -306,8 +306,8 @@ class Player( xbmc.Player ):
         count = 0
         while xbmc.Player().getTime() < (seekToTime - 5) and count < 11: # only try 10 times
             count = count + 1
-            xbmc.Player().pause
+            #xbmc.Player().pause()
             xbmc.sleep(100)
             xbmc.Player().seekTime(seekToTime)
             xbmc.sleep(100)
-            xbmc.Player().play()
+            #xbmc.Player().play()
