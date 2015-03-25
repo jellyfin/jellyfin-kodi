@@ -5,12 +5,12 @@ The Emby addon for Kodi combines the best of Kodi - ultra smooth navigation, bea
 
 **What does it do?**
 
-With our current MediaBrowser addon for Kodi we have a couple of issues because you browse your media as a "video addon":
+With the old MediaBrowser addon for Kodi we have a couple of issues because you browse your media as a "video addon":
 - 3th party addons such as NextAired, remote apps etc. won't work
 - Speed: when browsing the data has to be retrieved from the server. Especially on slower devices this can take too much time.
 - All kinds of workaround were needed to get the best experience on Kodi clients
 
-The Emby addon synchronizes your media on your MediaBrowser (Emby) server to the native Kodi database. Because we use the native Kodi database with this new approach the above limitations are gone! You can browse your media full speed and all other Kodi addons will be able to "see" your media.
+The new Emby addon synchronizes your media on your MediaBrowser (Emby) server to the native Kodi database. Because we use the native Kodi database with this new approach the above limitations are gone! You can browse your media full speed and all other Kodi addons will be able to "see" your media.
 
 **What is currently supported ?**
 
