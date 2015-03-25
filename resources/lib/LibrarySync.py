@@ -74,15 +74,17 @@ class LibrarySync():
     
     def MoviesSync(self, fullsync=True):
         
-        addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+        
         WINDOW = xbmcgui.Window( 10000 )
         pDialog = None
         startedSync = datetime.today()
         
         try:
+            addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
             dbSyncIndication = addon.getSetting("dbSyncIndication")
+            dbSyncFirstRun = addon.getSetting("SyncFirstMovieRunDone")
                 
-            if(addon.getSetting("SyncFirstMovieRunDone") != "true" or dbSyncIndication == "Dialog Progress"):
+            if(dbSyncFirstRun != "true" or dbSyncIndication == "Dialog Progress"):
                 pDialog = xbmcgui.DialogProgress()
             elif(dbSyncIndication == "BG Progress"):
                 pDialog = xbmcgui.DialogProgressBG()
@@ -224,7 +226,9 @@ class LibrarySync():
             if cleanNeeded:
                 self.doKodiLibraryUpdate(True, pDialog)
         
-            addon.setSetting("SyncFirstMovieRunDone", "true")
+            if(dbSyncFirstRun != "true"):
+                addon = xbmcaddon.Addon(id='plugin.video.mb3sync') #force a new instance of the addon
+                addon.setSetting("SyncFirstMovieRunDone", "true")
             
             # display notification if set up
             notificationString = ""
@@ -263,8 +267,9 @@ class LibrarySync():
         
         try:
             dbSyncIndication = addon.getSetting("dbSyncIndication")
+            dbSyncFirstRun = addon.getSetting("SyncFirstTVRunDone")
                 
-            if(addon.getSetting("SyncFirstTVRunDone") != "true" or dbSyncIndication == "Dialog Progress"):
+            if(dbSyncFirstRun != "true" or dbSyncIndication == "Dialog Progress"):
                 pDialog = xbmcgui.DialogProgress()
             elif(dbSyncIndication == "BG Progress"):
                 pDialog = xbmcgui.DialogProgressBG()
@@ -581,7 +586,9 @@ class LibrarySync():
                 if cleanNeeded:
                     self.doKodiLibraryUpdate(True, pDialog)
           
-            addon.setSetting("SyncFirstTVRunDone", "true")
+            if(dbSyncFirstRun != "true"):
+                addon = xbmcaddon.Addon(id='plugin.video.mb3sync') #force a new instance of the addon
+                addon.setSetting("SyncFirstTVRunDone", "true")          
 
             # display notification if set up
             notificationString = ""
@@ -619,8 +626,9 @@ class LibrarySync():
         
         try:
             dbSyncIndication = addon.getSetting("dbSyncIndication")
+            dbSyncFirstRun = addon.getSetting("SyncFirstMusicVideoRunDone")
                 
-            if(addon.getSetting("SyncFirstMusicVideoRunDone") != "true" or dbSyncIndication == "Dialog Progress"):
+            if(dbSyncFirstRun != "true" or dbSyncIndication == "Dialog Progress"):
                 pDialog = xbmcgui.DialogProgress()
             elif(dbSyncIndication == "BG Progress"):
                 pDialog = xbmcgui.DialogProgressBG()
@@ -736,7 +744,9 @@ class LibrarySync():
             if cleanNeeded:
                 self.doKodiLibraryUpdate(True, pDialog)
         
-            addon.setSetting("SyncFirstMusicVideoRunDone", "true")
+            if(dbSyncFirstRun != "true"):
+                addon = xbmcaddon.Addon(id='plugin.video.mb3sync')
+                addon.setSetting("SyncFirstMusicVideoRunDone", "true")
             
         finally:
             if(pDialog != None):
@@ -768,8 +778,9 @@ class LibrarySync():
         
         try:
             playCountSyncIndication = addon.getSetting("playCountSyncIndication")
+            playCountSyncFirstRun = addon.getSetting("SyncFirstCountsRunDone")
                 
-            if(addon.getSetting("SyncFirstCountsRunDone") != "true" or playCountSyncIndication == "Dialog Progress"):
+            if(playCountSyncFirstRun != "true" or playCountSyncIndication == "Dialog Progress"):
                 pDialog = xbmcgui.DialogProgress()
             elif(playCountSyncIndication == "BG Progress"):
                 pDialog = xbmcgui.DialogProgressBG()
@@ -899,8 +910,10 @@ class LibrarySync():
                                 count += 1
                                 
                         showCurrent += 1
-                        
-            addon.setSetting("SyncFirstCountsRunDone", "true")
+             
+            if(playCountSyncFirstRun != "true"):
+                addon = xbmcaddon.Addon(id='plugin.video.mb3sync')                  
+                addon.setSetting("SyncFirstCountsRunDone", "true")
                 
             # display notification if set up
             notificationString = ""
