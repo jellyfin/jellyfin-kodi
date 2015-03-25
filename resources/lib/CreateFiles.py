@@ -12,6 +12,9 @@ import time
 from calendar import timegm
 from datetime import datetime
 
+import string
+import unicodedata
+
 from xml.etree.ElementTree import Element, SubElement, Comment, tostring
 from xml.etree import ElementTree
 from xml.dom import minidom
