@@ -10,7 +10,7 @@ With the old MediaBrowser addon for Kodi we have a couple of issues because you 
 - Speed: when browsing the data has to be retrieved from the server. Especially on slower devices this can take too much time.
 - All kinds of workaround were needed to get the best experience on Kodi clients
 
-The new Emby addon synchronizes your media on your MediaBrowser (Emby) server to the native Kodi database. Because we use the native Kodi database with this new approach the above limitations are gone! You can browse your media full speed and all other Kodi addons will be able to "see" your media.
+The new Emby addon synchronizes your media on your Emby server to the native Kodi database. Because we use the native Kodi database with this new approach the above limitations are gone! You can browse your media full speed and all other Kodi addons will be able to "see" your media.
 
 **What is currently supported ?**
 
@@ -19,7 +19,7 @@ We're still in beta stage of development. Currently this features are working:
 - TV Shows
 - MusicVideos
 - Full sync at first run (import), background syncs configurable by the user in the addonsetting. The current default is that it will do a full sync on the background every couple of minutes.
-- Deletions are supported: Items that are deleted on the MB3 server will be deleted on the Kodi database. Deletions done from the Kodi client TO the Emby server is only supported if you enable file deletions in the Kodi settings. An additional warning will be diaplayed if you really want to remove the item from the Emby server.
+- Deletions are supported: Items that are deleted on the Emby server will be deleted on the Kodi database. Deletions done from the Kodi client TO the Emby server is only supported if you enable file deletions in the Kodi settings. An additional warning will be diaplayed if you really want to remove the item from the Emby server.
 - Watched state/resume status sync: This is a 2-way synchronisation. Any watched state or resume status will be instantly (within seconds) reflected to or from Kodi and the server.
 
 
@@ -43,7 +43,7 @@ The addon is not (and will not be) compatible with the MySQL database replacemen
 
 **Important note about user collections/nodes**
 
-Emby has the ability to create custom nodes/folders for your Media, such as having a seperate folder for your "Kids Movies" etc. In Kodi this isn't supported, you just have "movies" or "tvshows". But... Kodi let's you create your own playlists and tags to get this same experience. During the sync the foldernode from the MB3 server is added to the movies that are imported. In Kodi you can browse to Movie library --> tags and you will have a filtered result that points at your custom node. If you have a skin that let's you create any kind of shortcut on the homescreen you can simply create a shortcut to that tag. Another possibility is to create a "smart playlist" with Kodi and set it to show the content of a certain tag. 
+Emby has the ability to create custom nodes/folders for your Media, such as having a seperate folder for your "Kids Movies" etc. In Kodi this isn't supported, you just have "movies" or "tvshows". But... Kodi let's you create your own playlists and tags to get this same experience. During the sync the foldernode from the Emby server is added to the movies that are imported. In Kodi you can browse to Movie library --> tags and you will have a filtered result that points at your custom node. If you have a skin that let's you create any kind of shortcut on the homescreen you can simply create a shortcut to that tag. Another possibility is to create a "smart playlist" with Kodi and set it to show the content of a certain tag. 
 
 At this point, please hold on to your feature requests and report bugs only.
 
