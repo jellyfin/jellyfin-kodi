@@ -84,10 +84,10 @@ def checkKodiSources():
     return True
 
 def KodiSQL():
-    if xbmc.getinfolabel("System.BuildVersion").startswith("13"):
+    if xbmc.getInfoLabel("System.BuildVersion").startswith("13"):
         #gotham
         dbVersion = "78"
-    if xbmc.getinfolabel("System.BuildVersion").startswith("15"):
+    if xbmc.getInfoLabel("System.BuildVersion").startswith("15"):
         #isengard
         dbVersion = "91"
     else: 
@@ -100,7 +100,7 @@ def KodiSQL():
     if xbmcvfs.exists(settingsFile):
         tree = ET.ElementTree(file=settingsFile)
         root = tree.getroot()
-        video = root.find("videolibrary")
+        video = root.find("videodatabase")
         if video != None:
             mysql = video.find("type")
             if mysql != None:
@@ -113,13 +113,6 @@ def KodiSQL():
                     db_name = video.find("name").text
                 else:
                     db_name = "MyVideos"
-            
-            SubElement(video, "importwatchedstate").text = "true"
-        if video.find("importresumepoint") == None:
-            writeNeeded = True
-            SubElement(video, "importresumepoint").text = "true"
-    
-    
     if useMySQL:
         import local.mysql.connector as database
         connection = database.connect(dbPath)
