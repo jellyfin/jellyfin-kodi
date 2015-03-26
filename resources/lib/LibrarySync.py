@@ -165,15 +165,7 @@ class LibrarySync():
                     pDialog.update(0, progressTitle, "")
                     total = len(allMB3Movies) + 1
                     count = 1                    
-                
-                # process box sets - TODO cope with movies removed from a set
-                boxsets = ReadEmbyDB().getBoxSets()
-                for boxset in boxsets:
-                    boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
-                    WriteKodiDB().addBoxsetToKodiLibrary(boxset)
-                    for boxsetMovie in boxsetMovies:
-                        WriteKodiDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset)
-                
+
                 #process updates
                 allKodiMovies = ReadKodiDB().getKodiMovies(True)
                 for item in allMB3Movies:
@@ -199,6 +191,21 @@ class LibrarySync():
                             count += 1
                 
                 viewCurrent += 1
+                
+            # process box sets - TODO cope with movies removed from a set
+            if fullsync and addon.getSetting("syncMovieBoxSets") == "true":
+                utils.logMsg("Sync Movies", "BoxSet Sync Started", 1)
+                boxsets = ReadEmbyDB().getBoxSets()
+                for boxset in boxsets:
+                    if(self.ShouldStop(pDialog)):
+                        return True                
+                    boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
+                    WriteKodiDB().addBoxsetToKodiLibrary(boxset)
+                    for boxsetMovie in boxsetMovies:
+                        if(self.ShouldStop(pDialog)):
+                            return True
+                        WriteKodiDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset)
+                utils.logMsg("Sync Movies", "BoxSet Sync Finished", 1)                
                 
             if(pDialog != None):
                 progressTitle = "Removing Deleted Items"
