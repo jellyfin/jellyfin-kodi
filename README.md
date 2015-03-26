@@ -6,7 +6,7 @@ The Emby addon for Kodi combines the best of Kodi - ultra smooth navigation, bea
 **What does it do?**
 
 With the old MediaBrowser addon for Kodi we have a couple of issues because you browse your media as a "video addon":
-- 3th party addons such as NextAired, remote apps etc. won't work
+- 3rd party addons such as NextAired, remote apps etc. won't work
 - Speed: when browsing the data has to be retrieved from the server. Especially on slower devices this can take too much time.
 - All kinds of workaround were needed to get the best experience on Kodi clients
 
@@ -14,14 +14,16 @@ The new Emby addon synchronizes your media on your Emby server to the native Kod
 
 **What is currently supported ?**
 
-We're still in beta stage of development. Currently this features are working:
+We're still in beta stage of development. Currently these features are working:
 - Movies
+- Sets
 - TV Shows
 - MusicVideos
 - Full sync at first run (import), background syncs configurable by the user in the addonsetting. The current default is that it will do a full sync on the background every couple of minutes.
 - Deletions are supported: Items that are deleted on the Emby server will be deleted on the Kodi database. Deletions done from the Kodi client TO the Emby server is only supported if you enable file deletions in the Kodi settings. An additional warning will be diaplayed if you really want to remove the item from the Emby server.
 - Watched state/resume status sync: This is a 2-way synchronisation. Any watched state or resume status will be instantly (within seconds) reflected to or from Kodi and the server.
-
+- Possibility to copy Theme Music locally for use with the TVTunes addon
+- Possibility to copy ExtraFanart (rotating backgrounds) across for use with skins that support it
 
 **To get started with the Emby addon for Kodi, first follow these guides to set up Emby and Kodi:**
 
@@ -29,7 +31,7 @@ We're still in beta stage of development. Currently this features are working:
 2. If you were using a modded skin for the MediaBrowser addon, make sure to set it in "normal Kodi mode" or just install the unmodded version of the skin.
 3. Install the MediaBrowser/Emby BETA repository for Kodi, from the repo install the Emby addon.
 4. Within a few seconds you should be prompted for your server-details (or auto discovered). If not, try to restart Kodi
-5. Once you're succesfully authenticated to your MediaBrowser/Emby server, the initial sync will start. 
+5. Once you're succesfully authenticated to your Emby server, the initial sync will start. 
 6. The first sync of the Emby server to local Kodi database may take some time.  On a powerful machine and fast network, expect around 15-45 minutes.  On a slow machine (such as a Raspberry Pi) the first sync may take up to two hours.
 7. Once the full sync is done, you can browse your media in Kodi, syncs will be automatically done in the background.
 

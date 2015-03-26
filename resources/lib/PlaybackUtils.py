@@ -58,9 +58,10 @@ class PlaybackUtils():
         else:
             #get the resume point from Kodi DB for an episode
             episodeItem = ReadEmbyDB().getItem(id)
-            kodiItem = ReadKodiDB().getKodiEpisodeByMbItem(id,episodeItem["SeriesId"])
-            if kodiItem != None:
-                seekTime = int(round(kodiItem['resume'].get("position")))
+            if episodeItem != None and str(episodeItem["Type"]) == "Episode":
+                kodiItem = ReadKodiDB().getKodiEpisodeByMbItem(id,episodeItem["SeriesId"])
+                if kodiItem != None:
+                    seekTime = int(round(kodiItem['resume'].get("position")))
         
         playurl = PlayUtils().getPlayUrl(server, id, result)
         
