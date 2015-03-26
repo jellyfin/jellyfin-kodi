@@ -43,30 +43,44 @@ class LibrarySync():
             startupDone = True
         
         #are we running startup sync or background sync ?
-        if not startupDone:
-            syncOption = addon.getSetting("syncSettingStartup")
-        else:
-            syncOption = addon.getSetting("syncSettingBackground")
+        #if not startupDone:
+         #   syncOption = addon.getSetting("syncSettingStartup")
+        #else:
+         #   syncOption = addon.getSetting("syncSettingBackground")
         
         #what sync method to perform ?
-        if syncOption == "Full Sync":
+        #if syncOption == "Full Sync":
         
             #pr = utils.startProfiling()
-            self.MoviesSync(True)
+         #   self.MoviesSync(True)
             #utils.stopProfiling(pr, "MoviesSync(True)")
             
             #pr = utils.startProfiling()
-            self.TvShowsSync(True)
+          #  self.TvShowsSync(True)
             #utils.stopProfiling(pr, "TvShowsSync(True)")
             
             #pr = utils.startProfiling()
-            self.MusicVideosSync(True)
+           # self.MusicVideosSync(True)
             #utils.stopProfiling(pr, "MusicVideosSync(True)")
             
-        if syncOption == "Incremental Sync":
+        #if syncOption == "Incremental Sync":
+         #   self.MoviesSync(False)
+          #  self.TvShowsSync(False)
+           # self.MusicVideosSync(False)
+        
+        # Do incremental sync followed by full sync
+        if not startupDone:
+            self.MoviesSync(True)
+            self.TvShowsSync(True)
+            self.MusicVideosSync(True)  
+        else:
             self.MoviesSync(False)
             self.TvShowsSync(False)
             self.MusicVideosSync(False)
+        
+            self.MoviesSync(True)
+            self.TvShowsSync(True)
+            self.MusicVideosSync(True)   
         
         WINDOW.setProperty("startup", "done")
                         
