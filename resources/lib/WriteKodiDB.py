@@ -818,9 +818,8 @@ class WriteKodiDB():
         #season poster and banner are set by the nfo. landscape image is filled by this method
         #if wanted this feature can be extended to also update the other artwork
         tvshowid = KodiItem["tvshowid"]
-        
-        dbPath = xbmc.translatePath("special://userdata/Database/MyVideos%s.db" % utils.DATABASE_VERSION_HELIX)
-        connection = sqlite3.connect(dbPath)
+
+        connection = utils.KodiSQL()
         cursor = connection.cursor( )
         
         seasonData = ReadEmbyDB().getTVShowSeasons(MBitem["Id"])
@@ -848,8 +847,7 @@ class WriteKodiDB():
         
         utils.logMsg("MB3 Sync","setting resume point in kodi db..." + fileType + ": " + str(id))
         xbmc.sleep(sleepVal)
-        dbPath = xbmc.translatePath("special://userdata/Database/MyVideos%s.db" % utils.DATABASE_VERSION_HELIX)
-        connection = sqlite3.connect(dbPath)
+        connection = utils.KodiSQL()
         cursor = connection.cursor( )
         
         if fileType == "episode":
@@ -901,10 +899,7 @@ class WriteKodiDB():
         utils.logMsg("AddActorsToMedia", "List needs updating")
         
         xbmc.sleep(sleepVal)
-        
-        dbPath = xbmc.translatePath("special://userdata/Database/MyVideos%s.db" % utils.DATABASE_VERSION_HELIX)
-        
-        connection = sqlite3.connect(dbPath)
+        connection = utils.KodiSQL()
         cursor = connection.cursor()
         
         if(people != None):
@@ -942,9 +937,7 @@ class WriteKodiDB():
     
     def addBoxsetToKodiLibrary(self, boxset):
         #use sqlite to set add the set 
-        dbPath = xbmc.translatePath("special://userdata/Database/MyVideos%s.db" % utils.DATABASE_VERSION_HELIX)
-        
-        connection = sqlite3.connect(dbPath)
+        connection = utils.KodiSQL()
         cursor = connection.cursor() 
         
         strSet = boxset["Name"]
