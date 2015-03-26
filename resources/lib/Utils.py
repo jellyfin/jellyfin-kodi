@@ -95,36 +95,36 @@ def KodiSQL():
         dbVersion = "90"
     
     #find out if we should use MySQL
-    useMySQL = False
-    settingsFile = xbmc.translatePath( "special://profile/advancedsettings.xml" )
-    if xbmcvfs.exists(settingsFile):
-        tree = ET.ElementTree(file=settingsFile)
-        root = tree.getroot()
-        video = root.find("videodatabase")
-        if video != None:
-            mysql = video.find("type")
-            if mysql != None:
-                useMySQL = True
-                db_port = video.find("port").text
-                db_host = video.find("host").text
-                db_user = video.find("user").text
-                db_pass = video.find("pass").text
-                if video.find("name") != None:
-                    db_name = video.find("name").text
-                else:
-                    db_name = "MyVideos"
-    if useMySQL:
-        import local.mysql.connector as database
-        connection = database.connect(dbPath)
-        connection = database.connect(db = db_name, user = db_user, passwd = db_pass, host = db_host, port = db_port)
-        connection.set_charset('utf8')
-        connection.set_unicode(True)
-
-    else:
-        import sqlite3 as database
-        dbPath = xbmc.translatePath("special://userdata/Database/MyVideos" + dbVersion + ".db")
-        connection = database.connect(dbPath)
-
+    # MySQL support not working! Todo for a (very) rainy day...
+    # useMySQL = False
+    # settingsFile = xbmc.translatePath( "special://profile/advancedsettings.xml" )
+    # if xbmcvfs.exists(settingsFile):
+        # tree = ET.ElementTree(file=settingsFile)
+        # root = tree.getroot()
+        # video = root.find("videodatabase")
+        # if video != None:
+            # mysql = video.find("type")
+            # if mysql != None:
+                # useMySQL = True
+                # db_host = video.find("host").text              
+                # db_user = video.find("user").text
+                # db_pass = video.find("pass").text
+                # if video.find("name") != None:
+                    # db_name = video.find("name").text
+                # else:
+                    # db_name = "myvideos" + dbVersion
+    # if useMySQL:
+        # import mysql.connector as database
+        # connection = database.connect(db = db_name, user = db_user, passwd = db_pass, host = db_host)
+    # else:
+        # import sqlite3 as database
+        # dbPath = xbmc.translatePath("special://userdata/Database/MyVideos" + dbVersion + ".db")
+        # connection = database.connect(dbPath)
+    
+    import sqlite3 as database
+    dbPath = xbmc.translatePath("special://userdata/Database/MyVideos" + dbVersion + ".db")
+    connection = database.connect(dbPath)
+    
     return connection
         
         
@@ -132,25 +132,17 @@ def addKodiSource(name, path, type):
     #add new source to database, common way is to add it directly to the Kodi DB. Fallback to adding it to the sources.xml
     #return boolean wether a manual reboot is required.
     #todo: Do feature request with Kodi team to get support for adding a source by the json API
-    
-    
-    error = False
-    if xbmcvfs.exists(dbPath):
-        try:
-            connection = KodiSQL()
-            cursor = connection.cursor( )
-            cursor.execute("select coalesce(max(idPath),0) as pathId from path")
-            pathId =  cursor.fetchone()[0]
-            pathId = pathId + 1
-            pathsql="insert into path(idPath, strPath, strContent, strScraper, strHash, scanRecursive) values(?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (pathId,path + os.sep,type,"metadata.local",None,2147483647))
-            connection.commit()
-            cursor.close()
-        except:
-            error = True
-    else:
-        error = True
-    
+
+    connection = KodiSQL()
+    cursor = connection.cursor( )
+    cursor.execute("select coalesce(max(idPath),0) as pathId from path")
+    pathId =  cursor.fetchone()[0]
+    pathId = pathId + 1
+    pathsql="insert into path(idPath, strPath, strContent, strScraper, strHash, scanRecursive) values(?, ?, ?, ?, ?, ?)"
+    cursor.execute(pathsql, (pathId,path + os.sep,type,"metadata.local",None,2147483647))
+    connection.commit()
+    cursor.close()
+
     # add it to sources.xml
     sourcesFile = xbmc.translatePath( "special://profile/sources.xml" )
     
