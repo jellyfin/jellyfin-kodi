@@ -95,6 +95,7 @@ def KodiSQL():
         dbVersion = "90"
     
     #find out if we should use MySQL
+    useMySQL = False
     settingsFile = xbmc.translatePath( "special://profile/advancedsettings.xml" )
     if xbmcvfs.exists(settingsFile):
         tree = ET.ElementTree(file=settingsFile)
