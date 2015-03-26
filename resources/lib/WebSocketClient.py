@@ -14,6 +14,7 @@ import websocket
 from ClientInformation import ClientInformation
 from DownloadUtils import DownloadUtils
 from PlaybackUtils import PlaybackUtils
+from LibrarySync import LibrarySync
 
 _MODE_BASICPLAY=12
 
@@ -126,11 +127,10 @@ class WebSocketThread(threading.Thread):
             self.logMsg("Stopping Client NO Object ERROR")
             
     def on_message(self, ws, message):
-        self.logMsg("Message : " + str(message))
+        self.logMsg("Message : " + str(message), 0)
         result = json.loads(message)
         
         messageType = result.get("MessageType")
-        playCommand = result.get("PlayCommand")
         data = result.get("Data")
         
         if(messageType != None and messageType == "Play" and data != None):
@@ -174,7 +174,12 @@ class WebSocketThread(threading.Thread):
                 self.logMsg("Playback Seek : " + str(seekPositionTicks))
                 seekTime = (seekPositionTicks / 1000) / 10000
                 xbmc.Player().seekTime(seekTime)
-
+                
+        elif(messageType != None and messageType == "UserDataChanged"):
+            # for now just do a full playcount sync
+            self.logMsg("Message : Doing UserDataChanged calling updatePlayCounts()", 0)
+            LibrarySync().updatePlayCounts()
+            
         
     def on_error(self, ws, error):
         self.logMsg("Error : " + str(error))
