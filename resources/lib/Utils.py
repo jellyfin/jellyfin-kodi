@@ -55,6 +55,28 @@ def checkKodiSources():
     tvLibrary           = os.path.join(dataPath,'tvshows')
     musicvideoLibrary = os.path.join(dataPath,'musicvideos')
     
+    # If no folder exists at the time, create it.
+    if xbmcvfs.exists(addondir) == False:
+        xbmcvfs.mkdir(addondir)
+        xbmc.log("Manually created %s" % addondir)
+    
+    if not xbmcvfs.exists(dataPath + os.sep):
+        xbmcvfs.mkdir(dataPath)
+    if not xbmcvfs.exists(movieLibrary + os.sep):
+        xbmcvfs.mkdir(movieLibrary)
+        addKodiSource("mediabrowser_movies",movieLibrary,"movies")
+    if not xbmcvfs.exists(tvLibrary + os.sep):
+        xbmcvfs.mkdir(tvLibrary)
+        addKodiSource("mediabrowser_tvshows",tvLibrary,"tvshows")
+    if not xbmcvfs.exists(musicvideoLibrary + os.sep):
+        xbmcvfs.mkdir(musicvideoLibrary)
+        addKodiSource("mediabrowser_musicvideos",musicvideoLibrary,"musicvideos")
+    
+    KodiAdvancedSettingsCheck()
+    
+    return True
+    
+    ''' To be deleted once fully tested - Angel
     rebootRequired = False
     
     if not xbmcvfs.exists(dataPath + os.sep):
@@ -81,7 +103,7 @@ def checkKodiSources():
         else:
             return False
     
-    return True
+    return True'''
 
 def KodiSQL():
     if xbmc.getInfoLabel("System.BuildVersion").startswith("13"):
