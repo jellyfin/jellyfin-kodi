@@ -5,7 +5,6 @@
         provider-name="Emby.media">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
-	<import addon="script.module.myconnpy" version="0.3.2"/>
   </requires>
   <extension    point="xbmc.python.pluginsource"
                 library="default.py">

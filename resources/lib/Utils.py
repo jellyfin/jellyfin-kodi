@@ -12,6 +12,7 @@ import cProfile
 import pstats
 import time
 import inspect
+import sqlite3
 from xml.etree.ElementTree import Element, SubElement, Comment, tostring
 from xml.etree import ElementTree
 from xml.dom import minidom
@@ -116,43 +117,8 @@ def KodiSQL():
         #helix
         dbVersion = "90"
     
-    #find out if we should use MySQL
-    useMySQL = False
-    settingsFile = xbmc.translatePath( "special://profile/advancedsettings.xml" )
-    if xbmcvfs.exists(settingsFile):
-        tree = ET.ElementTree(file=settingsFile)
-        root = tree.getroot()
-        video = root.find("videolibrary")
-        if video != None:
-            mysql = video.find("type")
-            if mysql != None:
-                useMySQL = True
-                db_port = video.find("port").text
-                db_host = video.find("host").text
-                db_user = video.find("user").text
-                db_pass = video.find("pass").text
-                if video.find("name") != None:
-                    db_name = video.find("name").text
-                else:
-                    db_name = "MyVideos"
-            
-            SubElement(video, "importwatchedstate").text = "true"
-        if video.find("importresumepoint") == None:
-            writeNeeded = True
-            SubElement(video, "importresumepoint").text = "true"
-    
-    
-    if useMySQL:
-        import local.mysql.connector as database
-        connection = database.connect(dbPath)
-        connection = database.connect(db = db_name, user = db_user, passwd = db_pass, host = db_host, port = db_port)
-        connection.set_charset('utf8')
-        connection.set_unicode(True)
-
-    else:
-        import sqlite3 as database
-        dbPath = xbmc.translatePath("special://userdata/Database/MyVideos" + dbVersion + ".db")
-        connection = database.connect(dbPath)
+    dbPath = xbmc.translatePath("special://userdata/Database/MyVideos" + dbVersion + ".db")
+    connection = sqlite3.connect(dbPath)
 
     return connection
         
@@ -161,7 +127,6 @@ def addKodiSource(name, path, type):
     #add new source to database, common way is to add it directly to the Kodi DB. Fallback to adding it to the sources.xml
     #return boolean wether a manual reboot is required.
     #todo: Do feature request with Kodi team to get support for adding a source by the json API
-    
     
     error = False
     try:
