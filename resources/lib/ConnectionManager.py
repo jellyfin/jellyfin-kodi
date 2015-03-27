@@ -106,6 +106,10 @@ class ConnectionManager():
             self.addonSettings.setSetting("ipaddress", server_address)        
             self.addonSettings.setSetting("username", selected_user)
             downloadUtils.authenticate()
+        else:
+            xbmc.log("No user selected.")
+            xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
+            return
                 
     def getServerDetails(self):
 
