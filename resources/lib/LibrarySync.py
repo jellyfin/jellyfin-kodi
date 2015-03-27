@@ -32,63 +32,44 @@ class LibrarySync():
         
     def syncDatabase(self):
         
+        #set some variable to check if this is the first run
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         WINDOW = xbmcgui.Window( 10000 )
-        pDialog = None
 
-        #set some variable to check if this is the first run
-        startupDone = False
-        startupStr = WINDOW.getProperty("startup")
-        if startupStr == "done":
-            startupDone = True
+        startupDone = WINDOW.getProperty("startup") == "done"
+        syncInstallRunDone = addon.getSetting("SyncInstallRunDone") == "true"
         
-        #are we running startup sync or background sync ?
-        #if not startupDone:
-         #   syncOption = addon.getSetting("syncSettingStartup")
-        #else:
-         #   syncOption = addon.getSetting("syncSettingBackground")
+        completed = True
         
-        #what sync method to perform ?
-        #if syncOption == "Full Sync":
+        # sync movies
+        if(syncInstallRunDone == False): # on first install run do a full sync with model progress dialog
+            completed = completed and self.TvShowsSync(True, True)
+            completed = completed and self.MoviesSync(True, True)
+            completed = completed and self.MusicVideosSync(True, True)
+        elif(startupDone == False): # on first run after startup do a inc then a full sync
+            self.TvShowsSync(False, False)
+            self.MoviesSync(False, False)
+            self.MusicVideosSync(False, False)
+            self.TvShowsSync(True, False)
+            self.MoviesSync(True, False)
+            self.MusicVideosSync(True, False)
+        else: # on scheduled sync do a full sync
+            self.TvShowsSync(True, False)
+            self.MoviesSync(True, False)
+            self.MusicVideosSync(True, False)
+       
+         # set the install done setting
+        if(syncInstallRunDone == False and completed):
+            addon = xbmcaddon.Addon(id='plugin.video.emby') #force a new instance of the addon
+            addon.setSetting("SyncInstallRunDone", "true")        
         
-            #pr = utils.startProfiling()
-         #   self.MoviesSync(True)
-            #utils.stopProfiling(pr, "MoviesSync(True)")
-            
-            #pr = utils.startProfiling()
-          #  self.TvShowsSync(True)
-            #utils.stopProfiling(pr, "TvShowsSync(True)")
-            
-            #pr = utils.startProfiling()
-           # self.MusicVideosSync(True)
-            #utils.stopProfiling(pr, "MusicVideosSync(True)")
-            
-        #if syncOption == "Incremental Sync":
-         #   self.MoviesSync(False)
-          #  self.TvShowsSync(False)
-           # self.MusicVideosSync(False)
-        
-        # Do incremental sync followed by full sync
-        if not startupDone:
-            self.MoviesSync(True)
-            self.TvShowsSync(True)
-            self.MusicVideosSync(True)  
-        else:
-            self.MoviesSync(False)
-            self.TvShowsSync(False)
-            self.MusicVideosSync(False)
-        
-            self.MoviesSync(True)
-            self.TvShowsSync(True)
-            self.MusicVideosSync(True)   
-        
+        # set prop to show we have run for the first time
         WINDOW.setProperty("startup", "done")
                         
         return True      
     
-    def MoviesSync(self, fullsync=True):
-        
-        
+    def MoviesSync(self, fullsync, installFirstRun):
+
         WINDOW = xbmcgui.Window( 10000 )
         pDialog = None
         startedSync = datetime.today()
@@ -96,9 +77,8 @@ class LibrarySync():
         try:
             addon = xbmcaddon.Addon(id='plugin.video.emby')
             dbSyncIndication = addon.getSetting("dbSyncIndication")
-            dbSyncFirstRun = addon.getSetting("SyncFirstMovieRunDone")
                 
-            if(dbSyncFirstRun != "true" or dbSyncIndication == "Dialog Progress"):
+            if(installFirstRun or dbSyncIndication == "Dialog Progress"):
                 pDialog = xbmcgui.DialogProgress()
             elif(dbSyncIndication == "BG Progress"):
                 pDialog = xbmcgui.DialogProgressBG()
@@ -126,7 +106,7 @@ class LibrarySync():
                 allKodiIds = set(ReadKodiDB().getKodiMoviesIds(True))
             
                 if(self.ShouldStop(pDialog)):
-                    return True            
+                    return False            
             
                 if(allMB3Movies == None):
                     return False
@@ -150,7 +130,7 @@ class LibrarySync():
                             totalItemsAdded += 1
                         
                         if(self.ShouldStop(pDialog)):
-                            return True
+                            return False
                     
                         # update progress bar
                         if(pDialog != None):
@@ -172,7 +152,7 @@ class LibrarySync():
                         pDialog.create('Sync DB', 'Sync DB')
                 
                 if(self.ShouldStop(pDialog)):
-                    return True
+                    return False
 
                 if(pDialog != None):
                     progressTitle = "Sync DB : Processing " + view.get('title') + " " + str(viewCurrent) + " of " + str(viewCount)
@@ -196,7 +176,7 @@ class LibrarySync():
                                 totalItemsUpdated += 1
                         
                         if(self.ShouldStop(pDialog)):
-                            return True
+                            return False
                     
                         # update progress bar
                         if(pDialog != None):
@@ -212,12 +192,12 @@ class LibrarySync():
                 boxsets = ReadEmbyDB().getBoxSets()
                 for boxset in boxsets:
                     if(self.ShouldStop(pDialog)):
-                        return True                
+                        return False                
                     boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
                     WriteKodiDB().addBoxsetToKodiLibrary(boxset)
                     for boxsetMovie in boxsetMovies:
                         if(self.ShouldStop(pDialog)):
-                            return True
+                            return False
                         WriteKodiDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset)
                 utils.logMsg("Sync Movies", "BoxSet Sync Finished", 1)                
                 
@@ -226,7 +206,7 @@ class LibrarySync():
                 pDialog.update(0, progressTitle, "")
             
             if(self.ShouldStop(pDialog)):
-                return True            
+                return False            
             
             cleanNeeded = False
             
@@ -242,15 +222,11 @@ class LibrarySync():
                         totalItemsDeleted += 1
             
             if(self.ShouldStop(pDialog)):
-                return True            
+                return False            
             
             #initiate library clean and wait for finish before processing any updates
             if cleanNeeded:
                 self.doKodiLibraryUpdate(True, pDialog)
-        
-            if(dbSyncFirstRun != "true"):
-                addon = xbmcaddon.Addon(id='plugin.video.emby') #force a new instance of the addon
-                addon.setSetting("SyncFirstMovieRunDone", "true")
             
             # display notification if set up
             notificationString = ""
@@ -280,7 +256,7 @@ class LibrarySync():
         
         return True
         
-    def TvShowsSync(self, fullsync=True):
+    def TvShowsSync(self, fullsync, installFirstRun):
 
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         WINDOW = xbmcgui.Window( 10000 )
@@ -289,9 +265,8 @@ class LibrarySync():
         
         try:
             dbSyncIndication = addon.getSetting("dbSyncIndication")
-            dbSyncFirstRun = addon.getSetting("SyncFirstTVRunDone")
                 
-            if(dbSyncFirstRun != "true" or dbSyncIndication == "Dialog Progress"):
+            if(installFirstRun or dbSyncIndication == "Dialog Progress"):
                 pDialog = xbmcgui.DialogProgress()
             elif(dbSyncIndication == "BG Progress"):
                 pDialog = xbmcgui.DialogProgressBG()
@@ -327,7 +302,7 @@ class LibrarySync():
                             kodiEpisodes = ReadKodiDB().getKodiEpisodes(episode["SeriesId"],True,True)
                             
                             if(self.ShouldStop(pDialog)):
-                                return True                
+                                return False                
 
                             #we have to compare the lists somehow
                             comparestring1 = str(episode.get("ParentIndexNumber")) + "-" + str(episode.get("IndexNumber"))
@@ -346,7 +321,7 @@ class LibrarySync():
                                 totalItemsAdded += 1
                                 
                             if(self.ShouldStop(pDialog)):
-                                return True                        
+                                return False                        
                             
                             # update progress bar
                             if(pDialog != None):
@@ -372,7 +347,7 @@ class LibrarySync():
                             kodiEpisodes = ReadKodiDB().getKodiEpisodes(episode["SeriesId"],True,True)
                             
                             if(self.ShouldStop(pDialog)):
-                                return True                
+                                return False                
 
                             #we have to compare the lists somehow
                             comparestring1 = str(episode.get("ParentIndexNumber")) + "-" + str(episode.get("IndexNumber"))
@@ -383,7 +358,7 @@ class LibrarySync():
                                     WriteKodiDB().updateEpisodeToKodiLibrary(episode, KodiItem)
                                         
                             if(self.ShouldStop(pDialog)):
-                                return True                        
+                                return False                        
 
                             # update progress bar
                             if(pDialog != None):
@@ -403,10 +378,10 @@ class LibrarySync():
                 updateNeeded = False
                 
                 if(self.ShouldStop(pDialog)):
-                    return True            
+                    return False            
                 
                 if (tvShowData == None):
-                    return
+                    return False
                     
                 if(pDialog != None):
                     progressTitle = "Sync DB : Processing TV Shows"
@@ -424,7 +399,7 @@ class LibrarySync():
                             totalItemsAdded += 1
                             
                         if(self.ShouldStop(pDialog)):
-                            return True
+                            return False
                             
                         # update progress bar
                         if(pDialog != None):
@@ -447,7 +422,7 @@ class LibrarySync():
                     if episodeData != None:
                         
                         if(self.ShouldStop(pDialog)):
-                            return True                
+                            return False                
                         
                         if(pDialog != None):
                             progressTitle = "Sync DB : Processing Tv Show " + str(showCurrent) + " of " + str(showTotal)
@@ -473,7 +448,7 @@ class LibrarySync():
                                 totalItemsAdded += 1
                                 
                             if(self.ShouldStop(pDialog)):
-                                return True                        
+                                return False                        
                                 
                             # update progress bar
                             if(pDialog != None):
@@ -516,7 +491,7 @@ class LibrarySync():
                                 totalItemsUpdated += 1
                             
                         if(self.ShouldStop(pDialog)):
-                            return True
+                            return False
                             
                         # update progress bar
                         if(pDialog != None):
@@ -532,7 +507,7 @@ class LibrarySync():
                     kodiEpisodes = ReadKodiDB().getKodiEpisodes(tvshow,True,True)
                     
                     if(self.ShouldStop(pDialog)):
-                        return True                
+                        return False                
                     
                     if(pDialog != None):
                         progressTitle = "Sync DB : Processing Tv Show " + str(showCurrent) + " of " + str(showTotal)
@@ -556,7 +531,7 @@ class LibrarySync():
                                     totalItemsUpdated += 1                                
                             
                         if(self.ShouldStop(pDialog)):
-                            return True                        
+                            return False                        
                             
                         # update progress bar
                         if(pDialog != None):
@@ -580,7 +555,7 @@ class LibrarySync():
                     pDialog.update(0, progressTitle)
                 
                 if(self.ShouldStop(pDialog)):
-                    return True            
+                    return False            
                 
                 cleanNeeded = False
                 
@@ -605,15 +580,11 @@ class LibrarySync():
                             totalItemsDeleted += 1
             
                 if(self.ShouldStop(pDialog)):
-                    return True            
+                    return False            
                 
                 #initiate library clean and wait for finish before processing any updates
                 if cleanNeeded:
-                    self.doKodiLibraryUpdate(True, pDialog)
-          
-            if(dbSyncFirstRun != "true"):
-                addon = xbmcaddon.Addon(id='plugin.video.emby') #force a new instance of the addon
-                addon.setSetting("SyncFirstTVRunDone", "true")          
+                    self.doKodiLibraryUpdate(True, pDialog)       
 
             # display notification if set up
             notificationString = ""
@@ -643,7 +614,7 @@ class LibrarySync():
         
         return True
     
-    def MusicVideosSync(self, fullsync=True):
+    def MusicVideosSync(self, fullsync, installFirstRun):
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         WINDOW = xbmcgui.Window( 10000 )
@@ -651,9 +622,8 @@ class LibrarySync():
         
         try:
             dbSyncIndication = addon.getSetting("dbSyncIndication")
-            dbSyncFirstRun = addon.getSetting("SyncFirstMusicVideoRunDone")
                 
-            if(dbSyncFirstRun != "true" or dbSyncIndication == "Dialog Progress"):
+            if(installFirstRun or dbSyncIndication == "Dialog Progress"):
                 pDialog = xbmcgui.DialogProgress()
             elif(dbSyncIndication == "BG Progress"):
                 pDialog = xbmcgui.DialogProgressBG()
@@ -672,7 +642,7 @@ class LibrarySync():
             allKodiIds = set(ReadKodiDB().getKodiMusicVideoIds(True))
         
             if(self.ShouldStop(pDialog)):
-                return True            
+                return False            
         
             if(allMB3MusicVideos == None):
                 return False
@@ -693,7 +663,7 @@ class LibrarySync():
                         updateNeeded = True
                     
                     if(self.ShouldStop(pDialog)):
-                        return True
+                        return False
                 
                     # update progress bar
                     if(pDialog != None):
@@ -715,7 +685,7 @@ class LibrarySync():
                     pDialog.create('Sync DB', 'Sync DB')
             
             if(self.ShouldStop(pDialog)):
-                return True
+                return False
 
             if(pDialog != None):
                 progressTitle = "Sync DB : Processing musicvideos"
@@ -735,7 +705,7 @@ class LibrarySync():
                         WriteKodiDB().updateMusicVideoToKodiLibrary_Batched(item, kodimusicvideo)
                     
                     if(self.ShouldStop(pDialog)):
-                        return True
+                        return False
                 
                     # update progress bar
                     if(pDialog != None):
@@ -749,7 +719,7 @@ class LibrarySync():
                 pDialog.update(0, progressTitle, "")
             
             if(self.ShouldStop(pDialog)):
-                return True            
+                return False            
             
             cleanNeeded = False
             
@@ -763,15 +733,11 @@ class LibrarySync():
                         cleanNeeded = True
             
             if(self.ShouldStop(pDialog)):
-                return True            
+                return False            
             
             #initiate library clean and wait for finish before processing any updates
             if cleanNeeded:
                 self.doKodiLibraryUpdate(True, pDialog)
-        
-            if(dbSyncFirstRun != "true"):
-                addon = xbmcaddon.Addon(id='plugin.video.emby')
-                addon.setSetting("SyncFirstMusicVideoRunDone", "true")
             
         finally:
             if(pDialog != None):
@@ -788,7 +754,7 @@ class LibrarySync():
         xbmc.sleep(1000)
         while (xbmc.getCondVisibility("Library.IsScanningVideo")):
             if(self.ShouldStop(prog)):
-                return True
+                return False
             xbmc.sleep(1000)
     
     def updatePlayCounts(self):
@@ -829,7 +795,7 @@ class LibrarySync():
                     allKodiMovies = ReadKodiDB().getKodiMovies(False)
                     
                     if(self.ShouldStop(pDialog)):
-                        return True
+                        return False
                             
                     if(allMB3Movies == None):
                         return False    
@@ -863,7 +829,7 @@ class LibrarySync():
                                 if(updated):
                                     totalCountsUpdated += 1
                             if(self.ShouldStop(pDialog)):
-                                return True
+                                return False
                             
                             # update progress bar
                             if(pDialog != None):
@@ -881,7 +847,7 @@ class LibrarySync():
                 tvshowData = ReadEmbyDB().getTVShows(fullinfo = False, fullSync = True)
                 
                 if(self.ShouldStop(pDialog)):
-                    return True
+                    return False
                             
                 if (tvshowData == None):
                     return False
@@ -926,7 +892,7 @@ class LibrarySync():
                                 if(updated):
                                     totalCountsUpdated += 1    
                             if(self.ShouldStop(pDialog)):
-                                return True
+                                return False
                             
                             # update progress bar
                             if(pDialog != None):
@@ -976,7 +942,7 @@ class LibrarySync():
             MB3Movie = ReadEmbyDB().getItem(itemID)
             kodiItem = ReadKodiDB().getKodiMovie(itemID)      
             if(self.ShouldStop(None)):
-                return True
+                return False
                             
             if(MB3Movie == None):
                 return False    
@@ -997,12 +963,12 @@ class LibrarySync():
                 WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"movie",True)
                 WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "movie")
             if(self.ShouldStop(None)):
-                return True 
+                return False 
                     
         #process episode
         elif type=='Episode':
             if(self.ShouldStop(None)):
-                return True                   
+                return False                   
                     
             MB3Episode = ReadEmbyDB().getItem(itemID)
             kodiItem = ReadKodiDB().getKodiEpisodeByMbItem(MB3Episode["Id"], MB3Episode["SeriesId"])
@@ -1019,7 +985,7 @@ class LibrarySync():
                     WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode",True)
                     WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "episode")                    
                 if(self.ShouldStop(None)):
-                    return True          
+                    return False          
         
         return True
     
