@@ -84,10 +84,10 @@ def checkKodiSources():
     return True
 
 def KodiSQL():
-    if xbmc.getinfolabel("System.BuildVersion").startswith("13"):
+    if xbmc.getInfoLabel("System.BuildVersion").startswith("13"):
         #gotham
         dbVersion = "78"
-    if xbmc.getinfolabel("System.BuildVersion").startswith("15"):
+    if xbmc.getInfoLabel("System.BuildVersion").startswith("15"):
         #isengard
         dbVersion = "91"
     else: 
@@ -142,22 +142,19 @@ def addKodiSource(name, path, type):
     
     
     error = False
-    if xbmcvfs.exists(dbPath):
-        try:
-            connection = KodiSQL()
-            cursor = connection.cursor( )
-            cursor.execute("select coalesce(max(idPath),0) as pathId from path")
-            pathId =  cursor.fetchone()[0]
-            pathId = pathId + 1
-            pathsql="insert into path(idPath, strPath, strContent, strScraper, strHash, scanRecursive) values(?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (pathId,path + os.sep,type,"metadata.local",None,2147483647))
-            connection.commit()
-            cursor.close()
-        except:
-            error = True
-    else:
+    try:
+        connection = KodiSQL()
+        cursor = connection.cursor( )
+        cursor.execute("select coalesce(max(idPath),0) as pathId from path")
+        pathId =  cursor.fetchone()[0]
+        pathId = pathId + 1
+        pathsql="insert into path(idPath, strPath, strContent, strScraper, strHash, scanRecursive) values(?, ?, ?, ?, ?, ?)"
+        cursor.execute(pathsql, (pathId,path + os.sep,type,"metadata.local",None,2147483647))
+        connection.commit()
+        cursor.close()
+    except:
         error = True
-    
+
     # add it to sources.xml
     sourcesFile = xbmc.translatePath( "special://profile/sources.xml" )
     
