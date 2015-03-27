@@ -20,7 +20,8 @@ from WebSocketClient import WebSocketThread
 librarySync = LibrarySync()
 
 class Service():
-
+    
+    newWebSocketThread = None
     
     def __init__(self, *args ):
         self.KodiMonitor = KodiMonitor.Kodi_Monitor()
@@ -34,14 +35,11 @@ class Service():
         
         ConnectionManager().checkServer()
         
-        player = Player()
-        lastProgressUpdate = datetime.today()
-        
-        newWebSocketThread = WebSocketThread()
-        newWebSocketThread.start()        
-        
         # check kodi library sources
         mayRun = utils.checkKodiSources()
+        
+        player = Player()
+        lastProgressUpdate = datetime.today()
         
         interval_FullSync = 120
         interval_IncrementalSync = 30
@@ -50,6 +48,9 @@ class Service():
         cur_seconds_incrsync = interval_IncrementalSync
         
         if mayRun:
+            
+            ws = WebSocketThread()
+            
             while not xbmc.abortRequested:
                 
                 xbmc.sleep(1000)
@@ -79,6 +80,11 @@ class Service():
                 else:
                     # background worker for database sync
                     if DownloadUtils().authenticate(retreive=False) != "":
+                        
+                        # Correctly launch the websocket, if user manually launches the add-on
+                        if (self.newWebSocketThread == None):
+                            self.newWebSocketThread = "Started"
+                            ws.start()
                 
                         #full sync
                         if(cur_seconds_fullsync >= interval_FullSync):
@@ -119,8 +125,8 @@ class Service():
                         
             utils.logMsg("MB3 Sync Service", "stopping Service",0)
             
-            if(newWebSocketThread != None):
-                newWebSocketThread.stopClient()                
+            if (self.newWebSocketThread != None):
+                ws.stopClient()                
         
        
 #start the service
