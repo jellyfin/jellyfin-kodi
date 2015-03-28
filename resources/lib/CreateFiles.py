@@ -63,6 +63,10 @@ class CreateFiles():
             host = addon.getSetting('ipaddress')
             server = host + ":" + port  
             playurl = PlayUtils().getPlayUrl(server, item["Id"], item)
+            
+            #do not use direct path for transcoding
+            if playurl.startswith("http"):
+                playurl = "plugin://plugin.video.emby/?id=" + item["Id"] + '&mode=play'
 
             text_file.writelines(playurl)
             text_file.close()

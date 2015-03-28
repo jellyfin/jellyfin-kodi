@@ -99,6 +99,8 @@ class WriteKodiDB():
         
         #set Filename
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
+        if playurl.startswith("http"):
+            playurl = "plugin://plugin.video.emby/?id=" + MBitem["Id"] + '&mode=play'
         if playurl != KodiItem["file"]:
             self.setKodiFilename(KodiItem["movieid"], playurl, "movie")
         
@@ -432,6 +434,8 @@ class WriteKodiDB():
         
         #set Filename
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
+        if playurl.startswith("http"):
+            playurl = "plugin://plugin.video.emby/?id=" + MBitem["Id"] + '&mode=play'
         if playurl != KodiItem["file"]:
             self.setKodiFilename(KodiItem["episodeid"], playurl, "episode")
         
@@ -890,28 +894,16 @@ class WriteKodiDB():
     def setKodiFilename(self, id, filenameAndPath, fileType):
         #use sqlite to set the filename in DB -- needed to avoid problems with resumepoints etc
         #todo --> submit PR to kodi team to get this added to the jsonrpc api
-        
+        #todo --> extend support for musicvideos
         filenameAndPath = utils.convertEncoding(filenameAndPath)
-        
-        print "set filepath for id " + str(id)
-        
-        if not filenameAndPath.startswith("http"):
-            #assume direct play
-            if "\\" in filenameAndPath:
-                filename = filenameAndPath.rsplit("\\",1)[-1]
-                path = filenameAndPath.replace(filename,"")
-            elif "/" in filenameAndPath:
-                filename = filenameAndPath.rsplit("/",1)[-1]
-                path = filenameAndPath.replace(filename,"")
-            else:
-                #assume play from stream ?
-                filename = filenameAndPath
-                path = "plugin://plugin.video.emby/"
-        else:
-            #assume play from stream
-            filename = filenameAndPath
-            path = "plugin://plugin.video.emby/"
-        
+
+        if "\\" in filenameAndPath:
+            filename = filenameAndPath.rsplit("\\",1)[-1]
+            path = filenameAndPath.replace(filename,"")
+        elif "/" in filenameAndPath:
+            filename = filenameAndPath.rsplit("/",1)[-1]
+            path = filenameAndPath.replace(filename,"")
+
         utils.logMsg("MB3 Sync","setting filename in kodi db..." + fileType + ": " + str(id))
         xbmc.sleep(sleepVal)
         connection = utils.KodiSQL()
