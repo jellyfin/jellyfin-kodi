@@ -73,28 +73,6 @@ def checkKodiSources():
         xbmcvfs.mkdir(musicvideoLibrary)
         addKodiSource("mediabrowser_musicvideos",musicvideoLibrary,"musicvideos")
     
-    KodiAdvancedSettingsCheck()
-    
-    return True
-    
-    ''' To be deleted once fully tested - Angel
-    rebootRequired = False
-    
-    if not xbmcvfs.exists(dataPath + os.sep):
-        xbmcvfs.mkdir(dataPath)
-    if not xbmcvfs.exists(movieLibrary + os.sep):
-        xbmcvfs.mkdir(movieLibrary)
-        rebootRequired = True
-        addKodiSource("mediabrowser_movies",movieLibrary,"movies")
-    if not xbmcvfs.exists(tvLibrary + os.sep):
-        xbmcvfs.mkdir(tvLibrary)
-        rebootRequired = True
-        addKodiSource("mediabrowser_tvshows",tvLibrary,"tvshows")
-    if not xbmcvfs.exists(musicvideoLibrary + os.sep):
-        xbmcvfs.mkdir(musicvideoLibrary)
-        rebootRequired = True
-        addKodiSource("mediabrowser_musicvideos",musicvideoLibrary,"musicvideos")
-    
     rebootRequired = KodiAdvancedSettingsCheck()
     
     if rebootRequired:
@@ -104,7 +82,8 @@ def checkKodiSources():
         else:
             return False
     
-    return True'''
+    return True
+    
 
 def KodiSQL():
     if xbmc.getInfoLabel("System.BuildVersion").startswith("13"):
