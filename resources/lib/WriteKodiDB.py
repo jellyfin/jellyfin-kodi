@@ -891,36 +891,48 @@ class WriteKodiDB():
         #use sqlite to set the filename in DB -- needed to avoid problems with resumepoints etc
         #todo --> submit PR to kodi team to get this added to the jsonrpc api
         
-        print "set filepath for id " + str(id) + " - " + filenameAndPath
+        filenameAndPath = utils.convertEncoding(filenameAndPath)
         
+        print "set filepath for id " + str(id)
         
-        
-        if "\\" in filenameAndPath:
-            filename = filenameAndPath.rsplit("\\",1)[-1]
-            path = filenameAndPath.replace(filename,"")
-        elif "/" in filenameAndPath:
-            filename = filenameAndPath.rsplit("/",1)[-1]
-            path = filenameAndPath.replace(filename,"")
+        if not filenameAndPath.startswith("http"):
+            #assume direct play
+            if "\\" in filenameAndPath:
+                filename = filenameAndPath.rsplit("\\",1)[-1]
+                path = filenameAndPath.replace(filename,"")
+            elif "/" in filenameAndPath:
+                filename = filenameAndPath.rsplit("/",1)[-1]
+                path = filenameAndPath.replace(filename,"")
+            else:
+                #assume play from stream ?
+                filename = filenameAndPath
+                path = "plugin://plugin.video.emby/"
         else:
+            #assume play from stream
             filename = filenameAndPath
-            path = None
+            path = "plugin://plugin.video.emby/"
         
         utils.logMsg("MB3 Sync","setting filename in kodi db..." + fileType + ": " + str(id))
         xbmc.sleep(sleepVal)
         connection = utils.KodiSQL()
         cursor = connection.cursor( )
         
-        if path != None:
-            cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
-            result = cursor.fetchone()
-            if result != None:
-                pathid = result[0]
-            if result == None:
-                cursor.execute("select coalesce(max(idPath),0) as pathid from path")
-                pathid = cursor.fetchone()[0]
-                pathid = pathid + 1
-                pathsql="insert into path(idPath, strPath) values(?, ?)"
-                cursor.execute(pathsql, (pathid,path))
+        cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
+        result = cursor.fetchone()
+        if result != None:
+            pathid = result[0]
+        if result == None:
+            cursor.execute("select coalesce(max(idPath),0) as pathid from path")
+            pathid = cursor.fetchone()[0]
+            pathid = pathid + 1
+            pathsql="insert into path(idPath, strPath) values(?, ?)"
+            cursor.execute(pathsql, (pathid,path))
+            
+            cursor.execute("select coalesce(max(idPath),0) as pathid from path")
+            pathid = cursor.fetchone()[0]
+            pathid = pathid + 1
+            pathsql="insert into path(idPath, strPath) values(?, ?)"
+            cursor.execute(pathsql, (pathid,path))
         
         if fileType == "episode":
             cursor.execute("SELECT idFile as fileidid FROM episode WHERE idEpisode = ?",(id,))
