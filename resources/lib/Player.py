@@ -12,8 +12,8 @@ from DownloadUtils import DownloadUtils
 from PlayUtils import PlayUtils
 from ClientInformation import ClientInformation
 from LibrarySync import LibrarySync
+from  PlaybackUtils import PlaybackUtils
 librarySync = LibrarySync()
-
 
 # service class for playback monitoring
 class Player( xbmc.Player ):
@@ -211,7 +211,7 @@ class Player( xbmc.Player ):
             itemType = WINDOW.getProperty(currentFile + "type")
             seekTime = WINDOW.getProperty(currentFile + "seektime")
             if seekTime != "":
-                self.seekToPosition(int(seekTime))
+                PlaybackUtils().seekToPosition(int(seekTime))
             
             if(item_id == None or len(item_id) == 0):
                 return
@@ -298,16 +298,3 @@ class Player( xbmc.Player ):
         self.printDebug("emby Service -> onPlayBackStopped")
         self.stopAll()
 
-    def seekToPosition(self, seekTo):
-           
-        #Jump to resume point
-        jumpBackSec = 10
-        seekToTime = seekTo - jumpBackSec
-        count = 0
-        while xbmc.Player().getTime() < (seekToTime - 5) and count < 11: # only try 10 times
-            count = count + 1
-            #xbmc.Player().pause()
-            xbmc.sleep(100)
-            xbmc.Player().seekTime(seekToTime)
-            xbmc.sleep(100)
-            #xbmc.Player().play()

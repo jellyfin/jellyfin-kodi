@@ -11,10 +11,10 @@ import inspect
 import sys
 
 from DownloadUtils import DownloadUtils
-downloadUtils = DownloadUtils()
 from PlayUtils import PlayUtils
 from ReadKodiDB import ReadKodiDB
 from ReadEmbyDB import ReadEmbyDB
+import Utils as utils
 from API import API
 import Utils as utils
 import os
@@ -24,26 +24,25 @@ addon = xbmcaddon.Addon(id='plugin.video.emby')
 addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
 
 WINDOW = xbmcgui.Window( 10000 )
-port = addon.getSetting('port')
-host = addon.getSetting('ipaddress')
-server = host + ":" + port
-userid = downloadUtils.getUserId()
-
 
 class PlaybackUtils():
     
     settings = None
     language = addon.getLocalizedString
     logLevel = 0
-
+    downloadUtils = DownloadUtils()
     
     def __init__(self, *args):
         pass    
 
-
     def PLAY(self, id):
         
-        jsonData = downloadUtils.downloadUrl("http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + id + "?format=json&ImageTypeLimit=1", suppress=False, popup=1 )     
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port
+        
+        userid = self.downloadUtils.getUserId()
+        jsonData = self.downloadUtils.downloadUrl("http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + id + "?format=json&ImageTypeLimit=1", suppress=False, popup=1 )     
         result = json.loads(jsonData)
 
         userData = result.get("UserData")
@@ -101,7 +100,6 @@ class PlaybackUtils():
             display_list = [ self.language(30106) + ' ' + displayTime, self.language(30107)]
             resumeScreen = xbmcgui.Dialog()
             resume_result = resumeScreen.select(self.language(30105), display_list)
-            xbmc.log("RESUME_QUESTION : " + str(resume_result))
             if resume_result == 0:
                 WINDOW.setProperty(playurl+"seektime", str(seekTime))
             else:
@@ -138,7 +136,7 @@ class PlaybackUtils():
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
         else:
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
-            #xbmc.Player().play(playurl,listItem)
+            xbmc.Player().play(playurl,listItem)
 
     def setArt(self, list,name,path):
         if name=='thumb' or name=='fanart_image' or name=='small_poster' or name=='tiny_poster'  or name == "medium_landscape" or name=='medium_poster' or name=='small_fanartimage' or name=='medium_fanartimage' or name=='fanart_noindicators':
@@ -147,10 +145,9 @@ class PlaybackUtils():
             list.setArt({name:path})
         return list
     
-    
     def setListItemProps(self, server, id, listItem, result):
         # set up item and item info
-        userid = downloadUtils.getUserId()
+        userid = self.downloadUtils.getUserId()
         thumbID = id
         eppNum = -1
         seasonNum = -1
@@ -216,3 +213,124 @@ class PlaybackUtils():
         listItem.setInfo('video', {'mpaa': result.get("OfficialRating")})
         listItem.setInfo('video', {'genre': genre})
     
+    def seekToPosition(self, seekTo):
+    
+        #Set a loop to wait for positive confirmation of playback
+        count = 0
+        while not xbmc.Player().isPlaying():
+            count = count + 1
+            if count >= 10:
+                return
+            else:
+                xbmc.sleep(500)
+            
+        #Jump to resume point
+        jumpBackSec = 10#int(self.settings.getSetting("resumeJumpBack"))
+        seekToTime = seekTo - jumpBackSec
+        count = 0
+        while xbmc.Player().getTime() < (seekToTime - 5) and count < 11: # only try 10 times
+            count = count + 1
+            #xbmc.Player().pause
+            #xbmc.sleep(100)
+            xbmc.Player().seekTime(seekToTime)
+            xbmc.sleep(100)
+            #xbmc.Player().play()
+    
+    def PLAYAllItems(self, items, startPositionTicks):
+        utils.logMsg("PlayBackUtils", "== ENTER: PLAYAllItems ==")
+        utils.logMsg("PlayBackUtils", "Items : " + str(items))
+        userid = self.downloadUtils.getUserId()
+        server = self.downloadUtils.getServer()
+        
+        playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
+        playlist.clear()        
+        started = False
+        
+        for itemID in items:
+        
+            utils.logMsg("PlayBackUtils", "Adding Item to Playlist : " + itemID)
+            item_url = "http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + itemID + "?format=json"
+            jsonData = self.downloadUtils.downloadUrl(item_url, suppress=False, popup=1 )
+            
+            item_data = json.loads(jsonData)
+            added = self.addPlaylistItem(playlist, item_data, server, userid)
+            if(added and started == False):
+                started = True
+                utils.logMsg("PlayBackUtils", "Starting Playback Pre")
+                xbmc.Player().play(playlist)
+        
+        if(started == False):
+            utils.logMsg("PlayBackUtils", "Starting Playback Post")
+            xbmc.Player().play(playlist)
+        
+        #seek to position
+        seekTime = 0
+        if(startPositionTicks != None):
+            seekTime = (startPositionTicks / 1000) / 10000
+            
+        if seekTime > 0:
+            self.seekToPosition(seekTime)
+    
+    def AddToPlaylist(self, itemIds):
+        utils.logMsg("PlayBackUtils", "== ENTER: PLAYAllItems ==")
+        userid = self.downloadUtils.getUserId()
+        server = self.downloadUtils.getServer()
+        
+        playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)     
+        
+        for itemID in itemIds:
+        
+            utils.logMsg("PlayBackUtils", "Adding Item to Playlist : " + itemID)
+            item_url = "http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + itemID + "?format=json"
+            jsonData = self.downloadUtils.downloadUrl(item_url, suppress=False, popup=1 )
+            
+            item_data = json.loads(jsonData)
+            self.addPlaylistItem(playlist, item_data, server, userid)
+    
+        return playlist
+    
+    def addPlaylistItem(self, playlist, item, server, userid):
+
+        id = item.get("Id")
+        
+        playurl = PlayUtils().getPlayUrl(server, id, item)
+        utils.logMsg("PlayBackUtils", "Play URL: " + playurl)    
+        thumbPath = API().getArtwork(item, "Primary")
+        listItem = xbmcgui.ListItem(path=playurl, iconImage=thumbPath, thumbnailImage=thumbPath)
+        self.setListItemProps(server, id, listItem, item)
+
+        # Can not play virtual items
+        if (item.get("LocationType") == "Virtual") or (item.get("IsPlaceHolder") == True):
+        
+            xbmcgui.Dialog().ok(self.language(30128), self.language(30129))
+            return False
+            
+        else:
+        
+            watchedurl = 'http://' + server + '/mediabrowser/Users/'+ userid + '/PlayedItems/' + id
+            positionurl = 'http://' + server + '/mediabrowser/Users/'+ userid + '/PlayingItems/' + id
+            deleteurl = 'http://' + server + '/mediabrowser/Items/' + id
+
+            # set the current playing info
+            WINDOW = xbmcgui.Window( 10000 )
+            WINDOW.setProperty(playurl + "watchedurl", watchedurl)
+            WINDOW.setProperty(playurl + "positionurl", positionurl)
+            WINDOW.setProperty(playurl + "deleteurl", "")
+            
+            if item.get("Type") == "Episode" and self.settings.getSetting("offerDelete")=="true":
+               WINDOW.setProperty(playurl + "deleteurl", deleteurl)
+        
+            WINDOW.setProperty(playurl + "runtimeticks", str(item.get("RunTimeTicks")))
+            WINDOW.setProperty(playurl+"type", item.get("Type"))
+            WINDOW.setProperty(playurl + "item_id", id)
+            
+            if (item.get("Type") == "Episode"):
+                WINDOW.setProperty(playurl + "refresh_id", item.get("SeriesId"))
+            else:
+                WINDOW.setProperty(playurl + "refresh_id", id)            
+            
+            utils.logMsg("PlayBackUtils", "PlayList Item Url : " + str(playurl))
+            
+            playlist.add(playurl, listItem)
+            
+            return True
