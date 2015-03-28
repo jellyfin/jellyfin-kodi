@@ -76,11 +76,10 @@ class PlayUtils():
 
     # Works out if we are direct playing or not
     def isDirectPlay(self, result):
-        # if (self.fileExists(result) or (result.get("LocationType") == "FileSystem" and self.isNetworkQualitySufficient(result) == True and self.isLocalPath(result) == False)):
-            # return True
-        # else:
-            # return False
-        return False
+        if (self.fileExists(result) or (result.get("LocationType") == "FileSystem" and self.isNetworkQualitySufficient(result) == True and self.isLocalPath(result) == False)):
+            return True
+        else:
+            return False
         
 
     # Works out if the network quality can play directly or if transcoding is needed
