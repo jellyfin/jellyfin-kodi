@@ -24,24 +24,30 @@ addon = xbmcaddon.Addon(id='plugin.video.emby')
 addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
 
 WINDOW = xbmcgui.Window( 10000 )
+downloadUtils = DownloadUtils()
+port = addon.getSetting('port')
+host = addon.getSetting('ipaddress')
+server = host + ":" + port
+        
+userid = downloadUtils.getUserId()
 
 class PlaybackUtils():
     
     settings = None
     language = addon.getLocalizedString
     logLevel = 0
-    downloadUtils = DownloadUtils()
+    #downloadUtils = DownloadUtils()
     
     def __init__(self, *args):
         pass    
 
     def PLAY(self, id):
         
-        port = addon.getSetting('port')
+        '''port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
         
-        userid = self.downloadUtils.getUserId()
+        userid = self.downloadUtils.getUserId()'''
         jsonData = self.downloadUtils.downloadUrl("http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + id + "?format=json&ImageTypeLimit=1", suppress=False, popup=1 )     
         result = json.loads(jsonData)
 
