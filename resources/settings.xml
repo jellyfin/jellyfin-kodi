@@ -29,7 +29,7 @@
 	</category>
 	
 	<category label="Playback"> <!-- Extra Sync options -->
-		<setting id="addExtraPlaybackArt" type="bool" label="Add extra playback art" default="false" visible="true" enable="true" />
+		<setting id="addExtraPlaybackArt" type="bool" label="Add extra playback art" default="true" visible="true" enable="true" />
 		<setting id="smbusername" type="text" label="30007" default="" visible="true" enable="true" />
 		<setting id="smbpassword" type="text" label="30008" default="" option="hidden" visible="true" enable="true" />
 	</category>
