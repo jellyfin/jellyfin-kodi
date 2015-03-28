@@ -79,7 +79,7 @@ class Service():
                         pass
                 else:
                     # background worker for database sync
-                    if DownloadUtils().authenticate(retreive=False) != "":
+                    if DownloadUtils().authenticate(retreive=True) != "":
                         
                         # Correctly launch the websocket, if user manually launches the add-on
                         if (self.newWebSocketThread == None):
