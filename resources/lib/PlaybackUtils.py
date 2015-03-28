@@ -136,7 +136,9 @@ class PlaybackUtils():
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
         else:
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
-            xbmc.Player().play(playurl,listItem)
+            if(addon.getSetting("addExtraPlaybackArt") == "true"):
+                utils.logMsg("PLAY", "Doing second xbmc.Player().play to add extra art")
+                xbmc.Player().play(playurl,listItem)
 
     def setArt(self, list,name,path):
         if name=='thumb' or name=='fanart_image' or name=='small_poster' or name=='tiny_poster'  or name == "medium_landscape" or name=='medium_poster' or name=='small_fanartimage' or name=='medium_fanartimage' or name=='fanart_noindicators':
