@@ -188,17 +188,33 @@ class LibrarySync():
                 
             # process box sets - TODO cope with movies removed from a set
             if fullsync and addon.getSetting("syncMovieBoxSets") == "true":
+
+                if(pDialog != None):
+                    progressTitle = "Sync DB : BoxSets"
+                    pDialog.update(percentage, progressTitle, "Updating Movie: " + str(count))
+                            
                 utils.logMsg("Sync Movies", "BoxSet Sync Started", 1)
                 boxsets = ReadEmbyDB().getBoxSets()
+                
+                if(pDialog != None):
+                    total = len(boxsets) + 1
+                    count = 1                
+
                 for boxset in boxsets:
+                    if(pDialog != None):
+                        percentage = int(((float(count) / float(total)) * 100))
+                        pDialog.update(percentage, progressTitle, "Updating BoxSet: " + str(count) + " of " + str(total))
+                        count += 1
                     if(self.ShouldStop(pDialog)):
                         return False                
                     boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
                     WriteKodiDB().addBoxsetToKodiLibrary(boxset)
+                    
                     for boxsetMovie in boxsetMovies:
                         if(self.ShouldStop(pDialog)):
                             return False
                         WriteKodiDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset)
+                        
                 utils.logMsg("Sync Movies", "BoxSet Sync Finished", 1)                
                 
             if(pDialog != None):
