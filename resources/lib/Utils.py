@@ -182,7 +182,7 @@ def KodiAdvancedSettingsCheck():
         root = tree.getroot()
         video = root.find("videolibrary")
         if video == None:
-            video = SubElement(sources, "videolibrary")
+            video = SubElement(root, "videolibrary")
         # add the settings
         if video.find("importwatchedstate") == None:
             writeNeeded = True
