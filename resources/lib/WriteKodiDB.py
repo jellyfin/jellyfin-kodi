@@ -99,10 +99,9 @@ class WriteKodiDB():
         
         #set Filename
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
-        if playurl.startswith("http"):
-            playurl = "plugin://plugin.video.emby/?id=" + MBitem["Id"] + '&mode=play'
-        if playurl != KodiItem["file"]:
-            self.setKodiFilename(KodiItem["movieid"], playurl, "movie")
+        if not playurl.startswith("http"):
+            if playurl != KodiItem["file"]:
+                self.setKodiFilename(KodiItem["movieid"], playurl, "movie")
         
         #update common properties
         duration = (int(timeInfo.get('Duration'))*60)
@@ -434,10 +433,9 @@ class WriteKodiDB():
         
         #set Filename
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
-        if playurl.startswith("http"):
-            playurl = "plugin://plugin.video.emby/?id=" + MBitem["Id"] + '&mode=play'
-        if playurl != KodiItem["file"]:
-            self.setKodiFilename(KodiItem["episodeid"], playurl, "episode")
+        if not playurl.startswith("http"):
+            if playurl != KodiItem["file"]:
+                self.setKodiFilename(KodiItem["episodeid"], playurl, "episode")
         
         #update common properties
         duration = (int(timeInfo.get('Duration'))*60)
