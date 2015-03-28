@@ -580,7 +580,7 @@ class LibrarySync():
                 allMB3EpisodeIds = set(allMB3EpisodeIds)
                 for episode in allKodiEpisodeIds:
                     if episode.get('episodeid') not in allMB3EpisodeIds:
-                        WINDOW.setProperty(episode.get('episodeid'),"deleted")
+                        WINDOW.setProperty("embyid" + str(episode.get('episodeid')),"deleted")
                         WriteKodiDB().deleteEpisodeFromKodiLibrary(episode.get('episodeid'),episode.get('tvshowid'))
                         cleanneeded = True
                         totalItemsDeleted += 1

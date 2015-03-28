@@ -776,9 +776,13 @@ class WriteKodiDB():
         if episode != None:
             strmfile = episode["file"]
             nfofile = strmfile.replace(".strm",".nfo")
+            WINDOW = xbmcgui.Window( 10000 )
+            WINDOW.setProperty("suspendDeletes", "True")                
             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveEpisode", "params": { "episodeid": %i}, "id": 1 }' %(episode["episodeid"]))
             xbmcvfs.delete(strmfile)
             xbmcvfs.delete(nfofile)
+            while WINDOW.getProperty("suspendDeletes") == "True":
+                xbmc.sleep(100)
     
     def addTVShowToKodiLibrary( self, item ):
         itemPath = os.path.join(tvLibrary,item["Id"])
