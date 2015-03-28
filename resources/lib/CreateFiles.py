@@ -59,9 +59,12 @@ class CreateFiles():
             xbmcvfs.mkdir(itemPath)
             text_file = open(strmFile, "w")
             
-            playUrl = "plugin://plugin.video.emby/?id=" + item["Id"] + '&mode=play'
+            port = addon.getSetting('port')
+            host = addon.getSetting('ipaddress')
+            server = host + ":" + port  
+            playurl = PlayUtils().getPlayUrl(server, item["Id"], item)
 
-            text_file.writelines(playUrl)
+            text_file.writelines(playurl)
             text_file.close()
             
             #set timestamp on file - this will make sure that the dateadded field is properly set
@@ -116,7 +119,7 @@ class CreateFiles():
             root = Element(rootelement)
             SubElement(root, "id").text = item["Id"]
             SubElement(root, "uniqueid").text = item["Id"]
-
+            
             if item.get("Tag") != None:
                 for tag in item.get("Tag"):
                     SubElement(root, "tag").text = tag
@@ -149,7 +152,7 @@ class CreateFiles():
                 SubElement(root, "album").text = item["Album"]
                 
             if item.has_key("Artist"):
-                SubElement(root, "artist").text = item["Artist"][0]
+                SubElement(root, "artist").text = utils.convertEncoding(item["Artist"][0])
             
             if item.has_key("OfficialRating"):
                 SubElement(root, "mpaa").text = item["OfficialRating"]

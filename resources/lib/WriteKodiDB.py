@@ -13,6 +13,7 @@ import sqlite3
 import os
 
 from DownloadUtils import DownloadUtils
+from PlayUtils import PlayUtils
 from CreateFiles import CreateFiles
 from ReadKodiDB import ReadKodiDB
 from ReadEmbyDB import ReadEmbyDB
@@ -95,7 +96,12 @@ class WriteKodiDB():
         params = list()
         
         self.getArtworkParam_Batched(KodiItem, MBitem, params)
-
+        
+        #set Filename
+        playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
+        if playurl != KodiItem["file"]:
+            self.setKodiFilename(KodiItem["movieid"], playurl, "movie")
+        
         #update common properties
         duration = (int(timeInfo.get('Duration'))*60)
         self.getPropertyParam_Batched(KodiItem, "runtime", duration, params)
@@ -312,6 +318,10 @@ class WriteKodiDB():
         #add actors
         changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"),"movie")
         
+        #set Filename
+        playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
+        self.setKodiFilename(KodiItem["movieid"], playurl, "movie")
+        
         CreateFiles().createSTRM(MBitem)
         CreateFiles().createNFO(MBitem)
         
@@ -420,6 +430,10 @@ class WriteKodiDB():
         #update/check all artwork
         changes |= self.updateArtWork(KodiItem,MBitem)
         
+        #set Filename
+        playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
+        if playurl != KodiItem["file"]:
+            self.setKodiFilename(KodiItem["episodeid"], playurl, "episode")
         
         #update common properties
         duration = (int(timeInfo.get('Duration'))*60)
@@ -443,7 +457,7 @@ class WriteKodiDB():
 
         #add actors
         changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"),"episode")
-        
+
         CreateFiles().createNFO(MBitem)
         CreateFiles().createSTRM(MBitem)
         
@@ -867,6 +881,59 @@ class WriteKodiDB():
         cursor.execute(bookmarksql, (bookmarkId,fileid,resume_seconds,total_seconds,None,"DVDPlayer",None,1))
         connection.commit()
         cursor.close()
+    
+    
+    def setKodiFilename(self, id, filenameAndPath, fileType):
+        #use sqlite to set the filename in DB -- needed to avoid problems with resumepoints etc
+        #todo --> submit PR to kodi team to get this added to the jsonrpc api
+        
+        print "set filepath for id " + str(id) + " - " + filenameAndPath
+        
+        
+        
+        if "\\" in filenameAndPath:
+            filename = filenameAndPath.rsplit("\\",1)[-1]
+            path = filenameAndPath.replace(filename,"")
+        elif "/" in filenameAndPath:
+            filename = filenameAndPath.rsplit("/",1)[-1]
+            path = filenameAndPath.replace(filename,"")
+        else:
+            filename = filenameAndPath
+            path = None
+        
+        utils.logMsg("MB3 Sync","setting filename in kodi db..." + fileType + ": " + str(id))
+        xbmc.sleep(sleepVal)
+        connection = utils.KodiSQL()
+        cursor = connection.cursor( )
+        
+        if path != None:
+            cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
+            result = cursor.fetchone()
+            if result != None:
+                pathid = result[0]
+            if result == None:
+                cursor.execute("select coalesce(max(idPath),0) as pathid from path")
+                pathid = cursor.fetchone()[0]
+                pathid = pathid + 1
+                pathsql="insert into path(idPath, strPath) values(?, ?)"
+                cursor.execute(pathsql, (pathid,path))
+        
+        if fileType == "episode":
+            cursor.execute("SELECT idFile as fileidid FROM episode WHERE idEpisode = ?",(id,))
+            result = cursor.fetchone()
+            fileid = result[0]
+        if fileType == "movie":
+            cursor.execute("SELECT idFile as fileidid FROM movie WHERE idMovie = ?",(id,))
+            result = cursor.fetchone()
+            fileid = result[0]       
+        
+        cursor.execute("UPDATE files SET strFilename = ? WHERE idFile = ?", (filename,fileid))
+        cursor.execute("UPDATE files SET idPath = ? WHERE idFile = ?", (pathid,fileid))
+        
+        connection.commit()
+        cursor.close()
+    
+    
     
     def AddActorsToMedia(self, KodiItem, people, mediatype):
         #use sqlite to set add the actors while json api doesn't support this yet
