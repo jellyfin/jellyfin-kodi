@@ -22,7 +22,6 @@ import xbmcvfs
 
 addon = xbmcaddon.Addon(id='plugin.video.emby')
 addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
-language = addon.getLocalizedString   
 
 WINDOW = xbmcgui.Window( 10000 )
 port = addon.getSetting('port')
@@ -34,7 +33,7 @@ userid = downloadUtils.getUserId()
 class PlaybackUtils():
     
     settings = None
-    language = None 
+    language = addon.getLocalizedString
     logLevel = 0
 
     
@@ -85,7 +84,7 @@ class PlaybackUtils():
 
         # Can not play virtual items
         if (result.get("LocationType") == "Virtual"):
-          xbmcgui.Dialog().ok(self.language(30128), language(30129))
+          xbmcgui.Dialog().ok(self.language(30128), self.language(30129))
 
         watchedurl = 'http://' + server + '/mediabrowser/Users/'+ userid + '/PlayedItems/' + id
         positionurl = 'http://' + server + '/mediabrowser/Users/'+ userid + '/PlayingItems/' + id
@@ -96,8 +95,17 @@ class PlaybackUtils():
         WINDOW.setProperty(playurl+"positionurl", positionurl)
         WINDOW.setProperty(playurl+"deleteurl", "")
         WINDOW.setProperty(playurl+"deleteurl", deleteurl)
+        
         if seekTime != 0:
-            WINDOW.setProperty(playurl+"seektime", str(seekTime))
+            displayTime = str(datetime.timedelta(seconds=seekTime))
+            display_list = [ self.language(30106) + ' ' + displayTime, self.language(30107)]
+            resumeScreen = xbmcgui.Dialog()
+            resume_result = resumeScreen.select(self.language(30105), display_list)
+            xbmc.log("RESUME_QUESTION : " + str(resume_result))
+            if resume_result == 0:
+                WINDOW.setProperty(playurl+"seektime", str(seekTime))
+            else:
+                WINDOW.clearProperty(playurl+"seektime")
         else:
             WINDOW.clearProperty(playurl+"seektime")
 
@@ -130,7 +138,7 @@ class PlaybackUtils():
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
         else:
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
-            xbmc.Player().play(playurl,listItem)
+            #xbmc.Player().play(playurl,listItem)
 
     def setArt(self, list,name,path):
         if name=='thumb' or name=='fanart_image' or name=='small_poster' or name=='tiny_poster'  or name == "medium_landscape" or name=='medium_poster' or name=='small_fanartimage' or name=='medium_fanartimage' or name=='fanart_noindicators':
@@ -178,9 +186,9 @@ class PlaybackUtils():
         # play info
         playinformation = ''
         if PlayUtils().isDirectPlay(result) == True:
-            playinformation = language(30165)
+            playinformation = self.language(30165)
         else:
-            playinformation = language(30166)
+            playinformation = self.language(30166)
             
         details = {
                  'title'        : result.get("Name", "Missing Name") + ' - ' + playinformation,
