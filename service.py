@@ -51,7 +51,7 @@ class Service():
             
             ws = WebSocketThread()
             
-            while not xbmc.abortRequested:
+            while not self.KodiMonitor.abortRequested():
                 
                 xbmc.sleep(1000)
                 
