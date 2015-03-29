@@ -168,7 +168,11 @@ class LibrarySync():
                         item['Tag'] = []
                         item['Tag'].append(view.get('title'))
                         
-                        kodimovie = allKodiMovies.get(item["Id"], None)
+                        if allKodiMovies != None:
+                            kodimovie = allKodiMovies.get(item["Id"], None)
+                        else:
+                            kodimovie = None
+                        
                         if(kodimovie != None):
                             #WriteKodiDB().updateMovieToKodiLibrary(item, kodimovie)
                             updated = WriteKodiDB().updateMovieToKodiLibrary_Batched(item, kodimovie)
@@ -333,6 +337,7 @@ class LibrarySync():
                             progressAction = "Checking"
                             if not matchFound:
                                 #no match so we have to create it
+                                print "creating episode in incremental sync!"
                                 WriteKodiDB().addEpisodeToKodiLibrary(episode)
                                 updateNeeded = True
                                 progressAction = "Adding"
@@ -467,11 +472,13 @@ class LibrarySync():
 
                             progressAction = "Checking"
                             if not matchFound:
-                                #no match so we have to create it
-                                WriteKodiDB().addEpisodeToKodiLibrary(item)
-                                updateNeeded = True
-                                progressAction = "Adding"
-                                totalItemsAdded += 1
+                                #double check the item it might me added delayed by the Kodi scanner
+                                if ReadKodiDB().getKodiEpisodeByMbItem(item["Id"],tvshow) == None:
+                                    #no match so we have to create it
+                                    WriteKodiDB().addEpisodeToKodiLibrary(item)
+                                    updateNeeded = True
+                                    progressAction = "Adding"
+                                    totalItemsAdded += 1
                                 
                             if(self.ShouldStop(pDialog)):
                                 return False                        
@@ -727,8 +734,12 @@ class LibrarySync():
             for item in allMB3MusicVideos:
                 
                 if not item.get('IsFolder'):
-
-                    kodimusicvideo = allKodiMusicVideos.get(item["Id"], None)
+                    
+                    if allKodiMusicVideos != None:
+                        kodimusicvideo = allKodiMusicVideos.get(item["Id"], None)
+                    else:
+                        kodimusicvideo = None
+                    
                     if(kodimusicvideo != None):
                         #WriteKodiDB().updateMusicVideoToKodiLibrary(item, kodimusicvideo)
                         WriteKodiDB().updateMusicVideoToKodiLibrary_Batched(item, kodimusicvideo)
@@ -894,7 +905,10 @@ class LibrarySync():
                     episodeData = ReadEmbyDB().getEpisodes(item["Id"], False)
                     allKodiTVShows = ReadKodiDB().getKodiTvShows(False)
                     kodishow = allKodiTVShows.get(item["Id"],None)
-                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],False,True)
+                    if kodishow != None:
+                        kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],False,True)
+                    else:
+                        kodiEpisodes = None
                     
                     if (episodeData != None):
                         if(pDialog != None):
