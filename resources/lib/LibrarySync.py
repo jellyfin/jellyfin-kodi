@@ -440,7 +440,10 @@ class LibrarySync():
                     allKodiTVShows = ReadKodiDB().getKodiTvShows(False)
                     if allKodiTVShows != None:
                         kodishow = allKodiTVShows.get(tvshow,None)
-                        kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],True,True)
+                        if kodishow != None:
+                            kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],True,True)
+                        else:
+                            kodiEpisodes = None
                     else:
                         kodiEpisodes = None
                     
@@ -530,49 +533,50 @@ class LibrarySync():
                 for tvshow in allTVShows:
                     episodeData = ReadEmbyDB().getEpisodes(tvshow,True)
                     kodishow = allKodiTVShows.get(tvshow,None)
-                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],True,True)
-                    
-                    if(self.ShouldStop(pDialog)):
-                        return False                
-                    
-                    if(pDialog != None):
-                        progressTitle = "Sync DB : Processing Tv Show " + str(showCurrent) + " of " + str(showTotal)
-                        pDialog.update(0, progressTitle)
-                        total = len(episodeData) + 1
-                        count = 0         
-
-                    #we have to compare the lists somehow
-                    for item in episodeData:
-                        #add episodeId to the list of all episodes for use later on the deletes
-                        allMB3EpisodeIds.append(item["Id"])
-                        
-                        comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
-                        matchFound = False
-
-                        if kodiEpisodes != None:
-                            KodiItem = kodiEpisodes.get(comparestring1, None)
-                            if(KodiItem != None):
-                                updated = WriteKodiDB().updateEpisodeToKodiLibrary(item, KodiItem)
-                                if(updated):
-                                    totalItemsUpdated += 1                                
+                    if kodishow != None:
+                        kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],True,True)
                         
                         if(self.ShouldStop(pDialog)):
-                            return False                        
-                            
-                        # update progress bar
+                            return False                
+                        
                         if(pDialog != None):
-                            percentage = int(((float(count) / float(total)) * 100))
-                            pDialog.update(percentage, progressTitle, "Updating Episode: " + str(count))
-                            count += 1
-                    
-                    
-                    #add all kodi episodes to a list with episodes for use later on to delete episodes
-                    #the mediabrowser ID is set as uniqueID in the NFO... for some reason this has key 'unknown' in the json response
-                    show = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],False,False)
-                    if show != None:
-                        for episode in show:
-                            dict = {'episodeid': str(episode["uniqueid"]["unknown"]),'tvshowid': tvshow}
-                            allKodiEpisodeIds.append(dict)
+                            progressTitle = "Sync DB : Processing Tv Show " + str(showCurrent) + " of " + str(showTotal)
+                            pDialog.update(0, progressTitle)
+                            total = len(episodeData) + 1
+                            count = 0         
+    
+                        #we have to compare the lists somehow
+                        for item in episodeData:
+                            #add episodeId to the list of all episodes for use later on the deletes
+                            allMB3EpisodeIds.append(item["Id"])
+                            
+                            comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
+                            matchFound = False
+    
+                            if kodiEpisodes != None:
+                                KodiItem = kodiEpisodes.get(comparestring1, None)
+                                if(KodiItem != None):
+                                    updated = WriteKodiDB().updateEpisodeToKodiLibrary(item, KodiItem)
+                                    if(updated):
+                                        totalItemsUpdated += 1                                
+                            
+                            if(self.ShouldStop(pDialog)):
+                                return False                        
+                                
+                            # update progress bar
+                            if(pDialog != None):
+                                percentage = int(((float(count) / float(total)) * 100))
+                                pDialog.update(percentage, progressTitle, "Updating Episode: " + str(count))
+                                count += 1
+                        
+                        
+                        #add all kodi episodes to a list with episodes for use later on to delete episodes
+                        #the mediabrowser ID is set as uniqueID in the NFO... for some reason this has key 'unknown' in the json response
+                        show = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],False,False)
+                        if show != None:
+                            for episode in show:
+                                dict = {'episodeid': str(episode["uniqueid"]["unknown"]),'tvshowid': tvshow}
+                                allKodiEpisodeIds.append(dict)
                     
                     showCurrent += 1                  
                 
@@ -891,48 +895,49 @@ class LibrarySync():
                     episodeData = ReadEmbyDB().getEpisodes(item["Id"], False)
                     allKodiTVShows = ReadKodiDB().getKodiTvShows(False)
                     kodishow = allKodiTVShows.get(item["Id"],None)
-                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],False,True)
-                    
-                    if (episodeData != None):
-                        if(pDialog != None):
-                            progressTitle = "Sync PlayCounts: Processing TV Show " + str(showCurrent) + " of " + str(showTotal)
-                            pDialog.update(0, progressTitle)
-                            totalCount = len(episodeData) + 1
-                            count = 1                  
-                    
-                        for episode in episodeData:
-
-                            kodiItem = None
-                            comparestring1 = str(episode.get("ParentIndexNumber")) + "-" + str(episode.get("IndexNumber"))
-                            matchFound = False
-                            if kodiEpisodes != None:
-                                kodiItem = kodiEpisodes.get(comparestring1, None)
-
-                            userData=API().getUserData(episode)
-                            timeInfo = API().getTimeInfo(episode)
-                            if kodiItem != None:
-                                WINDOW = xbmcgui.Window( 10000 )
-                                WINDOW.setProperty("episodeid" + str(kodiItem['episodeid']), episode.get('Name') + ";;" + episode.get('Id'))
-                                kodiresume = int(round(kodiItem['resume'].get("position")))
-                                resume = int(round(float(timeInfo.get("ResumeTime"))))*60
-                                total = int(round(float(timeInfo.get("TotalTime"))))*60
-                                if kodiresume != resume:
-                                    WriteKodiDB().setKodiResumePoint(kodiItem['episodeid'],resume,total,"episode")
-                                    totalPositionsUpdated += 1
-                                
-                                updated = WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode")
-                                updated |= WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "episode")
-                                if(updated):
-                                    totalCountsUpdated += 1    
-                            if(self.ShouldStop(pDialog)):
-                                return False
-                            
-                            # update progress bar
+                    if kodishow != None:
+                        kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],False,True)
+                        
+                        if (episodeData != None):
                             if(pDialog != None):
-                                percentage = int(((float(count) / float(totalCount)) * 100))
-                                pDialog.update(percentage, progressTitle, "Updating Episode: " + str(count))
-                                count += 1
+                                progressTitle = "Sync PlayCounts: Processing TV Show " + str(showCurrent) + " of " + str(showTotal)
+                                pDialog.update(0, progressTitle)
+                                totalCount = len(episodeData) + 1
+                                count = 1                  
+                        
+                            for episode in episodeData:
+    
+                                kodiItem = None
+                                comparestring1 = str(episode.get("ParentIndexNumber")) + "-" + str(episode.get("IndexNumber"))
+                                matchFound = False
+                                if kodiEpisodes != None:
+                                    kodiItem = kodiEpisodes.get(comparestring1, None)
+    
+                                userData=API().getUserData(episode)
+                                timeInfo = API().getTimeInfo(episode)
+                                if kodiItem != None:
+                                    WINDOW = xbmcgui.Window( 10000 )
+                                    WINDOW.setProperty("episodeid" + str(kodiItem['episodeid']), episode.get('Name') + ";;" + episode.get('Id'))
+                                    kodiresume = int(round(kodiItem['resume'].get("position")))
+                                    resume = int(round(float(timeInfo.get("ResumeTime"))))*60
+                                    total = int(round(float(timeInfo.get("TotalTime"))))*60
+                                    if kodiresume != resume:
+                                        WriteKodiDB().setKodiResumePoint(kodiItem['episodeid'],resume,total,"episode")
+                                        totalPositionsUpdated += 1
+                                    
+                                    updated = WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode")
+                                    updated |= WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "episode")
+                                    if(updated):
+                                        totalCountsUpdated += 1    
+                                if(self.ShouldStop(pDialog)):
+                                    return False
                                 
+                                # update progress bar
+                                if(pDialog != None):
+                                    percentage = int(((float(count) / float(totalCount)) * 100))
+                                    pDialog.update(percentage, progressTitle, "Updating Episode: " + str(count))
+                                    count += 1
+                                    
                         showCurrent += 1
              
             if(playCountSyncFirstRun != "true"):
