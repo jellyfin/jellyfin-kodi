@@ -942,11 +942,11 @@ class WriteKodiDB():
                 finally:
                     cursor.close()
         
-                #rename the old strmfile to prevent Kodi from scanning it again
-                if oldFileName.endswith(".strm"):
-                    if xbmcvfs.exists(oldFileName):
-                        oldFileName_renamed = oldFileName.replace(".strm",".emby")
-                        xbmcvfs.rename(oldFileName,oldFileName_renamed)
+        #rename the old strmfile to prevent Kodi from scanning it again
+        if oldFileName.endswith(".strm"):
+            if xbmcvfs.exists(oldFileName):
+                oldFileName_renamed = oldFileName.replace(".strm",".emby")
+                xbmcvfs.rename(oldFileName,oldFileName_renamed)
                         
     
     def AddActorsToMedia(self, KodiItem, people, mediatype):
