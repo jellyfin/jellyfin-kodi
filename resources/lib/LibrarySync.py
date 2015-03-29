@@ -515,8 +515,11 @@ class LibrarySync():
                 allKodiTVShows = ReadKodiDB().getKodiTvShows(True)
                 for item in tvShowData:
                     if item.get('IsFolder'):
-
-                        kodishow = allKodiTVShows.get(item["Id"],None)
+                        
+                        if allKodiTVShows != None:
+                            kodishow = allKodiTVShows.get(item["Id"],None)
+                        else:
+                            kodishow = None
                         
                         if(kodishow != None):
                             updated = WriteKodiDB().updateTVShowToKodiLibrary(item,kodishow)
@@ -536,11 +539,12 @@ class LibrarySync():
                 showCurrent = 1
                 for tvshow in allTVShows:
                     episodeData = ReadEmbyDB().getEpisodes(tvshow,True)
-                    kodishow = allKodiTVShows.get(tvshow,None)
-                    if kodishow != None:
-                        kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],True,True)
-                    else:
-                        kodiEpisodes = None
+                    
+                    kodiEpisodes = None
+                    if allKodiTVShows != None:
+                        kodishow = allKodiTVShows.get(tvshow,None)
+                        if kodishow != None:
+                            kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],True,True)
                     
                     if(self.ShouldStop(pDialog)):
                         return False                
@@ -578,11 +582,12 @@ class LibrarySync():
                     
                     #add all kodi episodes to a list with episodes for use later on to delete episodes
                     #the mediabrowser ID is set as uniqueID in the NFO... for some reason this has key 'unknown' in the json response
-                    show = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],False,False)
-                    if show != None:
-                        for episode in show:
-                            dict = {'episodeid': str(episode["uniqueid"]["unknown"]),'tvshowid': tvshow}
-                            allKodiEpisodeIds.append(dict)
+                    if kodishow != None:
+                        show = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],False,False)
+                        if show != None:
+                            for episode in show:
+                                dict = {'episodeid': str(episode["uniqueid"]["unknown"]),'tvshowid': tvshow}
+                                allKodiEpisodeIds.append(dict)
                     
                     showCurrent += 1                  
                 
