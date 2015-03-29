@@ -407,9 +407,15 @@ class WriteKodiDB():
         #update/check all artwork
         changes |= self.updateArtWork(KodiItem,MBitem)
         
-        #set Filename
+        #set Filename (also submit strmfilepath to rename that if path has changed to original location)
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
-        self.setKodiFilename(KodiItem["episodeid"], KodiItem["file"], playurl, "episode")
+        itemPath = os.path.join(tvLibrary,MBitem["SeriesId"])
+        if str(MBitem.get("IndexNumber")) != None:
+            filenamestr = utils.CleanName(utils.convertEncoding(MBitem.get("SeriesName"))) + " S" + str(MBitem.get("ParentIndexNumber")) + "E" + str(MBitem.get("IndexNumber")) + " (" + MBitem["Id"] + ").strm"
+        else:
+            filenamestr = utils.CleanName(utils.convertEncoding(MBitem.get("SeriesName"))) + " S0E0 " + utils.CleanName(utils.convertEncoding(MBitem.get("Name"))) + " (" + MBitem["Id"] + ").strm"
+        strmFile = os.path.join(itemPath,filenamestr)
+        self.setKodiFilename(KodiItem["episodeid"], KodiItem["file"], playurl, "episode", strmFile)
         
         #update common properties
         duration = (int(timeInfo.get('Duration'))*60)
@@ -775,8 +781,7 @@ class WriteKodiDB():
                 xbmc.sleep(100)
             utils.logMsg("episode deleted succesfully!",episodeid)
         else:
-            utils.logMsg("episode not found in kodi DB",episodeid)
-            
+            utils.logMsg("episode not found in kodi DB",episodeid)        
             
     def addTVShowToKodiLibrary( self, item ):
         itemPath = os.path.join(tvLibrary,item["Id"])
@@ -866,8 +871,7 @@ class WriteKodiDB():
         connection.commit()
         cursor.close()
     
-    
-    def setKodiFilename(self, id, oldFileName, newFileName, fileType):
+    def setKodiFilename(self, id, oldFileName, newFileName, fileType, strmFile=None):
         #use sqlite to set the filename in DB -- needed to avoid problems with resumepoints etc
         #todo --> submit PR to kodi team to get this added to the jsonrpc api
         #todo --> extend support for musicvideos
@@ -887,6 +891,10 @@ class WriteKodiDB():
                 cursor = connection.cursor( )
                 
                 utils.logMsg("MB3 Sync","setting filename in kodi db..." + fileType + ": " + str(id))
+                try:
+                    print oldFileName
+                except:
+                    pass
                            
                 if fileType == "tvshow":
                     #for tvshows we only store the path in DB
@@ -942,11 +950,16 @@ class WriteKodiDB():
                 finally:
                     cursor.close()
         
-        #rename the old strmfile to prevent Kodi from scanning it again
-        if oldFileName.endswith(".strm"):
-            if xbmcvfs.exists(oldFileName):
-                oldFileName_renamed = oldFileName.replace(".strm",".emby")
-                xbmcvfs.rename(oldFileName,oldFileName_renamed)
+                #rename the old strmfile to prevent Kodi from scanning it again              
+                if strmFile != None:
+                    filename = strmFile
+                else:
+                    filename = oldFileName
+                
+                if filename.endswith(".strm"):
+                    if xbmcvfs.exists(filename):
+                        oldFileName_renamed = filename.replace(".strm",".emby")
+                        xbmcvfs.rename(filename,oldFileName_renamed)
                         
     
     def AddActorsToMedia(self, KodiItem, people, mediatype):

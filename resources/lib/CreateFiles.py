@@ -48,13 +48,13 @@ class CreateFiles():
         if item_type == "Episode":
             itemPath = os.path.join(tvLibrary,item["SeriesId"])
             if str(item.get("IndexNumber")) != None:
-                filenamestr = self.CleanName(utils.convertEncoding(item.get("SeriesName"))) + " S" + str(item.get("ParentIndexNumber")) + "E" + str(item.get("IndexNumber")) + " (" + item["Id"] + ").strm"
+                filenamestr = utils.CleanName(utils.convertEncoding(item.get("SeriesName"))) + " S" + str(item.get("ParentIndexNumber")) + "E" + str(item.get("IndexNumber")) + " (" + item["Id"] + ").strm"
             else:
-                filenamestr = self.CleanName(utils.convertEncoding(item.get("SeriesName"))) + " S0E0 " + self.CleanName(utils.convertEncoding(item.get("Name"))) + " (" + item["Id"] + ").strm"
+                filenamestr = utils.CleanName(utils.convertEncoding(item.get("SeriesName"))) + " S0E0 " + utils.CleanName(utils.convertEncoding(item.get("Name"))) + " (" + item["Id"] + ").strm"
             strmFile = os.path.join(itemPath,filenamestr)
 
         changes = False
-        if not xbmcvfs.exists(strmFile) and not xbmcvfs.exists(strmFile.replace(".strm",".emby")):
+        if not xbmcvfs.exists(strmFile):
             changes = True
             xbmcvfs.mkdir(itemPath)
             text_file = open(strmFile, "w")
@@ -108,9 +108,9 @@ class CreateFiles():
         if item_type == "Episode":
             itemPath = os.path.join(tvLibrary,item["SeriesId"])
             if str(item.get("ParentIndexNumber")) != None:
-                filenamestr = self.CleanName(utils.convertEncoding(item.get("SeriesName"))) + " S" + str(item.get("ParentIndexNumber")) + "E" + str(item.get("IndexNumber")) + " (" + item["Id"] + ").nfo"
+                filenamestr = utils.CleanName(utils.convertEncoding(item.get("SeriesName"))) + " S" + str(item.get("ParentIndexNumber")) + "E" + str(item.get("IndexNumber")) + " (" + item["Id"] + ").nfo"
             else:
-                filenamestr = self.CleanName(utils.convertEncoding(item.get("SeriesName"))) + " S0E0 " + self.CleanName(utils.convertEncoding(item["Name"])) + " (" + item["Id"] + ").nfo"
+                filenamestr = utils.CleanName(utils.convertEncoding(item.get("SeriesName"))) + " S0E0 " + utils.CleanName(utils.convertEncoding(item["Name"])) + " (" + item["Id"] + ").nfo"
             nfoFile = os.path.join(itemPath,filenamestr)
             rootelement = "episodedetails"
             
@@ -333,8 +333,5 @@ class CreateFiles():
                       fanartFile = os.path.join(fanartDir,"fanart" + str(index) + ".jpg")
                       xbmcvfs.copy(backgroundUrl,fanartFile)
         
-    def CleanName(self, filename):
-        validFilenameChars = "-_.() %s%s" % (string.ascii_letters, string.digits)
-        cleanedFilename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore')
-        return ''.join(c for c in cleanedFilename if c in validFilenameChars)
+    
  

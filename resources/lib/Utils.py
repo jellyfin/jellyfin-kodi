@@ -13,6 +13,8 @@ import pstats
 import time
 import inspect
 import sqlite3
+import string
+import unicodedata
 from xml.etree.ElementTree import Element, SubElement, Comment, tostring
 from xml.etree import ElementTree
 from xml.dom import minidom
@@ -243,6 +245,9 @@ def stopProfiling(pr, profileName):
             f.write(str(ncalls) + "\t" + "{0}".format(total_time) + "\t" + "{0}".format(cumulative_time) + "\t" + func_name + "\t" + filename + "\r\n")
     f.close()
 
-
+def CleanName(filename):
+    validFilenameChars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+    cleanedFilename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore')
+    return ''.join(c for c in cleanedFilename if c in validFilenameChars)
    
  

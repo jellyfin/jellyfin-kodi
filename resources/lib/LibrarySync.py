@@ -541,6 +541,7 @@ class LibrarySync():
                     episodeData = ReadEmbyDB().getEpisodes(tvshow,True)
                     
                     kodiEpisodes = None
+                    allKodiTVShows = ReadKodiDB().getKodiTvShows(False)
                     if allKodiTVShows != None:
                         kodishow = allKodiTVShows.get(tvshow,None)
                         if kodishow != None:
