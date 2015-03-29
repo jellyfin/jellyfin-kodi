@@ -894,13 +894,13 @@ class WriteKodiDB():
             pathid = pathid + 1
             pathsql="insert into path(idPath, strPath) values(?, ?)"
             cursor.execute(pathsql, (pathid,path))
-            
+            '''
             cursor.execute("select coalesce(max(idPath),0) as pathid from path")
             pathid = cursor.fetchone()[0]
             pathid = pathid + 1
             pathsql="insert into path(idPath, strPath) values(?, ?)"
             cursor.execute(pathsql, (pathid,path))
-        
+            '''
         if fileType == "episode":
             cursor.execute("SELECT idFile as fileidid FROM episode WHERE idEpisode = ?",(id,))
             result = cursor.fetchone()
