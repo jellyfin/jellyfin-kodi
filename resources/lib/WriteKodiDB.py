@@ -868,11 +868,6 @@ class WriteKodiDB():
         oldFileName = utils.convertEncoding(oldFileName)
         newFileName = utils.convertEncoding(newFileName)
         
-        print "setting filename for ID..." + str(id) + "...Type-->" + fileType
-        print oldFileName
-        print newFileName
-        
-        
         # only perform changes if the path actually differs
         if oldFileName != newFileName:
         

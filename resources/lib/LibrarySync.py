@@ -315,7 +315,9 @@ class LibrarySync():
                     for episode in latestMBEpisodes:
                         if episode["SeriesId"] in allKodiTvShowsIds:
                             #only process tvshows that already exist in the db at incremental updates
-                            kodiEpisodes = ReadKodiDB().getKodiEpisodes(episode["SeriesId"],True,True)
+                            allKodiTVShows = ReadKodiDB().getKodiTvShows(False)
+                            kodishow = allKodiTVShows.get(episode["SeriesId"],None)
+                            kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],True,True)
                             
                             if(self.ShouldStop(pDialog)):
                                 return False                
@@ -360,7 +362,9 @@ class LibrarySync():
                     for episode in latestMBEpisodes:
                         if episode["SeriesId"] in allKodiTvShowsIds:
                             #only process tvshows that already exist in the db at incremental updates
-                            kodiEpisodes = ReadKodiDB().getKodiEpisodes(episode["SeriesId"],True,True)
+                            allKodiTVShows = ReadKodiDB().getKodiTvShows(False)
+                            kodishow = allKodiTVShows.get(episode["SeriesId"],None)
+                            kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],True,True)
                             
                             if(self.ShouldStop(pDialog)):
                                 return False                
@@ -433,7 +437,9 @@ class LibrarySync():
                 for tvshow in allTVShows:
                     
                     episodeData = ReadEmbyDB().getEpisodes(tvshow,True)
-                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(tvshow,True,True)
+                    allKodiTVShows = ReadKodiDB().getKodiTvShows(False)
+                    kodishow = allKodiTVShows.get(tvshow,None)
+                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],True,True)
                     
                     if episodeData != None:
                         
@@ -447,6 +453,7 @@ class LibrarySync():
                             count = 0         
 
                         #we have to compare the lists somehow
+                        # TODO --> instead of matching by season and episode number we can use the uniqueid
                         for item in episodeData:
                             comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
                             matchFound = False
@@ -518,9 +525,9 @@ class LibrarySync():
                 # do episode updates
                 showCurrent = 1
                 for tvshow in allTVShows:
-                    
                     episodeData = ReadEmbyDB().getEpisodes(tvshow,True)
-                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(tvshow,True,True)
+                    kodishow = allKodiTVShows.get(tvshow,None)
+                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],True,True)
                     
                     if(self.ShouldStop(pDialog)):
                         return False                
@@ -533,19 +540,19 @@ class LibrarySync():
 
                     #we have to compare the lists somehow
                     for item in episodeData:
-                        
                         #add episodeId to the list of all episodes for use later on the deletes
                         allMB3EpisodeIds.append(item["Id"])
                         
                         comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
                         matchFound = False
+
                         if kodiEpisodes != None:
                             KodiItem = kodiEpisodes.get(comparestring1, None)
                             if(KodiItem != None):
                                 updated = WriteKodiDB().updateEpisodeToKodiLibrary(item, KodiItem)
                                 if(updated):
                                     totalItemsUpdated += 1                                
-                            
+                        
                         if(self.ShouldStop(pDialog)):
                             return False                        
                             
@@ -558,7 +565,7 @@ class LibrarySync():
                     
                     #add all kodi episodes to a list with episodes for use later on to delete episodes
                     #the mediabrowser ID is set as uniqueID in the NFO... for some reason this has key 'unknown' in the json response
-                    show = ReadKodiDB().getKodiEpisodes(tvshow,False,False)
+                    show = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],False,False)
                     if show != None:
                         for episode in show:
                             dict = {'episodeid': str(episode["uniqueid"]["unknown"]),'tvshowid': tvshow}
@@ -879,7 +886,9 @@ class LibrarySync():
                 for item in tvshowData:
                     
                     episodeData = ReadEmbyDB().getEpisodes(item["Id"], False)
-                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(item["Id"],False,True)
+                    allKodiTVShows = ReadKodiDB().getKodiTvShows(False)
+                    kodishow = allKodiTVShows.get(item["Id"],None)
+                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],False,True)
                     
                     if (episodeData != None):
                         if(pDialog != None):
