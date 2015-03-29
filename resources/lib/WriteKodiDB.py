@@ -761,13 +761,16 @@ class WriteKodiDB():
         utils.logMsg("deleting episode from Kodi library",episodeid)
         episode = ReadKodiDB().getKodiEpisodeByMbItem(episodeid, tvshowid)
         if episode != None:
-            strmfile = episode["file"]
-            nfofile = strmfile.replace(".strm",".nfo")
             WINDOW = xbmcgui.Window( 10000 )
             WINDOW.setProperty("suspendDeletes", "True")                
             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveEpisode", "params": { "episodeid": %i}, "id": 1 }' %(episode["episodeid"]))
-            xbmcvfs.delete(strmfile)
-            xbmcvfs.delete(nfofile)
+            
+            itemPath = os.path.join(tvLibrary,tvshowid)
+            allDirs, allFiles = xbmcvfs.listdir(itemPath)
+            for file in allFiles:
+                if episodeid in file:
+                    xbmcvfs.delete(file)
+            
             while WINDOW.getProperty("suspendDeletes") == "True":
                 xbmc.sleep(100)
             utils.logMsg("episode deleted succesfully!",episodeid)

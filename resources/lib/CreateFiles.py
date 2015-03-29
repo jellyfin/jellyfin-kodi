@@ -54,7 +54,7 @@ class CreateFiles():
             strmFile = os.path.join(itemPath,filenamestr)
 
         changes = False
-        if not xbmcvfs.exists(strmFile):
+        if not xbmcvfs.exists(strmFile) and not xbmcvfs.exists(strmFile.replace(".strm",".emby")):
             changes = True
             xbmcvfs.mkdir(itemPath)
             text_file = open(strmFile, "w")
