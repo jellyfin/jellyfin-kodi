@@ -770,7 +770,11 @@ class WriteKodiDB():
             xbmcvfs.delete(nfofile)
             while WINDOW.getProperty("suspendDeletes") == "True":
                 xbmc.sleep(100)
-    
+            utils.logMsg("episode deleted succesfully!",episodeid)
+        else:
+            utils.logMsg("episode not found in kodi DB",episodeid)
+            
+            
     def addTVShowToKodiLibrary( self, item ):
         itemPath = os.path.join(tvLibrary,item["Id"])
         
