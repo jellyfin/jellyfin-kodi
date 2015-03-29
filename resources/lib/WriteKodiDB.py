@@ -76,9 +76,7 @@ class WriteKodiDB():
         
         #set Filename
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
-        if not playurl.startswith("http"):
-            if playurl != KodiItem["file"]:
-                self.setKodiFilename(KodiItem["movieid"], playurl, "movie")
+        self.setKodiFilename(KodiItem["movieid"], KodiItem["file"], playurl, "movie")
         
         #update common properties
         duration = (int(timeInfo.get('Duration'))*60)
@@ -148,9 +146,6 @@ class WriteKodiDB():
             
         #add actors
         changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"), "movie")
-        
-        CreateFiles().createSTRM(MBitem)
-        CreateFiles().createNFO(MBitem)
         
         #add theme music
         if addon.getSetting("syncThemeMusic") == "true":
@@ -298,10 +293,8 @@ class WriteKodiDB():
         
         #set Filename
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
-        self.setKodiFilename(KodiItem["movieid"], playurl, "movie")
+        self.setKodiFilename(KodiItem["movieid"], KodiItem["file"], playurl, "movie")
         
-        CreateFiles().createSTRM(MBitem)
-        CreateFiles().createNFO(MBitem)
         
         #add theme music
         if addon.getSetting("syncThemeMusic") == "true":
@@ -332,6 +325,12 @@ class WriteKodiDB():
         thumbPath = API().getArtwork(MBitem, "Primary")
         
         changes = False
+        
+        #set Filename
+        playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
+        #make sure that the path always ends with a slash
+        playurl = playurl + "/"
+        self.setKodiFilename(KodiItem["tvshowid"], KodiItem["file"], playurl, "tvshow")
         
         #update/check all artwork
         changes |= self.updateArtWork(KodiItem,MBitem)
@@ -410,9 +409,7 @@ class WriteKodiDB():
         
         #set Filename
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
-        if not playurl.startswith("http"):
-            if playurl != KodiItem["file"]:
-                self.setKodiFilename(KodiItem["episodeid"], playurl, "episode")
+        self.setKodiFilename(KodiItem["episodeid"], KodiItem["file"], playurl, "episode")
         
         #update common properties
         duration = (int(timeInfo.get('Duration'))*60)
@@ -436,9 +433,6 @@ class WriteKodiDB():
 
         #add actors
         changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"),"episode")
-
-        CreateFiles().createNFO(MBitem)
-        CreateFiles().createSTRM(MBitem)
         
         if changes:
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
@@ -866,57 +860,92 @@ class WriteKodiDB():
         cursor.close()
     
     
-    def setKodiFilename(self, id, filenameAndPath, fileType):
+    def setKodiFilename(self, id, oldFileName, newFileName, fileType):
         #use sqlite to set the filename in DB -- needed to avoid problems with resumepoints etc
         #todo --> submit PR to kodi team to get this added to the jsonrpc api
         #todo --> extend support for musicvideos
-        filenameAndPath = utils.convertEncoding(filenameAndPath)
+        
+        oldFileName = utils.convertEncoding(oldFileName)
+        newFileName = utils.convertEncoding(newFileName)
+        
+        print "setting filename for ID..." + str(id) + "...Type-->" + fileType
+        print oldFileName
+        print newFileName
+        
+        
+        # only perform changes if the path actually differs
+        if oldFileName != newFileName:
+        
+            # play from stream is not supported, that has to use the old method of playing through the addon itself
+            # TODO --> if you change from stream to local you have to rescan, this can be fixed here ?
+            if not newFileName.startswith("http"):
+                
+                xbmc.sleep(sleepVal)
+                connection = utils.KodiSQL()
+                cursor = connection.cursor( )
+                
+                utils.logMsg("MB3 Sync","setting filename in kodi db..." + fileType + ": " + str(id))
+                           
+                if fileType == "tvshow":
+                    #for tvshows we only store the path in DB
+                    
+                    cursor.execute("SELECT idPath as pathid FROM tvshowlinkpath WHERE idShow = ?",(id,))
+                    result = cursor.fetchone()
+                    if result != None:
+                        pathid = result[0]
+                        cursor.execute("UPDATE path SET strPath = ? WHERE idPath = ?", (newFileName,pathid))
+                        cursor.execute("UPDATE path SET noUpdate = ? WHERE idPath = ?", (1,pathid))
+                        cursor.execute("UPDATE path SET idParentPath = ? WHERE idPath = ?", (None,pathid))
+                else:
+                    #process movies and episodes
+                    if "\\" in newFileName:
+                        filename = newFileName.rsplit("\\",1)[-1]
+                        path = newFileName.replace(filename,"")
+                    elif "/" in newFileName:
+                        filename = newFileName.rsplit("/",1)[-1]
+                        path = newFileName.replace(filename,"")
 
-        if "\\" in filenameAndPath:
-            filename = filenameAndPath.rsplit("\\",1)[-1]
-            path = filenameAndPath.replace(filename,"")
-        elif "/" in filenameAndPath:
-            filename = filenameAndPath.rsplit("/",1)[-1]
-            path = filenameAndPath.replace(filename,"")
+                    if fileType == "movie":
+                        strContent = "movies"
+                        strScraper = "metadata.local"
+                    elif fileType == "episode":
+                        strContent = None
+                        strScraper = None                   
+                    
+                    # we need to store both the path and the filename seperately in the kodi db
+                    cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
+                    result = cursor.fetchone()
+                    if result != None:
+                        pathid = result[0]
+                    if result == None:
+                        cursor.execute("select coalesce(max(idPath),0) as pathid from path")
+                        pathid = cursor.fetchone()[0]
+                        pathid = pathid + 1
+                        pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
+                        cursor.execute(pathsql, (pathid,path,strContent,strScraper,1))
 
-        utils.logMsg("MB3 Sync","setting filename in kodi db..." + fileType + ": " + str(id))
-        xbmc.sleep(sleepVal)
-        connection = utils.KodiSQL()
-        cursor = connection.cursor( )
+                    if fileType == "episode":
+                        cursor.execute("SELECT idFile as fileid FROM episode WHERE idEpisode = ?",(id,))
+                        result = cursor.fetchone()
+                        fileid = result[0]
+                    if fileType == "movie":
+                        cursor.execute("SELECT idFile as fileid FROM movie WHERE idMovie = ?",(id,))
+                        result = cursor.fetchone()
+                        fileid = result[0]       
+                    
+                    cursor.execute("UPDATE files SET strFilename = ? WHERE idFile = ?", (filename,fileid))
+                    cursor.execute("UPDATE files SET idPath = ? WHERE idFile = ?", (pathid,fileid))
+                try:
+                    connection.commit()
+                finally:
+                    cursor.close()
         
-        cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
-        result = cursor.fetchone()
-        if result != None:
-            pathid = result[0]
-        if result == None:
-            cursor.execute("select coalesce(max(idPath),0) as pathid from path")
-            pathid = cursor.fetchone()[0]
-            pathid = pathid + 1
-            pathsql="insert into path(idPath, strPath) values(?, ?)"
-            cursor.execute(pathsql, (pathid,path))
-            '''
-            cursor.execute("select coalesce(max(idPath),0) as pathid from path")
-            pathid = cursor.fetchone()[0]
-            pathid = pathid + 1
-            pathsql="insert into path(idPath, strPath) values(?, ?)"
-            cursor.execute(pathsql, (pathid,path))
-            '''
-        if fileType == "episode":
-            cursor.execute("SELECT idFile as fileidid FROM episode WHERE idEpisode = ?",(id,))
-            result = cursor.fetchone()
-            fileid = result[0]
-        if fileType == "movie":
-            cursor.execute("SELECT idFile as fileidid FROM movie WHERE idMovie = ?",(id,))
-            result = cursor.fetchone()
-            fileid = result[0]       
-        
-        cursor.execute("UPDATE files SET strFilename = ? WHERE idFile = ?", (filename,fileid))
-        cursor.execute("UPDATE files SET idPath = ? WHERE idFile = ?", (pathid,fileid))
-        
-        connection.commit()
-        cursor.close()
-    
-    
+                #rename the old strmfile to prevent Kodi from scanning it again
+                if oldFileName.endswith(".strm"):
+                    if xbmcvfs.exists(oldFileName):
+                        oldFileName_renamed = oldFileName.replace(".strm",".emby")
+                        xbmcvfs.rename(oldFileName,oldFileName_renamed)
+                        
     
     def AddActorsToMedia(self, KodiItem, people, mediatype):
         #use sqlite to set add the actors while json api doesn't support this yet

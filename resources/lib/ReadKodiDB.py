@@ -62,8 +62,6 @@ class ReadKodiDB():
                                 embyId = item["uniqueid"]["unknown"]
 
             return embyId
-
-
     
     def getKodiMovies(self,fullInfo = False):
         #returns all movies in Kodi db
@@ -129,9 +127,9 @@ class ReadKodiDB():
         #returns all tvshows in Kodi db inserted by MB
         xbmc.sleep(sleepVal)
         if fullInfo:
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.emby"}, "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "premiered", "rating", "thumbnail", "playcount", "lastplayed", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "premiered", "rating", "thumbnail", "playcount", "lastplayed", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
         else:
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.emby"}, "properties": ["sorttitle", "title", "playcount", "lastplayed", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "properties": ["sorttitle", "title", "playcount", "lastplayed", imdbnumber, "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         tvshows = None
 
@@ -144,18 +142,14 @@ class ReadKodiDB():
         if(tvshows != None and len(tvshows) > 0):
             kodiShowMap = {}
             for kodishow in tvshows:
-                filepath = kodishow["file"]
-                filepath = filepath.replace(tvLibrary + os.sep, "")
-                filepath = filepath.replace(".strm", "")
-                filepath = filepath.split(os.sep)[0]
-                key = filepath #extract the id from the file path
+                key = kodishow["imdbnumber"] #extract the id from the imdb number
                 kodiShowMap[key] = kodishow
                 
         return kodiShowMap
     
     def getKodiTVShow(self, id):
         xbmc.sleep(sleepVal)
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "lastplayed", "premiered", "rating", "thumbnail", "playcount", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "is", "field": "imdbnumber", "value": "' + id + '"}, "properties": ["art", "genre", "plot", "mpaa", "cast", "studio", "sorttitle", "title", "originaltitle", "imdbnumber", "year", "lastplayed", "premiered", "rating", "thumbnail", "playcount", "file", "fanart"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         tvshow = None
         if(jsonobject.has_key('result')):
@@ -168,7 +162,7 @@ class ReadKodiDB():
     def getKodiEpisodes(self, id, fullInfo = True, returnmap = True):
         xbmc.sleep(sleepVal)
         episodes = None
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties": ["title", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
+        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": {"operator": "contains", "field": "imdbnumber", "value": "' + id + '"}, "properties": ["title", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libTvShows"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         tvshow = None
         if(jsonobject.has_key('result')):
