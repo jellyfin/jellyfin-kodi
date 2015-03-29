@@ -530,7 +530,10 @@ class LibrarySync():
                 for tvshow in allTVShows:
                     episodeData = ReadEmbyDB().getEpisodes(tvshow,True)
                     kodishow = allKodiTVShows.get(tvshow,None)
-                    kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],True,True)
+                    if kodishow != None:
+                        kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],True,True)
+                    else:
+                        kodiEpisodes = None
                     
                     if(self.ShouldStop(pDialog)):
                         return False                
