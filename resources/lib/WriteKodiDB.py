@@ -34,32 +34,9 @@ class WriteKodiDB():
     def updatePlayCountFromKodi(self, id, type, playcount=0):
         #when user marks item watched from kodi interface update this in MB3
         xbmc.sleep(sleepVal)
-        xbmc.log("WriteKodiDB -> updatePlayCountFromKodi Called")
+        utils.logMsg("MB3 Sync", "updatePlayCountFromKodi Called")
         
-        mb3Id = None
-        if(type == "movie"):
-            mb3Id = None
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovieDetails", "params": { "movieid": ' + str(id) + ', "properties" : ["playcount", "file"] }, "id": "1"}')
-            if json_response != None:
-                jsonobject = json.loads(json_response.decode('utf-8','replace'))  
-                if(jsonobject.has_key('result')):
-                    result = jsonobject['result']
-                    if(result.has_key('moviedetails')):
-                        moviedetails = result['moviedetails']
-                        filename = moviedetails.get("file").rpartition('\\')[2]
-                        mb3Id = filename.replace(".strm","")
-        
-        elif(type == "episode"):
-            mb3Id = None
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodeDetails", "params": { "episodeid": ' + str(id) + ', "properties" : ["playcount", "file"] }, "id": "1"}')
-            if json_response != None:
-                jsonobject = json.loads(json_response.decode('utf-8','replace'))  
-                if(jsonobject.has_key('result')):
-                    result = jsonobject['result']
-                    if(result.has_key('episodedetails')):
-                        episodedetails = result['episodedetails']
-                        filename = episodedetails.get("file").rpartition('\\')[2]
-                        mb3Id = filename[-38:-6]
+        mb3Id = ReadKodiDB().getEmbyIdByKodiId(id, type)
 
         if(mb3Id != None):
             addon = xbmcaddon.Addon(id='plugin.video.emby')

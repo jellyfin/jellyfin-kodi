@@ -783,6 +783,11 @@ class LibrarySync():
         processMovies = True
         processTvShows = True
         
+        if(WINDOW.getProperty("updatePlayCounts_Running") == "true"):
+            utils.logMsg("Sync PlayCount", "updatePlayCounts Already Running", 0)
+            return
+        WINDOW.setProperty("updatePlayCounts_Running", "true")
+            
         try:
             playCountSyncIndication = addon.getSetting("playCountSyncIndication")
             playCountSyncFirstRun = addon.getSetting("SyncFirstCountsRunDone")
@@ -841,7 +846,7 @@ class LibrarySync():
                                     WriteKodiDB().setKodiResumePoint(kodiItem['movieid'],resume,total,"movie")
                                     totalPositionsUpdated += 1
                                 updated = WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")), "movie")
-                                updated = WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "movie")
+                                updated |= WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "movie")
                                 if(updated):
                                     totalCountsUpdated += 1
                             if(self.ShouldStop(pDialog)):
@@ -904,7 +909,7 @@ class LibrarySync():
                                     totalPositionsUpdated += 1
                                 
                                 updated = WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode")
-                                updated = WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "episode")
+                                updated |= WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "episode")
                                 if(updated):
                                     totalCountsUpdated += 1    
                             if(self.ShouldStop(pDialog)):
@@ -943,6 +948,7 @@ class LibrarySync():
                 xbmc.executebuiltin("XBMC.Notification(PlayCount Sync: " + notificationString + ",)")
 
         finally:
+            WINDOW.setProperty("updatePlayCounts_Running", "false")
             if(pDialog != None):
                 pDialog.close()            
         
