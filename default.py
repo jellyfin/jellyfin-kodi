@@ -27,6 +27,5 @@ if mode == "play":
     PlaybackUtils().PLAY(id)
     
 else:
-    utils.checkKodiSources()
     xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
 
