@@ -29,9 +29,9 @@ class Kodi_Monitor(xbmc.Monitor):
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
         downloadUtils = DownloadUtils()
-        
+        #print "onNotification:" + method + ":" + sender + ":" + str(data)
         #player started playing an item - 
-        if "Playlist.OnAdd" in method:
+        if method == "Player.OnPlay":
             print "playlist onadd is called"
             jsondata = json.loads(data)
             if jsondata != None:
