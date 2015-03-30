@@ -198,12 +198,22 @@ class Player( xbmc.Player ):
         
         if xbmcplayer.isPlaying():
             currentFile = xbmcplayer.getPlayingFile()
-            self.printDebug("emby Service -> onPlayBackStarted" + currentFile,2)
-                       
+            self.printDebug("emby Service -> onPlayBackStarted : " + currentFile, 0)
+            
+            # we may need to wait until the info is available
+            item_id = WINDOW.getProperty(currentFile + "item_id")
+            tryCount = 0
+            while(item_id == None or item_id == ""):
+                xbmc.sleep(500)
+                item_id = WINDOW.getProperty(currentFile + "item_id")
+                tryCount += 1
+                if(tryCount == 20): # try 20 times or about 10 seconds
+                    return
+            xbmc.sleep(500)
+            
             # grab all the info about this item from the stored windows props
             # only ever use the win props here, use the data map in all other places
             runtime = WINDOW.getProperty(currentFile + "runtimeticks")
-            item_id = WINDOW.getProperty(currentFile + "item_id")
             refresh_id = WINDOW.getProperty(currentFile + "refresh_id")
             audioindex = WINDOW.getProperty(currentFile + "AudioStreamIndex")
             subtitleindex = WINDOW.getProperty(currentFile + "SubtitleStreamIndex")
@@ -214,6 +224,7 @@ class Player( xbmc.Player ):
                 PlaybackUtils().seekToPosition(int(seekTime))
             
             if(item_id == None or len(item_id) == 0):
+                self.printDebug("emby Service -> onPlayBackStarted : No info for current playing file", 0)
                 return
         
             url = ("http://%s:%s/mediabrowser/Sessions/Playing" % (addonSettings.getSetting('ipaddress'), addonSettings.getSetting('port')))  
@@ -231,6 +242,7 @@ class Player( xbmc.Player ):
             if(subtitleindex != None and subtitleindex!=""):
               url = url + "&SubtitleStreamIndex=" + subtitleindex
             
+            self.printDebug("emby Service -> Sending Post Play Started : " + url, 0)
             self.downloadUtils.downloadUrl(url, postBody="", type="POST")   
             
             # save data map for updates and position calls
@@ -245,8 +257,8 @@ class Player( xbmc.Player ):
             data["Type"] = itemType
             self.played_information[currentFile] = data
             
-            self.printDebug("emby Service -> ADDING_FILE : " + currentFile)
-            self.printDebug("emby Service -> ADDING_FILE : " + str(self.played_information))
+            self.printDebug("emby Service -> ADDING_FILE : " + currentFile, 0)
+            self.printDebug("emby Service -> ADDING_FILE : " + str(self.played_information), 0)
 
             # log some playback stats
             if(itemType != None):
