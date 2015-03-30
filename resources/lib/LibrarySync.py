@@ -445,7 +445,10 @@ class LibrarySync():
                     allKodiTVShows = ReadKodiDB().getKodiTvShows(False)
                     if allKodiTVShows != None:
                         kodishow = allKodiTVShows.get(tvshow,None)
-                        kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],True,True)
+                        if kodishow != None:
+                            kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],True,True)
+                        else:
+                            kodiEpisodes = None
                     else:
                         kodiEpisodes = None
                     
