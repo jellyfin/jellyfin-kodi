@@ -879,6 +879,7 @@ class WriteKodiDB():
         oldFileName = utils.convertEncoding(oldFileName)
         newFileName = utils.convertEncoding(newFileName)
         
+        
         # only perform changes if the path actually differs
         if oldFileName != newFileName:
         
@@ -891,6 +892,8 @@ class WriteKodiDB():
                 cursor = connection.cursor( )
                 
                 utils.logMsg("MB3 Sync","setting filename in kodi db..." + fileType + ": " + str(id))
+                #utils.logMsg("MB3 Sync","Old Name : " + oldFileName)
+                #utils.logMsg("MB3 Sync","New Name : " + newFileName)
                 try:
                     print oldFileName
                 except:
