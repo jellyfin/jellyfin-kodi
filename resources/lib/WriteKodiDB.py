@@ -337,10 +337,9 @@ class WriteKodiDB():
         docleanup = self.setKodiFilename(KodiItem["tvshowid"], KodiItem["file"], playurl, "tvshow")
         
         #if the path has been set directly in the DB, cleanup the locally created nfo file to import the tvshow into the Kodi DB to prevent Kodi from scanning it again.
-        if docleanup: 
-            nfoPath = os.path.join(tvLibrary,MBitem["Id"],"tvshow.nfo")
-            print "about to delete file--> " + nfoPath
-            os.remove(nfoPath)
+        nfoPath = os.path.join(tvLibrary,MBitem["Id"],"tvshow.nfo")
+        if xbmcvfs.exists(nfoPath):
+            xbmcvfs.remove(nfoPath)
         
         #update/check all artwork
         changes |= self.updateArtWork(KodiItem,MBitem)
