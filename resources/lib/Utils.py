@@ -250,4 +250,13 @@ def CleanName(filename):
     cleanedFilename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore')
     return ''.join(c for c in cleanedFilename if c in validFilenameChars)
    
- 
+
+def removeDirectory(path):
+    if xbmcvfs.exists(path):
+        allDirs, allFiles = xbmcvfs.listdir(path)
+        for dir in allDirs:
+            xbmcvfs.rmdir(os.path.join(path,dir))
+        for file in allFiles:
+            xbmcvfs.delete(os.path.join(path,file))
+        
+        xbmcvfs.rmdir(path)
