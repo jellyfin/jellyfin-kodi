@@ -339,7 +339,7 @@ class WriteKodiDB():
         #if the path has been set directly in the DB, cleanup the locally created nfo file to import the tvshow into the Kodi DB to prevent Kodi from scanning it again.
         nfoPath = os.path.join(tvLibrary,MBitem["Id"],"tvshow.nfo")
         if xbmcvfs.exists(nfoPath):
-            xbmcvfs.remove(nfoPath)
+            xbmcvfs.delete(nfoPath)
         
         #update/check all artwork
         changes |= self.updateArtWork(KodiItem,MBitem)
@@ -378,7 +378,7 @@ class WriteKodiDB():
         #update season artwork
         self.updateSeasonArtwork(MBitem, KodiItem)
         
-        CreateFiles().createNFO(MBitem)
+        #CreateFiles().createNFO(MBitem)
         
         #add theme music
         if addon.getSetting("syncThemeMusic") == "true":
