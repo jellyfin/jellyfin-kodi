@@ -34,6 +34,7 @@ class Service():
     def ServiceEntryPoint(self):
         
         ConnectionManager().checkServer()
+        DownloadUtils().authenticate(retreive=True)
         
         # check kodi library sources
         mayRun = utils.checkKodiSources()
@@ -79,7 +80,7 @@ class Service():
                         pass
                 else:
                     # background worker for database sync
-                    if DownloadUtils().authenticate(retreive=True) != "":
+                    if DownloadUtils().authenticate(retreive=False) != "":
                         
                         # Correctly launch the websocket, if user manually launches the add-on
                         if (self.newWebSocketThread == None):
