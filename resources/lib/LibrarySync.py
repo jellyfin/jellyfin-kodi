@@ -21,7 +21,6 @@ from DownloadUtils import DownloadUtils
 from ReadEmbyDB import ReadEmbyDB
 from ReadKodiDB import ReadKodiDB
 from WriteKodiDB import WriteKodiDB
-from CreateFiles import CreateFiles
 
 addondir = xbmc.translatePath(xbmcaddon.Addon(id='plugin.video.emby').getAddonInfo('profile'))
 dataPath = os.path.join(addondir,"library")

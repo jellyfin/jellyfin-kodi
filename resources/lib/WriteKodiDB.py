@@ -14,7 +14,6 @@ import os
 
 from DownloadUtils import DownloadUtils
 from PlayUtils import PlayUtils
-from CreateFiles import CreateFiles
 from ReadKodiDB import ReadKodiDB
 from ReadEmbyDB import ReadEmbyDB
 from API import API
