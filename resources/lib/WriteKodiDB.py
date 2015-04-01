@@ -295,6 +295,7 @@ class WriteKodiDB():
         thumbPath = API().getArtwork(MBitem, "Primary")
         
         changes = False
+      
         
         #set Filename
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
@@ -998,12 +999,29 @@ class WriteKodiDB():
         connection = utils.KodiSQL()
         cursor = connection.cursor()
                     
-        #create the path
+        #create the tv show path
         cursor.execute("select coalesce(max(idPath),0) as pathid from path")
         pathid = cursor.fetchone()[0]
         pathid = pathid + 1
         pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
         cursor.execute(pathsql, (pathid,path,None,None,1))
+        
+        #create toplevel path as monitored source - needed for things like actors and stuff to work (no clue why)
+        if "\\" in path:
+            toplevelpathstr = path.rsplit("\\",2)[1]
+            toplevelpath = path.replace(toplevelpathstr + "\\","")
+        elif "/" in path:
+            toplevelpathstr = path.rsplit("/",2)[1]
+            toplevelpath = path.replace(toplevelpathstr + "/","")
+        cursor.execute("SELECT idPath as tlpathid FROM path WHERE strPath = ?",(toplevelpath,))
+        result = cursor.fetchone()
+        if result == None:
+            cursor.execute("select coalesce(max(idPath),0) as tlpathid from path")
+            tlpathid = cursor.fetchone()[0]
+            tlpathid = pathid + 1
+            pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (tlpathid,toplevelpath,"tvshows","metadata.local",1))
+        
         
         runtime = int(timeInfo.get('Duration'))*60
         plot = utils.convertEncoding(API().getOverview(MBitem))
@@ -1243,7 +1261,7 @@ class WriteKodiDB():
                         Name = person.get("Name")
                         Role = person.get("Role")
                         actorid = None
-                        Thumb = downloadUtils.imageUrl(person.get("Id"), "Primary", 0, 400, 400)
+                        Thumb = "<thumb>" + downloadUtils.imageUrl(person.get("Id"), "Primary", 0, 400, 400) + "</thumb>"
                         cursor.execute("SELECT idActor as actorid FROM actors WHERE strActor = ?",(Name,))
                         result = cursor.fetchone()
                         if result != None:
