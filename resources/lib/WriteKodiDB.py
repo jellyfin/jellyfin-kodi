@@ -680,18 +680,23 @@ class WriteKodiDB():
             path = playurl.replace(filename,"")
                     
         #create the path
-        cursor.execute("select coalesce(max(idPath),0) as pathid from path")
-        pathid = cursor.fetchone()[0]
-        pathid = pathid + 1
-        pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
-        cursor.execute(pathsql, (pathid,path,"movies","metadata.local",1))
+        cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
+        result = cursor.fetchone()
+        if result != None:
+            pathid = result[0]        
+        else:
+            cursor.execute("select coalesce(max(idPath),0) as pathid from path")
+            pathid = cursor.fetchone()[0]
+            pathid = pathid + 1
+            pathsql = "insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (pathid,path,"movies","metadata.local",1))
         
         playcount = None
         if userData.get("PlayCount") == "1":
             playcount = 1
             
         #create the file if not exists
-        cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ?",(filename,))
+        cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?",(filename,pathid,))
         result = cursor.fetchone()
         if result != None:
             fileid = result[0]
@@ -785,11 +790,16 @@ class WriteKodiDB():
             path = playurl.replace(filename,"")
                     
         #create the path
-        cursor.execute("select coalesce(max(idPath),0) as pathid from path")
-        pathid = cursor.fetchone()[0]
-        pathid = pathid + 1
-        pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
-        cursor.execute(pathsql, (pathid,path,"musicvideos","metadata.local",1))
+        cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
+        result = cursor.fetchone()
+        if result != None:
+            pathid = result[0]        
+        else:
+            cursor.execute("select coalesce(max(idPath),0) as pathid from path")
+            pathid = cursor.fetchone()[0]
+            pathid = pathid + 1
+            pathsql = "insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (pathid,path,"movies","metadata.local",1))
         
         playcount = None
         if userData.get("PlayCount") == "1":
@@ -886,13 +896,12 @@ class WriteKodiDB():
             pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
             cursor.execute(pathsql, (pathid,path,None,None,1))
         
-        
         playcount = None
         if userData.get("PlayCount") == "1":
             playcount = 1
         
         #create the file if not exists
-        cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ?",(filename,))
+        cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?",(filename,pathid,))
         result = cursor.fetchone()
         if result != None:
             fileid = result[0]
