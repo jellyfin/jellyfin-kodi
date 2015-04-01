@@ -1125,7 +1125,11 @@ class WriteKodiDB():
             utils.logMsg("MB3 Sync","new filename -->" + newFileName)
             
             ######### PROCESS TV SHOW ############
-            if fileType == "tvshow" and not newFileName.startswith("http"):
+            if fileType == "tvshow":
+                
+                if newFileName.startswith("http"):
+                    newFileName = "plugin://plugin.video.emby/"
+                
                 #for tvshows we only store the path in DB
                 cursor.execute("SELECT idPath as pathid FROM tvshowlinkpath WHERE idShow = ?",(id,))
                 result = cursor.fetchone()
@@ -1138,7 +1142,7 @@ class WriteKodiDB():
                 if newFileName.startswith("http"):
                     #transcoding or play from stream
                     path = "plugin://plugin.video.emby/"
-                    filename = "?id=" + mbId + '&mode=play'
+                    filename = "plugin://plugin.video.emby/?id=" + mbId + "&mode=play"
                     
                 else:
                     # direct play
