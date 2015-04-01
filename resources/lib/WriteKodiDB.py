@@ -146,7 +146,7 @@ class WriteKodiDB():
             jsoncommand = jsoncommand %(KodiItem['movieid'], paramString)
             utils.logMsg("executeJSONRPC : ", jsoncommand, level = 2)
             xbmc.sleep(sleepVal)
-            result = xbmc.executeJSONRPC(jsoncommand)
+            result = xbmc.executeJSONRPC(jsoncommand.encode("utf-8"))
             
         #add actors
         changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"), "movie")
@@ -216,7 +216,7 @@ class WriteKodiDB():
             jsoncommand = jsoncommand %(KodiItem['musicvideoid'], paramString)
             utils.logMsg("executeJSONRPC : ", jsoncommand, level = 2)
             xbmc.sleep(sleepVal)
-            result = xbmc.executeJSONRPC(jsoncommand)
+            result = xbmc.executeJSONRPC(jsoncommand.encode("utf-8"))
         
         CreateFiles().createSTRM(MBitem)
         CreateFiles().createNFO(MBitem)
@@ -591,7 +591,7 @@ class WriteKodiDB():
                     #xbmc.sleep(sleepVal)
                     utils.logMsg("MB3 Sync","updating property..." + str(propertyName))
                     utils.logMsg("MB3 Sync","kodi value:" + KodiItem[propertyName] + " MB value: " + propertyValue)
-                    params.append("\"" + propertyName + "\": \"" + str(propertyValue) + "\"")
+                    params.append("\"" + propertyName + "\": \"" + propertyValue + "\"")
                     #xbmc.executeJSONRPC(jsoncommand_s %(id, propertyName, propertyValue.encode('utf-8')))
                     changes = True
                     
