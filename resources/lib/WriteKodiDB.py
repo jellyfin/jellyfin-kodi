@@ -894,6 +894,7 @@ class WriteKodiDB():
             utils.logMsg("MB3 Sync","old filename -->" + oldFileName)
             utils.logMsg("MB3 Sync","new filename -->" + newFileName)
             
+            ######### PROCESS TV SHOW ############
             if fileType == "tvshow" and not newFileName.startswith("http"):
                 #for tvshows we only store the path in DB
                 cursor.execute("SELECT idPath as pathid FROM tvshowlinkpath WHERE idShow = ?",(id,))
@@ -918,7 +919,12 @@ class WriteKodiDB():
                 ######### PROCESS EPISODE ############
                 if fileType == "episode":
                     
-                    #create the path - return id if already exists  
+                    #get the file and the current path id
+                    cursor.execute("SELECT idFile as fileid FROM episode WHERE idEpisode = ?",(id,))
+                    result = cursor.fetchone()
+                    fileid = result[0]
+                    
+                    #create the new path - return id if already exists  
                     cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
                     result = cursor.fetchone()
                     if result != None:
@@ -929,15 +935,7 @@ class WriteKodiDB():
                         pathid = pathid + 1
                         pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
                         cursor.execute(pathsql, (pathid,path,None,None,1))
-                        
-                    #get the file and the current path id
-                    cursor.execute("SELECT idFile as fileid FROM episode WHERE idEpisode = ?",(id,))
-                    result = cursor.fetchone()
-                    fileid = result[0]
-                    cursor.execute("SELECT idPath as curpathid FROM files WHERE idFile = ?",(fileid,))
-                    result = cursor.fetchone()
-                    curpathid = result[0]
-                        
+                    
                     #set the new path and filename to the episode
                     cursor.execute("UPDATE files SET idPath = ?, strFilename = ? WHERE idFile = ?", (pathid,filename,fileid))
 
