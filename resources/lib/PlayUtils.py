@@ -76,8 +76,9 @@ class PlayUtils():
 
     # Works out if we are direct playing or not
     def isDirectPlay(self, result):
+        return False
         if (self.fileExists(result) or (result.get("LocationType") == "FileSystem" and self.isNetworkQualitySufficient(result) == True and self.isLocalPath(result) == False)):
-            return True
+            return False
         else:
             return False
         

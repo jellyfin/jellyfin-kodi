@@ -49,44 +49,6 @@ def convertEncoding(data):
     except:
         return data
           
-
-def checkKodiSources():
-    addon       = xbmcaddon.Addon(id='plugin.video.emby')
-    addondir   = xbmc.translatePath( addon.getAddonInfo('profile') )
-    dataPath = os.path.join(addondir,"library")
-    movieLibrary        = os.path.join(dataPath,'movies')
-    tvLibrary           = os.path.join(dataPath,'tvshows')
-    musicvideoLibrary = os.path.join(dataPath,'musicvideos')
-    
-    # If no folder exists at the time, create it.
-    if xbmcvfs.exists(addondir) == False:
-        xbmcvfs.mkdir(addondir)
-        xbmc.log("Manually created %s" % addondir)
-    
-    if not xbmcvfs.exists(dataPath + os.sep):
-        xbmcvfs.mkdir(dataPath)
-    if not xbmcvfs.exists(movieLibrary + os.sep):
-        xbmcvfs.mkdir(movieLibrary)
-        addKodiSource("mediabrowser_movies",movieLibrary,"movies")
-    if not xbmcvfs.exists(tvLibrary + os.sep):
-        xbmcvfs.mkdir(tvLibrary)
-        addKodiSource("mediabrowser_tvshows",tvLibrary,"tvshows")
-    if not xbmcvfs.exists(musicvideoLibrary + os.sep):
-        xbmcvfs.mkdir(musicvideoLibrary)
-        addKodiSource("mediabrowser_musicvideos",musicvideoLibrary,"musicvideos")
-    
-    rebootRequired = KodiAdvancedSettingsCheck()
-    
-    if rebootRequired:
-        ret = xbmcgui.Dialog().yesno(heading="Emby Sync service", line1="A restart of Kodi is needed to apply changes.", line2="Synchronisation will not start before the restart.", line3="Do you want to restart now?")
-        if ret:
-            xbmc.executebuiltin("RestartApp")
-        else:
-            return False
-    
-    return True
-    
-
 def KodiSQL():
     if xbmc.getInfoLabel("System.BuildVersion").startswith("13"):
         #gotham
@@ -103,81 +65,7 @@ def KodiSQL():
 
     return connection
         
-        
-def addKodiSource(name, path, type):
-    #add new source to database, common way is to add it directly to the Kodi DB. Fallback to adding it to the sources.xml
-    #return boolean wether a manual reboot is required.
-    #todo: Do feature request with Kodi team to get support for adding a source by the json API
-    
-    error = False
-    try:
-        connection = KodiSQL()
-        cursor = connection.cursor( )
-        cursor.execute("select coalesce(max(idPath),0) as pathId from path")
-        pathId =  cursor.fetchone()[0]
-        pathId = pathId + 1
-        pathsql="insert into path(idPath, strPath, strContent, strScraper, strHash, scanRecursive) values(?, ?, ?, ?, ?, ?)"
-        cursor.execute(pathsql, (pathId,path + os.sep,type,"metadata.local",None,2147483647))
-        connection.commit()
-        cursor.close()
-    except:
-        error = True
 
-    # add it to sources.xml
-    sourcesFile = xbmc.translatePath( "special://profile/sources.xml" )
-    
-    # add an empty sources file to work with
-    if xbmcvfs.exists(sourcesFile) == False:
-        sources = Element("sources")
-        video = SubElement(sources, "video")
-        ET.ElementTree(sources).write(sourcesFile)
-    
-    if xbmcvfs.exists(sourcesFile):
-        tree = ET.ElementTree(file=sourcesFile)
-        root = tree.getroot()
-        videosources = root.find("video")
-        #remove any existing entries for this path
-        allsources = videosources.findall("source")
-        if allsources != None:
-            for source in allsources:
-                if source.find("name").text == name:
-                    videosources.remove(source)
-        # add the new source
-        source = SubElement(videosources,'source')
-        SubElement(source, "name").text = name
-        SubElement(source, "path").text = path
-        tree.write(sourcesFile)
-       
-def KodiAdvancedSettingsCheck():
-    #setting that kodi should import watched state and resume points from the nfo files
-    settingsFile = xbmc.translatePath( "special://profile/advancedsettings.xml" )
-    # add an empty sources file to work with
-    if xbmcvfs.exists(settingsFile) == False:
-        sources = Element("advancedsettings")
-        video = SubElement(sources, "videolibrary")
-        ET.ElementTree(sources).write(settingsFile)
-    
-    writeNeeded = False
-    if xbmcvfs.exists(settingsFile):
-        tree = ET.ElementTree(file=settingsFile)
-        root = tree.getroot()
-        video = root.find("videolibrary")
-        if video == None:
-            video = SubElement(root, "videolibrary")
-        # add the settings
-        if video.find("importwatchedstate") == None:
-            writeNeeded = True
-            SubElement(video, "importwatchedstate").text = "true"
-        if video.find("importresumepoint") == None:
-            writeNeeded = True
-            SubElement(video, "importresumepoint").text = "true"
-        
-        if writeNeeded:
-            tree.write(settingsFile)
-            return True
-        else:
-            return False
-       
 def checkAuthentication():
     #check authentication
     if addonSettings.getSetting('username') != "" and addonSettings.getSetting('ipaddress') != "":

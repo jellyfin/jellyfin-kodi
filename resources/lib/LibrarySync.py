@@ -99,8 +99,6 @@ class LibrarySync():
             
             for view in views:
                 
-                updateNeeded = False
-                
                 #process new movies
                 allMB3Movies = ReadEmbyDB().getMovies(view.get('id'), True, fullsync)
                 allKodiIds = set(ReadKodiDB().getKodiMoviesIds(True))
@@ -126,7 +124,6 @@ class LibrarySync():
                         
                         if item["Id"] not in allKodiIds:
                             WriteKodiDB().addMovieToKodiLibrary(item)
-                            updateNeeded = True
                             totalItemsAdded += 1
                         
                         if(self.ShouldStop(pDialog)):
@@ -137,19 +134,6 @@ class LibrarySync():
                             percentage = int(((float(count) / float(total)) * 100))
                             pDialog.update(percentage, progressTitle, "Adding Movie: " + str(count))
                             count += 1
-                
-                #initiate library update and wait for finish before processing any updates
-                if updateNeeded:
-                    if(pDialog != None):
-                        pDialog.update(0, "Processing New Items", "Importing STRM Files")
-                    
-                    if(pDialog != None and type(pDialog) == xbmcgui.DialogProgressBG):
-                        pDialog.close()
-                        
-                    self.doKodiLibraryUpdate(False, pDialog)
-                    
-                    if(pDialog != None and type(pDialog) == xbmcgui.DialogProgressBG):
-                        pDialog.create('Sync DB', 'Sync DB')
                 
                 if(self.ShouldStop(pDialog)):
                     return False
@@ -228,8 +212,6 @@ class LibrarySync():
             if(self.ShouldStop(pDialog)):
                 return False            
             
-            cleanNeeded = False
-            
             # process any deletes only at fullsync
             if fullsync:
                 allKodiIds = ReadKodiDB().getKodiMoviesIds(True)
@@ -238,15 +220,10 @@ class LibrarySync():
                     if not kodiId in allEmbyMovieIds:
                         WINDOW.setProperty(kodiId,"deleted")
                         WriteKodiDB().deleteMovieFromKodiLibrary(kodiId)
-                        cleanNeeded = True
                         totalItemsDeleted += 1
             
             if(self.ShouldStop(pDialog)):
                 return False            
-            
-            #initiate library clean and wait for finish before processing any updates
-            if cleanNeeded:
-                self.doKodiLibraryUpdate(True, pDialog)
             
             # display notification if set up
             notificationString = ""
@@ -308,8 +285,6 @@ class LibrarySync():
                 if latestMBEpisodes != None:
                     allKodiTvShowsIds = set(ReadKodiDB().getKodiTvShowsIds(True))
                     
-                    updateNeeded = False
-                    
                     if(pDialog != None):
                         pDialog.update(0, progressTitle)
                         total = len(latestMBEpisodes) + 1
@@ -339,7 +314,6 @@ class LibrarySync():
                                 #no match so we have to create it
                                 print "creating episode in incremental sync!"
                                 WriteKodiDB().addEpisodeToKodiLibrary(episode)
-                                updateNeeded = True
                                 progressAction = "Adding"
                                 totalItemsAdded += 1
                                 
@@ -351,11 +325,6 @@ class LibrarySync():
                                 percentage = int(((float(count) / float(total)) * 100))
                                 pDialog.update(percentage, progressTitle, progressAction + " Episode: " + str(count))
                                 count += 1    
-                    
-                    #initiate library update and wait for finish before processing any updates
-                    if updateNeeded:
-                        self.doKodiLibraryUpdate(False, pDialog)
-                        updateNeeded = False
                     
                     #process updates
                     if(pDialog != None):
@@ -400,7 +369,6 @@ class LibrarySync():
 
                 tvShowData = ReadEmbyDB().getTVShows(True,True)
                 allKodiIds = set(ReadKodiDB().getKodiTvShowsIds(True))
-                updateNeeded = False
                 
                 if(self.ShouldStop(pDialog)):
                     return False            
@@ -420,7 +388,6 @@ class LibrarySync():
                         progMessage = "Processing"
                         if item["Id"] not in allKodiIds:
                             WriteKodiDB().addTVShowToKodiLibrary(item)
-                            updateNeeded = True
                             totalItemsAdded += 1
                             
                         if(self.ShouldStop(pDialog)):
@@ -479,7 +446,6 @@ class LibrarySync():
                                 if ReadKodiDB().getKodiEpisodeByMbItem(item["Id"],tvshow) == None:
                                     #no match so we have to create it
                                     WriteKodiDB().addEpisodeToKodiLibrary(item)
-                                    updateNeeded = True
                                     progressAction = "Adding"
                                     totalItemsAdded += 1
                                 
@@ -493,20 +459,7 @@ class LibrarySync():
                                 count += 1
                                 
                         showCurrent += 1
-                        
-                #initiate library update and wait for finish before processing any updates
-                if updateNeeded:
-                    if(pDialog != None):
-                        pDialog.update(0, "Processing New Items", "Importing STRM Files")
-
-                    if(pDialog != None and type(pDialog) == xbmcgui.DialogProgressBG):
-                        pDialog.close()
-                        
-                    self.doKodiLibraryUpdate(False, pDialog)
-                    updateNeeded = False
-                    
-                    if(pDialog != None and type(pDialog) == xbmcgui.DialogProgressBG):
-                        pDialog.create('Sync DB', 'Sync DB')                      
+                                          
                                       
                 if(pDialog != None):
                     progressTitle = "Sync DB : Processing TV Shows"
@@ -602,8 +555,6 @@ class LibrarySync():
                 if(self.ShouldStop(pDialog)):
                     return False            
                 
-                cleanNeeded = False
-                
                 # DELETES -- EPISODES
                 # process any deletes only at fullsync
                 allMB3EpisodeIds = set(allMB3EpisodeIds)
@@ -611,25 +562,19 @@ class LibrarySync():
                     if episode.get('episodeid') not in allMB3EpisodeIds:
                         WINDOW.setProperty("embyid" + str(episode.get('episodeid')),"deleted")
                         WriteKodiDB().deleteEpisodeFromKodiLibrary(episode.get('episodeid'),episode.get('tvshowid'))
-                        cleanneeded = True
                         totalItemsDeleted += 1
                 
                 # DELETES -- TV SHOWS
                 if fullsync:
-                    allLocaldirs, filesTVShows = xbmcvfs.listdir(tvLibrary)
+                    allKodiShows = ReadKodiDB().getKodiTvShowsIds(True)
                     allMB3TVShows = set(allTVShows)
-                    for dir in allLocaldirs:
-                        if not dir in allMB3TVShows:
+                    for show in allKodiShows:
+                        if not show in allMB3TVShows:
                             WriteKodiDB().deleteTVShowFromKodiLibrary(dir)
-                            cleanneeded = True
                             totalItemsDeleted += 1
             
                 if(self.ShouldStop(pDialog)):
                     return False            
-                
-                #initiate library clean and wait for finish before processing any updates
-                if cleanNeeded:
-                    self.doKodiLibraryUpdate(True, pDialog)       
 
             # display notification if set up
             notificationString = ""
@@ -680,8 +625,6 @@ class LibrarySync():
 
             progressTitle = ""
             
-            updateNeeded = False
-            
             #process new musicvideos
             allMB3MusicVideos = ReadEmbyDB().getMusicVideos(True, fullsync)
             allKodiIds = set(ReadKodiDB().getKodiMusicVideoIds(True))
@@ -705,7 +648,6 @@ class LibrarySync():
                     
                     if item["Id"] not in allKodiIds:
                         WriteKodiDB().addMusicVideoToKodiLibrary(item)
-                        updateNeeded = True
                     
                     if(self.ShouldStop(pDialog)):
                         return False
@@ -715,19 +657,6 @@ class LibrarySync():
                         percentage = int(((float(count) / float(total)) * 100))
                         pDialog.update(percentage, progressTitle, "Adding Musicvideo: " + str(count))
                         count += 1
-            
-            #initiate library update and wait for finish before processing any updates
-            if updateNeeded:
-                if(pDialog != None):
-                    pDialog.update(0, "Processing New Items", "Importing STRM Files")
-                
-                if(pDialog != None and type(pDialog) == xbmcgui.DialogProgressBG):
-                    pDialog.close()
-                    
-                self.doKodiLibraryUpdate(False, pDialog)
-                
-                if(pDialog != None and type(pDialog) == xbmcgui.DialogProgressBG):
-                    pDialog.create('Sync DB', 'Sync DB')
             
             if(self.ShouldStop(pDialog)):
                 return False
@@ -750,7 +679,6 @@ class LibrarySync():
                         kodimusicvideo = None
                     
                     if(kodimusicvideo != None):
-                        #WriteKodiDB().updateMusicVideoToKodiLibrary(item, kodimusicvideo)
                         WriteKodiDB().updateMusicVideoToKodiLibrary_Batched(item, kodimusicvideo)
                     
                     if(self.ShouldStop(pDialog)):
@@ -770,8 +698,6 @@ class LibrarySync():
             if(self.ShouldStop(pDialog)):
                 return False            
             
-            cleanNeeded = False
-            
             # process any deletes only at fullsync
             if fullsync:
                 allKodiIds = ReadKodiDB().getKodiMusicVideoIds(True)
@@ -779,33 +705,16 @@ class LibrarySync():
                 for kodiId in allKodiIds:
                     if not kodiId in allEmbyMusicVideoIds:
                         WriteKodiDB().deleteMusicVideoFromKodiLibrary(kodiId)
-                        cleanNeeded = True
             
             if(self.ShouldStop(pDialog)):
                 return False            
-            
-            #initiate library clean and wait for finish before processing any updates
-            if cleanNeeded:
-                self.doKodiLibraryUpdate(True, pDialog)
             
         finally:
             if(pDialog != None):
                 pDialog.close()
         
         return True  
-    
-    def doKodiLibraryUpdate(self, clean, prog):
-        #initiate library update and wait for finish before processing any updates
-        if clean:
-            xbmc.executebuiltin("CleanLibrary(video)")
-        else:
-            xbmc.executebuiltin("UpdateLibrary(video)")
-        xbmc.sleep(1000)
-        while (xbmc.getCondVisibility("Library.IsScanningVideo")):
-            if(self.ShouldStop(prog)):
-                return False
-            xbmc.sleep(1000)
-    
+
     def updatePlayCounts(self):
         #update all playcounts from MB3 to Kodi library
         

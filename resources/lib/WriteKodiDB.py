@@ -20,13 +20,6 @@ from ReadEmbyDB import ReadEmbyDB
 from API import API
 import Utils as utils
 
-addon = xbmcaddon.Addon(id='plugin.video.emby')
-addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
-dataPath = os.path.join(addondir,"library")
-movieLibrary = os.path.join(dataPath,'movies')
-tvLibrary = os.path.join(dataPath,'tvshows')
-musicvideoLibrary = os.path.join(dataPath,'musicvideos')
-
 sleepVal = 20
 
 class WriteKodiDB():
@@ -76,15 +69,11 @@ class WriteKodiDB():
         
         #set Filename
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
-        docleanup = self.setKodiFilename(KodiItem["movieid"], KodiItem["file"], playurl, "movie")
-        #if the path has been set directly in the DB, cleanup the locally created files to import the media-item into the Kodi DB to prevent Kodi from scanning it again.
-        if docleanup: 
-            itemPath = os.path.join(movieLibrary,MBitem["Id"])
-            utils.removeDirectory(os.path.join(movieLibrary,MBitem["Id"] + os.sep))
+        self.setKodiFilename(KodiItem["movieid"], KodiItem["file"], playurl, "movie", MBitem["Id"])
         
         #update common properties
-        duration = (int(timeInfo.get('Duration'))*60)
-        self.getPropertyParam_Batched(KodiItem, "runtime", duration, params)
+        if KodiItem["runtime"] == 0:
+            self.getPropertyParam_Batched(KodiItem, "runtime", (int(timeInfo.get('Duration'))*60), params)
         self.getPropertyParam_Batched(KodiItem, "year", MBitem.get("ProductionYear"), params)
         self.getPropertyParam_Batched(KodiItem, "mpaa", MBitem.get("OfficialRating"), params)
         self.getPropertyParam_Batched(KodiItem, "lastplayed", userData.get("LastPlayedDate"), params)
@@ -126,7 +115,7 @@ class WriteKodiDB():
             if(jsonData != ""):
                 trailerItem = json.loads(jsonData)
                 if trailerItem[0].get("LocationType") == "FileSystem":
-                    trailerUrl = "plugin://plugin.video.emby/?id=" + trailerItem[0].get("Id") + '&mode=play'
+                    trailerUrl = PlayUtils().getPlayUrl(server, trailerItem[0].get("Id"), trailerItem[0])
                     self.getPropertyParam_Batched(KodiItem, "trailer", trailerUrl, params)
                 
 
@@ -150,14 +139,6 @@ class WriteKodiDB():
             
         #add actors
         changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"), "movie")
-        
-        #add theme music
-        if addon.getSetting("syncThemeMusic") == "true":
-            CreateFiles().copyThemeMusic(MBitem)
-            
-        #add extra fanart
-        if addon.getSetting("syncExtraFanart") == "true":
-           CreateFiles().copyExtraFanart(MBitem)
         
         if(changes):
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"], level=0)
@@ -186,8 +167,8 @@ class WriteKodiDB():
         self.getArtworkParam_Batched(KodiItem, MBitem, params)
 
         #update common properties
-        duration = (int(timeInfo.get('Duration'))*60)
-        self.getPropertyParam_Batched(KodiItem, "runtime", duration, params)
+        if KodiItem["runtime"] == None:
+            self.getPropertyParam_Batched(KodiItem, "runtime", (int(timeInfo.get('Duration'))*60), params)
         self.getPropertyParam_Batched(KodiItem, "year", MBitem.get("ProductionYear"), params)
         self.getPropertyParamArray_Batched(KodiItem, "director", people.get("Director"), params)
         self.getPropertyParamArray_Batched(KodiItem, "genre", MBitem.get("Genres"), params)
@@ -218,9 +199,6 @@ class WriteKodiDB():
             xbmc.sleep(sleepVal)
             result = xbmc.executeJSONRPC(jsoncommand.encode("utf-8"))
         
-        CreateFiles().createSTRM(MBitem)
-        CreateFiles().createNFO(MBitem)
-        
         if(changes):
             utils.logMsg("Updated musicvideo to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"], level=0)
             
@@ -248,8 +226,6 @@ class WriteKodiDB():
         changes |= self.updateArtWork(KodiItem,MBitem)
 
         #update common properties
-        duration = (int(timeInfo.get('Duration'))*60)
-        changes |= self.updateProperty(KodiItem,"runtime",duration,"movie")
         changes |= self.updateProperty(KodiItem,"year",MBitem.get("ProductionYear"),"movie")
         changes |= self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"movie")
         changes |= self.updateProperty(KodiItem,"lastplayed",MBitem.get("LastPlayedDate"),"movie")
@@ -289,7 +265,7 @@ class WriteKodiDB():
             jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=False, popup=0 )
             if(jsonData != ""):
                 trailerItem = json.loads(jsonData)
-                trailerUrl = "plugin://plugin.video.emby/?id=" + trailerItem[0].get("Id") + '&mode=play'
+                trailerUrl = PlayUtils().getPlayUrl(server, trailerItem[0].get("Id"), MBitem)
                 changes |= self.updateProperty(KodiItem,"trailer",trailerUrl,"movie")
 
         #add actors
@@ -298,15 +274,6 @@ class WriteKodiDB():
         #set Filename
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
         self.setKodiFilename(KodiItem["movieid"], KodiItem["file"], playurl, "movie")
-        
-        
-        #add theme music
-        if addon.getSetting("syncThemeMusic") == "true":
-            CreateFiles().copyThemeMusic(MBitem)
-            
-        #add extra fanart
-        if addon.getSetting("syncExtraFanart") == "true":
-           CreateFiles().copyExtraFanart(MBitem)
         
         if changes:
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
@@ -334,13 +301,8 @@ class WriteKodiDB():
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
         #make sure that the path always ends with a slash
         playurl = playurl + "/"
-        docleanup = self.setKodiFilename(KodiItem["tvshowid"], KodiItem["file"], playurl, "tvshow")
-        
-        #if the path has been set directly in the DB, cleanup the locally created nfo file to import the tvshow into the Kodi DB to prevent Kodi from scanning it again.
-        nfoPath = os.path.join(tvLibrary,MBitem["Id"],"tvshow.nfo")
-        if xbmcvfs.exists(nfoPath):
-            xbmcvfs.delete(nfoPath)
-        
+        self.setKodiFilename(KodiItem["tvshowid"], KodiItem["file"], playurl, "tvshow", MBitem["Id"])
+               
         #update/check all artwork
         changes |= self.updateArtWork(KodiItem,MBitem)
         
@@ -375,18 +337,8 @@ class WriteKodiDB():
         #add actors
         changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"),"tvshow")
         
-        #update season artwork
-        self.updateSeasonArtwork(MBitem, KodiItem)
-        
-        #CreateFiles().createNFO(MBitem)
-        
-        #add theme music
-        if addon.getSetting("syncThemeMusic") == "true":
-            CreateFiles().copyThemeMusic(MBitem)
-        
-        #add extra fanart
-        if addon.getSetting("syncExtraFanart") == "true":
-           CreateFiles().copyExtraFanart(MBitem)
+        #update season details
+        self.updateSeasons(MBitem, KodiItem)
         
         if changes:
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
@@ -416,22 +368,13 @@ class WriteKodiDB():
         #update/check all artwork
         changes |= self.updateArtWork(KodiItem,MBitem)
         
-        #set Filename (also submit strmfilepath to rename that if path has changed to original location)
+        #set Filename (will update the filename in db if changed)
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
-        docleanup = self.setKodiFilename(KodiItem["episodeid"], KodiItem["file"], playurl, "episode")
-        
-        #if the path has been set directly in the DB, cleanup the locally created files to import the media-item into the Kodi DB to prevent Kodi from scanning it again.
-        if docleanup: 
-            path = os.path.join(tvLibrary,MBitem["SeriesId"] + os.sep)
-            if xbmcvfs.exists(path):
-                allDirs, allFiles = xbmcvfs.listdir(path)
-                for file in allFiles:
-                    if MBitem["Id"] in file:
-                        xbmcvfs.delete(os.path.join(path,file))
+        docleanup = self.setKodiFilename(KodiItem["episodeid"], KodiItem["file"], playurl, "episode", MBitem["Id"])
 
         #update common properties
-        duration = (int(timeInfo.get('Duration'))*60)
-        changes |= self.updateProperty(KodiItem,"runtime",duration,"episode")
+        if KodiItem["runtime"] == 0:
+            changes |= self.updateProperty(KodiItem,"runtime",(int(timeInfo.get('Duration'))*60),"episode")
         changes |= self.updateProperty(KodiItem,"lastplayed",userData.get("LastPlayedDate"),"episode")
 
         if MBitem.get("PremiereDate") != None:
@@ -696,80 +639,318 @@ class WriteKodiDB():
 
         return pendingChanges
     
-    def addMovieToKodiLibrary( self, item ):
-        itemPath = os.path.join(movieLibrary,item["Id"])
-        strmFile = os.path.join(itemPath,item["Id"] + ".strm")
+    def addMovieToKodiLibrary( self, MBitem ):
+        #adds a movie to Kodi by directly inserting it to the DB while there is no addmovie available on the json API
+        #TODO: PR at Kodi team for a addMovie endpoint on their API
         
-        changes = False
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port
+        downloadUtils = DownloadUtils()
+        userid = downloadUtils.getUserId()
         
-        #create path if not exists
-        if not xbmcvfs.exists(itemPath + os.sep):
-            xbmcvfs.mkdir(itemPath)
+        timeInfo = API().getTimeInfo(MBitem)
+        userData=API().getUserData(MBitem)
+        people = API().getPeople(MBitem)
+        genre = API().getGenre(MBitem)
+        studios = API().getStudios(MBitem)
+        mediaStreams=API().getMediaStreams(MBitem)
         
-        #create nfo file
-        changes = CreateFiles().createNFO(item)
+        thumbPath = API().getArtwork(MBitem, "Primary")
         
-        # create strm file
-        changes |= CreateFiles().createSTRM(item)
+        playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
+        playurl = utils.convertEncoding(playurl)
         
-        if changes:
-            utils.logMsg("MB3 Sync","Added movie to Kodi Library",item["Id"] + " - " + item["Name"])
+        if MBitem.get("DateCreated") != None:
+            dateadded = MBitem["DateCreated"].replace("T"," ")
+            dateadded = dateadded.replace(".0000000Z","")
+        else:
+            dateadded = None
+        
+        connection = utils.KodiSQL()
+        cursor = connection.cursor()
+        
+        # we need to store both the path and the filename seperately in the kodi db so we split them up
+        if "\\" in playurl:
+            filename = playurl.rsplit("\\",1)[-1]
+            path = playurl.replace(filename,"")
+        elif "/" in playurl:
+            filename = playurl.rsplit("/",1)[-1]
+            path = playurl.replace(filename,"")
+                    
+        #create the path
+        cursor.execute("select coalesce(max(idPath),0) as pathid from path")
+        pathid = cursor.fetchone()[0]
+        pathid = pathid + 1
+        pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
+        cursor.execute(pathsql, (pathid,path,"movies","metadata.local",1))
+        
+        playcount = None
+        if userData.get("PlayCount") == "1":
+            playcount = 1
+            
+        #create the file if not exists
+        cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ?",(filename,))
+        result = cursor.fetchone()
+        if result != None:
+            fileid = result[0]
+        if result == None:
+            cursor.execute("select coalesce(max(idFile),0) as fileid from files")
+            fileid = cursor.fetchone()[0]
+            fileid = fileid + 1
+            pathsql="insert into files(idFile, idPath, strFilename, playCount, lastPlayed, dateAdded) values(?, ?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (fileid,pathid,filename,playcount,userData.get("LastPlayedDate"),dateadded))
+        
+        runtime = int(timeInfo.get('Duration'))*60
+        plot = utils.convertEncoding(API().getOverview(MBitem))
+        thumb = "<thumb>" + API().getArtwork(MBitem, "Primary") + "</thumb>"
+        fanart = "<fanart>" + API().getArtwork(MBitem, "Backdrop") + "</fanart>"
+        title = utils.convertEncoding(MBitem["Name"])
+        sorttitle = utils.convertEncoding(MBitem["SortName"])
+        year = MBitem.get("ProductionYear")
+        if MBitem.get("CriticRating") != None:
+            rating = int(MBitem.get("CriticRating"))/10
+        else:
+            rating = None
+        if MBitem.get("ShortOverview") != None:
+            shortplot = utils.convertEncoding(MBitem.get("ShortOverview"))
+        else:
+            shortplot = None
+        
+        trailerUrl = None
+        if MBitem.get("LocalTrailerCount") != None and MBitem.get("LocalTrailerCount") > 0:
+            itemTrailerUrl = "http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + MBitem.get("Id") + "/LocalTrailers?format=json"
+            jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=False, popup=0 )
+            if(jsonData != ""):
+                trailerItem = json.loads(jsonData)
+                if trailerItem[0].get("LocationType") == "FileSystem":
+                    trailerUrl = PlayUtils().getPlayUrl(server, trailerItem[0].get("Id"), trailerItem[0])
+        
+        #create the movie
+        cursor.execute("select coalesce(max(idMovie),0) as movieid from movie")
+        movieid = cursor.fetchone()[0]
+        movieid = movieid + 1
+        pathsql="insert into movie(idMovie, idFile, c00, c01, c02, c04, c07, c08, c09, c10, c11, c16, c19, c20) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        cursor.execute(pathsql, (movieid, fileid, title, plot, shortplot, rating, year, thumb, MBitem["Id"], sorttitle, runtime, title, trailerUrl, fanart))
+        
+        try:
+            connection.commit()
+            utils.logMsg("MB3 Sync","Added movie to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+        except:
+            utils.logMsg("MB3 Sync","Error adding movie to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+            actionPerformed = False
+        finally:
+            cursor.close()
     
-    def addMusicVideoToKodiLibrary( self, item ):
-        itemPath = os.path.join(musicvideoLibrary,item["Id"])
-        strmFile = os.path.join(itemPath,item["Id"] + ".strm")
-        
-        changes = False
-        
-        #create path if not exists
-        if not xbmcvfs.exists(itemPath + os.sep):
-            xbmcvfs.mkdir(itemPath)
-        
-        #create nfo file
-        changes = CreateFiles().createNFO(item)
-        
-        # create strm file
-        changes |= CreateFiles().createSTRM(item)
-        
-        if changes:
-            utils.logMsg("MB3 Sync","Added musicvideo to Kodi Library",item["Id"] + " - " + item["Name"])
-    
-    def addEpisodeToKodiLibrary(self, item):
-        
-        changes = False
+    def addMusicVideoToKodiLibrary( self, MBitem ):
 
-        #create nfo file
-        changes = CreateFiles().createNFO(item)
+        #adds a musicvideo to Kodi by directly inserting it to the DB while there is no addMusicVideo available on the json API
+        #TODO: PR at Kodi team for a addMusicVideo endpoint on their API
         
-        # create strm file
-        changes |= CreateFiles().createSTRM(item)
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port
+        downloadUtils = DownloadUtils()
+        userid = downloadUtils.getUserId()
         
-        if changes:
-            utils.logMsg("MB3 Sync","Added episode to Kodi Library",item["Id"] + " - " + item["Name"])
+        timeInfo = API().getTimeInfo(MBitem)
+        userData=API().getUserData(MBitem)
+        people = API().getPeople(MBitem)
+        genre = API().getGenre(MBitem)
+        studios = API().getStudios(MBitem)
+        mediaStreams=API().getMediaStreams(MBitem)
+        
+        thumbPath = API().getArtwork(MBitem, "Primary")
+        
+        playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
+        playurl = utils.convertEncoding(playurl)
+        
+        if MBitem.get("DateCreated") != None:
+            dateadded = MBitem["DateCreated"].replace("T"," ")
+            dateadded = dateadded.replace(".0000000Z","")
+        else:
+            dateadded = None
+        
+        connection = utils.KodiSQL()
+        cursor = connection.cursor()
+        
+        # we need to store both the path and the filename seperately in the kodi db so we split them up
+        if "\\" in playurl:
+            filename = playurl.rsplit("\\",1)[-1]
+            path = playurl.replace(filename,"")
+        elif "/" in playurl:
+            filename = playurl.rsplit("/",1)[-1]
+            path = playurl.replace(filename,"")
+                    
+        #create the path
+        cursor.execute("select coalesce(max(idPath),0) as pathid from path")
+        pathid = cursor.fetchone()[0]
+        pathid = pathid + 1
+        pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
+        cursor.execute(pathsql, (pathid,path,"musicvideos","metadata.local",1))
+        
+        playcount = None
+        if userData.get("PlayCount") == "1":
+            playcount = 1
+            
+        #create the file if not exists
+        cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ?",(filename,))
+        result = cursor.fetchone()
+        if result != None:
+            fileid = result[0]
+        if result == None:
+            cursor.execute("select coalesce(max(idFile),0) as fileid from files")
+            fileid = cursor.fetchone()[0]
+            fileid = fileid + 1
+            pathsql="insert into files(idFile, idPath, strFilename, playCount, lastPlayed, dateAdded) values(?, ?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (fileid,pathid,filename,playcount,userData.get("LastPlayedDate"),dateadded))
+        
+        runtime = int(timeInfo.get('Duration'))*60
+        plot = utils.convertEncoding(API().getOverview(MBitem))
+        thumb = "<thumb>" + API().getArtwork(MBitem, "Primary") + "</thumb>"
+        title = utils.convertEncoding(MBitem["Name"])
+                
+        #create the musicvideo
+        cursor.execute("select coalesce(max(idMVideo),0) as musicvideoid from musicvideo")
+        musicvideoid = cursor.fetchone()[0]
+        musicvideoid = musicvideoid + 1
+        pathsql="insert into musicvideo(idMVideo, idFile, c00, c01, c04, c08, c23) values(?, ?, ?, ?, ?, ?, ?)"
+        cursor.execute(pathsql, (musicvideoid, fileid, title, thumb, runtime, plot, MBitem["Id"]))
+        
+        try:
+            connection.commit()
+            utils.logMsg("MB3 Sync","Added musicvideo to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+        except:
+            utils.logMsg("MB3 Sync","Error adding musicvideo to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+            actionPerformed = False
+        finally:
+            cursor.close()
+    
+    def addEpisodeToKodiLibrary(self, MBitem):
+        
+        #adds a Episode to Kodi by directly inserting it to the DB while there is no addEpisode available on the json API
+        #TODO: PR at Kodi team for a addEpisode endpoint on their API
+        
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port
+        downloadUtils = DownloadUtils()
+        userid = downloadUtils.getUserId()
+        
+        timeInfo = API().getTimeInfo(MBitem)
+        userData=API().getUserData(MBitem)
+        people = API().getPeople(MBitem)
+        genre = API().getGenre(MBitem)
+        studios = API().getStudios(MBitem)
+        mediaStreams=API().getMediaStreams(MBitem)
+        
+        thumbPath = API().getArtwork(MBitem, "Primary")
+        
+        playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
+        playurl = utils.convertEncoding(playurl)
+        
+        if MBitem.get("DateCreated") != None:
+            dateadded = MBitem["DateCreated"].replace("T"," ")
+            dateadded = dateadded.split(".")[0]
+        else:
+            dateadded = None
+        
+        if userData.get("LastPlayedDate") != None:
+            lastplayed = userData.get("LastPlayedDate")
+        else:
+            lastplayed = None
+
+        connection = utils.KodiSQL()
+        cursor = connection.cursor()
+                    
+        # we need to store both the path and the filename seperately in the kodi db so we split them up
+        if "\\" in playurl:
+            filename = playurl.rsplit("\\",1)[-1]
+            path = playurl.replace(filename,"")
+        elif "/" in playurl:
+            filename = playurl.rsplit("/",1)[-1]
+            path = playurl.replace(filename,"")
+                    
+        #create the new path - return id if already exists  
+        cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
+        result = cursor.fetchone()
+        if result != None:
+            pathid = result[0]
+        if result == None:
+            cursor.execute("select coalesce(max(idPath),0) as pathid from path")
+            pathid = cursor.fetchone()[0]
+            pathid = pathid + 1
+            pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (pathid,path,None,None,1))
+        
+        
+        playcount = None
+        if userData.get("PlayCount") == "1":
+            playcount = 1
+        
+        #create the file if not exists
+        cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ?",(filename,))
+        result = cursor.fetchone()
+        if result != None:
+            fileid = result[0]
+        if result == None:
+            cursor.execute("select coalesce(max(idFile),0) as fileid from files")
+            fileid = cursor.fetchone()[0]
+            fileid = fileid + 1
+            sql="INSERT OR REPLACE into files(idFile, idPath, strFilename, playCount, lastPlayed, dateAdded) values(?, ?, ?, ?, ?, ?)"
+            cursor.execute(sql, (fileid,pathid,filename,playcount,lastplayed,dateadded))
+        
+        #get the showid
+        cursor.execute("SELECT idShow as showid FROM tvshow WHERE c12 = ?",(MBitem["SeriesId"],))
+        showid = cursor.fetchone()[0]
+        
+        season = 0
+        if MBitem.get("ParentIndexNumber") != None:
+            season = int(MBitem.get("ParentIndexNumber"))
+        
+        episode = 0
+        if MBitem.get("IndexNumber") != None:
+            episode = int(MBitem.get("IndexNumber"))
+
+        runtime = int(timeInfo.get('Duration'))*60
+        plot = utils.convertEncoding(API().getOverview(MBitem))
+        thumb = "<thumb>" + API().getArtwork(MBitem, "Primary") + "</thumb>"
+        title = utils.convertEncoding(MBitem["Name"])
+        if MBitem.get("CriticRating") != None:
+            rating = int(MBitem.get("CriticRating"))/10
+        else:
+            rating = None
+        
+        #create the episode
+        cursor.execute("select coalesce(max(idEpisode),0) as episodeid from episode")
+        episodeid = cursor.fetchone()[0]
+        episodeid = episodeid + 1
+        pathsql="INSERT into episode(idEpisode, idFile, c00, c01, c03, c06, c09, c20, c12, c13, c14, idShow) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        cursor.execute(pathsql, (episodeid, fileid, title, plot, rating, thumb, runtime, MBitem["Id"], season, episode, title, showid))
+        
+        try:
+            connection.commit()
+            utils.logMsg("MB3 Sync","Added TV Show to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+        except:
+            utils.logMsg("MB3 Sync","Error adding tvshow to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+            actionPerformed = False
+        finally:
+            cursor.close()
     
     def deleteMovieFromKodiLibrary(self, id ):
         kodiItem = ReadKodiDB().getKodiMovie(id)
         utils.logMsg("deleting movie from Kodi library",id)
         if kodiItem != None:
             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveMovie", "params": { "movieid": %i}, "id": 1 }' %(kodiItem["movieid"]))
-        
-        path = os.path.join(movieLibrary,id + os.sep)
-        utils.removeDirectory(path)
  
-    
     def deleteMusicVideoFromKodiLibrary(self, id ):
         utils.logMsg("deleting musicvideo from Kodi library",id)
         kodiItem = ReadKodiDB().getKodiMusicVideo(id)
         if kodiItem != None:
             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveMusicVideo", "params": { "musicvideoid": %i}, "id": 1 }' %(kodiItem["musicvideoid"]))
-        
-        path = os.path.join(musicvideoLibrary,id)
-        allDirs, allFiles = xbmcvfs.listdir(path)
-        for dir in allDirs:
-            xbmcvfs.rmdir(os.path.join(path,dir))
-        for file in allFiles:
-            xbmcvfs.delete(os.path.join(path,file))
-        xbmcvfs.rmdir(path)   
          
     def deleteEpisodeFromKodiLibrary(self, episodeid, tvshowid ):
         utils.logMsg("deleting episode from Kodi library",episodeid)
@@ -779,32 +960,82 @@ class WriteKodiDB():
             WINDOW.setProperty("suspendDeletes", "True")                
             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveEpisode", "params": { "episodeid": %i}, "id": 1 }' %(episode["episodeid"]))
             
-            itemPath = os.path.join(tvLibrary,tvshowid)
-            allDirs, allFiles = xbmcvfs.listdir(itemPath)
-            for file in allFiles:
-                if episodeid in file:
-                    xbmcvfs.delete(file)
-            
             while WINDOW.getProperty("suspendDeletes") == "True":
                 xbmc.sleep(100)
             utils.logMsg("episode deleted succesfully!",episodeid)
         else:
             utils.logMsg("episode not found in kodi DB",episodeid)        
             
-    def addTVShowToKodiLibrary( self, item ):
-        itemPath = os.path.join(tvLibrary,item["Id"])
+    def addTVShowToKodiLibrary( self, MBitem ):
+        #adds a Tvshow to Kodi by directly inserting it to the DB while there is no addTvShow available on the json API
+        #TODO: PR at Kodi team for a addTvShow endpoint on their API
         
-        changes = False
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port
+        downloadUtils = DownloadUtils()
+        userid = downloadUtils.getUserId()
         
-        #create path if not exists
-        if not xbmcvfs.exists(itemPath + os.sep):
-            xbmcvfs.mkdir(itemPath)
+        timeInfo = API().getTimeInfo(MBitem)
+        userData=API().getUserData(MBitem)
+        people = API().getPeople(MBitem)
+        genre = API().getGenre(MBitem)
+        studios = API().getStudios(MBitem)
+        mediaStreams=API().getMediaStreams(MBitem)
+        
+        thumbPath = API().getArtwork(MBitem, "Primary")
+        
+        playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
+        #make sure that the path always ends with a slash
+        path = playurl + "/"
+        
+        if MBitem.get("DateCreated") != None:
+            dateadded = MBitem["DateCreated"].replace("T"," ")
+            dateadded = dateadded.replace(".0000000Z","")
+        else:
+            dateadded = None
+        
+        connection = utils.KodiSQL()
+        cursor = connection.cursor()
+                    
+        #create the path
+        cursor.execute("select coalesce(max(idPath),0) as pathid from path")
+        pathid = cursor.fetchone()[0]
+        pathid = pathid + 1
+        pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
+        cursor.execute(pathsql, (pathid,path,None,None,1))
+        
+        runtime = int(timeInfo.get('Duration'))*60
+        plot = utils.convertEncoding(API().getOverview(MBitem))
+        thumb = "<thumb>" + API().getArtwork(MBitem, "Primary") + "</thumb>"
+        fanart = "<fanart>" + API().getArtwork(MBitem, "Backdrop") + "</fanart>"
+        title = utils.convertEncoding(MBitem["Name"])
+        sorttitle = utils.convertEncoding(MBitem["SortName"])
+        if MBitem.get("CriticRating") != None:
+            rating = int(MBitem.get("CriticRating"))/10
+        else:
+            rating = None
             
-        #create nfo file
-        changes = CreateFiles().createNFO(item)
+        #create the tvshow
+        cursor.execute("select coalesce(max(idShow),0) as showid from tvshow")
+        showid = cursor.fetchone()[0]
+        showid = pathid + 1
+        pathsql="insert into tvshow(idShow, c00, c01, c04, c06, c09, c11, c12, c15) values(?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        cursor.execute(pathsql, (showid, title, plot, rating, thumb, title, fanart, MBitem["Id"], sorttitle))
         
-        if changes:
-            utils.logMsg("Added TV Show to Kodi Library ",item["Id"] + " - " + item["Name"])
+        #link the path
+        pathsql="insert into tvshowlinkpath(idShow,idPath) values(?, ?)"
+        cursor.execute(pathsql, (showid,pathid))
+
+        try:
+            connection.commit()
+            utils.logMsg("MB3 Sync","Added TV Show to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+        except:
+            utils.logMsg("MB3 Sync","Error adding tvshow to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+            actionPerformed = False
+        finally:
+            cursor.close()
         
     def deleteTVShowFromKodiLibrary(self, id ):
         xbmc.sleep(sleepVal)
@@ -813,35 +1044,34 @@ class WriteKodiDB():
  
         if kodiItem != None:
             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveTVShow", "params": { "tvshowid": %i}, "id": 1 }' %(kodiItem["tvshowid"]))
-        
-        path = os.path.join(tvLibrary,id + os.sep)
-        utils.removeDirectory(path)
-
     
-    def updateSeasonArtwork(self,MBitem, KodiItem):
-        #use sqlite to set the season artwork because no method in API available for this
-        #season poster and banner are set by the nfo. landscape image is filled by this method
-        #if wanted this feature can be extended to also update the other artwork
+    def updateSeasons(self,MBitem, KodiItem):
+        #use sqlite to set the season details because no method in API available for this
         tvshowid = KodiItem["tvshowid"]
 
         connection = utils.KodiSQL()
-        cursor = connection.cursor( )
+        cursor = connection.cursor()
         
         seasonData = ReadEmbyDB().getTVShowSeasons(MBitem["Id"])
         if seasonData != None:
             for season in seasonData:
                 if season.has_key("IndexNumber"):
-                    MB3landscape = API().getArtwork(season, "Thumb")
-                    if MB3landscape != "":
-                        cursor.execute("SELECT idSeason as seasonid FROM seasons WHERE idShow = ? and season = ?",(tvshowid,season["IndexNumber"]))
-                        result = cursor.fetchone()
-                        if result != None:
-                            seasonid = result[0]
-                            cursor.execute("SELECT art_id as art_id FROM art WHERE media_id = ? and media_type = ? and type = ?",(seasonid,"season","landscape"))
-                            result = cursor.fetchone()
-                            if result == None:
-                                sql="INSERT into art(media_id, media_type, type, url) values(?, ?, ?, ?)"
-                                cursor.execute(sql, (seasonid,"season","landscape",MB3landscape))
+                    cursor.execute("SELECT idSeason as seasonid FROM seasons WHERE idShow = ? and season = ?",(tvshowid,season["IndexNumber"]))
+                    result = cursor.fetchone()
+                    if result == None:
+                        #create the season
+                        cursor.execute("select coalesce(max(idSeason),0) as seasonid from seasons")
+                        seasonid = cursor.fetchone()[0]
+                        seasonid = seasonid + 1
+                        cursor.execute("INSERT into seasons(idSeason, idShow, season) values(?, ?, ?)", (seasonid, tvshowid, season["IndexNumber"]))
+                        
+                        #insert artwork
+                        if API().getArtwork(season, "Thumb") != "":
+                            cursor.execute("INSERT into art(media_id, media_type, type, url) values(?, ?, ?, ?)", (seasonid,"season","landscape",API().getArtwork(season, "Thumb")))
+                        if API().getArtwork(season, "Primary") != "":
+                            cursor.execute("INSERT into art(media_id, media_type, type, url) values(?, ?, ?, ?)", (seasonid,"season","poster",API().getArtwork(season, "Primary")))
+                        if API().getArtwork(season, "Banner") != "":
+                            cursor.execute("INSERT into art(media_id, media_type, type, url) values(?, ?, ?, ?)", (seasonid,"season","banner",API().getArtwork(season, "Banner")))
 
         connection.commit()
         cursor.close()   
@@ -873,7 +1103,7 @@ class WriteKodiDB():
         connection.commit()
         cursor.close()
     
-    def setKodiFilename(self, id, oldFileName, newFileName, fileType):
+    def setKodiFilename(self, id, oldFileName, newFileName, fileType, mbId):
         #use sqlite to set the filename in DB -- needed to avoid problems with resumepoints etc
         #return True if any action is performed, False if no action is performed
         #todo --> submit PR to kodi team to get this added to the jsonrpc api
@@ -889,7 +1119,7 @@ class WriteKodiDB():
         
             xbmc.sleep(sleepVal)
             connection = utils.KodiSQL()
-            cursor = connection.cursor( )
+            cursor = connection.cursor()
             utils.logMsg("MB3 Sync","setting filename in kodi db..." + fileType + ": " + str(id))
             utils.logMsg("MB3 Sync","old filename -->" + oldFileName)
             utils.logMsg("MB3 Sync","new filename -->" + newFileName)
@@ -904,17 +1134,21 @@ class WriteKodiDB():
             
             else:
                 # we need to store both the path and the filename seperately in the kodi db so we split them up
-                if "\\" in newFileName:
-                    filename = newFileName.rsplit("\\",1)[-1]
-                    path = newFileName.replace(filename,"")
-                elif "/" in newFileName:
-                    filename = newFileName.rsplit("/",1)[-1]
-                    path = newFileName.replace(filename,"")
                 
-                #if we want to use transcoding/play from stream we pass on the complete http path
-                #in this case both the path and filename are set to the addonpath
                 if newFileName.startswith("http"):
-                    path = newFileName
+                    #transcoding or play from stream
+                    path = "plugin://plugin.video.emby/"
+                    filename = "?id=" + mbId + '&mode=play'
+                    
+                else:
+                    # direct play
+                    if "\\" in newFileName:
+                        filename = newFileName.rsplit("\\",1)[-1]
+                        path = newFileName.replace(filename,"")
+                    elif "/" in newFileName:
+                        filename = newFileName.rsplit("/",1)[-1]
+                        path = newFileName.replace(filename,"")
+                
                 
                 ######### PROCESS EPISODE ############
                 if fileType == "episode":
@@ -963,7 +1197,6 @@ class WriteKodiDB():
                 cursor.close()
             
         return actionPerformed
-
     
     def AddActorsToMedia(self, KodiItem, people, mediatype):
         #use sqlite to set add the actors while json api doesn't support this yet

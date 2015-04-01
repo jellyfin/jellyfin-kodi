@@ -9,12 +9,8 @@ import xbmcaddon
 import json
 import os
 
-addon = xbmcaddon.Addon(id='plugin.video.emby')
-addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
-dataPath = os.path.join(addondir,"library")
-movieLibrary = os.path.join(dataPath,'movies')
-tvLibrary = os.path.join(dataPath,'tvshows')
-musicvideoLibrary = os.path.join(dataPath,'musicvideos')
+import Utils as utils
+
 
 #sleepval is used to throttle the calls to the xbmc json API
 sleepVal = 15
@@ -44,11 +40,20 @@ class ReadKodiDB():
         xbmc.sleep(sleepVal)
         
         embyId = None
+        json_response = None
         
         if type == "movie":
             json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovieDetails", "params": { "movieid": %d, "properties" : ["imdbnumber","file"] }, "id": "libMovies"}' %kodiid)
         if type == "episode":
             json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodeDetails", "params": {"episodeid": %d, "properties": ["file","uniqueid"]}, "id": 1}' %kodiid)
+        if type == "musicvideo":
+            connection = utils.KodiSQL()
+            cursor = connection.cursor()
+            cursor.execute("SELECT c23 as MBid FROM musicvideo WHERE idMVideo = ?",(kodiid,))
+            result = cursor.fetchone()
+            cursor.close()
+            if result != None:
+                embyId = result[0]
         
         if json_response != None:
             jsonobject = json.loads(json_response.decode('utf-8','replace'))  
@@ -65,7 +70,7 @@ class ReadKodiDB():
                             if item['uniqueid'].has_key('unknown'):
                                 embyId = item["uniqueid"]["unknown"]
 
-            return embyId
+        return embyId
     
     def getKodiMovies(self,fullInfo = False):
         #returns all movies in Kodi db
@@ -212,15 +217,25 @@ class ReadKodiDB():
     def getKodiMusicVideo(self, id):
         #returns a single musicvideo from Kodi db selected on MB item ID
         xbmc.sleep(sleepVal)
-        json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideos", "params": { "filter": {"operator": "contains", "field": "path", "value": "' + id + '"}, "properties" : ["art", "thumbnail", "resume", "runtime", "year", "genre", "studio", "artist", "album", "track","plot", "director", "playcount", "lastplayed", "tag", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMusicVideos"}')
-        jsonobject = json.loads(json_response.decode('utf-8','replace'))  
-        musicvideo = None
-       
-        if(jsonobject.has_key('result')):
-            result = jsonobject['result']
-            if(result.has_key('musicvideos')):
-                musicvideos = result['musicvideos']
-                musicvideo = musicvideos[0]
+        #get the mediabrowser ID from DB
+        connection = utils.KodiSQL()
+        cursor = connection.cursor()
+        cursor.execute("SELECT idMVideo as musicvideoid FROM musicvideo WHERE c23 = ?",(id,))
+        result = cursor.fetchone()
+        musicvideoid = None
+        if result != None:
+            musicvideoid = result[0]
+        cursor.close()
+        
+        if musicvideoid != None:
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideosDetails", "params": { "musicvideoid": ' + musicvideoid + ', "properties" : ["art", "thumbnail", "resume", "runtime", "year", "genre", "studio", "artist", "album", "track","plot", "director", "playcount", "lastplayed", "tag", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMusicVideos"}')
+            jsonobject = json.loads(json_response.decode('utf-8','replace'))  
+            musicvideo = None
+           
+            if(jsonobject.has_key('result')):
+                result = jsonobject['result']
+                if(result.has_key('musicvideodetails')):
+                    musicvideo = result['musicvideodetails']
 
         return musicvideo
     
@@ -228,9 +243,9 @@ class ReadKodiDB():
         #returns all musicvideos in Kodi db inserted by MB
         xbmc.sleep(sleepVal)
         if fullInfo:
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideos", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.emby"}, "properties" : ["art", "thumbnail", "resume", "runtime", "year", "genre", "studio", "artist", "album", "track", "lastplayed", "plot", "director", "playcount", "tag", "file"] }, "id": "libMusicVideos"}')
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideos", "params": { "properties" : ["art", "thumbnail", "resume", "runtime", "year", "genre", "studio", "artist", "album", "track", "lastplayed", "plot", "director", "playcount", "tag", "file"] }, "id": "libMusicVideos"}')
         else:
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideos", "params": { "filter": {"operator": "contains", "field": "path", "value": "plugin.video.emby"}, "properties" : ["resume", "playcount", "lastplayed", "file"] }, "id": "libMusicVideos"}')
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideos", "params": { "properties" : ["resume", "playcount", "lastplayed", "file", "track"] }, "id": "libMusicVideos"}')
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  
         musicvideos = None
         if(jsonobject.has_key('result')):
@@ -241,10 +256,16 @@ class ReadKodiDB():
         kodiMusicVideoMap = None
         if(musicvideos != None and len(musicvideos) > 0):
             kodiMusicVideoMap = {}
+            connection = utils.KodiSQL()
+            cursor = connection.cursor()
             for kodivideo in musicvideos:
-                key = kodivideo["file"][-37:-5] #extract the id from the file name
-                kodiMusicVideoMap[key] = kodivideo
-                
+                cursor.execute("SELECT c23 as MBid FROM musicvideo WHERE idMVideo = ?",(kodivideo["musicvideoid"],))
+                result = cursor.fetchone()
+                if result != None:
+                    key = result[0]
+                    kodiMusicVideoMap[key] = kodivideo
+            
+            cursor.close()    
         return kodiMusicVideoMap
     
     def getKodiMusicVideoIds(self,returnMB3Ids = False):
