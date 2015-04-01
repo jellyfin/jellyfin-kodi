@@ -937,10 +937,6 @@ class WriteKodiDB():
                     cursor.execute("SELECT idPath as curpathid FROM files WHERE idFile = ?",(fileid,))
                     result = cursor.fetchone()
                     curpathid = result[0]
-                    
-                    #remove the old path if different
-                    if curpathid != pathid:
-                        cursor.execute("DELETE FROM path WHERE idPath = ?",(curpathid,))
                         
                     #set the new path and filename to the episode
                     cursor.execute("UPDATE files SET idPath = ?, strFilename = ? WHERE idFile = ?", (pathid,filename,fileid))
