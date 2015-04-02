@@ -85,7 +85,6 @@ class Kodi_Monitor(xbmc.Monitor):
                                     WINDOW.setProperty(playurl+"SubtitleStreamIndex", str(mediaSources[0].get('DefaultSubtitleStreamIndex')))
         
         if method == "VideoLibrary.OnUpdate":
-           
             jsondata = json.loads(data)
             if jsondata != None:
                 
@@ -96,6 +95,7 @@ class Kodi_Monitor(xbmc.Monitor):
                 if playcount != None:
                     utils.logMsg("MB# Sync","Kodi_Monitor--> VideoLibrary.OnUpdate : " + str(data),2)
                     WriteKodiDB().updatePlayCountFromKodi(item, type, playcount)
+                    
         if method == "VideoLibrary.OnRemove":
             xbmc.log('Intercepted remove from sender: ' + sender + ' method: ' + method + ' data: ' + data)
             WINDOW = xbmcgui.Window( 10000 )

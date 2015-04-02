@@ -57,7 +57,7 @@ class LibrarySync():
             self.MoviesSync(True, False)
             self.MusicVideosSync(True, False)
        
-         # set the install done setting
+        # set the install done setting
         if(syncInstallRunDone == False and completed):
             addon = xbmcaddon.Addon(id='plugin.video.emby') #force a new instance of the addon
             addon.setSetting("SyncInstallRunDone", "true")        
@@ -155,6 +155,9 @@ class LibrarySync():
                             kodimovie = allKodiMovies.get(item["Id"], None)
                         else:
                             kodimovie = None
+                            
+                        userData = API().getUserData(item)
+                        WINDOW.setProperty("EmbyUserKey" + userData.get("Key"), item.get('Id') + ";;" + item.get("Type"))                            
                         
                         if(kodimovie != None):
                             #WriteKodiDB().updateMovieToKodiLibrary(item, kodimovie)
@@ -340,7 +343,10 @@ class LibrarySync():
                             kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],True,True)
                             
                             if(self.ShouldStop(pDialog)):
-                                return False                
+                                return False   
+
+                            userData = API().getUserData(episode)
+                            WINDOW.setProperty("EmbyUserKey" + userData.get("Key"), episode.get('Id') + ";;" + episode.get("Type"))
 
                             #we have to compare the lists somehow
                             comparestring1 = str(episode.get("ParentIndexNumber")) + "-" + str(episode.get("IndexNumber"))
@@ -519,6 +525,9 @@ class LibrarySync():
                         comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
                         matchFound = False
 
+                        userData = API().getUserData(item)
+                        WINDOW.setProperty("EmbyUserKey" + userData.get("Key"), item.get('Id') + ";;" + item.get("Type"))
+                        
                         if kodiEpisodes != None:
                             KodiItem = kodiEpisodes.get(comparestring1, None)
                             if(KodiItem != None):
@@ -775,6 +784,8 @@ class LibrarySync():
                                 userData = API().getUserData(item)
                                 timeInfo = API().getTimeInfo(item)
                                 
+                                WINDOW.setProperty("EmbyUserKey" + userData.get("Key"), item.get('Id') + ";;" + item.get("Type"))
+                                
                                 if kodiItem != None:
                                     kodiresume = int(round(kodiItem['resume'].get("position")))
                                     resume = int(round(float(timeInfo.get("ResumeTime"))))*60
@@ -840,6 +851,9 @@ class LibrarySync():
 
                                 userData=API().getUserData(episode)
                                 timeInfo = API().getTimeInfo(episode)
+                                
+                                WINDOW.setProperty("EmbyUserKey" + userData.get("Key"), episode.get('Id') + ";;" + episode.get("Type"))
+                                
                                 if kodiItem != None:
                                     WINDOW = xbmcgui.Window( 10000 )
                                     WINDOW.setProperty("episodeid" + str(kodiItem['episodeid']), episode.get('Name') + ";;" + episode.get('Id'))

@@ -177,9 +177,19 @@ class WebSocketThread(threading.Thread):
                 
         elif(messageType != None and messageType == "UserDataChanged"):
             # for now just do a full playcount sync
-            self.logMsg("Message : Doing UserDataChanged calling updatePlayCounts()", 0)
-            LibrarySync().updatePlayCounts()
-            
+            WINDOW = xbmcgui.Window( 10000 )
+            self.logMsg("Message : Doing UserDataChanged", 0)
+            userDataList = data.get("UserDataList")
+            self.logMsg("Message : Doing UserDataChanged : UserDataList : " + str(userDataList), 0)
+            if(userDataList != None):
+                for userData in userDataList:
+                    self.logMsg("Message : Doing UserDataChanged : UserData : " + str(userData), 0)
+                    userKey = userData.get("Key")
+                    if(userKey != None):
+                        embyItemId = WINDOW.getProperty("EmbyUserKey" + userKey).split(";;")
+                        self.logMsg("Message : Doing UserDataChanged : window data : " + str(embyItemId), 0)
+                        if(embyItemId != None and len(embyItemId) == 2):
+                            LibrarySync().updatePlayCount(embyItemId[0], embyItemId[1])
         
     def on_error(self, ws, error):
         self.logMsg("Error : " + str(error))

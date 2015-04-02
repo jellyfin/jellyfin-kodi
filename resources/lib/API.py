@@ -151,12 +151,14 @@ class API():
                 PlaybackPositionTicks = userData.get('PlaybackPositionTicks')
             else:
                 PlaybackPositionTicks = ''
+            userKey = userData.get("Key", "")
         return  {'Watched'  :   watched,
                  'Favorite' :   favorite,
                  'PlayCount':   playcount,
                  'LastPlayedDate':  LastPlayedDate,
                  'UnplayedItemCount' : UnplayedItemCount,
-                 'PlaybackPositionTicks' : str(PlaybackPositionTicks)
+                 'PlaybackPositionTicks' : str(PlaybackPositionTicks),
+                 'Key' : userKey
                 }
     
     def getGenre(self,item):
