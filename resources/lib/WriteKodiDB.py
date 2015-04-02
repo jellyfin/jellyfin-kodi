@@ -115,6 +115,7 @@ class WriteKodiDB():
                 trailerItem = json.loads(jsonData)
                 if trailerItem[0].get("LocationType") == "FileSystem":
                     trailerUrl = PlayUtils().getPlayUrl(server, trailerItem[0].get("Id"), trailerItem[0])
+                    trailerUrl = utils.convertEncoding(trailerUrl)
                     self.getPropertyParam_Batched(KodiItem, "trailer", trailerUrl, params)
                 
 
@@ -265,6 +266,7 @@ class WriteKodiDB():
             if(jsonData != ""):
                 trailerItem = json.loads(jsonData)
                 trailerUrl = PlayUtils().getPlayUrl(server, trailerItem[0].get("Id"), MBitem)
+                trailerUrl = utils.convertEncoding(trailerUrl)
                 changes |= self.updateProperty(KodiItem,"trailer",trailerUrl,"movie")
 
         #add actors
@@ -731,12 +733,14 @@ class WriteKodiDB():
                 trailerItem = json.loads(jsonData)
                 if trailerItem[0].get("LocationType") == "FileSystem":
                     trailerUrl = PlayUtils().getPlayUrl(server, trailerItem[0].get("Id"), trailerItem[0])
+                    trailerUrl = utils.convertEncoding(trailerUrl)
         
         #create the movie
         cursor.execute("select coalesce(max(idMovie),0) as movieid from movie")
         movieid = cursor.fetchone()[0]
         movieid = movieid + 1
         pathsql="insert into movie(idMovie, idFile, c00, c01, c02, c04, c07, c08, c09, c10, c11, c16, c19, c20) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        
         cursor.execute(pathsql, (movieid, fileid, title, plot, shortplot, rating, year, thumb, MBitem["Id"], sorttitle, runtime, title, trailerUrl, fanart))
         
         try:
