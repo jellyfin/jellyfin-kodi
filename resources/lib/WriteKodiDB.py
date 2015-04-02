@@ -1063,13 +1063,16 @@ class WriteKodiDB():
         finally:
             cursor.close()
         
-    def deleteTVShowFromKodiLibrary(self, id ):
+    def deleteTVShowFromKodiLibrary(self, id):
         xbmc.sleep(sleepVal)
         kodiItem = ReadKodiDB().getKodiTVShow(id)
-        utils.logMsg("deleting tvshow from Kodi library",id)
+        utils.logMsg("deleting tvshow from Kodi library ", "Emby ID : " + id)
  
         if kodiItem != None:
-            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveTVShow", "params": { "tvshowid": %i}, "id": 1 }' %(kodiItem["tvshowid"]))
+            utils.logMsg("deleting tvshow from Kodi library ", str(kodiItem))
+            kodiId = kodiItem["tvshowid"]
+            utils.logMsg("deleting tvshow from Kodi library ", "Kodi ID : " + str(kodiId))
+            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveTVShow", "params": { "tvshowid": %i}, "id": 1 }' %(kodiId))
     
     def updateSeasons(self,MBitem, KodiItem):
         #use sqlite to set the season details because no method in API available for this

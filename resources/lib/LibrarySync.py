@@ -569,7 +569,7 @@ class LibrarySync():
                     allMB3TVShows = set(allTVShows)
                     for show in allKodiShows:
                         if not show in allMB3TVShows:
-                            WriteKodiDB().deleteTVShowFromKodiLibrary(dir)
+                            WriteKodiDB().deleteTVShowFromKodiLibrary(show)
                             totalItemsDeleted += 1
             
                 if(self.ShouldStop(pDialog)):
