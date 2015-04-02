@@ -1277,7 +1277,7 @@ class WriteKodiDB():
                         Name = person.get("Name")
                         Role = person.get("Role")
                         actorid = None
-                        Thumb = "<thumb>" + downloadUtils.imageUrl(person.get("Id"), "Primary", 0, 400, 400) + "</thumb>"
+                        Thumb = downloadUtils.imageUrl(person.get("Id"), "Primary", 0, 400, 400)
                         cursor.execute("SELECT idActor as actorid FROM actors WHERE strActor = ?",(Name,))
                         result = cursor.fetchone()
                         if result != None:
