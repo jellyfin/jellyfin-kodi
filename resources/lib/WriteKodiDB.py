@@ -26,7 +26,7 @@ class WriteKodiDB():
     def updatePlayCountFromKodi(self, id, type, playcount=0):
         #when user marks item watched from kodi interface update this in MB3
         xbmc.sleep(sleepVal)
-        utils.logMsg("MB3 Sync", "updatePlayCountFromKodi Called")
+        utils.logMsg("Emby", "updatePlayCountFromKodi Called")
         
         mb3Id = ReadKodiDB().getEmbyIdByKodiId(id, type)
 
@@ -39,7 +39,7 @@ class WriteKodiDB():
             userid = downloadUtils.getUserId()           
         
             watchedurl = 'http://' + server + '/mediabrowser/Users/' + userid + '/PlayedItems/' + mb3Id
-            utils.logMsg("MB3 Sync","watchedurl -->" + watchedurl)
+            utils.logMsg("Emby","watchedurl -->" + watchedurl)
             if playcount != 0:
                 downloadUtils.downloadUrl(watchedurl, postBody="", type="POST")
             else:
@@ -527,15 +527,15 @@ class WriteKodiDB():
             if propertyValue != None:
                 if type(propertyValue) is int:
                     #xbmc.sleep(sleepVal)
-                    utils.logMsg("MB3 Sync","updating property..." + str(propertyName))
-                    utils.logMsg("MB3 Sync","kodi value:" + str(KodiItem[propertyName]) + " MB value: " + str(propertyValue))
+                    utils.logMsg("Emby","updating property..." + str(propertyName))
+                    utils.logMsg("Emby","kodi value:" + str(KodiItem[propertyName]) + " MB value: " + str(propertyValue))
                     params.append("\"" + propertyName + "\": " + str(propertyValue))
                     #xbmc.executeJSONRPC(jsoncommand_i %(id, propertyName, propertyValue))
                     changes = True
                 else:
                     #xbmc.sleep(sleepVal)
-                    utils.logMsg("MB3 Sync","updating property..." + str(propertyName))
-                    utils.logMsg("MB3 Sync","kodi value:" + KodiItem[propertyName] + " MB value: " + propertyValue)
+                    utils.logMsg("Emby","updating property..." + str(propertyName))
+                    utils.logMsg("Emby","kodi value:" + KodiItem[propertyName] + " MB value: " + propertyValue)
                     params.append("\"" + propertyName + "\": \"" + propertyValue + "\"")
                     #xbmc.executeJSONRPC(jsoncommand_s %(id, propertyName, propertyValue.encode('utf-8')))
                     changes = True
@@ -566,14 +566,14 @@ class WriteKodiDB():
             if propertyValue != None:
                 if type(propertyValue) is int:
                     xbmc.sleep(sleepVal)
-                    utils.logMsg("MB3 Sync","updating property..." + str(propertyName))
-                    utils.logMsg("MB3 Sync","kodi value:" + str(KodiItem[propertyName]) + " MB value: " + str(propertyValue))
+                    utils.logMsg("Emby","updating property..." + str(propertyName))
+                    utils.logMsg("Emby","kodi value:" + str(KodiItem[propertyName]) + " MB value: " + str(propertyValue))
                     xbmc.executeJSONRPC(jsoncommand_i %(id, propertyName, propertyValue))
                     changes = True
                 else:
                     xbmc.sleep(sleepVal)
-                    utils.logMsg("MB3 Sync","updating property..." + str(propertyName))
-                    utils.logMsg("MB3 Sync","kodi value:" + KodiItem[propertyName] + " MB value: " + propertyValue)
+                    utils.logMsg("Emby","updating property..." + str(propertyName))
+                    utils.logMsg("Emby","kodi value:" + KodiItem[propertyName] + " MB value: " + propertyValue)
                     xbmc.executeJSONRPC(jsoncommand_s %(id, propertyName, propertyValue.encode('utf-8')))
                     changes = True
                     
@@ -605,7 +605,7 @@ class WriteKodiDB():
             
             if pendingChanges:
                 #xbmc.sleep(sleepVal)
-                utils.logMsg("MB3 Sync","updating propertyarray... Name:" + str(propertyName) + " Current:" + str(currentvalues) + " New:" + str(json_array))
+                utils.logMsg("Emby","updating propertyarray... Name:" + str(propertyName) + " Current:" + str(currentvalues) + " New:" + str(json_array))
                 params.append("\"" + propertyName + "\": " + json_array)
                 #xbmc.executeJSONRPC(jsoncommand %(id,propertyName,json_array))
 
@@ -636,7 +636,7 @@ class WriteKodiDB():
             
             if pendingChanges:
                 xbmc.sleep(sleepVal)
-                utils.logMsg("MB3 Sync","updating propertyarray... Name:" + str(propertyName) + " Current:" + str(currentvalues) + " New:" + str(json_array))
+                utils.logMsg("Emby","updating propertyarray... Name:" + str(propertyName) + " Current:" + str(currentvalues) + " New:" + str(json_array))
                 xbmc.executeJSONRPC(jsoncommand %(id,propertyName,json_array))
 
         return pendingChanges
@@ -745,9 +745,9 @@ class WriteKodiDB():
         
         try:
             connection.commit()
-            utils.logMsg("MB3 Sync","Added movie to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+            utils.logMsg("Emby","Added movie to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
         except:
-            utils.logMsg("MB3 Sync","Error adding movie to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+            utils.logMsg("Emby","Error adding movie to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
             actionPerformed = False
         finally:
             cursor.close()
@@ -835,9 +835,9 @@ class WriteKodiDB():
         
         try:
             connection.commit()
-            utils.logMsg("MB3 Sync","Added musicvideo to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+            utils.logMsg("Emby","Added musicvideo to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
         except:
-            utils.logMsg("MB3 Sync","Error adding musicvideo to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+            utils.logMsg("Emby","Error adding musicvideo to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
             actionPerformed = False
         finally:
             cursor.close()
@@ -946,9 +946,9 @@ class WriteKodiDB():
         
         try:
             connection.commit()
-            utils.logMsg("MB3 Sync","Added TV Show to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+            utils.logMsg("Emby","Added TV Show to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
         except:
-            utils.logMsg("MB3 Sync","Error adding tvshow to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+            utils.logMsg("Emby","Error adding tvshow to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
             actionPerformed = False
         finally:
             cursor.close()
@@ -1060,9 +1060,9 @@ class WriteKodiDB():
 
         try:
             connection.commit()
-            utils.logMsg("MB3 Sync","Added TV Show to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+            utils.logMsg("Emby","Added TV Show to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
         except:
-            utils.logMsg("MB3 Sync","Error adding tvshow to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+            utils.logMsg("Emby","Error adding tvshow to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
             actionPerformed = False
         finally:
             cursor.close()
@@ -1113,7 +1113,7 @@ class WriteKodiDB():
         #use sqlite to set the resume point while json api doesn't support this yet
         #todo --> submit PR to kodi team to get this added to the jsonrpc api
         
-        utils.logMsg("MB3 Sync","setting resume point in kodi db..." + fileType + ": " + str(id))
+        utils.logMsg("Emby","setting resume point in kodi db..." + fileType + ": " + str(id))
         xbmc.sleep(sleepVal)
         connection = utils.KodiSQL()
         cursor = connection.cursor( )
@@ -1153,9 +1153,9 @@ class WriteKodiDB():
             xbmc.sleep(sleepVal)
             connection = utils.KodiSQL()
             cursor = connection.cursor()
-            utils.logMsg("MB3 Sync","setting filename in kodi db..." + fileType + ": " + str(id))
-            utils.logMsg("MB3 Sync","old filename -->" + oldFileName)
-            utils.logMsg("MB3 Sync","new filename -->" + newFileName)
+            utils.logMsg("Emby","setting filename in kodi db..." + fileType + ": " + str(id))
+            utils.logMsg("Emby","old filename -->" + oldFileName)
+            utils.logMsg("Emby","new filename -->" + newFileName)
             
             ######### PROCESS TV SHOW ############
             if fileType == "tvshow":
@@ -1228,7 +1228,7 @@ class WriteKodiDB():
                 connection.commit()
                 actionPerformed = True
             except:
-                utils.logMsg("MB3 Sync","Error setting filename in kodi db for: " + fileType + ": " + str(id))
+                utils.logMsg("Emby","Error setting filename in kodi db for: " + fileType + ": " + str(id))
                 actionPerformed = False
             finally:
                 cursor.close()
