@@ -17,15 +17,19 @@ WINDOW = xbmcgui.Window( 10000 )
 import Utils as utils
 from PlaybackUtils import PlaybackUtils
 
-# get the actions... 
-params=utils.get_params(sys.argv[2])
+try:
+    params=utils.get_params(sys.argv[2])
+    mode = params.get('mode',"")
+    id = params.get('id',"")
+except:
+    params={}
+    mode=None
+    id=None
 
-mode = params.get('mode',"")
-id = params.get('id',"")
-
-if mode == "play":
+if  mode != None and mode == "play":
     PlaybackUtils().PLAY(id)
-    
+elif sys.argv[1] == "reset":
+    utils.reset()
 else:
     xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
 

@@ -72,7 +72,7 @@ def checkAuthentication():
         try:
             downloadUtils.authenticate()
         except Exception, e:
-            logMsg("MB3 Syncer authentication failed",e)
+            logMsg("Emby authentication failed",e)
             pass
     
 def prettifyXml(elem):
@@ -148,3 +148,178 @@ def removeDirectory(path):
             xbmcvfs.delete(os.path.join(path,file))
         
         xbmcvfs.rmdir(path)
+        
+def reset():
+    # clear video database
+    connection = KodiSQL()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("DROP TABLE episode;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE movie;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE tvshow;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE actors;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE actorlinkepisode;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE actorlinkmovie;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE actorlinktvshow;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE art;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE artistlinkmusicvideo;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE countrylinkmovie;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE directorlinkepisode;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE directorlinkmovie;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE directorlinkmusicvideo;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE directorlinktvshow;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE files;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE genre;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE genrelinkmovie;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE genrelinkmusicvideo;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE genrelinktvshow;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE movielinktvshow;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE musicvideo;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE path;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE seasons;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE sets;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE stacktimes;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE streamdetails;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE studio;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE studiolinkmovie;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE studiolinkmusicvideo;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE studiolinktvshow;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE tag;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE taglinks;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE tvshowlinkepisode;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE tvshowlinkpath;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE version;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE writerlinkepisode;")
+    except:
+        pass
+    try:
+        cursor.execute("DROP TABLE writerlinkmovie;")  
+    except:
+        pass
+    
+    try:
+        connection.commit()
+        logMsg("Emby","Removed tables from kodi database")
+    finally:
+        cursor.close()
+        
+    # check for old library folder and delete if present
+    addon = xbmcaddon.Addon(id='plugin.video.emby')
+    addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
+    dataPath = os.path.join(addondir,"library" + os.sep)
+    removeDirectory(dataPath)
+    
+    # remove old entries from sources.xml
+    
+    # reset addon settings values
+    addon.setSetting("SyncInstallRunDone", "false") 
+    addon.setSetting("SyncFirstCountsRunDone", "false")
+    
+    dialog = xbmcgui.Dialog()
+    dialog.ok('Emby Reset', 'Reset of Emby has completed, please restart.')
+     
