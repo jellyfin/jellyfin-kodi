@@ -12,7 +12,7 @@ from DownloadUtils import DownloadUtils
 addon = xbmcaddon.Addon(id='plugin.video.emby')
 
 class ReadEmbyDB():   
-    def getMovies(self, id, fullinfo = False, fullSync = True):
+    def getMovies(self, id, fullinfo = False, fullSync = True, itemList = []):
         result = None
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
@@ -23,16 +23,19 @@ class ReadEmbyDB():
         downloadUtils = DownloadUtils()
         userid = downloadUtils.getUserId()
 
-        if not fullSync:
-            sortstring = "&Limit=20&SortBy=DateCreated"
-        else:
+        if fullSync:
             sortstring = "&SortBy=SortName"
-        
+        else:
+            if(len(itemList) > 0): # if we want a certain list specify it
+                sortstring = "&Ids=" + ",".join(itemList)
+            else: # just get the last 20 created items
+                sortstring = "&Limit=20&SortBy=DateCreated"
+            
         if fullinfo:
             url = server + '/mediabrowser/Users/' + userid + '/items?ParentId=' + id + sortstring + '&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=Movie&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1'
         else:
             url = server + '/mediabrowser/Users/' + userid + '/items?ParentId=' + id + sortstring + '&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Movie&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1'
-        
+
         jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=0)
         if jsonData != None and jsonData != "":
             result = json.loads(jsonData)
@@ -179,7 +182,7 @@ class ReadEmbyDB():
                 result = result['Items']
         return result
     
-    def getLatestEpisodes(self,fullinfo = False):
+    def getLatestEpisodes(self, fullinfo = False, itemList = []):
         result = None
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
@@ -190,10 +193,14 @@ class ReadEmbyDB():
         downloadUtils = DownloadUtils()
         userid = downloadUtils.getUserId()   
         
+        limitString = "Limit=20&SortBy=DateCreated&"
+        if(len(itemList) > 0): # if we want a certain list specify it
+            limitString = "Ids=" + ",".join(itemList) + "&"
+        
         if fullinfo:
-            url = server + '/mediabrowser/Users/' + userid + '/Items?Limit=20&SortBy=DateCreated&IsVirtualUnaired=false&IsMissing=False&Fields=ParentId,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1'
+            url = server + '/mediabrowser/Users/' + userid + '/Items?' + limitString + 'IsVirtualUnaired=false&IsMissing=False&Fields=ParentId,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1'
         else:
-            url = server + '/mediabrowser/Users/' + userid + '/Items?Limit=20&SortBy=DateCreated&IsVirtualUnaired=false&IsMissing=False&Fields=ParentId,Name,SortName,CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1'
+            url = server + '/mediabrowser/Users/' + userid + '/Items?' + limitString + 'IsVirtualUnaired=false&IsMissing=False&Fields=ParentId,Name,SortName,CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1'
         
         jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=0)
         

@@ -191,6 +191,25 @@ class WebSocketThread(threading.Thread):
                         if(embyItemId != None and len(embyItemId) == 2):
                             LibrarySync().updatePlayCount(embyItemId[0], embyItemId[1])
         
+        elif(messageType != None and messageType == "LibraryChanged"):
+            foldersAddedTo = data.get("FoldersAddedTo")
+            foldersRemovedFrom = data.get("FoldersRemovedFrom")
+            
+            # doing items removed
+            itemsRemoved = data.get("ItemsRemoved")
+            self.logMsg("Message : Doing LibraryChanged : Items Removed : " + str(itemsRemoved), 0)
+            
+            # doing adds and updates
+            itemsAdded = data.get("ItemsAdded")
+            self.logMsg("Message : Doing LibraryChanged : Items Added : " + str(itemsAdded), 0)
+            itemsUpdated = data.get("ItemsUpdated")
+            self.logMsg("Message : Doing LibraryChanged : Items Updated : " + str(itemsUpdated), 0)
+            itemsToUpdate = itemsAdded + itemsUpdated
+            if(len(itemsToUpdate) > 0):
+                self.logMsg("Message : Doing LibraryChanged : Processing Added and Updated : " + str(itemsToUpdate), 0)
+                LibrarySync().MoviesSync(fullsync = False, installFirstRun = False, itemList = itemsToUpdate)
+                LibrarySync().TvShowsSync(fullsync = False, installFirstRun = False, itemList = itemsToUpdate)
+        
     def on_error(self, ws, error):
         self.logMsg("Error : " + str(error))
         #raise

@@ -67,7 +67,7 @@ class LibrarySync():
                         
         return True      
     
-    def MoviesSync(self, fullsync, installFirstRun):
+    def MoviesSync(self, fullsync, installFirstRun, itemList = []):
 
         WINDOW = xbmcgui.Window( 10000 )
         pDialog = None
@@ -99,7 +99,7 @@ class LibrarySync():
             for view in views:
                 
                 #process new movies
-                allMB3Movies = ReadEmbyDB().getMovies(view.get('id'), True, fullsync)
+                allMB3Movies = ReadEmbyDB().getMovies(id = view.get('id'), fullinfo=True, fullSync = fullsync, itemList = itemList)
                 allKodiIds = set(ReadKodiDB().getKodiMoviesIds(True))
             
                 if(self.ShouldStop(pDialog)):
@@ -255,7 +255,7 @@ class LibrarySync():
         
         return True
         
-    def TvShowsSync(self, fullsync, installFirstRun):
+    def TvShowsSync(self, fullsync, installFirstRun, itemList = []):
 
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         WINDOW = xbmcgui.Window( 10000 )
@@ -282,7 +282,8 @@ class LibrarySync():
             # incremental sync --> new episodes only
             if not fullsync:
                 
-                latestMBEpisodes = ReadEmbyDB().getLatestEpisodes(True)
+                latestMBEpisodes = ReadEmbyDB().getLatestEpisodes(fullinfo = True, itemList = itemList)
+                utils.logMsg("Sync TV", "Inc Sync Started on : " + str(len(latestMBEpisodes)) + " : " + str(itemList), 1)
                 
                 if latestMBEpisodes != None:
                     allKodiTvShowsIds = set(ReadKodiDB().getKodiTvShowsIds(True))

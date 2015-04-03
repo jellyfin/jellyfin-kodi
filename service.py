@@ -39,8 +39,8 @@ class Service():
         player = Player()
         lastProgressUpdate = datetime.today()
         
-        interval_FullSync = 120
-        interval_IncrementalSync = 30
+        interval_FullSync = 600
+        interval_IncrementalSync = 300
         
         cur_seconds_fullsync = interval_FullSync
         cur_seconds_incrsync = interval_IncrementalSync
