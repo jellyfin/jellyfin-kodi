@@ -50,6 +50,11 @@ def convertEncoding(data):
         return data
           
 def KodiSQL():
+    connection = sqlite3.connect(getKodiDBPath())
+
+    return connection
+
+def getKodiDBPath():
     if xbmc.getInfoLabel("System.BuildVersion").startswith("13"):
         #gotham
         dbVersion = "78"
@@ -61,10 +66,8 @@ def KodiSQL():
         dbVersion = "90"
     
     dbPath = xbmc.translatePath("special://userdata/Database/MyVideos" + dbVersion + ".db")
-    connection = sqlite3.connect(dbPath)
-
-    return connection
-        
+    
+    return dbPath  
 
 def checkAuthentication():
     #check authentication
@@ -166,176 +169,17 @@ def reset():
             dialog.ok('Warning', 'Could not stop DB sync, you should try again.')
             return
         xbmc.sleep(1000)
-
-    # clear video database
-    connection = KodiSQL()
-    cursor = connection.cursor()
-    try:
-        cursor.execute("DROP TABLE episode;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE movie;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE tvshow;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE actors;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE actorlinkepisode;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE actorlinkmovie;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE actorlinktvshow;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE art;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE artistlinkmusicvideo;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE countrylinkmovie;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE directorlinkepisode;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE directorlinkmovie;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE directorlinkmusicvideo;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE directorlinktvshow;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE files;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE genre;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE genrelinkmovie;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE genrelinkmusicvideo;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE genrelinktvshow;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE movielinktvshow;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE musicvideo;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE path;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE seasons;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE sets;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE stacktimes;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE streamdetails;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE studio;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE studiolinkmovie;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE studiolinkmusicvideo;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE studiolinktvshow;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE tag;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE taglinks;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE tvshowlinkepisode;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE tvshowlinkpath;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE version;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE writerlinkepisode;")
-    except:
-        pass
-    try:
-        cursor.execute("DROP TABLE writerlinkmovie;")  
-    except:
-        pass
     
-    try:
-        connection.commit()
-        logMsg("Emby","Removed tables from kodi database")
-    finally:
-        cursor.close()
+    # delete db
+    os.remove(getKodiDBPath())
         
-    # check for old library folder and delete if present
+    # remove from addon data directory
     addon = xbmcaddon.Addon(id='plugin.video.emby')
     addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
-    dataPath = os.path.join(addondir,"library" + os.sep)
+    dataPath = os.path.join(addondir + os.sep)
     removeDirectory(dataPath)
     
     # remove old entries from sources.xml
-    
-    # reset addon settings values
-    addon.setSetting("SyncInstallRunDone", "false") 
-    addon.setSetting("SyncFirstCountsRunDone", "false")
     
     dialog = xbmcgui.Dialog()
     dialog.ok('Emby Reset', 'Reset of Emby has completed, you need to restart.')
