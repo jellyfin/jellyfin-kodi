@@ -251,7 +251,7 @@ class PlaybackUtils():
         for itemID in items:
         
             utils.logMsg("PlayBackUtils", "Adding Item to Playlist : " + itemID)
-            item_url = "http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + itemID + "?format=json"
+            item_url = server + "/mediabrowser/Users/" + userid + "/Items/" + itemID + "?format=json"
             jsonData = self.downloadUtils.downloadUrl(item_url, suppress=False, popup=1 )
             
             item_data = json.loads(jsonData)
@@ -283,7 +283,7 @@ class PlaybackUtils():
         for itemID in itemIds:
         
             utils.logMsg("PlayBackUtils", "Adding Item to Playlist : " + itemID)
-            item_url = "http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + itemID + "?format=json"
+            item_url = server + "/mediabrowser/Users/" + userid + "/Items/" + itemID + "?format=json"
             jsonData = self.downloadUtils.downloadUrl(item_url, suppress=False, popup=1 )
             
             item_data = json.loads(jsonData)
@@ -319,7 +319,7 @@ class PlaybackUtils():
             WINDOW.setProperty(playurl + "positionurl", positionurl)
             WINDOW.setProperty(playurl + "deleteurl", "")
             
-            if item.get("Type") == "Episode" and self.settings.getSetting("offerDelete")=="true":
+            if item.get("Type") == "Episode" and addon.getSetting("offerDelete")=="true":
                WINDOW.setProperty(playurl + "deleteurl", deleteurl)
         
             WINDOW.setProperty(playurl + "runtimeticks", str(item.get("RunTimeTicks")))
