@@ -182,6 +182,6 @@ def reset():
     # remove old entries from sources.xml
     
     dialog = xbmcgui.Dialog()
-    dialog.ok('Emby Reset', 'Reset of Emby has completed, you need to restart.')
+    dialog.ok('Emby Reset', 'Reset of Emby has completed, kodi will now restart to apply the changes.')
     xbmc.executebuiltin("RestartApp")
      
