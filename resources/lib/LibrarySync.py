@@ -116,7 +116,7 @@ class LibrarySync():
                 
                 for item in allMB3Movies:
                     
-                    if not item.get('IsFolder'):
+                    if not item.get('IsFolder'):                    
                         allEmbyMovieIds.append(item["Id"])
                         item['Tag'] = []
                         item['Tag'].append(view.get('title'))
