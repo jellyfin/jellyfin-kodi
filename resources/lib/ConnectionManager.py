@@ -69,12 +69,13 @@ class ConnectionManager():
             return
         
         serverInfo = self.getServerDetails()
-        prefix,ip,port = serverInfo.split(":")
         
         if (serverInfo == None):
             self.logMsg("getServerDetails failed", 1)
+            xbmc.executebuiltin('Addon.OpenSettings(%s)' % self.addonId)
             return
-        
+
+        prefix,ip,port = serverInfo.split(":")
         setServer = xbmcgui.Dialog().yesno(self.__language__(30167), "Proceed with the following server?", self.__language__(30169) + serverInfo)
         
         if setServer == 1:
