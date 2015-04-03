@@ -176,7 +176,7 @@ def reset():
     deleted = False
     while(deleted == False):
         try:
-            os.remove(getKodiDBPath())
+            xbmcvfs.delete(getKodiDBPath())
             deleted = True
         except:
             deletecount += 1
