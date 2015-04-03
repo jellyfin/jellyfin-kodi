@@ -330,6 +330,10 @@ class UserClient(threading.Thread):
             if self.stopClient == True:
                 break
                 
+            if self.KodiMonitor.waitForAbort(1):
+                # Abort was requested while waiting. We should exit
+                break
+                
         self.logMsg("|---- UserClient Stopped ----|", 0)
 
     def stopClient(self):
