@@ -970,11 +970,8 @@ class WriteKodiDB():
         episode = ReadKodiDB().getKodiEpisodeByMbItem(episodeid, tvshowid)
         if episode != None:
             WINDOW = xbmcgui.Window( 10000 )
-            WINDOW.setProperty("suspendDeletes", "True")                
             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveEpisode", "params": { "episodeid": %i}, "id": 1 }' %(episode["episodeid"]))
             
-            while WINDOW.getProperty("suspendDeletes") == "True":
-                xbmc.sleep(100)
             utils.logMsg("episode deleted succesfully!",episodeid)
         else:
             utils.logMsg("episode not found in kodi DB",episodeid)        
