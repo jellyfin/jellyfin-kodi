@@ -37,34 +37,43 @@ class LibrarySync():
 
         startupDone = WINDOW.getProperty("startup") == "done"
         syncInstallRunDone = addon.getSetting("SyncInstallRunDone") == "true"
+        WINDOW.setProperty("SyncDatabaseRunning", "true")
         
-        completed = True
-        
-        # sync movies
-        if(syncInstallRunDone == False): # on first install run do a full sync with model progress dialog
-            completed = completed and self.TvShowsSync(True, True)
-            completed = completed and self.MoviesSync(True, True)
-            completed = completed and self.MusicVideosSync(True, True)
-        elif(startupDone == False): # on first run after startup do a inc then a full sync
-            self.TvShowsSync(False, False)
-            self.MoviesSync(False, False)
-            self.MusicVideosSync(False, False)
-            self.TvShowsSync(True, False)
-            self.MoviesSync(True, False)
-            self.MusicVideosSync(True, False)
-        else: # on scheduled sync do a full sync
-            self.TvShowsSync(True, False)
-            self.MoviesSync(True, False)
-            self.MusicVideosSync(True, False)
-       
-        # set the install done setting
-        if(syncInstallRunDone == False and completed):
-            addon = xbmcaddon.Addon(id='plugin.video.emby') #force a new instance of the addon
-            addon.setSetting("SyncInstallRunDone", "true")        
-        
-        # set prop to show we have run for the first time
-        WINDOW.setProperty("startup", "done")
-                        
+        if(WINDOW.getProperty("SyncDatabaseShouldStop") ==  "true"):
+            utils.logMsg("Sync Database", "Can not start SyncDatabaseShouldStop=True", 0)
+            return True
+
+        try:
+            completed = True
+            
+            # sync movies
+            if(syncInstallRunDone == False): # on first install run do a full sync with model progress dialog
+                completed = completed and self.TvShowsSync(True, True)
+                completed = completed and self.MoviesSync(True, True)
+                completed = completed and self.MusicVideosSync(True, True)
+            elif(startupDone == False): # on first run after startup do a inc then a full sync
+                self.TvShowsSync(False, False)
+                self.MoviesSync(False, False)
+                self.MusicVideosSync(False, False)
+                self.TvShowsSync(True, False)
+                self.MoviesSync(True, False)
+                self.MusicVideosSync(True, False)
+            else: # on scheduled sync do a full sync
+                self.TvShowsSync(True, False)
+                self.MoviesSync(True, False)
+                self.MusicVideosSync(True, False)
+           
+            # set the install done setting
+            if(syncInstallRunDone == False and completed):
+                addon = xbmcaddon.Addon(id='plugin.video.emby') #force a new instance of the addon
+                addon.setSetting("SyncInstallRunDone", "true")        
+            
+            # set prop to show we have run for the first time
+            WINDOW.setProperty("startup", "done")
+            
+        finally:
+            WINDOW.setProperty("SyncDatabaseRunning", "false")
+            
         return True      
     
     def MoviesSync(self, fullsync, installFirstRun, itemList = []):
@@ -734,9 +743,14 @@ class LibrarySync():
         processMovies = True
         processTvShows = True
         
+        if(WINDOW.getProperty("SyncDatabaseShouldStop") ==  "true"):
+            utils.logMsg("Sync PlayCount", "Can not start SyncDatabaseShouldStop=True", 0)
+            return True        
+        
         if(WINDOW.getProperty("updatePlayCounts_Running") == "true"):
             utils.logMsg("Sync PlayCount", "updatePlayCounts Already Running", 0)
             return False
+            
         WINDOW.setProperty("updatePlayCounts_Running", "true")
             
         try:
@@ -977,8 +991,12 @@ class LibrarySync():
     
         if(xbmc.Player().isPlaying() or xbmc.abortRequested):
             return True
-        else:
-            return False
+
+        WINDOW = xbmcgui.Window( 10000 )
+        if(WINDOW.getProperty("SyncDatabaseShouldStop") == "true"):
+            return True
+
+        return False
 
         
         

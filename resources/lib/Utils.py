@@ -150,6 +150,23 @@ def removeDirectory(path):
         xbmcvfs.rmdir(path)
         
 def reset():
+
+    return_value = xbmcgui.Dialog().yesno("Warning", "Are you sure you want to reset your local database?")
+    if return_value == 0:
+        return
+    
+    # first stop any db sync
+    WINDOW = xbmcgui.Window( 10000 )
+    WINDOW.setProperty("SyncDatabaseShouldStop", "true")
+    
+    count = 0
+    while(WINDOW.getProperty("SyncDatabaseRunning") == "true"):
+        count += 1
+        if(count > 10):
+            dialog.ok('Warning', 'Could not stop DB sync, you should try again.')
+            return
+        xbmc.sleep(1000)
+
     # clear video database
     connection = KodiSQL()
     cursor = connection.cursor()
@@ -321,5 +338,6 @@ def reset():
     addon.setSetting("SyncFirstCountsRunDone", "false")
     
     dialog = xbmcgui.Dialog()
-    dialog.ok('Emby Reset', 'Reset of Emby has completed, please restart.')
+    dialog.ok('Emby Reset', 'Reset of Emby has completed, you need to restart.')
+    xbmc.executebuiltin("RestartApp")
      
