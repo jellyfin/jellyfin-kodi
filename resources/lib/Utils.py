@@ -171,8 +171,19 @@ def reset():
         xbmc.sleep(1000)
     
     # delete db
-    os.remove(getKodiDBPath())
-        
+    deletecount = 0
+    deleted = False
+    while(deleted == False):
+        try:
+            os.remove(getKodiDBPath())
+            deleted = True
+        except:
+            deletecount += 1
+            if(deletecount > 10):
+                dialog.ok('Warning', 'Could not delete Database, please try again later')
+                return
+            xbmc.sleep(1000)
+    
     # remove from addon data directory
     addon = xbmcaddon.Addon(id='plugin.video.emby')
     addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
