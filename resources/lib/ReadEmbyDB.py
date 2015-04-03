@@ -27,7 +27,8 @@ class ReadEmbyDB():
             sortstring = "&SortBy=SortName"
         else:
             if(len(itemList) > 0): # if we want a certain list specify it
-                sortstring = "&Ids=" + ",".join(itemList)
+                #sortstring = "&Ids=" + ",".join(itemList)
+                sortstring = "" # work around for now until ParetnId and Id work together
             else: # just get the last 20 created items
                 sortstring = "&Limit=20&SortBy=DateCreated"
             
@@ -42,6 +43,14 @@ class ReadEmbyDB():
             if(result.has_key('Items')):
                 result = result['Items']
 
+        # work around for now until ParetnId and Id work together
+        if(result != None and len(result) > 0 and len(itemList) > 0):
+            newResult = []
+            for item in result:
+                if(item.get("Id") in itemList):
+                    newResult.append(item)
+            result = newResult
+            
         return result
 
     def getMusicVideos(self, fullinfo = False, fullSync = True):
