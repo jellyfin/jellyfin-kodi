@@ -186,7 +186,7 @@ class LibrarySync():
                 viewCurrent += 1
                 
             # process box sets - TODO cope with movies removed from a set
-            if fullsync and addon.getSetting("syncMovieBoxSets") == "true":
+            if fullsync:
 
                 if(pDialog != None):
                     progressTitle = "Sync DB : BoxSets"
