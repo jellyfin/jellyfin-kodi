@@ -16,27 +16,30 @@ from LibrarySync import LibrarySync
 from Player import Player
 from DownloadUtils import DownloadUtils
 from ConnectionManager import ConnectionManager
+from ClientInformation import ClientInformation
 from WebSocketClient import WebSocketThread
+from UserClient import UserClient
 librarySync = LibrarySync()
 
 class Service():
     
     newWebSocketThread = None
+    newUserClient = None
+
+    clientInfo = ClientInformation()
     
     def __init__(self, *args ):
         self.KodiMonitor = KodiMonitor.Kodi_Monitor()
 
         utils.logMsg("MB3 Sync Service", "starting Monitor",0)
-        
-        pass  
+        xbmc.log("======== START %s ========" % self.clientInfo.getAddonName()) 
+        pass
     
             
     def ServiceEntryPoint(self):
         
         ConnectionManager().checkServer()
-        DownloadUtils().authenticate(retreive=True)
         
-        player = Player()
         lastProgressUpdate = datetime.today()
         
         interval_FullSync = 600
@@ -45,6 +48,8 @@ class Service():
         cur_seconds_fullsync = interval_FullSync
         cur_seconds_incrsync = interval_IncrementalSync
         
+        user = UserClient()
+        player = Player()
         ws = WebSocketThread()
         
         while not self.KodiMonitor.abortRequested():
@@ -74,8 +79,11 @@ class Service():
                     xbmc.log("MB3 Sync Service -> Exception in Playback Monitor Service : " + str(e))
                     pass
             else:
+                if (self.newUserClient == None):
+                        self.newUserClient = "Started"
+                        user.start()
                 # background worker for database sync
-                if DownloadUtils().authenticate(retreive=False) != "":
+                if (user.currUser != None):
                     
                     # Correctly launch the websocket, if user manually launches the add-on
                     if (self.newWebSocketThread == None):
@@ -113,7 +121,10 @@ class Service():
         utils.logMsg("MB3 Sync Service", "stopping Service",0)
         
         if (self.newWebSocketThread != None):
-            ws.stopClient()                
+            ws.stopClient()
+
+        if (self.newUserClient != None):
+            user.stopClient()              
         
        
 #start the service

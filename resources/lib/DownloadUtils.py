@@ -19,6 +19,7 @@ import traceback
 
 class DownloadUtils():
 
+    WINDOW = xbmcgui.Window(10000)
     logLevel = 0
     addonSettings = None
     getString = None
@@ -49,30 +50,16 @@ class DownloadUtils():
 
     def getServer(self, prefix=True):
         
-        # For https support
-        addon = self.addon
-        HTTPS = addon.getSetting('https')
-        host = addon.getSetting('ipaddress')
-        port = addon.getSetting('port')
-        server = host + ":" + port
-        return server
-        '''
-        if len(server) < 2:
-            self.logMsg("No server information saved.")
-            return ""
+        WINDOW = self.WINDOW
+        username = WINDOW.getProperty("currUser")
+        
+        if prefix:
+            server = WINDOW.getProperty("server%s" % username)
+        else:
+            server = WINDOW.getProperty("server_%s" % username)
 
-        # If https is true
-        if prefix and (HTTPS == "true"):
-            server = "https://%s" % server
-            return server
-        # If https is false
-        elif prefix and (HTTPS == "false"):
-            server = "http://%s" % server
-            return server
-        # If only the host:port is required
-        elif (prefix == False):
-            return server
-        '''
+        return server
+
     def getUserId(self, suppress=True):
 
         WINDOW = xbmcgui.Window( 10000 )
@@ -146,7 +133,7 @@ class DownloadUtils():
         
         self.downloadUrl(url, postBody=stringdata, type="POST")
 
-    def authenticate(self, retreive=True):
+    '''def authenticate(self, retreive=True):
     
         WINDOW = xbmcgui.Window(10000)
         self.addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
@@ -227,15 +214,13 @@ class DownloadUtils():
             WINDOW.setProperty("userid" + username, "")
             self.addonSettings.setSetting("AccessToken" + username, "")
             self.addonSettings.setSetting("userid" + username, "")
-            return ""            
+            return ""     '''       
 
     def imageUrl(self, id, type, index, width, height):
     
-        port = self.addonSettings.getSetting('port')
-        host = self.addonSettings.getSetting('ipaddress')
-        server = host + ":" + port
+        server = self.getServer()
         
-        return "http://" + server + "/mediabrowser/Items/" + str(id) + "/Images/" + type + "/" + str(index) + "/e3ab56fe27d389446754d0fb04910a34/original/" + str(width) + "/" + str(height) + "/0"
+        return "%s/mediabrowser/Items/%s/Images/%s/%s//e3ab56fe27d389446754d0fb04910a34/original/%s/%s/0" % (server, id, type, index, width, height)
     
     def getAuthHeader(self, authenticate=True):
         clientInfo = ClientInformation()
@@ -244,6 +229,7 @@ class DownloadUtils():
         
         deviceName = self.addonSettings.getSetting('deviceName')
         deviceName = deviceName.replace("\"", "_")
+        username = self.WINDOW.getProperty("currUser")
 
         if(authenticate == False):
             authString = "MediaBrowser Client=\"Kodi\",Device=\"" + deviceName + "\",DeviceId=\"" + txt_mac + "\",Version=\"" + version + "\""
@@ -254,7 +240,7 @@ class DownloadUtils():
             authString = "MediaBrowser UserId=\"" + userid + "\",Client=\"Kodi\",Device=\"" + deviceName + "\",DeviceId=\"" + txt_mac + "\",Version=\"" + version + "\""
             headers = {"Accept-encoding": "gzip", "Accept-Charset" : "UTF-8,*", "Authorization" : authString}        
                 
-            authToken = self.authenticate()
+            authToken = self.WINDOW.getProperty("accessToken%s" % username)
             if(authToken != ""):
                 headers["X-MediaBrowser-Token"] = authToken
                     
@@ -278,13 +264,19 @@ class DownloadUtils():
             self.TrackLog = self.TrackLog + "HTTP_API_CALL : " + url + stackString + "\r"
             
         link = ""
+        https = None
         try:
-            if url[0:4] == "http":
+            if url[0:5] == "https":
+                serversplit = 2
+                urlsplit = 3
+            elif url[0:4] == "http":
                 serversplit = 2
                 urlsplit = 3
             else:
                 serversplit = 0
                 urlsplit = 1
+
+            https = self.addonSettings.getSetting('https')
 
             server = url.split('/')[serversplit]
             urlPath = "/"+"/".join(url.split('/')[urlsplit:])
@@ -300,7 +292,12 @@ class DownloadUtils():
             head = self.getAuthHeader(authenticate)
             self.logMsg("HEADERS : " + str(head), level=2)
             
-            conn = httplib.HTTPConnection(server, timeout=5)
+            if (https == 'false'):
+                #xbmc.log("Https disabled.")
+                conn = httplib.HTTPConnection(server, timeout=5)
+            elif (https == 'true'):
+                #xbmc.log("Https enabled.")
+                conn = httplib.HTTPSConnection(server, timeout=5)
 
             # make the connection and send the request
             if(postBody != None):
@@ -356,22 +353,23 @@ class DownloadUtils():
                 return data.getheader('Location')
 
             elif int(data.status) == 401:
-                error = "HTTP response error: " + str(data.status) + " " + str(data.reason)
-                xbmc.log(error)
-                
-                username = self.addonSettings.getSetting("username")
                 WINDOW = xbmcgui.Window(10000)
-                WINDOW.setProperty("AccessToken" + username, "")
-                WINDOW.setProperty("userid" + username, "")
-                self.addonSettings.setSetting("AccessToken" + username, "")
-                self.addonSettings.setSetting("userid" + username, "")
-                
-                xbmcgui.Dialog().ok(self.getString(30135), self.getString(30044), "Reason : " + str(data.reason))
-                try: 
-                    conn.close()
-                except: 
+                status = WINDOW.getProperty("Server_status")
+                # Prevent multiple re-auth
+                if (status == "401") or (status == "Auth"):
                     pass
-                return ""
+                else:
+                    # Tell UserClient token has been revoked.
+                    WINDOW.setProperty("Server_status", "401")
+                    error = "HTTP response error: " + str(data.status) + " " + str(data.reason)
+                    xbmc.log(error)
+                    #xbmcgui.Dialog().ok(self.getString(30135),"Reason: %s" % data.reason) #self.getString(30044), 
+            
+                    try: 
+                        conn.close()
+                    except: 
+                        pass
+                    return ""
                 
             elif int(data.status) >= 400:
                 error = "HTTP response error: " + str(data.status) + " " + str(data.reason)
