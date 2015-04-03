@@ -166,6 +166,7 @@ def reset():
     while(WINDOW.getProperty("SyncDatabaseRunning") == "true"):
         count += 1
         if(count > 10):
+            dialog = xbmcgui.Dialog()
             dialog.ok('Warning', 'Could not stop DB sync, you should try again.')
             return
         xbmc.sleep(1000)
@@ -180,6 +181,7 @@ def reset():
         except:
             deletecount += 1
             if(deletecount > 10):
+                dialog = xbmcgui.Dialog()
                 dialog.ok('Warning', 'Could not delete Database, please try again later')
                 return
             xbmc.sleep(1000)
