@@ -3,7 +3,7 @@
 	<category label="30014"> <!-- Emby -->
 		<setting id="ipaddress" type="text" label="30000" default="" visible="true" enable="true" />
 		<setting id="port" type="text" label="30030" default="8096" visible="true" enable="true" />
-		<setting id="https" type="bool" label="Enable HTTPS" visible="true" enable="true" />
+		<setting id="https" type="bool" label="Enable HTTPS" visible="true" enable="true" default="false" />
 		<setting type="sep" />
 		<setting id="username" type="text" label="30024" />
 		<setting type="sep" />
