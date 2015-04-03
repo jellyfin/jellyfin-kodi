@@ -186,6 +186,12 @@ def reset():
                 return
             xbmc.sleep(1000)
     
+    # extra check on the database to see it has been removed
+    if xbmcvfs.exists(getKodiDBPath()):
+        dialog = xbmcgui.Dialog()
+        dialog.ok('Error', 'The video database could not be deleted, this will need to be done manually. First remove: '+getKodiDBPath() + ' Then delete the plugin from your addon_data directory and restart Kodi')
+        return
+    
     # remove from addon data directory
     addon = xbmcaddon.Addon(id='plugin.video.emby')
     addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
