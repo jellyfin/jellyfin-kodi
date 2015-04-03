@@ -998,7 +998,7 @@ class WriteKodiDB():
         
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
         #make sure that the path always ends with a slash
-        path = playurl + "/"
+        path = utils.convertEncoding(playurl + "/")
         
         if MBitem.get("DateCreated") != None:
             dateadded = MBitem["DateCreated"].replace("T"," ")
