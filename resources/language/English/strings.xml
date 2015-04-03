@@ -238,6 +238,8 @@
     <string id="30237">Sync Extra Fanart</string>
 	<string id="30238">Sync Movie BoxSets</string>
     
+    <string id="30239">Reset</string>
+    
 	<!-- Default views -->
     <string id="30300">Active</string>              
     <string id="30301">Clear Settings</string>              
