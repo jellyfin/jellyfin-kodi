@@ -116,7 +116,7 @@ class ReadEmbyDB():
 
         return result
     
-    def getTVShows(self, fullinfo = False, fullSync = False):
+    def getTVShows(self, id, fullinfo = False, fullSync = False):
         result = None
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
@@ -134,9 +134,9 @@ class ReadEmbyDB():
         
         
         if fullinfo:
-            url = server + '/mediabrowser/Users/' + userid + '/Items?' + sortstring + '&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1'
+            url = server + '/mediabrowser/Users/' + userid + '/Items?ParentId=' + id  + sortstring + '&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1'
         else:
-            url = server + '/mediabrowser/Users/' + userid + '/Items?' + sortstring + '&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1'
+            url = server + '/mediabrowser/Users/' + userid + '/Items?ParentId=' + id  + sortstring + '&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1'
         
         jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=0)
         if jsonData != None and jsonData != "":
@@ -257,12 +257,12 @@ class ReadEmbyDB():
                 Temp = item.get("Name")
                 Name = Temp.encode('utf-8')
                 section = item.get("CollectionType")
-                type = item.get("CollectionType")
-                if type == None:
-                    type = "None" # User may not have declared the type
-                if type == type and item.get("Name") != "Collections":
+                itemtype = item.get("CollectionType")
+                if itemtype == None:
+                    itemtype = "None" # User may not have declared the type
+                if itemtype == type and item.get("Name") != "Collections":
                     collections.append( {'title'      : item.get("Name"),
-                            'type'           : type,
+                            'type'           : itemtype,
                             'id'             : item.get("Id")})
         return collections
     

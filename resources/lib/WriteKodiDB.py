@@ -313,7 +313,8 @@ class WriteKodiDB():
             premieredatelist = (MBitem.get("PremiereDate")).split("T")
             premieredate = premieredatelist[0]
             changes |= self.updateProperty(KodiItem,"premiered",premieredate,"tvshow")
-        
+            
+        changes |= self.updatePropertyArray(KodiItem,"tag",MBitem.get("Tag"),"tvshow")        
         changes |= self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"tvshow")
         changes |= self.updateProperty(KodiItem,"lastplayed",MBitem.get("LastPlayedDate"),"tvshow")
         
