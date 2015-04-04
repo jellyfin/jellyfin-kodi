@@ -210,7 +210,7 @@ class WebSocketThread(threading.Thread):
                 connection = utils.KodiSQL()
                 cursor = connection.cursor()
                 LibrarySync().MoviesSync(connection, cursor, fullsync = False, installFirstRun = False, itemList = itemsToUpdate)
-                LibrarySync().TvShowsSync(connection, cursor,fullsync = False, installFirstRun = False, itemList = itemsToUpdate)
+                LibrarySync().TvShowsSync(connection, cursor, fullsync = False, installFirstRun = False, itemList = itemsToUpdate)
                 cursor.close()
         
     def on_error(self, ws, error):

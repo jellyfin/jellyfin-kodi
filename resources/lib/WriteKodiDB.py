@@ -844,12 +844,19 @@ class WriteKodiDB():
         #adds a Episode to Kodi by directly inserting it to the DB while there is no addEpisode available on the json API
         #TODO: PR at Kodi team for a addEpisode endpoint on their API
         
+        # first check the episode is not already in the DB using the Emby ID which is stored in c20
+        cursor.execute("SELECT idEpisode FROM episode WHERE c20 = ?",(MBitem["Id"],))
+        result = cursor.fetchone()
+        if result != None:
+            utils.logMsg("Emby", "TV Show already exists in DB : " + MBitem["Id"] + " - " + MBitem["Name"])
+            return
+        
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
-        downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()
+        #downloadUtils = DownloadUtils()
+        #userid = downloadUtils.getUserId()
         
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
@@ -943,9 +950,9 @@ class WriteKodiDB():
         
         try:
             connection.commit()
-            utils.logMsg("Emby","Added TV Show to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+            utils.logMsg("Emby","Added TV Show to Kodi Library" + MBitem["Id"] + " - " + MBitem["Name"])
         except:
-            utils.logMsg("Emby","Error adding tvshow to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+            utils.logMsg("Emby","Error adding tvshow to Kodi Library" + MBitem["Id"] + " - " + MBitem["Name"])
             actionPerformed = False
     
     def deleteMovieFromKodiLibrary(self, id ):
@@ -1097,7 +1104,7 @@ class WriteKodiDB():
                             cursor.execute("INSERT into art(media_id, media_type, type, url) values(?, ?, ?, ?)", (seasonid,"season","banner",API().getArtwork(season, "Banner")))
 
         connection.commit()
-         #cursor.close()   
+        #cursor.close()   
     
     def setKodiResumePoint(self, id, resume_seconds, total_seconds, fileType):
         #use sqlite to set the resume point while json api doesn't support this yet
@@ -1286,7 +1293,7 @@ class WriteKodiDB():
                         cursor.execute(peoplesql, (actorid,id,Role,None))
         
         connection.commit()
-         #cursor.close()
+        #cursor.close()
         
         return True
     
