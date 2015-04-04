@@ -93,12 +93,14 @@ class Service():
                     #full sync
                     if(cur_seconds_fullsync >= interval_FullSync):
                         xbmc.log("Doing_Db_Sync: syncDatabase (Started)")
+                        self.WINDOW.setProperty("Server_sync", "true")
                         worked = librarySync.syncDatabase()
                         xbmc.log("Doing_Db_Sync: syncDatabase (Finished) " + str(worked))
                         if(worked):
                             cur_seconds_fullsync = 0
                         else:
                             cur_seconds_fullsync = interval_FullSync - 10
+                        self.WINDOW.setProperty("Server_sync", "")
                     else:
                         cur_seconds_fullsync += 1
                     
