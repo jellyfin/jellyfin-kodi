@@ -44,6 +44,7 @@ class UserClient(threading.Thread):
         self.addonName = clientInfo.getAddonName()
         self.addon = xbmcaddon.Addon(id=self.addonId)
 
+        self.logMsg("|---- Starting UserClient ----|", 0)
         threading.Thread.__init__(self, *args)
 
     def logMsg(self, msg, level=1):
@@ -290,8 +291,6 @@ class UserClient(threading.Thread):
 
     def run(self):
 
-        self.logMsg("|---- Starting UserClient ----|", 0)
-
         while not self.KodiMonitor.abortRequested():
 
             # Get the latest addon settings
@@ -311,6 +310,7 @@ class UserClient(threading.Thread):
                     self.auth = False
                     self.authenticate()
                 
+
             if (self.auth == False) and (self.currUser == None):
                 # Only if there's information found to login
                 server = self.getServer()
@@ -330,11 +330,9 @@ class UserClient(threading.Thread):
             if self.stopClient == True:
                 break
                 
-            # Prevent sleep while the initial sync is going    
-            if (self.WINDOW.getProperty("Server_sync") == ""):
-                if self.KodiMonitor.waitForAbort(1):
-                    # Abort was requested while waiting. We should exit
-                    break
+            if self.KodiMonitor.waitForAbort(1):
+                # Abort was requested while waiting. We should exit
+                break
                 
         self.logMsg("|---- UserClient Stopped ----|", 0)
 
