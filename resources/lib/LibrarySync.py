@@ -476,7 +476,7 @@ class LibrarySync():
                                         #double check the item it might me added delayed by the Kodi scanner
                                         if ReadKodiDB().getKodiEpisodeByMbItem(item["Id"],tvshow) == None:
                                             #no match so we have to create it
-                                            WriteKodiDB().addEpisodeToKodiLibrary(item)
+                                            WriteKodiDB().addEpisodeToKodiLibrary(item,connection, cursor)
                                             progressAction = "Adding"
                                             totalItemsAdded += 1
                                         
