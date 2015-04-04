@@ -74,6 +74,7 @@ class LibrarySync():
             
         finally:
             WINDOW.setProperty("SyncDatabaseRunning", "false")
+            utils.logMsg("Sync DB", "syncDatabase Exiting", 0)
             cursor.close()
             
         return True      
@@ -448,6 +449,10 @@ class LibrarySync():
                                 count = 0         
     
                             for item in episodeData:
+                            
+                                if(self.ShouldStop(pDialog)):
+                                    return False        
+                                    
                                 progressAction = "Adding"
                                 WriteKodiDB().addEpisodeToKodiLibrary(item, connection, cursor)
                                 

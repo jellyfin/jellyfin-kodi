@@ -150,8 +150,8 @@ class WriteKodiDB():
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
-        downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()
+        #downloadUtils = DownloadUtils()
+        #userid = downloadUtils.getUserId()
         
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
@@ -354,8 +354,8 @@ class WriteKodiDB():
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port        
-        downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()
+        #downloadUtils = DownloadUtils()
+        #userid = downloadUtils.getUserId()
         
         timeInfo = API().getTimeInfo(MBitem)
         people = API().getPeople(MBitem)
@@ -760,8 +760,8 @@ class WriteKodiDB():
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
-        downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()
+        #downloadUtils = DownloadUtils()
+        #userid = downloadUtils.getUserId()
         
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
@@ -986,8 +986,8 @@ class WriteKodiDB():
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
-        downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()
+        #downloadUtils = DownloadUtils()
+        #userid = downloadUtils.getUserId()
         
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
@@ -1353,3 +1353,4 @@ class WriteKodiDB():
         kodiMovie = ReadKodiDB().getKodiMovie(boxsetmovie["Id"])
         if kodiMovie != None:
             WriteKodiDB().updateProperty(kodiMovie,"set",strSet,"movie",True)
+            
