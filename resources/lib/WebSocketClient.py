@@ -207,8 +207,11 @@ class WebSocketThread(threading.Thread):
             itemsToUpdate = itemsAdded + itemsUpdated
             if(len(itemsToUpdate) > 0):
                 self.logMsg("Message : Doing LibraryChanged : Processing Added and Updated : " + str(itemsToUpdate), 0)
-                LibrarySync().MoviesSync(fullsync = False, installFirstRun = False, itemList = itemsToUpdate)
-                LibrarySync().TvShowsSync(fullsync = False, installFirstRun = False, itemList = itemsToUpdate)
+                connection = utils.KodiSQL()
+                cursor = connection.cursor()
+                LibrarySync().MoviesSync(connection, cursor, fullsync = False, installFirstRun = False, itemList = itemsToUpdate)
+                LibrarySync().TvShowsSync(connection, cursor,fullsync = False, installFirstRun = False, itemList = itemsToUpdate)
+                cursor.close()
         
     def on_error(self, ws, error):
         self.logMsg("Error : " + str(error))

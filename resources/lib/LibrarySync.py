@@ -45,23 +45,24 @@ class LibrarySync():
 
         try:
             completed = True
-            
+            connection = utils.KodiSQL()
+            cursor = connection.cursor()
             # sync movies
             if(syncInstallRunDone == False): # on first install run do a full sync with model progress dialog
-                completed = completed and self.TvShowsSync(True, True)
-                completed = completed and self.MoviesSync(True, True)
-                completed = completed and self.MusicVideosSync(True, True)
+                completed = completed and self.TvShowsSync(connection, cursor,True, True)
+                completed = completed and self.MoviesSync(connection, cursor,True, True)
+                completed = completed and self.MusicVideosSync(True, True,connection , cursor)
             elif(startupDone == False): # on first run after startup do a inc then a full sync
-                self.TvShowsSync(False, False)
-                self.MoviesSync(False, False)
-                self.MusicVideosSync(False, False)
-                self.TvShowsSync(True, False)
-                self.MoviesSync(True, False)
-                self.MusicVideosSync(True, False)
+                self.TvShowsSync(connection, cursor,False, False)
+                self.MoviesSync(connection, cursor,False, False)
+                self.MusicVideosSync(False, False, connection,cursor)
+                self.TvShowsSync(connection, cursor,True, False)
+                self.MoviesSync(connection, cursor,True, False)
+                self.MusicVideosSync(True, False,connection,cursor)
             else: # on scheduled sync do a full sync
-                self.TvShowsSync(True, False)
-                self.MoviesSync(True, False)
-                self.MusicVideosSync(True, False)
+                self.TvShowsSync(connection, cursor,True, False)
+                self.MoviesSync(connection, cursor,True, False)
+                self.MusicVideosSync(True, False,connection,cursor)
            
             # set the install done setting
             if(syncInstallRunDone == False and completed):
@@ -73,10 +74,11 @@ class LibrarySync():
             
         finally:
             WINDOW.setProperty("SyncDatabaseRunning", "false")
+            cursor.close()
             
         return True      
     
-    def MoviesSync(self, fullsync, installFirstRun, itemList = []):
+    def MoviesSync(self,connection, cursor, fullsync, installFirstRun,itemList = []):
 
         WINDOW = xbmcgui.Window( 10000 )
         pDialog = None
@@ -131,7 +133,7 @@ class LibrarySync():
                         item['Tag'].append(view.get('title'))
                         
                         if item["Id"] not in allKodiIds:
-                            WriteKodiDB().addMovieToKodiLibrary(item)
+                            WriteKodiDB().addMovieToKodiLibrary(item,connection, cursor)
                             totalItemsAdded += 1
                         
                         if(self.ShouldStop(pDialog)):
@@ -170,7 +172,7 @@ class LibrarySync():
                         
                         if(kodimovie != None):
                             #WriteKodiDB().updateMovieToKodiLibrary(item, kodimovie)
-                            updated = WriteKodiDB().updateMovieToKodiLibrary_Batched(item, kodimovie)
+                            updated = WriteKodiDB().updateMovieToKodiLibrary_Batched(item, kodimovie, connection, cursor)
                             if(updated):
                                 totalItemsUpdated += 1
                         
@@ -207,7 +209,7 @@ class LibrarySync():
                     if(self.ShouldStop(pDialog)):
                         return False                
                     boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
-                    WriteKodiDB().addBoxsetToKodiLibrary(boxset)
+                    WriteKodiDB().addBoxsetToKodiLibrary(boxset,connection, cursor)
                     
                     for boxsetMovie in boxsetMovies:
                         if(self.ShouldStop(pDialog)):
@@ -264,7 +266,7 @@ class LibrarySync():
         
         return True
         
-    def TvShowsSync(self, fullsync, installFirstRun, itemList = []):
+    def TvShowsSync(self, connection, cursor ,fullsync, installFirstRun, itemList = []):
 
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         WINDOW = xbmcgui.Window( 10000 )
@@ -325,7 +327,7 @@ class LibrarySync():
                             if not matchFound:
                                 #no match so we have to create it
                                 print "creating episode in incremental sync!"
-                                WriteKodiDB().addEpisodeToKodiLibrary(episode)
+                                WriteKodiDB().addEpisodeToKodiLibrary(episode,connection, cursor)
                                 progressAction = "Adding"
                                 totalItemsAdded += 1
                                 
@@ -364,7 +366,7 @@ class LibrarySync():
                             if kodiEpisodes != None:
                                 KodiItem = kodiEpisodes.get(comparestring1, None)
                                 if(KodiItem != None): 
-                                    WriteKodiDB().updateEpisodeToKodiLibrary(episode, KodiItem)
+                                    WriteKodiDB().updateEpisodeToKodiLibrary(episode, KodiItem, connection, cursor)
                                         
                             if(self.ShouldStop(pDialog)):
                                 return False                        
@@ -402,7 +404,7 @@ class LibrarySync():
                         allTVShows.append(item["Id"])
                         progMessage = "Processing"
                         if item["Id"] not in allKodiIds:
-                            WriteKodiDB().addTVShowToKodiLibrary(item)
+                            WriteKodiDB().addTVShowToKodiLibrary(item,connection, cursor)
                             totalItemsAdded += 1
                             
                         if(self.ShouldStop(pDialog)):
@@ -450,7 +452,7 @@ class LibrarySync():
                         for item in episodeData:
                             if(installFirstRun):
                                 progressAction = "Adding"
-                                WriteKodiDB().addEpisodeToKodiLibrary(item)
+                                WriteKodiDB().addEpisodeToKodiLibrary(item, connection, cursor)
                             else:
                                 comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
                                 matchFound = False
@@ -497,7 +499,7 @@ class LibrarySync():
                             kodishow = None
                         
                         if(kodishow != None):
-                            updated = WriteKodiDB().updateTVShowToKodiLibrary(item,kodishow)
+                            updated = WriteKodiDB().updateTVShowToKodiLibrary(item,kodishow,connection, cursor)
                             if(updated):
                                 totalItemsUpdated += 1
                             
@@ -545,7 +547,7 @@ class LibrarySync():
                         if kodiEpisodes != None:
                             KodiItem = kodiEpisodes.get(comparestring1, None)
                             if(KodiItem != None):
-                                updated = WriteKodiDB().updateEpisodeToKodiLibrary(item, KodiItem)
+                                updated = WriteKodiDB().updateEpisodeToKodiLibrary(item, KodiItem, connection, cursor)
                                 if(updated):
                                     totalItemsUpdated += 1                                
                         
@@ -626,7 +628,7 @@ class LibrarySync():
         
         return True
     
-    def MusicVideosSync(self, fullsync, installFirstRun):
+    def MusicVideosSync(self, fullsync, installFirstRun,connection, cursor):
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         WINDOW = xbmcgui.Window( 10000 )
@@ -669,7 +671,7 @@ class LibrarySync():
                     allEmbyMusicVideoIds.append(item["Id"])
                     
                     if item["Id"] not in allKodiIds:
-                        WriteKodiDB().addMusicVideoToKodiLibrary(item)
+                        WriteKodiDB().addMusicVideoToKodiLibrary(item, connection, cursor)
                     
                     if(self.ShouldStop(pDialog)):
                         return False

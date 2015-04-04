@@ -45,7 +45,7 @@ class WriteKodiDB():
             else:
                 downloadUtils.downloadUrl(watchedurl, type="DELETE")
         
-    def updateMovieToKodiLibrary_Batched(self, MBitem, KodiItem):
+    def updateMovieToKodiLibrary_Batched(self, MBitem, KodiItem,connection, cursor):
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
@@ -68,7 +68,7 @@ class WriteKodiDB():
         
         #set Filename
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
-        self.setKodiFilename(KodiItem["movieid"], KodiItem["file"], playurl, "movie", MBitem["Id"])
+        self.setKodiFilename(KodiItem["movieid"], KodiItem["file"], playurl, "movie", MBitem["Id"], connection, cursor)
         
         #update common properties
         if KodiItem["runtime"] == 0:
@@ -138,7 +138,7 @@ class WriteKodiDB():
             result = xbmc.executeJSONRPC(jsoncommand.encode("utf-8"))
             
         #add actors
-        changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"), "movie")
+        changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"), "movie", connection, cursor)
         
         if(changes):
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"], level=0)
@@ -202,7 +202,7 @@ class WriteKodiDB():
         if(changes):
             utils.logMsg("Updated musicvideo to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"], level=0)
             
-    def updateMovieToKodiLibrary(self, MBitem, KodiItem):
+    def updateMovieToKodiLibrary(self, MBitem, KodiItem, connection, cursor):
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
@@ -270,16 +270,16 @@ class WriteKodiDB():
                 changes |= self.updateProperty(KodiItem,"trailer",trailerUrl,"movie")
 
         #add actors
-        changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"),"movie")
+        changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"),"movie", connection, cursor)
         
         #set Filename
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
-        self.setKodiFilename(KodiItem["movieid"], KodiItem["file"], playurl, "movie")
+        self.setKodiFilename(KodiItem["movieid"], KodiItem["file"], playurl, "movie", connection, cursor)
         
         if changes:
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
         
-    def updateTVShowToKodiLibrary( self, MBitem, KodiItem ):
+    def updateTVShowToKodiLibrary( self, MBitem, KodiItem,connection, cursor ):
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
@@ -303,7 +303,7 @@ class WriteKodiDB():
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
         #make sure that the path always ends with a slash
         playurl = playurl + "/"
-        self.setKodiFilename(KodiItem["tvshowid"], KodiItem["file"], playurl, "tvshow", MBitem["Id"])
+        self.setKodiFilename(KodiItem["tvshowid"], KodiItem["file"], playurl, "tvshow", MBitem["Id"], connection, cursor)
                
         #update/check all artwork
         changes |= self.updateArtWork(KodiItem,MBitem)
@@ -337,17 +337,17 @@ class WriteKodiDB():
         changes |= self.updatePropertyArray(KodiItem,"country",MBitem.get("ProductionLocations"),"tvshow")
         
         #add actors
-        changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"),"tvshow")
+        changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"),"tvshow", connection, cursor)
         
         #update season details
-        self.updateSeasons(MBitem, KodiItem)
+        self.updateSeasons(MBitem, KodiItem,connection, cursor)
         
         if changes:
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
             
         return changes
                   
-    def updateEpisodeToKodiLibrary( self, MBitem, KodiItem ):
+    def updateEpisodeToKodiLibrary( self, MBitem, KodiItem, connection, cursor ):
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
@@ -372,7 +372,7 @@ class WriteKodiDB():
         
         #set Filename (will update the filename in db if changed)
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
-        docleanup = self.setKodiFilename(KodiItem["episodeid"], KodiItem["file"], playurl, "episode", MBitem["Id"])
+        docleanup = self.setKodiFilename(KodiItem["episodeid"], KodiItem["file"], playurl, "episode", MBitem["Id"], connection, cursor)
 
         #update common properties
         if KodiItem["runtime"] == 0:
@@ -395,7 +395,7 @@ class WriteKodiDB():
         changes |= self.updatePropertyArray(KodiItem,"writer",people.get("Writer"),"episode")
 
         #add actors
-        changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"),"episode")
+        changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"),"episode", connection, cursor)
         
         if changes:
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
@@ -641,7 +641,7 @@ class WriteKodiDB():
 
         return pendingChanges
     
-    def addMovieToKodiLibrary( self, MBitem ):
+    def addMovieToKodiLibrary( self, MBitem ,connection, cursor):
         #adds a movie to Kodi by directly inserting it to the DB while there is no addmovie available on the json API
         #TODO: PR at Kodi team for a addMovie endpoint on their API
         
@@ -670,8 +670,8 @@ class WriteKodiDB():
         else:
             dateadded = None
         
-        connection = utils.KodiSQL()
-        cursor = connection.cursor()
+        #connection = utils.KodiSQL()
+        #cursor = connection.cursor()
         
         # we need to store both the path and the filename seperately in the kodi db so we split them up
         if "\\" in playurl:
@@ -749,12 +749,10 @@ class WriteKodiDB():
         except:
             utils.logMsg("Emby","Error adding movie to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
             actionPerformed = False
-        finally:
-            cursor.close()
     
-    def addMusicVideoToKodiLibrary( self, MBitem ):
+    def addMusicVideoToKodiLibrary( self, MBitem, connection, cursor  ):
 
-        #adds a musicvideo to Kodi by directly inserting it to the DB while there is no addMusicVideo available on the json API
+        #adds a musicvideo to Kodi by directly inserting it to connectionthe DB while there is no addMusicVideo available on the json API
         #TODO: PR at Kodi team for a addMusicVideo endpoint on their API
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
@@ -782,8 +780,8 @@ class WriteKodiDB():
         else:
             dateadded = None
         
-        connection = utils.KodiSQL()
-        cursor = connection.cursor()
+        #connection = utils.KodiSQL()
+        #cursor = connection.cursor()
         
         # we need to store both the path and the filename seperately in the kodi db so we split them up
         if "\\" in playurl:
@@ -839,10 +837,8 @@ class WriteKodiDB():
         except:
             utils.logMsg("Emby","Error adding musicvideo to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
             actionPerformed = False
-        finally:
-            cursor.close()
     
-    def addEpisodeToKodiLibrary(self, MBitem):
+    def addEpisodeToKodiLibrary(self, MBitem, connection, cursor):
         
         #adds a Episode to Kodi by directly inserting it to the DB while there is no addEpisode available on the json API
         #TODO: PR at Kodi team for a addEpisode endpoint on their API
@@ -877,8 +873,8 @@ class WriteKodiDB():
         else:
             lastplayed = None
 
-        connection = utils.KodiSQL()
-        cursor = connection.cursor()
+        #connection = utils.KodiSQL()
+        #cursor = connection.cursor()
                     
         # we need to store both the path and the filename seperately in the kodi db so we split them up
         if "\\" in playurl:
@@ -950,8 +946,6 @@ class WriteKodiDB():
         except:
             utils.logMsg("Emby","Error adding tvshow to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
             actionPerformed = False
-        finally:
-            cursor.close()
     
     def deleteMovieFromKodiLibrary(self, id ):
         kodiItem = ReadKodiDB().getKodiMovie(id)
@@ -976,7 +970,7 @@ class WriteKodiDB():
         else:
             utils.logMsg("episode not found in kodi DB",episodeid)        
             
-    def addTVShowToKodiLibrary( self, MBitem ):
+    def addTVShowToKodiLibrary( self, MBitem, connection, cursor ):
         #adds a Tvshow to Kodi by directly inserting it to the DB while there is no addTvShow available on the json API
         #TODO: PR at Kodi team for a addTvShow endpoint on their API
         
@@ -1006,8 +1000,8 @@ class WriteKodiDB():
         else:
             dateadded = None
         
-        connection = utils.KodiSQL()
-        cursor = connection.cursor()
+        #connection = utils.KodiSQL()
+        #cursor = connection.cursor()
                     
         #create the tv show path
         cursor.execute("select coalesce(max(idPath),0) as pathid from path")
@@ -1061,8 +1055,6 @@ class WriteKodiDB():
         except:
             utils.logMsg("Emby","Error adding tvshow to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
             actionPerformed = False
-        finally:
-            cursor.close()
         
     def deleteTVShowFromKodiLibrary(self, id):
         xbmc.sleep(sleepVal)
@@ -1075,12 +1067,12 @@ class WriteKodiDB():
             utils.logMsg("deleting tvshow from Kodi library ", "Kodi ID : " + str(kodiId))
             xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveTVShow", "params": { "tvshowid": %i}, "id": 1 }' %(kodiId))
     
-    def updateSeasons(self,MBitem, KodiItem):
+    def updateSeasons(self,MBitem, KodiItem, connection, cursor):
         #use sqlite to set the season details because no method in API available for this
         tvshowid = KodiItem["tvshowid"]
 
-        connection = utils.KodiSQL()
-        cursor = connection.cursor()
+        #connection = utils.KodiSQL()
+        #cursor = connection.cursor()
         
         seasonData = ReadEmbyDB().getTVShowSeasons(MBitem["Id"])
         if seasonData != None:
@@ -1104,7 +1096,7 @@ class WriteKodiDB():
                             cursor.execute("INSERT into art(media_id, media_type, type, url) values(?, ?, ?, ?)", (seasonid,"season","banner",API().getArtwork(season, "Banner")))
 
         connection.commit()
-        cursor.close()   
+         #cursor.close()   
     
     def setKodiResumePoint(self, id, resume_seconds, total_seconds, fileType):
         #use sqlite to set the resume point while json api doesn't support this yet
@@ -1133,7 +1125,7 @@ class WriteKodiDB():
         connection.commit()
         cursor.close()
     
-    def setKodiFilename(self, id, oldFileName, newFileName, fileType, mbId):
+    def setKodiFilename(self, id, oldFileName, newFileName, fileType, mbId, connection, cursor):
         #use sqlite to set the filename in DB -- needed to avoid problems with resumepoints etc
         #return True if any action is performed, False if no action is performed
         #todo --> submit PR to kodi team to get this added to the jsonrpc api
@@ -1148,8 +1140,8 @@ class WriteKodiDB():
         if oldFileName != newFileName:
         
             # xbmc.sleep(sleepVal)
-            connection = utils.KodiSQL()
-            cursor = connection.cursor()
+            #connection = utils.KodiSQL()
+            #cursor = connection.cursor()
             utils.logMsg("Emby","setting filename in kodi db..." + fileType + ": " + str(id))
             utils.logMsg("Emby","old filename -->" + oldFileName)
             utils.logMsg("Emby","new filename -->" + newFileName)
@@ -1227,12 +1219,10 @@ class WriteKodiDB():
             except:
                 utils.logMsg("Emby","Error setting filename in kodi db for: " + fileType + ": " + str(id))
                 actionPerformed = False
-            finally:
-                cursor.close()
             
         return actionPerformed
     
-    def AddActorsToMedia(self, KodiItem, people, mediatype):
+    def AddActorsToMedia(self, KodiItem, people, mediatype, connection, cursor):
         #use sqlite to set add the actors while json api doesn't support this yet
         #todo --> submit PR to kodi team to get this added to the jsonrpc api
         
@@ -1263,8 +1253,8 @@ class WriteKodiDB():
         utils.logMsg("AddActorsToMedia", "List needs updating")
         
         # xbmc.sleep(sleepVal)
-        connection = utils.KodiSQL()
-        cursor = connection.cursor()
+        #connection = utils.KodiSQL()
+        #cursor = connection.cursor()
         
         if(people != None):
             for person in people:              
@@ -1295,14 +1285,14 @@ class WriteKodiDB():
                         cursor.execute(peoplesql, (actorid,id,Role,None))
         
         connection.commit()
-        cursor.close()
+         #cursor.close()
         
         return True
     
-    def addBoxsetToKodiLibrary(self, boxset):
+    def addBoxsetToKodiLibrary(self, boxset, connection, cursor):
         #use sqlite to set add the set 
-        connection = utils.KodiSQL()
-        cursor = connection.cursor() 
+        #connection = utils.KodiSQL()
+        #cursor = connection.cursor() 
         
         strSet = boxset["Name"]
         # check if exists
@@ -1346,7 +1336,7 @@ class WriteKodiDB():
             if result != None:
                 setid = result[0]
         connection.commit()
-        cursor.close()
+        #cursor.close()
         
         return True
     
