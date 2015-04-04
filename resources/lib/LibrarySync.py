@@ -448,25 +448,29 @@ class LibrarySync():
                         #we have to compare the lists somehow
                         # TODO --> instead of matching by season and episode number we can use the uniqueid
                         for item in episodeData:
-                            comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
-                            matchFound = False
-                            if kodiEpisodes != None:
-                                KodiItem = kodiEpisodes.get(comparestring1, None)
-                                if(KodiItem != None):
-                                    matchFound = True
-
-                            progressAction = "Checking"
-                            if not matchFound:
-                                #double check the item it might me added delayed by the Kodi scanner
-                                if ReadKodiDB().getKodiEpisodeByMbItem(item["Id"],tvshow) == None:
-                                    #no match so we have to create it
-                                    WriteKodiDB().addEpisodeToKodiLibrary(item)
-                                    progressAction = "Adding"
-                                    totalItemsAdded += 1
-                                
-                            if(self.ShouldStop(pDialog)):
-                                return False                        
-                                
+                            if(installFirstRun):
+                                progressAction = "Adding"
+                                WriteKodiDB().addEpisodeToKodiLibrary(item)
+                            else:
+                                comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
+                                matchFound = False
+                                if kodiEpisodes != None:
+                                    KodiItem = kodiEpisodes.get(comparestring1, None)
+                                    if(KodiItem != None):
+                                        matchFound = True
+    
+                                progressAction = "Checking"
+                                if not matchFound:
+                                    #double check the item it might me added delayed by the Kodi scanner
+                                    if ReadKodiDB().getKodiEpisodeByMbItem(item["Id"],tvshow) == None:
+                                        #no match so we have to create it
+                                        WriteKodiDB().addEpisodeToKodiLibrary(item)
+                                        progressAction = "Adding"
+                                        totalItemsAdded += 1
+                                    
+                                if(self.ShouldStop(pDialog)):
+                                    return False                        
+                                    
                             # update progress bar
                             if(pDialog != None):
                                 percentage = int(((float(count) / float(total)) * 100))
