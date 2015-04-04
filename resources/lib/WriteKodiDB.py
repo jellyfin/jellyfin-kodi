@@ -1147,7 +1147,7 @@ class WriteKodiDB():
         # only perform changes if the path actually differs
         if oldFileName != newFileName:
         
-            xbmc.sleep(sleepVal)
+            # xbmc.sleep(sleepVal)
             connection = utils.KodiSQL()
             cursor = connection.cursor()
             utils.logMsg("Emby","setting filename in kodi db..." + fileType + ": " + str(id))
@@ -1262,7 +1262,7 @@ class WriteKodiDB():
         
         utils.logMsg("AddActorsToMedia", "List needs updating")
         
-        xbmc.sleep(sleepVal)
+        # xbmc.sleep(sleepVal)
         connection = utils.KodiSQL()
         cursor = connection.cursor()
         
