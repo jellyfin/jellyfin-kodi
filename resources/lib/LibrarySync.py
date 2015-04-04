@@ -448,7 +448,6 @@ class LibrarySync():
                                 count = 0         
     
                             for item in episodeData:
-                                #if(installFirstRun):
                                 progressAction = "Adding"
                                 WriteKodiDB().addEpisodeToKodiLibrary(item, connection, cursor)
                                 
