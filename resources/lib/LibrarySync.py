@@ -193,7 +193,7 @@ class LibrarySync():
 
                 if(pDialog != None):
                     progressTitle = "Sync DB : BoxSets"
-                    pDialog.update(percentage, progressTitle, "Updating Movie: " + str(count))
+                    pDialog.update(0, progressTitle, "Retrieving Boxset List")
                             
                 utils.logMsg("Sync Movies", "BoxSet Sync Started", 1)
                 boxsets = ReadEmbyDB().getBoxSets()

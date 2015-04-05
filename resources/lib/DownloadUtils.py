@@ -294,10 +294,10 @@ class DownloadUtils():
             
             if (https == 'false'):
                 #xbmc.log("Https disabled.")
-                conn = httplib.HTTPConnection(server, timeout=5)
+                conn = httplib.HTTPConnection(server, timeout=30)
             elif (https == 'true'):
                 #xbmc.log("Https enabled.")
-                conn = httplib.HTTPSConnection(server, timeout=5)
+                conn = httplib.HTTPSConnection(server, timeout=30)
 
             # make the connection and send the request
             if(postBody != None):
