@@ -258,8 +258,8 @@ class ReadEmbyDB():
                 Name = Temp.encode('utf-8')
                 section = item.get("CollectionType")
                 itemtype = item.get("CollectionType")
-                if itemtype == None:
-                    itemtype = "None" # User may not have declared the type
+                if itemtype == None or itemtype == "":
+                    itemtype = "movies" # User may not have declared the type
                 if itemtype == type and item.get("Name") != "Collections":
                     collections.append( {'title'      : item.get("Name"),
                             'type'           : itemtype,

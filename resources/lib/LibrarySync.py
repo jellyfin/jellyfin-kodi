@@ -290,6 +290,7 @@ class LibrarySync():
             totalItemsDeleted = 0                
             allTVShows = list()
             allMB3EpisodeIds = list() #for use with deletions
+            allKodiEpisodeIds = [] # for use with deletions            
             
             views = ReadEmbyDB().getCollections("tvshows")
             viewCount = len(views)
@@ -373,7 +374,6 @@ class LibrarySync():
                 
                 # full sync --> Tv shows and Episodes
                 if fullsync:
-                    allKodiEpisodeIds = [] # for use with deletions
                     viewTVShows = list()
                     tvShowData = ReadEmbyDB().getTVShows(id = view.get('id') , fullinfo = True, fullSync = True)
                     allKodiIds = set(ReadKodiDB().getKodiTvShowsIds(True))
@@ -546,23 +546,23 @@ class LibrarySync():
                     if(self.ShouldStop(pDialog)):
                         return False            
                     
-                    # DELETES -- EPISODES
-                    # process any deletes only at fullsync
-                    allMB3EpisodeIdsSet = set(allMB3EpisodeIds)
-                    for episode in allKodiEpisodeIds:
-                        if episode.get('episodeid') not in allMB3EpisodeIdsSet:
-                            WINDOW.setProperty("embyid" + str(episode.get('episodeid')),"deleted")
-                            WriteKodiDB().deleteEpisodeFromKodiLibrary(episode.get('episodeid'),episode.get('tvshowid'))
+                # DELETES -- EPISODES
+                # process any deletes only at fullsync
+                allMB3EpisodeIdsSet = set(allMB3EpisodeIds)
+                for episode in allKodiEpisodeIds:
+                    if episode.get('episodeid') not in allMB3EpisodeIdsSet:
+                        WINDOW.setProperty("embyid" + str(episode.get('episodeid')),"deleted")
+                        WriteKodiDB().deleteEpisodeFromKodiLibrary(episode.get('episodeid'),episode.get('tvshowid'))
+                        totalItemsDeleted += 1
+                
+                # DELETES -- TV SHOWS
+                if fullsync:
+                    allKodiShows = ReadKodiDB().getKodiTvShowsIds(True)
+                    allMB3TVShows = set(allTVShows)
+                    for show in allKodiShows:
+                        if not show in allMB3TVShows:
+                            WriteKodiDB().deleteTVShowFromKodiLibrary(show)
                             totalItemsDeleted += 1
-                    
-                    # DELETES -- TV SHOWS
-                    if fullsync:
-                        allKodiShows = ReadKodiDB().getKodiTvShowsIds(True)
-                        allMB3TVShows = set(allTVShows)
-                        for show in allKodiShows:
-                            if not show in allMB3TVShows:
-                                WriteKodiDB().deleteTVShowFromKodiLibrary(show)
-                                totalItemsDeleted += 1
                 
                     if(self.ShouldStop(pDialog)):
                         return False            
