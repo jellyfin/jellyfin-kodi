@@ -848,7 +848,7 @@ class WriteKodiDB():
         cursor.execute("SELECT idEpisode FROM episode WHERE c20 = ?",(MBitem["Id"],))
         result = cursor.fetchone()
         if result != None:
-            utils.logMsg("Emby", "TV Show already exists in DB : " + MBitem["Id"] + " - " + MBitem["Name"])
+            utils.logMsg("Emby", "TV Show already exists in DB : " + MBitem["Id"] + " - " + MBitem["Name"], 2)
             return
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
