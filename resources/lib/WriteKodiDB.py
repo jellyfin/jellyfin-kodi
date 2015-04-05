@@ -388,7 +388,7 @@ class WriteKodiDB():
             # for Helix we use the whole time string, for kodi 15 we have to change to only the datestring
             # see: http://forum.kodi.tv/showthread.php?tid=218743
             if KodiItem["firstaired"] != premieredate:
-                self.updateProperty(KodiItem,"firstaired",firstaired,"episode")
+                changes |= self.updateProperty(KodiItem,"firstaired",firstaired,"episode")
         
         if MBitem.get("CriticRating") != None:
             changes |= self.updateProperty(KodiItem,"rating",int(MBitem.get("CriticRating"))/10,"episode")
@@ -405,8 +405,10 @@ class WriteKodiDB():
         
     def getArtworkParam_Batched(self, KodiItem, MBitem, params):
 
-        '''
+        
         item_type=str(MBitem.get("Type"))
+        
+        '''
         if item_type == "Series":
             id = KodiItem['tvshowid']
             jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": %s}, "id": 1 }'
@@ -426,12 +428,14 @@ class WriteKodiDB():
         
         artwork = {}
         artwork["poster"] = API().getArtwork(MBitem, "Primary")
-        artwork["banner"] = API().getArtwork(MBitem, "Banner")
-        artwork["clearlogo"] = API().getArtwork(MBitem, "Logo")
-        artwork["clearart"] = API().getArtwork(MBitem, "Art")
-        artwork["landscape"] = API().getArtwork(MBitem, "Thumb")
-        artwork["discart"] = API().getArtwork(MBitem, "Disc")
-        artwork["fanart"] = API().getArtwork(MBitem, "Backdrop")
+        
+        if(item_type != "Episode"):        
+            artwork["banner"] = API().getArtwork(MBitem, "Banner")
+            artwork["clearlogo"] = API().getArtwork(MBitem, "Logo")
+            artwork["clearart"] = API().getArtwork(MBitem, "Art")
+            artwork["landscape"] = API().getArtwork(MBitem, "Thumb")
+            artwork["discart"] = API().getArtwork(MBitem, "Disc")
+            artwork["fanart"] = API().getArtwork(MBitem, "Backdrop")
         
         for art in artwork:
             if artwork.get(art) != "":
@@ -462,8 +466,8 @@ class WriteKodiDB():
             id = KodiItem['tvshowid']
             jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": %s}, "id": 1 }'
         elif item_type == "Episode":
-            # episodes don't have any artwork - they derrive this from the tv show
-            return False
+            id = KodiItem['episodeid']
+            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "art": %s}, "id": 1 }'
         elif item_type == "MusicVideo":
             id = KodiItem['musicvideoid']
             jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { musicvideoid": %i, "art": %s}, "id": 1 }'
@@ -476,12 +480,14 @@ class WriteKodiDB():
         
         artwork = {}
         artwork["poster"] = API().getArtwork(MBitem, "Primary")
-        artwork["banner"] = API().getArtwork(MBitem, "Banner")
-        artwork["clearlogo"] = API().getArtwork(MBitem, "Logo")
-        artwork["clearart"] = API().getArtwork(MBitem, "Art")
-        artwork["landscape"] = API().getArtwork(MBitem, "Thumb")
-        artwork["discart"] = API().getArtwork(MBitem, "Disc")
-        artwork["fanart"] = API().getArtwork(MBitem, "Backdrop")
+        
+        if(item_type != "Episode"):
+            artwork["banner"] = API().getArtwork(MBitem, "Banner")
+            artwork["clearlogo"] = API().getArtwork(MBitem, "Logo")
+            artwork["clearart"] = API().getArtwork(MBitem, "Art")
+            artwork["landscape"] = API().getArtwork(MBitem, "Thumb")
+            artwork["discart"] = API().getArtwork(MBitem, "Disc")
+            artwork["fanart"] = API().getArtwork(MBitem, "Backdrop")
         
         for art in artwork:
             if artwork.get(art) != "":
