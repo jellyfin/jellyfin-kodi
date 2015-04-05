@@ -319,30 +319,13 @@ class LibrarySync():
                         for episode in latestMBEpisodes:
                             if episode["SeriesId"] in allKodiTvShowsIds:
                                 #only process tvshows that already exist in the db at incremental updates
-                                allKodiTVShows = ReadKodiDB().getKodiTvShows(False)
-                                kodishow = allKodiTVShows.get(episode["SeriesId"],None)
-                                kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],True,True)
                                 
                                 if(self.ShouldStop(pDialog)):
                                     return False                
     
-                                #we have to compare the lists somehow
-                                comparestring1 = str(episode.get("ParentIndexNumber")) + "-" + str(episode.get("IndexNumber"))
-                                matchFound = False
-                                if kodiEpisodes != None:
-                                    KodiItem = kodiEpisodes.get(comparestring1, None)
-                                    if(KodiItem != None): 
-                                        matchFound = True
-                                
-                                progressAction = "Checking"
-                                if not matchFound:
-                                    #no match so we have to create it
-                                    WriteKodiDB().addEpisodeToKodiLibrary(episode,connection, cursor)
-                                    progressAction = "Adding"
-                                    totalItemsAdded += 1
-                                    
-                                if(self.ShouldStop(pDialog)):
-                                    return False                        
+                                WriteKodiDB().addEpisodeToKodiLibrary(episode, connection, cursor)
+                                progressAction = "Adding"
+                                totalItemsAdded += 1                 
                                 
                                 # update progress bar
                                 if(pDialog != None):
