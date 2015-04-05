@@ -539,55 +539,55 @@ class LibrarySync():
                         
                         showCurrent += 1                  
                     
-                    if(pDialog != None):
-                        progressTitle = "Removing Deleted Items"
-                        pDialog.update(0, progressTitle)
-                    
-                    if(self.ShouldStop(pDialog)):
-                        return False            
-                    
-                # DELETES -- EPISODES
-                # process any deletes only at fullsync
-                allMB3EpisodeIdsSet = set(allMB3EpisodeIds)
-                for episode in allKodiEpisodeIds:
-                    if episode.get('episodeid') not in allMB3EpisodeIdsSet:
-                        WINDOW.setProperty("embyid" + str(episode.get('episodeid')),"deleted")
-                        WriteKodiDB().deleteEpisodeFromKodiLibrary(episode.get('episodeid'),episode.get('tvshowid'))
+            if(pDialog != None):
+                progressTitle = "Removing Deleted Items"
+                pDialog.update(0, progressTitle)
+               
+            if(self.ShouldStop(pDialog)):
+                return False            
+                
+            # DELETES -- EPISODES
+            # process any deletes only at fullsync
+            allMB3EpisodeIdsSet = set(allMB3EpisodeIds)
+            for episode in allKodiEpisodeIds:
+                if episode.get('episodeid') not in allMB3EpisodeIdsSet:
+                    WINDOW.setProperty("embyid" + str(episode.get('episodeid')),"deleted")
+                    WriteKodiDB().deleteEpisodeFromKodiLibrary(episode.get('episodeid'),episode.get('tvshowid'))
+                    totalItemsDeleted += 1
+            
+            # DELETES -- TV SHOWS
+            if fullsync:
+                allKodiShows = ReadKodiDB().getKodiTvShowsIds(True)
+                allMB3TVShows = set(allTVShows)
+                for show in allKodiShows:
+                    if not show in allMB3TVShows:
+                        WriteKodiDB().deleteTVShowFromKodiLibrary(show)
                         totalItemsDeleted += 1
-                
-                # DELETES -- TV SHOWS
-                if fullsync:
-                    allKodiShows = ReadKodiDB().getKodiTvShowsIds(True)
-                    allMB3TVShows = set(allTVShows)
-                    for show in allKodiShows:
-                        if not show in allMB3TVShows:
-                            WriteKodiDB().deleteTVShowFromKodiLibrary(show)
-                            totalItemsDeleted += 1
-                
-                    if(self.ShouldStop(pDialog)):
-                        return False            
+            
+            if(self.ShouldStop(pDialog)):
+                return False            
     
-                # display notification if set up
-                notificationString = ""
-                if(totalItemsAdded > 0):
-                    notificationString += "Added:" + str(totalItemsAdded) + " "
-                if(totalItemsUpdated > 0):
-                    notificationString += "Updated:" + str(totalItemsUpdated) + " "
-                if(totalItemsDeleted > 0):
-                    notificationString += "Deleted:" + str(totalItemsDeleted) + " "
-                    
-                timeTaken = datetime.today() - startedSync
-                timeTakenString = str(int(timeTaken.seconds / 60)) + ":" + str(timeTaken.seconds % 60)
-                utils.logMsg("Sync Episodes", "Finished " + timeTakenString + " " + notificationString, 0)
+            # display notification if set up
+            notificationString = ""
+            if(totalItemsAdded > 0):
+                notificationString += "Added:" + str(totalItemsAdded) + " "
+            if(totalItemsUpdated > 0):
+                notificationString += "Updated:" + str(totalItemsUpdated) + " "
+            if(totalItemsDeleted > 0):
+                notificationString += "Deleted:" + str(totalItemsDeleted) + " "
                 
-                if(dbSyncIndication == "Notify OnChange" and notificationString != ""):
-                    notificationString = "(" + timeTakenString + ") " + notificationString
-                    xbmc.executebuiltin("XBMC.Notification(Episode Sync: " + notificationString + ",)")
-                elif(dbSyncIndication == "Notify OnFinish"):
-                    if(notificationString == ""):
-                        notificationString = "Done"
-                    notificationString = "(" + timeTakenString + ") " + notificationString
-                    xbmc.executebuiltin("XBMC.Notification(Episode Sync: " + notificationString + ",)")
+            timeTaken = datetime.today() - startedSync
+            timeTakenString = str(int(timeTaken.seconds / 60)) + ":" + str(timeTaken.seconds % 60)
+            utils.logMsg("Sync Episodes", "Finished " + timeTakenString + " " + notificationString, 0)
+            
+            if(dbSyncIndication == "Notify OnChange" and notificationString != ""):
+                notificationString = "(" + timeTakenString + ") " + notificationString
+                xbmc.executebuiltin("XBMC.Notification(Episode Sync: " + notificationString + ",)")
+            elif(dbSyncIndication == "Notify OnFinish"):
+                if(notificationString == ""):
+                    notificationString = "Done"
+                notificationString = "(" + timeTakenString + ") " + notificationString
+                xbmc.executebuiltin("XBMC.Notification(Episode Sync: " + notificationString + ",)")
 
         finally:
             if(pDialog != None):
