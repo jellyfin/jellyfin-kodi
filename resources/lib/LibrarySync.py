@@ -391,7 +391,7 @@ class LibrarySync():
                         count = 1
                         
                     for item in tvShowData:
-                        if item.get('IsFolder'):
+                        if item.get('IsFolder') and item.get('RecursiveItemCount') != 0:
                             allTVShows.append(item["Id"])
                             viewTVShows.append(item["Id"])
                             item['Tag'] = []
