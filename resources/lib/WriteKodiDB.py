@@ -403,7 +403,7 @@ class WriteKodiDB():
         
         if MBitem.get("IndexNumber") != None:
             episode = int(MBitem.get("IndexNumber"))
-            changes |= self.updateProperty(KodiItem,"episode",season,"episode")
+            changes |= self.updateProperty(KodiItem,"episode",episode,"episode")
 
         plot = utils.convertEncoding(API().getOverview(MBitem))
         changes |= self.updateProperty(KodiItem,"plot",plot,"episode")
