@@ -82,7 +82,7 @@ class WriteKodiDB():
         if MBitem.get("CriticRating") != None:
             self.getPropertyParam_Batched(KodiItem, "rating", int(MBitem.get("CriticRating"))/10, params)
 
-        self.getPropertyParam_Batched(KodiItem, "plot", MBitem.get("Overview"), params)
+        #self.getPropertyParam_Batched(KodiItem, "plot", MBitem.get("Overview"), params)
         self.getPropertyParam_Batched(KodiItem, "plotoutline", MBitem.get("ShortOverview"), params)
         self.getPropertyParam_Batched(KodiItem, "set", MBitem.get("TmdbCollectionName"), params)
         self.getPropertyParam_Batched(KodiItem, "sorttitle", MBitem.get("SortName"), params)
@@ -405,8 +405,8 @@ class WriteKodiDB():
             episode = int(MBitem.get("IndexNumber"))
             changes |= self.updateProperty(KodiItem,"episode",episode,"episode")
 
-        plot = utils.convertEncoding(API().getOverview(MBitem))
-        changes |= self.updateProperty(KodiItem,"plot",plot,"episode")
+        #plot = utils.convertEncoding(API().getOverview(MBitem))
+        #changes |= self.updateProperty(KodiItem,"plot",plot,"episode")
         title = utils.convertEncoding(MBitem["Name"])
         changes |= self.updateProperty(KodiItem,"title",title,"episode")
 
