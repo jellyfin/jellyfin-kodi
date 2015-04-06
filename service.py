@@ -21,20 +21,31 @@ from WebSocketClient import WebSocketThread
 from UserClient import UserClient
 librarySync = LibrarySync()
 
+
 class Service():
     
+
     newWebSocketThread = None
     newUserClient = None
 
     clientInfo = ClientInformation()
+    addonName = clientInfo.getAddonName()
+    className = None
     
     def __init__(self, *args ):
         self.KodiMonitor = KodiMonitor.Kodi_Monitor()
+        addonName = self.addonName
+        self.className = self.__class__.__name__
 
-        utils.logMsg("MB3 Sync Service", "starting Monitor",0)
-        xbmc.log("======== START %s ========" % self.clientInfo.getAddonName()) 
+        self.logMsg("Starting Monitor", 0)
+        self.logMsg("======== START %s ========" % addonName, 0)
+        self.logMsg("KODI Version: %s" % xbmc.getInfoLabel("System.BuildVersion"), 0)
+        self.logMsg("%s Version: %s" % (addonName, self.clientInfo.getVersion()), 0)
         pass
-    
+
+    def logMsg(self, msg, lvl=1):
+        
+        utils.logMsg("%s %s" % (self.addonName, self.className), str(msg), int(lvl))
             
     def ServiceEntryPoint(self):
         

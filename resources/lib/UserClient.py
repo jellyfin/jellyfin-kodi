@@ -12,6 +12,7 @@ import hashlib
 import json as json
 
 import KodiMonitor
+import Utils as utils
 from ClientInformation import ClientInformation
 from DownloadUtils import DownloadUtils
 
@@ -21,6 +22,8 @@ class UserClient(threading.Thread):
 
     clientInfo = ClientInformation()
     doUtils = DownloadUtils()
+    addonName = clientInfo.getAddonName()
+    className = None
 
     stopClient = False
     logLevel = 0
@@ -37,33 +40,17 @@ class UserClient(threading.Thread):
 
     def __init__(self, *args):
 
-        clientInfo = self.clientInfo
         self.KodiMonitor = KodiMonitor.Kodi_Monitor()
 
-        self.addonId = clientInfo.getAddonId()
-        self.addonName = clientInfo.getAddonName()
+        self.addonId = self.clientInfo.getAddonId()
         self.addon = xbmcaddon.Addon(id=self.addonId)
+        self.className = self.__class__.__name__
 
-        self.logMsg("|---- Starting UserClient ----|", 0)
         threading.Thread.__init__(self, *args)
 
-    def logMsg(self, msg, level=1):
-
-        addonName = self.addonName
-        className = self.__class__.__name__
-
-        if (self.logLevel != self.getLogLevel()):
-            xbmc.log("Adjusting logLevel to %i" % self.getLogLevel())
-            self.logLevel = self.getLogLevel()
-
-        if (self.logLevel >= level):
-            try:
-                xbmc.log("%s %s -> %s" % (addonName, className, str(msg)))
-            except UnicodeEncodeError:
-                try:
-                    xbmc.log("%s %s -> %s" % (addonName, className, str(msg.encode('utf-8'))))
-                except:
-                    pass
+    def logMsg(self, msg, lvl=1):
+        
+        utils.logMsg("%s %s" % (self.addonName, self.className), str(msg), int(lvl))
 
     def getUsername(self):
 
@@ -291,6 +278,8 @@ class UserClient(threading.Thread):
 
     def run(self):
 
+        self.logMsg("|---- Starting UserClient ----|", 0)
+
         while not self.KodiMonitor.abortRequested():
 
             # Get the latest addon settings
@@ -310,7 +299,6 @@ class UserClient(threading.Thread):
                     self.auth = False
                     self.authenticate()
                 
-
             if (self.auth == False) and (self.currUser == None):
                 # Only if there's information found to login
                 server = self.getServer()
