@@ -408,7 +408,7 @@ class WriteKodiDB():
         plot = utils.convertEncoding(API().getOverview(MBitem))
         changes |= self.updateProperty(KodiItem,"plot",plot,"episode")
         title = utils.convertEncoding(MBitem["Name"])
-        changes |= self.updateProperty(KodiItem,"title",season,"episode")
+        changes |= self.updateProperty(KodiItem,"title",title,"episode")
 
         changes |= self.updatePropertyArray(KodiItem,"writer",people.get("Writer"),"episode")
 
