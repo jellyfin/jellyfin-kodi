@@ -44,6 +44,7 @@ class UserClient(threading.Thread):
         self.addonName = clientInfo.getAddonName()
         self.addon = xbmcaddon.Addon(id=self.addonId)
 
+        self.logMsg("|---- Starting UserClient ----|", 0)
         threading.Thread.__init__(self, *args)
 
     def logMsg(self, msg, level=1):
@@ -289,8 +290,6 @@ class UserClient(threading.Thread):
 
 
     def run(self):
-
-        self.logMsg("|---- Starting UserClient ----|", 0)
 
         while not self.KodiMonitor.abortRequested():
 

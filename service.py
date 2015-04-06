@@ -27,26 +27,15 @@ class Service():
     newUserClient = None
 
     clientInfo = ClientInformation()
-    addonName = None
-    className = None
     
     def __init__(self, *args ):
         self.KodiMonitor = KodiMonitor.Kodi_Monitor()
-        self.addonName = self.clientInfo.getAddonName()
-        self.className = self.__class__.__name__
 
-        self.logMsg("Starting Monitor", 0)
-        self.logMsg("======== START %s ========" % self.addonName, 0)
-        self.logMsg("KODI Version: %s" % xbmc.getInfoLabel("System.BuildVersion"), 0)
-        self.logMsg("%s Version: %s" % (self.addonName, self.clientInfo.getVersion()), 0)
+        utils.logMsg("MB3 Sync Service", "starting Monitor",0)
+        xbmc.log("======== START %s ========" % self.clientInfo.getAddonName()) 
         pass
-
-    def logMsg(self, msg, lvl=1):
-        addonName = self.addonName
-        className = self.className
-
-        utils.logMsg("%s %s" % (addonName, className), str(msg), int(lvl))
-               
+    
+            
     def ServiceEntryPoint(self):
         
         ConnectionManager().checkServer()
@@ -82,12 +71,12 @@ class Service():
                         try:
                             player.reportPlayback()
                         except Exception, msg:
-                            self.logMsg("Exception reporting progress: %s" % msg)
+                            xbmc.log("MB3 Sync Service -> Exception reporting progress : " + msg)
                             pass
                         lastProgressUpdate = datetime.today()
                     
                 except Exception, e:
-                    self.logMsg("Exception in Playback Monitor Service: %s" % e)
+                    xbmc.log("MB3 Sync Service -> Exception in Playback Monitor Service : " + str(e))
                     pass
             else:
                 if (self.newUserClient == None):
@@ -103,9 +92,9 @@ class Service():
             
                     #full sync
                     if(cur_seconds_fullsync >= interval_FullSync):
-                        self.logMsg("Doing_Db_Sync: syncDatabase (Started)")
+                        xbmc.log("Doing_Db_Sync: syncDatabase (Started)")
                         worked = librarySync.syncDatabase()
-                        self.logMsg("Doing_Db_Sync: syncDatabase (Finished) %s" % worked)
+                        xbmc.log("Doing_Db_Sync: syncDatabase (Finished) " + str(worked))
                         if(worked):
                             cur_seconds_fullsync = 0
                         else:
@@ -115,9 +104,9 @@ class Service():
                     
                     #incremental sync
                     if(cur_seconds_incrsync >= interval_IncrementalSync):
-                        self.logMsg("Doing_Db_Sync: updatePlayCounts (Started)")
+                        xbmc.log("Doing_Db_Sync: updatePlayCounts (Started)")
                         worked = librarySync.updatePlayCounts()
-                        self.logMsg("Doing_Db_Sync: updatePlayCounts (Finished) %s" % worked)
+                        xbmc.log("Doing_Db_Sync: updatePlayCounts (Finished) "  + str(worked))
                         if(worked):
                             cur_seconds_incrsync = 0
                         else:
@@ -127,9 +116,9 @@ class Service():
               
                     
                 else:
-                    self.logMsg("Not authenticated yet")
+                    xbmc.log("Not authenticated yet")
                     
-        self.logMsg("Stopping Service", 0)
+        utils.logMsg("MB3 Sync Service", "stopping Service",0)
         
         if (self.newWebSocketThread != None):
             ws.stopClient()
