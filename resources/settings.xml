@@ -21,7 +21,7 @@
 		<setting id="smbpassword" type="text" label="30008" default="" option="hidden" visible="true" enable="true" />
 	</category>
 	<category label="30022">
-		<setting id="logLevel" type="enum" label="30004" values="None|Info|Debug" default="0" />
+		<setting id="logLevel" type="enum" label="30004" values="None|Info|Debug" default="1" />
 		<setting label="30239" type="action" action="RunScript(plugin.video.emby, reset)" />
 	</category>
 </settings>
