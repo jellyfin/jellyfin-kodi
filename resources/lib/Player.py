@@ -13,6 +13,8 @@ from PlayUtils import PlayUtils
 from ClientInformation import ClientInformation
 from LibrarySync import LibrarySync
 from  PlaybackUtils import PlaybackUtils
+from ReadEmbyDB import ReadEmbyDB
+from API import API
 librarySync = LibrarySync()
 
 # service class for playback monitoring
@@ -89,7 +91,36 @@ class Player( xbmc.Player ):
                 if(refresh_id != None):
                     #report updates playcount and resume status to Kodi and MB3
                     librarySync.updatePlayCount(item_id,type)
-            
+                    
+                # if its an episode see if autoplay is enabled
+                if addonSettings.getSetting("autoPlaySeason")=="true" and type=="Episode":
+                    port = addonSettings.getSetting('port')
+                    host = addonSettings.getSetting('ipaddress')
+                    server = host + ":" + port
+                    userid = self.downloadUtils.getUserId()
+                    # add remaining unplayed episodes if applicable
+                    MB3Episode = ReadEmbyDB().getItem(item_id)
+                    userData = MB3Episode["UserData"]
+                    if userData!=None and userData["Played"]==True:
+                        
+                        pDialog = xbmcgui.DialogProgress()
+                        pDialog.create("Auto Play","Further Episode(s) in "+MB3Episode["SeasonName"]+" for "+MB3Episode["SeriesName"]+ " found","Cancel to stop automatic play of remaining episodes")
+                        count = 0
+                        while(pDialog.iscanceled==False or count < 10):
+                            xbmc.sleep(1000)
+                            count += 1
+                            progress = count * 10
+                            remainingsecs = 10 - count
+                            pDialog.update(progress,"Further Episode(s) in "+MB3Episode["SeasonName"]+" for "+MB3Episode["SeriesName"]+ " found","Cancel to stop automatic play of remaining episodes", str(remainingsecs) + " seconds(s) until auto dismiss")
+                        
+                        if pDialog.iscanceled()==False:
+                            seasonId = MB3Episode["SeasonId"]
+                            jsonData = self.downloadUtils.downloadUrl("http://" + server + "/mediabrowser/Users/" + userid + "/Items?ParentId=" + seasonId + "&ImageTypeLimit=1&SortBy=SortName&SortOrder=Ascending&Filters=IsUnPlayed&IncludeItemTypes=Episode&IsVirtualUnaired=false&Recursive=true&IsMissing=False&format=json", suppress=False, popup=1 )     
+                            if(jsonData != ""):
+                                seasonData = json.loads(jsonData)
+                                if seasonData.get("Items") != None:
+                                    PlaybackUtils().PLAYAllEpisodes(seasonData.get("Items"))  
+                
         self.played_information.clear()
 
         # stop transcoding - todo check we are actually transcoding?

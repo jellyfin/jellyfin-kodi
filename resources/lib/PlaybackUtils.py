@@ -36,7 +36,7 @@ class PlaybackUtils():
         pass    
 
     def PLAY(self, id):
-        
+        xbmc.log("PLAY Called")
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
@@ -59,7 +59,7 @@ class PlaybackUtils():
             if episodeItem != None and str(episodeItem["Type"]) == "Episode":
                 kodiItem = ReadKodiDB().getKodiEpisodeByMbItem(id,episodeItem["SeriesId"])
                 if kodiItem != None:
-                    seekTime = int(round(kodiItem['resume'].get("position")))
+                    seekTime = int(round(kodiItem['resume'].get("position")))                  
         
         playurl = PlayUtils().getPlayUrl(server, id, result)
         
@@ -272,6 +272,23 @@ class PlaybackUtils():
             
         if seekTime > 0:
             self.seekToPosition(seekTime)
+            
+    def PLAYAllEpisodes(self, items):
+        userid = self.downloadUtils.getUserId()
+        server = self.downloadUtils.getServer()
+        
+        playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
+        playlist.clear()        
+        
+        for item in items:
+        
+            item_url = server + "/mediabrowser/Users/" + userid + "/Items/" + item["Id"] + "?format=json&ImageTypeLimit=1"
+            jsonData = self.downloadUtils.downloadUrl(item_url, suppress=False, popup=1 )
+            
+            item_data = json.loads(jsonData)
+            self.addPlaylistItem(playlist, item_data, server, userid)
+        
+        xbmc.Player().play(playlist)
     
     def AddToPlaylist(self, itemIds):
         utils.logMsg("PlayBackUtils", "== ENTER: PLAYAllItems ==")
