@@ -111,7 +111,7 @@ class Player( xbmc.Player ):
                             count += 1
                             progress = count * 10
                             remainingsecs = 10 - count
-                            pDialog.update(progress,"Further Episode(s) in "+MB3Episode["SeasonName"]+" for "+MB3Episode["SeriesName"]+ " found","Cancel to stop automatic play of remaining episodes", str(remainingsecs) + " seconds(s) until auto dismiss")
+                            pDialog.update(progress,"Further Episode(s) in "+MB3Episode["SeasonName"]+" for "+MB3Episode["SeriesName"]+ " found","Cancel to stop automatic play of remaining episodes", str(remainingsecs) + " seconds until auto dismiss")
                         
                         if pDialog.iscanceled()==False:
                             seasonId = MB3Episode["SeasonId"]
