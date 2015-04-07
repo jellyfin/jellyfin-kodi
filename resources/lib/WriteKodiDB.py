@@ -80,7 +80,7 @@ class WriteKodiDB():
         self.getPropertyParamArray_Batched(KodiItem, "tag", MBitem.get("Tag"), params)
         
         if MBitem.get("CommunityRating") != None:
-            self.getPropertyParam_Batched(KodiItem, "rating", int(MBitem.get(CommunityRating))/10, params)
+            self.getPropertyParam_Batched(KodiItem, "rating", int(MBitem.get("CommunityRating"))/10, params)
 
         #self.getPropertyParam_Batched(KodiItem, "plot", MBitem.get("Overview"), params)
         self.getPropertyParam_Batched(KodiItem, "plotoutline", MBitem.get("ShortOverview"), params)
