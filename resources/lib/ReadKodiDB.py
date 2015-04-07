@@ -175,7 +175,7 @@ class ReadKodiDB():
         xbmc.sleep(sleepVal)
         episodes = None
         if fullInfo:
-            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["title", "playcount", "plot", "season", "episode", "showtitle", "file", "lastplayed", "rating", "resume", "art", "streamdetails", "firstaired", "runtime", "writer", "cast", "dateadded","uniqueid"], "sort": {"method": "episode"}}, "id": 1}' %KodiTvShowId)
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["title", "playcount", "plot", "season", "episode", "showtitle", "file", "lastplayed", "rating", "resume", "art", "streamdetails", "firstaired", "runtime", "writer", "cast", "director", "dateadded","uniqueid"], "sort": {"method": "episode"}}, "id": 1}' %KodiTvShowId)
         else:
             json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": {"tvshowid": %d, "properties": ["title", "playcount", "season", "episode", "lastplayed", "resume","file","uniqueid"], "sort": {"method": "episode"}}, "id": 1}' %KodiTvShowId)
         jsonobject = json.loads(json_response.decode('utf-8','replace'))  

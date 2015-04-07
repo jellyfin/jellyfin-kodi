@@ -411,6 +411,8 @@ class WriteKodiDB():
         changes |= self.updateProperty(KodiItem,"title",title,"episode")
 
         changes |= self.updatePropertyArray(KodiItem,"writer",people.get("Writer"),"episode")
+        changes |= self.updatePropertyArray(KodiItem,"director",people.get("Director"),"episode")
+        
 
         #add actors
         changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"),"episode", connection, cursor)
