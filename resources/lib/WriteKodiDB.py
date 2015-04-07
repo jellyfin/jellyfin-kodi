@@ -80,7 +80,7 @@ class WriteKodiDB():
         self.getPropertyParamArray_Batched(KodiItem, "tag", MBitem.get("Tag"), params)
         
         if MBitem.get("CommunityRating") != None:
-            self.getPropertyParam_Batched(KodiItem, "rating", int(MBitem.get("CommunityRating"))/10, params)
+            self.getPropertyParam_Batched(KodiItem, "rating", int(MBitem.get("CommunityRating")), params)
 
         #self.getPropertyParam_Batched(KodiItem, "plot", MBitem.get("Overview"), params)
         self.getPropertyParam_Batched(KodiItem, "plotoutline", MBitem.get("ShortOverview"), params)
@@ -320,7 +320,7 @@ class WriteKodiDB():
         changes |= self.updateProperty(KodiItem,"lastplayed",MBitem.get("LastPlayedDate"),"tvshow")
         
         if MBitem.get("CommunityRating") != None:
-            changes |= self.updateProperty(KodiItem,"rating",int(MBitem.get("CommunityRating"))/10,"tvshow")
+            changes |= self.updateProperty(KodiItem,"rating",int(MBitem.get("CommunityRating")),"tvshow")
         
         changes |= self.updateProperty(KodiItem,"sorttitle",utils.convertEncoding(MBitem["SortName"]),"tvshow")
         changes |= self.updateProperty(KodiItem,"title",utils.convertEncoding(MBitem["Name"]),"tvshow")
@@ -395,7 +395,7 @@ class WriteKodiDB():
                 changes |= self.updateProperty(KodiItem,"firstaired",firstaired,"episode")
         
         if MBitem.get("CommunityRating") != None:
-            changes |= self.updateProperty(KodiItem,"rating",int(MBitem.get("CommunityRating"))/10,"episode")
+            changes |= self.updateProperty(KodiItem,"rating",int(MBitem.get("CommunityRating")),"episode")
             
         if MBitem.get("ParentIndexNumber") != None:
             season = int(MBitem.get("ParentIndexNumber"))
@@ -741,7 +741,7 @@ class WriteKodiDB():
         sorttitle = utils.convertEncoding(MBitem["SortName"])
         year = MBitem.get("ProductionYear")
         if MBitem.get("CommunityRating") != None:
-            rating = int(MBitem.get("CommunityRating"))/10
+            rating = int(MBitem.get("CommunityRating"))
         else:
             rating = None
         if MBitem.get("ShortOverview") != None:
@@ -960,7 +960,7 @@ class WriteKodiDB():
         thumb = "<thumb>" + API().getArtwork(MBitem, "Primary") + "</thumb>"
         title = utils.convertEncoding(MBitem["Name"])
         if MBitem.get("CommunityRating") != None:
-            rating = int(MBitem.get("CommunityRating"))/10
+            rating = int(MBitem.get("CommunityRating"))
         else:
             rating = None
         
@@ -1065,7 +1065,7 @@ class WriteKodiDB():
         title = utils.convertEncoding(MBitem["Name"])
         sorttitle = utils.convertEncoding(MBitem["SortName"])
         if MBitem.get("CommunityRating") != None:
-            rating = int(MBitem.get("CommunityRating"))/10
+            rating = int(MBitem.get("CommunityRating"))
         else:
             rating = None
             
