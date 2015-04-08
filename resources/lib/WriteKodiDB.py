@@ -951,9 +951,9 @@ class WriteKodiDB():
         
         try:
             connection.commit()
-            utils.logMsg("Emby","Added TV Show to Kodi Library" + MBitem["Id"] + " - " + MBitem["Name"])
+            utils.logMsg("Emby","Added episode to Kodi Library - ID: " + MBitem["Id"] + " - " + MBitem["Name"])
         except:
-            utils.logMsg("Emby","Error adding tvshow to Kodi Library" + MBitem["Id"] + " - " + MBitem["Name"])
+            utils.logMsg("Emby","Error adding episode to Kodi Library - ID: " + MBitem["Id"] + " - " + MBitem["Name"])
             actionPerformed = False
     
     def deleteMovieFromKodiLibrary(self, id ):
