@@ -19,6 +19,7 @@
 	<category label="Playback"> <!-- Extra Sync options -->
 		<setting id="smbusername" type="text" label="30007" default="" visible="true" enable="true" />
 		<setting id="smbpassword" type="text" label="30008" default="" option="hidden" visible="true" enable="true" />
+		<setting id="playFromStream" type="bool" label="30002" visible="true" enable="true" value="false" />
 	    <setting id="autoPlaySeason" type="bool" label="30216" default="false" visible="true" enable="true" />
 	</category>
 	<category label="30022">
