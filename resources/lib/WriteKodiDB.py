@@ -1293,9 +1293,9 @@ class WriteKodiDB():
         
         utils.logMsg("AddActorsToMedia", "List needs updating")
         
-        # xbmc.sleep(sleepVal)
-        #connection = utils.KodiSQL()
-        #cursor = connection.cursor()
+        kodiVersion = 14
+        if xbmc.getInfoLabel("System.BuildVersion").startswith("15"):
+            kodiVersion = 15
         
         if(people != None):
             for person in people:              
@@ -1306,24 +1306,45 @@ class WriteKodiDB():
                         Role = person.get("Role")
                         actorid = None
                         Thumb = downloadUtils.imageUrl(person.get("Id"), "Primary", 0, 400, 400)
-                        cursor.execute("SELECT idActor as actorid FROM actors WHERE strActor = ?",(Name,))
+                        if kodiVersion == 15:
+                            # Kodi Isengard database #
+                            if Thumb != None:
+                                Thumb = "<thumb>" + Thumb + "</thumb>"
+                            cursor.execute("SELECT actor_id as actorid FROM actor WHERE name = ?",(Name,))
+                        else:
+                            # Kodi Gotham or Helix database #
+                            cursor.execute("SELECT idActor as actorid FROM actors WHERE strActor = ?",(Name,))
                         result = cursor.fetchone()
                         if result != None:
                             actorid = result[0]
                         if actorid == None:
-                            cursor.execute("select coalesce(max(idActor),0) as actorid from actors")
-                            actorid = cursor.fetchone()[0]
-                            actorid = actorid + 1
-                            peoplesql="insert into actors(idActor, strActor, strThumb) values(?, ?, ?)"
+                            if kodiVersion == 15:
+                                # Kodi Isengard database #
+                                cursor.execute("select coalesce(max(actor_id),0) as actorid from actor")
+                                actorid = cursor.fetchone()[0]
+                                actorid = actorid + 1
+                                peoplesql="insert into actor(actor_id, name, art_urls) values(?, ?, ?)"
+                            else:
+                                # Kodi Gotham or Helix database #
+                                cursor.execute("select coalesce(max(idActor),0) as actorid from actors")
+                                actorid = cursor.fetchone()[0]
+                                actorid = actorid + 1
+                                peoplesql="insert into actors(idActor, strActor, strThumb) values(?, ?, ?)"
                             cursor.execute(peoplesql, (actorid,Name,Thumb))
                         
-                        if mediatype == "movie":
-                            peoplesql="INSERT OR REPLACE into actorlinkmovie(idActor, idMovie, strRole, iOrder) values(?, ?, ?, ?)"
-                        if mediatype == "tvshow":
-                            peoplesql="INSERT OR REPLACE into actorlinktvshow(idActor, idShow, strRole, iOrder) values(?, ?, ?, ?)"
-                        if mediatype == "episode":
-                            peoplesql="INSERT OR REPLACE into actorlinkepisode(idActor, idEpisode, strRole, iOrder) values(?, ?, ?, ?)"
-                        cursor.execute(peoplesql, (actorid,id,Role,None))
+                        if kodiVersion == 15:
+                            # Kodi Isengard database #
+                            peoplesql="INSERT OR REPLACE into actor_link(actor_id, media_id, media_type, role, cast_order) values(?, ?, ?, ?, ?)"
+                            cursor.execute(peoplesql, (actorid, id, mediatype, Role, None))
+                        else:
+                            # Kodi Gotham or Helix database #
+                            if mediatype == "movie":
+                                peoplesql="INSERT OR REPLACE into actorlinkmovie(idActor, idMovie, strRole, iOrder) values(?, ?, ?, ?)"
+                            if mediatype == "tvshow":
+                                peoplesql="INSERT OR REPLACE into actorlinktvshow(idActor, idShow, strRole, iOrder) values(?, ?, ?, ?)"
+                            if mediatype == "episode":
+                                peoplesql="INSERT OR REPLACE into actorlinkepisode(idActor, idEpisode, strRole, iOrder) values(?, ?, ?, ?)"
+                            cursor.execute(peoplesql, (actorid,id,Role,None))
         
         connection.commit()
         #cursor.close()
