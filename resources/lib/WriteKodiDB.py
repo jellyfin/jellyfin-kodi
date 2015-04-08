@@ -359,8 +359,6 @@ class WriteKodiDB():
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port        
-        #downloadUtils = DownloadUtils()
-        #userid = downloadUtils.getUserId()
         
         timeInfo = API().getTimeInfo(MBitem)
         people = API().getPeople(MBitem)
@@ -369,8 +367,6 @@ class WriteKodiDB():
         mediaStreams=API().getMediaStreams(MBitem)
         userData=API().getUserData(MBitem)
         
-        thumbPath = API().getArtwork(MBitem, "Primary")
-        
         changes = False
 
         #update/check all artwork
@@ -378,7 +374,7 @@ class WriteKodiDB():
         
         #set Filename (will update the filename in db if changed)
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
-        docleanup = self.setKodiFilename(KodiItem["episodeid"], KodiItem["file"], playurl, "episode", MBitem["Id"], connection, cursor)
+        self.setKodiFilename(KodiItem["episodeid"], KodiItem["file"], playurl, "episode", MBitem["Id"], connection, cursor)
 
         #update common properties
         if KodiItem["runtime"] == 0:
@@ -406,14 +402,12 @@ class WriteKodiDB():
             episode = int(MBitem.get("IndexNumber"))
             changes |= self.updateProperty(KodiItem,"episode",episode,"episode")
 
-        #plot = utils.convertEncoding(API().getOverview(MBitem))
-        #changes |= self.updateProperty(KodiItem,"plot",plot,"episode")
+        plot = utils.convertEncoding(API().getOverview(MBitem))
+        changes |= self.updateProperty(KodiItem,"plot",plot,"episode")
         title = utils.convertEncoding(MBitem["Name"])
         changes |= self.updateProperty(KodiItem,"title",title,"episode")
-
         changes |= self.updatePropertyArray(KodiItem,"writer",people.get("Writer"),"episode")
         changes |= self.updatePropertyArray(KodiItem,"director",people.get("Director"),"episode")
-        
 
         #add actors
         changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"),"episode", connection, cursor)
@@ -499,9 +493,10 @@ class WriteKodiDB():
         changes = False
         
         artwork = {}
-        artwork["poster"] = API().getArtwork(MBitem, "Primary")
+        artwork["thumb"] = API().getArtwork(MBitem, "Primary")
         
         if(item_type != "Episode"):
+            artwork["poster"] = API().getArtwork(MBitem, "Primary")
             artwork["banner"] = API().getArtwork(MBitem, "Banner")
             artwork["clearlogo"] = API().getArtwork(MBitem, "Logo")
             artwork["clearart"] = API().getArtwork(MBitem, "Art")
@@ -696,13 +691,7 @@ class WriteKodiDB():
         
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
-        people = API().getPeople(MBitem)
-        genre = API().getGenre(MBitem)
-        studios = API().getStudios(MBitem)
-        mediaStreams=API().getMediaStreams(MBitem)
-        
-        thumbPath = API().getArtwork(MBitem, "Primary")
-        
+
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
         playurl = utils.convertEncoding(playurl)
         
@@ -711,9 +700,6 @@ class WriteKodiDB():
             dateadded = dateadded.replace(".0000000Z","")
         else:
             dateadded = None
-        
-        #connection = utils.KodiSQL()
-        #cursor = connection.cursor()
         
         # we need to store both the path and the filename seperately in the kodi db so we split them up
         if "\\" in playurl:
@@ -753,8 +739,6 @@ class WriteKodiDB():
         
         runtime = int(timeInfo.get('Duration'))*60
         plot = utils.convertEncoding(API().getOverview(MBitem))
-        thumb = "<thumb>" + API().getArtwork(MBitem, "Primary") + "</thumb>"
-        fanart = "<fanart>" + API().getArtwork(MBitem, "Backdrop") + "</fanart>"
         title = utils.convertEncoding(MBitem["Name"])
         sorttitle = utils.convertEncoding(MBitem["SortName"])
         year = MBitem.get("ProductionYear")
@@ -779,9 +763,9 @@ class WriteKodiDB():
         cursor.execute("select coalesce(max(idMovie),0) as movieid from movie")
         movieid = cursor.fetchone()[0]
         movieid = movieid + 1
-        pathsql="insert into movie(idMovie, idFile, c00, c01, c02, c05, c07, c08, c09, c10, c11, c16, c19, c20) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        pathsql="insert into movie(idMovie, idFile, c00, c01, c02, c05, c07, c09, c10, c11, c16, c19) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         
-        cursor.execute(pathsql, (movieid, fileid, title, plot, shortplot, rating, year, thumb, MBitem["Id"], sorttitle, runtime, title, trailerUrl, fanart))
+        cursor.execute(pathsql, (movieid, fileid, title, plot, shortplot, rating, year, MBitem["Id"], sorttitle, runtime, title, trailerUrl))
         
         try:
             connection.commit()
@@ -799,17 +783,9 @@ class WriteKodiDB():
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
-        #downloadUtils = DownloadUtils()
-        #userid = downloadUtils.getUserId()
         
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
-        people = API().getPeople(MBitem)
-        genre = API().getGenre(MBitem)
-        studios = API().getStudios(MBitem)
-        mediaStreams=API().getMediaStreams(MBitem)
-        
-        thumbPath = API().getArtwork(MBitem, "Primary")
         
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
         playurl = utils.convertEncoding(playurl)
@@ -819,10 +795,7 @@ class WriteKodiDB():
             dateadded = dateadded.replace(".0000000Z","")
         else:
             dateadded = None
-        
-        #connection = utils.KodiSQL()
-        #cursor = connection.cursor()
-        
+
         # we need to store both the path and the filename seperately in the kodi db so we split them up
         if "\\" in playurl:
             filename = playurl.rsplit("\\",1)[-1]
@@ -861,15 +834,14 @@ class WriteKodiDB():
         
         runtime = int(timeInfo.get('Duration'))*60
         plot = utils.convertEncoding(API().getOverview(MBitem))
-        thumb = "<thumb>" + API().getArtwork(MBitem, "Primary") + "</thumb>"
         title = utils.convertEncoding(MBitem["Name"])
                 
         #create the musicvideo
         cursor.execute("select coalesce(max(idMVideo),0) as musicvideoid from musicvideo")
         musicvideoid = cursor.fetchone()[0]
         musicvideoid = musicvideoid + 1
-        pathsql="insert into musicvideo(idMVideo, idFile, c00, c01, c04, c08, c23) values(?, ?, ?, ?, ?, ?, ?)"
-        cursor.execute(pathsql, (musicvideoid, fileid, title, thumb, runtime, plot, MBitem["Id"]))
+        pathsql="insert into musicvideo(idMVideo, idFile, c00, c04, c08, c23) values(?, ?, ?, ?, ?, ?)"
+        cursor.execute(pathsql, (musicvideoid, fileid, title, runtime, plot, MBitem["Id"]))
         
         try:
             connection.commit()
@@ -894,18 +866,10 @@ class WriteKodiDB():
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
-        #downloadUtils = DownloadUtils()
-        #userid = downloadUtils.getUserId()
         
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
-        people = API().getPeople(MBitem)
-        genre = API().getGenre(MBitem)
-        studios = API().getStudios(MBitem)
-        mediaStreams=API().getMediaStreams(MBitem)
-        
-        thumbPath = API().getArtwork(MBitem, "Primary")
-        
+
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
         playurl = utils.convertEncoding(playurl)
         
@@ -919,9 +883,6 @@ class WriteKodiDB():
             lastplayed = userData.get("LastPlayedDate")
         else:
             lastplayed = None
-
-        #connection = utils.KodiSQL()
-        #cursor = connection.cursor()
                     
         # we need to store both the path and the filename seperately in the kodi db so we split them up
         if "\\" in playurl:
@@ -973,16 +934,20 @@ class WriteKodiDB():
 
         runtime = int(timeInfo.get('Duration'))*60
         plot = utils.convertEncoding(API().getOverview(MBitem))
-        thumb = "<thumb>" + API().getArtwork(MBitem, "Primary") + "</thumb>"
         title = utils.convertEncoding(MBitem["Name"])
         rating = MBitem.get("CommunityRating")
+        if MBitem.get("PremiereDate") != None:
+            premieredatelist = (MBitem.get("PremiereDate")).split("T")
+            premieredate = premieredatelist[0]
+        else:
+            premieredate = None
         
         #create the episode
         cursor.execute("select coalesce(max(idEpisode),0) as episodeid from episode")
         episodeid = cursor.fetchone()[0]
         episodeid = episodeid + 1
-        pathsql="INSERT into episode(idEpisode, idFile, c00, c01, c03, c06, c09, c20, c12, c13, c14, idShow) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-        cursor.execute(pathsql, (episodeid, fileid, title, plot, rating, thumb, runtime, MBitem["Id"], season, episode, title, showid))
+        pathsql="INSERT into episode(idEpisode, idFile, c00, c01, c03, c05, c09, c20, c12, c13, c14, idShow) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        cursor.execute(pathsql, (episodeid, fileid, title, plot, rating, premieredate, runtime, MBitem["Id"], season, episode, title, showid))
         
         try:
             connection.commit()
@@ -1022,15 +987,9 @@ class WriteKodiDB():
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
         server = host + ":" + port
-        #downloadUtils = DownloadUtils()
-        #userid = downloadUtils.getUserId()
         
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
-        people = API().getPeople(MBitem)
-        genre = API().getGenre(MBitem)
-        studios = API().getStudios(MBitem)
-        mediaStreams=API().getMediaStreams(MBitem)
         
         thumbPath = API().getArtwork(MBitem, "Primary")
         
@@ -1043,10 +1002,7 @@ class WriteKodiDB():
             dateadded = dateadded.replace(".0000000Z","")
         else:
             dateadded = None
-        
-        #connection = utils.KodiSQL()
-        #cursor = connection.cursor()
-                    
+         
         #create the tv show path
         cursor.execute("select coalesce(max(idPath),0) as pathid from path")
         pathid = cursor.fetchone()[0]
@@ -1073,8 +1029,6 @@ class WriteKodiDB():
         
         runtime = int(timeInfo.get('Duration'))*60
         plot = utils.convertEncoding(API().getOverview(MBitem))
-        thumb = "<thumb>" + API().getArtwork(MBitem, "Primary") + "</thumb>"
-        fanart = "<fanart>" + API().getArtwork(MBitem, "Backdrop") + "</fanart>"
         title = utils.convertEncoding(MBitem["Name"])
         sorttitle = utils.convertEncoding(MBitem["SortName"])
         rating = MBitem.get("CommunityRating")
@@ -1083,8 +1037,8 @@ class WriteKodiDB():
         cursor.execute("select coalesce(max(idShow),0) as showid from tvshow")
         showid = cursor.fetchone()[0]
         showid = pathid + 1
-        pathsql="insert into tvshow(idShow, c00, c01, c04, c06, c09, c11, c12, c15) values(?, ?, ?, ?, ?, ?, ?, ?, ?)"
-        cursor.execute(pathsql, (showid, title, plot, rating, thumb, title, fanart, MBitem["Id"], sorttitle))
+        pathsql="insert into tvshow(idShow, c00, c01, c04, c09, c12, c15) values(?, ?, ?, ?, ?, ?, ?)"
+        cursor.execute(pathsql, (showid, title, plot, rating, title, MBitem["Id"], sorttitle))
         
         #link the path
         pathsql="insert into tvshowlinkpath(idShow,idPath) values(?, ?)"
@@ -1136,8 +1090,7 @@ class WriteKodiDB():
                         if API().getArtwork(season, "Banner") != "":
                             cursor.execute("INSERT into art(media_id, media_type, type, url) values(?, ?, ?, ?)", (seasonid,"season","banner",API().getArtwork(season, "Banner")))
 
-        connection.commit()
-        #cursor.close()   
+        connection.commit() 
     
     def setKodiResumePoint(self, id, resume_seconds, total_seconds, fileType):
         #use sqlite to set the resume point while json api doesn't support this yet
