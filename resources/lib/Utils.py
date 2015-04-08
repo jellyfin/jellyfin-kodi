@@ -65,7 +65,7 @@ def getKodiDBPath():
         #helix
         dbVersion = "90"
     
-    dbPath = xbmc.translatePath("special://userdata/Database/MyVideos" + dbVersion + ".db")
+    dbPath = xbmc.translatePath("special://profile/Database/MyVideos" + dbVersion + ".db")
     
     return dbPath  
 
