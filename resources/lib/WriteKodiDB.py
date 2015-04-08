@@ -11,6 +11,7 @@ import json
 import urllib
 import sqlite3
 import os
+from decimal import Decimal
 
 from DownloadUtils import DownloadUtils
 from PlayUtils import PlayUtils
@@ -80,7 +81,7 @@ class WriteKodiDB():
         self.getPropertyParamArray_Batched(KodiItem, "tag", MBitem.get("Tag"), params)
         
         if MBitem.get("CommunityRating") != None:
-            self.getPropertyParam_Batched(KodiItem, "rating", int(MBitem.get("CommunityRating")), params)
+            self.getPropertyParam_Batched(KodiItem, "rating", Decimal(format(MBitem.get("CommunityRating"),'.1f')), params)
 
         #self.getPropertyParam_Batched(KodiItem, "plot", MBitem.get("Overview"), params)
         self.getPropertyParam_Batched(KodiItem, "plotoutline", MBitem.get("ShortOverview"), params)
@@ -320,7 +321,7 @@ class WriteKodiDB():
         changes |= self.updateProperty(KodiItem,"lastplayed",MBitem.get("LastPlayedDate"),"tvshow")
         
         if MBitem.get("CommunityRating") != None:
-            changes |= self.updateProperty(KodiItem,"rating",int(MBitem.get("CommunityRating")),"tvshow")
+            changes |= self.updateProperty(KodiItem,"rating",Decimal(format(MBitem.get("CommunityRating"),'.1f')),"tvshow")
         
         changes |= self.updateProperty(KodiItem,"sorttitle",utils.convertEncoding(MBitem["SortName"]),"tvshow")
         changes |= self.updateProperty(KodiItem,"title",utils.convertEncoding(MBitem["Name"]),"tvshow")
@@ -395,7 +396,7 @@ class WriteKodiDB():
                 changes |= self.updateProperty(KodiItem,"firstaired",firstaired,"episode")
         
         if MBitem.get("CommunityRating") != None:
-            changes |= self.updateProperty(KodiItem,"rating",int(MBitem.get("CommunityRating")),"episode")
+            changes |= self.updateProperty(KodiItem,"rating",Decimal(format(MBitem.get("CommunityRating"),'.1f')),"episode")
             
         if MBitem.get("ParentIndexNumber") != None:
             season = int(MBitem.get("ParentIndexNumber"))
@@ -558,6 +559,13 @@ class WriteKodiDB():
                     params.append("\"" + propertyName + "\": " + str(propertyValue))
                     #xbmc.executeJSONRPC(jsoncommand_i %(id, propertyName, propertyValue))
                     changes = True
+                elif type(propertyValue) is Decimal:
+                    #extra compare decimals as int (rounded)
+                    if int(propertyValue) != int(KodiItem[propertyName]):
+                        utils.logMsg("Emby","updating property..." + str(propertyName))
+                        utils.logMsg("Emby","kodi value:" + str(KodiItem[propertyName]) + " MB value: " + str(propertyValue))
+                        params.append("\"" + propertyName + "\": " + str(propertyValue))
+                        changes = True
                 else:
                     #xbmc.sleep(sleepVal)
                     utils.logMsg("Emby","updating property..." + str(propertyName))
@@ -572,19 +580,19 @@ class WriteKodiDB():
     def updateProperty(self,KodiItem,propertyName,propertyValue,fileType,forced=False):
         if fileType == "tvshow":
             id = KodiItem['tvshowid']
-            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "%s": %i}, "id": 1 }'
+            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "%s": %s}, "id": 1 }'
             jsoncommand_s = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "%s": "%s"}, "id": 1 }'
         elif fileType == "episode":
             id = KodiItem['episodeid']  
-            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "%s": %i}, "id": 1 }'            
+            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "%s": %s}, "id": 1 }'            
             jsoncommand_s = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "%s": "%s"}, "id": 1 }'
         elif fileType == "musicvideo":
             id = KodiItem['musicvideoid']
-            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { "musicvideoid": %i, "%s": %i}, "id": 1 }'
+            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { "musicvideoid": %i, "%s": %s}, "id": 1 }'
             jsoncommand_s = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { "musicvideoid": %i, "%s": "%s"}, "id": 1 }'
         elif fileType == "movie":
             id = KodiItem['movieid']
-            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": %i}, "id": 1 }'
+            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": %s}, "id": 1 }'
             jsoncommand_s = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": "%s"}, "id": 1 }'
         
         changes = False
@@ -596,6 +604,14 @@ class WriteKodiDB():
                     utils.logMsg("Emby","kodi value:" + str(KodiItem[propertyName]) + " MB value: " + str(propertyValue))
                     xbmc.executeJSONRPC(jsoncommand_i %(id, propertyName, propertyValue))
                     changes = True
+                elif type(propertyValue) is Decimal:
+                    #extra compare decimals as int (rounded)
+                    if int(propertyValue) != int(KodiItem[propertyName]):
+                        xbmc.sleep(sleepVal)
+                        utils.logMsg("Emby","updating property..." + str(propertyName))
+                        utils.logMsg("Emby","kodi value:" + str(KodiItem[propertyName]) + " MB value: " + str(propertyValue))
+                        xbmc.executeJSONRPC(jsoncommand_i %(id, propertyName, propertyValue))
+                        changes = True
                 else:
                     xbmc.sleep(sleepVal)
                     utils.logMsg("Emby","updating property..." + str(propertyName))
@@ -742,10 +758,8 @@ class WriteKodiDB():
         title = utils.convertEncoding(MBitem["Name"])
         sorttitle = utils.convertEncoding(MBitem["SortName"])
         year = MBitem.get("ProductionYear")
-        if MBitem.get("CommunityRating") != None:
-            rating = int(MBitem.get("CommunityRating"))
-        else:
-            rating = None
+        rating = MBitem.get("CommunityRating")
+
         if MBitem.get("ShortOverview") != None:
             shortplot = utils.convertEncoding(MBitem.get("ShortOverview"))
         else:
@@ -765,7 +779,7 @@ class WriteKodiDB():
         cursor.execute("select coalesce(max(idMovie),0) as movieid from movie")
         movieid = cursor.fetchone()[0]
         movieid = movieid + 1
-        pathsql="insert into movie(idMovie, idFile, c00, c01, c02, c04, c07, c08, c09, c10, c11, c16, c19, c20) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        pathsql="insert into movie(idMovie, idFile, c00, c01, c02, c05, c07, c08, c09, c10, c11, c16, c19, c20) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         
         cursor.execute(pathsql, (movieid, fileid, title, plot, shortplot, rating, year, thumb, MBitem["Id"], sorttitle, runtime, title, trailerUrl, fanart))
         
@@ -961,10 +975,7 @@ class WriteKodiDB():
         plot = utils.convertEncoding(API().getOverview(MBitem))
         thumb = "<thumb>" + API().getArtwork(MBitem, "Primary") + "</thumb>"
         title = utils.convertEncoding(MBitem["Name"])
-        if MBitem.get("CommunityRating") != None:
-            rating = int(MBitem.get("CommunityRating"))
-        else:
-            rating = None
+        rating = MBitem.get("CommunityRating")
         
         #create the episode
         cursor.execute("select coalesce(max(idEpisode),0) as episodeid from episode")
@@ -1066,10 +1077,7 @@ class WriteKodiDB():
         fanart = "<fanart>" + API().getArtwork(MBitem, "Backdrop") + "</fanart>"
         title = utils.convertEncoding(MBitem["Name"])
         sorttitle = utils.convertEncoding(MBitem["SortName"])
-        if MBitem.get("CommunityRating") != None:
-            rating = int(MBitem.get("CommunityRating"))
-        else:
-            rating = None
+        rating = MBitem.get("CommunityRating")
             
         #create the tvshow
         cursor.execute("select coalesce(max(idShow),0) as showid from tvshow")
