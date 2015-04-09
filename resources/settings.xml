@@ -3,11 +3,11 @@
 	<category label="30014"> <!-- Emby -->
 		<setting id="ipaddress" type="text" label="30000" default="" visible="true" enable="true" />
 		<setting id="port" type="text" label="30030" default="8096" visible="true" enable="true" />
+		<setting id="username" type="text" label="30024" />
 		<setting id="https" type="bool" label="30243" visible="true" enable="true" default="false" />
 		<setting type="sep" />
-		<setting id="username" type="text" label="30024" />
-		<setting type="sep" />
 		<setting id="deviceName" type="text" label="30016" default="Kodi" />
+		<setting id="playFromStream" type="bool" label="30002" visible="true" enable="true" default="false" />
 	</category>
 	<!-- <category label="Manual sync"> <setting label="Run manual full sync now" type="action" action="RunScript(plugin.video.mbsync, fullsync)" /> <setting label="Run manual incremental sync now" type="action" action="RunScript(plugin.video.mbsync, incrementalsync)" /> <setting label="Reset entire local library" type="action" action="RunScript(plugin.video.mbsync, reset)" /> </category> -->
 	<category label="Sync Options">
