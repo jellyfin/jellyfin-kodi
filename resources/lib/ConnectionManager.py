@@ -122,21 +122,12 @@ class ConnectionManager():
         
         if(return_value > -1):
             selected_user = userList[return_value]
-            self.logMsg("Selected User: %s" % selected_user)      
+            self.logMsg("Setting Selected User: %s" % selected_user)      
             self.addon.setSetting("username", selected_user)
+            return
         else:
             xbmc.log("No user selected.")
             xbmc.executebuiltin('Addon.OpenSettings(%s)' % self.addonId)
-            return
-
-        # Option to play from http
-        setPlayback = xbmcgui.Dialog().yesno("Playback option", "Play your files using HTTP?")
-        if setPlayback == 1:
-            self.logMsg("Playback will be set using HTTP/S.", 1)
-            addon.setSetting("playFromStream", "true")
-            return
-        else:
-            self.logMsg("Playback will be set using SMB.", 1)
             return
                 
     def getServerDetails(self):
