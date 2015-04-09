@@ -63,6 +63,8 @@ class Service():
         player = Player()
         ws = WebSocketThread()
         
+        lastFile = None
+        
         while not self.KodiMonitor.abortRequested():
             
             xbmc.sleep(1000)
@@ -70,6 +72,7 @@ class Service():
             if xbmc.Player().isPlaying():
                 try:
                     playTime = xbmc.Player().getTime()
+                    totalTime = xbmc.Player().getTotalTime()
                     currentFile = xbmc.Player().getPlayingFile()
                     
                     if(player.played_information.get(currentFile) != None):
@@ -85,6 +88,10 @@ class Service():
                             xbmc.log("MB3 Sync Service -> Exception reporting progress : " + msg)
                             pass
                         lastProgressUpdate = datetime.today()
+                    # only try autoplay when there's 20 seconds or less remaining and only once!
+                    if (totalTime - playTime <= 20 and (lastFile==None or lastFile!=currentFile)):
+                        lastFile = currentFile
+                        player.autoPlayPlayback()
                     
                 except Exception, e:
                     xbmc.log("MB3 Sync Service -> Exception in Playback Monitor Service : " + str(e))

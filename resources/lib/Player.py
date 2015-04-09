@@ -92,34 +92,6 @@ class Player( xbmc.Player ):
                     #report updates playcount and resume status to Kodi and MB3
                     librarySync.updatePlayCount(item_id,type)
                     
-                # if its an episode see if autoplay is enabled
-                if addonSettings.getSetting("autoPlaySeason")=="true" and type=="Episode":
-                    port = addonSettings.getSetting('port')
-                    host = addonSettings.getSetting('ipaddress')
-                    server = host + ":" + port
-                    userid = self.downloadUtils.getUserId()
-                    # add remaining unplayed episodes if applicable
-                    MB3Episode = ReadEmbyDB().getItem(item_id)
-                    userData = MB3Episode["UserData"]
-                    if userData!=None and userData["Played"]==True:
-                        
-                        pDialog = xbmcgui.DialogProgress()
-                        pDialog.create("Auto Play","Further Episode(s) in "+MB3Episode["SeasonName"]+" for "+MB3Episode["SeriesName"]+ " found","Cancel to stop automatic play of remaining episodes")
-                        count = 0
-                        while(pDialog.iscanceled==False or count < 10):
-                            xbmc.sleep(1000)
-                            count += 1
-                            progress = count * 10
-                            remainingsecs = 10 - count
-                            pDialog.update(progress,"Further Episode(s) in "+MB3Episode["SeasonName"]+" for "+MB3Episode["SeriesName"]+ " found","Cancel to stop automatic play of remaining episodes", str(remainingsecs) + " second(s) until auto dismiss")
-                        
-                        if pDialog.iscanceled()==False:
-                            seasonId = MB3Episode["SeasonId"]
-                            jsonData = self.downloadUtils.downloadUrl("http://" + server + "/mediabrowser/Users/" + userid + "/Items?ParentId=" + seasonId + "&ImageTypeLimit=1&SortBy=SortName&SortOrder=Ascending&Filters=IsUnPlayed&IncludeItemTypes=Episode&IsVirtualUnaired=false&Recursive=true&IsMissing=False&format=json", suppress=False, popup=1 )     
-                            if(jsonData != ""):
-                                seasonData = json.loads(jsonData)
-                                if seasonData.get("Items") != None:
-                                    PlaybackUtils().PLAYAllEpisodes(seasonData.get("Items"))  
                 
         self.played_information.clear()
 
@@ -340,4 +312,55 @@ class Player( xbmc.Player ):
         # Will be called when user stops xbmc playing a file
         self.printDebug("emby Service -> onPlayBackStopped")
         self.stopAll()
+        
+    
+    def autoPlayPlayback(self):
+        currentFile = xbmc.Player().getPlayingFile()
+        data = self.played_information.get(currentFile)
+        
+        # only report playback if emby has initiated the playback (item_id has value)
+        if(data != None and data.get("item_id") != None):
+            addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
+            
+            item_id = data.get("item_id")
+            type = data.get("Type")
+          
+            # if its an episode see if autoplay is enabled
+            if addonSettings.getSetting("autoPlaySeason")=="true" and type=="Episode":
+                    port = addonSettings.getSetting('port')
+                    host = addonSettings.getSetting('ipaddress')
+                    server = host + ":" + port
+                    userid = self.downloadUtils.getUserId()
+                    # add remaining unplayed episodes if applicable
+                    MB3Episode = ReadEmbyDB().getItem(item_id)
+                    userData = MB3Episode["UserData"]
+                    if userData!=None and userData["Played"]==True:
+                        pDialog = xbmcgui.DialogProgress()
+                        seasonId = MB3Episode["SeasonId"]
+                        jsonData = self.downloadUtils.downloadUrl("http://" + server + "/mediabrowser/Users/" + userid + "/Items?ParentId=" + seasonId + "&ImageTypeLimit=1&Limit=1&SortBy=SortName&SortOrder=Ascending&Filters=IsUnPlayed&IncludeItemTypes=Episode&IsVirtualUnaired=false&Recursive=true&IsMissing=False&format=json", suppress=False, popup=1 )     
+                        if(jsonData != ""):
+                            seasonData = json.loads(jsonData)
+                            if seasonData.get("Items") != None:
+                                item = seasonData.get("Items")[0]
+                                pDialog.create("Auto Play next episode", str(item.get("ParentIndexNumber")) + "x" + str(item.get("IndexNumber")) + ". " + item["Name"] + " found","Cancel to stop automatic play")
+                                count = 0
+                                while(pDialog.iscanceled()==False and count < 10):
+                                    xbmc.sleep(1000)
+                                    count += 1
+                                    progress = count * 10
+                                    remainingsecs = 10 - count
+                                    pDialog.update(progress, str(item.get("ParentIndexNumber")) + "x" + str(item.get("IndexNumber")) + ". " + item["Name"] + " found","Cancel to stop automatic play", str(remainingsecs) + " second(s) until auto dismiss")
+                                
+                                pDialog.close()
+                        
+                            if pDialog.iscanceled()==False:
+                                playTime = xbmc.Player().getTime()
+                                totalTime = xbmc.Player().getTotalTime()
+                                while xbmc.Player().isPlaying() and (totalTime-playTime > 2):
+                                    xbmc.sleep(500)
+                                    playTime = xbmc.Player().getTime()
+                                    totalTime = xbmc.Player().getTotalTime()
+                                
+                                PlaybackUtils().PLAYAllEpisodes(seasonData.get("Items"))  
+            
 
