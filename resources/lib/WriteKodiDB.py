@@ -83,7 +83,7 @@ class WriteKodiDB():
         if MBitem.get("CommunityRating") != None:
             self.getPropertyParam_Batched(KodiItem, "rating", Decimal(format(MBitem.get("CommunityRating"),'.1f')), params)
 
-        #self.getPropertyParam_Batched(KodiItem, "plot", MBitem.get("Overview"), params)
+        self.getPropertyParam_Batched(KodiItem, "plot", MBitem.get("Overview"), params)
         self.getPropertyParam_Batched(KodiItem, "plotoutline", MBitem.get("ShortOverview"), params)
         self.getPropertyParam_Batched(KodiItem, "set", MBitem.get("TmdbCollectionName"), params)
         self.getPropertyParam_Batched(KodiItem, "sorttitle", MBitem.get("SortName"), params)
