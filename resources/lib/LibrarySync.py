@@ -845,11 +845,12 @@ class LibrarySync():
                                     userData=API().getUserData(episode)
                                     timeInfo = API().getTimeInfo(episode)
                                     
-                                    WINDOW.setProperty("EmbyUserKey" + userData.get("Key"), episode.get('Id') + ";;" + episode.get("Type"))
-                                    WINDOW.setProperty(episode.get('Id'), "episode;;" + str(kodishow["tvshowid"]) + ";;" +str(kodiItem['episodeid']))
+                                    
                                     if kodiItem != None:
                                         WINDOW = xbmcgui.Window( 10000 )
                                         WINDOW.setProperty("episodeid" + str(kodiItem['episodeid']), episode.get('Name') + ";;" + episode.get('Id'))
+                                        WINDOW.setProperty("EmbyUserKey" + userData.get("Key"), episode.get('Id') + ";;" + episode.get("Type"))
+                                        WINDOW.setProperty(episode.get('Id'), "episode;;" + str(kodishow["tvshowid"]) + ";;" +str(kodiItem['episodeid']))
                                         kodiresume = int(round(kodiItem['resume'].get("position")))
                                         resume = int(round(float(timeInfo.get("ResumeTime"))))*60
                                         total = int(round(float(timeInfo.get("TotalTime"))))*60
