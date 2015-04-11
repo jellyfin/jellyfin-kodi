@@ -53,11 +53,12 @@ class Service():
         
         lastProgressUpdate = datetime.today()
         
-        interval_FullSync = 600
-        interval_IncrementalSync = 300
+        startupComplete = False
+        #interval_FullSync = 600
+        #interval_IncrementalSync = 300
         
-        cur_seconds_fullsync = interval_FullSync
-        cur_seconds_incrsync = interval_IncrementalSync
+        #cur_seconds_fullsync = interval_FullSync
+        #cur_seconds_incrsync = interval_IncrementalSync
         
         user = UserClient()
         player = Player()
@@ -109,29 +110,17 @@ class Service():
                         ws.start()
             
                     #full sync
-                    if(cur_seconds_fullsync >= interval_FullSync):
+                    if(startupComplete == False):
                         xbmc.log("Doing_Db_Sync: syncDatabase (Started)")
-                        worked = librarySync.syncDatabase()
-                        xbmc.log("Doing_Db_Sync: syncDatabase (Finished) " + str(worked))
-                        if(worked):
-                            cur_seconds_fullsync = 0
-                        else:
-                            cur_seconds_fullsync = interval_FullSync - 10
+                        libSync = librarySync.syncDatabase()
+                        xbmc.log("Doing_Db_Sync: syncDatabase (Finished) " + str(libSync))
+                        countSync = librarySync.updatePlayCounts()
+                        xbmc.log("Doing_Db_Sync: updatePlayCounts (Finished) "  + str(countSync))
+
+                        if(libSync and countSync):
+                            startupComplete = True
                     else:
-                        cur_seconds_fullsync += 1
-                    
-                    #incremental sync
-                    if(cur_seconds_incrsync >= interval_IncrementalSync):
-                        xbmc.log("Doing_Db_Sync: updatePlayCounts (Started)")
-                        worked = librarySync.updatePlayCounts()
-                        xbmc.log("Doing_Db_Sync: updatePlayCounts (Finished) "  + str(worked))
-                        if(worked):
-                            cur_seconds_incrsync = 0
-                        else:
-                            cur_seconds_incrsync = interval_IncrementalSync - 10
-                    else:
-                        cur_seconds_incrsync += 1
-              
+                        xbmc.sleep(10000)
                     
                 else:
                     xbmc.log("Not authenticated yet")

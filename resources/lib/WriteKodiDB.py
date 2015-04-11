@@ -922,8 +922,12 @@ class WriteKodiDB():
         
         #get the showid
         cursor.execute("SELECT idShow as showid FROM tvshow WHERE c12 = ?",(MBitem["SeriesId"],))
-        showid = cursor.fetchone()[0]
-        
+        try:
+            showid = cursor.fetchone()[0]
+        except:
+            utils.logMsg("Emby","Error adding episode to Kodi Library, couldn't find show - ID: " + MBitem["Id"] + " - " + MBitem["Name"])
+            actionPerformed = False        
+            return
         season = 0
         if MBitem.get("ParentIndexNumber") != None:
             season = int(MBitem.get("ParentIndexNumber"))

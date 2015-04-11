@@ -17,6 +17,7 @@ from ClientInformation import ClientInformation
 from DownloadUtils import DownloadUtils
 from PlaybackUtils import PlaybackUtils
 from LibrarySync import LibrarySync
+from WriteKodiDB import WriteKodiDB
 import Utils as utils
 
 _MODE_BASICPLAY=12
@@ -203,7 +204,13 @@ class WebSocketThread(threading.Thread):
             # doing items removed
             itemsRemoved = data.get("ItemsRemoved")
             self.logMsg("Message : Doing LibraryChanged : Items Removed : " + str(itemsRemoved), 0)
-            
+            itemsRemoved = data.get("ItemsRemoved")
+            for item in itemsRemoved:
+                WINDOW = xbmcgui.Window( 10000 )
+                itemInfo=WINDOW.getProperty(item)
+                if "episode" in itemInfo:
+                    type, tvshowid, episodeid  = WINDOW.getProperty(item).split(";;")
+                    xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveEpisode", "params": { "episodeid": %i}, "id": 1 }' %int(episodeid))
             # doing adds and updates
             itemsAdded = data.get("ItemsAdded")
             self.logMsg("Message : Doing LibraryChanged : Items Added : " + str(itemsAdded), 0)
