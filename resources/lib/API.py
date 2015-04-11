@@ -206,8 +206,7 @@ class API():
             Temp=''
         Overview1=Temp.encode('utf-8')
         Overview=str(Overview1)
-        Overview=Overview.replace("\"", "")
-        Overview=Overview.replace("\'", "")
+        Overview=Overview.replace("\"", "\'")
         Overview=Overview.replace("\n", " ")
         Overview=Overview.replace("\r", " ")
         return Overview
