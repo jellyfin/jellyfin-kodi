@@ -11,6 +11,8 @@ import threading
 import urllib
 import socket
 import websocket
+
+import KodiMonitor
 from ClientInformation import ClientInformation
 from DownloadUtils import DownloadUtils
 from PlaybackUtils import PlaybackUtils
@@ -26,6 +28,8 @@ class WebSocketThread(threading.Thread):
     keepRunning = True
     
     def __init__(self, *args):
+
+        self.KodiMonitor = KodiMonitor.Kodi_Monitor()
         addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
         level = addonSettings.getSetting('logLevel')        
         self.logLevel = 0
@@ -286,12 +290,13 @@ class WebSocketThread(threading.Thread):
                                     
         self.client.on_open = self.on_open
         
-        while(self.keepRunning):
+        while not self.KodiMonitor.abortRequested():
             self.logMsg("Client Starting")
             self.client.run_forever()
             if(self.keepRunning):
                 self.logMsg("Client Needs To Restart")
-                xbmc.sleep(10000)
+                if self.KodiMonitor.waitForAbort(10000):
+                    break
             
         self.logMsg("Thread Exited")
         
