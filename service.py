@@ -68,7 +68,9 @@ class Service():
         
         while not self.KodiMonitor.abortRequested():
             
-            xbmc.sleep(1000)
+            if self.KodiMonitor.waitForAbort(1):
+                # Abort was requested while waiting. We should exit
+                break
             
             if xbmc.Player().isPlaying():
                 try:
@@ -120,7 +122,9 @@ class Service():
                         if(libSync and countSync):
                             startupComplete = True
                     else:
-                        xbmc.sleep(10000)
+                        if self.KodiMonitor.waitForAbort(10):
+                            # Abort was requested while waiting. We should exit
+                            break                    
                     
                 else:
                     xbmc.log("Not authenticated yet")

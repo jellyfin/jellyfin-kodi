@@ -302,7 +302,7 @@ class WebSocketThread(threading.Thread):
             self.client.run_forever()
             if(self.keepRunning):
                 self.logMsg("Client Needs To Restart")
-                if self.KodiMonitor.waitForAbort(10000):
+                if self.KodiMonitor.waitForAbort(5):
                     break
             
         self.logMsg("Thread Exited")
