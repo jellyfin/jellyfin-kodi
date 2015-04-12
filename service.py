@@ -119,6 +119,8 @@ class Service():
                         countSync = librarySync.updatePlayCounts()
                         xbmc.log("Doing_Db_Sync: updatePlayCounts (Finished) "  + str(countSync))
 
+                        # Force refresh newly set thumbnails
+                        xbmc.executebuiltin("UpdateLibrary(video)")
                         if(libSync and countSync):
                             startupComplete = True
                     else:
