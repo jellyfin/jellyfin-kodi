@@ -1,7 +1,6 @@
 import xbmcaddon
 import xbmc
 import xbmcgui
-
 import os
 import threading
 import json
@@ -15,10 +14,12 @@ import KodiMonitor
 import Utils as utils
 from LibrarySync import LibrarySync
 from Player import Player
+from DownloadUtils import DownloadUtils
 from ConnectionManager import ConnectionManager
 from ClientInformation import ClientInformation
 from WebSocketClient import WebSocketThread
 from UserClient import UserClient
+librarySync = LibrarySync()
 
 
 class Service():
@@ -27,7 +28,6 @@ class Service():
     newWebSocketThread = None
     newUserClient = None
 
-    librarySync = LibrarySync()
     clientInfo = ClientInformation()
     addonName = clientInfo.getAddonName()
     className = None
@@ -65,7 +65,6 @@ class Service():
         ws = WebSocketThread()
         
         lastFile = None
-        xbmcplayer = xbmc.Player()
         
         while not self.KodiMonitor.abortRequested():
             
@@ -73,11 +72,11 @@ class Service():
                 # Abort was requested while waiting. We should exit
                 break
             
-            if xbmcplayer.isPlaying():
+            if xbmc.Player().isPlaying():
                 try:
-                    playTime = xbmcplayer.getTime()
-                    totalTime = xbmcplayer.getTotalTime()
-                    currentFile = xbmcplayer.getPlayingFile()
+                    playTime = xbmc.Player().getTime()
+                    totalTime = xbmc.Player().getTotalTime()
+                    currentFile = xbmc.Player().getPlayingFile()
                     
                     if(player.played_information.get(currentFile) != None):
                         player.played_information[currentFile]["currentPosition"] = playTime
@@ -89,7 +88,7 @@ class Service():
                         try:
                             player.reportPlayback()
                         except Exception, msg:
-                            self.logMsg("Exception reporting progress: %s" % msg, 0)
+                            xbmc.log("MB3 Sync Service -> Exception reporting progress : " + msg)
                             pass
                         lastProgressUpdate = datetime.today()
                     # only try autoplay when there's 20 seconds or less remaining and only once!
@@ -98,7 +97,7 @@ class Service():
                         player.autoPlayPlayback()
                     
                 except Exception, e:
-                    self.logMsg("Exception in Playback Monitor Service: %s" % e, 0)
+                    xbmc.log("MB3 Sync Service -> Exception in Playback Monitor Service : " + str(e))
                     pass
             else:
                 if (self.newUserClient == None):
@@ -114,13 +113,11 @@ class Service():
             
                     #full sync
                     if(startupComplete == False):
-                        librarySync = self.librarySync
-
-                        self.logMsg("Doing_Db_Sync: syncDatabase (Started)", 1)
+                        xbmc.log("Doing_Db_Sync: syncDatabase (Started)")
                         libSync = librarySync.syncDatabase()
-                        self.logMsg("Doing_Db_Sync: syncDatabase (Finished) %s" % libSync, 1)
+                        xbmc.log("Doing_Db_Sync: syncDatabase (Finished) " + str(libSync))
                         countSync = librarySync.updatePlayCounts()
-                        self.logMsg("Doing_Db_Sync: updatePlayCounts (Finished) %s" % countSync, 1)
+                        xbmc.log("Doing_Db_Sync: updatePlayCounts (Finished) "  + str(countSync))
 
                         # Force refresh newly set thumbnails
                         xbmc.executebuiltin("UpdateLibrary(video)")
@@ -132,16 +129,14 @@ class Service():
                             break                    
                     
                 else:
-                    self.logMsg("Not authenticated yet", 2)
+                    xbmc.log("Not authenticated yet")
                     
-        self.logMsg("Stopping Service", 0)
+        utils.logMsg("MB3 Sync Service", "stopping Service",0)
 
-        # If user reset library database
+        # If user reset library database.
         WINDOW = xbmcgui.Window(10000)
-        addon = xbmcaddon.Addon('plugin.video.emby')
-
         if WINDOW.getProperty("SyncInstallRunDone") == "false":
-            # Reset the initial sync
+            addon = xbmcaddon.Addon('plugin.video.emby')
             addon.setSetting("SyncInstallRunDone", "false")
         
         if (self.newWebSocketThread != None):
