@@ -402,8 +402,11 @@ class WriteKodiDB():
             episode = int(MBitem.get("IndexNumber"))
             changes |= self.updateProperty(KodiItem,"episode",episode,"episode")
 
-        plot = utils.convertEncoding(API().getOverview(MBitem))
-        changes |= self.updateProperty(KodiItem,"plot",plot,"episode")
+        #plot = utils.convertEncoding(API().getOverview(MBitem))
+        plot = MBitem.get("Overview")
+        if(plot != None):
+            changes |= self.updateProperty(KodiItem,"plot",plot,"episode")
+            
         title = utils.convertEncoding(MBitem["Name"])
         changes |= self.updateProperty(KodiItem,"title",title,"episode")
         changes |= self.updatePropertyArray(KodiItem,"writer",people.get("Writer"),"episode")
@@ -563,9 +566,10 @@ class WriteKodiDB():
                         changes = True
                 else:
                     #xbmc.sleep(sleepVal)
+                    propValue = json.dumps(propertyValue)
                     utils.logMsg("Emby","updating property..." + str(propertyName))
-                    utils.logMsg("Emby","kodi value:" + KodiItem[propertyName] + " MB value: " + propertyValue)
-                    params.append("\"" + propertyName + "\": \"" + propertyValue + "\"")
+                    utils.logMsg("Emby","kodi value:" + KodiItem[propertyName] + " MB value: " + propValue)
+                    params.append("\"" + propertyName + "\": " + propValue)
                     #xbmc.executeJSONRPC(jsoncommand_s %(id, propertyName, propertyValue.encode('utf-8')))
                     changes = True
                     
@@ -575,20 +579,16 @@ class WriteKodiDB():
     def updateProperty(self,KodiItem,propertyName,propertyValue,fileType,forced=False):
         if fileType == "tvshow":
             id = KodiItem['tvshowid']
-            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "%s": %s}, "id": 1 }'
-            jsoncommand_s = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "%s": "%s"}, "id": 1 }'
+            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "%s": %s}, "id": 1 }'
         elif fileType == "episode":
             id = KodiItem['episodeid']  
-            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "%s": %s}, "id": 1 }'            
-            jsoncommand_s = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "%s": "%s"}, "id": 1 }'
+            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "%s": %s}, "id": 1 }'            
         elif fileType == "musicvideo":
             id = KodiItem['musicvideoid']
-            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { "musicvideoid": %i, "%s": %s}, "id": 1 }'
-            jsoncommand_s = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { "musicvideoid": %i, "%s": "%s"}, "id": 1 }'
+            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { "musicvideoid": %i, "%s": %s}, "id": 1 }'
         elif fileType == "movie":
             id = KodiItem['movieid']
-            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": %s}, "id": 1 }'
-            jsoncommand_s = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": "%s"}, "id": 1 }'
+            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": %s}, "id": 1 }'
         
         changes = False
         if ((propertyValue != KodiItem[propertyName]) or forced):
@@ -597,7 +597,7 @@ class WriteKodiDB():
                     xbmc.sleep(sleepVal)
                     utils.logMsg("Emby","updating property..." + str(propertyName))
                     utils.logMsg("Emby","kodi value:" + str(KodiItem[propertyName]) + " MB value: " + str(propertyValue))
-                    xbmc.executeJSONRPC(jsoncommand_i %(id, propertyName, propertyValue))
+                    xbmc.executeJSONRPC(jsoncommand %(id, propertyName, propertyValue))
                     changes = True
                 elif type(propertyValue) is Decimal:
                     #extra compare decimals as int (rounded)
@@ -605,13 +605,14 @@ class WriteKodiDB():
                         xbmc.sleep(sleepVal)
                         utils.logMsg("Emby","updating property..." + str(propertyName))
                         utils.logMsg("Emby","kodi value:" + str(KodiItem[propertyName]) + " MB value: " + str(propertyValue))
-                        xbmc.executeJSONRPC(jsoncommand_i %(id, propertyName, propertyValue))
+                        xbmc.executeJSONRPC(jsoncommand %(id, propertyName, propertyValue))
                         changes = True
                 else:
                     xbmc.sleep(sleepVal)
+                    propValue = json.dumps(propertyValue)
                     utils.logMsg("Emby","updating property..." + str(propertyName))
-                    utils.logMsg("Emby","kodi value:" + KodiItem[propertyName] + " MB value: " + propertyValue)
-                    xbmc.executeJSONRPC(jsoncommand_s %(id, propertyName, propertyValue.encode('utf-8')))
+                    utils.logMsg("Emby","kodi value:" + KodiItem[propertyName] + " MB value: " + propValue)
+                    xbmc.executeJSONRPC(jsoncommand %(id, propertyName, propValue))
                     changes = True
                     
         return changes
