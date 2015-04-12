@@ -144,7 +144,7 @@ class PlayUtils():
         elif (videoQuality == "18"):
            return '1000000'
         else:
-            return '10000000'
+            return '2147483' # max bit rate supported by server (max signed 32bit integer)
             
     def fileExists(self, result):
         path=result.get("Path").encode('utf-8')
