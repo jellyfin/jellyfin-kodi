@@ -9,6 +9,7 @@
 		<setting id="deviceName" type="text" label="30016" default="Kodi" />
 		<setting id="videoBitRate" type="enum" label="30160" values="664 Kbps SD|996 Kbps HD|1.3 Mbps HD|2.0 Mbps HD|3.2 Mbps HD|4.7 Mbps HD|6.2 Mbps HD|7.7 Mbps HD|9.2 Mbps HD|10.7 Mbps HD|12.2 Mbps HD|13.7 Mbps HD|15.2 Mbps HD|16.7 Mbps HD|18.2 Mbps HD|20.0 Mbps HD|40.0 Mbps HD|100.0 Mbps HD [default]|1000.0 Mbps HD" default="17" />
 		<setting id="playFromStream" type="bool" label="30002" visible="true" enable="true" default="false" />
+		<setting id="forceTranscodingCodecs" type="text" label="30244" />
 	</category>
 	<!-- <category label="Manual sync"> <setting label="Run manual full sync now" type="action" action="RunScript(plugin.video.mbsync, fullsync)" /> <setting label="Run manual incremental sync now" type="action" action="RunScript(plugin.video.mbsync, incrementalsync)" /> <setting label="Reset entire local library" type="action" action="RunScript(plugin.video.mbsync, reset)" /> </category> -->
 	<category label="Sync Options">
