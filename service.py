@@ -1,8 +1,6 @@
 import xbmcaddon
 import xbmc
 import xbmcgui
-import xbmcvfs
-
 import os
 import threading
 import json
@@ -120,7 +118,7 @@ class Service():
                         xbmc.log("Doing_Db_Sync: syncDatabase (Finished) " + str(libSync))
                         countSync = librarySync.updatePlayCounts()
                         xbmc.log("Doing_Db_Sync: updatePlayCounts (Finished) "  + str(countSync))
-                        xbmc.executebuiltin("UpdateLibrary(video)")
+
                         if(libSync and countSync):
                             startupComplete = True
                     else:
@@ -135,16 +133,9 @@ class Service():
 
         # If user reset library database.
         WINDOW = xbmcgui.Window(10000)
-        addon = xbmcaddon.Addon('plugin.video.emby')
-
         if WINDOW.getProperty("SyncInstallRunDone") == "false":
+            addon = xbmcaddon.Addon('plugin.video.emby')
             addon.setSetting("SyncInstallRunDone", "false")
-
-        if WINDOW.getProperty("EraseUserInfo") == "true":
-            addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
-            dataPath = os.path.join(addondir + "settings.xml")
-            xbmcvfs.delete(dataPath)
-            xbmc.log("Deleted saved user information for: %s" % user.currUser)
         
         if (self.newWebSocketThread != None):
             ws.stopClient()

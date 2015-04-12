@@ -154,17 +154,9 @@ def removeDirectory(path):
         
 def reset():
 
-    WINDOW = xbmcgui.Window( 10000 )
     return_value = xbmcgui.Dialog().yesno("Warning", "Are you sure you want to reset your local database?")
-
     if return_value == 0:
         return
-
-    # Ask if user information should be deleted too.
-    return_user = xbmcgui.Dialog().yesno("Warning", "Do you wish to erase your saved Emby user information?")
-
-    if return_user == 1:
-        WINDOW.setProperty("EraseUserInfo", "true")
     
     # first stop any db sync
     WINDOW = xbmcgui.Window( 10000 )
@@ -197,6 +189,6 @@ def reset():
     WINDOW.setProperty("SyncInstallRunDone", "false")
 
     dialog = xbmcgui.Dialog()
-    dialog.ok('Emby Reset', 'Database reset has completed, Kodi will now restart to apply the changes.')
+    dialog.ok('Emby Reset', 'Database reset has completed, kodi will now restart to apply the changes.')
     xbmc.executebuiltin("RestartApp")
      
