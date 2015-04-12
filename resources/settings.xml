@@ -13,6 +13,7 @@
 	<category label="Sync Options">
 	<!--  	<setting id="syncMovieBoxSets" type="bool" label="30238" default="true" visible="true" enable="true" /> -->
 		<setting id="enablePlayCountSync" type="bool" label="30240" default="true" visible="true" enable="true" />
+		<setting id="useSeason100ForSpecials" type="bool" label="30244" default="false" visible="true" enable="true" />
 		<setting id="dbSyncIndication" type="labelenum" label="30241" values="None|Notify OnChange|Notify OnFinish|BG Progress|Dialog Progress" default="None" />
 		<setting id="playCountSyncIndication" type="labelenum" label="30242" values="None|Notify OnChange|Notify OnFinish|BG Progress|Dialog Progress" default="None" />
 	</category>

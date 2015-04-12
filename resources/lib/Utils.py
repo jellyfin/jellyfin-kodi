@@ -170,37 +170,26 @@ def reset():
             dialog.ok('Warning', 'Could not stop DB sync, you should try again.')
             return
         xbmc.sleep(1000)
+       
+    # delete db table data
+    print "Doing DB Reset"
+    connection = KodiSQL()
+    cursor = connection.cursor( )
+    cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
+    rows = cursor.fetchall()
+    for row in rows:
+        tableName = row[0]
+        print tableName
+        if(tableName != "version"):
+            cursor.execute("DELETE FROM " + tableName)
+    connection.commit()
+    cursor.close()
     
-    # remove from addon data directory
+    # reset the install run flag
     addon = xbmcaddon.Addon(id='plugin.video.emby')
-    addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
-    dataPath = os.path.join(addondir + os.sep)
-    removeDirectory(dataPath)
-    
-    # delete db
-    deletecount = 0
-    deleted = False
-    while(deleted == False):
-        try:
-            xbmcvfs.delete(getKodiDBPath())
-            deleted = True
-        except:
-            deletecount += 1
-            if(deletecount > 10):
-                dialog = xbmcgui.Dialog()
-                dialog.ok('Warning', 'Could not delete Database, please try again later')
-                return
-            xbmc.sleep(1000)
-    
-    # extra check on the database to see it has been removed
-    if xbmcvfs.exists(getKodiDBPath()):
-        dialog = xbmcgui.Dialog()
-        dialog.ok('Error', 'The video database could not be deleted, this will need to be done manually. Remove: '+getKodiDBPath() + ' then restart Kodi')
-        return
-    
-    # remove old entries from sources.xml
-    
+    addon.setSetting("SyncInstallRunDone", "false") # this is not working for some reason
+
     dialog = xbmcgui.Dialog()
-    dialog.ok('Emby Reset', 'Reset of Emby has completed, kodi will now restart to apply the changes.')
+    dialog.ok('Emby Reset', 'Database reset has completed, kodi will now restart to apply the changes.')
     xbmc.executebuiltin("RestartApp")
      

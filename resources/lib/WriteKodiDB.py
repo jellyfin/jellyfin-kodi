@@ -1087,6 +1087,10 @@ class WriteKodiDB():
                         seasonid = seasonid + 1
                         cursor.execute("INSERT into seasons(idSeason, idShow, season) values(?, ?, ?)", (seasonid, tvshowid, season["IndexNumber"]))
                         
+                        # this is for handling specials as season 100, it allows art to be correctly set form the season 0 Emby data
+                        if(season["IndexNumber"] == 100):
+                            season["IndexNumber"] = 0
+                        
                         #insert artwork
                         if API().getArtwork(season, "Thumb") != "":
                             cursor.execute("INSERT into art(media_id, media_type, type, url) values(?, ?, ?, ?)", (seasonid,"season","landscape",API().getArtwork(season, "Thumb")))
