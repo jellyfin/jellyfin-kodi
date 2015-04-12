@@ -244,6 +244,7 @@
     <string id="30242">Play Count Sync Indication:</string>
     <string id="30243">Enable HTTPS</string>
 	<string id="30244">Use Season 100 for TV Show Specials (Requires Reset)</string>
+    <string id="30245">Force Transcoding Codecs</string>
     
 	<!-- Default views -->
     <string id="30300">Active</string>              

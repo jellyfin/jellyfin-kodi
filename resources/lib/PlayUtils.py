@@ -76,6 +76,18 @@ class PlayUtils():
 
     # Works out if we are direct playing or not
     def isDirectPlay(self, result):
+        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
+
+        # check if we should force encoding due to the forceTranscodingCodecs setting
+        forceTranscodingCodecs = addonSettings.getSetting('forceTranscodingCodecs')
+        if forceTranscodingCodecs:
+            forceTranscodingCodecsSet = frozenset(forceTranscodingCodecs.lower().split(','))
+            codecs = frozenset([mediaStream.get('Codec', None) for mediaStream in result.get('MediaStreams', [])])
+            commonCodecs = forceTranscodingCodecsSet & codecs
+            #xbmc.log("emby isDirectPlay MediaStreams codecs: %s forceTranscodingCodecs: %s, common: %s" % (codecs, forceTranscodingCodecsSet, commonCodecs))
+            if commonCodecs:
+                return False
+	
         if (self.fileExists(result) or (result.get("LocationType") == "FileSystem" and self.isNetworkQualitySufficient(result) == True and self.isLocalPath(result) == False)):
             return True
         else:
