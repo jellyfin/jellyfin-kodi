@@ -130,6 +130,12 @@ class Service():
                     xbmc.log("Not authenticated yet")
                     
         utils.logMsg("MB3 Sync Service", "stopping Service",0)
+
+        # If user reset library database.
+        WINDOW = xbmcgui.Window(10000)
+        if WINDOW.getProperty("SyncInstallRunDone") == "false":
+            addon = xbmcaddon.Addon('plugin.video.emby')
+            addon.setSetting("SyncInstallRunDone", "false")
         
         if (self.newWebSocketThread != None):
             ws.stopClient()

@@ -186,8 +186,7 @@ def reset():
     cursor.close()
     
     # reset the install run flag
-    addon = xbmcaddon.Addon(id='plugin.video.emby')
-    addon.setSetting("SyncInstallRunDone", "false") # this is not working for some reason
+    WINDOW.setProperty("SyncInstallRunDone", "false")
 
     dialog = xbmcgui.Dialog()
     dialog.ok('Emby Reset', 'Database reset has completed, kodi will now restart to apply the changes.')
