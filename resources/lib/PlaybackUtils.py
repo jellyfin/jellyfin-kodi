@@ -37,12 +37,14 @@ class PlaybackUtils():
 
     def PLAY(self, id):
         xbmc.log("PLAY Called")
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port
+        WINDOW = xbmcgui.Window(10000)
+
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
         
-        userid = self.downloadUtils.getUserId()
-        jsonData = self.downloadUtils.downloadUrl("http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + id + "?format=json&ImageTypeLimit=1", suppress=False, popup=1 )     
+        url = "%s/mediabrowser/Users/%s/Items/%s?format=json&ImageTypeLimit=1" % (server, userid, id)
+        jsonData = self.downloadUtils.downloadUrl(url, suppress=False, popup=1 )     
         result = json.loads(jsonData)
 
         userData = result.get("UserData")
@@ -85,9 +87,9 @@ class PlaybackUtils():
         if (result.get("LocationType") == "Virtual"):
           xbmcgui.Dialog().ok(self.language(30128), self.language(30129))
 
-        watchedurl = 'http://' + server + '/mediabrowser/Users/'+ userid + '/PlayedItems/' + id
-        positionurl = 'http://' + server + '/mediabrowser/Users/'+ userid + '/PlayingItems/' + id
-        deleteurl = 'http://' + server + '/mediabrowser/Items/' + id
+        watchedurl = "%s/mediabrowser/Users/%s/PlayedItems/%s" % (server, userid, id)
+        positionurl = "%s/mediabrowser/Users/%s/PlayingItems/%s" % (server, userid, id)
+        deleteurl = "%s/mediabrowser/Items/%s" % (server, id)
 
         # set the current playing info
         WINDOW.setProperty(playurl+"watchedurl", watchedurl)
@@ -201,7 +203,7 @@ class PlaybackUtils():
             details["season"] = str(seasonNum)  
 
         if tvshowTitle != None:
-            details["TVShowTitle"] = tvshowTitle	
+            details["TVShowTitle"] = tvshowTitle    
         
         listItem.setInfo( "Video", infoLabels=details )
 
@@ -241,8 +243,11 @@ class PlaybackUtils():
     def PLAYAllItems(self, items, startPositionTicks):
         utils.logMsg("PlayBackUtils", "== ENTER: PLAYAllItems ==")
         utils.logMsg("PlayBackUtils", "Items : " + str(items))
-        userid = self.downloadUtils.getUserId()
-        server = self.downloadUtils.getServer()
+        WINDOW = xbmcgui.Window(10000)
+
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
         
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
         playlist.clear()        
@@ -251,9 +256,9 @@ class PlaybackUtils():
         for itemID in items:
         
             utils.logMsg("PlayBackUtils", "Adding Item to Playlist : " + itemID)
-            item_url = server + "/mediabrowser/Users/" + userid + "/Items/" + itemID + "?format=json"
+            item_url = "%s/mediabrowser/Users/%s/Items/%s?format=json" % (server, userid, itemID)
             jsonData = self.downloadUtils.downloadUrl(item_url, suppress=False, popup=1 )
-            
+
             item_data = json.loads(jsonData)
             added = self.addPlaylistItem(playlist, item_data, server, userid)
             if(added and started == False):
@@ -274,15 +279,18 @@ class PlaybackUtils():
             self.seekToPosition(seekTime)
             
     def PLAYAllEpisodes(self, items):
-        userid = self.downloadUtils.getUserId()
-        server = self.downloadUtils.getServer()
+        WINDOW = xbmcgui.Window(10000)
+
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
         
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
         playlist.clear()        
         
         for item in items:
         
-            item_url = server + "/mediabrowser/Users/" + userid + "/Items/" + item["Id"] + "?format=json&ImageTypeLimit=1"
+            item_url = "%s/mediabrowser/Users/%s/Items/%s?format=json&ImageTypeLimit=1" % (server, userid, item["Id"])
             jsonData = self.downloadUtils.downloadUrl(item_url, suppress=False, popup=1 )
             
             item_data = json.loads(jsonData)
@@ -292,15 +300,18 @@ class PlaybackUtils():
     
     def AddToPlaylist(self, itemIds):
         utils.logMsg("PlayBackUtils", "== ENTER: PLAYAllItems ==")
-        userid = self.downloadUtils.getUserId()
-        server = self.downloadUtils.getServer()
+        WINDOW = xbmcgui.Window(10000)
+
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
         
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)     
         
         for itemID in itemIds:
         
             utils.logMsg("PlayBackUtils", "Adding Item to Playlist : " + itemID)
-            item_url = server + "/mediabrowser/Users/" + userid + "/Items/" + itemID + "?format=json"
+            item_url = "%s/mediabrowser/Users/%s/Items/%s?format=json" % (server, userid, itemID)
             jsonData = self.downloadUtils.downloadUrl(item_url, suppress=False, popup=1 )
             
             item_data = json.loads(jsonData)
@@ -318,6 +329,12 @@ class PlaybackUtils():
         listItem = xbmcgui.ListItem(path=playurl, iconImage=thumbPath, thumbnailImage=thumbPath)
         self.setListItemProps(server, id, listItem, item)
 
+        WINDOW = xbmcgui.Window(10000)
+
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
+
         # Can not play virtual items
         if (item.get("LocationType") == "Virtual") or (item.get("IsPlaceHolder") == True):
         
@@ -326,9 +343,9 @@ class PlaybackUtils():
             
         else:
         
-            watchedurl = 'http://' + server + '/mediabrowser/Users/'+ userid + '/PlayedItems/' + id
-            positionurl = 'http://' + server + '/mediabrowser/Users/'+ userid + '/PlayingItems/' + id
-            deleteurl = 'http://' + server + '/mediabrowser/Items/' + id
+            watchedurl = "%s/mediabrowser/Users/%s/PlayedItems/%s" % (server, userid, id)
+            positionurl = "%s/mediabrowser/Users/%s/PlayingItems/%s" % (server, userid, id)
+            deleteurl = "%s/mediabrowser/Items/%s" % (server, id)
 
             # set the current playing info
             WINDOW = xbmcgui.Window( 10000 )

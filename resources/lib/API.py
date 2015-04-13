@@ -327,17 +327,17 @@ class API():
             if totalbackdrops != 0:
                 index = str(randrange(0,totalbackdrops))
         # use the local image proxy server that is made available by this addons service
-        
-        port = addonSettings.getSetting('port')
-        host = addonSettings.getSetting('ipaddress')
-        server = host + ":" + port
-        
+        # Load user information set by UserClient
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        server = WINDOW.getProperty('server%s' % username)
+
         if addonSettings.getSetting('compressArt')=='true':
             query = query + "&Quality=90"
         
         if imageTag == None:
             imageTag = "e3ab56fe27d389446754d0fb04910a34"
-        artwork = "http://" + server + "/mediabrowser/Items/" + str(id) + "/Images/" + type + "/" + index + "/" + imageTag + "/original/" + width + "/" + height + "/" + played + "?" + query
+        artwork = "%s/mediabrowser/Items/%s/Images/%s/%s/%s/original/%s/%s/%s?%s" % (server, id, type, index, imageTag, width, height, played, query)
         if addonSettings.getSetting('disableCoverArt')=='true':
             artwork = artwork + "&EnableImageEnhancers=false"
         
@@ -353,12 +353,13 @@ class API():
     
     def getUserArtwork(self, data, type, index = "0"):
 
-        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
+        # Load user information set by UserClient
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        server = WINDOW.getProperty('server%s' % username)
         id = data.get("Id")
-        port = addonSettings.getSetting('port')
-        host = addonSettings.getSetting('ipaddress')
-        server = host + ":" + port
-        artwork = "http://" + server + "/mediabrowser/Users/" + str(id) + "/Images/" + type  + "?Format=original"
+
+        artwork = "%s/mediabrowser/Users/%s/Images/%s?Format=original" % (server, id, type)
        
-        return artwork                  
+        return artwork  
         

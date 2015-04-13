@@ -94,11 +94,14 @@ class Player( xbmc.Player ):
                     
                 
         self.played_information.clear()
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        server = WINDOW.getProperty('server%s' % username)
 
         # stop transcoding - todo check we are actually transcoding?
         clientInfo = ClientInformation()
         txt_mac = clientInfo.getMachineId()
-        url = ("http://%s:%s/mediabrowser/Videos/ActiveEncodings" % (addonSettings.getSetting('ipaddress'), addonSettings.getSetting('port')))  
+        url = "%s/mediabrowser/Videos/ActiveEncodings" % server  
         url = url + '?DeviceId=' + txt_mac
         self.downloadUtils.downloadUrl(url, type="DELETE")           
     
@@ -112,8 +115,12 @@ class Player( xbmc.Player ):
         playMethod = data.get("playmethod")
         currentPosition = data.get("currentPosition")
         positionTicks = str(int(currentPosition * 10000000))
-                
-        url = ("http://%s:%s/mediabrowser/Sessions/Playing/Stopped" % (addonSettings.getSetting('ipaddress'), addonSettings.getSetting('port')))  
+        
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        server = WINDOW.getProperty('server%s' % username)
+
+        url = "%s/mediabrowser/Sessions/Playing/Stopped" % server  
             
         url = url + "?itemId=" + item_id
 
@@ -150,8 +157,12 @@ class Player( xbmc.Player ):
             subtitleindex = data.get("SubtitleStreamIndex")
             playMethod = data.get("playmethod")
             paused = data.get("paused")
+
+            WINDOW = xbmcgui.Window(10000)
+            username = WINDOW.getProperty('currUser')
+            server = WINDOW.getProperty('server%s' % username)
             
-            url = ("http://%s:%s/mediabrowser/Sessions/Playing/Progress" % (addonSettings.getSetting('ipaddress'), addonSettings.getSetting('port')))  
+            url = "%s/mediabrowser/Sessions/Playing/Progress" % server  
                 
             url = url + "?itemId=" + item_id
 
@@ -229,9 +240,12 @@ class Player( xbmc.Player ):
             if(item_id == None or len(item_id) == 0):
                 self.printDebug("emby Service -> onPlayBackStarted : No info for current playing file", 0)
                 return
-        
-            url = ("http://%s:%s/mediabrowser/Sessions/Playing" % (addonSettings.getSetting('ipaddress'), addonSettings.getSetting('port')))  
-            
+
+            username = WINDOW.getProperty('currUser')
+            server = WINDOW.getProperty('server%s' % username)
+
+            url = "%s/mediabrowser/Sessions/Playing" % server
+
             url = url + "?itemId=" + item_id
 
             url = url + "&canSeek=true"
@@ -296,11 +310,10 @@ class Player( xbmc.Player ):
                 id = WINDOW.getProperty("virtualstrm")
                 type = WINDOW.getProperty("virtualstrmtype")
                 addon = xbmcaddon.Addon(id='plugin.video.emby')
-                port = addon.getSetting('port')
-                host = addon.getSetting('ipaddress')
-                server = host + ":" + port        
-                userid = self.downloadUtils.getUserId()
-                watchedurl = 'http://' + server + '/mediabrowser/Users/' + userid + '/PlayedItems/' + id
+                username = WINDOW.getProperty('currUser')
+                userid = WINDOW.getProperty('userId%s' % username)
+                server = WINDOW.getProperty('server%s' % username)
+                watchedurl = "%s/mediabrowser/Users/%s/PlayedItems/%s" % (server, userid, id)
                 self.downloadUtils.downloadUrl(watchedurl, postBody="", type="POST")
                 librarySync.updatePlayCount(id,type)
             except: pass
@@ -327,17 +340,18 @@ class Player( xbmc.Player ):
           
             # if its an episode see if autoplay is enabled
             if addonSettings.getSetting("autoPlaySeason")=="true" and type=="Episode":
-                    port = addonSettings.getSetting('port')
-                    host = addonSettings.getSetting('ipaddress')
-                    server = host + ":" + port
-                    userid = self.downloadUtils.getUserId()
+                    WINDOW = xbmcgui.Window( 10000 )
+                    username = WINDOW.getProperty('currUser')
+                    userid = WINDOW.getProperty('userId%s' % username)
+                    server = WINDOW.getProperty('server%s' % username)
                     # add remaining unplayed episodes if applicable
                     MB3Episode = ReadEmbyDB().getItem(item_id)
                     userData = MB3Episode["UserData"]
                     if userData!=None and userData["Played"]==True:
                         pDialog = xbmcgui.DialogProgress()
                         seasonId = MB3Episode["SeasonId"]
-                        jsonData = self.downloadUtils.downloadUrl("http://" + server + "/mediabrowser/Users/" + userid + "/Items?ParentId=" + seasonId + "&ImageTypeLimit=1&Limit=1&SortBy=SortName&SortOrder=Ascending&Filters=IsUnPlayed&IncludeItemTypes=Episode&IsVirtualUnaired=false&Recursive=true&IsMissing=False&format=json", suppress=False, popup=1 )     
+                        url = "%s/mediabrowser/Users/%s/Items?ParentId=%s&ImageTypeLimit=1&Limit=1&SortBy=SortName&SortOrder=Ascending&Filters=IsUnPlayed&IncludeItemTypes=Episode&IsVirtualUnaired=false&Recursive=true&IsMissing=False&format=json" % (server, userid, seasonId)
+                        jsonData = self.downloadUtils.downloadUrl(url, suppress=False, popup=1 )     
                         if(jsonData != ""):
                             seasonData = json.loads(jsonData)
                             if seasonData.get("Items") != None:
@@ -362,5 +376,3 @@ class Player( xbmc.Player ):
                                     totalTime = xbmc.Player().getTotalTime()
                                 
                                 PlaybackUtils().PLAYAllEpisodes(seasonData.get("Items"))  
-            
-

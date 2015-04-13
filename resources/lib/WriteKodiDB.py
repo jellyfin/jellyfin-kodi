@@ -33,13 +33,14 @@ class WriteKodiDB():
 
         if(mb3Id != None):
             addon = xbmcaddon.Addon(id='plugin.video.emby')
-            port = addon.getSetting('port')
-            host = addon.getSetting('ipaddress')
-            server = host + ":" + port        
-            downloadUtils = DownloadUtils()
-            userid = downloadUtils.getUserId()           
+            WINDOW = xbmcgui.Window(10000)
+            username = WINDOW.getProperty('currUser')
+            userid = WINDOW.getProperty('userId%s' % username)
+            server = WINDOW.getProperty('server%s' % username)     
+            
+            downloadUtils = DownloadUtils()       
         
-            watchedurl = 'http://' + server + '/mediabrowser/Users/' + userid + '/PlayedItems/' + mb3Id
+            watchedurl = "%s/mediabrowser/Users/%s/PlayedItems/%s" % (server, userid, mb3Id)
             utils.logMsg("Emby","watchedurl -->" + watchedurl)
             if playcount != 0:
                 downloadUtils.downloadUrl(watchedurl, postBody="", type="POST")
@@ -48,11 +49,12 @@ class WriteKodiDB():
         
     def updateMovieToKodiLibrary_Batched(self, MBitem, KodiItem,connection, cursor):
         addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username) 
+        
         downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()
         
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
@@ -111,7 +113,7 @@ class WriteKodiDB():
         #trailer link
         trailerUrl = None
         if MBitem.get("LocalTrailerCount") != None and MBitem.get("LocalTrailerCount") > 0:
-            itemTrailerUrl = "http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + MBitem.get("Id") + "/LocalTrailers?format=json"
+            itemTrailerUrl = "%s/mediabrowser/Users/%s/Items/%s/LocalTrailers?format=json" % (server, userid, MBitem.get("Id"))
             jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=False, popup=0 )
             if(jsonData != ""):
                 trailerItem = json.loads(jsonData)
@@ -207,11 +209,12 @@ class WriteKodiDB():
     def updateMovieToKodiLibrary(self, MBitem, KodiItem, connection, cursor):
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port        
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)       
+        
         downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()
         
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
@@ -263,7 +266,7 @@ class WriteKodiDB():
         #trailer link
         trailerUrl = None
         if MBitem.get("LocalTrailerCount") != None and MBitem.get("LocalTrailerCount") > 0:
-            itemTrailerUrl = "http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + MBitem.get("Id") + "/LocalTrailers?format=json"
+            itemTrailerUrl = "%s/mediabrowser/Users/%s/Items/%s/LocalTrailers?format=json" % (server, userid, MBitem.get("Id"))
             jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=False, popup=0 )
             if(jsonData != ""):
                 trailerItem = json.loads(jsonData)
@@ -684,11 +687,12 @@ class WriteKodiDB():
         #TODO: PR at Kodi team for a addMovie endpoint on their API
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
+
         downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()
         
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
@@ -752,7 +756,7 @@ class WriteKodiDB():
         
         trailerUrl = None
         if MBitem.get("LocalTrailerCount") != None and MBitem.get("LocalTrailerCount") > 0:
-            itemTrailerUrl = "http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + MBitem.get("Id") + "/LocalTrailers?format=json"
+            itemTrailerUrl = "%s/mediabrowser/Users/%s/Items/%s/LocalTrailers?format=json" % (server, userid, MBitem.get("Id"))
             jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=False, popup=0 )
             if(jsonData != ""):
                 trailerItem = json.loads(jsonData)

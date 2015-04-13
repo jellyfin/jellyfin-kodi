@@ -23,7 +23,11 @@ clientInfo = ClientInformation()
 class PlayUtils():
 
     def getPlayUrl(self, server, id, result):
-    
+
+      WINDOW = xbmcgui.Window(10000)
+      username = WINDOW.getProperty('currUser')
+      server = WINDOW.getProperty('server%s' % username)
+
       addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
       # if the path is local and depending on the video quality play we can direct play it do so-
       if self.isDirectPlay(result) == True:
@@ -47,7 +51,7 @@ class PlayUtils():
             if ("apple.com" in playurl):
               playurl += '?|User-Agent=%s' % USER_AGENT
             if addonSettings.getSetting('playFromStream') == "true":
-              playurl = 'http://' + server + '/mediabrowser/Videos/' + id + '/stream?static=true'
+              playurl = "%s/mediabrowser/Videos/%s/stream?static=true" % (server, id)
               mediaSources = result.get("MediaSources")
               if(mediaSources != None):
                 if mediaSources[0].get('DefaultAudioStreamIndex') != None:
@@ -58,10 +62,10 @@ class PlayUtils():
       else:
           #No path or has a path but not sufficient network so transcode
           if result.get("Type") == "Audio":
-            playurl = 'http://' + server + '/mediabrowser/Audio/' + id + '/stream.mp3'
+            playurl = "%s/mediabrowser/Audio/%s/stream.mp3" % (server, id)
           else:
             txt_mac = clientInfo.getMachineId()
-            playurl = 'http://' + server + '/mediabrowser/Videos/' + id + '/master.m3u8?mediaSourceId=' + id
+            playurl = "%s/mediabrowser/Videos/%s/master.m3u8?mediaSourceId=%s" % (server, id, id)
             playurl = playurl + '&videoCodec=h264'
             playurl = playurl + '&AudioCodec=aac,ac3'
             playurl = playurl + '&deviceId=' + txt_mac
@@ -87,7 +91,7 @@ class PlayUtils():
             #xbmc.log("emby isDirectPlay MediaStreams codecs: %s forceTranscodingCodecs: %s, common: %s" % (codecs, forceTranscodingCodecsSet, commonCodecs))
             if commonCodecs:
                 return False
-	
+  
         if (self.fileExists(result) or (result.get("LocationType") == "FileSystem" and self.isNetworkQualitySufficient(result) == True and self.isLocalPath(result) == False)):
             return True
         else:
@@ -179,4 +183,3 @@ class PlayUtils():
            
         # default to not local 
         return False
-      

@@ -275,8 +275,10 @@ class WebSocketThread(threading.Thread):
     def run(self):
     
         addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
-        mb3Host = addonSettings.getSetting('ipaddress')
-        mb3Port = addonSettings.getSetting('port')
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        server = WINDOW.getProperty('server%s' % username)
+        host = WINDOW.getProperty('server_%s' % username)
         
         if(self.logLevel >= 1):
             websocket.enableTrace(True)        
@@ -287,8 +289,12 @@ class WebSocketThread(threading.Thread):
             self.logMsg("Could not retrieve WebSocket port, can not run WebScoket Client")
             return
         '''
+        if "https" in server:
+            webSocketUrl = "wss://%s/mediabrowser" % host
+        else:
+            webSocketUrl = "ws://%s/mediabrowser" % host
         # Make a call to /System/Info. WebSocketPortNumber is the port hosting the web socket.
-        webSocketUrl = "ws://" +  mb3Host + ":" + mb3Port + "/mediabrowser"
+        #webSocketUrl = "ws://" + host + "/mediabrowser"
         self.logMsg("WebSocket URL : " + webSocketUrl)
         self.client = websocket.WebSocketApp(webSocketUrl,
                                     on_message = self.on_message,

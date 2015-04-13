@@ -15,13 +15,12 @@ class ReadEmbyDB():
     def getMovies(self, id, fullinfo = False, fullSync = True, itemList = []):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
         
         downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()
 
         if fullSync:
             sortstring = "&SortBy=SortName"
@@ -33,9 +32,9 @@ class ReadEmbyDB():
                 sortstring = "&Limit=20&SortBy=DateCreated"
             
         if fullinfo:
-            url = server + '/mediabrowser/Users/' + userid + '/items?ParentId=' + id + sortstring + '&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=Movie&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1'
+            url = "%s/mediabrowser/Users/%s/items?ParentId=%s%s&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=Movie&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1" % (server, userid, id, sortstring)
         else:
-            url = server + '/mediabrowser/Users/' + userid + '/items?ParentId=' + id + sortstring + '&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Movie&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1'
+            url = "%s/mediabrowser/Users/%s/items?ParentId=%s%s&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Movie&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1" % (server, userid, id, sortstring)
 
         jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=0)
         if jsonData != None and jsonData != "":
@@ -56,13 +55,12 @@ class ReadEmbyDB():
     def getMusicVideos(self, fullinfo = False, fullSync = True):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
         
         downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()
 
         if not fullSync:
             sortstring = "&Limit=20&SortBy=DateCreated"
@@ -70,9 +68,9 @@ class ReadEmbyDB():
             sortstring = "&SortBy=SortName"
         
         if fullinfo:
-            url = server + '/mediabrowser/Users/' + userid + '/items?' + sortstring + '&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=MusicVideo&format=json&ImageTypeLimit=1'
+            url = "%s/mediabrowser/Users/%s/items?%s&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=MusicVideo&format=json&ImageTypeLimit=1" % (server, userid, sortstring)
         else:
-            url = server + '/mediabrowser/Users/' + userid + '/items?' + sortstring + '&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=MusicVideo&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1'
+            url = "%s/mediabrowser/Users/%s/items?%s&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=MusicVideo&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1" % (server, userid, sortstring)
         
         jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=0)
         if jsonData != None and jsonData != "":
@@ -85,15 +83,15 @@ class ReadEmbyDB():
     def getItem(self, id):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
         
         downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()
 
-        jsonData = downloadUtils.downloadUrl("http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + id + "?format=json&ImageTypeLimit=1", suppress=False, popup=1 )     
+        url = "%s/mediabrowser/Users/%s/Items/%s?format=json&ImageTypeLimit=1" % (server, userid, id)
+        jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=1 )     
         if jsonData != None and jsonData != "":
             result = json.loads(jsonData)
 
@@ -102,15 +100,15 @@ class ReadEmbyDB():
     def getFullItem(self, id):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
         
         downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()
 
-        jsonData = downloadUtils.downloadUrl("http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + id + "?format=json", suppress=False, popup=1 )     
+        url = "%s/mediabrowser/Users/%s/Items/%s?format=json" % (server, userid, id)
+        jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=1 )     
         if jsonData != None and jsonData != "":
             result = json.loads(jsonData)
 
@@ -119,13 +117,12 @@ class ReadEmbyDB():
     def getTVShows(self, id, fullinfo = False, fullSync = False):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
         
         downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()
 
         if not fullSync:
             sortstring = "&Limit=20&SortBy=DateCreated"
@@ -134,9 +131,9 @@ class ReadEmbyDB():
         
         
         if fullinfo:
-            url = server + '/mediabrowser/Users/' + userid + '/Items?ParentId=' + id  + sortstring + '&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1'
+            url = "%s/mediabrowser/Users/%s/Items?ParentId=%s%s&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1" % (server, userid, id, sortstring)
         else:
-            url = server + '/mediabrowser/Users/' + userid + '/Items?ParentId=' + id  + sortstring + '&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1'
+            url = "%s/mediabrowser/Users/%s/Items?ParentId=%s%s&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1" % (server, userid, id, sortstring)
         
         jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=0)
         if jsonData != None and jsonData != "":
@@ -149,15 +146,14 @@ class ReadEmbyDB():
     def getTVShowSeasons(self, tvShowId):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
         
         downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()
 
-        url = 'http://' + server + '/Shows/' + tvShowId + '/Seasons?UserId=' + userid + '&format=json&ImageTypeLimit=1'
+        url = "%s/Shows/%s/Seasons?UserId=%s&format=json&ImageTypeLimit=1" % (server, tvShowId, userid)
         
         jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=0)
         if jsonData != None and jsonData != "":
@@ -191,18 +187,17 @@ class ReadEmbyDB():
     def getEpisodes(self, showId, fullinfo = False):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
         
-        downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()   
+        downloadUtils = DownloadUtils()  
         
         if fullinfo:
-            url = server + '/mediabrowser/Users/' + userid + '/Items?ParentId=' + showId + '&IsVirtualUnaired=false&IsMissing=False&SortBy=SortName&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1'
+            url = "%s/mediabrowser/Users/%s/Items?ParentId=%s&IsVirtualUnaired=false&IsMissing=False&SortBy=SortName&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1" % (server, userid, showId)
         else:
-            url = server + '/mediabrowser/Users/' + userid + '/Items?ParentId=' + showId + '&IsVirtualUnaired=false&IsMissing=False&SortBy=SortName&Fields=Name,SortName,CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1'
+            url = "%s/mediabrowser/Users/%s/Items?ParentId=%s&IsVirtualUnaired=false&IsMissing=False&SortBy=SortName&Fields=Name,SortName,CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1" % (server, userid, showId)
         
         jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=0)
         
@@ -217,22 +212,21 @@ class ReadEmbyDB():
     def getLatestEpisodes(self, fullinfo = False, itemList = []):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
         
-        downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()   
+        downloadUtils = DownloadUtils() 
         
         limitString = "Limit=20&SortBy=DateCreated&"
         if(len(itemList) > 0): # if we want a certain list specify it
             limitString = "Ids=" + ",".join(itemList) + "&"
         
         if fullinfo:
-            url = server + '/mediabrowser/Users/' + userid + '/Items?' + limitString + 'IsVirtualUnaired=false&IsMissing=False&Fields=ParentId,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1'
+            url = "%s/mediabrowser/Users/%s/Items?%sIsVirtualUnaired=false&IsMissing=False&Fields=ParentId,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1" % (server, userid, limitString)
         else:
-            url = server + '/mediabrowser/Users/' + userid + '/Items?' + limitString + 'IsVirtualUnaired=false&IsMissing=False&Fields=ParentId,Name,SortName,CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1'
+            url = "%s/mediabrowser/Users/%s/Items?%sIsVirtualUnaired=false&IsMissing=False&Fields=ParentId,Name,SortName,CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1" % (server, userid, limitString)
         
         jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=0)
         
@@ -246,15 +240,16 @@ class ReadEmbyDB():
     
     def getCollections(self, type):
         #Build a list of the user views
-        userid = DownloadUtils().getUserId()  
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
+
         downloadUtils = DownloadUtils()
         
         try:
-            jsonData = downloadUtils.downloadUrl("http://" + server + "/mediabrowser/Users/" + userid + "/Items/Root?format=json")
+            url = "%s/mediabrowser/Users/%s/Items/Root?format=json" % (server, userid)
+            jsonData = downloadUtils.downloadUrl(url)
         except Exception, msg:
             error = "Get connect : " + str(msg)
             xbmc.log (error)
@@ -267,8 +262,8 @@ class ReadEmbyDB():
         
         parentid = result.get("Id")
         
-        htmlpath = ("http://%s/mediabrowser/Users/" % server)
-        jsonData = downloadUtils.downloadUrl(htmlpath + userid + "/items?ParentId=" + parentid + "&Sortby=SortName&format=json")
+        htmlpath = "%s/mediabrowser/Users/%s/items?ParentId=%s&Sortby=SortName&format=json" % (server, userid, parentid)
+        jsonData = downloadUtils.downloadUrl(htmlpath)
         collections=[]
         
         if(jsonData == ""):
@@ -293,13 +288,12 @@ class ReadEmbyDB():
     
     def getViewCollections(self, type):
         #Build a list of the user views
-        userid = DownloadUtils().getUserId()  
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
         
-        viewsUrl = server + "/mediabrowser/Users/" + userid + "/Views?format=json&ImageTypeLimit=1"
+        viewsUrl = "%s/mediabrowser/Users/%s/Views?format=json&ImageTypeLimit=1" % (server, userid)
         jsonData = DownloadUtils().downloadUrl(viewsUrl, suppress=False, popup=0 )
         collections=[]
         
@@ -309,7 +303,7 @@ class ReadEmbyDB():
 
             for view in views:
                 if view.get("Type") == 'UserView': # Need to grab the real main node
-                    newViewsUrl = server + '/mediabrowser/Users/' + userid + '/items?ParentId=' + view.get("Id") + '&SortBy=SortName&SortOrder=Ascending&format=json&ImageTypeLimit=1'
+                    newViewsUrl = "%s/mediabrowser/Users/%s/items?ParentId=%s&SortBy=SortName&SortOrder=Ascending&format=json&ImageTypeLimit=1" % (server, userid, view.get("Id"))
                     jsonData = DownloadUtils().downloadUrl(newViewsUrl, suppress=False, popup=0 )
                     if(jsonData != ""):
                         newViews = json.loads(jsonData)
@@ -334,15 +328,14 @@ class ReadEmbyDB():
     def getBoxSets(self):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
         
-        downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()   
+        downloadUtils = DownloadUtils()  
         
-        url = server + '/mediabrowser/Users/' + userid + '/Items?SortBy=SortName&IsVirtualUnaired=false&IsMissing=False&Fields=Name,SortName,CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=BoxSet&format=json&ImageTypeLimit=1'
+        url = "%s/mediabrowser/Users/%s/Items?SortBy=SortName&IsVirtualUnaired=false&IsMissing=False&Fields=Name,SortName,CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=BoxSet&format=json&ImageTypeLimit=1" % (server, userid)
         
         jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=0)
         
@@ -355,15 +348,14 @@ class ReadEmbyDB():
     def getMoviesInBoxSet(self,boxsetId):
         result = None
         
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
         
         downloadUtils = DownloadUtils()
-        userid = downloadUtils.getUserId()   
         
-        url = server + '/mediabrowser/Users/' + userid + '/Items?ParentId=' + boxsetId + '&Fields=ItemCounts&format=json&ImageTypeLimit=1'
+        url = "%s/mediabrowser/Users/%s/Items?ParentId=%s&Fields=ItemCounts&format=json&ImageTypeLimit=1" % (server, userid, boxsetId)
         
         jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=0)
         
@@ -372,4 +364,3 @@ class ReadEmbyDB():
             if(result.has_key('Items')):
                 result = result['Items']
         return result
-        

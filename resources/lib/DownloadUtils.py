@@ -101,13 +101,12 @@ class DownloadUtils():
         self.logMsg("postcapabilities called")
         
         # Set Capabilities
-        mb3Port = self.addonSettings.getSetting('port')
-        mb3Host = self.addonSettings.getSetting('ipaddress')
+        server = self.getServer()
         clientInfo = ClientInformation()
         machineId = clientInfo.getMachineId()
         
         # get session id
-        url = "http://" + mb3Host + ":" + mb3Port + "/mediabrowser/Sessions?DeviceId=" + machineId + "&format=json"
+        url = "%s/mediabrowser/Sessions?DeviceId=%s&format=json" % (server, machineId)
         self.logMsg("Session URL : " + url);
         jsonData = self.downloadUrl(url)
         self.logMsg("Session JsonData : " + jsonData)
@@ -122,7 +121,7 @@ class DownloadUtils():
         #supportedCommands = "Play,Playstate,DisplayContent,GoHome,SendString,GoToSettings,DisplayMessage,PlayNext"
         supportedCommands = "Play,Playstate,SendString,DisplayMessage,PlayNext"
         
-        url = "http://" + mb3Host + ":" + mb3Port + "/mediabrowser/Sessions/Capabilities?Id=" + sessionId + "&PlayableMediaTypes=" + playableMediaTypes + "&SupportedCommands=" + supportedCommands + "&SupportsMediaControl=True"
+        url = "%s/mediabrowser/Sessions/Capabilities?Id=%s&PlayableMediaTypes=%s&SupportedCommands=%s&SupportsMediaControl=True" % (server, sessionId, playableMediaTypes, supportedCommands)
         postData = {}
         #postData["Id"] = sessionId;
         #postData["PlayableMediaTypes"] = "Video";
@@ -132,89 +131,6 @@ class DownloadUtils():
         self.logMsg("Capabilities Data : " + stringdata)
         
         self.downloadUrl(url, postBody=stringdata, type="POST")
-
-    '''def authenticate(self, retreive=True):
-    
-        WINDOW = xbmcgui.Window(10000)
-        self.addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
-        username = self.addonSettings.getSetting('username')
-        
-        token = WINDOW.getProperty("AccessToken" + username)
-        if(token != None and token != ""):
-            self.logMsg("DownloadUtils -> Returning saved (WINDOW) AccessToken for user:" + username + " token:" + token,2)
-            return token
-        
-        token = self.addonSettings.getSetting("AccessToken" + username)
-        if(token != None and token != ""):
-            WINDOW.setProperty("AccessToken" + username, token)
-            self.logMsg("DownloadUtils -> Returning saved (SETTINGS) AccessToken for user:" + username + " token:" + token,2)
-            return token        
-        
-        port = self.addonSettings.getSetting("port")
-        host = self.addonSettings.getSetting("ipaddress")
-        if(host == None or host == "" or host == "<none>" or port == None or port == ""):
-            return ""
-        
-        if(retreive == False):
-            return ""
-        
-        url = "http://" + host + ":" + port + "/mediabrowser/Users/AuthenticateByName?format=json"
-    
-        clientInfo = ClientInformation()
-        txt_mac = clientInfo.getMachineId()
-        version = clientInfo.getVersion()
-        
-        # get user info
-        jsonData = self.downloadUrl("http://" + host + ":" + port + "/mediabrowser/Users/Public?format=json", authenticate=False)
-        users = []
-        if(jsonData != ""):
-            users = json.loads(jsonData)
-        userHasPassword = False
-        for user in users:
-            name = user.get("Name")
-            if(username == name):
-                if(user.get("HasPassword") == True):
-                    userHasPassword = True
-                break
-        
-        password = ""
-        if(userHasPassword):
-            password = xbmcgui.Dialog().input("Enter Password for user : " + username)
-            
-        if (password != ""):   
-            sha1 = hashlib.sha1(password)
-            sha1 = sha1.hexdigest()
-        else:
-            sha1 = 'da39a3ee5e6b4b0d3255bfef95601890afd80709'
-        
-        messageData = "username=" + username + "&password=" + sha1
-
-        resp = self.downloadUrl(url, postBody=messageData, type="POST", authenticate=False)
-
-        result = None
-        accessToken = None
-        try:
-            xbmc.log("Auth_Reponce: " + str(resp))
-            result = json.loads(resp)
-            accessToken = result.get("AccessToken")
-        except:
-            pass
-
-        if(result != None and accessToken != None):
-            userID = result.get("User").get("Id")
-            self.logMsg("User Authenticated : " + accessToken)
-            WINDOW.setProperty("AccessToken" + username, accessToken)
-            WINDOW.setProperty("userid" + username, userID)
-            self.addonSettings.setSetting("AccessToken" + username, accessToken)
-            self.addonSettings.setSetting("userid" + username, userID)
-            return accessToken
-        else:
-            self.logMsg("User NOT Authenticated")
-            WINDOW.setProperty("AccessToken" + username, "")
-            WINDOW.setProperty("userid" + username, "")
-            self.addonSettings.setSetting("AccessToken" + username, "")
-            self.addonSettings.setSetting("userid" + username, "")
-            return ""     '''       
 
     def imageUrl(self, id, type, index, width, height):
     

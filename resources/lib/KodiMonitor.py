@@ -25,9 +25,6 @@ class Kodi_Monitor(xbmc.Monitor):
     #as well as detect when a library item has been deleted to pass the delete to the Emby server
     def onNotification  (self,sender,method,data):
         addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port
         downloadUtils = DownloadUtils()
         print "onNotification:" + method + ":" + sender + ":" + str(data)
         #player started playing an item - 
@@ -45,16 +42,20 @@ class Kodi_Monitor(xbmc.Monitor):
                            
                             WINDOW = xbmcgui.Window( 10000 )
                             
-                            userid = downloadUtils.getUserId()
-                            jsonData = downloadUtils.downloadUrl("http://" + server + "/mediabrowser/Users/" + userid + "/Items/" + embyid + "?format=json&ImageTypeLimit=1", suppress=False, popup=1 )     
+                            username = WINDOW.getProperty('currUser')
+                            userid = WINDOW.getProperty('userId%s' % username)
+                            server = WINDOW.getProperty('server%s' % username)
+
+                            url = "%s/mediabrowser/Users/%s/Items/%s?format=json&ImageTypeLimit=1" % (server, userid, embyid)
+                            jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=1 )     
                             result = json.loads(jsonData)
                             userData = result.get("UserData")
-                            
+
                             playurl = PlayUtils().getPlayUrl(server, embyid, result)
-                            
-                            watchedurl = 'http://' + server + '/mediabrowser/Users/'+ userid + '/PlayedItems/' + embyid
-                            positionurl = 'http://' + server + '/mediabrowser/Users/'+ userid + '/PlayingItems/' + embyid
-                            deleteurl = 'http://' + server + '/mediabrowser/Items/' + embyid
+
+                            watchedurl = "%s/mediabrowser/Users/%s/PlayedItems/%s" % (server, userid, embyid)
+                            positionurl = "%s/mediabrowser/Users/%s/PlayingItems/%s" % (server, userid, embyid)
+                            deleteurl = "%s/mediabrowser/Items/%s" % (server, embyid)
 
                             # set the current playing info
                             WINDOW.setProperty(playurl+"watchedurl", watchedurl)
