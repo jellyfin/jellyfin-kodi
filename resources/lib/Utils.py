@@ -154,20 +154,17 @@ def removeDirectory(path):
         
 def reset():
 
-    WINDOW = xbmcgui.Window( 10000 )
-    username = WINDOW.getProperty('currUser')
-
-    user_delete = False
-    return_value = xbmcgui.Dialog().yesno("Warning", "Are you sure you want to reset your local database?")
+    return_value = xbmcgui.Dialog().yesno("Warning", "Are you sure you want to reset your local Kodi database?")
 
     if return_value == 0:
         return
 
     # Ask if user information should be deleted too.
-    return_user = xbmcgui.Dialog().yesno("Warning", "Do you wish to erase your saved Emby user information for %s?" % username)
+    return_user = xbmcgui.Dialog().yesno("Warning", "Reset all Emby Addon settings?")
 
+    delete_settings = False
     if return_user == 1:
-        user_delete = True
+        delete_settings = True
     
     # first stop any db sync
     WINDOW = xbmcgui.Window( 10000 )
@@ -175,6 +172,7 @@ def reset():
     
     count = 0
     while(WINDOW.getProperty("SyncDatabaseRunning") == "true"):
+        xbmc.log("Sync Running, will wait : " + str(count))
         count += 1
         if(count > 10):
             dialog = xbmcgui.Dialog()
@@ -199,11 +197,11 @@ def reset():
     # reset the install run flag
     WINDOW.setProperty("SyncInstallRunDone", "false")
 
-    if (user_delete == True):
+    if (delete_settings == True):
         addondir = xbmc.translatePath(addonSettings.getAddonInfo('profile'))
         dataPath = os.path.join(addondir + "settings.xml")
         xbmcvfs.delete(dataPath)
-        xbmc.log("Deleted saved user information for: %s" % username)
+        xbmc.log("Deleting : settings.xml")
 
     dialog = xbmcgui.Dialog()
     dialog.ok('Emby Reset', 'Database reset has completed, Kodi will now restart to apply the changes.')

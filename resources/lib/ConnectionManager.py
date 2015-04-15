@@ -128,12 +128,6 @@ class ConnectionManager():
             xbmc.log("No user selected.")
             xbmc.executebuiltin('Addon.OpenSettings(%s)' % self.addonId)
             return
-
-        #TV Show specual as season 100
-        setSpecialAction = xbmcgui.Dialog().yesno("TV Show Specials Handling", "Use season 100 for TV Show Specials?")
-        if setSpecialAction == 1:
-            self.logMsg("TV Show Specials will be assigned season 100", 0)
-            addon.setSetting("useSeason100ForSpecials", "true")
             
         # Option to play from http
         setPlayback = xbmcgui.Dialog().yesno("Playback option", "Play your files using HTTP?")

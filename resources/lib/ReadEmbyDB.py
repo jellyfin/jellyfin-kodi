@@ -160,28 +160,7 @@ class ReadEmbyDB():
             result = json.loads(jsonData)
             if(result.has_key('Items')):
                 result = result['Items']
-                result = self.changeSeasonSpecialToSeason100(result)
 
-        return result
-
-    def changeSeasonSpecialToSeason100(self, result):
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        if(addon.getSetting("useSeason100ForSpecials") != "true"):
-            return result
-            
-        for item in result:
-            if(item != None and item.get("IndexNumber") != None and item.get("IndexNumber") == 0):
-                item["IndexNumber"] = 100
-        return result
-    
-    def changeEpisodeSpecialToSeason100(self, result):
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        if(addon.getSetting("useSeason100ForSpecials") != "true"):
-            return result
-            
-        for item in result:
-            if(item != None and item.get("ParentIndexNumber") != None and item.get("ParentIndexNumber") == 0):
-                item["ParentIndexNumber"] = 100
         return result
     
     def getEpisodes(self, showId, fullinfo = False):
@@ -205,7 +184,6 @@ class ReadEmbyDB():
             result = json.loads(jsonData)
             if(result.has_key('Items')):
                 result = result['Items']
-                result = self.changeEpisodeSpecialToSeason100(result)
                 
         return result
     
@@ -234,7 +212,6 @@ class ReadEmbyDB():
             result = json.loads(jsonData)
             if(result.has_key('Items')):
                 result = result['Items']
-                result = self.changeEpisodeSpecialToSeason100(result)
                 
         return result
     

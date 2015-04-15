@@ -377,8 +377,8 @@ class WriteKodiDB():
         
         #set Filename (will update the filename in db if changed)
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
-        self.setKodiFilename(KodiItem["episodeid"], KodiItem["file"], playurl, "episode", MBitem["Id"], connection, cursor)
-
+        changes |= self.setKodiFilename(KodiItem["episodeid"], KodiItem["file"], playurl, "episode", MBitem["Id"], connection, cursor)
+        
         #update common properties
         if KodiItem["runtime"] == 0:
             changes |= self.updateProperty(KodiItem,"runtime",(int(timeInfo.get('Duration'))*60),"episode")
@@ -399,7 +399,11 @@ class WriteKodiDB():
             
         if MBitem.get("ParentIndexNumber") != None:
             season = int(MBitem.get("ParentIndexNumber"))
+            #print "ParentIndexNumber:" + str(season)
             changes |= self.updateProperty(KodiItem,"season",season,"episode")
+            # removed for now as setting c15 and c16 to -1 just shows specials in the special folder only
+            #if(season == 0):
+            #    changes |= self.setSpecialAirsDetails(MBitem, KodiItem, connection, cursor)
         
         if MBitem.get("IndexNumber") != None:
             episode = int(MBitem.get("IndexNumber"))
@@ -955,8 +959,8 @@ class WriteKodiDB():
         cursor.execute("select coalesce(max(idEpisode),0) as episodeid from episode")
         episodeid = cursor.fetchone()[0]
         episodeid = episodeid + 1
-        pathsql="INSERT into episode(idEpisode, idFile, c00, c01, c03, c05, c09, c20, c12, c13, c14, idShow) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-        cursor.execute(pathsql, (episodeid, fileid, title, plot, rating, premieredate, runtime, MBitem["Id"], season, episode, title, showid))
+        pathsql = "INSERT into episode(idEpisode, idFile, c00, c01, c03, c05, c09, c20, c12, c13, c14, idShow, c15, c16) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        cursor.execute(pathsql, (episodeid, fileid, title, plot, rating, premieredate, runtime, MBitem["Id"], season, episode, title, showid, "-1", "-1"))
         
         try:
             connection.commit()
@@ -1090,21 +1094,39 @@ class WriteKodiDB():
                         seasonid = cursor.fetchone()[0]
                         seasonid = seasonid + 1
                         cursor.execute("INSERT into seasons(idSeason, idShow, season) values(?, ?, ?)", (seasonid, tvshowid, season["IndexNumber"]))
+                    else:
+                        seasonid = result[0]
                         
-                        # this is for handling specials as season 100, it allows art to be correctly set form the season 0 Emby data
-                        if(season["IndexNumber"] == 100):
-                            season["IndexNumber"] = 0
-                        
-                        #insert artwork
-                        if API().getArtwork(season, "Thumb") != "":
-                            cursor.execute("INSERT into art(media_id, media_type, type, url) values(?, ?, ?, ?)", (seasonid,"season","landscape",API().getArtwork(season, "Thumb")))
-                        if API().getArtwork(season, "Primary") != "":
-                            cursor.execute("INSERT into art(media_id, media_type, type, url) values(?, ?, ?, ?)", (seasonid,"season","poster",API().getArtwork(season, "Primary")))
-                        if API().getArtwork(season, "Banner") != "":
-                            cursor.execute("INSERT into art(media_id, media_type, type, url) values(?, ?, ?, ?)", (seasonid,"season","banner",API().getArtwork(season, "Banner")))
-
-        connection.commit() 
-    
+                    #update artwork
+                    imageUrl = API().getArtwork(season, "Thumb")
+                    self.updateSeasonArt(imageUrl, seasonid, "landscape", cursor)
+                    
+                    imageUrl = API().getArtwork(season, "Primary")
+                    self.updateSeasonArt(imageUrl, seasonid, "poster", cursor)
+                    
+                    imageUrl = API().getArtwork(season, "Banner")
+                    self.updateSeasonArt(imageUrl, seasonid, "banner", cursor)                    
+                    
+        connection.commit()
+        
+    def updateSeasonArt(self, imageUrl, seasonid, imageType, cursor):
+        updateDone = False
+        if imageUrl != "":
+            cursor.execute("SELECT url FROM art WHERE media_id = ? AND media_type = ? AND type = ?", (seasonid, "season", imageType))
+            result = cursor.fetchone()
+            if(result == None):
+                utils.logMsg("SeasonArt", "Adding Art Link for SeasonId: " + str(seasonid) + " (" + imageUrl + ")")
+                cursor.execute("INSERT INTO art(media_id, media_type, type, url) values(?, ?, ?, ?)", (seasonid, "season", imageType, imageUrl))
+                updateDone = True
+            else:
+                url = result[0];
+                if(url != imageUrl):
+                    utils.logMsg("SeasonArt", "Updating Art Link for SeasonId: " + seasonid + " (" + url + ") -> (" + imageUrl + ")")
+                    cursor.execute("UPDATE art set url = ? WHERE media_id = ? AND media_type = ? AND type = ?", (imageUrl, seasonid, "season", imageType))
+                    updateDone = True
+                    
+        return updateDone
+        
     def setKodiResumePoint(self, id, resume_seconds, total_seconds, fileType):
         #use sqlite to set the resume point while json api doesn't support this yet
         #todo --> submit PR to kodi team to get this added to the jsonrpc api
@@ -1131,6 +1153,46 @@ class WriteKodiDB():
         cursor.execute(bookmarksql, (bookmarkId,fileid,resume_seconds,total_seconds,None,"DVDPlayer",None,1))
         connection.commit()
         cursor.close()
+        
+    '''
+    # removed for now as setting c15 and c16 to -1 looks like it just shows specials in the special folder only 
+    def setSpecialAirsDetails(self, MBitem, KodiItem, connection, cursor):
+        
+        changes = False
+        
+        cursor.execute("SELECT c15, c16 FROM episode WHERE idEpisode = ?",(KodiItem["episodeid"],))
+        result = cursor.fetchone()
+        if(result != None):
+        
+            c15 = -1
+            c16 = -1
+            
+            if(result[0] != None and result[0] != "" and result[0] != "None"):
+                c15 = int(result[0])
+            if(result[1] != None and result[1] != "" and result[1] != "None"):
+                c16 = int(result[1])
+
+            airsBeforeSeasonNumber = MBitem.get("AirsBeforeSeasonNumber")
+            airsBeforeEpisodeNumber = MBitem.get("AirsBeforeEpisodeNumber")
+            #AirsAfterSeasonNumber
+            
+            if(airsBeforeSeasonNumber == None):
+                airsBeforeSeasonNumber = 0
+                
+            if(airsBeforeEpisodeNumber == None):
+                airsBeforeEpisodeNumber = 0
+            
+            if(airsBeforeSeasonNumber != None and airsBeforeEpisodeNumber != None):
+                if(airsBeforeSeasonNumber != c15 or airsBeforeEpisodeNumber != c16):
+                    utils.logMsg("Emby","Special_Airs_Info Kodi: " + str(c15) + " " + str(c16))
+                    utils.logMsg("Emby","Special_Airs_Info Emby : " + str(airsBeforeSeasonNumber) + " " + str(airsBeforeEpisodeNumber))
+                    sql = "UPDATE episode set c15 = ?, c16 = ? WHERE idEpisode = ?"
+                    cursor.execute(sql, (airsBeforeSeasonNumber, airsBeforeEpisodeNumber, KodiItem["episodeid"]))
+                    connection.commit()
+                    changes = True
+                
+        return changes
+    '''
     
     def setKodiFilename(self, id, oldFileName, newFileName, fileType, mbId, connection, cursor):
         #use sqlite to set the filename in DB -- needed to avoid problems with resumepoints etc
