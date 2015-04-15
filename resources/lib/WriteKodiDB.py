@@ -868,7 +868,7 @@ class WriteKodiDB():
         cursor.execute("SELECT idEpisode FROM episode WHERE c20 = ?",(MBitem["Id"],))
         result = cursor.fetchone()
         if result != None:
-            utils.logMsg("Emby", "TV Show already exists in DB : " + MBitem["Id"] + " - " + MBitem["Name"], 2)
+            utils.logMsg("Emby", "Episode already exists in DB : " + MBitem["Id"] + " - " + MBitem["Name"], 2)
             return
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
@@ -931,16 +931,30 @@ class WriteKodiDB():
         
         #get the showid
         cursor.execute("SELECT idShow as showid FROM tvshow WHERE c12 = ?",(MBitem["SeriesId"],))
-        try:
-            showid = cursor.fetchone()[0]
-        except:
+        result = cursor.fetchone()
+        showid = -1
+        if(result == None):
             utils.logMsg("Emby","Error adding episode to Kodi Library, couldn't find show - ID: " + MBitem["Id"] + " - " + MBitem["Name"])
-            actionPerformed = False        
-            return
+            actionPerformed = False
+            return False
+        else:
+            showid = result[0]
+
+        # check season
         season = 0
         if MBitem.get("ParentIndexNumber") != None:
             season = int(MBitem.get("ParentIndexNumber"))
+            utils.logMsg("Emby","Error adding episode to Kodi Library, no ParentIndexNumber - ID: " + MBitem["Id"] + " - " + MBitem["Name"])
+            return False
+            
+        cursor.execute("SELECT idSeason FROM seasons WHERE idShow = ? and season = ?",(showid, season))
+        result = cursor.fetchone()        
+        if(result == None):
+            utils.logMsg("Emby","Error adding episode to Kodi Library, season does not exist - ID: " + MBitem["Id"] + " - " + MBitem["Name"])
+            actionPerformed = False
+            return False
         
+        # build info
         episode = 0
         if MBitem.get("IndexNumber") != None:
             episode = int(MBitem.get("IndexNumber"))
