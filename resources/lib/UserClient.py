@@ -199,25 +199,13 @@ class UserClient(threading.Thread):
         for user in users:
             name = user.get("Name")
             userHasPassword = False
-            userHasPin = False
             if (username == name):
                 # Verify if user has a password
                 if (user.get("HasPassword") == True):
                     userHasPassword = True
-                    # Verify if user enabled easy pin and enabled it's use
-                    if (user.get("HasConfiguredEasyPassword") == True) and (user.get("Configuration")["EnableLocalPassword"] == True):
-                        userHasPin = True
                 # If user has password
-                if (userHasPassword) and (userHasPin == False):
+                if (userHasPassword):
                     password = xbmcgui.Dialog().input("Enter password for user: %s" % username, option=xbmcgui.ALPHANUM_HIDE_INPUT)
-                    # If password dialog is cancelled
-                    if password == "":
-                        self.logMsg("No password entered.", 0)
-                        self.WINDOW.setProperty("Server_status", "Stop")
-                        self.auth = False
-                        return
-                elif (userHasPassword) and (userHasPin):
-                    password = xbmcgui.Dialog().input("Enter easy pin for user: %s" % username, type=xbmcgui.INPUT_NUMERIC)
                     # If password dialog is cancelled
                     if password == "":
                         self.logMsg("No password entered.", 0)
