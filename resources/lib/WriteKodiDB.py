@@ -285,7 +285,7 @@ class WriteKodiDB():
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
         
     def updateTVShowToKodiLibrary( self, MBitem, KodiItem,connection, cursor ):
-        
+
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
@@ -303,22 +303,21 @@ class WriteKodiDB():
         
         changes = False
       
-        
         #set Filename
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
         #make sure that the path always ends with a slash
         playurl = playurl + "/"
         self.setKodiFilename(KodiItem["tvshowid"], KodiItem["file"], playurl, "tvshow", MBitem["Id"], connection, cursor)
-               
+   
         #update/check all artwork
         changes |= self.updateArtWork(KodiItem,MBitem)
-        
+
         #update common properties
         if MBitem.get("PremiereDate") != None:
             premieredatelist = (MBitem.get("PremiereDate")).split("T")
             premieredate = premieredatelist[0]
             changes |= self.updateProperty(KodiItem,"premiered",premieredate,"tvshow")
-            
+
         changes |= self.updatePropertyArray(KodiItem,"tag",MBitem.get("Tag"),"tvshow")        
         changes |= self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"tvshow")
         changes |= self.updateProperty(KodiItem,"lastplayed",MBitem.get("LastPlayedDate"),"tvshow")
@@ -330,10 +329,8 @@ class WriteKodiDB():
         changes |= self.updateProperty(KodiItem,"title",utils.convertEncoding(MBitem["Name"]),"tvshow")
         changes |= self.updateProperty(KodiItem,"plot",utils.convertEncoding(API().getOverview(MBitem)),"tvshow")
         
-        
-        if MBitem.get("ProviderIds") != None:
-            if MBitem.get("ProviderIds").get("Imdb") != None:
-                changes |= self.updateProperty(KodiItem,"imdbnumber",MBitem.get("ProviderIds").get("Imdb"),"tvshow")
+        # we use this to store the Emby ID so make sure we use that
+        changes |= self.updateProperty(KodiItem, "imdbnumber", MBitem.get("Id"), "tvshow")
         
         changes |= self.updatePropertyArray(KodiItem,"genre",MBitem.get("Genres"),"tvshow")
         
@@ -343,7 +340,7 @@ class WriteKodiDB():
             changes |= self.updatePropertyArray(KodiItem,"studio",studios,"tvshow")
         
         # FIXME --> ProductionLocations not returned by MB3 server !?
-        changes |= self.updatePropertyArray(KodiItem,"country",MBitem.get("ProductionLocations"),"tvshow")
+        changes |= self.updatePropertyArray(KodiItem, "country", MBitem.get("ProductionLocations"), "tvshow")
         
         #add actors
         changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"),"tvshow", connection, cursor)
@@ -353,7 +350,7 @@ class WriteKodiDB():
         
         if changes:
             utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
-            
+        
         return changes
                   
     def updateEpisodeToKodiLibrary( self, MBitem, KodiItem, connection, cursor ):
@@ -672,7 +669,7 @@ class WriteKodiDB():
             jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": %s}, "id": 1 }'
 
         pendingChanges = False
-        if propertyCollection != None:   
+        if (propertyCollection != None and KodiItem.get(propertyName) != None):   
             currentvalues = set(KodiItem[propertyName])
             for item in propertyCollection:
                 if not item in currentvalues:
@@ -944,6 +941,7 @@ class WriteKodiDB():
         season = 0
         if MBitem.get("ParentIndexNumber") != None:
             season = int(MBitem.get("ParentIndexNumber"))
+        else:
             utils.logMsg("Emby","Error adding episode to Kodi Library, no ParentIndexNumber - ID: " + MBitem["Id"] + " - " + MBitem["Name"])
             return False
             

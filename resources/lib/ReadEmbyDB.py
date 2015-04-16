@@ -107,7 +107,7 @@ class ReadEmbyDB():
         
         downloadUtils = DownloadUtils()
 
-        url = "%s/mediabrowser/Users/%s/Items/%s?format=json" % (server, userid, id)
+        url = "%s/mediabrowser/Users/%s/Items/%s?format=json&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview" % (server, userid, id)
         jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=1 )     
         if jsonData != None and jsonData != "":
             result = json.loads(jsonData)

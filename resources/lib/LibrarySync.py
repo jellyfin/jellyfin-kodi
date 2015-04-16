@@ -299,11 +299,10 @@ class LibrarySync():
 
             for view in views:
             
-            
                 progressTitle = "Sync DB : Processing " + view.get('title') + " " + str(viewCurrent) + " of " + str(viewCount)
                 
                 # incremental sync --> new episodes only
-                if not fullsync:
+                if fullsync == False:
                     
                     latestMBEpisodes = ReadEmbyDB().getLatestEpisodes(fullinfo = True, itemList = itemList)
                     utils.logMsg("Sync TV", "Inc Sync Started on : " + str(len(latestMBEpisodes)) + " : " + str(itemList), 1)
@@ -311,28 +310,57 @@ class LibrarySync():
                     if latestMBEpisodes != None:
                         allKodiTvShowsIds = set(ReadKodiDB().getKodiTvShowsIds(True))
                         
+                        # get included TV Shows
+                        showList = []
+                        for episode in latestMBEpisodes:
+                            if(episode["SeriesId"] not in showList):
+                                showList.append(episode["SeriesId"])
+                        
+                        utils.logMsg("Incremental TV Sync", "Included TV Show List : " + str(showList), 0)
+                        
+                        if(pDialog != None):
+                            pDialog.update(0, progressTitle)
+                            total = len(showList) + 1
+                            count = 1                           
+                        
+                        # process included TV Shows
+                        for showID in showList:
+                        
+                            embyTvShow = ReadEmbyDB().getFullItem(showID)
+                        
+                            if(showID not in allKodiTvShowsIds):
+                                utils.logMsg("Incremental TV Sync", "Adding TV Show : " + embyTvShow.get("Name"), 1)
+                                WriteKodiDB().addTVShowToKodiLibrary(embyTvShow, connection, cursor)
+                            
+                            kodiTvShow = ReadKodiDB().getKodiTVShow(showID)
+                            utils.logMsg("Incremental TV Sync", "Updating  TV Show : " + embyTvShow.get("Name"), 1)
+                            WriteKodiDB().updateTVShowToKodiLibrary(embyTvShow, kodiTvShow, connection, cursor)
+
+                            # update progress bar
+                            if(pDialog != None):
+                                percentage = int(((float(count) / float(total)) * 100))
+                                pDialog.update(percentage, progressTitle, "Processing TV Shows : " + str(count))
+                                count += 1
+                        
                         if(pDialog != None):
                             pDialog.update(0, progressTitle)
                             total = len(latestMBEpisodes) + 1
-                            count = 1                     
-                        
+                            count = 1
+                            
                         # process new episodes
-                        for episode in latestMBEpisodes:
-                            if episode["SeriesId"] in allKodiTvShowsIds:
-                                #only process tvshows that already exist in the db at incremental updates
-                                
-                                if(self.ShouldStop(pDialog)):
-                                    return False                
-    
-                                WriteKodiDB().addEpisodeToKodiLibrary(episode, connection, cursor)
-                                progressAction = "Adding"
-                                totalItemsAdded += 1                 
-                                
-                                # update progress bar
-                                if(pDialog != None):
-                                    percentage = int(((float(count) / float(total)) * 100))
-                                    pDialog.update(percentage, progressTitle, progressAction + " Episode: " + str(count))
-                                    count += 1    
+                        for episode in latestMBEpisodes:                               
+                            if(self.ShouldStop(pDialog)):
+                                return False                
+
+                            WriteKodiDB().addEpisodeToKodiLibrary(episode, connection, cursor)
+                            progressAction = "Adding"
+                            totalItemsAdded += 1                 
+                            
+                            # update progress bar
+                            if(pDialog != None):
+                                percentage = int(((float(count) / float(total)) * 100))
+                                pDialog.update(percentage, progressTitle, progressAction + " Episode: " + str(count))
+                                count += 1    
                         
                         #process updates
                         if(pDialog != None):
@@ -342,34 +370,34 @@ class LibrarySync():
                             count = 1
                                     
                         for episode in latestMBEpisodes:
-                            if episode["SeriesId"] in allKodiTvShowsIds:
-                                #only process tvshows that already exist in the db at incremental updates
-                                allKodiTVShows = ReadKodiDB().getKodiTvShows(False)
-                                kodishow = allKodiTVShows.get(episode["SeriesId"],None)
-                                kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],True,True)
-                                
-                                if(self.ShouldStop(pDialog)):
-                                    return False   
-    
-                                userData = API().getUserData(episode)
-                                WINDOW.setProperty("EmbyUserKey" + userData.get("Key"), episode.get('Id') + ";;" + episode.get("Type"))
-    
-                                #we have to compare the lists somehow
-                                comparestring1 = str(episode.get("ParentIndexNumber")) + "-" + str(episode.get("IndexNumber"))
-    
-                                if kodiEpisodes != None:
-                                    KodiItem = kodiEpisodes.get(comparestring1, None)
-                                    if(KodiItem != None): 
-                                        WriteKodiDB().updateEpisodeToKodiLibrary(episode, KodiItem, connection, cursor)
-                                            
-                                if(self.ShouldStop(pDialog)):
-                                    return False                        
-    
-                                # update progress bar
-                                if(pDialog != None):
-                                    percentage = int(((float(count) / float(total)) * 100))
-                                    pDialog.update(percentage, progressTitle, "Updating Episode: " + str(count))
-                                    count += 1    
+                            if(self.ShouldStop(pDialog)):
+                                return False                           
+                            allKodiTVShows = ReadKodiDB().getKodiTvShows(False)
+                            kodishow = allKodiTVShows.get(episode["SeriesId"],None)
+                            kodiEpisodes = ReadKodiDB().getKodiEpisodes(kodishow["tvshowid"],True,True)
+                            
+                            if(self.ShouldStop(pDialog)):
+                                return False   
+
+                            userData = API().getUserData(episode)
+                            WINDOW.setProperty("EmbyUserKey" + userData.get("Key"), episode.get('Id') + ";;" + episode.get("Type"))
+
+                            #we have to compare the lists somehow
+                            comparestring1 = str(episode.get("ParentIndexNumber")) + "-" + str(episode.get("IndexNumber"))
+
+                            if kodiEpisodes != None:
+                                KodiItem = kodiEpisodes.get(comparestring1, None)
+                                if(KodiItem != None): 
+                                    WriteKodiDB().updateEpisodeToKodiLibrary(episode, KodiItem, connection, cursor)
+                                        
+                            if(self.ShouldStop(pDialog)):
+                                return False                        
+
+                            # update progress bar
+                            if(pDialog != None):
+                                percentage = int(((float(count) / float(total)) * 100))
+                                pDialog.update(percentage, progressTitle, "Updating Episode: " + str(count))
+                                count += 1    
                         
                 
                 # full sync --> Tv shows and Episodes
@@ -390,6 +418,7 @@ class LibrarySync():
                         total = len(tvShowData) + 1
                         count = 1
                         
+                    # add TV Shows
                     for item in tvShowData:
                         if item.get('IsFolder') and item.get('RecursiveItemCount') != 0:
                             allTVShows.append(item["Id"])
@@ -410,13 +439,42 @@ class LibrarySync():
                                 pDialog.update(percentage, progressTitle, "Adding Tv Show: " + str(count))
                                 count += 1                        
                             
-                    #process episodes first before updating tvshows
-                    allEpisodes = list()
+                    if(pDialog != None):
+                        progressTitle = "Sync DB : Processing TV Shows"
+                        pDialog.update(0, progressTitle, "")
+                        total = len(viewTVShows) + 1
+                        count = 1                    
                     
-                    showTotal = len(viewTVShows)
-                    showCurrent = 1
-                    
+                    # update TV Shows
+                    allKodiTVShows = ReadKodiDB().getKodiTvShows(True)
+                    for item in tvShowData:
+                        if item.get('IsFolder'):
+                            item['Tag'] = []
+                            item['Tag'].append(view.get('title'))
+                            if allKodiTVShows != None:
+                                kodishow = allKodiTVShows.get(item["Id"],None)
+                            else:
+                                kodishow = None
+                            
+                            if(kodishow != None):
+                                updated = WriteKodiDB().updateTVShowToKodiLibrary(item,kodishow,connection, cursor)
+                                if(updated):
+                                    totalItemsUpdated += 1
+                                
+                            if(self.ShouldStop(pDialog)):
+                                return False
+                                
+                            # update progress bar
+                            if(pDialog != None):
+                                percentage = int(((float(count) / float(total)) * 100))
+                                pDialog.update(percentage, progressTitle, "Updating Tv Show: " + str(count))
+                                count += 1                              
+
+                                
                     # do episode adds
+                    allEpisodes = list()
+                    showTotal = len(viewTVShows)
+                    showCurrent = 1                    
                     for tvshow in viewTVShows:
                         
                         episodeData = ReadEmbyDB().getEpisodes(tvshow,True)                       
@@ -447,38 +505,6 @@ class LibrarySync():
                                     
                             showCurrent += 1
                                             
-                                        
-                    if(pDialog != None):
-                        progressTitle = "Sync DB : Processing TV Shows"
-                        pDialog.update(0, progressTitle, "")
-                        total = len(viewTVShows) + 1
-                        count = 1                    
-                    
-                    #process updates at TV Show level
-                    allKodiTVShows = ReadKodiDB().getKodiTvShows(True)
-                    for item in tvShowData:
-                        if item.get('IsFolder'):
-                            item['Tag'] = []
-                            item['Tag'].append(view.get('title'))
-                            if allKodiTVShows != None:
-                                kodishow = allKodiTVShows.get(item["Id"],None)
-                            else:
-                                kodishow = None
-                            
-                            if(kodishow != None):
-                                updated = WriteKodiDB().updateTVShowToKodiLibrary(item,kodishow,connection, cursor)
-                                if(updated):
-                                    totalItemsUpdated += 1
-                                
-                            if(self.ShouldStop(pDialog)):
-                                return False
-                                
-                            # update progress bar
-                            if(pDialog != None):
-                                percentage = int(((float(count) / float(total)) * 100))
-                                pDialog.update(percentage, progressTitle, "Updating Tv Show: " + str(count))
-                                count += 1                        
-    
                     # do episode updates
                     showCurrent = 1
                     for tvshow in viewTVShows:
