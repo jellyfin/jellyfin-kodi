@@ -948,7 +948,7 @@ class WriteKodiDB():
         cursor.execute("SELECT idSeason FROM seasons WHERE idShow = ? and season = ?",(showid, season))
         result = cursor.fetchone()        
         if(result == None):
-            utils.logMsg("Emby","Error adding episode to Kodi Library, season does not exist - ID: " + MBitem["Id"] + " - " + MBitem["Name"])
+            utils.logMsg("Emby","Error adding episode to Kodi Library, season does not exist - ShowId: " + str(showid) + " SeasonNo: " + str(season) + " EmbyId: " + MBitem["Id"] + " Name: " + MBitem["Name"])
             actionPerformed = False
             return False
         
@@ -1097,15 +1097,16 @@ class WriteKodiDB():
         seasonData = ReadEmbyDB().getTVShowSeasons(MBitem["Id"])
         if seasonData != None:
             for season in seasonData:
-                if season.has_key("IndexNumber"):
-                    cursor.execute("SELECT idSeason as seasonid FROM seasons WHERE idShow = ? and season = ?",(tvshowid,season["IndexNumber"]))
+                seasonNum = season.get("IndexNumber")
+                if seasonNum != None and seasonNum >= 0 and seasonNum <= 1000:
+                    cursor.execute("SELECT idSeason as seasonid FROM seasons WHERE idShow = ? and season = ?",(tvshowid, seasonNum))
                     result = cursor.fetchone()
                     if result == None:
                         #create the season
                         cursor.execute("select coalesce(max(idSeason),0) as seasonid from seasons")
                         seasonid = cursor.fetchone()[0]
                         seasonid = seasonid + 1
-                        cursor.execute("INSERT into seasons(idSeason, idShow, season) values(?, ?, ?)", (seasonid, tvshowid, season["IndexNumber"]))
+                        cursor.execute("INSERT into seasons(idSeason, idShow, season) values(?, ?, ?)", (seasonid, tvshowid, seasonNum))
                     else:
                         seasonid = result[0]
                         
@@ -1133,7 +1134,7 @@ class WriteKodiDB():
             else:
                 url = result[0];
                 if(url != imageUrl):
-                    utils.logMsg("SeasonArt", "Updating Art Link for SeasonId: " + seasonid + " (" + url + ") -> (" + imageUrl + ")")
+                    utils.logMsg("SeasonArt", "Updating Art Link for SeasonId: " + str(seasonid) + " (" + url + ") -> (" + imageUrl + ")")
                     cursor.execute("UPDATE art set url = ? WHERE media_id = ? AND media_type = ? AND type = ?", (imageUrl, seasonid, "season", imageType))
                     updateDone = True
                     
