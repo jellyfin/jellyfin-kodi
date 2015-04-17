@@ -337,7 +337,9 @@ class API():
         
         if imageTag == None:
             imageTag = "e3ab56fe27d389446754d0fb04910a34"
-        artwork = "%s/mediabrowser/Items/%s/Images/%s/%s/%s/original/%s/%s/%s?%s" % (server, id, type, index, imageTag, width, height, played, query)
+            
+        artwork = "%s/mediabrowser/Items/%s/Images/%s/%s?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, id, type, index, width, height, imageTag, query)
+        #artwork = "%s/mediabrowser/Items/%s/Images/%s/%s/%s/original/%s/%s/%s?%s" % (server, id, type, index, imageTag, width, height, played, query) <- broken
         if addonSettings.getSetting('disableCoverArt')=='true':
             artwork = artwork + "&EnableImageEnhancers=false"
         

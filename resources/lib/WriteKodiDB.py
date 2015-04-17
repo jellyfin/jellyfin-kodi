@@ -205,85 +205,7 @@ class WriteKodiDB():
         
         if(changes):
             utils.logMsg("Updated musicvideo to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"], level=0)
-            
-    def updateMovieToKodiLibrary(self, MBitem, KodiItem, connection, cursor):
-        
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        WINDOW = xbmcgui.Window(10000)
-        username = WINDOW.getProperty('currUser')
-        userid = WINDOW.getProperty('userId%s' % username)
-        server = WINDOW.getProperty('server%s' % username)       
-        
-        downloadUtils = DownloadUtils()
-        
-        timeInfo = API().getTimeInfo(MBitem)
-        userData=API().getUserData(MBitem)
-        people = API().getPeople(MBitem)
-        genre = API().getGenre(MBitem)
-        studios = API().getStudios(MBitem)
-        mediaStreams=API().getMediaStreams(MBitem)
-        
-        thumbPath = API().getArtwork(MBitem, "Primary")
-        
-        changes = False
-        
-        #update/check all artwork
-        changes |= self.updateArtWork(KodiItem,MBitem)
-
-        #update common properties
-        changes |= self.updateProperty(KodiItem,"year",MBitem.get("ProductionYear"),"movie")
-        changes |= self.updateProperty(KodiItem,"mpaa",MBitem.get("OfficialRating"),"movie")
-        changes |= self.updateProperty(KodiItem,"lastplayed",MBitem.get("LastPlayedDate"),"movie")
-        changes |= self.updatePropertyArray(KodiItem,"tag",MBitem.get("Tag"),"movie")
-        
-        if MBitem.get("CriticRating") != None:
-            changes |= self.updateProperty(KodiItem,"rating",int(MBitem.get("CriticRating"))/10,"movie")
-
-        changes |= self.updateProperty(KodiItem,"plotoutline",MBitem.get("ShortOverview"),"movie")
-        changes |= self.updateProperty(KodiItem,"set",MBitem.get("TmdbCollectionName"),"movie")
-        changes |= self.updateProperty(KodiItem,"sorttitle",MBitem.get("SortName"),"movie")
-
-        if MBitem.get("ProviderIds") != None:
-            if MBitem.get("ProviderIds").get("Imdb") != None:
-                changes |= self.updateProperty(KodiItem,"imdbnumber",MBitem.get("ProviderIds").get("Imdb"),"movie")
-
-        # FIXME --> Taglines not returned by MB3 server !?
-        if MBitem.get("TagLines") != None:
-            changes |= self.updateProperty(KodiItem,"tagline",MBitem.get("TagLines")[0],"movie")      
-        
-        changes |= self.updatePropertyArray(KodiItem,"writer",people.get("Writer"),"movie")
-        changes |= self.updatePropertyArray(KodiItem,"director",people.get("Director"),"movie")
-        changes |= self.updatePropertyArray(KodiItem,"genre",MBitem.get("Genres"),"movie")
-
-        if(studios != None):
-            for x in range(0, len(studios)):
-                studios[x] = studios[x].replace("/", "&")
-            changes |= self.updatePropertyArray(KodiItem,"studio",studios,"movie")
-            
-        # FIXME --> ProductionLocations not returned by MB3 server !?
-        changes |= self.updatePropertyArray(KodiItem,"country",MBitem.get("ProductionLocations"),"movie")
-
-        #trailer link
-        trailerUrl = None
-        if MBitem.get("LocalTrailerCount") != None and MBitem.get("LocalTrailerCount") > 0:
-            itemTrailerUrl = "%s/mediabrowser/Users/%s/Items/%s/LocalTrailers?format=json" % (server, userid, MBitem.get("Id"))
-            jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=False, popup=0 )
-            if(jsonData != ""):
-                trailerItem = json.loads(jsonData)
-                trailerUrl = PlayUtils().getPlayUrl(server, trailerItem[0].get("Id"), MBitem)
-                trailerUrl = utils.convertEncoding(trailerUrl)
-                changes |= self.updateProperty(KodiItem,"trailer",trailerUrl,"movie")
-
-        #add actors
-        changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"),"movie", connection, cursor)
-        
-        #set Filename
-        playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
-        self.setKodiFilename(KodiItem["movieid"], KodiItem["file"], playurl, "movie", connection, cursor)
-        
-        if changes:
-            utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
-        
+                   
     def updateTVShowToKodiLibrary( self, MBitem, KodiItem,connection, cursor ):
 
         addon = xbmcaddon.Addon(id='plugin.video.emby')
@@ -353,8 +275,7 @@ class WriteKodiDB():
         
         return changes
                   
-    def updateEpisodeToKodiLibrary( self, MBitem, KodiItem, connection, cursor ):
-        
+    def updateEpisodeToKodiLibrary( self, MBitem, KodiItem, connection, cursor ):       
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
@@ -396,7 +317,6 @@ class WriteKodiDB():
             
         if MBitem.get("ParentIndexNumber") != None:
             season = int(MBitem.get("ParentIndexNumber"))
-            #print "ParentIndexNumber:" + str(season)
             changes |= self.updateProperty(KodiItem,"season",season,"episode")
             # removed for now as setting c15 and c16 to -1 just shows specials in the special folder only
             #if(season == 0):
@@ -480,7 +400,6 @@ class WriteKodiDB():
         
     # adds or updates artwork to the given Kodi file in database
     def updateArtWork(self,KodiItem,MBitem):
-        
         item_type=str(MBitem.get("Type"))
         
         if item_type == "Series":
@@ -1071,9 +990,9 @@ class WriteKodiDB():
 
         try:
             connection.commit()
-            utils.logMsg("Emby","Added TV Show to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+            utils.logMsg("Emby","Added TV Show to Kodi Library: " + MBitem["Id"] + " - " + MBitem["Name"])
         except:
-            utils.logMsg("Emby","Error adding tvshow to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+            utils.logMsg("Emby","Error adding tvshow to Kodi Library: " + MBitem["Id"] + " - " + MBitem["Name"])
             actionPerformed = False
         
     def deleteTVShowFromKodiLibrary(self, id):
@@ -1217,6 +1136,9 @@ class WriteKodiDB():
         
         oldFileName = utils.convertEncoding(oldFileName)
         newFileName = utils.convertEncoding(newFileName)
+        
+        # this is required to make sure the paths match
+        oldFileName = oldFileName.replace("\\", "/")
         
         # only perform changes if the path actually differs
         if oldFileName != newFileName:

@@ -172,7 +172,6 @@ class LibrarySync():
                         WINDOW.setProperty("EmbyUserKey" + userData.get("Key"), item.get('Id') + ";;" + item.get("Type"))                            
                         
                         if(kodimovie != None):
-                            #WriteKodiDB().updateMovieToKodiLibrary(item, kodimovie)
                             updated = WriteKodiDB().updateMovieToKodiLibrary_Batched(item, kodimovie, connection, cursor)
                             if(updated):
                                 totalItemsUpdated += 1
