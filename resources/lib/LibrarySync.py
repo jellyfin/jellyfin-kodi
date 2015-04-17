@@ -382,11 +382,8 @@ class LibrarySync():
                             userData = API().getUserData(episode)
                             WINDOW.setProperty("EmbyUserKey" + userData.get("Key"), episode.get('Id') + ";;" + episode.get("Type"))
 
-                            #we have to compare the lists somehow
-                            comparestring1 = str(episode.get("ParentIndexNumber")) + "-" + str(episode.get("IndexNumber"))
-
                             if kodiEpisodes != None:
-                                KodiItem = kodiEpisodes.get(comparestring1, None)
+                                KodiItem = kodiEpisodes.get(episode.get("Id"), None)
                                 if(KodiItem != None): 
                                     WriteKodiDB().updateEpisodeToKodiLibrary(episode, KodiItem, connection, cursor)
                                         
@@ -531,14 +528,13 @@ class LibrarySync():
                             #add episodeId to the list of all episodes for use later on the deletes
                             allMB3EpisodeIds.append(item["Id"])
                             
-                            comparestring1 = str(item.get("ParentIndexNumber")) + "-" + str(item.get("IndexNumber"))
                             matchFound = False
     
                             userData = API().getUserData(item)
                             WINDOW.setProperty("EmbyUserKey" + userData.get("Key"), item.get('Id') + ";;" + item.get("Type"))
                             
                             if kodiEpisodes != None:
-                                KodiItem = kodiEpisodes.get(comparestring1, None)
+                                KodiItem = kodiEpisodes.get(item.get("Id"), None)
                                 if(KodiItem != None):
                                     updated = WriteKodiDB().updateEpisodeToKodiLibrary(item, KodiItem, connection, cursor)
                                     if(updated):
@@ -863,10 +859,9 @@ class LibrarySync():
                                 for episode in episodeData:
     
                                     kodiItem = None
-                                    comparestring1 = str(episode.get("ParentIndexNumber")) + "-" + str(episode.get("IndexNumber"))
                                     matchFound = False
                                     if kodiEpisodes != None:
-                                        kodiItem = kodiEpisodes.get(comparestring1, None)
+                                        kodiItem = kodiEpisodes.get(episode.get("Id"), None)
     
                                     userData=API().getUserData(episode)
                                     timeInfo = API().getTimeInfo(episode)

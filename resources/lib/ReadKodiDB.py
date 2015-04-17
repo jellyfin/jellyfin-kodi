@@ -189,8 +189,7 @@ class ReadKodiDB():
             if(episodes != None):
                 episodeMap = {}
                 for KodiItem in episodes:
-                    key = str(KodiItem["season"]) + "-" + str(KodiItem["episode"])
-                    episodeMap[key] = KodiItem    
+                    episodeMap[KodiItem["uniqueid"]["unknown"]] = KodiItem    
             return episodeMap
         else:
             return episodes
