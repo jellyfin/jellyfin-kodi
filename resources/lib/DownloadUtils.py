@@ -136,7 +136,7 @@ class DownloadUtils():
     
         server = self.getServer()
         
-        return "%s/mediabrowser/Items/%s/Images/%s/%s//e3ab56fe27d389446754d0fb04910a34/original/%s/%s/0" % (server, id, type, index, width, height)
+        return "%s/mediabrowser/Items/%s/Images/%s?MaxWidth=%s&MaxHeight=%s&Index=%s" % (server, id, type, width, height, index)
     
     def getAuthHeader(self, authenticate=True):
         clientInfo = ClientInformation()
