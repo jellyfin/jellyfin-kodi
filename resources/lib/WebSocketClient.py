@@ -190,12 +190,10 @@ class WebSocketThread(threading.Thread):
             if(userDataList != None):
                 for userData in userDataList:
                     self.logMsg("Message : Doing UserDataChanged : UserData : " + str(userData), 0)
-                    userKey = userData.get("Key")
-                    if(userKey != None):
-                        embyItemId = WINDOW.getProperty("EmbyUserKey" + userKey).split(";;")
-                        self.logMsg("Message : Doing UserDataChanged : window data : " + str(embyItemId), 0)
-                        if(embyItemId != None and len(embyItemId) == 2):
-                            LibrarySync().updatePlayCount(embyItemId[0], embyItemId[1])
+                    itemId = userData.get("ItemId")
+                    if(itemId != None):
+                        self.logMsg("Message : Doing UserDataChanged : calling updatePlayCount with ID : " + str(itemId), 0)
+                        LibrarySync().updatePlayCount(itemId)
         
         elif(messageType != None and messageType == "LibraryChanged"):
             foldersAddedTo = data.get("FoldersAddedTo")

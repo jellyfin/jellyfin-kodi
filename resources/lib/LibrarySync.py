@@ -168,8 +168,7 @@ class LibrarySync():
                         else:
                             kodimovie = None
                             
-                        userData = API().getUserData(item)
-                        WINDOW.setProperty("EmbyUserKey" + userData.get("Key"), item.get('Id') + ";;" + item.get("Type"))                            
+                        userData = API().getUserData(item)                       
                         
                         if(kodimovie != None):
                             updated = WriteKodiDB().updateMovieToKodiLibrary_Batched(item, kodimovie, connection, cursor)
@@ -379,7 +378,6 @@ class LibrarySync():
                                 return False   
 
                             userData = API().getUserData(episode)
-                            WINDOW.setProperty("EmbyUserKey" + userData.get("Key"), episode.get('Id') + ";;" + episode.get("Type"))
 
                             if kodiEpisodes != None:
                                 KodiItem = kodiEpisodes.get(episode.get("Id"), None)
@@ -530,7 +528,6 @@ class LibrarySync():
                             matchFound = False
     
                             userData = API().getUserData(item)
-                            WINDOW.setProperty("EmbyUserKey" + userData.get("Key"), item.get('Id') + ";;" + item.get("Type"))
                             
                             if kodiEpisodes != None:
                                 KodiItem = kodiEpisodes.get(item.get("Id"), None)
@@ -793,8 +790,6 @@ class LibrarySync():
                                 userData = API().getUserData(item)
                                 timeInfo = API().getTimeInfo(item)
                                 
-                                WINDOW.setProperty("EmbyUserKey" + userData.get("Key"), item.get('Id') + ";;" + item.get("Type"))
-                                
                                 if kodiItem != None:
                                     kodiresume = int(round(kodiItem['resume'].get("position")))
                                     resume = int(round(float(timeInfo.get("ResumeTime"))))*60
@@ -869,7 +864,6 @@ class LibrarySync():
                                     if kodiItem != None:
                                         WINDOW = xbmcgui.Window( 10000 )
                                         WINDOW.setProperty("episodeid" + str(kodiItem['episodeid']), episode.get('Name') + ";;" + episode.get('Id'))
-                                        WINDOW.setProperty("EmbyUserKey" + userData.get("Key"), episode.get('Id') + ";;" + episode.get("Type"))
                                         WINDOW.setProperty(episode.get('Id'), "episode;;" + str(kodishow["tvshowid"]) + ";;" +str(kodiItem['episodeid']))
                                         kodiresume = int(round(kodiItem['resume'].get("position")))
                                         resume = int(round(float(timeInfo.get("ResumeTime"))))*60
@@ -925,60 +919,62 @@ class LibrarySync():
         
         return True
     
-    def updatePlayCount(self,itemID,type):
+    def updatePlayCount(self, itemID):
         #update playcount of the itemID from MB3 to Kodi library
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         WINDOW = xbmcgui.Window( 10000 )
+        
+        embyItem = ReadEmbyDB().getItem(itemID)
+        if(embyItem == None):
+            return False
+        
+        type = embyItem.get("Type")
+        
         #process movie
-        if type=='Movie':
-            MB3Movie = ReadEmbyDB().getItem(itemID)
-            kodiItem = ReadKodiDB().getKodiMovie(itemID)      
+        if type == 'Movie':
+            kodiItem = ReadKodiDB().getKodiMovie(itemID)     
+
+            if(kodiItem == None):
+                return False
+                
             if(self.ShouldStop(None)):
                 return False
-                            
-            if(MB3Movie == None):
-                return False    
-                    
-            if(kodiItem == None):
-                return False               
-                            
-            userData=API().getUserData(MB3Movie)
-            timeInfo = API().getTimeInfo(MB3Movie)
-            if kodiItem != None:
+ 
+            userData = API().getUserData(embyItem)
+            timeInfo = API().getTimeInfo(embyItem)
                 
-                kodiresume = int(round(kodiItem['resume'].get("position")))
-                resume = int(round(float(timeInfo.get("ResumeTime"))))*60
-                total = int(round(float(timeInfo.get("TotalTime"))))*60
-                if kodiresume != resume:
-                    WriteKodiDB().setKodiResumePoint(kodiItem['movieid'],resume,total,"movie")
-                #write property forced will refresh the item in the list so playcount change is immediately visible
-                WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"movie",True)
-                WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "movie")
+            kodiresume = int(round(kodiItem['resume'].get("position")))
+            resume = int(round(float(timeInfo.get("ResumeTime"))))*60
+            total = int(round(float(timeInfo.get("TotalTime"))))*60
+            if kodiresume != resume:
+                WriteKodiDB().setKodiResumePoint(kodiItem['movieid'],resume,total,"movie")
+            #write property forced will refresh the item in the list so playcount change is immediately visible
+            WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"movie",True)
+            WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "movie")
+                
             if(self.ShouldStop(None)):
                 return False 
                     
         #process episode
-        elif type=='Episode':
+        elif type == 'Episode':
             if(self.ShouldStop(None)):
                 return False                   
                     
-            MB3Episode = ReadEmbyDB().getItem(itemID)
-            kodiItem = ReadKodiDB().getKodiEpisodeByMbItem(MB3Episode["Id"], MB3Episode["SeriesId"])
-            if (MB3Episode != None):
-                userData=API().getUserData(MB3Episode)
-                timeInfo = API().getTimeInfo(MB3Episode)
-                if kodiItem != None:
-                    kodiresume = int(round(kodiItem['resume'].get("position")))
-                    resume = int(round(float(timeInfo.get("ResumeTime"))))*60
-                    total = int(round(float(timeInfo.get("TotalTime"))))*60
-                    if kodiresume != resume:
-                        WriteKodiDB().setKodiResumePoint(kodiItem['episodeid'],resume,total,"episode")
-                    #write property forced will refresh the item in the list so playcount change is immediately visible
-                    WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode",True)
-                    WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "episode")                    
-                if(self.ShouldStop(None)):
-                    return False          
+            kodiItem = ReadKodiDB().getKodiEpisodeByMbItem(embyItem["Id"], embyItem["SeriesId"])
+
+            userData = API().getUserData(embyItem)
+            timeInfo = API().getTimeInfo(embyItem)
+            
+            if kodiItem != None:
+                kodiresume = int(round(kodiItem['resume'].get("position")))
+                resume = int(round(float(timeInfo.get("ResumeTime"))))*60
+                total = int(round(float(timeInfo.get("TotalTime"))))*60
+                if kodiresume != resume:
+                    WriteKodiDB().setKodiResumePoint(kodiItem['episodeid'],resume,total,"episode")
+                #write property forced will refresh the item in the list so playcount change is immediately visible
+                WriteKodiDB().updateProperty(kodiItem,"playcount",int(userData.get("PlayCount")),"episode",True)
+                WriteKodiDB().updateProperty(kodiItem,"lastplayed",userData.get("LastPlayedDate"), "episode")       
         
         return True
     

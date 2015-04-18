@@ -90,7 +90,7 @@ class Player( xbmc.Player ):
                     
                 if(refresh_id != None):
                     #report updates playcount and resume status to Kodi and MB3
-                    librarySync.updatePlayCount(item_id,type)
+                    librarySync.updatePlayCount(item_id)
                     
                 
         self.played_information.clear()
@@ -315,7 +315,7 @@ class Player( xbmc.Player ):
                 server = WINDOW.getProperty('server%s' % username)
                 watchedurl = "%s/mediabrowser/Users/%s/PlayedItems/%s" % (server, userid, id)
                 self.downloadUtils.downloadUrl(watchedurl, postBody="", type="POST")
-                librarySync.updatePlayCount(id,type)
+                librarySync.updatePlayCount(id)
             except: pass
         WINDOW.clearProperty("virtualstrm")
             
