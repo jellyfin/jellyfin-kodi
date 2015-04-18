@@ -195,7 +195,6 @@ class ReadKodiDB():
             return episodes
         
     def getKodiEpisodeByMbItem(self, episodeid, tvshowid):
-        xbmc.sleep(sleepVal)
         episode = None
         tvshow = self.getKodiTVShow(tvshowid)
         
@@ -213,6 +212,30 @@ class ReadKodiDB():
 
         return episode
         
+    def getKodiEpisodeByMbItemEx(self, id):        
+        connection = utils.KodiSQL()
+        cursor = connection.cursor()
+        cursor.execute("SELECT idEpisode FROM episode WHERE c20 = ?", (id,))
+        result = cursor.fetchone()
+        kodiId = None
+        if result != None:
+            kodiId = result[0]
+        cursor.close()
+        
+        episode = None
+        if(kodiId != None):
+            print "Kodi Episode ID : " + str(kodiId)
+            json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodeDetails", "params": {"episodeid": %d, "properties": ["playcount", "season", "resume", "episode", "lastplayed", "uniqueid", "file"]}, "id": 1}' %kodiId)
+            #json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodeDetails", "params": {"episodeid": ' + str(kodiId) + ', "properties": ["playcount", "season", "resume", "episode", "lastplayed", "uniqueid", "file"], "sort": {"method": "episode"}}, "id": 1}')
+            jsonobject = json.loads(json_response.decode('utf-8','replace')) 
+            print "Kodi_Item: " + str(jsonobject)
+            if(jsonobject.has_key("result")):
+                result = jsonobject["result"]
+                if(result.has_key("episodedetails")):
+                    episode = result["episodedetails"]
+        
+        return episode
+        
     def getKodiMusicVideo(self, id):
         #returns a single musicvideo from Kodi db selected on MB item ID
         xbmc.sleep(sleepVal)
@@ -225,6 +248,8 @@ class ReadKodiDB():
         if result != None:
             musicvideoid = result[0]
         cursor.close()
+        
+        musicvideo = None
         
         if musicvideoid != None:
             json_response = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMusicVideosDetails", "params": { "musicvideoid": ' + musicvideoid + ', "properties" : ["art", "thumbnail", "fanart", "resume", "runtime", "year", "genre", "studio", "artist", "album", "track","plot", "director", "playcount", "lastplayed", "tag", "file"], "sort": { "order": "ascending", "method": "label", "ignorearticle": true } }, "id": "libMusicVideos"}')

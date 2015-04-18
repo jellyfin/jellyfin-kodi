@@ -204,11 +204,13 @@ class WebSocketThread(threading.Thread):
             self.logMsg("Message : Doing LibraryChanged : Items Removed : " + str(itemsRemoved), 0)
             itemsRemoved = data.get("ItemsRemoved")
             for item in itemsRemoved:
-                WINDOW = xbmcgui.Window( 10000 )
-                itemInfo=WINDOW.getProperty(item)
-                if "episode" in itemInfo:
-                    type, tvshowid, episodeid  = WINDOW.getProperty(item).split(";;")
-                    xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveEpisode", "params": { "episodeid": %i}, "id": 1 }' %int(episodeid))
+                self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteEpisodeFromKodiLibraryByMbId: " + item, 0)
+                WriteKodiDB().deleteEpisodeFromKodiLibraryByMbId(item)
+                self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteMovieFromKodiLibrary: " + item, 0)
+                WriteKodiDB().deleteMovieFromKodiLibrary(item)
+                self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteMusicVideoFromKodiLibrary: " + item, 0)
+                WriteKodiDB().deleteMusicVideoFromKodiLibrary(item)
+                    
             # doing adds and updates
             itemsAdded = data.get("ItemsAdded")
             self.logMsg("Message : Doing LibraryChanged : Items Added : " + str(itemsAdded), 0)

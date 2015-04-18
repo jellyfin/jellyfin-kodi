@@ -923,6 +923,15 @@ class WriteKodiDB():
         else:
             utils.logMsg("episode not found in kodi DB",episodeid)        
             
+    def deleteEpisodeFromKodiLibraryByMbId(self, id ):
+        utils.logMsg("deleting episode from Kodi library", id)
+        kodiItem = ReadKodiDB().getKodiEpisodeByMbItemEx(id)
+        if kodiItem != None:
+            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveEpisode", "params": { "episodeid": %i}, "id": 1 }' %(kodiItem["episodeid"]))            
+            utils.logMsg("episode deleted succesfully!", id)
+        else:
+            utils.logMsg("episode not found in kodi DB", id)  
+            
     def addTVShowToKodiLibrary( self, MBitem, connection, cursor ):
         #adds a Tvshow to Kodi by directly inserting it to the DB while there is no addTvShow available on the json API
         #TODO: PR at Kodi team for a addTvShow endpoint on their API
