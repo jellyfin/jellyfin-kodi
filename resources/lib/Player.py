@@ -9,6 +9,7 @@ import inspect
 import KodiMonitor
 import Utils as utils
 from DownloadUtils import DownloadUtils
+from WebSocketClient import WebSocketThread
 from PlayUtils import PlayUtils
 from ClientInformation import ClientInformation
 from LibrarySync import LibrarySync
@@ -59,6 +60,7 @@ class Player( xbmc.Player ):
     
     def stopAll(self):
 
+        WebSocketThread().processPendingActions()
         if(len(self.played_information) == 0):
             return 
             
@@ -103,7 +105,7 @@ class Player( xbmc.Player ):
         txt_mac = clientInfo.getMachineId()
         url = "%s/mediabrowser/Videos/ActiveEncodings" % server  
         url = url + '?DeviceId=' + txt_mac
-        self.downloadUtils.downloadUrl(url, type="DELETE")           
+        self.downloadUtils.downloadUrl(url, type="DELETE")
     
     def stopPlayback(self, data):
         self.printDebug("stopPlayback called")

@@ -20,6 +20,9 @@ from LibrarySync import LibrarySync
 from WriteKodiDB import WriteKodiDB
 import Utils as utils
 
+pendingUserDataList = []
+pendingItemsToRemove = []
+pendingItemsToUpdate = []
 _MODE_BASICPLAY=12
 
 class WebSocketThread(threading.Thread):
@@ -65,9 +68,7 @@ class WebSocketThread(threading.Thread):
                 self.logMsg("Exception : " + str(e), level=0)
         else:
             self.logMsg("Sending Playback Started NO Object ERROR")
-    '''
 
-    '''
     def playbackStopped(self, itemId, ticks):
         if(self.client != None):
             try:
@@ -133,6 +134,9 @@ class WebSocketThread(threading.Thread):
             self.logMsg("Stopping Client NO Object ERROR")
             
     def on_message(self, ws, message):
+        global pendingUserDataList
+        global pendingItemsToRemove
+        global pendingItemsToUpdate
         self.logMsg("Message : " + str(message), 0)
         result = json.loads(message)
         
@@ -188,12 +192,10 @@ class WebSocketThread(threading.Thread):
             userDataList = data.get("UserDataList")
             self.logMsg("Message : Doing UserDataChanged : UserDataList : " + str(userDataList), 0)
             if(userDataList != None):
-                for userData in userDataList:
-                    self.logMsg("Message : Doing UserDataChanged : UserData : " + str(userData), 0)
-                    itemId = userData.get("ItemId")
-                    if(itemId != None):
-                        self.logMsg("Message : Doing UserDataChanged : calling updatePlayCount with ID : " + str(itemId), 0)
-                        LibrarySync().updatePlayCount(itemId)
+                if xbmc.Player().isPlaying():
+                    pendingUserDataList += userDataList
+                else:
+                    self.user_data_update(userDataList)
         
         elif(messageType != None and messageType == "LibraryChanged"):
             foldersAddedTo = data.get("FoldersAddedTo")
@@ -201,30 +203,48 @@ class WebSocketThread(threading.Thread):
             
             # doing items removed
             itemsRemoved = data.get("ItemsRemoved")
-            self.logMsg("Message : Doing LibraryChanged : Items Removed : " + str(itemsRemoved), 0)
-            itemsRemoved = data.get("ItemsRemoved")
-            for item in itemsRemoved:
-                self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteEpisodeFromKodiLibraryByMbId: " + item, 0)
-                WriteKodiDB().deleteEpisodeFromKodiLibraryByMbId(item)
-                self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteMovieFromKodiLibrary: " + item, 0)
-                WriteKodiDB().deleteMovieFromKodiLibrary(item)
-                self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteMusicVideoFromKodiLibrary: " + item, 0)
-                WriteKodiDB().deleteMusicVideoFromKodiLibrary(item)
-                    
-            # doing adds and updates
             itemsAdded = data.get("ItemsAdded")
-            self.logMsg("Message : Doing LibraryChanged : Items Added : " + str(itemsAdded), 0)
             itemsUpdated = data.get("ItemsUpdated")
-            self.logMsg("Message : Doing LibraryChanged : Items Updated : " + str(itemsUpdated), 0)
             itemsToUpdate = itemsAdded + itemsUpdated
-            if(len(itemsToUpdate) > 0):
-                self.logMsg("Message : Doing LibraryChanged : Processing Added and Updated : " + str(itemsToUpdate), 0)
-                connection = utils.KodiSQL()
-                cursor = connection.cursor()
-                LibrarySync().MoviesSync(connection, cursor, fullsync = False, installFirstRun = False, itemList = itemsToUpdate)
-                LibrarySync().TvShowsSync(connection, cursor, fullsync = False, installFirstRun = False, itemList = itemsToUpdate)
-                cursor.close()
-        
+            self.logMsg("Message : WebSocket LibraryChanged : Items Added : " + str(itemsAdded), 0)
+            self.logMsg("Message : WebSocket LibraryChanged : Items Updated : " + str(itemsUpdated), 0)
+            self.logMsg("Message : WebSocket LibraryChanged : Items Removed : " + str(itemsRemoved), 0)
+
+            if xbmc.Player().isPlaying():
+                pendingItemsToRemove += itemsRemoved
+                pendingItemsToUpdate += itemsToUpdate
+            else:
+                self.remove_items(itemsRemoved)
+                self.update_items(itemsToUpdate)
+
+    def remove_items(self, itemsRemoved):
+        for item in itemsRemoved:
+            self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteEpisodeFromKodiLibraryByMbId: " + item, 0)
+            WriteKodiDB().deleteEpisodeFromKodiLibraryByMbId(item)
+            self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteMovieFromKodiLibrary: " + item, 0)
+            WriteKodiDB().deleteMovieFromKodiLibrary(item)
+            self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteMusicVideoFromKodiLibrary: " + item, 0)
+            WriteKodiDB().deleteMusicVideoFromKodiLibrary(item)
+
+    def update_items(self, itemsToUpdate):
+        # doing adds and updates
+        if(len(itemsToUpdate) > 0):
+            self.logMsg("Message : Doing LibraryChanged : Processing Added and Updated : " + str(itemsToUpdate), 0)
+            connection = utils.KodiSQL()
+            cursor = connection.cursor()
+            LibrarySync().MoviesSync(connection, cursor, fullsync = False, installFirstRun = False, itemList = itemsToUpdate)
+            LibrarySync().TvShowsSync(connection, cursor, fullsync = False, installFirstRun = False, itemList = itemsToUpdate)
+            cursor.close()
+
+    def user_data_update(self, userData):
+    
+        for userData in userDataList:
+            self.logMsg("Message : Doing UserDataChanged : UserData : " + str(userData), 0)
+            itemId = userData.get("ItemId")
+            if(itemId != None):
+                self.logMsg("Message : Doing UserDataChanged : calling updatePlayCount with ID : " + str(itemId), 0)
+                LibrarySync().updatePlayCount(itemId)
+                
     def on_error(self, ws, error):
         self.logMsg("Error : " + str(error))
         #raise
@@ -273,7 +293,6 @@ class WebSocketThread(threading.Thread):
             return -1
 
     def run(self):
-    
         addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
         WINDOW = xbmcgui.Window(10000)
         username = WINDOW.getProperty('currUser')
@@ -310,9 +329,20 @@ class WebSocketThread(threading.Thread):
                 self.logMsg("Client Needs To Restart")
                 if self.KodiMonitor.waitForAbort(5):
                     break
-            
         self.logMsg("Thread Exited")
         
         
-        
-        
+    def processPendingActions(self):
+        global pendingUserDataList
+        global pendingItemsToRemove
+        global pendingItemsToUpdate    
+        if pendingUserDataList != []:
+            self.user_data_update(pendingUserDataList)
+            pendingUserDataList = []
+        if pendingItemsToRemove != []:
+            self.remove_items(pendingItemsToRemove)
+            pendingItemsToRemove = []
+        if pendingItemsToUpdate != []:
+            self.update_items(pendingItemsToUpdate)
+            pendingItemsToUpdate = []
+                            
