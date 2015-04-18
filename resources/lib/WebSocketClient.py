@@ -236,7 +236,7 @@ class WebSocketThread(threading.Thread):
             LibrarySync().TvShowsSync(connection, cursor, fullsync = False, installFirstRun = False, itemList = itemsToUpdate)
             cursor.close()
 
-    def user_data_update(self, userData):
+    def user_data_update(self, userDataList):
     
         for userData in userDataList:
             self.logMsg("Message : Doing UserDataChanged : UserData : " + str(userData), 0)
