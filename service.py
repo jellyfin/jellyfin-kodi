@@ -126,7 +126,8 @@ class Service():
                     else:
                         if self.KodiMonitor.waitForAbort(10):
                             # Abort was requested while waiting. We should exit
-                            break                    
+                            break    
+                        WebSocketThread().processPendingActions()
                     
                 else:
                     xbmc.log("Not authenticated yet")
