@@ -32,15 +32,11 @@ class WriteKodiDB():
         mb3Id = ReadKodiDB().getEmbyIdByKodiId(id, type)
 
         if(mb3Id != None):
-            addon = xbmcaddon.Addon(id='plugin.video.emby')
-            WINDOW = xbmcgui.Window(10000)
-            username = WINDOW.getProperty('currUser')
-            userid = WINDOW.getProperty('userId%s' % username)
-            server = WINDOW.getProperty('server%s' % username)     
+            addon = xbmcaddon.Addon(id='plugin.video.emby')   
             
             downloadUtils = DownloadUtils()       
         
-            watchedurl = "%s/mediabrowser/Users/%s/PlayedItems/%s" % (server, userid, mb3Id)
+            watchedurl = "{server}/mediabrowser/Users/{UserId}/PlayedItems/%s" % mb3Id
             utils.logMsg("Emby","watchedurl -->" + watchedurl)
             if playcount != 0:
                 downloadUtils.downloadUrl(watchedurl, postBody="", type="POST")
@@ -51,8 +47,7 @@ class WriteKodiDB():
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         WINDOW = xbmcgui.Window(10000)
         username = WINDOW.getProperty('currUser')
-        userid = WINDOW.getProperty('userId%s' % username)
-        server = WINDOW.getProperty('server%s' % username) 
+        server = WINDOW.getProperty('server%s' % username)
         
         downloadUtils = DownloadUtils()
         
@@ -113,12 +108,12 @@ class WriteKodiDB():
         #trailer link
         trailerUrl = None
         if MBitem.get("LocalTrailerCount") != None and MBitem.get("LocalTrailerCount") > 0:
-            itemTrailerUrl = "%s/mediabrowser/Users/%s/Items/%s/LocalTrailers?format=json" % (server, userid, MBitem.get("Id"))
-            jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=False, popup=0 )
-            if(jsonData != ""):
-                trailerItem = json.loads(jsonData)
-                if trailerItem[0].get("LocationType") == "FileSystem":
-                    trailerUrl = PlayUtils().getPlayUrl(server, trailerItem[0].get("Id"), trailerItem[0])
+            itemTrailerUrl = "{server}/mediabrowser/Users/{UserId}/Items/%s/LocalTrailers?format=json" % MBitem.get("Id")
+            jsonData = downloadUtils.downloadUrl(itemTrailerUrl)
+            if (jsonData != ""):
+                trailerItem = jsonData
+                if trailerItem[0][u'LocationType'] == "FileSystem":
+                    trailerUrl = PlayUtils().getPlayUrl(server, trailerItem[0][u'Id'], trailerItem[0])
                     trailerUrl = utils.convertEncoding(trailerUrl)
                     self.getPropertyParam_Batched(KodiItem, "trailer", trailerUrl, params)
                 
@@ -417,6 +412,7 @@ class WriteKodiDB():
 
         #update artwork
         changes = False
+        
         artwork = {}
         artwork["thumb"] = API().getArtwork(MBitem, "Primary")
         
@@ -676,11 +672,11 @@ class WriteKodiDB():
         trailerUrl = None
         if MBitem.get("LocalTrailerCount") != None and MBitem.get("LocalTrailerCount") > 0:
             itemTrailerUrl = "%s/mediabrowser/Users/%s/Items/%s/LocalTrailers?format=json" % (server, userid, MBitem.get("Id"))
-            jsonData = downloadUtils.downloadUrl(itemTrailerUrl, suppress=False, popup=0 )
+            jsonData = downloadUtils.downloadUrl(itemTrailerUrl)
             if(jsonData != ""):
-                trailerItem = json.loads(jsonData)
-                if trailerItem[0].get("LocationType") == "FileSystem":
-                    trailerUrl = PlayUtils().getPlayUrl(server, trailerItem[0].get("Id"), trailerItem[0])
+                trailerItem = jsonData
+                if trailerItem[0][u'LocationType'] == "FileSystem":
+                    trailerUrl = PlayUtils().getPlayUrl(server, trailerItem[0][u'Id'], trailerItem[0])
                     trailerUrl = utils.convertEncoding(trailerUrl)
         
         #create the movie
@@ -691,18 +687,13 @@ class WriteKodiDB():
         
         cursor.execute(pathsql, (movieid, fileid, title, plot, shortplot, rating, year, MBitem["Id"], sorttitle, runtime, title, trailerUrl))
         
-        actionPerformed = False
-        
         try:
             connection.commit()
             utils.logMsg("Emby","Added movie to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
-            actionPerformed = True
         except:
             utils.logMsg("Emby","Error adding movie to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
             actionPerformed = False
     
-        return actionPerformed
-        
     def addMusicVideoToKodiLibrary( self, MBitem, connection, cursor  ):
 
         #adds a musicvideo to Kodi by directly inserting it to connectionthe DB while there is no addMusicVideo available on the json API
@@ -772,55 +763,25 @@ class WriteKodiDB():
         pathsql="insert into musicvideo(idMVideo, idFile, c00, c04, c08, c23) values(?, ?, ?, ?, ?, ?)"
         cursor.execute(pathsql, (musicvideoid, fileid, title, runtime, plot, MBitem["Id"]))
         
-        actionPerformed = False
-        
         try:
             connection.commit()
             utils.logMsg("Emby","Added musicvideo to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
-            actionPerformed = True
         except:
             utils.logMsg("Emby","Error adding musicvideo to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
+            actionPerformed = False
     
-        return actionPerformed
-        
     def addEpisodeToKodiLibrary(self, MBitem, connection, cursor):
         
         #adds a Episode to Kodi by directly inserting it to the DB while there is no addEpisode available on the json API
         #TODO: PR at Kodi team for a addEpisode endpoint on their API
-        
-        # check season
-        season = 0
-        if MBitem.get("ParentIndexNumber") != None:
-            season = int(MBitem.get("ParentIndexNumber"))
-        else:
-            utils.logMsg("Emby","Error adding episode to Kodi Library, no ParentIndexNumber - ID: " + MBitem["Id"] + " - " + MBitem["Name"])
-            return False        
         
         # first check the episode is not already in the DB using the Emby ID which is stored in c20
         cursor.execute("SELECT idEpisode FROM episode WHERE c20 = ?",(MBitem["Id"],))
         result = cursor.fetchone()
         if result != None:
             utils.logMsg("Emby", "Episode already exists in DB : " + MBitem["Id"] + " - " + MBitem["Name"], 2)
-            return False
+            return
         
-        # get the showid
-        cursor.execute("SELECT idShow as showid FROM tvshow WHERE c12 = ?",(MBitem["SeriesId"],))
-        result = cursor.fetchone()
-        showid = -1
-        if(result == None):
-            utils.logMsg("Emby","Error adding episode to Kodi Library, couldn't find show - ID: " + MBitem["Id"] + " - " + MBitem["Name"])
-            return False
-        else:
-            showid = result[0]
-
-        # check season
-        cursor.execute("SELECT idSeason FROM seasons WHERE idShow = ? and season = ?",(showid, season))
-        result = cursor.fetchone()        
-        if(result == None):
-            utils.logMsg("Emby","Error adding episode to Kodi Library, season does not exist - ShowId: " + str(showid) + " SeasonNo: " + str(season) + " EmbyId: " + MBitem["Id"] + " Name: " + MBitem["Name"])
-            return False        
-        
-        # do add
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         port = addon.getSetting('port')
         host = addon.getSetting('ipaddress')
@@ -878,7 +839,33 @@ class WriteKodiDB():
             fileid = fileid + 1
             sql="INSERT OR REPLACE into files(idFile, idPath, strFilename, playCount, lastPlayed, dateAdded) values(?, ?, ?, ?, ?, ?)"
             cursor.execute(sql, (fileid,pathid,filename,playcount,lastplayed,dateadded))
-                
+        
+        #get the showid
+        cursor.execute("SELECT idShow as showid FROM tvshow WHERE c12 = ?",(MBitem["SeriesId"],))
+        result = cursor.fetchone()
+        showid = -1
+        if(result == None):
+            utils.logMsg("Emby","Error adding episode to Kodi Library, couldn't find show - ID: " + MBitem["Id"] + " - " + MBitem["Name"])
+            actionPerformed = False
+            return False
+        else:
+            showid = result[0]
+
+        # check season
+        season = 0
+        if MBitem.get("ParentIndexNumber") != None:
+            season = int(MBitem.get("ParentIndexNumber"))
+        else:
+            utils.logMsg("Emby","Error adding episode to Kodi Library, no ParentIndexNumber - ID: " + MBitem["Id"] + " - " + MBitem["Name"])
+            return False
+            
+        cursor.execute("SELECT idSeason FROM seasons WHERE idShow = ? and season = ?",(showid, season))
+        result = cursor.fetchone()        
+        if(result == None):
+            utils.logMsg("Emby","Error adding episode to Kodi Library, season does not exist - ShowId: " + str(showid) + " SeasonNo: " + str(season) + " EmbyId: " + MBitem["Id"] + " Name: " + MBitem["Name"])
+            actionPerformed = False
+            return False
+        
         # build info
         episode = 0
         if MBitem.get("IndexNumber") != None:
@@ -901,17 +888,13 @@ class WriteKodiDB():
         pathsql = "INSERT into episode(idEpisode, idFile, c00, c01, c03, c05, c09, c20, c12, c13, c14, idShow, c15, c16) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         cursor.execute(pathsql, (episodeid, fileid, title, plot, rating, premieredate, runtime, MBitem["Id"], season, episode, title, showid, "-1", "-1"))
         
-        actionPerformed = False
-        
         try:
             connection.commit()
             utils.logMsg("Emby","Added episode to Kodi Library - ID: " + MBitem["Id"] + " - " + MBitem["Name"])
-            actionPerformed = True
         except:
             utils.logMsg("Emby","Error adding episode to Kodi Library - ID: " + MBitem["Id"] + " - " + MBitem["Name"])
-            
-        return actionPerformed
-        
+            actionPerformed = False
+    
     def deleteMovieFromKodiLibrary(self, id ):
         kodiItem = ReadKodiDB().getKodiMovie(id)
         utils.logMsg("deleting movie from Kodi library",id)
@@ -982,7 +965,6 @@ class WriteKodiDB():
         elif "/" in path:
             toplevelpathstr = path.rsplit("/",2)[1]
             toplevelpath = path.replace(toplevelpathstr + "/","")
-            
         cursor.execute("SELECT idPath as tlpathid FROM path WHERE strPath = ?",(toplevelpath,))
         result = cursor.fetchone()
         if result == None:
@@ -1010,16 +992,12 @@ class WriteKodiDB():
         pathsql="insert into tvshowlinkpath(idShow,idPath) values(?, ?)"
         cursor.execute(pathsql, (showid,pathid))
 
-        actionPerformed = False
-        
         try:
             connection.commit()
             utils.logMsg("Emby","Added TV Show to Kodi Library: " + MBitem["Id"] + " - " + MBitem["Name"])
-            actionPerformed = True
         except:
             utils.logMsg("Emby","Error adding tvshow to Kodi Library: " + MBitem["Id"] + " - " + MBitem["Name"])
-
-        return actionPerformed
+            actionPerformed = False
         
     def deleteTVShowFromKodiLibrary(self, id):
         xbmc.sleep(sleepVal)
