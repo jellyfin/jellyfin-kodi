@@ -47,7 +47,7 @@ class Kodi_Monitor(xbmc.Monitor):
                             server = WINDOW.getProperty('server%s' % username)
 
                             url = "%s/mediabrowser/Users/%s/Items/%s?format=json&ImageTypeLimit=1" % (server, userid, embyid)
-                            jsonData = downloadUtils.downloadUrl(url, suppress=False, popup=1 )     
+                            jsonData = downloadUtils.downloadUrl(url)     
                             result = json.loads(jsonData)
                             userData = result.get("UserData")
 
