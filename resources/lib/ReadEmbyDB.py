@@ -182,11 +182,11 @@ class ReadEmbyDB():
     
     def getCollections(self, type):
         #Build a list of the user views
-        downloadUtils = DownloadUtils()
+        doUtils = DownloadUtils()
         
         try:
             url = "{server}/mediabrowser/Users/{UserId}/Items/Root?format=json"
-            result = downloadUtils.downloadUrl(url)
+            result = doUtils.downloadUrl(url)
         except Exception, msg:
             error = "Can't connect: %s" % msg
             xbmc.log(error)
@@ -198,7 +198,7 @@ class ReadEmbyDB():
         parentid = result[u'Id']
         
         url = "{server}/mediabrowser/Users/{UserId}/items?ParentId=%s&Sortby=SortName&format=json" % parentid
-        result = downloadUtils.downloadUrl(url)
+        result = doUtils.downloadUrl(url)
         collections=[]
         
         if (result == ""):
@@ -209,9 +209,11 @@ class ReadEmbyDB():
         for item in result:
             if (item[u'RecursiveItemCount'] != 0):
                 Name = item[u'Name']
-                itemtype = item[u'CollectionType']
-                if itemtype == None or itemtype == "":
+                if u'CollectionType' not in item:
                     itemtype = "movies" # User may not have declared the type
+                else:
+                    itemtype = item[u'CollectionType']
+                    
                 if itemtype == type and Name != "Collections":
                     collections.append({'title': Name,
                                         'type' : itemtype,
@@ -247,9 +249,9 @@ class ReadEmbyDB():
                 if type == None:
                     type = "None" # User may not have declared the type
                 if type == type:
-                    collections.append({'title': Name,
-                                        'type' : type,
-                                        'id'   : view[u'Id']})
+                    collections.append( {'title'      : Name,
+                            'type'           : type,
+                            'id'             : view[u'Id']})
         return collections
     
     def getBoxSets(self):
