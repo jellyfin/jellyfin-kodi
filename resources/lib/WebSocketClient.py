@@ -236,7 +236,7 @@ class WebSocketThread(threading.Thread):
             LibrarySync().TvShowsSync(connection, cursor, fullsync = False, installFirstRun = False, itemList = itemsToUpdate)
             cursor.close()
 
-    def user_data_update(self, userData):
+    def user_data_update(self, userDataList):
     
         for userData in userDataList:
             self.logMsg("Message : Doing UserDataChanged : UserData : " + str(userData), 0)
@@ -268,11 +268,11 @@ class WebSocketThread(threading.Thread):
         messageString = json.dumps(messageData)
         self.logMsg("Opened : " + str(messageString))
         ws.send(messageString)
-        '''
+        
         # Set Capabilities
         xbmc.log("postcapabilities_called")
         downloadUtils = DownloadUtils()
-        downloadUtils.startSession()'''
+        downloadUtils.postcapabilities()
            
         
     def getWebSocketPort(self, host, port):

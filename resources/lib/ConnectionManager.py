@@ -13,7 +13,6 @@ import socket
 import threading
 from datetime import datetime
 
-import Utils as utils
 from DownloadUtils import DownloadUtils
 from UserClient import UserClient
 from ClientInformation import ClientInformation
@@ -22,32 +21,48 @@ from ClientInformation import ClientInformation
 class ConnectionManager():
 
     clientInfo = ClientInformation()
-    uc = UserClient()
+    userClient = UserClient()
     doUtils = DownloadUtils()
 
-    addonName = clientInfo.getAddonName()
-    addonId = clientInfo.getAddonId()
-    addon = xbmcaddon.Addon(id=addonId)
-    WINDOW = xbmcgui.Window(10000)
-
     logLevel = 0
+    addon = None
+    WINDOW = xbmcgui.Window(10000)
 
     def __init__(self):
 
-        self.className = self.__class__.__name__
-        self.__language__ = self.addon.getLocalizedString
-    
-    def logMsg(self, msg, lvl=1):
+        clientInfo = self.clientInfo
 
-        utils.logMsg("%s %s" % (self.addonName, self.className), msg, int(lvl))
+        self.addonId = clientInfo.getAddonId()
+        self.addonName = clientInfo.getAddonName()
+        self.addon = xbmcaddon.Addon(id=self.addonId)
+        self.__language__     = self.addon.getLocalizedString
+    
+    def logMsg(self, msg, level=1):
+        
+        addonName = self.addonName
+        className = self.__class__.__name__
+        s_logLevel = self.userClient.getLogLevel()
+
+        # Attempt to change logLevel live
+        if (self.logLevel != s_logLevel):
+            self.logLevel = s_logLevel
+
+        if (self.logLevel >= level):
+            try:
+                xbmc.log("%s %s -> %s" % (addonName, className, str(msg)))
+            except UnicodeEncodeError:
+                try:
+                    xbmc.log("%s %s -> %s" % (addonName, className, str(msg.encode('utf-8'))))
+                except:
+                    pass
 
     def checkServer(self):
         
         self.WINDOW.setProperty("Server_Checked", "True")
-        self.logMsg("Connection Manager Called", 2)
+        self.logMsg("Connection Manager Called")
         
         addon = self.addon
-        server = self.uc.getServer()
+        server = self.userClient.getServer()
 
         if (server != ""):
             self.logMsg("Server already set", 2)
@@ -63,7 +78,7 @@ class ConnectionManager():
         prefix,ip,port = serverInfo.split(":")
         setServer = xbmcgui.Dialog().yesno(self.__language__(30167), "Proceed with the following server?", self.__language__(30169) + serverInfo)
         
-        if (setServer == 1):
+        if setServer == 1:
             self.logMsg("Server selected. Saving information.", 1)
             addon.setSetting("ipaddress", ip.replace("/", ""))
             addon.setSetting("port", port)
@@ -78,40 +93,39 @@ class ConnectionManager():
         # Get List of public users
         self.logMsg("Getting user list", 1)
         server = ip.replace("/", "") + ":" + port
-        url = "%s/mediabrowser/Users/Public?format=json" % serverInfo
 
         try:
-            result = self.doUtils.downloadUrl(url, authenticate=False)
+            jsonData = self.doUtils.downloadUrl(serverInfo + "/mediabrowser/Users/Public?format=json", authenticate=False)
         except Exception, msg:
-            error = "Unable to connect to %s: %s" % (server, msg)
-            self.logMsg(error, 1)
+            error = "Get User unable to connect to " + server + " : " + str(msg)
+            xbmc.log (error)
             return ""
         
-        if (result == ""):
+        if (jsonData == False):
             return
     
-        self.logMsg("jsonData: %s" % result, 2)
-
+        self.logMsg("jsonData : " + str(jsonData), level=2)
+        result = json.loads(jsonData)
+        
         names = []
         userList = []
         for user in result:
-            name = user[u'Name']
+            name = user.get("Name")
             userList.append(name)
-
-            if(user[u'HasPassword'] == True):
+            if(user.get("HasPassword") == True):
                 name = name + " (Secure)"
             names.append(name)
     
-        self.logMsg("User List: %s" % names, 1)
-        self.logMsg("User List: %s" % userList, 2)
+        self.logMsg("User List: " + str(names))
+        self.logMsg("User List: " + str(userList))
         return_value = xbmcgui.Dialog().select(self.__language__(30200), names)
         
-        if (return_value > -1):
+        if(return_value > -1):
             selected_user = userList[return_value]
-            self.logMsg("Selected User: %s" % selected_user, 1)      
+            self.logMsg("elected User: %s" % selected_user)      
             self.addon.setSetting("username", selected_user)
         else:
-            self.logMsg("No user selected.", 1)
+            xbmc.log("No user selected.")
             xbmc.executebuiltin('Addon.OpenSettings(%s)' % self.addonId)
             return
             
@@ -139,8 +153,8 @@ class ConnectionManager():
         sock.setsockopt(socket.SOL_IP, socket.IP_MULTICAST_LOOP, 1)
         sock.setsockopt(socket.IPPROTO_IP, socket.SO_REUSEADDR, 1)
         
-        self.logMsg("MutliGroup      : %s" % str(MULTI_GROUP), 2);
-        self.logMsg("Sending UDP Data: %s" % MESSAGE, 2);
+        self.logMsg("MutliGroup      : %s" % str(MULTI_GROUP));
+        self.logMsg("Sending UDP Data: %s" % MESSAGE);
         sock.sendto(MESSAGE, MULTI_GROUP)
     
         try:

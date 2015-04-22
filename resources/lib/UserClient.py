@@ -19,22 +19,18 @@ from DownloadUtils import DownloadUtils
 
 class UserClient(threading.Thread):
 
-    # Borg - multiple instances, shared state
-    _shared_state = {}
 
     clientInfo = ClientInformation()
     doUtils = DownloadUtils()
-    KodiMonitor = KodiMonitor.Kodi_Monitor()
-    
     addonName = clientInfo.getAddonName()
-    addonId = clientInfo.getAddonId()
-    addon = xbmcaddon.Addon(id=addonId)
-    WINDOW = xbmcgui.Window(10000)
+    className = None
 
     stopClient = False
     logLevel = 0
+    addon = None
     auth = True
     retry = 0
+    WINDOW = xbmcgui.Window(10000)
 
     currUser = None
     currUserId = None
@@ -44,7 +40,10 @@ class UserClient(threading.Thread):
 
     def __init__(self, *args):
 
-        self.__dict__ = self._shared_state
+        self.KodiMonitor = KodiMonitor.Kodi_Monitor()
+
+        self.addonId = self.clientInfo.getAddonId()
+        self.addon = xbmcaddon.Addon(id=self.addonId)
         self.className = self.__class__.__name__
 
         threading.Thread.__init__(self, *args)
@@ -56,7 +55,7 @@ class UserClient(threading.Thread):
     def getUsername(self):
 
         username = self.addon.getSetting('username')
-
+        
         if (username == ""):
             self.logMsg("No username saved.", 2)
             return ""
@@ -137,19 +136,18 @@ class UserClient(threading.Thread):
 
         # Get public Users
         url = "%s/mediabrowser/Users/Public?format=json" % server
-        result = self.doUtils.downloadUrl(url, authenticate=False)
+        jsonData = self.doUtils.downloadUrl(url, authenticate=False)
         
         users = []
         
-        if (result != ""):
-            users = result
+        if (jsonData != ""):
+            users = json.loads(jsonData)
 
         return users
 
     def loadCurrUser(self):
 
         WINDOW = self.WINDOW
-        doUtils = self.doUtils
         username = self.getUsername()
 
         # Only to be used if token exists
@@ -163,14 +161,6 @@ class UserClient(threading.Thread):
         WINDOW.setProperty("server%s" % username, self.currServer)
         WINDOW.setProperty("server_%s" % username, self.getServer(prefix=False))
         WINDOW.setProperty("userId%s" % username, self.currUserId)
-
-        # Set DownloadUtils values
-        doUtils.setUsername(username)
-        doUtils.setUserId(self.currUserId)
-        doUtils.setServer(self.currServer)
-        doUtils.setToken(self.currToken)
-        # Start DownloadUtils session
-        doUtils.startSession()
 
         self.currUser = username
 
@@ -205,15 +195,11 @@ class UserClient(threading.Thread):
         users = self.getPublicUsers()
         password = ""
         
-        '''if users == "":
-            self.WINDOW.setProperty("Server_status", "Stop")
-            return'''
         # Find user in list
         for user in users:
-            name = user[u'Name']
+            name = user.get("Name")
             userHasPassword = False
-
-            if (unicode(username, 'utf-8') in name):
+            if (username == name):
                 # Verify if user has a password
                 if (user.get("HasPassword") == True):
                     userHasPassword = True
@@ -221,7 +207,7 @@ class UserClient(threading.Thread):
                 if (userHasPassword):
                     password = xbmcgui.Dialog().input("Enter password for user: %s" % username, option=xbmcgui.ALPHANUM_HIDE_INPUT)
                     # If password dialog is cancelled
-                    if (password == ""):
+                    if password == "":
                         self.logMsg("No password entered.", 0)
                         self.WINDOW.setProperty("Server_status", "Stop")
                         self.auth = False
@@ -236,21 +222,22 @@ class UserClient(threading.Thread):
 
         # Authenticate username and password
         url = "%s/mediabrowser/Users/AuthenticateByName?format=json" % server
-        data = {'username': username, 'password': sha1}
-        self.logMsg(data, 2)
+        messageData = "username=%s&password=%s" % (username, sha1)
 
-        result = self.doUtils.downloadUrl(url, postBody=data, type="POST", authenticate=False)
+        resp = self.doUtils.downloadUrl(url, postBody=messageData, type="POST", authenticate=False)
 
+        result = None
         accessToken = None
         try:
-            self.logMsg("Auth_Reponse: %s" % result, 1)
-            accessToken = result[u'AccessToken']
+            self.logMsg("Auth_Reponse: %s" % resp, 1)
+            result = json.loads(resp)
+            accessToken = result.get("AccessToken")
         except:
             pass
 
         if (result != None and accessToken != None):
             self.currUser = username
-            userId = result[u'User'][u'Id']
+            userId = result.get("User").get("Id")
             addon.setSetting("accessToken%s" % username, accessToken)
             addon.setSetting("userId%s" % username, userId)
             self.logMsg("User Authenticated: %s" % accessToken)
@@ -262,7 +249,7 @@ class UserClient(threading.Thread):
             self.logMsg("User authentication failed.")
             addon.setSetting("accessToken%s" % username, "")
             addon.setSetting("userId%s" % username, "")
-            xbmcgui.Dialog().ok("Error connecting", "Invalid username or password.")
+            xbmcgui.Dialog().ok("Error Connecting", "Wrong password.")
             
             # Give two attempts at entering password
             self.retry += 1
@@ -275,7 +262,7 @@ class UserClient(threading.Thread):
 
     def resetClient(self):
 
-        if (self.currToken != None):
+        if self.currToken != None:
             # In case of 401, removed saved token
             self.addon.setSetting("accessToken%s" % self.currUser, "")
             self.WINDOW.setProperty("accessToken%s" % self.currUser, "")
