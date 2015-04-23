@@ -46,10 +46,10 @@ class Kodi_Monitor(xbmc.Monitor):
                             userid = WINDOW.getProperty('userId%s' % username)
                             server = WINDOW.getProperty('server%s' % username)
 
-                            url = "%s/mediabrowser/Users/%s/Items/%s?format=json&ImageTypeLimit=1" % (server, userid, embyid)
-                            jsonData = downloadUtils.downloadUrl(url)     
-                            result = json.loads(jsonData)
-                            userData = result.get("UserData")
+                            url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json&ImageTypeLimit=1" % embyid
+                            result = downloadUtils.downloadUrl(url)     
+                            
+                            userData = result[u'UserData']
 
                             playurl = PlayUtils().getPlayUrl(server, embyid, result)
 
@@ -62,13 +62,13 @@ class Kodi_Monitor(xbmc.Monitor):
                             WINDOW.setProperty(playurl+"positionurl", positionurl)
                             WINDOW.setProperty(playurl+"deleteurl", "")
                             WINDOW.setProperty(playurl+"deleteurl", deleteurl)
-                            if result.get("Type")=="Episode":
-                                WINDOW.setProperty(playurl+"refresh_id", result.get("SeriesId"))
+                            if result[u'Type']=="Episode":
+                                WINDOW.setProperty(playurl+"refresh_id", result[u'SeriesId'])
                             else:
                                 WINDOW.setProperty(playurl+"refresh_id", embyid)
                                 
-                            WINDOW.setProperty(playurl+"runtimeticks", str(result.get("RunTimeTicks")))
-                            WINDOW.setProperty(playurl+"type", result.get("Type"))
+                            WINDOW.setProperty(playurl+"runtimeticks", str(result[u'RunTimeTicks']))
+                            WINDOW.setProperty(playurl+"type", result[u'Type'])
                             WINDOW.setProperty(playurl+"item_id", embyid)
 
                             if PlayUtils().isDirectPlay(result) == True:
@@ -78,12 +78,12 @@ class Kodi_Monitor(xbmc.Monitor):
 
                             WINDOW.setProperty(playurl+"playmethod", playMethod)
                                 
-                            mediaSources = result.get("MediaSources")
+                            mediaSources = result[u'MediaSources']
                             if(mediaSources != None):
                                 if mediaSources[0].get('DefaultAudioStreamIndex') != None:
-                                    WINDOW.setProperty(playurl+"AudioStreamIndex", str(mediaSources[0].get('DefaultAudioStreamIndex')))  
+                                    WINDOW.setProperty(playurl+"AudioStreamIndex", str(mediaSources[0][u'DefaultAudioStreamIndex']))  
                                 if mediaSources[0].get('DefaultSubtitleStreamIndex') != None:
-                                    WINDOW.setProperty(playurl+"SubtitleStreamIndex", str(mediaSources[0].get('DefaultSubtitleStreamIndex')))
+                                    WINDOW.setProperty(playurl+"SubtitleStreamIndex", str(mediaSources[0][u'DefaultSubtitleStreamIndex']))
         
         if method == "VideoLibrary.OnUpdate":
             jsondata = json.loads(data)
