@@ -8,8 +8,10 @@ import logging
 
 import Utils as utils
 from ClientInformation import ClientInformation
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 # Disable requests logging
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 logging.getLogger("requests").setLevel(logging.WARNING)
 
 class DownloadUtils():
@@ -34,7 +36,7 @@ class DownloadUtils():
 
     def logMsg(self, msg, lvl=1):
 
-        utils.logMsg("%s %s" % (self.addonName, self.className), str(msg), int(lvl))
+        utils.logMsg("%s %s" % (self.addonName, self.className), msg, int(lvl))
 
     def setUsername(self, username):
         # Reserved for UserClient only
@@ -55,6 +57,11 @@ class DownloadUtils():
         # Reserved for UserClient only
         self.token = token
         self.logMsg("Set token: %s" % token, 2)
+
+    def setSSL(self, ssl):
+        # Reserved for UserClient only
+        self.ssl = ssl
+        self.logMsg("Set ssl path: %s" % ssl, 2)
 
     def postCapabilities(self, deviceId):
 
@@ -84,17 +91,20 @@ class DownloadUtils():
 
         # User is identified from this point
         # Attach authenticated header to the session
-        cert = None
         header = self.getHeader()
+        cert = None
+        verify = None
 
-        if self.addon.getSetting('sslcert') != "None":
-            # If user uses HTTPS and has a custom client certificate
-            cert = self.addon.getSetting('sslcert')
-        
+        # If user has a custom certificate, verify the host certificate too
+        if (self.ssl != None):
+            cert = self.ssl
+            verify = True
+
         # Start session
         self.s = requests.Session()
-        self.s.headers.update(header)
+        self.s.headers = header
         self.s.cert = cert
+        self.s.verify = verify
         # Retry connections to the server
         self.s.mount("http://", requests.adapters.HTTPAdapter(max_retries=1))
         self.s.mount("https://", requests.adapters.HTTPAdapter(max_retries=1))
@@ -149,7 +159,7 @@ class DownloadUtils():
             url = url.replace("{UserId}", self.userId, 1)
             url = "%s&api_key=%s" % (url, self.token)
             
-            self.logMsg("URL: %s" % url, 1)
+            self.logMsg("URL: %s" % url, 2)
             # Prepare request
             if type == "GET":
                 r = s.get(url, params=postBody, timeout=timeout)
@@ -168,7 +178,7 @@ class DownloadUtils():
             if type == "GET":
                 r = requests.get(url, params=postBody, headers=header, timeout=timeout, verify=False)
             elif type == "POST":
-                r = requests.post(url, params=postBody, headers=header, timeout=timeout)
+                r = requests.post(url, params=postBody, headers=header, timeout=timeout, verify=False)
         
         # Process the response
         try:
@@ -176,14 +186,14 @@ class DownloadUtils():
 
             if r.status_code == 204:
                 # No response in body
-                self.logMsg("====== 204 Success ======", 1)
+                self.logMsg("====== 204 Success ======", 2)
                 return default_link
             # Response code 200
             elif r.status_code == requests.codes.ok:
                 try: 
                     # UTF-8 - JSON object
                     r = r.json()
-                    self.logMsg("====== 200 Success ======", 1)
+                    self.logMsg("====== 200 Success ======", 2)
                     return r
                 except:
                     self.logMsg("Unable to convert the response for: %s" % url, 1)
@@ -217,6 +227,10 @@ class DownloadUtils():
             elif r.status_code == 400:
                 # Bad requests
                 pass
+
+        except requests.exceptions.SSLError as e:
+            self.logMsg("Invalid SSL certificate for: %s" % url, 0)
+            self.logMsg(e, 1)
 
         except requests.exceptions.RequestException as e:
             self.logMsg("Unknown error connecting to: %s" % url, 0)
