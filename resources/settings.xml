@@ -7,7 +7,7 @@
 		<setting type="sep" />
 		<setting id="https" type="bool" label="30243" visible="true" enable="true" default="false" />
 		<setting id="sslverify" type="bool" label="Verify Host SSL Certificate" visible="eq(-1,true)" enable="true" default="false" />
-		<setting id="sslcert" type="file" label="Custom SSL Certificate" visible="eq(-1,true)" enable="true" default="None" />
+		<setting id="sslcert" type="file" label="Client SSL certificate" visible="eq(-2,true)" enable="true" default="None" />
 		<setting type="sep" />
 		<setting id="deviceName" type="text" label="30016" default="Kodi" />
 		<setting id="playFromStream" type="bool" label="30002" visible="true" enable="true" default="false" />
