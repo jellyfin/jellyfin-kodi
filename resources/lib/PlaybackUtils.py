@@ -43,11 +43,11 @@ class PlaybackUtils():
         userid = WINDOW.getProperty('userId%s' % username)
         server = WINDOW.getProperty('server%s' % username)
         
-        url = "%s/mediabrowser/Users/%s/Items/%s?format=json&ImageTypeLimit=1" % (server, userid, id)
-        jsonData = self.downloadUtils.downloadUrl(url, suppress=False, popup=1 )     
-        result = json.loads(jsonData)
+        url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json&ImageTypeLimit=1" % id
+        result = self.downloadUtils.downloadUrl(url)     
+        
 
-        userData = result.get("UserData")
+        userData = result[u'UserData']
         resume_result = 0
         seekTime = 0
         
@@ -151,7 +151,6 @@ class PlaybackUtils():
     
     def setListItemProps(self, server, id, listItem, result):
         # set up item and item info
-        userid = self.downloadUtils.getUserId()
         thumbID = id
         eppNum = -1
         seasonNum = -1
@@ -256,10 +255,10 @@ class PlaybackUtils():
         for itemID in items:
         
             utils.logMsg("PlayBackUtils", "Adding Item to Playlist : " + itemID)
-            item_url = "%s/mediabrowser/Users/%s/Items/%s?format=json" % (server, userid, itemID)
-            jsonData = self.downloadUtils.downloadUrl(item_url, suppress=False, popup=1 )
+            item_url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json" % itemID
+            jsonData = self.downloadUtils.downloadUrl(item_url)
 
-            item_data = json.loads(jsonData)
+            item_data = jsonData
             added = self.addPlaylistItem(playlist, item_data, server, userid)
             if(added and started == False):
                 started = True
@@ -290,10 +289,10 @@ class PlaybackUtils():
         
         for item in items:
         
-            item_url = "%s/mediabrowser/Users/%s/Items/%s?format=json&ImageTypeLimit=1" % (server, userid, item["Id"])
-            jsonData = self.downloadUtils.downloadUrl(item_url, suppress=False, popup=1 )
+            item_url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json&ImageTypeLimit=1" % item["Id"]
+            jsonData = self.downloadUtils.downloadUrl(item_url)
             
-            item_data = json.loads(jsonData)
+            item_data = jsonData
             self.addPlaylistItem(playlist, item_data, server, userid)
         
         xbmc.Player().play(playlist)
@@ -311,10 +310,10 @@ class PlaybackUtils():
         for itemID in itemIds:
         
             utils.logMsg("PlayBackUtils", "Adding Item to Playlist : " + itemID)
-            item_url = "%s/mediabrowser/Users/%s/Items/%s?format=json" % (server, userid, itemID)
-            jsonData = self.downloadUtils.downloadUrl(item_url, suppress=False, popup=1 )
+            item_url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json" % itemID
+            jsonData = self.downloadUtils.downloadUrl(item_url)
             
-            item_data = json.loads(jsonData)
+            item_data = jsonData
             self.addPlaylistItem(playlist, item_data, server, userid)
     
         return playlist
