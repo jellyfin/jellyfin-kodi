@@ -58,10 +58,12 @@ class DownloadUtils():
         self.token = token
         self.logMsg("Set token: %s" % token, 2)
 
-    def setSSL(self, ssl):
+    def setSSL(self, ssl, sslclient):
         # Reserved for UserClient only
-        self.ssl = ssl
-        self.logMsg("Set ssl path: %s" % ssl, 2)
+        self.sslverify = ssl
+        self.sslclient = sslclient
+        self.logMsg("Verify SSL host certificate: %s" % ssl, 2)
+        self.logMsg("SSL client side certificate: %s" % sslclient, 2)
 
     def postCapabilities(self, deviceId):
 
@@ -91,20 +93,20 @@ class DownloadUtils():
 
         # User is identified from this point
         # Attach authenticated header to the session
-        header = self.getHeader()
-        cert = None
         verify = None
+        cert = None
+        header = self.getHeader()
 
-        # If user has a custom certificate, verify the host certificate too
-        if (self.ssl != None):
-            cert = self.ssl
+        # If user enabled host certificate verification
+        if self.sslverify:
             verify = True
-
+            cert = self.sslclient
+        
         # Start session
         self.s = requests.Session()
         self.s.headers = header
-        self.s.cert = cert
         self.s.verify = verify
+        self.s.cert = cert
         # Retry connections to the server
         self.s.mount("http://", requests.adapters.HTTPAdapter(max_retries=1))
         self.s.mount("https://", requests.adapters.HTTPAdapter(max_retries=1))
@@ -173,12 +175,19 @@ class DownloadUtils():
             
             self.logMsg("URL: %s" % url, 1)
             header = self.getHeader(authenticate=False)
+            verifyssl = False
+
+            # If user enables ssl verification
+            try:
+                verifyssl = self.sslverify
+            except AttributeError:
+                pass
             
             # Prepare request
             if type == "GET":
-                r = requests.get(url, params=postBody, headers=header, timeout=timeout, verify=False)
+                r = requests.get(url, params=postBody, headers=header, timeout=timeout, verify=verifyssl)
             elif type == "POST":
-                r = requests.post(url, params=postBody, headers=header, timeout=timeout, verify=False)
+                r = requests.post(url, params=postBody, headers=header, timeout=timeout, verify=verifyssl)
         
         # Process the response
         try:

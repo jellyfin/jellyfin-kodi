@@ -131,8 +131,17 @@ class UserClient(threading.Thread):
             self.logMsg("No token found.")
             return ""
 
-    def getSSL(self):
+    def getSSLverify(self):
+        # Verify host certificate
+        s_sslverify = self.addon.getSetting('sslverify')
 
+        if s_sslverify == "true":
+            return True
+        else:
+            return False
+
+    def getSSL(self):
+        # Client side certificate
         s_cert = self.addon.getSetting('sslcert')
 
         if s_cert == "None":
@@ -165,7 +174,8 @@ class UserClient(threading.Thread):
         self.currUserId = self.getUserId()
         self.currServer = self.getServer()
         self.currToken = self.getToken()
-        self.ssl = self.getSSL()
+        self.ssl = self.getSSLverify()
+        self.sslcert = self.getSSL()
 
         # Set to windows property
         WINDOW.setProperty("currUser", username)
@@ -179,7 +189,7 @@ class UserClient(threading.Thread):
         doUtils.setUserId(self.currUserId)
         doUtils.setServer(self.currServer)
         doUtils.setToken(self.currToken)
-        doUtils.setSSL(self.ssl)
+        doUtils.setSSL(self.ssl, self.sslcert)
         # Start DownloadUtils session
         doUtils.startSession()
 
