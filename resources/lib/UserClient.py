@@ -46,6 +46,7 @@ class UserClient(threading.Thread):
 
         self.__dict__ = self._shared_state
         self.className = self.__class__.__name__
+        self.__language__ = self.addon.getLocalizedString
 
         threading.Thread.__init__(self, *args)
 
@@ -161,6 +162,9 @@ class UserClient(threading.Thread):
         
         if (result != ""):
             users = result
+        else:
+            # Server connection failed
+            return False
 
         return users
 
@@ -225,10 +229,7 @@ class UserClient(threading.Thread):
         
         users = self.getPublicUsers()
         password = ""
-        
-        '''if users == "":
-            self.WINDOW.setProperty("Server_status", "Stop")
-            return'''
+
         # Find user in list
         for user in users:
             name = user[u'Name']
