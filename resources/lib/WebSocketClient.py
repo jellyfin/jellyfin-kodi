@@ -18,7 +18,6 @@ from DownloadUtils import DownloadUtils
 from PlaybackUtils import PlaybackUtils
 from LibrarySync import LibrarySync
 from WriteKodiDB import WriteKodiDB
-from UserClient import UserClient
 import Utils as utils
 
 pendingUserDataList = []
@@ -31,8 +30,6 @@ class WebSocketThread(threading.Thread):
     logLevel = 0
     client = None
     keepRunning = True
-
-    uc = UserClient()
     
     def __init__(self, *args):
 
@@ -249,7 +246,7 @@ class WebSocketThread(threading.Thread):
                 LibrarySync().updatePlayCount(itemId)
                 
     def on_error(self, ws, error):
-        self.logMsg("Error : " + str(error), 2)
+        self.logMsg("Error : " + str(error))
         #raise
 
     def on_close(self, ws):
@@ -301,7 +298,7 @@ class WebSocketThread(threading.Thread):
         username = WINDOW.getProperty('currUser')
         server = WINDOW.getProperty('server%s' % username)
         host = WINDOW.getProperty('server_%s' % username)
-
+        
         if(self.logLevel >= 1):
             websocket.enableTrace(True)        
         '''
@@ -326,19 +323,12 @@ class WebSocketThread(threading.Thread):
         self.client.on_open = self.on_open
         
         while not self.KodiMonitor.abortRequested():
-            
+            self.logMsg("Client Starting")
             self.client.run_forever()
-
-            if (self.keepRunning):
-                # Server is not online, suppress future warning
-                if WINDOW.getProperty("Server_online") == "true":
-                    self.logMsg("Server is unreachable.", 1)
-                    WINDOW.setProperty("Server_online", "false")
-                    xbmcgui.Dialog().notification("Error connecting", "Server is unreachable.")
-                
+            if(self.keepRunning):
+                self.logMsg("Client Needs To Restart")
                 if self.KodiMonitor.waitForAbort(5):
                     break
-        
         self.logMsg("Thread Exited")
         
         
