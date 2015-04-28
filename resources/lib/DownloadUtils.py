@@ -32,16 +32,16 @@ class DownloadUtils():
     def __init__(self):
 
         self.__dict__ = self._shared_state
-        self.className = self.__class__.__name__
 
     def logMsg(self, msg, lvl=1):
 
+        self.className = self.__class__.__name__
         utils.logMsg("%s %s" % (self.addonName, self.className), msg, int(lvl))
 
     def setUsername(self, username):
         # Reserved for UserClient only
         self.username = username
-        self.logMsg("Set username: %s" % username, 1)
+        self.logMsg("Set username: %s" % username, 2)
 
     def setUserId(self, userId):
         # Reserved for UserClient only
@@ -71,8 +71,9 @@ class DownloadUtils():
         url = "{server}/mediabrowser/Sessions?DeviceId=%s&format=json" % deviceId
         result = self.downloadUrl(url)
         # sessionId result
-        self.logMsg("Session result: %s" % result, 1)
+        self.logMsg("Session result: %s" % result, 2)
         self.sessionId = result[0][u'Id']
+        self.WINDOW.setProperty('sessionId%s' % self.username, self.sessionId)
 
         # Settings for capabilities
         playableMediaTypes = "Audio,Video"
@@ -129,7 +130,7 @@ class DownloadUtils():
         if not authenticate:
             # If user is not authenticated
             auth = 'MediaBrowser Client="Kodi", Device="%s", DeviceId="%s", Version="%s"' % (deviceName, deviceId, version)
-            header = {"Accept-encoding": "gzip", "Accept-Charset": "UTF-8,*", "Authorization": auth}      
+            header = {'Content-type': 'application/json', 'Accept-encoding': 'gzip', 'Accept-Charset': 'UTF-8,*', 'Authorization': auth}      
             
             self.logMsg("Header: %s" % header, 2)
             return header
@@ -139,7 +140,7 @@ class DownloadUtils():
             token = self.token
             # Attached to the requests session
             auth = 'MediaBrowser UserId="%s", Client="Kodi", Device="%s", DeviceId="%s", Version="%s"' % (userId, deviceName, deviceId, version)
-            header = {"Accept-encoding": "gzip", "Accept-Charset": "UTF-8,*", "Authorization": auth, "X-MediaBrowser-Token": token}        
+            header = {'Content-type': 'application/json', 'Accept-encoding': 'gzip', 'Accept-Charset': 'UTF-8,*', 'Authorization': auth, 'X-MediaBrowser-Token': token}        
                     
             self.logMsg("Header: %s" % header, 2)
             return header
@@ -159,16 +160,16 @@ class DownloadUtils():
             # Replace for the real values and append api_key
             url = url.replace("{server}", self.server, 1)
             url = url.replace("{UserId}", self.userId, 1)
-            url = "%s&api_key=%s" % (url, self.token)
+            #url = "%s&api_key=%s" % (url, self.token)
             
             self.logMsg("URL: %s" % url, 2)
             # Prepare request
             if type == "GET":
-                r = s.get(url, params=postBody, timeout=timeout)
+                r = s.get(url, json=postBody, timeout=timeout)
             elif type == "POST":
-                r = s.post(url, params=postBody, timeout=timeout)
+                r = s.post(url, json=postBody, timeout=timeout)
             elif type == "DELETE":
-                r = s.delete(url, params=postBody, timeout=timeout)
+                r = s.delete(url, json=postBody, timeout=timeout)
 
         # If user is not authenticated
         elif not authenticate:
@@ -185,9 +186,9 @@ class DownloadUtils():
             
             # Prepare request
             if type == "GET":
-                r = requests.get(url, params=postBody, headers=header, timeout=timeout, verify=verifyssl)
+                r = requests.get(url, json=postBody, headers=header, timeout=timeout, verify=verifyssl)
             elif type == "POST":
-                r = requests.post(url, params=postBody, headers=header, timeout=timeout, verify=verifyssl)
+                r = requests.post(url, json=postBody, headers=header, timeout=timeout, verify=verifyssl)
         
         # Process the response
         try:

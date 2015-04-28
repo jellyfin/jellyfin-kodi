@@ -35,16 +35,15 @@ class Service():
     def __init__(self, *args ):
         self.KodiMonitor = KodiMonitor.Kodi_Monitor()
         addonName = self.addonName
-        self.className = self.__class__.__name__
 
         self.logMsg("Starting Monitor", 0)
         self.logMsg("======== START %s ========" % addonName, 0)
         self.logMsg("KODI Version: %s" % xbmc.getInfoLabel("System.BuildVersion"), 0)
         self.logMsg("%s Version: %s" % (addonName, self.clientInfo.getVersion()), 0)
-        pass
 
     def logMsg(self, msg, lvl=1):
         
+        self.className = self.__class__.__name__
         utils.logMsg("%s %s" % (self.addonName, self.className), str(msg), int(lvl))
             
     def ServiceEntryPoint(self):
@@ -77,18 +76,18 @@ class Service():
                     playTime = xbmc.Player().getTime()
                     totalTime = xbmc.Player().getTotalTime()
                     currentFile = xbmc.Player().getPlayingFile()
-                    
+
                     if(player.played_information.get(currentFile) != None):
                         player.played_information[currentFile]["currentPosition"] = playTime
                     
                     # send update
                     td = datetime.today() - lastProgressUpdate
                     secDiff = td.seconds
-                    if(secDiff > 10):
+                    if(secDiff > 3):
                         try:
                             player.reportPlayback()
                         except Exception, msg:
-                            xbmc.log("MB3 Sync Service -> Exception reporting progress : " + msg)
+                            self.logMsg("Exception reporting progress: %s" % msg)
                             pass
                         lastProgressUpdate = datetime.today()
                     # only try autoplay when there's 20 seconds or less remaining and only once!
@@ -97,7 +96,7 @@ class Service():
                         player.autoPlayPlayback()
                     
                 except Exception, e:
-                    xbmc.log("MB3 Sync Service -> Exception in Playback Monitor Service : " + str(e))
+                    self.logMsg("Exception in Playback Monitor Service: %s" % e)
                     pass
             else:
                 if (self.newUserClient == None):
@@ -113,11 +112,11 @@ class Service():
             
                     #full sync
                     if(startupComplete == False):
-                        xbmc.log("Doing_Db_Sync: syncDatabase (Started)")
+                        self.logMsg("Doing_Db_Sync: syncDatabase (Started)")
                         libSync = librarySync.syncDatabase()
-                        xbmc.log("Doing_Db_Sync: syncDatabase (Finished) " + str(libSync))
+                        self.logMsg("Doing_Db_Sync: syncDatabase (Finished) " + str(libSync))
                         countSync = librarySync.updatePlayCounts()
-                        xbmc.log("Doing_Db_Sync: updatePlayCounts (Finished) "  + str(countSync))
+                        self.logMsg("Doing_Db_Sync: updatePlayCounts (Finished) "  + str(countSync))
 
                         # Force refresh newly set thumbnails
                         xbmc.executebuiltin("UpdateLibrary(video)")
@@ -130,9 +129,9 @@ class Service():
                         WebSocketThread().processPendingActions()
                     
                 else:
-                    xbmc.log("Not authenticated yet")
+                    self.logMsg("Not authenticated yet", 0)
                     
-        utils.logMsg("MB3 Sync Service", "stopping Service",0)
+        self.logMsg("stopping Service", 0)
 
         # If user reset library database.
         WINDOW = xbmcgui.Window(10000)

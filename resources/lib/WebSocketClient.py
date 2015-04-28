@@ -13,12 +13,13 @@ import socket
 import websocket
 
 import KodiMonitor
+import Utils as utils
+
 from ClientInformation import ClientInformation
 from DownloadUtils import DownloadUtils
 from PlaybackUtils import PlaybackUtils
 from LibrarySync import LibrarySync
 from WriteKodiDB import WriteKodiDB
-import Utils as utils
 
 pendingUserDataList = []
 pendingItemsToRemove = []
@@ -27,79 +28,39 @@ _MODE_BASICPLAY=12
 
 class WebSocketThread(threading.Thread):
 
-    logLevel = 0
+    _shared_state = {}
+
+    clientInfo = ClientInformation()
+    KodiMonitor = KodiMonitor.Kodi_Monitor()
+    addonName = clientInfo.getAddonName()
+
     client = None
     keepRunning = True
     
     def __init__(self, *args):
 
-        self.KodiMonitor = KodiMonitor.Kodi_Monitor()
-        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
-        level = addonSettings.getSetting('logLevel')        
-        self.logLevel = 0
-        if(level != None):
-            self.logLevel = int(level)           
-    
-        xbmc.log("emby WebSocketThread -> Log Level:" +  str(self.logLevel))
-        
+        self.__dict__ = self._shared_state
         threading.Thread.__init__(self, *args)
     
-    def logMsg(self, msg, level = 1):
-        if(self.logLevel >= level):
-            try:
-                xbmc.log("emby WebSocketThread -> " + str(msg))
-            except UnicodeEncodeError:
-                try:
-                    xbmc.log("emby WebSocketThread -> " + str(msg.encode('utf-8')))
-                except: pass
-            
-    '''
-    def playbackStarted(self, itemId):
-        if(self.client != None):
-            try:
-                self.logMsg("Sending Playback Started")
-                messageData = {}
-                messageData["MessageType"] = "PlaybackStart"
-                messageData["Data"] = itemId + "|true|audio,video"
-                messageString = json.dumps(messageData)
-                self.logMsg("Message Data : " + messageString)
-                self.client.send(messageString)
-            except Exception, e:
-                self.logMsg("Exception : " + str(e), level=0)
-        else:
-            self.logMsg("Sending Playback Started NO Object ERROR")
+    def logMsg(self, msg, lvl=1):
 
-    def playbackStopped(self, itemId, ticks):
-        if(self.client != None):
+        self.className = self.__class__.__name__
+        utils.logMsg("%s %s" % (self.addonName, self.className), msg, int(lvl))
+    
+    def sendProgressUpdate(self, data):
+        self.logMsg("sendProgressUpdate", 1)
+        if self.client:
             try:
-                self.logMsg("Sending Playback Stopped")
-                messageData = {}
-                messageData["MessageType"] = "PlaybackStopped"
-                messageData["Data"] = itemId + "|" + str(ticks)
+                # Send progress update
+                messageData = {
+                    'MessageType': "ReportPlaybackProgress",
+                    'Data': data
+                }
                 messageString = json.dumps(messageData)
                 self.client.send(messageString)
+                self.logMsg("Message data: %s" % messageString, 2)
             except Exception, e:
-                self.logMsg("Exception : " + str(e), level=0)            
-        else:
-            self.logMsg("Sending Playback Stopped NO Object ERROR")
-    '''
-
-    '''
-    def sendProgressUpdate(self, itemId, ticks):
-        if(self.client != None):
-            try:
-                self.logMsg("Sending Progress Update")
-                messageData = {}
-                messageData["MessageType"] = "PlaybackProgress"
-                messageData["Data"] = itemId + "|" + str(ticks) + "|false|false"
-                messageString = json.dumps(messageData)
-                self.logMsg("Message Data : " + messageString)
-                self.client.send(messageString)
-            except Exception, e:
-                self.logMsg("Exception : " + str(e), level=0)              
-        else:
-            self.logMsg("Sending Progress Update NO Object ERROR")
-    '''
+                self.logMsg("Exception: %s" % e, 1)  
     
     def stopClient(self):
         # stopping the client is tricky, first set keep_running to false and then trigger one 
@@ -253,69 +214,30 @@ class WebSocketThread(threading.Thread):
         self.logMsg("Closed")
 
     def on_open(self, ws):
-
-        clientInfo = ClientInformation()
-        machineId = clientInfo.getMachineId()
-        version = clientInfo.getVersion()
-        messageData = {}
-        messageData["MessageType"] = "Identity"
-        
-        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
-        deviceName = addonSettings.getSetting('deviceName')
-        deviceName = deviceName.replace("\"", "_")
-    
-        messageData["Data"] = "Kodi|" + machineId + "|" + version + "|" + deviceName
-        messageString = json.dumps(messageData)
-        self.logMsg("Opened : " + str(messageString))
-        ws.send(messageString)
-        '''
-        # Set Capabilities
-        xbmc.log("postcapabilities_called")
-        downloadUtils = DownloadUtils()
-        downloadUtils.startSession()'''
-           
-        
-    def getWebSocketPort(self, host, port):
-        
-        userUrl = "http://" + host + ":" + port + "/mediabrowser/System/Info?format=json"
-         
-        downloadUtils = DownloadUtils()
-        jsonData = downloadUtils.downloadUrl(userUrl, suppress=False, popup=1 )
-        if(jsonData == ""):
-            return -1
-            
-        result = json.loads(jsonData)
-        
-        wsPort = result.get("WebSocketPortNumber")
-        if(wsPort != None):
-            return wsPort
-        else:
-            return -1
+        pass
 
     def run(self):
-        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
+        
         WINDOW = xbmcgui.Window(10000)
+        logLevel = int(WINDOW.getProperty('logLevel'))
         username = WINDOW.getProperty('currUser')
         server = WINDOW.getProperty('server%s' % username)
-        host = WINDOW.getProperty('server_%s' % username)
-        
-        if(self.logLevel >= 1):
+        token = WINDOW.getProperty('accessToken%s' % username)
+        deviceId = ClientInformation().getMachineId()
+
+        if (logLevel == 2):
             websocket.enableTrace(True)        
-        '''
-        wsPort = self.getWebSocketPort(mb3Host, mb3Port);
-        self.logMsg("WebSocketPortNumber = " + str(wsPort))
-        if(wsPort == -1):
-            self.logMsg("Could not retrieve WebSocket port, can not run WebScoket Client")
-            return
-        '''
+
+        # Get the appropriate prefix for websocket
         if "https" in server:
-            webSocketUrl = "wss://%s/mediabrowser" % host
+            server = server.replace('https', 'wss')
         else:
-            webSocketUrl = "ws://%s/mediabrowser" % host
-        # Make a call to /System/Info. WebSocketPortNumber is the port hosting the web socket.
-        #webSocketUrl = "ws://" + host + "/mediabrowser"
-        self.logMsg("WebSocket URL : " + webSocketUrl)
-        self.client = websocket.WebSocketApp(webSocketUrl,
+            server = server.replace('http', 'ws')
+        
+        websocketUrl = "%s?api_key=%s&deviceId=%s" % (server, token, deviceId)
+        self.logMsg("websocket URL: %s" % websocketUrl)
+
+        self.client = websocket.WebSocketApp(websocketUrl,
                                     on_message = self.on_message,
                                     on_error = self.on_error,
                                     on_close = self.on_close)
@@ -345,4 +267,3 @@ class WebSocketThread(threading.Thread):
         if pendingItemsToUpdate != []:
             self.update_items(pendingItemsToUpdate)
             pendingItemsToUpdate = []
-                            
