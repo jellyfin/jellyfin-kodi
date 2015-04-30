@@ -131,12 +131,12 @@ class API():
                 favorite="True"
             else:
                 favorite="False"
-            if (userData.get("PlayCount")):
-                playcount= userData.get("PlayCount")
+            if(userData.get("Played") == True):
+                playcount="1"
             else:
-                playcount ="0"
+                playcount="0"
             if userData.get('UnplayedItemCount') != None:
-                UnplayedItemCount = str(userData.get('UnplayedItemCount'))
+                UnplayedItemCount = userData.get('UnplayedItemCount')
             else:
                 UnplayedItemCount = "0"
             if userData.get('LastPlayedDate') != None:
