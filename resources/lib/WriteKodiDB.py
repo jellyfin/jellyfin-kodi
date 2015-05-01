@@ -854,12 +854,12 @@ class WriteKodiDB():
             cursor.execute("SELECT url FROM art WHERE media_id = ? AND media_type = ? AND type = ?", (kodiId, mediaType, imageType))
             result = cursor.fetchone()
             if(result == None):
-                utils.logMsg("SeasonArt", "Adding Art Link for kodiId: " + str(kodiId) + " (" + imageUrl + ")")
+                utils.logMsg("ArtworkSync", "Adding Art Link for kodiId: " + str(kodiId) + " (" + imageUrl + ")")
                 cursor.execute("INSERT INTO art(media_id, media_type, type, url) values(?, ?, ?, ?)", (kodiId, mediaType, imageType, imageUrl))
             else:
                 url = result[0];
                 if(url != imageUrl):
-                    utils.logMsg("SeasonArt", "Updating Art Link for kodiId: " + str(kodiId) + " (" + url + ") -> (" + imageUrl + ")")
+                    utils.logMsg("ArtworkSync", "Updating Art Link for kodiId: " + str(kodiId) + " (" + url + ") -> (" + imageUrl + ")")
                     cursor.execute("UPDATE art set url = ? WHERE media_id = ? AND media_type = ? AND type = ?", (imageUrl, kodiId, mediaType, imageType))
 
         
