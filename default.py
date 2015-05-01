@@ -27,7 +27,8 @@ except:
     id=None
 
 if  mode != None and mode == "play":
-    PlaybackUtils().PLAY(id)
+    #PlaybackUtils().PLAY(id)
+    WINDOW.setProperty('GUIPLAY', str(id)) # set window prop
 elif sys.argv[1] == "reset":
     utils.reset()
 else:

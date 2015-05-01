@@ -19,6 +19,7 @@ from ConnectionManager import ConnectionManager
 from ClientInformation import ClientInformation
 from WebSocketClient import WebSocketThread
 from UserClient import UserClient
+from PlaybackUtils import PlaybackUtils
 librarySync = LibrarySync()
 
 
@@ -53,11 +54,8 @@ class Service():
         lastProgressUpdate = datetime.today()
         
         startupComplete = False
-        #interval_FullSync = 600
-        #interval_IncrementalSync = 300
-        
-        #cur_seconds_fullsync = interval_FullSync
-        #cur_seconds_incrsync = interval_IncrementalSync
+        WINDOW = xbmcgui.Window(10000)
+
         
         user = UserClient()
         player = Player()
@@ -70,6 +68,11 @@ class Service():
             if self.KodiMonitor.waitForAbort(1):
                 # Abort was requested while waiting. We should exit
                 break
+                
+            if WINDOW.getProperty("GUIPLAY") != "":
+                id = WINDOW.getProperty("GUIPLAY")
+                WINDOW.setProperty("GUIPLAY", "")
+                PlaybackUtils().PLAY(id)
             
             if xbmc.Player().isPlaying():
                 try:

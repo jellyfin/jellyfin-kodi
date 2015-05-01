@@ -43,7 +43,6 @@ class WriteKodiDB():
             else:
                 downloadUtils.downloadUrl(watchedurl, type="DELETE")
         
-
     def addOrUpdateMovieToKodiLibrary( self, embyId ,connection, cursor, viewTag):
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
@@ -100,7 +99,7 @@ class WriteKodiDB():
             jsonData = downloadUtils.downloadUrl(itemTrailerUrl)
             if(jsonData != ""):
                 trailerItem = jsonData
-                trailerUrl = "plugin://plugin.video.emby/mode=play?id=" + trailerItem[0][u'Id']
+                trailerUrl = "plugin://plugin.video.emby/?id=%s&mode=play" % trailerItem[0][u'Id']
         
         if MBitem.get("DateCreated") != None:
             dateadded = MBitem["DateCreated"].replace("T"," ")
@@ -644,11 +643,13 @@ class WriteKodiDB():
                         # Kodi Gotham or Helix database #
                         if mediatype == "movie":
                             peoplesql="INSERT OR REPLACE into actorlinkmovie(idActor, idMovie, strRole, iOrder) values(?, ?, ?, ?)"
+                            cursor.execute(peoplesql, (actorid,id,Role,None))
                         if mediatype == "tvshow":
                             peoplesql="INSERT OR REPLACE into actorlinktvshow(idActor, idShow, strRole, iOrder) values(?, ?, ?, ?)"
+                            cursor.execute(peoplesql, (actorid,id,Role,None))
                         if mediatype == "episode":
                             peoplesql="INSERT OR REPLACE into actorlinkepisode(idActor, idEpisode, strRole, iOrder) values(?, ?, ?, ?)"
-                        cursor.execute(peoplesql, (actorid,id,Role,None))
+                            cursor.execute(peoplesql, (actorid,id,Role,None))         
                         
                 #### DIRECTORS ######
                 if(person.get("Type") == "Director"):
@@ -665,6 +666,8 @@ class WriteKodiDB():
                             peoplesql="INSERT OR REPLACE into directorlinktvshow(idDirector, idShow) values(?, ?)"
                         if mediatype == "musicvideo":
                             peoplesql="INSERT OR REPLACE into directorlinkmusicvideo(idDirector, idMVideo) values(?, ?)"
+                        if mediatype == "episode":
+                            peoplesql="INSERT OR REPLACE into directorlinkepisode(idDirector, idEpisode) values(?, ?)"
                         cursor.execute(peoplesql, (actorid,id))
                         
                 #### WRITERS ######
@@ -678,9 +681,11 @@ class WriteKodiDB():
                         # Kodi Gotham or Helix database #
                         if mediatype == "movie":
                             peoplesql="INSERT OR REPLACE into writerlinkmovie(idWriter, idMovie) values(?, ?)"
+                            cursor.execute(peoplesql, (actorid,id))
                         if mediatype == "episode":
                             peoplesql="INSERT OR REPLACE into writerlinkepisode(idWriter, idEpisode) values(?, ?)"
-                        cursor.execute(peoplesql, (actorid,id))
+                            cursor.execute(peoplesql, (actorid,id))
+                        
 
     def AddGenresToMedia(self, id, genres, mediatype, cursor):
 
