@@ -485,7 +485,7 @@ class WriteKodiDB():
         # UPDATE THE EPISODE IN KODI (for now, we just send in all data)
         else:
             pathsql = "UPDATE episode SET c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?, c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, embyId = ? WHERE idEpisode = ?"
-            cursor.execute(pathsql, title, plot, rating, writer, premieredate, runtime, director, season, episode, title, MBitem["Id"], episodeid)
+            cursor.execute(pathsql, (title, plot, rating, writer, premieredate, runtime, director, season, episode, title, "-1", "-1", MBitem["Id"], episodeid))
         
         #update or insert actors
         self.AddPeopleToMedia(episodeid,MBitem.get("People"),"episode", connection, cursor)
