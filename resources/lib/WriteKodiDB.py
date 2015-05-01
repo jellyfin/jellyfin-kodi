@@ -44,350 +44,6 @@ class WriteKodiDB():
                 downloadUtils.downloadUrl(watchedurl, type="DELETE")
         
 
-    def updateMusicVideoToKodiLibrary_Batched(self, MBitem, KodiItem):
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port
-        #downloadUtils = DownloadUtils()
-        #userid = downloadUtils.getUserId()
-        
-        timeInfo = API().getTimeInfo(MBitem)
-        userData=API().getUserData(MBitem)
-        people = API().getPeople(MBitem)
-        genre = API().getGenre(MBitem)
-        studios = API().getStudios(MBitem)
-        mediaStreams=API().getMediaStreams(MBitem)
-        
-        thumbPath = API().getArtwork(MBitem, "Primary")
-        
-        params = list()
-        
-        self.getArtworkParam_Batched(KodiItem, MBitem, params)
-
-        #update common properties
-        if KodiItem["runtime"] == None:
-            self.getPropertyParam_Batched(KodiItem, "runtime", (int(timeInfo.get('Duration'))*60), params)
-        self.getPropertyParam_Batched(KodiItem, "year", MBitem.get("ProductionYear"), params)
-        self.getPropertyParamArray_Batched(KodiItem, "director", people.get("Director"), params)
-        self.getPropertyParamArray_Batched(KodiItem, "genre", MBitem.get("Genres"), params)
-        self.getPropertyParamArray_Batched(KodiItem, "artist", MBitem.get("Artist"), params)
-        self.getPropertyParamArray_Batched(KodiItem, "album", MBitem.get("Album"), params)
-        self.getPropertyParam_Batched(KodiItem, "lastplayed", userData.get("LastPlayedDate"), params)
-
-        if(studios != None):
-            for x in range(0, len(studios)):
-                studios[x] = studios[x].replace("/", "&")
-            self.getPropertyParamArray_Batched(KodiItem, "studio", studios, params)
-
-        changes = False
-        # if there were movies changes then send the update via JSONRPC
-        if(len(params) > 0):
-            changes |= True
-            utils.logMsg("UpdateMovieParams", str(params), level = 2)
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { "musicvideoid": %i, %s}, "id": 1 }'
-            paramString = ""
-            paramLen = len(params)
-            for x in range(0, paramLen):
-                param = params[x]
-                paramString += param
-                if(x < paramLen-1):
-                    paramString += ", "
-            jsoncommand = jsoncommand %(KodiItem['musicvideoid'], paramString)
-            utils.logMsg("executeJSONRPC : ", jsoncommand, level = 2)
-            xbmc.sleep(sleepVal)
-            result = xbmc.executeJSONRPC(jsoncommand.encode("utf-8"))
-        
-        if(changes):
-            utils.logMsg("Updated musicvideo to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"], level=0)
-                   
-                  
-    def updateEpisodeToKodiLibrary( self, MBitem, KodiItem, connection, cursor ):       
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port        
-        
-        timeInfo = API().getTimeInfo(MBitem)
-        people = API().getPeople(MBitem)
-        genre = API().getGenre(MBitem)
-        studios = API().getStudios(MBitem)
-        mediaStreams=API().getMediaStreams(MBitem)
-        userData=API().getUserData(MBitem)
-        
-        changes = False
-
-        #update/check all artwork
-        changes |= self.updateArtWork(KodiItem,MBitem)
-        
-        addOrUpdateEpisodeToKodiLibrary(MBitem, connection, cursor)
-
-        #add actors
-        changes |= self.AddActorsToMedia(KodiItem,MBitem.get("People"),"episode", connection, cursor)
-        
-        if changes:
-            utils.logMsg("Updated item to Kodi Library", MBitem["Id"] + " - " + MBitem["Name"])
-    
-        return changes
-        
-    def getArtworkParam_Batched(self, KodiItem, MBitem, params):
-
-        
-        item_type=str(MBitem.get("Type"))
-        
-        '''
-        if item_type == "Series":
-            id = KodiItem['tvshowid']
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": %s}, "id": 1 }'
-        elif item_type == "Episode":
-            # episodes don't have any artwork - they derrive this from the tv show
-            return False
-        elif item_type == "MusicVideo":
-            id = KodiItem['musicvideoid']
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { musicvideoid": %i, "art": %s}, "id": 1 }'
-        elif item_type == "Movie":
-            id = KodiItem['movieid']
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": %s}, "id": 1 }'
-        '''
-        
-        #update artwork
-        changes = False
-        
-        artwork = {}
-        artwork["poster"] = API().getArtwork(MBitem, "Primary")
-        
-        if(item_type != "Episode"):        
-            artwork["banner"] = API().getArtwork(MBitem, "Banner")
-            artwork["clearlogo"] = API().getArtwork(MBitem, "Logo")
-            artwork["clearart"] = API().getArtwork(MBitem, "Art")
-            artwork["landscape"] = API().getArtwork(MBitem, "Thumb")
-            artwork["discart"] = API().getArtwork(MBitem, "Disc")
-            artwork["fanart"] = API().getArtwork(MBitem, "Backdrop")
-        
-        for art in artwork:
-            if artwork.get(art) != "":
-                if KodiItem["art"].has_key(art):
-                    curValue = urllib.unquote(KodiItem['art'][art]).decode('utf8')
-                    if not artwork.get(art) in curValue:
-                        KodiItem["art"][art] = artwork.get(art)
-                        changes = True
-                else:
-                    KodiItem["art"][art] = artwork.get(art)
-                    changes = True
-        
-        if len(KodiItem["art"]) == 0:
-            changes = False
-        
-        if changes:
-            json_array = json.dumps(KodiItem["art"])
-            params.append("\"art\": " + json_array)
-            #result = xbmc.executeJSONRPC(jsoncommand %(id, json_array))
-        return changes
-        
-    # adds or updates artwork to the given Kodi file in database
-    def updateArtWork(self,KodiItem,MBitem):
-        item_type=str(MBitem.get("Type"))
-        
-        if item_type == "Series":
-            id = KodiItem['tvshowid']
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "art": %s}, "id": 1 }'
-        elif item_type == "Episode":
-            id = KodiItem['episodeid']
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "art": %s}, "id": 1 }'
-        elif item_type == "MusicVideo":
-            id = KodiItem['musicvideoid']
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { musicvideoid": %i, "art": %s}, "id": 1 }'
-        elif item_type == "Movie":
-            id = KodiItem['movieid']
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "art": %s}, "id": 1 }'
-
-        #update artwork
-        changes = False
-        
-        artwork = {}
-        artwork["thumb"] = API().getArtwork(MBitem, "Primary")
-        
-        if(item_type != "Episode"):
-            artwork["poster"] = API().getArtwork(MBitem, "Primary")
-            artwork["banner"] = API().getArtwork(MBitem, "Banner")
-            artwork["clearlogo"] = API().getArtwork(MBitem, "Logo")
-            artwork["clearart"] = API().getArtwork(MBitem, "Art")
-            artwork["landscape"] = API().getArtwork(MBitem, "Thumb")
-            artwork["discart"] = API().getArtwork(MBitem, "Disc")
-            artwork["fanart"] = API().getArtwork(MBitem, "Backdrop")
-        
-        for art in artwork:
-            if artwork.get(art) != "":
-                if KodiItem["art"].has_key(art):
-                    curValue = urllib.unquote(KodiItem['art'][art]).decode('utf8')
-                    if not artwork.get(art) in curValue:
-                        KodiItem["art"][art] = artwork.get(art)
-                        changes = True
-                else:
-                    KodiItem["art"][art] = artwork.get(art)
-                    changes = True
-        
-        if len(KodiItem["art"]) == 0:
-            changes = False
-        
-        if changes:
-            json_array = json.dumps(KodiItem["art"])
-            result = xbmc.executeJSONRPC(jsoncommand %(id, json_array))
-        return changes
-    
-    def getPropertyParam_Batched(self,KodiItem, propertyName, propertyValue, params, forced = False):
-    
-        '''
-        if fileType == "tvshow":
-            id = KodiItem['tvshowid']
-            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "%s": %i}, "id": 1 }'
-            jsoncommand_s = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "%s": "%s"}, "id": 1 }'
-        elif fileType == "episode":
-            id = KodiItem['episodeid']  
-            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "%s": %i}, "id": 1 }'            
-            jsoncommand_s = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "%s": "%s"}, "id": 1 }'
-        elif fileType == "musicvideo":
-            id = KodiItem['musicvideoid']
-            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { "musicvideoid": %i, "%s": %i}, "id": 1 }'
-            jsoncommand_s = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { "musicvideoid": %i, "%s": "%s"}, "id": 1 }'
-        elif fileType == "movie":
-            id = KodiItem['movieid']
-            jsoncommand_i = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": %i}, "id": 1 }'
-            jsoncommand_s = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": "%s"}, "id": 1 }'
-        '''
-        
-        changes = False
-        if ((propertyValue != KodiItem[propertyName]) or forced):
-            if propertyValue != None:
-                if type(propertyValue) is int:
-                    #xbmc.sleep(sleepVal)
-                    utils.logMsg("Emby","updating property..." + str(propertyName))
-                    utils.logMsg("Emby","kodi value:" + str(KodiItem[propertyName]) + " MB value: " + str(propertyValue))
-                    params.append("\"" + propertyName + "\": " + str(propertyValue))
-                    #xbmc.executeJSONRPC(jsoncommand_i %(id, propertyName, propertyValue))
-                    changes = True
-                elif type(propertyValue) is Decimal:
-                    #extra compare decimals as int (rounded)
-                    if int(propertyValue) != int(KodiItem[propertyName]):
-                        utils.logMsg("Emby","updating property..." + str(propertyName))
-                        utils.logMsg("Emby","kodi value:" + str(KodiItem[propertyName]) + " MB value: " + str(propertyValue))
-                        params.append("\"" + propertyName + "\": " + str(propertyValue))
-                        changes = True
-                else:
-                    #xbmc.sleep(sleepVal)
-                    propValue = json.dumps(propertyValue)
-                    utils.logMsg("Emby","updating property..." + str(propertyName))
-                    utils.logMsg("Emby","kodi value:" + KodiItem[propertyName] + " MB value: " + propValue)
-                    params.append("\"" + propertyName + "\": " + propValue)
-                    #xbmc.executeJSONRPC(jsoncommand_s %(id, propertyName, propertyValue.encode('utf-8')))
-                    changes = True
-                    
-        return changes
-        
-    # adds or updates the given property on the videofile in Kodi database
-    def updateProperty(self,KodiItem,propertyName,propertyValue,fileType,forced=False):
-        if fileType == "tvshow":
-            id = KodiItem['tvshowid']
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "%s": %s}, "id": 1 }'
-        elif fileType == "episode":
-            id = KodiItem['episodeid']  
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "%s": %s}, "id": 1 }'            
-        elif fileType == "musicvideo":
-            id = KodiItem['musicvideoid']
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { "musicvideoid": %i, "%s": %s}, "id": 1 }'
-        elif fileType == "movie":
-            id = KodiItem['movieid']
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": %s}, "id": 1 }'
-        
-        changes = False
-        if ((propertyValue != KodiItem[propertyName]) or forced):
-            if propertyValue != None:
-                if type(propertyValue) is int:
-                    xbmc.sleep(sleepVal)
-                    utils.logMsg("Emby","updating property..." + str(propertyName))
-                    utils.logMsg("Emby","kodi value:" + str(KodiItem[propertyName]) + " MB value: " + str(propertyValue))
-                    xbmc.executeJSONRPC(jsoncommand %(id, propertyName, propertyValue))
-                    changes = True
-                elif type(propertyValue) is Decimal:
-                    #extra compare decimals as int (rounded)
-                    if int(propertyValue) != int(KodiItem[propertyName]):
-                        xbmc.sleep(sleepVal)
-                        utils.logMsg("Emby","updating property..." + str(propertyName))
-                        utils.logMsg("Emby","kodi value:" + str(KodiItem[propertyName]) + " MB value: " + str(propertyValue))
-                        xbmc.executeJSONRPC(jsoncommand %(id, propertyName, propertyValue))
-                        changes = True
-                else:
-                    xbmc.sleep(sleepVal)
-                    propValue = json.dumps(propertyValue)
-                    utils.logMsg("Emby","updating property..." + str(propertyName))
-                    utils.logMsg("Emby","kodi value:" + KodiItem[propertyName] + " MB value: " + propValue)
-                    xbmc.executeJSONRPC(jsoncommand %(id, propertyName, propValue))
-                    changes = True
-                    
-        return changes
-
-    def getPropertyParamArray_Batched(self, KodiItem, propertyName, propertyCollection, params):
-        '''
-        if fileType == "tvshow":
-            id = KodiItem['tvshowid']   
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "%s": %s}, "id": 1 }'
-        elif fileType == "episode":
-            id = KodiItem['episodeid']   
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "%s": %s}, "id": 1 }'
-        elif fileType == "musicvideo":
-            id = KodiItem['musicvideoid']   
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { "musicvideoid": %i, "%s": %s}, "id": 1 }'
-        elif fileType == "movie":
-            id = KodiItem['movieid']   
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": %s}, "id": 1 }'
-        '''
-        
-        pendingChanges = False
-        if propertyCollection != None:   
-            currentvalues = set(KodiItem[propertyName])
-            for item in propertyCollection:
-                if not item in currentvalues:
-                    pendingChanges = True
-                    json_array = json.dumps(propertyCollection)
-            
-            if pendingChanges:
-                #xbmc.sleep(sleepVal)
-                utils.logMsg("Emby","updating propertyarray... Name:" + str(propertyName) + " Current:" + str(currentvalues) + " New:" + str(json_array))
-                params.append("\"" + propertyName + "\": " + json_array)
-                #xbmc.executeJSONRPC(jsoncommand %(id,propertyName,json_array))
-
-        return pendingChanges        
-        
-    # adds or updates the property-array on the videofile in Kodi database
-    def updatePropertyArray(self,KodiItem,propertyName,propertyCollection,fileType):
-        if fileType == "tvshow":
-            id = KodiItem['tvshowid']   
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetTVShowDetails", "params": { "tvshowid": %i, "%s": %s}, "id": 1 }'
-        elif fileType == "episode":
-            id = KodiItem['episodeid']   
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": { "episodeid": %i, "%s": %s}, "id": 1 }'
-        elif fileType == "musicvideo":
-            id = KodiItem['musicvideoid']   
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMusicVideoDetails", "params": { "musicvideoid": %i, "%s": %s}, "id": 1 }'
-        elif fileType == "movie":
-            id = KodiItem['movieid']   
-            jsoncommand = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": { "movieid": %i, "%s": %s}, "id": 1 }'
-
-        pendingChanges = False
-        if (propertyCollection != None and KodiItem.get(propertyName) != None):   
-            currentvalues = set(KodiItem[propertyName])
-            for item in propertyCollection:
-                if not item in currentvalues:
-                    pendingChanges = True
-                    json_array = json.dumps(propertyCollection)
-            
-            if pendingChanges:
-                xbmc.sleep(sleepVal)
-                utils.logMsg("Emby","updating propertyarray... Name:" + str(propertyName) + " Current:" + str(currentvalues) + " New:" + str(json_array))
-                xbmc.executeJSONRPC(jsoncommand %(id,propertyName,json_array))
-
-        return pendingChanges
-    
     def addOrUpdateMovieToKodiLibrary( self, embyId ,connection, cursor, viewTag):
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
@@ -411,6 +67,7 @@ class WriteKodiDB():
         
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
+        people = API().getPeople(MBitem)
 
         #### The movie details #########
         runtime = int(timeInfo.get('Duration'))*60
@@ -419,6 +76,18 @@ class WriteKodiDB():
         sorttitle = utils.convertEncoding(MBitem["SortName"])
         year = MBitem.get("ProductionYear")
         rating = MBitem.get("CommunityRating")
+        mpaa = MBitem.get("OfficialRating")
+        genres = MBitem.get("Genres")
+        genre = " / ".join(genres)
+        studios = API().getStudios(MBitem)
+        studio = " / ".join(studios)
+        writer = " / ".join(people.get("Writer"))
+        director = " / ".join(people.get("Director"))
+        
+        imdb = None
+        if MBitem.get("ProviderIds"):
+            if MBitem.get("ProviderIds").get("Imdb"):
+                imdb = MBitem.get("ProviderIds").get("Imdb")
 
         if MBitem.get("ShortOverview") != None:
             shortplot = utils.convertEncoding(MBitem.get("ShortOverview"))
@@ -439,10 +108,14 @@ class WriteKodiDB():
         else:
             dateadded = None
         
+        playcount = None
+        if userData.get("PlayCount") == "1":
+            playcount = 1
+            
         #### ADD OR UPDATE THE FILE AND PATH ###########
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY
-        path = "plugin://plugin.video.emby/movies/"
-        filename = "plugin://plugin.video.emby/movies/?id=" + MBitem["Id"] + "&mode=play"
+        path = "plugin://plugin.video.emby/"
+        filename = "plugin://plugin.video.emby/?id=%s&mode=play" % MBitem["Id"]
         
         #create the path
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
@@ -455,11 +128,7 @@ class WriteKodiDB():
             pathid = pathid + 1
             pathsql = "insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
             cursor.execute(pathsql, (pathid,path,"movies","metadata.local",1))
-        
-        playcount = None
-        if userData.get("PlayCount") == "1":
-            playcount = 1
-            
+
         #create the file if not exists
         cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?",(filename,pathid,))
         result = cursor.fetchone()
@@ -479,16 +148,19 @@ class WriteKodiDB():
             cursor.execute("select coalesce(max(idMovie),0) as movieid from movie")
             movieid = cursor.fetchone()[0]
             movieid = movieid + 1
-            pathsql="insert into movie(idMovie, idFile, c00, c01, c02, c05, c07, c10, c11, c16, c19, embyId) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (movieid, fileid, title, plot, shortplot, rating, year, sorttitle, runtime, title, trailerUrl, MBitem["Id"]))
-        
+            pathsql="insert into movie(idMovie, idFile, c00, c01, c02, c05, c06, c07, c09, c10, c11, c12, c14, c15, c16, c18, c19, embyId) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (movieid, fileid, title, plot, shortplot, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl, MBitem["Id"]))
+            
+            #add the viewtag
+            self.AddTagToMedia(movieid, viewTag, "movie", cursor)
+            
         #### UPDATE THE MOVIE #####
         else:
-            pathsql="update movie SET c00 = ?, c01 = ?, c02 = ?, c05 = ?, c07 = ?, c10 = ?, c11 = ?, c16 = ?, c19 = ?, embyId= ? WHERE idMovie = ?"
-            cursor.execute(pathsql, (title, plot, shortplot, rating, year, sorttitle, runtime, title, trailerUrl, MBitem["Id"], movieid))
+            pathsql="update movie SET c00 = ?, c01 = ?, c02 = ?, c05 = ?, c06 = ?, c07 = ?, c09 = ? c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?, c16 = ?, c18 = ?, c19 = ?, embyId= ? WHERE idMovie = ?"
+            cursor.execute(pathsql, (title, plot, shortplot, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl, MBitem["Id"], movieid))
         
         #update or insert actors
-        self.AddActorsToMedia(movieid,MBitem.get("People"),"movie", connection, cursor)
+        self.AddPeopleToMedia(movieid,MBitem.get("People"),"movie", connection, cursor)
         
         #update artwork
         self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), movieid, "movie", "thumb", cursor)
@@ -500,10 +172,136 @@ class WriteKodiDB():
         self.addOrUpdateArt(API().getArtwork(MBitem, "Disc"), movieid, "movie", "discart", cursor)
         self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop"), movieid, "movie", "fanart", cursor)
         
+        #update genres
+        self.AddGenresToMedia(movieid, genres, "movie", cursor)
+        
+        #update studios
+        self.AddStudiosToMedia(movieid, studios, "movie", cursor)
+        
         #commit changes and return the id
         connection.commit()
         return movieid
 
+    def addOrUpdateTvShowToKodiLibrary( self, embyId, connection, cursor, viewTag ):
+        
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
+        port = addon.getSetting('port')
+        host = addon.getSetting('ipaddress')
+        server = host + ":" + port
+        
+        MBitem = ReadEmbyDB().getFullItem(embyId)
+        
+        timeInfo = API().getTimeInfo(MBitem)
+        userData=API().getUserData(MBitem)
+        
+        thumbPath = API().getArtwork(MBitem, "Primary")
+        
+        # If the item already exist in the local Kodi DB we'll perform a full item update
+        # If the item doesn't exist, we'll add it to the database
+        
+        cursor.execute("SELECT idMovie FROM movie WHERE embyId = ?",(MBitem["Id"],))
+        result = cursor.fetchone()
+        if result != None:
+            showid = result[0]
+        else:
+            showid = None
+        
+        #### TV SHOW DETAILS #########
+        
+        genres = MBitem.get("Genres")
+        genre = " / ".join(genres)
+        studios = API().getStudios(MBitem)
+        studio = " / ".join(studios)
+        mpaa = MBitem.get("OfficialRating")
+        
+        if MBitem.get("DateCreated") != None:
+            dateadded = MBitem["DateCreated"].replace("T"," ")
+            dateadded = dateadded.replace(".0000000Z","")
+        else:
+            dateadded = None
+        
+        if MBitem.get("PremiereDate") != None: 
+             premieredatelist = (MBitem.get("PremiereDate")).split("T") 
+             premieredate = premieredatelist[0] 
+        else:
+            premieredate = None
+        
+        path = "plugin://plugin.video.emby/tvshows/" + MBitem["Id"] + "/"
+        
+            
+        #### ADD THE TV SHOW TO KODI ############## 
+        if showid == None:
+            #create toplevel path as monitored source - needed for things like actors and stuff to work (no clue why)
+            toplevelpath = "plugin://plugin.video.emby/tvshows/"
+            cursor.execute("SELECT idPath as tlpathid FROM path WHERE strPath = ?",(toplevelpath,))
+            result = cursor.fetchone()
+            if result == None:
+                cursor.execute("select coalesce(max(idPath),0) as tlpathid from path")
+                tlpathid = cursor.fetchone()[0]
+                tlpathid = tlpathid + 1
+                pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
+                cursor.execute(pathsql, (tlpathid,toplevelpath,"tvshows","metadata.local",1))
+            else:
+                tlpathid = result[0]
+            
+            #create the tv show path
+            cursor.execute("select coalesce(max(idPath),0) as pathid from path")
+            pathid = cursor.fetchone()[0]
+            pathid = pathid + 1
+            pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate, idParentPath) values(?, ?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (pathid,path,None,None,1,tlpathid))
+            
+            runtime = int(timeInfo.get('Duration'))*60
+            plot = utils.convertEncoding(API().getOverview(MBitem))
+            title = utils.convertEncoding(MBitem["Name"])
+            sorttitle = utils.convertEncoding(MBitem["SortName"])
+            rating = MBitem.get("CommunityRating")
+                
+            #create the tvshow
+            cursor.execute("select coalesce(max(idShow),0) as showid from tvshow")
+            showid = cursor.fetchone()[0]
+            showid = pathid + 1
+            pathsql="insert into tvshow(idShow, c00, c01, c04, c05, c08, c09, c13, c14, c15, embyId) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (showid, title, plot, rating, premieredate, genre, title, mpaa, studio, sorttitle, MBitem["Id"]))
+            
+            #link the path
+            pathsql="insert into tvshowlinkpath(idShow,idPath) values(?, ?)"
+            cursor.execute(pathsql, (showid,pathid))
+            
+            #add the viewtag
+            self.AddTagToMedia(showid, viewTag, "tvshow", cursor)
+        
+        #### UPDATE THE TV SHOW #############
+        else:
+            pathsql="UPDATE tvshow SET (c00 = ?, c01 = ?, c04 = ?, c05 = ?, c08 = ?, c09 = ?, c13 = ?, c14 = ?, c15 = ?, embyId = ? WHERE idShow = ?"
+            cursor.execute(pathsql, title, plot, rating, premieredate, title, genre, mpaa, studio, sorttitle, MBitem["Id"], showid)
+            
+        #update or insert people
+        self.AddPeopleToMedia(showid,MBitem.get("People"),"tvshow", connection, cursor)
+        
+        #update genres
+        self.AddGenresToMedia(movieid, genres, "tvshow", cursor)
+        
+        #update studios
+        self.AddStudiosToMedia(movieid, studios, "tvshow", cursor)
+        
+        #update artwork
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), showid, "tvshow", "thumb", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), showid, "tvshow", "poster", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Banner"), showid, "tvshow", "banner", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Logo"), showid, "tvshow", "clearlogo", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Art"), showid, "tvshow", "clearart", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Thumb"), showid, "tvshow", "landscape", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Disc"), showid, "tvshow", "discart", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop"), showid, "tvshow", "fanart", cursor)
+        
+        #update season details
+        self.updateSeasons(MBitem["Id"], showid, connection, cursor)
+        
+        #commit changes and return the id
+        connection.commit()
+        return showid
+        
     def addMusicVideoToKodiLibrary( self, MBitem, connection, cursor  ):
 
         #adds a musicvideo to Kodi by directly inserting it to connectionthe DB while there is no addMusicVideo available on the json API
@@ -597,6 +395,7 @@ class WriteKodiDB():
         
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
+        people = API().getPeople(MBitem)
 
         ###### episode properties ################
         episode = 0
@@ -607,6 +406,9 @@ class WriteKodiDB():
         plot = utils.convertEncoding(API().getOverview(MBitem))
         title = utils.convertEncoding(MBitem["Name"])
         rating = MBitem.get("CommunityRating")
+        writer = " / ".join(people.get("Writer"))
+        director = " / ".join(people.get("Director"))
+        
         if MBitem.get("PremiereDate") != None:
             premieredatelist = (MBitem.get("PremiereDate")).split("T")
             premieredate = premieredatelist[0]
@@ -678,16 +480,16 @@ class WriteKodiDB():
             cursor.execute("select coalesce(max(idEpisode),0) as episodeid from episode")
             episodeid = cursor.fetchone()[0]
             episodeid = episodeid + 1
-            pathsql = "INSERT into episode(idEpisode, idFile, c00, c01, c03, c05, c09, c12, c13, c14, idShow, c15, c16, embyId) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (episodeid, fileid, title, plot, rating, premieredate, runtime, season, episode, title, showid, "-1", "-1", MBitem["Id"]))
+            pathsql = "INSERT into episode(idEpisode, idFile, c00, c01, c03, c04, c05, c09, c10, c12, c13, c14, idShow, c15, c16, embyId) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (episodeid, fileid, title, plot, rating, writer, premieredate, runtime, director, season, episode, title, showid, "-1", "-1", MBitem["Id"]))
         
         # UPDATE THE EPISODE IN KODI (for now, we just send in all data)
         else:
-            pathsql = "UPDATE episode SET c00 = ?, c01 = ?, c03 = ?, c05 = ?, c09 = ?, c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, embyId = ? WHERE idEpisode = ?"
-            cursor.execute(pathsql, title, plot, rating, premieredate, runtime, season, episode, title, MBitem["Id"], episodeid)
+            pathsql = "UPDATE episode SET c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?, c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, embyId = ? WHERE idEpisode = ?"
+            cursor.execute(pathsql, title, plot, rating, writer, premieredate, runtime, director, season, episode, title, MBitem["Id"], episodeid)
         
         #update or insert actors
-        self.AddActorsToMedia(episodeid,MBitem.get("People"),"episode", connection, cursor)
+        self.AddPeopleToMedia(episodeid,MBitem.get("People"),"episode", connection, cursor)
         
         #update artwork
         self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), episodeid, "episode", "thumb", cursor)
@@ -714,106 +516,7 @@ class WriteKodiDB():
         utils.logMsg("deleting episode from Kodi library --> ",id)
         cursor.execute("DELETE FROM episode WHERE embyId = ?", (id,))
         connection.commit()
-               
-    def addOrUpdateTvShowToKodiLibrary( self, embyId, connection, cursor, viewTag ):
-        
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port
-        
-        MBitem = ReadEmbyDB().getFullItem(embyId)
-        
-        timeInfo = API().getTimeInfo(MBitem)
-        userData=API().getUserData(MBitem)
-        
-        thumbPath = API().getArtwork(MBitem, "Primary")
-        
-        # If the item already exist in the local Kodi DB we'll perform a full item update
-        # If the item doesn't exist, we'll add it to the database
-        
-        cursor.execute("SELECT idMovie FROM movie WHERE embyId = ?",(MBitem["Id"],))
-        result = cursor.fetchone()
-        if result != None:
-            showid = result[0]
-        else:
-            showid = None
-        
-        #### TV SHOW DETAILS #########
-        
-        if MBitem.get("DateCreated") != None:
-            dateadded = MBitem["DateCreated"].replace("T"," ")
-            dateadded = dateadded.replace(".0000000Z","")
-        else:
-            dateadded = None
-        
-        path = "plugin://plugin.video.emby/tvshows/" + MBitem["Id"] + "/"
-        
-            
-        #### ADD THE TV SHOW TO KODI ############## 
-        if showid == None:
-            #create toplevel path as monitored source - needed for things like actors and stuff to work (no clue why)
-            toplevelpath = "plugin://plugin.video.emby/tvshows/"
-            cursor.execute("SELECT idPath as tlpathid FROM path WHERE strPath = ?",(toplevelpath,))
-            result = cursor.fetchone()
-            if result == None:
-                cursor.execute("select coalesce(max(idPath),0) as tlpathid from path")
-                tlpathid = cursor.fetchone()[0]
-                tlpathid = tlpathid + 1
-                pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
-                cursor.execute(pathsql, (tlpathid,toplevelpath,"tvshows","metadata.local",1))
-            else:
-                tlpathid = result[0]
-            
-            #create the tv show path
-            cursor.execute("select coalesce(max(idPath),0) as pathid from path")
-            pathid = cursor.fetchone()[0]
-            pathid = pathid + 1
-            pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate, idParentPath) values(?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (pathid,path,None,None,1,tlpathid))
-            
-            runtime = int(timeInfo.get('Duration'))*60
-            plot = utils.convertEncoding(API().getOverview(MBitem))
-            title = utils.convertEncoding(MBitem["Name"])
-            sorttitle = utils.convertEncoding(MBitem["SortName"])
-            rating = MBitem.get("CommunityRating")
-                
-            #create the tvshow
-            cursor.execute("select coalesce(max(idShow),0) as showid from tvshow")
-            showid = cursor.fetchone()[0]
-            showid = pathid + 1
-            pathsql="insert into tvshow(idShow, c00, c01, c04, c09, c15, embyId) values(?, ?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (showid, title, plot, rating, title, sorttitle, MBitem["Id"]))
-            
-            #link the path
-            pathsql="insert into tvshowlinkpath(idShow,idPath) values(?, ?)"
-            cursor.execute(pathsql, (showid,pathid))
-        
-        #### UPDATE THE TV SHOW #############
-        else:
-            pathsql="UPDATE tvshow SET (c00 = ?, c01 = ?, c04 = ?, c09 = ?, c15 = ?, embyId = ? WHERE idShow = ?"
-            cursor.execute(pathsql, title, plot, rating, title, sorttitle, MBitem["Id"], showid)
-            
-        #update or insert actors
-        self.AddActorsToMedia(showid,MBitem.get("People"),"tvshow", connection, cursor)
-        
-        #update artwork
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), showid, "tvshow", "thumb", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), showid, "tvshow", "poster", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Banner"), showid, "tvshow", "banner", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Logo"), showid, "tvshow", "clearlogo", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Art"), showid, "tvshow", "clearart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Thumb"), showid, "tvshow", "landscape", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Disc"), showid, "tvshow", "discart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop"), showid, "tvshow", "fanart", cursor)
-        
-        #update season details
-        self.updateSeasons(MBitem["Id"], showid, connection, cursor)
-        
-        #commit changes and return the id
-        connection.commit()
-        return showid
-        
+                      
     def deleteTVShowFromKodiLibrary(self, id, connection, cursor):
         utils.logMsg("deleting tvshow from Kodi library --> ",id)
         cursor.execute("DELETE FROM tvshow WHERE embyId = ?", (id,))
@@ -846,8 +549,7 @@ class WriteKodiDB():
                     
                     imageUrl = API().getArtwork(season, "Banner")
                     self.addOrUpdateArt(imageUrl, seasonid, "season", "banner", cursor)                    
-                    
-        
+                            
     def addOrUpdateArt(self, imageUrl, kodiId, mediaType, imageType, cursor):
         updateDone = False
         if imageUrl:
@@ -861,7 +563,6 @@ class WriteKodiDB():
                 if(url != imageUrl):
                     utils.logMsg("ArtworkSync", "Updating Art Link for kodiId: " + str(kodiId) + " (" + url + ") -> (" + imageUrl + ")")
                     cursor.execute("UPDATE art set url = ? WHERE media_id = ? AND media_type = ? AND type = ?", (imageUrl, kodiId, mediaType, imageType))
-
         
     def setKodiResumePoint(self, id, resume_seconds, total_seconds, fileType):
         #use sqlite to set the resume point while json api doesn't support this yet
@@ -890,47 +591,7 @@ class WriteKodiDB():
         connection.commit()
         cursor.close()
         
-    '''
-    # removed for now as setting c15 and c16 to -1 looks like it just shows specials in the special folder only 
-    def setSpecialAirsDetails(self, MBitem, KodiItem, connection, cursor):
-        
-        changes = False
-        
-        cursor.execute("SELECT c15, c16 FROM episode WHERE idEpisode = ?",(KodiItem["episodeid"],))
-        result = cursor.fetchone()
-        if(result != None):
-        
-            c15 = -1
-            c16 = -1
-            
-            if(result[0] != None and result[0] != "" and result[0] != "None"):
-                c15 = int(result[0])
-            if(result[1] != None and result[1] != "" and result[1] != "None"):
-                c16 = int(result[1])
-
-            airsBeforeSeasonNumber = MBitem.get("AirsBeforeSeasonNumber")
-            airsBeforeEpisodeNumber = MBitem.get("AirsBeforeEpisodeNumber")
-            #AirsAfterSeasonNumber
-            
-            if(airsBeforeSeasonNumber == None):
-                airsBeforeSeasonNumber = 0
-                
-            if(airsBeforeEpisodeNumber == None):
-                airsBeforeEpisodeNumber = 0
-            
-            if(airsBeforeSeasonNumber != None and airsBeforeEpisodeNumber != None):
-                if(airsBeforeSeasonNumber != c15 or airsBeforeEpisodeNumber != c16):
-                    utils.logMsg("Emby","Special_Airs_Info Kodi: " + str(c15) + " " + str(c16))
-                    utils.logMsg("Emby","Special_Airs_Info Emby : " + str(airsBeforeSeasonNumber) + " " + str(airsBeforeEpisodeNumber))
-                    sql = "UPDATE episode set c15 = ?, c16 = ? WHERE idEpisode = ?"
-                    cursor.execute(sql, (airsBeforeSeasonNumber, airsBeforeEpisodeNumber, KodiItem["episodeid"]))
-                    connection.commit()
-                    changes = True
-                
-        return changes
-    '''
-
-    def AddActorsToMedia(self, id, people, mediatype, connection, cursor):
+    def AddPeopleToMedia(self, id, people, mediatype, connection, cursor):
         downloadUtils = DownloadUtils()
         
         kodiVersion = 14
@@ -939,42 +600,46 @@ class WriteKodiDB():
         
         if(people != None):
             for person in people:              
-                if(person.get("Type") == "Actor"):
-                    utils.logMsg("AddActorsToMedia", "Processing : " + person.get("Name"))
-                    Name = person.get("Name")
-                    Role = person.get("Role")
-                    actorid = None
-                    Thumb = downloadUtils.imageUrl(person.get("Id"), "Primary", 0, 400, 400)
+                
+                Name = person.get("Name")
+                
+                actorid = None
+                Thumb = downloadUtils.imageUrl(person.get("Id"), "Primary", 0, 400, 400)
+                if kodiVersion == 15:
+                    # Kodi Isengard database #
+                    if Thumb != None:
+                        Thumb = "<thumb>" + Thumb + "</thumb>"
+                    cursor.execute("SELECT actor_id as actorid FROM actor WHERE name = ?",(Name,))
+                else:
+                    # Kodi Gotham or Helix database #
+                    cursor.execute("SELECT idActor as actorid FROM actors WHERE strActor = ?",(Name,))
+                result = cursor.fetchone()
+                if result != None:
+                    actorid = result[0]
+                if actorid == None:
                     if kodiVersion == 15:
                         # Kodi Isengard database #
-                        if Thumb != None:
-                            Thumb = "<thumb>" + Thumb + "</thumb>"
-                        cursor.execute("SELECT actor_id as actorid FROM actor WHERE name = ?",(Name,))
+                        cursor.execute("select coalesce(max(actor_id),0) as actorid from actor")
+                        actorid = cursor.fetchone()[0]
+                        actorid = actorid + 1
+                        peoplesql="insert into actor(actor_id, name, art_urls) values(?, ?, ?)"
                     else:
                         # Kodi Gotham or Helix database #
-                        cursor.execute("SELECT idActor as actorid FROM actors WHERE strActor = ?",(Name,))
-                    result = cursor.fetchone()
-                    if result != None:
-                        actorid = result[0]
-                    if actorid == None:
-                        if kodiVersion == 15:
-                            # Kodi Isengard database #
-                            cursor.execute("select coalesce(max(actor_id),0) as actorid from actor")
-                            actorid = cursor.fetchone()[0]
-                            actorid = actorid + 1
-                            peoplesql="insert into actor(actor_id, name, art_urls) values(?, ?, ?)"
-                        else:
-                            # Kodi Gotham or Helix database #
-                            cursor.execute("select coalesce(max(idActor),0) as actorid from actors")
-                            actorid = cursor.fetchone()[0]
-                            actorid = actorid + 1
-                            peoplesql="insert into actors(idActor, strActor, strThumb) values(?, ?, ?)"
-                        cursor.execute(peoplesql, (actorid,Name,Thumb))
+                        cursor.execute("select coalesce(max(idActor),0) as actorid from actors")
+                        actorid = cursor.fetchone()[0]
+                        actorid = actorid + 1
+                        peoplesql="insert into actors(idActor, strActor, strThumb) values(?, ?, ?)"
+                    utils.logMsg("AddPeopleToMedia", "Processing : " + person.get("Name"))
+                    cursor.execute(peoplesql, (actorid,Name,Thumb))
+                
+                #### ACTORS ######
+                if(person.get("Type") == "Actor"):
                     
+                    Role = person.get("Role")
                     if kodiVersion == 15:
                         # Kodi Isengard database #
-                        peoplesql="INSERT OR REPLACE into actor_link(actor_id, media_id, media_type, role, cast_order) values(?, ?, ?, ?, ?)"
-                        cursor.execute(peoplesql, (actorid, id, mediatype, Role, None))
+                        peoplesql="INSERT OR REPLACE into actor_link(actor_id, media_id, media_type) values(?, ?, ?)"
+                        cursor.execute(peoplesql, (actorid, id, mediatype))
                     else:
                         # Kodi Gotham or Helix database #
                         if mediatype == "movie":
@@ -984,8 +649,191 @@ class WriteKodiDB():
                         if mediatype == "episode":
                             peoplesql="INSERT OR REPLACE into actorlinkepisode(idActor, idEpisode, strRole, iOrder) values(?, ?, ?, ?)"
                         cursor.execute(peoplesql, (actorid,id,Role,None))
+                        
+                #### DIRECTORS ######
+                if(person.get("Type") == "Director"):
+                    
+                    if kodiVersion == 15:
+                        # Kodi Isengard database #
+                        peoplesql="INSERT OR REPLACE into director_link(actor_id, media_id, media_type) values(?, ?, ?)"
+                        cursor.execute(peoplesql, (actorid, id, mediatype))
+                    else:
+                        # Kodi Gotham or Helix database #
+                        if mediatype == "movie":
+                            peoplesql="INSERT OR REPLACE into directorlinkmovie(idDirector, idMovie) values(?, ?)"
+                        if mediatype == "tvshow":
+                            peoplesql="INSERT OR REPLACE into directorlinktvshow(idDirector, idShow) values(?, ?)"
+                        if mediatype == "musicvideo":
+                            peoplesql="INSERT OR REPLACE into directorlinkmusicvideo(idDirector, idMVideo) values(?, ?)"
+                        cursor.execute(peoplesql, (actorid,id))
+                        
+                #### WRITERS ######
+                if(person.get("Type") == "Writing" or person.get("Type") == "Writer"):
+                    
+                    if kodiVersion == 15:
+                        # Kodi Isengard database #
+                        peoplesql="INSERT OR REPLACE into writer_link(actor_id, media_id, media_type) values(?, ?, ?)"
+                        cursor.execute(peoplesql, (actorid, id, mediatype))
+                    else:
+                        # Kodi Gotham or Helix database #
+                        if mediatype == "movie":
+                            peoplesql="INSERT OR REPLACE into writerlinkmovie(idWriter, idMovie) values(?, ?)"
+                        if mediatype == "episode":
+                            peoplesql="INSERT OR REPLACE into writerlinkepisode(idWriter, idEpisode) values(?, ?)"
+                        cursor.execute(peoplesql, (actorid,id))
 
- 
+    def AddGenresToMedia(self, id, genres, mediatype, cursor):
+
+        if genres:
+            
+            kodiVersion = 14
+            if xbmc.getInfoLabel("System.BuildVersion").startswith("15"):
+                kodiVersion = 15
+            
+            for genre in genres:
+
+                if kodiVersion == 15:
+                    genre_id = None
+                    cursor.execute("SELECT genre_id as genre_id FROM genre WHERE name = ?",(genre,))
+                    result = cursor.fetchone()
+                    if result != None:
+                        genre_id = result[0]
+                    #create genre
+                    if genre_id == None:
+                        cursor.execute("select coalesce(max(genre_id),0) as genre_id from genre")
+                        genre_id = cursor.fetchone()[0]
+                        genre_id = genre_id + 1
+                        sql="insert into genre(genre_id, name) values(?, ?)"
+                        cursor.execute(sql, (genre_id,genre))
+                    
+                    #assign genre to item    
+                    utils.logMsg("AddGenresToMedia", "Processing : " + genre)
+                    sql="INSERT OR REPLACE into genre_link(genre_id, media_id, media_type) values(?, ?, ?)"
+                    cursor.execute(sql, (genre_id, id, mediatype))
+                
+                else:
+                    idGenre = None
+                    cursor.execute("SELECT idGenre as idGenre FROM genre WHERE strGenre = ?",(genre,))
+                    result = cursor.fetchone()
+                    if result != None:
+                        idGenre = result[0]
+                    #create genre
+                    if idGenre == None:
+                        cursor.execute("select coalesce(max(idGenre),0) as idGenre from genre")
+                        idGenre = cursor.fetchone()[0]
+                        idGenre = idGenre + 1
+                        sql="insert into genre(idGenre, strGenre) values(?, ?)"
+                        cursor.execute(sql, (idGenre,genre))
+
+                    #assign genre to item    
+                    utils.logMsg("AddGenresToMedia", "Processing : " + genre)
+                    if mediatype == "movie":
+                        sql="INSERT OR REPLACE into genrelinkmovie(idGenre, idMovie) values(?, ?)"
+                    if mediatype == "tvshow":
+                        sql="INSERT OR REPLACE into genrelinktvshow(idGenre, idShow) values(?, ?)"
+                    if mediatype == "episode":
+                        sql="INSERT OR REPLACE into genrelinkepisode(idGenre, idEpisode) values(?, ?)"
+                    cursor.execute(sql, (idGenre,id))
+    
+    def AddStudiosToMedia(self, id, studios, mediatype, cursor):
+
+        if studios:
+            
+            kodiVersion = 14
+            if xbmc.getInfoLabel("System.BuildVersion").startswith("15"):
+                kodiVersion = 15
+            
+            for studio in studios:
+
+                if kodiVersion == 15:
+                    studio_id = None
+                    cursor.execute("SELECT studio_id as studio_id FROM studio WHERE name = ?",(studio,))
+                    result = cursor.fetchone()
+                    if result != None:
+                        studio_id = result[0]
+                    #create studio
+                    if studio_id == None:
+                        cursor.execute("select coalesce(max(studio_id),0) as studio_id from studio")
+                        studio_id = cursor.fetchone()[0]
+                        studio_id = studio_id + 1
+                        sql="insert into studio(studio_id, name) values(?, ?)"
+                        cursor.execute(sql, (studio_id,studio))
+                    
+                    #assign studio to item    
+                    utils.logMsg("AddstudiosToMedia", "Processing : " + studio)
+                    sql="INSERT OR REPLACE into studio_link(studio_id, media_id, media_type) values(?, ?, ?)"
+                    cursor.execute(sql, (studio_id, id, mediatype))
+                
+                else:
+                    idstudio = None
+                    cursor.execute("SELECT idstudio as idstudio FROM studio WHERE strstudio = ?",(studio,))
+                    result = cursor.fetchone()
+                    if result != None:
+                        idstudio = result[0]
+                    #create studio
+                    if idstudio == None:
+                        cursor.execute("select coalesce(max(idstudio),0) as idstudio from studio")
+                        idstudio = cursor.fetchone()[0]
+                        idstudio = idstudio + 1
+                        sql="insert into studio(idstudio, strstudio) values(?, ?)"
+                        cursor.execute(sql, (idstudio,studio))
+
+                    #assign studio to item    
+                    utils.logMsg("AddstudiosToMedia", "Processing : " + studio)
+                    if mediatype == "movie":
+                        sql="INSERT OR REPLACE into studiolinkmovie(idstudio, idMovie) values(?, ?)"
+                    if mediatype == "tvshow":
+                        sql="INSERT OR REPLACE into studiolinktvshow(idstudio, idShow) values(?, ?)"
+                    if mediatype == "episode":
+                        sql="INSERT OR REPLACE into studiolinkepisode(idstudio, idEpisode) values(?, ?)"
+                    cursor.execute(sql, (idstudio,id))
+        
+    def AddTagToMedia(self, id, tag, mediatype, cursor):
+
+        if tag:
+            
+            kodiVersion = 14
+            if xbmc.getInfoLabel("System.BuildVersion").startswith("15"):
+                kodiVersion = 15
+            
+            if kodiVersion == 15:
+                tag_id = None
+                cursor.execute("SELECT tag_id as tag_id FROM tag WHERE name = ?",(tag,))
+                result = cursor.fetchone()
+                if result != None:
+                    tag_id = result[0]
+                #create tag
+                if tag_id == None:
+                    cursor.execute("select coalesce(max(tag_id),0) as tag_id from tag")
+                    tag_id = cursor.fetchone()[0]
+                    tag_id = tag_id + 1
+                    sql="insert into tag(tag_id, name) values(?, ?)"
+                    cursor.execute(sql, (tag_id,tag))
+                
+                #assign tag to item    
+                utils.logMsg("AddTagToMedia", "Processing : " + tag)
+                sql="INSERT OR REPLACE into tag_link(tag_id, media_id, media_type) values(?, ?, ?)"
+                cursor.execute(sql, (tag_id, id, mediatype))
+            
+            else:
+                idTag = None
+                cursor.execute("SELECT idTag as idTag FROM tag WHERE strTag = ?",(genre,))
+                result = cursor.fetchone()
+                if result != None:
+                    idTag = result[0]
+                #create idTag
+                if idTag == None:
+                    cursor.execute("select coalesce(max(idTag),0) as idTag from tag")
+                    idTag = cursor.fetchone()[0]
+                    idTag = idTag + 1
+                    sql="insert into tag(idTag, strTag) values(?, ?)"
+                    cursor.execute(sql, (idTag,tag))
+
+                #assign tag to item    
+                utils.logMsg("AddTagToMedia", "Processing : " + tag)
+                sql="INSERT OR REPLACE into taglinks(idTag, idMedia, media_type) values(?, ?, ?)"
+                cursor.execute(sql, (idTag, id, mediatype))
+       
     def addBoxsetToKodiLibrary(self, boxset, connection, cursor):
         
         strSet = boxset["Name"]
