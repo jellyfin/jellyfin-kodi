@@ -115,12 +115,10 @@ class Service():
                         self.logMsg("Doing_Db_Sync: syncDatabase (Started)")
                         libSync = librarySync.syncDatabase()
                         self.logMsg("Doing_Db_Sync: syncDatabase (Finished) " + str(libSync))
-                        countSync = librarySync.updatePlayCounts()
-                        self.logMsg("Doing_Db_Sync: updatePlayCounts (Finished) "  + str(countSync))
 
                         # Force refresh newly set thumbnails
                         xbmc.executebuiltin("UpdateLibrary(video)")
-                        if(libSync and countSync):
+                        if(libSync):
                             startupComplete = True
                     else:
                         if self.KodiMonitor.waitForAbort(10):

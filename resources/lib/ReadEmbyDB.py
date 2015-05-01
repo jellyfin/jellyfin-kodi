@@ -6,30 +6,22 @@ import xbmc
 import xbmcgui
 import xbmcaddon
 
+
+
 from DownloadUtils import DownloadUtils
 
 addon = xbmcaddon.Addon(id='plugin.video.emby')
 
 class ReadEmbyDB():   
     
-    def getMovies(self, id, fullinfo = False, fullSync = True, itemList = []):
+    def getMovies(self, id):
         
         result = None
         doUtils = DownloadUtils()
-
-        if fullSync:
-            sortstring = "&SortBy=SortName"
-        else:
-            if(len(itemList) > 0): # if we want a certain list specify it
-                #sortstring = "&Ids=" + ",".join(itemList)
-                sortstring = "" # work around for now until ParetnId and Id work together
-            else: # just get the last 20 created items
-                sortstring = "&Limit=20&SortBy=DateCreated"
-            
-        if fullinfo:
-            url = "{server}/mediabrowser/Users/{UserId}/items?ParentId=%s%s&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=Movie&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1" % (id, sortstring)
-        else:
-            url = "{server}/mediabrowser/Users/{UserId}/items?ParentId=%s%s&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Movie&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1" % (id, sortstring)
+        
+        #only get basic info for our sync-compares
+        sortstring = "&SortBy=SortName"
+        url = "{server}/mediabrowser/Users/{UserId}/items?ParentId=%s%s&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Movie&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1" % (id, sortstring)
 
         jsonData = doUtils.downloadUrl(url)
         if (jsonData == ""):
@@ -37,14 +29,6 @@ class ReadEmbyDB():
 
         if (jsonData[u'Items'] != ""):
             result = jsonData[u'Items']
-
-        # work around for now until ParetnId and Id work together
-        if (result != None and len(result) > 0 and len(itemList) > 0):
-            newResult = []
-            for item in result:
-                if (item[u'Id'] in itemList):
-                    newResult.append(item)
-            result = newResult
             
         return result
 
@@ -98,20 +82,14 @@ class ReadEmbyDB():
 
         return result
     
-    def getTVShows(self, id, fullinfo = False, fullSync = False):
+    def getTvShows(self, id):
         
         result = None
         doUtils = DownloadUtils()
-
-        if not fullSync:
-            sortstring = "&Limit=20&SortBy=DateCreated"
-        else:
-            sortstring = "&SortBy=SortName"
         
-        if fullinfo:
-            url = "{server}/mediabrowser/Users/{UserId}/Items?ParentId=%s%s&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1" % (id, sortstring)
-        else:
-            url = "{server}/mediabrowser/Users/{UserId}/Items?ParentId=%s%s&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1" % (id, sortstring)
+        #only get basic info for our sync-compares
+        sortstring = "&SortBy=SortName"
+        url = "{server}/mediabrowser/Users/{UserId}/Items?ParentId=%s%s&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1" % (id, sortstring)
         
         jsonData = doUtils.downloadUrl(url)
         if (jsonData == ""):
@@ -138,15 +116,12 @@ class ReadEmbyDB():
 
         return result
     
-    def getEpisodes(self, showId, fullinfo = False):
+    def getEpisodes(self, showId):
         
         result = None
         doUtils = DownloadUtils()  
         
-        if fullinfo:
-            url = "{server}/mediabrowser/Users/{UserId}/Items?ParentId=%s&IsVirtualUnaired=false&IsMissing=False&SortBy=SortName&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1" % showId
-        else:
-            url = "{server}/mediabrowser/Users/{UserId}/Items?ParentId=%s&IsVirtualUnaired=false&IsMissing=False&SortBy=SortName&Fields=Name,SortName,CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1" % showId
+        url = "{server}/mediabrowser/Users/{UserId}/Items?ParentId=%s&IsVirtualUnaired=false&IsMissing=False&SortBy=SortName&Fields=Name,SortName,CumulativeRunTimeTicks&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1" % showId
         
         jsonData = doUtils.downloadUrl(url)
         if (jsonData == ""):

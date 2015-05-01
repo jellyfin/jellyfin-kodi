@@ -53,7 +53,7 @@ def convertEncoding(data):
           
 def KodiSQL():
     connection = sqlite3.connect(getKodiDBPath())
-
+    
     return connection
 
 def getKodiDBPath():
