@@ -204,7 +204,7 @@ class LibrarySync():
             else:
                 # If there are changes to the item, perform a full sync of the item
                 if kodiEpisode[2] != item["Name"] or item["Id"] in itemList:
-                    WriteKodiDB().addOrUpdateTvShowToKodiLibrary(item["Id"], kodiShowId, connection, cursor)
+                    WriteKodiDB().addOrUpdateEpisodeToKodiLibrary(item["Id"], kodiShowId, connection, cursor)
         
         #### EPISODES: PROCESS DELETES #####
         allEmbyEpisodeIds = set(allEmbyEpisodeIds)
