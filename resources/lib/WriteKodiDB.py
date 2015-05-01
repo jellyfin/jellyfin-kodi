@@ -442,7 +442,7 @@ class WriteKodiDB():
         #### ADD OR UPDATE THE FILE AND PATH ###########
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY
         path = "plugin://plugin.video.emby/movies/"
-        filename = "plugin://plugin.video.emby/movies/?id=" MBitem["Id"] + "&mode=play"
+        filename = "plugin://plugin.video.emby/movies/?id=" + MBitem["Id"] + "&mode=play"
         
         #create the path
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
@@ -489,6 +489,16 @@ class WriteKodiDB():
         
         #update or insert actors
         self.AddActorsToMedia(movieid,MBitem.get("People"),"movie", connection, cursor)
+        
+        #update artwork
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), movieid, "movie", "thumb", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), movieid, "movie", "poster", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Banner"), movieid, "movie", "banner", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Logo"), movieid, "movie", "clearlogo", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Art"), movieid, "movie", "clearart", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Thumb"), movieid, "movie", "landscape", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Disc"), movieid, "movie", "discart", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop"), movieid, "movie", "fanart", cursor)
         
         #commit changes and return the id
         connection.commit()
@@ -621,7 +631,7 @@ class WriteKodiDB():
         #### ADD OR UPDATE THE FILE AND PATH ###########
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY        
         path = "plugin://plugin.video.emby/tvshows/" + MBitem["SeriesId"] + "/"
-        filename = "plugin://plugin.video.emby/tvshows/" + MBitem["SeriesId"] + "/?id=" MBitem["Id"] + "&mode=play"
+        filename = "plugin://plugin.video.emby/tvshows/" + MBitem["SeriesId"] + "/?id=" + MBitem["Id"] + "&mode=play"
         
         #create the new path - return id if already exists  
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
@@ -678,6 +688,9 @@ class WriteKodiDB():
         
         #update or insert actors
         self.AddActorsToMedia(episodeid,MBitem.get("People"),"episode", connection, cursor)
+        
+        #update artwork
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), episodeid, "episode", "thumb", cursor)
         
         try:
             connection.commit()
@@ -784,6 +797,16 @@ class WriteKodiDB():
         #update or insert actors
         self.AddActorsToMedia(showid,MBitem.get("People"),"tvshow", connection, cursor)
         
+        #update artwork
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), showid, "tvshow", "thumb", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), showid, "tvshow", "poster", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Banner"), showid, "tvshow", "banner", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Logo"), showid, "tvshow", "clearlogo", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Art"), showid, "tvshow", "clearart", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Thumb"), showid, "tvshow", "landscape", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Disc"), showid, "tvshow", "discart", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop"), showid, "tvshow", "fanart", cursor)
+        
         #update season details
         self.updateSeasons(MBitem["Id"], showid, connection, cursor)
         
@@ -816,32 +839,29 @@ class WriteKodiDB():
                         
                     #update artwork
                     imageUrl = API().getArtwork(season, "Thumb")
-                    self.updateSeasonArt(imageUrl, seasonid, "landscape", cursor)
+                    self.addOrUpdateArt(imageUrl, seasonid, "season", "landscape", cursor)
                     
                     imageUrl = API().getArtwork(season, "Primary")
-                    self.updateSeasonArt(imageUrl, seasonid, "poster", cursor)
+                    self.addOrUpdateArt(imageUrl, seasonid, "season", "poster", cursor)
                     
                     imageUrl = API().getArtwork(season, "Banner")
-                    self.updateSeasonArt(imageUrl, seasonid, "banner", cursor)                    
+                    self.addOrUpdateArt(imageUrl, seasonid, "season", "banner", cursor)                    
                     
         
-    def updateSeasonArt(self, imageUrl, seasonid, imageType, cursor):
+    def addOrUpdateArt(self, imageUrl, kodiId, mediaType, imageType, cursor):
         updateDone = False
-        if imageUrl != "":
-            cursor.execute("SELECT url FROM art WHERE media_id = ? AND media_type = ? AND type = ?", (seasonid, "season", imageType))
+        if imageUrl:
+            cursor.execute("SELECT url FROM art WHERE media_id = ? AND media_type = ? AND type = ?", (kodiId, mediaType, imageType))
             result = cursor.fetchone()
             if(result == None):
-                utils.logMsg("SeasonArt", "Adding Art Link for SeasonId: " + str(seasonid) + " (" + imageUrl + ")")
-                cursor.execute("INSERT INTO art(media_id, media_type, type, url) values(?, ?, ?, ?)", (seasonid, "season", imageType, imageUrl))
-                updateDone = True
+                utils.logMsg("SeasonArt", "Adding Art Link for kodiId: " + str(kodiId) + " (" + imageUrl + ")")
+                cursor.execute("INSERT INTO art(media_id, media_type, type, url) values(?, ?, ?, ?)", (kodiId, mediaType, imageType, imageUrl))
             else:
                 url = result[0];
                 if(url != imageUrl):
-                    utils.logMsg("SeasonArt", "Updating Art Link for SeasonId: " + str(seasonid) + " (" + url + ") -> (" + imageUrl + ")")
-                    cursor.execute("UPDATE art set url = ? WHERE media_id = ? AND media_type = ? AND type = ?", (imageUrl, seasonid, "season", imageType))
-                    updateDone = True
-                    
-        return updateDone
+                    utils.logMsg("SeasonArt", "Updating Art Link for kodiId: " + str(kodiId) + " (" + url + ") -> (" + imageUrl + ")")
+                    cursor.execute("UPDATE art set url = ? WHERE media_id = ? AND media_type = ? AND type = ?", (imageUrl, kodiId, mediaType, imageType))
+
         
     def setKodiResumePoint(self, id, resume_seconds, total_seconds, fileType):
         #use sqlite to set the resume point while json api doesn't support this yet
