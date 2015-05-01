@@ -62,7 +62,7 @@ def getKodiDBPath():
         dbVersion = "78"
     if xbmc.getInfoLabel("System.BuildVersion").startswith("15"):
         #isengard
-        dbVersion = "91"
+        dbVersion = "92"
     else: 
         #helix
         dbVersion = "90"

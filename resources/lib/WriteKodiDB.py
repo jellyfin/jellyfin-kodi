@@ -113,9 +113,21 @@ class WriteKodiDB():
             
         #### ADD OR UPDATE THE FILE AND PATH ###########
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY
-        path = "plugin://plugin.video.emby/"
+        path = "plugin://plugin.video.emby/?id=%s&mode=play" % MBitem["Id"]
         filename = "plugin://plugin.video.emby/?id=%s&mode=play" % MBitem["Id"]
         
+        playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
+        playurl = utils.convertEncoding(playurl)
+        
+        # we need to store both the path and the filename seperately in the kodi db so we split them up
+        if "\\" in playurl:
+            filename = playurl.rsplit("\\",1)[-1]
+            path = playurl.replace(filename,"")
+        elif "/" in playurl:
+            filename = playurl.rsplit("/",1)[-1]
+            path = playurl.replace(filename,"")
+
+
         #create the path
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
         result = cursor.fetchone()
@@ -227,11 +239,28 @@ class WriteKodiDB():
         
         path = "plugin://plugin.video.emby/tvshows/" + MBitem["Id"] + "/"
         
+        playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
+        #make sure that the path always ends with a slash
+        path = utils.convertEncoding(playurl + "/")
+        
             
         #### ADD THE TV SHOW TO KODI ############## 
         if showid == None:
+            
+            #create the tv show path
+            cursor.execute("select coalesce(max(idPath),0) as pathid from path")
+            pathid = cursor.fetchone()[0]
+            pathid = pathid + 1
+            pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (pathid,path,None,None,1))
+            
             #create toplevel path as monitored source - needed for things like actors and stuff to work (no clue why)
-            toplevelpath = "plugin://plugin.video.emby/tvshows/"
+            if "\\" in path:
+                toplevelpathstr = path.rsplit("\\",2)[1]
+                toplevelpath = path.replace(toplevelpathstr + "\\","")
+            elif "/" in path:
+                toplevelpathstr = path.rsplit("/",2)[1]
+                toplevelpath = path.replace(toplevelpathstr + "/","")
             cursor.execute("SELECT idPath as tlpathid FROM path WHERE strPath = ?",(toplevelpath,))
             result = cursor.fetchone()
             if result == None:
@@ -240,16 +269,8 @@ class WriteKodiDB():
                 tlpathid = tlpathid + 1
                 pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
                 cursor.execute(pathsql, (tlpathid,toplevelpath,"tvshows","metadata.local",1))
-            else:
-                tlpathid = result[0]
-            
-            #create the tv show path
-            cursor.execute("select coalesce(max(idPath),0) as pathid from path")
-            pathid = cursor.fetchone()[0]
-            pathid = pathid + 1
-            pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate, idParentPath) values(?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (pathid,path,None,None,1,tlpathid))
-            
+
+
             runtime = int(timeInfo.get('Duration'))*60
             plot = utils.convertEncoding(API().getOverview(MBitem))
             title = utils.convertEncoding(MBitem["Name"])
@@ -259,7 +280,7 @@ class WriteKodiDB():
             #create the tvshow
             cursor.execute("select coalesce(max(idShow),0) as showid from tvshow")
             showid = cursor.fetchone()[0]
-            showid = pathid + 1
+            showid = showid + 1
             pathsql="insert into tvshow(idShow, c00, c01, c04, c05, c08, c09, c13, c14, c15, embyId) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
             cursor.execute(pathsql, (showid, title, plot, rating, premieredate, genre, title, mpaa, studio, sorttitle, MBitem["Id"]))
             
@@ -433,6 +454,18 @@ class WriteKodiDB():
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY        
         path = "plugin://plugin.video.emby/tvshows/" + MBitem["SeriesId"] + "/"
         filename = "plugin://plugin.video.emby/tvshows/" + MBitem["SeriesId"] + "/?id=" + MBitem["Id"] + "&mode=play"
+        
+        playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
+        playurl = utils.convertEncoding(playurl)
+
+        # we need to store both the path and the filename seperately in the kodi db so we split them up
+        if "\\" in playurl:
+            filename = playurl.rsplit("\\",1)[-1]
+            path = playurl.replace(filename,"")
+        elif "/" in playurl:
+            filename = playurl.rsplit("/",1)[-1]
+            path = playurl.replace(filename,"")
+
         
         #create the new path - return id if already exists  
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
@@ -686,7 +719,6 @@ class WriteKodiDB():
                             peoplesql="INSERT OR REPLACE into writerlinkepisode(idWriter, idEpisode) values(?, ?)"
                             cursor.execute(peoplesql, (actorid,id))
                         
-
     def AddGenresToMedia(self, id, genres, mediatype, cursor):
 
         if genres:
