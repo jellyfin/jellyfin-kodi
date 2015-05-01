@@ -261,7 +261,7 @@ class WriteKodiDB():
             cursor.execute("select coalesce(max(idShow),0) as showid from tvshow")
             showid = cursor.fetchone()[0]
             showid = pathid + 1
-            pathsql="insert into tvshow(idShow, c00, c01, c04, c05, c08, c09, c13, c14, c15, embyId) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            pathsql="insert into tvshow(idShow, c00, c01, c04, c05, c08, c09, c13, c14, c15, embyId) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
             cursor.execute(pathsql, (showid, title, plot, rating, premieredate, genre, title, mpaa, studio, sorttitle, MBitem["Id"]))
             
             #link the path
@@ -280,10 +280,10 @@ class WriteKodiDB():
         self.AddPeopleToMedia(showid,MBitem.get("People"),"tvshow", connection, cursor)
         
         #update genres
-        self.AddGenresToMedia(movieid, genres, "tvshow", cursor)
+        self.AddGenresToMedia(showid, genres, "tvshow", cursor)
         
         #update studios
-        self.AddStudiosToMedia(movieid, studios, "tvshow", cursor)
+        self.AddStudiosToMedia(showid, studios, "tvshow", cursor)
         
         #update artwork
         self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), showid, "tvshow", "thumb", cursor)
@@ -817,7 +817,7 @@ class WriteKodiDB():
             
             else:
                 idTag = None
-                cursor.execute("SELECT idTag as idTag FROM tag WHERE strTag = ?",(genre,))
+                cursor.execute("SELECT idTag as idTag FROM tag WHERE strTag = ?",(tag,))
                 result = cursor.fetchone()
                 if result != None:
                     idTag = result[0]
