@@ -147,7 +147,10 @@ class WriteKodiDB():
 
         
         ##### ADD THE MOVIE ############
-        if movieid == None:          
+        if movieid == None:
+            
+            utils.logMsg("ADD movie to Kodi library","Id: %s - Title: %s" % (embyId, title))
+            
             #create the movie
             cursor.execute("select coalesce(max(idMovie),0) as movieid from movie")
             movieid = cursor.fetchone()[0]
@@ -167,6 +170,7 @@ class WriteKodiDB():
             
         #### UPDATE THE MOVIE #####
         else:
+            utils.logMsg("UPDATE movie to Kodi library","Id: %s - Title: %s" % (embyId, title))
             pathsql="update movie SET c00 = ?, c01 = ?, c02 = ?, c05 = ?, c06 = ?, c07 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?, c16 = ?, c18 = ?, c19 = ? WHERE idMovie = ?"
             cursor.execute(pathsql, (title, plot, shortplot, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl, movieid))
             
@@ -255,6 +259,8 @@ class WriteKodiDB():
         #### ADD THE TV SHOW TO KODI ############## 
         if showid == None:
             
+            utils.logMsg("ADD tvshow to Kodi library","Id: %s - Title: %s" % (embyId, title))
+            
             #create the tv show path
             cursor.execute("select coalesce(max(idPath),0) as pathid from path")
             pathid = cursor.fetchone()[0]
@@ -293,6 +299,8 @@ class WriteKodiDB():
         
         #### UPDATE THE TV SHOW #############
         else:
+            utils.logMsg("UPDATE tvshow to Kodi library","Id: %s - Title: %s" % (embyId, title))
+            
             pathsql="UPDATE tvshow SET c00 = ?, c01 = ?, c04 = ?, c05 = ?, c08 = ?, c09 = ?, c13 = ?, c14 = ?, c15 = ? WHERE idShow = ?"
             cursor.execute(pathsql, (title, plot, rating, premieredate, title, genre, mpaa, studio, sorttitle, showid))
             
@@ -496,7 +504,7 @@ class WriteKodiDB():
                 
         # ADD EPISODE TO KODI
         if episodeid == None:
-            
+            utils.logMsg("ADD episode to Kodi library","Id: %s - Title: %s" % (embyId, title))
             #create the episode
             cursor.execute("select coalesce(max(idEpisode),0) as episodeid from episode")
             episodeid = cursor.fetchone()[0]
@@ -513,6 +521,8 @@ class WriteKodiDB():
         
         # UPDATE THE EPISODE IN KODI (for now, we just send in all data)
         else:
+            utils.logMsg("UPDATE episode to Kodi library","Id: %s - Title: %s" % (embyId, title))
+            
             pathsql = "UPDATE episode SET c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?, c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ? WHERE idEpisode = ?"
             cursor.execute(pathsql, (title, plot, rating, writer, premieredate, runtime, director, season, episode, title, "-1", "-1", episodeid))
             

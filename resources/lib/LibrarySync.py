@@ -64,6 +64,7 @@ class LibrarySync():
             self.MoviesFullSync(connection,cursor,pDialog)
             #sync Tvshows and episodes
             self.TvShowsFullSync(connection,cursor,pDialog)
+            
 
             # set the install done setting
             if(syncInstallRunDone == False and completed):
@@ -115,7 +116,7 @@ class LibrarySync():
                     if(pDialog != None):
                         progressTitle = "Processing " + view.get('title') + " (" + str(count) + " of " + str(total) + ")"
                         pDialog.update(0, "Emby for Kodi - Running Sync", progressTitle)
-                        count = 1        
+                        count += 1        
                     
                     kodiMovie = None
                     for kodimovie in allKodiMovies:
@@ -128,12 +129,12 @@ class LibrarySync():
                         if kodiMovie[2] != API().getChecksum(item):
                             WriteKodiDB().addOrUpdateMovieToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
             
-            #### PROCESS DELETES #####
-            allEmbyMovieIds = set(allEmbyMovieIds)
-            for kodiId in allKodiMovieIds:
-                if not kodiId in allEmbyMovieIds:
-                    WINDOW.setProperty(kodiId,"deleted")
-                    WriteKodiDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
+        #### PROCESS DELETES #####
+        allEmbyMovieIds = set(allEmbyMovieIds)
+        for kodiId in allKodiMovieIds:
+            if not kodiId in allEmbyMovieIds:
+                WINDOW.setProperty(kodiId,"deleted")
+                WriteKodiDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
 
          
     def TvShowsFullSync(self,connection,cursor,pDialog):
@@ -164,7 +165,7 @@ class LibrarySync():
                     if(pDialog != None):
                         progressTitle = "Processing " + view.get('title') + " (" + str(count) + " of " + str(total) + ")"
                         pDialog.update(0, "Emby for Kodi - Running Sync", progressTitle)
-                        count = 1        
+                        count += 1        
                     
                     #build a list with all Id's and get the existing entry (if exists) in Kodi DB
                     kodiShow = None
@@ -184,12 +185,12 @@ class LibrarySync():
                     #### PROCESS EPISODES ######
                     self.EpisodesFullSync(connection,cursor,item["Id"], kodiId)
             
-            #### TVSHOW: PROCESS DELETES #####
-            allEmbyTvShowIds = set(allEmbyTvShowIds)
-            for kodiId in allKodiTvShowIds:
-                if not kodiId in allEmbyTvShowIds:
-                    WINDOW.setProperty(kodiId,"deleted")
-                    WriteKodiDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
+        #### TVSHOW: PROCESS DELETES #####
+        allEmbyTvShowIds = set(allEmbyTvShowIds)
+        for kodiId in allKodiTvShowIds:
+            if not kodiId in allEmbyTvShowIds:
+                WINDOW.setProperty(kodiId,"deleted")
+                WriteKodiDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
 
          
     def EpisodesFullSync(self,connection,cursor,embyShowId, kodiShowId):
@@ -241,43 +242,46 @@ class LibrarySync():
         connection = utils.KodiSQL()
         cursor = connection.cursor()
         
-        #### PROCESS MOVIES ####
-        views = ReadEmbyDB().getCollections("movies")
-        for view in views:
-            allEmbyMovies = ReadEmbyDB().getMovies(view.get('id'), itemList)
-            for item in allEmbyMovies:
+        try:
+            #### PROCESS MOVIES ####
+            views = ReadEmbyDB().getCollections("movies")
+            for view in views:
+                allEmbyMovies = ReadEmbyDB().getMovies(view.get('id'), itemList)
+                for item in allEmbyMovies:
+                        
+                    if not item.get('IsFolder'):                    
+                        WriteKodiDB().addOrUpdateMovieToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
+                        
+            #### PROCESS TV SHOWS ####
+            views = ReadEmbyDB().getCollections("tvshows")              
+            for view in views:
+                allEmbyTvShows = ReadEmbyDB().getTvShows(view.get('id'),itemList)
+                for item in allEmbyTvShows:
+                    if item.get('IsFolder') and item.get('RecursiveItemCount') != 0:                   
+                        kodiId = WriteKodiDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
+                        
+            #### PROCESS EPISODES ######
+            for item in itemList:
                     
-                if not item.get('IsFolder'):                    
-                    WriteKodiDB().addOrUpdateMovieToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
+                MBitem = ReadEmbyDB().getItem(item)
+                print MBitem
+                if MBitem["Type"] == "Episode":
                     
-        #### PROCESS TV SHOWS ####
-        views = ReadEmbyDB().getCollections("tvshows")              
-        for view in views:
-            allEmbyTvShows = ReadEmbyDB().getTvShows(view.get('id'),itemList)
-            for item in allEmbyTvShows:
-                if item.get('IsFolder') and item.get('RecursiveItemCount') != 0:                   
-                    kodiId = WriteKodiDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
+                    #get the tv show
+                    cursor.execute("SELECT kodi_id FROM emby WHERE media_type='tvshow' AND emby_id=?", (MBitem["SeriesId"],))
+                    result = cursor.fetchall()
+                    if result:
+                        kodi_show_id = result[0]
+                    else:
+                        kodi_show_id = None
+                        print "show id not found!"
                     
-        #### PROCESS EPISODES ######
-        for item in itemList:
-                
-            MBitem = ReadEmbyDB().getItem(item)
-            
-            if MBitem["Type"] == "Episode":
-                
-                #get the tv show
-                cursor.execute("SELECT kodi_id FROM emby WHERE media_type='tvshow' AND emby_id=?", (MBitem["SeriesId"],))
-                result = cursor.fetchall()
-                if result:
-                    kodi_show_id = result[0]
-                else:
-                    kodi_show_id = None
-                
-                if kodi_show_id:
-                    WriteKodiDB().addOrUpdateEpisodeToKodiLibrary(item["Id"], kodi_show_id, connection, cursor)
+                    if kodi_show_id:
+                        WriteKodiDB().addOrUpdateEpisodeToKodiLibrary(item["Id"], kodi_show_id, connection, cursor)
+        finally:
+            cursor.close()
         
-        
-        cursor.close()
+        #close the progress dialog
         if(pDialog != None):
             pDialog.close()
     
