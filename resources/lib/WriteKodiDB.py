@@ -535,33 +535,27 @@ class WriteKodiDB():
         #commit changes
         connection.commit()
 
-    def deleteMovieFromKodiLibrary(self, id, connection, cursor ):
-        utils.logMsg("deleting movie from Kodi library --> ",id)
-        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id=?", (id,))
-        kodi_id = cursor.fetchone()[0]
-        cursor.execute("DELETE FROM movie WHERE idMovie = ?", (kodi_id,))
-        connection.commit()
- 
-    def deleteMusicVideoFromKodiLibrary(self, id ):
-        utils.logMsg("deleting musicvideo from Kodi library",id)
-        kodiItem = ReadKodiDB().getKodiMusicVideo(id)
-        if kodiItem != None:
-            xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.RemoveMusicVideo", "params": { "musicvideoid": %i}, "id": 1 }' %(kodiItem["musicvideoid"]))
-         
-    def deleteEpisodeFromKodiLibrary(self, id, connection, cursor ):
-        utils.logMsg("deleting episode from Kodi library --> ",id)
-        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id=?", (id,))
-        kodi_id = cursor.fetchone()[0]
-        cursor.execute("DELETE FROM episode WHERE idEpisode = ?", (kodi_id,))
-        connection.commit()
-                      
-    def deleteTVShowFromKodiLibrary(self, id, connection, cursor):
-        utils.logMsg("deleting tvshow from Kodi library --> ",id)
-        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id=?", (id,))
-        kodi_id = cursor.fetchone()[0]
-        cursor.execute("DELETE FROM tvshow WHERE idShow = ?", (kodi_id,))
-        connection.commit()
-    
+    def deleteItemFromKodiLibrary(self, id, connection, cursor ):
+        
+        cursor.execute("SELECT kodi_id, media_type FROM emby WHERE emby_id=?", (id,))
+        result = cursor.fetchone()
+        if result:
+            kodi_id = result[0]
+            media_type = result[1]
+            if media_type == "movie":
+                utils.logMsg("deleting movie from Kodi library --> ",id)
+                cursor.execute("DELETE FROM movie WHERE idMovie = ?", (kodi_id,))
+            if media_type == "episode":
+                utils.logMsg("deleting episode from Kodi library --> ",id)
+                cursor.execute("DELETE FROM episode WHERE idEpisode = ?", (kodi_id,))
+            if media_type == "tvshow":
+                utils.logMsg("deleting tvshow from Kodi library --> ",id)
+                cursor.execute("DELETE FROM tvshow WHERE idShow = ?", (kodi_id,))
+            if media_type == "musicvideo":
+                utils.logMsg("deleting musicvideo from Kodi library --> ",id)
+                cursor.execute("DELETE FROM musicvideo WHERE idMVideo = ?", (kodi_id,))
+            connection.commit()
+     
     def updateSeasons(self,embyTvShowId, kodiTvShowId, connection, cursor):
         
         seasonData = ReadEmbyDB().getTVShowSeasons(embyTvShowId)

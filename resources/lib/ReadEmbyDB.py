@@ -14,7 +14,7 @@ addon = xbmcaddon.Addon(id='plugin.video.emby')
 
 class ReadEmbyDB():   
     
-    def getMovies(self, id):
+    def getMovies(self, id, itemList = []):
         
         result = None
         doUtils = DownloadUtils()
@@ -30,22 +30,24 @@ class ReadEmbyDB():
         if (jsonData[u'Items'] != ""):
             result = jsonData[u'Items']
             
+        # Work around to only return items from the given list
+        if (result != None and len(result) > 0 and len(itemList) > 0):
+            newResult = []
+            for item in result:
+                if (item[u'Id'] in itemList):
+                    newResult.append(item)
+            result = newResult
+            
         return result
 
-    def getMusicVideos(self, fullinfo = False, fullSync = True):
+    def getMusicVideos(self, id, itemList = []):
         
         result = None
         doUtils = DownloadUtils()
 
-        if not fullSync:
-            sortstring = "&Limit=20&SortBy=DateCreated"
-        else:
-            sortstring = "&SortBy=SortName"
-        
-        if fullinfo:
-            url = "{server}/mediabrowser/Users/{UserId}/items?%s&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&SortOrder=Descending&IncludeItemTypes=MusicVideo&format=json&ImageTypeLimit=1" % sortstring
-        else:
-            url = "{server}/mediabrowser/Users/{UserId}/items?%s&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=MusicVideo&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1" % sortstring
+        #only get basic info for our sync-compares
+        sortstring = "&SortBy=SortName"
+        url = "{server}/mediabrowser/Users/{UserId}/items?%s&Fields=CumulativeRunTimeTicks&Recursive=true&SortOrder=Descending&IncludeItemTypes=MusicVideo&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1" % sortstring
         
         jsonData = doUtils.downloadUrl(url)
         if (jsonData == ""):
@@ -53,6 +55,14 @@ class ReadEmbyDB():
 
         if (jsonData[u'Items'] != ""):
             result = jsonData[u'Items']
+            
+        # Work around to only return items from the given list
+        if (result != None and len(result) > 0 and len(itemList) > 0):
+            newResult = []
+            for item in result:
+                if (item[u'Id'] in itemList):
+                    newResult.append(item)
+            result = newResult
 
         return result
         
@@ -82,7 +92,7 @@ class ReadEmbyDB():
 
         return result
     
-    def getTvShows(self, id):
+    def getTvShows(self, id, itemList = []):
         
         result = None
         doUtils = DownloadUtils()
@@ -97,6 +107,14 @@ class ReadEmbyDB():
 
         if (jsonData[u'Items'] != ""):
             result = jsonData[u'Items']
+            
+        # Work around to only return items from the given list
+        if (result != None and len(result) > 0 and len(itemList) > 0):
+            newResult = []
+            for item in result:
+                if (item[u'Id'] in itemList):
+                    newResult.append(item)
+            result = newResult
 
         return result
     
@@ -116,7 +134,7 @@ class ReadEmbyDB():
 
         return result
     
-    def getEpisodes(self, showId):
+    def getEpisodes(self, showId, itemList = []):
         
         result = None
         doUtils = DownloadUtils()  
@@ -129,6 +147,14 @@ class ReadEmbyDB():
 
         if (jsonData[u'Items'] != ""):
             result = jsonData[u'Items']
+            
+        # Work around to only return items from the given list
+        if (result != None and len(result) > 0 and len(itemList) > 0):
+            newResult = []
+            for item in result:
+                if (item[u'Id'] in itemList):
+                    newResult.append(item)
+            result = newResult
                 
         return result
     

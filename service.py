@@ -116,11 +116,9 @@ class Service():
                     #full sync
                     if(startupComplete == False):
                         self.logMsg("Doing_Db_Sync: syncDatabase (Started)")
-                        libSync = librarySync.syncDatabase()
+                        libSync = librarySync.FullLibrarySync()
                         self.logMsg("Doing_Db_Sync: syncDatabase (Finished) " + str(libSync))
 
-                        # Force refresh newly set thumbnails
-                        xbmc.executebuiltin("UpdateLibrary(video)")
                         if(libSync):
                             startupComplete = True
                     else:

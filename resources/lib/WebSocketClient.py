@@ -20,6 +20,7 @@ from DownloadUtils import DownloadUtils
 from PlaybackUtils import PlaybackUtils
 from LibrarySync import LibrarySync
 from WriteKodiDB import WriteKodiDB
+from ReadEmbyDB import ReadEmbyDB
 
 pendingUserDataList = []
 pendingItemsToRemove = []
@@ -183,31 +184,24 @@ class WebSocketThread(threading.Thread):
             connection = utils.KodiSQL()
             cursor = connection.cursor()
             self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteEpisodeFromKodiLibraryByMbId: " + item, 0)
-            WriteKodiDB().deleteEpisodeFromKodiLibrary(item, connection, cursor)
-            self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteMovieFromKodiLibrary: " + item, 0)
-            WriteKodiDB().deleteMovieFromKodiLibrary(item, connection, cursor)
-            self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteMusicVideoFromKodiLibrary: " + item, 0)
-            WriteKodiDB().deleteMusicVideoFromKodiLibrary(item, connection, cursor)
+            WriteKodiDB().deleteItemFromKodiLibrary(item, connection, cursor)
             cursor.close()
 
     def update_items(self, itemsToUpdate):
         # doing adds and updates
         if(len(itemsToUpdate) > 0):
             self.logMsg("Message : Doing LibraryChanged : Processing Added and Updated : " + str(itemsToUpdate), 0)
-            connection = utils.KodiSQL()
-            cursor = connection.cursor()
-            LibrarySync().MoviesSync(connection, cursor, False, itemsToUpdate)
-            LibrarySync().TvShowsSync(connection, cursor, False, itemsToUpdate)
-            cursor.close()
+            LibrarySync().IncrementalSync(itemsToUpdate)
 
     def user_data_update(self, userDataList):
-    
+        itemsToUpdate = list()
         for userData in userDataList:
-            self.logMsg("Message : Doing UserDataChanged : UserData : " + str(userData), 0)
             itemId = userData.get("ItemId")
             if(itemId != None):
-                self.logMsg("Message : Doing UserDataChanged : calling updatePlayCount with ID : " + str(itemId), 0)
-                LibrarySync().updatePlayCount(itemId)
+                itemsToUpdate.append(itemId)
+        if(len(itemsToUpdate) > 0):
+            self.logMsg("Message : Doing UserDataChanged : Processing Updated : " + str(itemsToUpdate), 0)
+            LibrarySync().IncrementalSync(itemsToUpdate)
                 
     def on_error(self, ws, error):
         self.logMsg("Error : " + str(error))
