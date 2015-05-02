@@ -157,6 +157,9 @@ class WriteKodiDB():
             pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
             cursor.execute(pathsql, (MBitem["Id"], movieid, "movie", API().getChecksum(MBitem)))
             
+            #add streamdetails
+            self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), fileid, cursor)
+            
         #### UPDATE THE MOVIE #####
         else:
             pathsql="update movie SET c00 = ?, c01 = ?, c02 = ?, c05 = ?, c06 = ?, c07 = ?, c09 = ? c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?, c16 = ?, c18 = ?, c19 = ? WHERE idMovie = ?"
@@ -501,6 +504,9 @@ class WriteKodiDB():
             #create the reference in emby table
             pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum, parent_id) values(?, ?, ?, ?, ?)"
             cursor.execute(pathsql, (MBitem["Id"], episodeid, "episode", API().getChecksum(MBitem), showid))
+            
+            #add streamdetails
+            self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), fileid, cursor)
         
         # UPDATE THE EPISODE IN KODI (for now, we just send in all data)
         else:
@@ -850,7 +856,20 @@ class WriteKodiDB():
                 utils.logMsg("AddTagToMedia", "Processing : " + tag)
                 sql="INSERT OR REPLACE into taglinks(idTag, idMedia, media_type) values(?, ?, ?)"
                 cursor.execute(sql, (idTag, id, mediatype))
-       
+    
+    def AddStreamDetailsToMedia(self, streamdetails, fileid, cursor):
+        
+        #first remove any existing entries
+        cursor.execute("delete FROM streamdetails WHERE idFile = ?", (fileid,))
+        if streamdetails:
+            #video details
+            sql="insert into streamdetails(idFile, iStreamType, strVideoCodec, fVideoAspect, iVideoWidth, iVideoHeight) values(?, ?, ?, ?, ?, ?)"
+            cursor.execute(sql, (fileid,0,streamdetails.get("videocodec"),streamdetails.get("aspectratio"),streamdetails.get("width"),streamdetails.get("height")))
+            #audio details
+            sql="insert into streamdetails(idFile, iStreamType, strAudioCodec, iAudioChannels) values(?, ?, ?, ?)"
+            cursor.execute(sql, (fileid,1,streamdetails.get("audiocodec"),streamdetails.get("channels")))
+
+    
     def addBoxsetToKodiLibrary(self, boxset, connection, cursor):
         
         strSet = boxset["Name"]
