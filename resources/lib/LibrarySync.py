@@ -64,7 +64,6 @@ class LibrarySync():
             self.MoviesFullSync(connection,cursor,pDialog)
             #sync Tvshows and episodes
             self.TvShowsFullSync(connection,cursor,pDialog)
-            
 
             # set the install done setting
             if(syncInstallRunDone == False and completed):
@@ -264,22 +263,23 @@ class LibrarySync():
             for item in itemList:
                     
                 MBitem = ReadEmbyDB().getItem(item)
-                print MBitem
                 if MBitem["Type"] == "Episode":
-                    
+
                     #get the tv show
                     cursor.execute("SELECT kodi_id FROM emby WHERE media_type='tvshow' AND emby_id=?", (MBitem["SeriesId"],))
-                    result = cursor.fetchall()
+                    result = cursor.fetchone()
                     if result:
                         kodi_show_id = result[0]
                     else:
                         kodi_show_id = None
-                        print "show id not found!"
-                    
+
                     if kodi_show_id:
-                        WriteKodiDB().addOrUpdateEpisodeToKodiLibrary(item["Id"], kodi_show_id, connection, cursor)
+                        WriteKodiDB().addOrUpdateEpisodeToKodiLibrary(MBitem["Id"], kodi_show_id, connection, cursor)
         finally:
             cursor.close()
+            xbmc.executebuiltin("UpdateLibrary(video)")
+            xbmc.executebuiltin("Container.Refresh")
+            xbmc.executebuiltin("Container.Update")
         
         #close the progress dialog
         if(pDialog != None):
