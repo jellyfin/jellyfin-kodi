@@ -124,19 +124,19 @@ class API():
         # else just add some fields to a string
         checksum = ""
         
-        #if item.get("Etag") != None:
-            #checksum = item.get("Etag") 
-        #else:
-        userData = item.get("UserData")
-        if(userData != None):
-            checksum += str(userData.get("Played"))
-            checksum += str(userData.get("IsFavorite"))
-            if userData.get('UnplayedItemCount') != None:
-                checksum += str(userData.get("UnplayedItemCount"))
-            if userData.get('LastPlayedDate') != None:
-                checksum += str(userData.get("LastPlayedDate"))
-            if userData.get('PlaybackPositionTicks') != None:
-                checksum += str(userData.get("PlaybackPositionTicks"))
+        if item.get("Etag") != None:
+            checksum = item.get("Etag") 
+        else:
+            userData = item.get("UserData")
+            if(userData != None):
+                checksum += str(userData.get("Played"))
+                checksum += str(userData.get("IsFavorite"))
+                if userData.get('UnplayedItemCount') != None:
+                    checksum += str(userData.get("UnplayedItemCount"))
+                if userData.get('LastPlayedDate') != None:
+                    checksum += str(userData.get("LastPlayedDate"))
+                if userData.get('PlaybackPositionTicks') != None:
+                    checksum += str(userData.get("PlaybackPositionTicks"))
             
         return checksum
     
