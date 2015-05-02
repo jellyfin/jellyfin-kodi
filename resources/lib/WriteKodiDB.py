@@ -112,7 +112,7 @@ class WriteKodiDB():
         else:
             dateadded = None
         
-        playcount = None
+        playcount = 0
         if userData.get("PlayCount") == "1":
             playcount = 1
             
@@ -144,7 +144,9 @@ class WriteKodiDB():
             fileid = fileid + 1
             pathsql="insert into files(idFile, idPath, strFilename, playCount, lastPlayed, dateAdded) values(?, ?, ?, ?, ?, ?)"
             cursor.execute(pathsql, (fileid,pathid,filename,playcount,userData.get("LastPlayedDate"),dateadded))
-
+        else:
+            pathsql="update files SET playCount = ?, lastPlayed = ? WHERE idFile = ?"
+            cursor.execute(pathsql, (playcount,userData.get("LastPlayedDate"), fileid))
         
         ##### ADD THE MOVIE ############
         if movieid == None:
@@ -487,6 +489,9 @@ class WriteKodiDB():
             fileid = fileid + 1
             sql="INSERT OR REPLACE into files(idFile, idPath, strFilename, playCount, lastPlayed, dateAdded) values(?, ?, ?, ?, ?, ?)"
             cursor.execute(sql, (fileid,pathid,filename,playcount,lastplayed,dateadded))
+        else:
+            pathsql="update files SET playCount = ?, lastPlayed = ? WHERE idFile = ?"
+            cursor.execute(pathsql, (playcount,userData.get("LastPlayedDate"), fileid))
         
         # safety check: check season first
         season = 0
