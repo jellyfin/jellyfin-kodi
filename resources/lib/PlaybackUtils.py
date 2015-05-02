@@ -35,7 +35,7 @@ class PlaybackUtils():
     def __init__(self, *args):
         pass    
 
-    def PLAY(self, result):
+    def PLAY(self, result, setup="service"):
         xbmc.log("PLAY Called")
         WINDOW = xbmcgui.Window(10000)
 
@@ -73,7 +73,7 @@ class PlaybackUtils():
         WINDOW.setProperty(playurl+"deleteurl", "")
         WINDOW.setProperty(playurl+"deleteurl", deleteurl)
         
-        if seekTime != 0:
+        '''if seekTime != 0:
             displayTime = str(datetime.timedelta(seconds=seekTime))
             display_list = [ self.language(30106) + ' ' + displayTime, self.language(30107)]
             resumeScreen = xbmcgui.Dialog()
@@ -83,7 +83,7 @@ class PlaybackUtils():
             else:
                 WINDOW.clearProperty(playurl+"seektime")
         else:
-            WINDOW.clearProperty(playurl+"seektime")
+            WINDOW.clearProperty(playurl+"seektime")'''
 
         if result.get("Type")=="Episode":
             WINDOW.setProperty(playurl+"refresh_id", result.get("SeriesId"))
@@ -109,7 +109,11 @@ class PlaybackUtils():
                 WINDOW.setProperty(playurl+"SubtitleStreamIndex", str(mediaSources[0].get('DefaultSubtitleStreamIndex')))
 
         #launch the playback
-        xbmc.Player().play(playurl,listItem)
+        if setup == "service":
+            xbmc.Player().play(playurl,listItem)
+        elif setup == "default":
+            listItem = xbmcgui.ListItem(path=playurl)
+            xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
 
     def setArt(self, list,name,path):
         if name=='thumb' or name=='fanart_image' or name=='small_poster' or name=='tiny_poster'  or name == "medium_landscape" or name=='medium_poster' or name=='small_fanartimage' or name=='medium_fanartimage' or name=='fanart_noindicators':

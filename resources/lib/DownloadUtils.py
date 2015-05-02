@@ -99,9 +99,12 @@ class DownloadUtils():
         header = self.getHeader()
 
         # If user enabled host certificate verification
-        if self.sslverify:
-            verify = True
+        try:
+            verify = self.sslverify
             cert = self.sslclient
+        except:
+            self.logMsg("Could not load SSL settings.", 1)
+            pass
         
         # Start session
         self.s = requests.Session()
@@ -149,31 +152,62 @@ class DownloadUtils():
         
         self.logMsg("=== ENTER downloadUrl ===", 2)
 
-        WINDOW = xbmcgui.Window( 10000 )
+        WINDOW = self.WINDOW
         timeout = self.timeout
         default_link = ""
-        
-        username = WINDOW.getProperty('currUser')
-        userId = WINDOW.getProperty('userId%s' % username)
-        server = WINDOW.getProperty('server%s' % username)
-        url = url.replace("{server}", server, 1)
-        url = url.replace("{UserId}", userId, 1)
-        #url = "%s&api_key=%s" % (url, self.token)
 
         # If user is authenticated
         if (authenticate):
             # Get requests session
-            s = self.s
-            # Replace for the real values and append api_key
+            try: 
+                s = self.s
+                # Replace for the real values and append api_key
+                url = url.replace("{server}", self.server, 1)
+                url = url.replace("{UserId}", self.userId, 1)
+                #url = "%s&api_key=%s" % (url, self.token)
 
-            self.logMsg("URL: %s" % url, 2)
-            # Prepare request
-            if type == "GET":
-                r = s.get(url, json=postBody, timeout=timeout)
-            elif type == "POST":
-                r = s.post(url, json=postBody, timeout=timeout)
-            elif type == "DELETE":
-                r = s.delete(url, json=postBody, timeout=timeout)
+                self.logMsg("URL: %s" % url, 2)
+                # Prepare request
+                if type == "GET":
+                    r = s.get(url, json=postBody, timeout=timeout)
+                elif type == "POST":
+                    r = s.post(url, json=postBody, timeout=timeout)
+                elif type == "DELETE":
+                    r = s.delete(url, json=postBody, timeout=timeout)
+            
+            except AttributeError:
+                
+                # Get user information
+                self.username = WINDOW.getProperty('currUser')
+                self.userId = WINDOW.getProperty('userId%s' % self.username)
+                self.server = WINDOW.getProperty('server%s' % self.username)
+                self.token = WINDOW.getProperty('accessToken%s' % self.username)
+                header = self.getHeader()
+                verifyssl = False
+                cert = None
+
+                # IF user enables ssl verification
+                try:
+                    if self.addon.getSetting('sslverify') == "true":
+                        verifyssl = True
+                    if self.addon.getSetting('sslcert') != "None":
+                        cert = self.addon.getSetting('sslcert')
+                except:
+                    self.logMsg("Could not load SSL settings.", 1)
+                    pass
+
+                # Replace for the real values and append api_key
+                url = url.replace("{server}", self.server, 1)
+                url = url.replace("{UserId}", self.userId, 1)
+
+                self.logMsg("URL: %s" % url, 2)
+                # Prepare request
+                if type == "GET":
+                    r = requests.get(url, json=postBody, headers=header, timeout=timeout, cert=cert, verify=verifyssl)
+                elif type == "POST":
+                    r = requests.post(url, json=postBody, headers=header, timeout=timeout, cert=cert, verify=verifyssl)
+                elif type == "DELETE":
+                    r = requests.delete(url, json=postBody, headers=header, timeout=timeout, cert=cert, verify=verifyssl)
 
         # If user is not authenticated
         elif not authenticate:
