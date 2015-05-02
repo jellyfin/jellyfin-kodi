@@ -37,6 +37,7 @@ class ReadKodiDB():
             cursor.execute("SELECT kodi_id, emby_id, checksum FROM emby WHERE media_type=?",("episode",))
         else:
             cursor.execute("SELECT kodi_id, emby_id, checksum FROM emby WHERE media_type=? AND parent_id=?",("episode", showid))
+        
         allepisodes = cursor.fetchall()
         #this will return a list with tuples of all items returned from the database
         return allepisodes

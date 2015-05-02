@@ -174,15 +174,14 @@ class LibrarySync():
                           
                     if kodiShow == None:
                         # Tv show doesn't exist in Kodi yet so proceed and add it
-                        kodiId = WriteKodiDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
+                        WriteKodiDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
                     else:
-                        kodiId = kodishow[0]
                         # If there are changes to the item, perform a full sync of the item
                         if kodiShow[2] != API().getChecksum(item):
                             WriteKodiDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
                             
                     #### PROCESS EPISODES ######
-                    self.EpisodesFullSync(connection,cursor,item["Id"], kodiId)
+                    self.EpisodesFullSync(connection,cursor,item["Id"])
             
         #### TVSHOW: PROCESS DELETES #####
         allEmbyTvShowIds = set(allEmbyTvShowIds)
@@ -192,14 +191,18 @@ class LibrarySync():
                 WriteKodiDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
 
          
-    def EpisodesFullSync(self,connection,cursor,embyShowId, kodiShowId):
+    def EpisodesFullSync(self,connection,cursor,showId):
         
         WINDOW = xbmcgui.Window( 10000 )
         
         allKodiEpisodeIds = list()
         allEmbyEpisodeIds = list()
         
-        allEmbyEpisodes = ReadEmbyDB().getEpisodes(embyShowId)
+        #get the kodi parent id
+        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id=?",(showId,))
+        kodiShowId = cursor.fetchone()[0]
+        
+        allEmbyEpisodes = ReadEmbyDB().getEpisodes(showId)
         allKodiEpisodes = ReadKodiDB().getKodiEpisodes(connection, cursor, kodiShowId)
         
         for kodiepisode in allKodiEpisodes:
@@ -222,6 +225,8 @@ class LibrarySync():
             else:
                 # If there are changes to the item, perform a full sync of the item
                 if kodiEpisode[2] != API().getChecksum(item):
+                    print "previous checksum--> " + kodiEpisode[2]
+                    print "new checksum--> " + API().getChecksum(item)
                     WriteKodiDB().addOrUpdateEpisodeToKodiLibrary(item["Id"], kodiShowId, connection, cursor)
         
         #### EPISODES: PROCESS DELETES #####

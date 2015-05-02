@@ -333,7 +333,6 @@ class WriteKodiDB():
         
         #commit changes and return the id
         connection.commit()
-        return showid
         
     def addMusicVideoToKodiLibrary( self, MBitem, connection, cursor  ):
 
@@ -567,6 +566,10 @@ class WriteKodiDB():
             if media_type == "musicvideo":
                 utils.logMsg("deleting musicvideo from Kodi library --> ",id)
                 cursor.execute("DELETE FROM musicvideo WHERE idMVideo = ?", (kodi_id,))
+            
+            #delete the record in emby table
+            cursor.execute("DELETE FROM emby WHERE emby_id = ?", (id,))
+            
             connection.commit()
      
     def updateSeasons(self,embyTvShowId, kodiTvShowId, connection, cursor):
