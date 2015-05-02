@@ -220,13 +220,13 @@ class LibrarySync():
                 if (self.ShouldStop()):
                     return False
                 
+                if(pDialog != None):
+                    progressTitle = "Processing " + view.get('title') + " (" + str(count) + " of " + str(total) + ")"
+                    pDialog.update(0, "Emby for Kodi - Running Sync", progressTitle)
+                    count += 1                   
+
                 if item.get('IsFolder') and item.get('RecursiveItemCount') != 0:                   
                     allEmbyTvShowIds.append(item["Id"])
-                    
-                    if(pDialog != None):
-                        progressTitle = "Processing " + view.get('title') + " (" + str(count) + " of " + str(total) + ")"
-                        pDialog.update(0, "Emby for Kodi - Running Sync", progressTitle)
-                        count += 1        
                     
                     #build a list with all Id's and get the existing entry (if exists) in Kodi DB
                     kodiShow = None
