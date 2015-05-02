@@ -194,6 +194,12 @@ class WriteKodiDB():
         #add streamdetails
         self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), fileid, cursor)
         
+        #add to favorites tag --> todo translated label for favorites ?
+        if userData.get("Favorite"):
+            self.AddTagToMedia(movieid, "Favorite movies", "movie", cursor)
+        else:
+            self.AddTagToMedia(movieid, "Favorite movies", "movie", cursor, True)
+        
         #set resume point
         resume = int(round(float(timeInfo.get("ResumeTime"))))*60
         total = int(round(float(timeInfo.get("TotalTime"))))*60
@@ -421,7 +427,7 @@ class WriteKodiDB():
             #link the path
             pathsql="insert into tvshowlinkpath(idShow,idPath) values(?, ?)"
             cursor.execute(pathsql, (showid,pathid))
-            
+                        
             #add the viewtag
             self.AddTagToMedia(showid, viewTag, "tvshow", cursor)
         
@@ -443,6 +449,12 @@ class WriteKodiDB():
         
         #update studios
         self.AddStudiosToMedia(showid, studios, "tvshow", cursor)
+        
+        #add to favorites tag --> todo translated label for favorites ?
+        if userData.get("Favorite"):
+            self.AddTagToMedia(showid, "Favorite tvshows", "tvshow", cursor)
+        else:
+            self.AddTagToMedia(showid, "Favorite tvshows", "tvshow", cursor, True)
                 
         #update artwork
         self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), showid, "tvshow", "thumb", cursor)
@@ -457,72 +469,6 @@ class WriteKodiDB():
         #update season details
         self.updateSeasons(MBitem["Id"], showid, connection, cursor)
         
-        
-    def addMusicVideoToKodiLibrary( self, MBitem, connection, cursor  ):
-
-        #adds a musicvideo to Kodi by directly inserting it to connectionthe DB while there is no addMusicVideo available on the json API
-        #TODO: PR at Kodi team for a addMusicVideo endpoint on their API
-        
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        port = addon.getSetting('port')
-        host = addon.getSetting('ipaddress')
-        server = host + ":" + port
-        
-        timeInfo = API().getTimeInfo(MBitem)
-        userData=API().getUserData(MBitem)
-        
-        playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
-        playurl = utils.convertEncoding(playurl)
-        
-        if MBitem.get("DateCreated") != None:
-            dateadded = MBitem["DateCreated"].replace("T"," ")
-            dateadded = dateadded.replace(".0000000Z","")
-        else:
-            dateadded = None
-
-        path = "plugin://plugin.video.emby/musicvideos/"
-        filename = "plugin://plugin.video.emby/musicvideos/?mode=play&id=" + MBitem["Id"]
-                    
-        #create the path
-        cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
-        result = cursor.fetchone()
-        if result != None:
-            pathid = result[0]        
-        else:
-            cursor.execute("select coalesce(max(idPath),0) as pathid from path")
-            pathid = cursor.fetchone()[0]
-            pathid = pathid + 1
-            pathsql = "insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (pathid,path,"movies","metadata.local",1))
-        
-        playcount = None
-        if userData.get("PlayCount") == "1":
-            playcount = 1
-            
-        #create the file if not exists
-        cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ?",(filename,))
-        result = cursor.fetchone()
-        if result != None:
-            fileid = result[0]
-        if result == None:
-            cursor.execute("select coalesce(max(idFile),0) as fileid from files")
-            fileid = cursor.fetchone()[0]
-            fileid = fileid + 1
-            pathsql="insert into files(idFile, idPath, strFilename, playCount, lastPlayed, dateAdded) values(?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (fileid,pathid,filename,playcount,userData.get("LastPlayedDate"),dateadded))
-        
-        runtime = int(timeInfo.get('Duration'))*60
-        plot = utils.convertEncoding(API().getOverview(MBitem))
-        title = utils.convertEncoding(MBitem["Name"])
-                
-        #create the musicvideo
-        cursor.execute("select coalesce(max(idMVideo),0) as musicvideoid from musicvideo")
-        musicvideoid = cursor.fetchone()[0]
-        musicvideoid = musicvideoid + 1
-        pathsql="insert into musicvideo(idMVideo, idFile, c00, c04, c08, c23) values(?, ?, ?, ?, ?, ?)"
-        cursor.execute(pathsql, (musicvideoid, fileid, title, runtime, plot, MBitem["Id"]))
-        
-    
     def addOrUpdateEpisodeToKodiLibrary(self, embyId, showid, connection, cursor):
         
         # If the episode already exist in the local Kodi DB we'll perform a full item update
@@ -939,7 +885,7 @@ class WriteKodiDB():
                         sql="INSERT OR REPLACE into studiolinkepisode(idstudio, idEpisode) values(?, ?)"
                     cursor.execute(sql, (idstudio,id))
         
-    def AddTagToMedia(self, id, tag, mediatype, cursor):
+    def AddTagToMedia(self, id, tag, mediatype, cursor, doRemove=False):
 
         if tag:
             
@@ -962,9 +908,13 @@ class WriteKodiDB():
                     cursor.execute(sql, (tag_id,tag))
                     utils.logMsg("AddTagToMedia", "Adding tag: " + tag)
                 
-                #assign tag to item    
-                sql="INSERT OR REPLACE into tag_link(tag_id, media_id, media_type) values(?, ?, ?)"
-                cursor.execute(sql, (tag_id, id, mediatype))
+                #assign tag to item
+                if doRemove:
+                    sql="DELETE FROM tag_link WHERE media_id = ? AND media_type = ? AND tag_id = ?"
+                    cursor.execute(sql, (id, mediatype, tag_id))
+                else:
+                    sql="INSERT OR REPLACE into tag_link(tag_id, media_id, media_type) values(?, ?, ?)"
+                    cursor.execute(sql, (tag_id, id, mediatype))
             
             else:
                 idTag = None
@@ -980,9 +930,13 @@ class WriteKodiDB():
                     sql="insert into tag(idTag, strTag) values(?, ?)"
                     cursor.execute(sql, (idTag,tag))
 
-                #assign tag to item    
-                sql="INSERT OR REPLACE into taglinks(idTag, idMedia, media_type) values(?, ?, ?)"
-                cursor.execute(sql, (idTag, id, mediatype))
+                #assign tag to item
+                if doRemove:
+                    sql="DELETE FROM taglinks WHERE idMedia = ? AND media_type = ? AND idTag = ?"
+                    cursor.execute(sql, (id, mediatype, idTag))
+                else:                
+                    sql="INSERT OR REPLACE into taglinks(idTag, idMedia, media_type) values(?, ?, ?)"
+                    cursor.execute(sql, (idTag, id, mediatype))
     
     def AddStreamDetailsToMedia(self, streamdetails, fileid, cursor):
         

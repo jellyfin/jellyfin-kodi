@@ -123,23 +123,22 @@ class API():
                 }
     
     def getChecksum(self, item):
-        # use the etags or serverside checksum for this if available
-        # else just add some fields to a string
+        # use the etags checksum for this if available
+        # AND the userdata
         checksum = ""
         
         if item.get("Etag") != None:
             checksum = item.get("Etag") 
-        else:
             userData = item.get("UserData")
-            if(userData != None):
-                checksum += str(userData.get("Played"))
-                checksum += str(userData.get("IsFavorite"))
-                if userData.get('UnplayedItemCount') != None:
-                    checksum += str(userData.get("UnplayedItemCount"))
-                if userData.get('LastPlayedDate') != None:
-                    checksum += str(userData.get("LastPlayedDate"))
-                if userData.get('PlaybackPositionTicks') != None:
-                    checksum += str(userData.get("PlaybackPositionTicks"))
+        if(userData != None):
+            checksum += str(userData.get("Played"))
+            checksum += str(userData.get("IsFavorite"))
+            if userData.get('UnplayedItemCount') != None:
+                checksum += str(userData.get("UnplayedItemCount"))
+            if userData.get('LastPlayedDate') != None:
+                checksum += str(userData.get("LastPlayedDate"))
+            if userData.get('PlaybackPositionTicks') != None:
+                checksum += str(userData.get("PlaybackPositionTicks"))
             
         return checksum
     
@@ -152,9 +151,9 @@ class API():
             else:
                 watched="False"
             if userData.get("IsFavorite") == True:
-                favorite="True"
+                favorite=True
             else:
-                favorite="False"
+                favorite=False
             if(userData.get("Played") == True):
                 playcount="1"
             else:
