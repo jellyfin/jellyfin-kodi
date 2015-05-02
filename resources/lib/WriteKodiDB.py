@@ -199,9 +199,6 @@ class WriteKodiDB():
         total = int(round(float(timeInfo.get("TotalTime"))))*60
         self.setKodiResumePoint(fileid, resume, total, cursor)
         
-        #commit changes and return the id
-        connection.commit()
-        return movieid
 
     def addOrUpdateMusicVideoToKodiLibrary( self, embyId ,connection, cursor):
         
@@ -335,9 +332,6 @@ class WriteKodiDB():
         resume = int(round(float(timeInfo.get("ResumeTime"))))*60
         total = int(round(float(timeInfo.get("TotalTime"))))*60
         self.setKodiResumePoint(fileid, resume, total, cursor)
-        
-        #commit changes and return the id
-        connection.commit()
     
     def addOrUpdateTvShowToKodiLibrary( self, embyId, connection, cursor, viewTag ):
         
@@ -463,8 +457,6 @@ class WriteKodiDB():
         #update season details
         self.updateSeasons(MBitem["Id"], showid, connection, cursor)
         
-        #commit changes and return the id
-        connection.commit()
         
     def addMusicVideoToKodiLibrary( self, MBitem, connection, cursor  ):
 
@@ -530,12 +522,6 @@ class WriteKodiDB():
         pathsql="insert into musicvideo(idMVideo, idFile, c00, c04, c08, c23) values(?, ?, ?, ?, ?, ?)"
         cursor.execute(pathsql, (musicvideoid, fileid, title, runtime, plot, MBitem["Id"]))
         
-        try:
-            connection.commit()
-            utils.logMsg("Emby","Added musicvideo to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
-        except:
-            utils.logMsg("Emby","Error adding musicvideo to Kodi Library",MBitem["Id"] + " - " + MBitem["Name"])
-            actionPerformed = False
     
     def addOrUpdateEpisodeToKodiLibrary(self, embyId, showid, connection, cursor):
         
@@ -675,9 +661,6 @@ class WriteKodiDB():
         
         #update artwork
         self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), episodeid, "episode", "thumb", cursor)
-        
-        #commit changes
-        connection.commit()
 
     def deleteItemFromKodiLibrary(self, id, connection, cursor ):
         
@@ -701,8 +684,6 @@ class WriteKodiDB():
             
             #delete the record in emby table
             cursor.execute("DELETE FROM emby WHERE emby_id = ?", (id,))
-            
-            connection.commit()
      
     def updateSeasons(self,embyTvShowId, kodiTvShowId, connection, cursor):
         
@@ -1058,8 +1039,6 @@ class WriteKodiDB():
             result = cursor.fetchone()
             if result != None:
                 setid = result[0]
-        connection.commit()
-
         
         return True
     

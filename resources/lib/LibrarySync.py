@@ -83,7 +83,7 @@ class LibrarySync():
                 addon = xbmcaddon.Addon(id='plugin.video.emby') #force a new instance of the addon
                 addon.setSetting("SyncInstallRunDone", "true")        
             
-            # Force refresh the library
+            # Commit all DB changes at once and Force refresh the library
             xbmc.executebuiltin("UpdateLibrary(video)")
             
             # set prop to show we have run for the first time
@@ -92,6 +92,7 @@ class LibrarySync():
         finally:
             WINDOW.setProperty("SyncDatabaseRunning", "false")
             utils.logMsg("Sync DB", "syncDatabase Exiting", 0)
+            
             cursor.close()
 
         if(pDialog != None):
@@ -148,6 +149,9 @@ class LibrarySync():
             if not kodiId in allEmbyMovieIds:
                 WINDOW.setProperty(kodiId,"deleted")
                 WriteKodiDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
+                
+        ### commit all changes to database ###
+        connection.commit()
 
     def MusicVideosFullSync(self,connection,cursor, pDialog):
                
@@ -194,6 +198,9 @@ class LibrarySync():
             if not kodiId in allEmbyMusicvideoIds:
                 WINDOW.setProperty(kodiId,"deleted")
                 WriteKodiDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
+                
+        ### commit all changes to database ###
+        connection.commit()
     
     def TvShowsFullSync(self,connection,cursor,pDialog):
                
@@ -251,6 +258,9 @@ class LibrarySync():
             if not kodiId in allEmbyTvShowIds:
                 WINDOW.setProperty(kodiId,"deleted")
                 WriteKodiDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
+                
+        ### commit all changes to database ###
+        connection.commit()
          
     def EpisodesFullSync(self,connection,cursor,showId):
         
@@ -299,6 +309,7 @@ class LibrarySync():
             if (not kodiId in allEmbyEpisodeIds):
                 WINDOW.setProperty(kodiId,"deleted")
                 WriteKodiDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
+                
     
     def IncrementalSync(self, itemList):
         #this will only perform sync for items received by the websocket
@@ -355,6 +366,9 @@ class LibrarySync():
             for item in allEmbyMusicvideos:
                 if not item.get('IsFolder'):                    
                     WriteKodiDB().addOrUpdateMusicVideoToKodiLibrary(item["Id"],connection, cursor)
+                    
+            ### commit all changes to database ###
+            connection.commit()
         
         finally:
             cursor.close()

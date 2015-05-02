@@ -180,12 +180,13 @@ class WebSocketThread(threading.Thread):
                 self.update_items(itemsToUpdate)
 
     def remove_items(self, itemsRemoved):
+        connection = utils.KodiSQL()
+        cursor = connection.cursor()
         for item in itemsRemoved:
-            connection = utils.KodiSQL()
-            cursor = connection.cursor()
             self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteEpisodeFromKodiLibraryByMbId: " + item, 0)
             WriteKodiDB().deleteItemFromKodiLibrary(item, connection, cursor)
-            cursor.close()
+        connection.commit()
+        cursor.close()
 
     def update_items(self, itemsToUpdate):
         # doing adds and updates
