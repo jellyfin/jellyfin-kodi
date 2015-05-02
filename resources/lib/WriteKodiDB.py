@@ -39,12 +39,11 @@ class WriteKodiDB():
             addon = xbmcaddon.Addon(id='plugin.video.emby')   
             
             downloadUtils = DownloadUtils()       
-            
-            #FIXME --> This is no longer working ??!!
+
             watchedurl = "{server}/mediabrowser/Users/{UserId}/PlayedItems/%s" % emby_id
             utils.logMsg("Emby","watchedurl -->" + watchedurl)
             if playcount != 0:
-                downloadUtils.downloadUrl(watchedurl, postBody="", type="POST")
+                downloadUtils.downloadUrl(watchedurl, type="POST")
             else:
                 downloadUtils.downloadUrl(watchedurl, type="DELETE")
         
