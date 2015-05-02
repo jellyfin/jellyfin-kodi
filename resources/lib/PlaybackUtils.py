@@ -62,22 +62,8 @@ class PlaybackUtils():
                     # seekTime = int(round(kodiItem['resume'].get("position")))                  
 
         playurl = PlayUtils().getPlayUrl(server, id, result)
-        
-        isStrmFile = False
         thumbPath = API().getArtwork(result, "Primary")
         
-        #workaround for when the file to play is a strm file itself
-        if playurl.endswith(".strm"):
-            isStrmFile = True
-            tempPath = os.path.join(addondir,"library","temp.strm")
-            xbmcvfs.copy(playurl, tempPath)
-            sfile = open(tempPath, 'r')
-            playurl = sfile.readline()
-            sfile.close()
-            xbmcvfs.delete(tempPath)
-            WINDOW.setProperty("virtualstrm", id)
-            WINDOW.setProperty("virtualstrmtype", result.get("Type"))
-
         listItem = xbmcgui.ListItem(path=playurl, iconImage=thumbPath, thumbnailImage=thumbPath)
         self.setListItemProps(server, id, listItem, result)    
 
@@ -130,9 +116,7 @@ class PlaybackUtils():
             if mediaSources[0].get('DefaultSubtitleStreamIndex') != None:
                 WINDOW.setProperty(playurl+"SubtitleStreamIndex", str(mediaSources[0].get('DefaultSubtitleStreamIndex')))
 
-        #this launches the playback
-        #artwork only works with both resolvedurl and player command
-        #xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
+        #launch the playback
         xbmc.Player().play(playurl,listItem)
 
     def setArt(self, list,name,path):

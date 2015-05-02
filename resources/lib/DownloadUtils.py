@@ -149,19 +149,23 @@ class DownloadUtils():
         
         self.logMsg("=== ENTER downloadUrl ===", 2)
 
-        WINDOW = self.WINDOW
+        WINDOW = xbmcgui.Window( 10000 )
         timeout = self.timeout
         default_link = ""
+        
+        username = WINDOW.getProperty('currUser')
+        userId = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
+        url = url.replace("{server}", server, 1)
+        url = url.replace("{UserId}", userId, 1)
+        #url = "%s&api_key=%s" % (url, self.token)
 
         # If user is authenticated
         if (authenticate):
             # Get requests session
             s = self.s
             # Replace for the real values and append api_key
-            url = url.replace("{server}", self.server, 1)
-            url = url.replace("{UserId}", self.userId, 1)
-            #url = "%s&api_key=%s" % (url, self.token)
-            
+
             self.logMsg("URL: %s" % url, 2)
             # Prepare request
             if type == "GET":

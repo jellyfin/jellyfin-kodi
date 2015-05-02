@@ -68,11 +68,19 @@ class Service():
             if self.KodiMonitor.waitForAbort(1):
                 # Abort was requested while waiting. We should exit
                 break
-                
+            
+            #detection that file needs to be playback
             if WINDOW.getProperty("GUIPLAY") != "":
+                downloadUtils = DownloadUtils()
                 id = WINDOW.getProperty("GUIPLAY")
                 WINDOW.setProperty("GUIPLAY", "")
-                PlaybackUtils().PLAY(id)
+                WINDOW = xbmcgui.Window( 10000 ) 
+                username = WINDOW.getProperty('currUser')
+                userid = WINDOW.getProperty('userId%s' % username)
+                server = WINDOW.getProperty('server%s' % username)
+                url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json&ImageTypeLimit=1" % id
+                result = downloadUtils.downloadUrl(url)     
+                PlaybackUtils().PLAY(result)
             
             if xbmc.Player().isPlaying():
                 try:
@@ -122,7 +130,7 @@ class Service():
                         if(libSync):
                             startupComplete = True
                     else:
-                        if self.KodiMonitor.waitForAbort(10):
+                        if self.KodiMonitor.waitForAbort(1):
                             # Abort was requested while waiting. We should exit
                             break    
                         WebSocketThread().processPendingActions()
