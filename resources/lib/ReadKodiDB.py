@@ -42,3 +42,15 @@ class ReadKodiDB():
         #this will return a list with tuples of all items returned from the database
         return allepisodes
         
+    def getEmbyIdByKodiId(self, id, type, connection=None, cursor=None):
+        if not connection:
+            connection = utils.KodiSQL()
+            cursor = connection.cursor()
+        cursor.execute("SELECT emby_id FROM emby WHERE media_type=? AND kodi_id=?",(type,id))
+        result = cursor.fetchone()
+        if result:
+            return result[0]
+        else:
+            return None
+       
+        

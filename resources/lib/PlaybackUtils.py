@@ -35,7 +35,7 @@ class PlaybackUtils():
     def __init__(self, *args):
         pass    
 
-    def PLAY(self, id):
+    def PLAY(self, result):
         xbmc.log("PLAY Called")
         WINDOW = xbmcgui.Window(10000)
 
@@ -43,11 +43,9 @@ class PlaybackUtils():
         userid = WINDOW.getProperty('userId%s' % username)
         server = WINDOW.getProperty('server%s' % username)
         
-        url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json&ImageTypeLimit=1" % id
-        result = self.downloadUtils.downloadUrl(url)     
-        
+        id = result["Id"]
 
-        userData = result[u'UserData']
+        userData = result['UserData']
         resume_result = 0
         seekTime = 0
         
@@ -134,13 +132,8 @@ class PlaybackUtils():
 
         #this launches the playback
         #artwork only works with both resolvedurl and player command
-        if isStrmFile:
-            xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
-        else:
-            #xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
-            if(addon.getSetting("addExtraPlaybackArt") == "true"):
-                utils.logMsg("PLAY", "Doing second xbmc.Player().play to add extra art")
-                xbmc.Player().play(playurl,listItem)
+        #xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
+        xbmc.Player().play(playurl,listItem)
 
     def setArt(self, list,name,path):
         if name=='thumb' or name=='fanart_image' or name=='small_poster' or name=='tiny_poster'  or name == "medium_landscape" or name=='medium_poster' or name=='small_fanartimage' or name=='medium_fanartimage' or name=='fanart_noindicators':

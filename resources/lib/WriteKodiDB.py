@@ -25,7 +25,7 @@ sleepVal = 20
 class WriteKodiDB():
 
     def updatePlayCountFromKodi(self, id, type, playcount=0):
-        #when user marks item watched from kodi interface update this in MB3
+        #when user marks item watched from kodi interface update this in Emby
         
         utils.logMsg("Emby", "updatePlayCountFromKodi Called")
         connection = utils.KodiSQL()
@@ -37,11 +37,8 @@ class WriteKodiDB():
 
         if(emby_id != None):
             addon = xbmcaddon.Addon(id='plugin.video.emby')   
-            
             downloadUtils = DownloadUtils()       
-
             watchedurl = "{server}/mediabrowser/Users/{UserId}/PlayedItems/%s" % emby_id
-            utils.logMsg("Emby","watchedurl -->" + watchedurl)
             if playcount != 0:
                 downloadUtils.downloadUrl(watchedurl, type="POST")
             else:
@@ -882,8 +879,7 @@ class WriteKodiDB():
             #audio details
             sql="insert into streamdetails(idFile, iStreamType, strAudioCodec, iAudioChannels) values(?, ?, ?, ?)"
             cursor.execute(sql, (fileid,1,streamdetails.get("audiocodec"),streamdetails.get("channels")))
-
-    
+  
     def addBoxsetToKodiLibrary(self, boxset, connection, cursor):
         
         strSet = boxset["Name"]

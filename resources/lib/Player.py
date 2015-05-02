@@ -90,9 +90,9 @@ class Player( xbmc.Player ):
                     self.logMsg("emby Service -> Percent Complete:" + str(percentComplete) + " Mark Played At:" + str(markPlayedAt))
                     self.stopPlayback(data)
                     
-                if(refresh_id != None):
+                #if(refresh_id != None):
                     #report updates playcount and resume status to Kodi and MB3
-                    librarySync.updatePlayCount(item_id)
+                    #librarySync.updatePlayCount(item_id)
                     
                 
         self.played_information.clear()

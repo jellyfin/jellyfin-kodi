@@ -27,8 +27,10 @@ except:
     id=None
 
 if  mode != None and mode == "play":
+    pass
     #PlaybackUtils().PLAY(id)
-    WINDOW.setProperty('GUIPLAY', str(id)) # set window prop
+    #WINDOW.setProperty('GUIPLAY', str(id)) # set window prop
+    #xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, None)
 elif sys.argv[1] == "reset":
     utils.reset()
 else:
