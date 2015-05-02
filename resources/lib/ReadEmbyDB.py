@@ -40,7 +40,7 @@ class ReadEmbyDB():
             
         return result
 
-    def getMusicVideos(self, id, itemList = []):
+    def getMusicVideos(self, itemList = []):
         
         result = None
         doUtils = DownloadUtils()

@@ -203,6 +203,142 @@ class WriteKodiDB():
         connection.commit()
         return movieid
 
+    def addOrUpdateMusicVideoToKodiLibrary( self, embyId ,connection, cursor):
+        
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
+        downloadUtils = DownloadUtils()
+        
+        MBitem = ReadEmbyDB().getFullItem(embyId)
+        
+        # If the item already exist in the local Kodi DB we'll perform a full item update
+        # If the item doesn't exist, we'll add it to the database
+        
+        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?",(MBitem["Id"],))
+        result = cursor.fetchone()
+        if result != None:
+            idMVideo = result[0]
+        else:
+            idMVideo = None
+        
+        timeInfo = API().getTimeInfo(MBitem)
+        userData=API().getUserData(MBitem)
+        people = API().getPeople(MBitem)
+
+        #### The video details #########
+        runtime = int(timeInfo.get('Duration'))*60
+        plot = utils.convertEncoding(API().getOverview(MBitem))
+        title = utils.convertEncoding(MBitem["Name"])
+        year = MBitem.get("ProductionYear")
+        genres = MBitem.get("Genres")
+        genre = " / ".join(genres)
+        studios = API().getStudios(MBitem)
+        studio = " / ".join(studios)
+        director = " / ".join(people.get("Director"))
+        artist = MBitem.get("Artist")
+        album = MBitem.get("Album")
+        track = MBitem.get("Track")
+        
+        if MBitem.get("DateCreated") != None:
+            dateadded = MBitem["DateCreated"].replace("T"," ")
+            dateadded = dateadded.replace(".0000000Z","")
+        else:
+            dateadded = None
+        
+        playcount = 0
+        if userData.get("PlayCount") == "1":
+            playcount = 1
+            
+        #### ADD OR UPDATE THE FILE AND PATH ###########
+        #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY
+        path = "plugin://plugin.video.emby/musicvideos/"
+        filename = "plugin://plugin.video.emby/musicvideos/?id=%s&mode=play" % MBitem["Id"]
+        
+        #create the path
+        cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
+        result = cursor.fetchone()
+        if result != None:
+            pathid = result[0]        
+        else:
+            cursor.execute("select coalesce(max(idPath),0) as pathid from path")
+            pathid = cursor.fetchone()[0]
+            pathid = pathid + 1
+            pathsql = "insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (pathid,path,"musicvideos","metadata.local",1))
+
+        #create the file if not exists
+        cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?",(filename,pathid,))
+        result = cursor.fetchone()
+        if result != None:
+            fileid = result[0]
+        if result == None:
+            cursor.execute("select coalesce(max(idFile),0) as fileid from files")
+            fileid = cursor.fetchone()[0]
+            fileid = fileid + 1
+            pathsql="insert into files(idFile, idPath, strFilename, playCount, lastPlayed, dateAdded) values(?, ?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (fileid,pathid,filename,playcount,userData.get("LastPlayedDate"),dateadded))
+        else:
+            pathsql="update files SET playCount = ?, lastPlayed = ? WHERE idFile = ?"
+            cursor.execute(pathsql, (playcount,userData.get("LastPlayedDate"), fileid))
+        
+        ##### ADD THE VIDEO ############
+        if idMVideo == None:
+            
+            utils.logMsg("ADD musicvideo to Kodi library","Id: %s - Title: %s" % (embyId, title))
+            
+            #create the video
+            cursor.execute("select coalesce(max(idMVideo),0) as idMVideo from musicvideo")
+            idMVideo = cursor.fetchone()[0]
+            idMVideo = idMVideo + 1
+            pathsql="insert into musicvideo(idMVideo, idFile, c00, c04, c05, c06, c07, c08, c09, c10, c11, c12) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (idMVideo, fileid, title, runtime, director, studio, year, plot, album, artist, genre, track))
+            
+            #create the reference in emby table
+            pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
+            cursor.execute(pathsql, (MBitem["Id"], idMVideo, "musicvideo", API().getChecksum(MBitem)))
+            
+            #add streamdetails
+            self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), fileid, cursor)
+            
+        #### UPDATE THE VIDEO #####
+        else:
+            utils.logMsg("UPDATE musicvideo to Kodi library","Id: %s - Title: %s" % (embyId, title))
+            pathsql="update musicvideo SET c00 = ?, c04 = ?, c05 = ?, c06 = ?, c07 = ?, c08 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ? WHERE idMVideo = ?"
+            cursor.execute(pathsql, (title, runtime, director, studio, year, plot, album, artist, genre, track, idMVideo))
+            
+            #update the checksum in emby table
+            cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(MBitem),MBitem["Id"]))
+        
+        #update or insert actors
+        self.AddPeopleToMedia(idMVideo,MBitem.get("People"),"musicvideo", connection, cursor)
+        
+        #update artwork
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), idMVideo, "musicvideo", "thumb", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), idMVideo, "musicvideo", "poster", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Banner"), idMVideo, "musicvideo", "banner", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Logo"), idMVideo, "musicvideo", "clearlogo", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Art"), idMVideo, "musicvideo", "clearart", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Thumb"), idMVideo, "musicvideo", "landscape", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Disc"), idMVideo, "musicvideo", "discart", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop"), idMVideo, "musicvideo", "fanart", cursor)
+        
+        #update genres
+        self.AddGenresToMedia(idMVideo, genres, "musicvideo", cursor)
+               
+        #update studios
+        self.AddStudiosToMedia(idMVideo, studios, "musicvideo", cursor)
+        
+        #set resume point
+        resume = int(round(float(timeInfo.get("ResumeTime"))))*60
+        total = int(round(float(timeInfo.get("TotalTime"))))*60
+        self.setKodiResumePoint(fileid, resume, total, cursor)
+        
+        #commit changes and return the id
+        connection.commit()
+    
     def addOrUpdateTvShowToKodiLibrary( self, embyId, connection, cursor, viewTag ):
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
@@ -739,9 +875,9 @@ class WriteKodiDB():
                         genre_id = genre_id + 1
                         sql="insert into genre(genre_id, name) values(?, ?)"
                         cursor.execute(sql, (genre_id,genre))
+                        utils.logMsg("AddGenresToMedia", "Processing : " + genre)
                     
                     #assign genre to item    
-                    utils.logMsg("AddGenresToMedia", "Processing : " + genre)
                     sql="INSERT OR REPLACE into genre_link(genre_id, media_id, media_type) values(?, ?, ?)"
                     cursor.execute(sql, (genre_id, id, mediatype))
                 
@@ -760,7 +896,6 @@ class WriteKodiDB():
                         cursor.execute(sql, (idGenre,genre))
 
                     #assign genre to item    
-                    utils.logMsg("AddGenresToMedia", "Processing : " + genre)
                     if mediatype == "movie":
                         sql="INSERT OR REPLACE into genrelinkmovie(idGenre, idMovie) values(?, ?)"
                     if mediatype == "tvshow":
@@ -792,9 +927,9 @@ class WriteKodiDB():
                         studio_id = studio_id + 1
                         sql="insert into studio(studio_id, name) values(?, ?)"
                         cursor.execute(sql, (studio_id,studio))
+                        utils.logMsg("AddstudiosToMedia", "Processing : " + studio)
                     
                     #assign studio to item    
-                    utils.logMsg("AddstudiosToMedia", "Processing : " + studio)
                     sql="INSERT OR REPLACE into studio_link(studio_id, media_id, media_type) values(?, ?, ?)"
                     cursor.execute(sql, (studio_id, id, mediatype))
                 
@@ -813,7 +948,6 @@ class WriteKodiDB():
                         cursor.execute(sql, (idstudio,studio))
 
                     #assign studio to item    
-                    utils.logMsg("AddstudiosToMedia", "Processing : " + studio)
                     if mediatype == "movie":
                         sql="INSERT OR REPLACE into studiolinkmovie(idstudio, idMovie) values(?, ?)"
                     if mediatype == "tvshow":
@@ -843,9 +977,9 @@ class WriteKodiDB():
                     tag_id = tag_id + 1
                     sql="insert into tag(tag_id, name) values(?, ?)"
                     cursor.execute(sql, (tag_id,tag))
+                    utils.logMsg("AddTagToMedia", "Adding tag: " + tag)
                 
                 #assign tag to item    
-                utils.logMsg("AddTagToMedia", "Processing : " + tag)
                 sql="INSERT OR REPLACE into tag_link(tag_id, media_id, media_type) values(?, ?, ?)"
                 cursor.execute(sql, (tag_id, id, mediatype))
             
@@ -864,7 +998,6 @@ class WriteKodiDB():
                     cursor.execute(sql, (idTag,tag))
 
                 #assign tag to item    
-                utils.logMsg("AddTagToMedia", "Processing : " + tag)
                 sql="INSERT OR REPLACE into taglinks(idTag, idMedia, media_type) values(?, ?, ?)"
                 cursor.execute(sql, (idTag, id, mediatype))
     

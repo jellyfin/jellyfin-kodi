@@ -24,7 +24,14 @@ class ReadKodiDB():
         allmovies = cursor.fetchall()
         #this will return a list with tuples of all items returned from the database
         return allmovies
-        
+    
+    def getKodiMusicVideos(self, connection, cursor):
+        #returns all musicvideos in Kodi db
+        cursor.execute("SELECT kodi_id, emby_id, checksum FROM emby WHERE media_type='musicvideo'")
+        allvideos = cursor.fetchall()
+        #this will return a list with tuples of all items returned from the database
+        return allvideos
+    
     def getKodiTvShows(self, connection, cursor):
         cursor.execute("SELECT kodi_id, emby_id, checksum FROM emby WHERE media_type='tvshow'")
         allshows = cursor.fetchall()

@@ -67,11 +67,17 @@ class LibrarySync():
             self.MoviesFullSync(connection,cursor,pDialog)
             
             if (self.ShouldStop()):
-                    return False
+                return False
             
             #sync Tvshows and episodes
             self.TvShowsFullSync(connection,cursor,pDialog)
-
+            
+            if (self.ShouldStop()):
+                return False
+                    
+            # sync musicvideos
+            self.MusicVideosFullSync(connection,cursor,pDialog)
+            
             # set the install done setting
             if(syncInstallRunDone == False and completed):
                 addon = xbmcaddon.Addon(id='plugin.video.emby') #force a new instance of the addon
@@ -143,7 +149,52 @@ class LibrarySync():
                 WINDOW.setProperty(kodiId,"deleted")
                 WriteKodiDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
 
-         
+    def MusicVideosFullSync(self,connection,cursor, pDialog):
+               
+        allKodiMusicvideoIds = list()
+        allEmbyMusicvideoIds = list()
+            
+        allEmbyMusicvideos = ReadEmbyDB().getMusicVideos()
+        allKodiMusicvideos = ReadKodiDB().getKodiMusicVideos(connection, cursor)
+        
+        for kodivideo in allKodiMusicvideos:
+            allKodiMusicvideoIds.append(kodivideo[1])
+        
+        total = len(allEmbyMusicvideos) + 1
+        count = 1
+        
+        #### PROCESS ADDS AND UPDATES ###
+        for item in allEmbyMusicvideos:
+            
+            if (self.ShouldStop()):
+                return False
+            
+            if not item.get('IsFolder'):                    
+                allEmbyMusicvideoIds.append(item["Id"])
+                
+                if(pDialog != None):
+                    progressTitle = "Processing MusicVideos (" + str(count) + " of " + str(total) + ")"
+                    pDialog.update(0, "Emby for Kodi - Running Sync", progressTitle)
+                    count += 1        
+                
+                kodiVideo = None
+                for kodivideo in allKodiMusicvideos:
+                    if kodivideo[1] == item["Id"]:
+                        kodiVideo = kodivideo
+                      
+                if kodiVideo == None:
+                    WriteKodiDB().addOrUpdateMusicVideoToKodiLibrary(item["Id"],connection, cursor)
+                else:
+                    if kodiVideo[2] != API().getChecksum(item):
+                        WriteKodiDB().addOrUpdateMusicVideoToKodiLibrary(item["Id"],connection, cursor)
+            
+        #### PROCESS DELETES #####
+        allEmbyMusicvideoIds = set(allEmbyMusicvideoIds)
+        for kodiId in allKodiMusicvideoIds:
+            if not kodiId in allEmbyMusicvideoIds:
+                WINDOW.setProperty(kodiId,"deleted")
+                WriteKodiDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
+    
     def TvShowsFullSync(self,connection,cursor,pDialog):
                
         views = ReadEmbyDB().getCollections("tvshows")
@@ -200,7 +251,6 @@ class LibrarySync():
             if not kodiId in allEmbyTvShowIds:
                 WINDOW.setProperty(kodiId,"deleted")
                 WriteKodiDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
-
          
     def EpisodesFullSync(self,connection,cursor,showId):
         
@@ -250,7 +300,6 @@ class LibrarySync():
                 WINDOW.setProperty(kodiId,"deleted")
                 WriteKodiDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
     
-
     def IncrementalSync(self, itemList):
         #this will only perform sync for items received by the websocket
         addon = xbmcaddon.Addon(id='plugin.video.emby')
@@ -300,6 +349,13 @@ class LibrarySync():
 
                     if kodi_show_id:
                         WriteKodiDB().addOrUpdateEpisodeToKodiLibrary(MBitem["Id"], kodi_show_id, connection, cursor)
+        
+            #### PROCESS MUSICVIDEOS ####
+            allEmbyMusicvideos = ReadEmbyDB().getMusicVideos(itemList)
+            for item in allEmbyMusicvideos:
+                if not item.get('IsFolder'):                    
+                    WriteKodiDB().addOrUpdateMusicVideoToKodiLibrary(item["Id"],connection, cursor)
+        
         finally:
             cursor.close()
             xbmc.executebuiltin("UpdateLibrary(video)")
