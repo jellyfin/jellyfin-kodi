@@ -49,17 +49,9 @@ class PlaybackUtils():
         resume_result = 0
         seekTime = 0
         
-        #get the resume point from Kodi DB for a Movie
-        # kodiItem = ReadKodiDB().getKodiMovie(id)
-        # if kodiItem != None:
-            # seekTime = int(round(kodiItem['resume'].get("position")))
-        # else:
-            # #get the resume point from Kodi DB for an episode
-            # episodeItem = ReadEmbyDB().getItem(id)
-            # if episodeItem != None and str(episodeItem["Type"]) == "Episode":
-                # kodiItem = ReadKodiDB().getKodiEpisodeByMbItem(id,episodeItem["SeriesId"])
-                # if kodiItem != None:
-                    # seekTime = int(round(kodiItem['resume'].get("position")))                  
+        if userData.get("PlaybackPositionTicks") != 0:
+            reasonableTicks = int(userData.get("PlaybackPositionTicks")) / 1000
+            seekTime = reasonableTicks / 10000
 
         playurl = PlayUtils().getPlayUrl(server, id, result)
         thumbPath = API().getArtwork(result, "Primary")
