@@ -84,6 +84,7 @@ class API():
         width = ''
         aspectratio = '1:1'
         aspectfloat = 1.85
+        Video3DFormat = ''
 
         if mediaSources == True:
             mediaSources = item.get("MediaSources")
@@ -102,6 +103,7 @@ class API():
                         height = int(mediaStream.get("Height"))
                         width = int(mediaStream.get("Width"))
                         aspectratio = mediaStream.get("AspectRatio")
+                        Video3DFormat = item.get("Video3DFormat")
                         if aspectratio != None and len(aspectratio) >= 3:
                             try:
                                 aspectwidth,aspectheight = aspectratio.split(':')
@@ -116,7 +118,8 @@ class API():
                 'audiocodec'    : audiocodec, 
                 'height'        : height,
                 'width'         : width,
-                'aspectratio'   : aspectfloat
+                'aspectratio'   : aspectfloat,
+                '3dformat'      : Video3DFormat
                 }
     
     def getChecksum(self, item):

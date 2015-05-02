@@ -162,10 +162,7 @@ class WriteKodiDB():
             #create the reference in emby table
             pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
             cursor.execute(pathsql, (MBitem["Id"], movieid, "movie", API().getChecksum(MBitem)))
-            
-            #add streamdetails
-            self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), fileid, cursor)
-            
+                        
         #### UPDATE THE MOVIE #####
         else:
             utils.logMsg("UPDATE movie to Kodi library","Id: %s - Title: %s" % (embyId, title))
@@ -193,6 +190,9 @@ class WriteKodiDB():
                
         #update studios
         self.AddStudiosToMedia(movieid, studios, "movie", cursor)
+        
+        #add streamdetails
+        self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), fileid, cursor)
         
         #set resume point
         resume = int(round(float(timeInfo.get("ResumeTime"))))*60
@@ -297,9 +297,6 @@ class WriteKodiDB():
             pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
             cursor.execute(pathsql, (MBitem["Id"], idMVideo, "musicvideo", API().getChecksum(MBitem)))
             
-            #add streamdetails
-            self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), fileid, cursor)
-            
         #### UPDATE THE VIDEO #####
         else:
             utils.logMsg("UPDATE musicvideo to Kodi library","Id: %s - Title: %s" % (embyId, title))
@@ -327,6 +324,9 @@ class WriteKodiDB():
                
         #update studios
         self.AddStudiosToMedia(idMVideo, studios, "musicvideo", cursor)
+        
+        #add streamdetails
+        self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), fileid, cursor)
         
         #set resume point
         resume = int(round(float(timeInfo.get("ResumeTime"))))*60
@@ -637,9 +637,6 @@ class WriteKodiDB():
             #create the reference in emby table
             pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum, parent_id) values(?, ?, ?, ?, ?)"
             cursor.execute(pathsql, (MBitem["Id"], episodeid, "episode", API().getChecksum(MBitem), showid))
-            
-            #add streamdetails
-            self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), fileid, cursor)
         
         # UPDATE THE EPISODE IN KODI (for now, we just send in all data)
         else:
@@ -658,6 +655,9 @@ class WriteKodiDB():
         resume = int(round(float(timeInfo.get("ResumeTime"))))*60
         total = int(round(float(timeInfo.get("TotalTime"))))*60
         self.setKodiResumePoint(fileid, resume, total, cursor)
+        
+        #add streamdetails
+        self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), fileid, cursor)
         
         #update artwork
         self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), episodeid, "episode", "thumb", cursor)
@@ -990,8 +990,8 @@ class WriteKodiDB():
         cursor.execute("delete FROM streamdetails WHERE idFile = ?", (fileid,))
         if streamdetails:
             #video details
-            sql="insert into streamdetails(idFile, iStreamType, strVideoCodec, fVideoAspect, iVideoWidth, iVideoHeight) values(?, ?, ?, ?, ?, ?)"
-            cursor.execute(sql, (fileid,0,streamdetails.get("videocodec"),streamdetails.get("aspectratio"),streamdetails.get("width"),streamdetails.get("height")))
+            sql="insert into streamdetails(idFile, iStreamType, strVideoCodec, fVideoAspect, iVideoWidth, iVideoHeight, strStereoMode) values(?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(sql, (fileid,0,streamdetails.get("videocodec"),streamdetails.get("aspectratio"),streamdetails.get("width"),streamdetails.get("height"),streamdetails.get("3dformat")))
             #audio details
             sql="insert into streamdetails(idFile, iStreamType, strAudioCodec, iAudioChannels) values(?, ?, ?, ?)"
             cursor.execute(sql, (fileid,1,streamdetails.get("audiocodec"),streamdetails.get("channels")))
