@@ -34,17 +34,20 @@ class LibrarySync():
         
     def FullLibrarySync(self):
         
-        #show the progress dialog
-        pDialog = xbmcgui.DialogProgressBG()
-        pDialog.create('Emby for Kodi', 'Performing full sync')
-        
         #set some variable to check if this is the first run
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         
-
         startupDone = WINDOW.getProperty("startup") == "done"
         syncInstallRunDone = addon.getSetting("SyncInstallRunDone") == "true"
+        dbSyncIndication = addon.getSetting("dbSyncIndication") == "true"
         WINDOW.setProperty("SyncDatabaseRunning", "true")
+        
+        
+        #show the progress dialog
+        pDialog = None
+        if (syncInstallRunDone == False or dbSyncIndication):
+            pDialog = xbmcgui.DialogProgressBG()
+            pDialog.create('Emby for Kodi', 'Performing full sync')
         
         if(WINDOW.getProperty("SyncDatabaseShouldStop") ==  "true"):
             utils.logMsg("Sync Database", "Can not start SyncDatabaseShouldStop=True", 0)
@@ -62,6 +65,10 @@ class LibrarySync():
             
             # sync movies
             self.MoviesFullSync(connection,cursor,pDialog)
+            
+            if (self.ShouldStop()):
+                    return False
+            
             #sync Tvshows and episodes
             self.TvShowsFullSync(connection,cursor,pDialog)
 
@@ -72,8 +79,6 @@ class LibrarySync():
             
             # Force refresh the library
             xbmc.executebuiltin("UpdateLibrary(video)")
-            xbmc.executebuiltin("Container.Refresh")
-            xbmc.executebuiltin("Container.Update")
             
             # set prop to show we have run for the first time
             WINDOW.setProperty("startup", "done")
@@ -108,7 +113,10 @@ class LibrarySync():
             
             #### PROCESS ADDS AND UPDATES ###
             for item in allEmbyMovies:
-                    
+                
+                if (self.ShouldStop()):
+                    return False
+                
                 if not item.get('IsFolder'):                    
                     allEmbyMovieIds.append(item["Id"])
                     
@@ -157,7 +165,10 @@ class LibrarySync():
 
             #### TVSHOW: PROCESS ADDS AND UPDATES ###
             for item in allEmbyTvShows:
-                    
+                
+                if (self.ShouldStop()):
+                    return False
+                
                 if item.get('IsFolder') and item.get('RecursiveItemCount') != 0:                   
                     allEmbyTvShowIds.append(item["Id"])
                     
@@ -210,7 +221,10 @@ class LibrarySync():
 
         #### EPISODES: PROCESS ADDS AND UPDATES ###
         for item in allEmbyEpisodes:
-                
+            
+            if (self.ShouldStop()):
+                    return False    
+            
             allEmbyEpisodeIds.append(item["Id"])
             
             #get the existing entry (if exists) in Kodi DB
@@ -239,9 +253,15 @@ class LibrarySync():
 
     def IncrementalSync(self, itemList):
         #this will only perform sync for items received by the websocket
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
+        dbSyncIndication = addon.getSetting("dbSyncIndication") == "true"
+        WINDOW.setProperty("SyncDatabaseRunning", "true")
         
-        pDialog = xbmcgui.DialogProgressBG()
-        pDialog.create('Emby for Kodi', 'Performing incremental sync...')
+        #show the progress dialog
+        pDialog = None
+        if (dbSyncIndication):
+            pDialog = xbmcgui.DialogProgressBG()
+            pDialog.create('Emby for Kodi', 'Performing incremental sync...')
         
         connection = utils.KodiSQL()
         cursor = connection.cursor()
@@ -283,20 +303,15 @@ class LibrarySync():
         finally:
             cursor.close()
             xbmc.executebuiltin("UpdateLibrary(video)")
-            xbmc.executebuiltin("Container.Refresh")
-            xbmc.executebuiltin("Container.Update")
+            WINDOW.setProperty("SyncDatabaseRunning", "false")
         
         #close the progress dialog
         if(pDialog != None):
             pDialog.close()
     
-    def ShouldStop(self, prog):
-        
-        if(prog != None and type(prog) == xbmcgui.DialogProgress):
-            if(prog.iscanceled() == True):
-                return True
-    
-        if(xbmc.Player().isPlaying() or xbmc.abortRequested):
+    def ShouldStop(self):
+            
+        if(xbmc.abortRequested):
             return True
 
         if(WINDOW.getProperty("SyncDatabaseShouldStop") == "true"):

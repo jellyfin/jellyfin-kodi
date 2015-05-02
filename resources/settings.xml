@@ -12,12 +12,9 @@
 		<setting id="deviceName" type="text" label="30016" default="Kodi" />
 		<setting id="playFromStream" type="bool" label="30002" visible="true" enable="true" default="false" />
 	</category>
-	<!-- <category label="Manual sync"> <setting label="Run manual full sync now" type="action" action="RunScript(plugin.video.mbsync, fullsync)" /> <setting label="Run manual incremental sync now" type="action" action="RunScript(plugin.video.mbsync, incrementalsync)" /> <setting label="Reset entire local library" type="action" action="RunScript(plugin.video.mbsync, reset)" /> </category> -->
 	<category label="Sync Options">
 	<!--  	<setting id="syncMovieBoxSets" type="bool" label="30238" default="true" visible="true" enable="true" /> -->
-		<setting id="enablePlayCountSync" type="bool" label="30240" default="true" visible="true" enable="true" />
-		<setting id="dbSyncIndication" type="labelenum" label="30241" values="None|Notify OnChange|Notify OnFinish|BG Progress|Dialog Progress" default="None" />
-		<setting id="playCountSyncIndication" type="labelenum" label="30242" values="None|Notify OnChange|Notify OnFinish|BG Progress|Dialog Progress" default="None" />
+		<setting id="dbSyncIndication" type="bool" label="30241" default="false" visible="true" enable="true" />
 	</category>
 	<category label="Playback"> <!-- Extra Sync options -->
 		<setting id="smbusername" type="text" label="30007" default="" visible="true" enable="true" />
