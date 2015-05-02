@@ -232,6 +232,11 @@ class WriteKodiDB():
         studios = API().getStudios(MBitem)
         studio = " / ".join(studios)
         mpaa = MBitem.get("OfficialRating")
+        runtime = int(timeInfo.get('Duration'))*60
+        plot = utils.convertEncoding(API().getOverview(MBitem))
+        title = utils.convertEncoding(MBitem["Name"])
+        sorttitle = utils.convertEncoding(MBitem["SortName"])
+        rating = MBitem.get("CommunityRating")
         
         if MBitem.get("DateCreated") != None:
             dateadded = MBitem["DateCreated"].replace("T"," ")
@@ -267,13 +272,6 @@ class WriteKodiDB():
                 tlpathid = tlpathid + 1
                 pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
                 cursor.execute(pathsql, (tlpathid,toplevelpath,"tvshows","metadata.local",1))
-
-
-            runtime = int(timeInfo.get('Duration'))*60
-            plot = utils.convertEncoding(API().getOverview(MBitem))
-            title = utils.convertEncoding(MBitem["Name"])
-            sorttitle = utils.convertEncoding(MBitem["SortName"])
-            rating = MBitem.get("CommunityRating")
                 
             #create the tvshow
             cursor.execute("select coalesce(max(idShow),0) as showid from tvshow")
@@ -296,7 +294,7 @@ class WriteKodiDB():
         #### UPDATE THE TV SHOW #############
         else:
             pathsql="UPDATE tvshow SET (c00 = ?, c01 = ?, c04 = ?, c05 = ?, c08 = ?, c09 = ?, c13 = ?, c14 = ?, c15 = ? WHERE idShow = ?"
-            cursor.execute(pathsql, title, plot, rating, premieredate, title, genre, mpaa, studio, sorttitle, showid)
+            cursor.execute(pathsql, (title, plot, rating, premieredate, title, genre, mpaa, studio, sorttitle, showid))
             
             #update the checksum in emby table
             cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(MBitem), MBitem["Id"]))
