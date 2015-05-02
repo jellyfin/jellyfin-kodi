@@ -293,7 +293,7 @@ class WriteKodiDB():
         
         #### UPDATE THE TV SHOW #############
         else:
-            pathsql="UPDATE tvshow SET (c00 = ?, c01 = ?, c04 = ?, c05 = ?, c08 = ?, c09 = ?, c13 = ?, c14 = ?, c15 = ? WHERE idShow = ?"
+            pathsql="UPDATE tvshow SET c00 = ?, c01 = ?, c04 = ?, c05 = ?, c08 = ?, c09 = ?, c13 = ?, c14 = ?, c15 = ? WHERE idShow = ?"
             cursor.execute(pathsql, (title, plot, rating, premieredate, title, genre, mpaa, studio, sorttitle, showid))
             
             #update the checksum in emby table
