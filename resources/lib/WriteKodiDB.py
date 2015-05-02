@@ -57,7 +57,7 @@ class WriteKodiDB():
         # If the item already exist in the local Kodi DB we'll perform a full item update
         # If the item doesn't exist, we'll add it to the database
         
-        cursor.execute("SELECT idMovie FROM movie WHERE embyId = ?",(MBitem["Id"],))
+        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?",(MBitem["Id"],))
         result = cursor.fetchone()
         if result != None:
             movieid = result[0]
@@ -99,7 +99,7 @@ class WriteKodiDB():
             jsonData = downloadUtils.downloadUrl(itemTrailerUrl)
             if(jsonData != ""):
                 trailerItem = jsonData
-                trailerUrl = "plugin://plugin.video.emby/?id=%s&mode=play" % trailerItem[0][u'Id']
+                trailerUrl = "plugin://plugin.video.emby/trailer/?id=%s&mode=play" % trailerItem[0][u'Id']
         
         if MBitem.get("DateCreated") != None:
             dateadded = MBitem["DateCreated"].replace("T"," ")
@@ -113,21 +113,9 @@ class WriteKodiDB():
             
         #### ADD OR UPDATE THE FILE AND PATH ###########
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY
-        path = "plugin://plugin.video.emby/?id=%s&mode=play" % MBitem["Id"]
-        filename = "plugin://plugin.video.emby/?id=%s&mode=play" % MBitem["Id"]
+        path = "plugin://plugin.video.emby/movies/"
+        filename = "plugin://plugin.video.emby/movies/?id=%s&mode=play" % MBitem["Id"]
         
-        playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
-        playurl = utils.convertEncoding(playurl)
-        
-        # we need to store both the path and the filename seperately in the kodi db so we split them up
-        if "\\" in playurl:
-            filename = playurl.rsplit("\\",1)[-1]
-            path = playurl.replace(filename,"")
-        elif "/" in playurl:
-            filename = playurl.rsplit("/",1)[-1]
-            path = playurl.replace(filename,"")
-
-
         #create the path
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
         result = cursor.fetchone()
@@ -159,16 +147,23 @@ class WriteKodiDB():
             cursor.execute("select coalesce(max(idMovie),0) as movieid from movie")
             movieid = cursor.fetchone()[0]
             movieid = movieid + 1
-            pathsql="insert into movie(idMovie, idFile, c00, c01, c02, c05, c06, c07, c09, c10, c11, c12, c14, c15, c16, c18, c19, embyId) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (movieid, fileid, title, plot, shortplot, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl, MBitem["Id"]))
+            pathsql="insert into movie(idMovie, idFile, c00, c01, c02, c05, c06, c07, c09, c10, c11, c12, c14, c15, c16, c18, c19) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (movieid, fileid, title, plot, shortplot, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl))
             
             #add the viewtag
             self.AddTagToMedia(movieid, viewTag, "movie", cursor)
             
+            #create the reference in emby table
+            pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
+            cursor.execute(pathsql, (MBitem["Id"], movieid, "movie", API().getChecksum(MBitem)))
+            
         #### UPDATE THE MOVIE #####
         else:
-            pathsql="update movie SET c00 = ?, c01 = ?, c02 = ?, c05 = ?, c06 = ?, c07 = ?, c09 = ? c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?, c16 = ?, c18 = ?, c19 = ?, embyId= ? WHERE idMovie = ?"
-            cursor.execute(pathsql, (title, plot, shortplot, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl, MBitem["Id"], movieid))
+            pathsql="update movie SET c00 = ?, c01 = ?, c02 = ?, c05 = ?, c06 = ?, c07 = ?, c09 = ? c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?, c16 = ?, c18 = ?, c19 = ? WHERE idMovie = ?"
+            cursor.execute(pathsql, (title, plot, shortplot, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl, movieid))
+            
+            #update the checksum in emby table
+            cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(MBitem),MBitem["Id"]))
         
         #update or insert actors
         self.AddPeopleToMedia(movieid,MBitem.get("People"),"movie", connection, cursor)
@@ -185,9 +180,14 @@ class WriteKodiDB():
         
         #update genres
         self.AddGenresToMedia(movieid, genres, "movie", cursor)
-        
+               
         #update studios
         self.AddStudiosToMedia(movieid, studios, "movie", cursor)
+        
+        #set resume point
+        resume = int(round(float(timeInfo.get("ResumeTime"))))*60
+        total = int(round(float(timeInfo.get("TotalTime"))))*60
+        self.setKodiResumePoint(fileid, resume, total, cursor)
         
         #commit changes and return the id
         connection.commit()
@@ -210,7 +210,7 @@ class WriteKodiDB():
         # If the item already exist in the local Kodi DB we'll perform a full item update
         # If the item doesn't exist, we'll add it to the database
         
-        cursor.execute("SELECT idMovie FROM movie WHERE embyId = ?",(MBitem["Id"],))
+        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?",(MBitem["Id"],))
         result = cursor.fetchone()
         if result != None:
             showid = result[0]
@@ -237,12 +237,7 @@ class WriteKodiDB():
         else:
             premieredate = None
         
-        path = "plugin://plugin.video.emby/tvshows/" + MBitem["Id"] + "/"
-        
-        playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
-        #make sure that the path always ends with a slash
-        path = utils.convertEncoding(playurl + "/")
-        
+        path = "plugin://plugin.video.emby/tvshows/" + MBitem["Id"] + "/"       
             
         #### ADD THE TV SHOW TO KODI ############## 
         if showid == None:
@@ -255,12 +250,7 @@ class WriteKodiDB():
             cursor.execute(pathsql, (pathid,path,None,None,1))
             
             #create toplevel path as monitored source - needed for things like actors and stuff to work (no clue why)
-            if "\\" in path:
-                toplevelpathstr = path.rsplit("\\",2)[1]
-                toplevelpath = path.replace(toplevelpathstr + "\\","")
-            elif "/" in path:
-                toplevelpathstr = path.rsplit("/",2)[1]
-                toplevelpath = path.replace(toplevelpathstr + "/","")
+            toplevelpath = "plugin://plugin.video.emby/"
             cursor.execute("SELECT idPath as tlpathid FROM path WHERE strPath = ?",(toplevelpath,))
             result = cursor.fetchone()
             if result == None:
@@ -281,8 +271,12 @@ class WriteKodiDB():
             cursor.execute("select coalesce(max(idShow),0) as showid from tvshow")
             showid = cursor.fetchone()[0]
             showid = showid + 1
-            pathsql="insert into tvshow(idShow, c00, c01, c04, c05, c08, c09, c13, c14, c15, embyId) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (showid, title, plot, rating, premieredate, genre, title, mpaa, studio, sorttitle, MBitem["Id"]))
+            pathsql="insert into tvshow(idShow, c00, c01, c04, c05, c08, c09, c13, c14, c15) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (showid, title, plot, rating, premieredate, genre, title, mpaa, studio, sorttitle))
+            
+            #create the reference in emby table
+            pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
+            cursor.execute(pathsql, (MBitem["Id"], showid, "tvshow", API().getChecksum(MBitem)))
             
             #link the path
             pathsql="insert into tvshowlinkpath(idShow,idPath) values(?, ?)"
@@ -293,8 +287,11 @@ class WriteKodiDB():
         
         #### UPDATE THE TV SHOW #############
         else:
-            pathsql="UPDATE tvshow SET (c00 = ?, c01 = ?, c04 = ?, c05 = ?, c08 = ?, c09 = ?, c13 = ?, c14 = ?, c15 = ?, embyId = ? WHERE idShow = ?"
-            cursor.execute(pathsql, title, plot, rating, premieredate, title, genre, mpaa, studio, sorttitle, MBitem["Id"], showid)
+            pathsql="UPDATE tvshow SET (c00 = ?, c01 = ?, c04 = ?, c05 = ?, c08 = ?, c09 = ?, c13 = ?, c14 = ?, c15 = ? WHERE idShow = ?"
+            cursor.execute(pathsql, title, plot, rating, premieredate, title, genre, mpaa, studio, sorttitle, showid)
+            
+            #update the checksum in emby table
+            cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(MBitem), MBitem["Id"]))
             
         #update or insert people
         self.AddPeopleToMedia(showid,MBitem.get("People"),"tvshow", connection, cursor)
@@ -304,7 +301,7 @@ class WriteKodiDB():
         
         #update studios
         self.AddStudiosToMedia(showid, studios, "tvshow", cursor)
-        
+                
         #update artwork
         self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), showid, "tvshow", "thumb", cursor)
         self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), showid, "tvshow", "poster", cursor)
@@ -399,11 +396,9 @@ class WriteKodiDB():
         # If the item doesn't exist, we'll add it to the database
         
         MBitem = ReadEmbyDB().getFullItem(embyId)
-        
-        cursor.execute("SELECT idEpisode FROM episode WHERE embyId = ?",(MBitem["Id"],))
+        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?",(MBitem["Id"],))
         result = cursor.fetchone()
         if result != None:
-            utils.logMsg("Emby", "Episode already exists in DB : " + MBitem["Id"] + " - " + MBitem["Name"], 2)
             episodeid = result[0]
         else:
             episodeid = None
@@ -455,18 +450,6 @@ class WriteKodiDB():
         path = "plugin://plugin.video.emby/tvshows/" + MBitem["SeriesId"] + "/"
         filename = "plugin://plugin.video.emby/tvshows/" + MBitem["SeriesId"] + "/?id=" + MBitem["Id"] + "&mode=play"
         
-        playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
-        playurl = utils.convertEncoding(playurl)
-
-        # we need to store both the path and the filename seperately in the kodi db so we split them up
-        if "\\" in playurl:
-            filename = playurl.rsplit("\\",1)[-1]
-            path = playurl.replace(filename,"")
-        elif "/" in playurl:
-            filename = playurl.rsplit("/",1)[-1]
-            path = playurl.replace(filename,"")
-
-        
         #create the new path - return id if already exists  
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
         result = cursor.fetchone()
@@ -512,30 +495,40 @@ class WriteKodiDB():
             cursor.execute("select coalesce(max(idEpisode),0) as episodeid from episode")
             episodeid = cursor.fetchone()[0]
             episodeid = episodeid + 1
-            pathsql = "INSERT into episode(idEpisode, idFile, c00, c01, c03, c04, c05, c09, c10, c12, c13, c14, idShow, c15, c16, embyId) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (episodeid, fileid, title, plot, rating, writer, premieredate, runtime, director, season, episode, title, showid, "-1", "-1", MBitem["Id"]))
+            pathsql = "INSERT into episode(idEpisode, idFile, c00, c01, c03, c04, c05, c09, c10, c12, c13, c14, idShow, c15, c16) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (episodeid, fileid, title, plot, rating, writer, premieredate, runtime, director, season, episode, title, showid, "-1", "-1"))
+            
+            #create the reference in emby table
+            pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum, parent_id) values(?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (MBitem["Id"], episodeid, "episode", API().getChecksum(MBitem), showid))
         
         # UPDATE THE EPISODE IN KODI (for now, we just send in all data)
         else:
-            pathsql = "UPDATE episode SET c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?, c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, embyId = ? WHERE idEpisode = ?"
-            cursor.execute(pathsql, (title, plot, rating, writer, premieredate, runtime, director, season, episode, title, "-1", "-1", MBitem["Id"], episodeid))
+            pathsql = "UPDATE episode SET c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?, c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ? WHERE idEpisode = ?"
+            cursor.execute(pathsql, (title, plot, rating, writer, premieredate, runtime, director, season, episode, title, "-1", "-1", episodeid))
+            
+            #update the checksum in emby table
+            cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(MBitem), MBitem["Id"]))
         
         #update or insert actors
         self.AddPeopleToMedia(episodeid,MBitem.get("People"),"episode", connection, cursor)
         
+        #set resume point
+        resume = int(round(float(timeInfo.get("ResumeTime"))))*60
+        total = int(round(float(timeInfo.get("TotalTime"))))*60
+        self.setKodiResumePoint(fileid, resume, total, cursor)
+        
         #update artwork
         self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), episodeid, "episode", "thumb", cursor)
         
-        try:
-            connection.commit()
-            utils.logMsg("Emby","Added or updated episode to Kodi Library - ID: " + MBitem["Id"] + " - " + MBitem["Name"])
-        except:
-            utils.logMsg("Emby","Error adding/updating episode to Kodi Library - ID: " + MBitem["Id"] + " - " + MBitem["Name"])
-            actionPerformed = False
-    
+        #commit changes
+        connection.commit()
+
     def deleteMovieFromKodiLibrary(self, id, connection, cursor ):
         utils.logMsg("deleting movie from Kodi library --> ",id)
-        cursor.execute("DELETE FROM movie WHERE embyId = ?", (id,))
+        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id=?", (id,))
+        kodi_id = cursor.fetchone()[0]
+        cursor.execute("DELETE FROM movie WHERE idMovie = ?", (kodi_id,))
         connection.commit()
  
     def deleteMusicVideoFromKodiLibrary(self, id ):
@@ -546,12 +539,16 @@ class WriteKodiDB():
          
     def deleteEpisodeFromKodiLibrary(self, id, connection, cursor ):
         utils.logMsg("deleting episode from Kodi library --> ",id)
-        cursor.execute("DELETE FROM episode WHERE embyId = ?", (id,))
+        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id=?", (id,))
+        kodi_id = cursor.fetchone()[0]
+        cursor.execute("DELETE FROM episode WHERE idEpisode = ?", (kodi_id,))
         connection.commit()
                       
     def deleteTVShowFromKodiLibrary(self, id, connection, cursor):
         utils.logMsg("deleting tvshow from Kodi library --> ",id)
-        cursor.execute("DELETE FROM tvshow WHERE embyId = ?", (id,))
+        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id=?", (id,))
+        kodi_id = cursor.fetchone()[0]
+        cursor.execute("DELETE FROM tvshow WHERE idShow = ?", (kodi_id,))
         connection.commit()
     
     def updateSeasons(self,embyTvShowId, kodiTvShowId, connection, cursor):
@@ -596,33 +593,16 @@ class WriteKodiDB():
                     utils.logMsg("ArtworkSync", "Updating Art Link for kodiId: " + str(kodiId) + " (" + url + ") -> (" + imageUrl + ")")
                     cursor.execute("UPDATE art set url = ? WHERE media_id = ? AND media_type = ? AND type = ?", (imageUrl, kodiId, mediaType, imageType))
         
-    def setKodiResumePoint(self, id, resume_seconds, total_seconds, fileType):
-        #use sqlite to set the resume point while json api doesn't support this yet
-        #todo --> submit PR to kodi team to get this added to the jsonrpc api
-        
-        utils.logMsg("Emby","setting resume point in kodi db..." + fileType + ": " + str(id))
-        xbmc.sleep(sleepVal)
-        connection = utils.KodiSQL()
-        cursor = connection.cursor( )
-        
-        if fileType == "episode":
-            cursor.execute("SELECT idFile as fileidid FROM episode WHERE idEpisode = ?",(id,))
-            result = cursor.fetchone()
-            fileid = result[0]
-        if fileType == "movie":
-            cursor.execute("SELECT idFile as fileidid FROM movie WHERE idMovie = ?",(id,))
-            result = cursor.fetchone()
-            fileid = result[0]       
+    def setKodiResumePoint(self, fileid, resume_seconds, total_seconds, cursor):
         
         cursor.execute("delete FROM bookmark WHERE idFile = ?", (fileid,))
-        cursor.execute("select coalesce(max(idBookmark),0) as bookmarkId from bookmark")
-        bookmarkId =  cursor.fetchone()[0]
-        bookmarkId = bookmarkId + 1
-        bookmarksql="insert into bookmark(idBookmark, idFile, timeInSeconds, totalTimeInSeconds, thumbNailImage, player, playerState, type) values(?, ?, ?, ?, ?, ?, ?, ?)"
-        cursor.execute(bookmarksql, (bookmarkId,fileid,resume_seconds,total_seconds,None,"DVDPlayer",None,1))
-        connection.commit()
-        cursor.close()
-        
+        if resume_seconds != 0:
+            cursor.execute("select coalesce(max(idBookmark),0) as bookmarkId from bookmark")
+            bookmarkId =  cursor.fetchone()[0]
+            bookmarkId = bookmarkId + 1
+            bookmarksql="insert into bookmark(idBookmark, idFile, timeInSeconds, totalTimeInSeconds, thumbNailImage, player, playerState, type) values(?, ?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(bookmarksql, (bookmarkId,fileid,resume_seconds,total_seconds,None,"DVDPlayer",None,1))
+     
     def AddPeopleToMedia(self, id, people, mediatype, connection, cursor):
         downloadUtils = DownloadUtils()
         

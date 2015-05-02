@@ -52,17 +52,17 @@ class PlaybackUtils():
         seekTime = 0
         
         #get the resume point from Kodi DB for a Movie
-        kodiItem = ReadKodiDB().getKodiMovie(id)
-        if kodiItem != None:
-            seekTime = int(round(kodiItem['resume'].get("position")))
-        else:
-            #get the resume point from Kodi DB for an episode
-            episodeItem = ReadEmbyDB().getItem(id)
-            if episodeItem != None and str(episodeItem["Type"]) == "Episode":
-                kodiItem = ReadKodiDB().getKodiEpisodeByMbItem(id,episodeItem["SeriesId"])
-                if kodiItem != None:
-                    seekTime = int(round(kodiItem['resume'].get("position")))                  
-        
+        # kodiItem = ReadKodiDB().getKodiMovie(id)
+        # if kodiItem != None:
+            # seekTime = int(round(kodiItem['resume'].get("position")))
+        # else:
+            # #get the resume point from Kodi DB for an episode
+            # episodeItem = ReadEmbyDB().getItem(id)
+            # if episodeItem != None and str(episodeItem["Type"]) == "Episode":
+                # kodiItem = ReadKodiDB().getKodiEpisodeByMbItem(id,episodeItem["SeriesId"])
+                # if kodiItem != None:
+                    # seekTime = int(round(kodiItem['resume'].get("position")))                  
+
         playurl = PlayUtils().getPlayUrl(server, id, result)
         
         isStrmFile = False
@@ -137,7 +137,7 @@ class PlaybackUtils():
         if isStrmFile:
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
         else:
-            xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
+            #xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
             if(addon.getSetting("addExtraPlaybackArt") == "true"):
                 utils.logMsg("PLAY", "Doing second xbmc.Player().play to add extra art")
                 xbmc.Player().play(playurl,listItem)

@@ -118,7 +118,24 @@ class API():
                 'width'         : width,
                 'aspectratio'   : str(aspectfloat)
                 }
-                
+    
+    def getChecksum(self, item):
+        #TODO --> use the etags or serverside checksum for this
+        # for now we just add some fields to a string
+        checksum = ""
+        userData = item.get("UserData")
+        if(userData != None):
+            checksum += str(userData.get("Played"))
+            checksum += str(userData.get("IsFavorite"))
+            if userData.get('UnplayedItemCount') != None:
+                checksum += str(userData.get("UnplayedItemCount"))
+            if userData.get('LastPlayedDate') != None:
+                checksum += str(userData.get("LastPlayedDate"))
+            if userData.get('PlaybackPositionTicks') != None:
+                checksum += str(userData.get("PlaybackPositionTicks"))
+            
+        return checksum
+    
     def getUserData(self, item):
         userData = item.get("UserData")
         resumeTime = 0
