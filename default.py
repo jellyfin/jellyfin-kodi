@@ -27,7 +27,8 @@ except:
     id=None
 
 if  mode != None and mode == "play":
-    xbmcplugin.endOfDirectory(int(sys.argv[1]),True,False,True)
+    listItem = xbmcgui.ListItem(path="")
+    xbmcplugin.setResolvedUrl (int(sys.argv[1]), True, listItem)
     WINDOW.setProperty('GUIPLAY', str(id)) # set window prop
 elif sys.argv[1] == "reset":
     utils.reset()

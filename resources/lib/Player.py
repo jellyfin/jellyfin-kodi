@@ -204,7 +204,11 @@ class Player( xbmc.Player ):
         self.stopAll()
         
         if xbmcplayer.isPlaying():
-            currentFile = xbmcplayer.getPlayingFile()
+            
+            currentFile = ""
+            try:
+                currentFile = xbmcplayer.getPlayingFile()
+            except: pass
             self.logMsg("onPlayBackStarted: %s" % currentFile, 0)
             
             # we may need to wait until the info is available
