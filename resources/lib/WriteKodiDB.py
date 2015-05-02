@@ -26,17 +26,22 @@ class WriteKodiDB():
 
     def updatePlayCountFromKodi(self, id, type, playcount=0):
         #when user marks item watched from kodi interface update this in MB3
-        xbmc.sleep(sleepVal)
-        utils.logMsg("Emby", "updatePlayCountFromKodi Called")
         
-        mb3Id = ReadKodiDB().getEmbyIdByKodiId(id, type)
+        utils.logMsg("Emby", "updatePlayCountFromKodi Called")
+        connection = utils.KodiSQL()
+        cursor = connection.cursor()
+        cursor.execute("SELECT emby_id FROM emby WHERE media_type=? AND kodi_id=?",(type,id))
+        
+        emby_id = cursor.fetchone()[0]
+        cursor.close
 
-        if(mb3Id != None):
+        if(emby_id != None):
             addon = xbmcaddon.Addon(id='plugin.video.emby')   
             
             downloadUtils = DownloadUtils()       
-        
-            watchedurl = "{server}/mediabrowser/Users/{UserId}/PlayedItems/%s" % mb3Id
+            
+            #FIXME --> This is no longer working ??!!
+            watchedurl = "{server}/mediabrowser/Users/{UserId}/PlayedItems/%s" % emby_id
             utils.logMsg("Emby","watchedurl -->" + watchedurl)
             if playcount != 0:
                 downloadUtils.downloadUrl(watchedurl, postBody="", type="POST")
@@ -162,7 +167,7 @@ class WriteKodiDB():
             
         #### UPDATE THE MOVIE #####
         else:
-            pathsql="update movie SET c00 = ?, c01 = ?, c02 = ?, c05 = ?, c06 = ?, c07 = ?, c09 = ? c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?, c16 = ?, c18 = ?, c19 = ? WHERE idMovie = ?"
+            pathsql="update movie SET c00 = ?, c01 = ?, c02 = ?, c05 = ?, c06 = ?, c07 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?, c16 = ?, c18 = ?, c19 = ? WHERE idMovie = ?"
             cursor.execute(pathsql, (title, plot, shortplot, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl, movieid))
             
             #update the checksum in emby table
