@@ -213,7 +213,7 @@ class WriteKodiDB():
         downloadUtils = DownloadUtils()
         
         MBitem = ReadEmbyDB().getFullItem(embyId)
-        
+
         # If the item already exist in the local Kodi DB we'll perform a full item update
         # If the item doesn't exist, we'll add it to the database
         
@@ -238,7 +238,7 @@ class WriteKodiDB():
         studios = API().getStudios(MBitem)
         studio = " / ".join(studios)
         director = " / ".join(people.get("Director"))
-        artist = MBitem.get("Artist")
+        artist = " / ".join(MBitem.get("Artists"))
         album = MBitem.get("Album")
         track = MBitem.get("Track")
         
@@ -901,7 +901,9 @@ class WriteKodiDB():
                     if mediatype == "tvshow":
                         sql="INSERT OR REPLACE into genrelinktvshow(idGenre, idShow) values(?, ?)"
                     if mediatype == "episode":
-                        sql="INSERT OR REPLACE into genrelinkepisode(idGenre, idEpisode) values(?, ?)"
+                        return
+                    if mediatype == "musicvideo":
+                        sql="INSERT OR REPLACE into genrelinkmusicvideo(idGenre, idMVideo) values(?, ?)"
                     cursor.execute(sql, (idGenre,id))
     
     def AddStudiosToMedia(self, id, studios, mediatype, cursor):
