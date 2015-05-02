@@ -180,12 +180,15 @@ class WebSocketThread(threading.Thread):
 
     def remove_items(self, itemsRemoved):
         for item in itemsRemoved:
+            connection = utils.KodiSQL()
+            cursor = connection.cursor()
             self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteEpisodeFromKodiLibraryByMbId: " + item, 0)
-            WriteKodiDB().deleteEpisodeFromKodiLibraryByMbId(item)
+            WriteKodiDB().deleteEpisodeFromKodiLibrary(item, connection, cursor)
             self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteMovieFromKodiLibrary: " + item, 0)
-            WriteKodiDB().deleteMovieFromKodiLibrary(item)
+            WriteKodiDB().deleteMovieFromKodiLibrary(item, connection, cursor)
             self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteMusicVideoFromKodiLibrary: " + item, 0)
-            WriteKodiDB().deleteMusicVideoFromKodiLibrary(item)
+            WriteKodiDB().deleteMusicVideoFromKodiLibrary(item, connection, cursor)
+            cursor.close()
 
     def update_items(self, itemsToUpdate):
         # doing adds and updates
@@ -193,8 +196,8 @@ class WebSocketThread(threading.Thread):
             self.logMsg("Message : Doing LibraryChanged : Processing Added and Updated : " + str(itemsToUpdate), 0)
             connection = utils.KodiSQL()
             cursor = connection.cursor()
-            LibrarySync().MoviesSync(connection, cursor, fullsync = False, installFirstRun = False, itemList = itemsToUpdate)
-            LibrarySync().TvShowsSync(connection, cursor, fullsync = False, installFirstRun = False, itemList = itemsToUpdate)
+            LibrarySync().MoviesSync(connection, cursor, False, itemsToUpdate)
+            LibrarySync().TvShowsSync(connection, cursor, False, itemsToUpdate)
             cursor.close()
 
     def user_data_update(self, userDataList):
