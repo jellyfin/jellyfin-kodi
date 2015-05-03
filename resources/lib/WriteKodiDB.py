@@ -992,15 +992,61 @@ class WriteKodiDB():
             setssql="INSERT INTO sets (idSet, strSet)  values(?, ?)"
             cursor.execute(setssql, (None,strSet))
             #if OK:
+            cursor.execute("SELECT idSet FROM sets WHERE strSet = ?", (strSet,))
+        
             result = cursor.fetchone()
             if result != None:
                 setid = result[0]
+                
+                currentsetartsql =  "SELECT type, url FROM art where media_type = ? and media_id = ? and url != ''"
+                cursor.execute(currentsetartsql, ("set", setid))
+                existing_type_map = {}
+                rows = cursor.fetchall()
+                for row in rows:
+                    existing_type_map[row[0] ] = row[1]
+              
+                artwork = {}
+                artwork["poster"] = API().getArtwork(boxset, "Primary")
+                artwork["banner"] = API().getArtwork(boxset, "Banner")
+                artwork["clearlogo"] = API().getArtwork(boxset, "Logo")
+                artwork["clearart"] = API().getArtwork(boxset, "Art")
+                artwork["landscape"] = API().getArtwork(boxset, "Thumb")
+                artwork["discart"] = API().getArtwork(boxset, "Disc")
+                artwork["fanart"] = API().getArtwork(boxset, "Backdrop")
+               
+                art_types = ['poster','fanart','landscape','clearlogo','clearart','banner','discart']
+                for update_type in art_types:
+                    if ( update_type in existing_type_map ):
+                        if ( existing_type_map[update_type] != artwork[update_type] ) and artwork[update_type] != '':
+                            setupdateartsql = "UPDATE art SET url = ? where media_type = ? and media_id = ? and type = ?"
+                            cursor.execute(setupdateartsql,(artwork[update_type],"set",setid,update_type))
+                    elif artwork[update_type] != '':
+                        setartsql = "INSERT INTO art(media_id, media_type, type, url) VALUES(?,?,?,?)"
+                        cursor.execute(setartsql,(setid,"set",update_type,artwork[update_type]))
         
         return True
     
-    def updateBoxsetToKodiLibrary(self, boxsetmovie, boxset):
+    def updateBoxsetToKodiLibrary(self, boxsetmovie, boxset, connection, cursor):
         strSet = boxset["Name"]
-        kodiMovie = ReadKodiDB().getKodiMovie(boxsetmovie["Id"])
-        if kodiMovie != None:
-            WriteKodiDB().updateProperty(kodiMovie,"set",strSet,"movie",True)
-            
+        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?",(boxsetmovie["Id"],))
+        result = cursor.fetchone()
+        if result != None:
+            movieid = result[0]
+        else:
+            movieid = None
+        if movieid != None:
+            # check if exists
+            cursor.execute("SELECT idSet FROM sets WHERE strSet = ?", (strSet,))
+            result = cursor.fetchone()
+            setid = None
+            if result != None:
+                setid = result[0]
+           
+                pathsql="update movie SET idSet = ? WHERE idMovie = ?"
+                cursor.execute(pathsql, (setid, movieid))
+                
+                #update the checksum in emby table
+                cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(boxsetmovie),boxsetmovie["Id"]))
+             
+                
+               
