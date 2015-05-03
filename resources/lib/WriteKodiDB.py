@@ -106,9 +106,7 @@ class WriteKodiDB():
                 trailerUrl = "plugin://plugin.video.emby/trailer/?id=%s&mode=play" % trailerItem[0][u'Id']
         
         if MBitem.get("DateCreated") != None:
-            dateadded = MBitem["DateCreated"].replace("T"," ")
-            dateadded = dateadded.replace(".0000000Z","")
-            dateadded = dateadded.split(".")[0]
+            dateadded = MBitem["DateCreated"].split('.')[0].replace('T', " ")
         else:
             dateadded = None
         
@@ -250,9 +248,7 @@ class WriteKodiDB():
         track = MBitem.get("Track")
         
         if MBitem.get("DateCreated") != None:
-            dateadded = MBitem["DateCreated"].replace("T"," ")
-            dateadded = dateadded.replace(".0000000Z","")
-            dateadded = dateadded.split(".")[0]
+            dateadded = MBitem["DateCreated"].split('.')[0].replace('T', " ")
         else:
             dateadded = None
         
@@ -382,9 +378,7 @@ class WriteKodiDB():
         rating = MBitem.get("CommunityRating")
         
         if MBitem.get("DateCreated") != None:
-            dateadded = MBitem["DateCreated"].replace("T"," ")
-            dateadded = dateadded.replace(".0000000Z","")
-            dateadded = dateadded.split(".")[0]
+            dateadded = MBitem["DateCreated"].split('.')[0].replace('T', " ")
         else:
             dateadded = None
         
