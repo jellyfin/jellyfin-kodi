@@ -226,33 +226,43 @@ class ReadEmbyDB():
         doUtils = DownloadUtils()
 
         viewsUrl = "{server}/mediabrowser/Users/{UserId}/Views?format=json&ImageTypeLimit=1"
-        jsonData = doUtils.downloadUrl(viewsUrl)
+        result = doUtils.downloadUrl(viewsUrl)
         collections=[]
         
-        if (jsonData != ""):
-            views = views[u'Items']
+        if (result == ""):
+            return []
+            
+        result = result[u'Items']
 
-            for view in views:
-                if (view[u'Type'] == 'UserView'): # Need to grab the real main node
-                    newViewsUrl = "{server}/mediabrowser/Users/{UserId}/items?ParentId=%s&SortBy=SortName&SortOrder=Ascending&format=json&ImageTypeLimit=1" % view[u'Id']
-                    jsonData = doUtils.downloadUrl(newViewsUrl)
-                    if (jsonData != ""):
-                        newViews = newViews[u'Items']
-                        for newView in newViews:
-                            # There are multiple nodes in here like 'Latest', 'NextUp' - below we grab the full node.
-                            if newView[u'CollectionType'] == "MovieMovies" or newView[u'CollectionType'] == "TvShowSeries":
-                                view=newView
-                if (view[u'ChildCount'] != 0):
-                    Name = view[u'Name'] 
-                    
-                total = str(view[u'ChildCount'])
+        for view in result:
+            if (view[u'Type'] == 'UserView'): # Need to grab the real main node
+                newViewsUrl = "{server}/mediabrowser/Users/{UserId}/items?ParentId=%s&SortBy=SortName&SortOrder=Ascending&format=json&ImageTypeLimit=1" % view[u'Id']
+                newViews = doUtils.downloadUrl(newViewsUrl)
+                if (result == ""):
+                    return []
+                newViews = newViews[u'Items']
+                print str(newViews)
+                for newView in newViews:
+                    # There are multiple nodes in here like 'Latest', 'NextUp' - below we grab the full node.
+                    if newView[u'CollectionType'] != None:
+                        if newView[u'CollectionType'] == "MovieMovies" or newView[u'CollectionType'] == "TvShowSeries":
+                            view=newView
+            if (view[u'ChildCount'] != 0):
+                Name = view[u'Name'] 
+                
+            total = str(view[u'ChildCount'])
+            try:
                 itemtype = view[u'CollectionType']
-                if itemtype == None:
-                    itemtype = "movies" # User may not have declared the type
-                if itemtype == type:
-                    collections.append( {'title'      : Name,
-                                         'type'           : type,
-                                         'id'             : view[u'Id']})
+            except:
+                itemtype = "movies"
+            if itemtype == "MovieMovies":
+                itemtype = "movies"
+            if itemtype == "TvShowSeries":
+                itemtype = "tvshows"
+            if itemtype == type:
+                collections.append( {'title'      : Name,
+                                     'type'           : type,
+                                     'id'             : view[u'Id']})
         return collections
     
     def getBoxSets(self):
