@@ -880,7 +880,7 @@ class WriteKodiDB():
                     if mediatype == "movie":
                         sql="INSERT OR REPLACE into studiolinkmovie(idstudio, idMovie) values(?, ?)"
                     if mediatype == "musicvideo":
-                        sql="INSERT OR REPLACE into studiolinkusicvideo(idstudio, idMVideo) values(?, ?)"
+                        sql="INSERT OR REPLACE into studiolinkmusicvideo(idstudio, idMVideo) values(?, ?)"
                     if mediatype == "tvshow":
                         sql="INSERT OR REPLACE into studiolinktvshow(idstudio, idShow) values(?, ?)"
                     if mediatype == "episode":
