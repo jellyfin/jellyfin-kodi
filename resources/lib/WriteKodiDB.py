@@ -1061,7 +1061,7 @@ class WriteKodiDB():
             xbmcvfs.mkdir(libraryPath)
             nodefile = os.path.join(libraryPath, "index.xml")
             root = Element("node", {"order":"1"})
-            SubElement(root, "label").text = tagname
+            SubElement(root, "label").text = "Emby - " + tagname
             SubElement(root, "icon").text = "DefaultMovies.png"
             try:
                 ET.ElementTree(root).write(nodefile, xml_declaration=True)
