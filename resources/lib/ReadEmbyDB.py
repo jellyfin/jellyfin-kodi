@@ -246,13 +246,13 @@ class ReadEmbyDB():
                     Name = view[u'Name'] 
                     
                 total = str(view[u'ChildCount'])
-                type = view[u'CollectionType']
-                if type == None:
-                    type = "None" # User may not have declared the type
-                if type == type:
+                itemtype = view[u'CollectionType']
+                if itemtype == None:
+                    itemtype = "movies" # User may not have declared the type
+                if itemtype == type:
                     collections.append( {'title'      : Name,
-                            'type'           : type,
-                            'id'             : view[u'Id']})
+                                         'type'           : type,
+                                         'id'             : view[u'Id']})
         return collections
     
     def getBoxSets(self):
