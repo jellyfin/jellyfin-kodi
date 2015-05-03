@@ -1035,6 +1035,15 @@ class WriteKodiDB():
     def addVideoNodesForTag(self, tagname, type):
         
         utils.logMsg("addVideoNodesForTag", "Creating nodes for tag: " + tagname)
+        
+        # the library path doesn't exist on all systems
+        if not xbmcvfs.exists("special://userdata/library/"):
+            xbmcvfs.mkdir("special://userdata/library") 
+        if not xbmcvfs.exists("special://userdata/library/video/"):
+            #we need to copy over the default items
+            import shutil
+            shutil.copytree(xbmc.translatePath("special://xbmc/system/library/video"), xbmc.translatePath("special://userdata/library/video"))
+        
         libraryPath = xbmc.translatePath("special://userdata/library/video/emby/")
         
         if type == "movie":
