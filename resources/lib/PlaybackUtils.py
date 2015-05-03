@@ -76,17 +76,19 @@ class PlaybackUtils():
         WINDOW.setProperty(playurl+"deleteurl", "")
         WINDOW.setProperty(playurl+"deleteurl", deleteurl)
         
-        '''if seekTime != 0:
-            displayTime = str(datetime.timedelta(seconds=seekTime))
-            display_list = [ self.language(30106) + ' ' + displayTime, self.language(30107)]
-            resumeScreen = xbmcgui.Dialog()
-            resume_result = resumeScreen.select(self.language(30105), display_list)
-            if resume_result == 0:
-                WINDOW.setProperty(playurl+"seektime", str(seekTime))
+        #show the additional resume dialog if launched from a widget
+        if xbmc.getCondVisibility("Window.IsActive(home)"):
+            if seekTime != 0:
+                displayTime = str(datetime.timedelta(seconds=seekTime))
+                display_list = [ self.language(30106) + ' ' + displayTime, self.language(30107)]
+                resumeScreen = xbmcgui.Dialog()
+                resume_result = resumeScreen.select(self.language(30105), display_list)
+                if resume_result == 0:
+                    WINDOW.setProperty(playurl+"seektime", str(seekTime))
+                else:
+                    WINDOW.clearProperty(playurl+"seektime")
             else:
                 WINDOW.clearProperty(playurl+"seektime")
-        else:
-            WINDOW.clearProperty(playurl+"seektime")'''
 
         if result.get("Type")=="Episode":
             WINDOW.setProperty(playurl+"refresh_id", result.get("SeriesId"))
@@ -117,7 +119,8 @@ class PlaybackUtils():
         elif setup == "default":
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
             #artwork only works from widgets with both resolvedurl and player command
-            xbmc.Player().play(playurl,listItem)
+            if xbmc.getCondVisibility("Window.IsActive(home)"):
+                xbmc.Player().play(playurl,listItem)
 
     def setArt(self, list,name,path):
         if name=='thumb' or name=='fanart_image' or name=='small_poster' or name=='tiny_poster'  or name == "medium_landscape" or name=='medium_poster' or name=='small_fanartimage' or name=='medium_fanartimage' or name=='fanart_noindicators':
