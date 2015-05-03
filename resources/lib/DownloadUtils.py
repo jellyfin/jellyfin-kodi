@@ -67,26 +67,22 @@ class DownloadUtils():
 
     def postCapabilities(self, deviceId):
 
-        # Get sessionId
-        url = "{server}/mediabrowser/Sessions?DeviceId=%s&format=json" % deviceId
-        result = self.downloadUrl(url)
-        # sessionId result
-        self.logMsg("Session result: %s" % result, 2)
-        self.sessionId = result[0][u'Id']
-        self.WINDOW.setProperty('sessionId%s' % self.username, self.sessionId)
+        # Post settings to session
+        url = "{server}/mediabrowser/Sessions/Capabilities/Full"
+        data = {
+            'PlayableMediaTypes': "Audio,Video",
+            'SupportedCommands': "Play,Playstate,SendString,DisplayMessage,PlayNext",
+            'SupportsMediaControl': True
+        }
 
-        # Settings for capabilities
-        playableMediaTypes = "Audio,Video"
-        supportedCommands = "Play,Playstate,SendString,DisplayMessage,PlayNext"
-
-        # Post settings to sessionId
-        url = "{server}/mediabrowser/Sessions/Capabilities?Id=%s&PlayableMediaTypes=%s&SupportedCommands=%s&SupportsMediaControl=True" % (self.sessionId, playableMediaTypes, supportedCommands)
-        data = {}
         self.logMsg("Capabilities URL: %s" % url, 2)
         self.logMsg("PostData: %s" % data, 2)
 
-        self.downloadUrl(url, postBody=data, type="POST")
-        self.logMsg("Posted capabilities to sessionId: %s" % self.sessionId, 1)
+        try:
+            self.downloadUrl(url, postBody=data, type="POST")
+            self.logMsg("Posted capabilities to %s" % self.server, 1)
+        except:
+            self.logMsg("Posted capabilities failed.")
 
     def startSession(self):
 
@@ -104,7 +100,6 @@ class DownloadUtils():
             cert = self.sslclient
         except:
             self.logMsg("Could not load SSL settings.", 1)
-            pass
         
         # Start session
         self.s = requests.Session()
