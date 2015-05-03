@@ -108,6 +108,7 @@ class WriteKodiDB():
         if MBitem.get("DateCreated") != None:
             dateadded = MBitem["DateCreated"].replace("T"," ")
             dateadded = dateadded.replace(".0000000Z","")
+            dateadded = dateadded.split(".")[0]
         else:
             dateadded = None
         
@@ -251,6 +252,7 @@ class WriteKodiDB():
         if MBitem.get("DateCreated") != None:
             dateadded = MBitem["DateCreated"].replace("T"," ")
             dateadded = dateadded.replace(".0000000Z","")
+            dateadded = dateadded.split(".")[0]
         else:
             dateadded = None
         
@@ -382,6 +384,7 @@ class WriteKodiDB():
         if MBitem.get("DateCreated") != None:
             dateadded = MBitem["DateCreated"].replace("T"," ")
             dateadded = dateadded.replace(".0000000Z","")
+            dateadded = dateadded.split(".")[0]
         else:
             dateadded = None
         
