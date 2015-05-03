@@ -114,8 +114,8 @@ class WriteKodiDB():
             
         #### ADD OR UPDATE THE FILE AND PATH ###########
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY
-        path = "plugin://plugin.video.emby/movies/"
-        filename = "plugin://plugin.video.emby/movies/?id=%s&mode=play" % MBitem["Id"]
+        path = "plugin://plugin.video.emby/movies/%s/" % MBitem["Id"]
+        filename = "plugin://plugin.video.emby/movies/%s/?id=%s&mode=play" % (MBitem["Id"],MBitem["Id"])
         
         #create the path
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
@@ -257,8 +257,8 @@ class WriteKodiDB():
             
         #### ADD OR UPDATE THE FILE AND PATH ###########
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY
-        path = "plugin://plugin.video.emby/musicvideos/"
-        filename = "plugin://plugin.video.emby/musicvideos/?id=%s&mode=play" % MBitem["Id"]
+        path = "plugin://plugin.video.emby/musicvideos/%s/" % MBitem["Id"]
+        filename = "plugin://plugin.video.emby/musicvideos/%s/?id=%s&mode=play" % (MBitem["Id"], MBitem["Id"])
         
         #create the path
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
