@@ -142,6 +142,31 @@ class LibrarySync():
                     else:
                         if kodiMovie[2] != API().getChecksum(item):
                             WriteKodiDB().addOrUpdateMovieToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
+          
+          
+       
+        #### PROCESS BOX SETS #####
+        if(pDialog != None):
+            utils.logMsg("Sync Movies", "BoxSet Sync Started", 1)
+            boxsets = ReadEmbyDB().getBoxSets()
+            
+            total = len(boxsets) + 1
+            count = 1
+            for boxset in boxsets:
+                progressTitle = "Processing BoxSets"+ " (" + str(count) + " of " + str(total) + ")"                
+                pDialog.update(0, "Emby for Kodi - Running Sync", progressTitle)
+                count += 1
+                if(self.ShouldStop()):
+                    return False                
+                boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
+                WriteKodiDB().addBoxsetToKodiLibrary(boxset,connection, cursor)
+                    
+                for boxsetMovie in boxsetMovies:
+                    if(self.ShouldStop()):
+                        return False
+                    WriteKodiDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset, connection, cursor)
+                        
+            utils.logMsg("Sync Movies", "BoxSet Sync Finished", 1)    
             
         #### PROCESS DELETES #####
         allEmbyMovieIds = set(allEmbyMovieIds)
@@ -335,7 +360,19 @@ class LibrarySync():
                         
                     if not item.get('IsFolder'):                    
                         WriteKodiDB().addOrUpdateMovieToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
+           
+           
+            #### PROCESS BOX SETS #####
+            boxsets = ReadEmbyDB().getBoxSets()
+           
+            for boxset in boxsets:
+                boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
+                WriteKodiDB().addBoxsetToKodiLibrary(boxset,connection, cursor)
+                    
+                for boxsetMovie in boxsetMovies:
+                    WriteKodiDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset, connection, cursor)
                         
+                     
             #### PROCESS TV SHOWS ####
             views = ReadEmbyDB().getCollections("tvshows")              
             for view in views:

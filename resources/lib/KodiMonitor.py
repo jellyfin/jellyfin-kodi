@@ -11,6 +11,7 @@ import json
 import Utils as utils
 from WriteKodiDB import WriteKodiDB
 from ReadKodiDB import ReadKodiDB
+from LibrarySync import LibrarySync
 from PlayUtils import PlayUtils
 from DownloadUtils import DownloadUtils
 from PlaybackUtils import PlaybackUtils
@@ -45,6 +46,12 @@ class Kodi_Monitor(xbmc.Monitor):
                     utils.logMsg("MB# Sync","Kodi_Monitor--> VideoLibrary.OnUpdate : " + str(data),2)
                     WriteKodiDB().updatePlayCountFromKodi(item, type, playcount)
                     
-                
+        if method == "System.OnWake":
+            xbmc.sleep(10000) #Allow network to wake up
+            utils.logMsg("Doing_Db_Sync Post Resume: syncDatabase (Started)",1)
+            libSync = LibrarySync().FullLibrarySync()
+            utils.logMsg("Doing_Db_Sync Post Resume: syncDatabase (Finished) " + str(libSync),1)
+            
+        
                 
 
