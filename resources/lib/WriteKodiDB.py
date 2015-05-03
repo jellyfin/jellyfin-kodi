@@ -1054,7 +1054,7 @@ class WriteKodiDB():
             return
                
         #tagpath
-        libraryPath = xbmc.translatePath("special://userdata/library/video/%s/Emby - " %tagname)
+        libraryPath = xbmc.translatePath("special://userdata/library/video/Emby - %s/" %tagname)
         
         if not xbmcvfs.exists(libraryPath):
             #create tag node - index
