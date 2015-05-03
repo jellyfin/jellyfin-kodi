@@ -116,12 +116,12 @@ class ConnectionManager():
             return
             
         # Option to play from http
-        setPlayback = xbmcgui.Dialog().yesno("Playback option", "Play your files using HTTP?")
-        if setPlayback == 1:
-            self.logMsg("Playback will be set using HTTP.", 1)
-            addon.setSetting("playFromStream", "true")
-        else:
-            self.logMsg("Playback will be set using SMB.", 1)
+        #setPlayback = xbmcgui.Dialog().yesno("Playback option", "Play your files using HTTP?")
+        #if setPlayback == 1:
+            #self.logMsg("Playback will be set using HTTP.", 1)
+            #addon.setSetting("playFromStream", "true")
+        #else:
+            #self.logMsg("Playback will be set using SMB.", 1)
                 
     def getServerDetails(self):
 
