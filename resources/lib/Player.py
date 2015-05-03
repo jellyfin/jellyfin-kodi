@@ -176,7 +176,7 @@ class Player( xbmc.Player ):
                 postdata['SubtitleStreamIndex'] = subtitleindex
 
             postdata = json.dumps(postdata)
-            self.logMsg("Report: %s" % postdata)
+            self.logMsg("Report: %s" % postdata, 2)
             self.ws.sendProgressUpdate(postdata)
     
     def onPlayBackPaused( self ):
