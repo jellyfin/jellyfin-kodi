@@ -28,12 +28,7 @@ class Kodi_Monitor(xbmc.Monitor):
     def onNotification  (self,sender,method,data):
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         downloadUtils = DownloadUtils()
-        print "onNotification:" + method + ":" + sender + ":" + str(data)
-        #player started playing an item - 
-        if method == "Playlist.OnAdd":
-            print "playlist onadd is called"
-        
-        
+
         if method == "VideoLibrary.OnUpdate":
             jsondata = json.loads(data)
             if jsondata != None:

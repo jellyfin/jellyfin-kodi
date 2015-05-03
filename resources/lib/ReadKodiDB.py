@@ -11,10 +11,6 @@ import os
 
 import Utils as utils
 
-
-#sleepval is used to throttle the calls to the xbmc json API
-sleepVal = 15
-
 class ReadKodiDB():   
        
    

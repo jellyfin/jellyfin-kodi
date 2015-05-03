@@ -20,7 +20,10 @@ from ReadEmbyDB import ReadEmbyDB
 from API import API
 import Utils as utils
 
-sleepVal = 20
+from xml.etree.ElementTree import Element, SubElement, Comment, tostring
+from xml.etree import ElementTree
+from xml.dom import minidom
+import xml.etree.cElementTree as ET
 
 class WriteKodiDB():
 
@@ -909,6 +912,7 @@ class WriteKodiDB():
                     sql="insert into tag(tag_id, name) values(?, ?)"
                     cursor.execute(sql, (tag_id,tag))
                     utils.logMsg("AddTagToMedia", "Adding tag: " + tag)
+                    self.addVideoNodesForTag(tag, mediatype)
                 
                 #assign tag to item
                 if doRemove:
@@ -931,6 +935,8 @@ class WriteKodiDB():
                     idTag = idTag + 1
                     sql="insert into tag(idTag, strTag) values(?, ?)"
                     cursor.execute(sql, (idTag,tag))
+                    utils.logMsg("AddTagToMedia", "Adding tag: " + tag)
+                    self.addVideoNodesForTag(tag, mediatype)
 
                 #assign tag to item
                 if doRemove:
@@ -1026,6 +1032,139 @@ class WriteKodiDB():
         
         return True
     
+    def addVideoNodesForTag(self, tagname, type):
+        
+        utils.logMsg("addVideoNodesForTag", "Creating nodes for tag: " + tagname)
+        libraryPath = xbmc.translatePath("special://userdata/library/video/emby/")
+        
+        if type == "movie":
+            type = "movies"
+        elif type == "tvshow":
+            type = "tvshows"
+        else:
+            return
+        
+        if not xbmcvfs.exists(libraryPath):
+            #create root node
+            xbmcvfs.mkdir(libraryPath)
+            nodefile = os.path.join(libraryPath, "index.xml")
+            root = Element("node", {"order":"1"})
+            SubElement(root, "label").text = "Emby"
+            SubElement(root, "icon").text = "DefaultMovies.png"
+            try:
+                ET.ElementTree(root).write(nodefile, xml_declaration=True)
+            except:
+                ET.ElementTree(root).write(nodefile)
+        
+        #tagpath
+        libraryPath = xbmc.translatePath("special://userdata/library/video/emby/%s/" %tagname)
+        
+        if not xbmcvfs.exists(libraryPath):
+            #create tag node - index
+            xbmcvfs.mkdir(libraryPath)
+            nodefile = os.path.join(libraryPath, "index.xml")
+            root = Element("node", {"order":"1"})
+            SubElement(root, "label").text = tagname
+            SubElement(root, "icon").text = "DefaultMovies.png"
+            try:
+                ET.ElementTree(root).write(nodefile, xml_declaration=True)
+            except:
+                ET.ElementTree(root).write(nodefile)
+            
+            #create tag node - all items
+            nodefile = os.path.join(libraryPath, tagname + "_all.xml")
+            root = Element("node", {"order":"1", "type":"filter"})
+            SubElement(root, "label").text = tagname
+            SubElement(root, "match").text = "all"
+            SubElement(root, "content").text = type
+            SubElement(root, "icon").text = "DefaultMovies.png"
+            Rule = SubElement(root, "rule", {"field":"tag","operator":"is"})
+            SubElement(Rule, "value").text = tagname
+            try:
+                ET.ElementTree(root).write(nodefile, xml_declaration=True)
+            except:
+                ET.ElementTree(root).write(nodefile)
+            
+            #create tag node - recent items
+            nodefile = os.path.join(libraryPath, tagname + "_recent.xml")
+            root = Element("node", {"order":"2", "type":"filter"})
+            SubElement(root, "label").text = tagname + " - Recently added"
+            SubElement(root, "match").text = "all"
+            SubElement(root, "content").text = type
+            SubElement(root, "icon").text = "DefaultMovies.png"
+            Rule = SubElement(root, "rule", {"field":"tag","operator":"is"})
+            SubElement(Rule, "value").text = tagname
+            SubElement(root, "order", {"direction":"descending"}).text = "dateadded"
+            #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
+            SubElement(root, "limit").text = "25"
+            #exclude watched items --> currently hardcoded --> TODO: add a setting for this ?
+            Rule2 = SubElement(root, "rule", {"field":"playcount","operator":"is"})
+            SubElement(Rule2, "value").text = "0"
+            
+            try:
+                ET.ElementTree(root).write(nodefile, xml_declaration=True)
+            except:
+                ET.ElementTree(root).write(nodefile)
+            
+            #create tag node - inprogress items
+            nodefile = os.path.join(libraryPath, tagname + "_progress.xml")
+            root = Element("node", {"order":"3", "type":"filter"})
+            SubElement(root, "label").text = tagname + " - In progress"
+            SubElement(root, "match").text = "all"
+            SubElement(root, "content").text = type
+            SubElement(root, "icon").text = "DefaultMovies.png"
+            Rule = SubElement(root, "rule", {"field":"tag","operator":"is"})
+            SubElement(Rule, "value").text = tagname
+            #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
+            SubElement(root, "limit").text = "25"
+            Rule2 = SubElement(root, "rule", {"field":"inprogress","operator":"true"})
+            
+            try:
+                ET.ElementTree(root).write(nodefile, xml_declaration=True)
+            except:
+                ET.ElementTree(root).write(nodefile)
+                
+            #add some additional nodes for episodes
+            if type == "tvshows":
+                #create tag node - recent episodes
+                nodefile = os.path.join(libraryPath, tagname + "_recent_episodes.xml")
+                root = Element("node", {"order":"3", "type":"filter"})
+                SubElement(root, "label").text = tagname + " - Recently added episodes"
+                SubElement(root, "match").text = "all"
+                SubElement(root, "content").text = "episodes"
+                SubElement(root, "icon").text = "DefaultMovies.png"
+                Rule = SubElement(root, "rule", {"field":"tag","operator":"is"})
+                SubElement(Rule, "value").text = tagname
+                SubElement(root, "order", {"direction":"descending"}).text = "dateadded"
+                #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
+                SubElement(root, "limit").text = "25"
+                #exclude watched items --> currently hardcoded --> TODO: add a setting for this ?
+                Rule2 = SubElement(root, "rule", {"field":"playcount","operator":"is"})
+                SubElement(Rule2, "value").text = "0"
+                
+                try:
+                    ET.ElementTree(root).write(nodefile, xml_declaration=True)
+                except:
+                    ET.ElementTree(root).write(nodefile)
+                
+                #create tag node - inprogress items
+                nodefile = os.path.join(libraryPath, tagname + "_progress_episodes.xml")
+                root = Element("node", {"order":"4", "type":"filter"})
+                SubElement(root, "label").text = tagname + " - In progress episodes"
+                SubElement(root, "match").text = "all"
+                SubElement(root, "content").text = "episodes"
+                SubElement(root, "icon").text = "DefaultMovies.png"
+                Rule = SubElement(root, "rule", {"field":"tag","operator":"is"})
+                SubElement(Rule, "value").text = tagname
+                #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
+                SubElement(root, "limit").text = "25"
+                Rule2 = SubElement(root, "rule", {"field":"inprogress","operator":"true"})
+                
+                try:
+                    ET.ElementTree(root).write(nodefile, xml_declaration=True)
+                except:
+                    ET.ElementTree(root).write(nodefile)
+                
     def updateBoxsetToKodiLibrary(self, boxsetmovie, boxset, connection, cursor):
         strSet = boxset["Name"]
         cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?",(boxsetmovie["Id"],))
