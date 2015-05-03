@@ -1052,21 +1052,9 @@ class WriteKodiDB():
             type = "tvshows"
         else:
             return
-        
-        if not xbmcvfs.exists(libraryPath):
-            #create root node
-            xbmcvfs.mkdir(libraryPath)
-            nodefile = os.path.join(libraryPath, "index.xml")
-            root = Element("node", {"order":"1"})
-            SubElement(root, "label").text = "Emby"
-            SubElement(root, "icon").text = "DefaultMovies.png"
-            try:
-                ET.ElementTree(root).write(nodefile, xml_declaration=True)
-            except:
-                ET.ElementTree(root).write(nodefile)
-        
+               
         #tagpath
-        libraryPath = xbmc.translatePath("special://userdata/library/video/emby/%s/" %tagname)
+        libraryPath = xbmc.translatePath("special://userdata/library/video/%s/Emby - " %tagname)
         
         if not xbmcvfs.exists(libraryPath):
             #create tag node - index
