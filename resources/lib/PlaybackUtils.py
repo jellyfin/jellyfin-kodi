@@ -43,7 +43,10 @@ class PlaybackUtils():
         userid = WINDOW.getProperty('userId%s' % username)
         server = WINDOW.getProperty('server%s' % username)
         
-        id = result["Id"]
+        try:
+            id = result["Id"]
+        except:
+            return
 
         userData = result['UserData']
         resume_result = 0

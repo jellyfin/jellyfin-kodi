@@ -268,6 +268,7 @@ class DownloadUtils():
                     # Tell UserClient token has been revoked.
                     WINDOW.setProperty("Server_status", "401")
                     self.logMsg("HTTP Error: %s" % e, 0)
+                    xbmcgui.Dialog().notification("Error connecting", "Unauthorized.", xbmcgui.NOTIFICATION_ERROR)
 
             elif (r.status_code == 301) or (r.status_code == 302):
                 # Redirects
