@@ -1075,6 +1075,7 @@ class WriteKodiDB():
             SubElement(root, "match").text = "all"
             SubElement(root, "content").text = type
             SubElement(root, "icon").text = "DefaultMovies.png"
+            SubElement(root, "order", {"direction":"ascending"}).text = "sorttitle"
             Rule = SubElement(root, "rule", {"field":"tag","operator":"is"})
             SubElement(Rule, "value").text = tagname
             try:
