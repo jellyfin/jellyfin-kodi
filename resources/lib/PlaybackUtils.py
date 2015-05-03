@@ -117,7 +117,8 @@ class PlaybackUtils():
         elif setup == "default":
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
             #artwork only works from widgets with both resolvedurl and player command
-            xbmc.Player().play(playurl,listItem)
+            if xbmc.getCondVisibility("Window.IsActive(home)"):
+                xbmc.Player().play(playurl,listItem)
 
     def setArt(self, list,name,path):
         if name=='thumb' or name=='fanart_image' or name=='small_poster' or name=='tiny_poster'  or name == "medium_landscape" or name=='medium_poster' or name=='small_fanartimage' or name=='medium_fanartimage' or name=='fanart_noindicators':
