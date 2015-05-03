@@ -151,87 +151,86 @@ class DownloadUtils():
         timeout = self.timeout
         default_link = ""
 
-        # If user is authenticated
-        if (authenticate):
-            # Get requests session
-            try: 
-                s = self.s
-                # Replace for the real values and append api_key
-                url = url.replace("{server}", self.server, 1)
-                url = url.replace("{UserId}", self.userId, 1)
-                #url = "%s&api_key=%s" % (url, self.token)
-
-                self.logMsg("URL: %s" % url, 2)
-                # Prepare request
-                if type == "GET":
-                    r = s.get(url, json=postBody, timeout=timeout)
-                elif type == "POST":
-                    r = s.post(url, json=postBody, timeout=timeout)
-                elif type == "DELETE":
-                    r = s.delete(url, json=postBody, timeout=timeout)
-            
-            except AttributeError:
-                
-                # Get user information
-                self.username = WINDOW.getProperty('currUser')
-                self.userId = WINDOW.getProperty('userId%s' % self.username)
-                self.server = WINDOW.getProperty('server%s' % self.username)
-                self.token = WINDOW.getProperty('accessToken%s' % self.username)
-                header = self.getHeader()
-                verifyssl = False
-                cert = None
-
-                # IF user enables ssl verification
-                try:
-                    if self.addon.getSetting('sslverify') == "true":
-                        verifyssl = True
-                    if self.addon.getSetting('sslcert') != "None":
-                        cert = self.addon.getSetting('sslcert')
-                except:
-                    self.logMsg("Could not load SSL settings.", 1)
-                    pass
-
-                # Replace for the real values and append api_key
-                url = url.replace("{server}", self.server, 1)
-                url = url.replace("{UserId}", self.userId, 1)
-
-                self.logMsg("URL: %s" % url, 2)
-                # Prepare request
-                if type == "GET":
-                    r = requests.get(url, json=postBody, headers=header, timeout=timeout, cert=cert, verify=verifyssl)
-                elif type == "POST":
-                    r = requests.post(url, json=postBody, headers=header, timeout=timeout, cert=cert, verify=verifyssl)
-                elif type == "DELETE":
-                    r = requests.delete(url, json=postBody, headers=header, timeout=timeout, cert=cert, verify=verifyssl)
-
-        # If user is not authenticated
-        elif not authenticate:
-            
-            self.logMsg("URL: %s" % url, 1)
-            header = self.getHeader(authenticate=False)
-            verifyssl = False
-
-            # If user enables ssl verification
-            try:
-                verifyssl = self.sslverify
-            except AttributeError:
-                pass
-            
-            # Prepare request
-            if type == "GET":
-                r = requests.get(url, json=postBody, headers=header, timeout=timeout, verify=verifyssl)
-            elif type == "POST":
-                r = requests.post(url, json=postBody, headers=header, timeout=timeout, verify=verifyssl)
-        
-        # Process the response
         try:
-            r.raise_for_status()
 
+            # If user is authenticated
+            if (authenticate):
+                # Get requests session
+                try: 
+                    s = self.s
+                    # Replace for the real values and append api_key
+                    url = url.replace("{server}", self.server, 1)
+                    url = url.replace("{UserId}", self.userId, 1)
+                    #url = "%s&api_key=%s" % (url, self.token)
+
+                    self.logMsg("URL: %s" % url, 2)
+                    # Prepare request
+                    if type == "GET":
+                        r = s.get(url, json=postBody, timeout=timeout)
+                    elif type == "POST":
+                        r = s.post(url, json=postBody, timeout=timeout)
+                    elif type == "DELETE":
+                        r = s.delete(url, json=postBody, timeout=timeout)
+                
+                except AttributeError:
+                    
+                    # Get user information
+                    self.username = WINDOW.getProperty('currUser')
+                    self.userId = WINDOW.getProperty('userId%s' % self.username)
+                    self.server = WINDOW.getProperty('server%s' % self.username)
+                    self.token = WINDOW.getProperty('accessToken%s' % self.username)
+                    header = self.getHeader()
+                    verifyssl = False
+                    cert = None
+
+                    # IF user enables ssl verification
+                    try:
+                        if self.addon.getSetting('sslverify') == "true":
+                            verifyssl = True
+                        if self.addon.getSetting('sslcert') != "None":
+                            cert = self.addon.getSetting('sslcert')
+                    except:
+                        self.logMsg("Could not load SSL settings.", 1)
+                        pass
+
+                    # Replace for the real values and append api_key
+                    url = url.replace("{server}", self.server, 1)
+                    url = url.replace("{UserId}", self.userId, 1)
+
+                    self.logMsg("URL: %s" % url, 2)
+                    # Prepare request
+                    if type == "GET":
+                        r = requests.get(url, json=postBody, headers=header, timeout=timeout, cert=cert, verify=verifyssl)
+                    elif type == "POST":
+                        r = requests.post(url, json=postBody, headers=header, timeout=timeout, cert=cert, verify=verifyssl)
+                    elif type == "DELETE":
+                        r = requests.delete(url, json=postBody, headers=header, timeout=timeout, cert=cert, verify=verifyssl)
+
+            # If user is not authenticated
+            elif not authenticate:
+                
+                self.logMsg("URL: %s" % url, 2)
+                header = self.getHeader(authenticate=False)
+                verifyssl = False
+
+                # If user enables ssl verification
+                try:
+                    verifyssl = self.sslverify
+                except AttributeError:
+                    pass
+                
+                # Prepare request
+                if type == "GET":
+                    r = requests.get(url, json=postBody, headers=header, timeout=timeout, verify=verifyssl)
+                elif type == "POST":
+                    r = requests.post(url, json=postBody, headers=header, timeout=timeout, verify=verifyssl)
+        
+            # Process the response
             if r.status_code == 204:
-                # No response in body
+                # No body in the response
                 self.logMsg("====== 204 Success ======", 2)
                 return default_link
-            # Response code 200
+
             elif r.status_code == requests.codes.ok:
                 try: 
                     # UTF-8 - JSON object
@@ -240,13 +239,19 @@ class DownloadUtils():
                     return r
                 except:
                     self.logMsg("Unable to convert the response for: %s" % url, 1)
+            else:
+                r.raise_for_status()
 
             return default_link
         
         # TO REVIEW EXCEPTIONS
         except requests.exceptions.ConnectionError as e:
-            self.logMsg("Server unreachable at: %s" % url, 0)
-            self.logMsg(e, 1)
+            # Make the addon aware of status
+            if WINDOW.getProperty("Server_online") != "false":
+                self.logMsg("Server unreachable at: %s" % url, 0)
+                self.logMsg(e, 2)
+                WINDOW.setProperty("Server_online", "false")
+            pass
 
         except requests.exceptions.ConnectTimeout as e:
             self.logMsg("Server timeout at: %s" % url, 0)

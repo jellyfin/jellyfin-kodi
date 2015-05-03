@@ -205,11 +205,15 @@ class WebSocketThread(threading.Thread):
             LibrarySync().IncrementalSync(itemsToUpdate)
                 
     def on_error(self, ws, error):
-        self.logMsg("Error : " + str(error))
+        if "10061" in str(error):
+            # Server is offline
+            pass
+        else:
+            self.logMsg("Error: %s" % error, 1)
         #raise
 
     def on_close(self, ws):
-        self.logMsg("Closed")
+        self.logMsg("Closed", 2)
 
     def on_open(self, ws):
         pass
@@ -243,12 +247,19 @@ class WebSocketThread(threading.Thread):
         self.client.on_open = self.on_open
         
         while not self.KodiMonitor.abortRequested():
-            self.logMsg("Client Starting")
+            
             self.client.run_forever()
-            if(self.keepRunning):
-                self.logMsg("Client Needs To Restart")
+
+            if (self.keepRunning):
+                # Server is not online
+                if WINDOW.getProperty("Server_online") == "true":
+                    self.logMsg("Server is unreachable.", 1)
+                    WINDOW.setProperty("Server_online", "false")
+                    xbmcgui.Dialog().notification("Error connecting", "Server is unreachable.")
+                
                 if self.KodiMonitor.waitForAbort(5):
                     break
+
         self.logMsg("Thread Exited")
         
         
