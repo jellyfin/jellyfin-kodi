@@ -90,9 +90,9 @@ class Player( xbmc.Player ):
                     self.logMsg("emby Service -> Percent Complete:" + str(percentComplete) + " Mark Played At:" + str(markPlayedAt))
                     self.stopPlayback(data)
                     
-                if(refresh_id != None):
+                #if(refresh_id != None):
                     #report updates playcount and resume status to Kodi and MB3
-                    librarySync.updatePlayCount(item_id)
+                    #librarySync.updatePlayCount(item_id)
                     
                 
         self.played_information.clear()
@@ -138,6 +138,10 @@ class Player( xbmc.Player ):
         
         self.logMsg("reportPlayback Called", 2)
         xbmcplayer = self.xbmcplayer
+        
+        if not xbmcplayer.isPlaying():
+            self.logMsg("reportPlayback: Not playing anything so returning", 0)
+            return
 
         currentFile = xbmcplayer.getPlayingFile()
         data = self.played_information.get(currentFile)
@@ -176,7 +180,7 @@ class Player( xbmc.Player ):
                 postdata['SubtitleStreamIndex'] = subtitleindex
 
             postdata = json.dumps(postdata)
-            self.logMsg("Report: %s" % postdata)
+            self.logMsg("Report: %s" % postdata, 2)
             self.ws.sendProgressUpdate(postdata)
     
     def onPlayBackPaused( self ):
@@ -204,7 +208,11 @@ class Player( xbmc.Player ):
         self.stopAll()
         
         if xbmcplayer.isPlaying():
-            currentFile = xbmcplayer.getPlayingFile()
+            
+            currentFile = ""
+            try:
+                currentFile = xbmcplayer.getPlayingFile()
+            except: pass
             self.logMsg("onPlayBackStarted: %s" % currentFile, 0)
             
             # we may need to wait until the info is available
@@ -321,14 +329,11 @@ class Player( xbmc.Player ):
     def autoPlayPlayback(self):
         currentFile = xbmc.Player().getPlayingFile()
         data = self.played_information.get(currentFile)
-        
         # only report playback if emby has initiated the playback (item_id has value)
         if(data != None and data.get("item_id") != None):
             addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
-            
             item_id = data.get("item_id")
             type = data.get("Type")
-          
             # if its an episode see if autoplay is enabled
             if addonSettings.getSetting("autoPlaySeason")=="true" and type=="Episode":
                     WINDOW = xbmcgui.Window( 10000 )
@@ -343,8 +348,10 @@ class Player( xbmc.Player ):
                         seasonId = MB3Episode["SeasonId"]
                         url = "{server}/mediabrowser/Users/{UserId}/Items?ParentId=%s&ImageTypeLimit=1&Limit=1&SortBy=SortName&SortOrder=Ascending&Filters=IsUnPlayed&IncludeItemTypes=Episode&IsVirtualUnaired=false&Recursive=true&IsMissing=False&format=json" % seasonId
                         jsonData = self.doUtils.downloadUrl(url)     
+                    
                         if(jsonData != ""):
-                            seasonData = json.loads(jsonData)
+                            seasonData = jsonData
+                    
                             if seasonData.get("Items") != None:
                                 item = seasonData.get("Items")[0]
                                 pDialog.create("Auto Play next episode", str(item.get("ParentIndexNumber")) + "x" + str(item.get("IndexNumber")) + ". " + item["Name"] + " found","Cancel to stop automatic play")
@@ -365,5 +372,5 @@ class Player( xbmc.Player ):
                                     xbmc.sleep(500)
                                     playTime = xbmc.Player().getTime()
                                     totalTime = xbmc.Player().getTotalTime()
-                                
+        
                                 PlaybackUtils().PLAYAllEpisodes(seasonData.get("Items"))  

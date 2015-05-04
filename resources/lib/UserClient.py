@@ -45,17 +45,17 @@ class UserClient(threading.Thread):
     def __init__(self, *args):
 
         self.__dict__ = self._shared_state
-        self.className = self.__class__.__name__
-
         threading.Thread.__init__(self, *args)
 
     def logMsg(self, msg, lvl=1):
         
-        utils.logMsg("%s %s" % (self.addonName, self.className), str(msg), int(lvl))
+        className = self.__class__.__name__
+        utils.logMsg("%s %s" % (self.addonName, className), str(msg), int(lvl))
 
     def getUsername(self):
 
-        username = self.addon.getSetting('username')
+        addon = xbmcaddon.Addon(id=self.addonId)
+        username = addon.getSetting('username')
 
         if (username == ""):
             self.logMsg("No username saved.", 2)
@@ -90,7 +90,7 @@ class UserClient(threading.Thread):
     def getServer(self, prefix=True):
 
         # For https support
-        addon = self.addon
+        addon = xbmcaddon.Addon(id=self.addonId)
         HTTPS = addon.getSetting('https')
         host = addon.getSetting('ipaddress')
         port = addon.getSetting('port')
@@ -161,6 +161,9 @@ class UserClient(threading.Thread):
         
         if (result != ""):
             users = result
+        else:
+            # Server connection failed
+            return False
 
         return users
 
@@ -226,9 +229,6 @@ class UserClient(threading.Thread):
         users = self.getPublicUsers()
         password = ""
         
-        '''if users == "":
-            self.WINDOW.setProperty("Server_status", "Stop")
-            return'''
         # Find user in list
         for user in users:
             name = user[u'Name']

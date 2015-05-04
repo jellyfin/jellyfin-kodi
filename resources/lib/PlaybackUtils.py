@@ -35,7 +35,7 @@ class PlaybackUtils():
     def __init__(self, *args):
         pass    
 
-    def PLAY(self, id):
+    def PLAY(self, result, setup="service"):
         xbmc.log("PLAY Called")
         WINDOW = xbmcgui.Window(10000)
 
@@ -43,43 +43,22 @@ class PlaybackUtils():
         userid = WINDOW.getProperty('userId%s' % username)
         server = WINDOW.getProperty('server%s' % username)
         
-        url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json&ImageTypeLimit=1" % id
-        result = self.downloadUtils.downloadUrl(url)     
-        
+        try:
+            id = result["Id"]
+        except:
+            return
 
-        userData = result[u'UserData']
+        userData = result['UserData']
         resume_result = 0
         seekTime = 0
         
-        #get the resume point from Kodi DB for a Movie
-        kodiItem = ReadKodiDB().getKodiMovie(id)
-        if kodiItem != None:
-            seekTime = int(round(kodiItem['resume'].get("position")))
-        else:
-            #get the resume point from Kodi DB for an episode
-            episodeItem = ReadEmbyDB().getItem(id)
-            if episodeItem != None and str(episodeItem["Type"]) == "Episode":
-                kodiItem = ReadKodiDB().getKodiEpisodeByMbItem(id,episodeItem["SeriesId"])
-                if kodiItem != None:
-                    seekTime = int(round(kodiItem['resume'].get("position")))                  
-        
+        if userData.get("PlaybackPositionTicks") != 0:
+            reasonableTicks = int(userData.get("PlaybackPositionTicks")) / 1000
+            seekTime = reasonableTicks / 10000
+
         playurl = PlayUtils().getPlayUrl(server, id, result)
-        
-        isStrmFile = False
         thumbPath = API().getArtwork(result, "Primary")
         
-        #workaround for when the file to play is a strm file itself
-        if playurl.endswith(".strm"):
-            isStrmFile = True
-            tempPath = os.path.join(addondir,"library","temp.strm")
-            xbmcvfs.copy(playurl, tempPath)
-            sfile = open(tempPath, 'r')
-            playurl = sfile.readline()
-            sfile.close()
-            xbmcvfs.delete(tempPath)
-            WINDOW.setProperty("virtualstrm", id)
-            WINDOW.setProperty("virtualstrmtype", result.get("Type"))
-
         listItem = xbmcgui.ListItem(path=playurl, iconImage=thumbPath, thumbnailImage=thumbPath)
         self.setListItemProps(server, id, listItem, result)    
 
@@ -97,17 +76,19 @@ class PlaybackUtils():
         WINDOW.setProperty(playurl+"deleteurl", "")
         WINDOW.setProperty(playurl+"deleteurl", deleteurl)
         
-        if seekTime != 0:
-            displayTime = str(datetime.timedelta(seconds=seekTime))
-            display_list = [ self.language(30106) + ' ' + displayTime, self.language(30107)]
-            resumeScreen = xbmcgui.Dialog()
-            resume_result = resumeScreen.select(self.language(30105), display_list)
-            if resume_result == 0:
-                WINDOW.setProperty(playurl+"seektime", str(seekTime))
+        #show the additional resume dialog if launched from a widget
+        if xbmc.getCondVisibility("Window.IsActive(home)"):
+            if seekTime != 0:
+                displayTime = str(datetime.timedelta(seconds=seekTime))
+                display_list = [ self.language(30106) + ' ' + displayTime, self.language(30107)]
+                resumeScreen = xbmcgui.Dialog()
+                resume_result = resumeScreen.select(self.language(30105), display_list)
+                if resume_result == 0:
+                    WINDOW.setProperty(playurl+"seektime", str(seekTime))
+                else:
+                    WINDOW.clearProperty(playurl+"seektime")
             else:
                 WINDOW.clearProperty(playurl+"seektime")
-        else:
-            WINDOW.clearProperty(playurl+"seektime")
 
         if result.get("Type")=="Episode":
             WINDOW.setProperty(playurl+"refresh_id", result.get("SeriesId"))
@@ -132,15 +113,15 @@ class PlaybackUtils():
             if mediaSources[0].get('DefaultSubtitleStreamIndex') != None:
                 WINDOW.setProperty(playurl+"SubtitleStreamIndex", str(mediaSources[0].get('DefaultSubtitleStreamIndex')))
 
-        #this launches the playback
-        #artwork only works with both resolvedurl and player command
-        if isStrmFile:
-            xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
-        else:
-            xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
-            if(addon.getSetting("addExtraPlaybackArt") == "true"):
-                utils.logMsg("PLAY", "Doing second xbmc.Player().play to add extra art")
+        #launch the playback
+        if setup == "service":
+            xbmc.Player().play(playurl,listItem)
+        elif setup == "default":
+            #artwork only works from widgets (home screen) with player command as there is no listitem selected
+            if xbmc.getCondVisibility("Window.IsActive(home)"):
                 xbmc.Player().play(playurl,listItem)
+            else:
+               xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)                
 
     def setArt(self, list,name,path):
         if name=='thumb' or name=='fanart_image' or name=='small_poster' or name=='tiny_poster'  or name == "medium_landscape" or name=='medium_poster' or name=='small_fanartimage' or name=='medium_fanartimage' or name=='fanart_noindicators':

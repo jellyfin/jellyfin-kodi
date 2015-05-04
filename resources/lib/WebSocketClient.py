@@ -20,6 +20,7 @@ from DownloadUtils import DownloadUtils
 from PlaybackUtils import PlaybackUtils
 from LibrarySync import LibrarySync
 from WriteKodiDB import WriteKodiDB
+from ReadEmbyDB import ReadEmbyDB
 
 pendingUserDataList = []
 pendingItemsToRemove = []
@@ -179,39 +180,40 @@ class WebSocketThread(threading.Thread):
                 self.update_items(itemsToUpdate)
 
     def remove_items(self, itemsRemoved):
+        connection = utils.KodiSQL()
+        cursor = connection.cursor()
         for item in itemsRemoved:
             self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteEpisodeFromKodiLibraryByMbId: " + item, 0)
-            WriteKodiDB().deleteEpisodeFromKodiLibraryByMbId(item)
-            self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteMovieFromKodiLibrary: " + item, 0)
-            WriteKodiDB().deleteMovieFromKodiLibrary(item)
-            self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteMusicVideoFromKodiLibrary: " + item, 0)
-            WriteKodiDB().deleteMusicVideoFromKodiLibrary(item)
+            WriteKodiDB().deleteItemFromKodiLibrary(item, connection, cursor)
+        connection.commit()
+        cursor.close()
 
     def update_items(self, itemsToUpdate):
         # doing adds and updates
         if(len(itemsToUpdate) > 0):
             self.logMsg("Message : Doing LibraryChanged : Processing Added and Updated : " + str(itemsToUpdate), 0)
-            connection = utils.KodiSQL()
-            cursor = connection.cursor()
-            LibrarySync().MoviesSync(connection, cursor, fullsync = False, installFirstRun = False, itemList = itemsToUpdate)
-            LibrarySync().TvShowsSync(connection, cursor, fullsync = False, installFirstRun = False, itemList = itemsToUpdate)
-            cursor.close()
+            LibrarySync().IncrementalSync(itemsToUpdate)
 
     def user_data_update(self, userDataList):
-    
+        itemsToUpdate = list()
         for userData in userDataList:
-            self.logMsg("Message : Doing UserDataChanged : UserData : " + str(userData), 0)
             itemId = userData.get("ItemId")
             if(itemId != None):
-                self.logMsg("Message : Doing UserDataChanged : calling updatePlayCount with ID : " + str(itemId), 0)
-                LibrarySync().updatePlayCount(itemId)
+                itemsToUpdate.append(itemId)
+        if(len(itemsToUpdate) > 0):
+            self.logMsg("Message : Doing UserDataChanged : Processing Updated : " + str(itemsToUpdate), 0)
+            LibrarySync().IncrementalSync(itemsToUpdate)
                 
     def on_error(self, ws, error):
-        self.logMsg("Error : " + str(error))
+        if "10061" in str(error):
+            # Server is offline
+            pass
+        else:
+            self.logMsg("Error: %s" % error, 1)
         #raise
 
     def on_close(self, ws):
-        self.logMsg("Closed")
+        self.logMsg("Closed", 2)
 
     def on_open(self, ws):
         pass
@@ -245,12 +247,19 @@ class WebSocketThread(threading.Thread):
         self.client.on_open = self.on_open
         
         while not self.KodiMonitor.abortRequested():
-            self.logMsg("Client Starting")
+            
             self.client.run_forever()
-            if(self.keepRunning):
-                self.logMsg("Client Needs To Restart")
+
+            if (self.keepRunning):
+                # Server is not online
+                if WINDOW.getProperty("Server_online") == "true":
+                    self.logMsg("Server is unreachable.", 1)
+                    WINDOW.setProperty("Server_online", "false")
+                    xbmcgui.Dialog().notification("Error connecting", "Server is unreachable.")
+                
                 if self.KodiMonitor.waitForAbort(5):
                     break
+
         self.logMsg("Thread Exited")
         
         

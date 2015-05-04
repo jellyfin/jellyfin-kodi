@@ -84,6 +84,7 @@ class API():
         width = ''
         aspectratio = '1:1'
         aspectfloat = 1.85
+        Video3DFormat = ''
 
         if mediaSources == True:
             mediaSources = item.get("MediaSources")
@@ -99,9 +100,10 @@ class API():
                 for mediaStream in MediaStreams:
                     if(mediaStream.get("Type") == "Video"):
                         videocodec = mediaStream.get("Codec")
-                        height = str(mediaStream.get("Height"))
-                        width = str(mediaStream.get("Width"))
+                        height = int(mediaStream.get("Height"))
+                        width = int(mediaStream.get("Width"))
                         aspectratio = mediaStream.get("AspectRatio")
+                        Video3DFormat = item.get("Video3DFormat")
                         if aspectratio != None and len(aspectratio) >= 3:
                             try:
                                 aspectwidth,aspectheight = aspectratio.split(':')
@@ -116,9 +118,30 @@ class API():
                 'audiocodec'    : audiocodec, 
                 'height'        : height,
                 'width'         : width,
-                'aspectratio'   : str(aspectfloat)
+                'aspectratio'   : aspectfloat,
+                '3dformat'      : Video3DFormat
                 }
-                
+    
+    def getChecksum(self, item):
+        # use the etags checksum for this if available
+        # AND the userdata
+        checksum = ""
+        
+        if item.get("Etag") != None:
+            checksum = item.get("Etag") 
+            userData = item.get("UserData")
+        if(userData != None):
+            checksum += str(userData.get("Played"))
+            checksum += str(userData.get("IsFavorite"))
+            if userData.get('UnplayedItemCount') != None:
+                checksum += str(userData.get("UnplayedItemCount"))
+            if userData.get('LastPlayedDate') != None:
+                checksum += str(userData.get("LastPlayedDate"))
+            if userData.get('PlaybackPositionTicks') != None:
+                checksum += str(userData.get("PlaybackPositionTicks"))
+            
+        return checksum
+    
     def getUserData(self, item):
         userData = item.get("UserData")
         resumeTime = 0
@@ -128,9 +151,9 @@ class API():
             else:
                 watched="False"
             if userData.get("IsFavorite") == True:
-                favorite="True"
+                favorite=True
             else:
-                favorite="False"
+                favorite=False
             if(userData.get("Played") == True):
                 playcount="1"
             else:

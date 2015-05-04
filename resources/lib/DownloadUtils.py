@@ -11,8 +11,8 @@ from ClientInformation import ClientInformation
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 # Disable requests logging
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-logging.getLogger("requests").setLevel(logging.WARNING)
+# requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+# logging.getLogger("requests").setLevel(logging.WARNING)
 
 class DownloadUtils():
     
@@ -67,26 +67,22 @@ class DownloadUtils():
 
     def postCapabilities(self, deviceId):
 
-        # Get sessionId
-        url = "{server}/mediabrowser/Sessions?DeviceId=%s&format=json" % deviceId
-        result = self.downloadUrl(url)
-        # sessionId result
-        self.logMsg("Session result: %s" % result, 2)
-        self.sessionId = result[0][u'Id']
-        self.WINDOW.setProperty('sessionId%s' % self.username, self.sessionId)
+        # Post settings to session
+        url = "{server}/mediabrowser/Sessions/Capabilities/Full"
+        data = {
+            'PlayableMediaTypes': "Audio,Video",
+            'SupportedCommands': "Play,Playstate,SendString,DisplayMessage,PlayNext",
+            'SupportsMediaControl': True
+        }
 
-        # Settings for capabilities
-        playableMediaTypes = "Audio,Video"
-        supportedCommands = "Play,Playstate,SendString,DisplayMessage,PlayNext"
-
-        # Post settings to sessionId
-        url = "{server}/mediabrowser/Sessions/Capabilities?Id=%s&PlayableMediaTypes=%s&SupportedCommands=%s&SupportsMediaControl=True" % (self.sessionId, playableMediaTypes, supportedCommands)
-        data = {}
         self.logMsg("Capabilities URL: %s" % url, 2)
         self.logMsg("PostData: %s" % data, 2)
 
-        self.downloadUrl(url, postBody=data, type="POST")
-        self.logMsg("Posted capabilities to sessionId: %s" % self.sessionId, 1)
+        try:
+            self.downloadUrl(url, postBody=data, type="POST")
+            self.logMsg("Posted capabilities to %s" % self.server, 1)
+        except:
+            self.logMsg("Posted capabilities failed.")
 
     def startSession(self):
 
@@ -99,9 +95,11 @@ class DownloadUtils():
         header = self.getHeader()
 
         # If user enabled host certificate verification
-        if self.sslverify:
-            verify = True
+        try:
+            verify = self.sslverify
             cert = self.sslclient
+        except:
+            self.logMsg("Could not load SSL settings.", 1)
         
         # Start session
         self.s = requests.Session()
@@ -153,52 +151,86 @@ class DownloadUtils():
         timeout = self.timeout
         default_link = ""
 
-        # If user is authenticated
-        if (authenticate):
-            # Get requests session
-            s = self.s
-            # Replace for the real values and append api_key
-            url = url.replace("{server}", self.server, 1)
-            url = url.replace("{UserId}", self.userId, 1)
-            #url = "%s&api_key=%s" % (url, self.token)
-            
-            self.logMsg("URL: %s" % url, 2)
-            # Prepare request
-            if type == "GET":
-                r = s.get(url, json=postBody, timeout=timeout)
-            elif type == "POST":
-                r = s.post(url, json=postBody, timeout=timeout)
-            elif type == "DELETE":
-                r = s.delete(url, json=postBody, timeout=timeout)
-
-        # If user is not authenticated
-        elif not authenticate:
-            
-            self.logMsg("URL: %s" % url, 1)
-            header = self.getHeader(authenticate=False)
-            verifyssl = False
-
-            # If user enables ssl verification
-            try:
-                verifyssl = self.sslverify
-            except AttributeError:
-                pass
-            
-            # Prepare request
-            if type == "GET":
-                r = requests.get(url, json=postBody, headers=header, timeout=timeout, verify=verifyssl)
-            elif type == "POST":
-                r = requests.post(url, json=postBody, headers=header, timeout=timeout, verify=verifyssl)
-        
-        # Process the response
         try:
-            r.raise_for_status()
 
+            # If user is authenticated
+            if (authenticate):
+                # Get requests session
+                try: 
+                    s = self.s
+                    # Replace for the real values and append api_key
+                    url = url.replace("{server}", self.server, 1)
+                    url = url.replace("{UserId}", self.userId, 1)
+                    #url = "%s&api_key=%s" % (url, self.token)
+
+                    self.logMsg("URL: %s" % url, 2)
+                    # Prepare request
+                    if type == "GET":
+                        r = s.get(url, json=postBody, timeout=timeout)
+                    elif type == "POST":
+                        r = s.post(url, json=postBody, timeout=timeout)
+                    elif type == "DELETE":
+                        r = s.delete(url, json=postBody, timeout=timeout)
+                
+                except AttributeError:
+                    
+                    # Get user information
+                    self.username = WINDOW.getProperty('currUser')
+                    self.userId = WINDOW.getProperty('userId%s' % self.username)
+                    self.server = WINDOW.getProperty('server%s' % self.username)
+                    self.token = WINDOW.getProperty('accessToken%s' % self.username)
+                    header = self.getHeader()
+                    verifyssl = False
+                    cert = None
+
+                    # IF user enables ssl verification
+                    try:
+                        if self.addon.getSetting('sslverify') == "true":
+                            verifyssl = True
+                        if self.addon.getSetting('sslcert') != "None":
+                            cert = self.addon.getSetting('sslcert')
+                    except:
+                        self.logMsg("Could not load SSL settings.", 1)
+                        pass
+
+                    # Replace for the real values and append api_key
+                    url = url.replace("{server}", self.server, 1)
+                    url = url.replace("{UserId}", self.userId, 1)
+
+                    self.logMsg("URL: %s" % url, 2)
+                    # Prepare request
+                    if type == "GET":
+                        r = requests.get(url, json=postBody, headers=header, timeout=timeout, cert=cert, verify=verifyssl)
+                    elif type == "POST":
+                        r = requests.post(url, json=postBody, headers=header, timeout=timeout, cert=cert, verify=verifyssl)
+                    elif type == "DELETE":
+                        r = requests.delete(url, json=postBody, headers=header, timeout=timeout, cert=cert, verify=verifyssl)
+
+            # If user is not authenticated
+            elif not authenticate:
+                
+                self.logMsg("URL: %s" % url, 2)
+                header = self.getHeader(authenticate=False)
+                verifyssl = False
+
+                # If user enables ssl verification
+                try:
+                    verifyssl = self.sslverify
+                except AttributeError:
+                    pass
+                
+                # Prepare request
+                if type == "GET":
+                    r = requests.get(url, json=postBody, headers=header, timeout=timeout, verify=verifyssl)
+                elif type == "POST":
+                    r = requests.post(url, json=postBody, headers=header, timeout=timeout, verify=verifyssl)
+        
+            # Process the response
             if r.status_code == 204:
-                # No response in body
+                # No body in the response
                 self.logMsg("====== 204 Success ======", 2)
                 return default_link
-            # Response code 200
+
             elif r.status_code == requests.codes.ok:
                 try: 
                     # UTF-8 - JSON object
@@ -207,13 +239,19 @@ class DownloadUtils():
                     return r
                 except:
                     self.logMsg("Unable to convert the response for: %s" % url, 1)
+            else:
+                r.raise_for_status()
 
             return default_link
         
         # TO REVIEW EXCEPTIONS
         except requests.exceptions.ConnectionError as e:
-            self.logMsg("Server unreachable at: %s" % url, 0)
-            self.logMsg(e, 1)
+            # Make the addon aware of status
+            if WINDOW.getProperty("Server_online") != "false":
+                self.logMsg("Server unreachable at: %s" % url, 0)
+                self.logMsg(e, 2)
+                WINDOW.setProperty("Server_online", "false")
+            pass
 
         except requests.exceptions.ConnectTimeout as e:
             self.logMsg("Server timeout at: %s" % url, 0)
@@ -230,6 +268,7 @@ class DownloadUtils():
                     # Tell UserClient token has been revoked.
                     WINDOW.setProperty("Server_status", "401")
                     self.logMsg("HTTP Error: %s" % e, 0)
+                    xbmcgui.Dialog().notification("Error connecting", "Unauthorized.", xbmcgui.NOTIFICATION_ERROR)
 
             elif (r.status_code == 301) or (r.status_code == 302):
                 # Redirects
