@@ -25,7 +25,7 @@ from API import API
 try:
     params = utils.get_params(sys.argv[2])
     mode = params['mode']
-    id = params['id']
+    id = params.get('id', None)
 except:
     params = {}
     mode = None
