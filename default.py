@@ -36,7 +36,9 @@ if  mode == "play":
     result = DownloadUtils().downloadUrl(url)
     item = PlaybackUtils().PLAY(result, setup="default")
 
-    
+elif mode == "reset":
+    utils.reset()
+
 #get extrafanart for listitem - this will only be used for skins that actually call the listitem's path + fanart dir... 
 elif "extrafanart" in sys.argv[0]:
     itemPath = ""
@@ -84,9 +86,6 @@ elif "extrafanart" in sys.argv[0]:
     #always do endofdirectory to prevent errors in the logs
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
-
-elif sys.argv[1] == "reset":
-    utils.reset()
 else:   
     xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
 
