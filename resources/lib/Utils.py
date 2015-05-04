@@ -143,16 +143,6 @@ def CleanName(filename):
     cleanedFilename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore')
     return ''.join(c for c in cleanedFilename if c in validFilenameChars)
    
-
-def removeDirectory(path):
-    if xbmcvfs.exists(path):
-        allDirs, allFiles = xbmcvfs.listdir(path)
-        for dir in allDirs:
-            xbmcvfs.rmdir(os.path.join(path,dir))
-        for file in allFiles:
-            xbmcvfs.delete(os.path.join(path,file))
-        
-        xbmcvfs.rmdir(path)
         
 def reset():
 
@@ -161,6 +151,16 @@ def reset():
     if return_value == 0:
         return
 
+    #cleanup video nodes
+    import shutil
+    path = "special://userdata/library/video/"
+    if xbmcvfs.exists(path):
+        allDirs, allFiles = xbmcvfs.listdir(path)
+        for dir in allDirs:
+            if dir.startswith("Emby "):
+                shutil.rmtree(xbmc.translatePath("special://userdata/library/video/" + dir))
+
+    
     # Ask if user information should be deleted too.
     return_user = xbmcgui.Dialog().yesno("Warning", "Reset all Emby Addon settings?")
 

@@ -25,43 +25,32 @@ from API import API
 from PluginFunctions import PluginFunctions
 
 
-def json_query( method, unplayed=False, properties=None, sort=False, query_filter=False, limit=False, params=False):
-    json_query = { "jsonrpc": "2.0", "id": 1, "method": method, "params": {} }
-    if properties is not None:
-        json_query["params"]["properties"] = properties
-    if limit is not None:
-        json_query["params"]["limits"] =  {"end":limit if limit else 25}
-    if sort is not None:
-        json_query["params"]["sort"] = sort
-    if query_filter:
-        json_query["params"]["filter"] = query_filter
-    if params:
-        json_query["params"].update(params)
-
-    json_string = json.dumps(json_query)
-    rv = xbmc.executeJSONRPC(json_string)
-    
-    return unicode(rv, 'utf-8', errors='ignore')
-
-
 try:
     params = utils.get_params(sys.argv[2])
     mode = params['mode']
-    id = params['id']
+    id = params.get('id', None)
 except:
     params = {}
     mode = None
 
-if  mode == "play":
+if  mode == "play" or mode == "playfromaddon":
     # Play items via plugin://plugin.video.emby/
     url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json&ImageTypeLimit=1" % id
     result = DownloadUtils().downloadUrl(url)
-    item = PlaybackUtils().PLAY(result, setup="default")
+    #from from addon needed if the palyback is launched from the addon itself
+    if mode == "playfromaddon":
+        item = PlaybackUtils().PLAY(result, setup="service")
+    else:
+        item = PlaybackUtils().PLAY(result, setup="default")
 
-    
-elif "getnextup" in sys.argv[0]:
-    params = utils.get_params(sys.argv[2])
-    tagname = params['tagname']
+elif mode == "reset":
+    utils.reset()
+
+
+elif  mode == "nextup":
+    #if the addon is called with nextup parameter, we return the nextepisodes list of the given tagname
+    tagname = params['id']
+    limit = int(params['limit'])
     xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
     # First we get a list of all the in-progress TV shows - filtered by tag
     json_query_string = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "sort": { "order": "descending", "method": "lastplayed" }, "filter": {"and": [{"operator":"true", "field":"inprogress", "value":""}, {"operator": "contains", "field": "tag", "value": "%s"}]}, "properties": [ "title", "studio", "mpaa", "file", "art" ]  }, "id": "libTvShows"}' %tagname)
@@ -87,6 +76,7 @@ elif "getnextup" in sys.argv[0]:
                         plot = item['plot']
                         liz = xbmcgui.ListItem(item['title'])
                         liz.setInfo( type="Video", infoLabels={ "Title": item['title'] })
+                        liz.setInfo( type="Video", infoLabels={ "duration": str(item['runtime']/60) })
                         liz.setInfo( type="Video", infoLabels={ "Episode": item['episode'] })
                         liz.setInfo( type="Video", infoLabels={ "Season": item['season'] })
                         liz.setInfo( type="Video", infoLabels={ "Premiered": item['firstaired'] })
@@ -111,10 +101,13 @@ elif "getnextup" in sys.argv[0]:
                         liz.setProperty("fanart_image", item['art'].get('tvshow.fanart',''))
                         for key, value in item['streamdetails'].iteritems():
                             for stream in value:
-                                liz.addStreamInfo( key, stream ) 
-                        
-                        xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=item['file'], listitem=liz)
-    xbmcplugin.endOfDirectory(handle= int(sys.argv[1]))
+                                liz.addStreamInfo( key, stream )
+                        file = item['file'].replace("mode=play","mode=playfromaddon")
+                        xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=file, listitem=liz)
+                        count +=1
+                        if count == limit:
+                            break
+    xbmcplugin.endOfDirectory(handle=int(sys.argv[1]))
 
     
 #get extrafanart for listitem - this will only be used for skins that actually call the listitem's path + fanart dir... 
@@ -164,9 +157,6 @@ elif "extrafanart" in sys.argv[0]:
     #always do endofdirectory to prevent errors in the logs
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
-
-elif sys.argv[1] == "reset":
-    utils.reset()
 else:   
     xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
 

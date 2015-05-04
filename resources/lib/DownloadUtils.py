@@ -238,7 +238,10 @@ class DownloadUtils():
                     self.logMsg("====== 200 Success ======", 2)
                     return r
                 except:
-                    self.logMsg("Unable to convert the response for: %s" % url, 1)
+                    if r.headers['content-type'] == "text/html":
+                        pass
+                    else:
+                        self.logMsg("Unable to convert the response for: %s" % url, 1)
             else:
                 r.raise_for_status()
 

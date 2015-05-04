@@ -1159,6 +1159,17 @@ class WriteKodiDB():
                     ET.ElementTree(root).write(nodefile, xml_declaration=True)
                 except:
                     ET.ElementTree(root).write(nodefile)
+                    
+                #create tag node - nextup items
+                nodefile = os.path.join(libraryPath, tagname + "_nextup_episodes.xml")
+                root = Element("node", {"order":"4", "type":"folder"})
+                SubElement(root, "label").text = tagname + " - Nextup episodes"
+                SubElement(root, "path").text = "plugin://plugin.video.emby/?id=%s&mode=nextup&limit=25" %tagname
+                SubElement(root, "icon").text = "DefaultMovies.png"               
+                try:
+                    ET.ElementTree(root).write(nodefile, xml_declaration=True)
+                except:
+                    ET.ElementTree(root).write(nodefile)
                 
     def updateBoxsetToKodiLibrary(self, boxsetmovie, boxset, connection, cursor):
         strSet = boxset["Name"]
