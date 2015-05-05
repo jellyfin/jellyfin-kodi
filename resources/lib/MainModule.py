@@ -89,9 +89,9 @@ def BrowseChannels(id, folderid=None):
             else:
                 premieredate = ""
             
-            mediaStreams=API().getMediaStreams(item, True)
+            #mediaStreams=API().getMediaStreams(item, True)
                     
-            people = API().getPeople(item)
+            #people = API().getPeople(item)
             
             # Process Genres
             genre = API().getGenre(item)
