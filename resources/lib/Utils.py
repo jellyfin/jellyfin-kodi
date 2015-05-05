@@ -159,7 +159,9 @@ def reset():
         for dir in allDirs:
             if dir.startswith("Emby "):
                 shutil.rmtree(xbmc.translatePath("special://userdata/library/video/" + dir))
-
+        for file in allFiles:
+                if file.startswith("emby"):
+                    xbmcvfs.delete(path + file)
     
     # Ask if user information should be deleted too.
     return_user = xbmcgui.Dialog().yesno("Warning", "Reset all Emby Addon settings?")
@@ -208,4 +210,245 @@ def reset():
     dialog = xbmcgui.Dialog()
     dialog.ok('Emby Reset', 'Database reset has completed, Kodi will now restart to apply the changes.')
     xbmc.executebuiltin("RestartApp")
-     
+
+
+def buildVideoNodeForView(tagname, type):
+    #this method will build a video node for a particular Emby view (= tag in kodi)
+    
+    libraryPath = xbmc.translatePath("special://userdata/library/video/Emby - %s/" %tagname)
+    
+    if not xbmcvfs.exists(libraryPath):
+        #create tag node - index
+        xbmcvfs.mkdir(libraryPath)
+        nodefile = os.path.join(libraryPath, "index.xml")
+        root = Element("node", {"order":"1"})
+        SubElement(root, "label").text = "Emby - " + tagname
+        SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+        try:
+            ET.ElementTree(root).write(nodefile, xml_declaration=True)
+        except:
+            ET.ElementTree(root).write(nodefile)
+        
+        #create tag node - all items
+        nodefile = os.path.join(libraryPath, tagname + "_all.xml")
+        root = Element("node", {"order":"1", "type":"filter"})
+        SubElement(root, "label").text = tagname
+        SubElement(root, "match").text = "all"
+        SubElement(root, "content").text = type
+        SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+        SubElement(root, "order", {"direction":"ascending"}).text = "sorttitle"
+        Rule = SubElement(root, "rule", {"field":"tag","operator":"is"})
+        SubElement(Rule, "value").text = tagname
+        try:
+            ET.ElementTree(root).write(nodefile, xml_declaration=True)
+        except:
+            ET.ElementTree(root).write(nodefile)
+        
+        #create tag node - recent items
+        nodefile = os.path.join(libraryPath, tagname + "_recent.xml")
+        root = Element("node", {"order":"2", "type":"filter"})
+        if type == "tvshows":
+            SubElement(root, "label").text = tagname + " - " + language(30170)
+        else:
+            SubElement(root, "label").text = tagname + " - " + language(30174)
+        SubElement(root, "match").text = "all"
+        SubElement(root, "content").text = type
+        SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+        Rule = SubElement(root, "rule", {"field":"tag","operator":"is"})
+        SubElement(Rule, "value").text = tagname
+        SubElement(root, "order", {"direction":"descending"}).text = "dateadded"
+        #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
+        SubElement(root, "limit").text = "25"
+        #exclude watched items --> currently hardcoded --> TODO: add a setting for this ?
+        Rule2 = SubElement(root, "rule", {"field":"playcount","operator":"is"})
+        SubElement(Rule2, "value").text = "0"
+        
+        try:
+            ET.ElementTree(root).write(nodefile, xml_declaration=True)
+        except:
+            ET.ElementTree(root).write(nodefile)
+        
+        #create tag node - inprogress items
+        nodefile = os.path.join(libraryPath, tagname + "_progress.xml")
+        root = Element("node", {"order":"3", "type":"filter"})
+        if type == "tvshows":
+            SubElement(root, "label").text = tagname + " - " + language(30171)
+        else:
+            SubElement(root, "label").text = tagname + " - " + language(30177)
+        SubElement(root, "match").text = "all"
+        SubElement(root, "content").text = type
+        SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+        Rule = SubElement(root, "rule", {"field":"tag","operator":"is"})
+        SubElement(Rule, "value").text = tagname
+        #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
+        SubElement(root, "limit").text = "25"
+        Rule2 = SubElement(root, "rule", {"field":"inprogress","operator":"true"})
+        
+        try:
+            ET.ElementTree(root).write(nodefile, xml_declaration=True)
+        except:
+            ET.ElementTree(root).write(nodefile)
+        
+        #create tag node - add unwatched movies node for movies
+        if type == "movies":
+            nodefile = os.path.join(libraryPath, tagname + "_unwatched.xml")
+            root = Element("node", {"order":"4", "type":"filter"})
+            SubElement(root, "label").text = tagname + " - " + language(30189)
+            SubElement(root, "match").text = "all"
+            SubElement(root, "content").text = "movies"
+            SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+            Rule = SubElement(root, "rule", {"field":"tag","operator":"is"})
+            SubElement(Rule, "value").text = tagname
+            Rule = SubElement(root, "rule", {"field":"playcount","operator":"is"})
+            SubElement(Rule, "value").text = "0"
+            SubElement(root, "order", {"direction":"ascending"}).text = "sorttitle"
+            #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
+            SubElement(root, "limit").text = "25"
+            #exclude watched items --> currently hardcoded --> TODO: add a setting for this ?
+            Rule2 = SubElement(root, "rule", {"field":"playcount","operator":"is"})
+            SubElement(Rule2, "value").text = "0"
+            
+            try:
+                ET.ElementTree(root).write(nodefile, xml_declaration=True)
+            except:
+                ET.ElementTree(root).write(nodefile)
+                              
+        
+        #add some additional nodes for episodes
+        if type == "tvshows":
+            #create tag node - recent episodes
+            nodefile = os.path.join(libraryPath, tagname + "_recent_episodes.xml")
+            root = Element("node", {"order":"3", "type":"filter"})
+            SubElement(root, "label").text = tagname + " - " + language(30175)
+            SubElement(root, "match").text = "all"
+            SubElement(root, "content").text = "episodes"
+            SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+            Rule = SubElement(root, "rule", {"field":"tag","operator":"is"})
+            SubElement(Rule, "value").text = tagname
+            SubElement(root, "order", {"direction":"descending"}).text = "dateadded"
+            #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
+            SubElement(root, "limit").text = "25"
+            #exclude watched items --> currently hardcoded --> TODO: add a setting for this ?
+            Rule2 = SubElement(root, "rule", {"field":"playcount","operator":"is"})
+            SubElement(Rule2, "value").text = "0"
+            
+            try:
+                ET.ElementTree(root).write(nodefile, xml_declaration=True)
+            except:
+                ET.ElementTree(root).write(nodefile)
+            
+            #create tag node - inprogress items
+            nodefile = os.path.join(libraryPath, tagname + "_progress_episodes.xml")
+            root = Element("node", {"order":"4", "type":"filter"})
+            SubElement(root, "label").text = tagname + " - " + language(30178)
+            SubElement(root, "match").text = "all"
+            SubElement(root, "content").text = "episodes"
+            SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+            Rule = SubElement(root, "rule", {"field":"tag","operator":"is"})
+            SubElement(Rule, "value").text = tagname
+            #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
+            SubElement(root, "limit").text = "25"
+            Rule2 = SubElement(root, "rule", {"field":"inprogress","operator":"true"})
+            
+            try:
+                ET.ElementTree(root).write(nodefile, xml_declaration=True)
+            except:
+                ET.ElementTree(root).write(nodefile)
+                
+            #create tag node - nextup items
+            nodefile = os.path.join(libraryPath, tagname + "_nextup_episodes.xml")
+            root = Element("node", {"order":"4", "type":"folder"})
+            SubElement(root, "label").text = tagname + " - " + language(30179)
+            SubElement(root, "content").text = "episodes"
+            SubElement(root, "path").text = "plugin://plugin.video.emby/?id=%s&mode=nextup&limit=25" %tagname
+            SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"             
+            try:
+                ET.ElementTree(root).write(nodefile, xml_declaration=True)
+            except:
+                ET.ElementTree(root).write(nodefile)
+    
+def buildVideoNodesListing():
+        
+    import shutil
+    from ReadEmbyDB import ReadEmbyDB
+    
+    try:
+    
+        # the library path doesn't exist on all systems
+        if not xbmcvfs.exists("special://userdata/library/"):
+            xbmcvfs.mkdir("special://userdata/library") 
+        if not xbmcvfs.exists("special://userdata/library/video/"):
+            #we need to copy over the default items
+            import shutil
+            shutil.copytree(xbmc.translatePath("special://xbmc/system/library/video"), xbmc.translatePath("special://userdata/library/video"))
+        
+        #always cleanup existing Emby video nodes first because we don't want old stuff to stay in there
+        path = "special://userdata/library/video/"
+        if xbmcvfs.exists(path):
+            allDirs, allFiles = xbmcvfs.listdir(path)
+            for dir in allDirs:
+                if dir.startswith("Emby "):
+                    shutil.rmtree(xbmc.translatePath("special://userdata/library/video/" + dir))
+            for file in allFiles:
+                if file.startswith("emby"):
+                    xbmcvfs.delete(path + file)
+        
+        #create tag node for emby channels
+        nodefile = os.path.join(xbmc.translatePath("special://userdata/library/video"), "emby_channels.xml")
+        if not xbmcvfs.exists(nodefile):
+            root = Element("node", {"order":"1", "type":"folder"})
+            SubElement(root, "label").text = "Emby  - " + language(30173)
+            SubElement(root, "content").text = "movies"
+            SubElement(root, "path").text = "plugin://plugin.video.emby/?id=0&mode=channels"
+            SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"               
+            try:
+                ET.ElementTree(root).write(nodefile, xml_declaration=True)
+            except:
+                ET.ElementTree(root).write(nodefile)
+               
+        #create tag node - favorite shows
+        nodefile = os.path.join(xbmc.translatePath("special://userdata/library/video"),"emby_favorite_shows.xml")
+        if not xbmcvfs.exists(nodefile):
+            root = Element("node", {"order":"1", "type":"filter"})
+            SubElement(root, "label").text = "Emby - " + language(30181)
+            SubElement(root, "match").text = "all"
+            SubElement(root, "content").text = "tvshows"
+            SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+            SubElement(root, "order", {"direction":"ascending"}).text = "sorttitle"
+            Rule = SubElement(root, "rule", {"field":"tag","operator":"is"})
+            SubElement(Rule, "value").text = "Favorite tvshows" #do not localize the tagname itself
+            try:
+                ET.ElementTree(root).write(nodefile, xml_declaration=True)
+            except:
+                ET.ElementTree(root).write(nodefile)
+        
+        #create tag node - favorite movies
+        nodefile = os.path.join(xbmc.translatePath("special://userdata/library/video"),"emby_favorite_movies.xml")
+        if not xbmcvfs.exists(nodefile):
+            root = Element("node", {"order":"1", "type":"filter"})
+            SubElement(root, "label").text = "Emby - " + language(30180)
+            SubElement(root, "match").text = "all"
+            SubElement(root, "content").text = "movies"
+            SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+            SubElement(root, "order", {"direction":"ascending"}).text = "sorttitle"
+            Rule = SubElement(root, "rule", {"field":"tag","operator":"is"})
+            SubElement(Rule, "value").text = "Favorite movies" #do not localize the tagname itself
+            try:
+                ET.ElementTree(root).write(nodefile, xml_declaration=True)
+            except:
+                ET.ElementTree(root).write(nodefile)
+        
+        #build the listing for all views
+        views_movies = ReadEmbyDB().getCollections("movies")
+        if views_movies:
+            for view in views_movies:
+                buildVideoNodeForView(view.get('title'), "movies")
+                
+        views_shows = ReadEmbyDB().getCollections("tvshows")
+        if views_shows:
+            for view in views_shows:
+                buildVideoNodeForView(view.get('title'), "tvshows")        
+            
+    except:
+        logMsg("Emby addon","Error while creating videonodes listings, restart required ?")
+            

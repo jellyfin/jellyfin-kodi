@@ -159,9 +159,10 @@
     <string id="30169">Address : </string>     
     
      
-    <string id="30170">Alle films</string>             
-    <string id="30171">Alle TV</string>                 
-    <string id="30172">Alle Muziek</string>              
+    <string id="30170">Recent toegevoegde TV-series</string>             
+    <string id="30171">Niet afgekeken TV-series</string>                 
+    
+	<string id="30172">Alle Muziek</string>              
     <string id="30173">Kanalen</string>               
     <string id="30174">Recent toegevoegde films</string>  
     <string id="30175">Recent toegevoegde afleveringen</string>
@@ -179,7 +180,7 @@
     <string id="30187">Muziek videos</string>           
     <string id="30188">Fotos</string>                 
     <string id="30189">Onbekeken films</string>       
-    <string id="30190">Film Genres</string>           
+            
     <string id="30191">Film Studios</string>          
     <string id="30192">Film Acteurs</string>           
     <string id="30193">Onbekeken afleveringen</string>     

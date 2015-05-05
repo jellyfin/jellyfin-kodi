@@ -86,6 +86,9 @@ class WriteKodiDB():
         studio = " / ".join(studios)
         writer = " / ".join(people.get("Writer"))
         director = " / ".join(people.get("Director"))
+        country = None
+        if MBitem.get("ProductionLocations") !=None and MBitem.get("ProductionLocations") != []:
+           country = MBitem.get("ProductionLocations")[0]
         
         imdb = None
         if MBitem.get("ProviderIds"):
@@ -155,8 +158,8 @@ class WriteKodiDB():
             cursor.execute("select coalesce(max(idMovie),0) as movieid from movie")
             movieid = cursor.fetchone()[0]
             movieid = movieid + 1
-            pathsql="insert into movie(idMovie, idFile, c00, c01, c02, c05, c06, c07, c09, c10, c11, c12, c14, c15, c16, c18, c19) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (movieid, fileid, title, plot, shortplot, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl))
+            pathsql="insert into movie(idMovie, idFile, c00, c01, c02, c05, c06, c07, c09, c10, c11, c12, c14, c15, c16, c18, c19, c21) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (movieid, fileid, title, plot, shortplot, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl, country))
             
             #add the viewtag
             self.AddTagToMedia(movieid, viewTag, "movie", cursor)
@@ -168,8 +171,8 @@ class WriteKodiDB():
         #### UPDATE THE MOVIE #####
         else:
             utils.logMsg("UPDATE movie to Kodi library","Id: %s - Title: %s" % (embyId, title))
-            pathsql="update movie SET c00 = ?, c01 = ?, c02 = ?, c05 = ?, c06 = ?, c07 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?, c16 = ?, c18 = ?, c19 = ? WHERE idMovie = ?"
-            cursor.execute(pathsql, (title, plot, shortplot, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl, movieid))
+            pathsql="update movie SET c00 = ?, c01 = ?, c02 = ?, c05 = ?, c06 = ?, c07 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?, c16 = ?, c18 = ?, c19 = ?, c21 = ?WHERE idMovie = ?"
+            cursor.execute(pathsql, (title, plot, shortplot, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl, country, movieid))
             
             #update the checksum in emby table
             cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(MBitem),MBitem["Id"]))
@@ -193,10 +196,13 @@ class WriteKodiDB():
         #update studios
         self.AddStudiosToMedia(movieid, studios, "movie", cursor)
         
+        #update countries
+        self.AddCountriesToMedia(movieid, MBitem.get("ProductionLocations"), "movie", cursor)
+        
         #add streamdetails
         self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), fileid, cursor)
         
-        #add to favorites tag --> todo translated label for favorites ?
+        #add to or remove from favorites tag
         if userData.get("Favorite"):
             self.AddTagToMedia(movieid, "Favorite movies", "movie", cursor)
         else:
@@ -207,7 +213,6 @@ class WriteKodiDB():
         total = int(round(float(timeInfo.get("TotalTime"))))*60
         self.setKodiResumePoint(fileid, resume, total, cursor)
         
-
     def addOrUpdateMusicVideoToKodiLibrary( self, embyId ,connection, cursor):
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
@@ -377,6 +382,11 @@ class WriteKodiDB():
         sorttitle = utils.convertEncoding(MBitem["SortName"])
         rating = MBitem.get("CommunityRating")
         
+        tvdb = None
+        if MBitem.get("ProviderIds"):
+            if MBitem.get("ProviderIds").get("Tvdb"):
+                tvdb = MBitem.get("ProviderIds").get("Tvdb")
+        
         if MBitem.get("DateCreated") != None:
             dateadded = MBitem["DateCreated"].split('.')[0].replace('T', " ")
         else:
@@ -417,8 +427,8 @@ class WriteKodiDB():
             cursor.execute("select coalesce(max(idShow),0) as showid from tvshow")
             showid = cursor.fetchone()[0]
             showid = showid + 1
-            pathsql="insert into tvshow(idShow, c00, c01, c04, c05, c08, c09, c13, c14, c15) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (showid, title, plot, rating, premieredate, genre, title, mpaa, studio, sorttitle))
+            pathsql="insert into tvshow(idShow, c00, c01, c04, c05, c08, c09, c12, c13, c14, c15) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (showid, title, plot, rating, premieredate, genre, title, tvdb, mpaa, studio, sorttitle))
             
             #create the reference in emby table
             pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
@@ -435,8 +445,8 @@ class WriteKodiDB():
         else:
             utils.logMsg("UPDATE tvshow to Kodi library","Id: %s - Title: %s" % (embyId, title))
             
-            pathsql="UPDATE tvshow SET c00 = ?, c01 = ?, c04 = ?, c05 = ?, c08 = ?, c09 = ?, c13 = ?, c14 = ?, c15 = ? WHERE idShow = ?"
-            cursor.execute(pathsql, (title, plot, rating, premieredate, title, genre, mpaa, studio, sorttitle, showid))
+            pathsql="UPDATE tvshow SET c00 = ?, c01 = ?, c04 = ?, c05 = ?, c08 = ?, c09 = ?, c12 = ?, c13 = ?, c14 = ?, c15 = ? WHERE idShow = ?"
+            cursor.execute(pathsql, (title, plot, rating, premieredate, title, genre, tvdb, mpaa, studio, sorttitle, showid))
             
             #update the checksum in emby table
             cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(MBitem), MBitem["Id"]))
@@ -450,7 +460,7 @@ class WriteKodiDB():
         #update studios
         self.AddStudiosToMedia(showid, studios, "tvshow", cursor)
         
-        #add to favorites tag --> todo translated label for favorites ?
+        #add to or remove from favorites tag
         if userData.get("Favorite"):
             self.AddTagToMedia(showid, "Favorite tvshows", "tvshow", cursor)
         else:
@@ -779,60 +789,55 @@ class WriteKodiDB():
                             peoplesql="INSERT OR REPLACE into writerlinkepisode(idWriter, idEpisode) values(?, ?)"
                             cursor.execute(peoplesql, (actorid,id))
                         
-    def AddGenresToMedia(self, id, genres, mediatype, cursor):
-
-        if genres:
-            
+    def AddCountriesToMedia(self, id, countries, mediatype, cursor):
+        if countries:
             kodiVersion = 14
             if xbmc.getInfoLabel("System.BuildVersion").startswith("15"):
                 kodiVersion = 15
             
-            for genre in genres:
+            for country in countries:
 
                 if kodiVersion == 15:
-                    genre_id = None
-                    cursor.execute("SELECT genre_id as genre_id FROM genre WHERE name = ?",(genre,))
+                    country_id = None
+                    cursor.execute("SELECT country_id as country_id FROM country WHERE name = ?",(country,))
                     result = cursor.fetchone()
                     if result != None:
-                        genre_id = result[0]
-                    #create genre
-                    if genre_id == None:
-                        cursor.execute("select coalesce(max(genre_id),0) as genre_id from genre")
-                        genre_id = cursor.fetchone()[0]
-                        genre_id = genre_id + 1
-                        sql="insert into genre(genre_id, name) values(?, ?)"
-                        cursor.execute(sql, (genre_id,genre))
-                        utils.logMsg("AddGenresToMedia", "Processing : " + genre)
+                        country_id = result[0]
+                    #create country
+                    if country_id == None:
+                        cursor.execute("select coalesce(max(country_id),0) as country_id from country")
+                        country_id = cursor.fetchone()[0]
+                        country_id = country_id + 1
+                        sql="insert into country(country_id, name) values(?, ?)"
+                        cursor.execute(sql, (country_id,country))
+                        utils.logMsg("AddCountriesToMedia", "Processing : " + country)
                     
-                    #assign genre to item    
-                    sql="INSERT OR REPLACE into genre_link(genre_id, media_id, media_type) values(?, ?, ?)"
-                    cursor.execute(sql, (genre_id, id, mediatype))
+                    #assign country to item    
+                    sql="INSERT OR REPLACE into country_link(country_id, media_id, media_type) values(?, ?, ?)"
+                    cursor.execute(sql, (country_id, id, mediatype))
                 
                 else:
-                    idGenre = None
-                    cursor.execute("SELECT idGenre as idGenre FROM genre WHERE strGenre = ?",(genre,))
+                    idCountry = None
+                    cursor.execute("SELECT idCountry as idCountry FROM country WHERE strCountry = ?",(country,))
                     result = cursor.fetchone()
                     if result != None:
-                        idGenre = result[0]
-                    #create genre
-                    if idGenre == None:
-                        cursor.execute("select coalesce(max(idGenre),0) as idGenre from genre")
-                        idGenre = cursor.fetchone()[0]
-                        idGenre = idGenre + 1
-                        sql="insert into genre(idGenre, strGenre) values(?, ?)"
-                        cursor.execute(sql, (idGenre,genre))
+                        idCountry = result[0]
+                    #create country
+                    if idCountry == None:
+                        cursor.execute("select coalesce(max(idCountry),0) as idCountry from country")
+                        idCountry = cursor.fetchone()[0]
+                        idCountry = idCountry + 1
+                        sql="insert into country(idCountry, strCountry) values(?, ?)"
+                        cursor.execute(sql, (idCountry,country))
 
-                    #assign genre to item    
+                    #assign country to item    
                     if mediatype == "movie":
-                        sql="INSERT OR REPLACE into genrelinkmovie(idGenre, idMovie) values(?, ?)"
-                    if mediatype == "tvshow":
-                        sql="INSERT OR REPLACE into genrelinktvshow(idGenre, idShow) values(?, ?)"
-                    if mediatype == "episode":
+                        sql="INSERT OR REPLACE into countrylinkmovie(idCountry, idMovie) values(?, ?)"
+                        cursor.execute(sql, (idCountry,id))
+                    else:
+                        #only movies have a country field
                         return
-                    if mediatype == "musicvideo":
-                        sql="INSERT OR REPLACE into genrelinkmusicvideo(idGenre, idMVideo) values(?, ?)"
-                    cursor.execute(sql, (idGenre,id))
-    
+                        
     def AddStudiosToMedia(self, id, studios, mediatype, cursor):
 
         if studios:
@@ -909,7 +914,6 @@ class WriteKodiDB():
                     sql="insert into tag(tag_id, name) values(?, ?)"
                     cursor.execute(sql, (tag_id,tag))
                     utils.logMsg("AddTagToMedia", "Adding tag: " + tag)
-                    self.addVideoNodesForTag(tag, mediatype)
                 
                 #assign tag to item
                 if doRemove:
@@ -933,7 +937,6 @@ class WriteKodiDB():
                     sql="insert into tag(idTag, strTag) values(?, ?)"
                     cursor.execute(sql, (idTag,tag))
                     utils.logMsg("AddTagToMedia", "Adding tag: " + tag)
-                    self.addVideoNodesForTag(tag, mediatype)
 
                 #assign tag to item
                 if doRemove:
@@ -1029,160 +1032,6 @@ class WriteKodiDB():
         
         return True
     
-    def addVideoNodesForTag(self, tagname, type):
-        
-        utils.logMsg("addVideoNodesForTag", "Creating nodes for tag: " + tagname)
-        
-        # the library path doesn't exist on all systems
-        if not xbmcvfs.exists("special://userdata/library/"):
-            xbmcvfs.mkdir("special://userdata/library") 
-        if not xbmcvfs.exists("special://userdata/library/video/"):
-            #we need to copy over the default items
-            import shutil
-            shutil.copytree(xbmc.translatePath("special://xbmc/system/library/video"), xbmc.translatePath("special://userdata/library/video"))
-            
-        #create tag node for emby channels
-        nodefile = os.path.join(xbmc.translatePath("special://userdata/library/video"), "emby_channels.xml")
-        if not xbmcvfs.exists(nodefile):
-            root = Element("node", {"order":"20", "type":"folder"})
-            SubElement(root, "label").text = "Emby  - Channels"
-            SubElement(root, "path").text = "plugin://plugin.video.emby/?id=0&mode=channels"
-            SubElement(root, "icon").text = "DefaultMovies.png"               
-            try:
-                ET.ElementTree(root).write(nodefile, xml_declaration=True)
-            except:
-                ET.ElementTree(root).write(nodefile)
-
-        
-        if type == "movie":
-            type = "movies"
-        elif type == "tvshow":
-            type = "tvshows"
-        else:
-            return
-               
-        #tagpath
-        libraryPath = xbmc.translatePath("special://userdata/library/video/Emby - %s/" %tagname)
-        
-        if not xbmcvfs.exists(libraryPath):
-            #create tag node - index
-            xbmcvfs.mkdir(libraryPath)
-            nodefile = os.path.join(libraryPath, "index.xml")
-            root = Element("node", {"order":"1"})
-            SubElement(root, "label").text = "Emby - " + tagname
-            SubElement(root, "icon").text = "DefaultMovies.png"
-            try:
-                ET.ElementTree(root).write(nodefile, xml_declaration=True)
-            except:
-                ET.ElementTree(root).write(nodefile)
-            
-            #create tag node - all items
-            nodefile = os.path.join(libraryPath, tagname + "_all.xml")
-            root = Element("node", {"order":"1", "type":"filter"})
-            SubElement(root, "label").text = tagname
-            SubElement(root, "match").text = "all"
-            SubElement(root, "content").text = type
-            SubElement(root, "icon").text = "DefaultMovies.png"
-            SubElement(root, "order", {"direction":"ascending"}).text = "sorttitle"
-            Rule = SubElement(root, "rule", {"field":"tag","operator":"is"})
-            SubElement(Rule, "value").text = tagname
-            try:
-                ET.ElementTree(root).write(nodefile, xml_declaration=True)
-            except:
-                ET.ElementTree(root).write(nodefile)
-            
-            #create tag node - recent items
-            nodefile = os.path.join(libraryPath, tagname + "_recent.xml")
-            root = Element("node", {"order":"2", "type":"filter"})
-            SubElement(root, "label").text = tagname + " - Recently added"
-            SubElement(root, "match").text = "all"
-            SubElement(root, "content").text = type
-            SubElement(root, "icon").text = "DefaultMovies.png"
-            Rule = SubElement(root, "rule", {"field":"tag","operator":"is"})
-            SubElement(Rule, "value").text = tagname
-            SubElement(root, "order", {"direction":"descending"}).text = "dateadded"
-            #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
-            SubElement(root, "limit").text = "25"
-            #exclude watched items --> currently hardcoded --> TODO: add a setting for this ?
-            Rule2 = SubElement(root, "rule", {"field":"playcount","operator":"is"})
-            SubElement(Rule2, "value").text = "0"
-            
-            try:
-                ET.ElementTree(root).write(nodefile, xml_declaration=True)
-            except:
-                ET.ElementTree(root).write(nodefile)
-            
-            #create tag node - inprogress items
-            nodefile = os.path.join(libraryPath, tagname + "_progress.xml")
-            root = Element("node", {"order":"3", "type":"filter"})
-            SubElement(root, "label").text = tagname + " - In progress"
-            SubElement(root, "match").text = "all"
-            SubElement(root, "content").text = type
-            SubElement(root, "icon").text = "DefaultMovies.png"
-            Rule = SubElement(root, "rule", {"field":"tag","operator":"is"})
-            SubElement(Rule, "value").text = tagname
-            #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
-            SubElement(root, "limit").text = "25"
-            Rule2 = SubElement(root, "rule", {"field":"inprogress","operator":"true"})
-            
-            try:
-                ET.ElementTree(root).write(nodefile, xml_declaration=True)
-            except:
-                ET.ElementTree(root).write(nodefile)
-                
-            #add some additional nodes for episodes
-            if type == "tvshows":
-                #create tag node - recent episodes
-                nodefile = os.path.join(libraryPath, tagname + "_recent_episodes.xml")
-                root = Element("node", {"order":"3", "type":"filter"})
-                SubElement(root, "label").text = tagname + " - Recently added episodes"
-                SubElement(root, "match").text = "all"
-                SubElement(root, "content").text = "episodes"
-                SubElement(root, "icon").text = "DefaultMovies.png"
-                Rule = SubElement(root, "rule", {"field":"tag","operator":"is"})
-                SubElement(Rule, "value").text = tagname
-                SubElement(root, "order", {"direction":"descending"}).text = "dateadded"
-                #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
-                SubElement(root, "limit").text = "25"
-                #exclude watched items --> currently hardcoded --> TODO: add a setting for this ?
-                Rule2 = SubElement(root, "rule", {"field":"playcount","operator":"is"})
-                SubElement(Rule2, "value").text = "0"
-                
-                try:
-                    ET.ElementTree(root).write(nodefile, xml_declaration=True)
-                except:
-                    ET.ElementTree(root).write(nodefile)
-                
-                #create tag node - inprogress items
-                nodefile = os.path.join(libraryPath, tagname + "_progress_episodes.xml")
-                root = Element("node", {"order":"4", "type":"filter"})
-                SubElement(root, "label").text = tagname + " - In progress episodes"
-                SubElement(root, "match").text = "all"
-                SubElement(root, "content").text = "episodes"
-                SubElement(root, "icon").text = "DefaultMovies.png"
-                Rule = SubElement(root, "rule", {"field":"tag","operator":"is"})
-                SubElement(Rule, "value").text = tagname
-                #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
-                SubElement(root, "limit").text = "25"
-                Rule2 = SubElement(root, "rule", {"field":"inprogress","operator":"true"})
-                
-                try:
-                    ET.ElementTree(root).write(nodefile, xml_declaration=True)
-                except:
-                    ET.ElementTree(root).write(nodefile)
-                    
-                #create tag node - nextup items
-                nodefile = os.path.join(libraryPath, tagname + "_nextup_episodes.xml")
-                root = Element("node", {"order":"4", "type":"folder"})
-                SubElement(root, "label").text = tagname + " - Nextup episodes"
-                SubElement(root, "path").text = "plugin://plugin.video.emby/?id=%s&mode=nextup&limit=25" %tagname
-                SubElement(root, "icon").text = "DefaultMovies.png"               
-                try:
-                    ET.ElementTree(root).write(nodefile, xml_declaration=True)
-                except:
-                    ET.ElementTree(root).write(nodefile)
-                    
-                
     def updateBoxsetToKodiLibrary(self, boxsetmovie, boxset, connection, cursor):
         strSet = boxset["Name"]
         cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?",(boxsetmovie["Id"],))

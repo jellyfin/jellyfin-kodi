@@ -62,6 +62,9 @@ class LibrarySync():
             if not startupDone:
                 cursor.execute("CREATE TABLE IF NOT EXISTS emby(emby_id TEXT, kodi_id INTEGER, media_type TEXT, checksum TEXT, parent_id INTEGER)")
                 connection.commit()
+                
+            ### BUILD VIDEO NODES LISTING ###
+            utils.buildVideoNodesListing()
             
             # sync movies
             self.MoviesFullSync(connection,cursor,pDialog)
@@ -245,7 +248,6 @@ class LibrarySync():
             for kodishow in allKodiTvShows:
                 allKodiTvShowIds.append(kodishow[1])
             
-
             #### TVSHOW: PROCESS ADDS AND UPDATES ###
             for item in allEmbyTvShows:
                 
