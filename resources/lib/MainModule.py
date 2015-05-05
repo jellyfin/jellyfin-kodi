@@ -268,9 +268,9 @@ def getExtraFanArt():
                 item = ReadEmbyDB().getFullItem(embyId)
                 if item != None:
                     if item.has_key("BackdropImageTags"):
-                        if(len(item["BackdropImageTags"]) > 1):
+                        if(len(item["BackdropImageTags"]) > 0):
                             totalbackdrops = len(item["BackdropImageTags"]) 
-                            for index in range(1,totalbackdrops): 
+                            for index in range(0,totalbackdrops): 
                                 backgroundUrl = API().getArtwork(item, "Backdrop",str(index))
                                 fanartFile = os.path.join(fanartDir,"fanart" + str(index) + ".jpg")
                                 li = xbmcgui.ListItem(str(index), path=fanartFile)
