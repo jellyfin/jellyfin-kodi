@@ -13,7 +13,7 @@ sys.path.append(BASE_RESOURCE_PATH)
 
 
 
-import MainModule as mainModule
+import Entrypoint as entrypoint
 import Utils as utils
 
 
@@ -27,7 +27,7 @@ except:
 
 ##### Play items via plugin://plugin.video.emby/ #####
 if  mode == "play":
-    mainModule.doPlayback(id)
+    entrypoint.doPlayback(id)
 
 ##### DO DATABASE RESET #####
 elif mode == "reset":
@@ -35,26 +35,26 @@ elif mode == "reset":
 
 #### DO RESET AUTH #####    
 elif mode == "resetauth":
-    mainModule.resetAuth()
+    entrypoint.resetAuth()
 
 ##### BROWSE EMBY CHANNELS ROOT #####    
 elif  mode == "channels":
-    mainModule.BrowseChannels(id)
+    entrypoint.BrowseChannels(id)
 
 ##### BROWSE EMBY CHANNELS FOLDER #####    
 elif  mode == "channelsfolder":
     folderid = params['folderid']
-    mainModule.BrowseChannels(id,folderid)    
+    entrypoint.BrowseChannels(id,folderid)    
     
 ##### GET NEXTUP EPISODES FOR TAGNAME #####    
 elif  mode == "nextup":
     limit = int(params['limit'])
-    mainModule.getNextUpEpisodes(id, limit)
+    entrypoint.getNextUpEpisodes(id, limit)
 
     
 ##### GET EXTRAFANART FOR LISTITEM #####
 elif "extrafanart" in sys.argv[0]:
-    mainModule.getExtraFanArt()
+    entrypoint.getExtraFanArt()
     
 
 ##### SHOW ADDON SETTINGS #####    
