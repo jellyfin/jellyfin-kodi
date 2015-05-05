@@ -34,11 +34,8 @@ if  mode == "play" or mode == "playfromaddon":
     # Play items via plugin://plugin.video.emby/
     url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json&ImageTypeLimit=1" % id
     result = DownloadUtils().downloadUrl(url)
-    #from from addon needed if the palyback is launched from the addon itself
-    if mode == "playfromaddon":
-        item = PlaybackUtils().PLAY(result, setup="service")
-    else:
-        item = PlaybackUtils().PLAY(result, setup="default")
+    item = PlaybackUtils().PLAY(result, setup="service")
+
 
 elif mode == "reset":
     utils.reset()
@@ -52,7 +49,6 @@ elif mode == "resetauth":
     else:
         xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
 
-    
     
 if  mode == "channels" or mode == "channelsfolder":
     id = params['id']
@@ -195,10 +191,11 @@ if  mode == "channels" or mode == "channelsfolder":
             xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=file, listitem=liz, isFolder=True)
         
         elif isFolder == True:
-            file = _addon_url + "?id=%s&mode=channels&folderid=%s" %(channelId, id)
+            file = _addon_url + "?id=%s&mode=channelsfolder&folderid=%s" %(channelId, id)
             xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=file, listitem=liz, isFolder=True)
         else:
-            file = _addon_url + "?id=%s&mode=playfromaddon"%id
+            file = _addon_url + "?id=%s&mode=play"%id
+            liz.setProperty('IsPlayable', 'true')
             xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=file, listitem=liz)
 
     xbmcplugin.endOfDirectory(handle=int(sys.argv[1]))
@@ -232,6 +229,7 @@ elif  mode == "nextup":
                         plot = item['plot']
                         liz = xbmcgui.ListItem(item['title'])
                         liz.setInfo( type="Video", infoLabels={ "Title": item['title'] })
+                        liz.setProperty('IsPlayable', 'true')
                         liz.setInfo( type="Video", infoLabels={ "duration": str(item['runtime']/60) })
                         liz.setInfo( type="Video", infoLabels={ "Episode": item['episode'] })
                         liz.setInfo( type="Video", infoLabels={ "Season": item['season'] })
@@ -258,7 +256,7 @@ elif  mode == "nextup":
                         for key, value in item['streamdetails'].iteritems():
                             for stream in value:
                                 liz.addStreamInfo( key, stream )
-                        file = item['file'].replace("mode=play","mode=playfromaddon")
+                        #file = item['file'].replace("mode=play","mode=playfromaddon")
                         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=file, listitem=liz)
                         count +=1
                         if count == limit:
@@ -313,6 +311,10 @@ elif "extrafanart" in sys.argv[0]:
     #always do endofdirectory to prevent errors in the logs
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
-else:   
-    xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
+else:
+    #open the addon settings if the addon is called directly from video addons
+    try:
+        if "content_type" in sys.argv[2]:
+            xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
+    except: pass
 

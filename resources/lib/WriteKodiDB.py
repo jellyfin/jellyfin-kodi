@@ -1040,8 +1040,19 @@ class WriteKodiDB():
             #we need to copy over the default items
             import shutil
             shutil.copytree(xbmc.translatePath("special://xbmc/system/library/video"), xbmc.translatePath("special://userdata/library/video"))
-        
-        libraryPath = xbmc.translatePath("special://userdata/library/video/emby/")
+            
+        #create tag node for emby channels
+        nodefile = os.path.join(xbmc.translatePath("special://userdata/library/video"), "emby_channels.xml")
+        if not xbmcvfs.exists(nodefile):
+            root = Element("node", {"order":"20", "type":"folder"})
+            SubElement(root, "label").text = "Emby  - Channels"
+            SubElement(root, "path").text = "plugin://plugin.video.emby/?id=0&mode=channels"
+            SubElement(root, "icon").text = "DefaultMovies.png"               
+            try:
+                ET.ElementTree(root).write(nodefile, xml_declaration=True)
+            except:
+                ET.ElementTree(root).write(nodefile)
+
         
         if type == "movie":
             type = "movies"
@@ -1170,6 +1181,7 @@ class WriteKodiDB():
                     ET.ElementTree(root).write(nodefile, xml_declaration=True)
                 except:
                     ET.ElementTree(root).write(nodefile)
+                    
                 
     def updateBoxsetToKodiLibrary(self, boxsetmovie, boxset, connection, cursor):
         strSet = boxset["Name"]

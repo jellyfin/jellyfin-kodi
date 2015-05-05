@@ -163,6 +163,8 @@ class PlayUtils():
             return '2147483' # max bit rate supported by server (max signed 32bit integer)
             
     def fileExists(self, result):
+        if not result.has_key("Path"):
+            return False
         path=result.get("Path").encode('utf-8')
         if os.path.exists(path) == True:
             return True
