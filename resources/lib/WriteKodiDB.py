@@ -192,12 +192,12 @@ class WriteKodiDB():
         
         #update genres
         self.AddGenresToMedia(movieid, genres, "movie", cursor)
-               
-        #update studios
-        self.AddStudiosToMedia(movieid, studios, "movie", cursor)
         
         #update countries
-        self.AddCountriesToMedia(movieid, MBitem.get("ProductionLocations"), "movie", cursor)
+        self.AddGenresToMedia(movieid, MBitem.get("ProductionLocations"), "movie", cursor)
+        
+        #update studios
+        self.AddStudiosToMedia(movieid, studios, "movie", cursor)
         
         #add streamdetails
         self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), fileid, cursor)
@@ -789,6 +789,60 @@ class WriteKodiDB():
                             peoplesql="INSERT OR REPLACE into writerlinkepisode(idWriter, idEpisode) values(?, ?)"
                             cursor.execute(peoplesql, (actorid,id))
                         
+    def AddGenresToMedia(self, id, genres, mediatype, cursor):
+
+        if genres:
+            
+            kodiVersion = 14
+            if xbmc.getInfoLabel("System.BuildVersion").startswith("15"):
+                kodiVersion = 15
+            
+            for genre in genres:
+
+                if kodiVersion == 15:
+                    genre_id = None
+                    cursor.execute("SELECT genre_id as genre_id FROM genre WHERE name = ?",(genre,))
+                    result = cursor.fetchone()
+                    if result != None:
+                        genre_id = result[0]
+                    #create genre
+                    if genre_id == None:
+                        cursor.execute("select coalesce(max(genre_id),0) as genre_id from genre")
+                        genre_id = cursor.fetchone()[0]
+                        genre_id = genre_id + 1
+                        sql="insert into genre(genre_id, name) values(?, ?)"
+                        cursor.execute(sql, (genre_id,genre))
+                        utils.logMsg("AddGenresToMedia", "Processing : " + genre)
+                    
+                    #assign genre to item    
+                    sql="INSERT OR REPLACE into genre_link(genre_id, media_id, media_type) values(?, ?, ?)"
+                    cursor.execute(sql, (genre_id, id, mediatype))
+                
+                else:
+                    idGenre = None
+                    cursor.execute("SELECT idGenre as idGenre FROM genre WHERE strGenre = ?",(genre,))
+                    result = cursor.fetchone()
+                    if result != None:
+                        idGenre = result[0]
+                    #create genre
+                    if idGenre == None:
+                        cursor.execute("select coalesce(max(idGenre),0) as idGenre from genre")
+                        idGenre = cursor.fetchone()[0]
+                        idGenre = idGenre + 1
+                        sql="insert into genre(idGenre, strGenre) values(?, ?)"
+                        cursor.execute(sql, (idGenre,genre))
+
+                    #assign genre to item    
+                    if mediatype == "movie":
+                        sql="INSERT OR REPLACE into genrelinkmovie(idGenre, idMovie) values(?, ?)"
+                    if mediatype == "tvshow":
+                        sql="INSERT OR REPLACE into genrelinktvshow(idGenre, idShow) values(?, ?)"
+                    if mediatype == "episode":
+                        return
+                    if mediatype == "musicvideo":
+                        sql="INSERT OR REPLACE into genrelinkmusicvideo(idGenre, idMVideo) values(?, ?)"
+                    cursor.execute(sql, (idGenre,id))
+    
     def AddCountriesToMedia(self, id, countries, mediatype, cursor):
         if countries:
             kodiVersion = 14
@@ -838,6 +892,7 @@ class WriteKodiDB():
                         #only movies have a country field
                         return
                         
+    
     def AddStudiosToMedia(self, id, studios, mediatype, cursor):
 
         if studios:
