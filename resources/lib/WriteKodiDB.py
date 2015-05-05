@@ -116,6 +116,8 @@ class WriteKodiDB():
         playcount = 0
         if userData.get("PlayCount") == "1":
             playcount = 1
+        else:
+            playcount = None #playcount must be set to NULL in the db
             
         #### ADD OR UPDATE THE FILE AND PATH ###########
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY
@@ -260,6 +262,8 @@ class WriteKodiDB():
         playcount = 0
         if userData.get("PlayCount") == "1":
             playcount = 1
+        else:
+            playcount = None #playcount must be set to NULL in the db
             
         #### ADD OR UPDATE THE FILE AND PATH ###########
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY
@@ -533,6 +537,8 @@ class WriteKodiDB():
         playcount = None
         if userData.get("PlayCount") == "1":
             playcount = 1
+        else:
+            playcount = None #playcount must be set to NULL in the db
         
         #### ADD OR UPDATE THE FILE AND PATH ###########
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY        
