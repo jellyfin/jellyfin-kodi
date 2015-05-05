@@ -116,7 +116,7 @@ class UserClient(threading.Thread):
 
         username = self.getUsername()
         w_token = self.WINDOW.getProperty('accessToken%s' % username)
-        s_token = self.addon.getSetting('accessToken%s' % username)
+        s_token = self.addon.getSetting('accessToken')
         
         # Verify the window property
         if (w_token != ""):
@@ -272,7 +272,7 @@ class UserClient(threading.Thread):
         if (result != None and accessToken != None):
             self.currUser = username
             userId = result[u'User'][u'Id']
-            addon.setSetting("accessToken%s" % username, accessToken)
+            addon.setSetting("accessToken", accessToken)
             addon.setSetting("userId%s" % username, userId)
             self.logMsg("User Authenticated: %s" % accessToken)
             self.loadCurrUser()
@@ -281,15 +281,16 @@ class UserClient(threading.Thread):
             return
         else:
             self.logMsg("User authentication failed.")
-            addon.setSetting("accessToken%s" % username, "")
+            addon.setSetting("accessToken", "")
             addon.setSetting("userId%s" % username, "")
             xbmcgui.Dialog().ok("Error connecting", "Invalid username or password.")
             
             # Give two attempts at entering password
             self.retry += 1
             if self.retry == 2:
-                self.logMsg("Too many retries. Please restart Kodi.")
+                self.logMsg("Too many retries. You can retry by selecting the option in the addon settings.")
                 self.WINDOW.setProperty("Server_status", "Stop")
+                xbmcgui.Dialog().ok("Error connecting", "Failed to authenticate too many times. You can retry by selecting the option in the addon settings.")
             
             self.auth = False
             return

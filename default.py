@@ -44,7 +44,17 @@ if  mode == "play" or mode == "playfromaddon":
         item = PlaybackUtils().PLAY(result, setup="default")
 
 elif mode == "reset":
+    # User reset local Kodi db
     utils.reset()
+
+elif mode == "resetauth":
+    # User tried login and failed too many times
+    resp = xbmcgui.Dialog().yesno("Warning", "Emby might lock your account if you fail to log in too many times. Proceed anyway?")
+    if resp == 1:
+        xbmc.log("Reset login attempts.")
+        WINDOW.setProperty("Server_status", "Auth")
+    else:
+        xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
 
 
 elif  mode == "nextup":
