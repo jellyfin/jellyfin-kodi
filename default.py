@@ -22,9 +22,6 @@ from DownloadUtils import DownloadUtils
 from ReadEmbyDB import ReadEmbyDB
 from API import API
 
-from PluginFunctions import PluginFunctions
-
-
 try:
     params = utils.get_params(sys.argv[2])
     mode = params['mode']
@@ -46,6 +43,154 @@ if  mode == "play" or mode == "playfromaddon":
 elif mode == "reset":
     utils.reset()
 
+if  mode == "channels" or mode == "channelsfolder":
+    id = params['id']
+    
+    if mode == "channelsfolder":
+        folderid = params['folderid']
+        url = "{server}/mediabrowser/Channels/" + id + "/Items?userid={UserId}&folderid=" + folderid + "&format=json"
+    else:
+        if id == "0":
+            url = "{server}/mediabrowser/Channels?{UserId}&format=json"
+        else:
+            url = "{server}/mediabrowser/Channels/" + id + "/Items?userid={UserId}&format=json"
+    
+    pluginhandle = int(sys.argv[1])
+    _addon_id   =   int(sys.argv[1])
+    _addon_url  =   sys.argv[0]
+    
+    results = DownloadUtils().downloadUrl(url)
+    result = results.get("Items")
+    if(result == None):
+        result = []
+
+    item_count = len(result)
+    current_item = 1;
+        
+    for item in result:
+        print item
+        id=str(item.get("Id")).encode('utf-8')
+        type=item.get("Type").encode('utf-8')
+        
+        
+        if(item.get("Name") != None):
+            tempTitle = item.get("Name")
+            tempTitle=tempTitle.encode('utf-8')
+        else:
+            tempTitle = "Missing Title"
+            
+        if type=="ChannelFolderItem":
+            isFolder = True
+        else:
+            isFolder = False
+        item_type = str(type).encode('utf-8')
+        
+        if(item.get("ChannelId") != None):
+           channelId = str(item.get("ChannelId")).encode('utf-8')
+        
+        channelName = ''   
+        if(item.get("ChannelName") != None):
+           channelName = item.get("ChannelName").encode('utf-8')   
+           
+        if(item.get("PremiereDate") != None):
+            premieredatelist = (item.get("PremiereDate")).split("T")
+            premieredate = premieredatelist[0]
+        else:
+            premieredate = ""
+        
+        mediaStreams=API().getMediaStreams(item, True)
+                
+        people = API().getPeople(item)
+        
+        # Process Genres
+        genre = API().getGenre(item)
+                
+        # Process UserData
+        userData = item.get("UserData")
+        PlaybackPositionTicks = '100'
+        overlay = "0"
+        favorite = "False"
+        seekTime = 0
+        if(userData != None):
+            if userData.get("Played") != True:
+                overlay = "7"
+                watched = "true"
+            else:
+                overlay = "6"
+                watched = "false"
+            if userData.get("IsFavorite") == True:
+                overlay = "5"
+                favorite = "True"
+            else:
+                favorite = "False"
+            if userData.get("PlaybackPositionTicks") != None:
+                PlaybackPositionTicks = str(userData.get("PlaybackPositionTicks"))
+                reasonableTicks = int(userData.get("PlaybackPositionTicks")) / 1000
+                seekTime = reasonableTicks / 10000
+        
+        playCount = 0
+        if(userData != None and userData.get("Played") == True):
+            playCount = 1
+        # Populate the details list
+        details={'title'        : tempTitle,
+                 'channelname'  : channelName,
+                 'plot'         : item.get("Overview"),
+                 'Overlay'      : overlay,
+                 'playcount'    : str(playCount)}
+        
+        if item.get("Type") == "ChannelVideoItem":
+            xbmcplugin.setContent(pluginhandle, 'movies')
+        elif item.get("Type") == "ChannelAudioItem":
+            xbmcplugin.setContent(pluginhandle, 'songs')
+
+        # Populate the extraData list
+        extraData={'thumb'        : API().getArtwork(item, "Primary")  ,
+                   'fanart_image' : API().getArtwork(item, "Backdrop") ,
+                   'poster'       : API().getArtwork(item, "poster") , 
+                   'tvshow.poster': API().getArtwork(item, "tvshow.poster") ,
+                   'banner'       : API().getArtwork(item, "Banner") ,
+                   'clearlogo'    : API().getArtwork(item, "Logo") ,
+                   'discart'      : API().getArtwork(item, "Disc") ,
+                   'clearart'     : API().getArtwork(item, "Art") ,
+                   'landscape'    : API().getArtwork(item, "Thumb") ,
+                   'id'           : id ,
+                   'rating'       : item.get("CommunityRating"),
+                   'year'         : item.get("ProductionYear"),
+                   'premieredate' : premieredate,
+                   'genre'        : genre,
+                   'playcount'    : str(playCount),
+                   'itemtype'     : item_type}
+                   
+        if extraData['thumb'] == '':
+            extraData['thumb'] = extraData['fanart_image']
+            
+        liz = xbmcgui.ListItem(tempTitle)
+
+        artTypes=['poster', 'tvshow.poster', 'fanart_image', 'clearlogo', 'discart', 'banner', 'clearart', 'landscape', 'small_poster', 'tiny_poster', 'medium_poster','small_fanartimage', 'medium_fanartimage', 'medium_landscape', 'fanart_noindicators']
+        
+        for artType in artTypes:
+            imagePath=str(extraData.get(artType,''))
+            liz=PlaybackUtils().setArt(liz,artType, imagePath)
+        
+        liz.setThumbnailImage(API().getArtwork(item, "Primary"))
+        liz.setIconImage('DefaultTVShows.png')
+
+        extraData['mode'] = "channels"
+        
+        print "type-->" + type
+        
+        if type=="Channel":
+            file = _addon_url + "?id=%s&mode=channels"%id
+            xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=file, listitem=liz, isFolder=True)
+        
+        elif isFolder == True:
+            file = _addon_url + "?id=%s&mode=channels&folderid=%s" %(channelId, id)
+            xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=file, listitem=liz, isFolder=True)
+        else:
+            file = _addon_url + "?id=%s&mode=playfromaddon"%id
+            xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=file, listitem=liz)
+
+    xbmcplugin.endOfDirectory(handle=int(sys.argv[1]))
 
 elif  mode == "nextup":
     #if the addon is called with nextup parameter, we return the nextepisodes list of the given tagname
