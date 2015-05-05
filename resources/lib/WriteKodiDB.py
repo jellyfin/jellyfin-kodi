@@ -194,7 +194,7 @@ class WriteKodiDB():
         self.AddGenresToMedia(movieid, genres, "movie", cursor)
         
         #update countries
-        self.AddGenresToMedia(movieid, MBitem.get("ProductionLocations"), "movie", cursor)
+        self.AddCountriesToMedia(movieid, MBitem.get("ProductionLocations"), "movie", cursor)
         
         #update studios
         self.AddStudiosToMedia(movieid, studios, "movie", cursor)
