@@ -241,7 +241,6 @@ class ReadEmbyDB():
                 if (result == ""):
                     return []
                 newViews = newViews[u'Items']
-                print str(newViews)
                 for newView in newViews:
                     # There are multiple nodes in here like 'Latest', 'NextUp' - below we grab the full node.
                     if newView[u'CollectionType'] != None:

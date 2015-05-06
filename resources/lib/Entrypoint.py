@@ -126,7 +126,7 @@ def BrowseChannels(id, folderid=None):
     _addon_id   =   int(sys.argv[1])
     _addon_url  =   sys.argv[0]
     
-    
+    xbmcplugin.setContent(int(sys.argv[1]), 'files')
     if folderid:
         url = "{server}/mediabrowser/Channels/" + id + "/Items?userid={UserId}&folderid=" + folderid + "&format=json"
     else:
@@ -375,3 +375,34 @@ def getExtraFanArt():
     #always do endofdirectory to prevent errors in the logs
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
+
+def addDirectoryItem(label, path, folder=True):
+    li = xbmcgui.ListItem(label, path=path)
+    li.setThumbnailImage("special://home/addons/plugin.video.emby/icon.png")
+    li.setArt({"fanart":"special://home/addons/plugin.video.emby/fanart.jpg"})
+    li.setArt({"landscape":"special://home/addons/plugin.video.emby/fanart.jpg"})
+    xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=path, listitem=li, isFolder=folder)    
+    
+# if the addon is called without parameters we show the listing...    
+def doMainListing():
+    
+    xbmcplugin.setContent(int(sys.argv[1]), 'files')    
+    #get emby nodes from the window props
+    embyProperty = WINDOW.getProperty("Emby.nodes.total")
+    if embyProperty:
+        totalNodes = int(embyProperty)
+        for i in range(totalNodes):
+            path = WINDOW.getProperty("Emby.nodes.%s.index" %str(i))
+            if not path:
+                path = WINDOW.getProperty("Emby.nodes.%s.content" %str(i))
+            label = WINDOW.getProperty("Emby.nodes.%s.title" %str(i))
+            if path:
+                addDirectoryItem(label, path)
+    
+    # some extra entries for settinsg and stuff. TODO --> localize the labels
+    addDirectoryItem("Settings", "plugin://plugin.video.emby/?mode=settings")
+    addDirectoryItem("Add user to session", "plugin://plugin.video.emby/?mode=adduser")
+    addDirectoryItem("Perform full resync", "plugin://plugin.video.emby/?mode=reset")
+    
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))                
+                    

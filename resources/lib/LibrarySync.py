@@ -327,8 +327,6 @@ class LibrarySync():
             else:
                 # If there are changes to the item, perform a full sync of the item
                 if kodiEpisode[2] != API().getChecksum(item):
-                    print "previous checksum--> " + kodiEpisode[2]
-                    print "new checksum--> " + API().getChecksum(item)
                     WriteKodiDB().addOrUpdateEpisodeToKodiLibrary(item["Id"], kodiShowId, connection, cursor)
         
         #### EPISODES: PROCESS DELETES #####

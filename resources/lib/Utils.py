@@ -189,7 +189,6 @@ def reset():
     rows = cursor.fetchall()
     for row in rows:
         tableName = row[0]
-        print tableName
         if(tableName != "version"):
             cursor.execute("DELETE FROM " + tableName)
     connection.commit()

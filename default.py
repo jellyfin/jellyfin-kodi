@@ -39,7 +39,11 @@ elif mode == "resetauth":
 
 elif mode == "adduser":
     entrypoint.addUser()
+    
+elif mode == "settings":
+    xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
 
+    
 ##### BROWSE EMBY CHANNELS ROOT #####    
 elif  mode == "channels":
     entrypoint.BrowseChannels(id)
@@ -60,11 +64,8 @@ elif "extrafanart" in sys.argv[0]:
     entrypoint.getExtraFanArt()
     
 
-##### SHOW ADDON SETTINGS #####    
+##### SHOW ADDON NODES LISTING #####    
 else:
-    #open the addon settings if the addon is called directly from video addons
-    try:
-        if "content_type" in sys.argv[2]:
-            xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
-    except: pass
+    entrypoint.doMainListing()
+
 

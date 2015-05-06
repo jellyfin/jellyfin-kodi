@@ -38,6 +38,8 @@ class VideoNodes():
         root = Element("node", {"order":"0"})
         SubElement(root, "label").text = "Emby - " + tagname
         SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+        path = "library://video/Emby - %s/"%tagname
+        WINDOW.setProperty("Emby.nodes.%s.index" %str(windowPropId),path)
         try:
             ET.ElementTree(root).write(nodefile, xml_declaration=True)
         except:
