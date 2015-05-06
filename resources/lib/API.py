@@ -101,8 +101,10 @@ class API():
                 for mediaStream in MediaStreams:
                     if(mediaStream.get("Type") == "Video"):
                         videocodec = mediaStream.get("Codec")
-                        height = int(mediaStream.get("Height"))
-                        width = int(mediaStream.get("Width"))
+                        if mediaStream.get("Height"):
+                            height = int(mediaStream.get("Height"))
+                        if mediaStream.get("Width"):
+                            width = int(mediaStream.get("Width"))
                         aspectratio = mediaStream.get("AspectRatio")
                         Video3DFormat = item.get("Video3DFormat")
                         if aspectratio != None and len(aspectratio) >= 3:
