@@ -122,8 +122,13 @@ class WriteKodiDB():
         #### ADD OR UPDATE THE FILE AND PATH ###########
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY
         path = "plugin://plugin.video.emby/movies/%s/" % MBitem["Id"]
-        filename = "plugin://plugin.video.emby/movies/%s/?id=%s&mode=play" % (MBitem["Id"],MBitem["Id"])
-        
+        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
+        selectAction = addonSettings.getSetting('selectAction')
+        if(selectAction == "1"):
+            filename = "plugin://plugin.video.emby/movies/%s/?id=%s&mode=info" % (MBitem["Id"],MBitem["Id"])
+        else:
+            filename = "plugin://plugin.video.emby/movies/%s/?id=%s&mode=play" % (MBitem["Id"],MBitem["Id"])
+                  
         #create the path
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
         result = cursor.fetchone()
@@ -543,8 +548,14 @@ class WriteKodiDB():
         #### ADD OR UPDATE THE FILE AND PATH ###########
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY        
         path = "plugin://plugin.video.emby/tvshows/" + MBitem["SeriesId"] + "/"
-        filename = "plugin://plugin.video.emby/tvshows/" + MBitem["SeriesId"] + "/?id=" + MBitem["Id"] + "&mode=play"
+        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
+        selectAction = addonSettings.getSetting('selectAction')
+        if(selectAction == "1"):
+            filename = "plugin://plugin.video.emby/tvshows/" + MBitem["SeriesId"] + "/?id=" + MBitem["Id"] + "&mode=info"
+        else:
+            filename = "plugin://plugin.video.emby/tvshows/" + MBitem["SeriesId"] + "/?id=" + MBitem["Id"] + "&mode=play"
         
+            
         #create the new path - return id if already exists  
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
         result = cursor.fetchone()

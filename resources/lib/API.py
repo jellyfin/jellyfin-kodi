@@ -2,6 +2,7 @@
 # This class helps translate more complex cases from the MediaBrowser API to the XBMC API
 
 from datetime import datetime
+from random import randrange
 import xbmc
 import xbmcgui
 import xbmcaddon

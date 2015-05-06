@@ -17,6 +17,8 @@ from PlaybackUtils import PlaybackUtils
 from DownloadUtils import DownloadUtils
 from ReadEmbyDB import ReadEmbyDB
 from API import API
+from ItemInfo import ItemInfo
+from PersonInfo import PersonInfo
 
 
 ##### Play items via plugin://plugin.video.emby/ #####
@@ -25,6 +27,29 @@ def doPlayback(id):
     result = DownloadUtils().downloadUrl(url)
     item = PlaybackUtils().PLAY(result, setup="default")
 
+
+##### Show the item info window #####
+def showInfo(id):
+    xbmcplugin.endOfDirectory(int(sys.argv[1]), cacheToDisc=False)
+    addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
+    infoPage = ItemInfo("ItemInfo.xml", addonSettings.getAddonInfo('path'), "default", "720p")  
+    infoPage.setId(id)
+    infoPage.doModal()
+    del infoPage
+    
+
+def showPersonInfo(id,basename):
+    xbmcplugin.endOfDirectory(int(sys.argv[1]), cacheToDisc=False)
+    addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
+    infoPage = PersonInfo("PersonInfo.xml", addonSettings.getAddonInfo('path'), "default", "720p") 
+    infoPage.setPersonName(basename)
+    infoPage.doModal()
+    
+    if(infoPage.showMovies == True):
+        xbmc.log("RUNNING_PLUGIN: " + infoPage.pluginCastLink)
+        xbmc.executebuiltin(infoPage.pluginCastLink)    
+    
+    del infoPage
 
 #### DO RESET AUTH #####    
 def resetAuth():
