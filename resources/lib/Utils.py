@@ -153,12 +153,12 @@ def reset():
 
     #cleanup video nodes
     import shutil
-    path = "special://userdata/library/video/"
+    path = "special://profile/library/video/"
     if xbmcvfs.exists(path):
         allDirs, allFiles = xbmcvfs.listdir(path)
         for dir in allDirs:
             if dir.startswith("Emby "):
-                shutil.rmtree(xbmc.translatePath("special://userdata/library/video/" + dir))
+                shutil.rmtree(xbmc.translatePath("special://profile/library/video/" + dir))
         for file in allFiles:
                 if file.startswith("emby"):
                     xbmcvfs.delete(path + file)
@@ -215,7 +215,7 @@ def reset():
 def buildVideoNodeForView(tagname, type):
     #this method will build a video node for a particular Emby view (= tag in kodi)
     
-    libraryPath = xbmc.translatePath("special://userdata/library/video/Emby - %s/" %tagname)
+    libraryPath = xbmc.translatePath("special://profile/library/video/Emby - %s/" %tagname)
     
     if not xbmcvfs.exists(libraryPath):
         #create tag node - index
@@ -375,26 +375,26 @@ def buildVideoNodesListing():
     try:
     
         # the library path doesn't exist on all systems
-        if not xbmcvfs.exists("special://userdata/library/"):
-            xbmcvfs.mkdir("special://userdata/library") 
-        if not xbmcvfs.exists("special://userdata/library/video/"):
+        if not xbmcvfs.exists("special://profile/library/"):
+            xbmcvfs.mkdir("special://profile/library") 
+        if not xbmcvfs.exists("special://profile/library/video/"):
             #we need to copy over the default items
             import shutil
-            shutil.copytree(xbmc.translatePath("special://xbmc/system/library/video"), xbmc.translatePath("special://userdata/library/video"))
+            shutil.copytree(xbmc.translatePath("special://xbmc/system/library/video"), xbmc.translatePath("special://profile/library/video"))
         
         #always cleanup existing Emby video nodes first because we don't want old stuff to stay in there
-        path = "special://userdata/library/video/"
+        path = "special://profile/library/video/"
         if xbmcvfs.exists(path):
             allDirs, allFiles = xbmcvfs.listdir(path)
             for dir in allDirs:
                 if dir.startswith("Emby "):
-                    shutil.rmtree(xbmc.translatePath("special://userdata/library/video/" + dir))
+                    shutil.rmtree(xbmc.translatePath("special://profile/library/video/" + dir))
             for file in allFiles:
                 if file.startswith("emby"):
                     xbmcvfs.delete(path + file)
         
         #create tag node for emby channels
-        nodefile = os.path.join(xbmc.translatePath("special://userdata/library/video"), "emby_channels.xml")
+        nodefile = os.path.join(xbmc.translatePath("special://profile/library/video"), "emby_channels.xml")
         if not xbmcvfs.exists(nodefile):
             root = Element("node", {"order":"1", "type":"folder"})
             SubElement(root, "label").text = "Emby  - " + language(30173)
@@ -407,7 +407,7 @@ def buildVideoNodesListing():
                 ET.ElementTree(root).write(nodefile)
                
         #create tag node - favorite shows
-        nodefile = os.path.join(xbmc.translatePath("special://userdata/library/video"),"emby_favorite_shows.xml")
+        nodefile = os.path.join(xbmc.translatePath("special://profile/library/video"),"emby_favorite_shows.xml")
         if not xbmcvfs.exists(nodefile):
             root = Element("node", {"order":"1", "type":"filter"})
             SubElement(root, "label").text = "Emby - " + language(30181)
@@ -423,7 +423,7 @@ def buildVideoNodesListing():
                 ET.ElementTree(root).write(nodefile)
         
         #create tag node - favorite movies
-        nodefile = os.path.join(xbmc.translatePath("special://userdata/library/video"),"emby_favorite_movies.xml")
+        nodefile = os.path.join(xbmc.translatePath("special://profile/library/video"),"emby_favorite_movies.xml")
         if not xbmcvfs.exists(nodefile):
             root = Element("node", {"order":"1", "type":"filter"})
             SubElement(root, "label").text = "Emby - " + language(30180)
