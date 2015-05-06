@@ -89,6 +89,7 @@ def addUser():
                     url = "{server}/mediabrowser/Sessions/%s/Users/%s" % (sessionId, selected_userId)
                     postdata = {}
                     doUtils.downloadUrl(url, postBody=postdata, type="DELETE")
+                    xbmcgui.Dialog().notification("Success!", "%s removed from viewing session" % selected, time=1000)
                     return
                 else:
                     return
@@ -113,9 +114,11 @@ def addUser():
             url = "{server}/mediabrowser/Sessions/%s/Users/%s" % (sessionId, selected_userId)
             postdata = {}
             doUtils.downloadUrl(url, postBody=postdata, type="POST")
+            xbmcgui.Dialog().notification("Success!", "%s added to viewing session" % selected, time=1000)
 
     except:
         xbmc.log("Failed to add user to session.")
+        xbmcgui.Dialog().notification("Error", "Unable to add/remove user from the session.", xbmcgui.NOTIFICATION_ERROR)
 
 ##### BROWSE EMBY CHANNELS #####    
 def BrowseChannels(id, folderid=None):
