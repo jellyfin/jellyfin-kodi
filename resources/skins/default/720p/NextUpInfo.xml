@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window>
+	<defaultcontrol always="true">3012</defaultcontrol>
+	<zorder>0</zorder>
+	<controls>
+		<control type="group">
+			<control type="image">
+				<left>0</left>
+				<top>-150</top>
+				<width>1280</width>
+				<height>256</height>
+				<texture flipy="true" border="1">HomeNowPlayingBack.png</texture>
+			</control>
+			<control type="label" id="1">
+				<description>Clock label</description>
+				<left>450</left>
+				<top>5</top>
+				<width>800</width>
+				<height>25</height>
+				<align>right</align>
+				<aligny>center</aligny>
+				<font>font13</font>
+				<textcolor>white</textcolor>
+				<shadowcolor>black</shadowcolor>
+				<label>$INFO[System.Time]</label>
+				<animation effect="slide" start="0,0" end="-70,0" time="0" condition="Window.IsVisible(VideoOSD)">conditional</animation>
+			</control>
+			<control type="image">
+				<left>0</left>
+				<top>230r</top>
+				<width>1280</width>
+				<height>230</height>
+				<texture border="1">HomeNowPlayingBack.png</texture>
+			</control>
+			<control type="image" id="3009">
+				<description>cover image</description>
+				<left>20</left>
+				<top>350r</top>
+				<width>300</width>
+				<height>330</height>
+			</control>
+			<control type="image" id="3006">
+				<description>clearart</description>
+				<visible>false</visible>
+			</control>
+			<control type="group" id="1">
+				<left>330</left>
+				<top>185r</top>
+				<control type="label" id="1">
+					<description>TV Show label</description>
+					<left>20</left>
+					<top>30</top>
+					<width>910</width>
+					<height>25</height>
+					<align>left</align>
+					<font>font12</font>
+					<label>$INFO[Control.GetLabel(3002),Up Next... ,][COLOR=orange]$INFO[Control.GetLabel(3000), ,][/COLOR]</label>
+					<textcolor>grey2</textcolor>
+					<shadowcolor>black</shadowcolor>
+					<visible>VideoPlayer.Content(Episodes)</visible>
+				</control>
+				<control type="label" description="episode/season info" id="3002">
+					<width>100%</width>
+					<top>0</top>
+					<left>175</left>
+					<height>40</height>
+					<visible>false</visible>
+				</control>
+				<control type="label" description="Title" id="3000">
+					<width>100%</width>
+					<left>267</left>
+					<top>0</top>
+					<height>40</height>
+					<visible>false</visible>
+				</control>
+				<control type="textbox" id="3001">
+					<description>text</description>
+					<left>30</left>
+					<top>62</top>
+					<width>550</width>
+					<height>98</height>
+					<align>left</align>
+					<label>-</label>
+					<font>font13</font>
+					<autoscroll time="3000" delay="4000" repeat="5000">true</autoscroll>
+					<visible>false</visible>
+				</control>
+				<control type="grouplist" id="1">
+					<left>20</left>
+					<top>60</top>
+					<width>910</width>
+					<height>35</height>
+					<itemgap>5</itemgap>
+					<orientation>horizontal</orientation>
+					<control type="label" id="3003" description="rating">
+						<width>100%</width>
+						<top>50</top>
+						<height>40</height>
+						<visible>false</visible>
+					</control>
+					<control type="label" id="3004" description="year/runtime">
+						<width>100%</width>
+						<top>50</top>
+						<height>40</height>
+						<scroll>false</scroll>
+						<visible>false</visible>
+					</control>
+					<control type="label" id="1">
+						<width min="10" max="520">auto</width>
+						<height>30</height>
+						<font>font30</font>
+						<align>left</align>
+						<aligny>center</aligny>
+						<label>$INFO[Control.GetLabel(3003)]$INFO[Control.GetLabel(3004), ,]</label>
+						<textcolor>grey</textcolor>
+						<scroll>true</scroll>
+					</control>
+					<control type="button" id="3012">
+						<description>Watch now button</description>
+						<width>200</width>
+						<height>40</height>
+						<label>Watch Now</label>
+						<font>font12_title</font>
+						<onleft>3013</onleft>
+						<onright>3013</onright>
+					</control>
+					<control type="button" id="3013">
+						<description>cancel button</description>
+						<width>200</width>
+						<height>40</height>
+						<label>222</label>
+						<font>font12_title</font>
+						<onleft>3012</onleft>
+						<onright>3012</onright>
+					</control>
+				</control>
+				<control type="label" id="1">
+					<left>0</left>
+					<top>120</top>
+					<width>910</width>
+					<height>25</height>
+					<label>$INFO[Player.TimeRemaining(ss),Press cancel to stop automatic play of next episode , seconds remaining]</label>
+					<align>center</align>
+					<aligny>center</aligny>
+					<font>font12</font>
+					<textcolor>grey</textcolor>
+					<scroll>true</scroll>
+					<visible>!Window.IsVisible(VideoOSD) + !VideoPlayer.Content(LiveTV)</visible>
+					<animation effect="fade" time="200">VisibleChange</animation>
+				</control>
+			</control>
+			<control type="group" id="1">
+				<left>330</left>
+				<top>95r</top>
+				<visible>!VideoPlayer.Content(LiveTV) | [VideoPlayer.Content(LiveTV) + VideoPlayer.HasEpg]</visible>
+				<control type="label" id="1">
+					<visible>!VideoPlayer.Content(LiveTV)</visible>
+					<left>0</left>
+					<top>0</top>
+					<width>100</width>
+					<height>40</height>
+					<font>font13</font>
+					<align>left</align>
+					<aligny>center</aligny>
+					<label>$INFO[Player.Time(hh:mm:ss)]</label>
+				</control>
+				<control type="progress" id="1">
+					<description>ProgressbarCache</description>
+					<left>100</left>
+					<top>15</top>
+					<width>720</width>
+					<height>16</height>
+					<info>Player.ProgressCache</info>
+					<midtexture border="6,0,6,0">OSDProgressMidLight.png</midtexture>
+				</control>
+				<control type="progress" id="1">
+					<description>Progressbar</description>
+					<left>100</left>
+					<top>15</top>
+					<width>720</width>
+					<height>16</height>
+					<info>Player.Progress</info>
+				</control>
+				<control type="label" id="1">
+					<visible>!VideoPlayer.Content(LiveTV)</visible>
+					<left>820</left>
+					<top>0</top>
+					<width>100</width>
+					<height>40</height>
+					<font>font13</font>
+					<align>right</align>
+					<aligny>center</aligny>
+					<label>$INFO[Player.Duration(hh:mm:ss)]</label>
+				</control>
+			</control>
+		</control>
+		<!-- codec info -->
+		<control type="group" id="0">
+			<left>0</left>
+			<top>20</top>
+			<animation effect="fade" time="200">VisibleChange</animation>
+			<control type="image">
+				<description>media info background image</description>
+				<left>0</left>
+				<top>0</top>
+				<width>1280</width>
+				<height>160</height>
+				<texture>black-back.png</texture>
+			</control>
+			<control type="label" id="10">
+				<description>row 1 label</description>
+				<left>50</left>
+				<top>10</top>
+				<width>1180</width>
+				<height>30</height>
+				<align>left</align>
+				<aligny>center</aligny>
+				<font>font12</font>
+				<label>-</label>
+			</control>
+			<control type="label" id="11">
+				<description>row 2 label</description>
+				<left>50</left>
+				<top>55</top>
+				<width>1180</width>
+				<height>30</height>
+				<align>left</align>
+				<aligny>center</aligny>
+				<font>font12</font>
+				<label>-</label>
+			</control>
+			<control type="label" id="12">
+				<description>row 3 label</description>
+				<left>50</left>
+				<top>100</top>
+				<width>1180</width>
+				<height>45</height>
+				<align>left</align>
+				<aligny>center</aligny>
+				<font>font12</font>
+				<label>-</label>
+			</control>
+		</control>
+	</controls>
+</window>

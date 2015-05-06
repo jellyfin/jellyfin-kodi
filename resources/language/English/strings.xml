@@ -245,6 +245,11 @@
     <string id="30243">Enable HTTPS</string>
     <string id="30245">Force Transcoding Codecs</string>
     
+    <string id="30246">Enable Netflix style next up notification</string>
+    <string id="30247">  - The number of seconds before the end to show the notification</string>
+    <string id="30248">Show Emby Info dialog on play/select action</string>
+    
+    
 	<!-- Default views -->
     <string id="30300">Active</string>              
     <string id="30301">Clear Settings</string>              

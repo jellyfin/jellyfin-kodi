@@ -21,6 +21,7 @@ try:
     params = utils.get_params(sys.argv[2])
     mode = params['mode']
     id = params.get('id', None)
+    name = params.get('name',None)
 except:
     params = {}
     mode = None
@@ -28,6 +29,12 @@ except:
 ##### Play items via plugin://plugin.video.emby/ #####
 if  mode == "play":
     entrypoint.doPlayback(id)
+    
+elif mode == "info":
+    entrypoint.showInfo(id)
+    
+elif mode == "person":
+    entrypoint.showPersonInfo(id,name)
 
 ##### DO DATABASE RESET #####
 elif mode == "reset":

@@ -18,6 +18,7 @@ from LibrarySync import LibrarySync
 from  PlaybackUtils import PlaybackUtils
 from ReadEmbyDB import ReadEmbyDB
 from API import API
+from NextUpInfo import NextUpInfo
 librarySync = LibrarySync()
 
 # service class for playback monitoring
@@ -348,29 +349,23 @@ class Player( xbmc.Player ):
                         seasonId = MB3Episode["SeasonId"]
                         url = "{server}/mediabrowser/Users/{UserId}/Items?ParentId=%s&ImageTypeLimit=1&Limit=1&SortBy=SortName&SortOrder=Ascending&Filters=IsUnPlayed&IncludeItemTypes=Episode&IsVirtualUnaired=false&Recursive=true&IsMissing=False&format=json" % seasonId
                         jsonData = self.doUtils.downloadUrl(url)     
-                    
                         if(jsonData != ""):
                             seasonData = jsonData
-                    
                             if seasonData.get("Items") != None:
                                 item = seasonData.get("Items")[0]
-                                pDialog.create("Auto Play next episode", str(item.get("ParentIndexNumber")) + "x" + str(item.get("IndexNumber")) + ". " + item["Name"] + " found","Cancel to stop automatic play")
-                                count = 0
-                                while(pDialog.iscanceled()==False and count < 10):
-                                    xbmc.sleep(1000)
-                                    count += 1
-                                    progress = count * 10
-                                    remainingsecs = 10 - count
-                                    pDialog.update(progress, str(item.get("ParentIndexNumber")) + "x" + str(item.get("IndexNumber")) + ". " + item["Name"] + " found","Cancel to stop automatic play", str(remainingsecs) + " second(s) until auto dismiss")
-                                
-                                pDialog.close()
-                        
-                            if pDialog.iscanceled()==False:
+                                item = ReadEmbyDB().getItem(item["Id"])
+                                nextUpPage = NextUpInfo("NextUpInfo.xml", addonSettings.getAddonInfo('path'), "default", "720p")
+                                nextUpPage.setItem(item)
                                 playTime = xbmc.Player().getTime()
                                 totalTime = xbmc.Player().getTotalTime()
-                                while xbmc.Player().isPlaying() and (totalTime-playTime > 2):
-                                    xbmc.sleep(500)
+                                nextUpPage.show()
+                                playTime = xbmc.Player().getTime()
+                                totalTime = xbmc.Player().getTotalTime()
+                                while xbmc.Player().isPlaying() and (totalTime-playTime > 1) and not nextUpPage.isCancel() and not nextUpPage.isWatchNow():
+                                    xbmc.sleep(100)
                                     playTime = xbmc.Player().getTime()
                                     totalTime = xbmc.Player().getTotalTime()
-        
-                                PlaybackUtils().PLAYAllEpisodes(seasonData.get("Items"))  
+                                nextUpPage.close()
+                                if not nextUpPage.isCancel():
+                                    PlaybackUtils().PLAY(item)
+                            
