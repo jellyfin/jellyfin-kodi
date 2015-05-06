@@ -49,8 +49,13 @@ class ReadKodiDB():
         if not connection:
             connection = utils.KodiSQL()
             cursor = connection.cursor()
+            closeCon = True
+        else:
+            closeCon = False
         cursor.execute("SELECT emby_id FROM emby WHERE media_type=? AND kodi_id=?",(type,id))
         result = cursor.fetchone()
+        if closeCon:
+            connection.close()
         if result:
             return result[0]
         else:
