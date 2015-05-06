@@ -13,6 +13,7 @@
 		<setting type="sep" />
 		<setting id="accessToken" type="text" visible="false" default="" />
 		<setting label="[COLOR yellow]Reset login attempts[/COLOR]" type="action" visible="eq(-1,) + !eq(-9,)" enable="true" action="RunPlugin(plugin://plugin.video.emby?mode=resetauth)" option="close" />
+		<setting label="Add/Remove additional user to the session" type="action" visible="true" action="RunPlugin(plugin://plugin.video.emby?mode=adduser)" option="close" />
 	</category>
 	<category label="Sync Options">
 	<!--  	<setting id="syncMovieBoxSets" type="bool" label="30238" default="true" visible="true" enable="true" /> -->

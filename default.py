@@ -37,6 +37,9 @@ elif mode == "reset":
 elif mode == "resetauth":
     entrypoint.resetAuth()
 
+elif mode == "adduser":
+    entrypoint.addUser()
+
 ##### BROWSE EMBY CHANNELS ROOT #####    
 elif  mode == "channels":
     entrypoint.BrowseChannels(id)

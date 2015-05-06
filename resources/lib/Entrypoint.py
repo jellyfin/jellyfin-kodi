@@ -12,6 +12,7 @@ import urllib
 WINDOW = xbmcgui.Window(10000)
 
 import Utils as utils
+from ClientInformation import ClientInformation
 from PlaybackUtils import PlaybackUtils
 from DownloadUtils import DownloadUtils
 from ReadEmbyDB import ReadEmbyDB
@@ -34,6 +35,87 @@ def resetAuth():
         WINDOW.setProperty("Server_status", "Auth")
     else:
         xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
+
+### ADD ADDITIONAL USERS ###
+def addUser():
+
+    doUtils = DownloadUtils()
+    clientInfo = ClientInformation()
+    currUser = WINDOW.getProperty("currUser")
+    deviceId = clientInfo.getMachineId()
+    deviceName = clientInfo.getDeviceName()
+
+    # Get session
+    url = "{server}/mediabrowser/Sessions?DeviceId=%s" % deviceId
+    result = doUtils.downloadUrl(url)
+    
+    try:
+        sessionId = result[0][u'Id']
+        additionalUsers = result[0][u'AdditionalUsers']
+        # Add user to session
+        userlist = {}
+        users = []
+        url = "{server}/mediabrowser/Users?IsDisabled=false"
+        result = doUtils.downloadUrl(url)
+
+        # pull the list of users
+        for user in result:
+            name = user[u'Name']
+            userId = user[u'Id']
+            if currUser not in name:
+                userlist[name] = userId
+                users.append(name)
+
+        # Display dialog if there's additional users
+        if additionalUsers:
+
+            option = xbmcgui.Dialog().select("Add/Remove user from the session", ["Add user", "Remove user"])
+            # Users currently in the session
+            additionalUserlist = {}
+            additionalUsername = []
+            # Users currently in the session
+            for user in additionalUsers:
+                name = user[u'UserName']
+                userId = user[u'UserId']
+                additionalUserlist[name] = userId
+                additionalUsername.append(name)
+
+            if option == 1:
+                # User selected Remove user
+                resp = xbmcgui.Dialog().select("Remove user from the session", additionalUsername)
+                if resp > -1:
+                    selected = additionalUsername[resp]
+                    selected_userId = additionalUserlist[selected]
+                    url = "{server}/mediabrowser/Sessions/%s/Users/%s" % (sessionId, selected_userId)
+                    postdata = {}
+                    doUtils.downloadUrl(url, postBody=postdata, type="DELETE")
+                    return
+                else:
+                    return
+
+            elif option == 0:
+                # User selected Add user
+                for adduser in additionalUsername:
+                    xbmc.log(str(adduser))
+                    users.remove(adduser)
+
+            elif option < 0:
+                # User cancelled
+                return
+
+        # Subtract any additional users
+        xbmc.log("Displaying list of users: %s" % users)
+        resp = xbmcgui.Dialog().select("Add user to the session", users)
+        # post additional user
+        if resp > -1:
+            selected = users[resp]
+            selected_userId = userlist[selected]
+            url = "{server}/mediabrowser/Sessions/%s/Users/%s" % (sessionId, selected_userId)
+            postdata = {}
+            doUtils.downloadUrl(url, postBody=postdata, type="POST")
+
+    except:
+        xbmc.log("Failed to add user to session.")
 
 ##### BROWSE EMBY CHANNELS #####    
 def BrowseChannels(id, folderid=None):
