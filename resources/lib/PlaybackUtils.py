@@ -59,8 +59,14 @@ class PlaybackUtils():
         playurl = PlayUtils().getPlayUrl(server, id, result)
         thumbPath = API().getArtwork(result, "Primary")
         
+        #if the file is a virtual strm file, we need to override the path by reading it's contents
+        if playurl.endswith(".strm"):
+            xbmc.log("virtual strm file file detected, starting playback with 3th party addon...")
+            StrmTemp = "special://temp/temp.strm"
+            xbmcvfs.copy(playurl, StrmTemp)
+            playurl = open(xbmc.translatePath(StrmTemp), 'r').readline()
+                 
         listItem = xbmcgui.ListItem(path=playurl, iconImage=thumbPath, thumbnailImage=thumbPath)
-        self.setListItemProps(server, id, listItem, result)    
 
         # Can not play virtual items
         if (result.get("LocationType") == "Virtual"):
@@ -113,12 +119,14 @@ class PlaybackUtils():
             if mediaSources[0].get('DefaultSubtitleStreamIndex') != None:
                 WINDOW.setProperty(playurl+"SubtitleStreamIndex", str(mediaSources[0].get('DefaultSubtitleStreamIndex')))
 
-        #launch the playback
+        #launch the playback - only set the listitem props if we're not using the setresolvedurl approach
         if setup == "service":
+            self.setListItemProps(server, id, listItem, result)
             xbmc.Player().play(playurl,listItem)
         elif setup == "default":
             #artwork only works from widgets (home screen) with player command as there is no listitem selected
             if xbmc.getCondVisibility("Window.IsActive(home)"):
+                self.setListItemProps(server, id, listItem, result)
                 xbmc.Player().play(playurl,listItem)
             else:
                xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)              
@@ -163,16 +171,9 @@ class PlaybackUtils():
         else:
             studio = studios[0]
         listItem.setInfo('video', {'studio' : studio})    
-
-        # play info
-        playinformation = ''
-        if PlayUtils().isDirectPlay(result) == True:
-            playinformation = self.language(30165)
-        else:
-            playinformation = self.language(30166)
             
         details = {
-                 'title'        : result.get("Name", "Missing Name") + ' - ' + playinformation,
+                 'title'        : result.get("Name", "Missing Name"),
                  'plot'         : result.get("Overview")
                  }
                  
@@ -195,7 +196,7 @@ class PlaybackUtils():
         listItem.setInfo('video', {'director' : people.get('Director')})
         listItem.setInfo('video', {'writer' : people.get('Writer')})
         listItem.setInfo('video', {'mpaa': result.get("OfficialRating")})
-        listItem.setInfo('video', {'genre': genre})
+        listItem.setInfo('video', {'genre': API().getGenre(result)})
     
     def seekToPosition(self, seekTo):
     
