@@ -22,6 +22,7 @@ from DownloadUtils import DownloadUtils
 from ReadEmbyDB import ReadEmbyDB
 from ReadKodiDB import ReadKodiDB
 from WriteKodiDB import WriteKodiDB
+from VideoNodes import VideoNodes
 
 addondir = xbmc.translatePath(xbmcaddon.Addon(id='plugin.video.emby').getAddonInfo('profile'))
 dataPath = os.path.join(addondir,"library")
@@ -64,7 +65,7 @@ class LibrarySync():
                 connection.commit()
                 
             ### BUILD VIDEO NODES LISTING ###
-            utils.buildVideoNodesListing()
+            VideoNodes().buildVideoNodesListing()
             
             # sync movies
             self.MoviesFullSync(connection,cursor,pDialog)
