@@ -140,7 +140,7 @@ class Service():
                     
                     if user.getServer() == "":
                         pass
-                    elif not user.getPublicUsers():
+                    elif user.getPublicUsers() == False:
                         # Server is not online, suppress future warning
                         if self.server_online:
                             WINDOW.setProperty("Server_online", "false")
