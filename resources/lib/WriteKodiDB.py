@@ -710,13 +710,11 @@ class WriteKodiDB():
             for person in people:              
                 
                 Name = person.get("Name")
-                
                 actorid = None
-                Thumb = downloadUtils.imageUrl(person.get("Id"), "Primary", 0, 400, 400)
+
+                # Get existing actor
                 if kodiVersion == 15:
                     # Kodi Isengard database #
-                    if Thumb != None:
-                        Thumb = "<thumb>" + Thumb + "</thumb>"
                     cursor.execute("SELECT actor_id as actorid FROM actor WHERE name = ?",(Name,))
                 else:
                     # Kodi Gotham or Helix database #
@@ -730,16 +728,27 @@ class WriteKodiDB():
                         cursor.execute("select coalesce(max(actor_id),0) as actorid from actor")
                         actorid = cursor.fetchone()[0]
                         actorid = actorid + 1
-                        peoplesql="insert into actor(actor_id, name, art_urls) values(?, ?, ?)"
+                        peoplesql="insert into actor(actor_id, name) values(?, ?)"
                     else:
                         # Kodi Gotham or Helix database #
                         cursor.execute("select coalesce(max(idActor),0) as actorid from actors")
                         actorid = cursor.fetchone()[0]
                         actorid = actorid + 1
-                        peoplesql="insert into actors(idActor, strActor, strThumb) values(?, ?, ?)"
+                        peoplesql="insert into actors(idActor, strActor) values(?, ?)"
                     utils.logMsg("AddPeopleToMedia", "Processing : " + person.get("Name"))
-                    cursor.execute(peoplesql, (actorid,Name,Thumb))
+                    cursor.execute(peoplesql, (actorid,Name))
                 
+                ### add people image to art table
+                Thumb = downloadUtils.imageUrl(person.get("Id"), "Primary", 0, 400, 400)
+                if Thumb:
+                    if(person.get("Type") == "Director"):
+                        arttype = "director"
+                    elif(person.get("Type") == "Writer" or person.get("Type") == "Writing"):
+                        arttype = "writer"
+                    else:
+                        arttype = "actor"
+                    self.addOrUpdateArt(Thumb, actorid, arttype, "thumb", cursor)
+
                 #### ACTORS ######
                 if(person.get("Type") == "Actor"):
                     
