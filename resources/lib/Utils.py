@@ -203,9 +203,9 @@ def reset():
             return
         xbmc.sleep(1000)
        
-    # delete db table data
-    print "Doing DB Reset"
-    connection = KodiSQL()
+    # delete video db table data
+    print "Doing Video DB Reset"
+    connection = KodiSQL("video")
     cursor = connection.cursor( )
     cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
     rows = cursor.fetchall()
@@ -215,6 +215,21 @@ def reset():
             cursor.execute("DELETE FROM " + tableName)
     connection.commit()
     cursor.close()
+    
+    if addonSettings.getSetting("enableMusicSync") == "true":
+        # delete video db table data
+        print "Doing Music DB Reset"
+        connection = KodiSQL("music")
+        cursor = connection.cursor( )
+        cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
+        rows = cursor.fetchall()
+        for row in rows:
+            tableName = row[0]
+            if(tableName != "version"):
+                cursor.execute("DELETE FROM " + tableName)
+        connection.commit()
+        cursor.close()
+        
     
     # reset the install run flag
     WINDOW.setProperty("SyncInstallRunDone", "false")
