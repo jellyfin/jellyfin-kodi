@@ -58,9 +58,10 @@ class PlaybackUtils():
 
         playurl = PlayUtils().getPlayUrl(server, id, result)
         if playurl == False:
+            xbmcgui.Dialog().ok('Warning', 'Failed to launch playback.')
             xbmc.log("Failed to retrieve the playback path/url.")
             return
-            
+
         thumbPath = API().getArtwork(result, "Primary")
         
         #if the file is a virtual strm file, we need to override the path by reading it's contents
