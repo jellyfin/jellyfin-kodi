@@ -89,8 +89,8 @@ class WriteKodiMusicDB():
         if MBitem.get("DateCreated"):
             dateadded = MBitem["DateCreated"].split('.')[0].replace('T', " ")
             
-        #safety check: does the musicbrainzartistId already exist?
-        cursor.execute("SELECT idArtist FROM artist WHERE strMusicBrainzArtistID = ?",(musicBrainsId,))
+        #convenience/safety check: does the artist already exist?
+        cursor.execute("SELECT idArtist FROM artist WHERE strArtist = ?",(name,))
         result = cursor.fetchone()
         if result != None:
             artistid = result[0]
