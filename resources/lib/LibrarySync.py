@@ -591,9 +591,9 @@ class LibrarySync():
                         if MBitem["Type"] == "MusicArtist":
                             WriteKodiMusicDB().addOrUpdateArtistToKodiLibrary(MBitem["Id"],connection, cursor)
                         if MBitem["Type"] == "MusicAlbum":
-                            WriteKodiMusicDB().addOrUpdateAlbumToKodiLibraryToKodiLibrary(MBitem["Id"],connection, cursor)
+                            WriteKodiMusicDB().addOrUpdateAlbumToKodiLibrary(MBitem["Id"],connection, cursor)
                         if MBitem["Type"] == "Audio":
-                            WriteKodiMusicDB().addOrUpdateSongToKodiLibraryToKodiLibrary(MBitem["Id"],connection, cursor)    
+                            WriteKodiMusicDB().addOrUpdateSongToKodiLibrary(MBitem["Id"],connection, cursor)    
                     connection.commit()
                     cursor.close()
 
