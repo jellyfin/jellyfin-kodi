@@ -305,5 +305,9 @@ class PlayUtils():
         # Verify the device has access to the direct path
         if os.path.exists(path):
             return True
+        elif ":\\" not in path:
+            # Give benefit of the doubt for nfs protocol
+            # Does not behave with os.path.exists
+            return True
         else:
             return False
