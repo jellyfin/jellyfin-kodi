@@ -48,12 +48,18 @@ def convertEncoding(data):
     except:
         return data
           
-def KodiSQL():
-    connection = sqlite3.connect(getKodiDBPath())
+def KodiSQL(type="video"):
+    
+    if type == "music":
+        dbPath = getKodiMusicDBPath()
+    else:
+        dbPath = getKodiVideoDBPath()
+    
+    connection = sqlite3.connect(dbPath)
     
     return connection
 
-def getKodiDBPath():
+def getKodiVideoDBPath():
     if xbmc.getInfoLabel("System.BuildVersion").startswith("13"):
         #gotham
         dbVersion = "78"
@@ -68,6 +74,22 @@ def getKodiDBPath():
     
     return dbPath  
 
+def getKodiMusicDBPath():
+    if xbmc.getInfoLabel("System.BuildVersion").startswith("13"):
+        #gotham
+        dbVersion = "48"
+    if xbmc.getInfoLabel("System.BuildVersion").startswith("15"):
+        #isengard
+        dbVersion = "52"
+    else: 
+        #helix
+        dbVersion = "48"
+    
+    dbPath = xbmc.translatePath("special://profile/Database/MyMusic" + dbVersion + ".db")
+    
+    return dbPath      
+    
+    
 def checkAuthentication():
     #check authentication
     if addonSettings.getSetting('username') != "" and addonSettings.getSetting('ipaddress') != "":

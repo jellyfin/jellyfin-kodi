@@ -22,6 +22,7 @@ from DownloadUtils import DownloadUtils
 from ReadEmbyDB import ReadEmbyDB
 from ReadKodiDB import ReadKodiDB
 from WriteKodiVideoDB import WriteKodiVideoDB
+from WriteKodiMusicDB import WriteKodiMusicDB
 from VideoNodes import VideoNodes
 
 addondir = xbmc.translatePath(xbmcaddon.Addon(id='plugin.video.emby').getAddonInfo('profile'))
@@ -40,6 +41,7 @@ class LibrarySync():
         
         startupDone = WINDOW.getProperty("startup") == "done"
         syncInstallRunDone = addon.getSetting("SyncInstallRunDone") == "true"
+        performMusicSync = addon.getSetting("enableMusicSync") == "true"
         dbSyncIndication = addon.getSetting("dbSyncIndication") == "true"
         WINDOW.setProperty("SyncDatabaseRunning", "true")
         
@@ -56,16 +58,21 @@ class LibrarySync():
 
         try:
             completed = True
-            connection = utils.KodiSQL()
+            
+
+            ### BUILD VIDEO NODES LISTING ###
+            VideoNodes().buildVideoNodesListing()
+            
+            ### PROCESS VIDEO LIBRARY ###
+            
+            #create the sql connection to video db
+            connection = utils.KodiSQL("video")
             cursor = connection.cursor()
             
             #Add the special emby table
             if not startupDone:
                 cursor.execute("CREATE TABLE IF NOT EXISTS emby(emby_id TEXT, kodi_id INTEGER, media_type TEXT, checksum TEXT, parent_id INTEGER)")
                 connection.commit()
-                
-            ### BUILD VIDEO NODES LISTING ###
-            VideoNodes().buildVideoNodesListing()
             
             # sync movies
             self.MoviesFullSync(connection,cursor,pDialog)
@@ -82,6 +89,23 @@ class LibrarySync():
             # sync musicvideos
             self.MusicVideosFullSync(connection,cursor,pDialog)
             
+            #close sql connection
+            cursor.close()
+            
+            ### PROCESS MUSIC LIBRARY ###
+            if performMusicSync:
+                #create the sql connection to music db
+                connection = utils.KodiSQL("music")
+                cursor = connection.cursor()
+                
+                #Add the special emby table
+                if not startupDone:
+                    cursor.execute("CREATE TABLE IF NOT EXISTS emby(emby_id TEXT, kodi_id INTEGER, media_type TEXT, checksum TEXT, parent_id INTEGER)")
+                    connection.commit()
+                
+                self.MusicFullSync(connection,cursor,pDialog)
+                cursor.close()
+            
             # set the install done setting
             if(syncInstallRunDone == False and completed):
                 addon = xbmcaddon.Addon(id='plugin.video.emby') #force a new instance of the addon
@@ -97,7 +121,6 @@ class LibrarySync():
             WINDOW.setProperty("SyncDatabaseRunning", "false")
             utils.logMsg("Sync DB", "syncDatabase Exiting", 0)
             
-            cursor.close()
 
         if(pDialog != None):
             pDialog.close()
@@ -336,6 +359,149 @@ class LibrarySync():
                 WINDOW.setProperty(kodiId,"deleted")
                 WriteKodiVideoDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
                 
+    def MusicFullSync(self, connection,cursor, pDialog):
+
+        self.ProcessMusicArtists(connection,cursor,pDialog)
+        self.ProcessMusicAlbums(connection,cursor,pDialog)
+        self.ProcessMusicSongs(connection,cursor,pDialog)
+        
+        ### commit all changes to database ###
+        connection.commit()
+    
+    def ProcessMusicSongs(self,connection,cursor,pDialog):
+               
+        allKodiSongIds = list()
+        allEmbySongIds = list()
+        
+        allEmbySongs = ReadEmbyDB().getMusicSongs()
+        allKodiSongs = ReadKodiDB().getKodiMusicSongs(connection, cursor)
+        
+        for kodisong in allKodiSongs:
+            allKodiSongIds.append(kodisong[1])
+            
+        total = len(allEmbySongs) + 1
+        count = 1    
+        
+        #### PROCESS SONGS ADDS AND UPDATES ###
+        for item in allEmbySongs:
+            
+            if (self.ShouldStop()):
+                return False
+                             
+            allEmbySongIds.append(item["Id"])
+            
+            if(pDialog != None):
+                progressTitle = "Processing Music Songs (" + str(count) + " of " + str(total) + ")"
+                pDialog.update(0, "Emby for Kodi - Running Sync", progressTitle)
+                count += 1        
+            
+            kodiSong = None
+            for kodisong in allKodiSongs:
+                if kodisong[1] == item["Id"]:
+                    kodiSong = kodisong
+                  
+            if kodiSong == None:
+                WriteKodiMusicDB().addOrUpdateSongToKodiLibrary(item["Id"],connection, cursor)
+            else:
+                if kodiSong[2] != API().getChecksum(item):
+                    WriteKodiMusicDB().addOrUpdateSongToKodiLibrary(item["Id"],connection, cursor)
+        
+        #### PROCESS DELETES #####
+        allEmbySongIds = set(allEmbySongIds)
+        for kodiId in allKodiSongIds:
+            if not kodiId in allEmbySongIds:
+                WINDOW.setProperty(kodiId,"deleted")
+                WriteKodiMusicDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
+        
+    def ProcessMusicArtists(self,connection,cursor,pDialog):
+               
+        allKodiArtistIds = list()
+        allEmbyArtistIds = list()
+        
+        allEmbyArtists = ReadEmbyDB().getMusicArtists()
+        allKodiArtists = ReadKodiDB().getKodiMusicArtists(connection, cursor)
+        
+        for kodiartist in allKodiArtists:
+            allKodiArtistIds.append(kodiartist[1])
+            
+        total = len(allEmbyArtists) + 1
+        count = 1    
+        
+        #### PROCESS SONGS ADDS AND UPDATES ###
+        for item in allEmbyArtists:
+            
+            if (self.ShouldStop()):
+                return False
+                             
+            allEmbyArtistIds.append(item["Id"])
+            
+            if(pDialog != None):
+                progressTitle = "Processing Music Artists (" + str(count) + " of " + str(total) + ")"
+                pDialog.update(0, "Emby for Kodi - Running Sync", progressTitle)
+                count += 1        
+            
+            kodiArtist = None
+            for kodiartist in allKodiArtists:
+                if kodiartist[1] == item["Id"]:
+                    kodiArtist = kodiartist
+                  
+            if kodiArtist == None:
+                WriteKodiMusicDB().addOrUpdateArtistToKodiLibrary(item["Id"],connection, cursor)
+            else:
+                if kodiArtist[2] != API().getChecksum(item):
+                    WriteKodiMusicDB().addOrUpdateArtistToKodiLibrary(item["Id"],connection, cursor)
+        
+        #### PROCESS DELETES #####
+        allEmbyArtistIds = set(allEmbyArtistIds)
+        for kodiId in allKodiArtistIds:
+            if not kodiId in allEmbyArtistIds:
+                WINDOW.setProperty(kodiId,"deleted")
+                WriteKodiMusicDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
+    
+    def ProcessMusicAlbums(self,connection,cursor,pDialog):
+               
+        allKodiAlbumIds = list()
+        allEmbyAlbumIds = list()
+        
+        allEmbyAlbums = ReadEmbyDB().getMusicAlbums()
+        allKodiAlbums = ReadKodiDB().getKodiMusicAlbums(connection, cursor)
+        
+        for kodialbum in allKodiAlbums:
+            allKodiAlbumIds.append(kodialbum[1])
+            
+        total = len(allEmbyAlbums) + 1
+        count = 1    
+        
+        #### PROCESS SONGS ADDS AND UPDATES ###
+        for item in allEmbyAlbums:
+            
+            if (self.ShouldStop()):
+                return False
+                             
+            allEmbyAlbumIds.append(item["Id"])
+            
+            if(pDialog != None):
+                progressTitle = "Processing Music Albums (" + str(count) + " of " + str(total) + ")"
+                pDialog.update(0, "Emby for Kodi - Running Sync", progressTitle)
+                count += 1        
+            
+            kodiAlbum = None
+            for kodialbum in allKodiAlbums:
+                if kodialbum[1] == item["Id"]:
+                    kodiAlbum = kodialbum
+                  
+            if kodiAlbum == None:
+                WriteKodiMusicDB().addOrUpdateAlbumToKodiLibrary(item["Id"],connection, cursor)
+            else:
+                if kodiAlbum[2] != API().getChecksum(item):
+                    WriteKodiMusicDB().addOrUpdateAlbumToKodiLibrary(item["Id"],connection, cursor)
+        
+        #### PROCESS DELETES #####
+        allEmbyAlbumIds = set(allEmbyAlbumIds)
+        for kodiId in allKodiAlbumIds:
+            if not kodiId in allEmbyAlbumIds:
+                WINDOW.setProperty(kodiId,"deleted")
+                WriteKodiMusicDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
     
     def IncrementalSync(self, itemList):
         #this will only perform sync for items received by the websocket
@@ -349,7 +515,7 @@ class LibrarySync():
             pDialog = xbmcgui.DialogProgressBG()
             pDialog.create('Emby for Kodi', 'Performing incremental sync...')
         
-        connection = utils.KodiSQL()
+        connection = utils.KodiSQL("video")
         cursor = connection.cursor()
         
         try:
@@ -407,9 +573,25 @@ class LibrarySync():
                     
             ### commit all changes to database ###
             connection.commit()
-        
-        finally:
             cursor.close()
+
+            ### PROCESS MUSIC LIBRARY ###
+            if performMusicSync:
+                connection = utils.KodiSQL("music")
+                cursor = connection.cursor()
+                for item in itemList:
+                    MBitem = ReadEmbyDB().getItem(item)
+                    if MBitem["Type"] == "MusicArtist":
+                        WriteKodiMusicDB().addOrUpdateArtistToKodiLibrary(MBitem["Id"],connection, cursor)
+                    if MBitem["Type"] == "MusicAlbum":
+                        WriteKodiMusicDB().addOrUpdateAlbumToKodiLibraryToKodiLibrary(MBitem["Id"],connection, cursor)
+                    if MBitem["Type"] == "Audio":
+                        WriteKodiMusicDB().addOrUpdateSongToKodiLibraryToKodiLibrary(MBitem["Id"],connection, cursor)    
+                connection.commit()
+                cursor.close()
+
+        finally:
+            
             xbmc.executebuiltin("UpdateLibrary(video)")
             WINDOW.setProperty("SyncDatabaseRunning", "false")
         

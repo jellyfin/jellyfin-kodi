@@ -61,4 +61,23 @@ class ReadKodiDB():
         else:
             return None
        
+    def getKodiMusicArtists(self, connection, cursor):
+        #returns all artists in Kodi db
+        cursor.execute("SELECT kodi_id, emby_id, checksum FROM emby WHERE media_type='artist'")
+        allartists = cursor.fetchall()
+        #this will return a list with tuples of all items returned from the database
+        return allartists
+    
+    def getKodiMusicAlbums(self, connection, cursor):
+        #returns all artists in Kodi db
+        cursor.execute("SELECT kodi_id, emby_id, checksum FROM emby WHERE media_type='album'")
+        allalbums = cursor.fetchall()
+        #this will return a list with tuples of all items returned from the database
+        return allalbums
         
+    def getKodiMusicSongs(self, connection, cursor):
+        #returns all songs in Kodi db
+        cursor.execute("SELECT kodi_id, emby_id, checksum FROM emby WHERE media_type='song'")
+        allsongs = cursor.fetchall()
+        #this will return a list with tuples of all items returned from the database
+        return allsongs    

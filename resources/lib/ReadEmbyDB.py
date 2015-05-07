@@ -65,7 +65,83 @@ class ReadEmbyDB():
             result = newResult
 
         return result
+    
+    def getMusicArtists(self, itemList = []):
         
+        result = None
+        doUtils = DownloadUtils()
+
+        #only get basic info for our sync-compares
+        url = "{server}/Artists?Fields=Name,CumulativeRunTimeTicks,Etag&Recursive=true&format=json"
+        
+        jsonData = doUtils.downloadUrl(url)
+        if (jsonData == ""):
+            return result
+
+        if (jsonData[u'Items'] != ""):
+            result = jsonData[u'Items']
+            
+        # Work around to only return items from the given list
+        if (result != None and len(result) > 0 and len(itemList) > 0):
+            newResult = []
+            for item in result:
+                if (item[u'Id'] in itemList):
+                    newResult.append(item)
+            result = newResult
+
+        return result
+    
+    def getMusicSongs(self, itemList = []):
+        
+        result = None
+        doUtils = DownloadUtils()
+
+        #only get basic info for our sync-compares
+        url = "{server}/mediabrowser/Users/{UserId}/Items?Fields=Name,CumulativeRunTimeTicks,Etag&Recursive=true&IncludeItemTypes=Audio&format=json"
+        
+        jsonData = doUtils.downloadUrl(url)
+        if (jsonData == ""):
+            return result
+
+        if (jsonData[u'Items'] != ""):
+            result = jsonData[u'Items']
+            
+        # Work around to only return items from the given list
+        if (result != None and len(result) > 0 and len(itemList) > 0):
+            newResult = []
+            for item in result:
+                if (item[u'Id'] in itemList):
+                    newResult.append(item)
+            result = newResult
+
+        return result
+    
+    def getMusicAlbums(self, itemList = []):
+        
+        result = None
+        doUtils = DownloadUtils()
+
+        #only get basic info for our sync-compares
+        url = "{server}/mediabrowser/Users/{UserId}/Items?Fields=Name,CumulativeRunTimeTicks,Etag&Recursive=true&IncludeItemTypes=MusicAlbum&format=json"
+        
+        jsonData = doUtils.downloadUrl(url)
+        if (jsonData == ""):
+            return result
+
+        if (jsonData[u'Items'] != ""):
+            result = jsonData[u'Items']
+            
+        # Work around to only return items from the given list
+        if (result != None and len(result) > 0 and len(itemList) > 0):
+            newResult = []
+            for item in result:
+                if (item[u'Id'] in itemList):
+                    newResult.append(item)
+            result = newResult
+
+        return result
+    
+    
     def getItem(self, id):
         
         result = None

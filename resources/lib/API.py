@@ -332,7 +332,7 @@ class API():
         if(data.get("ImageTags") != None and data.get("ImageTags").get(type) != None):
             imageTag = data.get("ImageTags").get(type)   
 
-        if (data.get("Type") == "Episode" or data.get("Type") == "Season") and type=="Logo":
+        if (data.get("Type") == "Episode" or data.get("Type") == "Season" or data.get("Type") == "MusicAlbum")  and type=="Logo":
             imageTag = data.get("ParentLogoImageTag")
         if (data.get("Type") == "Episode" or data.get("Type") == "Season") and type=="Art":
             imageTag = data.get("ParentArtImageTag")
