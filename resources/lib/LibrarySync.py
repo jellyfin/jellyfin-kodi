@@ -513,6 +513,7 @@ class LibrarySync():
             #this will only perform sync for items received by the websocket
             addon = xbmcaddon.Addon(id='plugin.video.emby')
             dbSyncIndication = addon.getSetting("dbSyncIndication") == "true"
+            performMusicSync = addon.getSetting("enableMusicSync") == "true"
             WINDOW.setProperty("SyncDatabaseRunning", "true")
             
             #show the progress dialog
