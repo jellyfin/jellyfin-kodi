@@ -95,15 +95,14 @@ class Player( xbmc.Player ):
                     #report updates playcount and resume status to Kodi and MB3
                     #librarySync.updatePlayCount(item_id)
                     
+        # Stop transcoding
+        if self.WINDOW.getProperty("transcoding%s" % item_id) == "true":
+            deviceId = self.clientInfo.getMachineId()
+            url = "{server}/mediabrowser/Videos/ActiveEncodings?DeviceId=%s" % deviceId
+            self.doUtils.downloadUrl(url, type="DELETE")
+            self.WINDOW.clearProperty("transcoding%s" % item_id)
                 
         self.played_information.clear()
-
-        # stop transcoding - todo check we are actually transcoding?
-        clientInfo = ClientInformation()
-        txt_mac = clientInfo.getMachineId()
-        url = "{server}/mediabrowser/Videos/ActiveEncodings"
-        url = url + '?DeviceId=' + txt_mac
-        self.doUtils.downloadUrl(url, type="DELETE")
     
     def stopPlayback(self, data):
         
