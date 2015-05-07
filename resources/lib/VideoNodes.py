@@ -10,6 +10,7 @@ import xbmcvfs
 import json
 import os
 import shutil
+#import common elementree because cElementree has issues with kodi
 import xml.etree.ElementTree as etree
 
 import Utils as utils
@@ -37,7 +38,10 @@ class VideoNodes():
         etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
         path = "library://video/Emby - %s/"%tagname
         WINDOW.setProperty("Emby.nodes.%s.index" %str(windowPropId),path)
-        etree.ElementTree(root).write(nodefile)
+        try:
+            etree.ElementTree(root).write(nodefile, xml_declaration=True)
+        except:
+            etree.ElementTree(root).write(nodefile)
         
         #create tag node - all items
         nodefile = os.path.join(libraryPath, tagname + "_all.xml")
