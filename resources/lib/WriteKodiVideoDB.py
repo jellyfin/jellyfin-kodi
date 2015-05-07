@@ -653,7 +653,7 @@ class WriteKodiVideoDB():
         if seasonData != None:
             for season in seasonData:
                 seasonNum = season.get("IndexNumber")
-                if seasonNum != None and seasonNum >= 0 and seasonNum <= 1000:
+                if seasonNum != None and seasonNum >= 0:
                     cursor.execute("SELECT idSeason as seasonid FROM seasons WHERE idShow = ? and season = ?",(kodiTvShowId, seasonNum))
                     result = cursor.fetchone()
                     if result == None:
