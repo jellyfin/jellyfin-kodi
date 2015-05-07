@@ -172,12 +172,12 @@ class WebSocketThread(threading.Thread):
             self.logMsg("Message : WebSocket LibraryChanged : Items Updated : " + str(itemsUpdated), 0)
             self.logMsg("Message : WebSocket LibraryChanged : Items Removed : " + str(itemsRemoved), 0)
 
-            if xbmc.Player().isPlaying():
-                pendingItemsToRemove += itemsRemoved
-                pendingItemsToUpdate += itemsToUpdate
-            else:
-                self.remove_items(itemsRemoved)
-                self.update_items(itemsToUpdate)
+            #if xbmc.Player().isPlaying():
+            #    pendingItemsToRemove += itemsRemoved
+            #    pendingItemsToUpdate += itemsToUpdate
+            #else:
+            self.remove_items(itemsRemoved)
+            self.update_items(itemsToUpdate)
 
     def remove_items(self, itemsRemoved):
         connection = utils.KodiSQL()

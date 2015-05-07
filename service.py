@@ -128,7 +128,7 @@ class Service():
                             if self.KodiMonitor.waitForAbort(1):
                                 # Abort was requested while waiting. We should exit
                                 break    
-                            WebSocketThread().processPendingActions()
+                            #WebSocketThread().processPendingActions()
                         
                     else:
                         if self.warn_auth:
