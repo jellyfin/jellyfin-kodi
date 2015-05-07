@@ -132,7 +132,7 @@ class API():
         
         if item.get("Etag") != None:
             checksum = item.get("Etag") 
-            userData = item.get("UserData")
+        userData = item.get("UserData")
         if(userData != None):
             checksum += str(userData.get("Played"))
             checksum += str(userData.get("IsFavorite"))

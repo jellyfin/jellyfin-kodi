@@ -504,100 +504,106 @@ class LibrarySync():
                 WriteKodiMusicDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
     
     def IncrementalSync(self, itemList):
-        #this will only perform sync for items received by the websocket
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        dbSyncIndication = addon.getSetting("dbSyncIndication") == "true"
-        WINDOW.setProperty("SyncDatabaseRunning", "true")
         
-        #show the progress dialog
-        pDialog = None
-        if (dbSyncIndication):
-            pDialog = xbmcgui.DialogProgressBG()
-            pDialog.create('Emby for Kodi', 'Performing incremental sync...')
+        startupDone = WINDOW.getProperty("startup") == "done"
         
-        connection = utils.KodiSQL("video")
-        cursor = connection.cursor()
+        #only perform incremental scan when full scan is completed 
+        if startupDone:
         
-        try:
-            #### PROCESS MOVIES ####
-            views = ReadEmbyDB().getCollections("movies")
-            for view in views:
-                allEmbyMovies = ReadEmbyDB().getMovies(view.get('id'), itemList)
-                for item in allEmbyMovies:
+            #this will only perform sync for items received by the websocket
+            addon = xbmcaddon.Addon(id='plugin.video.emby')
+            dbSyncIndication = addon.getSetting("dbSyncIndication") == "true"
+            WINDOW.setProperty("SyncDatabaseRunning", "true")
+            
+            #show the progress dialog
+            pDialog = None
+            if (dbSyncIndication):
+                pDialog = xbmcgui.DialogProgressBG()
+                pDialog.create('Emby for Kodi', 'Performing incremental sync...')
+            
+            connection = utils.KodiSQL("video")
+            cursor = connection.cursor()
+            
+            try:
+                #### PROCESS MOVIES ####
+                views = ReadEmbyDB().getCollections("movies")
+                for view in views:
+                    allEmbyMovies = ReadEmbyDB().getMovies(view.get('id'), itemList)
+                    for item in allEmbyMovies:
+                            
+                        if not item.get('IsFolder'):                    
+                            WriteKodiVideoDB().addOrUpdateMovieToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
+               
+               
+                #### PROCESS BOX SETS #####
+                boxsets = ReadEmbyDB().getBoxSets()
+               
+                for boxset in boxsets:
+                    boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
+                    WriteKodiVideoDB().addBoxsetToKodiLibrary(boxset,connection, cursor)
                         
-                    if not item.get('IsFolder'):                    
-                        WriteKodiVideoDB().addOrUpdateMovieToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
-           
-           
-            #### PROCESS BOX SETS #####
-            boxsets = ReadEmbyDB().getBoxSets()
-           
-            for boxset in boxsets:
-                boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
-                WriteKodiVideoDB().addBoxsetToKodiLibrary(boxset,connection, cursor)
-                    
-                for boxsetMovie in boxsetMovies:
-                    WriteKodiVideoDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset, connection, cursor)
-                        
-                     
-            #### PROCESS TV SHOWS ####
-            views = ReadEmbyDB().getCollections("tvshows")              
-            for view in views:
-                allEmbyTvShows = ReadEmbyDB().getTvShows(view.get('id'),itemList)
-                for item in allEmbyTvShows:
-                    if item.get('IsFolder') and item.get('RecursiveItemCount') != 0:                   
-                        kodiId = WriteKodiVideoDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
-                        
-            #### PROCESS EPISODES ######
-            for item in itemList:
-                    
-                MBitem = ReadEmbyDB().getItem(item)
-                if MBitem["Type"] == "Episode":
-
-                    #get the tv show
-                    cursor.execute("SELECT kodi_id FROM emby WHERE media_type='tvshow' AND emby_id=?", (MBitem["SeriesId"],))
-                    result = cursor.fetchone()
-                    if result:
-                        kodi_show_id = result[0]
-                    else:
-                        kodi_show_id = None
-
-                    if kodi_show_id:
-                        WriteKodiVideoDB().addOrUpdateEpisodeToKodiLibrary(MBitem["Id"], kodi_show_id, connection, cursor)
-        
-            #### PROCESS MUSICVIDEOS ####
-            allEmbyMusicvideos = ReadEmbyDB().getMusicVideos(itemList)
-            for item in allEmbyMusicvideos:
-                if not item.get('IsFolder'):                    
-                    WriteKodiVideoDB().addOrUpdateMusicVideoToKodiLibrary(item["Id"],connection, cursor)
-                    
-            ### commit all changes to database ###
-            connection.commit()
-            cursor.close()
-
-            ### PROCESS MUSIC LIBRARY ###
-            if performMusicSync:
-                connection = utils.KodiSQL("music")
-                cursor = connection.cursor()
+                    for boxsetMovie in boxsetMovies:
+                        WriteKodiVideoDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset, connection, cursor)
+                            
+                         
+                #### PROCESS TV SHOWS ####
+                views = ReadEmbyDB().getCollections("tvshows")              
+                for view in views:
+                    allEmbyTvShows = ReadEmbyDB().getTvShows(view.get('id'),itemList)
+                    for item in allEmbyTvShows:
+                        if item.get('IsFolder') and item.get('RecursiveItemCount') != 0:                   
+                            kodiId = WriteKodiVideoDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
+                            
+                #### PROCESS EPISODES ######
                 for item in itemList:
+                        
                     MBitem = ReadEmbyDB().getItem(item)
-                    if MBitem["Type"] == "MusicArtist":
-                        WriteKodiMusicDB().addOrUpdateArtistToKodiLibrary(MBitem["Id"],connection, cursor)
-                    if MBitem["Type"] == "MusicAlbum":
-                        WriteKodiMusicDB().addOrUpdateAlbumToKodiLibraryToKodiLibrary(MBitem["Id"],connection, cursor)
-                    if MBitem["Type"] == "Audio":
-                        WriteKodiMusicDB().addOrUpdateSongToKodiLibraryToKodiLibrary(MBitem["Id"],connection, cursor)    
+                    if MBitem["Type"] == "Episode":
+
+                        #get the tv show
+                        cursor.execute("SELECT kodi_id FROM emby WHERE media_type='tvshow' AND emby_id=?", (MBitem["SeriesId"],))
+                        result = cursor.fetchone()
+                        if result:
+                            kodi_show_id = result[0]
+                        else:
+                            kodi_show_id = None
+
+                        if kodi_show_id:
+                            WriteKodiVideoDB().addOrUpdateEpisodeToKodiLibrary(MBitem["Id"], kodi_show_id, connection, cursor)
+            
+                #### PROCESS MUSICVIDEOS ####
+                allEmbyMusicvideos = ReadEmbyDB().getMusicVideos(itemList)
+                for item in allEmbyMusicvideos:
+                    if not item.get('IsFolder'):                    
+                        WriteKodiVideoDB().addOrUpdateMusicVideoToKodiLibrary(item["Id"],connection, cursor)
+                        
+                ### commit all changes to database ###
                 connection.commit()
                 cursor.close()
 
-        finally:
+                ### PROCESS MUSIC LIBRARY ###
+                if performMusicSync:
+                    connection = utils.KodiSQL("music")
+                    cursor = connection.cursor()
+                    for item in itemList:
+                        MBitem = ReadEmbyDB().getItem(item)
+                        if MBitem["Type"] == "MusicArtist":
+                            WriteKodiMusicDB().addOrUpdateArtistToKodiLibrary(MBitem["Id"],connection, cursor)
+                        if MBitem["Type"] == "MusicAlbum":
+                            WriteKodiMusicDB().addOrUpdateAlbumToKodiLibraryToKodiLibrary(MBitem["Id"],connection, cursor)
+                        if MBitem["Type"] == "Audio":
+                            WriteKodiMusicDB().addOrUpdateSongToKodiLibraryToKodiLibrary(MBitem["Id"],connection, cursor)    
+                    connection.commit()
+                    cursor.close()
+
+            finally:
+                
+                xbmc.executebuiltin("UpdateLibrary(video)")
+                WINDOW.setProperty("SyncDatabaseRunning", "false")
             
-            xbmc.executebuiltin("UpdateLibrary(video)")
-            WINDOW.setProperty("SyncDatabaseRunning", "false")
-        
-        #close the progress dialog
-        if(pDialog != None):
-            pDialog.close()
+            #close the progress dialog
+            if(pDialog != None):
+                pDialog.close()
     
     def ShouldStop(self):
             
