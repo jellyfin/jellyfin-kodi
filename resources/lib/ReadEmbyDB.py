@@ -140,8 +140,7 @@ class ReadEmbyDB():
             result = newResult
 
         return result
-    
-    
+        
     def getItem(self, id):
         
         result = None

@@ -34,7 +34,7 @@ class VideoNodes():
         xbmcvfs.mkdir(libraryPath)
         nodefile = os.path.join(libraryPath, "index.xml")
         root = etree.Element("node", {"order":"0"})
-        etree.SubElement(root, "label").text = "Emby - " + tagname
+        etree.SubElement(root, "label").text = tagname
         etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
         path = "library://video/Emby - %s/"%tagname
         WINDOW.setProperty("Emby.nodes.%s.index" %str(windowPropId),path)
@@ -67,9 +67,9 @@ class VideoNodes():
         nodefile = os.path.join(libraryPath, tagname + "_recent.xml")
         root = etree.Element("node", {"order":"2", "type":"filter"})
         if type == "tvshows":
-            label = tagname + " - " + language(30170)
+            label = language(30170)
         else:
-            label = tagname + " - " + language(30174)
+            label = language(30174)
         etree.SubElement(root, "label").text = label
         etree.SubElement(root, "match").text = "all"
         etree.SubElement(root, "content").text = type
@@ -95,9 +95,9 @@ class VideoNodes():
         nodefile = os.path.join(libraryPath, tagname + "_progress.xml")
         root = etree.Element("node", {"order":"3", "type":"filter"})
         if type == "tvshows":
-            label = tagname + " - " + language(30171)
+            label = language(30171)
         else:
-            label = tagname + " - " + language(30177)
+            label = language(30177)
         etree.SubElement(root, "label").text = label
         etree.SubElement(root, "match").text = "all"
         etree.SubElement(root, "content").text = type
@@ -120,7 +120,7 @@ class VideoNodes():
         if type == "movies":
             nodefile = os.path.join(libraryPath, tagname + "_unwatched.xml")
             root = etree.Element("node", {"order":"4", "type":"filter"})
-            label = tagname + " - " + language(30189)
+            label = language(30189)
             etree.SubElement(root, "label").text = label
             etree.SubElement(root, "match").text = "all"
             etree.SubElement(root, "content").text = "movies"
@@ -150,7 +150,7 @@ class VideoNodes():
             #create tag node - recent episodes
             nodefile = os.path.join(libraryPath, tagname + "_recent_episodes.xml")
             root = etree.Element("node", {"order":"3", "type":"filter"})
-            label = tagname + " - " + language(30175)
+            label = language(30175)
             etree.SubElement(root, "label").text = label
             etree.SubElement(root, "match").text = "all"
             etree.SubElement(root, "content").text = "episodes"
@@ -175,7 +175,7 @@ class VideoNodes():
             #create tag node - inprogress items
             nodefile = os.path.join(libraryPath, tagname + "_progress_episodes.xml")
             root = etree.Element("node", {"order":"4", "type":"filter"})
-            label = tagname + " - " + language(30178)
+            label = language(30178)
             etree.SubElement(root, "label").text = label
             etree.SubElement(root, "match").text = "all"
             etree.SubElement(root, "content").text = "episodes"
@@ -197,7 +197,7 @@ class VideoNodes():
             #create tag node - nextup items
             nodefile = os.path.join(libraryPath, tagname + "_nextup_episodes.xml")
             root = etree.Element("node", {"order":"4", "type":"folder"})
-            label = tagname + " - " + language(30179)
+            label = language(30179)
             etree.SubElement(root, "label").text = label
             etree.SubElement(root, "content").text = "episodes"
             path = "plugin://plugin.video.emby/?id=%s&mode=nextup&limit=25" %tagname
@@ -255,7 +255,7 @@ class VideoNodes():
             #create tag node for emby channels
             nodefile = os.path.join(xbmc.translatePath("special://profile/library/video"), "emby_channels.xml")
             root = etree.Element("node", {"order":"1", "type":"folder"})
-            label = "Emby  - " + language(30173)
+            label = language(30173)
             etree.SubElement(root, "label").text = label
             etree.SubElement(root, "content").text = "movies"
             etree.SubElement(root, "path").text = "plugin://plugin.video.emby/?id=0&mode=channels"
@@ -274,7 +274,7 @@ class VideoNodes():
             #create tag node - favorite shows
             nodefile = os.path.join(xbmc.translatePath("special://profile/library/video"),"emby_favorite_shows.xml")
             root = etree.Element("node", {"order":"1", "type":"filter"})
-            label = "Emby - " + language(30181)
+            label = language(30181)
             etree.SubElement(root, "label").text = label
             etree.SubElement(root, "match").text = "all"
             etree.SubElement(root, "content").text = "tvshows"
@@ -296,7 +296,7 @@ class VideoNodes():
             #create tag node - favorite movies
             nodefile = os.path.join(xbmc.translatePath("special://profile/library/video"),"emby_favorite_movies.xml")
             root = etree.Element("node", {"order":"1", "type":"filter"})
-            label = "Emby - " + language(30180)
+            label = language(30180)
             etree.SubElement(root, "label").text = label
             etree.SubElement(root, "match").text = "all"
             etree.SubElement(root, "content").text = "movies"

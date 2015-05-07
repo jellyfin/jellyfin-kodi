@@ -232,6 +232,9 @@ class WriteKodiMusicDB():
                 sql="INSERT OR REPLACE into discography(idArtist, strAlbum, strYear) values(?, ?, ?)"
                 cursor.execute(sql, (artistid, name, str(year)))
         
+        #add genres
+        self.AddGenresToMedia(albumid, MBitem.get("Genres"), "album", cursor)
+        
         #return the album id
         return albumid
         
