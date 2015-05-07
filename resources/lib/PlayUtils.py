@@ -115,6 +115,8 @@ class PlayUtils():
 
     def directPlay(self, result):
 
+        addon = self.addon
+
         try:
             # Item can be played directly
             playurl = result[u'MediaSources'][0][u'Path']
