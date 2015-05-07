@@ -68,11 +68,11 @@ class ReadEmbyDB():
     
     def getMusicArtists(self, itemList = []):
         
-        result = None
+        result = []
         doUtils = DownloadUtils()
 
         #only get basic info for our sync-compares
-        url = "{server}/Artists?Fields=Name,CumulativeRunTimeTicks,Etag&Recursive=true&format=json"
+        url = "{server}/Artists?Recursive=true&Fields=Etag,CumulativeRunTimeTicks&UserId={UserId}&format=json"
         
         jsonData = doUtils.downloadUrl(url)
         if (jsonData == ""):
@@ -80,7 +80,7 @@ class ReadEmbyDB():
 
         if (jsonData[u'Items'] != ""):
             result = jsonData[u'Items']
-            
+                       
         # Work around to only return items from the given list
         if (result != None and len(result) > 0 and len(itemList) > 0):
             newResult = []
@@ -147,7 +147,7 @@ class ReadEmbyDB():
         result = None
         doUtils = DownloadUtils()
 
-        url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json&ImageTypeLimit=1" % id
+        url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json&ImageTypeLimit=1&Fields=Etag" % id
         
         jsonData = doUtils.downloadUrl(url)     
         if (jsonData != ""):
