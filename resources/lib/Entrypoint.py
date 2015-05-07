@@ -424,10 +424,11 @@ def doMainListing():
             if path:
                 addDirectoryItem(label, path)
     
-    # some extra entries for settinsg and stuff. TODO --> localize the labels
+    # some extra entries for settings and stuff. TODO --> localize the labels
     addDirectoryItem("Settings", "plugin://plugin.video.emby/?mode=settings")
+    addDirectoryItem("Perform manual sync", "plugin://plugin.video.emby/?mode=manualsync")
     addDirectoryItem("Add user to session", "plugin://plugin.video.emby/?mode=adduser")
-    addDirectoryItem("Perform full resync", "plugin://plugin.video.emby/?mode=reset")
+    addDirectoryItem("Perform local database reset (full resync)", "plugin://plugin.video.emby/?mode=reset")
     
     xbmcplugin.endOfDirectory(int(sys.argv[1]))                
                     

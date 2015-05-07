@@ -33,7 +33,7 @@ WINDOW = xbmcgui.Window( 10000 )
 
 class LibrarySync():   
         
-    def FullLibrarySync(self):
+    def FullLibrarySync(self,manualRun=False):
         
         #set some variable to check if this is the first run
         addon = xbmcaddon.Addon(id='plugin.video.emby')
@@ -46,7 +46,7 @@ class LibrarySync():
         
         #show the progress dialog
         pDialog = None
-        if (syncInstallRunDone == False or dbSyncIndication):
+        if (syncInstallRunDone == False or dbSyncIndication or manualRun):
             pDialog = xbmcgui.DialogProgressBG()
             pDialog.create('Emby for Kodi', 'Performing full sync')
         

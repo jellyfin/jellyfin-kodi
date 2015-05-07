@@ -50,6 +50,9 @@ elif mode == "adduser":
 elif mode == "settings":
     xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
 
+elif mode == "manualsync":
+    from LibrarySync import LibrarySync
+    LibrarySync().FullLibrarySync(True)
     
 ##### BROWSE EMBY CHANNELS ROOT #####    
 elif  mode == "channels":
