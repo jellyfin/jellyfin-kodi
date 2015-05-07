@@ -180,13 +180,26 @@ class WebSocketThread(threading.Thread):
             self.update_items(itemsToUpdate)
 
     def remove_items(self, itemsRemoved):
-        connection = utils.KodiSQL()
+        
+        #Process video library
+        connection = utils.KodiSQL("video")
         cursor = connection.cursor()
         for item in itemsRemoved:
-            self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteEpisodeFromKodiLibraryByMbId: " + item, 0)
+            self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteItemFromKodiLibrary: " + item, 0)
             WriteKodiVideoDB().deleteItemFromKodiLibrary(item, connection, cursor)
         connection.commit()
         cursor.close()
+        
+        #Process music library
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
+        if addon.getSetting("enableMusicSync") == "true":
+            connection = utils.KodiSQL("music")
+            cursor = connection.cursor()
+            for item in itemsRemoved:
+                self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteItemFromKodiLibrary (musiclibrary): " + item, 0)
+                WriteKodiMusicDB().deleteItemFromKodiLibrary(item, connection, cursor)
+            connection.commit()
+            cursor.close()
 
     def update_items(self, itemsToUpdate):
         # doing adds and updates

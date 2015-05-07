@@ -384,18 +384,15 @@ class WriteKodiMusicDB():
         if result:
             kodi_id = result[0]
             media_type = result[1]
-            if media_type == "movie":
-                utils.logMsg("deleting movie from Kodi library --> ",id)
-                cursor.execute("DELETE FROM movie WHERE idMovie = ?", (kodi_id,))
-            if media_type == "episode":
-                utils.logMsg("deleting episode from Kodi library --> ",id)
-                cursor.execute("DELETE FROM episode WHERE idEpisode = ?", (kodi_id,))
-            if media_type == "tvshow":
-                utils.logMsg("deleting tvshow from Kodi library --> ",id)
-                cursor.execute("DELETE FROM tvshow WHERE idShow = ?", (kodi_id,))
-            if media_type == "musicvideo":
-                utils.logMsg("deleting musicvideo from Kodi library --> ",id)
-                cursor.execute("DELETE FROM musicvideo WHERE idMVideo = ?", (kodi_id,))
+            if media_type == "artist":
+                utils.logMsg("deleting artist from Kodi library --> ",id)
+                cursor.execute("DELETE FROM artist WHERE idArtist = ?", (kodi_id,))
+            if media_type == "song":
+                utils.logMsg("deleting song from Kodi library --> ",id)
+                cursor.execute("DELETE FROM song WHERE idSong = ?", (kodi_id,))
+            if media_type == "album":
+                utils.logMsg("deleting album from Kodi library --> ",id)
+                cursor.execute("DELETE FROM album WHERE idAlbum = ?", (kodi_id,))
             
             #delete the record in emby table
             cursor.execute("DELETE FROM emby WHERE emby_id = ?", (id,))
