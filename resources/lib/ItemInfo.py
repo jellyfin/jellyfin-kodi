@@ -124,7 +124,7 @@ class ItemInfo(xbmcgui.WindowXMLDialog):
                     self.isTrailer = True
                 
             
-        self.playUrl = "plugin://plugin.video.emby/?id=%s&mode=play" % id
+        self.playUrl = "plugin://plugin.video.emby/?id=%s&mode=playnow" % id
             
         try:
             trailerButton = self.getControl(3102)
@@ -134,7 +134,7 @@ class ItemInfo(xbmcgui.WindowXMLDialog):
                     jsonData = self.downloadUtils.downloadUrl(itemTrailerUrl)
                     if(jsonData != ""): 
                         trailerItem = jsonData
-                        self.trailerUrl = "plugin://plugin.video.emby/trailer/?id=%s&mode=play" % trailerItem[0][u'Id'] 
+                        self.trailerUrl = "plugin://plugin.video.emby/trailer/?id=%s&mode=playnow" % trailerItem[0][u'Id'] 
                 else:
                     trailerButton.setEnabled(False)
         except:
@@ -406,10 +406,11 @@ class ItemInfo(xbmcgui.WindowXMLDialog):
             seriesimage = API().getArtwork(item, "SeriesPrimary")
             try:
                 self.getControl(3099).setImage(seriesimage)
+                self.getControl(3009).setImage(image)
+            
             except:
                 pass
             
-            self.getControl(3009).setImage(image)
             if(cappedPercentage != None):
                 self.getControl(3010).setImage("Progress\progress_" + str(cappedPercentage) + ".png")
         else:

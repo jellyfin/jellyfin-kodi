@@ -114,7 +114,7 @@ class PersonInfo(xbmcgui.WindowXMLDialog):
                 listItem = xbmcgui.ListItem(label=item_name, label2=type_info, iconImage=thumbPath, thumbnailImage=thumbPath)
                 listItem.setArt({"fanart":fanArt})
                 
-                actionUrl = "plugin://plugin.video.emby?id=" + item_id + "&mode=info"
+                actionUrl = "plugin://plugin.video.emby?id=" + item_id + "&mode=play"
                 listItem.setProperty("ActionUrl", actionUrl)
                 
                 otherItemsList.addItem(listItem)
