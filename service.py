@@ -45,6 +45,17 @@ class Service():
         self.logMsg("KODI Version: %s" % xbmc.getInfoLabel("System.BuildVersion"), 0)
         self.logMsg("%s Version: %s" % (addonName, self.clientInfo.getVersion()), 0)
         self.logMsg("Platform: %s" % (self.clientInfo.getPlatform()), 0)
+        
+        #reset all window props on startup for user profile switches
+        self.WINDOW.clearProperty("startup")
+        embyProperty = self.WINDOW.getProperty("Emby.nodes.total")
+        propNames = ["index","path","title","content","inprogress.content","inprogress.title","inprogress.content","inprogress.path","nextepisodes.title","nextepisodes.content","nextepisodes.path","unwatched.title","unwatched.content","unwatched.path","recent.title","recent.content","recent.path","recentepisodes.title","recentepisodes.content","recentepisodes.path","inprogressepisodes.title","inprogressepisodes.content","inprogressepisodes.path"]
+        if embyProperty:
+            totalNodes = int(embyProperty)
+            for i in range(totalNodes):
+                for prop in propNames:
+                    self.WINDOW.clearProperty("Emby.nodes.%s.%s" %(str(i),prop))
+
 
     def logMsg(self, msg, lvl=1):
         
