@@ -9,7 +9,7 @@ import xbmcaddon
 import json
 
 import Utils as utils
-from WriteKodiDB import WriteKodiDB
+from WriteKodiVideoDB import WriteKodiVideoDB
 from ReadKodiDB import ReadKodiDB
 from LibrarySync import LibrarySync
 from PlayUtils import PlayUtils
@@ -46,7 +46,7 @@ class Kodi_Monitor(xbmc.Monitor):
                 if (playcount != None) and (prop != "true"):
                     WINDOW.setProperty("Played%s%s" % (type,item), "true")
                     utils.logMsg("MB# Sync","Kodi_Monitor--> VideoLibrary.OnUpdate : " + str(data),2)
-                    WriteKodiDB().updatePlayCountFromKodi(item, type, playcount)
+                    WriteKodiVideoDB().updatePlayCountFromKodi(item, type, playcount)
                 
                 self.clearProperty(type,item)
                     

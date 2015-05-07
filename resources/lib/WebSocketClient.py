@@ -19,7 +19,7 @@ from ClientInformation import ClientInformation
 from DownloadUtils import DownloadUtils
 from PlaybackUtils import PlaybackUtils
 from LibrarySync import LibrarySync
-from WriteKodiDB import WriteKodiDB
+from WriteKodiVideoDB import WriteKodiVideoDB
 from ReadEmbyDB import ReadEmbyDB
 
 pendingUserDataList = []
@@ -184,7 +184,7 @@ class WebSocketThread(threading.Thread):
         cursor = connection.cursor()
         for item in itemsRemoved:
             self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteEpisodeFromKodiLibraryByMbId: " + item, 0)
-            WriteKodiDB().deleteItemFromKodiLibrary(item, connection, cursor)
+            WriteKodiVideoDB().deleteItemFromKodiLibrary(item, connection, cursor)
         connection.commit()
         cursor.close()
 

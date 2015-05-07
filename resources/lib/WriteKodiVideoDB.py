@@ -1,5 +1,5 @@
 #################################################################################################
-# WriteKodiDB
+# WriteKodiVideoDB
 #################################################################################################
 
 
@@ -25,7 +25,7 @@ from xml.etree import ElementTree
 from xml.dom import minidom
 import xml.etree.cElementTree as ET
 
-class WriteKodiDB():
+class WriteKodiVideoDB():
 
     def updatePlayCountFromKodi(self, id, type, playcount=0):
         #when user marks item watched from kodi interface update this in Emby

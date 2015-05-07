@@ -21,7 +21,7 @@ import Utils as utils
 from DownloadUtils import DownloadUtils
 from ReadEmbyDB import ReadEmbyDB
 from ReadKodiDB import ReadKodiDB
-from WriteKodiDB import WriteKodiDB
+from WriteKodiVideoDB import WriteKodiVideoDB
 from VideoNodes import VideoNodes
 
 addondir = xbmc.translatePath(xbmcaddon.Addon(id='plugin.video.emby').getAddonInfo('profile'))
@@ -142,10 +142,10 @@ class LibrarySync():
                             kodiMovie = kodimovie
                           
                     if kodiMovie == None:
-                        WriteKodiDB().addOrUpdateMovieToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
+                        WriteKodiVideoDB().addOrUpdateMovieToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
                     else:
                         if kodiMovie[2] != API().getChecksum(item):
-                            WriteKodiDB().addOrUpdateMovieToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
+                            WriteKodiVideoDB().addOrUpdateMovieToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
           
           
        
@@ -163,12 +163,12 @@ class LibrarySync():
                 if(self.ShouldStop()):
                     return False                
                 boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
-                WriteKodiDB().addBoxsetToKodiLibrary(boxset,connection, cursor)
+                WriteKodiVideoDB().addBoxsetToKodiLibrary(boxset,connection, cursor)
                     
                 for boxsetMovie in boxsetMovies:
                     if(self.ShouldStop()):
                         return False
-                    WriteKodiDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset, connection, cursor)
+                    WriteKodiVideoDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset, connection, cursor)
                         
             utils.logMsg("Sync Movies", "BoxSet Sync Finished", 1)    
             
@@ -177,7 +177,7 @@ class LibrarySync():
         for kodiId in allKodiMovieIds:
             if not kodiId in allEmbyMovieIds:
                 WINDOW.setProperty(kodiId,"deleted")
-                WriteKodiDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
+                WriteKodiVideoDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
                 
         ### commit all changes to database ###
         connection.commit()
@@ -216,17 +216,17 @@ class LibrarySync():
                         kodiVideo = kodivideo
                       
                 if kodiVideo == None:
-                    WriteKodiDB().addOrUpdateMusicVideoToKodiLibrary(item["Id"],connection, cursor)
+                    WriteKodiVideoDB().addOrUpdateMusicVideoToKodiLibrary(item["Id"],connection, cursor)
                 else:
                     if kodiVideo[2] != API().getChecksum(item):
-                        WriteKodiDB().addOrUpdateMusicVideoToKodiLibrary(item["Id"],connection, cursor)
+                        WriteKodiVideoDB().addOrUpdateMusicVideoToKodiLibrary(item["Id"],connection, cursor)
             
         #### PROCESS DELETES #####
         allEmbyMusicvideoIds = set(allEmbyMusicvideoIds)
         for kodiId in allKodiMusicvideoIds:
             if not kodiId in allEmbyMusicvideoIds:
                 WINDOW.setProperty(kodiId,"deleted")
-                WriteKodiDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
+                WriteKodiVideoDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
                 
         ### commit all changes to database ###
         connection.commit()
@@ -271,11 +271,11 @@ class LibrarySync():
                           
                     if kodiShow == None:
                         # Tv show doesn't exist in Kodi yet so proceed and add it
-                        WriteKodiDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
+                        WriteKodiVideoDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
                     else:
                         # If there are changes to the item, perform a full sync of the item
                         if kodiShow[2] != API().getChecksum(item):
-                            WriteKodiDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
+                            WriteKodiVideoDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
                             
                     #### PROCESS EPISODES ######
                     self.EpisodesFullSync(connection,cursor,item["Id"])
@@ -285,7 +285,7 @@ class LibrarySync():
         for kodiId in allKodiTvShowIds:
             if not kodiId in allEmbyTvShowIds:
                 WINDOW.setProperty(kodiId,"deleted")
-                WriteKodiDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
+                WriteKodiVideoDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
                 
         ### commit all changes to database ###
         connection.commit()
@@ -323,18 +323,18 @@ class LibrarySync():
                   
             if kodiEpisode == None:
                 # Episode doesn't exist in Kodi yet so proceed and add it
-                WriteKodiDB().addOrUpdateEpisodeToKodiLibrary(item["Id"], kodiShowId, connection, cursor)
+                WriteKodiVideoDB().addOrUpdateEpisodeToKodiLibrary(item["Id"], kodiShowId, connection, cursor)
             else:
                 # If there are changes to the item, perform a full sync of the item
                 if kodiEpisode[2] != API().getChecksum(item):
-                    WriteKodiDB().addOrUpdateEpisodeToKodiLibrary(item["Id"], kodiShowId, connection, cursor)
+                    WriteKodiVideoDB().addOrUpdateEpisodeToKodiLibrary(item["Id"], kodiShowId, connection, cursor)
         
         #### EPISODES: PROCESS DELETES #####
         allEmbyEpisodeIds = set(allEmbyEpisodeIds)
         for kodiId in allKodiEpisodeIds:
             if (not kodiId in allEmbyEpisodeIds):
                 WINDOW.setProperty(kodiId,"deleted")
-                WriteKodiDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
+                WriteKodiVideoDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
                 
     
     def IncrementalSync(self, itemList):
@@ -360,7 +360,7 @@ class LibrarySync():
                 for item in allEmbyMovies:
                         
                     if not item.get('IsFolder'):                    
-                        WriteKodiDB().addOrUpdateMovieToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
+                        WriteKodiVideoDB().addOrUpdateMovieToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
            
            
             #### PROCESS BOX SETS #####
@@ -368,10 +368,10 @@ class LibrarySync():
            
             for boxset in boxsets:
                 boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
-                WriteKodiDB().addBoxsetToKodiLibrary(boxset,connection, cursor)
+                WriteKodiVideoDB().addBoxsetToKodiLibrary(boxset,connection, cursor)
                     
                 for boxsetMovie in boxsetMovies:
-                    WriteKodiDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset, connection, cursor)
+                    WriteKodiVideoDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset, connection, cursor)
                         
                      
             #### PROCESS TV SHOWS ####
@@ -380,7 +380,7 @@ class LibrarySync():
                 allEmbyTvShows = ReadEmbyDB().getTvShows(view.get('id'),itemList)
                 for item in allEmbyTvShows:
                     if item.get('IsFolder') and item.get('RecursiveItemCount') != 0:                   
-                        kodiId = WriteKodiDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
+                        kodiId = WriteKodiVideoDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
                         
             #### PROCESS EPISODES ######
             for item in itemList:
@@ -397,13 +397,13 @@ class LibrarySync():
                         kodi_show_id = None
 
                     if kodi_show_id:
-                        WriteKodiDB().addOrUpdateEpisodeToKodiLibrary(MBitem["Id"], kodi_show_id, connection, cursor)
+                        WriteKodiVideoDB().addOrUpdateEpisodeToKodiLibrary(MBitem["Id"], kodi_show_id, connection, cursor)
         
             #### PROCESS MUSICVIDEOS ####
             allEmbyMusicvideos = ReadEmbyDB().getMusicVideos(itemList)
             for item in allEmbyMusicvideos:
                 if not item.get('IsFolder'):                    
-                    WriteKodiDB().addOrUpdateMusicVideoToKodiLibrary(item["Id"],connection, cursor)
+                    WriteKodiVideoDB().addOrUpdateMusicVideoToKodiLibrary(item["Id"],connection, cursor)
                     
             ### commit all changes to database ###
             connection.commit()
