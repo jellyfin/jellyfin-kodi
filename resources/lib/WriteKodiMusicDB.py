@@ -12,6 +12,7 @@ import urllib
 import sqlite3
 import os
 from decimal import Decimal
+from datetime import datetime
 
 from DownloadUtils import DownloadUtils
 from PlayUtils import PlayUtils
@@ -88,7 +89,15 @@ class WriteKodiMusicDB():
         dateadded = None
         if MBitem.get("DateCreated"):
             dateadded = MBitem["DateCreated"].split('.')[0].replace('T', " ")
-            
+        
+        thumb = API().getArtwork(MBitem, "Primary")
+        if thumb:
+            thumb = "<thumb>" + thumb + "</thumb>"
+        fanart = API().getArtwork(MBitem, "Backdrop")
+        if fanart:
+            fanart = "<fanart>" + fanart + "</fanart>"    
+        lastScraped = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
         #safety check 1: does the artist already exist?
         cursor.execute("SELECT idArtist FROM artist WHERE strArtist = ?",(name,))
         result = cursor.fetchone()
@@ -110,8 +119,8 @@ class WriteKodiMusicDB():
             cursor.execute("select coalesce(max(idArtist),0) as artistid from artist")
             artistid = cursor.fetchone()[0]
             artistid = artistid + 1
-            pathsql="insert into artist(idArtist, strArtist, strMusicBrainzArtistID, strGenres, strBiography, dateAdded) values(?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (artistid, name, musicBrainsId, genres, bio, dateadded))
+            pathsql="insert into artist(idArtist, strArtist, strMusicBrainzArtistID, strGenres, strBiography, strImage, strFanart, lastScraped, dateAdded) values(?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (artistid, name, musicBrainsId, genres, bio, thumb, fanart, lastScraped, dateadded))
             
             #create the reference in emby table
             pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
@@ -120,8 +129,8 @@ class WriteKodiMusicDB():
         #### UPDATE THE ARTIST #####
         else:
             utils.logMsg("UPDATE artist to Kodi library","Id: %s - Title: %s" % (embyId, name))
-            pathsql="update artist SET strArtist = ?, strMusicBrainzArtistID = ?, strGenres = ?, strBiography = ?,  dateAdded = ?  WHERE idArtist = ?"
-            cursor.execute(pathsql, (name, musicBrainsId, genres, bio, dateadded, artistid))
+            pathsql="update artist SET strArtist = ?, strMusicBrainzArtistID = ?, strGenres = ?, strBiography = ?, strImage = ?, strFanart = ?, lastScraped = ?,  dateAdded = ?  WHERE idArtist = ?"
+            cursor.execute(pathsql, (name, musicBrainsId, genres, bio, thumb, fanart, lastScraped, dateadded, artistid))
             
             #update the checksum in emby table
             cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(MBitem),MBitem["Id"]))
@@ -144,6 +153,10 @@ class WriteKodiMusicDB():
         userid = WINDOW.getProperty('userId%s' % username)
         server = WINDOW.getProperty('server%s' % username)
         downloadUtils = DownloadUtils()
+        
+        kodiVersion = 14
+        if xbmc.getInfoLabel("System.BuildVersion").startswith("15"):
+            kodiVersion = 15
         
         MBitem = ReadEmbyDB().getFullItem(embyId)
         
@@ -177,6 +190,13 @@ class WriteKodiMusicDB():
         dateadded = None
         if MBitem.get("DateCreated"):
             dateadded = MBitem["DateCreated"].split('.')[0].replace('T', " ")
+            
+        thumb = API().getArtwork(MBitem, "Primary")
+        if thumb:
+            thumb = "<thumb>" + thumb + "</thumb>"
+            
+        lastScraped = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
         
         ##### ADD THE ALBUM ############
         if albumid == None:
@@ -187,8 +207,12 @@ class WriteKodiMusicDB():
             cursor.execute("select coalesce(max(idAlbum),0) as albumid from album")
             albumid = cursor.fetchone()[0]
             albumid = albumid + 1
-            pathsql="insert into album(idAlbum, strAlbum, strMusicBrainzAlbumID, strArtists, iYear, strGenres, dateAdded) values(?, ?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (albumid, name, musicBrainsId, artists, year, genres, dateadded))
+            if kodiVersion == 15:
+                pathsql="insert into album(idAlbum, strAlbum, strMusicBrainzAlbumID, strArtists, iYear, strGenres, strReview, strImage, lastScraped, dateAdded, strReleaseType) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                cursor.execute(pathsql, (albumid, name, musicBrainsId, artists, year, genres, bio, thumb, lastScraped, dateadded, "album"))
+            else:
+                pathsql="insert into album(idAlbum, strAlbum, strMusicBrainzAlbumID, strArtists, iYear, strGenres, strReview, strImage, lastScraped, dateAdded) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                cursor.execute(pathsql, (albumid, name, musicBrainsId, artists, year, genres, bio, thumb, lastScraped, dateadded))
             
             #create the reference in emby table
             pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
@@ -197,8 +221,12 @@ class WriteKodiMusicDB():
         #### UPDATE THE ALBUM #####
         else:
             utils.logMsg("UPDATE album to Kodi library","Id: %s - Title: %s" % (embyId, name))
-            pathsql="update album SET strAlbum = ?, strMusicBrainzAlbumID = ?, strArtists = ?, strGenres = ?, iYear = ?,  dateAdded = ?  WHERE idAlbum = ?"
-            cursor.execute(pathsql, (name, musicBrainsId, artists, genres, year, dateadded, albumid))
+            if kodiVersion == 15:
+                pathsql="update album SET strAlbum=?, strMusicBrainzAlbumID=?, strArtists=?, iYear=?, strGenres=?, strReview=?, strImage=?, lastScraped=?, dateAdded=?, strReleaseType=?  WHERE idAlbum = ?"
+                cursor.execute(pathsql, (name, musicBrainsId, artists, year, genres, bio, thumb, lastScraped, dateadded, "album", albumid))
+            else:
+                pathsql="update album SET strAlbum=?, strMusicBrainzAlbumID=?, strArtists=?, iYear=?, strGenres=?, strReview=?, strImage=?, lastScraped=?, dateAdded=?  WHERE idAlbum = ?"
+                cursor.execute(pathsql, (name, musicBrainsId, artists, year, genres, bio, thumb, lastScraped, dateadded, albumid))
             
             #update the checksum in emby table
             cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(MBitem),MBitem["Id"]))
@@ -253,6 +281,10 @@ class WriteKodiMusicDB():
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
         
+        kodiVersion = 14
+        if xbmc.getInfoLabel("System.BuildVersion").startswith("15"):
+            kodiVersion = 15
+        
         # If the item already exist in the local Kodi DB we'll perform a full item update
         # If the item doesn't exist, we'll add it to the database
         
@@ -277,6 +309,7 @@ class WriteKodiMusicDB():
         duration = int(timeInfo.get('Duration'))*60
         year = MBitem.get("ProductionYear")
         bio = utils.convertEncoding(API().getOverview(MBitem))
+        
         dateadded = None
         if MBitem.get("DateCreated"):
             dateadded = MBitem["DateCreated"].split('.')[0].replace('T', " ")
@@ -302,8 +335,12 @@ class WriteKodiMusicDB():
             cursor.execute("select coalesce(max(idAlbum),0) as albumid from album")
             albumid = cursor.fetchone()[0]
             albumid = albumid + 1
-            pathsql="insert into album(idAlbum, strArtists, strGenres, iYear, dateAdded) values(?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (albumid, artists, genres, year, dateadded))
+            if kodiVersion == 15:
+                pathsql="insert into album(idAlbum, strArtists, strGenres, iYear, dateAdded, strReleaseType) values(?, ?, ?, ?, ?, ?)"
+                cursor.execute(pathsql, (albumid, artists, genres, year, dateadded, "single"))
+            else:
+                pathsql="insert into album(idAlbum, strArtists, strGenres, iYear, dateAdded) values(?, ?, ?, ?, ?)"
+                cursor.execute(pathsql, (albumid, artists, genres, year, dateadded))
             #some stuff here to get the album linked to artists
             for artist in MBitem.get("ArtistItems"):
                 cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?",(artist["Id"],))
@@ -313,9 +350,18 @@ class WriteKodiMusicDB():
                     sql="INSERT OR REPLACE into album_artist(idArtist, idAlbum, strArtist) values(?, ?, ?)"
                     cursor.execute(sql, (artistid, albumid, artist["Name"]))
 
-        playurl = PlayUtils().directPlay(MBitem)
-        #for transcoding we need to create a fake strm file because I couldn't figure out how to set a http or plugin path in the music DB
-        if playurl.startswith("http"):
+        if PlayUtils().isDirectPlay(MBitem):
+            playurl = PlayUtils().directPlay(MBitem)
+            #use the direct file path
+            if "\\" in playurl:
+                filename = playurl.rsplit("\\",1)[-1]
+                path = playurl.replace(filename,"")
+            elif "/" in playurl:
+                filename = playurl.rsplit("/",1)[-1]
+                path = playurl.replace(filename,"")
+        else:
+            #for transcoding we need to create a fake strm file because I couldn't figure out how to set a http or plugin path in the music DB
+            playurl = "plugin://plugin.video.emby/music/?id=%s&mode=play" %MBitem["Id"]
             #create fake strm file
             if not xbmcvfs.exists(dataPath):
                 xbmcvfs.mkdir(dataPath)
@@ -325,14 +371,7 @@ class WriteKodiMusicDB():
             text_file = open(strmFile, "w")
             text_file.writelines(playurl)
             text_file.close()
-        else:
-            #use the direct file path
-            if "\\" in playurl:
-                filename = playurl.rsplit("\\",1)[-1]
-                path = playurl.replace(filename,"")
-            elif "/" in playurl:
-                filename = playurl.rsplit("/",1)[-1]
-                path = playurl.replace(filename,"")
+
 
         #get the path
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
