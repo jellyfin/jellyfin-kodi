@@ -53,14 +53,17 @@ class PlayUtils():
                             playurl = self.transcoding(result, server, id)
                             WINDOW.setProperty("transcoding%s" % id, "true")
                             self.logMsg("File is transcoding.", 1)
+                            WINDOW.setProperty("%splaymethod" % playurl, "Transcode")
                         else:
                             self.logMsg("File is direct streaming.", 1)
+                            WINDOW.setProperty("%splaymethod" % playurl, "DirectStream")
                     else:
                         # User decided not to proceed.
                         self.logMsg("Unable to direct play. Verify the following path is accessible by the device: %s. You might also need to add SMB credentials in the addon settings." % result[u'MediaSources'][0][u'Path'])
                         return False
                 else:
                     self.logMsg("File is direct playing.", 1)
+                    WINDOW.setProperty("%splaymethod" % playurl, "DirectPlay")
             except:
                 return False
 
@@ -73,8 +76,10 @@ class PlayUtils():
                     playurl = self.transcoding(result, server, id)
                     WINDOW.setProperty("transcoding%s" % id, "true")
                     self.logMsg("File is transcoding.", 1)
+                    WINDOW.setProperty("%splaymethod" % playurl, "Transcode")
                 else:
                     self.logMsg("File is direct streaming.", 1)
+                    WINDOW.setProperty("%splaymethod" % playurl, "DirectStream")
             except:
                 return False
 
@@ -84,6 +89,7 @@ class PlayUtils():
                 playurl = self.transcoding(result, server, id)
                 WINDOW.setProperty("transcoding%s" % id, "true")
                 self.logMsg("File is transcoding.", 1)
+                WINDOW.setProperty("%splaymethod" % playurl, "Transcode")
             except:
                 return False
 
@@ -93,9 +99,9 @@ class PlayUtils():
     def isDirectPlay(self, result):
         # Requirements for Direct play:
         # FileSystem, Accessible path
-        addon = self.addon
+        self.addon = xbmcaddon.Addon(id=self.addonId)
         
-        playhttp = addon.getSetting('playFromStream')
+        playhttp = self.addon.getSetting('playFromStream')
         # User forcing to play via HTTP instead of SMB
         if playhttp == "true":
             return False
