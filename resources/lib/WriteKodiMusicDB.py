@@ -28,7 +28,6 @@ import xml.etree.cElementTree as ET
 
 addon = xbmcaddon.Addon(id='plugin.video.emby')
 addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
-dataPath = os.path.join(addondir,",musicfiles" + os.sep)
 
 
 class WriteKodiMusicDB():
@@ -198,21 +197,28 @@ class WriteKodiMusicDB():
         lastScraped = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         
+        
         ##### ADD THE ALBUM ############
         if albumid == None:
             
             utils.logMsg("ADD album to Kodi library","Id: %s - Title: %s" % (embyId, name))
             
-            #create the album
-            cursor.execute("select coalesce(max(idAlbum),0) as albumid from album")
-            albumid = cursor.fetchone()[0]
-            albumid = albumid + 1
-            if kodiVersion == 15:
-                pathsql="insert into album(idAlbum, strAlbum, strMusicBrainzAlbumID, strArtists, iYear, strGenres, strReview, strImage, lastScraped, dateAdded, strReleaseType) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-                cursor.execute(pathsql, (albumid, name, musicBrainsId, artists, year, genres, bio, thumb, lastScraped, dateadded, "album"))
+            #safety check: does the musicbrainzartistId already exist?
+            cursor.execute("SELECT idAlbum FROM album WHERE strMusicBrainzAlbumID = ?",(musicBrainsId,))
+            result = cursor.fetchone()
+            if result != None:
+                albumid = result[0]
             else:
-                pathsql="insert into album(idAlbum, strAlbum, strMusicBrainzAlbumID, strArtists, iYear, strGenres, strReview, strImage, lastScraped, dateAdded) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-                cursor.execute(pathsql, (albumid, name, musicBrainsId, artists, year, genres, bio, thumb, lastScraped, dateadded))
+                #create the album
+                cursor.execute("select coalesce(max(idAlbum),0) as albumid from album")
+                albumid = cursor.fetchone()[0]
+                albumid = albumid + 1
+                if kodiVersion == 15:
+                    pathsql="insert into album(idAlbum, strAlbum, strMusicBrainzAlbumID, strArtists, iYear, strGenres, strReview, strImage, lastScraped, dateAdded, strReleaseType) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                    cursor.execute(pathsql, (albumid, name, musicBrainsId, artists, year, genres, bio, thumb, lastScraped, dateadded, "album"))
+                else:
+                    pathsql="insert into album(idAlbum, strAlbum, strMusicBrainzAlbumID, strArtists, iYear, strGenres, strReview, strImage, lastScraped, dateAdded) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                    cursor.execute(pathsql, (albumid, name, musicBrainsId, artists, year, genres, bio, thumb, lastScraped, dateadded))
             
             #create the reference in emby table
             pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
@@ -362,10 +368,11 @@ class WriteKodiMusicDB():
         else:
             #for transcoding we need to create a fake strm file because I couldn't figure out how to set a http or plugin path in the music DB
             playurl = "plugin://plugin.video.emby/music/?id=%s&mode=play" %MBitem["Id"]
+            dataPath = os.path.join(addondir,"musicfiles" + os.sep)
             #create fake strm file
             if not xbmcvfs.exists(dataPath):
                 xbmcvfs.mkdir(dataPath)
-            filename = item["Id"] + ".strm"
+            filename = MBitem["Id"] + ".strm"
             path = dataPath
             strmFile = os.path.join(dataPath,filename)
             text_file = open(strmFile, "w")
