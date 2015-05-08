@@ -524,10 +524,8 @@ class LibrarySync():
             WINDOW.setProperty("SyncDatabaseRunning", "true")
             
             #show the progress dialog
-            pDialog = None
             if (dbSyncIndication):
-                pDialog = xbmcgui.DialogProgressBG()
-                pDialog.create('Emby for Kodi', 'Performing incremental sync...')
+                xbmcgui.Dialog().notification('Emby for Kodi', 'Performing incremental sync...', "special://home/addons/plugin.video.emby/icon.png")
             
             connection = utils.KodiSQL("video")
             cursor = connection.cursor()
@@ -607,10 +605,7 @@ class LibrarySync():
                 
                 xbmc.executebuiltin("UpdateLibrary(video)")
                 WINDOW.setProperty("SyncDatabaseRunning", "false")
-            
-            #close the progress dialog
-            if(pDialog != None):
-                pDialog.close()
+
     
     def ShouldStop(self):
             
