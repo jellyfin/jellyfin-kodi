@@ -313,7 +313,7 @@ class WriteKodiMusicDB():
                     sql="INSERT OR REPLACE into album_artist(idArtist, idAlbum, strArtist) values(?, ?, ?)"
                     cursor.execute(sql, (artistid, albumid, artist["Name"]))
 
-        playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
+        playurl = PlayUtils().directPlay(MBitem)
         #for transcoding we need to create a fake strm file because I couldn't figure out how to set a http or plugin path in the music DB
         if playurl.startswith("http"):
             #create fake strm file
