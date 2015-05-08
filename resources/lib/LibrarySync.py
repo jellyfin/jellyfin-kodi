@@ -156,7 +156,8 @@ class LibrarySync():
                     
                     if(pDialog != None):
                         progressTitle = "Processing " + view.get('title') + " (" + str(count) + " of " + str(total) + ")"
-                        pDialog.update(0, "Emby for Kodi - Running Sync", progressTitle)
+                        percentage = int(((float(count) / float(total)) * 100))
+                        pDialog.update(percentage, "Emby for Kodi - Running Sync", progressTitle)
                         count += 1        
                     
                     kodiMovie = None
@@ -180,8 +181,9 @@ class LibrarySync():
             total = len(boxsets) + 1
             count = 1
             for boxset in boxsets:
-                progressTitle = "Processing BoxSets"+ " (" + str(count) + " of " + str(total) + ")"                
-                pDialog.update(0, "Emby for Kodi - Running Sync", progressTitle)
+                progressTitle = "Processing BoxSets"+ " (" + str(count) + " of " + str(total) + ")"
+                percentage = int(((float(count) / float(total)) * 100))
+                pDialog.update(percentage, "Emby for Kodi - Running Sync", progressTitle)
                 count += 1
                 if(self.ShouldStop()):
                     return False                
@@ -230,7 +232,8 @@ class LibrarySync():
                 
                 if(pDialog != None):
                     progressTitle = "Processing MusicVideos (" + str(count) + " of " + str(total) + ")"
-                    pDialog.update(0, "Emby for Kodi - Running Sync", progressTitle)
+                    percentage = int(((float(count) / float(total)) * 100))
+                    pDialog.update(percentage, "Emby for Kodi - Running Sync", progressTitle)
                     count += 1        
                 
                 kodiVideo = None
@@ -280,7 +283,8 @@ class LibrarySync():
                 
                 if(pDialog != None):
                     progressTitle = "Processing " + view.get('title') + " (" + str(count) + " of " + str(total) + ")"
-                    pDialog.update(0, "Emby for Kodi - Running Sync", progressTitle)
+                    percentage = int(((float(count) / float(total)) * 100))
+                    pDialog.update(percentage, "Emby for Kodi - Running Sync", progressTitle)
                     count += 1                   
 
                 if item.get('IsFolder') and item.get('RecursiveItemCount') != 0:                   
@@ -392,7 +396,8 @@ class LibrarySync():
             
             if(pDialog != None):
                 progressTitle = "Processing Music Songs (" + str(count) + " of " + str(total) + ")"
-                pDialog.update(0, "Emby for Kodi - Running Sync", progressTitle)
+                percentage = int(((float(count) / float(total)) * 100))
+                pDialog.update(percentage, "Emby for Kodi - Running Sync", progressTitle)
                 count += 1        
             
             kodiSong = None
@@ -437,7 +442,8 @@ class LibrarySync():
             
             if(pDialog != None):
                 progressTitle = "Processing Music Artists (" + str(count) + " of " + str(total) + ")"
-                pDialog.update(0, "Emby for Kodi - Running Sync", progressTitle)
+                percentage = int(((float(count) / float(total)) * 100))
+                pDialog.update(percentage, "Emby for Kodi - Running Sync", progressTitle)
                 count += 1        
             
             kodiArtist = None
@@ -482,7 +488,8 @@ class LibrarySync():
             
             if(pDialog != None):
                 progressTitle = "Processing Music Albums (" + str(count) + " of " + str(total) + ")"
-                pDialog.update(0, "Emby for Kodi - Running Sync", progressTitle)
+                percentage = int(((float(count) / float(total)) * 100))
+                pDialog.update(percentage, "Emby for Kodi - Running Sync", progressTitle)
                 count += 1        
             
             kodiAlbum = None
@@ -535,7 +542,7 @@ class LibrarySync():
                         if not item.get('IsFolder'):                    
                             WriteKodiVideoDB().addOrUpdateMovieToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
                
-               
+                
                 #### PROCESS BOX SETS #####
                 boxsets = ReadEmbyDB().getBoxSets()
                
@@ -544,9 +551,8 @@ class LibrarySync():
                     WriteKodiVideoDB().addBoxsetToKodiLibrary(boxset,connection, cursor)
                         
                     for boxsetMovie in boxsetMovies:
-                        WriteKodiVideoDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset, connection, cursor)
-                            
-                         
+                        WriteKodiVideoDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset, connection, cursor)      
+                
                 #### PROCESS TV SHOWS ####
                 views = ReadEmbyDB().getCollections("tvshows")              
                 for view in views:
@@ -554,7 +560,7 @@ class LibrarySync():
                     for item in allEmbyTvShows:
                         if item.get('IsFolder') and item.get('RecursiveItemCount') != 0:                   
                             kodiId = WriteKodiVideoDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
-                            
+                
                 #### PROCESS EPISODES ######
                 for item in itemList:
                         
@@ -571,7 +577,7 @@ class LibrarySync():
 
                         if kodi_show_id:
                             WriteKodiVideoDB().addOrUpdateEpisodeToKodiLibrary(MBitem["Id"], kodi_show_id, connection, cursor)
-            
+                
                 #### PROCESS MUSICVIDEOS ####
                 allEmbyMusicvideos = ReadEmbyDB().getMusicVideos(itemList)
                 for item in allEmbyMusicvideos:
