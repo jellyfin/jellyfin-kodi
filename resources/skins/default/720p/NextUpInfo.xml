@@ -15,6 +15,13 @@
 					<height>281</height>
 					<aspectratio align="right" aligny="bottom">keep</aspectratio>
 				</control>
+				<control type="image">
+					<top>110r</top>
+					<width>100%</width>
+					<height>374</height>
+					<texture>white.png</texture>
+					<colordiffuse>ff010101</colordiffuse>
+				</control>
 				<!-- buttons -->
 				<control type="button" id="3012">
 					<description>Watch Now</description>
@@ -93,7 +100,16 @@
 							<textcolor>orange</textcolor>
 							<visible>false</visible>
 						</control>
+						<control type="image">
+							<top>52</top>
+							<width>24</width>
+							<height>24</height>
+							<aspect>keep</aspect>
+							<texture>imdb.png</texture>
+							<visible>Control.IsVisible(3003)</visible>
+						</control>
 						<control type="label" id="3003" description="rating">
+							<left>35</left>
 							<width>100%</width>
 							<top>50</top>
 							<height>40</height>
@@ -101,7 +117,7 @@
 							<textcolor>B3dddddd</textcolor>
 						</control>
 						<control type="label" id="3004" description="year/runtime">
-							<left>55</left>
+							<left>90</left>
 							<width>100%</width>
 							<top>50</top>
 							<height>40</height>
