@@ -56,6 +56,31 @@ class Kodi_Monitor(xbmc.Monitor):
             libSync = LibrarySync().FullLibrarySync()
             utils.logMsg("Doing_Db_Sync Post Resume: syncDatabase (Finished) " + str(libSync),1)
 
+        if method == "VideoLibrary.OnRemove":
+            xbmc.log('Intercepted remove from sender: ' + sender + ' method: ' + method + ' data: ' + data)
+            jsondata = json.loads(data)
+            id = ReadKodiDB().getEmbyIdByKodiId(jsondata.get("id"), jsondata.get("type"))
+            if id == None:
+                return            
+            xbmc.log("Deleting Emby ID: " + id + " from database")
+            connection = utils.KodiSQL()
+            cursor = connection.cursor()
+            cursor.execute("DELETE FROM emby WHERE emby_id = ?", (id,))
+            connection.commit()
+            
+            if jsondata != None:
+                if jsondata.get("type") == "episode":
+                    url='{server}/mediabrowser/Items?Ids=' + id + '&format=json'
+                    #This is a check to see if the item exists on the server, if it doesn't it may have already been deleted by another client
+                    result = DownloadUtils().downloadUrl(url)
+                    item = result.get("Items")[0]
+                    if data != "":
+                        return_value = xbmcgui.Dialog().yesno("Confirm Delete", "Delete file on Emby Server?")
+                        if return_value:
+                            url='{server}/mediabrowser/Items/' + id
+                            xbmc.log('Deleting via URL: ' + url)
+                            DownloadUtils().downloadUrl(url, type="DELETE")
+                            
     def clearProperty(self,type,id):
         # The sleep is necessary since VideoLibrary.OnUpdate
         # triggers 3 times in a row.
