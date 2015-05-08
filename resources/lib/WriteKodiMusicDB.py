@@ -249,7 +249,7 @@ class WriteKodiMusicDB():
         
         #link album to artist
         artistid = None
-        album_artists = None
+        album_artists = []
         if MBitem.get("AlbumArtists"):
             album_artists = MBitem.get("AlbumArtists")
         elif MBitem.get("ArtistItems"):
@@ -366,19 +366,9 @@ class WriteKodiMusicDB():
                 filename = playurl.rsplit("/",1)[-1]
                 path = playurl.replace(filename,"")
         else:
-            #for transcoding we need to create a fake strm file because I couldn't figure out how to set a http or plugin path in the music DB
-            playurl = "plugin://plugin.video.emby/music/?id=%s&mode=play" %MBitem["Id"]
-            dataPath = os.path.join(addondir,"musicfiles" + os.sep)
-            #create fake strm file
-            if not xbmcvfs.exists(dataPath):
-                xbmcvfs.mkdir(dataPath)
-            filename = MBitem["Id"] + ".strm"
-            path = dataPath
-            strmFile = os.path.join(dataPath,filename)
-            text_file = open(strmFile, "w")
-            text_file.writelines(playurl)
-            text_file.close()
-
+            #for transcoding we just use the server's streaming path because I couldn't figure out how to set a http or plugin path in the music DB
+            path = server + "/Audio/%s/" %MBitem["Id"]
+            filename = "stream.mp3"
 
         #get the path
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))

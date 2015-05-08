@@ -44,7 +44,7 @@ class VideoNodes():
             etree.ElementTree(root).write(nodefile)
         
         #create tag node - all items
-        nodefile = os.path.join(libraryPath, tagname + "_all.xml")
+        nodefile_root = os.path.join(libraryPath, tagname + "_all.xml")
         root = etree.Element("node", {"order":"1", "type":"filter"})
         etree.SubElement(root, "label").text = tagname
         etree.SubElement(root, "match").text = "all"
@@ -59,9 +59,9 @@ class VideoNodes():
         WINDOW.setProperty("Emby.nodes.%s.type" %str(windowPropId),type)
         etree.SubElement(Rule, "value").text = tagname
         try:
-            etree.ElementTree(root).write(nodefile, xml_declaration=True)
+            etree.ElementTree(root).write(nodefile_root, xml_declaration=True)
         except:
-            etree.ElementTree(root).write(nodefile)
+            etree.ElementTree(root).write(nodefile_root)
         
         #create tag node - recent items
         nodefile = os.path.join(libraryPath, tagname + "_recent.xml")
@@ -154,9 +154,8 @@ class VideoNodes():
             etree.SubElement(root, "label").text = label
             etree.SubElement(root, "match").text = "all"
             etree.SubElement(root, "content").text = "episodes"
+            etree.SubElement(root, "path").text = nodefile_root
             etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
-            Rule = etree.SubElement(root, "rule", {"field":"tag","operator":"is"})
-            etree.SubElement(Rule, "value").text = tagname
             etree.SubElement(root, "order", {"direction":"descending"}).text = "dateadded"
             #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
             etree.SubElement(root, "limit").text = "25"
@@ -180,8 +179,7 @@ class VideoNodes():
             etree.SubElement(root, "match").text = "all"
             etree.SubElement(root, "content").text = "episodes"
             etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
-            Rule = etree.SubElement(root, "rule", {"field":"tag","operator":"is"})
-            etree.SubElement(Rule, "value").text = tagname
+            etree.SubElement(root, "path").text = nodefile_root
             #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
             etree.SubElement(root, "limit").text = "25"
             Rule2 = etree.SubElement(root, "rule", {"field":"inprogress","operator":"true"})
@@ -200,8 +198,7 @@ class VideoNodes():
             label = language(30179)
             etree.SubElement(root, "label").text = label
             etree.SubElement(root, "content").text = "episodes"
-            path = "plugin://plugin.video.emby/?id=%s&mode=nextup&limit=25" %tagname
-            etree.SubElement(root, "path").text = path
+            etree.SubElement(root, "path").text = nodefile_root
             etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
             WINDOW.setProperty("Emby.nodes.%s.nextepisodes.title" %str(windowPropId),label)
             path = "library://video/Emby - %s/%s_nextup_episodes.xml"%(tagname,tagname)

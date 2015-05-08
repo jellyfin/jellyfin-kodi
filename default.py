@@ -27,21 +27,9 @@ except:
     mode = None
 
 ##### Play items via plugin://plugin.video.emby/ #####
-if  mode == "play":
-    addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
-    selectAction = addonSettings.getSetting('selectAction')
-    ##### info only working from widgets currently #####
-    if selectAction == "1" and xbmc.getCondVisibility("Window.IsActive(home)"):
-        entrypoint.showInfo(id)
-    else:
-        entrypoint.doPlayback(id)
-   
-elif mode == "playnow":   
+if  mode == "play" or mode == "playnow":
     entrypoint.doPlayback(id)
-     
-elif mode == "person":
-    entrypoint.showPersonInfo(id,name)
-
+   
 ##### DO DATABASE RESET #####
 elif mode == "reset":
     utils.reset()

@@ -106,7 +106,7 @@ class WriteKodiVideoDB():
             jsonData = downloadUtils.downloadUrl(itemTrailerUrl)
             if(jsonData != ""):
                 trailerItem = jsonData
-                trailerUrl = "plugin://plugin.video.emby/trailer/?id=%s&mode=playnow" % trailerItem[0][u'Id']
+                trailerUrl = "plugin://plugin.video.emby/trailer/?id=%s&mode=play" % trailerItem[0][u'Id']
         
         if MBitem.get("DateCreated") != None:
             dateadded = MBitem["DateCreated"].split('.')[0].replace('T', " ")
