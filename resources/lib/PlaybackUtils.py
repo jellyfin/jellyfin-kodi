@@ -109,13 +109,6 @@ class PlaybackUtils():
         WINDOW.setProperty(playurl+"runtimeticks", str(result.get("RunTimeTicks")))
         WINDOW.setProperty(playurl+"type", result.get("Type"))
         WINDOW.setProperty(playurl+"item_id", id)
-
-        if PlayUtils().isDirectPlay(result) == True:
-            playMethod = "DirectPlay"
-        else:
-            playMethod = "Transcode"
-
-        WINDOW.setProperty(playurl+"playmethod", playMethod)
             
         mediaSources = result.get("MediaSources")
         if(mediaSources != None):
