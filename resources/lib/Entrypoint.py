@@ -17,8 +17,6 @@ from PlaybackUtils import PlaybackUtils
 from DownloadUtils import DownloadUtils
 from ReadEmbyDB import ReadEmbyDB
 from API import API
-from ItemInfo import ItemInfo
-from PersonInfo import PersonInfo
 
 
 ##### Play items via plugin://plugin.video.emby/ #####
