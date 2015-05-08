@@ -117,6 +117,8 @@ class PlayUtils():
             # Verify if path is accessible
             if self.fileExists(result):
                 return True
+            else:
+                return False
 
 
     def directPlay(self, result):
