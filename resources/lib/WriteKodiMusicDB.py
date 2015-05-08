@@ -304,7 +304,14 @@ class WriteKodiMusicDB():
             albumid = albumid + 1
             pathsql="insert into album(idAlbum, strArtists, strGenres, iYear, dateAdded) values(?, ?, ?, ?, ?)"
             cursor.execute(pathsql, (albumid, artists, genres, year, dateadded))
-
+            #some stuff here to get the album linked to artists
+            for artist in MBitem.get("ArtistItems"):
+                cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?",(artist["Id"],))
+                result = cursor.fetchone()
+                if result:
+                    artistid = result[0]
+                    sql="INSERT OR REPLACE into album_artist(idArtist, idAlbum, strArtist) values(?, ?, ?)"
+                    cursor.execute(sql, (artistid, albumid, artist["Name"]))
 
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
         #for transcoding we need to create a fake strm file because I couldn't figure out how to set a http or plugin path in the music DB
