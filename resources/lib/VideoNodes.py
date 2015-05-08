@@ -198,7 +198,8 @@ class VideoNodes():
             label = language(30179)
             etree.SubElement(root, "label").text = label
             etree.SubElement(root, "content").text = "episodes"
-            etree.SubElement(root, "path").text = nodefile_root
+            path = "plugin://plugin.video.emby/?id=%s&mode=nextup&limit=25" %tagname
+            etree.SubElement(root, "path").text = path
             etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
             WINDOW.setProperty("Emby.nodes.%s.nextepisodes.title" %str(windowPropId),label)
             path = "library://video/Emby - %s/%s_nextup_episodes.xml"%(tagname,tagname)
