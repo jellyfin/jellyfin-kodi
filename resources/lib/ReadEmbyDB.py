@@ -131,6 +131,15 @@ class ReadEmbyDB():
         if (jsonData[u'Items'] != ""):
             result = jsonData[u'Items']
             
+            #only return valid albums - which have artists
+            tempresult = []
+            for item in result:
+                if item["AlbumArtists"]:
+                    tempresult.append(item)
+            
+            result = tempresult
+
+            
         # Work around to only return items from the given list
         if (result != None and len(result) > 0 and len(itemList) > 0):
             newResult = []

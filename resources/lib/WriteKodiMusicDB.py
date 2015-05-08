@@ -27,7 +27,7 @@ import xml.etree.cElementTree as ET
 
 addon = xbmcaddon.Addon(id='plugin.video.emby')
 addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
-dataPath = os.path.join(addondir,",musicfiles")
+dataPath = os.path.join(addondir,",musicfiles" + os.sep)
 
 
 class WriteKodiMusicDB():
@@ -136,7 +136,7 @@ class WriteKodiMusicDB():
         self.addOrUpdateArt(API().getArtwork(MBitem, "Disc"), artistid, "artist", "discart", cursor)
         self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop"), artistid, "artist", "fanart", cursor)
 
-    def addOrUpdateAlbumToKodiLibrary( self, embyId ,connection, cursor, isSingle=False):
+    def addOrUpdateAlbumToKodiLibrary( self, embyId ,connection, cursor):
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         WINDOW = xbmcgui.Window(10000)
@@ -178,12 +178,6 @@ class WriteKodiMusicDB():
         if MBitem.get("DateCreated"):
             dateadded = MBitem["DateCreated"].split('.')[0].replace('T', " ")
         
-        if isSingle:
-            releasetype = "single"
-            name = None
-        else:
-            releasetype = "album"
-        
         ##### ADD THE ALBUM ############
         if albumid == None:
             
@@ -221,7 +215,14 @@ class WriteKodiMusicDB():
         
         #link album to artist
         artistid = None
-        for artist in MBitem.get("AlbumArtists"):
+        album_artists = None
+        if MBitem.get("AlbumArtists"):
+            album_artists = MBitem.get("AlbumArtists")
+        elif MBitem.get("ArtistItems"):
+            album_artists = MBitem.get("ArtistItems")
+        
+        #some stuff here to get the albums linked to artists
+        for artist in album_artists:
             cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?",(artist["Id"],))
             result = cursor.fetchone()
             if result:
@@ -231,7 +232,7 @@ class WriteKodiMusicDB():
                 #update discography
                 sql="INSERT OR REPLACE into discography(idArtist, strAlbum, strYear) values(?, ?, ?)"
                 cursor.execute(sql, (artistid, name, str(year)))
-        
+          
         #add genres
         self.AddGenresToMedia(albumid, MBitem.get("Genres"), "album", cursor)
         
@@ -296,14 +297,21 @@ class WriteKodiMusicDB():
             result = cursor.fetchone()
             if result:
                 albumid = result[0]
-        if not albumid:
+        if albumid == None:
             #no album = single in kodi, we need to create a single album for that
-            albumid = self.addOrUpdateAlbumToKodiLibrary(MBitem["Id"],connection, cursor, True)
+            cursor.execute("select coalesce(max(idAlbum),0) as albumid from album")
+            albumid = cursor.fetchone()[0]
+            albumid = albumid + 1
+            pathsql="insert into album(idAlbum, strArtists, strGenres, iYear, dateAdded) values(?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (albumid, artists, genres, year, dateadded))
+
 
         playurl = PlayUtils().getPlayUrl(server, MBitem["Id"], MBitem)
         #for transcoding we need to create a fake strm file because I couldn't figure out how to set a http or plugin path in the music DB
         if playurl.startswith("http"):
             #create fake strm file
+            if not xbmcvfs.exists(dataPath):
+                xbmcvfs.mkdir(dataPath)
             filename = item["Id"] + ".strm"
             path = dataPath
             strmFile = os.path.join(dataPath,filename)
