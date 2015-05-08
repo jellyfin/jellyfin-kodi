@@ -80,7 +80,7 @@ def addUser():
         # Add user to session
         userlist = {}
         users = []
-        url = "{server}/mediabrowser/Users?IsDisabled=false"
+        url = "{server}/mediabrowser/Users?IsDisabled=false&IsHidden=false"
         result = doUtils.downloadUrl(url)
 
         # pull the list of users
