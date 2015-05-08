@@ -91,6 +91,14 @@ class Player( xbmc.Player ):
                     self.logMsg("emby Service -> Percent Complete:" + str(percentComplete) + " Mark Played At:" + str(markPlayedAt))
                     self.stopPlayback(data)
                     
+                    if percentComplete > .80 and data.get("Type") == "Episode" and addonSettings.getSetting("offerDelete")=="true":
+                        return_value = xbmcgui.Dialog().yesno("Offer Delete", "Delete\n" + data.get("currentfile").split("/")[-1] + "\non Emby Server? ")
+                        if return_value:
+                            url='{server}/mediabrowser/Items/' + item_id
+                            xbmc.log('Deleting via URL: ' + url)
+                            self.doUtils.downloadUrl(url, type="DELETE")                            
+                            xbmc.sleep (15000)
+                            xbmc.executebuiltin( "Container.Refresh" )
                 #if(refresh_id != None):
                     #report updates playcount and resume status to Kodi and MB3
                     #librarySync.updatePlayCount(item_id)
