@@ -67,14 +67,15 @@ class Kodi_Monitor(xbmc.Monitor):
             cursor = connection.cursor()
             cursor.execute("DELETE FROM emby WHERE emby_id = ?", (id,))
             connection.commit()
+            cursor.close
             
-            if jsondata != None:
+            if jsondata:
                 if jsondata.get("type") == "episode":
                     url='{server}/mediabrowser/Items?Ids=' + id + '&format=json'
                     #This is a check to see if the item exists on the server, if it doesn't it may have already been deleted by another client
                     result = DownloadUtils().downloadUrl(url)
                     item = result.get("Items")[0]
-                    if data != "":
+                    if data:
                         return_value = xbmcgui.Dialog().yesno("Confirm Delete", "Delete file on Emby Server?")
                         if return_value:
                             url='{server}/mediabrowser/Items/' + id
