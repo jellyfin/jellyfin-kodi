@@ -62,6 +62,15 @@ elif  mode == "nextup":
     limit = int(params['limit'])
     entrypoint.getNextUpEpisodes(id, limit)
 
+##### GET INPROGRESS EPISODES FOR TAGNAME #####    
+elif  mode == "inprogressepisodes":
+    limit = int(params['limit'])
+    entrypoint.getInProgressEpisodes(id, limit)
+
+##### GET RECENT EPISODES FOR TAGNAME #####    
+elif  mode == "recentepisodes":
+    limit = int(params['limit'])
+    entrypoint.getRecentEpisodes(id, limit)
     
 ##### GET EXTRAFANART FOR LISTITEM #####
 elif "extrafanart" in sys.argv[0]:

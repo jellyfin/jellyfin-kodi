@@ -149,19 +149,13 @@ class VideoNodes():
         if type == "tvshows":
             #create tag node - recent episodes
             nodefile = os.path.join(libraryPath, tagname + "_recent_episodes.xml")
-            root = etree.Element("node", {"order":"3", "type":"filter"})
+            root = etree.Element("node", {"order":"3", "type":"folder"})
             label = language(30175)
             etree.SubElement(root, "label").text = label
-            etree.SubElement(root, "match").text = "all"
             etree.SubElement(root, "content").text = "episodes"
-            etree.SubElement(root, "path").text = nodefile_root
             etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
-            etree.SubElement(root, "order", {"direction":"descending"}).text = "dateadded"
-            #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
-            etree.SubElement(root, "limit").text = "25"
-            #exclude watched items --> currently hardcoded --> TODO: add a setting for this ?
-            Rule2 = etree.SubElement(root, "rule", {"field":"playcount","operator":"is"})
-            etree.SubElement(Rule2, "value").text = "0"
+            path = "plugin://plugin.video.emby/?id=%s&mode=recentepisodes&limit=25" %tagname
+            etree.SubElement(root, "path").text = path
             WINDOW.setProperty("Emby.nodes.%s.recentepisodes.title" %str(windowPropId),label)
             path = "library://video/Emby - %s/%s_recent_episodes.xml"%(tagname,tagname)
             WINDOW.setProperty("Emby.nodes.%s.recentepisodes.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
@@ -173,16 +167,13 @@ class VideoNodes():
             
             #create tag node - inprogress items
             nodefile = os.path.join(libraryPath, tagname + "_progress_episodes.xml")
-            root = etree.Element("node", {"order":"4", "type":"filter"})
+            root = etree.Element("node", {"order":"4", "type":"folder"})
             label = language(30178)
             etree.SubElement(root, "label").text = label
-            etree.SubElement(root, "match").text = "all"
             etree.SubElement(root, "content").text = "episodes"
             etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
-            etree.SubElement(root, "path").text = nodefile_root
-            #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
-            etree.SubElement(root, "limit").text = "25"
-            Rule2 = etree.SubElement(root, "rule", {"field":"inprogress","operator":"true"})
+            path = "plugin://plugin.video.emby/?id=%s&mode=inprogressepisodes&limit=25" %tagname
+            etree.SubElement(root, "path").text = path
             WINDOW.setProperty("Emby.nodes.%s.inprogressepisodes.title" %str(windowPropId),label)
             path = "library://video/Emby - %s/%s_progress_episodes.xml"%(tagname,tagname)
             WINDOW.setProperty("Emby.nodes.%s.inprogressepisodes.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
