@@ -332,7 +332,7 @@ class WriteKodiMusicDB():
         genres = " / ".join(MBitem.get("Genres"))
         artists = " / ".join(MBitem.get("Artists"))
         track = MBitem.get("IndexNumber")
-        duration = int(timeInfo.get('Duration'))*60
+        duration = int(timeInfo.get('Duration'))*60 ## TODO --> duration in seconds, now its capped at minutes
         year = MBitem.get("ProductionYear")
         bio = utils.convertEncoding(API().getOverview(MBitem))
         

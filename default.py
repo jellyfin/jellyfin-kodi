@@ -76,9 +76,8 @@ elif  mode == "recentepisodes":
 elif "extrafanart" in sys.argv[0]:
     entrypoint.getExtraFanArt()
     
-
 ##### SHOW ADDON NODES LISTING #####    
-else:
+if mode is None:
     entrypoint.doMainListing()
 
 
