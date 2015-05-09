@@ -48,6 +48,18 @@ class PlaybackUtils():
         except:
             return
 
+        # For split movies
+        if u'PartCount' in result:
+            partcount = result[u'PartCount']
+            # Get additional parts/playurl
+            url = "{server}/mediabrowser/Videos/%s/AdditionalParts" % id
+            parts = self.downloadUtils.downloadUrl(url)
+            partsId = [id]
+            for part in parts[u'Items']:
+                partId = part[u'Id']
+                partsId.append(partId)
+            self.PLAYAllItems(partsId, startPositionTicks=None)
+
         userData = result['UserData']
         resume_result = 0
         seekTime = 0

@@ -179,6 +179,19 @@ class WebSocketThread(threading.Thread):
             self.remove_items(itemsRemoved)
             self.update_items(itemsToUpdate)
 
+        elif messageType == "GeneralCommand":
+            
+            if data.get("Name") == "DisplayMessage":
+                message = data.get("Arguments")
+                header = message[u'Header']
+                text = message[u'Text']
+                xbmcgui.Dialog().notification(header, text)
+
+            elif data.get("Name") == "SendString":
+                message = data.get("Arguments")
+                string = message[u'String']
+                xbmcgui.Dialog().notification("Emby server", string)
+
     def remove_items(self, itemsRemoved):
         
         #Process video library
