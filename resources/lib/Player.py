@@ -61,7 +61,6 @@ class Player( xbmc.Player ):
     
     def stopAll(self):
 
-        self.ws.processPendingActions()
         if(len(self.played_information) == 0):
             return 
             

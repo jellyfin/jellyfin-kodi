@@ -22,9 +22,6 @@ from LibrarySync import LibrarySync
 from WriteKodiVideoDB import WriteKodiVideoDB
 from ReadEmbyDB import ReadEmbyDB
 
-pendingUserDataList = []
-pendingItemsToRemove = []
-pendingItemsToUpdate = []
 _MODE_BASICPLAY=12
 
 class WebSocketThread(threading.Thread):
@@ -96,9 +93,6 @@ class WebSocketThread(threading.Thread):
             self.logMsg("Stopping Client NO Object ERROR")
             
     def on_message(self, ws, message):
-        global pendingUserDataList
-        global pendingItemsToRemove
-        global pendingItemsToUpdate
         self.logMsg("Message : " + str(message), 0)
         result = json.loads(message)
         
@@ -154,10 +148,7 @@ class WebSocketThread(threading.Thread):
             userDataList = data.get("UserDataList")
             self.logMsg("Message : Doing UserDataChanged : UserDataList : " + str(userDataList), 0)
             if(userDataList != None):
-                if xbmc.Player().isPlaying():
-                    pendingUserDataList += userDataList
-                else:
-                    self.user_data_update(userDataList)
+                self.user_data_update(userDataList)
         
         elif(messageType != None and messageType == "LibraryChanged"):
             foldersAddedTo = data.get("FoldersAddedTo")
@@ -172,10 +163,6 @@ class WebSocketThread(threading.Thread):
             self.logMsg("Message : WebSocket LibraryChanged : Items Updated : " + str(itemsUpdated), 0)
             self.logMsg("Message : WebSocket LibraryChanged : Items Removed : " + str(itemsRemoved), 0)
 
-            #if xbmc.Player().isPlaying():
-            #    pendingItemsToRemove += itemsRemoved
-            #    pendingItemsToUpdate += itemsToUpdate
-            #else:
             self.remove_items(itemsRemoved)
             self.update_items(itemsToUpdate)
 
@@ -288,17 +275,3 @@ class WebSocketThread(threading.Thread):
 
         self.logMsg("Thread Exited")
         
-        
-    def processPendingActions(self):
-        global pendingUserDataList
-        global pendingItemsToRemove
-        global pendingItemsToUpdate    
-        if pendingUserDataList != []:
-            self.user_data_update(pendingUserDataList)
-            pendingUserDataList = []
-        if pendingItemsToRemove != []:
-            self.remove_items(pendingItemsToRemove)
-            pendingItemsToRemove = []
-        if pendingItemsToUpdate != []:
-            self.update_items(pendingItemsToUpdate)
-            pendingItemsToUpdate = []
