@@ -113,26 +113,34 @@ class WriteKodiMusicDB():
         if artistid == None:
             
             utils.logMsg("ADD artist to Kodi library","Id: %s - Title: %s" % (embyId, name))
-
-            #create the artist
-            cursor.execute("select coalesce(max(idArtist),0) as artistid from artist")
-            artistid = cursor.fetchone()[0]
-            artistid = artistid + 1
-            pathsql="insert into artist(idArtist, strArtist, strMusicBrainzArtistID, strGenres, strBiography, strImage, strFanart, lastScraped, dateAdded) values(?, ?, ?, ?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (artistid, name, musicBrainsId, genres, bio, thumb, fanart, lastScraped, dateadded))
+            try:
+                #create the artist
+                cursor.execute("select coalesce(max(idArtist),0) as artistid from artist")
+                artistid = cursor.fetchone()[0]
+                artistid = artistid + 1
+                pathsql="insert into artist(idArtist, strArtist, strMusicBrainzArtistID, strGenres, strBiography, strImage, strFanart, lastScraped, dateAdded) values(?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                cursor.execute(pathsql, (artistid, name, musicBrainsId, genres, bio, thumb, fanart, lastScraped, dateadded))
+                
+                #create the reference in emby table
+                pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
+                cursor.execute(pathsql, (MBitem["Id"], artistid, "artist", API().getChecksum(MBitem)))
             
-            #create the reference in emby table
-            pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
-            cursor.execute(pathsql, (MBitem["Id"], artistid, "artist", API().getChecksum(MBitem)))
+            except Exception, e:
+                utils.logMsg("Error while adding artist to Kodi library: ", e)
+                return
                         
         #### UPDATE THE ARTIST #####
         else:
             utils.logMsg("UPDATE artist to Kodi library","Id: %s - Title: %s" % (embyId, name))
-            pathsql="update artist SET strArtist = ?, strMusicBrainzArtistID = ?, strGenres = ?, strBiography = ?, strImage = ?, strFanart = ?, lastScraped = ?,  dateAdded = ?  WHERE idArtist = ?"
-            cursor.execute(pathsql, (name, musicBrainsId, genres, bio, thumb, fanart, lastScraped, dateadded, artistid))
+            try:
+                pathsql="update artist SET strArtist = ?, strMusicBrainzArtistID = ?, strGenres = ?, strBiography = ?, strImage = ?, strFanart = ?, lastScraped = ?,  dateAdded = ?  WHERE idArtist = ?"
+                cursor.execute(pathsql, (name, musicBrainsId, genres, bio, thumb, fanart, lastScraped, dateadded, artistid))
             
-            #update the checksum in emby table
-            cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(MBitem),MBitem["Id"]))
+                #update the checksum in emby table
+                cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(MBitem),MBitem["Id"]))
+            except Exception, e:
+                utils.logMsg("Error while updating artist to Kodi library: ", e)
+                return
         
         #update artwork
         self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), artistid, "artist", "thumb", cursor)
@@ -195,30 +203,37 @@ class WriteKodiMusicDB():
             thumb = "<thumb>" + thumb + "</thumb>"
             
         lastScraped = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-        
         
         ##### ADD THE ALBUM ############
         if albumid == None:
             
             utils.logMsg("ADD album to Kodi library","Id: %s - Title: %s" % (embyId, name))
             
-            #safety check: does the musicbrainzartistId already exist?
+            #safety check: does the strMusicBrainzAlbumID already exist?
             cursor.execute("SELECT idAlbum FROM album WHERE strMusicBrainzAlbumID = ?",(musicBrainsId,))
             result = cursor.fetchone()
             if result != None:
                 albumid = result[0]
             else:
                 #create the album
-                cursor.execute("select coalesce(max(idAlbum),0) as albumid from album")
-                albumid = cursor.fetchone()[0]
-                albumid = albumid + 1
-                if kodiVersion == 15:
-                    pathsql="insert into album(idAlbum, strAlbum, strMusicBrainzAlbumID, strArtists, iYear, strGenres, strReview, strImage, lastScraped, dateAdded, strReleaseType) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-                    cursor.execute(pathsql, (albumid, name, musicBrainsId, artists, year, genres, bio, thumb, lastScraped, dateadded, "album"))
-                else:
-                    pathsql="insert into album(idAlbum, strAlbum, strMusicBrainzAlbumID, strArtists, iYear, strGenres, strReview, strImage, lastScraped, dateAdded) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-                    cursor.execute(pathsql, (albumid, name, musicBrainsId, artists, year, genres, bio, thumb, lastScraped, dateadded))
+                try:
+                    cursor.execute("select coalesce(max(idAlbum),0) as albumid from album")
+                    albumid = cursor.fetchone()[0]
+                    albumid = albumid + 1
+                    if kodiVersion == 15:
+                        pathsql="insert into album(idAlbum, strAlbum, strMusicBrainzAlbumID, strArtists, iYear, strGenres, strReview, strImage, lastScraped, dateAdded, strReleaseType) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                        cursor.execute(pathsql, (albumid, name, musicBrainsId, artists, year, genres, bio, thumb, lastScraped, dateadded, "album"))
+                    else:
+                        pathsql="insert into album(idAlbum, strAlbum, strMusicBrainzAlbumID, strArtists, iYear, strGenres, strReview, strImage, lastScraped, dateAdded) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                        cursor.execute(pathsql, (albumid, name, musicBrainsId, artists, year, genres, bio, thumb, lastScraped, dateadded))
+                        
+                    #create the reference in emby table
+                    pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
+                    cursor.execute(pathsql, (MBitem["Id"], albumid, "album", API().getChecksum(MBitem)))
+                
+                except Exception, e:
+                    utils.logMsg("Error while adding album to Kodi library: ", e)
+                    return
             
             #create the reference in emby table
             pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
@@ -227,16 +242,21 @@ class WriteKodiMusicDB():
         #### UPDATE THE ALBUM #####
         else:
             utils.logMsg("UPDATE album to Kodi library","Id: %s - Title: %s" % (embyId, name))
-            if kodiVersion == 15:
-                pathsql="update album SET strAlbum=?, strMusicBrainzAlbumID=?, strArtists=?, iYear=?, strGenres=?, strReview=?, strImage=?, lastScraped=?, dateAdded=?, strReleaseType=?  WHERE idAlbum = ?"
-                cursor.execute(pathsql, (name, musicBrainsId, artists, year, genres, bio, thumb, lastScraped, dateadded, "album", albumid))
-            else:
-                pathsql="update album SET strAlbum=?, strMusicBrainzAlbumID=?, strArtists=?, iYear=?, strGenres=?, strReview=?, strImage=?, lastScraped=?, dateAdded=?  WHERE idAlbum = ?"
-                cursor.execute(pathsql, (name, musicBrainsId, artists, year, genres, bio, thumb, lastScraped, dateadded, albumid))
+            try:
+                if kodiVersion == 15:
+                    pathsql="update album SET strAlbum=?, strMusicBrainzAlbumID=?, strArtists=?, iYear=?, strGenres=?, strReview=?, strImage=?, lastScraped=?, dateAdded=?, strReleaseType=?  WHERE idAlbum = ?"
+                    cursor.execute(pathsql, (name, musicBrainsId, artists, year, genres, bio, thumb, lastScraped, dateadded, "album", albumid))
+                else:
+                    pathsql="update album SET strAlbum=?, strMusicBrainzAlbumID=?, strArtists=?, iYear=?, strGenres=?, strReview=?, strImage=?, lastScraped=?, dateAdded=?  WHERE idAlbum = ?"
+                    cursor.execute(pathsql, (name, musicBrainsId, artists, year, genres, bio, thumb, lastScraped, dateadded, albumid))
+                    
+                #update the checksum in emby table
+                cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(MBitem),MBitem["Id"]))
             
-            #update the checksum in emby table
-            cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(MBitem),MBitem["Id"]))
-        
+            except Exception, e:
+                utils.logMsg("Error while updating album to Kodi library: ", e)
+                return
+
         #update artwork
         self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), albumid, "album", "thumb", cursor)
         self.addOrUpdateArt(API().getArtwork(MBitem, "BoxRear"), albumid, "album", "poster", cursor)
@@ -366,7 +386,7 @@ class WriteKodiMusicDB():
                 filename = playurl.rsplit("/",1)[-1]
                 path = playurl.replace(filename,"")
         else:
-            #for transcoding we just use the server's streaming path because I couldn't figure out how to set a http or plugin path in the music DB
+            #for transcoding we just use the server's streaming path because I couldn't figure out how to set the plugin path in the music DB
             path = server + "/Audio/%s/" %MBitem["Id"]
             filename = "stream.mp3"
 
@@ -387,26 +407,33 @@ class WriteKodiMusicDB():
         if songid == None:
             
             utils.logMsg("ADD song to Kodi library","Id: %s - Title: %s" % (embyId, name))
-
-            #create the song
-            cursor.execute("select coalesce(max(idSong),0) as songid from song")
-            songid = cursor.fetchone()[0]
-            songid = songid + 1
-            pathsql="insert into song(idSong, idAlbum, idPath, strArtists, strGenres, strTitle, iTrack, iDuration, iYear, strFileName, strMusicBrainzTrackID, iTimesPlayed, lastplayed) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (songid, albumid, pathid, artists, genres, name, track, duration, year, filename, musicBrainzId, playcount, lastplayed))
-            
-            #create the reference in emby table
-            pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
-            cursor.execute(pathsql, (MBitem["Id"], songid, "song", API().getChecksum(MBitem)))
+            try:
+                #create the song
+                cursor.execute("select coalesce(max(idSong),0) as songid from song")
+                songid = cursor.fetchone()[0]
+                songid = songid + 1
+                pathsql="insert into song(idSong, idAlbum, idPath, strArtists, strGenres, strTitle, iTrack, iDuration, iYear, strFileName, strMusicBrainzTrackID, iTimesPlayed, lastplayed) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                cursor.execute(pathsql, (songid, albumid, pathid, artists, genres, name, track, duration, year, filename, musicBrainzId, playcount, lastplayed))
+                
+                #create the reference in emby table
+                pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
+                cursor.execute(pathsql, (MBitem["Id"], songid, "song", API().getChecksum(MBitem)))
+            except Exception, e:
+                utils.logMsg("Error while adding song to Kodi library: ", e)
+                return
             
         #### UPDATE THE SONG #####
         else:
             utils.logMsg("UPDATE song to Kodi library","Id: %s - Title: %s" % (embyId, name))
-            pathsql="update song SET idAlbum=?, strArtists=?, strGenres=?, strTitle=?, iTrack=?, iDuration=?, iYear=?, strFileName=?,  strMusicBrainzTrackID=?, iTimesPlayed=?, lastplayed=?  WHERE idSong = ?"
-            cursor.execute(pathsql, (albumid, artists, genres, name, track, duration, year, filename, musicBrainzId, playcount, lastplayed, songid))
-            
-            #update the checksum in emby table
-            cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(MBitem),MBitem["Id"]))
+            try:
+                pathsql="update song SET idAlbum=?, strArtists=?, strGenres=?, strTitle=?, iTrack=?, iDuration=?, iYear=?, strFileName=?,  strMusicBrainzTrackID=?, iTimesPlayed=?, lastplayed=?  WHERE idSong = ?"
+                cursor.execute(pathsql, (albumid, artists, genres, name, track, duration, year, filename, musicBrainzId, playcount, lastplayed, songid))
+                
+                #update the checksum in emby table
+                cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(MBitem),MBitem["Id"]))
+            except Exception, e:
+                utils.logMsg("Error while updating song to Kodi library: ", e)
+                return
         
         #add genres
         self.AddGenresToMedia(songid, MBitem.get("Genres"), "song", cursor)
