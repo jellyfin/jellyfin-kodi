@@ -278,7 +278,7 @@ def getNextUpEpisodes(tagname,limit):
     # If we found any, find the oldest unwatched show for each one.
     if json_result.has_key('result') and json_result['result'].has_key('tvshows'):
         for item in json_result['result']['tvshows']:
-            json_query2 = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": { "tvshowid": %d, "sort": {"method":"episode"}, "filter": {"field": "playcount", "operator": "lessthan", "value":"1"}, "properties": [ "title", "playcount", "season", "episode", "showtitle", "plot", "file", "rating", "resume", "tvshowid", "art", "streamdetails", "firstaired", "runtime", "writer", "dateadded", "lastplayed" ], "limits":{"end":1}}, "id": "1"}' %item['tvshowid'])
+            json_query2 = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": { "tvshowid": %d, "sort": {"method":"episode"}, "filter": {"field": "playcount", "operator": "lessthan", "value":"1"}, "properties": [ "title", "playcount", "season", "episode", "showtitle", "plot", "file", "rating", "resume", "tvshowid", "art", "streamdetails", "firstaired", "runtime", "writer", "cast", "dateadded", "lastplayed" ], "limits":{"end":1}}, "id": "1"}' %item['tvshowid'])
 
             if json_query2:
                 json_query2 = json.loads(json_query2)
@@ -302,7 +302,7 @@ def getInProgressEpisodes(tagname,limit):
     # If we found any, find all in progress episodes for each one.
     if json_result.has_key('result') and json_result['result'].has_key('tvshows'):
         for item in json_result['result']['tvshows']:
-            json_query2 = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": { "tvshowid": %d, "sort": {"method":"episode"}, "filter": {"field": "inprogress", "operator": "true", "value":""}, "properties": [ "title", "playcount", "season", "episode", "showtitle", "plot", "file", "rating", "resume", "tvshowid", "art", "streamdetails", "firstaired", "runtime", "writer", "dateadded", "lastplayed" ]}, "id": "1"}' %item['tvshowid'])
+            json_query2 = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": { "tvshowid": %d, "sort": {"method":"episode"}, "filter": {"field": "inprogress", "operator": "true", "value":""}, "properties": [ "title", "playcount", "season", "episode", "showtitle", "plot", "file", "rating", "resume", "tvshowid", "art", "cast", "streamdetails", "firstaired", "runtime", "writer", "dateadded", "lastplayed" ]}, "id": "1"}' %item['tvshowid'])
 
             if json_query2:
                 json_query2 = json.loads(json_query2)
@@ -331,7 +331,7 @@ def getRecentEpisodes(tagname,limit):
         alltvshowIds = set(alltvshowIds)
         
         #get all recently added episodes
-        json_query2 = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": { "sort": {"order": "descending", "method": "dateadded"}, "filter": {"field": "playcount", "operator": "lessthan", "value":"1"}, "properties": [ "title", "playcount", "season", "episode", "showtitle", "plot", "file", "rating", "resume", "tvshowid", "art", "streamdetails", "firstaired", "runtime", "writer", "dateadded", "lastplayed" ]}, "limits":{"end":%d}, "id": "1"}' %limit)
+        json_query2 = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": { "sort": {"order": "descending", "method": "dateadded"}, "filter": {"field": "playcount", "operator": "lessthan", "value":"1"}, "properties": [ "title", "playcount", "season", "episode", "showtitle", "plot", "file", "rating", "resume", "tvshowid", "art", "streamdetails", "firstaired", "runtime", "cast", "writer", "dateadded", "lastplayed" ]}, "limits":{"end":%d}, "id": "1"}' %limit)
         count = 0
         if json_query2:
             json_query2 = json.loads(json_query2)
@@ -346,32 +346,51 @@ def getRecentEpisodes(tagname,limit):
     xbmcplugin.endOfDirectory(handle=int(sys.argv[1]))
     
 def createListItem(item):
-    episode = "%.2d" % float(item['episode'])
-    season = "%.2d" % float(item['season'])
-    episodeno = "s%se%s" %(season,episode)
-    watched = False
-    if item['playcount'] >= 1:
-        watched = True
-    plot = item['plot']
+       
     liz = xbmcgui.ListItem(item['title'])
     liz.setInfo( type="Video", infoLabels={ "Title": item['title'] })
     liz.setProperty('IsPlayable', 'true')
     liz.setInfo( type="Video", infoLabels={ "duration": str(item['runtime']/60) })
-    liz.setInfo( type="Video", infoLabels={ "Episode": item['episode'] })
-    liz.setInfo( type="Video", infoLabels={ "Season": item['season'] })
-    liz.setInfo( type="Video", infoLabels={ "Premiered": item['firstaired'] })
+    
+    if "episode" in item:
+        episode = "%.2d" % float(item['episode'])
+        liz.setInfo( type="Video", infoLabels={ "Episode": item['episode'] })
+    
+    if "season" in item:
+        season = "%.2d" % float(item['season'])
+        liz.setInfo( type="Video", infoLabels={ "Season": item['season'] })
+        
+    if season and episode:
+        episodeno = "s%se%s" %(season,episode)
+        liz.setProperty("episodeno", episodeno)
+        
+    if "firstaired" in item:
+        liz.setInfo( type="Video", infoLabels={ "Premiered": item['firstaired'] })
+    
+    plot = item['plot']
     liz.setInfo( type="Video", infoLabels={ "Plot": plot })
-    liz.setInfo( type="Video", infoLabels={ "TVshowTitle": item['showtitle'] })
-    liz.setInfo( type="Video", infoLabels={ "Rating": str(round(float(item['rating']),1)) })
+    
+    if "showtitle" in item:
+        liz.setInfo( type="Video", infoLabels={ "TVshowTitle": item['showtitle'] })
+    
+    if "rating" in item:
+        liz.setInfo( type="Video", infoLabels={ "Rating": str(round(float(item['rating']),1)) })
     liz.setInfo( type="Video", infoLabels={ "Playcount": item['playcount'] })
     if "director" in item:
         liz.setInfo( type="Video", infoLabels={ "Director": " / ".join(item['director']) })
     if "writer" in item:
         liz.setInfo( type="Video", infoLabels={ "Writer": " / ".join(item['writer']) })
+        
     if "cast" in item:
+        listCast = []
+        listCastAndRole = []
+        for castmember in item["cast"]:
+            listCast.append( castmember["name"] )
+            listCastAndRole.append( (castmember["name"], castmember["role"]) ) 
+        cast = [listCast, listCastAndRole]
         liz.setInfo( type="Video", infoLabels={ "Cast": cast[0] })
         liz.setInfo( type="Video", infoLabels={ "CastAndRole": cast[1] })
-    liz.setProperty("episodeno", episodeno)
+    
     liz.setProperty("resumetime", str(item['resume']['position']))
     liz.setProperty("totaltime", str(item['resume']['total']))
     liz.setArt(item['art'])
