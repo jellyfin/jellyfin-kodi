@@ -311,7 +311,7 @@ class PlayUtils():
 
         path = result[u'Path']
         # Verify the device has access to the direct path
-        if os.path.exists(path) == True:
+        if os.path.exists(path.encode('utf-8')) == True:
             return True
         elif ":\\" not in path:
             # Give benefit of the doubt for nfs protocol
