@@ -12,7 +12,7 @@ import urllib
 import sqlite3
 import os
 from decimal import Decimal
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from DownloadUtils import DownloadUtils
 from PlayUtils import PlayUtils
@@ -332,7 +332,7 @@ class WriteKodiMusicDB():
         genres = " / ".join(MBitem.get("Genres"))
         artists = " / ".join(MBitem.get("Artists"))
         track = MBitem.get("IndexNumber")
-        duration = int(timeInfo.get('Duration'))*60 ## TODO --> duration in seconds, now its capped at minutes
+        duration = MBitem.get("RunTimeTicks", 0) / 10000000
         year = MBitem.get("ProductionYear")
         bio = utils.convertEncoding(API().getOverview(MBitem))
         
