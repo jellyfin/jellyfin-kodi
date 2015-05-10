@@ -755,8 +755,8 @@ class WriteKodiVideoDB():
                     Role = person.get("Role")
                     if kodiVersion == 15:
                         # Kodi Isengard database #
-                        peoplesql="INSERT OR REPLACE into actor_link(actor_id, media_id, media_type) values(?, ?, ?)"
-                        cursor.execute(peoplesql, (actorid, id, mediatype))
+                        peoplesql="INSERT OR REPLACE into actor_link(actor_id, media_id, media_type,role) values(?, ?, ?, ?)"
+                        cursor.execute(peoplesql, (actorid, id, mediatype, Role))
                     else:
                         # Kodi Gotham or Helix database #
                         if mediatype == "movie":
