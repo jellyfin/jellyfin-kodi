@@ -63,7 +63,7 @@ class PlayUtils():
                         return False
                 else:
                     self.logMsg("File is direct playing.", 1)
-                    WINDOW.setProperty("%splaymethod" % playurl, "DirectPlay")
+                    WINDOW.setProperty("%splaymethod" % playurl.encode('utf-8'), "DirectPlay")
             except:
                 return False
 
@@ -93,7 +93,7 @@ class PlayUtils():
             except:
                 return False
 
-        return playurl
+        return playurl.encode('utf-8')
 
 
     def isDirectPlay(self, result):
@@ -128,7 +128,7 @@ class PlayUtils():
         try:
             # Item can be played directly
             playurl = result[u'MediaSources'][0][u'Path']
-            
+
             if u'VideoType' in result:
                 # Specific format modification
                 if u'Dvd' in result[u'VideoType']:
@@ -150,7 +150,7 @@ class PlayUtils():
             if "apple.com" in playurl:
                 USER_AGENT = 'QuickTime/7.7.4'
                 playurl += "?|User-Agent=%s" % USER_AGENT
-            
+
             return playurl
 
         except:
@@ -311,7 +311,7 @@ class PlayUtils():
 
         path = result[u'Path']
         # Verify the device has access to the direct path
-        if os.path.exists(path.encode('utf-8')):
+        if os.path.exists(path) == True:
             return True
         elif ":\\" not in path:
             # Give benefit of the doubt for nfs protocol
