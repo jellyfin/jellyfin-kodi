@@ -332,7 +332,7 @@ class API():
         if(data.get("ImageTags") != None and data.get("ImageTags").get(type) != None):
             imageTag = data.get("ImageTags").get(type)   
 
-        if (data.get("Type") == "Episode" or data.get("Type") == "Season" or data.get("Type") == "MusicAlbum")  and type=="Logo":
+        if (data.get("Type") == "Episode" or data.get("Type") == "Season" or data.get("Type") == "MusicAlbum" or data.get("Type") == "Audio") and type=="Logo":
             imageTag = data.get("ParentLogoImageTag")
         if (data.get("Type") == "Episode" or data.get("Type") == "Season") and type=="Art":
             imageTag = data.get("ParentArtImageTag")
@@ -341,6 +341,8 @@ class API():
         if (data.get("Type") == "Season") and originalType=="Thumb3" and imageTag=="e3ab56fe27d389446754d0fb04910a34" :
             imageTag = data.get("ParentThumbImageTag")
             id = data.get("SeriesId")
+        if (data.get("Type") == "MusicAlbum" or data.get("Type") == "Audio") and type=="Backdrop":
+            id = data.get("ParentBackdropItemId")
      
         query = ""
         height = "10000"
