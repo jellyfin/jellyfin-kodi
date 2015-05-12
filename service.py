@@ -67,6 +67,7 @@ class Service():
         
         WINDOW = self.WINDOW
         WINDOW.setProperty("Server_online", "")
+        self.WINDOW.setProperty("Server_status", "")
         WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
         
         ConnectionManager().checkServer()
