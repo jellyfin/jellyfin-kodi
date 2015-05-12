@@ -88,48 +88,48 @@ class Service():
 
             if WINDOW.getProperty('Server_online') == "true":
                 # Server is online
-                if xbmc.Player().isPlaying():
-                    try:
-                        playTime = xbmc.Player().getTime()
-                        totalTime = xbmc.Player().getTotalTime()
-                        currentFile = xbmc.Player().getPlayingFile()
+                if (user.currUser != None) and (user.HasAccess == True):
+                    self.warn_auth = True
 
-                        if(player.played_information.get(currentFile) != None):
-                            player.played_information[currentFile]["currentPosition"] = playTime
-                        
-                        # send update
-                        td = datetime.today() - lastProgressUpdate
-                        secDiff = td.seconds
-                        if(secDiff > 3):
-                            try:
-                                player.reportPlayback()
-                            except Exception, msg:
-                                self.logMsg("Exception reporting progress: %s" % msg)
-                                pass
-                            lastProgressUpdate = datetime.today()
-                        # only try autoplay when there's 20 seconds or less remaining and only once!
-                        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
-                      
-                        # if its an episode see if autoplay is enabled
-                        if addonSettings.getSetting("autoPlaySeason")=="true":
-                            notificationtime = addonSettings.getSetting("autoPlaySeasonTime")
-                            if (totalTime - playTime <= int(notificationtime) and (lastFile==None or lastFile!=currentFile)):
-                                lastFile = currentFile
-                                player.autoPlayPlayback()
-                        
-                    except Exception, e:
-                        self.logMsg("Exception in Playback Monitor Service: %s" % e)
-                        pass
-                else:
-                    # background worker for database sync
-                    if (user.currUser != None):
-                        self.warn_auth = True
-                        
-                        # Correctly launch the websocket, if user manually launches the add-on
-                        if (self.newWebSocketThread == None):
-                            self.newWebSocketThread = "Started"
-                            ws.start()
-                
+                    # Correctly launch the websocket, if user manually launches the add-on
+                    if (self.newWebSocketThread == None):
+                        self.newWebSocketThread = "Started"
+                        ws.start()
+
+                    if xbmc.Player().isPlaying():
+                        try:
+                            playTime = xbmc.Player().getTime()
+                            totalTime = xbmc.Player().getTotalTime()
+                            currentFile = xbmc.Player().getPlayingFile()
+
+                            if(player.played_information.get(currentFile) != None):
+                                player.played_information[currentFile]["currentPosition"] = playTime
+                            
+                            # send update
+                            td = datetime.today() - lastProgressUpdate
+                            secDiff = td.seconds
+                            if(secDiff > 3):
+                                try:
+                                    player.reportPlayback()
+                                except Exception, msg:
+                                    self.logMsg("Exception reporting progress: %s" % msg)
+                                    pass
+                                lastProgressUpdate = datetime.today()
+                            # only try autoplay when there's 20 seconds or less remaining and only once!
+                            addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
+                          
+                            # if its an episode see if autoplay is enabled
+                            if addonSettings.getSetting("autoPlaySeason")=="true":
+                                notificationtime = addonSettings.getSetting("autoPlaySeasonTime")
+                                if (totalTime - playTime <= int(notificationtime) and (lastFile==None or lastFile!=currentFile)):
+                                    lastFile = currentFile
+                                    player.autoPlayPlayback()
+                            
+                        except Exception, e:
+                            self.logMsg("Exception in Playback Monitor Service: %s" % e)
+                            pass
+
+                    else:
                         #full sync
                         if (startupComplete == False):
                             self.logMsg("Doing_Db_Sync: syncDatabase (Started)")
@@ -143,11 +143,12 @@ class Service():
                                 # Abort was requested while waiting. We should exit
                                 break    
                             #WebSocketThread().processPendingActions()
-                        
-                    else:
-                        if self.warn_auth:
-                            self.logMsg("Not authenticated yet.", 1)
-                            self.warn_auth = False
+                else:
+                    user.hasAccess()
+                    if self.warn_auth:
+                        self.logMsg("Not authenticated yet.", 1)
+                        self.warn_auth = False
+
             else:
                 # Wait until server becomes online or shut down is requested
                 while not self.KodiMonitor.abortRequested():

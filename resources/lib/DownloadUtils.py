@@ -265,8 +265,16 @@ class DownloadUtils():
             if r.status_code == 401:
                 # Unauthorized
                 status = WINDOW.getProperty("Server_status")
-                if (status == "401") or (status == "Auth"):
+
+                if r.headers['X-Application-Error-Code'] == "ParentalControl":
+                    # Parental control - access restricted
+                    WINDOW.setProperty("Server_status", "restricted")
+                    xbmcgui.Dialog().notification("Emby server", "Access restricted.", xbmcgui.NOTIFICATION_ERROR)
+                    return False
+
+                elif (status == "401") or (status == "Auth"):
                     pass
+
                 else:
                     # Tell UserClient token has been revoked.
                     WINDOW.setProperty("Server_status", "401")

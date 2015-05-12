@@ -40,6 +40,7 @@ class UserClient(threading.Thread):
     currUserId = None
     currServer = None
     currToken = None
+    HasAccess = True
     AdditionalUser = []
 
     def __init__(self, *args):
@@ -167,6 +168,24 @@ class UserClient(threading.Thread):
 
         return users
 
+    def hasAccess(self):
+
+        url = "{server}/mediabrowser/Users"
+        result = self.doUtils.downloadUrl(url)
+        
+        if result is False:
+            # Access is restricted
+            self.logMsg("Access is restricted.")
+            self.HasAccess = False
+            return
+
+        if self.WINDOW.getProperty("Server_status") == "restricted":
+            self.logMsg("Access is granted.")
+            self.HasAccess = True
+            self.WINDOW.setProperty("Server_status", "")
+            xbmcgui.Dialog().notification("Emby server", "Access is enabled.")
+        return
+
     def loadCurrUser(self):
 
         WINDOW = self.WINDOW
@@ -224,6 +243,8 @@ class UserClient(threading.Thread):
             self.logMsg("Current user: %s" % self.currUser, 0)
             self.logMsg("Current userId: %s" % self.currUserId, 0)
             self.logMsg("Current accessToken: %s" % self.currToken, 0)
+            # parental control - let's verify if access is restricted
+            self.hasAccess()
             return
         
         users = self.getPublicUsers()
@@ -320,7 +341,12 @@ class UserClient(threading.Thread):
 
             if (self.WINDOW.getProperty("Server_status") != ""):
                 status = self.WINDOW.getProperty("Server_status")
-                if status == "401":
+                
+                if status == "restricted":
+                    # Parental control is restricting access
+                    self.HasAccess = False
+
+                elif status == "401":
                     self.WINDOW.setProperty("Server_status", "Auth")
                     # Revoked token
                     self.resetClient()
