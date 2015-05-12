@@ -70,9 +70,8 @@ class LibrarySync():
             cursor = connection.cursor()
             
             #Add the special emby table
-            if not startupDone:
-                cursor.execute("CREATE TABLE IF NOT EXISTS emby(emby_id TEXT, kodi_id INTEGER, media_type TEXT, checksum TEXT, parent_id INTEGER)")
-                connection.commit()
+            cursor.execute("CREATE TABLE IF NOT EXISTS emby(emby_id TEXT, kodi_id INTEGER, media_type TEXT, checksum TEXT, parent_id INTEGER)")
+            connection.commit()
             
             # sync movies
             self.MoviesFullSync(connection,cursor,pDialog)
@@ -99,9 +98,8 @@ class LibrarySync():
                 cursor = connection.cursor()
                 
                 #Add the special emby table
-                if not startupDone:
-                    cursor.execute("CREATE TABLE IF NOT EXISTS emby(emby_id TEXT, kodi_id INTEGER, media_type TEXT, checksum TEXT, parent_id INTEGER)")
-                    connection.commit()
+                cursor.execute("CREATE TABLE IF NOT EXISTS emby(emby_id TEXT, kodi_id INTEGER, media_type TEXT, checksum TEXT, parent_id INTEGER)")
+                connection.commit()
                 
                 self.MusicFullSync(connection,cursor,pDialog)
                 cursor.close()
@@ -575,6 +573,12 @@ class LibrarySync():
 
                         if kodi_show_id:
                             WriteKodiVideoDB().addOrUpdateEpisodeToKodiLibrary(MBitem["Id"], kodi_show_id, connection, cursor)
+                        else:
+                            #tv show doesn't exist
+                            #perform full tvshow sync instead so both the show and episodes get added
+                            self.TvShowsFullSync(connection,cursor,None)
+                            return
+                            
                 
                 #### PROCESS MUSICVIDEOS ####
                 allEmbyMusicvideos = ReadEmbyDB().getMusicVideos(itemList)
