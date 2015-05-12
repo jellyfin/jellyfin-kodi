@@ -151,7 +151,10 @@ class Service():
                         self.warn_auth = False
 
                     while user.HasAccess == False:
+
+                        WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
                         user.hasAccess()
+
                         if self.KodiMonitor.waitForAbort(5):
                             # Abort was requested while waiting. We should exit
                             break
@@ -160,6 +163,7 @@ class Service():
             else:
                 # Wait until server becomes online or shut down is requested
                 while not self.KodiMonitor.abortRequested():
+                    WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
                     
                     if user.getServer() == "":
                         pass
