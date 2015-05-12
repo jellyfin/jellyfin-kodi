@@ -163,8 +163,12 @@ class WebSocketThread(threading.Thread):
             self.logMsg("Message : WebSocket LibraryChanged : Items Updated : " + str(itemsUpdated), 0)
             self.logMsg("Message : WebSocket LibraryChanged : Items Removed : " + str(itemsRemoved), 0)
 
-            self.remove_items(itemsRemoved)
-            self.update_items(itemsToUpdate)
+            if itemsAdded:
+                self.logMsg("Message : Doing Full LibrarySync")
+                LibrarySync().FullLibrarySync()
+            else:
+                self.remove_items(itemsRemoved)
+                self.update_items(itemsToUpdate)
 
         elif messageType == "GeneralCommand":
             
