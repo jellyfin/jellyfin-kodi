@@ -557,10 +557,13 @@ class LibrarySync():
                         if item.get('IsFolder') and item.get('RecursiveItemCount') != 0:                   
                             kodiId = WriteKodiVideoDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
                 
-                #### PROCESS EPISODES ######
+                
+                #### PROCESS OTHERS BY THE ITEMLIST ######
                 for item in itemList:
                         
                     MBitem = ReadEmbyDB().getItem(item)
+                    
+                    #### PROCESS EPISODES ######
                     if MBitem["Type"] == "Episode":
 
                         #get the tv show
@@ -577,14 +580,19 @@ class LibrarySync():
                             #tv show doesn't exist
                             #perform full tvshow sync instead so both the show and episodes get added
                             self.TvShowsFullSync(connection,cursor,None)
-                            return
-                            
-                
-                #### PROCESS MUSICVIDEOS ####
-                allEmbyMusicvideos = ReadEmbyDB().getMusicVideos(itemList)
-                for item in allEmbyMusicvideos:
-                    if not item.get('IsFolder'):                    
-                        WriteKodiVideoDB().addOrUpdateMusicVideoToKodiLibrary(item["Id"],connection, cursor)
+                    
+                    #### PROCESS BOXSETS ######
+                    elif MBitem["Type"] == "BoxSet":
+                        boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
+                        WriteKodiVideoDB().addBoxsetToKodiLibrary(boxset,connection, cursor)
+                        
+                        for boxsetMovie in boxsetMovies:
+                            WriteKodiVideoDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset, connection, cursor)
+
+                    #### PROCESS MUSICVIDEOS ####
+                    elif MBitem["Type"] == "MusicVideo":
+                        if not MBitem.get('IsFolder'):                    
+                            WriteKodiVideoDB().addOrUpdateMusicVideoToKodiLibrary(MBitem["Id"],connection, cursor)
                         
                 ### commit all changes to database ###
                 connection.commit()
