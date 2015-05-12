@@ -58,6 +58,10 @@ class WriteKodiVideoDB():
         
         MBitem = ReadEmbyDB().getFullItem(embyId)
         
+        if not MBitem:
+            utils.logMsg("ADD movie to Kodi library FAILED", "Item %s not found on server!" %embyId)
+            return
+        
         # If the item already exist in the local Kodi DB we'll perform a full item update
         # If the item doesn't exist, we'll add it to the database
         
@@ -225,6 +229,10 @@ class WriteKodiVideoDB():
         downloadUtils = DownloadUtils()
         
         MBitem = ReadEmbyDB().getFullItem(embyId)
+        
+        if not MBitem:
+            utils.logMsg("ADD musicvideo to Kodi library FAILED", "Item %s not found on server!" %embyId)
+            return
 
         # If the item already exist in the local Kodi DB we'll perform a full item update
         # If the item doesn't exist, we'll add it to the database
@@ -358,6 +366,10 @@ class WriteKodiVideoDB():
         
         MBitem = ReadEmbyDB().getFullItem(embyId)
         
+        if not MBitem:
+            utils.logMsg("ADD tvshow to Kodi library FAILED", "Item %s not found on server!" %embyId)
+            return
+        
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
         
@@ -489,6 +501,10 @@ class WriteKodiVideoDB():
         # If the item doesn't exist, we'll add it to the database
         
         MBitem = ReadEmbyDB().getFullItem(embyId)
+        if not MBitem:
+            utils.logMsg("ADD episode to Kodi library FAILED", "Item %s not found on server!" %embyId)
+            return
+            
         cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?",(MBitem["Id"],))
         result = cursor.fetchone()
         if result != None:
