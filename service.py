@@ -145,10 +145,17 @@ class Service():
                                 break    
                             #WebSocketThread().processPendingActions()
                 else:
-                    user.hasAccess()
+                    
                     if self.warn_auth:
                         self.logMsg("Not authenticated yet.", 1)
                         self.warn_auth = False
+
+                    while user.HasAccess == False:
+                        user.hasAccess()
+                        if self.KodiMonitor.waitForAbort(5):
+                            # Abort was requested while waiting. We should exit
+                            break
+
 
             else:
                 # Wait until server becomes online or shut down is requested

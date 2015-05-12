@@ -269,7 +269,7 @@ class DownloadUtils():
                 if r.headers['X-Application-Error-Code'] == "ParentalControl":
                     # Parental control - access restricted
                     WINDOW.setProperty("Server_status", "restricted")
-                    xbmcgui.Dialog().notification("Emby server", "Access restricted.", xbmcgui.NOTIFICATION_ERROR)
+                    xbmcgui.Dialog().notification("Emby server", "Access restricted.", xbmcgui.NOTIFICATION_ERROR, time=5000)
                     return False
 
                 elif (status == "401") or (status == "Auth"):
