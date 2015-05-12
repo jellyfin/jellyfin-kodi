@@ -5,6 +5,7 @@ import os
 import threading
 import json
 from datetime import datetime
+import time
 
 cwd = xbmcaddon.Addon(id='plugin.video.emby').getAddonInfo('path')
 BASE_RESOURCE_PATH = xbmc.translatePath( os.path.join( cwd, 'resources', 'lib' ) )
@@ -66,7 +67,8 @@ class Service():
         
         WINDOW = self.WINDOW
         WINDOW.setProperty("Server_online", "")
-
+        WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
+        
         ConnectionManager().checkServer()
         lastProgressUpdate = datetime.today()
         startupComplete = False
@@ -78,7 +80,8 @@ class Service():
         lastFile = None
         
         while not self.KodiMonitor.abortRequested():
-            
+            WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
+                     
             if self.KodiMonitor.waitForAbort(1):
                 # Abort was requested while waiting. We should exit
                 break

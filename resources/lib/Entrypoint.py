@@ -7,7 +7,7 @@ import os, sys
 import threading
 import json
 import urllib
-
+import time
 
 WINDOW = xbmcgui.Window(10000)
 
@@ -21,6 +21,7 @@ from API import API
 
 ##### Play items via plugin://plugin.video.emby/ #####
 def doPlayback(id):
+    checkService()
     url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json&ImageTypeLimit=1" % id
     result = DownloadUtils().downloadUrl(url)
     item = PlaybackUtils().PLAY(result, setup="default")
@@ -482,4 +483,31 @@ def doMainListing():
     addDirectoryItem("Perform local database reset (full resync)", "plugin://plugin.video.emby/?mode=reset")
     
     xbmcplugin.endOfDirectory(int(sys.argv[1]))                
-                    
+             
+def checkService():
+
+    timeStamp = xbmcgui.Window(10000).getProperty("Emby_Service_Timestamp")
+    loops = 0
+    monitor = xbmc.Monitor()
+    while(timeStamp == ""):
+        timeStamp = xbmcgui.Window(10000).getProperty("Emby_Service_Timestamp")
+        loops = loops + 1
+        if(loops == 5):
+            xbmc.log("Emby Service Not Running, no time stamp, exiting")
+            addon = xbmcaddon.Addon(id='plugin.video.emby')
+            language = addon.getLocalizedString
+            xbmcgui.Dialog().ok(language(30135), language(30136), language(30137))
+            sys.exit()
+        if monitor.waitForAbort(1):
+            # Abort was requested while waiting. We should exit
+            return
+        
+    xbmc.log("Emby Service Timestamp: " + timeStamp)
+    xbmc.log("Emby Current Timestamp: " + str(int(time.time())))
+    
+    if((int(timeStamp) + 30) < int(time.time())):
+        xbmc.log("Emby Service Not Running, time stamp to old, exiting")
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
+        language = addon.getLocalizedString        
+        xbmcgui.Dialog().ok(language(30135), language(30136), language(30137))
+        sys.exit()
