@@ -84,19 +84,6 @@ class DownloadUtils():
         except:
             self.logMsg("Posted capabilities failed.")
 
-        # Attempt at getting sessionId
-        url = "{server}/mediabrowser/Sessions?DeviceId=%s&format=json" % deviceId
-
-        try:
-            result = self.downloadUrl(url)
-            self.logMsg("Session: %s" % result, 2)
-            
-            sessionId = result[0][u'Id']
-            self.logMsg("SessionId: %s" % sessionId)
-            self.WINDOW.setProperty("sessionId%s" % self.username, sessionId)
-        except:
-            self.logMsg("Failed to retrieve sessionId.", 1)
-
     def startSession(self):
 
         self.deviceId = self.clientInfo.getMachineId()
