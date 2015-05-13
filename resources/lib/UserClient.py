@@ -173,7 +173,7 @@ class UserClient(threading.Thread):
         url = "{server}/mediabrowser/Users"
         result = self.doUtils.downloadUrl(url)
         
-        if result is False:
+        if result is False or result is "":
             # Access is restricted
             self.logMsg("Access is restricted.")
             self.HasAccess = False
