@@ -155,6 +155,10 @@ class Service():
                         WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
                         user.hasAccess()
 
+                            # Server went offline
+                            xbmcgui.Dialog().notification("Error connecting", "%s Server is unreachable." % self.addonName)
+                            break
+
                         if self.KodiMonitor.waitForAbort(5):
                             # Abort was requested while waiting. We should exit
                             break
