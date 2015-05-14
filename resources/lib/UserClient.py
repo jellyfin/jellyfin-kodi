@@ -178,6 +178,9 @@ class UserClient(threading.Thread):
             self.logMsg("Access is restricted.")
             self.HasAccess = False
             return
+        elif self.WINDOW.getProperty('Server_online') != "true":
+            # Server connection failed
+            return
 
         if self.WINDOW.getProperty("Server_status") == "restricted":
             self.logMsg("Access is granted.")
@@ -186,7 +189,7 @@ class UserClient(threading.Thread):
             xbmcgui.Dialog().notification("Emby server", "Access is enabled.")
         return
 
-    def loadCurrUser(self):
+    def loadCurrUser(self, authenticated=False):
 
         WINDOW = self.WINDOW
         doUtils = self.doUtils
@@ -198,6 +201,17 @@ class UserClient(threading.Thread):
         self.currToken = self.getToken()
         self.ssl = self.getSSLverify()
         self.sslcert = self.getSSL()
+
+        # Test the validity of current token
+        if authenticated == False:
+            url = "%s/mediabrowser/Users/%s" % (self.currServer, self.currUserId)
+            WINDOW.setProperty("currUser", username)
+            WINDOW.setProperty("accessToken%s" % username, self.currToken)
+            result = doUtils.downloadUrl(url, type="POST")
+            if result == 401:
+                # Token is no longer valid
+                self.resetClient()
+                return False
 
         # Set to windows property
         WINDOW.setProperty("currUser", username)
@@ -212,6 +226,8 @@ class UserClient(threading.Thread):
         doUtils.setServer(self.currServer)
         doUtils.setToken(self.currToken)
         doUtils.setSSL(self.ssl, self.sslcert)
+        # parental control - let's verify if access is restricted
+        self.hasAccess()
         # Start DownloadUtils session
         doUtils.startSession()
 
@@ -239,13 +255,15 @@ class UserClient(threading.Thread):
             return
         # If there's a token
         if (self.getToken() != ""):
-            self.loadCurrUser()
-            self.logMsg("Current user: %s" % self.currUser, 0)
-            self.logMsg("Current userId: %s" % self.currUserId, 0)
-            self.logMsg("Current accessToken: %s" % self.currToken, 0)
-            # parental control - let's verify if access is restricted
-            self.hasAccess()
-            return
+            result = self.loadCurrUser()
+
+            if result == False:
+                pass
+            else:
+                self.logMsg("Current user: %s" % self.currUser, 0)
+                self.logMsg("Current userId: %s" % self.currUserId, 0)
+                self.logMsg("Current accessToken: %s" % self.currToken, 0)
+                return
         
         users = self.getPublicUsers()
         password = ""
@@ -292,11 +310,12 @@ class UserClient(threading.Thread):
 
         if (result != None and accessToken != None):
             self.currUser = username
+            xbmcgui.Dialog().notification("Emby server", "Welcome %s!" % self.currUser)
             userId = result[u'User'][u'Id']
             addon.setSetting("accessToken", accessToken)
             addon.setSetting("userId%s" % username, userId)
             self.logMsg("User Authenticated: %s" % accessToken)
-            self.loadCurrUser()
+            self.loadCurrUser(authenticated=True)
             self.WINDOW.setProperty("Server_status", "")
             self.retry = 0
             return
@@ -318,17 +337,19 @@ class UserClient(threading.Thread):
 
     def resetClient(self):
 
+        username = self.getUsername()
+        self.logMsg("Reset UserClient authentication.", 1)
         if (self.currToken != None):
             # In case of 401, removed saved token
-            self.addon.setSetting("accessToken%s" % self.currUser, "")
-            self.WINDOW.setProperty("accessToken%s" % self.currUser, "")
+            self.addon.setSetting("accessToken", "")
+            self.WINDOW.setProperty("accessToken%s" % username, "")
             self.currToken = None
             self.logMsg("User token has been removed.", 1)
         
         self.auth = True
         self.currUser = None
         return
-
+        
 
     def run(self):
 

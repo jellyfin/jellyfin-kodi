@@ -124,7 +124,6 @@ class DownloadUtils():
         self.s.mount("https://", requests.adapters.HTTPAdapter(max_retries=1))
 
         self.logMsg("Requests session started on: %s" % self.server)
-        self.postCapabilities(self.deviceId)
 
     def imageUrl(self, id, type, index, width, height):
         # To move to API.py
@@ -279,13 +278,14 @@ class DownloadUtils():
                 # Unauthorized
                 status = WINDOW.getProperty("Server_status")
 
-                if r.headers['X-Application-Error-Code'] == "ParentalControl":
-                    # Parental control - access restricted
-                    WINDOW.setProperty("Server_status", "restricted")
-                    xbmcgui.Dialog().notification("Emby server", "Access restricted.", xbmcgui.NOTIFICATION_ERROR, time=5000)
-                    return False
+                if 'x-application-error-code' in r.headers:
+                    if r.headers['X-Application-Error-Code'] == "ParentalControl":
+                        # Parental control - access restricted
+                        WINDOW.setProperty("Server_status", "restricted")
+                        xbmcgui.Dialog().notification("Emby server", "Access restricted.", xbmcgui.NOTIFICATION_ERROR, time=5000)
+                        return False
 
-                elif (status == "401") or (status == "Auth"):
+                if (status == "401") or (status == "Auth"):
                     pass
 
                 else:
@@ -293,6 +293,7 @@ class DownloadUtils():
                     WINDOW.setProperty("Server_status", "401")
                     self.logMsg("HTTP Error: %s" % e, 0)
                     xbmcgui.Dialog().notification("Error connecting", "Unauthorized.", xbmcgui.NOTIFICATION_ERROR)
+                    return 401
 
             elif (r.status_code == 301) or (r.status_code == 302):
                 # Redirects

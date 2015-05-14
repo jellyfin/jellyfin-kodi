@@ -143,7 +143,6 @@ class Service():
                             if self.KodiMonitor.waitForAbort(1):
                                 # Abort was requested while waiting. We should exit
                                 break    
-                            #WebSocketThread().processPendingActions()
                 else:
                     
                     if self.warn_auth:
@@ -154,6 +153,10 @@ class Service():
 
                         WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
                         user.hasAccess()
+
+                        if WINDOW.getProperty('Server_online') != "true":
+                            # Server went offline
+                            break
 
                         if self.KodiMonitor.waitForAbort(5):
                             # Abort was requested while waiting. We should exit

@@ -28,6 +28,7 @@ class WebSocketThread(threading.Thread):
 
     _shared_state = {}
 
+    doUtils = DownloadUtils()
     clientInfo = ClientInformation()
     KodiMonitor = KodiMonitor.Kodi_Monitor()
     addonName = clientInfo.getAddonName()
@@ -258,10 +259,14 @@ class WebSocketThread(threading.Thread):
                                     on_close = self.on_close)
                                     
         self.client.on_open = self.on_open
+        self.doUtils.postCapabilities(deviceId)
         
         while not self.KodiMonitor.abortRequested():
             
-            self.client.run_forever()
+            if WINDOW.getProperty("Server_online") == "true":
+                # Server came back online, repost capabilities
+                self.doUtils.postCapabilities(deviceId)
+                self.client.run_forever()
 
             if (self.keepRunning):
                 # Server is not online
