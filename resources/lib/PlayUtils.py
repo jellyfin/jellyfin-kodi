@@ -43,11 +43,13 @@ class PlayUtils():
                 playurl = self.directPlay(result)
                 if not playurl:
                     # Let user know that direct play failed
-                    resp = xbmcgui.Dialog().yesno('Warning', 'Unable to direct play. Try direct stream or transcoding instead? By selecting yes, it will also switch your playback to HTTP for future playback.')
-                    if resp == True:
-                        # Try direct stream
+                    resp = xbmcgui.Dialog().select('Warning: Unable to direct play.', ['Play from HTTP', 'Play from HTTP and remember next time.'])
+                    if resp > -1:
+                        # Play from HTTP
                         playurl = self.directStream(result, server, id)
-                        addon.setSetting('playFromStream', "true")
+                        if resp == 1:
+                            # Remember next time
+                            addon.setSetting('playFromStream', "true")
                         if not playurl:
                             # Try transcoding
                             playurl = self.transcoding(result, server, id)
