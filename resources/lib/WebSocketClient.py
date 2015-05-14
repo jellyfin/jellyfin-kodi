@@ -272,6 +272,7 @@ class WebSocketThread(threading.Thread):
                 if WINDOW.getProperty("Server_online") == "true":
                     self.logMsg("Server is unreachable.", 1)
                     WINDOW.setProperty("Server_online", "false")
+                    xbmcgui.Dialog().notification("Error connecting", "%s Server is unreachable." % self.addonName)
                 
                 if self.KodiMonitor.waitForAbort(5):
                     break
