@@ -21,6 +21,7 @@ from PlaybackUtils import PlaybackUtils
 from LibrarySync import LibrarySync
 from WriteKodiVideoDB import WriteKodiVideoDB
 from ReadEmbyDB import ReadEmbyDB
+from ReadKodiDB import ReadKodiDB
 
 _MODE_BASICPLAY=12
 
@@ -253,9 +254,22 @@ class WebSocketThread(threading.Thread):
         connection = utils.KodiSQL("video")
         cursor = connection.cursor()
         for item in itemsRemoved:
+            type=ReadKodiDB().getTypeByEmbyId(item, connection, cursor)
+            self.logMsg("Type: " + str(type))
             self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteItemFromKodiLibrary: " + item, 0)
+            if type == "episode":
+                showId=ReadKodiDB().getShowIdByEmbyId(item, connection, cursor) # Get the TV Show ID
+                self.logMsg("ShowID: " + str(showId),0)
             WriteKodiVideoDB().deleteItemFromKodiLibrary(item, connection, cursor)
-        connection.commit()
+            connection.commit() #Need to commit so that the count will be right - can't use one in case of multiple deletes
+            if type == "episode":
+                showTotalCount = ReadKodiDB().getShowTotalCount(showId, connection, cursor) # Check if there are no episodes left
+                self.logMsg("ShowTotalCount: " + str(showTotalCount),0)
+                if showTotalCount == 0 or showTotalCount == None: # Delete show if no episodes are left
+                    embyId=ReadKodiDB().getEmbyIdByKodiId(showId, "tvshow", connection, cursor)
+                    self.logMsg("Message : Doing LibraryChanged : Deleting show:" + embyId, 0)
+                    WriteKodiVideoDB().deleteItemFromKodiLibrary(embyId, connection, cursor)
+                    connection.commit()
         cursor.close()
         
         #Process music library

@@ -60,7 +60,56 @@ class ReadKodiDB():
             return result[0]
         else:
             return None
-       
+            
+    def getShowIdByEmbyId(self, id, connection=None, cursor=None):
+        if not connection:
+            connection = utils.KodiSQL()
+            cursor = connection.cursor()
+            closeCon = True
+        else:
+            closeCon = False
+        cursor.execute("SELECT parent_id FROM emby WHERE emby_id=?",(id,))
+        result = cursor.fetchone()
+        if closeCon:
+            connection.close()
+        if result:
+            return result[0]
+        else:
+            return None    
+            
+    def getTypeByEmbyId(self, id, connection=None, cursor=None):
+        if not connection:
+            connection = utils.KodiSQL()
+            cursor = connection.cursor()
+            closeCon = True
+        else:
+            closeCon = False
+        cursor.execute("SELECT media_type FROM emby WHERE emby_id=?",(id,))
+        result = cursor.fetchone()
+        if closeCon:
+            connection.close()
+        if result:
+            return result[0]
+        else:
+            return None            
+            
+    def getShowTotalCount(self, id, connection=None, cursor=None):
+        if not connection:
+            connection = utils.KodiSQL()
+            cursor = connection.cursor()
+            closeCon = True
+        else:
+            closeCon = False
+        command = "SELECT totalCount FROM tvshowcounts WHERE idShow=%s" % str(id)
+        cursor.execute(command)
+        result = cursor.fetchone()
+        if closeCon:
+            connection.close()
+        if result:
+            return result[0]
+        else:
+            return None    
+            
     def getKodiMusicArtists(self, connection, cursor):
         #returns all artists in Kodi db
         cursor.execute("SELECT kodi_id, emby_id, checksum FROM emby WHERE media_type='artist'")
