@@ -295,7 +295,7 @@ class Player( xbmc.Player ):
                 'AudioStreamIndex': audioindex,
                 'SubtitleStreamIndex': subtitleindex,
                 'playmethod': playMethod,
-                'type': itemType,
+                'Type': itemType,
                 'PositionTicks': int(seekTime)
             }
             self.played_information[currentFile] = data
