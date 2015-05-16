@@ -242,7 +242,8 @@ class WebSocketThread(threading.Thread):
                     xbmcgui.Dialog().notification(header, text)
                 elif command == "SendString":
                     string = arguments[u'String']
-                    xbmcgui.Dialog().notification("Emby server", string)
+                    text = '{"jsonrpc": "2.0", "method": "Input.SendText",  "params": { "text": "%s", "done": false }, "id": 0}' % string
+                    result = xbmc.executeJSONRPC(text)
                 else:
                     self.logMsg("Unknown command.", 1)
 
