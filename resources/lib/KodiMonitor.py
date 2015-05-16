@@ -42,8 +42,9 @@ class Kodi_Monitor(xbmc.Monitor):
                 item = jsondata.get("item").get("id")
                 type = jsondata.get("item").get("type")
                 prop = WINDOW.getProperty('Played%s%s' % (type,item))
+                processWatched = WINDOW.getProperty('played_skipWatched')
                 
-                if (playcount != None) and (prop != "true"):
+                if (playcount != None) and (prop != "true") and (processWatched != "true"):
                     WINDOW.setProperty("Played%s%s" % (type,item), "true")
                     utils.logMsg("MB# Sync","Kodi_Monitor--> VideoLibrary.OnUpdate : " + str(data),2)
                     WriteKodiVideoDB().updatePlayCountFromKodi(item, type, playcount)
@@ -87,6 +88,7 @@ class Kodi_Monitor(xbmc.Monitor):
         # triggers 3 times in a row.
         xbmc.sleep(100)
         self.WINDOW.clearProperty("Played%s%s" % (type,id))
+        self.WINDOW.clearProperty('played_skipWatched')
             
         
                 

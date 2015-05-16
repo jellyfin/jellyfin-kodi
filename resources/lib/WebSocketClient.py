@@ -99,8 +99,14 @@ class WebSocketThread(threading.Thread):
         
         messageType = result.get("MessageType")
         data = result.get("Data")
-        
-        if(messageType != None and messageType == "Play" and data != None):
+        WINDOW = xbmcgui.Window( 10000 )
+        playedItemId = WINDOW.getProperty('played_itemId')
+
+        if (playedItemId != '') and (playedItemId in message):
+            # Prevent feedback for watched
+            WINDOW.clearProperty('played_itemId')
+
+        elif(messageType != None and messageType == "Play" and data != None):
             itemIds = data.get("ItemIds")
             playCommand = data.get("PlayCommand")
             
@@ -144,7 +150,6 @@ class WebSocketThread(threading.Thread):
                 
         elif(messageType != None and messageType == "UserDataChanged"):
             # for now just do a full playcount sync
-            WINDOW = xbmcgui.Window( 10000 )
             self.logMsg("Message : Doing UserDataChanged", 0)
             userDataList = data.get("UserDataList")
             self.logMsg("Message : Doing UserDataChanged : UserDataList : " + str(userDataList), 0)
@@ -169,16 +174,77 @@ class WebSocketThread(threading.Thread):
 
         elif messageType == "GeneralCommand":
             
-            if data.get("Name") == "DisplayMessage":
-                message = data.get("Arguments")
-                header = message[u'Header']
-                text = message[u'Text']
-                xbmcgui.Dialog().notification(header, text)
+            command = data.get("Name")
+            arguments = data.get("Arguments")
+            
+            commandsPlayback = [
+                'Mute','Unmute','SetVolume',
+                'SetAudioStreamIndex'
+            ]
 
-            elif data.get("Name") == "SendString":
-                message = data.get("Arguments")
-                string = message[u'String']
-                xbmcgui.Dialog().notification("Emby server", string)
+            if command in commandsPlayback:
+                # These commands need to be reported back
+                if command == "Mute":
+                    xbmc.executebuiltin('Mute')
+                elif command == "Unmute":
+                    xbmc.executebuiltin('Mute')
+                elif command == "SetVolume":
+                    volume = arguments[u'Volume']
+                    xbmc.executebuiltin('SetVolume(%s[,showvolumebar])' % volume)
+                # Report playback
+                WINDOW.setProperty('commandUpdate', 'true')
+
+            else:
+                # GUI commands
+                if command == "ToggleFullscreen":
+                    xbmc.executebuiltin('Action(FullScreen)')
+                elif command == "ToggleOsdMenu":
+                    xbmc.executebuiltin('Action(OSD)')
+                elif command == "MoveUp":
+                    xbmc.executebuiltin('Action(Up)')
+                elif command == "MoveDown":
+                    xbmc.executebuiltin('Action(Down)')
+                elif command == "MoveLeft":
+                    xbmc.executebuiltin('Action(Left)')
+                elif command == "MoveRight":
+                    xbmc.executebuiltin('Action(Right)')
+                elif command == "Select":
+                    xbmc.executebuiltin('Action(Select)')
+                elif command == "Back":
+                    xbmc.executebuiltin('Action(back)')
+                elif command == "ToggleContextMenu":
+                    xbmc.executebuiltin('Action(ContextMenu)')
+                elif command == "GoHome":
+                    xbmc.executebuiltin('ActivateWindow(Home)')
+                elif command == "PageUp":
+                    xbmc.executebuiltin('Action(PageUp)')
+                elif command == "NextLetter":
+                    xbmc.executebuiltin('Action(NextLetter)')
+                elif command == "GoToSearch":
+                    xbmc.executebuiltin('VideoLibrary.Search')
+                elif command == "GoToSettings":
+                    xbmc.executebuiltin('ActivateWindow(Settings)')
+                elif command == "PageDown":
+                    xbmc.executebuiltin('Action(PageDown)')
+                elif command == "PreviousLetter":
+                    xbmc.executebuiltin('Action(PrevLetter)')
+                elif command == "TakeScreenshot":
+                    xbmc.executebuiltin('TakeScreenshot')
+                elif command == "ToggleMute":
+                    xbmc.executebuiltin('Mute')
+                elif command == "VolumeUp":
+                    xbmc.executebuiltin('Action(VolumeUp)')
+                elif command == "VolumeDown":
+                    xbmc.executebuiltin('Action(VolumeDown)')
+                elif command == "DisplayMessage":
+                    header = arguments[u'Header']
+                    text = arguments[u'Text']
+                    xbmcgui.Dialog().notification(header, text)
+                elif command == "SendString":
+                    string = arguments[u'String']
+                    xbmcgui.Dialog().notification("Emby server", string)
+                else:
+                    self.logMsg("Unknown command.", 1)
 
     def remove_items(self, itemsRemoved):
         

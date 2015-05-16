@@ -108,10 +108,17 @@ class PlaybackUtils():
                 resume_result = resumeScreen.select(self.language(30105), display_list)
                 if resume_result == 0:
                     WINDOW.setProperty(playurl+"seektime", str(seekTime))
+                elif resume_result < 0:
+                    # User cancelled dialog
+                    xbmc.log("Emby player -> User cancelled resume dialog.")
+                    return
                 else:
                     WINDOW.clearProperty(playurl+"seektime")
             else:
                 WINDOW.clearProperty(playurl+"seektime")
+        else:
+            # Playback started from library
+            WINDOW.setProperty(playurl+"seektime", str(seekTime))
 
         if result.get("Type")=="Episode":
             WINDOW.setProperty(playurl+"refresh_id", result.get("SeriesId"))

@@ -98,6 +98,7 @@ class Service():
                         ws.start()
 
                     if xbmc.Player().isPlaying():
+                        WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
                         try:
                             playTime = xbmc.Player().getTime()
                             totalTime = xbmc.Player().getTotalTime()
@@ -131,6 +132,7 @@ class Service():
                             pass
 
                     else:
+                        WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
                         #full sync
                         if (startupComplete == False):
                             self.logMsg("Doing_Db_Sync: syncDatabase (Started)")

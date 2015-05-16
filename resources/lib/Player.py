@@ -66,20 +66,22 @@ class Player( xbmc.Player ):
             
         addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
         self.logMsg("emby Service -> played_information : " + str(self.played_information))
-        
+
         for item_url in self.played_information:
             data = self.played_information.get(item_url)
-            
             if (data is not None):
                 self.logMsg("emby Service -> item_url  : " + item_url)
                 self.logMsg("emby Service -> item_data : " + str(data))
-                
+
                 runtime = data.get("runtime")
                 currentPosition = data.get("currentPosition")
                 item_id = data.get("item_id")
                 refresh_id = data.get("refresh_id")
                 currentFile = data.get("currentfile")
                 type = data.get("Type")
+
+                # Prevent websocket feedback
+                self.WINDOW.setProperty("played_itemId", item_id)
 
                 if(currentPosition != None and self.hasData(runtime)):
                     runtimeTicks = int(runtime)
@@ -88,6 +90,10 @@ class Player( xbmc.Player ):
                     markPlayedAt = float(90) / 100    
 
                     self.logMsg("emby Service -> Percent Complete:" + str(percentComplete) + " Mark Played At:" + str(markPlayedAt))
+                    if percentComplete < markPlayedAt:
+                        # Do not mark as watched
+                        self.WINDOW.setProperty('played_skipWatched', 'true')
+
                     self.stopPlayback(data)
                     
                     if percentComplete > .80 and data.get("Type") == "Episode" and addonSettings.getSetting("offerDelete")=="true":
@@ -116,28 +122,16 @@ class Player( xbmc.Player ):
         self.logMsg("stopPlayback called", 2)
         
         item_id = data.get("item_id")
-        audioindex = data.get("AudioStreamIndex")
-        subtitleindex = data.get("SubtitleStreamIndex")
-        playMethod = data.get("playmethod")
         currentPosition = data.get("currentPosition")
         positionTicks = int(currentPosition * 10000000)
 
         url = "{server}/mediabrowser/Sessions/Playing/Stopped"
         
         postdata = {
-            'QueueableMediaTypes': "Video",
-            'CanSeek': True,
             'ItemId': item_id,
             'MediaSourceId': item_id,
-            'PlayMethod': playMethod,
             'PositionTicks': positionTicks
-        }
-
-        if audioindex:
-            postdata['AudioStreamIndex'] = audioindex
-
-        if subtitleindex:
-            postdata['SubtitleStreamIndex'] = subtitleindex    
+        } 
             
         self.doUtils.downloadUrl(url, postBody=postdata, type="POST")
     
@@ -154,7 +148,7 @@ class Player( xbmc.Player ):
         data = self.played_information.get(currentFile)
 
         # only report playback if emby has initiated the playback (item_id has value)
-        if (data is not None) and (data.get("item_id") is not None):
+        if data is not None and data.get("item_id") is not None:
 
             # Get playback information
             item_id = data.get("item_id")
@@ -167,14 +161,22 @@ class Player( xbmc.Player ):
             if paused is None:
                 paused = False
 
-            #url = "{server}/mediabrowser/Sessions/Playing/Progress" 
+            # Get playback volume
+            volume_query = '{"jsonrpc": "2.0", "method": "Application.GetProperties", "params": {"properties": ["volume","muted"]}, "id": 1}'
+            result = xbmc.executeJSONRPC(volume_query)
+            result = json.loads(result)
+            volume = result.get(u'result').get(u'volume')
+            muted = result.get(u'result').get(u'muted')
+
             postdata = {
                 'QueueableMediaTypes': "Video",
                 'CanSeek': True,
                 'ItemId': item_id,
                 'MediaSourceId': item_id,
+                'PlayMethod': playMethod,
                 'IsPaused': paused,
-                'PlayMethod': playMethod
+                'VolumeLevel': volume,
+                'IsMuted': muted
             }
 
             if playTime:
@@ -243,15 +245,17 @@ class Player( xbmc.Player ):
             itemType = WINDOW.getProperty(currentFile + "type")
             seekTime = WINDOW.getProperty(currentFile + "seektime")
             
-            username = WINDOW.getProperty('currUser')
-            sessionId = WINDOW.getProperty('sessionId%s' % username)
-
-            if seekTime != "":
-                PlaybackUtils().seekToPosition(int(seekTime))
+            # Get playback volume
+            volume_query = '{"jsonrpc": "2.0", "method": "Application.GetProperties", "params": {"properties": ["volume","muted"]}, "id": 1}'
+            result = xbmc.executeJSONRPC(volume_query)
+            result = json.loads(result)
+            volume = result.get(u'result').get(u'volume')
+            muted = result.get(u'result').get(u'muted')
             
-            if (not item_id) or (len(item_id) == 0):
-                self.logMsg("onPlayBackStarted: No info for current playing file", 0)
-                return
+            if seekTime:
+                PlaybackUtils().seekToPosition(int(seekTime))
+            else:
+                seekTime = 0
 
             url = "{server}/mediabrowser/Sessions/Playing"
             postdata = {
@@ -259,7 +263,10 @@ class Player( xbmc.Player ):
                 'CanSeek': True,
                 'ItemId': item_id,
                 'MediaSourceId': item_id,
-                'PlayMethod': playMethod
+                'PlayMethod': playMethod,
+                'VolumeLevel': volume,
+                'PositionTicks': int(seekTime),
+                'IsMuted': muted
             }
 
             if audioindex:
@@ -268,24 +275,24 @@ class Player( xbmc.Player ):
             if subtitleindex:
                 postdata['SubtitleStreamIndex'] = subtitleindex
             
+            # Post playback to server
             self.logMsg("Sending POST play started.", 1)
-            #self.logMsg("emby Service -> Sending Post Play Started : " + url, 0)
-            self.doUtils.downloadUrl(url, postBody=postdata, type="POST")   
+            self.doUtils.downloadUrl(url, postBody=postdata, type="POST")
             
             # save data map for updates and position calls
-            data = {}
-            data["runtime"] = runtime
-            data["item_id"] = item_id
-            data["refresh_id"] = refresh_id
-            data["currentfile"] = currentFile
-            data["AudioStreamIndex"] = audioindex
-            data["SubtitleStreamIndex"] = subtitleindex
-            data["playmethod"] = playMethod
-            data["Type"] = itemType
+            data = {
+                'runtime': runtime,
+                'item_id': item_id,
+                'refresh_id': refresh_id,
+                'currentfile': currentFile,
+                'AudioStreamIndex': audioindex,
+                'SubtitleStreamIndex': subtitleindex,
+                'playmethod': playMethod,
+                'type': itemType,
+                'PositionTicks': int(seekTime)
+            }
             self.played_information[currentFile] = data
-            
-            self.logMsg("emby Service -> ADDING_FILE : " + currentFile, 0)
-            self.logMsg("emby Service -> ADDING_FILE : " + str(self.played_information), 0)
+            self.logMsg("ADDING_FILE: %s" % self.played_information, 1)
 
             # log some playback stats
             if(itemType != None):
@@ -303,7 +310,7 @@ class Player( xbmc.Player ):
                     self.playStats[playMethod] = 1
             
             # reset in progress position
-            self.reportPlayback()
+            #self.reportPlayback()
             
     def GetPlayStats(self):
         return self.playStats

@@ -71,8 +71,18 @@ class DownloadUtils():
         url = "{server}/mediabrowser/Sessions/Capabilities/Full"
         data = {
             'PlayableMediaTypes': "Audio,Video",
-            'SupportedCommands': "Play,Playstate,SendString,DisplayMessage,PlayNext",
-            'SupportsMediaControl': True
+            'SupportsMediaControl': True,
+            'SupportedCommands': (
+                
+                "MoveUp,MoveDown,MoveLeft,MoveRight,Select,"
+                "Back,ToggleContextMenu,ToggleFullscreen,ToggleOsdMenu,"
+                "GoHome,PageUp,NextLetter,GoToSearch,"
+                "GoToSettings,PageDown,PreviousLetter,TakeScreenshot,"
+                "VolumeUp,VolumeDown,ToggleMute,SendString,DisplayMessage,"
+
+                "Mute,Unmute,SetVolume,"
+                "Play,Playstate,PlayNext"
+            )
         }
 
         self.logMsg("Capabilities URL: %s" % url, 2)
