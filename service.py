@@ -117,6 +117,12 @@ class Service():
                                     self.logMsg("Exception reporting progress: %s" % msg)
                                     pass
                                 lastProgressUpdate = datetime.today()
+                            elif WINDOW.getProperty('commandUpdate') == "true":
+                                try:
+                                    WINDOW.clearProperty('commandUpdate')
+                                    player.reportPlayback()
+                                except: pass
+                                lastProgressUpdate = datetime.today()
                             # only try autoplay when there's 20 seconds or less remaining and only once!
                             addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
                           
