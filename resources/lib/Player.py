@@ -208,7 +208,14 @@ class Player( xbmc.Player ):
     
     def onPlayBackSeek( self, time, seekOffset ):
         self.logMsg("PLAYBACK_SEEK",2)
-        self.reportPlayback()
+        # Make position when seeking a bit more accurate
+        try:
+            playTime = xbmc.Player().getTime()
+            currentFile = xbmc.Player().getPlayingFile()
+            if(self.played_information.get(currentFile) != None):
+                self.played_information[currentFile]["currentPosition"] = playTime
+            self.reportPlayback()
+        except: pass
         
     def onPlayBackStarted( self ):
         # Will be called when xbmc starts playing a file
