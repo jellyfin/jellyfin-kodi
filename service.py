@@ -195,7 +195,9 @@ class Service():
                                 break
                         self.server_online = True
                         self.logMsg("Server is online and ready.", 1)
-                        xbmcgui.Dialog().notification("Connection successful", "%s Server is online." % self.addonName, time=2000)
+                        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
+                        if addonSettings.getSetting("supressConnectMsg")=="false":
+                            xbmcgui.Dialog().notification("Connection successful", "%s Server is online." % self.addonName, time=2000)
                         WINDOW.setProperty("Server_online", "true")
                         
                         # Server is online, proceed.
