@@ -261,7 +261,6 @@ class WebSocketThread(threading.Thread):
                 showId=ReadKodiDB().getShowIdByEmbyId(item, connection, cursor) # Get the TV Show ID
                 self.logMsg("ShowID: " + str(showId),0)
             WriteKodiVideoDB().deleteItemFromKodiLibrary(item, connection, cursor)
-            connection.commit() #Need to commit so that the count will be right - can't use one in case of multiple deletes
             if type == "episode":
                 showTotalCount = ReadKodiDB().getShowTotalCount(showId, connection, cursor) # Check if there are no episodes left
                 self.logMsg("ShowTotalCount: " + str(showTotalCount),0)
@@ -269,7 +268,7 @@ class WebSocketThread(threading.Thread):
                     embyId=ReadKodiDB().getEmbyIdByKodiId(showId, "tvshow", connection, cursor)
                     self.logMsg("Message : Doing LibraryChanged : Deleting show:" + embyId, 0)
                     WriteKodiVideoDB().deleteItemFromKodiLibrary(embyId, connection, cursor)
-                    connection.commit()
+        connection.commit()
         cursor.close()
         
         #Process music library
