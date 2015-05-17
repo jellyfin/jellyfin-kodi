@@ -313,7 +313,7 @@ class PlayUtils():
 
         path = result[u'Path']
         # Verify the device has access to the direct path
-        if os.path.exists(unicode(path)) == True:
+        if os.path.exists(path) == True:
             # Local or Network path
             self.logMsg("Path exists.", 2)
             return True
