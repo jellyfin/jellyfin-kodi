@@ -31,6 +31,7 @@ class Service():
     newUserClient = None
 
     clientInfo = ClientInformation()
+    KodiMonitor = KodiMonitor.Kodi_Monitor()
     addonName = clientInfo.getAddonName()
     WINDOW = xbmcgui.Window(10000)
 
@@ -38,7 +39,6 @@ class Service():
     server_online = True
     
     def __init__(self, *args ):
-        self.KodiMonitor = KodiMonitor.Kodi_Monitor()
         addonName = self.addonName
 
         self.logMsg("Starting Monitor", 0)
@@ -138,19 +138,18 @@ class Service():
                             pass
 
                     else:
-                        WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
                         #full sync
                         if (startupComplete == False):
                             self.logMsg("Doing_Db_Sync: syncDatabase (Started)")
                             libSync = librarySync.FullLibrarySync()
                             self.logMsg("Doing_Db_Sync: syncDatabase (Finished) " + str(libSync))
-
+                            WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
                             if (libSync):
                                 startupComplete = True
                         else:
                             if self.KodiMonitor.waitForAbort(1):
                                 # Abort was requested while waiting. We should exit
-                                break    
+                                break
                 else:
                     
                     if self.warn_auth:
@@ -210,6 +209,8 @@ class Service():
                         # Abort was requested while waiting.
                         break
 
+            self.checkService()
+
         # If user reset library database.
         if WINDOW.getProperty("SyncInstallRunDone") == "false":
             addon = xbmcaddon.Addon('plugin.video.emby')
@@ -222,6 +223,35 @@ class Service():
             user.stopClient()
 
         self.logMsg("======== STOP %s ========" % self.addonName, 0)
+
+    def checkService(self):
+
+        WINDOW = self.WINDOW
+        timeStamp = WINDOW.getProperty("Emby_Service_Timestamp")
+        loops = 0
+
+        while(timeStamp == ""):
+            timeStamp = WINDOW.getProperty("Emby_Service_Timestamp")
+            loops = loops + 1
+            if(loops == 5):
+                self.logMsg("Emby Service Not Running, no time stamp, exiting.", 0)
+                addon = xbmcaddon.Addon(id='plugin.video.emby')
+                language = addon.getLocalizedString
+                xbmcgui.Dialog().ok(language(30135), language(30136), language(30137))
+                sys.exit()
+            if self.KodiMonitor.waitForAbort(1):
+                # Abort was requested while waiting. We should exit
+                return
+            
+        self.logMsg("Emby Service Timestamp: " + timeStamp, 2)
+        self.logMsg("Emby Current Timestamp: " + str(int(time.time())), 2)
+        
+        if((int(timeStamp) + 30) < int(time.time())):
+            self.logMsg("Emby Service Not Running, time stamp to old, exiting.", 0)
+            addon = xbmcaddon.Addon(id='plugin.video.emby')
+            language = addon.getLocalizedString        
+            xbmcgui.Dialog().ok(language(30135), language(30136), language(30137))
+            sys.exit()
        
 #start the service
 Service().ServiceEntryPoint()
