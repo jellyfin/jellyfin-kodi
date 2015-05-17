@@ -81,7 +81,7 @@ class Service():
         lastFile = None
         
         while not self.KodiMonitor.abortRequested():
-            WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
+            #WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
                      
             if self.KodiMonitor.waitForAbort(1):
                 # Abort was requested while waiting. We should exit
@@ -98,7 +98,7 @@ class Service():
                         ws.start()
 
                     if xbmc.Player().isPlaying():
-                        WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
+                        #WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
                         try:
                             playTime = xbmc.Player().getTime()
                             totalTime = xbmc.Player().getTotalTime()
@@ -143,7 +143,7 @@ class Service():
                             self.logMsg("Doing_Db_Sync: syncDatabase (Started)")
                             libSync = librarySync.FullLibrarySync()
                             self.logMsg("Doing_Db_Sync: syncDatabase (Finished) " + str(libSync))
-                            WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
+                            #WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
                             if (libSync):
                                 startupComplete = True
                         else:
@@ -158,7 +158,7 @@ class Service():
 
                     while user.HasAccess == False:
 
-                        WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
+                        #WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
                         user.hasAccess()
 
                         if WINDOW.getProperty('Server_online') != "true":
@@ -173,7 +173,7 @@ class Service():
             else:
                 # Wait until server becomes online or shut down is requested
                 while not self.KodiMonitor.abortRequested():
-                    WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
+                    #WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
                     
                     if user.getServer() == "":
                         pass
@@ -209,7 +209,7 @@ class Service():
                         # Abort was requested while waiting.
                         break
 
-            self.checkService()
+            #self.checkService()
 
         # If user reset library database.
         if WINDOW.getProperty("SyncInstallRunDone") == "false":
@@ -224,7 +224,8 @@ class Service():
 
         self.logMsg("======== STOP %s ========" % self.addonName, 0)
 
-    def checkService(self):
+    # To be reviewed when moving the sync process to it's own thread
+    '''def checkService(self):
 
         WINDOW = self.WINDOW
         timeStamp = WINDOW.getProperty("Emby_Service_Timestamp")
@@ -251,7 +252,7 @@ class Service():
             addon = xbmcaddon.Addon(id='plugin.video.emby')
             language = addon.getLocalizedString        
             xbmcgui.Dialog().ok(language(30135), language(30136), language(30137))
-            sys.exit()
+            sys.exit()'''
        
 #start the service
 Service().ServiceEntryPoint()
