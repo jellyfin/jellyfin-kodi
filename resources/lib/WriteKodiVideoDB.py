@@ -46,12 +46,12 @@ class WriteKodiVideoDB():
                 downloadUtils.downloadUrl(watchedurl, type="POST")
             else:
                 downloadUtils.downloadUrl(watchedurl, type="DELETE")
-                # Erase resume point when user marks unwatched to follow Emby behavior
-                if type == "episode":
-                    resume = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": {"episodeid": %d, "resume": {"position": 0}}, "id": "setResumePoint"}' % id
-                elif type == "movie":
-                    resume = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": {"movieid": %d, "resume": {"position": 0}}, "id": "setResumePoint"}' % id
-                xbmc.executeJSONRPC(resume)
+            # Erase resume point when user marks unwatched to follow Emby behavior
+            if type == "episode":
+                resume = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": {"episodeid": %d, "resume": {"position": 0}}, "id": "setResumePoint"}' % id
+            elif type == "movie":
+                resume = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": {"movieid": %d, "resume": {"position": 0}}, "id": "setResumePoint"}' % id
+            xbmc.executeJSONRPC(resume)
         
     def addOrUpdateMovieToKodiLibrary( self, embyId ,connection, cursor, viewTag):
         
