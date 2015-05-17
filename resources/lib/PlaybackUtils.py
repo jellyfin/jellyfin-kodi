@@ -101,6 +101,9 @@ class PlaybackUtils():
         
         #show the additional resume dialog if launched from a widget
         if xbmc.getCondVisibility("Window.IsActive(home)"):
+            if userData.get("PlaybackPositionTicks") != 0:
+                reasonableTicks = int(userData.get("PlaybackPositionTicks")) / 1000
+                seekTime = reasonableTicks / 10000
             if seekTime != 0:
                 displayTime = str(datetime.timedelta(seconds=seekTime))
                 display_list = [ self.language(30106) + ' ' + displayTime, self.language(30107)]

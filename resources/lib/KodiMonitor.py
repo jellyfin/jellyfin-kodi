@@ -34,22 +34,24 @@ class Kodi_Monitor(xbmc.Monitor):
         downloadUtils = DownloadUtils()
 
         if method == "VideoLibrary.OnUpdate":
-            jsondata = json.loads(data)
-            if jsondata != None:
-                
-                playcount = None
-                playcount = jsondata.get("playcount")
-                item = jsondata.get("item").get("id")
-                type = jsondata.get("item").get("type")
-                prop = WINDOW.getProperty('Played%s%s' % (type,item))
-                processWatched = WINDOW.getProperty('played_skipWatched')
-                
-                if (playcount != None) and (prop != "true") and (processWatched != "true"):
-                    WINDOW.setProperty("Played%s%s" % (type,item), "true")
-                    utils.logMsg("MB# Sync","Kodi_Monitor--> VideoLibrary.OnUpdate : " + str(data),2)
-                    WriteKodiVideoDB().updatePlayCountFromKodi(item, type, playcount)
-                
-                self.clearProperty(type,item)
+            if WINDOW.getProperty('prevent_libraryUpdate') != "true":
+                jsondata = json.loads(data)
+                if jsondata != None:
+                    
+                    playcount = None
+                    playcount = jsondata.get("playcount")
+                    item = jsondata.get("item").get("id")
+                    type = jsondata.get("item").get("type")
+                    prop = WINDOW.getProperty('Played%s%s' % (type,item))
+                    processWatched = WINDOW.getProperty('played_skipWatched')
+                    
+                    if (playcount != None) and (prop != "true") and (processWatched != "true"):
+                        WINDOW.setProperty("Played%s%s" % (type,item), "true")
+                        utils.logMsg("MB# Sync","Kodi_Monitor--> VideoLibrary.OnUpdate : " + str(data),2)
+                        WriteKodiVideoDB().updatePlayCountFromKodi(item, type, playcount)
+                    
+                    self.clearProperty(type,item)
+            WINDOW.clearProperty('prevent_libraryUpdate')
                     
         if method == "System.OnWake":
             xbmc.sleep(10000) #Allow network to wake up

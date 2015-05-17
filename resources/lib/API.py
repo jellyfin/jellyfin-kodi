@@ -158,7 +158,7 @@ class API():
             else:
                 favorite=False
             if(userData.get("Played") == True):
-                playcount="1"
+                playcount= userData.get('PlayCount')
             else:
                 playcount="0"
             if userData.get('UnplayedItemCount') != None:

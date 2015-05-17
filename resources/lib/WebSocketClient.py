@@ -32,6 +32,8 @@ class WebSocketThread(threading.Thread):
     doUtils = DownloadUtils()
     clientInfo = ClientInformation()
     KodiMonitor = KodiMonitor.Kodi_Monitor()
+    WINDOW = xbmcgui.Window(10000)
+
     addonName = clientInfo.getAddonName()
 
     client = None
@@ -101,13 +103,8 @@ class WebSocketThread(threading.Thread):
         messageType = result.get("MessageType")
         data = result.get("Data")
         WINDOW = xbmcgui.Window( 10000 )
-        playedItemId = WINDOW.getProperty('played_itemId')
 
-        if (playedItemId != '') and (playedItemId in message):
-            # Prevent feedback for watched
-            WINDOW.clearProperty('played_itemId')
-
-        elif(messageType != None and messageType == "Play" and data != None):
+        if(messageType != None and messageType == "Play" and data != None):
             itemIds = data.get("ItemIds")
             playCommand = data.get("PlayCommand")
             
@@ -289,6 +286,7 @@ class WebSocketThread(threading.Thread):
             LibrarySync().IncrementalSync(itemsToUpdate)
 
     def user_data_update(self, userDataList):
+        self.WINDOW.setProperty('prevent_libraryUpdate', "true")
         itemsToUpdate = list()
         for userData in userDataList:
             itemId = userData.get("ItemId")

@@ -117,9 +117,8 @@ class WriteKodiVideoDB():
         else:
             dateadded = None
         
-        playcount = 0
-        if userData.get("PlayCount") == "1":
-            playcount = 1
+        if userData.get("PlayCount") != "0":
+            playcount = int(userData.get('PlayCount'))
         else:
             playcount = None #playcount must be set to NULL in the db
             
@@ -267,9 +266,8 @@ class WriteKodiVideoDB():
         else:
             dateadded = None
         
-        playcount = 0
-        if userData.get("PlayCount") == "1":
-            playcount = 1
+        if userData.get("PlayCount") != "0":
+            playcount = int(userData.get('PlayCount'))
         else:
             playcount = None #playcount must be set to NULL in the db
             
@@ -550,9 +548,8 @@ class WriteKodiVideoDB():
         else:
             lastplayed = None
         
-        playcount = None
-        if userData.get("PlayCount") == "1":
-            playcount = 1
+        if userData.get("PlayCount") != "0":
+            playcount = int(userData.get('PlayCount'))
         else:
             playcount = None #playcount must be set to NULL in the db
         

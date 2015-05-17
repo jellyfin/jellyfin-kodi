@@ -296,7 +296,7 @@ class Player( xbmc.Player ):
                 'SubtitleStreamIndex': subtitleindex,
                 'playmethod': playMethod,
                 'Type': itemType,
-                'PositionTicks': int(seekTime)
+                'currentPosition': int(seekTime)
             }
             self.played_information[currentFile] = data
             self.logMsg("ADDING_FILE: %s" % self.played_information, 1)
