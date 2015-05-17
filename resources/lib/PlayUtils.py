@@ -312,8 +312,12 @@ class PlayUtils():
             return False
 
         path = result[u'Path']
+        try:
+            path = os.path.exists(path)
+        except UnicodeEncodeError:
+            path = os.path.exists(path.encode('utf-8'))
         # Verify the device has access to the direct path
-        if os.path.exists(path) == True:
+        if path:
             # Local or Network path
             self.logMsg("Path exists.", 2)
             return True
