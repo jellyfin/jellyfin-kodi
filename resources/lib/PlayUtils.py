@@ -313,11 +313,15 @@ class PlayUtils():
 
         path = result[u'Path']
         # Verify the device has access to the direct path
-        if os.path.exists(path.encode('utf-8')) == True:
+        if os.path.exists(unicode(path)) == True:
+            # Local or Network path
+            self.logMsg("Path exists.", 2)
             return True
         elif ":\\" not in path:
             # Give benefit of the doubt for nfs protocol
             # Does not behave with os.path.exists
+            self.logMsg("Can't verify path. Still try direct play.", 2)
             return True
         else:
+            self.logMsg("Path is detected as a Url. Try direct streaming.", 2)
             return False
