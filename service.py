@@ -132,6 +132,7 @@ class Service():
                                 if (totalTime - playTime <= int(notificationtime) and (lastFile==None or lastFile!=currentFile)):
                                     lastFile = currentFile
                                     player.autoPlayPlayback()
+                                    self.logMsg("Netflix style autoplay succeeded.", 2)
                             
                         except Exception, e:
                             self.logMsg("Exception in Playback Monitor Service: %s" % e)

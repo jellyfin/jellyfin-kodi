@@ -237,7 +237,7 @@ class WebSocketThread(threading.Thread):
                 elif command == "DisplayMessage":
                     header = arguments[u'Header']
                     text = arguments[u'Text']
-                    xbmcgui.Dialog().notification(header, text)
+                    xbmcgui.Dialog().notification(header, text, time=4000)
                 elif command == "SendString":
                     string = arguments[u'String']
                     text = '{"jsonrpc": "2.0", "method": "Input.SendText",  "params": { "text": "%s", "done": false }, "id": 0}' % string
