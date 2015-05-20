@@ -158,7 +158,10 @@ class API():
             else:
                 favorite=False
             if(userData.get("Played") == True):
-                playcount= userData.get('PlayCount')
+                # Cover the Emby scenario where item is played but playcount is 0.
+                playcount = userData.get('PlayCount')
+                if playcount == 0:
+                    playcount = 1
             else:
                 playcount="0"
             if userData.get('UnplayedItemCount') != None:
