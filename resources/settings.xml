@@ -32,6 +32,7 @@
 	</category>
 	<category label="Extras">
 	    <setting id="disableCoverArt" type="bool" label="30157" default="false" visible="true" enable="true" />
+        <setting id="ignoreSpecialsNextEpisodes" type="bool" label="Ignore specials in next episodes" visible="true" enable="true" default="false" />
 		<setting id="showSpecialInfoDialog" type="bool" label="Show special Emby infodialog on play" default="false" visible="false" />
 		<setting id="autoPlaySeason" type="bool" label="30246" default="false" visible="true" enable="true" />
 	    <setting id="autoPlaySeasonTime" type="number" label="30247" default="20" visible="eq(-1,true)" enable="true" />
