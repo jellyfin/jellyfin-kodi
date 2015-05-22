@@ -23,6 +23,9 @@ from WriteKodiVideoDB import WriteKodiVideoDB
 from ReadEmbyDB import ReadEmbyDB
 from ReadKodiDB import ReadKodiDB
 
+import logging
+logging.basicConfig()
+
 _MODE_BASICPLAY=12
 
 class WebSocketThread(threading.Thread):
