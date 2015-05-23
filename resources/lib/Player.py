@@ -252,12 +252,12 @@ class Player( xbmc.Player ):
             itemType = WINDOW.getProperty(currentFile + "type")
             seekTime = WINDOW.getProperty(currentFile + "seektime")
             
-            # Get playback volume
+            '''# Get playback volume
             volume_query = '{"jsonrpc": "2.0", "method": "Application.GetProperties", "params": {"properties": ["volume","muted"]}, "id": 1}'
             result = xbmc.executeJSONRPC(volume_query)
             result = json.loads(result)
             volume = result.get(u'result').get(u'volume')
-            muted = result.get(u'result').get(u'muted')
+            muted = result.get(u'result').get(u'muted')'''
             
             if seekTime:
                 PlaybackUtils().seekToPosition(int(seekTime))
@@ -271,9 +271,7 @@ class Player( xbmc.Player ):
                 'ItemId': item_id,
                 'MediaSourceId': item_id,
                 'PlayMethod': playMethod,
-                'VolumeLevel': volume,
-                'PositionTicks': int(seekTime),
-                'IsMuted': muted
+                'PositionTicks': int(seekTime)
             }
 
             if audioindex:
