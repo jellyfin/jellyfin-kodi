@@ -119,9 +119,9 @@ class PlaybackUtils():
                     WINDOW.clearProperty(playurl+"seektime")
             else:
                 WINDOW.clearProperty(playurl+"seektime")
-        else:
+        '''else:
             # Playback started from library
-            WINDOW.setProperty(playurl+"seektime", str(seekTime))
+            WINDOW.setProperty(playurl+"seektime", str(seekTime))'''
 
         if result.get("Type")=="Episode":
             WINDOW.setProperty(playurl+"refresh_id", result.get("SeriesId"))
