@@ -128,6 +128,12 @@ class WriteKodiVideoDB():
             playcount = int(userData.get('PlayCount'))
         else:
             playcount = None #playcount must be set to NULL in the db
+          
+        votecount = MBitem.get("VoteCount")
+        
+        tagline = None
+        if MBitem.get("Taglines") != None and MBitem.get("Taglines") != []:
+            tagline = MBitem.get("Taglines")[0]
             
         #### ADD OR UPDATE THE FILE AND PATH ###########
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY
@@ -170,8 +176,8 @@ class WriteKodiVideoDB():
             cursor.execute("select coalesce(max(idMovie),0) as movieid from movie")
             movieid = cursor.fetchone()[0]
             movieid = movieid + 1
-            pathsql="insert into movie(idMovie, idFile, c00, c01, c02, c05, c06, c07, c09, c10, c11, c12, c14, c15, c16, c18, c19, c21) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (movieid, fileid, title, plot, shortplot, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl, country))
+            pathsql="insert into movie(idMovie, idFile, c00, c01, c02, c03, c04, c05, c06, c07, c09, c10, c11, c12, c14, c15, c16, c18, c19, c21) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (movieid, fileid, title, plot, shortplot, tagline, votecount, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl, country))
             
             #add the viewtag
             self.AddTagToMedia(movieid, viewTag, "movie", cursor)
@@ -183,8 +189,8 @@ class WriteKodiVideoDB():
         #### UPDATE THE MOVIE #####
         else:
             utils.logMsg("UPDATE movie to Kodi library","Id: %s - Title: %s" % (embyId, title))
-            pathsql="update movie SET c00 = ?, c01 = ?, c02 = ?, c05 = ?, c06 = ?, c07 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?, c16 = ?, c18 = ?, c19 = ?, c21 = ?WHERE idMovie = ?"
-            cursor.execute(pathsql, (title, plot, shortplot, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl, country, movieid))
+            pathsql="update movie SET c00 = ?, c01 = ?, c02 = ?, c03 = ?, c04 = ?, c05 = ?, c06 = ?, c07 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?, c16 = ?, c18 = ?, c19 = ?, c21 = ?WHERE idMovie = ?"
+            cursor.execute(pathsql, (title, plot, shortplot,  tagline, votecount, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl, country, movieid))
             
             #update the checksum in emby table
             cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(MBitem),MBitem["Id"]))
