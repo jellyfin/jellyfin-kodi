@@ -39,13 +39,6 @@ class WriteKodiVideoDB():
         cursor.close
 
         if(emby_id != None):
-            addon = xbmcaddon.Addon(id='plugin.video.emby')   
-            downloadUtils = DownloadUtils()       
-            watchedurl = "{server}/mediabrowser/Users/{UserId}/PlayedItems/%s" % emby_id
-            if playcount != 0:
-                downloadUtils.downloadUrl(watchedurl, type="POST")
-            else:
-                downloadUtils.downloadUrl(watchedurl, type="DELETE")
             # Erase resume point when user marks watched/unwatched to follow Emby behavior
             # Also force sets the playcount to instantly reflect the appropriate playstate.
             if type == "episode":
@@ -53,6 +46,14 @@ class WriteKodiVideoDB():
             elif type == "movie":
                 resume = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": {"movieid": %d, "playcount": %d, "resume": {"position": 0}}, "id": "setResumePoint"}' % (id, playcount)
             xbmc.executeJSONRPC(resume)
+            
+            addon = xbmcaddon.Addon(id='plugin.video.emby')   
+            downloadUtils = DownloadUtils()       
+            watchedurl = "{server}/mediabrowser/Users/{UserId}/PlayedItems/%s" % emby_id
+            if playcount != 0:
+                downloadUtils.downloadUrl(watchedurl, type="POST")
+            else:
+                downloadUtils.downloadUrl(watchedurl, type="DELETE")
         
     def addOrUpdateMovieToKodiLibrary( self, embyId ,connection, cursor, viewTag):
         
