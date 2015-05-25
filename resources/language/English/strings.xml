@@ -209,12 +209,8 @@
     <string id="30212">Enable Theme Videos (Requires Restart)</string>
     <string id="30213"> - Loop Theme Videos</string>
 	
-	<string id="30214">Disable forced view</string>
-    <string id="30215">Enable Fast Processing</string>
     <string id="30216">AutoPlay remaining episodes in a season</string> 
-	<string id="30217">Show boxsets collapsed in views (Requires Restart)</string>	
     <string id="30218">Compress Artwork</string>
-    <string id="30219">Enable Skin Helper (Requires Restart)</string>
     <string id="30220">Latest </string>
     <string id="30221">In Progress </string>
     <string id="30222">NextUp </string>
@@ -225,13 +221,6 @@
     
     <string id="30227">Random Movies</string>
     <string id="30228">Random Episodes</string>
-    
-    <string id="30229">Skin Compatibility Warning</string>
-    <string id="30230">Your current skin is not fully compatible.</string>
-    <string id="30231">For a better experience use a skin from the forum.</string>
-    <string id="30232">http://tinyurl.com/knfus2x</string>
-    <string id="30233">Don't Show Skin Compatibility Message</string>
-    <string id="30234">Add Show Name (Season + Episode)</string>
     
     <string id="30235">Extras</string>
     <string id="30236">Sync Theme Music</string>
@@ -249,6 +238,7 @@
     <string id="30247">  - The number of seconds before the end to show the notification</string>
     <string id="30248">Show Emby Info dialog on play/select action</string>
     <string id="30249">Suppress server connection message at boot</string>
+    <string id="30250">Use local paths instead of addon redirect (faster playback, but no remote access)</string>
     
     
 	<!-- Default views -->

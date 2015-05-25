@@ -138,8 +138,23 @@ class WriteKodiVideoDB():
             
         #### ADD OR UPDATE THE FILE AND PATH ###########
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY
-        path = "plugin://plugin.video.emby/movies/%s/" % MBitem["Id"]
-        filename = "plugin://plugin.video.emby/movies/%s/?id=%s&mode=play" % (MBitem["Id"],MBitem["Id"])
+        if addon.getSetting('useDirectPaths')=='true':
+            if PlayUtils().isDirectPlay(MBitem):
+                playurl = PlayUtils().directPlay(MBitem)
+                #use the direct file path
+                if "\\" in playurl:
+                    filename = playurl.rsplit("\\",1)[-1]
+                    path = playurl.replace(filename,"")
+                elif "/" in playurl:
+                    filename = playurl.rsplit("/",1)[-1]
+                    path = playurl.replace(filename,"")        
+            else:
+                #for transcoding we just use the server's streaming path because I couldn't figure out how to set the plugin path in the music DB
+                path = server + "/Audio/%s/" %MBitem["Id"]
+                filename = "stream.mp3"                
+        else:
+            path = "plugin://plugin.video.emby/movies/%s/" % MBitem["Id"]
+            filename = "plugin://plugin.video.emby/movies/%s/?id=%s&mode=play" % (MBitem["Id"],MBitem["Id"])
                   
         #create the path
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
@@ -287,8 +302,23 @@ class WriteKodiVideoDB():
             
         #### ADD OR UPDATE THE FILE AND PATH ###########
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY
-        path = "plugin://plugin.video.emby/musicvideos/%s/" % MBitem["Id"]
-        filename = "plugin://plugin.video.emby/musicvideos/%s/?id=%s&mode=play" % (MBitem["Id"], MBitem["Id"])
+        if addon.getSetting('useDirectPaths')=='true':
+            if PlayUtils().isDirectPlay(MBitem):
+                playurl = PlayUtils().directPlay(MBitem)
+                #use the direct file path
+                if "\\" in playurl:
+                    filename = playurl.rsplit("\\",1)[-1]
+                    path = playurl.replace(filename,"")
+                elif "/" in playurl:
+                    filename = playurl.rsplit("/",1)[-1]
+                    path = playurl.replace(filename,"")        
+            else:
+                #for transcoding we just use the server's streaming path because I couldn't figure out how to set the plugin path in the music DB
+                path = server + "/Audio/%s/" %MBitem["Id"]
+                filename = "stream.mp3"                
+        else:
+            path = "plugin://plugin.video.emby/movies/%s/" % MBitem["Id"]
+            filename = "plugin://plugin.video.emby/movies/%s/?id=%s&mode=play" % (MBitem["Id"],MBitem["Id"])
         
         #create the path
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
@@ -569,8 +599,23 @@ class WriteKodiVideoDB():
         
         #### ADD OR UPDATE THE FILE AND PATH ###########
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY        
-        path = "plugin://plugin.video.emby/tvshows/" + MBitem["SeriesId"] + "/"
-        filename = "plugin://plugin.video.emby/tvshows/" + MBitem["SeriesId"] + "/?id=" + MBitem["Id"] + "&mode=play"
+        if addon.getSetting('useDirectPaths')=='true':
+            if PlayUtils().isDirectPlay(MBitem):
+                playurl = PlayUtils().directPlay(MBitem)
+                #use the direct file path
+                if "\\" in playurl:
+                    filename = playurl.rsplit("\\",1)[-1]
+                    path = playurl.replace(filename,"")
+                elif "/" in playurl:
+                    filename = playurl.rsplit("/",1)[-1]
+                    path = playurl.replace(filename,"")        
+            else:
+                #for transcoding we just use the server's streaming path because I couldn't figure out how to set the plugin path in the music DB
+                path = server + "/Audio/%s/" %MBitem["Id"]
+                filename = "stream.mp3"                
+        else:
+            path = "plugin://plugin.video.emby/movies/%s/" % MBitem["Id"]
+            filename = "plugin://plugin.video.emby/movies/%s/?id=%s&mode=play" % (MBitem["Id"],MBitem["Id"])
             
         #create the new path - return id if already exists  
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
