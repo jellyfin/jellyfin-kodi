@@ -150,8 +150,8 @@ class WriteKodiVideoDB():
                     path = playurl.replace(filename,"")        
             else:
                 #for transcoding we just use the server's streaming path because I couldn't figure out how to set the plugin path in the music DB
-                path = server + "/Audio/%s/" %MBitem["Id"]
-                filename = "stream.mp3"                
+                path = server + "/Video/%s/" %MBitem["Id"]
+                filename = "stream.mp4"                
         else:
             path = "plugin://plugin.video.emby/movies/%s/" % MBitem["Id"]
             filename = "plugin://plugin.video.emby/movies/%s/?id=%s&mode=play" % (MBitem["Id"],MBitem["Id"])
@@ -314,8 +314,8 @@ class WriteKodiVideoDB():
                     path = playurl.replace(filename,"")        
             else:
                 #for transcoding we just use the server's streaming path because I couldn't figure out how to set the plugin path in the music DB
-                path = server + "/Audio/%s/" %MBitem["Id"]
-                filename = "stream.mp3"                
+                path = server + "/Video/%s/" %MBitem["Id"]
+                filename = "stream.mp4"                
         else:
             path = "plugin://plugin.video.emby/movies/%s/" % MBitem["Id"]
             filename = "plugin://plugin.video.emby/movies/%s/?id=%s&mode=play" % (MBitem["Id"],MBitem["Id"])
@@ -611,8 +611,8 @@ class WriteKodiVideoDB():
                     path = playurl.replace(filename,"")        
             else:
                 #for transcoding we just use the server's streaming path because I couldn't figure out how to set the plugin path in the music DB
-                path = server + "/Audio/%s/" %MBitem["Id"]
-                filename = "stream.mp3"                
+                path = server + "/Video/%s/" %MBitem["Id"]
+                filename = "stream.mp4"                
         else:
             path = "plugin://plugin.video.emby/movies/%s/" % MBitem["Id"]
             filename = "plugin://plugin.video.emby/movies/%s/?id=%s&mode=play" % (MBitem["Id"],MBitem["Id"])
