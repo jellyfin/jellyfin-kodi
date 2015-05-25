@@ -289,7 +289,6 @@ class WebSocketThread(threading.Thread):
             LibrarySync().IncrementalSync(itemsToUpdate)
 
     def user_data_update(self, userDataList):
-        self.WINDOW.setProperty('prevent_libraryUpdate', "true")
         itemsToUpdate = list()
         for userData in userDataList:
             itemId = userData.get("ItemId")
