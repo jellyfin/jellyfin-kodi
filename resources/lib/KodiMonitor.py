@@ -35,7 +35,7 @@ class Kodi_Monitor(xbmc.Monitor):
         WINDOW = self.WINDOW
         downloadUtils = DownloadUtils()
         #player started playing an item - 
-        if "Playlist.OnAdd" in method and addon.getSetting('useDirectPaths')=='true':
+        if ("Playlist.OnAdd" in method or "Player.OnPlay" in method) and addon.getSetting('useDirectPaths')=='true':
 
             jsondata = json.loads(data)
             if jsondata != None:

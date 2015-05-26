@@ -455,8 +455,17 @@ class WriteKodiVideoDB():
              premieredate = premieredatelist[0] 
         else:
             premieredate = None
-        
-        path = "plugin://plugin.video.emby/tvshows/" + MBitem["Id"] + "/"       
+
+        #create toplevel path as monitored source - needed for things like actors and stuff to work (no clue why)
+        if addon.getSetting('useDirectPaths')=='true':
+            playurl = MBitem["Path"].replace("\\\\", "smb://").replace("\\", "/")
+            #make sure that the path always ends with a slash
+            path = utils.convertEncoding(playurl + "/")
+            toplevelpathstr = path.rsplit("/",2)[1]
+            toplevelpath = path.replace(toplevelpathstr + "/","")
+        else:
+            path = "plugin://plugin.video.emby/tvshows/" + MBitem["Id"] + "/"       
+            toplevelpath = "plugin://plugin.video.emby/"
             
         #### ADD THE TV SHOW TO KODI ############## 
         if showid == None:
@@ -469,9 +478,6 @@ class WriteKodiVideoDB():
             pathid = pathid + 1
             pathsql="insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
             cursor.execute(pathsql, (pathid,path,None,None,1))
-            
-            #create toplevel path as monitored source - needed for things like actors and stuff to work (no clue why)
-            toplevelpath = "plugin://plugin.video.emby/"
             cursor.execute("SELECT idPath as tlpathid FROM path WHERE strPath = ?",(toplevelpath,))
             result = cursor.fetchone()
             if result == None:
