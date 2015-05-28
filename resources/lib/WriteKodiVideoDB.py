@@ -317,8 +317,8 @@ class WriteKodiVideoDB():
                 path = server + "/Video/%s/" %MBitem["Id"]
                 filename = "stream.mp4"                
         else:
-            path = "plugin://plugin.video.emby/movies/%s/" % MBitem["Id"]
-            filename = "plugin://plugin.video.emby/movies/%s/?id=%s&mode=play" % (MBitem["Id"],MBitem["Id"])
+            path = "plugin://plugin.video.emby/musicvideos/%s/" % MBitem["Id"]
+            filename = "plugin://plugin.video.emby/musicvideos/%s/?id=%s&mode=play" % (MBitem["Id"], MBitem["Id"])
         
         #create the path
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
@@ -620,8 +620,8 @@ class WriteKodiVideoDB():
                 path = server + "/Video/%s/" %MBitem["Id"]
                 filename = "stream.mp4"                
         else:
-            path = "plugin://plugin.video.emby/movies/%s/" % MBitem["Id"]
-            filename = "plugin://plugin.video.emby/movies/%s/?id=%s&mode=play" % (MBitem["Id"],MBitem["Id"])
+            path = "plugin://plugin.video.emby/tvshows/" + MBitem["SeriesId"] + "/"
+            filename = "plugin://plugin.video.emby/tvshows/" + MBitem["SeriesId"] + "/?id=" + MBitem["Id"] + "&mode=play"
             
         #create the new path - return id if already exists  
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
