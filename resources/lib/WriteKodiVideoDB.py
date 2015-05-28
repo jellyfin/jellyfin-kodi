@@ -458,7 +458,13 @@ class WriteKodiVideoDB():
 
         #create toplevel path as monitored source - needed for things like actors and stuff to work (no clue why)
         if addon.getSetting('useDirectPaths')=='true':
-            playurl = MBitem["Path"].replace("\\\\", "smb://").replace("\\", "/")
+            smbuser = addon.getSetting('smbusername')
+            smbpass = addon.getSetting('smbpassword')
+            # Network share
+            if smbuser:
+                playurl = MBitem["Path"].replace("\\\\", "smb://%s:%s@" % (smbuser, smbpass)).replace("\\", "/")
+            else:
+                playurl = MBitem["Path"].replace("\\\\", "smb://").replace("\\", "/")
             #make sure that the path always ends with a slash
             path = utils.convertEncoding(playurl + "/")
             toplevelpathstr = path.rsplit("/",2)[1]
