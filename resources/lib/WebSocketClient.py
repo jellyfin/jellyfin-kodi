@@ -307,7 +307,13 @@ class WebSocketThread(threading.Thread):
         #raise
 
     def on_close(self, ws):
+        WINDOW = self.WINDOW
         self.logMsg("Closed", 2)
+        # Server is not online
+        if WINDOW.getProperty("Server_online") == "true":
+            self.logMsg("Server is unreachable.", 1)
+            WINDOW.setProperty("Server_online", "false")
+            xbmcgui.Dialog().notification("Error connecting", "%s Server is unreachable." % self.addonName)
 
     def on_open(self, ws):
         pass
@@ -348,14 +354,9 @@ class WebSocketThread(threading.Thread):
                 self.client.run_forever()
 
             if (self.keepRunning):
-                # Server is not online
-                if WINDOW.getProperty("Server_online") == "true":
-                    self.logMsg("Server is unreachable.", 1)
-                    WINDOW.setProperty("Server_online", "false")
-                    xbmcgui.Dialog().notification("Error connecting", "%s Server is unreachable." % self.addonName)
-                
                 if self.KodiMonitor.waitForAbort(5):
                     break
+            else: break
 
         self.logMsg("Thread Exited")
         
