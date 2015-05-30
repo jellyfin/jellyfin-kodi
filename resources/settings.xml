@@ -17,7 +17,7 @@
 	<category label="Sync Options">
 	<!--  	<setting id="syncMovieBoxSets" type="bool" label="30238" default="true" visible="true" enable="true" /> -->
 		<setting id="dbSyncIndication" type="bool" label="Show sync progress on screen" default="false" visible="true" enable="true" />
-		<setting id="enableMusicSync" type="bool" label="Enable Music Library Sync" default="false" visible="true" enable="true" />
+		<setting id="disableMusicSync" type="bool" label="Disable Music Library Sync" default="false" visible="true" enable="true" />
 		<setting id="useDirectPaths" type="bool" label="30250" default="false" visible="true" enable="true" />        
 	</category>
 	<category label="Playback"> <!-- Extra Sync options -->

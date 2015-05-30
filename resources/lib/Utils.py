@@ -216,7 +216,7 @@ def reset():
     connection.commit()
     cursor.close()
     
-    if addonSettings.getSetting("enableMusicSync") == "true":
+    if addonSettings.getSetting("disableMusicSync") == "false":
         # delete video db table data
         print "Doing Music DB Reset"
         connection = KodiSQL("music")
