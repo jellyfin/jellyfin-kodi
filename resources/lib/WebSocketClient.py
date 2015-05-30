@@ -273,7 +273,7 @@ class WebSocketThread(threading.Thread):
         
         #Process music library
         addon = xbmcaddon.Addon(id='plugin.video.emby')
-        if addon.getSetting("disableMusicSync") == "false":
+        if addon.getSetting("enableMusicSync") == "true":
             connection = utils.KodiSQL("music")
             cursor = connection.cursor()
             for item in itemsRemoved:
