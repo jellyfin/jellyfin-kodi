@@ -522,7 +522,7 @@ class LibrarySync():
             WINDOW.setProperty("SyncDatabaseRunning", "true")
             
             #show the progress dialog
-            if (dbSyncIndication):
+            if (dbSyncIndication and xbmc.Player().isPlaying() == False):
                 xbmcgui.Dialog().notification('Emby for Kodi', 'Performing incremental sync...', "special://home/addons/plugin.video.emby/icon.png")
             
             connection = utils.KodiSQL("video")

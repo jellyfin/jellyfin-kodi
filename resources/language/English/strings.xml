@@ -237,8 +237,8 @@
     <string id="30246">Enable Netflix style next up notification</string>
     <string id="30247">  - The number of seconds before the end to show the notification</string>
     <string id="30248">Show Emby Info dialog on play/select action</string>
-    <string id="30249">Suppress server connection message at boot</string>
-    <string id="30250">Use local paths instead of addon redirect (faster playback, but no remote access)</string>
+    <string id="30249">Suppress server connection message on start-up</string>
+    <string id="30250">Use local paths instead of addon redirect for playback</string>
     
     
 	<!-- Default views -->
