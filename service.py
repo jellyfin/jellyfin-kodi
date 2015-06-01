@@ -123,16 +123,6 @@ class Service():
                                     player.reportPlayback()
                                 except: pass
                                 lastProgressUpdate = datetime.today()
-                            # only try autoplay when there's 20 seconds or less remaining and only once!
-                            addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
-                          
-                            # if its an episode see if autoplay is enabled
-                            if addonSettings.getSetting("autoPlaySeason")=="true":
-                                notificationtime = addonSettings.getSetting("autoPlaySeasonTime")
-                                if (totalTime - playTime <= int(notificationtime) and (lastFile==None or lastFile!=currentFile)):
-                                    lastFile = currentFile
-                                    player.autoPlayPlayback()
-                                    self.logMsg("Netflix style autoplay succeeded.", 2)
                             
                         except Exception, e:
                             self.logMsg("Exception in Playback Monitor Service: %s" % e)
