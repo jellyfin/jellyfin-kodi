@@ -106,11 +106,13 @@ class PlayUtils():
         playhttp = self.addon.getSetting('playFromStream')
         # User forcing to play via HTTP instead of SMB
         if playhttp == "true":
+            self.logMsg("Can't direct play: Play from HTTP is enabled.", 1)
             return False
 
         canDirectPlay = result[u'MediaSources'][0][u'SupportsDirectPlay']
         # Make sure it's supported by server
         if not canDirectPlay:
+            self.logMsg("Can't direct play: Server does not allow or support it.", 1)
             return False
 
         location = result[u'LocationType']
@@ -120,6 +122,7 @@ class PlayUtils():
             if self.fileExists(result):
                 return True
             else:
+                self.logMsg("Can't direct play: Unable to locate the content.", 1)
                 return False
 
 
