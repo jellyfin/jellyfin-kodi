@@ -318,7 +318,7 @@ class PlayUtils():
         try:
             pathexists = os.path.exists(path)
         except UnicodeEncodeError:
-            pathexists = os.path.exists(path.encode('utf-8'))
+            pathexists = os.path.exists(path.decode('utf-8'))
         # Verify the device has access to the direct path
         if pathexists:
             # Local or Network path
@@ -330,5 +330,5 @@ class PlayUtils():
             self.logMsg("Can't verify path. Still try direct play.", 2)
             return True
         else:
-            self.logMsg("Path is detected as a Url. Try direct streaming.", 2)
+            self.logMsg("Path is detected as a Url: %s. Try direct streaming." % path, 2)
             return False
