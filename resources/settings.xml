@@ -34,7 +34,7 @@
 	</category>
 	<category label="30022">
 		<setting id="logLevel" type="enum" label="30004" values="None|Info|Debug" default="0" />
-        <setting id="supressConnectMsg" type="bool" label="30249" default="false" visible="true" enable="true" />        
+        <!--<setting id="supressConnectMsg" type="bool" label="30249" default="false" visible="true" enable="true" />        -->
 		<setting label="30239" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=reset)" />
 
 	</category>

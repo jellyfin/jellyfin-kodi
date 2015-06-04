@@ -173,7 +173,7 @@ class Service():
                         if self.server_online:
                             WINDOW.setProperty("Server_online", "false")
                             self.logMsg("Server is offline.", 1)
-                            xbmcgui.Dialog().notification("Error connecting", "%s Server is unreachable." % self.addonName)
+                            xbmcgui.Dialog().notification("Error connecting", "%s Server is unreachable." % self.addonName, sound=False)
                         self.server_online = False
                     else:
                         # Server is online
@@ -183,11 +183,10 @@ class Service():
                             if self.KodiMonitor.waitForAbort(5):
                                 # Abort was requested while waiting.
                                 break
+                            xbmcgui.Dialog().notification("Connection successful", "%s Server is online." % self.addonName, time=2000, sound=False)
+                            
                         self.server_online = True
                         self.logMsg("Server is online and ready.", 1)
-                        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
-                        if addonSettings.getSetting("supressConnectMsg")=="false":
-                            xbmcgui.Dialog().notification("Connection successful", "%s Server is online." % self.addonName, time=2000)
                         WINDOW.setProperty("Server_online", "true")
                         
                         # Server is online, proceed.
