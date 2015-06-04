@@ -36,6 +36,7 @@ class Service():
     WINDOW = xbmcgui.Window(10000)
 
     warn_auth = True
+    welcome_msg = True
     server_online = True
     
     def __init__(self, *args ):
@@ -90,7 +91,12 @@ class Service():
             if WINDOW.getProperty('Server_online') == "true":
                 # Server is online
                 if (user.currUser != None) and (user.HasAccess == True):
-                    self.warn_auth = True
+                    
+                    if self.welcome_msg:
+                        # Reset authentication warnings
+                        self.welcome_msg = False
+                        self.warn_auth = True
+                        xbmcgui.Dialog().notification("Emby server", "Welcome %s!" % user.currUser, sound=False)
 
                     # Correctly launch the websocket, if user manually launches the add-on
                     if (self.newWebSocketThread == None):
@@ -184,7 +190,7 @@ class Service():
                                 # Abort was requested while waiting.
                                 break
                             xbmcgui.Dialog().notification("Connection successful", "%s Server is online." % self.addonName, time=2000, sound=False)
-                            
+
                         self.server_online = True
                         self.logMsg("Server is online and ready.", 1)
                         WINDOW.setProperty("Server_online", "true")
