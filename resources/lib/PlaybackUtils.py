@@ -68,6 +68,17 @@ class PlaybackUtils():
             reasonableTicks = int(userData.get("PlaybackPositionTicks")) / 1000
             seekTime = reasonableTicks / 10000
 
+        # check for any intros - if we have any play them when the movie/show is not being resumed
+        url = "{server}/mediabrowser/Users/{UserId}/Items/%s/Intros?format=json&ImageTypeLimit=1&Fields=Etag" % id    
+        intros = self.downloadUtils.downloadUrl(url)
+        if(intros != "" and intros.get("Items") != None and seekTime == 0):
+            introsId = []
+            for intro in intros[u'Items']:
+              introid = intro[u'Id']
+              introsId.append(introid)
+            introsId.append(id)
+            return self.PLAYAllItems(introsId, startPositionTicks=None)
+
         playurl = PlayUtils().getPlayUrl(server, id, result)
         if playurl == False:
             #xbmcgui.Dialog().ok('Warning', 'Failed to launch playback.')
@@ -149,7 +160,7 @@ class PlaybackUtils():
                 self.setListItemProps(server, id, listItem, result)
                 xbmc.Player().play(playurl,listItem)
             else:
-               xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)              
+               xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)           
 
     def setArt(self, list,name,path):
         if name=='thumb' or name=='fanart_image' or name=='small_poster' or name=='tiny_poster'  or name == "medium_landscape" or name=='medium_poster' or name=='small_fanartimage' or name=='medium_fanartimage' or name=='fanart_noindicators':
