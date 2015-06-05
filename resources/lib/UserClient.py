@@ -150,6 +150,25 @@ class UserClient(threading.Thread):
         else:
             return s_cert
 
+    def setUserPref(self):
+
+        server = self.getServer()
+        userId = self.getUserId()
+        addon = self.addon
+
+        url = "%s/mediabrowser/Users/%s" % (server, userId)
+        result = self.doUtils.downloadUrl(url)
+
+        audio = result[u'Configuration'].get(u'AudioLanguagePreference', "default")
+        subs = result[u'Configuration'].get(u'SubtitleLanguagePreference', "default")
+        addon.setSetting('Audiopref', audio)
+        addon.setSetting('Subspref', subs)
+
+        self.logMsg("Audio preference: %s" % audio, 2)
+        self.logMsg("Subtitles preference: %s" % subs, 2)
+
+        return True
+
     def getPublicUsers(self):
 
         server = self.getServer()
@@ -212,6 +231,9 @@ class UserClient(threading.Thread):
                 # Token is no longer valid
                 self.resetClient()
                 return False
+
+        # Set user preferences in settings
+        self.setUserPref()
 
         # Set to windows property
         WINDOW.setProperty("currUser", username)
