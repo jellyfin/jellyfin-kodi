@@ -34,6 +34,7 @@ class Service():
     KodiMonitor = KodiMonitor.Kodi_Monitor()
     addonName = clientInfo.getAddonName()
     WINDOW = xbmcgui.Window(10000)
+    logLevel = UserClient().getLogLevel()
 
     warn_auth = True
     welcome_msg = True
@@ -41,22 +42,25 @@ class Service():
     
     def __init__(self, *args ):
         addonName = self.addonName
+        WINDOW = self.WINDOW
+        WINDOW.setProperty('getLogLevel', str(self.logLevel))
 
         self.logMsg("Starting Monitor", 0)
         self.logMsg("======== START %s ========" % addonName, 0)
         self.logMsg("KODI Version: %s" % xbmc.getInfoLabel("System.BuildVersion"), 0)
         self.logMsg("%s Version: %s" % (addonName, self.clientInfo.getVersion()), 0)
         self.logMsg("Platform: %s" % (self.clientInfo.getPlatform()), 0)
+        self.logMsg("Log Level: %s" % self.logLevel, 0)
         
         #reset all window props on startup for user profile switches
         self.WINDOW.clearProperty("startup")
-        embyProperty = self.WINDOW.getProperty("Emby.nodes.total")
+        embyProperty = WINDOW.getProperty("Emby.nodes.total")
         propNames = ["index","path","title","content","inprogress.content","inprogress.title","inprogress.content","inprogress.path","nextepisodes.title","nextepisodes.content","nextepisodes.path","unwatched.title","unwatched.content","unwatched.path","recent.title","recent.content","recent.path","recentepisodes.title","recentepisodes.content","recentepisodes.path","inprogressepisodes.title","inprogressepisodes.content","inprogressepisodes.path"]
         if embyProperty:
             totalNodes = int(embyProperty)
             for i in range(totalNodes):
                 for prop in propNames:
-                    self.WINDOW.clearProperty("Emby.nodes.%s.%s" %(str(i),prop))
+                    WINDOW.clearProperty("Emby.nodes.%s.%s" %(str(i),prop))
 
 
     def logMsg(self, msg, lvl=1):

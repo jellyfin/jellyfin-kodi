@@ -32,7 +32,7 @@ class UserClient(threading.Thread):
     WINDOW = xbmcgui.Window(10000)
 
     stopClient = False
-    logLevel = 0
+    logLevel = int(addon.getSetting('logLevel'))
     auth = True
     retry = 0
 
@@ -359,6 +359,13 @@ class UserClient(threading.Thread):
 
             # Get the latest addon settings
             self.addon = xbmcaddon.Addon(id=self.addonId)
+            # Verify the log level
+            currLogLevel = self.getLogLevel()
+            if self.logLevel != currLogLevel:
+                # Set new log level
+                self.logLevel = currLogLevel
+                self.logMsg("New Log Level: %s" % currLogLevel, 0)
+                self.WINDOW.setProperty('getLogLevel', str(currLogLevel)) 
 
             if (self.WINDOW.getProperty("Server_status") != ""):
                 status = self.WINDOW.getProperty("Server_status")

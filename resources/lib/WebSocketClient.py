@@ -322,14 +322,14 @@ class WebSocketThread(threading.Thread):
     def run(self):
         
         WINDOW = xbmcgui.Window(10000)
-        logLevel = int(WINDOW.getProperty('logLevel'))
+        logLevel = int(WINDOW.getProperty('getLogLevel'))
         username = WINDOW.getProperty('currUser')
         server = WINDOW.getProperty('server%s' % username)
         token = WINDOW.getProperty('accessToken%s' % username)
         deviceId = ClientInformation().getMachineId()
 
-        if (logLevel == 2):
-            websocket.enableTrace(True)        
+        '''if (logLevel == 2):
+            websocket.enableTrace(True)        '''
 
         # Get the appropriate prefix for websocket
         if "https" in server:

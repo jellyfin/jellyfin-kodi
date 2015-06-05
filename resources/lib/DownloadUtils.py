@@ -258,6 +258,7 @@ class DownloadUtils():
                     # UTF-8 - JSON object
                     r = r.json()
                     self.logMsg("====== 200 Success ======", 2)
+                    self.logMsg("Response: %s" % r, 2)
                     return r
                 except:
                     if r.headers['content-type'] == "text/html":

@@ -18,7 +18,7 @@ from LibrarySync import LibrarySync
 from  PlaybackUtils import PlaybackUtils
 from ReadEmbyDB import ReadEmbyDB
 from API import API
-from NextUpInfo import NextUpInfo
+
 librarySync = LibrarySync()
 
 # service class for playback monitoring
