@@ -47,6 +47,10 @@ elif mode == "settings":
 elif mode == "manualsync":
     from LibrarySync import LibrarySync
     LibrarySync().FullLibrarySync(True)
+
+elif mode == "texturecache":
+    from TextureCache import TextureCache
+    TextureCache().FullTextureCacheSync()
     
 ##### BROWSE EMBY CHANNELS ROOT #####    
 elif  mode == "channels":

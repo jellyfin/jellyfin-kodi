@@ -18,6 +18,7 @@ from DownloadUtils import DownloadUtils
 from PlayUtils import PlayUtils
 from ReadKodiDB import ReadKodiDB
 from ReadEmbyDB import ReadEmbyDB
+from TextureCache import TextureCache
 from API import API
 import Utils as utils
 
@@ -32,7 +33,7 @@ addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
 
 class WriteKodiMusicDB():
     
-
+    textureCache = TextureCache()
 
     def updatePlayCountFromKodi(self, id, type, playcount=0):
         #when user marks item watched from kodi interface update this in Emby
@@ -495,6 +496,10 @@ class WriteKodiMusicDB():
                 if(url != imageUrl):
                     utils.logMsg("ArtworkSync", "Updating Art Link for kodiId: " + str(kodiId) + " (" + url + ") -> (" + imageUrl + ")")
                     cursor.execute("UPDATE art set url = ? WHERE media_id = ? AND media_type = ? AND type = ?", (imageUrl, kodiId, mediaType, imageType))
+            
+            #cache fanart textures in Kodi texture cache
+            if imageType == "fanart":
+                self.textureCache.CacheTexture(imageUrl)
                      
     def AddGenresToMedia(self, id, genres, mediatype, cursor):
 

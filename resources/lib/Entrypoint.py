@@ -486,5 +486,6 @@ def doMainListing():
     addDirectoryItem("Perform manual sync", "plugin://plugin.video.emby/?mode=manualsync")
     addDirectoryItem("Add user to session", "plugin://plugin.video.emby/?mode=adduser")
     addDirectoryItem("Perform local database reset (full resync)", "plugin://plugin.video.emby/?mode=reset")
+    addDirectoryItem("Cache all images to Kodi texture cache (advanced)", "plugin://plugin.video.emby/?mode=texturecache")
     
     xbmcplugin.endOfDirectory(int(sys.argv[1]))                

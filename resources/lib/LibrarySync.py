@@ -618,7 +618,6 @@ class LibrarySync():
                 xbmc.executebuiltin("UpdateLibrary(video)")
                 WINDOW.setProperty("SyncDatabaseRunning", "false")
 
-    
     def ShouldStop(self):
             
         if(xbmc.abortRequested):

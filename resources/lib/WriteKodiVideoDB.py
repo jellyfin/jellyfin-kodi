@@ -13,10 +13,12 @@ import sqlite3
 import os
 from decimal import Decimal
 
+
 from DownloadUtils import DownloadUtils
 from PlayUtils import PlayUtils
 from ReadKodiDB import ReadKodiDB
 from ReadEmbyDB import ReadEmbyDB
+from TextureCache import TextureCache
 from API import API
 import Utils as utils
 
@@ -26,6 +28,8 @@ from xml.dom import minidom
 import xml.etree.cElementTree as ET
 
 class WriteKodiVideoDB():
+    
+    textureCache = TextureCache()
 
     def updatePlayCountFromKodi(self, id, type, playcount=0):
         #when user marks item watched from kodi interface update this in Emby
@@ -772,6 +776,10 @@ class WriteKodiVideoDB():
                 if(url != imageUrl):
                     utils.logMsg("ArtworkSync", "Updating Art Link for kodiId: " + str(kodiId) + " (" + url + ") -> (" + imageUrl + ")")
                     cursor.execute("UPDATE art set url = ? WHERE media_id = ? AND media_type = ? AND type = ?", (imageUrl, kodiId, mediaType, imageType))
+                    
+            #cache fanart and poster in Kodi texture cache
+            if imageType == "fanart" or imageType == "poster":
+                self.textureCache.CacheTexture(imageUrl)
         
     def setKodiResumePoint(self, fileid, resume_seconds, total_seconds, cursor):
         
@@ -990,8 +998,7 @@ class WriteKodiVideoDB():
                     else:
                         #only movies have a country field
                         return
-                        
-    
+                            
     def AddStudiosToMedia(self, id, studios, mediatype, cursor):
 
         if studios:
@@ -1208,5 +1215,4 @@ class WriteKodiVideoDB():
                 #update the checksum in emby table
                 cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(boxsetmovie),boxsetmovie["Id"]))
              
-                
-               
+    
