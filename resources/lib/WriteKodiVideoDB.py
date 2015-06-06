@@ -616,7 +616,7 @@ class WriteKodiVideoDB():
         #### ADD OR UPDATE THE FILE AND PATH ###########
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY        
         if addon.getSetting('useDirectPaths')=='true':
-            if PlayUtils().isDirectPlay(MBitem):
+            if True: #PlayUtils().isDirectPlay(MBitem): # dont do the exists check
                 playurl = PlayUtils().directPlay(MBitem)
                 #use the direct file path
                 if "\\" in playurl:
