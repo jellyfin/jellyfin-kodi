@@ -21,7 +21,7 @@ class UserPreferences(xbmcgui.WindowXMLDialog):
     def onInit(self):
         self.action_exitkeys_id = [10, 13]
         # set the dialog data
-        
+        self.save = False
         cinemaMode = self.configuration.get(u'EnableCinemaMode')
         self.getControl(8011).setSelected(cinemaMode)
         self.getControl(8001).setLabel(self.name)
@@ -57,7 +57,7 @@ class UserPreferences(xbmcgui.WindowXMLDialog):
         
         if(controlID == 8012):
             # save now
-            self.save()
+            self.save = True
             self.close()
         
         elif(controlID == 8013):
