@@ -41,6 +41,9 @@ elif mode == "resetauth":
 elif mode == "adduser":
     entrypoint.addUser()
     
+elif mode == "userprefs":
+    entrypoint.userPreferences()
+    
 elif mode == "settings":
     xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
 

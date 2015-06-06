@@ -17,6 +17,7 @@ from PlaybackUtils import PlaybackUtils
 from DownloadUtils import DownloadUtils
 from ReadEmbyDB import ReadEmbyDB
 from API import API
+from UserPreferences import UserPreferences
 
 
 ##### Play items via plugin://plugin.video.emby/ #####
@@ -119,6 +120,23 @@ def addUser():
     except:
         xbmc.log("Failed to add user to session.")
         xbmcgui.Dialog().notification("Error", "Unable to add/remove user from the session.", xbmcgui.NOTIFICATION_ERROR)
+
+def userPreferences():
+    doUtils = DownloadUtils()
+    addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
+    userPreferencesPage = UserPreferences("script-emby-kodi-UserPreferences.xml", addonSettings.getAddonInfo('path'), "default", "1080i")
+    url = "{server}/mediabrowser/Users/{UserId}" 
+    result = doUtils.downloadUrl(url)
+    configuration = result[u'Configuration']
+    userPreferencesPage.setConfiguration(configuration)
+    userPreferencesPage.setName(result[u'Name'])
+    userPreferencesPage.setImage(API().getUserArtwork(result,"Primary"))
+    
+    userPreferencesPage.doModal()
+    if userPreferencesPage.isSave():
+        url = "{server}/mediabrowser/Users/{UserId}/Configuration"
+        postdata = userPreferencesPage.getConfiguration()
+        doUtils.downloadUrl(url, postBody=postdata, type="POST")
 
 ##### BROWSE EMBY CHANNELS #####    
 def BrowseChannels(id, folderid=None):
@@ -485,6 +503,7 @@ def doMainListing():
     addDirectoryItem("Settings", "plugin://plugin.video.emby/?mode=settings")
     addDirectoryItem("Perform manual sync", "plugin://plugin.video.emby/?mode=manualsync")
     addDirectoryItem("Add user to session", "plugin://plugin.video.emby/?mode=adduser")
+    addDirectoryItem("Configure user preferences", "plugin://plugin.video.emby/?mode=userprefs")
     addDirectoryItem("Perform local database reset (full resync)", "plugin://plugin.video.emby/?mode=reset")
     addDirectoryItem("Cache all images to Kodi texture cache (advanced)", "plugin://plugin.video.emby/?mode=texturecache")
     
