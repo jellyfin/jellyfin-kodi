@@ -48,18 +48,6 @@ class PlaybackUtils():
         except:
             return
 
-        # For split movies
-        if u'PartCount' in result:
-            partcount = result[u'PartCount']
-            # Get additional parts/playurl
-            url = "{server}/mediabrowser/Videos/%s/AdditionalParts" % id
-            parts = self.downloadUtils.downloadUrl(url)
-            partsId = [id]
-            for part in parts[u'Items']:
-                partId = part[u'Id']
-                partsId.append(partId)
-            self.PLAYAllItems(partsId, startPositionTicks=None)
-
         userData = result['UserData']
         resume_result = 0
         seekTime = 0
@@ -68,16 +56,36 @@ class PlaybackUtils():
             reasonableTicks = int(userData.get("PlaybackPositionTicks")) / 1000
             seekTime = reasonableTicks / 10000
 
-        # check for any intros - if we have any play them when the movie/show is not being resumed
-        url = "{server}/mediabrowser/Users/{UserId}/Items/%s/Intros?format=json&ImageTypeLimit=1&Fields=Etag" % id    
-        intros = self.downloadUtils.downloadUrl(url)
-        if(intros != "" and intros.get("Items") != None and seekTime == 0):
-            introsId = []
-            for intro in intros[u'Items']:
-              introid = intro[u'Id']
-              introsId.append(introid)
-            introsId.append(id)
-            return self.PLAYAllItems(introsId, startPositionTicks=None)
+        itemsToPlay = []
+        # Check for intros
+        if seekTime == 0:
+            # if we have any play them when the movie/show is not being resumed
+            # We can add the option right here
+            url = "{server}/mediabrowser/Users/{UserId}/Items/%s/Intros?format=json&ImageTypeLimit=1&Fields=Etag" % id    
+            intros = self.downloadUtils.downloadUrl(url)
+            if intros[u'TotalRecordCount'] == 0:
+                pass
+            else:
+                for intro in intros[u'Items']:
+                    introId = intro[u'Id']
+                    itemsToPlay.append(introId)
+
+        # Add original item
+        itemsToPlay.append(id)
+        
+        # For split movies
+        if u'PartCount' in result:
+            partcount = result[u'PartCount']
+            # Get additional parts/playurl
+            url = "{server}/mediabrowser/Videos/%s/AdditionalParts" % id
+            parts = self.downloadUtils.downloadUrl(url)
+            for part in parts[u'Items']:
+                partId = part[u'Id']
+                itemsToPlay.append(partId)
+
+        if len(itemsToPlay) > 1:
+            # Let's play the playlist
+            return self.AddToPlaylist(itemsToPlay)
 
         playurl = PlayUtils().getPlayUrl(server, id, result)
         if playurl == False:
