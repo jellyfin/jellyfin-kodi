@@ -74,7 +74,7 @@
 							<radioheight>32</radioheight>
 							<textoffsetx>30</textoffsetx>
 							<textcolor>B3dddddd</textcolor>
-							<label>Cinema Mode Enabled</label>
+							<label>Enable cinema mode</label>
 						</control>
 					</control>
 				</control>
