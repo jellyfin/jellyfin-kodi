@@ -309,25 +309,34 @@ class Player( xbmc.Player ):
                     self.logMsg("Door 3", 2)
                     # 1. There one audio track.
                     # 2. The audio is undefined or a codec.
-                    # 3. Audio pref could be mislabelled.
-                    if addon.getSetting('subsoverride') == "true":
-                        if self.subsPref in subs:
+                    # 3. Audio track is be mislabeled.
+                    if self.subsPref in subs:
+                        # If the subtitle is available, only display
+                        # if the setting is enabled.
+                        if addon.getSetting('subsoverride') == "true":
                             # Subs are forced.
-                            self.logMsg("Door 3.1", 2)
-                            # Only display if subs language is different than audio.
+                            self.logMsg("Door 3.2", 2)
                             index = subs.index(self.subsPref)
                             xbmcplayer.setSubtitleStream(index)
+                        else:
+                            # Let the user decide, since track is mislabeled.
+                            self.logMsg("Door 3.3")
+                            xbmcplayer.showSubtitles(False)
                     else:
                         # Use default subs
                         if defaultsubs == "ssa":
                             # For some reason, Kodi sees SSA as ''
-                            self.logMsg("Door 3.2", 2)
+                            self.logMsg("Door 3.4", 2)
                             index = subs.index('')
                             xbmcplayer.setSubtitleStream(index)
                         elif defaultsubs:
-                            self.logMsg("Door 3.3", 2)
+                            self.logMsg("Door 3.5", 2)
                             index = subs.index(defaultsubs)
                             xbmcplayer.setSubtitleStream(index)
+                        else:
+                            # Nothing matches, let the user decide.
+                            self.logMsg("Door 3.6", 2)
+                            xbmcplayer.showSubtitles(False)
             
             # we may need to wait until the info is available
             item_id = WINDOW.getProperty(currentFile + "item_id")
