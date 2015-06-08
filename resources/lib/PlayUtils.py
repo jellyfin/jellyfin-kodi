@@ -156,6 +156,10 @@ class PlayUtils():
                 USER_AGENT = 'QuickTime/7.7.4'
                 playurl += "?|User-Agent=%s" % USER_AGENT
 
+            if ":" not in playurl:
+                self.logMsg("Path seems invalid: %s" % playurl)
+                return False
+
             return playurl
 
         except:
