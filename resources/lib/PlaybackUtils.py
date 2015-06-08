@@ -138,9 +138,6 @@ class PlaybackUtils():
                     WINDOW.clearProperty(playurl+"seektime")
             else:
                 WINDOW.clearProperty(playurl+"seektime")
-        '''else:
-            # Playback started from library
-            WINDOW.setProperty(playurl+"seektime", str(seekTime))'''
 
         if result.get("Type")=="Episode":
             WINDOW.setProperty(playurl+"refresh_id", result.get("SeriesId"))
@@ -153,6 +150,12 @@ class PlaybackUtils():
             
         mediaSources = result.get("MediaSources")
         if(mediaSources != None):
+            mediaStream = mediaSources[0].get('MediaStreams')
+            defaultsubs = ""
+            for stream in mediaStream:
+                if u'Subtitle' in stream[u'Type'] and stream[u'IsDefault']:
+                    defaultsubs = stream[u'Codec']
+            WINDOW.setProperty("%ssubs" % playurl, defaultsubs.encode('utf-8'))
             if mediaSources[0].get('DefaultAudioStreamIndex') != None:
                 WINDOW.setProperty(playurl+"AudioStreamIndex", str(mediaSources[0].get('DefaultAudioStreamIndex')))  
             if mediaSources[0].get('DefaultSubtitleStreamIndex') != None:
