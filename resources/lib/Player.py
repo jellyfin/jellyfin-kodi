@@ -249,94 +249,102 @@ class Player( xbmc.Player ):
                 defaultsubs = WINDOW.getProperty("%ssubs" % currentFile)
 
                 codecs = [
-                    # To be adjusted and include every codec Emby server can return.
-                    'und','Stereo','Stereo - Stereo','AC3 5.1'
+                    # Possible codecs
+                    'und','Stereo','AC3','DTS', '5.1',
+                    #'Stereo - Stereo','AC3 5.1', 'DTS 5.1', 'DTS-HD MA 5.1'
                 ]
 
                 if len(audiotracks) == 1 and len(subs) == 0:
                     # There's only one audio track and no subtitles
                     xbmcplayer.showSubtitles(False)
 
-                elif self.audioPref in audiotracks:
-                    self.logMsg("Door 1", 2)
-                    # Audio pref is available
-                    index = audiotracks.index(self.audioPref)
-                    xbmcplayer.setAudioStream(index)
+                else:
+                    # More complex cases
+                    codec_intrack = False
+                    for codec in codecs:
+                        if codec in '\n'.join(audiotracks):
+                            codec_intrack = True
 
-                    if addon.getSetting('subsoverride') == "true":
+                    if self.audioPref in audiotracks:
+                        self.logMsg("Door 1", 1)
+                        # Audio pref is available
+                        index = audiotracks.index(self.audioPref)
+                        xbmcplayer.setAudioStream(index)
+
+                        if addon.getSetting('subsoverride') == "true":
+                            if self.subsPref in subs:
+                                self.logMsg("Door 1.1", 1)
+                                # Subs are forced.
+                                index = subs.index(self.subsPref)
+                                xbmcplayer.setSubtitleStream(index)
+                            else:
+                                # Use default subs
+                                if defaultsubs == "ssa":
+                                    # For some reason, Kodi sees SSA as ''
+                                    self.logMsg("Door 1.2", 1)
+                                    index = subs.index('')
+                                    xbmcplayer.setSubtitleStream(index)
+                                elif defaultsubs:
+                                    self.logMsg("Door 1.3", 1)
+                                    index = subs.index(defaultsubs)
+                                    xbmcplayer.setSubtitleStream(index)
+                        else:  
+                            xbmcplayer.showSubtitles(False)
+
+                    elif (len(audiotracks) == 1) and not codec_intrack:
+                        self.logMsg("Door 2", 1)
+                        # 1. There's one audio track.
+                        # 2. The audio is defined as a language.
+                        # 3. Audio pref is not available, guaranteed.
                         if self.subsPref in subs:
-                            self.logMsg("Door 1.1", 2)
-                            # Subs are forced.
+                            self.logMsg("Door 2.1", 1)
+                            # Subs pref is available.
                             index = subs.index(self.subsPref)
                             xbmcplayer.setSubtitleStream(index)
                         else:
                             # Use default subs
                             if defaultsubs == "ssa":
                                 # For some reason, Kodi sees SSA as ''
-                                self.logMsg("Door 1.2", 2)
+                                self.logMsg("Door 2.2", 1)
                                 index = subs.index('')
                                 xbmcplayer.setSubtitleStream(index)
                             elif defaultsubs:
-                                self.logMsg("Door 1.3", 2)
+                                self.logMsg("Door 2.3", 1)
                                 index = subs.index(defaultsubs)
                                 xbmcplayer.setSubtitleStream(index)
-                    else:  
-                        xbmcplayer.showSubtitles(False)
 
-                elif len(audiotracks) == 1 and '\n'.join(audiotracks) not in codecs:
-                    self.logMsg("Door 2", 2)
-                    # 1. There's one audio track.
-                    # 2. The audio is defined as a language.
-                    # 3. Audio pref is not available, guaranteed.
-                    if self.subsPref in subs:
-                        self.logMsg("Door 2.1", 2)
-                        # Subs pref is available.
-                        index = subs.index(self.subsPref)
-                        xbmcplayer.setSubtitleStream(index)
-                    else:
-                        # Use default subs
-                        if defaultsubs == "ssa":
-                            # For some reason, Kodi sees SSA as ''
-                            self.logMsg("Door 2.2", 2)
-                            index = subs.index('')
-                            xbmcplayer.setSubtitleStream(index)
-                        elif defaultsubs:
-                            self.logMsg("Door 2.3", 2)
-                            index = subs.index(defaultsubs)
-                            xbmcplayer.setSubtitleStream(index)
-
-                elif len(audiotracks) == 1 and '\n'.join(audiotracks) in codecs:
-                    self.logMsg("Door 3", 2)
-                    # 1. There one audio track.
-                    # 2. The audio is undefined or a codec.
-                    # 3. Audio track is be mislabeled.
-                    if self.subsPref in subs:
-                        # If the subtitle is available, only display
-                        # if the setting is enabled.
-                        if addon.getSetting('subsoverride') == "true":
-                            # Subs are forced.
-                            self.logMsg("Door 3.2", 2)
-                            index = subs.index(self.subsPref)
-                            xbmcplayer.setSubtitleStream(index)
+                    elif len(audiotracks) == 1 and codec_intrack:
+                        self.logMsg("Door 3", 1)
+                        # 1. There one audio track.
+                        # 2. The audio is undefined or a codec.
+                        # 3. Audio track is mislabeled.
+                        if self.subsPref in subs:
+                            # If the subtitle is available, only display
+                            # if the setting is enabled.
+                            if addon.getSetting('subsoverride') == "true":
+                                # Subs are forced.
+                                self.logMsg("Door 3.2", 1)
+                                index = subs.index(self.subsPref)
+                                xbmcplayer.setSubtitleStream(index)
+                            else:
+                                # Let the user decide, since track is mislabeled.
+                                self.logMsg("Door 3.3")
+                                xbmcplayer.showSubtitles(False)
                         else:
-                            # Let the user decide, since track is mislabeled.
-                            self.logMsg("Door 3.3")
-                            xbmcplayer.showSubtitles(False)
-                    else:
-                        # Use default subs
-                        if defaultsubs == "ssa":
-                            # For some reason, Kodi sees SSA as ''
-                            self.logMsg("Door 3.4", 2)
-                            index = subs.index('')
-                            xbmcplayer.setSubtitleStream(index)
-                        elif defaultsubs:
-                            self.logMsg("Door 3.5", 2)
-                            index = subs.index(defaultsubs)
-                            xbmcplayer.setSubtitleStream(index)
-                        else:
-                            # Nothing matches, let the user decide.
-                            self.logMsg("Door 3.6", 2)
-                            xbmcplayer.showSubtitles(False)
+                            # Use default subs
+                            if defaultsubs == "ssa":
+                                # For some reason, Kodi sees SSA as ''
+                                self.logMsg("Door 3.4", 1)
+                                index = subs.index('')
+                                xbmcplayer.setSubtitleStream(index)
+                            elif defaultsubs:
+                                self.logMsg("Door 3.5", 1)
+                                index = subs.index(defaultsubs)
+                                xbmcplayer.setSubtitleStream(index)
+                            else:
+                                # Nothing matches, let the user decide.
+                                self.logMsg("Door 3.6", 1)
+                                xbmcplayer.showSubtitles(False)
             
             # we may need to wait until the info is available
             item_id = WINDOW.getProperty(currentFile + "item_id")
