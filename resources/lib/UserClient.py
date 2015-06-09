@@ -156,7 +156,7 @@ class UserClient(threading.Thread):
         userId = self.getUserId()
         addon = self.addon
 
-        url = "%s/mediabrowser/Users/%s" % (server, userId)
+        url = "{server}/mediabrowser/Users/{UserId}?format=json"
         result = self.doUtils.downloadUrl(url)
 
         audio = result[u'Configuration'].get(u'AudioLanguagePreference', "default")
