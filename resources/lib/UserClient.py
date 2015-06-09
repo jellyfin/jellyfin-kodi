@@ -232,9 +232,6 @@ class UserClient(threading.Thread):
                 self.resetClient()
                 return False
 
-        # Set user preferences in settings
-        self.setUserPref()
-
         # Set to windows property
         WINDOW.setProperty("currUser", username)
         WINDOW.setProperty("accessToken%s" % username, self.currToken)
@@ -252,6 +249,9 @@ class UserClient(threading.Thread):
         self.hasAccess()
         # Start DownloadUtils session
         doUtils.startSession()
+
+        # Set user preferences in settings
+        self.setUserPref()
 
         self.currUser = username
 
