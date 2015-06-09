@@ -240,7 +240,7 @@ class Player( xbmc.Player ):
 
             # Set audio and subtitles automatically
             # Following Emby user preference.
-            if playMethod == "DirectPlay":
+            if playMethod == "DirectPlay" or playMethod == "DirectStream":
                 # Only currently compatible with DirectPlay.
                 # Tested on plugin://, unsure about direct paths.
                 audiotracks = xbmcplayer.getAvailableAudioStreams()
@@ -250,7 +250,7 @@ class Player( xbmc.Player ):
 
                 codecs = [
                     # Possible codecs
-                    'und','Stereo','AC3','DTS', '5.1',
+                    'und','Stereo','AC3','DTS', '5.1'
                     #'Stereo - Stereo','AC3 5.1', 'DTS 5.1', 'DTS-HD MA 5.1'
                 ]
 

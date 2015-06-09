@@ -86,6 +86,15 @@ class Kodi_Monitor(xbmc.Monitor):
                                 
                             mediaSources = result.get("MediaSources")
                             if(mediaSources != None):
+                                mediaStream = mediaSources[0].get('MediaStreams')
+                                defaultsubs = ""
+                                for stream in mediaStream:
+                                    if u'Subtitle' in stream[u'Type'] and stream[u'IsDefault']:
+                                        if u'Language' in stream:
+                                            defaultsubs = stream[u'Language']
+                                        else:
+                                            defaultsubs = stream[u'Codec']
+                                WINDOW.setProperty("%ssubs" % playurl, defaultsubs.encode('utf-8'))
                                 if mediaSources[0].get('DefaultAudioStreamIndex') != None:
                                     WINDOW.setProperty(playurl+"AudioStreamIndex", str(mediaSources[0].get('DefaultAudioStreamIndex')))  
                                 if mediaSources[0].get('DefaultSubtitleStreamIndex') != None:

@@ -22,6 +22,9 @@ class PlayUtils():
     addonId = clientInfo.getAddonId()
     addon = xbmcaddon.Addon(id=addonId)
 
+    audioPref = addon.getSetting('Audiopref')
+    subsPref = addon.getSetting('Subspref')
+
     def __init__(self):
         self.__dict__ = self._shared_state
 
@@ -228,27 +231,16 @@ class PlayUtils():
             playurl = "%s&VideoCodec=h264&AudioCodec=aac,ac3&deviceId=%s&VideoBitrate=%s" % (playurl, deviceId, self.getVideoBitRate()*1000)
 
             mediaSources = result[u'MediaSources']
-            if mediaSources[0].get('DefaultAudioStreamIndex') != None:
-                playurl = "%s&AudioStreamIndex=%s" % (playurl, mediaSources[0][u'DefaultAudioStreamIndex'])
-            if mediaSources[0].get('DefaultSubtitleStreamIndex') != None:
-                playurl = "%s&SubtitleStreamIndex=%s" % (playurl, mediaSources[0][u'DefaultSubtitleStreamIndex'])
-
+            prefs = self.audioSubsPref(mediaSources)
+            
+            playurl = "%s%s" % (playurl, prefs)
             self.logMsg("Playurl: %s" % playurl)
+            
             return playurl
 
         except:
             self.logMsg("Transcoding failed.")
             return False
-
-        '''forceTranscodingCodecs = self.addon.getSetting('forceTranscodingCodecs')
-        # check if we should force encoding due to the forceTranscodingCodecs setting
-        if forceTranscodingCodecs:
-            forceTranscodingCodecsSet = frozenset(forceTranscodingCodecs.lower().split(','))
-            codecs = frozenset([mediaStream.get('Codec', None) for mediaStream in result.get('MediaStreams', [])])
-            commonCodecs = forceTranscodingCodecsSet & codecs
-            #xbmc.log("emby isDirectPlay MediaStreams codecs: %s forceTranscodingCodecs: %s, common: %s" % (codecs, forceTranscodingCodecsSet, commonCodecs))
-            if commonCodecs:
-                return False'''
         
     # Works out if the network quality can play directly or if transcoding is needed
     def isNetworkQualitySufficient(self, result):
@@ -320,6 +312,9 @@ class PlayUtils():
 
         # Convert Emby path to a path we can verify
         path = self.directPlay(result)
+        if not path:
+            return False
+
         try:
             pathexists = xbmcvfs.exists(path)
         except:
@@ -337,3 +332,109 @@ class PlayUtils():
         else:
             self.logMsg("Path is detected as follow: %s. Try direct streaming." % path, 2)
             return False
+
+    def audioSubsPref(self, mediaSources):
+
+        addon = xbmcaddon.Addon(id=self.addonId)
+
+        defaultAudio = mediaSources[0][u'DefaultAudioStreamIndex']
+        playurlprefs = "&AudioStreamIndex=%s" % defaultAudio
+
+        codecs = [
+            # Possible codecs
+            u'und', u'ac3', u'dts', u'5.1', u'aac', u'mp3', u'dca'
+        ]
+
+        try:
+            mediaStream = mediaSources[0].get('MediaStreams')
+            audiotracks = {}
+            substracks = {}
+            defaultSubs = None
+
+            for stream in mediaStream:
+                # Since Emby returns all possible tracks together, have to sort them.
+                if u'Audio' in stream[u'Type']:
+                    if u'Language' in stream:
+                        audiotracks[stream[u'Language']] = stream[u'Index']
+                    else:
+                        audiotracks[stream[u'Codec']] = stream[u'Index']
+
+                if u'Subtitle' in stream[u'Type']:
+                    if u'Language' in stream:
+                        substracks[stream[u'Language']] = stream[u'Index']
+                        if stream[u'IsDefault'] == True:
+                            defaultSubs = stream[u'Language']
+                    else:
+                        substracks[stream[u'Codec']] = stream[u'Index']
+                        if stream[u'IsDefault']:
+                            defaultSubs = stream[u'Codec']
+
+            self.logMsg("%s %s %s" % (defaultSubs, audiotracks, substracks), 1)
+            
+            if len(audiotracks) == 1 and len(substracks) == 0:
+                # There's only one audio track and no subtitles
+                playurlprefs = "&AudioStreamIndex=%s" % defaultAudio
+                return playurlprefs
+
+            codec_intrack = False
+            for codec in codecs:
+                for track in audiotracks:
+                    if codec in track:
+                        codec_intrack = True
+
+            if self.audioPref in audiotracks:
+                self.logMsg("Door 1", 2)
+                # Audio pref is available
+                playurlprefs = "&AudioStreamIndex=%s" % audiotracks[self.audioPref]
+
+                if addon.getSetting('subsoverride') == "true":
+                    # Subs are forced.
+                    if self.subsPref in substracks:
+                        self.logMsg("Door 1.1", 2)
+                        playurlprefs = "%s&SubtitleStreamIndex=%s" % (playurlprefs, substracks[self.subsPref])
+                    else:
+                        # Use default subs
+                        if defaultSubs != None:
+                            self.logMsg("Door 1.2", 2)
+                            playurlprefs = "%s&SubtitleStreamIndex=%s" % (playurlprefs, substracks[defaultSubs])
+
+            elif (len(audiotracks) == 1) and not codec_intrack:
+                self.logMsg("Door 2", 2)
+                # 1. There's one audio track.
+                # 2. The audio is defined as a language.
+                # 3. Audio pref is not available, guaranteed.
+                playurlprefs = "&AudioStreamIndex=%s" % defaultAudio
+
+                if self.subsPref in substracks:
+                    self.logMsg("Door 2.1", 2)
+                    # Subs pref is available.
+                    playurlprefs = "%s&SubtitleStreamIndex=%s" % (playurlprefs, substracks[self.subsPref])
+                else:
+                    # Use default subs
+                    if defaultSubs != None:
+                        self.logMsg("Door 2.2", 2)
+                        playurlprefs = "%s&SubtitleStreamIndex=%s" % (playurlprefs, substracks[defaultSubs])
+
+            elif len(audiotracks) == 1 and codec_intrack:
+                self.logMsg("Door 3", 2)
+                # 1. There one audio track.
+                # 2. The audio is undefined or a codec.
+                # 3. Audio track is mislabeled.
+                playurlprefs = "&AudioStreamIndex=%s" % defaultAudio
+
+                if self.subsPref in substracks:
+                    # If the subtitle is available, only display
+                    # if the setting is enabled.
+                    if addon.getSetting('subsoverride') == "true":
+                        # Subs are forced.
+                        self.logMsg("Door 3.1", 2)
+                        playurlprefs = "%s&SubtitleStreamIndex=%s" % (playurlprefs, substracks[self.subsPref])
+                else:
+                    # Use default subs
+                    if defaultSubs != None:
+                        self.logMsg("Door 3.2", 2)
+                        playurlprefs = "%s&SubtitleStreamIndex=%s" % (playurlprefs, substracks[defaultSubs])
+
+        except: pass
+
+        return playurlprefs
