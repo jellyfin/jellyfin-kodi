@@ -170,22 +170,29 @@ def getThemeMedia():
 
     # Get paths
     for itemId in itemIds:
-        url = "{server}/mediabrowser/Items/%s/ThemeSongs?format=json" % itemId
-        result = doUtils.downloadUrl(url)
-        if playback == "DirectPlay":
-            playurl = playUtils.directPlay(result[u'Items'][0])
-        else:
-            playurl = playUtils.directStream(result, server, result[u'Items'][0][u'Id'], "Audio")
         nfo_path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/%s/" % itemIds[itemId])
         # Create folders for each content
         if not xbmcvfs.exists(nfo_path):
             xbmcvfs.mkdir(nfo_path)
         # Where to put the nfos
         nfo_path = "%s%s" % (nfo_path, "tvtunes.nfo")
-        # Create nfo and write our URL to it
+
+        url = "{server}/mediabrowser/Items/%s/ThemeSongs?format=json" % itemId
+        result = doUtils.downloadUrl(url)
+
+        # Create nfo and write themes to it
         nfo_file = open(nfo_path, 'w')
+        pathstowrite = ""
+        # May be more than one theme
+        for theme in result[u'Items']:  
+            if playback == "DirectPlay":
+                playurl = playUtils.directPlay(theme)
+            else:
+                playurl = playUtils.directStream(result, server, theme[u'Id'], "Audio")
+            pathstowrite += ('<file>%s</file>' % playurl)
+
         nfo_file.write(
-            '<tvtunes><file>%s</file></tvtunes>' % playurl
+            '<tvtunes>%s</tvtunes>' % pathstowrite
         )
         # Close nfo file
         nfo_file.close()
