@@ -43,8 +43,8 @@ class Player( xbmc.Player ):
     settings = None
     playStats = {}
 
-    audioPref = addon.getSetting('Audiopref')
-    subsPref = addon.getSetting('Subspref')
+    audioPref = "default"
+    subsPref = "default"
     
     def __init__( self, *args ):
         
@@ -54,7 +54,11 @@ class Player( xbmc.Player ):
     def logMsg(self, msg, lvl=1):
         
         self.className = self.__class__.__name__
-        utils.logMsg("%s %s" % (self.addonName, self.className), msg, int(lvl))      
+        utils.logMsg("%s %s" % (self.addonName, self.className), msg, int(lvl))
+
+    def setAudioSubsPref(self, audio, subs):
+        self.audioPref = audio
+        self.subsPref = subs
     
     def hasData(self, data):
         if(data == None or len(data) == 0 or data == "None"):
@@ -223,7 +227,6 @@ class Player( xbmc.Player ):
     def onPlayBackStarted( self ):
         # Will be called when xbmc starts playing a file
         WINDOW = self.WINDOW
-        self.addon = xbmcaddon.Addon(id=self.addonId)
         addon = self.addon
         xbmcplayer = self.xbmcplayer
         self.stopAll()
@@ -240,9 +243,14 @@ class Player( xbmc.Player ):
 
             # Set audio and subtitles automatically
             # Following Emby user preference.
-            if playMethod == "DirectPlay" or playMethod == "DirectStream":
+            if self.audioPref == "default" and self.subsPref == "default":
+                self.logMsg("No Emby user preferences found.", 2)
+                # Emby user preferences are not set.
+                pass
+            elif playMethod == "DirectPlay" or playMethod == "DirectStream":
                 # Only currently compatible with DirectPlay.
                 # Tested on plugin://, unsure about direct paths.
+                self.logMsg("Audio Pref: %s Subtitles Pref: %s" % (self.audioPref, self.subsPref), 1)
                 audiotracks = xbmcplayer.getAvailableAudioStreams()
                 subs = xbmcplayer.getAvailableSubtitleStreams()
                 self.logMsg("%s %s" % (audiotracks, subs), 1)

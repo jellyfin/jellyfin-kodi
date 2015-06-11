@@ -15,6 +15,7 @@ import KodiMonitor
 import Utils as utils
 from ClientInformation import ClientInformation
 from DownloadUtils import DownloadUtils
+from Player import Player
 
 
 class UserClient(threading.Thread):
@@ -152,6 +153,7 @@ class UserClient(threading.Thread):
 
     def setUserPref(self):
 
+        player = Player()
         server = self.getServer()
         userId = self.getUserId()
         addon = self.addon
@@ -163,6 +165,9 @@ class UserClient(threading.Thread):
         subs = result[u'Configuration'].get(u'SubtitleLanguagePreference', "default")
         addon.setSetting('Audiopref', audio)
         addon.setSetting('Subspref', subs)
+
+        # Set the setting in Player
+        player.setAudioSubsPref(audio.encode('utf-8'), subs.encode('utf-8'))
 
         self.logMsg("Audio preference: %s" % audio, 2)
         self.logMsg("Subtitles preference: %s" % subs, 2)
