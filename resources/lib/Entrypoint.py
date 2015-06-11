@@ -14,6 +14,7 @@ WINDOW = xbmcgui.Window(10000)
 import Utils as utils
 from ClientInformation import ClientInformation
 from PlaybackUtils import PlaybackUtils
+from PlayUtils import PlayUtils
 from DownloadUtils import DownloadUtils
 from ReadEmbyDB import ReadEmbyDB
 from API import API
@@ -120,6 +121,74 @@ def addUser():
     except:
         xbmc.log("Failed to add user to session.")
         xbmcgui.Dialog().notification("Error", "Unable to add/remove user from the session.", xbmcgui.NOTIFICATION_ERROR)
+
+# THEME MUSIC/VIDEOS
+def getThemeMedia():
+
+    doUtils = DownloadUtils()
+    playUtils = PlayUtils()
+    
+    currUser = WINDOW.getProperty('currUser')
+    server = WINDOW.getProperty('server%s' % currUser)
+    playback = None
+
+    library = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/")
+
+    # Choose playback method
+    resp = xbmcgui.Dialog().select("Choose playback method for your themes", ["Direct Play", "Direct Stream"])
+    if resp == 0:
+        # Direct Play
+        playback = "DirectPlay"
+    elif resp == 1:
+        # Direct Stream
+        playback = "DirectStream"
+    else:return
+
+    # Create library directory
+    if not xbmcvfs.exists(library):
+        xbmcvfs.mkdir(library)
+
+    # Get every user view Id
+    userViews = []
+    url = "{server}/mediabrowser/Users/{UserId}/Items?format=json"
+    result = doUtils.downloadUrl(url)
+    
+    for view in result[u'Items']:
+        userviewId = view[u'Id']
+        userViews.append(userviewId)
+
+    # Get Ids with Theme songs
+    itemIds = {}
+    for view in userViews:
+        url = "{server}/mediabrowser/Users/{UserId}/Items?HasThemeSong=True&ParentId=%s&format=json" % view
+        result = doUtils.downloadUrl(url)
+        if result[u'TotalRecordCount'] != 0:
+            for item in result[u'Items']:
+                itemId = item[u'Id']
+                folderName = item[u'Name']
+                itemIds[itemId] = folderName
+
+    # Get paths
+    for itemId in itemIds:
+        url = "{server}/mediabrowser/Items/%s/ThemeSongs?format=json" % itemId
+        result = doUtils.downloadUrl(url)
+        if playback == "DirectPlay":
+            playurl = playUtils.directPlay(result[u'Items'][0])
+        else:
+            playurl = playUtils.directStream(result, server, result[u'Items'][0][u'Id'], "Audio")
+        nfo_path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/%s/" % itemIds[itemId])
+        # Create folders for each content
+        if not xbmcvfs.exists(nfo_path):
+            xbmcvfs.mkdir(nfo_path)
+        # Where to put the nfos
+        nfo_path = "%s%s" % (nfo_path, "tvtunes.nfo")
+        # Create nfo and write our URL to it
+        nfo_file = open(nfo_path, 'w')
+        nfo_file.write(
+            '<tvtunes><file>%s</file></tvtunes>' % playurl
+        )
+        # Close nfo file
+        nfo_file.close()
 
 def userPreferences():
     doUtils = DownloadUtils()

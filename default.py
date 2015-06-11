@@ -40,6 +40,9 @@ elif mode == "resetauth":
 
 elif mode == "adduser":
     entrypoint.addUser()
+
+elif mode == "thememedia":
+    entrypoint.getThemeMedia()
     
 elif mode == "userprefs":
     entrypoint.userPreferences()

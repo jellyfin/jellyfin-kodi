@@ -187,12 +187,16 @@ class PlayUtils():
             return False
 
         return True
-
-    def directStream(self, result, server, id):
+  
+    def directStream(self, result, server, id, type="Video"):
         
         try:
-            # Play with Direct Stream
-            playurl = "%s/mediabrowser/Videos/%s/stream?static=true" % (server, id)
+            if type == "Video":
+                # Play with Direct Stream
+                playurl = "%s/mediabrowser/Videos/%s/stream?static=true" % (server, id)
+            elif type == "Audio":
+                playurl = "%s/mediabrowser/Audio/%s/stream.mp3" % (server, id)
+                return playurl
 
             mediaSources = result[u'MediaSources']
             if mediaSources[0].get('DefaultAudioStreamIndex') != None:
