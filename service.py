@@ -71,6 +71,7 @@ class Service():
     def ServiceEntryPoint(self):
         
         WINDOW = self.WINDOW
+        addon = xbmcaddon.Addon(id=self.clientInfo.getAddonId())
         WINDOW.setProperty("Server_online", "")
         self.WINDOW.setProperty("Server_status", "")
         WINDOW.setProperty("Emby_Service_Timestamp", str(int(time.time())))
@@ -96,11 +97,11 @@ class Service():
                 # Server is online
                 if (user.currUser != None) and (user.HasAccess == True):
                     self.warn_auth = True
-                    ''''if self.welcome_msg:
-                        # Reset authentication warnings
-                        self.welcome_msg = False
-                        self.warn_auth = True
-                        xbmcgui.Dialog().notification("Emby server", "Welcome %s!" % user.currUser, sound=False)'''
+                    if addon.getSetting('supressConnectMsg') == "false":
+                        if self.welcome_msg:
+                            # Reset authentication warnings
+                            self.welcome_msg = False
+                            xbmcgui.Dialog().notification("Emby server", "Welcome %s!" % user.currUser, time=2000, sound=False)
 
                     # Correctly launch the websocket, if user manually launches the add-on
                     if (self.newWebSocketThread == None):
