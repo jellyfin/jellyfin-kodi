@@ -16,7 +16,7 @@ class ReadEmbyDB():
     
     def getMovies(self, id, itemList = []):
         
-        result = None
+        result = []
         doUtils = DownloadUtils()
         
         #only get basic info for our sync-compares
@@ -42,7 +42,7 @@ class ReadEmbyDB():
 
     def getMusicVideos(self, itemList = []):
         
-        result = None
+        result = []
         doUtils = DownloadUtils()
 
         #only get basic info for our sync-compares
@@ -93,7 +93,7 @@ class ReadEmbyDB():
     
     def getMusicSongs(self, itemList = []):
         
-        result = None
+        result = []
         doUtils = DownloadUtils()
 
         #only get basic info for our sync-compares
@@ -118,7 +118,7 @@ class ReadEmbyDB():
     
     def getMusicAlbums(self, itemList = []):
         
-        result = None
+        result = []
         doUtils = DownloadUtils()
 
         #only get basic info for our sync-compares
@@ -178,7 +178,7 @@ class ReadEmbyDB():
     
     def getTvShows(self, id, itemList = []):
         
-        result = None
+        result = []
         doUtils = DownloadUtils()
         
         #only get basic info for our sync-compares
@@ -204,7 +204,7 @@ class ReadEmbyDB():
     
     def getTVShowSeasons(self, tvShowId):
         
-        result = None
+        result = []
         doUtils = DownloadUtils()
 
         url = "{server}/Shows/%s/Seasons?UserId={UserId}&format=json&ImageTypeLimit=1" % tvShowId
@@ -220,7 +220,7 @@ class ReadEmbyDB():
     
     def getEpisodes(self, showId, itemList = []):
         
-        result = None
+        result = []
         doUtils = DownloadUtils()  
         
         url = "{server}/mediabrowser/Users/{UserId}/Items?ParentId=%s&IsVirtualUnaired=false&IsMissing=False&SortBy=SortName&Fields=Name,SortName,CumulativeRunTimeTicks,Etag&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1" % showId
@@ -244,7 +244,7 @@ class ReadEmbyDB():
     
     def getLatestEpisodes(self, fullinfo = False, itemList = []):
         
-        result = None
+        result = []
         doUtils = DownloadUtils() 
         
         limitString = "Limit=20&SortBy=DateCreated&"
@@ -350,7 +350,7 @@ class ReadEmbyDB():
     
     def getBoxSets(self):
         
-        result = None
+        result = []
         doUtils = DownloadUtils()  
         
         url = "{server}/mediabrowser/Users/{UserId}/Items?SortBy=SortName&IsVirtualUnaired=false&IsMissing=False&Fields=Name,SortName,CumulativeRunTimeTicks,Etag&Recursive=true&SortOrder=Ascending&IncludeItemTypes=BoxSet&format=json&ImageTypeLimit=1"
@@ -366,7 +366,7 @@ class ReadEmbyDB():
     
     def getMoviesInBoxSet(self,boxsetId):
         
-        result = None
+        result = []
         doUtils = DownloadUtils()
         
         url = "{server}/mediabrowser/Users/{UserId}/Items?ParentId=%s&Fields=ItemCounts,Etag&format=json&ImageTypeLimit=1" % boxsetId
