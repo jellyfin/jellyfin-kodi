@@ -1116,8 +1116,8 @@ class WriteKodiVideoDB():
             sql="insert into streamdetails(idFile, iStreamType, strVideoCodec, fVideoAspect, iVideoWidth, iVideoHeight, strStereoMode) values(?, ?, ?, ?, ?, ?, ?)"
             cursor.execute(sql, (fileid,0,streamdetails.get("videocodec"),streamdetails.get("aspectratio"),streamdetails.get("width"),streamdetails.get("height"),streamdetails.get("3dformat")))
             #audio details
-            sql="insert into streamdetails(idFile, iStreamType, strAudioCodec, iAudioChannels) values(?, ?, ?, ?)"
-            cursor.execute(sql, (fileid,1,streamdetails.get("audiocodec"),streamdetails.get("channels")))
+            sql="insert into streamdetails(idFile, iStreamType, strAudioCodec, iAudioChannels, strAudioLanguage, strSubtitleLanguage) values(?, ?, ?, ?, ?, ?)"
+            cursor.execute(sql, (fileid,1,streamdetails.get("audiocodec"),streamdetails.get("channels"),streamdetails.get("audiolanguage"),streamdetails.get("subtitlelanguage")))
   
     def addBoxsetToKodiLibrary(self, boxset, connection, cursor):
         

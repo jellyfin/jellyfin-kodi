@@ -81,6 +81,8 @@ class API():
         channels = ''
         videocodec = ''
         audiocodec = ''
+        audiolanguage = ''
+        subtitlelanguage = ''
         height = ''
         width = ''
         aspectratio = '1:1'
@@ -114,15 +116,36 @@ class API():
                             except:
                                 aspectfloat = 1.85
                     if(mediaStream.get("Type") == "Audio"):
-                        audiocodec = mediaStream.get("Codec")
-                        channels = mediaStream.get("Channels")
-        return {'channels'      : str(channels), 
-                'videocodec'    : videocodec, 
-                'audiocodec'    : audiocodec, 
-                'height'        : height,
-                'width'         : width,
-                'aspectratio'   : aspectfloat,
-                '3dformat'      : Video3DFormat
+                        isdefault = mediaStream.get("IsDefault") == "true"
+                        if audiocodec == '':
+                            audiocodec = mediaStream.get("Codec")
+                        if channels == '':
+                            channels = mediaStream.get("Channels")
+                        if audiolanguage == '':
+                            audiolanguage = mediaStream.get("Language")
+                        # only overwrite if default
+                        if isdefault:
+                            audiocodec = mediaStream.get("Codec")
+                            channels = mediaStream.get("Channels")
+                            audiolanguage = mediaStream.get("Language")
+                    if(mediaStream.get("Type") == "Subtitle"):
+                        isdefault = mediaStream.get("IsDefault") == "true"
+                        if subtitlelanguage == '':
+                            subtitlelanguage = mediaStream.get("Language")
+                        # only overwrite if default
+                        if isdefault:
+                            subtitlelanguage = mediaStream.get("Language")
+                            
+                    
+        return {'channels'         : str(channels), 
+                'videocodec'       : videocodec, 
+                'audiocodec'       : audiocodec,
+                'audiolanguage'    : audiolanguage,
+                'subtitlelanguage' : subtitlelanguage, 
+                'height'           : height,
+                'width'            : width,
+                'aspectratio'      : aspectfloat,
+                '3dformat'         : Video3DFormat
                 }
     
     def getChecksum(self, item):
