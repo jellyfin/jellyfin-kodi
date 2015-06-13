@@ -243,7 +243,7 @@ class Player( xbmc.Player ):
 
             # Set audio and subtitles automatically
             # Following Emby user preference.
-            if self.audioPref == "default" and self.subsPref == "default":
+            '''if self.audioPref == "default" and self.subsPref == "default":
                 self.logMsg("No Emby user preferences found.", 2)
                 # Emby user preferences are not set.
                 pass
@@ -287,7 +287,7 @@ class Player( xbmc.Player ):
                                 xbmcplayer.setSubtitleStream(index)
                             else:
                                 # Use default subs
-                                if defaultsubs == "ssa":
+                                if defaultsubs == "ssa" or defaultsubs == "srt":
                                     # For some reason, Kodi sees SSA as ''
                                     self.logMsg("Door 1.2", 1)
                                     index = subs.index('')
@@ -311,7 +311,7 @@ class Player( xbmc.Player ):
                             xbmcplayer.setSubtitleStream(index)
                         else:
                             # Use default subs
-                            if defaultsubs == "ssa":
+                            if defaultsubs == "ssa" or defaultsubs == "srt":
                                 # For some reason, Kodi sees SSA as ''
                                 self.logMsg("Door 2.2", 1)
                                 index = subs.index('')
@@ -340,7 +340,7 @@ class Player( xbmc.Player ):
                                 xbmcplayer.showSubtitles(False)
                         else:
                             # Use default subs
-                            if defaultsubs == "ssa":
+                            if defaultsubs == "ssa" or defaultsubs == "srt":
                                 # For some reason, Kodi sees SSA as ''
                                 self.logMsg("Door 3.4", 1)
                                 index = subs.index('')
@@ -352,7 +352,7 @@ class Player( xbmc.Player ):
                             else:
                                 # Nothing matches, let the user decide.
                                 self.logMsg("Door 3.6", 1)
-                                xbmcplayer.showSubtitles(False)
+                                xbmcplayer.showSubtitles(False)'''
             
             # we may need to wait until the info is available
             item_id = WINDOW.getProperty(currentFile + "item_id")
