@@ -22,6 +22,7 @@ from LibrarySync import LibrarySync
 from WriteKodiVideoDB import WriteKodiVideoDB
 from ReadEmbyDB import ReadEmbyDB
 from ReadKodiDB import ReadKodiDB
+from WriteKodiMusicDB import WriteKodiMusicDB
 
 import logging
 logging.basicConfig()
