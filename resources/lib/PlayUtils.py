@@ -31,7 +31,7 @@ class PlayUtils():
     def logMsg(self, msg, lvl=1):
         
         className = self.__class__.__name__
-        utils.logMsg("%s %s" % (self.addonName, className), str(msg), int(lvl))
+        utils.logMsg("%s %s" % (self.addonName, className), msg, int(lvl))
 
     def getPlayUrl(self, server, id, result):
 
