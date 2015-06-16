@@ -9,7 +9,7 @@ import xbmcaddon
 import xbmc
 import xbmcgui
 
-addon_ = xbmcaddon.Addon(id='plugin.video.emby')
+addon_ = xbmcaddon.Addon()
 addon_path = addon_.getAddonInfo('path').decode('utf-8')
 base_resource_path = xbmc.translatePath(os.path.join(addon_path, 'resources', 'lib')).decode('utf-8')
 sys.path.append(base_resource_path)
@@ -246,7 +246,6 @@ class Service():
 
         # If user reset library database.
         if WINDOW.getProperty('SyncInstallRunDone') == "false":
-            addon = xbmcaddon.Addon()
             addon.setSetting('SyncInstallRunDone', "false")
         
         if (self.newWebSocketThread != None):
