@@ -9,7 +9,7 @@ import xbmcaddon
 import xbmc
 import xbmcgui
 
-addon_ = xbmcaddon.Addon()
+addon_ = xbmcaddon.Addon(id='plugin.video.emby')
 addon_path = addon_.getAddonInfo('path').decode('utf-8')
 base_resource_path = xbmc.translatePath(os.path.join(addon_path, 'resources', 'lib')).decode('utf-8')
 sys.path.append(base_resource_path)
