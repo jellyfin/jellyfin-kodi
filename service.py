@@ -9,7 +9,7 @@ import xbmcaddon
 import xbmc
 import xbmcgui
 
-addon_ = xbmcaddon.Addon()
+addon_ = xbmcaddon.Addon(id='plugin.video.emby')
 addon_path = addon_.getAddonInfo('path').decode('utf-8')
 base_resource_path = xbmc.translatePath(os.path.join(addon_path, 'resources', 'lib')).decode('utf-8')
 sys.path.append(base_resource_path)
@@ -136,8 +136,7 @@ class Service():
                                 try:
                                     player.reportPlayback()
                                 except Exception as msg:
-                                    self.logMsg("Exception reporting progress: %s" % msg)
-                                    pass
+                                    self.logMsg("Exception reporting progress: %s" % msg)-
                                 lastProgressUpdate = datetime.today()
                             
                             elif WINDOW.getProperty('commandUpdate') == "true":
@@ -159,13 +158,13 @@ class Service():
                             if self.welcome_msg:
                                 # Reset authentication warnings
                                 self.welcome_msg = False
-                                xbmcgui.Dialog().notification("Emby server", "Welcome %s!" % user.currUser, time=2000, sound=False)
+                                xbmcgui.Dialog().notification("Emby server", "Welcome %s!" % user.currUser.decode('utf-8').encode('utf-8'), time=2000, sound=False)
 
                         # Start the Websocket Client
                         if (self.newWebSocketThread == None):
                             self.newWebSocketThread = "Started"
                             ws.start()
-
+                        # Start the Library Sync Thread
                         if (self.newLibraryThread == None):
                             self.newLibraryThread = "Started"
                             library.start()
