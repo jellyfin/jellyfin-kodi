@@ -31,6 +31,7 @@ class Service():
     librarySync = LibrarySync()
 
     addonName = clientInfo.getAddonName()
+    logLevel = UserClient().getLogLevel()
     WINDOW = xbmcgui.Window(10000)
 
     newWebSocketThread = None
@@ -43,6 +44,7 @@ class Service():
 
         addonName = self.addonName
         WINDOW = self.WINDOW
+        WINDOW.setProperty('getLogLevel', str(self.logLevel))
 
         # Initial logging
         self.logMsg("Starting Monitor", 0)
@@ -50,7 +52,7 @@ class Service():
         self.logMsg("Platform: %s" % (self.clientInfo.getPlatform()), 0)
         self.logMsg("KODI Version: %s" % xbmc.getInfoLabel('System.BuildVersion'), 0)
         self.logMsg("%s Version: %s" % (addonName, self.clientInfo.getVersion()), 0)
-        self.logMsg("Log Level: %s" % UserClient().getLogLevel(), 1)
+        self.logMsg("Log Level: %s" % self.logLevel, 1)
 
         # Reset window props for profile switch
         WINDOW.clearProperty('Server_online')
@@ -86,6 +88,7 @@ class Service():
     def ServiceEntryPoint(self):
         
         WINDOW = self.WINDOW
+        addon = xbmcaddon.Addon()
         
         # Server auto-detect
         ConnectionManager().checkServer()
@@ -112,11 +115,12 @@ class Service():
                 # Verify if user is set and has access to the server
                 if (user.currUser != None) and user.HasAccess:
                     
-                    if self.welcome_msg:
-                        # Reset authentication warnings
-                        self.welcome_msg = False
-                        self.warn_auth = True
-                        xbmcgui.Dialog().notification("Emby server", "Welcome %s!" % user.currUser, sound=False)
+                    self.warn_auth = True
+                    if addon.getSetting('supressConnectMsg') == "false":
+                        if self.welcome_msg:
+                            # Reset authentication warnings
+                            self.welcome_msg = False
+                            xbmcgui.Dialog().notification("Emby server", "Welcome %s!" % user.currUser, time=2000, sound=False)
 
                     # Start the Websocket Client
                     if (self.newWebSocketThread == None):
@@ -242,7 +246,7 @@ class Service():
 
         # If user reset library database.
         if WINDOW.getProperty('SyncInstallRunDone') == "false":
-            addon = xbmcaddon.Addon('plugin.video.emby')
+            addon = xbmcaddon.Addon()
             addon.setSetting('SyncInstallRunDone', "false")
         
         if (self.newWebSocketThread != None):
