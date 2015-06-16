@@ -119,11 +119,7 @@ class Kodi_Monitor(xbmc.Monitor):
                     
         if method == "System.OnWake":
             xbmc.sleep(10000) #Allow network to wake up
-            if WINDOW.getProperty("SyncDatabaseRunning") != "true":
-                utils.logMsg("Doing_Db_Sync Post Resume: syncDatabase (Started)",0)
-                libSync = LibrarySync().FullLibrarySync()
-                utils.logMsg("Doing_Db_Sync Post Resume: syncDatabase (Finished) " + str(libSync),0)
-
+            WINDOW.setProperty("OnWakeSync", "true")
 
         if method == "VideoLibrary.OnRemove":
             xbmc.log('Intercepted remove from sender: ' + sender + ' method: ' + method + ' data: ' + data)

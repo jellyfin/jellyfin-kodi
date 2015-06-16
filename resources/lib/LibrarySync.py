@@ -16,8 +16,10 @@ from itertools import chain
 import urllib2
 import os
 
+import KodiMonitor
 from API import API
 import Utils as utils
+from ClientInformation import ClientInformation
 from DownloadUtils import DownloadUtils
 from ReadEmbyDB import ReadEmbyDB
 from ReadKodiDB import ReadKodiDB
@@ -32,7 +34,21 @@ tvLibrary = os.path.join(dataPath,'tvshows')
 
 WINDOW = xbmcgui.Window( 10000 )
 
-class LibrarySync():   
+class LibrarySync(threading.Thread):
+
+    KodiMonitor = KodiMonitor.Kodi_Monitor()
+    clientInfo = ClientInformation()
+
+    addonName = clientInfo.getAddonName()
+
+    def __init__(self, *args):
+
+        threading.Thread.__init__(self, *args)
+
+    def logMsg(self, msg, lvl=1):
+
+        className = self.__class__.__name__
+        utils.logMsg("%s %s" % (self.addonName, className), msg, int(lvl))
         
     def FullLibrarySync(self,manualRun=False):
         
@@ -628,6 +644,33 @@ class LibrarySync():
 
         return False
 
-        
-        
-        
+    def run(self):
+
+        self.logMsg("--- Starting Library Sync Thread ---", 0)
+        WINDOW = xbmcgui.Window(10000)
+        startupComplete = False
+
+        while not self.KodiMonitor.abortRequested():
+
+            # Library sync
+            if not startupComplete:
+                # Run full sync
+                self.logMsg("Doing_Db_Sync: syncDatabase (Started)", 1)
+                libSync = self.FullLibrarySync()
+                self.logMsg("Doing_Db_Sync: syncDatabase (Finished) %s" % libSync, 1)
+
+                if libSync:
+                    startupComplete = True
+
+            if WINDOW.getProperty("OnWakeSync") == "true":
+                WINDOW.clearProperty("OnWakeSync")
+                if WINDOW.getProperty("SyncDatabaseRunning") != "true":
+                    utils.logMsg("Doing_Db_Sync Post Resume: syncDatabase (Started)",0)
+                    libSync = self.FullLibrarySync()
+                    utils.logMsg("Doing_Db_Sync Post Resume: syncDatabase (Finished) " + str(libSync),0)
+
+            if self.KodiMonitor.waitForAbort(1):
+                # Abort was requested while waiting. We should exit
+                break
+
+        self.logMsg("--- Library Sync Thread stopped ---", 0)
