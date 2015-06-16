@@ -73,12 +73,7 @@ def getKodiVideoDBPath():
         dbVersion = "90"
     elif kodibuild.startswith("15"):
         # Isengard
-        if "BETA1" in kodibuild:
-            # Beta 1
-            dbVersion = "92"
-        elif "BETA2" in kodibuild:
-            # Beta 2
-            dbVersion = "93"
+        dbVersion = "93"
     else:
         # Not a compatible build
         xbmc.log("This Kodi version is incompatible. Current version: %s" % kodibuild)
