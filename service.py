@@ -115,23 +115,6 @@ class Service():
                 # Emby server is online
                 # Verify if user is set and has access to the server
                 if (user.currUser != None) and user.HasAccess:
-                    
-                    self.warn_auth = True
-                    if addon.getSetting('supressConnectMsg') == "false":
-                        if self.welcome_msg:
-                            # Reset authentication warnings
-                            self.welcome_msg = False
-                            xbmcgui.Dialog().notification("Emby server", "Welcome %s!" % user.currUser, time=2000, sound=False)
-
-                    # Start the Websocket Client
-                    if (self.newWebSocketThread == None):
-                        self.newWebSocketThread = "Started"
-                        ws.start()
-
-                    # Start the LibrarySync Thread
-                    if (self.newLibraryThread == None):
-                        self.newLibraryThread = "Started"
-                        library.start()
 
                     # If an item is playing
                     if xbmc.Player().isPlaying():
@@ -169,6 +152,23 @@ class Service():
                         except Exception as e:
                             self.logMsg("Exception in Playback Monitor Service: %s" % e)
                             pass
+                    else:
+                        # Start up events
+                        self.warn_auth = True
+                        if addon.getSetting('supressConnectMsg') == "false":
+                            if self.welcome_msg:
+                                # Reset authentication warnings
+                                self.welcome_msg = False
+                                xbmcgui.Dialog().notification("Emby server", "Welcome %s!" % user.currUser, time=2000, sound=False)
+
+                        # Start the Websocket Client
+                        if (self.newWebSocketThread == None):
+                            self.newWebSocketThread = "Started"
+                            ws.start()
+
+                        if (self.newLibraryThread == None):
+                            self.newLibraryThread = "Started"
+                            library.start()
                             
                 else:
                     
