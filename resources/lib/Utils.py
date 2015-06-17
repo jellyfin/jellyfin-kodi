@@ -63,49 +63,31 @@ def KodiSQL(type="video"):
 
 def getKodiVideoDBPath():
 
-    kodibuild = xbmc.getInfoLabel("System.BuildVersion")
-
-    if kodibuild.startswith("13"):
-        # Gotham
-        dbVersion = "78"
-    elif kodibuild.startswith("14"):
-        # Helix
-        dbVersion = "90"
-    elif kodibuild.startswith("15"):
-        # Isengard
-        dbVersion = "93"
-    else:
-        # Not a compatible build
-        xbmc.log("This Kodi version is incompatible. Current version: %s" % kodibuild)
-
-    dbPath = xbmc.translatePath("special://profile/Database/MyVideos" + dbVersion + ".db")
+    dirs, files = xbmcvfs.listdir("special://database")
+    dbVersion = ""
     
-    return dbPath  
+    for database in files:
+        if "MyVideos" in database:
+            dbVersion = database
+
+    dbPath = xbmc.translatePath("special://database/%s" % dbVersion)
+    logMsg("Utils", "Path to Video database: %s" % dbPath, 0)
+    
+    return dbPath
 
 def getKodiMusicDBPath():
-    if xbmc.getInfoLabel("System.BuildVersion").startswith("13"):
-        #gotham
-        dbVersion = "46"
-    elif xbmc.getInfoLabel("System.BuildVersion").startswith("15"):
-        #isengard
-        dbVersion = "52"
-    else: 
-        #helix
-        dbVersion = "48"
-    
-    dbPath = xbmc.translatePath("special://profile/Database/MyMusic" + dbVersion + ".db")
-    
-    return dbPath      
-    
-    
-def checkAuthentication():
-    #check authentication
-    if addonSettings.getSetting('username') != "" and addonSettings.getSetting('ipaddress') != "":
-        try:
-            downloadUtils.authenticate()
-        except Exception, e:
-            logMsg("Emby authentication failed",e)
-            pass
+
+    dirs, files = xbmcvfs.listdir("special://database")
+    dbVersion = ""
+
+    for database in files:
+        if "MyMusic" in database:
+            dbVersion = database
+
+    dbPath = xbmc.translatePath("special://database/%s" % dbVersion)
+    logMsg("Utils", "Path to Music database: %s" % dbPath, 0)
+
+    return dbPath
     
 def prettifyXml(elem):
     rough_string = etree.tostring(elem, "utf-8")
