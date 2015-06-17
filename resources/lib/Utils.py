@@ -67,7 +67,7 @@ def getKodiVideoDBPath():
     dbVersion = ""
     
     for database in files:
-        if "MyVideos" in database:
+        if "MyVideos" in database and database.endswith("db"):
             dbVersion = database
 
     dbPath = xbmc.translatePath("special://database/%s" % dbVersion)
@@ -81,7 +81,7 @@ def getKodiMusicDBPath():
     dbVersion = ""
 
     for database in files:
-        if "MyMusic" in database:
+        if "MyMusic" in database and database.endswith("db"):
             dbVersion = database
 
     dbPath = xbmc.translatePath("special://database/%s" % dbVersion)
