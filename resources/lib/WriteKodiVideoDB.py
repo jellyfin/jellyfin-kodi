@@ -123,7 +123,7 @@ class WriteKodiVideoDB():
             if(jsonData != ""):
                 trailerItem = jsonData
                 trailerUrl = "plugin://plugin.video.emby/trailer/?id=%s&mode=play" % trailerItem[0][u'Id']
-        elif MBitem.get("RemoteTrailers") != None:
+        elif MBitem.get("RemoteTrailers"):
             try:
                 trailerUrl = MBitem.get("RemoteTrailers")[0].get("Url")
                 trailerId = trailerUrl.split('=')[1]
