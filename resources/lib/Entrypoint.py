@@ -144,6 +144,14 @@ def getThemeMedia():
         playback = "DirectStream"
     else:return
 
+    # Set custom path for user
+    tvtunes_path = xbmc.translatePath("special://profile/addon_data/script.tvtunes/")
+    if xbmcvfs.exists(tvtunes_path):
+        tvtunes = xbmcaddon.Addon(id="script.tvtunes")
+        tvtunes.setSetting('custom_path_enable', "true")
+        tvtunes.setSetting('custom_path', library)
+        xbmc.log("TV Tunes custom path is enabled and set.")
+
     # Create library directory
     if not xbmcvfs.exists(library):
         xbmcvfs.mkdir(library)
