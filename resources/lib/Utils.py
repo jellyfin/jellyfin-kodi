@@ -66,7 +66,7 @@ def getKodiVideoDBPath():
     dirs, files = xbmcvfs.listdir("special://database")
     dbVersion = ""
     
-    for database in files:
+    for database in files and "journal" not in database:
         if "MyVideos" in database:
             dbVersion = database
 
@@ -80,7 +80,7 @@ def getKodiMusicDBPath():
     dirs, files = xbmcvfs.listdir("special://database")
     dbVersion = ""
 
-    for database in files:
+    for database in files and "journal" not in database:
         if "MyMusic" in database:
             dbVersion = database
 
