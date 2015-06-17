@@ -373,13 +373,8 @@ class API():
         query = ""
         height = "10000"
         width = "10000"
-        dimensions = ""
         played = "0"
         totalbackdrops = 0
-
-        # Force ratio
-        if type == "Primary":
-            dimensions = "&Width=1000&Height=1500"
 
         if originalType =="BackdropNoIndicators" and index == "0" and data.get("BackdropImageTags") != None:
             totalbackdrops = len(data.get("BackdropImageTags"))
@@ -396,8 +391,9 @@ class API():
         
         if imageTag == None:
             imageTag = "e3ab56fe27d389446754d0fb04910a34"
-
-        artwork = "%s/mediabrowser/Items/%s/Images/%s/%s?MaxWidth=%s&MaxHeight=%s%s&Format=original&Tag=%s%s" % (server, id, type, index, width, height, dimensions, imageTag, query)
+            
+        artwork = "%s/mediabrowser/Items/%s/Images/%s/%s?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, id, type, index, width, height, imageTag, query)
+        #artwork = "%s/mediabrowser/Items/%s/Images/%s/%s/%s/original/%s/%s/%s?%s" % (server, id, type, index, imageTag, width, height, played, query) <- broken
         if addonSettings.getSetting('disableCoverArt')=='true':
             artwork = artwork + "&EnableImageEnhancers=false"
         
