@@ -166,6 +166,7 @@ def getThemeMedia():
             for item in result[u'Items']:
                 itemId = item[u'Id']
                 folderName = item[u'Name']
+                folderName = utils.CleanName(folderName)
                 itemIds[itemId] = folderName
 
     # Get paths
@@ -189,7 +190,7 @@ def getThemeMedia():
                 playurl = playUtils.directPlay(theme)
             else:
                 playurl = playUtils.directStream(result, server, theme[u'Id'], "Audio")
-            pathstowrite += ('<file>%s</file>' % playurl)
+            pathstowrite += ('<file>%s</file>' % playurl.encode('utf-8'))
 
         nfo_file.write(
             '<tvtunes>%s</tvtunes>' % pathstowrite
