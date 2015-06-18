@@ -764,7 +764,22 @@ class WriteKodiVideoDB():
                     self.addOrUpdateArt(imageUrl, seasonid, "season", "poster", cursor)
                     
                     imageUrl = API().getArtwork(season, "Banner")
-                    self.addOrUpdateArt(imageUrl, seasonid, "season", "banner", cursor)                    
+                    self.addOrUpdateArt(imageUrl, seasonid, "season", "banner", cursor)
+            # Set All season poster
+            MBitem = ReadEmbyDB().getFullItem(embyTvShowId)
+            seasonNum = -1
+            cursor.execute("SELECT idSeason as seasonid FROM seasons WHERE idShow = ? and season = ?", (kodiTvShowId, seasonNum))
+            result = cursor.fetchone()
+            if result == None:
+                # Create the all-season
+                cursor.execute("select coalesce(max(idSeason),0) as seasonid from seasons")
+                seasonid = cursor.fetchone()[0]
+                seasonid = seasonid + 1
+                cursor.execute("INSERT into seasons(idSeason, idShow, season) values(?, ?, ?)", (seasonid, kodiTvShowId, seasonNum))
+            else:
+                seasonid = result[0]
+            imageUrl = API().getArtwork(MBitem, "Primary")
+            self.addOrUpdateArt(imageUrl, seasonid, "season", "poster", cursor)
                             
     def addOrUpdateArt(self, imageUrl, kodiId, mediaType, imageType, cursor):
         updateDone = False
