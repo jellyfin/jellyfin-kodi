@@ -580,6 +580,17 @@ class LibrarySync():
                             #tv show doesn't exist
                             #perform full tvshow sync instead so both the show and episodes get added
                             self.TvShowsFullSync(connection,cursor,None)
+
+                    elif u"Season" in MBitem['Type']:
+
+                        #get the tv show
+                        cursor.execute("SELECT kodi_id FROM emby WHERE media_type='tvshow' AND emby_id=?", (MBitem["SeriesId"],))
+                        result = cursor.fetchone()
+                        if result:
+                            kodi_show_id = result[0]
+                            season = MBitem['IndexNumber']
+                            # update season
+                            WriteKodiVideoDB().updateSeasons(MBitem["SeriesId"], kodi_show_id, connection, cursor)
                     
                     #### PROCESS BOXSETS ######
                     elif MBitem["Type"] == "BoxSet":
