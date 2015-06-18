@@ -64,13 +64,16 @@ def KodiSQL(type="video"):
 def getKodiVideoDBPath():
 
     dirs, files = xbmcvfs.listdir("special://database")
-    dbVersion = ""
-    
+    dbVersions = {}
+
     for database in files:
         if "MyVideos" in database and database.endswith("db"):
-            dbVersion = database
+            version = database[len("MyVideos"):-len(".db")]
+            dbVersions[int(version)] = database
+    # Sort by highest version number
+    versions = sorted(dbVersions.keys(), reverse=True)
 
-    dbPath = xbmc.translatePath("special://database/%s" % dbVersion)
+    dbPath = xbmc.translatePath("special://database/%s" % dbVersions[versions[0]])
     logMsg("Utils", "Path to Video database: %s" % dbPath, 0)
     
     return dbPath
@@ -78,13 +81,16 @@ def getKodiVideoDBPath():
 def getKodiMusicDBPath():
 
     dirs, files = xbmcvfs.listdir("special://database")
-    dbVersion = ""
+    dbVersions = {}
 
     for database in files:
         if "MyMusic" in database and database.endswith("db"):
-            dbVersion = database
+            version = database[len("MyMusic"):-len(".db")]
+            dbVersions[int(version)] = database
+    # Sort by highest version number
+    versions = sorted(dbVersions.keys(), reverse=True)
 
-    dbPath = xbmc.translatePath("special://database/%s" % dbVersion)
+    dbPath = xbmc.translatePath("special://database/%s" % dbVersions[versions[0]])
     logMsg("Utils", "Path to Music database: %s" % dbPath, 0)
 
     return dbPath
