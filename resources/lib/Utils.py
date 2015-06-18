@@ -63,37 +63,39 @@ def KodiSQL(type="video"):
 
 def getKodiVideoDBPath():
 
-    dirs, files = xbmcvfs.listdir("special://database")
-    dbVersions = {}
+    kodibuild = xbmc.getInfoLabel("System.BuildVersion")
 
-    for database in files:
-        if "MyVideos" in database and database.endswith("db"):
-            version = database[len("MyVideos"):-len(".db")]
-            dbVersions[int(version)] = database
-    # Sort by highest version number
-    versions = sorted(dbVersions.keys(), reverse=True)
+    if kodibuild.startswith("13"):
+        # Gotham
+        dbVersion = "78"
+    elif kodibuild.startswith("14"):
+        # Helix
+        dbVersion = "90"
+    elif kodibuild.startswith("15"):
+        # Isengard
+        dbVersion = "93"
+    else:
+        # Not a compatible build
+        xbmc.log("This Kodi version is incompatible. Current version: %s" % kodibuild)
 
-    dbPath = xbmc.translatePath("special://database/%s" % dbVersions[versions[0]])
-    logMsg("Utils", "Path to Video database: %s" % dbPath, 0)
+    dbPath = xbmc.translatePath("special://profile/Database/MyVideos" + dbVersion + ".db")
     
-    return dbPath
+    return dbPath  
 
 def getKodiMusicDBPath():
-
-    dirs, files = xbmcvfs.listdir("special://database")
-    dbVersions = {}
-
-    for database in files:
-        if "MyMusic" in database and database.endswith("db"):
-            version = database[len("MyMusic"):-len(".db")]
-            dbVersions[int(version)] = database
-    # Sort by highest version number
-    versions = sorted(dbVersions.keys(), reverse=True)
-
-    dbPath = xbmc.translatePath("special://database/%s" % dbVersions[versions[0]])
-    logMsg("Utils", "Path to Music database: %s" % dbPath, 0)
-
-    return dbPath
+    if xbmc.getInfoLabel("System.BuildVersion").startswith("13"):
+        #gotham
+        dbVersion = "46"
+    elif xbmc.getInfoLabel("System.BuildVersion").startswith("15"):
+        #isengard
+        dbVersion = "52"
+    else: 
+        #helix
+        dbVersion = "48"
+    
+    dbPath = xbmc.translatePath("special://profile/Database/MyMusic" + dbVersion + ".db")
+    
+    return dbPath   
     
 def prettifyXml(elem):
     rough_string = etree.tostring(elem, "utf-8")
