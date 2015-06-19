@@ -54,6 +54,8 @@ def KodiSQL(type="video"):
     
     if type == "music":
         dbPath = getKodiMusicDBPath()
+    elif type == "texture":
+        dbPath = xbmc.translatePath("special://database/Textures13.db")
     else:
         dbPath = getKodiVideoDBPath()
     

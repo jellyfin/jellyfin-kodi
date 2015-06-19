@@ -73,6 +73,18 @@ class TextureCache():
             except:
                 #extreme short timeouts so we will have a exception, but we don't need the result so pass
                 pass
+
+    def refreshFanart(self,url):
+        connection = utils.KodiSQL("texture")
+        cursor = connection.cursor()
+        cursor.execute("SELECT cachedurl FROM texture WHERE url = ?", (url,))
+        result = cursor.fetchone()
+        if result:
+            cursor.execute("DELETE FROM texture WHERE url = ?", (url,))
+            connection.commit()
+        else:
+            self.CacheTexture(url)
+        cursor.close()
             
       
     def setKodiWebServerDetails(self):

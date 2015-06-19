@@ -796,7 +796,10 @@ class WriteKodiVideoDB():
                     cursor.execute("UPDATE art set url = ? WHERE media_id = ? AND media_type = ? AND type = ?", (imageUrl, kodiId, mediaType, imageType))
                     
             #cache fanart and poster in Kodi texture cache
-            if imageType == "fanart" or imageType == "poster":
+            if "fanart" in imageType:
+                utils.logMsg("ArtworkSync", "Adding or Updating Fanart: %s" % imageUrl)
+                self.textureCache.refreshFanart(imageUrl)
+            elif "poster" in imageType:
                 self.textureCache.CacheTexture(imageUrl)
         
     def setKodiResumePoint(self, fileid, resume_seconds, total_seconds, cursor):
