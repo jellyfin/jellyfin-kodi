@@ -174,12 +174,12 @@ def getThemeMedia():
             for item in result[u'Items']:
                 itemId = item[u'Id']
                 folderName = item[u'Name']
-                folderName = utils.CleanName(folderName)
+                folderName = xbmc.makeLegalFilename(folderName)
                 itemIds[itemId] = folderName
 
     # Get paths
     for itemId in itemIds:
-        nfo_path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/%s/" % itemIds[itemId])
+        nfo_path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/%s" % itemIds[itemId])
         # Create folders for each content
         if not xbmcvfs.exists(nfo_path):
             xbmcvfs.mkdir(nfo_path)
