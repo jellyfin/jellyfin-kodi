@@ -39,18 +39,11 @@ class WriteKodiVideoDB():
         cursor = connection.cursor()
         cursor.execute("SELECT emby_id FROM emby WHERE media_type=? AND kodi_id=?",(type,id))
         
-        emby_id = cursor.fetchone()[0]
-        cursor.close
+        emby_id = cursor.fetchone()
 
         if(emby_id != None):
+            emby_id = emby_id[0]
             # Erase resume point when user marks watched/unwatched to follow Emby behavior
-            # Also force sets the playcount to instantly reflect the appropriate playstate.
-            if type == "episode":
-                resume = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": {"episodeid": %d, "playcount": %d, "resume": {"position": 0}}, "id": "setResumePoint"}' % (id, playcount)
-            elif type == "movie":
-                resume = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": {"movieid": %d, "playcount": %d, "resume": {"position": 0}}, "id": "setResumePoint"}' % (id, playcount)
-            xbmc.executeJSONRPC(resume)
-            
             addon = xbmcaddon.Addon(id='plugin.video.emby')   
             downloadUtils = DownloadUtils()       
             watchedurl = "{server}/mediabrowser/Users/{UserId}/PlayedItems/%s" % emby_id
@@ -58,6 +51,9 @@ class WriteKodiVideoDB():
                 downloadUtils.downloadUrl(watchedurl, type="POST")
             else:
                 downloadUtils.downloadUrl(watchedurl, type="DELETE")
+
+            self.setKodiResumePoint(id, 0, 0, cursor)
+        cursor.close
         
     def addOrUpdateMovieToKodiLibrary( self, embyId ,connection, cursor, viewTag):
         
