@@ -159,6 +159,20 @@ def CleanName(filename):
     validFilenameChars = "-_.() %s%s" % (string.ascii_letters, string.digits)
     cleanedFilename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore')
     return ''.join(c for c in cleanedFilename if c in validFilenameChars)
+
+def normalize_string(text):
+    try:
+        text = text.replace(":", "")
+        text = text.replace("/", "-")
+        text = text.replace("\\", "-")
+        text = text.strip()
+        # Remove dots from the last character as windows can not have directories
+        # with dots at the end
+        text = text.rstrip('.')
+        text = unicodedata.normalize('NFKD', unicode(text, 'utf-8')).encode('ascii', 'ignore')
+    except:
+        pass
+    return text
    
         
 def reset():
