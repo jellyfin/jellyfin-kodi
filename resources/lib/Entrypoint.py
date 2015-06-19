@@ -174,7 +174,7 @@ def getThemeMedia():
             for item in result[u'Items']:
                 itemId = item[u'Id']
                 folderName = item[u'Name']
-                folderName = utils.normalize_string(folderName)
+                folderName = utils.normalize_string(folderName.encode('utf-8'))
                 itemIds[itemId] = folderName
 
     # Get paths
