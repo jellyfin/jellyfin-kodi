@@ -165,6 +165,48 @@ def getThemeMedia():
         userviewId = view[u'Id']
         userViews.append(userviewId)
 
+
+    # Get Ids with Theme Videos
+    itemIds = {}
+    for view in userViews:
+        url = "{server}/mediabrowser/Users/{UserId}/Items?HasThemeVideo=True&ParentId=%s&format=json" % view
+        result = doUtils.downloadUrl(url)
+        if result[u'TotalRecordCount'] != 0:
+            for item in result[u'Items']:
+                itemId = item[u'Id']
+                folderName = item[u'Name']
+                folderName = utils.normalize_string(folderName)
+                itemIds[itemId] = folderName
+
+    # Get paths for theme videos
+    for itemId in itemIds:
+        nfo_path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/%s/" % itemIds[itemId])
+        # Create folders for each content
+        if not xbmcvfs.exists(nfo_path):
+            xbmcvfs.mkdir(nfo_path)
+        # Where to put the nfos
+        nfo_path = "%s%s" % (nfo_path, "tvtunes.nfo")
+
+        url = "{server}/mediabrowser/Items/%s/ThemeVideos?format=json" % itemId
+        result = doUtils.downloadUrl(url)
+
+        # Create nfo and write themes to it
+        nfo_file = open(nfo_path, 'w')
+        pathstowrite = ""
+        # May be more than one theme
+        for theme in result[u'Items']:  
+            if playback == "DirectPlay":
+                playurl = playUtils.directPlay(theme)
+            else:
+                playurl = playUtils.directStream(result, server, theme[u'Id'])
+            pathstowrite += ('<file>%s</file>' % playurl.encode('utf-8'))
+
+        nfo_file.write(
+            '<tvtunes>%s</tvtunes>' % pathstowrite
+        )
+        # Close nfo file
+        nfo_file.close()
+
     # Get Ids with Theme songs
     itemIds = {}
     for view in userViews:
@@ -174,7 +216,7 @@ def getThemeMedia():
             for item in result[u'Items']:
                 itemId = item[u'Id']
                 folderName = item[u'Name']
-                folderName = utils.normalize_string(folderName.encode('utf-8'))
+                folderName = utils.normalize_string(folderName)
                 itemIds[itemId] = folderName
 
     # Get paths
@@ -185,6 +227,10 @@ def getThemeMedia():
             xbmcvfs.mkdir(nfo_path)
         # Where to put the nfos
         nfo_path = "%s%s" % (nfo_path, "tvtunes.nfo")
+        
+        # if the nfo already exists assume a theme video was added so back out because if both are added it rotates between theme video and theme music
+        if xbmcvfs.exists(nfo_path):
+            continue
 
         url = "{server}/mediabrowser/Items/%s/ThemeSongs?format=json" % itemId
         result = doUtils.downloadUrl(url)
