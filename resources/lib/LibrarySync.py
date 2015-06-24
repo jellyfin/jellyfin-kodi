@@ -115,6 +115,9 @@ class LibrarySync():
             # set prop to show we have run for the first time
             WINDOW.setProperty("startup", "done")
             
+            # tell any widgets to refresh because the content has changed
+            WINDOW.setProperty("widgetreload", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+            
         finally:
             WINDOW.setProperty("SyncDatabaseRunning", "false")
             utils.logMsg("Sync DB", "syncDatabase Exiting", 0)
@@ -625,9 +628,10 @@ class LibrarySync():
                     cursor.close()
 
             finally:
-                
                 xbmc.executebuiltin("UpdateLibrary(video)")
                 WINDOW.setProperty("SyncDatabaseRunning", "false")
+                # tell any widgets to refresh because the content has changed
+                WINDOW.setProperty("widgetreload", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
     def ShouldStop(self):
             
