@@ -80,11 +80,13 @@ class TextureCache():
         cursor.execute("SELECT cachedurl FROM texture WHERE url = ?", (url,))
         result = cursor.fetchone()
         if result:
-            cursor.execute("DELETE FROM texture WHERE url = ?", (url,))
+            result = result[0]
+            cursor.execute("DELETE FROM texture WHERE cachedurl = ?", (result,))
             connection.commit()
+            cursor.close()
         else:
+            cursor.close()
             self.CacheTexture(url)
-        cursor.close()
             
       
     def setKodiWebServerDetails(self):
