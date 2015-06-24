@@ -151,6 +151,12 @@ def getThemeMedia():
         tvtunes.setSetting('custom_path_enable', "true")
         tvtunes.setSetting('custom_path', library)
         xbmc.log("TV Tunes custom path is enabled and set.")
+    else:
+        # if it does not exist this will not work so warn user, often they need to edit the settings first for it to be created.
+        dialog = xbmcgui.Dialog()
+        dialog.ok('Warning', 'The settings file does not exist in tvtunes. Go to the tvtunes addon and change a setting, then come back and re-run')
+        return
+        
 
     # Create library directory
     if not xbmcvfs.exists(library):
