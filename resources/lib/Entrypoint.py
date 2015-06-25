@@ -650,12 +650,12 @@ def doMainListing():
                 addDirectoryItem(label, path)
     
     # some extra entries for settings and stuff. TODO --> localize the labels
-    addDirectoryItem("Settings", "plugin://plugin.video.emby/?mode=settings")
-    addDirectoryItem("Perform manual sync", "plugin://plugin.video.emby/?mode=manualsync")
-    addDirectoryItem("Add user to session", "plugin://plugin.video.emby/?mode=adduser")
-    addDirectoryItem("Configure user preferences", "plugin://plugin.video.emby/?mode=userprefs")
-    addDirectoryItem("Perform local database reset (full resync)", "plugin://plugin.video.emby/?mode=reset")
-    addDirectoryItem("Cache all images to Kodi texture cache (advanced)", "plugin://plugin.video.emby/?mode=texturecache")
-    addDirectoryItem("Sync Emby Theme Media to Kodi", "plugin://plugin.video.emby/?mode=thememedia")
+    addDirectoryItem("Settings", "plugin://plugin.video.emby/?mode=settings", False)
+    addDirectoryItem("Perform manual sync", "plugin://plugin.video.emby/?mode=manualsync", False)
+    addDirectoryItem("Add user to session", "plugin://plugin.video.emby/?mode=adduser", False)
+    addDirectoryItem("Configure user preferences", "plugin://plugin.video.emby/?mode=userprefs", False)
+    addDirectoryItem("Perform local database reset (full resync)", "plugin://plugin.video.emby/?mode=reset", False)
+    addDirectoryItem("Cache all images to Kodi texture cache (advanced)", "plugin://plugin.video.emby/?mode=texturecache", False)
+    addDirectoryItem("Sync Emby Theme Media to Kodi", "plugin://plugin.video.emby/?mode=thememedia", False)
     
     xbmcplugin.endOfDirectory(int(sys.argv[1]))                
