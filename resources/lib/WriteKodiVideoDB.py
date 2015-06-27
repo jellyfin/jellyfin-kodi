@@ -156,9 +156,9 @@ class WriteKodiVideoDB():
                 filename = playurl.rsplit("/",1)[-1]
                 path = playurl.replace(filename, "")
         else:
-            path = "plugin://plugin.video.emby/tvshows/" + MBitem["SeriesId"] + "/"
-            filename = "plugin://plugin.video.emby/tvshows/" + MBitem["SeriesId"] + "/?id=" + MBitem["Id"] + "&mode=play"        
-                  
+            path = "plugin://plugin.video.emby/movies/%s/" % MBitem["Id"]
+            filename = "plugin://plugin.video.emby/movies/%s/?id=%s&mode=play" % (MBitem["Id"],MBitem["Id"])
+                 
         #create the path
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
         result = cursor.fetchone()
