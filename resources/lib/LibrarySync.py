@@ -591,7 +591,6 @@ class LibrarySync():
                         result = cursor.fetchone()
                         if result:
                             kodi_show_id = result[0]
-                            season = MBitem['IndexNumber']
                             # update season
                             WriteKodiVideoDB().updateSeasons(MBitem["SeriesId"], kodi_show_id, connection, cursor)
                     
