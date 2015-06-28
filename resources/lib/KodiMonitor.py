@@ -11,7 +11,6 @@ import json
 import Utils as utils
 from WriteKodiVideoDB import WriteKodiVideoDB
 from ReadKodiDB import ReadKodiDB
-from LibrarySync import LibrarySync
 from PlayUtils import PlayUtils
 from DownloadUtils import DownloadUtils
 from PlaybackUtils import PlaybackUtils
