@@ -136,7 +136,7 @@ class Service():
                                 try:
                                     player.reportPlayback()
                                 except Exception as msg:
-                                    self.logMsg("Exception reporting progress: %s" % msg)-
+                                    self.logMsg("Exception reporting progress: %s" % msg)
                                 lastProgressUpdate = datetime.today()
                             
                             elif WINDOW.getProperty('commandUpdate') == "true":
