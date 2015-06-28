@@ -144,6 +144,20 @@ def getThemeMedia():
         playback = "DirectStream"
     else:return
 
+    # Set custom path for user
+    tvtunes_path = xbmc.translatePath("special://profile/addon_data/script.tvtunes/")
+    if xbmcvfs.exists(tvtunes_path):
+        tvtunes = xbmcaddon.Addon(id="script.tvtunes")
+        tvtunes.setSetting('custom_path_enable', "true")
+        tvtunes.setSetting('custom_path', library)
+        xbmc.log("TV Tunes custom path is enabled and set.")
+    else:
+        # if it does not exist this will not work so warn user, often they need to edit the settings first for it to be created.
+        dialog = xbmcgui.Dialog()
+        dialog.ok('Warning', 'The settings file does not exist in tvtunes. Go to the tvtunes addon and change a setting, then come back and re-run')
+        return
+        
+
     # Create library directory
     if not xbmcvfs.exists(library):
         xbmcvfs.mkdir(library)
@@ -157,18 +171,20 @@ def getThemeMedia():
         userviewId = view[u'Id']
         userViews.append(userviewId)
 
-    # Get Ids with Theme songs
+
+    # Get Ids with Theme Videos
     itemIds = {}
     for view in userViews:
-        url = "{server}/mediabrowser/Users/{UserId}/Items?HasThemeSong=True&ParentId=%s&format=json" % view
+        url = "{server}/mediabrowser/Users/{UserId}/Items?HasThemeVideo=True&ParentId=%s&format=json" % view
         result = doUtils.downloadUrl(url)
         if result[u'TotalRecordCount'] != 0:
             for item in result[u'Items']:
                 itemId = item[u'Id']
                 folderName = item[u'Name']
+                folderName = utils.normalize_string(folderName.encode('utf-8'))
                 itemIds[itemId] = folderName
 
-    # Get paths
+    # Get paths for theme videos
     for itemId in itemIds:
         nfo_path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/%s/" % itemIds[itemId])
         # Create folders for each content
@@ -177,6 +193,64 @@ def getThemeMedia():
         # Where to put the nfos
         nfo_path = "%s%s" % (nfo_path, "tvtunes.nfo")
 
+        url = "{server}/mediabrowser/Items/%s/ThemeVideos?format=json" % itemId
+        result = doUtils.downloadUrl(url)
+
+        # Create nfo and write themes to it
+        nfo_file = open(nfo_path, 'w')
+        pathstowrite = ""
+        # May be more than one theme
+        for theme in result[u'Items']:  
+            if playback == "DirectPlay":
+                playurl = playUtils.directPlay(theme)
+            else:
+                playurl = playUtils.directStream(result, server, theme[u'Id'])
+            pathstowrite += ('<file>%s</file>' % playurl.encode('utf-8'))
+        
+        # Check if the item has theme songs and add them   
+        url = "{server}/mediabrowser/Items/%s/ThemeSongs?format=json" % itemId
+        result = doUtils.downloadUrl(url)
+
+        # May be more than one theme
+        for theme in result[u'Items']:  
+            if playback == "DirectPlay":
+                playurl = playUtils.directPlay(theme)
+            else:
+                playurl = playUtils.directStream(result, server, theme[u'Id'], "Audio")
+            pathstowrite += ('<file>%s</file>' % playurl.encode('utf-8'))
+
+        nfo_file.write(
+            '<tvtunes>%s</tvtunes>' % pathstowrite
+        )
+        # Close nfo file
+        nfo_file.close()
+
+    # Get Ids with Theme songs
+    musicitemIds = {}
+    for view in userViews:
+        url = "{server}/mediabrowser/Users/{UserId}/Items?HasThemeSong=True&ParentId=%s&format=json" % view
+        result = doUtils.downloadUrl(url)
+        if result[u'TotalRecordCount'] != 0:
+            for item in result[u'Items']:
+                itemId = item[u'Id']
+                folderName = item[u'Name']
+                folderName = utils.normalize_string(folderName.encode('utf-8'))
+                musicitemIds[itemId] = folderName
+
+    # Get paths
+    for itemId in musicitemIds:
+        
+        # if the item was already processed with video themes back out
+        if itemId in itemIds:
+            continue
+        
+        nfo_path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/%s/" % musicitemIds[itemId])
+        # Create folders for each content
+        if not xbmcvfs.exists(nfo_path):
+            xbmcvfs.mkdir(nfo_path)
+        # Where to put the nfos
+        nfo_path = "%s%s" % (nfo_path, "tvtunes.nfo")
+        
         url = "{server}/mediabrowser/Items/%s/ThemeSongs?format=json" % itemId
         result = doUtils.downloadUrl(url)
 
@@ -189,7 +263,7 @@ def getThemeMedia():
                 playurl = playUtils.directPlay(theme)
             else:
                 playurl = playUtils.directStream(result, server, theme[u'Id'], "Audio")
-            pathstowrite += ('<file>%s</file>' % playurl)
+            pathstowrite += ('<file>%s</file>' % playurl.encode('utf-8'))
 
         nfo_file.write(
             '<tvtunes>%s</tvtunes>' % pathstowrite
@@ -576,12 +650,12 @@ def doMainListing():
                 addDirectoryItem(label, path)
     
     # some extra entries for settings and stuff. TODO --> localize the labels
-    addDirectoryItem("Settings", "plugin://plugin.video.emby/?mode=settings")
-    addDirectoryItem("Perform manual sync", "plugin://plugin.video.emby/?mode=manualsync")
-    addDirectoryItem("Add user to session", "plugin://plugin.video.emby/?mode=adduser")
-    addDirectoryItem("Configure user preferences", "plugin://plugin.video.emby/?mode=userprefs")
-    addDirectoryItem("Perform local database reset (full resync)", "plugin://plugin.video.emby/?mode=reset")
-    addDirectoryItem("Cache all images to Kodi texture cache (advanced)", "plugin://plugin.video.emby/?mode=texturecache")
-    addDirectoryItem("Sync Emby Theme Media to Kodi", "plugin://plugin.video.emby/?mode=thememedia")
+    addDirectoryItem("Settings", "plugin://plugin.video.emby/?mode=settings", False)
+    addDirectoryItem("Perform manual sync", "plugin://plugin.video.emby/?mode=manualsync", False)
+    addDirectoryItem("Add user to session", "plugin://plugin.video.emby/?mode=adduser", False)
+    addDirectoryItem("Configure user preferences", "plugin://plugin.video.emby/?mode=userprefs", False)
+    addDirectoryItem("Perform local database reset (full resync)", "plugin://plugin.video.emby/?mode=reset", False)
+    addDirectoryItem("Cache all images to Kodi texture cache (advanced)", "plugin://plugin.video.emby/?mode=texturecache", False)
+    addDirectoryItem("Sync Emby Theme Media to Kodi", "plugin://plugin.video.emby/?mode=thememedia", False)
     
     xbmcplugin.endOfDirectory(int(sys.argv[1]))                

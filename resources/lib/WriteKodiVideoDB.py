@@ -39,18 +39,11 @@ class WriteKodiVideoDB():
         cursor = connection.cursor()
         cursor.execute("SELECT emby_id FROM emby WHERE media_type=? AND kodi_id=?",(type,id))
         
-        emby_id = cursor.fetchone()[0]
-        cursor.close
+        emby_id = cursor.fetchone()
 
         if(emby_id != None):
+            emby_id = emby_id[0]
             # Erase resume point when user marks watched/unwatched to follow Emby behavior
-            # Also force sets the playcount to instantly reflect the appropriate playstate.
-            if type == "episode":
-                resume = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetEpisodeDetails", "params": {"episodeid": %d, "playcount": %d, "resume": {"position": 0}}, "id": "setResumePoint"}' % (id, playcount)
-            elif type == "movie":
-                resume = '{"jsonrpc": "2.0", "method": "VideoLibrary.SetMovieDetails", "params": {"movieid": %d, "playcount": %d, "resume": {"position": 0}}, "id": "setResumePoint"}' % (id, playcount)
-            xbmc.executeJSONRPC(resume)
-            
             addon = xbmcaddon.Addon(id='plugin.video.emby')   
             downloadUtils = DownloadUtils()       
             watchedurl = "{server}/mediabrowser/Users/{UserId}/PlayedItems/%s" % emby_id
@@ -58,6 +51,9 @@ class WriteKodiVideoDB():
                 downloadUtils.downloadUrl(watchedurl, type="POST")
             else:
                 downloadUtils.downloadUrl(watchedurl, type="DELETE")
+
+            self.setKodiResumePoint(id, 0, 0, cursor)
+        cursor.close
         
     def addOrUpdateMovieToKodiLibrary( self, embyId ,connection, cursor, viewTag):
         
@@ -123,6 +119,13 @@ class WriteKodiVideoDB():
             if(jsonData != ""):
                 trailerItem = jsonData
                 trailerUrl = "plugin://plugin.video.emby/trailer/?id=%s&mode=play" % trailerItem[0][u'Id']
+        elif MBitem.get("RemoteTrailers"):
+            try:
+                trailerUrl = MBitem.get("RemoteTrailers")[0].get("Url")
+                trailerId = trailerUrl.split('=')[1]
+                trailerUrl = "plugin://plugin.video.youtube/play/?video_id=%s" % trailerId
+            except:
+                trailerUrl = MBitem.get("RemoteTrailers")[0].get("Url")
         
         if MBitem.get("DateCreated") != None:
             dateadded = MBitem["DateCreated"].split('.')[0].replace('T', " ")
@@ -142,24 +145,20 @@ class WriteKodiVideoDB():
             
         #### ADD OR UPDATE THE FILE AND PATH ###########
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY
-        if addon.getSetting('useDirectPaths')=='true':
-            if PlayUtils().isDirectPlay(MBitem):
-                playurl = PlayUtils().directPlay(MBitem)
-                #use the direct file path
-                if "\\" in playurl:
-                    filename = playurl.rsplit("\\",1)[-1]
-                    path = playurl.replace(filename,"")
-                elif "/" in playurl:
-                    filename = playurl.rsplit("/",1)[-1]
-                    path = playurl.replace(filename,"")        
-            else:
-                #for transcoding we just use the server's streaming path because I couldn't figure out how to set the plugin path in the music DB
-                path = server + "/Video/%s/" %MBitem["Id"]
-                filename = "stream.mp4"                
+        if addon.getSetting('useDirectPaths') == 'true':
+            playurl = PlayUtils().directPlay(MBitem)
+            if playurl == False:
+                return
+            elif "\\" in playurl:
+                filename = playurl.rsplit("\\",1)[-1]
+                path = playurl.replace(filename, "")
+            elif "/" in playurl:
+                filename = playurl.rsplit("/",1)[-1]
+                path = playurl.replace(filename, "")
         else:
             path = "plugin://plugin.video.emby/movies/%s/" % MBitem["Id"]
             filename = "plugin://plugin.video.emby/movies/%s/?id=%s&mode=play" % (MBitem["Id"],MBitem["Id"])
-                  
+                 
         #create the path
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
         result = cursor.fetchone()
@@ -757,7 +756,22 @@ class WriteKodiVideoDB():
                     self.addOrUpdateArt(imageUrl, seasonid, "season", "poster", cursor)
                     
                     imageUrl = API().getArtwork(season, "Banner")
-                    self.addOrUpdateArt(imageUrl, seasonid, "season", "banner", cursor)                    
+                    self.addOrUpdateArt(imageUrl, seasonid, "season", "banner", cursor)
+            # Set All season poster
+            MBitem = ReadEmbyDB().getFullItem(embyTvShowId)
+            seasonNum = -1
+            cursor.execute("SELECT idSeason as seasonid FROM seasons WHERE idShow = ? and season = ?", (kodiTvShowId, seasonNum))
+            result = cursor.fetchone()
+            if result == None:
+                # Create the all-season
+                cursor.execute("select coalesce(max(idSeason),0) as seasonid from seasons")
+                seasonid = cursor.fetchone()[0]
+                seasonid = seasonid + 1
+                cursor.execute("INSERT into seasons(idSeason, idShow, season) values(?, ?, ?)", (seasonid, kodiTvShowId, seasonNum))
+            else:
+                seasonid = result[0]
+            imageUrl = API().getArtwork(MBitem, "Primary")
+            self.addOrUpdateArt(imageUrl, seasonid, "season", "poster", cursor)
                             
     def addOrUpdateArt(self, imageUrl, kodiId, mediaType, imageType, cursor):
         updateDone = False
@@ -774,7 +788,8 @@ class WriteKodiVideoDB():
                     cursor.execute("UPDATE art set url = ? WHERE media_id = ? AND media_type = ? AND type = ?", (imageUrl, kodiId, mediaType, imageType))
                     
             #cache fanart and poster in Kodi texture cache
-            if imageType == "fanart" or imageType == "poster":
+            if "fanart" in imageType or "poster" in imageType:
+                utils.logMsg("ArtworkSync", "Adding or Updating Fanart: %s" % imageUrl)
                 self.textureCache.CacheTexture(imageUrl)
         
     def setKodiResumePoint(self, fileid, resume_seconds, total_seconds, cursor):

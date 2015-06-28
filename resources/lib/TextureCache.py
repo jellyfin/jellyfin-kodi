@@ -3,11 +3,11 @@
 #################################################################################################
 
 
-import xbmc
-import xbmcaddon
+import xbmc, xbmcaddon, xbmcvfs
 import json
 import requests
 import urllib
+import os
 
 import Utils as utils
 
@@ -42,15 +42,38 @@ class TextureCache():
     def FullTextureCacheSync(self):
         #this method can be called from the plugin to sync all Kodi textures to the texture cache.
         #Warning: this means that every image will be cached locally, this takes diskspace!
+        
+        #remove all existing textures first
+        path = "special://thumbnails/"
+        if xbmcvfs.exists(path):
+            allDirs, allFiles = xbmcvfs.listdir(path)
+            for dir in allDirs:
+                allDirs, allFiles = xbmcvfs.listdir(path+dir)
+                for file in allFiles:
+                    xbmcvfs.delete(os.path.join(path+dir,file))
+        
+        textureconnection = utils.KodiSQL("texture")
+        texturecursor = textureconnection.cursor()
+        texturecursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
+        rows = texturecursor.fetchall()
+        for row in rows:
+            tableName = row[0]
+            if(tableName != "version"):
+                texturecursor.execute("DELETE FROM " + tableName)
+        textureconnection.commit()
+        texturecursor.close()
+
+        
+        #cache all entries in video DB
         connection = utils.KodiSQL("video")
         cursor = connection.cursor()
         cursor.execute("SELECT url FROM art")
         result = cursor.fetchall()
         for url in result:
             self.CacheTexture(url[0])
-        
         cursor.close()    
         
+        #cache all entries in music DB
         connection = utils.KodiSQL("music")
         cursor = connection.cursor()
         cursor.execute("SELECT url FROM art")
@@ -73,7 +96,7 @@ class TextureCache():
             except:
                 #extreme short timeouts so we will have a exception, but we don't need the result so pass
                 pass
-            
+           
       
     def setKodiWebServerDetails(self):
         # Get the Kodi webserver details - used to set the texture cache

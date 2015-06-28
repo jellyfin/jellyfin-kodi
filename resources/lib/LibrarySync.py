@@ -131,6 +131,9 @@ class LibrarySync(threading.Thread):
             # set prop to show we have run for the first time
             WINDOW.setProperty("startup", "done")
             
+            # tell any widgets to refresh because the content has changed
+            WINDOW.setProperty("widgetreload", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+            
         finally:
             WINDOW.setProperty("SyncDatabaseRunning", "false")
             utils.logMsg("Sync DB", "syncDatabase Exiting", 0)
@@ -596,6 +599,16 @@ class LibrarySync(threading.Thread):
                             #tv show doesn't exist
                             #perform full tvshow sync instead so both the show and episodes get added
                             self.TvShowsFullSync(connection,cursor,None)
+
+                    elif u"Season" in MBitem['Type']:
+
+                        #get the tv show
+                        cursor.execute("SELECT kodi_id FROM emby WHERE media_type='tvshow' AND emby_id=?", (MBitem["SeriesId"],))
+                        result = cursor.fetchone()
+                        if result:
+                            kodi_show_id = result[0]
+                            # update season
+                            WriteKodiVideoDB().updateSeasons(MBitem["SeriesId"], kodi_show_id, connection, cursor)
                     
                     #### PROCESS BOXSETS ######
                     elif MBitem["Type"] == "BoxSet":
@@ -630,9 +643,10 @@ class LibrarySync(threading.Thread):
                     cursor.close()
 
             finally:
-                
                 xbmc.executebuiltin("UpdateLibrary(video)")
                 WINDOW.setProperty("SyncDatabaseRunning", "false")
+                # tell any widgets to refresh because the content has changed
+                WINDOW.setProperty("widgetreload", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
     def ShouldStop(self):
             

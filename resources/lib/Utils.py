@@ -54,6 +54,8 @@ def KodiSQL(type="video"):
     
     if type == "music":
         dbPath = getKodiMusicDBPath()
+    elif type == "texture":
+        dbPath = xbmc.translatePath("special://database/Textures13.db")
     else:
         dbPath = getKodiVideoDBPath()
     
@@ -73,12 +75,7 @@ def getKodiVideoDBPath():
         dbVersion = "90"
     elif kodibuild.startswith("15"):
         # Isengard
-        if "BETA1" in kodibuild:
-            # Beta 1
-            dbVersion = "92"
-        elif "BETA2" in kodibuild:
-            # Beta 2
-            dbVersion = "93"
+        dbVersion = "93"
     else:
         # Not a compatible build
         xbmc.log("This Kodi version is incompatible. Current version: %s" % kodibuild)
@@ -100,17 +97,7 @@ def getKodiMusicDBPath():
     
     dbPath = xbmc.translatePath("special://profile/Database/MyMusic" + dbVersion + ".db")
     
-    return dbPath      
-    
-    
-def checkAuthentication():
-    #check authentication
-    if addonSettings.getSetting('username') != "" and addonSettings.getSetting('ipaddress') != "":
-        try:
-            downloadUtils.authenticate()
-        except Exception, e:
-            logMsg("Emby authentication failed",e)
-            pass
+    return dbPath   
     
 def prettifyXml(elem):
     rough_string = etree.tostring(elem, "utf-8")
@@ -174,6 +161,25 @@ def CleanName(filename):
     validFilenameChars = "-_.() %s%s" % (string.ascii_letters, string.digits)
     cleanedFilename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore')
     return ''.join(c for c in cleanedFilename if c in validFilenameChars)
+
+def normalize_string(text):
+    try:
+        text = text.replace(":", "")
+        text = text.replace("/", "-")
+        text = text.replace("\\", "-")
+        text = text.replace("<", "")
+        text = text.replace(">", "")
+        text = text.replace("*", "")
+        text = text.replace("?", "")
+        text = text.replace('|', "")
+        text = text.strip()
+        # Remove dots from the last character as windows can not have directories
+        # with dots at the end
+        text = text.rstrip('.')
+        text = unicodedata.normalize('NFKD', unicode(text, 'utf-8')).encode('ascii', 'ignore')
+    except:
+        pass
+    return text
    
         
 def reset():
