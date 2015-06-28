@@ -701,7 +701,7 @@ class LibrarySync(threading.Thread):
                     showTotalCount = ReadKodiDB().getShowTotalCount(showId, connection, cursor)
                     self.logMsg("ShowTotalCount: %s" % showTotalCount, 0)
                     # If there are no episodes left
-                    if not showTotalCount:
+                    if showTotalCount == 0 or showTotalCount == None:
                         # Delete show
                         embyId = ReadKodiDB().getEmbyIdByKodiId(showId, "tvshow", connection, cursor)
                         self.logMsg("Message: Doing LibraryChanged: Deleting show: %s" % embyId, 0)
