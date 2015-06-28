@@ -743,7 +743,7 @@ class LibrarySync(threading.Thread):
             self.doIncrementalSync = True
 
     def user_data_update(self, userDataList):
-        self.updateItems = []
+        # do full playcount update for now
         for userData in userDataList:
             itemId = userData.get("ItemId")
             if(itemId != None):
