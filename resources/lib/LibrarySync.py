@@ -36,13 +36,20 @@ WINDOW = xbmcgui.Window( 10000 )
 
 class LibrarySync(threading.Thread):
 
+    _shared_state = {}
+
     KodiMonitor = KodiMonitor.Kodi_Monitor()
     clientInfo = ClientInformation()
 
     addonName = clientInfo.getAddonName()
 
+    doIncrementalSync = False
+    updateItems = []
+    removeItems = []
+
     def __init__(self, *args):
 
+        self.__dict__ = self._shared_state
         threading.Thread.__init__(self, *args)
 
     def logMsg(self, msg, lvl=1):
@@ -648,6 +655,103 @@ class LibrarySync(threading.Thread):
                 # tell any widgets to refresh because the content has changed
                 WINDOW.setProperty("widgetreload", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
+    def removefromDB(self, itemList, deleteEmbyItem = False):
+        # Delete from Kodi before Emby
+        # To be able to get mediaType
+        doUtils = DownloadUtils()
+
+        video = []
+        music = []
+
+        itemIds = ','.join(itemList)
+        url = "{server}/mediabrowser/Users/{UserId}/Items?Ids=%s&format=json" % itemIds
+        result = doUtils.downloadUrl(url)
+
+        if result is "":
+            # Websocket feedback
+            self.logMsg("Item %s is removed." % itemIds)
+            return
+        
+        for item in result[u'Items']:
+            # Sort by type for database deletion
+            itemId = item["Id"]
+            mediaType = item["MediaType"]
+
+            if "Video" in mediaType:
+                video.append(itemId)
+            elif "Audio" in mediaType:
+                music.append(itemId)
+
+        if len(video) > 0:
+            #Process video library
+            connection = utils.KodiSQL("video")
+            cursor = connection.cursor()
+
+            for item in video:
+                type = ReadKodiDB().getTypeByEmbyId(item, connection, cursor)
+                self.logMsg("Type: %s" % type)
+                self.logMsg("Message: Doing LibraryChanged: Items Removed: Calling deleteItemFromKodiLibrary: %s" % item, 0)
+                if "episode" in type:
+                    # Get the TV Show Id for reference later
+                    showId = ReadKodiDB().getShowIdByEmbyId(item, connection, cursor)
+                    self.logMsg("ShowId: %s" % showId, 0)
+                WriteKodiVideoDB().deleteItemFromKodiLibrary(item, connection, cursor)
+                # Verification
+                if "episode" in type:
+                    showTotalCount = ReadKodiDB().getShowTotalCount(showId, connection, cursor)
+                    self.logMsg("ShowTotalCount: %s" % showTotalCount, 0)
+                    # If there are no episodes left
+                    if not showTotalCount:
+                        # Delete show
+                        embyId = ReadKodiDB().getEmbyIdByKodiId(showId, "tvshow", connection, cursor)
+                        self.logMsg("Message: Doing LibraryChanged: Deleting show: %s" % embyId, 0)
+                        WriteKodiVideoDB().deleteItemFromKodiLibrary(embyId, connection, cursor)
+
+            connection.commit()
+            cursor.close()
+
+        if len(music) > 0:
+            #Process music library
+            addon = xbmcaddon.Addon(id='plugin.video.emby')
+            if addon.getSetting("enableMusicSync") is "true":
+                connection = utils.KodiSQL("music")
+                cursor = connection.cursor()
+
+                for item in music:
+                    self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteItemFromKodiLibrary (musiclibrary): " + item, 0)
+                    WriteKodiMusicDB().deleteItemFromKodiLibrary(item, connection, cursor)
+
+                connection.commit()
+                cursor.close()
+
+        if deleteEmbyItem:
+            for item in itemList:
+                url = "{server}/mediabrowser/Items/%s" % item
+                self.logMsg('Deleting via URL: %s' % url)
+                doUtils.downloadUrl(url, type="DELETE")                            
+                xbmc.executebuiltin("Container.Refresh")
+
+    def remove_items(self, itemsRemoved):
+        
+        self.removeItems.extend(itemsRemoved)
+
+    def update_items(self, itemsToUpdate):
+        # doing adds and updates
+        if(len(itemsToUpdate) > 0):
+            self.logMsg("Message : Doing LibraryChanged : Processing Added and Updated : " + str(itemsToUpdate), 0)
+            self.updateItems.extend(itemsToUpdate)
+            self.doIncrementalSync = True
+
+    def user_data_update(self, userDataList):
+        self.updateItems = []
+        for userData in userDataList:
+            itemId = userData.get("ItemId")
+            if(itemId != None):
+                self.updateItems.append(itemId)
+        if(len(self.updateItems) > 0):
+            self.logMsg("Message : Doing UserDataChanged : Processing Updated : " + str(self.updateItems), 0)
+            self.doIncrementalSync = True
+
     def ShouldStop(self):
             
         if(xbmc.abortRequested):
@@ -682,6 +786,19 @@ class LibrarySync(threading.Thread):
                     utils.logMsg("Doing_Db_Sync Post Resume: syncDatabase (Started)",0)
                     libSync = self.FullLibrarySync()
                     utils.logMsg("Doing_Db_Sync Post Resume: syncDatabase (Finished) " + str(libSync),0)
+
+            if self.doIncrementalSync:
+                # Add or update item to Kodi library
+                listItems = self.updateItems
+                self.updateItems = []
+                self.doIncrementalSync = False
+                self.IncrementalSync(listItems)
+
+            if len(self.removeItems) > 0:
+                # Remove item from Kodi library
+                listItems = self.removeItems
+                self.removeItems = []
+                self.removefromDB(listItems)
 
             if self.KodiMonitor.waitForAbort(1):
                 # Abort was requested while waiting. We should exit
