@@ -218,14 +218,14 @@ class WriteKodiVideoDB():
         self.AddPeopleToMedia(movieid,MBitem.get("People"),"movie", connection, cursor)
         
         #update artwork
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "movie"), movieid, "movie", "thumb", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "movie"), movieid, "movie", "poster", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Banner", mediaType = "movie"), movieid, "movie", "banner", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Logo", mediaType = "movie"), movieid, "movie", "clearlogo", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Art", mediaType = "movie"), movieid, "movie", "clearart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Thumb", mediaType = "movie"), movieid, "movie", "landscape", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Disc", mediaType = "movie"), movieid, "movie", "discart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop", mediaType = "movie"), movieid, "movie", "fanart", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), movieid, "movie", "thumb", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), movieid, "movie", "poster", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Banner"), movieid, "movie", "banner", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Logo"), movieid, "movie", "clearlogo", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Art"), movieid, "movie", "clearart", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Thumb"), movieid, "movie", "landscape", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Disc"), movieid, "movie", "discart", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop"), movieid, "movie", "fanart", cursor)
         
         #update genres
         self.AddGenresToMedia(movieid, genres, "movie", cursor)
@@ -379,14 +379,14 @@ class WriteKodiVideoDB():
         self.AddPeopleToMedia(idMVideo,MBitem.get("People"),"musicvideo", connection, cursor)
         
         #update artwork
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "musicvideo"), idMVideo, "musicvideo", "thumb", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "musicvideo"), idMVideo, "musicvideo", "poster", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Banner", mediaType = "musicvideo"), idMVideo, "musicvideo", "banner", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Logo", mediaType = "musicvideo"), idMVideo, "musicvideo", "clearlogo", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Art", mediaType = "musicvideo"), idMVideo, "musicvideo", "clearart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Thumb", mediaType = "musicvideo"), idMVideo, "musicvideo", "landscape", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Disc", mediaType = "musicvideo"), idMVideo, "musicvideo", "discart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop", mediaType = "musicvideo"), idMVideo, "musicvideo", "fanart", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), idMVideo, "musicvideo", "thumb", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), idMVideo, "musicvideo", "poster", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Banner"), idMVideo, "musicvideo", "banner", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Logo"), idMVideo, "musicvideo", "clearlogo", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Art"), idMVideo, "musicvideo", "clearart", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Thumb"), idMVideo, "musicvideo", "landscape", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Disc"), idMVideo, "musicvideo", "discart", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop"), idMVideo, "musicvideo", "fanart", cursor)
         
         #update genres
         self.AddGenresToMedia(idMVideo, genres, "musicvideo", cursor)
@@ -418,7 +418,7 @@ class WriteKodiVideoDB():
         timeInfo = API().getTimeInfo(MBitem)
         userData=API().getUserData(MBitem)
         
-        #thumbPath = API().getArtwork(MBitem, "Primary")
+        thumbPath = API().getArtwork(MBitem, "Primary")
         
         # If the item already exist in the local Kodi DB we'll perform a full item update
         # If the item doesn't exist, we'll add it to the database
@@ -540,14 +540,14 @@ class WriteKodiVideoDB():
             self.AddTagToMedia(showid, "Favorite tvshows", "tvshow", cursor, True)
                 
         #update artwork
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "tvshow"), showid, "tvshow", "thumb", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "tvshow"), showid, "tvshow", "poster", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Banner", mediaType = "tvshow"), showid, "tvshow", "banner", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Logo", mediaType = "tvshow"), showid, "tvshow", "clearlogo", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Art", mediaType = "tvshow"), showid, "tvshow", "clearart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Thumb", mediaType = "tvshow"), showid, "tvshow", "landscape", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Disc", mediaType = "tvshow"), showid, "tvshow", "discart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop", mediaType = "tvshow"), showid, "tvshow", "fanart", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), showid, "tvshow", "thumb", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), showid, "tvshow", "poster", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Banner"), showid, "tvshow", "banner", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Logo"), showid, "tvshow", "clearlogo", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Art"), showid, "tvshow", "clearart", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Thumb"), showid, "tvshow", "landscape", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Disc"), showid, "tvshow", "discart", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop"), showid, "tvshow", "fanart", cursor)
         
         #update season details
         self.updateSeasons(MBitem["Id"], showid, connection, cursor)
@@ -705,7 +705,7 @@ class WriteKodiVideoDB():
         self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), fileid, cursor)
         
         #update artwork
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "episode"), episodeid, "episode", "thumb", cursor)
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), episodeid, "episode", "thumb", cursor)
 
     def deleteItemFromKodiLibrary(self, id, connection, cursor ):
         
@@ -749,13 +749,13 @@ class WriteKodiVideoDB():
                         seasonid = result[0]
                         
                     #update artwork
-                    imageUrl = API().getArtwork(season, "Thumb", mediaType = "season")
+                    imageUrl = API().getArtwork(season, "Thumb")
                     self.addOrUpdateArt(imageUrl, seasonid, "season", "landscape", cursor)
                     
-                    imageUrl = API().getArtwork(season, "Primary", mediaType = "season")
+                    imageUrl = API().getArtwork(season, "Primary")
                     self.addOrUpdateArt(imageUrl, seasonid, "season", "poster", cursor)
                     
-                    imageUrl = API().getArtwork(season, "Banner", mediaType = "season")
+                    imageUrl = API().getArtwork(season, "Banner")
                     self.addOrUpdateArt(imageUrl, seasonid, "season", "banner", cursor)
             # Set All season poster
             MBitem = ReadEmbyDB().getFullItem(embyTvShowId)
@@ -770,7 +770,7 @@ class WriteKodiVideoDB():
                 cursor.execute("INSERT into seasons(idSeason, idShow, season) values(?, ?, ?)", (seasonid, kodiTvShowId, seasonNum))
             else:
                 seasonid = result[0]
-            imageUrl = API().getArtwork(MBitem, "Primary", mediaType = "season")
+            imageUrl = API().getArtwork(MBitem, "Primary")
             self.addOrUpdateArt(imageUrl, seasonid, "season", "poster", cursor)
                             
     def addOrUpdateArt(self, imageUrl, kodiId, mediaType, imageType, cursor):
@@ -1147,13 +1147,13 @@ class WriteKodiVideoDB():
                 existing_type_map[row[0] ] = row[1]
           
             artwork = {}
-            artwork["poster"] = API().getArtwork(boxset, "Primary", mediaType = "boxset")
-            artwork["banner"] = API().getArtwork(boxset, "Banner", mediaType = "boxset")
-            artwork["clearlogo"] = API().getArtwork(boxset, "Logo", mediaType = "boxset")
-            artwork["clearart"] = API().getArtwork(boxset, "Art", mediaType = "boxset")
-            artwork["landscape"] = API().getArtwork(boxset, "Thumb", mediaType = "boxset")
-            artwork["discart"] = API().getArtwork(boxset, "Disc", mediaType = "boxset")
-            artwork["fanart"] = API().getArtwork(boxset, "Backdrop", mediaType = "boxset")
+            artwork["poster"] = API().getArtwork(boxset, "Primary")
+            artwork["banner"] = API().getArtwork(boxset, "Banner")
+            artwork["clearlogo"] = API().getArtwork(boxset, "Logo")
+            artwork["clearart"] = API().getArtwork(boxset, "Art")
+            artwork["landscape"] = API().getArtwork(boxset, "Thumb")
+            artwork["discart"] = API().getArtwork(boxset, "Disc")
+            artwork["fanart"] = API().getArtwork(boxset, "Backdrop")
            
             art_types = ['poster','fanart','landscape','clearlogo','clearart','banner','discart']
             for update_type in art_types:
@@ -1184,13 +1184,13 @@ class WriteKodiVideoDB():
                     existing_type_map[row[0] ] = row[1]
               
                 artwork = {}
-                artwork["poster"] = API().getArtwork(boxset, "Primary", mediaType = "boxset")
-                artwork["banner"] = API().getArtwork(boxset, "Banner", mediaType = "boxset")
-                artwork["clearlogo"] = API().getArtwork(boxset, "Logo", mediaType = "boxset")
-                artwork["clearart"] = API().getArtwork(boxset, "Art", mediaType = "boxset")
-                artwork["landscape"] = API().getArtwork(boxset, "Thumb", mediaType = "boxset")
-                artwork["discart"] = API().getArtwork(boxset, "Disc", mediaType = "boxset")
-                artwork["fanart"] = API().getArtwork(boxset, "Backdrop", mediaType = "boxset")
+                artwork["poster"] = API().getArtwork(boxset, "Primary")
+                artwork["banner"] = API().getArtwork(boxset, "Banner")
+                artwork["clearlogo"] = API().getArtwork(boxset, "Logo")
+                artwork["clearart"] = API().getArtwork(boxset, "Art")
+                artwork["landscape"] = API().getArtwork(boxset, "Thumb")
+                artwork["discart"] = API().getArtwork(boxset, "Disc")
+                artwork["fanart"] = API().getArtwork(boxset, "Backdrop")
                
                 art_types = ['poster','fanart','landscape','clearlogo','clearart','banner','discart']
                 for update_type in art_types:

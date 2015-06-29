@@ -33,7 +33,6 @@
 	</category>
 	<category label="Extras">
 	    <setting id="disableCoverArt" type="bool" label="30157" default="false" visible="true" enable="true" />
-	    <setting id="coverArtratio" type="bool" label="Force CoverArt Ratio" visible="eq(-1,false)" default="false" enable="true" />
         <setting id="ignoreSpecialsNextEpisodes" type="bool" label="Ignore specials in next episodes" visible="true" enable="true" default="false" />
 		<setting id="showSpecialInfoDialog" type="bool" label="Show special Emby infodialog on play" default="false" visible="false" />
 	</category>
