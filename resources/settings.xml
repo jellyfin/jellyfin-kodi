@@ -2,9 +2,7 @@
 <settings>
 	<category label="30014"> <!-- Emby -->
 		<setting id="ipaddress" type="text" label="30000" default="" visible="true" enable="true" />
-		<setting id="altip" type="bool" label="Use alternate address" default="false" visible="true" enable="true" />
-		<setting id="secondipaddress" type="text" label="Secondary Server Address" default="" visible="eq(-1,true)" enable="true" />
-		<setting id="port" type="number" label="30030" default="8096" visible="true" enable="true" />
+		<setting id="port" type="text" label="30030" default="8096" visible="true" enable="true" />
 		<setting id="username" type="text" label="30024" default="" />
 		<setting type="sep" />
 		<setting id="https" type="bool" label="30243" visible="true" enable="true" default="false" />
