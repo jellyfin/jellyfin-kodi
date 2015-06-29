@@ -96,6 +96,10 @@ class UserClient(threading.Thread):
         HTTPS = addon.getSetting('https')
         host = addon.getSetting('ipaddress')
         port = addon.getSetting('port')
+        # Alternate host
+        if addon.getSetting('altip') == "true":
+            host = addon.getSetting('secondipaddress')
+            
         server = host + ":" + port
         
         if host == "":
