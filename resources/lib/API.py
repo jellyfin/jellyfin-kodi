@@ -316,7 +316,7 @@ class API():
             tempDate = "01.01.2000"
         return tempDate
 
-    def getArtwork(self, data, type, mediaType, index = "0", userParentInfo = False):
+    def getArtwork(self, data, type, mediaType = "", index = "0", userParentInfo = False):
 
         addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
         id = data.get("Id")
