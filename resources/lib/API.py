@@ -316,7 +316,7 @@ class API():
             tempDate = "01.01.2000"
         return tempDate
 
-    def getArtwork(self, data, type, index = "0", userParentInfo = False):
+    def getArtwork(self, data, type, mediaType, index = "0", userParentInfo = False):
 
         addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
         id = data.get("Id")
@@ -371,10 +371,20 @@ class API():
             id = data.get("ParentBackdropItemId")
      
         query = ""
-        height = "10000"
-        width = "10000"
+        maxHeight = "10000"
+        maxWidth = "10000"
+        height = ""
+        width = ""
         played = "0"
         totalbackdrops = 0
+
+        if addonSettings.getSetting('coverArtratio') == "true":
+            if mediaType in ("movie","boxset","tvshow"):
+                if "Primary" in type:
+                    # Only force ratio for cover art for main covers
+                    aspectratio = data.get("PrimaryImageAspectRatio")
+                    width = "&Width=1000"
+                    height = "&Height=1480"
 
         if originalType =="BackdropNoIndicators" and index == "0" and data.get("BackdropImageTags") != None:
             totalbackdrops = len(data.get("BackdropImageTags"))
@@ -392,7 +402,7 @@ class API():
         if imageTag == None:
             imageTag = "e3ab56fe27d389446754d0fb04910a34"
             
-        artwork = "%s/mediabrowser/Items/%s/Images/%s/%s?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, id, type, index, width, height, imageTag, query)
+        artwork = "%s/mediabrowser/Items/%s/Images/%s/%s?MaxWidth=%s&MaxHeight=%s%s%s&Format=original&Tag=%s%s" % (server, id, type, index, maxWidth, maxHeight, height, width, imageTag, query)
         #artwork = "%s/mediabrowser/Items/%s/Images/%s/%s/%s/original/%s/%s/%s?%s" % (server, id, type, index, imageTag, width, height, played, query) <- broken
         if addonSettings.getSetting('disableCoverArt')=='true':
             artwork = artwork + "&EnableImageEnhancers=false"
