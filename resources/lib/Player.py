@@ -103,15 +103,18 @@ class Player( xbmc.Player ):
 
                     self.stopPlayback(data)
                     
-                    if percentComplete > .80 and data.get("Type") == "Episode" and addonSettings.getSetting("offerDelete")=="true":
+                    offerDelete=False
+                    if data.get("Type") == "Episode" and addonSettings.getSetting("offerDeleteTV")=="true":
+                        offerDelete = True
+                    elif data.get("Type") == "Movie" and addonSettings.getSetting("offerDeleteMovies")=="true":
+                        offerDelete = True
+
+                    if percentComplete > .80 and offerDelete == True:
                         return_value = xbmcgui.Dialog().yesno("Offer Delete", "Delete\n" + data.get("currentfile").split("/")[-1] + "\non Emby Server? ")
                         if return_value:
                             # Delete Kodi entry before Emby
                             listItem = [item_id]
                             LibrarySync().removefromDB(listItem, True)
-                #if(refresh_id != None):
-                    #report updates playcount and resume status to Kodi and MB3
-                    #librarySync.updatePlayCount(item_id)
                     
         # Stop transcoding
         if self.WINDOW.getProperty("transcoding%s" % item_id) == "true":

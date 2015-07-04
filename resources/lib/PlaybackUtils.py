@@ -379,8 +379,10 @@ class PlaybackUtils():
             WINDOW.setProperty(playurl + "positionurl", positionurl)
             WINDOW.setProperty(playurl + "deleteurl", "")
             
-            if item.get("Type") == "Episode" and addon.getSetting("offerDelete")=="true":
+            if item.get("Type") == "Episode" and addon.getSetting("offerDeleteTV")=="true":
                WINDOW.setProperty(playurl + "deleteurl", deleteurl)
+            if item.get("Type") == "Movie" and addon.getSetting("offerDeleteMovies")=="true":
+               WINDOW.setProperty(playurl + "deleteurl", deleteurl)			   
         
             WINDOW.setProperty(playurl + "runtimeticks", str(item.get("RunTimeTicks")))
             WINDOW.setProperty(playurl+"type", item.get("Type"))

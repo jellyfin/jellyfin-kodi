@@ -97,9 +97,9 @@
     <string id="30111">Include Stream Info</string>
     <string id="30112">Include People</string>
     <string id="30113">Include Overview</string>
-    <string id="30114">On Resume Jump Back Seconds</string>
-    <string id="30115"> - Offer delete when stopped above %</string>
-    <string id="30116">Add Item and Played Counts</string>
+    <string id="30114">Offer delete after playback</string>
+    <string id="30115"> - For Episodes</string>
+    <string id="30116"> - For Movies</string>
     <string id="30117">Background Art Refresh Rate (seconds)</string>
     <string id="30118">Add Resume Percent</string>
     <string id="30119">Add Episode Number</string>
@@ -110,7 +110,7 @@
     <string id="30124">Downloading Jason Data</string>
     <string id="30125">Done</string>
     <string id="30126">Processing Item : </string>
-    <string id="30127">Offer delete for watched episodes</string>   
+    <string id="30127">YOUCANUSETHIS</string>
     <string id="30128">Play Error</string>
     <string id="30129">This item is not playable</string>    
     <string id="30130">Local path detected</string>
@@ -255,6 +255,8 @@
     <string id="30310">Music Videos</string>              
     <string id="30311">Music Tracks</string>
     <string id="30312">Channels</string>  
+	
+	
 
     
 

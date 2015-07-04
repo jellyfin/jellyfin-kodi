@@ -134,7 +134,7 @@ class Kodi_Monitor(xbmc.Monitor):
             cursor.close
             
             if jsondata:
-                if jsondata.get("type") == "episode":
+                if jsondata.get("type") == "episode" or "movie":
                     url='{server}/mediabrowser/Items?Ids=' + id + '&format=json'
                     #This is a check to see if the item exists on the server, if it doesn't it may have already been deleted by another client
                     result = DownloadUtils().downloadUrl(url)
