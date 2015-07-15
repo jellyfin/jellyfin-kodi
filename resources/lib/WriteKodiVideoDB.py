@@ -810,11 +810,10 @@ class WriteKodiVideoDB():
             kodiVersion = 15
         
         if(people != None):
-            for person in people:              
-                
+            castorder = 1
+            for person in people:
                 Name = person.get("Name")
                 actorid = None
-
                 # Get existing actor
                 if kodiVersion == 15:
                     # Kodi Isengard database #
@@ -858,8 +857,9 @@ class WriteKodiVideoDB():
                     Role = person.get("Role")
                     if kodiVersion == 15:
                         # Kodi Isengard database #
-                        peoplesql="INSERT OR REPLACE into actor_link(actor_id, media_id, media_type,role) values(?, ?, ?, ?)"
-                        cursor.execute(peoplesql, (actorid, id, mediatype, Role))
+                        peoplesql="INSERT OR REPLACE into actor_link(actor_id, media_id, media_type,role,cast_order) values(?, ?, ?, ?, ?)"
+                        cursor.execute(peoplesql, (actorid, id, mediatype, Role, castorder))
+                        castorder = castorder + 1
                     else:
                         # Kodi Gotham or Helix database #
                         if mediatype == "movie":
