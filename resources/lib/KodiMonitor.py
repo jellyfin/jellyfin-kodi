@@ -11,7 +11,6 @@ import json
 import Utils as utils
 from WriteKodiVideoDB import WriteKodiVideoDB
 from ReadKodiDB import ReadKodiDB
-from LibrarySync import LibrarySync
 from PlayUtils import PlayUtils
 from DownloadUtils import DownloadUtils
 from PlaybackUtils import PlaybackUtils
@@ -119,11 +118,7 @@ class Kodi_Monitor(xbmc.Monitor):
                     
         if method == "System.OnWake":
             xbmc.sleep(10000) #Allow network to wake up
-            if WINDOW.getProperty("SyncDatabaseRunning") != "true":
-                utils.logMsg("Doing_Db_Sync Post Resume: syncDatabase (Started)",0)
-                libSync = LibrarySync().FullLibrarySync()
-                utils.logMsg("Doing_Db_Sync Post Resume: syncDatabase (Finished) " + str(libSync),0)
-
+            WINDOW.setProperty("OnWakeSync", "true")
 
         if method == "VideoLibrary.OnRemove":
             xbmc.log('Intercepted remove from sender: ' + sender + ' method: ' + method + ' data: ' + data)
@@ -139,7 +134,7 @@ class Kodi_Monitor(xbmc.Monitor):
             cursor.close
             
             if jsondata:
-                if jsondata.get("type") == "episode":
+                if jsondata.get("type") == "episode" or "movie":
                     url='{server}/mediabrowser/Items?Ids=' + id + '&format=json'
                     #This is a check to see if the item exists on the server, if it doesn't it may have already been deleted by another client
                     result = DownloadUtils().downloadUrl(url)

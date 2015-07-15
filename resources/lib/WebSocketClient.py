@@ -156,7 +156,7 @@ class WebSocketThread(threading.Thread):
             userDataList = data.get("UserDataList")
             self.logMsg("Message : Doing UserDataChanged : UserDataList : " + str(userDataList), 0)
             if(userDataList != None):
-                self.user_data_update(userDataList)
+                LibrarySync().user_data_update(userDataList)
         
         elif(messageType != None and messageType == "LibraryChanged"):
             foldersAddedTo = data.get("FoldersAddedTo")
@@ -171,8 +171,8 @@ class WebSocketThread(threading.Thread):
             self.logMsg("Message : WebSocket LibraryChanged : Items Updated : " + str(itemsUpdated), 0)
             self.logMsg("Message : WebSocket LibraryChanged : Items Removed : " + str(itemsRemoved), 0)
 
-            self.remove_items(itemsRemoved)
-            self.update_items(itemsToUpdate)
+            LibrarySync().remove_items(itemsRemoved)
+            LibrarySync().update_items(itemsToUpdate)
 
         elif messageType == "GeneralCommand":
             
@@ -248,56 +248,6 @@ class WebSocketThread(threading.Thread):
                     result = xbmc.executeJSONRPC(text)
                 else:
                     self.logMsg("Unknown command.", 1)
-
-    def remove_items(self, itemsRemoved):
-        
-        #Process video library
-        connection = utils.KodiSQL("video")
-        cursor = connection.cursor()
-        for item in itemsRemoved:
-            type=ReadKodiDB().getTypeByEmbyId(item, connection, cursor)
-            self.logMsg("Type: " + str(type))
-            self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteItemFromKodiLibrary: " + item, 0)
-            if type == "episode":
-                showId=ReadKodiDB().getShowIdByEmbyId(item, connection, cursor) # Get the TV Show ID
-                self.logMsg("ShowID: " + str(showId),0)
-            WriteKodiVideoDB().deleteItemFromKodiLibrary(item, connection, cursor)
-            if type == "episode":
-                showTotalCount = ReadKodiDB().getShowTotalCount(showId, connection, cursor) # Check if there are no episodes left
-                self.logMsg("ShowTotalCount: " + str(showTotalCount),0)
-                if showTotalCount == 0 or showTotalCount == None: # Delete show if no episodes are left
-                    embyId=ReadKodiDB().getEmbyIdByKodiId(showId, "tvshow", connection, cursor)
-                    self.logMsg("Message : Doing LibraryChanged : Deleting show:" + embyId, 0)
-                    WriteKodiVideoDB().deleteItemFromKodiLibrary(embyId, connection, cursor)
-        connection.commit()
-        cursor.close()
-        
-        #Process music library
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        if addon.getSetting("enableMusicSync") == "true":
-            connection = utils.KodiSQL("music")
-            cursor = connection.cursor()
-            for item in itemsRemoved:
-                self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteItemFromKodiLibrary (musiclibrary): " + item, 0)
-                WriteKodiMusicDB().deleteItemFromKodiLibrary(item, connection, cursor)
-            connection.commit()
-            cursor.close()
-
-    def update_items(self, itemsToUpdate):
-        # doing adds and updates
-        if(len(itemsToUpdate) > 0):
-            self.logMsg("Message : Doing LibraryChanged : Processing Added and Updated : " + str(itemsToUpdate), 0)
-            LibrarySync().IncrementalSync(itemsToUpdate)
-
-    def user_data_update(self, userDataList):
-        itemsToUpdate = list()
-        for userData in userDataList:
-            itemId = userData.get("ItemId")
-            if(itemId != None):
-                itemsToUpdate.append(itemId)
-        if(len(itemsToUpdate) > 0):
-            self.logMsg("Message : Doing UserDataChanged : Processing Updated : " + str(itemsToUpdate), 0)
-            LibrarySync().IncrementalSync(itemsToUpdate)
                 
     def on_error(self, ws, error):
         if "10061" in str(error):
