@@ -857,20 +857,21 @@ class WriteKodiVideoDB():
                     Role = person.get("Role")
                     if kodiVersion == 15:
                         # Kodi Isengard database #
-                        peoplesql="INSERT OR REPLACE into actor_link(actor_id, media_id, media_type,role,cast_order) values(?, ?, ?, ?, ?)"
+                        peoplesql="INSERT OR REPLACE into actor_link(actor_id, media_id, media_type,role, cast_order) values(?, ?, ?, ?, ?)"
                         cursor.execute(peoplesql, (actorid, id, mediatype, Role, castorder))
-                        castorder = castorder + 1
+                        castorder += 1
                     else:
                         # Kodi Gotham or Helix database #
                         if mediatype == "movie":
                             peoplesql="INSERT OR REPLACE into actorlinkmovie(idActor, idMovie, strRole, iOrder) values(?, ?, ?, ?)"
-                            cursor.execute(peoplesql, (actorid,id,Role,None))
+                            cursor.execute(peoplesql, (actorid,id,Role,castorder))
                         if mediatype == "tvshow":
                             peoplesql="INSERT OR REPLACE into actorlinktvshow(idActor, idShow, strRole, iOrder) values(?, ?, ?, ?)"
-                            cursor.execute(peoplesql, (actorid,id,Role,None))
+                            cursor.execute(peoplesql, (actorid,id,Role,castorder))
                         if mediatype == "episode":
                             peoplesql="INSERT OR REPLACE into actorlinkepisode(idActor, idEpisode, strRole, iOrder) values(?, ?, ?, ?)"
-                            cursor.execute(peoplesql, (actorid,id,Role,None))         
+                            cursor.execute(peoplesql, (actorid,id,Role,castorder))
+                        castorder += 1     
                         
                 #### DIRECTORS ######
                 if(person.get("Type") == "Director"):
