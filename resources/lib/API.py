@@ -1,3 +1,4 @@
+# -- coding: utf-8 --
 # API.py
 # This class helps translate more complex cases from the MediaBrowser API to the XBMC API
 
@@ -11,142 +12,157 @@ class API():
     
     def getPeople(self, item):
         # Process People
-        director=[]
-        writer=[]
-        cast=[]
-        people = item.get("People")
-        if(people != None):
-            for person in people:
-                if(person.get("Type") == "Director"):
-                    director.append(person.get("Name")) 
-                if(person.get("Type") == "Writing"):
-                    writer.append(person.get("Name"))
-                if(person.get("Type") == "Writer"):
-                    writer.append(person.get("Name"))                 
-                if(person.get("Type") == "Actor"):
-                    Name = person.get("Name")
-                    Role = person.get("Role")
-                    if Role == None:
-                        Role = ''
-                    cast.append(Name)
-        return  {'Director'  : director, 
-                'Writer'    : writer,
-                'Cast'      : cast
-                }
-
-    def getTimeInfo(self, item):
-        resumeTime = ''
-        userData = item.get("UserData")
-        PlaybackPositionTicks = '100'
-        if userData.get("PlaybackPositionTicks") != None:
-            PlaybackPositionTicks = str(userData.get("PlaybackPositionTicks"))
-            reasonableTicks = int(userData.get("PlaybackPositionTicks")) / 1000
-            resumeTime = reasonableTicks / 10000    
+        director = []
+        writer = []
+        cast = []
 
         try:
-            tempDuration = str(int(item.get("RunTimeTicks", "0"))/(10000000*60))
-        except TypeError:
-            try:
-                tempDuration = str(int(item.get("CumulativeRunTimeTicks"))/(10000000*60))
-            except TypeError:
-                tempDuration = "0"
-        cappedPercentage = None
-        resume=0
-        percentage=0
-        if (resumeTime != "" and int(resumeTime) > 0):
-            duration = float(tempDuration)
-            if(duration > 0):
-                resume = float(resumeTime) / 60
-                percentage = int((resume / duration) * 100.0)
-        return {'Duration'      : tempDuration, 
-                'TotalTime'     : tempDuration,
-                'Percent'       : str(percentage),
-                'ResumeTime'    : str(resume)
-               }
+            people = item['People']
+        
+        except: pass
+
+        else:
+            
+            for person in people:
+
+                type = person['Type']
+                Name = person['Name']
+
+                if "Director" in type:
+                    director.append(Name)
+                elif "Writing" in type:
+                    writer.append(Name)
+                elif "Writer" in type:
+                    writer.append(Name)
+                elif "Actor" in type:
+                    cast.append(Name)
+
+        return {
+
+            'Director': director,
+            'Writer':   writer,
+            'Cast':     cast
+        }
+
+    def getTimeInfo(self, item):
+        # Runtime and Resume point
+        tempRuntime = 0
+        runtime = 0
+        resume = 0
+
+        try: # Get resume point
+            userdata = item['UserData']
+            playbackPosition = userdata['PlaybackPositionTicks']
+            resume = playbackPosition / 10000000.0
+        except: pass
+        
+        try: # Get total runtime
+            tempRuntime = item['RunTimeTicks']
+        
+        except:
+            try: tempRuntime = item['CumulativeRunTimeTicks']
+            except: pass
+
+        finally: 
+            runtime = tempRuntime / 10000000.0
+
+
+        return {
+
+            'ResumeTime':   resume,
+            'TotalTime':    runtime
+        }
 
     def getStudios(self, item):
         # Process Studio
-        studios = [] 
-        if item.get("SeriesStudio") != None and item.get("SeriesStudio") != '':
-            studios.append(item.get("SeriesStudio"))
-        else:        
-            if(item.get("Studios") != []):
-                for studio_string in item.get("Studios"):
-                    temp=studio_string.get("Name")
-                    studios.append(temp)
+        studios = []
+
+        try:
+            studio = item['SeriesStudio']
+            studios.append(studio)
+        except:
+            try:
+                studioArray = item['Studios']
+                for studio in studioArray:
+                    studios.append(studio['Name'])
+            except: pass
+
         return studios
 
-    def getMediaStreams(self, item, mediaSources=False):    
-        # Process MediaStreams
-        channels = ''
-        videocodec = ''
-        audiocodec = ''
-        audiolanguage = ''
-        subtitlelanguage = ''
-        height = ''
-        width = ''
-        aspectratio = '1:1'
-        aspectfloat = 1.85
-        Video3DFormat = ''
+    def getGenre(self,item):
+        genre = ""
+        genres = item.get("Genres")
+        if genres != None and genres != []:
+            for genre_string in genres:
+                if genre == "": #Just take the first genre
+                    genre = genre_string
+                else:
+                    genre = genre + " / " + genre_string
+        elif item.get("SeriesGenres") != None and item.get("SeriesGenres") != '':
+            genres = item.get("SeriesGenres")
+            if genres != None and genres != []:
+              for genre_string in genres:
+                if genre == "": #Just take the first genre
+                    genre = genre_string
+                else:
+                    genre = genre + " / " + genre_string
+        return genre
 
-        if mediaSources == True:
-            mediaSources = item.get("MediaSources")
-            if(mediaSources != None):
-                MediaStreams = mediaSources[0].get("MediaStreams")
-            else:
+    def getMediaStreams(self, item, mediaSources = False):
+
+        videotracks = [] # Height, Width, Codec, AspectRatio, AspectFloat, 3D 
+        audiotracks = [] # Codec, Channels, language
+        subtitlelanguages = [] # Language
+
+        if mediaSources:
+            try:
+                MediaStreams = item['MediaSources'][0]['MediaStreams']
+            except:
                 MediaStreams = None
         else:
-            MediaStreams = item.get("MediaStreams")
-        if(MediaStreams != None):
-            #mediaStreams = MediaStreams[0].get("MediaStreams")
-            if(MediaStreams != None):
-                for mediaStream in MediaStreams:
-                    if(mediaStream.get("Type") == "Video"):
-                        videocodec = mediaStream.get("Codec")
-                        if mediaStream.get("Height"):
-                            height = int(mediaStream.get("Height"))
-                        if mediaStream.get("Width"):
-                            width = int(mediaStream.get("Width"))
-                        aspectratio = mediaStream.get("AspectRatio")
-                        Video3DFormat = item.get("Video3DFormat")
-                        if aspectratio != None and len(aspectratio) >= 3:
-                            try:
-                                aspectwidth,aspectheight = aspectratio.split(':')
-                                aspectfloat = float(aspectwidth) / float(aspectheight)
-                            except:
-                                aspectfloat = 1.85
-                    if(mediaStream.get("Type") == "Audio"):
-                        isdefault = mediaStream.get("IsDefault") == "true"
-                        if audiocodec == '':
-                            audiocodec = mediaStream.get("Codec")
-                        if channels == '':
-                            channels = mediaStream.get("Channels")
-                        if audiolanguage == '':
-                            audiolanguage = mediaStream.get("Language")
-                        # only overwrite if default
-                        if isdefault:
-                            audiocodec = mediaStream.get("Codec")
-                            channels = mediaStream.get("Channels")
-                            audiolanguage = mediaStream.get("Language")
-                    if(mediaStream.get("Type") == "Subtitle"):
-                        isdefault = mediaStream.get("IsDefault") == "true"
-                        if subtitlelanguage == '':
-                            subtitlelanguage = mediaStream.get("Language")
-                        # only overwrite if default
-                        if isdefault:
-                            subtitlelanguage = mediaStream.get("Language")
-                            
-                    
-        return {'channels'         : str(channels), 
-                'videocodec'       : videocodec, 
-                'audiocodec'       : audiocodec,
-                'audiolanguage'    : audiolanguage,
-                'subtitlelanguage' : subtitlelanguage, 
-                'height'           : height,
-                'width'            : width,
-                'aspectratio'      : aspectfloat,
-                '3dformat'         : Video3DFormat
-                }
+            MediaStreams = item.get('MediaStreams')
+
+        if MediaStreams:
+            # Sort through the Video, Audio, Subtitle tracks
+            for mediaStream in MediaStreams:
+
+                type = mediaStream.get("Type", "")
+
+                if "Video" in type:
+                    videotrack = {}
+                    videotrack['videocodec'] = mediaStream.get('Codec')
+                    videotrack['height'] = mediaStream.get('Height')
+                    videotrack['width'] = mediaStream.get('Width')
+                    videotrack['aspectratio'] = mediaStream.get('AspectRatio')
+                    videotrack['Video3DFormat'] = item.get('Video3DFormat')
+                    if len(videotrack['aspectratio']) >= 3:
+                        try:
+                            aspectwidth, aspectheight = aspectratio.split(':')
+                            videotrack['aspectfloat'] = float(aspectwidth) / float(aspectheight)
+                        except:
+                            videotrack['aspectfloat'] = 1.85
+                    videotracks.append(videotrack)
+
+                elif "Audio" in type:
+                    audiotrack = {}
+                    audiotrack['audiocodec'] = mediaStream.get('Codec')
+                    audiotrack['channels'] = mediaStream.get('Channels')
+                    audiotrack['audiolanguage'] = mediaStream.get('Language')
+                    audiotracks.append(audiotrack)
+
+                elif "Subtitle" in type:
+                    try:
+                        subtitlelanguages.append(mediaStream['Language'])
+                    except:
+                        subtitlelanguages.append("Unknown")
+
+        return {
+
+            'videocodec'        : videotracks, 
+            'audiocodec'        : audiotracks,
+            'subtitlelanguage'  : subtitlelanguages
+        }
+
     
     def getChecksum(self, item):
         # use the etags checksum for this if available
@@ -169,109 +185,62 @@ class API():
         return checksum
     
     def getUserData(self, item):
-        userData = item.get("UserData")
-        resumeTime = 0
-        if(userData != None):
-            if userData.get("Played") != True:
-                watched="True"
-            else:
-                watched="False"
-            if userData.get("IsFavorite") == True:
-                favorite=True
-            else:
-                favorite=False
-            if(userData.get("Played") == True):
-                # Cover the Emby scenario where item is played but playcount is 0.
-                playcount = userData.get('PlayCount')
+        # Default
+        favorite = False
+        playcount = None
+        lastPlayedDate = None
+        userKey = ""
+
+        try:
+            userdata = item['UserData']
+        
+        except: # No userdata found.
+            pass
+
+        else:
+            favorite = userdata['IsFavorite']
+            userKey = userdata.get('Key', "")
+            
+            watched = userdata['Played']
+            if watched:
+                # Playcount is tied to the watch status
+                playcount = userdata['PlayCount']
                 if playcount == 0:
                     playcount = 1
             else:
-                playcount="0"
-            if userData.get('UnplayedItemCount') != None:
-                UnplayedItemCount = userData.get('UnplayedItemCount')
-            else:
-                UnplayedItemCount = "0"
-            if userData.get('LastPlayedDate') != None:
-                #TODO--> is there some other way to do this ?
-                datestring = userData.get('LastPlayedDate').split('T')[0]
-                timestring = userData.get('LastPlayedDate').split('T')[1]
-                timestring = timestring.split('.')[0]
-                LastPlayedDate = datestring + " " + timestring
-            else:
-                LastPlayedDate = None
-            if userData.get('PlaybackPositionTicks') != None:
-                PlaybackPositionTicks = userData.get('PlaybackPositionTicks')
-            else:
-                PlaybackPositionTicks = ''
-            userKey = userData.get("Key", "")
-        return  {'Watched'  :   watched,
-                 'Favorite' :   favorite,
-                 'PlayCount':   playcount,
-                 'LastPlayedDate':  LastPlayedDate,
-                 'UnplayedItemCount' : UnplayedItemCount,
-                 'PlaybackPositionTicks' : str(PlaybackPositionTicks),
-                 'Key' : userKey
-                }
-    
-    def getGenre(self,item):
-        genre = ""
-        genres = item.get("Genres")
-        if genres != None and genres != []:
-            for genre_string in genres:
-                if genre == "": #Just take the first genre
-                    genre = genre_string
-                else:
-                    genre = genre + " / " + genre_string
-        elif item.get("SeriesGenres") != None and item.get("SeriesGenres") != '':
-            genres = item.get("SeriesGenres")
-            if genres != None and genres != []:
-              for genre_string in genres:
-                if genre == "": #Just take the first genre
-                    genre = genre_string
-                else:
-                    genre = genre + " / " + genre_string
-        return genre
-        
-    def getName(self, item):
-        Temp = item.get("Name")
-        if Temp == None:
-            Temp = ""
-        Name=Temp.encode('utf-8')
-        return Name
+                playcount = None
+            
+            lastPlayedDate = userdata.get('LastPlayedDate', None)
+            if lastPlayedDate:
+                lastPlayedDate = lastPlayedDate.split('.')[0].replace('T', " ")
+
+        return {
+
+            'Favorite':         favorite,
+            'PlayCount':        playcount,
+            'LastPlayedDate':   lastPlayedDate,
+            'Key':              userKey
+        }
+
         
     def getRecursiveItemCount(self, item):
         if item.get("RecursiveItemCount") != None:
             return str(item.get("RecursiveItemCount"))
         else:
-            return "0"
-            
-    def getSeriesName(self, item):
-        Temp = item.get("SeriesName")
-        if Temp == None:
-            Temp = ""
-        Name=Temp.encode('utf-8')
-        return Name        
+            return "0"     
         
     def getOverview(self, item):
-        Temp = item.get("Overview")
-        if Temp == None:
-            Temp=''
-        Overview1=Temp.encode('utf-8')
-        Overview=str(Overview1)
-        Overview=Overview.replace("\"", "\'")
-        Overview=Overview.replace("\n", " ")
-        Overview=Overview.replace("\r", " ")
-        return Overview
-        
-    def getPremiereDate(self, item):
-        if(item.get("PremiereDate") != None):
-            premieredatelist = (item.get("PremiereDate")).split("T")
-            premieredate = premieredatelist[0]
-        else:
-            premieredate = ""
-        Temp = premieredate
-        premieredate = Temp.encode('utf-8')            
-        return premieredate
+
+        overview = ""
+
+        try:
+            overview = item['Overview']
+            overview = overview.replace("\"", "\'")
+            overview = overview.replace("\n", " ")
+            overview = overview.replace("\r", " ")
+        except: pass
+
+        return overview
         
     def getTVInfo(self, item, userData):
         TotalSeasons     = 0 if item.get("ChildCount")==None else item.get("ChildCount")
@@ -306,15 +275,105 @@ class API():
                  'Episode'          :   tempEpisode,
                  'SeriesName'       :   SeriesName
                  }
+    
     def getDateCreated(self, item):
-        tempDate = item.get("DateCreated")
-        if tempDate != None:
-            tempDate = tempDate.split("T")[0]
-            date = tempDate.split("-")
-            tempDate = date[2] + "." + date[1] + "." +date[0]
-        else:
-            tempDate = "01.01.2000"
-        return tempDate
+
+        dateadded = None
+
+        try:
+            dateadded = item['DateCreated']
+            dateadded = dateadded.split('.')[0].replace('T', " ")
+        except: pass
+
+        return dateadded
+
+    def getPremiereDate(self, item):
+
+        premiere = None
+
+        try:
+            premiere = item['PremiereDate']
+            premiere = premiere.split('.')[0].replace('T', " ")
+        except: pass
+
+        return premiere
+
+    def getTagline(self, item):
+
+        tagline = None
+
+        try:
+            tagline = item['Taglines'][0]
+        except: pass
+
+        return tagline
+
+    def getProvider(self, item, providername):
+        # Provider Name: imdb or tvdb
+        provider = None
+
+        try:
+            if "imdb" in providername:
+                provider = item['ProviderIds']['Imdb']
+            elif "tvdb" in providername:
+                provider = item['ProviderIds']['Tvdb']
+        except: pass
+
+        return provider
+
+    def getCountry(self, item):
+
+        country = None
+
+        try:
+            country = item['ProductionLocations'][0]
+        except: pass
+
+        return country
+
+    def getArtworks(self, data, type, mediaType = "", index = "0", getAll = False):
+
+        """
+                Get all artwork, it will return an empty string
+                for the artwork type not found.
+
+                Index only matters when getAll is False.
+
+                mediaType:      movie, boxset, tvshow, episode, season
+
+                Artwork type:   Primary, Banner, Logo, Art, Thumb,
+                                Disc Backdrop
+                                                                            """
+        id = data['Id']
+
+        maxHeight = 10000
+        maxWidth = 10000
+        imageTag = "e3ab56fe27d389446754d0fb04910a34" # Place holder tag
+        
+
+        if getAll:
+
+            allartworks = {
+
+                'Primary': "",
+                'Banner': "",
+                'Logo': "",
+                'Art': "",
+                'Thumb': "",
+                'Disc': "",
+                'Backdrop': ""
+            }
+
+            for keytype in allartworks:
+                type = keytype
+                url = ""
+
+                allartworks[keytype] = url
+
+
+            return allartworks
+
+        else: pass
 
     def getArtwork(self, data, type, mediaType = "", index = "0", userParentInfo = False):
 
@@ -416,6 +475,14 @@ class API():
                 artwork=''        
         
         return artwork
+
+    def imageUrl(self, id, type, index, width, height):
+
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        server = WINDOW.getProperty('server%s' % username)
+        # For people image - actors, directors, writers
+        return "%s/mediabrowser/Items/%s/Images/%s?MaxWidth=%s&MaxHeight=%s&Index=%s" % (server, id, type, width, height, index)
     
     def getUserArtwork(self, data, type, index = "0"):
 

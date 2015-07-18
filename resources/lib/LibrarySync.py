@@ -659,61 +659,67 @@ class LibrarySync(threading.Thread):
         # Delete from Kodi before Emby
         # To be able to get mediaType
         doUtils = DownloadUtils()
-
-        video = []
+        video = {}
         music = []
-
-        itemIds = ','.join(itemList)
-        url = "{server}/mediabrowser/Users/{UserId}/Items?Ids=%s&format=json" % itemIds
-        result = doUtils.downloadUrl(url)
-
-        if result is "":
-            # Websocket feedback
-            self.logMsg("Item %s is removed." % itemIds)
-            return
         
-        for item in result[u'Items']:
-            # Sort by type for database deletion
-            itemId = item["Id"]
-            mediaType = item["MediaType"]
+        # Database connection to myVideosXX.db
+        connectionvideo = utils.KodiSQL()
+        cursorvideo = connectionvideo.cursor()
+        # Database connection to myMusicXX.db
+        connectionmusic = utils.KodiSQL("music")
+        cursormusic = connectionmusic.cursor()
 
-            if "Video" in mediaType:
-                video.append(itemId)
-            elif "Audio" in mediaType:
-                music.append(itemId)
+        for item in itemList:
+            # Sort by type for database deletion
+            try: # Search video database
+                self.logMsg("Check video database.", 1)
+                cursorvideo.execute("SELECT media_type FROM emby WHERE emby_id = ?", (item,))
+                mediatype = cursorvideo.fetchone()[0]
+                video[item] = mediatype
+                #video.append(itemtype)
+            except:
+                self.logMsg("Check music database.", 1)
+                try: # Search music database
+                    cursormusic.execute("SELECT media_type FROM emby WHERE emby_id = ?", (item,))
+                    cursormusic.fetchone()[0]
+                    music.append(item)
+                except: self.logMsg("Item %s is not found in Kodi database." % item, 1)
 
         if len(video) > 0:
-            #Process video library
-            connection = utils.KodiSQL("video")
-            cursor = connection.cursor()
-
+            connection = connectionvideo
+            cursor = cursorvideo
+            # Process video library
             for item in video:
-                type = ReadKodiDB().getTypeByEmbyId(item, connection, cursor)
-                self.logMsg("Type: %s" % type)
-                self.logMsg("Message: Doing LibraryChanged: Items Removed: Calling deleteItemFromKodiLibrary: %s" % item, 0)
+
+                type = video[item]
+                self.logMsg("Doing LibraryChanged: Items Removed: Calling deleteItemFromKodiLibrary: %s" % item, 1)
+
                 if "episode" in type:
                     # Get the TV Show Id for reference later
                     showId = ReadKodiDB().getShowIdByEmbyId(item, connection, cursor)
-                    self.logMsg("ShowId: %s" % showId, 0)
+                    self.logMsg("ShowId: %s" % showId, 1)
                 WriteKodiVideoDB().deleteItemFromKodiLibrary(item, connection, cursor)
                 # Verification
                 if "episode" in type:
                     showTotalCount = ReadKodiDB().getShowTotalCount(showId, connection, cursor)
-                    self.logMsg("ShowTotalCount: %s" % showTotalCount, 0)
+                    self.logMsg("ShowTotalCount: %s" % showTotalCount, 1)
                     # If there are no episodes left
                     if showTotalCount == 0 or showTotalCount == None:
                         # Delete show
                         embyId = ReadKodiDB().getEmbyIdByKodiId(showId, "tvshow", connection, cursor)
-                        self.logMsg("Message: Doing LibraryChanged: Deleting show: %s" % embyId, 0)
+                        self.logMsg("Message: Doing LibraryChanged: Deleting show: %s" % embyId, 1)
                         WriteKodiVideoDB().deleteItemFromKodiLibrary(embyId, connection, cursor)
 
             connection.commit()
-            cursor.close()
+        # Close connection
+        cursorvideo.close()
 
         if len(music) > 0:
+            connection = connectionmusic
+            cursor = cursormusic
             #Process music library
-            addon = xbmcaddon.Addon(id='plugin.video.emby')
-            if addon.getSetting("enableMusicSync") is "true":
+            addon = xbmcaddon.Addon()
+            if addon.getSetting('enableMusicSync') == "true":
                 connection = utils.KodiSQL("music")
                 cursor = connection.cursor()
 
@@ -722,35 +728,34 @@ class LibrarySync(threading.Thread):
                     WriteKodiMusicDB().deleteItemFromKodiLibrary(item, connection, cursor)
 
                 connection.commit()
-                cursor.close()
+        # Close connection
+        cursormusic.close()
 
         if deleteEmbyItem:
             for item in itemList:
                 url = "{server}/mediabrowser/Items/%s" % item
                 self.logMsg('Deleting via URL: %s' % url)
-                doUtils.downloadUrl(url, type="DELETE")                            
+                doUtils.downloadUrl(url, type = "DELETE")                            
                 xbmc.executebuiltin("Container.Refresh")
 
     def remove_items(self, itemsRemoved):
-        
+        # websocket client
         self.removeItems.extend(itemsRemoved)
 
     def update_items(self, itemsToUpdate):
-        # doing adds and updates
+        # websocket client
         if(len(itemsToUpdate) > 0):
-            self.logMsg("Message : Doing LibraryChanged : Processing Added and Updated : " + str(itemsToUpdate), 0)
+            self.logMsg("Doing LibraryChanged : Processing Added and Updated : " + str(itemsToUpdate), 0)
             self.updateItems.extend(itemsToUpdate)
-            self.doIncrementalSync = True
 
     def user_data_update(self, userDataList):
-        # do full playcount update for now
+        # websocket client
         for userData in userDataList:
             itemId = userData.get("ItemId")
             if(itemId != None):
                 self.updateItems.append(itemId)
         if(len(self.updateItems) > 0):
-            self.logMsg("Message : Doing UserDataChanged : Processing Updated : " + str(self.updateItems), 0)
-            self.doIncrementalSync = True
+            self.logMsg("Doing UserDataChanged : Processing Updated : " + str(self.updateItems), 0)
 
     def ShouldStop(self):
             
@@ -770,32 +775,44 @@ class LibrarySync(threading.Thread):
 
         while not self.KodiMonitor.abortRequested():
 
+            # In the event the server goes offline after
+            # the thread has already been started.
+            while self.suspendClient == True:
+                # The service.py will change self.suspendClient to False
+                if self.KodiMonitor.waitForAbort(5):
+                    # Abort was requested while waiting. We should exit
+                    break
+
             # Library sync
             if not startupComplete:
                 # Run full sync
                 self.logMsg("Doing_Db_Sync: syncDatabase (Started)", 1)
+                startTime = datetime.now()
                 libSync = self.FullLibrarySync()
-                self.logMsg("Doing_Db_Sync: syncDatabase (Finished) %s" % libSync, 1)
+                elapsedTime = datetime.now() - startTime
+                self.logMsg("Doing_Db_Sync: syncDatabase (Finished in: %s) %s" % (str(elapsedTime).split('.')[0], libSync), 1)
 
                 if libSync:
                     startupComplete = True
 
-            if WINDOW.getProperty("OnWakeSync") == "true":
+            # Set via Kodi Monitor event
+            if WINDOW.getProperty("OnWakeSync") == "true" and WINDOW.getProperty('Server_online') == "true":
                 WINDOW.clearProperty("OnWakeSync")
                 if WINDOW.getProperty("SyncDatabaseRunning") != "true":
-                    utils.logMsg("Doing_Db_Sync Post Resume: syncDatabase (Started)",0)
+                    self.logMsg("Doing_Db_Sync Post Resume: syncDatabase (Started)", 0)
                     libSync = self.FullLibrarySync()
-                    utils.logMsg("Doing_Db_Sync Post Resume: syncDatabase (Finished) " + str(libSync),0)
+                    self.logMsg("Doing_Db_Sync Post Resume: syncDatabase (Finished) " + str(libSync), 0)
 
-            if self.doIncrementalSync:
-                # Add or update item to Kodi library
+            if len(self.updateItems) > 0:
+                # Add or update items
+                self.logMsg("Processing items: %s" % (str(self.updateItems)), 1)
                 listItems = self.updateItems
                 self.updateItems = []
-                self.doIncrementalSync = False
                 self.IncrementalSync(listItems)
 
             if len(self.removeItems) > 0:
                 # Remove item from Kodi library
+                self.logMsg("Removing items: %s" % self.removeItems, 1)
                 listItems = self.removeItems
                 self.removeItems = []
                 self.removefromDB(listItems)
@@ -805,3 +822,11 @@ class LibrarySync(threading.Thread):
                 break
 
         self.logMsg("--- Library Sync Thread stopped ---", 0)
+
+    def suspendClient(self):
+        self.suspendClient = True
+        self.logMsg("--- Library Sync Thread paused ---", 0)
+
+    def resumeClient(self):
+        self.suspendClient = False
+        self.logMsg("--- Library Sync Thread resumed ---", 0)

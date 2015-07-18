@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 #################################################################################################
 # utils class
 #################################################################################################
@@ -19,8 +21,7 @@ class PlayUtils():
     clientInfo = ClientInformation()
     
     addonName = clientInfo.getAddonName()
-    addonId = clientInfo.getAddonId()
-    addon = xbmcaddon.Addon(id=addonId)
+    addon = xbmcaddon.Addon()
 
     audioPref = addon.getSetting('Audiopref')
     subsPref = addon.getSetting('Subspref')
@@ -35,76 +36,36 @@ class PlayUtils():
 
     def getPlayUrl(self, server, id, result):
 
-        addon = self.addon
         WINDOW = xbmcgui.Window(10000)
         username = WINDOW.getProperty('currUser')
         server = WINDOW.getProperty('server%s' % username)
 
-        if self.isDirectPlay(result):
-            try:
-                # Try direct play
-                playurl = self.directPlay(result)
-                if not playurl:
-                    # Let user know that direct play failed
-                    resp = xbmcgui.Dialog().select('Warning: Unable to direct play.', ['Play from HTTP', 'Play from HTTP and remember next time.'])
-                    if resp > -1:
-                        # Play from HTTP
-                        playurl = self.directStream(result, server, id)
-                        if resp == 1:
-                            # Remember next time
-                            addon.setSetting('playFromStream', "true")
-                        if not playurl:
-                            # Try transcoding
-                            playurl = self.transcoding(result, server, id)
-                            WINDOW.setProperty("transcoding%s" % id, "true")
-                            self.logMsg("File is transcoding.", 1)
-                            WINDOW.setProperty("%splaymethod" % playurl, "Transcode")
-                        else:
-                            self.logMsg("File is direct streaming.", 1)
-                            WINDOW.setProperty("%splaymethod" % playurl, "DirectStream")
-                    else:
-                        # User decided not to proceed.
-                        self.logMsg("Unable to direct play. Verify the following path is accessible by the device: %s. You might also need to add SMB credentials in the addon settings." % result[u'MediaSources'][0][u'Path'])
-                        return False
-                else:
-                    self.logMsg("File is direct playing.", 1)
-                    WINDOW.setProperty("%splaymethod" % playurl.encode('utf-8'), "DirectPlay")
-            except:
-                return False
+        if self.isDirectPlay(result,True):
+            # Try direct play
+            playurl = self.directPlay(result)
+            if playurl:
+                self.logMsg("File is direct playing.", 1)
+                WINDOW.setProperty("%splaymethod" % playurl.encode('utf-8'), "DirectPlay")
 
         elif self.isDirectStream(result):
-            try:
-                # Try direct stream
-                playurl = self.directStream(result, server, id)
-                if not playurl:
-                    # Try transcoding
-                    playurl = self.transcoding(result, server, id)
-                    WINDOW.setProperty("transcoding%s" % id, "true")
-                    self.logMsg("File is transcoding.", 1)
-                    WINDOW.setProperty("%splaymethod" % playurl, "Transcode")
-                else:
-                    self.logMsg("File is direct streaming.", 1)
-                    WINDOW.setProperty("%splaymethod" % playurl, "DirectStream")
-            except:
-                return False
+            # Try direct stream
+            playurl = self.directStream(result, server, id)
+            if playurl:
+                self.logMsg("File is direct streaming.", 1)
+                WINDOW.setProperty("%splaymethod" % playurl, "DirectStream")
 
-        elif self.isTranscoding(result):
-            try:
-                # Try transcoding
-                playurl = self.transcoding(result, server, id)
-                WINDOW.setProperty("transcoding%s" % id, "true")
+        else:# Try transcoding
+            playurl = self.transcoding(result, server, id)
+            if playurl:
                 self.logMsg("File is transcoding.", 1)
                 WINDOW.setProperty("%splaymethod" % playurl, "Transcode")
-            except:
-                return False
 
         return playurl.encode('utf-8')
 
-
-    def isDirectPlay(self, result):
+    def isDirectPlay(self, result, dialog=False):
         # Requirements for Direct play:
         # FileSystem, Accessible path
-        self.addon = xbmcaddon.Addon(id=self.addonId)
+        self.addon = xbmcaddon.Addon()
         
         playhttp = self.addon.getSetting('playFromStream')
         # User forcing to play via HTTP instead of SMB
@@ -126,17 +87,30 @@ class PlayUtils():
                 return True
             else:
                 self.logMsg("Can't direct play: Unable to locate the content.", 1)
+                if dialog:
+                    # Let user know that direct play failed
+                    resp = xbmcgui.Dialog().select('Warning: Unable to direct play.', ['Play from HTTP', 'Play from HTTP and remember next time.'])
+                    if resp == 1:
+                        # Remember next time
+                        addon.setSetting('playFromStream', "true")
+                    else:
+                        # User decided not to proceed.
+                        self.logMsg("Unable to direct play. Verify the following path is accessible by the device: %s. You might also need to add SMB credentials in the addon settings." % result[u'MediaSources'][0][u'Path'])
                 return False
 
 
     def directPlay(self, result):
 
         addon = self.addon
-
         try:
-            # Item can be played directly
-            playurl = result[u'MediaSources'][0][u'Path']
-
+            try:
+                playurl = result[u'MediaSources'][0][u'Path']
+            except:
+                playurl = result[u'Path']
+        except: 
+            self.logMsg("Direct play failed. Trying Direct stream.", 1)
+            return False
+        else:
             if u'VideoType' in result:
                 # Specific format modification
                 if u'Dvd' in result[u'VideoType']:
@@ -156,18 +130,14 @@ class PlayUtils():
                 playurl = playurl.replace("\\", "/")
                 
             if "apple.com" in playurl:
-                USER_AGENT = 'QuickTime/7.7.4'
+                USER_AGENT = "QuickTime/7.7.4"
                 playurl += "?|User-Agent=%s" % USER_AGENT
 
             if ":" not in playurl:
-                self.logMsg("Path seems invalid: %s" % playurl)
+                self.logMsg("Path seems invalid: %s" % playurl, 1)
                 return False
 
             return playurl
-
-        except:
-            self.logMsg("Direct play failed. Trying Direct stream.", 1)
-            return False
 
     def isDirectStream(self, result):
         # Requirements for Direct stream:
@@ -188,23 +158,24 @@ class PlayUtils():
 
         return True
   
-    def directStream(self, result, server, id, type="Video"):
+    def directStream(self, result, server, id, type = "Video"):
         
         try:
-            if type == "Video":
-                # Play with Direct Stream
+            if "ThemeVideo" in type:
+                playurl ="%s/mediabrowser/Videos/%s/stream?static=true" % (server, id)
+
+            elif "Video" in type:
                 playurl = "%s/mediabrowser/Videos/%s/stream?static=true" % (server, id)
-            elif type == "Audio":
+                # Verify audio and subtitles
+                mediaSources = result[u'MediaSources']
+                if mediaSources[0].get('DefaultAudioStreamIndex') != None:
+                    playurl = "%s&AudioStreamIndex=%s" % (playurl, mediaSources[0].get('DefaultAudioStreamIndex'))
+                if mediaSources[0].get('DefaultSubtitleStreamIndex') != None:
+                    playurl = "%s&SubtitleStreamIndex=%s" % (playurl, mediaSources[0].get('DefaultSubtitleStreamIndex'))
+            
+            elif "Audio" in type:
                 playurl = "%s/mediabrowser/Audio/%s/stream.mp3" % (server, id)
-                return playurl
-
-            mediaSources = result[u'MediaSources']
-            if mediaSources[0].get('DefaultAudioStreamIndex') != None:
-                playurl = "%s&AudioStreamIndex=%s" % (playurl, mediaSources[0].get('DefaultAudioStreamIndex'))
-            if mediaSources[0].get('DefaultSubtitleStreamIndex') != None:
-                playurl = "%s&SubtitleStreamIndex=%s" % (playurl, mediaSources[0].get('DefaultSubtitleStreamIndex'))
-
-            self.logMsg("Playurl: %s" % playurl)
+            
             return playurl
                 
         except:
@@ -329,7 +300,7 @@ class PlayUtils():
             # Local or Network path
             self.logMsg("Path exists.", 2)
             return True
-        elif ":\\" not in path:
+        elif "nfs:" in path.lower():
             # Give benefit of the doubt.
             self.logMsg("Can't verify path. Still try direct play.", 2)
             return True
