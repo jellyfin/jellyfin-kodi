@@ -67,7 +67,11 @@ class UserClient(threading.Thread):
 
     def getLogLevel(self):
 
-        logLevel = int(self.addon.getSetting('logLevel'))
+        try:
+            logLevel = int(self.addon.getSetting('logLevel'))
+        except:
+            logLevel = 0
+        
         return logLevel
 
     def getUserId(self):
