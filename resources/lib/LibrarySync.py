@@ -85,6 +85,12 @@ class LibrarySync(threading.Thread):
 
             ### BUILD VIDEO NODES LISTING ###
             VideoNodes().buildVideoNodesListing()
+            ### CREATE SOURCES ###
+            if addon.getSetting("Sources") != "true":
+                # Only create sources once
+                self.logMsg("Sources.xml created.", 0)
+                utils.createSources()
+                addon.setSetting("Sources", "true")
             
             ### PROCESS VIDEO LIBRARY ###
             

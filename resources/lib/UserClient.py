@@ -239,7 +239,7 @@ class UserClient(threading.Thread):
             url = "%s/mediabrowser/Users/%s" % (self.currServer, self.currUserId)
             WINDOW.setProperty("currUser", username)
             WINDOW.setProperty("accessToken%s" % username, self.currToken)
-            result = doUtils.downloadUrl(url, type="POST")
+            result = doUtils.downloadUrl(url)
             if result == 401:
                 # Token is no longer valid
                 self.resetClient()

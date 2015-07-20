@@ -25,6 +25,7 @@
 		<setting id="smbusername" type="text" label="30007" default="" visible="true" enable="true" />
 		<setting id="smbpassword" type="text" label="30008" default="" option="hidden" visible="true" enable="true" />
 		<setting type="sep" />
+		<setting id="resumeJumpBack" type="slider" label="30114" default="10" range="0,1,120" option="int" visible="true" enable="true" />
         <setting id="offerDelete" type="bool" label="30114" visible="true" enable="true" default="false" />
 		<setting id="offerDeleteTV" type="bool" label="		30115" visible="eq(-1,true)" enable="true" default="false" />
 		<setting id="offerDeleteMovies" type="bool" label="30116" visible="eq(-2,true)" enable="true" default="false" />

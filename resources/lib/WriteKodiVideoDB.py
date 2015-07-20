@@ -62,9 +62,9 @@ class WriteKodiVideoDB():
             # Found the Emby Id, let Emby server know of new playcount
             watchedurl = "{server}/mediabrowser/Users/{UserId}/PlayedItems/%s" % emby_id
             if playcount != 0:
-                doUtils.downloadUtils(watchedurl, type = "POST")
+                doUtils.downloadUrl(watchedurl, type = "POST")
             else:
-                doUtils.downloadUtils(watchedurl, type = "DELETE")
+                doUtils.downloadUrl(watchedurl, type = "DELETE")
             # Erase any resume point associated
             self.setKodiResumePoint(id, 0, 0, cursor)
         finally:
@@ -252,6 +252,39 @@ class WriteKodiVideoDB():
             # To avoid negative bookmark
             resume = resume - jumpback
         self.setKodiResumePoint(fileid, resume, total, cursor)
+
+        # Create a dummy bookmark for homescreen - widgets
+        if not self.directpath:
+            plugindummy = "plugin://plugin.video.emby/"
+            cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?", (plugindummy,))
+            try:
+                pathid = cursor.fetchone()[0]
+            except:
+                # Top level path does not exist yet
+                cursor.execute("select coalesce(max(idPath),0) as tlpathid from path")
+                pathid = cursor.fetchone()[0] + 1
+                query = "INSERT INTO path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
+                cursor.execute(query, (pathid, plugindummy, "tvshows", "metadata.local", 1))
+
+            # Validate the file in database
+            cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?", (filename, pathid,))
+            try:
+                fileid = cursor.fetchone()[0]
+            except:
+                # File does not exist yet
+                if resume:
+                    cursor.execute("select coalesce(max(idFile),0) as fileid from files")
+                    fileid = cursor.fetchone()[0] + 1
+                    query = "INSERT INTO files(idFile, idPath, strFilename, playCount, lastPlayed, dateAdded) values(?, ?, ?, ?, ?, ?)"
+                    cursor.execute(query, (fileid, pathid, filename, playcount, dateplayed, dateadded))
+                    self.setKodiResumePoint(fileid, resume, total, cursor)
+            else: # File exists
+                if not resume:
+                    cursor.execute("DELETE FROM files WHERE idFile = ?", (fileid,))
+                else:
+                    query = "UPDATE files SET playCount = ?, lastPlayed = ? WHERE idFile = ?"
+                    cursor.execute(query, (playcount, dateplayed, fileid))
+                    self.setKodiResumePoint(fileid, resume, total, cursor)
         
     def addOrUpdateMusicVideoToKodiLibrary(self, embyId ,connection, cursor):
         
@@ -652,6 +685,12 @@ class WriteKodiVideoDB():
         # Update or insert actors
         self.AddPeopleToMedia(episodeid, MBitem.get('People'), "episode", connection, cursor)
 
+        # Add streamdetails
+        self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), fileid, cursor)
+        
+        # Update artwork
+        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "episode"), episodeid, "episode", "thumb", cursor)
+
         # Set resume point and round to 6th decimal
         resume = round(float(timeInfo.get('ResumeTime')), 6)
         total = round(float(timeInfo.get('TotalTime')), 6)
@@ -660,12 +699,40 @@ class WriteKodiVideoDB():
             # To avoid negative bookmark
             resume = resume - jumpback
         self.setKodiResumePoint(fileid, resume, total, cursor)
-        
-        # Add streamdetails
-        self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), fileid, cursor)
-        
-        # Update artwork
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "episode"), episodeid, "episode", "thumb", cursor)
+
+        if not self.directpath:
+            # Create a dummy bookmark for homescreen - widgets
+            plugindummy = "plugin://plugin.video.emby/"
+            cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?", (plugindummy,))
+            try:
+                pathid = cursor.fetchone()[0]
+            except:
+                # Top level path does not exist yet
+                cursor.execute("select coalesce(max(idPath),0) as tlpathid from path")
+                pathid = cursor.fetchone()[0] + 1
+                query = "INSERT INTO path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
+                cursor.execute(query, (pathid, plugindummy, "tvshows", "metadata.local", 1))
+
+            # Validate the file in database
+            cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?", (filename, pathid,))
+            try:
+                fileid = cursor.fetchone()[0]
+            except:
+                # File does not exist yet
+                if resume:
+                    cursor.execute("select coalesce(max(idFile),0) as fileid from files")
+                    fileid = cursor.fetchone()[0] + 1
+                    query = "INSERT INTO files(idFile, idPath, strFilename, playCount, lastPlayed, dateAdded) values(?, ?, ?, ?, ?, ?)"
+                    cursor.execute(query, (fileid, pathid, filename, playcount, dateplayed, dateadded))
+                    self.setKodiResumePoint(fileid, resume, total, cursor)
+            else: # File exists
+                if not resume:
+                    cursor.execute("DELETE FROM files WHERE idFile = ?", (fileid,))
+                else:
+                    query = "UPDATE files SET playCount = ?, lastPlayed = ? WHERE idFile = ?"
+                    cursor.execute(query, (playcount, dateplayed, fileid))
+                    self.setKodiResumePoint(fileid, resume, total, cursor)
+    
 
     def deleteItemFromKodiLibrary(self, id, connection, cursor ):
         

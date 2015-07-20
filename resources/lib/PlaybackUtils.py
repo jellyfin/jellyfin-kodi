@@ -117,27 +117,6 @@ class PlaybackUtils():
         WINDOW.setProperty(playurl+"positionurl", positionurl)
         WINDOW.setProperty(playurl+"deleteurl", "")
         WINDOW.setProperty(playurl+"deleteurl", deleteurl)
-        
-        #show the additional resume dialog if launched from a widget
-        if xbmc.getCondVisibility("Window.IsActive(home)"):
-            if userData.get("PlaybackPositionTicks") != 0:
-                reasonableTicks = int(userData.get("PlaybackPositionTicks")) / 1000
-                seekTime = reasonableTicks / 10000
-            if seekTime != 0:
-                displayTime = str(datetime.timedelta(seconds=seekTime))
-                display_list = [ self.language(30106) + ' ' + displayTime, self.language(30107)]
-                resumeScreen = xbmcgui.Dialog()
-                resume_result = resumeScreen.select(self.language(30105), display_list)
-                if resume_result == 0:
-                    WINDOW.setProperty(playurl+"seektime", str(seekTime))
-                elif resume_result < 0:
-                    # User cancelled dialog
-                    xbmc.log("Emby player -> User cancelled resume dialog.")
-                    return
-                else:
-                    WINDOW.clearProperty(playurl+"seektime")
-            else:
-                WINDOW.clearProperty(playurl+"seektime")
 
         if result.get("Type")=="Episode":
             WINDOW.setProperty(playurl+"refresh_id", result.get("SeriesId"))
@@ -169,12 +148,7 @@ class PlaybackUtils():
             self.setListItemProps(server, id, listItem, result)
             xbmc.Player().play(playurl,listItem)
         elif setup == "default":
-            #artwork only works from widgets (home screen) with player command as there is no listitem selected
-            if xbmc.getCondVisibility("Window.IsActive(home)"):
-                self.setListItemProps(server, id, listItem, result)
-                xbmc.Player().play(playurl,listItem)
-            else:
-               xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)           
+            xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
 
     def setArt(self, list,name,path):
         if name=='thumb' or name=='fanart_image' or name=='small_poster' or name=='tiny_poster'  or name == "medium_landscape" or name=='medium_poster' or name=='small_fanartimage' or name=='medium_fanartimage' or name=='fanart_noindicators':
@@ -255,7 +229,7 @@ class PlaybackUtils():
                 xbmc.sleep(500)
             
         #Jump to resume point
-        jumpBackSec = 10#int(self.settings.getSetting("resumeJumpBack"))
+        jumpBackSec = int(addon.getSetting("resumeJumpBack"))
         seekToTime = seekTo - jumpBackSec
         count = 0
         while xbmc.Player().getTime() < (seekToTime - 5) and count < 11: # only try 10 times
@@ -382,7 +356,7 @@ class PlaybackUtils():
             if item.get("Type") == "Episode" and addon.getSetting("offerDeleteTV")=="true":
                WINDOW.setProperty(playurl + "deleteurl", deleteurl)
             if item.get("Type") == "Movie" and addon.getSetting("offerDeleteMovies")=="true":
-               WINDOW.setProperty(playurl + "deleteurl", deleteurl)			   
+               WINDOW.setProperty(playurl + "deleteurl", deleteurl)            
         
             WINDOW.setProperty(playurl + "runtimeticks", str(item.get("RunTimeTicks")))
             WINDOW.setProperty(playurl+"type", item.get("Type"))

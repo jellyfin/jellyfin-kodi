@@ -157,6 +157,43 @@ def stopProfiling(pr, profileName):
             f.write(str(ncalls) + "\t" + "{0}".format(total_time) + "\t" + "{0}".format(cumulative_time) + "\t" + func_name + "\t" + filename + "\r\n")
     f.close()
 
+def createSources():
+    # To make Master lock compatible
+    path = xbmc.translatePath("special://profile/").decode("utf-8")
+    xmlpath = "%ssources.xml" % path
+
+    sources = open(xmlpath, 'w')
+    sources.write(
+        
+        '<sources>\n\t'
+            '<programs>\n\t\t'
+                '<default pathversion="1"></default>\n\t'
+            '</programs>\n\t'
+            '<video>\n\t\t'
+                '<default pathversion="1"></default>\n\t\t'
+                '<source>\n\t\t\t'
+                    '<name>dummy one</name>\n\t\t\t'
+                    '<path pathversion="1">smb://embydummy/dummypath1/</path>\n\t\t\t'
+                    '<allowsharing>true</allowsharing>\n\t\t'
+                '</source>\n\t\t'
+                '<source>\n\t\t\t'
+                    '<name>dummy two</name>\n\t\t\t'
+                    '<path pathversion="1">smb://embydummy/dummypath2/</path>\n\t\t\t'
+                    '<allowsharing>true</allowsharing>\n\t\t'
+                '</source>\n\t'
+            '</video>\n\t'
+            '<music>\n\t\t'
+                '<default pathversion="1"></default>\n\t'
+            '</music>\n\t'
+            '<pictures>\n\t\t'
+                '<default pathversion="1"></default>\n\t'
+            '</pictures>\n\t'
+            '<files>\n\t\t'
+                '<default pathversion="1"></default>\n\t'
+            '</files>\n'
+        '</sources>'
+    )
+
 def CleanName(filename):
     validFilenameChars = "-_.() %s%s" % (string.ascii_letters, string.digits)
     cleanedFilename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore')
