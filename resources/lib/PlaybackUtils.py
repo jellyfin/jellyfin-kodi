@@ -49,8 +49,14 @@ class PlaybackUtils():
             return
 
         userData = result['UserData']
-        resume_result = 0
-        seekTime = 0
+
+        # BOOKMARK - RESUME POINT
+        timeInfo = API().getTimeInfo(result)
+        jumpBackSec = int(addon.getSetting("resumeJumpBack"))
+        seekTime = round(float(timeInfo.get('ResumeTime')), 6)
+        if seekTime > jumpBackSec:
+            # To avoid negative bookmark
+            seekTime = seekTime - jumpBackSec
         
         if userData.get("PlaybackPositionTicks") != 0:
             reasonableTicks = int(userData.get("PlaybackPositionTicks")) / 1000
@@ -118,6 +124,21 @@ class PlaybackUtils():
         WINDOW.setProperty(playurl+"deleteurl", "")
         WINDOW.setProperty(playurl+"deleteurl", deleteurl)
 
+        #show the additional resume dialog if launched from a widget
+        if xbmc.getCondVisibility("Window.IsActive(home)"):
+            if seekTime != 0:
+                displayTime = str(datetime.timedelta(seconds=(int(seekTime))))
+                display_list = [ self.language(30106) + ' ' + displayTime, self.language(30107)]
+                resumeScreen = xbmcgui.Dialog()
+                resume_result = resumeScreen.select(self.language(30105), display_list)
+                if resume_result == 0:
+                    listItem.setProperty('StartOffset', str(seekTime))
+
+                elif resume_result < 0:
+                    # User cancelled dialog
+                    xbmc.log("Emby player -> User cancelled resume dialog.")
+                    return
+
         if result.get("Type")=="Episode":
             WINDOW.setProperty(playurl+"refresh_id", result.get("SeriesId"))
         else:
@@ -148,7 +169,11 @@ class PlaybackUtils():
             self.setListItemProps(server, id, listItem, result)
             xbmc.Player().play(playurl,listItem)
         elif setup == "default":
-            xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
+            if xbmc.getCondVisibility("Window.IsActive(home)"):
+                self.setListItemProps(server, id, listItem, result)
+                xbmc.Player().play(playurl,listItem)   
+            else:
+               xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
 
     def setArt(self, list,name,path):
         if name=='thumb' or name=='fanart_image' or name=='small_poster' or name=='tiny_poster'  or name == "medium_landscape" or name=='medium_poster' or name=='small_fanartimage' or name=='medium_fanartimage' or name=='fanart_noindicators':
