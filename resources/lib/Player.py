@@ -277,7 +277,7 @@ class Player( xbmc.Player ):
                 'MediaSourceId': item_id,
                 'PlayMethod': playMethod,
                 'VolumeLevel': volume,
-                'PositionTicks': int(seekTime),
+                'PositionTicks': int(seekTime * 10000000),
                 'IsMuted': muted
             }
 
