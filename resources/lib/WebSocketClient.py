@@ -149,6 +149,8 @@ class WebSocketThread(threading.Thread):
                 self.logMsg("Playback Seek : " + str(seekPositionTicks))
                 seekTime = (seekPositionTicks / 1000) / 10000
                 xbmc.Player().seekTime(seekTime)
+            # Report playback
+            WINDOW.setProperty('commandUpdate', 'true')
                 
         elif(messageType != None and messageType == "UserDataChanged"):
             # for now just do a full playcount sync
