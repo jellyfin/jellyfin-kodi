@@ -137,7 +137,10 @@ class WriteKodiVideoDB():
         # Get the real filename for direct path or media flags for plugin path
         playurl = PlayUtils().directPlay(MBitem)
         try:
-            fileext = basename(playurl)
+            if "plugin://" in playurl:
+                fileext = ""
+            else:
+                fileext = basename(playurl)
         except: return # playurl returned False
         else: # Set filename and path
             
@@ -568,7 +571,10 @@ class WriteKodiVideoDB():
         # Get the real filename
         playurl = PlayUtils().directPlay(MBitem)
         try:
-            fileext = basename(playurl)
+            if "plugin://" in playurl:
+                fileext = ""
+            else:
+                fileext = basename(playurl)
         except: return # playurl returned False
         else: # Set filename and path
 
