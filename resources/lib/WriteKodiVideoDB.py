@@ -153,12 +153,25 @@ class WriteKodiVideoDB():
                 filename = "plugin://plugin.video.emby/movies/%s/?filename=%s&id=%s&mode=play" % (embyId, fileext, embyId)
                 path = "plugin://plugin.video.emby/movies/%s/" % embyId
 
-                # Remove Kodi bookmark - messes with plugin path bookmark
+                # If the bookmark was created from widget
                 cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ?", (fileext,))
-                try:
+                try: # Remove Kodi bookmark - messes with plugin path bookmark
                     result = cursor.fetchone()[0]
                     self.setKodiResumePoint(result, 0, 0, cursor)
                 except: pass
+
+                # If the bookmark was created within the library
+                plugindummy = "plugin://plugin.video.emby/"
+                cursor.execute("SELECT idPath FROM path WHERE strPath = ?", (plugindummy,))
+                try: 
+                    pathiddummy = cursor.fetchone()[0]
+                except: pass
+                else:
+                    cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?", (filename, pathiddummy,))
+                    try: # Remove Kodi bookmark - creates a ghost bookmark for widgets
+                        result = cursor.fetchone()[0]
+                        self.setKodiResumePoint(result, 0, 0, cursor)
+                    except: pass
 
 
         # Validate the path in database
@@ -586,11 +599,25 @@ class WriteKodiVideoDB():
                 filename = "plugin://plugin.video.emby/tvshows/%s/?filename=%s&id=%s&mode=play" % (seriesId, fileext, embyId)
                 path = "plugin://plugin.video.emby/tvshows/%s/" % seriesId
 
+                # If the bookmark was created from widget
                 cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ?", (fileext,))
                 try: # Remove Kodi bookmark - messes with plugin path bookmark
                     result = cursor.fetchone()[0]
                     self.setKodiResumePoint(result, 0, 0, cursor)
                 except: pass
+
+                # If the bookmark was created within the library
+                plugindummy = "plugin://plugin.video.emby/"
+                cursor.execute("SELECT idPath FROM path WHERE strPath = ?", (plugindummy,))
+                try: 
+                    pathiddummy = cursor.fetchone()[0]
+                except: pass
+                else:
+                    cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?", (filename, pathiddummy,))
+                    try: # Remove Kodi bookmark - creates a ghost bookmark for widgets
+                        result = cursor.fetchone()[0]
+                        self.setKodiResumePoint(result, 0, 0, cursor)
+                    except: pass
         
         # Validate the path in database
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?", (path,))

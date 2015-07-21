@@ -57,10 +57,6 @@ class PlaybackUtils():
         if seekTime > jumpBackSec:
             # To avoid negative bookmark
             seekTime = seekTime - jumpBackSec
-        
-        if userData.get("PlaybackPositionTicks") != 0:
-            reasonableTicks = int(userData.get("PlaybackPositionTicks")) / 1000
-            seekTime = reasonableTicks / 10000
 
         itemsToPlay = []
         # Check for intros
@@ -137,6 +133,7 @@ class PlaybackUtils():
                 elif resume_result < 0:
                     # User cancelled dialog
                     xbmc.log("Emby player -> User cancelled resume dialog.")
+                    xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, listItem)
                     return
 
         if result.get("Type")=="Episode":
