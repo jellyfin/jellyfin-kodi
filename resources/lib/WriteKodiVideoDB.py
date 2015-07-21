@@ -774,22 +774,26 @@ class WriteKodiVideoDB():
     def addOrUpdateArt(self, imageUrl, kodiId, mediaType, imageType, cursor):
 
         if imageUrl:
+
+            cacheimage = False
             
             cursor.execute("SELECT url FROM art WHERE media_id = ? AND media_type = ? AND type = ?", (kodiId, mediaType, imageType,))
             try: # Update the artwork
                 url = cursor.fetchone()[0]
             except: # Add the artwork
+                cacheimage = True
                 self.logMsg("Adding Art Link for kodiId: %s (%s)" % (kodiId, imageUrl), 1)
                 query = "INSERT INTO art(media_id, media_type, type, url) values(?, ?, ?, ?)"
                 cursor.execute(query, (kodiId, mediaType, imageType, imageUrl))
             else:
                 if url != imageUrl:
+                    cacheimage = True
                     self.logMsg("Updating Art Link for kodiId: %s (%s) -> (%s)" % (kodiId, url, imageUrl), 1)
                     query = "INSERT INTO art(media_id, media_type, type, url) values(?, ?, ?, ?)"
                     cursor.execute(query, (kodiId, mediaType, imageType, imageUrl))
                     
             # Cache fanart and poster in Kodi texture cache
-            if imageType in ("fanart", "poster"):
+            if cacheimage and imageType in ("fanart", "poster"):
                 self.textureCache.CacheTexture(imageUrl)
         
     def setKodiResumePoint(self, fileid, resume_seconds, total_seconds, cursor):
