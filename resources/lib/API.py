@@ -133,7 +133,7 @@ class API():
                     videotrack['videocodec'] = mediaStream.get('Codec')
                     videotrack['height'] = mediaStream.get('Height')
                     videotrack['width'] = mediaStream.get('Width')
-                    videotrack['aspectratio'] = mediaStream.get('AspectRatio')
+                    videotrack['aspectratio'] = mediaStream.get('AspectRatio', "1:1")
                     videotrack['Video3DFormat'] = item.get('Video3DFormat')
                     if len(videotrack['aspectratio']) >= 3:
                         try:
