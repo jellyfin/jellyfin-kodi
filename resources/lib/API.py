@@ -317,6 +317,12 @@ class API():
                 provider = item['ProviderIds']['Imdb']
             elif "tvdb" in providername:
                 provider = item['ProviderIds']['Tvdb']
+            elif "musicBrainzArtist" in providername:
+                provider = item['ProviderIds']['MusicBrainzArtist']
+            elif "musicBrainzAlbum" in providername:
+                provider = item['ProviderIds']['MusicBrainzAlbum']
+            elif "musicBrainzTrackId" in providername:
+                provider = item['ProviderIds']['MusicBrainzTrackId']
         except: pass
 
         return provider

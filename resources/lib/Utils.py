@@ -21,7 +21,7 @@ from API import API
 from PlayUtils import PlayUtils
 from DownloadUtils import DownloadUtils
 downloadUtils = DownloadUtils()
-addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
+addonSettings = xbmcaddon.Addon()
 language = addonSettings.getLocalizedString
 
  
@@ -102,31 +102,7 @@ def getKodiMusicDBPath():
 def prettifyXml(elem):
     rough_string = etree.tostring(elem, "utf-8")
     reparsed = minidom.parseString(rough_string)
-    return reparsed.toprettyxml(indent="\t")        
-    
-def get_params( paramstring ):
-    xbmc.log("Parameter string: " + paramstring)
-    param={}
-    if len(paramstring)>=2:
-        params=paramstring
-
-        if params[0] == "?":
-            cleanedparams=params[1:]
-        else:
-            cleanedparams=params
-
-        if (params[len(params)-1]=='/'):
-                params=params[0:len(params)-2]
-
-        pairsofparams=cleanedparams.split('&')
-        for i in range(len(pairsofparams)):
-                splitparams={}
-                splitparams=pairsofparams[i].split('=')
-                if (len(splitparams))==2:
-                        param[splitparams[0]]=splitparams[1]
-                elif (len(splitparams))==3:
-                        param[splitparams[0]]=splitparams[1]+"="+splitparams[2]
-    return param
+    return reparsed.toprettyxml(indent="\t")
 
 def startProfiling():
     pr = cProfile.Profile()
@@ -221,6 +197,7 @@ def normalize_string(text):
         
 def reset():
 
+    WINDOW = xbmcgui.Window( 10000 )
     return_value = xbmcgui.Dialog().yesno("Warning", "Are you sure you want to reset your local Kodi database?")
 
     if return_value == 0:
@@ -240,13 +217,10 @@ def reset():
     
     # Ask if user information should be deleted too.
     return_user = xbmcgui.Dialog().yesno("Warning", "Reset all Emby Addon settings?")
-
-    delete_settings = False
     if return_user == 1:
-        delete_settings = True
+        WINDOW.setProperty('deletesettings', "true")
     
     # first stop any db sync
-    WINDOW = xbmcgui.Window( 10000 )
     WINDOW.setProperty("SyncDatabaseShouldStop", "true")
     
     count = 0
@@ -289,12 +263,6 @@ def reset():
     
     # reset the install run flag
     WINDOW.setProperty("SyncInstallRunDone", "false")
-
-    if (delete_settings == True):
-        addondir = xbmc.translatePath(addonSettings.getAddonInfo('profile'))
-        dataPath = os.path.join(addondir + "settings.xml")
-        xbmcvfs.delete(dataPath)
-        xbmc.log("Deleting : settings.xml")
 
     dialog = xbmcgui.Dialog()
     dialog.ok('Emby Reset', 'Database reset has completed, Kodi will now restart to apply the changes.')

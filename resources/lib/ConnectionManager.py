@@ -1,45 +1,41 @@
+# -*- coding: utf-8 -*-
+
 #################################################################################################
 # connection manager class
 #################################################################################################
+
+import json
+import socket
 
 import xbmc
 import xbmcgui
 import xbmcaddon
 
-import json
-import urllib
-import sys
-import socket
-import threading
-from datetime import datetime
-
 import Utils as utils
+from ClientInformation import ClientInformation
 from DownloadUtils import DownloadUtils
 from UserClient import UserClient
-from ClientInformation import ClientInformation
 
 
 class ConnectionManager():
 
     clientInfo = ClientInformation()
-    uc = UserClient()
+    user = UserClient()
     doUtils = DownloadUtils()
 
     addonName = clientInfo.getAddonName()
     addonId = clientInfo.getAddonId()
-    addon = xbmcaddon.Addon(id=addonId)
+    addon = xbmcaddon.Addon()
     WINDOW = xbmcgui.Window(10000)
-
-    logLevel = 0
 
     def __init__(self):
 
-        self.className = self.__class__.__name__
         self.__language__ = self.addon.getLocalizedString
     
     def logMsg(self, msg, lvl=1):
 
-        utils.logMsg("%s %s" % (self.addonName, self.className), msg, int(lvl))
+        className = self.__class__.__name__
+        utils.logMsg("%s %s" % (self.addonName, className), msg, int(lvl))
 
     def checkServer(self):
         
@@ -47,27 +43,27 @@ class ConnectionManager():
         self.logMsg("Connection Manager Called", 2)
         
         addon = self.addon
-        server = self.uc.getServer()
+        server = self.user.getServer()
 
-        if (server != ""):
+        if server != "":
             self.logMsg("Server already set", 2)
             return
         
         serverInfo = self.getServerDetails()
         
-        if (serverInfo == None):
+        try:
+            prefix,ip,port = serverInfo.split(":")
+            setServer = xbmcgui.Dialog().yesno(self.__language__(30167), "Proceed with the following server?", self.__language__(30169) + serverInfo)
+        except: # serverInfo is None
             self.logMsg("getServerDetails failed", 1)
             xbmc.executebuiltin('Addon.OpenSettings(%s)' % self.addonId)
             return
-
-        prefix,ip,port = serverInfo.split(":")
-        setServer = xbmcgui.Dialog().yesno(self.__language__(30167), "Proceed with the following server?", self.__language__(30169) + serverInfo)
         
-        if (setServer == 1):
+        if setServer == 1:
             self.logMsg("Server selected. Saving information.", 1)
             addon.setSetting("ipaddress", ip.replace("/", ""))
             addon.setSetting("port", port)
-            # If https is enabled
+            # If https, enable the setting
             if (prefix == 'https'):
                 addon.setSetting('https', "true")
         else:
@@ -77,51 +73,37 @@ class ConnectionManager():
 
         # Get List of public users
         self.logMsg("Getting user list", 1)
-        server = ip.replace("/", "") + ":" + port
+        server = "%s:%s" % (ip.replace("/", ""), port)
         url = "%s/mediabrowser/Users/Public?format=json" % serverInfo
 
-        try:
-            result = self.doUtils.downloadUrl(url, authenticate=False)
-        except Exception, msg:
-            error = "Unable to connect to %s: %s" % (server, msg)
-            self.logMsg(error, 1)
-            return ""
-        
-        if (result == ""):
+        result = self.doUtils.downloadUrl(url, authenticate=False)
+        if result == "":
+            self.logMsg("Unable to connect to %s." % server, 1)
             return
-    
-        self.logMsg("jsonData: %s" % result, 2)
 
+        self.logMsg("Result: %s" % result, 2)
+
+        # Process the list returned
         names = []
         userList = []
         for user in result:
-            name = user[u'Name']
+            name = user['Name']
             userList.append(name)
 
-            if(user[u'HasPassword'] == True):
-                name = name + " (Secure)"
+            if user['HasPassword']:
+                name = "%s (Secure)" % name
             names.append(name)
-    
-        self.logMsg("User List: %s" % names, 1)
-        self.logMsg("User List: %s" % userList, 2)
-        return_value = xbmcgui.Dialog().select(self.__language__(30200), names)
-        
-        if (return_value > -1):
-            selected_user = userList[return_value]
+
+        self.logMsg("User list: %s" % names, 1)
+        resp = xbmcgui.Dialog().select(self.__language__(30200), names)
+        if resp > -1:
+            selected_user = userList[resp]
             self.logMsg("Selected User: %s" % selected_user, 1)      
             self.addon.setSetting("username", selected_user)
         else:
             self.logMsg("No user selected.", 1)
             xbmc.executebuiltin('Addon.OpenSettings(%s)' % self.addonId)
             return
-            
-        # Option to play from http
-        #setPlayback = xbmcgui.Dialog().yesno("Playback option", "Play your files using HTTP?")
-        #if setPlayback == 1:
-            #self.logMsg("Playback will be set using HTTP.", 1)
-            #addon.setSetting("playFromStream", "true")
-        #else:
-            #self.logMsg("Playback will be set using SMB.", 1)
                 
     def getServerDetails(self):
 

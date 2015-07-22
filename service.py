@@ -1,4 +1,4 @@
-# -- coding: utf-8 --
+# -*- coding: utf-8 -*-
 
 import os
 import sys
@@ -8,6 +8,7 @@ from datetime import datetime
 import xbmcaddon
 import xbmc
 import xbmcgui
+import xbmcvfs
 
 addon_ = xbmcaddon.Addon(id='plugin.video.emby')
 addon_path = addon_.getAddonInfo('path').decode('utf-8')
@@ -105,6 +106,9 @@ class Service():
 
         while not self.KodiMonitor.abortRequested():
 
+            # Refresh with the latest addon settings
+            addon = xbmcaddon.Addon()
+
             # Before proceeding, need to make sure:
             # 1. Server is online
             # 2. User is set
@@ -114,7 +118,7 @@ class Service():
                 
                 # Emby server is online
                 # Verify if user is set and has access to the server
-                if (user.currUser != None) and user.HasAccess:
+                if (user.currUser is not None) and user.HasAccess:
 
                     # If an item is playing
                     if xbmc.Player().isPlaying():
@@ -125,7 +129,7 @@ class Service():
                             currentFile = xbmc.Player().getPlayingFile()
 
                             # Update positionticks
-                            if player.played_information.get(currentFile) != None:
+                            if player.played_information.get(currentFile) is not None:
                                 player.played_information[currentFile]["currentPosition"] = playTime
                             
                             td = datetime.today() - lastProgressUpdate
@@ -133,23 +137,18 @@ class Service():
                             
                             # Report progress to Emby server
                             if (secDiff > 3):
-                                try:
-                                    player.reportPlayback()
-                                except Exception as msg:
-                                    self.logMsg("Exception reporting progress: %s" % msg)
+                                player.reportPlayback()
                                 lastProgressUpdate = datetime.today()
                             
                             elif WINDOW.getProperty('commandUpdate') == "true":
                                 # Received a remote control command that
                                 # requires updating immediately
-                                try:
-                                    WINDOW.clearProperty('commandUpdate')
-                                    player.reportPlayback()
-                                except: pass
+                                WINDOW.clearProperty('commandUpdate')
+                                player.reportPlayback()
                                 lastProgressUpdate = datetime.today()
                             
                         except Exception as e:
-                            self.logMsg("Exception in Playback Monitor Service: %s" % e)
+                            self.logMsg("Exception in Playback Monitor Service: %s" % e, 1)
                             pass
                     else:
                         # Start up events
@@ -158,20 +157,20 @@ class Service():
                             if self.welcome_msg:
                                 # Reset authentication warnings
                                 self.welcome_msg = False
-                                xbmcgui.Dialog().notification("Emby server", "Welcome %s!" % user.currUser.decode('utf-8').encode('utf-8'), time=2000, sound=False)
+                                xbmcgui.Dialog().notification("Emby server", "Welcome %s!" % user.currUser, icon="special://home/addons/plugin.video.emby/icon.png", time=2000, sound=False)
 
                         # Start the Websocket Client
-                        if (self.newWebSocketThread == None):
+                        if (self.newWebSocketThread is None):
                             self.newWebSocketThread = "Started"
                             ws.start()
                         # Start the Library Sync Thread
-                        if (self.newLibraryThread == None):
+                        if (self.newLibraryThread is None):
                             self.newLibraryThread = "Started"
                             library.start()
                             
                 else:
                     
-                    if (user.currUser == None) and self.warn_auth:
+                    if (user.currUser is None) and self.warn_auth:
                         # Alert user is not authenticated and suppress future warning
                         self.warn_auth = False
                         self.logMsg("Not authenticated yet.", 1)
@@ -206,7 +205,7 @@ class Service():
                         if self.server_online:
                             self.logMsg("Server is offline.", 1)
                             WINDOW.setProperty('Server_online', "false")
-                            xbmcgui.Dialog().notification("Error connecting", "%s Server is unreachable." % self.addonName, sound=False)
+                            xbmcgui.Dialog().notification("Error connecting", "%s Server is unreachable." % self.addonName, icon="special://home/addons/plugin.video.emby/icon.png", sound=False)
                         self.server_online = False
                     
                     else:
@@ -218,14 +217,14 @@ class Service():
                                 # Abort was requested while waiting.
                                 break
                             # Alert the user that server is online.
-                            xbmcgui.Dialog().notification("Connection successful", "%s Server is online." % self.addonName, time=2000, sound=False)
+                            xbmcgui.Dialog().notification("Emby server", "Welcome %s!" % user.currUser, icon="special://home/addons/plugin.video.emby/icon.png", time=2000, sound=False)
                         
                         self.server_online = True
                         self.logMsg("Server is online and ready.", 1)
                         WINDOW.setProperty('Server_online', "true")
                         
                         # Start the User client
-                        if self.newUserClient == None:
+                        if self.newUserClient is None:
                             self.newUserClient = "Started"
                             user.start()
                         break
@@ -241,11 +240,17 @@ class Service():
         # If user reset library database.
         if WINDOW.getProperty('SyncInstallRunDone') == "false":
             addon.setSetting('SyncInstallRunDone', "false")
+        # If user delete Emby settings
+        if WINDOW.getProperty('deletesettings') == "true":
+            addondir = xbmc.translatePath(addon.getAddonInfo('profile')).decode('utf-8')
+            dataPath = "%ssettings.xml" % addondir
+            xbmcvfs.delete(dataPath)
+            self.logMsg("Deleting: settings.xml", 1)
         
-        if (self.newWebSocketThread != None):
+        if (self.newWebSocketThread is not None):
             ws.stopClient()
 
-        if (self.newUserClient != None):
+        if (self.newUserClient is not None):
             user.stopClient()
 
         self.logMsg("======== STOP %s ========" % self.addonName, 0)
