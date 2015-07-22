@@ -88,12 +88,16 @@ def getKodiMusicDBPath():
     if xbmc.getInfoLabel("System.BuildVersion").startswith("13"):
         #gotham
         dbVersion = "46"
+    elif xbmc.getInfoLabel("System.BuildVersion").startswith("14"):
+        #helix
+        dbVersion = "48"
     elif xbmc.getInfoLabel("System.BuildVersion").startswith("15"):
         #isengard
         dbVersion = "52"
     else: 
-        #helix
-        dbVersion = "48"
+        # Not a compatible build
+        xbmc.log("This Kodi version is incompatible. Current version: %s" % kodibuild)
+
     
     dbPath = xbmc.translatePath("special://profile/Database/MyMusic" + dbVersion + ".db")
     
