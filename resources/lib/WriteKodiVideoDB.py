@@ -63,8 +63,10 @@ class WriteKodiVideoDB():
             watchedurl = "{server}/mediabrowser/Users/{UserId}/PlayedItems/%s" % emby_id
             if playcount != 0:
                 doUtils.downloadUrl(watchedurl, type = "POST")
+                self.logMsg("Mark as watched for Id: %s, playcount: %s." % (emby_id, playcount), 1)
             else:
                 doUtils.downloadUrl(watchedurl, type = "DELETE")
+                self.logMsg("Mark as unwatched for Id: %s, playcount: %s." % (emby_id, playcount), 1)
             # Erase any resume point associated
             self.setKodiResumePoint(id, 0, 0, cursor)
         finally:
