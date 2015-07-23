@@ -158,10 +158,12 @@ class PlayUtils():
         location = result[u'LocationType']
         # File can be FileSystem or Remote, not Virtual
         if u'Virtual' in location:
+            self.logMsg("File location is virtual. Can't proceed.", 1)
             return False
 
         # Verify BitRate
         if not self.isNetworkQualitySufficient(result):
+            self.logMsg("The network speed is insufficient to playback the file.", 1)
             return False
 
         return True
@@ -318,7 +320,7 @@ class PlayUtils():
 
     def audioSubsPref(self, mediaSources):
 
-        addon = xbmcaddon.Addon(id=self.addonId)
+        addon = xbmcaddon.Addon()
 
         defaultAudio = mediaSources[0][u'DefaultAudioStreamIndex']
         playurlprefs = "&AudioStreamIndex=%s" % defaultAudio
