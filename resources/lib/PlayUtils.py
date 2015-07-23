@@ -92,7 +92,7 @@ class PlayUtils():
                     resp = xbmcgui.Dialog().select('Warning: Unable to direct play.', ['Play from HTTP', 'Play from HTTP and remember next time.'])
                     if resp == 1:
                         # Remember next time
-                        addon.setSetting('playFromStream', "true")
+                        self.addon.setSetting('playFromStream', "true")
                     else:
                         # User decided not to proceed.
                         self.logMsg("Unable to direct play. Verify the following path is accessible by the device: %s. You might also need to add SMB credentials in the addon settings." % result[u'MediaSources'][0][u'Path'])
