@@ -31,6 +31,8 @@ class PlaybackUtils():
     language = addon.getLocalizedString
     logLevel = 0
     downloadUtils = DownloadUtils()
+
+    WINDOW.clearProperty('playurlFalse')
     
     def __init__(self, *args):
         pass    
@@ -90,8 +92,8 @@ class PlaybackUtils():
             return self.AddToPlaylist(itemsToPlay)
 
         playurl = PlayUtils().getPlayUrl(server, id, result)
-        if playurl == False:
-            #xbmcgui.Dialog().ok('Warning', 'Failed to launch playback.')
+        if playurl == False or WINDOW.getProperty('playurlFalse') == "true":
+            WINDOW.clearProperty('playurlFalse')
             xbmc.log("Failed to retrieve the playback path/url.")
             return
 
