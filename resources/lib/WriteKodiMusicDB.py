@@ -6,7 +6,7 @@
 
 import sqlite3
 from datetime import datetime
-from os.path import basename
+from ntpath import split as ntsplit
 
 import xbmc
 import xbmcgui
@@ -270,8 +270,11 @@ class WriteKodiMusicDB():
         # Get the path and filename
         playurl = PlayUtils().directPlay(MBitem)
         try:
-            filename = basename(playurl)
-            path = playurl.replace(filename, "")
+            path, filename = ntsplit(playurl)
+            if "\\" in playurl:
+                path = "%s\\" % path
+            elif "/" in playurl:
+                path = "%s/" % path
         except: # playurl returned false - using server streaming path, because could not figure out plugin paths for music DB
             playurl = PlayUtils().directstream(MBitem, self.server, embyId, "Audio")
             filename = "stream.mp3"

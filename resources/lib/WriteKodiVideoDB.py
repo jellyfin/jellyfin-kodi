@@ -5,7 +5,7 @@
 #################################################################################################
 
 import sqlite3
-from os.path import basename
+from ntpath import dirname, split as ntsplit
 
 import xbmc
 import xbmcgui
@@ -142,14 +142,17 @@ class WriteKodiVideoDB():
             if "plugin://" in playurl:
                 fileext = ""
             else:
-                fileext = basename(playurl)
+                path, fileext = ntsplit(playurl)
         except: return # playurl returned False
         else: # Set filename and path
             
             if self.directpath:
                 # Use direct paths instead of add-on redirect
                 filename = fileext
-                path = playurl.replace(filename, "")
+                if "\\" in path:
+                    path = "%s\\" % path
+                elif "/" in directory:
+                    path = "%s/" % path
 
             else: # Set plugin path and media flags using real filename
                 filename = "plugin://plugin.video.emby/movies/%s/?filename=%s&id=%s&mode=play" % (embyId, fileext, embyId)
@@ -320,9 +323,15 @@ class WriteKodiVideoDB():
             # playurl can return False
             playurl = PlayUtils().directPlay(MBitem)
             try:
-                filename = basename(playurl)
-                path = playurl.replace(filename, "")
-            except: return# Should we return instead? - for transcoding we just use the server's streaming path because I couldn't figure out how to set the plugin path in the music DB'
+                path, filename = ntsplit(playurl)
+                if "\\" in path:
+                    path = "%s\\" % path
+                elif "/" in path:
+                    path = "%s/" % path
+            except:
+                #for transcoding we just use the server's streaming path because I couldn't figure out how to set the plugin path in the music DB
+                path = "%s/Video/%s/" % (self.server, embyId)
+                filename = "stream.mp4"
         else: # Set plugin path
             path = "plugin://plugin.video.emby/musicvideos/%s/" % embyId
             filename = "plugin://plugin.video.emby/musicvideos/%s/?id=%s&mode=play" % (embyId, embyId)
@@ -445,16 +454,16 @@ class WriteKodiVideoDB():
 
         # Set filename and path
         if self.directpath:
+            # Network share
             playurl = PlayUtils().directPlay(MBitem)
-            try: # playurl can return False
-                filename = basename(playurl)
-                path = playurl.replace(filename, "")
-                if "\\" in playurl:
-                    temp = "%s\\" % path.rsplit("\\", 2)[1]
-                elif "/" in playurl:
-                    temp = "%s/" % path.rsplit("/", 2)[1]
-                toplevelpath = path.replace(temp,"")
-            except: pass
+            if "/" in playurl:
+                # Network path
+                path = "%s/" % playurl
+                toplevelpath = "%s/" % dirname(dirname(path))
+            else:
+                # Local path
+                path = "%s\\" % playurl
+                toplevelpath = "%s\\" % dirname(dirname(path))
         else: # Set plugin path
             path = "plugin://plugin.video.emby/tvshows/%s/" % embyId       
             toplevelpath = "plugin://plugin.video.emby/"
@@ -589,13 +598,16 @@ class WriteKodiVideoDB():
             if "plugin://" in playurl:
                 fileext = ""
             else:
-                fileext = basename(playurl)
+                path, fileext = ntsplit(playurl)
         except: return # playurl returned False
         else: # Set filename and path
 
             if self.directpath:
                 filename = fileext
-                path = playurl.replace(filename, "")
+                if "\\" in playurl:
+                    path = "%s\\" % path
+                elif "/" in playurl:
+                    path = "%s/" % path
 
             else: # Set plugin path and media flags - real filename with extension
                 filename = "plugin://plugin.video.emby/tvshows/%s/?filename=%s&id=%s&mode=play" % (seriesId, fileext, embyId)
