@@ -124,7 +124,6 @@ def addUser():
 
 # THEME MUSIC/VIDEOS
 def getThemeMedia():
-
     doUtils = DownloadUtils()
     playUtils = PlayUtils()
     
@@ -156,7 +155,9 @@ def getThemeMedia():
         dialog = xbmcgui.Dialog()
         dialog.ok('Warning', 'The settings file does not exist in tvtunes. Go to the tvtunes addon and change a setting, then come back and re-run')
         return
-        
+
+    # Offer to exclude video themes
+    includeVideoThemes = xbmcgui.Dialog().yesno("Theme Types", "Should video themes be included?")
 
     # Create library directory
     if not xbmcvfs.exists(library):
@@ -174,15 +175,16 @@ def getThemeMedia():
 
     # Get Ids with Theme Videos
     itemIds = {}
-    for view in userViews:
-        url = "{server}/mediabrowser/Users/{UserId}/Items?HasThemeVideo=True&ParentId=%s&format=json" % view
-        result = doUtils.downloadUrl(url)
-        if result[u'TotalRecordCount'] != 0:
-            for item in result[u'Items']:
-                itemId = item[u'Id']
-                folderName = item[u'Name']
-                folderName = utils.normalize_string(folderName.encode('utf-8'))
-                itemIds[itemId] = folderName
+    if includeVideoThemes:
+        for view in userViews:
+            url = "{server}/mediabrowser/Users/{UserId}/Items?HasThemeVideo=True&ParentId=%s&format=json" % view
+            result = doUtils.downloadUrl(url)
+            if result[u'TotalRecordCount'] != 0:
+                for item in result[u'Items']:
+                    itemId = item[u'Id']
+                    folderName = item[u'Name']
+                    folderName = utils.normalize_string(folderName.encode('utf-8'))
+                    itemIds[itemId] = folderName
 
     # Get paths for theme videos
     for itemId in itemIds:
