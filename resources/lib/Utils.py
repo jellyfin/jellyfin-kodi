@@ -76,6 +76,9 @@ def getKodiVideoDBPath():
     elif kodibuild.startswith("15"):
         # Isengard
         dbVersion = "93"
+    elif kodibuild.startswith("16"):
+        # Jarvis
+        dbVersion = "94"
     else:
         # Not a compatible build
         xbmc.log("This Kodi version is incompatible. Current version: %s" % kodibuild)
@@ -94,6 +97,9 @@ def getKodiMusicDBPath():
     elif xbmc.getInfoLabel("System.BuildVersion").startswith("15"):
         #isengard
         dbVersion = "52"
+    elif xbmc.getInfoLabel("System.BuildVersion").startswith("16"):
+        #jarvis
+        dbVersion = "53"
     else: 
         # Not a compatible build
         xbmc.log("This Kodi version is incompatible. Current version: %s" % kodibuild)

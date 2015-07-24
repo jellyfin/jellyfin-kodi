@@ -831,8 +831,8 @@ class WriteKodiVideoDB():
                 name = person['Name']
                 type = person['Type']
 
-                if kodiVersion == 15:
-                    # Kodi Isengard
+                if kodiVersion == 15 or kodiVersion == 16:
+                    # Kodi Isengard/jarvis
                     cursor.execute("SELECT actor_id as actorid FROM actor WHERE name = ?", (name,))
                 else:
                     # Kodi Gotham or Helix
@@ -842,7 +842,7 @@ class WriteKodiVideoDB():
                     actorid = cursor.fetchone()[0]
                 except:
                     # Person entry does not exist yet.
-                    if kodiVersion == 15:
+                    if kodiVersion == 15 or kodiVersion == 16:
                         # Kodi Isengard
                         cursor.execute("select coalesce(max(actor_id),0) as actorid from actor")
                         query = "INSERT INTO actor(actor_id, name) values(?, ?)"
@@ -867,7 +867,7 @@ class WriteKodiVideoDB():
                         self.addOrUpdateArt(thumb, actorid, arttype, "thumb", cursor)
 
                     # Link person to content in database
-                    if kodiVersion == 15:
+                    if kodiVersion == 15 or kodiVersion == 16:
                         # Kodi Isengard
                         if "Actor" in type:
                             Role = person.get('Role')
@@ -927,7 +927,7 @@ class WriteKodiVideoDB():
         if genres:
 
             # Delete current genres for clean slate
-            if kodiVersion == 15:
+            if kodiVersion == 15 or kodiVersion == 16:
                 cursor.execute("DELETE FROM genre_link WHERE media_id = ? AND media_type = ?", (id, mediatype,))
             else:
                 if "movie" in mediatype:
@@ -940,7 +940,7 @@ class WriteKodiVideoDB():
             # Add Genres
             for genre in genres:
 
-                if kodiVersion == 15:
+                if kodiVersion == 15 or kodiVersion == 16:
                     # Kodi Isengard
                     cursor.execute("SELECT genre_id as genre_id FROM genre WHERE name = ?", (genre,))
                     try:
@@ -987,7 +987,7 @@ class WriteKodiVideoDB():
         if countries:
             for country in countries:
 
-                if kodiVersion == 15:
+                if kodiVersion == 15 or kodiVersion == 16:
                     # Kodi Isengard
                     cursor.execute("SELECT country_id as country_id FROM country WHERE name = ?", (country,))
                     try:
@@ -1029,7 +1029,7 @@ class WriteKodiVideoDB():
         if studios:
             for studio in studios:
 
-                if kodiVersion == 15:
+                if kodiVersion == 15 or kodiVersion == 16:
                     # Kodi Isengard
                     cursor.execute("SELECT studio_id as studio_id FROM studio WHERE name = ?",(studio,))
                     try:
@@ -1076,7 +1076,7 @@ class WriteKodiVideoDB():
 
         if tag:
 
-            if kodiVersion == 15:
+            if kodiVersion == 15 or kodiVersion == 16:
                 # Kodi Isengard
                 cursor.execute("SELECT tag_id as tag_id FROM tag WHERE name = ?", (tag,))
                 try:

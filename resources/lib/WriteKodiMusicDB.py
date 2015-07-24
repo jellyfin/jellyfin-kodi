@@ -163,7 +163,7 @@ class WriteKodiMusicDB():
         if albumid:
             self.logMsg("UPDATE album to Kodi library, Id: %s - Title: %s" % (embyId, name), 1)
 
-            if kodiVersion == 15:
+            if kodiVersion == 15 or kodiVersion == 16:
                 # Kodi Isengard
                 query = "UPDATE album SET strAlbum = ?, strMusicBrainzAlbumID = ?, strArtists = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?, lastScraped = ?, dateAdded = ?, strReleaseType = ? WHERE idAlbum = ?"
                 cursor.execute(query, (name, musicBrainzId, artists, year, genre, bio, thumb, lastScraped, dateadded, "album", albumid))
@@ -188,7 +188,7 @@ class WriteKodiMusicDB():
                 # Create the album
                 cursor.execute("select coalesce(max(idAlbum),0) as albumid from album")
                 albumid = cursor.fetchone()[0] + 1
-                if kodiVersion == 15:
+                if kodiVersion == 15 or kodiVersion == 16:
                     # Kodi Isengard
                     query = "INSERT INTO album(idAlbum, strAlbum, strMusicBrainzAlbumID, strArtists, iYear, strGenres, strReview, strImage, lastScraped, dateAdded, strReleaseType) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
                     cursor.execute(query, (albumid, name, musicBrainzId, artists, year, genre, bio, thumb, lastScraped, dateadded, "album"))
@@ -299,7 +299,7 @@ class WriteKodiMusicDB():
             # No album found, create a single's album
             cursor.execute("select coalesce(max(idAlbum),0) as albumid from album")
             albumid = cursor.fetchone()[0] + 1
-            if kodiVersion == 15:
+            if kodiVersion == 15 or kodiVersion == 16:
                 # Kodi Isengard
                 query = "INSERT INTO album(idAlbum, strArtists, strGenres, iYear, dateAdded, strReleaseType) values(?, ?, ?, ?, ?, ?)"
                 cursor.execute(query, (albumid, artists, genre, year, dateadded, "single"))
