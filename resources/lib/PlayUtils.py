@@ -141,10 +141,6 @@ class PlayUtils():
                 USER_AGENT = "QuickTime/7.7.4"
                 playurl += "?|User-Agent=%s" % USER_AGENT
 
-            if ":" not in playurl:
-                self.logMsg("Path seems invalid: %s" % playurl, 1)
-                return False
-
             return playurl
 
     def isDirectStream(self, result):
@@ -310,9 +306,9 @@ class PlayUtils():
             # Local or Network path
             self.logMsg("Path exists.", 2)
             return True
-        elif "nfs:" in path.lower():
-            # Give benefit of the doubt.
-            self.logMsg("Can't verify path. Still try direct play.", 2)
+        elif ":" not in path:
+            # Give benefit of the doubt for nfs.
+            self.logMsg("Can't verify path (assumed NFS). Still try direct play.", 2)
             return True
         else:
             self.logMsg("Path is detected as follow: %s. Try direct streaming." % path, 2)
