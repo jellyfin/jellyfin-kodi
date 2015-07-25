@@ -151,7 +151,7 @@ class WriteKodiVideoDB():
                 filename = fileext
                 if "\\" in path:
                     path = "%s\\" % path
-                elif "/" in directory:
+                elif "/" in path:
                     path = "%s/" % path
 
             else: # Set plugin path and media flags using real filename
