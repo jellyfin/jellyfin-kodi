@@ -78,7 +78,7 @@ class WriteKodiVideoDB():
         MBitem = ReadEmbyDB().getFullItem(embyId)
         
         if not MBitem:
-            self.logMsg("ADD movie to Kodi library FAILED", "Item %s not found on server!" % embyId)
+            self.logMsg("ADD movie to Kodi library FAILED, Item %s not found on server!" % embyId)
             return
         
         # If the item already exist in the local Kodi DB we'll perform a full item update
@@ -280,7 +280,7 @@ class WriteKodiVideoDB():
         MBitem = ReadEmbyDB().getFullItem(embyId)
         
         if not MBitem:
-            self.logMsg("ADD musicvideo to Kodi library FAILED", "Item %s not found on server!" % embyId, 1)
+            self.logMsg("ADD musicvideo to Kodi library FAILED, Item %s not found on server!" % embyId, 1)
             return
         
         # If the item already exist in the local Kodi DB we'll perform a full item update
@@ -415,7 +415,7 @@ class WriteKodiVideoDB():
         MBitem = ReadEmbyDB().getFullItem(embyId)
         
         if not MBitem:
-            self.logMsg("ADD tvshow to Kodi library FAILED", "Item %s not found on server!" % embyId)
+            self.logMsg("ADD tvshow to Kodi library FAILED, Item %s not found on server!" % embyId)
             return
 
         # If the item already exist in the local Kodi DB we'll perform a full item update
