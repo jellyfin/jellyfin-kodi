@@ -18,9 +18,7 @@ class API():
 
         try:
             people = item['People']
-        
         except: pass
-
         else:
             
             for person in people:

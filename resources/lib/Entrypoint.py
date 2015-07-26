@@ -124,6 +124,7 @@ def addUser():
 
 # THEME MUSIC/VIDEOS
 def getThemeMedia():
+
     doUtils = DownloadUtils()
     playUtils = PlayUtils()
     
@@ -131,7 +132,7 @@ def getThemeMedia():
     server = WINDOW.getProperty('server%s' % currUser)
     playback = None
 
-    library = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/")
+    library = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/").decode('utf-8')
 
     # Choose playback method
     resp = xbmcgui.Dialog().select("Choose playback method for your themes", ["Direct Play", "Direct Stream"])
@@ -144,7 +145,7 @@ def getThemeMedia():
     else:return
 
     # Set custom path for user
-    tvtunes_path = xbmc.translatePath("special://profile/addon_data/script.tvtunes/")
+    tvtunes_path = xbmc.translatePath("special://profile/addon_data/script.tvtunes/").decode('utf-8')
     if xbmcvfs.exists(tvtunes_path):
         tvtunes = xbmcaddon.Addon(id="script.tvtunes")
         tvtunes.setSetting('custom_path_enable', "true")
@@ -155,9 +156,7 @@ def getThemeMedia():
         dialog = xbmcgui.Dialog()
         dialog.ok('Warning', 'The settings file does not exist in tvtunes. Go to the tvtunes addon and change a setting, then come back and re-run')
         return
-
-    # Offer to exclude video themes
-    includeVideoThemes = xbmcgui.Dialog().yesno("Theme Types", "Should video themes be included?")
+        
 
     # Create library directory
     if not xbmcvfs.exists(library):
@@ -175,16 +174,15 @@ def getThemeMedia():
 
     # Get Ids with Theme Videos
     itemIds = {}
-    if includeVideoThemes:
-        for view in userViews:
-            url = "{server}/mediabrowser/Users/{UserId}/Items?HasThemeVideo=True&ParentId=%s&format=json" % view
-            result = doUtils.downloadUrl(url)
-            if result[u'TotalRecordCount'] != 0:
-                for item in result[u'Items']:
-                    itemId = item[u'Id']
-                    folderName = item[u'Name']
-                    folderName = utils.normalize_string(folderName.encode('utf-8'))
-                    itemIds[itemId] = folderName
+    for view in userViews:
+        url = "{server}/mediabrowser/Users/{UserId}/Items?HasThemeVideo=True&ParentId=%s&format=json" % view
+        result = doUtils.downloadUrl(url)
+        if result[u'TotalRecordCount'] != 0:
+            for item in result[u'Items']:
+                itemId = item[u'Id']
+                folderName = item[u'Name']
+                folderName = utils.normalize_string(folderName.encode('utf-8'))
+                itemIds[itemId] = folderName
 
     # Get paths for theme videos
     for itemId in itemIds:
@@ -206,7 +204,7 @@ def getThemeMedia():
             if playback == "DirectPlay":
                 playurl = playUtils.directPlay(theme)
             else:
-                playurl = playUtils.directStream(result, server, theme[u'Id'])
+                playurl = playUtils.directStream(result, server, theme[u'Id'], "ThemeVideo")
             pathstowrite += ('<file>%s</file>' % playurl.encode('utf-8'))
         
         # Check if the item has theme songs and add them   
@@ -660,4 +658,4 @@ def doMainListing():
     addDirectoryItem("Cache all images to Kodi texture cache (advanced)", "plugin://plugin.video.emby/?mode=texturecache")
     addDirectoryItem("Sync Emby Theme Media to Kodi", "plugin://plugin.video.emby/?mode=thememedia")
     
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))                
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))

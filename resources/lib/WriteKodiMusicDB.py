@@ -137,6 +137,7 @@ class WriteKodiMusicDB():
             albumid = None
 
         genres = MBitem.get('Genres')
+
         ##### The album details #####
         lastScraped = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         dateadded = API().getDateCreated(MBitem)
@@ -234,7 +235,7 @@ class WriteKodiMusicDB():
                 cursor.execute(query, (artistid, name, str(year)))
         
     def addOrUpdateSongToKodiLibrary(self, embyId, connection, cursor):
-        
+
         kodiVersion = self.kodiversion
 
         MBitem = ReadEmbyDB().getFullItem(embyId)
@@ -269,12 +270,13 @@ class WriteKodiMusicDB():
 
         # Get the path and filename
         playurl = PlayUtils().directPlay(MBitem)
+
         try:
             path, filename = ntsplit(playurl)
-            if "\\" in playurl:
-                path = "%s\\" % path
-            elif "/" in playurl:
+            if "/" in playurl:
                 path = "%s/" % path
+            elif "\\" in playurl:
+                path = "%s\\" % path
         except: # playurl returned false - using server streaming path, because could not figure out plugin paths for music DB
             playurl = PlayUtils().directstream(MBitem, self.server, embyId, "Audio")
             filename = "stream.mp3"
@@ -426,7 +428,6 @@ class WriteKodiMusicDB():
             
             for genre in genres:
 
-                idGenre = None
                 cursor.execute("SELECT idGenre as idGenre FROM genre WHERE strGenre = ?", (genre,))
                 try:
                     idGenre = cursor.fetchone()[0]

@@ -20,7 +20,6 @@ from ReadKodiDB import ReadKodiDB
 from ReadEmbyDB import ReadEmbyDB
 from TextureCache import TextureCache
 
-
 class WriteKodiVideoDB():
     
     textureCache = TextureCache()
@@ -73,12 +72,12 @@ class WriteKodiVideoDB():
             cursor.close
         
     def addOrUpdateMovieToKodiLibrary(self, embyId, connection, cursor, viewTag):
-        
+
         addon = self.addon
         MBitem = ReadEmbyDB().getFullItem(embyId)
         
         if not MBitem:
-            self.logMsg("ADD movie to Kodi library FAILED, Item %s not found on server!" % embyId)
+            self.logMsg("ADD movie to Kodi library FAILED, Item %s not found on server!" % embyId, 1)
             return
         
         # If the item already exist in the local Kodi DB we'll perform a full item update
@@ -89,8 +88,9 @@ class WriteKodiVideoDB():
             movieid = cursor.fetchone()[0]
         except:
             movieid = None
-            self.logMsg("Movie Id: %s not found." % embyId, 2)
+            self.logMsg("Movie Id: %s not found." % embyId, 1)
         
+
         timeInfo = API().getTimeInfo(MBitem)
         userData = API().getUserData(MBitem)
         people = API().getPeople(MBitem)
@@ -132,51 +132,52 @@ class WriteKodiVideoDB():
                 trailerUrl = "plugin://plugin.video.youtube/play/?video_id=%s" % trailerId
         except:
             trailerUrl = None
-            
-        #### ADD OR UPDATE THE FILE AND PATH ###########
-        #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY
+        
+        ##### ADD OR UPDATE THE FILE AND PATH #####
+        ##### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY #####
 
-        # Get the real filename for direct path or media flags for plugin path
         playurl = PlayUtils().directPlay(MBitem)
-        try:
-            if "plugin://" in playurl:
+        
+        if self.directpath:
+            if playurl == False:
+                return
+            elif "\\" in playurl:
+                filename = playurl.rsplit("\\",1)[-1]
+                path = playurl.replace(filename, "")
+            elif "/" in playurl:
+                filename = playurl.rsplit("/",1)[-1]
+                path = playurl.replace(filename, "")
+        else: # Set plugin path and media flags using real filename
+            try:
+                if "plugin://" in playurl:
+                    fileext = ""
+                else:
+                    path, fileext = ntsplit(playurl)
+            except: # The playurl may return False
                 fileext = ""
+
+            filename = "plugin://plugin.video.emby/movies/%s/?filename=%s&id=%s&mode=play" % (embyId, fileext, embyId)
+            path = "plugin://plugin.video.emby/movies/%s/" % embyId
+
+            # If the bookmark was created from widget
+            cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ?", (fileext,))
+            try: # Remove Kodi bookmark - messes with plugin path bookmark
+                result = cursor.fetchone()[0]
+                self.setKodiResumePoint(result, 0, 0, cursor)
+            except: pass
+
+            # If the bookmark was created within the library
+            plugindummy = "plugin://plugin.video.emby/"
+            cursor.execute("SELECT idPath FROM path WHERE strPath = ?", (plugindummy,))
+            try: 
+                pathiddummy = cursor.fetchone()[0]
+            except: pass
             else:
-                path, fileext = ntsplit(playurl)
-        except: return # playurl returned False
-        else: # Set filename and path
-            
-            if self.directpath:
-                # Use direct paths instead of add-on redirect
-                filename = fileext
-                if "\\" in path:
-                    path = "%s\\" % path
-                elif "/" in path:
-                    path = "%s/" % path
-
-            else: # Set plugin path and media flags using real filename
-                filename = "plugin://plugin.video.emby/movies/%s/?filename=%s&id=%s&mode=play" % (embyId, fileext, embyId)
-                path = "plugin://plugin.video.emby/movies/%s/" % embyId
-
-                # If the bookmark was created from widget
-                cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ?", (fileext,))
-                try: # Remove Kodi bookmark - messes with plugin path bookmark
+                cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?", (filename, pathiddummy,))
+                try: # Remove Kodi bookmark - creates a ghost bookmark for widgets
                     result = cursor.fetchone()[0]
                     self.setKodiResumePoint(result, 0, 0, cursor)
                 except: pass
-
-                # If the bookmark was created within the library
-                plugindummy = "plugin://plugin.video.emby/"
-                cursor.execute("SELECT idPath FROM path WHERE strPath = ?", (plugindummy,))
-                try: 
-                    pathiddummy = cursor.fetchone()[0]
-                except: pass
-                else:
-                    cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?", (filename, pathiddummy,))
-                    try: # Remove Kodi bookmark - creates a ghost bookmark for widgets
-                        result = cursor.fetchone()[0]
-                        self.setKodiResumePoint(result, 0, 0, cursor)
-                    except: pass
 
 
         # Validate the path in database
@@ -235,7 +236,7 @@ class WriteKodiVideoDB():
 
 
         # Update or insert actors
-        self.AddPeopleToMedia(movieid ,MBitem.get('People'), "movie", connection, cursor)
+        self.AddPeopleToMedia(movieid, MBitem.get('People'), "movie", connection, cursor)
         
         # Update artwork
         self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "movie"), movieid, "movie", "thumb", cursor)
@@ -274,124 +275,135 @@ class WriteKodiVideoDB():
             resume = resume - jumpback
         self.setKodiResumePoint(fileid, resume, total, cursor)
         
-    def addOrUpdateMusicVideoToKodiLibrary(self, embyId ,connection, cursor):
+    def addOrUpdateMusicVideoToKodiLibrary( self, embyId ,connection, cursor):
         
-        addon = self.addon
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
+        WINDOW = xbmcgui.Window(10000)
+        username = WINDOW.getProperty('currUser')
+        userid = WINDOW.getProperty('userId%s' % username)
+        server = WINDOW.getProperty('server%s' % username)
+        downloadUtils = DownloadUtils()
+        
         MBitem = ReadEmbyDB().getFullItem(embyId)
         
         if not MBitem:
-            self.logMsg("ADD musicvideo to Kodi library FAILED, Item %s not found on server!" % embyId, 1)
+            utils.logMsg("ADD musicvideo to Kodi library FAILED", "Item %s not found on server!" %embyId)
             return
-        
+
         # If the item already exist in the local Kodi DB we'll perform a full item update
         # If the item doesn't exist, we'll add it to the database
         
-        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?", (embyId,))
-        try:
-            idMVideo = cursor.fetchone()[0]
-        except:
+        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?",(MBitem["Id"],))
+        result = cursor.fetchone()
+        if result != None:
+            idMVideo = result[0]
+        else:
             idMVideo = None
         
         timeInfo = API().getTimeInfo(MBitem)
-        userData = API().getUserData(MBitem)
+        userData=API().getUserData(MBitem)
         people = API().getPeople(MBitem)
-        genres = MBitem.get('Genres')
-        studios = API().getStudios(MBitem)
 
-        #### The video details ####
-        playcount = userData.get('PlayCount')
-        dateplayed = userData.get('LastPlayedDate')
-        dateadded = API().getDateCreated(MBitem)
-        checksum = API().getChecksum(MBitem)
-
-        title = MBitem['Name']
+        #### The video details #########
         runtime = timeInfo.get('TotalTime')
-        director = " / ".join(people.get('Director'))
-        studio = " / ".join(studios)
-        year = MBitem.get('ProductionYear')
-        plot = API().getOverview(MBitem)
-        album = MBitem.get('Album')
-        artist = " / ".join(MBitem.get('Artists'))
+        plot = utils.convertEncoding(API().getOverview(MBitem))
+        title = utils.convertEncoding(MBitem["Name"])
+        year = MBitem.get("ProductionYear")
+        genres = MBitem.get("Genres")
         genre = " / ".join(genres)
-        track = MBitem.get('Track')
+        studios = API().getStudios(MBitem)
+        studio = " / ".join(studios)
+        director = " / ".join(people.get("Director"))
+        artist = " / ".join(MBitem.get("Artists"))
+        album = MBitem.get("Album")
+        track = MBitem.get("Track")
+        
+        if MBitem.get("DateCreated") != None:
+            dateadded = MBitem["DateCreated"].split('.')[0].replace('T', " ")
+        else:
+            dateadded = None
+        
+        if userData.get("PlayCount") != "0":
+            playcount = int(userData.get('PlayCount'))
+        else:
+            playcount = None #playcount must be set to NULL in the db
             
         #### ADD OR UPDATE THE FILE AND PATH ###########
         #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY
-
-        # Set filename and path
-        if addon.getSetting('useDirectPaths') == "true":
-            # playurl can return False
-            playurl = PlayUtils().directPlay(MBitem)
-            try:
-                path, filename = ntsplit(playurl)
-                if "\\" in path:
-                    path = "%s\\" % path
-                elif "/" in path:
-                    path = "%s/" % path
-            except:
+        if addon.getSetting('useDirectPaths')=='true':
+            if PlayUtils().isDirectPlay(MBitem):
+                playurl = PlayUtils().directPlay(MBitem)
+                #use the direct file path
+                if "\\" in playurl:
+                    filename = playurl.rsplit("\\",1)[-1]
+                    path = playurl.replace(filename,"")
+                elif "/" in playurl:
+                    filename = playurl.rsplit("/",1)[-1]
+                    path = playurl.replace(filename,"")        
+            else:
                 #for transcoding we just use the server's streaming path because I couldn't figure out how to set the plugin path in the music DB
-                path = "%s/Video/%s/" % (self.server, embyId)
-                filename = "stream.mp4"
-        else: # Set plugin path
-            path = "plugin://plugin.video.emby/musicvideos/%s/" % embyId
-            filename = "plugin://plugin.video.emby/musicvideos/%s/?id=%s&mode=play" % (embyId, embyId)
-
-        
-        # Validate the path in database
-        cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?", (path,))
-        try:
-            pathid = cursor.fetchone()[0]
-        except:
-            # Path does not exist yet
-            cursor.execute("select coalesce(max(idPath),0) as pathid from path")
-            pathid = cursor.fetchone()[0] + 1
-            query = "INSERT INTO path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
-            cursor.execute(query, (pathid, path, "musicvideos", "metadata.local", 1))
-
-        # Validate the file in database
-        cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?", (filename, pathid,))
-        try:
-            fileid = cursor.fetchone()[0]
-            query = "UPDATE files SET playCount = ?, lastPlayed = ? WHERE idFile = ?"
-            cursor.execute(query, (playcount, dateplayed, fileid))
-        except:
-            # File does not exist yet
-            cursor.execute("select coalesce(max(idFile),0) as fileid from files")
-            fileid = cursor.fetchone()[0] + 1
-            query = "INSERT INTO files(idFile, idPath, strFilename, playCount, lastPlayed, dateAdded) values(?, ?, ?, ?, ?, ?)"
-            cursor.execute(query, (fileid, pathid, filename, playcount, dateplayed, dateadded))
-
-        
-        ##### UPDATE THE MVIDEO #####
-        if idMVideo:
-            self.logMsg("UPDATE musicvideo to Kodi Library, Id: %s - Title: %s" % (embyId, title), 1)
-
-            query = "UPDATE musicvideo SET c00 = ?, c04 = ?, c05 = ?, c06 = ?, c07 = ?, c08 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ? WHERE idMVideo = ?"
-            cursor.execute(query, (title, runtime, director, studio, year, plot, album, artist, genre, track, idMVideo))
-
-            # Update the checksum in emby table
-            query = "UPDATE emby SET checksum = ? WHERE emby_id = ?"
-            cursor.execute(query, (checksum, embyId))
-
-        ##### OR ADD THE MVIDEO #####
+                path = server + "/Video/%s/" %MBitem["Id"]
+                filename = "stream.mp4"                
         else:
-            self.logMsg("ADD musicvideo to Kodi Library, Id: %s - Title: %s" % (embyId, title), 1)
-
-            # Create the video
-            cursor.execute("select coalesce(max(idMVideo),0) as idMVideo from musicvideo")
-            idMVideo = cursor.fetchone()[0] + 1
-            query = "INSERT INTO musicvideo(idMVideo, idFile, c00, c04, c05, c06, c07, c08, c09, c10, c11, c12) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-            cursor.execute(query, (idMVideo, fileid, title, runtime, director, studio, year, plot, album, artist, genre, track))
-
-            # Create the reference in emby table
-            query = "INSERT INTO emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
-            cursor.execute(query, (embyId, idMVideo, "musicvideo", checksum))
-
+            path = "plugin://plugin.video.emby/musicvideos/%s/" % MBitem["Id"]
+            filename = "plugin://plugin.video.emby/musicvideos/%s/?id=%s&mode=play" % (MBitem["Id"], MBitem["Id"])
         
-        # Update or insert actors
+        #create the path
+        cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
+        result = cursor.fetchone()
+        if result != None:
+            pathid = result[0]        
+        else:
+            cursor.execute("select coalesce(max(idPath),0) as pathid from path")
+            pathid = cursor.fetchone()[0]
+            pathid = pathid + 1
+            pathsql = "insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (pathid,path,"musicvideos","metadata.local",1))
+
+        #create the file if not exists
+        cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?",(filename,pathid,))
+        result = cursor.fetchone()
+        if result != None:
+            fileid = result[0]
+        if result == None:
+            cursor.execute("select coalesce(max(idFile),0) as fileid from files")
+            fileid = cursor.fetchone()[0]
+            fileid = fileid + 1
+            pathsql="insert into files(idFile, idPath, strFilename, playCount, lastPlayed, dateAdded) values(?, ?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (fileid,pathid,filename,playcount,userData.get("LastPlayedDate"),dateadded))
+        else:
+            pathsql="update files SET playCount = ?, lastPlayed = ? WHERE idFile = ?"
+            cursor.execute(pathsql, (playcount,userData.get("LastPlayedDate"), fileid))
+        
+        ##### ADD THE VIDEO ############
+        if idMVideo == None:
+            
+            utils.logMsg("ADD musicvideo to Kodi library","Id: %s - Title: %s" % (embyId, title))
+            
+            #create the video
+            cursor.execute("select coalesce(max(idMVideo),0) as idMVideo from musicvideo")
+            idMVideo = cursor.fetchone()[0]
+            idMVideo = idMVideo + 1
+            pathsql="insert into musicvideo(idMVideo, idFile, c00, c04, c05, c06, c07, c08, c09, c10, c11, c12) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(pathsql, (idMVideo, fileid, title, runtime, director, studio, year, plot, album, artist, genre, track))
+            
+            #create the reference in emby table
+            pathsql = "INSERT into emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
+            cursor.execute(pathsql, (MBitem["Id"], idMVideo, "musicvideo", API().getChecksum(MBitem)))
+            
+        #### UPDATE THE VIDEO #####
+        else:
+            utils.logMsg("UPDATE musicvideo to Kodi library","Id: %s - Title: %s" % (embyId, title))
+            pathsql="update musicvideo SET c00 = ?, c04 = ?, c05 = ?, c06 = ?, c07 = ?, c08 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ? WHERE idMVideo = ?"
+            cursor.execute(pathsql, (title, runtime, director, studio, year, plot, album, artist, genre, track, idMVideo))
+            
+            #update the checksum in emby table
+            cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(MBitem),MBitem["Id"]))
+        
+        #update or insert actors
         self.AddPeopleToMedia(idMVideo,MBitem.get("People"),"musicvideo", connection, cursor)
         
-        # Update artwork
+        #update artwork
         self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "musicvideo"), idMVideo, "musicvideo", "thumb", cursor)
         self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "musicvideo"), idMVideo, "musicvideo", "poster", cursor)
         self.addOrUpdateArt(API().getArtwork(MBitem, "Banner", mediaType = "musicvideo"), idMVideo, "musicvideo", "banner", cursor)
@@ -401,17 +413,23 @@ class WriteKodiVideoDB():
         self.addOrUpdateArt(API().getArtwork(MBitem, "Disc", mediaType = "musicvideo"), idMVideo, "musicvideo", "discart", cursor)
         self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop", mediaType = "musicvideo"), idMVideo, "musicvideo", "fanart", cursor)
         
-        # Update genres
+        #update genres
         self.AddGenresToMedia(idMVideo, genres, "musicvideo", cursor)
                
-        # Update studios
+        #update studios
         self.AddStudiosToMedia(idMVideo, studios, "musicvideo", cursor)
         
-        # Add streamdetails
+        #add streamdetails
         self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), fileid, cursor)
-    
-    def addOrUpdateTvShowToKodiLibrary(self, embyId, connection, cursor, viewTag):
         
+        #set resume point
+        resume = int(round(float(timeInfo.get("ResumeTime"))))*60
+        total = int(round(float(timeInfo.get("TotalTime"))))*60
+        self.setKodiResumePoint(fileid, resume, total, cursor)
+    
+    def addOrUpdateTvShowToKodiLibrary(self, embyId, connection, cursor, viewTag ):
+        
+        addon = self.addon
         MBitem = ReadEmbyDB().getFullItem(embyId)
         
         if not MBitem:
@@ -426,6 +444,8 @@ class WriteKodiVideoDB():
             showid = cursor.fetchone()[0]
         except:
             showid = None
+            self.logMsg("TV Show Id: %s not found." % embyId, 1)
+
 
         timeInfo = API().getTimeInfo(MBitem)
         userData = API().getUserData(MBitem)
@@ -449,10 +469,8 @@ class WriteKodiVideoDB():
         studio = " / ".join(studios)
         sorttitle = MBitem['SortName']
 
-        #### ADD OR UPDATE THE FILE AND PATH ###########
-        #### TOP LEVEL PATH AS MONITORED SOURCE IS REQUIRED - for actors, etc. (no clue why)
 
-        # Set filename and path
+        #create toplevel path as monitored source - needed for things like actors and stuff to work (no clue why)
         if self.directpath:
             # Network share
             playurl = PlayUtils().directPlay(MBitem)
@@ -464,7 +482,7 @@ class WriteKodiVideoDB():
                 # Local path
                 path = "%s\\" % playurl
                 toplevelpath = "%s\\" % dirname(dirname(path))
-        else: # Set plugin path
+        else:# Set plugin path
             path = "plugin://plugin.video.emby/tvshows/%s/" % embyId       
             toplevelpath = "plugin://plugin.video.emby/"
             
@@ -546,6 +564,7 @@ class WriteKodiVideoDB():
         
         # Update season details
         self.updateSeasons(embyId, showid, connection, cursor)
+
         
     def addOrUpdateEpisodeToKodiLibrary(self, embyId, showid, connection, cursor):
         
@@ -559,11 +578,13 @@ class WriteKodiVideoDB():
         # If the episode already exist in the local Kodi DB we'll perform a full item update
         # If the item doesn't exist, we'll add it to the database
         
-        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?",(embyId,))
+        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?", (MBitem['Id'],))
         try:
             episodeid = cursor.fetchone()[0]
         except:
             episodeid = None
+            self.logMsg("Episode Id: %s not found." % embyId, 1)
+
 
         timeInfo = API().getTimeInfo(MBitem)
         userData = API().getUserData(MBitem)
@@ -583,55 +604,58 @@ class WriteKodiVideoDB():
         title = MBitem['Name']
         plot = API().getOverview(MBitem)
         rating = MBitem.get('CommunityRating')
-        writer = " / ".join(people.get("Writer"))
+        writer = " / ".join(people.get('Writer'))
         premieredate = API().getPremiereDate(MBitem)
         runtime = timeInfo.get('TotalTime')
-        director = " / ".join(people.get("Director"))
+        director = " / ".join(people.get('Director'))
 
+        
         #### ADD OR UPDATE THE FILE AND PATH ###########
-        #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY
-        #### ORDERING FOR SORTING C15 C16 TO DISPLAY SPECIALS WITHIN REGULAR EPISODES
-
-        # Get the real filename
+        #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY        
+        
         playurl = PlayUtils().directPlay(MBitem)
-        try:
-            if "plugin://" in playurl:
+
+        if self.directpath:
+            if playurl == False:
+                return
+            elif "\\" in playurl:
+                filename = playurl.rsplit("\\",1)[-1]
+                path = playurl.replace(filename, "")
+            elif "/" in playurl:
+                filename = playurl.rsplit("/",1)[-1]
+                path = playurl.replace(filename, "")
+        else: # Set plugin path and media flags - real filename with extension
+            try:
+                if "plugin://" in playurl:
+                    fileext = ""
+                else:
+                    path, fileext = ntsplit(playurl)
+            except: # The playurl may return False
                 fileext = ""
+
+            filename = "plugin://plugin.video.emby/tvshows/%s/?filename=%s&id=%s&mode=play" % (seriesId, fileext, embyId)
+            path = "plugin://plugin.video.emby/tvshows/%s/" % seriesId
+
+            # If the bookmark was created from widget
+            cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ?", (fileext,))
+            try: # Remove Kodi bookmark - messes with plugin path bookmark
+                result = cursor.fetchone()[0]
+                self.setKodiResumePoint(result, 0, 0, cursor)
+            except: pass
+
+            # If the bookmark was created within the library
+            plugindummy = "plugin://plugin.video.emby/"
+            cursor.execute("SELECT idPath FROM path WHERE strPath = ?", (plugindummy,))
+            try: 
+                pathiddummy = cursor.fetchone()[0]
+            except: pass
             else:
-                path, fileext = ntsplit(playurl)
-        except: return # playurl returned False
-        else: # Set filename and path
-
-            if self.directpath:
-                filename = fileext
-                if "\\" in playurl:
-                    path = "%s\\" % path
-                elif "/" in playurl:
-                    path = "%s/" % path
-
-            else: # Set plugin path and media flags - real filename with extension
-                filename = "plugin://plugin.video.emby/tvshows/%s/?filename=%s&id=%s&mode=play" % (seriesId, fileext, embyId)
-                path = "plugin://plugin.video.emby/tvshows/%s/" % seriesId
-
-                # If the bookmark was created from widget
-                cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ?", (fileext,))
-                try: # Remove Kodi bookmark - messes with plugin path bookmark
+                cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?", (filename, pathiddummy,))
+                try: # Remove Kodi bookmark - creates a ghost bookmark for widgets
                     result = cursor.fetchone()[0]
                     self.setKodiResumePoint(result, 0, 0, cursor)
                 except: pass
-
-                # If the bookmark was created within the library
-                plugindummy = "plugin://plugin.video.emby/"
-                cursor.execute("SELECT idPath FROM path WHERE strPath = ?", (plugindummy,))
-                try: 
-                    pathiddummy = cursor.fetchone()[0]
-                except: pass
-                else:
-                    cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?", (filename, pathiddummy,))
-                    try: # Remove Kodi bookmark - creates a ghost bookmark for widgets
-                        result = cursor.fetchone()[0]
-                        self.setKodiResumePoint(result, 0, 0, cursor)
-                    except: pass
+            
         
         # Validate the path in database
         cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?", (path,))
@@ -657,7 +681,7 @@ class WriteKodiVideoDB():
         else: # File exists
             query = "UPDATE files SET playCount = ?, lastPlayed = ? WHERE idFile = ?"
             cursor.execute(query, (playcount, dateplayed, fileid))
-
+        
         # Validate the season exists in Emby and in database
         if season is None:
             self.logMsg("SKIP adding episode to Kodi Library, no ParentIndexNumber - ID: %s - %s" % (embyId, title))
@@ -714,7 +738,7 @@ class WriteKodiVideoDB():
             resume = resume - jumpback
         self.setKodiResumePoint(fileid, resume, total, cursor)
 
-    def deleteItemFromKodiLibrary(self, id, connection, cursor ):
+    def deleteItemFromKodiLibrary(self, id, connection, cursor):
         
         cursor.execute("SELECT kodi_id, media_type FROM emby WHERE emby_id = ?", (id,))
         try:
@@ -742,7 +766,7 @@ class WriteKodiVideoDB():
             # Delete the record in emby table
             cursor.execute("DELETE FROM emby WHERE emby_id = ?", (id,))
      
-    def updateSeasons(self,embyTvShowId, kodiTvShowId, connection, cursor):
+    def updateSeasons(self, embyTvShowId, kodiTvShowId, connection, cursor):
         
         seasonData = ReadEmbyDB().getTVShowSeasons(embyTvShowId)
         
@@ -786,11 +810,11 @@ class WriteKodiVideoDB():
                 self.addOrUpdateArt(imageUrl, seasonid, "season", "poster", cursor)
                             
     def addOrUpdateArt(self, imageUrl, kodiId, mediaType, imageType, cursor):
-
+        
         if imageUrl:
-
-            cacheimage = False
             
+            cacheimage = False
+
             cursor.execute("SELECT url FROM art WHERE media_id = ? AND media_type = ? AND type = ?", (kodiId, mediaType, imageType,))
             try: # Update the artwork
                 url = cursor.fetchone()[0]
@@ -803,8 +827,8 @@ class WriteKodiVideoDB():
                 if url != imageUrl:
                     cacheimage = True
                     self.logMsg("Updating Art Link for kodiId: %s (%s) -> (%s)" % (kodiId, url, imageUrl), 1)
-                    query = "INSERT INTO art(media_id, media_type, type, url) values(?, ?, ?, ?)"
-                    cursor.execute(query, (kodiId, mediaType, imageType, imageUrl))
+                    query = "UPDATE art set url = ? WHERE media_id = ? AND media_type = ? AND type = ?"
+                    cursor.execute(query, (imageUrl, kodiId, mediaType, imageType))
                     
             # Cache fanart and poster in Kodi texture cache
             if cacheimage and imageType in ("fanart", "poster"):
@@ -836,7 +860,7 @@ class WriteKodiVideoDB():
                     cursor.execute("SELECT actor_id as actorid FROM actor WHERE name = ?", (name,))
                 else:
                     # Kodi Gotham or Helix
-                    cursor.execute("SELECT idActor as actorid FROM actors WHERE strActor = ?",(name,))
+                    cursor.execute("SELECT idActor as actorid FROM actors WHERE strActor = ?", (name,))
 
                 try: # Update person in database
                     actorid = cursor.fetchone()[0]
@@ -951,7 +975,7 @@ class WriteKodiVideoDB():
                         genre_id = cursor.fetchone()[0] + 1
                         
                         query = "INSERT INTO genre(genre_id, name) values(?, ?)"
-                        cursor.execute(query, (genre_id,genre))
+                        cursor.execute(query, (genre_id, genre))
                         self.logMsg("Add Genres to media, processing: %s" % genre, 1)
                     finally:
                         # Assign genre to item
@@ -968,7 +992,7 @@ class WriteKodiVideoDB():
                         idGenre = cursor.fetchone()[0] + 1
 
                         query = "INSERT INTO genre(idGenre, strGenre) values(?, ?)"
-                        cursor.execute(query, (idGenre,genre))
+                        cursor.execute(query, (idGenre, genre))
                         self.logMsg("Add Genres to media, processing: %s" % genre, 1)
                     finally:
                         # Assign genre to item
@@ -978,8 +1002,10 @@ class WriteKodiVideoDB():
                             query = "INSERT OR REPLACE into genrelinktvshow(idGenre, idShow) values(?, ?)"
                         elif "musicvideo" in mediatype:
                             query = "INSERT OR REPLACE into genrelinkmusicvideo(idGenre, idMVideo) values(?, ?)"
+                        else: # Item is invalid
+                            return
                         cursor.execute(query, (idGenre, id))
-
+    
     def AddCountriesToMedia(self, id, countries, mediatype, cursor):
         
         kodiVersion = self.kodiversion
@@ -1031,7 +1057,7 @@ class WriteKodiVideoDB():
 
                 if kodiVersion == 15 or kodiVersion == 16:
                     # Kodi Isengard
-                    cursor.execute("SELECT studio_id as studio_id FROM studio WHERE name = ?",(studio,))
+                    cursor.execute("SELECT studio_id as studio_id FROM studio WHERE name = ?", (studio,))
                     try:
                         studio_id = cursor.fetchone()[0]
                     except: # Studio does not exists.
@@ -1041,7 +1067,6 @@ class WriteKodiVideoDB():
                         query = "INSERT INTO studio(studio_id, name) values(?, ?)"
                         cursor.execute(query, (studio_id,studio))
                         self.logMsg("Add Studios to media, processing: %s" % studio, 1)
-                    
                     finally: # Assign studio to item
                         query = "INSERT OR REPLACE INTO studio_link(studio_id, media_id, media_type) values(?, ?, ?)"
                         cursor.execute(query, (studio_id, id, mediatype))
@@ -1050,7 +1075,6 @@ class WriteKodiVideoDB():
                     cursor.execute("SELECT idstudio as idstudio FROM studio WHERE strstudio = ?",(studio,))
                     try:
                         idstudio = cursor.fetchone()[0]
-                    
                     except: # Studio does not exists.
                         cursor.execute("select coalesce(max(idstudio),0) as idstudio from studio")
                         idstudio = cursor.fetchone()[0] + 1
@@ -1058,8 +1082,8 @@ class WriteKodiVideoDB():
                         query = "INSERT INTO studio(idstudio, strstudio) values(?, ?)"
                         cursor.execute(query, (idstudio,studio))
                         self.logMsg("Add Studios to media, processing: %s" % studio, 1)
-                    
                     finally: # Assign studio to item
+                        
                         if "movie" in mediatype:
                             query = "INSERT OR REPLACE INTO studiolinkmovie(idstudio, idMovie) values(?, ?)"
                         elif "musicvideo" in mediatype:
@@ -1070,7 +1094,7 @@ class WriteKodiVideoDB():
                             query = "INSERT OR REPLACE INTO studiolinkepisode(idstudio, idEpisode) values(?, ?)"
                         cursor.execute(query, (idstudio, id))
         
-    def AddTagToMedia(self, id, tag, mediatype, cursor, doRemove = False):
+    def AddTagToMedia(self, id, tag, mediatype, cursor, doRemove=False):
 
         kodiVersion = self.kodiversion
 
@@ -1095,7 +1119,8 @@ class WriteKodiVideoDB():
                         query = "INSERT OR REPLACE INTO tag_link(tag_id, media_id, media_type) values(?, ?, ?)"
                         cursor.execute(query, (tag_id, id, mediatype))
                     else:
-                        cursor.execute("DELETE FROM tag_link WHERE media_id = ? AND media_type = ? AND tag_id = ?", (id, mediatype, tag_id,))
+                        query = "DELETE FROM tag_link WHERE media_id = ? AND media_type = ? AND tag_id = ?"
+                        cursor.execute(query, (id, mediatype, tag_id))
             else:
                 # Kodi Gotham or Helix
                 cursor.execute("SELECT idTag as idTag FROM tag WHERE strTag = ?", (tag,))
@@ -1114,8 +1139,9 @@ class WriteKodiVideoDB():
                     if not doRemove:
                         query = "INSERT OR REPLACE INTO taglinks(idTag, idMedia, media_type) values(?, ?, ?)"
                         cursor.execute(query, (idTag, id, mediatype))
-                    else:    
-                        cursor.execute("DELETE FROM taglinks WHERE idMedia = ? AND media_type = ? AND idTag = ?", (id, mediatype, idTag,))
+                    else:
+                        query = "DELETE FROM taglinks WHERE idMedia = ? AND media_type = ? AND idTag = ?"
+                        cursor.execute(query, (id, mediatype, idTag))
     
     def AddStreamDetailsToMedia(self, streamdetails, fileid, cursor):
         
@@ -1152,8 +1178,8 @@ class WriteKodiVideoDB():
             setid = cursor.fetchone()[0]
         finally:
             # Assign artwork
-            currentsetartsql = 'SELECT type, url FROM art where media_type = ? and media_id = ? and url != ""'
-            cursor.execute(currentsetartsql, ("set", setid))
+            cursor.execute('SELECT type, url FROM art WHERE media_type = ? AND media_id = ? and url != ""', ("set", setid,))
+
             existing_type_map = {}
             rows = cursor.fetchall()
             for row in rows:
@@ -1184,7 +1210,7 @@ class WriteKodiVideoDB():
         
         strSet = boxset['Name']
         boxsetmovieid = boxsetmovie['Id']
-        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?",(boxsetmovieid,))
+        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?", (boxsetmovieid,))
         try:
             movieid = cursor.fetchone()[0]
             cursor.execute("SELECT idSet FROM sets WHERE strSet = ?", (strSet,))
