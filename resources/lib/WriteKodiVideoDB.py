@@ -137,6 +137,8 @@ class WriteKodiVideoDB():
         ##### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY #####
 
         playurl = PlayUtils().directPlay(MBitem)
+        realfile = ""
+        realpath = ""
         
         if self.directpath:
             if playurl == False:
@@ -149,66 +151,30 @@ class WriteKodiVideoDB():
                 path = playurl.replace(filename, "")
         else: # Set plugin path and media flags using real filename
             try:
-                if "plugin://" in playurl:
-                    fileext = ""
-                else:
-                    path, fileext = ntsplit(playurl)
-            except: # The playurl may return False
-                fileext = ""
+                if not "plugin://" in playurl:
+                    realpath, realfile = ntsplit(playurl)
+                    if "/" in playurl:
+                        realpath = realpath + "/"
+                    else:
+                        realpath = realpath + "\\"
+            except: 
+                pass
 
-            filename = "plugin://plugin.video.emby/movies/%s/?filename=%s&id=%s&mode=play" % (embyId, fileext, embyId)
+            filename = "plugin://plugin.video.emby/movies/%s/?filename=%s&id=%s&mode=play" % (embyId, realfile, embyId)
             path = "plugin://plugin.video.emby/movies/%s/" % embyId
-
-            # If the bookmark was created from widget
-            cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ?", (fileext,))
-            try: # Remove Kodi bookmark - messes with plugin path bookmark
-                result = cursor.fetchone()[0]
-                self.setKodiResumePoint(result, 0, 0, cursor)
-            except: pass
-
-            # If the bookmark was created within the library
-            plugindummy = "plugin://plugin.video.emby/"
-            cursor.execute("SELECT idPath FROM path WHERE strPath = ?", (plugindummy,))
-            try: 
-                pathiddummy = cursor.fetchone()[0]
-            except: pass
-            else:
-                cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?", (filename, pathiddummy,))
-                try: # Remove Kodi bookmark - creates a ghost bookmark for widgets
-                    result = cursor.fetchone()[0]
-                    self.setKodiResumePoint(result, 0, 0, cursor)
-                except: pass
-
-
-        # Validate the path in database
-        cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?", (path,))
-        try:
-            pathid = cursor.fetchone()[0]
-        except:
-            # Path does not exist yet
-            cursor.execute("select coalesce(max(idPath),0) as pathid from path")
-            pathid = cursor.fetchone()[0] + 1
-            query = "INSERT into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
-            cursor.execute(query, (pathid, path, "movies", "metadata.local", 1))
-
-        # Validate the file in database
-        cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?", (filename, pathid,))
-        try:
-            fileid = cursor.fetchone()[0]
-        except:
-            # File does not exist yet
-            cursor.execute("select coalesce(max(idFile),0) as fileid from files")
-            fileid = cursor.fetchone()[0] + 1
-            query = "INSERT INTO files(idFile, idPath, strFilename, playCount, lastPlayed, dateAdded) values(?, ?, ?, ?, ?, ?)"
-            cursor.execute(query, (fileid, pathid, filename, playcount, dateplayed, dateadded))
-        else: # File exists
-            query = "UPDATE files SET playCount = ?, lastPlayed = ? WHERE idFile = ?"
-            cursor.execute(query, (playcount, dateplayed, fileid))
-
+              
 
         ##### UPDATE THE MOVIE #####
         if movieid:
             self.logMsg("UPDATE movie to Kodi Library, Id: %s - Title: %s" % (embyId, title), 1)
+            
+            #get the file ID
+            cursor.execute("SELECT idFile as fileid FROM movie WHERE idMovie = ?", (movieid,))
+            fileid = cursor.fetchone()[0]
+            
+            #always update the filepath (fix for path change)
+            query = "UPDATE files SET strFilename = ? WHERE idFile = ?"
+            cursor.execute(query, (filename, fileid))
 
             query = "UPDATE movie SET c00 = ?, c01 = ?, c02 = ?, c03 = ?, c04 = ?, c05 = ?, c06 = ?, c07 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?, c16 = ?, c18 = ?, c19 = ?, c21 = ? WHERE idMovie = ?"
             cursor.execute(query, (title, plot, shortplot, tagline, votecount, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl, country, movieid))
@@ -220,6 +186,31 @@ class WriteKodiVideoDB():
         ##### OR ADD THE MOVIE #####
         else:
             self.logMsg("ADD movie to Kodi Library, Id: %s - Title: %s" % (embyId, title), 1)
+            
+            # Validate the path in database
+            cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?", (path,))
+            try:
+                pathid = cursor.fetchone()[0]
+            except:
+                # Path does not exist yet
+                cursor.execute("select coalesce(max(idPath),0) as pathid from path")
+                pathid = cursor.fetchone()[0] + 1
+                query = "INSERT into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
+                cursor.execute(query, (pathid, path, "movies", "metadata.local", 1))
+
+            # Validate the file in database
+            if self.directpath:
+                cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?", (filename, pathid,))
+            else:
+                cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename LIKE ? and idPath = ?", (filename, embyId,))
+            try:
+                fileid = cursor.fetchone()[0]
+            except:
+                # File does not exist yet
+                cursor.execute("select coalesce(max(idFile),0) as fileid from files")
+                fileid = cursor.fetchone()[0] + 1
+                query = "INSERT INTO files(idFile, idPath, strFilename, playCount, lastPlayed, dateAdded) values(?, ?, ?, ?, ?, ?)"
+                cursor.execute(query, (fileid, pathid, filename, playcount, dateplayed, dateadded))
 
             # Create the movie
             cursor.execute("select coalesce(max(idMovie),0) as movieid from movie")
@@ -273,7 +264,7 @@ class WriteKodiVideoDB():
         if resume > jumpback:
             # To avoid negative bookmark
             resume = resume - jumpback
-        self.setKodiResumePoint(fileid, resume, total, cursor)
+        self.setKodiResumePoint(fileid, resume, total, cursor, playcount, dateplayed, realpath, realfile)
         
     def addOrUpdateMusicVideoToKodiLibrary( self, embyId ,connection, cursor):
         
@@ -317,68 +308,80 @@ class WriteKodiVideoDB():
         artist = " / ".join(MBitem.get("Artists"))
         album = MBitem.get("Album")
         track = MBitem.get("Track")
+        dateplayed = userData.get("LastPlayedDate")
         
         if MBitem.get("DateCreated") != None:
             dateadded = MBitem["DateCreated"].split('.')[0].replace('T', " ")
         else:
             dateadded = None
         
-        if userData.get("PlayCount") != "0":
+        if userData.get("PlayCount") != "0" and userData.get("PlayCount") != None:
             playcount = int(userData.get('PlayCount'))
         else:
             playcount = None #playcount must be set to NULL in the db
             
-        #### ADD OR UPDATE THE FILE AND PATH ###########
-        #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY
-        if addon.getSetting('useDirectPaths')=='true':
-            if PlayUtils().isDirectPlay(MBitem):
-                playurl = PlayUtils().directPlay(MBitem)
-                #use the direct file path
-                if "\\" in playurl:
-                    filename = playurl.rsplit("\\",1)[-1]
-                    path = playurl.replace(filename,"")
-                elif "/" in playurl:
-                    filename = playurl.rsplit("/",1)[-1]
-                    path = playurl.replace(filename,"")        
-            else:
-                #for transcoding we just use the server's streaming path because I couldn't figure out how to set the plugin path in the music DB
-                path = server + "/Video/%s/" %MBitem["Id"]
-                filename = "stream.mp4"                
-        else:
-            path = "plugin://plugin.video.emby/musicvideos/%s/" % MBitem["Id"]
-            filename = "plugin://plugin.video.emby/musicvideos/%s/?id=%s&mode=play" % (MBitem["Id"], MBitem["Id"])
-        
-        #create the path
-        cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
-        result = cursor.fetchone()
-        if result != None:
-            pathid = result[0]        
-        else:
-            cursor.execute("select coalesce(max(idPath),0) as pathid from path")
-            pathid = cursor.fetchone()[0]
-            pathid = pathid + 1
-            pathsql = "insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (pathid,path,"musicvideos","metadata.local",1))
+        ##### ADD OR UPDATE THE FILE AND PATH #####
+        ##### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY #####
 
-        #create the file if not exists
-        cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?",(filename,pathid,))
-        result = cursor.fetchone()
-        if result != None:
-            fileid = result[0]
-        if result == None:
-            cursor.execute("select coalesce(max(idFile),0) as fileid from files")
-            fileid = cursor.fetchone()[0]
-            fileid = fileid + 1
-            pathsql="insert into files(idFile, idPath, strFilename, playCount, lastPlayed, dateAdded) values(?, ?, ?, ?, ?, ?)"
-            cursor.execute(pathsql, (fileid,pathid,filename,playcount,userData.get("LastPlayedDate"),dateadded))
-        else:
-            pathsql="update files SET playCount = ?, lastPlayed = ? WHERE idFile = ?"
-            cursor.execute(pathsql, (playcount,userData.get("LastPlayedDate"), fileid))
+        playurl = PlayUtils().directPlay(MBitem)
+        realfile = ""
+        realpath = ""
+        
+        if self.directpath:
+            if playurl == False:
+                return
+            elif "\\" in playurl:
+                filename = playurl.rsplit("\\",1)[-1]
+                path = playurl.replace(filename, "")
+            elif "/" in playurl:
+                filename = playurl.rsplit("/",1)[-1]
+                path = playurl.replace(filename, "")
+        else: # Set plugin path and media flags using real filename
+            try:
+                if not "plugin://" in playurl:
+                    realpath, realfile = ntsplit(playurl)
+                    if "/" in playurl:
+                        realpath = realpath + "/"
+                    else:
+                        realpath = realpath + "\\"
+            except: 
+                pass
+
+            filename = "plugin://plugin.video.emby/musicvideos/%s/?filename=%s&id=%s&mode=play" % (MBitem["Id"], realfile, MBitem["Id"])
+            path = "plugin://plugin.video.emby/movies/%s/" % embyId
+
         
         ##### ADD THE VIDEO ############
         if idMVideo == None:
             
             utils.logMsg("ADD musicvideo to Kodi library","Id: %s - Title: %s" % (embyId, title))
+            
+            #create the path
+            cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?",(path,))
+            result = cursor.fetchone()
+            if result != None:
+                pathid = result[0]        
+            else:
+                cursor.execute("select coalesce(max(idPath),0) as pathid from path")
+                pathid = cursor.fetchone()[0]
+                pathid = pathid + 1
+                pathsql = "insert into path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
+                cursor.execute(pathsql, (pathid,path,"musicvideos","metadata.local",1))
+
+            #create the file if not exists
+            if self.directpath:
+                cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?", (filename, pathid,))
+            else:
+                cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename LIKE ? and idPath = ?", (filename, embyId,))
+            result = cursor.fetchone()
+            if result != None:
+                fileid = result[0]
+            if result == None:
+                cursor.execute("select coalesce(max(idFile),0) as fileid from files")
+                fileid = cursor.fetchone()[0]
+                fileid = fileid + 1
+                pathsql="insert into files(idFile, idPath, strFilename, playCount, lastPlayed, dateAdded) values(?, ?, ?, ?, ?, ?)"
+                cursor.execute(pathsql, (fileid,pathid,filename,playcount,userData.get("LastPlayedDate"),dateadded))
             
             #create the video
             cursor.execute("select coalesce(max(idMVideo),0) as idMVideo from musicvideo")
@@ -394,6 +397,15 @@ class WriteKodiVideoDB():
         #### UPDATE THE VIDEO #####
         else:
             utils.logMsg("UPDATE musicvideo to Kodi library","Id: %s - Title: %s" % (embyId, title))
+            
+            #get the file ID
+            cursor.execute("SELECT idFile as fileid FROM musicvideo WHERE idMVideo = ?", (idMVideo,))
+            fileid = cursor.fetchone()[0]
+            
+            #always update the filepath (fix for path change)
+            query = "UPDATE files SET strFilename = ? WHERE idFile = ?"
+            cursor.execute(query, (filename, fileid))
+            
             pathsql="update musicvideo SET c00 = ?, c04 = ?, c05 = ?, c06 = ?, c07 = ?, c08 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ? WHERE idMVideo = ?"
             cursor.execute(pathsql, (title, runtime, director, studio, year, plot, album, artist, genre, track, idMVideo))
             
@@ -425,7 +437,7 @@ class WriteKodiVideoDB():
         #set resume point
         resume = int(round(float(timeInfo.get("ResumeTime"))))*60
         total = int(round(float(timeInfo.get("TotalTime"))))*60
-        self.setKodiResumePoint(fileid, resume, total, cursor)
+        self.setKodiResumePoint(fileid, resume, total, cursor, playcount, dateplayed, realpath, realfile)
     
     def addOrUpdateTvShowToKodiLibrary(self, embyId, connection, cursor, viewTag ):
         
@@ -564,8 +576,7 @@ class WriteKodiVideoDB():
         
         # Update season details
         self.updateSeasons(embyId, showid, connection, cursor)
-
-        
+       
     def addOrUpdateEpisodeToKodiLibrary(self, embyId, showid, connection, cursor):
         
         addon = self.addon
@@ -607,13 +618,11 @@ class WriteKodiVideoDB():
         writer = " / ".join(people.get('Writer'))
         premieredate = API().getPremiereDate(MBitem)
         runtime = timeInfo.get('TotalTime')
-        director = " / ".join(people.get('Director'))
-
-        
-        #### ADD OR UPDATE THE FILE AND PATH ###########
-        #### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY        
+        director = " / ".join(people.get('Director'))     
         
         playurl = PlayUtils().directPlay(MBitem)
+        realfile = ""
+        realpath = ""
 
         if self.directpath:
             if playurl == False:
@@ -625,62 +634,20 @@ class WriteKodiVideoDB():
                 filename = playurl.rsplit("/",1)[-1]
                 path = playurl.replace(filename, "")
         else: # Set plugin path and media flags - real filename with extension
+            realfile = ""
+            realpath = ""
             try:
-                if "plugin://" in playurl:
-                    fileext = ""
-                else:
-                    path, fileext = ntsplit(playurl)
-            except: # The playurl may return False
-                fileext = ""
+                if not "plugin://" in playurl:
+                    realpath, realfile = ntsplit(playurl)
+                    if "/" in playurl:
+                        realpath = realpath + "/"
+                    else:
+                        realpath = realpath + "\\"
+            except: 
+                pass
 
-            filename = "plugin://plugin.video.emby/tvshows/%s/?filename=%s&id=%s&mode=play" % (seriesId, fileext, embyId)
-            path = "plugin://plugin.video.emby/tvshows/%s/" % seriesId
-
-            # If the bookmark was created from widget
-            cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ?", (fileext,))
-            try: # Remove Kodi bookmark - messes with plugin path bookmark
-                result = cursor.fetchone()[0]
-                self.setKodiResumePoint(result, 0, 0, cursor)
-            except: pass
-
-            # If the bookmark was created within the library
-            plugindummy = "plugin://plugin.video.emby/"
-            cursor.execute("SELECT idPath FROM path WHERE strPath = ?", (plugindummy,))
-            try: 
-                pathiddummy = cursor.fetchone()[0]
-            except: pass
-            else:
-                cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?", (filename, pathiddummy,))
-                try: # Remove Kodi bookmark - creates a ghost bookmark for widgets
-                    result = cursor.fetchone()[0]
-                    self.setKodiResumePoint(result, 0, 0, cursor)
-                except: pass
-            
-        
-        # Validate the path in database
-        cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?", (path,))
-        try:
-            pathid = cursor.fetchone()[0]
-        except:
-            # Path does not exist yet
-            cursor.execute("select coalesce(max(idPath),0) as pathid from path")
-            pathid = cursor.fetchone()[0] + 1
-            query = "INSERT INTO path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
-            cursor.execute(query, (pathid, path, None, None, 1))
-
-        # Validate the file in database
-        cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?", (filename, pathid,))
-        try:
-            fileid = cursor.fetchone()[0]
-        except:
-            # File does not exist yet
-            cursor.execute("select coalesce(max(idFile),0) as fileid from files")
-            fileid = cursor.fetchone()[0] + 1
-            query = "INSERT INTO files(idFile, idPath, strFilename, playCount, lastPlayed, dateAdded) values(?, ?, ?, ?, ?, ?)"
-            cursor.execute(query, (fileid, pathid, filename, playcount, dateplayed, dateadded))
-        else: # File exists
-            query = "UPDATE files SET playCount = ?, lastPlayed = ? WHERE idFile = ?"
-            cursor.execute(query, (playcount, dateplayed, fileid))
+            filename = "plugin://plugin.video.emby/tvshows/%s/?filename=%s&id=%s&mode=play" % (seriesId, realfile, embyId)
+            path = "plugin://plugin.video.emby/tvshows/%s/" % seriesId          
         
         # Validate the season exists in Emby and in database
         if season is None:
@@ -697,6 +664,14 @@ class WriteKodiVideoDB():
         ##### UPDATE THE EPISODE #####
         if episodeid:
             self.logMsg("UPDATE episode from // %s - S%s // to Kodi library, Id: %s - E%s: %s" % (seriesName, season, embyId, episode, title))
+            
+            #get the file ID
+            cursor.execute("SELECT idFile as fileid FROM episode WHERE idEpisode = ?", (episodeid,))
+            fileid = cursor.fetchone()[0]
+            
+            #always update the filepath (fix for path change)
+            query = "UPDATE files SET strFilename = ? WHERE idFile = ?"
+            cursor.execute(query, (filename, fileid))
 
             query = "UPDATE episode SET c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?, c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ? WHERE idEpisode = ?"
             cursor.execute(query, (title, plot, rating, writer, premieredate, runtime, director, season, episode, title, "-1", "-1", episodeid))
@@ -708,6 +683,31 @@ class WriteKodiVideoDB():
         ##### OR ADD THE EPISODE #####
         else:
             self.logMsg("ADD episode from // %s - S%s // to Kodi library, Id: %s - E%s: %s" % (seriesName, season, embyId, episode, title))
+            
+            # Validate the path in database
+            if self.directpath:
+                cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?", (filename, pathid,))
+            else:
+                cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename LIKE ? and idPath = ?", (filename, embyId,))
+            try:
+                pathid = cursor.fetchone()[0]
+            except:
+                # Path does not exist yet
+                cursor.execute("select coalesce(max(idPath),0) as pathid from path")
+                pathid = cursor.fetchone()[0] + 1
+                query = "INSERT INTO path(idPath, strPath, strContent, strScraper, noUpdate) values(?, ?, ?, ?, ?)"
+                cursor.execute(query, (pathid, path, None, None, 1))
+
+            # Validate the file in database
+            cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?", (filename, pathid,))
+            try:
+                fileid = cursor.fetchone()[0]
+            except:
+                # File does not exist yet
+                cursor.execute("select coalesce(max(idFile),0) as fileid from files")
+                fileid = cursor.fetchone()[0] + 1
+                query = "INSERT INTO files(idFile, idPath, strFilename, playCount, lastPlayed, dateAdded) values(?, ?, ?, ?, ?, ?)"
+                cursor.execute(query, (fileid, pathid, filename, playcount, dateplayed, dateadded))
 
             # Create the episode
             cursor.execute("select coalesce(max(idEpisode),0) as episodeid from episode")
@@ -719,7 +719,6 @@ class WriteKodiVideoDB():
             query = "INSERT INTO emby(emby_id, kodi_id, media_type, checksum, parent_id) values(?, ?, ?, ?, ?)"
             cursor.execute(query, (embyId, episodeid, "episode", checksum, showid))
 
-        
         # Update or insert actors
         self.AddPeopleToMedia(episodeid, MBitem.get('People'), "episode", connection, cursor)
 
@@ -736,7 +735,7 @@ class WriteKodiVideoDB():
         if resume > jumpback:
             # To avoid negative bookmark
             resume = resume - jumpback
-        self.setKodiResumePoint(fileid, resume, total, cursor)
+        self.setKodiResumePoint(fileid, resume, total, cursor, playcount, dateplayed, realpath, realfile)
 
     def deleteItemFromKodiLibrary(self, id, connection, cursor):
         
@@ -834,14 +833,34 @@ class WriteKodiVideoDB():
             if cacheimage and imageType in ("fanart", "poster"):
                 self.textureCache.CacheTexture(imageUrl)
         
-    def setKodiResumePoint(self, fileid, resume_seconds, total_seconds, cursor):
+    def setKodiResumePoint(self, fileid, resume_seconds, total_seconds, cursor, playcount=None, dateplayed=None, realpath=None, realfile=None):
         
+        if realpath:
+            #delete any existing resume point for the real filepath
+            cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?", (realpath,))
+            result = cursor.fetchone()
+            if result:
+                pathid = result[0]
+                cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?", (realfile, pathid,))
+                result = cursor.fetchone()
+                if result:
+                    cursor.execute("DELETE FROM bookmark WHERE idFile = ?", (result[0],))
+        
+        #delete existing resume point for the actual filepath
         cursor.execute("DELETE FROM bookmark WHERE idFile = ?", (fileid,))
+        
+        #set watched count
+        if playcount:
+            query = "UPDATE files SET playCount = ?, lastPlayed = ? WHERE idFile = ?"
+            cursor.execute(query, (playcount, dateplayed, fileid))
+        
+        #set the resume bookmark
         if resume_seconds:
             cursor.execute("select coalesce(max(idBookmark),0) as bookmarkId from bookmark")
             bookmarkId =  cursor.fetchone()[0] + 1
             query = "INSERT INTO bookmark(idBookmark, idFile, timeInSeconds, totalTimeInSeconds, thumbNailImage, player, playerState, type) values(?, ?, ?, ?, ?, ?, ?, ?)"
             cursor.execute(query, (bookmarkId, fileid, resume_seconds, total_seconds, None, "DVDPlayer", None, 1))
+            
      
     def AddPeopleToMedia(self, id, people, mediatype, connection, cursor):
         
@@ -911,7 +930,7 @@ class WriteKodiVideoDB():
                         # Kodi Gotham or Helix
                         if "Actor" in type:
                             Role = person.get('Role')
-
+                            query = None
                             if "movie" in mediatype:
                                 query = "INSERT OR REPLACE INTO actorlinkmovie(idActor, idMovie, strRole, iOrder) values(?, ?, ?, ?)"
                             elif "tvshow" in mediatype:
@@ -919,8 +938,9 @@ class WriteKodiVideoDB():
                             elif "episode" in mediatype:
                                 query = "INSERT OR REPLACE INTO actorlinkepisode(idActor, idEpisode, strRole, iOrder) values(?, ?, ?, ?)"
                             
-                            cursor.execute(query, (actorid, id, Role, castorder))
-                            castorder += 1
+                            if query:
+                                cursor.execute(query, (actorid, id, Role, castorder))
+                                castorder += 1
 
                         elif "Director" in type:
 
