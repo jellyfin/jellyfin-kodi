@@ -309,16 +309,8 @@ class WriteKodiVideoDB():
         album = MBitem.get("Album")
         track = MBitem.get("Track")
         dateplayed = userData.get("LastPlayedDate")
-        
-        if MBitem.get("DateCreated") != None:
-            dateadded = MBitem["DateCreated"].split('.')[0].replace('T', " ")
-        else:
-            dateadded = None
-        
-        if userData.get("PlayCount") != "0" and userData.get("PlayCount") != None:
-            playcount = int(userData.get('PlayCount'))
-        else:
-            playcount = None #playcount must be set to NULL in the db
+        playcount = userData.get('PlayCount')
+        dateadded = API().getDateCreated(MBitem)
             
         ##### ADD OR UPDATE THE FILE AND PATH #####
         ##### NOTE THAT LASTPLAYED AND PLAYCOUNT ARE STORED AT THE FILE ENTRY #####
