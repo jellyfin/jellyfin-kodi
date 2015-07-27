@@ -129,10 +129,18 @@ class API():
                 if "Video" in type:
                     videotrack = {}
                     videotrack['videocodec'] = mediaStream.get('Codec')
+                    if "mpeg4" in videotrack['videocodec']:
+                        profile = mediaStream.get('Profile', "")
+                        if "Advanced" in profile:
+                            videotrack['videocodec'] = "xvid"
+                    elif "h264" in videotrack['videocodec']:
+                        container = item['MediaSources'][0].get('Container', "")
+                        if "mp4" in container:
+                            videotrack['videocodec'] = "avc1"
                     videotrack['height'] = mediaStream.get('Height')
                     videotrack['width'] = mediaStream.get('Width')
-                    videotrack['aspectratio'] = mediaStream.get('AspectRatio', "1:1")
                     videotrack['Video3DFormat'] = item.get('Video3DFormat')
+                    videotrack['aspectratio'] = mediaStream.get('AspectRatio', "1:1")
                     if len(videotrack['aspectratio']) >= 3:
                         try:
                             aspectwidth, aspectheight = videotrack['aspectratio'].split(':')
