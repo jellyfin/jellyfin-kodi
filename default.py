@@ -81,17 +81,17 @@ class Main:
             
         ##### GET NEXTUP EPISODES FOR TAGNAME #####    
         elif "nextup" in mode:
-            limit = params['limit'][0]
+            limit = int(params['limit'][0])
             entrypoint.getNextUpEpisodes(id, limit)
 
         ##### GET INPROGRESS EPISODES FOR TAGNAME #####    
         elif "inprogressepisodes" in mode:
-            limit = params['limit'][0]
+            limit = int(params['limit'][0])
             entrypoint.getInProgressEpisodes(id, limit)
 
         ##### GET RECENT EPISODES FOR TAGNAME #####    
         elif "recentepisodes" in mode:
-            limit = params['limit'][0]
+            limit = int(params['limit'][0])
             entrypoint.getRecentEpisodes(id, limit)
             
         ##### GET EXTRAFANART FOR LISTITEM #####

@@ -30,7 +30,7 @@ class VideoNodes():
         
         libraryPath = xbmc.translatePath("special://profile/library/video/Emby - %s/" %tagname)
         kodiVersion = 14
-        if xbmc.getInfoLabel("System.BuildVersion").startswith("15"):
+        if xbmc.getInfoLabel("System.BuildVersion").startswith("15") or xbmc.getInfoLabel("System.BuildVersion").startswith("16"):
             kodiVersion = 15
         
         #create tag node - index

@@ -27,7 +27,6 @@ def doPlayback(id):
     result = DownloadUtils().downloadUrl(url)
     item = PlaybackUtils().PLAY(result, setup="default")
 
-
 #### DO RESET AUTH #####    
 def resetAuth():
     # User tried login and failed too many times
@@ -639,7 +638,6 @@ def getExtraFanArt():
     
     #always do endofdirectory to prevent errors in the logs
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
-
 
 def addDirectoryItem(label, path, folder=True):
     li = xbmcgui.ListItem(label, path=path)
