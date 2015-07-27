@@ -153,6 +153,6 @@ class Kodi_Monitor(xbmc.Monitor):
         self.WINDOW.clearProperty("Played%s%s" % (type,id))
         self.WINDOW.clearProperty('played_skipWatched')
             
-        
+        #clear the widget cache
+        self.WINDOW.setProperty('clearwidgetcache','clear')
                 
-
