@@ -686,9 +686,9 @@ class WriteKodiVideoDB():
             
             # Validate the path in database
             if self.directpath:
-                cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename = ? and idPath = ?", (filename, pathid,))
+                cursor.execute("SELECT idPath as pathid FROM path WHERE strPath = ?", (path,))
             else:
-                cursor.execute("SELECT idFile as fileid FROM files WHERE strFilename LIKE ? and idPath = ?", (filename, embyId,))
+                cursor.execute("SELECT idPath as pathid FROM path WHERE strPath LIKE ?", (seriesId,))
             try:
                 pathid = cursor.fetchone()[0]
             except:
