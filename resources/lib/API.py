@@ -135,10 +135,10 @@ class API():
                     videotrack['Video3DFormat'] = item.get('Video3DFormat')
                     if len(videotrack['aspectratio']) >= 3:
                         try:
-                            aspectwidth, aspectheight = aspectratio.split(':')
-                            videotrack['aspectfloat'] = float(aspectwidth) / float(aspectheight)
+                            aspectwidth, aspectheight = videotrack['aspectratio'].split(':')
+                            videotrack['aspectratio'] = round(float(aspectwidth) / float(aspectheight), 6)
                         except:
-                            videotrack['aspectfloat'] = 1.85
+                            videotrack['aspectratio'] = 1.85
                     videotracks.append(videotrack)
 
                 elif "Audio" in type:
