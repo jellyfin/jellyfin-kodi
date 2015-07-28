@@ -128,25 +128,29 @@ class API():
 
                 if "Video" in type:
                     videotrack = {}
-                    videotrack['videocodec'] = mediaStream.get('Codec')
-                    if "mpeg4" in videotrack['videocodec']:
-                        profile = mediaStream.get('Profile', "")
-                        if "Advanced" in profile:
+                    videotrack['videocodec'] = mediaStream.get('Codec', "").lower()
+                    container = item['MediaSources'][0].get('Container', "").lower()
+                    if "msmpeg4" in videotrack['videocodec']:
+                        videotrack['videocodec'] = "divx"
+                    elif "mpeg4" in videotrack['videocodec']:
+                        profile = mediaStream.get('Profile', "").lower()
+                        if "simple profile" in profile:
                             videotrack['videocodec'] = "xvid"
                     elif "h264" in videotrack['videocodec']:
-                        container = item['MediaSources'][0].get('Container', "")
-                        if "mp4" in container:
+                        if container in ("mp4", "mov", "m4v"):
                             videotrack['videocodec'] = "avc1"
                     videotrack['height'] = mediaStream.get('Height')
                     videotrack['width'] = mediaStream.get('Width')
                     videotrack['Video3DFormat'] = item.get('Video3DFormat')
-                    videotrack['aspectratio'] = mediaStream.get('AspectRatio', "1:1")
+                    videotrack['aspectratio'] = mediaStream.get('AspectRatio', "0")
                     if len(videotrack['aspectratio']) >= 3:
                         try:
                             aspectwidth, aspectheight = videotrack['aspectratio'].split(':')
                             videotrack['aspectratio'] = round(float(aspectwidth) / float(aspectheight), 6)
                         except:
-                            videotrack['aspectratio'] = 1.85
+                            videotrack['aspectratio'] = round(float(videotrack['width'] / videotrack['height']), 6)
+                    else:
+                        videotrack['aspectratio'] = round(float(videotrack['width'] / videotrack['height']), 6)
                     videotracks.append(videotrack)
 
                 elif "Audio" in type:
