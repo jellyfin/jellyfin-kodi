@@ -44,7 +44,9 @@ class WriteKodiMusicDB():
     def addOrUpdateArtistToKodiLibrary(self, embyId, connection, cursor):
         
         MBitem = ReadEmbyDB().getFullItem(embyId)
-        
+        if not MBitem:
+            self.logMsg("ADD or UPDATE artist to Kodi library FAILED!, Id: %s" %(embyId), 1)
+            return
         # If the item already exist in the local Kodi DB we'll perform a full item update
         # If the item doesn't exist, we'll add it to the database
         
