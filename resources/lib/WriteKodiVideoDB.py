@@ -67,7 +67,7 @@ class WriteKodiVideoDB():
                 doUtils.downloadUrl(watchedurl, type = "DELETE")
                 self.logMsg("Mark as unwatched for Id: %s, playcount: %s." % (emby_id, playcount), 1)
             # Erase any resume point associated
-            self.setKodiResumePoint(id, 0, 0, cursor)
+            self.setKodiResumePoint(id, 0, 0, cursor, playcount)
         finally:
             cursor.close
         
@@ -825,7 +825,7 @@ class WriteKodiVideoDB():
             if cacheimage and imageType in ("fanart", "poster"):
                 self.textureCache.CacheTexture(imageUrl)
         
-    def setKodiResumePoint(self, fileid, resume_seconds, total_seconds, cursor, playcount=None, dateplayed=None, realpath=None, realfile=None):
+    def setKodiResumePoint(self, fileid, resume_seconds, total_seconds, cursor, playcount, dateplayed=None, realpath=None, realfile=None):
         
         if realpath:
             #delete any existing resume point for the real filepath
@@ -842,9 +842,8 @@ class WriteKodiVideoDB():
         cursor.execute("DELETE FROM bookmark WHERE idFile = ?", (fileid,))
         
         #set watched count
-        if playcount:
-            query = "UPDATE files SET playCount = ?, lastPlayed = ? WHERE idFile = ?"
-            cursor.execute(query, (playcount, dateplayed, fileid))
+        query = "UPDATE files SET playCount = ?, lastPlayed = ? WHERE idFile = ?"
+        cursor.execute(query, (playcount, dateplayed, fileid))
         
         #set the resume bookmark
         if resume_seconds:
