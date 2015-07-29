@@ -594,9 +594,10 @@ class LibrarySync(threading.Thread):
                 for item in itemList:
                         
                     MBitem = ReadEmbyDB().getItem(item)
+                    itemType = MBitem.get('Type', "")
                     
                     #### PROCESS EPISODES ######
-                    if MBitem["Type"] == "Episode":
+                    if "Episode" in itemType:
 
                         #get the tv show
                         cursor.execute("SELECT kodi_id FROM emby WHERE media_type='tvshow' AND emby_id=?", (MBitem["SeriesId"],))
@@ -613,7 +614,7 @@ class LibrarySync(threading.Thread):
                             #perform full tvshow sync instead so both the show and episodes get added
                             self.TvShowsFullSync(connection,cursor,None)
 
-                    elif u"Season" in MBitem['Type']:
+                    elif "Season" in itemType:
 
                         #get the tv show
                         cursor.execute("SELECT kodi_id FROM emby WHERE media_type='tvshow' AND emby_id=?", (MBitem["SeriesId"],))
@@ -624,7 +625,7 @@ class LibrarySync(threading.Thread):
                             WriteKodiVideoDB().updateSeasons(MBitem["SeriesId"], kodi_show_id, connection, cursor)
                     
                     #### PROCESS BOXSETS ######
-                    elif MBitem["Type"] == "BoxSet":
+                    elif "BoxSet" in itemType:
                         boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
                         WriteKodiVideoDB().addBoxsetToKodiLibrary(boxset,connection, cursor)
                         
@@ -632,7 +633,7 @@ class LibrarySync(threading.Thread):
                             WriteKodiVideoDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset, connection, cursor)
 
                     #### PROCESS MUSICVIDEOS ####
-                    elif MBitem["Type"] == "MusicVideo":
+                    elif "MusicVideo" in itemType:
                         if not MBitem.get('IsFolder'):                    
                             WriteKodiVideoDB().addOrUpdateMusicVideoToKodiLibrary(MBitem["Id"],connection, cursor)
                         
@@ -646,11 +647,12 @@ class LibrarySync(threading.Thread):
                     cursor = connection.cursor()
                     for item in itemList:
                         MBitem = ReadEmbyDB().getItem(item)
-                        if MBitem["Type"] == "MusicArtist":
+                        itemType = MBitem.get('Type', "")
+                        if "MusicArtist" in itemType:
                             WriteKodiMusicDB().addOrUpdateArtistToKodiLibrary(MBitem["Id"],connection, cursor)
-                        if MBitem["Type"] == "MusicAlbum":
+                        if "MusicAlbum" in itemType:
                             WriteKodiMusicDB().addOrUpdateAlbumToKodiLibrary(MBitem["Id"],connection, cursor)
-                        if MBitem["Type"] == "Audio":
+                        if "Audio" in itemType:
                             WriteKodiMusicDB().addOrUpdateSongToKodiLibrary(MBitem["Id"],connection, cursor)    
                     connection.commit()
                     cursor.close()
