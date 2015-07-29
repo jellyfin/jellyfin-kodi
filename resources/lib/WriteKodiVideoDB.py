@@ -643,7 +643,7 @@ class WriteKodiVideoDB():
         
         # Validate the season exists in Emby and in database
         if season is None:
-            self.logMsg("SKIP adding episode to Kodi Library, no ParentIndexNumber - ID: %s - %s" % (embyId, title))
+            self.logMsg("SKIP adding episode to Kodi Library, no season assigned - ID: %s - %s" % (embyId, title))
             return False
             
         cursor.execute("SELECT idSeason FROM seasons WHERE idShow = ? and season = ?", (showid, season,))
