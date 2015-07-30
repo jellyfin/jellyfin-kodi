@@ -396,7 +396,9 @@ class LibrarySync(threading.Thread):
     def MusicFullSync(self, connection,cursor, pDialog):
 
         self.ProcessMusicArtists(connection,cursor,pDialog)
+        connection.commit()
         self.ProcessMusicAlbums(connection,cursor,pDialog)
+        connection.commit()
         self.ProcessMusicSongs(connection,cursor,pDialog)
         
         ### commit all changes to database ###
@@ -436,10 +438,10 @@ class LibrarySync(threading.Thread):
                     kodiSong = kodisong
                   
             if kodiSong == None:
-                WriteKodiMusicDB().addOrUpdateSongToKodiLibrary(item["Id"],connection, cursor)
+                WriteKodiMusicDB().addOrUpdateSongToKodiLibrary(item,connection, cursor)
             else:
                 if kodiSong[2] != API().getChecksum(item):
-                    WriteKodiMusicDB().addOrUpdateSongToKodiLibrary(item["Id"],connection, cursor)
+                    WriteKodiMusicDB().addOrUpdateSongToKodiLibrary(item,connection, cursor)
         
         #### PROCESS DELETES #####
         allEmbySongIds = set(allEmbySongIds)
@@ -462,7 +464,7 @@ class LibrarySync(threading.Thread):
         total = len(allEmbyArtists) + 1
         count = 1    
         
-        #### PROCESS SONGS ADDS AND UPDATES ###
+        #### PROCESS ARTIST ADDS AND UPDATES ###
         for item in allEmbyArtists:
             
             if (self.ShouldStop()):
@@ -482,10 +484,10 @@ class LibrarySync(threading.Thread):
                     kodiArtist = kodiartist
                   
             if kodiArtist == None:
-                WriteKodiMusicDB().addOrUpdateArtistToKodiLibrary(item["Id"],connection, cursor)
+                WriteKodiMusicDB().addOrUpdateArtistToKodiLibrary(item,connection, cursor)
             else:
                 if kodiArtist[2] != API().getChecksum(item):
-                    WriteKodiMusicDB().addOrUpdateArtistToKodiLibrary(item["Id"],connection, cursor)
+                    WriteKodiMusicDB().addOrUpdateArtistToKodiLibrary(item,connection, cursor)
         
         #### PROCESS DELETES #####
         allEmbyArtistIds = set(allEmbyArtistIds)
@@ -528,10 +530,10 @@ class LibrarySync(threading.Thread):
                     kodiAlbum = kodialbum
                   
             if kodiAlbum == None:
-                WriteKodiMusicDB().addOrUpdateAlbumToKodiLibrary(item["Id"],connection, cursor)
+                WriteKodiMusicDB().addOrUpdateAlbumToKodiLibrary(item,connection, cursor)
             else:
                 if kodiAlbum[2] != API().getChecksum(item):
-                    WriteKodiMusicDB().addOrUpdateAlbumToKodiLibrary(item["Id"],connection, cursor)
+                    WriteKodiMusicDB().addOrUpdateAlbumToKodiLibrary(item,connection, cursor)
         
         #### PROCESS DELETES #####
         allEmbyAlbumIds = set(allEmbyAlbumIds)

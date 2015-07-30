@@ -72,7 +72,7 @@ class ReadEmbyDB():
         doUtils = DownloadUtils()
 
         #only get basic info for our sync-compares
-        url = "{server}/Artists?Recursive=true&Fields=Etag,CumulativeRunTimeTicks&UserId={UserId}&format=json"
+        url = "{server}/Artists?Recursive=true&Fields=Etag,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&UserId={UserId}&format=json"
         
         jsonData = doUtils.downloadUrl(url)
         if (jsonData == ""):
@@ -97,7 +97,7 @@ class ReadEmbyDB():
         doUtils = DownloadUtils()
 
         #only get basic info for our sync-compares
-        url = "{server}/mediabrowser/Users/{UserId}/Items?Fields=Name,CumulativeRunTimeTicks,Etag&Recursive=true&IncludeItemTypes=Audio&format=json"
+        url = "{server}/mediabrowser/Users/{UserId}/Items?Fields=Etag,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&IncludeItemTypes=Audio&format=json"
         
         jsonData = doUtils.downloadUrl(url)
         if (jsonData == ""):
@@ -122,7 +122,7 @@ class ReadEmbyDB():
         doUtils = DownloadUtils()
 
         #only get basic info for our sync-compares
-        url = "{server}/mediabrowser/Users/{UserId}/Items?Fields=Name,CumulativeRunTimeTicks,Etag&Recursive=true&IncludeItemTypes=MusicAlbum&format=json"
+        url = "{server}/mediabrowser/Users/{UserId}/Items?Fields=Etag,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&IncludeItemTypes=MusicAlbum&format=json"
         
         jsonData = doUtils.downloadUrl(url)
         if (jsonData == ""):

@@ -433,17 +433,26 @@ class API():
         if(data.get("ImageTags") != None and data.get("ImageTags").get(type) != None):
             imageTag = data.get("ImageTags").get(type)   
 
-        if (data.get("Type") == "Episode" or data.get("Type") == "Season" or data.get("Type") == "MusicAlbum" or data.get("Type") == "Audio") and type=="Logo":
+        if (data.get("Type") == "Episode" or data.get("Type") == "Season") and type=="Logo":
             imageTag = data.get("ParentLogoImageTag")
         if (data.get("Type") == "Episode" or data.get("Type") == "Season") and type=="Art":
             imageTag = data.get("ParentArtImageTag")
-        if (data.get("Type") == "Episode") and originalType=="Thumb3":
+        if (data.get("Type") == "Episode" and originalType=="Thumb3"):
             imageTag = data.get("SeriesThumbImageTag")
-        if (data.get("Type") == "Season") and originalType=="Thumb3" and imageTag=="e3ab56fe27d389446754d0fb04910a34" :
+        if (data.get("Type") == "Season" and originalType=="Thumb3" and imageTag=="e3ab56fe27d389446754d0fb04910a34"):
             imageTag = data.get("ParentThumbImageTag")
             id = data.get("SeriesId")
-        if (data.get("Type") == "MusicAlbum" or data.get("Type") == "Audio") and type=="Backdrop":
+            
+        # for music we return the parent art if no image exists
+        if (data.get("Type") == "MusicAlbum" or data.get("Type") == "Audio") and type=="Backdrop" and not data.get("BackdropImageTags"):
+            data["BackdropImageTags"] = data["ParentBackdropImageTags"]
             id = data.get("ParentBackdropItemId")
+        if (data.get("Type") == "MusicAlbum" or data.get("Type") == "Audio") and type=="Logo" and (not imageTag or imageTag == "e3ab56fe27d389446754d0fb04910a34"):
+            imageTag = data.get("ParentLogoImageTag")
+            id = data.get("ParentLogoItemId")
+        if (data.get("Type") == "MusicAlbum" or data.get("Type") == "Audio") and type=="Art" and (not imageTag or imageTag == "e3ab56fe27d389446754d0fb04910a34"):
+            imageTag = data.get("ParentArtImageTag")
+            id = data.get("ParentArtItemId")
      
         query = ""
         maxHeight = "10000"

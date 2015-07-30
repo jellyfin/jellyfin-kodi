@@ -867,10 +867,10 @@ class WriteKodiVideoDB():
 
                 if kodiVersion == 15 or kodiVersion == 16:
                     # Kodi Isengard/jarvis
-                    cursor.execute("SELECT actor_id as actorid FROM actor WHERE name = ?", (name,))
+                    cursor.execute("SELECT actor_id as actorid FROM actor WHERE name = ? COLLATE NOCASE", (name,))
                 else:
                     # Kodi Gotham or Helix
-                    cursor.execute("SELECT idActor as actorid FROM actors WHERE strActor = ?", (name,))
+                    cursor.execute("SELECT idActor as actorid FROM actors WHERE strActor = ? COLLATE NOCASE", (name,))
 
                 try: # Update person in database
                     actorid = cursor.fetchone()[0]
@@ -977,7 +977,7 @@ class WriteKodiVideoDB():
 
                 if kodiVersion == 15 or kodiVersion == 16:
                     # Kodi Isengard
-                    cursor.execute("SELECT genre_id as genre_id FROM genre WHERE name = ?", (genre,))
+                    cursor.execute("SELECT genre_id as genre_id FROM genre WHERE name = ? COLLATE NOCASE", (genre,))
                     try:
                         genre_id = cursor.fetchone()[0]
                     except:
@@ -994,7 +994,7 @@ class WriteKodiVideoDB():
                         cursor.execute(query, (genre_id, id, mediatype))
                 else:
                     # Kodi Gotham or Helix
-                    cursor.execute("SELECT idGenre as idGenre FROM genre WHERE strGenre = ?", (genre,))
+                    cursor.execute("SELECT idGenre as idGenre FROM genre WHERE strGenre = ? COLLATE NOCASE", (genre,))
                     try:
                         idGenre = cursor.fetchone()[0]
                     except:
@@ -1026,7 +1026,7 @@ class WriteKodiVideoDB():
 
                 if kodiVersion == 15 or kodiVersion == 16:
                     # Kodi Isengard
-                    cursor.execute("SELECT country_id as country_id FROM country WHERE name = ?", (country,))
+                    cursor.execute("SELECT country_id as country_id FROM country WHERE name = ? COLLATE NOCASE", (country,))
                     try:
                         country_id = cursor.fetchone()[0]
                     except:
@@ -1043,7 +1043,7 @@ class WriteKodiVideoDB():
                         cursor.execute(query, (country_id, id, mediatype))
                 else:
                     # Kodi Gotham or Helix
-                    cursor.execute("SELECT idCountry as idCountry FROM country WHERE strCountry = ?", (country,))
+                    cursor.execute("SELECT idCountry as idCountry FROM country WHERE strCountry = ? COLLATE NOCASE", (country,))
                     try:
                         idCountry = cursor.fetchone()[0]
                     except:
@@ -1068,7 +1068,7 @@ class WriteKodiVideoDB():
 
                 if kodiVersion == 15 or kodiVersion == 16:
                     # Kodi Isengard
-                    cursor.execute("SELECT studio_id as studio_id FROM studio WHERE name = ?", (studio,))
+                    cursor.execute("SELECT studio_id as studio_id FROM studio WHERE name = ? COLLATE NOCASE", (studio,))
                     try:
                         studio_id = cursor.fetchone()[0]
                     except: # Studio does not exists.
@@ -1083,7 +1083,7 @@ class WriteKodiVideoDB():
                         cursor.execute(query, (studio_id, id, mediatype))
                 else:
                     # Kodi Gotham or Helix
-                    cursor.execute("SELECT idstudio as idstudio FROM studio WHERE strstudio = ?",(studio,))
+                    cursor.execute("SELECT idstudio as idstudio FROM studio WHERE strstudio = ? COLLATE NOCASE",(studio,))
                     try:
                         idstudio = cursor.fetchone()[0]
                     except: # Studio does not exists.
@@ -1113,7 +1113,7 @@ class WriteKodiVideoDB():
 
             if kodiVersion == 15 or kodiVersion == 16:
                 # Kodi Isengard
-                cursor.execute("SELECT tag_id as tag_id FROM tag WHERE name = ?", (tag,))
+                cursor.execute("SELECT tag_id as tag_id FROM tag WHERE name = ? COLLATE NOCASE", (tag,))
                 try:
                     tag_id = cursor.fetchone()[0]
                 except:
@@ -1134,7 +1134,7 @@ class WriteKodiVideoDB():
                         cursor.execute(query, (id, mediatype, tag_id))
             else:
                 # Kodi Gotham or Helix
-                cursor.execute("SELECT idTag as idTag FROM tag WHERE strTag = ?", (tag,))
+                cursor.execute("SELECT idTag as idTag FROM tag WHERE strTag = ? COLLATE NOCASE", (tag,))
                 try:
                     idTag = cursor.fetchone()[0]
                 except:
@@ -1224,7 +1224,7 @@ class WriteKodiVideoDB():
         cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?", (boxsetmovieid,))
         try:
             movieid = cursor.fetchone()[0]
-            cursor.execute("SELECT idSet FROM sets WHERE strSet = ?", (strSet,))
+            cursor.execute("SELECT idSet FROM sets WHERE strSet = ? COLLATE NOCASE", (strSet,))
             setid  =  cursor.fetchone()[0]
         except: pass
         else:

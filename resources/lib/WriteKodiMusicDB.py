@@ -41,14 +41,12 @@ class WriteKodiMusicDB():
         className = self.__class__.__name__
         utils.logMsg("%s %s" % (self.addonName, className), msg, int(lvl))
         
-    def addOrUpdateArtistToKodiLibrary(self, embyId, connection, cursor):
+    def addOrUpdateArtistToKodiLibrary(self, MBitem, connection, cursor):
         
-        MBitem = ReadEmbyDB().getFullItem(embyId)
-        if not MBitem:
-            self.logMsg("ADD or UPDATE artist to Kodi library FAILED!, Id: %s" %(embyId), 1)
-            return
         # If the item already exist in the local Kodi DB we'll perform a full item update
         # If the item doesn't exist, we'll add it to the database
+        
+        embyId = MBitem["Id"]
         
         cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?", (embyId,))
         try:
@@ -73,20 +71,7 @@ class WriteKodiMusicDB():
         fanart = API().getArtwork(MBitem, "Backdrop")
         if fanart:
             fanart = "<fanart>%s</fanart>" % fanart    
-        
-        # Safety check 1: does the artist already exist?
-        cursor.execute("SELECT idArtist FROM artist WHERE strArtist = ?", (name,))
-        try:
-            artistid = cursor.fetchone()[0]
-        except: pass
-        
-        # Safety check 2: does the MusicBrainzArtistId already exist?
-        cursor.execute("SELECT idArtist FROM artist WHERE strMusicBrainzArtistID = ?", (musicBrainzId,))
-        try:
-            artistid = cursor.fetchone()[0]
-        except: pass
-        
-        
+
         ##### UPDATE THE ARTIST #####
         if artistid:
             self.logMsg("UPDATE artist to Kodi library, Id: %s - Artist: %s" % (embyId, name), 1)
@@ -101,12 +86,29 @@ class WriteKodiMusicDB():
         ##### OR ADD THE ARTIST #####
         else:
             self.logMsg("ADD artist to Kodi library, Id: %s - Artist: %s" % (embyId, name), 1)
-
-            # Create the artist
-            cursor.execute("select coalesce(max(idArtist),0) as artistid from artist")
-            artistid = cursor.fetchone()[0] + 1
-            query = "INSERT INTO artist(idArtist, strArtist, strMusicBrainzArtistID, strGenres, strBiography, strImage, strFanart, lastScraped, dateAdded) values(?, ?, ?, ?, ?, ?, ?, ?, ?)"
-            cursor.execute(query, (artistid, name, musicBrainzId, genres, bio, thumb, fanart, lastScraped, dateadded))
+            
+            #safety checks: It looks like Emby supports the same artist multiple times in the database while Kodi doesn't allow that. In case that happens we just merge the artist in the Kodi database.
+            
+            # Safety check 1: does the artist already exist?
+            cursor.execute("SELECT idArtist FROM artist WHERE strArtist = ? COLLATE NOCASE", (name,))
+            try:
+                artistid = cursor.fetchone()[0]
+                self.logMsg("Artist already exists in Kodi library - appending to existing object, Id: %s - Artist: %s - MusicBrainzId: %s - existing Kodi Id: %s" % (embyId, name, musicBrainzId, str(artistid)), 1)
+            except: pass
+            
+            # Safety check 2: does the MusicBrainzArtistId already exist?
+            cursor.execute("SELECT idArtist FROM artist WHERE strMusicBrainzArtistID = ?", (musicBrainzId,))
+            try:
+                artistid = cursor.fetchone()[0]
+                self.logMsg("Artist already exists in Kodi library - appending to existing object, Id: %s - Artist: %s - MusicBrainzId: %s - existing Kodi Id: %s" % (embyId, name, musicBrainzId, str(artistid)), 1)
+            except: pass
+                
+            if not artistid:
+                # Create the artist
+                cursor.execute("select coalesce(max(idArtist),0) as artistid from artist")
+                artistid = cursor.fetchone()[0] + 1
+                query = "INSERT INTO artist(idArtist, strArtist, strMusicBrainzArtistID, strGenres, strBiography, strImage, strFanart, lastScraped, dateAdded) values(?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                cursor.execute(query, (artistid, name, musicBrainzId, genres, bio, thumb, fanart, lastScraped, dateadded))
 
             # Create the reference in emby table
             query = "INSERT INTO emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
@@ -123,11 +125,11 @@ class WriteKodiMusicDB():
         self.addOrUpdateArt(API().getArtwork(MBitem, "Disc"), artistid, "artist", "discart", cursor)
         self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop"), artistid, "artist", "fanart", cursor)
 
-    def addOrUpdateAlbumToKodiLibrary(self, embyId, connection, cursor):
+    def addOrUpdateAlbumToKodiLibrary(self, MBitem, connection, cursor):
         
         kodiVersion = self.kodiversion
         
-        MBitem = ReadEmbyDB().getFullItem(embyId)
+        embyId = MBitem["Id"]
         
         # If the item already exist in the local Kodi DB we'll perform a full item update
         # If the item doesn't exist, we'll add it to the database
@@ -236,11 +238,11 @@ class WriteKodiMusicDB():
                 query = "INSERT OR REPLACE INTO discography(idArtist, strAlbum, strYear) values(?, ?, ?)"
                 cursor.execute(query, (artistid, name, str(year)))
         
-    def addOrUpdateSongToKodiLibrary(self, embyId, connection, cursor):
+    def addOrUpdateSongToKodiLibrary(self, MBitem, connection, cursor):
 
         kodiVersion = self.kodiversion
-
-        MBitem = ReadEmbyDB().getFullItem(embyId)
+        
+        embyId = MBitem["Id"]
         
         # If the item already exist in the local Kodi DB we'll perform a full item update
         # If the item doesn't exist, we'll add it to the database
@@ -430,7 +432,7 @@ class WriteKodiMusicDB():
             
             for genre in genres:
 
-                cursor.execute("SELECT idGenre as idGenre FROM genre WHERE strGenre = ?", (genre,))
+                cursor.execute("SELECT idGenre as idGenre FROM genre WHERE strGenre = ? COLLATE NOCASE", (genre,))
                 try:
                     idGenre = cursor.fetchone()[0]
                 except: # Create the genre
