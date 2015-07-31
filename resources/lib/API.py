@@ -445,7 +445,7 @@ class API():
             
         # for music we return the parent art if no image exists
         if (data.get("Type") == "MusicAlbum" or data.get("Type") == "Audio") and type=="Backdrop" and not data.get("BackdropImageTags"):
-            data["BackdropImageTags"] = data["ParentBackdropImageTags"]
+            data["BackdropImageTags"] = data.get("ParentBackdropImageTags")
             id = data.get("ParentBackdropItemId")
         if (data.get("Type") == "MusicAlbum" or data.get("Type") == "Audio") and type=="Logo" and (not imageTag or imageTag == "e3ab56fe27d389446754d0fb04910a34"):
             imageTag = data.get("ParentLogoImageTag")
