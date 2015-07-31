@@ -249,7 +249,7 @@ class WriteKodiVideoDB():
         self.AddStudiosToMedia(movieid, studios, "movie", cursor)
         
         # Add streamdetails
-        self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), fileid, cursor)
+        self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), runtime ,fileid, cursor)
         
         # Add to or remove from favorites tag
         if userData.get('Favorite'):
@@ -424,7 +424,7 @@ class WriteKodiVideoDB():
         self.AddStudiosToMedia(idMVideo, studios, "musicvideo", cursor)
         
         #add streamdetails
-        self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), fileid, cursor)
+        self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), runtime ,fileid, cursor)
         
         #set resume point
         resume = int(round(float(timeInfo.get("ResumeTime"))))*60
@@ -715,7 +715,7 @@ class WriteKodiVideoDB():
         self.AddPeopleToMedia(episodeid, MBitem.get('People'), "episode", connection, cursor)
 
         # Add streamdetails
-        self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), fileid, cursor)
+        self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), runtime, fileid, cursor)
         
         # Update artwork
         self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "episode"), episodeid, "episode", "thumb", cursor)
@@ -1154,15 +1154,15 @@ class WriteKodiVideoDB():
                         query = "DELETE FROM taglinks WHERE idMedia = ? AND media_type = ? AND idTag = ?"
                         cursor.execute(query, (id, mediatype, idTag))
     
-    def AddStreamDetailsToMedia(self, streamdetails, fileid, cursor):
+    def AddStreamDetailsToMedia(self, streamdetails, runtime , fileid, cursor):
         
         # First remove any existing entries
         cursor.execute("DELETE FROM streamdetails WHERE idFile = ?", (fileid,))
         if streamdetails:
             # Video details
             for videotrack in streamdetails['videocodec']:
-                query = "INSERT INTO streamdetails(idFile, iStreamType, strVideoCodec, fVideoAspect, iVideoWidth, iVideoHeight, strStereoMode) values(?, ?, ?, ?, ?, ?, ?)"
-                cursor.execute(query, (fileid, 0, videotrack.get('videocodec'), videotrack.get('aspectratio'), videotrack.get('width'), videotrack.get('height'), videotrack.get('Video3DFormat')))
+                query = "INSERT INTO streamdetails(idFile, iStreamType, strVideoCodec, fVideoAspect, iVideoWidth, iVideoHeight, iVideoDuration ,strStereoMode) values(?, ?, ?, ?, ?, ?, ?, ?)"
+                cursor.execute(query, (fileid, 0, videotrack.get('videocodec'), videotrack.get('aspectratio'), videotrack.get('width'), videotrack.get('height'), runtime ,videotrack.get('Video3DFormat')))
             
             # Audio details
             for audiotrack in streamdetails['audiocodec']:
