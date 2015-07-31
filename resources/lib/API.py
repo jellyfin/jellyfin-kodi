@@ -148,9 +148,12 @@ class API():
                             aspectwidth, aspectheight = videotrack['aspectratio'].split(':')
                             videotrack['aspectratio'] = round(float(aspectwidth) / float(aspectheight), 6)
                         except:
-                            videotrack['aspectratio'] = round(float(videotrack['width'] / videotrack['height']), 6)
+                            videotrack['aspectratio'] = 1.85
                     else:
-                        videotrack['aspectratio'] = round(float(videotrack['width'] / videotrack['height']), 6)
+                        try:
+                            videotrack['aspectratio'] = round(float(videotrack['width'] / videotrack['height']), 6)
+                        except: # In the event the aspect ratio is missing and the width and height are missing as well.
+                            videotrack['aspectratio'] = 1.85
                     videotracks.append(videotrack)
 
                 elif "Audio" in type:
