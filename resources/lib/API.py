@@ -134,7 +134,7 @@ class API():
                         videotrack['videocodec'] = "divx"
                     elif "mpeg4" in videotrack['videocodec']:
                         profile = mediaStream.get('Profile', "").lower()
-                        if "simple profile" in profile or not profile:
+                        if "simple profile" in profile or profile == "":
                             videotrack['videocodec'] = "xvid"
                     elif "h264" in videotrack['videocodec']:
                         if container in ("mp4", "mov", "m4v"):
@@ -155,7 +155,9 @@ class API():
 
                 elif "Audio" in type:
                     audiotrack = {}
-                    audiotrack['audiocodec'] = mediaStream.get('Codec')
+                    audiotrack['audiocodec'] = mediaStream.get('Codec', "").lower()
+                    if "dts-hd ma" in audiotrack['audiocodec']:
+                        audiotrack['audiocodec'] = "dts"
                     audiotrack['channels'] = mediaStream.get('Channels')
                     audiotrack['audiolanguage'] = mediaStream.get('Language')
                     audiotracks.append(audiotrack)
