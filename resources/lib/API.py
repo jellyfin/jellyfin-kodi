@@ -134,7 +134,7 @@ class API():
                         videotrack['videocodec'] = "divx"
                     elif "mpeg4" in videotrack['videocodec']:
                         profile = mediaStream.get('Profile', "").lower()
-                        if "simple profile" in profile:
+                        if "simple profile" in profile or not profile:
                             videotrack['videocodec'] = "xvid"
                     elif "h264" in videotrack['videocodec']:
                         if container in ("mp4", "mov", "m4v"):
