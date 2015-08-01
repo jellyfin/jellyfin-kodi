@@ -72,9 +72,13 @@ class LibrarySync(threading.Thread):
             
             du = DownloadUtils()
             
-            # yyyy-MM-ddThh:mm:ssZ
-            # TODO: save the last sync time/date and use it in the query
-            url = "{server}/Emby.Kodi.SyncQueue/{UserId}/2015-01-01T00:00:00Z/GetItems?format=json"
+            lastSync = addon.getSetting("LastIncrenetalSync")
+            if(lastSync == None or len(lastSync) == 0):
+                lastSync = "2010-01-01T00:00:00Z"
+            utils.logMsg("Sync Database", "Incremental Sync Setting Last Run Time Loaded : " + lastSync, 0)
+
+            url = "{server}/Emby.Kodi.SyncQueue/{UserId}/" + lastSync + "/GetItems?format=json"
+            utils.logMsg("Sync Database", "Incremental Sync Get Items URL : " + url, 0)
             
             results = du.downloadUrl(url)
             utils.logMsg("Sync Database", "Incfemental Sync Changes : " + str(results), 0)
@@ -87,7 +91,12 @@ class LibrarySync(threading.Thread):
             
             LibrarySync().remove_items(removedItems)
             LibrarySync().update_items(changedItems)
-            LibrarySync().user_data_update(userChanges)        
+            LibrarySync().user_data_update(userChanges)
+            
+            # save last sync time
+            lastSync = (datetime.utcnow() - timedelta(minutes=5)).strftime('%Y-%m-%dT%H:%M:%SZ')
+            utils.logMsg("Sync Database", "Incremental Sync Setting Last Run Time Saved : " + lastSync, 0)
+            addon.setSetting("LastIncrenetalSync", lastSync)     
             
             return True
 		
