@@ -21,7 +21,14 @@ class ReadEmbyDB():
         
         #only get basic info for our sync-compares
         sortstring = "&SortBy=SortName"
+
         url = "{server}/mediabrowser/Users/{UserId}/items?ParentId=%s%s&Fields=CumulativeRunTimeTicks,Etag&Recursive=true&SortOrder=Descending&IncludeItemTypes=Movie&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1" % (id, sortstring)
+        if itemList != [] and len(itemList) < 50:
+            if len(itemList) == 1:
+                Ids=itemList[0]
+            else:
+                Ids=",".join(itemList)
+            url = url + "&Ids=" + Ids
 
         jsonData = doUtils.downloadUrl(url)
         if (jsonData == ""):
@@ -31,7 +38,7 @@ class ReadEmbyDB():
             result = jsonData[u'Items']
             
         # Work around to only return items from the given list
-        if (result != None and len(result) > 0 and len(itemList) > 0):
+        if (result != None and len(result) > 0 and len(itemList) > 0 and len(itemList) >= 50):
             newResult = []
             for item in result:
                 if (item[u'Id'] in itemList):
@@ -48,6 +55,12 @@ class ReadEmbyDB():
         #only get basic info for our sync-compares
         sortstring = "&SortBy=SortName"
         url = "{server}/mediabrowser/Users/{UserId}/items?%s&Fields=CumulativeRunTimeTicks,Etag&Recursive=true&SortOrder=Descending&IncludeItemTypes=MusicVideo&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1" % sortstring
+        if itemList != [] and len(itemList) < 50:
+            if len(itemList) == 1:
+                Ids=itemList[0]
+            else:
+                Ids=",".join(itemList)
+            url = url + "&Ids=" + Ids
         
         jsonData = doUtils.downloadUrl(url)
         if (jsonData == ""):
@@ -57,7 +70,7 @@ class ReadEmbyDB():
             result = jsonData[u'Items']
             
         # Work around to only return items from the given list
-        if (result != None and len(result) > 0 and len(itemList) > 0):
+        if (result != None and len(result) > 0 and len(itemList) > 0 and len(itemList) >= 50):
             newResult = []
             for item in result:
                 if (item[u'Id'] in itemList):
@@ -73,6 +86,12 @@ class ReadEmbyDB():
 
         #only get basic info for our sync-compares
         url = "{server}/Artists?Recursive=true&Fields=Etag,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&UserId={UserId}&format=json"
+        if itemList != [] and len(itemList) < 50:
+            if len(itemList) == 1:
+                Ids=itemList[0]
+            else:
+                Ids=",".join(itemList)
+            url = url + "&Ids=" + Ids
         
         jsonData = doUtils.downloadUrl(url)
         if (jsonData == ""):
@@ -82,7 +101,7 @@ class ReadEmbyDB():
             result = jsonData[u'Items']
                        
         # Work around to only return items from the given list
-        if (result != None and len(result) > 0 and len(itemList) > 0):
+        if (result != None and len(result) > 0 and len(itemList) > 0 and len(itemList) >= 50):
             newResult = []
             for item in result:
                 if (item[u'Id'] in itemList):
@@ -98,6 +117,13 @@ class ReadEmbyDB():
 
         #only get basic info for our sync-compares
         url = "{server}/mediabrowser/Users/{UserId}/Items?Fields=Etag,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&IncludeItemTypes=Audio&format=json"
+        if itemList != [] and len(itemList) < 50:
+            if len(itemList) == 1:
+                Ids=itemList[0]
+            else:
+                Ids=",".join(itemList)
+            url = url + "&Ids=" + Ids
+        
         
         jsonData = doUtils.downloadUrl(url)
         if (jsonData == ""):
@@ -107,7 +133,7 @@ class ReadEmbyDB():
             result = jsonData[u'Items']
             
         # Work around to only return items from the given list
-        if (result != None and len(result) > 0 and len(itemList) > 0):
+        if (result != None and len(result) > 0 and len(itemList) > 0 and len(itemList) >= 50):
             newResult = []
             for item in result:
                 if (item[u'Id'] in itemList):
@@ -123,6 +149,12 @@ class ReadEmbyDB():
 
         #only get basic info for our sync-compares
         url = "{server}/mediabrowser/Users/{UserId}/Items?Fields=Etag,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&IncludeItemTypes=MusicAlbum&format=json"
+        if itemList != [] and len(itemList) < 50:
+            if len(itemList) == 1:
+                Ids=itemList[0]
+            else:
+                Ids=",".join(itemList)
+            url = url + "&Ids=" + Ids
         
         jsonData = doUtils.downloadUrl(url)
         if (jsonData == ""):
@@ -141,7 +173,7 @@ class ReadEmbyDB():
 
             
         # Work around to only return items from the given list
-        if (result != None and len(result) > 0 and len(itemList) > 0):
+        if (result != None and len(result) > 0 and len(itemList) > 0 and len(itemList) >= 50):
             newResult = []
             for item in result:
                 if (item[u'Id'] in itemList):
@@ -184,6 +216,12 @@ class ReadEmbyDB():
         #only get basic info for our sync-compares
         sortstring = "&SortBy=SortName"
         url = "{server}/mediabrowser/Users/{UserId}/Items?ParentId=%s%s&Fields=CumulativeRunTimeTicks,Etag&Recursive=true&SortOrder=Descending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1" % (id, sortstring)
+        if itemList != [] and len(itemList) < 50:
+            if len(itemList) == 1:
+                Ids=itemList[0]
+            else:
+                Ids=",".join(itemList)
+            url = url + "&Ids=" + Ids
         
         jsonData = doUtils.downloadUrl(url)
         if (jsonData == ""):
@@ -193,7 +231,7 @@ class ReadEmbyDB():
             result = jsonData[u'Items']
             
         # Work around to only return items from the given list
-        if (result != None and len(result) > 0 and len(itemList) > 0):
+        if (result != None and len(result) > 0 and len(itemList) > 0 and len(itemList) >= 50):
             newResult = []
             for item in result:
                 if (item[u'Id'] in itemList):
@@ -224,6 +262,12 @@ class ReadEmbyDB():
         doUtils = DownloadUtils()  
         
         url = "{server}/mediabrowser/Users/{UserId}/Items?ParentId=%s&IsVirtualUnaired=false&IsMissing=False&SortBy=SortName&Fields=Name,SortName,CumulativeRunTimeTicks,Etag&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1" % showId
+        if itemList != [] and len(itemList) < 50:
+            if len(itemList) == 1:
+                Ids=itemList[0]
+            else:
+                Ids=",".join(itemList)
+            url = url + "&Ids=" + Ids
         
         jsonData = doUtils.downloadUrl(url)
         if (jsonData == ""):
@@ -233,7 +277,7 @@ class ReadEmbyDB():
             result = jsonData[u'Items']
             
         # Work around to only return items from the given list
-        if (result != None and len(result) > 0 and len(itemList) > 0):
+        if (result != None and len(result) > 0 and len(itemList) > 0 and len(itemList) >= 50):
             newResult = []
             for item in result:
                 if (item[u'Id'] in itemList):
