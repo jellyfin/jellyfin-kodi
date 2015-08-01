@@ -67,7 +67,7 @@ class LibrarySync(threading.Thread):
         dbSyncIndication = addon.getSetting("dbSyncIndication") == "true"        
         
         # just do a incremental sync if that is what is required
-        if(addon.getSetting("useIncSync") == "true"):
+        if(addon.getSetting("useIncSync") == "true" and addon.getSetting("SyncInstallRunDone") == "true")    :
             utils.logMsg("Sync Database", "Using incremental sync instead of full sync useIncSync=True)", 0)
             
             du = DownloadUtils()
@@ -81,7 +81,7 @@ class LibrarySync(threading.Thread):
             utils.logMsg("Sync Database", "Incremental Sync Get Items URL : " + url, 0)
             
             results = du.downloadUrl(url)
-            utils.logMsg("Sync Database", "Incfemental Sync Changes : " + str(results), 0)
+            utils.logMsg("Sync Database", "Incremental Sync Changes : " + str(results), 0)
             
             changedItems = results["ItemsUpdated"] + results["ItemsAdded"]
             removedItems = results["ItemsRemoved"]
@@ -93,10 +93,7 @@ class LibrarySync(threading.Thread):
             LibrarySync().update_items(changedItems)
             LibrarySync().user_data_update(userChanges)
             
-            # save last sync time
-            lastSync = (datetime.utcnow() - timedelta(minutes=5)).strftime('%Y-%m-%dT%H:%M:%SZ')
-            utils.logMsg("Sync Database", "Incremental Sync Setting Last Run Time Saved : " + lastSync, 0)
-            addon.setSetting("LastIncrenetalSync", lastSync)     
+            self.SaveLastSync()
             
             return True
 		
@@ -171,6 +168,7 @@ class LibrarySync(threading.Thread):
             if(syncInstallRunDone == False and completed):
                 addon = xbmcaddon.Addon(id='plugin.video.emby') #force a new instance of the addon
                 addon.setSetting("SyncInstallRunDone", "true")        
+                self.SaveLastSync()
             
             # Commit all DB changes at once and Force refresh the library
             xbmc.executebuiltin("UpdateLibrary(video)")
@@ -190,7 +188,13 @@ class LibrarySync(threading.Thread):
             pDialog.close()
         
         return True      
-      
+    def SaveLastSync(self):
+        # save last sync time
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
+        lastSync = (datetime.utcnow() - timedelta(minutes=5)).strftime('%Y-%m-%dT%H:%M:%SZ')
+        utils.logMsg("Sync Database", "Incremental Sync Setting Last Run Time Saved : " + lastSync, 0)
+        addon.setSetting("LastIncrenetalSync", lastSync)       
+
     def MoviesFullSync(self,connection,cursor, pDialog):
                
         views = ReadEmbyDB().getCollections("movies")
