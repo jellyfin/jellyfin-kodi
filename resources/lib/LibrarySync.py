@@ -59,15 +59,38 @@ class LibrarySync(threading.Thread):
         
     def FullLibrarySync(self,manualRun=False):
         
-        #set some variable to check if this is the first run
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
         
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
         startupDone = WINDOW.getProperty("startup") == "done"
         syncInstallRunDone = addon.getSetting("SyncInstallRunDone") == "true"
         performMusicSync = addon.getSetting("enableMusicSync") == "true"
-        dbSyncIndication = addon.getSetting("dbSyncIndication") == "true"
-        WINDOW.setProperty("SyncDatabaseRunning", "true")
+        dbSyncIndication = addon.getSetting("dbSyncIndication") == "true"        
         
+        # just do a incremental sync if that is what is required
+        if(addon.getSetting("useIncSync") == "true"):
+            utils.logMsg("Sync Database", "Using incremental sync instead of full sync useIncSync=True)", 0)
+            
+            du = DownloadUtils()
+            
+            # yyyy-MM-ddThh:mm:ssZ
+            # TODO: save the last sync time/date and use it in the query
+            url = "{server}/Emby.Kodi.SyncQueue/{UserId}/2015-01-01T00:00:00Z/GetItems?format=json"
+            
+            results = du.downloadUrl(url)
+            utils.logMsg("Sync Database", "Incfemental Sync Changes : " + str(results), 0)
+            
+            changedItems = results["ItemsUpdated"] + results["ItemsAdded"] + results["UserDataChanged"]
+            removedItems = results["ItemsRemoved"]
+            
+            WINDOW.setProperty("startup", "done")
+            
+            LibrarySync().remove_items(removedItems)
+            LibrarySync().update_items(changedItems)           
+            
+            return True
+		
+        #set some variable to check if this is the first run
+        WINDOW.setProperty("SyncDatabaseRunning", "true")     
         
         #show the progress dialog
         pDialog = None
@@ -757,7 +780,7 @@ class LibrarySync(threading.Thread):
         if(len(itemsToUpdate) > 0):
             self.logMsg("Doing LibraryChanged : Processing Added and Updated : " + str(itemsToUpdate), 0)
             self.updateItems.extend(itemsToUpdate)
-
+            
     def user_data_update(self, userDataList):
         # websocket client
         for userData in userDataList:

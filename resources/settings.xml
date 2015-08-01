@@ -20,7 +20,8 @@
 		<setting id="dbSyncIndication" type="bool" label="Show sync progress on screen" default="false" visible="true" enable="true" />
 		<setting id="enableMusicSync" type="bool" label="Enable Music Library Sync" default="true" visible="true" enable="true" />
 		<setting id="useDirectPaths" type="bool" label="30250" default="false" visible="true" enable="true" />  
-		<setting id="enableTextureCache" type="bool" label="Auto add images to the Kodi texture cache" default="true" visible="true" enable="true" />		
+		<setting id="enableTextureCache" type="bool" label="Auto add images to the Kodi texture cache" default="true" visible="true" enable="true" />
+		<setting id="useIncSync" type="bool" label="Use incremental sync at startup (Requires Server Plugin)" default="false" visible="true" enable="true" />
 	</category>
 	<category label="Playback"> <!-- Extra Sync options -->
 		<setting id="smbusername" type="text" label="30007" default="" visible="true" enable="true" />
