@@ -79,13 +79,15 @@ class LibrarySync(threading.Thread):
             results = du.downloadUrl(url)
             utils.logMsg("Sync Database", "Incfemental Sync Changes : " + str(results), 0)
             
-            changedItems = results["ItemsUpdated"] + results["ItemsAdded"] + results["UserDataChanged"]
+            changedItems = results["ItemsUpdated"] + results["ItemsAdded"]
             removedItems = results["ItemsRemoved"]
+            userChanges = results["UserDataChanged"]
             
             WINDOW.setProperty("startup", "done")
             
             LibrarySync().remove_items(removedItems)
-            LibrarySync().update_items(changedItems)           
+            LibrarySync().update_items(changedItems)
+            LibrarySync().user_data_update(userChanges)        
             
             return True
 		
