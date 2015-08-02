@@ -27,8 +27,9 @@ class VideoNodes():
     def buildVideoNodeForView(self, tagname, type, windowPropId):
         #this method will build a video node for a particular Emby view (= tag in kodi)
         #we set some window props here to for easy future reference and to be used in skins (for easy access only)
+        tagname_normalized = utils.normalize_string(tagname)
         
-        libraryPath = xbmc.translatePath("special://profile/library/video/Emby - %s/" %tagname)
+        libraryPath = xbmc.translatePath("special://profile/library/video/Emby - %s/" %tagname_normalized)
         kodiVersion = 14
         if xbmc.getInfoLabel("System.BuildVersion").startswith("15") or xbmc.getInfoLabel("System.BuildVersion").startswith("16"):
             kodiVersion = 15
@@ -39,7 +40,7 @@ class VideoNodes():
         root = etree.Element("node", {"order":"0"})
         etree.SubElement(root, "label").text = tagname
         etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
-        path = "library://video/Emby - %s/"%tagname
+        path = "library://video/Emby - %s/" %tagname_normalized
         WINDOW.setProperty("Emby.nodes.%s.index" %str(windowPropId),path)
         try:
             etree.ElementTree(root).write(nodefile, xml_declaration=True)
@@ -47,7 +48,7 @@ class VideoNodes():
             etree.ElementTree(root).write(nodefile)
         
         #create tag node - all items
-        nodefile = os.path.join(libraryPath, tagname + "_all.xml")
+        nodefile = os.path.join(libraryPath, tagname_normalized + "_all.xml")
         root = etree.Element("node", {"order":"1", "type":"filter"})
         etree.SubElement(root, "label").text = tagname
         etree.SubElement(root, "match").text = "all"
@@ -56,7 +57,7 @@ class VideoNodes():
         etree.SubElement(root, "order", {"direction":"ascending"}).text = "sorttitle"
         Rule = etree.SubElement(root, "rule", {"field":"tag","operator":"is"})
         WINDOW.setProperty("Emby.nodes.%s.title" %str(windowPropId),tagname)
-        path = "library://video/Emby - %s/%s_all.xml"%(tagname,tagname)
+        path = "library://video/Emby - %s/%s_all.xml"%(tagname_normalized,tagname_normalized)
         WINDOW.setProperty("Emby.nodes.%s.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
         WINDOW.setProperty("Emby.nodes.%s.content" %str(windowPropId),path)
         WINDOW.setProperty("Emby.nodes.%s.type" %str(windowPropId),type)
@@ -67,7 +68,7 @@ class VideoNodes():
             etree.ElementTree(root).write(nodefile)
         
         #create tag node - recent items
-        nodefile = os.path.join(libraryPath, tagname + "_recent.xml")
+        nodefile = os.path.join(libraryPath, tagname_normalized + "_recent.xml")
         root = etree.Element("node", {"order":"2", "type":"filter"})
         if type == "tvshows":
             label = language(30170)
@@ -86,7 +87,7 @@ class VideoNodes():
         Rule2 = etree.SubElement(root, "rule", {"field":"playcount","operator":"is"})
         etree.SubElement(Rule2, "value").text = "0"
         WINDOW.setProperty("Emby.nodes.%s.recent.title" %str(windowPropId),label)
-        path = "library://video/Emby - %s/%s_recent.xml"%(tagname,tagname)
+        path = "library://video/Emby - %s/%s_recent.xml"%(tagname_normalized,tagname_normalized)
         WINDOW.setProperty("Emby.nodes.%s.recent.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
         WINDOW.setProperty("Emby.nodes.%s.recent.content" %str(windowPropId),path)
         try:
@@ -95,7 +96,7 @@ class VideoNodes():
             etree.ElementTree(root).write(nodefile)
         
         #create tag node - inprogress items
-        nodefile = os.path.join(libraryPath, tagname + "_progress.xml")
+        nodefile = os.path.join(libraryPath, tagname_normalized + "_progress.xml")
         root = etree.Element("node", {"order":"3", "type":"filter"})
         if type == "tvshows":
             label = language(30171)
@@ -111,7 +112,7 @@ class VideoNodes():
         etree.SubElement(root, "limit").text = "25"
         Rule2 = etree.SubElement(root, "rule", {"field":"inprogress","operator":"true"})
         WINDOW.setProperty("Emby.nodes.%s.inprogress.title" %str(windowPropId),label)
-        path = "library://video/Emby - %s/%s_progress.xml"%(tagname,tagname)
+        path = "library://video/Emby - %s/%s_progress.xml"%(tagname_normalized,tagname_normalized)
         WINDOW.setProperty("Emby.nodes.%s.inprogress.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
         WINDOW.setProperty("Emby.nodes.%s.inprogress.content" %str(windowPropId),path)
         try:
@@ -123,7 +124,7 @@ class VideoNodes():
         if type == "movies":
             
             #unwatched movies
-            nodefile = os.path.join(libraryPath, tagname + "_unwatched.xml")
+            nodefile = os.path.join(libraryPath, tagname_normalized + "_unwatched.xml")
             root = etree.Element("node", {"order":"4", "type":"filter"})
             label = language(30189)
             etree.SubElement(root, "label").text = label
@@ -138,7 +139,7 @@ class VideoNodes():
             Rule2 = etree.SubElement(root, "rule", {"field":"playcount","operator":"is"})
             etree.SubElement(Rule2, "value").text = "0"
             WINDOW.setProperty("Emby.nodes.%s.unwatched.title" %str(windowPropId),label)
-            path = "library://video/Emby - %s/%s_unwatched.xml"%(tagname,tagname)
+            path = "library://video/Emby - %s/%s_unwatched.xml"%(tagname_normalized,tagname_normalized)
             WINDOW.setProperty("Emby.nodes.%s.unwatched.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
             WINDOW.setProperty("Emby.nodes.%s.unwatched.content" %str(windowPropId),path)
             try:
@@ -147,7 +148,7 @@ class VideoNodes():
                 etree.ElementTree(root).write(nodefile)
             
             #sets
-            nodefile = os.path.join(libraryPath, tagname + "_sets.xml")
+            nodefile = os.path.join(libraryPath, tagname_normalized + "_sets.xml")
             root = etree.Element("node", {"order":"9", "type":"filter"})
             label = xbmc.getLocalizedString(20434)
             etree.SubElement(root, "label").text = label
@@ -159,7 +160,7 @@ class VideoNodes():
             Rule = etree.SubElement(root, "rule", {"field":"tag","operator":"is"})
             etree.SubElement(Rule, "value").text = tagname
             WINDOW.setProperty("Emby.nodes.%s.sets.title" %str(windowPropId),label)
-            path = "library://video/Emby - %s/%s_sets.xml"%(tagname,tagname)
+            path = "library://video/Emby - %s/%s_sets.xml"%(tagname_normalized,tagname_normalized)
             WINDOW.setProperty("Emby.nodes.%s.sets.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
             WINDOW.setProperty("Emby.nodes.%s.sets.content" %str(windowPropId),path)
             try:
@@ -168,7 +169,7 @@ class VideoNodes():
                 etree.ElementTree(root).write(nodefile)
 
         #create tag node - genres
-        nodefile = os.path.join(libraryPath, tagname + "_genres.xml")
+        nodefile = os.path.join(libraryPath, tagname_normalized + "_genres.xml")
         root = etree.Element("node", {"order":"9", "type":"filter"})
         label = xbmc.getLocalizedString(135)
         etree.SubElement(root, "label").text = label
@@ -180,7 +181,7 @@ class VideoNodes():
         Rule = etree.SubElement(root, "rule", {"field":"tag","operator":"is"})
         etree.SubElement(Rule, "value").text = tagname
         WINDOW.setProperty("Emby.nodes.%s.genres.title" %str(windowPropId),label)
-        path = "library://video/Emby - %s/%s_genres.xml"%(tagname,tagname)
+        path = "library://video/Emby - %s/%s_genres.xml"%(tagname_normalized,tagname_normalized)
         WINDOW.setProperty("Emby.nodes.%s.genres.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
         WINDOW.setProperty("Emby.nodes.%s.genres.content" %str(windowPropId),path)
         
@@ -197,7 +198,7 @@ class VideoNodes():
             #for below isengard we still use the plugin's entrypoint to build a listing
             if kodiVersion == 15:
                 #create tag node - recent episodes
-                nodefile = os.path.join(libraryPath, tagname + "_recent_episodes.xml")
+                nodefile = os.path.join(libraryPath, tagname_normalized + "_recent_episodes.xml")
                 root = etree.Element("node", {"order":"3", "type":"filter"})
                 label = language(30175)
                 etree.SubElement(root, "label").text = label
@@ -213,7 +214,7 @@ class VideoNodes():
                 Rule2 = etree.SubElement(root, "rule", {"field":"playcount","operator":"is"})
                 etree.SubElement(Rule2, "value").text = "0"
                 WINDOW.setProperty("Emby.nodes.%s.recentepisodes.title" %str(windowPropId),label)
-                path = "library://video/Emby - %s/%s_recent_episodes.xml"%(tagname,tagname)
+                path = "library://video/Emby - %s/%s_recent_episodes.xml"%(tagname_normalized,tagname_normalized)
                 WINDOW.setProperty("Emby.nodes.%s.recentepisodes.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
                 WINDOW.setProperty("Emby.nodes.%s.recentepisodes.content" %str(windowPropId),path)
                 try:
@@ -222,7 +223,7 @@ class VideoNodes():
                     etree.ElementTree(root).write(nodefile)
                 
                 #create tag node - inprogress episodes
-                nodefile = os.path.join(libraryPath, tagname + "_progress_episodes.xml")
+                nodefile = os.path.join(libraryPath, tagname_normalized + "_progress_episodes.xml")
                 root = etree.Element("node", {"order":"4", "type":"filter"})
                 label = language(30178)
                 etree.SubElement(root, "label").text = label
@@ -235,7 +236,7 @@ class VideoNodes():
                 etree.SubElement(root, "limit").text = "25"
                 Rule2 = etree.SubElement(root, "rule", {"field":"inprogress","operator":"true"})
                 WINDOW.setProperty("Emby.nodes.%s.inprogressepisodes.title" %str(windowPropId),label)
-                path = "library://video/Emby - %s/%s_progress_episodes.xml"%(tagname,tagname)
+                path = "library://video/Emby - %s/%s_progress_episodes.xml"%(tagname_normalized,tagname_normalized)
                 WINDOW.setProperty("Emby.nodes.%s.inprogressepisodes.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
                 WINDOW.setProperty("Emby.nodes.%s.inprogressepisodes.content" %str(windowPropId),path)
                 try:
@@ -245,7 +246,7 @@ class VideoNodes():
                     
             if kodiVersion == 14:
                 #create tag node - recent episodes
-                nodefile = os.path.join(libraryPath, tagname + "_recent_episodes.xml")
+                nodefile = os.path.join(libraryPath, tagname_normalized + "_recent_episodes.xml")
                 root = etree.Element("node", {"order":"4", "type":"folder"})
                 label = language(30175)
                 etree.SubElement(root, "label").text = label
@@ -254,7 +255,7 @@ class VideoNodes():
                 path = "plugin://plugin.video.emby/?id=%s&mode=recentepisodes&limit=25" %tagname
                 etree.SubElement(root, "path").text = path
                 WINDOW.setProperty("Emby.nodes.%s.recentepisodes.title" %str(windowPropId),label)
-                path = "library://video/Emby - %s/%s_recent_episodes.xml"%(tagname,tagname)
+                path = "library://video/Emby - %s/%s_recent_episodes.xml"%(tagname_normalized,tagname_normalized)
                 WINDOW.setProperty("Emby.nodes.%s.recentepisodes.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
                 WINDOW.setProperty("Emby.nodes.%s.recentepisodes.content" %str(windowPropId),path)
                 try:
@@ -263,7 +264,7 @@ class VideoNodes():
                     etree.ElementTree(root).write(nodefile)
                 
                 #create tag node - inprogress items
-                nodefile = os.path.join(libraryPath, tagname + "_progress_episodes.xml")
+                nodefile = os.path.join(libraryPath, tagname_normalized + "_progress_episodes.xml")
                 root = etree.Element("node", {"order":"5", "type":"folder"})
                 label = language(30178)
                 etree.SubElement(root, "label").text = label
@@ -272,7 +273,7 @@ class VideoNodes():
                 path = "plugin://plugin.video.emby/?id=%s&mode=inprogressepisodes&limit=25" %tagname
                 etree.SubElement(root, "path").text = path
                 WINDOW.setProperty("Emby.nodes.%s.inprogressepisodes.title" %str(windowPropId),label)
-                path = "library://video/Emby - %s/%s_progress_episodes.xml"%(tagname,tagname)
+                path = "library://video/Emby - %s/%s_progress_episodes.xml"%(tagname_normalized,tagname_normalized)
                 WINDOW.setProperty("Emby.nodes.%s.inprogressepisodes.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
                 WINDOW.setProperty("Emby.nodes.%s.inprogressepisodes.content" %str(windowPropId),path)
                 try:
@@ -282,7 +283,7 @@ class VideoNodes():
             
             #create tag node - nextup items
             #for nextup we always use the dynamic content approach with the plugin's entrypoint because it involves a custom query
-            nodefile = os.path.join(libraryPath, tagname + "_nextup_episodes.xml")
+            nodefile = os.path.join(libraryPath, tagname_normalized + "_nextup_episodes.xml")
             root = etree.Element("node", {"order":"6", "type":"folder"})
             label = language(30179)
             etree.SubElement(root, "label").text = label
@@ -291,7 +292,7 @@ class VideoNodes():
             etree.SubElement(root, "path").text = path
             etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
             WINDOW.setProperty("Emby.nodes.%s.nextepisodes.title" %str(windowPropId),label)
-            path = "library://video/Emby - %s/%s_nextup_episodes.xml"%(tagname,tagname)
+            path = "library://video/Emby - %s/%s_nextup_episodes.xml"%(tagname_normalized,tagname_normalized)
             WINDOW.setProperty("Emby.nodes.%s.nextepisodes.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
             WINDOW.setProperty("Emby.nodes.%s.nextepisodes.content" %str(windowPropId),path)        
             try:
