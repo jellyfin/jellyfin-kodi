@@ -57,8 +57,14 @@ class LibrarySync(threading.Thread):
         className = self.__class__.__name__
         utils.logMsg("%s %s" % (self.addonName, className), msg, int(lvl))
         
-    def FullLibrarySync(self,manualRun=False):
+    def FullLibrarySync(self,manualRun=False):      
         
+        addon = xbmcaddon.Addon(id='plugin.video.emby')
+        startupDone = WINDOW.getProperty("startup") == "done"
+        syncInstallRunDone = addon.getSetting("SyncInstallRunDone") == "true"
+        performMusicSync = addon.getSetting("enableMusicSync") == "true"
+        dbSyncIndication = addon.getSetting("dbSyncIndication") == "true"
+
         ### BUILD VIDEO NODES LISTING ###
         VideoNodes().buildVideoNodesListing()
         ### CREATE SOURCES ###
@@ -66,13 +72,7 @@ class LibrarySync(threading.Thread):
             # Only create sources once
             self.logMsg("Sources.xml created.", 0)
             utils.createSources()
-            addon.setSetting("Sources", "true")        
-        
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
-        startupDone = WINDOW.getProperty("startup") == "done"
-        syncInstallRunDone = addon.getSetting("SyncInstallRunDone") == "true"
-        performMusicSync = addon.getSetting("enableMusicSync") == "true"
-        dbSyncIndication = addon.getSetting("dbSyncIndication") == "true"        
+            addon.setSetting("Sources", "true")  
         
         # just do a incremental sync if that is what is required
         if(addon.getSetting("useIncSync") == "true" and addon.getSetting("SyncInstallRunDone") == "true")    :
