@@ -59,6 +59,14 @@ class LibrarySync(threading.Thread):
         
     def FullLibrarySync(self,manualRun=False):
         
+        ### BUILD VIDEO NODES LISTING ###
+        VideoNodes().buildVideoNodesListing()
+        ### CREATE SOURCES ###
+        if addon.getSetting("Sources") != "true":
+            # Only create sources once
+            self.logMsg("Sources.xml created.", 0)
+            utils.createSources()
+            addon.setSetting("Sources", "true")        
         
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         startupDone = WINDOW.getProperty("startup") == "done"
@@ -112,17 +120,7 @@ class LibrarySync(threading.Thread):
 
         try:
             completed = True
-            
-
-            ### BUILD VIDEO NODES LISTING ###
-            VideoNodes().buildVideoNodesListing()
-            ### CREATE SOURCES ###
-            if addon.getSetting("Sources") != "true":
-                # Only create sources once
-                self.logMsg("Sources.xml created.", 0)
-                utils.createSources()
-                addon.setSetting("Sources", "true")
-            
+                        
             ### PROCESS VIDEO LIBRARY ###
             
             #create the sql connection to video db
@@ -187,13 +185,14 @@ class LibrarySync(threading.Thread):
         if(pDialog != None):
             pDialog.close()
         
-        return True      
+        return True
+        
     def SaveLastSync(self):
         # save last sync time
         addon = xbmcaddon.Addon(id='plugin.video.emby')
         lastSync = (datetime.utcnow() - timedelta(minutes=5)).strftime('%Y-%m-%dT%H:%M:%SZ')
         utils.logMsg("Sync Database", "Incremental Sync Setting Last Run Time Saved : " + lastSync, 0)
-        addon.setSetting("LastIncrenetalSync", lastSync)       
+        addon.setSetting("LastIncrenetalSync", lastSync)
 
     def MoviesFullSync(self,connection,cursor, pDialog):
                
