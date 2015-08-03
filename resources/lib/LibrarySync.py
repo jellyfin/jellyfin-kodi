@@ -635,10 +635,8 @@ class LibrarySync(threading.Thread):
                 for item in itemList:
                         
                     MBitem = ReadEmbyDB().getItem(item)
-                    try:
-                        itemType = MBitem.get('Type', "")
-                    except:
-                        itemType = ""
+                    itemType = MBitem.get('Type', "")
+
                     #### PROCESS EPISODES ######
                     if "Episode" in itemType:
 
@@ -690,10 +688,8 @@ class LibrarySync(threading.Thread):
                     cursor = connection.cursor()
                     for item in itemList:
                         MBitem = ReadEmbyDB().getItem(item)
-                        try:
-                            itemType = MBitem.get('Type', "")
-                        except:
-                            itemType = ""
+                        itemType = MBitem.get('Type', "")
+                        
                         if "MusicArtist" in itemType:
                             WriteKodiMusicDB().addOrUpdateArtistToKodiLibrary(MBitem["Id"],connection, cursor)
                         if "MusicAlbum" in itemType:
