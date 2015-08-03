@@ -85,6 +85,8 @@ class LibrarySync(threading.Thread):
                 lastSync = "2010-01-01T00:00:00Z"
             utils.logMsg("Sync Database", "Incremental Sync Setting Last Run Time Loaded : " + lastSync, 0)
 
+            lastSync = urllib2.quote(lastSync)
+            
             url = "{server}/Emby.Kodi.SyncQueue/{UserId}/" + lastSync + "/GetItems?format=json"
             utils.logMsg("Sync Database", "Incremental Sync Get Items URL : " + url, 0)
             
