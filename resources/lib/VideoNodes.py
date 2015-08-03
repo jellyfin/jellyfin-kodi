@@ -27,7 +27,7 @@ class VideoNodes():
     def buildVideoNodeForView(self, tagname, type, windowPropId):
         #this method will build a video node for a particular Emby view (= tag in kodi)
         #we set some window props here to for easy future reference and to be used in skins (for easy access only)
-        tagname_normalized = utils.normalize_string(tagname)
+        tagname_normalized = utils.normalize_nodes(tagname)
         
         libraryPath = xbmc.translatePath("special://profile/library/video/Emby - %s/" %tagname_normalized)
         kodiVersion = 14

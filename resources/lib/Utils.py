@@ -190,24 +190,42 @@ def CleanName(filename):
     return ''.join(c for c in cleanedFilename if c in validFilenameChars)
 
 def normalize_string(text):
-    try:
-        text = text.replace(":", "")
-        text = text.replace("/", "-")
-        text = text.replace("\\", "-")
-        text = text.replace("<", "")
-        text = text.replace(">", "")
-        text = text.replace("*", "")
-        text = text.replace("?", "")
-        text = text.replace('|', "")
-        text = text.replace('(', "")
-        text = text.replace(')', "")
-        text = text.strip()
-        # Remove dots from the last character as windows can not have directories
-        # with dots at the end
-        text = text.rstrip('.')
-        text = unicodedata.normalize('NFKD', unicode(text, 'utf-8')).encode('ascii', 'ignore')
-    except:
-        pass
+    # For theme media, do not modify unless
+    # modified in TV Tunes
+    text = text.replace(":", "")
+    text = text.replace("/", "-")
+    text = text.replace("\\", "-")
+    text = text.replace("<", "")
+    text = text.replace(">", "")
+    text = text.replace("*", "")
+    text = text.replace("?", "")
+    text = text.replace('|', "")
+    text = text.strip()
+    # Remove dots from the last character as windows can not have directories
+    # with dots at the end
+    text = text.rstrip('.')
+    text = unicodedata.normalize('NFKD', unicode(text, 'utf-8')).encode('ascii', 'ignore')
+
+    return text
+
+def normalize_nodes(text):
+    # For video nodes
+    text = text.replace(":", "")
+    text = text.replace("/", "-")
+    text = text.replace("\\", "-")
+    text = text.replace("<", "")
+    text = text.replace(">", "")
+    text = text.replace("*", "")
+    text = text.replace("?", "")
+    text = text.replace('|', "")
+    text = text.replace('(', "")
+    text = text.replace(')', "")
+    text = text.strip()
+    # Remove dots from the last character as windows can not have directories
+    # with dots at the end
+    text = text.rstrip('.')
+    text = unicodedata.normalize('NFKD', unicode(text, 'utf-8')).encode('ascii', 'ignore')
+    
     return text
    
         
