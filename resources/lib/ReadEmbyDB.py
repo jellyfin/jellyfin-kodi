@@ -1,354 +1,230 @@
+# -*- coding: utf-8 -*-
+
 #################################################################################################
 # ReadEmbyDB
 #################################################################################################
 
-import xbmc
-import xbmcgui
-import xbmcaddon
-
-
-
 from DownloadUtils import DownloadUtils
 
-addon = xbmcaddon.Addon(id='plugin.video.emby')
 
-class ReadEmbyDB():   
+class ReadEmbyDB():
+
+    doUtils = DownloadUtils()
     
-    def getMovies(self, id, itemList = []):
-        
+    def getMovies(self, parentId, itemList = []):
+
+        # Only get basic info for our sync-compares
         result = []
-        doUtils = DownloadUtils()
-        
-        #only get basic info for our sync-compares
-        sortstring = "&SortBy=SortName"
+        url = "{server}/mediabrowser/Users/{UserId}/Items?ParentId=%s&SortBy=SortName&Fields=CumulativeRunTimeTicks,Etag&Recursive=true&SortOrder=Descending&IncludeItemTypes=Movie&CollapseBoxSetItems=false&ImageTypeLimit=1&format=json" % parentId
+        # Process itemList if any
+        if itemList:
+            url = "%s&Ids=%s" % (url, ",".join(itemList))
 
-        url = "{server}/mediabrowser/Users/{UserId}/items?ParentId=%s%s&Fields=CumulativeRunTimeTicks,Etag&Recursive=true&SortOrder=Descending&IncludeItemTypes=Movie&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1" % (id, sortstring)
-        if itemList != [] and len(itemList) < 50:
-            if len(itemList) == 1:
-                Ids=itemList[0]
-            else:
-                Ids=",".join(itemList)
-            url = url + "&Ids=" + Ids
+        jsondata = self.doUtils.downloadUrl(url)
+        if jsondata:
+            result = jsondata['Items']
 
-        jsonData = doUtils.downloadUrl(url)
-        if (jsonData == ""):
-            return result
-
-        if (jsonData[u'Items'] != ""):
-            result = jsonData[u'Items']
-            
-        # Work around to only return items from the given list
-        if (result != None and len(result) > 0 and len(itemList) > 0 and len(itemList) >= 50):
-            newResult = []
-            for item in result:
-                if (item[u'Id'] in itemList):
-                    newResult.append(item)
-            result = newResult
-            
         return result
 
     def getMusicVideos(self, itemList = []):
         
+        # Only get basic info for our sync-compares
         result = []
-        doUtils = DownloadUtils()
+        url = "{server}/mediabrowser/Users/{UserId}/items?&SortBy=SortName&Fields=CumulativeRunTimeTicks,Etag&Recursive=true&SortOrder=Descending&IncludeItemTypes=MusicVideo&CollapseBoxSetItems=false&ImageTypeLimit=1&format=json"
+        # Process itemList if any
+        if itemList:
+            url = "%s&Ids=%s" % (url, ",".join(itemList))
 
-        #only get basic info for our sync-compares
-        sortstring = "&SortBy=SortName"
-        url = "{server}/mediabrowser/Users/{UserId}/items?%s&Fields=CumulativeRunTimeTicks,Etag&Recursive=true&SortOrder=Descending&IncludeItemTypes=MusicVideo&CollapseBoxSetItems=false&format=json&ImageTypeLimit=1" % sortstring
-        if itemList != [] and len(itemList) < 50:
-            if len(itemList) == 1:
-                Ids=itemList[0]
-            else:
-                Ids=",".join(itemList)
-            url = url + "&Ids=" + Ids
-        
-        jsonData = doUtils.downloadUrl(url)
-        if (jsonData == ""):
-            return result
-
-        if (jsonData[u'Items'] != ""):
-            result = jsonData[u'Items']
-            
-        # Work around to only return items from the given list
-        if (result != None and len(result) > 0 and len(itemList) > 0 and len(itemList) >= 50):
-            newResult = []
-            for item in result:
-                if (item[u'Id'] in itemList):
-                    newResult.append(item)
-            result = newResult
+        jsondata = self.doUtils.downloadUrl(url)
+        if jsondata:
+            result = jsondata['Items']
 
         return result
     
     def getMusicArtists(self, itemList = []):
         
+        # Only get basic info for our sync-compares
         result = []
-        doUtils = DownloadUtils()
-
-        #only get basic info for our sync-compares
         url = "{server}/Artists?Recursive=true&Fields=Etag,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&UserId={UserId}&format=json"
-        if itemList != [] and len(itemList) < 50:
-            if len(itemList) == 1:
-                Ids=itemList[0]
-            else:
-                Ids=",".join(itemList)
-            url = url + "&Ids=" + Ids
+        # Process itemList if any
+        if itemList:
+            url = "%s&Ids=%s" % (url, ",".join(itemList))
         
-        jsonData = doUtils.downloadUrl(url)
-        if (jsonData == ""):
-            return result
-
-        if (jsonData[u'Items'] != ""):
-            result = jsonData[u'Items']
-                       
-        # Work around to only return items from the given list
-        if (result != None and len(result) > 0 and len(itemList) > 0 and len(itemList) >= 50):
-            newResult = []
-            for item in result:
-                if (item[u'Id'] in itemList):
-                    newResult.append(item)
-            result = newResult
+        jsondata = self.doUtils.downloadUrl(url)
+        if jsondata:
+            result = jsondata['Items']
 
         return result
     
     def getMusicSongs(self, itemList = []):
         
+        # Only get basic info for our sync-compares
         result = []
-        doUtils = DownloadUtils()
-
-        #only get basic info for our sync-compares
         url = "{server}/mediabrowser/Users/{UserId}/Items?Fields=Etag,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&IncludeItemTypes=Audio&format=json"
-        if itemList != [] and len(itemList) < 50:
-            if len(itemList) == 1:
-                Ids=itemList[0]
-            else:
-                Ids=",".join(itemList)
-            url = url + "&Ids=" + Ids
+        if itemList:
+            url = "%s&Ids=%s" % (url, ",".join(itemList))
         
-        
-        jsonData = doUtils.downloadUrl(url)
-        if (jsonData == ""):
-            return result
-
-        if (jsonData[u'Items'] != ""):
-            result = jsonData[u'Items']
-            
-        # Work around to only return items from the given list
-        if (result != None and len(result) > 0 and len(itemList) > 0 and len(itemList) >= 50):
-            newResult = []
-            for item in result:
-                if (item[u'Id'] in itemList):
-                    newResult.append(item)
-            result = newResult
+        jsondata = self.doUtils.downloadUrl(url)
+        if jsondata:
+            result = jsondata['Items']
 
         return result
     
     def getMusicAlbums(self, itemList = []):
         
+        # Only get basic info for our sync-compares
         result = []
-        doUtils = DownloadUtils()
-
-        #only get basic info for our sync-compares
         url = "{server}/mediabrowser/Users/{UserId}/Items?Fields=Etag,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&IncludeItemTypes=MusicAlbum&format=json"
-        if itemList != [] and len(itemList) < 50:
-            if len(itemList) == 1:
-                Ids=itemList[0]
-            else:
-                Ids=",".join(itemList)
-            url = url + "&Ids=" + Ids
+        if itemList:
+            url = "%s&Ids=%s" % (url, ",".join(itemList))
         
-        jsonData = doUtils.downloadUrl(url)
-        if (jsonData == ""):
-            return result
-
-        if (jsonData[u'Items'] != ""):
-            result = jsonData[u'Items']
-            
-            #only return valid albums - which have artists
+        jsondata = self.doUtils.downloadUrl(url)
+        try:
+            result = jsondata['Items']
+        except: pass
+        else:
             tempresult = []
+            # Only return valid albums - which have artists
             for item in result:
-                if item["AlbumArtists"]:
+                if item['AlbumArtists']:
                     tempresult.append(item)
-            
             result = tempresult
-
-            
-        # Work around to only return items from the given list
-        if (result != None and len(result) > 0 and len(itemList) > 0 and len(itemList) >= 50):
-            newResult = []
-            for item in result:
-                if (item[u'Id'] in itemList):
-                    newResult.append(item)
-            result = newResult
 
         return result
         
     def getItem(self, id):
         
-        result = None
-        doUtils = DownloadUtils()
-
+        result = {}
         url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json&ImageTypeLimit=1&Fields=Etag" % id
         
-        jsonData = doUtils.downloadUrl(url)     
-        if (jsonData != ""):
-            result = jsonData
+        jsondata = self.doUtils.downloadUrl(url)
+        if jsondata:
+            result = jsondata
 
         return result
     
     def getFullItem(self, id):
         
-        result = None
-        doUtils = DownloadUtils()
-
+        result = {}
         url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json&Fields=Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview" % id
         
-        jsonData = doUtils.downloadUrl(url)     
-        if (jsonData != ""):
-            result = jsonData
+        jsondata = self.doUtils.downloadUrl(url)     
+        if jsondata:
+            result = jsondata
 
         return result
     
-    def getTvShows(self, id, itemList = []):
+    def getTvShows(self, parentId, itemList = []):
         
+        # Only get basic info for our sync-compares
         result = []
-        doUtils = DownloadUtils()
-        
-        #only get basic info for our sync-compares
-        sortstring = "&SortBy=SortName"
-        url = "{server}/mediabrowser/Users/{UserId}/Items?ParentId=%s%s&Fields=CumulativeRunTimeTicks,Etag&Recursive=true&SortOrder=Descending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1" % (id, sortstring)
-        if itemList != [] and len(itemList) < 50:
-            if len(itemList) == 1:
-                Ids=itemList[0]
-            else:
-                Ids=",".join(itemList)
-            url = url + "&Ids=" + Ids
-        
-        jsonData = doUtils.downloadUrl(url)
-        if (jsonData == ""):
-            return result
 
-        if (jsonData[u'Items'] != ""):
-            result = jsonData[u'Items']
-            
-        # Work around to only return items from the given list
-        if (result != None and len(result) > 0 and len(itemList) > 0 and len(itemList) >= 50):
-            newResult = []
-            for item in result:
-                if (item[u'Id'] in itemList):
-                    newResult.append(item)
-            result = newResult
+        url = "{server}/mediabrowser/Users/{UserId}/Items?ParentId=%s&SortBy=SortName&Fields=CumulativeRunTimeTicks,Etag&Recursive=true&SortOrder=Descending&IncludeItemTypes=Series&format=json&ImageTypeLimit=1" % parentId
+        if itemList:
+            url = "%s&Ids=%s" % (url, ",".join(itemList))
+
+        jsondata = self.doUtils.downloadUrl(url)
+        if jsondata:
+            result = jsondata['Items']
 
         return result
     
     def getTVShowSeasons(self, tvShowId):
         
         result = []
-        doUtils = DownloadUtils()
-
         url = "{server}/Shows/%s/Seasons?UserId={UserId}&format=json&ImageTypeLimit=1" % tvShowId
         
-        jsonData = doUtils.downloadUrl(url)
-        if (jsonData == ""):
-            return result
-
-        if (jsonData[u'Items'] != ""):
-            result = jsonData[u'Items']
+        jsondata = self.doUtils.downloadUrl(url)
+        if jsondata:
+            result = jsondata['Items']
 
         return result
     
     def getEpisodes(self, showId, itemList = []):
         
         result = []
-        doUtils = DownloadUtils()  
         
         url = "{server}/mediabrowser/Users/{UserId}/Items?ParentId=%s&IsVirtualUnaired=false&IsMissing=False&SortBy=SortName&Fields=Name,SortName,CumulativeRunTimeTicks,Etag&Recursive=true&SortOrder=Ascending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1" % showId
-        if itemList != [] and len(itemList) < 50:
-            if len(itemList) == 1:
-                Ids=itemList[0]
-            else:
-                Ids=",".join(itemList)
-            url = url + "&Ids=" + Ids
-        
-        jsonData = doUtils.downloadUrl(url)
-        if (jsonData == ""):
-            return result
+        if itemList:
+            url = "%s&Ids=%s" % (url, ",".join(itemList))
 
-        if (jsonData[u'Items'] != ""):
-            result = jsonData[u'Items']
-            
-        # Work around to only return items from the given list
-        if (result != None and len(result) > 0 and len(itemList) > 0 and len(itemList) >= 50):
-            newResult = []
-            for item in result:
-                if (item[u'Id'] in itemList):
-                    newResult.append(item)
-            result = newResult
-                
+        jsondata = self.doUtils.downloadUrl(url)
+        if jsondata:
+            result = jsondata['Items']
+
         return result
     
     def getLatestEpisodes(self, fullinfo = False, itemList = []):
         
-        result = []
-        doUtils = DownloadUtils() 
+        result = [] 
         
         limitString = "Limit=20&SortBy=DateCreated&"
-        if(len(itemList) > 0): # if we want a certain list specify it
-            limitString = "Ids=" + ",".join(itemList) + "&"
+        if itemList: # if we want a certain list specify it
+            limitString = "Ids=%s&" % ",".join(itemList)
         
         if fullinfo:
             url = "{server}/mediabrowser/Users/{UserId}/Items?%sIsVirtualUnaired=false&IsMissing=False&Fields=ParentId,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview,Etag&Recursive=true&SortOrder=Descending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1" % limitString
         else:
             url = "{server}/mediabrowser/Users/{UserId}/Items?%sIsVirtualUnaired=false&IsMissing=False&Fields=ParentId,Name,SortName,CumulativeRunTimeTicks,Etag&Recursive=true&SortOrder=Descending&IncludeItemTypes=Episode&format=json&ImageTypeLimit=1" % limitString
         
-        jsonData = doUtils.downloadUrl(url)
-        if (jsonData == ""):
-            return result
+        jsondata = self.doUtils.downloadUrl(url)
+        if jsondata:
+            result = jsondata['Items']
 
-        if (jsonData[u'Items'] != ""):
-            result = jsonData[u'Items']
-                
         return result
     
     def getCollections(self, type):
-        #Build a list of the user views
-        doUtils = DownloadUtils()
-        
-        try:
-            url = "{server}/mediabrowser/Users/{UserId}/Items/Root?format=json"
-            result = doUtils.downloadUrl(url)
-        except Exception, msg:
-            error = "Can't connect: %s" % msg
-            xbmc.log(error)
-            return []
-        
-        if (result == ""):
-            return []
+        # Build a list of the user views
+        doUtils = self.doUtils
+        collections = []
 
-        parentid = result[u'Id']
-        
-        url = "{server}/mediabrowser/Users/{UserId}/items?ParentId=%s&Sortby=SortName&format=json" % parentid
-        result = doUtils.downloadUrl(url)
-        collections=[]
-        
-        if (result == ""):
-            return []
-        
-        result = result[u'Items']
-        
-        for item in result:
-            if (item[u'RecursiveItemCount'] != 0):
-                Name = item[u'Name']
-                if u'CollectionType' not in item:
-                    itemtype = "movies" # User may not have declared the type
-                else:
-                    itemtype = item[u'CollectionType']
-                    
-                if itemtype == type and Name != "Collections":
-                    collections.append({'title': Name,
-                                        'type' : itemtype,
-                                        'id'   : item[u'Id']})
+        url = "{server}/mediabrowser/Users/{UserId}/Items?Sortby=SortName&format=json"
+        jsondata = doUtils.downloadUrl(url)
+
+        try:
+            result = jsondata['Items']
+        except: pass
+        else:
+            for item in result:
+                if item['RecursiveItemCount']:
+                    name = item['Name']
+                    itemtype = item.get('CollectionType', "movies")
+
+                    if itemtype == type and name != "Collections":
+                        collections.append({
+                            'title': name,
+                            'type': itemtype,
+                            'id': item['Id']
+                        })
+
         return collections
     
+    def getBoxSets(self):
+        
+        result = []
+        url = "{server}/mediabrowser/Users/{UserId}/Items?SortBy=SortName&IsVirtualUnaired=false&IsMissing=False&Fields=Name,SortName,CumulativeRunTimeTicks,Etag&Recursive=true&SortOrder=Ascending&IncludeItemTypes=BoxSet&format=json&ImageTypeLimit=1"
+        
+        jsondata = self.doUtils.downloadUrl(url)
+        if jsondata:
+            result = jsondata['Items']
+
+        return result
+    
+    def getMoviesInBoxSet(self, boxsetId):
+        
+        result = []
+        url = "{server}/mediabrowser/Users/{UserId}/Items?ParentId=%s&Fields=ItemCounts,Etag&format=json&ImageTypeLimit=1" % boxsetId
+        
+        jsondata = self.doUtils.downloadUrl(url)
+        if jsondata:
+            result = jsondata['Items']
+
+        return result
+
+
+    # This is not being used.
+    # To be removed?
+
     def getViewCollections(self, type):
         #Build a list of the user views
         doUtils = DownloadUtils()
@@ -391,35 +267,3 @@ class ReadEmbyDB():
                                      'type'           : type,
                                      'id'             : view[u'Id']})
         return collections
-    
-    def getBoxSets(self):
-        
-        result = []
-        doUtils = DownloadUtils()  
-        
-        url = "{server}/mediabrowser/Users/{UserId}/Items?SortBy=SortName&IsVirtualUnaired=false&IsMissing=False&Fields=Name,SortName,CumulativeRunTimeTicks,Etag&Recursive=true&SortOrder=Ascending&IncludeItemTypes=BoxSet&format=json&ImageTypeLimit=1"
-        
-        jsonData = doUtils.downloadUrl(url)
-        if (jsonData == ""):
-            return result
-
-        if (jsonData[u'Items'] != ""):
-            result = jsonData[u'Items']
-
-        return result
-    
-    def getMoviesInBoxSet(self,boxsetId):
-        
-        result = []
-        doUtils = DownloadUtils()
-        
-        url = "{server}/mediabrowser/Users/{UserId}/Items?ParentId=%s&Fields=ItemCounts,Etag&format=json&ImageTypeLimit=1" % boxsetId
-        
-        jsonData = doUtils.downloadUrl(url)
-        if (jsonData == ""):
-            return result
-
-        if (jsonData[u'Items'] != ""):
-            result = jsonData[u'Items']
-
-        return result
