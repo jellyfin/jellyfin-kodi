@@ -77,6 +77,25 @@ class ReadEmbyDB():
                 result = self.filterbyId(result, itemList)
 
         return result
+
+    def getMusicArtistsTotal(self):
+
+        result = []
+
+        url = "{server}/Artists?Limit=1&Recursive=true&Fields=Etag,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&UserId={UserId}&format=json"
+        jsondata = self.doUtils.downloadUrl(url)
+
+        total = jsondata['TotalRecordCount']
+        index = 1
+        jump = 200
+
+        while index < total:
+            url = "{server}/Artists?StartIndex=%s&Limit=%s&Recursive=true&Fields=Etag,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&UserId={UserId}&format=json" % (index, jump)
+            jsondata = self.doUtils.downloadUrl(url)
+            result.extend(jsondata['Items'])
+            index += jump
+
+        return result
     
     def getMusicSongs(self, itemList = []):
         
@@ -112,7 +131,7 @@ class ReadEmbyDB():
             url = "{server}/mediabrowser/Users/{UserId}/Items?StartIndex=%s&Limit=%s&Fields=Etag,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&IncludeItemTypes=Audio&format=json" % (index, jump)
             jsondata = self.doUtils.downloadUrl(url)
             result.extend(jsondata['Items'])
-            index += 200
+            index += jump
 
         return result
     
@@ -142,6 +161,32 @@ class ReadEmbyDB():
 
         return result
     
+    def getMusicAlbumsTotal(self):
+
+        result = []
+
+        url = "{server}/mediabrowser/Users/{UserId}/Items?Limit=1&Fields=Etag,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&IncludeItemTypes=MusicAlbum&format=json"
+        jsondata = self.doUtils.downloadUrl(url)
+
+        total = jsondata['TotalRecordCount']
+        index = 1
+        jump = 200
+
+        while index < total:
+            url = "{server}/mediabrowser/Users/{UserId}/Items?StartIndex=%s&Limit=%s&Fields=Etag,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&IncludeItemTypes=MusicAlbum&format=json" % (index, jump)
+            jsondata = self.doUtils.downloadUrl(url)
+
+            tempresult = []
+            # Only return valid albums - which have artists
+            for item in jsondata['Items']:
+                if item['AlbumArtists']:
+                    tempresult.append(item)
+
+            result.extend(tempresult)
+            index += jump
+
+        return result
+
     def getTvShows(self, parentId, itemList = []):
         
         result = []

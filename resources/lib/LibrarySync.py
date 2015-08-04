@@ -494,7 +494,7 @@ class LibrarySync(threading.Thread):
         allKodiArtistIds = list()
         allEmbyArtistIds = list()
         
-        allEmbyArtists = ReadEmbyDB().getMusicArtists()
+        allEmbyArtists = ReadEmbyDB().getMusicArtistsTotal()
         allKodiArtists = ReadKodiDB().getKodiMusicArtists(connection, cursor)
         
         for kodiartist in allKodiArtists:
@@ -540,7 +540,7 @@ class LibrarySync(threading.Thread):
         allKodiAlbumIds = list()
         allEmbyAlbumIds = list()
         
-        allEmbyAlbums = ReadEmbyDB().getMusicAlbums()
+        allEmbyAlbums = ReadEmbyDB().getMusicAlbumsTotal()
         allKodiAlbums = ReadKodiDB().getKodiMusicAlbums(connection, cursor)
         
         for kodialbum in allKodiAlbums:
