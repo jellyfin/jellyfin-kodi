@@ -96,6 +96,25 @@ class ReadEmbyDB():
                 result = self.filterbyId(result, itemList)
 
         return result
+
+    def getMusicSongsTotal(self):
+
+        result = []
+
+        url = "{server}/mediabrowser/Users/{UserId}/Items?Index=1&Limit=1&Fields=Etag,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&IncludeItemTypes=Audio&format=json"
+        jsondata = self.doUtils.downloadUrl(url)
+
+        total = jsondata['TotalRecordCount']
+        index = 1
+        jump = 200
+
+        while index < total:
+            url = "{server}/mediabrowser/Users/{UserId}/Items?StartIndex=%s&Limit=%s&Fields=Etag,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&IncludeItemTypes=Audio&format=json" % (index, jump)
+            jsondata = self.doUtils.downloadUrl(url)
+            result.extend(jsondata['Items'])
+            index += 200
+
+        return result
     
     def getMusicAlbums(self, itemList = []):
         

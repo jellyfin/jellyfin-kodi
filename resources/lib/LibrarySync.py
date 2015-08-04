@@ -448,7 +448,7 @@ class LibrarySync(threading.Thread):
         allKodiSongIds = list()
         allEmbySongIds = list()
         
-        allEmbySongs = ReadEmbyDB().getMusicSongs()
+        allEmbySongs = ReadEmbyDB().getMusicSongsTotal()
         allKodiSongs = ReadKodiDB().getKodiMusicSongs(connection, cursor)
         
         for kodisong in allKodiSongs:

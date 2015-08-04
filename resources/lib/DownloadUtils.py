@@ -27,7 +27,7 @@ class DownloadUtils():
 
     # Requests session
     s = None
-    timeout = 30
+    timeout = 60
 
     def __init__(self):
 
