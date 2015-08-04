@@ -412,7 +412,7 @@ class API():
         if type == "poster" or type == "tvshow.poster": # Now that the Ids are right, change type to MB3 name
             type="Primary"
         if data.get("Type") == "Season":  # For seasons: primary (poster), thumb and banner get season art, rest series art
-            if type != "Primary" and type != "Primary2" and type != "Primary3" and type != "Primary4" and type != "Thumb" and type != "Banner" and type!="Thumb3":
+            if type != "Primary" and type != "Primary2" and type != "Primary3" and type != "Primary4" and type != "Thumb" and type != "Banner" and type!="Thumb3"  and type!="Backdrop":
                 id = data.get("SeriesId")
                 getSeriesData = True
         if data.get("Type") == "Episode":  # For episodes: primary (episode thumb) gets episode art, rest series art. 
@@ -442,6 +442,9 @@ class API():
             imageTag = data.get("ParentLogoImageTag")
         if (data.get("Type") == "Episode" or data.get("Type") == "Season") and type=="Art":
             imageTag = data.get("ParentArtImageTag")
+        if (data.get("Type") == "Episode" or data.get("Type") == "Season") and type=="Backdrop":
+            if data.get("BackdropImageTags"):
+                imageTag = data['BackdropImageTags'][0]
         if (data.get("Type") == "Episode" and originalType=="Thumb3"):
             imageTag = data.get("SeriesThumbImageTag")
         if (data.get("Type") == "Season" and originalType=="Thumb3" and imageTag=="e3ab56fe27d389446754d0fb04910a34"):

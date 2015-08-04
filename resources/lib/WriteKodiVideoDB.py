@@ -783,6 +783,9 @@ class WriteKodiVideoDB():
                     
                     imageUrl = API().getArtwork(season, "Banner", mediaType = "season")
                     self.addOrUpdateArt(imageUrl, seasonid, "season", "banner", cursor)
+
+                    imageUrl = API().getArtwork(season, "Backdrop", mediaType = "season")
+                    self.addOrUpdateArt(imageUrl, seasonid, "season", "fanart", cursor)
             
             # All season entry
             MBitem = ReadEmbyDB().getFullItem(embyTvShowId)
