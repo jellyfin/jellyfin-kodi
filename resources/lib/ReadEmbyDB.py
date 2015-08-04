@@ -173,7 +173,7 @@ class ReadEmbyDB():
         jump = 200
 
         while index < total:
-            url = "{server}/mediabrowser/Users/{UserId}/Items?StartIndex=%s&Limit=%s&Fields=Etag,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&Recursive=true&IncludeItemTypes=MusicAlbum&format=json" % (index, jump)
+            url = "{server}/mediabrowser/Users/{UserId}/Items?StartIndex=%s&Limit=%s&Fields=Etag,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&SortBy=DateCreated&Recursive=true&IncludeItemTypes=MusicAlbum&format=json" % (index, jump)
             jsondata = self.doUtils.downloadUrl(url)
 
             tempresult = []
