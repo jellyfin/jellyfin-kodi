@@ -75,7 +75,7 @@ class LibrarySync(threading.Thread):
             addon.setSetting("Sources", "true")  
         
         # just do a incremental sync if that is what is required
-        if(addon.getSetting("useIncSync") == "true" and addon.getSetting("SyncInstallRunDone") == "true"):
+        if(addon.getSetting("useIncSync") == "true" and addon.getSetting("SyncInstallRunDone") == "true") and manualRun == False:
             utils.logMsg("Sync Database", "Using incremental sync instead of full sync useIncSync=True)", 0)
             
             du = DownloadUtils()
