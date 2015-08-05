@@ -596,6 +596,7 @@ def createListItem(item):
 def getExtraFanArt():
     itemPath = ""
     embyId = ""
+    
     #get extrafanart for listitem - this will only be used for skins that actually call the listitem's path + fanart dir... 
     try:
         #only do this if the listitem has actually changed
@@ -606,6 +607,8 @@ def getExtraFanArt():
         
         if ("/tvshows/" in itemPath or "/musicvideos/" in itemPath or "/movies/" in itemPath):
             embyId = itemPath.split("/")[-2]
+            
+            utils.logMsg("%s %s" % ("Emby addon", "getExtraFanArt"), "requesting extraFanArt for Id: " + embyId, 1)
 
             #we need to store the images locally for this to work because of the caching system in xbmc
             fanartDir = xbmc.translatePath("special://thumbnails/emby/" + embyId + "/")
@@ -617,11 +620,16 @@ def getExtraFanArt():
                 if item != None:
                     if item.has_key("BackdropImageTags"):
                         if(len(item["BackdropImageTags"]) > 0):
-                            totalbackdrops = len(item["BackdropImageTags"]) 
-                            for index in range(0,totalbackdrops): 
-                                backgroundUrl = API().getArtwork(item, "Backdrop",str(index))
-                                fanartFile = os.path.join(fanartDir,"fanart" + str(index) + ".jpg")
-                                li = xbmcgui.ListItem(str(index), path=fanartFile)
+                            WINDOW = xbmcgui.Window(10000)
+                            username = WINDOW.getProperty('currUser')
+                            server = WINDOW.getProperty('server%s' % username)
+                            totalbackdrops = len(item["BackdropImageTags"])
+                            count = 0
+                            for backdrop in item["BackdropImageTags"]: 
+                                backgroundUrl = "%s/mediabrowser/Items/%s/Images/Backdrop/%s/?MaxWidth=10000&MaxHeight=10000&Format=original&Tag=%s&EnableImageEnhancers=false" % (server, embyId, str(count), backdrop)
+                                count += 1
+                                fanartFile = os.path.join(fanartDir,"fanart" + backdrop + ".jpg")
+                                li = xbmcgui.ListItem(backdrop, path=fanartFile)
                                 xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=fanartFile, listitem=li)
                                 xbmcvfs.copy(backgroundUrl,fanartFile) 
                 
@@ -633,7 +641,8 @@ def getExtraFanArt():
                     count +=1
                     li = xbmcgui.ListItem(file, path=os.path.join(fanartDir,file))
                     xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=os.path.join(fanartDir,file), listitem=li)
-    except:
+    except Exception as e:
+        utils.logMsg("%s %s" % ("Emby addon", "Error in getExtraFanArt"), str(e), 1)
         pass
     
     #always do endofdirectory to prevent errors in the logs
