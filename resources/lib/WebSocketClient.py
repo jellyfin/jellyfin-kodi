@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+
+import json
+import threading
+import websocket
+import logging
+
 #################################################################################################
 # WebSocket Client thread
 #################################################################################################
@@ -6,28 +13,17 @@ import xbmc
 import xbmcgui
 import xbmcaddon
 
-import json
-import threading
-import urllib
-import socket
-import websocket
-
 import KodiMonitor
 import Utils as utils
-
 from ClientInformation import ClientInformation
 from DownloadUtils import DownloadUtils
 from PlaybackUtils import PlaybackUtils
 from LibrarySync import LibrarySync
 from WriteKodiVideoDB import WriteKodiVideoDB
-from ReadEmbyDB import ReadEmbyDB
-from ReadKodiDB import ReadKodiDB
 from WriteKodiMusicDB import WriteKodiMusicDB
 
-import logging
 logging.basicConfig()
 
-_MODE_BASICPLAY=12
 
 class WebSocketThread(threading.Thread):
 
@@ -36,7 +32,6 @@ class WebSocketThread(threading.Thread):
     doUtils = DownloadUtils()
     clientInfo = ClientInformation()
     KodiMonitor = KodiMonitor.Kodi_Monitor()
-    WINDOW = xbmcgui.Window(10000)
 
     addonName = clientInfo.getAddonName()
 
@@ -65,138 +60,112 @@ class WebSocketThread(threading.Thread):
                 messageString = json.dumps(messageData)
                 self.client.send(messageString)
                 self.logMsg("Message data: %s" % messageString, 2)
-            except Exception, e:
+            except Exception as e:
                 self.logMsg("Exception: %s" % e, 1)  
     
     def stopClient(self):
         # stopping the client is tricky, first set keep_running to false and then trigger one 
         # more message by requesting one SessionsStart message, this causes the 
         # client to receive the message and then exit
-        if(self.client != None):
+        if self.client:
             self.logMsg("Stopping Client")
             self.keepRunning = False
             self.client.keep_running = False            
             self.client.close() 
             self.logMsg("Stopping Client : KeepRunning set to False")
-            '''
-            try:
-                self.keepRunning = False
-                self.client.keep_running = False
-                self.logMsg("Stopping Client")
-                self.logMsg("Calling Ping")
-                self.client.sock.ping()
-                
-                self.logMsg("Calling Socket Shutdown()")
-                self.client.sock.sock.shutdown(socket.SHUT_RDWR)
-                self.logMsg("Calling Socket Close()")
-                self.client.sock.sock.close()
-                self.logMsg("Stopping Client Done")
-                self.logMsg("Calling Ping")
-                self.client.sock.ping()     
-                               
-            except Exception, e:
-                self.logMsg("Exception : " + str(e), level=0)      
-            '''
         else:
             self.logMsg("Stopping Client NO Object ERROR")
             
     def on_message(self, ws, message):
-        self.logMsg("Message : " + str(message), 0)
-        result = json.loads(message)
+
+        WINDOW = xbmcgui.Window(10000)
+        addon = xbmcaddon.Addon()
+        self.logMsg("Message: %s" % message, 1)
         
-        messageType = result.get("MessageType")
+        result = json.loads(message)
+        messageType = result['MessageType']
         data = result.get("Data")
-        WINDOW = xbmcgui.Window( 10000 )
 
-        if(messageType != None and messageType == "Play" and data != None):
-            itemIds = data.get("ItemIds")
-            playCommand = data.get("PlayCommand")
-            
-            if(playCommand != None and playCommand == "PlayNow"):
-            
+        if messageType == "Play":
+            # A remote control play command has been sent from the server.
+            itemIds = data['ItemIds']
+            playCommand = data['PlayCommand']
+
+            if "PlayNow" in playCommand:
+                startPositionTicks = data.get('StartPositionTicks', 0)
                 xbmc.executebuiltin("Dialog.Close(all,true)")
-                startPositionTicks = data.get("StartPositionTicks")
+                xbmc.executebuiltin("XBMC.Notification(Playlist: Added %s items to Playlist,)" % len(itemIds))
                 PlaybackUtils().PLAYAllItems(itemIds, startPositionTicks)
-                xbmc.executebuiltin("XBMC.Notification(Playlist: Added " + str(len(itemIds)) + " items to Playlist,)")
-
-            elif(playCommand != None and playCommand == "PlayNext"):
-            
+            # Don't think this is being used.
+            elif "PlayNext" in playCommand:
+                xbmc.executebuiltin("XBMC.Notification(Playlist: Added %s items to Playlist,)" % len(itemIds))
                 playlist = PlaybackUtils().AddToPlaylist(itemIds)
-                xbmc.executebuiltin("XBMC.Notification(Playlist: Added " + str(len(itemIds)) + " items to Playlist,)")
-                if(xbmc.Player().isPlaying() == False):
+                if not xbmc.Player().isPlaying():
                     xbmc.Player().play(playlist)
-                            
-        elif(messageType != None and messageType == "Playstate"):
-            command = data.get("Command")
-            if(command != None and command == "Stop"):
-                self.logMsg("Playback Stopped")
-                xbmc.executebuiltin('xbmc.activatewindow(10000)')
+               
+        elif messageType == "Playstate":
+            # A remote control update playstate command has been sent from the server.
+            command = data['Command']
+
+            if "Stop" in command:
+                self.logMsg("Playback Stopped.", 1)
                 xbmc.Player().stop()
-            elif(command != None and command == "Pause"):
-                self.logMsg("Playback Paused")
+            elif "Unpause" in command:
+                self.logMsg("Playback unpaused.", 1)
                 xbmc.Player().pause()
-            elif(command != None and command == "Unpause"):
-                self.logMsg("Playback UnPaused")
+            elif "Pause" in command:
+                self.logMsg("Playback paused.", 1)
                 xbmc.Player().pause()
-            elif(command != None and command == "NextTrack"):
-                self.logMsg("Playback NextTrack")
+            elif "NextTrack" in command:
+                self.logMsg("Playback next track.", 1)
                 xbmc.Player().playnext()
-            elif(command != None and command == "PreviousTrack"):
-                self.logMsg("Playback PreviousTrack")
+            elif "PreviousTrack" in command:
+                self.logMsg("Playback previous track.", 1)
                 xbmc.Player().playprevious()
-            elif(command != None and command == "Seek"):
-                seekPositionTicks = data.get("SeekPositionTicks")
-                self.logMsg("Playback Seek : " + str(seekPositionTicks))
-                seekTime = (seekPositionTicks / 1000) / 10000
+            elif "Seek" in command:
+                seekPositionTicks = data['SeekPositionTicks']
+                seekTime = seekPositionTicks / 10000000.0
+                self.logMsg("Seek to %s" % seekTime, 1)
                 xbmc.Player().seekTime(seekTime)
             # Report playback
-            WINDOW.setProperty('commandUpdate', 'true')
-                
-        elif(messageType != None and messageType == "UserDataChanged"):
-            # for now just do a full playcount sync
-            self.logMsg("Message : Doing UserDataChanged", 0)
-            userDataList = data.get("UserDataList")
-            self.logMsg("Message : Doing UserDataChanged : UserDataList : " + str(userDataList), 0)
-            if(userDataList != None):
-                LibrarySync().user_data_update(userDataList)
-        
-        elif(messageType != None and messageType == "LibraryChanged"):
-            foldersAddedTo = data.get("FoldersAddedTo")
-            foldersRemovedFrom = data.get("FoldersRemovedFrom")
-            
-            # doing items removed
+            WINDOW.setProperty('commandUpdate', "true")
+
+        elif messageType == "UserDataChanged":
+            # A user changed their personal rating for an item, or their playstate was updated
+            userdataList = data['UserDataList']
+            self.logMsg("Message: Doing UserDataChanged: UserDataList: %s" % userdataList, 1)
+            LibrarySync().user_data_update(userdataList)
+
+        elif messageType == "LibraryChanged":
+            # Library items
             itemsRemoved = data.get("ItemsRemoved")
             itemsAdded = data.get("ItemsAdded")
             itemsUpdated = data.get("ItemsUpdated")
             itemsToUpdate = itemsAdded + itemsUpdated
-            self.logMsg("Message : WebSocket LibraryChanged : Items Added : " + str(itemsAdded), 0)
-            self.logMsg("Message : WebSocket LibraryChanged : Items Updated : " + str(itemsUpdated), 0)
-            self.logMsg("Message : WebSocket LibraryChanged : Items Removed : " + str(itemsRemoved), 0)
+
+            self.logMsg("Message: WebSocket LibraryChanged: Items Added: %s" % itemsAdded, 1)
+            self.logMsg("Message: WebSocket LibraryChanged: Items Updated: %s" % itemsUpdated, 1)
+            self.logMsg("Message: WebSocket LibraryChanged: Items Removed: %s" % itemsRemoved, 1)
 
             LibrarySync().remove_items(itemsRemoved)
             LibrarySync().update_items(itemsToUpdate)
 
         elif messageType == "GeneralCommand":
             
-            command = data.get("Name")
+            command = data['Name']
             arguments = data.get("Arguments")
-            
-            commandsPlayback = [
-                'Mute','Unmute','SetVolume',
-                'SetAudioStreamIndex'
-            ]
 
-            if command in commandsPlayback:
+            if command in ('Mute', 'Unmute', 'SetVolume'):
                 # These commands need to be reported back
                 if command == "Mute":
                     xbmc.executebuiltin('Mute')
                 elif command == "Unmute":
                     xbmc.executebuiltin('Mute')
                 elif command == "SetVolume":
-                    volume = arguments[u'Volume']
+                    volume = arguments['Volume']
                     xbmc.executebuiltin('SetVolume(%s[,showvolumebar])' % volume)
                 # Report playback
-                WINDOW.setProperty('commandUpdate', 'true')
+                WINDOW.setProperty('commandUpdate', "true")
 
             else:
                 # GUI commands
@@ -241,16 +210,20 @@ class WebSocketThread(threading.Thread):
                 elif command == "VolumeDown":
                     xbmc.executebuiltin('Action(VolumeDown)')
                 elif command == "DisplayMessage":
-                    header = arguments[u'Header']
-                    text = arguments[u'Text']
-                    xbmcgui.Dialog().notification(header, text, time=4000)
+                    header = arguments['Header']
+                    text = arguments['Text']
+                    xbmcgui.Dialog().notification(header, text, icon="special://home/addons/plugin.video.emby/icon.png", time=4000)
                 elif command == "SendString":
-                    string = arguments[u'String']
+                    string = arguments['String']
                     text = '{"jsonrpc": "2.0", "method": "Input.SendText",  "params": { "text": "%s", "done": false }, "id": 0}' % string
                     result = xbmc.executeJSONRPC(text)
                 else:
                     self.logMsg("Unknown command.", 1)
-                
+
+        elif messageType == "ServerRestarting":
+            if addon.getSetting('supressRestartMsg') == "true":
+                xbmcgui.Dialog().notification("Emby server", "Server is restarting.", icon="special://home/addons/plugin.video.emby/icon.png")
+
     def on_error(self, ws, error):
         if "10061" in str(error):
             # Server is offline
@@ -260,13 +233,7 @@ class WebSocketThread(threading.Thread):
         #raise
 
     def on_close(self, ws):
-        WINDOW = self.WINDOW
         self.logMsg("Closed", 2)
-        # Server is not online
-        '''if WINDOW.getProperty("Server_online") == "true":
-            self.logMsg("Server is unreachable.", 1)
-            WINDOW.setProperty("Server_online", "false")
-            xbmcgui.Dialog().notification("Error connecting", "%s Server is unreachable." % self.addonName)'''
 
     def on_open(self, ws):
         deviceId = ClientInformation().getMachineId()
@@ -282,7 +249,7 @@ class WebSocketThread(threading.Thread):
         deviceId = ClientInformation().getMachineId()
 
         '''if (logLevel == 2):
-            websocket.enableTrace(True)        '''
+            websocket.enableTrace(True)'''
 
         # Get the appropriate prefix for websocket
         if "https" in server:
@@ -310,4 +277,3 @@ class WebSocketThread(threading.Thread):
                     break
             
         self.logMsg("Thread Exited", 1)
-        
