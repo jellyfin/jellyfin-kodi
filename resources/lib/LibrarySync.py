@@ -87,7 +87,7 @@ class LibrarySync(threading.Thread):
 
             lastSync = urllib2.quote(lastSync)
             
-            url = "{server}/Emby.Kodi.SyncQueue/{UserId}/" + lastSync + "/GetItems?format=json"
+            url = "{server}/Emby.Kodi.SyncQueue/{UserId}/GetItems?LastUpdateDT=" + lastSync + "&format=json"
             utils.logMsg("Sync Database", "Incremental Sync Get Items URL : " + url, 0)
             
             results = du.downloadUrl(url)
