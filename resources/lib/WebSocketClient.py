@@ -96,7 +96,7 @@ class WebSocketThread(threading.Thread):
                 xbmc.executebuiltin("Dialog.Close(all,true)")
                 xbmc.executebuiltin("XBMC.Notification(Playlist: Added %s items to Playlist,)" % len(itemIds))
                 PlaybackUtils().PLAYAllItems(itemIds, startPositionTicks)
-            # Don't think this is being used.
+
             elif "PlayNext" in playCommand:
                 xbmc.executebuiltin("XBMC.Notification(Playlist: Added %s items to Playlist,)" % len(itemIds))
                 playlist = PlaybackUtils().AddToPlaylist(itemIds)
@@ -155,7 +155,7 @@ class WebSocketThread(threading.Thread):
             command = data['Name']
             arguments = data.get("Arguments")
 
-            if command in ('Mute', 'Unmute', 'SetVolume'):
+            if command in ('Mute', 'Unmute', 'SetVolume', 'SetSubtitleStreamIndex', 'SetAudioStreamIndex'):
                 # These commands need to be reported back
                 if command == "Mute":
                     xbmc.executebuiltin('Mute')
@@ -164,6 +164,14 @@ class WebSocketThread(threading.Thread):
                 elif command == "SetVolume":
                     volume = arguments['Volume']
                     xbmc.executebuiltin('SetVolume(%s[,showvolumebar])' % volume)
+                elif command == "SetSubtitleStreamIndex":
+                    # Emby merges audio and subtitle index together
+                    audioTracks = len(xbmc.Player().getAvailableAudioStreams())
+                    index = int(arguments['Index']) - audioTracks
+                    xbmc.Player().setSubtitleStream(index - 1)
+                elif command == "SetAudioStreamIndex":
+                    index = int(arguments['Index'])
+                    xbmc.Player().setAudioStream(index - 1)
                 # Report playback
                 WINDOW.setProperty('commandUpdate', "true")
 

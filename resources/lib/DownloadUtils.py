@@ -21,8 +21,7 @@ class DownloadUtils():
     clientInfo = ClientInformation()
 
     addonName = clientInfo.getAddonName()
-    addonId = clientInfo.getAddonId()
-    addon = xbmcaddon.Addon(id=addonId)
+    addon = xbmcaddon.Addon()
     WINDOW = xbmcgui.Window(10000)
 
     # Requests session
@@ -79,6 +78,7 @@ class DownloadUtils():
                 "GoHome,PageUp,NextLetter,GoToSearch,"
                 "GoToSettings,PageDown,PreviousLetter,TakeScreenshot,"
                 "VolumeUp,VolumeDown,ToggleMute,SendString,DisplayMessage,"
+                "SetAudioStreamIndex,SetSubtitleStreamIndex,"
 
                 "Mute,Unmute,SetVolume,"
                 "Play,Playstate,PlayNext"
@@ -183,7 +183,6 @@ class DownloadUtils():
                     # Replace for the real values and append api_key
                     url = url.replace("{server}", self.server, 1)
                     url = url.replace("{UserId}", self.userId, 1)
-                    #url = "%s&api_key=%s" % (url, self.token)
 
                     self.logMsg("URL: %s" % url, 2)
                     # Prepare request
@@ -293,7 +292,7 @@ class DownloadUtils():
                     if r.headers['X-Application-Error-Code'] == "ParentalControl":
                         # Parental control - access restricted
                         WINDOW.setProperty("Server_status", "restricted")
-                        xbmcgui.Dialog().notification("Emby server", "Access restricted.", xbmcgui.NOTIFICATION_ERROR, time=5000)
+                        xbmcgui.Dialog().notification("Emby server", "Access restricted.", xbmcgui.NOTIFICATION_ERROR, icon="special://home/addons/plugin.video.emby/icon.png", time=5000)
                         return False
 
                 if (status == "401") or (status == "Auth"):
@@ -303,7 +302,7 @@ class DownloadUtils():
                     # Tell UserClient token has been revoked.
                     WINDOW.setProperty("Server_status", "401")
                     self.logMsg("HTTP Error: %s" % e, 0)
-                    xbmcgui.Dialog().notification("Error connecting", "Unauthorized.", xbmcgui.NOTIFICATION_ERROR)
+                    xbmcgui.Dialog().notification("Error connecting", "Unauthorized.", xbmcgui.NOTIFICATION_ERROR, icon="special://home/addons/plugin.video.emby/icon.png")
                     return 401
 
             elif (r.status_code == 301) or (r.status_code == 302):
