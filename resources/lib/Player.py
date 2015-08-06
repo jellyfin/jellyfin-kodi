@@ -176,6 +176,18 @@ class Player( xbmc.Player ):
             volume = result.get(u'result').get(u'volume')
             muted = result.get(u'result').get(u'muted')
 
+            # Get current audio and subtitles track
+            track_query = '{"jsonrpc": "2.0", "method": "Player.GetProperties",  "params": {"playerid":1,"properties": ["currentsubtitle","currentaudiostream"]} , "id": 1}'
+            result = xbmc.executeJSONRPC(track_query)
+            result = json.loads(result)
+            indexAudio = result['result']['currentaudiostream']['index']
+            indexSubs = result['result']['currentsubtitle']['index']
+
+            # Convert back into an Emby index
+            audioTracks = len(xbmc.Player().getAvailableAudioStreams())
+            indexAudio = indexAudio + 1
+            indexSubs = indexSubs + audioTracks + 1
+
             postdata = {
                 'QueueableMediaTypes': "Video",
                 'CanSeek': True,
@@ -190,11 +202,17 @@ class Player( xbmc.Player ):
             if playTime:
                 postdata['PositionTicks'] = int(playTime * 10000000)
 
-            if audioindex:
+            if audioindex == indexAudio:
                 postdata['AudioStreamIndex'] = audioindex
+            else:
+                postdata['AudioStreamIndex'] = indexAudio
+                data['AudioStreamIndex'] = indexAudio
 
-            if subtitleindex:
+            if subtitleindex == indexSubs:
                 postdata['SubtitleStreamIndex'] = subtitleindex
+            else:
+                postdata['SubtitleStreamIndex'] = indexSubs
+                data['SubtitleStreamIndex'] = indexSubs
 
             postdata = json.dumps(postdata)
             self.logMsg("Report: %s" % postdata, 2)
@@ -267,6 +285,13 @@ class Player( xbmc.Player ):
             volume = result.get(u'result').get(u'volume')
             muted = result.get(u'result').get(u'muted')
 
+            # Get the current audio track and subtitles
+            track_query = '{"jsonrpc": "2.0", "method": "Player.GetProperties",  "params": {"playerid":1,"properties": ["currentsubtitle","currentaudiostream"]} , "id": 1}'
+            result = xbmc.executeJSONRPC(track_query)
+            result = json.loads(result)
+            indexAudio = result['result']['currentaudiostream']['index']
+            indexSubs = result['result']['currentsubtitle']['index']
+
             seekTime = xbmc.Player().getTime()
 
             url = "{server}/mediabrowser/Sessions/Playing"
@@ -283,9 +308,14 @@ class Player( xbmc.Player ):
 
             if audioindex:
                 postdata['AudioStreamIndex'] = audioindex
+            else:
+                postdata['AudioStreamIndex'] = indexAudio + 1
 
             if subtitleindex:
                 postdata['SubtitleStreamIndex'] = subtitleindex
+            else:
+                audioTracks = len(xbmc.Player().getAvailableAudioStreams())
+                postdata['SubtitleStreamIndex'] = indexSubs + audioTracks + 1
             
             # Post playback to server
             self.logMsg("Sending POST play started.", 1)
@@ -297,8 +327,8 @@ class Player( xbmc.Player ):
                 'item_id': item_id,
                 'refresh_id': refresh_id,
                 'currentfile': currentFile,
-                'AudioStreamIndex': audioindex,
-                'SubtitleStreamIndex': subtitleindex,
+                'AudioStreamIndex': postdata['AudioStreamIndex'],
+                'SubtitleStreamIndex': postdata['SubtitleStreamIndex'],
                 'playmethod': playMethod,
                 'Type': itemType,
                 'currentPosition': int(seekTime)

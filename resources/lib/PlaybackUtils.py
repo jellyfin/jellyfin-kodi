@@ -147,7 +147,7 @@ class PlaybackUtils():
         WINDOW.setProperty(playurl+"type", result.get("Type"))
         WINDOW.setProperty(playurl+"item_id", id)
             
-        mediaSources = result.get("MediaSources")
+        '''mediaSources = result.get("MediaSources")
         if(mediaSources != None):
             mediaStream = mediaSources[0].get('MediaStreams')
             defaultsubs = ""
@@ -161,7 +161,7 @@ class PlaybackUtils():
             if mediaSources[0].get('DefaultAudioStreamIndex') != None:
                 WINDOW.setProperty(playurl+"AudioStreamIndex", str(mediaSources[0].get('DefaultAudioStreamIndex')))  
             if mediaSources[0].get('DefaultSubtitleStreamIndex') != None:
-                WINDOW.setProperty(playurl+"SubtitleStreamIndex", str(mediaSources[0].get('DefaultSubtitleStreamIndex')))
+                WINDOW.setProperty(playurl+"SubtitleStreamIndex", str(mediaSources[0].get('DefaultSubtitleStreamIndex')))'''
 
         #launch the playback - only set the listitem props if we're not using the setresolvedurl approach
         if setup == "service":
