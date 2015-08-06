@@ -68,6 +68,8 @@ class Player( xbmc.Player ):
     
     def stopAll(self):
 
+        WINDOW = xbmcgui.Window(10000)
+
         if(len(self.played_information) == 0):
             return 
             
@@ -86,6 +88,7 @@ class Player( xbmc.Player ):
                 refresh_id = data.get("refresh_id")
                 currentFile = data.get("currentfile")
                 type = data.get("Type")
+                playMethod = data.get('playmethod')
 
                 # Prevent websocket feedback
                 self.WINDOW.setProperty("played_itemId", item_id)
@@ -116,12 +119,12 @@ class Player( xbmc.Player ):
                             listItem = [item_id]
                             LibrarySync().removefromDB(listItem, True)
                     
-        # Stop transcoding
-        if self.WINDOW.getProperty("transcoding%s" % item_id) == "true":
-            deviceId = self.clientInfo.getMachineId()
-            url = "{server}/mediabrowser/Videos/ActiveEncodings?DeviceId=%s" % deviceId
-            self.doUtils.downloadUrl(url, type="DELETE")
-            self.WINDOW.clearProperty("transcoding%s" % item_id)
+                # Stop transcoding
+                if playMethod == "Transcode":
+                    self.logMsg("Transcoding for %s terminated." % item_id)
+                    deviceId = self.clientInfo.getMachineId()
+                    url = "{server}/mediabrowser/Videos/ActiveEncodings?DeviceId=%s" % deviceId
+                    self.doUtils.downloadUrl(url, type="DELETE")
                 
         self.played_information.clear()
     
@@ -176,22 +179,6 @@ class Player( xbmc.Player ):
             volume = result.get(u'result').get(u'volume')
             muted = result.get(u'result').get(u'muted')
 
-            # Get current audio and subtitles track
-            track_query = '{"jsonrpc": "2.0", "method": "Player.GetProperties",  "params": {"playerid":1,"properties": ["currentsubtitle","currentaudiostream","subtitleenabled"]} , "id": 1}'
-            result = xbmc.executeJSONRPC(track_query)
-            result = json.loads(result)
-            indexAudio = result['result']['currentaudiostream']['index']
-            indexSubs = result['result']['currentsubtitle']['index']
-            subsEnabled = result['result']['subtitleenabled']
-
-            # Convert back into an Emby index
-            audioTracks = len(xbmc.Player().getAvailableAudioStreams())
-            indexAudio = indexAudio + 1
-            if subsEnabled:
-                indexSubs = indexSubs + audioTracks + 1
-            else:
-                indexSubs = ""
-
             postdata = {
                 'QueueableMediaTypes': "Video",
                 'CanSeek': True,
@@ -206,17 +193,38 @@ class Player( xbmc.Player ):
             if playTime:
                 postdata['PositionTicks'] = int(playTime * 10000000)
 
-            if audioindex == indexAudio:
-                postdata['AudioStreamIndex'] = audioindex
-            else:
-                postdata['AudioStreamIndex'] = indexAudio
-                data['AudioStreamIndex'] = indexAudio
+            if playMethod != "Transcode":
+                # Get current audio and subtitles track
+                track_query = '{"jsonrpc": "2.0", "method": "Player.GetProperties",  "params": {"playerid":1,"properties": ["currentsubtitle","currentaudiostream","subtitleenabled"]} , "id": 1}'
+                result = xbmc.executeJSONRPC(track_query)
+                result = json.loads(result)
+                indexAudio = result['result']['currentaudiostream']['index']
+                indexSubs = result['result']['currentsubtitle']['index']
+                subsEnabled = result['result']['subtitleenabled']
 
-            if subtitleindex == indexSubs:
-                postdata['SubtitleStreamIndex'] = subtitleindex
+                # Convert back into an Emby index
+                audioTracks = len(xbmc.Player().getAvailableAudioStreams())
+                indexAudio = indexAudio + 1
+                if subsEnabled:
+                    indexSubs = indexSubs + audioTracks + 1
+                else:
+                    indexSubs = ""
+
+                if audioindex == indexAudio:
+                    postdata['AudioStreamIndex'] = audioindex
+                else:
+                    postdata['AudioStreamIndex'] = indexAudio
+                    data['AudioStreamIndex'] = indexAudio
+
+                if subtitleindex == indexSubs:
+                    postdata['SubtitleStreamIndex'] = subtitleindex
+                else:
+                    postdata['SubtitleStreamIndex'] = indexSubs
+                    data['SubtitleStreamIndex'] = indexSubs
+
             else:
-                postdata['SubtitleStreamIndex'] = indexSubs
-                data['SubtitleStreamIndex'] = indexSubs
+                data['AudioStreamIndex'] = audioindex
+                data['SubtitleStreamIndex'] = subtitleindex
 
             postdata = json.dumps(postdata)
             self.logMsg("Report: %s" % postdata, 2)
@@ -249,7 +257,7 @@ class Player( xbmc.Player ):
         
     def onPlayBackStarted( self ):
         # Will be called when xbmc starts playing a file
-        WINDOW = self.WINDOW
+        WINDOW = xbmcgui.Window(10000)
         addon = self.addon
         xbmcplayer = self.xbmcplayer
         self.stopAll()
@@ -277,8 +285,6 @@ class Player( xbmc.Player ):
             # only ever use the win props here, use the data map in all other places
             runtime = WINDOW.getProperty(currentFile + "runtimeticks")
             refresh_id = WINDOW.getProperty(currentFile + "refresh_id")
-            audioindex = WINDOW.getProperty(currentFile + "AudioStreamIndex")
-            subtitleindex = WINDOW.getProperty(currentFile + "SubtitleStreamIndex")
             playMethod = WINDOW.getProperty(currentFile + "playmethod")
             itemType = WINDOW.getProperty(currentFile + "type")
             
@@ -288,14 +294,6 @@ class Player( xbmc.Player ):
             result = json.loads(result)
             volume = result.get(u'result').get(u'volume')
             muted = result.get(u'result').get(u'muted')
-
-            # Get the current audio track and subtitles
-            track_query = '{"jsonrpc": "2.0", "method": "Player.GetProperties",  "params": {"playerid":1,"properties": ["currentsubtitle","currentaudiostream","subtitleenabled"]} , "id": 1}'
-            result = xbmc.executeJSONRPC(track_query)
-            result = json.loads(result)
-            indexAudio = result['result']['currentaudiostream']['index']
-            indexSubs = result['result']['currentsubtitle']['index']
-            subsEnabled = result['result']['subtitleenabled']
 
             seekTime = xbmc.Player().getTime()
 
@@ -311,14 +309,22 @@ class Player( xbmc.Player ):
                 'IsMuted': muted
             }
 
-            if audioindex:
+            # Get the current audio track and subtitles
+            if playMethod == "Transcode":
+                audioindex = WINDOW.getProperty(currentFile + "AudioStreamIndex")
+                subtitleindex = WINDOW.getProperty(currentFile + "SubtitleStreamIndex")
                 postdata['AudioStreamIndex'] = audioindex
-            else:
-                postdata['AudioStreamIndex'] = indexAudio + 1
-
-            if subtitleindex:
                 postdata['SubtitleStreamIndex'] = subtitleindex
+
             else:
+                track_query = '{"jsonrpc": "2.0", "method": "Player.GetProperties",  "params": {"playerid": 1,"properties": ["currentsubtitle","currentaudiostream","subtitleenabled"]} , "id": 1}'
+                result = xbmc.executeJSONRPC(track_query)
+                result = json.loads(result)
+                indexAudio = result['result']['currentaudiostream']['index']
+                indexSubs = result['result']['currentsubtitle']['index']
+                subsEnabled = result['result']['subtitleenabled']
+
+                postdata['AudioStreamIndex'] = indexAudio + 1
                 if subsEnabled:
                     audioTracks = len(xbmc.Player().getAvailableAudioStreams())
                     postdata['SubtitleStreamIndex'] = indexSubs + audioTracks + 1

@@ -97,6 +97,13 @@ class PlaybackUtils():
             xbmc.log("Failed to retrieve the playback path/url.")
             return
 
+        if WINDOW.getProperty("%splaymethod" % playurl) == "Transcode":
+            playurlprefs = self.audioSubsPref(playurl, result.get("MediaSources"))
+            if playurlprefs:
+                playurl = playurlprefs
+            else: # User cancelled dialog
+                return
+
         thumbPath = API().getArtwork(result, "Primary")
         
         #if the file is a virtual strm file, we need to override the path by reading it's contents
@@ -146,22 +153,6 @@ class PlaybackUtils():
         WINDOW.setProperty(playurl+"runtimeticks", str(result.get("RunTimeTicks")))
         WINDOW.setProperty(playurl+"type", result.get("Type"))
         WINDOW.setProperty(playurl+"item_id", id)
-            
-        '''mediaSources = result.get("MediaSources")
-        if(mediaSources != None):
-            mediaStream = mediaSources[0].get('MediaStreams')
-            defaultsubs = ""
-            for stream in mediaStream:
-                if u'Subtitle' in stream[u'Type'] and stream[u'IsDefault']:
-                    if u'Language' in stream:
-                        defaultsubs = stream[u'Language']
-                    else:
-                        defaultsubs = stream[u'Codec']
-            WINDOW.setProperty("%ssubs" % playurl, defaultsubs.encode('utf-8'))
-            if mediaSources[0].get('DefaultAudioStreamIndex') != None:
-                WINDOW.setProperty(playurl+"AudioStreamIndex", str(mediaSources[0].get('DefaultAudioStreamIndex')))  
-            if mediaSources[0].get('DefaultSubtitleStreamIndex') != None:
-                WINDOW.setProperty(playurl+"SubtitleStreamIndex", str(mediaSources[0].get('DefaultSubtitleStreamIndex')))'''
 
         #launch the playback - only set the listitem props if we're not using the setresolvedurl approach
         if setup == "service":
@@ -173,6 +164,76 @@ class PlaybackUtils():
                 xbmc.Player().play(playurl,listItem)   
             else:
                xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
+
+    def audioSubsPref(self, url, mediaSources):
+
+        WINDOW = xbmcgui.Window(10000)
+        # Present the list of audio to select from
+        audioStreamsList = {}
+        audioStreams = []
+        selectAudioIndex = ""
+        subtitleStreamsList = {}
+        subtitleStreams = ['No subtitles']
+        selectSubsIndex = ""
+        playurlprefs = "%s" % url
+
+        mediaStream = mediaSources[0].get('MediaStreams')
+        for stream in mediaStream:
+            index = stream['Index']
+            # Since Emby returns all possible tracks together, have to sort them.
+            if 'Audio' in stream['Type']:
+                try:
+                    track = stream['Language']
+                    audioStreamsList[track] = index
+                    audioStreams.append(track)
+                except:
+                    track = stream['Codec']
+                    audioStreamsList[track] = index
+                    audioStreams.append(track)
+
+            elif 'Subtitle' in stream['Type']:
+                try:
+                    track = stream['Language']
+                    subtitleStreamsList[track] = index
+                    subtitleStreams.append(track)
+                except:
+                    track = stream['Codec']
+                    subtitleStreamsList[track] = index
+                    subtitleStreams.append(track)
+
+        if len(audioStreams) > 1:
+            resp = xbmcgui.Dialog().select("Choose the audio stream", audioStreams)
+            if resp > -1:
+                # User selected audio
+                selected = audioStreams[resp]
+                selected_audioIndex = audioStreamsList[selected]
+                playurlprefs += "&AudioStreamIndex=%s" % selected_audioIndex
+                selectAudioIndex = str(selected_audioIndex)
+            else: return False
+        else: # There's only one audiotrack.
+            audioIndex = audioStreamsList[audioStreams[0]]
+            playurlprefs += "&AudioStreamIndex=%s" % audioIndex
+            selectAudioIndex = str(audioIndex)
+
+        if len(subtitleStreams) > 1:
+            resp = xbmcgui.Dialog().select("Choose the subtitle stream", subtitleStreams)
+            if resp == 0:
+                # User selected no subtitles
+                pass
+            elif resp > -1:
+                # User selected subtitles
+                selected = subtitleStreams[resp]
+                selected_subsIndex = subtitleStreamsList[selected]
+                playurlprefs += "&SubtitleStreamIndex=%s" % selected_subsIndex
+                selectSubsIndex = str(selected_subsIndex)
+            else: return False
+        
+        # Reset the method with the new playurl
+        WINDOW.setProperty("%splaymethod" % playurlprefs, "Transcode")
+        WINDOW.setProperty("%sAudioStreamIndex" % playurlprefs, selectAudioIndex)
+        WINDOW.setProperty("%sSubtitleStreamIndex" % playurlprefs, selectSubsIndex)
+
+        return playurlprefs
 
     def setArt(self, list,name,path):
         if name=='thumb' or name=='fanart_image' or name=='small_poster' or name=='tiny_poster'  or name == "medium_landscape" or name=='medium_poster' or name=='small_fanartimage' or name=='medium_fanartimage' or name=='fanart_noindicators':
