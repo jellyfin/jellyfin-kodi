@@ -1,2 +1,5 @@
+1.1.28
+- Fix playback for widgets
+
 0.0.1
 - initital alpha version

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon  id="plugin.video.emby" 
         name="Emby" 
-        version="1.1.27"
+        version="1.1.28"
         provider-name="Emby.media">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -21,6 +21,6 @@
     <website>http://mediabrowser.tv/</website>
     <source></source>
     <summary lang="en"></summary>
-    <description lang="en"></description>
+    <description lang="en">Emby for Kodi combines the best of Kodi - ultra smooth navigation, beautiful UIs and playback of any file under the sun, and Emby - the most powerful fully open source multi-client media metadata indexer and server.&#10;&#10;Emby for Kodi is the absolute best way to enjoy the incredible Kodi playback engine combined with the power of Emby's centralized database.</description>
   </extension>
 </addon>
