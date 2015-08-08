@@ -114,7 +114,7 @@ class WriteKodiVideoDB():
         imdb = API().getProvider(MBitem, "imdb")
         sorttitle = MBitem['SortName']
         runtime = timeInfo.get('TotalTime')
-        mpaa = MBitem.get('OfficialRating')
+        mpaa = API().getMpaa(MBitem)
         genre = " / ".join(genres)
         director = " / ".join(people.get('Director'))
         studio = " / ".join(studios)
@@ -469,7 +469,7 @@ class WriteKodiVideoDB():
         premieredate = API().getPremiereDate(MBitem)
         genre = " / ".join(genres)
         tvdb = API().getProvider(MBitem, "tvdb")
-        mpaa = MBitem.get('OfficialRating')
+        mpaa = API().getMpaa(MBitem)
         studio = " / ".join(studios)
         sorttitle = MBitem['SortName']
 

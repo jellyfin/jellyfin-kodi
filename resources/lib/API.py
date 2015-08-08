@@ -142,9 +142,10 @@ class API():
                     videotrack['height'] = mediaStream.get('Height')
                     videotrack['width'] = mediaStream.get('Width')
                     videotrack['Video3DFormat'] = item.get('Video3DFormat')
-                    try:# Metadata aspect ratio
+                    if item.get('AspectRatio'):
+                        # Metadata aspect ratio
                         videotrack['aspectratio'] = item['AspectRatio']
-                    except: # File aspect ratio
+                    else: # File aspect ratio
                         videotrack['aspectratio'] = mediaStream.get('AspectRatio', "0")
                     if len(videotrack['aspectratio']) >= 3:
                         try:
@@ -296,40 +297,35 @@ class API():
     
     def getDateCreated(self, item):
 
-        dateadded = None
-
         try:
             dateadded = item['DateCreated']
             dateadded = dateadded.split('.')[0].replace('T', " ")
-        except: pass
+        except:
+            dateadded = None
 
         return dateadded
 
     def getPremiereDate(self, item):
 
-        premiere = None
-
         try:
             premiere = item['PremiereDate']
             premiere = premiere.split('.')[0].replace('T', " ")
-        except: pass
+        except:
+            premiere = None
 
         return premiere
 
     def getTagline(self, item):
 
-        tagline = None
-
         try:
             tagline = item['Taglines'][0]
-        except: pass
+        except:
+            tagline = None
 
         return tagline
 
     def getProvider(self, item, providername):
         # Provider Name: imdb or tvdb
-        provider = None
-
         try:
             if "imdb" in providername:
                 provider = item['ProviderIds']['Imdb']
@@ -341,19 +337,28 @@ class API():
                 provider = item['ProviderIds']['MusicBrainzAlbum']
             elif "musicBrainzTrackId" in providername:
                 provider = item['ProviderIds']['MusicBrainzTrackId']
-        except: pass
+        except:
+            provider = None
 
         return provider
 
     def getCountry(self, item):
 
-        country = None
-
         try:
             country = item['ProductionLocations'][0]
-        except: pass
+        except:
+            country = None
 
         return country
+
+    def getMpaa(self, item):
+        # Convert more complex cases
+        mpaa = item.get('OfficialRating', "")
+        if "NR" in mpaa:
+            # Kodi seems to not like NR, but will accept Rated Not Rated
+            mpaa = "Rated Not Rated"
+
+        return mpaa
 
     def getArtworks(self, data, type, mediaType = "", index = "0", getAll = False):
 
