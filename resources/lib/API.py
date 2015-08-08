@@ -142,7 +142,10 @@ class API():
                     videotrack['height'] = mediaStream.get('Height')
                     videotrack['width'] = mediaStream.get('Width')
                     videotrack['Video3DFormat'] = item.get('Video3DFormat')
-                    videotrack['aspectratio'] = mediaStream.get('AspectRatio', "0")
+                    try:# Metadata aspect ratio
+                        videotrack['aspectratio'] = item['AspectRatio']
+                    except: # File aspect ratio
+                        videotrack['aspectratio'] = mediaStream.get('AspectRatio', "0")
                     if len(videotrack['aspectratio']) >= 3:
                         try:
                             aspectwidth, aspectheight = videotrack['aspectratio'].split(':')
