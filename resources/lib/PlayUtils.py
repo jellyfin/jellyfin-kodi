@@ -227,13 +227,14 @@ class PlayUtils():
         try:
             mediaSources = result[u'MediaSources']
             sourceBitRate = int(mediaSources[0][u'Bitrate'])
-            self.logMsg("The video quality selected is: %s, the video bitrate required to direct stream is: %s." % (settingsVideoBitRate, sourceBitRate), 1)
-            if settingsVideoBitRate > sourceBitRate:
-                return True
-            else:
-                return False
         except:
-            return True
+            self.logMsg("Bitrate value is missing.")
+        else:
+            self.logMsg("The video quality selected is: %s, the video bitrate required to direct stream is: %s." % (settingsVideoBitRate, sourceBitRate), 1)
+            if settingsVideoBitRate < sourceBitRate:
+                return False
+        
+        return True
       
     def getVideoBitRate(self):
         # get the addon video quality
