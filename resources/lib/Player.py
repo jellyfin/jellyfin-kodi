@@ -198,9 +198,9 @@ class Player( xbmc.Player ):
                 track_query = '{"jsonrpc": "2.0", "method": "Player.GetProperties",  "params": {"playerid":1,"properties": ["currentsubtitle","currentaudiostream","subtitleenabled"]} , "id": 1}'
                 result = xbmc.executeJSONRPC(track_query)
                 result = json.loads(result)
-                indexAudio = result['result']['currentaudiostream'].get('index', "")
-                indexSubs = result['result']['currentsubtitle'].get('index', "")
-                subsEnabled = result['result']['subtitleenabled']
+                indexAudio = result.get('result', "").get('currentaudiostream', "").get('index', 0)
+                indexSubs = result.get('result', "").get('currentsubtitle', "").get('index', 0)
+                subsEnabled = result.get('result', "").get('subtitleenabled', "")
 
                 # Convert back into an Emby index
                 audioTracks = len(xbmc.Player().getAvailableAudioStreams())
@@ -320,9 +320,9 @@ class Player( xbmc.Player ):
                 track_query = '{"jsonrpc": "2.0", "method": "Player.GetProperties",  "params": {"playerid": 1,"properties": ["currentsubtitle","currentaudiostream","subtitleenabled"]} , "id": 1}'
                 result = xbmc.executeJSONRPC(track_query)
                 result = json.loads(result)
-                indexAudio = result['result']['currentaudiostream'].get('index', "")
-                indexSubs = result['result']['currentsubtitle'].get('index', "")
-                subsEnabled = result['result']['subtitleenabled']
+                indexAudio = result.get('result', "").get('currentaudiostream', "").get('index', 0)
+                indexSubs = result.get('result', "").get('currentsubtitle', "").get('index', 0)
+                subsEnabled = result.get('result', "").get('subtitleenabled', "")
 
                 postdata['AudioStreamIndex'] = indexAudio + 1
                 if subsEnabled:
