@@ -1,3 +1,6 @@
+version 1.1.31
+- Added user image home property.
+
 version 1.1.30
 - Fix aspect ratio. Take into account metadata aspect ratio.
 - Fix flag for NR
