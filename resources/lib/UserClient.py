@@ -16,6 +16,7 @@ import Utils as utils
 from ClientInformation import ClientInformation
 from DownloadUtils import DownloadUtils
 from Player import Player
+from API import API
 
 
 class UserClient(threading.Thread):
@@ -179,6 +180,9 @@ class UserClient(threading.Thread):
 
         self.logMsg("Audio preference: %s" % audio, 2)
         self.logMsg("Subtitles preference: %s" % subs, 2)
+
+        # Set user image for skin display
+        self.WINDOW.setProperty("EmbyUserImage",API().getUserArtwork(result,"Primary"))
 
         return True
 
