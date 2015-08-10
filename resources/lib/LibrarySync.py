@@ -103,8 +103,6 @@ class LibrarySync(threading.Thread):
             LibrarySync().update_items(changedItems)
             LibrarySync().user_data_update(userChanges)
             
-            self.SaveLastSync()
-            
             return True
 		
         #set some variable to check if this is the first run
@@ -859,6 +857,7 @@ class LibrarySync(threading.Thread):
                 listItems = self.updateItems
                 self.updateItems = []
                 self.IncrementalSync(listItems)
+                self.SaveLastSync()
 
             if len(self.removeItems) > 0:
                 # Remove item from Kodi library
@@ -866,6 +865,7 @@ class LibrarySync(threading.Thread):
                 listItems = self.removeItems
                 self.removeItems = []
                 self.removefromDB(listItems)
+                self.SaveLastSync()
 
             if self.KodiMonitor.waitForAbort(1):
                 # Abort was requested while waiting. We should exit
