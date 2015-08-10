@@ -13,18 +13,19 @@
     <string id="30011">Caching-Mechanismus</string>
 
     <string id="30014">Emby</string>
-    <string id="30015">Netzwerk</string>    
+    <string id="30015">Netzwerk</string>
     <string id="30016">Gerätename</string>
 
     <string id="30022">Erweitert</string>
     <string id="30024">Benutzername:</string>
     <string id="30025">Passwort:</string>
-    
+    <string id="30026">Benutze 'SIMPLEJSON' anstelle von 'JSON'</string>
+
     <string id="30030">Portnummer:</string>
     <string id="30036">Anzahl der zuletzt hinzugefügten Filme:</string>
     <string id="30037">Anzahl der zuletzt hinzugefügten Episoden:</string>
     <string id="30035">Anzahl der zuletzt hinzugefügten Alben:</string>
-    <string id="30038">Bei Start der Wiedergabe als 'gesehen' markieren:</string>    
+    <string id="30038">Bei Start der Wiedergabe als 'gesehen' markieren:</string>
     <string id="30039">Staffelposter für Episoden nutzen</string>
 
     <string id="30040">Genre Filter ...</string>
@@ -32,13 +33,13 @@
     <string id="30042">Aktualisieren</string>
     <string id="30043">Löschen</string>
     <string id="30046">Film zu CouchPotato hinzufügen</string>
-    
+
     <string id="30044">Benutzername/Passwort falsch</string>
     <string id="30045">Benutzername nicht gefunden</string>
-    
+
     <string id="30052">Lösche</string>
     <string id="30053">Lösche von Server</string>
-    
+
     <string id="30059">Server Standard</string>
     <string id="30060">Titel</string>
     <string id="30061">Jahr</string>
@@ -48,9 +49,9 @@
     <string id="30065">Zuschauerbewertung</string>
     <string id="30066">Abspielzähler</string>
     <string id="30067">Budget</string>
-    
+
     <string id="30068">Sortiere nach</string>
-    
+
     <string id="30069">Kein Filter</string>
     <string id="30070">Action</string>
     <string id="30071">Adventure</string>
@@ -72,11 +73,11 @@
     <string id="30087">Suspense</string>
     <string id="30088">Thriller</string>
     <string id="30089">Western</string>
-    
+
     <string id="30090">Genre Filter</string>
     <string id="30091">Löschen von Dateien bestätigen?</string>
     <string id="30092">Diesen Eintrag löschen? Diese Aktion löscht die Mediendatei und damit verbundene Daten.</string>
-    
+
     <string id="30093">Als 'gesehen' markieren</string>
     <string id="30094">Als 'ungesehen' markieren</string>
     <string id="30095">Zu Favoriten hinzufügen</string>
@@ -90,64 +91,65 @@
     <string id="30105">Fortsetzen</string>
     <string id="30106">Fortsetzen bei</string>
     <string id="30107">Am Anfang starten</string>
-    
+
     <string id="30110">Benutzeroberfläche</string>
     <string id="30111">Lade Streaminformationen</string>
     <string id="30112">Lade Darsteller</string>
     <string id="30113">Lade Inhaltsübersicht</string>
-    <string id="30114">Rücksprung bei Fortsetzen</string>
-    <string id="30115">Bei Stop nach x % als 'gesehen' markieren</string>
-    <string id="30116">Medien- und 'Abgespielt'-Zähler hinzufügen</string>
-    <string id="30117"> - Aktualisierungsintervall von Hintergrundbildern (Sekunden)</string>
+    <string id="30114">Löschen von Medien nach dem Abspielen anbieten</string>
+    <string id="30115"> - Für Episoden</string>
+    <string id="30116"> - Für Filme</string>
+    <string id="30117">Aktualisierungsintervall von Hintergrundbildern (Sekunden)</string>
     <string id="30118">Prozentanzeige für Fortsetzen</string>
     <string id="30119">Episodennummer hinzufügen</string>
     <string id="30120">Ladefortschritt anzeigen</string>
     <string id="30121">Lade Inhalt</string>
     <string id="30122">Lade Daten</string>
-    <string id="30123">Verarbeite Json Daten</string>
-    <string id="30124">Lade Json Daten</string>
+    <string id="30123">Verarbeite JSON Daten</string>
+    <string id="30124">Lade JSON Daten</string>
     <string id="30125">Fertig</string>
     <string id="30126">Verarbeite Eintrag : </string>
-    <string id="30127">Löschen von gesehenen Episoden anbieten</string>
+    <string id="30127">NICHT FESTGELEGT</string>
     <string id="30128">Abspielfehler</string>
-    <string id="30129">Dieser Eintrag ist nicht abspielbar</string>    
+    <string id="30129">Dieser Eintrag ist nicht abspielbar</string>
     <string id="30130">Lokaler Pfad erkannt</string>
     <string id="30132">Warnung</string>
     <string id="30133">Debug Logging aktiviert.</string>
     <string id="30134">Dies beeinträchtigt die Performance.</string>
     <string id="30135">Fehler</string>
-    <string id="30136">XBMB3C-Service läuft nicht</string>
-    <string id="30137">Bitte XBMC neustarten</string>
+    <string id="30136">Emby Hintergrunddienst läuft nicht</string>
+    <string id="30137">Bitte Kodi neustarten</string>
     <string id="30138">Suche</string>
-    
+
     <string id="30139">Themen-Musik aktivieren (Erfordert Neustart)</string>
     <string id="30140"> - Themen-Musik in Schleife abspielen</string>
     <string id="30141">Laden im Hintergrund aktivieren (Erfordert Neustart)</string>
     <string id="30142">Dienste</string>
     <string id="30143">Info-Loader aktivieren (Erfordert Neustart)</string>
     <string id="30144">Menü-Loader aktivieren (Erfordert Neustart)</string>
-    <string id="30145">WebSocket Fernbedienung aktivieren (Erfordert Neustart)</string>   
+    <string id="30145">WebSocket Fernbedienung aktivieren (Erfordert Neustart)</string>
     <string id="30146">'Laufende Medien'-Loader aktivieren (Erfordert Neustart)</string>
     <string id="30147">'Zuletzt hinzugefügt' Loader aktivieren (Erfordert Neustart)</string>
     <string id="30148">'Zufallsmedien'-Loader aktivieren (Erfordert Neustart)</string>
     <string id="30149">'Nächste'-Loader aktivieren (Erfordert Neustart)</string>
-    
-    <string id="30150">Skin unterstützt das Setzen von Views nicht</string>
+
+    <string id="30150">Skin unterstützt das Setzen von benutzerdefinierten Ansichten nicht</string>
     <string id="30151">Aktion bei Auswahl (Erfordert Neustart)</string>
-    
-    <string id="30152">Indikatoren</string>
-    <string id="30153">  - 'Gesehen'-Indikator anzeigen</string>
-    <string id="30154">  - Zähler für ungesehene Medien anzeigen</string>
-    <string id="30155">  - Abspiel-Prozentanzeige aktivieren</string>
+
+    <string id="30152">Indikatoren anzeigen</string>
+    <string id="30153"> - 'Gesehen'-Indikator anzeigen</string>
+    <string id="30154"> - Zähler für ungesehene Medien anzeigen</string>
+    <string id="30155"> - Abspiel-Prozentanzeige aktivieren</string>
     <string id="30156">Sortiere 'Nächste' nach Serientitel</string>
     <string id="30157">Deaktiviere erweiterte Bilder (z.B. CoverArt)</string>
     <string id="30158">Metadaten</string>
     <string id="30159">Grafiken</string>
     <string id="30160">Videoqualität</string>
-    
+
     <string id="30161">'Empfohlen'-Loader aktivieren (Erfordert Neustart)</string>
     <string id="30162">Staffelnummer hinzufügen</string>
     <string id="30163">Serienstaffeln reduzieren</string>
+
     <string id="30164">Direkte Wiedergabe - HTTP</string>
     <string id="30165">Direkte Wiedergabe</string>
     <string id="30166">Transkodierung</string>
@@ -155,8 +157,8 @@
     <string id="30168">Server gefunden</string>
     <string id="30169">Addresse : </string>
 
-    <string id="30170">Zuletzt hinzugefügte Serien</string>             
-    <string id="30171">Begonnene Serien</string>      
+    <string id="30170">Zuletzt hinzugefügte Serien</string>
+    <string id="30171">Begonnene Serien</string>
     <string id="30172">Alles an Musik</string>
     <string id="30173">Kanäle</string>
     <string id="30174">Zuletzt hinzugefügte Filme</string>
@@ -191,9 +193,9 @@
     <string id="30202">Bitte daran denken, nach dem Testen wieder zu deaktivieren.</string>
     <string id="30203">Fehler in ArtworkRotationThread</string>
     <string id="30204">Verbindung zum Server fehlgeschlagen</string>
-    <string id="30205">Fehler in LoadMenuOptionsThread</string>
-    
-    <string id="30206">'Playlist'-Loader aktivieren (Erfordert Neustart)</string> 
+    <string id="30205">Fehler in 'LoadMenuOptionsThread'</string>
+
+    <string id="30206">'Playlist'-Loader aktivieren (Erfordert Neustart)</string>
 
 	<string id="30207">Songs</string>
 	<string id="30208">Alben</string>
@@ -204,24 +206,50 @@
 	<string id="30212">Themen-Videos aktivieren (Erfordert Neustart)</string>
 	<string id="30213"> - Themen-Videos in Schleife abspielen</string>
 
-	<string id="30214">Festgelegte Ansichten deaktivieren</string>
-	<string id="30215">Schnelleres Laden der Daten aktivieren</string>
 	<string id="30216">Spiele weitere Episoden einer Staffel automatisch ab</string>
-	<string id="30217">Aktiviere gruppierte Darstellung von Sammlungen (Erfordert Neustart)</string>
 	<string id="30218">Bilder komprimieren</string>
+    <string id="30220">Zuletzt hinzugefügte </string>
+    <string id="30221">Begonnene </string>
+    <string id="30222">Anstehende </string>
+    <string id="30223">Benutzerdefinierte Ansichten</string>
+    <string id="30224">Statistiken senden</string>
+    <string id="30225">Benutze Kodi Sortierung</string>
+    <string id="30226">Laufzeit</string>
+
+    <string id="30227">Zufällige Filme</string>
+    <string id="30228">Zufällige Episoden</string>
+
+    <string id="30235">Extras</string>
+    <string id="30236">Synchronisiere Themen-Musik</string>
+    <string id="30237">Synchronisiere Extra-Fanart</string>
+	<string id="30238">Synchronisiere Film-BoxSets</string>
+
+    <string id="30239">Lokale Kodi Datenbank zurücksetzen</string>
+    <string id="30240">Enable watched/resume status sync</string>
+    <string id="30241">Datenbank Synchronisierungs-Indikatoren:</string>
+    <string id="30242">Abspielzähler Synchronisierungs-Indikatoren:</string>
+    <string id="30243">Aktiviere HTTPS</string>
+    <string id="30245">Erzwinge Transkodierung</string>
+
+    <string id="30246">Enable Netflix style next up notification</string>
+    <string id="30247"> - The number of seconds before the end to show the notification</string>
+    <string id="30248">Zeige Emby-Infodialog bei Abspiel/Auswahl Aktion</string>
+    <string id="30249">Unterdrücke Server-Verbindungsmeldungen beim Starten</string>
+    <string id="30250">Benutze lokale Pfade anstelle von Addon-Umleitungen beim Abspielen</string>
 
 	<!-- Default views -->
-    <string id="30300">Aktiviert</string>              
-    <string id="30301">Zurücksetzen</string>              
-    <string id="30302">Filme</string>              
-    <string id="30303">BoxSets</string>              
-    <string id="30304">Trailer</string>              
-    <string id="30305">Serien</string>              
-    <string id="30306">Staffeln</string>              
-    <string id="30307">Episoden</string>              
-    <string id="30308">Interpreten</string>              
-    <string id="30309">Alben</string>              
-    <string id="30310">Musikvideos</string>              
-    <string id="30311">Musikstücke</string>              
-   
+    <string id="30300">Aktiviert</string>
+    <string id="30301">Zurücksetzen</string>
+    <string id="30302">Filme</string>
+    <string id="30303">BoxSets</string>
+    <string id="30304">Trailer</string>
+    <string id="30305">Serien</string>
+    <string id="30306">Staffeln</string>
+    <string id="30307">Episoden</string>
+    <string id="30308">Interpreten</string>
+    <string id="30309">Alben</string>
+    <string id="30310">Musikvideos</string>
+    <string id="30311">Musikstücke</string>
+    <string id="30312">Kanäle</string>
+
 </strings>
