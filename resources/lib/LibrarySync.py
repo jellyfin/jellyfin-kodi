@@ -691,11 +691,11 @@ class LibrarySync(threading.Thread):
                         itemType = MBitem.get('Type', "")
                         
                         if "MusicArtist" in itemType:
-                            WriteKodiMusicDB().addOrUpdateArtistToKodiLibrary(MBitem["Id"],connection, cursor)
+                            WriteKodiMusicDB().addOrUpdateArtistToKodiLibrary(MBitem,connection, cursor)
                         if "MusicAlbum" in itemType:
-                            WriteKodiMusicDB().addOrUpdateAlbumToKodiLibrary(MBitem["Id"],connection, cursor)
+                            WriteKodiMusicDB().addOrUpdateAlbumToKodiLibrary(MBitem,connection, cursor)
                         if "Audio" in itemType:
-                            WriteKodiMusicDB().addOrUpdateSongToKodiLibrary(MBitem["Id"],connection, cursor)    
+                            WriteKodiMusicDB().addOrUpdateSongToKodiLibrary(MBitem,connection, cursor)    
                     connection.commit()
                     cursor.close()
 
