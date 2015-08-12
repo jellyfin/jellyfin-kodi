@@ -1237,3 +1237,52 @@ class WriteKodiVideoDB():
             # Update the checksum in emby table
             query = "UPDATE emby SET checksum = ? WHERE emby_id = ?"
             cursor.execute(query, (API().getChecksum(boxsetmovie), boxsetmovieid))
+
+    def updateUserdata(self, userdata, connection, cursor):
+        # This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
+        embyId = userdata['ItemId']
+        MBitem = ReadEmbyDB().getItem(embyId)
+
+        if not MBitem:
+            self.logMsg("UPDATE userdata to Kodi library FAILED, Item %s not found on server!" % embyId, 1)
+            return
+
+        # Get details
+        checksum = API().getChecksum(MBitem)
+        userdata = API().getUserData(MBitem)
+        timeInfo = API().getTimeInfo(MBitem)
+
+        # Find the Kodi Id
+        cursor.execute("SELECT kodi_id, kodi_file_id, media_type FROM emby WHERE emby_id = ?", (embyId,))
+        try:
+            result = cursor.fetchone()
+            kodiid = result[0]
+            fileid = result[1]
+            mediatype = result[2]
+            self.logMsg("Found embyId: %s in database - kodiId: %s fileId: %s type: %s" % (embyId, kodiid, fileid, mediatype), 1)
+        except:
+            self.logMsg("Id: %s not found in the emby database table." % embyId, 1)
+        else:
+            if mediatype in ("movie", "episode"):
+                playcount = userdata['PlayCount']
+                dateplayed = userdata['LastPlayedDate']
+
+                # Set resume point and round to 6th decimal
+                resume = round(float(timeInfo.get('ResumeTime')), 6)
+                total = round(float(timeInfo.get('TotalTime')), 6)
+                jumpback = int(utils.settings('resumeJumpBack'))
+                if resume > jumpback:
+                    # To avoid negative bookmark
+                    resume = resume - jumpback
+                self.setKodiResumePoint(fileid, resume, total, cursor, playcount, dateplayed)
+
+                #update the checksum in emby table
+                query = "UPDATE emby SET checksum = ? WHERE emby_id = ?"
+                cursor.execute(query, (checksum, embyId))
+
+            if mediatype in ("movie", "tvshow"):
+                # Add to or remove from favorites tag
+                if userdata['Favorite']:
+                    self.AddTagToMedia(kodiid, "Favorite %ss" % mediatype, mediatype, cursor)
+                else:
+                    self.AddTagToMedia(kodiid, "Favorite %ss" % mediatype, mediatype, cursor, True)
