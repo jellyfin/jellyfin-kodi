@@ -21,8 +21,8 @@ from API import API
 from PlayUtils import PlayUtils
 from DownloadUtils import DownloadUtils
 downloadUtils = DownloadUtils()
-addonSettings = xbmcaddon.Addon()
-language = addonSettings.getLocalizedString
+addon = xbmcaddon.Addon()
+language = addon.getLocalizedString
 
  
 def logMsg(title, msg, level = 1):
@@ -184,10 +184,13 @@ def createSources():
             '</sources>'
         )
 
-def CleanName(filename):
-    validFilenameChars = "-_.() %s%s" % (string.ascii_letters, string.digits)
-    cleanedFilename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore')
-    return ''.join(c for c in cleanedFilename if c in validFilenameChars)
+def settings(setting, value=""):
+    # Get or add addon setting
+    addon = xbmcaddon.Addon()
+    if value:
+        addon.setSetting(setting, value)
+    else:
+        return addon.getSetting(setting)
 
 def normalize_string(text):
     # For theme media, do not modify unless
@@ -280,7 +283,7 @@ def reset():
     connection.commit()
     cursor.close()
     
-    if addonSettings.getSetting("enableMusicSync") == "true":
+    if addon.getSetting("enableMusicSync") == "true":
         # delete video db table data
         print "Doing Music DB Reset"
         connection = KodiSQL("music")
