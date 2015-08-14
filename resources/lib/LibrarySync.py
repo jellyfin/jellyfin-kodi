@@ -796,8 +796,8 @@ class LibrarySync(threading.Thread):
         connectionvideo = utils.KodiSQL()
         cursorvideo = connectionvideo.cursor()
         # Database connection to myMusicXX.db
-        connectionmusic = utils.KodiSQL('music')
-        cursormusic = connectionmusic.cursor()
+        #connectionmusic = utils.KodiSQL('music')
+        #cursormusic = connectionmusic.cursor()
 
         for userdata in listItems:
             itemId = userdata['ItemId']
@@ -807,13 +807,13 @@ class LibrarySync(threading.Thread):
                 self.logMsg("Check video database.", 1)
                 mediatype = cursorvideo.fetchone()[0]
                 video.append(userdata)
-            except:
-                cursormusic.execute("SELECT media_type FROM emby WHERE emby_id = ?", (itemId,))
+            except: self.logMsg("Item %s is not found in Kodi database." % itemId, 2)
+                '''cursormusic.execute("SELECT media_type FROM emby WHERE emby_id = ?", (itemId,))
                 try: # Search music database
                     self.logMsg("Check the music database.", 1)
                     mediatype = cursormusic.fetchone()[0]
                     music.append(userdata)
-                except: self.logMsg("Item %s is not found in Kodi database." % itemId, 2)
+                except: self.logMsg("Item %s is not found in Kodi database." % itemId, 2)'''
 
         if len(video) > 0:
             connection = connectionvideo
@@ -840,7 +840,7 @@ class LibrarySync(threading.Thread):
                 connection.commit()
                 xbmc.executebuiltin("UpdateLibrary(music)")'''
         # Close connection
-        cursormusic.close()
+        #cursormusic.close()
         self.SaveLastSync()
 
     def remove_items(self, itemsRemoved):
