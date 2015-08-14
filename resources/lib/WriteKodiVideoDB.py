@@ -26,7 +26,6 @@ class WriteKodiVideoDB():
     doUtils = DownloadUtils()
     kodiversion = int(xbmc.getInfoLabel("System.BuildVersion")[:2])
 
-    addon = xbmcaddon.Addon()
     addonName = ClientInformation().getAddonName()
     WINDOW = xbmcgui.Window(10000)
 
@@ -34,7 +33,7 @@ class WriteKodiVideoDB():
     userid = WINDOW.getProperty('userId%s' % username)
     server = WINDOW.getProperty('server%s' % username)
 
-    directpath = addon.getSetting('useDirectPaths') == "true"
+    directpath = utils.settings('useDirectPaths') == "true"
 
     def logMsg(self, msg, lvl = 1):
 
@@ -73,7 +72,6 @@ class WriteKodiVideoDB():
         
     def addOrUpdateMovieToKodiLibrary(self, embyId, connection, cursor, viewTag):
 
-        addon = self.addon
         MBitem = ReadEmbyDB().getFullItem(embyId)
         
         if not MBitem:
@@ -222,8 +220,8 @@ class WriteKodiVideoDB():
             self.AddTagToMedia(movieid, viewTag, "movie", cursor)
 
             # Create the reference in emby table
-            query = "INSERT INTO emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
-            cursor.execute(query, (embyId, movieid, "movie", checksum))
+            query = "INSERT INTO emby(emby_id, kodi_id, kodi_file_id, media_type, checksum) values(?, ?, ?, ?, ?)"
+            cursor.execute(query, (embyId, movieid, fileid, "movie", checksum))
 
 
         # Update or insert actors
@@ -260,7 +258,7 @@ class WriteKodiVideoDB():
         # Set resume point and round to 6th decimal
         resume = round(float(timeInfo.get('ResumeTime')), 6)
         total = round(float(timeInfo.get('TotalTime')), 6)
-        jumpback = int(addon.getSetting('resumeJumpBack'))
+        jumpback = int(utils.settings('resumeJumpBack'))
         if resume > jumpback:
             # To avoid negative bookmark
             resume = resume - jumpback
@@ -268,7 +266,6 @@ class WriteKodiVideoDB():
         
     def addOrUpdateMusicVideoToKodiLibrary( self, embyId ,connection, cursor):
         
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
         WINDOW = xbmcgui.Window(10000)
         username = WINDOW.getProperty('currUser')
         userid = WINDOW.getProperty('userId%s' % username)
@@ -433,7 +430,6 @@ class WriteKodiVideoDB():
     
     def addOrUpdateTvShowToKodiLibrary(self, embyId, connection, cursor, viewTag ):
         
-        addon = self.addon
         MBitem = ReadEmbyDB().getFullItem(embyId)
         
         if not MBitem:
@@ -571,7 +567,6 @@ class WriteKodiVideoDB():
        
     def addOrUpdateEpisodeToKodiLibrary(self, embyId, showid, connection, cursor):
         
-        addon = self.addon
         MBitem = ReadEmbyDB().getFullItem(embyId)
 
         if not MBitem:
@@ -708,8 +703,8 @@ class WriteKodiVideoDB():
             cursor.execute(query, (episodeid, fileid, title, plot, rating, writer, premieredate, runtime, director, season, episode, title, showid, "-1", "-1"))
             
             # Create the reference in emby table
-            query = "INSERT INTO emby(emby_id, kodi_id, media_type, checksum, parent_id) values(?, ?, ?, ?, ?)"
-            cursor.execute(query, (embyId, episodeid, "episode", checksum, showid))
+            query = "INSERT INTO emby(emby_id, kodi_id, kodi_file_id, media_type, checksum, parent_id) values(?, ?, ?, ?, ?, ?)"
+            cursor.execute(query, (embyId, episodeid, fileid, "episode", checksum, showid))
 
         # Update or insert actors
         self.AddPeopleToMedia(episodeid, MBitem.get('People'), "episode", connection, cursor)
@@ -723,7 +718,7 @@ class WriteKodiVideoDB():
         # Set resume point and round to 6th decimal
         resume = round(float(timeInfo.get('ResumeTime')), 6)
         total = round(float(timeInfo.get('TotalTime')), 6)
-        jumpback = int(addon.getSetting('resumeJumpBack'))
+        jumpback = int(utils.settings('resumeJumpBack'))
         if resume > jumpback:
             # To avoid negative bookmark
             resume = resume - jumpback

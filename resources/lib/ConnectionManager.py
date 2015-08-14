@@ -42,7 +42,6 @@ class ConnectionManager():
         self.WINDOW.setProperty("Server_Checked", "True")
         self.logMsg("Connection Manager Called", 2)
         
-        addon = self.addon
         server = self.user.getServer()
 
         if server != "":
@@ -61,11 +60,11 @@ class ConnectionManager():
         
         if setServer == 1:
             self.logMsg("Server selected. Saving information.", 1)
-            addon.setSetting("ipaddress", ip.replace("/", ""))
-            addon.setSetting("port", port)
+            utils.settings("ipaddress", ip.replace("/", ""))
+            utils.settings("port", port)
             # If https, enable the setting
             if (prefix == 'https'):
-                addon.setSetting('https', "true")
+                utils.settings('https', "true")
         else:
             self.logMsg("No server selected.", 1)
             xbmc.executebuiltin('Addon.OpenSettings(%s)' % self.addonId)
@@ -99,7 +98,7 @@ class ConnectionManager():
         if resp > -1:
             selected_user = userList[resp]
             self.logMsg("Selected User: %s" % selected_user, 1)      
-            self.addon.setSetting("username", selected_user)
+            utils.settings("username", selected_user)
         else:
             self.logMsg("No user selected.", 1)
             xbmc.executebuiltin('Addon.OpenSettings(%s)' % self.addonId)

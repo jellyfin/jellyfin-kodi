@@ -135,9 +135,11 @@ class DownloadUtils():
 
         self.logMsg("Requests session started on: %s" % self.server)
 
-    def imageUrl(self, id, type, index, width, height):
-        # To move to API.py
-        return "%s/mediabrowser/Items/%s/Images/%s?MaxWidth=%s&MaxHeight=%s&Index=%s" % (self.server, id, type, width, height, index)
+    def stopSession(self):
+        try:
+            self.s.close()
+        except:
+            self.logMsg("Requests session could not be terminated.", 1)
 
     def getHeader(self, authenticate=True):
 
@@ -206,10 +208,10 @@ class DownloadUtils():
 
                     # IF user enables ssl verification
                     try:
-                        if self.addon.getSetting('sslverify') == "true":
+                        if utils.settings('sslverify') == "true":
                             verifyssl = True
-                        if self.addon.getSetting('sslcert') != "None":
-                            cert = self.addon.getSetting('sslcert')
+                        if utils.settings('sslcert') != "None":
+                            cert = utils.settings('sslcert')
                     except:
                         self.logMsg("Could not load SSL settings.", 1)
                         pass

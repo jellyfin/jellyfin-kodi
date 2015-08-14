@@ -79,7 +79,6 @@ class WebSocketThread(threading.Thread):
     def on_message(self, ws, message):
 
         WINDOW = xbmcgui.Window(10000)
-        addon = xbmcaddon.Addon()
         self.logMsg("Message: %s" % message, 1)
         
         result = json.loads(message)
@@ -223,13 +222,13 @@ class WebSocketThread(threading.Thread):
                     xbmcgui.Dialog().notification(header, text, icon="special://home/addons/plugin.video.emby/icon.png", time=4000)
                 elif command == "SendString":
                     string = arguments['String']
-                    text = '{"jsonrpc": "2.0", "method": "Input.SendText",  "params": { "text": "%s", "done": false }, "id": 0}' % string
+                    text = '{"jsonrpc": "2.0", "method": "Input.SendText", "params": { "text": "%s", "done": false }, "id": 0}' % string
                     result = xbmc.executeJSONRPC(text)
                 else:
                     self.logMsg("Unknown command.", 1)
 
         elif messageType == "ServerRestarting":
-            if addon.getSetting('supressRestartMsg') == "true":
+            if utils.settings('supressRestartMsg') == "true":
                 xbmcgui.Dialog().notification("Emby server", "Server is restarting.", icon="special://home/addons/plugin.video.emby/icon.png")
 
     def on_error(self, ws, error):

@@ -16,11 +16,10 @@ from ReadKodiDB import ReadKodiDB
 from ReadEmbyDB import ReadEmbyDB
 import Utils as utils
 from API import API
-import Utils as utils
 import os
 import xbmcvfs
 
-addon = xbmcaddon.Addon(id='plugin.video.emby')
+addon = xbmcaddon.Addon()
 addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
 
 WINDOW = xbmcgui.Window( 10000 )
@@ -54,7 +53,7 @@ class PlaybackUtils():
 
         # BOOKMARK - RESUME POINT
         timeInfo = API().getTimeInfo(result)
-        jumpBackSec = int(addon.getSetting("resumeJumpBack"))
+        jumpBackSec = int(utils.settings("resumeJumpBack"))
         seekTime = round(float(timeInfo.get('ResumeTime')), 6)
         if seekTime > jumpBackSec:
             # To avoid negative bookmark

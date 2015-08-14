@@ -21,11 +21,7 @@ class PlayUtils():
     clientInfo = ClientInformation()
     
     addonName = clientInfo.getAddonName()
-    addon = xbmcaddon.Addon()
     WINDOW = xbmcgui.Window(10000)
-
-    audioPref = addon.getSetting('Audiopref')
-    subsPref = addon.getSetting('Subspref')
 
     def __init__(self):
         self.__dict__ = self._shared_state
@@ -70,9 +66,8 @@ class PlayUtils():
     def isDirectPlay(self, result, dialog=False):
         # Requirements for Direct play:
         # FileSystem, Accessible path
-        self.addon = xbmcaddon.Addon()
         
-        playhttp = self.addon.getSetting('playFromStream')
+        playhttp = utils.settings('playFromStream')
         # User forcing to play via HTTP instead of SMB
         if playhttp == "true":
             self.logMsg("Can't direct play: Play from HTTP is enabled.", 1)
@@ -98,7 +93,7 @@ class PlayUtils():
                     resp = dialog.select('Warning: Unable to direct play.', ['Play from HTTP', 'Play from HTTP and remember next time.'])
                     if resp == 1:
                         # Remember next time
-                        self.addon.setSetting('playFromStream', "true")
+                        utils.settings('playFromStream', "true")
                     elif resp < 0:
                         # User decided not to proceed.
                         self.logMsg("User cancelled HTTP selection dialog.", 1)
@@ -109,7 +104,6 @@ class PlayUtils():
 
     def directPlay(self, result):
 
-        addon = self.addon
         try:
             try:
                 playurl = result[u'MediaSources'][0][u'Path']
@@ -128,8 +122,8 @@ class PlayUtils():
 
             # Network - SMB protocol
             if "\\\\" in playurl:
-                smbuser = addon.getSetting('smbusername')
-                smbpass = addon.getSetting('smbpassword')
+                smbuser = utils.settings('smbusername')
+                smbpass = utils.settings('smbpassword')
                 # Network share
                 if smbuser:
                     playurl = playurl.replace("\\\\", "smb://%s:%s@" % (smbuser, smbpass))
@@ -238,7 +232,7 @@ class PlayUtils():
       
     def getVideoBitRate(self):
         # get the addon video quality
-        videoQuality = self.addon.getSetting('videoBitRate')
+        videoQuality = utils.settings('videoBitRate')
 
         if (videoQuality == "0"):
             return 664

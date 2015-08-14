@@ -15,7 +15,6 @@ from PlayUtils import PlayUtils
 from DownloadUtils import DownloadUtils
 from PlaybackUtils import PlaybackUtils
 
-addon = xbmcaddon.Addon(id='plugin.video.emby')
 
 class Kodi_Monitor(xbmc.Monitor):
     
@@ -34,7 +33,7 @@ class Kodi_Monitor(xbmc.Monitor):
         WINDOW = self.WINDOW
         downloadUtils = DownloadUtils()
         #player started playing an item - 
-        if ("Playlist.OnAdd" in method or "Player.OnPlay" in method) and addon.getSetting('useDirectPaths')=='true':
+        if ("Playlist.OnAdd" in method or "Player.OnPlay" in method) and utils.settings('useDirectPaths')=='true':
 
             jsondata = json.loads(data)
             if jsondata != None:

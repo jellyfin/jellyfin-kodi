@@ -18,7 +18,7 @@ import Utils as utils
 from ReadEmbyDB import ReadEmbyDB
 WINDOW = xbmcgui.Window(10000)
 
-addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
+addonSettings = xbmcaddon.Addon()
 language = addonSettings.getLocalizedString
 
 class VideoNodes():   

@@ -20,6 +20,7 @@ import unicodedata
 from API import API
 from PlayUtils import PlayUtils
 from DownloadUtils import DownloadUtils
+
 downloadUtils = DownloadUtils()
 addon = xbmcaddon.Addon()
 language = addon.getLocalizedString
@@ -184,7 +185,7 @@ def createSources():
             '</sources>'
         )
 
-def settings(setting, value=""):
+def settings(setting, value = None):
     # Get or add addon setting
     addon = xbmcaddon.Addon()
     if value:
@@ -230,8 +231,13 @@ def normalize_nodes(text):
     text = unicodedata.normalize('NFKD', unicode(text, 'utf-8')).encode('ascii', 'ignore')
     
     return text
+
+def reloadProfile():
+    # Useful to reload the add-on without restarting Kodi.
+    profile = xbmc.getInfoLabel('System.ProfileName')
+    xbmc.executebuiltin("LoadProfile(%s)" % profile)
    
-        
+
 def reset():
 
     WINDOW = xbmcgui.Window( 10000 )
@@ -251,11 +257,18 @@ def reset():
         for file in allFiles:
                 if file.startswith("emby"):
                     xbmcvfs.delete(path + file)
+
+    settings('SyncInstallRunDone', "false")
     
     # Ask if user information should be deleted too.
     return_user = xbmcgui.Dialog().yesno("Warning", "Reset all Emby Addon settings?")
     if return_user == 1:
         WINDOW.setProperty('deletesettings', "true")
+        addon = xbmcaddon.Addon()
+        addondir = xbmc.translatePath(addon.getAddonInfo('profile')).decode('utf-8')
+        dataPath = "%ssettings.xml" % addondir
+        xbmcvfs.delete(dataPath)
+        logMsg("EMBY", "Deleting: settings.xml", 1)
     
     # first stop any db sync
     WINDOW.setProperty("SyncDatabaseShouldStop", "true")
@@ -283,7 +296,7 @@ def reset():
     connection.commit()
     cursor.close()
     
-    if addon.getSetting("enableMusicSync") == "true":
+    if settings('enableMusicSync') == "true":
         # delete video db table data
         print "Doing Music DB Reset"
         connection = KodiSQL("music")
@@ -299,8 +312,13 @@ def reset():
         
     
     # reset the install run flag
-    WINDOW.setProperty("SyncInstallRunDone", "false")
+    #settings('SyncInstallRunDone', "false")
+    #WINDOW.setProperty("SyncInstallRunDone", "false")
 
     dialog = xbmcgui.Dialog()
+    # Reload would work instead of restart since the add-on is a service.
+    #dialog.ok('Emby Reset', 'Database reset has completed, Kodi will now restart to apply the changes.')
+    #WINDOW.clearProperty("SyncDatabaseShouldStop")
+    #reloadProfile()
     dialog.ok('Emby Reset', 'Database reset has completed, Kodi will now restart to apply the changes.')
     xbmc.executebuiltin("RestartApp")

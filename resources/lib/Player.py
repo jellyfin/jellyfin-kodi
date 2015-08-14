@@ -33,8 +33,6 @@ class Player( xbmc.Player ):
     ws = WebSocketThread()
 
     addonName = clientInfo.getAddonName()
-    addonId = clientInfo.getAddonId()
-    addon = xbmcaddon.Addon(id=addonId)
 
     WINDOW = xbmcgui.Window(10000)
 
@@ -73,7 +71,6 @@ class Player( xbmc.Player ):
         if(len(self.played_information) == 0):
             return 
             
-        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
         self.logMsg("emby Service -> played_information : " + str(self.played_information))
 
         for item_url in self.played_information:
@@ -107,9 +104,9 @@ class Player( xbmc.Player ):
                     self.stopPlayback(data)
                     
                     offerDelete=False
-                    if data.get("Type") == "Episode" and addonSettings.getSetting("offerDeleteTV")=="true":
+                    if data.get("Type") == "Episode" and utils.settings("offerDeleteTV")=="true":
                         offerDelete = True
-                    elif data.get("Type") == "Movie" and addonSettings.getSetting("offerDeleteMovies")=="true":
+                    elif data.get("Type") == "Movie" and utils.settings("offerDeleteMovies")=="true":
                         offerDelete = True
 
                     if percentComplete > .80 and offerDelete == True:
@@ -258,7 +255,6 @@ class Player( xbmc.Player ):
     def onPlayBackStarted( self ):
         # Will be called when xbmc starts playing a file
         WINDOW = xbmcgui.Window(10000)
-        addon = self.addon
         xbmcplayer = self.xbmcplayer
         self.stopAll()
         

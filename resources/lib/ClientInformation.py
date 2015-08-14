@@ -37,13 +37,11 @@ class ClientInformation():
 
     def getDeviceName(self):
 
-        addon = self.addon
-
-        if addon.getSetting('deviceNameOpt') == "false":
+        if utils.settings('deviceNameOpt') == "false":
             # Use Kodi's deviceName
             deviceName = xbmc.getInfoLabel('System.FriendlyName')
         else:
-            deviceName = addon.getSetting('deviceName')
+            deviceName = utils.settings('deviceName')
             deviceName = deviceName.replace("\"", "_")
             deviceName = deviceName.replace("/", "_")
 

@@ -6,7 +6,8 @@ from datetime import datetime
 from random import randrange
 import xbmc
 import xbmcgui
-import xbmcaddon
+
+import Utils as utils
 
 class API():
     
@@ -406,7 +407,6 @@ class API():
 
     def getArtwork(self, data, type, mediaType = "", index = "0", userParentInfo = False):
 
-        addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
         id = data.get("Id")
         getSeriesData = False
         userData = data.get("UserData") 
@@ -415,7 +415,7 @@ class API():
             if data.get("Type") == "Season" or data.get("Type")== "Episode":
                 id = data.get("SeriesId")
                 getSeriesData = True
-        elif type == "poster" and data.get("Type") == "Episode" and addonSettings.getSetting('useSeasonPoster')=='true': # Change the Id to the Season to get the season poster
+        elif type == "poster" and data.get("Type") == "Episode" and utils.settings('useSeasonPoster')=='true': # Change the Id to the Season to get the season poster
             id = data.get("SeasonId")
         if type == "poster" or type == "tvshow.poster": # Now that the Ids are right, change type to MB3 name
             type="Primary"
@@ -478,7 +478,7 @@ class API():
         played = "0"
         totalbackdrops = 0
 
-        if addonSettings.getSetting('coverArtratio') == "true":
+        if utils.settings('coverArtratio') == "true":
             if mediaType in ("movie","boxset","tvshow"):
                 if "Primary" in type:
                     # Only force ratio for cover art for main covers
@@ -496,7 +496,7 @@ class API():
         username = WINDOW.getProperty('currUser')
         server = WINDOW.getProperty('server%s' % username)
 
-        if addonSettings.getSetting('compressArt')=='true':
+        if utils.settings('compressArt')=='true':
             query = query + "&Quality=90"
         
         if imageTag == None:
@@ -504,7 +504,7 @@ class API():
             
         artwork = "%s/mediabrowser/Items/%s/Images/%s/%s?MaxWidth=%s&MaxHeight=%s%s%s&Format=original&Tag=%s%s" % (server, id, type, index, maxWidth, maxHeight, height, width, imageTag, query)
         #artwork = "%s/mediabrowser/Items/%s/Images/%s/%s/%s/original/%s/%s/%s?%s" % (server, id, type, index, imageTag, width, height, played, query) <- broken
-        if addonSettings.getSetting('disableCoverArt')=='true':
+        if utils.settings('disableCoverArt')=='true':
             artwork = artwork + "&EnableImageEnhancers=false"
         
         # do not return non-existing images

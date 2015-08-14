@@ -26,7 +26,6 @@ class WriteKodiMusicDB():
     textureCache = TextureCache()
     kodiversion = int(xbmc.getInfoLabel("System.BuildVersion")[:2])
     
-    addon = xbmcaddon.Addon()
     addonName = ClientInformation().getAddonName()
     WINDOW = xbmcgui.Window(10000)
 
@@ -34,7 +33,7 @@ class WriteKodiMusicDB():
     userid = WINDOW.getProperty('userId%s' % username)
     server = WINDOW.getProperty('server%s' % username)
 
-    directpath = addon.getSetting('useDirectPaths') == "true"
+    directpath = utils.settings('useDirectPaths') == "true"
 
     def logMsg(self, msg, lvl = 1):
 

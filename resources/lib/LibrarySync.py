@@ -43,8 +43,8 @@ class LibrarySync(threading.Thread):
 
     addonName = clientInfo.getAddonName()
 
-    doIncrementalSync = False
     updateItems = []
+    userdataItems = []
     removeItems = []
 
     def __init__(self, *args):
@@ -59,28 +59,27 @@ class LibrarySync(threading.Thread):
         
     def FullLibrarySync(self,manualRun=False):
         
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
         startupDone = WINDOW.getProperty("startup") == "done"
-        syncInstallRunDone = addon.getSetting("SyncInstallRunDone") == "true"
-        performMusicSync = addon.getSetting("enableMusicSync") == "true"
-        dbSyncIndication = addon.getSetting("dbSyncIndication") == "true"
+        syncInstallRunDone = utils.settings("SyncInstallRunDone") == "true"
+        performMusicSync = utils.settings("enableMusicSync") == "true"
+        dbSyncIndication = utils.settings("dbSyncIndication") == "true"
 
         ### BUILD VIDEO NODES LISTING ###
         VideoNodes().buildVideoNodesListing()
         ### CREATE SOURCES ###
-        if addon.getSetting("Sources") != "true":
+        if utils.settings("Sources") != "true":
             # Only create sources once
             self.logMsg("Sources.xml created.", 0)
             utils.createSources()
-            addon.setSetting("Sources", "true")  
+            utils.settings("Sources", "true")  
         
         # just do a incremental sync if that is what is required
-        if(addon.getSetting("useIncSync") == "true" and addon.getSetting("SyncInstallRunDone") == "true") and manualRun == False:
+        if(utils.settings("useIncSync") == "true" and utils.settings("SyncInstallRunDone") == "true") and manualRun == False:
             utils.logMsg("Sync Database", "Using incremental sync instead of full sync useIncSync=True)", 0)
             
             du = DownloadUtils()
             
-            lastSync = addon.getSetting("LastIncrenetalSync")
+            lastSync = utils.settings("LastIncrenetalSync")
             if(lastSync == None or len(lastSync) == 0):
                 lastSync = "2010-01-01T00:00:00Z"
             utils.logMsg("Sync Database", "Incremental Sync Setting Last Run Time Loaded : " + lastSync, 0)
@@ -103,8 +102,10 @@ class LibrarySync(threading.Thread):
             LibrarySync().update_items(changedItems)
             LibrarySync().user_data_update(userChanges)
             
+            self.SaveLastSync()
+            
             return True
-		
+        
         #set some variable to check if this is the first run
         WINDOW.setProperty("SyncDatabaseRunning", "true")     
         
@@ -128,7 +129,10 @@ class LibrarySync(threading.Thread):
             cursor = connection.cursor()
             
             #Add the special emby table
-            cursor.execute("CREATE TABLE IF NOT EXISTS emby(emby_id TEXT, kodi_id INTEGER, media_type TEXT, checksum TEXT, parent_id INTEGER)")
+            cursor.execute("CREATE TABLE IF NOT EXISTS emby(emby_id TEXT, kodi_id INTEGER, media_type TEXT, checksum TEXT, parent_id INTEGER, kodi_file_id INTEGER)")
+            try:
+                cursor.execute("ALTER TABLE emby ADD COLUMN kodi_file_id INTEGER")
+            except: pass
             connection.commit()
             
             # sync movies
@@ -156,7 +160,10 @@ class LibrarySync(threading.Thread):
                 cursor = connection.cursor()
                 
                 #Add the special emby table
-                cursor.execute("CREATE TABLE IF NOT EXISTS emby(emby_id TEXT, kodi_id INTEGER, media_type TEXT, checksum TEXT, parent_id INTEGER)")
+                cursor.execute("CREATE TABLE IF NOT EXISTS emby(emby_id TEXT, kodi_id INTEGER, media_type TEXT, checksum TEXT, parent_id INTEGER, kodi_file_id INTEGER)")
+                try:
+                    cursor.execute("ALTER TABLE emby ADD COLUMN kodi_file_id INTEGER")
+                except: pass
                 connection.commit()
                 
                 self.MusicFullSync(connection,cursor,pDialog)
@@ -164,12 +171,12 @@ class LibrarySync(threading.Thread):
             
             # set the install done setting
             if(syncInstallRunDone == False and completed):
-                addon = xbmcaddon.Addon(id='plugin.video.emby') #force a new instance of the addon
-                addon.setSetting("SyncInstallRunDone", "true")        
+                utils.settings("SyncInstallRunDone", "true")        
                 self.SaveLastSync()
             
             # Commit all DB changes at once and Force refresh the library
             xbmc.executebuiltin("UpdateLibrary(video)")
+            #xbmc.executebuiltin("UpdateLibrary(music)")
             
             # set prop to show we have run for the first time
             WINDOW.setProperty("startup", "done")
@@ -189,10 +196,9 @@ class LibrarySync(threading.Thread):
         
     def SaveLastSync(self):
         # save last sync time
-        addon = xbmcaddon.Addon(id='plugin.video.emby')
         lastSync = (datetime.utcnow() - timedelta(minutes=5)).strftime('%Y-%m-%dT%H:%M:%SZ')
-        utils.logMsg("Sync Database", "Incremental Sync Setting Last Run Time Saved : " + lastSync, 0)
-        addon.setSetting("LastIncrenetalSync", lastSync)
+        self.logMsg("Sync Database, Incremental Sync Setting Last Run Time Saved: %s" % lastSync, 1)
+        utils.settings("LastIncrenetalSync", lastSync)
 
     def MoviesFullSync(self,connection,cursor, pDialog):
                
@@ -587,9 +593,8 @@ class LibrarySync(threading.Thread):
         if startupDone:
         
             #this will only perform sync for items received by the websocket
-            addon = xbmcaddon.Addon(id='plugin.video.emby')
-            dbSyncIndication = addon.getSetting("dbSyncIndication") == "true"
-            performMusicSync = addon.getSetting("enableMusicSync") == "true"
+            dbSyncIndication = utils.settings("dbSyncIndication") == "true"
+            performMusicSync = utils.settings("enableMusicSync") == "true"
             WINDOW.setProperty("SyncDatabaseRunning", "true")
             
             #show the progress dialog
@@ -689,11 +694,11 @@ class LibrarySync(threading.Thread):
                         itemType = MBitem.get('Type', "")
                         
                         if "MusicArtist" in itemType:
-                            WriteKodiMusicDB().addOrUpdateArtistToKodiLibrary(MBitem,connection, cursor)
+                            WriteKodiMusicDB().addOrUpdateArtistToKodiLibrary(MBitem, connection, cursor)
                         if "MusicAlbum" in itemType:
-                            WriteKodiMusicDB().addOrUpdateAlbumToKodiLibrary(MBitem,connection, cursor)
+                            WriteKodiMusicDB().addOrUpdateAlbumToKodiLibrary(MBitem, connection, cursor)
                         if "Audio" in itemType:
-                            WriteKodiMusicDB().addOrUpdateSongToKodiLibrary(MBitem,connection, cursor)    
+                            WriteKodiMusicDB().addOrUpdateSongToKodiLibrary(MBitem, connection, cursor)    
                     connection.commit()
                     cursor.close()
 
@@ -766,10 +771,7 @@ class LibrarySync(threading.Thread):
             connection = connectionmusic
             cursor = cursormusic
             #Process music library
-            addon = xbmcaddon.Addon()
-            if addon.getSetting('enableMusicSync') == "true":
-                connection = utils.KodiSQL("music")
-                cursor = connection.cursor()
+            if utils.settings('enableMusicSync') == "true":
 
                 for item in music:
                     self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteItemFromKodiLibrary (musiclibrary): " + item, 0)
@@ -786,6 +788,61 @@ class LibrarySync(threading.Thread):
                 doUtils.downloadUrl(url, type = "DELETE")                            
                 xbmc.executebuiltin("Container.Refresh")
 
+    def setUserdata(self, listItems):
+        # We need to sort between video and music database
+        video = []
+        music = []
+        # Database connection to myVideosXX.db
+        connectionvideo = utils.KodiSQL()
+        cursorvideo = connectionvideo.cursor()
+        # Database connection to myMusicXX.db
+        connectionmusic = utils.KodiSQL('music')
+        cursormusic = connectionmusic.cursor()
+
+        for userdata in listItems:
+            itemId = userdata['ItemId']
+            
+            cursorvideo.execute("SELECT media_type FROM emby WHERE emby_id = ?", (itemId,))
+            try: # Search video database
+                self.logMsg("Check video database.", 1)
+                mediatype = cursorvideo.fetchone()[0]
+                video.append(userdata)
+            except:
+                cursormusic.execute("SELECT media_type FROM emby WHERE emby_id = ?", (itemId,))
+                try: # Search music database
+                    self.logMsg("Check the music database.", 1)
+                    mediatype = cursormusic.fetchone()[0]
+                    music.append(userdata)
+                except: self.logMsg("Item %s is not found in Kodi database." % itemId, 2)
+
+        if len(video) > 0:
+            connection = connectionvideo
+            cursor = cursorvideo
+            # Process the userdata update for video library
+            for userdata in video:
+                WriteKodiVideoDB().updateUserdata(userdata, connection, cursor)
+
+            connection.commit()
+            xbmc.executebuiltin("UpdateLibrary(video)")
+        # Close connection
+        cursorvideo.close()
+
+        '''if len(music) > 0:
+            connection = connectionmusic
+            cursor = cursormusic
+            #Process music library
+            musicenabled = utils.settings('enableMusicSync') == "true"
+            # Process the userdata update for music library
+            if musicenabled:
+                for userdata in music:
+                    WriteKodiMusicDB().updateUserdata(userdata, connection, cursor)
+
+                connection.commit()
+                xbmc.executebuiltin("UpdateLibrary(music)")'''
+        # Close connection
+        cursormusic.close()
+        self.SaveLastSync()
+
     def remove_items(self, itemsRemoved):
         # websocket client
         self.removeItems.extend(itemsRemoved)
@@ -798,12 +855,7 @@ class LibrarySync(threading.Thread):
             
     def user_data_update(self, userDataList):
         # websocket client
-        for userData in userDataList:
-            itemId = userData.get("ItemId")
-            if(itemId != None):
-                self.updateItems.append(itemId)
-        if(len(self.updateItems) > 0):
-            self.logMsg("Doing UserDataChanged : Processing Updated : " + str(self.updateItems), 0)
+        self.userdataItems.extend(userDataList)
 
     def ShouldStop(self):
             
@@ -851,13 +903,21 @@ class LibrarySync(threading.Thread):
                     libSync = self.FullLibrarySync()
                     self.logMsg("Doing_Db_Sync Post Resume: syncDatabase (Finished) " + str(libSync), 0)
 
+            
+
             if len(self.updateItems) > 0:
                 # Add or update items
                 self.logMsg("Processing items: %s" % (str(self.updateItems)), 1)
                 listItems = self.updateItems
                 self.updateItems = []
                 self.IncrementalSync(listItems)
-                self.SaveLastSync()
+
+            if len(self.userdataItems) > 0:
+                # Process userdata changes only
+                self.logMsg("Processing items: %s" % (str(self.userdataItems)), 1)
+                listItems = self.userdataItems
+                self.userdataItems = []
+                self.setUserdata(listItems)
 
             if len(self.removeItems) > 0:
                 # Remove item from Kodi library
@@ -865,7 +925,6 @@ class LibrarySync(threading.Thread):
                 listItems = self.removeItems
                 self.removeItems = []
                 self.removefromDB(listItems)
-                self.SaveLastSync()
 
             if self.KodiMonitor.waitForAbort(1):
                 # Abort was requested while waiting. We should exit

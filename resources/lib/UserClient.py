@@ -29,8 +29,7 @@ class UserClient(threading.Thread):
     KodiMonitor = KodiMonitor.Kodi_Monitor()
     
     addonName = clientInfo.getAddonName()
-    addonId = clientInfo.getAddonId()
-    addon = xbmcaddon.Addon(id=addonId)
+    addon = xbmcaddon.Addon()
     WINDOW = xbmcgui.Window(10000)
 
     stopClient = False
@@ -57,8 +56,7 @@ class UserClient(threading.Thread):
 
     def getUsername(self):
 
-        addon = xbmcaddon.Addon(id=self.addonId)
-        username = addon.getSetting('username')
+        username = utils.settings('username')
 
         if (username == ""):
             self.logMsg("No username saved.", 2)
@@ -69,7 +67,7 @@ class UserClient(threading.Thread):
     def getLogLevel(self):
 
         try:
-            logLevel = int(self.addon.getSetting('logLevel'))
+            logLevel = int(utils.settings('logLevel'))
         except:
             logLevel = 0
         
@@ -79,7 +77,7 @@ class UserClient(threading.Thread):
 
         username = self.getUsername()
         w_userId = self.WINDOW.getProperty('userId%s' % username)
-        s_userId = self.addon.getSetting('userId%s' % username)
+        s_userId = utils.settings('userId%s' % username)
 
         # Verify the window property
         if (w_userId != ""):
@@ -97,13 +95,12 @@ class UserClient(threading.Thread):
     def getServer(self, prefix=True):
 
         # For https support
-        addon = xbmcaddon.Addon(id=self.addonId)
-        HTTPS = addon.getSetting('https')
-        host = addon.getSetting('ipaddress')
-        port = addon.getSetting('port')
+        HTTPS = utils.settings('https')
+        host = utils.settings('ipaddress')
+        port = utils.settings('port')
         # Alternate host
-        if addon.getSetting('altip') == "true":
-            host = addon.getSetting('secondipaddress')
+        if utils.settings('altip') == "true":
+            host = utils.settings('secondipaddress')
             
         server = host + ":" + port
         
@@ -127,7 +124,7 @@ class UserClient(threading.Thread):
 
         username = self.getUsername()
         w_token = self.WINDOW.getProperty('accessToken%s' % username)
-        s_token = self.addon.getSetting('accessToken')
+        s_token = utils.settings('accessToken')
         
         # Verify the window property
         if (w_token != ""):
@@ -144,7 +141,7 @@ class UserClient(threading.Thread):
 
     def getSSLverify(self):
         # Verify host certificate
-        s_sslverify = self.addon.getSetting('sslverify')
+        s_sslverify = utils.settings('sslverify')
 
         if s_sslverify == "true":
             return True
@@ -153,7 +150,7 @@ class UserClient(threading.Thread):
 
     def getSSL(self):
         # Client side certificate
-        s_cert = self.addon.getSetting('sslcert')
+        s_cert = utils.settings('sslcert')
 
         if s_cert == "None":
             return None
@@ -165,21 +162,9 @@ class UserClient(threading.Thread):
         player = Player()
         server = self.getServer()
         userId = self.getUserId()
-        addon = self.addon
 
         url = "{server}/mediabrowser/Users/{UserId}?format=json"
         result = self.doUtils.downloadUrl(url)
-
-        audio = result[u'Configuration'].get(u'AudioLanguagePreference', "default")
-        subs = result[u'Configuration'].get(u'SubtitleLanguagePreference', "default")
-        addon.setSetting('Audiopref', audio)
-        addon.setSetting('Subspref', subs)
-
-        # Set the setting in Player
-        player.setAudioSubsPref(audio.encode('utf-8'), subs.encode('utf-8'))
-
-        self.logMsg("Audio preference: %s" % audio, 2)
-        self.logMsg("Subtitles preference: %s" % subs, 2)
 
         # Set user image for skin display
         self.WINDOW.setProperty("EmbyUserImage",API().getUserArtwork(result,"Primary"))
@@ -279,7 +264,7 @@ class UserClient(threading.Thread):
 
         username = self.getUsername()
         server = self.getServer()
-        addondir = xbmc.translatePath(self.addon.getAddonInfo('profile'))
+        addondir = xbmc.translatePath(self.addon.getAddonInfo('profile')).decode('utf-8')
         hasSettings   = xbmcvfs.exists("%ssettings.xml" % addondir)
 
         # If there's no settings.xml
@@ -351,8 +336,8 @@ class UserClient(threading.Thread):
             self.currUser = username
             xbmcgui.Dialog().notification("Emby server", "Welcome %s!" % self.currUser)
             userId = result[u'User'][u'Id']
-            addon.setSetting("accessToken", accessToken)
-            addon.setSetting("userId%s" % username, userId)
+            utils.settings("accessToken", accessToken)
+            utils.settings("userId%s" % username, userId)
             self.logMsg("User Authenticated: %s" % accessToken)
             self.loadCurrUser(authenticated=True)
             self.WINDOW.setProperty("Server_status", "")
@@ -360,8 +345,8 @@ class UserClient(threading.Thread):
             return
         else:
             self.logMsg("User authentication failed.")
-            addon.setSetting("accessToken", "")
-            addon.setSetting("userId%s" % username, "")
+            utils.settings("accessToken", "")
+            utils.settings("userId%s" % username, "")
             xbmcgui.Dialog().ok("Error connecting", "Invalid username or password.")
             
             # Give two attempts at entering password
@@ -380,7 +365,7 @@ class UserClient(threading.Thread):
         self.logMsg("Reset UserClient authentication.", 1)
         if (self.currToken != None):
             # In case of 401, removed saved token
-            self.addon.setSetting("accessToken", "")
+            utils.settings("accessToken", "")
             self.WINDOW.setProperty("accessToken%s" % username, "")
             self.currToken = None
             self.logMsg("User token has been removed.", 1)
@@ -396,8 +381,6 @@ class UserClient(threading.Thread):
 
         while not self.KodiMonitor.abortRequested():
 
-            # Get the latest addon settings
-            self.addon = xbmcaddon.Addon(id=self.addonId)
             # Verify the log level
             currLogLevel = self.getLogLevel()
             if self.logLevel != currLogLevel:
@@ -447,7 +430,8 @@ class UserClient(threading.Thread):
             if self.KodiMonitor.waitForAbort(1):
                 # Abort was requested while waiting. We should exit
                 break
-                
+        
+        self.doUtils.stopSession()    
         self.logMsg("|---- UserClient Stopped ----|", 0)
 
     def stopClient(self):

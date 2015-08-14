@@ -437,7 +437,7 @@ def BrowseChannels(id, folderid=None):
 ##### GET NEXTUP EPISODES FOR TAGNAME #####    
 def getNextUpEpisodes(tagname,limit):
     count=0
-    addonSettings = xbmcaddon.Addon(id='plugin.video.emby')
+
     #if the addon is called with nextup parameter, we return the nextepisodes list of the given tagname
     xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
     # First we get a list of all the in-progress TV shows - filtered by tag
@@ -449,7 +449,7 @@ def getNextUpEpisodes(tagname,limit):
         for item in json_result['result']['tvshows']:
 
             # If Ignore Specials is true only choose episodes from seasons greater than 0.
-            if addonSettings.getSetting("ignoreSpecialsNextEpisodes")=="true":
+            if utils.settings("ignoreSpecialsNextEpisodes")=="true":
                 json_query2 = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": { "tvshowid": %d, "sort": {"method":"episode"}, "filter": {"and": [ {"field": "playcount", "operator": "lessthan", "value":"1"}, {"field": "season", "operator": "greaterthan", "value": "0"} ]}, "properties": [ "title", "playcount", "season", "episode", "showtitle", "plot", "file", "rating", "resume", "tvshowid", "art", "streamdetails", "firstaired", "runtime", "writer", "dateadded", "lastplayed" ], "limits":{"end":1}}, "id": "1"}' %item['tvshowid'])
             else:
                 json_query2 = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": { "tvshowid": %d, "sort": {"method":"episode"}, "filter": {"field": "playcount", "operator": "lessthan", "value":"1"}, "properties": [ "title", "playcount", "season", "episode", "showtitle", "plot", "file", "rating", "resume", "tvshowid", "art", "streamdetails", "firstaired", "runtime", "writer", "dateadded", "lastplayed" ], "limits":{"end":1}}, "id": "1"}' %item['tvshowid'])

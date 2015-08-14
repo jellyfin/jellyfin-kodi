@@ -10,8 +10,8 @@ import xbmc
 import xbmcgui
 import xbmcvfs
 
-addon_ = xbmcaddon.Addon(id='plugin.video.emby')
-addon_path = addon_.getAddonInfo('path').decode('utf-8')
+_addon = xbmcaddon.Addon(id='plugin.video.emby')
+addon_path = _addon.getAddonInfo('path').decode('utf-8')
 base_resource_path = xbmc.translatePath(os.path.join(addon_path, 'resources', 'lib')).decode('utf-8')
 sys.path.append(base_resource_path)
 
@@ -90,7 +90,6 @@ class Service():
     def ServiceEntryPoint(self):
         
         WINDOW = self.WINDOW
-        addon = xbmcaddon.Addon()
         
         # Server auto-detect
         ConnectionManager().checkServer()
@@ -105,9 +104,6 @@ class Service():
         lastProgressUpdate = datetime.today()
 
         while not self.KodiMonitor.abortRequested():
-
-            # Refresh with the latest addon settings
-            addon = xbmcaddon.Addon()
 
             # Before proceeding, need to make sure:
             # 1. Server is online
@@ -153,7 +149,7 @@ class Service():
                     else:
                         # Start up events
                         self.warn_auth = True
-                        if addon.getSetting('supressConnectMsg') == "false":
+                        if utils.settings('supressConnectMsg') == "false":
                             if self.welcome_msg:
                                 # Reset authentication warnings
                                 self.welcome_msg = False
@@ -236,16 +232,6 @@ class Service():
             if self.KodiMonitor.waitForAbort(1):
                 # Abort was requested while waiting. We should exit
                 break
-
-        # If user reset library database.
-        if WINDOW.getProperty('SyncInstallRunDone') == "false":
-            addon.setSetting('SyncInstallRunDone', "false")
-        # If user delete Emby settings
-        if WINDOW.getProperty('deletesettings') == "true":
-            addondir = xbmc.translatePath(addon.getAddonInfo('profile')).decode('utf-8')
-            dataPath = "%ssettings.xml" % addondir
-            xbmcvfs.delete(dataPath)
-            self.logMsg("Deleting: settings.xml", 1)
         
         if (self.newWebSocketThread is not None):
             ws.stopClient()
