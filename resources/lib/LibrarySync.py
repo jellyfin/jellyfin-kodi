@@ -597,9 +597,12 @@ class LibrarySync(threading.Thread):
             performMusicSync = utils.settings("enableMusicSync") == "true"
             WINDOW.setProperty("SyncDatabaseRunning", "true")
             
-            #show the progress dialog
+            #show the progress dialog               
+            pDialog = None
             if (dbSyncIndication and xbmc.Player().isPlaying() == False):
-                xbmcgui.Dialog().notification('Emby for Kodi', 'Performing incremental sync...', "special://home/addons/plugin.video.emby/icon.png")
+                pDialog = xbmcgui.DialogProgressBG()
+                pDialog.create('Emby for Kodi', 'Incremental Sync')
+                self.logMsg("Doing LibraryChanged : Show Progress IncrementalSync()", 0);
             
             connection = utils.KodiSQL("video")
             cursor = connection.cursor()
@@ -609,19 +612,29 @@ class LibrarySync(threading.Thread):
                 views = ReadEmbyDB().getCollections("movies")
                 for view in views:
                     allEmbyMovies = ReadEmbyDB().getMovies(view.get('id'), itemList)
+                    count = 1
+                    total = len(allEmbyMovies) + 1
                     for item in allEmbyMovies:
-                            
-                        if not item.get('IsFolder'):                    
+                        if(pDialog != None):
+                            progressTitle = "Incremental Sync "+ " (" + str(count) + " of " + str(total) + ")"
+                            percentage = int(((float(count) / float(total)) * 100))
+                            pDialog.update(percentage, "Emby for Kodi - Incremental Sync Movies", progressTitle)
+                            count = count + 1
+                        if not item.get('IsFolder'):
                             WriteKodiVideoDB().addOrUpdateMovieToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
-               
-                
+                            
                 #### PROCESS BOX SETS #####
                 boxsets = ReadEmbyDB().getBoxSets()
-               
+                count = 1
+                total = len(boxsets) + 1
                 for boxset in boxsets:
                     boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
                     WriteKodiVideoDB().addBoxsetToKodiLibrary(boxset,connection, cursor)
-                        
+                    if(pDialog != None):
+                        progressTitle = "Incremental Sync "+ " (" + str(count) + " of " + str(total) + ")"
+                        percentage = int(((float(count) / float(total)) * 100))
+                        pDialog.update(percentage, "Emby for Kodi - Incremental Sync BoxSet", progressTitle)
+                        count = count + 1                        
                     for boxsetMovie in boxsetMovies:
                         WriteKodiVideoDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset, connection, cursor)      
                 
@@ -629,13 +642,28 @@ class LibrarySync(threading.Thread):
                 views = ReadEmbyDB().getCollections("tvshows")              
                 for view in views:
                     allEmbyTvShows = ReadEmbyDB().getTvShows(view.get('id'),itemList)
+                    count = 1
+                    total = len(allEmbyTvShows) + 1
                     for item in allEmbyTvShows:
+                        if(pDialog != None):
+                            progressTitle = "Incremental Sync "+ " (" + str(count) + " of " + str(total) + ")"
+                            percentage = int(((float(count) / float(total)) * 100))
+                            pDialog.update(percentage, "Emby for Kodi - Incremental Sync Tv", progressTitle)
+                            count = count + 1                    
                         if item.get('IsFolder') and item.get('RecursiveItemCount') != 0:                   
                             kodiId = WriteKodiVideoDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
                 
                 
                 #### PROCESS OTHERS BY THE ITEMLIST ######
+                count = 1
+                total = len(itemList) + 1
                 for item in itemList:
+                        
+                    if(pDialog != None):
+                        progressTitle = "Incremental Sync "+ " (" + str(count) + " of " + str(total) + ")"
+                        percentage = int(((float(count) / float(total)) * 100))
+                        pDialog.update(percentage, "Emby for Kodi - Incremental Sync Items", progressTitle)
+                        count = count + 1                           
                         
                     MBitem = ReadEmbyDB().getItem(item)
                     itemType = MBitem.get('Type', "")
@@ -703,12 +731,25 @@ class LibrarySync(threading.Thread):
                     cursor.close()
 
             finally:
+                if(pDialog != None):
+                    pDialog.close()
+                self.SaveLastSync()
                 xbmc.executebuiltin("UpdateLibrary(video)")
                 WINDOW.setProperty("SyncDatabaseRunning", "false")
                 # tell any widgets to refresh because the content has changed
                 WINDOW.setProperty("widgetreload", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
     def removefromDB(self, itemList, deleteEmbyItem = False):
+    
+        dbSyncIndication = utils.settings("dbSyncIndication") == "true"
+    
+        #show the progress dialog               
+        pDialog = None
+        if (dbSyncIndication and xbmc.Player().isPlaying() == False):
+            pDialog = xbmcgui.DialogProgressBG()
+            pDialog.create('Emby for Kodi', 'Incremental Sync')    
+            self.logMsg("Doing LibraryChanged : Show Progress removefromDB()", 0);
+            
         # Delete from Kodi before Emby
         # To be able to get mediaType
         doUtils = DownloadUtils()
@@ -722,7 +763,16 @@ class LibrarySync(threading.Thread):
         connectionmusic = utils.KodiSQL("music")
         cursormusic = connectionmusic.cursor()
 
+        count = 1
+        total = len(itemList) + 1          
         for item in itemList:
+        
+            if(pDialog != None):
+                progressTitle = "Incremental Sync "+ " (" + str(count) + " of " + str(total) + ")"
+                percentage = int(((float(count) / float(total)) * 100))
+                pDialog.update(percentage, "Emby for Kodi - Incremental Sync Delete ", progressTitle)
+                count = count + 1   
+                
             # Sort by type for database deletion
             try: # Search video database
                 self.logMsg("Check video database.", 1)
@@ -742,8 +792,16 @@ class LibrarySync(threading.Thread):
             connection = connectionvideo
             cursor = cursorvideo
             # Process video library
+            count = 1
+            total = len(video) + 1                
             for item in video:
 
+                if(pDialog != None):
+                    progressTitle = "Incremental Sync "+ " (" + str(count) + " of " + str(total) + ")"
+                    percentage = int(((float(count) / float(total)) * 100))
+                    pDialog.update(percentage, "Emby for Kodi - Incremental Sync Delete ", progressTitle)
+                    count = count + 1   
+                
                 type = video[item]
                 self.logMsg("Doing LibraryChanged: Items Removed: Calling deleteItemFromKodiLibrary: %s" % item, 1)
 
@@ -788,7 +846,22 @@ class LibrarySync(threading.Thread):
                 doUtils.downloadUrl(url, type = "DELETE")                            
                 xbmc.executebuiltin("Container.Refresh")
 
+        if(pDialog != None):
+            pDialog.close()
+        self.SaveLastSync()
+        
+        
     def setUserdata(self, listItems):
+    
+        dbSyncIndication = utils.settings("dbSyncIndication") == "true"
+    
+        #show the progress dialog               
+        pDialog = None
+        if (dbSyncIndication and xbmc.Player().isPlaying() == False):
+            pDialog = xbmcgui.DialogProgressBG()
+            pDialog.create('Emby for Kodi', 'Incremental Sync')
+            self.logMsg("Doing LibraryChanged : Show Progress setUserdata()", 0);
+
         # We need to sort between video and music database
         video = []
         music = []
@@ -799,8 +872,16 @@ class LibrarySync(threading.Thread):
         #connectionmusic = utils.KodiSQL('music')
         #cursormusic = connectionmusic.cursor()
 
+        count = 1
+        total = len(listItems) + 1        
         for userdata in listItems:
             itemId = userdata['ItemId']
+                        
+            if(pDialog != None):
+                progressTitle = "Incremental Sync "+ " (" + str(count) + " of " + str(total) + ")"
+                percentage = int(((float(count) / float(total)) * 100))
+                pDialog.update(percentage, "Emby for Kodi - Incremental Sync User Data ", progressTitle)
+                count = count + 1               
             
             cursorvideo.execute("SELECT media_type FROM emby WHERE emby_id = ?", (itemId,))
             try: # Search video database
@@ -820,7 +901,14 @@ class LibrarySync(threading.Thread):
             connection = connectionvideo
             cursor = cursorvideo
             # Process the userdata update for video library
+            count = 1
+            total = len(video) + 1              
             for userdata in video:
+                if(pDialog != None):
+                    progressTitle = "Incremental Sync "+ " (" + str(count) + " of " + str(total) + ")"
+                    percentage = int(((float(count) / float(total)) * 100))
+                    pDialog.update(percentage, "Emby for Kodi - Incremental Sync User Data ", progressTitle)
+                    count = count + 1                 
                 WriteKodiVideoDB().updateUserdata(userdata, connection, cursor)
 
             connection.commit()
@@ -842,11 +930,17 @@ class LibrarySync(threading.Thread):
                 xbmc.executebuiltin("UpdateLibrary(music)")'''
         # Close connection
         #cursormusic.close()
+        
+        if(pDialog != None):
+            pDialog.close()
         self.SaveLastSync()
+                
 
     def remove_items(self, itemsRemoved):
         # websocket client
-        self.removeItems.extend(itemsRemoved)
+        if(len(itemsRemoved) > 0):
+            self.logMsg("Doing LibraryChanged : Processing Deleted : " + str(itemsRemoved), 0)        
+            self.removeItems.extend(itemsRemoved)
 
     def update_items(self, itemsToUpdate):
         # websocket client
@@ -856,7 +950,9 @@ class LibrarySync(threading.Thread):
             
     def user_data_update(self, userDataList):
         # websocket client
-        self.userdataItems.extend(userDataList)
+        if(len(userDataList) > 0):
+            self.logMsg("Doing LibraryChanged : Processing User Data Changed : " + str(userDataList), 0)
+            self.userdataItems.extend(userDataList)
 
     def ShouldStop(self):
             
