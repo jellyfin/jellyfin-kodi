@@ -64,6 +64,13 @@ class UserClient(threading.Thread):
 
         return username
 
+    def getAdditionalUsers(self):
+
+        additionalUsers = utils.settings('additionalUsers')
+        
+        if additionalUsers:
+            self.AdditionalUser = additionalUsers.split(',')
+
     def getLogLevel(self):
 
         try:
@@ -251,6 +258,7 @@ class UserClient(threading.Thread):
         self.hasAccess()
         # Start DownloadUtils session
         doUtils.startSession()
+        self.getAdditionalUsers()
 
         # Set user preferences in settings
         self.setUserPref()

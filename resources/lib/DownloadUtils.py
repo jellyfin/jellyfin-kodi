@@ -106,6 +106,25 @@ class DownloadUtils():
             self.WINDOW.setProperty("sessionId%s" % self.username, sessionId)
         except:
             self.logMsg("Failed to retrieve sessionId.", 1)
+        else:
+            # Post any permanent additional users
+            additionalUsers = utils.settings('additionalUsers').split(',')
+            self.logMsg("List of permanent users that should be added to the session: %s" % str(additionalUsers), 1)
+            # Get the user list from server to get the userId
+            url = "{server}/mediabrowser/Users?format=json"
+            result = self.downloadUrl(url)
+
+            if result:
+                for user in result:
+                    username = user['Name'].lower()
+                    userId = user['Id']
+                    for additional in additionalUsers:
+                        addUser = additional.decode('utf-8').lower()
+                        if username in addUser:
+                            url = "{server}/mediabrowser/Sessions/%s/Users/%s" % (sessionId, userId)
+                            postdata = {}
+                            self.downloadUrl(url, postBody=postdata, type="POST")
+                            #xbmcgui.Dialog().notification("Success!", "%s added to viewing session" % username, time=1000)
 
     def startSession(self):
 

@@ -98,8 +98,9 @@ def addUser():
             elif option == 0:
                 # User selected Add user
                 for adduser in additionalUsername:
-                    xbmc.log(str(adduser))
-                    users.remove(adduser)
+                    try: # Remove from selected already added users. It is possible they are hidden.
+                        users.remove(adduser)
+                    except: pass
 
             elif option < 0:
                 # User cancelled

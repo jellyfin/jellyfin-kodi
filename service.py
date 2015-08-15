@@ -153,7 +153,13 @@ class Service():
                             if self.welcome_msg:
                                 # Reset authentication warnings
                                 self.welcome_msg = False
-                                xbmcgui.Dialog().notification("Emby server", "Welcome %s!" % user.currUser, icon="special://home/addons/plugin.video.emby/icon.png", time=2000, sound=False)
+                                # Get additional users
+                                additionalUsers = user.AdditionalUser
+                                if additionalUsers:
+                                    add = ", %s" % ", ".join(additionalUsers)
+                                else:
+                                    add = ""
+                                xbmcgui.Dialog().notification("Emby server", "Welcome %s%s!" % (user.currUser, add), icon="special://home/addons/plugin.video.emby/icon.png", time=2000, sound=False)
 
                         # Start the Websocket Client
                         if (self.newWebSocketThread is None):
