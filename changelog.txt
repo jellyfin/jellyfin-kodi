@@ -1,3 +1,8 @@
+version 1.1.32
+- Implemented userdata update only
+- Added progress dialog for incremental sync.
+- Added the option to start Kodi session with permanent additional users.
+
 version 1.1.31
 - Added user image home property.
 
