@@ -446,3 +446,37 @@ class WriteKodiMusicDB():
                     elif "song" in mediatype:
                         query = "INSERT OR REPLACE INTO song_genre(idGenre, idSong) values(?, ?)"
                         cursor.execute(query, (idGenre, id))
+
+    def updateUserdata(self, userdata, connection, cursor):
+        # This updates: LastPlayedDate, Playcount
+        embyId = userdata['ItemId']
+        MBitem = ReadEmbyDB().getItem(embyId)
+
+        if not MBitem:
+            self.logMsg("UPDATE userdata to Kodi library FAILED, Item %s not found on server!" % embyId, 1)
+            return
+
+        # Get details
+        checksum = API().getChecksum(MBitem)
+        userdata = API().getUserData(MBitem)
+
+        # Find the Kodi Id
+        cursor.execute("SELECT kodi_id, media_type FROM emby WHERE emby_id = ?", (embyId,))
+        try:
+            result = cursor.fetchone()
+            kodiid = result[0]
+            mediatype = result[1]
+            self.logMsg("Found embyId: %s in database - kodiId: %s type: %s" % (embyId, kodiid, mediatype), 1)
+        except:
+            self.logMsg("Id: %s not found in the emby database table." % embyId, 1)
+        else:
+            if mediatype in ("song"):
+                playcount = userdata['PlayCount']
+                dateplayed = userdata['LastPlayedDate']
+
+                query = "UPDATE song SET iTimesPlayed = ?, lastplayed = ? WHERE idSong = ?"
+                cursor.execute(query, (playcount, dateplayed, kodiid))
+
+                #update the checksum in emby table
+                query = "UPDATE emby SET checksum = ? WHERE emby_id = ?"
+                cursor.execute(query, (checksum, embyId))

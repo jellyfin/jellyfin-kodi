@@ -869,12 +869,13 @@ class LibrarySync(threading.Thread):
         connectionvideo = utils.KodiSQL()
         cursorvideo = connectionvideo.cursor()
         # Database connection to myMusicXX.db
-        #connectionmusic = utils.KodiSQL('music')
-        #cursormusic = connectionmusic.cursor()
+        connectionmusic = utils.KodiSQL('music')
+        cursormusic = connectionmusic.cursor()
 
         count = 1
         total = len(listItems) + 1        
         for userdata in listItems:
+            # Sort between video and music
             itemId = userdata['ItemId']
                         
             if(pDialog != None):
@@ -889,13 +890,12 @@ class LibrarySync(threading.Thread):
                 mediatype = cursorvideo.fetchone()[0]
                 video.append(userdata)
             except:
-                self.logMsg("Item %s is not found in Kodi database." % itemId, 2)
-                '''cursormusic.execute("SELECT media_type FROM emby WHERE emby_id = ?", (itemId,))
+                cursormusic.execute("SELECT media_type FROM emby WHERE emby_id = ?", (itemId,))
                 try: # Search music database
                     self.logMsg("Check the music database.", 1)
                     mediatype = cursormusic.fetchone()[0]
                     music.append(userdata)
-                except: self.logMsg("Item %s is not found in Kodi database." % itemId, 2)'''
+                except: self.logMsg("Item %s is not found in Kodi database." % itemId, 2)
 
         if len(video) > 0:
             connection = connectionvideo
@@ -908,7 +908,7 @@ class LibrarySync(threading.Thread):
                     progressTitle = "Incremental Sync "+ " (" + str(count) + " of " + str(total) + ")"
                     percentage = int(((float(count) / float(total)) * 100))
                     pDialog.update(percentage, "Emby for Kodi - Incremental Sync User Data ", progressTitle)
-                    count = count + 1                 
+                    count = count + 1
                 WriteKodiVideoDB().updateUserdata(userdata, connection, cursor)
 
             connection.commit()
@@ -916,20 +916,27 @@ class LibrarySync(threading.Thread):
         # Close connection
         cursorvideo.close()
 
-        '''if len(music) > 0:
+        if len(music) > 0:
             connection = connectionmusic
             cursor = cursormusic
             #Process music library
+            count = 1
+            total = len(video) + 1
             musicenabled = utils.settings('enableMusicSync') == "true"
             # Process the userdata update for music library
             if musicenabled:
                 for userdata in music:
+                    if(pDialog != None):
+                        progressTitle = "Incremental Sync "+ " (" + str(count) + " of " + str(total) + ")"
+                        percentage = int(((float(count) / float(total)) * 100))
+                        pDialog.update(percentage, "Emby for Kodi - Incremental Sync User Data ", progressTitle)
+                        count = count + 1
                     WriteKodiMusicDB().updateUserdata(userdata, connection, cursor)
 
                 connection.commit()
-                xbmc.executebuiltin("UpdateLibrary(music)")'''
+                #xbmc.executebuiltin("UpdateLibrary(music)")
         # Close connection
-        #cursormusic.close()
+        cursormusic.close()
         
         if(pDialog != None):
             pDialog.close()
