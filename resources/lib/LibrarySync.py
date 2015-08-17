@@ -854,6 +854,7 @@ class LibrarySync(threading.Thread):
     def setUserdata(self, listItems):
     
         dbSyncIndication = utils.settings("dbSyncIndication") == "true"
+        musicenabled = utils.settings('enableMusicSync') == "true"
     
         #show the progress dialog               
         pDialog = None
@@ -890,12 +891,15 @@ class LibrarySync(threading.Thread):
                 mediatype = cursorvideo.fetchone()[0]
                 video.append(userdata)
             except:
-                cursormusic.execute("SELECT media_type FROM emby WHERE emby_id = ?", (itemId,))
-                try: # Search music database
-                    self.logMsg("Check the music database.", 1)
-                    mediatype = cursormusic.fetchone()[0]
-                    music.append(userdata)
-                except: self.logMsg("Item %s is not found in Kodi database." % itemId, 2)
+                if musicenabled:
+                    cursormusic.execute("SELECT media_type FROM emby WHERE emby_id = ?", (itemId,))
+                    try: # Search music database
+                        self.logMsg("Check the music database.", 1)
+                        mediatype = cursormusic.fetchone()[0]
+                        music.append(userdata)
+                    except: self.logMsg("Item %s is not found in Kodi database." % itemId, 2)
+                else:
+                    self.logMsg("Item %s is not found in Kodi database." % itemId, 2)
 
         if len(video) > 0:
             connection = connectionvideo
@@ -922,7 +926,6 @@ class LibrarySync(threading.Thread):
             #Process music library
             count = 1
             total = len(video) + 1
-            musicenabled = utils.settings('enableMusicSync') == "true"
             # Process the userdata update for music library
             if musicenabled:
                 for userdata in music:
