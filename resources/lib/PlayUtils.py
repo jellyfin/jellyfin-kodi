@@ -203,7 +203,7 @@ class PlayUtils():
             # Play transcoding
             deviceId = self.clientInfo.getMachineId()
             playurl = "%s/mediabrowser/Videos/%s/master.m3u8?mediaSourceId=%s" % (server, id, id)
-            playurl = "%s&VideoCodec=h264&AudioCodec=aac,ac3&deviceId=%s&VideoBitrate=%s" % (playurl, deviceId, self.getVideoBitRate()*1000)
+            playurl = "%s&VideoCodec=h264&AudioCodec=ac3&deviceId=%s&VideoBitrate=%s" % (playurl, deviceId, self.getVideoBitRate()*1000)
             self.logMsg("Playurl: %s" % playurl)
             
             return playurl
