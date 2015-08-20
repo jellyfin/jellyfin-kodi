@@ -31,11 +31,16 @@ class PlayUtils():
         className = self.__class__.__name__
         utils.logMsg("%s %s" % (self.addonName, className), msg, int(lvl))
 
-    def getPlayUrl(self, server, id, result):
+    def getPlayUrl(self, server, id, result, type):
 
         WINDOW = self.WINDOW
         username = WINDOW.getProperty('currUser')
         server = WINDOW.getProperty('server%s' % username)
+
+        if "Audio" in type:
+            type = "Audio"
+        else:
+            type = "Video"
 
         if self.isDirectPlay(result,True):
             # Try direct play
@@ -46,7 +51,7 @@ class PlayUtils():
 
         elif self.isDirectStream(result):
             # Try direct stream
-            playurl = self.directStream(result, server, id)
+            playurl = self.directStream(result, server, id, type)
             if playurl:
                 self.logMsg("File is direct streaming.", 1)
                 WINDOW.setProperty("%splaymethod" % playurl, "DirectStream")
@@ -161,17 +166,8 @@ class PlayUtils():
     def directStream(self, result, server, id, type = "Video"):
         
         try:
-            if "ThemeVideo" in type:
+            if "Video" in type:
                 playurl ="%s/mediabrowser/Videos/%s/stream?static=true" % (server, id)
-
-            elif "Video" in type:
-                playurl = "%s/mediabrowser/Videos/%s/stream?static=true" % (server, id)
-                # Verify audio and subtitles
-                mediaSources = result[u'MediaSources']
-                if mediaSources[0].get('DefaultAudioStreamIndex') != None:
-                    playurl = "%s&AudioStreamIndex=%s" % (playurl, mediaSources[0].get('DefaultAudioStreamIndex'))
-                if mediaSources[0].get('DefaultSubtitleStreamIndex') != None:
-                    playurl = "%s&SubtitleStreamIndex=%s" % (playurl, mediaSources[0].get('DefaultSubtitleStreamIndex'))
             
             elif "Audio" in type:
                 playurl = "%s/mediabrowser/Audio/%s/stream.mp3" % (server, id)

@@ -46,6 +46,7 @@ class PlaybackUtils():
         
         try:
             id = result["Id"]
+            type = result['Type']
         except:
             return
 
@@ -90,7 +91,7 @@ class PlaybackUtils():
             # Let's play the playlist
             return self.AddToPlaylist(itemsToPlay)
 
-        playurl = PlayUtils().getPlayUrl(server, id, result)
+        playurl = PlayUtils().getPlayUrl(server, id, result, type)
         if playurl == False or WINDOW.getProperty('playurlFalse') == "true":
             WINDOW.clearProperty('playurlFalse')
             xbmc.log("Failed to retrieve the playback path/url.")

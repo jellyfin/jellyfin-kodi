@@ -204,7 +204,7 @@ def getThemeMedia():
             if playback == "DirectPlay":
                 playurl = playUtils.directPlay(theme)
             else:
-                playurl = playUtils.directStream(result, server, theme[u'Id'], "ThemeVideo")
+                playurl = playUtils.directStream(result, server, theme[u'Id'], "Video")
             pathstowrite += ('<file>%s</file>' % playurl.encode('utf-8'))
         
         # Check if the item has theme songs and add them   
