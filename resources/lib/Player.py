@@ -195,14 +195,23 @@ class Player( xbmc.Player ):
                 track_query = '{"jsonrpc": "2.0", "method": "Player.GetProperties",  "params": {"playerid":1,"properties": ["currentsubtitle","currentaudiostream","subtitleenabled"]} , "id": 1}'
                 result = xbmc.executeJSONRPC(track_query)
                 result = json.loads(result)
-                indexAudio = result.get('result', "").get('currentaudiostream', "").get('index', 0)
-                indexSubs = result.get('result', "").get('currentsubtitle', "").get('index', 0)
-                subsEnabled = result.get('result', "").get('subtitleenabled', "")
+                # Audio tracks
+                indexAudio = result.get('result', 0)
+                if indexAudio:
+                    indexAudio = indexAudio.get('currentaudiostream', {}).get('index', 0)
+                # Subtitles tracks
+                indexSubs = result.get('result', 0)
+                if indexSubs:
+                    indexSubs = indexSubs.get('currentsubtitle', {}).get('index', 0)
+                # If subtitles are enabled
+                subsEnabled = result.get('result', "")
+                if subsEnabled:
+                    subsEnabled = subsEnabled.get('subtitleenabled', "")
 
                 # Convert back into an Emby index
                 audioTracks = len(xbmc.Player().getAvailableAudioStreams())
                 indexAudio = indexAudio + 1
-                if subsEnabled:
+                if subsEnabled and len(xbmc.Player().getAvailableSubtitleStreams()) > 0:
                     indexSubs = indexSubs + audioTracks + 1
                 else:
                     indexSubs = ""
@@ -316,12 +325,21 @@ class Player( xbmc.Player ):
                 track_query = '{"jsonrpc": "2.0", "method": "Player.GetProperties",  "params": {"playerid": 1,"properties": ["currentsubtitle","currentaudiostream","subtitleenabled"]} , "id": 1}'
                 result = xbmc.executeJSONRPC(track_query)
                 result = json.loads(result)
-                indexAudio = result.get('result', "").get('currentaudiostream', "").get('index', 0)
-                indexSubs = result.get('result', "").get('currentsubtitle', "").get('index', 0)
-                subsEnabled = result.get('result', "").get('subtitleenabled', "")
-
-                postdata['AudioStreamIndex'] = indexAudio + 1
+                # Audio tracks
+                indexAudio = result.get('result', 0)
+                if indexAudio:
+                    indexAudio = indexAudio.get('currentaudiostream', {}).get('index', 0)
+                # Subtitles tracks
+                indexSubs = result.get('result', 0)
+                if indexSubs:
+                    indexSubs = indexSubs.get('currentsubtitle', {}).get('index', 0)
+                # If subtitles are enabled
+                subsEnabled = result.get('result', "")
                 if subsEnabled:
+                    subsEnabled = subsEnabled.get('subtitleenabled', "")
+                # Postdata for the audio and subs tracks
+                postdata['AudioStreamIndex'] = indexAudio + 1
+                if subsEnabled and len(xbmc.Player().getAvailableSubtitleStreams()) > 0:
                     audioTracks = len(xbmc.Player().getAvailableAudioStreams())
                     postdata['SubtitleStreamIndex'] = indexSubs + audioTracks + 1
                 else:
