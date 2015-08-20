@@ -11,6 +11,7 @@ from ntpath import split as ntsplit
 import xbmc
 import xbmcgui
 import xbmcaddon
+import xbmcvfs
 
 from ClientInformation import ClientInformation
 import Utils as utils
@@ -201,9 +202,14 @@ class WriteKodiMusicDB():
                     query = "INSERT INTO album(idAlbum, strAlbum, strMusicBrainzAlbumID, strArtists, iYear, strGenres, strReview, strImage, lastScraped, dateAdded) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
                     cursor.execute(query, (albumid, name, musicBrainzId, artists, year, genre, bio, thumb, lastScraped, dateadded))
 
+            fullpath = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/music/%s/" % embyId).decode('utf-8')
+            # Create the album folder
+            if not xbmcvfs.exists(fullpath):
+                xbmcvfs.mkdir(fullpath)
+
             # Create the reference in emby table
-            query = "INSERT INTO emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
-            cursor.execute(query, (embyId, albumid, "album", checksum))
+            query = "INSERT INTO emby(emby_id, kodi_id, media_type, checksum, fullpath) values(?, ?, ?, ?, ?)"
+            cursor.execute(query, (embyId, albumid, "album", checksum, fullpath))
 
 
         # Add genres
@@ -270,20 +276,41 @@ class WriteKodiMusicDB():
         year = MBitem.get('ProductionYear')
         bio = API().getOverview(MBitem)
         duration = timeInfo.get('TotalTime')
+        albumId = MBitem.get('AlbumId')
 
-        # Get the path and filename
-        playurl = PlayUtils().directPlay(MBitem)
+        fullpath = ""
+        if self.directpath:
+            # Get the path and filename
+            playurl = PlayUtils().directPlay(MBitem)
+            try:
+                path, filename = ntsplit(playurl)
+                if "/" in playurl:
+                    path = "%s/" % path
+                elif "\\" in playurl:
+                    path = "%s\\" % path
+            except: return # playurl returned False
+        else:
+            # Plugin path via strm file. We need the album Id for directory and itemId for filename. To maintain, we'll add the path to the emby database.
+            library = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/music/").decode('utf-8')
 
-        try:
-            path, filename = ntsplit(playurl)
-            if "/" in playurl:
-                path = "%s/" % path
-            elif "\\" in playurl:
-                path = "%s\\" % path
-        except: # playurl returned false - using server streaming path, because could not figure out plugin paths for music DB
-            playurl = PlayUtils().directstream(MBitem, self.server, embyId, "Audio")
-            filename = "stream.mp3"
-            path = playurl.replace(filename, "")
+            # Create the music library
+            if not xbmcvfs.exists(library):
+                xbmcvfs.mkdirs(library)
+
+            path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/music/%s/" % albumId).decode('utf-8')
+
+            # Create the album folder
+            if not xbmcvfs.exists(path):
+                xbmcvfs.mkdir(path)
+
+            filename = "%s.strm" % embyId
+            fullpath = "%s%s" % (path, filename)
+
+            # Create the strm file
+            strm = open(fullpath, 'w')
+            pluginpath = "plugin://plugin.video.emby/music/%s/?id=%s&mode=play" % (albumId, embyId)
+            strm.write(pluginpath)
+            strm.close()
 
 
         # Validate the path in database
@@ -297,7 +324,7 @@ class WriteKodiMusicDB():
             cursor.execute(query, (pathid, path))
 
         # Get the album
-        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?", (MBitem.get("AlbumId"),))
+        cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?", (albumId,))
         try:
             albumid = cursor.fetchone()[0]
         except:
@@ -346,8 +373,8 @@ class WriteKodiMusicDB():
             cursor.execute(query, (songid, albumid, pathid, artists, genre, name, track, duration, year, filename, musicBrainzId, playcount, lastplayed))
 
             # Create the reference in emby table
-            query = "INSERT INTO emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
-            cursor.execute(query, (embyId, songid, "song", checksum))
+            query = "INSERT INTO emby(emby_id, kodi_id, media_type, checksum, fullpath) values(?, ?, ?, ?, ?)"
+            cursor.execute(query, (embyId, songid, "song", checksum, fullpath))
 
         
         # Add genres
@@ -393,9 +420,26 @@ class WriteKodiMusicDB():
             elif "song" in media_type:
                 self.logMsg("Deleting song from Kodi library, Id: %s" % id, 1)
                 cursor.execute("DELETE FROM song WHERE idSong = ?", (kodi_id,))
+
+                cursor.execute("SELECT fullpath FROM emby WHERE emby_id = ?", (id,))
+                try: # Delete the strm file
+                    fullpath = cursor.fetchone()[0]
+                except: pass
+                else:
+                    self.logMsg("Delete the strm %s." % fullpath)
+                    xbmcvfs.delete(fullpath)
+
             elif "album" in media_type:
                 self.logMsg("Deleting album from Kodi library, Id: %s" % id, 1)
                 cursor.execute("DELETE FROM album WHERE idAlbum = ?", (kodi_id,))
+
+                cursor.execute("SELECT fullpath FROM emby WHERE emby_id = ?", (id,))
+                try: # Delete the folder
+                    fullpath = cursor.fetchone()[0]
+                except: pass
+                else:
+                    self.logMsg("Delete the album folder %s." % fullpath)
+                    xbmcvfs.rmdir(fullpath)
 
             # Delete the record in emby table
             cursor.execute("DELETE FROM emby WHERE emby_id = ?", (id,))

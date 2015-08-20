@@ -309,6 +309,12 @@ def reset():
                 cursor.execute("DELETE FROM " + tableName)
         connection.commit()
         cursor.close()
+
+    # Remove the strm and nfo
+    path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/").decode('utf-8')
+    if xbmcvfs.exists(path):
+        xbmc.log("Removing %s." % path)
+        shutil.rmtree(path)
         
     
     # reset the install run flag
