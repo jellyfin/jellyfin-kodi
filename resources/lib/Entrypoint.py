@@ -132,7 +132,7 @@ def getThemeMedia():
     server = WINDOW.getProperty('server%s' % currUser)
     playback = None
 
-    library = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/themes/").decode('utf-8')
+    library = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/").decode('utf-8')
 
     # Choose playback method
     resp = xbmcgui.Dialog().select("Choose playback method for your themes", ["Direct Play", "Direct Stream"])
@@ -160,7 +160,7 @@ def getThemeMedia():
 
     # Create library directory
     if not xbmcvfs.exists(library):
-        xbmcvfs.mkdirs(library)
+        xbmcvfs.mkdir(library)
 
     # Get every user view Id
     userViews = []
@@ -186,7 +186,7 @@ def getThemeMedia():
 
     # Get paths for theme videos
     for itemId in itemIds:
-        nfo_path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/themes/%s/" % itemIds[itemId])
+        nfo_path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/%s/" % itemIds[itemId])
         # Create folders for each content
         if not xbmcvfs.exists(nfo_path):
             xbmcvfs.mkdir(nfo_path)
@@ -244,7 +244,7 @@ def getThemeMedia():
         if itemId in itemIds:
             continue
         
-        nfo_path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/themes/%s/" % musicitemIds[itemId])
+        nfo_path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/%s/" % musicitemIds[itemId])
         # Create folders for each content
         if not xbmcvfs.exists(nfo_path):
             xbmcvfs.mkdir(nfo_path)

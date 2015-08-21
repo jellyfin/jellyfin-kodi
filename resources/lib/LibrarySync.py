@@ -164,9 +164,6 @@ class LibrarySync(threading.Thread):
                 try:
                     cursor.execute("ALTER TABLE emby ADD COLUMN kodi_file_id INTEGER")
                 except: pass
-                try:
-                    cursor.execute("ALTER TABLE emby ADD COLUMN fullpath TEXT")
-                except: pass
                 connection.commit()
                 
                 self.MusicFullSync(connection,cursor,pDialog)
