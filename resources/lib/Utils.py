@@ -246,6 +246,10 @@ def reset():
     if return_value == 0:
         return
 
+    # Because the settings dialog could be open
+    # it seems to override settings so we need to close it before we reset settings.
+    xbmc.executebuiltin("Dialog.Close(all,true)")
+    
     #cleanup video nodes
     import shutil
     path = "special://profile/library/video/"
