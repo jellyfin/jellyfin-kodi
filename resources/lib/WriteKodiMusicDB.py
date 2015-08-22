@@ -271,19 +271,23 @@ class WriteKodiMusicDB():
         bio = API().getOverview(MBitem)
         duration = timeInfo.get('TotalTime')
 
-        # Get the path and filename
-        playurl = PlayUtils().directPlay(MBitem)
 
-        try:
+        if utils.settings('directstreammusic') == "true":
+            WINDOW = xbmcgui.Window(10000)
+            username = WINDOW.getProperty('currUser')
+            server = WINDOW.getProperty('server%s' % username)
+
+            playurl = PlayUtils().directStream(MBitem, server, embyId, "Audio")
+            filename = "stream.mp3"
+            path = playurl.replace(filename, "")
+        else:
+            # Get the path and filename
+            playurl = PlayUtils().directPlay(MBitem)
             path, filename = ntsplit(playurl)
             if "/" in playurl:
                 path = "%s/" % path
             elif "\\" in playurl:
                 path = "%s\\" % path
-        except: # playurl returned false - using server streaming path, because could not figure out plugin paths for music DB
-            playurl = PlayUtils().directstream(MBitem, self.server, embyId, "Audio")
-            filename = "stream.mp3"
-            path = playurl.replace(filename, "")
 
 
         # Validate the path in database

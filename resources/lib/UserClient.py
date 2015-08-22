@@ -101,13 +101,17 @@ class UserClient(threading.Thread):
 
     def getServer(self, prefix=True):
 
+        alternate = utils.settings('altip') == "true"
+
         # For https support
         HTTPS = utils.settings('https')
         host = utils.settings('ipaddress')
         port = utils.settings('port')
         # Alternate host
-        if utils.settings('altip') == "true":
+        if alternate:
+            HTTPS = utils.settings('secondhttps')
             host = utils.settings('secondipaddress')
+            port = utils.settings('secondport')
             
         server = host + ":" + port
         
@@ -149,6 +153,8 @@ class UserClient(threading.Thread):
     def getSSLverify(self):
         # Verify host certificate
         s_sslverify = utils.settings('sslverify')
+        if utils.settings('altip') == "true":
+            s_sslverify = utils.settings('secondsslverify')
 
         if s_sslverify == "true":
             return True
@@ -158,6 +164,8 @@ class UserClient(threading.Thread):
     def getSSL(self):
         # Client side certificate
         s_cert = utils.settings('sslcert')
+        if utils.settings('altip') == "true":
+            s_cert = utils.settings('secondsslcert')
 
         if s_cert == "None":
             return None

@@ -2,23 +2,28 @@
 <settings>
 	<category label="30014"> <!-- Emby -->
 		<setting id="ipaddress" type="text" label="30000" default="" visible="true" enable="true" />
-		<setting id="altip" type="bool" label="Use alternate address" default="false" visible="true" enable="true" />
-		<setting id="secondipaddress" type="text" label="Secondary Server Address" default="" visible="eq(-1,true)" enable="true" />
-		<setting id="https" type="bool" label="30243" visible="true" enable="true" default="false" />
 		<setting id="port" type="number" label="30030" default="8096" visible="true" enable="true" />
-		<setting id="username" type="text" label="30024" default="" />
-		<setting type="sep" />
+		<setting id="https" type="bool" label="30243" visible="true" enable="true" default="false" />
 		<setting id="sslverify" type="bool" label="Verify Host SSL Certificate" visible="eq(-1,true)" enable="true" default="false" />
 		<setting id="sslcert" type="file" label="Client SSL certificate" visible="eq(-2,true)" enable="true" default="None" />
+		<setting id="altip" type="bool" label="Use alternate address" default="false" visible="true" enable="true" />
+		<setting id="secondipaddress" type="text" label="Secondary Server Address" default="" visible="eq(-1,true)" enable="true" />
+		<setting id="secondport" type="number" label="30030" default="8096" visible="eq(-2,true)" enable="true" />
+		<setting id="secondhttps" type="bool" label="30243" visible="true" enable="eq(-3,true)" default="false" />
+		<setting id="secondsslverify" type="bool" label="Verify Host SSL Certificate" visible="eq(-1,true)" enable="true" default="false" />
+		<setting id="secondsslcert" type="file" label="Client SSL certificate" visible="eq(-2,true)" enable="true" default="None" />
+		<setting id="pathsub" type="bool" visible="false" default="false" />
+		<setting id="username" type="text" label="30024" default="" />
+		<setting type="sep" />
 		<setting id="deviceNameOpt" type="bool" label="Use altername Device Name" visible="true" enable="true" default="true" />
 		<setting id="deviceName" type="text" label="30016" visible="eq(-1,true)" enable="true" default="Kodi" />
 		<setting id="accessToken" type="text" visible="false" default="" />
 		<setting label="[COLOR yellow]Reset login attempts[/COLOR]" type="action" visible="eq(-1,) + !eq(-9,)" enable="true" action="RunPlugin(plugin://plugin.video.emby?mode=resetauth)" option="close" />
 	</category>
 	<category label="Sync Options">
-	<!--  	<setting id="syncMovieBoxSets" type="bool" label="30238" default="true" visible="true" enable="true" /> -->
 		<setting id="dbSyncIndication" type="bool" label="Show sync progress on screen" default="false" visible="true" enable="true" />
 		<setting id="enableMusicSync" type="bool" label="Enable Music Library Sync" default="true" visible="true" enable="true" />
+		<setting id="directstreammusic" type="bool" label="- Direct stream music library" default="false" visible="eq(-1,true)" enable="true" />
 		<setting id="useDirectPaths" type="bool" label="30250" default="false" visible="true" enable="true" />  
 		<setting id="enableTextureCache" type="bool" label="Auto add images to the Kodi texture cache" default="true" visible="true" enable="true" />
 		<setting id="useIncSync" type="bool" label="Use incremental sync at startup (Requires Server Plugin)" default="false" visible="true" enable="true" />
@@ -46,6 +51,5 @@
         <setting id="supressConnectMsg" type="bool" label="30249" default="false" visible="true" enable="true" />
         <setting id="supressRestartMsg" type="bool" label="Enable server message when it's restarting" default="false" visible="true" enable="true" />
 		<setting label="30239" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=reset)" />
-
 	</category>
 </settings>
