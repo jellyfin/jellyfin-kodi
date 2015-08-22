@@ -15,7 +15,7 @@ import inspect
 import sqlite3
 import string
 import unicodedata
-
+import xml.etree.ElementTree as etree
 
 from API import API
 from PlayUtils import PlayUtils
@@ -184,6 +184,82 @@ def createSources():
                 '</files>\n'
             '</sources>'
         )
+
+def pathsubstitution(add=True):
+
+    path = xbmc.translatePath('special://userdata').decode('utf-8')
+    xmlpath = "%sadvancedsettings.xml" % path
+    xmlpathexists = xbmcvfs.exists(xmlpath)
+
+    # original address
+    originalServer = settings('ipaddress')
+    originalPort = settings('port')
+    originalHttp = settings('https') == "true"
+
+    if originalHttp:
+        originalHttp = "https"
+    else:
+        originalHttp = "http"
+
+    # Process add or deletion
+    if add:
+        # second address
+        secondServer = settings('secondipaddress')
+        secondPort = settings('secondport')
+        secondHttp = settings('secondhttps') == "true"
+
+        if secondHttp:
+            secondHttp = "https"
+        else:
+            secondHttp = "http"
+
+        logMsg("EMBY", "Original address: %s://%s:%s, alternate is: %s://%s:%s" % (originalHttp, originalServer, originalPort, secondHttp, secondServer, secondPort), 1)
+
+        if xmlpathexists:
+            # we need to modify the file.
+            try:
+                xmlparse = etree.parse(xmlpath)
+            except: # Document is blank
+                root = etree.Element('advancedsettings')
+            else:
+                root = xmlparse.getroot()
+            
+            pathsubs = root.find('pathsubstitution')
+            if pathsubs is None:
+                pathsubs = etree.SubElement(root, 'pathsubstitution')
+        else:
+            # we need to create the file.
+            root = etree.Element('advancedsettings')
+            pathsubs = etree.SubElement(root, 'pathsubstitution')
+        
+        substitute = etree.SubElement(pathsubs, 'substitute')
+        # From original address
+        etree.SubElement(substitute, 'from').text = "%s://%s:%s" % (originalHttp, originalServer, originalPort)
+        # To secondary address
+        etree.SubElement(substitute, 'to').text = "%s://%s:%s" % (secondHttp, secondServer, secondPort)
+
+        etree.ElementTree(root).write(xmlpath)
+        settings('pathsub', "true")
+
+    else: # delete the path substitution, we don't need it anymore.
+        logMsg("EMBY", "Alternate address is disabled, removing path substitution for: %s://%s:%s" % (originalHttp, originalServer, originalPort), 1)
+
+        xmlparse = etree.parse(xmlpath)
+        root = xmlparse.getroot()
+        
+        iterator = root.getiterator("pathsubstitution")
+
+        for substitutes in iterator:
+            for substitute in substitutes:
+                frominsert = substitute.find(".//from").text == "%s://%s:%s" % (originalHttp, originalServer, originalPort)
+
+                if frominsert:
+                    # Found a match, in case there's more than one substitution.
+                    substitutes.remove(substitute)
+
+        etree.ElementTree(root).write(xmlpath)
+        settings('pathsub', "false")
+
 
 def settings(setting, value = None):
     # Get or add addon setting

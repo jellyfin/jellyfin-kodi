@@ -238,6 +238,21 @@ class Service():
             if self.KodiMonitor.waitForAbort(1):
                 # Abort was requested while waiting. We should exit
                 break
+
+        # If music is enable and direct stream for music is enabled
+        # We use Kodi pathsubstitution to allow for music to play outside network
+        # The setting needs to be set before Kodi starts.
+        if utils.settings('enableMusicSync') == "true" and utils.settings('directstreammusic') == "true":
+            # We need to keep track of the settings
+            alternate = utils.settings('altip') == "true"
+            pathsub = utils.settings('pathsub') == "true"
+            
+            if pathsub and not alternate:
+                # Path sub in place, but primary address in use, remove it
+                utils.pathsubstitution(False)
+            elif not pathsub and alternate:
+                # Path sub not in place, but secondary address in use, add it
+                utils.pathsubstitution()
         
         if (self.newWebSocketThread is not None):
             ws.stopClient()
