@@ -269,6 +269,16 @@ def settings(setting, value = None):
     else:
         return addon.getSetting(setting)
 
+def window(property, value = None, clear = False):
+    # Get or set window property
+    WINDOW = xbmcgui.Window(10000)
+    if clear:
+        WINDOW.clearProperty(property)
+    elif value:
+        WINDOW.setProperty(property, value)
+    else:
+        return WINDOW.getProperty(property)
+
 def normalize_string(text):
     # For theme media, do not modify unless
     # modified in TV Tunes
