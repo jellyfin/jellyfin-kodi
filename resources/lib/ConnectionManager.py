@@ -103,6 +103,18 @@ class ConnectionManager():
             self.logMsg("No user selected.", 1)
             xbmc.executebuiltin('Addon.OpenSettings(%s)' % self.addonId)
             return
+
+        musicEnabled = xbmcgui.Dialog().yesno("Music Setting", "Enable music library?")
+        if musicEnabled:
+            self.logMsg("User opted to enable music library.", 1)
+            utils.settings('enableMusicSync', "true")
+        
+        musicPath = xbmcgui.Dialog().yesno("Music Setting", "Direct stream the music library?", "Select this option only if you plan on listening to music outside your network.")
+        if musicPath:
+            self.logMsg("User option to direct stream music library.", 1)
+            utils.settings('directstreammusic', "true")
+
+        return
                 
     def getServerDetails(self):
 
