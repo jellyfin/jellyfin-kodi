@@ -211,8 +211,24 @@ class Player( xbmc.Player ):
                 # Convert back into an Emby index
                 audioTracks = len(xbmc.Player().getAvailableAudioStreams())
                 indexAudio = indexAudio + 1
+
                 if subsEnabled and len(xbmc.Player().getAvailableSubtitleStreams()) > 0:
-                    indexSubs = indexSubs + audioTracks + 1
+                    WINDOW = xbmcgui.Window(10000)
+                    mapping = WINDOW.getProperty("%sIndexMapping" % currentFile)
+                    externalIndex = json.loads(mapping)
+                    if externalIndex:
+                        # If there's external subtitles added via PlaybackUtils
+                        if externalIndex.get(str(indexSubs)):
+                            # If the current subtitle is in the mapping
+                            indexSubs = externalIndex[str(indexSubs)]
+                        else:
+                            # Internal subtitle currently selected
+                            external = len(externalIndex)
+                            indexSubs = indexSubs - external + audioTracks + 1
+                    else:
+                        # No external subtitles added via PlayUtils
+                        audioTracks = len(xbmc.Player().getAvailableAudioStreams())
+                        indexSubs = indexSubs + audioTracks + 1
                 else:
                     indexSubs = ""
 
@@ -292,6 +308,9 @@ class Player( xbmc.Player ):
             refresh_id = WINDOW.getProperty(currentFile + "refresh_id")
             playMethod = WINDOW.getProperty(currentFile + "playmethod")
             itemType = WINDOW.getProperty(currentFile + "type")
+            mapping = WINDOW.getProperty("%sIndexMapping" % currentFile)
+
+            self.logMsg("Mapping for index: %s" % mapping)
             
             # Get playback volume
             volume_query = '{"jsonrpc": "2.0", "method": "Application.GetProperties", "params": {"properties": ["volume","muted"]}, "id": 1}'
@@ -304,6 +323,7 @@ class Player( xbmc.Player ):
 
             url = "{server}/mediabrowser/Sessions/Playing"
             postdata = {
+
                 'QueueableMediaTypes': "Video",
                 'CanSeek': True,
                 'ItemId': item_id,
@@ -325,6 +345,7 @@ class Player( xbmc.Player ):
                 track_query = '{"jsonrpc": "2.0", "method": "Player.GetProperties",  "params": {"playerid": 1,"properties": ["currentsubtitle","currentaudiostream","subtitleenabled"]} , "id": 1}'
                 result = xbmc.executeJSONRPC(track_query)
                 result = json.loads(result)
+                
                 # Audio tracks
                 indexAudio = result.get('result', 0)
                 if indexAudio:
@@ -337,11 +358,25 @@ class Player( xbmc.Player ):
                 subsEnabled = result.get('result', "")
                 if subsEnabled:
                     subsEnabled = subsEnabled.get('subtitleenabled', "")
+                
                 # Postdata for the audio and subs tracks
+                audioTracks = len(xbmc.Player().getAvailableAudioStreams())
                 postdata['AudioStreamIndex'] = indexAudio + 1
+                
                 if subsEnabled and len(xbmc.Player().getAvailableSubtitleStreams()) > 0:
-                    audioTracks = len(xbmc.Player().getAvailableAudioStreams())
-                    postdata['SubtitleStreamIndex'] = indexSubs + audioTracks + 1
+                    externalIndex = json.loads(mapping)
+                    if externalIndex:
+                        # If there's external subtitles added via PlaybackUtils
+                        if externalIndex.get(str(indexSubs)):
+                            # If the current subtitle is in the mapping
+                            postdata['SubtitleStreamIndex'] = externalIndex[str(indexSubs)]
+                        else:
+                            # Internal subtitle currently selected
+                            external = len(externalIndex)
+                            postdata['SubtitleStreamIndex'] = indexSubs - external + audioTracks + 1
+                    else:
+                        # No external subtitles added via PlayUtils
+                        postdata['SubtitleStreamIndex'] = indexSubs + audioTracks + 1
                 else:
                     postdata['SubtitleStreamIndex'] = ""
             
@@ -349,6 +384,7 @@ class Player( xbmc.Player ):
             self.logMsg("Sending POST play started.", 1)
             self.doUtils.downloadUrl(url, postBody=postdata, type="POST")
             
+
             # save data map for updates and position calls
             data = {
                 'runtime': runtime,

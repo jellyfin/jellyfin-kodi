@@ -91,17 +91,20 @@ class PlaybackUtils():
             return self.AddToPlaylist(itemsToPlay)
 
         playurl = PlayUtils().getPlayUrl(server, id, result)
+
         if playurl == False or WINDOW.getProperty('playurlFalse') == "true":
             WINDOW.clearProperty('playurlFalse')
             xbmc.log("Failed to retrieve the playback path/url.")
             return
 
         if WINDOW.getProperty("%splaymethod" % playurl) == "Transcode":
+            # Transcoding, we pull every track to set before playback starts
             playurlprefs = self.audioSubsPref(playurl, result.get("MediaSources"))
             if playurlprefs:
                 playurl = playurlprefs
             else: # User cancelled dialog
                 return
+
 
         thumbPath = API().getArtwork(result, "Primary")
         
@@ -113,6 +116,13 @@ class PlaybackUtils():
             playurl = open(xbmc.translatePath(StrmTemp), 'r').readline()
                  
         listItem = xbmcgui.ListItem(path=playurl, iconImage=thumbPath, thumbnailImage=thumbPath)
+
+        if WINDOW.getProperty("%splaymethod" % playurl) != "Transcode":
+            # Only for direct play and direct stream
+            # Append external subtitles to stream
+            subtitleList = self.externalSubs(id, playurl, server, result.get('MediaSources'))
+            listItem.setSubtitles(subtitleList)
+            #pass
 
         # Can not play virtual items
         if (result.get("LocationType") == "Virtual"):
@@ -163,6 +173,38 @@ class PlaybackUtils():
                 xbmc.Player().play(playurl,listItem)   
             else:
                xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
+
+    def externalSubs(self, id, playurl, server, mediaSources):
+
+        externalsubs = []
+        mapping = {}
+
+        mediaStream = mediaSources[0].get('MediaStreams')
+        kodiindex = 0
+        for stream in mediaStream:
+            
+            index = stream['Index']
+            # Since Emby returns all possible tracks together, have to pull only external subtitles.
+            # IsTextSubtitleStream if true, is available to download from emby.
+            if "Subtitle" in stream['Type'] and stream['IsExternal'] and stream['IsTextSubtitleStream']:
+                
+                playmethod = utils.window("%splaymethod" % playurl)
+
+                if "DirectPlay" in playmethod:
+                    # Direct play, get direct path
+                    url = PlayUtils().directPlay(stream)
+                elif "DirectStream" in playmethod: # Direct stream
+                    url = "%s/Videos/%s/%s/Subtitles/%s/Stream.srt" % (server, id, id, index)
+                
+                # map external subtitles for mapping
+                mapping[kodiindex] = index
+                externalsubs.append(url)
+                kodiindex += 1
+        
+        mapping = json.dumps(mapping)
+        utils.window('%sIndexMapping' % playurl, mapping)
+
+        return externalsubs
 
     def audioSubsPref(self, url, mediaSources):
 

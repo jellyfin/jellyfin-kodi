@@ -166,12 +166,6 @@ class PlayUtils():
 
             elif "Video" in type:
                 playurl = "%s/mediabrowser/Videos/%s/stream?static=true" % (server, id)
-                # Verify audio and subtitles
-                mediaSources = result[u'MediaSources']
-                if mediaSources[0].get('DefaultAudioStreamIndex') != None:
-                    playurl = "%s&AudioStreamIndex=%s" % (playurl, mediaSources[0].get('DefaultAudioStreamIndex'))
-                if mediaSources[0].get('DefaultSubtitleStreamIndex') != None:
-                    playurl = "%s&SubtitleStreamIndex=%s" % (playurl, mediaSources[0].get('DefaultSubtitleStreamIndex'))
             
             elif "Audio" in type:
                 playurl = "%s/mediabrowser/Audio/%s/stream.mp3" % (server, id)

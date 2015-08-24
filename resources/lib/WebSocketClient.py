@@ -165,9 +165,28 @@ class WebSocketThread(threading.Thread):
                     xbmc.executebuiltin('SetVolume(%s[,showvolumebar])' % volume)
                 elif command == "SetSubtitleStreamIndex":
                     # Emby merges audio and subtitle index together
-                    audioTracks = len(xbmc.Player().getAvailableAudioStreams())
-                    index = int(arguments['Index']) - audioTracks
-                    xbmc.Player().setSubtitleStream(index - 1)
+                    xbmcplayer = xbmc.Player()
+                    currentFile = xbmcplayer.getPlayingFile()
+                    embyIndex = int(arguments['Index'])
+
+                    mapping = WINDOW.getProperty("%sIndexMapping" % currentFile)
+                    externalIndex = json.loads(mapping)
+
+                    if externalIndex:
+                        # If there's external subtitles added via PlaybackUtils
+                        for index in externalIndex:
+                            if externalIndex[index] == embyIndex:
+                                xbmcplayer.setSubtitleStream(int(index))
+                        else:
+                            # User selected internal subtitles
+                            external = len(externalIndex)
+                            audioTracks = len(xbmcplayer.getAvailableAudioStreams())
+                            xbmcplayer.setSubtitleStream(external + embyIndex - audioTracks - 1)
+                    else:
+                        # Emby merges audio and subtitle index together
+                        audioTracks = len(xbmcplayer.getAvailableAudioStreams())
+                        xbmcplayer.setSubtitleStream(index - audioTracks - 1)
+
                 elif command == "SetAudioStreamIndex":
                     index = int(arguments['Index'])
                     xbmc.Player().setAudioStream(index - 1)
