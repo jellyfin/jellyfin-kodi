@@ -360,7 +360,7 @@ class LibrarySync(threading.Thread):
                     pDialog.update(percentage, "Emby for Kodi - Running Sync", progressTitle)
                     count += 1                   
 
-                if item.get('IsFolder') and item.get('RecursiveItemCount') != 0:                   
+                if utils.settings('syncEmptyShows') == "true" or (item.get('IsFolder') and item.get('RecursiveItemCount') != 0):
                     allEmbyTvShowIds.append(item["Id"])
                     
                     #build a list with all Id's and get the existing entry (if exists) in Kodi DB
@@ -650,7 +650,7 @@ class LibrarySync(threading.Thread):
                             percentage = int(((float(count) / float(total)) * 100))
                             pDialog.update(percentage, "Emby for Kodi - Incremental Sync Tv", progressTitle)
                             count = count + 1                    
-                        if item.get('IsFolder') and item.get('RecursiveItemCount') != 0:                   
+                        if utils.settings('syncEmptyShows') == "true" or (item.get('IsFolder') and item.get('RecursiveItemCount') != 0):
                             kodiId = WriteKodiVideoDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
                 
                 
