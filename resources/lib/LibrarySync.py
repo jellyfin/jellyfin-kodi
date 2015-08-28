@@ -887,19 +887,19 @@ class LibrarySync(threading.Thread):
             
             cursorvideo.execute("SELECT media_type FROM emby WHERE emby_id = ?", (itemId,))
             try: # Search video database
-                self.logMsg("Check video database.", 1)
+                self.logMsg("Check video database.", 2)
                 mediatype = cursorvideo.fetchone()[0]
                 video.append(userdata)
             except:
                 if musicenabled:
                     cursormusic.execute("SELECT media_type FROM emby WHERE emby_id = ?", (itemId,))
                     try: # Search music database
-                        self.logMsg("Check the music database.", 1)
+                        self.logMsg("Check the music database.", 2)
                         mediatype = cursormusic.fetchone()[0]
                         music.append(userdata)
-                    except: self.logMsg("Item %s is not found in Kodi database." % itemId, 2)
+                    except: self.logMsg("Item %s is not found in Kodi database." % itemId, 1)
                 else:
-                    self.logMsg("Item %s is not found in Kodi database." % itemId, 2)
+                    self.logMsg("Item %s is not found in Kodi database." % itemId, 1)
 
         if len(video) > 0:
             connection = connectionvideo
