@@ -313,17 +313,20 @@ class DownloadUtils():
                     if r.headers['X-Application-Error-Code'] == "ParentalControl":
                         # Parental control - access restricted
                         WINDOW.setProperty("Server_status", "restricted")
-                        xbmcgui.Dialog().notification("Emby server", "Access restricted.", xbmcgui.NOTIFICATION_ERROR, icon="special://home/addons/plugin.video.emby/icon.png", time=5000)
+                        xbmcgui.Dialog().notification("Emby server", "Access restricted.", xbmcgui.NOTIFICATION_ERROR, time=5000)
                         return False
+                    elif r.headers['X-Application-Error-Code'] == "UnauthorizedAccessException":
+                        # User tried to do something his emby account doesn't allow - admin restricted in some way
+                        pass
 
-                if (status == "401") or (status == "Auth"):
+                elif (status == "401") or (status == "Auth"):
                     pass
 
                 else:
                     # Tell UserClient token has been revoked.
                     WINDOW.setProperty("Server_status", "401")
                     self.logMsg("HTTP Error: %s" % e, 0)
-                    xbmcgui.Dialog().notification("Error connecting", "Unauthorized.", xbmcgui.NOTIFICATION_ERROR, icon="special://home/addons/plugin.video.emby/icon.png")
+                    xbmcgui.Dialog().notification("Error connecting", "Unauthorized.", xbmcgui.NOTIFICATION_ERROR)
                     return 401
 
             elif (r.status_code == 301) or (r.status_code == 302):
