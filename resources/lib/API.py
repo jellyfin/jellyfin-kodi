@@ -355,7 +355,7 @@ class API():
     def getMpaa(self, item):
         # Convert more complex cases
         mpaa = item.get('OfficialRating', "")
-        if "NR" == mpaa:
+        if mpaa in ("NR", "UR"):
             # Kodi seems to not like NR, but will accept Rated Not Rated
             mpaa = "Rated Not Rated"
 
