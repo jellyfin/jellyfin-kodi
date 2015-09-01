@@ -200,7 +200,7 @@ class LibrarySync(threading.Thread):
         self.logMsg("Sync Database, Incremental Sync Setting Last Run Time Saved: %s" % lastSync, 1)
         utils.settings("LastIncrenetalSync", lastSync)
 
-    def MoviesFullSync(self,connection,cursor, pDialog):
+    def MoviesFullSync(self,connection, cursor, pDialog):
                
         views = ReadEmbyDB().getCollections("movies")
         
@@ -249,26 +249,28 @@ class LibrarySync(threading.Thread):
         #### PROCESS BOX SETS #####
         if(pDialog != None):
             utils.logMsg("Sync Movies", "BoxSet Sync Started", 1)
-            boxsets = ReadEmbyDB().getBoxSets()
+        
+        boxsets = ReadEmbyDB().getBoxSets()
             
-            total = len(boxsets) + 1
-            count = 1
-            for boxset in boxsets:
-                progressTitle = "Processing BoxSets"+ " (" + str(count) + " of " + str(total) + ")"
-                percentage = int(((float(count) / float(total)) * 100))
-                pDialog.update(percentage, "Emby for Kodi - Running Sync", progressTitle)
-                count += 1
+        total = len(boxsets) + 1
+        count = 1
+        for boxset in boxsets:
+            progressTitle = "Processing BoxSets"+ " (" + str(count) + " of " + str(total) + ")"
+            percentage = int(((float(count) / float(total)) * 100))
+            pDialog.update(percentage, "Emby for Kodi - Running Sync", progressTitle)
+            count += 1
+            if(self.ShouldStop()):
+                return False                
+            boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
+            WriteKodiVideoDB().addBoxsetToKodiLibrary(boxset, connection, cursor)
+                
+            WriteKodiVideoDB().removeMoviesFromBoxset(boxset, connection, cursor)
+            for boxsetMovie in boxsetMovies:
                 if(self.ShouldStop()):
-                    return False                
-                boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
-                WriteKodiVideoDB().addBoxsetToKodiLibrary(boxset,connection, cursor)
+                    return False
+                WriteKodiVideoDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset, connection, cursor)
                     
-                for boxsetMovie in boxsetMovies:
-                    if(self.ShouldStop()):
-                        return False
-                    WriteKodiVideoDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset, connection, cursor)
-                        
-            utils.logMsg("Sync Movies", "BoxSet Sync Finished", 1)    
+        utils.logMsg("Sync Movies", "BoxSet Sync Finished", 1)
             
         #### PROCESS DELETES #####
         allEmbyMovieIds = set(allEmbyMovieIds)
@@ -628,16 +630,21 @@ class LibrarySync(threading.Thread):
                 count = 1
                 total = len(boxsets) + 1
                 for boxset in boxsets:
-                    boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
-                    WriteKodiVideoDB().addBoxsetToKodiLibrary(boxset,connection, cursor)
-                    if(pDialog != None):
-                        progressTitle = "Incremental Sync "+ " (" + str(count) + " of " + str(total) + ")"
-                        percentage = int(((float(count) / float(total)) * 100))
-                        pDialog.update(percentage, "Emby for Kodi - Incremental Sync BoxSet", progressTitle)
-                        count = count + 1                        
-                    for boxsetMovie in boxsetMovies:
-                        WriteKodiVideoDB().updateBoxsetToKodiLibrary(boxsetMovie,boxset, connection, cursor)      
-                
+                    if(boxset["Id"] in itemList):
+                        utils.logMsg("IncrementalSync", "Updating box Set : " + str(boxset["Name"]), 1)
+                        boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
+                        WriteKodiVideoDB().addBoxsetToKodiLibrary(boxset, connection, cursor)
+                        if(pDialog != None):
+                            progressTitle = "Incremental Sync "+ " (" + str(count) + " of " + str(total) + ")"
+                            percentage = int(((float(count) / float(total)) * 100))
+                            pDialog.update(percentage, "Emby for Kodi - Incremental Sync BoxSet", progressTitle)
+                            count = count + 1
+                        WriteKodiVideoDB().removeMoviesFromBoxset(boxset, connection, cursor)
+                        for boxsetMovie in boxsetMovies:
+                            WriteKodiVideoDB().updateBoxsetToKodiLibrary(boxsetMovie, boxset, connection, cursor)      
+                    else:
+                        utils.logMsg("IncrementalSync", "Skipping Box Set : " + boxset["Name"], 1)
+                        
                 #### PROCESS TV SHOWS ####
                 views = ReadEmbyDB().getCollections("tvshows")              
                 for view in views:

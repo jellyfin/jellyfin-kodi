@@ -1233,6 +1233,17 @@ class WriteKodiVideoDB():
             query = "UPDATE emby SET checksum = ? WHERE emby_id = ?"
             cursor.execute(query, (API().getChecksum(boxsetmovie), boxsetmovieid))
 
+    def removeMoviesFromBoxset(self, boxset, connection, cursor):
+    
+        strSet = boxset['Name']
+        try:
+            cursor.execute("SELECT idSet FROM sets WHERE strSet = ? COLLATE NOCASE", (strSet,))
+            setid  =  cursor.fetchone()[0]
+        except: pass
+        else:
+            query = "UPDATE movie SET idSet = null WHERE idSet = ?"
+            cursor.execute(query, (setid,))
+    
     def updateUserdata(self, userdata, connection, cursor):
         # This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
         embyId = userdata['ItemId']
