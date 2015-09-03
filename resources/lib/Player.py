@@ -215,7 +215,12 @@ class Player( xbmc.Player ):
                 if subsEnabled and len(xbmc.Player().getAvailableSubtitleStreams()) > 0:
                     WINDOW = xbmcgui.Window(10000)
                     mapping = WINDOW.getProperty("%sIndexMapping" % currentFile)
-                    externalIndex = json.loads(mapping)
+                    
+                    if mapping:
+                        externalIndex = json.loads(mapping)
+                    else: # Direct paths scenario
+                        externalIndex = ""
+
                     if externalIndex:
                         # If there's external subtitles added via PlaybackUtils
                         if externalIndex.get(str(indexSubs)):
@@ -364,7 +369,12 @@ class Player( xbmc.Player ):
                 postdata['AudioStreamIndex'] = indexAudio + 1
                 
                 if subsEnabled and len(xbmc.Player().getAvailableSubtitleStreams()) > 0:
-                    externalIndex = json.loads(mapping)
+                    
+                    if mapping:
+                        externalIndex = json.loads(mapping)
+                    else: # Direct paths scenario
+                        externalIndex = ""
+
                     if externalIndex:
                         # If there's external subtitles added via PlaybackUtils
                         if externalIndex.get(str(indexSubs)):
