@@ -52,8 +52,8 @@ class Kodi_Monitor(xbmc.Monitor):
                             
                             url = "{server}/mediabrowser/Users/{UserId}/Items/" + embyid + "?format=json&ImageTypeLimit=1"
                             result = downloadUtils.downloadUrl(url)     
-                            print "Here: " + str(result)
-                            userData = result[u'UserData']
+                            print "Here: %s" % result
+                            userData = result['UserData']
                             
                             playurl = PlayUtils().getPlayUrl(server, embyid, result)
                             
