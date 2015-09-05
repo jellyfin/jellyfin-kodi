@@ -91,16 +91,14 @@ class LibrarySync(threading.Thread):
             
             try:
                 results = du.downloadUrl(url)
+                changedItems = results["ItemsUpdated"] + results["ItemsAdded"]
+                removedItems = results["ItemsRemoved"]
+                userChanges = results["UserDataChanged"]                
             except:
                 utils.logMsg("Sync Database", "Incremental Sync Get Changes Failed", 0)
                 pass
             else:
                 utils.logMsg("Sync Database", "Incremental Sync Changes : " + str(results), 0)
-  
-                changedItems = results["ItemsUpdated"] + results["ItemsAdded"]
-                removedItems = results["ItemsRemoved"]
-                userChanges = results["UserDataChanged"]
-                
                 if(len(changedItems) < 1000 and len(removedItems) < 1000 and len(userChanges) < 1000):
                 
                     WINDOW.setProperty("startup", "done")
