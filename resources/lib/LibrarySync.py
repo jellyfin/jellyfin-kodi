@@ -89,22 +89,31 @@ class LibrarySync(threading.Thread):
             url = "{server}/Emby.Kodi.SyncQueue/{UserId}/GetItems?LastUpdateDT=" + lastSync + "&format=json"
             utils.logMsg("Sync Database", "Incremental Sync Get Items URL : " + url, 0)
             
-            results = du.downloadUrl(url)
-            utils.logMsg("Sync Database", "Incremental Sync Changes : " + str(results), 0)
-            
-            changedItems = results["ItemsUpdated"] + results["ItemsAdded"]
-            removedItems = results["ItemsRemoved"]
-            userChanges = results["UserDataChanged"]
-            
-            WINDOW.setProperty("startup", "done")
-            
-            LibrarySync().remove_items(removedItems)
-            LibrarySync().update_items(changedItems)
-            LibrarySync().user_data_update(userChanges)
-            
-            self.SaveLastSync()
-            
-            return True
+            try:
+                results = du.downloadUrl(url)
+            except:
+                utils.logMsg("Sync Database", "Incremental Sync Get Changes Failed", 0)
+                pass
+            else:
+                utils.logMsg("Sync Database", "Incremental Sync Changes : " + str(results), 0)
+  
+                changedItems = results["ItemsUpdated"] + results["ItemsAdded"]
+                removedItems = results["ItemsRemoved"]
+                userChanges = results["UserDataChanged"]
+                
+                if(len(changedItems) < 1000 and len(removedItems) < 1000 and len(userChanges) < 1000):
+                
+                    WINDOW.setProperty("startup", "done")
+                    
+                    LibrarySync().remove_items(removedItems)
+                    LibrarySync().update_items(changedItems)
+                    LibrarySync().user_data_update(userChanges)
+                    
+                    self.SaveLastSync()
+                    
+                    return True
+                else:
+                    utils.logMsg("Sync Database", "Too Many For Incremental Sync, changedItems" + str(len(changedItems)) + " removedItems:" + str(len(removedItems)) + " userChanges:" + str(len(userChanges)), 0)
         
         #set some variable to check if this is the first run
         WINDOW.setProperty("SyncDatabaseRunning", "true")     
@@ -171,8 +180,7 @@ class LibrarySync(threading.Thread):
             
             # set the install done setting
             if(syncInstallRunDone == False and completed):
-                utils.settings("SyncInstallRunDone", "true")        
-                self.SaveLastSync()
+                utils.settings("SyncInstallRunDone", "true")
             
             # Commit all DB changes at once and Force refresh the library
             xbmc.executebuiltin("UpdateLibrary(video)")
@@ -184,10 +192,11 @@ class LibrarySync(threading.Thread):
             # tell any widgets to refresh because the content has changed
             WINDOW.setProperty("widgetreload", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             
+            self.SaveLastSync()
+            
         finally:
             WINDOW.setProperty("SyncDatabaseRunning", "false")
             utils.logMsg("Sync DB", "syncDatabase Exiting", 0)
-            
 
         if(pDialog != None):
             pDialog.close()
@@ -247,18 +256,17 @@ class LibrarySync(threading.Thread):
           
        
         #### PROCESS BOX SETS #####
-        if(pDialog != None):
-            utils.logMsg("Sync Movies", "BoxSet Sync Started", 1)
-        
+        utils.logMsg("Sync Movies", "BoxSet Sync Started", 1)
         boxsets = ReadEmbyDB().getBoxSets()
             
         total = len(boxsets) + 1
         count = 1
         for boxset in boxsets:
-            progressTitle = "Processing BoxSets"+ " (" + str(count) + " of " + str(total) + ")"
-            percentage = int(((float(count) / float(total)) * 100))
-            pDialog.update(percentage, "Emby for Kodi - Running Sync", progressTitle)
-            count += 1
+            if(pDialog != None):
+                progressTitle = "Processing BoxSets" + " (" + str(count) + " of " + str(total-1) + ")"
+                percentage = int(((float(count) / float(total)) * 100))
+                pDialog.update(percentage, "Emby for Kodi - Running Sync", progressTitle)
+                count += 1
             if(self.ShouldStop()):
                 return False                
             boxsetMovies = ReadEmbyDB().getMoviesInBoxSet(boxset["Id"])
