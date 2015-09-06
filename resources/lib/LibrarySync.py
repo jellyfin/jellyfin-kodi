@@ -12,6 +12,7 @@ import inspect
 import threading
 import urllib
 from datetime import datetime, timedelta, time
+from distutils.version import LooseVersion, StrictVersion
 from itertools import chain
 import urllib2
 import os
@@ -1003,7 +1004,7 @@ class LibrarySync(threading.Thread):
         return False
 
     def run(self):
-
+        clientInfo = ClientInformation()
         self.logMsg("--- Starting Library Sync Thread ---", 0)
         WINDOW = xbmcgui.Window(10000)
         startupComplete = False
@@ -1018,6 +1019,25 @@ class LibrarySync(threading.Thread):
                     # Abort was requested while waiting. We should exit
                     break
 
+            # Check if the version of Emby for Kodi the DB was created with is recent enough - controled by Window property set at top of service _INIT_
+            
+            # START TEMPORARY CODE
+            # Only get in here for a while, can be removed later
+            if utils.settings("dbCreatedWithVersion")=="" and utils.settings("SyncInstallRunDone") == "true":
+                return_value = xbmcgui.Dialog().yesno("DB Version", "Can't detect version of Emby for Kodi the DB was created with.\nWas it at least version " + WINDOW.getProperty('minDBVersion') + "?")
+                if return_value == 0:
+                    utils.settings("dbCreatedWithVersion","0.0.0")
+                else:
+                    utils.settings("dbCreatedWithVersion",WINDOW.getProperty('minDBVersion'))      
+            # END TEMPORARY CODE
+                
+            if (utils.settings("SyncInstallRunDone") == "true" and LooseVersion(utils.settings("dbCreatedWithVersion")) < LooseVersion(WINDOW.getProperty('minDBVersion'))):
+                return_value = xbmcgui.Dialog().yesno("DB Version", "Detected the DB needs to be recreated for\nthis version of Emby for Kodi.\nProceed?")
+                if return_value == 0:
+                    xbmcgui.Dialog().ok("Emby for Kodi","Emby for Kodi may not work\ncorrectly until the database is reset.\n")
+                else:
+                    utils.reset()
+            
             # Library sync
             if not startupComplete:
                 # Run full sync
