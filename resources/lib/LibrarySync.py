@@ -181,6 +181,7 @@ class LibrarySync(threading.Thread):
             # set the install done setting
             if(syncInstallRunDone == False and completed):
                 utils.settings("SyncInstallRunDone", "true")
+                utils.settings("dbCreatedWithVersion", self.clientInfo.getVersion())    
             
             # Commit all DB changes at once and Force refresh the library
             xbmc.executebuiltin("UpdateLibrary(video)")
