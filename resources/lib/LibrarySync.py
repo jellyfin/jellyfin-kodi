@@ -98,8 +98,9 @@ class LibrarySync(threading.Thread):
                 utils.logMsg("Sync Database", "Incremental Sync Get Changes Failed", 0)
                 pass
             else:
+                maxItems = int(utils.settings("incSyncMaxItems"))
                 utils.logMsg("Sync Database", "Incremental Sync Changes : " + str(results), 0)
-                if(len(changedItems) < 1000 and len(removedItems) < 1000 and len(userChanges) < 1000):
+                if(len(changedItems) < maxItems and len(removedItems) < maxItems and len(userChanges) < maxItems):
                 
                     WINDOW.setProperty("startup", "done")
                     
@@ -111,7 +112,7 @@ class LibrarySync(threading.Thread):
                     
                     return True
                 else:
-                    utils.logMsg("Sync Database", "Too Many For Incremental Sync, changedItems" + str(len(changedItems)) + " removedItems:" + str(len(removedItems)) + " userChanges:" + str(len(userChanges)), 0)
+                    utils.logMsg("Sync Database", "Too Many For Incremental Sync (" + str(maxItems) + "), changedItems" + str(len(changedItems)) + " removedItems:" + str(len(removedItems)) + " userChanges:" + str(len(userChanges)), 0)
         
         #set some variable to check if this is the first run
         WINDOW.setProperty("SyncDatabaseRunning", "true")     
@@ -203,8 +204,22 @@ class LibrarySync(threading.Thread):
         
     def SaveLastSync(self):
         # save last sync time
-        lastSync = (datetime.utcnow() - timedelta(minutes=5)).strftime('%Y-%m-%dT%H:%M:%SZ')
-        self.logMsg("Sync Database, Incremental Sync Setting Last Run Time Saved: %s" % lastSync, 1)
+
+        du = DownloadUtils()    
+        url = "{server}/Emby.Kodi.SyncQueue/GetServerDateTime?format=json"
+            
+        try:
+            results = du.downloadUrl(url)
+            lastSync = results["ServerDateTime"]
+            self.logMsg("Sync Database, Incremental Sync Using Server Time: %s" % lastSync, 0)
+            lastSync = datetime.strptime(lastSync, "%Y-%m-%dT%H:%M:%SZ")
+            lastSync = (lastSync - timedelta(minutes=5)).strftime('%Y-%m-%dT%H:%M:%SZ')
+            self.logMsg("Sync Database, Incremental Sync Using Server Time -5 min: %s" % lastSync, 0)
+        except:
+            lastSync = (datetime.utcnow() - timedelta(minutes=5)).strftime('%Y-%m-%dT%H:%M:%SZ')
+            self.logMsg("Sync Database, Incremental Sync Using Client Time -5 min: %s" % lastSync, 0)
+            
+        self.logMsg("Sync Database, Incremental Sync Setting Last Run Time Saved: %s" % lastSync, 0)
         utils.settings("LastIncrenetalSync", lastSync)
 
     def MoviesFullSync(self,connection, cursor, pDialog):
