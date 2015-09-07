@@ -594,6 +594,13 @@ class WriteKodiVideoDB():
         season = MBitem.get('ParentIndexNumber')
         episode = MBitem.get('IndexNumber', 0)
 
+        if utils.settings('syncSpecialsOrder') == "true":
+            airsBeforeSeason = MBitem.get('AirsBeforeSeasonNumber', "-1")
+            airsBeforeEpisode = MBitem.get('AirsBeforeEpisodeNumber', "-1")
+        else:
+            airsBeforeSeason = "-1"
+            airsBeforeEpisode = "-1"
+
         playcount = userData.get('PlayCount')
         dateplayed = userData.get("LastPlayedDate")
         dateadded = API().getDateCreated(MBitem)
@@ -661,7 +668,7 @@ class WriteKodiVideoDB():
             cursor.execute(query, (filename, fileid))
 
             query = "UPDATE episode SET c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?, c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ? WHERE idEpisode = ?"
-            cursor.execute(query, (title, plot, rating, writer, premieredate, runtime, director, season, episode, title, "-1", "-1", episodeid))
+            cursor.execute(query, (title, plot, rating, writer, premieredate, runtime, director, season, episode, title, airsBeforeSeason, airsBeforeEpisode, episodeid))
             
             #update the checksum in emby table
             query = "UPDATE emby SET checksum = ? WHERE emby_id = ?"
@@ -700,7 +707,7 @@ class WriteKodiVideoDB():
             cursor.execute("select coalesce(max(idEpisode),0) as episodeid from episode")
             episodeid = cursor.fetchone()[0] + 1
             query = "INSERT INTO episode(idEpisode, idFile, c00, c01, c03, c04, c05, c09, c10, c12, c13, c14, idShow, c15, c16) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-            cursor.execute(query, (episodeid, fileid, title, plot, rating, writer, premieredate, runtime, director, season, episode, title, showid, "-1", "-1"))
+            cursor.execute(query, (episodeid, fileid, title, plot, rating, writer, premieredate, runtime, director, season, episode, title, showid, airsBeforeSeason, airsBeforeEpisode))
             
             # Create the reference in emby table
             query = "INSERT INTO emby(emby_id, kodi_id, kodi_file_id, media_type, checksum, parent_id) values(?, ?, ?, ?, ?, ?)"
