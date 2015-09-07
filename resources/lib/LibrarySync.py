@@ -1032,10 +1032,11 @@ class LibrarySync(threading.Thread):
                     utils.settings("dbCreatedWithVersion",WINDOW.getProperty('minDBVersion'))      
             # END TEMPORARY CODE
                 
-            if (utils.settings("SyncInstallRunDone") == "true" and LooseVersion(utils.settings("dbCreatedWithVersion")) < LooseVersion(WINDOW.getProperty('minDBVersion'))):
+            if (utils.settings("SyncInstallRunDone") == "true" and LooseVersion(utils.settings("dbCreatedWithVersion")) < LooseVersion(WINDOW.getProperty('minDBVersion'))) and WINDOW.getProperty('minDBVersionCheck') != "true":
                 return_value = xbmcgui.Dialog().yesno("DB Version", "Detected the DB needs to be recreated for\nthis version of Emby for Kodi.\nProceed?")
                 if return_value == 0:
                     xbmcgui.Dialog().ok("Emby for Kodi","Emby for Kodi may not work\ncorrectly until the database is reset.\n")
+                    WINDOW.setProperty('minDBVersionCheck', "true")
                 else:
                     utils.reset()
             

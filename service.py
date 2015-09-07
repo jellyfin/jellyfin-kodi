@@ -60,8 +60,9 @@ class Service():
         WINDOW.clearProperty('Server_status')
         WINDOW.clearProperty('startup')
         WINDOW.clearProperty('OnWakeSync')
+        WINDOW.clearProperty('minDBVersionCheck')
         
-        #Set min DB version
+        # Set min DB version
         WINDOW.setProperty('minDBVersion','1.1.33')
 
         embyProperty = WINDOW.getProperty('Emby.nodes.total')
