@@ -291,13 +291,21 @@ class ReadEmbyDB():
             for item in result:
                 if item['RecursiveItemCount']:
                     name = item['Name']
-                    itemtype = item.get('CollectionType', "movies")
+                    itemtype = item.get('CollectionType')
+                    content = itemtype
+
+                    if itemtype is None and type in ("movies", "tvshows"):
+                        # Mixed content or rich presentation is disabled
+                        itemtype = type
+                        content = "mixed"
 
                     if itemtype == type and name != "Collections":
                         collections.append({
+                            
                             'title': name,
                             'type': itemtype,
-                            'id': item['Id']
+                            'id': item['Id'],
+                            'content': content
                         })
 
         return collections

@@ -239,6 +239,15 @@ class LibrarySync(threading.Thread):
             for kodimovie in allKodiMovies:
                 allKodiMovieIds.append(kodimovie[1])
             
+            title = view.get('title')
+            content = view.get('content')
+
+            if content == "mixed":
+                title = "%s - Movies" % title
+            
+            for kodimovie in allKodiMovies:
+                allKodiMovieIds.append(kodimovie[1])
+            
             total = len(allEmbyMovies) + 1
             count = 1
             
@@ -263,10 +272,10 @@ class LibrarySync(threading.Thread):
                             kodiMovie = kodimovie
                           
                     if kodiMovie == None:
-                        WriteKodiVideoDB().addOrUpdateMovieToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
+                        WriteKodiVideoDB().addOrUpdateMovieToKodiLibrary(item["Id"],connection, cursor, title)
                     else:
                         if kodiMovie[2] != API().getChecksum(item):
-                            WriteKodiVideoDB().addOrUpdateMovieToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
+                            WriteKodiVideoDB().addOrUpdateMovieToKodiLibrary(item["Id"],connection, cursor, title)
           
           
        
@@ -367,6 +376,12 @@ class LibrarySync(threading.Thread):
             allEmbyTvShows = ReadEmbyDB().getTvShows(view.get('id'))
             allKodiTvShows = ReadKodiDB().getKodiTvShows(connection, cursor)
             
+            title = view.get('title')
+            content = view.get('content')
+
+            if content == "mixed":
+                title = "%s - TV Shows" % title
+            
             total = len(allEmbyTvShows) + 1
             count = 1
             
@@ -396,11 +411,11 @@ class LibrarySync(threading.Thread):
                           
                     if kodiShow == None:
                         # Tv show doesn't exist in Kodi yet so proceed and add it
-                        WriteKodiVideoDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
+                        WriteKodiVideoDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, title)
                     else:
                         # If there are changes to the item, perform a full sync of the item
                         if kodiShow[2] != API().getChecksum(item):
-                            WriteKodiVideoDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, view.get('title'))
+                            WriteKodiVideoDB().addOrUpdateTvShowToKodiLibrary(item["Id"],connection, cursor, title)
                             
                     #### PROCESS EPISODES ######
                     self.EpisodesFullSync(connection,cursor,item["Id"])

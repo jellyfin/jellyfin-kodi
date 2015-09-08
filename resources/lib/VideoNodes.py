@@ -331,13 +331,21 @@ class VideoNodes():
             views_movies = ReadEmbyDB().getCollections("movies")
             if views_movies:
                 for view in views_movies:
-                    self.buildVideoNodeForView(view.get('title'), "movies", totalNodesCount)
+                    title = view.get('title')
+                    content = view.get('content')
+                    if content == "mixed":
+                        title = "%s - Movies" % title
+                    self.buildVideoNodeForView(title, "movies", totalNodesCount)
                     totalNodesCount +=1
                     
             views_shows = ReadEmbyDB().getCollections("tvshows")
             if views_shows:
                 for view in views_shows:
-                    self.buildVideoNodeForView(view.get('title'), "tvshows", totalNodesCount)
+                    title = view.get('title')
+                    content = view.get('content')
+                    if content == "mixed":
+                        title = "%s - TV Shows" % title
+                    self.buildVideoNodeForView(title, "tvshows", totalNodesCount)
                     totalNodesCount +=1
 
             #create tag node for emby channels
