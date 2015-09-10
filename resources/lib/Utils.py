@@ -100,7 +100,7 @@ def getKodiMusicDBPath():
         dbVersion = "52"
     elif xbmc.getInfoLabel("System.BuildVersion").startswith("16"):
         #jarvis
-        dbVersion = "53"
+        dbVersion = "54"
     else: 
         # Not a compatible build
         xbmc.log("This Kodi version is incompatible. Current version: %s" % kodibuild)

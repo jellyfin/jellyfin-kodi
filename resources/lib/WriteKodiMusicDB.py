@@ -44,7 +44,7 @@ class WriteKodiMusicDB():
         
         # If the item already exist in the local Kodi DB we'll perform a full item update
         # If the item doesn't exist, we'll add it to the database
-        
+        kodiVersion = self.kodiversion
         embyId = MBitem["Id"]
         
         cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?", (embyId,))
@@ -75,8 +75,12 @@ class WriteKodiMusicDB():
         if artistid:
             self.logMsg("UPDATE artist to Kodi library, Id: %s - Artist: %s" % (embyId, name), 1)
 
-            query = "UPDATE artist SET strArtist = ?, strMusicBrainzArtistID = ?, strGenres = ?, strBiography = ?, strImage = ?, strFanart = ?, lastScraped = ?, dateadded = ? WHERE idArtist = ?"
-            cursor.execute(query, (name, musicBrainzId, genres, bio, thumb, fanart, lastScraped, dateadded, artistid))
+            if kodiVersion == 16:
+                query = "UPDATE artist SET strArtist = ?, strMusicBrainzArtistID = ?, strGenres = ?, strBiography = ?, strImage = ?, strFanart = ?, lastScraped = ? WHERE idArtist = ?"
+                cursor.execute(query, (name, musicBrainzId, genres, bio, thumb, fanart, lastScraped, artistid))
+            else:
+                query = "UPDATE artist SET strArtist = ?, strMusicBrainzArtistID = ?, strGenres = ?, strBiography = ?, strImage = ?, strFanart = ?, lastScraped = ?, dateadded = ? WHERE idArtist = ?"
+                cursor.execute(query, (name, musicBrainzId, genres, bio, thumb, fanart, lastScraped, dateadded, artistid))
 
             # Update the checksum in emby table
             query = "UPDATE emby SET checksum = ? WHERE emby_id = ?"
@@ -106,8 +110,12 @@ class WriteKodiMusicDB():
                 # Create the artist
                 cursor.execute("select coalesce(max(idArtist),0) as artistid from artist")
                 artistid = cursor.fetchone()[0] + 1
-                query = "INSERT INTO artist(idArtist, strArtist, strMusicBrainzArtistID, strGenres, strBiography, strImage, strFanart, lastScraped, dateAdded) values(?, ?, ?, ?, ?, ?, ?, ?, ?)"
-                cursor.execute(query, (artistid, name, musicBrainzId, genres, bio, thumb, fanart, lastScraped, dateadded))
+                if kodiVersion == 16:
+                    query = "INSERT INTO artist(idArtist, strArtist, strMusicBrainzArtistID, strGenres, strBiography, strImage, strFanart, lastScraped) values(?, ?, ?, ?, ?, ?, ?, ?)"
+                    cursor.execute(query, (artistid, name, musicBrainzId, genres, bio, thumb, fanart, lastScraped))
+                else:
+                    query = "INSERT INTO artist(idArtist, strArtist, strMusicBrainzArtistID, strGenres, strBiography, strImage, strFanart, lastScraped, dateAdded) values(?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                    cursor.execute(query, (artistid, name, musicBrainzId, genres, bio, thumb, fanart, lastScraped, dateadded))
 
             # Create the reference in emby table
             query = "INSERT INTO emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
@@ -167,10 +175,13 @@ class WriteKodiMusicDB():
         if albumid:
             self.logMsg("UPDATE album to Kodi library, Id: %s - Title: %s" % (embyId, name), 1)
 
-            if kodiVersion == 15 or kodiVersion == 16:
+            if kodiVersion == 15:
                 # Kodi Isengard
                 query = "UPDATE album SET strAlbum = ?, strMusicBrainzAlbumID = ?, strArtists = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?, lastScraped = ?, dateAdded = ?, strReleaseType = ? WHERE idAlbum = ?"
                 cursor.execute(query, (name, musicBrainzId, artists, year, genre, bio, thumb, lastScraped, dateadded, "album", albumid))
+            elif kodiVersion == 16:
+                query = "UPDATE album SET strAlbum = ?, strMusicBrainzAlbumID = ?, strArtists = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?, lastScraped = ?, strReleaseType = ? WHERE idAlbum = ?"
+                cursor.execute(query, (name, musicBrainzId, artists, year, genre, bio, thumb, lastScraped, "album", albumid))
             else:
                 # Kodi Gotham and Helix
                 query = "UPDATE album SET strAlbum = ?, strMusicBrainzAlbumID = ?, strArtists = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?, lastScraped = ?, dateAdded = ? WHERE idAlbum = ?"
@@ -192,10 +203,13 @@ class WriteKodiMusicDB():
                 # Create the album
                 cursor.execute("select coalesce(max(idAlbum),0) as albumid from album")
                 albumid = cursor.fetchone()[0] + 1
-                if kodiVersion == 15 or kodiVersion == 16:
+                if kodiVersion == 15:
                     # Kodi Isengard
                     query = "INSERT INTO album(idAlbum, strAlbum, strMusicBrainzAlbumID, strArtists, iYear, strGenres, strReview, strImage, lastScraped, dateAdded, strReleaseType) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
                     cursor.execute(query, (albumid, name, musicBrainzId, artists, year, genre, bio, thumb, lastScraped, dateadded, "album"))
+                elif kodiVersion == 16:
+                    query = "INSERT INTO album(idAlbum, strAlbum, strMusicBrainzAlbumID, strArtists, iYear, strGenres, strReview, strImage, lastScraped, strReleaseType) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                    cursor.execute(query, (albumid, name, musicBrainzId, artists, year, genre, bio, thumb, lastScraped, "album"))
                 else:
                     # Kodi Gotham and Helix
                     query = "INSERT INTO album(idAlbum, strAlbum, strMusicBrainzAlbumID, strArtists, iYear, strGenres, strReview, strImage, lastScraped, dateAdded) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
@@ -308,10 +322,13 @@ class WriteKodiMusicDB():
             # No album found, create a single's album
             cursor.execute("select coalesce(max(idAlbum),0) as albumid from album")
             albumid = cursor.fetchone()[0] + 1
-            if kodiVersion == 15 or kodiVersion == 16:
+            if kodiVersion == 15:
                 # Kodi Isengard
                 query = "INSERT INTO album(idAlbum, strArtists, strGenres, iYear, dateAdded, strReleaseType) values(?, ?, ?, ?, ?, ?)"
                 cursor.execute(query, (albumid, artists, genre, year, dateadded, "single"))
+            elif kodiVersion == 16:
+                query = "INSERT INTO album(idAlbum, strArtists, strGenres, iYear, strReleaseType) values(?, ?, ?, ?, ?)"
+                cursor.execute(query, (albumid, artists, genre, year, "single"))
             else:
                 # Kodi Gotham and Helix
                 query = "INSERT INTO album(idAlbum, strArtists, strGenres, iYear, dateAdded) values(?, ?, ?, ?, ?)"
