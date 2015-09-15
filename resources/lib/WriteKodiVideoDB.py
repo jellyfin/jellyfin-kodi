@@ -107,6 +107,9 @@ class WriteKodiVideoDB():
         tagline = API().getTagline(MBitem)
         votecount = MBitem.get('VoteCount')
         rating = MBitem.get('CommunityRating')
+        criticrating = MBitem.get('CriticRating')
+        criticratingsummary = MBitem.get('CriticRatingSummary')
+        metascorerating = MBitem.get('Metascore')
         writer = " / ".join(people.get('Writer'))
         year = MBitem.get('ProductionYear')
         imdb = API().getProvider(MBitem, "imdb")
@@ -177,9 +180,9 @@ class WriteKodiVideoDB():
             query = "UPDATE movie SET c00 = ?, c01 = ?, c02 = ?, c03 = ?, c04 = ?, c05 = ?, c06 = ?, c07 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?, c16 = ?, c18 = ?, c19 = ?, c21 = ? WHERE idMovie = ?"
             cursor.execute(query, (title, plot, shortplot, tagline, votecount, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl, country, movieid))
 
-            # Update the checksum in emby table
-            query = "UPDATE emby SET checksum = ? WHERE emby_id = ?"
-            cursor.execute(query, (checksum, embyId))
+            # Update the checksum in emby table and critic ratings
+            query = "UPDATE emby SET checksum = ?, rotten_tomatoes = ?, rotten_tomatoes_summary = ?, metascore = ? WHERE emby_id = ?"
+            cursor.execute(query, (checksum, criticrating, criticratingsummary, metascorerating, embyId))
 
         ##### OR ADD THE MOVIE #####
         else:
@@ -220,8 +223,8 @@ class WriteKodiVideoDB():
             self.AddTagToMedia(movieid, viewTag, "movie", cursor)
 
             # Create the reference in emby table
-            query = "INSERT INTO emby(emby_id, kodi_id, kodi_file_id, media_type, checksum) values(?, ?, ?, ?, ?)"
-            cursor.execute(query, (embyId, movieid, fileid, "movie", checksum))
+            query = "INSERT INTO emby(emby_id, kodi_id, kodi_file_id, media_type, checksum, rotten_tomatoes, rotten_tomatoes_summary, metascore) values(?, ?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(query, (embyId, movieid, fileid, "movie", checksum, criticrating, criticratingsummary, metascorerating))
 
 
         # Update or insert actors
