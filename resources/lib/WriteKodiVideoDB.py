@@ -895,6 +895,7 @@ class WriteKodiVideoDB():
                     
                     cursor.execute(query, (actorid, name))
                 finally:
+                    query = ""
                     # Add person image to art table
                     thumb = API().imageUrl(person['Id'], "Primary", 0, 400, 400)
                     if thumb:
@@ -949,7 +950,8 @@ class WriteKodiVideoDB():
                             elif "episode" in mediatype:
                                 query = "INSERT OR REPLACE INTO directorlinkepisode(idDirector, idEpisode) values(?, ?)"
                             
-                            cursor.execute(query, (actorid, id))
+                            if query:
+                                cursor.execute(query, (actorid, id))
 
                         elif type in ("Writing", "Writer"):
 
@@ -958,7 +960,8 @@ class WriteKodiVideoDB():
                             elif "episode" in mediatype:
                                 query = "INSERT OR REPLACE INTO writerlinkepisode(idWriter, idEpisode) values(?, ?)"
 
-                            cursor. execute(query, (actorid, id))
+                            if query:
+                                cursor. execute(query, (actorid, id))
                         
     def AddGenresToMedia(self, id, genres, mediatype, cursor):
 
