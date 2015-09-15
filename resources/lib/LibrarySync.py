@@ -1060,7 +1060,7 @@ class LibrarySync(threading.Thread):
                     utils.settings("dbCreatedWithVersion",WINDOW.getProperty('minDBVersion'))   
                     self.logMsg("DB version okay according to user", 0)                    
             # END TEMPORARY CODE
-            self.logMsg("DB Version: " + utils.settings("dbCreatedWithVersion"), 0)    
+        
             if (utils.settings("SyncInstallRunDone") == "true" and self.checkDBVersion(utils.settings("dbCreatedWithVersion"), WINDOW.getProperty('minDBVersion'))==False and WINDOW.getProperty('minDBVersionCheck') != "true"):
                 self.logMsg("DB version out of date according to check", 0)
                 return_value = xbmcgui.Dialog().yesno("DB Version", "Detected the DB needs to be recreated for\nthis version of Emby for Kodi.\nProceed?")
@@ -1074,6 +1074,7 @@ class LibrarySync(threading.Thread):
             # Library sync
             if not startupComplete:
                 # Run full sync
+                self.logMsg("DB Version: " + utils.settings("dbCreatedWithVersion"), 0)
                 self.logMsg("Doing_Db_Sync: syncDatabase (Started)", 1)
                 startTime = datetime.now()
                 libSync = self.FullLibrarySync()
