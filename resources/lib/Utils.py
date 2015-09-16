@@ -383,6 +383,7 @@ def reset():
         tableName = row[0]
         if(tableName != "version"):
             cursor.execute("DELETE FROM " + tableName)
+    cursor.execute("DROP TABLE emby")
     connection.commit()
     cursor.close()
     
@@ -397,6 +398,7 @@ def reset():
             tableName = row[0]
             if(tableName != "version"):
                 cursor.execute("DELETE FROM " + tableName)
+        cursor.execute("DROP TABLE emby")
         connection.commit()
         cursor.close()
         
