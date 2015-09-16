@@ -89,7 +89,12 @@ class PlaybackUtils():
         if len(itemsToPlay) > 1:
             # Let's play the playlist
             playlist = self.AddToPlaylist(itemsToPlay)
-            return xbmc.Player().play(playlist)
+
+            if xbmc.getCondVisibility("Window.IsActive(home)"):
+                # Widget workaround
+                return xbmc.Player().play(playlist)
+            else:
+                return playlist
 
         playurl = PlayUtils().getPlayUrl(server, id, result)
 
