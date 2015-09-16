@@ -63,7 +63,7 @@ class Service():
         WINDOW.clearProperty('minDBVersionCheck')
         
         # Set min DB version
-        WINDOW.setProperty('minDBVersion','1.1.33')
+        WINDOW.setProperty('minDBVersion','1.1.40')
 
         embyProperty = WINDOW.getProperty('Emby.nodes.total')
         propNames = [
