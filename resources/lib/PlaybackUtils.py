@@ -442,8 +442,8 @@ class PlaybackUtils():
             
             item_data = jsonData
             self.addPlaylistItem(playlist, item_data, server, userid)
-    
-        return playlist
+
+        xbmc.Player().play(playlist)
     
     def addPlaylistItem(self, playlist, item, server, userid):
 
