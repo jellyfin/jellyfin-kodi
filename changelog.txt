@@ -1,3 +1,6 @@
+version 1.1.43
+- Fix loop that was happening if you had intros and play next automatically enabled.
+
 version 1.1.42
 - Fix for cinema mode playback
 - New skinhelper properties
