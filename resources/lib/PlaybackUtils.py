@@ -88,8 +88,7 @@ class PlaybackUtils():
 
         if len(itemsToPlay) > 1:
             # Let's play the playlist
-            playlist = self.AddToPlaylist(itemsToPlay)
-            return xbmc.Player().play(playlist)
+            return self.AddToPlaylist(itemsToPlay)
 
         playurl = PlayUtils().getPlayUrl(server, id, result)
 
@@ -444,7 +443,7 @@ class PlaybackUtils():
             item_data = jsonData
             self.addPlaylistItem(playlist, item_data, server, userid)
 
-        return playlist
+        xbmc.Player().play(playlist)
     
     def addPlaylistItem(self, playlist, item, server, userid):
 
