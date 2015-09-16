@@ -88,7 +88,19 @@ class PlaybackUtils():
 
         if len(itemsToPlay) > 1:
             # Let's play the playlist
-            return self.AddToPlaylist(itemsToPlay)
+            playlist = self.AddToPlaylist(itemsToPlay)
+            if xbmc.getCondVisibility("Window.IsActive(home)"):
+                # Widget workaround
+                return xbmc.Player().play(playlist)
+            else:
+                # Can't pass a playlist to setResolvedUrl, so return False
+                # Wait for Kodi to process setResolved failure, then launch playlist
+                xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, xbmcgui.ListItem())
+                xbmc.sleep(10)
+                # Since we clear the original Kodi playlist, this is to prevent
+                # info dialog - can't play next item from showing up.
+                xbmc.executebuiltin('Dialog.Close(all,true)')
+                return xbmc.Player().play(playlist)
 
         playurl = PlayUtils().getPlayUrl(server, id, result)
 
@@ -412,7 +424,7 @@ class PlaybackUtils():
         server = WINDOW.getProperty('server%s' % username)
         
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
-        playlist.clear()        
+        playlist.clear()
         
         for item in items:
         
@@ -432,7 +444,8 @@ class PlaybackUtils():
         userid = WINDOW.getProperty('userId%s' % username)
         server = WINDOW.getProperty('server%s' % username)
         
-        playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)     
+        playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
+        playlist.clear()
         
         for itemID in itemIds:
         
@@ -443,7 +456,7 @@ class PlaybackUtils():
             item_data = jsonData
             self.addPlaylistItem(playlist, item_data, server, userid)
 
-        xbmc.Player().play(playlist)
+        return playlist
     
     def addPlaylistItem(self, playlist, item, server, userid):
 
