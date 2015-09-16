@@ -1,3 +1,7 @@
+version 1.1.42
+- Fix for cinema mode playback
+- New skinhelper properties
+
 version 1.1.35
 - Added option to direct stream music library - useful for out of network playback.
 - Fix error in reporting to the server, when playing music.
