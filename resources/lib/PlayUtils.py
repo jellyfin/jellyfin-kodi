@@ -79,6 +79,10 @@ class PlayUtils():
             self.logMsg("Can't direct play: Server does not allow or support it.", 1)
             return False
 
+        if result['Path'].endswith('.strm'):
+            # Allow strm loading when direct playing
+            return True
+
         location = result[u'LocationType']
         # File needs to be "FileSystem"
         if u'FileSystem' in location:
@@ -159,6 +163,11 @@ class PlayUtils():
         return True
   
     def directStream(self, result, server, id, type = "Video"):
+
+        if result['Path'].endswith('.strm'):
+            # Allow strm loading when direct streaming
+            playurl = self.directPlay(result)
+            return playurl
         
         try:
             if "ThemeVideo" in type:
@@ -192,6 +201,11 @@ class PlayUtils():
         return True
 
     def transcoding(self, result, server, id):
+
+        if result['Path'].endswith('.strm'):
+            # Allow strm loading when transcoding
+            playurl = self.directPlay(result)
+            return playurl
         
         try:
             # Play transcoding
