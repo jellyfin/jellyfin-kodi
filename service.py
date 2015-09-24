@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+#################################################################################################
+
 import os
 import sys
 import time
@@ -10,10 +12,14 @@ import xbmc
 import xbmcgui
 import xbmcvfs
 
+#################################################################################################
+
 _addon = xbmcaddon.Addon(id='plugin.video.emby')
 addon_path = _addon.getAddonInfo('path').decode('utf-8')
 base_resource_path = xbmc.translatePath(os.path.join(addon_path, 'resources', 'lib')).decode('utf-8')
 sys.path.append(base_resource_path)
+
+#################################################################################################
 
 import KodiMonitor
 import Utils as utils
@@ -24,6 +30,8 @@ from Player import Player
 from WebSocketClient import WebSocketThread
 from LibrarySync import LibrarySync
 from LibraryMonitor import LibraryMonitor
+
+#################################################################################################
 
 class Service():
 
@@ -44,28 +52,31 @@ class Service():
     def __init__(self, *args):
 
         addonName = self.addonName
-        WINDOW = self.WINDOW
-        WINDOW.setProperty('getLogLevel', str(self.logLevel))
+        clientInfo = self.clientInfo
+        logLevel = self.logLevel
+
+        utils.window('getLogLevel', value=str(logLevel))
+        utils.window('kodiProfile_emby', value=xbmc.translatePath("special://profile"))
 
         # Initial logging
         self.logMsg("Starting Monitor", 0)
         self.logMsg("======== START %s ========" % addonName, 0)
-        self.logMsg("Platform: %s" % (self.clientInfo.getPlatform()), 0)
+        self.logMsg("Platform: %s" % (clientInfo.getPlatform()), 0)
         self.logMsg("KODI Version: %s" % xbmc.getInfoLabel('System.BuildVersion'), 0)
-        self.logMsg("%s Version: %s" % (addonName, self.clientInfo.getVersion()), 0)
-        self.logMsg("Log Level: %s" % self.logLevel, 1)
+        self.logMsg("%s Version: %s" % (addonName, clientInfo.getVersion()), 0)
+        self.logMsg("Log Level: %s" % logLevel, 0)
 
         # Reset window props for profile switch
-        WINDOW.clearProperty('Server_online')
-        WINDOW.clearProperty('Server_status')
-        WINDOW.clearProperty('startup')
-        WINDOW.clearProperty('OnWakeSync')
-        WINDOW.clearProperty('minDBVersionCheck')
+        utils.window('Server_online', clear=True)
+        utils.window('Server_status', clear=True)
+        utils.window('startup', clear=True)
+        utils.window('OnWakeSync', clear=True)
+        utils.window('minDBVersionCheck', clear=True)
         
         # Set min DB version
-        WINDOW.setProperty('minDBVersion','1.1.40')
+        utils.window('minDBVersion', value="1.1.40")
 
-        embyProperty = WINDOW.getProperty('Emby.nodes.total')
+        embyProperty = utils.window('Emby.nodes.total')
         propNames = [
         
             "index","path","title","content",
@@ -84,7 +95,7 @@ class Service():
             totalNodes = int(embyProperty)
             for i in range(totalNodes):
                 for prop in propNames:
-                    WINDOW.clearProperty('Emby.nodes.%s.%s' % (str(i), prop))
+                    utils.window('Emby.nodes.%s.%s' % (str(i), prop), clear=True)
 
     def logMsg(self, msg, lvl=1):
 
@@ -92,9 +103,9 @@ class Service():
         utils.logMsg("%s %s" % (self.addonName, className), msg, int(lvl))
        
     def ServiceEntryPoint(self):
-        
-        WINDOW = self.WINDOW
-        
+
+        kodiProfile = xbmc.translatePath("special://profile")
+
         # Server auto-detect
         ConnectionManager().checkServer()
 
@@ -116,8 +127,13 @@ class Service():
             # 1. Server is online
             # 2. User is set
             # 3. User has access to the server
+
+            if utils.window("kodiProfile_emby") != kodiProfile:
+                # Profile change happened, terminate this thread
+                self.logMsg("Kodi profile was: %s and changed to: %s. Terminating old Emby thread." % (kodiProfile, utils.window("kodiProfile_emby")), 1)
+                break
             
-            if WINDOW.getProperty('Server_online') == "true":
+            if utils.window('Server_online') == "true":
                 
                 # Emby server is online
                 # Verify if user is set and has access to the server
@@ -133,7 +149,7 @@ class Service():
 
                             # Update positionticks
                             if player.played_information.get(currentFile) is not None:
-                                player.played_information[currentFile]["currentPosition"] = playTime
+                                player.played_information[currentFile]['currentPosition'] = playTime
                             
                             td = datetime.today() - lastProgressUpdate
                             secDiff = td.seconds
@@ -143,12 +159,12 @@ class Service():
                                 player.reportPlayback()
                                 lastProgressUpdate = datetime.today()
                             
-                            elif WINDOW.getProperty('commandUpdate') == "true":
+                            elif utils.window('commandUpdate') == "true":
                                 # Received a remote control command that
                                 # requires updating immediately
-                                WINDOW.clearProperty('commandUpdate')
+                                utils.window('commandUpdate', clear=True)
                                 player.reportPlayback()
-                                lastProgressUpdate = datetime.today()
+                                lastProgressUpdate = da4tetime.today()
                             
                         except Exception as e:
                             self.logMsg("Exception in Playback Monitor Service: %s" % e, 1)
@@ -191,7 +207,7 @@ class Service():
                         # Verify access with an API call
                         user.hasAccess()
 
-                        if WINDOW.getProperty('Server_online') != "true":
+                        if utils.window('Server_online') != "true":
                             # Server went offline
                             break
 
@@ -213,7 +229,7 @@ class Service():
                         # Alert the user and suppress future warning
                         if self.server_online:
                             self.logMsg("Server is offline.", 1)
-                            WINDOW.setProperty('Server_online', "false")
+                            utils.window('Server_online', value="false")
                             xbmcgui.Dialog().notification("Error connecting", "%s Server is unreachable." % self.addonName, icon="special://home/addons/plugin.video.emby/icon.png", sound=False)
                         self.server_online = False
                     
@@ -230,7 +246,7 @@ class Service():
                         
                         self.server_online = True
                         self.logMsg("Server is online and ready.", 1)
-                        WINDOW.setProperty('Server_online', "true")
+                        utils.window('Server_online', value="true")
                         
                         # Start the User client
                         if self.newUserClient is None:
@@ -246,7 +262,9 @@ class Service():
                 # Abort was requested while waiting. We should exit
                 break
 
-        # If music is enable and direct stream for music is enabled
+        ##### Emby thread is terminating. #####
+
+        # If music is enabled and direct stream for music is enabled
         # We use Kodi pathsubstitution to allow for music to play outside network
         # The setting needs to be set before Kodi starts.
         if utils.settings('enableMusicSync') == "true" and utils.settings('directstreammusic') == "true":
@@ -272,5 +290,5 @@ class Service():
 
         self.logMsg("======== STOP %s ========" % self.addonName, 0)
 
-#start the service
+# Start the service
 Service().ServiceEntryPoint()

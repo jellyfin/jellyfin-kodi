@@ -1034,10 +1034,11 @@ class LibrarySync(threading.Thread):
             return False
             
     def run(self):
-        clientInfo = ClientInformation()
-        self.logMsg("--- Starting Library Sync Thread ---", 0)
-        WINDOW = xbmcgui.Window(10000)
+
         startupComplete = False
+        kodiProfile = xbmc.translatePath("special://profile")
+
+        self.logMsg("--- Starting Library Sync Thread ---", 0)
 
         while not self.KodiMonitor.abortRequested():
 
@@ -1055,22 +1056,22 @@ class LibrarySync(threading.Thread):
             # Only get in here for a while, can be removed later
             if utils.settings("dbCreatedWithVersion")=="" and utils.settings("SyncInstallRunDone") == "true":
                 self.logMsg("Unknown DB version", 0)
-                return_value = xbmcgui.Dialog().yesno("DB Version", "Can't detect version of Emby for Kodi the DB was created with.\nWas it at least version " + WINDOW.getProperty('minDBVersion') + "?")
+                return_value = xbmcgui.Dialog().yesno("DB Version", "Can't detect version of Emby for Kodi the DB was created with.\nWas it at least version " + utils.window('minDBVersion') + "?")
                 if return_value == 0:
                     utils.settings("dbCreatedWithVersion","0.0.0")
                     self.logMsg("DB version out of date according to user", 0)
                 else:
-                    utils.settings("dbCreatedWithVersion",WINDOW.getProperty('minDBVersion'))   
+                    utils.settings("dbCreatedWithVersion", utils.window('minDBVersion'))   
                     self.logMsg("DB version okay according to user", 0)                    
             # END TEMPORARY CODE
         
-            if (utils.settings("SyncInstallRunDone") == "true" and self.checkDBVersion(utils.settings("dbCreatedWithVersion"), WINDOW.getProperty('minDBVersion'))==False and WINDOW.getProperty('minDBVersionCheck') != "true"):
+            if (utils.settings("SyncInstallRunDone") == "true" and self.checkDBVersion(utils.settings("dbCreatedWithVersion"), utils.window('minDBVersion'))==False and utils.window('minDBVersionCheck') != "true"):
                 self.logMsg("DB version out of date according to check", 0)
                 return_value = xbmcgui.Dialog().yesno("DB Version", "Detected the DB needs to be recreated for\nthis version of Emby for Kodi.\nProceed?")
                 if return_value == 0:
                     self.logMsg("DB version out of date !!! USER IGNORED !!!", 0)
                     xbmcgui.Dialog().ok("Emby for Kodi","Emby for Kodi may not work\ncorrectly until the database is reset.\n")
-                    WINDOW.setProperty('minDBVersionCheck', "true")
+                    utils.window('minDBVersionCheck', value="true")
                 else:
                     utils.reset()
             
@@ -1088,9 +1089,9 @@ class LibrarySync(threading.Thread):
                     startupComplete = True
 
             # Set via Kodi Monitor event
-            if WINDOW.getProperty("OnWakeSync") == "true" and WINDOW.getProperty('Server_online') == "true":
-                WINDOW.clearProperty("OnWakeSync")
-                if WINDOW.getProperty("SyncDatabaseRunning") != "true":
+            if utils.window('OnWakeSync') == "true" and utils.window('Server_online') == "true":
+                utils.window("OnWakeSync", clear=True)
+                if utils.window("SyncDatabaseRunning") != "true":
                     self.logMsg("Doing_Db_Sync Post Resume: syncDatabase (Started)", 0)
                     libSync = self.FullLibrarySync()
                     self.logMsg("Doing_Db_Sync Post Resume: syncDatabase (Finished) " + str(libSync), 0)
@@ -1117,6 +1118,12 @@ class LibrarySync(threading.Thread):
                 listItems = self.removeItems
                 self.removeItems = []
                 self.removefromDB(listItems)
+
+            
+            if utils.window("kodiProfile_emby") != kodiProfile:
+                # Profile change happened, terminate this thread
+                self.logMsg("Kodi profile was: %s and changed to: %s. Terminating Library thread." % (kodiProfile, utils.window("kodiProfile_emby")), 1)
+                break
 
             if self.KodiMonitor.waitForAbort(1):
                 # Abort was requested while waiting. We should exit
