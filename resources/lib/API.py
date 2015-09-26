@@ -125,16 +125,17 @@ class API():
             # Sort through the Video, Audio, Subtitle tracks
             for mediaStream in MediaStreams:
 
-                type = mediaStream.get("Type", "")
+                type = mediaStream.get('Type', "")
+                profile = mediaStream.get('Profile', "").lower()
+                codec = mediaStream.get('Codec', "").lower()
 
                 if "Video" in type:
                     videotrack = {}
-                    videotrack['videocodec'] = mediaStream.get('Codec', "").lower()
+                    videotrack['videocodec'] = codec
                     container = item['MediaSources'][0].get('Container', "").lower()
                     if "msmpeg4" in videotrack['videocodec']:
                         videotrack['videocodec'] = "divx"
                     elif "mpeg4" in videotrack['videocodec']:
-                        profile = mediaStream.get('Profile', "").lower()
                         if "simple profile" in profile or profile == "":
                             videotrack['videocodec'] = "xvid"
                     elif "h264" in videotrack['videocodec']:
@@ -163,9 +164,9 @@ class API():
 
                 elif "Audio" in type:
                     audiotrack = {}
-                    audiotrack['audiocodec'] = mediaStream.get('Codec', "").lower()
-                    if "dts-hd ma" in audiotrack['audiocodec']:
-                        audiotrack['audiocodec'] = "dts"
+                    audiotrack['audiocodec'] = codec
+                    if "dca" in audiotrack['audiocodec'] and "dts-hd ma" in profile:
+                        audiotrack['audiocodec'] = "dtshd_ma"
                     audiotrack['channels'] = mediaStream.get('Channels')
                     audiotrack['audiolanguage'] = mediaStream.get('Language')
                     audiotracks.append(audiotrack)
