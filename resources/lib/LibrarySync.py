@@ -137,12 +137,9 @@ class LibrarySync(threading.Thread):
             cursor = connection.cursor()
             
             #Add the special emby table
-            cursor.execute("CREATE TABLE IF NOT EXISTS emby(emby_id TEXT, kodi_id INTEGER, media_type TEXT, checksum TEXT, parent_id INTEGER, kodi_file_id INTEGER, rotten_tomatoes TEXT, rotten_tomatoes_summary TEXT, metascore TEXT)")
+            cursor.execute("CREATE TABLE IF NOT EXISTS emby(emby_id TEXT, kodi_id INTEGER, media_type TEXT, checksum TEXT, parent_id INTEGER, kodi_file_id INTEGER)")
             try:
                 cursor.execute("ALTER TABLE emby ADD COLUMN kodi_file_id INTEGER")
-                cursor.execute("ALTER TABLE emby ADD COLUMN rotten_tomatoes TEXT")
-                cursor.execute("ALTER TABLE emby ADD COLUMN rotten_tomatoes_summary TEXT")
-                cursor.execute("ALTER TABLE emby ADD COLUMN metascore TEXT")
             except: pass
             connection.commit()
             
