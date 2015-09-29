@@ -29,7 +29,6 @@ from UserClient import UserClient
 from Player import Player
 from WebSocketClient import WebSocketThread
 from LibrarySync import LibrarySync
-from LibraryMonitor import LibraryMonitor
 
 #################################################################################################
 
@@ -114,10 +113,6 @@ class Service():
         player = Player()
         ws = WebSocketThread()
         library = LibrarySync()
-        librarymonitor = LibraryMonitor()
-        xbmc.log("START LIBRARY MONITOR")
-        librarymonitor.start()
-
         # Sync and progress report
         lastProgressUpdate = datetime.today()
 
@@ -284,9 +279,6 @@ class Service():
 
         if (self.newUserClient is not None):
             user.stopClient()
-
-        xbmc.log("STOP LIBRARY MONITOR")
-        librarymonitor.stop()
 
         self.logMsg("======== STOP %s ========" % self.addonName, 0)
 
