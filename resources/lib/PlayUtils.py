@@ -90,19 +90,21 @@ class PlayUtils():
             if self.fileExists(result):
                 return True
             else:
-                self.logMsg("Unable to direct play. Verify the following path is accessible by the device: %s. You might also need to add SMB credentials in the addon settings." % result[u'MediaSources'][0][u'Path'])
+                self.logMsg("Unable to direct play. Verify the following path is accessible by the device: %s. You might also need to add SMB credentials in the add-on settings." % result['MediaSources'][0]['Path'], 1)
                 if dialog:
-                    # Let user know that direct play failed
-                    dialog = xbmcgui.Dialog()
-                    resp = dialog.select('Warning: Unable to direct play.', ['Play from HTTP', 'Play from HTTP and remember next time.'])
-                    if resp == 1:
-                        # Remember next time
-                        utils.settings('playFromStream', "true")
-                    elif resp < 0:
-                        # User decided not to proceed.
-                        self.logMsg("User cancelled HTTP selection dialog.", 1)
-                        self.WINDOW.setProperty("playurlFalse", "true")
-                        
+                    
+                    failCount = int(utils.settings('directSteamFailedCount'))
+                    self.logMsg("Direct Play failCount: %s." % failCount, 1)
+                    
+                    if failCount < 2:
+                        # Let user know that direct play failed
+                        utils.settings('directSteamFailedCount', value=str(failCount + 1))
+                        xbmcgui.Dialog().notification("Emby server", "Unable to direct play. Verify your log for more information.", icon="special://home/addons/plugin.video.emby/icon.png", sound=False)
+                    elif utils.settings('playFromStream') != "true":
+                        # Permanently set direct stream as true
+                        utils.settings('playFromStream', value="true")
+                        xbmcgui.Dialog().notification("Emby server", "Enabled play from HTTP in add-on settings.", icon="special://home/addons/plugin.video.emby/icon.png", sound=False)
+
                 return False
 
 
