@@ -78,15 +78,28 @@ class API():
 
         try:
             studio = item['SeriesStudio']
-            studios.append(studio)
+            studios.append(self.getStudio(studio))
         except:
             try:
                 studioArray = item['Studios']
                 for studio in studioArray:
-                    studios.append(studio['Name'])
+                    studios.append(self.getStudio(studio['Name']))
             except: pass
 
         return studios
+
+    def getStudio(self, studioName):
+        # Convert studio for Kodi to properly detect them
+        studios = {
+
+            'abc (us)': "ABC",
+            'fox (us)': "FOX",
+            'mtv (us)': "MTV",
+            'showcase (ca)': "Showcase",
+            'wgn america': "WGN"
+        }
+
+        return studios.get(studioName.lower(), studioName)
 
     def getGenre(self,item):
         genre = ""
