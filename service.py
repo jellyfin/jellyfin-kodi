@@ -140,7 +140,7 @@ class Service():
                             # Update and report progress
                             playTime = xbmc.Player().getTime()
                             totalTime = xbmc.Player().getTotalTime()
-                            currentFile = xbmc.Player().getPlayingFile()
+                            currentFile = player.currentFile
 
                             # Update positionticks
                             if player.played_information.get(currentFile) is not None:

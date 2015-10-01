@@ -1,30 +1,20 @@
 # -*- coding: utf-8 -*-
 
 #################################################################################################
-# utils class
-#################################################################################################
 
 import xbmc
 import xbmcgui
-import xbmcaddon
 import xbmcvfs
 
 from ClientInformation import ClientInformation
 import Utils as utils
 
-###########################################################################
+#################################################################################################
 
 class PlayUtils():
 
-    _shared_state = {}
-
     clientInfo = ClientInformation()
-    
     addonName = clientInfo.getAddonName()
-    WINDOW = xbmcgui.Window(10000)
-
-    def __init__(self):
-        self.__dict__ = self._shared_state
 
     def logMsg(self, msg, lvl=1):
         
@@ -33,59 +23,51 @@ class PlayUtils():
 
     def getPlayUrl(self, server, id, result):
 
-        WINDOW = self.WINDOW
-        username = WINDOW.getProperty('currUser')
-        server = WINDOW.getProperty('server%s' % username)
-
         if self.isDirectPlay(result,True):
             # Try direct play
             playurl = self.directPlay(result)
             if playurl:
                 self.logMsg("File is direct playing.", 1)
-                WINDOW.setProperty("%splaymethod" % playurl.encode('utf-8'), "DirectPlay")
+                utils.window("%splaymethod" % playurl.encode('utf-8'), value="DirectPlay")
 
         elif self.isDirectStream(result):
             # Try direct stream
             playurl = self.directStream(result, server, id)
             if playurl:
                 self.logMsg("File is direct streaming.", 1)
-                WINDOW.setProperty("%splaymethod" % playurl, "DirectStream")
+                utils.window("%splaymethod" % playurl, value="DirectStream")
 
         elif self.isTranscoding(result):
             # Try transcoding
             playurl = self.transcoding(result, server, id)
             if playurl:
                 self.logMsg("File is transcoding.", 1)
-                WINDOW.setProperty("%splaymethod" % playurl, "Transcode")
-        else:
-            # Error
-            return False
+                utils.window("%splaymethod" % playurl, value="Transcode")
+        
+        else: # Error
+            utils.window("playurlFalse", value="true")
+            return
 
         return playurl.encode('utf-8')
 
-    def isDirectPlay(self, result, dialog=False):
+
+    def isDirectPlay(self, result, dialog = False):
         # Requirements for Direct play:
         # FileSystem, Accessible path
-        
-        playhttp = utils.settings('playFromStream')
-        # User forcing to play via HTTP instead of SMB
-        if playhttp == "true":
+        if utils.settings('playFromStream') == "true":
+            # User forcing to play via HTTP instead of SMB
             self.logMsg("Can't direct play: Play from HTTP is enabled.", 1)
             return False
 
-        canDirectPlay = result[u'MediaSources'][0][u'SupportsDirectPlay']
+        canDirectPlay = result['MediaSources'][0]['SupportsDirectPlay']
         # Make sure it's supported by server
         if not canDirectPlay:
             self.logMsg("Can't direct play: Server does not allow or support it.", 1)
             return False
 
-        if result['Path'].endswith('.strm'):
-            # Allow strm loading when direct playing
-            return True
-
-        location = result[u'LocationType']
+        location = result['LocationType']
         # File needs to be "FileSystem"
-        if u'FileSystem' in location:
+        if 'FileSystem' in location:
             # Verify if path is accessible
             if self.fileExists(result):
                 return True
@@ -107,53 +89,49 @@ class PlayUtils():
 
                 return False
 
-
     def directPlay(self, result):
 
         try:
-            try:
-                playurl = result[u'MediaSources'][0][u'Path']
-            except:
-                playurl = result[u'Path']
-        except: 
-            self.logMsg("Direct play failed. Trying Direct stream.", 1)
-            return False
-        else:
-            if u'VideoType' in result:
-                # Specific format modification
-                if u'Dvd' in result[u'VideoType']:
-                    playurl = "%s/VIDEO_TS/VIDEO_TS.IFO" % playurl
-                elif u'BluRay' in result[u'VideoType']:
-                    playurl = "%s/BDMV/index.bdmv" % playurl
+            playurl = result['MediaSources'][0]['Path']
+        except KeyError:
+            playurl = result['Path']
 
-            # Network - SMB protocol
-            if "\\\\" in playurl:
-                smbuser = utils.settings('smbusername')
-                smbpass = utils.settings('smbpassword')
-                # Network share
-                if smbuser:
-                    playurl = playurl.replace("\\\\", "smb://%s:%s@" % (smbuser, smbpass))
-                else:
-                    playurl = playurl.replace("\\\\", "smb://")
-                playurl = playurl.replace("\\", "/")
-                
-            if "apple.com" in playurl:
-                USER_AGENT = "QuickTime/7.7.4"
-                playurl += "?|User-Agent=%s" % USER_AGENT
+        if 'VideoType' in result:
+            # Specific format modification
+            if 'Dvd' in result['VideoType']:
+                playurl = "%s/VIDEO_TS/VIDEO_TS.IFO" % playurl
+            elif 'BluRay' in result['VideoType']:
+                playurl = "%s/BDMV/index.bdmv" % playurl
 
-            return playurl
+        # Network - SMB protocol
+        if "\\\\" in playurl:
+            smbuser = utils.settings('smbusername')
+            smbpass = utils.settings('smbpassword')
+            # Network share
+            if smbuser:
+                playurl = playurl.replace("\\\\", "smb://%s:%s@" % (smbuser, smbpass))
+            else:
+                playurl = playurl.replace("\\\\", "smb://")
+            playurl = playurl.replace("\\", "/")
+            
+        if "apple.com" in playurl:
+            USER_AGENT = "QuickTime/7.7.4"
+            playurl += "?|User-Agent=%s" % USER_AGENT
+
+        return playurl
+
 
     def isDirectStream(self, result):
         # Requirements for Direct stream:
         # FileSystem or Remote, BitRate, supported encoding
-        canDirectStream = result[u'MediaSources'][0][u'SupportsDirectStream']
+        canDirectStream = result['MediaSources'][0]['SupportsDirectStream']
         # Make sure it's supported by server
         if not canDirectStream:
             return False
 
-        location = result[u'LocationType']
+        location = result['LocationType']
         # File can be FileSystem or Remote, not Virtual
-        if u'Virtual' in location:
+        if 'Virtual' in location:
             self.logMsg("File location is virtual. Can't proceed.", 1)
             return False
 
@@ -171,33 +149,29 @@ class PlayUtils():
             playurl = self.directPlay(result)
             return playurl
         
-        try:
-            if "ThemeVideo" in type:
-                playurl ="%s/mediabrowser/Videos/%s/stream?static=true" % (server, id)
+        if "ThemeVideo" in type:
+            playurl = "%s/mediabrowser/Videos/%s/stream?static=true" % (server, id)
 
-            elif "Video" in type:
-                playurl = "%s/mediabrowser/Videos/%s/stream?static=true" % (server, id)
-            
-            elif "Audio" in type:
-                playurl = "%s/mediabrowser/Audio/%s/stream.mp3" % (server, id)
-            
-            return playurl
-                
-        except:
-            self.logMsg("Direct stream failed. Trying transcoding.", 1)
-            return False
+        elif "Video" in type:
+            playurl = "%s/mediabrowser/Videos/%s/stream?static=true" % (server, id)
+        
+        elif "Audio" in type:
+            playurl = "%s/mediabrowser/Audio/%s/stream.mp3" % (server, id)
+        
+        return playurl
+
 
     def isTranscoding(self, result):
         # Last resort, no requirements
         # BitRate
-        canTranscode = result[u'MediaSources'][0][u'SupportsTranscoding']
+        canTranscode = result['MediaSources'][0]['SupportsTranscoding']
         # Make sure it's supported by server
         if not canTranscode:
             return False
 
-        location = result[u'LocationType']
+        location = result['LocationType']
         # File can be FileSystem or Remote, not Virtual
-        if u'Virtual' in location:
+        if 'Virtual' in location:
             return False
 
         return True
@@ -208,31 +182,28 @@ class PlayUtils():
             # Allow strm loading when transcoding
             playurl = self.directPlay(result)
             return playurl
-        
-        try:
-            # Play transcoding
-            deviceId = self.clientInfo.getMachineId()
-            playurl = "%s/mediabrowser/Videos/%s/master.m3u8?mediaSourceId=%s" % (server, id, id)
-            playurl = "%s&VideoCodec=h264&AudioCodec=ac3&deviceId=%s&VideoBitrate=%s" % (playurl, deviceId, self.getVideoBitRate()*1000)
-            self.logMsg("Playurl: %s" % playurl)
-            
-            return playurl
 
-        except:
-            self.logMsg("Transcoding failed.")
-            return False
+        # Play transcoding
+        deviceId = self.clientInfo.getMachineId()
+        playurl = "%s/mediabrowser/Videos/%s/master.m3u8?mediaSourceId=%s" % (server, id, id)
+        playurl = "%s&VideoCodec=h264&AudioCodec=ac3&MaxAudioChannels=6&deviceId=%s&VideoBitrate=%s" % (playurl, deviceId, self.getVideoBitRate()*1000)
         
-    # Works out if the network quality can play directly or if transcoding is needed
+        playurl = self.audioSubsPref(playurl, result.get('MediaSources'))
+        self.logMsg("Playurl: %s" % playurl, 1)
+        
+        return playurl
+        
+
     def isNetworkQualitySufficient(self, result):
-        
+        # Works out if the network quality can play directly or if transcoding is needed
         settingsVideoBitRate = self.getVideoBitRate()
         settingsVideoBitRate = settingsVideoBitRate * 1000
 
         try:
-            mediaSources = result[u'MediaSources']
-            sourceBitRate = int(mediaSources[0][u'Bitrate'])
-        except:
-            self.logMsg("Bitrate value is missing.")
+            mediaSources = result['MediaSources']
+            sourceBitRate = int(mediaSources[0]['Bitrate'])
+        except KeyError:
+            self.logMsg("Bitrate value is missing.", 1)
         else:
             self.logMsg("The video quality selected is: %s, the video bitrate required to direct stream is: %s." % (settingsVideoBitRate, sourceBitRate), 1)
             if settingsVideoBitRate < sourceBitRate:
@@ -243,58 +214,40 @@ class PlayUtils():
     def getVideoBitRate(self):
         # get the addon video quality
         videoQuality = utils.settings('videoBitRate')
+        bitrate = {
 
-        if (videoQuality == "0"):
-            return 664
-        elif (videoQuality == "1"):
-           return 996
-        elif (videoQuality == "2"):
-           return 1320
-        elif (videoQuality == "3"):
-           return 2000
-        elif (videoQuality == "4"):
-           return 3200
-        elif (videoQuality == "5"):
-           return 4700
-        elif (videoQuality == "6"):
-           return 6200
-        elif (videoQuality == "7"):
-           return 7700
-        elif (videoQuality == "8"):
-           return 9200
-        elif (videoQuality == "9"):
-           return 10700
-        elif (videoQuality == "10"):
-           return 12200
-        elif (videoQuality == "11"):
-           return 13700
-        elif (videoQuality == "12"):
-           return 15200
-        elif (videoQuality == "13"):
-           return 16700
-        elif (videoQuality == "14"):
-           return 18200
-        elif (videoQuality == "15"):
-           return 20000
-        elif (videoQuality == "16"):
-           return 40000
-        elif (videoQuality == "17"):
-           return 100000
-        elif (videoQuality == "18"):
-           return 1000000
-        else:
-            return 2147483 # max bit rate supported by server (max signed 32bit integer)
+            '0': 664,
+            '1': 996,
+            '2': 1320,
+            '3': 2000,
+            '4': 3200,
+            '5': 4700,
+            '6': 6200,
+            '7': 7700,
+            '8': 9200,
+            '9': 10700,
+            '10': 12200,
+            '11': 13700,
+            '12': 15200,
+            '13': 16700,
+            '14': 18200,
+            '15': 20000,
+            '16': 40000,
+            '17': 100000,
+            '18': 1000000
+        }
+
+        # max bit rate supported by server (max signed 32bit integer)
+        return bitrate.get(videoQuality, 2147483)
             
     def fileExists(self, result):
         
-        if u'Path' not in result:
+        if 'Path' not in result:
             # File has no path in server
             return False
 
         # Convert Emby path to a path we can verify
         path = self.directPlay(result)
-        if not path:
-            return False
 
         try:
             pathexists = xbmcvfs.exists(path)
@@ -313,3 +266,86 @@ class PlayUtils():
         else:
             self.logMsg("Path is detected as follow: %s. Try direct streaming." % path, 2)
             return False
+
+    def audioSubsPref(self, url, mediaSources):
+        # For transcoding only
+        # Present the list of audio to select from
+        audioStreamsList = {}
+        audioStreams = []
+        audioStreamsChannelsList = {}
+        subtitleStreamsList = {}
+        subtitleStreams = ['No subtitles']
+        selectAudioIndex = ""
+        selectSubsIndex = ""
+        playurlprefs = "%s" % url
+
+        mediaStream = mediaSources[0].get('MediaStreams')
+        for stream in mediaStream:
+            # Since Emby returns all possible tracks together, have to sort them.
+            index = stream['Index']
+            type = stream['Type']
+
+            if 'Audio' in type:
+                codec = stream['Codec']
+                channelLayout = stream['ChannelLayout']
+               
+                try:
+                    track = "%s - %s - %s %s" % (index, stream['Language'], codec, channelLayout)
+                except:
+                    track = "%s - %s %s" % (index, codec, channelLayout)
+                
+                audioStreamsChannelsList[index] = stream['Channels']
+                audioStreamsList[track] = index
+                audioStreams.append(track)
+
+            elif 'Subtitle' in type:
+                try:
+                    track = "%s - %s" % (index, stream['Language'])
+                except:
+                    track = "%s - %s" % (index, stream['Codec'])
+
+                default = stream['IsDefault']
+                forced = stream['IsForced']
+                if default:
+                    track = "%s - Default" % track
+                if forced:
+                    track = "%s - Forced" % track
+
+                subtitleStreamsList[track] = index
+                subtitleStreams.append(track)
+
+
+        if len(audioStreams) > 1:
+            resp = xbmcgui.Dialog().select("Choose the audio stream", audioStreams)
+            if resp > -1:
+                # User selected audio
+                selected = audioStreams[resp]
+                selectAudioIndex = audioStreamsList[selected]
+                playurlprefs += "&AudioStreamIndex=%s" % selectAudioIndex
+            else: # User backed out of selection
+                playurlprefs += "&AudioStreamIndex=%s" % mediaSources[0]['DefaultAudioStreamIndex']
+        else: # There's only one audiotrack.
+            selectAudioIndex = audioStreamsList[audioStreams[0]]
+            playurlprefs += "&AudioStreamIndex=%s" % selectAudioIndex
+
+        if len(subtitleStreams) > 1:
+            resp = xbmcgui.Dialog().select("Choose the subtitle stream", subtitleStreams)
+            if resp == 0:
+                # User selected no subtitles
+                pass
+            elif resp > -1:
+                # User selected subtitles
+                selected = subtitleStreams[resp]
+                selectSubsIndex = subtitleStreamsList[selected]
+                playurlprefs += "&SubtitleStreamIndex=%s" % selectSubsIndex
+            else: # User backed out of selection
+                playurlprefs += "&SubtitleStreamIndex=%s" % mediaSources[0].get('DefaultSubtitleStreamIndex', "")
+
+        # Get number of channels for selected audio track
+        audioChannels = audioStreamsChannelsList.get(selectAudioIndex, 0)
+        if audioChannels > 2:
+            playurlprefs += "&AudioBitrate=384000"
+        else:
+            playurlprefs += "&AudioBitrate=192000"
+
+        return playurlprefs

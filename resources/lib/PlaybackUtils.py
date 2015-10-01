@@ -1,190 +1,151 @@
+# -*- coding: utf-8 -*-
 
-import xbmc
-import xbmcplugin
-import xbmcgui
-import xbmcaddon
-import urllib
+#################################################################################################
+
 import datetime
-import time
 import json as json
-import inspect
 import sys
 
+import xbmc
+import xbmcaddon
+import xbmcplugin
+import xbmcgui
+
+from API import API
 from DownloadUtils import DownloadUtils
 from PlayUtils import PlayUtils
-from ReadKodiDB import ReadKodiDB
-from ReadEmbyDB import ReadEmbyDB
+from ClientInformation import ClientInformation
 import Utils as utils
-from API import API
-import os
-import xbmcvfs
 
-addon = xbmcaddon.Addon()
-addondir = xbmc.translatePath(addon.getAddonInfo('profile'))
-
-WINDOW = xbmcgui.Window( 10000 )
+#################################################################################################
 
 class PlaybackUtils():
     
-    settings = None
+    clientInfo = ClientInformation()
+    doUtils = DownloadUtils()
+    api = API()
+
+    addon = xbmcaddon.Addon()
     language = addon.getLocalizedString
-    logLevel = 0
-    downloadUtils = DownloadUtils()
+    addonName = clientInfo.getAddonName()
 
-    WINDOW.clearProperty('playurlFalse')
-    
-    def __init__(self, *args):
-        pass    
+    username = utils.window('currUser')
+    userid = utils.window('userId%s' % username)
+    server = utils.window('server%s' % username)
 
-    def PLAY(self, result, setup="service"):
-        xbmc.log("PLAY Called")
-        WINDOW = xbmcgui.Window(10000)
-
-        username = WINDOW.getProperty('currUser')
-        userid = WINDOW.getProperty('userId%s' % username)
-        server = WINDOW.getProperty('server%s' % username)
+    def logMsg(self, msg, lvl=1):
         
-        try:
-            id = result["Id"]
-        except:
-            return
+        className = self.__class__.__name__
+        utils.logMsg("%s %s" % (self.addonName, className), msg, int(lvl))
 
-        userData = result['UserData']
+    def PLAY(self, result, setup = "service"):
 
-        # BOOKMARK - RESUME POINT
-        timeInfo = API().getTimeInfo(result)
-        jumpBackSec = int(utils.settings("resumeJumpBack"))
+        self.logMsg("PLAY Called", 1)
+
+        api = self.api
+        doUtils = self.doUtils
+        server = self.server
+
+        listItem = xbmcgui.ListItem()
+        id = result['Id']
+        userdata = result['UserData']
+
+        # Get the playurl - direct play, direct stream or transcoding
+        playurl = PlayUtils().getPlayUrl(server, id, result)
+
+        if utils.window('playurlFalse') == "true":
+            # Playurl failed - set in PlayUtils.py
+            utils.window('playurlFalse', clear=True)
+            self.logMsg("Failed to retrieve the playback path/url or dialog was cancelled.", 1)
+            return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, listItem)
+
+        # Resume point for widget only
+        timeInfo = api.getTimeInfo(result)
+        jumpBackSec = int(utils.settings('resumeJumpBack'))
         seekTime = round(float(timeInfo.get('ResumeTime')), 6)
         if seekTime > jumpBackSec:
             # To avoid negative bookmark
             seekTime = seekTime - jumpBackSec
 
-        itemsToPlay = []
+        # Show the additional resume dialog if launched from a widget
+        if xbmc.getCondVisibility('Window.IsActive(home)') and seekTime:
+            # Dialog presentation
+            displayTime = str(datetime.timedelta(seconds=(int(seekTime))))
+            display_list = ["%s %s" % (self.language(30106), displayTime), self.language(30107)]
+            resume_result = xbmcgui.Dialog().select(self.language(30105), display_list)
+
+            if resume_result == 0:
+                # User selected to resume, append resume point to listitem
+                listItem.setProperty('StartOffset', str(seekTime))
+
+            elif resume_result > 0:
+                # User selected to start from beginning
+                seekTime = 0
+
+            elif resume_result < 0:
+                # User cancelled the dialog
+                self.logMsg("User cancelled resume dialog.", 1)
+                return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, listItem)
+
+
+        # In order, intros, original item requested and any additional parts
+        playstack = []
+
         # Check for intros
-        if seekTime == 0:
+        if utils.settings('disableCinema') == "false" and not seekTime:
             # if we have any play them when the movie/show is not being resumed
-            # We can add the option right here
             url = "{server}/mediabrowser/Users/{UserId}/Items/%s/Intros?format=json&ImageTypeLimit=1&Fields=Etag" % id    
-            intros = self.downloadUtils.downloadUrl(url)
-            if intros[u'TotalRecordCount'] == 0:
-                pass
-            else:
-                for intro in intros[u'Items']:
-                    introId = intro[u'Id']
-                    itemsToPlay.append(introId)
+            intros = doUtils.downloadUrl(url)
+            if intros['TotalRecordCount'] != 0:
+                for intro in intros['Items']:
+                    introPlayurl = PlayUtils().getPlayUrl(server, intro['Id'], intro)
+                    self.setProperties(introPlayurl, intro)
+                    playstack.append(introPlayurl)
 
         # Add original item
-        itemsToPlay.append(id)
+        playstack.append(playurl)
+        self.setProperties(playurl, result)
         
-        # For split movies
-        if u'PartCount' in result:
-            partcount = result[u'PartCount']
-            # Get additional parts/playurl
+        mainArt = API().getArtwork(result, "Primary")
+        listItem.setThumbnailImage(mainArt)
+        listItem.setIconImage(mainArt)
+
+        # Get additional parts/playurl
+        if result.get('PartCount'):
             url = "{server}/mediabrowser/Videos/%s/AdditionalParts" % id
-            parts = self.downloadUtils.downloadUrl(url)
-            for part in parts[u'Items']:
-                partId = part[u'Id']
-                itemsToPlay.append(partId)
-
-        if len(itemsToPlay) > 1:
-            # Let's play the playlist
-            playlist = self.AddToPlaylist(itemsToPlay)
-            if xbmc.getCondVisibility("Window.IsActive(home)"):
-                # Widget workaround
-                return xbmc.Player().play(playlist)
-            else:
-                # Can't pass a playlist to setResolvedUrl, so return False
-                # Wait for Kodi to process setResolved failure, then launch playlist
-                xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, xbmcgui.ListItem())
-                xbmc.sleep(10)
-                # Since we clear the original Kodi playlist, this is to prevent
-                # info dialog - can't play next item from showing up.
-                xbmc.executebuiltin('Dialog.Close(all,true)')
-                return xbmc.Player().play(playlist)
-
-        playurl = PlayUtils().getPlayUrl(server, id, result)
-
-        if playurl == False or WINDOW.getProperty('playurlFalse') == "true":
-            WINDOW.clearProperty('playurlFalse')
-            xbmc.log("Failed to retrieve the playback path/url.")
-            return
-
-        if WINDOW.getProperty("%splaymethod" % playurl) == "Transcode":
-            # Transcoding, we pull every track to set before playback starts
-            playurlprefs = self.audioSubsPref(playurl, result.get("MediaSources"))
-            if playurlprefs:
-                playurl = playurlprefs
-            else: # User cancelled dialog
-                return
+            parts = doUtils.downloadUrl(url)
+            for part in parts['Items']:
+                additionalPlayurl = PlayUtils().getPlayUrl(server, part['Id'], part)
+                self.setProperties(additionalPlayurl, part)
+                playstack.append(additionalPlayurl)
 
 
-        thumbPath = API().getArtwork(result, "Primary")
-        
-        #if the file is a virtual strm file, we need to override the path by reading it's contents
-        if playurl.endswith(".strm"):
-            xbmc.log("virtual strm file file detected, starting playback with 3th party addon...")
-            StrmTemp = "special://temp/temp.strm"
-            xbmcvfs.copy(playurl, StrmTemp)
-            playurl = open(xbmc.translatePath(StrmTemp), 'r').readline()
-                 
-        listItem = xbmcgui.ListItem(path=playurl, iconImage=thumbPath, thumbnailImage=thumbPath)
+        if len(playstack) > 1:
+            # Convert list in stack:// playurl
+            playMethod = utils.window('%splaymethod' % playurl)
+            playurl = "stack://%s" % " , ".join(playstack)
+            # Set new window properties for combined playurl
+            utils.window("%splaymethod" % playurl, value=playMethod)
+            self.setProperties(playurl, result)
 
-        if WINDOW.getProperty("%splaymethod" % playurl) != "Transcode":
+        self.logMsg("Returned playurl: %s" % playurl, 1)
+        listItem.setPath(playurl)
+
+        if utils.window("%splaymethod" % playurl) != "Transcode":
             # Only for direct play and direct stream
             # Append external subtitles to stream
-            subtitleList = self.externalSubs(id, playurl, server, result.get('MediaSources'))
+            subtitleList = self.externalSubs(id, playurl, server, result['MediaSources'])
             listItem.setSubtitles(subtitleList)
-            #pass
 
-        # Can not play virtual items
-        if (result.get("LocationType") == "Virtual"):
-          xbmcgui.Dialog().ok(self.language(30128), self.language(30129))
-
-        watchedurl = "%s/mediabrowser/Users/%s/PlayedItems/%s" % (server, userid, id)
-        positionurl = "%s/mediabrowser/Users/%s/PlayingItems/%s" % (server, userid, id)
-        deleteurl = "%s/mediabrowser/Items/%s" % (server, id)
-
-        # set the current playing info
-        WINDOW.setProperty(playurl+"watchedurl", watchedurl)
-        WINDOW.setProperty(playurl+"positionurl", positionurl)
-        WINDOW.setProperty(playurl+"deleteurl", "")
-        WINDOW.setProperty(playurl+"deleteurl", deleteurl)
-
-        #show the additional resume dialog if launched from a widget
-        if xbmc.getCondVisibility("Window.IsActive(home)"):
-            if seekTime != 0:
-                displayTime = str(datetime.timedelta(seconds=(int(seekTime))))
-                display_list = [ self.language(30106) + ' ' + displayTime, self.language(30107)]
-                resumeScreen = xbmcgui.Dialog()
-                resume_result = resumeScreen.select(self.language(30105), display_list)
-                if resume_result == 0:
-                    listItem.setProperty('StartOffset', str(seekTime))
-
-                elif resume_result < 0:
-                    # User cancelled dialog
-                    xbmc.log("Emby player -> User cancelled resume dialog.")
-                    xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, listItem)
-                    return
-
-        if result.get("Type")=="Episode":
-            WINDOW.setProperty(playurl+"refresh_id", result.get("SeriesId"))
-        else:
-            WINDOW.setProperty(playurl+"refresh_id", id)
             
-        WINDOW.setProperty(playurl+"runtimeticks", str(result.get("RunTimeTicks")))
-        WINDOW.setProperty(playurl+"type", result.get("Type"))
-        WINDOW.setProperty(playurl+"item_id", id)
-
-        #launch the playback - only set the listitem props if we're not using the setresolvedurl approach
-        if setup == "service":
+        # Launch the playback - only set the listitem props if we're not using the setresolvedurl approach
+        if setup == "service" or xbmc.getCondVisibility('Window.IsActive(home)'):
+            # Sent via websocketclient.py or default.py but via widgets
             self.setListItemProps(server, id, listItem, result)
-            xbmc.Player().play(playurl,listItem)
+            xbmc.Player().play(playurl, listItem)
         elif setup == "default":
-            if xbmc.getCondVisibility("Window.IsActive(home)"):
-                self.setListItemProps(server, id, listItem, result)
-                xbmc.Player().play(playurl,listItem)   
-            else:
-               xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
+            # Sent via default.py
+            xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
 
     def externalSubs(self, id, playurl, server, mediaSources):
 
@@ -214,173 +175,170 @@ class PlaybackUtils():
                 kodiindex += 1
         
         mapping = json.dumps(mapping)
-        utils.window('%sIndexMapping' % playurl, mapping)
+        utils.window('%sIndexMapping' % playurl, value=mapping)
 
         return externalsubs
 
-    def audioSubsPref(self, url, mediaSources):
+    def setProperties(self, playurl, result):
+        # Set runtimeticks, type, refresh_id and item_id
+        id = result.get('Id')
+        type = result.get('Type', "")
 
-        WINDOW = xbmcgui.Window(10000)
-        # Present the list of audio to select from
-        audioStreamsList = {}
-        audioStreams = []
-        selectAudioIndex = ""
-        subtitleStreamsList = {}
-        subtitleStreams = ['No subtitles']
-        selectSubsIndex = ""
-        playurlprefs = "%s" % url
+        utils.window("%sruntimeticks" % playurl, value=str(result.get('RunTimeTicks')))
+        utils.window("%stype" % playurl, value=type)
+        utils.window("%sitem_id" % playurl, value=id)
 
-        mediaStream = mediaSources[0].get('MediaStreams')
-        for stream in mediaStream:
-            index = stream['Index']
-            # Since Emby returns all possible tracks together, have to sort them.
-            if 'Audio' in stream['Type']:
-                try:
-                    track = stream['Language']
-                    audioStreamsList[track] = index
-                    audioStreams.append(track)
-                except:
-                    track = stream['Codec']
-                    audioStreamsList[track] = index
-                    audioStreams.append(track)
+        if type == "Episode":
+            utils.window("%srefresh_id" % playurl, value=result.get('SeriesId'))
+        else:
+            utils.window("%srefresh_id" % playurl, value=id)
 
-            elif 'Subtitle' in stream['Type']:
-                try:
-                    track = stream['Language']
-                    subtitleStreamsList[track] = index
-                    subtitleStreams.append(track)
-                except:
-                    track = stream['Codec']
-                    subtitleStreamsList[track] = index
-                    subtitleStreams.append(track)
-
-        if len(audioStreams) > 1:
-            resp = xbmcgui.Dialog().select("Choose the audio stream", audioStreams)
-            if resp > -1:
-                # User selected audio
-                selected = audioStreams[resp]
-                selected_audioIndex = audioStreamsList[selected]
-                playurlprefs += "&AudioStreamIndex=%s" % selected_audioIndex
-                selectAudioIndex = str(selected_audioIndex)
-            else: return False
-        else: # There's only one audiotrack.
-            audioIndex = audioStreamsList[audioStreams[0]]
-            playurlprefs += "&AudioStreamIndex=%s" % audioIndex
-            selectAudioIndex = str(audioIndex)
-
-        if len(subtitleStreams) > 1:
-            resp = xbmcgui.Dialog().select("Choose the subtitle stream", subtitleStreams)
-            if resp == 0:
-                # User selected no subtitles
-                pass
-            elif resp > -1:
-                # User selected subtitles
-                selected = subtitleStreams[resp]
-                selected_subsIndex = subtitleStreamsList[selected]
-                playurlprefs += "&SubtitleStreamIndex=%s" % selected_subsIndex
-                selectSubsIndex = str(selected_subsIndex)
-            else: return False
+    def setArt(self, list, name, path):
         
-        # Reset the method with the new playurl
-        WINDOW.setProperty("%splaymethod" % playurlprefs, "Transcode")
-        WINDOW.setProperty("%sAudioStreamIndex" % playurlprefs, selectAudioIndex)
-        WINDOW.setProperty("%sSubtitleStreamIndex" % playurlprefs, selectSubsIndex)
-
-        return playurlprefs
-
-    def setArt(self, list,name,path):
-        if name=='thumb' or name=='fanart_image' or name=='small_poster' or name=='tiny_poster'  or name == "medium_landscape" or name=='medium_poster' or name=='small_fanartimage' or name=='medium_fanartimage' or name=='fanart_noindicators':
+        if name in ("thumb", "fanart_image", "small_poster", "tiny_poster", "medium_landscape", "medium_poster", "small_fanartimage", "medium_fanartimage", "fanart_noindicators"):
             list.setProperty(name, path)
         else:
             list.setArt({name:path})
+        
         return list
     
     def setListItemProps(self, server, id, listItem, result):
-        # set up item and item info
-        thumbID = id
-        eppNum = -1
-        seasonNum = -1
-        tvshowTitle = ""
-        
-        if(result.get("Type") == "Episode"):
-            thumbID = result.get("SeriesId")
-            seasonNum = result.get("ParentIndexNumber")
-            eppNum = result.get("IndexNumber")
-            tvshowTitle = result.get("SeriesName")
+        # Set up item and item info
+        api = self.api
+
+        type = result.get('Type')
+        people = api.getPeople(result)
+        studios = api.getStudios(result)
+
+        metadata = {
             
+            'title': result.get('Name', "Missing name"),
+            'year': result.get('ProductionYear'),
+            'plot': api.getOverview(result),
+            'director': people.get('Director'),
+            'writer': people.get('Writer'),
+            'mpaa': api.getMpaa(result),
+            'genre': api.getGenre(result),
+            'studio': " / ".join(studios),
+            'aired': api.getPremiereDate(result),
+            'rating': result.get('CommunityRating'),
+            'votes': result.get('VoteCount')
+        }
+
+        if "Episode" in type:
+            # Only for tv shows
+            thumbId = result.get('SeriesId')
+            season = result.get('ParentIndexNumber', -1)
+            episode = result.get('IndexNumber', -1)
+            show = result.get('SeriesName', "")
+
+            metadata['TVShowTitle'] = show
+            metadata['season'] = season
+            metadata['episode'] = episode
+
+        listItem.setProperty('IsPlayable', 'true')
+        listItem.setProperty('IsFolder', 'false')
+        listItem.setInfo('video', infoLabels=metadata)
+
+        # Set artwork for listitem
         self.setArt(listItem,'poster', API().getArtwork(result, "Primary"))
         self.setArt(listItem,'tvshow.poster', API().getArtwork(result, "SeriesPrimary"))
         self.setArt(listItem,'clearart', API().getArtwork(result, "Art"))
-        self.setArt(listItem,'tvshow.clearart', API().getArtwork(result, "Art"))    
+        self.setArt(listItem,'tvshow.clearart', API().getArtwork(result, "Art"))
         self.setArt(listItem,'clearlogo', API().getArtwork(result, "Logo"))
-        self.setArt(listItem,'tvshow.clearlogo', API().getArtwork(result, "Logo"))    
-        self.setArt(listItem,'discart', API().getArtwork(result, "Disc"))  
+        self.setArt(listItem,'tvshow.clearlogo', API().getArtwork(result, "Logo"))
+        self.setArt(listItem,'discart', API().getArtwork(result, "Disc"))
         self.setArt(listItem,'fanart_image', API().getArtwork(result, "Backdrop"))
-        self.setArt(listItem,'landscape', API().getArtwork(result, "Thumb"))   
-        
-        listItem.setProperty('IsPlayable', 'true')
-        listItem.setProperty('IsFolder', 'false')
-        
-        # Process Studios
-        studios = API().getStudios(result)
-        if studios == []:
-            studio = ""
-        else:
-            studio = studios[0]
-        listItem.setInfo('video', {'studio' : studio})    
-            
-        details = {
-                 'title'        : result.get("Name", "Missing Name"),
-                 'plot'         : result.get("Overview")
-                 }
-                 
-        if(eppNum > -1):
-            details["episode"] = str(eppNum)
-            
-        if(seasonNum > -1):
-            details["season"] = str(seasonNum)  
-
-        if tvshowTitle != None:
-            details["TVShowTitle"] = tvshowTitle    
-        
-        listItem.setInfo( "Video", infoLabels=details )
-
-        people = API().getPeople(result)
-
-        # Process Genres
-        genre = API().getGenre(result)
-        
-        listItem.setInfo('video', {'director' : people.get('Director')})
-        listItem.setInfo('video', {'writer' : people.get('Writer')})
-        listItem.setInfo('video', {'mpaa': result.get("OfficialRating")})
-        listItem.setInfo('video', {'genre': API().getGenre(result)})
+        self.setArt(listItem,'landscape', API().getArtwork(result, "Thumb"))
     
     def seekToPosition(self, seekTo):
-    
-        #Set a loop to wait for positive confirmation of playback
+        # Set a loop to wait for positive confirmation of playback
         count = 0
         while not xbmc.Player().isPlaying():
-            count = count + 1
+            count += 1
             if count >= 10:
                 return
             else:
                 xbmc.sleep(500)
             
-        #Jump to resume point
-        jumpBackSec = int(addon.getSetting("resumeJumpBack"))
-        seekToTime = seekTo - jumpBackSec
+        # Jump to seek position
         count = 0
         while xbmc.Player().getTime() < (seekToTime - 5) and count < 11: # only try 10 times
-            count = count + 1
-            #xbmc.Player().pause
-            #xbmc.sleep(100)
-            xbmc.Player().seekTime(seekToTime)
+            count += 1
+            xbmc.Player().seekTime(seekTo)
             xbmc.sleep(100)
-            #xbmc.Player().play()
     
     def PLAYAllItems(self, items, startPositionTicks):
-        utils.logMsg("PlayBackUtils", "== ENTER: PLAYAllItems ==")
-        utils.logMsg("PlayBackUtils", "Items : " + str(items))
+        
+        self.logMsg("== ENTER: PLAYAllItems ==")
+        self.logMsg("Items: %s" % items)
+
+        doUtils = self.doUtils
+
+        playlist = xbmc.Playlist(xbmc.PLAYLIST_VIDEO)
+        playlist.clear()
+        started = False
+
+        for itemId in items:
+            self.logMsg("Adding Item to playlist: %s" % itemId, 1)
+            url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json" % itemId
+            result = doUtils.downloadUrl(url)
+
+            addition = self.addPlaylistItem(playlist, result)
+            if not started and addition:
+                started = True
+                self.logMsg("Starting Playback Pre", 1)
+                xbmc.Player().play(playlist)
+
+        if not started:
+            self.logMsg("Starting Playback Post", 1)
+            xbmc.Player().play(playlist)
+
+        # Seek to position
+        if startPositionTicks:
+            seekTime = startPositionTicks / 10000000.0
+            self.seekToPosition(seekTime)
+    
+    def AddToPlaylist(self, itemIds):
+
+        self.logMsg("PlayBackUtils", "== ENTER: PLAYAllItems ==")
+        
+        doUtils = self.doUtils
+        playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
+
+        for itemId in itemIds:
+            self.logMsg("Adding Item to Playlist: %s" % itemId)
+            url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json" % itemId
+            result = doUtils.downloadUrl(url)
+
+            self.addPlaylistItem(playlist, result)
+        
+        return playlist
+    
+    def addPlaylistItem(self, playlist, item):
+
+        id = item['Id']
+        server = self.server
+
+        playurl = PlayUtils().getPlayUrl(server, id, item)
+        
+        if utils.window('playurlFalse') == "true":
+            # Playurl failed - set in PlayUtils.py
+            utils.window('playurlFalse', clear=True)
+            self.logMsg("Failed to retrieve the playback path/url or dialog was cancelled.", 1)
+            return
+
+        self.logMsg("Playurl: %s" % playurl)
+
+        thumb = API().getArtwork(item, "Primary")
+        listItem = xbmcgui.ListItem(path=playurl, iconImage=thumb, thumbnailImage=thumb)
+        self.setListItemProps(server, id, listItem, item)
+        self.setProperties(playurl, item)
+
+        playlist.add(playurl, listItem)
+
+    # Not currently being used
+    '''def PLAYAllEpisodes(self, items):
         WINDOW = xbmcgui.Window(10000)
 
         username = WINDOW.getProperty('currUser')
@@ -389,42 +347,6 @@ class PlaybackUtils():
         
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
         playlist.clear()        
-        started = False
-        
-        for itemID in items:
-        
-            utils.logMsg("PlayBackUtils", "Adding Item to Playlist : " + itemID)
-            item_url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json" % itemID
-            jsonData = self.downloadUtils.downloadUrl(item_url)
-
-            item_data = jsonData
-            added = self.addPlaylistItem(playlist, item_data, server, userid)
-            if(added and started == False):
-                started = True
-                utils.logMsg("PlayBackUtils", "Starting Playback Pre")
-                xbmc.Player().play(playlist)
-        
-        if(started == False):
-            utils.logMsg("PlayBackUtils", "Starting Playback Post")
-            xbmc.Player().play(playlist)
-        
-        #seek to position
-        seekTime = 0
-        if(startPositionTicks != None):
-            seekTime = (startPositionTicks / 1000) / 10000
-            
-        if seekTime > 0:
-            self.seekToPosition(seekTime)
-            
-    def PLAYAllEpisodes(self, items):
-        WINDOW = xbmcgui.Window(10000)
-
-        username = WINDOW.getProperty('currUser')
-        userid = WINDOW.getProperty('userId%s' % username)
-        server = WINDOW.getProperty('server%s' % username)
-        
-        playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
-        playlist.clear()
         
         for item in items:
         
@@ -434,80 +356,4 @@ class PlaybackUtils():
             item_data = jsonData
             self.addPlaylistItem(playlist, item_data, server, userid)
         
-        xbmc.Player().play(playlist)
-    
-    def AddToPlaylist(self, itemIds):
-        utils.logMsg("PlayBackUtils", "== ENTER: PLAYAllItems ==")
-        WINDOW = xbmcgui.Window(10000)
-
-        username = WINDOW.getProperty('currUser')
-        userid = WINDOW.getProperty('userId%s' % username)
-        server = WINDOW.getProperty('server%s' % username)
-        
-        playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
-        playlist.clear()
-        
-        for itemID in itemIds:
-        
-            utils.logMsg("PlayBackUtils", "Adding Item to Playlist : " + itemID)
-            item_url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json" % itemID
-            jsonData = self.downloadUtils.downloadUrl(item_url)
-            
-            item_data = jsonData
-            self.addPlaylistItem(playlist, item_data, server, userid)
-
-        return playlist
-    
-    def addPlaylistItem(self, playlist, item, server, userid):
-
-        id = item.get("Id")
-        
-        playurl = PlayUtils().getPlayUrl(server, id, item)
-        utils.logMsg("PlayBackUtils", "Play URL: " + playurl)    
-        thumbPath = API().getArtwork(item, "Primary")
-        listItem = xbmcgui.ListItem(path=playurl, iconImage=thumbPath, thumbnailImage=thumbPath)
-        self.setListItemProps(server, id, listItem, item)
-
-        WINDOW = xbmcgui.Window(10000)
-
-        username = WINDOW.getProperty('currUser')
-        userid = WINDOW.getProperty('userId%s' % username)
-        server = WINDOW.getProperty('server%s' % username)
-
-        # Can not play virtual items
-        if (item.get("LocationType") == "Virtual") or (item.get("IsPlaceHolder") == True):
-        
-            xbmcgui.Dialog().ok(self.language(30128), self.language(30129))
-            return False
-            
-        else:
-        
-            watchedurl = "%s/mediabrowser/Users/%s/PlayedItems/%s" % (server, userid, id)
-            positionurl = "%s/mediabrowser/Users/%s/PlayingItems/%s" % (server, userid, id)
-            deleteurl = "%s/mediabrowser/Items/%s" % (server, id)
-
-            # set the current playing info
-            WINDOW = xbmcgui.Window( 10000 )
-            WINDOW.setProperty(playurl + "watchedurl", watchedurl)
-            WINDOW.setProperty(playurl + "positionurl", positionurl)
-            WINDOW.setProperty(playurl + "deleteurl", "")
-            
-            if item.get("Type") == "Episode" and addon.getSetting("offerDeleteTV")=="true":
-               WINDOW.setProperty(playurl + "deleteurl", deleteurl)
-            if item.get("Type") == "Movie" and addon.getSetting("offerDeleteMovies")=="true":
-               WINDOW.setProperty(playurl + "deleteurl", deleteurl)            
-        
-            WINDOW.setProperty(playurl + "runtimeticks", str(item.get("RunTimeTicks")))
-            WINDOW.setProperty(playurl+"type", item.get("Type"))
-            WINDOW.setProperty(playurl + "item_id", id)
-            
-            if (item.get("Type") == "Episode"):
-                WINDOW.setProperty(playurl + "refresh_id", item.get("SeriesId"))
-            else:
-                WINDOW.setProperty(playurl + "refresh_id", id)            
-            
-            utils.logMsg("PlayBackUtils", "PlayList Item Url : " + str(playurl))
-            
-            playlist.add(playurl, listItem)
-            
-            return True
+        xbmc.Player().play(playlist)'''
