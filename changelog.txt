@@ -1,3 +1,11 @@
+version 1.1.44
+- Play strm files regardless of playback method.
+- Stack method for multi part, including trailers.
+- Revise transcoding properties
+- Fix channels name to display properly in Kodi.
+- Fix DTS-HD MA display
+- Fix profiles that were leaving threads running after loading a new profile in Kodi.
+
 version 1.1.43
 - Fix loop that was happening if you had intros and play next automatically enabled.
 
