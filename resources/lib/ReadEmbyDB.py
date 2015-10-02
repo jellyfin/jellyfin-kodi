@@ -281,7 +281,7 @@ class ReadEmbyDB():
         # Build a list of the user views
         collections = []
 
-        url = "{server}/mediabrowser/Users/{UserId}/Items?Sortby=SortName&format=json"
+        url = "{server}/mediabrowser/Users/{UserId}/Views?format=json" #Items?Sortby=SortName&format=json"
         jsondata = self.doUtils.downloadUrl(url)
 
         try:
@@ -289,24 +289,24 @@ class ReadEmbyDB():
         except: pass
         else:
             for item in result:
-                if item['RecursiveItemCount']:
-                    name = item['Name']
-                    itemtype = item.get('CollectionType')
-                    content = itemtype
 
-                    if itemtype is None and type in ("movies", "tvshows"):
-                        # Mixed content or rich presentation is disabled
-                        itemtype = type
-                        content = "mixed"
+                name = item['Name']
+                itemtype = item.get('CollectionType')
+                content = itemtype
 
-                    if itemtype == type and name != "Collections":
-                        collections.append({
-                            
-                            'title': name,
-                            'type': itemtype,
-                            'id': item['Id'],
-                            'content': content
-                        })
+                if itemtype is None and type in {"movies", "tvshows"}:
+                    # Mixed content or rich presentation is disabled
+                    itemtype = type
+                    content = "mixed"
+
+                if itemtype == type and name != "Collections":
+                    collections.append({
+
+                        'title': name,
+                        'type': itemtype,
+                        'id': item['Id'],
+                        'content': content
+                    })
 
         return collections
     
