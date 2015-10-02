@@ -216,13 +216,18 @@ class WriteKodiVideoDB():
             query = "INSERT INTO movie(idMovie, idFile, c00, c01, c02, c03, c04, c05, c06, c07, c09, c10, c11, c12, c14, c15, c16, c18, c19, c21) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
             cursor.execute(query, (movieid, fileid, title, plot, shortplot, tagline, votecount, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl, country))
 
-            # Add the viewtag
-            self.AddTagToMedia(movieid, viewTag, "movie", cursor)
-
             # Create the reference in emby table
             query = "INSERT INTO emby(emby_id, kodi_id, kodi_file_id, media_type, checksum) values(?, ?, ?, ?, ?)"
             cursor.execute(query, (embyId, movieid, fileid, "movie", checksum))
 
+
+        # Add tags to item, view tag and emby tags
+        tags = [viewTag]
+        tags.extend(MBitem['Tags'])
+        if userData['Favorite']:
+            tags.append("Favorite movies")
+
+        self.AddTagsToMedia(movieid, tags, "movie", cursor)
 
         # Update or insert actors
         self.AddPeopleToMedia(movieid, MBitem.get('People'), "movie", connection, cursor)
@@ -248,12 +253,6 @@ class WriteKodiVideoDB():
         
         # Add streamdetails
         self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), runtime ,fileid, cursor)
-        
-        # Add to or remove from favorites tag
-        if userData.get('Favorite'):
-            self.AddTagToMedia(movieid, "Favorite movies", "movie", cursor)
-        else:
-            self.AddTagToMedia(movieid, "Favorite movies", "movie", cursor, True)
         
         # Set resume point and round to 6th decimal
         resume = round(float(timeInfo.get('ResumeTime')), 6)
@@ -533,10 +532,15 @@ class WriteKodiVideoDB():
             query = "INSERT INTO tvshowlinkpath(idShow, idPath) values(?, ?)"
             cursor.execute(query, (showid, pathid))
                         
-            # Add the viewtag
-            self.AddTagToMedia(showid, viewTag, "tvshow", cursor)
 
-            
+        # Add tags to item, view tag, emby tags and favourite
+        tags = [viewTag]
+        tags.extend(MBitem['Tags'])
+        if userData['Favorite']:
+            tags.append("Favorite tvshows")
+
+        self.AddTagsToMedia(showid, tags, "tvshow", cursor)
+
         # Update or insert people
         self.AddPeopleToMedia(showid, MBitem.get('People'),"tvshow", connection, cursor)
         
@@ -545,12 +549,6 @@ class WriteKodiVideoDB():
         
         # Update studios
         self.AddStudiosToMedia(showid, studios, "tvshow", cursor)
-        
-        # Add to or remove from favorites tag
-        if userData.get('Favorite'):
-            self.AddTagToMedia(showid, "Favorite tvshows", "tvshow", cursor)
-        else:
-            self.AddTagToMedia(showid, "Favorite tvshows", "tvshow", cursor, True)
                 
         # Update artwork
         self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "tvshow"), showid, "tvshow", "thumb", cursor)
@@ -1112,56 +1110,72 @@ class WriteKodiVideoDB():
                         elif "episode" in mediatype:
                             query = "INSERT OR REPLACE INTO studiolinkepisode(idstudio, idEpisode) values(?, ?)"
                         cursor.execute(query, (idstudio, id))
-        
+       
+
+    def AddTagsToMedia(self, id, tags, mediatype, cursor):
+
+        # First, delete any existing tags associated to the id
+        if self.kodiversion in {15, 16}:
+            # Kodi Isengard, Jarvis
+            query = "DELETE FROM tag_link WHERE media_id = ? AND media_type = ?"
+            cursor.execute(query, (id, mediatype))
+
+        else: # Kodi Helix
+            query = "DELETE FROM taglinks WHERE idMedia = ? AND media_type = ?"
+            cursor.execute(query, (id, mediatype))
+    
+        # Add tags
+        self.logMsg("Adding Tags: %s" % tags, 1)
+        for tag in tags:
+            self.AddTagToMedia(id, tag, mediatype, cursor)
+
     def AddTagToMedia(self, id, tag, mediatype, cursor, doRemove=False):
 
-        kodiVersion = self.kodiversion
+        if self.kodiversion in {15, 16}:
+            # Kodi Isengard, Jarvis
+            cursor.execute("SELECT tag_id FROM tag WHERE name = ? COLLATE NOCASE", (tag,))
+            try:
+                tag_id = cursor.fetchone()[0]
+            except:
+                # Create the tag, because it does not exist
+                cursor.execute("select coalesce(max(tag_id),0) as tag_id from tag")
+                tag_id = cursor.fetchone()[0] + 1
 
-        if tag:
+                query = "INSERT INTO tag(tag_id, name) values(?, ?)"
+                cursor.execute(query, (tag_id, tag))
+                self.logMsg("Add Tag to media, adding tag: %s" % tag, 2)
+            finally:
+                # Assign tag to item
+                if not doRemove:
+                    query = "INSERT OR REPLACE INTO tag_link(tag_id, media_id, media_type) values(?, ?, ?)"
+                    cursor.execute(query, (tag_id, id, mediatype))
+                else:
+                    query = "DELETE FROM tag_link WHERE media_id = ? AND media_type = ? AND tag_id = ?"
+                    cursor.execute(query, (id, mediatype, tag_id))
 
-            if kodiVersion == 15 or kodiVersion == 16:
-                # Kodi Isengard
-                cursor.execute("SELECT tag_id as tag_id FROM tag WHERE name = ? COLLATE NOCASE", (tag,))
-                try:
-                    tag_id = cursor.fetchone()[0]
-                except:
-                    # Create the tag
-                    cursor.execute("select coalesce(max(tag_id),0) as tag_id from tag")
-                    tag_id = cursor.fetchone()[0] + 1
-                    
-                    query = "INSERT INTO tag(tag_id, name) values(?, ?)"
-                    cursor.execute(query, (tag_id, tag))
-                    self.logMsg("Add Tag to media, adding tag: %s" % tag, 1)
-                finally:
-                    # Assign tag to item
-                    if not doRemove:
-                        query = "INSERT OR REPLACE INTO tag_link(tag_id, media_id, media_type) values(?, ?, ?)"
-                        cursor.execute(query, (tag_id, id, mediatype))
-                    else:
-                        query = "DELETE FROM tag_link WHERE media_id = ? AND media_type = ? AND tag_id = ?"
-                        cursor.execute(query, (id, mediatype, tag_id))
-            else:
-                # Kodi Gotham or Helix
-                cursor.execute("SELECT idTag as idTag FROM tag WHERE strTag = ? COLLATE NOCASE", (tag,))
-                try:
-                    idTag = cursor.fetchone()[0]
-                except:
-                    # Create the tag
-                    cursor.execute("select coalesce(max(idTag),0) as idTag from tag")
-                    idTag = cursor.fetchone()[0] + 1
+        else:
+            # Kodi Helix
+            cursor.execute("SELECT idTag FROM tag WHERE strTag = ? COLLATE NOCASE", (tag,))
+            try:
+                idTag = cursor.fetchone()[0]
+            except:
+                # Create the tag
+                cursor.execute("select coalesce(max(idTag),0) as idTag from tag")
+                idTag = cursor.fetchone()[0] + 1
 
-                    query = "INSERT INTO tag(idTag, strTag) values(?, ?)"
-                    cursor.execute(query, (idTag, tag))
-                    self.logMsg("Add Tag to media, adding tag: %s" % tag, 1)
-                finally:
-                    # Assign tag to item
-                    if not doRemove:
-                        query = "INSERT OR REPLACE INTO taglinks(idTag, idMedia, media_type) values(?, ?, ?)"
-                        cursor.execute(query, (idTag, id, mediatype))
-                    else:
-                        query = "DELETE FROM taglinks WHERE idMedia = ? AND media_type = ? AND idTag = ?"
-                        cursor.execute(query, (id, mediatype, idTag))
+                query = "INSERT INTO tag(idTag, strTag) values(?, ?)"
+                cursor.execute(query, (idTag, tag))
+                self.logMsg("Add Tag to media, adding tag: %s" % tag, 2)
+            finally:
+                # Assign tag to item
+                if not doRemove:
+                    query = "INSERT OR REPLACE INTO taglinks(idTag, idMedia, media_type) values(?, ?, ?)"
+                    cursor.execute(query, (idTag, id, mediatype))
+                else:
+                    query = "DELETE FROM taglinks WHERE idMedia = ? AND media_type = ? AND idTag = ?"
+                    cursor.execute(query, (id, mediatype, idTag))
     
+
     def AddStreamDetailsToMedia(self, streamdetails, runtime , fileid, cursor):
         
         # First remove any existing entries
