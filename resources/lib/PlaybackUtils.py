@@ -29,10 +29,6 @@ class PlaybackUtils():
     language = addon.getLocalizedString
     addonName = clientInfo.getAddonName()
 
-    username = utils.window('currUser')
-    userid = utils.window('userId%s' % username)
-    server = utils.window('server%s' % username)
-
     def logMsg(self, msg, lvl=1):
         
         className = self.__class__.__name__
@@ -44,7 +40,8 @@ class PlaybackUtils():
 
         api = self.api
         doUtils = self.doUtils
-        server = self.server
+        username = utils.window('currUser')
+        server = utils.window('server%s' % username)
 
         listItem = xbmcgui.ListItem()
         id = result['Id']
@@ -275,7 +272,7 @@ class PlaybackUtils():
 
         doUtils = self.doUtils
 
-        playlist = xbmc.Playlist(xbmc.PLAYLIST_VIDEO)
+        playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
         playlist.clear()
         started = False
 
@@ -318,7 +315,8 @@ class PlaybackUtils():
     def addPlaylistItem(self, playlist, item):
 
         id = item['Id']
-        server = self.server
+        username = utils.window('currUser')
+        server = utils.window('server%s' % username)
 
         playurl = PlayUtils().getPlayUrl(server, id, item)
         
