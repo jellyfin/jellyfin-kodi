@@ -375,49 +375,55 @@ class API():
 
         return mpaa
 
-    def getArtworks(self, data, type, mediaType = "", index = "0", getAll = False):
+    def getAllArtwork(self, item):
 
         """
-                Get all artwork, it will return an empty string
-                for the artwork type not found.
+            Get all artwork, it will return an empty string
+            for the artwork type not found.
 
-                Index only matters when getAll is False.
+            Artwork type:   Primary, Art, Banner, Logo, Thumb,
+                            Disc, Backdrop
+                                                                """
+        
+        username = utils.window('currUser')
+        server = utils.window('server%s' % username)
 
-                mediaType:      movie, boxset, tvshow, episode, season
-
-                Artwork type:   Primary, Banner, Logo, Art, Thumb,
-                                Disc Backdrop
-                                                                            """
-        id = data['Id']
+        id = item['Id']
+        artworks = item['ImageTags']
+        backdrops = item['BackdropImageTags']
 
         maxHeight = 10000
         maxWidth = 10000
-        imageTag = "e3ab56fe27d389446754d0fb04910a34" # Place holder tag
+        quality = ""
+
+        if utils.settings('compressArt') == "true":
+            quality = "&Quality=90"
+
+        allartworks = {
+
+            'Primary': "",
+            'Art': "",
+            'Banner': "",
+            'Logo': "",
+            'Thumb': "",
+            'Disc': "",
+            'Backdrop': []
+        }
         
+        # Process backdrops
+        backdropIndex = 0
+        for backdroptag in backdrops:
+            artwork = "%s/mediabrowser/Items/%s/Images/Backdrop/%s?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, id, backdropIndex, maxWidth, maxHeight, backdroptag, quality)
+            allartworks['Backdrop'].append(artwork)
+            backdropIndex += 1
 
-        if getAll:
+        # Process the rest of the artwork
+        for art in artworks:
+            tag = artworks[art]
+            artwork = "%s/mediabrowser/Items/%s/Images/%s/0?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, id, art, maxWidth, maxHeight, tag, quality)
+            allartworks[art] = artwork
 
-            allartworks = {
-
-                'Primary': "",
-                'Banner': "",
-                'Logo': "",
-                'Art': "",
-                'Thumb': "",
-                'Disc': "",
-                'Backdrop': ""
-            }
-
-            for keytype in allartworks:
-                type = keytype
-                url = ""
-
-                allartworks[keytype] = url
-
-
-            return allartworks
-
-        else: pass
+        return allartworks
 
     def getArtwork(self, data, type, mediaType = "", index = "0", userParentInfo = False):
 
