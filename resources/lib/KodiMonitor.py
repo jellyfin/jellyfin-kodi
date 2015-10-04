@@ -16,12 +16,17 @@ from DownloadUtils import DownloadUtils
 from PlaybackUtils import PlaybackUtils
 
 
-class Kodi_Monitor(xbmc.Monitor):
+class Kodi_Monitor( xbmc.Monitor ):
     
     WINDOW = xbmcgui.Window(10000)
 
     def __init__(self, *args, **kwargs):
         xbmc.Monitor.__init__(self)
+
+    def logMsg(self, msg, lvl = 1):
+
+        className = self.__class__.__name__
+        utils.logMsg("%s %s" % ("EMBY", className), msg, int(lvl))
 
     def onDatabaseUpdated(self, database):
         pass
@@ -97,23 +102,26 @@ class Kodi_Monitor(xbmc.Monitor):
                                     WINDOW.setProperty(playurl+"AudioStreamIndex", str(mediaSources[0].get('DefaultAudioStreamIndex')))  
                                 if mediaSources[0].get('DefaultSubtitleStreamIndex') != None:
                                     WINDOW.setProperty(playurl+"SubtitleStreamIndex", str(mediaSources[0].get('DefaultSubtitleStreamIndex')))
+        
         if method == "VideoLibrary.OnUpdate":
+            # Triggers 4 times, the following is only for manually marking as watched/unwatched
             jsondata = json.loads(data)
-            if jsondata != None:
-                
-                playcount = None
-                playcount = jsondata.get("playcount")
-                item = jsondata.get("item").get("id")
-                type = jsondata.get("item").get("type")
-                prop = WINDOW.getProperty('Played%s%s' % (type,item))
-                processWatched = WINDOW.getProperty('played_skipWatched')
-                
-                if (playcount != None) and (prop != "true") and (processWatched != "true"):
-                    WINDOW.setProperty("Played%s%s" % (type,item), "true")
-                    utils.logMsg("MB# Sync","Kodi_Monitor--> VideoLibrary.OnUpdate : " + str(data),2)
+            
+            try:
+                playcount = jsondata['playcount']
+                item = jsondata['item']['id']
+                type = jsondata['item']['type']
+                prop = utils.window('Played%s%s' % (type, item))
+            except:
+                self.logMsg("Could not process VideoLibrary.OnUpdate data.", 1)
+            else:
+                self.logMsg("VideoLibrary.OnUpdate: %s" % data, 2)
+                if prop != "true":
+                    # Set property to prevent the multi triggering
+                    utils.window('Played%s%s' % (type, item), "true")
                     WriteKodiVideoDB().updatePlayCountFromKodi(item, type, playcount)
-                
-                self.clearProperty(type,item)
+
+                self.clearProperty(type, item)
                     
         if method == "System.OnWake":
             xbmc.sleep(10000) #Allow network to wake up
@@ -145,13 +153,11 @@ class Kodi_Monitor(xbmc.Monitor):
                             xbmc.log('Deleting via URL: ' + url)
                             DownloadUtils().downloadUrl(url, type="DELETE")
                             
-    def clearProperty(self,type,id):
+    def clearProperty(self, type, id):
         # The sleep is necessary since VideoLibrary.OnUpdate
-        # triggers 3 times in a row.
+        # triggers 4 times in a row.
         xbmc.sleep(100)
-        self.WINDOW.clearProperty("Played%s%s" % (type,id))
-        self.WINDOW.clearProperty('played_skipWatched')
+        utils.window('Played%s%s' % (type,id), clear=True)
             
-        #clear the widget cache
-        self.WINDOW.setProperty('clearwidgetcache','clear')
-                
+        # Clear the widget cache
+        utils.window('clearwidgetcache', value="clear")

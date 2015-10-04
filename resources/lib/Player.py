@@ -378,8 +378,8 @@ class Player( xbmc.Player ):
             data = self.played_information.get(item)
             if data:
                 
-                self.logMsg("Item path: %s" % item, 1)
-                self.logMsg("Item data: %s" % str(data), 1)
+                self.logMsg("Item path: %s" % item, 2)
+                self.logMsg("Item data: %s" % str(data), 2)
 
                 runtime = data.get('runtime')
                 currentPosition = data.get('currentPosition')
@@ -390,14 +390,12 @@ class Player( xbmc.Player ):
                 playMethod = data.get('playmethod')
 
                 if currentPosition and runtime:
-                    self.logMsg("RuntimeTicks: %s" % runtime, 1)
                     percentComplete = (currentPosition * 10000000) / int(runtime)
                     markPlayedAt = float(utils.settings('markPlayed')) / 100
 
-                    self.logMsg("Percent complete: %s Mark played at: %s" % (percentComplete, markPlayedAt))
-                    if percentComplete < markPlayedAt:
-                        # Do not mark as watched for Kodi Monitor
-                        utils.window('played_skipWatched', value="true")
+                    self.logMsg("Percent complete: %s Mark played at: %s" % (percentComplete, markPlayedAt), 1)
+                    # Prevent manually mark as watched in Kodi monitor > WriteKodiVideoDB().UpdatePlaycountFromKodi()
+                    utils.window('SkipWatched%s' % itemId, "true")
 
                     self.stopPlayback(data)
                     offerDelete = False
@@ -430,8 +428,8 @@ class Player( xbmc.Player ):
         
         self.logMsg("stopPlayback called", 2)
         
-        itemId = data.get('item_id')
-        currentPosition = data.get('currentPosition')
+        itemId = data['item_id']
+        currentPosition = data['currentPosition']
         positionTicks = int(currentPosition * 10000000)
 
         url = "{server}/mediabrowser/Sessions/Playing/Stopped"

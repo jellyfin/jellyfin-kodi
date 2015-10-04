@@ -184,6 +184,12 @@ class UserClient(threading.Thread):
         # Set user image for skin display
         self.WINDOW.setProperty("EmbyUserImage",API().getUserArtwork(result,"Primary"))
 
+        # Load the resume point from Emby and set as setting
+        url = "{server}/mediabrowser/System/Configuration?format=json"
+        result = self.doUtils.downloadUrl(url)
+
+        utils.settings('markPlayed', value=str(result['MaxResumePct']))
+
         return True
 
     def getPublicUsers(self):

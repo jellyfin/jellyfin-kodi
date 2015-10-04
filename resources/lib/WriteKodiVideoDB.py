@@ -57,16 +57,21 @@ class WriteKodiVideoDB():
             # Could not find the Emby Id
             self.logMsg("Emby Id not found.", 2)
         else:
-            # Found the Emby Id, let Emby server know of new playcount
-            watchedurl = "{server}/mediabrowser/Users/{UserId}/PlayedItems/%s" % emby_id
-            if playcount != 0:
-                doUtils.downloadUrl(watchedurl, type = "POST")
-                self.logMsg("Mark as watched for Id: %s, playcount: %s." % (emby_id, playcount), 1)
+            # Stop from manually marking as watched unwatched, with actual playback.
+            # Window property is set in Player.py
+            if utils.window('SkipWatched%s' % emby_id) == "true":
+                utils.window('SkipWatched%s' % emby_id, clear=True)
             else:
-                doUtils.downloadUrl(watchedurl, type = "DELETE")
-                self.logMsg("Mark as unwatched for Id: %s, playcount: %s." % (emby_id, playcount), 1)
-            # Erase any resume point associated
-            self.setKodiResumePoint(id, 0, 0, cursor, playcount)
+                # Found the Emby Id, let Emby server know of new playcount
+                watchedurl = "{server}/mediabrowser/Users/{UserId}/PlayedItems/%s" % emby_id
+                if playcount != 0:
+                    doUtils.downloadUrl(watchedurl, type = "POST")
+                    self.logMsg("Mark as watched for Id: %s, playcount: %s." % (emby_id, playcount), 1)
+                else:
+                    doUtils.downloadUrl(watchedurl, type = "DELETE")
+                    self.logMsg("Mark as unwatched for Id: %s, playcount: %s." % (emby_id, playcount), 1)
+                # Erase any resume point associated
+                self.setKodiResumePoint(id, 0, 0, cursor, playcount)
         finally:
             cursor.close
         
