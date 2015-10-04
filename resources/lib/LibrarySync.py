@@ -436,9 +436,13 @@ class LibrarySync(threading.Thread):
         allKodiEpisodeIds = list()
         allEmbyEpisodeIds = list()
         
-        #get the kodi parent id
+        # Get the kodi parent id
         cursor.execute("SELECT kodi_id FROM emby WHERE emby_id=?",(showId,))
-        kodiShowId = cursor.fetchone()[0]
+        try:
+            kodiShowId = cursor.fetchone()[0]
+        except:
+            self.logMsg("Unable to find show itemId:%s" % showId, 1)
+            return
         
         allEmbyEpisodes = ReadEmbyDB().getEpisodes(showId)
         allKodiEpisodes = ReadKodiDB().getKodiEpisodes(connection, cursor, kodiShowId)
