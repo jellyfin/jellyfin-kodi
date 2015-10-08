@@ -64,12 +64,16 @@ class WriteKodiMusicDB():
         bio = API().getOverview(MBitem)
 
         # Associate artwork
-        thumb = API().getArtwork(MBitem, "Primary")
+        artworks = API().getAllArtwork(MBitem)
+        thumb = artworks['Primary']
+        backdrops = artworks['Backdrop'] # List
+
         if thumb:
             thumb = "<thumb>%s</thumb>" % thumb
-        fanart = API().getArtwork(MBitem, "Backdrop")
-        if fanart:
-            fanart = "<fanart>%s</fanart>" % fanart    
+        if backdrops:
+            fanart = "<fanart>%s</fanart>" % backdrops[0]
+        else:
+            fanart = ""
 
         ##### UPDATE THE ARTIST #####
         if artistid:
@@ -121,16 +125,8 @@ class WriteKodiMusicDB():
             query = "INSERT INTO emby(emby_id, kodi_id, media_type, checksum) values(?, ?, ?, ?)"
             cursor.execute(query, (embyId, artistid, "artist", checksum))
 
-        
         # Update artwork
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), artistid, "artist", "thumb", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), artistid, "artist", "poster", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Banner"), artistid, "artist", "banner", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Logo"), artistid, "artist", "clearlogo", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Art"), artistid, "artist", "clearart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Thumb"), artistid, "artist", "landscape", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Disc"), artistid, "artist", "discart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop"), artistid, "artist", "fanart", cursor)
+        self.textureCache.addArtwork(artworks, artistid, "artist", cursor)
 
     def addOrUpdateAlbumToKodiLibrary(self, MBitem, connection, cursor):
         
@@ -166,7 +162,8 @@ class WriteKodiMusicDB():
         artists = " / ".join(MBartists)
 
         # Associate the artwork
-        thumb = API().getArtwork(MBitem, "Primary")
+        artworks = API().getAllArtwork(MBitem)
+        thumb = artworks['Primary']
         if thumb:
             thumb = "<thumb>%s</thumb>" % thumb
 
@@ -224,14 +221,7 @@ class WriteKodiMusicDB():
         self.AddGenresToMedia(albumid, genres, "album", cursor)
 
         # Update artwork
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), albumid, "album", "thumb", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "BoxRear"), albumid, "album", "poster", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Banner"), albumid, "album", "banner", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Logo"), albumid, "album", "clearlogo", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Art"), albumid, "album", "clearart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Thumb"), albumid, "album", "landscape", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Disc"), albumid, "album", "discart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop"), albumid, "album", "fanart", cursor)
+        self.textureCache.addArtwork(artworks, albumid, "album", cursor)
         
         # Link album to artists
         if MBartists:
@@ -390,14 +380,7 @@ class WriteKodiMusicDB():
                 cursor.execute(query, (artistid, songid, artist['Name']))
         
         # Update artwork
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), songid, "song", "thumb", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary"), songid, "song", "poster", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Banner"), songid, "song", "banner", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Logo"), songid, "song", "clearlogo", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Art"), songid, "song", "clearart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Thumb"), songid, "song", "landscape", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Disc"), songid, "song", "discart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop"), songid, "song", "fanart", cursor)
+        self.textureCache.addArtwork(API().getAllArtwork(MBitem), songid, "song", cursor)
     
     def deleteItemFromKodiLibrary(self, id, connection, cursor):
         

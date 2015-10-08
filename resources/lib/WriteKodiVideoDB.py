@@ -234,18 +234,11 @@ class WriteKodiVideoDB():
 
         self.AddTagsToMedia(movieid, tags, "movie", cursor)
 
+        # Update artwork
+        self.textureCache.addArtwork(API().getAllArtwork(MBitem), movieid, "movie", cursor)
+
         # Update or insert actors
         self.AddPeopleToMedia(movieid, MBitem.get('People'), "movie", connection, cursor)
-        
-        # Update artwork
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "movie"), movieid, "movie", "thumb", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "movie"), movieid, "movie", "poster", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Banner", mediaType = "movie"), movieid, "movie", "banner", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Logo", mediaType = "movie"), movieid, "movie", "clearlogo", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Art", mediaType = "movie"), movieid, "movie", "clearart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Thumb", mediaType = "movie"), movieid, "movie", "landscape", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Disc", mediaType = "movie"), movieid, "movie", "discart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop", mediaType = "movie"), movieid, "movie", "fanart", cursor)
         
         # Update genres
         self.AddGenresToMedia(movieid, genres, "movie", cursor)
@@ -405,18 +398,12 @@ class WriteKodiVideoDB():
             #update the checksum in emby table
             cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(MBitem),MBitem["Id"]))
         
+        
         #update or insert actors
         self.AddPeopleToMedia(idMVideo,MBitem.get("People"),"musicvideo", connection, cursor)
-        
-        #update artwork
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "musicvideo"), idMVideo, "musicvideo", "thumb", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "musicvideo"), idMVideo, "musicvideo", "poster", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Banner", mediaType = "musicvideo"), idMVideo, "musicvideo", "banner", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Logo", mediaType = "musicvideo"), idMVideo, "musicvideo", "clearlogo", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Art", mediaType = "musicvideo"), idMVideo, "musicvideo", "clearart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Thumb", mediaType = "musicvideo"), idMVideo, "musicvideo", "landscape", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Disc", mediaType = "musicvideo"), idMVideo, "musicvideo", "discart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop", mediaType = "musicvideo"), idMVideo, "musicvideo", "fanart", cursor)
+
+        # Update artwork
+        self.textureCache.addArtwork(API().getAllArtwork(MBitem), idMVideo, "musicvideo", cursor)
         
         #update genres
         self.AddGenresToMedia(idMVideo, genres, "musicvideo", cursor)
@@ -546,6 +533,9 @@ class WriteKodiVideoDB():
 
         self.AddTagsToMedia(showid, tags, "tvshow", cursor)
 
+        # Update artwork
+        self.textureCache.addArtwork(API().getAllArtwork(MBitem), showid, "tvshow", cursor)
+
         # Update or insert people
         self.AddPeopleToMedia(showid, MBitem.get('People'),"tvshow", connection, cursor)
         
@@ -554,16 +544,6 @@ class WriteKodiVideoDB():
         
         # Update studios
         self.AddStudiosToMedia(showid, studios, "tvshow", cursor)
-                
-        # Update artwork
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "tvshow"), showid, "tvshow", "thumb", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "tvshow"), showid, "tvshow", "poster", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Banner", mediaType = "tvshow"), showid, "tvshow", "banner", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Logo", mediaType = "tvshow"), showid, "tvshow", "clearlogo", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Art", mediaType = "tvshow"), showid, "tvshow", "clearart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Thumb", mediaType = "tvshow"), showid, "tvshow", "landscape", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Disc", mediaType = "tvshow"), showid, "tvshow", "discart", cursor)
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop", mediaType = "tvshow"), showid, "tvshow", "fanart", cursor)
         
         # Update season details
         self.updateSeasons(embyId, showid, connection, cursor)
@@ -723,7 +703,8 @@ class WriteKodiVideoDB():
         self.AddStreamDetailsToMedia(API().getMediaStreams(MBitem), runtime, fileid, cursor)
         
         # Update artwork
-        self.addOrUpdateArt(API().getArtwork(MBitem, "Primary", mediaType = "episode"), episodeid, "episode", "thumb", cursor)
+        artworks = API().getAllArtwork(MBitem)
+        self.textureCache.addOrUpdateArt(artworks['Primary'], episodeid, "episode", "thumb", cursor)
 
         # Set resume point and round to 6th decimal
         resume = round(float(timeInfo.get('ResumeTime')), 6)
@@ -764,49 +745,38 @@ class WriteKodiVideoDB():
      
     def updateSeasons(self, embyTvShowId, kodiTvShowId, connection, cursor):
         
+        textureCache = self.textureCache
         seasonData = ReadEmbyDB().getTVShowSeasons(embyTvShowId)
-        
-        if seasonData: # Verify every season
-            for season in seasonData:
-                
-                seasonNum = season.get('IndexNumber')
-                
-                cursor.execute("SELECT idSeason as seasonid FROM seasons WHERE idShow = ? and season = ?", (kodiTvShowId, seasonNum,))
-                try:
-                    seasonid = cursor.fetchone()[0]
-                except: # Create the season
-                    cursor.execute("select coalesce(max(idSeason),0) as seasonid from seasons")
-                    seasonid = cursor.fetchone()[0] + 1
-                    query = "INSERT INTO seasons(idSeason, idShow, season) values(?, ?, ?)"
-                    cursor.execute(query, (seasonid, kodiTvShowId, seasonNum))
-                finally: # Update artwork
-                    imageUrl = API().getArtwork(season, "Thumb", mediaType = "season")
-                    self.addOrUpdateArt(imageUrl, seasonid, "season", "landscape", cursor)
-                    
-                    imageUrl = API().getArtwork(season, "Primary", mediaType = "season")
-                    self.addOrUpdateArt(imageUrl, seasonid, "season", "poster", cursor)
-                    
-                    imageUrl = API().getArtwork(season, "Banner", mediaType = "season")
-                    self.addOrUpdateArt(imageUrl, seasonid, "season", "banner", cursor)
 
-                    imageUrl = API().getArtwork(season, "Backdrop", mediaType = "season")
-                    self.addOrUpdateArt(imageUrl, seasonid, "season", "fanart", cursor)
+        for season in seasonData:
             
-            # All season entry
-            MBitem = ReadEmbyDB().getFullItem(embyTvShowId)
-            seasonNum = -1
-
+            seasonNum = season.get('IndexNumber')
+            
             cursor.execute("SELECT idSeason as seasonid FROM seasons WHERE idShow = ? and season = ?", (kodiTvShowId, seasonNum,))
             try:
                 seasonid = cursor.fetchone()[0]
-            except: # Create all season entry
+            except: # Create the season
                 cursor.execute("select coalesce(max(idSeason),0) as seasonid from seasons")
                 seasonid = cursor.fetchone()[0] + 1
                 query = "INSERT INTO seasons(idSeason, idShow, season) values(?, ?, ?)"
                 cursor.execute(query, (seasonid, kodiTvShowId, seasonNum))
-            finally: # Update the artwork
-                imageUrl = API().getArtwork(MBitem, "Primary", mediaType = "season")
-                self.addOrUpdateArt(imageUrl, seasonid, "season", "poster", cursor)
+            finally: # Update artwork
+                textureCache.addArtwork(API().getAllArtwork(season), seasonid, "season", cursor)
+        
+        # All season entry
+        MBitem = ReadEmbyDB().getFullItem(embyTvShowId)
+        seasonNum = -1
+
+        cursor.execute("SELECT idSeason as seasonid FROM seasons WHERE idShow = ? and season = ?", (kodiTvShowId, seasonNum,))
+        try:
+            seasonid = cursor.fetchone()[0]
+        except: # Create all season entry
+            cursor.execute("select coalesce(max(idSeason),0) as seasonid from seasons")
+            seasonid = cursor.fetchone()[0] + 1
+            query = "INSERT INTO seasons(idSeason, idShow, season) values(?, ?, ?)"
+            cursor.execute(query, (seasonid, kodiTvShowId, seasonNum))
+        finally: # Update the artwork
+            textureCache.addArtwork(API().getAllArtwork(MBitem), seasonid, "season", cursor)
                             
     def addOrUpdateArt(self, imageUrl, kodiId, mediaType, imageType, cursor):
         
@@ -907,7 +877,7 @@ class WriteKodiVideoDB():
                         if "writing" in arttype:
                             arttype = "writer"
 
-                        self.addOrUpdateArt(thumb, actorid, arttype, "thumb", cursor)
+                        self.textureCache.addOrUpdateArt(thumb, actorid, arttype, "thumb", cursor)
 
                     # Link person to content in database
                     if kodiVersion == 15 or kodiVersion == 16:

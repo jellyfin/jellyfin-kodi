@@ -137,18 +137,32 @@ class TextureCache():
         for art in artwork:
             
             if art == "Backdrop":
-                # Backdrop entry is a list
-                artList = artwork[art]
-                if artList:
-                    self.addOrUpdateArt(artList[0], kodiId, mediaType, kodiart[art], cursor)
+                # Backdrop entry is a list, process extra fanart for artwork downloader (fanart, fanart1, fanart2, etc.)
+                backdrops = artwork[art]
+                backdropsNumber = len(backdrops)
+
+                cursor.execute("SELECT url FROM art WHERE media_id = ? AND media_type = ? AND type LIKE ?", (kodiId, mediaType, "fanart%",))
+                rows = cursor.fetchall()
+
+                if len(rows) > backdropsNumber:
+                    # More backdrops in database than what we are going to process. Delete extra fanart.
+                    cursor.execute("DELETE FROM art WHERE media_id = ? AND media_type = ? AND type LIKE ?", (kodiId, mediaType, "fanart_",))
+
+                index = ""
+                for backdrop in backdrops:
+                    self.addOrUpdateArt(backdrop, kodiId, mediaType, "%s%s" % ("fanart", index), cursor)
+                    if backdropsNumber > 1:
+                        try: # Will only fail on the first try, str to int.
+                            index += 1
+                        except TypeError:
+                            index = 1
                 
             elif art == "Primary":
                 # Primary art is processed as thumb and poster for Kodi.
                 for artType in kodiart[art]:
                     self.addOrUpdateArt(artwork[art], kodiId, mediaType, artType, cursor)
             
-            else:
-                # For banner, logo, art, thumb, disc
+            else: # For banner, logo, art, thumb, disc
                 self.addOrUpdateArt(artwork[art], kodiId, mediaType, kodiart[art], cursor)
 
     def addOrUpdateArt(self, imageUrl, kodiId, mediaType, imageType, cursor):
@@ -166,14 +180,14 @@ class TextureCache():
                 query = "INSERT INTO art(media_id, media_type, type, url) values(?, ?, ?, ?)"
                 cursor.execute(query, (kodiId, mediaType, imageType, imageUrl))
             
-            else:
+            else: # Only cache artwork if it changed
                 if url != imageUrl:
                     cacheimage = True
                     
-                    # Only for backdrop
-                    if imageType == "fanart":
+                    # Only for the main backdrop, poster
+                    if imageType in {"fanart", "poster"}:
                         # Delete current entry before updating with the new one
-                        self.deleteFanart(url)
+                        self.deleteCachedArtwork(url)
                     
                     self.logMsg("Updating Art Link for kodiId: %s (%s) -> (%s)" % (kodiId, url, imageUrl), 1)
                     query = "UPDATE art set url = ? WHERE media_id = ? AND media_type = ? AND type = ?"
@@ -188,26 +202,31 @@ class TextureCache():
         if url and self.enableTextureCache:
             self.logMsg("Processing: %s" % url, 2)
 
-            # add image to texture cache by simply calling it at the http endpoint
+            # Add image to texture cache by simply calling it at the http endpoint
             url = self.double_urlencode(url)
-            try:
-                response = requests.head('http://%s:%s/image/image://%s' % (self.xbmc_host, self.xbmc_port, url), auth=(self.xbmc_username, self.xbmc_password),timeout=(0.01, 0.01))
-            except:
-                #extreme short timeouts so we will have a exception, but we don't need the result so pass
-                pass
+            try: # Extreme short timeouts so we will have a exception, but we don't need the result so pass
+                response = requests.head('http://%s:%s/image/image://%s' % (self.xbmc_host, self.xbmc_port, url), auth=(self.xbmc_username, self.xbmc_password), timeout=(0.01, 0.01))
+            except: pass
 
-    def deleteFanart(self, url):
-        # Only necessary to remove and apply a new backdrop
+    def deleteCachedArtwork(self, url):
+        # Only necessary to remove and apply a new backdrop or poster
         connection = utils.KodiSQL('texture')
         cursor = connection.cursor()
 
         cursor.execute("SELECT cachedurl FROM texture WHERE url = ?", (url,))
         try:
-            cursor.fetchone()[0]
+            cachedurl = cursor.fetchone()[0]
+        
         except:
             self.logMsg("Could not find cached url.", 1)
-        else:
+        
+        else: # Delete thumbnail as well as the entry
+            thumbnails = xbmc.translatePath("special://thumbnails/%s" % cachedurl)
+            self.logMsg("Deleting cached thumbnail: %s" % thumbnails, 1)
+            xbmcvfs.delete(thumbnails)
+            
             cursor.execute("DELETE FROM texture WHERE url = ?", (url,))
             connection.commit()
+        
         finally:
             cursor.close()
