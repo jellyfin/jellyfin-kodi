@@ -108,7 +108,7 @@ class Kodi_Monitor( xbmc.Monitor ):
             jsondata = json.loads(data)
             
             try:
-                playcount = jsondata['playcount']
+                playcount = jsondata.get('playcount')
                 item = jsondata['item']['id']
                 type = jsondata['item']['type']
                 prop = utils.window('Played%s%s' % (type, item))
