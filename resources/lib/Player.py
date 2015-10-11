@@ -70,145 +70,179 @@ class Player( xbmc.Player ):
         xbmcplayer = self.xbmcplayer
         self.stopAll()
         
-        # Get current file - if stack://, get currently playing item
-        currentFile = xbmcplayer.getPlayingFile()
-        if "stack://" in currentFile:
-            self.stackFiles = currentFile
-            currentFile = self.currentStackItem(currentFile)
-        else:
-            self.stackFiles = None
-            self.currentFile = currentFile
-            self.stackElapsed = 0
+        # Get current file
+        try:
+            currentFile = xbmcplayer.getPlayingFile()
+            xbmc.sleep(200)
+        except:
+            currentFile = ""
+            count = 0
+            while not currentFile:
 
-        self.logMsg("ONPLAYBACK_STARTED: %s" % currentFile, 0)
-        
-        # We may need to wait for info to be set in kodi monitor
-        itemId = utils.window("%sitem_id" % currentFile)
-        tryCount = 0
-        while not itemId:
-            
-            xbmc.sleep(500)
-            itemId = utils.window("%sitem_id" % currentFile)
-            if tryCount == 20: # try 20 times or about 10 seconds
-                break
-            else: tryCount += 1
-        
-        else:
-            # Only proceed if an itemId was found.
-            runtime = utils.window("%sruntimeticks" % currentFile)
-            refresh_id = utils.window("%srefresh_id" % currentFile)
-            playMethod = utils.window("%splaymethod" % currentFile)
-            itemType = utils.window("%stype" % currentFile)
-            mapping = utils.window("%sIndexMapping" % currentFile)
-            seekTime = xbmc.Player().getTime()
+                xbmc.sleep(100)
+                try:
+                    currentFile = xbmcplayer.getPlayingFile()
+                except: pass
 
-            self.logMsg("Mapping for subtitles index: %s" % mapping, 2)
+                if count == 5: # try 5 times
+                    self.logMsg("Cancelling playback report...", 1)
+                    break
+                else: count += 1
 
-            # Get playback volume
-            volume_query = '{"jsonrpc": "2.0", "method": "Application.GetProperties", "params": {"properties": ["volume","muted"]}, "id": 1}'
-            result = xbmc.executeJSONRPC(volume_query)
-            result = json.loads(result)
-            volume = result.get('result').get('volume')
-            muted = result.get('result').get('muted')
 
-            url = "{server}/mediabrowser/Sessions/Playing"
-            postdata = {
-
-                'QueueableMediaTypes': "Video",
-                'CanSeek': True,
-                'ItemId': itemId,
-                'MediaSourceId': itemId,
-                'PlayMethod': playMethod,
-                'VolumeLevel': volume,
-                'PositionTicks': int(seekTime * 10000000) - int(self.stackElapsed * 10000000),
-                'IsMuted': muted
-            }
-
-            # Get the current audio track and subtitles
-            if playMethod == "Transcode":
-                # property set in PlayUtils.py
-                postdata['AudioStreamIndex'] = utils.window("%sAudioStreamIndex" % currentFile)
-                postdata['SubtitleStreamIndex'] = utils.window("%sSubtitleStreamIndex" % currentFile)
-
+        if currentFile:
+            # if stack://, get currently playing item
+            if "stack://" in currentFile:
+                self.stackFiles = currentFile
+                currentFile = self.currentStackItem(currentFile)
             else:
-                track_query = '{"jsonrpc": "2.0", "method": "Player.GetProperties",  "params": {"playerid": 1,"properties": ["currentsubtitle","currentaudiostream","subtitleenabled"]} , "id": 1}'
-                result = xbmc.executeJSONRPC(track_query)
+                self.stackFiles = None
+                self.currentFile = currentFile
+                self.stackElapsed = 0
+
+            self.logMsg("ONPLAYBACK_STARTED: %s" % currentFile, 0)
+            
+
+            # We may need to wait for info to be set in kodi monitor
+            itemId = utils.window("%sitem_id" % currentFile)
+            tryCount = 0
+            while not itemId:
+                
+                xbmc.sleep(200)
+                itemId = utils.window("%sitem_id" % currentFile)
+                if tryCount == 20: # try 20 times or about 10 seconds
+                    self.logMsg("Could not find itemId, cancelling playback report...", 1)
+                    break
+                else: tryCount += 1
+            
+            else:
+                # Only proceed if an itemId was found.
+                runtime = utils.window("%sruntimeticks" % currentFile)
+                refresh_id = utils.window("%srefresh_id" % currentFile)
+                playMethod = utils.window("%splaymethod" % currentFile)
+                itemType = utils.window("%stype" % currentFile)
+                seekTime = xbmcplayer.getTime()
+
+
+                # Get playback volume
+                volume_query = '{"jsonrpc": "2.0", "method": "Application.GetProperties", "params": {"properties": ["volume","muted"]}, "id": 1}'
+                result = xbmc.executeJSONRPC(volume_query)
                 result = json.loads(result)
-                
-                # Audio tracks
-                indexAudio = result.get('result', 0)
-                if indexAudio:
-                    indexAudio = indexAudio.get('currentaudiostream', {}).get('index', 0)
-                # Subtitles tracks
-                indexSubs = result.get('result', 0)
-                if indexSubs:
-                    indexSubs = indexSubs.get('currentsubtitle', {}).get('index', 0)
-                # If subtitles are enabled
-                subsEnabled = result.get('result', "")
-                if subsEnabled:
-                    subsEnabled = subsEnabled.get('subtitleenabled', "")
-                
-                # Postdata for the audio and subs tracks
-                audioTracks = len(xbmc.Player().getAvailableAudioStreams())
-                postdata['AudioStreamIndex'] = indexAudio + 1
-                
-                if subsEnabled and len(xbmc.Player().getAvailableSubtitleStreams()) > 0:
-                    
-                    if mapping:
-                        externalIndex = json.loads(mapping)
-                    else: # Direct paths scenario
-                        externalIndex = ""
+                result = result.get('result')
 
-                    if externalIndex:
-                        # If there's external subtitles added via PlaybackUtils
-                        if externalIndex.get(str(indexSubs)):
-                            # If the current subtitle is in the mapping
-                            postdata['SubtitleStreamIndex'] = externalIndex[str(indexSubs)]
-                        else:
-                            # Internal subtitle currently selected
-                            external = len(externalIndex)
-                            postdata['SubtitleStreamIndex'] = indexSubs - external + audioTracks + 1
+                volume = result.get('volume')
+                muted = result.get('muted')
+
+                # Postdata structure to send to Emby server
+                url = "{server}/mediabrowser/Sessions/Playing"
+                postdata = {
+
+                    'QueueableMediaTypes': "Video",
+                    'CanSeek': True,
+                    'ItemId': itemId,
+                    'MediaSourceId': itemId,
+                    'PlayMethod': playMethod,
+                    'VolumeLevel': volume,
+                    'PositionTicks': int(seekTime * 10000000) - int(self.stackElapsed * 10000000),
+                    'IsMuted': muted
+                }
+
+                # Get the current audio track and subtitles
+                if playMethod == "Transcode":
+                    # property set in PlayUtils.py
+                    postdata['AudioStreamIndex'] = utils.window("%sAudioStreamIndex" % currentFile)
+                    postdata['SubtitleStreamIndex'] = utils.window("%sSubtitleStreamIndex" % currentFile)
+
+                else:
+                    # Get the current kodi audio and subtitles and convert to Emby equivalent
+                    track_query = '{"jsonrpc": "2.0", "method": "Player.GetProperties",  "params": {"playerid": 1,"properties": ["currentsubtitle","currentaudiostream","subtitleenabled"]} , "id": 1}'
+                    result = xbmc.executeJSONRPC(track_query)
+                    result = json.loads(result)
+                    result = result.get('result')
+
+                    try: # Audio tracks
+                        indexAudio = result['currentaudiostream']['index']
+                    except KeyError:
+                        indexAudio = 0
+                    
+                    try: # Subtitles tracks
+                        indexSubs = result['currentsubtitle']['index']
+                    except KeyError:
+                        indexSubs = 0
+
+                    try: # If subtitles are enabled
+                        subsEnabled = result['subtitleenabled']
+                    except KeyError:
+                        subsEnabled = ""
+
+                    # Postdata for the audio
+                    postdata['AudioStreamIndex'] = indexAudio + 1
+                    
+                    # Postdata for the subtitles
+                    if subsEnabled and len(xbmc.Player().getAvailableSubtitleStreams()) > 0:
+                        
+                        # Number of audiotracks to help get Emby Index
+                        audioTracks = len(xbmc.Player().getAvailableAudioStreams())
+                        mapping = utils.window("%sIndexMapping" % currentFile)
+
+                        if mapping: # Set in PlaybackUtils.py
+                            
+                            self.logMsg("Mapping for external subtitles index: %s" % mapping, 2)
+                            externalIndex = json.loads(mapping)
+
+                            if externalIndex.get(str(indexSubs)):
+                                # If the current subtitle is in the mapping
+                                postdata['SubtitleStreamIndex'] = externalIndex[str(indexSubs)]
+                            else:
+                                # Internal subtitle currently selected
+                                postdata['SubtitleStreamIndex'] = indexSubs - len(externalIndex) + audioTracks + 1
+                        
+                        else: # Direct paths enabled scenario or no external subtitles set
+                            postdata['SubtitleStreamIndex'] = indexSubs + audioTracks + 1
                     else:
-                        # No external subtitles added via PlayUtils
-                        postdata['SubtitleStreamIndex'] = indexSubs + audioTracks + 1
-                else:
-                    postdata['SubtitleStreamIndex'] = ""
-            
-            # Post playback to server
-            self.logMsg("Sending POST play started.", 1)
-            self.doUtils.downloadUrl(url, postBody=postdata, type="POST")
-            
-            # save data map for updates and position calls
-            data = {
+                        postdata['SubtitleStreamIndex'] = ""
                 
-                'runtime': runtime,
-                'item_id': itemId,
-                'refresh_id': refresh_id,
-                'currentfile': currentFile,
-                'AudioStreamIndex': postdata['AudioStreamIndex'],
-                'SubtitleStreamIndex': postdata['SubtitleStreamIndex'],
-                'playmethod': playMethod,
-                'Type': itemType,
-                'currentPosition': int(seekTime) - int(self.stackElapsed)
-            }
-            
-            self.played_information[currentFile] = data
-            self.logMsg("ADDING_FILE: %s" % self.played_information, 1)
 
-            # log some playback stats
-            '''if(itemType != None):
-                if(self.playStats.get(itemType) != None):
-                    count = self.playStats.get(itemType) + 1
-                    self.playStats[itemType] = count
-                else:
-                    self.playStats[itemType] = 1
+                # Post playback to server
+                self.logMsg("Sending POST play started: %s." % postdata, 2)
+                self.doUtils.downloadUrl(url, postBody=postdata, type="POST")
+                
+                # Ensure we do have a runtime
+                if not runtime:
+                    runtime = xbmcplayer.getTotalTime()
+                    self.logMsg("Runtime is missing, grabbing runtime from Kodi player: %s" % runtime, 1)
+
+                # Save data map for updates and position calls
+                data = {
                     
-            if(playMethod != None):
-                if(self.playStats.get(playMethod) != None):
-                    count = self.playStats.get(playMethod) + 1
-                    self.playStats[playMethod] = count
-                else:
-                    self.playStats[playMethod] = 1'''
+                    'runtime': runtime,
+                    'item_id': itemId,
+                    'refresh_id': refresh_id,
+                    'currentfile': currentFile,
+                    'AudioStreamIndex': postdata['AudioStreamIndex'],
+                    'SubtitleStreamIndex': postdata['SubtitleStreamIndex'],
+                    'playmethod': playMethod,
+                    'Type': itemType,
+                    'currentPosition': int(seekTime) - int(self.stackElapsed)
+                }
+                
+                self.played_information[currentFile] = data
+                self.logMsg("ADDING_FILE: %s" % self.played_information, 1)
+
+                # log some playback stats
+                '''if(itemType != None):
+                    if(self.playStats.get(itemType) != None):
+                        count = self.playStats.get(itemType) + 1
+                        self.playStats[itemType] = count
+                    else:
+                        self.playStats[itemType] = 1
+                        
+                if(playMethod != None):
+                    if(self.playStats.get(playMethod) != None):
+                        count = self.playStats.get(playMethod) + 1
+                        self.playStats[playMethod] = count
+                    else:
+                        self.playStats[playMethod] = 1'''
 
     def reportPlayback(self):
         
@@ -221,25 +255,26 @@ class Player( xbmc.Player ):
 
         # only report playback if emby has initiated the playback (item_id has value)
         if data:
-
             # Get playback information
-            itemId = data.get("item_id")
-            audioindex = data.get("AudioStreamIndex")
-            subtitleindex = data.get("SubtitleStreamIndex")
-            playTime = data.get("currentPosition")
-            playMethod = data.get("playmethod")
-            paused = data.get("paused")
-            
-            if paused is None:
-                paused = False
+            itemId = data['item_id']
+            audioindex = data['AudioStreamIndex']
+            subtitleindex = data['SubtitleStreamIndex']
+            playTime = data['currentPosition']
+            playMethod = data['playmethod']
+            paused = data.get('paused', False)
+
 
             # Get playback volume
             volume_query = '{"jsonrpc": "2.0", "method": "Application.GetProperties", "params": {"properties": ["volume","muted"]}, "id": 1}'
             result = xbmc.executeJSONRPC(volume_query)
             result = json.loads(result)
-            volume = result.get('result').get('volume')
-            muted = result.get('result').get('muted')
+            result = result.get('result')
 
+            volume = result.get('volume')
+            muted = result.get('muted')
+
+
+            # Postdata for the websocketclient report
             postdata = {
 
                 'QueueableMediaTypes': "Video",
@@ -247,78 +282,67 @@ class Player( xbmc.Player ):
                 'ItemId': itemId,
                 'MediaSourceId': itemId,
                 'PlayMethod': playMethod,
+                'PositionTicks': int(playTime * 10000000) - int(self.stackElapsed * 10000000),
                 'IsPaused': paused,
                 'VolumeLevel': volume,
                 'IsMuted': muted
             }
 
-            if playTime:
-                postdata['PositionTicks'] = int(playTime * 10000000) - int(self.stackElapsed * 10000000)
-
             if playMethod == "Transcode":
-
-                data['AudioStreamIndex'] = audioindex
-                data['SubtitleStreamIndex'] = subtitleindex
+                # Track can't be changed, keep reporting the same index
+                postdata['AudioStreamIndex'] = audioindex
+                postdata['AudioStreamIndex'] = subtitleindex
 
             else:
                 # Get current audio and subtitles track
                 track_query = '{"jsonrpc": "2.0", "method": "Player.GetProperties",  "params": {"playerid":1,"properties": ["currentsubtitle","currentaudiostream","subtitleenabled"]} , "id": 1}'
                 result = xbmc.executeJSONRPC(track_query)
                 result = json.loads(result)
-                # Audio tracks
-                indexAudio = result.get('result', 0)
-                if indexAudio:
-                    indexAudio = indexAudio.get('currentaudiostream', {}).get('index', 0)
-                # Subtitles tracks
-                indexSubs = result.get('result', 0)
-                if indexSubs:
-                    indexSubs = indexSubs.get('currentsubtitle', {}).get('index', 0)
-                # If subtitles are enabled
-                subsEnabled = result.get('result', "")
-                if subsEnabled:
-                    subsEnabled = subsEnabled.get('subtitleenabled', "")
+                result = result.get('result')
 
-                # Convert back into an Emby index
-                audioTracks = len(xbmc.Player().getAvailableAudioStreams())
-                indexAudio = indexAudio + 1
+                try: # Audio tracks
+                    indexAudio = result['currentaudiostream']['index']
+                except KeyError:
+                    indexAudio = 0
+                
+                try: # Subtitles tracks
+                    indexSubs = result['currentsubtitle']['index']
+                except KeyError:
+                    indexSubs = 0
 
+                try: # If subtitles are enabled
+                    subsEnabled = result['subtitleenabled']
+                except KeyError:
+                    subsEnabled = ""
+
+                # Postdata for the audio
+                data['AudioStreamIndex'], postdata['AudioStreamIndex'] = [indexAudio + 1] * 2
+                
+                # Postdata for the subtitles
                 if subsEnabled and len(xbmc.Player().getAvailableSubtitleStreams()) > 0:
-                    WINDOW = xbmcgui.Window(10000)
-                    mapping = WINDOW.getProperty("%sIndexMapping" % currentFile)
                     
-                    if mapping:
-                        externalIndex = json.loads(mapping)
-                    else: # Direct paths scenario
-                        externalIndex = ""
+                    # Number of audiotracks to help get Emby Index
+                    audioTracks = len(xbmc.Player().getAvailableAudioStreams())
+                    mapping = utils.window("%sIndexMapping" % currentFile)
 
-                    if externalIndex:
-                        # If there's external subtitles added via PlaybackUtils
+                    if mapping: # Set in PlaybackUtils.py
+                        
+                        self.logMsg("Mapping for external subtitles index: %s" % mapping, 2)
+                        externalIndex = json.loads(mapping)
+
                         if externalIndex.get(str(indexSubs)):
                             # If the current subtitle is in the mapping
-                            indexSubs = externalIndex[str(indexSubs)]
+                            data['SubtitleStreamIndex'], postdata['SubtitleStreamIndex'] = [externalIndex[str(indexSubs)]] * 2
                         else:
                             # Internal subtitle currently selected
-                            external = len(externalIndex)
-                            indexSubs = indexSubs - external + audioTracks + 1
-                    else:
-                        # No external subtitles added via PlayUtils
-                        audioTracks = len(xbmc.Player().getAvailableAudioStreams())
-                        indexSubs = indexSubs + audioTracks + 1
+                            data['SubtitleStreamIndex'], postdata['SubtitleStreamIndex'] = [indexSubs - len(externalIndex) + audioTracks + 1] * 2
+                    
+                    else: # Direct paths enabled scenario or no external subtitles set
+                        data['SubtitleStreamIndex'], postdata['SubtitleStreamIndex'] = [indexSubs + audioTracks + 1] * 2
                 else:
-                    indexSubs = ""
+                    data['SubtitleStreamIndex'], postdata['SubtitleStreamIndex'] = [""] * 2
 
-                if audioindex == indexAudio:
-                    postdata['AudioStreamIndex'] = audioindex
-                else:
-                    postdata['AudioStreamIndex'] = indexAudio
-                    data['AudioStreamIndex'] = indexAudio
-
-                if subtitleindex == indexSubs:
-                    postdata['SubtitleStreamIndex'] = subtitleindex
-                else:
-                    postdata['SubtitleStreamIndex'] = indexSubs
-                    data['SubtitleStreamIndex'] = indexSubs
-
+            # Report progress via websocketclient
             postdata = json.dumps(postdata)
             self.logMsg("Report: %s" % postdata, 2)
             self.ws.sendProgressUpdate(postdata)
@@ -329,9 +353,9 @@ class Player( xbmc.Player ):
         self.logMsg("PLAYBACK_PAUSED: %s" % currentFile, 2)
 
         if self.played_information.get(currentFile):
-            self.played_information[currentFile]['paused'] = "true"
+            self.played_information[currentFile]['paused'] = True
         
-        self.reportPlayback()
+            self.reportPlayback()
 
     def onPlayBackResumed( self ):
 
@@ -339,22 +363,20 @@ class Player( xbmc.Player ):
         self.logMsg("PLAYBACK_RESUMED: %s" % currentFile, 2)
 
         if self.played_information.get(currentFile):
-            self.played_information[currentFile]['paused'] = "false"
+            self.played_information[currentFile]['paused'] = False
         
-        self.reportPlayback()
+            self.reportPlayback()
 
     def onPlayBackSeek( self, time, seekOffset ):
-        
-        self.logMsg("PLAYBACK_SEEK", 2)
-        xbmcplayer = self.xbmcplayer
         # Make position when seeking a bit more accurate
-        position = xbmcplayer.getTime()
         currentFile = self.currentFile
+        self.logMsg("PLAYBACK_SEEK: %s" % currentFile, 2)
 
         if self.played_information.get(currentFile):
+            position = self.xbmcplayer.getTime()
             self.played_information[currentFile]['currentPosition'] = position
 
-        self.reportPlayback()
+            self.reportPlayback()
     
     def onPlayBackStopped( self ):
         # Will be called when user stops xbmc playing a file
@@ -371,7 +393,7 @@ class Player( xbmc.Player ):
         if not self.played_information:
             return 
             
-        self.logMsg("Played_information: %s" % str(self.played_information), 1)
+        self.logMsg("Played_information: %s" % self.played_information, 1)
         # Process each items
         for item in self.played_information:
             
@@ -379,15 +401,15 @@ class Player( xbmc.Player ):
             if data:
                 
                 self.logMsg("Item path: %s" % item, 2)
-                self.logMsg("Item data: %s" % str(data), 2)
+                self.logMsg("Item data: %s" % data, 2)
 
-                runtime = data.get('runtime')
-                currentPosition = data.get('currentPosition')
-                itemId = data.get('item_id')
-                refresh_id = data.get('refresh_id')
-                currentFile = data.get('currentfile')
-                type = data.get('Type')
-                playMethod = data.get('playmethod')
+                runtime = data['runtime']
+                currentPosition = data['currentPosition']
+                itemId = data['item_id']
+                refresh_id = data['refresh_id']
+                currentFile = data['currentfile']
+                type = data['Type']
+                playMethod = data['playmethod']
 
                 if currentPosition and runtime:
                     percentComplete = (currentPosition * 10000000) / int(runtime)
@@ -409,7 +431,7 @@ class Player( xbmc.Player ):
                     if percentComplete >= markPlayedAt and offerDelete:
                         # Item could be stacked, so only offer to delete the main item.
                         if not self.stackFiles or itemId == utils.window('%sitem_id' % self.stackFiles):
-                            return_value = xbmcgui.Dialog().yesno("Offer Delete", "Delete %s" % data.get('currentfile').split("/")[-1], "on Emby Server?")
+                            return_value = xbmcgui.Dialog().yesno("Offer Delete", "Delete %s" % currentFile.split("/")[-1], "on Emby Server?")
                             if return_value:
                                 # Delete Kodi entry before Emby
                                 listItem = [itemId]

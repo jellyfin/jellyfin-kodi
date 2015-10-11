@@ -33,7 +33,7 @@ class Kodi_Monitor( xbmc.Monitor ):
     
     #this library monitor is used to detect a watchedstate change by the user through the library
     #as well as detect when a library item has been deleted to pass the delete to the Emby server
-    def onNotification  (self,sender,method,data):
+    def onNotification  (self, sender, method, data):
 
         WINDOW = self.WINDOW
         downloadUtils = DownloadUtils()
@@ -50,6 +50,8 @@ class Kodi_Monitor( xbmc.Monitor ):
 
                         if embyid != None:
                            
+                            playurl = xbmc.Player().getPlayingFile()
+
                             WINDOW = xbmcgui.Window( 10000 )
                             username = WINDOW.getProperty('currUser')
                             userid = WINDOW.getProperty('userId%s' % username)
@@ -152,6 +154,12 @@ class Kodi_Monitor( xbmc.Monitor ):
                             url='{server}/mediabrowser/Items/' + id
                             xbmc.log('Deleting via URL: ' + url)
                             DownloadUtils().downloadUrl(url, type="DELETE")
+
+        elif method == "Playlist.OnClear":
+            self.logMsg("Clear playback properties.", 2)
+            utils.window('PlaylistIntroSet', clear=True)
+            utils.window('PlaylistsetDummy', clear=True)
+            utils.window('PlaylistAdditional', clear=True)
                             
     def clearProperty(self, type, id):
         # The sleep is necessary since VideoLibrary.OnUpdate
