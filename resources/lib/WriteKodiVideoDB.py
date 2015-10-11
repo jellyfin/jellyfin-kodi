@@ -549,7 +549,7 @@ class WriteKodiVideoDB():
         self.updateSeasons(embyId, showid, connection, cursor)
        
     def addOrUpdateEpisodeToKodiLibrary(self, embyId, showid, connection, cursor):
-        
+        kodiVersion = self.kodiversion
         MBitem = ReadEmbyDB().getFullItem(embyId)
 
         if not MBitem:
@@ -637,6 +637,8 @@ class WriteKodiVideoDB():
         except: # Season does not exist, update seasons
             self.updateSeasons(seriesId, showid, connection, cursor)
 
+        cursor.execute("SELECT idSeason FROM seasons WHERE idShow = ? and season = ?", (showid, season,))
+        idSeason = cursor.fetchone()[0]
 
         ##### UPDATE THE EPISODE #####
         if episodeid:
@@ -650,8 +652,12 @@ class WriteKodiVideoDB():
             query = "UPDATE files SET strFilename = ? WHERE idFile = ?"
             cursor.execute(query, (filename, fileid))
 
-            query = "UPDATE episode SET c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?, c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ? WHERE idEpisode = ?"
-            cursor.execute(query, (title, plot, rating, writer, premieredate, runtime, director, season, episode, title, airsBeforeSeason, airsBeforeEpisode, episodeid))
+            if kodiVersion == 16:
+                query = "UPDATE episode SET c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?, c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, idSeason = ? WHERE idEpisode = ?"
+                cursor.execute(query, (title, plot, rating, writer, premieredate, runtime, director, season, episode, title, airsBeforeSeason, airsBeforeEpisode, idSeason ,episodeid))
+            else:
+                query = "UPDATE episode SET c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?, c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ? WHERE idEpisode = ?"
+                cursor.execute(query, (title, plot, rating, writer, premieredate, runtime, director, season, episode, title, airsBeforeSeason, airsBeforeEpisode, episodeid))
             
             #update the checksum in emby table
             query = "UPDATE emby SET checksum = ? WHERE emby_id = ?"
@@ -689,9 +695,13 @@ class WriteKodiVideoDB():
             # Create the episode
             cursor.execute("select coalesce(max(idEpisode),0) as episodeid from episode")
             episodeid = cursor.fetchone()[0] + 1
-            query = "INSERT INTO episode(idEpisode, idFile, c00, c01, c03, c04, c05, c09, c10, c12, c13, c14, idShow, c15, c16) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-            cursor.execute(query, (episodeid, fileid, title, plot, rating, writer, premieredate, runtime, director, season, episode, title, showid, airsBeforeSeason, airsBeforeEpisode))
-            
+            if kodiVersion == 16:
+                query = "INSERT INTO episode(idEpisode, idFile, c00, c01, c03, c04, c05, c09, c10, c12, c13, c14, idShow, c15, c16, idSeason) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                cursor.execute(query, (episodeid, fileid, title, plot, rating, writer, premieredate, runtime, director, season, episode, title, showid, airsBeforeSeason, airsBeforeEpisode, idSeason))
+            else:
+                query = "INSERT INTO episode(idEpisode, idFile, c00, c01, c03, c04, c05, c09, c10, c12, c13, c14, idShow, c15, c16) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                cursor.execute(query, (episodeid, fileid, title, plot, rating, writer, premieredate, runtime, director, season, episode, title, showid, airsBeforeSeason, airsBeforeEpisode))
+
             # Create the reference in emby table
             query = "INSERT INTO emby(emby_id, kodi_id, kodi_file_id, media_type, checksum, parent_id) values(?, ?, ?, ?, ?, ?)"
             cursor.execute(query, (embyId, episodeid, fileid, "episode", checksum, showid))
