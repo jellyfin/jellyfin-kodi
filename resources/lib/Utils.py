@@ -79,7 +79,7 @@ def getKodiVideoDBPath():
         dbVersion = "93"
     elif kodibuild.startswith("16"):
         # Jarvis
-        dbVersion = "97"
+        dbVersion = "99"
     else:
         # Not a compatible build
         xbmc.log("This Kodi version is incompatible. Current version: %s" % kodibuild)
