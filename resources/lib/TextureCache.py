@@ -186,7 +186,7 @@ class TextureCache():
                     cacheimage = True
                     
                     # Only for the main backdrop, poster
-                    if imageType in {"fanart", "poster"}:
+                    if imageType in ("fanart", "poster"):
                         # Delete current entry before updating with the new one
                         self.deleteCachedArtwork(url)
                     
@@ -195,7 +195,7 @@ class TextureCache():
                     cursor.execute(query, (imageUrl, kodiId, mediaType, imageType))
                     
             # Cache fanart and poster in Kodi texture cache
-            if cacheimage and imageType in {"fanart", "poster"}:
+            if cacheimage and imageType in ("fanart", "poster"):
                 self.CacheTexture(imageUrl)
 
     def CacheTexture(self, url):

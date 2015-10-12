@@ -1100,7 +1100,7 @@ class WriteKodiVideoDB():
     def AddTagsToMedia(self, id, tags, mediatype, cursor):
 
         # First, delete any existing tags associated to the id
-        if self.kodiversion in {15, 16}:
+        if self.kodiversion in (15, 16):
             # Kodi Isengard, Jarvis
             query = "DELETE FROM tag_link WHERE media_id = ? AND media_type = ?"
             cursor.execute(query, (id, mediatype))
@@ -1116,7 +1116,7 @@ class WriteKodiVideoDB():
 
     def AddTagToMedia(self, id, tag, mediatype, cursor, doRemove=False):
 
-        if self.kodiversion in {15, 16}:
+        if self.kodiversion in (15, 16):
             # Kodi Isengard, Jarvis
             cursor.execute("SELECT tag_id FROM tag WHERE name = ? COLLATE NOCASE", (tag,))
             try:
