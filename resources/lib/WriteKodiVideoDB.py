@@ -627,7 +627,7 @@ class WriteKodiVideoDB():
             path = "plugin://plugin.video.emby/tvshows/%s/" % seriesId          
         
         # Validate the season exists in Emby and in database
-        if season is None:
+        if season is None or season == 0:
             self.logMsg("SKIP adding episode to Kodi Library, no season assigned - ID: %s - %s" % (embyId, title))
             return False
             
