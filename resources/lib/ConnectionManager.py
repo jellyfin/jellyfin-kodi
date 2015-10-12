@@ -115,6 +115,11 @@ class ConnectionManager():
                 self.logMsg("User option to direct stream music library.", 1)
                 utils.settings('directstreammusic', "true")
 
+        directPaths = xbmcgui.Dialog().yesno("Direct Paths", "Use direct paths?")
+        if directPaths:
+            self.logMsg("User opted to use direct paths.", 1)
+            utils.settings('useDirectPaths', "true")
+
         return
                 
     def getServerDetails(self):
