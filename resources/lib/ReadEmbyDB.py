@@ -294,12 +294,12 @@ class ReadEmbyDB():
                 itemtype = item.get('CollectionType')
                 content = itemtype
 
-                if itemtype is None and type in {"movies", "tvshows"}:
+                if itemtype is None and type in ("movies", "tvshows"):
                     # Mixed content or rich presentation is disabled
                     itemtype = type
                     content = "mixed"
 
-                if itemtype == type and name != "Collections":
+                if itemtype == type and name not in ("Collections", "Trailers"):
                     collections.append({
 
                         'title': name,
