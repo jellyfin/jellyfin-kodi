@@ -162,7 +162,8 @@ class TextureCache():
                 for artType in kodiart[art]:
                     self.addOrUpdateArt(artwork[art], kodiId, mediaType, artType, cursor)
             
-            else: # For banner, logo, art, thumb, disc
+            elif kodiart.get(art): # For banner, logo, art, thumb, disc
+                # Only process artwork type that Kodi can use
                 self.addOrUpdateArt(artwork[art], kodiId, mediaType, kodiart[art], cursor)
 
     def addOrUpdateArt(self, imageUrl, kodiId, mediaType, imageType, cursor):
