@@ -157,9 +157,7 @@ class Kodi_Monitor( xbmc.Monitor ):
 
         elif method == "Playlist.OnClear":
             self.logMsg("Clear playback properties.", 2)
-            utils.window('PlaylistIntroSet', clear=True)
-            utils.window('PlaylistsetDummy', clear=True)
-            utils.window('PlaylistAdditional', clear=True)
+            utils.window('propertiesPlayback', clear=True)
                             
     def clearProperty(self, type, id):
         # The sleep is necessary since VideoLibrary.OnUpdate

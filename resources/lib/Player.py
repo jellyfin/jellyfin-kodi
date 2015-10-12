@@ -208,7 +208,9 @@ class Player( xbmc.Player ):
                 self.doUtils.downloadUrl(url, postBody=postdata, type="POST")
                 
                 # Ensure we do have a runtime
-                if not runtime:
+                try:
+                    runtime = int(runtime)
+                except ValueError:
                     runtime = xbmcplayer.getTotalTime()
                     self.logMsg("Runtime is missing, grabbing runtime from Kodi player: %s" % runtime, 1)
 

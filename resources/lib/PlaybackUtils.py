@@ -55,6 +55,35 @@ class PlaybackUtils():
             self.logMsg("Failed to retrieve the playback path/url or dialog was cancelled.", 1)
             return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, listItem)
 
+        
+        ############### -- SETUP MAIN ITEM ################
+            
+        # Set listitem and properties for main item
+        self.logMsg("Returned playurl: %s" % playurl, 1)
+        listItem.setPath(playurl)
+        self.setProperties(playurl, result, listItem)
+
+        mainArt = API().getArtwork(result, "Primary")
+        listItem.setThumbnailImage(mainArt)
+        listItem.setIconImage(mainArt)
+        
+
+        ############### ORGANIZE CURRENT PLAYLIST ################
+        
+        homeScreen = xbmc.getCondVisibility('Window.IsActive(home)')
+        playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
+        startPos = max(playlist.getposition(), 0) # Can return -1
+        sizePlaylist = playlist.size()
+
+        propertiesPlayback = utils.window('propertiesPlayback') == "true"
+        introsPlaylist = False
+        currentPosition = startPos
+
+        self.logMsg("Playlist start position: %s" % startPos, 2)
+        self.logMsg("Playlist plugin position: %s" % currentPosition, 2)
+        self.logMsg("Playlist size: %s" % sizePlaylist, 2)
+
+
         ############### RESUME POINT ################
         
         # Resume point for widget only
@@ -66,7 +95,7 @@ class PlaybackUtils():
             seekTime = seekTime - jumpBackSec
 
         # Show the additional resume dialog if launched from a widget
-        if xbmc.getCondVisibility('Window.IsActive(home)') and seekTime:
+        if homeScreen and seekTime:
             # Dialog presentation
             displayTime = str(datetime.timedelta(seconds=(int(seekTime))))
             display_list = ["%s %s" % (self.language(30106), displayTime), self.language(30107)]
@@ -84,154 +113,117 @@ class PlaybackUtils():
                 self.logMsg("User cancelled resume dialog.", 1)
                 return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, listItem)
 
-        ############### ORGANIZE CURRENT PLAYLIST ################
+        # We need to ensure we add the intro and additional parts only once.
+        # Otherwise we get a loop.
+        if not propertiesPlayback:
 
-        # In order, intros, original item requested and any additional part
-        playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
-        startPos = max(playlist.getposition(), 0) # Can return -1
-        sizePlaylist = playlist.size()
-        currentPosition = startPos
-
-        self.logMsg("Playlist start position: %s" % startPos, 2)
-        self.logMsg("Playlist current position: %s" % currentPosition, 2)
-        self.logMsg("Playlist size: %s" % sizePlaylist, 2)
-        
-        # Properties to ensure we have have proper playlists with additional items.
-        introsPlaylist = False
-        introProperty = utils.window('PlaylistIntroSet') == "true"
-        dummyProperty = utils.window('PlaylistsetDummy') == "true"
-        additionalProperty = utils.window('PlaylistAdditional') == "true"
-
-        ############### -- CHECK FOR INTROS ################
-
-        if utils.settings('disableCinema') == "false" and not introProperty and not seekTime:
-            # if we have any play them when the movie/show is not being resumed
-            url = "{server}/mediabrowser/Users/{UserId}/Items/%s/Intros?format=json&ImageTypeLimit=1&Fields=Etag" % id    
+            utils.window('propertiesPlayback', value="true")
+            self.logMsg("Setting up properties in playlist.")
             
-            intros = doUtils.downloadUrl(url)
-            if intros['TotalRecordCount'] != 0:
-                # The server randomly returns one custom intro
-                intro = intros['Items'][0]
-                introId = intro['Id']
-                introListItem = xbmcgui.ListItem()
-                introPlayurl = PlayUtils().getPlayUrl(server, introId, intro)
+            ############### -- CHECK FOR INTROS ################
 
-                self.logMsg("Intro play: %s" % introPlayurl, 1)
+            if utils.settings('disableCinema') == "false" and not seekTime:
+                # if we have any play them when the movie/show is not being resumed
+                url = "{server}/mediabrowser/Users/{UserId}/Items/%s/Intros?format=json&ImageTypeLimit=1&Fields=Etag" % id    
+                intros = doUtils.downloadUrl(url)
 
-                self.setProperties(introPlayurl, intro, introListItem)
-                self.setListItemProps(server, introId, introListItem, intro)
-                
-                introsPlaylist = True
-                utils.window('PlaylistIntroSet', value="true")
-                playlist.add(introPlayurl, introListItem, index=currentPosition)
-                currentPosition += 1
-        
-        elif introProperty:
-            # Play main item, do not play the intro since we already played it. Reset property for next time.
-            utils.window('PlaylistIntroSet', clear=True)
-            self.logMsg("Clear intro property.", 2)
+                if intros['TotalRecordCount'] != 0:
+                    for intro in intros['Items']:
+                        # The server randomly returns intros, process them.
+                        introId = intro['Id']
+                        
+                        introPlayurl = PlayUtils().getPlayUrl(server, introId, intro)
+                        introListItem = xbmcgui.ListItem()
+                        self.logMsg("Adding Intro: %s" % introPlayurl, 1)
 
-        ############### -- SETUP MAIN ITEM ################
-        
-        ##### Set listitem and properties for main item
-        self.logMsg("Returned playurl: %s" % playurl, 1)
-        listItem.setPath(playurl)
-        self.setProperties(playurl, result, listItem)
+                        # Set listitem and properties for intros
+                        self.setProperties(introPlayurl, intro, introListItem)
+                        self.setListItemProps(server, introId, introListItem, intro)
+                        
+                        playlist.add(introPlayurl, introListItem, index=currentPosition)
+                        introsPlaylist = True
+                        currentPosition += 1
 
-        mainArt = API().getArtwork(result, "Primary")
-        listItem.setThumbnailImage(mainArt)
-        listItem.setIconImage(mainArt)
 
-        if introsPlaylist and not sizePlaylist:
-            # Extend our current playlist with the actual item to play only if there's no playlist first
-            self.logMsg("No playlist detected at the start. Creating playlist with intro and play item.", 1)
-            self.logMsg("Playlist current position: %s" % (currentPosition), 1)
-            playlist.add(playurl, listItem, index=currentPosition)
+            ############### -- ADD MAIN ITEM ONLY FOR HOMESCREEN ###############
+
+            if homeScreen and not sizePlaylist:
+                # Extend our current playlist with the actual item to play only if there's no playlist first
+                self.logMsg("Adding main item to playlist.", 1)
+                self.setListItemProps(server, id, listItem, result)
+                playlist.add(playurl, listItem, index=currentPosition)
+            
+            # Ensure that additional parts are played after the main item
             currentPosition += 1
 
-        ############### -- CHECK FOR ADDITIONAL PARTS ################
 
-        if result.get('PartCount') and not additionalProperty:
-            # Only add to the playlist after intros have played
-            url = "{server}/mediabrowser/Videos/%s/AdditionalParts" % id
+            ############### -- CHECK FOR ADDITIONAL PARTS ################
             
-            parts = doUtils.downloadUrl(url)
-            for part in parts['Items']:
-                partId = part['Id']
-                additionalPlayurl = PlayUtils().getPlayUrl(server, partId, part)
-                additionalListItem = xbmcgui.ListItem()
+            if result.get('PartCount'):
+                # Only add to the playlist after intros have played
+                partcount = result['PartCount']
+                url = "{server}/mediabrowser/Videos/%s/AdditionalParts" % id
+                parts = doUtils.downloadUrl(url)
 
-                # Set listitem and properties for each additional parts
-                self.logMsg("Adding to playlist: %s position: %s" % (additionalPlayurl, currentPosition), 1)
-                self.setProperties(additionalPlayurl, part, additionalListItem)
-                self.setListItemProps(server, partId, additionalListItem, part)
+                for part in parts['Items']:
 
-                # Add item to playlist, after the main item
-                utils.window('PlaylistAdditional', value="true")
-                playlist.add(additionalPlayurl, additionalListItem, index=currentPosition+1)
+                    partId = part['Id']
+                    additionalPlayurl = PlayUtils().getPlayUrl(server, partId, part)
+                    additionalListItem = xbmcgui.ListItem()
+                    self.logMsg("Adding additional part: %s" % partcount, 1)
+
+                    # Set listitem and properties for each additional parts
+                    self.setProperties(additionalPlayurl, part, additionalListItem)
+                    self.setListItemProps(server, partId, additionalListItem, part)
+
+                    playlist.add(additionalPlayurl, additionalListItem, index=currentPosition)
+                    currentPosition += 1
+
+            
+            ############### ADD DUMMY TO PLAYLIST #################
+
+            if (not homeScreen and introsPlaylist) or (homeScreen and sizePlaylist > 0):
+                # Playlist will fail on the current position. Adding dummy url
+                self.logMsg("Adding dummy url to counter the setResolvedUrl error.", 2)
+                playlist.add(playurl, index=startPos)
                 currentPosition += 1
-        
-        elif additionalProperty:
-            # Additional parts are already set, reset property for next time
-            utils.window('PlaylistAdditional', clear=True)
-            self.logMsg("Clear additional property", 2)
+                
+
+        # We just skipped adding properties. Reset flag for next time.
+        elif propertiesPlayback:
+            self.logMsg("Resetting properties playback flag.", 2)
+            utils.window('propertiesPlayback', clear=True)
+
+        self.verifyPlaylist()
 
         ############### PLAYBACK ################
-
-        if setup == "service" or xbmc.getCondVisibility('Window.IsActive(home)'):
-            # Sent via websocketclient.py or default.py but via widgets
-            self.logMsg("Detecting playback happening via service.py or home menu.", 1)
-            self.setListItemProps(server, id, listItem, result)
-
-            playlistPlayer = False
-
-            if introsPlaylist and not sizePlaylist:
-                # Extend our current playlist with the actual item to play only if there's no playlist first
-                playlistPlayer = True
-
-            elif sizePlaylist > 0 and not dummyProperty:
-                # Playlist will fail on the current position. Adding dummy url
-                playlist.add(playurl, index=startPos)
-                self.logMsg("Adding dummy path as replacement for position: %s" % startPos, 2)
-                utils.window('PlaylistsetDummy', value="true")
-                playlistPlayer = True
-
-            elif dummyProperty:
-                # Already failed, play the item as a single item
-                utils.window('PlaylistsetDummy', clear=True)
-                self.logMsg("Clear dummy property.", 2)
-
-
-            if playlistPlayer:
-                self.logMsg("Processed as a playlist.", 1)
-                return xbmc.Player().play(playlist)
-            else:
-                self.logMsg("Processed as a single item.", 1)
-                return xbmc.Player().play(playurl, listItem)
-
-        elif setup == "default":
-            self.logMsg("Detecting playback happening via default.py.", 1)
-            playlistPlayer = False
-
-            if sizePlaylist > 0 and not dummyProperty:
-                # Playlist will fail on the current position. Adding dummy url
-                playlist.add(playurl, index=startPos)
-                self.logMsg("Adding dummy path as replacement for position: %s" % startPos, 2)
-                utils.window('PlaylistsetDummy', value="true")
-                playlistPlayer = True
-
-            elif dummyProperty:
-                # Already failed, play the item as a single item
-                utils.window('PlaylistsetDummy', clear=True)
-                self.logMsg("Clear dummy property.", 2)
-
+        
+        if not homeScreen and not introsPlaylist:
             
-            if playlistPlayer:
-                self.logMsg("Processed as a playlist.", 1)
-                return xbmc.Player().play(playlist, startpos=startPos)
-            else: # Sent via default.py
-                self.logMsg("Processed as a single item.", 1)
-                return xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
+            self.logMsg("Processed as a single item.", 1)
+            xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
+
+        elif not homeScreen:
+
+            self.logMsg("Processed as a playlist. First item is skipped.", 1)
+            xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, listItem)
+
+        else:
+            self.logMsg("Play as a regular item.", 1)
+            xbmc.Player().play(playlist, startpos=startPos)
+
+                
+    def verifyPlaylist(self):
+        
+        playlistitems = '{"jsonrpc": "2.0", "method": "Playlist.GetItems", "params": { "playlistid": 1 }, "id": 1}'
+        items = xbmc.executeJSONRPC(playlistitems)
+        self.logMsg(items, 2)
+
+    def removeFromPlaylist(self, pos):
+
+        playlistremove = '{"jsonrpc": "2.0", "method": "Playlist.Remove", "params": { "playlistid": 1, "position": %d }, "id": 1}' % pos
+        result = xbmc.executeJSONRPC(playlistremove)
+        self.logMsg(result, 1)
 
 
     def externalSubs(self, id, playurl, mediaSources):
@@ -268,6 +260,7 @@ class PlaybackUtils():
 
         return externalsubs
 
+
     def setProperties(self, playurl, result, listItem):
         # Set runtimeticks, type, refresh_id and item_id
         id = result.get('Id')
@@ -290,7 +283,7 @@ class PlaybackUtils():
 
     def setArt(self, list, name, path):
         
-        if name in {"thumb", "fanart_image", "small_poster", "tiny_poster", "medium_landscape", "medium_poster", "small_fanartimage", "medium_fanartimage", "fanart_noindicators"}:
+        if name in ("thumb", "fanart_image", "small_poster", "tiny_poster", "medium_landscape", "medium_poster", "small_fanartimage", "medium_fanartimage", "fanart_noindicators"):
             list.setProperty(name, path)
         else:
             list.setArt({name:path})
@@ -333,6 +326,7 @@ class PlaybackUtils():
 
         listItem.setProperty('IsPlayable', 'true')
         listItem.setProperty('IsFolder', 'false')
+        listItem.setLabel(metadata['title'])
         listItem.setInfo('video', infoLabels=metadata)
 
         # Set artwork for listitem
