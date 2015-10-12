@@ -274,10 +274,9 @@ class UserClient(threading.Thread):
         doUtils.startSession()
         self.getAdditionalUsers()
 
+        self.currUser = username
         # Set user preferences in settings
         self.setUserPref()
-
-        self.currUser = username
 
     def authenticate(self):
 
