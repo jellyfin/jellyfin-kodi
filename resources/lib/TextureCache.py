@@ -130,7 +130,8 @@ class TextureCache():
             'Art': "clearart",
             'Thumb': "landscape",
             'Disc': "discart",
-            'Backdrop': "fanart"
+            'Backdrop': "fanart",
+            'BoxRear': "poster"
         }
 
         # Artwork is a dictionary
