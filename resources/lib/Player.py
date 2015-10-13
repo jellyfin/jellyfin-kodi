@@ -394,16 +394,17 @@ class Player( xbmc.Player ):
                     utils.window('SkipWatched%s' % itemId, "true")
 
                     self.stopPlayback(data)
-                    offerDelete = False
+                    offerDelete = utils.settings('offerDelete') == "true"
+                    offerTypeDelete = False
 
                     if type == "Episode" and utils.settings('offerDeleteTV') == "true":
-                        offerDelete = True
+                        offerTypeDelete = True
 
                     elif type == "Movie" and utils.settings('offerDeleteMovies') == "true":
-                        offerDelete = True
+                        offerTypeDelete = True
 
-                    if percentComplete >= markPlayedAt and offerDelete:
-                        # Item could be stacked, so only offer to delete the main item.
+                    if percentComplete >= markPlayedAt and offerDelete and offerTypeDelete:
+                        # Make the bigger setting be able to disable option easily.
                         self.logMsg("Offering deletion for: %s." % itemId, 1)
                         return_value = xbmcgui.Dialog().yesno("Offer Delete", "Delete %s" % currentFile.split("/")[-1], "on Emby Server?")
                         if return_value:
