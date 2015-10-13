@@ -64,7 +64,7 @@ class WriteKodiMusicDB():
         bio = API().getOverview(MBitem)
 
         # Associate artwork
-        artworks = API().getAllArtwork(MBitem)
+        artworks = API().getAllArtwork(MBitem, parentInfo=True)
         thumb = artworks['Primary']
         backdrops = artworks['Backdrop'] # List
 
@@ -162,7 +162,7 @@ class WriteKodiMusicDB():
         artists = " / ".join(MBartists)
 
         # Associate the artwork
-        artworks = API().getAllArtwork(MBitem)
+        artworks = API().getAllArtwork(MBitem, parentInfo=True)
         thumb = artworks['Primary']
         if thumb:
             thumb = "<thumb>%s</thumb>" % thumb
@@ -222,7 +222,6 @@ class WriteKodiMusicDB():
 
         # Update artwork
         self.textureCache.addArtwork(artworks, albumid, "album", cursor)
-        self.textureCache.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop"), albumid, "album", "fanart", cursor)
         
         # Link album to artists
         if MBartists:
@@ -381,7 +380,7 @@ class WriteKodiMusicDB():
                 cursor.execute(query, (artistid, songid, artist['Name']))
         
         # Update artwork
-        self.textureCache.addArtwork(API().getAllArtwork(MBitem), songid, "song", cursor)
+        self.textureCache.addArtwork(API().getAllArtwork(MBitem, parentInfo=True), songid, "song", cursor)
     
     def deleteItemFromKodiLibrary(self, id, connection, cursor):
         

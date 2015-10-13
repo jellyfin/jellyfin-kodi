@@ -375,7 +375,7 @@ class API():
 
         return mpaa
 
-    def getAllArtwork(self, item):
+    def getAllArtwork(self, item, parentInfo = False):
 
         """
             Get all artwork, it will return an empty string
@@ -422,6 +422,33 @@ class API():
             tag = artworks[art]
             artwork = "%s/mediabrowser/Items/%s/Images/%s/0?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, id, art, maxWidth, maxHeight, tag, quality)
             allartworks[art] = artwork
+
+        # Process parent items if the main item is missing artwork
+        if parentInfo:
+            
+            # Process backdrops
+            if not allartworks['Backdrop']:
+                parentId = item.get('ParentBackdropItemId')
+                if parentId:
+                    # If there is a parentId, go through the parent backdrop list
+                    parentbackdrops = item['ParentBackdropImageTags']
+
+                    backdropIndex = 0
+                    for parentbackdroptag in parentbackdrops:
+                        artwork = "%s/mediabrowser/Items/%s/Images/Backdrop/%s?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, parentId, backdropIndex, maxWidth, maxHeight, parentbackdroptag, quality)
+                        allartworks['Backdrop'].append(artwork)
+                        backdropIndex += 1
+
+            # Process the rest of the artwork
+            parentartwork = ['Logo', 'Art', 'Thumb']
+            for parentart in parentartwork:
+
+                if not allartworks[parentart]:
+                    parentId = item.get('Parent%sItemId' % parentart)
+                    if parentId:
+                        parentTag = item['Parent%sItemId' % parentart]
+                        artwork = "%s/mediabrowser/Items/%s/Images/%s/0?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, parentId, parentart, maxWidth, maxHeight, parentTag, quality)
+                        allartworks[parentart] = artwork
 
         return allartworks
 
