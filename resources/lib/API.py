@@ -446,7 +446,7 @@ class API():
                 if not allartworks[parentart]:
                     parentId = item.get('Parent%sItemId' % parentart)
                     if parentId:
-                        parentTag = item['Parent%sItemId' % parentart]
+                        parentTag = item['Parent%sImageTag' % parentart]
                         artwork = "%s/mediabrowser/Items/%s/Images/%s/0?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, parentId, parentart, maxWidth, maxHeight, parentTag, quality)
                         allartworks[parentart] = artwork
 
