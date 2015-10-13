@@ -31,8 +31,6 @@ class Player( xbmc.Player ):
     played_information = {}
     playStats = {}
     currentFile = None
-    stackFiles = None
-    stackElapsed = 0
 
     def __init__(self, *args):
 
@@ -47,38 +45,19 @@ class Player( xbmc.Player ):
     def GetPlayStats(self):
         return self.playStats
 
-    def currentStackItem(self, stackItems):
-        # Only for stacked items - stack://
-        xbmcplayer = self.xbmcplayer
-        
-        stack = stackItems.replace("stack://", "").split(" , ")
-        position = xbmcplayer.getTime()
-        totalRuntime = 0
-
-        for item in stack:
-            runtime = int(utils.window("%sruntimeticks" % item)) / 10000000
-            # Verify the position compared to the totalRuntime for stacked items processed in loop so far.
-            if position < (runtime + totalRuntime):
-                self.stackElapsed = totalRuntime
-                self.currentFile = item
-                return item
-            else:
-                totalRuntime += runtime
-
     def onPlayBackStarted( self ):
         # Will be called when xbmc starts playing a file
         xbmcplayer = self.xbmcplayer
         self.stopAll()
-        
+
         # Get current file
         try:
             currentFile = xbmcplayer.getPlayingFile()
-            xbmc.sleep(200)
+            xbmc.sleep(300)
         except:
             currentFile = ""
             count = 0
             while not currentFile:
-
                 xbmc.sleep(100)
                 try:
                     currentFile = xbmcplayer.getPlayingFile()
@@ -91,18 +70,9 @@ class Player( xbmc.Player ):
 
 
         if currentFile:
-            # if stack://, get currently playing item
-            if "stack://" in currentFile:
-                self.stackFiles = currentFile
-                currentFile = self.currentStackItem(currentFile)
-            else:
-                self.stackFiles = None
-                self.currentFile = currentFile
-                self.stackElapsed = 0
 
-            self.logMsg("ONPLAYBACK_STARTED: %s" % currentFile, 0)
+            self.currentFile = currentFile
             
-
             # We may need to wait for info to be set in kodi monitor
             itemId = utils.window("%sitem_id" % currentFile)
             tryCount = 0
@@ -116,6 +86,8 @@ class Player( xbmc.Player ):
                 else: tryCount += 1
             
             else:
+                self.logMsg("ONPLAYBACK_STARTED: %s ITEMID: %s" % (currentFile, itemId), 0)
+
                 # Only proceed if an itemId was found.
                 runtime = utils.window("%sruntimeticks" % currentFile)
                 refresh_id = utils.window("%srefresh_id" % currentFile)
@@ -143,7 +115,7 @@ class Player( xbmc.Player ):
                     'MediaSourceId': itemId,
                     'PlayMethod': playMethod,
                     'VolumeLevel': volume,
-                    'PositionTicks': int(seekTime * 10000000) - int(self.stackElapsed * 10000000),
+                    'PositionTicks': int(seekTime * 10000000),
                     'IsMuted': muted
                 }
 
@@ -225,7 +197,7 @@ class Player( xbmc.Player ):
                     'SubtitleStreamIndex': postdata['SubtitleStreamIndex'],
                     'playmethod': playMethod,
                     'Type': itemType,
-                    'currentPosition': int(seekTime) - int(self.stackElapsed)
+                    'currentPosition': int(seekTime)
                 }
                 
                 self.played_information[currentFile] = data
@@ -284,7 +256,7 @@ class Player( xbmc.Player ):
                 'ItemId': itemId,
                 'MediaSourceId': itemId,
                 'PlayMethod': playMethod,
-                'PositionTicks': int(playTime * 10000000) - int(self.stackElapsed * 10000000),
+                'PositionTicks': int(playTime * 10000000),
                 'IsPaused': paused,
                 'VolumeLevel': volume,
                 'IsMuted': muted
@@ -432,12 +404,12 @@ class Player( xbmc.Player ):
 
                     if percentComplete >= markPlayedAt and offerDelete:
                         # Item could be stacked, so only offer to delete the main item.
-                        if not self.stackFiles or itemId == utils.window('%sitem_id' % self.stackFiles):
-                            return_value = xbmcgui.Dialog().yesno("Offer Delete", "Delete %s" % currentFile.split("/")[-1], "on Emby Server?")
-                            if return_value:
-                                # Delete Kodi entry before Emby
-                                listItem = [itemId]
-                                LibrarySync().removefromDB(listItem, True)
+                        self.logMsg("Offering deletion for: %s." % itemId, 1)
+                        return_value = xbmcgui.Dialog().yesno("Offer Delete", "Delete %s" % currentFile.split("/")[-1], "on Emby Server?")
+                        if return_value:
+                            # Delete Kodi entry before Emby
+                            listItem = [itemId]
+                            LibrarySync().removefromDB(listItem, True)
                     
                 # Stop transcoding
                 if playMethod == "Transcode":

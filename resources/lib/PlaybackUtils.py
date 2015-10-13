@@ -77,6 +77,7 @@ class PlaybackUtils():
 
         propertiesPlayback = utils.window('propertiesPlayback') == "true"
         introsPlaylist = False
+        dummyPlaylist = False
         currentPosition = startPos
 
         self.logMsg("Playlist start position: %s" % startPos, 2)
@@ -184,6 +185,7 @@ class PlaybackUtils():
 
             if (not homeScreen and introsPlaylist) or (homeScreen and sizePlaylist > 0):
                 # Playlist will fail on the current position. Adding dummy url
+                dummyPlaylist = True
                 self.logMsg("Adding dummy url to counter the setResolvedUrl error.", 2)
                 playlist.add(playurl, index=startPos)
                 currentPosition += 1
@@ -194,6 +196,7 @@ class PlaybackUtils():
             self.logMsg("Resetting properties playback flag.", 2)
             utils.window('propertiesPlayback', clear=True)
 
+
         self.verifyPlaylist()
 
         ############### PLAYBACK ################
@@ -203,8 +206,8 @@ class PlaybackUtils():
             self.logMsg("Processed as a single item.", 1)
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listItem)
 
-        elif not homeScreen:
-
+        elif dummyPlaylist:
+            # Added a dummy file to the playlist because the first item is going to fail automatically.
             self.logMsg("Processed as a playlist. First item is skipped.", 1)
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, listItem)
 
