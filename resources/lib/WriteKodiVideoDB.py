@@ -627,18 +627,24 @@ class WriteKodiVideoDB():
             path = "plugin://plugin.video.emby/tvshows/%s/" % seriesId          
         
         # Validate the season exists in Emby and in database
-        if season is None or season == 0:
+        if season is None:
             self.logMsg("SKIP adding episode to Kodi Library, no season assigned - ID: %s - %s" % (embyId, title))
             return False
             
-        cursor.execute("SELECT idSeason FROM seasons WHERE idShow = ? and season = ?", (showid, season,))
-        try:
-            cursor.fetchone()[0]
-        except: # Season does not exist, update seasons
-            self.updateSeasons(seriesId, showid, connection, cursor)
-
-        cursor.execute("SELECT idSeason FROM seasons WHERE idShow = ? and season = ?", (showid, season,))
-        idSeason = cursor.fetchone()[0]
+        idSeason = None
+        count = 0
+        while idSeason is None:
+            cursor.execute("SELECT idSeason FROM seasons WHERE idShow = ? and season = ?", (showid, season,))
+            try:
+                idSeason = cursor.fetchone()[0]
+            except: # Season does not exist, update seasons
+                if not count:
+                    self.updateSeasons(seriesId, showid, connection, cursor)
+                    count += 1
+                else:
+                    # Season is still not found, skip episode.
+                    self.logMsg("Skipping episode: %s. Season number is missing at season level in the metadata manager." % title, 1)
+                    return False
 
         ##### UPDATE THE EPISODE #####
         if episodeid:
