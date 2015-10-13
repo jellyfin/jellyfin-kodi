@@ -222,6 +222,7 @@ class WriteKodiMusicDB():
 
         # Update artwork
         self.textureCache.addArtwork(artworks, albumid, "album", cursor)
+        self.textureCache.addOrUpdateArt(API().getArtwork(MBitem, "Backdrop"), albumid, "album", "fanart", cursor)
         
         # Link album to artists
         if MBartists:
