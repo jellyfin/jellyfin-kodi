@@ -428,6 +428,7 @@ class API():
             
             # Process backdrops
             if not allartworks['Backdrop']:
+                
                 parentId = item.get('ParentBackdropItemId')
                 if parentId:
                     # If there is a parentId, go through the parent backdrop list
@@ -444,11 +445,24 @@ class API():
             for parentart in parentartwork:
 
                 if not allartworks[parentart]:
+                    
                     parentId = item.get('Parent%sItemId' % parentart)
                     if parentId:
+                        
                         parentTag = item['Parent%sImageTag' % parentart]
                         artwork = "%s/mediabrowser/Items/%s/Images/%s/0?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, parentId, parentart, maxWidth, maxHeight, parentTag, quality)
                         allartworks[parentart] = artwork
+
+            # Parent album works a bit differently
+            if not allartworks['Primary']:
+
+                parentId = item.get('AlbumId')
+                if parentId and item.get('AlbumPrimaryImageTag'):
+                    
+                    parentTag = item['AlbumPrimaryImageTag']
+                    artwork = "%s/mediabrowser/Items/%s/Images/Primary/0?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, parentId, maxWidth, maxHeight, parentTag, quality)
+                    allartworks['Primary'] = artwork
+
 
         return allartworks
 
