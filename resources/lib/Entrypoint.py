@@ -91,6 +91,10 @@ def addUser():
                     postdata = {}
                     doUtils.downloadUrl(url, postBody=postdata, type="DELETE")
                     xbmcgui.Dialog().notification("Success!", "%s removed from viewing session" % selected, time=1000)
+
+                    # clear picture
+                    position = WINDOW.getProperty('EmbyAdditionalUserPosition.' + selected_userId)
+                    WINDOW.clearProperty('EmbyAdditionalUserImage.' + str(position))
                     return
                 else:
                     return
@@ -121,6 +125,28 @@ def addUser():
     except:
         xbmc.log("Failed to add user to session.")
         xbmcgui.Dialog().notification("Error", "Unable to add/remove user from the session.", xbmcgui.NOTIFICATION_ERROR)
+
+    try:
+        # Add additional user images
+        #always clear the individual items first
+        totalNodes = 10
+        for i in range(totalNodes):
+            if not WINDOW.getProperty('EmbyAdditionalUserImage.' + str(i)):
+                break
+            WINDOW.clearProperty('EmbyAdditionalUserImage.' + str(i))
+
+        url = "{server}/mediabrowser/Sessions?DeviceId=%s" % deviceId
+        result = doUtils.downloadUrl(url)
+        additionalUsers = result[0][u'AdditionalUsers']
+        count = 0
+        for additionaluser in additionalUsers:
+            url = "{server}/mediabrowser/Users/%s?format=json" % (additionaluser[u'UserId'])
+            result = doUtils.downloadUrl(url)
+            WINDOW.setProperty("EmbyAdditionalUserImage." + str(count),API().getUserArtwork(result,"Primary"))
+            WINDOW.setProperty("EmbyAdditionalUserPosition." + str(additionaluser[u'UserId']),str(count))
+            count +=1
+    except:
+        pass
 
 # THEME MUSIC/VIDEOS
 def getThemeMedia():
