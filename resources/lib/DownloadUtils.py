@@ -12,7 +12,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 # Disable requests logging
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-logging.getLogger("requests").setLevel(logging.WARNING)
+#logging.getLogger("requests").setLevel(logging.WARNING)
 
 class DownloadUtils():
     
