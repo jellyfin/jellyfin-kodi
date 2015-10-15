@@ -426,7 +426,7 @@ class PlaybackUtils():
         thumb = API().getArtwork(item, "Primary")
         listItem = xbmcgui.ListItem(path=playurl, iconImage=thumb, thumbnailImage=thumb)
         self.setListItemProps(server, id, listItem, item)
-        self.setProperties(playurl, item)
+        self.setProperties(playurl, item, listItem)
 
         playlist.add(playurl, listItem)
 
