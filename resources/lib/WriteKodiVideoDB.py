@@ -176,8 +176,8 @@ class WriteKodiVideoDB():
             fileid = cursor.fetchone()[0]
             
             #always update the filepath (fix for path change)
-            query = "UPDATE files SET strFilename = ? WHERE idFile = ?"
-            cursor.execute(query, (filename, fileid))
+            query = "UPDATE files SET strFilename = ?, dateAdded = ? WHERE idFile = ?"
+            cursor.execute(query, (filename, dateadded, fileid))
 
             query = "UPDATE movie SET c00 = ?, c01 = ?, c02 = ?, c03 = ?, c04 = ?, c05 = ?, c06 = ?, c07 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?, c16 = ?, c18 = ?, c19 = ?, c21 = ? WHERE idMovie = ?"
             cursor.execute(query, (title, plot, shortplot, tagline, votecount, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailerUrl, country, movieid))
@@ -389,8 +389,8 @@ class WriteKodiVideoDB():
             fileid = cursor.fetchone()[0]
             
             #always update the filepath (fix for path change)
-            query = "UPDATE files SET strFilename = ? WHERE idFile = ?"
-            cursor.execute(query, (filename, fileid))
+            query = "UPDATE files SET strFilename = ?, dateAdded = ? WHERE idFile = ?"
+            cursor.execute(query, (filename, dateadded, fileid))
             
             pathsql="update musicvideo SET c00 = ?, c04 = ?, c05 = ?, c06 = ?, c07 = ?, c08 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ? WHERE idMVideo = ?"
             cursor.execute(pathsql, (title, runtime, director, studio, year, plot, album, artist, genre, track, idMVideo))
@@ -655,8 +655,8 @@ class WriteKodiVideoDB():
             fileid = cursor.fetchone()[0]
             
             #always update the filepath (fix for path change)
-            query = "UPDATE files SET strFilename = ? WHERE idFile = ?"
-            cursor.execute(query, (filename, fileid))
+            query = "UPDATE files SET strFilename = ?, dateAdded = ? WHERE idFile = ?"
+            cursor.execute(query, (filename, dateadded, fileid))
 
             if kodiVersion == 16:
                 query = "UPDATE episode SET c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?, c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, idSeason = ? WHERE idEpisode = ?"
