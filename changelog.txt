@@ -1,3 +1,9 @@
+version 1.1.50
+- Ignore channels from syncing process
+- Date added can now be updated
+- Disable ssl warning
+- Fix playlist when play command is issued outside of Kodi.
+
 version 1.1.48
 - Support Emby tags
 - Respect emby "My views" settings
