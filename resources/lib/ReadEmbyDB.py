@@ -291,8 +291,13 @@ class ReadEmbyDB():
             for item in result:
 
                 name = item['Name']
+                contentType = item['Type']
                 itemtype = item.get('CollectionType')
                 content = itemtype
+
+                if contentType == "Channel":
+                    # Ignore channel type otherwise, they get processed as mixed content
+                    continue
 
                 if itemtype is None and type in ("movies", "tvshows"):
                     # Mixed content or rich presentation is disabled
