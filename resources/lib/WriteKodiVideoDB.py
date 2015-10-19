@@ -401,7 +401,10 @@ class WriteKodiVideoDB():
             #update the checksum in emby table
             cursor.execute("UPDATE emby SET checksum = ? WHERE emby_id = ?", (API().getChecksum(MBitem),MBitem["Id"]))
         
-        
+        # Add tags to item, view tag and emby tags
+        tags = MBitem['Tags']
+        self.AddTagsToMedia(idMVideo, tags, "musicvideo", cursor)
+
         #update or insert actors
         self.AddPeopleToMedia(idMVideo,MBitem.get("People"),"musicvideo", connection, cursor)
 
