@@ -120,7 +120,10 @@ class WriteKodiVideoDB():
         mpaa = API().getMpaa(MBitem)
         genre = " / ".join(genres)
         director = " / ".join(people.get('Director'))
-        studio = " / ".join(studios)
+        try:
+            studio = studios[0]
+        except IndexError:
+            studio = None
         country = API().getCountry(MBitem)
 
         try: # Verify if there's a local trailer
