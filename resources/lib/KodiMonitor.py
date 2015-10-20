@@ -38,72 +38,48 @@ class Kodi_Monitor( xbmc.Monitor ):
         WINDOW = self.WINDOW
         downloadUtils = DownloadUtils()
         #player started playing an item - 
-        if ("Playlist.OnAdd" in method or "Player.OnPlay" in method) and utils.settings('useDirectPaths')=='true':
+        if ("Playlist.OnAdd" in method or "Player.OnPlay" in method):
 
-            jsondata = json.loads(data)
-            if jsondata != None:
-                if jsondata.has_key("item"):
-                    if jsondata.get("item").has_key("id") and jsondata.get("item").has_key("type"):
-                        id = jsondata.get("item").get("id")
-                        type = jsondata.get("item").get("type")
-                        embyid = ReadKodiDB().getEmbyIdByKodiId(id,type)
+            if utils.settings('useDirectPaths')=='true' or utils.settings('enableMusicSync') == "true":
 
-                        if embyid != None:
-                           
-                            playurl = xbmc.Player().getPlayingFile()
-
-                            WINDOW = xbmcgui.Window( 10000 )
-                            username = WINDOW.getProperty('currUser')
-                            userid = WINDOW.getProperty('userId%s' % username)
-                            server = WINDOW.getProperty('server%s' % username)
+                jsondata = json.loads(data)
+                if jsondata != None:
+                    if jsondata.has_key("item"):
+                        if jsondata.get("item").has_key("id") and jsondata.get("item").has_key("type"):
+                            id = jsondata.get("item").get("id")
+                            type = jsondata.get("item").get("type")
                             
-                            url = "{server}/mediabrowser/Users/{UserId}/Items/" + embyid + "?format=json&ImageTypeLimit=1"
-                            result = downloadUtils.downloadUrl(url)     
-                            print "Here: %s" % result
-                            userData = result['UserData']
-                            
-                            playurl = PlayUtils().getPlayUrl(server, embyid, result)
-                            
-                            watchedurl = 'http://' + server + '/mediabrowser/Users/'+ userid + '/PlayedItems/' + embyid
-                            positionurl = 'http://' + server + '/mediabrowser/Users/'+ userid + '/PlayingItems/' + embyid
-                            deleteurl = 'http://' + server + '/mediabrowser/Items/' + embyid
+                            if type == "song":
+                                connection = utils.KodiSQL('music')
+                                cursor = connection.cursor()
+                                embyid = ReadKodiDB().getEmbyIdByKodiId(id, type, connection, cursor)
+                                cursor.close()
+                            else:    
+                                embyid = ReadKodiDB().getEmbyIdByKodiId(id,type)
 
-                            # set the current playing info
-                            WINDOW.setProperty(playurl+"watchedurl", watchedurl)
-                            WINDOW.setProperty(playurl+"positionurl", positionurl)
-                            WINDOW.setProperty(playurl+"deleteurl", "")
-                            WINDOW.setProperty(playurl+"deleteurl", deleteurl)
-                            if result.get("Type")=="Episode":
-                                WINDOW.setProperty(playurl+"refresh_id", result.get("SeriesId"))
-                            else:
-                                WINDOW.setProperty(playurl+"refresh_id", embyid)
+                            if embyid:
+
+                                url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json" % embyid
+                                result = downloadUtils.downloadUrl(url)
+                                self.logMsg("Result: %s" % result, 2)
                                 
-                            WINDOW.setProperty(playurl+"runtimeticks", str(result.get("RunTimeTicks")))
-                            WINDOW.setProperty(playurl+"type", result.get("Type"))
-                            WINDOW.setProperty(playurl+"item_id", embyid)
+                                playurl = None
+                                count = 0
+                                while not playurl and count < 2:
+                                    try:
+                                        playurl = xbmc.Player().getPlayingFile()
+                                    except RuntimeError:
+                                        xbmc.sleep(200)
+                                    else:
+                                        listItem = xbmcgui.ListItem()
+                                        PlaybackUtils().setProperties(playurl, result, listItem)
 
-                            if PlayUtils().isDirectPlay(result) == True:
-                                playMethod = "DirectPlay"
-                            else:
-                                playMethod = "Transcode"
-
-                            WINDOW.setProperty(playurl+"playmethod", playMethod)
-                                
-                            mediaSources = result.get("MediaSources")
-                            if(mediaSources != None):
-                                mediaStream = mediaSources[0].get('MediaStreams')
-                                defaultsubs = ""
-                                for stream in mediaStream:
-                                    if u'Subtitle' in stream[u'Type'] and stream[u'IsDefault']:
-                                        if u'Language' in stream:
-                                            defaultsubs = stream[u'Language']
+                                        if type == "song" and utils.settings('directstreammusic') == "true":
+                                            utils.window('%splaymethod' % playurl, value="DirectStream")
                                         else:
-                                            defaultsubs = stream[u'Codec']
-                                WINDOW.setProperty("%ssubs" % playurl, defaultsubs.encode('utf-8'))
-                                if mediaSources[0].get('DefaultAudioStreamIndex') != None:
-                                    WINDOW.setProperty(playurl+"AudioStreamIndex", str(mediaSources[0].get('DefaultAudioStreamIndex')))  
-                                if mediaSources[0].get('DefaultSubtitleStreamIndex') != None:
-                                    WINDOW.setProperty(playurl+"SubtitleStreamIndex", str(mediaSources[0].get('DefaultSubtitleStreamIndex')))
+                                            utils.window('%splaymethod' % playurl, value="DirectPlay")
+
+                                    count += 1
         
         if method == "VideoLibrary.OnUpdate":
             # Triggers 4 times, the following is only for manually marking as watched/unwatched
