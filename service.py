@@ -73,7 +73,7 @@ class Service():
         utils.window('minDBVersionCheck', clear=True)
         
         # Set min DB version
-        utils.window('minDBVersion', value="1.1.40")
+        utils.window('minDBVersion', value="1.1.52")
 
         embyProperty = utils.window('Emby.nodes.total')
         propNames = [
