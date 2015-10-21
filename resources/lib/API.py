@@ -394,10 +394,13 @@ class API():
 
         maxHeight = 10000
         maxWidth = 10000
-        quality = ""
+        customquery = ""
 
         if utils.settings('compressArt') == "true":
-            quality = "&Quality=90"
+            customquery = "&Quality=90"
+
+        if utils.settings('disableCoverArt') == "true":
+            customquery += "&EnableImageEnhancers=false"
 
         allartworks = {
 
@@ -413,14 +416,14 @@ class API():
         # Process backdrops
         backdropIndex = 0
         for backdroptag in backdrops:
-            artwork = "%s/mediabrowser/Items/%s/Images/Backdrop/%s?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, id, backdropIndex, maxWidth, maxHeight, backdroptag, quality)
+            artwork = "%s/mediabrowser/Items/%s/Images/Backdrop/%s?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, id, backdropIndex, maxWidth, maxHeight, backdroptag, customquery)
             allartworks['Backdrop'].append(artwork)
             backdropIndex += 1
 
         # Process the rest of the artwork
         for art in artworks:
             tag = artworks[art]
-            artwork = "%s/mediabrowser/Items/%s/Images/%s/0?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, id, art, maxWidth, maxHeight, tag, quality)
+            artwork = "%s/mediabrowser/Items/%s/Images/%s/0?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, id, art, maxWidth, maxHeight, tag, customquery)
             allartworks[art] = artwork
 
         # Process parent items if the main item is missing artwork
@@ -436,7 +439,7 @@ class API():
 
                     backdropIndex = 0
                     for parentbackdroptag in parentbackdrops:
-                        artwork = "%s/mediabrowser/Items/%s/Images/Backdrop/%s?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, parentId, backdropIndex, maxWidth, maxHeight, parentbackdroptag, quality)
+                        artwork = "%s/mediabrowser/Items/%s/Images/Backdrop/%s?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, parentId, backdropIndex, maxWidth, maxHeight, parentbackdroptag, customquery)
                         allartworks['Backdrop'].append(artwork)
                         backdropIndex += 1
 
@@ -450,7 +453,7 @@ class API():
                     if parentId:
                         
                         parentTag = item['Parent%sImageTag' % parentart]
-                        artwork = "%s/mediabrowser/Items/%s/Images/%s/0?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, parentId, parentart, maxWidth, maxHeight, parentTag, quality)
+                        artwork = "%s/mediabrowser/Items/%s/Images/%s/0?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, parentId, parentart, maxWidth, maxHeight, parentTag, customquery)
                         allartworks[parentart] = artwork
 
             # Parent album works a bit differently
@@ -460,7 +463,7 @@ class API():
                 if parentId and item.get('AlbumPrimaryImageTag'):
                     
                     parentTag = item['AlbumPrimaryImageTag']
-                    artwork = "%s/mediabrowser/Items/%s/Images/Primary/0?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, parentId, maxWidth, maxHeight, parentTag, quality)
+                    artwork = "%s/mediabrowser/Items/%s/Images/Primary/0?MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s" % (server, parentId, maxWidth, maxHeight, parentTag, customquery)
                     allartworks['Primary'] = artwork
 
 
