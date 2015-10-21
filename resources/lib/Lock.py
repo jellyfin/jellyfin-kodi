@@ -20,12 +20,12 @@ class Lock:
                 break;
             except OSError as e:
                 if (time.time() - start_time) >= self.timeout:
-                    xbmc.log("File_Lock_On " + self.filename + " timed out")
+                    xbmc.log("File_Lock_On " + self.filename.encode('utf-8') + " timed out")
                     return False
                 #xbmc.log("File_Lock_On " + self.filename + " error " + str(e))
             time.sleep(self.delay)
         self.is_locked = True
-        xbmc.log("File_Lock_On " + self.filename + " obtained")
+        xbmc.log("File_Lock_On " + self.filename.encode('utf-8') + " obtained")
         return True
         
     def release(self):
@@ -33,7 +33,7 @@ class Lock:
             os.close(self.fd)
             os.unlink(self.filename)
             self.is_locked = False
-            xbmc.log("File_Lock_On " + self.filename + " released")
+            xbmc.log("File_Lock_On " + self.filename.encode('utf-8') + " released")
         
     def __del__(self):
         self.release()
