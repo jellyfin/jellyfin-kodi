@@ -1078,6 +1078,15 @@ class LibrarySync(threading.Thread):
             
             # Library sync
             if not startupComplete:
+                
+                # Verify the database for videos
+                videodb = utils.getKodiVideoDBPath()
+                if not xbmcvfs.exists(videodb):
+                    # Database does not exists.
+                    self.logMsg("The current Kodi version is incompatible with the Emby for Kodi add-on. Please visit here, to see currently supported Kodi versions: https://github.com/MediaBrowser/Emby.Kodi/wiki", 0)
+                    xbmcgui.Dialog().ok("Emby Warning", "Cancelling the database syncing process. Current Kodi version: %s is unsupported. Please verify your logs for more info." % xbmc.getInfoLabel('System.BuildVersion'))
+                    break
+
                 # Run full sync
                 self.logMsg("DB Version: " + utils.settings("dbCreatedWithVersion"), 0)
                 self.logMsg("Doing_Db_Sync: syncDatabase (Started)", 1)
