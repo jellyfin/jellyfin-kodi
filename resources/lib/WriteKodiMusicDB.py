@@ -221,8 +221,16 @@ class WriteKodiMusicDB():
         self.AddGenresToMedia(albumid, genres, "album", cursor)
 
         # Update artwork
-        self.textureCache.addArtwork(artworks, albumid, "album", cursor)
+        if artworks['Primary']:
+            self.textureCache.addOrUpdateArt(artworks['Primary'], albumid, "album", "thumb", cursor)
+            artworks['Primary'] = ""
+
+        if artworks.get('BoxRear'):
+            self.textureCache.addOrUpdateArt(artworks['BoxRear'], albumid, "album", "poster", cursor)
+            artworks['BoxRear'] = ""
         
+        self.textureCache.addArtwork(artworks, albumid, "album", cursor)
+
         # Link album to artists
         if MBartists:
             album_artists = MBitem['AlbumArtists']
