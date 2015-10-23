@@ -27,6 +27,14 @@ class Kodi_Monitor( xbmc.Monitor ):
 
         className = self.__class__.__name__
         utils.logMsg("%s %s" % ("EMBY", className), msg, int(lvl))
+
+    def onScanStarted(self, library):
+        utils.window('kodiScan', value="true")
+        self.logMsg("Kodi library scan running.", 2)
+
+    def onScanFinished(self, library):
+        utils.window('kodiScan', clear=True)
+        self.logMsg("Kodi library scan finished.", 2)
         
     #this library monitor is used to detect a watchedstate change by the user through the library
     #as well as detect when a library item has been deleted to pass the delete to the Emby server
