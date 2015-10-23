@@ -125,25 +125,35 @@ class PlaybackUtils():
 
             if utils.settings('disableCinema') == "false" and not seekTime:
                 # if we have any play them when the movie/show is not being resumed
-                url = "{server}/mediabrowser/Users/{UserId}/Items/%s/Intros?format=json&ImageTypeLimit=1&Fields=Etag" % id    
-                intros = doUtils.downloadUrl(url)
+                getTrailers = True
 
-                if intros['TotalRecordCount'] != 0:
-                    for intro in intros['Items']:
-                        # The server randomly returns intros, process them.
-                        introId = intro['Id']
-                        
-                        introPlayurl = PlayUtils().getPlayUrl(server, introId, intro)
-                        introListItem = xbmcgui.ListItem()
-                        self.logMsg("Adding Intro: %s" % introPlayurl, 1)
+                if utils.settings('askCinema') == "true":
+                    resp = xbmcgui.Dialog().yesno("Emby Cinema Mode", "Play trailers?")
+                    if not resp:
+                        # User selected to not play trailers
+                        getTrailers = False
+                        self.logMsg("Skip trailers.", 1)
 
-                        # Set listitem and properties for intros
-                        self.setProperties(introPlayurl, intro, introListItem)
-                        self.setListItemProps(server, introId, introListItem, intro)
-                        
-                        playlist.add(introPlayurl, introListItem, index=currentPosition)
-                        introsPlaylist = True
-                        currentPosition += 1
+                if getTrailers:
+                    url = "{server}/mediabrowser/Users/{UserId}/Items/%s/Intros?format=json&ImageTypeLimit=1&Fields=Etag" % id    
+                    intros = doUtils.downloadUrl(url)
+
+                    if intros['TotalRecordCount'] != 0:
+                        for intro in intros['Items']:
+                            # The server randomly returns intros, process them.
+                            introId = intro['Id']
+                            
+                            introPlayurl = PlayUtils().getPlayUrl(server, introId, intro)
+                            introListItem = xbmcgui.ListItem()
+                            self.logMsg("Adding Intro: %s" % introPlayurl, 1)
+
+                            # Set listitem and properties for intros
+                            self.setProperties(introPlayurl, intro, introListItem)
+                            self.setListItemProps(server, introId, introListItem, intro)
+                            
+                            playlist.add(introPlayurl, introListItem, index=currentPosition)
+                            introsPlaylist = True
+                            currentPosition += 1
 
 
             ############### -- ADD MAIN ITEM ONLY FOR HOMESCREEN ###############

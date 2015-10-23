@@ -27,13 +27,12 @@ class WriteKodiMusicDB():
     kodiversion = int(xbmc.getInfoLabel("System.BuildVersion")[:2])
     
     addonName = ClientInformation().getAddonName()
-    WINDOW = xbmcgui.Window(10000)
 
-    username = WINDOW.getProperty('currUser')
-    userid = WINDOW.getProperty('userId%s' % username)
-    server = WINDOW.getProperty('server%s' % username)
-
-    directpath = utils.settings('useDirectPaths') == "true"
+    def __init__(self):
+        
+        username = utils.window('currUser')
+        self.userid = utils.window('userId%s' % username)
+        self.server = utils.window('server%s' % username)
 
     def logMsg(self, msg, lvl = 1):
 
@@ -221,8 +220,16 @@ class WriteKodiMusicDB():
         self.AddGenresToMedia(albumid, genres, "album", cursor)
 
         # Update artwork
-        self.textureCache.addArtwork(artworks, albumid, "album", cursor)
+        if artworks['Primary']:
+            self.textureCache.addOrUpdateArt(artworks['Primary'], albumid, "album", "thumb", cursor)
+            artworks['Primary'] = ""
+
+        if artworks.get('BoxRear'):
+            self.textureCache.addOrUpdateArt(artworks['BoxRear'], albumid, "album", "poster", cursor)
+            artworks['BoxRear'] = ""
         
+        self.textureCache.addArtwork(artworks, albumid, "album", cursor)
+
         # Link album to artists
         if MBartists:
             album_artists = MBitem['AlbumArtists']
@@ -323,7 +330,7 @@ class WriteKodiMusicDB():
                 # Kodi Gotham and Helix
                 query = "INSERT INTO album(idAlbum, strArtists, strGenres, iYear, dateAdded) values(?, ?, ?, ?, ?)"
                 cursor.execute(query, (albumid, artists, genre, year, dateadded))
-
+        finally:
             # Link album to artists
             for artist in MBitem['ArtistItems']:
                 cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?", (artist['Id'],))

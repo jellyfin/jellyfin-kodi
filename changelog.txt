@@ -1,3 +1,9 @@
+version 1.1.52
+- Report playback for music
+- Support Emby tags for music videos
+- Fix studio icon for movies
+- FORCE RESET LOCAL DATABASE IN PLACE
+
 version 1.1.50
 - Ignore channels from syncing process
 - Date added can now be updated

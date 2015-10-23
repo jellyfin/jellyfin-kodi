@@ -176,13 +176,14 @@ class ReadEmbyDB():
             url = "{server}/mediabrowser/Users/{UserId}/Items?StartIndex=%s&Limit=%s&Fields=Etag,Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,AirTime,DateCreated,MediaStreams,People,Overview&SortBy=DateCreated&Recursive=true&IncludeItemTypes=MusicAlbum&format=json" % (index, jump)
             jsondata = self.doUtils.downloadUrl(url)
 
-            tempresult = []
+            #tempresult = []
             # Only return valid albums - which have artists
-            for item in jsondata['Items']:
+            '''for item in jsondata['Items']:
                 if item['AlbumArtists']:
                     tempresult.append(item)
 
-            result.extend(tempresult)
+            result.extend(tempresult)'''
+            result.extend(jsondata['Items'])
             index += jump
 
         return result

@@ -56,59 +56,44 @@ def KodiSQL(type="video"):
     if type == "music":
         dbPath = getKodiMusicDBPath()
     elif type == "texture":
-        dbPath = xbmc.translatePath("special://database/Textures13.db")
+        dbPath = xbmc.translatePath("special://database/Textures13.db").decode('utf-8')
     else:
         dbPath = getKodiVideoDBPath()
     
     connection = sqlite3.connect(dbPath)
-    
     return connection
 
 def getKodiVideoDBPath():
 
-    kodibuild = xbmc.getInfoLabel("System.BuildVersion")
+    kodibuild = xbmc.getInfoLabel('System.BuildVersion')[:2]
+    dbVersion = {
 
-    if kodibuild.startswith("13"):
-        # Gotham
-        dbVersion = "78"
-    elif kodibuild.startswith("14"):
-        # Helix
-        dbVersion = "90"
-    elif kodibuild.startswith("15"):
-        # Isengard
-        dbVersion = "93"
-    elif kodibuild.startswith("16"):
-        # Jarvis
-        dbVersion = "99"
-    else:
-        # Not a compatible build
-        xbmc.log("This Kodi version is incompatible. Current version: %s" % kodibuild)
+        "13": 78,   # Gotham
+        "14": 90,   # Helix
+        "15": 93,   # Isengard
+        "16": 99    # Jarvis
+    }
 
-    dbPath = xbmc.translatePath("special://profile/Database/MyVideos" + dbVersion + ".db")
-    
-    return dbPath  
+    dbPath = xbmc.translatePath(
+                    "special://database/MyVideos%s.db"
+                    % dbVersion.get(kodibuild, "")).decode('utf-8')
+    return dbPath
 
 def getKodiMusicDBPath():
-    if xbmc.getInfoLabel("System.BuildVersion").startswith("13"):
-        #gotham
-        dbVersion = "46"
-    elif xbmc.getInfoLabel("System.BuildVersion").startswith("14"):
-        #helix
-        dbVersion = "48"
-    elif xbmc.getInfoLabel("System.BuildVersion").startswith("15"):
-        #isengard
-        dbVersion = "52"
-    elif xbmc.getInfoLabel("System.BuildVersion").startswith("16"):
-        #jarvis
-        dbVersion = "55"
-    else: 
-        # Not a compatible build
-        xbmc.log("This Kodi version is incompatible. Current version: %s" % kodibuild)
 
-    
-    dbPath = xbmc.translatePath("special://profile/Database/MyMusic" + dbVersion + ".db")
-    
-    return dbPath   
+    kodibuild = xbmc.getInfoLabel('System.BuildVersion')[:2]
+    dbVersion = {
+
+        "13": 46,   # Gotham
+        "14": 48,   # Helix
+        "15": 52,   # Isengard
+        "16": 55    # Jarvis
+    }
+
+    dbPath = xbmc.translatePath(
+                    "special://database/MyMusic%s.db"
+                    % dbVersion.get(kodibuild, "")).decode('utf-8')
+    return dbPath
     
 def prettifyXml(elem):
     rough_string = etree.tostring(elem, "utf-8")
