@@ -27,10 +27,7 @@ class Kodi_Monitor( xbmc.Monitor ):
 
         className = self.__class__.__name__
         utils.logMsg("%s %s" % ("EMBY", className), msg, int(lvl))
-
-    def onDatabaseUpdated(self, database):
-        pass
-    
+        
     #this library monitor is used to detect a watchedstate change by the user through the library
     #as well as detect when a library item has been deleted to pass the delete to the Emby server
     def onNotification  (self, sender, method, data):
@@ -40,14 +37,14 @@ class Kodi_Monitor( xbmc.Monitor ):
         #player started playing an item - 
         if ("Playlist.OnAdd" in method or "Player.OnPlay" in method):
 
-            if utils.settings('useDirectPaths')=='true' or utils.settings('enableMusicSync') == "true":
-
-                jsondata = json.loads(data)
-                if jsondata != None:
-                    if jsondata.has_key("item"):
-                        if jsondata.get("item").has_key("id") and jsondata.get("item").has_key("type"):
-                            id = jsondata.get("item").get("id")
-                            type = jsondata.get("item").get("type")
+            jsondata = json.loads(data)
+            if jsondata:
+                if jsondata.has_key("item"):
+                    if jsondata.get("item").has_key("id") and jsondata.get("item").has_key("type"):
+                        id = jsondata.get("item").get("id")
+                        type = jsondata.get("item").get("type")
+                        
+                        if utils.settings('useDirectPaths')=='true' or (type == "song" and utils.settings('enableMusicSync') == "true"):
                             
                             if type == "song":
                                 connection = utils.KodiSQL('music')
