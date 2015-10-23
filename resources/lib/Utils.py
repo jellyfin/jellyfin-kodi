@@ -184,6 +184,7 @@ def createSources():
                 '</files>\n'
             '</sources>'
         )
+        sources.close()
 
 def pathsubstitution(add=True):
 
