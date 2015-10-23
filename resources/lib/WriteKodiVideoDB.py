@@ -27,13 +27,14 @@ class WriteKodiVideoDB():
     kodiversion = int(xbmc.getInfoLabel("System.BuildVersion")[:2])
 
     addonName = ClientInformation().getAddonName()
-    WINDOW = xbmcgui.Window(10000)
+    
+    def __init__(self):
 
-    username = WINDOW.getProperty('currUser')
-    userid = WINDOW.getProperty('userId%s' % username)
-    server = WINDOW.getProperty('server%s' % username)
-
-    directpath = utils.settings('useDirectPaths') == "true"
+        username = utils.window('currUser')
+        self.userid = utils.window('userId%s' % username)
+        self.server = utils.window('server%s' % username)
+        
+        self.directpath = utils.settings('useDirectPaths') == "true"
 
     def logMsg(self, msg, lvl = 1):
 
