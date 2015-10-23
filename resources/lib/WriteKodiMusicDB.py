@@ -331,7 +331,7 @@ class WriteKodiMusicDB():
                 # Kodi Gotham and Helix
                 query = "INSERT INTO album(idAlbum, strArtists, strGenres, iYear, dateAdded) values(?, ?, ?, ?, ?)"
                 cursor.execute(query, (albumid, artists, genre, year, dateadded))
-
+        finally:
             # Link album to artists
             for artist in MBitem['ArtistItems']:
                 cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?", (artist['Id'],))
