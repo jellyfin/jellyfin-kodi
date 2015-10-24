@@ -1,3 +1,10 @@
+version 1.1.53
+- Add visual warning when kodi version is incompatible
+- Add ask to play trailers option
+- Fix music singles
+- Fix direct path not working during the initial setup
+- Fix music videos missing artist link
+
 version 1.1.52
 - Report playback for music
 - Support Emby tags for music videos
