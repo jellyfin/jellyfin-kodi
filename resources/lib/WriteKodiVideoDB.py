@@ -407,7 +407,10 @@ class WriteKodiVideoDB():
         self.AddTagsToMedia(idMVideo, tags, "musicvideo", cursor)
 
         #update or insert actors
-        self.AddPeopleToMedia(idMVideo,MBitem.get("People"),"musicvideo", connection, cursor)
+        artists = MBitem['ArtistItems']
+        for artist in artists:
+            artist['Type'] = "Artist"
+        self.AddPeopleToMedia(idMVideo,artists,"musicvideo", connection, cursor)
 
         # Update artwork
         self.textureCache.addArtwork(API().getAllArtwork(MBitem), idMVideo, "musicvideo", cursor)
@@ -919,6 +922,10 @@ class WriteKodiVideoDB():
                             query = "INSERT OR REPLACE INTO writer_link(actor_id, media_id, media_type) values(?, ?, ?)"
                             cursor.execute(query, (actorid, id, mediatype))
 
+                        elif "Artist" in type:
+                            query = "INSERT OR REPLACE INTO actor_link(actor_id, media_id, media_type) values(?, ?, ?)"
+                            cursor.execute(query, (actorid, id, mediatype))
+
                     else:
                         # Kodi Gotham or Helix
                         if "Actor" in type:
@@ -958,6 +965,10 @@ class WriteKodiVideoDB():
 
                             if query:
                                 cursor. execute(query, (actorid, id))
+
+                        elif "Artist" in type:
+                            query = "INSERT OR REPLACE INTO artistlinkmusicvideo(idArtist, idMVideo) values(?, ?)"
+                            cursor.execute(query, (actorid, id))
                         
     def AddGenresToMedia(self, id, genres, mediatype, cursor):
 
