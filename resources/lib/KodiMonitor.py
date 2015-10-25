@@ -52,7 +52,7 @@ class Kodi_Monitor( xbmc.Monitor ):
                         id = jsondata.get("item").get("id")
                         type = jsondata.get("item").get("type")
                         
-                        if utils.settings('useDirectPaths')=='true' or (type == "song" and utils.settings('enableMusicSync') == "true"):
+                        if (utils.settings('useDirectPaths')=='true' and not type == "song") or (type == "song" and utils.settings('enableMusicSync') == "true"):
                             
                             if type == "song":
                                 connection = utils.KodiSQL('music')
