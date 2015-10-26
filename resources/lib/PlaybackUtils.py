@@ -125,20 +125,20 @@ class PlaybackUtils():
 
             if utils.settings('disableCinema') == "false" and not seekTime:
                 # if we have any play them when the movie/show is not being resumed
-                getTrailers = True
+                url = "{server}/mediabrowser/Users/{UserId}/Items/%s/Intros?format=json&ImageTypeLimit=1&Fields=Etag" % id    
+                intros = doUtils.downloadUrl(url)
 
-                if utils.settings('askCinema') == "true":
-                    resp = xbmcgui.Dialog().yesno("Emby Cinema Mode", "Play trailers?")
-                    if not resp:
-                        # User selected to not play trailers
-                        getTrailers = False
-                        self.logMsg("Skip trailers.", 1)
+                if intros['TotalRecordCount'] != 0:
+                    getTrailers = True
 
-                if getTrailers:
-                    url = "{server}/mediabrowser/Users/{UserId}/Items/%s/Intros?format=json&ImageTypeLimit=1&Fields=Etag" % id    
-                    intros = doUtils.downloadUrl(url)
-
-                    if intros['TotalRecordCount'] != 0:
+                    if utils.settings('askCinema') == "true":
+                        resp = xbmcgui.Dialog().yesno("Emby Cinema Mode", "Play trailers?")
+                        if not resp:
+                            # User selected to not play trailers
+                            getTrailers = False
+                            self.logMsg("Skip trailers.", 1)
+                    
+                    if getTrailers:
                         for intro in intros['Items']:
                             # The server randomly returns intros, process them.
                             introId = intro['Id']
