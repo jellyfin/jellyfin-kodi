@@ -156,6 +156,9 @@ class WriteKodiVideoDB():
             elif "/" in playurl:
                 filename = playurl.rsplit("/",1)[-1]
                 path = playurl.replace(filename, "")
+            else:
+                self.logMsg("Invalid path: %s" % playurl, 1)
+                return
         else: # Set plugin path and media flags using real filename
             try:
                 if not "plugin://" in playurl:
@@ -326,6 +329,9 @@ class WriteKodiVideoDB():
             elif "/" in playurl:
                 filename = playurl.rsplit("/",1)[-1]
                 path = playurl.replace(filename, "")
+            else:
+                self.logMsg("Invalid path: %s" % playurl, 1)
+                return
         else: # Set plugin path and media flags using real filename
             try:
                 if not "plugin://" in playurl:
@@ -620,6 +626,9 @@ class WriteKodiVideoDB():
             elif "/" in playurl:
                 filename = playurl.rsplit("/",1)[-1]
                 path = playurl.replace(filename, "")
+            else:
+                self.logMsg("Invalid path: %s" % playurl, 1)
+                return
         else: # Set plugin path and media flags - real filename with extension
             realfile = ""
             realpath = ""
