@@ -87,7 +87,7 @@ def getKodiMusicDBPath():
         "13": 46,   # Gotham
         "14": 48,   # Helix
         "15": 52,   # Isengard
-        "16": 55    # Jarvis
+        "16": 56    # Jarvis
     }
 
     dbPath = xbmc.translatePath(
