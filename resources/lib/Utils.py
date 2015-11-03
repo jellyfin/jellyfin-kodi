@@ -129,47 +129,68 @@ def stopProfiling(pr, profileName):
             f.write(str(ncalls) + "\t" + "{0}".format(total_time) + "\t" + "{0}".format(cumulative_time) + "\t" + func_name + "\t" + filename + "\r\n")
     f.close()
 
+def indent(elem, level=0):
+    # Prettify xml trees
+    i = "\n" + level*"  "
+    if len(elem):
+        if not elem.text or not elem.text.strip():
+          elem.text = i + "  "
+        if not elem.tail or not elem.tail.strip():
+          elem.tail = i
+        for elem in elem:
+          indent(elem, level+1)
+        if not elem.tail or not elem.tail.strip():
+          elem.tail = i
+    else:
+        if level and (not elem.tail or not elem.tail.strip()):
+          elem.tail = i
+
 def createSources():
     # To make Master lock compatible
     path = xbmc.translatePath("special://profile/").decode("utf-8")
     xmlpath = "%ssources.xml" % path
 
     if xbmcvfs.exists(xmlpath):
-        # add some way to writing dummy path to existing sources.xml
-        pass
+        # Modify the existing file
+        try:
+            xmlparse = etree.parse(xmlpath)
+        except:
+            root = etree.Element('sources')
+        else:
+            root = xmlparse.getroot()
+
+        video = root.find('video')
+        if video is None:
+            video = etree.SubElement(root, 'video')
     else:
-        sources = open(xmlpath, 'w')
-        sources.write(
-            
-            '<sources>\n\t'
-                '<programs>\n\t\t'
-                    '<default pathversion="1"></default>\n\t'
-                '</programs>\n\t'
-                '<video>\n\t\t'
-                    '<default pathversion="1"></default>\n\t\t'
-                    '<source>\n\t\t\t'
-                        '<name>Emby</name>\n\t\t\t'
-                        '<path pathversion="1">smb://embydummy/dummypath1/</path>\n\t\t\t'
-                        '<allowsharing>true</allowsharing>\n\t\t'
-                    '</source>\n\t\t'
-                    '<source>\n\t\t\t'
-                        '<name>Emby</name>\n\t\t\t'
-                        '<path pathversion="1">smb://embydummy/dummypath2/</path>\n\t\t\t'
-                        '<allowsharing>true</allowsharing>\n\t\t'
-                    '</source>\n\t'
-                '</video>\n\t'
-                '<music>\n\t\t'
-                    '<default pathversion="1"></default>\n\t'
-                '</music>\n\t'
-                '<pictures>\n\t\t'
-                    '<default pathversion="1"></default>\n\t'
-                '</pictures>\n\t'
-                '<files>\n\t\t'
-                    '<default pathversion="1"></default>\n\t'
-                '</files>\n'
-            '</sources>'
+        # We need to create the file
+        root = etree.Element('sources')
+        video = etree.SubElement(root, 'video')
+
+
+    # Add elements
+    etree.SubElement(video, 'default', attrib={'pathversion': "1"})
+    
+    # First dummy source
+    source_one = etree.SubElement(video, 'source')
+    etree.SubElement(source_one, 'name').text = "Emby"
+    etree.SubElement(source_one, 'path', attrib={'pathversion': "1"}).text = (
+
+            "smb://embydummy/dummypath1/"
         )
-        sources.close()
+    etree.SubElement(source_one, 'allowsharing').text = "true"
+    
+    # Second dummy source
+    source_two = etree.SubElement(video, 'source')
+    etree.SubElement(source_two, 'name').text = "Emby"
+    etree.SubElement(source_two, 'path', attrib={'pathversion': "1"}).text = (
+
+            "smb://embydummy/dummypath2/"
+        )
+    etree.SubElement(source_two, 'allowsharing').text = "true"
+
+    indent(root)
+    etree.ElementTree(root).write(xmlpath, method="html")
 
 def pathsubstitution(add=True):
 
