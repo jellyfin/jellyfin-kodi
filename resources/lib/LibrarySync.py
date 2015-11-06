@@ -46,6 +46,7 @@ class LibrarySync(threading.Thread):
     updateItems = []
     userdataItems = []
     removeItems = []
+    forceUpdate = False
 
     def __init__(self, *args):
 
@@ -141,7 +142,7 @@ class LibrarySync(threading.Thread):
             try:
                 cursor.execute("ALTER TABLE emby ADD COLUMN kodi_file_id INTEGER")
             except: pass
-            connection.commit()
+            self.dbCommit(connection)
             
             # sync movies
             self.MoviesFullSync(connection,cursor,pDialog)
@@ -172,7 +173,7 @@ class LibrarySync(threading.Thread):
                 try:
                     cursor.execute("ALTER TABLE emby ADD COLUMN kodi_file_id INTEGER")
                 except: pass
-                connection.commit()
+                self.dbCommit(connection)
                 
                 self.MusicFullSync(connection,cursor,pDialog)
                 cursor.close()
@@ -183,7 +184,8 @@ class LibrarySync(threading.Thread):
                 utils.settings("dbCreatedWithVersion", self.clientInfo.getVersion())    
             
             # Commit all DB changes at once and Force refresh the library
-            xbmc.executebuiltin("UpdateLibrary(video)")
+            #xbmc.executebuiltin("UpdateLibrary(video)")
+            #self.updateLibrary("video")
             #xbmc.executebuiltin("UpdateLibrary(music)")
             
             # set prop to show we have run for the first time
@@ -311,7 +313,7 @@ class LibrarySync(threading.Thread):
                 WriteKodiVideoDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
                 
         ### commit all changes to database ###
-        connection.commit()
+        self.dbCommit(connection)
 
     def MusicVideosFullSync(self,connection,cursor, pDialog):
                
@@ -361,7 +363,7 @@ class LibrarySync(threading.Thread):
                 WriteKodiVideoDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
                 
         ### commit all changes to database ###
-        connection.commit()
+        self.dbCommit(connection)
     
     def TvShowsFullSync(self,connection,cursor,pDialog):
                
@@ -427,7 +429,7 @@ class LibrarySync(threading.Thread):
                 WriteKodiVideoDB().deleteItemFromKodiLibrary(kodiId, connection, cursor)
                 
         ### commit all changes to database ###
-        connection.commit()
+        self.dbCommit(connection)
          
     def EpisodesFullSync(self,connection,cursor,showId):
         
@@ -482,13 +484,13 @@ class LibrarySync(threading.Thread):
     def MusicFullSync(self, connection,cursor, pDialog):
 
         self.ProcessMusicArtists(connection,cursor,pDialog)
-        connection.commit()
+        self.dbCommit(connection)
         self.ProcessMusicAlbums(connection,cursor,pDialog)
-        connection.commit()
+        self.dbCommit(connection)
         self.ProcessMusicSongs(connection,cursor,pDialog)
         
         ### commit all changes to database ###
-        connection.commit()
+        self.dbCommit(connection)
     
     def ProcessMusicSongs(self,connection,cursor,pDialog):
                
@@ -758,7 +760,7 @@ class LibrarySync(threading.Thread):
                             WriteKodiVideoDB().addOrUpdateMusicVideoToKodiLibrary(MBitem["Id"],connection, cursor)
                         
                 ### commit all changes to database ###
-                connection.commit()
+                self.dbCommit(connection)
                 cursor.close()
 
                 ### PROCESS MUSIC LIBRARY ###
@@ -775,14 +777,14 @@ class LibrarySync(threading.Thread):
                             WriteKodiMusicDB().addOrUpdateAlbumToKodiLibrary(MBitem, connection, cursor)
                         if "Audio" in itemType:
                             WriteKodiMusicDB().addOrUpdateSongToKodiLibrary(MBitem, connection, cursor)    
-                    connection.commit()
+                    self.dbCommit(connection)
                     cursor.close()
 
             finally:
                 if(pDialog != None):
                     pDialog.close()
                 self.SaveLastSync()
-                xbmc.executebuiltin("UpdateLibrary(video)")
+                #self.updateLibrary("video")
                 WINDOW.setProperty("SyncDatabaseRunning", "false")
                 # tell any widgets to refresh because the content has changed
                 WINDOW.setProperty("widgetreload", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
@@ -869,7 +871,7 @@ class LibrarySync(threading.Thread):
                         self.logMsg("Message: Doing LibraryChanged: Deleting show: %s" % embyId, 1)
                         WriteKodiVideoDB().deleteItemFromKodiLibrary(embyId, connection, cursor)
 
-            connection.commit()
+            self.dbCommit(connection)
         # Close connection
         cursorvideo.close()
 
@@ -883,7 +885,7 @@ class LibrarySync(threading.Thread):
                     self.logMsg("Message : Doing LibraryChanged : Items Removed : Calling deleteItemFromKodiLibrary (musiclibrary): " + item, 0)
                     WriteKodiMusicDB().deleteItemFromKodiLibrary(item, connection, cursor)
 
-                connection.commit()
+                self.dbCommit(connection)
         # Close connection
         cursormusic.close()
 
@@ -963,8 +965,8 @@ class LibrarySync(threading.Thread):
                     count = count + 1
                 WriteKodiVideoDB().updateUserdata(userdata, connection, cursor)
 
-            connection.commit()
-            xbmc.executebuiltin("UpdateLibrary(video)")
+            self.dbCommit(connection)
+            #self.updateLibrary("video")
         # Close connection
         cursorvideo.close()
 
@@ -984,7 +986,7 @@ class LibrarySync(threading.Thread):
                         count = count + 1
                     WriteKodiMusicDB().updateUserdata(userdata, connection, cursor)
 
-                connection.commit()
+                self.dbCommit(connection)
                 #xbmc.executebuiltin("UpdateLibrary(music)")
         # Close connection
         cursormusic.close()
@@ -1011,6 +1013,29 @@ class LibrarySync(threading.Thread):
         if(len(userDataList) > 0):
             self.logMsg("Doing LibraryChanged : Processing User Data Changed : " + str(userDataList), 0)
             self.userdataItems.extend(userDataList)
+
+    def dbCommit(self, connection):
+        # Central commit, will verify if Kodi database
+        kodidb_scan = utils.window('kodiScan') == "true"
+
+        while kodidb_scan:
+            
+            self.logMsg("Kodi scan running. Waiting...", 1)
+            kodidb_scan = utils.window('kodiScan') == "true"
+
+            if self.KodiMonitor.waitForAbort(1):
+                # Abort was requested while waiting. We should exit
+                self.logMsg("Commit unsuccessful.", 1)
+                break
+        else:
+            connection.commit()
+            self.logMsg("Commit successful.", 1)
+
+    def updateLibrary(self, type):
+
+        self.logMsg("Updating %s library." % type, 1)
+        utils.window('kodiScan', value="true")
+        xbmc.executebuiltin('UpdateLibrary(%s)' % type)
 
     def ShouldStop(self):
             
@@ -1114,6 +1139,7 @@ class LibrarySync(threading.Thread):
                 listItems = self.updateItems
                 self.updateItems = []
                 self.IncrementalSync(listItems)
+                self.forceUpdate = True
 
             if len(self.userdataItems) > 0 and utils.window('kodiScan') != "true":
                 # Process userdata changes only
@@ -1121,6 +1147,7 @@ class LibrarySync(threading.Thread):
                 listItems = self.userdataItems
                 self.userdataItems = []
                 self.setUserdata(listItems)
+                self.forceUpdate = True
 
             if len(self.removeItems) > 0 and utils.window('kodiScan') != "true":
                 # Remove item from Kodi library
@@ -1128,6 +1155,12 @@ class LibrarySync(threading.Thread):
                 listItems = self.removeItems
                 self.removeItems = []
                 self.removefromDB(listItems)
+                self.forceUpdate = True
+
+            if self.forceUpdate and not self.updateItems and not self.userdataItems and not self.removeItems:
+                # Force update Kodi library
+                self.forceUpdate = False
+                self.updateLibrary("video")
 
             
             if utils.window("kodiProfile_emby") != kodiProfile:
