@@ -332,7 +332,12 @@ class WriteKodiMusicDB():
                 cursor.execute(query, (albumid, artists, genre, year, dateadded))
         finally:
             # Link album to artists
-            for artist in MBitem['ArtistItems']:
+            if MBitem['AlbumArtists']:
+                album_artists = MBitem['AlbumArtists']
+            else:
+                album_artists = MBitem['ArtistItems']
+
+            for artist in album_artists:
                 cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?", (artist['Id'],))
                 try:
                     artistid = cursor.fetchone()[0]
