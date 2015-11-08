@@ -323,30 +323,48 @@ class WriteKodiMusicDB():
             albumid = cursor.fetchone()[0] + 1
             if kodiVersion == 15:
                 # Kodi Isengard
-                query = "INSERT INTO album(idAlbum, strArtists, strGenres, iYear, dateAdded, strReleaseType) values(?, ?, ?, ?, ?, ?)"
-                cursor.execute(query, (albumid, artists, genre, year, dateadded, "single"))
+                query = "INSERT INTO album(idAlbum, strGenres, iYear, dateAdded, strReleaseType) values(?, ?, ?, ?, ?)"
+                cursor.execute(query, (albumid, genre, year, dateadded, "single"))
             elif kodiVersion == 16:
-                query = "INSERT INTO album(idAlbum, strArtists, strGenres, iYear, strReleaseType) values(?, ?, ?, ?, ?)"
-                cursor.execute(query, (albumid, artists, genre, year, "single"))
+                query = "INSERT INTO album(idAlbum, strGenres, iYear, strReleaseType) values(?, ?, ?, ?)"
+                cursor.execute(query, (albumid, genre, year, "single"))
             else:
                 # Kodi Gotham and Helix
-                query = "INSERT INTO album(idAlbum, strArtists, strGenres, iYear, dateAdded) values(?, ?, ?, ?, ?)"
-                cursor.execute(query, (albumid, artists, genre, year, dateadded))
+                query = "INSERT INTO album(idAlbum, strGenres, iYear, dateAdded) values(?, ?, ?, ?)"
+                cursor.execute(query, (albumid, genre, year, dateadded))
         finally:
-            # Link album to artists
-            if MBitem['AlbumArtists']:
-                album_artists = MBitem['AlbumArtists']
-            else:
-                album_artists = MBitem['ArtistItems']
-
-            for artist in album_artists:
-                cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?", (artist['Id'],))
-                try:
-                    artistid = cursor.fetchone()[0]
-                except: pass
+            cursor.execute("SELECT strArtists FROM album WHERE idAlbum = ?", (albumid,))
+            result = cursor.fetchone()
+            if result and result[0] == "":
+                # Link album to artists
+                if MBitem['AlbumArtists']:
+                    album_artists = MBitem['AlbumArtists']
                 else:
-                    query = "INSERT OR REPLACE INTO album_artist(idArtist, idAlbum, strArtist) values(?, ?, ?)"
-                    cursor.execute(query, (artistid, albumid, artist['Name']))
+                    album_artists = MBitem['ArtistItems']
+
+                MBartists = []
+                for artist in album_artists:
+                    MBartists.append(artist['Name'])
+                    cursor.execute("SELECT kodi_id FROM emby WHERE emby_id = ?", (artist['Id'],))
+                    try:
+                        artistid = cursor.fetchone()[0]
+                    except: pass
+                    else:
+                        query = "INSERT OR REPLACE INTO album_artist(idArtist, idAlbum, strArtist) values(?, ?, ?)"
+                        cursor.execute(query, (artistid, albumid, artist['Name']))
+
+                artists_onalbum = " / ".join(MBartists)
+                if kodiVersion == 15:
+                    # Kodi Isengard
+                    query = "UPDATE album SET strArtists = ? WHERE idAlbum = ?"
+                    cursor.execute(query, (artists_onalbum, albumid))
+                elif kodiVersion == 16:
+                    query = "UPDATE album SET strArtists = ? WHERE idAlbum = ?"
+                    cursor.execute(query, (artists_onalbum, albumid))
+                else:
+                    # Kodi Gotham and Helix
+                    query = "UPDATE album SET strArtists = ? WHERE idAlbum = ?"
+                    cursor.execute(query, (artists_onalbum, albumid))
 
 
         ##### UPDATE THE SONG #####

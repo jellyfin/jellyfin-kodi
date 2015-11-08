@@ -70,6 +70,7 @@ class Service():
         utils.window('Server_status', clear=True)
         utils.window('startup', clear=True)
         utils.window('OnWakeSync', clear=True)
+        utils.window('kodiScan', clear=True)
         utils.window('minDBVersionCheck', clear=True)
         
         # Set min DB version
