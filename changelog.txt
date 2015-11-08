@@ -1,3 +1,8 @@
+version 1.1.55
+- Fix to incremental sync - database locked error
+- Fix to music multi disc tracks ordering
+- Fix to prioritize album artists and fall back to song artists if missing.
+
 version 1.1.53
 - Add visual warning when kodi version is incompatible
 - Add ask to play trailers option
