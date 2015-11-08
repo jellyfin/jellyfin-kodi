@@ -190,7 +190,7 @@ def createSources():
     etree.SubElement(source_two, 'allowsharing').text = "true"
 
     indent(root)
-    etree.ElementTree(root).write(xmlpath, method="html")
+    etree.ElementTree(root).write(xmlpath)
 
 def pathsubstitution(add=True):
 
