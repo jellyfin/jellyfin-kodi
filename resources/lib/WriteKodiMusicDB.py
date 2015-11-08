@@ -277,7 +277,9 @@ class WriteKodiMusicDB():
         musicBrainzId = API().getProvider(MBitem, "musicBrainzTrackId")
         genre = " / ".join(genres)
         artists = " / ".join(MBitem.get('Artists'))
-        track = MBitem.get('IndexNumber')
+        tracknumber = MBitem.get('IndexNumber', 0)
+        disc = MBitem.get('ParentIndexNumber', 1)
+        track = disc*2**16 + tracknumber
         year = MBitem.get('ProductionYear')
         bio = API().getOverview(MBitem)
         duration = timeInfo.get('TotalTime')
