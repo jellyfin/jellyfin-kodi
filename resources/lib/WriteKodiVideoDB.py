@@ -413,10 +413,12 @@ class WriteKodiVideoDB():
         self.AddTagsToMedia(idMVideo, tags, "musicvideo", cursor)
 
         #update or insert actors
+        people = MBitem['People']
         artists = MBitem['ArtistItems']
         for artist in artists:
             artist['Type'] = "Artist"
-        self.AddPeopleToMedia(idMVideo,artists,"musicvideo", connection, cursor)
+        people.extend(artists)
+        self.AddPeopleToMedia(idMVideo,people,"musicvideo", connection, cursor)
 
         # Update artwork
         self.textureCache.addArtwork(API().getAllArtwork(MBitem), idMVideo, "musicvideo", cursor)
