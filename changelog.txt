@@ -1,3 +1,6 @@
+version 1.1.57
+- Fix for music videos directors
+
 version 1.1.55
 - Fix to incremental sync - database locked error
 - Fix to music multi disc tracks ordering
