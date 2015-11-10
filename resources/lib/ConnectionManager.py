@@ -115,7 +115,13 @@ class ConnectionManager():
                 self.logMsg("User option to direct stream music library.", 1)
                 utils.settings('directstreammusic', "true")
 
-        directPaths = xbmcgui.Dialog().yesno("Direct Paths", "Use direct paths?")
+        directPaths = xbmcgui.Dialog().yesno(
+                                        heading="Direct paths",
+                                        line1=(
+                                            "Use direct paths? Caution! If you choose yes, you "
+                                            "will lose access to certain Emby features such as: "
+                                            "Emby cinema mode, direct stream/transcode options, "
+                                            "parental access schedule."))
         if directPaths:
             self.logMsg("User opted to use direct paths.", 1)
             utils.settings('useDirectPaths', "true")
