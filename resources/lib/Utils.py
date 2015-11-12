@@ -189,7 +189,9 @@ def createSources():
         )
     etree.SubElement(source_two, 'allowsharing').text = "true"
 
-    indent(root)
+    try:
+        indent(root)
+    except:pass
     etree.ElementTree(root).write(xmlpath)
 
 def pathsubstitution(add=True):

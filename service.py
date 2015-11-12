@@ -63,6 +63,7 @@ class Service():
         self.logMsg("Platform: %s" % (clientInfo.getPlatform()), 0)
         self.logMsg("KODI Version: %s" % xbmc.getInfoLabel('System.BuildVersion'), 0)
         self.logMsg("%s Version: %s" % (addonName, clientInfo.getVersion()), 0)
+        self.logMsg("Using plugin paths: %s" % (utils.settings('useDirectPaths') != "true"), 0)
         self.logMsg("Log Level: %s" % logLevel, 0)
 
         # Reset window props for profile switch
