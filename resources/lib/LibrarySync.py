@@ -1058,8 +1058,16 @@ class LibrarySync(threading.Thread):
             return True
         else:
             return False
-            
+
     def run(self):
+    
+        try:
+            self.run_internal()
+        except Exception as e:
+            xbmcgui.Dialog().ok("Emby for Kodi", "Library sync thread has exited!", "You should restart Kodi now.", "Please report this on the forum.")
+            raise
+
+    def run_internal(self):
 
         startupComplete = False
         kodiProfile = xbmc.translatePath("special://profile")
