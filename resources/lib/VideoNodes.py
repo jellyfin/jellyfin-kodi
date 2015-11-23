@@ -189,7 +189,54 @@ class VideoNodes():
             etree.ElementTree(root).write(nodefile, xml_declaration=True)
         except:
             etree.ElementTree(root).write(nodefile)
-
+        
+        #create tag node - random items
+        nodefile = os.path.join(libraryPath, tagname_normalized + "_random.xml")
+        root = etree.Element("node", {"order":"10", "type":"filter"})
+        label = language(30229)
+        etree.SubElement(root, "label").text = label
+        etree.SubElement(root, "match").text = "all"
+        etree.SubElement(root, "content").text = type
+        etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+        Rule = etree.SubElement(root, "rule", {"field":"tag","operator":"is"})
+        etree.SubElement(Rule, "value").text = tagname
+        #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
+        etree.SubElement(root, "limit").text = "25"
+        etree.SubElement(root, "order", {"direction":"ascending"}).text = "random"
+        WINDOW.setProperty("Emby.nodes.%s.random.title" %str(windowPropId),label)
+        path = "library://video/Emby - %s/%s_random.xml"%(tagname_normalized,tagname_normalized)
+        WINDOW.setProperty("Emby.nodes.%s.random.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
+        WINDOW.setProperty("Emby.nodes.%s.random.content" %str(windowPropId),path)
+        try:
+            etree.ElementTree(root).write(nodefile, xml_declaration=True)
+        except:
+            etree.ElementTree(root).write(nodefile)
+        
+        #create tag node - recommended items
+        nodefile = os.path.join(libraryPath, tagname_normalized + "_recommended.xml")
+        root = etree.Element("node", {"order":"10", "type":"filter"})
+        label = language(30230)
+        etree.SubElement(root, "label").text = label
+        etree.SubElement(root, "match").text = "all"
+        etree.SubElement(root, "content").text = type
+        etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+        Rule = etree.SubElement(root, "rule", {"field":"tag","operator":"is"})
+        etree.SubElement(Rule, "value").text = tagname
+        Rule2 = etree.SubElement(root, "rule", {"field":"playcount","operator":"is"})
+        etree.SubElement(Rule2, "value").text = "0"
+        Rule3 = etree.SubElement(root, "rule", {"field":"rating","operator":"greaterthan"})
+        etree.SubElement(Rule3, "value").text = "7"
+        #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
+        etree.SubElement(root, "limit").text = "25"
+        etree.SubElement(root, "order", {"direction":"descending"}).text = "rating"
+        WINDOW.setProperty("Emby.nodes.%s.random.title" %str(windowPropId),label)
+        path = "library://video/Emby - %s/%s_recommended.xml"%(tagname_normalized,tagname_normalized)
+        WINDOW.setProperty("Emby.nodes.%s.recommended.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
+        WINDOW.setProperty("Emby.nodes.%s.recommended.content" %str(windowPropId),path)
+        try:
+            etree.ElementTree(root).write(nodefile, xml_declaration=True)
+        except:
+            etree.ElementTree(root).write(nodefile)
         
         #### TAGS ONLY FOR TV SHOWS COLLECTIONS ####
         if type == "tvshows":    
