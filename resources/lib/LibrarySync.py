@@ -109,8 +109,6 @@ class LibrarySync(threading.Thread):
                     LibrarySync().update_items(changedItems)
                     LibrarySync().user_data_update(userChanges)
                     
-                    self.SaveLastSync()
-                    
                     return True
                 else:
                     utils.logMsg("Sync Database", "Too Many For Incremental Sync (" + str(maxItems) + "), changedItems" + str(len(changedItems)) + " removedItems:" + str(len(removedItems)) + " userChanges:" + str(len(userChanges)), 0)
@@ -783,7 +781,7 @@ class LibrarySync(threading.Thread):
             finally:
                 if(pDialog != None):
                     pDialog.close()
-                self.SaveLastSync()
+
                 #self.updateLibrary("video")
                 WINDOW.setProperty("SyncDatabaseRunning", "false")
                 # tell any widgets to refresh because the content has changed
@@ -898,9 +896,7 @@ class LibrarySync(threading.Thread):
 
         if(pDialog != None):
             pDialog.close()
-        self.SaveLastSync()
-        
-        
+              
     def setUserdata(self, listItems):
     
         dbSyncIndication = utils.settings("dbSyncIndication") == "true"
@@ -993,8 +989,6 @@ class LibrarySync(threading.Thread):
         
         if(pDialog != None):
             pDialog.close()
-        self.SaveLastSync()
-                
 
     def remove_items(self, itemsRemoved):
         # websocket client
@@ -1064,7 +1058,7 @@ class LibrarySync(threading.Thread):
         try:
             self.run_internal()
         except Exception as e:
-            xbmcgui.Dialog().ok("Emby for Kodi", "Library sync thread has exited!", "You should restart Kodi now.", "Please report this on the forum.")
+            xbmcgui.Dialog().ok("Emby for Kodi", "Library sync thread has crashed!", "You will need to restart Kodi.", "Please report this on the forum, we will need your log.")
             raise
 
     def run_internal(self):
@@ -1140,7 +1134,8 @@ class LibrarySync(threading.Thread):
                     self.logMsg("Doing_Db_Sync Post Resume: syncDatabase (Finished) " + str(libSync), 0)
 
             
-
+            doSaveLastSync = False
+            
             if len(self.updateItems) > 0 and utils.window('kodiScan') != "true":
                 # Add or update items
                 self.logMsg("Processing items: %s" % (str(self.updateItems)), 1)
@@ -1148,6 +1143,7 @@ class LibrarySync(threading.Thread):
                 self.updateItems = []
                 self.IncrementalSync(listItems)
                 self.forceUpdate = True
+                doSaveLastSync = True
 
             if len(self.userdataItems) > 0 and utils.window('kodiScan') != "true":
                 # Process userdata changes only
@@ -1156,6 +1152,7 @@ class LibrarySync(threading.Thread):
                 self.userdataItems = []
                 self.setUserdata(listItems)
                 self.forceUpdate = True
+                doSaveLastSync = True
 
             if len(self.removeItems) > 0 and utils.window('kodiScan') != "true":
                 # Remove item from Kodi library
@@ -1164,13 +1161,16 @@ class LibrarySync(threading.Thread):
                 self.removeItems = []
                 self.removefromDB(listItems)
                 self.forceUpdate = True
+                doSaveLastSync = True
+                
+            if doSaveLastSync == True:
+                self.SaveLastSync()
 
             if self.forceUpdate and not self.updateItems and not self.userdataItems and not self.removeItems:
                 # Force update Kodi library
                 self.forceUpdate = False
                 self.updateLibrary("video")
 
-            
             if utils.window("kodiProfile_emby") != kodiProfile:
                 # Profile change happened, terminate this thread
                 self.logMsg("Kodi profile was: %s and changed to: %s. Terminating Library thread." % (kodiProfile, utils.window("kodiProfile_emby")), 1)
