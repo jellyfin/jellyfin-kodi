@@ -74,7 +74,7 @@ class WriteKodiVideoDB():
                 # Erase any resume point associated
                 self.setKodiResumePoint(id, 0, 0, cursor, playcount)
         finally:
-            cursor.close
+            cursor.close()
         
     def addOrUpdateMovieToKodiLibrary(self, embyId, connection, cursor, viewTag):
 
