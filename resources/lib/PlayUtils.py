@@ -60,7 +60,8 @@ class PlayUtils():
             return False
 
         # Avoid H265 1080p
-        if utils.settings('transcodeH265') == "true":
+        if (utils.settings('transcodeH265') == "true" and 
+            result['MediaSources'][0]['Name'].startswith("1080P/H265")):
             self.logMsg("Option to transcode 1080P/H265 enabled.", 1)
             return False
 
@@ -131,7 +132,8 @@ class PlayUtils():
         # FileSystem or Remote, BitRate, supported encoding
 
         # Avoid H265 1080p
-        if utils.settings('transcodeH265') == "true":
+        if (utils.settings('transcodeH265') == "true" and 
+            result['MediaSources'][0]['Name'].startswith("1080P/H265")):
             self.logMsg("Option to transcode 1080P/H265 enabled.", 1)
             return False
 
