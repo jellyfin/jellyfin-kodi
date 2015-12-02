@@ -60,8 +60,8 @@ class PlayUtils():
             return False
 
         # Avoid H265 1080p
-        if result['MediaSources'][0]['Name'].startswith("1080P/H265"):
-            self.logMsg("Skip direct play for 1080P/H265 since format playback is not stable.", 1)
+        if utils.settings('transcodeH265') == "true":
+            self.logMsg("Option to transcode 1080P/H265 enabled.", 1)
             return False
 
         canDirectPlay = result['MediaSources'][0]['SupportsDirectPlay']
@@ -131,8 +131,8 @@ class PlayUtils():
         # FileSystem or Remote, BitRate, supported encoding
 
         # Avoid H265 1080p
-        if result['MediaSources'][0]['Name'].startswith("1080P/H265"):
-            self.logMsg("Skip direct stream for 1080P/H265 since format playback is not stable.", 1)
+        if utils.settings('transcodeH265') == "true":
+            self.logMsg("Option to transcode 1080P/H265 enabled.", 1)
             return False
 
         canDirectStream = result['MediaSources'][0]['SupportsDirectStream']
