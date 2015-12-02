@@ -226,9 +226,11 @@ class TextureCache():
             thumbnails = xbmc.translatePath("special://thumbnails/%s" % cachedurl)
             self.logMsg("Deleting cached thumbnail: %s" % thumbnails, 1)
             xbmcvfs.delete(thumbnails)
-            
-            cursor.execute("DELETE FROM texture WHERE url = ?", (url,))
-            connection.commit()
+            try:
+                cursor.execute("DELETE FROM texture WHERE url = ?", (url,))
+                connection.commit()
+            except:
+                self.logMsg("Issue deleting url from cache. Skipping.", 2)
         
         finally:
             cursor.close()
