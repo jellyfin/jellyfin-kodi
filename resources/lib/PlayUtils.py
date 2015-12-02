@@ -59,6 +59,11 @@ class PlayUtils():
             self.logMsg("Can't direct play: Play from HTTP is enabled.", 1)
             return False
 
+        # Avoid H265 1080p
+        if result['MediaSources'][0]['Name'].startswith("1080P/H265"):
+            self.logMsg("Skip direct play for 1080P/H265 since format playback is not stable.", 1)
+            return False
+
         canDirectPlay = result['MediaSources'][0]['SupportsDirectPlay']
         # Make sure it's supported by server
         if not canDirectPlay:
@@ -124,6 +129,12 @@ class PlayUtils():
     def isDirectStream(self, result):
         # Requirements for Direct stream:
         # FileSystem or Remote, BitRate, supported encoding
+
+        # Avoid H265 1080p
+        if item['MediaSources'][0]['Name'].startswith("1080P/H265"):
+            self.logMsg("Skip direct stream for 1080P/H265 since format playback is not stable.", 1)
+            return False
+            
         canDirectStream = result['MediaSources'][0]['SupportsDirectStream']
         # Make sure it's supported by server
         if not canDirectStream:
