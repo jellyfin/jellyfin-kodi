@@ -131,10 +131,10 @@ class PlayUtils():
         # FileSystem or Remote, BitRate, supported encoding
 
         # Avoid H265 1080p
-        if item['MediaSources'][0]['Name'].startswith("1080P/H265"):
+        if result['MediaSources'][0]['Name'].startswith("1080P/H265"):
             self.logMsg("Skip direct stream for 1080P/H265 since format playback is not stable.", 1)
             return False
-            
+
         canDirectStream = result['MediaSources'][0]['SupportsDirectStream']
         # Make sure it's supported by server
         if not canDirectStream:
