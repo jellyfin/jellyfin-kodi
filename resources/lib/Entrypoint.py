@@ -468,7 +468,7 @@ def getNextUpEpisodes(tagname,limit):
     #if the addon is called with nextup parameter, we return the nextepisodes list of the given tagname
     xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
     # First we get a list of all the in-progress TV shows - filtered by tag
-    json_query_string = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "sort": { "order": "descending", "method": "lastplayed" }, "filter": {"and": [{"operator":"true", "field":"inprogress", "value":""}, {"operator": "contains", "field": "tag", "value": "%s"}]}, "properties": [ "title", "studio", "mpaa", "file", "art" ]  }, "id": "libTvShows"}' %tagname)
+    json_query_string = xbmc.executeJSONRPC('{"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "sort": { "order": "descending", "method": "lastplayed" }, "filter": {"and": [{"operator":"true", "field":"inprogress", "value":""}, {"operator": "is", "field": "tag", "value": "%s"}]}, "properties": [ "title", "studio", "mpaa", "file", "art" ]  }, "id": "libTvShows"}' %tagname)
     
     json_result = json.loads(json_query_string)
     # If we found any, find the oldest unwatched show for each one.
