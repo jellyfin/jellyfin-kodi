@@ -720,7 +720,7 @@ class LibrarySync(threading.Thread):
                     if "Episode" in itemType:
 
                         #get the tv show
-                        cursor.execute("SELECT kodi_id FROM emby WHERE media_type='tvshow' AND emby_id=?", (MBitem["SeriesId"],))
+                        cursor.execute("SELECT kodi_id FROM emby WHERE media_type='tvshow' AND emby_id=?", (MBitem.get("SeriesId"),))
                         result = cursor.fetchone()
                         if result:
                             kodi_show_id = result[0]
@@ -737,7 +737,7 @@ class LibrarySync(threading.Thread):
                     elif "Season" in itemType:
 
                         #get the tv show
-                        cursor.execute("SELECT kodi_id FROM emby WHERE media_type='tvshow' AND emby_id=?", (MBitem["SeriesId"],))
+                        cursor.execute("SELECT kodi_id FROM emby WHERE media_type='tvshow' AND emby_id=?", (MBitem.get("SeriesId"),))
                         result = cursor.fetchone()
                         if result:
                             kodi_show_id = result[0]
