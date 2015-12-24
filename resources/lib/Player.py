@@ -2,45 +2,47 @@
 
 #################################################################################################
 
-import json as json
+import json
 
 import xbmc
 import xbmcgui
 
-from DownloadUtils import DownloadUtils
-from WebSocketClient import WebSocketThread
-from ClientInformation import ClientInformation
-from LibrarySync import LibrarySync
-import Utils as utils
+import utils
+import clientinfo
+import downloadutils
+import kodidb_functions as kodidb
+import websocket_client as wsc
 
 #################################################################################################
 
-class Player( xbmc.Player ):
+
+class Player(xbmc.Player):
 
     # Borg - multiple instances, shared state
     _shared_state = {}
 
-    xbmcplayer = xbmc.Player()
-    doUtils = DownloadUtils()
-    clientInfo = ClientInformation()
-    ws = WebSocketThread()
-    librarySync = LibrarySync()
-
-    addonName = clientInfo.getAddonName()
-
-    played_information = {}
+    played_info = {}
     playStats = {}
     currentFile = None
 
-    def __init__(self, *args):
+
+    def __init__(self):
 
         self.__dict__ = self._shared_state
+
+        self.clientInfo = clientinfo.ClientInfo()
+        self.addonName = self.clientInfo.getAddonName()
+        self.doUtils = downloadutils.DownloadUtils()
+        self.ws = wsc.WebSocket_Client()
+        self.xbmcplayer = xbmc.Player()
+
         self.logMsg("Starting playback monitor.", 2)
 
     def logMsg(self, msg, lvl=1):
         
         self.className = self.__class__.__name__
-        utils.logMsg("%s %s" % (self.addonName, self.className), msg, int(lvl))
+        utils.logMsg("%s %s" % (self.addonName, self.className), msg, lvl)
+
 
     def GetPlayStats(self):
         return self.playStats
@@ -74,39 +76,50 @@ class Player( xbmc.Player ):
             self.currentFile = currentFile
             
             # We may need to wait for info to be set in kodi monitor
-            itemId = utils.window("%sitem_id" % currentFile)
+            itemId = utils.window("emby_%s.itemid" % currentFile)
             tryCount = 0
             while not itemId:
                 
                 xbmc.sleep(200)
-                itemId = utils.window("%sitem_id" % currentFile)
+                itemId = utils.window("emby_%s.itemid" % currentFile)
                 if tryCount == 20: # try 20 times or about 10 seconds
                     self.logMsg("Could not find itemId, cancelling playback report...", 1)
                     break
                 else: tryCount += 1
             
             else:
-                self.logMsg("ONPLAYBACK_STARTED: %s ITEMID: %s" % (currentFile, itemId), 0)
+                self.logMsg("ONPLAYBACK_STARTED: %s itemid: %s" % (currentFile, itemId), 0)
 
                 # Only proceed if an itemId was found.
-                runtime = utils.window("%sruntimeticks" % currentFile)
-                refresh_id = utils.window("%srefresh_id" % currentFile)
-                playMethod = utils.window("%splaymethod" % currentFile)
-                itemType = utils.window("%stype" % currentFile)
+                embyitem = "emby_%s" % currentFile
+                runtime = utils.window("%s.runtime" % embyitem)
+                refresh_id = utils.window("%s.refreshid" % embyitem)
+                playMethod = utils.window("%s.playmethod" % embyitem)
+                itemType = utils.window("%s.type" % embyitem)
+                utils.window('emby_skipWatched%s' % itemId, value="true")
+
                 seekTime = xbmcplayer.getTime()
 
-
                 # Get playback volume
-                volume_query = '{"jsonrpc": "2.0", "method": "Application.GetProperties", "params": {"properties": ["volume","muted"]}, "id": 1}'
-                result = xbmc.executeJSONRPC(volume_query)
+                volume_query = {
+
+                    "jsonrpc": "2.0",
+                    "id": 1,
+                    "method": "Application.GetProperties",
+                    "params": {
+
+                        "properties": ["volume", "muted"] 
+                    }
+                }
+                result = xbmc.executeJSONRPC(json.dumps(volume_query))
                 result = json.loads(result)
                 result = result.get('result')
-
+                
                 volume = result.get('volume')
                 muted = result.get('muted')
 
                 # Postdata structure to send to Emby server
-                url = "{server}/mediabrowser/Sessions/Playing"
+                url = "{server}/emby/Sessions/Playing"
                 postdata = {
 
                     'QueueableMediaTypes': "Video",
@@ -123,12 +136,22 @@ class Player( xbmc.Player ):
                 if playMethod == "Transcode":
                     # property set in PlayUtils.py
                     postdata['AudioStreamIndex'] = utils.window("%sAudioStreamIndex" % currentFile)
-                    postdata['SubtitleStreamIndex'] = utils.window("%sSubtitleStreamIndex" % currentFile)
-
+                    postdata['SubtitleStreamIndex'] = utils.window("%sSubtitleStreamIndex"
+                                                                    % currentFile)
                 else:
                     # Get the current kodi audio and subtitles and convert to Emby equivalent
-                    track_query = '{"jsonrpc": "2.0", "method": "Player.GetProperties",  "params": {"playerid": 1,"properties": ["currentsubtitle","currentaudiostream","subtitleenabled"]} , "id": 1}'
-                    result = xbmc.executeJSONRPC(track_query)
+                    tracks_query = {
+
+                        "jsonrpc": "2.0",
+                        "id": 1,
+                        "method": "Player.GetProperties",
+                        "params": {
+
+                            "playerid": 1,
+                            "properties": ["currentsubtitle","currentaudiostream","subtitleenabled"]
+                        }
+                    }
+                    result = xbmc.executeJSONRPC(json.dumps(tracks_query))
                     result = json.loads(result)
                     result = result.get('result')
 
@@ -155,9 +178,9 @@ class Player( xbmc.Player ):
                         
                         # Number of audiotracks to help get Emby Index
                         audioTracks = len(xbmc.Player().getAvailableAudioStreams())
-                        mapping = utils.window("%sIndexMapping" % currentFile)
+                        mapping = utils.window("%s.indexMapping" % embyitem)
 
-                        if mapping: # Set in PlaybackUtils.py
+                        if mapping: # Set in playbackutils.py
                             
                             self.logMsg("Mapping for external subtitles index: %s" % mapping, 2)
                             externalIndex = json.loads(mapping)
@@ -167,7 +190,8 @@ class Player( xbmc.Player ):
                                 postdata['SubtitleStreamIndex'] = externalIndex[str(indexSubs)]
                             else:
                                 # Internal subtitle currently selected
-                                postdata['SubtitleStreamIndex'] = indexSubs - len(externalIndex) + audioTracks + 1
+                                subindex = indexSubs - len(externalIndex) + audioTracks + 1
+                                postdata['SubtitleStreamIndex'] = subindex
                         
                         else: # Direct paths enabled scenario or no external subtitles set
                             postdata['SubtitleStreamIndex'] = indexSubs + audioTracks + 1
@@ -184,7 +208,7 @@ class Player( xbmc.Player ):
                     runtime = int(runtime)
                 except ValueError:
                     runtime = xbmcplayer.getTotalTime()
-                    self.logMsg("Runtime is missing, grabbing runtime from Kodi player: %s" % runtime, 1)
+                    self.logMsg("Runtime is missing, Kodi runtime: %s" % runtime, 1)
 
                 # Save data map for updates and position calls
                 data = {
@@ -200,8 +224,8 @@ class Player( xbmc.Player ):
                     'currentPosition': int(seekTime)
                 }
                 
-                self.played_information[currentFile] = data
-                self.logMsg("ADDING_FILE: %s" % self.played_information, 1)
+                self.played_info[currentFile] = data
+                self.logMsg("ADDING_FILE: %s" % self.played_info, 1)
 
                 # log some playback stats
                 '''if(itemType != None):
@@ -225,7 +249,7 @@ class Player( xbmc.Player ):
 
         # Get current file
         currentFile = self.currentFile
-        data = self.played_information.get(currentFile)
+        data = self.played_info.get(currentFile)
 
         # only report playback if emby has initiated the playback (item_id has value)
         if data:
@@ -239,14 +263,22 @@ class Player( xbmc.Player ):
 
 
             # Get playback volume
-            volume_query = '{"jsonrpc": "2.0", "method": "Application.GetProperties", "params": {"properties": ["volume","muted"]}, "id": 1}'
-            result = xbmc.executeJSONRPC(volume_query)
+            volume_query = {
+
+                    "jsonrpc": "2.0",
+                    "id": 1,
+                    "method": "Application.GetProperties",
+                    "params": {
+
+                        "properties": ["volume", "muted"] 
+                    }
+                }
+            result = xbmc.executeJSONRPC(json.dumps(volume_query))
             result = json.loads(result)
             result = result.get('result')
 
             volume = result.get('volume')
             muted = result.get('muted')
-
 
             # Postdata for the websocketclient report
             postdata = {
@@ -269,8 +301,18 @@ class Player( xbmc.Player ):
 
             else:
                 # Get current audio and subtitles track
-                track_query = '{"jsonrpc": "2.0", "method": "Player.GetProperties",  "params": {"playerid":1,"properties": ["currentsubtitle","currentaudiostream","subtitleenabled"]} , "id": 1}'
-                result = xbmc.executeJSONRPC(track_query)
+                tracks_query = {
+
+                        "jsonrpc": "2.0",
+                        "id": 1,
+                        "method": "Player.GetProperties",
+                        "params": {
+
+                            "playerid": 1,
+                            "properties": ["currentsubtitle","currentaudiostream","subtitleenabled"]
+                        }
+                    }
+                result = xbmc.executeJSONRPC(json.dumps(tracks_query))
                 result = json.loads(result)
                 result = result.get('result')
 
@@ -297,7 +339,7 @@ class Player( xbmc.Player ):
                     
                     # Number of audiotracks to help get Emby Index
                     audioTracks = len(xbmc.Player().getAvailableAudioStreams())
-                    mapping = utils.window("%sIndexMapping" % currentFile)
+                    mapping = utils.window("emby_%s.indexMapping" % currentFile)
 
                     if mapping: # Set in PlaybackUtils.py
                         
@@ -306,13 +348,16 @@ class Player( xbmc.Player ):
 
                         if externalIndex.get(str(indexSubs)):
                             # If the current subtitle is in the mapping
-                            data['SubtitleStreamIndex'], postdata['SubtitleStreamIndex'] = [externalIndex[str(indexSubs)]] * 2
+                            subindex = [externalIndex[str(indexSubs)]] * 2
+                            data['SubtitleStreamIndex'], postdata['SubtitleStreamIndex'] = subindex
                         else:
                             # Internal subtitle currently selected
-                            data['SubtitleStreamIndex'], postdata['SubtitleStreamIndex'] = [indexSubs - len(externalIndex) + audioTracks + 1] * 2
+                            subindex = [indexSubs - len(externalIndex) + audioTracks + 1] * 2
+                            data['SubtitleStreamIndex'], postdata['SubtitleStreamIndex'] = subindex
                     
                     else: # Direct paths enabled scenario or no external subtitles set
-                        data['SubtitleStreamIndex'], postdata['SubtitleStreamIndex'] = [indexSubs + audioTracks + 1] * 2
+                        subindex = [indexSubs + audioTracks + 1] * 2
+                        data['SubtitleStreamIndex'], postdata['SubtitleStreamIndex'] = subindex
                 else:
                     data['SubtitleStreamIndex'], postdata['SubtitleStreamIndex'] = [""] * 2
 
@@ -326,8 +371,8 @@ class Player( xbmc.Player ):
         currentFile = self.currentFile
         self.logMsg("PLAYBACK_PAUSED: %s" % currentFile, 2)
 
-        if self.played_information.get(currentFile):
-            self.played_information[currentFile]['paused'] = True
+        if self.played_info.get(currentFile):
+            self.played_info[currentFile]['paused'] = True
         
             self.reportPlayback()
 
@@ -336,8 +381,8 @@ class Player( xbmc.Player ):
         currentFile = self.currentFile
         self.logMsg("PLAYBACK_RESUMED: %s" % currentFile, 2)
 
-        if self.played_information.get(currentFile):
-            self.played_information[currentFile]['paused'] = False
+        if self.played_info.get(currentFile):
+            self.played_info[currentFile]['paused'] = False
         
             self.reportPlayback()
 
@@ -346,15 +391,17 @@ class Player( xbmc.Player ):
         currentFile = self.currentFile
         self.logMsg("PLAYBACK_SEEK: %s" % currentFile, 2)
 
-        if self.played_information.get(currentFile):
+        if self.played_info.get(currentFile):
             position = self.xbmcplayer.getTime()
-            self.played_information[currentFile]['currentPosition'] = position
+            self.played_info[currentFile]['currentPosition'] = position
 
             self.reportPlayback()
     
     def onPlayBackStopped( self ):
         # Will be called when user stops xbmc playing a file
         self.logMsg("ONPLAYBACK_STOPPED", 2)
+        xbmcgui.Window(10101).clearProperties()
+        self.logMsg("Clear playlist properties.")
         self.stopAll()
 
     def onPlayBackEnded( self ):
@@ -364,14 +411,16 @@ class Player( xbmc.Player ):
 
     def stopAll(self):
 
-        if not self.played_information:
+        doUtils = self.doUtils
+
+        if not self.played_info:
             return 
             
-        self.logMsg("Played_information: %s" % self.played_information, 1)
+        self.logMsg("Played_information: %s" % self.played_info, 1)
         # Process each items
-        for item in self.played_information:
+        for item in self.played_info:
             
-            data = self.played_information.get(item)
+            data = self.played_info.get(item)
             if data:
                 
                 self.logMsg("Item path: %s" % item, 2)
@@ -379,47 +428,61 @@ class Player( xbmc.Player ):
 
                 runtime = data['runtime']
                 currentPosition = data['currentPosition']
-                itemId = data['item_id']
+                itemid = data['item_id']
                 refresh_id = data['refresh_id']
                 currentFile = data['currentfile']
                 type = data['Type']
                 playMethod = data['playmethod']
 
                 if currentPosition and runtime:
-                    percentComplete = (currentPosition * 10000000) / int(runtime)
+                    try:
+                        percentComplete = (currentPosition * 10000000) / int(runtime)
+                    except ZeroDivisionError:
+                        # Runtime is 0.
+                        percentComplete = 0
+                        
                     markPlayedAt = float(utils.settings('markPlayed')) / 100
+                    self.logMsg(
+                        "Percent complete: %s Mark played at: %s"
+                        % (percentComplete, markPlayedAt), 1)
 
-                    self.logMsg("Percent complete: %s Mark played at: %s" % (percentComplete, markPlayedAt), 1)
-                    # Prevent manually mark as watched in Kodi monitor > WriteKodiVideoDB().UpdatePlaycountFromKodi()
-                    utils.window('SkipWatched%s' % itemId, "true")
+                    # Prevent manually mark as watched in Kodi monitor
+                    utils.window('emby_skipWatched%s' % itemid, value="true")
 
                     self.stopPlayback(data)
-                    offerDelete = utils.settings('offerDelete') == "true"
-                    offerTypeDelete = False
+                    # Stop transcoding
+                    if playMethod == "Transcode":
+                        self.logMsg("Transcoding for %s terminated." % itemid, 1)
+                        deviceId = self.clientInfo.getDeviceId()
+                        url = "{server}/emby/Videos/ActiveEncodings?DeviceId=%s" % deviceId
+                        doUtils.downloadUrl(url, type="DELETE")
 
-                    if type == "Episode" and utils.settings('offerDeleteTV') == "true":
-                        offerTypeDelete = True
+                    # Send the delete action to the server.
+                    offerDelete = False
 
-                    elif type == "Movie" and utils.settings('offerDeleteMovies') == "true":
-                        offerTypeDelete = True
+                    if type == "Episode" and utils.settings('deleteTV') == "true":
+                        offerDelete = True
+                    elif type == "Movie" and utils.settings('deleteMovies') == "true":
+                        offerDelete = True
 
-                    if percentComplete >= markPlayedAt and offerDelete and offerTypeDelete:
-                        # Make the bigger setting be able to disable option easily.
-                        self.logMsg("Offering deletion for: %s." % itemId, 1)
-                        return_value = xbmcgui.Dialog().yesno("Offer Delete", "Delete %s" % currentFile.split("/")[-1], "on Emby Server?")
-                        if return_value:
-                            # Delete Kodi entry before Emby
-                            listItem = [itemId]
-                            LibrarySync().removefromDB(listItem, True)
-                    
-                # Stop transcoding
-                if playMethod == "Transcode":
-                    self.logMsg("Transcoding for %s terminated." % itemId, 1)
-                    deviceId = self.clientInfo.getMachineId()
-                    url = "{server}/mediabrowser/Videos/ActiveEncodings?DeviceId=%s" % deviceId
-                    self.doUtils.downloadUrl(url, type="DELETE")
+                    if utils.settings('offerDelete') != "true":
+                        # Delete could be disabled, even if the subsetting is enabled.
+                        offerDelete = False
+
+                    if percentComplete >= markPlayedAt and offerDelete:
+                        if utils.settings('skipConfirmDelete') != "true":
+                            resp = xbmcgui.Dialog().yesno(
+                                                    heading="Confirm delete",
+                                                    line1="Delete file on Emby Server?")
+                            if not resp:
+                                self.logMsg("User skipped deletion.", 1)
+                                continue
+
+                        url = "{server}/emby/Items/%s?format=json" % itemid
+                        self.logMsg("Deleting request: %s" % itemid)
+                        doUtils.downloadUrl(url, type="DELETE")
     
-        self.played_information.clear()
+        self.played_info.clear()
     
     def stopPlayback(self, data):
         
@@ -429,12 +492,11 @@ class Player( xbmc.Player ):
         currentPosition = data['currentPosition']
         positionTicks = int(currentPosition * 10000000)
 
-        url = "{server}/mediabrowser/Sessions/Playing/Stopped"
+        url = "{server}/emby/Sessions/Playing/Stopped"
         postdata = {
             
             'ItemId': itemId,
             'MediaSourceId': itemId,
             'PositionTicks': positionTicks
         }
-            
         self.doUtils.downloadUrl(url, postBody=postdata, type="POST")

@@ -1,150 +1,195 @@
+# -*- coding: utf-8 -*-
+
 #################################################################################################
-# Kodi  Monitor
-# Watched events that occur in Kodi, like setting media watched
-#################################################################################################
+
+import json
 
 import xbmc
 import xbmcgui
-import xbmcaddon
-import json
 
-import Utils as utils
-from WriteKodiVideoDB import WriteKodiVideoDB
-from ReadKodiDB import ReadKodiDB
-from PlayUtils import PlayUtils
-from DownloadUtils import DownloadUtils
-from PlaybackUtils import PlaybackUtils
+import clientinfo
+import downloadutils
+import embydb_functions as embydb
+import playbackutils as pbutils
+import utils
+
+#################################################################################################
 
 
-class Kodi_Monitor( xbmc.Monitor ):
-    
-    WINDOW = xbmcgui.Window(10000)
+class KodiMonitor(xbmc.Monitor):
 
-    def __init__(self, *args, **kwargs):
-        xbmc.Monitor.__init__(self)
 
-    def logMsg(self, msg, lvl = 1):
+    def __init__(self):
 
-        className = self.__class__.__name__
-        utils.logMsg("%s %s" % ("EMBY", className), msg, int(lvl))
+        self.clientInfo = clientinfo.ClientInfo()
+        self.addonName = self.clientInfo.getAddonName()
+        self.doUtils = downloadutils.DownloadUtils()
+
+        self.logMsg("Kodi monitor started.", 1)
+
+    def logMsg(self, msg, lvl=1):
+
+        self.className = self.__class__.__name__
+        utils.logMsg("%s %s" % (self.addonName, self.className), msg, lvl)
+
 
     def onScanStarted(self, library):
-        utils.window('kodiScan', value="true")
-        self.logMsg("Kodi library scan running.", 2)
-
+        self.logMsg("Kodi library scan %s running." % library, 2)
+        if library == "video":
+            utils.window('emby_kodiScan', value="true")
+            
     def onScanFinished(self, library):
-        utils.window('kodiScan', clear=True)
-        self.logMsg("Kodi library scan finished.", 2)
-        
-    #this library monitor is used to detect a watchedstate change by the user through the library
-    #as well as detect when a library item has been deleted to pass the delete to the Emby server
-    def onNotification  (self, sender, method, data):
+        self.logMsg("Kodi library scan %s finished." % library, 2)
+        if library == "video":
+            utils.window('emby_kodiScan', clear=True)
 
-        WINDOW = self.WINDOW
-        downloadUtils = DownloadUtils()
-        #player started playing an item - 
-        if ("Playlist.OnAdd" in method or "Player.OnPlay" in method):
+    def onNotification(self, sender, method, data):
 
-            jsondata = json.loads(data)
-            if jsondata:
-                if jsondata.has_key("item"):
-                    if jsondata.get("item").has_key("id") and jsondata.get("item").has_key("type"):
-                        id = jsondata.get("item").get("id")
-                        type = jsondata.get("item").get("type")
-                        
-                        if (utils.settings('useDirectPaths')=='true' and not type == "song") or (type == "song" and utils.settings('enableMusicSync') == "true"):
-                            
-                            if type == "song":
-                                connection = utils.KodiSQL('music')
-                                cursor = connection.cursor()
-                                embyid = ReadKodiDB().getEmbyIdByKodiId(id, type, connection, cursor)
-                                cursor.close()
-                            else:    
-                                embyid = ReadKodiDB().getEmbyIdByKodiId(id,type)
-
-                            if embyid:
-
-                                url = "{server}/mediabrowser/Users/{UserId}/Items/%s?format=json" % embyid
-                                result = downloadUtils.downloadUrl(url)
-                                self.logMsg("Result: %s" % result, 2)
-                                
-                                playurl = None
-                                count = 0
-                                while not playurl and count < 2:
-                                    try:
-                                        playurl = xbmc.Player().getPlayingFile()
-                                    except RuntimeError:
-                                        xbmc.sleep(200)
-                                    else:
-                                        listItem = xbmcgui.ListItem()
-                                        PlaybackUtils().setProperties(playurl, result, listItem)
-
-                                        if type == "song" and utils.settings('directstreammusic') == "true":
-                                            utils.window('%splaymethod' % playurl, value="DirectStream")
-                                        else:
-                                            utils.window('%splaymethod' % playurl, value="DirectPlay")
-
-                                    count += 1
-        
-        if method == "VideoLibrary.OnUpdate":
-            # Triggers 4 times, the following is only for manually marking as watched/unwatched
-            jsondata = json.loads(data)
+        doUtils = self.doUtils
+        if method not in ("Playlist.OnAdd"):
+            self.logMsg("Method: %s Data: %s" % (method, data), 1)
             
+        if data:
+            data = json.loads(data)
+
+
+        if method == "Player.OnPlay":
+            # Set up report progress for emby playback
+            item = data.get('item')
             try:
-                playcount = jsondata.get('playcount')
-                item = jsondata['item']['id']
-                type = jsondata['item']['type']
-                prop = utils.window('Played%s%s' % (type, item))
-            except:
-                self.logMsg("Could not process VideoLibrary.OnUpdate data.", 1)
+                kodiid = item['id']
+                type = item['type']
+            except (KeyError, TypeError):
+                self.logMsg("Properties already set for item.", 1)
             else:
-                self.logMsg("VideoLibrary.OnUpdate: %s" % data, 2)
-                if prop != "true":
-                    # Set property to prevent the multi triggering
-                    utils.window('Played%s%s' % (type, item), "true")
-                    WriteKodiVideoDB().updatePlayCountFromKodi(item, type, playcount)
+                if ((utils.settings('useDirectPaths') == "1" and not type == "song") or
+                        (type == "song" and utils.settings('disableMusic') == "false")):
+                    # Set up properties for player
+                    embyconn = utils.kodiSQL('emby')
+                    embycursor = embyconn.cursor()
+                    emby_db = embydb.Embydb_Functions(embycursor)
+                    emby_dbitem = emby_db.getItem_byKodiId(kodiid, type)
+                    try:
+                        itemid = emby_dbitem[0]
+                    except TypeError:
+                        self.logMsg("No kodiid returned.", 1)
+                    else:
+                        url = "{server}/emby/Users/{UserId}/Items/%s?format=json" % itemid
+                        result = doUtils.downloadUrl(url)
+                        self.logMsg("Item: %s" % result, 2)
 
-                self.clearProperty(type, item)
-                    
-        if method == "System.OnWake":
-            xbmc.sleep(10000) #Allow network to wake up
-            WINDOW.setProperty("OnWakeSync", "true")
+                        playurl = None
+                        count = 0
+                        while not playurl and count < 2:
+                            try:
+                                playurl = xbmc.Player().getPlayingFile()
+                            except RuntimeError:
+                                count += 1
+                                xbmc.sleep(200)
+                            else:
+                                listItem = xbmcgui.ListItem()
+                                playback = pbutils.PlaybackUtils(result)
 
-        if method == "VideoLibrary.OnRemove":
-            xbmc.log('Intercepted remove from sender: ' + sender + ' method: ' + method + ' data: ' + data)
-            jsondata = json.loads(data)
-            id = ReadKodiDB().getEmbyIdByKodiId(jsondata.get("id"), jsondata.get("type"))
-            if id == None:
-                return            
-            xbmc.log("Deleting Emby ID: " + id + " from database")
-            connection = utils.KodiSQL()
-            cursor = connection.cursor()
-            cursor.execute("DELETE FROM emby WHERE emby_id = ?", (id,))
-            connection.commit()
-            cursor.close
+                                if type == "song" and utils.settings('streamMusic') == "true":
+                                    utils.window('emby_%s.playmethod' % playurl,
+                                        value="DirectStream")
+                                else:
+                                    utils.window('emby_%s.playmethod' % playurl,
+                                        value="DirectPlay")
+                                # Set properties for player.py
+                                playback.setProperties(playurl, listItem)
+                    finally:
+                        embycursor.close()
             
-            if jsondata:
-                if jsondata.get("type") == "episode" or "movie":
-                    url='{server}/mediabrowser/Items?Ids=' + id + '&format=json'
-                    #This is a check to see if the item exists on the server, if it doesn't it may have already been deleted by another client
-                    result = DownloadUtils().downloadUrl(url)
-                    item = result.get("Items")[0]
-                    if data:
-                        return_value = xbmcgui.Dialog().yesno("Confirm Delete", "Delete file on Emby Server?")
-                        if return_value:
-                            url='{server}/mediabrowser/Items/' + id
-                            xbmc.log('Deleting via URL: ' + url)
-                            DownloadUtils().downloadUrl(url, type="DELETE")
+
+        elif method == "VideoLibrary.OnUpdate":
+            # Manually marking as watched/unwatched
+            playcount = data.get('playcount')
+            item = data.get('item')
+            try:
+                kodiid = item['id']
+                type = item['type']
+            except (KeyError, TypeError):
+                self.logMsg("Item is invalid for playstate update.", 1)
+            else:
+                # Send notification to the server.
+                embyconn = utils.kodiSQL('emby')
+                embycursor = embyconn.cursor()
+                emby_db = embydb.Embydb_Functions(embycursor)
+                emby_dbitem = emby_db.getItem_byKodiId(kodiid, type)
+                try:
+                    itemid = emby_dbitem[0]
+                except TypeError:
+                    self.logMsg("Could not find itemid in emby database.", 1)
+                else:
+                    # Stop from manually marking as watched unwatched, with actual playback.
+                    if utils.window('emby_skipWatched%s' % itemid) == "true":
+                        # property is set in player.py
+                        utils.window('emby_skipWatched%s' % itemid, clear=True)
+                    else:
+                        # notify the server
+                        url = "{server}/emby/Users/{UserId}/PlayedItems/%s?format=json" % itemid
+                        if playcount != 0:
+                            doUtils.downloadUrl(url, type="POST")
+                            self.logMsg("Mark as watched for itemid: %s" % itemid, 1)
+                        else:
+                            doUtils.downloadUrl(url, type="DELETE")
+                            self.logMsg("Mark as unwatched for itemid: %s" % itemid, 1)
+                finally:
+                    embycursor.close()
+
+
+        elif method == "VideoLibrary.OnRemove":
+
+            try:
+                kodiid = data['id']
+                type = data['type']
+            except (KeyError, TypeError):
+                self.logMsg("Item is invalid for emby deletion.", 1)
+            else:
+                # Send the delete action to the server.
+                offerDelete = False
+
+                if type == "episode" and utils.settings('deleteTV') == "true":
+                    offerDelete = True
+                elif type == "movie" and utils.settings('deleteMovies') == "true":
+                    offerDelete = True
+
+                if utils.settings('offerDelete') != "true":
+                    # Delete could be disabled, even if the subsetting is enabled.
+                    offerDelete = False
+
+                if offerDelete:
+                    embyconn = utils.kodiSQL('emby')
+                    embycursor = embyconn.cursor()
+                    emby_db = embydb.Embydb_Functions(embycursor)
+                    emby_dbitem = emby_db.getItem_byKodiId(kodiid, type)
+                    try:
+                        itemid = emby_dbitem[0]
+                    except TypeError:
+                        self.logMsg("Could not find itemid in emby database.", 1)
+                    else:
+                        if utils.settings('skipConfirmDelete') != "true":
+                            resp = xbmcgui.Dialog().yesno(
+                                                    heading="Confirm delete",
+                                                    line1="Delete file on Emby Server?")
+                            if not resp:
+                                self.logMsg("User skipped deletion.", 1)
+                                embycursor.close()
+                                return
+                        url = "{server}/emby/Items/%s?format=json" % itemid
+                        self.logMsg("Deleting request: %s" % itemid)
+                        doUtils.downloadUrl(url, type="DELETE")
+                    finally:
+                        embycursor.close()
+
+
+        elif method == "System.OnWake":
+            # Allow network to wake up
+            xbmc.sleep(10000)
+            utils.window('emby_onWake', value="true")
 
         elif method == "Playlist.OnClear":
-            self.logMsg("Clear playback properties.", 2)
-            utils.window('propertiesPlayback', clear=True)
-                            
-    def clearProperty(self, type, id):
-        # The sleep is necessary since VideoLibrary.OnUpdate
-        # triggers 4 times in a row.
-        xbmc.sleep(100)
-        utils.window('Played%s%s' % (type,id), clear=True)
-            
-        # Clear the widget cache
-        utils.window('clearwidgetcache', value="clear")
+            utils.window('emby_customPlaylist', clear=True, windowid=10101)
+            #xbmcgui.Window(10101).clearProperties()
+            self.logMsg("Clear playlist properties.")
