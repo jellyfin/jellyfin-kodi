@@ -1,3 +1,6 @@
+versopm 1.1.64
+- Fix trailer causing initial sync to crash
+
 version 1.1.63
 - Code refactoring of the add-on
 
