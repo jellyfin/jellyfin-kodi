@@ -341,8 +341,13 @@ class Movies(Items):
             except (KeyError, IndexError):
                 trailer = None
             else:    
-                trailerId = trailer.rsplit('=', 1)[1]
-                trailer = "plugin://plugin.video.youtube/play/?video_id=%s" % trailerId
+                try:
+                    trailerId = trailer.rsplit('=', 1)[1]
+                except IndexError:
+                    self.logMsg("Failed to process trailer: %s" % trailer)
+                    trailer = None
+                else:
+                    trailer = "plugin://plugin.video.youtube/play/?video_id=%s" % trailerId
 
         
         ##### GET THE FILE AND PATH #####
