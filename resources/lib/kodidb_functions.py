@@ -210,7 +210,7 @@ class Kodidb_Functions():
                             VALUES (?, ?)
                             '''
                         )
-                        cursor.execute(query, (idCountry, itemid))
+                        cursor.execute(query, (idCountry, kodiid))
 
     def addPeople(self, kodiid, people, mediatype):
         
@@ -778,7 +778,7 @@ class Kodidb_Functions():
             ))
             cursor.execute(query, (tag,))
             try:
-                idTag = cursor.fetchone()[0]
+                tag_id = cursor.fetchone()[0]
             
             except TypeError:
                 # Create the tag
@@ -795,7 +795,7 @@ class Kodidb_Functions():
                     VALUES (?, ?, ?)
                     '''
                 )
-                cursor.execute(query, (idTag, kodiid, mediatype))
+                cursor.execute(query, (tag_id, kodiid, mediatype))
 
     def createTag(self, name):
         
