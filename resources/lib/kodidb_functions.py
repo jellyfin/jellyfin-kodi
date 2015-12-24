@@ -899,7 +899,7 @@ class Kodidb_Functions():
                     "AND media_type = ?",
                     "AND tag_id = ?"
                 ))
-                cursor.execute(query, (kodiid, mediatype, tag_id))
+                cursor.execute(query, (kodiid, mediatype, tag_id,))
         else:
             # Kodi Helix
             query = ' '.join((
@@ -919,10 +919,10 @@ class Kodidb_Functions():
 
                     "DELETE FROM taglinks",
                     "WHERE idMedia = ?",
-                    "AND media_type ?",
+                    "AND media_type = ?",
                     "AND idTag = ?"
                 ))
-                cursor.execute(query, (kodiid, mediatype, tag_id))
+                cursor.execute(query, (kodiid, mediatype, tag_id,))
 
     def createBoxset(self, boxsetname):
 
