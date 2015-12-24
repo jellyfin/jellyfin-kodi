@@ -1,17 +1,32 @@
 # -*- coding: utf-8 -*-
-import xbmcaddon, xbmc
-import os, sys
+
+#################################################################################################
+
+import os
+import sys
 import urlparse
+
+import xbmc
+import xbmcaddon
+
+#################################################################################################
 
 addon_ = xbmcaddon.Addon(id='plugin.video.emby')
 addon_path = addon_.getAddonInfo('path').decode('utf-8')
-base_resource_path = xbmc.translatePath(os.path.join(addon_path, 'resources', 'lib')).decode('utf-8')
-sys.path.append(base_resource_path)
-import Entrypoint as entrypoint
+base_resource = xbmc.translatePath(os.path.join(addon_path, 'resources', 'lib')).decode('utf-8')
+sys.path.append(base_resource)
+
+#################################################################################################
+
+import entrypoint
+import utils
+
+#################################################################################################
 
 enableProfiling = False
 
 class Main:
+
 
     # MAIN ENTRY POINT
     def __init__(self):
@@ -24,83 +39,66 @@ class Main:
 
         try:
             mode = params['mode'][0]
-            id = params.get('id', None)
-            if id:
-                id = id[0]
+            itemid = params.get('id')
+            if itemid:
+                itemid = itemid[0]
         except:
             params = {}
             mode = ""
 
-        ##### PLAY ITEM VIA plugin://plugin.video.emby/ #####
-        if "play" in mode or "playnow" in mode:
-            entrypoint.doPlayback(id)
 
-        #### DO RESET AUTH #####    
-        elif "resetauth" in mode:
-            entrypoint.resetAuth()
-           
-        ##### DO DATABASE RESET #####
-        elif "reset" in mode:
-            import Utils as utils
-            utils.reset()
+        modes = {
 
-        ##### ADD/REMOVE USER FROM SESSION #####
-        elif "adduser" in mode:
-            entrypoint.addUser()
+            'reset': utils.reset,
+            'resetauth': entrypoint.resetAuth,
+            'play': entrypoint.doPlayback,
+            'passwords': utils.passwordsXML,
+            'adduser': entrypoint.addUser,
+            'thememedia': entrypoint.getThemeMedia,
+            'channels': entrypoint.BrowseChannels,
+            'channelsfolder': entrypoint.BrowseChannels,
+            'nextup': entrypoint.getNextUpEpisodes,
+            'inprogressepisodes': entrypoint.getInProgressEpisodes,
+            'recentepisodes': entrypoint.getRecentEpisodes
+        }
 
-        ##### SYNC THEME MEDIA #####
-        elif "thememedia" in mode:
-            entrypoint.getThemeMedia()
+        if modes.get(mode):
+            # Simple functions
+            if mode == "play":
+                dbid = params.get('dbid')
+                modes[mode](itemid, dbid)
 
-        ##### LAUNCH EMBY USER PREFS #####
-        elif "userprefs" in mode:
-            entrypoint.userPreferences()
-
-        ##### OPEN ADDON SETTINGS #####
-        elif "settings" in mode:
-            xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
-
-        ##### MANUALLY SYNC LIBRARY #####
-        elif "manualsync" in mode:
-            from LibrarySync import LibrarySync
-            LibrarySync().FullLibrarySync(True)
-
-        ##### CACHE ARTWORK #####
-        elif "texturecache" in mode:
-            from TextureCache import TextureCache
-            TextureCache().FullTextureCacheSync()
-
-        ##### BROWSE EMBY CHANNELS FOLDER #####    
-        elif "channelsfolder" in mode:
-            folderid = params['folderid'][0]
-            entrypoint.BrowseChannels(id,folderid)    
+            elif mode in ("nextup", "inprogressepisodes", "recentepisodes"):
+                limit = int(params['limit'][0])
+                modes[mode](itemid, limit)
             
-        ##### BROWSE EMBY CHANNELS ROOT #####    
-        elif "channels" in mode:
-            entrypoint.BrowseChannels(id)
-            
-        ##### GET NEXTUP EPISODES FOR TAGNAME #####    
-        elif "nextup" in mode:
-            limit = int(params['limit'][0])
-            entrypoint.getNextUpEpisodes(id, limit)
+            elif mode == "channels":
+                modes[mode](itemid)
 
-        ##### GET INPROGRESS EPISODES FOR TAGNAME #####    
-        elif "inprogressepisodes" in mode:
-            limit = int(params['limit'][0])
-            entrypoint.getInProgressEpisodes(id, limit)
+            elif mode == "channelsfolder":
+                folderid = params['folderid'][0]
+                modes[mode](itemid, folderid)
+            
+            else:
+                modes[mode]()
+        else:
+            # Other functions
+            if mode == "settings":
+                xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
+            elif mode in ("manualsync", "repair"):
+                import librarysync
+                if mode == "manualsync":
+                    librarysync.LibrarySync().fullSync(manualrun=True)
+                else:
+                    librarysync.LibrarySync().fullSync(repair=True)
+            elif mode == "texturecache":
+                import artwork
+                artwork.Artwork().FullTextureCacheSync()
+            elif "extrafanart" in sys.argv[0]:
+                entrypoint.getExtraFanArt()
+            else:
+                entrypoint.doMainListing()
 
-        ##### GET RECENT EPISODES FOR TAGNAME #####    
-        elif "recentepisodes" in mode:
-            limit = int(params['limit'][0])
-            entrypoint.getRecentEpisodes(id, limit)
-            
-        ##### GET EXTRAFANART FOR LISTITEM #####
-        elif "extrafanart" in sys.argv[0]:
-            entrypoint.getExtraFanArt()
-            
-        ##### SHOW ADDON NODES LISTING #####    
-        if not mode:
-            entrypoint.doMainListing()
                       
 if ( __name__ == "__main__" ):
     xbmc.log('plugin.video.emby started')

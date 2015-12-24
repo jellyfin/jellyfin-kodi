@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon  id="plugin.video.emby" 
+<addon  id="plugin.video.emby"
         name="Emby" 
-        version="1.1.62"
+        version="1.1.63"
         provider-name="Emby.media">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
-    <import addon="script.module.requests" version="2.3.0"/>
+    <import addon="script.module.requests" version="2.3.0" />
+    <import addon="plugin.video.emby.movies" version="0.01" />
+    <import addon="plugin.video.emby.tvshows" version="0.01" />
+    <import addon="plugin.video.emby.musicvideos" version="0.01" />
   </requires>
   <extension    point="xbmc.python.pluginsource"
                 library="default.py">
