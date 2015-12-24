@@ -1,3 +1,6 @@
+version 1.1.63
+- Code refactoring of the add-on
+
 version 1.1.62
 - Fix connection to database staying open
 - Fix artwork cache delete
