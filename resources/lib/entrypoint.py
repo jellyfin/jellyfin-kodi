@@ -94,6 +94,7 @@ def doMainListing():
 def addUser():
 
     doUtils = downloadutils.DownloadUtils()
+    art = artwork.Artwork()
     clientInfo = clientinfo.ClientInfo()
     deviceId = clientInfo.getDeviceId()
     deviceName = clientInfo.getDeviceName()
@@ -195,18 +196,19 @@ def addUser():
     for i in range(totalNodes):
         if not utils.window('EmbyAdditionalUserImage.%s' % i):
             break
-        utils.window('EmbyAdditionalUserImage.%s' % i)
+        utils.window('EmbyAdditionalUserImage.%s' % i, clear=True)
 
     url = "{server}/emby/Sessions?DeviceId=%s" % deviceId
     result = doUtils.downloadUrl(url)
     additionalUsers = result[0]['AdditionalUsers']
     count = 0
     for additionaluser in additionalUsers:
-        url = "{server}/emby/Users/%s?format=json" % additionaluser['UserId']
+        userid = additionaluser['UserId']
+        url = "{server}/emby/Users/%s?format=json" % userid
         result = doUtils.downloadUrl(url)
         utils.window('EmbyAdditionalUserImage.%s' % count,
-            value=artwork.Artwork().getUserArtwork(result, 'Primary'))
-        utils.window('EmbyAdditionalUserPosition.%s' % additionaluser['UserId'], value=str(count))
+            value=art.getUserArtwork(result['Id'], 'Primary'))
+        utils.window('EmbyAdditionalUserPosition.%s' % userid, value=str(count))
         count +=1
 
 ##### THEME MUSIC/VIDEOS #####

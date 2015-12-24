@@ -188,13 +188,14 @@ class UserClient(threading.Thread):
     def setUserPref(self):
 
         doUtils = self.doUtils
+        art = artwork.Artwork()
 
         url = "{server}/emby/Users/{UserId}?format=json"
         result = doUtils.downloadUrl(url)
         self.userSettings = result
         # Set user image for skin display
         if result.get('PrimaryImageTag'):
-            utils.window('EmbyUserImage', value=artwork.Artwork().getUserArtwork(result, 'Primary'))
+            utils.window('EmbyUserImage', value=art.getUserArtwork(result['Id'], 'Primary'))
 
         # Set resume point max
         url = "{server}/emby/System/Configuration?format=json"
