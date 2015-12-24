@@ -1,344 +1,466 @@
-# -*- coding: utf-8 -*-
-
+#################################################################################################
+# VideoNodes - utils to create video nodes listings in kodi for the emby addon
 #################################################################################################
 
-import shutil
-import xml.etree.ElementTree as etree
 
 import xbmc
+import xbmcgui
 import xbmcaddon
 import xbmcvfs
+import json
+import os
+import shutil
+#import common elementree because cElementree has issues with kodi
+import xml.etree.ElementTree as etree
 
-import clientinfo
-import utils
+import Utils as utils
 
-#################################################################################################
+from ReadEmbyDB import ReadEmbyDB
+WINDOW = xbmcgui.Window(10000)
 
+addonSettings = xbmcaddon.Addon()
+language = addonSettings.getLocalizedString
 
-class VideoNodes(object):
-
-
-    def __init__(self):
-
-        clientInfo = clientinfo.ClientInfo()
-        self.addonName = clientInfo.getAddonName()
-
-        self.kodiversion = int(xbmc.getInfoLabel("System.BuildVersion")[:2])
-
-    def logMsg(self, msg, lvl=1):
-
-        className = self.__class__.__name__
-        utils.logMsg("%s %s" % (self.addonName, className), msg, lvl)
-
-
-    def commonRoot(self, order, label, tagname, roottype=1):
-
-        if roottype == 0:
-            # Index
-            root = etree.Element('node', attrib={'order': "%s" % order})
-        elif roottype == 1:
-            # Filter
-            root = etree.Element('node', attrib={'order': "%s" % order, 'type': "filter"})
-            etree.SubElement(root, 'match').text = "all"
-            # Add tag rule
-            rule = etree.SubElement(root, 'rule', attrib={'field': "tag", 'operator': "is"})
-            etree.SubElement(rule, 'value').text = tagname
-        else:
-            # Folder
-            root = etree.Element('node', attrib={'order': "%s" % order, 'type': "folder"})
-
-        etree.SubElement(root, 'label').text = label
-        etree.SubElement(root, 'icon').text = "special://home/addons/plugin.video.emby/icon.png"
-
-        return root
-
-    def viewNode(self, indexnumber, tagname, mediatype, viewtype, delete=False):
-
-        kodiversion = self.kodiversion
-
-        if mediatype == "homevideos":
-            # Treat homevideos as movies
-            mediatype = "movies"
-
-        tagname = tagname.encode('utf-8')
-        cleantagname = utils.normalize_nodes(tagname)
-        if viewtype == "mixed":
-            dirname = "%s - %s" % (cleantagname, mediatype)
-        else:
-            dirname = cleantagname
+class VideoNodes():   
+       
+   
+    def buildVideoNodeForView(self, tagname, type, windowPropId):
+        #this method will build a video node for a particular Emby view (= tag in kodi)
+        #we set some window props here to for easy future reference and to be used in skins (for easy access only)
+        tagname_normalized = utils.normalize_nodes(tagname.encode('utf-8'))
         
-        path = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
-        nodepath = xbmc.translatePath(
-                    "special://profile/library/video/Emby - %s/" % dirname).decode('utf-8')
-
-        # Verify the video directory
-        if not xbmcvfs.exists(path):
-            shutil.copytree(
-                src=xbmc.translatePath("special://xbmc/system/library/video/").decode('utf-8'),
-                dst=xbmc.translatePath("special://profile/library/video/").decode('utf-8'))
-            xbmcvfs.exists(path)
-
-        # Create the node directory
-        if not xbmcvfs.exists(nodepath):
-            # We need to copy over the default items
-            xbmcvfs.mkdirs(nodepath)
-        else:
-            if delete:
-                dirs, files = xbmcvfs.listdir(nodepath)
-                for file in files:
-                    xbmcvfs.delete(nodepath + file)
-
-                self.logMsg("Sucessfully removed videonode: %s." % tagname, 1)
-                return
-
-        # Create index entry
-        nodeXML = "%sindex.xml" % nodepath
-        # Set windows property
-        path = "library://video/Emby - %s/" % dirname
-        for i in range(1, indexnumber):
-            # Verify to make sure we don't create duplicates
-            if utils.window('Emby.nodes.%s.index' % i) == path:
-                return
-
-        utils.window('Emby.nodes.%s.index' % indexnumber, value=path)
-        # Root
-        root = self.commonRoot(order=0, label=dirname, tagname=tagname, roottype=0)
+        libraryPath = xbmc.translatePath("special://profile/library/video/Emby - %s/" %tagname_normalized)
+        kodiVersion = 14
+        if xbmc.getInfoLabel("System.BuildVersion").startswith("15") or xbmc.getInfoLabel("System.BuildVersion").startswith("16"):
+            kodiVersion = 15
+        
+        #create tag node - index
+        xbmcvfs.mkdir(libraryPath)
+        nodefile = os.path.join(libraryPath, "index.xml")
+        root = etree.Element("node", {"order":"0"})
+        etree.SubElement(root, "label").text = tagname
+        etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+        path = "library://video/Emby - %s/" %tagname_normalized
+        WINDOW.setProperty("Emby.nodes.%s.index" %str(windowPropId),path)
         try:
-            utils.indent(root)
-        except: pass
-        etree.ElementTree(root).write(nodeXML)
-
-
-        nodetypes = {
-
-            '1': "all",
-            '2': "recent",
-            '3': "recentepisodes",
-            '4': "inprogress",
-            '5': "inprogressepisodes",
-            '6': "unwatched",
-            '7': "nextupepisodes",
-            '8': "sets",
-            '9': "genres",
-            '10': "random",
-            '11': "recommended"
-        }
-        mediatypes = {
-            # label according to nodetype per mediatype
-            'movies': {
-                '1': tagname,
-                '2': 30174,
-                '4': 30177,
-                '6': 30189,
-                '8': 20434,
-                '9': 135,
-                '10': 30229,
-                '11': 30230},
-
-            'tvshows': {
-                '1': tagname,
-                '2': 30170,
-                '3': 30175,
-                '4': 30171,
-                '5': 30178,
-                '7': 30179,
-                '9': 135,
-                '10': 30229,
-                '11': 30230},
-        }
-
-        nodes = mediatypes[mediatype]
-        for node in nodes:
-
-            nodetype = nodetypes[node]
-            nodeXML = "%s%s_%s.xml" % (nodepath, cleantagname, nodetype)
-            # Get label
-            stringid = nodes[node]
-            if node != '1':
-                label = utils.language(stringid)
-                if not label:
-                    label = xbmc.getLocalizedString(stringid)
-            else:
-                label = stringid
-
-            # Set window properties
-            if nodetype == "nextupepisodes":
-                # Custom query
-                path = "plugin://plugin.video.emby/?id=%s&mode=nextup&limit=25" % tagname
-            elif kodiversion == 14 and nodetype == "recentepisodes":
-                # Custom query
-                path = "plugin://plugin.video.emby/?id=%s&mode=recentepisodes&limit=25" % tagname
-            elif kodiversion == 14 and nodetype == "inprogressepisodes":
-                # Custom query
-                path = "plugin://plugin.video.emby/?id=%s&mode=inprogressepisodes&limit=25"% tagname
-            else:
-                path = "library://video/Emby - %s/%s_%s.xml" % (dirname, cleantagname, nodetype)
-            windowpath = "ActivateWindow(Video, %s, return)" % path
+            etree.ElementTree(root).write(nodefile, xml_declaration=True)
+        except:
+            etree.ElementTree(root).write(nodefile)
+        
+        #create tag node - all items
+        nodefile = os.path.join(libraryPath, tagname_normalized + "_all.xml")
+        root = etree.Element("node", {"order":"1", "type":"filter"})
+        etree.SubElement(root, "label").text = tagname
+        etree.SubElement(root, "match").text = "all"
+        etree.SubElement(root, "content").text = type
+        etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+        etree.SubElement(root, "order", {"direction":"ascending"}).text = "sorttitle"
+        Rule = etree.SubElement(root, "rule", {"field":"tag","operator":"is"})
+        WINDOW.setProperty("Emby.nodes.%s.title" %str(windowPropId),tagname)
+        path = "library://video/Emby - %s/%s_all.xml"%(tagname_normalized,tagname_normalized)
+        WINDOW.setProperty("Emby.nodes.%s.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
+        WINDOW.setProperty("Emby.nodes.%s.content" %str(windowPropId),path)
+        WINDOW.setProperty("Emby.nodes.%s.type" %str(windowPropId),type)
+        etree.SubElement(Rule, "value").text = tagname
+        try:
+            etree.ElementTree(root).write(nodefile, xml_declaration=True)
+        except:
+            etree.ElementTree(root).write(nodefile)
+        
+        #create tag node - recent items
+        nodefile = os.path.join(libraryPath, tagname_normalized + "_recent.xml")
+        root = etree.Element("node", {"order":"2", "type":"filter"})
+        if type == "tvshows":
+            label = language(30170)
+        else:
+            label = language(30174)
+        etree.SubElement(root, "label").text = label
+        etree.SubElement(root, "match").text = "all"
+        etree.SubElement(root, "content").text = type
+        etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+        Rule = etree.SubElement(root, "rule", {"field":"tag","operator":"is"})
+        etree.SubElement(Rule, "value").text = tagname
+        etree.SubElement(root, "order", {"direction":"descending"}).text = "dateadded"
+        #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
+        etree.SubElement(root, "limit").text = "25"
+        #exclude watched items --> currently hardcoded --> TODO: add a setting for this ?
+        Rule2 = etree.SubElement(root, "rule", {"field":"playcount","operator":"is"})
+        etree.SubElement(Rule2, "value").text = "0"
+        WINDOW.setProperty("Emby.nodes.%s.recent.title" %str(windowPropId),label)
+        path = "library://video/Emby - %s/%s_recent.xml"%(tagname_normalized,tagname_normalized)
+        WINDOW.setProperty("Emby.nodes.%s.recent.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
+        WINDOW.setProperty("Emby.nodes.%s.recent.content" %str(windowPropId),path)
+        try:
+            etree.ElementTree(root).write(nodefile, xml_declaration=True)
+        except:
+            etree.ElementTree(root).write(nodefile)
+        
+        #create tag node - inprogress items
+        nodefile = os.path.join(libraryPath, tagname_normalized + "_progress.xml")
+        root = etree.Element("node", {"order":"3", "type":"filter"})
+        if type == "tvshows":
+            label = language(30171)
+        else:
+            label = language(30177)
+        etree.SubElement(root, "label").text = label
+        etree.SubElement(root, "match").text = "all"
+        etree.SubElement(root, "content").text = type
+        etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+        Rule = etree.SubElement(root, "rule", {"field":"tag","operator":"is"})
+        etree.SubElement(Rule, "value").text = tagname
+        #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
+        etree.SubElement(root, "limit").text = "25"
+        Rule2 = etree.SubElement(root, "rule", {"field":"inprogress","operator":"true"})
+        WINDOW.setProperty("Emby.nodes.%s.inprogress.title" %str(windowPropId),label)
+        path = "library://video/Emby - %s/%s_progress.xml"%(tagname_normalized,tagname_normalized)
+        WINDOW.setProperty("Emby.nodes.%s.inprogress.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
+        WINDOW.setProperty("Emby.nodes.%s.inprogress.content" %str(windowPropId),path)
+        try:
+            etree.ElementTree(root).write(nodefile, xml_declaration=True)
+        except:
+            etree.ElementTree(root).write(nodefile)
+        
+        #some movies-only nodes
+        if type == "movies":
             
-            if nodetype == "all":
-
-                if viewtype == "mixed":
-                    templabel = dirname
-                else:
-                    templabel = label
-
-                embynode = "Emby.nodes.%s" % indexnumber
-                utils.window('%s.title' % embynode, value=templabel)
-                utils.window('%s.path' % embynode, value=windowpath)
-                utils.window('%s.content' % embynode, value=path)
-                utils.window('%s.type' % embynode, value=mediatype)
-            else:
-                embynode = "Emby.nodes.%s.%s" % (indexnumber, nodetype)
-                utils.window('%s.title' % embynode, value=label)
-                utils.window('%s.path' % embynode, value=windowpath)
-                utils.window('%s.content' % embynode, value=path)
-
-            if xbmcvfs.exists(nodeXML):
-                # Don't recreate xml if already exists
-                continue
-
-
-            # Create the root
-            if nodetype == "nextupepisodes" or (kodiversion == 14 and
-                                        nodetype in ('recentepisodes', 'inprogressepisodes')):
-                # Folder type with plugin path
-                root = self.commonRoot(order=node, label=label, tagname=tagname, roottype=2)
-                etree.SubElement(root, 'path').text = path
-                etree.SubElement(root, 'content').text = "episodes"
-            else:
-                root = self.commonRoot(order=node, label=label, tagname=tagname)
-                if nodetype in ('recentepisodes', 'inprogressepisodes'):
-                    etree.SubElement(root, 'content').text = "episodes"
-                else:
-                    etree.SubElement(root, 'content').text = mediatype
-
-                limit = "25"
-                # Elements per nodetype
-                if nodetype == "all":
-                    etree.SubElement(root, 'order', {'direction': "ascending"}).text = "sorttitle"
-                
-                elif nodetype == "recent":
-                    etree.SubElement(root, 'order', {'direction': "descending"}).text = "dateadded"
-                    etree.SubElement(root, 'limit').text = limit
-                    rule = etree.SubElement(root, 'rule', {'field': "playcount", 'operator': "is"})
-                    etree.SubElement(rule, 'value').text = "0"
-                
-                elif nodetype == "inprogress":
-                    etree.SubElement(root, 'rule', {'field': "inprogress", 'operator': "true"})
-                    etree.SubElement(root, 'limit').text = limit
-
-                elif nodetype == "genres":
-                    etree.SubElement(root, 'order', {'direction': "ascending"}).text = "sorttitle"
-                    etree.SubElement(root, 'group').text = "genres"
-                
-                elif nodetype == "unwatched":
-                    etree.SubElement(root, 'order', {'direction': "ascending"}).text = "sorttitle"
-                    rule = etree.SubElement(root, "rule", {'field': "playcount", 'operator': "is"})
-                    etree.SubElement(rule, 'value').text = "0"
-
-                elif nodetype == "sets":
-                    etree.SubElement(root, 'order', {'direction': "ascending"}).text = "sorttitle"
-                    etree.SubElement(root, 'group').text = "sets"
-
-                elif nodetype == "random":
-                    etree.SubElement(root, 'order', {'direction': "ascending"}).text = "random"
-                    etree.SubElement(root, 'limit').text = limit
-
-                elif nodetype == "recommended":
-                    etree.SubElement(root, 'order', {'direction': "descending"}).text = "rating"
-                    etree.SubElement(root, 'limit').text = limit
-                    rule = etree.SubElement(root, 'rule', {'field': "playcount", 'operator': "is"})
-                    etree.SubElement(rule, 'value').text = "0"
-                    rule2 = etree.SubElement(root, 'rule',
-                        attrib={'field': "rating", 'operator': "greaterthan"})
-                    etree.SubElement(rule2, 'value').text = "7"
-
-                elif nodetype == "recentepisodes":
-                    # Kodi Isengard, Jarvis
-                    etree.SubElement(root, 'order', {'direction': "descending"}).text = "dateadded"
-                    etree.SubElement(root, 'limit').text = limit
-                    rule = etree.SubElement(root, 'rule', {'field': "playcount", 'operator': "is"})
-                    etree.SubElement(rule, 'value').text = "0"
-
-                elif nodetype == "inprogressepisodes":
-                    # Kodi Isengard, Jarvis
-                    etree.SubElement(root, 'limit').text = "25"
-                    rule = etree.SubElement(root, 'rule',
-                        attrib={'field': "inprogress", 'operator':"true"})
-
+            #unwatched movies
+            nodefile = os.path.join(libraryPath, tagname_normalized + "_unwatched.xml")
+            root = etree.Element("node", {"order":"4", "type":"filter"})
+            label = language(30189)
+            etree.SubElement(root, "label").text = label
+            etree.SubElement(root, "match").text = "all"
+            etree.SubElement(root, "content").text = "movies"
+            etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+            Rule = etree.SubElement(root, "rule", {"field":"tag","operator":"is"})
+            etree.SubElement(Rule, "value").text = tagname
+            Rule = etree.SubElement(root, "rule", {"field":"playcount","operator":"is"})
+            etree.SubElement(Rule, "value").text = "0"
+            etree.SubElement(root, "order", {"direction":"ascending"}).text = "sorttitle"
+            Rule2 = etree.SubElement(root, "rule", {"field":"playcount","operator":"is"})
+            etree.SubElement(Rule2, "value").text = "0"
+            WINDOW.setProperty("Emby.nodes.%s.unwatched.title" %str(windowPropId),label)
+            path = "library://video/Emby - %s/%s_unwatched.xml"%(tagname_normalized,tagname_normalized)
+            WINDOW.setProperty("Emby.nodes.%s.unwatched.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
+            WINDOW.setProperty("Emby.nodes.%s.unwatched.content" %str(windowPropId),path)
             try:
-                utils.indent(root)
-            except: pass
-            etree.ElementTree(root).write(nodeXML)
+                etree.ElementTree(root).write(nodefile, xml_declaration=True)
+            except:
+                etree.ElementTree(root).write(nodefile)
+            
+            #sets
+            nodefile = os.path.join(libraryPath, tagname_normalized + "_sets.xml")
+            root = etree.Element("node", {"order":"9", "type":"filter"})
+            label = xbmc.getLocalizedString(20434)
+            etree.SubElement(root, "label").text = label
+            etree.SubElement(root, "match").text = "all"
+            etree.SubElement(root, "group").text = "sets"
+            etree.SubElement(root, "content").text = type
+            etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+            etree.SubElement(root, "order", {"direction":"ascending"}).text = "sorttitle"
+            Rule = etree.SubElement(root, "rule", {"field":"tag","operator":"is"})
+            etree.SubElement(Rule, "value").text = tagname
+            WINDOW.setProperty("Emby.nodes.%s.sets.title" %str(windowPropId),label)
+            path = "library://video/Emby - %s/%s_sets.xml"%(tagname_normalized,tagname_normalized)
+            WINDOW.setProperty("Emby.nodes.%s.sets.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
+            WINDOW.setProperty("Emby.nodes.%s.sets.content" %str(windowPropId),path)
+            try:
+                etree.ElementTree(root).write(nodefile, xml_declaration=True)
+            except:
+                etree.ElementTree(root).write(nodefile)
 
-    def singleNode(self, indexnumber, tagname, mediatype, itemtype):
-
-        tagname = tagname.encode('utf-8')
-        cleantagname = utils.normalize_nodes(tagname)
-        nodepath = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
-        nodeXML = "%semby_%s.xml" % (nodepath, cleantagname)
-        path = "library://video/emby_%s.xml" % (cleantagname)
-        windowpath = "ActivateWindow(Video, %s, return)" % path
+        #create tag node - genres
+        nodefile = os.path.join(libraryPath, tagname_normalized + "_genres.xml")
+        root = etree.Element("node", {"order":"9", "type":"filter"})
+        label = xbmc.getLocalizedString(135)
+        etree.SubElement(root, "label").text = label
+        etree.SubElement(root, "match").text = "all"
+        etree.SubElement(root, "group").text = "genres"
+        etree.SubElement(root, "content").text = type
+        etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+        etree.SubElement(root, "order", {"direction":"ascending"}).text = "sorttitle"
+        Rule = etree.SubElement(root, "rule", {"field":"tag","operator":"is"})
+        etree.SubElement(Rule, "value").text = tagname
+        WINDOW.setProperty("Emby.nodes.%s.genres.title" %str(windowPropId),label)
+        path = "library://video/Emby - %s/%s_genres.xml"%(tagname_normalized,tagname_normalized)
+        WINDOW.setProperty("Emby.nodes.%s.genres.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
+        WINDOW.setProperty("Emby.nodes.%s.genres.content" %str(windowPropId),path)
         
-        # Create the video node directory
-        if not xbmcvfs.exists(nodepath):
-            # We need to copy over the default items
-            shutil.copytree(
-                src=xbmc.translatePath("special://xbmc/system/library/video").decode('utf-8'),
-                dst=xbmc.translatePath("special://profile/library/video").decode('utf-8'))
-            xbmcvfs.exists(path)
-
-        labels = {
-
-            'Favorite movies': 30180,
-            'Favorite tvshows': 30181,
-            'channels': 30173
-        }
-        label = utils.language(labels[tagname])
-        embynode = "Emby.nodes.%s" % indexnumber
-        utils.window('%s.title' % embynode, value=label)
-        utils.window('%s.path' % embynode, value=windowpath)
-        utils.window('%s.content' % embynode, value=path)
-        utils.window('%s.type' % embynode, value=itemtype)
-
-        if xbmcvfs.exists(nodeXML):
-            # Don't recreate xml if already exists
-            return
-
-        if itemtype == "channels":
-            root = self.commonRoot(order=1, label=label, tagname=tagname, roottype=2)
-            etree.SubElement(root, 'path').text = "plugin://plugin.video.emby/?id=0&mode=channels"
-        else:
-            root = self.commonRoot(order=1, label=label, tagname=tagname)
-            etree.SubElement(root, 'order', {'direction': "ascending"}).text = "sorttitle"
-
-        etree.SubElement(root, 'content').text = mediatype
-
         try:
-            utils.indent(root)
-        except: pass
-        etree.ElementTree(root).write(nodeXML)
-
-    def clearProperties(self):
-
-        self.logMsg("Clearing nodes properties.", 1)
-        embyprops = utils.window('Emby.nodes.total')
-        propnames = [
+            etree.ElementTree(root).write(nodefile, xml_declaration=True)
+        except:
+            etree.ElementTree(root).write(nodefile)
         
-            "index","path","title","content",
-            "inprogress.content","inprogress.title",
-            "inprogress.content","inprogress.path",
-            "nextepisodes.title","nextepisodes.content",
-            "nextepisodes.path","unwatched.title",
-            "unwatched.content","unwatched.path",
-            "recent.title","recent.content","recent.path",
-            "recentepisodes.title","recentepisodes.content",
-            "recentepisodes.path","inprogressepisodes.title",
-            "inprogressepisodes.content","inprogressepisodes.path"
-        ]
+        #create tag node - random items
+        nodefile = os.path.join(libraryPath, tagname_normalized + "_random.xml")
+        root = etree.Element("node", {"order":"10", "type":"filter"})
+        label = language(30229)
+        etree.SubElement(root, "label").text = label
+        etree.SubElement(root, "match").text = "all"
+        etree.SubElement(root, "content").text = type
+        etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+        Rule = etree.SubElement(root, "rule", {"field":"tag","operator":"is"})
+        etree.SubElement(Rule, "value").text = tagname
+        #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
+        etree.SubElement(root, "limit").text = "25"
+        etree.SubElement(root, "order", {"direction":"ascending"}).text = "random"
+        WINDOW.setProperty("Emby.nodes.%s.random.title" %str(windowPropId),label)
+        path = "library://video/Emby - %s/%s_random.xml"%(tagname_normalized,tagname_normalized)
+        WINDOW.setProperty("Emby.nodes.%s.random.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
+        WINDOW.setProperty("Emby.nodes.%s.random.content" %str(windowPropId),path)
+        try:
+            etree.ElementTree(root).write(nodefile, xml_declaration=True)
+        except:
+            etree.ElementTree(root).write(nodefile)
+        
+        #create tag node - recommended items
+        nodefile = os.path.join(libraryPath, tagname_normalized + "_recommended.xml")
+        root = etree.Element("node", {"order":"10", "type":"filter"})
+        label = language(30230)
+        etree.SubElement(root, "label").text = label
+        etree.SubElement(root, "match").text = "all"
+        etree.SubElement(root, "content").text = type
+        etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+        Rule = etree.SubElement(root, "rule", {"field":"tag","operator":"is"})
+        etree.SubElement(Rule, "value").text = tagname
+        Rule2 = etree.SubElement(root, "rule", {"field":"playcount","operator":"is"})
+        etree.SubElement(Rule2, "value").text = "0"
+        Rule3 = etree.SubElement(root, "rule", {"field":"rating","operator":"greaterthan"})
+        etree.SubElement(Rule3, "value").text = "7"
+        #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
+        etree.SubElement(root, "limit").text = "25"
+        etree.SubElement(root, "order", {"direction":"descending"}).text = "rating"
+        WINDOW.setProperty("Emby.nodes.%s.random.title" %str(windowPropId),label)
+        path = "library://video/Emby - %s/%s_recommended.xml"%(tagname_normalized,tagname_normalized)
+        WINDOW.setProperty("Emby.nodes.%s.recommended.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
+        WINDOW.setProperty("Emby.nodes.%s.recommended.content" %str(windowPropId),path)
+        try:
+            etree.ElementTree(root).write(nodefile, xml_declaration=True)
+        except:
+            etree.ElementTree(root).write(nodefile)
+        
+        #### TAGS ONLY FOR TV SHOWS COLLECTIONS ####
+        if type == "tvshows":    
+            
+            #as from kodi isengard you can use tags for episodes to filter
+            #for below isengard we still use the plugin's entrypoint to build a listing
+            if kodiVersion == 15:
+                #create tag node - recent episodes
+                nodefile = os.path.join(libraryPath, tagname_normalized + "_recent_episodes.xml")
+                root = etree.Element("node", {"order":"3", "type":"filter"})
+                label = language(30175)
+                etree.SubElement(root, "label").text = label
+                etree.SubElement(root, "match").text = "all"
+                etree.SubElement(root, "content").text = "episodes"
+                etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+                etree.SubElement(root, "order", {"direction":"descending"}).text = "dateadded"
+                Rule = etree.SubElement(root, "rule", {"field":"tag","operator":"is"})
+                etree.SubElement(Rule, "value").text = tagname
+                #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
+                etree.SubElement(root, "limit").text = "25"
+                #exclude watched items --> currently hardcoded --> TODO: add a setting for this ?
+                Rule2 = etree.SubElement(root, "rule", {"field":"playcount","operator":"is"})
+                etree.SubElement(Rule2, "value").text = "0"
+                WINDOW.setProperty("Emby.nodes.%s.recentepisodes.title" %str(windowPropId),label)
+                path = "library://video/Emby - %s/%s_recent_episodes.xml"%(tagname_normalized,tagname_normalized)
+                WINDOW.setProperty("Emby.nodes.%s.recentepisodes.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
+                WINDOW.setProperty("Emby.nodes.%s.recentepisodes.content" %str(windowPropId),path)
+                try:
+                    etree.ElementTree(root).write(nodefile, xml_declaration=True)
+                except:
+                    etree.ElementTree(root).write(nodefile)
+                
+                #create tag node - inprogress episodes
+                nodefile = os.path.join(libraryPath, tagname_normalized + "_progress_episodes.xml")
+                root = etree.Element("node", {"order":"4", "type":"filter"})
+                label = language(30178)
+                etree.SubElement(root, "label").text = label
+                etree.SubElement(root, "match").text = "all"
+                etree.SubElement(root, "content").text = "episodes"
+                etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+                Rule = etree.SubElement(root, "rule", {"field":"tag","operator":"is"})
+                etree.SubElement(Rule, "value").text = tagname
+                #set limit to 25 --> currently hardcoded --> TODO: add a setting for this ?
+                etree.SubElement(root, "limit").text = "25"
+                Rule2 = etree.SubElement(root, "rule", {"field":"inprogress","operator":"true"})
+                WINDOW.setProperty("Emby.nodes.%s.inprogressepisodes.title" %str(windowPropId),label)
+                path = "library://video/Emby - %s/%s_progress_episodes.xml"%(tagname_normalized,tagname_normalized)
+                WINDOW.setProperty("Emby.nodes.%s.inprogressepisodes.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
+                WINDOW.setProperty("Emby.nodes.%s.inprogressepisodes.content" %str(windowPropId),path)
+                try:
+                    etree.ElementTree(root).write(nodefile, xml_declaration=True)
+                except:
+                    etree.ElementTree(root).write(nodefile)
+                    
+            if kodiVersion == 14:
+                #create tag node - recent episodes
+                nodefile = os.path.join(libraryPath, tagname_normalized + "_recent_episodes.xml")
+                root = etree.Element("node", {"order":"4", "type":"folder"})
+                label = language(30175)
+                etree.SubElement(root, "label").text = label
+                etree.SubElement(root, "content").text = "episodes"
+                etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+                path = "plugin://plugin.video.emby/?id=%s&mode=recentepisodes&limit=25" %tagname
+                etree.SubElement(root, "path").text = path
+                WINDOW.setProperty("Emby.nodes.%s.recentepisodes.title" %str(windowPropId),label)
+                path = "library://video/Emby - %s/%s_recent_episodes.xml"%(tagname_normalized,tagname_normalized)
+                WINDOW.setProperty("Emby.nodes.%s.recentepisodes.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
+                WINDOW.setProperty("Emby.nodes.%s.recentepisodes.content" %str(windowPropId),path)
+                try:
+                    etree.ElementTree(root).write(nodefile, xml_declaration=True)
+                except:
+                    etree.ElementTree(root).write(nodefile)
+                
+                #create tag node - inprogress items
+                nodefile = os.path.join(libraryPath, tagname_normalized + "_progress_episodes.xml")
+                root = etree.Element("node", {"order":"5", "type":"folder"})
+                label = language(30178)
+                etree.SubElement(root, "label").text = label
+                etree.SubElement(root, "content").text = "episodes"
+                etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+                path = "plugin://plugin.video.emby/?id=%s&mode=inprogressepisodes&limit=25" %tagname
+                etree.SubElement(root, "path").text = path
+                WINDOW.setProperty("Emby.nodes.%s.inprogressepisodes.title" %str(windowPropId),label)
+                path = "library://video/Emby - %s/%s_progress_episodes.xml"%(tagname_normalized,tagname_normalized)
+                WINDOW.setProperty("Emby.nodes.%s.inprogressepisodes.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
+                WINDOW.setProperty("Emby.nodes.%s.inprogressepisodes.content" %str(windowPropId),path)
+                try:
+                    etree.ElementTree(root).write(nodefile, xml_declaration=True)
+                except:
+                    etree.ElementTree(root).write(nodefile)
+            
+            #create tag node - nextup items
+            #for nextup we always use the dynamic content approach with the plugin's entrypoint because it involves a custom query
+            nodefile = os.path.join(libraryPath, tagname_normalized + "_nextup_episodes.xml")
+            root = etree.Element("node", {"order":"6", "type":"folder"})
+            label = language(30179)
+            etree.SubElement(root, "label").text = label
+            etree.SubElement(root, "content").text = "episodes"
+            path = "plugin://plugin.video.emby/?id=%s&mode=nextup&limit=25" %tagname
+            etree.SubElement(root, "path").text = path
+            etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+            WINDOW.setProperty("Emby.nodes.%s.nextepisodes.title" %str(windowPropId),label)
+            path = "library://video/Emby - %s/%s_nextup_episodes.xml"%(tagname_normalized,tagname_normalized)
+            WINDOW.setProperty("Emby.nodes.%s.nextepisodes.path" %str(windowPropId),"ActivateWindow(Video,%s,return)"%path)
+            WINDOW.setProperty("Emby.nodes.%s.nextepisodes.content" %str(windowPropId),path)        
+            try:
+                etree.ElementTree(root).write(nodefile, xml_declaration=True)
+            except:
+                etree.ElementTree(root).write(nodefile)
+    
+    def buildVideoNodesListing(self):
+            
+        try:
+        
+            # the library path doesn't exist on all systems
+            if not xbmcvfs.exists("special://profile/library/"):
+                xbmcvfs.mkdir("special://profile/library") 
+            if not xbmcvfs.exists("special://profile/library/video/"):
+                #we need to copy over the default items
+                shutil.copytree(xbmc.translatePath("special://xbmc/system/library/video"), xbmc.translatePath("special://profile/library/video"))
+            
+            #always cleanup existing Emby video nodes first because we don't want old stuff to stay in there
+            path = "special://profile/library/video/"
+            if xbmcvfs.exists(path):
+                allDirs, allFiles = xbmcvfs.listdir(path)
+                for dir in allDirs:
+                    if dir.startswith("Emby "):
+                        shutil.rmtree(xbmc.translatePath("special://profile/library/video/" + dir))
+                for file in allFiles:
+                    if file.startswith("emby"):
+                        xbmcvfs.delete(path + file)
+            
+            #we build up a listing and set window props for all nodes we created
+            #the window props will be used by the main entry point to quickly build up the listing and can be used in skins (like titan) too for quick reference
+            #comment marcelveldt: please leave the window props as-is because I will be referencing them in titan skin...
+            totalNodesCount = 0
+            
+            #build the listing for all views
+            views_movies = ReadEmbyDB().getCollections("movies")
+            if views_movies:
+                for view in views_movies:
+                    title = view.get('title')
+                    content = view.get('content')
+                    if content == "mixed":
+                        title = "%s - Movies" % title
+                    self.buildVideoNodeForView(title, "movies", totalNodesCount)
+                    totalNodesCount +=1
+                    
+            views_shows = ReadEmbyDB().getCollections("tvshows")
+            if views_shows:
+                for view in views_shows:
+                    title = view.get('title')
+                    content = view.get('content')
+                    if content == "mixed":
+                        title = "%s - TV Shows" % title
+                    self.buildVideoNodeForView(title, "tvshows", totalNodesCount)
+                    totalNodesCount +=1
 
-        if embyprops:
-            totalnodes = int(embyprops)
-            for i in range(totalnodes):
-                for prop in propnames:
-                    utils.window('Emby.nodes.%s.%s' % (str(i), prop), clear=True)
+            #create tag node for emby channels
+            nodefile = os.path.join(xbmc.translatePath("special://profile/library/video"), "emby_channels.xml")
+            root = etree.Element("node", {"order":"1", "type":"folder"})
+            label = language(30173)
+            etree.SubElement(root, "label").text = label
+            etree.SubElement(root, "content").text = "movies"
+            etree.SubElement(root, "path").text = "plugin://plugin.video.emby/?id=0&mode=channels"
+            etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+            WINDOW.setProperty("Emby.nodes.%s.title" %str(totalNodesCount),label)
+            WINDOW.setProperty("Emby.nodes.%s.type" %str(totalNodesCount),"channels")
+            path = "library://video/emby_channels.xml"
+            WINDOW.setProperty("Emby.nodes.%s.path" %str(totalNodesCount),"ActivateWindow(Video,%s,return)"%path)
+            WINDOW.setProperty("Emby.nodes.%s.content" %str(totalNodesCount),path)
+            totalNodesCount +=1        
+            try:
+                etree.ElementTree(root).write(nodefile, xml_declaration=True)
+            except:
+                etree.ElementTree(root).write(nodefile)
+                   
+            #create tag node - favorite shows
+            nodefile = os.path.join(xbmc.translatePath("special://profile/library/video"),"emby_favorite_shows.xml")
+            root = etree.Element("node", {"order":"1", "type":"filter"})
+            label = language(30181)
+            etree.SubElement(root, "label").text = label
+            etree.SubElement(root, "match").text = "all"
+            etree.SubElement(root, "content").text = "tvshows"
+            etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+            etree.SubElement(root, "order", {"direction":"ascending"}).text = "sorttitle"
+            Rule = etree.SubElement(root, "rule", {"field":"tag","operator":"is"})
+            etree.SubElement(Rule, "value").text = "Favorite tvshows" #do not localize the tagname itself
+            WINDOW.setProperty("Emby.nodes.%s.title" %str(totalNodesCount),label)
+            WINDOW.setProperty("Emby.nodes.%s.type" %str(totalNodesCount),"favourites")
+            path = "library://video/emby_favorite_shows.xml"
+            WINDOW.setProperty("Emby.nodes.%s.path" %str(totalNodesCount),"ActivateWindow(Video,%s,return)"%path)
+            WINDOW.setProperty("Emby.nodes.%s.content" %str(totalNodesCount),path)
+            totalNodesCount +=1
+            try:
+                etree.ElementTree(root).write(nodefile, xml_declaration=True)
+            except:
+                etree.ElementTree(root).write(nodefile)
+            
+            #create tag node - favorite movies
+            nodefile = os.path.join(xbmc.translatePath("special://profile/library/video"),"emby_favorite_movies.xml")
+            root = etree.Element("node", {"order":"1", "type":"filter"})
+            label = language(30180)
+            etree.SubElement(root, "label").text = label
+            etree.SubElement(root, "match").text = "all"
+            etree.SubElement(root, "content").text = "movies"
+            etree.SubElement(root, "icon").text = "special://home/addons/plugin.video.emby/icon.png"
+            etree.SubElement(root, "order", {"direction":"ascending"}).text = "sorttitle"
+            Rule = etree.SubElement(root, "rule", {"field":"tag","operator":"is"})
+            etree.SubElement(Rule, "value").text = "Favorite movies" #do not localize the tagname itself
+            WINDOW.setProperty("Emby.nodes.%s.title" %str(totalNodesCount),label)
+            WINDOW.setProperty("Emby.nodes.%s.type" %str(totalNodesCount),"favourites")
+            path = "library://video/emby_favorite_movies.xml"
+            WINDOW.setProperty("Emby.nodes.%s.path" %str(totalNodesCount),"ActivateWindow(Video,%s,return)"%path)
+            WINDOW.setProperty("Emby.nodes.%s.content" %str(totalNodesCount),path)
+            totalNodesCount +=1
+            try:
+                etree.ElementTree(root).write(nodefile, xml_declaration=True)
+            except:
+                etree.ElementTree(root).write(nodefile)
+            
+            WINDOW.setProperty("Emby.nodes.total", str(totalNodesCount))               
+                
+
+        except Exception as e:
+            utils.logMsg("Emby addon","Error while creating videonodes listings, restart required ?")
+            print e    
