@@ -1,4 +1,7 @@
-versopm 1.1.64
+version 1.1.65
+- Fix aspect ratio error
+
+version 1.1.64
 - Fix trailer causing initial sync to crash
 
 version 1.1.63
