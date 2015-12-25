@@ -165,12 +165,14 @@ class API():
                     aspectwidth, aspectheight = aspectratio.split(':')
                     track['aspectratio'] = round(float(aspectwidth) / float(aspectheight), 6)
                 
-                except ValueError:
-                    width = track['width']
-                    height = track['height']
+                except (ValueError, ZeroDivisionError):
+                    width = track.get('width')
+                    height = track.get('height')
 
                     if width and height:
                         track['aspectratio'] = round(float(width / height), 6)
+                    else:
+                        track['aspectratio'] = 1.85
 
                 videotracks.append(track)
 
