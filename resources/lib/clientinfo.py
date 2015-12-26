@@ -2,6 +2,7 @@
 
 #################################################################################################
 
+import os
 from uuid import uuid4
 
 import xbmc
@@ -74,7 +75,7 @@ class ClientInfo():
             return clientId
 
         addon_path = self.addon.getAddonInfo('path').decode('utf-8')
-        GUID_file = xbmc.translatePath("%s\machine_guid" % addon_path).decode('utf-8')
+        GUID_file = xbmc.translatePath(os.path.join(addon_path, "machine_guid")).decode('utf-8')
 
         try:
             GUID = open(GUID_file)
