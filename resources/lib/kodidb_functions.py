@@ -251,7 +251,7 @@ class Kodidb_Functions():
                 finally:
                     # Link person to content
                     if "Actor" in type:
-                        role = person['Role']
+                        role = person.get('Role')
                         query = (
                             '''
                             INSERT OR REPLACE INTO actor_link(
@@ -310,7 +310,7 @@ class Kodidb_Functions():
                 finally:
                     # Link person to content
                     if "Actor" in type:
-                        role = person['Role']
+                        role = person.get('Role')
 
                         if "movie" in mediatype:
                             query = (
