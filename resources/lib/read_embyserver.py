@@ -259,7 +259,7 @@ class Read_EmbyServer():
 
     def getMovies_byBoxset(self, boxsetid):
 
-        items = self.getSection(boxsetid)
+        items = self.getSection(boxsetid, "Movie")
 
         return items
 

@@ -521,8 +521,13 @@ class Movies(Items):
             if not current.get(itemid):
                 # Assign boxset to movie
                 emby_dbitem = emby_db.getItem_byId(itemid)
-                movieid = emby_dbitem[0]
-                self.logMsg("New addition to boxset %s: %s" % (title, movie['Name']))
+                try:
+                    movieid = emby_dbitem[0]
+                except TypeError:
+                    self.logMsg("Failed to add: %s to boxset." % movie['Name'], 1)
+                    continue
+
+                self.logMsg("New addition to boxset %s: %s" % (title, movie['Name']), 1)
                 kodi_db.assignBoxset(setid, movieid)
                 # Update emby reference
                 emby_db.updateParentId(itemid, setid)
