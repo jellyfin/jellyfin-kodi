@@ -799,7 +799,10 @@ def getExtraFanArt():
         
         if any([x in itemPath for x in ['tvshows', 'musicvideos', 'movies']]):
             params = urlparse.parse_qs(itemPath)
-            embyId = params['id'][0]
+            try:
+                embyId = params['id'][0]
+            except KeyError:
+                embyId = itemPath.split("/")[-2]
             
             utils.logMsg("EMBY", "Requesting extrafanart for Id: %s" % embyId, 1)
 

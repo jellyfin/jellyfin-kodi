@@ -458,6 +458,7 @@ def playlistXSP(mediatype, tagname, viewtype="", delete=False):
 
     # Create the playlist directory
     if not xbmcvfs.exists(path):
+        logMsg("EMBY", "Creating directory: %s" % path, 1)
         xbmcvfs.mkdirs(path)
 
     # Only add the playlist if it doesn't already exists
@@ -473,15 +474,22 @@ def playlistXSP(mediatype, tagname, viewtype="", delete=False):
     itemtypes = {
         'homevideos': "movies"
     }
-    f = open(xsppath, 'w')
-    f.write(
-        '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>\n'
-        '<smartplaylist type="%s">\n\t'
-            '<name>Emby %s</name>\n\t'
-            '<match>all</match>\n\t'
-            '<rule field="tag" operator="is">\n\t\t'
-                '<value>%s</value>\n\t'
-            '</rule>'
-        % (itemtypes.get(mediatype, mediatype), plname, tagname))
-    f.close()
+    logMsg("EMBY", "Writing playlist file to: %s" % xsppath, 1)
+    try:
+        f = open(xsppath, 'w')
+    except:
+        logMsg("EMBY", "Failed to create playlist: %s" % xsppath, 1)
+        return
+    else:
+        f.write(
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>\n'
+            '<smartplaylist type="%s">\n\t'
+                '<name>Emby %s</name>\n\t'
+                '<match>all</match>\n\t'
+                '<rule field="tag" operator="is">\n\t\t'
+                    '<value>%s</value>\n\t'
+                '</rule>'
+            '</smartplaylist>'
+            % (itemtypes.get(mediatype, mediatype), plname, tagname))
+        f.close()
     logMsg("EMBY", "Successfully added playlist: %s" % tagname)
