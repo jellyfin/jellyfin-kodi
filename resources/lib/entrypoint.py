@@ -632,7 +632,7 @@ def getNextUpEpisodes(tagname, limit):
                     li = createListItem(episode)
                     xbmcplugin.addDirectoryItem(
                                 handle=int(sys.argv[1]),
-                                url=item['file'],
+                                url=episode['file'],
                                 listitem=li)
                     count += 1
 
@@ -703,7 +703,7 @@ def getInProgressEpisodes(tagname, limit):
                     li = createListItem(episode)
                     xbmcplugin.addDirectoryItem(
                                 handle=int(sys.argv[1]),
-                                url=item['file'],
+                                url=episode['file'],
                                 listitem=li)
                     count += 1
 
@@ -773,7 +773,7 @@ def getRecentEpisodes(tagname, limit):
                     li = createListItem(episode)
                     xbmcplugin.addDirectoryItem(
                                 handle=int(sys.argv[1]),
-                                url=item['file'],
+                                url=episode['file'],
                                 listitem=li)
                     count += 1
 
