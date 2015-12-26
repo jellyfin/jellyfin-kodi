@@ -59,7 +59,8 @@ class Main:
             'channelsfolder': entrypoint.BrowseChannels,
             'nextup': entrypoint.getNextUpEpisodes,
             'inprogressepisodes': entrypoint.getInProgressEpisodes,
-            'recentepisodes': entrypoint.getRecentEpisodes
+            'recentepisodes': entrypoint.getRecentEpisodes,
+            'refreshplaylist': entrypoint.refreshPlaylist
         }
 
         if modes.get(mode):
@@ -87,10 +88,12 @@ class Main:
                 xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
             elif mode in ("manualsync", "repair"):
                 import librarysync
+                lib = librarysync.LibrarySync()
                 if mode == "manualsync":
-                    librarysync.LibrarySync().fullSync(manualrun=True)
+                    lib.fullSync(manualrun=True)
                 else:
-                    librarysync.LibrarySync().fullSync(repair=True)
+                    lib.fullSync(repair=True)
+                    
             elif mode == "texturecache":
                 import artwork
                 artwork.Artwork().FullTextureCacheSync()

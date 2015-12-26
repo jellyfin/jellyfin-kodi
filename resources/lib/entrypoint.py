@@ -74,6 +74,10 @@ def doMainListing():
     addDirectoryItem("Settings", "plugin://plugin.video.emby/?mode=settings", False)
     addDirectoryItem("Add user to session", "plugin://plugin.video.emby/?mode=adduser", False)
     #addDirectoryItem("Cache all images to Kodi texture cache (advanced)", "plugin://plugin.video.emby/?mode=texturecache")
+    addDirectoryItem(
+        label="Refresh Emby playlists",
+        path="plugin://plugin.video.emby/?mode=refreshplaylist",
+        folder=False)
     addDirectoryItem("Perform manual sync", "plugin://plugin.video.emby/?mode=manualsync", False)
     addDirectoryItem(
         label="Repair local database (force update all content)",
@@ -366,6 +370,31 @@ def getThemeMedia():
     dialog.notification(
             heading="Emby for Kodi",
             message="Themes added!",
+            icon="special://home/addons/plugin.video.emby/icon.png",
+            time=1000,
+            sound=False)
+
+##### REFRESH EMBY PLAYLISTS #####
+def refreshPlaylist():
+
+    lib = librarysync.LibrarySync()
+    dialog = xbmcgui.Dialog()
+    try:
+        # First remove playlists
+        utils.deletePlaylists()
+        # Refresh views
+        lib.refreshViews()
+        dialog.notification(
+                heading="Emby for Kodi",
+                message="Emby playlist refreshed!",
+                icon="special://home/addons/plugin.video.emby/icon.png",
+                time=1000,
+                sound=False)
+    except Exception as e:
+        utils.logMsg("EMBY", "Refresh playlist failed: %s" % e, 1)
+        dialog.notification(
+            heading="Emby for Kodi",
+            message="Emby playlist refresh failed!",
             icon="special://home/addons/plugin.video.emby/icon.png",
             time=1000,
             sound=False)

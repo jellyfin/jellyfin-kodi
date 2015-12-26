@@ -132,11 +132,7 @@ def reset():
         xbmc.sleep(1000)
 
     # Clean up the playlists
-    path = xbmc.translatePath("special://profile/playlists/video/").decode('utf-8')
-    dirs, files = xbmcvfs.listdir(path)
-    for file in files:
-        if file.startswith('Emby'):
-            xbmcvfs.delete("%s%s" % (path, file))
+    deletePlaylists()
 
     # Clean up the video nodes
     import shutil
@@ -493,3 +489,12 @@ def playlistXSP(mediatype, tagname, viewtype="", delete=False):
             % (itemtypes.get(mediatype, mediatype), plname, tagname))
         f.close()
     logMsg("EMBY", "Successfully added playlist: %s" % tagname)
+
+def deletePlaylists():
+
+    # Clean up the playlists
+    path = xbmc.translatePath("special://profile/playlists/video/").decode('utf-8')
+    dirs, files = xbmcvfs.listdir(path)
+    for file in files:
+        if file.startswith('Emby'):
+            xbmcvfs.delete("%s%s" % (path, file))
