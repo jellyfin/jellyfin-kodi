@@ -79,7 +79,8 @@ class ClientInfo():
         try:
             GUID = open(GUID_file)
         
-        except IOError: # machine_guid does not exists.
+        except Exception as e: # machine_guid does not exists.
+            self.logMsg("Generating a new deviceid: %s" % e, 1)
             clientId = str("%012X" % uuid4())
             GUID = open(GUID_file, 'w')
             GUID.write(clientId)
