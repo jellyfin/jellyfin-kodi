@@ -17,6 +17,7 @@ import artwork
 import utils
 import clientinfo
 import downloadutils
+import librarysync
 import read_embyserver as embyserver
 import embydb_functions as embydb
 import playlist
