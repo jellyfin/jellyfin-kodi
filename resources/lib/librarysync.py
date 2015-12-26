@@ -929,11 +929,17 @@ class LibrarySync(threading.Thread):
                     total = len(updatelist)
                     del updatelist[:]
 
+                    count = 0
                     for episode in embyepisodes:
 
                         # Process individual episode
                         if self.shouldStop():
                             return False
+
+                        if pdialog:
+                            percentage = int((float(count) / float(total))*100)
+                            pdialog.update(percentage, message=title)
+                            count += 1
 
                         title = episode['SeriesName']
                         episodetitle = episode['Name']
