@@ -74,7 +74,7 @@ class ClientInfo():
             return clientId
 
         addon_path = self.addon.getAddonInfo('path').decode('utf-8')
-        GUID_file = xbmc.translatePath("%s\machine_guid" % addon_path).decode('utf-8')
+        GUID_file = xbmc.translatePath("%smachine_guid" % addon_path).decode('utf-8')
 
         try:
             GUID = open(GUID_file)
