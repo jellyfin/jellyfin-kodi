@@ -8,6 +8,7 @@ import urlparse
 
 import xbmc
 import xbmcaddon
+import xbmcgui
 
 #################################################################################################
 
@@ -87,12 +88,15 @@ class Main:
             if mode == "settings":
                 xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
             elif mode in ("manualsync", "repair"):
-                import librarysync
-                lib = librarysync.LibrarySync()
-                if mode == "manualsync":
-                    lib.fullSync(manualrun=True)
+                if utils.window('emby_dbScan') != "true":
+                    import librarysync
+                    lib = librarysync.LibrarySync()
+                    if mode == "manualsync":
+                        lib.fullSync(manualrun=True)
+                    else:
+                        lib.fullSync(repair=True)
                 else:
-                    lib.fullSync(repair=True)
+                    utils.logMsg("EMBY", "Database scan is already running.", 1)
                     
             elif mode == "texturecache":
                 import artwork
