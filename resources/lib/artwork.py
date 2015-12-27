@@ -103,55 +103,58 @@ class Artwork():
             result = xbmc.executeJSONRPC(json.dumps(web_user))
             self.xbmc_username = "kodi"
 
-        else:
-            # Webserver already enabled
-            web_port = {
 
-                "jsonrpc": "2.0",
-                "id": 1,
-                "method": "Settings.GetSettingValue",
-                "params": {
+        # Webserver already enabled
+        web_port = {
 
-                    "setting": "services.webserverport"
-                }
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "Settings.GetSettingValue",
+            "params": {
+
+                "setting": "services.webserverport"
             }
-            result = xbmc.executeJSONRPC(json.dumps(web_port))
-            try:
-                self.xbmc_port = result['result']['value']
-            except TypeError:
-                pass
+        }
+        result = xbmc.executeJSONRPC(json.dumps(web_port))
+        result = json.loads(result)
+        try:
+            self.xbmc_port = result['result']['value']
+        except TypeError:
+            pass
 
-            web_user = {
+        web_user = {
 
-                "jsonrpc": "2.0",
-                "id": 1,
-                "method": "Settings.GetSettingValue",
-                "params": {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "Settings.GetSettingValue",
+            "params": {
 
-                    "setting": "services.webserverusername"
-                }
+                "setting": "services.webserverusername"
             }
-            result = xbmc.executeJSONRPC(json.dumps(web_user))
-            try:
-                self.xbmc_username = result['result']['value']
-            except TypeError:
-                pass
+        }
+        result = xbmc.executeJSONRPC(json.dumps(web_user))
+        result = json.loads(result)
+        try:
+            self.xbmc_username = result['result']['value']
+        except TypeError:
+            pass
 
-            web_pass = {
+        web_pass = {
 
-                "jsonrpc": "2.0",
-                "id": 1,
-                "method": "Settings.GetSettingValue",
-                "params": {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "Settings.GetSettingValue",
+            "params": {
 
-                    "setting": "services.webserverpassword"
-                }
+                "setting": "services.webserverpassword"
             }
-            result = xbmc.executeJSONRPC(json.dumps(web_pass))
-            try:
-                self.xbmc_password = result['result']['value']
-            except TypeError:
-                pass
+        }
+        result = xbmc.executeJSONRPC(json.dumps(web_pass))
+        result = json.loads(result)
+        try:
+            self.xbmc_password = result['result']['value']
+        except TypeError:
+            pass
     
     def FullTextureCacheSync(self):
         # This method will sync all Kodi artwork to textures13.db
@@ -315,13 +318,13 @@ class Artwork():
                 cacheimage = True
                 self.logMsg("Adding Art Link for kodiId: %s (%s)" % (kodiId, imageUrl), 2)
                 
-                query = ' '.join((
+                query = (
+                    '''
+                    INSERT INTO art(media_id, media_type, type, url)
 
-                    "INSERT INTO art(",
-                        "media_id, media_type, type, url)",
-
-                    "VALUES (?, ?, ?, ?)"
-                ))
+                    VALUES (?, ?, ?, ?)
+                    '''
+                )
                 cursor.execute(query, (kodiId, mediaType, imageType, imageUrl))
             
             else: # Only cache artwork if it changed
