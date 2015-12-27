@@ -32,6 +32,7 @@
 		<setting id="useDirectPaths" type="enum" label="Playback Mode" values="Addon(Default)|Native(Direct paths)" default="0" />
 		<setting id="enableTextureCache" label="Auto add images to the Kodi texture cache"  type="bool" default="true" />
 		<setting id="serverSync" type="bool" label="Enable fast starting sync" default="true" />
+		<setting id="limitindex" type="number" label="Maximum items to request at once from server" default="200" option="int" />
 	</category>
 	
 	<category label="Playback"> <!-- Extra Sync options -->

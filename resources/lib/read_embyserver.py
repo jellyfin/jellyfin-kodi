@@ -11,7 +11,7 @@ import downloadutils
 
 class Read_EmbyServer():
 
-    limitIndex = 200
+    limitIndex = int(utils.settings('limitindex'))
 
 
     def __init__(self):
