@@ -934,17 +934,14 @@ class LibrarySync(threading.Thread):
 
                         # Process individual episode
                         if self.shouldStop():
-                            return False
-
-                        if pdialog:
-                            percentage = int((float(count) / float(total))*100)
-                            pdialog.update(percentage, message=title)
-                            count += 1
+                            return False                          
 
                         title = episode['SeriesName']
                         episodetitle = episode['Name']
                         if pdialog:
+                            percentage = int((float(count) / float(total))*100)
                             pdialog.update(percentage, message="%s - %s" % (title, episodetitle))
+                            count += 1
                         tvshows.add_updateEpisode(episode)
         else:
             self.logMsg("TVShows finished.", 2)
