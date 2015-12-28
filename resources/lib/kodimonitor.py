@@ -148,40 +148,28 @@ class KodiMonitor(xbmc.Monitor):
                 self.logMsg("Item is invalid for emby deletion.", 1)
             else:
                 # Send the delete action to the server.
-                offerDelete = False
-
-                if type == "episode" and utils.settings('deleteTV') == "true":
-                    offerDelete = True
-                elif type == "movie" and utils.settings('deleteMovies') == "true":
-                    offerDelete = True
-
-                if utils.settings('offerDelete') != "true":
-                    # Delete could be disabled, even if the subsetting is enabled.
-                    offerDelete = False
-
-                if offerDelete:
-                    embyconn = utils.kodiSQL('emby')
-                    embycursor = embyconn.cursor()
-                    emby_db = embydb.Embydb_Functions(embycursor)
-                    emby_dbitem = emby_db.getItem_byKodiId(kodiid, type)
-                    try:
-                        itemid = emby_dbitem[0]
-                    except TypeError:
-                        self.logMsg("Could not find itemid in emby database.", 1)
-                    else:
-                        if utils.settings('skipConfirmDelete') != "true":
-                            resp = xbmcgui.Dialog().yesno(
-                                                    heading="Confirm delete",
-                                                    line1="Delete file on Emby Server?")
-                            if not resp:
-                                self.logMsg("User skipped deletion.", 1)
-                                embycursor.close()
-                                return
-                        url = "{server}/emby/Items/%s?format=json" % itemid
-                        self.logMsg("Deleting request: %s" % itemid)
-                        doUtils.downloadUrl(url, type="DELETE")
-                    finally:
-                        embycursor.close()
+                embyconn = utils.kodiSQL('emby')
+                embycursor = embyconn.cursor()
+                emby_db = embydb.Embydb_Functions(embycursor)
+                emby_dbitem = emby_db.getItem_byKodiId(kodiid, type)
+                try:
+                    itemid = emby_dbitem[0]
+                except TypeError:
+                    self.logMsg("Could not find itemid in emby database.", 1)
+                else:
+                    if utils.settings('skipConfirmDelete') != "true":
+                        resp = xbmcgui.Dialog().yesno(
+                                                heading="Confirm delete",
+                                                line1="Delete file on Emby Server?")
+                        if not resp:
+                            self.logMsg("User skipped deletion.", 1)
+                            embycursor.close()
+                            return
+                    url = "{server}/emby/Items/%s?format=json" % itemid
+                    self.logMsg("Deleting request: %s" % itemid)
+                    doUtils.downloadUrl(url, type="DELETE")
+                finally:
+                    embycursor.close()
 
 
         elif method == "System.OnWake":
