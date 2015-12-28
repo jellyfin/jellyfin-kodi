@@ -60,8 +60,7 @@ class VideoNodes(object):
             # Treat homevideos as movies
             mediatype = "movies"
 
-        tagname = tagname.encode('utf-8')
-        cleantagname = utils.normalize_nodes(tagname)
+        cleantagname = utils.normalize_nodes(tagname.encode('utf-8'))
         if viewtype == "mixed":
             dirname = "%s - %s" % (cleantagname, mediatype)
         else:
@@ -102,7 +101,7 @@ class VideoNodes(object):
 
         utils.window('Emby.nodes.%s.index' % indexnumber, value=path)
         # Root
-        root = self.commonRoot(order=0, label=dirname, tagname=tagname, roottype=0)
+        root = self.commonRoot(order=0, label=tagname, tagname=tagname, roottype=0)
         try:
             utils.indent(root)
         except: pass
