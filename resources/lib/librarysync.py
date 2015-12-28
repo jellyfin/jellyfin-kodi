@@ -1315,7 +1315,7 @@ class LibrarySync(threading.Thread):
                 if utils.window('emby_syncRunning') != "true":
                     self.logMsg("SyncDatabase onWake (started)", 0)
                     librarySync = self.startSync()
-                    self.logMsg("SyncDatabase onWake (finished) %s", librarySync, 0)
+                    self.logMsg("SyncDatabase onWake (finished) %s" % librarySync, 0)
 
             if self.stop_thread:
                 # Set in service.py
