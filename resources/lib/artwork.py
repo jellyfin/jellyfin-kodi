@@ -332,7 +332,8 @@ class Artwork():
                     cacheimage = True
                     
                     # Only for the main backdrop, poster
-                    if imageType in ("fanart", "poster"):
+                    if (utils.window('emby_initialScan') != "true" and
+                            imageType in ("fanart", "poster")):
                         # Delete current entry before updating with the new one
                         self.deleteCachedArtwork(url)
                     

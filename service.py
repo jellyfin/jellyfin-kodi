@@ -69,7 +69,8 @@ class Service():
 
             "emby_online", "emby_serverStatus", "emby_onWake",
             "emby_syncRunning", "emby_dbCheck", "emby_kodiScan",
-            "emby_shouldStop", "emby_currUser", "emby_dbScan", "emby_sessionId"
+            "emby_shouldStop", "emby_currUser", "emby_dbScan", "emby_sessionId",
+            "emby_initialScan"
         ]
         for prop in properties:
             utils.window(prop, clear=True)

@@ -216,6 +216,7 @@ class LibrarySync(threading.Thread):
             message = "Repair sync"
         else:
             message = "Initial sync"
+            utils.window('emby_initialScan', value="true")
         
         pDialog = self.progressDialog("%s" % message, forced=True)
         starttotal = datetime.now()
