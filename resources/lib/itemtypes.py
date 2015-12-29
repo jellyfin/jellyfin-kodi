@@ -1882,6 +1882,8 @@ class Music(Items):
 
     def added(self, items, pdialog):
         
+        total = len(items)
+        count = 0
         for artist in items:
 
             title = artist['Name']
@@ -1896,6 +1898,8 @@ class Music(Items):
 
     def added_album(self, items, pdialog):
         
+        total = len(items)
+        count = 0
         for album in items:
 
             title = album['Name']
@@ -1910,6 +1914,8 @@ class Music(Items):
 
     def added_song(self, items, pdialog):
         
+        total = len(items)
+        count = 0
         for song in items:
 
             title = song['Name']
