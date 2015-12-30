@@ -1,3 +1,9 @@
+version 1.1.69
+- Fix unicode error for video nodes
+- Fix special episode ordering (repair sync can be run)
+- Fix deletion via context menu
+- Fix music add/update breaking incremental sync
+
 version 1.1.68
 - Minor fixes
 
