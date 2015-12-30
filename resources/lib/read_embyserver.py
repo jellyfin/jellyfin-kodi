@@ -81,7 +81,7 @@ class Read_EmbyServer():
                         "CommunityRating,OfficialRating,CumulativeRunTimeTicks,"
                         "Metascore,AirTime,DateCreated,MediaStreams,People,Overview,"
                         "CriticRating,CriticRatingSummary,Etag,ProductionLocations,"
-                        "Tags,ProviderIds,RemoteTrailers"
+                        "Tags,ProviderIds,RemoteTrailers,SpecialEpisodeNumbers"
                 )
             }
             result = self.doUtils.downloadUrl(url, parameters=params)
@@ -182,7 +182,7 @@ class Read_EmbyServer():
                         "CommunityRating,OfficialRating,CumulativeRunTimeTicks,"
                         "Metascore,AirTime,DateCreated,MediaStreams,People,Overview,"
                         "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
-                        "Tags,ProviderIds,ParentId,RemoteTrailers"
+                        "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers"
                     )
                 result = doUtils.downloadUrl(url, parameters=params)
                 items['Items'].extend(result['Items'])
