@@ -63,7 +63,7 @@ class KodiMonitor(xbmc.Monitor):
                 self.logMsg("Properties already set for item.", 1)
             else:
                 if ((utils.settings('useDirectPaths') == "1" and not type == "song") or
-                        (type == "song" and utils.settings('disableMusic') == "false")):
+                        (type == "song" and utils.settings('enableMusic') == "true")):
                     # Set up properties for player
                     embyconn = utils.kodiSQL('emby')
                     embycursor = embyconn.cursor()

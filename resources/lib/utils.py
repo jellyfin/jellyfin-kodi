@@ -158,7 +158,7 @@ def reset():
     connection.commit()
     cursor.close()
 
-    if settings('disableMusic') != "true":
+    if settings('enableMusic') == "true":
         logMsg("EMBY", "Resetting the Kodi music database.")
         connection = kodiSQL('music')
         cursor = connection.cursor()
