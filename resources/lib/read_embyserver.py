@@ -233,8 +233,8 @@ class Read_EmbyServer():
                         if itemId == folder['Id']:
                             itemtype = folder.get('CollectionType', "mixed")
                 
-                if (itemtype == type or 
-                    (itemtype == "mixed" and type in ("movies", "tvshows"))):
+                if (name not in ('Collections', 'Trailers') and (itemtype == type or 
+                    (itemtype == "mixed" and type in ("movies", "tvshows")))):
                     
                     views.append({
 
