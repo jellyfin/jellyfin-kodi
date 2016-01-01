@@ -358,7 +358,7 @@ class LibrarySync(threading.Thread):
                     # Media folders are grouped into userview
                     for grouped_view in grouped_views:
                         if (grouped_view['Type'] == "UserView" and 
-                            grouped_view['CollectionType'] == mediatype):
+                            grouped_view.get('CollectionType') == mediatype):
                             # Take the name of the userview
                             foldername = grouped_view['Name']
                             break

@@ -2280,10 +2280,14 @@ class Music(Items):
             # Add path
             pathid = kodi_db.addPath(path)
 
-            # Get the album
-            emby_dbalbum = emby_db.getItem_byId(item['AlbumId'])
             try:
+                # Get the album
+                emby_dbalbum = emby_db.getItem_byId(item['AlbumId'])
                 albumid = emby_dbalbum[0]
+            except KeyError:
+                # No album Id associated to the song.
+                self.logMsg("Song itemid: %s has no albumId." % itemid, 1)
+                return
             except TypeError:
                 # No album found, create a single's album
                 kodicursor.execute("select coalesce(max(idAlbum),0) from album")
