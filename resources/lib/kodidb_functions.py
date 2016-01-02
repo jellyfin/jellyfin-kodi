@@ -1050,29 +1050,17 @@ class Kodidb_Functions():
         try:
             albumid = cursor.fetchone()[0]
         except TypeError:
-            # Verify by name
-            query = ' '.join((
+            # Create the album
+            cursor.execute("select coalesce(max(idAlbum),0) from album")
+            albumid = cursor.fetchone()[0] + 1
+            query = (
+                '''
+                INSERT INTO album(idAlbum, strAlbum, strMusicBrainzAlbumID)
 
-                "SELECT idAlbum",
-                "FROM album",
-                "WHERE strAlbum = ?",
-                "COLLATE NOCASE"
-            ))
-            cursor.execute(query, (name,))
-            try:
-                albumid = cursor.fetchone()[0]
-            except TypeError:
-                # Create the album
-                cursor.execute("select coalesce(max(idAlbum),0) from album")
-                albumid = cursor.fetchone()[0] + 1
-                query = (
-                    '''
-                    INSERT INTO album(idAlbum, strAlbum, strMusicBrainzAlbumID)
-
-                    VALUES (?, ?, ?)
-                    '''
-                )
-                cursor.execute(query, (albumid, name, musicbrainz))
+                VALUES (?, ?, ?)
+                '''
+            )
+            cursor.execute(query, (albumid, name, musicbrainz))
 
         return albumid
 
