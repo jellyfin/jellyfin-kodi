@@ -296,7 +296,7 @@ class LibrarySync(threading.Thread):
         utils.window('emby_dbScan', clear=True)
         xbmcgui.Dialog().notification(
                         heading="Emby for Kodi",
-                        message="%s completed in: %s!" % 
+                        message="%s completed in: %s" % 
                                 (message, str(elapsedtotal).split('.')[0]),
                         icon="special://home/addons/plugin.video.emby/icon.png",
                         sound=False)

@@ -376,7 +376,7 @@ def passwordsXML():
             settings('networkCreds', value="")
             xbmcgui.Dialog().notification(
                                 heading="Emby for Kodi",
-                                message="%s removed from passwords.xml!" % credentials,
+                                message="%s removed from passwords.xml" % credentials,
                                 icon="special://home/addons/plugin.video.emby/icon.png",
                                 time=1000,
                                 sound=False)
@@ -435,7 +435,7 @@ def passwordsXML():
     
     dialog.notification(
             heading="Emby for Kodi",
-            message="%s added to passwords.xml!" % server,
+            message="%s added to passwords.xml" % server,
             icon="special://home/addons/plugin.video.emby/icon.png",
             time=1000,
             sound=False)
