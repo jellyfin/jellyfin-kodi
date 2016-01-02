@@ -1,3 +1,10 @@
+version 1.1.70
+- Include AirsAfterSeason for special episodes ordering
+- Cover art settings - label adjusted. A reset or repair will be required if you change the settings value.
+- Fix duplicate views being created (reset will be required)
+- Fix albums merge when they had the same name (reset will be required)
+- Minor fix to songs
+
 version 1.1.69
 - Fix unicode error for video nodes
 - Fix special episode ordering (repair sync can be run)
