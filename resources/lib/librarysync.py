@@ -357,7 +357,7 @@ class LibrarySync(threading.Thread):
                 if folderid in groupedFolders:
                     # Media folders are grouped into userview
                     for grouped_view in grouped_views:
-                        # This is only reserved for the detection or grouped views
+                        # This is only reserved for the detection of grouped views
                         if (grouped_view['Type'] == "UserView" and 
                             grouped_view.get('CollectionType') == mediatype and
                             grouped_view['Id'] not in grouped_view['Path']):
