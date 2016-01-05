@@ -73,8 +73,8 @@ class VideoNodes(object):
         # Verify the video directory
         if not xbmcvfs.exists(path):
             shutil.copytree(
-                src=xbmc.translatePath("special://xbmc/system/library/video/").decode('utf-8'),
-                dst=xbmc.translatePath("special://profile/library/video/").decode('utf-8'))
+                src=xbmc.translatePath("special://xbmc/system/library/video").decode('utf-8'),
+                dst=xbmc.translatePath("special://profile/library/video").decode('utf-8'))
             xbmcvfs.exists(path)
 
         # Create the node directory

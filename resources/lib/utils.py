@@ -394,7 +394,7 @@ def passwordsXML():
             line1= (
                 "Input the server name or IP address as indicated in your emby library paths. "
                 'For example, the server name: \\\\SERVER-PC\\path\\ is "SERVER-PC".'))
-        server = dialog.input("Enter the server name or IP address", settings('ipaddress'))
+        server = dialog.input("Enter the server name or IP address")
         if not server:
             return
 
