@@ -172,7 +172,7 @@ class VideoNodes(object):
                 path = "plugin://plugin.video.emby/?id=%s&mode=inprogressepisodes&limit=25"% tagname
             else:
                 path = "library://video/Emby - %s/%s_%s.xml" % (dirname, cleantagname, nodetype)
-            windowpath = "ActivateWindow(Video, %s, return)" % path
+            windowpath = "ActivateWindow(Video,%s,return)" % path
             
             if nodetype == "all":
 
