@@ -277,7 +277,7 @@ class VideoNodes(object):
         nodepath = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
         nodeXML = "%semby_%s.xml" % (nodepath, cleantagname)
         path = "library://video/emby_%s.xml" % (cleantagname)
-        windowpath = "ActivateWindow(Video, %s, return)" % path
+        windowpath = "ActivateWindow(Video,%s,return)" % path
         
         # Create the video node directory
         if not xbmcvfs.exists(nodepath):
