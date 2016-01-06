@@ -817,24 +817,27 @@ def getExtraFanArt():
     
     emby = embyserver.Read_EmbyServer()
     art = artwork.Artwork()
+    embyId = ""
     
     # Get extrafanart for listitem 
-    # this will only be used for skins that actually call the listitem's path + fanart dir... 
+    # will be called by skinhelper script to get the extrafanart
     try:
-        # Only do this if the listitem has actually changed
-        itemPath = xbmc.getInfoLabel("ListItem.FileNameAndPath")
-            
-        if not itemPath:
+        # for tvshows we get the embyid just from the path
+        if xbmc.getCondVisibility("Container.Content(tvshows) | Container.Content(seasons) | Container.Content(episodes)"):
             itemPath = xbmc.getInfoLabel("ListItem.Path")
-        
-        if any([x in itemPath for x in ['tvshows', 'musicvideos', 'movies']]):
-            params = urlparse.parse_qs(itemPath)
-            try:
-                embyId = params['id'][0]
-            except KeyError:
+            if "plugin.video.emby" in itemPath:
                 embyId = itemPath.split("/")[-2]
-            
-            utils.logMsg("EMBY", "Requesting extrafanart for Id: %s" % embyId, 1)
+        else:
+            #for movies we grab the emby id from the params
+            itemPath = xbmc.getInfoLabel("ListItem.FileNameAndPath")
+            if "plugin.video.emby" in itemPath:
+                params = urlparse.parse_qs(itemPath)
+                embyId = params.get('id')
+                if embyId: embyId = embyId[0]
+        
+        if embyId:
+            #only proceed if we actually have a emby id
+            utils.logMsg("EMBY", "Requesting extrafanart for Id: %s" % embyId, 0)
 
             # We need to store the images locally for this to work
             # because of the caching system in xbmc
