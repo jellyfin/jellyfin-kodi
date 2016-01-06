@@ -116,7 +116,7 @@ class VideoNodes(object):
             '4': "inprogress",
             '5': "inprogressepisodes",
             '6': "unwatched",
-            '7': "nextupepisodes",
+            '7': "nextepisodes",
             '8': "sets",
             '9': "genres",
             '10': "random",
@@ -161,7 +161,7 @@ class VideoNodes(object):
                 label = stringid
 
             # Set window properties
-            if nodetype == "nextupepisodes":
+            if nodetype == "nextepisodes":
                 # Custom query
                 path = "plugin://plugin.video.emby/?id=%s&mode=nextup&limit=25" % tagname
             elif kodiversion == 14 and nodetype == "recentepisodes":
@@ -198,7 +198,7 @@ class VideoNodes(object):
 
 
             # Create the root
-            if nodetype == "nextupepisodes" or (kodiversion == 14 and
+            if nodetype == "nextepisodes" or (kodiversion == 14 and
                                         nodetype in ('recentepisodes', 'inprogressepisodes')):
                 # Folder type with plugin path
                 root = self.commonRoot(order=node, label=label, tagname=tagname, roottype=2)
