@@ -50,7 +50,6 @@ class Main:
         modes = {
 
             'reset': utils.reset,
-            'extrafanart': entrypoint.getExtraFanArt(),
             'resetauth': entrypoint.resetAuth,
             'play': entrypoint.doPlayback,
             'passwords': utils.passwordsXML,
