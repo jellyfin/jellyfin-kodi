@@ -51,6 +51,7 @@ class Main:
 
             'reset': utils.reset,
             'resetauth': entrypoint.resetAuth,
+            'extrafanart': entrypoint.getExtraFanArt,
             'play': entrypoint.doPlayback,
             'passwords': utils.passwordsXML,
             'adduser': entrypoint.addUser,
