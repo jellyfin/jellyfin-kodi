@@ -98,7 +98,7 @@ class Items(object):
 
             musicconn = None
 
-            if itemtype in ('MusicAlbum', 'MusicArtist', 'Audio'):
+            if itemtype in ('MusicAlbum', 'MusicArtist', 'AlbumArtist', 'Audio'):
                 if music_enabled:
                     musicconn = utils.kodiSQL('music')
                     musiccursor = musicconn.cursor()
