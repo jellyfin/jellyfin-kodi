@@ -55,6 +55,7 @@ class Service():
 
         utils.window('emby_logLevel', value=str(logLevel))
         utils.window('emby_kodiProfile', value=xbmc.translatePath("special://profile"))
+        utils.window('emby_pluginpath', value=utils.settings('useDirectPaths'))
 
         # Initial logging
         self.logMsg("======== START %s ========" % self.addonName, 0)

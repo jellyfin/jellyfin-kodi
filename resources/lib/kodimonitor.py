@@ -43,6 +43,28 @@ class KodiMonitor(xbmc.Monitor):
         if library == "video":
             utils.window('emby_kodiScan', clear=True)
 
+    def onSettingsChanged(self):
+        # Monitor emby settings
+        currentPath = utils.settings('useDirectPaths')
+        if utils.window('emby_pluginpath') != currentPath:
+            # Plugin path value changed. Offer to reset
+            self.logMsg("Changed to playback mode detected", 1)
+            utils.window('emby_pluginpath', value=currentPath)
+            resp = xbmcgui.Dialog().yesno(
+                                heading="Playback mode change detected",
+                                line1=(
+                                    "Detected the playback mode has changed. The database "
+                                    "needs to be recreated for the change to be applied. "
+                                    "Proceed?"))
+            if resp:
+                utils.reset()
+
+        currentLog = utils.settings('logLevel')
+        if utils.window('emby_logLevel') != currentLog:
+            # The log level changed, set new prop
+            self.logMsg("New log level: %s" % currentLog, 1)
+            utils.window('emby_logLevel', value=currentLog)
+
     def onNotification(self, sender, method, data):
 
         doUtils = self.doUtils

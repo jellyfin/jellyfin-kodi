@@ -44,7 +44,6 @@ class UserClient(threading.Thread):
 
         self.addonName = clientinfo.ClientInfo().getAddonName()
         self.doUtils = downloadutils.DownloadUtils()
-        self.logLevel = int(utils.settings('logLevel'))
         
         threading.Thread.__init__(self)
 
@@ -410,15 +409,6 @@ class UserClient(threading.Thread):
         self.logMsg("----===## Starting UserClient ##===----", 0)
 
         while not monitor.abortRequested():
-
-            # Verify the log level
-            currLogLevel = self.getLogLevel()
-            if self.logLevel != currLogLevel:
-                # Set new log level
-                self.logLevel = currLogLevel
-                utils.window('emby_logLevel', value=str(currLogLevel))
-                self.logMsg("New Log Level: %s" % currLogLevel, 0)
-
 
             status = utils.window('emby_serverStatus')
             if status:
