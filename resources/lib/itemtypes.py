@@ -1879,7 +1879,6 @@ class Music(Items):
     def __init__(self, embycursor, musiccursor):
         
         Items.__init__(self, embycursor, musiccursor)
-        self.musiccursor = musiccursor
 
         self.directstream = utils.settings('streamMusic') == "true"
         self.userid = utils.window('emby_currUser')
@@ -1936,7 +1935,7 @@ class Music(Items):
     def add_updateArtist(self, item, artisttype="MusicArtist"):
         # Process a single artist
         kodiversion = self.kodiversion
-        kodicursor = self.musiccursor
+        kodicursor = self.kodicursor
         emby_db = self.emby_db
         kodi_db = self.kodi_db
         artwork = self.artwork
@@ -2019,7 +2018,7 @@ class Music(Items):
         # Process a single artist
         emby = self.emby
         kodiversion = self.kodiversion
-        kodicursor = self.musiccursor
+        kodicursor = self.kodicursor
         emby_db = self.emby_db
         kodi_db = self.kodi_db
         artwork = self.artwork
@@ -2177,7 +2176,7 @@ class Music(Items):
     def add_updateSong(self, item):
         # Process single song
         kodiversion = self.kodiversion
-        kodicursor = self.musiccursor
+        kodicursor = self.kodicursor
         emby_db = self.emby_db
         kodi_db = self.kodi_db
         artwork = self.artwork
@@ -2426,7 +2425,7 @@ class Music(Items):
     def updateUserdata(self, item):
         # This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
         # Poster with progress bar
-        kodicursor = self.musiccursor
+        kodicursor = self.kodicursor
         emby_db = self.emby_db
         kodi_db = self.kodi_db
         API = api.API(item)
@@ -2465,7 +2464,7 @@ class Music(Items):
     def remove(self, itemid):
         # Remove kodiid, fileid, pathid, emby reference
         emby_db = self.emby_db
-        kodicursor = self.musiccursor
+        kodicursor = self.kodicursor
         artwork = self.artwork
 
         emby_dbitem = emby_db.getItem_byId(itemid)
@@ -2530,7 +2529,7 @@ class Music(Items):
 
     def removeSong(self, kodiid):
 
-        kodicursor = self.musiccursor
+        kodicursor = self.kodicursor
         artwork = self.artwork
 
         artwork.deleteArtwork(kodiid, "song", kodicursor)
@@ -2538,7 +2537,7 @@ class Music(Items):
 
     def removeAlbum(self, kodiid):
 
-        kodicursor = self.musiccursor
+        kodicursor = self.kodicursor
         artwork = self.artwork
 
         artwork.deleteArtwork(kodiid, "album", kodicursor)
@@ -2546,7 +2545,7 @@ class Music(Items):
 
     def removeArtist(self, kodiid):
 
-        kodicursor = self.musiccursor
+        kodicursor = self.kodicursor
         artwork = self.artwork
 
         artwork.deleteArtwork(kodiid, "artist", kodicursor)
