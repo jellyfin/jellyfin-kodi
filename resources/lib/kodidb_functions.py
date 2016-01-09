@@ -852,26 +852,52 @@ class Kodidb_Functions():
         
         if self.kodiversion in (15, 16):
             # Kodi Isengard, Jarvis
-            query = ' '.join((
+            try: 
+                query = ' '.join((
 
-                "UPDATE tag_link",
-                "SET tag_id = ?",
-                "WHERE media_id = ?",
-                "AND media_type = ?",
-                "AND tag_id = ?"
-            ))
-            cursor.execute(query, (newtag, kodiid, mediatype, oldtag,))
+                    "UPDATE tag_link",
+                    "SET tag_id = ?",
+                    "WHERE media_id = ?",
+                    "AND media_type = ?",
+                    "AND tag_id = ?"
+                ))
+                cursor.execute(query, (newtag, kodiid, mediatype, oldtag,))
+            except Exception as e:
+                # The new tag we are going to apply already exists for this item
+                # delete current tag instead
+                self.logMsg("Exception: %s" % e, 1)
+                query = ' '.join((
+
+                    "DELETE FROM tag_link",
+                    "WHERE media_id = ?",
+                    "AND media_type = ?",
+                    "AND tag_id = ?"
+                ))
+                cursor.execute(query, (kodiid, mediatype, oldtag,))
         else:
             # Kodi Helix
-            query = ' '.join((
+            try:
+                query = ' '.join((
 
-                "UPDATE taglinks",
-                "SET idTag = ?",
-                "WHERE idMedia = ?",
-                "AND media_type = ?",
-                "AND idTag = ?"
-            ))
-            cursor.execute(query, (newtag, kodiid, mediatype, oldtag,))
+                    "UPDATE taglinks",
+                    "SET idTag = ?",
+                    "WHERE idMedia = ?",
+                    "AND media_type = ?",
+                    "AND idTag = ?"
+                ))
+                cursor.execute(query, (newtag, kodiid, mediatype, oldtag,))
+            except Exception as e:
+                # The new tag we are going to apply already exists for this item
+                # delete current tag instead
+                self.logMsg("Exception: %s" % e, 1)
+                query = ' '.join((
+
+                    "DELETE FROM taglinks",
+                    "WHERE idMedia = ?",
+                    "AND media_type = ?",
+                    "AND idTag = ?"
+                ))
+                cursor.execute(query, (kodiid, mediatype, oldtag,))
 
     def removeTag(self, kodiid, tagname, mediatype):
 
