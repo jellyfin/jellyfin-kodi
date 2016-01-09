@@ -1,3 +1,8 @@
+version 1.1.72
+- Fix to extrafanart
+- Fix for artists deletion
+- Fix for views
+
 version 1.1.70
 - Include AirsAfterSeason for special episodes ordering
 - Cover art settings - label adjusted. A reset or repair will be required if you change the settings value.
