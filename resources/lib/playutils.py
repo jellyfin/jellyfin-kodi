@@ -36,7 +36,7 @@ class PlayUtils():
         item = self.item
         playurl = None
 
-        if item['MediaSources'][0]['Protocol'] == "Http":
+        if item.get('MediaSources') and item['MediaSources'][0]['Protocol'] == "Http":
             # Only play as http
             self.logMsg("File protocol is http.", 1)
             playurl = self.httpPlay()
@@ -74,7 +74,7 @@ class PlayUtils():
         itemid = item['Id']
         mediatype = item['MediaType']
 
-        if type == "Audio":
+        if mediatype == "Audio":
             playurl = "%s/emby/Audio/%s/stream" % (server, itemid)
         else:
             playurl = "%s/emby/Videos/%s/stream?static=true" % (server, itemid)
