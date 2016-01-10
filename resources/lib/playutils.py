@@ -191,10 +191,10 @@ class PlayUtils():
 
         item = self.item
 
-        if (utils.settings('transcodeH265') == "true" and 
-                item['MediaSources'][0]['Name'].startswith("1080P/H265")):
-            # Avoid H265 1080p
-            self.logMsg("Option to transcode 1080P/H265 enabled.", 1)
+        if (utils.settings('transcodeHEVC') == "true" and
+                item['MediaSources'][0]['Name'].startswith("1080P/HEVC")):
+            # Avoid HEVC(H265) 1080p
+            self.logMsg("Option to transcode 1080P/HEVC enabled.", 1)
             return False
 
         # Requirement: BitRate, supported encoding
