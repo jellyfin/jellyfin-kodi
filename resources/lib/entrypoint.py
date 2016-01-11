@@ -68,6 +68,7 @@ def doMainListing():
                 path = utils.window('Emby.nodes.%s.content' % i)
             label = utils.window('Emby.nodes.%s.title' % i)
             if path:
+                print path
                 addDirectoryItem(label, path)
     
     # some extra entries for settings and stuff. TODO --> localize the labels
@@ -400,6 +401,99 @@ def refreshPlaylist():
             time=1000,
             sound=False)
 
+##### BROWSE EMBY HOMEVIDEOS AND PICTURES #####    
+def BrowseContent(viewname, type="", folderid=None, filter=None):
+    
+    _addon_id   =   int(sys.argv[1])
+    _addon_url  =   sys.argv[0]
+    doUtils = downloadutils.DownloadUtils()
+    emby = embyserver.Read_EmbyServer()
+    art = artwork.Artwork()
+    utils.logMsg("BrowseHomeVideos","viewname: %s - type: %s - folderid: %s - filter: %s" %(viewname, type, folderid, filter),0)
+
+    if type.lower() == "homevideos":
+        xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
+        itemtype = "Video"
+    elif type.lower() == "photos":
+        xbmcplugin.setContent(int(sys.argv[1]), 'pictures')
+        itemtype = "Photo"
+    else:
+        itemtype = ""
+    
+    if not folderid:
+        views = emby.getViews(type)
+        for view in views:
+            if view.get("name") == viewname:
+                folderid = view.get("id")
+                print view
+
+    if folderid:
+        listing = emby.getSection(folderid).get("Items",[])
+        for item in listing:
+            if item.get("Type") == itemtype or item.get("IsFolder") == True:
+                API = api.API(item)
+                itemid = item['Id']
+                title = item.get('Name')
+                li = xbmcgui.ListItem(title)
+
+                premieredate = API.getPremiereDate()
+                genre = API.getGenres()
+                overlay = 0
+                userdata = API.getUserData()
+                seektime = userdata['Resume']
+                if seektime:
+                    li.setProperty("resumetime", seektime)
+                    li.setProperty("totaltime", item.get("RunTimeTicks")/ 10000000.0)
+                
+                played = userdata['Played']
+                if played: overlay = 7
+                else: overlay = 6
+
+                favorite = userdata['Favorite']
+                if favorite: overlay = 5
+                
+                playcount = userdata['PlayCount']
+                if playcount is None:
+                    playcount = 0
+                    
+                rating = item.get('CommunityRating')
+                if not rating: rating = userdata['UserRating']
+
+                # Populate the extradata list and artwork
+                pbutils.PlaybackUtils(item).setArtwork(li)
+                extradata = {
+
+                    'id': itemid,
+                    'rating': rating,
+                    'year': item.get('ProductionYear'),
+                    'premieredate': premieredate,
+                    'genre': genre,
+                    'playcount': str(playcount),
+                    'title': title,
+                    'plot': API.getOverview(),
+                    'Overlay': str(overlay),
+                }
+                li.setInfo('video', infoLabels=extradata)
+                li.setThumbnailImage(art.getAllArtwork(item)['Primary'])
+                li.setIconImage('DefaultTVShows.png')
+                
+                if item.get("IsFolder") == True:
+                    path = "%s?id=%s&mode=browsecontent&type=%s&folderid=%s" % (_addon_url, viewname, type, itemid)
+                    xbmcplugin.addDirectoryItem(handle=_addon_id, url=path, listitem=li, isFolder=True)
+                else:
+                    path = "%s?id=%s&mode=play" % (_addon_url, itemid)
+                    li.setProperty('IsPlayable', 'true')
+                    
+                    mediastreams = API.getMediaStreams()
+                    if mediastreams:
+                        for key, value in mediastreams.iteritems():
+                            if value: li.addStreamInfo(key, value[0])
+                    
+                    xbmcplugin.addDirectoryItem(handle=_addon_id, url=path, listitem=li)
+
+
+    xbmcplugin.endOfDirectory(handle=int(sys.argv[1]))
+            
 ##### BROWSE EMBY CHANNELS #####    
 def BrowseChannels(itemid, folderid=None):
     

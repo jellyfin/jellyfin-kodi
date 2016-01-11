@@ -61,7 +61,7 @@ def getSongTags(file):
     comment = ""
     
     isTemp,filename = getRealFileName(file)
-    logMsg( "getting song ID3 tags for " + filename, 0)
+    logMsg( "getting song ID3 tags for " + filename)
     
     try:
         if filename.lower().endswith(".flac"):
@@ -82,7 +82,7 @@ def getSongTags(file):
                     #POPM rating is 0-255 and needs to be converted to 0-5 range
                     if rating > 5: rating = (rating / 255) * 5
         else:
-            logMsg( "Not supported fileformat or unable to access file: %s" %(filename), 0)
+            logMsg( "Not supported fileformat or unable to access file: %s" %(filename))
         rating = int(round(rating,0))
     
     except Exception as e:
@@ -98,7 +98,7 @@ def updateRatingToFile(rating, file):
     #update the rating from Emby to the file
     
     isTemp,filename = getRealFileName(file)
-    logMsg( "setting song rating: %s for filename: %s" %(rating,filename), 0)
+    logMsg( "setting song rating: %s for filename: %s" %(rating,filename))
     
     if not filename:
         return
@@ -115,7 +115,7 @@ def updateRatingToFile(rating, file):
             audio.add(id3.POPM(email="Windows Media Player 9 Series", rating=calcrating, count=1))
             audio.save()
         else:
-            logMsg( "Not supported fileformat: %s" %(filename), 0)
+            logMsg( "Not supported fileformat: %s" %(filename))
             
         #remove tempfile if needed....
         if isTemp:

@@ -640,8 +640,8 @@ class Kodidb_Functions():
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                     '''
                 )
-                cursor.execute(query, (fileid, 0, videotrack['videocodec'],
-                    videotrack['aspectratio'], videotrack['width'], videotrack['height'],
+                cursor.execute(query, (fileid, 0, videotrack['codec'],
+                    videotrack['aspect'], videotrack['width'], videotrack['height'],
                     runtime ,videotrack['video3DFormat']))
             
             # Audio details
@@ -654,8 +654,8 @@ class Kodidb_Functions():
                     VALUES (?, ?, ?, ?, ?)
                     '''
                 )
-                cursor.execute(query, (fileid, 1, audiotrack['audiocodec'],
-                    audiotrack['channels'], audiotrack['audiolanguage']))
+                cursor.execute(query, (fileid, 1, audiotrack['codec'],
+                    audiotrack['channels'], audiotrack['language']))
 
             # Subtitles details
             for subtitletrack in streamdetails['subtitle']:

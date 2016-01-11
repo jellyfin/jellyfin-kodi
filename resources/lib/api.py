@@ -122,6 +122,7 @@ class API():
             media_streams = item['MediaSources'][0]['MediaStreams']
 
         except KeyError:
+            if not item.get("MediaStreams"): return None
             media_streams = item['MediaStreams']
 
         for media_stream in media_streams:
@@ -134,11 +135,11 @@ class API():
                 # Height, Width, Codec, AspectRatio, AspectFloat, 3D
                 track = {
 
-                    'videocodec': codec,
+                    'codec': codec,
                     'height': media_stream.get('Height'),
                     'width': media_stream.get('Width'),
                     'video3DFormat': item.get('Video3DFormat'),
-                    'aspectratio': 1.85
+                    'aspect': 1.85
                 }
 
                 try:
@@ -148,47 +149,50 @@ class API():
 
                 # Sort codec vs container/profile
                 if "msmpeg4" in codec:
-                    track['videocodec'] = "divx"
+                    track['codec'] = "divx"
                 elif "mpeg4" in codec:
                     if "simple profile" in profile or not profile:
-                        track['videocodec'] = "xvid"
+                        track['codec'] = "xvid"
                 elif "h264" in codec:
                     if container in ("mp4", "mov", "m4v"):
-                        track['videocodec'] = "avc1"
+                        track['codec'] = "avc1"
 
                 # Aspect ratio
                 if item.get('AspectRatio'):
                     # Metadata AR
-                    aspectratio = item['AspectRatio']
+                    aspect = item['AspectRatio']
                 else: # File AR
-                    aspectratio = media_stream.get('AspectRatio', "0")
+                    aspect = media_stream.get('AspectRatio', "0")
 
                 try:
-                    aspectwidth, aspectheight = aspectratio.split(':')
-                    track['aspectratio'] = round(float(aspectwidth) / float(aspectheight), 6)
+                    aspectwidth, aspectheight = aspect.split(':')
+                    track['aspect'] = round(float(aspectwidth) / float(aspectheight), 6)
                 
                 except (ValueError, ZeroDivisionError):
                     width = track.get('width')
                     height = track.get('height')
 
                     if width and height:
-                        track['aspectratio'] = round(float(width / height), 6)
+                        track['aspect'] = round(float(width / height), 6)
                     else:
-                        track['aspectratio'] = 1.85
-
+                        track['aspect'] = 1.85
+                
+                if item.get("RunTimeTicks"):
+                    track['duration'] = item.get("RunTimeTicks") / 10000000.0
+                
                 videotracks.append(track)
 
             elif stream_type == "Audio":
                 # Codec, Channels, language
                 track = {
                     
-                    'audiocodec': codec,
+                    'codec': codec,
                     'channels': media_stream.get('Channels'),
-                    'audiolanguage': media_stream.get('Language')
+                    'language': media_stream.get('Language')
                 }
 
                 if "dca" in codec and "dts-hd ma" in profile:
-                    track['audiocodec'] = "dtshd_ma"
+                    track['codec'] = "dtshd_ma"
 
                 audiotracks.append(track)
 

@@ -56,10 +56,6 @@ class VideoNodes(object):
 
         kodiversion = self.kodiversion
 
-        if mediatype == "homevideos":
-            # Treat homevideos as movies
-            mediatype = "movies"
-
         cleantagname = utils.normalize_nodes(tagname.encode('utf-8'))
         if viewtype == "mixed":
             dirname = "%s - %s" % (cleantagname, mediatype)
@@ -78,7 +74,7 @@ class VideoNodes(object):
             xbmcvfs.exists(path)
 
         # Create the node directory
-        if not xbmcvfs.exists(nodepath):
+        if not xbmcvfs.exists(nodepath) and not mediatype=="photos":
             # We need to copy over the default items
             xbmcvfs.mkdirs(nodepath)
         else:
@@ -99,14 +95,18 @@ class VideoNodes(object):
             if utils.window('Emby.nodes.%s.index' % i) == path:
                 return
 
+        if mediatype=="photos":
+            path = "plugin://plugin.video.emby/?id=%s&mode=browsecontent&type=photos&filter=index" % tagname
+            
         utils.window('Emby.nodes.%s.index' % indexnumber, value=path)
+        
         # Root
-        root = self.commonRoot(order=0, label=tagname, tagname=tagname, roottype=0)
-        try:
-            utils.indent(root)
-        except: pass
-        etree.ElementTree(root).write(nodeXML)
-
+        if not mediatype=="photos":
+            root = self.commonRoot(order=0, label=tagname, tagname=tagname, roottype=0)
+            try:
+                utils.indent(root)
+            except: pass
+            etree.ElementTree(root).write(nodeXML)
 
         nodetypes = {
 
@@ -144,6 +144,14 @@ class VideoNodes(object):
                 '9': 135,
                 '10': 30229,
                 '11': 30230},
+                
+            'homevideos': {
+                '1': tagname,
+                '2': 30170},
+                
+            'photos': {
+                '1': tagname,
+                '2': 30170},
         }
 
         nodes = mediatypes[mediatype]
@@ -161,7 +169,19 @@ class VideoNodes(object):
                 label = stringid
 
             # Set window properties
-            if nodetype == "nextepisodes":
+            if mediatype == "homevideos" and nodetype == "all":
+                # Custom query
+                path = "plugin://plugin.video.emby/?id=%s&mode=browsecontent&type=homevideos" % tagname
+            elif mediatype == "homevideos" and nodetype == "recent":
+                # Custom query
+                path = "plugin://plugin.video.emby/?id=%s&mode=browsecontent&type=homevideos&filter=recent" % tagname
+            elif mediatype == "photos" and nodetype == "all":
+                # Custom query
+                path = "plugin://plugin.video.emby/?id=%s&mode=browsecontent&type=photos" % tagname
+            elif mediatype == "photos" and nodetype == "recent":
+                # Custom query
+                path = "plugin://plugin.video.emby/?id=%s&mode=browsecontent&type=photos&filter=recent" % tagname
+            elif nodetype == "nextepisodes":
                 # Custom query
                 path = "plugin://plugin.video.emby/?id=%s&mode=nextup&limit=25" % tagname
             elif kodiversion == 14 and nodetype == "recentepisodes":
@@ -172,7 +192,11 @@ class VideoNodes(object):
                 path = "plugin://plugin.video.emby/?id=%s&mode=inprogressepisodes&limit=25"% tagname
             else:
                 path = "library://video/Emby - %s/%s_%s.xml" % (dirname, cleantagname, nodetype)
-            windowpath = "ActivateWindow(Video,%s,return)" % path
+            
+            if mediatype == "photos":
+                windowpath = "ActivateWindow(Pictures,%s,return)" % path
+            else:
+                windowpath = "ActivateWindow(Video,%s,return)" % path
             
             if nodetype == "all":
 
@@ -192,14 +216,17 @@ class VideoNodes(object):
                 utils.window('%s.path' % embynode, value=windowpath)
                 utils.window('%s.content' % embynode, value=path)
 
+            if mediatype=="photos":
+                #for photos we do not create a node in videos but we do want the window props to be created
+                #todo: add our photos nodes to kodi picture sources somehow
+                continue
+            
             if xbmcvfs.exists(nodeXML):
                 # Don't recreate xml if already exists
                 continue
 
-
             # Create the root
-            if nodetype == "nextepisodes" or (kodiversion == 14 and
-                                        nodetype in ('recentepisodes', 'inprogressepisodes')):
+            if nodetype == "nextepisodes" or (kodiversion == 14 and nodetype in ('recentepisodes', 'inprogressepisodes')) or mediatype=="homevideos":
                 # Folder type with plugin path
                 root = self.commonRoot(order=node, label=label, tagname=tagname, roottype=2)
                 etree.SubElement(root, 'path').text = path

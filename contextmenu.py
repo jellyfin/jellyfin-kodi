@@ -41,7 +41,7 @@ if __name__ == '__main__':
     if not itemtype and xbmc.getCondVisibility("Container.Content(artists)"): itemtype = "artist"
     if not itemtype and xbmc.getCondVisibility("Container.Content(songs)"): itemtype = "song"
     
-    logMsg("Contextmenu opened for itemid: %s  - itemtype: %s" %(itemid,itemtype),0)
+    logMsg("Contextmenu opened for itemid: %s  - itemtype: %s" %(itemid,itemtype))
     
     userid = utils.window('emby_currUser')
     server = utils.window('emby_server%s' % userid)

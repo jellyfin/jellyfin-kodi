@@ -230,8 +230,7 @@ class LibrarySync(threading.Thread):
 
             'movies': self.movies,
             'musicvideos': self.musicvideos,
-            'tvshows': self.tvshows,
-            'homevideos': self.homevideos
+            'tvshows': self.tvshows
         }
         for itemtype in process:
             startTime = datetime.now()
@@ -343,7 +342,7 @@ class LibrarySync(threading.Thread):
         totalnodes = 0
 
         # Set views for supported media type
-        mediatypes = ['movies', 'tvshows', 'musicvideos', 'homevideos', 'music']
+        mediatypes = ['movies', 'tvshows', 'musicvideos', 'homevideos', 'music', 'photos']
         for mediatype in mediatypes:
 
             # Get media folders from server
@@ -446,7 +445,6 @@ class LibrarySync(threading.Thread):
             totalnodes += 1
             # Save total
             utils.window('Emby.nodes.total', str(totalnodes))
-
 
     def movies(self, embycursor, kodicursor, pdialog, compare=False):
         # Get movies from emby
@@ -707,99 +705,6 @@ class LibrarySync(threading.Thread):
             else:
                 self.logMsg("MusicVideos compare finished.", 1)
 
-        return True
-
-    def homevideos(self, embycursor, kodicursor, pdialog, compare=False):
-        # Get homevideos from emby
-        emby = self.emby
-        emby_db = embydb.Embydb_Functions(embycursor)
-        hvideos = itemtypes.HomeVideos(embycursor, kodicursor)
-
-        views = emby_db.getView_byType('homevideos')
-        self.logMsg("Media folders: %s" % views, 1)
-
-        if compare:
-            # Pull the list of homevideos in Kodi
-            try:
-                all_kodihvideos = dict(emby_db.getChecksum('Video'))
-            except ValueError:
-                all_kodihvideos = {}
-
-            all_embyhvideosIds = set()
-            updatelist = []
-
-        for view in views:
-            
-            if self.shouldStop():
-                return False
-
-            # Get items per view
-            viewId = view['id']
-            viewName = view['name']
-
-            if pdialog:
-                pdialog.update(
-                        heading="Emby for Kodi",
-                        message="Gathering homevideos from view: %s..." % viewName)
-            
-            all_embyhvideos = emby.getHomeVideos(viewId)
-
-            if compare:
-                # Manual sync
-                if pdialog:
-                    pdialog.update(
-                            heading="Emby for Kodi",
-                            message="Comparing homevideos from view: %s..." % viewName)
-
-                for embyhvideo in all_embyhvideos['Items']:
-
-                    if self.shouldStop():
-                        return False
-
-                    API = api.API(embyhvideo)
-                    itemid = embyhvideo['Id']
-                    all_embyhvideosIds.add(itemid)
-
-                    
-                    if all_kodihvideos.get(itemid) != API.getChecksum():
-                        # Only update if homemovie is not in Kodi or checksum is different
-                        updatelist.append(itemid)
-
-                self.logMsg("HomeVideos to update for %s: %s" % (viewName, updatelist), 1)
-                embyhvideos = emby.getFullItems(updatelist)
-                total = len(updatelist)
-                del updatelist[:]
-            else:
-                total = all_embyhvideos['TotalRecordCount']
-                embyhvideos = all_embyhvideos['Items']
-
-            if pdialog:
-                pdialog.update(heading="Processing %s / %s items" % (viewName, total))
-
-            count = 0
-            for embyhvideo in embyhvideos:
-                # Process individual homemovies
-                if self.shouldStop():
-                    return False
-                
-                title = embyhvideo['Name']
-                if pdialog:
-                    percentage = int((float(count) / float(total))*100)
-                    pdialog.update(percentage, message=title)
-                    count += 1
-                hvideos.add_update(embyhvideo, viewName, viewId)
-        else:
-            self.logMsg("HomeVideos finished.", 2)
-
-        ##### PROCESS DELETES #####
-        if compare:
-            # Manual sync, process deletes
-            for kodihvideo in all_kodihvideos:
-                if kodihvideo not in all_embyhvideosIds:
-                    hvideos.remove(kodihvideo)
-            else:
-                self.logMsg("HomeVideos compare finished.", 1)
-        
         return True
 
     def tvshows(self, embycursor, kodicursor, pdialog, compare=False):
