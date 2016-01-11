@@ -25,6 +25,7 @@ class API():
     def getUserData(self):
         # Default
         favorite = False
+        likes = None
         playcount = None
         played = False
         lastPlayedDate = None
@@ -403,4 +404,4 @@ class API():
             url = "{server}/emby/Users/{UserId}/Items/%s/Rating?format=json" % itemid
             doUtils.downloadUrl(url, type="DELETE")
 
-        self.logMsg( "updateUserRating on embyserver for embyId: %s - like: %s - favourite: %s - deletelike: %s" %(itemid, like, favourite, deletelike), 0)
+        self.logMsg( "updateUserRating on embyserver for embyId: %s - like: %s - favourite: %s - deletelike: %s" %(itemid, like, favourite, deletelike))
