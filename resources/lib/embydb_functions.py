@@ -128,10 +128,11 @@ class Embydb_Functions():
             "FROM emby",
             "WHERE emby_id = ?"
         ))
-        embycursor.execute(query, (embyid,))
-        item = embycursor.fetchone()
-
-        return item
+        try:
+            embycursor.execute(query, (embyid,))
+            item = embycursor.fetchone()
+            return item
+        except: return None
 
     def getItem_byView(self, mediafolderid):
 
@@ -292,3 +293,4 @@ class Embydb_Functions():
 
         query = "DELETE FROM emby WHERE emby_id = ?"
         self.embycursor.execute(query, (embyid,))
+        

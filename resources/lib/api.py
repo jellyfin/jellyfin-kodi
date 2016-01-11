@@ -29,7 +29,7 @@ class API():
         played = False
         lastPlayedDate = None
         resume = 0
-        rating = 0
+        userrating = 0
 
         try:
             userdata = self.item['UserData']
@@ -40,15 +40,15 @@ class API():
         else:
             favorite = userdata['IsFavorite']
             likes = userdata.get('Likes')
-            # Rating for album and songs
+            # Userrating is based on likes and favourite
             if favorite:
-                rating = 5
+                userrating = 5
             elif likes:
-                rating = 3
+                userrating = 3
             elif likes == False:
-                rating = 1
+                userrating = 0
             else:
-                rating = 0
+                userrating = 1
 
             lastPlayedDate = userdata.get('LastPlayedDate')
             if lastPlayedDate:
@@ -71,11 +71,12 @@ class API():
         return {
 
             'Favorite': favorite,
+            'Likes': likes,
             'PlayCount': playcount,
             'Played': played,
             'LastPlayedDate': lastPlayedDate,
             'Resume': resume,
-            'Rating': rating
+            'UserRating': userrating
         }
 
     def getPeople(self):
@@ -259,11 +260,12 @@ class API():
         item = self.item
         userdata = item['UserData']
 
-        checksum = "%s%s%s%s%s%s" % (
+        checksum = "%s%s%s%s%s%s%s" % (
             
             item['Etag'], 
             userdata['Played'],
             userdata['IsFavorite'],
+            userdata.get('Likes',''),
             userdata['PlaybackPositionTicks'],
             userdata.get('UnplayedItemCount', ""),
             userdata.get('LastPlayedDate', "")
@@ -378,3 +380,27 @@ class API():
                 filepath = filepath.replace("/", "\\")
 
         return filepath
+    
+    def updateUserRating(self, itemid, like=None, favourite=None, deletelike=False):
+        #updates the userrating to Emby
+        import downloadutils
+        doUtils = downloadutils.DownloadUtils()
+        
+        if favourite != None and favourite==True:
+            url = "{server}/emby/Users/{UserId}/FavoriteItems/%s?format=json" % itemid
+            doUtils.downloadUrl(url, type="POST")
+        elif favourite != None and favourite==False:
+            url = "{server}/emby/Users/{UserId}/FavoriteItems/%s?format=json" % itemid
+            doUtils.downloadUrl(url, type="DELETE")
+            
+        if not deletelike and like != None and like==True:
+            url = "{server}/emby/Users/{UserId}/Items/%s/Rating?Likes=true&format=json" % itemid
+            doUtils.downloadUrl(url, type="POST")
+        if not deletelike and like != None and like==False:
+            url = "{server}/emby/Users/{UserId}/Items/%s/Rating?Likes=false&format=json" % itemid
+            doUtils.downloadUrl(url, type="POST")
+        if deletelike:
+            url = "{server}/emby/Users/{UserId}/Items/%s/Rating?format=json" % itemid
+            doUtils.downloadUrl(url, type="DELETE")
+
+        self.logMsg( "updateUserRating on embyserver for embyId: %s - like: %s - favourite: %s - deletelike: %s" %(itemid, like, favourite, deletelike), 0)

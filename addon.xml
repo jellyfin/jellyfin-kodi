@@ -16,6 +16,13 @@
   </extension>
   <extension point="xbmc.service" library="service.py" start="login">
   </extension>
+  <extension point="kodi.context.item" library="contextmenu.py">
+		<item>
+			<label>30401</label>
+            <description>Settings for the Emby Server</description>
+            <visible>!IsEmpty(ListItem.DBID)</visible>
+		</item>
+	</extension>
   <extension point="xbmc.addon.metadata">
     <platform>all</platform>
     <language>en</language>

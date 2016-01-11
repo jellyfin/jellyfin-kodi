@@ -18,7 +18,7 @@ import utils
 import embydb_functions as embydb
 import kodidb_functions as kodidb
 import read_embyserver as embyserver
-
+import musicutils as musicutils
 ##################################################################################################
 
 
@@ -1931,7 +1931,6 @@ class Music(Items):
             if not pdialog and self.contentmsg:
                 self.contentPop(title)
 
-
     def add_updateArtist(self, item, artisttype="MusicArtist"):
         # Process a single artist
         kodiversion = self.kodiversion
@@ -2045,7 +2044,7 @@ class Music(Items):
         genres = item.get('Genres')
         genre = " / ".join(genres)
         bio = API.getOverview()
-        rating = userdata['Rating']
+        rating = userdata['UserRating']
         artists = item['AlbumArtists']
         if not artists:
             artists = item['ArtistItems']
@@ -2213,11 +2212,18 @@ class Music(Items):
         else:
             track = disc*2**16 + tracknumber
         year = item.get('ProductionYear')
-        bio = API.getOverview()
         duration = API.getRuntime()
-        rating = userdata['Rating']
-
-
+        
+        #the server only returns the rating based on like/love and not the actual rating from the song
+        rating = userdata['UserRating']
+        
+        #the server doesn't support comment on songs so this will always be empty
+        comment = API.getOverview()
+        
+        #if enabled, try to get the rating and comment value from the file itself
+        if not self.directstream:
+            rating, comment = self.getSongRatingAndComment(itemid, rating, API)
+        
         ##### GET THE FILE AND PATH #####
         if self.directstream:
             path = "%s/emby/Audio/%s/" % (self.server, itemid)
@@ -2264,11 +2270,11 @@ class Music(Items):
                 "UPDATE song",
                 "SET idAlbum = ?, strArtists = ?, strGenres = ?, strTitle = ?, iTrack = ?,",
                     "iDuration = ?, iYear = ?, strFilename = ?, iTimesPlayed = ?, lastplayed = ?,",
-                    "rating = ?",
+                    "rating = ?, comment = ?",
                 "WHERE idSong = ?"
             ))
             kodicursor.execute(query, (albumid, artists, genre, title, track, duration, year,
-                filename, playcount, dateplayed, rating, songid))
+                filename, playcount, dateplayed, rating, comment, songid))
 
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
@@ -2435,7 +2441,7 @@ class Music(Items):
         checksum = API.getChecksum()
         userdata = API.getUserData()
         runtime = API.getRuntime()
-        rating = userdata['Rating']
+        rating = userdata['UserRating']
 
         # Get Kodi information
         emby_dbitem = emby_db.getItem_byId(itemid)
@@ -2450,6 +2456,7 @@ class Music(Items):
             # Process playstates
             playcount = userdata['PlayCount']
             dateplayed = userdata['LastPlayedDate']
+            rating, comment = self.getSongRatingAndComment(itemid, rating, API)
             
             query = "UPDATE song SET iTimesPlayed = ?, lastplayed = ?, rating = ? WHERE idSong = ?"
             kodicursor.execute(query, (playcount, dateplayed, rating, kodiid))
@@ -2461,6 +2468,77 @@ class Music(Items):
 
         emby_db.updateReference(itemid, checksum)
 
+    def getSongRatingAndComment(self, embyid, emby_rating, API):
+        previous_values = None
+        filename = API.getFilePath()
+        rating = 0
+        emby_rating = int(round(emby_rating,0))
+        file_rating, comment = musicutils.getSongTags(filename)
+        
+        currentvalue = None
+        kodiid = self.emby_db.getItem_byId(embyid)[0]
+        query = ' '.join(("SELECT rating", "FROM song", "WHERE idSong = ?" ))
+        self.kodicursor.execute(query, (kodiid,))
+        currentvalue = int(round(float(self.kodicursor.fetchone()[0]),0))
+        
+        #only proceed if we actually have a rating from the file
+        if file_rating == None and currentvalue:
+            return (currentvalue, comment)
+        elif file_rating == None and not currentvalue:
+            return (emby_rating, comment)
+        
+        file_rating = int(round(file_rating,0))
+        self.logMsg("getSongRatingAndComment --> embyid: %s - emby_rating: %s - file_rating: %s - current rating in kodidb: %s" %(embyid, emby_rating, file_rating, currentvalue))
+        
+        updateFileRating = False
+        updateEmbyRating = False
+
+        if currentvalue != None:
+            # we need to translate the emby values...
+            if emby_rating == 1 and currentvalue == 2:
+                emby_rating = 2
+            if emby_rating == 3 and currentvalue == 4:
+                emby_rating = 4
+                
+            if (emby_rating == file_rating) and (file_rating != currentvalue):
+                #the rating has been updated from kodi itself, update change to both emby ands file
+                rating = currentvalue
+                updateFileRating = True
+                updateEmbyRating = True
+            elif (emby_rating != currentvalue) and (file_rating == currentvalue):
+                #emby rating changed - update the file
+                rating = emby_rating
+                updateFileRating = True  
+            elif (file_rating != currentvalue) and (emby_rating == currentvalue):
+                #file rating was updated, sync change to emby
+                rating = file_rating
+                updateEmbyRating = True
+            elif (emby_rating != currentvalue) and (file_rating != currentvalue):
+                #both ratings have changed (corner case) - the highest rating wins...
+                if emby_rating > file_rating:
+                    rating = emby_rating
+                    updateFileRating = True
+                else:
+                    rating = file_rating
+                    updateEmbyRating = True
+            else:
+                #nothing has changed, just return the current value
+                rating = currentvalue
+        else:      
+            # no rating yet in DB, always prefer file details...
+            rating = file_rating
+            updateEmbyRating = True
+            
+        if updateFileRating:
+            musicutils.updateRatingToFile(rating, filename)
+            
+        if updateEmbyRating:
+            # sync details to emby server. Translation needed between ID3 rating and emby likes/favourites:
+            like, favourite, deletelike = musicutils.getEmbyRatingFromKodiRating(rating)
+            API.updateUserRating(embyid, like, favourite, deletelike)
+        
+        return (rating, comment)
+        
     def remove(self, itemid):
         # Remove kodiid, fileid, pathid, emby reference
         emby_db = self.emby_db
