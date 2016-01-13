@@ -1122,6 +1122,7 @@ class LibrarySync(threading.Thread):
         try:
             self.run_internal()
         except Exception as e:
+            utils.window('emby_dbScan', clear=True)
             xbmcgui.Dialog().ok(
                         heading="Emby for Kodi",
                         line1=(
