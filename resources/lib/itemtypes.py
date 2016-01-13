@@ -195,11 +195,6 @@ class Items(object):
                             count += 1
 
                         actions[process](item)
-                    else:
-                        if itemtype == "Movie" and process == "update":
-                            # Refresh boxsets
-                            boxsets = self.emby.getBoxset()
-                            items_process.added_boxset(boxsets['Items'], pdialog)
 
 
             if musicconn is not None:
@@ -237,9 +232,6 @@ class Movies(Items):
             self.add_update(movie)
             if not pdialog and self.contentmsg:
                 self.contentPop(title)
-        # Refresh boxsets
-        boxsets = self.emby.getBoxset()
-        self.added_boxset(boxsets['Items'], pdialog)
 
     def added_boxset(self, items, pdialog):
 
