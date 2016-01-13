@@ -428,26 +428,27 @@ def BrowseContent(viewname, type="", folderid=None, filter=""):
         
         #get the actual listing
         if filter == "recent":
-            listing = emby.getFilteredSection("", itemtype=itemtype.split(",")[0], sortby="DateCreated", recursive=True, limit=25, sortorder="Descending").get("Items",[])
+            listing = emby.getFilteredSection("", itemtype=itemtype.split(",")[0], sortby="DateCreated", recursive=True, limit=25, sortorder="Descending")
         elif filter == "random":
-            listing = emby.getFilteredSection("", itemtype=itemtype.split(",")[0], sortby="Random", recursive=True, limit=150, sortorder="Descending").get("Items",[])
+            listing = emby.getFilteredSection("", itemtype=itemtype.split(",")[0], sortby="Random", recursive=True, limit=150, sortorder="Descending")
         elif filter == "recommended":
-            listing = emby.getFilteredSection("", itemtype=itemtype.split(",")[0], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter="IsFavorite").get("Items",[])
+            listing = emby.getFilteredSection("", itemtype=itemtype.split(",")[0], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter="IsFavorite")
         elif filter == "sets":
-            listing = emby.getFilteredSection("", itemtype=itemtype.split(",")[1], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter="IsFavorite").get("Items",[])
+            listing = emby.getFilteredSection("", itemtype=itemtype.split(",")[1], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter="IsFavorite")
         else:
-            listing = emby.getFilteredSection(folderid, itemtype=itemtype, recursive=False).get("Items",[])
+            listing = emby.getFilteredSection(folderid, itemtype=itemtype, recursive=False)
         
         #process the listing
-        for item in listing:
-            li = createListItemFromEmbyItem(item)
-            if item.get("IsFolder") == True:
-                #for folders we add an additional browse request, passing the folderId
-                path = "%s?id=%s&mode=browsecontent&type=%s&folderid=%s" % (sys.argv[0], viewname, type, item.get("Id"))
-                xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=path, listitem=li, isFolder=True)
-            else:
-                #playable item, set plugin path and mediastreams
-                xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=li.getProperty("path"), listitem=li)
+        if listing:
+            for item in listing.get("Items"):
+                li = createListItemFromEmbyItem(item)
+                if item.get("IsFolder") == True:
+                    #for folders we add an additional browse request, passing the folderId
+                    path = "%s?id=%s&mode=browsecontent&type=%s&folderid=%s" % (sys.argv[0], viewname, type, item.get("Id"))
+                    xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=path, listitem=li, isFolder=True)
+                else:
+                    #playable item, set plugin path and mediastreams
+                    xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=li.getProperty("path"), listitem=li)
 
 
     xbmcplugin.endOfDirectory(handle=int(sys.argv[1]))
@@ -479,14 +480,16 @@ def createListItemFromEmbyItem(item):
     
     allart = art.getAllArtwork(item)
     
-    if item["Type"] in ["Photo","PhotoAlbum"]:
+    if item["Type"] is "Photo":
         #listitem setup for pictures...
         img_path = allart.get('Primary')
         li.setProperty("path",img_path)
-        picture = doUtils.downloadUrl("{server}/Items/%s/Images" %itemid)[0]
-        if picture.get("Width") > picture.get("Height"):
-            li.setArt( {"fanart":  img_path}) #add image as fanart for use with skinhelper auto thumb/backgrund creation
-        li.setInfo('pictures', infoLabels={ "picturepath": img_path, "date": premieredate, "size": picture.get("Size"), "exif:width": str(picture.get("Width")), "exif:height": str(picture.get("Height")), "title": "blaat" })
+        picture = doUtils.downloadUrl("{server}/Items/%s/Images" %itemid)
+        if picture:
+            picture = picture[0]
+            if picture.get("Width") > picture.get("Height"):
+                li.setArt( {"fanart":  img_path}) #add image as fanart for use with skinhelper auto thumb/backgrund creation
+            li.setInfo('pictures', infoLabels={ "picturepath": img_path, "date": premieredate, "size": picture.get("Size"), "exif:width": str(picture.get("Width")), "exif:height": str(picture.get("Height")), "title": "blaat" })
         li.setThumbnailImage(img_path)
         li.setIconImage('DefaultPicture.png')
     else:

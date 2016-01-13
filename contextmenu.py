@@ -82,6 +82,9 @@ if __name__ == '__main__':
             #Set custom song rating
             options.append(utils.language(30407))
         
+        #delete item
+        options.append(utils.language(30409))
+        
         #addon settings
         options.append(utils.language(30408))
         
@@ -119,4 +122,14 @@ if __name__ == '__main__':
             if options[ret] == utils.language(30408):
                 #Open addon settings
                 xbmc.executebuiltin("Addon.OpenSettings(plugin.video.emby)")
-
+                
+            if options[ret] == utils.language(30409):
+                #delete item from the server
+                if xbmcgui.Dialog().yesno("Do you really want to delete this item ?", "This will delete the item from the server and the file(s) from disk!"):
+                    import downloadutils
+                    doUtils = downloadutils.DownloadUtils()
+                    url = "{server}/emby/Items/%s?format=json" % embyid
+                    doUtils.downloadUrl(url, type="DELETE")
+            
+            xbmc.sleep(500)
+            xbmc.executebuiltin("Container.Update")
