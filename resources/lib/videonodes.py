@@ -120,11 +120,12 @@ class VideoNodes(object):
             '8': "sets",
             '9': "genres",
             '10': "random",
-            '11': "recommended"
+            '11': "recommended",
         }
         mediatypes = {
             # label according to nodetype per mediatype
-            'movies': {
+            'movies': 
+                {
                 '1': tagname,
                 '2': 30174,
                 '4': 30177,
@@ -132,9 +133,11 @@ class VideoNodes(object):
                 '8': 20434,
                 '9': 135,
                 '10': 30229,
-                '11': 30230},
+                '11': 30230
+                },
 
-            'tvshows': {
+            'tvshows': 
+                {
                 '1': tagname,
                 '2': 30170,
                 '3': 30175,
@@ -143,15 +146,23 @@ class VideoNodes(object):
                 '7': 30179,
                 '9': 135,
                 '10': 30229,
-                '11': 30230},
+                '11': 30230
+                },
                 
-            'homevideos': {
+            'homevideos': 
+                {
                 '1': tagname,
-                '2': 30170},
+                '2': 30251,
+                '11': 30253
+                },
                 
-            'photos': {
+            'photos': 
+                {
                 '1': tagname,
-                '2': 30170},
+                '2': 30252,
+                '8': 30255,
+                '11': 30254
+                },
         }
 
         nodes = mediatypes[mediatype]
@@ -169,18 +180,12 @@ class VideoNodes(object):
                 label = stringid
 
             # Set window properties
-            if mediatype == "homevideos" and nodetype == "all":
+            if (mediatype == "homevideos" or mediatype == "photos") and nodetype == "all":
                 # Custom query
-                path = "plugin://plugin.video.emby/?id=%s&mode=browsecontent&type=homevideos" % tagname
-            elif mediatype == "homevideos" and nodetype == "recent":
+                path = "plugin://plugin.video.emby/?id=%s&mode=browsecontent&type=%s" %(tagname,mediatype)
+            elif (mediatype == "homevideos" or mediatype == "photos"):
                 # Custom query
-                path = "plugin://plugin.video.emby/?id=%s&mode=browsecontent&type=homevideos&filter=recent" % tagname
-            elif mediatype == "photos" and nodetype == "all":
-                # Custom query
-                path = "plugin://plugin.video.emby/?id=%s&mode=browsecontent&type=photos" % tagname
-            elif mediatype == "photos" and nodetype == "recent":
-                # Custom query
-                path = "plugin://plugin.video.emby/?id=%s&mode=browsecontent&type=photos&filter=recent" % tagname
+                path = "plugin://plugin.video.emby/?id=%s&mode=browsecontent&type=%s&filter=%s" %(tagname,mediatype,nodetype)
             elif nodetype == "nextepisodes":
                 # Custom query
                 path = "plugin://plugin.video.emby/?id=%s&mode=nextup&limit=25" % tagname

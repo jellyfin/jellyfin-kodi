@@ -25,6 +25,7 @@ import playbackutils as pbutils
 import playutils
 import api
 
+
 #################################################################################################
 
 
@@ -56,7 +57,6 @@ def addDirectoryItem(label, path, folder=True):
     xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=path, listitem=li, isFolder=folder)
 
 def doMainListing():
-    
     xbmcplugin.setContent(int(sys.argv[1]), 'files')    
     # Get emby nodes from the window props
     embyprops = utils.window('Emby.nodes.total')
@@ -67,8 +67,8 @@ def doMainListing():
             if not path:
                 path = utils.window('Emby.nodes.%s.content' % i)
             label = utils.window('Emby.nodes.%s.title' % i)
-            if path:
-                print path
+            type = utils.window('Emby.nodes.%s.type' % i)
+            if path and ((xbmc.getCondVisibility("Window.IsActive(Pictures)") and type=="photos") or (xbmc.getCondVisibility("Window.IsActive(VideoLibrary)") and type != "photos")):
                 addDirectoryItem(label, path)
     
     # some extra entries for settings and stuff. TODO --> localize the labels
@@ -402,98 +402,148 @@ def refreshPlaylist():
             sound=False)
 
 ##### BROWSE EMBY HOMEVIDEOS AND PICTURES #####    
-def BrowseContent(viewname, type="", folderid=None, filter=None):
+def BrowseContent(viewname, type="", folderid=None, filter=""):
     
-    _addon_id   =   int(sys.argv[1])
-    _addon_url  =   sys.argv[0]
-    doUtils = downloadutils.DownloadUtils()
     emby = embyserver.Read_EmbyServer()
-    art = artwork.Artwork()
-    utils.logMsg("BrowseHomeVideos","viewname: %s - type: %s - folderid: %s - filter: %s" %(viewname, type, folderid, filter),0)
-
-    if type.lower() == "homevideos":
-        xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
-        itemtype = "Video"
-    elif type.lower() == "photos":
-        xbmcplugin.setContent(int(sys.argv[1]), 'pictures')
-        itemtype = "Photo"
-    else:
-        itemtype = ""
-    
+    utils.logMsg("BrowseHomeVideos","viewname: %s - type: %s - folderid: %s - filter: %s" %(viewname, type, folderid, filter))
+    xbmcplugin.setPluginCategory(int(sys.argv[1]), viewname)
+    #get views for root level
     if not folderid:
         views = emby.getViews(type)
         for view in views:
             if view.get("name") == viewname:
                 folderid = view.get("id")
-                print view
-
+    
+    #set the correct params for the content type
+    #only proceed if we have a folderid
     if folderid:
-        listing = emby.getSection(folderid).get("Items",[])
+        if type.lower() == "homevideos":
+            xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
+            itemtype = "Video,Folder,PhotoAlbum"
+        elif type.lower() == "photos":
+            xbmcplugin.setContent(int(sys.argv[1]), 'files')
+            itemtype = "Photo,PhotoAlbum"
+        else:
+            itemtype = ""
+        
+        #get the actual listing
+        if filter == "recent":
+            listing = emby.getFilteredSection("", itemtype=itemtype.split(",")[0], sortby="DateCreated", recursive=True, limit=25, sortorder="Descending").get("Items",[])
+        elif filter == "random":
+            listing = emby.getFilteredSection("", itemtype=itemtype.split(",")[0], sortby="Random", recursive=True, limit=150, sortorder="Descending").get("Items",[])
+        elif filter == "recommended":
+            listing = emby.getFilteredSection("", itemtype=itemtype.split(",")[0], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter="IsFavorite").get("Items",[])
+        elif filter == "sets":
+            listing = emby.getFilteredSection("", itemtype=itemtype.split(",")[1], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter="IsFavorite").get("Items",[])
+        else:
+            listing = emby.getFilteredSection(folderid, itemtype=itemtype, recursive=False).get("Items",[])
+        
+        #process the listing
         for item in listing:
-            if item.get("Type") == itemtype or item.get("IsFolder") == True:
-                API = api.API(item)
-                itemid = item['Id']
-                title = item.get('Name')
-                li = xbmcgui.ListItem(title)
-
-                premieredate = API.getPremiereDate()
-                genre = API.getGenres()
-                overlay = 0
-                userdata = API.getUserData()
-                seektime = userdata['Resume']
-                if seektime:
-                    li.setProperty("resumetime", seektime)
-                    li.setProperty("totaltime", item.get("RunTimeTicks")/ 10000000.0)
-                
-                played = userdata['Played']
-                if played: overlay = 7
-                else: overlay = 6
-
-                favorite = userdata['Favorite']
-                if favorite: overlay = 5
-                
-                playcount = userdata['PlayCount']
-                if playcount is None:
-                    playcount = 0
-                    
-                rating = item.get('CommunityRating')
-                if not rating: rating = userdata['UserRating']
-
-                # Populate the extradata list and artwork
-                pbutils.PlaybackUtils(item).setArtwork(li)
-                extradata = {
-
-                    'id': itemid,
-                    'rating': rating,
-                    'year': item.get('ProductionYear'),
-                    'premieredate': premieredate,
-                    'genre': genre,
-                    'playcount': str(playcount),
-                    'title': title,
-                    'plot': API.getOverview(),
-                    'Overlay': str(overlay),
-                }
-                li.setInfo('video', infoLabels=extradata)
-                li.setThumbnailImage(art.getAllArtwork(item)['Primary'])
-                li.setIconImage('DefaultTVShows.png')
-                
-                if item.get("IsFolder") == True:
-                    path = "%s?id=%s&mode=browsecontent&type=%s&folderid=%s" % (_addon_url, viewname, type, itemid)
-                    xbmcplugin.addDirectoryItem(handle=_addon_id, url=path, listitem=li, isFolder=True)
-                else:
-                    path = "%s?id=%s&mode=play" % (_addon_url, itemid)
-                    li.setProperty('IsPlayable', 'true')
-                    
-                    mediastreams = API.getMediaStreams()
-                    if mediastreams:
-                        for key, value in mediastreams.iteritems():
-                            if value: li.addStreamInfo(key, value[0])
-                    
-                    xbmcplugin.addDirectoryItem(handle=_addon_id, url=path, listitem=li)
+            li = createListItemFromEmbyItem(item)
+            if item.get("IsFolder") == True:
+                #for folders we add an additional browse request, passing the folderId
+                path = "%s?id=%s&mode=browsecontent&type=%s&folderid=%s" % (sys.argv[0], viewname, type, item.get("Id"))
+                xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=path, listitem=li, isFolder=True)
+            else:
+                #playable item, set plugin path and mediastreams
+                xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=li.getProperty("path"), listitem=li)
 
 
     xbmcplugin.endOfDirectory(handle=int(sys.argv[1]))
+    if filter == "recent":
+        xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_DATE)
+    else:
+        xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_VIDEO_TITLE)
+        xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_DATE)
+        xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_VIDEO_RATING)
+        xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_VIDEO_RUNTIME)
+
+##### CREATE LISTITEM FROM EMBY METADATA #####
+def createListItemFromEmbyItem(item):
+    API = api.API(item)
+    art = artwork.Artwork()
+    doUtils = downloadutils.DownloadUtils()
+    itemid = item['Id']
+    
+    title = item.get('Name')
+    li = xbmcgui.ListItem(title)
+    
+    premieredate = item.get('PremiereDate',"")
+    if not premieredate: premieredate = item.get('DateCreated',"")
+    if premieredate:
+        premieredatelst = premieredate.split('T')[0].split("-")
+        premieredate = "%s.%s.%s" %(premieredatelst[2],premieredatelst[1],premieredatelst[0])
+
+    li.setProperty("embyid",itemid)
+    
+    allart = art.getAllArtwork(item)
+    
+    if item["Type"] in ["Photo","PhotoAlbum"]:
+        #listitem setup for pictures...
+        img_path = allart.get('Primary')
+        li.setProperty("path",img_path)
+        picture = doUtils.downloadUrl("{server}/Items/%s/Images" %itemid)[0]
+        if picture.get("Width") > picture.get("Height"):
+            li.setArt( {"fanart":  img_path}) #add image as fanart for use with skinhelper auto thumb/backgrund creation
+        li.setInfo('pictures', infoLabels={ "picturepath": img_path, "date": premieredate, "size": picture.get("Size"), "exif:width": str(picture.get("Width")), "exif:height": str(picture.get("Height")), "title": "blaat" })
+        li.setThumbnailImage(img_path)
+        li.setIconImage('DefaultPicture.png')
+    else:
+        #normal video items
+        li.setProperty('IsPlayable', 'true')
+        path = "%s?id=%s&mode=play" % (sys.argv[0], item.get("Id"))
+        li.setProperty("path",path)
+        genre = API.getGenres()
+        overlay = 0
+        userdata = API.getUserData()
+        seektime = userdata['Resume']
+        if seektime:
+            li.setProperty("resumetime", seektime)
+            li.setProperty("totaltime", item.get("RunTimeTicks")/ 10000000.0)
+        
+        played = userdata['Played']
+        if played: overlay = 7
+        else: overlay = 6
+
+        favorite = userdata['Favorite']
+        if favorite: overlay = 5
+        
+        playcount = userdata['PlayCount']
+        if playcount is None:
+            playcount = 0
             
+        rating = item.get('CommunityRating')
+        if not rating: rating = userdata['UserRating']
+
+        # Populate the extradata list and artwork
+        extradata = {
+            'id': itemid,
+            'rating': rating,
+            'year': item.get('ProductionYear'),
+            'premieredate': premieredate,
+            'date': premieredate,
+            'genre': genre,
+            'playcount': str(playcount),
+            'title': title,
+            'plot': API.getOverview(),
+            'Overlay': str(overlay),
+        }
+        li.setInfo('video', infoLabels=extradata)
+        li.setThumbnailImage(allart.get('Primary'))
+        li.setIconImage('DefaultTVShows.png')
+        if not allart.get('Background'): #add image as fanart for use with skinhelper auto thumb/backgrund creation
+            li.setArt( {"fanart": allart.get('Primary') } )
+        else:
+            pbutils.PlaybackUtils(item).setArtwork(li)
+        
+        mediastreams = API.getMediaStreams()
+        if mediastreams:
+            for key, value in mediastreams.iteritems():
+                if value: li.addStreamInfo(key, value[0])
+        
+    return li
+    
 ##### BROWSE EMBY CHANNELS #####    
 def BrowseChannels(itemid, folderid=None):
     

@@ -20,7 +20,7 @@
 		<item>
 			<label>30401</label>
             <description>Settings for the Emby Server</description>
-            <visible>!IsEmpty(ListItem.DBID)</visible>
+            <visible>[!IsEmpty(ListItem.DBID) + !IsEmpty(ListItem.DBTYPE)] | !IsEmpty(ListItem.Property(embyid))</visible>
 		</item>
 	</extension>
   <extension point="xbmc.addon.metadata">

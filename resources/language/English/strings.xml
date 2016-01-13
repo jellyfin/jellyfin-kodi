@@ -242,6 +242,11 @@
     <string id="30249">Enable server connection message on start-up</string>
     <string id="30250">Use local paths instead of addon redirect for playback</string>
     
+    <string id="30251">Recently added Home Videos</string>
+    <string id="30252">Recently added Photos</string>
+    <string id="30253">Favourite Home Videos</string>
+    <string id="30254">Favourite Photos</string>
+    <string id="30255">Favourite Albums</string>
     
 	<!-- Default views -->
     <string id="30300">Active</string>              

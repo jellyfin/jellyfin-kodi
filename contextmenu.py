@@ -33,35 +33,30 @@ def logMsg(msg, lvl=1):
 #Kodi contextmenu item to configure the emby settings
 #for now used to set ratings but can later be used to sync individual items etc.
 if __name__ == '__main__':
-    
-    
     itemid = xbmc.getInfoLabel("ListItem.DBID").decode("utf-8")
     itemtype = xbmc.getInfoLabel("ListItem.DBTYPE").decode("utf-8")
+    
+    emby = embyserver.Read_EmbyServer()
+    
+    embyid = ""
     if not itemtype and xbmc.getCondVisibility("Container.Content(albums)"): itemtype = "album"
     if not itemtype and xbmc.getCondVisibility("Container.Content(artists)"): itemtype = "artist"
     if not itemtype and xbmc.getCondVisibility("Container.Content(songs)"): itemtype = "song"
+    if not itemtype and xbmc.getCondVisibility("Container.Content(pictures)"): itemtype = "picture"
     
-    logMsg("Contextmenu opened for itemid: %s  - itemtype: %s" %(itemid,itemtype))
+    if (not itemid or itemid == "-1") and xbmc.getInfoLabel("ListItem.Property(embyid)"):
+        embyid = xbmc.getInfoLabel("ListItem.Property(embyid)")
+    else:
+        embyconn = utils.kodiSQL('emby')
+        embycursor = embyconn.cursor()
+        emby_db = embydb.Embydb_Functions(embycursor)
+        item = emby_db.getItem_byKodiId(itemid, itemtype)
+        if item: embyid = item[0]
     
-    userid = utils.window('emby_currUser')
-    server = utils.window('emby_server%s' % userid)
-    embyconn = utils.kodiSQL('emby')
-    embycursor = embyconn.cursor()
-    kodiconn = utils.kodiSQL('music')
-    kodicursor = kodiconn.cursor()
-    
-    emby = embyserver.Read_EmbyServer()
-    emby_db = embydb.Embydb_Functions(embycursor)
-    kodi_db = kodidb.Kodidb_Functions(kodicursor)
-    
-    item = emby_db.getItem_byKodiId(itemid, itemtype)
-    if item:
-        embyid = item[0]
-        
+    logMsg("Contextmenu opened for embyid: %s  - itemtype: %s" %(embyid,itemtype))
+
+    if embyid:
         item = emby.getItem(embyid)
-        
-        print item
-        
         API = api.API(item)
         userdata = API.getUserData()
         likes = userdata['Likes']
@@ -105,6 +100,8 @@ if __name__ == '__main__':
             if options[ret] == utils.language(30406):
                 API.updateUserRating(embyid, favourite=False)
             if options[ret] == utils.language(30407):
+                kodiconn = utils.kodiSQL('music')
+                kodicursor = kodiconn.cursor()
                 query = ' '.join(("SELECT rating", "FROM song", "WHERE idSong = ?" ))
                 kodicursor.execute(query, (itemid,))
                 currentvalue = int(round(float(kodicursor.fetchone()[0]),0))

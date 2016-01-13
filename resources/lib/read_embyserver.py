@@ -124,7 +124,30 @@ class Read_EmbyServer():
         cursor_emby.close()
 
         return [viewName, viewId, mediatype]
+    
+    def getFilteredSection(self, parentid, itemtype=None, sortby="SortName", recursive=True, limit=None, sortorder="Ascending", filter=""):
+        doUtils = self.doUtils
+        url = "{server}/emby/Users/{UserId}/Items?format=json"
+        params = {
 
+            'ParentId': parentid,
+            'IncludeItemTypes': itemtype,
+            'CollapseBoxSetItems': False,
+            'IsVirtualUnaired': False,
+            'IsMissing': False,
+            'Recursive': recursive,
+            'Limit': limit,
+            'SortBy': sortby,
+            'SortOrder': sortorder,
+            'Filters': filter,
+            'Fields': ( "Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,"
+            "CommunityRating,OfficialRating,CumulativeRunTimeTicks,"
+            "Metascore,AirTime,DateCreated,MediaStreams,People,Overview,"
+            "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
+            "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers")
+        }
+        return doUtils.downloadUrl(url, parameters=params)
+    
     def getSection(self, parentid, itemtype=None, sortby="SortName", basic=False):
 
         doUtils = self.doUtils
