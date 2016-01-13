@@ -2209,22 +2209,31 @@ class Music(Items):
         emby_db.updateReference(itemid, checksum)
 
     def getSongRatingAndComment(self, embyid, emby_rating, API):
+        
+        kodicursor = self.kodicursor
+
         previous_values = None
         filename = API.getFilePath()
         rating = 0
-        emby_rating = int(round(emby_rating,0))
+        emby_rating = int(round(emby_rating, 0))
         file_rating, comment = musicutils.getSongTags(filename)
         
-        currentvalue = None
-        kodiid = self.emby_db.getItem_byId(embyid)[0]
-        query = ' '.join(("SELECT rating", "FROM song", "WHERE idSong = ?" ))
-        self.kodicursor.execute(query, (kodiid,))
-        currentvalue = int(round(float(self.kodicursor.fetchone()[0]),0))
+
+        emby_dbitem = self.emby_db.getItem_byId(embyid)
+        try:
+            kodiid = emby_dbitem[0]
+        except TypeError:
+            # Item is not in database.
+            currentvalue = None
+        else:
+            query = "SELECT rating FROM song WHERE idSong = ?"
+            kodicursor.execute(query, (kodiid,))
+            currentvalue = int(round(float(kodicursor.fetchone()[0]),0))
         
-        #only proceed if we actually have a rating from the file
-        if file_rating == None and currentvalue:
+        # Only proceed if we actually have a rating from the file
+        if file_rating is None and currentvalue:
             return (currentvalue, comment)
-        elif file_rating == None and not currentvalue:
+        elif file_rating is None and currentvalue is None:
             return (emby_rating, comment)
         
         file_rating = int(round(file_rating,0))
