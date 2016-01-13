@@ -480,7 +480,7 @@ def createListItemFromEmbyItem(item):
     
     allart = art.getAllArtwork(item)
     
-    if item["Type"] is "Photo":
+    if item["Type"] == "Photo":
         #listitem setup for pictures...
         img_path = allart.get('Primary')
         li.setProperty("path",img_path)
@@ -489,8 +489,9 @@ def createListItemFromEmbyItem(item):
             picture = picture[0]
             if picture.get("Width") > picture.get("Height"):
                 li.setArt( {"fanart":  img_path}) #add image as fanart for use with skinhelper auto thumb/backgrund creation
-            li.setInfo('pictures', infoLabels={ "picturepath": img_path, "date": premieredate, "size": picture.get("Size"), "exif:width": str(picture.get("Width")), "exif:height": str(picture.get("Height")), "title": "blaat" })
+            li.setInfo('pictures', infoLabels={ "picturepath": img_path, "date": premieredate, "size": picture.get("Size"), "exif:width": str(picture.get("Width")), "exif:height": str(picture.get("Height")), "title": title})
         li.setThumbnailImage(img_path)
+        li.setProperty("plot",API.getOverview())
         li.setIconImage('DefaultPicture.png')
     else:
         #normal video items
@@ -507,11 +508,7 @@ def createListItemFromEmbyItem(item):
         
         played = userdata['Played']
         if played: overlay = 7
-        else: overlay = 6
-
-        favorite = userdata['Favorite']
-        if favorite: overlay = 5
-        
+        else: overlay = 6       
         playcount = userdata['PlayCount']
         if playcount is None:
             playcount = 0
