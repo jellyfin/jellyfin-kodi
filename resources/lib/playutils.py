@@ -97,6 +97,12 @@ class PlayUtils():
             self.logMsg("Option to transcode 1080P/H265 enabled.", 1)
             return False
 
+        elif (utils.settings('transcode720H265') == "true" and
+                item['MediaSources'][0]['Name'].startswith(("720P/HEVC","720P/H265"))):
+            # Avoid H265 720p
+            self.logMsg("Option to transcode 720P/H265 enabled.", 1)
+            return False
+
         canDirectPlay = item['MediaSources'][0]['SupportsDirectPlay']
         # Make sure direct play is supported by the server
         if not canDirectPlay:
@@ -195,6 +201,12 @@ class PlayUtils():
                 item['MediaSources'][0]['Name'].startswith(("1080P/HEVC","1080P/H265"))):
             # Avoid H265 1080p
             self.logMsg("Option to transcode 1080P/H265 enabled.", 1)
+            return False
+
+        elif (utils.settings('transcode720H265') == "true" and
+                item['MediaSources'][0]['Name'].startswith(("720P/HEVC","720P/H265"))):
+            # Avoid H265 720p
+            self.logMsg("Option to transcode 720P/H265 enabled.", 1)
             return False
 
         # Requirement: BitRate, supported encoding
