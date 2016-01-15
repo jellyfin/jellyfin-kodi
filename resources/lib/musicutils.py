@@ -83,7 +83,9 @@ def getSongTags(file):
                     if rating > 5: rating = (rating / 255) * 5
         else:
             logMsg( "Not supported fileformat or unable to access file: %s" %(filename))
-        rating = int(round(rating,0))
+        
+        if rating:
+            rating = int(round(rating,0))
     
     except Exception as e:
         #file in use ?
