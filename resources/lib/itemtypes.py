@@ -2225,7 +2225,7 @@ class Music(Items):
         # Only proceed if we actually have a rating from the file
         if file_rating is None and currentvalue:
             return (currentvalue, comment)
-        elif file_rating is None and currentvalue is None:
+        elif file_rating is None and not currentvalue:
             return (emby_rating, comment)
         
         file_rating = int(round(file_rating,0))
