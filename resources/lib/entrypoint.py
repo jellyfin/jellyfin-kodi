@@ -72,27 +72,15 @@ def doMainListing():
                 addDirectoryItem(label, path)
     
     # some extra entries for settings and stuff. TODO --> localize the labels
-    addDirectoryItem("Network credentials", "plugin://plugin.video.emby/?mode=passwords", False)
-    addDirectoryItem("Settings", "plugin://plugin.video.emby/?mode=settings", False)
-    addDirectoryItem("Add user to session", "plugin://plugin.video.emby/?mode=adduser", False)
-    #addDirectoryItem("Cache all images to Kodi texture cache (advanced)", "plugin://plugin.video.emby/?mode=texturecache")
-    addDirectoryItem(
-        label="Refresh Emby playlists",
-        path="plugin://plugin.video.emby/?mode=refreshplaylist",
-        folder=False)
-    addDirectoryItem("Perform manual sync", "plugin://plugin.video.emby/?mode=manualsync", False)
-    addDirectoryItem(
-        label="Repair local database (force update all content)",
-        path="plugin://plugin.video.emby/?mode=repair",
-        folder=False)
-    addDirectoryItem(
-        label="Perform local database reset (full resync)",
-        path="plugin://plugin.video.emby/?mode=reset",
-        folder=False)
-    addDirectoryItem(
-        label="Sync Emby Theme Media to Kodi",
-        path="plugin://plugin.video.emby/?mode=thememedia",
-        folder=False)
+    addDirectoryItem("Network credentials", "plugin://plugin.video.emby/?mode=passwords")
+    addDirectoryItem("Settings", "plugin://plugin.video.emby/?mode=settings")
+    addDirectoryItem("Add user to session", "plugin://plugin.video.emby/?mode=adduser")
+    addDirectoryItem("Refresh Emby playlists", "plugin://plugin.video.emby/?mode=refreshplaylist")
+    addDirectoryItem("Perform manual sync", "plugin://plugin.video.emby/?mode=manualsync")
+    addDirectoryItem("Repair local database (force update all content)", "plugin://plugin.video.emby/?mode=repair")
+    addDirectoryItem("Perform local database reset (full resync)", "plugin://plugin.video.emby/?mode=reset")
+    addDirectoryItem("Cache all images to Kodi texture cache", "plugin://plugin.video.emby/?mode=texturecache")
+    addDirectoryItem("Sync Emby Theme Media to Kodi", "plugin://plugin.video.emby/?mode=thememedia")
     
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 

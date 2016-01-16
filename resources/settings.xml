@@ -31,6 +31,7 @@
 		<setting id="streamMusic" type="bool" label="Direct stream music library" default="false" visible="eq(-1,true)" subsetting="true" />
 		<setting id="useDirectPaths" type="enum" label="Playback Mode" values="Addon(Default)|Native(Direct paths)" default="0" />
 		<setting id="enableTextureCache" label="Auto add images to the Kodi texture cache"  type="bool" default="true" />
+        <setting id="imageCacheLimit" type="enum" label="Limit image cache import threads" values="None|5|10|15|20|25" default="0" visible="eq(-1,true)"/>
 		<setting id="serverSync" type="bool" label="Enable fast starting sync" default="true" />
 		<setting id="limitindex" type="number" label="Maximum items to request at once from server" default="200" option="int" />
 	</category>
