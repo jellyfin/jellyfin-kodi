@@ -1,3 +1,12 @@
+version 1.1.76
+- Add music rating system
+- Add home videos as a dynamic plugin entry (requires a reset)
+- Add photo library (requires a reset)
+- Add/Fix force transcode setting for 720p-1080p/HEVC-H265 formats
+- Fix to incremental sync, caused by the server restarting
+- Fix for image caching during the initial sync on rpi devices
+- Fix to audio/subtitles tracks (requires a repair, or reset)
+
 version 1.1.72
 - Fix to extrafanart
 - Fix for artists deletion
