@@ -206,7 +206,7 @@ class Artwork():
         result = cursor.fetchall()
         total = len(result)
         count = 1     
-        percentage = 0.0    
+        percentage = 0  
         self.logMsg("Image cache sync about to process " + str(total) + " images", 1)
         for url in result:
             percentage = int((float(count) / float(total))*100)
@@ -223,7 +223,7 @@ class Artwork():
         result = cursor.fetchall()
         total = len(result)
         count = 1     
-        percentage = 0.0
+        percentage = 0
         self.logMsg("Image cache sync about to process " + str(total) + " images", 1)
         for url in result:
             percentage = int((float(count) / float(total))*100)
@@ -233,13 +233,13 @@ class Artwork():
             count += 1
         cursor.close()
         
-        dialog.update(percentage, message="Waiting for all threads to exit: " + str(len(self.imageCacheThreads)))
+        dialog.update(100, message="Waiting for all threads to exit: " + str(len(self.imageCacheThreads)))
         self.logMsg("Waiting for all threads to exit", 1)
         while len(self.imageCacheThreads) > 0:
             for thread in self.imageCacheThreads:
                 if thread.isFinished:
                     self.imageCacheThreads.remove(thread)
-            dialog.update(percentage, message="Waiting for all threads to exit: " + str(len(self.imageCacheThreads)))
+            dialog.update(100, message="Waiting for all threads to exit: " + str(len(self.imageCacheThreads)))
             self.logMsg("Waiting for all threads to exit: " + str(len(self.imageCacheThreads)), 1)
             xbmc.sleep(500)
         
