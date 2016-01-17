@@ -62,7 +62,7 @@ def settings(setting, value=None):
 def language(stringid):
     # Central string retrieval
     addon = xbmcaddon.Addon(id='plugin.video.emby')
-    string = addon.getLocalizedString(stringid).decode("utf-8")
+    string = addon.getLocalizedString(stringid)
 
     return string
 
