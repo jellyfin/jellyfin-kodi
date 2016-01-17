@@ -12,7 +12,7 @@
   </requires>
   <extension    point="xbmc.python.pluginsource"
                 library="default.py">
-        <provides>video audio</provides>
+        <provides>video audio image</provides>
   </extension>
   <extension point="xbmc.service" library="service.py" start="login">
   </extension>
