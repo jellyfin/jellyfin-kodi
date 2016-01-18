@@ -990,7 +990,10 @@ def getExtraFanArt():
                     for backdrop in backdrops:
                         # Same ordering as in artwork
                         tag = tags[count]
-                        fanartFile = os.path.join(fanartDir, "fanart%s.jpg" % tag)
+                        if os.path.supports_unicode_filenames:
+                            fanartFile = os.path.join(fanartDir, "fanart%s.jpg" % tag)
+                        else:
+                            fanartFile = os.path.join(fanartDir.encode("utf-8"), "fanart%s.jpg" % tag.encode("utf-8"))
                         li = xbmcgui.ListItem(tag, path=fanartFile)
                         xbmcplugin.addDirectoryItem(
                                             handle=int(sys.argv[1]),

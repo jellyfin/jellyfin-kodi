@@ -185,7 +185,10 @@ class Artwork():
                 for dir in allDirs:
                     allDirs, allFiles = xbmcvfs.listdir(path+dir)
                     for file in allFiles:
-                        xbmcvfs.delete(os.path.join(path+dir.decode('utf-8'),file.decode('utf-8')))
+                        if os.path.supports_unicode_filenames:
+                            xbmcvfs.delete(os.path.join(path+dir.decode('utf-8'),file.decode('utf-8')))
+                        else:
+                            xbmcvfs.delete(os.path.join(path.encode('utf-8')+dir,file))
             
             # remove all existing data from texture DB
             textureconnection = utils.kodiSQL('texture')

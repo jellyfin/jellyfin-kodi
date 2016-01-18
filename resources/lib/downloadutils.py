@@ -326,7 +326,7 @@ class DownloadUtils():
             elif r.status_code == requests.codes.ok:
                
                 try: 
-                    # UTF-8 - JSON object
+                    # UNICODE - JSON object
                     r = r.json()
                     self.logMsg("====== 200 Success ======", 2)
                     self.logMsg("Response: %s" % r, 2)

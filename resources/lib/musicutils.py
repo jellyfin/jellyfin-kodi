@@ -19,15 +19,21 @@ def logMsg(msg, lvl=1):
 def getRealFileName(filename):
     #get the filename path accessible by python if possible...
     isTemp = False
-    
+
     if not xbmcvfs.exists(filename):
         logMsg( "File does not exist! %s" %(filename), 0)
         return (False, "")
     
+    #if we use os.path method on older python versions (sunch as some android builds), we need to pass arguments as string
+    if os.path.supports_unicode_filenames:
+        checkfile = filename
+    else:
+        checkfile = file.encode("utf-8")
+    
     # determine if our python module is able to access the file directly...
-    if os.path.exists(filename):
+    if os.path.exists(checkfile):
         filename = filename
-    elif os.path.exists(filename.replace("smb://","\\\\").replace("/","\\")):
+    elif os.path.exists(checkfile.replace("smb://","\\\\").replace("/","\\")):
         filename = filename.replace("smb://","\\\\").replace("/","\\")
     else:
         #file can not be accessed by python directly, we copy it for processing...
@@ -57,7 +63,7 @@ def getEmbyRatingFromKodiRating(rating):
     
 def getSongTags(file):
     # Get the actual ID3 tags for music songs as the server is lacking that info
-    rating = None
+    rating = 0
     comment = ""
     
     isTemp,filename = getRealFileName(file)
@@ -84,12 +90,13 @@ def getSongTags(file):
         else:
             logMsg( "Not supported fileformat or unable to access file: %s" %(filename))
         
-        if rating:
-            rating = int(round(rating,0))
+        #the rating must be a round value
+        rating = int(round(rating,0))
     
     except Exception as e:
         #file in use ?
         logMsg("Exception in getSongTags %s" %e,0)
+        return (None,"")
         
     #remove tempfile if needed....
     if isTemp: xbmcvfs.delete(filename)

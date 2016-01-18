@@ -72,7 +72,7 @@ class KodiMonitor(xbmc.Monitor):
             self.logMsg("Method: %s Data: %s" % (method, data), 1)
             
         if data:
-            data = json.loads(data)
+            data = json.loads(data,'utf-8')
 
 
         if method == "Player.OnPlay":

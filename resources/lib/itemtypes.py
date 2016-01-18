@@ -2208,8 +2208,10 @@ class Music(Items):
         filename = API.getFilePath()
         rating = 0
         emby_rating = int(round(emby_rating, 0))
-        file_rating, comment = musicutils.getSongTags(filename)
         
+        #get file rating and comment tag from file itself.
+        #TODO: should we make this an optional setting if it impacts sync speed too much ?
+        file_rating, comment = musicutils.getSongTags(filename)
 
         emby_dbitem = self.emby_db.getItem_byId(embyid)
         try:
@@ -2228,7 +2230,6 @@ class Music(Items):
         elif file_rating is None and not currentvalue:
             return (emby_rating, comment)
         
-        file_rating = int(round(file_rating,0))
         self.logMsg("getSongRatingAndComment --> embyid: %s - emby_rating: %s - file_rating: %s - current rating in kodidb: %s" %(embyid, emby_rating, file_rating, currentvalue))
         
         updateFileRating = False
