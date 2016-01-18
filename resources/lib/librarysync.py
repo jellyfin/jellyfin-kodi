@@ -287,8 +287,6 @@ class LibrarySync(threading.Thread):
         utils.settings('SyncInstallRunDone', value="true")
         utils.settings("dbCreatedWithVersion", self.clientInfo.getVersion())
         self.saveLastSync()
-        # tell any widgets to refresh because the content has changed
-        utils.window('widgetreload', value=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         xbmc.executebuiltin('UpdateLibrary(video)')
         elapsedtotal = datetime.now() - starttotal
 
@@ -1087,9 +1085,6 @@ class LibrarySync(threading.Thread):
             self.dbCommit(kodiconn)
             embyconn.commit()
             self.saveLastSync()
-
-            # tell any widgets to refresh because the content has changed
-            utils.window('widgetreload', value=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
             self.logMsg("Updating video library.", 1)
             utils.window('emby_kodiScan', value="true")
