@@ -69,7 +69,7 @@ def getSongTags(file):
     hasEmbeddedCover = False
     
     isTemp,filename = getRealFileName(file)
-    logMsg( "getting song ID3 tags for " + filename,0)
+    logMsg( "getting song ID3 tags for " + filename)
     
     try:
         ###### FLAC FILES #############

@@ -163,6 +163,13 @@ class VideoNodes(object):
                 '8': 30255,
                 '11': 30254
                 },
+            'musicvideos': 
+                {
+                '1': tagname,
+                '2': 30256,
+                '4': 30257,
+                '6': 30258
+                },
         }
 
         nodes = mediatypes[mediatype]

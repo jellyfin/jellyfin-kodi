@@ -373,12 +373,12 @@ class LibrarySync(threading.Thread):
                     self.logMsg("Creating viewid: %s in Emby database." % folderid, 1)
                     tagid = kodi_db.createTag(foldername)
                     # Create playlist for the video library
-                    if mediatype != "music":
+                    if mediatype in ['movies', 'tvshows', 'musicvideos']:
                         utils.playlistXSP(mediatype, foldername, viewtype)
-                        # Create the video node
-                        if mediatype != "musicvideos":
-                            vnodes.viewNode(totalnodes, foldername, mediatype, viewtype)
-                            totalnodes += 1
+                    # Create the video node
+                    if mediatype in ['movies', 'tvshows', 'musicvideos', 'homevideos']:
+                        vnodes.viewNode(totalnodes, foldername, mediatype, viewtype)
+                        totalnodes += 1
                     # Add view to emby database
                     emby_db.addView(folderid, foldername, viewtype, tagid)
 

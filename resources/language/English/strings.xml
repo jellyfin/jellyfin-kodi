@@ -248,6 +248,10 @@
     <string id="30254">Favourite Photos</string>
     <string id="30255">Favourite Albums</string>
     
+    <string id="30256">Recently added Music videos</string>
+    <string id="30257">In progress Music videos</string>
+    <string id="30258">Unwatched Music videos</string>
+    
 	<!-- Default views -->
     <string id="30300">Active</string>              
     <string id="30301">Clear Settings</string>              
