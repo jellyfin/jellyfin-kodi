@@ -55,10 +55,11 @@ class Artwork():
         return text
 
     def single_urlencode(self, text):
-        text = urllib.urlencode({'blahblahblah':text})
+        
+        text = urllib.urlencode({'blahblahblah':text.encode("utf-8")}) #urlencode needs a utf- string
         text = text[13:]
 
-        return text
+        return text.decode("utf-8") #return the result again as unicode
 
     def setKodiWebServerDetails(self):
         # Get the Kodi webserver details - used to set the texture cache
