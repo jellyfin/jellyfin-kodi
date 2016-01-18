@@ -2231,9 +2231,9 @@ class Music(Items):
         
         # Only proceed if we actually have a rating from the file
         if file_rating is None and currentvalue:
-            return (currentvalue, comment)
+            return (currentvalue, comment, False)
         elif file_rating is None and not currentvalue:
-            return (emby_rating, comment)
+            return (emby_rating, comment, False)
         
         self.logMsg("getSongTagsFromFile --> embyid: %s - emby_rating: %s - file_rating: %s - current rating in kodidb: %s" %(embyid, emby_rating, file_rating, currentvalue))
         
