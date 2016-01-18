@@ -2222,7 +2222,9 @@ class Music(Items):
         else:
             query = "SELECT rating FROM song WHERE idSong = ?"
             kodicursor.execute(query, (kodiid,))
-            currentvalue = int(round(float(kodicursor.fetchone()[0]),0))
+            try:
+                currentvalue = int(round(float(kodicursor.fetchone()[0]),0))
+            except: currentvalue = None
         
         # Only proceed if we actually have a rating from the file
         if file_rating is None and currentvalue:
