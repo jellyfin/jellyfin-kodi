@@ -1954,7 +1954,7 @@ class Music(Items):
         
         #if enabled, try to get the rating and comment value from the file itself
         if not self.directstream:
-            rating, comment = self.getSongRatingAndComment(itemid, rating, API)
+            rating, comment, hasEmbeddedCover = self.getSongTagsFromFile(itemid, rating, API)
         
         ##### GET THE FILE AND PATH #####
         if self.directstream:
@@ -2158,7 +2158,10 @@ class Music(Items):
         # Add genres
         kodi_db.addMusicGenres(songid, genres, "song")
         # Update artwork
-        artwork.addArtwork(artwork.getAllArtwork(item, parentInfo=True), songid, "song", kodicursor)
+        allart = artwork.getAllArtwork(item, parentInfo=True)
+        if hasEmbeddedCover:
+            allart["Primary"] = "image://music@" + artwork.single_urlencode( playurl )
+        artwork.addArtwork(allart, songid, "song", kodicursor)
 
     def updateUserdata(self, item):
         # This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
@@ -2188,7 +2191,7 @@ class Music(Items):
             # Process playstates
             playcount = userdata['PlayCount']
             dateplayed = userdata['LastPlayedDate']
-            rating, comment = self.getSongRatingAndComment(itemid, rating, API)
+            rating, comment, hasEmbeddedCover = self.getSongTagsFromFile(itemid, rating, API)
             
             query = "UPDATE song SET iTimesPlayed = ?, lastplayed = ?, rating = ? WHERE idSong = ?"
             kodicursor.execute(query, (playcount, dateplayed, rating, kodiid))
@@ -2200,7 +2203,7 @@ class Music(Items):
 
         emby_db.updateReference(itemid, checksum)
 
-    def getSongRatingAndComment(self, embyid, emby_rating, API):
+    def getSongTagsFromFile(self, embyid, emby_rating, API):
         
         kodicursor = self.kodicursor
 
@@ -2211,7 +2214,7 @@ class Music(Items):
         
         #get file rating and comment tag from file itself.
         #TODO: should we make this an optional setting if it impacts sync speed too much ?
-        file_rating, comment = musicutils.getSongTags(filename)
+        file_rating, comment, hasEmbeddedCover = musicutils.getSongTags(filename)
 
         emby_dbitem = self.emby_db.getItem_byId(embyid)
         try:
@@ -2232,7 +2235,7 @@ class Music(Items):
         elif file_rating is None and not currentvalue:
             return (emby_rating, comment)
         
-        self.logMsg("getSongRatingAndComment --> embyid: %s - emby_rating: %s - file_rating: %s - current rating in kodidb: %s" %(embyid, emby_rating, file_rating, currentvalue))
+        self.logMsg("getSongTagsFromFile --> embyid: %s - emby_rating: %s - file_rating: %s - current rating in kodidb: %s" %(embyid, emby_rating, file_rating, currentvalue))
         
         updateFileRating = False
         updateEmbyRating = False
@@ -2281,7 +2284,7 @@ class Music(Items):
             like, favourite, deletelike = musicutils.getEmbyRatingFromKodiRating(rating)
             API.updateUserRating(embyid, like, favourite, deletelike)
         
-        return (rating, comment)
+        return (rating, comment, hasEmbeddedCover)
         
     def remove(self, itemid):
         # Remove kodiid, fileid, pathid, emby reference

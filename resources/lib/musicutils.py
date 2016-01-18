@@ -5,9 +5,10 @@
 import os
 import xbmc, xbmcaddon, xbmcvfs
 import utils
-from mutagen.flac import FLAC
+from mutagen.flac import FLAC, Picture
 from mutagen.id3 import ID3
 from mutagen import id3
+import base64
 
 #################################################################################################
 
@@ -28,7 +29,7 @@ def getRealFileName(filename):
     if os.path.supports_unicode_filenames:
         checkfile = filename
     else:
-        checkfile = file.encode("utf-8")
+        checkfile = filename.encode("utf-8")
     
     # determine if our python module is able to access the file directly...
     if os.path.exists(checkfile):
@@ -65,21 +66,34 @@ def getSongTags(file):
     # Get the actual ID3 tags for music songs as the server is lacking that info
     rating = 0
     comment = ""
+    hasEmbeddedCover = False
     
     isTemp,filename = getRealFileName(file)
-    logMsg( "getting song ID3 tags for " + filename)
+    logMsg( "getting song ID3 tags for " + filename,0)
     
     try:
+        ###### FLAC FILES #############
         if filename.lower().endswith(".flac"):
             audio = FLAC(filename)
             if audio.get("comment"):
                 comment = audio.get("comment")[0]
+            for pic in audio.pictures:
+                if pic.type == 3 and pic.data:
+                    #the file has an embedded cover
+                    hasEmbeddedCover = True
             if audio.get("rating"):
                 rating = float(audio.get("rating")[0])
                 #flac rating is 0-100 and needs to be converted to 0-5 range
                 if rating > 5: rating = (rating / 100) * 5
+        
+        ###### MP3 FILES #############
         elif filename.lower().endswith(".mp3"):
             audio = ID3(filename)
+            
+            if audio.get("APIC:Front Cover"):
+                if audio.get("APIC:Front Cover").data:
+                    hasEmbeddedCover = True
+            
             if audio.get("comment"):
                 comment = audio.get("comment")[0]
             if audio.get("POPM:Windows Media Player 9 Series"):
@@ -96,12 +110,12 @@ def getSongTags(file):
     except Exception as e:
         #file in use ?
         logMsg("Exception in getSongTags %s" %e,0)
-        return (None,"")
+        rating = None
         
     #remove tempfile if needed....
     if isTemp: xbmcvfs.delete(filename)
         
-    return (rating, comment)
+    return (rating, comment, hasEmbeddedCover)
 
 def updateRatingToFile(rating, file):
     #update the rating from Emby to the file
