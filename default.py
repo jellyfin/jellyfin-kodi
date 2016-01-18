@@ -35,6 +35,7 @@ class Main:
         # Parse parameters
         base_url = sys.argv[0]
         addon_handle = int(sys.argv[1])
+        print sys.argv[2]
         params = urlparse.parse_qs(sys.argv[2][1:])
         xbmc.log("Parameter string: %s" % sys.argv[2])
         try:
