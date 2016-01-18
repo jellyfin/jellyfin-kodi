@@ -7,6 +7,7 @@ from uuid import uuid4
 
 import xbmc
 import xbmcaddon
+import xbmcvfs
 
 import utils
 
@@ -43,7 +44,7 @@ class ClientInfo():
 
         if utils.settings('deviceNameOpt') == "false":
             # Use Kodi's deviceName
-            deviceName = xbmc.getInfoLabel('System.FriendlyName')
+            deviceName = xbmc.getInfoLabel('System.FriendlyName').decode('utf-8')
         else:
             deviceName = utils.settings('deviceName')
             deviceName = deviceName.replace("\"", "_")
@@ -78,12 +79,12 @@ class ClientInfo():
         GUID_file = xbmc.translatePath(os.path.join(addon_path, "machine_guid")).decode('utf-8')
 
         try:
-            GUID = open(GUID_file)
+            GUID = xbmcvfs.File(GUID_file)
         
         except Exception as e: # machine_guid does not exists.
             self.logMsg("Generating a new deviceid: %s" % e, 1)
             clientId = str("%012X" % uuid4())
-            GUID = open(GUID_file, 'w')
+            GUID = xbmcvfs.File(GUID_file, 'w')
             GUID.write(clientId)
 
         else: # machine_guid already exists. Get guid.

@@ -283,7 +283,7 @@ def getThemeMedia():
         result = doUtils.downloadUrl(url)
 
         # Create nfo and write themes to it
-        nfo_file = open(nfo_path, 'w')
+        nfo_file = xbmcvfs.File(nfo_path, 'w')
         pathstowrite = ""
         # May be more than one theme
         for theme in result['Items']:
@@ -344,7 +344,7 @@ def getThemeMedia():
         result = doUtils.downloadUrl(url)
 
         # Create nfo and write themes to it
-        nfo_file = open(nfo_path, 'w')
+        nfo_file = xbmcvfs.File(nfo_path, 'w')
         pathstowrite = ""
         # May be more than one theme
         for theme in result['Items']: 
@@ -960,12 +960,12 @@ def getExtraFanArt():
     try:
         # for tvshows we get the embyid just from the path
         if xbmc.getCondVisibility("Container.Content(tvshows) | Container.Content(seasons) | Container.Content(episodes)"):
-            itemPath = xbmc.getInfoLabel("ListItem.Path")
+            itemPath = xbmc.getInfoLabel("ListItem.Path").decode('utf-8')
             if "plugin.video.emby" in itemPath:
                 embyId = itemPath.split("/")[-2]
         else:
             #for movies we grab the emby id from the params
-            itemPath = xbmc.getInfoLabel("ListItem.FileNameAndPath")
+            itemPath = xbmc.getInfoLabel("ListItem.FileNameAndPath").decode('utf-8')
             if "plugin.video.emby" in itemPath:
                 params = urlparse.parse_qs(itemPath)
                 embyId = params.get('id')
@@ -1003,7 +1003,7 @@ def getExtraFanArt():
                 # Use existing cached images
                 dirs, files = xbmcvfs.listdir(fanartDir)
                 for file in files:
-                    fanartFile = os.path.join(fanartDir, file)
+                    fanartFile = os.path.join(fanartDir, file.decode('utf-8'))
                     li = xbmcgui.ListItem(file, path=fanartFile)
                     xbmcplugin.addDirectoryItem(
                                             handle=int(sys.argv[1]),
