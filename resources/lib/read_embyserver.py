@@ -149,7 +149,7 @@ class Read_EmbyServer():
         }
         return doUtils.downloadUrl(url, parameters=params)
     
-    def getSection(self, parentid, itemtype=None, sortby="SortName", basic=False):
+    def getSection(self, parentid, itemtype=None, sortby="SortName", basic=False, dialog=None):
 
         doUtils = self.doUtils
         items = {
@@ -219,7 +219,9 @@ class Read_EmbyServer():
                     self.logMsg("New throttle for items requested: %s" % jump, 1)
                 else:
                     index += jump
-
+                    if dialog:
+                        percentage = int((float(index) / float(total))*100)
+                        dialog.update(percentage)
         return items
 
     def getViews(self, type, root=False):
@@ -276,15 +278,15 @@ class Read_EmbyServer():
         
         return views
 
-    def getMovies(self, parentId, basic=False):
+    def getMovies(self, parentId, basic=False, dialog=None):
 
-        items = self.getSection(parentId, "Movie", basic=basic)
+        items = self.getSection(parentId, "Movie", basic=basic, dialog=dialog)
         
         return items
 
-    def getBoxset(self):
+    def getBoxset(self, dialog=None):
 
-        items = self.getSection(None, "BoxSet")
+        items = self.getSection(None, "BoxSet", dialog=dialog)
 
         return items
 
@@ -294,9 +296,9 @@ class Read_EmbyServer():
 
         return items
 
-    def getMusicVideos(self, parentId, basic=False):
+    def getMusicVideos(self, parentId, basic=False, dialog=None):
 
-        items = self.getSection(parentId, "MusicVideo", basic=basic)
+        items = self.getSection(parentId, "MusicVideo", basic=basic, dialog=dialog)
 
         return items
 
@@ -306,9 +308,9 @@ class Read_EmbyServer():
 
         return items
 
-    def getShows(self, parentId, basic=False):
+    def getShows(self, parentId, basic=False, dialog=None):
 
-        items = self.getSection(parentId, "Series", basic=basic)
+        items = self.getSection(parentId, "Series", basic=basic, dialog=dialog)
 
         return items
 
@@ -332,9 +334,9 @@ class Read_EmbyServer():
 
         return items
 
-    def getEpisodes(self, parentId, basic=False):
+    def getEpisodes(self, parentId, basic=False, dialog=None):
 
-        items = self.getSection(parentId, "Episode", basic=basic)
+        items = self.getSection(parentId, "Episode", basic=basic, dialog=dialog)
 
         return items
 
@@ -350,7 +352,7 @@ class Read_EmbyServer():
 
         return items
 
-    def getArtists(self):
+    def getArtists(self, dialog=None):
 
         doUtils = self.doUtils
         items = {
@@ -406,12 +408,14 @@ class Read_EmbyServer():
                     self.logMsg("New throttle for items requested: %s" % jump, 1)
                 else:
                     index += jump
-
+                    if dialog:
+                        percentage = int((float(index) / float(total))*100)
+                        dialog.update(percentage)
         return items
 
-    def getAlbums(self, basic=False):
+    def getAlbums(self, basic=False, dialog=None):
 
-        items = self.getSection(None, "MusicAlbum", sortby="DateCreated", basic=basic)
+        items = self.getSection(None, "MusicAlbum", sortby="DateCreated", basic=basic, dialog=dialog)
 
         return items
 
@@ -421,9 +425,9 @@ class Read_EmbyServer():
 
         return items
 
-    def getSongs(self, basic=False):
+    def getSongs(self, basic=False, dialog=None):
 
-        items = self.getSection(None, "Audio", basic=basic)
+        items = self.getSection(None, "Audio", basic=basic, dialog=dialog)
 
         return items
 
