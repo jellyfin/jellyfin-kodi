@@ -68,7 +68,11 @@ def doMainListing():
                 path = utils.window('Emby.nodes.%s.content' % i)
             label = utils.window('Emby.nodes.%s.title' % i)
             type = utils.window('Emby.nodes.%s.type' % i)
-            if path and ((xbmc.getCondVisibility("Window.IsActive(Pictures)") and type=="photos") or (xbmc.getCondVisibility("Window.IsActive(VideoLibrary)") and type != "photos")):
+            #because we do not use seperate entrypoints for each content type, we need to figure out which items to show in each listing.
+            #if skinshortcuts is active, we just show all nodes
+            if path and ((xbmc.getCondVisibility("Window.IsActive(Pictures)") and type=="photos") 
+                or (xbmc.getCondVisibility("Window.IsActive(VideoLibrary)") and type != "photos") 
+                or xbmc.getCondVisibility("Window.IsActive(script-skinshortcuts.xml)")):
                 addDirectoryItem(label, path)
     
     # some extra entries for settings and stuff. TODO --> localize the labels

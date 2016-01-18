@@ -57,12 +57,15 @@ def settings(setting, value=None):
     if value is not None:
         addon.setSetting(setting, value)
     else:
-        return addon.getSetting(setting)
+        return addon.getSetting(setting) #returns unicode object
 
 def language(stringid):
     # Central string retrieval
     addon = xbmcaddon.Addon(id='plugin.video.emby')
-    string = addon.getLocalizedString(stringid)
+    string = addon.getLocalizedString(stringid) #returns unicode object
+    if isinstance(string, unicode): print "EMBY LANGUAGE STRING IS UNICODE !"
+    elif isinstance(string, txt): print "EMBY LANGUAGE STRING IS TEXT !"
+    else: print "EMBY LANGUAGE STRING IS UNKNOWN !"
 
     return string
 
