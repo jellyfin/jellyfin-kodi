@@ -494,7 +494,7 @@ class LibrarySync(threading.Thread):
                             heading="Emby for Kodi",
                             message="Comparing movies from view: %s..." % viewName)
 
-                all_embymovies = emby.getMovies(viewId, basic=True)
+                all_embymovies = emby.getMovies(viewId, basic=True, dialog=pdialog)
                 for embymovie in all_embymovies['Items']:
 
                     if self.shouldStop():
@@ -515,7 +515,7 @@ class LibrarySync(threading.Thread):
                 del updatelist[:]
             else:
                 # Initial or repair sync
-                all_embymovies = emby.getMovies(viewId)
+                all_embymovies = emby.getMovies(viewId, dialog=pdialog)
                 total = all_embymovies['TotalRecordCount']
                 embymovies = all_embymovies['Items']
 
@@ -543,7 +543,7 @@ class LibrarySync(threading.Thread):
         if pdialog:
             pdialog.update(heading="Emby for Kodi", message="Gathering boxsets from server...")
         
-        boxsets = emby.getBoxset()
+        boxsets = emby.getBoxset(dialog=pdialog)
 
         if compare:
             # Manual sync
@@ -652,7 +652,7 @@ class LibrarySync(threading.Thread):
                             heading="Emby for Kodi",
                             message="Comparing musicvideos from view: %s..." % viewName)
 
-                all_embymvideos = emby.getMusicVideos(viewId, basic=True)
+                all_embymvideos = emby.getMusicVideos(viewId, basic=True, dialog=pdialog)
                 for embymvideo in all_embymvideos['Items']:
 
                     if self.shouldStop():
@@ -673,7 +673,7 @@ class LibrarySync(threading.Thread):
                 del updatelist[:]
             else:
                 # Initial or repair sync
-                all_embymvideos = emby.getMusicVideos(viewId)
+                all_embymvideos = emby.getMusicVideos(viewId, dialog=pdialog)
                 total = all_embymvideos['TotalRecordCount']
                 embymvideos = all_embymvideos['Items']
 
@@ -755,7 +755,7 @@ class LibrarySync(threading.Thread):
                             heading="Emby for Kodi",
                             message="Comparing tvshows from view: %s..." % viewName)
 
-                all_embytvshows = emby.getShows(viewId, basic=True)
+                all_embytvshows = emby.getShows(viewId, basic=True, dialog=pdialog)
                 for embytvshow in all_embytvshows['Items']:
 
                     if self.shouldStop():
@@ -775,7 +775,7 @@ class LibrarySync(threading.Thread):
                 total = len(updatelist)
                 del updatelist[:]
             else:
-                all_embytvshows = emby.getShows(viewId)
+                all_embytvshows = emby.getShows(viewId, dialog=pdialog)
                 total = all_embytvshows['TotalRecordCount']
                 embytvshows = all_embytvshows['Items']
 
@@ -818,7 +818,7 @@ class LibrarySync(threading.Thread):
                                 heading="Emby for Kodi",
                                 message="Comparing episodes from view: %s..." % viewName)
 
-                    all_embyepisodes = emby.getEpisodes(viewId, basic=True)
+                    all_embyepisodes = emby.getEpisodes(viewId, basic=True, dialog=pdialog)
                     for embyepisode in all_embyepisodes['Items']:
 
                         if self.shouldStop():
@@ -921,9 +921,9 @@ class LibrarySync(threading.Thread):
                             message="Comparing %s..." % type)
 
                 if type != "artists":
-                    all_embyitems = process[type][0](basic=True)
+                    all_embyitems = process[type][0](basic=True, dialog=pdialog)
                 else:
-                    all_embyitems = process[type][0]()
+                    all_embyitems = process[type][0](dialog=pdialog)
                 for embyitem in all_embyitems['Items']:
 
                     if self.shouldStop():
@@ -952,7 +952,7 @@ class LibrarySync(threading.Thread):
                 total = len(updatelist)
                 del updatelist[:]
             else:
-                all_embyitems = process[type][0]()
+                all_embyitems = process[type][0](dialog=pdialog)
                 total = all_embyitems['TotalRecordCount']
                 embyitems = all_embyitems['Items']
 
