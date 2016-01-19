@@ -506,7 +506,7 @@ class Artwork():
 
         id = item['Id']
         artworks = item['ImageTags']
-        backdrops = item['BackdropImageTags']
+        backdrops = item.get('BackdropImageTags',[])
 
         maxHeight = 10000
         maxWidth = 10000

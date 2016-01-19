@@ -149,6 +149,36 @@ class Read_EmbyServer():
         }
         return doUtils.downloadUrl(url, parameters=params)
     
+    def getTvChannels(self):
+        doUtils = self.doUtils
+        url = "{server}/emby/LiveTv/Channels/?userid={UserId}&format=json"
+        params = {
+
+            'EnableImages': True,
+            'Fields': ( "Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,"
+            "CommunityRating,OfficialRating,CumulativeRunTimeTicks,"
+            "Metascore,AirTime,DateCreated,MediaStreams,People,Overview,"
+            "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
+            "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers")
+        }
+        return doUtils.downloadUrl(url, parameters=params)
+    
+    def getTvRecordings(self, groupid):
+        doUtils = self.doUtils
+        url = "{server}/emby/LiveTv/Recordings/?userid={UserId}&format=json"
+        if groupid == "root": groupid = ""
+        params = {
+
+            'GroupId': groupid,
+            'EnableImages': True,
+            'Fields': ( "Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,"
+            "CommunityRating,OfficialRating,CumulativeRunTimeTicks,"
+            "Metascore,AirTime,DateCreated,MediaStreams,People,Overview,"
+            "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
+            "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers")
+        }
+        return doUtils.downloadUrl(url, parameters=params)
+    
     def getSection(self, parentid, itemtype=None, sortby="SortName", basic=False, dialog=None):
 
         doUtils = self.doUtils
