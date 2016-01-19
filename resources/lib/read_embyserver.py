@@ -210,18 +210,12 @@ class Read_EmbyServer():
                         "MediaSources"
                     )
                 result = doUtils.downloadUrl(url, parameters=params)
-                try:
-                    items['Items'].extend(result['Items'])
-                except TypeError:
-                    # Connection timed out, reduce the number
-                    jump -= 50
-                    self.limitindex = jump
-                    self.logMsg("New throttle for items requested: %s" % jump, 1)
-                else:
-                    index += jump
-                    if dialog:
-                        percentage = int((float(index) / float(total))*100)
-                        dialog.update(percentage)
+                items['Items'].extend(result['Items'])
+
+                index += jump
+                if dialog:
+                    percentage = int((float(index) / float(total))*100)
+                    dialog.update(percentage)
         return items
 
     def getViews(self, type, root=False):
@@ -399,18 +393,12 @@ class Read_EmbyServer():
                     )
                 }
                 result = doUtils.downloadUrl(url, parameters=params)
-                try:
-                    items['Items'].extend(result['Items'])
-                except TypeError:
-                    # Connection timed out, reduce the number
-                    jump -= 50
-                    self.limitindex = jump
-                    self.logMsg("New throttle for items requested: %s" % jump, 1)
-                else:
-                    index += jump
-                    if dialog:
-                        percentage = int((float(index) / float(total))*100)
-                        dialog.update(percentage)
+                items['Items'].extend(result['Items'])
+
+                index += jump
+                if dialog:
+                    percentage = int((float(index) / float(total))*100)
+                    dialog.update(percentage)
         return items
 
     def getAlbums(self, basic=False, dialog=None):
