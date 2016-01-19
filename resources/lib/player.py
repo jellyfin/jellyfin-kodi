@@ -400,7 +400,7 @@ class Player(xbmc.Player):
     def onPlayBackStopped( self ):
         # Will be called when user stops xbmc playing a file
         self.logMsg("ONPLAYBACK_STOPPED", 2)
-        xbmcgui.Window(10101).clearProperties()
+        xbmcgui.Window(10008).clearProperties()
         self.logMsg("Clear playlist properties.")
         self.stopAll()
 

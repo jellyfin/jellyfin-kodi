@@ -77,7 +77,7 @@ class Service():
             utils.window(prop, clear=True)
 
         # Clear playlist properties
-        xbmcgui.Window(10101).clearProperties()
+        xbmcgui.Window(10008).clearProperties()
         # Clear video nodes properties
         videonodes.VideoNodes().clearProperties()
         
