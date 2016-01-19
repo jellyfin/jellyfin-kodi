@@ -51,7 +51,7 @@ class Playlist():
         playlist.clear()
         started = False
 
-        utils.window('emby_customplaylist', value="true", windowid=10101)
+        utils.window('emby_customplaylist', value="true")
 
         position = 0
 

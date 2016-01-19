@@ -251,6 +251,9 @@ class LibrarySync(threading.Thread):
                 self.logMsg(
                     "SyncDatabase (finished %s in: %s)"
                     % (itemtype, str(elapsedTime).split('.')[0]), 1)
+        else:
+            # Close the Kodi cursor
+            kodicursor.close()
 
         # sync music
         if music_enabled:
@@ -282,7 +285,6 @@ class LibrarySync(threading.Thread):
             pDialog.close()
         
         embycursor.close()
-        kodicursor.close()
         
         utils.settings('SyncInstallRunDone', value="true")
         utils.settings("dbCreatedWithVersion", self.clientInfo.getVersion())
