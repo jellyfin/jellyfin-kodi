@@ -71,13 +71,11 @@ class Service():
             "emby_online", "emby_serverStatus", "emby_onWake",
             "emby_syncRunning", "emby_dbCheck", "emby_kodiScan",
             "emby_shouldStop", "emby_currUser", "emby_dbScan", "emby_sessionId",
-            "emby_initialScan"
+            "emby_initialScan", "emby_customplaylist", "emby_playbackProps"
         ]
         for prop in properties:
             utils.window(prop, clear=True)
 
-        # Clear playlist properties
-        xbmcgui.Window(10008).clearProperties()
         # Clear video nodes properties
         videonodes.VideoNodes().clearProperties()
         

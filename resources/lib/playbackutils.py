@@ -74,7 +74,7 @@ class PlaybackUtils():
         sizePlaylist = playlist.size()
         currentPosition = startPos
 
-        propertiesPlayback = utils.window('emby_playbackProps', windowid=10008) == "true"
+        propertiesPlayback = utils.window('emby_playbackProps') == "true"
         introsPlaylist = False
         dummyPlaylist = False
 
@@ -91,11 +91,11 @@ class PlaybackUtils():
         # Otherwise we get a loop.
         if not propertiesPlayback:
 
-            utils.window('emby_playbackProps', value="true", windowid=10008)
+            utils.window('emby_playbackProps', value="true")
             self.logMsg("Setting up properties in playlist.", 1)
 
             if (not homeScreen and not seektime and 
-                    utils.window('emby_customPlaylist', windowid=10008) != "true"):
+                    utils.window('emby_customPlaylist') != "true"):
                 
                 self.logMsg("Adding dummy file to playlist.", 2)
                 dummyPlaylist = True
@@ -182,7 +182,7 @@ class PlaybackUtils():
         # We just skipped adding properties. Reset flag for next time.
         elif propertiesPlayback:
             self.logMsg("Resetting properties playback flag.", 2)
-            utils.window('emby_playbackProps', clear=True, windowid=10008)
+            utils.window('emby_playbackProps', clear=True)
 
         #self.pl.verifyPlaylist()
         ########## SETUP MAIN ITEM ##########
@@ -202,7 +202,7 @@ class PlaybackUtils():
             self.setListItem(listitem)
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listitem)
 
-        elif ((introsPlaylist and utils.window('emby_customPlaylist', windowid=10008) == "true") or
+        elif ((introsPlaylist and utils.window('emby_customPlaylist') == "true") or
             (homeScreen and not sizePlaylist)):
             # Playlist was created just now, play it.
             self.logMsg("Play playlist.", 1)
