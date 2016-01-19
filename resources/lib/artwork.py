@@ -170,10 +170,9 @@ class Artwork():
         if not xbmcgui.Dialog().yesno("Image Texture Cache", "Running the image cache process can take some time.", "Are you sure you want continue?"):
             return
             
-
         self.logMsg("Doing Image Cache Sync", 1)
         
-        dialog = xbmcgui.DialogProgressBG()
+        dialog = xbmcgui.DialogProgress()
         dialog.create("Emby for Kodi", "Image Cache Sync")
             
         # ask to rest all existing or not
@@ -213,9 +212,11 @@ class Artwork():
         percentage = 0  
         self.logMsg("Image cache sync about to process " + str(total) + " images", 1)
         for url in result:
+            if dialog.iscanceled():
+                break
             percentage = int((float(count) / float(total))*100)
             textMessage = str(count) + " of " + str(total) + " (" + str(len(self.imageCacheThreads)) + ")"
-            dialog.update(percentage, message="Updating Image Cache: " + textMessage)
+            dialog.update(percentage, "Updating Image Cache: " + textMessage)
             self.CacheTexture(url[0])
             count += 1
         cursor.close()
@@ -230,20 +231,22 @@ class Artwork():
         percentage = 0
         self.logMsg("Image cache sync about to process " + str(total) + " images", 1)
         for url in result:
+            if dialog.iscanceled():
+                break        
             percentage = int((float(count) / float(total))*100)
             textMessage = str(count) + " of " + str(total)
-            dialog.update(percentage, message="Updating Image Cache: " + textMessage)
+            dialog.update(percentage, "Updating Image Cache: " + textMessage)
             self.CacheTexture(url[0])
             count += 1
         cursor.close()
         
-        dialog.update(100, message="Waiting for all threads to exit: " + str(len(self.imageCacheThreads)))
+        dialog.update(100, "Waiting for all threads to exit: " + str(len(self.imageCacheThreads)))
         self.logMsg("Waiting for all threads to exit", 1)
         while len(self.imageCacheThreads) > 0:
             for thread in self.imageCacheThreads:
                 if thread.isFinished:
                     self.imageCacheThreads.remove(thread)
-            dialog.update(100, message="Waiting for all threads to exit: " + str(len(self.imageCacheThreads)))
+            dialog.update(100, "Waiting for all threads to exit: " + str(len(self.imageCacheThreads)))
             self.logMsg("Waiting for all threads to exit: " + str(len(self.imageCacheThreads)), 1)
             xbmc.sleep(500)
         
