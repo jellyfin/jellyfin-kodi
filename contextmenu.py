@@ -112,9 +112,11 @@ if __name__ == '__main__':
                 if newvalue:
                     newvalue = int(newvalue)
                     if newvalue > 5: newvalue = "5"
-                    musicutils.updateRatingToFile(newvalue, API.getFilePath())
-                    like, favourite, deletelike = musicutils.getEmbyRatingFromKodiRating(newvalue)
-                    API.updateUserRating(embyid, like, favourite, deletelike)
+                    if utils.settings('enableUpdateSongRating') == "true":
+                        musicutils.updateRatingToFile(newvalue, API.getFilePath())
+                    if utils.settings('enableExportSongRating') == "true":
+                        like, favourite, deletelike = musicutils.getEmbyRatingFromKodiRating(newvalue)
+                        API.updateUserRating(embyid, like, favourite, deletelike)
                     query = ' '.join(( "UPDATE song","SET rating = ?", "WHERE idSong = ?" ))
                     kodicursor.execute(query, (newvalue,itemid,))
                     kodiconn.commit()

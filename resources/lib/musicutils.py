@@ -17,9 +17,9 @@ import base64
 def logMsg(msg, lvl=1):
     utils.logMsg("%s %s" % ("Emby", "musictools"), msg, lvl)
 
-def getRealFileName(filename):
+def getRealFileName(filename,useTemp = False):
     #get the filename path accessible by python if possible...
-    isTemp = False
+    useTemp = False
 
     if not xbmcvfs.exists(filename):
         logMsg( "File does not exist! %s" %(filename), 0)
@@ -38,14 +38,16 @@ def getRealFileName(filename):
         filename = filename.replace("smb://","\\\\").replace("/","\\")
     else:
         #file can not be accessed by python directly, we copy it for processing...
-        isTemp = True
+        useTemp = True
+    
+    if useTemp:
         if "/" in filename: filepart = filename.split("/")[-1]
         else: filepart = filename.split("\\")[-1]
         tempfile = "special://temp/"+filepart
         xbmcvfs.copy(filename, tempfile)
         filename = xbmc.translatePath(tempfile).decode("utf-8")
         
-    return (isTemp,filename)
+    return (useTemp,filename)
 
 def getEmbyRatingFromKodiRating(rating):
     # Translation needed between Kodi/ID3 rating and emby likes/favourites:
@@ -61,7 +63,112 @@ def getEmbyRatingFromKodiRating(rating):
     if (rating == 1 or rating == 2): deletelike = True
     if (rating >= 5): favourite = True
     return(like, favourite, deletelike)
+
+def getAdditionalSongTags(embyid, emby_rating, API, kodicursor, emby_db, enableimportsongrating, enableexportsongrating, enableupdatesongrating):
+    previous_values = None
+    filename = API.getFilePath()
+    rating = 0
+    emby_rating = int(round(emby_rating, 0))
     
+    #get file rating and comment tag from file itself.
+    if enableimportsongrating:
+        file_rating, comment, hasEmbeddedCover = getSongTags(filename)
+    else: 
+        file_rating = 0
+        comment = ""
+        hasEmbeddedCover = False
+        
+
+    emby_dbitem = emby_db.getItem_byId(embyid)
+    try:
+        kodiid = emby_dbitem[0]
+    except TypeError:
+        # Item is not in database.
+        currentvalue = None
+    else:
+        query = "SELECT rating FROM song WHERE idSong = ?"
+        kodicursor.execute(query, (kodiid,))
+        try:
+            currentvalue = int(round(float(kodicursor.fetchone()[0]),0))
+        except: currentvalue = None
+    
+    # Only proceed if we actually have a rating from the file
+    if file_rating is None and currentvalue:
+        return (currentvalue, comment, False)
+    elif file_rating is None and not currentvalue:
+        return (emby_rating, comment, False)
+    
+    logMsg("getAdditionalSongTags --> embyid: %s - emby_rating: %s - file_rating: %s - current rating in kodidb: %s" %(embyid, emby_rating, file_rating, currentvalue))
+    
+    updateFileRating = False
+    updateEmbyRating = False
+
+    if currentvalue != None:
+        # we need to translate the emby values...
+        if emby_rating == 1 and currentvalue == 2:
+            emby_rating = 2
+        if emby_rating == 3 and currentvalue == 4:
+            emby_rating = 4
+            
+        #if updating rating into file is disabled, we ignore the rating in the file...
+        if not enableupdatesongrating:
+            file_rating = currentvalue
+        #if convert emby likes/favourites convert to song rating is disabled, we ignore the emby rating...
+        if not enableexportsongrating:
+            emby_rating = currentvalue
+            
+        if (emby_rating == file_rating) and (file_rating != currentvalue):
+            #the rating has been updated from kodi itself, update change to both emby ands file
+            rating = currentvalue
+            updateFileRating = True
+            updateEmbyRating = True
+        elif (emby_rating != currentvalue) and (file_rating == currentvalue):
+            #emby rating changed - update the file
+            rating = emby_rating
+            updateFileRating = True  
+        elif (file_rating != currentvalue) and (emby_rating == currentvalue):
+            #file rating was updated, sync change to emby
+            rating = file_rating
+            updateEmbyRating = True
+        elif (emby_rating != currentvalue) and (file_rating != currentvalue):
+            #both ratings have changed (corner case) - the highest rating wins...
+            if emby_rating > file_rating:
+                rating = emby_rating
+                updateFileRating = True
+            else:
+                rating = file_rating
+                updateEmbyRating = True
+        else:
+            #nothing has changed, just return the current value
+            rating = currentvalue
+    else:      
+        # no rating yet in DB
+        if enableimportsongrating:
+            #prefer the file rating
+            rating = file_rating
+            #determine if we should also send the rating to emby server
+            if enableexportsongrating:
+                if emby_rating == 1 and file_rating == 2:
+                    emby_rating = 2
+                if emby_rating == 3 and file_rating == 4:
+                    emby_rating = 4
+                if emby_rating != file_rating:
+                    updateEmbyRating = True
+                
+        elif enableexportsongrating:
+            #set the initial rating to emby value
+            rating = emby_rating
+        
+    if updateFileRating and enableupdatesongrating:
+        updateRatingToFile(rating, filename)
+        
+    if updateEmbyRating and enableexportsongrating:
+        # sync details to emby server. Translation needed between ID3 rating and emby likes/favourites:
+        like, favourite, deletelike = getEmbyRatingFromKodiRating(rating)
+        API.updateUserRating(embyid, like, favourite, deletelike)
+    
+    return (rating, comment, hasEmbeddedCover)
+        
 def getSongTags(file):
     # Get the actual ID3 tags for music songs as the server is lacking that info
     rating = 0
@@ -120,31 +227,33 @@ def getSongTags(file):
 def updateRatingToFile(rating, file):
     #update the rating from Emby to the file
     
-    isTemp,filename = getRealFileName(file)
-    logMsg( "setting song rating: %s for filename: %s" %(rating,filename))
+    isTemp,tempfile = getRealFileName(file,True)
+    logMsg( "setting song rating: %s for filename: %s" %(rating,tempfile))
     
-    if not filename:
+    if not tempfile:
         return
     
     try:
-        if filename.lower().endswith(".flac"):
-            audio = FLAC(filename)
+        if tempfile.lower().endswith(".flac"):
+            audio = FLAC(tempfile)
             calcrating = int(round((float(rating) / 5) * 100, 0))
             audio["rating"] = str(calcrating)
             audio.save()
-        elif filename.lower().endswith(".mp3"):
-            audio = ID3(filename)
+        elif tempfile.lower().endswith(".mp3"):
+            audio = ID3(tempfile)
             calcrating = int(round((float(rating) / 5) * 255, 0))
             audio.add(id3.POPM(email="Windows Media Player 9 Series", rating=calcrating, count=1))
             audio.save()
         else:
-            logMsg( "Not supported fileformat: %s" %(filename))
+            logMsg( "Not supported fileformat: %s" %(tempfile))
             
-        #remove tempfile if needed....
-        if isTemp:
+        #once we have succesfully written the flags we move the temp file to destination, otherwise not proceeding and just delete the temp
+        #safety check: we check if we can read the new tags successfully from the tempfile before deleting anything
+        checksum_rating, checksum_comment, checksum_hasEmbeddedCover = getSongTags(tempfile)
+        if checksum_rating == rating:
             xbmcvfs.delete(file)
-            xbmcvfs.copy(filename,file)
-            xbmcvfs.delete(filename)
+            xbmcvfs.copy(tempfile,file)
+        xbmcvfs.delete(tempfile)
             
     except Exception as e:
         #file in use ?

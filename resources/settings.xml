@@ -60,6 +60,10 @@
 	    <setting id="ignoreSpecialsNextEpisodes" type="bool" label="Ignore specials in next episodes" default="false" />
 		<setting id="additionalUsers" type="text" label="Permanent users to add to the session" default="" />
 		<setting id="startupDelay" type="number" label="Startup Delay (seconds)" default="0" option="int" />
+        <setting type="sep" label="Music metadata options" />
+        <setting id="enableImportSongRating" type="bool" label="Import Music song rating directly from files" default="true" />
+        <setting id="enableExportSongRating" type="bool" label="Convert Music song rating to Emby (likes/favourites)" default="false" />
+        <setting id="enableUpdateSongRating" type="bool" label="Allow rating in song files to be updated by Kodi/Emby" default="false" />
 	</category>
 	
 	<category label="30022">
