@@ -165,6 +165,7 @@ def getAdditionalSongTags(embyid, emby_rating, API, kodicursor, emby_db, enablei
     if updateEmbyRating and enableexportsongrating:
         # sync details to emby server. Translation needed between ID3 rating and emby likes/favourites:
         like, favourite, deletelike = getEmbyRatingFromKodiRating(rating)
+        utils.window("ignore-update-%s" %embyid, "true") #set temp windows prop to ignore the update from webclient update
         API.updateUserRating(embyid, like, favourite, deletelike)
     
     return (rating, comment, hasEmbeddedCover)

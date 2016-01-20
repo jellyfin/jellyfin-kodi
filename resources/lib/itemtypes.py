@@ -2191,9 +2191,18 @@ class Music(Items):
             return
 
         if mediatype == "song":
+            
+            #should we ignore this item ?
+            #happens when userdata updated by ratings method
+            if utils.window("ignore-update-%s" %itemid):
+                utils.window("ignore-update-%s" %itemid,clear=True)
+                return
+                
             # Process playstates
             playcount = userdata['PlayCount']
             dateplayed = userdata['LastPlayedDate']
+            
+            #process item ratings
             rating, comment, hasEmbeddedCover = musicutils.getAdditionalSongTags(itemid, rating, API, kodicursor, emby_db, self.enableimportsongrating, self.enableexportsongrating, self.enableupdatesongrating)
             
             query = "UPDATE song SET iTimesPlayed = ?, lastplayed = ?, rating = ? WHERE idSong = ?"
