@@ -17,11 +17,10 @@ import base64
 def logMsg(msg, lvl=1):
     utils.logMsg("%s %s" % ("Emby", "musictools"), msg, lvl)
 
-def getRealFileName(filename,useTemp = False):
+def getRealFileName(filename, isTemp=False):
     #get the filename path accessible by python if possible...
-    useTemp = False
-
-    if not xbmcvfs.exists(filename) and not useTemp:
+    
+    if not xbmcvfs.exists(filename):
         logMsg( "File does not exist! %s" %(filename), 0)
         return (False, "")
     
@@ -38,16 +37,14 @@ def getRealFileName(filename,useTemp = False):
         filename = filename.replace("smb://","\\\\").replace("/","\\")
     else:
         #file can not be accessed by python directly, we copy it for processing...
-        useTemp = True
-    
-    if useTemp:
+        isTemp = True
         if "/" in filename: filepart = filename.split("/")[-1]
         else: filepart = filename.split("\\")[-1]
         tempfile = "special://temp/"+filepart
         xbmcvfs.copy(filename, tempfile)
         filename = xbmc.translatePath(tempfile).decode("utf-8")
         
-    return (useTemp,filename)
+    return (isTemp,filename)
 
 def getEmbyRatingFromKodiRating(rating):
     # Translation needed between Kodi/ID3 rating and emby likes/favourites:
@@ -219,7 +216,7 @@ def getSongTags(file):
         #file in use ?
         logMsg("Exception in getSongTags %s" %e,0)
         rating = None
-        
+    
     #remove tempfile if needed....
     if isTemp: xbmcvfs.delete(filename)
         
@@ -228,8 +225,18 @@ def getSongTags(file):
 def updateRatingToFile(rating, file):
     #update the rating from Emby to the file
     
-    isTemp,tempfile = getRealFileName(file,True)
-    logMsg( "setting song rating: %s for filename: %s" %(rating,tempfile))
+    f = xbmcvfs.File(file)
+    org_size = f.size()
+    f.close()
+    
+    #create tempfile
+    if "/" in file: filepart = file.split("/")[-1]
+    else: filepart = file.split("\\")[-1]
+    tempfile = "special://temp/"+filepart
+    xbmcvfs.copy(file, tempfile)
+    tempfile = xbmc.translatePath(tempfile).decode("utf-8")
+    
+    logMsg( "setting song rating: %s for filename: %s - using tempfile: %s" %(rating,file,tempfile))
     
     if not tempfile:
         return
@@ -249,11 +256,17 @@ def updateRatingToFile(rating, file):
             logMsg( "Not supported fileformat: %s" %(tempfile))
             
         #once we have succesfully written the flags we move the temp file to destination, otherwise not proceeding and just delete the temp
-        #safety check: we check if we can read the new tags successfully from the tempfile before deleting anything
-        checksum_rating, checksum_comment, checksum_hasEmbeddedCover = getSongTags(tempfile)
-        if checksum_rating == rating:
+        #safety check: we check the file size of the temp file before proceeding with overwite of original file
+        f = xbmcvfs.File(tempfile)
+        checksum_size = f.size()
+        f.close()
+        if checksum_size >= org_size:
             xbmcvfs.delete(file)
             xbmcvfs.copy(tempfile,file)
+        else:
+            logMsg( "Checksum mismatch for filename: %s - using tempfile: %s  -  not proceeding with file overwite!" %(rating,file,tempfile))
+        
+        #always delete the tempfile
         xbmcvfs.delete(tempfile)
             
     except Exception as e:
