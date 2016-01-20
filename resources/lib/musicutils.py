@@ -21,7 +21,7 @@ def getRealFileName(filename,useTemp = False):
     #get the filename path accessible by python if possible...
     useTemp = False
 
-    if not xbmcvfs.exists(filename):
+    if not xbmcvfs.exists(filename) and not useTemp:
         logMsg( "File does not exist! %s" %(filename), 0)
         return (False, "")
     
