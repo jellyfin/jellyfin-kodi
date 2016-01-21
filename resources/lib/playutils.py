@@ -34,8 +34,6 @@ class PlayUtils():
     def getPlayUrl(self):
 
         item = self.item
-        print "playutilks"
-        print item
         playurl = None
         
         if item.get('Type') in ["Recording","TvChannel"] and item.get('MediaSources') and item['MediaSources'][0]['Protocol'] == "Http":
