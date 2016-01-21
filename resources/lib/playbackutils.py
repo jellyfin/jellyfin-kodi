@@ -189,7 +189,7 @@ class PlaybackUtils():
 
         # For transcoding only, ask for audio/subs pref
         if utils.window('emby_%s.playmethod' % playurl) == "Transcode":
-            playurl = playutils.audioSubsPref(playurl)
+            playurl = playutils.audioSubsPref(playurl, listitem)
             utils.window('emby_%s.playmethod' % playurl, value="Transcode")
 
         listitem.setPath(playurl)
@@ -232,7 +232,7 @@ class PlaybackUtils():
         playmethod = utils.window('%s.playmethod' % embyitem)
         # Only for direct play and direct stream
         subtitles = self.externalSubs(playurl)
-        if playmethod in ("DirectStream", "Transcode"):
+        if playmethod != "Transcode":
             # Direct play automatically appends external
             listitem.setSubtitles(subtitles)
 
