@@ -189,7 +189,7 @@ class DownloadUtils():
             # If user is not authenticated
             auth = (
                 'MediaBrowser Client="Kodi", Device="%s", DeviceId="%s", Version="%s"'
-                % (deviceName, deviceId, version))
+                % (deviceName, deviceId.encode('utf-8'), version.encode('utf-8')))
             header = {
 
                 'Content-type': 'application/json',
@@ -205,7 +205,8 @@ class DownloadUtils():
             # Attached to the requests session
             auth = (
                 'MediaBrowser UserId="%s", Client="Kodi", Device="%s", DeviceId="%s", Version="%s"'
-                % (userId, deviceName, deviceId, version))
+                % (userId.encode('utf-8'), deviceName, deviceId.encode('utf-8'),
+                    version.encode('utf-8')))
             header = {
 
                 'Content-type': 'application/json',
@@ -274,7 +275,6 @@ class DownloadUtils():
                                         verify=verifyssl)
 
                     elif type == "POST":
-                        print url
                         r = requests.post(url,
                                         json=postBody,
                                         headers=header,
