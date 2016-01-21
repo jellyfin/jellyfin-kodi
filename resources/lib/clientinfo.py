@@ -44,7 +44,8 @@ class ClientInfo():
 
         if utils.settings('deviceNameOpt') == "false":
             # Use Kodi's deviceName
-            deviceName = xbmc.getInfoLabel('System.FriendlyName').decode('utf-8')
+            deviceName = xbmc.getInfoLabel('System.FriendlyName')
+            deviceName = utils.normalize_string(deviceName)
         else:
             deviceName = utils.settings('deviceName')
             deviceName = deviceName.replace("\"", "_")

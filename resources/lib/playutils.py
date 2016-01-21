@@ -323,7 +323,7 @@ class PlayUtils():
         # max bit rate supported by server (max signed 32bit integer)
         return bitrate.get(videoQuality, 2147483)
 
-    def audioSubsPref(self, url):
+    def audioSubsPref(self, url, listitem):
         # For transcoding only
         # Present the list of audio to select from
         audioStreamsList = {}
@@ -331,6 +331,7 @@ class PlayUtils():
         audioStreamsChannelsList = {}
         subtitleStreamsList = {}
         subtitleStreams = ['No subtitles']
+        downloadableStreams = []
         selectAudioIndex = ""
         selectSubsIndex = ""
         playurlprefs = "%s" % url
@@ -361,8 +362,8 @@ class PlayUtils():
                 audioStreams.append(track)
 
             elif 'Subtitle' in type:
-                if stream['IsExternal']:
-                    continue
+                '''if stream['IsExternal']:
+                    continue'''
                 try:
                     track = "%s - %s" % (index, stream['Language'])
                 except:
@@ -370,10 +371,14 @@ class PlayUtils():
 
                 default = stream['IsDefault']
                 forced = stream['IsForced']
+                downloadable = stream['IsTextSubtitleStream']
+
                 if default:
                     track = "%s - Default" % track
                 if forced:
                     track = "%s - Forced" % track
+                if downloadable:
+                    downloadableStreams.append(index)
 
                 subtitleStreamsList[track] = index
                 subtitleStreams.append(track)
@@ -401,7 +406,19 @@ class PlayUtils():
                 # User selected subtitles
                 selected = subtitleStreams[resp]
                 selectSubsIndex = subtitleStreamsList[selected]
-                playurlprefs += "&SubtitleStreamIndex=%s" % selectSubsIndex
+
+                # Load subtitles in the listitem if downloadable
+                if selectSubsIndex in downloadableStreams:
+
+                    itemid = item['Id']
+                    url = [("%s/Videos/%s/%s/Subtitles/%s/Stream.srt"
+                        % (self.server, itemid, itemid, selectSubsIndex))]
+                    self.logMsg("Set up subtitles: %s %s" % (selectSubsIndex, url), 1)
+                    listitem.setSubtitles(url)
+                else:
+                    # Burn subtitles
+                    playurlprefs += "&SubtitleStreamIndex=%s" % selectSubsIndex
+
             else: # User backed out of selection
                 playurlprefs += "&SubtitleStreamIndex=%s" % mediasources.get('DefaultSubtitleStreamIndex', "")
 

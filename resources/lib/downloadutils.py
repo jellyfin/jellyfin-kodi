@@ -274,7 +274,6 @@ class DownloadUtils():
                                         verify=verifyssl)
 
                     elif type == "POST":
-                        print url
                         r = requests.post(url,
                                         json=postBody,
                                         headers=header,
