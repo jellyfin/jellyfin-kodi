@@ -1948,17 +1948,16 @@ class Music(Items):
             track = disc*2**16 + tracknumber
         year = item.get('ProductionYear')
         duration = API.getRuntime()
-        
-        #the server only returns the rating based on like/love and not the actual rating from the song
-        rating = userdata['UserRating']
-        
-        #the server doesn't support comment on songs so this will always be empty
-        comment = API.getOverview()
-        
+
         #if enabled, try to get the rating from file and/or emby
         if not self.directstream:
             rating, comment, hasEmbeddedCover = musicutils.getAdditionalSongTags(itemid, rating, API, kodicursor, emby_db, self.enableimportsongrating, self.enableexportsongrating, self.enableupdatesongrating)
-        
+        else:
+            hasEmbeddedCover = False
+            comment = API.getOverview()
+            rating = userdata['UserRating']
+            
+            
         ##### GET THE FILE AND PATH #####
         if self.directstream:
             path = "%s/emby/Audio/%s/" % (self.server, itemid)
