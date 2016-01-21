@@ -189,7 +189,7 @@ class DownloadUtils():
             # If user is not authenticated
             auth = (
                 'MediaBrowser Client="Kodi", Device="%s", DeviceId="%s", Version="%s"'
-                % (deviceName, deviceId.encode('utf-8'), version.encode('utf-8')))
+                % (deviceName, deviceId, version))
             header = {
 
                 'Content-type': 'application/json',
@@ -205,8 +205,7 @@ class DownloadUtils():
             # Attached to the requests session
             auth = (
                 'MediaBrowser UserId="%s", Client="Kodi", Device="%s", DeviceId="%s", Version="%s"'
-                % (userId.encode('utf-8'), deviceName, deviceId.encode('utf-8'),
-                    version.encode('utf-8')))
+                % (userId, deviceName, deviceId, version))
             header = {
 
                 'Content-type': 'application/json',
