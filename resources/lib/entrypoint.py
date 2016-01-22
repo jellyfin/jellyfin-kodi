@@ -85,7 +85,7 @@ def doMainListing():
     addDirectoryItem("Network credentials", "plugin://plugin.video.emby/?mode=passwords")
     addDirectoryItem("Settings", "plugin://plugin.video.emby/?mode=settings")
     addDirectoryItem("Add user to session", "plugin://plugin.video.emby/?mode=adduser")
-    addDirectoryItem("Refresh Emby playlists", "plugin://plugin.video.emby/?mode=refreshplaylist")
+    addDirectoryItem("Refresh Emby playlists/nodes", "plugin://plugin.video.emby/?mode=refreshplaylist")
     addDirectoryItem("Perform manual sync", "plugin://plugin.video.emby/?mode=manualsync")
     addDirectoryItem("Repair local database (force update all content)", "plugin://plugin.video.emby/?mode=repair")
     addDirectoryItem("Perform local database reset (full resync)", "plugin://plugin.video.emby/?mode=reset")
@@ -382,19 +382,22 @@ def refreshPlaylist():
     try:
         # First remove playlists
         utils.deletePlaylists()
+        # Remove video nodes
+        utils.deleteNodes()
         # Refresh views
         lib.refreshViews()
         dialog.notification(
                 heading="Emby for Kodi",
-                message="Emby playlist refreshed",
+                message="Emby playlists/nodes refreshed",
                 icon="special://home/addons/plugin.video.emby/icon.png",
                 time=1000,
                 sound=False)
+
     except Exception as e:
-        utils.logMsg("EMBY", "Refresh playlist failed: %s" % e, 1)
+        utils.logMsg("EMBY", "Refresh playlists/nodes failed: %s" % e, 1)
         dialog.notification(
             heading="Emby for Kodi",
-            message="Emby playlist refresh failed",
+            message="Emby playlists/nodes refresh failed",
             icon=xbmcgui.NOTIFICATION_ERROR,
             time=1000,
             sound=False)

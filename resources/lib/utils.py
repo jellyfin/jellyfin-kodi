@@ -140,15 +140,7 @@ def reset():
     deletePlaylists()
 
     # Clean up the video nodes
-    import shutil
-    path = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
-    dirs, files = xbmcvfs.listdir(path)
-    for dir in dirs:
-        if dir.decode('utf-8').startswith('Emby'):
-            shutil.rmtree("%s%s" % (path, dir.decode('utf-8')))
-    for file in files:
-        if file.decode('utf-8').startswith('emby'):
-            xbmcvfs.delete("%s%s" % (path, file.decode('utf-8')))
+    deleteNodes()
 
     # Wipe the kodi databases
     logMsg("EMBY", "Resetting the Kodi video database.")
@@ -503,3 +495,16 @@ def deletePlaylists():
     for file in files:
         if file.decode('utf-8').startswith('Emby'):
             xbmcvfs.delete("%s%s" % (path, file))
+
+def deleteNodes():
+
+    # Clean up video nodes
+    import shutil
+    path = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
+    dirs, files = xbmcvfs.listdir(path)
+    for dir in dirs:
+        if dir.decode('utf-8').startswith('Emby'):
+            shutil.rmtree("%s%s" % (path, dir.decode('utf-8')))
+    for file in files:
+        if file.decode('utf-8').startswith('emby'):
+            xbmcvfs.delete("%s%s" % (path, file.decode('utf-8')))
