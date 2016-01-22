@@ -432,13 +432,14 @@ def BrowseContent(viewname, type="", folderid=None, filter=""):
         elif type == "tvchannels":
             listing = emby.getTvChannels()
         elif filter == "recent":
-            listing = emby.getFilteredSection("", itemtype=itemtype.split(",")[0], sortby="DateCreated", recursive=True, limit=25, sortorder="Descending")
+            #why don't we get a recursive result when the parentid is set ?
+            listing = emby.getFilteredSection(parentid="", itemtype=itemtype.split(",")[0], sortby="DateCreated", recursive=True, limit=25, sortorder="Descending")
         elif filter == "random":
-            listing = emby.getFilteredSection("", itemtype=itemtype.split(",")[0], sortby="Random", recursive=True, limit=150, sortorder="Descending")
+            listing = emby.getFilteredSection(parentid="", itemtype=itemtype.split(",")[0], sortby="Random", recursive=True, limit=150, sortorder="Descending")
         elif filter == "recommended":
-            listing = emby.getFilteredSection("", itemtype=itemtype.split(",")[0], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter="IsFavorite")
+            listing = emby.getFilteredSection(parentid="", itemtype=itemtype.split(",")[0], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter="IsFavorite")
         elif filter == "sets":
-            listing = emby.getFilteredSection("", itemtype=itemtype.split(",")[1], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter="IsFavorite")
+            listing = emby.getFilteredSection(parentid="", itemtype=itemtype.split(",")[1], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter="IsFavorite")
         else:
             listing = emby.getFilteredSection(folderid, itemtype=itemtype, recursive=False)
         
