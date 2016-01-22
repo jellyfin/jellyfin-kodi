@@ -52,6 +52,7 @@ class PlayUtils():
 
             self.logMsg("File is direct playing.", 1)
             playurl = self.directPlay()
+            playurl = playurl.encode('utf-8')
             # Set playmethod property
             utils.window('emby_%s.playmethod' % playurl, value="DirectPlay")
 
