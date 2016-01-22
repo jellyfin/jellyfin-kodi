@@ -415,7 +415,8 @@ class LibrarySync(threading.Thread):
                                         viewtype=current_viewtype,
                                         delete=True)
                             # Added new playlist
-                            utils.playlistXSP(mediatype, foldername, viewtype)
+                            if mediatype in ['movies', 'tvshows', 'musicvideos']:
+                                utils.playlistXSP(mediatype, foldername, viewtype)
                             # Add new video node
                             if mediatype != "musicvideos":
                                 vnodes.viewNode(totalnodes, foldername, mediatype, viewtype)
@@ -430,7 +431,8 @@ class LibrarySync(threading.Thread):
                     else:
                         if mediatype != "music":
                             # Validate the playlist exists or recreate it
-                            utils.playlistXSP(mediatype, foldername, viewtype)
+                            if mediatype in ['movies', 'tvshows', 'musicvideos']:
+                                utils.playlistXSP(mediatype, foldername, viewtype)
                             # Create the video node if not already exists
                             if mediatype != "musicvideos":
                                 vnodes.viewNode(totalnodes, foldername, mediatype, viewtype)

@@ -474,7 +474,7 @@ def BrowseContent(viewname, type="", folderid=""):
                     xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=li.getProperty("path"), listitem=li)
 
 
-    xbmcplugin.endOfDirectory(handle=int(sys.argv[1]),succeeded=True,updateListing=False,cacheToDisc=False)
+    xbmcplugin.endOfDirectory(handle=int(sys.argv[1]))
     if filter == "recent":
         xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_DATE)
     else:
