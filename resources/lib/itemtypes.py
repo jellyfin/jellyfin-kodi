@@ -1948,6 +1948,7 @@ class Music(Items):
             track = disc*2**16 + tracknumber
         year = item.get('ProductionYear')
         duration = API.getRuntime()
+        rating = userdata['UserRating']
 
         #if enabled, try to get the rating from file and/or emby
         if not self.directstream:
@@ -1955,7 +1956,6 @@ class Music(Items):
         else:
             hasEmbeddedCover = False
             comment = API.getOverview()
-            rating = userdata['UserRating']
             
             
         ##### GET THE FILE AND PATH #####
