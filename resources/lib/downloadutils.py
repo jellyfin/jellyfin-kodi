@@ -182,6 +182,7 @@ class DownloadUtils():
         clientInfo = self.clientInfo
 
         deviceName = clientInfo.getDeviceName()
+        deviceName = utils.normalize_string(deviceName.encode('utf-8'))
         deviceId = clientInfo.getDeviceId()
         version = clientInfo.getVersion()
 
