@@ -44,17 +44,17 @@ def window(property, value=None, clear=False, windowid=10000):
     WINDOW = xbmcgui.Window(windowid)
     
     #setproperty accepts both string and unicode but utf-8 strings are adviced by kodi devs because some unicode can give issues
-    if isinstance(property, unicode):
+    '''if isinstance(property, unicode):
         property = property.encode("utf-8")
     if isinstance(value, unicode):
-        value = value.encode("utf-8")
+        value = value.encode("utf-8")'''
     
     if clear:
         WINDOW.clearProperty(property)
     elif value is not None:
         WINDOW.setProperty(property, value)
     else: #getproperty returns string so convert to unicode
-        return WINDOW.getProperty(property).decode("utf-8")
+        return WINDOW.getProperty(property)#.decode("utf-8")
 
 def settings(setting, value=None):
     # Get or add addon setting
