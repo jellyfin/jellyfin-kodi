@@ -58,6 +58,7 @@ class Main:
             'channels': entrypoint.BrowseChannels,
             'channelsfolder': entrypoint.BrowseChannels,
             'browsecontent': entrypoint.BrowseContent,
+            'getsubfolders': entrypoint.GetSubFolders,
             'nextup': entrypoint.getNextUpEpisodes,
             'inprogressepisodes': entrypoint.getInProgressEpisodes,
             'recentepisodes': entrypoint.getRecentEpisodes,
@@ -77,11 +78,11 @@ class Main:
                 limit = int(params['limit'][0])
                 modes[mode](itemid, limit)
             
-            elif mode == "channels":
+            elif mode in ["channels","getsubfolders"]:
                 modes[mode](itemid)
                 
             elif mode == "browsecontent":
-                modes[mode]( itemid, params.get('type',[""])[0], params.get('folderid',[""])[0], params.get('filter',[""])[0] )
+                modes[mode]( itemid, params.get('type',[""])[0], params.get('folderid',[""])[0] )
 
             elif mode == "channelsfolder":
                 folderid = params['folderid'][0]
