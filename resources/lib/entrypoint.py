@@ -528,7 +528,7 @@ def createListItemFromEmbyItem(item,art=artwork.Artwork(),doUtils=downloadutils.
         runtime = item.get("RunTimeTicks",0)/ 10000000.0
         seektime = userdata['Resume']
         if seektime:
-            li.setProperty("resumetime", seektime)
+            li.setProperty("resumetime", str(seektime))
             li.setProperty("totaltime", str(runtime))
         
         played = userdata['Played']
