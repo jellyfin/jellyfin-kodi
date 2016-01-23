@@ -293,6 +293,7 @@ class LibrarySync(threading.Thread):
         elapsedtotal = datetime.now() - starttotal
 
         utils.window('emby_dbScan', clear=True)
+        utils.window('emby_initialScan', clear=True)
         xbmcgui.Dialog().notification(
                         heading="Emby for Kodi",
                         message="%s completed in: %s" % 
@@ -927,7 +928,7 @@ class LibrarySync(threading.Thread):
     def resumeThread(self):
         self.suspend_thread = False
         self.logMsg("Resuming thread...", 0)
-        
+
 
 class ManualSync(LibrarySync):
 
