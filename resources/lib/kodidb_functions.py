@@ -141,8 +141,8 @@ class Kodidb_Functions():
         
         cursor = self.cursor
         
-        if self.kodiversion in (15, 16):
-            # Kodi Isengard, Jarvis
+        if self.kodiversion in (15, 16, 17):
+            # Kodi Isengard, Jarvis, Krypton
             for country in countries:
                 query = ' '.join((
 
@@ -225,8 +225,8 @@ class Kodidb_Functions():
             type = person['Type']
             thumb = person['imageurl']
             
-            # Kodi Isengard, Jarvis
-            if kodiversion in (15, 16):
+            # Kodi Isengard, Jarvis, Krypton
+            if kodiversion in (15, 16, 17):
                 query = ' '.join((
 
                     "SELECT actor_id",
@@ -422,8 +422,8 @@ class Kodidb_Functions():
 
         cursor = self.cursor
         
-        # Kodi Isengard, Jarvis
-        if self.kodiversion in (15, 16):
+        # Kodi Isengard, Jarvis, Krypton
+        if self.kodiversion in (15, 16, 17):
             # Delete current genres for clean slate
             query = ' '.join((
 
@@ -542,8 +542,8 @@ class Kodidb_Functions():
 
         for studio in studios:
 
-            if kodiversion in (15, 16):
-                # Kodi Isengard, Jarvis
+            if kodiversion in (15, 16, 17):
+                # Kodi Isengard, Jarvis, Krypton
                 query = ' '.join((
 
                     "SELECT studio_id",
@@ -710,8 +710,8 @@ class Kodidb_Functions():
         cursor = self.cursor
         
         # First, delete any existing tags associated to the id
-        if self.kodiversion in (15, 16):
-            # Kodi Isengard, Jarvis
+        if self.kodiversion in (15, 16, 17):
+            # Kodi Isengard, Jarvis, Krypton
             query = ' '.join((
 
                 "DELETE FROM tag_link",
@@ -738,8 +738,8 @@ class Kodidb_Functions():
 
         cursor = self.cursor
 
-        if self.kodiversion in (15, 16):
-            # Kodi Isengard, Jarvis
+        if self.kodiversion in (15, 16, 17):
+            # Kodi Isengard, Jarvis, Krypton
             query = ' '.join((
 
                 "SELECT tag_id",
@@ -802,8 +802,8 @@ class Kodidb_Functions():
         cursor = self.cursor
 
         # This will create and return the tag_id
-        if self.kodiversion in (15, 16):
-            # Kodi Isengard, Jarvis
+        if self.kodiversion in (15, 16, 17):
+            # Kodi Isengard, Jarvis, Krypton
             query = ' '.join((
 
                 "SELECT tag_id",
@@ -850,8 +850,8 @@ class Kodidb_Functions():
         cursor = self.cursor
         self.logMsg("Updating: %s with %s for %s: %s" % (oldtag, newtag, mediatype, kodiid), 2)
         
-        if self.kodiversion in (15, 16):
-            # Kodi Isengard, Jarvis
+        if self.kodiversion in (15, 16, 17):
+            # Kodi Isengard, Jarvis, Krypton
             try: 
                 query = ' '.join((
 
@@ -903,8 +903,8 @@ class Kodidb_Functions():
 
         cursor = self.cursor
 
-        if self.kodiversion in (15, 16):
-            # Kodi Isengard, Jarvis
+        if self.kodiversion in (15, 16, 17):
+            # Kodi Isengard, Jarvis, Krypton
             query = ' '.join((
 
                 "SELECT tag_id",
