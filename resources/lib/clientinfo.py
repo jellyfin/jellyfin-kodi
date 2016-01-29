@@ -76,18 +76,15 @@ class ClientInfo():
             return clientId
 
         addon_path = self.addon.getAddonInfo('path').decode('utf-8')
-        if os.path.supports_unicode_filenames:
-            GUID_file = xbmc.translatePath(os.path.join(addon_path, "machine_guid")).decode('utf-8')
-        else:
-            GUID_file = xbmc.translatePath(os.path.join(addon_path.encode("utf-8"), "machine_guid")).decode('utf-8')
+        GUID_file = xbmc.translatePath(os.path.join(addon_path, "machine_guid")).decode('utf-8')
 
         try:
-            GUID = xbmcvfs.File(GUID_file)
+            GUID = open(GUID_file)
         
         except Exception as e: # machine_guid does not exists.
             self.logMsg("Generating a new deviceid: %s" % e, 1)
             clientId = str("%012X" % uuid4())
-            GUID = xbmcvfs.File(GUID_file, 'w')
+            GUID = open(GUID_file, 'w')
             GUID.write(clientId)
 
         else: # machine_guid already exists. Get guid.
