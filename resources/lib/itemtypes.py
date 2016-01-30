@@ -2043,7 +2043,7 @@ class Music(Items):
             except TypeError:
                 # No album found. Let's create it
                 emby_albumId = item['AlbumId']
-                album = emby.getItem(emby_albumId)
+                album = self.emby.getItem(emby_albumId)
                 emby_dbalbum = emby_db.getItem_byId(emby_albumId)
                 try:
                     albumid = emby_dbalbum[0]
