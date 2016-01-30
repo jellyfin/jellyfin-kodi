@@ -1,3 +1,7 @@
+version 1.1.81
+- Fix missing deviceId
+- Fix to newly added album/songs (if you experienced the bug, you will need to reset to fix it. Know that moving forward, it is corrected.)
+
 version 1.1.80
 - Add refresh for video nodes
 - Fix for home videos (being unable to back out of the menu). Running refresh playlists/nodes will fix this.
