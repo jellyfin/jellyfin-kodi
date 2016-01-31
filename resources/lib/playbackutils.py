@@ -141,7 +141,7 @@ class PlaybackUtils():
 
             ############### -- ADD MAIN ITEM ONLY FOR HOMESCREEN ###############
 
-            if homeScreen and not sizePlaylist:
+            if homeScreen and not seektime and not sizePlaylist:
                 # Extend our current playlist with the actual item to play
                 # only if there's no playlist first
                 self.logMsg("Adding main item to playlist.", 1)
