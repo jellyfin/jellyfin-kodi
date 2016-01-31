@@ -2042,13 +2042,17 @@ class Music(Items):
                 return
             except TypeError:
                 # No album found. Let's create it
+                self.logMsg("Album database entry missing.", 1)
                 emby_albumId = item['AlbumId']
                 album = self.emby.getItem(emby_albumId)
+                self.add_updateAlbum(album)
                 emby_dbalbum = emby_db.getItem_byId(emby_albumId)
                 try:
                     albumid = emby_dbalbum[0]
+                    self.logMsg("Found albumid: %s" % albumid, 1)
                 except TypeError:
                     # No album found, create a single's album
+                    self.logMsg("Failed to add album. Creating singles.", 1)
                     kodicursor.execute("select coalesce(max(idAlbum),0) from album")
                     albumid = kodicursor.fetchone()[0] + 1
                     if kodiversion == 16:
