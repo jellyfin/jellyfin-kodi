@@ -197,7 +197,7 @@ class PlaybackUtils():
 
         ############### PLAYBACK ################
 
-        if homeScreen and seektime:
+        if homeScreen and seektime and utils.window('emby_customPlaylist') != "true":
             self.logMsg("Play as a widget item.", 1)
             self.setListItem(listitem)
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listitem)
