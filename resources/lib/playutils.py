@@ -163,7 +163,7 @@ class PlayUtils():
 
             if type == "Dvd":
                 playurl = "%s/VIDEO_TS/VIDEO_TS.IFO" % playurl
-            elif type == "Bluray":
+            elif type == "BluRay":
                 playurl = "%s/BDMV/index.bdmv" % playurl
 
         # Assign network protocol
