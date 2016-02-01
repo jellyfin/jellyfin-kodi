@@ -91,7 +91,7 @@ class LibrarySync(threading.Thread):
             
             if not completed:
                 # Fast sync failed or server plugin is not found
-                completed = self.fullSync(manualrun=True)
+                completed = ManualSync()
         else:
             # Install sync is not completed
             completed = self.fullSync()
