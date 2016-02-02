@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# Read an api response and convert more complex cases
+
 ##################################################################################################
 
 import clientinfo
@@ -11,8 +13,9 @@ import utils
 class API():
 
     def __init__(self, item):
-
+        # item is the api response
         self.item = item
+
         self.clientinfo = clientinfo.ClientInfo()
         self.addonName = self.clientinfo.getAddonName()
 
@@ -377,7 +380,7 @@ class API():
                 # Specific format modification
                 if 'Dvd'in videotype:
                     filepath = "%s/VIDEO_TS/VIDEO_TS.IFO" % filepath
-                elif 'Bluray' in videotype:
+                elif 'BluRay' in videotype:
                     filepath = "%s/BDMV/index.bdmv" % filepath
             
             if "\\" in filepath:
@@ -388,6 +391,7 @@ class API():
     
     def updateUserRating(self, itemid, like=None, favourite=None, deletelike=False):
         #updates the userrating to Emby
+        # This should be moved to read_embyserver.py
         import downloadutils
         doUtils = downloadutils.DownloadUtils()
         
