@@ -48,22 +48,25 @@ class Service():
 
     def __init__(self):
 
+        log = self.logMsg
+        window = utils.window
+
         self.clientInfo = clientinfo.ClientInfo()
         self.addonName = self.clientInfo.getAddonName()
         logLevel = userclient.UserClient().getLogLevel()
         self.monitor = xbmc.Monitor()
 
-        utils.window('emby_logLevel', value=str(logLevel))
-        utils.window('emby_kodiProfile', value=xbmc.translatePath("special://profile"))
-        utils.window('emby_pluginpath', value=utils.settings('useDirectPaths'))
+        window('emby_logLevel', value=str(logLevel))
+        window('emby_kodiProfile', value=xbmc.translatePath("special://profile"))
+        window('emby_pluginpath', value=utils.settings('useDirectPaths'))
 
         # Initial logging
-        self.logMsg("======== START %s ========" % self.addonName, 0)
-        self.logMsg("Platform: %s" % (self.clientInfo.getPlatform()), 0)
-        self.logMsg("KODI Version: %s" % xbmc.getInfoLabel('System.BuildVersion'), 0)
-        self.logMsg("%s Version: %s" % (self.addonName, self.clientInfo.getVersion()), 0)
-        self.logMsg("Using plugin paths: %s" % (utils.settings('useDirectPaths') != "true"), 0)
-        self.logMsg("Log Level: %s" % logLevel, 0)
+        log("======== START %s ========" % self.addonName, 0)
+        log("Platform: %s" % (self.clientInfo.getPlatform()), 0)
+        log("KODI Version: %s" % xbmc.getInfoLabel('System.BuildVersion'), 0)
+        log("%s Version: %s" % (self.addonName, self.clientInfo.getVersion()), 0)
+        log("Using plugin paths: %s" % (utils.settings('useDirectPaths') != "true"), 0)
+        log("Log Level: %s" % logLevel, 0)
 
         # Reset window props for profile switch
         properties = [
@@ -74,13 +77,13 @@ class Service():
             "emby_initialScan", "emby_customplaylist", "emby_playbackProps"
         ]
         for prop in properties:
-            utils.window(prop, clear=True)
+            window(prop, clear=True)
 
         # Clear video nodes properties
         videonodes.VideoNodes().clearProperties()
         
         # Set the minimum database version
-        utils.window('emby_minDBVersion', value="1.1.63")
+        window('emby_minDBVersion', value="1.1.63")
 
     def logMsg(self, msg, lvl=1):
 
@@ -89,6 +92,11 @@ class Service():
 
        
     def ServiceEntryPoint(self):
+
+        log = self.logMsg
+        window = utils.window
+        lang = utils.language
+
         # Important: Threads depending on abortRequest will not trigger
         # if profile switch happens more than once.
         monitor = self.monitor
@@ -107,10 +115,9 @@ class Service():
 
         while not monitor.abortRequested():
 
-            if utils.window('emby_kodiProfile') != kodiProfile:
+            if window('emby_kodiProfile') != kodiProfile:
                 # Profile change happened, terminate this thread and others
-                self.logMsg(
-                    "Kodi profile was: %s and changed to: %s. Terminating old Emby thread."
+                log("Kodi profile was: %s and changed to: %s. Terminating old Emby thread."
                     % (kodiProfile, utils.window('emby_kodiProfile')), 1)
                 
                 break
@@ -120,7 +127,7 @@ class Service():
             # 2. User is set
             # 3. User has access to the server
 
-            if utils.window('emby_online') == "true":
+            if window('emby_online') == "true":
                 
                 # Emby server is online
                 # Verify if user is set and has access to the server
@@ -146,15 +153,15 @@ class Service():
                                 kplayer.reportPlayback()
                                 lastProgressUpdate = datetime.today()
                             
-                            elif utils.window('emby_command') == "true":
+                            elif window('emby_command') == "true":
                                 # Received a remote control command that
                                 # requires updating immediately
-                                utils.window('emby_command', clear=True)
+                                window('emby_command', clear=True)
                                 kplayer.reportPlayback()
                                 lastProgressUpdate = datetime.today()
                             
                         except Exception as e:
-                            self.logMsg("Exception in Playback Monitor Service: %s" % e, 1)
+                            log("Exception in Playback Monitor Service: %s" % e, 1)
                             pass
                     else:
                         # Start up events
@@ -169,8 +176,8 @@ class Service():
                             else:
                                 add = ""
                             xbmcgui.Dialog().notification(
-                                        heading="Emby server",
-                                        message="Welcome %s%s!" % (user.currUser, add),
+                                        heading="Emby for Kodi",
+                                        message="%s %s%s!" % (lang(33000), user.currUser, add),
                                         icon="special://home/addons/plugin.video.emby/icon.png",
                                         time=2000,
                                         sound=False)
@@ -192,7 +199,7 @@ class Service():
                     if (user.currUser is None) and self.warn_auth:
                         # Alert user is not authenticated and suppress future warning
                         self.warn_auth = False
-                        self.logMsg("Not authenticated yet.", 1)
+                        log("Not authenticated yet.", 1)
 
                     # User access is restricted.
                     # Keep verifying until access is granted
@@ -201,7 +208,7 @@ class Service():
                         # Verify access with an API call
                         user.hasAccess()
 
-                        if utils.window('emby_online') != "true":
+                        if window('emby_online') != "true":
                             # Server went offline
                             break
 
@@ -221,12 +228,12 @@ class Service():
                         # Server is offline.
                         # Alert the user and suppress future warning
                         if self.server_online:
-                            self.logMsg("Server is offline.", 1)
-                            utils.window('emby_online', value="false")
+                            log("Server is offline.", 1)
+                            window('emby_online', value="false")
 
                             xbmcgui.Dialog().notification(
-                                        heading="Error connecting",
-                                        message="%s Server is unreachable." % self.addonName,
+                                        heading=lang(33001),
+                                        message="%s %s" % (self.addonName, lang(33002)),
                                         icon="special://home/addons/plugin.video.emby/icon.png",
                                         sound=False)
                         
@@ -242,15 +249,15 @@ class Service():
                                 break
                             # Alert the user that server is online.
                             xbmcgui.Dialog().notification(
-                                        heading="Emby server",
-                                        message="Server is online.",
+                                        heading="Emby for Kodi",
+                                        message=lang(33003),
                                         icon="special://home/addons/plugin.video.emby/icon.png",
                                         time=2000,
                                         sound=False)
                         
                         self.server_online = True
-                        self.logMsg("Server is online and ready.", 1)
-                        utils.window('emby_online', value="true")
+                        log("Server is online and ready.", 1)
+                        window('emby_online', value="true")
                         
                         # Start the userclient thread
                         if not self.userclient_running:
@@ -278,7 +285,7 @@ class Service():
         if self.userclient_running:
             user.stopClient()
 
-        self.logMsg("======== STOP %s ========" % self.addonName, 0)
+        log("======== STOP %s ========" % self.addonName, 0)
 
 # Delay option
 delay = int(utils.settings('startupDelay'))

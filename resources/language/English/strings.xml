@@ -276,6 +276,12 @@
     <string id="30406">Remove from Emby favorites</string>
     <string id="30407">Set custom song rating</string>
     <string id="30408">Emby addon settings</string>
-    <string id="30409">Delete item from the server</string>   
+    <string id="30409">Delete item from the server</string>
+
+    <!-- service add-on -->
+    <string id="33000">Welcome</string>
+    <string id="33001">Error connecting</string>
+    <string id="33002">Server is unreachable</string>
+    <string id="33003">Server is online</string>
 
 </strings>
