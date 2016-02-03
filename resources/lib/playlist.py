@@ -44,7 +44,7 @@ class Playlist():
         emby_db = embydb.Embydb_Functions(embycursor)
 
         self.logMsg("---*** PLAY ALL ***---", 1)
-        self.logMsg("Items: %s" % itemids)
+        self.logMsg("Items: %s and start at: %s" % (itemids, startat))
 
         player = xbmc.Player()
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
@@ -62,6 +62,7 @@ class Playlist():
                 mediatype = embydb_item[4]
             except TypeError:
                 # Item is not found in our database, add item manually
+				self.logMsg("Item was not found in the database, manually adding item.", 1)
                 item = self.emby.getItem(itemid)
                 self.addtoPlaylist_xbmc(playlist, item)
             else:
@@ -78,6 +79,7 @@ class Playlist():
             # Seek to the starting position
             seektime = startat / 10000000.0
             player.seekTime(seektime)
+			self.logMsg("Seeking to: %s" % seektime, 1)
 
         self.verifyPlaylist()
         embycursor.close()
