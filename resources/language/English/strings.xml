@@ -283,5 +283,8 @@
     <string id="33001">Error connecting</string>
     <string id="33002">Server is unreachable</string>
     <string id="33003">Server is online</string>
+    <string id="33004">items added to playlist</string>
+    <string id="33005">items queued to playlist</string>
+    <string id="33006">Server is restarting</string>
 
 </strings>
