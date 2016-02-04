@@ -298,8 +298,8 @@
     <string id="30529">Startup delay (in seconds)</string>
     <string id="30530">Enable server restart message</string>
     <string id="30531">Enable new content notification</string>
-    <string id="30532">For the video library (in seconds)</string>
-    <string id="30533">For the music library (in seconds)</string>
+    <string id="30532">Duration of the video library pop up (in seconds)</string>
+    <string id="30533">Duration of the music library pop up (in seconds)</string>
 
     <!-- service add-on -->
     <string id="33000">Welcome</string>
