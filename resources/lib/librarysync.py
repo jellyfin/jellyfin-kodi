@@ -1375,10 +1375,10 @@ class ManualSync(LibrarySync):
                         # Only update if songs is not in Kodi or checksum is different
                         updatelist.append(itemid)
 
-                self.logMsg("%s to update: %s" % (type, updatelist), 1)
-                embyitems = emby.getFullItems(updatelist)
-                total = len(updatelist)
-                del updatelist[:]
+            self.logMsg("%s to update: %s" % (type, updatelist), 1)
+            embyitems = emby.getFullItems(updatelist)
+            total = len(updatelist)
+            del updatelist[:]
 
             if pdialog:
                 pdialog.update(heading="Processing %s / %s items" % (type, total))
