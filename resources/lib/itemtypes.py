@@ -39,6 +39,8 @@ class Items(object):
         self.directpath = utils.settings('useDirectPaths') == "1"
         self.music_enabled = utils.settings('enableMusic') == "true"
         self.contentmsg = utils.settings('newContent') == "true"
+        self.newvideo_time = int(utils.settings('newvideotime'))*1000
+        self.newmusic_time = int(utils.settings('newmusictime'))*1000
 
         self.artwork = artwork.Artwork()
         self.emby = embyserver.Read_EmbyServer()
@@ -205,11 +207,12 @@ class Items(object):
 
         return True
 
-    def contentPop(self, name):
+    def contentPop(self, name, time=5000):
         xbmcgui.Dialog().notification(
                 heading="Emby for Kodi",
                 message="Added: %s" % name,
                 icon="special://home/addons/plugin.video.emby/icon.png",
+                time=time,
                 sound=False)
 
 
@@ -232,7 +235,7 @@ class Movies(Items):
                 count += 1
             self.add_update(movie)
             if not pdialog and self.contentmsg:
-                self.contentPop(title)
+                self.contentPop(title, self.newvideo_time)
 
     def added_boxset(self, items, pdialog):
 
@@ -627,7 +630,7 @@ class MusicVideos(Items):
                 count += 1
             self.add_update(mvideo)
             if not pdialog and self.contentmsg:
-                self.contentPop(title)
+                self.contentPop(title, self.newvideo_time)
 
 
     def add_update(self, item, viewtag=None, viewid=None):
@@ -964,7 +967,7 @@ class TVShows(Items):
                 count += 1
             self.add_updateEpisode(episode)
             if not pdialog and self.contentmsg:
-                self.contentPop(title)
+                self.contentPop(title, self.newvideo_time)
 
 
     def add_update(self, item, viewtag=None, viewid=None):
@@ -1665,7 +1668,7 @@ class Music(Items):
                 count += 1
             self.add_updateSong(song)
             if not pdialog and self.contentmsg:
-                self.contentPop(title)
+                self.contentPop(title, self.newmusic_time)
 
     def add_updateArtist(self, item, artisttype="MusicArtist"):
         # Process a single artist

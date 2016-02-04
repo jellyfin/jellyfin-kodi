@@ -233,11 +233,7 @@
     <string id="30241">DB Sync Indication:</string>
     <string id="30242">Play Count Sync Indication:</string>
     <string id="30243">Enable HTTPS</string><!-- Verified -->
-    <string id="30245">Force Transcoding Codecs</string>
     
-    <string id="30246">Enable Netflix style next up notification</string>
-    <string id="30247">  - The number of seconds before the end to show the notification</string>
-    <string id="30248">Show Emby Info dialog on play/select action</string>
     <string id="30249">Enable server connection message on startup</string><!-- Verified -->
     
     <string id="30251">Recently added Home Videos</string>
@@ -309,6 +305,8 @@
     <string id="30529">Startup delay (in seconds)</string>
     <string id="30530">Enable server restart message</string>
     <string id="30531">Enable new content notification</string>
+    <string id="30532">For the video library (in seconds)</string>
+    <string id="30533">For the music library (in seconds)</string>
 
     <!-- service add-on -->
     <string id="33000">Welcome</string>
