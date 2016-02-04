@@ -54,6 +54,7 @@ class VideoNodes(object):
 
     def viewNode(self, indexnumber, tagname, mediatype, viewtype, delete=False):
 
+        window = utils.window
         kodiversion = self.kodiversion
 
         cleantagname = utils.normalize_nodes(tagname.encode('utf-8'))
@@ -92,13 +93,13 @@ class VideoNodes(object):
         path = "library://video/Emby - %s/" % dirname
         for i in range(1, indexnumber):
             # Verify to make sure we don't create duplicates
-            if utils.window('Emby.nodes.%s.index' % i) == path:
+            if window('Emby.nodes.%s.index' % i) == path:
                 return
 
-        if mediatype=="photos":
+        if mediatype == "photos":
             path = "plugin://plugin.video.emby/?id=%s&mode=getsubfolders" % indexnumber
             
-        utils.window('Emby.nodes.%s.index' % indexnumber, value=path)
+        window('Emby.nodes.%s.index' % indexnumber, value=path)
         
         # Root
         if not mediatype=="photos":
@@ -163,13 +164,14 @@ class VideoNodes(object):
                 '8': 30255,
                 '11': 30254
                 },
+
             'musicvideos': 
                 {
                 '1': tagname,
                 '2': 30256,
                 '4': 30257,
                 '6': 30258
-                },
+                }
         }
 
         nodes = mediatypes[mediatype]
@@ -189,10 +191,12 @@ class VideoNodes(object):
             # Set window properties
             if (mediatype == "homevideos" or mediatype == "photos") and nodetype == "all":
                 # Custom query
-                path = "plugin://plugin.video.emby/?id=%s&mode=browsecontent&type=%s" %(tagname,mediatype)
+                path = ("plugin://plugin.video.emby/?id=%s&mode=browsecontent&type=%s"
+                        % (tagname, mediatype))
             elif (mediatype == "homevideos" or mediatype == "photos"):
                 # Custom query
-                path = "plugin://plugin.video.emby/?id=%s&mode=browsecontent&type=%s&folderid=%s" %(tagname,mediatype,nodetype)
+                path = ("plugin://plugin.video.emby/?id=%s&mode=browsecontent&type=%s&folderid=%s"
+                        % (tagname, mediatype, nodetype))
             elif nodetype == "nextepisodes":
                 # Custom query
                 path = "plugin://plugin.video.emby/?id=%s&mode=nextup&limit=25" % tagname
@@ -218,19 +222,20 @@ class VideoNodes(object):
                     templabel = label
 
                 embynode = "Emby.nodes.%s" % indexnumber
-                utils.window('%s.title' % embynode, value=templabel)
-                utils.window('%s.path' % embynode, value=windowpath)
-                utils.window('%s.content' % embynode, value=path)
-                utils.window('%s.type' % embynode, value=mediatype)
+                window('%s.title' % embynode, value=templabel)
+                window('%s.path' % embynode, value=windowpath)
+                window('%s.content' % embynode, value=path)
+                window('%s.type' % embynode, value=mediatype)
             else:
                 embynode = "Emby.nodes.%s.%s" % (indexnumber, nodetype)
-                utils.window('%s.title' % embynode, value=label)
-                utils.window('%s.path' % embynode, value=windowpath)
-                utils.window('%s.content' % embynode, value=path)
+                window('%s.title' % embynode, value=label)
+                window('%s.path' % embynode, value=windowpath)
+                window('%s.content' % embynode, value=path)
 
-            if mediatype=="photos":
-                #for photos we do not create a node in videos but we do want the window props to be created
-                #todo: add our photos nodes to kodi picture sources somehow
+            if mediatype == "photos":
+                # For photos, we do not create a node in videos but we do want the window props
+                # to be created.
+                # To do: add our photos nodes to kodi picture sources somehow
                 continue
             
             if xbmcvfs.exists(nodeXML):
@@ -238,7 +243,8 @@ class VideoNodes(object):
                 continue
 
             # Create the root
-            if nodetype == "nextepisodes" or (kodiversion == 14 and nodetype in ('recentepisodes', 'inprogressepisodes')) or mediatype=="homevideos":
+            if (nodetype == "nextepisodes" or mediatype == "homevideos" or
+                    (kodiversion == 14 and nodetype in ('recentepisodes', 'inprogressepisodes'))):
                 # Folder type with plugin path
                 root = self.commonRoot(order=node, label=label, tagname=tagname, roottype=2)
                 etree.SubElement(root, 'path').text = path
@@ -311,6 +317,8 @@ class VideoNodes(object):
 
     def singleNode(self, indexnumber, tagname, mediatype, itemtype):
 
+        window = utils.window
+
         tagname = tagname.encode('utf-8')
         cleantagname = utils.normalize_nodes(tagname)
         nodepath = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
@@ -334,10 +342,10 @@ class VideoNodes(object):
         }
         label = utils.language(labels[tagname])
         embynode = "Emby.nodes.%s" % indexnumber
-        utils.window('%s.title' % embynode, value=label)
-        utils.window('%s.path' % embynode, value=windowpath)
-        utils.window('%s.content' % embynode, value=path)
-        utils.window('%s.type' % embynode, value=itemtype)
+        window('%s.title' % embynode, value=label)
+        window('%s.path' % embynode, value=windowpath)
+        window('%s.content' % embynode, value=path)
+        window('%s.type' % embynode, value=itemtype)
 
         if xbmcvfs.exists(nodeXML):
             # Don't recreate xml if already exists
@@ -359,8 +367,10 @@ class VideoNodes(object):
 
     def clearProperties(self):
 
+        window = utils.window
+
         self.logMsg("Clearing nodes properties.", 1)
-        embyprops = utils.window('Emby.nodes.total')
+        embyprops = window('Emby.nodes.total')
         propnames = [
         
             "index","path","title","content",
@@ -379,4 +389,4 @@ class VideoNodes(object):
             totalnodes = int(embyprops)
             for i in range(totalnodes):
                 for prop in propnames:
-                    utils.window('Emby.nodes.%s.%s' % (str(i), prop), clear=True)
+                    window('Emby.nodes.%s.%s' % (str(i), prop), clear=True)
