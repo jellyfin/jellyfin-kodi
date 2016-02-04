@@ -312,20 +312,21 @@ def sourcesXML():
         etree.SubElement(video, 'default', attrib={'pathversion': "1"})
 
     # Add elements
-    for i in range(1, 3):
-
-            for source in root.findall('.//path'):
-                if source.text == "smb://embydummy/dummypath%s/" % i:
-                    # Already there, skip
-                    break
-            else:
-                source = etree.SubElement(video, 'source')
-                etree.SubElement(source, 'name').text = "Emby"
-                etree.SubElement(source, 'path', attrib={'pathversion': "1"}).text = (
-
-                    "smb://embydummy/dummypath%s/" % i
-                )
-                etree.SubElement(source, 'allowsharing').text = "true"
+    count = 2
+    for source in root.findall('.//path'):
+        if source.text == "smb://":
+            count -= 1
+        
+        if count == 0:
+            # sources already set
+            break
+    else:
+        # Missing smb:// occurences, re-add.
+        for i in range(0, count):
+            source = etree.SubElement(video, 'source')
+            etree.SubElement(source, 'name').text = "Emby"
+            etree.SubElement(source, 'path', attrib={'pathversion': "1"}).text = "smb://"
+            etree.SubElement(source, 'allowsharing').text = "true"
     # Prettify and write to file
     try:
         indent(root)
