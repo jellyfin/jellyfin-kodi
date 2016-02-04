@@ -200,5 +200,4 @@ class KodiMonitor(xbmc.Monitor):
             utils.window('emby_onWake', value="true")
 
         elif method == "Playlist.OnClear":
-            utils.window('emby_customPlaylist', clear=True)
-            self.logMsg("Clear playlist properties.")
+            pass

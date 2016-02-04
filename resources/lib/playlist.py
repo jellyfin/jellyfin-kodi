@@ -43,17 +43,19 @@ class Playlist():
         embycursor = embyconn.cursor()
         emby_db = embydb.Embydb_Functions(embycursor)
 
-        self.logMsg("---*** PLAY ALL ***---", 1)
-        self.logMsg("Items: %s and start at: %s" % (itemids, startat))
-
         player = xbmc.Player()
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
         playlist.clear()
-        started = False
 
+        self.logMsg("---*** PLAY ALL ***---", 1)
+        self.logMsg("Items: %s and start at: %s" % (itemids, startat))
+
+        started = False
         utils.window('emby_customplaylist', value="true")
 
-        position = 0
+        if startat != 0:
+            # Seek to the starting position
+            utils.window('emby_customplaylist.seektime', str(startat))
 
         for itemid in itemids:
             embydb_item = emby_db.getItem_byId(itemid)
@@ -74,12 +76,6 @@ class Playlist():
             if not started:
                 started = True
                 player.play(playlist)
-
-        if startat:
-            # Seek to the starting position
-            seektime = startat / 10000000.0
-            player.seekTime(seektime)
-            self.logMsg("Seeking to: %s" % seektime, 1)
 
         self.verifyPlaylist()
         embycursor.close()

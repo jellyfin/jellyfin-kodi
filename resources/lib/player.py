@@ -98,6 +98,15 @@ class Player(xbmc.Player):
                 itemType = utils.window("%s.type" % embyitem)
                 utils.window('emby_skipWatched%s' % itemId, value="true")
 
+
+                if (utils.window('emby_customPlaylist') == "true" and
+                        utils.window('emby_customPlaylist.seektime')):
+                    # Start at, when using custom playlist (play to Kodi from webclient)
+                    seektime = utils.window('emby_customPlaylist.seektime')
+                    self.logMsg("Seeking to: %s" % seektime, 1)
+                    xbmcplayer.seekTime(int(seektime)/10000000.0)
+                    utils.window('emby_customPlaylist.seektime', clear=True)
+
                 seekTime = xbmcplayer.getTime()
 
                 # Get playback volume
@@ -401,6 +410,7 @@ class Player(xbmc.Player):
         # Will be called when user stops xbmc playing a file
         self.logMsg("ONPLAYBACK_STOPPED", 2)
         utils.window('emby_customPlaylist', clear=True)
+        utils.window('emby_customPlaylist.seektime', clear=True)
         utils.window('emby_playbackProps', clear=True)
         self.logMsg("Clear playlist properties.", 1)
         self.stopAll()
@@ -408,6 +418,7 @@ class Player(xbmc.Player):
     def onPlayBackEnded( self ):
         # Will be called when xbmc stops playing a file
         self.logMsg("ONPLAYBACK_ENDED", 2)
+        utils.window('emby_customPlaylist.seektime', clear=True)
         self.stopAll()
 
     def stopAll(self):
