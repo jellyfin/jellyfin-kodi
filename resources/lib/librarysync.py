@@ -112,7 +112,7 @@ class LibrarySync(threading.Thread):
         url = "{server}/Emby.Kodi.SyncQueue/GetServerDateTime?format=json"
         result = self.doUtils.downloadUrl(url)
         retention_time = "2010-01-01T00:00:00Z"
-        if result and result['RetentionDateTime']:
+        if result and result.get("RetentionDateTime"):
             self.logMsg("RetentionDateTime Found", 1)
             retention_time = result['RetentionDateTime']
         retention_time = datetime.strptime(retention_time, "%Y-%m-%dT%H:%M:%SZ")
