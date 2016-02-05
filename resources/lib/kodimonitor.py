@@ -49,7 +49,6 @@ class KodiMonitor(xbmc.Monitor):
         if utils.window('emby_pluginpath') != currentPath:
             # Plugin path value changed. Offer to reset
             self.logMsg("Changed to playback mode detected", 1)
-            utils.window('emby_pluginpath', value=currentPath)
             resp = xbmcgui.Dialog().yesno(
                                 heading="Playback mode change detected",
                                 line1=(
