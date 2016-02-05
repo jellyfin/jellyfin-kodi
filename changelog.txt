@@ -1,3 +1,11 @@
+version 2.0.3
+- Add new retention time option that the latest server Sync plugin uses to help determine if full sync or inc sync should be used.
+- Add control over new content pop up display time. You will find the settings under Extras > Enable new content notification
+- Change to the transcode H265 setting. You will need to re-select the proper resolution, if you had the setting enabled.
+- Change to the paths added to sources.xml
+- Fix to the manual sync for the music library
+- Fix resume when launching playback via the web client
+
 version 1.1.81
 - Fix missing deviceId
 - Fix to newly added album/songs (if you experienced the bug, you will need to reset to fix it. Know that moving forward, it is corrected.)
