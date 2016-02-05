@@ -706,7 +706,7 @@ def getNextUpEpisodes(tagname, limit):
             'filter': {
                 'and': [
                     {'operator': "true", 'field': "inprogress", 'value': ""},
-                    {'operator': "contains", 'field': "tag", 'value': "%s" % tagname}
+                    {'operator': "is", 'field': "tag", 'value': "%s" % tagname}
                 ]},
             'properties': ['title', 'studio', 'mpaa', 'file', 'art']
         }
@@ -804,7 +804,7 @@ def getInProgressEpisodes(tagname, limit):
             'filter': {
                 'and': [
                     {'operator': "true", 'field': "inprogress", 'value': ""},
-                    {'operator': "contains", 'field': "tag", 'value': "%s" % tagname}
+                    {'operator': "is", 'field': "tag", 'value': "%s" % tagname}
                 ]},
             'properties': ['title', 'studio', 'mpaa', 'file', 'art']
         }
@@ -872,7 +872,7 @@ def getRecentEpisodes(tagname, limit):
         'params': {
 
             'sort': {'order': "descending", 'method': "dateadded"},
-            'filter': {'operator': "contains", 'field': "tag", 'value': "%s" % tagname},
+            'filter': {'operator': "is", 'field': "tag", 'value': "%s" % tagname},
             'properties': ["title","sorttitle"]
         }
     }
