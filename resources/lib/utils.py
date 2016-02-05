@@ -6,6 +6,7 @@ import cProfile
 import inspect
 import pstats
 import sqlite3
+from datetime import datetime, time
 import time
 import unicodedata
 import xml.etree.ElementTree as etree
@@ -237,6 +238,16 @@ def stopProfiling(pr, profileName):
                 % (ncalls, "{0}".format(total_time),
                     "{0}".format(cumulative_time), func_name, filename))
     f.close()
+
+def convertdate(date):
+    try:
+        date = datetime.strptime(date, "%Y-%m-%dT%H:%M:%SZ")
+    except TypeError:
+        # TypeError: attribute of type 'NoneType' is not callable
+        # Known Kodi/python error
+        date = datetime(*(time.strptime(date, "%Y-%m-%dT%H:%M:%SZ")[0:6]))
+
+    return date
 
 def normalize_nodes(text):
     # For video nodes
