@@ -100,7 +100,7 @@ class PlayUtils():
         videotrack = item['MediaSources'][0]['Name']
         transcodeH265 = utils.settings('transcodeH265')
 
-        if transcodeH265 != "0" and ("HEVC" in videotrack or "H265" in videotrack):
+        if transcodeH265 in ("1", "2", "3") and ("HEVC" in videotrack or "H265" in videotrack):
             # Avoid H265/HEVC depending on the resolution
             resolution = int(videotrack.split("P", 1)[0])
             res = {
@@ -211,7 +211,7 @@ class PlayUtils():
         videotrack = item['MediaSources'][0]['Name']
         transcodeH265 = utils.settings('transcodeH265')
 
-        if transcodeH265 != "0" and ("HEVC" in videotrack or "H265" in videotrack):
+        if transcodeH265 in ("1", "2", "3") and ("HEVC" in videotrack or "H265" in videotrack):
             # Avoid H265/HEVC depending on the resolution
             resolution = int(videotrack.split("P", 1)[0])
             res = {
