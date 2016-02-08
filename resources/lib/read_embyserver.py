@@ -2,6 +2,8 @@
 
 #################################################################################################
 
+import xbmc
+
 import utils
 import clientinfo
 import downloadutils
@@ -18,7 +20,7 @@ class Read_EmbyServer():
 
         self.clientInfo = clientinfo.ClientInfo()
         self.addonName = self.clientInfo.getAddonName()
-        self.doUtils = downloadutils.DownloadUtils()
+        self.doUtils = downloadutils.DownloadUtils().downloadUrl
 
         self.userId = utils.window('emby_currUser')
         self.server = utils.window('emby_server%s' % self.userId)
@@ -39,7 +41,7 @@ class Read_EmbyServer():
         item = {}
 
         url = "{server}/emby/Users/{UserId}/Items/%s?format=json" % itemid
-        result = self.doUtils.downloadUrl(url)
+        result = self.doUtils(url)
         if result:
             item = result
 
@@ -58,7 +60,7 @@ class Read_EmbyServer():
                 'Ids': ",".join(itemlist),
                 'Fields': "Etag"
             }
-            result = self.doUtils.downloadUrl(url, parameters=params)
+            result = self.doUtils(url, parameters=params)
             if result:
                 items.extend(result['Items'])
 
@@ -85,7 +87,7 @@ class Read_EmbyServer():
                         "MediaSources"
                 )
             }
-            result = self.doUtils.downloadUrl(url, parameters=params)
+            result = self.doUtils(url, parameters=params)
             if result:
                 items.extend(result['Items'])
 
@@ -95,7 +97,7 @@ class Read_EmbyServer():
         # Returns ancestors using embyId
         viewId = None
         url = "{server}/emby/Items/%s/Ancestors?UserId={UserId}&format=json" % itemid
-        result = self.doUtils.downloadUrl(url)
+        result = self.doUtils(url)
 
         for view in result:
 
@@ -147,7 +149,7 @@ class Read_EmbyServer():
             "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
             "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers")
         }
-        return doUtils.downloadUrl(url, parameters=params)
+        return doUtils(url, parameters=params)
     
     def getTvChannels(self):
         doUtils = self.doUtils
@@ -161,7 +163,7 @@ class Read_EmbyServer():
             "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
             "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers")
         }
-        return doUtils.downloadUrl(url, parameters=params)
+        return doUtils(url, parameters=params)
     
     def getTvRecordings(self, groupid):
         doUtils = self.doUtils
@@ -177,7 +179,7 @@ class Read_EmbyServer():
             "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
             "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers")
         }
-        return doUtils.downloadUrl(url, parameters=params)
+        return doUtils(url, parameters=params)
     
     def getSection(self, parentid, itemtype=None, sortby="SortName", basic=False, dialog=None):
 
@@ -200,7 +202,7 @@ class Read_EmbyServer():
             'Recursive': True,
             'Limit': 1
         }
-        result = doUtils.downloadUrl(url, parameters=params)
+        result = doUtils(url, parameters=params)
         try:
             total = result['TotalRecordCount']
             items['TotalRecordCount'] = total
@@ -314,7 +316,7 @@ class Read_EmbyServer():
         else: # Views ungrouped
             url = "{server}/emby/Users/{UserId}/Items?Sortby=SortName&format=json"
 
-        result = doUtils.downloadUrl(url)
+        result = doUtils(url)
         try:
             items = result['Items']
         
@@ -339,7 +341,7 @@ class Read_EmbyServer():
                 # Assumed missing is mixed then.
                 if itemtype is None:
                     url = "{server}/emby/Library/MediaFolders?format=json"
-                    result = doUtils.downloadUrl(url)
+                    result = doUtils(url)
 
                     for folder in result['Items']:
                         if itemId == folder['Id']:
@@ -407,7 +409,7 @@ class Read_EmbyServer():
             'IsVirtualUnaired': False,
             'Fields': "Etag"
         }
-        result = self.doUtils.downloadUrl(url, parameters=params)
+        result = self.doUtils(url, parameters=params)
         if result:
             items = result
 
@@ -447,7 +449,7 @@ class Read_EmbyServer():
             'Recursive': True,
             'Limit': 1
         }
-        result = doUtils.downloadUrl(url, parameters=params)
+        result = doUtils(url, parameters=params)
         try:
             total = result['TotalRecordCount']
             items['TotalRecordCount'] = total
@@ -477,7 +479,7 @@ class Read_EmbyServer():
                         "AirTime,DateCreated,MediaStreams,People,ProviderIds,Overview"
                     )
                 }
-                result = doUtils.downloadUrl(url, parameters=params)
+                result = doUtils(url, parameters=params)
                 items['Items'].extend(result['Items'])
 
                 index += jump
@@ -519,7 +521,7 @@ class Read_EmbyServer():
         }
 
         url = "{server}/emby/Videos/%s/AdditionalParts?UserId={UserId}&format=json" % itemId
-        result = self.doUtils.downloadUrl(url)
+        result = self.doUtils(url)
         if result:
             items = result
 
