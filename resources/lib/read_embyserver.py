@@ -244,13 +244,15 @@ class Read_EmbyServer():
                         "MediaSources"
                     )
                 result = doUtils(url, parameters=params)
-                
-                if result == "":
-                    # Something happened to the connection.
+                try:
+                    items['Items'].extend(result['Items'])
+                except TypeError:
+                    # Something happened to the connection
                     if not throttled:
                         throttled = True
                         self.logMsg("Throttle activated.", 1)
-                    elif jump == highestjump:
+                    
+                    if jump == highestjump:
                         # We already adjusted to highestjump, but it failed. Reset value
                         self.logMsg("Reset highest value.", 1)
                         highestjump = 0
@@ -259,25 +261,24 @@ class Read_EmbyServer():
                     if highestjump:
                         throttled = False
                         jump = highestjump
+                        self.logMsg("Throttle deactivated.", 1)
                     else:
-                        jump = int(jump/2)
+                        jump = int(jump/4)
+                        self.logMsg("Set jump limit to recover: %s" % jump, 1)
                     
-                    self.logMsg("Set jump limit to recover: %s" % jump)
                     retry = 0
                     while utils.window('emby_online') != "true":
                         # Wait server to come back online
                         if retry == 3:
-                            self.logMsg("Server never came back online.")
+                            self.logMsg("Unable to reconnect to server. Abort process.", 1)
                             return
-
+                        
                         retry += 1
                         if xbmc.Monitor().waitForAbort(1):
                             # Abort was requested while waiting.
                             return
-                    else:
-                        xbmc.Monitor().waitForAbort(3)
                 else:
-                    items['Items'].extend(result['Items'])
+                    # Request succeeded
                     index += jump
 
                     if dialog:
@@ -289,20 +290,15 @@ class Read_EmbyServer():
                         highestjump = jump
 
                     if throttled:
-                        # We needed to adjust the number, keep increasing until.
-                        if jump < highestjump:
-                            # Found a number that already works, use it.
-                            throttled = False
-                            jump = highestjump
-                            self.logMsg("Throttle deactivated with jump limit set to: %s" % jump, 1)
-                        else:
-                            # keep increasing until the connection times out again
-                            increment = int(jump*0.33)
-                            if not increment: # Incase the increment is 0
-                                increment += 10
+                        # We needed to adjust the number of item requested.
+                        # keep increasing until the connection times out again
+                        # to find the highest value
+                        increment = int(jump*0.33)
+                        if not increment: # Incase the increment is 0
+                            increment = 10
 
-                            jump += increment
-                            self.logMsg("Increase jump limit to: %s" % jump, 1)
+                        jump += increment
+                        self.logMsg("Increase jump limit to: %s" % jump, 1)
         return items
 
     def getViews(self, type, root=False):
