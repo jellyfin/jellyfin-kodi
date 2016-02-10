@@ -1,3 +1,7 @@
+version 2.1.0
+- Add a throttle (automatically adjust the number of items requested at once) to prevent crashing during the initial sync
+- Do not update the video library when there's a music-only update
+
 version 2.0.3
 - Add new retention time option that the latest server Sync plugin uses to help determine if full sync or inc sync should be used.
 - Add control over new content pop up display time. You will find the settings under Extras > Enable new content notification
