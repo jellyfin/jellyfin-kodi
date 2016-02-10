@@ -103,20 +103,18 @@ class LibrarySync(threading.Thread):
         lastSync = utils.settings('LastIncrementalSync')
         if not lastSync:
             lastSync = "2010-01-01T00:00:00Z"
-        self.logMsg("Last sync run: %s" % lastSync, 1)
         
         lastSyncTime = utils.convertdate(lastSync)
-        self.logMsg("LastIncrementalSync : %s" % lastSyncTime, 1)
+        self.logMsg("Last sync run: %s" % lastSyncTime, 1)
         
         # get server RetentionDateTime
         url = "{server}/Emby.Kodi.SyncQueue/GetServerDateTime?format=json"
         result = self.doUtils.downloadUrl(url)
         retention_time = "2010-01-01T00:00:00Z"
         if result and result.get('RetentionDateTime'):
-            self.logMsg("RetentionDateTime Found", 1)
             retention_time = result['RetentionDateTime']
         retention_time = utils.convertdate(retention_time)
-        self.logMsg("RetentionDateTime : %s" % retention_time, 1)
+        self.logMsg("RetentionDateTime: %s" % retention_time, 1)
 
         # if last sync before retention time do a full sync
         if retention_time > lastSyncTime:
