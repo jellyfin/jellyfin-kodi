@@ -73,6 +73,7 @@ class Items(object):
             'Audio': Music
         }
 
+        update_videolibrary = False
         total = 0
         for item in items:
             total += len(items[item])
@@ -108,6 +109,7 @@ class Items(object):
                     # Music is not enabled, do not proceed with itemtype
                     continue
             else:
+                update_videolibrary = True
                 items_process = itemtypes[itemtype](embycursor, kodicursor)
 
             if itemtype == "Movie":
@@ -202,10 +204,11 @@ class Items(object):
 
             if musicconn is not None:
                 # close connection for special types
+                self.logMsg("Updating music database.", 1)
                 musicconn.commit()
                 musiccursor.close()
 
-        return True
+        return (True, update_videolibrary)
 
     def contentPop(self, name, time=5000):
         xbmcgui.Dialog().notification(

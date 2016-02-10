@@ -253,7 +253,7 @@ class Read_EmbyServer():
                         self.logMsg("Throttle activated.", 1)
                     
                     if jump == highestjump:
-                        # We already adjusted to highestjump, but it failed. Reset value
+                        # We already tried with the highestjump, but it failed. Reset value.
                         self.logMsg("Reset highest value.", 1)
                         highestjump = 0
 

@@ -728,12 +728,14 @@ class LibrarySync(threading.Thread):
         emby = self.emby
         emby_db = embydb.Embydb_Functions(embycursor)
         pDialog = None
+        update_embydb = False
 
         if self.refresh_views:
             # Received userconfig update
             self.refresh_views = False
             self.maintainViews(embycursor, kodicursor)
             self.forceLibraryUpdate = True
+            update_embydb = True
 
         if self.addedItems or self.updateItems or self.userdataItems or self.removeItems:
             # Only present dialog if we are going to process items
@@ -771,23 +773,31 @@ class LibrarySync(threading.Thread):
                         sorted_items = emby.sortby_mediatype(items['Unsorted'])
                         doupdate = items_process.itemsbyId(sorted_items, "added", pDialog)
                         if doupdate:
-                            update = True
+                            embyupdate, kodiupdate_video = doupdate
+                            if embyupdate:
+                                update_embydb = True
+                            if kodiupdate_video:
+                                self.forceLibraryUpdate = True
                         del items['Unsorted']
 
                 doupdate = items_process.itemsbyId(items, type, pDialog)
                 if doupdate:
-                    update = True
-                    
-                if update:
-                    self.forceLibraryUpdate = True
+                    embyupdate, kodiupdate_video = doupdate
+                    if embyupdate:
+                        update_embydb = True
+                    if kodiupdate_video:
+                        self.forceLibraryUpdate = True
 
+        if update_embydb:
+            update_embydb = False
+            self.logMsg("Updating emby database.", 1)
+            embyconn.commit()
+            self.saveLastSync()
 
         if self.forceLibraryUpdate:
             # Force update the Kodi library
             self.forceLibraryUpdate = False
             self.dbCommit(kodiconn)
-            embyconn.commit()
-            self.saveLastSync()
 
             self.logMsg("Updating video library.", 1)
             utils.window('emby_kodiScan', value="true")
