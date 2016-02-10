@@ -95,6 +95,14 @@ class Main:
             if mode == "settings":
                 xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
             elif mode in ("manualsync", "repair"):
+                if utils.window('emby_online') != "true":
+                    # Server is not online, do not run the sync
+                    xbmcgui.Dialog().ok(heading="Emby for Kodi",
+                                        line1=("Unable to run the sync, the add-on is not "
+                                               "connected to the Emby server."))
+                    utils.logMsg("EMBY", "Not connected to the emby server.", 1)
+                    return
+                    
                 if utils.window('emby_dbScan') != "true":
                     import librarysync
                     lib = librarysync.LibrarySync()
