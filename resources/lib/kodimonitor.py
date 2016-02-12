@@ -180,8 +180,7 @@ class KodiMonitor(xbmc.Monitor):
                     self.logMsg("Could not find itemid in emby database.", 1)
                 else:
                     if utils.settings('skipContextMenu') != "true":
-                        self.logMsg("BAM!")
-                        '''resp = xbmcgui.Dialog().yesno(
+                        resp = xbmcgui.Dialog().yesno(
                                                 heading="Confirm delete",
                                                 line1="Delete file on Emby Server?")
                         if not resp:
@@ -191,8 +190,7 @@ class KodiMonitor(xbmc.Monitor):
 
                     url = "{server}/emby/Items/%s?format=json" % itemid
                     self.logMsg("Deleting request: %s" % itemid)
-                    doUtils.downloadUrl(url, type="DELETE")'''
-                    self.logMsg("BAm!")
+                    doUtils.downloadUrl(url, type="DELETE")
                 finally:
                     embycursor.close()
 
