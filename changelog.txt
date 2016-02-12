@@ -1,3 +1,8 @@
+version 2.1.1
+- Update setting - skip emby delete confirmation, it is now under the extras tab.
+- Update setting - new content notification, it's now disables the notification if the time is set to 0.
+- Prevent manual sync from running if the add-on is not yet connected to the emby server.
+
 version 2.1.0
 - Add a throttle (automatically adjust the number of items requested at once) to prevent crashing during the initial sync
 - Do not update the video library when there's a music-only update
