@@ -279,14 +279,14 @@
     <string id="30510">Direct stream music library</string>
     <string id="30511">Playback Mode</string>
     <string id="30512">Force artwork caching</string>
-    <string id="30513">Limit artwork cache threads</string>
+    <string id="30513">Limit artwork cache threads (recommended for rpi)</string>
     <string id="30514">Enable fast startup (requires server plugin)</string>
     <string id="30515">Maximum items to request from the server at once</string>
     <string id="30516">Playback</string>
     <string id="30517">Network credentials</string>
     <string id="30518">Enable Emby cinema mode</string>
     <string id="30519">Ask to play trailers</string>
-    <string id="30520">Skip delete confirmation</string>
+    <string id="30520">Skip Emby delete confirmation</string>
     <string id="30521">Jump back on resume (in seconds)</string>
     <string id="30522">Force transcode H265</string>
     <string id="30523">Music metadata options (not compatible with direct stream)</string>
@@ -300,6 +300,9 @@
     <string id="30531">Enable new content notification</string>
     <string id="30532">Duration of the video library pop up (in seconds)</string>
     <string id="30533">Duration of the music library pop up (in seconds)</string>
+    <string id="30534">For the context menu</string>
+    <string id="30535">After playback (Caution!)</string>
+    <string id="30536">Server messages</string>
 
     <!-- service add-on -->
     <string id="33000">Welcome</string>
