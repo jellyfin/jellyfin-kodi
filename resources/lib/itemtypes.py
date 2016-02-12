@@ -211,12 +211,15 @@ class Items(object):
         return (True, update_videolibrary)
 
     def contentPop(self, name, time=5000):
-        xbmcgui.Dialog().notification(
-                heading="Emby for Kodi",
-                message="Added: %s" % name,
-                icon="special://home/addons/plugin.video.emby/icon.png",
-                time=time,
-                sound=False)
+        
+        if time: 
+            # It's possible for the time to be 0. It should be considered disabled in this case.
+            xbmcgui.Dialog().notification(
+                    heading="Emby for Kodi",
+                    message="Added: %s" % name,
+                    icon="special://home/addons/plugin.video.emby/icon.png",
+                    time=time,
+                    sound=False)
 
 
 class Movies(Items):
