@@ -482,13 +482,12 @@ class Player(xbmc.Player):
                         offerDelete = False
 
                     if percentComplete >= markPlayedAt and offerDelete:
-                        if utils.settings('skipPlayback') != "true":
-                            resp = xbmcgui.Dialog().yesno(
-                                                    heading="Confirm delete",
-                                                    line1="Delete file on Emby Server?")
-                            if not resp:
-                                self.logMsg("User skipped deletion.", 1)
-                                continue
+                        resp = xbmcgui.Dialog().yesno(
+                                                heading="Confirm delete",
+                                                line1="Delete file on Emby Server?")
+                        if not resp:
+                            self.logMsg("User skipped deletion.", 1)
+                            continue
 
                         url = "{server}/emby/Items/%s?format=json" % itemid
                         self.logMsg("Deleting request: %s" % itemid)

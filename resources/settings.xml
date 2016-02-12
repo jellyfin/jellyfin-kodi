@@ -62,11 +62,9 @@
 	<category label="30235"><!-- Extras -->
 	    <setting id="enableCoverArt" type="bool" label="30157" default="true" />
 	    <setting id="ignoreSpecialsNextEpisodes" type="bool" label="30527" default="false" />
+	    <setting id="skipContextMenu" type="bool" label="30520" default="false" />
 		<setting id="additionalUsers" type="text" label="30528" default="" />
-		<setting type="lsep" label="30520" />
-	    <setting id="skipContextMenu" type="bool" label="30534" default="false" />
-	    <setting id="skipPlayback" type="bool" label="30535" default="false" />
-		<setting type="lsep" label="30536" />
+		<setting type="lsep" label="30534" />
 		<setting id="connectMsg" type="bool" label="30249" default="true" />
         <setting id="restartMsg" type="bool" label="30530" default="false" />
         <setting id="newContent" type="bool" label="30531" default="false" />
