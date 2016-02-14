@@ -82,7 +82,7 @@ class KodiMonitor(xbmc.Monitor):
                 kodiid = item['id']
                 type = item['type']
             except (KeyError, TypeError):
-                self.logMsg("Properties already set for item.", 1)
+                self.logMsg("Item is invalid for playstate update.", 1)
             else:
                 if ((utils.settings('useDirectPaths') == "1" and not type == "song") or
                         (type == "song" and utils.settings('enableMusic') == "true")):
