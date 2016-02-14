@@ -36,14 +36,15 @@ class PlayUtils():
         item = self.item
         playurl = None
         
-        if item.get('Type') in ["Recording","TvChannel"] and item.get('MediaSources') and item['MediaSources'][0]['Protocol'] == "Http":
-            #Is this the right way to play a Live TV or recordings ?
+        if (item.get('Type') in ("Recording", "TvChannel") and
+                item.get('MediaSources') and item['MediaSources'][0]['Protocol'] == "Http"):
+            # Play LiveTV or recordings
             self.logMsg("File protocol is http (livetv).", 1)
             playurl = "%s/emby/Videos/%s/live.m3u8?static=true" % (self.server, item['Id'])
-            utils.window('emby_%s.playmethod' % playurl, value="DirectPlay")
+            utils.window('emby_%s.playmethod' % playurl, value="Transcode")
 
         elif item.get('MediaSources') and item['MediaSources'][0]['Protocol'] == "Http":
-            # Only play as http
+            # Only play as http, used for channels, or online hosting of content
             self.logMsg("File protocol is http.", 1)
             playurl = self.httpPlay()
             utils.window('emby_%s.playmethod' % playurl, value="DirectStream")
