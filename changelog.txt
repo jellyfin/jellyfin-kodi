@@ -1,3 +1,6 @@
+version 2.1.2
+- Fix to repair entries if they are deleted by Kodi, but still exists in the Emby database.
+
 version 2.1.1
 - Update setting - skip emby delete confirmation, it is now under the extras tab.
 - Update setting - new content notification, it's now disables the notification if the time is set to 0.
