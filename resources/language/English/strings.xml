@@ -18,7 +18,6 @@
 
     <string id="30022">Advanced</string>
     <string id="30024">Username</string><!-- Verified -->
-    <string id="30026">Use SIMPLEJSON instead of JSON</string>
     
     <string id="30030">Port Number</string><!-- Verified -->
     <string id="30036">Number of recent Movies to show:</string>    
@@ -75,7 +74,7 @@
     <string id="30089">Western</string>
     
     <string id="30090">Genre Filter</string>
-    <string id="30091">Confirm file delete?</string>
+    <string id="30091">Confirm file deletion</string><!-- Verified -->
     <string id="30092">Delete this item? This action will delete media and associated data files.</string>
     
     <string id="30093">Mark Watched</string>
@@ -105,11 +104,8 @@
     <string id="30120">Show Load Progress</string>
     <string id="30121">Loading Content</string>
     <string id="30122">Retrieving Data</string>
-    <string id="30123">Parsing Jason Data</string>
-    <string id="30124">Downloading Jason Data</string>
     <string id="30125">Done</string>
     <string id="30126">Processing Item : </string>
-    <string id="30127">YOUCANUSETHIS</string>
     <string id="30128">Play Error</string>
     <string id="30129">This item is not playable</string>    
     <string id="30130">Local path detected</string>
@@ -286,7 +282,7 @@
     <string id="30517">Network credentials</string>
     <string id="30518">Enable Emby cinema mode</string>
     <string id="30519">Ask to play trailers</string>
-    <string id="30520">Skip Emby delete confirmation for the context menu</string>
+    <string id="30520">Skip Emby delete confirmation for the context menu (use at your own risk)</string>
     <string id="30521">Jump back on resume (in seconds)</string>
     <string id="30522">Force transcode H265</string>
     <string id="30523">Music metadata options (not compatible with direct stream)</string>
@@ -310,5 +306,30 @@
     <string id="33004">items added to playlist</string>
     <string id="33005">items queued to playlist</string>
     <string id="33006">Server is restarting</string>
+    <string id="33007">Access is enabled</string>
+    <string id="33008">Enter password for user:</string>
+    <string id="33009">Invalid username or password</string>
+    <string id="33010">Failed to authenticate too many times</string>
+    <string id="33011">Unable to direct play</string>
+    <string id="33012">Direct play failed 3 times. Enabled play from HTTP.</string>
+    <string id="33013">Choose the audio stream</string>
+    <string id="33014">Choose the subtitles stream</string>
+    <string id="33015">Delete file on your Emby server?</string>
+    <string id="33016">Play trailers?</string>
+    <string id="33017">Gathering movies from:</string>
+    <string id="33018">Gathering boxsets</string>
+    <string id="33019">Gathering music videos from:</string>
+    <string id="33020">Gathering tv shows from:</string>
+    <string id="33021">Gathering:</string>
+    <string id="33022">Detected the database needs to be recreated for this version of Emby for Kodi. Proceed?</string>
+    <string id="33023">Emby for Kod may not work correctly until the database is reset.</string>
+    <string id="33024">Cancelling the database syncing process. The current Kodi version is unsupported.</string>
+    <string id="33025">completed in:</string>
+    <string id="33026">Comparing movies from:</string>
+    <string id="33027">Comparing boxsets</string>
+    <string id="33028">Comparing music videos from:</string>
+    <string id="33029">Comparing tv shows from:</string>
+    <string id="33030">Comparing episodes from:</string>
+    <string id="33031">Comparing:</string>
 
 </strings>
