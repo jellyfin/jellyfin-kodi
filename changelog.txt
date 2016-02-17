@@ -1,3 +1,6 @@
+version 2.1.4
+- Removed Emby delete via the Kodi context menu. It is exclusively offered via the extended emby context menu which is available for Isengard or higher. This change was necessary, because there was a risk of wiping the entire library if Kodi decides to run a clean database task and paths were set as plugin paths.
+
 version 2.1.3
 - Fix Live TV to terminate ffmpeg processes.
 
