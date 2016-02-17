@@ -324,4 +324,4 @@ class WebSocket_Client(threading.Thread):
 
         self.stopWebsocket = True
         self.client.close()
-        self.logMsg("Stopping thread.")
+        self.logMsg("Stopping thread.", 1)

@@ -31,7 +31,7 @@ class PlaybackUtils():
 
         self.clientInfo = clientinfo.ClientInfo()
         self.addonName = self.clientInfo.getAddonName()
-        self.doUtils = downloadutils.DownloadUtils()
+        self.doUtils = downloadutils.DownloadUtils().downloadUrl
 
         self.userid = utils.window('emby_currUser')
         self.server = utils.window('emby_server%s' % self.userid)
@@ -48,7 +48,9 @@ class PlaybackUtils():
 
     def play(self, itemid, dbid=None):
 
-        self.logMsg("Play called.", 1)
+        log = self.logMsg
+        window = utils.window
+        settings = utils.settings
 
         doUtils = self.doUtils
         item = self.item
@@ -56,6 +58,7 @@ class PlaybackUtils():
         listitem = xbmcgui.ListItem()
         playutils = putils.PlayUtils(item)
 
+        log("Play called.", 1)
         playurl = playutils.getPlayUrl()
         if not playurl:
             return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, listitem)
@@ -74,13 +77,13 @@ class PlaybackUtils():
         sizePlaylist = playlist.size()
         currentPosition = startPos
 
-        propertiesPlayback = utils.window('emby_playbackProps') == "true"
+        propertiesPlayback = window('emby_playbackProps') == "true"
         introsPlaylist = False
         dummyPlaylist = False
 
-        self.logMsg("Playlist start position: %s" % startPos, 1)
-        self.logMsg("Playlist plugin position: %s" % currentPosition, 1)
-        self.logMsg("Playlist size: %s" % sizePlaylist, 1)
+        log("Playlist start position: %s" % startPos, 2)
+        log("Playlist plugin position: %s" % currentPosition, 2)
+        log("Playlist size: %s" % sizePlaylist, 2)
 
         ############### RESUME POINT ################
         
@@ -91,13 +94,13 @@ class PlaybackUtils():
         # Otherwise we get a loop.
         if not propertiesPlayback:
 
-            utils.window('emby_playbackProps', value="true")
-            self.logMsg("Setting up properties in playlist.", 1)
+            window('emby_playbackProps', value="true")
+            log("Setting up properties in playlist.", 1)
 
             if (not homeScreen and not seektime and 
-                    utils.window('emby_customPlaylist') != "true"):
+                    window('emby_customPlaylist') != "true"):
                 
-                self.logMsg("Adding dummy file to playlist.", 2)
+                log("Adding dummy file to playlist.", 2)
                 dummyPlaylist = True
                 playlist.add(playurl, listitem, index=startPos)
                 # Remove the original item from playlist 
@@ -108,27 +111,27 @@ class PlaybackUtils():
             
             ############### -- CHECK FOR INTROS ################
 
-            if utils.settings('enableCinema') == "true" and not seektime:
+            if settings('enableCinema') == "true" and not seektime:
                 # if we have any play them when the movie/show is not being resumed
                 url = "{server}/emby/Users/{UserId}/Items/%s/Intros?format=json" % itemid    
-                intros = doUtils.downloadUrl(url)
+                intros = doUtils(url)
 
                 if intros['TotalRecordCount'] != 0:
                     getTrailers = True
 
-                    if utils.settings('askCinema') == "true":
-                        resp = xbmcgui.Dialog().yesno("Emby Cinema Mode", "Play trailers?")
+                    if settings('askCinema') == "true":
+                        resp = xbmcgui.Dialog().yesno("Emby for Kodi", utils.language(33016))
                         if not resp:
                             # User selected to not play trailers
                             getTrailers = False
-                            self.logMsg("Skip trailers.", 1)
+                            log("Skip trailers.", 1)
                     
                     if getTrailers:
                         for intro in intros['Items']:
                             # The server randomly returns intros, process them.
                             introListItem = xbmcgui.ListItem()
                             introPlayurl = putils.PlayUtils(intro).getPlayUrl()
-                            self.logMsg("Adding Intro: %s" % introPlayurl, 1)
+                            log("Adding Intro: %s" % introPlayurl, 1)
 
                             # Set listitem and properties for intros
                             pbutils = PlaybackUtils(intro)
@@ -144,7 +147,7 @@ class PlaybackUtils():
             if homeScreen and not seektime and not sizePlaylist:
                 # Extend our current playlist with the actual item to play
                 # only if there's no playlist first
-                self.logMsg("Adding main item to playlist.", 1)
+                log("Adding main item to playlist.", 1)
                 self.pl.addtoPlaylist(dbid, item['Type'].lower())
 
             # Ensure that additional parts are played after the main item
@@ -156,12 +159,12 @@ class PlaybackUtils():
                 # Only add to the playlist after intros have played
                 partcount = item['PartCount']
                 url = "{server}/emby/Videos/%s/AdditionalParts?format=json" % itemid
-                parts = doUtils.downloadUrl(url)
+                parts = doUtils(url)
                 for part in parts['Items']:
 
                     additionalListItem = xbmcgui.ListItem()
                     additionalPlayurl = putils.PlayUtils(part).getPlayUrl()
-                    self.logMsg("Adding additional part: %s" % partcount, 1)
+                    log("Adding additional part: %s" % partcount, 1)
 
                     # Set listitem and properties for each additional parts
                     pbutils = PlaybackUtils(part)
@@ -175,58 +178,60 @@ class PlaybackUtils():
             if dummyPlaylist:
                 # Added a dummy file to the playlist,
                 # because the first item is going to fail automatically.
-                self.logMsg("Processed as a playlist. First item is skipped.", 1)
+                log("Processed as a playlist. First item is skipped.", 1)
                 return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, listitem)
                 
 
         # We just skipped adding properties. Reset flag for next time.
         elif propertiesPlayback:
-            self.logMsg("Resetting properties playback flag.", 2)
-            utils.window('emby_playbackProps', clear=True)
+            log("Resetting properties playback flag.", 2)
+            window('emby_playbackProps', clear=True)
 
         #self.pl.verifyPlaylist()
         ########## SETUP MAIN ITEM ##########
 
         # For transcoding only, ask for audio/subs pref
-        if utils.window('emby_%s.playmethod' % playurl) == "Transcode":
+        if window('emby_%s.playmethod' % playurl) == "Transcode":
             playurl = playutils.audioSubsPref(playurl, listitem)
-            utils.window('emby_%s.playmethod' % playurl, value="Transcode")
+            window('emby_%s.playmethod' % playurl, value="Transcode")
 
         listitem.setPath(playurl)
         self.setProperties(playurl, listitem)
 
         ############### PLAYBACK ################
 
-        if homeScreen and seektime and utils.window('emby_customPlaylist') != "true":
-            self.logMsg("Play as a widget item.", 1)
+        if homeScreen and seektime and window('emby_customPlaylist') != "true":
+            log("Play as a widget item.", 1)
             self.setListItem(listitem)
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listitem)
 
-        elif ((introsPlaylist and utils.window('emby_customPlaylist') == "true") or
-            (homeScreen and not sizePlaylist)):
+        elif ((introsPlaylist and window('emby_customPlaylist') == "true") or
+                (homeScreen and not sizePlaylist)):
             # Playlist was created just now, play it.
-            self.logMsg("Play playlist.", 1)
+            log("Play playlist.", 1)
             xbmc.Player().play(playlist, startpos=startPos)
 
         else:
-            self.logMsg("Play as a regular item.", 1)
+            log("Play as a regular item.", 1)
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listitem)
 
     def setProperties(self, playurl, listitem):
+
+        window = utils.window
         # Set all properties necessary for plugin path playback
         item = self.item
         itemid = item['Id']
         itemtype = item['Type']
 
         embyitem = "emby_%s" % playurl
-        utils.window('%s.runtime' % embyitem, value=str(item.get('RunTimeTicks')))
-        utils.window('%s.type' % embyitem, value=itemtype)
-        utils.window('%s.itemid' % embyitem, value=itemid)
+        window('%s.runtime' % embyitem, value=str(item.get('RunTimeTicks')))
+        window('%s.type' % embyitem, value=itemtype)
+        window('%s.itemid' % embyitem, value=itemid)
 
         if itemtype == "Episode":
-            utils.window('%s.refreshid' % embyitem, value=item.get('SeriesId'))
+            window('%s.refreshid' % embyitem, value=item.get('SeriesId'))
         else:
-            utils.window('%s.refreshid' % embyitem, value=itemid)
+            window('%s.refreshid' % embyitem, value=itemid)
 
         # Append external subtitles to stream
         playmethod = utils.window('%s.playmethod' % embyitem)
@@ -316,7 +321,7 @@ class PlaybackUtils():
     def setListItem(self, listItem):
 
         item = self.item
-        type = item['Type']
+        itemtype = item['Type']
         API = self.API
         people = API.getPeople()
         studios = API.getStudios()
@@ -336,7 +341,7 @@ class PlaybackUtils():
             'votes': item.get('VoteCount')
         }
 
-        if "Episode" in type:
+        if "Episode" in itemtype:
             # Only for tv shows
             thumbId = item.get('SeriesId')
             season = item.get('ParentIndexNumber', -1)

@@ -277,14 +277,14 @@ class Service():
 
         ##### Emby thread is terminating. #####
 
+        if self.userclient_running:
+            user.stopClient()
+            
         if self.library_running:
             library.stopThread()
 
         if self.websocket_running:
             ws.stopClient()
-        
-        if self.userclient_running:
-            user.stopClient()
 
         log("======== STOP %s ========" % self.addonName, 0)
 

@@ -23,7 +23,7 @@ class VideoNodes(object):
         clientInfo = clientinfo.ClientInfo()
         self.addonName = clientInfo.getAddonName()
 
-        self.kodiversion = int(xbmc.getInfoLabel("System.BuildVersion")[:2])
+        self.kodiversion = int(xbmc.getInfoLabel('System.BuildVersion')[:2])
 
     def logMsg(self, msg, lvl=1):
 
@@ -75,7 +75,7 @@ class VideoNodes(object):
             xbmcvfs.exists(path)
 
         # Create the node directory
-        if not xbmcvfs.exists(nodepath) and not mediatype=="photos":
+        if not xbmcvfs.exists(nodepath) and not mediatype == "photos":
             # We need to copy over the default items
             xbmcvfs.mkdirs(nodepath)
         else:
@@ -102,7 +102,7 @@ class VideoNodes(object):
         window('Emby.nodes.%s.index' % indexnumber, value=path)
         
         # Root
-        if not mediatype=="photos":
+        if not mediatype == "photos":
             root = self.commonRoot(order=0, label=tagname, tagname=tagname, roottype=0)
             try:
                 utils.indent(root)
@@ -181,7 +181,7 @@ class VideoNodes(object):
             nodeXML = "%s%s_%s.xml" % (nodepath, cleantagname, nodetype)
             # Get label
             stringid = nodes[node]
-            if node != '1':
+            if node != "1":
                 label = utils.language(stringid)
                 if not label:
                     label = xbmc.getLocalizedString(stringid)
@@ -323,7 +323,7 @@ class VideoNodes(object):
         cleantagname = utils.normalize_nodes(tagname)
         nodepath = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
         nodeXML = "%semby_%s.xml" % (nodepath, cleantagname)
-        path = "library://video/emby_%s.xml" % (cleantagname)
+        path = "library://video/emby_%s.xml" % cleantagname
         windowpath = "ActivateWindow(Video,%s,return)" % path
         
         # Create the video node directory
