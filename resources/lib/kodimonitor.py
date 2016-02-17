@@ -162,8 +162,11 @@ class KodiMonitor(xbmc.Monitor):
 
 
         elif method == "VideoLibrary.OnRemove":
-
-            try:
+            # Removed function, because with plugin paths + clean library, it will wipe
+            # entire library if user has permissions. Instead, use the emby context menu available
+            # in Isengard and higher version
+            pass
+            '''try:
                 kodiid = data['id']
                 type = data['type']
             except (KeyError, TypeError):
@@ -192,7 +195,7 @@ class KodiMonitor(xbmc.Monitor):
                     self.logMsg("Deleting request: %s" % itemid)
                     doUtils.downloadUrl(url, type="DELETE")
                 finally:
-                    embycursor.close()
+                    embycursor.close()'''
 
 
         elif method == "System.OnWake":

@@ -27,7 +27,7 @@ import musicutils as musicutils
 import api
 
 def logMsg(msg, lvl=1):
-    utils.logMsg("%s %s" % ("Emby", "Contextmenu"), msg, lvl)
+    utils.logMsg("%s %s" % ("EMBY", "Contextmenu"), msg, lvl)
 
 
 #Kodi contextmenu item to configure the emby settings
@@ -127,11 +127,32 @@ if __name__ == '__main__':
                 
             if options[ret] == utils.language(30409):
                 #delete item from the server
-                if xbmcgui.Dialog().yesno("Do you really want to delete this item ?", "This will delete the item from the server and the file(s) from disk!"):
+                delete = True
+                if utils.settings('skipContextMenu') != "true":
+                    resp = xbmcgui.Dialog().yesno(
+                                            heading="Confirm delete",
+                                            line1=("Delete file from Emby Server? This will "
+                                                    "also delete the file(s) from disk!"))
+                    if not resp:
+                        logMsg("User skipped deletion.", 1)
+                        delete = False
+                
+                if delete:
                     import downloadutils
                     doUtils = downloadutils.DownloadUtils()
                     url = "{server}/emby/Items/%s?format=json" % embyid
+                    logMsg("Deleting request: %s" % embyid, 0)
                     doUtils.downloadUrl(url, type="DELETE")
+
+                '''if utils.settings('skipContextMenu') != "true":
+                    if xbmcgui.Dialog().yesno(
+                                        heading="Confirm delete",
+                                        line1=("Delete file on Emby Server? This will "
+                                                "also delete the file(s) from disk!")):
+                        import downloadutils
+                        doUtils = downloadutils.DownloadUtils()
+                        url = "{server}/emby/Items/%s?format=json" % embyid
+                        doUtils.downloadUrl(url, type="DELETE")'''
             
             xbmc.sleep(500)
             xbmc.executebuiltin("Container.Update")
