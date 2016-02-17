@@ -134,7 +134,7 @@ if __name__ == '__main__':
                                             line1=("Delete file from Emby Server? This will "
                                                     "also delete the file(s) from disk!"))
                     if not resp:
-                        logMsg("User skipped deletion.", 1)
+                        logMsg("User skipped deletion for: %s." % embyid, 1)
                         delete = False
                 
                 if delete:
