@@ -490,7 +490,7 @@ class Player(xbmc.Player):
                         offerDelete = False
 
                     if percentComplete >= markPlayedAt and offerDelete:
-                        resp = xbmcgui.Dialog().yesno(lang(30091), lang(33015))
+                        resp = xbmcgui.Dialog().yesno(lang(30091), lang(33015), autoclose=120000)
                         if not resp:
                             log("User skipped deletion.", 1)
                             continue

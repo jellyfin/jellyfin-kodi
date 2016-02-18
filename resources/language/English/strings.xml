@@ -314,7 +314,7 @@
     <string id="33012">Direct play failed 3 times. Enabled play from HTTP.</string>
     <string id="33013">Choose the audio stream</string>
     <string id="33014">Choose the subtitles stream</string>
-    <string id="33015">Delete file on your Emby server?</string>
+    <string id="33015">Delete file from your Emby server?</string>
     <string id="33016">Play trailers?</string>
     <string id="33017">Gathering movies from:</string>
     <string id="33018">Gathering boxsets</string>
