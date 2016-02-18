@@ -178,7 +178,9 @@ class Service():
                                 add = ""
                             xbmcgui.Dialog().notification(
                                         heading="Emby for Kodi",
-                                        message="%s %s%s!" % (lang(33000), user.currUser, add),
+                                        message=("%s %s%s!"
+                                                % (lang(33000), user.currUser.decode('utf-8'),
+                                                    add.decode('utf-8'))),
                                         icon="special://home/addons/plugin.video.emby/icon.png",
                                         time=2000,
                                         sound=False)

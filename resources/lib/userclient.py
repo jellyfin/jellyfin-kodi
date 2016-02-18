@@ -383,7 +383,8 @@ class UserClient(threading.Thread):
 
         if accessToken is not None:
             self.currUser = username
-            dialog.notification("Emby for Kodi", "%s %s!" % (lang(33000), self.currUser), 1)
+            dialog.notification("Emby for Kodi",
+                                "%s %s!" % (lang(33000), self.currUser.decode('utf-8')))
             userId = result['User']['Id']
             settings('accessToken', value=accessToken)
             settings('userId%s' % username, value=userId)
