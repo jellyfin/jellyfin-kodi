@@ -1,3 +1,9 @@
+version 2.2.1
+- Fix artist/album link for music videos
+- Fix progress dialog when the manual sync runs at start up
+- Fix encoding error for special characters in emby username
+- Offer delete dialog after playback now times out after 2 mins
+
 version 2.1.4
 - Removed Emby delete via the Kodi context menu. It is exclusively offered via the extended emby context menu which is available for Isengard or higher. This change was necessary, because there was a risk of wiping the entire library if Kodi decides to run a clean database task and paths were set as plugin paths.
 
