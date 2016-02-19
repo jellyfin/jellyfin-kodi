@@ -284,6 +284,17 @@ class Kodidb_Functions():
                             '''
                         )
                         cursor.execute(query, (actorid, kodiid, mediatype))
+
+                    elif "Artist" in type:
+                        query = (
+                            '''
+                            INSERT OR REPLACE INTO actor_link(
+                                actor_id, media_id, media_type)
+                            
+                            VALUES (?, ?, ?)
+                            '''
+                        )
+                        cursor.execute(query, (actorid, kodiid, mediatype))
             # Kodi Helix
             else:
                 query = ' '.join((
@@ -407,6 +418,17 @@ class Kodidb_Functions():
                             )
                         else: return # Item is invalid
                             
+                        cursor.execute(query, (actorid, kodiid))
+
+                    elif "Artist" in type:
+                        query = (
+                            '''
+                            INSERT OR REPLACE INTO artistlinkmusicvideo(
+                                idArtist, idMVideo)
+                            
+                            VALUES (?, ?)
+                            '''
+                        )
                         cursor.execute(query, (actorid, kodiid))
 
             # Add person image to art table
