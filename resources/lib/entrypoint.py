@@ -60,6 +60,7 @@ def doMainListing():
     xbmcplugin.setContent(int(sys.argv[1]), 'files')    
     # Get emby nodes from the window props
     embyprops = utils.window('Emby.nodes.total')
+    nodes = []
     if embyprops:
         totalnodes = int(embyprops)
         for i in range(totalnodes):
@@ -68,6 +69,10 @@ def doMainListing():
                 path = utils.window('Emby.nodes.%s.content' % i)
             label = utils.window('Emby.nodes.%s.title' % i)
             type = utils.window('Emby.nodes.%s.type' % i)
+            if label not in nodes:
+                nodes.append(label)
+            else: # Avoid duplicates
+                continue
             #because we do not use seperate entrypoints for each content type, we need to figure out which items to show in each listing.
             #for now we just only show picture nodes in the picture library video nodes in the video library and all nodes in any other window
             if path and xbmc.getCondVisibility("Window.IsActive(Pictures)") and type == "photos":

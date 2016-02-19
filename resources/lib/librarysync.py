@@ -402,7 +402,7 @@ class LibrarySync(threading.Thread):
                         # This is only reserved for the detection of grouped views
                         if (grouped_view['Type'] == "UserView" and 
                             grouped_view.get('CollectionType') == mediatype and
-                            grouped_view['Id'] not in grouped_view.get('Path', "")):
+                            grouped_view['Id'] in grouped_view.get('Path', "")):
                             # Take the name of the userview
                             foldername = grouped_view['Name']
                             break
