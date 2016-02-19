@@ -1073,7 +1073,7 @@ class ManualSync(LibrarySync):
         embyboxsets = []
 
         if pdialog:
-            pdialog.update("Emby for Kodi", lang(33027))
+            pdialog.update(heading="Emby for Kodi", message=lang(33027))
 
         for boxset in boxsets['Items']:
 
