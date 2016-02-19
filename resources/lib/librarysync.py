@@ -114,7 +114,7 @@ class LibrarySync(threading.Thread):
         log("Last sync run: %s" % lastSyncTime, 1)
         
         # get server RetentionDateTime
-        url = "{server}/Emby.Kodi.SyncQueue/GetServerDateTime?format=json"
+        url = "{server}/emby/Emby.Kodi.SyncQueue/GetServerDateTime?format=json"
         result = doUtils(url)
         retention_time = "2010-01-01T00:00:00Z"
         if result and result.get('RetentionDateTime'):
@@ -166,7 +166,7 @@ class LibrarySync(threading.Thread):
         # Save last sync time
         overlap = 2
 
-        url = "{server}/Emby.Kodi.SyncQueue/GetServerDateTime?format=json"
+        url = "{server}/emby/Emby.Kodi.SyncQueue/GetServerDateTime?format=json"
         result = self.doUtils(url)
         try: # datetime fails when used more than once, TypeError
             server_time = result['ServerDateTime']
