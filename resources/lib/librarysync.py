@@ -219,7 +219,7 @@ class LibrarySync(threading.Thread):
             connection.commit()
             log("Commit successful.", 1)
 
-    def fullSync(self, manualrun=False, repair=False):
+    def fullSync(self, manualrun=False, repair=False, forceddialog=False):
 
         log = self.logMsg
         window = utils.window
@@ -254,11 +254,13 @@ class LibrarySync(threading.Thread):
             message = "Manual sync"
         elif repair:
             message = "Repair sync"
+            forceddialog = True
         else:
             message = "Initial sync"
+            forceddialog = True
             window('emby_initialScan', value="true")
         
-        pDialog = self.progressDialog("%s" % message, forced=True)
+        pDialog = self.progressDialog("%s" % message, forced=forceddialog)
         starttotal = datetime.now()
 
         # Set views
@@ -980,10 +982,10 @@ class LibrarySync(threading.Thread):
 class ManualSync(LibrarySync):
 
 
-    def __init__(self):
+    def __init__(self, dialog=False):
 
         LibrarySync.__init__(self)
-        self.fullSync(manualrun=True)
+        self.fullSync(manualrun=True, forceddialog=dialog)
 
 
     def movies(self, embycursor, kodicursor, pdialog):
