@@ -413,11 +413,11 @@ class Player(xbmc.Player):
         log = self.logMsg
         window = utils.window
         # Will be called when user stops xbmc playing a file
-        logMsg("ONPLAYBACK_STOPPED", 2)
+        log("ONPLAYBACK_STOPPED", 2)
         window('emby_customPlaylist', clear=True)
         window('emby_customPlaylist.seektime', clear=True)
         window('emby_playbackProps', clear=True)
-        logMsg("Clear playlist properties.", 1)
+        log("Clear playlist properties.", 1)
         self.stopAll()
 
     def onPlayBackEnded( self ):
