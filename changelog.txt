@@ -1,3 +1,6 @@
+version 2.2.3
+- Fix resume
+
 version 2.2.2
 - Fix dialog crash in the manual sync
 - Fix view duplicate views appearing via launching the emby add-on, when grouping views in emby

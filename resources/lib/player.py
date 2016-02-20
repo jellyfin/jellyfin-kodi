@@ -377,7 +377,7 @@ class Player(xbmc.Player):
             log("Report: %s" % postdata, 2)
             self.ws.sendProgressUpdate(postdata)
 
-    def onPlayBackPaused( self ):
+    def onPlayBackPaused(self):
 
         currentFile = self.currentFile
         self.logMsg("PLAYBACK_PAUSED: %s" % currentFile, 2)
@@ -387,7 +387,7 @@ class Player(xbmc.Player):
         
             self.reportPlayback()
 
-    def onPlayBackResumed( self ):
+    def onPlayBackResumed(self):
 
         currentFile = self.currentFile
         self.logMsg("PLAYBACK_RESUMED: %s" % currentFile, 2)
@@ -397,7 +397,7 @@ class Player(xbmc.Player):
         
             self.reportPlayback()
 
-    def onPlayBackSeek( self, time, seekOffset ):
+    def onPlayBackSeek(self, time, seekOffset):
         # Make position when seeking a bit more accurate
         currentFile = self.currentFile
         self.logMsg("PLAYBACK_SEEK: %s" % currentFile, 2)
@@ -408,7 +408,7 @@ class Player(xbmc.Player):
 
             self.reportPlayback()
     
-    def onPlayBackStopped( self ):
+    def onPlayBackStopped(self):
         
         log = self.logMsg
         window = utils.window
@@ -420,7 +420,7 @@ class Player(xbmc.Player):
         log("Clear playlist properties.", 1)
         self.stopAll()
 
-    def onPlayBackEnded( self ):
+    def onPlayBackEnded(self):
         # Will be called when xbmc stops playing a file
         self.logMsg("ONPLAYBACK_ENDED", 2)
         utils.window('emby_customPlaylist.seektime', clear=True)
