@@ -279,7 +279,7 @@ class LibrarySync(threading.Thread):
             startTime = datetime.now()
             completed = process[itemtype](embycursor, kodicursor, pDialog)
             if not completed:
-                
+                xbmc.executebuiltin('InhibitIdleShutdown(false)')
                 window('emby_dbScan', clear=True)
                 if pDialog:
                     pDialog.close()
@@ -306,7 +306,7 @@ class LibrarySync(threading.Thread):
             startTime = datetime.now()
             completed = self.music(embycursor, musiccursor, pDialog)
             if not completed:
-
+                xbmc.executebuiltin('InhibitIdleShutdown(false)')
                 window('emby_dbScan', clear=True)
                 if pDialog:
                     pDialog.close()
