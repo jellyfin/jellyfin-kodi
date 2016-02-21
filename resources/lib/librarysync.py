@@ -228,6 +228,7 @@ class LibrarySync(threading.Thread):
         emby = self.emby
         music_enabled = utils.settings('enableMusic') == "true"
 
+        xbmc.executebuiltin('InhibitIdleShutdown(true)')
         window('emby_dbScan', value="true")
         # Add sources
         utils.sourcesXML()
@@ -332,6 +333,7 @@ class LibrarySync(threading.Thread):
         xbmc.executebuiltin('UpdateLibrary(video)')
         elapsedtotal = datetime.now() - starttotal
 
+        xbmc.executebuiltin('InhibitIdleShutdown(false)')
         window('emby_dbScan', clear=True)
         window('emby_initialScan', clear=True)
         xbmcgui.Dialog().notification(
