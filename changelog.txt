@@ -1,3 +1,7 @@
+version 2.2.4
+- Fix external subs being appended to direct play (via add-on playback)
+- First attempt at keeping Kodi awake during the initial sync
+
 version 2.2.3
 - Fix resume
 
