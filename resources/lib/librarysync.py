@@ -336,7 +336,8 @@ class LibrarySync(threading.Thread):
         xbmc.executebuiltin('InhibitIdleShutdown(false)')
         window('emby_dbScan', clear=True)
         window('emby_initialScan', clear=True)
-        xbmcgui.Dialog().notification(
+        if forceddialog:
+            xbmcgui.Dialog().notification(
                         heading="Emby for Kodi",
                         message="%s %s %s" % 
                                 (message, utils.language(33025), str(elapsedtotal).split('.')[0]),
