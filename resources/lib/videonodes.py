@@ -103,7 +103,10 @@ class VideoNodes(object):
         
         # Root
         if not mediatype == "photos":
-            root = self.commonRoot(order=0, label=tagname, tagname=tagname, roottype=0)
+            if viewtype == "mixed":
+                root = self.commonRoot(order=0, label=dirname, tagname=tagname, roottype=0)
+            else:
+                root = self.commonRoot(order=0, label=tagname, tagname=tagname, roottype=0)
             try:
                 utils.indent(root)
             except: pass
