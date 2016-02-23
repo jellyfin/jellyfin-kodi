@@ -392,6 +392,7 @@ class LibrarySync(threading.Thread):
         for mediatype in mediatypes:
 
             nodes = [] # Prevent duplicate for nodes of the same type
+            playlists = [] # Prevent duplicate for playlists of the same type
             # Get media folders from server
             folders = self.emby.getViews(mediatype, root=True)
             for folder in folders:
@@ -422,12 +423,14 @@ class LibrarySync(threading.Thread):
                     self.logMsg("Creating viewid: %s in Emby database." % folderid, 1)
                     tagid = kodi_db.createTag(foldername)
                     # Create playlist for the video library
-                    if mediatype in ('movies', 'tvshows', 'musicvideos'):
-                        utils.playlistXSP(mediatype, foldername, viewtype)
+                    if (foldername not in playlists and
+                            mediatype in ('movies', 'tvshows', 'musicvideos')):
+                        utils.playlistXSP(mediatype, foldername, folderid, viewtype)
+                        playlists.append(foldername)
                     # Create the video node
                     if (foldername not in nodes and
                             mediatype in ('movies', 'tvshows', 'musicvideos', 'homevideos')):
-                        vnodes.viewNode(totalnodes, foldername, mediatype, viewtype)
+                        vnodes.viewNode(totalnodes, foldername, mediatype, viewtype, folderid)
                         nodes.append(foldername)
                         totalnodes += 1
                     # Add view to emby database
@@ -454,7 +457,7 @@ class LibrarySync(threading.Thread):
                                 # The tag could be a combined view. Ensure there's no other tags
                                 # with the same name before deleting playlist.
                                 utils.playlistXSP(
-                                    mediatype, current_viewname, current_viewtype, True)
+                                    mediatype, current_viewname, folderid, current_viewtype, True)
                                 # Delete video node
                                 if mediatype != "musicvideos":
                                     vnodes.viewNode(
@@ -462,14 +465,17 @@ class LibrarySync(threading.Thread):
                                         tagname=current_viewname,
                                         mediatype=mediatype,
                                         viewtype=current_viewtype,
+                                        viewid=folderid,
                                         delete=True)
                             # Added new playlist
-                            if mediatype in ('movies', 'tvshows', 'musicvideos'):
-                                utils.playlistXSP(mediatype, foldername, viewtype)
+                            if (foldername not in playlists and
+                                    mediatype in ('movies', 'tvshows', 'musicvideos')):
+                                utils.playlistXSP(mediatype, foldername, folderid, viewtype)
+                                playlists.append(foldername)
                             # Add new video node
                             if (foldername not in nodes and
                                     mediatype in ('movies', 'tvshows', 'musicvideos', 'homevideos')):
-                                vnodes.viewNode(totalnodes, foldername, mediatype, viewtype)
+                                vnodes.viewNode(totalnodes, foldername, mediatype, viewtype, folderid)
                                 nodes.append(foldername)
                                 totalnodes += 1
                         
@@ -481,12 +487,14 @@ class LibrarySync(threading.Thread):
                                 current_tagid, tagid, item[0], current_viewtype[:-1])
                     else:
                         # Validate the playlist exists or recreate it
-                        if mediatype in ('movies', 'tvshows', 'musicvideos'):
-                            utils.playlistXSP(mediatype, foldername, viewtype)
+                        if (foldername not in playlists and
+                                mediatype in ('movies', 'tvshows', 'musicvideos')):
+                            utils.playlistXSP(mediatype, foldername, folderid, viewtype)
+                            playlists.append(foldername)
                         # Create the video node if not already exists
                         if (foldername not in nodes and
                                 mediatype in ('movies', 'tvshows', 'musicvideos', 'homevideos')):
-                            vnodes.viewNode(totalnodes, foldername, mediatype, viewtype)
+                            vnodes.viewNode(totalnodes, foldername, mediatype, viewtype, folderid)
                             nodes.append(foldername)
                             totalnodes += 1
         else:

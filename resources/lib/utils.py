@@ -449,17 +449,17 @@ def passwordsXML():
             time=1000,
             sound=False)
 
-def playlistXSP(mediatype, tagname, viewtype="", delete=False):
+def playlistXSP(mediatype, tagname, viewid, viewtype="", delete=False):
     # Tagname is in unicode - actions: add or delete
     tagname = tagname.encode('utf-8')
-    cleantagname = normalize_nodes(tagname)
+
     path = xbmc.translatePath("special://profile/playlists/video/").decode('utf-8')
     if viewtype == "mixed":
         plname = "%s - %s" % (tagname, mediatype)
-        xsppath = "%sEmby %s - %s.xsp" % (path, cleantagname, mediatype)
+        xsppath = "%sEmby %s - %s.xsp" % (path, viewid, mediatype)
     else:
         plname = tagname
-        xsppath = "%sEmby %s.xsp" % (path, cleantagname)
+        xsppath = "%sEmby %s.xsp" % (path, viewid)
 
     # Create the playlist directory
     if not xbmcvfs.exists(path):
