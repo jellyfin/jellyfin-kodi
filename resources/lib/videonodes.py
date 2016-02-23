@@ -104,7 +104,8 @@ class VideoNodes(object):
         # Root
         if not mediatype == "photos":
             if viewtype == "mixed":
-                root = self.commonRoot(order=0, label=dirname, tagname=tagname, roottype=0)
+                specialtag = "%s - %s" % (tagname, mediatype)
+                root = self.commonRoot(order=0, label=specialtag, tagname=tagname, roottype=0)
             else:
                 root = self.commonRoot(order=0, label=tagname, tagname=tagname, roottype=0)
             try:
