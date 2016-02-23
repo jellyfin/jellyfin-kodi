@@ -353,6 +353,13 @@ class LibrarySync(threading.Thread):
         kodiconn = utils.kodiSQL('video')
         kodicursor = kodiconn.cursor()
 
+        # Erase saved views
+        embycursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
+        rows = embycursor.fetchall()
+        for row in rows:
+            tablename = row[0]
+            if tablename == "view":
+                embycursor.execute("DELETE FROM " + tablename)
         # Compare views, assign correct tags to items
         self.maintainViews(embycursor, kodicursor)
         
