@@ -516,7 +516,13 @@ def deleteNodes():
     dirs, files = xbmcvfs.listdir(path)
     for dir in dirs:
         if dir.decode('utf-8').startswith('Emby'):
-            shutil.rmtree("%s%s" % (path, dir.decode('utf-8')))
+            try:
+                shutil.rmtree("%s%s" % (path, dir.decode('utf-8')))
+            except:
+                logMsg("EMBY", "Failed to delete directory: %s" % dir.decode('utf-8'))
     for file in files:
         if file.decode('utf-8').startswith('emby'):
-            xbmcvfs.delete("%s%s" % (path, file.decode('utf-8')))
+            try:
+                xbmcvfs.delete("%s%s" % (path, file.decode('utf-8')))
+            except:
+                logMsg("EMBY", "Failed to file: %s" % file.decode('utf-8'))
