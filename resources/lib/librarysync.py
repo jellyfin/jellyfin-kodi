@@ -353,13 +353,6 @@ class LibrarySync(threading.Thread):
         kodiconn = utils.kodiSQL('video')
         kodicursor = kodiconn.cursor()
 
-        # Erase saved views
-        embycursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
-        rows = embycursor.fetchall()
-        for row in rows:
-            tablename = row[0]
-            if tablename == "view":
-                embycursor.execute("DELETE FROM " + tablename)
         # Compare views, assign correct tags to items
         self.maintainViews(embycursor, kodicursor)
         
@@ -382,6 +375,15 @@ class LibrarySync(threading.Thread):
         url = "{server}/emby/Users/{UserId}/Views?format=json"
         result = doUtils(url)
         grouped_views = result['Items']
+        ordered_views = self.emby.getViews(sortedlist=True)
+        sorted_views = []
+        for view in ordered_views:
+            if view['type'] == "music":
+                continue
+                
+            if view['type'] == "mixed":
+                sorted_views.append(view['name'])
+            sorted_views.append(view['name'])
 
         try:
             groupedFolders = self.user.userSettings['Configuration']['GroupedFolders']
@@ -394,6 +396,7 @@ class LibrarySync(threading.Thread):
         vnodes.clearProperties()
         totalnodes = 0
 
+        current_views = emby_db.getViews()
         # Set views for supported media type
         mediatypes = ['movies', 'tvshows', 'musicvideos', 'homevideos', 'music', 'photos']
         for mediatype in mediatypes:
@@ -427,7 +430,7 @@ class LibrarySync(threading.Thread):
                     current_tagid = view[2]
 
                 except TypeError:
-                    self.logMsg("Creating viewid: %s in Emby database." % folderid, 1)
+                    log("Creating viewid: %s in Emby database." % folderid, 1)
                     tagid = kodi_db.createTag(foldername)
                     # Create playlist for the video library
                     if (foldername not in playlists and
@@ -435,9 +438,11 @@ class LibrarySync(threading.Thread):
                         utils.playlistXSP(mediatype, foldername, folderid, viewtype)
                         playlists.append(foldername)
                     # Create the video node
-                    if (foldername not in nodes and
-                            mediatype in ('movies', 'tvshows', 'musicvideos', 'homevideos')):
-                        vnodes.viewNode(totalnodes, foldername, mediatype, viewtype, folderid)
+                    if foldername not in nodes and mediatype not in ("musicvideos", "music"):
+                        vnodes.viewNode(sorted_views.index(foldername), foldername, mediatype,
+                            viewtype, folderid)
+                        if viewtype == "mixed": # Change the value
+                            sorted_views[sorted_views.index(foldername)] = "%ss" % foldername
                         nodes.append(foldername)
                         totalnodes += 1
                     # Add view to emby database
@@ -450,6 +455,13 @@ class LibrarySync(threading.Thread):
                         "viewname: %s" % current_viewname,
                         "viewtype: %s" % current_viewtype,
                         "tagid: %s" % current_tagid)), 2)
+
+                    # View is still valid
+                    try:
+                        current_views.remove(folderid)
+                    except ValueError:
+                        # View was just created, nothing to remove
+                        pass
 
                     # View was modified, update with latest info
                     if current_viewname != foldername:
@@ -468,7 +480,7 @@ class LibrarySync(threading.Thread):
                                 # Delete video node
                                 if mediatype != "musicvideos":
                                     vnodes.viewNode(
-                                        indexnumber=totalnodes,
+                                        indexnumber=sorted_views.index(foldername),
                                         tagname=current_viewname,
                                         mediatype=mediatype,
                                         viewtype=current_viewtype,
@@ -481,7 +493,10 @@ class LibrarySync(threading.Thread):
                                 playlists.append(foldername)
                             # Add new video node
                             if foldername not in nodes and mediatype != "musicvideos":
-                                vnodes.viewNode(totalnodes, foldername, mediatype, viewtype, folderid)
+                                vnodes.viewNode(sorted_views.index(foldername), foldername,
+                                    mediatype, viewtype, folderid)
+                                if viewtype == "mixed": # Change the value
+                                    sorted_views[sorted_views.index(foldername)] = "%ss" % foldername
                                 nodes.append(foldername)
                                 totalnodes += 1
                         
@@ -500,7 +515,10 @@ class LibrarySync(threading.Thread):
                                 playlists.append(foldername)
                             # Create the video node if not already exists
                             if foldername not in nodes and mediatype != "musicvideos":
-                                vnodes.viewNode(totalnodes, foldername, mediatype, viewtype, folderid)
+                                vnodes.viewNode(sorted_views.index(foldername), foldername,
+                                    mediatype, viewtype, folderid)
+                                if viewtype == "mixed": # Change the value
+                                    sorted_views[sorted_views.index(foldername)] = "%ss" % foldername
                                 nodes.append(foldername)
                                 totalnodes += 1
         else:
@@ -513,6 +531,11 @@ class LibrarySync(threading.Thread):
             totalnodes += 1
             # Save total
             utils.window('Emby.nodes.total', str(totalnodes))
+
+            # Remove any old referenced views
+            log("Removing views: %s" % current_views, 1)
+            for view in current_views:
+                emby_db.removeView(view)
 
     def movies(self, embycursor, kodicursor, pdialog):
 

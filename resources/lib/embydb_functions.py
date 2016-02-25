@@ -118,6 +118,15 @@ class Embydb_Functions():
         ))
         self.embycursor.execute(query, (name, tagid, mediafolderid))
 
+    def removeView(self, viewid):
+
+        query = ' '.join((
+
+            "DELETE FROM view",
+            "WHERE view_id = ?"
+        ))
+        self.embycursor.execute(query, (viewid,))
+
     def getItem_byId(self, embyid):
 
         embycursor = self.embycursor

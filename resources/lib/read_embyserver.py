@@ -305,11 +305,11 @@ class Read_EmbyServer():
                         log("Increase jump limit to: %s" % jump, 1)
         return items
 
-    def getViews(self, type, root=False):
+    def getViews(self, mediatype="", root=False, sortedlist=False):
         # Build a list of user views
         doUtils = self.doUtils
         views = []
-        type = type.lower()
+        mediatype = mediatype.lower()
 
         if not root:
             url = "{server}/emby/Users/{UserId}/Views?format=json"
@@ -319,10 +319,8 @@ class Read_EmbyServer():
         result = doUtils(url)
         try:
             items = result['Items']
-        
         except TypeError:
-            self.logMsg("Error retrieving views for type: %s" % type, 2)
-        
+            self.logMsg("Error retrieving views for type: %s" % mediatype, 2)
         else:
             for item in items:
 
@@ -347,15 +345,25 @@ class Read_EmbyServer():
                         if itemId == folder['Id']:
                             itemtype = folder.get('CollectionType', "mixed")
                 
-                if (name not in ('Collections', 'Trailers') and (itemtype == type or 
-                    (itemtype == "mixed" and type in ("movies", "tvshows")))):
+                if name not in ('Collections', 'Trailers'):
                     
-                    views.append({
+                    if sortedlist:
+                        views.append({
 
-                        'name': name,
-                        'type': itemtype,
-                        'id': itemId
-                    })
+                            'name': name,
+                            'type': itemtype,
+                            'id': itemId
+                        })
+
+                    elif (itemtype == mediatype or 
+                        (itemtype == "mixed" and mediatype in ("movies", "tvshows"))):
+                    
+                        views.append({
+
+                            'name': name,
+                            'type': itemtype,
+                            'id': itemId
+                        })
         
         return views
 
