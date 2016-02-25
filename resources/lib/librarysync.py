@@ -493,15 +493,16 @@ class LibrarySync(threading.Thread):
                                 current_tagid, tagid, item[0], current_viewtype[:-1])
                     else:
                         # Validate the playlist exists or recreate it
-                        if (foldername not in playlists and
-                                mediatype in ('movies', 'tvshows', 'musicvideos')):
-                            utils.playlistXSP(mediatype, foldername, folderid, viewtype)
-                            playlists.append(foldername)
-                        # Create the video node if not already exists
-                        if foldername not in nodes and mediatype != "musicvideos":
-                            vnodes.viewNode(totalnodes, foldername, mediatype, viewtype, folderid)
-                            nodes.append(foldername)
-                            totalnodes += 1
+                        if mediatype != "music":
+                            if (foldername not in playlists and
+                                    mediatype in ('movies', 'tvshows', 'musicvideos')):
+                                utils.playlistXSP(mediatype, foldername, folderid, viewtype)
+                                playlists.append(foldername)
+                            # Create the video node if not already exists
+                            if foldername not in nodes and mediatype != "musicvideos":
+                                vnodes.viewNode(totalnodes, foldername, mediatype, viewtype, folderid)
+                                nodes.append(foldername)
+                                totalnodes += 1
         else:
             # Add video nodes listings
             vnodes.singleNode(totalnodes, "Favorite movies", "movies", "favourites")
