@@ -145,31 +145,32 @@ class DownloadUtils():
 
     def startSession(self):
 
+        log = self.logMsg
+
         self.deviceId = self.clientInfo.getDeviceId()
 
         # User is identified from this point
         # Attach authenticated header to the session
-        verify = None
-        cert = None
+        verify = False
         header = self.getHeader()
 
         # If user enabled host certificate verification
         try:
             verify = self.sslverify
-            cert = self.sslclient
+            if self.sslclient is not None:
+                verify = self.sslclient
         except:
-            self.logMsg("Could not load SSL settings.", 1)
+            log("Could not load SSL settings.", 1)
         
         # Start session
         self.s = requests.Session()
         self.s.headers = header
         self.s.verify = verify
-        self.s.cert = cert
         # Retry connections to the server
         self.s.mount("http://", requests.adapters.HTTPAdapter(max_retries=1))
         self.s.mount("https://", requests.adapters.HTTPAdapter(max_retries=1))
 
-        self.logMsg("Requests session started on: %s" % self.server, 1)
+        log("Requests session started on: %s" % self.server, 1)
 
     def stopSession(self):
         try:
@@ -258,7 +259,7 @@ class DownloadUtils():
                     if utils.settings('sslverify') == "true":
                         verifyssl = True
                     if utils.settings('sslcert') != "None":
-                        cert = utils.settings('sslcert')
+                        verifyssl = utils.settings('sslcert')
 
                     # Replace for the real values
                     url = url.replace("{server}", self.server)
@@ -271,7 +272,6 @@ class DownloadUtils():
                                         params=parameters,
                                         headers=header,
                                         timeout=timeout,
-                                        cert=cert,
                                         verify=verifyssl)
 
                     elif type == "POST":
@@ -279,7 +279,6 @@ class DownloadUtils():
                                         json=postBody,
                                         headers=header,
                                         timeout=timeout,
-                                        cert=cert,
                                         verify=verifyssl)
 
                     elif type == "DELETE":
@@ -287,7 +286,6 @@ class DownloadUtils():
                                         json=postBody,
                                         headers=header,
                                         timeout=timeout,
-                                        cert=cert,
                                         verify=verifyssl)
 
             # If user is not authenticated
@@ -299,6 +297,8 @@ class DownloadUtils():
                 # If user enables ssl verification
                 try:
                     verifyssl = self.sslverify
+                    if self.sslclient is not None:
+                        verifyssl = self.sslclient
                 except AttributeError:
                     pass
                 
