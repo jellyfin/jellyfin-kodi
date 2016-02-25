@@ -455,6 +455,9 @@ class Player(xbmc.Player):
                 type = data['Type']
                 playMethod = data['playmethod']
 
+                # Prevent manually mark as watched in Kodi monitor
+                utils.window('emby_skipWatched%s' % itemid, value="true")
+
                 if currentPosition and runtime:
                     try:
                         percentComplete = (currentPosition * 10000000) / int(runtime)
@@ -465,17 +468,6 @@ class Player(xbmc.Player):
                     markPlayedAt = float(settings('markPlayed')) / 100
                     log("Percent complete: %s Mark played at: %s"
                         % (percentComplete, markPlayedAt), 1)
-
-                    # Prevent manually mark as watched in Kodi monitor
-                    utils.window('emby_skipWatched%s' % itemid, value="true")
-
-                    self.stopPlayback(data)
-                    # Stop transcoding
-                    if playMethod == "Transcode":
-                        log("Transcoding for %s terminated." % itemid, 1)
-                        deviceId = self.clientInfo.getDeviceId()
-                        url = "{server}/emby/Videos/ActiveEncodings?DeviceId=%s" % deviceId
-                        doUtils(url, type="DELETE")
 
                     # Send the delete action to the server.
                     offerDelete = False
@@ -498,6 +490,15 @@ class Player(xbmc.Player):
                         url = "{server}/emby/Items/%s?format=json" % itemid
                         log("Deleting request: %s" % itemid, 1)
                         doUtils(url, type="DELETE")
+
+                self.stopPlayback(data)
+
+                # Stop transcoding
+                if playMethod == "Transcode":
+                    log("Transcoding for %s terminated." % itemid, 1)
+                    deviceId = self.clientInfo.getDeviceId()
+                    url = "{server}/emby/Videos/ActiveEncodings?DeviceId=%s" % deviceId
+                    doUtils(url, type="DELETE")
     
         self.played_info.clear()
     
