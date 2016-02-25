@@ -480,8 +480,7 @@ class LibrarySync(threading.Thread):
                                 utils.playlistXSP(mediatype, foldername, folderid, viewtype)
                                 playlists.append(foldername)
                             # Add new video node
-                            if (foldername not in nodes and
-                                    mediatype in ('movies', 'tvshows', 'musicvideos', 'homevideos')):
+                            if foldername not in nodes and mediatype != "musicvideos":
                                 vnodes.viewNode(totalnodes, foldername, mediatype, viewtype, folderid)
                                 nodes.append(foldername)
                                 totalnodes += 1
@@ -499,8 +498,7 @@ class LibrarySync(threading.Thread):
                             utils.playlistXSP(mediatype, foldername, folderid, viewtype)
                             playlists.append(foldername)
                         # Create the video node if not already exists
-                        if (foldername not in nodes and
-                                mediatype in ('movies', 'tvshows', 'musicvideos', 'homevideos')):
+                        if foldername not in nodes and mediatype != "musicvideos":
                             vnodes.viewNode(totalnodes, foldername, mediatype, viewtype, folderid)
                             nodes.append(foldername)
                             totalnodes += 1
