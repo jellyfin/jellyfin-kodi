@@ -586,6 +586,8 @@ class Movies(Items):
         resume = API.adjustResume(userdata['Resume'])
         total = round(float(runtime), 6)
 
+        self.logMsg("%s New resume point: %s" % (itemid, resume))
+
         kodi_db.addPlaystate(fileid, resume, total, playcount, dateplayed)
         emby_db.updateReference(itemid, checksum)
 
@@ -1501,6 +1503,7 @@ class TVShows(Items):
         checksum = API.getChecksum()
         userdata = API.getUserData()
         runtime = API.getRuntime()
+        dateadded = API.getDateCreated()
 
         # Get Kodi information
         emby_dbitem = emby_db.getItem_byId(itemid)
@@ -1528,11 +1531,28 @@ class TVShows(Items):
             resume = API.adjustResume(userdata['Resume'])
             total = round(float(runtime), 6)
 
+            self.logMsg("%s New resume point: %s" % (itemid, resume))
+
             kodi_db.addPlaystate(fileid, resume, total, playcount, dateplayed)
             if not self.directpath and not resume:
                 # Make sure there's no other bookmarks created by widget.
                 filename = kodi_db.getFile(fileid)
                 kodi_db.removeFile("plugin://plugin.video.emby.tvshows/", filename)
+
+            if not self.directpath and resume:
+                # Create additional entry for widgets. This is only required for plugin/episode.
+                filename = kodi_db.getFile(fileid)
+                temppathid = kodi_db.getPath("plugin://plugin.video.emby.tvshows/")
+                tempfileid = kodi_db.addFile(filename, temppathid)
+                query = ' '.join((
+
+                    "UPDATE files",
+                    "SET idPath = ?, strFilename = ?, dateAdded = ?",
+                    "WHERE idFile = ?"
+                ))
+                self.kodicursor.execute(query, (temppathid, filename, dateadded, tempfileid))
+                kodi_db.addPlaystate(tempfileid, resume, total, playcount, dateplayed)
+
         emby_db.updateReference(itemid, checksum)
 
     def remove(self, itemid):
