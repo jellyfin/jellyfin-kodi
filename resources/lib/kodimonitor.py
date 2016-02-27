@@ -45,7 +45,9 @@ class KodiMonitor(xbmc.Monitor):
 
     def onSettingsChanged(self):
         # Monitor emby settings
-        currentPath = utils.settings('useDirectPaths')
+        # Review reset setting at a later time, need to be adjusted to account for initial setup
+        # changes.
+        '''currentPath = utils.settings('useDirectPaths')
         if utils.window('emby_pluginpath') != currentPath:
             # Plugin path value changed. Offer to reset
             self.logMsg("Changed to playback mode detected", 1)
@@ -57,7 +59,7 @@ class KodiMonitor(xbmc.Monitor):
                                     "needs to be recreated for the change to be applied. "
                                     "Proceed?"))
             if resp:
-                utils.reset()
+                utils.reset()'''
 
         currentLog = utils.settings('logLevel')
         if utils.window('emby_logLevel') != currentLog:
