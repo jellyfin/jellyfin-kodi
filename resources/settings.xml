@@ -76,5 +76,6 @@
 		<setting id="logLevel" type="enum" label="30004" values="Disabled|Info|Debug" default="1" />
 		<setting id="startupDelay" type="number" label="30529" default="0" option="int" />
 		<setting label="30239" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=reset)" option="close" />
+		<setting label="30535" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=deviceid)" />
 	</category>
 </settings>

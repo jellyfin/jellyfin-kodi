@@ -69,7 +69,7 @@ class ClientInfo():
         else:
             return "Unknown"
 
-    def getDeviceId(self):
+    def getDeviceId(self, reset=False):
 
         clientId = utils.window('emby_deviceId')
         if clientId:
@@ -80,6 +80,10 @@ class ClientInfo():
             GUID_file = xbmc.translatePath(os.path.join(addon_path, "machine_guid")).decode('utf-8')
         else:
             GUID_file = xbmc.translatePath(os.path.join(addon_path.encode("utf-8"), "machine_guid")).decode('utf-8')
+
+        if reset and xbmcvfs.exists(GUID_file):
+            # Reset the file
+            xbmcvfs.delete(GUID_file)
 
         GUID = xbmcvfs.File(GUID_file)
         clientId = GUID.read()

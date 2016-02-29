@@ -62,7 +62,8 @@ class Main:
             'nextup': entrypoint.getNextUpEpisodes,
             'inprogressepisodes': entrypoint.getInProgressEpisodes,
             'recentepisodes': entrypoint.getRecentEpisodes,
-            'refreshplaylist': entrypoint.refreshPlaylist
+            'refreshplaylist': entrypoint.refreshPlaylist,
+            'deviceid': entrypoint.resetDeviceId
         }
         
         if "extrafanart" in sys.argv[0]:

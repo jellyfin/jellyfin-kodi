@@ -297,6 +297,7 @@
     <string id="30532">Duration of the video library pop up (in seconds)</string>
     <string id="30533">Duration of the music library pop up (in seconds)</string>
     <string id="30534">Server messages</string>
+    <string id="30535">Generate a new device Id</string>
 
     <!-- service add-on -->
     <string id="33000">Welcome</string>
@@ -331,5 +332,7 @@
     <string id="33029">Comparing tv shows from:</string>
     <string id="33030">Comparing episodes from:</string>
     <string id="33031">Comparing:</string>
+    <string id="33032">Failed to generate a new device Id. See your logs for more information.</string>
+    <string id="33033">A new device Id has been generated. Kodi will now restart.</string>
 
 </strings>
