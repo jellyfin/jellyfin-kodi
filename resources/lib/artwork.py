@@ -6,6 +6,7 @@ import json
 import requests
 import os
 import urllib
+from sqlite3 import OperationalError
 
 import xbmc
 import xbmcgui
@@ -458,12 +459,15 @@ class Artwork():
         connection = utils.kodiSQL('texture')
         cursor = connection.cursor()
 
-        cursor.execute("SELECT cachedurl FROM texture WHERE url = ?", (url,))
         try:
+            cursor.execute("SELECT cachedurl FROM texture WHERE url = ?", (url,))
             cachedurl = cursor.fetchone()[0]
         
         except TypeError:
             self.logMsg("Could not find cached url.", 1)
+
+        except OperationalError:
+            self.logMsg("Database is locked. Skip deletion process.", 1)
         
         else: # Delete thumbnail as well as the entry
             thumbnails = xbmc.translatePath("special://thumbnails/%s" % cachedurl).decode('utf-8')
@@ -473,7 +477,7 @@ class Artwork():
             try:
                 cursor.execute("DELETE FROM texture WHERE url = ?", (url,))
                 connection.commit()
-            except:
+            except OperationalError:
                 self.logMsg("Issue deleting url from cache. Skipping.", 2)
         
         finally:
