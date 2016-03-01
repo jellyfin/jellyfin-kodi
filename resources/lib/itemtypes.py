@@ -1206,10 +1206,6 @@ class TVShows(Items):
         kodi_db = self.kodi_db
         artwork = self.artwork
 
-        if item['LocationType'] == "Virtual":
-            self.logMsg("Skipping virtual season.")
-            return
-
         seasonnum = item.get('IndexNumber', 1)
         itemid = item['Id']
 
@@ -1224,10 +1220,13 @@ class TVShows(Items):
                 show = self.emby.getItem(seriesId)
                 self.add_update(show)
                 return
-            
+        
         seasonid = kodi_db.addSeason(showid, seasonnum)
-        # Create the reference in emby table
-        emby_db.addReference(itemid, seasonid, "Season", "season", parentid=showid)
+        
+        if item['LocationType'] != "Virtual":
+            # Create the reference in emby table
+            self.logMsg("Skipping virtual season.")
+            emby_db.addReference(itemid, seasonid, "Season", "season", parentid=showid)
 
         # Process artwork
         artwork.addArtwork(artwork.getAllArtwork(item), seasonid, "season", kodicursor)
