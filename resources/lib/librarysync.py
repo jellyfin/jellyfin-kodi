@@ -957,6 +957,8 @@ class LibrarySync(threading.Thread):
                     else:
                         utils.reset()
 
+                    break
+
                 window('emby_dbCheck', value="true")
 
 
