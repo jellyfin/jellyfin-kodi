@@ -1,3 +1,14 @@
+version 2.2.5
+- Add generate a new device Id option, found in the add-on settings > advanced.
+- Offer to delete cached thumbnails upon database reset.
+- Breaking fix for views. You will notice duplicates in your video nodes. When you have a moment to spare, run the refresh playlists/nodes action found by launching the emby add-on (this is not reversible). Your homescreen shortcuts actions will need to be redirected to the new playlists/nodes. 
+- Fix pictures, the shortcut should now appear under photo add-ons > emby.
+- Fix view shortcuts to follow emby ordering. This changes the Emby.nodes.X ordering (automatically created shortcuts and via launching the emby add-on). This does not change the video nodes ordering.
+- Fix ssl client certificate verification
+- Fix resume
+- Prevent artwork deletion from crashing the add-on
+- Fix to import virtual season artwork
+
 version 2.2.4
 - Fix external subs being appended to direct play (via add-on playback)
 - First attempt at keeping Kodi awake during the initial sync
