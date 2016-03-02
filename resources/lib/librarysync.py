@@ -376,7 +376,7 @@ class LibrarySync(threading.Thread):
         url = "{server}/emby/Users/{UserId}/Views?format=json"
         result = doUtils(url)
         grouped_views = result['Items']
-        ordered_views = self.emby.getViews(sortedlist=True)
+        ordered_views = emby.getViews(sortedlist=True)
         sorted_views = []
         for view in ordered_views:
             if view['type'] == "music":
@@ -395,7 +395,7 @@ class LibrarySync(threading.Thread):
 
         # total nodes for window properties
         vnodes.clearProperties()
-        totalnodes = 0
+        totalnodes = len(sorted_views) + 0
 
         current_views = emby_db.getViews()
         # Set views for supported media type
@@ -495,7 +495,7 @@ class LibrarySync(threading.Thread):
                                 # Delete video node
                                 if mediatype != "musicvideos":
                                     vnodes.viewNode(
-                                        indexnumber=sorted_views.index(foldername),
+                                        indexnumber=None,
                                         tagname=current_viewname,
                                         mediatype=mediatype,
                                         viewtype=current_viewtype,
