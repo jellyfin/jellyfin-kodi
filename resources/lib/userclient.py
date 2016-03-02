@@ -349,7 +349,7 @@ class UserClient(threading.Thread):
                 # If user has password
                 if user['HasPassword'] == True:
                     password = dialog.input(
-                        heading="%s %s" % (lang(33008), username),
+                        heading="%s %s" % (lang(33008), username.decode('utf-8')),
                         option=xbmcgui.ALPHANUM_HIDE_INPUT)
                     # If password dialog is cancelled
                     if not password:
