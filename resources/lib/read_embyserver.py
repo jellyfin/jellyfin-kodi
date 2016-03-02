@@ -367,6 +367,32 @@ class Read_EmbyServer():
         
         return views
 
+    def verifyView(self, parentid, itemid):
+
+        belongs = False
+
+        url = "{server}/emby/Users/{UserId}/Items?format=json"
+        params = {
+
+            'ParentId': parentid,
+            'CollapseBoxSetItems': False,
+            'IsVirtualUnaired': False,
+            'IsMissing': False,
+            'Recursive': True,
+            'Ids': itemid
+        }
+        result = self.doUtils(url, parameters=params)
+        try:
+            total = result['TotalRecordCount']
+        except TypeError:
+            # Something happened to the connection
+            pass
+        else:
+            if total:
+                belongs = True
+
+        return belongs
+
     def getMovies(self, parentId, basic=False, dialog=None):
 
         items = self.getSection(parentId, "Movie", basic=basic, dialog=dialog)

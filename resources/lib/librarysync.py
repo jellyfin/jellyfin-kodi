@@ -366,6 +366,7 @@ class LibrarySync(threading.Thread):
 
         log = self.logMsg
         # Compare the views to emby
+        emby = self.emby
         emby_db = embydb.Embydb_Functions(embycursor)
         kodi_db = kodidb.Kodidb_Functions(kodicursor)
         doUtils = self.doUtils
@@ -404,7 +405,7 @@ class LibrarySync(threading.Thread):
             nodes = [] # Prevent duplicate for nodes of the same type
             playlists = [] # Prevent duplicate for playlists of the same type
             # Get media folders from server
-            folders = self.emby.getViews(mediatype, root=True)
+            folders = emby.getViews(mediatype, root=True)
             for folder in folders:
 
                 folderid = folder['id']
@@ -413,14 +414,28 @@ class LibrarySync(threading.Thread):
                 
                 if folderid in groupedFolders:
                     # Media folders are grouped into userview
-                    for grouped_view in grouped_views:
-                        # This is only reserved for the detection of grouped views
-                        if (grouped_view['Type'] == "UserView" and 
-                            grouped_view.get('CollectionType') == mediatype and
-                            grouped_view['Id'] in grouped_view.get('Path', "")):
-                            # Take the name of the userview
-                            foldername = grouped_view['Name']
-                            break
+                    url = "{server}/emby/Users/{UserId}/Items?format=json"
+                    params = {
+                        'ParentId': folderid,
+                        'Limit': 1
+                    } # Get one item from server using the folderid
+                    result = doUtils(url, parameters=params)
+                    try:
+                        verifyitem = result['Items'][0]['Id']
+                    except (TypeError, IndexError):
+                        # Something is wrong. Keep the same folder name.
+                        # Could be the view is empty or the connection
+                        pass
+                    else:
+                        for grouped_view in grouped_views:
+                            # This is only reserved for the detection of grouped views
+                            if (grouped_view['Type'] == "UserView" and 
+                                grouped_view.get('CollectionType') == mediatype):
+                                # Take the userview, and validate the item belong to the view
+                                if emby.verifyView(grouped_view['Id'], verifyitem):
+                                    # Take the name of the userview
+                                    foldername = grouped_view['Name']
+                                    break
 
                 # Get current media folders from emby database
                 view = emby_db.getView_byId(folderid)
