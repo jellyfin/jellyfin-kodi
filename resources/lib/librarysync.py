@@ -229,6 +229,8 @@ class LibrarySync(threading.Thread):
         music_enabled = utils.settings('enableMusic') == "true"
 
         xbmc.executebuiltin('InhibitIdleShutdown(true)')
+        screensaver = utils.getScreensaver()
+        utils.setScreensaver(value="")
         window('emby_dbScan', value="true")
         # Add sources
         utils.sourcesXML()
@@ -280,6 +282,7 @@ class LibrarySync(threading.Thread):
             completed = process[itemtype](embycursor, kodicursor, pDialog)
             if not completed:
                 xbmc.executebuiltin('InhibitIdleShutdown(false)')
+                utils.setScreensaver(value=screensaver)
                 window('emby_dbScan', clear=True)
                 if pDialog:
                     pDialog.close()
@@ -307,6 +310,7 @@ class LibrarySync(threading.Thread):
             completed = self.music(embycursor, musiccursor, pDialog)
             if not completed:
                 xbmc.executebuiltin('InhibitIdleShutdown(false)')
+                utils.setScreensaver(value=screensaver)
                 window('emby_dbScan', clear=True)
                 if pDialog:
                     pDialog.close()
@@ -334,6 +338,7 @@ class LibrarySync(threading.Thread):
         elapsedtotal = datetime.now() - starttotal
 
         xbmc.executebuiltin('InhibitIdleShutdown(false)')
+        utils.setScreensaver(value=screensaver)
         window('emby_dbScan', clear=True)
         window('emby_initialScan', clear=True)
         if forceddialog:
@@ -453,6 +458,7 @@ class LibrarySync(threading.Thread):
                         else:
                             # Unable to find a match, add the name to our sorted_view list
                             sorted_views.append(foldername)
+                            log("Couldn't find corresponding grouped view: %s" % sorted_views, 1)
 
                 # Get current media folders from emby database
                 view = emby_db.getView_byId(folderid)
