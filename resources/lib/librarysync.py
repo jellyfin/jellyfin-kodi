@@ -383,6 +383,7 @@ class LibrarySync(threading.Thread):
         grouped_views = result['Items']
         ordered_views = emby.getViews(sortedlist=True)
         all_views = []
+        sorted_views = []
         for view in ordered_views:
             all_views.append(view['name'])
             if view['type'] == "music":
