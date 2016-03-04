@@ -332,18 +332,18 @@ class Read_EmbyServer():
                     # Filter view types
                     continue
 
-                # 11/10/2015 Review key, when it's added to server. Currently unavailable.
-                itemtype = item.get('OriginalCollectionType', item.get('CollectionType'))
+                # 3/4/2016 OriginalCollectionType is added
+                itemtype = item.get('OriginalCollectionType', item.get('CollectionType', "mixed"))
 
                 # 11/29/2015 Remove this once OriginalCollectionType is added to stable server.
                 # Assumed missing is mixed then.
-                if itemtype is None:
+                '''if itemtype is None:
                     url = "{server}/emby/Library/MediaFolders?format=json"
                     result = doUtils(url)
 
                     for folder in result['Items']:
                         if itemId == folder['Id']:
-                            itemtype = folder.get('CollectionType', "mixed")
+                            itemtype = folder.get('CollectionType', "mixed")'''
                 
                 if name not in ('Collections', 'Trailers'):
                     
