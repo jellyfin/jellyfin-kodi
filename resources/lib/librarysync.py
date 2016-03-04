@@ -229,6 +229,8 @@ class LibrarySync(threading.Thread):
         music_enabled = utils.settings('enableMusic') == "true"
 
         xbmc.executebuiltin('InhibitIdleShutdown(true)')
+        screensaver = utils.getScreensaver()
+        utils.setScreensaver(value="")
         window('emby_dbScan', value="true")
         # Add sources
         utils.sourcesXML()
@@ -280,6 +282,7 @@ class LibrarySync(threading.Thread):
             completed = process[itemtype](embycursor, kodicursor, pDialog)
             if not completed:
                 xbmc.executebuiltin('InhibitIdleShutdown(false)')
+                utils.setScreensaver(value=screensaver)
                 window('emby_dbScan', clear=True)
                 if pDialog:
                     pDialog.close()
@@ -307,6 +310,7 @@ class LibrarySync(threading.Thread):
             completed = self.music(embycursor, musiccursor, pDialog)
             if not completed:
                 xbmc.executebuiltin('InhibitIdleShutdown(false)')
+                utils.setScreensaver(value=screensaver)
                 window('emby_dbScan', clear=True)
                 if pDialog:
                     pDialog.close()
@@ -334,6 +338,7 @@ class LibrarySync(threading.Thread):
         elapsedtotal = datetime.now() - starttotal
 
         xbmc.executebuiltin('InhibitIdleShutdown(false)')
+        utils.setScreensaver(value=screensaver)
         window('emby_dbScan', clear=True)
         window('emby_initialScan', clear=True)
         if forceddialog:
@@ -377,21 +382,17 @@ class LibrarySync(threading.Thread):
         result = doUtils(url)
         grouped_views = result['Items']
         ordered_views = emby.getViews(sortedlist=True)
+        all_views = []
         sorted_views = []
         for view in ordered_views:
+            all_views.append(view['name'])
             if view['type'] == "music":
                 continue
                 
             if view['type'] == "mixed":
                 sorted_views.append(view['name'])
             sorted_views.append(view['name'])
-
-        try:
-            groupedFolders = self.user.userSettings['Configuration']['GroupedFolders']
-        except TypeError:
-            url = "{server}/emby/Users/{UserId}?format=json"
-            result = doUtils(url)
-            groupedFolders = result['Configuration']['GroupedFolders']
+        log("Sorted views: %s" % sorted_views, 1)
 
         # total nodes for window properties
         vnodes.clearProperties()
@@ -399,6 +400,15 @@ class LibrarySync(threading.Thread):
 
         current_views = emby_db.getViews()
         # Set views for supported media type
+        emby_mediatypes = {
+
+            'movies': "Movie",
+            'tvshows': "Series",
+            'musicvideos': "MusicVideo",
+            'homevideos': "Video",
+            'music': "Audio",
+            'photos': "Photo"
+        }
         mediatypes = ['movies', 'tvshows', 'musicvideos', 'homevideos', 'music', 'photos']
         for mediatype in mediatypes:
 
@@ -412,12 +422,14 @@ class LibrarySync(threading.Thread):
                 foldername = folder['name']
                 viewtype = folder['type']
                 
-                if folderid in groupedFolders:
+                if foldername not in all_views:
                     # Media folders are grouped into userview
                     url = "{server}/emby/Users/{UserId}/Items?format=json"
                     params = {
                         'ParentId': folderid,
-                        'Limit': 1
+                        'Recursive': True,
+                        'Limit': 1,
+                        'IncludeItemTypes': emby_mediatypes[mediatype]
                     } # Get one item from server using the folderid
                     result = doUtils(url, parameters=params)
                     try:
@@ -434,8 +446,20 @@ class LibrarySync(threading.Thread):
                                 # Take the userview, and validate the item belong to the view
                                 if emby.verifyView(grouped_view['Id'], verifyitem):
                                     # Take the name of the userview
+                                    log("Found corresponding view: %s %s"
+                                        % (grouped_view['Name'], grouped_view['Id']), 1)
                                     foldername = grouped_view['Name']
                                     break
+                        else:
+                            # Unable to find a match, add the name to our sorted_view list
+                            sorted_views.append(foldername)
+                            log("Couldn't find corresponding grouped view: %s" % sorted_views, 1)
+
+                # Failsafe 
+                try:
+                    sorted_views.index(foldername)
+                except ValueError:
+                    sorted_views.append(foldername)
 
                 # Get current media folders from emby database
                 view = emby_db.getView_byId(folderid)

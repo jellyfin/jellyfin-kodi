@@ -1,3 +1,10 @@
+version 2.2.7
+- Prevent Kodi screensaver during the initial sync
+
+version 2.2.6
+- Fix unicode error
+- Fix grouped folders error
+
 version 2.2.5
 - Add generate a new device Id option, found in the add-on settings > advanced.
 - Offer to delete cached thumbnails upon database reset.

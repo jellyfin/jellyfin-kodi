@@ -4,6 +4,7 @@
 
 import cProfile
 import inspect
+import json
 import pstats
 import sqlite3
 import os
@@ -118,6 +119,40 @@ def getKodiMusicDBPath():
                     "special://database/MyMusic%s.db"
                     % dbVersion.get(kodibuild, "")).decode('utf-8')
     return dbPath
+
+def getScreensaver():
+    # Get the current screensaver value
+    query = {
+
+        'jsonrpc': "2.0",
+        'id': 0,
+        'method': "Settings.getSettingValue",
+        'params': {
+
+            'setting': "screensaver.mode"
+        }
+    }
+    result = xbmc.executeJSONRPC(json.dumps(query))
+    result = json.loads(result)
+    screensaver = result['result']['value']
+
+    return screensaver
+
+def setScreensaver(value):
+    # Toggle the screensaver
+    query = {
+
+        'jsonrpc': "2.0",
+        'id': 0,
+        'method': "Settings.setSettingValue",
+        'params': {
+
+            'setting': "screensaver.mode",
+            'value': value
+        }
+    }
+    result = xbmc.executeJSONRPC(json.dumps(query))
+    logMsg("EMBY", "Toggling screensaver: %s %s" % (value, result), 1)    
 
 def reset():
 
