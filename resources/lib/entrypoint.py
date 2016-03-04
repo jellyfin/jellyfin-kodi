@@ -456,10 +456,10 @@ def BrowseContent(viewname, type="", folderid=""):
     if not folderid:
         views = emby.getViews(type)
         for view in views:
-            if view.get("name") == viewname:
+            if view.get("name") == viewname.decode('utf-8'):
                 folderid = view.get("id")
     
-    utils.logMsg("BrowseContent","viewname: %s - type: %s - folderid: %s - filter: %s" %(viewname, type, folderid, filter))
+    utils.logMsg("BrowseContent","viewname: %s - type: %s - folderid: %s - filter: %s" %(viewname.decode('utf-8'), type.decode('utf-8'), folderid.decode('utf-8'), filter.decode('utf-8')))
     #set the correct params for the content type
     #only proceed if we have a folderid
     if folderid:
@@ -494,14 +494,13 @@ def BrowseContent(viewname, type="", folderid=""):
                 li = createListItemFromEmbyItem(item,art,doUtils)
                 if item.get("IsFolder") == True:
                     #for folders we add an additional browse request, passing the folderId
-                    path = "%s?id=%s&mode=browsecontent&type=%s&folderid=%s" % (sys.argv[0], viewname, type, item.get("Id"))
+                    path = "%s?id=%s&mode=browsecontent&type=%s&folderid=%s" % (sys.argv[0].decode('utf-8'), viewname.decode('utf-8'), type.decode('utf-8'), item.get("Id").decode('utf-8'))
                     xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=path, listitem=li, isFolder=True)
                 else:
                     #playable item, set plugin path and mediastreams
                     xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=li.getProperty("path"), listitem=li)
 
 
-    xbmcplugin.endOfDirectory(handle=int(sys.argv[1]))
     if filter == "recent":
         xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_DATE)
     else:
@@ -509,6 +508,8 @@ def BrowseContent(viewname, type="", folderid=""):
         xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_DATE)
         xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_VIDEO_RATING)
         xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_VIDEO_RUNTIME)
+
+    xbmcplugin.endOfDirectory(handle=int(sys.argv[1]))
 
 ##### CREATE LISTITEM FROM EMBY METADATA #####
 def createListItemFromEmbyItem(item,art=artwork.Artwork(),doUtils=downloadutils.DownloadUtils()):
