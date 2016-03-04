@@ -1,3 +1,7 @@
+version 2.2.8
+- Fix to photos not displaying directories without picutres.
+- Fix to grouped views causing crash
+
 version 2.2.7
 - Prevent Kodi screensaver during the initial sync
 
