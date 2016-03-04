@@ -50,7 +50,6 @@ class Main:
 
             'reset': utils.reset,
             'resetauth': entrypoint.resetAuth,
-            'extrafanart': entrypoint.getExtraFanArt,
             'play': entrypoint.doPlayback,
             'passwords': utils.passwordsXML,
             'adduser': entrypoint.addUser,
@@ -66,8 +65,15 @@ class Main:
             'deviceid': entrypoint.resetDeviceId
         }
         
-        if "extrafanart" in sys.argv[0]:
-            entrypoint.getExtraFanArt()
+        if "/extrafanart" in sys.argv[0]:
+            embypath = sys.argv[2][1:]
+            embyid = params.get('id',[""])[0]
+            entrypoint.getExtraFanArt(embyid,embypath)
+            
+        if "/Extras" in sys.argv[0] or "/VideoFiles" in sys.argv[0]:
+            embypath = sys.argv[2][1:]
+            embyid = params.get('id',[""])[0]
+            entrypoint.getVideoFiles(embyid,embypath)
 
         if modes.get(mode):
             # Simple functions
