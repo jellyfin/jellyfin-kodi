@@ -951,6 +951,32 @@ def getRecentEpisodes(tagname, limit):
 
     xbmcplugin.endOfDirectory(handle=int(sys.argv[1]))
 
+##### GET VIDEO EXTRAS FOR LISTITEM #####
+def getVideoFiles(embyId,embyPath):
+    #returns the video files for the item as plugin listing, can be used for browsing the actual files or videoextras etc.
+    emby = embyserver.Read_EmbyServer()
+    if not embyId:
+        if "plugin.video.emby" in embyPath:
+            embyId = embyPath.split("/")[-2]
+    if embyId:
+        item = emby.getItem(embyId)
+        putils = playutils.PlayUtils(item)
+        if putils.isDirectPlay():
+            #only proceed if we can access the files directly. TODO: copy local on the fly if accessed outside
+            filelocation = putils.directPlay()
+            if not filelocation.endswith("/"):
+                filelocation = filelocation.rpartition("/")[0]
+            dirs, files = xbmcvfs.listdir(filelocation)
+            for file in files:
+                file = filelocation + file
+                li = xbmcgui.ListItem(file, path=file)
+                xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=file, listitem=li)
+            for dir in dirs:
+                dir = filelocation + dir
+                li = xbmcgui.ListItem(dir, path=dir)
+                xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=dir, listitem=li, isFolder=True)
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    
 ##### GET EXTRAFANART FOR LISTITEM #####
 def getExtraFanArt(embyId,embyPath):
     
