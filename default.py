@@ -67,7 +67,9 @@ class Main:
         }
         
         if "extrafanart" in sys.argv[0]:
-            entrypoint.getExtraFanArt()
+            embypath = sys.argv[2][1:]
+            embyid = params.get('id',[""])[0]
+            entrypoint.getExtraFanArt(embyid,embypath)
 
         if modes.get(mode):
             # Simple functions

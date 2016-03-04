@@ -214,7 +214,7 @@ def getSongTags(file):
     
     except Exception as e:
         #file in use ?
-        logMsg("Exception in getSongTags %s" %e,0)
+        utils.logMsg("Exception in getSongTags", str(e),0)
         rating = None
     
     #remove tempfile if needed....

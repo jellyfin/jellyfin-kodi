@@ -951,27 +951,18 @@ def getRecentEpisodes(tagname, limit):
     xbmcplugin.endOfDirectory(handle=int(sys.argv[1]))
 
 ##### GET EXTRAFANART FOR LISTITEM #####
-def getExtraFanArt():
+def getExtraFanArt(embyId,embyPath):
     
     emby = embyserver.Read_EmbyServer()
     art = artwork.Artwork()
-    embyId = ""
     
     # Get extrafanart for listitem 
     # will be called by skinhelper script to get the extrafanart
     try:
         # for tvshows we get the embyid just from the path
-        if xbmc.getCondVisibility("Container.Content(tvshows) | Container.Content(seasons) | Container.Content(episodes)"):
-            itemPath = xbmc.getInfoLabel("ListItem.Path").decode('utf-8')
-            if "plugin.video.emby" in itemPath:
-                embyId = itemPath.split("/")[-2]
-        else:
-            #for movies we grab the emby id from the params
-            itemPath = xbmc.getInfoLabel("ListItem.FileNameAndPath").decode('utf-8')
-            if "plugin.video.emby" in itemPath:
-                params = urlparse.parse_qs(itemPath)
-                embyId = params.get('id')
-                if embyId: embyId = embyId[0]
+        if not embyId:
+            if "plugin.video.emby" in embyPath:
+                embyId = embyPath.split("/")[-2]
         
         if embyId:
             #only proceed if we actually have a emby id
@@ -1015,7 +1006,7 @@ def getExtraFanArt():
                                             url=fanartFile,
                                             listitem=li)
     except Exception as e:
-        utils.logMsg("EMBY", "Error getting extrafanart: %s" % e, 1)
+        utils.logMsg("EMBY", "Error getting extrafanart: %s" % e, 0)
     
     # Always do endofdirectory to prevent errors in the logs
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
