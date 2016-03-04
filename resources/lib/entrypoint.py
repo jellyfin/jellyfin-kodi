@@ -468,7 +468,7 @@ def BrowseContent(viewname, type="", folderid=""):
             itemtype = "Video,Folder,PhotoAlbum"
         elif type.lower() == "photos":
             xbmcplugin.setContent(int(sys.argv[1]), 'files')
-            itemtype = "Photo,PhotoAlbum"
+            itemtype = "Photo,PhotoAlbum,Folder"
         else:
             itemtype = ""
         
