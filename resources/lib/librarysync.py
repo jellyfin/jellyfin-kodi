@@ -382,8 +382,9 @@ class LibrarySync(threading.Thread):
         result = doUtils(url)
         grouped_views = result['Items']
         ordered_views = emby.getViews(sortedlist=True)
-        sorted_views = []
+        all_views = []
         for view in ordered_views:
+            all_views.append(view['name'])
             if view['type'] == "music":
                 continue
                 
@@ -391,13 +392,6 @@ class LibrarySync(threading.Thread):
                 sorted_views.append(view['name'])
             sorted_views.append(view['name'])
         log("Sorted views: %s" % sorted_views, 1)
-
-        try:
-            groupedFolders = self.user.userSettings['Configuration']['GroupedFolders']
-        except TypeError:
-            url = "{server}/emby/Users/{UserId}?format=json"
-            result = doUtils(url)
-            groupedFolders = result['Configuration']['GroupedFolders']
 
         # total nodes for window properties
         vnodes.clearProperties()
@@ -427,12 +421,12 @@ class LibrarySync(threading.Thread):
                 foldername = folder['name']
                 viewtype = folder['type']
                 
-                if folderid in groupedFolders:
+                if foldername not in all_views:
                     # Media folders are grouped into userview
                     url = "{server}/emby/Users/{UserId}/Items?format=json"
                     params = {
-
                         'ParentId': folderid,
+                        'Recursive': True,
                         'Limit': 1,
                         'IncludeItemTypes': emby_mediatypes[mediatype]
                     } # Get one item from server using the folderid
@@ -459,6 +453,12 @@ class LibrarySync(threading.Thread):
                             # Unable to find a match, add the name to our sorted_view list
                             sorted_views.append(foldername)
                             log("Couldn't find corresponding grouped view: %s" % sorted_views, 1)
+
+                # Failsafe 
+                try:
+                    sorted_views.index(foldername)
+                except ValueError:
+                    sorted_views.append(foldername)
 
                 # Get current media folders from emby database
                 view = emby_db.getView_byId(folderid)
