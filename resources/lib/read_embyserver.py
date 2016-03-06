@@ -273,14 +273,14 @@ class Read_EmbyServer():
                     retry = 0
                     while utils.window('emby_online') != "true":
                         # Wait server to come back online
-                        if retry == 3:
+                        if retry == 5:
                             log("Unable to reconnect to server. Abort process.", 1)
-                            return
+                            return items
                         
                         retry += 1
                         if xbmc.Monitor().waitForAbort(1):
                             # Abort was requested while waiting.
-                            return
+                            return items
                 else:
                     # Request succeeded
                     index += jump
