@@ -1,3 +1,6 @@
+version 2.2.9
+- Fix extrafanart
+
 version 2.2.8
 - Fix to photos not displaying directories without picutres.
 - Fix to grouped views causing crash
