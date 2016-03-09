@@ -51,6 +51,7 @@ if __name__ == '__main__':
         embycursor = embyconn.cursor()
         emby_db = embydb.Embydb_Functions(embycursor)
         item = emby_db.getItem_byKodiId(itemid, itemtype)
+        embycursor.close()
         if item: embyid = item[0]
     
     logMsg("Contextmenu opened for embyid: %s  - itemtype: %s" %(embyid,itemtype))
