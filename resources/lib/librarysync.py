@@ -93,7 +93,7 @@ class LibrarySync(threading.Thread):
             
             if not completed:
                 # Fast sync failed or server plugin is not found
-                completed = ManualSync()
+                completed = ManualSync().sync()
         else:
             # Install sync is not completed
             completed = self.fullSync()
@@ -1069,11 +1069,14 @@ class LibrarySync(threading.Thread):
 class ManualSync(LibrarySync):
 
 
-    def __init__(self, dialog=False):
+    def __init__(self):
 
         LibrarySync.__init__(self)
-        self.fullSync(manualrun=True, forceddialog=dialog)
 
+    def sync(self, dialog=False):
+
+        return self.fullSync(manualrun=True, forceddialog=dialog)
+        
 
     def movies(self, embycursor, kodicursor, pdialog):
 
