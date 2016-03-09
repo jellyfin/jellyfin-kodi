@@ -118,6 +118,56 @@ def resetDeviceId():
             line1=language(33033))
         xbmc.executebuiltin('RestartApp')
 
+##### Delete Item, like the context menu action
+def deleteItem():
+
+    # Serves as a keymap action
+    dbid = xbmc.getInfoLabel('ListItem.DBID')
+    itemtype = xbmc.getInfoLabel('ListItem.DBTYPE')
+
+    if not itemtype:
+
+        if xbmc.getCondVisibility('Container.Content(albums)'):
+            itemtype = "album"
+        elif xbmc.getCondVisibility('Container.Content(artists)'):
+            itemtype = "artist"
+        elif xbmc.getCondVisibility('Container.Content(songs)'):
+            itemtype = "song"
+        elif xbmc.getCondVisibility('Container.Content(pictures)'):
+            itemtype = "picture"
+        else:
+            utils.logMsg("EMBY delete", "Unknown type, unable to proceed.", 1)
+            return
+
+    if xbmc.getInfoLabel('ListItem.Property(embyid)'): # If we already have the embyid
+        embyid = xbmc.getInfoLabel('ListItem.Property(embyid)')
+    else:
+        embyconn = utils.kodiSQL('emby')
+        embycursor = embyconn.cursor()
+        emby_db = embydb.Embydb_Functions(embycursor)
+        item = emby_db.getItem_byKodiId(dbid, itemtype)
+        embycursor.close()
+
+        try:
+            embyid = item[0]
+        except TypeError:
+            utils.logMsg("EMBY delete", "Unknown embyId, unable to proceed.", 1)
+            return
+
+    if utils.settings('skipContextMenu') != "true":
+        resp = xbmcgui.Dialog().yesno(
+                                heading="Confirm delete",
+                                line1=("Delete file from Emby Server? This will "
+                                        "also delete the file(s) from disk!"))
+        if not resp:
+            utils.logMsg("EMBY delete", "User skipped deletion for: %s." % embyid, 1)
+            return
+    
+    doUtils = downloadutils.DownloadUtils()
+    url = "{server}/emby/Items/%s?format=json" % embyid
+    utils.logMsg("EMBY delete", "Deleting request: %s" % embyid, 0)
+    doUtils.downloadUrl(url, type="DELETE")
+
 ##### ADD ADDITIONAL USERS #####
 def addUser():
 
