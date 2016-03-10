@@ -1,3 +1,7 @@
+version 2.2.10
+- Add keymap action for delete content: RunPlugin(plugin://plugin.video.emby?mode=delete)
+- Fix various bugs
+
 version 2.2.9
 - Fix extrafanart
 
