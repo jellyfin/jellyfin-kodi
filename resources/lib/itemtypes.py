@@ -1287,7 +1287,13 @@ class TVShows(Items):
         premieredate = API.getPremiereDate()
 
         # episode details
-        seriesId = item['SeriesId']
+        try:
+            seriesId = item['SeriesId']
+        except KeyError:
+            # Missing seriesId, skip
+            self.logMsg("Skipping: %s. SeriesId is missing." % itemid, 1)
+            return False
+            
         seriesName = item['SeriesName']
         season = item.get('ParentIndexNumber')
         episode = item.get('IndexNumber', -1)
