@@ -1225,7 +1225,6 @@ class TVShows(Items):
         
         if item['LocationType'] != "Virtual":
             # Create the reference in emby table
-            self.logMsg("Skipping virtual season.")
             emby_db.addReference(itemid, seasonid, "Season", "season", parentid=showid)
 
         # Process artwork
