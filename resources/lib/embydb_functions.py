@@ -143,6 +143,21 @@ class Embydb_Functions():
             return item
         except: return None
 
+    def getItem_byWildId(self, embyid):
+
+        embycursor = self.embycursor
+
+        query = ' '.join((
+
+            "SELECT kodi_id, media_type",
+            "FROM emby",
+            "WHERE emby_id LIKE ?"
+        ))
+        embycursor.execute(query, (embyid+"%",))
+        items = embycursor.fetchall()
+
+        return items
+
     def getItem_byView(self, mediafolderid):
 
         embycursor = self.embycursor
@@ -302,4 +317,9 @@ class Embydb_Functions():
 
         query = "DELETE FROM emby WHERE emby_id = ?"
         self.embycursor.execute(query, (embyid,))
+
+    def removeWildItem(self, embyid):
+
+        query = "DELETE FROM emby WHERE emby_id LIKE ?"
+        self.embycursor.execute(query, (embyid+"%",))
         

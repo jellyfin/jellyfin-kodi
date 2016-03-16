@@ -2010,6 +2010,7 @@ class Music(Items):
         # Process single song
         kodiversion = self.kodiversion
         kodicursor = self.kodicursor
+        emby = self.emby
         emby_db = self.emby_db
         kodi_db = self.kodi_db
         artwork = self.artwork
@@ -2124,14 +2125,22 @@ class Music(Items):
                 emby_dbalbum = emby_db.getItem_byId(item['AlbumId'])
                 albumid = emby_dbalbum[0]
             except KeyError:
-                # No album Id associated to the song.
-                self.logMsg("Song itemid: %s has no albumId." % itemid, 1)
-                return
+                # Verify if there's an album associated.
+                self.logMsg("Song itemid: %s has no albumId associated." % itemid, 1)
+                album_name = item.get('Album')
+                if album_name:
+                    albumid = kodi_db.addAlbum(album_name, API.getProvider('MusicBrainzAlbum'))
+                    emby_db.addReference("%salbum%s" % (itemid, albumid), albumid, "MusicAlbum_", "album")
+                else:
+                    # No album Id associated to the song.
+                    self.logMsg("Song itemid: %s has no albumId associated." % itemid, 1)
+                    return False
+
             except TypeError:
                 # No album found. Let's create it
                 self.logMsg("Album database entry missing.", 1)
                 emby_albumId = item['AlbumId']
-                album = self.emby.getItem(emby_albumId)
+                album = emby.getItem(emby_albumId)
                 self.add_updateAlbum(album)
                 emby_dbalbum = emby_db.getItem_byId(emby_albumId)
                 try:
@@ -2205,75 +2214,102 @@ class Music(Items):
         )
         kodicursor.execute(query, (songid, albumid, track, title, duration))
         
-        # Verify if album has artists
-        addArtist = False
-        query = ' '.join((
+        # Link song to artists
+        for index, artist in enumerate(item['ArtistItems']):
 
-            "SELECT strArtists",
-            "FROM album",
-            "WHERE idAlbum = ?"
-        ))
-        kodicursor.execute(query, (albumid,))
-        result = kodicursor.fetchone()
-        if result and result[0] == "":
-            addArtist = True
-
-        if item['AlbumArtists']:
-            album_artists = item['AlbumArtists']
-        else:
-            album_artists = item['ArtistItems']
-
-        # Link song to artist
-        artists_name = []
-        for artist in album_artists:
             artist_name = artist['Name']
-            artists_name.append(artist_name)
-            emby_dbartist = emby_db.getItem_byId(artist['Id'])
+            artist_eid = artist['Id']
+            artist_edb = emby_db.getItem_byId(artist_eid)
             try:
-                artistid = emby_dbartist[0]
-            except: pass
-            else:
+                artistid = artist_edb[0]
+            except TypeError:
+                # Artist is missing from emby database, add it.
+                artist_full = emby.getItem(artist_eid)
+                self.add_updateArtist(artist_full)
+                artist_edb = emby_db.getItem_byId(artist_eid)
+                artistid = artist_edb[0]
+            finally:
                 query = (
                     '''
-                    INSERT OR REPLACE INTO song_artist(idArtist, idSong, strArtist)
+                    INSERT OR REPLACE INTO song_artist(idArtist, idSong, iOrder, strArtist)
+
+                    VALUES (?, ?, ?, ?)
+                    '''
+                )
+                kodicursor.execute(query, (artistid, songid, index, artist_name))
+
+        # Verify if album artist exists
+        album_artists = []
+        for artist in item['AlbumArtists']:
+
+            artist_name = artist['Name']
+            album_artists.append(artist_name)
+            artist_eid = artist['Id']
+            artist_edb = emby_db.getItem_byId(artist_eid)
+            try:
+                artistid = artist_edb[0]
+            except TypeError:
+                # Artist is missing from emby database, add it.
+                artist_full = emby.getItem(artist_eid)
+                self.add_updateArtist(artist_full)
+                artist_edb = emby_db.getItem_byId(artist_eid)
+                artistid = artist_edb[0]
+            finally:
+                query = (
+                    '''
+                    INSERT OR REPLACE INTO album_artist(idArtist, idAlbum, strArtist)
 
                     VALUES (?, ?, ?)
                     '''
                 )
-                kodicursor.execute(query, (artistid, songid, artist_name))
-
-                if addArtist:
+                kodicursor.execute(query, (artistid, albumid, artist_name))
+                # Update discography
+                if item.get('Album'):
                     query = (
                         '''
-                        INSERT OR REPLACE INTO album_artist(idArtist, idAlbum, strArtist)
+                        INSERT OR REPLACE INTO discography(idArtist, strAlbum, strYear)
 
                         VALUES (?, ?, ?)
                         '''
                     )
-                    kodicursor.execute(query, (artistid, albumid, artist_name))
+                    kodicursor.execute(query, (artistid, item['Album'], 0))
         else:
-            if addArtist:
-                artists_onalbum = " / ".join(artists_name)
+            album_artists = " / ".join(album_artists)
+            query = ' '.join((
+
+                "SELECT strArtists",
+                "FROM album",
+                "WHERE idAlbum = ?"
+            ))
+            kodicursor.execute(query, (albumid,))
+            result = kodicursor.fetchone()
+            if result and result[0] != album_artists:
+                # Field is empty
                 if kodiversion in (16, 17):
                     # Kodi Jarvis, Krypton
                     query = "UPDATE album SET strArtists = ? WHERE idAlbum = ?"
-                    kodicursor.execute(query, (artists_onalbum, albumid))
+                    kodicursor.execute(query, (album_artists, albumid))
                 elif kodiversion == 15:
                     # Kodi Isengard
                     query = "UPDATE album SET strArtists = ? WHERE idAlbum = ?"
-                    kodicursor.execute(query, (artists_onalbum, albumid))
+                    kodicursor.execute(query, (album_artists, albumid))
                 else:
                     # Kodi Helix
                     query = "UPDATE album SET strArtists = ? WHERE idAlbum = ?"
-                    kodicursor.execute(query, (artists_onalbum, albumid))
+                    kodicursor.execute(query, (album_artists, albumid))
 
         # Add genres
         kodi_db.addMusicGenres(songid, genres, "song")
+        
         # Update artwork
         allart = artwork.getAllArtwork(item, parentInfo=True)
         if hasEmbeddedCover:
             allart["Primary"] = "image://music@" + artwork.single_urlencode( playurl )
         artwork.addArtwork(allart, songid, "song", kodicursor)
+
+        if item.get('AlbumId') is None:
+            # Update album artwork
+            artwork.addArtwork(allart, albumid, "album", kodicursor)
 
     def updateUserdata(self, item):
         # This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
@@ -2349,6 +2385,21 @@ class Music(Items):
         if mediatype == "song":
             # Delete song
             self.removeSong(kodiid)
+            # This should only address single song scenario, where server doesn't actually
+            # create an album for the song. 
+            customitems = emby_db.getItem_byWildId(itemid)
+            emby_db.removeWildItem(itemid)
+
+            for item in customitems:
+
+                item_kid = item[0]
+                item_mediatype = item[1]
+
+                if item_mediatype == "album":
+                    childs = emby_db.getItem_byParentId(item_kid, "song")
+                    if not childs:
+                        # Delete album
+                        self.removeAlbum(item_kid)
 
         ##### IF ALBUM #####
 

@@ -1086,6 +1086,7 @@ class Kodidb_Functions():
 
     def addAlbum(self, name, musicbrainz):
 
+        kodiversion = self.kodiversion
         cursor = self.cursor
 
         query = ' '.join((
@@ -1101,14 +1102,24 @@ class Kodidb_Functions():
             # Create the album
             cursor.execute("select coalesce(max(idAlbum),0) from album")
             albumid = cursor.fetchone()[0] + 1
-            query = (
-                '''
-                INSERT INTO album(idAlbum, strAlbum, strMusicBrainzAlbumID)
+            if kodiversion in (15, 16, 17):
+                query = (
+                    '''
+                    INSERT INTO album(idAlbum, strAlbum, strMusicBrainzAlbumID, strReleaseType)
 
-                VALUES (?, ?, ?)
-                '''
-            )
-            cursor.execute(query, (albumid, name, musicbrainz))
+                    VALUES (?, ?, ?, ?)
+                    '''
+                )
+                cursor.execute(query, (albumid, name, musicbrainz, "album"))
+            else: # Helix
+                query = (
+                    '''
+                    INSERT INTO album(idAlbum, strAlbum, strMusicBrainzAlbumID)
+
+                    VALUES (?, ?, ?)
+                    '''
+                )
+                cursor.execute(query, (albumid, name, musicbrainz))
 
         return albumid
 
