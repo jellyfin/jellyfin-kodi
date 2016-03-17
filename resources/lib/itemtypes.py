@@ -2126,9 +2126,9 @@ class Music(Items):
                 albumid = emby_dbalbum[0]
             except KeyError:
                 # Verify if there's an album associated.
-                self.logMsg("Song itemid: %s has no albumId associated." % itemid, 1)
                 album_name = item.get('Album')
                 if album_name:
+                    self.logMsg("Creating virtual music album for song: %s." % itemid, 1)
                     albumid = kodi_db.addAlbum(album_name, API.getProvider('MusicBrainzAlbum'))
                     emby_db.addReference("%salbum%s" % (itemid, albumid), albumid, "MusicAlbum_", "album")
                 else:
