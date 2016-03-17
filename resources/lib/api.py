@@ -388,28 +388,4 @@ class API():
                 filepath = filepath.replace("/", "\\")
 
         return filepath
-    
-    def updateUserRating(self, itemid, like=None, favourite=None, deletelike=False):
-        #updates the userrating to Emby
-        # This should be moved to read_embyserver.py
-        import downloadutils
-        doUtils = downloadutils.DownloadUtils()
         
-        if favourite != None and favourite==True:
-            url = "{server}/emby/Users/{UserId}/FavoriteItems/%s?format=json" % itemid
-            doUtils.downloadUrl(url, type="POST")
-        elif favourite != None and favourite==False:
-            url = "{server}/emby/Users/{UserId}/FavoriteItems/%s?format=json" % itemid
-            doUtils.downloadUrl(url, type="DELETE")
-            
-        if not deletelike and like != None and like==True:
-            url = "{server}/emby/Users/{UserId}/Items/%s/Rating?Likes=true&format=json" % itemid
-            doUtils.downloadUrl(url, type="POST")
-        if not deletelike and like != None and like==False:
-            url = "{server}/emby/Users/{UserId}/Items/%s/Rating?Likes=false&format=json" % itemid
-            doUtils.downloadUrl(url, type="POST")
-        if deletelike:
-            url = "{server}/emby/Users/{UserId}/Items/%s/Rating?format=json" % itemid
-            doUtils.downloadUrl(url, type="DELETE")
-
-        self.logMsg( "updateUserRating on embyserver for embyId: %s - like: %s - favourite: %s - deletelike: %s" %(itemid, like, favourite, deletelike))
