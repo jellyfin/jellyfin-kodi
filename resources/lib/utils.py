@@ -7,6 +7,7 @@ import inspect
 import json
 import pstats
 import sqlite3
+import StringIO
 import os
 from datetime import datetime, time
 import time
@@ -266,44 +267,26 @@ def reset():
         line1="Database reset has completed, Kodi will now restart to apply the changes.")
     xbmc.executebuiltin('RestartApp')
 
-def startProfiling():
-    
-    pr = cProfile.Profile()
-    pr.enable()
-    
-    return pr
+def profiling(sortby="cumulative"):
+    # Will print results to Kodi log
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            
+            pr = cProfile.Profile()
 
-def stopProfiling(pr, profileName):
-    
-    pr.disable()
-    ps = pstats.Stats(pr)
-    
-    profiles = xbmc.translatePath("%sprofiles/"
-                % xbmcaddon.Addon().getAddonInfo('profile')).decode('utf-8')
+            pr.enable()
+            result = func(*args, **kwargs)
+            pr.disable()
 
-    if not xbmcvfs.exists(profiles):
-        # Create the profiles folder
-        xbmcvfs.mkdir(profiles)
+            s = StringIO.StringIO()
+            ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+            ps.print_stats()
+            logMsg("EMBY Profiling", s.getvalue(), 1)
 
-    timestamp = time.strftime("%Y-%m-%d %H-%M-%S")
-    profile = "%s%s_profile_(%s).tab" % (profiles, profileName, timestamp)
-    
-    f = xbmcvfs.File(profile, 'w')
-    f.write("NumbCalls\tTotalTime\tCumulativeTime\tFunctionName\tFileName\r\n")
-    for (key, value) in ps.stats.items():
-        (filename, count, func_name) = key
-        (ccalls, ncalls, total_time, cumulative_time, callers) = value
-        try:
-            f.write(
-                "%s\t%s\t%s\t%s\t%s\r\n"
-                % (ncalls, "{:10.4f}".format(total_time),
-                    "{:10.4f}".format(cumulative_time), func_name, filename))
-        except ValueError:
-            f.write(
-                "%s\t%s\t%s\t%s\t%s\r\n"
-                % (ncalls, "{0}".format(total_time),
-                    "{0}".format(cumulative_time), func_name, filename))
-    f.close()
+            return result
+
+        return wrapper
+    return decorator
 
 def convertdate(date):
     try:
