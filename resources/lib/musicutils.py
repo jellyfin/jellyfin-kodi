@@ -3,12 +3,18 @@
 #################################################################################################
 
 import os
-import xbmc, xbmcaddon, xbmcvfs
-import utils
+
+import xbmc
+import xbmcaddon
+import xbmcvfs
+
 from mutagen.flac import FLAC, Picture
 from mutagen.id3 import ID3
 from mutagen import id3
 import base64
+
+import read_embyserver as embyserver
+import utils
 
 #################################################################################################
 
@@ -62,6 +68,9 @@ def getEmbyRatingFromKodiRating(rating):
     return(like, favourite, deletelike)
 
 def getAdditionalSongTags(embyid, emby_rating, API, kodicursor, emby_db, enableimportsongrating, enableexportsongrating, enableupdatesongrating):
+    
+    emby = embyserver.Read_EmbyServer()
+
     previous_values = None
     filename = API.getFilePath()
     rating = 0
@@ -163,7 +172,7 @@ def getAdditionalSongTags(embyid, emby_rating, API, kodicursor, emby_db, enablei
         # sync details to emby server. Translation needed between ID3 rating and emby likes/favourites:
         like, favourite, deletelike = getEmbyRatingFromKodiRating(rating)
         utils.window("ignore-update-%s" %embyid, "true") #set temp windows prop to ignore the update from webclient update
-        API.updateUserRating(embyid, like, favourite, deletelike)
+        emby.updateUserRating(embyid, like, favourite, deletelike)
     
     return (rating, comment, hasEmbeddedCover)
         

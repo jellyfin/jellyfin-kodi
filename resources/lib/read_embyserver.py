@@ -574,3 +574,28 @@ class Read_EmbyServer():
                 sorted_items.setdefault(mediatype, []).append(item)
 
         return sorted_items
+
+    def updateUserRating(self, itemid, like=None, favourite=None, deletelike=False):
+        # Updates the user rating to Emby
+        doUtils = self.doUtils
+        
+        if favourite:
+            url = "{server}/emby/Users/{UserId}/FavoriteItems/%s?format=json" % itemid
+            doUtils(url, type="POST")
+        elif favourite == False:
+            url = "{server}/emby/Users/{UserId}/FavoriteItems/%s?format=json" % itemid
+            doUtils(url, type="DELETE")
+
+        if not deletelike and like:
+            url = "{server}/emby/Users/{UserId}/Items/%s/Rating?Likes=true&format=json" % itemid
+            doUtils(url, type="POST")
+        elif not deletelike and like == False:
+            url = "{server}/emby/Users/{UserId}/Items/%s/Rating?Likes=false&format=json" % itemid
+            doUtil(url, type="POST")
+        elif deletelike:
+            url = "{server}/emby/Users/{UserId}/Items/%s/Rating?format=json" % itemid
+            doUtils(url, type="DELETE")
+
+        self.logMsg("Update user rating to emby for itemid: %s "
+                    "| like: %s | favourite: %s | deletelike: %s"
+                    % (itemid, like, favourite, deletelike), 1)

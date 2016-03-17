@@ -94,15 +94,15 @@ if __name__ == '__main__':
         ret = xbmcgui.Dialog().select(header, options)
         if ret != -1:
             if options[ret] == utils.language(30402):
-                API.updateUserRating(embyid, deletelike=True)
+                emby.updateUserRating(embyid, deletelike=True)
             if options[ret] == utils.language(30403):
-                API.updateUserRating(embyid, like=True)
+                emby.updateUserRating(embyid, like=True)
             if options[ret] == utils.language(30404):
-                API.updateUserRating(embyid, like=False)
+                emby.updateUserRating(embyid, like=False)
             if options[ret] == utils.language(30405):
-                 API.updateUserRating(embyid, favourite=True)
+                emby.updateUserRating(embyid, favourite=True)
             if options[ret] == utils.language(30406):
-                API.updateUserRating(embyid, favourite=False)
+                emby.updateUserRating(embyid, favourite=False)
             if options[ret] == utils.language(30407):
                 kodiconn = utils.kodiSQL('music')
                 kodicursor = kodiconn.cursor()
@@ -117,7 +117,7 @@ if __name__ == '__main__':
                         musicutils.updateRatingToFile(newvalue, API.getFilePath())
                     if utils.settings('enableExportSongRating') == "true":
                         like, favourite, deletelike = musicutils.getEmbyRatingFromKodiRating(newvalue)
-                        API.updateUserRating(embyid, like, favourite, deletelike)
+                        emby.updateUserRating(embyid, like, favourite, deletelike)
                     query = ' '.join(( "UPDATE song","SET rating = ?", "WHERE idSong = ?" ))
                     kodicursor.execute(query, (newvalue,itemid,))
                     kodiconn.commit()
