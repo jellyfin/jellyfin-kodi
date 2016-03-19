@@ -678,10 +678,9 @@ def BrowseChannels(itemid, folderid=None):
             itemid = item['Id']
             itemtype = item['Type']
             li = createListItemFromEmbyItem(item,art,doUtils)
-            if itemtype == "ChannelFolderItem":
-                isFolder = True
-            else:
-                isFolder = False
+            
+            isFolder = item.get('IsFolder', False)
+
             channelId = item.get('ChannelId', "")
             channelName = item.get('ChannelName', "")
             if itemtype == "Channel":
