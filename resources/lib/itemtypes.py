@@ -337,7 +337,11 @@ class Movies(Items):
                 % itemid
             )
             result = self.doUtils.downloadUrl(url)
-            trailer = "plugin://plugin.video.emby/trailer/?id=%s&mode=play" % result[0]['Id']
+            try:
+                trailer = "plugin://plugin.video.emby/trailer/?id=%s&mode=play" % result[0]['Id']
+            except IndexError:
+                self.logMsg("Failed to process local trailer.", 1)
+                trailer = None
         else:
             # Try to get the youtube trailer
             try:
@@ -348,7 +352,7 @@ class Movies(Items):
                 try:
                     trailerId = trailer.rsplit('=', 1)[1]
                 except IndexError:
-                    self.logMsg("Failed to process trailer: %s" % trailer)
+                    self.logMsg("Failed to process trailer: %s" % trailer, 1)
                     trailer = None
                 else:
                     trailer = "plugin://plugin.video.youtube/play/?video_id=%s" % trailerId
