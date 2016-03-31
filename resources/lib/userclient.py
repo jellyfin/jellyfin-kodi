@@ -316,7 +316,7 @@ class UserClient(threading.Thread):
         elif self.getToken():
             result = self.loadCurrUser()
 
-            if result == False:
+            if result is False:
                 pass
             else:
                 self.logMsg("Current user: %s" % self.currUser, 1)
@@ -355,11 +355,10 @@ class UserClient(threading.Thread):
         sha1 = sha1.hexdigest()    
 
         # Authenticate username and password
-        url = "%s/emby/Users/AuthenticateByName?format=json" % server
         data = {'username': username, 'password': sha1}
         self.logMsg(data, 2)
 
-        result = self.doUtils.downloadUrl(url, postBody=data, type="POST", authenticate=False)
+        result = self.doUtils.downloadUrl("%s/emby/Users/AuthenticateByName?format=json" % server, postBody=data, type="POST", authenticate=False)
 
         try:
             self.logMsg("Auth response: %s" % result, 1)
@@ -373,9 +372,8 @@ class UserClient(threading.Thread):
             self.currUser = username
             dialog.notification("Emby for Kodi",
                                 "%s %s!" % (lang(33000), self.currUser.decode('utf-8')))
-            userId = result['User']['Id']
             settings('accessToken', value=accessToken)
-            settings('userId%s' % username, value=userId)
+            settings('userId%s' % username, value=result['User']['Id'])
             self.logMsg("User Authenticated: %s" % accessToken, 1)
             self.loadCurrUser(authenticated=True)
             window('emby_serverStatus', clear=True)
@@ -399,12 +397,10 @@ class UserClient(threading.Thread):
     def resetClient(self):
 
         self.logMsg("Reset UserClient authentication.", 1)
-        userId = self.getUserId()
-        
         if self.currToken is not None:
             # In case of 401, removed saved token
             utils.settings('accessToken', value="")
-            utils.window('emby_accessToken%s' % userId, clear=True)
+            utils.window('emby_accessToken%s' % self.getUserId(), clear=True)
             self.currToken = None
             self.logMsg("User token has been removed.", 1)
         

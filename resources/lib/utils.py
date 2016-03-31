@@ -62,26 +62,23 @@ def window(property, value=None, clear=False, windowid=10000):
 
 def settings(setting, value=None):
     # Get or add addon setting
-    addon = xbmcaddon.Addon(id='plugin.video.emby')
-    
     if value is not None:
-        addon.setSetting(setting, value)
+        xbmcaddon.Addon(id='plugin.video.metaman').setSetting(setting, value)
     else:
-        return addon.getSetting(setting) #returns unicode object
+        return xbmcaddon.Addon(id='plugin.video.metaman').getSetting(setting) #returns unicode object
 
 def language(stringid):
     # Central string retrieval
-    addon = xbmcaddon.Addon(id='plugin.video.emby')
-    string = addon.getLocalizedString(stringid) #returns unicode object
+    string = xbmcaddon.Addon(id='plugin.video.emby').getLocalizedString(stringid) #returns unicode object
     return string
 
-def kodiSQL(type="video"):
+def kodiSQL(media_type="video"):
     
-    if type == "emby":
+    if media_type == "emby":
         dbPath = xbmc.translatePath("special://database/emby.db").decode('utf-8')
-    elif type == "music":
+    elif media_type == "music":
         dbPath = getKodiMusicDBPath()
-    elif type == "texture":
+    elif media_type == "texture":
         dbPath = xbmc.translatePath("special://database/Textures13.db").decode('utf-8')
     else:
         dbPath = getKodiVideoDBPath()
@@ -91,7 +88,6 @@ def kodiSQL(type="video"):
 
 def getKodiVideoDBPath():
 
-    kodibuild = xbmc.getInfoLabel('System.BuildVersion')[:2]
     dbVersion = {
 
         "13": 78,   # Gotham
@@ -102,12 +98,11 @@ def getKodiVideoDBPath():
 
     dbPath = xbmc.translatePath(
                     "special://database/MyVideos%s.db"
-                    % dbVersion.get(kodibuild, "")).decode('utf-8')
+                    % dbVersion.get(xbmc.getInfoLabel('System.BuildVersion')[:2], "")).decode('utf-8')
     return dbPath
 
 def getKodiMusicDBPath():
 
-    kodibuild = xbmc.getInfoLabel('System.BuildVersion')[:2]
     dbVersion = {
 
         "13": 46,   # Gotham
@@ -118,7 +113,7 @@ def getKodiMusicDBPath():
 
     dbPath = xbmc.translatePath(
                     "special://database/MyMusic%s.db"
-                    % dbVersion.get(kodibuild, "")).decode('utf-8')
+                    % dbVersion.get(xbmc.getInfoLabel('System.BuildVersion')[:2], "")).decode('utf-8')
     return dbPath
 
 def getScreensaver():
@@ -133,11 +128,7 @@ def getScreensaver():
             'setting': "screensaver.mode"
         }
     }
-    result = xbmc.executeJSONRPC(json.dumps(query))
-    result = json.loads(result)
-    screensaver = result['result']['value']
-
-    return screensaver
+    return json.loads(xbmc.executeJSONRPC(json.dumps(query)))['result']['value']
 
 def setScreensaver(value):
     # Toggle the screensaver
@@ -152,15 +143,13 @@ def setScreensaver(value):
             'value': value
         }
     }
-    result = xbmc.executeJSONRPC(json.dumps(query))
-    logMsg("EMBY", "Toggling screensaver: %s %s" % (value, result), 1)    
+    logMsg("EMBY", "Toggling screensaver: %s %s" % (value, xbmc.executeJSONRPC(json.dumps(query))), 1)    
 
 def reset():
 
     dialog = xbmcgui.Dialog()
 
-    resp = dialog.yesno("Warning", "Are you sure you want to reset your local Kodi database?")
-    if resp == 0:
+    if dialog.yesno("Warning", "Are you sure you want to reset your local Kodi database?") == 0:
         return
 
     # first stop any db sync
@@ -418,9 +407,7 @@ def passwordsXML():
 
         elif option == 1:
             # User selected remove
-            iterator = root.getiterator('passwords')
-
-            for paths in iterator:
+            for paths in root.getiterator('passwords'):
                 for path in paths:
                     if path.find('.//from').text == "smb://%s/" % credentials:
                         paths.remove(path)
