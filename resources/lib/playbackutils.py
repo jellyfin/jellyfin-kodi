@@ -51,11 +51,8 @@ class PlaybackUtils():
         window = utils.window
         settings = utils.settings
 
-        doUtils = self.doUtils
-        item = self.item
-        API = self.API
         listitem = xbmcgui.ListItem()
-        playutils = putils.PlayUtils(item)
+        playutils = putils.PlayUtils(self.item)
 
         self.logMsg("Play called.", 1)
         playurl = playutils.getPlayUrl()
@@ -86,8 +83,8 @@ class PlaybackUtils():
 
         ############### RESUME POINT ################
         
-        userdata = API.getUserData()
-        seektime = API.adjustResume(userdata['Resume'])
+        userdata = self.API.getUserData()
+        seektime = self.API.adjustResume(userdata['Resume'])
 
         # We need to ensure we add the intro and additional parts only once.
         # Otherwise we get a loop.
@@ -105,7 +102,7 @@ class PlaybackUtils():
                 # Remove the original item from playlist 
                 self.pl.removefromPlaylist(startPos+1)
                 # Readd the original item to playlist - via jsonrpc so we have full metadata
-                self.pl.insertintoPlaylist(currentPosition+1, dbid, item['Type'].lower())
+                self.pl.insertintoPlaylist(currentPosition+1, dbid, self.item['Type'].lower())
                 currentPosition += 1
             
             ############### -- CHECK FOR INTROS ################
@@ -113,7 +110,7 @@ class PlaybackUtils():
             if settings('enableCinema') == "true" and not seektime:
                 # if we have any play them when the movie/show is not being resumed
                 url = "{server}/emby/Users/{UserId}/Items/%s/Intros?format=json" % itemid    
-                intros = doUtils(url)
+                intros = self.doUtils(url)
 
                 if intros['TotalRecordCount'] != 0:
                     getTrailers = True
@@ -147,18 +144,18 @@ class PlaybackUtils():
                 # Extend our current playlist with the actual item to play
                 # only if there's no playlist first
                 self.logMsg("Adding main item to playlist.", 1)
-                self.pl.addtoPlaylist(dbid, item['Type'].lower())
+                self.pl.addtoPlaylist(dbid, self.item['Type'].lower())
 
             # Ensure that additional parts are played after the main item
             currentPosition += 1
 
             ############### -- CHECK FOR ADDITIONAL PARTS ################
             
-            if item.get('PartCount'):
+            if self.item.get('PartCount'):
                 # Only add to the playlist after intros have played
-                partcount = item['PartCount']
+                partcount = self.item['PartCount']
                 url = "{server}/emby/Videos/%s/AdditionalParts?format=json" % itemid
-                parts = doUtils(url)
+                parts = self.doUtils(url)
                 for part in parts['Items']:
 
                     additionalListItem = xbmcgui.ListItem()
@@ -218,17 +215,16 @@ class PlaybackUtils():
 
         window = utils.window
         # Set all properties necessary for plugin path playback
-        item = self.item
-        itemid = item['Id']
-        itemtype = item['Type']
+        itemid = self.item['Id']
+        itemtype = self.item['Type']
 
         embyitem = "emby_%s" % playurl
-        window('%s.runtime' % embyitem, value=str(item.get('RunTimeTicks')))
+        window('%s.runtime' % embyitem, value=str(self.item.get('RunTimeTicks')))
         window('%s.type' % embyitem, value=itemtype)
         window('%s.itemid' % embyitem, value=itemid)
 
         if itemtype == "Episode":
-            window('%s.refreshid' % embyitem, value=item.get('SeriesId'))
+            window('%s.refreshid' % embyitem, value=self.item.get('SeriesId'))
         else:
             window('%s.refreshid' % embyitem, value=itemid)
 
@@ -247,10 +243,9 @@ class PlaybackUtils():
         externalsubs = []
         mapping = {}
 
-        item = self.item
-        itemid = item['Id']
+        itemid = self.item['Id']
         try:
-            mediastreams = item['MediaSources'][0]['MediaStreams']
+            mediastreams = self.item['MediaSources'][0]['MediaStreams']
         except (TypeError, KeyError, IndexError):
             return
 
@@ -279,10 +274,7 @@ class PlaybackUtils():
 
     def setArtwork(self, listItem):
         # Set up item and item info
-        item = self.item
-        artwork = self.artwork
-
-        allartwork = artwork.getAllArtwork(item, parentInfo=True)
+        allartwork = self.artwork.getAllArtwork(self.item, parentInfo=True)
         # Set artwork for listitem
         arttypes = {
 
@@ -319,33 +311,30 @@ class PlaybackUtils():
 
     def setListItem(self, listItem):
 
-        item = self.item
-        itemtype = item['Type']
-        API = self.API
-        people = API.getPeople()
-        studios = API.getStudios()
+        people = self.API.getPeople()
+        studios = self.API.getStudios()
 
         metadata = {
             
-            'title': item.get('Name', "Missing name"),
-            'year': item.get('ProductionYear'),
-            'plot': API.getOverview(),
+            'title': self.item.get('Name', "Missing name"),
+            'year': self.item.get('ProductionYear'),
+            'plot': self.API.getOverview(),
             'director': people.get('Director'),
             'writer': people.get('Writer'),
-            'mpaa': API.getMpaa(),
-            'genre': " / ".join(item['Genres']),
+            'mpaa': self.API.getMpaa(),
+            'genre': " / ".join(self.item['Genres']),
             'studio': " / ".join(studios),
-            'aired': API.getPremiereDate(),
-            'rating': item.get('CommunityRating'),
-            'votes': item.get('VoteCount')
+            'aired': self.API.getPremiereDate(),
+            'rating': self.item.get('CommunityRating'),
+            'votes': self.item.get('VoteCount')
         }
 
-        if "Episode" in itemtype:
+        if "Episode" in self.item['Type']:
             # Only for tv shows
-            thumbId = item.get('SeriesId')
-            season = item.get('ParentIndexNumber', -1)
-            episode = item.get('IndexNumber', -1)
-            show = item.get('SeriesName', "")
+            thumbId = self.item.get('SeriesId')
+            season = self.item.get('ParentIndexNumber', -1)
+            episode = self.item.get('IndexNumber', -1)
+            show = self.item.get('SeriesName', "")
 
             metadata['TVShowTitle'] = show
             metadata['season'] = season
