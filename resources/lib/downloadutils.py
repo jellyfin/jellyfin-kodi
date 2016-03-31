@@ -23,7 +23,7 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 class DownloadUtils():
-    
+
     # Borg - multiple instances, shared state
     _shared_state = {}
     clientInfo = clientinfo.ClientInfo()
@@ -77,11 +77,11 @@ class DownloadUtils():
         # Post settings to session
         url = "{server}/emby/Sessions/Capabilities/Full?format=json"
         data = {
-            
+
             'PlayableMediaTypes': "Audio,Video",
             'SupportsMediaControl': True,
             'SupportedCommands': (
-                
+
                 "MoveUp,MoveDown,MoveLeft,MoveRight,Select,"
                 "Back,ToggleContextMenu,ToggleFullscreen,ToggleOsdMenu,"
                 "GoHome,PageUp,NextLetter,GoToSearch,"
@@ -105,19 +105,19 @@ class DownloadUtils():
         result = self.downloadUrl(url)
         try:
             sessionId = result[0]['Id']
-        
+
         except (KeyError, TypeError):
             self.logMsg("Failed to retrieve sessionId.", 1)
-        
+
         else:
             self.logMsg("Session: %s" % result, 2)
             self.logMsg("SessionId: %s" % sessionId, 1)
             utils.window('emby_sessionId', value=sessionId)
-            
+
             # Post any permanent additional users
             additionalUsers = utils.settings('additionalUsers')
             if additionalUsers:
-                
+
                 additionalUsers = additionalUsers.split(',')
                 self.logMsg(
                     "List of permanent users added to the session: %s"
@@ -145,8 +145,6 @@ class DownloadUtils():
 
     def startSession(self):
 
-        log = self.logMsg
-
         self.deviceId = self.clientInfo.getDeviceId()
 
         # User is identified from this point
@@ -160,8 +158,8 @@ class DownloadUtils():
             if self.sslclient is not None:
                 verify = self.sslclient
         except:
-            log("Could not load SSL settings.", 1)
-        
+            self.logMsg("Could not load SSL settings.", 1)
+
         # Start session
         self.s = requests.Session()
         self.s.headers = header
@@ -170,7 +168,7 @@ class DownloadUtils():
         self.s.mount("http://", requests.adapters.HTTPAdapter(max_retries=1))
         self.s.mount("https://", requests.adapters.HTTPAdapter(max_retries=1))
 
-        log("Requests session started on: %s" % self.server, 1)
+        self.logMsg("Requests session started on: %s" % self.server, 1)
 
     def stopSession(self):
         try:
@@ -198,9 +196,9 @@ class DownloadUtils():
                 'Accept-encoding': 'gzip',
                 'Accept-Charset': 'UTF-8,*',
                 'Authorization': auth
-            }      
+            }
             self.logMsg("Header: %s" % header, 2)
-        
+
         else:
             userId = self.userId
             token = self.token
@@ -215,13 +213,13 @@ class DownloadUtils():
                 'Accept-Charset': 'UTF-8,*',
                 'Authorization': auth,
                 'X-MediaBrowser-Token': token
-            }        
+            }
             self.logMsg("Header: %s" % header, 2)
-        
+
         return header
 
     def downloadUrl(self, url, postBody=None, type="GET", parameters=None, authenticate=True):
-        
+
         self.logMsg("=== ENTER downloadUrl ===", 2)
 
         timeout = self.timeout
@@ -231,7 +229,7 @@ class DownloadUtils():
             # If user is authenticated
             if (authenticate):
                 # Get requests session
-                try: 
+                try:
                     s = self.s
                     # Replace for the real values
                     url = url.replace("{server}", self.server)
@@ -244,7 +242,7 @@ class DownloadUtils():
                         r = s.post(url, json=postBody, timeout=timeout)
                     elif type == "DELETE":
                         r = s.delete(url, json=postBody, timeout=timeout)
-                
+
                 except AttributeError:
                     # request session does not exists
                     # Get user information
@@ -301,7 +299,7 @@ class DownloadUtils():
                         verifyssl = self.sslclient
                 except AttributeError:
                     pass
-                
+
                 # Prepare request
                 if type == "GET":
                     r = requests.get(url,
@@ -317,7 +315,7 @@ class DownloadUtils():
                                     headers=header,
                                     timeout=timeout,
                                     verify=verifyssl)
-        
+
             ##### THE RESPONSE #####
             self.logMsg(r.url, 2)
             if r.status_code == 204:
@@ -325,8 +323,8 @@ class DownloadUtils():
                 self.logMsg("====== 204 Success ======", 2)
 
             elif r.status_code == requests.codes.ok:
-               
-                try: 
+
+                try:
                     # UNICODE - JSON object
                     r = r.json()
                     self.logMsg("====== 200 Success ======", 2)
@@ -338,7 +336,7 @@ class DownloadUtils():
                         self.logMsg("Unable to convert the response for: %s" % url, 1)
             else:
                 r.raise_for_status()
-        
+
         ##### EXCEPTIONS #####
 
         except requests.exceptions.ConnectionError as e:
@@ -369,7 +367,7 @@ class DownloadUtils():
                                                 icon=xbmcgui.NOTIFICATION_ERROR,
                                                 time=5000)
                         return False
-                    
+
                     elif r.headers['X-Application-Error-Code'] == "UnauthorizedAccessException":
                         # User tried to do something his emby account doesn't allow
                         pass
