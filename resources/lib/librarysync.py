@@ -103,8 +103,6 @@ class LibrarySync(threading.Thread):
 
     def fastSync(self):
 
-        log = self.logMsg
-
         doUtils = self.doUtils
 
         lastSync = utils.settings('LastIncrementalSync')
@@ -112,7 +110,7 @@ class LibrarySync(threading.Thread):
             lastSync = "2010-01-01T00:00:00Z"
 
         lastSyncTime = utils.convertdate(lastSync)
-        log("Last sync run: %s" % lastSyncTime, 1)
+        self.logMsg("Last sync run: %s" % lastSyncTime, 1)
 
         # get server RetentionDateTime
         url = "{server}/emby/Emby.Kodi.SyncQueue/GetServerDateTime?format=json"
@@ -130,11 +128,11 @@ class LibrarySync(threading.Thread):
         '''
 
         retention_time = utils.convertdate(retention_time)
-        log("RetentionDateTime: %s" % retention_time, 1)
+        self.logMsg("RetentionDateTime: %s" % retention_time, 1)
 
         # if last sync before retention time do a full sync
         if retention_time > lastSyncTime:
-            log("Fast sync server retention insufficient, fall back to full sync", 1)
+            self.logMsg("Fast sync server retention insufficient, fall back to full sync", 1)
             return False
 
         url = "{server}/emby/Emby.Kodi.SyncQueue/{UserId}/GetItems?format=json"
@@ -151,11 +149,11 @@ class LibrarySync(threading.Thread):
             }
 
         except (KeyError, TypeError):
-            log("Failed to retrieve latest updates using fast sync.", 1)
+            self.logMsg("Failed to retrieve latest updates using fast sync.", 1)
             return False
 
         else:
-            log("Fast sync changes: %s" % result, 1)
+            self.logMsg("Fast sync changes: %s" % result, 1)
             for action in processlist:
                 self.triage_items(action, processlist[action])
 
@@ -163,7 +161,6 @@ class LibrarySync(threading.Thread):
 
     def saveLastSync(self):
 
-        log = self.logMsg
         # Save last sync time
         overlap = 2
 
@@ -175,14 +172,14 @@ class LibrarySync(threading.Thread):
 
         except Exception as e:
             # If the server plugin is not installed or an error happened.
-            log("An exception occurred: %s" % e, 1)
+            self.logMsg("An exception occurred: %s" % e, 1)
             time_now = datetime.utcnow()-timedelta(minutes=overlap)
             lastSync = time_now.strftime('%Y-%m-%dT%H:%M:%SZ')
-            log("New sync time: client time -%s min: %s" % (overlap, lastSync), 1)
+            self.logMsg("New sync time: client time -%s min: %s" % (overlap, lastSync), 1)
 
         else:
             lastSync = (server_time - timedelta(minutes=overlap)).strftime('%Y-%m-%dT%H:%M:%SZ')
-            log("New sync time: server time -%s min: %s" % (overlap, lastSync), 1)
+            self.logMsg("New sync time: server time -%s min: %s" % (overlap, lastSync), 1)
 
         finally:
             utils.settings('LastIncrementalSync', value=lastSync)
@@ -198,31 +195,29 @@ class LibrarySync(threading.Thread):
 
     def dbCommit(self, connection):
 
-        log = self.logMsg
         window = utils.window
         # Central commit, verifies if Kodi database update is running
         kodidb_scan = window('emby_kodiScan') == "true"
 
         while kodidb_scan:
 
-            log("Kodi scan is running. Waiting...", 1)
+            self.logMsg("Kodi scan is running. Waiting...", 1)
             kodidb_scan = window('emby_kodiScan') == "true"
 
             if self.shouldStop():
-                log("Commit unsuccessful. Sync terminated.", 1)
+                self.logMsg("Commit unsuccessful. Sync terminated.", 1)
                 break
 
             if self.monitor.waitForAbort(1):
                 # Abort was requested while waiting. We should exit
-                log("Commit unsuccessful.", 1)
+                self.logMsg("Commit unsuccessful.", 1)
                 break
         else:
             connection.commit()
-            log("Commit successful.", 1)
+            self.logMsg("Commit successful.", 1)
 
     def fullSync(self, manualrun=False, repair=False, forceddialog=False):
 
-        log = self.logMsg
         window = utils.window
         settings = utils.settings
         # Only run once when first setting up. Can be run manually.
@@ -295,7 +290,7 @@ class LibrarySync(threading.Thread):
                 self.dbCommit(kodiconn)
                 embyconn.commit()
                 elapsedTime = datetime.now() - startTime
-                log("SyncDatabase (finished %s in: %s)"
+                self.logMsg("SyncDatabase (finished %s in: %s)"
                     % (itemtype, str(elapsedTime).split('.')[0]), 1)
         else:
             # Close the Kodi cursor
@@ -323,7 +318,7 @@ class LibrarySync(threading.Thread):
                 musicconn.commit()
                 embyconn.commit()
                 elapsedTime = datetime.now() - startTime
-                log("SyncDatabase (finished music in: %s)"
+                self.logMsg("SyncDatabase (finished music in: %s)"
                     % (str(elapsedTime).split('.')[0]), 1)
             musiccursor.close()
 
@@ -370,7 +365,6 @@ class LibrarySync(threading.Thread):
 
     def maintainViews(self, embycursor, kodicursor):
 
-        log = self.logMsg
         # Compare the views to emby
         emby = self.emby
         emby_db = embydb.Embydb_Functions(embycursor)
@@ -393,7 +387,7 @@ class LibrarySync(threading.Thread):
             if view['type'] == "mixed":
                 sorted_views.append(view['name'])
             sorted_views.append(view['name'])
-        log("Sorted views: %s" % sorted_views, 1)
+        self.logMsg("Sorted views: %s" % sorted_views, 1)
 
         # total nodes for window properties
         vnodes.clearProperties()
@@ -447,14 +441,14 @@ class LibrarySync(threading.Thread):
                                 # Take the userview, and validate the item belong to the view
                                 if emby.verifyView(grouped_view['Id'], verifyitem):
                                     # Take the name of the userview
-                                    log("Found corresponding view: %s %s"
+                                    self.logMsg("Found corresponding view: %s %s"
                                         % (grouped_view['Name'], grouped_view['Id']), 1)
                                     foldername = grouped_view['Name']
                                     break
                         else:
                             # Unable to find a match, add the name to our sorted_view list
                             sorted_views.append(foldername)
-                            log("Couldn't find corresponding grouped view: %s" % sorted_views, 1)
+                            self.logMsg("Couldn't find corresponding grouped view: %s" % sorted_views, 1)
 
                 # Failsafe
                 try:
@@ -470,7 +464,7 @@ class LibrarySync(threading.Thread):
                     current_tagid = view[2]
 
                 except TypeError:
-                    log("Creating viewid: %s in Emby database." % folderid, 1)
+                    self.logMsg("Creating viewid: %s in Emby database." % folderid, 1)
                     tagid = kodi_db.createTag(foldername)
                     # Create playlist for the video library
                     if (foldername not in playlists and
@@ -489,7 +483,7 @@ class LibrarySync(threading.Thread):
                     emby_db.addView(folderid, foldername, viewtype, tagid)
 
                 else:
-                    log(' '.join((
+                    self.logMsg(' '.join((
 
                         "Found viewid: %s" % folderid,
                         "viewname: %s" % current_viewname,
@@ -505,7 +499,7 @@ class LibrarySync(threading.Thread):
 
                     # View was modified, update with latest info
                     if current_viewname != foldername:
-                        log("viewid: %s new viewname: %s" % (folderid, foldername), 1)
+                        self.logMsg("viewid: %s new viewname: %s" % (folderid, foldername), 1)
                         tagid = kodi_db.createTag(foldername)
 
                         # Update view with new info
@@ -573,13 +567,12 @@ class LibrarySync(threading.Thread):
             utils.window('Emby.nodes.total', str(totalnodes))
 
             # Remove any old referenced views
-            log("Removing views: %s" % current_views, 1)
+            self.logMsg("Removing views: %s" % current_views, 1)
             for view in current_views:
                 emby_db.removeView(view)
 
     def movies(self, embycursor, kodicursor, pdialog):
 
-        log = self.logMsg
         lang = utils.language
         # Get movies from emby
         emby = self.emby
@@ -588,7 +581,7 @@ class LibrarySync(threading.Thread):
 
         views = emby_db.getView_byType('movies')
         views += emby_db.getView_byType('mixed')
-        log("Media folders: %s" % views, 1)
+        self.logMsg("Media folders: %s" % views, 1)
 
         ##### PROCESS MOVIES #####
         for view in views:
@@ -626,7 +619,7 @@ class LibrarySync(threading.Thread):
                     count += 1
                 movies.add_update(embymovie, viewName, viewId)
         else:
-            log("Movies finished.", 2)
+            self.logMsg("Movies finished.", 2)
 
 
         ##### PROCESS BOXSETS #####
@@ -653,20 +646,19 @@ class LibrarySync(threading.Thread):
                 count += 1
             movies.add_updateBoxset(boxset)
         else:
-            log("Boxsets finished.", 2)
+            self.logMsg("Boxsets finished.", 2)
 
         return True
 
     def musicvideos(self, embycursor, kodicursor, pdialog):
 
-        log = self.logMsg
         # Get musicvideos from emby
         emby = self.emby
         emby_db = embydb.Embydb_Functions(embycursor)
         mvideos = itemtypes.MusicVideos(embycursor, kodicursor)
 
         views = emby_db.getView_byType('musicvideos')
-        log("Media folders: %s" % views, 1)
+        self.logMsg("Media folders: %s" % views, 1)
 
         for view in views:
 
@@ -703,13 +695,12 @@ class LibrarySync(threading.Thread):
                     count += 1
                 mvideos.add_update(embymvideo, viewName, viewId)
         else:
-            log("MusicVideos finished.", 2)
+            self.logMsg("MusicVideos finished.", 2)
 
         return True
 
     def tvshows(self, embycursor, kodicursor, pdialog):
 
-        log = self.logMsg
         # Get shows from emby
         emby = self.emby
         emby_db = embydb.Embydb_Functions(embycursor)
@@ -717,7 +708,7 @@ class LibrarySync(threading.Thread):
 
         views = emby_db.getView_byType('tvshows')
         views += emby_db.getView_byType('mixed')
-        log("Media folders: %s" % views, 1)
+        self.logMsg("Media folders: %s" % views, 1)
 
         for view in views:
 
@@ -767,7 +758,7 @@ class LibrarySync(threading.Thread):
                         pdialog.update(percentage, message="%s - %s" % (title, episodetitle))
                     tvshows.add_updateEpisode(episode)
         else:
-            log("TVShows finished.", 2)
+            self.logMsg("TVShows finished.", 2)
 
         return True
 
@@ -838,8 +829,6 @@ class LibrarySync(threading.Thread):
 
     def incrementalSync(self):
 
-        log = self.logMsg
-
         embyconn = utils.kodiSQL('emby')
         embycursor = embyconn.cursor()
         kodiconn = utils.kodiSQL('video')
@@ -909,7 +898,7 @@ class LibrarySync(threading.Thread):
 
         if update_embydb:
             update_embydb = False
-            log("Updating emby database.", 1)
+            self.logMsg("Updating emby database.", 1)
             embyconn.commit()
             self.saveLastSync()
 
@@ -918,7 +907,7 @@ class LibrarySync(threading.Thread):
             self.forceLibraryUpdate = False
             self.dbCommit(kodiconn)
 
-            log("Updating video library.", 1)
+            self.logMsg("Updating video library.", 1)
             utils.window('emby_kodiScan', value="true")
             xbmc.executebuiltin('UpdateLibrary(video)')
 
@@ -960,7 +949,6 @@ class LibrarySync(threading.Thread):
 
     def run_internal(self):
 
-        log = self.logMsg
         lang = utils.language
         window = utils.window
         settings = utils.settings
@@ -969,7 +957,7 @@ class LibrarySync(threading.Thread):
         startupComplete = False
         monitor = self.monitor
 
-        log("---===### Starting LibrarySync ###===---", 0)
+        self.logMsg("---===### Starting LibrarySync ###===---", 0)
 
         while not monitor.abortRequested():
 
@@ -987,12 +975,12 @@ class LibrarySync(threading.Thread):
                 uptoDate = self.compareDBVersion(currentVersion, minVersion)
 
                 if not uptoDate:
-                    log("Database version out of date: %s minimum version required: %s"
+                    self.logMsg("Database version out of date: %s minimum version required: %s"
                         % (currentVersion, minVersion), 0)
 
                     resp = dialog.yesno("Emby for Kodi", lang(33022))
                     if not resp:
-                        log("Database version is out of date! USER IGNORED!", 0)
+                        self.logMsg("Database version is out of date! USER IGNORED!", 0)
                         dialog.ok("Emby for Kodi", lang(33023))
                     else:
                         utils.reset()
@@ -1007,7 +995,7 @@ class LibrarySync(threading.Thread):
                 videoDb = utils.getKodiVideoDBPath()
                 if not xbmcvfs.exists(videoDb):
                     # Database does not exists
-                    log(
+                    self.logMsg(
                         "The current Kodi version is incompatible "
                         "with the Emby for Kodi add-on. Please visit "
                         "https://github.com/MediaBrowser/Emby.Kodi/wiki "
@@ -1019,12 +1007,12 @@ class LibrarySync(threading.Thread):
                     break
 
                 # Run start up sync
-                log("Database version: %s" % settings('dbCreatedWithVersion'), 0)
-                log("SyncDatabase (started)", 1)
+                self.logMsg("Database version: %s" % settings('dbCreatedWithVersion'), 0)
+                self.logMsg("SyncDatabase (started)", 1)
                 startTime = datetime.now()
                 librarySync = self.startSync()
                 elapsedTime = datetime.now() - startTime
-                log("SyncDatabase (finished in: %s) %s"
+                self.logMsg("SyncDatabase (finished in: %s) %s"
                     % (str(elapsedTime).split('.')[0], librarySync), 1)
                 # Only try the initial sync once per kodi session regardless
                 # This will prevent an infinite loop in case something goes wrong.
@@ -1039,20 +1027,20 @@ class LibrarySync(threading.Thread):
                 # Set in kodimonitor.py
                 window('emby_onWake', clear=True)
                 if window('emby_syncRunning') != "true":
-                    log("SyncDatabase onWake (started)", 0)
+                    self.logMsg("SyncDatabase onWake (started)", 0)
                     librarySync = self.startSync()
-                    log("SyncDatabase onWake (finished) %s" % librarySync, 0)
+                    self.logMsg("SyncDatabase onWake (finished) %s" % librarySync, 0)
 
             if self.stop_thread:
                 # Set in service.py
-                log("Service terminated thread.", 2)
+                self.logMsg("Service terminated thread.", 2)
                 break
 
             if monitor.waitForAbort(1):
                 # Abort was requested while waiting. We should exit
                 break
 
-        log("###===--- LibrarySync Stopped ---===###", 0)
+        self.logMsg("###===--- LibrarySync Stopped ---===###", 0)
 
     def stopThread(self):
         self.stop_thread = True
@@ -1081,7 +1069,6 @@ class ManualSync(LibrarySync):
 
     def movies(self, embycursor, kodicursor, pdialog):
 
-        log = self.logMsg
         lang = utils.language
         # Get movies from emby
         emby = self.emby
@@ -1090,7 +1077,7 @@ class ManualSync(LibrarySync):
 
         views = emby_db.getView_byType('movies')
         views += emby_db.getView_byType('mixed')
-        log("Media folders: %s" % views, 1)
+        self.logMsg("Media folders: %s" % views, 1)
 
         # Pull the list of movies and boxsets in Kodi
         try:
@@ -1137,7 +1124,7 @@ class ManualSync(LibrarySync):
                     # Only update if movie is not in Kodi or checksum is different
                     updatelist.append(itemid)
 
-            log("Movies to update for %s: %s" % (viewName, updatelist), 1)
+            self.logMsg("Movies to update for %s: %s" % (viewName, updatelist), 1)
             embymovies = emby.getFullItems(updatelist)
             total = len(updatelist)
             del updatelist[:]
@@ -1181,7 +1168,7 @@ class ManualSync(LibrarySync):
                 updatelist.append(itemid)
                 embyboxsets.append(boxset)
 
-        log("Boxsets to update: %s" % updatelist, 1)
+        self.logMsg("Boxsets to update: %s" % updatelist, 1)
         total = len(updatelist)
 
         if pdialog:
@@ -1206,26 +1193,25 @@ class ManualSync(LibrarySync):
             if kodimovie not in all_embymoviesIds:
                 movies.remove(kodimovie)
         else:
-            log("Movies compare finished.", 1)
+            self.logMsg("Movies compare finished.", 1)
 
         for boxset in all_kodisets:
             if boxset not in all_embyboxsetsIds:
                 movies.remove(boxset)
         else:
-            log("Boxsets compare finished.", 1)
+            self.logMsg("Boxsets compare finished.", 1)
 
         return True
 
     def musicvideos(self, embycursor, kodicursor, pdialog):
 
-        log = self.logMsg
         # Get musicvideos from emby
         emby = self.emby
         emby_db = embydb.Embydb_Functions(embycursor)
         mvideos = itemtypes.MusicVideos(embycursor, kodicursor)
 
         views = emby_db.getView_byType('musicvideos')
-        log("Media folders: %s" % views, 1)
+        self.logMsg("Media folders: %s" % views, 1)
 
         # Pull the list of musicvideos in Kodi
         try:
@@ -1265,7 +1251,7 @@ class ManualSync(LibrarySync):
                     # Only update if musicvideo is not in Kodi or checksum is different
                     updatelist.append(itemid)
 
-            log("MusicVideos to update for %s: %s" % (viewName, updatelist), 1)
+            self.logMsg("MusicVideos to update for %s: %s" % (viewName, updatelist), 1)
             embymvideos = emby.getFullItems(updatelist)
             total = len(updatelist)
             del updatelist[:]
@@ -1293,13 +1279,12 @@ class ManualSync(LibrarySync):
             if kodimvideo not in all_embymvideosIds:
                 mvideos.remove(kodimvideo)
         else:
-            log("MusicVideos compare finished.", 1)
+            self.logMsg("MusicVideos compare finished.", 1)
 
         return True
 
     def tvshows(self, embycursor, kodicursor, pdialog):
 
-        log = self.logMsg
         lang = utils.language
         # Get shows from emby
         emby = self.emby
@@ -1308,7 +1293,7 @@ class ManualSync(LibrarySync):
 
         views = emby_db.getView_byType('tvshows')
         views += emby_db.getView_byType('mixed')
-        log("Media folders: %s" % views, 1)
+        self.logMsg("Media folders: %s" % views, 1)
 
         # Pull the list of tvshows and episodes in Kodi
         try:
@@ -1355,7 +1340,7 @@ class ManualSync(LibrarySync):
                     # Only update if movie is not in Kodi or checksum is different
                     updatelist.append(itemid)
 
-            log("TVShows to update for %s: %s" % (viewName, updatelist), 1)
+            self.logMsg("TVShows to update for %s: %s" % (viewName, updatelist), 1)
             embytvshows = emby.getFullItems(updatelist)
             total = len(updatelist)
             del updatelist[:]
@@ -1399,7 +1384,7 @@ class ManualSync(LibrarySync):
                         # Only update if movie is not in Kodi or checksum is different
                         updatelist.append(itemid)
 
-                log("Episodes to update for %s: %s" % (viewName, updatelist), 1)
+                self.logMsg("Episodes to update for %s: %s" % (viewName, updatelist), 1)
                 embyepisodes = emby.getFullItems(updatelist)
                 total = len(updatelist)
                 del updatelist[:]
@@ -1425,19 +1410,18 @@ class ManualSync(LibrarySync):
             if koditvshow not in all_embytvshowsIds:
                 tvshows.remove(koditvshow)
         else:
-            log("TVShows compare finished.", 1)
+            self.logMsg("TVShows compare finished.", 1)
 
         for kodiepisode in all_kodiepisodes:
             if kodiepisode not in all_embyepisodesIds:
                 tvshows.remove(kodiepisode)
         else:
-            log("Episodes compare finished.", 1)
+            self.logMsg("Episodes compare finished.", 1)
 
         return True
 
     def music(self, embycursor, kodicursor, pdialog):
 
-        log = self.logMsg
         # Get music from emby
         emby = self.emby
         emby_db = embydb.Embydb_Functions(embycursor)
@@ -1505,7 +1489,7 @@ class ManualSync(LibrarySync):
                         # Only update if songs is not in Kodi or checksum is different
                         updatelist.append(itemid)
 
-            log("%s to update: %s" % (type, updatelist), 1)
+            self.logMsg("%s to update: %s" % (type, updatelist), 1)
             embyitems = emby.getFullItems(updatelist)
             total = len(updatelist)
             del updatelist[:]
@@ -1533,18 +1517,18 @@ class ManualSync(LibrarySync):
             if kodiartist not in all_embyartistsIds and all_kodiartists[kodiartist] is not None:
                 music.remove(kodiartist)
         else:
-            log("Artist compare finished.", 1)
+            self.logMsg("Artist compare finished.", 1)
 
         for kodialbum in all_kodialbums:
             if kodialbum not in all_embyalbumsIds:
                 music.remove(kodialbum)
         else:
-            log("Albums compare finished.", 1)
+            self.logMsg("Albums compare finished.", 1)
 
         for kodisong in all_kodisongs:
             if kodisong not in all_embysongsIds:
                 music.remove(kodisong)
         else:
-            log("Songs compare finished.", 1)
+            self.logMsg("Songs compare finished.", 1)
 
         return True
