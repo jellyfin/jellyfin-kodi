@@ -216,7 +216,7 @@ class DownloadUtils():
 
         return header
 
-    def downloadUrl(self, url, postBody=None, type="GET", parameters=None, authenticate=True):
+    def downloadUrl(self, url, postBody=None, action_type="GET", parameters=None, authenticate=True):
 
         self.logMsg("=== ENTER downloadUrl ===", 2)
 
@@ -233,11 +233,11 @@ class DownloadUtils():
                     url = url.replace("{UserId}", self.userId)
 
                     # Prepare request
-                    if type == "GET":
+                    if action_type == "GET":
                         r = s.get(url, json=postBody, params=parameters, timeout=self.timeout)
-                    elif type == "POST":
+                    elif action_type == "POST":
                         r = s.post(url, json=postBody, timeout=self.timeout)
-                    elif type == "DELETE":
+                    elif action_type == "DELETE":
                         r = s.delete(url, json=postBody, timeout=self.timeout)
 
                 except AttributeError:
@@ -261,7 +261,7 @@ class DownloadUtils():
                     url = url.replace("{UserId}", self.userId)
 
                     # Prepare request
-                    if type == "GET":
+                    if action_type == "GET":
                         r = requests.get(url,
                                         json=postBody,
                                         params=parameters,
@@ -269,14 +269,14 @@ class DownloadUtils():
                                         timeout=self.timeout,
                                         verify=verifyssl)
 
-                    elif type == "POST":
+                    elif action_type == "POST":
                         r = requests.post(url,
                                         json=postBody,
                                         headers=header,
                                         timeout=self.timeout,
                                         verify=verifyssl)
 
-                    elif type == "DELETE":
+                    elif action_type == "DELETE":
                         r = requests.delete(url,
                                         json=postBody,
                                         headers=header,
@@ -298,7 +298,7 @@ class DownloadUtils():
                     pass
 
                 # Prepare request
-                if type == "GET":
+                if action_type == "GET":
                     r = requests.get(url,
                                     json=postBody,
                                     params=parameters,
@@ -306,7 +306,7 @@ class DownloadUtils():
                                     timeout=self.timeout,
                                     verify=verifyssl)
 
-                elif type == "POST":
+                elif action_type == "POST":
                     r = requests.post(url,
                                     json=postBody,
                                     headers=header,
