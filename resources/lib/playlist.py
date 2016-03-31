@@ -135,7 +135,6 @@ class Playlist():
 
     def addtoPlaylist_xbmc(self, playlist, item):
 
-        itemid = item['Id']
         playurl = playutils.PlayUtils(item).getPlayUrl()
         if not playurl:
             # Playurl failed
