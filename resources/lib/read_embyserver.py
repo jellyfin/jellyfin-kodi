@@ -42,8 +42,7 @@ class Read_EmbyServer():
         # This will return the full item
         item = {}
 
-        url = "{server}/emby/Users/{UserId}/Items/%s?format=json" % itemid
-        result = self.doUtils(url)
+        result = self.doUtils("{server}/metaman/Users/{UserId}/Items/%s?format=json" % itemid)
         if result:
             item = result
 
@@ -56,13 +55,12 @@ class Read_EmbyServer():
         itemlists = self.split_list(itemlist, 50)
         for itemlist in itemlists:
             # Will return basic information
-            url = "{server}/emby/Users/{UserId}/Items?&format=json"
             params = {
 
                 'Ids': ",".join(itemlist),
                 'Fields': "Etag"
             }
-            result = self.doUtils(url, parameters=params)
+            result = self.doUtils("{server}/emby/Users/{UserId}/Items?&format=json", parameters=params)
             if result:
                 items.extend(result['Items'])
 
@@ -75,7 +73,6 @@ class Read_EmbyServer():
         itemlists = self.split_list(itemlist, 50)
         for itemlist in itemlists:
 
-            url = "{server}/emby/Users/{UserId}/Items?format=json"
             params = {
 
                 "Ids": ",".join(itemlist),
@@ -89,7 +86,7 @@ class Read_EmbyServer():
                         "MediaSources"
                 )
             }
-            result = self.doUtils(url, parameters=params)
+            result = self.doUtils("{server}/emby/Users/{UserId}/Items?format=json", parameters=params)
             if result:
                 items.extend(result['Items'])
 
@@ -98,13 +95,10 @@ class Read_EmbyServer():
     def getView_embyId(self, itemid):
         # Returns ancestors using embyId
         viewId = None
-        url = "{server}/emby/Items/%s/Ancestors?UserId={UserId}&format=json" % itemid
-        result = self.doUtils(url)
 
-        for view in result:
+        for view in self.doUtils("{server}/emby/Items/%s/Ancestors?UserId={UserId}&format=json" % itemid):
 
-            viewtype = view['Type']
-            if viewtype == "CollectionFolder":
+            if view['Type'] == "CollectionFolder":
                 # Found view
                 viewId = view['Id']
 
@@ -131,7 +125,6 @@ class Read_EmbyServer():
         return [viewName, viewId, mediatype]
     
     def getFilteredSection(self, parentid, itemtype=None, sortby="SortName", recursive=True, limit=None, sortorder="Ascending", filter=""):
-        doUtils = self.doUtils
         url = "{server}/emby/Users/{UserId}/Items?format=json"
         params = {
 
@@ -151,10 +144,9 @@ class Read_EmbyServer():
             "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
             "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers")
         }
-        return doUtils(url, parameters=params)
+        return self.doUtils(url, parameters=params)
     
     def getTvChannels(self):
-        doUtils = self.doUtils
         url = "{server}/emby/LiveTv/Channels/?userid={UserId}&format=json"
         params = {
 
@@ -165,10 +157,9 @@ class Read_EmbyServer():
             "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
             "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers")
         }
-        return doUtils(url, parameters=params)
+        return self.doUtils(url, parameters=params)
     
     def getTvRecordings(self, groupid):
-        doUtils = self.doUtils
         url = "{server}/emby/LiveTv/Recordings/?userid={UserId}&format=json"
         if groupid == "root": groupid = ""
         params = {
@@ -181,13 +172,12 @@ class Read_EmbyServer():
             "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
             "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers")
         }
-        return doUtils(url, parameters=params)
+        return self.doUtils(url, parameters=params)
     
     def getSection(self, parentid, itemtype=None, sortby="SortName", basic=False, dialog=None):
 
         log = self.logMsg
 
-        doUtils = self.doUtils
         items = {
             
             'Items': [],
@@ -206,7 +196,7 @@ class Read_EmbyServer():
             'Recursive': True,
             'Limit': 1
         }
-        result = doUtils(url, parameters=params)
+        result = self.doUtils(url, parameters=params)
         try:
             total = result['TotalRecordCount']
             items['TotalRecordCount'] = total
@@ -247,7 +237,7 @@ class Read_EmbyServer():
                         "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers,"
                         "MediaSources"
                     )
-                result = doUtils(url, parameters=params)
+                result = self.doUtils(url, parameters=params)
                 try:
                     items['Items'].extend(result['Items'])
                 except TypeError:
@@ -307,7 +297,6 @@ class Read_EmbyServer():
 
     def getViews(self, mediatype="", root=False, sortedlist=False):
         # Build a list of user views
-        doUtils = self.doUtils
         views = []
         mediatype = mediatype.lower()
 
@@ -316,7 +305,7 @@ class Read_EmbyServer():
         else: # Views ungrouped
             url = "{server}/emby/Users/{UserId}/Items?Sortby=SortName&format=json"
 
-        result = doUtils(url)
+        result = self.doUtils(url)
         try:
             items = result['Items']
         except TypeError:
@@ -339,7 +328,7 @@ class Read_EmbyServer():
                 # Assumed missing is mixed then.
                 '''if itemtype is None:
                     url = "{server}/emby/Library/MediaFolders?format=json"
-                    result = doUtils(url)
+                    result = self.doUtils(url)
 
                     for folder in result['Items']:
                         if itemId == folder['Id']:
@@ -469,7 +458,6 @@ class Read_EmbyServer():
 
     def getArtists(self, dialog=None):
 
-        doUtils = self.doUtils
         items = {
 
             'Items': [],
@@ -483,7 +471,7 @@ class Read_EmbyServer():
             'Recursive': True,
             'Limit': 1
         }
-        result = doUtils(url, parameters=params)
+        result = self.doUtils(url, parameters=params)
         try:
             total = result['TotalRecordCount']
             items['TotalRecordCount'] = total
@@ -513,7 +501,7 @@ class Read_EmbyServer():
                         "AirTime,DateCreated,MediaStreams,People,ProviderIds,Overview"
                     )
                 }
-                result = doUtils(url, parameters=params)
+                result = self.doUtils(url, parameters=params)
                 items['Items'].extend(result['Items'])
 
                 index += jump
@@ -577,24 +565,23 @@ class Read_EmbyServer():
 
     def updateUserRating(self, itemid, like=None, favourite=None, deletelike=False):
         # Updates the user rating to Emby
-        doUtils = self.doUtils
         
         if favourite:
             url = "{server}/emby/Users/{UserId}/FavoriteItems/%s?format=json" % itemid
-            doUtils(url, type="POST")
+            self.doUtils(url, type="POST")
         elif favourite == False:
             url = "{server}/emby/Users/{UserId}/FavoriteItems/%s?format=json" % itemid
-            doUtils(url, type="DELETE")
+            self.doUtils(url, type="DELETE")
 
         if not deletelike and like:
             url = "{server}/emby/Users/{UserId}/Items/%s/Rating?Likes=true&format=json" % itemid
-            doUtils(url, type="POST")
-        elif not deletelike and like == False:
+            self.doUtils(url, type="POST")
+        elif not deletelike and like is False:
             url = "{server}/emby/Users/{UserId}/Items/%s/Rating?Likes=false&format=json" % itemid
-            doUtil(url, type="POST")
+            self.doUtils(url, type="POST")
         elif deletelike:
             url = "{server}/emby/Users/{UserId}/Items/%s/Rating?format=json" % itemid
-            doUtils(url, type="DELETE")
+            self.doUtils(url, type="DELETE")
 
         self.logMsg("Update user rating to emby for itemid: %s "
                     "| like: %s | favourite: %s | deletelike: %s"
