@@ -507,6 +507,7 @@ def BrowseContent(viewname, browse_type="", folderid=""):
         for view in views:
             if view.get("name") == viewname.decode('utf-8'):
                 folderid = view.get("id")
+                break
     
     if viewname is not None:
         utils.logMsg("BrowseContent","viewname: %s - type: %s - folderid: %s - filter: %s" %(viewname.decode('utf-8'), browse_type.decode('utf-8'), folderid.decode('utf-8'), filter_type.decode('utf-8')))
