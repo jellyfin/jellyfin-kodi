@@ -277,23 +277,19 @@ class WebSocket_Client(threading.Thread):
     def run(self):
 
         window = utils.window
-        monitor = self.monitor
-
         loglevel = int(window('emby_logLevel'))
         # websocket.enableTrace(True)
 
         userId = window('emby_currUser')
         server = window('emby_server%s' % userId)
         token = window('emby_accessToken%s' % userId)
-        deviceId = self.deviceId
-
         # Get the appropriate prefix for the websocket
         if "https" in server:
             server = server.replace('https', "wss")
         else:
             server = server.replace('http', "ws")
 
-        websocket_url = "%s?api_key=%s&deviceId=%s" % (server, token, deviceId)
+        websocket_url = "%s?api_key=%s&deviceId=%s" % (server, token, self.deviceId)
         self.logMsg("websocket url: %s" % websocket_url, 1)
 
         self.client = websocket.WebSocketApp(websocket_url,
@@ -304,13 +300,13 @@ class WebSocket_Client(threading.Thread):
         self.client.on_open = self.on_open
         self.logMsg("----===## Starting WebSocketClient ##===----", 0)
 
-        while not monitor.abortRequested():
+        while not self.monitor.abortRequested():
 
             self.client.run_forever(ping_interval=10)
             if self.stopWebsocket:
                 break
 
-            if monitor.waitForAbort(5):
+            if self.monitor.waitForAbort(5):
                 # Abort was requested, exit
                 break
 
