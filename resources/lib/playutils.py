@@ -35,17 +35,16 @@ class PlayUtils():
 
         window = utils.window
 
-        item = self.item
         playurl = None
         
-        if (item.get('Type') in ("Recording", "TvChannel") and
-                item.get('MediaSources') and item['MediaSources'][0]['Protocol'] == "Http"):
+        if (self.item.get('Type') in ("Recording", "TvChannel") and
+                self.item.get('MediaSources') and self.item['MediaSources'][0]['Protocol'] == "Http"):
             # Play LiveTV or recordings
             self.logMsg("File protocol is http (livetv).", 1)
-            playurl = "%s/emby/Videos/%s/live.m3u8?static=true" % (self.server, item['Id'])
+            playurl = "%s/emby/Videos/%s/live.m3u8?static=true" % (self.server, self.item['Id'])
             window('emby_%s.playmethod' % playurl, value="Transcode")
 
-        elif item.get('MediaSources') and item['MediaSources'][0]['Protocol'] == "Http":
+        elif self.item.get('MediaSources') and self.item['MediaSources'][0]['Protocol'] == "Http":
             # Only play as http, used for channels, or online hosting of content
             self.logMsg("File protocol is http.", 1)
             playurl = self.httpPlay()
@@ -77,11 +76,10 @@ class PlayUtils():
 
     def httpPlay(self):
         # Audio, Video, Photo
-        item = self.item
         server = self.server
 
-        itemid = item['Id']
-        mediatype = item['MediaType']
+        itemid = self.item['Id']
+        mediatype = self.item['MediaType']
 
         if mediatype == "Audio":
             playurl = "%s/emby/Audio/%s/stream" % (server, itemid)
@@ -96,7 +94,6 @@ class PlayUtils():
         settings = utils.settings
         dialog = xbmcgui.Dialog()
 
-        item = self.item
 
         # Requirement: Filesystem, Accessible path
         if settings('playFromStream') == "true":
@@ -104,7 +101,7 @@ class PlayUtils():
             self.logMsg("Can't direct play, play from HTTP enabled.", 1)
             return False
 
-        videotrack = item['MediaSources'][0]['Name']
+        videotrack = self.item['MediaSources'][0]['Name']
         transcodeH265 = settings('transcodeH265')
 
         if transcodeH265 in ("1", "2", "3") and ("HEVC" in videotrack or "H265" in videotrack):
@@ -121,13 +118,13 @@ class PlayUtils():
             if res[transcodeH265] <= resolution:
                 return False
 
-        canDirectPlay = item['MediaSources'][0]['SupportsDirectPlay']
+        canDirectPlay = self.item['MediaSources'][0]['SupportsDirectPlay']
         # Make sure direct play is supported by the server
         if not canDirectPlay:
             self.logMsg("Can't direct play, server doesn't allow/support it.", 1)
             return False
 
-        location = item['LocationType']
+        location = self.item['LocationType']
         if location == "FileSystem":
             # Verify the path
             if not self.fileExists():
@@ -161,16 +158,14 @@ class PlayUtils():
 
     def directPlay(self):
 
-        item = self.item
-
         try:
-            playurl = item['MediaSources'][0]['Path']
+            playurl = self.item['MediaSources'][0]['Path']
         except (IndexError, KeyError):
-            playurl = item['Path']
+            playurl = self.item['Path']
 
-        if item.get('VideoType'):
+        if self.item.get('VideoType'):
             # Specific format modification
-            type = item['VideoType']
+            type = self.item['VideoType']
 
             if type == "Dvd":
                 playurl = "%s/VIDEO_TS/VIDEO_TS.IFO" % playurl
@@ -212,9 +207,8 @@ class PlayUtils():
 
     def isDirectStream(self):
 
-        item = self.item
 
-        videotrack = item['MediaSources'][0]['Name']
+        videotrack = self.item['MediaSources'][0]['Name']
         transcodeH265 = utils.settings('transcodeH265')
 
         if transcodeH265 in ("1", "2", "3") and ("HEVC" in videotrack or "H265" in videotrack):
@@ -232,7 +226,7 @@ class PlayUtils():
                 return False
 
         # Requirement: BitRate, supported encoding
-        canDirectStream = item['MediaSources'][0]['SupportsDirectStream']
+        canDirectStream = self.item['MediaSources'][0]['SupportsDirectStream']
         # Make sure the server supports it
         if not canDirectStream:
             return False
@@ -246,13 +240,12 @@ class PlayUtils():
 
     def directStream(self):
 
-        item = self.item
         server = self.server
 
-        itemid = item['Id']
-        itemtype = item['Type']
+        itemid = self.item['Id']
+        itemtype = self.item['Type']
 
-        if 'Path' in item and item['Path'].endswith('.strm'):
+        if 'Path' in self.item and self.item['Path'].endswith('.strm'):
             # Allow strm loading when direct streaming
             playurl = self.directPlay()
         elif itemtype == "Audio":
@@ -281,9 +274,7 @@ class PlayUtils():
 
     def isTranscoding(self):
 
-        item = self.item
-
-        canTranscode = item['MediaSources'][0]['SupportsTranscoding']
+        canTranscode = self.item['MediaSources'][0]['SupportsTranscoding']
         # Make sure the server supports it
         if not canTranscode:
             return False
@@ -292,13 +283,11 @@ class PlayUtils():
 
     def transcoding(self):
 
-        item = self.item
-
-        if 'Path' in item and item['Path'].endswith('.strm'):
+        if 'Path' in self.item and self.item['Path'].endswith('.strm'):
             # Allow strm loading when transcoding
             playurl = self.directPlay()
         else:
-            itemid = item['Id']
+            itemid = self.item['Id']
             deviceId = self.clientInfo.getDeviceId()
             playurl = (
                 "%s/emby/Videos/%s/master.m3u8?MediaSourceId=%s"
@@ -356,9 +345,8 @@ class PlayUtils():
         selectSubsIndex = ""
         playurlprefs = "%s" % url
 
-        item = self.item
         try:
-            mediasources = item['MediaSources'][0]
+            mediasources = self.item['MediaSources'][0]
             mediastreams = mediasources['MediaStreams']
         except (TypeError, KeyError, IndexError):
             return
@@ -428,7 +416,7 @@ class PlayUtils():
                 # Load subtitles in the listitem if downloadable
                 if selectSubsIndex in downloadableStreams:
 
-                    itemid = item['Id']
+                    itemid = self.item['Id']
                     url = [("%s/Videos/%s/%s/Subtitles/%s/Stream.srt"
                         % (self.server, itemid, itemid, selectSubsIndex))]
                     self.logMsg("Set up subtitles: %s %s" % (selectSubsIndex, url), 1)
