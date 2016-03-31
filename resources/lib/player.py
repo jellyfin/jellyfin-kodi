@@ -51,12 +51,11 @@ class Player(xbmc.Player):
 
         window = utils.window
         # Will be called when xbmc starts playing a file
-        xbmcplayer = self.xbmcplayer
         self.stopAll()
 
         # Get current file
         try:
-            currentFile = xbmcplayer.getPlayingFile()
+            currentFile = self.xbmcplayer.getPlayingFile()
             xbmc.sleep(300)
         except:
             currentFile = ""
@@ -64,7 +63,7 @@ class Player(xbmc.Player):
             while not currentFile:
                 xbmc.sleep(100)
                 try:
-                    currentFile = xbmcplayer.getPlayingFile()
+                    currentFile = self.xbmcplayer.getPlayingFile()
                 except: pass
 
                 if count == 5: # try 5 times
@@ -104,10 +103,10 @@ class Player(xbmc.Player):
                 if window('emby_customPlaylist') == "true" and customseek:
                     # Start at, when using custom playlist (play to Kodi from webclient)
                     self.logMsg("Seeking to: %s" % customseek, 1)
-                    xbmcplayer.seekTime(int(customseek)/10000000.0)
+                    self.xbmcplayer.seekTime(int(customseek)/10000000.0)
                     window('emby_customPlaylist.seektime', clear=True)
 
-                seekTime = xbmcplayer.getTime()
+                seekTime = self.xbmcplayer.getTime()
 
                 # Get playback volume
                 volume_query = {
@@ -215,7 +214,7 @@ class Player(xbmc.Player):
                 try:
                     runtime = int(runtime)
                 except ValueError:
-                    runtime = xbmcplayer.getTotalTime()
+                    runtime = self.xbmcplayer.getTotalTime()
                     self.logMsg("Runtime is missing, Kodi runtime: %s" % runtime, 1)
 
                 # Save data map for updates and position calls
@@ -253,7 +252,6 @@ class Player(xbmc.Player):
     def reportPlayback(self):
         
         self.logMsg("reportPlayback Called", 2)
-        xbmcplayer = self.xbmcplayer
 
         # Get current file
         currentFile = self.currentFile
