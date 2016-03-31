@@ -483,7 +483,6 @@ def GetSubFolders(nodeindex):
         title = utils.window('Emby.nodes.%s%s.title' %(nodeindex,node))
         if title:
             path = utils.window('Emby.nodes.%s%s.content' %(nodeindex,node))
-            type = utils.window('Emby.nodes.%s%s.type' %(nodeindex,node))
             addDirectoryItem(title, path)
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
               
