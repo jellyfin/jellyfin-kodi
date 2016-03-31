@@ -366,12 +366,11 @@ class LibrarySync(threading.Thread):
         emby = self.emby
         emby_db = embydb.Embydb_Functions(embycursor)
         kodi_db = kodidb.Kodidb_Functions(kodicursor)
-        doUtils = self.doUtils
         vnodes = self.vnodes
 
         # Get views
         url = "{server}/emby/Users/{UserId}/Views?format=json"
-        result = doUtils(url)
+        result = self.doUtils(url)
         grouped_views = result['Items']
         ordered_views = emby.getViews(sortedlist=True)
         all_views = []
@@ -423,7 +422,7 @@ class LibrarySync(threading.Thread):
                         'Limit': 1,
                         'IncludeItemTypes': emby_mediatypes[mediatype]
                     } # Get one item from server using the folderid
-                    result = doUtils(url, parameters=params)
+                    result = self.doUtils(url, parameters=params)
                     try:
                         verifyitem = result['Items'][0]['Id']
                     except (TypeError, IndexError):
