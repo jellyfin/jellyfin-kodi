@@ -25,7 +25,6 @@ class Embydb_Functions():
 
     def getViews(self):
 
-        embycursor = self.embycursor
         views = []
 
         query = ' '.join((
@@ -33,8 +32,8 @@ class Embydb_Functions():
             "SELECT view_id",
             "FROM view"
         ))
-        embycursor.execute(query)
-        rows = embycursor.fetchall()
+        self.embycursor.execute(query)
+        rows = self.embycursor.fetchall()
         for row in rows:
             views.append(row[0])
         
@@ -42,7 +41,6 @@ class Embydb_Functions():
 
     def getView_byId(self, viewid):
 
-        embycursor = self.embycursor
 
         query = ' '.join((
 
@@ -50,14 +48,13 @@ class Embydb_Functions():
             "FROM view",
             "WHERE view_id = ?"
         ))
-        embycursor.execute(query, (viewid,))
-        view = embycursor.fetchone()
+        self.embycursor.execute(query, (viewid,))
+        view = self.embycursor.fetchone()
         
         return view
 
     def getView_byType(self, mediatype):
 
-        embycursor = self.embycursor
         views = []
 
         query = ' '.join((
@@ -66,8 +63,8 @@ class Embydb_Functions():
             "FROM view",
             "WHERE media_type = ?"
         ))
-        embycursor.execute(query, (mediatype,))
-        rows = embycursor.fetchall()
+        self.embycursor.execute(query, (mediatype,))
+        rows = self.embycursor.fetchall()
         for row in rows:
             views.append({
 
@@ -79,17 +76,15 @@ class Embydb_Functions():
 
     def getView_byName(self, tagname):
 
-        embycursor = self.embycursor
-
         query = ' '.join((
 
             "SELECT view_id",
             "FROM view",
             "WHERE view_name = ?"
         ))
-        embycursor.execute(query, (tagname,))
+        self.embycursor.execute(query, (tagname,))
         try:
-            view = embycursor.fetchone()[0]
+            view = self.embycursor.fetchone()[0]
         
         except TypeError:
             view = None
@@ -129,8 +124,6 @@ class Embydb_Functions():
 
     def getItem_byId(self, embyid):
 
-        embycursor = self.embycursor
-
         query = ' '.join((
 
             "SELECT kodi_id, kodi_fileid, kodi_pathid, parent_id, media_type, emby_type",
@@ -138,14 +131,12 @@ class Embydb_Functions():
             "WHERE emby_id = ?"
         ))
         try:
-            embycursor.execute(query, (embyid,))
-            item = embycursor.fetchone()
+            self.embycursor.execute(query, (embyid,))
+            item = self.embycursor.fetchone()
             return item
         except: return None
 
     def getItem_byWildId(self, embyid):
-
-        embycursor = self.embycursor
 
         query = ' '.join((
 
@@ -153,14 +144,12 @@ class Embydb_Functions():
             "FROM emby",
             "WHERE emby_id LIKE ?"
         ))
-        embycursor.execute(query, (embyid+"%",))
-        items = embycursor.fetchall()
+        self.embycursor.execute(query, (embyid+"%",))
+        items = self.embycursor.fetchall()
 
         return items
 
     def getItem_byView(self, mediafolderid):
-
-        embycursor = self.embycursor
 
         query = ' '.join((
 
@@ -168,14 +157,12 @@ class Embydb_Functions():
             "FROM emby",
             "WHERE media_folder = ?"
         ))
-        embycursor.execute(query, (mediafolderid,))
-        items = embycursor.fetchall()
+        self.embycursor.execute(query, (mediafolderid,))
+        items = self.embycursor.fetchall()
 
         return items
 
     def getItem_byKodiId(self, kodiid, mediatype):
-
-        embycursor = self.embycursor
 
         query = ' '.join((
 
@@ -184,14 +171,12 @@ class Embydb_Functions():
             "WHERE kodi_id = ?",
             "AND media_type = ?"
         ))
-        embycursor.execute(query, (kodiid, mediatype,))
-        item = embycursor.fetchone()
+        self.embycursor.execute(query, (kodiid, mediatype,))
+        item = self.embycursor.fetchone()
 
         return item
 
     def getItem_byParentId(self, parentid, mediatype):
-
-        embycursor = self.embycursor
 
         query = ' '.join((
 
@@ -200,14 +185,12 @@ class Embydb_Functions():
             "WHERE parent_id = ?",
             "AND media_type = ?"
         ))
-        embycursor.execute(query, (parentid, mediatype,))
-        items = embycursor.fetchall()
+        self.embycursor.execute(query, (parentid, mediatype,))
+        items = self.embycursor.fetchall()
 
         return items
 
     def getItemId_byParentId(self, parentid, mediatype):
-
-        embycursor = self.embycursor
 
         query = ' '.join((
 
@@ -216,14 +199,12 @@ class Embydb_Functions():
             "WHERE parent_id = ?",
             "AND media_type = ?"
         ))
-        embycursor.execute(query, (parentid, mediatype,))
-        items = embycursor.fetchall()
+        self.embycursor.execute(query, (parentid, mediatype,))
+        items = self.embycursor.fetchall()
 
         return items
 
     def getChecksum(self, mediatype):
-
-        embycursor = self.embycursor
 
         query = ' '.join((
 
@@ -231,14 +212,12 @@ class Embydb_Functions():
             "FROM emby",
             "WHERE emby_type = ?"
         ))
-        embycursor.execute(query, (mediatype,))
-        items = embycursor.fetchall()
+        self.embycursor.execute(query, (mediatype,))
+        items = self.embycursor.fetchall()
 
         return items
 
     def getMediaType_byId(self, embyid):
-
-        embycursor = self.embycursor
 
         query = ' '.join((
 
@@ -246,9 +225,9 @@ class Embydb_Functions():
             "FROM emby",
             "WHERE emby_id = ?"
         ))
-        embycursor.execute(query, (embyid,))
+        self.embycursor.execute(query, (embyid,))
         try:
-            itemtype = embycursor.fetchone()[0]
+            itemtype = self.embycursor.fetchone()[0]
         
         except TypeError:
             itemtype = None
