@@ -249,10 +249,9 @@ class Movies(Items):
         count = 0
         for boxset in items:
 
-            title = boxset['Name']
             if pdialog:
                 percentage = int((float(count) / float(total))*100)
-                pdialog.update(percentage, message=title)
+                pdialog.update(percentage, message=boxset['Name'])
                 count += 1
             self.add_updateBoxset(boxset)
 
@@ -521,8 +520,7 @@ class Movies(Items):
             process.append(current_movie)
 
         # New list to compare
-        boxsetMovies = emby.getMovies_byBoxset(boxsetid)
-        for movie in boxsetMovies['Items']:
+        for movie in emby.getMovies_byBoxset(boxsetid)['Items']:
 
             itemid = movie['Id']
 
@@ -935,8 +933,7 @@ class MusicVideos(Items):
             "AND media_type = 'musicvideo'"
         ))
         kodicursor.execute(query, (mvideoid,))
-        rows = kodicursor.fetchall()
-        for row in rows:
+        for row in kodicursor.fetchall():
             
             url = row[0]
             imagetype = row[1]
@@ -1211,7 +1208,6 @@ class TVShows(Items):
         artwork = self.artwork
 
         seasonnum = item.get('IndexNumber', 1)
-        itemid = item['Id']
 
         if showid is None:
             try:
@@ -1229,14 +1225,13 @@ class TVShows(Items):
         
         if item['LocationType'] != "Virtual":
             # Create the reference in emby table
-            emby_db.addReference(itemid, seasonid, "Season", "season", parentid=showid)
+            emby_db.addReference(item['Id'], seasonid, "Season", "season", parentid=showid)
 
         # Process artwork
         artwork.addArtwork(artwork.getAllArtwork(item), seasonid, "season", kodicursor)
 
     def add_updateEpisode(self, item):
         # Process single episode
-        kodiversion = self.kodiversion
         kodicursor = self.kodicursor
         emby_db = self.emby_db
         kodi_db = self.kodi_db
@@ -1384,7 +1379,7 @@ class TVShows(Items):
             self.logMsg("UPDATE episode itemid: %s - Title: %s" % (itemid, title), 1)
 
             # Update the movie entry
-            if kodiversion in (16, 17):
+            if self.kodiversion in (16, 17):
                 # Kodi Jarvis, Krypton
                 query = ' '.join((
                 
@@ -1423,7 +1418,7 @@ class TVShows(Items):
             fileid = kodi_db.addFile(filename, pathid)
             
             # Create the episode entry
-            if kodiversion in (16, 17):
+            if self.kodiversion in (16, 17):
                 # Kodi Jarvis, Krypton
                 query = (
                     '''
@@ -1531,9 +1526,8 @@ class TVShows(Items):
                 kodi_db.addTag(kodiid, "Favorite tvshows", "tvshow")
             else:
                 kodi_db.removeTag(kodiid, "Favorite tvshows", "tvshow")
-
-        # Process playstates
-        if mediatype == "episode":
+        elif mediatype == "episode":
+            # Process playstates
             playcount = userdata['PlayCount']
             dateplayed = userdata['LastPlayedDate']
             resume = API.adjustResume(userdata['Resume'])
@@ -1672,27 +1666,23 @@ class TVShows(Items):
     def removeShow(self, kodiid):
         
         kodicursor = self.kodicursor
-        artwork = self.artwork
-
-        artwork.deleteArtwork(kodiid, "tvshow", kodicursor)
+        self.artwork.deleteArtwork(kodiid, "tvshow", kodicursor)
         kodicursor.execute("DELETE FROM tvshow WHERE idShow = ?", (kodiid,))
         self.logMsg("Removed tvshow: %s." % kodiid, 2)
 
     def removeSeason(self, kodiid):
         
         kodicursor = self.kodicursor
-        artwork = self.artwork
 
-        artwork.deleteArtwork(kodiid, "season", kodicursor)
+        self.artwork.deleteArtwork(kodiid, "season", kodicursor)
         kodicursor.execute("DELETE FROM seasons WHERE idSeason = ?", (kodiid,))
         self.logMsg("Removed season: %s." % kodiid, 2)
 
     def removeEpisode(self, kodiid, fileid):
 
         kodicursor = self.kodicursor
-        artwork = self.artwork
 
-        artwork.deleteArtwork(kodiid, "episode", kodicursor)
+        self.artwork.deleteArtwork(kodiid, "episode", kodicursor)
         kodicursor.execute("DELETE FROM episode WHERE idEpisode = ?", (kodiid,))
         kodicursor.execute("DELETE FROM files WHERE idFile = ?", (fileid,))
         self.logMsg("Removed episode: %s." % kodiid, 2)
@@ -1717,10 +1707,9 @@ class Music(Items):
         count = 0
         for artist in items:
 
-            title = artist['Name']
             if pdialog:
                 percentage = int((float(count) / float(total))*100)
-                pdialog.update(percentage, message=title)
+                pdialog.update(percentage, message=artist['Name'])
                 count += 1
             self.add_updateArtist(artist)
             # Add albums
@@ -1733,10 +1722,9 @@ class Music(Items):
         count = 0
         for album in items:
 
-            title = album['Name']
             if pdialog:
                 percentage = int((float(count) / float(total))*100)
-                pdialog.update(percentage, message=title)
+                pdialog.update(percentage, message=album['Name'])
                 count += 1
             self.add_updateAlbum(album)
             # Add songs
@@ -1749,10 +1737,9 @@ class Music(Items):
         count = 0
         for song in items:
 
-            title = song['Name']
             if pdialog:
                 percentage = int((float(count) / float(total))*100)
-                pdialog.update(percentage, message=title)
+                pdialog.update(percentage, message=song['Name'])
                 count += 1
             self.add_updateSong(song)
             if not pdialog and self.contentmsg:
@@ -1760,7 +1747,6 @@ class Music(Items):
 
     def add_updateArtist(self, item, artisttype="MusicArtist"):
         # Process a single artist
-        kodiversion = self.kodiversion
         kodicursor = self.kodicursor
         emby_db = self.emby_db
         kodi_db = self.kodi_db
@@ -1843,7 +1829,6 @@ class Music(Items):
     def add_updateAlbum(self, item):
         # Process a single artist
         emby = self.emby
-        kodiversion = self.kodiversion
         kodicursor = self.kodicursor
         emby_db = self.emby_db
         kodi_db = self.kodi_db
@@ -1903,7 +1888,7 @@ class Music(Items):
 
 
         # Process the album info
-        if kodiversion == 17:
+        if self.kodiversion == 17:
             # Kodi Krypton
             query = ' '.join((
 
@@ -1914,7 +1899,7 @@ class Music(Items):
             ))
             kodicursor.execute(query, (artistname, year, genre, bio, thumb, rating, lastScraped,
                 "album", albumid))
-        elif kodiversion == 16:
+        elif self.kodiversion == 16:
             # Kodi Jarvis
             query = ' '.join((
 
@@ -1925,7 +1910,7 @@ class Music(Items):
             ))
             kodicursor.execute(query, (artistname, year, genre, bio, thumb, rating, lastScraped,
                 "album", albumid))
-        elif kodiversion == 15:
+        elif self.kodiversion == 15:
             # Kodi Isengard
             query = ' '.join((
 
@@ -2012,7 +1997,6 @@ class Music(Items):
 
     def add_updateSong(self, item):
         # Process single song
-        kodiversion = self.kodiversion
         kodicursor = self.kodicursor
         emby = self.emby
         emby_db = self.emby_db
@@ -2155,7 +2139,7 @@ class Music(Items):
                     self.logMsg("Failed to add album. Creating singles.", 1)
                     kodicursor.execute("select coalesce(max(idAlbum),0) from album")
                     albumid = kodicursor.fetchone()[0] + 1
-                    if kodiversion == 16:
+                    if self.kodiversion == 16:
                         # Kodi Jarvis
                         query = (
                             '''
@@ -2165,7 +2149,7 @@ class Music(Items):
                             '''
                         )
                         kodicursor.execute(query, (albumid, genre, year, "single"))
-                    elif kodiversion == 15:
+                    elif self.kodiversion == 15:
                         # Kodi Isengard
                         query = (
                             '''
@@ -2289,11 +2273,11 @@ class Music(Items):
             result = kodicursor.fetchone()
             if result and result[0] != album_artists:
                 # Field is empty
-                if kodiversion in (16, 17):
+                if self.kodiversion in (16, 17):
                     # Kodi Jarvis, Krypton
                     query = "UPDATE album SET strArtists = ? WHERE idAlbum = ?"
                     kodicursor.execute(query, (album_artists, albumid))
-                elif kodiversion == 15:
+                elif self.kodiversion == 15:
                     # Kodi Isengard
                     query = "UPDATE album SET strArtists = ? WHERE idAlbum = ?"
                     kodicursor.execute(query, (album_artists, albumid))
@@ -2391,10 +2375,9 @@ class Music(Items):
             self.removeSong(kodiid)
             # This should only address single song scenario, where server doesn't actually
             # create an album for the song. 
-            customitems = emby_db.getItem_byWildId(itemid)
             emby_db.removeWildItem(itemid)
 
-            for item in customitems:
+            for item in emby_db.getItem_byWildId(itemid):
 
                 item_kid = item[0]
                 item_mediatype = item[1]
@@ -2448,23 +2431,16 @@ class Music(Items):
     def removeSong(self, kodiid):
 
         kodicursor = self.kodicursor
-        artwork = self.artwork
 
-        artwork.deleteArtwork(kodiid, "song", kodicursor)
-        kodicursor.execute("DELETE FROM song WHERE idSong = ?", (kodiid,))
+        self.artwork.deleteArtwork(kodiid, "song", self.kodicursor)
+        self.kodicursor.execute("DELETE FROM song WHERE idSong = ?", (kodiid,))
 
     def removeAlbum(self, kodiid):
 
-        kodicursor = self.kodicursor
-        artwork = self.artwork
-
-        artwork.deleteArtwork(kodiid, "album", kodicursor)
-        kodicursor.execute("DELETE FROM album WHERE idAlbum = ?", (kodiid,))
+        self.artwork.deleteArtwork(kodiid, "album", self.kodicursor)
+        self.kodicursor.execute("DELETE FROM album WHERE idAlbum = ?", (kodiid,))
 
     def removeArtist(self, kodiid):
 
-        kodicursor = self.kodicursor
-        artwork = self.artwork
-
-        artwork.deleteArtwork(kodiid, "artist", kodicursor)
-        kodicursor.execute("DELETE FROM artist WHERE idArtist = ?", (kodiid,))
+        self.artwork.deleteArtwork(kodiid, "artist", self.kodicursor)
+        self.kodicursor.execute("DELETE FROM artist WHERE idArtist = ?", (kodiid,))
