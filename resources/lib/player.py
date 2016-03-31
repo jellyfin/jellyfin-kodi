@@ -425,8 +425,6 @@ class Player(xbmc.Player):
         lang = utils.language
         settings = utils.settings
 
-        doUtils = self.doUtils
-
         if not self.played_info:
             return 
             
@@ -482,7 +480,7 @@ class Player(xbmc.Player):
 
                         url = "{server}/emby/Items/%s?format=json" % itemid
                         self.logMsg("Deleting request: %s" % itemid, 1)
-                        doUtils(url, type="DELETE")
+                        self.doUtils(url, type="DELETE")
 
                 self.stopPlayback(data)
 
@@ -491,7 +489,7 @@ class Player(xbmc.Player):
                     self.logMsg("Transcoding for %s terminated." % itemid, 1)
                     deviceId = self.clientInfo.getDeviceId()
                     url = "{server}/emby/Videos/ActiveEncodings?DeviceId=%s" % deviceId
-                    doUtils(url, type="DELETE")
+                    self.doUtils(url, type="DELETE")
     
         self.played_info.clear()
     
