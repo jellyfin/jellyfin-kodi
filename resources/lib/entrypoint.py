@@ -67,12 +67,12 @@ def doMainListing():
             if not path:
                 path = utils.window('Emby.nodes.%s.content' % i)
             label = utils.window('Emby.nodes.%s.title' % i)
-            type = utils.window('Emby.nodes.%s.type' % i)
+            node_type = utils.window('Emby.nodes.%s.type' % i)
             #because we do not use seperate entrypoints for each content type, we need to figure out which items to show in each listing.
             #for now we just only show picture nodes in the picture library video nodes in the video library and all nodes in any other window
-            if path and xbmc.getCondVisibility("Window.IsActive(Pictures)") and type == "photos":
+            if path and xbmc.getCondVisibility("Window.IsActive(Pictures)") and node_type == "photos":
                 addDirectoryItem(label, path)
-            elif path and xbmc.getCondVisibility("Window.IsActive(VideoLibrary)") and type != "photos":
+            elif path and xbmc.getCondVisibility("Window.IsActive(VideoLibrary)") and node_type != "photos":
                 addDirectoryItem(label, path)
             elif path and not xbmc.getCondVisibility("Window.IsActive(VideoLibrary) | Window.IsActive(Pictures) | Window.IsActive(MusicLibrary)"):
                 addDirectoryItem(label, path)
