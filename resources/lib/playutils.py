@@ -76,15 +76,14 @@ class PlayUtils():
 
     def httpPlay(self):
         # Audio, Video, Photo
-        server = self.server
 
         itemid = self.item['Id']
         mediatype = self.item['MediaType']
 
         if mediatype == "Audio":
-            playurl = "%s/emby/Audio/%s/stream" % (server, itemid)
+            playurl = "%s/emby/Audio/%s/stream" % (self.server, itemid)
         else:
-            playurl = "%s/emby/Videos/%s/stream?static=true" % (server, itemid)
+            playurl = "%s/emby/Videos/%s/stream?static=true" % (self.server, itemid)
 
         return playurl
 
@@ -165,11 +164,9 @@ class PlayUtils():
 
         if self.item.get('VideoType'):
             # Specific format modification
-            type = self.item['VideoType']
-
-            if type == "Dvd":
+            if self.item['VideoType'] == "Dvd":
                 playurl = "%s/VIDEO_TS/VIDEO_TS.IFO" % playurl
-            elif type == "BluRay":
+            elif self.item['VideoType'] == "BluRay":
                 playurl = "%s/BDMV/index.bdmv" % playurl
 
         # Assign network protocol
