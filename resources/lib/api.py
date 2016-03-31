@@ -37,7 +37,7 @@ class API():
 
         try:
             userdata = self.item['UserData']
-        
+
         except KeyError: # No userdata found.
             pass
 
@@ -57,7 +57,7 @@ class API():
             lastPlayedDate = userdata.get('LastPlayedDate')
             if lastPlayedDate:
                 lastPlayedDate = lastPlayedDate.split('.')[0].replace('T', " ")
-            
+
             if userdata['Played']:
                 # Playcount is tied to the watch status
                 played = True
@@ -91,10 +91,10 @@ class API():
 
         try:
             people = self.item['People']
-        
+
         except KeyError:
             pass
-        
+
         else:
             for person in people:
 
@@ -116,17 +116,16 @@ class API():
         }
 
     def getMediaStreams(self):
-        item = self.item
         videotracks = []
         audiotracks = []
         subtitlelanguages = []
 
         try:
-            media_streams = item['MediaSources'][0]['MediaStreams']
+            media_streams = self.item['MediaSources'][0]['MediaStreams']
 
         except KeyError:
-            if not item.get("MediaStreams"): return None
-            media_streams = item['MediaStreams']
+            if not self.item.get("MediaStreams"): return None
+            media_streams = self.item['MediaStreams']
 
         for media_stream in media_streams:
             # Sort through Video, Audio, Subtitle
@@ -141,12 +140,12 @@ class API():
                     'codec': codec,
                     'height': media_stream.get('Height'),
                     'width': media_stream.get('Width'),
-                    'video3DFormat': item.get('Video3DFormat'),
+                    'video3DFormat': self.item.get('Video3DFormat'),
                     'aspect': 1.85
                 }
 
                 try:
-                    container = item['MediaSources'][0]['Container'].lower()
+                    container = self.item['MediaSources'][0]['Container'].lower()
                 except:
                     container = ""
 
@@ -161,16 +160,16 @@ class API():
                         track['codec'] = "avc1"
 
                 # Aspect ratio
-                if item.get('AspectRatio'):
+                if self.item.get('AspectRatio'):
                     # Metadata AR
-                    aspect = item['AspectRatio']
+                    aspect = self.item['AspectRatio']
                 else: # File AR
                     aspect = media_stream.get('AspectRatio', "0")
 
                 try:
                     aspectwidth, aspectheight = aspect.split(':')
                     track['aspect'] = round(float(aspectwidth) / float(aspectheight), 6)
-                
+
                 except (ValueError, ZeroDivisionError):
                     width = track.get('width')
                     height = track.get('height')
@@ -179,16 +178,16 @@ class API():
                         track['aspect'] = round(float(width / height), 6)
                     else:
                         track['aspect'] = 1.85
-                
-                if item.get("RunTimeTicks"):
-                    track['duration'] = item.get("RunTimeTicks") / 10000000.0
-                
+
+                if self.item.get("RunTimeTicks"):
+                    track['duration'] = self.item.get("RunTimeTicks") / 10000000.0
+
                 videotracks.append(track)
 
             elif stream_type == "Audio":
                 # Codec, Channels, language
                 track = {
-                    
+
                     'codec': codec,
                     'channels': media_stream.get('Channels'),
                     'language': media_stream.get('Language')
@@ -205,18 +204,17 @@ class API():
 
         return {
 
-            'video': videotracks, 
+            'video': videotracks,
             'audio': audiotracks,
             'subtitle': subtitlelanguages
         }
 
     def getRuntime(self):
-        item = self.item
         try:
-            runtime = item['RunTimeTicks'] / 10000000.0
-        
+            runtime = self.item['RunTimeTicks'] / 10000000.0
+
         except KeyError:
-            runtime = item.get('CumulativeRunTimeTicks', 0) / 10000000.0
+            runtime = self.item.get('CumulativeRunTimeTicks', 0) / 10000000.0
 
         return runtime
 
@@ -234,20 +232,19 @@ class API():
 
     def getStudios(self):
         # Process Studios
-        item = self.item
         studios = []
 
         try:
-            studio = item['SeriesStudio']
+            studio = self.item['SeriesStudio']
             studios.append(self.verifyStudio(studio))
-        
+
         except KeyError:
-            studioList = item['Studios']
+            studioList = self.item['Studios']
             for studio in studioList:
 
                 name = studio['Name']
                 studios.append(self.verifyStudio(name))
-        
+
         return studios
 
     def verifyStudio(self, studioName):
@@ -265,12 +262,11 @@ class API():
 
     def getChecksum(self):
         # Use the etags checksum and userdata
-        item = self.item
-        userdata = item['UserData']
+        userdata = self.item['UserData']
 
         checksum = "%s%s%s%s%s%s%s" % (
-            
-            item['Etag'], 
+
+            self.item['Etag'],
             userdata['Played'],
             userdata['IsFavorite'],
             userdata.get('Likes',''),
@@ -282,9 +278,8 @@ class API():
         return checksum
 
     def getGenres(self):
-        item = self.item
         all_genres = ""
-        genres = item.get('Genres', item.get('SeriesGenres'))
+        genres = self.item.get('Genres', self.item.get('SeriesGenres'))
 
         if genres:
             all_genres = " / ".join(genres)
@@ -344,7 +339,7 @@ class API():
     def getMpaa(self):
         # Convert more complex cases
         mpaa = self.item.get('OfficialRating', "")
-        
+
         if mpaa in ("NR", "UR"):
             # Kodi seems to not like NR, but will accept Not Rated
             mpaa = "Not Rated"
@@ -362,9 +357,8 @@ class API():
 
     def getFilePath(self):
 
-        item = self.item
         try:
-            filepath = item['Path']
+            filepath = self.item['Path']
 
         except KeyError:
             filepath = ""
@@ -375,17 +369,16 @@ class API():
                 filepath = filepath.replace("\\\\", "smb://")
                 filepath = filepath.replace("\\", "/")
 
-            if item.get('VideoType'):
-                videotype = item['VideoType']
+            if self.item.get('VideoType'):
+                videotype = self.item['VideoType']
                 # Specific format modification
                 if 'Dvd'in videotype:
                     filepath = "%s/VIDEO_TS/VIDEO_TS.IFO" % filepath
                 elif 'BluRay' in videotype:
                     filepath = "%s/BDMV/index.bdmv" % filepath
-            
+
             if "\\" in filepath:
                 # Local path scenario, with special videotype
                 filepath = filepath.replace("/", "\\")
 
         return filepath
-        
