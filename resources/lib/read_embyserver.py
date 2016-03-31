@@ -125,7 +125,6 @@ class Read_EmbyServer():
         return [viewName, viewId, mediatype]
     
     def getFilteredSection(self, parentid, itemtype=None, sortby="SortName", recursive=True, limit=None, sortorder="Ascending", filter=""):
-        url = "{server}/emby/Users/{UserId}/Items?format=json"
         params = {
 
             'ParentId': parentid,
@@ -144,10 +143,9 @@ class Read_EmbyServer():
             "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
             "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers")
         }
-        return self.doUtils(url, parameters=params)
+        return self.doUtils("{server}/emby/Users/{UserId}/Items?format=json", parameters=params)
     
     def getTvChannels(self):
-        url = "{server}/emby/LiveTv/Channels/?userid={UserId}&format=json"
         params = {
 
             'EnableImages': True,
@@ -157,10 +155,9 @@ class Read_EmbyServer():
             "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
             "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers")
         }
-        return self.doUtils(url, parameters=params)
+        return self.doUtils("{server}/emby/LiveTv/Channels/?userid={UserId}&format=json", parameters=params)
     
     def getTvRecordings(self, groupid):
-        url = "{server}/emby/LiveTv/Recordings/?userid={UserId}&format=json"
         if groupid == "root": groupid = ""
         params = {
 
@@ -172,11 +169,9 @@ class Read_EmbyServer():
             "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
             "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers")
         }
-        return self.doUtils(url, parameters=params)
+        return self.doUtils("{server}/emby/LiveTv/Recordings/?userid={UserId}&format=json", parameters=params)
     
     def getSection(self, parentid, itemtype=None, sortby="SortName", basic=False, dialog=None):
-
-        log = self.logMsg
 
         items = {
             
@@ -202,7 +197,7 @@ class Read_EmbyServer():
             items['TotalRecordCount'] = total
 
         except TypeError: # Failed to retrieve
-            log("%s:%s Failed to retrieve the server response." % (url, params), 2)
+            self.logMsg("%s:%s Failed to retrieve the server response." % (url, params), 2)
 
         else:
             index = 0
@@ -244,27 +239,27 @@ class Read_EmbyServer():
                     # Something happened to the connection
                     if not throttled:
                         throttled = True
-                        log("Throttle activated.", 1)
+                        self.logMsg("Throttle activated.", 1)
                     
                     if jump == highestjump:
                         # We already tried with the highestjump, but it failed. Reset value.
-                        log("Reset highest value.", 1)
+                        self.logMsg("Reset highest value.", 1)
                         highestjump = 0
 
                     # Lower the number by half
                     if highestjump:
                         throttled = False
                         jump = highestjump
-                        log("Throttle deactivated.", 1)
+                        self.logMsg("Throttle deactivated.", 1)
                     else:
                         jump = int(jump/4)
-                        log("Set jump limit to recover: %s" % jump, 2)
+                        self.logMsg("Set jump limit to recover: %s" % jump, 2)
                     
                     retry = 0
                     while utils.window('emby_online') != "true":
                         # Wait server to come back online
                         if retry == 5:
-                            log("Unable to reconnect to server. Abort process.", 1)
+                            self.logMsg("Unable to reconnect to server. Abort process.", 1)
                             return items
                         
                         retry += 1
@@ -292,7 +287,7 @@ class Read_EmbyServer():
                             increment = 10
 
                         jump += increment
-                        log("Increase jump limit to: %s" % jump, 1)
+                        self.logMsg("Increase jump limit to: %s" % jump, 1)
         return items
 
     def getViews(self, mediatype="", root=False, sortedlist=False):
