@@ -487,7 +487,7 @@ def GetSubFolders(nodeindex):
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
               
 ##### BROWSE EMBY NODES DIRECTLY #####    
-def BrowseContent(viewname, type="", folderid=""):
+def BrowseContent(viewname, browse_type="", folderid=""):
     
     emby = embyserver.Read_EmbyServer()
     art = artwork.Artwork()
@@ -503,29 +503,29 @@ def BrowseContent(viewname, type="", folderid=""):
     xbmcplugin.setPluginCategory(int(sys.argv[1]), viewname)
     #get views for root level
     if not folderid:
-        views = emby.getViews(type)
+        views = emby.getViews(browse_type)
         for view in views:
             if view.get("name") == viewname.decode('utf-8'):
                 folderid = view.get("id")
     
     if viewname is not None:
-        utils.logMsg("BrowseContent","viewname: %s - type: %s - folderid: %s - filter: %s" %(viewname.decode('utf-8'), type.decode('utf-8'), folderid.decode('utf-8'), filter.decode('utf-8')))
+        utils.logMsg("BrowseContent","viewname: %s - type: %s - folderid: %s - filter: %s" %(viewname.decode('utf-8'), browse_type.decode('utf-8'), folderid.decode('utf-8'), filter.decode('utf-8')))
     #set the correct params for the content type
     #only proceed if we have a folderid
     if folderid:
-        if type.lower() == "homevideos":
+        if browse_type.lower() == "homevideos":
             xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
             itemtype = "Video,Folder,PhotoAlbum"
-        elif type.lower() == "photos":
+        elif browse_type.lower() == "photos":
             xbmcplugin.setContent(int(sys.argv[1]), 'files')
             itemtype = "Photo,PhotoAlbum,Folder"
         else:
             itemtype = ""
         
         #get the actual listing
-        if type == "recordings":
+        if browse_type == "recordings":
             listing = emby.getTvRecordings(folderid)
-        elif type == "tvchannels":
+        elif browse_type == "tvchannels":
             listing = emby.getTvChannels()
         elif filter == "recent":
             listing = emby.getFilteredSection(folderid, itemtype=itemtype.split(",")[0], sortby="DateCreated", recursive=True, limit=25, sortorder="Descending")
@@ -544,7 +544,7 @@ def BrowseContent(viewname, type="", folderid=""):
                 li = createListItemFromEmbyItem(item,art,doUtils)
                 if item.get("IsFolder") == True:
                     #for folders we add an additional browse request, passing the folderId
-                    path = "%s?id=%s&mode=browsecontent&type=%s&folderid=%s" % (sys.argv[0].decode('utf-8'), viewname.decode('utf-8'), type.decode('utf-8'), item.get("Id").decode('utf-8'))
+                    path = "%s?id=%s&mode=browsecontent&type=%s&folderid=%s" % (sys.argv[0].decode('utf-8'), viewname.decode('utf-8'), browse_type.decode('utf-8'), item.get("Id").decode('utf-8'))
                     xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=path, listitem=li, isFolder=True)
                 else:
                     #playable item, set plugin path and mediastreams
