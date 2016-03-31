@@ -208,7 +208,7 @@ class Kodidb_Functions():
         for person in people:
 
             name = person['Name']
-            type = person['Type']
+            person_type = person['Type']
             thumb = person['imageurl']
             
             # Kodi Isengard, Jarvis, Krypton
@@ -236,7 +236,7 @@ class Kodidb_Functions():
 
                 finally:
                     # Link person to content
-                    if "Actor" in type:
+                    if "Actor" in person_type:
                         role = person.get('Role')
                         query = (
                             '''
@@ -249,7 +249,7 @@ class Kodidb_Functions():
                         self.cursor.execute(query, (actorid, kodiid, mediatype, role, castorder))
                         castorder += 1
                     
-                    elif "Director" in type:
+                    elif "Director" in person_type:
                         query = (
                             '''
                             INSERT OR REPLACE INTO director_link(
@@ -260,7 +260,7 @@ class Kodidb_Functions():
                         )
                         self.cursor.execute(query, (actorid, kodiid, mediatype))
                     
-                    elif type in ("Writing", "Writer"):
+                    elif person_type in ("Writing", "Writer"):
                         query = (
                             '''
                             INSERT OR REPLACE INTO writer_link(
@@ -271,7 +271,7 @@ class Kodidb_Functions():
                         )
                         self.cursor.execute(query, (actorid, kodiid, mediatype))
 
-                    elif "Artist" in type:
+                    elif "Artist" in person_type:
                         query = (
                             '''
                             INSERT OR REPLACE INTO actor_link(
@@ -306,7 +306,7 @@ class Kodidb_Functions():
 
                 finally:
                     # Link person to content
-                    if "Actor" in type:
+                    if "Actor" in person_type:
                         role = person.get('Role')
 
                         if "movie" in mediatype:
@@ -341,7 +341,7 @@ class Kodidb_Functions():
                         self.cursor.execute(query, (actorid, kodiid, role, castorder))
                         castorder += 1
 
-                    elif "Director" in type:
+                    elif "Director" in person_type:
                         if "movie" in mediatype:
                             query = (
                                 '''
@@ -383,7 +383,7 @@ class Kodidb_Functions():
 
                         self.cursor.execute(query, (actorid, kodiid))
 
-                    elif type in ("Writing", "Writer"):
+                    elif person_type in ("Writing", "Writer"):
                         if "movie" in mediatype:
                             query = (
                                 '''
@@ -406,7 +406,7 @@ class Kodidb_Functions():
                             
                         self.cursor.execute(query, (actorid, kodiid))
 
-                    elif "Artist" in type:
+                    elif "Artist" in person_type:
                         query = (
                             '''
                             INSERT OR REPLACE INTO artistlinkmusicvideo(
@@ -419,7 +419,7 @@ class Kodidb_Functions():
 
             # Add person image to art table
             if thumb:
-                arttype = type.lower()
+                arttype = person_type.lower()
 
                 if "writing" in arttype:
                     arttype = "writer"
