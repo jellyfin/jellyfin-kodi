@@ -196,41 +196,33 @@ class UserClient(threading.Thread):
     def setUserPref(self):
 
         doUtils = self.doUtils.downloadUrl
-        art = artwork.Artwork()
 
-        url = "{server}/emby/Users/{UserId}?format=json"
-        result = doUtils(url)
+        result = doUtils("{server}/emby/Users/{UserId}?format=json")
         self.userSettings = result
         # Set user image for skin display
         if result.get('PrimaryImageTag'):
-            utils.window('EmbyUserImage', value=art.getUserArtwork(result['Id'], 'Primary'))
+            utils.window('EmbyUserImage', value=artwork.Artwork().getUserArtwork(result['Id'], 'Primary'))
 
         # Set resume point max
-        url = "{server}/emby/System/Configuration?format=json"
-        result = doUtils(url)
+        result = doUtils("{server}/emby/System/Configuration?format=json")
 
         utils.settings('markPlayed', value=str(result['MaxResumePct']))
 
     def getPublicUsers(self):
-
-        server = self.getServer()
-
         # Get public Users
-        url = "%s/emby/Users/Public?format=json" % server
-        result = self.doUtils.downloadUrl(url, authenticate=False)
-        
+        result = self.doUtils.downloadUrl("%s/emby/Users/Public?format=json" % self.getServer(), authenticate=False)
         if result != "":
             return result
         else:
             # Server connection failed
             return False
 
+
     def hasAccess(self):
         # hasAccess is verified in service.py
         window = utils.window
 
-        url = "{server}/emby/Users?format=json"
-        result = self.doUtils.downloadUrl(url)
+        result = self.doUtils.downloadUrl("{server}/emby/Users?format=json")
         
         if result == False:
             # Access is restricted, set in downloadutils.py via exception
