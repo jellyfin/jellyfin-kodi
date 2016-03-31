@@ -495,10 +495,10 @@ def BrowseContent(viewname, browse_type="", folderid=""):
     
     #folderid used as filter ?
     if folderid in ["recent","recentepisodes","inprogress","inprogressepisodes","unwatched","nextepisodes","sets","genres","random","recommended"]:
-        filter = folderid
+        filter_type = folderid
         folderid = ""
     else:
-        filter = ""
+        filter_type = ""
     
     xbmcplugin.setPluginCategory(int(sys.argv[1]), viewname)
     #get views for root level
@@ -509,7 +509,7 @@ def BrowseContent(viewname, browse_type="", folderid=""):
                 folderid = view.get("id")
     
     if viewname is not None:
-        utils.logMsg("BrowseContent","viewname: %s - type: %s - folderid: %s - filter: %s" %(viewname.decode('utf-8'), browse_type.decode('utf-8'), folderid.decode('utf-8'), filter.decode('utf-8')))
+        utils.logMsg("BrowseContent","viewname: %s - type: %s - folderid: %s - filter: %s" %(viewname.decode('utf-8'), browse_type.decode('utf-8'), folderid.decode('utf-8'), filter_type.decode('utf-8')))
     #set the correct params for the content type
     #only proceed if we have a folderid
     if folderid:
@@ -527,14 +527,14 @@ def BrowseContent(viewname, browse_type="", folderid=""):
             listing = emby.getTvRecordings(folderid)
         elif browse_type == "tvchannels":
             listing = emby.getTvChannels()
-        elif filter == "recent":
+        elif filter_type == "recent":
             listing = emby.getFilteredSection(folderid, itemtype=itemtype.split(",")[0], sortby="DateCreated", recursive=True, limit=25, sortorder="Descending")
-        elif filter == "random":
+        elif filter_type == "random":
             listing = emby.getFilteredSection(folderid, itemtype=itemtype.split(",")[0], sortby="Random", recursive=True, limit=150, sortorder="Descending")
-        elif filter == "recommended":
-            listing = emby.getFilteredSection(folderid, itemtype=itemtype.split(",")[0], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter="IsFavorite")
-        elif filter == "sets":
-            listing = emby.getFilteredSection(folderid, itemtype=itemtype.split(",")[1], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter="IsFavorite")
+        elif filter_type == "recommended":
+            listing = emby.getFilteredSection(folderid, itemtype=itemtype.split(",")[0], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter_type="IsFavorite")
+        elif filter_type == "sets":
+            listing = emby.getFilteredSection(folderid, itemtype=itemtype.split(",")[1], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter_type="IsFavorite")
         else:
             listing = emby.getFilteredSection(folderid, itemtype=itemtype, recursive=False)
         
@@ -551,7 +551,7 @@ def BrowseContent(viewname, browse_type="", folderid=""):
                     xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=li.getProperty("path"), listitem=li)
 
 
-    if filter == "recent":
+    if filter_type == "recent":
         xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_DATE)
     else:
         xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_VIDEO_TITLE)
