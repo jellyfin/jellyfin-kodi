@@ -371,7 +371,7 @@ class LibrarySync(threading.Thread):
         url = "{server}/emby/Users/{UserId}/Views?format=json"
         result = self.doUtils(url)
         grouped_views = result['Items']
-        ordered_views = emby.getViews(sortedlist=True)
+        ordered_views = self.emby.getViews(sortedlist=True)
         all_views = []
         sorted_views = []
         for view in ordered_views:
@@ -405,7 +405,7 @@ class LibrarySync(threading.Thread):
             nodes = [] # Prevent duplicate for nodes of the same type
             playlists = [] # Prevent duplicate for playlists of the same type
             # Get media folders from server
-            folders = emby.getViews(mediatype, root=True)
+            folders = self.emby.getViews(mediatype, root=True)
             for folder in folders:
 
                 folderid = folder['id']
@@ -434,7 +434,7 @@ class LibrarySync(threading.Thread):
                             if (grouped_view['Type'] == "UserView" and
                                 grouped_view.get('CollectionType') == mediatype):
                                 # Take the userview, and validate the item belong to the view
-                                if emby.verifyView(grouped_view['Id'], verifyitem):
+                                if self.emby.verifyView(grouped_view['Id'], verifyitem):
                                     # Take the name of the userview
                                     self.logMsg("Found corresponding view: %s %s"
                                         % (grouped_view['Name'], grouped_view['Id']), 1)
@@ -570,7 +570,6 @@ class LibrarySync(threading.Thread):
 
         lang = utils.language
         # Get movies from emby
-        emby = self.emby
         emby_db = embydb.Embydb_Functions(embycursor)
         movies = itemtypes.Movies(embycursor, kodicursor)
 
@@ -594,7 +593,7 @@ class LibrarySync(threading.Thread):
                         message="%s %s..." % (lang(33017), viewName))
 
             # Initial or repair sync
-            all_embymovies = emby.getMovies(viewId, dialog=pdialog)
+            all_embymovies = self.emby.getMovies(viewId, dialog=pdialog)
             total = all_embymovies['TotalRecordCount']
             embymovies = all_embymovies['Items']
 
@@ -621,7 +620,7 @@ class LibrarySync(threading.Thread):
         if pdialog:
             pdialog.update(heading="Emby for Kodi", message=lang(33018))
 
-        boxsets = emby.getBoxset(dialog=pdialog)
+        boxsets = self.emby.getBoxset(dialog=pdialog)
         total = boxsets['TotalRecordCount']
         embyboxsets = boxsets['Items']
 
@@ -648,7 +647,6 @@ class LibrarySync(threading.Thread):
     def musicvideos(self, embycursor, kodicursor, pdialog):
 
         # Get musicvideos from emby
-        emby = self.emby
         emby_db = embydb.Embydb_Functions(embycursor)
         mvideos = itemtypes.MusicVideos(embycursor, kodicursor)
 
@@ -670,7 +668,7 @@ class LibrarySync(threading.Thread):
                         message="%s %s..." % (utils.language(33019), viewName))
 
             # Initial or repair sync
-            all_embymvideos = emby.getMusicVideos(viewId, dialog=pdialog)
+            all_embymvideos = self.emby.getMusicVideos(viewId, dialog=pdialog)
             total = all_embymvideos['TotalRecordCount']
             embymvideos = all_embymvideos['Items']
 
@@ -697,7 +695,6 @@ class LibrarySync(threading.Thread):
     def tvshows(self, embycursor, kodicursor, pdialog):
 
         # Get shows from emby
-        emby = self.emby
         emby_db = embydb.Embydb_Functions(embycursor)
         tvshows = itemtypes.TVShows(embycursor, kodicursor)
 
@@ -719,7 +716,7 @@ class LibrarySync(threading.Thread):
                         heading="Emby for Kodi",
                         message="%s %s..." % (utils.language(33020), viewName))
 
-            all_embytvshows = emby.getShows(viewId, dialog=pdialog)
+            all_embytvshows = self.emby.getShows(viewId, dialog=pdialog)
             total = all_embytvshows['TotalRecordCount']
             embytvshows = all_embytvshows['Items']
 
@@ -741,7 +738,7 @@ class LibrarySync(threading.Thread):
                 tvshows.add_update(embytvshow, viewName, viewId)
 
                 # Process episodes
-                all_episodes = emby.getEpisodesbyShow(itemid)
+                all_episodes = self.emby.getEpisodesbyShow(itemid)
                 for episode in all_episodes['Items']:
 
                     # Process individual show
@@ -759,15 +756,14 @@ class LibrarySync(threading.Thread):
 
     def music(self, embycursor, kodicursor, pdialog):
         # Get music from emby
-        emby = self.emby
         emby_db = embydb.Embydb_Functions(embycursor)
         music = itemtypes.Music(embycursor, kodicursor)
 
         process = {
 
-            'artists': [emby.getArtists, music.add_updateArtist],
-            'albums': [emby.getAlbums, music.add_updateAlbum],
-            'songs': [emby.getSongs, music.add_updateSong]
+            'artists': [self.emby.getArtists, music.add_updateArtist],
+            'albums': [self.emby.getAlbums, music.add_updateAlbum],
+            'songs': [self.emby.getSongs, music.add_updateSong]
         }
         types = ['artists', 'albums', 'songs']
         for itemtype in types:
@@ -828,7 +824,6 @@ class LibrarySync(threading.Thread):
         embycursor = embyconn.cursor()
         kodiconn = utils.kodiSQL('video')
         kodicursor = kodiconn.cursor()
-        emby = self.emby
         emby_db = embydb.Embydb_Functions(embycursor)
         pDialog = None
         update_embydb = False
@@ -865,7 +860,7 @@ class LibrarySync(threading.Thread):
 
                 # Prepare items according to process type
                 if type == "added":
-                    items = emby.sortby_mediatype(listItems)
+                    items = self.emby.sortby_mediatype(listItems)
 
                 elif type in ("userdata", "remove"):
                     items = emby_db.sortby_mediaType(listItems, unsorted=False)
@@ -873,7 +868,7 @@ class LibrarySync(threading.Thread):
                 else:
                     items = emby_db.sortby_mediaType(listItems)
                     if items.get('Unsorted'):
-                        sorted_items = emby.sortby_mediatype(items['Unsorted'])
+                        sorted_items = self.emby.sortby_mediatype(items['Unsorted'])
                         doupdate = items_process.itemsbyId(sorted_items, "added", pDialog)
                         if doupdate:
                             embyupdate, kodiupdate_video = doupdate
@@ -1066,7 +1061,6 @@ class ManualSync(LibrarySync):
 
         lang = utils.language
         # Get movies from emby
-        emby = self.emby
         emby_db = embydb.Embydb_Functions(embycursor)
         movies = itemtypes.Movies(embycursor, kodicursor)
 
@@ -1104,7 +1098,7 @@ class ManualSync(LibrarySync):
                         heading="Emby for Kodi",
                         message="%s %s..." % (lang(33026), viewName))
 
-            all_embymovies = emby.getMovies(viewId, basic=True, dialog=pdialog)
+            all_embymovies = self.emby.getMovies(viewId, basic=True, dialog=pdialog)
             for embymovie in all_embymovies['Items']:
 
                 if self.shouldStop():
@@ -1120,7 +1114,7 @@ class ManualSync(LibrarySync):
                     updatelist.append(itemid)
 
             self.logMsg("Movies to update for %s: %s" % (viewName, updatelist), 1)
-            embymovies = emby.getFullItems(updatelist)
+            embymovies = self.emby.getFullItems(updatelist)
             total = len(updatelist)
             del updatelist[:]
 
@@ -1142,7 +1136,7 @@ class ManualSync(LibrarySync):
 
         ##### PROCESS BOXSETS #####
 
-        boxsets = emby.getBoxset(dialog=pdialog)
+        boxsets = self.emby.getBoxset(dialog=pdialog)
         embyboxsets = []
 
         if pdialog:
@@ -1201,7 +1195,6 @@ class ManualSync(LibrarySync):
     def musicvideos(self, embycursor, kodicursor, pdialog):
 
         # Get musicvideos from emby
-        emby = self.emby
         emby_db = embydb.Embydb_Functions(embycursor)
         mvideos = itemtypes.MusicVideos(embycursor, kodicursor)
 
@@ -1231,7 +1224,7 @@ class ManualSync(LibrarySync):
                         heading="Emby for Kodi",
                         message="%s %s..." % (utils.language(33028), viewName))
 
-            all_embymvideos = emby.getMusicVideos(viewId, basic=True, dialog=pdialog)
+            all_embymvideos = self.emby.getMusicVideos(viewId, basic=True, dialog=pdialog)
             for embymvideo in all_embymvideos['Items']:
 
                 if self.shouldStop():
@@ -1247,7 +1240,7 @@ class ManualSync(LibrarySync):
                     updatelist.append(itemid)
 
             self.logMsg("MusicVideos to update for %s: %s" % (viewName, updatelist), 1)
-            embymvideos = emby.getFullItems(updatelist)
+            embymvideos = self.emby.getFullItems(updatelist)
             total = len(updatelist)
             del updatelist[:]
 
@@ -1282,7 +1275,6 @@ class ManualSync(LibrarySync):
 
         lang = utils.language
         # Get shows from emby
-        emby = self.emby
         emby_db = embydb.Embydb_Functions(embycursor)
         tvshows = itemtypes.TVShows(embycursor, kodicursor)
 
@@ -1320,7 +1312,7 @@ class ManualSync(LibrarySync):
                         heading="Emby for Kodi",
                         message="%s %s..." % (lang(33029), viewName))
 
-            all_embytvshows = emby.getShows(viewId, basic=True, dialog=pdialog)
+            all_embytvshows = self.emby.getShows(viewId, basic=True, dialog=pdialog)
             for embytvshow in all_embytvshows['Items']:
 
                 if self.shouldStop():
@@ -1336,7 +1328,7 @@ class ManualSync(LibrarySync):
                     updatelist.append(itemid)
 
             self.logMsg("TVShows to update for %s: %s" % (viewName, updatelist), 1)
-            embytvshows = emby.getFullItems(updatelist)
+            embytvshows = self.emby.getFullItems(updatelist)
             total = len(updatelist)
             del updatelist[:]
 
@@ -1365,7 +1357,7 @@ class ManualSync(LibrarySync):
                             heading="Emby for Kodi",
                             message="%s %s..." % (lang(33030), viewName))
 
-                all_embyepisodes = emby.getEpisodes(viewId, basic=True, dialog=pdialog)
+                all_embyepisodes = self.emby.getEpisodes(viewId, basic=True, dialog=pdialog)
                 for embyepisode in all_embyepisodes['Items']:
 
                     if self.shouldStop():
@@ -1380,7 +1372,7 @@ class ManualSync(LibrarySync):
                         updatelist.append(itemid)
 
                 self.logMsg("Episodes to update for %s: %s" % (viewName, updatelist), 1)
-                embyepisodes = emby.getFullItems(updatelist)
+                embyepisodes = self.emby.getFullItems(updatelist)
                 total = len(updatelist)
                 del updatelist[:]
 
@@ -1418,7 +1410,6 @@ class ManualSync(LibrarySync):
     def music(self, embycursor, kodicursor, pdialog):
 
         # Get music from emby
-        emby = self.emby
         emby_db = embydb.Embydb_Functions(embycursor)
         music = itemtypes.Music(embycursor, kodicursor)
 
@@ -1445,9 +1436,9 @@ class ManualSync(LibrarySync):
 
         process = {
 
-            'artists': [emby.getArtists, music.add_updateArtist],
-            'albums': [emby.getAlbums, music.add_updateAlbum],
-            'songs': [emby.getSongs, music.add_updateSong]
+            'artists': [self.emby.getArtists, music.add_updateArtist],
+            'albums': [self.emby.getAlbums, music.add_updateAlbum],
+            'songs': [self.emby.getSongs, music.add_updateSong]
         }
         types = ['artists', 'albums', 'songs']
         for type in types:
@@ -1485,7 +1476,7 @@ class ManualSync(LibrarySync):
                         updatelist.append(itemid)
 
             self.logMsg("%s to update: %s" % (type, updatelist), 1)
-            embyitems = emby.getFullItems(updatelist)
+            embyitems = self.emby.getFullItems(updatelist)
             total = len(updatelist)
             del updatelist[:]
 
