@@ -544,11 +544,9 @@ class Kodidb_Functions():
 
     def addStudios(self, kodiid, studios, mediatype):
 
-        kodiversion = self.kodiversion
-
         for studio in studios:
 
-            if kodiversion in (15, 16, 17):
+            if self.kodiversion in (15, 16, 17):
                 # Kodi Isengard, Jarvis, Krypton
                 query = ' '.join((
 
@@ -1052,8 +1050,6 @@ class Kodidb_Functions():
 
     def addAlbum(self, name, musicbrainz):
 
-        kodiversion = self.kodiversion
-
         query = ' '.join((
 
             "SELECT idAlbum",
@@ -1067,7 +1063,7 @@ class Kodidb_Functions():
             # Create the album
             self.cursor.execute("select coalesce(max(idAlbum),0) from album")
             albumid = self.cursor.fetchone()[0] + 1
-            if kodiversion in (15, 16, 17):
+            if self.kodiversion in (15, 16, 17):
                 query = (
                     '''
                     INSERT INTO album(idAlbum, strAlbum, strMusicBrainzAlbumID, strReleaseType)
