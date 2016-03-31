@@ -103,8 +103,6 @@ class LibrarySync(threading.Thread):
 
     def fastSync(self):
 
-        doUtils = self.doUtils
-
         lastSync = utils.settings('LastIncrementalSync')
         if not lastSync:
             lastSync = "2010-01-01T00:00:00Z"
@@ -114,7 +112,7 @@ class LibrarySync(threading.Thread):
 
         # get server RetentionDateTime
         url = "{server}/emby/Emby.Kodi.SyncQueue/GetServerDateTime?format=json"
-        result = doUtils(url)
+        result = self.doUtils(url)
         retention_time = "2010-01-01T00:00:00Z"
         if result and result.get('RetentionDateTime'):
             retention_time = result['RetentionDateTime']
@@ -137,7 +135,7 @@ class LibrarySync(threading.Thread):
 
         url = "{server}/emby/Emby.Kodi.SyncQueue/{UserId}/GetItems?format=json"
         params = {'LastUpdateDT': lastSync}
-        result = doUtils(url, parameters=params)
+        result = self.doUtils(url, parameters=params)
 
         try:
             processlist = {
