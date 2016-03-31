@@ -178,12 +178,10 @@ class DownloadUtils():
 
     def getHeader(self, authenticate=True):
 
-        clientInfo = self.clientInfo
-
-        deviceName = clientInfo.getDeviceName()
+        deviceName = self.clientInfo.getDeviceName()
         deviceName = utils.normalize_string(deviceName.encode('utf-8'))
-        deviceId = clientInfo.getDeviceId()
-        version = clientInfo.getVersion()
+        deviceId = self.clientInfo.getDeviceId()
+        version = self.clientInfo.getVersion()
 
         if not authenticate:
             # If user is not authenticated
@@ -222,7 +220,6 @@ class DownloadUtils():
 
         self.logMsg("=== ENTER downloadUrl ===", 2)
 
-        timeout = self.timeout
         default_link = ""
 
         try:
@@ -237,11 +234,11 @@ class DownloadUtils():
 
                     # Prepare request
                     if type == "GET":
-                        r = s.get(url, json=postBody, params=parameters, timeout=timeout)
+                        r = s.get(url, json=postBody, params=parameters, timeout=self.timeout)
                     elif type == "POST":
-                        r = s.post(url, json=postBody, timeout=timeout)
+                        r = s.post(url, json=postBody, timeout=self.timeout)
                     elif type == "DELETE":
-                        r = s.delete(url, json=postBody, timeout=timeout)
+                        r = s.delete(url, json=postBody, timeout=self.timeout)
 
                 except AttributeError:
                     # request session does not exists
@@ -269,21 +266,21 @@ class DownloadUtils():
                                         json=postBody,
                                         params=parameters,
                                         headers=header,
-                                        timeout=timeout,
+                                        timeout=self.timeout,
                                         verify=verifyssl)
 
                     elif type == "POST":
                         r = requests.post(url,
                                         json=postBody,
                                         headers=header,
-                                        timeout=timeout,
+                                        timeout=self.timeout,
                                         verify=verifyssl)
 
                     elif type == "DELETE":
                         r = requests.delete(url,
                                         json=postBody,
                                         headers=header,
-                                        timeout=timeout,
+                                        timeout=self.timeout,
                                         verify=verifyssl)
 
             # If user is not authenticated
@@ -306,14 +303,14 @@ class DownloadUtils():
                                     json=postBody,
                                     params=parameters,
                                     headers=header,
-                                    timeout=timeout,
+                                    timeout=self.timeout,
                                     verify=verifyssl)
 
                 elif type == "POST":
                     r = requests.post(url,
                                     json=postBody,
                                     headers=header,
-                                    timeout=timeout,
+                                    timeout=self.timeout,
                                     verify=verifyssl)
 
             ##### THE RESPONSE #####
