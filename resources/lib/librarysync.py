@@ -366,7 +366,6 @@ class LibrarySync(threading.Thread):
         emby = self.emby
         emby_db = embydb.Embydb_Functions(embycursor)
         kodi_db = kodidb.Kodidb_Functions(kodicursor)
-        vnodes = self.vnodes
 
         # Get views
         url = "{server}/emby/Users/{UserId}/Views?format=json"
@@ -386,7 +385,7 @@ class LibrarySync(threading.Thread):
         self.logMsg("Sorted views: %s" % sorted_views, 1)
 
         # total nodes for window properties
-        vnodes.clearProperties()
+        self.vnodes.clearProperties()
         totalnodes = len(sorted_views) + 0
 
         current_views = emby_db.getViews()
@@ -469,7 +468,7 @@ class LibrarySync(threading.Thread):
                         playlists.append(foldername)
                     # Create the video node
                     if foldername not in nodes and mediatype not in ("musicvideos", "music"):
-                        vnodes.viewNode(sorted_views.index(foldername), foldername, mediatype,
+                        self.vnodes.viewNode(sorted_views.index(foldername), foldername, mediatype,
                             viewtype, folderid)
                         if viewtype == "mixed": # Change the value
                             sorted_views[sorted_views.index(foldername)] = "%ss" % foldername
@@ -509,7 +508,7 @@ class LibrarySync(threading.Thread):
                                     mediatype, current_viewname, folderid, current_viewtype, True)
                                 # Delete video node
                                 if mediatype != "musicvideos":
-                                    vnodes.viewNode(
+                                    self.vnodes.viewNode(
                                         indexnumber=None,
                                         tagname=current_viewname,
                                         mediatype=mediatype,
@@ -523,7 +522,7 @@ class LibrarySync(threading.Thread):
                                 playlists.append(foldername)
                             # Add new video node
                             if foldername not in nodes and mediatype != "musicvideos":
-                                vnodes.viewNode(sorted_views.index(foldername), foldername,
+                                self.vnodes.viewNode(sorted_views.index(foldername), foldername,
                                     mediatype, viewtype, folderid)
                                 if viewtype == "mixed": # Change the value
                                     sorted_views[sorted_views.index(foldername)] = "%ss" % foldername
@@ -545,7 +544,7 @@ class LibrarySync(threading.Thread):
                                 playlists.append(foldername)
                             # Create the video node if not already exists
                             if foldername not in nodes and mediatype != "musicvideos":
-                                vnodes.viewNode(sorted_views.index(foldername), foldername,
+                                self.vnodes.viewNode(sorted_views.index(foldername), foldername,
                                     mediatype, viewtype, folderid)
                                 if viewtype == "mixed": # Change the value
                                     sorted_views[sorted_views.index(foldername)] = "%ss" % foldername
@@ -553,11 +552,11 @@ class LibrarySync(threading.Thread):
                                 totalnodes += 1
         else:
             # Add video nodes listings
-            vnodes.singleNode(totalnodes, "Favorite movies", "movies", "favourites")
+            self.vnodes.singleNode(totalnodes, "Favorite movies", "movies", "favourites")
             totalnodes += 1
-            vnodes.singleNode(totalnodes, "Favorite tvshows", "tvshows", "favourites")
+            self.vnodes.singleNode(totalnodes, "Favorite tvshows", "tvshows", "favourites")
             totalnodes += 1
-            vnodes.singleNode(totalnodes, "channels", "movies", "channels")
+            self.vnodes.singleNode(totalnodes, "channels", "movies", "channels")
             totalnodes += 1
             # Save total
             utils.window('Emby.nodes.total', str(totalnodes))
