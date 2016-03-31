@@ -323,7 +323,7 @@
     <string id="33020">Gathering tv shows from:</string>
     <string id="33021">Gathering:</string>
     <string id="33022">Detected the database needs to be recreated for this version of Emby for Kodi. Proceed?</string>
-    <string id="33023">Emby for Kod may not work correctly until the database is reset.</string>
+    <string id="33023">Emby for Kodi may not work correctly until the database is reset.</string>
     <string id="33024">Cancelling the database syncing process. The current Kodi version is unsupported.</string>
     <string id="33025">completed in:</string>
     <string id="33026">Comparing movies from:</string>
