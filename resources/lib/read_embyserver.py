@@ -308,11 +308,8 @@ class Read_EmbyServer():
         else:
             for item in items:
 
-                name = item['Name']
-                itemId = item['Id']
-                viewtype = item['Type']
-
-                if viewtype == "Channel":
+                item['Name'] = item['Name']
+                if item['Type'] == "Channel":
                     # Filter view types
                     continue
 
@@ -326,17 +323,17 @@ class Read_EmbyServer():
                     result = self.doUtils(url)
 
                     for folder in result['Items']:
-                        if itemId == folder['Id']:
+                        if item['Id'] == folder['Id']:
                             itemtype = folder.get('CollectionType', "mixed")'''
                 
-                if name not in ('Collections', 'Trailers'):
+                if item['Name'] not in ('Collections', 'Trailers'):
                     
                     if sortedlist:
                         views.append({
 
-                            'name': name,
+                            'name': item['Name'],
                             'type': itemtype,
-                            'id': itemId
+                            'id': item['Id']
                         })
 
                     elif (itemtype == mediatype or 
@@ -344,9 +341,9 @@ class Read_EmbyServer():
                     
                         views.append({
 
-                            'name': name,
+                            'name': item['Name'],
                             'type': itemtype,
-                            'id': itemId
+                            'id': item['Id']
                         })
         
         return views
@@ -354,8 +351,6 @@ class Read_EmbyServer():
     def verifyView(self, parentid, itemid):
 
         belongs = False
-
-        url = "{server}/emby/Users/{UserId}/Items?format=json"
         params = {
 
             'ParentId': parentid,
@@ -365,7 +360,7 @@ class Read_EmbyServer():
             'Recursive': True,
             'Ids': itemid
         }
-        result = self.doUtils(url, parameters=params)
+        result = self.doUtils("{server}/emby/Users/{UserId}/Items?format=json", parameters=params)
         try:
             total = result['TotalRecordCount']
         except TypeError:
@@ -378,40 +373,23 @@ class Read_EmbyServer():
         return belongs
 
     def getMovies(self, parentId, basic=False, dialog=None):
-
-        items = self.getSection(parentId, "Movie", basic=basic, dialog=dialog)
-        
-        return items
+        return self.getSection(parentId, "Movie", basic=basic, dialog=dialog)
 
     def getBoxset(self, dialog=None):
-
-        items = self.getSection(None, "BoxSet", dialog=dialog)
-
-        return items
+        return self.getSection(None, "BoxSet", dialog=dialog)
 
     def getMovies_byBoxset(self, boxsetid):
-
-        items = self.getSection(boxsetid, "Movie")
-
-        return items
+        return self.getSection(boxsetid, "Movie")
 
     def getMusicVideos(self, parentId, basic=False, dialog=None):
-
-        items = self.getSection(parentId, "MusicVideo", basic=basic, dialog=dialog)
-
-        return items
+        return self.getSection(parentId, "MusicVideo", basic=basic, dialog=dialog)
 
     def getHomeVideos(self, parentId):
 
-        items = self.getSection(parentId, "Video")
-
-        return items
+        return self.getSection(parentId, "Video")
 
     def getShows(self, parentId, basic=False, dialog=None):
-
-        items = self.getSection(parentId, "Series", basic=basic, dialog=dialog)
-
-        return items
+        return self.getSection(parentId, "Series", basic=basic, dialog=dialog)
 
     def getSeasons(self, showId):
 
@@ -421,13 +399,12 @@ class Read_EmbyServer():
             'TotalRecordCount': 0
         }
 
-        url = "{server}/emby/Shows/%s/Seasons?UserId={UserId}&format=json" % showId
         params = {
 
             'IsVirtualUnaired': False,
             'Fields': "Etag"
         }
-        result = self.doUtils(url, parameters=params)
+        result = self.doUtils("{server}/emby/Shows/%s/Seasons?UserId={UserId}&format=json" % showId, parameters=params)
         if result:
             items = result
 
@@ -435,21 +412,16 @@ class Read_EmbyServer():
 
     def getEpisodes(self, parentId, basic=False, dialog=None):
 
-        items = self.getSection(parentId, "Episode", basic=basic, dialog=dialog)
-
-        return items
+        return self.getSection(parentId, "Episode", basic=basic, dialog=dialog)
 
     def getEpisodesbyShow(self, showId):
 
-        items = self.getSection(showId, "Episode")
-
-        return items
+        return self.getSection(showId, "Episode")
 
     def getEpisodesbySeason(self, seasonId):
 
-        items = self.getSection(seasonId, "Episode")
+        return self.getSection(seasonId, "Episode")
 
-        return items
 
     def getArtists(self, dialog=None):
 
@@ -506,28 +478,17 @@ class Read_EmbyServer():
         return items
 
     def getAlbums(self, basic=False, dialog=None):
-
-        items = self.getSection(None, "MusicAlbum", sortby="DateCreated", basic=basic, dialog=dialog)
-
-        return items
+        return self.getSection(None, "MusicAlbum", sortby="DateCreated", basic=basic, dialog=dialog)
 
     def getAlbumsbyArtist(self, artistId):
-
-        items = self.getSection(artistId, "MusicAlbum", sortby="DateCreated")
-
-        return items
+        return self.getSection(artistId, "MusicAlbum", sortby="DateCreated")
 
     def getSongs(self, basic=False, dialog=None):
-
-        items = self.getSection(None, "Audio", basic=basic, dialog=dialog)
-
-        return items
+        return self.getSection(None, "Audio", basic=basic, dialog=dialog)
 
     def getSongsbyAlbum(self, albumId):
+        return self.getSection(albumId, "Audio")
 
-        items = self.getSection(albumId, "Audio")
-
-        return items
 
     def getAdditionalParts(self, itemId):
 
@@ -537,8 +498,7 @@ class Read_EmbyServer():
             'TotalRecordCount': 0
         }
 
-        url = "{server}/emby/Videos/%s/AdditionalParts?UserId={UserId}&format=json" % itemId
-        result = self.doUtils(url)
+        result = self.doUtils("{server}/emby/Videos/%s/AdditionalParts?UserId={UserId}&format=json" % itemId)
         if result:
             items = result
 
@@ -562,21 +522,16 @@ class Read_EmbyServer():
         # Updates the user rating to Emby
         
         if favourite:
-            url = "{server}/emby/Users/{UserId}/FavoriteItems/%s?format=json" % itemid
-            self.doUtils(url, type="POST")
+            self.doUtils("{server}/emby/Users/{UserId}/FavoriteItems/%s?format=json" % itemid, type="POST")
         elif favourite == False:
-            url = "{server}/emby/Users/{UserId}/FavoriteItems/%s?format=json" % itemid
-            self.doUtils(url, type="DELETE")
+            self.doUtils("{server}/emby/Users/{UserId}/FavoriteItems/%s?format=json" % itemid, type="DELETE")
 
         if not deletelike and like:
-            url = "{server}/emby/Users/{UserId}/Items/%s/Rating?Likes=true&format=json" % itemid
-            self.doUtils(url, type="POST")
+            self.doUtils("{server}/emby/Users/{UserId}/Items/%s/Rating?Likes=true&format=json" % itemid, type="POST")
         elif not deletelike and like is False:
-            url = "{server}/emby/Users/{UserId}/Items/%s/Rating?Likes=false&format=json" % itemid
-            self.doUtils(url, type="POST")
+            self.doUtils("{server}/emby/Users/{UserId}/Items/%s/Rating?Likes=false&format=json" % itemid, type="POST")
         elif deletelike:
-            url = "{server}/emby/Users/{UserId}/Items/%s/Rating?format=json" % itemid
-            self.doUtils(url, type="DELETE")
+            self.doUtils("{server}/emby/Users/{UserId}/Items/%s/Rating?format=json" % itemid, type="DELETE")
 
         self.logMsg("Update user rating to emby for itemid: %s "
                     "| like: %s | favourite: %s | deletelike: %s"
