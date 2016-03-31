@@ -39,7 +39,6 @@ class Playlist():
 
     def playAll(self, itemids, startat):
 
-        log = self.logMsg
         window = utils.window
 
         embyconn = utils.kodiSQL('emby')
@@ -50,8 +49,8 @@ class Playlist():
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
         playlist.clear()
 
-        log("---*** PLAY ALL ***---", 1)
-        log("Items: %s and start at: %s" % (itemids, startat), 1)
+        self.logMsg("---*** PLAY ALL ***---", 1)
+        self.logMsg("Items: %s and start at: %s" % (itemids, startat), 1)
 
         started = False
         window('emby_customplaylist', value="true")
@@ -67,14 +66,14 @@ class Playlist():
                 mediatype = embydb_item[4]
             except TypeError:
                 # Item is not found in our database, add item manually
-                log("Item was not found in the database, manually adding item.", 1)
+                self.logMsg("Item was not found in the database, manually adding item.", 1)
                 item = self.emby.getItem(itemid)
                 self.addtoPlaylist_xbmc(playlist, item)
             else:
                 # Add to playlist
                 self.addtoPlaylist(dbid, mediatype)
 
-            log("Adding %s to playlist." % itemid, 1)
+            self.logMsg("Adding %s to playlist." % itemid, 1)
 
             if not started:
                 started = True
@@ -85,14 +84,12 @@ class Playlist():
 
     def modifyPlaylist(self, itemids):
 
-        log = self.logMsg
-
         embyconn = utils.kodiSQL('emby')
         embycursor = embyconn.cursor()
         emby_db = embydb.Embydb_Functions(embycursor)
 
-        log("---*** ADD TO PLAYLIST ***---", 1)
-        log("Items: %s" % itemids, 1)
+        self.logMsg("---*** ADD TO PLAYLIST ***---", 1)
+        self.logMsg("Items: %s" % itemids, 1)
 
         player = xbmc.Player()
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
@@ -110,7 +107,7 @@ class Playlist():
                 # Add to playlist
                 self.addtoPlaylist(dbid, mediatype)
 
-            log("Adding %s to playlist." % itemid, 1)
+            self.logMsg("Adding %s to playlist." % itemid, 1)
 
         self.verifyPlaylist()
         embycursor.close()
