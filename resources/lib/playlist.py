@@ -130,8 +130,7 @@ class Playlist():
         else:
             pl['params']['item'] = {'file': url}
 
-        result = xbmc.executeJSONRPC(json.dumps(pl))
-        self.logMsg(result, 2)
+        self.logMsg(xbmc.executeJSONRPC(json.dumps(pl)), 2)
 
     def addtoPlaylist_xbmc(self, playlist, item):
 
@@ -165,8 +164,7 @@ class Playlist():
         else:
             pl['params']['item'] = {'file': url}
 
-        result = xbmc.executeJSONRPC(json.dumps(pl))
-        self.logMsg(result, 2)
+        self.logMsg(xbmc.executeJSONRPC(json.dumps(pl)), 2)
 
     def verifyPlaylist(self):
 
@@ -180,8 +178,7 @@ class Playlist():
                 'playlistid': 1
             }
         }
-        result = xbmc.executeJSONRPC(json.dumps(pl))
-        self.logMsg(result, 2)
+        self.logMsg(xbmc.executeJSONRPC(json.dumps(pl)), 2)
 
     def removefromPlaylist(self, position):
 
@@ -196,5 +193,4 @@ class Playlist():
                 'position': position
             }
         }
-        result = xbmc.executeJSONRPC(json.dumps(pl))
-        self.logMsg(result, 2)
+        self.logMsg(xbmc.executeJSONRPC(json.dumps(pl)), 2)
