@@ -237,18 +237,13 @@ class PlayUtils():
 
     def directStream(self):
 
-        server = self.server
-
-        itemid = self.item['Id']
-        itemtype = self.item['Type']
-
         if 'Path' in self.item and self.item['Path'].endswith('.strm'):
             # Allow strm loading when direct streaming
             playurl = self.directPlay()
-        elif itemtype == "Audio":
-            playurl = "%s/emby/Audio/%s/stream.mp3" % (server, itemid)
+        elif self.item['Type'] == "Audio":
+            playurl = "%s/emby/Audio/%s/stream.mp3" % (self.server, self.item['Id'])
         else:
-            playurl = "%s/emby/Videos/%s/stream?static=true" % (server, itemid)
+            playurl = "%s/emby/Videos/%s/stream?static=true" % (self.server, self.item['Id'])
 
         return playurl
 
@@ -270,10 +265,8 @@ class PlayUtils():
         return True
 
     def isTranscoding(self):
-
-        canTranscode = self.item['MediaSources'][0]['SupportsTranscoding']
         # Make sure the server supports it
-        if not canTranscode:
+        if not self.item['MediaSources'][0]['SupportsTranscoding']:
             return False
 
         return True
@@ -299,7 +292,6 @@ class PlayUtils():
     def getBitrate(self):
 
         # get the addon video quality
-        videoQuality = utils.settings('videoBitrate')
         bitrate = {
 
             '0': 664,
@@ -324,7 +316,7 @@ class PlayUtils():
         }
 
         # max bit rate supported by server (max signed 32bit integer)
-        return bitrate.get(videoQuality, 2147483)
+        return bitrate.get(utils.settings('videoBitrate'), 2147483)
 
     def audioSubsPref(self, url, listitem):
 
@@ -351,9 +343,8 @@ class PlayUtils():
         for stream in mediastreams:
             # Since Emby returns all possible tracks together, have to sort them.
             index = stream['Index']
-            type = stream['Type']
 
-            if 'Audio' in type:
+            if 'Audio' in stream['Type']:
                 codec = stream['Codec']
                 channelLayout = stream.get('ChannelLayout', "")
                
@@ -366,7 +357,7 @@ class PlayUtils():
                 audioStreamsList[track] = index
                 audioStreams.append(track)
 
-            elif 'Subtitle' in type:
+            elif 'Subtitle' in stream['Type']:
                 try:
                     track = "%s - %s" % (index, stream['Language'])
                 except:
