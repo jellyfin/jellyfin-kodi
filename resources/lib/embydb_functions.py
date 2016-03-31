@@ -145,9 +145,7 @@ class Embydb_Functions():
             "WHERE emby_id LIKE ?"
         ))
         self.embycursor.execute(query, (embyid+"%",))
-        items = self.embycursor.fetchall()
-
-        return items
+        return self.embycursor.fetchall()
 
     def getItem_byView(self, mediafolderid):
 
@@ -158,9 +156,7 @@ class Embydb_Functions():
             "WHERE media_folder = ?"
         ))
         self.embycursor.execute(query, (mediafolderid,))
-        items = self.embycursor.fetchall()
-
-        return items
+        return self.embycursor.fetchall()
 
     def getItem_byKodiId(self, kodiid, mediatype):
 
@@ -172,9 +168,7 @@ class Embydb_Functions():
             "AND media_type = ?"
         ))
         self.embycursor.execute(query, (kodiid, mediatype,))
-        item = self.embycursor.fetchone()
-
-        return item
+        return self.embycursor.fetchone()
 
     def getItem_byParentId(self, parentid, mediatype):
 
@@ -186,9 +180,7 @@ class Embydb_Functions():
             "AND media_type = ?"
         ))
         self.embycursor.execute(query, (parentid, mediatype,))
-        items = self.embycursor.fetchall()
-
-        return items
+        return self.embycursor.fetchall()
 
     def getItemId_byParentId(self, parentid, mediatype):
 
@@ -200,9 +192,7 @@ class Embydb_Functions():
             "AND media_type = ?"
         ))
         self.embycursor.execute(query, (parentid, mediatype,))
-        items = self.embycursor.fetchall()
-
-        return items
+        return self.embycursor.fetchall()
 
     def getChecksum(self, mediatype):
 
@@ -213,9 +203,7 @@ class Embydb_Functions():
             "WHERE emby_type = ?"
         ))
         self.embycursor.execute(query, (mediatype,))
-        items = self.embycursor.fetchall()
-
-        return items
+        return self.embycursor.fetchall()
 
     def getMediaType_byId(self, embyid):
 
