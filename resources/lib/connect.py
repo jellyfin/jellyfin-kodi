@@ -21,7 +21,7 @@ requests.packages.urllib3.disable_warnings(InsecurePlatformWarning)
 
 
 class ConnectUtils():
-    
+
     # Borg - multiple instances, shared state
     _shared_state = {}
     clientInfo = clientinfo.ClientInfo()
@@ -60,8 +60,6 @@ class ConnectUtils():
 
     def startSession(self):
 
-        log = self.logMsg
-
         self.deviceId = self.clientInfo.getDeviceId()
 
         # User is identified from this point
@@ -75,8 +73,8 @@ class ConnectUtils():
             if self.sslclient is not None:
                 verify = self.sslclient
         except:
-            log("Could not load SSL settings.", 1)
-        
+            self.logMsg("Could not load SSL settings.", 1)
+
         # Start session
         self.c = requests.Session()
         self.c.headers = header
@@ -85,7 +83,7 @@ class ConnectUtils():
         self.c.mount("http://", requests.adapters.HTTPAdapter(max_retries=1))
         self.c.mount("https://", requests.adapters.HTTPAdapter(max_retries=1))
 
-        log("Requests session started on: %s" % self.server, 1)
+        self.logMsg("Requests session started on: %s" % self.server, 1)
 
     def stopSession(self):
         try:
@@ -95,8 +93,7 @@ class ConnectUtils():
 
     def getHeader(self, authenticate=True):
 
-        clientInfo = self.clientInfo
-        version = clientInfo.getVersion()
+        version = self.clientInfo.getVersion()
 
         if not authenticate:
             # If user is not authenticated
@@ -105,9 +102,9 @@ class ConnectUtils():
                 'X-Application': "Kodi/%s" % version,
                 'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Accept': "application/json"
-            }      
+            }
             self.logMsg("Header: %s" % header, 1)
-        
+
         else:
             token = self.token
             # Attached to the requests session
@@ -117,18 +114,17 @@ class ConnectUtils():
                 'Accept': "application/json",
                 'X-Application': "Kodi/%s" % version,
                 'X-Connect-UserToken': token
-            }        
+            }
             self.logMsg("Header: %s" % header, 1)
-        
+
         return header
 
     def doUrl(self, url, data=None, postBody=None, rtype="GET",
                 parameters=None, authenticate=True, timeout=None):
 
-        log = self.logMsg
         window = utils.window
 
-        log("=== ENTER connectUrl ===", 2)
+        self.logMsg("=== ENTER connectUrl ===", 2)
         default_link = ""
         if timeout is None:
             timeout = self.timeout
@@ -137,7 +133,7 @@ class ConnectUtils():
         try:
             # If connect user is authenticated
             if authenticate:
-                try: 
+                try:
                     c = self.c
                     # Replace for the real values
                     url = url.replace("{server}", self.server)
@@ -167,7 +163,7 @@ class ConnectUtils():
                             verifyssl = self.sslclient
                     except AttributeError:
                         pass
-                    
+
                     # Prepare request
                     if rtype == "GET":
                         r = requests.get(url,
@@ -195,7 +191,7 @@ class ConnectUtils():
                         verifyssl = self.sslclient
                 except AttributeError:
                     pass
-                
+
                 # Prepare request
                 if rtype == "GET":
                     r = requests.get(url,
@@ -213,28 +209,28 @@ class ConnectUtils():
                                     verify=verifyssl)
 
             ##### THE RESPONSE #####
-            log(r.url, 1)
-            log(r, 1)
+            self.logMsg(r.url, 1)
+            self.logMsg(r, 1)
 
             if r.status_code == 204:
                 # No body in the response
-                log("====== 204 Success ======", 1)
+                self.logMsg("====== 204 Success ======", 1)
 
             elif r.status_code == requests.codes.ok:
-               
-                try: 
+
+                try:
                     # UNICODE - JSON object
                     r = r.json()
-                    log("====== 200 Success ======", 1)
-                    log("Response: %s" % r, 1)
+                    self.logMsg("====== 200 Success ======", 1)
+                    self.logMsg("Response: %s" % r, 1)
                     return r
 
                 except:
                     if r.headers.get('content-type') != "text/html":
-                        log("Unable to convert the response for: %s" % url, 1)
+                        self.logMsg("Unable to convert the response for: %s" % url, 1)
             else:
                 r.raise_for_status()
-        
+
         ##### EXCEPTIONS #####
 
         except requests.exceptions.ConnectionError as e:
@@ -242,8 +238,8 @@ class ConnectUtils():
             pass
 
         except requests.exceptions.ConnectTimeout as e:
-            log("Server timeout at: %s" % url, 0)
-            log(e, 1)
+            self.logMsg("Server timeout at: %s" % url, 0)
+            self.logMsg(e, 1)
 
         except requests.exceptions.HTTPError as e:
 
@@ -259,11 +255,11 @@ class ConnectUtils():
                 pass
 
         except requests.exceptions.SSLError as e:
-            log("Invalid SSL certificate for: %s" % url, 0)
-            log(e, 1)
+            self.logMsg("Invalid SSL certificate for: %s" % url, 0)
+            self.logMsg(e, 1)
 
         except requests.exceptions.RequestException as e:
-            log("Unknown error connecting to: %s" % url, 0)
-            log(e, 1)
+            self.logMsg("Unknown error connecting to: %s" % url, 0)
+            self.logMsg(e, 1)
 
         return default_link
