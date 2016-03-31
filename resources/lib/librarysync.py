@@ -219,7 +219,6 @@ class LibrarySync(threading.Thread):
         window = utils.window
         settings = utils.settings
         # Only run once when first setting up. Can be run manually.
-        emby = self.emby
         music_enabled = utils.settings('enableMusic') == "true"
 
         xbmc.executebuiltin('InhibitIdleShutdown(true)')
