@@ -522,16 +522,16 @@ class Read_EmbyServer():
         # Updates the user rating to Emby
         
         if favourite:
-            self.doUtils("{server}/emby/Users/{UserId}/FavoriteItems/%s?format=json" % itemid, type="POST")
+            self.doUtils("{server}/emby/Users/{UserId}/FavoriteItems/%s?format=json" % itemid, action_type="POST")
         elif favourite == False:
-            self.doUtils("{server}/emby/Users/{UserId}/FavoriteItems/%s?format=json" % itemid, type="DELETE")
+            self.doUtils("{server}/emby/Users/{UserId}/FavoriteItems/%s?format=json" % itemid, action_type="DELETE")
 
         if not deletelike and like:
-            self.doUtils("{server}/emby/Users/{UserId}/Items/%s/Rating?Likes=true&format=json" % itemid, type="POST")
+            self.doUtils("{server}/emby/Users/{UserId}/Items/%s/Rating?Likes=true&format=json" % itemid, action_type="POST")
         elif not deletelike and like is False:
-            self.doUtils("{server}/emby/Users/{UserId}/Items/%s/Rating?Likes=false&format=json" % itemid, type="POST")
+            self.doUtils("{server}/emby/Users/{UserId}/Items/%s/Rating?Likes=false&format=json" % itemid, action_type="POST")
         elif deletelike:
-            self.doUtils("{server}/emby/Users/{UserId}/Items/%s/Rating?format=json" % itemid, type="DELETE")
+            self.doUtils("{server}/emby/Users/{UserId}/Items/%s/Rating?format=json" % itemid, action_type="DELETE")
 
         self.logMsg("Update user rating to emby for itemid: %s "
                     "| like: %s | favourite: %s | deletelike: %s"

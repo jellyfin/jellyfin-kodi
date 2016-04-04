@@ -97,7 +97,7 @@ class DownloadUtils():
         self.logMsg("Capabilities URL: %s" % url, 2)
         self.logMsg("Postdata: %s" % data, 2)
 
-        self.downloadUrl(url, postBody=data, type="POST")
+        self.downloadUrl(url, postBody=data, action_type="POST")
         self.logMsg("Posted capabilities to %s" % self.server, 2)
 
         # Attempt at getting sessionId
@@ -140,7 +140,7 @@ class DownloadUtils():
                                     "{server}/emby/Sessions/%s/Users/%s?format=json"
                                     % (sessionId, userId)
                             )
-                            self.downloadUrl(url, postBody={}, type="POST")
+                            self.downloadUrl(url, postBody={}, action_type="POST")
 
 
     def startSession(self):
