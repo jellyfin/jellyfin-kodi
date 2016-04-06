@@ -424,7 +424,7 @@ class Kodidb_Functions():
                 if "writing" in arttype:
                     arttype = "writer"
 
-                self.artwork.addOrUpdateArt(thumb, actorid, arttype, "thumb", cursor)
+                self.artwork.addOrUpdateArt(thumb, actorid, arttype, "thumb", self.cursor)
 
     def addGenres(self, kodiid, genres, mediatype):
 
