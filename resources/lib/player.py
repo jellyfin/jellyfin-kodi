@@ -443,7 +443,7 @@ class Player(xbmc.Player):
                 itemid = data['item_id']
                 refresh_id = data['refresh_id']
                 currentFile = data['currentfile']
-                type = data['Type']
+                media_type = data['Type']
                 playMethod = data['playmethod']
 
                 # Prevent manually mark as watched in Kodi monitor
@@ -463,9 +463,9 @@ class Player(xbmc.Player):
                     # Send the delete action to the server.
                     offerDelete = False
 
-                    if type == "Episode" and settings('deleteTV') == "true":
+                    if media_type == "Episode" and settings('deleteTV') == "true":
                         offerDelete = True
-                    elif type == "Movie" and settings('deleteMovies') == "true":
+                    elif media_type == "Movie" and settings('deleteMovies') == "true":
                         offerDelete = True
 
                     if settings('offerDelete') != "true":
