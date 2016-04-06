@@ -35,7 +35,7 @@ class Artwork():
 
         self.enableTextureCache = utils.settings('enableTextureCache') == "true"
         self.imageCacheLimitThreads = int(utils.settings("imageCacheLimit"))
-        self.imageCacheLimitThreads = int(self.imageCacheLimitThreads * 5);
+        self.imageCacheLimitThreads = int(self.imageCacheLimitThreads * 5)
         utils.logMsg("Using Image Cache Thread Count: " + str(self.imageCacheLimitThreads), 1)
 
         if not self.xbmc_port and self.enableTextureCache:

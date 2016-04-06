@@ -176,8 +176,8 @@ class InitialSetup():
         sock.setsockopt(socket.SOL_IP, socket.IP_MULTICAST_LOOP, 1)
         sock.setsockopt(socket.IPPROTO_IP, socket.SO_REUSEADDR, 1)
         
-        self.logMsg("MultiGroup      : %s" % str(MULTI_GROUP), 2);
-        self.logMsg("Sending UDP Data: %s" % MESSAGE, 2);
+        self.logMsg("MultiGroup      : %s" % str(MULTI_GROUP), 2)
+        self.logMsg("Sending UDP Data: %s" % MESSAGE, 2)
         sock.sendto(MESSAGE, MULTI_GROUP)
     
         try:
