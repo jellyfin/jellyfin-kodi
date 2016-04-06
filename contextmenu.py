@@ -143,7 +143,7 @@ if __name__ == '__main__':
                     doUtils = downloadutils.DownloadUtils()
                     url = "{server}/emby/Items/%s?format=json" % embyid
                     logMsg("Deleting request: %s" % embyid, 0)
-                    doUtils.downloadUrl(url, type="DELETE")
+                    doUtils.downloadUrl(url, action_type="DELETE")
 
                 '''if utils.settings('skipContextMenu') != "true":
                     if xbmcgui.Dialog().yesno(
@@ -152,8 +152,7 @@ if __name__ == '__main__':
                                                 "also delete the file(s) from disk!")):
                         import downloadutils
                         doUtils = downloadutils.DownloadUtils()
-                        url = "{server}/emby/Items/%s?format=json" % embyid
-                        doUtils.downloadUrl(url, type="DELETE")'''
+                        doUtils.downloadUrl("{server}/emby/Items/%s?format=json" % embyid, action_type="DELETE")'''
             
             xbmc.sleep(500)
             xbmc.executebuiltin("Container.Update")

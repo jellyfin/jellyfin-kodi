@@ -154,10 +154,10 @@ class KodiMonitor(xbmc.Monitor):
                         # notify the server
                         url = "{server}/emby/Users/{UserId}/PlayedItems/%s?format=json" % itemid
                         if playcount != 0:
-                            doUtils.downloadUrl(url, type="POST")
+                            doUtils.downloadUrl(url, action_type="POST")
                             self.logMsg("Mark as watched for itemid: %s" % itemid, 1)
                         else:
-                            doUtils.downloadUrl(url, type="DELETE")
+                            doUtils.downloadUrl(url, action_type="DELETE")
                             self.logMsg("Mark as unwatched for itemid: %s" % itemid, 1)
                 finally:
                     embycursor.close()
@@ -195,7 +195,7 @@ class KodiMonitor(xbmc.Monitor):
 
                     url = "{server}/emby/Items/%s?format=json" % itemid
                     self.logMsg("Deleting request: %s" % itemid)
-                    doUtils.downloadUrl(url, type="DELETE")
+                    doUtils.downloadUrl(url, action_type="DELETE")
                 finally:
                     embycursor.close()'''
 

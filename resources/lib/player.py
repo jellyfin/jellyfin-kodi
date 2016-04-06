@@ -208,7 +208,7 @@ class Player(xbmc.Player):
 
                 # Post playback to server
                 self.logMsg("Sending POST play started: %s." % postdata, 2)
-                self.doUtils(url, postBody=postdata, type="POST")
+                self.doUtils(url, postBody=postdata, action_type="POST")
                 
                 # Ensure we do have a runtime
                 try:
@@ -443,7 +443,7 @@ class Player(xbmc.Player):
                 itemid = data['item_id']
                 refresh_id = data['refresh_id']
                 currentFile = data['currentfile']
-                type = data['Type']
+                media_type = data['Type']
                 playMethod = data['playmethod']
 
                 # Prevent manually mark as watched in Kodi monitor
@@ -463,9 +463,9 @@ class Player(xbmc.Player):
                     # Send the delete action to the server.
                     offerDelete = False
 
-                    if type == "Episode" and settings('deleteTV') == "true":
+                    if media_type == "Episode" and settings('deleteTV') == "true":
                         offerDelete = True
-                    elif type == "Movie" and settings('deleteMovies') == "true":
+                    elif media_type == "Movie" and settings('deleteMovies') == "true":
                         offerDelete = True
 
                     if settings('offerDelete') != "true":
@@ -480,7 +480,7 @@ class Player(xbmc.Player):
 
                         url = "{server}/emby/Items/%s?format=json" % itemid
                         self.logMsg("Deleting request: %s" % itemid, 1)
-                        self.doUtils(url, type="DELETE")
+                        self.doUtils(url, action_type="DELETE")
 
                 self.stopPlayback(data)
 
@@ -489,7 +489,7 @@ class Player(xbmc.Player):
                     self.logMsg("Transcoding for %s terminated." % itemid, 1)
                     deviceId = self.clientInfo.getDeviceId()
                     url = "{server}/emby/Videos/ActiveEncodings?DeviceId=%s" % deviceId
-                    self.doUtils(url, type="DELETE")
+                    self.doUtils(url, action_type="DELETE")
     
         self.played_info.clear()
     
@@ -508,4 +508,4 @@ class Player(xbmc.Player):
             'MediaSourceId': itemId,
             'PositionTicks': positionTicks
         }
-        self.doUtils(url, postBody=postdata, type="POST")
+        self.doUtils(url, postBody=postdata, action_type="POST")

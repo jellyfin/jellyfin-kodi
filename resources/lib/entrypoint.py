@@ -166,7 +166,7 @@ def deleteItem():
     doUtils = downloadutils.DownloadUtils()
     url = "{server}/emby/Items/%s?format=json" % embyid
     utils.logMsg("EMBY delete", "Deleting request: %s" % embyid, 0)
-    doUtils.downloadUrl(url, type="DELETE")
+    doUtils.downloadUrl(url, action_type="DELETE")
 
 ##### ADD ADDITIONAL USERS #####
 def addUser():
@@ -221,7 +221,7 @@ def addUser():
                     selected = additionalUsername[resp]
                     selected_userId = additionalUserlist[selected]
                     url = "{server}/emby/Sessions/%s/Users/%s" % (sessionId, selected_userId)
-                    doUtils.downloadUrl(url, postBody={}, type="DELETE")
+                    doUtils.downloadUrl(url, postBody={}, action_type="DELETE")
                     dialog.notification(
                             heading="Success!",
                             message="%s removed from viewing session" % selected,
@@ -254,7 +254,7 @@ def addUser():
             selected = users[resp]
             selected_userId = userlist[selected]
             url = "{server}/emby/Sessions/%s/Users/%s" % (sessionId, selected_userId)
-            doUtils.downloadUrl(url, postBody={}, type="POST")
+            doUtils.downloadUrl(url, postBody={}, action_type="POST")
             dialog.notification(
                     heading="Success!",
                     message="%s added to viewing session" % selected,
