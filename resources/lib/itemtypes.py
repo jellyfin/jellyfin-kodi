@@ -1734,7 +1734,7 @@ class Music(Items):
                 count += 1
             self.add_updateSong(song)
             if not pdialog and self.contentmsg:
-                self.contentPop(title, self.newmusic_time)
+                self.contentPop(song['Name'], self.newmusic_time)
 
     def add_updateArtist(self, item, artisttype="MusicArtist"):
         # Process a single artist
