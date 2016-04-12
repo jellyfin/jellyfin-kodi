@@ -55,7 +55,6 @@ class VideoNodes(object):
     def viewNode(self, indexnumber, tagname, mediatype, viewtype, viewid, delete=False):
 
         window = utils.window
-        kodiversion = self.kodiversion
 
         if viewtype == "mixed":
             dirname = "%s - %s" % (viewid, mediatype)
@@ -203,10 +202,10 @@ class VideoNodes(object):
             elif nodetype == "nextepisodes":
                 # Custom query
                 path = "plugin://plugin.video.emby/?id=%s&mode=nextup&limit=25" % tagname
-            elif kodiversion == 14 and nodetype == "recentepisodes":
+            elif self.kodiversion == 14 and nodetype == "recentepisodes":
                 # Custom query
                 path = "plugin://plugin.video.emby/?id=%s&mode=recentepisodes&limit=25" % tagname
-            elif kodiversion == 14 and nodetype == "inprogressepisodes":
+            elif self.kodiversion == 14 and nodetype == "inprogressepisodes":
                 # Custom query
                 path = "plugin://plugin.video.emby/?id=%s&mode=inprogressepisodes&limit=25"% tagname
             else:
@@ -247,7 +246,7 @@ class VideoNodes(object):
 
             # Create the root
             if (nodetype == "nextepisodes" or mediatype == "homevideos" or
-                    (kodiversion == 14 and nodetype in ('recentepisodes', 'inprogressepisodes'))):
+                    (self.kodiversion == 14 and nodetype in ('recentepisodes', 'inprogressepisodes'))):
                 # Folder type with plugin path
                 root = self.commonRoot(order=node, label=label, tagname=tagname, roottype=2)
                 etree.SubElement(root, 'path').text = path

@@ -195,6 +195,7 @@ def getSongTags(file):
                 if pic.type == 3 and pic.data:
                     #the file has an embedded cover
                     hasEmbeddedCover = True
+                    break
             if audio.get("rating"):
                 rating = float(audio.get("rating")[0])
                 #flac rating is 0-100 and needs to be converted to 0-5 range

@@ -82,17 +82,17 @@ class KodiMonitor(xbmc.Monitor):
             item = data.get('item')
             try:
                 kodiid = item['id']
-                type = item['type']
+                item_type = item['type']
             except (KeyError, TypeError):
                 self.logMsg("Item is invalid for playstate update.", 1)
             else:
-                if ((utils.settings('useDirectPaths') == "1" and not type == "song") or
-                        (type == "song" and utils.settings('enableMusic') == "true")):
+                if ((utils.settings('useDirectPaths') == "1" and not item_type == "song") or
+                        (item_type == "song" and utils.settings('enableMusic') == "true")):
                     # Set up properties for player
                     embyconn = utils.kodiSQL('emby')
                     embycursor = embyconn.cursor()
                     emby_db = embydb.Embydb_Functions(embycursor)
-                    emby_dbitem = emby_db.getItem_byKodiId(kodiid, type)
+                    emby_dbitem = emby_db.getItem_byKodiId(kodiid, item_type)
                     try:
                         itemid = emby_dbitem[0]
                     except TypeError:
@@ -114,7 +114,7 @@ class KodiMonitor(xbmc.Monitor):
                                 listItem = xbmcgui.ListItem()
                                 playback = pbutils.PlaybackUtils(result)
 
-                                if type == "song" and utils.settings('streamMusic') == "true":
+                                if item_type == "song" and utils.settings('streamMusic') == "true":
                                     utils.window('emby_%s.playmethod' % playurl,
                                         value="DirectStream")
                                 else:
@@ -132,7 +132,7 @@ class KodiMonitor(xbmc.Monitor):
             item = data.get('item')
             try:
                 kodiid = item['id']
-                type = item['type']
+                item_type = item['type']
             except (KeyError, TypeError):
                 self.logMsg("Item is invalid for playstate update.", 1)
             else:
@@ -140,7 +140,7 @@ class KodiMonitor(xbmc.Monitor):
                 embyconn = utils.kodiSQL('emby')
                 embycursor = embyconn.cursor()
                 emby_db = embydb.Embydb_Functions(embycursor)
-                emby_dbitem = emby_db.getItem_byKodiId(kodiid, type)
+                emby_dbitem = emby_db.getItem_byKodiId(kodiid, item_type)
                 try:
                     itemid = emby_dbitem[0]
                 except TypeError:
@@ -154,10 +154,10 @@ class KodiMonitor(xbmc.Monitor):
                         # notify the server
                         url = "{server}/emby/Users/{UserId}/PlayedItems/%s?format=json" % itemid
                         if playcount != 0:
-                            doUtils.downloadUrl(url, type="POST")
+                            doUtils.downloadUrl(url, action_type="POST")
                             self.logMsg("Mark as watched for itemid: %s" % itemid, 1)
                         else:
-                            doUtils.downloadUrl(url, type="DELETE")
+                            doUtils.downloadUrl(url, action_type="DELETE")
                             self.logMsg("Mark as unwatched for itemid: %s" % itemid, 1)
                 finally:
                     embycursor.close()
@@ -195,7 +195,7 @@ class KodiMonitor(xbmc.Monitor):
 
                     url = "{server}/emby/Items/%s?format=json" % itemid
                     self.logMsg("Deleting request: %s" % itemid)
-                    doUtils.downloadUrl(url, type="DELETE")
+                    doUtils.downloadUrl(url, action_type="DELETE")
                 finally:
                     embycursor.close()'''
 
