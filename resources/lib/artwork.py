@@ -78,7 +78,7 @@ class Artwork():
         result = json.loads(result)
         try:
             xbmc_webserver_enabled = result['result']['value']
-        except TypeError:
+        except KeyError, TypeError:
             xbmc_webserver_enabled = False
 
         if not xbmc_webserver_enabled:
