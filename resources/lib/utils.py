@@ -63,9 +63,9 @@ def window(property, value=None, clear=False, windowid=10000):
 def settings(setting, value=None):
     # Get or add addon setting
     if value is not None:
-        xbmcaddon.Addon(id='plugin.video.metaman').setSetting(setting, value)
+        xbmcaddon.Addon(id='plugin.video.emby').setSetting(setting, value)
     else:
-        return xbmcaddon.Addon(id='plugin.video.metaman').getSetting(setting) #returns unicode object
+        return xbmcaddon.Addon(id='plugin.video.emby').getSetting(setting) #returns unicode object
 
 def language(stringid):
     # Central string retrieval
