@@ -42,7 +42,7 @@ class Read_EmbyServer():
         # This will return the full item
         item = {}
 
-        result = self.doUtils("{server}/metaman/Users/{UserId}/Items/%s?format=json" % itemid)
+        result = self.doUtils("{server}/emby/Users/{UserId}/Items/%s?format=json" % itemid)
         if result:
             item = result
 
