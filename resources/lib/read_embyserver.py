@@ -230,7 +230,7 @@ class Read_EmbyServer():
                         "Metascore,AirTime,DateCreated,MediaStreams,People,Overview,"
                         "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
                         "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers,"
-                        "MediaSources"
+                        "MediaSources,VoteCount"
                     )
                 result = self.doUtils(url, parameters=params)
                 try:
@@ -532,6 +532,8 @@ class Read_EmbyServer():
             self.doUtils("{server}/emby/Users/{UserId}/Items/%s/Rating?Likes=false&format=json" % itemid, action_type="POST")
         elif deletelike:
             self.doUtils("{server}/emby/Users/{UserId}/Items/%s/Rating?format=json" % itemid, action_type="DELETE")
+        else:
+            self.logMsg("Error processing user rating.", 1)
 
         self.logMsg("Update user rating to emby for itemid: %s "
                     "| like: %s | favourite: %s | deletelike: %s"
