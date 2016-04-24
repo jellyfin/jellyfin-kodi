@@ -83,7 +83,7 @@ class Read_EmbyServer():
                         "Metascore,AirTime,DateCreated,MediaStreams,People,Overview,"
                         "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
                         "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers,"
-                        "MediaSources"
+                        "MediaSources,VoteCount"
                 )
             }
             result = self.doUtils("{server}/emby/Users/{UserId}/Items?format=json", parameters=params)
