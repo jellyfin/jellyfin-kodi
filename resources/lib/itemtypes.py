@@ -406,12 +406,12 @@ class Movies(Items):
                 "UPDATE movie",
                 "SET c00 = ?, c01 = ?, c02 = ?, c03 = ?, c04 = ?, c05 = ?, c06 = ?,",
                     "c07 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?,",
-                    "c16 = ?, c18 = ?, c19 = ?, c21 = ?",
+                    "c16 = ?, c18 = ?, c19 = ?, c21 = ?, c22 = ?, c23 = ?",
                 "WHERE idMovie = ?"
             ))
             kodicursor.execute(query, (title, plot, shortplot, tagline, votecount, rating, writer,
                 year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailer,
-                country, movieid))
+                country, playurl, pathid, movieid))
 
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
@@ -430,14 +430,14 @@ class Movies(Items):
                 '''
                 INSERT INTO movie(
                     idMovie, idFile, c00, c01, c02, c03, c04, c05, c06, c07, 
-                    c09, c10, c11, c12, c14, c15, c16, c18, c19, c21)
+                    c09, c10, c11, c12, c14, c15, c16, c18, c19, c21, c22, c23)
 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 '''
             )
             kodicursor.execute(query, (movieid, fileid, title, plot, shortplot, tagline, votecount,
                 rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title,
-                studio, trailer, country))
+                studio, trailer, country, playurl, pathid))
 
             # Create the reference in emby table
             emby_db.addReference(itemid, movieid, "Movie", "movie", fileid, pathid, None, checksum, viewid)
@@ -1377,23 +1377,24 @@ class TVShows(Items):
                 
                     "UPDATE episode",
                     "SET c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?,",
-                        "c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, idSeason = ?",
+                        "c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, c18 = ?, c19 = ?,",
+                        "idSeason = ?",
                     "WHERE idEpisode = ?"
                 ))
                 kodicursor.execute(query, (title, plot, rating, writer, premieredate,
                     runtime, director, season, episode, title, airsBeforeSeason,
-                    airsBeforeEpisode, seasonid, episodeid))
+                    airsBeforeEpisode, playurl, pathid, seasonid, episodeid))
             else:
                 query = ' '.join((
                     
                     "UPDATE episode",
                     "SET c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?,",
-                        "c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?",
+                        "c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, c18 = ?, c19 = ?",
                     "WHERE idEpisode = ?"
                 ))
                 kodicursor.execute(query, (title, plot, rating, writer, premieredate,
                     runtime, director, season, episode, title, airsBeforeSeason,
-                    airsBeforeEpisode, episodeid))
+                    airsBeforeEpisode, playurl, pathid, episodeid))
 
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
@@ -1416,27 +1417,27 @@ class TVShows(Items):
                     '''
                     INSERT INTO episode(
                         idEpisode, idFile, c00, c01, c03, c04, c05, c09, c10, c12, c13, c14,
-                        idShow, c15, c16, idSeason)
+                        idShow, c15, c16, c18, c19, idSeason)
 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     '''
                 )
                 kodicursor.execute(query, (episodeid, fileid, title, plot, rating, writer,
                     premieredate, runtime, director, season, episode, title, showid,
-                    airsBeforeSeason, airsBeforeEpisode, seasonid))
+                    airsBeforeSeason, airsBeforeEpisode, playurl, pathid, seasonid))
             else:
                 query = (
                     '''
                     INSERT INTO episode(
                         idEpisode, idFile, c00, c01, c03, c04, c05, c09, c10, c12, c13, c14,
-                        idShow, c15, c16)
+                        idShow, c15, c16, c18, c19)
 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     '''
                 )
                 kodicursor.execute(query, (episodeid, fileid, title, plot, rating, writer,
                     premieredate, runtime, director, season, episode, title, showid,
-                    airsBeforeSeason, airsBeforeEpisode))
+                    airsBeforeSeason, airsBeforeEpisode, playurl, pathid))
 
             # Create the reference in emby table
             emby_db.addReference(itemid, episodeid, "Episode", "episode", fileid, pathid,
