@@ -102,7 +102,7 @@ class Main:
             # Other functions
             if mode == "settings":
                 xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
-            elif mode in ("manualsync", "repair"):
+            elif mode in ("manualsync", "fastsync", "repair"):
                 if utils.window('emby_online') != "true":
                     # Server is not online, do not run the sync
                     xbmcgui.Dialog().ok(heading="Emby for Kodi",
@@ -116,6 +116,8 @@ class Main:
                     lib = librarysync.LibrarySync()
                     if mode == "manualsync":
                         librarysync.ManualSync().sync(dialog=True)
+                    elif mode == "fastsync":
+                        lib.startSync()
                     else:
                         lib.fullSync(repair=True)
                 else:
