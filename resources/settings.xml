@@ -32,6 +32,7 @@
 		<setting id="enableTextureCache" label="30512"  type="bool" default="true" />
         <setting id="imageCacheLimit" type="enum" label="30513" values="Disabled|5|10|15|20|25" default="0" visible="eq(-1,true)" subsetting="true" />
 		<setting id="syncEmptyShows" type="bool" label="30508" default="false" />
+		<setting id="dbSyncScreensaver" label="30536" type="bool" default="false" />
 		<setting id="useDirectPaths" type="enum" label="30511" values="Addon(Default)|Native(Direct paths)" default="0" />
 		<setting id="enableMusic" type="bool" label="30509" default="true" />
 		<setting id="streamMusic" type="bool" label="30510" default="false" visible="eq(-1,true)" subsetting="true" />
