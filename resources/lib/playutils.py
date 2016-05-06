@@ -18,7 +18,6 @@ class PlayUtils():
     def __init__(self, item):
 
         self.item = item
-        self.logMsg(self.item)
         self.clientInfo = clientinfo.ClientInfo()
         self.addonName = self.clientInfo.getAddonName()
 
