@@ -102,7 +102,7 @@ class PlayUtils():
 
         videotrack = self.item['MediaSources'][0]['Name']
         transcodeH265 = settings('transcodeH265')
-        videoprofile = self.item['MediaSources'][1]['Name']
+        videoprofile = self.item['MediaSources'][0]['Profile']
         transcodeHi10P = settings('transcodeHi10P')        
 
         if transcodeHi10P == "true" and "H264" in videotrack and "High 10" in videoprofile:
@@ -212,7 +212,7 @@ class PlayUtils():
 
         videotrack = self.item['MediaSources'][0]['Name']
         transcodeH265 = utils.settings('transcodeH265')
-        videoprofile = self.item['MediaSources'][1]['Name']
+        videoprofile = self.item['MediaSources'][0]['Profile']
         transcodeHi10P = settings('transcodeHi10P')        
 
         if transcodeHi10P == "true" and "H264" in videotrack and "High 10" in videoprofile:
