@@ -102,11 +102,15 @@ class PlayUtils():
 
         videotrack = self.item['MediaSources'][0]['Name']
         transcodeH265 = settings('transcodeH265')
-        videoprofile = self.item['MediaSources'][0]['Profile']
-        transcodeHi10P = settings('transcodeHi10P')        
-
-        if transcodeHi10P == "true" and "H264" in videotrack and "High 10" in videoprofile:
-            return False
+        videoprofiles = self.item['MediaSources'][0]['MediaStreams']
+        streamprofiles = []
+        for vprofile in videoprofiles:
+            if "Profile" in vprofile:
+                streamprofiles.append(vprofile['Profile'])
+        transcodeHi10P = utils.settings('transcodeHi10P')        
+        
+        if transcodeHi10P == "true" and "H264" in videotrack and "High 10" in streamprofiles:
+            return False   
             
         if transcodeH265 in ("1", "2", "3") and ("HEVC" in videotrack or "H265" in videotrack):
             # Avoid H265/HEVC depending on the resolution
@@ -212,11 +216,15 @@ class PlayUtils():
 
         videotrack = self.item['MediaSources'][0]['Name']
         transcodeH265 = utils.settings('transcodeH265')
-        videoprofile = self.item['MediaSources'][0]['Profile']
-        transcodeHi10P = settings('transcodeHi10P')        
-
-        if transcodeHi10P == "true" and "H264" in videotrack and "High 10" in videoprofile:
-            return False        
+        videoprofiles = self.item['MediaSources'][0]['MediaStreams']
+        streamprofiles = []
+        for vprofile in videoprofiles:
+            if "Profile" in vprofile:
+                streamprofiles.append(vprofile['Profile'])
+        transcodeHi10P = utils.settings('transcodeHi10P')        
+        
+        if transcodeHi10P == "true" and "H264" in videotrack and "High 10" in streamprofiles:
+            return False   
 
         if transcodeH265 in ("1", "2", "3") and ("HEVC" in videotrack or "H265" in videotrack):
             # Avoid H265/HEVC depending on the resolution
