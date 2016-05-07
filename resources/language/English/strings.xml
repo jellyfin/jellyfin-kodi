@@ -299,6 +299,7 @@
     <string id="30534">Server messages</string>
     <string id="30535">Generate a new device Id</string>
     <string id="30536">Sync when screensaver is deactivated</string>
+    <string id="30537">Force Transcode Hi10P</string>    
 
     <!-- service add-on -->
     <string id="33000">Welcome</string>
