@@ -18,7 +18,6 @@ class PlayUtils():
     def __init__(self, item):
 
         self.item = item
-
         self.clientInfo = clientinfo.ClientInfo()
         self.addonName = self.clientInfo.getAddonName()
 
@@ -102,6 +101,11 @@ class PlayUtils():
 
         videotrack = self.item['MediaSources'][0]['Name']
         transcodeH265 = settings('transcodeH265')
+        videoprofiles = [x['Profile'] for x in self.item['MediaSources'][0]['MediaStreams'] if 'Profile' in x]
+        transcodeHi10P = utils.settings('transcodeHi10P')        
+
+        if transcodeHi10P == "true" and "H264" in videotrack and "High 10" in videoprofiles:
+            return False   
 
         if transcodeH265 in ("1", "2", "3") and ("HEVC" in videotrack or "H265" in videotrack):
             # Avoid H265/HEVC depending on the resolution
@@ -207,6 +211,11 @@ class PlayUtils():
 
         videotrack = self.item['MediaSources'][0]['Name']
         transcodeH265 = utils.settings('transcodeH265')
+        videoprofiles = [x['Profile'] for x in self.item['MediaSources'][0]['MediaStreams'] if 'Profile' in x]
+        transcodeHi10P = utils.settings('transcodeHi10P')        
+
+        if transcodeHi10P == "true" and "H264" in videotrack and "High 10" in videoprofiles:
+            return False   
 
         if transcodeH265 in ("1", "2", "3") and ("HEVC" in videotrack or "H265" in videotrack):
             # Avoid H265/HEVC depending on the resolution
