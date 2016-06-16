@@ -1004,7 +1004,7 @@ class TVShows(Items):
         artwork = self.artwork
         API = api.API(item)
 
-        if utils.settings('syncEmptyShows') == "false" and not item['RecursiveItemCount']:
+        if utils.settings('syncEmptyShows') == "false" and not item.get('RecursiveItemCount'):
             self.logMsg("Skipping empty show: %s" % item['Name'], 1)
             return
         # If the item already exist in the local Kodi DB we'll perform a full item update
