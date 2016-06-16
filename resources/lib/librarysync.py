@@ -1363,7 +1363,8 @@ class ManualSync(LibrarySync):
 
                     if pdialog:
                         percentage = int((float(count) / float(total))*100)
-                        pdialog.update(percentage, message="%s - %s" % (episode['SeriesName'], episode['Name']))
+                        title = "%s - %s" % (episode.get('SeriesName', "Unknown"), episode['Name'])
+                        pdialog.update(percentage, message=title)
                         count += 1
                     tvshows.add_updateEpisode(episode)
 

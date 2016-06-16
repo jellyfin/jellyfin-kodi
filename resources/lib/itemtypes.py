@@ -192,7 +192,7 @@ class Items(object):
                         title = item['Name']
 
                         if itemtype == "Episode":
-                            title = "%s - %s" % (item['SeriesName'], title)
+                            title = "%s - %s" % (item.get('SeriesName', "Unknown"), title)
 
                         if pdialog:
                             percentage = int((float(count) / float(total))*100)
@@ -1284,7 +1284,6 @@ class TVShows(Items):
             self.logMsg("Skipping: %s. SeriesId is missing." % itemid, 1)
             return False
             
-        seriesName = item['SeriesName']
         season = item.get('ParentIndexNumber')
         episode = item.get('IndexNumber', -1)
        
