@@ -5,7 +5,7 @@
 ##################################################################################################
 
 import clientinfo
-import utils
+from utils import Logging, settings
 
 ##################################################################################################
 
@@ -13,16 +13,15 @@ import utils
 class API():
 
     def __init__(self, item):
+
+        global log
+        log = Logging(self.__class__.__name__).log
+        
         # item is the api response
         self.item = item
 
         self.clientinfo = clientinfo.ClientInfo()
         self.addonName = self.clientinfo.getAddonName()
-
-    def logMsg(self, msg, lvl=1):
-
-        className = self.__class__.__name__
-        utils.logMsg("%s %s" % (self.addonName, className), msg, lvl)
 
 
     def getUserData(self):
@@ -223,7 +222,7 @@ class API():
         resume = 0
         if resume_seconds:
             resume = round(float(resume_seconds), 6)
-            jumpback = int(utils.settings('resumeJumpBack'))
+            jumpback = int(settings('resumeJumpBack'))
             if resume > jumpback:
                 # To avoid negative bookmark
                 resume = resume - jumpback

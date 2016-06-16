@@ -11,6 +11,7 @@ import xbmcvfs
 
 import clientinfo
 import utils
+from utils import Logging, window, language as lang
 
 #################################################################################################
 
@@ -20,15 +21,13 @@ class VideoNodes(object):
 
     def __init__(self):
 
+        global log
+        log = Logging(self.__class__.__name__).log
+
         clientInfo = clientinfo.ClientInfo()
         self.addonName = clientInfo.getAddonName()
 
         self.kodiversion = int(xbmc.getInfoLabel('System.BuildVersion')[:2])
-
-    def logMsg(self, msg, lvl=1):
-
-        className = self.__class__.__name__
-        utils.logMsg("%s %s" % (self.addonName, className), msg, lvl)
 
 
     def commonRoot(self, order, label, tagname, roottype=1):
@@ -53,8 +52,6 @@ class VideoNodes(object):
         return root
 
     def viewNode(self, indexnumber, tagname, mediatype, viewtype, viewid, delete=False):
-
-        window = utils.window
 
         if viewtype == "mixed":
             dirname = "%s - %s" % (viewid, mediatype)
@@ -82,7 +79,7 @@ class VideoNodes(object):
                 for file in files:
                     xbmcvfs.delete(nodepath + file)
 
-                self.logMsg("Sucessfully removed videonode: %s." % tagname, 1)
+                log("Sucessfully removed videonode: %s." % tagname, 1)
                 return
 
         # Create index entry
@@ -184,7 +181,7 @@ class VideoNodes(object):
             # Get label
             stringid = nodes[node]
             if node != "1":
-                label = utils.language(stringid)
+                label = lang(stringid)
                 if not label:
                     label = xbmc.getLocalizedString(stringid)
             else:
@@ -319,8 +316,6 @@ class VideoNodes(object):
 
     def singleNode(self, indexnumber, tagname, mediatype, itemtype):
 
-        window = utils.window
-
         tagname = tagname.encode('utf-8')
         cleantagname = utils.normalize_nodes(tagname)
         nodepath = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
@@ -342,7 +337,7 @@ class VideoNodes(object):
             'Favorite tvshows': 30181,
             'channels': 30173
         }
-        label = utils.language(labels[tagname])
+        label = lang(labels[tagname])
         embynode = "Emby.nodes.%s" % indexnumber
         window('%s.title' % embynode, value=label)
         window('%s.path' % embynode, value=windowpath)
@@ -369,9 +364,7 @@ class VideoNodes(object):
 
     def clearProperties(self):
 
-        window = utils.window
-
-        self.logMsg("Clearing nodes properties.", 1)
+        log("Clearing nodes properties.", 1)
         embyprops = window('Emby.nodes.total')
         propnames = [
         
