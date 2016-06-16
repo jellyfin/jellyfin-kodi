@@ -279,7 +279,7 @@ class Artwork():
             # add a new thread or wait and retry if we hit our limit
             if len(self.imageCacheThreads) < self.imageCacheLimitThreads:
                 newThread = image_cache_thread.image_cache_thread()
-                newThread.setUrl(self.double_urlencode(urlToAdd))
+                newThread.setUrl(self.double_urlencode(url))
                 newThread.setHost(self.xbmc_host, self.xbmc_port)
                 newThread.setAuth(self.xbmc_username, self.xbmc_password)
                 newThread.start()
@@ -519,7 +519,7 @@ class Artwork():
                     % (self.server, item_id, item_type))
         return image
 
-    def getAllArtwork(self, item, parent_artwork=False):
+    def getAllArtwork(self, item, parentInfo=False):
 
         itemid = item['Id']
         artworks = item['ImageTags']
@@ -566,7 +566,7 @@ class Artwork():
                 allartworks[art] = artwork
 
         # Process parent items if the main item is missing artwork
-        if parent_artwork:
+        if parentInfo:
 
             # Process parent backdrops
             if not allartworks['Backdrop']:

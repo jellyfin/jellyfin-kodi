@@ -9,7 +9,7 @@ import xbmc
 import xbmcaddon
 import xbmcvfs
 
-import utils
+from utils import Logging, window, settings
 
 #################################################################################################
 
@@ -19,13 +19,11 @@ class ClientInfo():
 
     def __init__(self):
 
+        global log
+        log = Logging(self.__class__.__name__).log
+
         self.addon = xbmcaddon.Addon()
         self.addonName = self.getAddonName()
-
-    def logMsg(self, msg, lvl=1):
-
-        className = self.__class__.__name__
-        utils.logMsg("%s %s" % (self.addonName, className), msg, lvl)
 
 
     def getAddonName(self):
@@ -42,11 +40,11 @@ class ClientInfo():
 
     def getDeviceName(self):
 
-        if utils.settings('deviceNameOpt') == "false":
+        if settings('deviceNameOpt') == "false":
             # Use Kodi's deviceName
             deviceName = xbmc.getInfoLabel('System.FriendlyName').decode('utf-8')
         else:
-            deviceName = utils.settings('deviceName')
+            deviceName = settings('deviceName')
             deviceName = deviceName.replace("\"", "_")
             deviceName = deviceName.replace("/", "_")
 
@@ -71,16 +69,18 @@ class ClientInfo():
 
     def getDeviceId(self, reset=False):
 
-        clientId = utils.window('emby_deviceId')
+        clientId = window('emby_deviceId')
         if clientId:
             return clientId
 
         addon_path = self.addon.getAddonInfo('path').decode('utf-8')
         if os.path.supports_unicode_filenames:
-            GUID_file = xbmc.translatePath(os.path.join(addon_path, "machine_guid")).decode('utf-8')
+            path = os.path.join(addon_path, "machine_guid")
         else:
-            GUID_file = xbmc.translatePath(os.path.join(addon_path.encode("utf-8"), "machine_guid")).decode('utf-8')
-
+            path = os.path.join(addon_path.encode('utf-8'), "machine_guid")
+        
+        GUID_file = xbmc.translatePath(path).decode('utf-8')
+        
         if reset and xbmcvfs.exists(GUID_file):
             # Reset the file
             xbmcvfs.delete(GUID_file)
@@ -88,14 +88,14 @@ class ClientInfo():
         GUID = xbmcvfs.File(GUID_file)
         clientId = GUID.read()
         if not clientId:
-            self.logMsg("Generating a new deviceid...", 1)
+            log("Generating a new deviceid...", 1)
             clientId = str("%012X" % uuid4())
             GUID = xbmcvfs.File(GUID_file, 'w')
             GUID.write(clientId)
 
         GUID.close()
 
-        self.logMsg("DeviceId loaded: %s" % clientId, 1)
-        utils.window('emby_deviceId', value=clientId)
+        log("DeviceId loaded: %s" % clientId, 1)
+        window('emby_deviceId', value=clientId)
         
         return clientId

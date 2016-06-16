@@ -271,7 +271,7 @@ class PlaybackUtils():
 
     def setArtwork(self, listItem):
         # Set up item and item info
-        allartwork = self.artwork.getAllArtwork(self.item, parent_artwork=True)
+        allartwork = self.artwork.getAllArtwork(self.item, parentInfo=True)
         # Set artwork for listitem
         arttypes = {
 
