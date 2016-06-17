@@ -14,11 +14,11 @@ import api
 import artwork
 import clientinfo
 import downloadutils
-import utils
 import embydb_functions as embydb
 import kodidb_functions as kodidb
 import read_embyserver as embyserver
 import musicutils
+from utils import Logging, window, settings, language as lang
 
 ##################################################################################################
 
@@ -28,6 +28,9 @@ class Items(object):
 
     def __init__(self, embycursor, kodicursor):
 
+        global log
+        log = Logging(self.__class__.__name__).log
+
         self.embycursor = embycursor
         self.kodicursor = kodicursor
 
@@ -35,22 +38,17 @@ class Items(object):
         self.addonName = self.clientInfo.getAddonName()
         self.doUtils = downloadutils.DownloadUtils()
 
-        self.kodiversion = int(xbmc.getInfoLabel("System.BuildVersion")[:2])
-        self.directpath = utils.settings('useDirectPaths') == "1"
-        self.music_enabled = utils.settings('enableMusic') == "true"
-        self.contentmsg = utils.settings('newContent') == "true"
-        self.newvideo_time = int(utils.settings('newvideotime'))*1000
-        self.newmusic_time = int(utils.settings('newmusictime'))*1000
+        self.kodiversion = int(xbmc.getInfoLabel('System.BuildVersion')[:2])
+        self.directpath = settings('useDirectPaths') == "1"
+        self.music_enabled = settings('enableMusic') == "true"
+        self.contentmsg = settings('newContent') == "true"
+        self.newvideo_time = int(settings('newvideotime'))*1000
+        self.newmusic_time = int(settings('newmusictime'))*1000
 
         self.artwork = artwork.Artwork()
         self.emby = embyserver.Read_EmbyServer()
         self.emby_db = embydb.Embydb_Functions(embycursor)
         self.kodi_db = kodidb.Kodidb_Functions(kodicursor)
-
-    def logMsg(self, msg, lvl=1):
-
-        className = self.__class__.__name__
-        utils.logMsg("%s %s" % (self.addonName, className), msg, lvl)
 
 
     def itemsbyId(self, items, process, pdialog=None):
@@ -81,7 +79,7 @@ class Items(object):
         if total == 0:
             return False
 
-        self.logMsg("Processing %s: %s" % (process, items), 1)
+        log("Processing %s: %s" % (process, items), 1)
         if pdialog:
             pdialog.update(heading="Processing %s: %s items" % (process, total))
 
@@ -173,7 +171,7 @@ class Items(object):
                     'remove': items_process.remove
                 }
             else:
-                self.logMsg("Unsupported itemtype: %s." % itemtype, 1)
+                log("Unsupported itemtype: %s." % itemtype, 1)
                 actions = {}
 
             if actions.get(process):
@@ -204,11 +202,28 @@ class Items(object):
 
             if musicconn is not None:
                 # close connection for special types
-                self.logMsg("Updating music database.", 1)
+                log("Updating music database.", 1)
                 musicconn.commit()
                 musiccursor.close()
 
         return (True, update_videolibrary)
+
+    def pathValidation(self, path):
+        # Verify if direct path is accessible or not
+        if window('emby_pathverified') != "true" and not xbmcvfs.exists(path):
+            resp = xbmcgui.Dialog().yesno(
+                        heading="Can't validate path",
+                        line1=(
+                            "Kodi can't locate file: %s. "
+                            "You may need to verify your network credentials in the "
+                            "add-on settings or use the Emby path substitution "
+                            "to format your path correctly (Emby dashboard > library). "
+                            "Stop syncing?" % playurl))
+            if resp:
+                window('emby_shouldStop', value="true")
+                return False
+
+        return True
 
     def contentPop(self, name, time=5000):
         
@@ -272,11 +287,11 @@ class Movies(Items):
             movieid = emby_dbitem[0]
             fileid = emby_dbitem[1]
             pathid = emby_dbitem[2]
-            self.logMsg("movieid: %s fileid: %s pathid: %s" % (movieid, fileid, pathid), 1)
+            log("movieid: %s fileid: %s pathid: %s" % (movieid, fileid, pathid), 1)
         
         except TypeError:
             update_item = False
-            self.logMsg("movieid: %s not found." % itemid, 2)
+            log("movieid: %s not found." % itemid, 2)
             # movieid
             kodicursor.execute("select coalesce(max(idMovie),0) from movie")
             movieid = kodicursor.fetchone()[0] + 1
@@ -290,12 +305,12 @@ class Movies(Items):
             except TypeError:
                 # item is not found, let's recreate it.
                 update_item = False
-                self.logMsg("movieid: %s missing from Kodi, repairing the entry." % movieid, 1)
+                log("movieid: %s missing from Kodi, repairing the entry." % movieid, 1)
 
         if not viewtag or not viewid:
             # Get view tag from emby
             viewtag, viewid, mediatype = self.emby.getView_embyId(itemid)
-            self.logMsg("View tag found: %s" % viewtag, 2)
+            log("View tag found: %s" % viewtag, 2)
 
         # fileId information
         checksum = API.getChecksum()
@@ -338,7 +353,7 @@ class Movies(Items):
             try:
                 trailer = "plugin://plugin.video.emby/trailer/?id=%s&mode=play" % result[0]['Id']
             except IndexError:
-                self.logMsg("Failed to process local trailer.", 1)
+                log("Failed to process local trailer.", 1)
                 trailer = None
         else:
             # Try to get the youtube trailer
@@ -350,7 +365,7 @@ class Movies(Items):
                 try:
                     trailerId = trailer.rsplit('=', 1)[1]
                 except IndexError:
-                    self.logMsg("Failed to process trailer: %s" % trailer, 1)
+                    log("Failed to process trailer: %s" % trailer, 1)
                     trailer = None
                 else:
                     trailer = "plugin://plugin.video.youtube/play/?video_id=%s" % trailerId
@@ -367,22 +382,11 @@ class Movies(Items):
 
         if self.directpath:
             # Direct paths is set the Kodi way
-            if utils.window('emby_pathverified') != "true" and not xbmcvfs.exists(playurl):
-                # Validate the path is correct with user intervention
-                resp = xbmcgui.Dialog().yesno(
-                                        heading="Can't validate path",
-                                        line1=(
-                                            "Kodi can't locate file: %s. Verify the path. "
-                                            "You may to verify your network credentials in the "
-                                            "add-on settings or use the emby path substitution "
-                                            "to format your path correctly. Stop syncing?"
-                                            % playurl))
-                if resp:
-                    utils.window('emby_shouldStop', value="true")
-                    return False
+            if not self.pathValidation(playurl):
+                return False
             
             path = playurl.replace(filename, "")
-            utils.window('emby_pathverified', value="true")
+            window('emby_pathverified', value="true")
         else:
             # Set plugin path and media flags using real filename
             path = "plugin://plugin.video.emby.movies/"
@@ -398,7 +402,7 @@ class Movies(Items):
 
         ##### UPDATE THE MOVIE #####
         if update_item:
-            self.logMsg("UPDATE movie itemid: %s - Title: %s" % (itemid, title), 1)
+            log("UPDATE movie itemid: %s - Title: %s" % (itemid, title), 1)
 
             # Update the movie entry
             query = ' '.join((
@@ -418,7 +422,7 @@ class Movies(Items):
         
         ##### OR ADD THE MOVIE #####
         else:
-            self.logMsg("ADD movie itemid: %s - Title: %s" % (itemid, title), 1)
+            log("ADD movie itemid: %s - Title: %s" % (itemid, title), 1)
             
             # Add path
             pathid = self.kodi_db.addPath(path)
@@ -528,10 +532,10 @@ class Movies(Items):
                 try:
                     movieid = emby_dbitem[0]
                 except TypeError:
-                    self.logMsg("Failed to add: %s to boxset." % movie['Name'], 1)
+                    log("Failed to add: %s to boxset." % movie['Name'], 1)
                     continue
 
-                self.logMsg("New addition to boxset %s: %s" % (title, movie['Name']), 1)
+                log("New addition to boxset %s: %s" % (title, movie['Name']), 1)
                 self.kodi_db.assignBoxset(setid, movieid)
                 # Update emby reference
                 emby_db.updateParentId(itemid, setid)
@@ -542,7 +546,7 @@ class Movies(Items):
         # Process removals from boxset
         for movie in process:
             movieid = current[movie]
-            self.logMsg("Remove from boxset %s: %s" % (title, movieid))
+            log("Remove from boxset %s: %s" % (title, movieid))
             self.kodi_db.removefromBoxset(movieid)
             # Update emby reference
             emby_db.updateParentId(movie, None)
@@ -567,7 +571,7 @@ class Movies(Items):
         try:
             movieid = emby_dbitem[0]
             fileid = emby_dbitem[1]
-            self.logMsg(
+            log(
                 "Update playstate for movie: %s fileid: %s"
                 % (item['Name'], fileid), 1)
         except TypeError:
@@ -585,7 +589,7 @@ class Movies(Items):
         resume = API.adjustResume(userdata['Resume'])
         total = round(float(runtime), 6)
 
-        self.logMsg("%s New resume point: %s" % (itemid, resume))
+        log("%s New resume point: %s" % (itemid, resume))
 
         self.kodi_db.addPlaystate(fileid, resume, total, playcount, dateplayed)
         emby_db.updateReference(itemid, checksum)
@@ -601,7 +605,7 @@ class Movies(Items):
             kodiid = emby_dbitem[0]
             fileid = emby_dbitem[1]
             mediatype = emby_dbitem[4]
-            self.logMsg("Removing %sid: %s fileid: %s" % (mediatype, kodiid, fileid), 1)
+            log("Removing %sid: %s fileid: %s" % (mediatype, kodiid, fileid), 1)
         except TypeError:
             return
 
@@ -627,7 +631,7 @@ class Movies(Items):
 
             kodicursor.execute("DELETE FROM sets WHERE idSet = ?", (kodiid,))
 
-        self.logMsg("Deleted %s %s from kodi database" % (mediatype, itemid), 1)
+        log("Deleted %s %s from kodi database" % (mediatype, itemid), 1)
 
 class MusicVideos(Items):
 
@@ -667,11 +671,11 @@ class MusicVideos(Items):
             mvideoid = emby_dbitem[0]
             fileid = emby_dbitem[1]
             pathid = emby_dbitem[2]
-            self.logMsg("mvideoid: %s fileid: %s pathid: %s" % (mvideoid, fileid, pathid), 1)
+            log("mvideoid: %s fileid: %s pathid: %s" % (mvideoid, fileid, pathid), 1)
         
         except TypeError:
             update_item = False
-            self.logMsg("mvideoid: %s not found." % itemid, 2)
+            log("mvideoid: %s not found." % itemid, 2)
             # mvideoid
             kodicursor.execute("select coalesce(max(idMVideo),0) from musicvideo")
             mvideoid = kodicursor.fetchone()[0] + 1
@@ -685,12 +689,12 @@ class MusicVideos(Items):
             except TypeError:
                 # item is not found, let's recreate it.
                 update_item = False
-                self.logMsg("mvideoid: %s missing from Kodi, repairing the entry." % mvideoid, 1)
+                log("mvideoid: %s missing from Kodi, repairing the entry." % mvideoid, 1)
 
         if not viewtag or not viewid:
             # Get view tag from emby
             viewtag, viewid, mediatype = self.emby.getView_embyId(itemid)
-            self.logMsg("View tag found: %s" % viewtag, 2)
+            log("View tag found: %s" % viewtag, 2)
 
         # fileId information
         checksum = API.getChecksum()
@@ -726,22 +730,11 @@ class MusicVideos(Items):
 
         if self.directpath:
             # Direct paths is set the Kodi way
-            if utils.window('emby_pathverified') != "true" and not xbmcvfs.exists(playurl):
-                # Validate the path is correct with user intervention
-                resp = xbmcgui.Dialog().yesno(
-                                        heading="Can't validate path",
-                                        line1=(
-                                            "Kodi can't locate file: %s. Verify the path. "
-                                            "You may to verify your network credentials in the "
-                                            "add-on settings or use the emby path substitution "
-                                            "to format your path correctly. Stop syncing?"
-                                            % playurl))
-                if resp:
-                    utils.window('emby_shouldStop', value="true")
-                    return False
+            if not self.pathValidation(playurl):
+                return False
             
             path = playurl.replace(filename, "")
-            utils.window('emby_pathverified', value="true")
+            window('emby_pathverified', value="true")
         else:
             # Set plugin path and media flags using real filename
             path = "plugin://plugin.video.emby.musicvideos/"
@@ -757,7 +750,7 @@ class MusicVideos(Items):
 
         ##### UPDATE THE MUSIC VIDEO #####
         if update_item:
-            self.logMsg("UPDATE mvideo itemid: %s - Title: %s" % (itemid, title), 1)
+            log("UPDATE mvideo itemid: %s - Title: %s" % (itemid, title), 1)
             
             # Update path
             query = "UPDATE path SET strPath = ? WHERE idPath = ?"
@@ -783,7 +776,7 @@ class MusicVideos(Items):
         
         ##### OR ADD THE MUSIC VIDEO #####
         else:
-            self.logMsg("ADD mvideo itemid: %s - Title: %s" % (itemid, title), 1)
+            log("ADD mvideo itemid: %s - Title: %s" % (itemid, title), 1)
             
             # Add path
             query = ' '.join((
@@ -883,7 +876,7 @@ class MusicVideos(Items):
         try:
             mvideoid = emby_dbitem[0]
             fileid = emby_dbitem[1]
-            self.logMsg(
+            log(
                 "Update playstate for musicvideo: %s fileid: %s"
                 % (item['Name'], fileid), 1)
         except TypeError:
@@ -915,7 +908,7 @@ class MusicVideos(Items):
             mvideoid = emby_dbitem[0]
             fileid = emby_dbitem[1]
             pathid = emby_dbitem[2]
-            self.logMsg("Removing mvideoid: %s fileid: %s" % (mvideoid, fileid, pathid), 1)
+            log("Removing mvideoid: %s fileid: %s" % (mvideoid, fileid, pathid), 1)
         except TypeError:
             return
 
@@ -941,7 +934,7 @@ class MusicVideos(Items):
             kodicursor.execute("DELETE FROM path WHERE idPath = ?", (pathid,))
         self.embycursor.execute("DELETE FROM emby WHERE emby_id = ?", (itemid,))
 
-        self.logMsg("Deleted musicvideo %s from kodi database" % itemid, 1)
+        log("Deleted musicvideo %s from kodi database" % itemid, 1)
 
 class TVShows(Items):
 
@@ -1004,8 +997,8 @@ class TVShows(Items):
         artwork = self.artwork
         API = api.API(item)
 
-        if utils.settings('syncEmptyShows') == "false" and not item.get('RecursiveItemCount'):
-            self.logMsg("Skipping empty show: %s" % item['Name'], 1)
+        if settings('syncEmptyShows') == "false" and not item.get('RecursiveItemCount'):
+            log("Skipping empty show: %s" % item['Name'], 1)
             return
         # If the item already exist in the local Kodi DB we'll perform a full item update
         # If the item doesn't exist, we'll add it to the database
@@ -1016,11 +1009,11 @@ class TVShows(Items):
         try:
             showid = emby_dbitem[0]
             pathid = emby_dbitem[2]
-            self.logMsg("showid: %s pathid: %s" % (showid, pathid), 1)
+            log("showid: %s pathid: %s" % (showid, pathid), 1)
         
         except TypeError:
             update_item = False
-            self.logMsg("showid: %s not found." % itemid, 2)
+            log("showid: %s not found." % itemid, 2)
             kodicursor.execute("select coalesce(max(idShow),0) from tvshow")
             showid = kodicursor.fetchone()[0] + 1
 
@@ -1033,7 +1026,7 @@ class TVShows(Items):
             except TypeError:
                 # item is not found, let's recreate it.
                 update_item = False
-                self.logMsg("showid: %s missing from Kodi, repairing the entry." % showid, 1)
+                log("showid: %s missing from Kodi, repairing the entry." % showid, 1)
                 # Force re-add episodes after the show is re-created.
                 force_episodes = True
 
@@ -1041,7 +1034,7 @@ class TVShows(Items):
         if viewtag is None or viewid is None:
             # Get view tag from emby
             viewtag, viewid, mediatype = emby.getView_embyId(itemid)
-            self.logMsg("View tag found: %s" % viewtag, 2)
+            log("View tag found: %s" % viewtag, 2)
 
         # fileId information
         checksum = API.getChecksum()
@@ -1078,21 +1071,10 @@ class TVShows(Items):
                 path = "%s/" % playurl
                 toplevelpath = "%s/" % dirname(dirname(path))
 
-            if utils.window('emby_pathverified') != "true" and not xbmcvfs.exists(path):
-                # Validate the path is correct with user intervention
-                resp = xbmcgui.Dialog().yesno(
-                                        heading="Can't validate path",
-                                        line1=(
-                                            "Kodi can't locate file: %s. Verify the path. "
-                                            "You may to verify your network credentials in the "
-                                            "add-on settings or use the emby path substitution "
-                                            "to format your path correctly. Stop syncing?"
-                                            % playurl))
-                if resp:
-                    utils.window('emby_shouldStop', value="true")
-                    return False
+            if not self.pathValidation(playurl):
+                return False
 
-            utils.window('emby_pathverified', value="true")
+            window('emby_pathverified', value="true")
         else:
             # Set plugin path
             toplevelpath = "plugin://plugin.video.emby.tvshows/"
@@ -1101,7 +1083,7 @@ class TVShows(Items):
 
         ##### UPDATE THE TVSHOW #####
         if update_item:
-            self.logMsg("UPDATE tvshow itemid: %s - Title: %s" % (itemid, title), 1)
+            log("UPDATE tvshow itemid: %s - Title: %s" % (itemid, title), 1)
 
             # Update the tvshow entry
             query = ' '.join((
@@ -1119,7 +1101,7 @@ class TVShows(Items):
         
         ##### OR ADD THE TVSHOW #####
         else:
-            self.logMsg("ADD tvshow itemid: %s - Title: %s" % (itemid, title), 1)
+            log("ADD tvshow itemid: %s - Title: %s" % (itemid, title), 1)
             
             # Add top path
             toppathid = self.kodi_db.addPath(toplevelpath)
@@ -1190,7 +1172,7 @@ class TVShows(Items):
 
         if force_episodes:
             # We needed to recreate the show entry. Re-add episodes now.
-            self.logMsg("Repairing episodes for showid: %s %s" % (showid, title), 1)
+            log("Repairing episodes for showid: %s %s" % (showid, title), 1)
             all_episodes = emby.getEpisodesbyShow(itemid)
             self.added_episode(all_episodes['Items'], None)
 
@@ -1239,11 +1221,11 @@ class TVShows(Items):
             episodeid = emby_dbitem[0]
             fileid = emby_dbitem[1]
             pathid = emby_dbitem[2]
-            self.logMsg("episodeid: %s fileid: %s pathid: %s" % (episodeid, fileid, pathid), 1)
+            log("episodeid: %s fileid: %s pathid: %s" % (episodeid, fileid, pathid), 1)
         
         except TypeError:
             update_item = False
-            self.logMsg("episodeid: %s not found." % itemid, 2)
+            log("episodeid: %s not found." % itemid, 2)
             # episodeid
             kodicursor.execute("select coalesce(max(idEpisode),0) from episode")
             episodeid = kodicursor.fetchone()[0] + 1
@@ -1257,7 +1239,7 @@ class TVShows(Items):
             except TypeError:
                 # item is not found, let's recreate it.
                 update_item = False
-                self.logMsg("episodeid: %s missing from Kodi, repairing the entry." % episodeid, 1)
+                log("episodeid: %s missing from Kodi, repairing the entry." % episodeid, 1)
 
         # fileId information
         checksum = API.getChecksum()
@@ -1281,7 +1263,7 @@ class TVShows(Items):
             seriesId = item['SeriesId']
         except KeyError:
             # Missing seriesId, skip
-            self.logMsg("Skipping: %s. SeriesId is missing." % itemid, 1)
+            log("Skipping: %s. SeriesId is missing." % itemid, 1)
             return False
             
         season = item.get('ParentIndexNumber')
@@ -1319,7 +1301,7 @@ class TVShows(Items):
             try:
                 showid = show[0]
             except TypeError:
-                self.logMsg("Skipping: %s. Unable to add series: %s." % (itemid, seriesId))
+                log("Skipping: %s. Unable to add series: %s." % (itemid, seriesId))
                 return False
 
         seasonid = self.kodi_db.addSeason(showid, season)
@@ -1336,22 +1318,11 @@ class TVShows(Items):
 
         if self.directpath:
             # Direct paths is set the Kodi way
-            if utils.window('emby_pathverified') != "true" and not xbmcvfs.exists(playurl):
-                # Validate the path is correct with user intervention
-                resp = xbmcgui.Dialog().yesno(
-                                        heading="Can't validate path",
-                                        line1=(
-                                            "Kodi can't locate file: %s. Verify the path. "
-                                            "You may to verify your network credentials in the "
-                                            "add-on settings or use the emby path substitution "
-                                            "to format your path correctly. Stop syncing?"
-                                            % playurl))
-                if resp:
-                    utils.window('emby_shouldStop', value="true")
-                    return False
+            if not self.pathValidation(playurl):
+                return False
             
             path = playurl.replace(filename, "")
-            utils.window('emby_pathverified', value="true")
+            window('emby_pathverified', value="true")
         else:
             # Set plugin path and media flags using real filename
             path = "plugin://plugin.video.emby.tvshows/%s/" % seriesId
@@ -1367,7 +1338,7 @@ class TVShows(Items):
 
         ##### UPDATE THE EPISODE #####
         if update_item:
-            self.logMsg("UPDATE episode itemid: %s - Title: %s" % (itemid, title), 1)
+            log("UPDATE episode itemid: %s - Title: %s" % (itemid, title), 1)
 
             # Update the movie entry
             if self.kodiversion in (16, 17):
@@ -1401,7 +1372,7 @@ class TVShows(Items):
         
         ##### OR ADD THE EPISODE #####
         else:
-            self.logMsg("ADD episode itemid: %s - Title: %s" % (itemid, title), 1)
+            log("ADD episode itemid: %s - Title: %s" % (itemid, title), 1)
             
             # Add path
             pathid = self.kodi_db.addPath(path)
@@ -1504,7 +1475,7 @@ class TVShows(Items):
             kodiid = emby_dbitem[0]
             fileid = emby_dbitem[1]
             mediatype = emby_dbitem[4]
-            self.logMsg(
+            log(
                 "Update playstate for %s: %s fileid: %s"
                 % (mediatype, item['Name'], fileid), 1)
         except TypeError:
@@ -1523,7 +1494,7 @@ class TVShows(Items):
             resume = API.adjustResume(userdata['Resume'])
             total = round(float(runtime), 6)
 
-            self.logMsg("%s New resume point: %s" % (itemid, resume))
+            log("%s New resume point: %s" % (itemid, resume))
 
             self.kodi_db.addPlaystate(fileid, resume, total, playcount, dateplayed)
             if not self.directpath and not resume:
@@ -1561,7 +1532,7 @@ class TVShows(Items):
             pathid = emby_dbitem[2]
             parentid = emby_dbitem[3]
             mediatype = emby_dbitem[4]
-            self.logMsg("Removing %s kodiid: %s fileid: %s" % (mediatype, kodiid, fileid), 1)
+            log("Removing %s kodiid: %s fileid: %s" % (mediatype, kodiid, fileid), 1)
         except TypeError:
             return
 
@@ -1651,14 +1622,14 @@ class TVShows(Items):
                 self.removeShow(parentid)
                 emby_db.removeItem_byKodiId(parentid, "tvshow")
 
-        self.logMsg("Deleted %s: %s from kodi database" % (mediatype, itemid), 1)
+        log("Deleted %s: %s from kodi database" % (mediatype, itemid), 1)
 
     def removeShow(self, kodiid):
         
         kodicursor = self.kodicursor
         self.artwork.deleteArtwork(kodiid, "tvshow", kodicursor)
         kodicursor.execute("DELETE FROM tvshow WHERE idShow = ?", (kodiid,))
-        self.logMsg("Removed tvshow: %s." % kodiid, 2)
+        log("Removed tvshow: %s." % kodiid, 2)
 
     def removeSeason(self, kodiid):
         
@@ -1666,7 +1637,7 @@ class TVShows(Items):
 
         self.artwork.deleteArtwork(kodiid, "season", kodicursor)
         kodicursor.execute("DELETE FROM seasons WHERE idSeason = ?", (kodiid,))
-        self.logMsg("Removed season: %s." % kodiid, 2)
+        log("Removed season: %s." % kodiid, 2)
 
     def removeEpisode(self, kodiid, fileid):
 
@@ -1675,7 +1646,7 @@ class TVShows(Items):
         self.artwork.deleteArtwork(kodiid, "episode", kodicursor)
         kodicursor.execute("DELETE FROM episode WHERE idEpisode = ?", (kodiid,))
         kodicursor.execute("DELETE FROM files WHERE idFile = ?", (fileid,))
-        self.logMsg("Removed episode: %s." % kodiid, 2)
+        log("Removed episode: %s." % kodiid, 2)
 
 class Music(Items):
 
@@ -1684,12 +1655,12 @@ class Music(Items):
         
         Items.__init__(self, embycursor, musiccursor)
 
-        self.directstream = utils.settings('streamMusic') == "true"
-        self.enableimportsongrating = utils.settings('enableImportSongRating') == "true"
-        self.enableexportsongrating = utils.settings('enableExportSongRating') == "true"
-        self.enableupdatesongrating = utils.settings('enableUpdateSongRating') == "true"
-        self.userid = utils.window('emby_currUser')
-        self.server = utils.window('emby_server%s' % self.userid)
+        self.directstream = settings('streamMusic') == "true"
+        self.enableimportsongrating = settings('enableImportSongRating') == "true"
+        self.enableexportsongrating = settings('enableExportSongRating') == "true"
+        self.enableupdatesongrating = settings('enableUpdateSongRating') == "true"
+        self.userid = window('emby_currUser')
+        self.server = window('emby_server%s' % self.userid)
 
     def added(self, items, pdialog):
         
@@ -1749,7 +1720,7 @@ class Music(Items):
             artistid = emby_dbitem[0]
         except TypeError:
             update_item = False
-            self.logMsg("artistid: %s not found." % itemid, 2)
+            log("artistid: %s not found." % itemid, 2)
 
         ##### The artist details #####
         lastScraped = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -1776,13 +1747,13 @@ class Music(Items):
 
         ##### UPDATE THE ARTIST #####
         if update_item:
-            self.logMsg("UPDATE artist itemid: %s - Name: %s" % (itemid, name), 1)
+            log("UPDATE artist itemid: %s - Name: %s" % (itemid, name), 1)
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
 
         ##### OR ADD THE ARTIST #####
         else:
-            self.logMsg("ADD artist itemid: %s - Name: %s" % (itemid, name), 1)
+            log("ADD artist itemid: %s - Name: %s" % (itemid, name), 1)
             # safety checks: It looks like Emby supports the same artist multiple times.
             # Kodi doesn't allow that. In case that happens we just merge the artist entries.
             artistid = self.kodi_db.addArtist(name, musicBrainzId)
@@ -1830,7 +1801,7 @@ class Music(Items):
             albumid = emby_dbitem[0]
         except TypeError:
             update_item = False
-            self.logMsg("albumid: %s not found." % itemid, 2)
+            log("albumid: %s not found." % itemid, 2)
 
         ##### The album details #####
         lastScraped = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -1861,13 +1832,13 @@ class Music(Items):
 
         ##### UPDATE THE ALBUM #####
         if update_item:
-            self.logMsg("UPDATE album itemid: %s - Name: %s" % (itemid, name), 1)
+            log("UPDATE album itemid: %s - Name: %s" % (itemid, name), 1)
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
 
         ##### OR ADD THE ALBUM #####
         else:
-            self.logMsg("ADD album itemid: %s - Name: %s" % (itemid, name), 1)
+            log("ADD album itemid: %s - Name: %s" % (itemid, name), 1)
             # safety checks: It looks like Emby supports the same artist multiple times.
             # Kodi doesn't allow that. In case that happens we just merge the artist entries.
             albumid = self.kodi_db.addAlbum(name, musicBrainzId)
@@ -2000,7 +1971,7 @@ class Music(Items):
             albumid = emby_dbitem[3]
         except TypeError:
             update_item = False
-            self.logMsg("songid: %s not found." % itemid, 2)
+            log("songid: %s not found." % itemid, 2)
             
         ##### The song details #####
         checksum = API.getChecksum()
@@ -2047,27 +2018,15 @@ class Music(Items):
                 filename = playurl.rsplit("/", 1)[1]
 
             # Direct paths is set the Kodi way
-            if utils.window('emby_pathverified') != "true" and not xbmcvfs.exists(playurl):
-                # Validate the path is correct with user intervention
-                utils.window('emby_directPath', clear=True)
-                resp = xbmcgui.Dialog().yesno(
-                                        heading="Can't validate path",
-                                        line1=(
-                                            "Kodi can't locate file: %s. Verify the path. "
-                                            "You may to verify your network credentials in the "
-                                            "add-on settings or use the emby path substitution "
-                                            "to format your path correctly. Stop syncing?"
-                                            % playurl))
-                if resp:
-                    utils.window('emby_shouldStop', value="true")
-                    return False
+            if not self.pathValidation(playurl):
+                return False
             
             path = playurl.replace(filename, "")
-            utils.window('emby_pathverified', value="true")
+            window('emby_pathverified', value="true")
 
         ##### UPDATE THE SONG #####
         if update_item:
-            self.logMsg("UPDATE song itemid: %s - Title: %s" % (itemid, title), 1)
+            log("UPDATE song itemid: %s - Title: %s" % (itemid, title), 1)
             
             # Update path
             query = "UPDATE path SET strPath = ? WHERE idPath = ?"
@@ -2090,7 +2049,7 @@ class Music(Items):
         
         ##### OR ADD THE SONG #####
         else:
-            self.logMsg("ADD song itemid: %s - Title: %s" % (itemid, title), 1)
+            log("ADD song itemid: %s - Title: %s" % (itemid, title), 1)
             
             # Add path
             pathid = self.kodi_db.addPath(path)
@@ -2103,27 +2062,27 @@ class Music(Items):
                 # Verify if there's an album associated.
                 album_name = item.get('Album')
                 if album_name:
-                    self.logMsg("Creating virtual music album for song: %s." % itemid, 1)
+                    log("Creating virtual music album for song: %s." % itemid, 1)
                     albumid = self.kodi_db.addAlbum(album_name, API.getProvider('MusicBrainzAlbum'))
                     emby_db.addReference("%salbum%s" % (itemid, albumid), albumid, "MusicAlbum_", "album")
                 else:
                     # No album Id associated to the song.
-                    self.logMsg("Song itemid: %s has no albumId associated." % itemid, 1)
+                    log("Song itemid: %s has no albumId associated." % itemid, 1)
                     return False
 
             except TypeError:
                 # No album found. Let's create it
-                self.logMsg("Album database entry missing.", 1)
+                log("Album database entry missing.", 1)
                 emby_albumId = item['AlbumId']
                 album = emby.getItem(emby_albumId)
                 self.add_updateAlbum(album)
                 emby_dbalbum = emby_db.getItem_byId(emby_albumId)
                 try:
                     albumid = emby_dbalbum[0]
-                    self.logMsg("Found albumid: %s" % albumid, 1)
+                    log("Found albumid: %s" % albumid, 1)
                 except TypeError:
                     # No album found, create a single's album
-                    self.logMsg("Failed to add album. Creating singles.", 1)
+                    log("Failed to add album. Creating singles.", 1)
                     kodicursor.execute("select coalesce(max(idAlbum),0) from album")
                     albumid = kodicursor.fetchone()[0] + 1
                     if self.kodiversion == 16:
@@ -2305,7 +2264,7 @@ class Music(Items):
         try:
             kodiid = emby_dbitem[0]
             mediatype = emby_dbitem[4]
-            self.logMsg("Update playstate for %s: %s" % (mediatype, item['Name']), 1)
+            log("Update playstate for %s: %s" % (mediatype, item['Name']), 1)
         except TypeError:
             return
 
@@ -2313,8 +2272,8 @@ class Music(Items):
             
             #should we ignore this item ?
             #happens when userdata updated by ratings method
-            if utils.window("ignore-update-%s" %itemid):
-                utils.window("ignore-update-%s" %itemid,clear=True)
+            if window("ignore-update-%s" %itemid):
+                window("ignore-update-%s" %itemid,clear=True)
                 return
                 
             # Process playstates
@@ -2344,7 +2303,7 @@ class Music(Items):
         try:
             kodiid = emby_dbitem[0]
             mediatype = emby_dbitem[4]
-            self.logMsg("Removing %s kodiid: %s" % (mediatype, kodiid), 1)
+            log("Removing %s kodiid: %s" % (mediatype, kodiid), 1)
         except TypeError:
             return
 
@@ -2412,7 +2371,7 @@ class Music(Items):
             # Remove artist
             self.removeArtist(kodiid)
 
-        self.logMsg("Deleted %s: %s from kodi database" % (mediatype, itemid), 1)
+        log("Deleted %s: %s from kodi database" % (mediatype, itemid), 1)
 
     def removeSong(self, kodiid):
 
