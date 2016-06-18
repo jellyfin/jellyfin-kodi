@@ -21,9 +21,11 @@ sys.path.append(base_resource)
 
 import entrypoint
 import utils
+from utils import Logging, window
 
 #################################################################################################
 
+log = Logging('Default').log
 enableProfiling = False
 
 class Main:
@@ -103,15 +105,15 @@ class Main:
             if mode == "settings":
                 xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
             elif mode in ("manualsync", "fastsync", "repair"):
-                if utils.window('emby_online') != "true":
+                if window('emby_online') != "true":
                     # Server is not online, do not run the sync
                     xbmcgui.Dialog().ok(heading="Emby for Kodi",
                                         line1=("Unable to run the sync, the add-on is not "
                                                "connected to the Emby server."))
-                    utils.logMsg("EMBY", "Not connected to the emby server.", 1)
+                    log("EMBY", "Not connected to the emby server.", 1)
                     return
                     
-                if utils.window('emby_dbScan') != "true":
+                if window('emby_dbScan') != "true":
                     import librarysync
                     lib = librarysync.LibrarySync()
                     if mode == "manualsync":
@@ -121,7 +123,7 @@ class Main:
                     else:
                         lib.fullSync(repair=True)
                 else:
-                    utils.logMsg("EMBY", "Database scan is already running.", 1)
+                    log("EMBY", "Database scan is already running.", 1)
                     
             elif mode == "texturecache":
                 import artwork
@@ -131,7 +133,7 @@ class Main:
 
                       
 if ( __name__ == "__main__" ):
-    xbmc.log('plugin.video.emby started')
+    log('plugin.video.emby started', 1)
 
     if enableProfiling:
         import cProfile
@@ -152,4 +154,4 @@ if ( __name__ == "__main__" ):
     else:
         Main()
     
-    xbmc.log('plugin.video.emby stopped')
+    log('plugin.video.emby stopped', 1)
