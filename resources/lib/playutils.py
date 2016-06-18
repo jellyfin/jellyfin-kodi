@@ -202,9 +202,9 @@ class PlayUtils():
     def isDirectStream(self):
 
         videotrack = self.item['MediaSources'][0]['Name']
-        transcodeH265 = utils.settings('transcodeH265')
+        transcodeH265 = settings('transcodeH265')
         videoprofiles = [x['Profile'] for x in self.item['MediaSources'][0]['MediaStreams'] if 'Profile' in x]
-        transcodeHi10P = utils.settings('transcodeHi10P')        
+        transcodeHi10P = settings('transcodeHi10P')        
 
         if transcodeHi10P == "true" and "H264" in videotrack and "High 10" in videoprofiles:
             return False   
@@ -316,7 +316,7 @@ class PlayUtils():
         }
 
         # max bit rate supported by server (max signed 32bit integer)
-        return bitrate.get(utils.settings('videoBitrate'), 2147483)
+        return bitrate.get(settings('videoBitrate'), 2147483)
 
     def audioSubsPref(self, url, listitem):
 
