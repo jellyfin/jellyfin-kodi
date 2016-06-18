@@ -14,20 +14,18 @@ from mutagen import id3
 import base64
 
 import read_embyserver as embyserver
-import utils
+from utils import Logging, window
 
 #################################################################################################
 
 # Helper for the music library, intended to fix missing song ID3 tags on Emby
-
-def logMsg(msg, lvl=1):
-    utils.logMsg("%s %s" % ("Emby", "musictools"), msg, lvl)
+log = Logging('MusicTools').log
 
 def getRealFileName(filename, isTemp=False):
     #get the filename path accessible by python if possible...
     
     if not xbmcvfs.exists(filename):
-        logMsg( "File does not exist! %s" %(filename), 0)
+        log("File does not exist! %s" % filename, 0)
         return (False, "")
     
     #if we use os.path method on older python versions (sunch as some android builds), we need to pass arguments as string
@@ -104,7 +102,7 @@ def getAdditionalSongTags(embyid, emby_rating, API, kodicursor, emby_db, enablei
     elif file_rating is None and not currentvalue:
         return (emby_rating, comment, False)
     
-    logMsg("getAdditionalSongTags --> embyid: %s - emby_rating: %s - file_rating: %s - current rating in kodidb: %s" %(embyid, emby_rating, file_rating, currentvalue))
+    log("getAdditionalSongTags --> embyid: %s - emby_rating: %s - file_rating: %s - current rating in kodidb: %s" %(embyid, emby_rating, file_rating, currentvalue))
     
     updateFileRating = False
     updateEmbyRating = False
@@ -171,7 +169,7 @@ def getAdditionalSongTags(embyid, emby_rating, API, kodicursor, emby_db, enablei
     if updateEmbyRating and enableexportsongrating:
         # sync details to emby server. Translation needed between ID3 rating and emby likes/favourites:
         like, favourite, deletelike = getEmbyRatingFromKodiRating(rating)
-        utils.window("ignore-update-%s" %embyid, "true") #set temp windows prop to ignore the update from webclient update
+        window("ignore-update-%s" %embyid, "true") #set temp windows prop to ignore the update from webclient update
         emby.updateUserRating(embyid, like, favourite, deletelike)
     
     return (rating, comment, hasEmbeddedCover)
@@ -183,7 +181,7 @@ def getSongTags(file):
     hasEmbeddedCover = False
     
     isTemp,filename = getRealFileName(file)
-    logMsg( "getting song ID3 tags for " + filename)
+    log( "getting song ID3 tags for " + filename)
     
     try:
         ###### FLAC FILES #############
@@ -217,14 +215,14 @@ def getSongTags(file):
                     #POPM rating is 0-255 and needs to be converted to 0-5 range
                     if rating > 5: rating = (rating / 255) * 5
         else:
-            logMsg( "Not supported fileformat or unable to access file: %s" %(filename))
+            log( "Not supported fileformat or unable to access file: %s" %(filename))
         
         #the rating must be a round value
         rating = int(round(rating,0))
     
     except Exception as e:
         #file in use ?
-        utils.logMsg("Exception in getSongTags", str(e),0)
+        log("Exception in getSongTags", str(e),0)
         rating = None
     
     #remove tempfile if needed....
@@ -246,7 +244,7 @@ def updateRatingToFile(rating, file):
     xbmcvfs.copy(file, tempfile)
     tempfile = xbmc.translatePath(tempfile).decode("utf-8")
     
-    logMsg( "setting song rating: %s for filename: %s - using tempfile: %s" %(rating,file,tempfile))
+    log( "setting song rating: %s for filename: %s - using tempfile: %s" %(rating,file,tempfile))
     
     if not tempfile:
         return
@@ -263,7 +261,7 @@ def updateRatingToFile(rating, file):
             audio.add(id3.POPM(email="Windows Media Player 9 Series", rating=calcrating, count=1))
             audio.save()
         else:
-            logMsg( "Not supported fileformat: %s" %(tempfile))
+            log( "Not supported fileformat: %s" %(tempfile))
             
         #once we have succesfully written the flags we move the temp file to destination, otherwise not proceeding and just delete the temp
         #safety check: we check the file size of the temp file before proceeding with overwite of original file
@@ -274,14 +272,14 @@ def updateRatingToFile(rating, file):
             xbmcvfs.delete(file)
             xbmcvfs.copy(tempfile,file)
         else:
-            logMsg( "Checksum mismatch for filename: %s - using tempfile: %s  -  not proceeding with file overwite!" %(rating,file,tempfile))
+            log( "Checksum mismatch for filename: %s - using tempfile: %s  -  not proceeding with file overwite!" %(rating,file,tempfile))
         
         #always delete the tempfile
         xbmcvfs.delete(tempfile)
             
     except Exception as e:
         #file in use ?
-        logMsg("Exception in updateRatingToFile %s" %e,0)
+        log("Exception in updateRatingToFile %s" %e,0)
         
     
     

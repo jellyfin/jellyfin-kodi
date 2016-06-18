@@ -1,7 +1,13 @@
+# -*- coding: utf-8 -*-
+
+#################################################################################################
+
 import threading
-import utils
-import xbmc
 import requests
+
+from utils import Logging
+
+#################################################################################################
 
 class image_cache_thread(threading.Thread):
 
@@ -13,28 +19,32 @@ class image_cache_thread(threading.Thread):
     xbmc_username = ""
     xbmc_password = ""
     
+
     def __init__(self):
-        self.monitor = xbmc.Monitor()
+
+        global log
+        log = Logging(self.__class__.__name__).log
+
         threading.Thread.__init__(self)
-         
-    def logMsg(self, msg, lvl=1):
-        className = self.__class__.__name__
-        utils.logMsg("%s" % className, msg, lvl)
+
         
     def setUrl(self, url):
+
         self.urlToProcess = url
         
     def setHost(self, host, port):
+
         self.xbmc_host = host
         self.xbmc_port = port
         
     def setAuth(self, user, pwd):
+
         self.xbmc_username = user
         self.xbmc_password = pwd
          
     def run(self):
         
-        self.logMsg("Image Caching Thread Processing : " + self.urlToProcess, 2)
+        log("Image Caching Thread Processing: %s" % self.urlToProcess, 2)
         
         try:
             response = requests.head(
@@ -46,7 +56,5 @@ class image_cache_thread(threading.Thread):
         # We don't need the result
         except: pass
         
-        self.logMsg("Image Caching Thread Exited", 2)
-        
+        log("Image Caching Thread Exited", 2)
         self.isFinished = True
-        

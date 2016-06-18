@@ -6,8 +6,8 @@ import json
 import requests
 import logging
 
-import utils
 import clientinfo
+from utils import Logging, window
 
 ##################################################################################################
 
@@ -34,28 +34,26 @@ class ConnectUtils():
 
     def __init__(self):
 
+        global log
+        log = Logging(self.__class__.__name__).log
+
         self.__dict__ = self._shared_state
-
-    def logMsg(self, msg, lvl=1):
-
-        className = self.__class__.__name__
-        utils.logMsg("%s %s" % (self.addonName, className), msg, lvl)
 
 
     def setUserId(self, userId):
         # Reserved for userclient only
         self.userId = userId
-        self.logMsg("Set connect userId: %s" % userId, 2)
+        log("Set connect userId: %s" % userId, 2)
 
     def setServer(self, server):
         # Reserved for userclient only
         self.server = server
-        self.logMsg("Set connect server: %s" % server, 2)
+        log("Set connect server: %s" % server, 2)
 
     def setToken(self, token):
         # Reserved for userclient only
         self.token = token
-        self.logMsg("Set connect token: %s" % token, 2)
+        log("Set connect token: %s" % token, 2)
 
 
     def startSession(self):
@@ -73,7 +71,7 @@ class ConnectUtils():
             if self.sslclient is not None:
                 verify = self.sslclient
         except:
-            self.logMsg("Could not load SSL settings.", 1)
+            log("Could not load SSL settings.", 1)
 
         # Start session
         self.c = requests.Session()
@@ -83,13 +81,13 @@ class ConnectUtils():
         self.c.mount("http://", requests.adapters.HTTPAdapter(max_retries=1))
         self.c.mount("https://", requests.adapters.HTTPAdapter(max_retries=1))
 
-        self.logMsg("Requests session started on: %s" % self.server, 1)
+        log("Requests session started on: %s" % self.server, 1)
 
     def stopSession(self):
         try:
             self.c.close()
         except Exception as e:
-            self.logMsg("Requests session could not be terminated: %s" % e, 1)
+            log("Requests session could not be terminated: %s" % e, 1)
 
     def getHeader(self, authenticate=True):
 
@@ -103,7 +101,7 @@ class ConnectUtils():
                 'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Accept': "application/json"
             }
-            self.logMsg("Header: %s" % header, 1)
+            log("Header: %s" % header, 1)
 
         else:
             token = self.token
@@ -115,17 +113,17 @@ class ConnectUtils():
                 'X-Application': "Kodi/%s" % version,
                 'X-Connect-UserToken': token
             }
-            self.logMsg("Header: %s" % header, 1)
+            log("Header: %s" % header, 1)
 
         return header
 
     def doUrl(self, url, data=None, postBody=None, rtype="GET",
                 parameters=None, authenticate=True, timeout=None):
 
-        window = utils.window
-
-        self.logMsg("=== ENTER connectUrl ===", 2)
+        log("=== ENTER connectUrl ===", 2)
+        
         default_link = ""
+        
         if timeout is None:
             timeout = self.timeout
 
@@ -209,25 +207,25 @@ class ConnectUtils():
                                     verify=verifyssl)
 
             ##### THE RESPONSE #####
-            self.logMsg(r.url, 1)
-            self.logMsg(r, 1)
+            log(r.url, 1)
+            log(r, 1)
 
             if r.status_code == 204:
                 # No body in the response
-                self.logMsg("====== 204 Success ======", 1)
+                log("====== 204 Success ======", 1)
 
             elif r.status_code == requests.codes.ok:
 
                 try:
                     # UNICODE - JSON object
                     r = r.json()
-                    self.logMsg("====== 200 Success ======", 1)
-                    self.logMsg("Response: %s" % r, 1)
+                    log("====== 200 Success ======", 1)
+                    log("Response: %s" % r, 1)
                     return r
 
                 except:
                     if r.headers.get('content-type') != "text/html":
-                        self.logMsg("Unable to convert the response for: %s" % url, 1)
+                        log("Unable to convert the response for: %s" % url, 1)
             else:
                 r.raise_for_status()
 
@@ -238,8 +236,8 @@ class ConnectUtils():
             pass
 
         except requests.exceptions.ConnectTimeout as e:
-            self.logMsg("Server timeout at: %s" % url, 0)
-            self.logMsg(e, 1)
+            log("Server timeout at: %s" % url, 0)
+            log(e, 1)
 
         except requests.exceptions.HTTPError as e:
 
@@ -255,11 +253,11 @@ class ConnectUtils():
                 pass
 
         except requests.exceptions.SSLError as e:
-            self.logMsg("Invalid SSL certificate for: %s" % url, 0)
-            self.logMsg(e, 1)
+            log("Invalid SSL certificate for: %s" % url, 0)
+            log(e, 1)
 
         except requests.exceptions.RequestException as e:
-            self.logMsg("Unknown error connecting to: %s" % url, 0)
-            self.logMsg(e, 1)
+            log("Unknown error connecting to: %s" % url, 0)
+            log(e, 1)
 
         return default_link

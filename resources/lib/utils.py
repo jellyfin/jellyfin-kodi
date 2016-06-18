@@ -188,7 +188,7 @@ def setScreensaver(value):
     result = xbmc.executeJSONRPC(json.dumps(query))
     log("Toggling screensaver: %s %s" % (value, result), 1)
 
-def convertdate(date):
+def convertDate(date):
     try:
         date = datetime.strptime(date, "%Y-%m-%dT%H:%M:%SZ")
     except TypeError:
