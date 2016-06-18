@@ -9,10 +9,10 @@ import pstats
 import sqlite3
 import StringIO
 import os
-from datetime import datetime, time
 import time
 import unicodedata
 import xml.etree.ElementTree as etree
+from datetime import datetime, time
 
 import xbmc
 import xbmcaddon
@@ -21,27 +21,6 @@ import xbmcvfs
 
 #################################################################################################
 # Main methods
-
-def logMsg(title, msg, level=1):
-
-    # Get the logLevel set in UserClient
-    try:
-        logLevel = int(window('emby_logLevel'))
-    except ValueError:
-        logLevel = 0
-
-    if logLevel >= level:
-
-        if logLevel == 2: # inspect.stack() is expensive
-            try:
-                xbmc.log("%s -> %s : %s" % (title, inspect.stack()[1][3], msg))
-            except UnicodeEncodeError:
-                xbmc.log("%s -> %s : %s" % (title, inspect.stack()[1][3], msg.encode('utf-8')))
-        else:
-            try:
-                xbmc.log("%s -> %s" % (title, msg))
-            except UnicodeEncodeError:
-                xbmc.log("%s -> %s" % (title, msg.encode('utf-8')))
 
 class Logging():
 
