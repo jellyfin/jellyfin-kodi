@@ -110,7 +110,7 @@ class Main:
                     xbmcgui.Dialog().ok(heading="Emby for Kodi",
                                         line1=("Unable to run the sync, the add-on is not "
                                                "connected to the Emby server."))
-                    log("EMBY", "Not connected to the emby server.", 1)
+                    log("Not connected to the emby server.", 1)
                     return
                     
                 if window('emby_dbScan') != "true":
@@ -123,7 +123,7 @@ class Main:
                     else:
                         lib.fullSync(repair=True)
                 else:
-                    log("EMBY", "Database scan is already running.", 1)
+                    log("Database scan is already running.", 1)
                     
             elif mode == "texturecache":
                 import artwork
