@@ -218,7 +218,7 @@ class Items(object):
                             "You may need to verify your network credentials in the "
                             "add-on settings or use the Emby path substitution "
                             "to format your path correctly (Emby dashboard > library). "
-                            "Stop syncing?" % playurl))
+                            "Stop syncing?" % path))
             if resp:
                 window('emby_shouldStop', value="true")
                 return False
