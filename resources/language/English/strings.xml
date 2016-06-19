@@ -1,25 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <strings>
+
     <!-- Add-on settings -->
+    <string id="29999">Emby for Kodi</string>
     <string id="30000">Primary Server Address</string><!-- Verified -->
     <string id="30002">Play from HTTP instead of SMB</string><!-- Verified -->
     <string id="30004">Log level</string><!-- Verified -->
-    <string id="30005">Username: </string>
-    <string id="30006">Password: </string>
+    <string id="30024">Username</string><!-- Verified -->
+    <string id="30030">Port Number</string><!-- Verified -->
+
+
+
+
+
+
+    <!-- Add-on settings -->
     <string id="30007">Network Username: </string>
     <string id="30008">Network Password: </string>
     <string id="30009">Transcode: </string>
-    <string id="30010">Enable Performance Profiling</string>
-    <string id="30011">Local caching system</string>
 
     <string id="30014">Emby</string>
     <string id="30015">Network</string>    
     <string id="30016">Device Name</string>        
 
     <string id="30022">Advanced</string>
-    <string id="30024">Username</string><!-- Verified -->
     
-    <string id="30030">Port Number</string><!-- Verified -->
     <string id="30036">Number of recent Movies to show:</string>    
     <string id="30037">Number of recent TV episodes to show:</string>    
     <string id="30035">Number of recent Music Albums to show:</string>    
@@ -141,7 +146,7 @@
     <string id="30166">Transcoding</string>     
     <string id="30167">Server Detection Succeeded</string>     
     <string id="30168">Found server</string>     
-    <string id="30169">Address : </string>     
+    <string id="30169">Address:</string>     
     
     <!-- Video nodes -->
     <string id="30170">Recently Added TV Shows</string><!-- Verified -->
@@ -175,7 +180,8 @@
     <string id="30198">Search</string>              
     <string id="30199">Set Views</string>              
     
-    <string id="30200">Select User</string>              
+    <string id="30200">Select User</string><!-- Verified -->
+
     <string id="30201">Profiling enabled.</string>              
     <string id="30202">Please remember to turn off when finished testing.</string>              
     <string id="30203">Error in ArtworkRotationThread</string>              
@@ -262,6 +268,12 @@
     <string id="30409">Delete item from the server</string>
 
     <!-- add-on settings -->
+    <string id="30000">Primary Server Address</string><!-- Verified -->
+    <string id="30002">Play from HTTP instead of SMB</string><!-- Verified -->
+    <string id="30004">Log level</string><!-- Verified -->
+    <string id="30024">Username</string><!-- Verified -->
+    <string id="30030">Port Number</string><!-- Verified -->
+
     <string id="30500">Verify Host SSL Certificate</string>
     <string id="30501">Client SSL certificate</string>
     <string id="30502">Use alternate address</string>
@@ -299,7 +311,8 @@
     <string id="30534">Server messages</string>
     <string id="30535">Generate a new device Id</string>
     <string id="30536">Sync when screensaver is deactivated</string>
-    <string id="30537">Force Transcode Hi10P</string>    
+    <string id="30537">Force Transcode Hi10P</string>
+    <string id="30538">Disabled</string>
 
     <!-- service add-on -->
     <string id="33000">Welcome</string>
@@ -336,5 +349,13 @@
     <string id="33031">Comparing:</string>
     <string id="33032">Failed to generate a new device Id. See your logs for more information.</string>
     <string id="33033">A new device Id has been generated. Kodi will now restart.</string>
+
+    <string id="33034">Proceed with the following server?</string>
+    <string id="33035">Caution! If you choose Native mode, certain Emby features will be missing, such as: Emby cinema mode, direct stream/transcode options and parental access schedule.</string>
+    <string id="33036">Addon (Default)</string>
+    <string id="33037">Native (Direct Paths)</string>
+    <string id="33038">"Add network credentials to allow Kodi access to your content? Important: Kodi will need to be restarted to see the credentials. They can also be added at a later time.</string>
+    <string id="33039">Disable Emby music library?</string>
+    <string id="33040">Direct stream the music library? Select this option if the music library will be remotely accessed.</string>
 
 </strings>

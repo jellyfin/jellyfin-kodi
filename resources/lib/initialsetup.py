@@ -25,15 +25,15 @@ class InitialSetup():
         global log
         log = Logging(self.__class__.__name__).log
 
-        self.clientInfo = clientinfo.ClientInfo()
-        self.addonId = self.clientInfo.getAddonId()
-        self.doUtils = downloadutils.DownloadUtils()
+        self.addonId = clientinfo.ClientInfo().getAddonId()
+        self.doUtils = downloadutils.DownloadUtils().downloadUrl
         self.userClient = userclient.UserClient()
 
 
     def setup(self):
         # Check server, user, direct paths, music, direct stream if not direct path.
         addonId = self.addonId
+        dialog = xbmcgui.Dialog()
 
         ##### SERVER INFO #####
         
@@ -54,10 +54,10 @@ class InitialSetup():
             xbmc.executebuiltin('Addon.OpenSettings(%s)' % addonId)
             return
         else:
-            server_confirm = xbmcgui.Dialog().yesno(
-                                            heading="Emby for Kodi",
-                                            line1="Proceed with the following server?",
-                                            line2="%s %s" % (lang(30169), server))
+            server_confirm = dialog.yesno(
+                                heading=lang(29999),
+                                line1=lang(33034),
+                                line2="%s %s" % (lang(30169), server))
             if server_confirm:
                 # Correct server found
                 log("Server is selected. Saving the information.", 1)
@@ -75,9 +75,8 @@ class InitialSetup():
         ##### USER INFO #####
         
         log("Getting user list.", 1)
-        
-        url = "%s/emby/Users/Public?format=json" % server
-        result = self.doUtils.downloadUrl(url, authenticate=False)
+
+        result = self.doUtils("%s/emby/Users/Public?format=json" % server, authenticate=False)
         if result == "":
             log("Unable to connect to %s" % server, 1)
             return
@@ -97,7 +96,7 @@ class InitialSetup():
             users_hasPassword.append(name)
 
         log("Presenting user list: %s" % users_hasPassword, 1)
-        user_select = xbmcgui.Dialog().select(lang(30200), users_hasPassword)
+        user_select = dialog.select(lang(30200), users_hasPassword)
         if user_select > -1:
             selected_user = usernames[user_select]
             log("Selected user: %s" % selected_user, 1)
@@ -105,38 +104,30 @@ class InitialSetup():
         else:
             log("No user selected.", 1)
             xbmc.executebuiltin('Addon.OpenSettings(%s)' % addonId)
+            return
 
         ##### ADDITIONAL PROMPTS #####
-        dialog = xbmcgui.Dialog()
 
         directPaths = dialog.yesno(
-                            heading="Playback Mode",
-                            line1=(
-                                "Caution! If you choose Native mode, you "
-                                "will lose access to certain Emby features such as: "
-                                "Emby cinema mode, direct stream/transcode options, "
-                                "parental access schedule."),
-                            nolabel="Addon (Default)",
-                            yeslabel="Native (Direct Paths)")
+                            heading=lang(30511),
+                            line1=lang(33035),
+                            nolabel=lang(33036),
+                            yeslabel=lang(33037))
         if directPaths:
             log("User opted to use direct paths.", 1)
             settings('useDirectPaths', value="1")
 
             # ask for credentials
             credentials = dialog.yesno(
-                                heading="Network credentials",
-                                line1= (
-                                    "Add network credentials to allow Kodi access to your "
-                                    "content? Note: Skipping this step may generate a message "
-                                    "during the initial scan of your content if Kodi can't "
-                                    "locate your content."))
+                                heading=lang(30517),
+                                line1= lang(33038))
             if credentials:
                 log("Presenting network credentials dialog.", 1)
                 passwordsXML()
         
         musicDisabled = dialog.yesno(
-                            heading="Music Library",
-                            line1="Disable Emby music library?")
+                            heading=lang(29999),
+                            line1=lang(33039))
         if musicDisabled:
             log("User opted to disable Emby music library.", 1)
             settings('enableMusic', value="false")
@@ -144,11 +135,8 @@ class InitialSetup():
             # Only prompt if the user didn't select direct paths for videos
             if not directPaths:
                 musicAccess = dialog.yesno(
-                                    heading="Music Library",
-                                    line1=(
-                                        "Direct stream the music library? Select "
-                                        "this option only if you plan on listening "
-                                        "to music outside of your network."))
+                                    heading=lang(29999),
+                                    line1=lang(33040))
                 if musicAccess:
                     log("User opted to direct stream music.", 1)
                     settings('streamMusic', value="true")

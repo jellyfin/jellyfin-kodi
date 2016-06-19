@@ -167,7 +167,7 @@ class Service():
                             else:
                                 add = ""
                             xbmcgui.Dialog().notification(
-                                        heading="Emby for Kodi",
+                                        heading=lang(29999),
                                         message=("%s %s%s!"
                                                 % (lang(33000), user.currUser.decode('utf-8'),
                                                     add.decode('utf-8'))),
@@ -242,7 +242,7 @@ class Service():
                                 break
                             # Alert the user that server is online.
                             xbmcgui.Dialog().notification(
-                                        heading="Emby for Kodi",
+                                        heading=lang(29999),
                                         message=lang(33003),
                                         icon="special://home/addons/plugin.video.emby/icon.png",
                                         time=2000,
