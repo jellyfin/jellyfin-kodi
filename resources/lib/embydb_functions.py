@@ -2,8 +2,10 @@
 
 #################################################################################################
 
-import utils
+from sqlite3 import OperationalError
+
 import clientinfo
+from utils import Logging
 
 #################################################################################################
 
@@ -13,15 +15,14 @@ class Embydb_Functions():
 
     def __init__(self, embycursor):
 
+        global log
+        log = Logging(self.__class__.__name__).log
+
         self.embycursor = embycursor
 
         self.clientInfo = clientinfo.ClientInfo()
         self.addonName = self.clientInfo.getAddonName()
 
-    def logMsg(self, msg, lvl=1):
-
-        className = self.__class__.__name__
-        utils.logMsg("%s %s" % (self.addonName, className), msg, lvl)
 
     def getViews(self):
 
