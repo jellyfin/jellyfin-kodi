@@ -354,7 +354,7 @@
     <string id="33035">Caution! If you choose Native mode, certain Emby features will be missing, such as: Emby cinema mode, direct stream/transcode options and parental access schedule.</string>
     <string id="33036">Addon (Default)</string>
     <string id="33037">Native (Direct Paths)</string>
-    <string id="33038">"Add network credentials to allow Kodi access to your content? Important: Kodi will need to be restarted to see the credentials. They can also be added at a later time.</string>
+    <string id="33038">Add network credentials to allow Kodi access to your content? Important: Kodi will need to be restarted to see the credentials. They can also be added at a later time.</string>
     <string id="33039">Disable Emby music library?</string>
     <string id="33040">Direct stream the music library? Select this option if the music library will be remotely accessed.</string>
 
