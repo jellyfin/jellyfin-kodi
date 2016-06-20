@@ -356,10 +356,10 @@ class Artwork():
                 index = ""
                 for backdrop in backdrops:
                     self.addOrUpdateArt(
-                        image_url=backdrop,
-                        kodi_id=kodiId,
-                        media_type=mediaType,
-                        image_type="%s%s" % ("fanart", index),
+                        imageUrl=backdrop,
+                        kodiId=kodiId,
+                        mediaType=mediaType,
+                        imageType="%s%s" % ("fanart", index),
                         cursor=cursor)
 
                     if backdropsNumber > 1:
@@ -372,19 +372,19 @@ class Artwork():
                 # Primary art is processed as thumb and poster for Kodi.
                 for artType in kodiart[art]:
                     self.addOrUpdateArt(
-                        image_url=artwork[art],
-                        kodi_id=kodiId,
-                        media_type=mediaType,
-                        image_type=artType,
+                        imageUrl=artwork[art],
+                        kodiId=kodiId,
+                        mediaType=mediaType,
+                        imageType=artType,
                         cursor=cursor)
 
             elif kodiart.get(art):
                 # Process the rest artwork type that Kodi can use
                 self.addOrUpdateArt(
-                    image_url=artwork[art],
-                    kodi_id=kodiId,
-                    media_type=mediaType,
-                    image_type=kodiart[art],
+                    imageUrl=artwork[art],
+                    kodiId=kodiId,
+                    mediaType=mediaType,
+                    imageType=kodiart[art],
                     cursor=cursor)
 
     def addOrUpdateArt(self, imageUrl, kodiId, mediaType, imageType, cursor):
