@@ -24,11 +24,10 @@ import playlist
 import playbackutils as pbutils
 import playutils
 import api
-from utils import Logging, window, settings
+from utils import Logging, window, settings, language as lang
+log = Logging('Entrypoint').log
 
 #################################################################################################
-
-log = Logging('Entrypoint').log
 
 
 def doPlayback(itemid, dbid):
@@ -46,7 +45,7 @@ def resetAuth():
                     "Emby might lock your account if you fail to log in too many times. "
                     "Proceed anyway?"))
     if resp == 1:
-        log("EMBY", "Reset login attempts.", 1)
+        log("Reset login attempts.", 1)
         window('emby_serverStatus', value="Auth")
     else:
         xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
@@ -108,16 +107,15 @@ def resetDeviceId():
         window('emby_deviceId', clear=True)
         deviceId = clientinfo.ClientInfo().getDeviceId(reset=True)
     except Exception as e:
-        log("EMBY", "Failed to generate a new device Id: %s" % e, 1)
+        log("Failed to generate a new device Id: %s" % e, 1)
         dialog.ok(
             heading="Emby for Kodi",
             line1=language(33032))
     else:
-        log("EMBY", "Successfully removed old deviceId: %s New deviceId: %s"
-                    % (deviceId_old, deviceId), 1)
+        log("Successfully removed old deviceId: %s New deviceId: %s" % (deviceId_old, deviceId), 1)
         dialog.ok(
-            heading="Emby for Kodi",
-            line1=language(33033))
+            heading=lang(29999),
+            line1=lang(33033))
         xbmc.executebuiltin('RestartApp')
 
 ##### Delete Item
@@ -141,7 +139,7 @@ def deleteItem():
             elif xbmc.getCondVisibility('Container.Content(pictures)'):
                 itemtype = "picture"
             else:
-                log("EMBY delete", "Unknown type, unable to proceed.", 1)
+                log("Unknown type, unable to proceed.", 1)
                 return
 
         embyconn = utils.kodiSQL('emby')
@@ -153,7 +151,7 @@ def deleteItem():
         try:
             embyid = item[0]
         except TypeError:
-            log("EMBY delete", "Unknown embyId, unable to proceed.", 1)
+            log("Unknown embyId, unable to proceed.", 1)
             return
 
     if settings('skipContextMenu') != "true":
@@ -162,12 +160,12 @@ def deleteItem():
                                 line1=("Delete file from Emby Server? This will "
                                         "also delete the file(s) from disk!"))
         if not resp:
-            log("EMBY delete", "User skipped deletion for: %s." % embyid, 1)
+            log("User skipped deletion for: %s." % embyid, 1)
             return
     
     doUtils = downloadutils.DownloadUtils()
     url = "{server}/emby/Items/%s?format=json" % embyid
-    log("EMBY delete", "Deleting request: %s" % embyid, 0)
+    log("Deleting request: %s" % embyid, 0)
     doUtils.downloadUrl(url, action_type="DELETE")
 
 ##### ADD ADDITIONAL USERS #####
@@ -249,7 +247,7 @@ def addUser():
                 return
 
         # Subtract any additional users
-        log("EMBY", "Displaying list of users: %s" % users)
+        log("Displaying list of users: %s" % users)
         resp = dialog.select("Add user to the session", users)
         # post additional user
         if resp > -1:
@@ -264,7 +262,7 @@ def addUser():
                     time=1000)
 
     except:
-        log("EMBY", "Failed to add user to session.")
+        log("Failed to add user to session.")
         dialog.notification(
                 heading="Error",
                 message="Unable to add/remove user from the session.",
@@ -320,7 +318,7 @@ def getThemeMedia():
         tvtunes = xbmcaddon.Addon(id="script.tvtunes")
         tvtunes.setSetting('custom_path_enable', "true")
         tvtunes.setSetting('custom_path', library)
-        log("EMBY", "TV Tunes custom path is enabled and set.", 1)
+        log("TV Tunes custom path is enabled and set.", 1)
     else:
         # if it does not exist this will not work so warn user
         # often they need to edit the settings first for it to be created.
@@ -470,7 +468,7 @@ def refreshPlaylist():
                 sound=False)
 
     except Exception as e:
-        log("EMBY", "Refresh playlists/nodes failed: %s" % e, 1)
+        log("Refresh playlists/nodes failed: %s" % e, 1)
         dialog.notification(
             heading="Emby for Kodi",
             message="Emby playlists/nodes refresh failed",
@@ -512,7 +510,7 @@ def BrowseContent(viewname, browse_type="", folderid=""):
                 break
     
     if viewname is not None:
-        log("BrowseContent","viewname: %s - type: %s - folderid: %s - filter: %s" %(viewname.decode('utf-8'), browse_type.decode('utf-8'), folderid.decode('utf-8'), filter_type.decode('utf-8')))
+        log("viewname: %s - type: %s - folderid: %s - filter: %s" %(viewname.decode('utf-8'), browse_type.decode('utf-8'), folderid.decode('utf-8'), filter_type.decode('utf-8')))
     #set the correct params for the content type
     #only proceed if we have a folderid
     if folderid:
@@ -1045,7 +1043,7 @@ def getExtraFanArt(embyId,embyPath):
         
         if embyId:
             #only proceed if we actually have a emby id
-            log("EMBY", "Requesting extrafanart for Id: %s" % embyId, 0)
+            log("Requesting extrafanart for Id: %s" % embyId, 0)
 
             # We need to store the images locally for this to work
             # because of the caching system in xbmc
@@ -1074,7 +1072,7 @@ def getExtraFanArt(embyId,embyPath):
                         xbmcvfs.copy(backdrop, fanartFile) 
                         count += 1               
             else:
-                log("EMBY", "Found cached backdrop.", 2)
+                log("Found cached backdrop.", 2)
                 # Use existing cached images
                 dirs, files = xbmcvfs.listdir(fanartDir)
                 for file in files:
@@ -1085,7 +1083,7 @@ def getExtraFanArt(embyId,embyPath):
                                             url=fanartFile,
                                             listitem=li)
     except Exception as e:
-        log("EMBY", "Error getting extrafanart: %s" % e, 0)
+        log("Error getting extrafanart: %s" % e, 0)
     
     # Always do endofdirectory to prevent errors in the logs
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
