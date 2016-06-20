@@ -258,15 +258,13 @@
     
     <!-- contextmenu -->
     <string id="30401">Emby options</string>
-    <string id="30402">Clear like for this item</string>
-    <string id="30403">Like this item</string>
-    <string id="30404">Dislike this item</string>
     <string id="30405">Add to Emby favorites</string>
     <string id="30406">Remove from Emby favorites</string>
     <string id="30407">Set custom song rating</string>
     <string id="30408">Emby addon settings</string>
     <string id="30409">Delete item from the server</string>
     <string id="30410">Refresh this item</string>
+    <string id="30411">Set custom song rating (0-5)</string>
 
     <!-- add-on settings -->
     <string id="30000">Primary Server Address</string><!-- Verified -->
@@ -358,5 +356,6 @@
     <string id="33038">Add network credentials to allow Kodi access to your content? Important: Kodi will need to be restarted to see the credentials. They can also be added at a later time.</string>
     <string id="33039">Disable Emby music library?</string>
     <string id="33040">Direct stream the music library? Select this option if the music library will be remotely accessed.</string>
+    <string id="33041">Delete file(s) from Emby Server? This will also delete the file(s) from disk!</string>
 
 </strings>

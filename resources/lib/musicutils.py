@@ -15,11 +15,11 @@ import base64
 
 import read_embyserver as embyserver
 from utils import Logging, window
+log = Logging('MusicTools').log
 
 #################################################################################################
 
 # Helper for the music library, intended to fix missing song ID3 tags on Emby
-log = Logging('MusicTools').log
 
 def getRealFileName(filename, isTemp=False):
     #get the filename path accessible by python if possible...

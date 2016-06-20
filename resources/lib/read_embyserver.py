@@ -539,32 +539,20 @@ class Read_EmbyServer():
 
         return sorted_items
 
-    def updateUserRating(self, itemid, like=None, favourite=None, deletelike=False):
+    def updateUserRating(self, itemid, favourite=None):
         # Updates the user rating to Emby
         doUtils = self.doUtils
 
         if favourite:
             url = "{server}/emby/Users/{UserId}/FavoriteItems/%s?format=json" % itemid
             doUtils(url, action_type="POST")
-        elif favourite == False:
+        elif not favourite:
             url = "{server}/emby/Users/{UserId}/FavoriteItems/%s?format=json" % itemid
-            doUtils(url, action_type="DELETE")
-
-        if not deletelike and like:
-            url = "{server}/emby/Users/{UserId}/Items/%s/Rating?Likes=true&format=json" % itemid
-            doUtils(url, action_type="POST")
-        elif not deletelike and like is False:
-            url = "{server}/emby/Users/{UserId}/Items/%s/Rating?Likes=false&format=json" % itemid
-            doUtils(url, action_type="POST")
-        elif deletelike:
-            url = "{server}/emby/Users/{UserId}/Items/%s/Rating?format=json" % itemid
             doUtils(url, action_type="DELETE")
         else:
             log("Error processing user rating.", 1)
 
-        log("Update user rating to emby for itemid: %s "
-            "| like: %s | favourite: %s | deletelike: %s"
-            % (itemid, like, favourite, deletelike), 1)
+        log("Update user rating to emby for itemid: %s | favourite: %s" % (itemid, favourite), 1)
 
     def refreshItem(self, itemid):
 
@@ -579,3 +567,8 @@ class Read_EmbyServer():
 
         }
         self.doUtils(url, postBody=params, action_type="POST")
+
+    def deleteItem(self, itemid):
+
+        url = "{server}/emby/Items/%s?format=json" % itemId
+        self.doUtils(url, action_type="DELETE")
