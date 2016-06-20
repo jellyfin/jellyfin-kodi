@@ -18,7 +18,7 @@ import embydb_functions as embydb
 import kodidb_functions as kodidb
 import read_embyserver as embyserver
 import musicutils
-from utils import Logging, window, settings, language as lang
+from utils import Logging, window, settings, language as lang, kodiSQL
 
 ##################################################################################################
 
@@ -100,7 +100,7 @@ class Items(object):
 
             if itemtype in ('MusicAlbum', 'MusicArtist', 'AlbumArtist', 'Audio'):
                 if music_enabled:
-                    musicconn = utils.kodiSQL('music')
+                    musicconn = kodiSQL('music')
                     musiccursor = musicconn.cursor()
                     items_process = itemtypes[itemtype](embycursor, musiccursor)
                 else:
