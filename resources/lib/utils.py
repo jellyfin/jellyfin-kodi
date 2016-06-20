@@ -267,7 +267,7 @@ def reset():
     window('emby_shouldStop', value="true")
     count = 10
     while window('emby_dbScan') == "true":
-        logMsg("EMBY", "Sync is running, will retry: %s..." % count)
+        log("Sync is running, will retry: %s..." % count)
         count -= 1
         if count == 0:
             dialog.ok("Warning", "Could not stop the database from running. Try again.")
