@@ -165,4 +165,4 @@ if __name__ == '__main__':
                     emby.deleteItem(itemId)
             
             xbmc.sleep(500)
-            xbmc.executebuiltin('Container.Update')
+            xbmc.executebuiltin('Container.Refresh')
