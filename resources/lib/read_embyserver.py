@@ -565,3 +565,17 @@ class Read_EmbyServer():
         log("Update user rating to emby for itemid: %s "
             "| like: %s | favourite: %s | deletelike: %s"
             % (itemid, like, favourite, deletelike), 1)
+
+    def refreshItem(self, itemid):
+
+        url = "{server}/emby/Items/%s/Refresh?format=json" % itemid
+        params = {
+
+            'Recursive': True,
+            'ImageRefreshMode': "FullRefresh",
+            'MetadataRefreshMode': "FullRefresh",
+            'ReplaceAllImages': False,
+            'ReplaceAllMetadata': True
+
+        }
+        self.doUtils(url, postBody=params, action_type="POST")
