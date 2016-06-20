@@ -14,7 +14,7 @@ import xbmcvfs
 
 import clientinfo
 import image_cache_thread
-from utils import Logging, window, settings, kodiSQL
+from utils import Logging, window, settings, language as lang, kodiSQL
 
 #################################################################################################
 
@@ -165,25 +165,23 @@ class Artwork():
         except TypeError:
             pass
 
-    def FullTextureCacheSync(self):
+    def fullTextureCacheSync(self):
         # This method will sync all Kodi artwork to textures13.db
         # and cache them locally. This takes diskspace!
         dialog = xbmcgui.Dialog()
 
         if not dialog.yesno(
-                    heading="Image Texture Cache",
-                    line1=(
-                        "Running the image cache process can take some time. "
-                        "Are you sure you want continue?")):
+                    heading=lang(29999),
+                    line1=lang(33042)):
             return
 
         log("Doing Image Cache Sync", 1)
 
         pdialog = xbmcgui.DialogProgress()
-        pdialog.create("Emby for Kodi", "Image Cache Sync")
+        pdialog.create(lang(29999), lang(33043))
 
         # ask to rest all existing or not
-        if dialog.yesno("Image Texture Cache", "Reset all existing cache data first?"):
+        if dialog.yesno(lang(29999), lang(33044)):
             log("Resetting all cache data first.", 1)
             
             # Remove all existing textures first
@@ -228,11 +226,10 @@ class Artwork():
 
             percentage = int((float(count) / float(total))*100)
             message = "%s of %s (%s)" % (count, total, self.imageCacheThreads)
-            pdialog.update(percentage, "Updating Image Cache: %s" % message)
+            pdialog.update(percentage, "%s %s" % (lang(33045), message))
             self.cacheTexture(url[0])
             count += 1
         
-
         # Cache all entries in music DB
         connection = kodiSQL('music')
         cursor = connection.cursor()
@@ -250,19 +247,18 @@ class Artwork():
 
             percentage = int((float(count) / float(total))*100)
             message = "%s of %s" % (count, total)
-            pdialog.update(percentage, "Updating Image Cache: %s" % message)
+            pdialog.update(percentage, "%s %s" % (lang(33045), message))
             self.cacheTexture(url[0])
             count += 1
         
-
-        pdialog.update(100, "Waiting for all threads to exit: %s" % len(self.imageCacheThreads))
+        pdialog.update(100, "%s %s" % (lang(33046), len(self.imageCacheThreads)))
         log("Waiting for all threads to exit", 1)
         
         while len(self.imageCacheThreads):
             for thread in self.imageCacheThreads:
                 if thread.isFinished:
                     self.imageCacheThreads.remove(thread)
-            pdialog.update(100, "Waiting for all threads to exit: %s" % len(self.imageCacheThreads))
+            pdialog.update(100, "%s %s" % (lang(33046), len(self.imageCacheThreads)))
             log("Waiting for all threads to exit: %s" % len(self.imageCacheThreads), 1)
             xbmc.sleep(500)
 
@@ -311,7 +307,7 @@ class Artwork():
                 self.addWorkerImageCacheThread(url)
 
 
-    def addArtwork(self, artwork, kodi_id, media_type, cursor):
+    def addArtwork(self, artwork, kodiId, mediaType, cursor):
         # Kodi conversion table
         kodiart = {
 
@@ -342,7 +338,7 @@ class Artwork():
                     "AND media_type = ?",
                     "AND type LIKE ?"
                 ))
-                cursor.execute(query, (kodi_id, media_type, "fanart%",))
+                cursor.execute(query, (kodiId, mediaType, "fanart%",))
                 rows = cursor.fetchall()
 
                 if len(rows) > backdropsNumber:
@@ -354,15 +350,15 @@ class Artwork():
                         "AND media_type = ?",
                         "AND type LIKE ?"
                     ))
-                    cursor.execute(query, (kodi_id, media_type, "fanart_",))
+                    cursor.execute(query, (kodiId, mediaType, "fanart_",))
 
                 # Process backdrops and extra fanart
                 index = ""
                 for backdrop in backdrops:
                     self.addOrUpdateArt(
                         image_url=backdrop,
-                        kodi_id=kodi_id,
-                        media_type=media_type,
+                        kodi_id=kodiId,
+                        media_type=mediaType,
                         image_type="%s%s" % ("fanart", index),
                         cursor=cursor)
 
@@ -377,8 +373,8 @@ class Artwork():
                 for artType in kodiart[art]:
                     self.addOrUpdateArt(
                         image_url=artwork[art],
-                        kodi_id=kodi_id,
-                        media_type=media_type,
+                        kodi_id=kodiId,
+                        media_type=mediaType,
                         image_type=artType,
                         cursor=cursor)
 
@@ -386,14 +382,14 @@ class Artwork():
                 # Process the rest artwork type that Kodi can use
                 self.addOrUpdateArt(
                     image_url=artwork[art],
-                    kodi_id=kodi_id,
-                    media_type=media_type,
+                    kodi_id=kodiId,
+                    media_type=mediaType,
                     image_type=kodiart[art],
                     cursor=cursor)
 
-    def addOrUpdateArt(self, image_url, kodi_id, media_type, image_type, cursor):
+    def addOrUpdateArt(self, imageUrl, kodiId, mediaType, imageType, cursor):
         # Possible that the imageurl is an empty string
-        if image_url:
+        if imageUrl:
             cacheimage = False
 
             query = ' '.join((
@@ -404,13 +400,13 @@ class Artwork():
                 "AND media_type = ?",
                 "AND type = ?"
             ))
-            cursor.execute(query, (kodi_id, media_type, image_type,))
+            cursor.execute(query, (kodiId, mediaType, imageType,))
             try: # Update the artwork
                 url = cursor.fetchone()[0]
 
             except TypeError: # Add the artwork
                 cacheimage = True
-                log("Adding Art Link for kodiId: %s (%s)" % (kodi_id, image_url), 2)
+                log("Adding Art Link for kodiId: %s (%s)" % (kodiId, imageUrl), 2)
 
                 query = (
                     '''
@@ -419,20 +415,20 @@ class Artwork():
                     VALUES (?, ?, ?, ?)
                     '''
                 )
-                cursor.execute(query, (kodi_id, media_type, image_type, image_url))
+                cursor.execute(query, (kodiId, mediaType, imageType, imageUrl))
 
             else: # Only cache artwork if it changed
-                if url != image_url:
+                if url != imageUrl:
                     cacheimage = True
 
                     # Only for the main backdrop, poster
                     if (window('emby_initialScan') != "true" and
-                            image_type in ("fanart", "poster")):
+                            imageType in ("fanart", "poster")):
                         # Delete current entry before updating with the new one
                         self.deleteCachedArtwork(url)
 
                     log("Updating Art url for %s kodiId: %s (%s) -> (%s)"
-                        % (image_type, kodi_id, url, image_url), 1)
+                        % (imageType, kodiId, url, imageUrl), 1)
 
                     query = ' '.join((
 
@@ -442,13 +438,13 @@ class Artwork():
                         "AND media_type = ?",
                         "AND type = ?"
                     ))
-                    cursor.execute(query, (image_url, kodi_id, media_type, image_type))
+                    cursor.execute(query, (imageUrl, kodiId, mediaType, imageType))
 
             # Cache fanart and poster in Kodi texture cache
-            if cacheimage and image_type in ("fanart", "poster"):
-                self.cacheTexture(image_url)
+            if cacheimage and imageType in ("fanart", "poster"):
+                self.cacheTexture(imageUrl)
 
-    def deleteArtwork(self, kodi_id, media_type, cursor):
+    def deleteArtwork(self, kodiId, mediaType, cursor):
 
         query = ' '.join((
 
@@ -457,13 +453,13 @@ class Artwork():
             "WHERE media_id = ?",
             "AND media_type = ?"
         ))
-        cursor.execute(query, (kodi_id, media_type,))
+        cursor.execute(query, (kodiId, mediaType,))
         rows = cursor.fetchall()
         for row in rows:
 
             url = row[0]
-            imagetype = row[1]
-            if imagetype in ("poster", "fanart"):
+            imageType = row[1]
+            if imageType in ("poster", "fanart"):
                 self.deleteCachedArtwork(url)
 
     def deleteCachedArtwork(self, url):
@@ -513,10 +509,10 @@ class Artwork():
 
         return people
 
-    def getUserArtwork(self, item_id, item_type):
+    def getUserArtwork(self, itemId, itemType):
         # Load user information set by UserClient
         image = ("%s/emby/Users/%s/Images/%s?Format=original"
-                    % (self.server, item_id, item_type))
+                    % (self.server, itemId, itemType))
         return image
 
     def getAllArtwork(self, item, parentInfo=False):
