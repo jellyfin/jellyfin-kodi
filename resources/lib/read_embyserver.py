@@ -570,5 +570,5 @@ class Read_EmbyServer():
 
     def deleteItem(self, itemid):
 
-        url = "{server}/emby/Items/%s?format=json" % itemId
+        url = "{server}/emby/Items/%s?format=json" % itemid
         self.doUtils(url, action_type="DELETE")
