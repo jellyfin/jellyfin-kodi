@@ -332,7 +332,7 @@ def getThemeMedia():
     else:
         # if it does not exist this will not work so warn user
         # often they need to edit the settings first for it to be created.
-        dialog.ok(heading=lang(29999), line1=lang(33073))0
+        dialog.ok(heading=lang(29999), line1=lang(33073))
         xbmc.executebuiltin('Addon.OpenSettings(script.tvtunes)')
         return
         
