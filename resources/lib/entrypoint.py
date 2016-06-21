@@ -88,7 +88,7 @@ def doMainListing():
                     addDirectoryItem(label, path)
                 elif xbmc.getCondVisibility("Window.IsActive(VideoLibrary)") and node != "photos":
                     addDirectoryItem(label, path)
-                else:
+                elif not xbmc.getCondVisibility("Window.IsActive(VideoLibrary) | Window.IsActive(Pictures) | Window.IsActive(MusicLibrary)"):
                     addDirectoryItem(label, path)
 
     # experimental live tv nodes
