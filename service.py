@@ -16,9 +16,9 @@ import xbmcvfs
 #################################################################################################
 
 _addon = xbmcaddon.Addon(id='plugin.video.emby')
-addon_path = _addon.getAddonInfo('path').decode('utf-8')
-base_resource = xbmc.translatePath(os.path.join(addon_path, 'resources', 'lib')).decode('utf-8')
-sys.path.append(base_resource)
+_addon_path = _addon.getAddonInfo('path').decode('utf-8')
+_base_resource = xbmc.translatePath(os.path.join(_addon_path, 'resources', 'lib')).decode('utf-8')
+sys.path.append(_base_resource)
 
 #################################################################################################
 
@@ -28,9 +28,9 @@ import initialsetup
 import kodimonitor
 import librarysync
 import player
-import utils
 import videonodes
 import websocket_client as wsc
+from utils import Logging, window, settings, language as lang
 
 #################################################################################################
 
@@ -49,8 +49,8 @@ class Service():
 
     def __init__(self):
 
-        log = self.logMsg
-        window = utils.window
+        global log
+        log = Logging(self.__class__.__name__).log
 
         self.clientInfo = clientinfo.ClientInfo()
         self.addonName = self.clientInfo.getAddonName()
@@ -58,15 +58,14 @@ class Service():
         self.monitor = xbmc.Monitor()
 
         window('emby_logLevel', value=str(logLevel))
-        window('emby_kodiProfile', value=xbmc.translatePath("special://profile"))
-        window('emby_pluginpath', value=utils.settings('useDirectPaths'))
+        window('emby_kodiProfile', value=xbmc.translatePath('special://profile'))
 
         # Initial logging
         log("======== START %s ========" % self.addonName, 0)
         log("Platform: %s" % (self.clientInfo.getPlatform()), 0)
         log("KODI Version: %s" % xbmc.getInfoLabel('System.BuildVersion'), 0)
         log("%s Version: %s" % (self.addonName, self.clientInfo.getVersion()), 0)
-        log("Using plugin paths: %s" % (utils.settings('useDirectPaths') != "true"), 0)
+        log("Using plugin paths: %s" % (settings('useDirectPaths') == "0"), 0)
         log("Log Level: %s" % logLevel, 0)
 
         # Reset window props for profile switch
@@ -86,22 +85,13 @@ class Service():
         # Set the minimum database version
         window('emby_minDBVersion', value="1.1.63")
 
-    def logMsg(self, msg, lvl=1):
-
-        className = self.__class__.__name__
-        utils.logMsg("%s %s" % (self.addonName, className), msg, lvl)
-
        
     def ServiceEntryPoint(self):
-
-        log = self.logMsg
-        window = utils.window
-        lang = utils.language
 
         # Important: Threads depending on abortRequest will not trigger
         # if profile switch happens more than once.
         monitor = self.monitor
-        kodiProfile = xbmc.translatePath("special://profile")
+        kodiProfile = xbmc.translatePath('special://profile')
 
         # Server auto-detect
         initialsetup.InitialSetup().setup()
@@ -119,7 +109,7 @@ class Service():
             if window('emby_kodiProfile') != kodiProfile:
                 # Profile change happened, terminate this thread and others
                 log("Kodi profile was: %s and changed to: %s. Terminating old Emby thread."
-                    % (kodiProfile, utils.window('emby_kodiProfile')), 1)
+                    % (kodiProfile, window('emby_kodiProfile')), 1)
                 
                 break
             
@@ -167,7 +157,7 @@ class Service():
                     else:
                         # Start up events
                         self.warn_auth = True
-                        if utils.settings('connectMsg') == "true" and self.welcome_msg:
+                        if settings('connectMsg') == "true" and self.welcome_msg:
                             # Reset authentication warnings
                             self.welcome_msg = False
                             # Get additional users
@@ -177,7 +167,7 @@ class Service():
                             else:
                                 add = ""
                             xbmcgui.Dialog().notification(
-                                        heading="Emby for Kodi",
+                                        heading=lang(29999),
                                         message=("%s %s%s!"
                                                 % (lang(33000), user.currUser.decode('utf-8'),
                                                     add.decode('utf-8'))),
@@ -252,7 +242,7 @@ class Service():
                                 break
                             # Alert the user that server is online.
                             xbmcgui.Dialog().notification(
-                                        heading="Emby for Kodi",
+                                        heading=lang(29999),
                                         message=lang(33003),
                                         icon="special://home/addons/plugin.video.emby/icon.png",
                                         time=2000,
@@ -291,7 +281,7 @@ class Service():
         log("======== STOP %s ========" % self.addonName, 0)
 
 # Delay option
-delay = int(utils.settings('startupDelay'))
+delay = int(settings('startupDelay'))
 
 xbmc.log("Delaying emby startup by: %s sec..." % delay)
 if delay and xbmc.Monitor().waitForAbort(delay):

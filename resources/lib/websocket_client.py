@@ -14,10 +14,7 @@ import downloadutils
 import librarysync
 import playlist
 import userclient
-import utils
-
-import logging
-logging.basicConfig()
+from utils import Logging, window, settings, language as lang
 
 #################################################################################################
 
@@ -32,6 +29,9 @@ class WebSocket_Client(threading.Thread):
 
     def __init__(self):
 
+        global log
+        log = Logging(self.__class__.__name__).log
+
         self.__dict__ = self._shared_state
         self.monitor = xbmc.Monitor()
         
@@ -43,15 +43,10 @@ class WebSocket_Client(threading.Thread):
         
         threading.Thread.__init__(self)
 
-    def logMsg(self, msg, lvl=1):
-
-        self.className = self.__class__.__name__
-        utils.logMsg("%s %s" % (self.addonName, self.className), msg, lvl)
-
 
     def sendProgressUpdate(self, data):
         
-        self.logMsg("sendProgressUpdate", 2)
+        log("sendProgressUpdate", 2)
         try:
             messageData = {
 
@@ -60,23 +55,21 @@ class WebSocket_Client(threading.Thread):
             }
             messageString = json.dumps(messageData)
             self.client.send(messageString)
-            self.logMsg("Message data: %s" % messageString, 2)
+            log("Message data: %s" % messageString, 2)
 
         except Exception as e:
-            self.logMsg("Exception: %s" % e, 1)
+            log("Exception: %s" % e, 1)
 
     def on_message(self, ws, message):
-        
-        window = utils.window
-        lang = utils.language
 
         result = json.loads(message)
         messageType = result['MessageType']
         data = result['Data']
+        dialog = xbmcgui.Dialog()
 
         if messageType not in ('SessionEnded'):
             # Mute certain events
-            self.logMsg("Message: %s" % message, 1)
+            log("Message: %s" % message, 1)
 
         if messageType == "Play":
             # A remote control play command has been sent from the server.
@@ -84,11 +77,10 @@ class WebSocket_Client(threading.Thread):
             command = data['PlayCommand']
 
             pl = playlist.Playlist()
-            dialog = xbmcgui.Dialog()
 
             if command == "PlayNow":
                 dialog.notification(
-                        heading="Emby for Kodi",
+                        heading=lang(29999),
                         message="%s %s" % (len(itemIds), lang(33004)),
                         icon="special://home/addons/plugin.video.emby/icon.png",
                         sound=False)
@@ -97,7 +89,7 @@ class WebSocket_Client(threading.Thread):
 
             elif command == "PlayNext":
                 dialog.notification(
-                        heading="Emby for Kodi",
+                        heading=lang(29999),
                         message="%s %s" % (len(itemIds), lang(33005)),
                         icon="special://home/addons/plugin.video.emby/icon.png",
                         sound=False)
@@ -126,10 +118,10 @@ class WebSocket_Client(threading.Thread):
                 seekto = data['SeekPositionTicks']
                 seektime = seekto / 10000000.0
                 action(seektime)
-                self.logMsg("Seek to %s." % seektime, 1)
+                log("Seek to %s." % seektime, 1)
             else:
                 action()
-                self.logMsg("Command: %s completed." % command, 1)
+                log("Command: %s completed." % command, 1)
 
             window('emby_command', value="true")
 
@@ -199,11 +191,11 @@ class WebSocket_Client(threading.Thread):
                 
                 header = arguments['Header']
                 text = arguments['Text']
-                xbmcgui.Dialog().notification(
-                                    heading=header,
-                                    message=text,
-                                    icon="special://home/addons/plugin.video.emby/icon.png",
-                                    time=4000)
+                dialog.notification(
+                            heading=header,
+                            message=text,
+                            icon="special://home/addons/plugin.video.emby/icon.png",
+                            time=4000)
 
             elif command == "SendString":
                 
@@ -250,11 +242,11 @@ class WebSocket_Client(threading.Thread):
                     xbmc.executebuiltin(action)
 
         elif messageType == "ServerRestarting":
-            if utils.settings('supressRestartMsg') == "true":
-                xbmcgui.Dialog().notification(
-                                    heading="Emby for Kodi",
-                                    message=lang(33006),
-                                    icon="special://home/addons/plugin.video.emby/icon.png")
+            if settings('supressRestartMsg') == "true":
+                dialog.notification(
+                            heading=lang(29999),
+                            message=lang(33006),
+                            icon="special://home/addons/plugin.video.emby/icon.png")
 
         elif messageType == "UserConfigurationUpdated":
             # Update user data set in userclient
@@ -262,7 +254,7 @@ class WebSocket_Client(threading.Thread):
             self.librarySync.refresh_views = True
 
     def on_close(self, ws):
-        self.logMsg("Closed.", 2)
+        log("Closed.", 2)
 
     def on_open(self, ws):
         self.doUtils.postCapabilities(self.deviceId)
@@ -272,11 +264,10 @@ class WebSocket_Client(threading.Thread):
             # Server is offline
             pass
         else:
-            self.logMsg("Error: %s" % error, 2)
+            log("Error: %s" % error, 2)
 
     def run(self):
 
-        window = utils.window
         loglevel = int(window('emby_logLevel'))
         # websocket.enableTrace(True)
 
@@ -290,7 +281,7 @@ class WebSocket_Client(threading.Thread):
             server = server.replace('http', "ws")
 
         websocket_url = "%s?api_key=%s&deviceId=%s" % (server, token, self.deviceId)
-        self.logMsg("websocket url: %s" % websocket_url, 1)
+        log("websocket url: %s" % websocket_url, 1)
 
         self.client = websocket.WebSocketApp(websocket_url,
                                     on_message=self.on_message,
@@ -298,7 +289,7 @@ class WebSocket_Client(threading.Thread):
                                     on_close=self.on_close)
         
         self.client.on_open = self.on_open
-        self.logMsg("----===## Starting WebSocketClient ##===----", 0)
+        log("----===## Starting WebSocketClient ##===----", 0)
 
         while not self.monitor.abortRequested():
 
@@ -310,10 +301,10 @@ class WebSocket_Client(threading.Thread):
                 # Abort was requested, exit
                 break
 
-        self.logMsg("##===---- WebSocketClient Stopped ----===##", 0)
+        log("##===---- WebSocketClient Stopped ----===##", 0)
 
     def stopClient(self):
 
         self.stopWebsocket = True
         self.client.close()
-        self.logMsg("Stopping thread.", 1)
+        log("Stopping thread.", 1)

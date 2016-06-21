@@ -7,7 +7,7 @@ import xbmcgui
 import xbmcvfs
 
 import clientinfo
-import utils
+from utils import Logging, window, settings, language as lang
 
 #################################################################################################
 
@@ -17,41 +17,37 @@ class PlayUtils():
     
     def __init__(self, item):
 
+        global log
+        log = Logging(self.__class__.__name__).log
+
         self.item = item
         self.clientInfo = clientinfo.ClientInfo()
         self.addonName = self.clientInfo.getAddonName()
 
-        self.userid = utils.window('emby_currUser')
-        self.server = utils.window('emby_server%s' % self.userid)
-
-    def logMsg(self, msg, lvl=1):
-
-        self.className = self.__class__.__name__
-        utils.logMsg("%s %s" % (self.addonName, self.className), msg, lvl)
+        self.userid = window('emby_currUser')
+        self.server = window('emby_server%s' % self.userid)
     
 
     def getPlayUrl(self):
 
-        window = utils.window
-
         playurl = None
         
-        if (self.item.get('Type') in ("Recording", "TvChannel") and
-                self.item.get('MediaSources') and self.item['MediaSources'][0]['Protocol'] == "Http"):
+        if (self.item.get('Type') in ("Recording", "TvChannel") and self.item.get('MediaSources')
+                and self.item['MediaSources'][0]['Protocol'] == "Http"):
             # Play LiveTV or recordings
-            self.logMsg("File protocol is http (livetv).", 1)
+            log("File protocol is http (livetv).", 1)
             playurl = "%s/emby/Videos/%s/live.m3u8?static=true" % (self.server, self.item['Id'])
             window('emby_%s.playmethod' % playurl, value="Transcode")
 
         elif self.item.get('MediaSources') and self.item['MediaSources'][0]['Protocol'] == "Http":
             # Only play as http, used for channels, or online hosting of content
-            self.logMsg("File protocol is http.", 1)
+            log("File protocol is http.", 1)
             playurl = self.httpPlay()
             window('emby_%s.playmethod' % playurl, value="DirectStream")
 
         elif self.isDirectPlay():
 
-            self.logMsg("File is direct playing.", 1)
+            log("File is direct playing.", 1)
             playurl = self.directPlay()
             playurl = playurl.encode('utf-8')
             # Set playmethod property
@@ -59,14 +55,14 @@ class PlayUtils():
 
         elif self.isDirectStream():
             
-            self.logMsg("File is direct streaming.", 1)
+            log("File is direct streaming.", 1)
             playurl = self.directStream()
             # Set playmethod property
             window('emby_%s.playmethod' % playurl, value="DirectStream")
 
         elif self.isTranscoding():
             
-            self.logMsg("File is transcoding.", 1)
+            log("File is transcoding.", 1)
             playurl = self.transcoding()
             # Set playmethod property
             window('emby_%s.playmethod' % playurl, value="Transcode")
@@ -88,21 +84,18 @@ class PlayUtils():
 
     def isDirectPlay(self):
 
-        lang = utils.language
-        settings = utils.settings
         dialog = xbmcgui.Dialog()
-
 
         # Requirement: Filesystem, Accessible path
         if settings('playFromStream') == "true":
             # User forcing to play via HTTP
-            self.logMsg("Can't direct play, play from HTTP enabled.", 1)
+            log("Can't direct play, play from HTTP enabled.", 1)
             return False
 
         videotrack = self.item['MediaSources'][0]['Name']
         transcodeH265 = settings('transcodeH265')
         videoprofiles = [x['Profile'] for x in self.item['MediaSources'][0]['MediaStreams'] if 'Profile' in x]
-        transcodeHi10P = utils.settings('transcodeHi10P')        
+        transcodeHi10P = settings('transcodeHi10P')        
 
         if transcodeHi10P == "true" and "H264" in videotrack and "High 10" in videoprofiles:
             return False   
@@ -116,7 +109,7 @@ class PlayUtils():
                 '2': 720,
                 '3': 1080
             }
-            self.logMsg("Resolution is: %sP, transcode for resolution: %sP+"
+            log("Resolution is: %sP, transcode for resolution: %sP+"
                 % (resolution, res[transcodeH265]), 1)
             if res[transcodeH265] <= resolution:
                 return False
@@ -124,25 +117,25 @@ class PlayUtils():
         canDirectPlay = self.item['MediaSources'][0]['SupportsDirectPlay']
         # Make sure direct play is supported by the server
         if not canDirectPlay:
-            self.logMsg("Can't direct play, server doesn't allow/support it.", 1)
+            log("Can't direct play, server doesn't allow/support it.", 1)
             return False
 
         location = self.item['LocationType']
         if location == "FileSystem":
             # Verify the path
             if not self.fileExists():
-                self.logMsg("Unable to direct play.")
+                log("Unable to direct play.", 1)
                 try:
                     count = int(settings('failCount'))
                 except ValueError:
                     count = 0
-                self.logMsg("Direct play failed: %s times." % count, 1)
+                log("Direct play failed: %s times." % count, 1)
 
                 if count < 2:
                     # Let the user know that direct play failed
                     settings('failCount', value=str(count+1))
                     dialog.notification(
-                                heading="Emby for Kodi",
+                                heading=lang(29999),
                                 message=lang(33011),
                                 icon="special://home/addons/plugin.video.emby/icon.png",
                                 sound=False)
@@ -151,7 +144,7 @@ class PlayUtils():
                     settings('playFromStream', value="true")
                     settings('failCount', value="0")
                     dialog.notification(
-                                heading="Emby for Kodi",
+                                heading=lang(29999),
                                 message=lang(33012),
                                 icon="special://home/addons/plugin.video.emby/icon.png",
                                 sound=False)
@@ -192,27 +185,26 @@ class PlayUtils():
 
         # Convert path to direct play
         path = self.directPlay()
-        self.logMsg("Verifying path: %s" % path, 1)
+        log("Verifying path: %s" % path, 1)
 
         if xbmcvfs.exists(path):
-            self.logMsg("Path exists.", 1)
+            log("Path exists.", 1)
             return True
 
         elif ":" not in path:
-            self.logMsg("Can't verify path, assumed linux. Still try to direct play.", 1)
+            log("Can't verify path, assumed linux. Still try to direct play.", 1)
             return True
 
         else:
-            self.logMsg("Failed to find file.", 1)
+            log("Failed to find file.", 1)
             return False
 
     def isDirectStream(self):
 
-
         videotrack = self.item['MediaSources'][0]['Name']
-        transcodeH265 = utils.settings('transcodeH265')
+        transcodeH265 = settings('transcodeH265')
         videoprofiles = [x['Profile'] for x in self.item['MediaSources'][0]['MediaStreams'] if 'Profile' in x]
-        transcodeHi10P = utils.settings('transcodeHi10P')        
+        transcodeHi10P = settings('transcodeHi10P')        
 
         if transcodeHi10P == "true" and "H264" in videotrack and "High 10" in videoprofiles:
             return False   
@@ -226,7 +218,7 @@ class PlayUtils():
                 '2': 720,
                 '3': 1080
             }
-            self.logMsg("Resolution is: %sP, transcode for resolution: %sP+"
+            log("Resolution is: %sP, transcode for resolution: %sP+"
                 % (resolution, res[transcodeH265]), 1)
             if res[transcodeH265] <= resolution:
                 return False
@@ -239,7 +231,7 @@ class PlayUtils():
 
         # Verify the bitrate
         if not self.isNetworkSufficient():
-            self.logMsg("The network speed is insufficient to direct stream file.", 1)
+            log("The network speed is insufficient to direct stream file.", 1)
             return False
 
         return True
@@ -258,15 +250,14 @@ class PlayUtils():
 
     def isNetworkSufficient(self):
 
-
         settings = self.getBitrate()*1000
 
         try:
             sourceBitrate = int(self.item['MediaSources'][0]['Bitrate'])
         except (KeyError, TypeError):
-            self.logMsg("Bitrate value is missing.", 1)
+            log("Bitrate value is missing.", 1)
         else:
-            self.logMsg("The add-on settings bitrate is: %s, the video bitrate required is: %s"
+            log("The add-on settings bitrate is: %s, the video bitrate required is: %s"
                 % (settings, sourceBitrate), 1)
             if settings < sourceBitrate:
                 return False
@@ -325,11 +316,10 @@ class PlayUtils():
         }
 
         # max bit rate supported by server (max signed 32bit integer)
-        return bitrate.get(utils.settings('videoBitrate'), 2147483)
+        return bitrate.get(settings('videoBitrate'), 2147483)
 
     def audioSubsPref(self, url, listitem):
 
-        lang = utils.language
         dialog = xbmcgui.Dialog()
         # For transcoding only
         # Present the list of audio to select from

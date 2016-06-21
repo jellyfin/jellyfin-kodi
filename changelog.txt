@@ -1,3 +1,8 @@
+version 2.2.11
+- Preparation for feature requests
+- Add option to refresh Emby items via context menu
+- Minor fixes
+
 version 2.2.10
 - Add keymap action for delete content: RunPlugin(plugin://plugin.video.emby?mode=delete)
 - Fix various bugs

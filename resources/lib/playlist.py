@@ -13,7 +13,7 @@ import playutils
 import playbackutils
 import embydb_functions as embydb
 import read_embyserver as embyserver
-import utils
+from utils import Logging, window, settings, language as lang, kodiSQL
 
 #################################################################################################
 
@@ -23,25 +23,21 @@ class Playlist():
 
     def __init__(self):
 
+        global log
+        log = Logging(self.__class__.__name__).log
+
         self.clientInfo = clientinfo.ClientInfo()
         self.addonName = self.clientInfo.getAddonName()
 
-        self.userid = utils.window('emby_currUser')
-        self.server = utils.window('emby_server%s' % self.userid)
+        self.userid = window('emby_currUser')
+        self.server = window('emby_server%s' % self.userid)
 
         self.emby = embyserver.Read_EmbyServer()
-
-    def logMsg(self, msg, lvl=1):
-
-        self.className = self.__class__.__name__
-        utils.logMsg("%s %s" % (self.addonName, self.className), msg, lvl)
 
 
     def playAll(self, itemids, startat):
 
-        window = utils.window
-
-        embyconn = utils.kodiSQL('emby')
+        embyconn = kodiSQL('emby')
         embycursor = embyconn.cursor()
         emby_db = embydb.Embydb_Functions(embycursor)
 
@@ -49,8 +45,8 @@ class Playlist():
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
         playlist.clear()
 
-        self.logMsg("---*** PLAY ALL ***---", 1)
-        self.logMsg("Items: %s and start at: %s" % (itemids, startat), 1)
+        log("---*** PLAY ALL ***---", 1)
+        log("Items: %s and start at: %s" % (itemids, startat), 1)
 
         started = False
         window('emby_customplaylist', value="true")
@@ -66,14 +62,14 @@ class Playlist():
                 mediatype = embydb_item[4]
             except TypeError:
                 # Item is not found in our database, add item manually
-                self.logMsg("Item was not found in the database, manually adding item.", 1)
+                log("Item was not found in the database, manually adding item.", 1)
                 item = self.emby.getItem(itemid)
                 self.addtoPlaylist_xbmc(playlist, item)
             else:
                 # Add to playlist
                 self.addtoPlaylist(dbid, mediatype)
 
-            self.logMsg("Adding %s to playlist." % itemid, 1)
+            log("Adding %s to playlist." % itemid, 1)
 
             if not started:
                 started = True
@@ -84,12 +80,12 @@ class Playlist():
 
     def modifyPlaylist(self, itemids):
 
-        embyconn = utils.kodiSQL('emby')
+        embyconn = kodiSQL('emby')
         embycursor = embyconn.cursor()
         emby_db = embydb.Embydb_Functions(embycursor)
 
-        self.logMsg("---*** ADD TO PLAYLIST ***---", 1)
-        self.logMsg("Items: %s" % itemids, 1)
+        log("---*** ADD TO PLAYLIST ***---", 1)
+        log("Items: %s" % itemids, 1)
 
         player = xbmc.Player()
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
@@ -107,7 +103,7 @@ class Playlist():
                 # Add to playlist
                 self.addtoPlaylist(dbid, mediatype)
 
-            self.logMsg("Adding %s to playlist." % itemid, 1)
+            log("Adding %s to playlist." % itemid, 1)
 
         self.verifyPlaylist()
         embycursor.close()
@@ -130,17 +126,17 @@ class Playlist():
         else:
             pl['params']['item'] = {'file': url}
 
-        self.logMsg(xbmc.executeJSONRPC(json.dumps(pl)), 2)
+        log(xbmc.executeJSONRPC(json.dumps(pl)), 2)
 
     def addtoPlaylist_xbmc(self, playlist, item):
 
         playurl = playutils.PlayUtils(item).getPlayUrl()
         if not playurl:
             # Playurl failed
-            self.logMsg("Failed to retrieve playurl.", 1)
+            log("Failed to retrieve playurl.", 1)
             return
 
-        self.logMsg("Playurl: %s" % playurl)
+        log("Playurl: %s" % playurl)
         listitem = xbmcgui.ListItem()
         playbackutils.PlaybackUtils(item).setProperties(playurl, listitem)
 
@@ -164,7 +160,7 @@ class Playlist():
         else:
             pl['params']['item'] = {'file': url}
 
-        self.logMsg(xbmc.executeJSONRPC(json.dumps(pl)), 2)
+        log(xbmc.executeJSONRPC(json.dumps(pl)), 2)
 
     def verifyPlaylist(self):
 
@@ -178,7 +174,7 @@ class Playlist():
                 'playlistid': 1
             }
         }
-        self.logMsg(xbmc.executeJSONRPC(json.dumps(pl)), 2)
+        log(xbmc.executeJSONRPC(json.dumps(pl)), 2)
 
     def removefromPlaylist(self, position):
 
@@ -193,4 +189,4 @@ class Playlist():
                 'position': position
             }
         }
-        self.logMsg(xbmc.executeJSONRPC(json.dumps(pl)), 2)
+        log(xbmc.executeJSONRPC(json.dumps(pl)), 2)
