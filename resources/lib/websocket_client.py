@@ -80,7 +80,7 @@ class WebSocket_Client(threading.Thread):
 
             if command == "PlayNow":
                 dialog.notification(
-                        heading="Emby for Kodi",
+                        heading=lang(29999),
                         message="%s %s" % (len(itemIds), lang(33004)),
                         icon="special://home/addons/plugin.video.emby/icon.png",
                         sound=False)
@@ -89,7 +89,7 @@ class WebSocket_Client(threading.Thread):
 
             elif command == "PlayNext":
                 dialog.notification(
-                        heading="Emby for Kodi",
+                        heading=lang(29999),
                         message="%s %s" % (len(itemIds), lang(33005)),
                         icon="special://home/addons/plugin.video.emby/icon.png",
                         sound=False)
@@ -244,7 +244,7 @@ class WebSocket_Client(threading.Thread):
         elif messageType == "ServerRestarting":
             if settings('supressRestartMsg') == "true":
                 dialog.notification(
-                            heading="Emby for Kodi",
+                            heading=lang(29999),
                             message=lang(33006),
                             icon="special://home/addons/plugin.video.emby/icon.png")
 

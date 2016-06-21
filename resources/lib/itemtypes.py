@@ -212,13 +212,8 @@ class Items(object):
         # Verify if direct path is accessible or not
         if window('emby_pathverified') != "true" and not xbmcvfs.exists(path):
             resp = xbmcgui.Dialog().yesno(
-                        heading="Can't validate path",
-                        line1=(
-                            "Kodi can't locate file: %s. "
-                            "You may need to verify your network credentials in the "
-                            "add-on settings or use the Emby path substitution "
-                            "to format your path correctly (Emby dashboard > library). "
-                            "Stop syncing?" % path))
+                        heading=lang(29999),
+                        line1="%s %s. %s" % (lang(33047), path, lang(33048)))
             if resp:
                 window('emby_shouldStop', value="true")
                 return False
@@ -230,8 +225,8 @@ class Items(object):
         if time: 
             # It's possible for the time to be 0. It should be considered disabled in this case.
             xbmcgui.Dialog().notification(
-                    heading="Emby for Kodi",
-                    message="Added: %s" % name,
+                    heading=lang(29999),
+                    message="%s %s" % (lang(33049), name),
                     icon="special://home/addons/plugin.video.emby/icon.png",
                     time=time,
                     sound=False)
@@ -571,9 +566,7 @@ class Movies(Items):
         try:
             movieid = emby_dbitem[0]
             fileid = emby_dbitem[1]
-            log(
-                "Update playstate for movie: %s fileid: %s"
-                % (item['Name'], fileid), 1)
+            log("Update playstate for movie: %s fileid: %s" % (item['Name'], fileid), 1)
         except TypeError:
             return
 
@@ -2373,19 +2366,19 @@ class Music(Items):
 
         log("Deleted %s: %s from kodi database" % (mediatype, itemid), 1)
 
-    def removeSong(self, kodiid):
+    def removeSong(self, kodiId):
 
         kodicursor = self.kodicursor
 
-        self.artwork.deleteArtwork(kodiid, "song", self.kodicursor)
-        self.kodicursor.execute("DELETE FROM song WHERE idSong = ?", (kodiid,))
+        self.artwork.deleteArtwork(kodiId, "song", self.kodicursor)
+        self.kodicursor.execute("DELETE FROM song WHERE idSong = ?", (kodiId,))
 
-    def removeAlbum(self, kodiid):
+    def removeAlbum(self, kodiId):
 
-        self.artwork.deleteArtwork(kodiid, "album", self.kodicursor)
-        self.kodicursor.execute("DELETE FROM album WHERE idAlbum = ?", (kodiid,))
+        self.artwork.deleteArtwork(kodiId, "album", self.kodicursor)
+        self.kodicursor.execute("DELETE FROM album WHERE idAlbum = ?", (kodiId,))
 
-    def removeArtist(self, kodiid):
+    def removeArtist(self, kodiId):
 
-        self.artwork.deleteArtwork(kodiid, "artist", self.kodicursor)
-        self.kodicursor.execute("DELETE FROM artist WHERE idArtist = ?", (kodiid,))
+        self.artwork.deleteArtwork(kodiId, "artist", self.kodicursor)
+        self.kodicursor.execute("DELETE FROM artist WHERE idArtist = ?", (kodiId,))

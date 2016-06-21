@@ -94,7 +94,7 @@ class KodiMonitor(xbmc.Monitor):
                     try:
                         itemid = emby_dbitem[0]
                     except TypeError:
-                        log("No kodiid returned.", 1)
+                        log("No kodiId returned.", 1)
                     else:
                         url = "{server}/emby/Users/{UserId}/Items/%s?format=json" % itemid
                         result = doUtils.downloadUrl(url)

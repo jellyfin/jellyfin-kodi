@@ -260,7 +260,7 @@ def reset():
 
     dialog = xbmcgui.Dialog()
 
-    if not dialog.yesno("Warning", "Are you sure you want to reset your local Kodi database?"):
+    if not dialog.yesno(language(29999), language(33074)):
         return
 
     # first stop any db sync
@@ -270,7 +270,7 @@ def reset():
         log("Sync is running, will retry: %s..." % count)
         count -= 1
         if count == 0:
-            dialog.ok("Warning", "Could not stop the database from running. Try again.")
+            dialog.ok(language(29999), language(33085))
             return
         xbmc.sleep(1000)
 
@@ -322,7 +322,7 @@ def reset():
     cursor.close()
 
     # Offer to wipe cached thumbnails
-    resp = dialog.yesno("Warning", "Remove all cached artwork?")
+    resp = dialog.yesno(language(29999), language(33086))
     if resp:
         log("Resetting all cached artwork.", 0)
         # Remove all existing textures first
@@ -353,7 +353,7 @@ def reset():
     settings('SyncInstallRunDone', value="false")
 
     # Remove emby info
-    resp = dialog.yesno("Warning", "Reset all Emby Addon settings?")
+    resp = dialog.yesno(language(29999), language(33087))
     if resp:
         # Delete the settings
         addon = xbmcaddon.Addon()
@@ -362,9 +362,7 @@ def reset():
         xbmcvfs.delete(dataPath)
         log("Deleting: settings.xml", 1)
 
-    dialog.ok(
-        heading="Emby for Kodi",
-        line1="Database reset has completed, Kodi will now restart to apply the changes.")
+    dialog.ok(heading=language(29999), line1=language(33088))
     xbmc.executebuiltin('RestartApp')
 
 def sourcesXML():
@@ -424,7 +422,7 @@ def passwordsXML():
     credentials = settings('networkCreds')
     if credentials:
         # Present user with options
-        option = dialog.select("Modify/Remove network credentials", ["Modify", "Remove"])
+        option = dialog.select(language(33075), [language(33076), language(33077)])
 
         if option < 0:
             # User cancelled dialog
@@ -444,8 +442,8 @@ def passwordsXML():
 
             settings('networkCreds', value="")
             xbmcgui.Dialog().notification(
-                                heading="Emby for Kodi",
-                                message="%s removed from passwords.xml" % credentials,
+                                heading=language(29999),
+                                message="%s %s" % (language(33078), credentials),
                                 icon="special://home/addons/plugin.video.emby/icon.png",
                                 time=1000,
                                 sound=False)
@@ -453,28 +451,22 @@ def passwordsXML():
 
         elif option == 0:
             # User selected to modify
-            server = dialog.input("Modify the computer name or ip address", credentials)
+            server = dialog.input(language(33083), credentials)
             if not server:
                 return
     else:
         # No credentials added
-        dialog.ok(
-            heading="Network credentials",
-            line1= (
-                "Input the server name or IP address as indicated in your emby library paths. "
-                'For example, the server name: \\\\SERVER-PC\\path\\ is "SERVER-PC".'))
-        server = dialog.input("Enter the server name or IP address")
+        dialog.ok(heading=language(29999), line1=language(33082))
+        server = dialog.input(language(33084))
         if not server:
             return
 
     # Network username
-    user = dialog.input("Enter the network username")
+    user = dialog.input(language(33079))
     if not user:
         return
     # Network password
-    password = dialog.input(
-                        heading="Enter the network password",
-                        option=xbmcgui.ALPHANUM_HIDE_INPUT)
+    password = dialog.input(heading=language(33080), option=xbmcgui.ALPHANUM_HIDE_INPUT)
     if not password:
         return
 
@@ -503,8 +495,8 @@ def passwordsXML():
     etree.ElementTree(root).write(xmlpath)
 
     dialog.notification(
-            heading="Emby for Kodi",
-            message="%s added to passwords.xml" % server,
+            heading=language(29999),
+            message="%s %s" % (language(33081), server),
             icon="special://home/addons/plugin.video.emby/icon.png",
             time=1000,
             sound=False)

@@ -130,7 +130,7 @@ class Main():
                     
             elif mode == "texturecache":
                 import artwork
-                artwork.Artwork().FullTextureCacheSync()
+                artwork.Artwork().fullTextureCacheSync()
             
             else:
                 entrypoint.doMainListing()

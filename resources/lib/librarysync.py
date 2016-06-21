@@ -320,7 +320,7 @@ class LibrarySync(threading.Thread):
         window('emby_initialScan', clear=True)
         if forceddialog:
             xbmcgui.Dialog().notification(
-                        heading="Emby for Kodi",
+                        heading=lang(29999),
                         message="%s %s %s" %
                                 (message, lang(33025), str(elapsedtotal).split('.')[0]),
                         icon="special://home/addons/plugin.video.emby/icon.png",
@@ -541,7 +541,7 @@ class LibrarySync(threading.Thread):
             self.vnodes.singleNode(totalnodes, "channels", "movies", "channels")
             totalnodes += 1
             # Save total
-            utils.window('Emby.nodes.total', str(totalnodes))
+            window('Emby.nodes.total', str(totalnodes))
 
             # Remove any old referenced views
             log("Removing views: %s" % current_views, 1)
@@ -567,7 +567,7 @@ class LibrarySync(threading.Thread):
             # Get items per view
             if pdialog:
                 pdialog.update(
-                        heading="Emby for Kodi",
+                        heading=lang(29999),
                         message="%s %s..." % (lang(33017), view['name']))
 
             # Initial or repair sync
@@ -596,7 +596,7 @@ class LibrarySync(threading.Thread):
 
         ##### PROCESS BOXSETS #####
         if pdialog:
-            pdialog.update(heading="Emby for Kodi", message=lang(33018))
+            pdialog.update(heading=lang(29999), message=lang(33018))
 
         boxsets = self.emby.getBoxset(dialog=pdialog)
         total = boxsets['TotalRecordCount']
@@ -642,7 +642,7 @@ class LibrarySync(threading.Thread):
 
             if pdialog:
                 pdialog.update(
-                        heading="Emby for Kodi",
+                        heading=lang(29999),
                         message="%s %s..." % (lang(33019), viewName))
 
             # Initial or repair sync
@@ -688,7 +688,7 @@ class LibrarySync(threading.Thread):
             # Get items per view
             if pdialog:
                 pdialog.update(
-                        heading="Emby for Kodi",
+                        heading=lang(29999),
                         message="%s %s..." % (lang(33020), view['name']))
 
             all_embytvshows = self.emby.getShows(view['id'], dialog=pdialog)
@@ -743,7 +743,7 @@ class LibrarySync(threading.Thread):
 
             if pdialog:
                 pdialog.update(
-                    heading="Emby for Kodi",
+                    heading=lang(29999),
                     message="%s %s..." % (lang(33021), itemtype))
 
             all_embyitems = process[itemtype][0](dialog=pdialog)
@@ -900,13 +900,13 @@ class LibrarySync(threading.Thread):
         except Exception as e:
             window('emby_dbScan', clear=True)
             xbmcgui.Dialog().ok(
-                        heading="Emby for Kodi",
+                        heading=lang(29999),
                         line1=(
                             "Library sync thread has exited! "
                             "You should restart Kodi now. "
                             "Please report this on the forum."))
             raise
-
+    @utils.profiling()
     def run_internal(self):
 
         dialog = xbmcgui.Dialog()
@@ -934,10 +934,10 @@ class LibrarySync(threading.Thread):
                     log("Database version out of date: %s minimum version required: %s"
                         % (currentVersion, minVersion), 0)
 
-                    resp = dialog.yesno("Emby for Kodi", lang(33022))
+                    resp = dialog.yesno(lang(29999), lang(33022))
                     if not resp:
                         log("Database version is out of date! USER IGNORED!", 0)
-                        dialog.ok("Emby for Kodi", lang(33023))
+                        dialog.ok(lang(29999), lang(33023))
                     else:
                         utils.reset()
 
@@ -958,7 +958,7 @@ class LibrarySync(threading.Thread):
                         "to know which Kodi versions are supported.", 0)
 
                     dialog.ok(
-                            heading="Emby for Kodi",
+                            heading=lang(29999),
                             line1=lang(33024))
                     break
 
@@ -1060,7 +1060,7 @@ class ManualSync(LibrarySync):
 
             if pdialog:
                 pdialog.update(
-                        heading="Emby for Kodi",
+                        heading=lang(29999),
                         message="%s %s..." % (lang(33026), viewName))
 
             all_embymovies = self.emby.getMovies(viewId, basic=True, dialog=pdialog)
@@ -1104,7 +1104,7 @@ class ManualSync(LibrarySync):
         embyboxsets = []
 
         if pdialog:
-            pdialog.update(heading="Emby for Kodi", message=lang(33027))
+            pdialog.update(heading=lang(29999), message=lang(33027))
 
         for boxset in boxsets['Items']:
 
@@ -1183,7 +1183,7 @@ class ManualSync(LibrarySync):
 
             if pdialog:
                 pdialog.update(
-                        heading="Emby for Kodi",
+                        heading=lang(29999),
                         message="%s %s..." % (lang(33028), viewName))
 
             all_embymvideos = self.emby.getMusicVideos(viewId, basic=True, dialog=pdialog)
@@ -1269,7 +1269,7 @@ class ManualSync(LibrarySync):
 
             if pdialog:
                 pdialog.update(
-                        heading="Emby for Kodi",
+                        heading=lang(29999),
                         message="%s %s..." % (lang(33029), viewName))
 
             all_embytvshows = self.emby.getShows(viewId, basic=True, dialog=pdialog)
@@ -1314,7 +1314,7 @@ class ManualSync(LibrarySync):
                 # Get all episodes in view
                 if pdialog:
                     pdialog.update(
-                            heading="Emby for Kodi",
+                            heading=lang(29999),
                             message="%s %s..." % (lang(33030), viewName))
 
                 all_embyepisodes = self.emby.getEpisodes(viewId, basic=True, dialog=pdialog)
@@ -1402,7 +1402,7 @@ class ManualSync(LibrarySync):
         for data_type in ['artists', 'albums', 'songs']:
             if pdialog:
                 pdialog.update(
-                        heading="Emby for Kodi",
+                        heading=lang(29999),
                         message="%s %s..." % (lang(33031), data_type))
             if data_type != "artists":
                 all_embyitems = process[data_type][0](basic=True, dialog=pdialog)

@@ -135,7 +135,7 @@ class PlayUtils():
                     # Let the user know that direct play failed
                     settings('failCount', value=str(count+1))
                     dialog.notification(
-                                heading="Emby for Kodi",
+                                heading=lang(29999),
                                 message=lang(33011),
                                 icon="special://home/addons/plugin.video.emby/icon.png",
                                 sound=False)
@@ -144,7 +144,7 @@ class PlayUtils():
                     settings('playFromStream', value="true")
                     settings('failCount', value="0")
                     dialog.notification(
-                                heading="Emby for Kodi",
+                                heading=lang(29999),
                                 message=lang(33012),
                                 icon="special://home/addons/plugin.video.emby/icon.png",
                                 sound=False)

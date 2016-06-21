@@ -221,7 +221,7 @@ class UserClient(threading.Thread):
             log("Access is granted.", 1)
             self.HasAccess = True
             window('emby_serverStatus', clear=True)
-            xbmcgui.Dialog().notification("Emby for Kodi", lang(33007))
+            xbmcgui.Dialog().notification(lang(29999), lang(33007))
 
     def loadCurrUser(self, authenticated=False):
 
@@ -350,7 +350,7 @@ class UserClient(threading.Thread):
 
         if accessToken is not None:
             self.currUser = username
-            dialog.notification("Emby for Kodi",
+            dialog.notification(lang(29999),
                                 "%s %s!" % (lang(33000), self.currUser.decode('utf-8')))
             settings('accessToken', value=accessToken)
             settings('userId%s' % username, value=result['User']['Id'])
