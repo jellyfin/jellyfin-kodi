@@ -12,7 +12,7 @@ import os
 import time
 import unicodedata
 import xml.etree.ElementTree as etree
-from datetime import datetime, time
+from datetime import datetime
 
 import xbmc
 import xbmcaddon
