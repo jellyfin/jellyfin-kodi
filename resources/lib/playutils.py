@@ -36,7 +36,7 @@ class PlayUtils():
                 and self.item['MediaSources'][0]['Protocol'] == "Http"):
             # Play LiveTV or recordings
             log("File protocol is http (livetv).", 1)
-            playurl = "%s/emby/Videos/%s/live.m3u8?static=true" % (self.server, self.item['Id'])
+            playurl = "%s/emby/Videos/%s/stream.ts?audioCodec=copy&videoCodec=copy" % (self.server, self.item['Id'])
             window('emby_%s.playmethod' % playurl, value="Transcode")
 
         elif self.item.get('MediaSources') and self.item['MediaSources'][0]['Protocol'] == "Http":
@@ -244,7 +244,7 @@ class PlayUtils():
         elif self.item['Type'] == "Audio":
             playurl = "%s/emby/Audio/%s/stream.mp3" % (self.server, self.item['Id'])
         else:
-            playurl = "%s/emby/Videos/%s/stream?static=true" % (self.server, self.item['Id'])
+            playurl = "%s/emby/Videos/%s/stream.ts?audioCodec=copy&videoCodec=copy" % (self.server, self.item['Id'])
 
         return playurl
 
