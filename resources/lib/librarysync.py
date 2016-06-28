@@ -906,7 +906,7 @@ class LibrarySync(threading.Thread):
                             "You should restart Kodi now. "
                             "Please report this on the forum."))
             raise
-    @utils.profiling()
+
     def run_internal(self):
 
         dialog = xbmcgui.Dialog()

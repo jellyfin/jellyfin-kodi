@@ -295,7 +295,7 @@ class UserClient(threading.Thread):
         elif self.getToken():
             result = self.loadCurrUser()
 
-            if result is False:
+            if result == False:
                 pass
             else:
                 log("Current user: %s" % self.currUser, 1)

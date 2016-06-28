@@ -12,7 +12,7 @@ import os
 import time
 import unicodedata
 import xml.etree.ElementTree as etree
-from datetime import datetime, time
+from datetime import datetime
 
 import xbmc
 import xbmcaddon
@@ -99,7 +99,7 @@ def kodiSQL(media_type="video"):
     else:
         dbPath = getKodiVideoDBPath()
 
-    connection = sqlite3.connect(dbPath)
+    connection = sqlite3.connect(dbPath, timeout=20)
     return connection
 
 def getKodiVideoDBPath():
@@ -133,6 +133,59 @@ def getKodiMusicDBPath():
                 "special://database/MyMusic%s.db"
                 % dbVersion.get(xbmc.getInfoLabel('System.BuildVersion')[:2], "")).decode('utf-8')
     return dbPath
+
+def querySQL(query, args=None, cursor=None, conntype=None):
+
+    result = None
+    manualconn = False
+    failed = False
+
+    if cursor is None:
+        if conntype is None:
+            log("New connection type is missing.", 1)
+            return result
+        else:
+            manualconn = True
+            connection = kodiSQL(conntype)
+            cursor = connection.cursor()
+
+    attempts = 0
+    while attempts < 3:
+        try:
+            log("Query: %s Args: %s" % (query, args), 2)
+            if args is None:
+                result = cursor.execute(query)
+            else:
+                result = cursor.execute(query, args)
+            break # Query successful, break out of while loop
+        except sqlite3.OperationalError as e:
+            if "database is locked" in e:
+                log("%s...Attempt: %s" % (e, attempts), 0)
+                attempts += 1
+                xbmc.sleep(1000)
+            else:
+                log("Error sqlite3: %s" % e, 0)
+                if manualconn:
+                    cursor.close()
+                raise
+        except sqlite3.Error as e:
+            log("Error sqlite3: %s" % e, 0)
+            if manualconn:
+                cursor.close()
+            raise
+    else:
+        failed = True
+        log("FAILED // Query: %s Args: %s" % (query, args), 1)
+
+    if manualconn:
+        if failed:
+            cursor.close()
+        else:
+            connection.commit()
+            cursor.close()
+
+    log(result, 2)
+    return result
 
 #################################################################################################
 # Utility methods
