@@ -244,7 +244,7 @@ class PlayUtils():
         elif self.item['Type'] == "Audio":
             playurl = "%s/emby/Audio/%s/stream.mp3" % (self.server, self.item['Id'])
         else:
-            playurl = "%s/emby/Videos/%s/stream.ts?audioCodec=copy&videoCodec=copy" % (self.server, self.item['Id'])
+            playurl = "%s/emby/Videos/%s/stream?static=true" % (self.server, self.item['Id'])
 
         return playurl
 
