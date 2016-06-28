@@ -1,3 +1,8 @@
+version 2.2.12
+- Preparation for Emby connect
+- Add string translation (Dutch, Russian and Swedish)
+- Various bug fixes
+
 version 2.2.11
 - Preparation for feature requests
 - Add option to refresh Emby items via context menu
