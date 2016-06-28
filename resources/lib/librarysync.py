@@ -670,7 +670,6 @@ class LibrarySync(threading.Thread):
 
         return True
 
-    @utils.profiling()
     def tvshows(self, embycursor, kodicursor, pdialog):
 
         # Get shows from emby
