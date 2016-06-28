@@ -670,6 +670,7 @@ class LibrarySync(threading.Thread):
 
         return True
 
+    @utils.profiling()
     def tvshows(self, embycursor, kodicursor, pdialog):
 
         # Get shows from emby
@@ -906,7 +907,7 @@ class LibrarySync(threading.Thread):
                             "You should restart Kodi now. "
                             "Please report this on the forum."))
             raise
-    @utils.profiling()
+
     def run_internal(self):
 
         dialog = xbmcgui.Dialog()
