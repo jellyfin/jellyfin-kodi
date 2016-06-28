@@ -3,7 +3,10 @@
 #################################################################################################
 
 import shutil
-import xml.etree.ElementTree as etree
+try:
+    import xml.etree.cElementTree as etree
+except ImportError:
+    import xml.etree.ElementTree as etree
 
 import xbmc
 import xbmcaddon
