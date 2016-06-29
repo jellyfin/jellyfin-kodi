@@ -11,10 +11,7 @@ import StringIO
 import os
 import time
 import unicodedata
-try:
-    import xml.etree.cElementTree as etree
-except ImportError:
-    import xml.etree.ElementTree as etree
+import xml.etree.ElementTree as etree
 from datetime import datetime
 
 import xbmc
