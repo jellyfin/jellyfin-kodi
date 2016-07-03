@@ -163,9 +163,9 @@ def deleteItem():
         embycursor.close()
 
         try:
-            embyid = item[0]
+            itemId = item[0]
         except TypeError:
-            log("Unknown embyId, unable to proceed.", 1)
+            log("Unknown itemId, unable to proceed.", 1)
             return
 
     if settings('skipContextMenu') != "true":

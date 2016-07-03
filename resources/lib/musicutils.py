@@ -222,7 +222,7 @@ def getSongTags(file):
     
     except Exception as e:
         #file in use ?
-        log("Exception in getSongTags", str(e),0)
+        log("Exception in getSongTags %s" % e,0)
         rating = None
     
     #remove tempfile if needed....
