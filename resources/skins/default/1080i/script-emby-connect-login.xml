@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window>
+	<defaultcontrol always="true">100</defaultcontrol>
+	<zorder>0</zorder>
+	<include>dialogeffect</include>
+	<controls>
+		<control type="image">
+			<description>Background fade</description>
+			<width>100%</width>
+			<height>100%</height>
+			<texture>emby-bg-fade.png</texture>
+		</control>
+		
+		<control type="group">
+			<width>600</width>
+			<left>33%</left>
+			<top>15%</top>
+			<control type="image">
+				<description>Background box</description>
+				<texture border="6" colordiffuse="ff111111">box.png</texture>
+				<width>600</width>
+				<height>700</height>
+			</control>
+			
+			<control type="image">
+				<description>Emby logo</description>
+				<texture>logo-white.png</texture>
+				<width>160</width>
+				<height>49</height>
+				<top>20</top>
+				<left>25</left>
+			</control>
+			
+			<control type="group">
+				<width>500</width>
+				<left>50</left>
+				<control type="label">
+					<description>Sign in emby connect</description>
+					<label>$ADDON[plugin.video.emby 30600]</label>
+					<textcolor>white</textcolor>
+					<font>font12</font>
+					<aligny>top</aligny>
+					<top>115</top>
+				</control>
+				
+				<control type="group">
+					<top>190</top>
+					<control type="label">
+						<description>Username email</description>
+						<label>$ADDON[plugin.video.emby 30601]</label>
+						<textcolor>ffa6a6a6</textcolor>
+						<font>font10</font>
+						<aligny>top</aligny>
+					</control>
+
+					<control type="edit" id="100">
+						<description>Username field</description>
+						<texturefocus border="5" colordiffuse="ff111111">box.png</texturefocus>
+						<texturenofocus border="5" colordiffuse="ff111111">box.png</texturenofocus>
+						<hinttext>User</hinttext>
+						<width>100%</width>
+						<height>40</height>
+						<textcolor>ff464646</textcolor>
+						<font>font10</font>
+						<top>25</top>
+						<ondown>101</ondown>
+					</control>
+
+					<control type="image">
+						<description>separator</description>
+						<width>102%</width>
+						<height>0.5</height>
+						<top>66</top>
+						<left>-10</left>
+						<texture colordiffuse="ff222222" border="90,3,90,3">separator.png</texture>
+					</control>
+				</control>
+				
+				<control type="group">
+					<description>Password</description>
+					<top>275</top>
+					<control type="label">
+						<description>Password label</description>
+						<label>$ADDON[plugin.video.emby 30602]</label>
+						<textcolor>ffa6a6a6</textcolor>
+						<font>font10</font>
+						<aligny>top</aligny>
+					</control>
+					
+					<control type="edit" id="101">
+						<description>Password field</description>
+						<texturefocus border="5" colordiffuse="ff111111">box.png</texturefocus>
+						<texturenofocus border="5" colordiffuse="ff111111">box.png</texturenofocus>
+						<hinttext>Password</hinttext>
+						<width>100%</width>
+						<height>40</height>
+						<textcolor>ff464646</textcolor>
+						<font>font10</font>
+						<top>25</top>
+						<ondown>200</ondown>
+						<onup>100</onup>
+					</control>
+
+					<control type="image">
+						<description>separator</description>
+						<width>102%</width>
+						<height>0.5</height>
+						<top>66</top>
+						<left>-10</left>
+						<texture colordiffuse="ff222222" border="90,3,90,3">separator.png</texture>
+					</control>
+				</control>
+
+				<control type="group">
+					<description>Buttons</description>
+					<top>365</top>
+					<control type="button" id="200">
+						<description>Sign in</description>
+						<texturenofocus border="5" colordiffuse="green">box.png</texturenofocus>
+						<texturefocus border="5" colordiffuse="green">box.png</texturefocus>
+						<label>[UPPERCASE][B]$ADDON[plugin.video.emby 30605][/B][/UPPERCASE]</label>
+						<font>font10</font>
+						<align>center</align>
+						<width>100%</width>
+						<height>50</height>
+						<ondown>201</ondown>
+						<onup>101</onup>
+					</control>
+					
+					<control type="button" id="201">
+						<description>Later</description>
+						<texturenofocus border="5" colordiffuse="ff464646">box.png</texturenofocus>
+						<texturefocus border="5" colordiffuse="ff464646">box.png</texturefocus>
+						<label>[UPPERCASE][B]$ADDON[plugin.video.emby 30606][/B][/UPPERCASE]</label>
+						<font>font10</font>
+						<align>center</align>
+						<width>100%</width>
+						<height>50</height>
+						<top>55</top>
+						<onup>200</onup>
+					</control>
+				</control>
+
+				<control type="group">
+					<description>Disclaimer</description>
+					<top>490</top>
+					<control type="label">
+						<description>Disclaimer label</description>
+						<label>$ADDON[plugin.video.emby 30603]</label>
+						<font>font10</font>
+						<textcolor>ff464646</textcolor>
+						<wrapmultiline>true</wrapmultiline>
+						<aligny>top</aligny>
+						<width>340</width>
+					</control>
+
+					<control type="image">
+						<description>qrcode</description>
+						<texture>qrcode_disclaimer.png</texture>
+						<width>140</width>
+						<height>140</height>
+						<top>10</top>
+						<left>360</left>
+					</control>
+
+					<control type="label">
+						<description>Scan me</description>
+						<label>[UPPERCASE]$ADDON[plugin.video.emby 30604][/UPPERCASE]</label>
+						<font>font12</font>
+						<textcolor>green</textcolor>
+						<align>right</align>
+						<aligny>top</aligny>
+						<top>151</top>
+					</control>
+				</control>
+			</control>
+		</control>
+
+	</controls>
+</window>

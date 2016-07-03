@@ -223,6 +223,20 @@
     <string id="30536">Sync when screensaver is deactivated</string>
     <string id="30537">Force Transcode Hi10P</string>
     <string id="30538">Disabled</string>
+    <string id="30539">Login</string>
+    <string id="30540">Manual login</string>
+    <string id="30541">Emby Connect</string>
+    <string id="30542">Server</string>
+    <string id="30543">Username or email</string>
+
+    <!-- dialogs -->
+    <string id="30600">Sign in with Emby Connect</string>
+    <string id="30601">Username or email:</string>
+    <string id="30602">Password:</string>
+    <string id="30603">Please see our terms of use. The use of any Emby software constitutes acceptance of these terms.</string>
+    <string id="30604">Scan me</string>
+    <string id="30605">Sign in</string>
+    <string id="30606">Remind me later</string>
 
     <!-- service add-on -->
     <string id="33000">Welcome</string>
