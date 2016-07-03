@@ -1,3 +1,11 @@
+version 2.2.14
+- Progress dialog always shows for full sync
+- Add (if item count greater than) to options for inc sync progress dialog display
+- Limit artwork loading to 25 threads by default
+- Fix delete option
+- Fix music log error
+- Add string translation (Spanish)
+
 version 2.2.12
 - Preparation for Emby connect
 - Add string translation (Dutch, Russian and Swedish)
