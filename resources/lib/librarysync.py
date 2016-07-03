@@ -59,14 +59,13 @@ class LibrarySync(threading.Thread):
         threading.Thread.__init__(self)
 
 
-    def progressDialog(self, title, forced=False):
+    def progressDialog(self, title):
 
         dialog = None
 
-        if settings('dbSyncIndicator') == "true" or forced:
-            dialog = xbmcgui.DialogProgressBG()
-            dialog.create("Emby for Kodi", title)
-            log("Show progress dialog: %s" % title, 2)
+        dialog = xbmcgui.DialogProgressBG()
+        dialog.create("Emby for Kodi", title)
+        log("Show progress dialog: %s" % title, 2)
 
         return dialog
 
@@ -201,7 +200,7 @@ class LibrarySync(threading.Thread):
             connection.commit()
             log("Commit successful.", 1)
 
-    def fullSync(self, manualrun=False, repair=False, forceddialog=False):
+    def fullSync(self, manualrun=False, repair=False):
         # Only run once when first setting up. Can be run manually.
         music_enabled = settings('enableMusic') == "true"
 
@@ -234,13 +233,11 @@ class LibrarySync(threading.Thread):
             message = "Manual sync"
         elif repair:
             message = "Repair sync"
-            forceddialog = True
         else:
             message = "Initial sync"
-            forceddialog = True
             window('emby_initialScan', value="true")
 
-        pDialog = self.progressDialog("%s" % message, forced=forceddialog)
+        pDialog = self.progressDialog("%s" % message)
         starttotal = datetime.now()
 
         # Set views
@@ -318,13 +315,14 @@ class LibrarySync(threading.Thread):
         utils.setScreensaver(value=screensaver)
         window('emby_dbScan', clear=True)
         window('emby_initialScan', clear=True)
-        if forceddialog:
-            xbmcgui.Dialog().notification(
-                        heading=lang(29999),
-                        message="%s %s %s" %
-                                (message, lang(33025), str(elapsedtotal).split('.')[0]),
-                        icon="special://home/addons/plugin.video.emby/icon.png",
-                        sound=False)
+
+        xbmcgui.Dialog().notification(
+                    heading=lang(29999),
+                    message="%s %s %s" %
+                            (message, lang(33025), str(elapsedtotal).split('.')[0]),
+                    icon="special://home/addons/plugin.video.emby/icon.png",
+                    sound=False)
+                    
         return True
 
 
@@ -806,10 +804,13 @@ class LibrarySync(threading.Thread):
             self.forceLibraryUpdate = True
             update_embydb = True
 
-        if self.addedItems or self.updateItems or self.userdataItems or self.removeItems:
+        incSyncIndicator = int(settings('incSyncIndicator'))
+        totalUpdates = len(self.addedItems) + len(self.updateItems) + len(self.userdataItems) + len(self.removeItems)
+        log("incSyncIndicator=" + str(incSyncIndicator) + " totalUpdates=" + str(totalUpdates), 1)
+        
+        if incSyncIndicator != -1 and totalUpdates > incSyncIndicator:
             # Only present dialog if we are going to process items
             pDialog = self.progressDialog('Incremental sync')
-
 
         process = {
 
@@ -1018,9 +1019,9 @@ class ManualSync(LibrarySync):
 
         LibrarySync.__init__(self)
 
-    def sync(self, dialog=False):
+    def sync(self):
 
-        return self.fullSync(manualrun=True, forceddialog=dialog)
+        return self.fullSync(manualrun=True)
 
 
     def movies(self, embycursor, kodicursor, pdialog):

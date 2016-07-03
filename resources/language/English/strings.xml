@@ -191,7 +191,7 @@
     <string id="30504">Use altername device Name</string>
     <string id="30505">[COLOR yellow]Retry login[/COLOR]</string>
     <string id="30506">Sync Options</string>
-    <string id="30507">Show syncing progress</string>
+    <string id="30507">Show progress if item count greater than</string>
     <string id="30508">Sync empty TV Shows</string>
     <string id="30509">Enable Music Library</string>
     <string id="30510">Direct stream music library</string>

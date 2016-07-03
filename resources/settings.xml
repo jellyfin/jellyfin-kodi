@@ -26,11 +26,10 @@
 
 	<category label="30506"><!-- Sync Options -->
 		<setting id="serverSync" type="bool" label="30514" default="true" />
-		<setting id="dbSyncIndicator" label="30507" type="bool" default="false" />
-		<setting type="sep" />
+		<setting id="incSyncIndicator" label="30507" type="number" default="10" visible="eq(-1,true)" subsetting="true"/>
 		<setting id="limitindex" type="number" label="30515" default="200" option="int" />
 		<setting id="enableTextureCache" label="30512"  type="bool" default="true" />
-        <setting id="imageCacheLimit" type="enum" label="30513" values="Disabled|5|10|15|20|25" default="0" visible="eq(-1,true)" subsetting="true" />
+        <setting id="imageCacheLimit" type="enum" label="30513" values="Unlimited|5|10|15|20|25" default="5" visible="eq(-1,true)" subsetting="true" />
 		<setting id="syncEmptyShows" type="bool" label="30508" default="false" />
 		<setting id="dbSyncScreensaver" label="30536" type="bool" default="false" />
 		<setting id="useDirectPaths" type="enum" label="30511" lvalues="33036|33037" default="0" />

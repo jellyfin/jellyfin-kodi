@@ -120,7 +120,7 @@ class Main():
                     import librarysync
                     lib = librarysync.LibrarySync()
                     if mode == "manualsync":
-                        librarysync.ManualSync().sync(dialog=True)
+                        librarysync.ManualSync().sync()
                     elif mode == "fastsync":
                         lib.startSync()
                     else:
