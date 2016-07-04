@@ -2,6 +2,8 @@
 
 #################################################################################################
 
+import sys
+
 import xbmc
 import xbmcgui
 import xbmcvfs
@@ -84,8 +86,6 @@ class PlayUtils():
 
     def isDirectPlay(self):
 
-        dialog = xbmcgui.Dialog()
-
         # Requirement: Filesystem, Accessible path
         if settings('playFromStream') == "true":
             # User forcing to play via HTTP
@@ -125,30 +125,12 @@ class PlayUtils():
             # Verify the path
             if not self.fileExists():
                 log("Unable to direct play.", 1)
-                try:
-                    count = int(settings('failCount'))
-                except ValueError:
-                    count = 0
-                log("Direct play failed: %s times." % count, 1)
-
-                if count < 2:
-                    # Let the user know that direct play failed
-                    settings('failCount', value=str(count+1))
-                    dialog.notification(
-                                heading=lang(29999),
-                                message=lang(33011),
-                                icon="special://home/addons/plugin.video.emby/icon.png",
-                                sound=False)
-                elif settings('playFromStream') != "true":
-                    # Permanently set direct stream as true
-                    settings('playFromStream', value="true")
-                    settings('failCount', value="0")
-                    dialog.notification(
-                                heading=lang(29999),
-                                message=lang(33012),
-                                icon="special://home/addons/plugin.video.emby/icon.png",
-                                sound=False)
-                return False
+                log(self.directPlay(), 1)
+                xbmcgui.Dialog().ok(
+                            heading=lang(29999),
+                            line1=lang(33011),
+                            line2=(self.directPlay()))                            
+                sys.exit()
 
         return True
 
