@@ -236,7 +236,7 @@
     <string id="33008">Enter password for user:</string>
     <string id="33009">Invalid username or password</string>
     <string id="33010">Failed to authenticate too many times</string>
-    <string id="33011">Unable to direct play</string>
+    <string id="33011">Unable to direct play file</string>
     <string id="33012">Direct play failed 3 times. Enabled play from HTTP.</string>
     <string id="33013">Choose the audio stream</string>
     <string id="33014">Choose the subtitles stream</string>
