@@ -5,6 +5,7 @@
 import os
 
 import xbmcgui
+import xbmcaddon
 
 ##################################################################################################
 
@@ -20,7 +21,6 @@ class LoginConnect(xbmcgui.WindowXMLDialog):
 
     def __init__(self, *args, **kwargs):
 
-        self.UserClient = userclient.UserClient()
         xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)
 
     def __add_editcontrol(self, x, y, height, width, password=0):
@@ -47,11 +47,14 @@ class LoginConnect(xbmcgui.WindowXMLDialog):
         self.setFocus(self.user_field)
         self.password_field = self.__add_editcontrol(685,470,40,500, password=1)
         self.signin_button = self.getControl(SIGN_IN)
+        self.remind_button = self.getControl(REMIND_LATER)
 
+        self.user_field.controlUp(self.remind_button)
         self.user_field.controlDown(self.password_field)
         self.password_field.controlUp(self.user_field)
         self.password_field.controlDown(self.signin_button)
         self.signin_button.controlUp(self.password_field)
+        self.remind_button.controlDown(self.user_field)
 
     def onClick(self, control):
 
@@ -61,6 +64,7 @@ class LoginConnect(xbmcgui.WindowXMLDialog):
             __password = self.password_field.getText()
 
             ### REVIEW ONCE CONNECT MODULE IS MADE
+            self.close()
 
         elif control == REMIND_LATER:
             # Remind me later
