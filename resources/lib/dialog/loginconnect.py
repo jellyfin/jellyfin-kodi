@@ -49,10 +49,8 @@ class LoginConnect(xbmcgui.WindowXMLDialog):
         self.signin_button = self.getControl(SIGN_IN)
 
         self.user_field.controlDown(self.password_field)
-        self.user_field.controlRight(self.password_field)
         self.password_field.controlUp(self.user_field)
         self.password_field.controlDown(self.signin_button)
-        self.password_field.controlRight(self.signin_button)
         self.signin_button.controlUp(self.password_field)
 
     def onClick(self, control):
