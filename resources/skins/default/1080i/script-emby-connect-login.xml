@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <window>
-	<defaultcontrol always="true">100</defaultcontrol>
+	<defaultcontrol always="false">200</defaultcontrol>
 	<zorder>0</zorder>
 	<include>dialogeffect</include>
 	<controls>
@@ -53,19 +53,6 @@
 						<aligny>top</aligny>
 					</control>
 
-					<control type="edit" id="100">
-						<description>Username field</description>
-						<texturefocus border="5" colordiffuse="ff111111">box.png</texturefocus>
-						<texturenofocus border="5" colordiffuse="ff111111">box.png</texturenofocus>
-						<hinttext>User</hinttext>
-						<width>100%</width>
-						<height>40</height>
-						<textcolor>ff464646</textcolor>
-						<font>font10</font>
-						<top>25</top>
-						<ondown>101</ondown>
-					</control>
-
 					<control type="image">
 						<description>separator</description>
 						<width>102%</width>
@@ -86,20 +73,6 @@
 						<font>font10</font>
 						<aligny>top</aligny>
 					</control>
-					
-					<control type="edit" id="101">
-						<description>Password field</description>
-						<texturefocus border="5" colordiffuse="ff111111">box.png</texturefocus>
-						<texturenofocus border="5" colordiffuse="ff111111">box.png</texturenofocus>
-						<hinttext>Password</hinttext>
-						<width>100%</width>
-						<height>40</height>
-						<textcolor>ff464646</textcolor>
-						<font>font10</font>
-						<top>25</top>
-						<ondown>200</ondown>
-						<onup>100</onup>
-					</control>
 
 					<control type="image">
 						<description>separator</description>
@@ -113,7 +86,7 @@
 
 				<control type="group">
 					<description>Buttons</description>
-					<top>365</top>
+					<top>385</top>
 					<control type="button" id="200">
 						<description>Sign in</description>
 						<texturenofocus border="5" colordiffuse="green">box.png</texturenofocus>
@@ -124,7 +97,6 @@
 						<width>100%</width>
 						<height>50</height>
 						<ondown>201</ondown>
-						<onup>101</onup>
 					</control>
 					
 					<control type="button" id="201">
@@ -143,7 +115,7 @@
 
 				<control type="group">
 					<description>Disclaimer</description>
-					<top>490</top>
+					<top>510</top>
 					<control type="label">
 						<description>Disclaimer label</description>
 						<label>$ADDON[plugin.video.emby 30603]</label>
@@ -170,7 +142,8 @@
 						<textcolor>green</textcolor>
 						<align>right</align>
 						<aligny>top</aligny>
-						<top>151</top>
+						<top>120</top>
+						<right>160</right>
 					</control>
 				</control>
 			</control>
