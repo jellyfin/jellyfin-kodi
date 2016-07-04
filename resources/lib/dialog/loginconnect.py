@@ -6,14 +6,6 @@ import os
 
 import xbmcgui
 
-import userclient
-
-import sys
-import xbmc
-import xbmcaddon
-import json as json
-import urllib
-
 ##################################################################################################
 
 addon = xbmcaddon.Addon('plugin.video.emby')
