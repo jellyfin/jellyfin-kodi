@@ -193,8 +193,6 @@ class DownloadUtils():
                 'Accept-Charset': 'UTF-8,*',
                 'Authorization': auth
             }
-            log("Header: %s" % header, 2)
-
         else:
             userId = self.userId
             token = self.token
@@ -210,44 +208,36 @@ class DownloadUtils():
                 'Authorization': auth,
                 'X-MediaBrowser-Token': token
             }
-            log("Header: %s" % header, 2)
 
         return header
 
     def downloadUrl(self, url, postBody=None, action_type="GET", parameters=None,
                     authenticate=True):
 
-        log("=== ENTER downloadUrl ===", 2)
-
+        log("===== ENTER downloadUrl =====", 2)
+        
+        session = requests
         default_link = ""
 
         try:
-            # If user is authenticated
+
+            kwargs = {
+                'timeout': self.timeout,
+                'json': postBody,
+                'params': parameters
+            }
+
             if authenticate:
-                # Get requests session
-                try:
-                    s = self.s
-                    # Replace for the real values
-                    url = url.replace("{server}", self.server)
-                    url = url.replace("{UserId}", self.userId)
 
-                    # Prepare request
-                    if action_type == "GET":
-                        r = s.get(url, json=postBody, params=parameters, timeout=self.timeout)
-                    elif action_type == "POST":
-                        r = s.post(url, json=postBody, timeout=self.timeout)
-                    elif action_type == "DELETE":
-                        r = s.delete(url, json=postBody, timeout=self.timeout)
-
-                except AttributeError:
+                if self.s is not None:
+                    session = self.s
+                else:
                     # request session does not exists
                     # Get user information
                     self.userId = window('emby_currUser')
                     self.server = window('emby_server%s' % self.userId)
                     self.token = window('emby_accessToken%s' % self.userId)
-                    header = self.getHeader()
                     verifyssl = False
-                    cert = None
 
                     # IF user enables ssl verification
                     if settings('sslverify') == "true":
@@ -255,38 +245,16 @@ class DownloadUtils():
                     if settings('sslcert') != "None":
                         verifyssl = settings('sslcert')
 
-                    # Replace for the real values
-                    url = url.replace("{server}", self.server)
-                    url = url.replace("{UserId}", self.userId)
+                    kwargs['headers'] = self.getHeader()
 
-                    # Prepare request
-                    if action_type == "GET":
-                        r = requests.get(url,
-                                        json=postBody,
-                                        params=parameters,
-                                        headers=header,
-                                        timeout=self.timeout,
-                                        verify=verifyssl)
+                # Replace for the real values
+                url = url.replace("{server}", self.server)
+                url = url.replace("{UserId}", self.userId)
+                kwargs['url'] = url
 
-                    elif action_type == "POST":
-                        r = requests.post(url,
-                                        json=postBody,
-                                        headers=header,
-                                        timeout=self.timeout,
-                                        verify=verifyssl)
-
-                    elif action_type == "DELETE":
-                        r = requests.delete(url,
-                                        json=postBody,
-                                        headers=header,
-                                        timeout=self.timeout,
-                                        verify=verifyssl)
-
-            # If user is not authenticated
-            elif not authenticate:
-
-                header = self.getHeader(authenticate=False)
-                verifyssl = False
+            else: # User is not authenticated
+                kwargs['url'] = url
+                kwargs['headers'] = self.getHeader(authenticate=False)
 
                 # If user enables ssl verification
                 try:
@@ -294,32 +262,21 @@ class DownloadUtils():
                     if self.sslclient is not None:
                         verifyssl = self.sslclient
                 except AttributeError:
-                    pass
-
-                # Prepare request
-                if action_type == "GET":
-                    r = requests.get(url,
-                                    json=postBody,
-                                    params=parameters,
-                                    headers=header,
-                                    timeout=self.timeout,
-                                    verify=verifyssl)
-
-                elif action_type == "POST":
-                    r = requests.post(url,
-                                    json=postBody,
-                                    headers=header,
-                                    timeout=self.timeout,
-                                    verify=verifyssl)
+                    verifyssl = False
+                finally:
+                    kwargs['verify'] = verifyssl
 
             ##### THE RESPONSE #####
-            log(r.url, 2)
+            log(kwargs, 2)
+            r = self.__requests(action_type, session, **kwargs)
+
             if r.status_code == 204:
                 # No body in the response
                 log("====== 204 Success ======", 2)
+                # Read response to release connection
+                r.content
 
             elif r.status_code == requests.codes.ok:
-
                 try:
                     # UNICODE - JSON object
                     r = r.json()
@@ -330,7 +287,8 @@ class DownloadUtils():
                 except:
                     if r.headers.get('content-type') != "text/html":
                         log("Unable to convert the response for: %s" % url, 1)
-            else:
+
+            else: # Bad status code
                 r.raise_for_status()
 
         ##### EXCEPTIONS #####
@@ -394,3 +352,14 @@ class DownloadUtils():
             log(e, 1)
 
         return default_link
+
+    def __requests(self, action, session=requests, **kwargs):
+
+        if action == "GET":
+            r = session.get(**kwargs)
+        elif action == "POST":
+            r = session.post(**kwargs)
+        elif action == "DELETE":
+            r = session.delete(**kwargs)
+
+        return r
