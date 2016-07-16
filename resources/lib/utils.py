@@ -22,39 +22,33 @@ import xbmcvfs
 #################################################################################################
 # Main methods
 
-class Logging():
-
-    LOGGINGCLASS = None
+class Logging(object):
 
 
-    def __init__(self, classname=""):
+    def __init__(self, title=""):
 
-        self.LOGGINGCLASS = classname
+        self.title = title
 
-    def log(self, msg, level=1):
+    def _getLogLevel(self, level):
 
-        self.logMsg("EMBY %s" % self.LOGGINGCLASS, msg, level)
-
-    def logMsg(self, title, msg, level=1):
-
-        # Get the logLevel set in UserClient
         try:
             logLevel = int(window('emby_logLevel'))
         except ValueError:
             logLevel = 0
 
-        if logLevel >= level:
+        return logLevel >= level
 
-            if logLevel == 2: # inspect.stack() is expensive
-                try:
-                    xbmc.log("%s -> %s : %s" % (title, inspect.stack()[1][3], msg))
-                except UnicodeEncodeError:
-                    xbmc.log("%s -> %s : %s" % (title, inspect.stack()[1][3], msg.encode('utf-8')))
-            else:
-                try:
-                    xbmc.log("%s -> %s" % (title, msg))
-                except UnicodeEncodeError:
-                    xbmc.log("%s -> %s" % (title, msg.encode('utf-8')))
+    def _printMsg(self, title, msg):
+
+        try:
+            xbmc.log("%s -> %s" % (title, msg))
+        except UnicodeEncodeError:
+            xbmc.log("%s -> %s" % (title, msg.encode('utf-8')))
+
+    def log(self, msg, level=1):
+
+        if self._getLogLevel(level):
+            self._printMsg("EMBY %s" % self.title, msg) 
 
 # Initiate class for utils.py document logging
 log = Logging('Utils').log
@@ -223,7 +217,7 @@ def setScreensaver(value):
 def convertDate(date):
     try:
         date = datetime.strptime(date, "%Y-%m-%dT%H:%M:%SZ")
-    except TypeError:
+    except (ImportError, TypeError):
         # TypeError: attribute of type 'NoneType' is not callable
         # Known Kodi/python error
         date = datetime(*(time.strptime(date, "%Y-%m-%dT%H:%M:%SZ")[0:6]))

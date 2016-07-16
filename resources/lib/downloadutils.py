@@ -11,7 +11,6 @@ import xbmcgui
 
 import clientinfo
 from utils import Logging, window, settings
-import utils
 
 ##################################################################################################
 
@@ -29,11 +28,10 @@ class DownloadUtils():
     # Borg - multiple instances, shared state
     _shared_state = {}
     clientInfo = clientinfo.ClientInfo()
-    addonName = clientInfo.getAddonName()
 
     # Requests session
     s = None
-    timeout = 30
+    default_timeout = 30
 
 
     def __init__(self):
@@ -182,7 +180,19 @@ class DownloadUtils():
         deviceId = self.clientInfo.getDeviceId()
         version = self.clientInfo.getVersion()
 
-        if not authenticate:
+        if authenticate:
+            auth = (
+                'MediaBrowser UserId="%s", Client="Kodi", Device="%s", DeviceId="%s", Version="%s"'
+                % (self.userId, deviceName, deviceId, version))
+            header = {
+
+                'Content-type': 'application/json',
+                'Accept-encoding': 'gzip',
+                'Accept-Charset': 'UTF-8,*',
+                'Authorization': auth,
+                'X-MediaBrowser-Token': self.token
+            }
+        else:
             # If user is not authenticated
             auth = (
                 'MediaBrowser Client="Kodi", Device="%s", DeviceId="%s", Version="%s"'
@@ -193,21 +203,6 @@ class DownloadUtils():
                 'Accept-encoding': 'gzip',
                 'Accept-Charset': 'UTF-8,*',
                 'Authorization': auth
-            }
-        else:
-            userId = self.userId
-            token = self.token
-            # Attached to the requests session
-            auth = (
-                'MediaBrowser UserId="%s", Client="Kodi", Device="%s", DeviceId="%s", Version="%s"'
-                % (userId, deviceName, deviceId, version))
-            header = {
-
-                'Content-type': 'application/json',
-                'Accept-encoding': 'gzip',
-                'Accept-Charset': 'UTF-8,*',
-                'Authorization': auth,
-                'X-MediaBrowser-Token': token
             }
 
         return header
@@ -266,14 +261,14 @@ class DownloadUtils():
             ##### PREPARE REQUEST #####
             kwargs.update({
                 'url': url,
-                'timeout': self.timeout,
+                'timeout': self.default_timeout,
                 'json': postBody,
                 'params': parameters
             })
 
             ##### THE RESPONSE #####
             log(kwargs, 2)
-            r = self.__requests(action_type, session, **kwargs)
+            r = self._requests(action_type, session, **kwargs)
 
             if r.status_code == 204:
                 # No body in the response
@@ -358,7 +353,7 @@ class DownloadUtils():
 
         return default_link
 
-    def __requests(self, action, session=requests, **kwargs):
+    def _requests(self, action, session=requests, **kwargs):
 
         if action == "GET":
             r = session.get(**kwargs)
