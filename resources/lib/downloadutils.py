@@ -11,6 +11,7 @@ import xbmcgui
 
 import clientinfo
 from utils import Logging, window, settings
+import utils
 
 ##################################################################################################
 
@@ -217,16 +218,10 @@ class DownloadUtils():
         log("===== ENTER downloadUrl =====", 2)
         
         session = requests
+        kwargs = {}
         default_link = ""
 
         try:
-
-            kwargs = {
-                'timeout': self.timeout,
-                'json': postBody,
-                'params': parameters
-            }
-
             if authenticate:
 
                 if self.s is not None:
@@ -245,17 +240,16 @@ class DownloadUtils():
                     if settings('sslcert') != "None":
                         verifyssl = settings('sslcert')
 
-                    kwargs['headers'] = self.getHeader()
+                    kwargs.update({
+                        'verify': verifyssl,
+                        'headers': self.getHeader()
+                    })
 
                 # Replace for the real values
                 url = url.replace("{server}", self.server)
                 url = url.replace("{UserId}", self.userId)
-                kwargs['url'] = url
 
             else: # User is not authenticated
-                kwargs['url'] = url
-                kwargs['headers'] = self.getHeader(authenticate=False)
-
                 # If user enables ssl verification
                 try:
                     verifyssl = self.sslverify
@@ -263,8 +257,19 @@ class DownloadUtils():
                         verifyssl = self.sslclient
                 except AttributeError:
                     verifyssl = False
-                finally:
-                    kwargs['verify'] = verifyssl
+
+                kwargs.update({
+                    'verify': verifyssl,
+                    'headers': self.getHeader(authenticate=False)
+                })
+
+            ##### PREPARE REQUEST #####
+            kwargs.update({
+                'url': url,
+                'timeout': self.timeout,
+                'json': postBody,
+                'params': parameters
+            })
 
             ##### THE RESPONSE #####
             log(kwargs, 2)
@@ -353,6 +358,7 @@ class DownloadUtils():
 
         return default_link
 
+    @utils.timeIt
     def __requests(self, action, session=requests, **kwargs):
 
         if action == "GET":
