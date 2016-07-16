@@ -358,7 +358,6 @@ class DownloadUtils():
 
         return default_link
 
-    @utils.timeIt
     def __requests(self, action, session=requests, **kwargs):
 
         if action == "GET":
