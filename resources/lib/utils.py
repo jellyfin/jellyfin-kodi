@@ -47,8 +47,13 @@ class Logging(object):
 
     def log(self, msg, level=1):
 
+        extra = ""
+        if level == -1:
+            # Error mode
+            extra = "::ERROR"
+
         if self._getLogLevel(level):
-            self._printMsg("EMBY %s" % self.title, msg) 
+            self._printMsg("EMBY %s%s" % (self.title, extra), msg)
 
 # Initiate class for utils.py document logging
 log = Logging('Utils').log
