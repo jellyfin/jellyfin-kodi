@@ -81,8 +81,7 @@ def settings(setting, value=None):
 
 def language(string_id):
     # Central string retrieval - unicode
-    string = xbmcaddon.Addon(id='plugin.video.emby').getLocalizedString(string_id) 
-    return string
+    return xbmcaddon.Addon(id='plugin.video.emby').getLocalizedString(string_id)
 
 #################################################################################################
 # Database related methods
@@ -98,7 +97,7 @@ def kodiSQL(media_type="video"):
     else:
         dbPath = getKodiVideoDBPath()
 
-    connection = sqlite3.connect(dbPath, timeout=20)
+    connection = sqlite3.connect(dbPath, isolation_level=None, timeout=20)
     return connection
 
 def getKodiVideoDBPath():
