@@ -465,13 +465,12 @@ class Player(xbmc.Player):
 
                     if percentComplete >= markPlayedAt and offerDelete:
                         resp = xbmcgui.Dialog().yesno(lang(30091), lang(33015), autoclose=120000)
-                        if not resp:
+                        if resp:
+                            url = "{server}/emby/Items/%s?format=json" % itemid
+                            log("Deleting request: %s" % itemid, 1)
+                            self.doUtils(url, action_type="DELETE")
+                        else
                             log("User skipped deletion.", 1)
-                            continue
-
-                        url = "{server}/emby/Items/%s?format=json" % itemid
-                        log("Deleting request: %s" % itemid, 1)
-                        self.doUtils(url, action_type="DELETE")
 
                 self.stopPlayback(data)
 
