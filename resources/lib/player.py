@@ -469,7 +469,7 @@ class Player(xbmc.Player):
                             url = "{server}/emby/Items/%s?format=json" % itemid
                             log("Deleting request: %s" % itemid, 1)
                             self.doUtils(url, action_type="DELETE")
-                        else
+                        else:
                             log("User skipped deletion.", 1)
 
                 self.stopPlayback(data)
