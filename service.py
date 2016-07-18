@@ -5,6 +5,7 @@
 import os
 import sys
 import time
+import _strptime # Workaround for threads using datetime: _striptime is locked
 from datetime import datetime
 
 import xbmc
