@@ -25,6 +25,7 @@
 	</category>
 
 	<category label="30506"><!-- Sync Options -->
+		<setting id="dblock" type="bool" label="30544" default="false" />
 		<setting id="serverSync" type="bool" label="30514" default="true" />
 		<setting id="incSyncIndicator" label="30507" type="number" default="10" visible="eq(-1,true)" subsetting="true"/>
 		<setting id="limitindex" type="number" label="30515" default="200" option="int" />

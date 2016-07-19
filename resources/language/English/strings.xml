@@ -228,6 +228,7 @@
     <string id="30541">Emby Connect</string>
     <string id="30542">Server</string>
     <string id="30543">Username or email</string>
+    <string id="30544">Enable database locked fix (will slow syncing process)</string>
 
     <!-- dialogs -->
     <string id="30600">Sign in with Emby Connect</string>
