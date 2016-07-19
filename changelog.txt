@@ -1,3 +1,8 @@
+version 2.2.16
+- Fix strptime error
+- Temporary fix for database being locked
+- Fix watched status failing to update if offer delete after playing is enabled but skipped
+
 version 2.2.14
 - Progress dialog always shows for full sync
 - Add (if item count greater than) to options for inc sync progress dialog display
