@@ -231,7 +231,21 @@ class Service():
                                         sound=False)
                         
                         self.server_online = False
-                    
+
+                    elif window('emby_online') == "sleep":
+                        # device going to sleep
+                        if self.websocket_running:
+                            log("Stop websocket thread")
+                            ws.stopClient()
+                            ws = wsc.WebSocket_Client()
+                            self.websocket_running = False
+
+                        if self.library_running:
+                            log("Stop library thread")
+                            library.stopThread()
+                            library = librarysync.LibrarySync()
+                            self.library_running = False
+
                     else:
                         # Server is online
                         if not self.server_online:
@@ -254,6 +268,7 @@ class Service():
                         
                         # Start the userclient thread
                         if not self.userclient_running:
+                            log("Start user thread")
                             self.userclient_running = True
                             user.start()
                         

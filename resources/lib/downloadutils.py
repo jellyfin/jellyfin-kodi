@@ -289,6 +289,7 @@ class DownloadUtils():
                         log("Unable to convert the response for: %s" % url, 1)
 
             else: # Bad status code
+                log("=== Bad status response: %s ===" % r.status_code, -1)
                 r.raise_for_status()
 
         ##### EXCEPTIONS #####

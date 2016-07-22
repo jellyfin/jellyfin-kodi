@@ -195,10 +195,15 @@ class KodiMonitor(xbmc.Monitor):
                 finally:
                     embycursor.close()'''
 
+        elif method == "System.OnSleep":
+            # Connection is going to sleep
+            log("Marking the server as offline. System.OnSleep activating.", 1)
+            window('emby_online', value="sleep")
 
         elif method == "System.OnWake":
             # Allow network to wake up
             xbmc.sleep(10000)
+            window('emby_online', value="false")
             window('emby_onWake', value="true")
 
 

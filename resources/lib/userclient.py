@@ -23,7 +23,7 @@ class UserClient(threading.Thread):
     # Borg - multiple instances, shared state
     _shared_state = {}
 
-    stopClient = False
+    stop_thread = False
     auth = True
     retry = 0
 
@@ -430,7 +430,7 @@ class UserClient(threading.Thread):
                     self.auth = True
 
 
-            if self.stopClient == True:
+            if self.stop_thread == True:
                 # If stopping the client didn't work
                 break
 
@@ -443,4 +443,4 @@ class UserClient(threading.Thread):
 
     def stopClient(self):
         # When emby for kodi terminates
-        self.stopClient = True
+        self.stop_thread = True
