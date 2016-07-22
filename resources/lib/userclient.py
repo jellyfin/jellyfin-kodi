@@ -328,7 +328,7 @@ class UserClient(threading.Thread):
         else:
             # Manual login, user is hidden
             password = dialog.input(
-                            heading="%s %s" % (lang(33008), username),
+                            heading="%s %s" % (lang(33008), username.decode('utf-8')),
                             option=xbmcgui.ALPHANUM_HIDE_INPUT)
         sha1 = hashlib.sha1(password)
         sha1 = sha1.hexdigest()
