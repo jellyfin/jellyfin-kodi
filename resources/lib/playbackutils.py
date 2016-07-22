@@ -16,6 +16,7 @@ import downloadutils
 import playutils as putils
 import playlist
 import read_embyserver as embyserver
+import shutil
 from utils import Logging, window, settings, language as lang
 
 #################################################################################################
@@ -228,7 +229,7 @@ class PlaybackUtils():
         # Append external subtitles to stream
         playmethod = window('%s.playmethod' % embyitem)
         # Only for direct stream
-        if playmethod in ("DirectStream"):
+        if playmethod in ("DirectStream") and settings('enableExternalSubs') == "true":
             # Direct play automatically appends external
             subtitles = self.externalSubs(playurl)
             listitem.setSubtitles(subtitles)
