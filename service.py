@@ -298,8 +298,8 @@ class Service():
 
 # Delay option
 delay = int(settings('startupDelay'))
+log.warn("Delaying emby startup by: %s sec..." % delay)
 
-log.info("Delaying emby startup by: %s sec..." % delay)
 if delay and xbmc.Monitor().waitForAbort(delay):
     # Start the service
     log.warn("Abort requested while waiting. Emby for kodi not started.")

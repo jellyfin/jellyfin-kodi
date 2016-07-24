@@ -38,7 +38,7 @@ class LogHandler(logging.StreamHandler):
             logging.ERROR: 0,
             logging.WARNING: 0,
             logging.INFO: 1,
-            logging.DEBUG: 2,
+            logging.DEBUG: 2
         }
         try:
             logLevel = int(window('emby_logLevel'))

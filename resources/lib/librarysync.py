@@ -807,11 +807,11 @@ class LibrarySync(threading.Thread):
 
         incSyncIndicator = int(settings('incSyncIndicator'))
         totalUpdates = len(self.addedItems) + len(self.updateItems) + len(self.userdataItems) + len(self.removeItems)
-        log.info("incSyncIndicator=" + str(incSyncIndicator) + " totalUpdates=" + str(totalUpdates))
         
         if incSyncIndicator != -1 and totalUpdates > incSyncIndicator:
             # Only present dialog if we are going to process items
             pDialog = self.progressDialog('Incremental sync')
+            log.info("incSyncIndicator=" + str(incSyncIndicator) + " totalUpdates=" + str(totalUpdates))
 
         process = {
 
