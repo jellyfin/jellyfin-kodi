@@ -27,8 +27,14 @@ import read_embyserver as embyserver
 import embydb_functions as embydb
 import kodidb_functions as kodidb
 import musicutils as musicutils
-from utils import Logging, settings, language as lang, kodiSQL
-log = Logging('ContextMenu').log
+from utils import settings, language as lang, kodiSQL
+
+#################################################################################################
+
+import loghandler
+
+loghandler.config()
+log = logging.getLogger("EMBY.contextmenu")
 
 #################################################################################################
 
