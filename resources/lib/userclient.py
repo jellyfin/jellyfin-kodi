@@ -3,6 +3,7 @@
 ##################################################################################################
 
 import hashlib
+import logging
 import threading
 
 import xbmc
@@ -13,7 +14,11 @@ import xbmcvfs
 import artwork
 import clientinfo
 import downloadutils
-from utils import Logging, window, settings, language as lang
+from utils import window, settings, language as lang
+
+##################################################################################################
+
+log = logging.getLogger("EMBY."+__name__)
 
 ##################################################################################################
 
@@ -39,13 +44,9 @@ class UserClient(threading.Thread):
 
     def __init__(self):
 
-        global log
-        log = Logging(self.__class__.__name__).log
-
         self.__dict__ = self._shared_state
         self.addon = xbmcaddon.Addon()
 
-        self.addonName = clientinfo.ClientInfo().getAddonName()
         self.doUtils = downloadutils.DownloadUtils()
 
         threading.Thread.__init__(self)
@@ -63,7 +64,7 @@ class UserClient(threading.Thread):
         username = settings('username')
 
         if not username:
-            log("No username saved.", 2)
+            log.debug("No username saved.")
             return ""
 
         return username
@@ -88,17 +89,17 @@ class UserClient(threading.Thread):
             if not s_userId:
                 # Save access token if it's missing from settings
                 settings('userId%s' % username, value=w_userId)
-            log("Returning userId from WINDOW for username: %s UserId: %s"
-                % (username, w_userId), 2)
+            log.debug("Returning userId from WINDOW for username: %s UserId: %s"
+                % (username, w_userId))
             return w_userId
         # Verify the settings
         elif s_userId:
-            log("Returning userId from SETTINGS for username: %s userId: %s"
-                % (username, s_userId), 2)
+            log.debug("Returning userId from SETTINGS for username: %s userId: %s"
+                % (username, s_userId))
             return s_userId
         # No userId found
         else:
-            log("No userId saved for username: %s." % username, 1)
+            log.info("No userId saved for username: %s." % username)
 
     def getServer(self, prefix=True):
 
@@ -117,7 +118,7 @@ class UserClient(threading.Thread):
         server = host + ":" + port
 
         if not host:
-            log("No server information saved.", 2)
+            log.debug("No server information saved.")
             return False
 
         # If https is true
@@ -144,17 +145,17 @@ class UserClient(threading.Thread):
             if not s_token:
                 # Save access token if it's missing from settings
                 settings('accessToken', value=w_token)
-                log("Returning accessToken from WINDOW for username: %s accessToken: %s"
-                % (username, w_token), 2)
+                log.debug("Returning accessToken from WINDOW for username: %s accessToken: %s"
+                % (username, w_token))
             return w_token
         # Verify the settings
         elif s_token:
-            log("Returning accessToken from SETTINGS for username: %s accessToken: %s"
-                % (username, s_token), 2)
+            log.debug("Returning accessToken from SETTINGS for username: %s accessToken: %s"
+                % (username, s_token))
             window('emby_accessToken%s' % username, value=s_token)
             return s_token
         else:
-            log("No token found.", 1)
+            log.info("No token found.")
             return ""
 
     def getSSLverify(self):
@@ -210,7 +211,7 @@ class UserClient(threading.Thread):
 
         if result == False:
             # Access is restricted, set in downloadutils.py via exception
-            log("Access is restricted.", 1)
+            log.info("Access is restricted.")
             self.HasAccess = False
 
         elif window('emby_online') != "true":
@@ -218,7 +219,7 @@ class UserClient(threading.Thread):
             pass
 
         elif window('emby_serverStatus') == "restricted":
-            log("Access is granted.", 1)
+            log.info("Access is granted.")
             self.HasAccess = True
             window('emby_serverStatus', clear=True)
             xbmcgui.Dialog().notification(lang(29999), lang(33007))
@@ -283,12 +284,12 @@ class UserClient(threading.Thread):
 
         # If there's no settings.xml
         if not hasSettings:
-            log("No settings.xml found.", 1)
+            log.info("No settings.xml found.")
             self.auth = False
             return
         # If no user information
         elif not server or not username:
-            log("Missing server information.", 1)
+            log.info("Missing server information.")
             self.auth = False
             return
         # If there's a token, load the user
@@ -298,9 +299,9 @@ class UserClient(threading.Thread):
             if result == False:
                 pass
             else:
-                log("Current user: %s" % self.currUser, 1)
-                log("Current userId: %s" % self.currUserId, 1)
-                log("Current accessToken: %s" % self.currToken, 2)
+                log.info("Current user: %s" % self.currUser)
+                log.info("Current userId: %s" % self.currUserId)
+                log.debug("Current accessToken: %s" % self.currToken)
                 return
 
         ##### AUTHENTICATE USER #####
@@ -320,7 +321,7 @@ class UserClient(threading.Thread):
                         option=xbmcgui.ALPHANUM_HIDE_INPUT)
                     # If password dialog is cancelled
                     if not password:
-                        log("No password entered.", 0)
+                        log.warn("No password entered.")
                         window('emby_serverStatus', value="Stop")
                         self.auth = False
                         return
@@ -335,17 +336,17 @@ class UserClient(threading.Thread):
 
         # Authenticate username and password
         data = {'username': username, 'password': sha1}
-        log(data, 2)
+        log.debug(data)
 
         url = "%s/emby/Users/AuthenticateByName?format=json" % server
         result = self.doUtils.downloadUrl(url, postBody=data, action_type="POST", authenticate=False)
 
         try:
-            log("Auth response: %s" % result, 1)
+            log.info("Auth response: %s" % result)
             accessToken = result['AccessToken']
 
         except (KeyError, TypeError):
-            log("Failed to retrieve the api key.", 1)
+            log.info("Failed to retrieve the api key.")
             accessToken = None
 
         if accessToken is not None:
@@ -354,20 +355,20 @@ class UserClient(threading.Thread):
                                 "%s %s!" % (lang(33000), self.currUser.decode('utf-8')))
             settings('accessToken', value=accessToken)
             settings('userId%s' % username, value=result['User']['Id'])
-            log("User Authenticated: %s" % accessToken, 1)
+            log.info("User Authenticated: %s" % accessToken)
             self.loadCurrUser(authenticated=True)
             window('emby_serverStatus', clear=True)
             self.retry = 0
         else:
-            log("User authentication failed.", 1)
+            log.error("User authentication failed.")
             settings('accessToken', value="")
             settings('userId%s' % username, value="")
             dialog.ok(lang(33001), lang(33009))
 
             # Give two attempts at entering password
             if self.retry == 2:
-                log("Too many retries. "
-                    "You can retry by resetting attempts in the addon settings.", 1)
+                log.info("Too many retries. "
+                    "You can retry by resetting attempts in the addon settings.")
                 window('emby_serverStatus', value="Stop")
                 dialog.ok(lang(33001), lang(33010))
 
@@ -376,13 +377,13 @@ class UserClient(threading.Thread):
 
     def resetClient(self):
 
-        log("Reset UserClient authentication.", 1)
+        log.info("Reset UserClient authentication.")
         if self.currToken is not None:
             # In case of 401, removed saved token
             settings('accessToken', value="")
             window('emby_accessToken%s' % self.getUserId(), clear=True)
             self.currToken = None
-            log("User token has been removed.", 1)
+            log.info("User token has been removed.")
 
         self.auth = True
         self.currUser = None
@@ -390,7 +391,7 @@ class UserClient(threading.Thread):
     def run(self):
 
         monitor = xbmc.Monitor()
-        log("----===## Starting UserClient ##===----", 0)
+        log.warn("----===## Starting UserClient ##===----")
 
         while not monitor.abortRequested():
 
@@ -425,8 +426,8 @@ class UserClient(threading.Thread):
                 # The status Stop is for when user cancelled password dialog.
                 if server and username and status != "Stop":
                     # Only if there's information found to login
-                    log("Server found: %s" % server, 2)
-                    log("Username found: %s" % username, 2)
+                    log.debug("Server found: %s" % server)
+                    log.debug("Username found: %s" % username)
                     self.auth = True
 
 
@@ -439,7 +440,7 @@ class UserClient(threading.Thread):
                 break
 
         self.doUtils.stopSession()
-        log("##===---- UserClient Stopped ----===##", 0)
+        log.warn("##===---- UserClient Stopped ----===##")
 
     def stopClient(self):
         # When emby for kodi terminates

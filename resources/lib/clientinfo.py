@@ -2,6 +2,7 @@
 
 #################################################################################################
 
+import logging
 import os
 from uuid import uuid4
 
@@ -9,18 +10,19 @@ import xbmc
 import xbmcaddon
 import xbmcvfs
 
-from utils import Logging, window, settings
+from utils import window, settings
 
-#################################################################################################
+##################################################################################################
+
+log = logging.getLogger("EMBY."+__name__)
+
+##################################################################################################
 
 
 class ClientInfo():
 
 
     def __init__(self):
-
-        global log
-        log = Logging(self.__class__.__name__).log
 
         self.addon = xbmcaddon.Addon()
         self.addonName = self.getAddonName()
@@ -88,14 +90,14 @@ class ClientInfo():
         GUID = xbmcvfs.File(GUID_file)
         clientId = GUID.read()
         if not clientId:
-            log("Generating a new deviceid...", 1)
+            log.info("Generating a new deviceid...")
             clientId = str("%012X" % uuid4())
             GUID = xbmcvfs.File(GUID_file, 'w')
             GUID.write(clientId)
 
         GUID.close()
 
-        log("DeviceId loaded: %s" % clientId, 1)
+        log.info("DeviceId loaded: %s" % clientId)
         window('emby_deviceId', value=clientId)
         
         return clientId

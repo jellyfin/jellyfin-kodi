@@ -2,6 +2,7 @@
 
 #################################################################################################
 
+import logging
 import shutil
 import xml.etree.ElementTree as etree
 
@@ -9,9 +10,12 @@ import xbmc
 import xbmcaddon
 import xbmcvfs
 
-import clientinfo
 import utils
-from utils import Logging, window, language as lang
+from utils import window, language as lang
+
+#################################################################################################
+
+log = logging.getLogger("EMBY."+__name__)
 
 #################################################################################################
 
@@ -20,12 +24,6 @@ class VideoNodes(object):
 
 
     def __init__(self):
-
-        global log
-        log = Logging(self.__class__.__name__).log
-
-        clientInfo = clientinfo.ClientInfo()
-        self.addonName = clientInfo.getAddonName()
 
         self.kodiversion = int(xbmc.getInfoLabel('System.BuildVersion')[:2])
 
@@ -79,7 +77,7 @@ class VideoNodes(object):
                 for file in files:
                     xbmcvfs.delete(nodepath + file)
 
-                log("Sucessfully removed videonode: %s." % tagname, 1)
+                log.info("Sucessfully removed videonode: %s." % tagname)
                 return
 
         # Create index entry
@@ -364,7 +362,7 @@ class VideoNodes(object):
 
     def clearProperties(self):
 
-        log("Clearing nodes properties.", 1)
+        log.info("Clearing nodes properties.")
         embyprops = window('Emby.nodes.total')
         propnames = [
         

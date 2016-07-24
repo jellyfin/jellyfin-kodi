@@ -2,11 +2,16 @@
 
 #################################################################################################
 
+import logging
+
 import xbmc
 
-import clientinfo
 import downloadutils
-from utils import Logging, window, settings, kodiSQL
+from utils import window, settings, kodiSQL
+
+#################################################################################################
+
+log = logging.getLogger("EMBY."+__name__)
 
 #################################################################################################
 
@@ -18,11 +23,6 @@ class Read_EmbyServer():
 
     def __init__(self):
 
-        global log
-        log = Logging(self.__class__.__name__).log
-
-        self.clientInfo = clientinfo.ClientInfo()
-        self.addonName = self.clientInfo.getAddonName()
         self.doUtils = downloadutils.DownloadUtils().downloadUrl
 
         self.userId = window('emby_currUser')
@@ -211,7 +211,7 @@ class Read_EmbyServer():
             items['TotalRecordCount'] = total
 
         except TypeError: # Failed to retrieve
-            log("%s:%s Failed to retrieve the server response." % (url, params), 2)
+            log.debug("%s:%s Failed to retrieve the server response." % (url, params))
 
         else:
             index = 0
@@ -253,27 +253,27 @@ class Read_EmbyServer():
                     # Something happened to the connection
                     if not throttled:
                         throttled = True
-                        log("Throttle activated.", 1)
+                        log.info("Throttle activated.")
                     
                     if jump == highestjump:
                         # We already tried with the highestjump, but it failed. Reset value.
-                        log("Reset highest value.", 1)
+                        log.info("Reset highest value.")
                         highestjump = 0
 
                     # Lower the number by half
                     if highestjump:
                         throttled = False
                         jump = highestjump
-                        log("Throttle deactivated.", 1)
+                        log.info("Throttle deactivated.")
                     else:
                         jump = int(jump/4)
-                        log("Set jump limit to recover: %s" % jump, 2)
+                        log.debug("Set jump limit to recover: %s" % jump)
                     
                     retry = 0
                     while window('emby_online') != "true":
                         # Wait server to come back online
                         if retry == 5:
-                            log("Unable to reconnect to server. Abort process.", 1)
+                            log.info("Unable to reconnect to server. Abort process.")
                             return items
                         
                         retry += 1
@@ -301,7 +301,7 @@ class Read_EmbyServer():
                             increment = 10
 
                         jump += increment
-                        log("Increase jump limit to: %s" % jump, 1)
+                        log.info("Increase jump limit to: %s" % jump)
         return items
 
     def getViews(self, mediatype="", root=False, sortedlist=False):
@@ -318,7 +318,7 @@ class Read_EmbyServer():
         try:
             items = result['Items']
         except TypeError:
-            log("Error retrieving views for type: %s" % mediatype, 2)
+            log.debug("Error retrieving views for type: %s" % mediatype)
         else:
             for item in items:
 
@@ -462,7 +462,7 @@ class Read_EmbyServer():
             items['TotalRecordCount'] = total
 
         except TypeError: # Failed to retrieve
-            log("%s:%s Failed to retrieve the server response." % (url, params), 2)
+            log.debug("%s:%s Failed to retrieve the server response." % (url, params))
 
         else:
             index = 1
@@ -550,9 +550,9 @@ class Read_EmbyServer():
             url = "{server}/emby/Users/{UserId}/FavoriteItems/%s?format=json" % itemid
             doUtils(url, action_type="DELETE")
         else:
-            log("Error processing user rating.", 1)
+            log.info("Error processing user rating.")
 
-        log("Update user rating to emby for itemid: %s | favourite: %s" % (itemid, favourite), 1)
+        log.info("Update user rating to emby for itemid: %s | favourite: %s" % (itemid, favourite))
 
     def refreshItem(self, itemid):
 

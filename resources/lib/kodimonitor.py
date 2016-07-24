@@ -3,6 +3,7 @@
 #################################################################################################
 
 import json
+import logging
 
 import xbmc
 import xbmcgui
@@ -11,7 +12,11 @@ import clientinfo
 import downloadutils
 import embydb_functions as embydb
 import playbackutils as pbutils
-from utils import Logging, window, settings, kodiSQL
+from utils import window, settings, kodiSQL
+
+#################################################################################################
+
+log = logging.getLogger("EMBY."+__name__)
 
 #################################################################################################
 
@@ -21,23 +26,20 @@ class KodiMonitor(xbmc.Monitor):
 
     def __init__(self):
 
-        global log
-        log = Logging(self.__class__.__name__).log
-
         self.clientInfo = clientinfo.ClientInfo()
         self.addonName = self.clientInfo.getAddonName()
         self.doUtils = downloadutils.DownloadUtils()
 
-        log("Kodi monitor started.", 1)
+        log.info("Kodi monitor started.")
 
 
     def onScanStarted(self, library):
-        log("Kodi library scan %s running." % library, 2)
+        log.debug("Kodi library scan %s running." % library)
         if library == "video":
             window('emby_kodiScan', value="true")
             
     def onScanFinished(self, library):
-        log("Kodi library scan %s finished." % library, 2)
+        log.debug("Kodi library scan %s finished." % library)
         if library == "video":
             window('emby_kodiScan', clear=True)
 
@@ -62,14 +64,14 @@ class KodiMonitor(xbmc.Monitor):
         currentLog = settings('logLevel')
         if window('emby_logLevel') != currentLog:
             # The log level changed, set new prop
-            log("New log level: %s" % currentLog, 1)
+            log.info("New log level: %s" % currentLog)
             window('emby_logLevel', value=currentLog)
 
     def onNotification(self, sender, method, data):
 
         doUtils = self.doUtils
         if method not in ("Playlist.OnAdd"):
-            log("Method: %s Data: %s" % (method, data), 1)
+            log.info("Method: %s Data: %s" % (method, data))
             
         if data:
             data = json.loads(data,'utf-8')
@@ -82,7 +84,7 @@ class KodiMonitor(xbmc.Monitor):
                 kodiid = item['id']
                 item_type = item['type']
             except (KeyError, TypeError):
-                log("Item is invalid for playstate update.", 1)
+                log.info("Item is invalid for playstate update.")
             else:
                 if ((settings('useDirectPaths') == "1" and not item_type == "song") or
                         (item_type == "song" and settings('enableMusic') == "true")):
@@ -94,11 +96,11 @@ class KodiMonitor(xbmc.Monitor):
                     try:
                         itemid = emby_dbitem[0]
                     except TypeError:
-                        log("No kodiId returned.", 1)
+                        log.info("No kodiId returned.")
                     else:
                         url = "{server}/emby/Users/{UserId}/Items/%s?format=json" % itemid
                         result = doUtils.downloadUrl(url)
-                        log("Item: %s" % result, 2)
+                        log.debug("Item: %s" % result)
 
                         playurl = None
                         count = 0
@@ -130,7 +132,7 @@ class KodiMonitor(xbmc.Monitor):
                 kodiid = item['id']
                 item_type = item['type']
             except (KeyError, TypeError):
-                log("Item is invalid for playstate update.", 1)
+                log.info("Item is invalid for playstate update.")
             else:
                 # Send notification to the server.
                 embyconn = kodiSQL('emby')
@@ -140,7 +142,7 @@ class KodiMonitor(xbmc.Monitor):
                 try:
                     itemid = emby_dbitem[0]
                 except TypeError:
-                    log("Could not find itemid in emby database.", 1)
+                    log.info("Could not find itemid in emby database.")
                 else:
                     # Stop from manually marking as watched unwatched, with actual playback.
                     if window('emby_skipWatched%s' % itemid) == "true":
@@ -151,10 +153,10 @@ class KodiMonitor(xbmc.Monitor):
                         url = "{server}/emby/Users/{UserId}/PlayedItems/%s?format=json" % itemid
                         if playcount != 0:
                             doUtils.downloadUrl(url, action_type="POST")
-                            log("Mark as watched for itemid: %s" % itemid, 1)
+                            log.info("Mark as watched for itemid: %s" % itemid)
                         else:
                             doUtils.downloadUrl(url, action_type="DELETE")
-                            log("Mark as unwatched for itemid: %s" % itemid, 1)
+                            log.info("Mark as unwatched for itemid: %s" % itemid)
                 finally:
                     embycursor.close()
 
@@ -197,7 +199,7 @@ class KodiMonitor(xbmc.Monitor):
 
         elif method == "System.OnSleep":
             # Connection is going to sleep
-            log("Marking the server as offline. System.OnSleep activating.", 1)
+            log.info("Marking the server as offline. System.OnSleep activated.")
             window('emby_online', value="sleep")
 
         elif method == "System.OnWake":

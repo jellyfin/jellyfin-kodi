@@ -2,6 +2,7 @@
 
 #################################################################################################
 
+import logging
 import os
 import sys
 import urlparse
@@ -21,8 +22,14 @@ sys.path.append(_base_resource)
 
 import entrypoint
 import utils
-from utils import Logging, window, language as lang
-log = Logging('Default').log
+from utils import window, language as lang
+
+#################################################################################################
+
+import loghandler
+
+loghandler.config()
+log = logging.getLogger("EMBY.default")
 
 #################################################################################################
 
@@ -37,7 +44,7 @@ class Main():
         # Parse parameters
         base_url = sys.argv[0]
         params = urlparse.parse_qs(sys.argv[2][1:])
-        log("Parameter string: %s" % sys.argv[2], 0)
+        log.warn("Parameter string: %s" % sys.argv[2])
         try:
             mode = params['mode'][0]
             itemid = params.get('id')
@@ -113,7 +120,7 @@ class Main():
                     # Server is not online, do not run the sync
                     xbmcgui.Dialog().ok(heading=lang(29999),
                                         line1=lang(33034))
-                    log("Not connected to the emby server.", 1)
+                    log.warn("Not connected to the emby server.")
                     return
                     
                 if window('emby_dbScan') != "true":
@@ -126,7 +133,7 @@ class Main():
                     else:
                         lib.fullSync(repair=True)
                 else:
-                    log("Database scan is already running.", 1)
+                    log.warn("Database scan is already running.")
                     
             elif mode == "texturecache":
                 import artwork
@@ -137,6 +144,6 @@ class Main():
 
            
 if __name__ == "__main__":
-    log('plugin.video.emby started', 1)
+    log.info('plugin.video.emby started')
     Main()
-    log('plugin.video.emby stopped', 1)
+    log.info('plugin.video.emby stopped')

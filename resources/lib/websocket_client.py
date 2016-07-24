@@ -3,6 +3,7 @@
 #################################################################################################
 
 import json
+import logging
 import threading
 import websocket
 
@@ -14,9 +15,13 @@ import downloadutils
 import librarysync
 import playlist
 import userclient
-from utils import Logging, window, settings, language as lang
+from utils import window, settings, language as lang
 
-#################################################################################################
+##################################################################################################
+
+log = logging.getLogger("EMBY."+__name__)
+
+##################################################################################################
 
 
 class WebSocket_Client(threading.Thread):
@@ -29,15 +34,11 @@ class WebSocket_Client(threading.Thread):
 
     def __init__(self):
 
-        global log
-        log = Logging(self.__class__.__name__).log
-
         self.__dict__ = self._shared_state
         self.monitor = xbmc.Monitor()
         
         self.doUtils = downloadutils.DownloadUtils()
         self.clientInfo = clientinfo.ClientInfo()
-        self.addonName = self.clientInfo.getAddonName()
         self.deviceId = self.clientInfo.getDeviceId()
         self.librarySync = librarysync.LibrarySync()
         
@@ -46,7 +47,7 @@ class WebSocket_Client(threading.Thread):
 
     def sendProgressUpdate(self, data):
         
-        log("sendProgressUpdate", 2)
+        log.debug("sendProgressUpdate")
         try:
             messageData = {
 
@@ -55,10 +56,10 @@ class WebSocket_Client(threading.Thread):
             }
             messageString = json.dumps(messageData)
             self.client.send(messageString)
-            log("Message data: %s" % messageString, 2)
+            log.debug("Message data: %s" % messageString)
 
         except Exception as e:
-            log("Exception: %s" % e, 1)
+            log.exception(e)
 
     def on_message(self, ws, message):
 
@@ -69,7 +70,7 @@ class WebSocket_Client(threading.Thread):
 
         if messageType not in ('SessionEnded'):
             # Mute certain events
-            log("Message: %s" % message, 1)
+            log.info("Message: %s" % message)
 
         if messageType == "Play":
             # A remote control play command has been sent from the server.
@@ -118,10 +119,10 @@ class WebSocket_Client(threading.Thread):
                 seekto = data['SeekPositionTicks']
                 seektime = seekto / 10000000.0
                 action(seektime)
-                log("Seek to %s." % seektime, 1)
+                log.info("Seek to %s." % seektime)
             else:
                 action()
-                log("Command: %s completed." % command, 1)
+                log.info("Command: %s completed." % command)
 
             window('emby_command', value="true")
 
@@ -254,7 +255,7 @@ class WebSocket_Client(threading.Thread):
             self.librarySync.refresh_views = True
 
     def on_close(self, ws):
-        log("Closed.", 2)
+        log.debug("Closed.")
 
     def on_open(self, ws):
         self.doUtils.postCapabilities(self.deviceId)
@@ -264,7 +265,7 @@ class WebSocket_Client(threading.Thread):
             # Server is offline
             pass
         else:
-            log("Error: %s" % error, 2)
+            log.debug("Error: %s" % error)
 
     def run(self):
 
@@ -281,7 +282,7 @@ class WebSocket_Client(threading.Thread):
             server = server.replace('http', "ws")
 
         websocket_url = "%s?api_key=%s&deviceId=%s" % (server, token, self.deviceId)
-        log("websocket url: %s" % websocket_url, 1)
+        log.info("websocket url: %s" % websocket_url)
 
         self.client = websocket.WebSocketApp(websocket_url,
                                     on_message=self.on_message,
@@ -289,7 +290,7 @@ class WebSocket_Client(threading.Thread):
                                     on_close=self.on_close)
         
         self.client.on_open = self.on_open
-        log("----===## Starting WebSocketClient ##===----", 0)
+        log.warn("----===## Starting WebSocketClient ##===----")
 
         while not self.monitor.abortRequested():
 
@@ -301,10 +302,10 @@ class WebSocket_Client(threading.Thread):
                 # Abort was requested, exit
                 break
 
-        log("##===---- WebSocketClient Stopped ----===##", 0)
+        log.warn("##===---- WebSocketClient Stopped ----===##")
 
     def stopClient(self):
 
         self.stopWebsocket = True
         self.client.close()
-        log("Stopping thread.", 1)
+        log.info("Stopping thread.")

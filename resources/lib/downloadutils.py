@@ -10,7 +10,7 @@ import xbmc
 import xbmcgui
 
 import clientinfo
-from utils import Logging, window, settings
+from utils import window, settings
 
 ##################################################################################################
 
@@ -18,7 +18,8 @@ from utils import Logging, window, settings
 from requests.packages.urllib3.exceptions import InsecureRequestWarning, InsecurePlatformWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 requests.packages.urllib3.disable_warnings(InsecurePlatformWarning)
-#logging.getLogger('requests').setLevel(logging.WARNING)
+
+log = logging.getLogger("EMBY."+__name__)
 
 ##################################################################################################
 
@@ -36,38 +37,35 @@ class DownloadUtils():
 
     def __init__(self):
 
-        global log
-        log = Logging(self.__class__.__name__).log
-
         self.__dict__ = self._shared_state
 
 
     def setUsername(self, username):
         # Reserved for userclient only
         self.username = username
-        log("Set username: %s" % username, 2)
+        log.debug("Set username: %s" % username)
 
     def setUserId(self, userId):
         # Reserved for userclient only
         self.userId = userId
-        log("Set userId: %s" % userId, 2)
+        log.debug("Set userId: %s" % userId)
 
     def setServer(self, server):
         # Reserved for userclient only
         self.server = server
-        log("Set server: %s" % server, 2)
+        log.debug("Set server: %s" % server)
 
     def setToken(self, token):
         # Reserved for userclient only
         self.token = token
-        log("Set token: %s" % token, 2)
+        log.debug("Set token: %s" % token)
 
     def setSSL(self, ssl, sslclient):
         # Reserved for userclient only
         self.sslverify = ssl
         self.sslclient = sslclient
-        log("Verify SSL host certificate: %s" % ssl, 2)
-        log("SSL client side certificate: %s" % sslclient, 2)
+        log.debug("Verify SSL host certificate: %s" % ssl)
+        log.debug("SSL client side certificate: %s" % sslclient)
 
 
     def postCapabilities(self, deviceId):
@@ -92,11 +90,11 @@ class DownloadUtils():
             )
         }
 
-        log("Capabilities URL: %s" % url, 2)
-        log("Postdata: %s" % data, 2)
+        log.debug("Capabilities URL: %s" % url)
+        log.debug("Postdata: %s" % data)
 
         self.downloadUrl(url, postBody=data, action_type="POST")
-        log("Posted capabilities to %s" % self.server, 2)
+        log.debug("Posted capabilities to %s" % self.server)
 
         # Attempt at getting sessionId
         url = "{server}/emby/Sessions?DeviceId=%s&format=json" % deviceId
@@ -105,11 +103,11 @@ class DownloadUtils():
             sessionId = result[0]['Id']
 
         except (KeyError, TypeError):
-            log("Failed to retrieve sessionId.", 1)
+            log.info("Failed to retrieve sessionId.")
 
         else:
-            log("Session: %s" % result, 2)
-            log("SessionId: %s" % sessionId, 1)
+            log.debug("Session: %s" % result)
+            log.info("SessionId: %s" % sessionId)
             window('emby_sessionId', value=sessionId)
 
             # Post any permanent additional users
@@ -117,8 +115,7 @@ class DownloadUtils():
             if additionalUsers:
 
                 additionalUsers = additionalUsers.split(',')
-                log("List of permanent users added to the session: %s"
-                    % additionalUsers, 1)
+                log.info("List of permanent users added to the session: %s" % additionalUsers)
 
                 # Get the user list from server to get the userId
                 url = "{server}/emby/Users?format=json"
@@ -155,7 +152,7 @@ class DownloadUtils():
             if self.sslclient is not None:
                 verify = self.sslclient
         except:
-            log("Could not load SSL settings.", 1)
+            log.info("Could not load SSL settings.")
 
         # Start session
         self.s = requests.Session()
@@ -165,13 +162,13 @@ class DownloadUtils():
         self.s.mount("http://", requests.adapters.HTTPAdapter(max_retries=1))
         self.s.mount("https://", requests.adapters.HTTPAdapter(max_retries=1))
 
-        log("Requests session started on: %s" % self.server, 1)
+        log.info("Requests session started on: %s" % self.server)
 
     def stopSession(self):
         try:
             self.s.close()
-        except:
-            log("Requests session could not be terminated.", 1)
+        except Exception:
+            log.warn("Requests session could not be terminated.")
 
     def getHeader(self, authenticate=True):
 
@@ -210,7 +207,7 @@ class DownloadUtils():
     def downloadUrl(self, url, postBody=None, action_type="GET", parameters=None,
                     authenticate=True):
 
-        log("===== ENTER downloadUrl =====", 2)
+        log.debug("===== ENTER downloadUrl =====")
         
         session = requests
         kwargs = {}
@@ -267,12 +264,12 @@ class DownloadUtils():
             })
 
             ##### THE RESPONSE #####
-            log(kwargs, 2)
+            log.debug(kwargs)
             r = self._requests(action_type, session, **kwargs)
 
             if r.status_code == 204:
                 # No body in the response
-                log("====== 204 Success ======", 2)
+                log.debug("====== 204 Success ======")
                 # Read response to release connection
                 r.content
 
@@ -280,16 +277,16 @@ class DownloadUtils():
                 try:
                     # UNICODE - JSON object
                     r = r.json()
-                    log("====== 200 Success ======", 2)
-                    log("Response: %s" % r, 2)
+                    log.debug("====== 200 Success ======")
+                    log.debug("Response: %s" % r)
                     return r
 
                 except:
                     if r.headers.get('content-type') != "text/html":
-                        log("Unable to convert the response for: %s" % url, 1)
+                        log.info("Unable to convert the response for: %s" % url)
 
             else: # Bad status code
-                log("=== Bad status response: %s ===" % r.status_code, -1)
+                log.error("=== Bad status response: %s ===" % r.status_code)
                 r.raise_for_status()
 
         ##### EXCEPTIONS #####
@@ -297,13 +294,11 @@ class DownloadUtils():
         except requests.exceptions.ConnectionError as e:
             # Make the addon aware of status
             if window('emby_online') != "false":
-                log("Server unreachable at: %s" % url, 0)
-                log(e, 2)
+                log.warn("Server unreachable at: %s" % url)
                 window('emby_online', value="false")
 
         except requests.exceptions.ConnectTimeout as e:
-            log("Server timeout at: %s" % url, 0)
-            log(e, 1)
+            log.warn("Server timeout at: %s" % url)
 
         except requests.exceptions.HTTPError as e:
 
@@ -330,7 +325,7 @@ class DownloadUtils():
                 elif status not in ("401", "Auth"):
                     # Tell userclient token has been revoked.
                     window('emby_serverStatus', value="401")
-                    log("HTTP Error: %s" % e, 0)
+                    log.warn("HTTP Error: %s" % e)
                     xbmcgui.Dialog().notification(
                                             heading="Error connecting",
                                             message="Unauthorized.",
@@ -345,12 +340,10 @@ class DownloadUtils():
                 pass
 
         except requests.exceptions.SSLError as e:
-            log("Invalid SSL certificate for: %s" % url, 0)
-            log(e, 1)
+            log.warn("Invalid SSL certificate for: %s" % url)
 
         except requests.exceptions.RequestException as e:
-            log("Unknown error connecting to: %s" % url, 0)
-            log(e, 1)
+            log.warn("Unknown error connecting to: %s" % url)
 
         return default_link
 

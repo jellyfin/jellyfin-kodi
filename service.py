@@ -2,6 +2,7 @@
 
 #################################################################################################
 
+import logging
 import os
 import sys
 import time
@@ -30,7 +31,14 @@ import librarysync
 import player
 import videonodes
 import websocket_client as wsc
-from utils import Logging, window, settings, language as lang
+from utils import window, settings, language as lang
+
+#################################################################################################
+
+import loghandler
+
+loghandler.config()
+log = logging.getLogger("EMBY.service")
 
 #################################################################################################
 
@@ -49,9 +57,6 @@ class Service():
 
     def __init__(self):
 
-        global log
-        log = Logging(self.__class__.__name__).log
-
         self.clientInfo = clientinfo.ClientInfo()
         self.addonName = self.clientInfo.getAddonName()
         logLevel = userclient.UserClient().getLogLevel()
@@ -61,12 +66,12 @@ class Service():
         window('emby_kodiProfile', value=xbmc.translatePath('special://profile'))
 
         # Initial logging
-        log("======== START %s ========" % self.addonName, 0)
-        log("Platform: %s" % (self.clientInfo.getPlatform()), 0)
-        log("KODI Version: %s" % xbmc.getInfoLabel('System.BuildVersion'), 0)
-        log("%s Version: %s" % (self.addonName, self.clientInfo.getVersion()), 0)
-        log("Using plugin paths: %s" % (settings('useDirectPaths') == "0"), 0)
-        log("Log Level: %s" % logLevel, 0)
+        log.warn("======== START %s ========" % self.addonName)
+        log.warn("Platform: %s" % (self.clientInfo.getPlatform()))
+        log.warn("KODI Version: %s" % xbmc.getInfoLabel('System.BuildVersion'))
+        log.warn("%s Version: %s" % (self.addonName, self.clientInfo.getVersion()))
+        log.warn("Using plugin paths: %s" % (settings('useDirectPaths') == "0"))
+        log.warn("Log Level: %s" % logLevel)
 
         # Reset window props for profile switch
         properties = [
@@ -108,8 +113,8 @@ class Service():
 
             if window('emby_kodiProfile') != kodiProfile:
                 # Profile change happened, terminate this thread and others
-                log("Kodi profile was: %s and changed to: %s. Terminating old Emby thread."
-                    % (kodiProfile, window('emby_kodiProfile')), 1)
+                log.info("Kodi profile was: %s and changed to: %s. Terminating old Emby thread."
+                    % (kodiProfile, window('emby_kodiProfile')))
                 
                 break
             
@@ -151,9 +156,8 @@ class Service():
                                 kplayer.reportPlayback()
                                 lastProgressUpdate = datetime.today()
                             
-                        except Exception as e:
-                            log("Exception in Playback Monitor Service: %s" % e, 1)
-                            pass
+                        except Exception:
+                            log.exception("Exception in Playback Monitor Service")
                     else:
                         # Start up events
                         self.warn_auth = True
@@ -192,7 +196,7 @@ class Service():
                     if (user.currUser is None) and self.warn_auth:
                         # Alert user is not authenticated and suppress future warning
                         self.warn_auth = False
-                        log("Not authenticated yet.", 1)
+                        log.info("Not authenticated yet.")
 
                     # User access is restricted.
                     # Keep verifying until access is granted
@@ -221,7 +225,7 @@ class Service():
                         # Server is offline.
                         # Alert the user and suppress future warning
                         if self.server_online:
-                            log("Server is offline.", 1)
+                            log.info("Server is offline.")
                             window('emby_online', value="false")
 
                             xbmcgui.Dialog().notification(
@@ -235,13 +239,11 @@ class Service():
                     elif window('emby_online') == "sleep":
                         # device going to sleep
                         if self.websocket_running:
-                            log("Stop websocket thread")
                             ws.stopClient()
                             ws = wsc.WebSocket_Client()
                             self.websocket_running = False
 
                         if self.library_running:
-                            log("Stop library thread")
                             library.stopThread()
                             library = librarysync.LibrarySync()
                             self.library_running = False
@@ -263,12 +265,11 @@ class Service():
                                         sound=False)
                         
                         self.server_online = True
-                        log("Server is online and ready.", 1)
+                        log.info("Server is online and ready.")
                         window('emby_online', value="true")
                         
                         # Start the userclient thread
                         if not self.userclient_running:
-                            log("Start user thread")
                             self.userclient_running = True
                             user.start()
                         
@@ -293,14 +294,14 @@ class Service():
         if self.websocket_running:
             ws.stopClient()
 
-        log("======== STOP %s ========" % self.addonName, 0)
+        log.warn("======== STOP %s ========" % self.addonName)
 
 # Delay option
 delay = int(settings('startupDelay'))
 
-xbmc.log("Delaying emby startup by: %s sec..." % delay)
+log.info("Delaying emby startup by: %s sec..." % delay)
 if delay and xbmc.Monitor().waitForAbort(delay):
     # Start the service
-    xbmc.log("Abort requested while waiting. Emby for kodi not started.")
+    log.warn("Abort requested while waiting. Emby for kodi not started.")
 else:
     Service().ServiceEntryPoint()
