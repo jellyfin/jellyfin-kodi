@@ -901,14 +901,13 @@ class LibrarySync(threading.Thread):
             self.run_internal()
         except Exception as e:
             window('emby_dbScan', clear=True)
+            log.exception(e)
             xbmcgui.Dialog().ok(
                         heading=lang(29999),
                         line1=(
                             "Library sync thread has exited! "
                             "You should restart Kodi now. "
                             "Please report this on the forum."))
-            log.exception(e)
-            raise
 
     def run_internal(self):
 
