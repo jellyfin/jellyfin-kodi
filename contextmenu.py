@@ -2,6 +2,7 @@
 
 #################################################################################################
 
+import logging
 import os
 import sys
 import urlparse
@@ -27,8 +28,14 @@ import read_embyserver as embyserver
 import embydb_functions as embydb
 import kodidb_functions as kodidb
 import musicutils as musicutils
-from utils import Logging, settings, language as lang, kodiSQL
-log = Logging('ContextMenu').log
+from utils import settings, language as lang, kodiSQL
+
+#################################################################################################
+
+import loghandler
+
+loghandler.config()
+log = logging.getLogger("EMBY.contextmenu")
 
 #################################################################################################
 
@@ -50,7 +57,7 @@ if __name__ == '__main__':
         elif xbmc.getCondVisibility("Container.Content(pictures)"):
             itemType = "picture"
         else:
-            log("ItemType is unknown.")
+            log.info("ItemType is unknown.")
 
     if (not kodiId or kodiId == "-1") and xbmc.getInfoLabel("ListItem.Property(embyid)"):
         itemId = xbmc.getInfoLabel("ListItem.Property(embyid)")
@@ -67,7 +74,7 @@ if __name__ == '__main__':
             pass
 
     
-    log("Found ItemId: %s ItemType: %s" % (itemId, itemType), 1)
+    log.info("Found ItemId: %s ItemType: %s" % (itemId, itemType))
     if itemId:
 
         dialog = xbmcgui.Dialog()
@@ -157,11 +164,11 @@ if __name__ == '__main__':
                                 heading=lang(29999),
                                 line1=lang(33041))
                     if not resp:
-                        log("User skipped deletion for: %s." % itemId, 1)
+                        log.info("User skipped deletion for: %s." % itemId)
                         delete = False
                 
                 if delete:
-                    log("Deleting request: %s" % itemId, 0)
+                    log.info("Deleting request: %s" % itemId)
                     emby.deleteItem(itemId)
             
             xbmc.sleep(500)

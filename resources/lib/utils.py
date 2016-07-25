@@ -5,6 +5,7 @@
 import cProfile
 import inspect
 import json
+import logging
 import pstats
 import sqlite3
 import StringIO
@@ -20,44 +21,11 @@ import xbmcgui
 import xbmcvfs
 
 #################################################################################################
+
+log = logging.getLogger("EMBY."+__name__)
+
+#################################################################################################
 # Main methods
-
-class Logging(object):
-
-
-    def __init__(self, title=""):
-
-        self.title = title
-
-    def _getLogLevel(self, level):
-
-        try:
-            logLevel = int(window('emby_logLevel'))
-        except ValueError:
-            logLevel = 0
-
-        return logLevel >= level
-
-    def _printMsg(self, title, msg):
-
-        try:
-            xbmc.log("%s -> %s" % (title, msg))
-        except UnicodeEncodeError:
-            xbmc.log("%s -> %s" % (title, msg.encode('utf-8')))
-
-    def log(self, msg, level=1):
-
-        extra = ""
-        if level == -1:
-            # Error mode
-            extra = "::ERROR"
-
-        if self._getLogLevel(level):
-            self._printMsg("EMBY %s%s" % (self.title, extra), msg)
-
-# Initiate class for utils.py document logging
-log = Logging('Utils').log
-
 
 def window(property, value=None, clear=False, window_id=10000):
     # Get or set window property
@@ -143,7 +111,7 @@ def querySQL(query, args=None, cursor=None, conntype=None):
 
     if cursor is None:
         if conntype is None:
-            log("New connection type is missing.", 1)
+            log.info("New connection type is missing.")
             return result
         else:
             manualconn = True
@@ -153,7 +121,7 @@ def querySQL(query, args=None, cursor=None, conntype=None):
     attempts = 0
     while attempts < 3:
         try:
-            log("Query: %s Args: %s" % (query, args), 2)
+            log.debug("Query: %s Args: %s" % (query, args))
             if args is None:
                 result = cursor.execute(query)
             else:
@@ -161,22 +129,22 @@ def querySQL(query, args=None, cursor=None, conntype=None):
             break # Query successful, break out of while loop
         except sqlite3.OperationalError as e:
             if "database is locked" in e:
-                log("%s...Attempt: %s" % (e, attempts), 0)
+                log.warn("%s...Attempt: %s" % (e, attempts))
                 attempts += 1
                 xbmc.sleep(1000)
             else:
-                log("Error sqlite3: %s" % e, 0)
+                log.error(e)
                 if manualconn:
                     cursor.close()
                 raise
         except sqlite3.Error as e:
-            log("Error sqlite3: %s" % e, 0)
+            log.error(e)
             if manualconn:
                 cursor.close()
             raise
     else:
         failed = True
-        log("FAILED // Query: %s Args: %s" % (query, args), 1)
+        log.info("FAILED // Query: %s Args: %s" % (query, args))
 
     if manualconn:
         if failed:
@@ -185,7 +153,7 @@ def querySQL(query, args=None, cursor=None, conntype=None):
             connection.commit()
             cursor.close()
 
-    log(result, 2)
+    log.debug(result)
     return result
 
 #################################################################################################
@@ -219,7 +187,7 @@ def setScreensaver(value):
         }
     }
     result = xbmc.executeJSONRPC(json.dumps(query))
-    log("Toggling screensaver: %s %s" % (value, result), 1)
+    log.info("Toggling screensaver: %s %s" % (value, result))
 
 def convertDate(date):
     try:
@@ -300,7 +268,7 @@ def profiling(sortby="cumulative"):
             s = StringIO.StringIO()
             ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
             ps.print_stats()
-            log(s.getvalue(), 1)
+            log.info(s.getvalue())
 
             return result
 
@@ -321,7 +289,7 @@ def reset():
     window('emby_shouldStop', value="true")
     count = 10
     while window('emby_dbScan') == "true":
-        log("Sync is running, will retry: %s..." % count)
+        log.info("Sync is running, will retry: %s..." % count)
         count -= 1
         if count == 0:
             dialog.ok(language(29999), language(33085))
@@ -335,7 +303,7 @@ def reset():
     deleteNodes()
 
     # Wipe the kodi databases
-    log("Resetting the Kodi video database.", 0)
+    log.warn("Resetting the Kodi video database.")
     connection = kodiSQL('video')
     cursor = connection.cursor()
     cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
@@ -348,7 +316,7 @@ def reset():
     cursor.close()
 
     if settings('enableMusic') == "true":
-        log("Resetting the Kodi music database.", 0)
+        log.warn("Resetting the Kodi music database.")
         connection = kodiSQL('music')
         cursor = connection.cursor()
         cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
@@ -361,7 +329,7 @@ def reset():
         cursor.close()
 
     # Wipe the emby database
-    log("Resetting the Emby database.", 0)
+    log.warn("Resetting the Emby database.")
     connection = kodiSQL('emby')
     cursor = connection.cursor()
     cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
@@ -378,7 +346,7 @@ def reset():
     # Offer to wipe cached thumbnails
     resp = dialog.yesno(language(29999), language(33086))
     if resp:
-        log("Resetting all cached artwork.", 0)
+        log.warn("Resetting all cached artwork.")
         # Remove all existing textures first
         path = xbmc.translatePath("special://thumbnails/").decode('utf-8')
         if xbmcvfs.exists(path):
@@ -414,7 +382,7 @@ def reset():
         addondir = xbmc.translatePath(addon.getAddonInfo('profile')).decode('utf-8')
         dataPath = "%ssettings.xml" % addondir
         xbmcvfs.delete(dataPath)
-        log("Deleting: settings.xml", 1)
+        log.info("Deleting: settings.xml")
 
     dialog.ok(heading=language(29999), line1=language(33088))
     xbmc.executebuiltin('RestartApp')
@@ -488,11 +456,11 @@ def passwordsXML():
                 for path in paths:
                     if path.find('.//from').text == "smb://%s/" % credentials:
                         paths.remove(path)
-                        log("Successfully removed credentials for: %s" % credentials, 1)
+                        log.info("Successfully removed credentials for: %s" % credentials)
                         etree.ElementTree(root).write(xmlpath)
                         break
             else:
-                log("Failed to find saved server: %s in passwords.xml" % credentials, 1)
+                log.info("Failed to find saved server: %s in passwords.xml" % credentials)
 
             settings('networkCreds', value="")
             xbmcgui.Dialog().notification(
@@ -541,7 +509,7 @@ def passwordsXML():
 
     # Add credentials
     settings('networkCreds', value="%s" % server)
-    log("Added server: %s to passwords.xml" % server, 1)
+    log.info("Added server: %s to passwords.xml" % server)
     # Prettify and write to file
     try:
         indent(root)
@@ -569,7 +537,7 @@ def playlistXSP(mediatype, tagname, viewid, viewtype="", delete=False):
 
     # Create the playlist directory
     if not xbmcvfs.exists(path):
-        log("Creating directory: %s" % path, 1)
+        log.info("Creating directory: %s" % path)
         xbmcvfs.mkdirs(path)
 
     # Only add the playlist if it doesn't already exists
@@ -577,7 +545,7 @@ def playlistXSP(mediatype, tagname, viewid, viewtype="", delete=False):
 
         if delete:
             xbmcvfs.delete(xsppath)
-            log("Successfully removed playlist: %s." % tagname, 1)
+            log.info("Successfully removed playlist: %s." % tagname)
 
         return
 
@@ -585,11 +553,11 @@ def playlistXSP(mediatype, tagname, viewid, viewtype="", delete=False):
     itemtypes = {
         'homevideos': "movies"
     }
-    log("Writing playlist file to: %s" % xsppath, 1)
+    log.info("Writing playlist file to: %s" % xsppath)
     try:
         f = xbmcvfs.File(xsppath, 'w')
     except:
-        log("Failed to create playlist: %s" % xsppath, 1)
+        log.info("Failed to create playlist: %s" % xsppath)
         return
     else:
         f.write(
@@ -603,7 +571,7 @@ def playlistXSP(mediatype, tagname, viewid, viewtype="", delete=False):
             '</smartplaylist>'
             % (itemtypes.get(mediatype, mediatype), plname, tagname))
         f.close()
-    log("Successfully added playlist: %s" % tagname, 1)
+    log.info("Successfully added playlist: %s" % tagname)
 
 def deletePlaylists():
 
@@ -625,10 +593,10 @@ def deleteNodes():
             try:
                 shutil.rmtree("%s%s" % (path, dir.decode('utf-8')))
             except:
-                log("Failed to delete directory: %s" % dir.decode('utf-8'), 0)
+                log.warn("Failed to delete directory: %s" % dir.decode('utf-8'))
     for file in files:
         if file.decode('utf-8').startswith('emby'):
             try:
                 xbmcvfs.delete("%s%s" % (path, file.decode('utf-8')))
             except:
-                log("Failed to file: %s" % file.decode('utf-8'), 0)
+                log.warn("Failed to delete file: %s" % file.decode('utf-8'))

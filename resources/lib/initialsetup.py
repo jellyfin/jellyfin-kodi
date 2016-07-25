@@ -3,6 +3,7 @@
 #################################################################################################
 
 import json
+import logging
 import socket
 
 import xbmc
@@ -12,7 +13,11 @@ import xbmcaddon
 import clientinfo
 import downloadutils
 import userclient
-from utils import Logging, settings, language as lang, passwordsXML
+from utils import settings, language as lang, passwordsXML
+
+#################################################################################################
+
+log = logging.getLogger("EMBY."+__name__)
 
 #################################################################################################
 
@@ -21,9 +26,6 @@ class InitialSetup():
 
 
     def __init__(self):
-
-        global log
-        log = Logging(self.__class__.__name__).log
 
         self.addonId = clientinfo.ClientInfo().getAddonId()
         self.doUtils = downloadutils.DownloadUtils().downloadUrl
@@ -37,20 +39,20 @@ class InitialSetup():
 
         ##### SERVER INFO #####
         
-        log("Initial setup called.", 2)
+        log.debug("Initial setup called.")
         server = self.userClient.getServer()
 
         if server:
-            log("Server is already set.", 2)
+            log.debug("Server is already set.")
             return
         
-        log("Looking for server...", 2)
+        log.debug("Looking for server...")
         server = self.getServerDetails()
-        log("Found: %s" % server, 2)
+        log.debug("Found: %s" % server)
         try:
             prefix, ip, port = server.replace("/", "").split(":")
-        except: # Failed to retrieve server information
-            log("getServerDetails failed.", 1)
+        except Exception: # Failed to retrieve server information
+            log.error("getServerDetails failed.")
             xbmc.executebuiltin('Addon.OpenSettings(%s)' % addonId)
             return
         else:
@@ -60,7 +62,7 @@ class InitialSetup():
                                 line2="%s %s" % (lang(30169), server))
             if server_confirm:
                 # Correct server found
-                log("Server is selected. Saving the information.", 1)
+                log.info("Server is selected. Saving the information.")
                 settings('ipaddress', value=ip)
                 settings('port', value=port)
 
@@ -68,20 +70,20 @@ class InitialSetup():
                     settings('https', value="true")
             else:
                 # User selected no or cancelled the dialog
-                log("No server selected.", 1)
+                log.info("No server selected.")
                 xbmc.executebuiltin('Addon.OpenSettings(%s)' % addonId)
                 return
 
         ##### USER INFO #####
         
-        log("Getting user list.", 1)
+        log.info("Getting user list.")
 
         result = self.doUtils("%s/emby/Users/Public?format=json" % server, authenticate=False)
         if result == "":
-            log("Unable to connect to %s" % server, 1)
+            log.info("Unable to connect to %s" % server)
             return
 
-        log("Response: %s" % result, 2)
+        log.debug("Response: %s" % result)
         # Process the list of users
         usernames = []
         users_hasPassword = []
@@ -95,14 +97,14 @@ class InitialSetup():
                 name = "%s (secure)" % name
             users_hasPassword.append(name)
 
-        log("Presenting user list: %s" % users_hasPassword, 1)
+        log.info("Presenting user list: %s" % users_hasPassword)
         user_select = dialog.select(lang(30200), users_hasPassword)
         if user_select > -1:
             selected_user = usernames[user_select]
-            log("Selected user: %s" % selected_user, 1)
+            log.info("Selected user: %s" % selected_user)
             settings('username', value=selected_user)
         else:
-            log("No user selected.", 1)
+            log.info("No user selected.")
             xbmc.executebuiltin('Addon.OpenSettings(%s)' % addonId)
             return
 
@@ -114,7 +116,7 @@ class InitialSetup():
                             nolabel=lang(33036),
                             yeslabel=lang(33037))
         if directPaths:
-            log("User opted to use direct paths.", 1)
+            log.info("User opted to use direct paths.")
             settings('useDirectPaths', value="1")
 
             # ask for credentials
@@ -122,14 +124,14 @@ class InitialSetup():
                                 heading=lang(30517),
                                 line1= lang(33038))
             if credentials:
-                log("Presenting network credentials dialog.", 1)
+                log.info("Presenting network credentials dialog.")
                 passwordsXML()
         
         musicDisabled = dialog.yesno(
                             heading=lang(29999),
                             line1=lang(33039))
         if musicDisabled:
-            log("User opted to disable Emby music library.", 1)
+            log.info("User opted to disable Emby music library.")
             settings('enableMusic', value="false")
         else:
             # Only prompt if the user didn't select direct paths for videos
@@ -138,12 +140,12 @@ class InitialSetup():
                                     heading=lang(29999),
                                     line1=lang(33040))
                 if musicAccess:
-                    log("User opted to direct stream music.", 1)
+                    log.info("User opted to direct stream music.")
                     settings('streamMusic', value="true")
                 
     def getServerDetails(self):
 
-        log("Getting Server Details from Network", 1)
+        log.info("Getting Server Details from Network")
         
         MULTI_GROUP = ("<broadcast>", 7359)
         MESSAGE = "who is EmbyServer?"
@@ -157,15 +159,15 @@ class InitialSetup():
         sock.setsockopt(socket.SOL_IP, socket.IP_MULTICAST_LOOP, 1)
         sock.setsockopt(socket.IPPROTO_IP, socket.SO_REUSEADDR, 1)
         
-        log("MultiGroup      : %s" % str(MULTI_GROUP), 2)
-        log("Sending UDP Data: %s" % MESSAGE, 2)
+        log.debug("MultiGroup      : %s" % str(MULTI_GROUP))
+        log.debug("Sending UDP Data: %s" % MESSAGE)
         sock.sendto(MESSAGE, MULTI_GROUP)
     
         try:
             data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
-            log("Received Response: %s" % data)
-        except:
-            log("No UDP Response")
+            log.info("Received Response: %s" % data)
+        except Exception:
+            log.error("No UDP Response")
             return None
         else:
             # Get the address

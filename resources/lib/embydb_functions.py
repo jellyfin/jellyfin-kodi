@@ -2,12 +2,14 @@
 
 #################################################################################################
 
+import logging
 from sqlite3 import OperationalError
 
-import clientinfo
-from utils import Logging
+##################################################################################################
 
-#################################################################################################
+log = logging.getLogger("EMBY."+__name__)
+
+##################################################################################################
 
 
 class Embydb_Functions():
@@ -15,13 +17,7 @@ class Embydb_Functions():
 
     def __init__(self, embycursor):
 
-        global log
-        log = Logging(self.__class__.__name__).log
-
         self.embycursor = embycursor
-
-        self.clientInfo = clientinfo.ClientInfo()
-        self.addonName = self.clientInfo.getAddonName()
 
 
     def getViews(self):

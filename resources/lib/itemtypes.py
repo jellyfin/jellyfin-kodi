@@ -2,6 +2,7 @@
 
 ##################################################################################################
 
+import logging
 import urllib
 from ntpath import dirname
 from datetime import datetime
@@ -18,18 +19,19 @@ import embydb_functions as embydb
 import kodidb_functions as kodidb
 import read_embyserver as embyserver
 import musicutils
-from utils import Logging, window, settings, language as lang, kodiSQL
+from utils import window, settings, language as lang, kodiSQL
 
-##################################################################################################
+#################################################################################################
+
+log = logging.getLogger("EMBY."+__name__)
+
+#################################################################################################
 
 
 class Items(object):
 
 
     def __init__(self, embycursor, kodicursor):
-
-        global log
-        log = Logging(self.__class__.__name__).log
 
         self.embycursor = embycursor
         self.kodicursor = kodicursor
@@ -79,7 +81,7 @@ class Items(object):
         if total == 0:
             return False
 
-        log("Processing %s: %s" % (process, items), 1)
+        log.info("Processing %s: %s" % (process, items))
         if pdialog:
             pdialog.update(heading="Processing %s: %s items" % (process, total))
 
@@ -171,7 +173,7 @@ class Items(object):
                     'remove': items_process.remove
                 }
             else:
-                log("Unsupported itemtype: %s." % itemtype, 1)
+                log.info("Unsupported itemtype: %s." % itemtype)
                 actions = {}
 
             if actions.get(process):
@@ -202,7 +204,7 @@ class Items(object):
 
             if musicconn is not None:
                 # close connection for special types
-                log("Updating music database.", 1)
+                log.info("Updating music database.")
                 musicconn.commit()
                 musiccursor.close()
 
@@ -282,11 +284,11 @@ class Movies(Items):
             movieid = emby_dbitem[0]
             fileid = emby_dbitem[1]
             pathid = emby_dbitem[2]
-            log("movieid: %s fileid: %s pathid: %s" % (movieid, fileid, pathid), 1)
+            log.info("movieid: %s fileid: %s pathid: %s" % (movieid, fileid, pathid))
         
         except TypeError:
             update_item = False
-            log("movieid: %s not found." % itemid, 2)
+            log.info("movieid: %s not found." % itemid)
             # movieid
             kodicursor.execute("select coalesce(max(idMovie),0) from movie")
             movieid = kodicursor.fetchone()[0] + 1
@@ -300,12 +302,12 @@ class Movies(Items):
             except TypeError:
                 # item is not found, let's recreate it.
                 update_item = False
-                log("movieid: %s missing from Kodi, repairing the entry." % movieid, 1)
+                log.info("movieid: %s missing from Kodi, repairing the entry." % movieid)
 
         if not viewtag or not viewid:
             # Get view tag from emby
             viewtag, viewid, mediatype = self.emby.getView_embyId(itemid)
-            log("View tag found: %s" % viewtag, 2)
+            log.debug("View tag found: %s" % viewtag)
 
         # fileId information
         checksum = API.getChecksum()
@@ -348,7 +350,7 @@ class Movies(Items):
             try:
                 trailer = "plugin://plugin.video.emby/trailer/?id=%s&mode=play" % result[0]['Id']
             except IndexError:
-                log("Failed to process local trailer.", 1)
+                log.info("Failed to process local trailer.")
                 trailer = None
         else:
             # Try to get the youtube trailer
@@ -360,7 +362,7 @@ class Movies(Items):
                 try:
                     trailerId = trailer.rsplit('=', 1)[1]
                 except IndexError:
-                    log("Failed to process trailer: %s" % trailer, 1)
+                    log.info("Failed to process trailer: %s" % trailer)
                     trailer = None
                 else:
                     trailer = "plugin://plugin.video.youtube/play/?video_id=%s" % trailerId
@@ -397,7 +399,7 @@ class Movies(Items):
 
         ##### UPDATE THE MOVIE #####
         if update_item:
-            log("UPDATE movie itemid: %s - Title: %s" % (itemid, title), 1)
+            log.info("UPDATE movie itemid: %s - Title: %s" % (itemid, title))
 
             # Update the movie entry
             query = ' '.join((
@@ -417,7 +419,7 @@ class Movies(Items):
         
         ##### OR ADD THE MOVIE #####
         else:
-            log("ADD movie itemid: %s - Title: %s" % (itemid, title), 1)
+            log.info("ADD movie itemid: %s - Title: %s" % (itemid, title))
             
             # Add path
             pathid = self.kodi_db.addPath(path)
@@ -527,10 +529,10 @@ class Movies(Items):
                 try:
                     movieid = emby_dbitem[0]
                 except TypeError:
-                    log("Failed to add: %s to boxset." % movie['Name'], 1)
+                    log.info("Failed to add: %s to boxset." % movie['Name'])
                     continue
 
-                log("New addition to boxset %s: %s" % (title, movie['Name']), 1)
+                log.info("New addition to boxset %s: %s" % (title, movie['Name']))
                 self.kodi_db.assignBoxset(setid, movieid)
                 # Update emby reference
                 emby_db.updateParentId(itemid, setid)
@@ -541,7 +543,7 @@ class Movies(Items):
         # Process removals from boxset
         for movie in process:
             movieid = current[movie]
-            log("Remove from boxset %s: %s" % (title, movieid))
+            log.info("Remove from boxset %s: %s" % (title, movieid))
             self.kodi_db.removefromBoxset(movieid)
             # Update emby reference
             emby_db.updateParentId(movie, None)
@@ -566,7 +568,7 @@ class Movies(Items):
         try:
             movieid = emby_dbitem[0]
             fileid = emby_dbitem[1]
-            log("Update playstate for movie: %s fileid: %s" % (item['Name'], fileid), 1)
+            log.info("Update playstate for movie: %s fileid: %s" % (item['Name'], fileid))
         except TypeError:
             return
 
@@ -582,7 +584,7 @@ class Movies(Items):
         resume = API.adjustResume(userdata['Resume'])
         total = round(float(runtime), 6)
 
-        log("%s New resume point: %s" % (itemid, resume))
+        log.debug("%s New resume point: %s" % (itemid, resume))
 
         self.kodi_db.addPlaystate(fileid, resume, total, playcount, dateplayed)
         emby_db.updateReference(itemid, checksum)
@@ -598,7 +600,7 @@ class Movies(Items):
             kodiid = emby_dbitem[0]
             fileid = emby_dbitem[1]
             mediatype = emby_dbitem[4]
-            log("Removing %sid: %s fileid: %s" % (mediatype, kodiid, fileid), 1)
+            log.info("Removing %sid: %s fileid: %s" % (mediatype, kodiid, fileid))
         except TypeError:
             return
 
@@ -624,7 +626,7 @@ class Movies(Items):
 
             kodicursor.execute("DELETE FROM sets WHERE idSet = ?", (kodiid,))
 
-        log("Deleted %s %s from kodi database" % (mediatype, itemid), 1)
+        log.info("Deleted %s %s from kodi database" % (mediatype, itemid))
 
 class MusicVideos(Items):
 
@@ -664,11 +666,11 @@ class MusicVideos(Items):
             mvideoid = emby_dbitem[0]
             fileid = emby_dbitem[1]
             pathid = emby_dbitem[2]
-            log("mvideoid: %s fileid: %s pathid: %s" % (mvideoid, fileid, pathid), 1)
+            log.info("mvideoid: %s fileid: %s pathid: %s" % (mvideoid, fileid, pathid))
         
         except TypeError:
             update_item = False
-            log("mvideoid: %s not found." % itemid, 2)
+            log.info("mvideoid: %s not found." % itemid)
             # mvideoid
             kodicursor.execute("select coalesce(max(idMVideo),0) from musicvideo")
             mvideoid = kodicursor.fetchone()[0] + 1
@@ -682,12 +684,12 @@ class MusicVideos(Items):
             except TypeError:
                 # item is not found, let's recreate it.
                 update_item = False
-                log("mvideoid: %s missing from Kodi, repairing the entry." % mvideoid, 1)
+                log.info("mvideoid: %s missing from Kodi, repairing the entry." % mvideoid)
 
         if not viewtag or not viewid:
             # Get view tag from emby
             viewtag, viewid, mediatype = self.emby.getView_embyId(itemid)
-            log("View tag found: %s" % viewtag, 2)
+            log.debug("View tag found: %s" % viewtag)
 
         # fileId information
         checksum = API.getChecksum()
@@ -743,7 +745,7 @@ class MusicVideos(Items):
 
         ##### UPDATE THE MUSIC VIDEO #####
         if update_item:
-            log("UPDATE mvideo itemid: %s - Title: %s" % (itemid, title), 1)
+            log.info("UPDATE mvideo itemid: %s - Title: %s" % (itemid, title))
             
             # Update path
             query = "UPDATE path SET strPath = ? WHERE idPath = ?"
@@ -769,7 +771,7 @@ class MusicVideos(Items):
         
         ##### OR ADD THE MUSIC VIDEO #####
         else:
-            log("ADD mvideo itemid: %s - Title: %s" % (itemid, title), 1)
+            log.info("ADD mvideo itemid: %s - Title: %s" % (itemid, title))
             
             # Add path
             query = ' '.join((
@@ -869,9 +871,9 @@ class MusicVideos(Items):
         try:
             mvideoid = emby_dbitem[0]
             fileid = emby_dbitem[1]
-            log(
+            log.info(
                 "Update playstate for musicvideo: %s fileid: %s"
-                % (item['Name'], fileid), 1)
+                % (item['Name'], fileid))
         except TypeError:
             return
 
@@ -901,7 +903,7 @@ class MusicVideos(Items):
             mvideoid = emby_dbitem[0]
             fileid = emby_dbitem[1]
             pathid = emby_dbitem[2]
-            log("Removing mvideoid: %s fileid: %s" % (mvideoid, fileid, pathid), 1)
+            log.info("Removing mvideoid: %s fileid: %s" % (mvideoid, fileid, pathid))
         except TypeError:
             return
 
@@ -927,7 +929,7 @@ class MusicVideos(Items):
             kodicursor.execute("DELETE FROM path WHERE idPath = ?", (pathid,))
         self.embycursor.execute("DELETE FROM emby WHERE emby_id = ?", (itemid,))
 
-        log("Deleted musicvideo %s from kodi database" % itemid, 1)
+        log.info("Deleted musicvideo %s from kodi database" % itemid)
 
 class TVShows(Items):
 
@@ -991,7 +993,7 @@ class TVShows(Items):
         API = api.API(item)
 
         if settings('syncEmptyShows') == "false" and not item.get('RecursiveItemCount'):
-            log("Skipping empty show: %s" % item['Name'], 1)
+            log.info("Skipping empty show: %s" % item['Name'])
             return
         # If the item already exist in the local Kodi DB we'll perform a full item update
         # If the item doesn't exist, we'll add it to the database
@@ -1002,11 +1004,11 @@ class TVShows(Items):
         try:
             showid = emby_dbitem[0]
             pathid = emby_dbitem[2]
-            log("showid: %s pathid: %s" % (showid, pathid), 1)
+            log.info("showid: %s pathid: %s" % (showid, pathid))
         
         except TypeError:
             update_item = False
-            log("showid: %s not found." % itemid, 2)
+            log.info("showid: %s not found." % itemid)
             kodicursor.execute("select coalesce(max(idShow),0) from tvshow")
             showid = kodicursor.fetchone()[0] + 1
 
@@ -1019,7 +1021,7 @@ class TVShows(Items):
             except TypeError:
                 # item is not found, let's recreate it.
                 update_item = False
-                log("showid: %s missing from Kodi, repairing the entry." % showid, 1)
+                log.info("showid: %s missing from Kodi, repairing the entry." % showid)
                 # Force re-add episodes after the show is re-created.
                 force_episodes = True
 
@@ -1027,7 +1029,7 @@ class TVShows(Items):
         if viewtag is None or viewid is None:
             # Get view tag from emby
             viewtag, viewid, mediatype = emby.getView_embyId(itemid)
-            log("View tag found: %s" % viewtag, 2)
+            log.debug("View tag found: %s" % viewtag)
 
         # fileId information
         checksum = API.getChecksum()
@@ -1076,7 +1078,7 @@ class TVShows(Items):
 
         ##### UPDATE THE TVSHOW #####
         if update_item:
-            log("UPDATE tvshow itemid: %s - Title: %s" % (itemid, title), 1)
+            log.info("UPDATE tvshow itemid: %s - Title: %s" % (itemid, title))
 
             # Update the tvshow entry
             query = ' '.join((
@@ -1094,7 +1096,7 @@ class TVShows(Items):
         
         ##### OR ADD THE TVSHOW #####
         else:
-            log("ADD tvshow itemid: %s - Title: %s" % (itemid, title), 1)
+            log.info("ADD tvshow itemid: %s - Title: %s" % (itemid, title))
             
             # Add top path
             toppathid = self.kodi_db.addPath(toplevelpath)
@@ -1165,7 +1167,7 @@ class TVShows(Items):
 
         if force_episodes:
             # We needed to recreate the show entry. Re-add episodes now.
-            log("Repairing episodes for showid: %s %s" % (showid, title), 1)
+            log.info("Repairing episodes for showid: %s %s" % (showid, title))
             all_episodes = emby.getEpisodesbyShow(itemid)
             self.added_episode(all_episodes['Items'], None)
 
@@ -1214,11 +1216,11 @@ class TVShows(Items):
             episodeid = emby_dbitem[0]
             fileid = emby_dbitem[1]
             pathid = emby_dbitem[2]
-            log("episodeid: %s fileid: %s pathid: %s" % (episodeid, fileid, pathid), 1)
+            log.info("episodeid: %s fileid: %s pathid: %s" % (episodeid, fileid, pathid))
         
         except TypeError:
             update_item = False
-            log("episodeid: %s not found." % itemid, 2)
+            log.info("episodeid: %s not found." % itemid)
             # episodeid
             kodicursor.execute("select coalesce(max(idEpisode),0) from episode")
             episodeid = kodicursor.fetchone()[0] + 1
@@ -1232,7 +1234,7 @@ class TVShows(Items):
             except TypeError:
                 # item is not found, let's recreate it.
                 update_item = False
-                log("episodeid: %s missing from Kodi, repairing the entry." % episodeid, 1)
+                log.info("episodeid: %s missing from Kodi, repairing the entry." % episodeid)
 
         # fileId information
         checksum = API.getChecksum()
@@ -1256,7 +1258,7 @@ class TVShows(Items):
             seriesId = item['SeriesId']
         except KeyError:
             # Missing seriesId, skip
-            log("Skipping: %s. SeriesId is missing." % itemid, 1)
+            log.error("Skipping: %s. SeriesId is missing." % itemid)
             return False
             
         season = item.get('ParentIndexNumber')
@@ -1294,7 +1296,7 @@ class TVShows(Items):
             try:
                 showid = show[0]
             except TypeError:
-                log("Skipping: %s. Unable to add series: %s." % (itemid, seriesId))
+                log.error("Skipping: %s. Unable to add series: %s." % (itemid, seriesId))
                 return False
 
         seasonid = self.kodi_db.addSeason(showid, season)
@@ -1331,7 +1333,7 @@ class TVShows(Items):
 
         ##### UPDATE THE EPISODE #####
         if update_item:
-            log("UPDATE episode itemid: %s - Title: %s" % (itemid, title), 1)
+            log.info("UPDATE episode itemid: %s - Title: %s" % (itemid, title))
 
             # Update the movie entry
             if self.kodiversion in (16, 17):
@@ -1365,7 +1367,7 @@ class TVShows(Items):
         
         ##### OR ADD THE EPISODE #####
         else:
-            log("ADD episode itemid: %s - Title: %s" % (itemid, title), 1)
+            log.info("ADD episode itemid: %s - Title: %s" % (itemid, title))
             
             # Add path
             pathid = self.kodi_db.addPath(path)
@@ -1468,9 +1470,9 @@ class TVShows(Items):
             kodiid = emby_dbitem[0]
             fileid = emby_dbitem[1]
             mediatype = emby_dbitem[4]
-            log(
+            log.info(
                 "Update playstate for %s: %s fileid: %s"
-                % (mediatype, item['Name'], fileid), 1)
+                % (mediatype, item['Name'], fileid))
         except TypeError:
             return
 
@@ -1487,7 +1489,7 @@ class TVShows(Items):
             resume = API.adjustResume(userdata['Resume'])
             total = round(float(runtime), 6)
 
-            log("%s New resume point: %s" % (itemid, resume))
+            log.debug("%s New resume point: %s" % (itemid, resume))
 
             self.kodi_db.addPlaystate(fileid, resume, total, playcount, dateplayed)
             if not self.directpath and not resume:
@@ -1525,7 +1527,7 @@ class TVShows(Items):
             pathid = emby_dbitem[2]
             parentid = emby_dbitem[3]
             mediatype = emby_dbitem[4]
-            log("Removing %s kodiid: %s fileid: %s" % (mediatype, kodiid, fileid), 1)
+            log.info("Removing %s kodiid: %s fileid: %s" % (mediatype, kodiid, fileid))
         except TypeError:
             return
 
@@ -1615,14 +1617,14 @@ class TVShows(Items):
                 self.removeShow(parentid)
                 emby_db.removeItem_byKodiId(parentid, "tvshow")
 
-        log("Deleted %s: %s from kodi database" % (mediatype, itemid), 1)
+        log.info("Deleted %s: %s from kodi database" % (mediatype, itemid))
 
     def removeShow(self, kodiid):
         
         kodicursor = self.kodicursor
         self.artwork.deleteArtwork(kodiid, "tvshow", kodicursor)
         kodicursor.execute("DELETE FROM tvshow WHERE idShow = ?", (kodiid,))
-        log("Removed tvshow: %s." % kodiid, 2)
+        log.debug("Removed tvshow: %s." % kodiid)
 
     def removeSeason(self, kodiid):
         
@@ -1630,7 +1632,7 @@ class TVShows(Items):
 
         self.artwork.deleteArtwork(kodiid, "season", kodicursor)
         kodicursor.execute("DELETE FROM seasons WHERE idSeason = ?", (kodiid,))
-        log("Removed season: %s." % kodiid, 2)
+        log.debug("Removed season: %s." % kodiid)
 
     def removeEpisode(self, kodiid, fileid):
 
@@ -1639,7 +1641,7 @@ class TVShows(Items):
         self.artwork.deleteArtwork(kodiid, "episode", kodicursor)
         kodicursor.execute("DELETE FROM episode WHERE idEpisode = ?", (kodiid,))
         kodicursor.execute("DELETE FROM files WHERE idFile = ?", (fileid,))
-        log("Removed episode: %s." % kodiid, 2)
+        log.debug("Removed episode: %s." % kodiid)
 
 class Music(Items):
 
@@ -1713,7 +1715,7 @@ class Music(Items):
             artistid = emby_dbitem[0]
         except TypeError:
             update_item = False
-            log("artistid: %s not found." % itemid, 2)
+            log.debug("artistid: %s not found." % itemid)
 
         ##### The artist details #####
         lastScraped = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -1740,13 +1742,13 @@ class Music(Items):
 
         ##### UPDATE THE ARTIST #####
         if update_item:
-            log("UPDATE artist itemid: %s - Name: %s" % (itemid, name), 1)
+            log.info("UPDATE artist itemid: %s - Name: %s" % (itemid, name))
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
 
         ##### OR ADD THE ARTIST #####
         else:
-            log("ADD artist itemid: %s - Name: %s" % (itemid, name), 1)
+            log.info("ADD artist itemid: %s - Name: %s" % (itemid, name))
             # safety checks: It looks like Emby supports the same artist multiple times.
             # Kodi doesn't allow that. In case that happens we just merge the artist entries.
             artistid = self.kodi_db.addArtist(name, musicBrainzId)
@@ -1794,7 +1796,7 @@ class Music(Items):
             albumid = emby_dbitem[0]
         except TypeError:
             update_item = False
-            log("albumid: %s not found." % itemid, 2)
+            log.debug("albumid: %s not found." % itemid)
 
         ##### The album details #####
         lastScraped = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -1825,13 +1827,13 @@ class Music(Items):
 
         ##### UPDATE THE ALBUM #####
         if update_item:
-            log("UPDATE album itemid: %s - Name: %s" % (itemid, name), 1)
+            log.info("UPDATE album itemid: %s - Name: %s" % (itemid, name))
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
 
         ##### OR ADD THE ALBUM #####
         else:
-            log("ADD album itemid: %s - Name: %s" % (itemid, name), 1)
+            log.info("ADD album itemid: %s - Name: %s" % (itemid, name))
             # safety checks: It looks like Emby supports the same artist multiple times.
             # Kodi doesn't allow that. In case that happens we just merge the artist entries.
             albumid = self.kodi_db.addAlbum(name, musicBrainzId)
@@ -1964,7 +1966,7 @@ class Music(Items):
             albumid = emby_dbitem[3]
         except TypeError:
             update_item = False
-            log("songid: %s not found." % itemid, 2)
+            log.debug("songid: %s not found." % itemid)
             
         ##### The song details #####
         checksum = API.getChecksum()
@@ -2019,7 +2021,7 @@ class Music(Items):
 
         ##### UPDATE THE SONG #####
         if update_item:
-            log("UPDATE song itemid: %s - Title: %s" % (itemid, title), 1)
+            log.info("UPDATE song itemid: %s - Title: %s" % (itemid, title))
             
             # Update path
             query = "UPDATE path SET strPath = ? WHERE idPath = ?"
@@ -2042,7 +2044,7 @@ class Music(Items):
         
         ##### OR ADD THE SONG #####
         else:
-            log("ADD song itemid: %s - Title: %s" % (itemid, title), 1)
+            log.info("ADD song itemid: %s - Title: %s" % (itemid, title))
             
             # Add path
             pathid = self.kodi_db.addPath(path)
@@ -2055,27 +2057,27 @@ class Music(Items):
                 # Verify if there's an album associated.
                 album_name = item.get('Album')
                 if album_name:
-                    log("Creating virtual music album for song: %s." % itemid, 1)
+                    log.info("Creating virtual music album for song: %s." % itemid)
                     albumid = self.kodi_db.addAlbum(album_name, API.getProvider('MusicBrainzAlbum'))
                     emby_db.addReference("%salbum%s" % (itemid, albumid), albumid, "MusicAlbum_", "album")
                 else:
                     # No album Id associated to the song.
-                    log("Song itemid: %s has no albumId associated." % itemid, 1)
+                    log.error("Song itemid: %s has no albumId associated." % itemid)
                     return False
 
             except TypeError:
                 # No album found. Let's create it
-                log("Album database entry missing.", 1)
+                log.info("Album database entry missing.")
                 emby_albumId = item['AlbumId']
                 album = emby.getItem(emby_albumId)
                 self.add_updateAlbum(album)
                 emby_dbalbum = emby_db.getItem_byId(emby_albumId)
                 try:
                     albumid = emby_dbalbum[0]
-                    log("Found albumid: %s" % albumid, 1)
+                    log.info("Found albumid: %s" % albumid)
                 except TypeError:
                     # No album found, create a single's album
-                    log("Failed to add album. Creating singles.", 1)
+                    log.info("Failed to add album. Creating singles.")
                     kodicursor.execute("select coalesce(max(idAlbum),0) from album")
                     albumid = kodicursor.fetchone()[0] + 1
                     if self.kodiversion == 16:
@@ -2257,7 +2259,7 @@ class Music(Items):
         try:
             kodiid = emby_dbitem[0]
             mediatype = emby_dbitem[4]
-            log("Update playstate for %s: %s" % (mediatype, item['Name']), 1)
+            log.info("Update playstate for %s: %s" % (mediatype, item['Name']))
         except TypeError:
             return
 
@@ -2296,7 +2298,7 @@ class Music(Items):
         try:
             kodiid = emby_dbitem[0]
             mediatype = emby_dbitem[4]
-            log("Removing %s kodiid: %s" % (mediatype, kodiid), 1)
+            log.info("Removing %s kodiid: %s" % (mediatype, kodiid))
         except TypeError:
             return
 
@@ -2364,7 +2366,7 @@ class Music(Items):
             # Remove artist
             self.removeArtist(kodiid)
 
-        log("Deleted %s: %s from kodi database" % (mediatype, itemid), 1)
+        log.info("Deleted %s: %s from kodi database" % (mediatype, itemid))
 
     def removeSong(self, kodiId):
 

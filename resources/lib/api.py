@@ -4,8 +4,12 @@
 
 ##################################################################################################
 
-import clientinfo
-from utils import Logging, settings
+import logging
+from utils import settings
+
+##################################################################################################
+
+log = logging.getLogger("EMBY."+__name__)
 
 ##################################################################################################
 
@@ -13,16 +17,9 @@ from utils import Logging, settings
 class API():
 
     def __init__(self, item):
-
-        global log
-        log = Logging(self.__class__.__name__).log
         
         # item is the api response
         self.item = item
-
-        self.clientinfo = clientinfo.ClientInfo()
-        self.addonName = self.clientinfo.getAddonName()
-
 
     def getUserData(self):
         # Default

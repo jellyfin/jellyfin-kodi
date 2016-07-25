@@ -3,6 +3,7 @@
 #################################################################################################
 
 import json
+import logging
 import requests
 import os
 import urllib
@@ -12,11 +13,14 @@ import xbmc
 import xbmcgui
 import xbmcvfs
 
-import clientinfo
 import image_cache_thread
-from utils import Logging, window, settings, language as lang, kodiSQL
+from utils import window, settings, language as lang, kodiSQL
 
-#################################################################################################
+##################################################################################################
+
+log = logging.getLogger("EMBY."+__name__)
+
+##################################################################################################
 
 
 class Artwork():
@@ -32,16 +36,10 @@ class Artwork():
 
     def __init__(self):
 
-        global log
-        log = Logging(self.__class__.__name__).log
-
-        self.clientinfo = clientinfo.ClientInfo()
-        self.addonName = self.clientinfo.getAddonName()
-
         self.enableTextureCache = settings('enableTextureCache') == "true"
         self.imageCacheLimitThreads = int(settings('imageCacheLimit'))
         self.imageCacheLimitThreads = int(self.imageCacheLimitThreads * 5)
-        log("Using Image Cache Thread Count: %s" % self.imageCacheLimitThreads, 1)
+        log.info("Using Image Cache Thread Count: %s" % self.imageCacheLimitThreads)
 
         if not self.xbmc_port and self.enableTextureCache:
             self.setKodiWebServerDetails()
@@ -175,14 +173,14 @@ class Artwork():
                     line1=lang(33042)):
             return
 
-        log("Doing Image Cache Sync", 1)
+        log.info("Doing Image Cache Sync")
 
         pdialog = xbmcgui.DialogProgress()
         pdialog.create(lang(29999), lang(33043))
 
         # ask to rest all existing or not
         if dialog.yesno(lang(29999), lang(33044)):
-            log("Resetting all cache data first.", 1)
+            log.info("Resetting all cache data first.")
             
             # Remove all existing textures first
             path = xbmc.translatePath('special://thumbnails/').decode('utf-8')
@@ -215,7 +213,7 @@ class Artwork():
         cursor.execute("SELECT url FROM art WHERE media_type != 'actor'") # dont include actors
         result = cursor.fetchall()
         total = len(result)
-        log("Image cache sync about to process %s images" % total, 1)
+        log.info("Image cache sync about to process %s images" % total)
         cursor.close()
 
         count = 0
@@ -236,7 +234,7 @@ class Artwork():
         cursor.execute("SELECT url FROM art")
         result = cursor.fetchall()
         total = len(result)
-        log("Image cache sync about to process %s images" % total, 1)
+        log.info("Image cache sync about to process %s images" % total)
         cursor.close()
 
         count = 0
@@ -252,14 +250,14 @@ class Artwork():
             count += 1
         
         pdialog.update(100, "%s %s" % (lang(33046), len(self.imageCacheThreads)))
-        log("Waiting for all threads to exit", 1)
+        log.info("Waiting for all threads to exit")
         
         while len(self.imageCacheThreads):
             for thread in self.imageCacheThreads:
                 if thread.isFinished:
                     self.imageCacheThreads.remove(thread)
             pdialog.update(100, "%s %s" % (lang(33046), len(self.imageCacheThreads)))
-            log("Waiting for all threads to exit: %s" % len(self.imageCacheThreads), 1)
+            log.info("Waiting for all threads to exit: %s" % len(self.imageCacheThreads))
             xbmc.sleep(500)
 
         pdialog.close()
@@ -282,13 +280,13 @@ class Artwork():
                 self.imageCacheThreads.append(newThread)
                 return
             else:
-                log("Waiting for empty queue spot: %s" % len(self.imageCacheThreads), 2)
+                log.info("Waiting for empty queue spot: %s" % len(self.imageCacheThreads))
                 xbmc.sleep(50)
 
     def cacheTexture(self, url):
         # Cache a single image url to the texture cache
         if url and self.enableTextureCache:
-            log("Processing: %s" % url, 2)
+            log.debug("Processing: %s" % url)
 
             if not self.imageCacheLimitThreads:
                 # Add image to texture cache by simply calling it at the http endpoint
@@ -406,7 +404,7 @@ class Artwork():
 
             except TypeError: # Add the artwork
                 cacheimage = True
-                log("Adding Art Link for kodiId: %s (%s)" % (kodiId, imageUrl), 2)
+                log.debug("Adding Art Link for kodiId: %s (%s)" % (kodiId, imageUrl))
 
                 query = (
                     '''
@@ -427,8 +425,8 @@ class Artwork():
                         # Delete current entry before updating with the new one
                         self.deleteCachedArtwork(url)
 
-                    log("Updating Art url for %s kodiId: %s (%s) -> (%s)"
-                        % (imageType, kodiId, url, imageUrl), 1)
+                    log.info("Updating Art url for %s kodiId: %s (%s) -> (%s)"
+                        % (imageType, kodiId, url, imageUrl))
 
                     query = ' '.join((
 
@@ -472,21 +470,21 @@ class Artwork():
             cachedurl = cursor.fetchone()[0]
 
         except TypeError:
-            log("Could not find cached url.", 1)
+            log.info("Could not find cached url.")
 
         except OperationalError:
-            log("Database is locked. Skip deletion process.", 1)
+            log.info("Database is locked. Skip deletion process.")
 
         else: # Delete thumbnail as well as the entry
             thumbnails = xbmc.translatePath("special://thumbnails/%s" % cachedurl).decode('utf-8')
-            log("Deleting cached thumbnail: %s" % thumbnails, 1)
+            log.info("Deleting cached thumbnail: %s" % thumbnails)
             xbmcvfs.delete(thumbnails)
 
             try:
                 cursor.execute("DELETE FROM texture WHERE url = ?", (url,))
                 connection.commit()
             except OperationalError:
-                log("Issue deleting url from cache. Skipping.", 2)
+                log.debug("Issue deleting url from cache. Skipping.")
 
         finally:
             cursor.close()

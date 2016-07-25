@@ -2,10 +2,13 @@
 
 #################################################################################################
 
-import threading
+import logging
 import requests
+import threading
 
-from utils import Logging
+#################################################################################################
+
+log = logging.getLogger("EMBY."+__name__)
 
 #################################################################################################
 
@@ -21,9 +24,6 @@ class image_cache_thread(threading.Thread):
     
 
     def __init__(self):
-
-        global log
-        log = Logging(self.__class__.__name__).log
 
         threading.Thread.__init__(self)
 
@@ -44,7 +44,7 @@ class image_cache_thread(threading.Thread):
          
     def run(self):
         
-        log("Image Caching Thread Processing: %s" % self.urlToProcess, 2)
+        log.debug("Image Caching Thread Processing: %s" % self.urlToProcess)
         
         try:
             response = requests.head(
@@ -56,5 +56,5 @@ class image_cache_thread(threading.Thread):
         # We don't need the result
         except: pass
         
-        log("Image Caching Thread Exited", 2)
+        log.debug("Image Caching Thread Exited")
         self.isFinished = True
