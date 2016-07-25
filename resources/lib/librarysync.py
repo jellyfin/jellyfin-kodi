@@ -417,8 +417,8 @@ class LibrarySync(threading.Thread):
                                 # Take the userview, and validate the item belong to the view
                                 if self.emby.verifyView(grouped_view['Id'], verifyitem):
                                     # Take the name of the userview
-                                    log("Found corresponding view: %s %s"
-                                        % (grouped_view['Name'], grouped_view['Id']), 1)
+                                    log.info("Found corresponding view: %s %s"
+                                        % (grouped_view['Name'], grouped_view['Id']))
                                     foldername = grouped_view['Name']
                                     break
                         else:
