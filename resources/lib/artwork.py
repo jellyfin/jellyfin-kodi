@@ -126,7 +126,7 @@ class Artwork():
         result = json.loads(result)
         try:
             self.xbmc_port = result['result']['value']
-        except TypeError:
+        except (TypeError, KeyError):
             pass
 
         web_user = {
