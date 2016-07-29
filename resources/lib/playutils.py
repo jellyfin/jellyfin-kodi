@@ -389,7 +389,7 @@ class PlayUtils():
                     itemid = self.item['Id']
                     url = [("%s/Videos/%s/%s/Subtitles/%s/Stream.srt"
                         % (self.server, itemid, itemid, selectSubsIndex))]
-                    self.logMsg("Set up subtitles: %s %s" % (selectSubsIndex, url), 1)
+                    log.info("Set up subtitles: %s %s" % (selectSubsIndex, url))
                     listitem.setSubtitles(url)
                 else:
                     # Burn subtitles

@@ -1,3 +1,6 @@
+version 2.2.19
+- Fix transcode (logging error)
+
 version 2.2.18
 - Fix logging
 
