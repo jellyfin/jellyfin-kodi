@@ -294,11 +294,11 @@ class DownloadUtils():
         except requests.exceptions.ConnectionError as e:
             # Make the addon aware of status
             if window('emby_online') != "false":
-                log.warn("Server unreachable at: %s" % url)
+                log.error("Server unreachable at: %s" % url)
                 window('emby_online', value="false")
 
         except requests.exceptions.ConnectTimeout as e:
-            log.warn("Server timeout at: %s" % url)
+            log.error("Server timeout at: %s" % url)
 
         except requests.exceptions.HTTPError as e:
 
@@ -325,7 +325,7 @@ class DownloadUtils():
                 elif status not in ("401", "Auth"):
                     # Tell userclient token has been revoked.
                     window('emby_serverStatus', value="401")
-                    log.warn("HTTP Error: %s" % e)
+                    log.error("HTTP Error: %s" % e)
                     xbmcgui.Dialog().notification(
                                             heading="Error connecting",
                                             message="Unauthorized.",
@@ -340,10 +340,10 @@ class DownloadUtils():
                 pass
 
         except requests.exceptions.SSLError as e:
-            log.warn("Invalid SSL certificate for: %s" % url)
+            log.error("Invalid SSL certificate for: %s" % url)
 
         except requests.exceptions.RequestException as e:
-            log.warn("Unknown error connecting to: %s" % url)
+            log.error("Unknown error connecting to: %s" % url)
 
         return default_link
 

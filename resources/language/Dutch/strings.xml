@@ -99,12 +99,12 @@
     <string id="30184">Binnenkort op TV</string>
     <string id="30185">BoxSets</string>
     <string id="30186">Trailers</string>
-    <string id="30187">Muziek video\'s</string>
-    <string id="30188">Foto\'s</string>
+    <string id="30187">Muziek video's</string>
+    <string id="30188">Foto's</string>
     <string id="30189">Onbekeken films</string>
     
     <string id="30190">Film Genres</string>
-    <string id="30191">Film Studio\'s</string>
+    <string id="30191">Film Studio's</string>
     <string id="30192">Film Acteurs</string>
     <string id="30193">Onbekeken afleveringen</string>
     <string id="30194">TV Genres</string>
@@ -130,7 +130,7 @@
     <string id="30229">Willekeurige Items</string>
     
     <string id="30230">Aanbevolen Items</string>
-    <string id="30235">Extra\'s</string>
+    <string id="30235">Extra's</string>
     
     <string id="30236">Synchroniseer Thema Muziek</string>
     <string id="30237">Synchroniseer Extra Fanart</string>
@@ -140,14 +140,14 @@
     <string id="30243">Activeer HTTPS</string>
     <string id="30245">Forceer Transcoderen van Codecs</string>
     <string id="30249">Activeer server verbindings melding bij het opstarten</string>
-    <string id="30251">Onlangs bekeken Thuis Video\'s</string>
-    <string id="30252">Onlangs toegevoegde Foto\'s</string>
-    <string id="30253">Favoriete Home Video\'s</string>
-    <string id="30254">Favoriete Foto\'s</string>
+    <string id="30251">Onlangs bekeken Thuis Video's</string>
+    <string id="30252">Onlangs toegevoegde Foto's</string>
+    <string id="30253">Favoriete Home Video's</string>
+    <string id="30254">Favoriete Foto's</string>
     <string id="30255">Favoriete Albums</string>
-    <string id="30256">Onlangs toegevoegde Muziek Video\'s</string>
-    <string id="30257">Niet afgekeken Muziek Video\'s</string>
-    <string id="30258">Onbekeken Muziek Video\'s</string>
+    <string id="30256">Onlangs toegevoegde Muziek Video's</string>
+    <string id="30257">Niet afgekeken Muziek Video's</string>
+    <string id="30258">Onbekeken Muziek Video's</string>
     
     <!-- Default views -->
     <string id="30300">Actief</string>
@@ -160,7 +160,7 @@
     <string id="30307">Afleveringen</string>
     <string id="30308">Muziek - artiesten</string>
     <string id="30309">Muziek - albums</string>
-    <string id="30310">Muziek Video\'s</string>
+    <string id="30310">Muziek Video's</string>
     <string id="30311">Muziek - nummers</string>
     <string id="30312">Kanalen</string>
     <!-- contextmenu -->
@@ -232,7 +232,7 @@
     <string id="33016">Trailers afspelen?</string>
     <string id="33017">Verzamelen films van:</string>
     <string id="33018">verzamelen boxsets</string>
-    <string id="33019">Verzamelen muziek-video\'s van:</string>
+    <string id="33019">Verzamelen muziek-video's van:</string>
     <string id="33020">Verzamelen TV-series van:</string>
     <string id="33021">Verzamelen:</string>
     <string id="33022">Gedetecteerd dat de database moet worden vernieuwd voor deze versie van Emby voor Kodi. Doorgaan?</string>
@@ -241,7 +241,7 @@
     <string id="33025">voltooid in:</string>
     <string id="33026">Vergelijken van films uit:</string>
     <string id="33027">Vergelijken van boxsets</string>
-    <string id="33028">Vergelijken van muziek-video\'s uit:</string>
+    <string id="33028">Vergelijken van muziek-video's uit:</string>
     <string id="33029">Vergelijken van TV-series uit:</string>
     <string id="33030">Vergelijken van afleveringen uit:</string>
     <string id="33031">Vergelijken:</string>
@@ -285,7 +285,7 @@
     <string id="33069">De taak is geslaagd</string>
     <string id="33070">De taak is mislukt</string>
     <string id="33071">Direct Stream</string>
-    <string id="33072">Afspeel methode voor uw thema\'s</string>
+    <string id="33072">Afspeel methode voor uw thema's</string>
     <string id="33073">Het instellingenbestand bestaat niet in TV-Tunes. Wijzig een instelling en voer de taak opnieuw uit.</string>
     <string id="33074">Weet u zeker dat u uw lokale Kodi database opnieuw wilt instellen?</string>
     <string id="33075">Wijzig/verwijder netwerkreferenties</string>
