@@ -2158,15 +2158,36 @@ class Music(Items):
                 artist_edb = emby_db.getItem_byId(artist_eid)
                 artistid = artist_edb[0]
             finally:
-                query = (
-                    '''
-                    INSERT OR REPLACE INTO song_artist(idArtist, idSong, iOrder, strArtist)
-
-                    VALUES (?, ?, ?, ?)
-                    '''
-                )
-                kodicursor.execute(query, (artistid, songid, index, artist_name))
-
+                if self.kodiversion >= 17:
+                    # Kodi Krypton
+                    query = (
+                        '''
+                        INSERT OR REPLACE INTO song_artist(idArtist, idSong, idRole, iOrder, strArtist)
+    
+                        VALUES (?, ?, ?, ?, ?)
+                        '''
+                    )
+                    kodicursor.execute(query, (artistid, songid, 1, index, artist_name))
+                    
+                    # May want to look into only doing this once?
+                    query = ( 
+                        '''
+                        INSERT OR REPLACE INTO role(idRole, strRole)
+    
+                        VALUES (?, ?)
+                        '''
+                    )
+                    kodicursor.execute(query, (1, 'Composer'))                
+                else:
+                    query = (
+                        '''
+                        INSERT OR REPLACE INTO song_artist(idArtist, idSong, iOrder, strArtist)
+    
+                        VALUES (?, ?, ?, ?)
+                        '''
+                    )
+                    kodicursor.execute(query, (artistid, songid, index, artist_name))
+               
         # Verify if album artist exists
         album_artists = []
         for artist in item['AlbumArtists']:

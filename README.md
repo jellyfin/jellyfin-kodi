@@ -7,15 +7,15 @@ The Emby addon for Kodi combines the best of Kodi - ultra smooth navigation, bea
 
 View this short [Youtube video](https://youtu.be/IaecDPcXI3I?t=119) to give you a better idea of the general process.
 
-1. Install the Emby repository for Kodi, from the repo install the Emby addon.
-2. Within a few seconds you should be prompted for your server-details (or auto discovered). If not, try to restart Kodi
-3. Once you're succesfully authenticated to your Emby server, the initial sync will start. 
-4. The first sync of the Emby server to local Kodi database may take some time depending on your device and library size.
-5. Once the full sync is done, you can browse your media in Kodi, syncs will be automatically done in the background.
+1. Install the Emby for Kodi repository, from the repo install the Emby addon.
+2. Within a few seconds you should be prompted for your server-details (or it may be auto discovered). If not, try to restart Kodi
+3. Once you're succesfully authenticated with your Emby server, the initial sync will start. 
+4. The first sync of the Emby server to the local Kodi database may take some time depending on your device and library size.
+5. Once the full sync is done, you can browse your media in Kodi, and syncs will be done automatically in the background.
 
 ### Our Wiki
 
-If you need additional information on Emby for Kodi, check out our [wiki](https://github.com/MediaBrowser/plugin.video.emby/wiki).
+If you need additional information for Emby for Kodi, check out our [wiki](https://github.com/MediaBrowser/plugin.video.emby/wiki).
 
 ### What does Emby for Kodi do?
 
@@ -26,11 +26,11 @@ The Emby addon synchronizes your media on your Emby server to the native Kodi da
 - If you require help, post to our [Emby-Kodi forums](http://emby.media/community/index.php?/forum/99-kodi/) for faster replies.
 - To achieve direct play, you will need to ensure your Emby library paths point to network paths (e.g: "\\\\server\Media\Movies"). See the [Emby wiki](https://github.com/MediaBrowser/Wiki/wiki/Path%20Substitution) for additional information.
 - **The addon is not (and will not be) compatible with the MySQL database replacement in Kodi.** In fact, Emby takes over the point of having a MySQL database because it acts as a "man in the middle" for your entire media library.
-- Emby for Kodi is currently not compatible with Kodi's Video Extras addon unless native playback mode is used. **Deactivate Video Extras if content start randomly playing.**
+- Emby for Kodi is not currently compatible with Kodi's Video Extras addon unless native playback mode is used. **Deactivate Video Extras if content start randomly playing.**
 
 ### What is currently supported?
 
-Emby for Kodi is constantly being worked on. The following features are currently provided:
+Emby for Kodi is under constant development. The following features are currently provided:
 
 - Library types available:
   + Movies
