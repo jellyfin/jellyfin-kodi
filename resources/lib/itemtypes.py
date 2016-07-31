@@ -288,7 +288,7 @@ class Movies(Items):
         
         except TypeError:
             update_item = False
-            log.info("movieid: %s not found." % itemid)
+            log.debug("movieid: %s not found." % itemid)
             # movieid
             kodicursor.execute("select coalesce(max(idMovie),0) from movie")
             movieid = kodicursor.fetchone()[0] + 1
@@ -670,7 +670,7 @@ class MusicVideos(Items):
         
         except TypeError:
             update_item = False
-            log.info("mvideoid: %s not found." % itemid)
+            log.debug("mvideoid: %s not found." % itemid)
             # mvideoid
             kodicursor.execute("select coalesce(max(idMVideo),0) from musicvideo")
             mvideoid = kodicursor.fetchone()[0] + 1
@@ -1008,7 +1008,7 @@ class TVShows(Items):
         
         except TypeError:
             update_item = False
-            log.info("showid: %s not found." % itemid)
+            log.debug("showid: %s not found." % itemid)
             kodicursor.execute("select coalesce(max(idShow),0) from tvshow")
             showid = kodicursor.fetchone()[0] + 1
 
