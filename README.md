@@ -26,7 +26,7 @@ The Emby addon synchronizes your media on your Emby server to the native Kodi da
 - If you require help, post to our [Emby-Kodi forums](http://emby.media/community/index.php?/forum/99-kodi/) for faster replies.
 - To achieve direct play, you will need to ensure your Emby library paths point to network paths (e.g: "\\\\server\Media\Movies"). See the [Emby wiki](https://github.com/MediaBrowser/Wiki/wiki/Path%20Substitution) for additional information.
 - **The addon is not (and will not be) compatible with the MySQL database replacement in Kodi.** In fact, Emby takes over the point of having a MySQL database because it acts as a "man in the middle" for your entire media library.
-- Emby for Kodi is notcurrently compatible with Kodi's Video Extras addon unless native playback mode is used. **Deactivate Video Extras if content start randomly playing.**
+- Emby for Kodi is not currently compatible with Kodi's Video Extras addon unless native playback mode is used. **Deactivate Video Extras if content start randomly playing.**
 
 ### What is currently supported?
 
