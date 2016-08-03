@@ -1066,7 +1066,7 @@ class TVShows(Items):
                 path = "%s/" % playurl
                 toplevelpath = "%s/" % dirname(dirname(path))
 
-            if not self.pathValidation(playurl):
+            if not self.pathValidation(path):
                 return False
 
             window('emby_pathverified', value="true")
