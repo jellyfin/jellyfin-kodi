@@ -209,7 +209,7 @@ class VideoNodes(object):
             if mediatype == "photos":
                 windowpath = "ActivateWindow(Pictures,%s,return)" % path
             else:
-                windowpath = "ActivateWindow(Video,%s,return)" % path
+                windowpath = "ActivateWindow(Videos,%s,return)" % path
             
             if nodetype == "all":
 
