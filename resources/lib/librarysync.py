@@ -33,6 +33,8 @@ class LibrarySync(threading.Thread):
 
     _shared_state = {}
 
+    isFastSync = False
+
     stop_thread = False
     suspend_thread = False
 
@@ -87,6 +89,7 @@ class LibrarySync(threading.Thread):
                 for plugin in result:
                     if plugin['Name'] == "Emby.Kodi Sync Queue":
                         log.debug("Found server plugin.")
+                        self.isFastSync = True
                         completed = self.fastSync()
                         break
 
@@ -152,14 +155,17 @@ class LibrarySync(threading.Thread):
         # Save last sync time
         overlap = 2
 
-        result = self.doUtils("{server}/emby/Emby.Kodi.SyncQueue/GetServerDateTime?format=json")
         try: # datetime fails when used more than once, TypeError
-            server_time = result['ServerDateTime']
-            server_time = utils.convertDate(server_time)
+            if isFastSync:
+                result = self.doUtils("{server}/emby/Emby.Kodi.SyncQueue/GetServerDateTime?format=json")
+                server_time = result['ServerDateTime']
+                server_time = utils.convertDate(server_time)
+            else:
+                raise Exception("Fast sync server plugin is not enabled.")
 
         except Exception as e:
             # If the server plugin is not installed or an error happened.
-            log.error("An exception occurred: %s" % e)
+            log.debug("An exception occurred: %s" % e)
             time_now = datetime.utcnow()-timedelta(minutes=overlap)
             lastSync = time_now.strftime('%Y-%m-%dT%H:%M:%SZ')
             log.info("New sync time: client time -%s min: %s" % (overlap, lastSync))
