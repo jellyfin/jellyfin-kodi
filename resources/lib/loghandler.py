@@ -28,9 +28,9 @@ class LogHandler(logging.StreamHandler):
 
         if self._getLogLevel(record.levelno):
             try:
-                xbmc.log(self.format(record))
+                xbmc.log(self.format(record), level=xbmc.LOGNOTICE)
             except UnicodeEncodeError:
-                xbmc.log(self.format(record).encode('utf-8'))
+                xbmc.log(self.format(record).encode('utf-8'), level=xbmc.LOGNOTICE)
 
     def _getLogLevel(self, level):
 
