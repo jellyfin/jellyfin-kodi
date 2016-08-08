@@ -15,7 +15,7 @@ import downloadutils
 import librarysync
 import playlist
 import userclient
-from utils import window, settings, language as lang
+from utils import window, settings, language as lang, JSONRPC
 
 ##################################################################################################
 
@@ -200,19 +200,24 @@ class WebSocket_Client(threading.Thread):
 
             elif command == "SendString":
                 
-                string = arguments['String']
-                text = {
-
-                    'jsonrpc': "2.0",
-                    'id': 0,
-                    'method': "Input.SendText",
-                    'params': {
-
-                        'text': "%s" % string,
-                        'done': False
-                    }
+                params = {
+                    'text': arguments['String'],
+                    'done': False
                 }
-                result = xbmc.executeJSONRPC(json.dumps(text))
+                result = JSONRPC("Input.SendText").execute(params)
+
+            elif command in ("MoveUp", "MoveDown", "MoveRight", "MoveLeft"):
+                # Commands that should wake up display
+                actions = {
+                    'MoveUp': "Input.Up",
+                    'MoveDown': "Input.Down",
+                    'MoveRight': "Input.Right",
+                    'MoveLeft': "Input.Left"
+                }
+                result = JSONRPC(actions[command]).execute()
+
+            elif command == "GoHome":
+                result = JSONRPC("GUI.ActivateWindow").execute({"window":"home"})
 
             else:
                 builtin = {
@@ -220,13 +225,8 @@ class WebSocket_Client(threading.Thread):
                     'ToggleFullscreen': 'Action(FullScreen)',
                     'ToggleOsdMenu': 'Action(OSD)',
                     'ToggleContextMenu': 'Action(ContextMenu)',
-                    'MoveUp': 'Action(Up)',
-                    'MoveDown': 'Action(Down)',
-                    'MoveLeft': 'Action(Left)',
-                    'MoveRight': 'Action(Right)',
                     'Select': 'Action(Select)',
                     'Back': 'Action(back)',
-                    'GoHome': 'ActivateWindow(Home)',
                     'PageUp': 'Action(PageUp)',
                     'NextLetter': 'Action(NextLetter)',
                     'GoToSearch': 'VideoLibrary.Search',
