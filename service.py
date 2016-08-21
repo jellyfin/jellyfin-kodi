@@ -67,6 +67,7 @@ class Service():
 
         # Initial logging
         log.warn("======== START %s ========" % self.addonName)
+        log.warn("Python Version: %s", sys.version)
         log.warn("Platform: %s" % (self.clientInfo.getPlatform()))
         log.warn("KODI Version: %s" % xbmc.getInfoLabel('System.BuildVersion'))
         log.warn("%s Version: %s" % (self.addonName, self.clientInfo.getVersion()))

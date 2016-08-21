@@ -2,11 +2,10 @@
 
 #################################################################################################
 
-import cProfile
+
 import inspect
 import json
 import logging
-import pstats
 import sqlite3
 import StringIO
 import os
@@ -288,7 +287,9 @@ def profiling(sortby="cumulative"):
     # Will print results to Kodi log
     def decorator(func):
         def wrapper(*args, **kwargs):
-
+            import cProfile
+            import pstats
+            
             pr = cProfile.Profile()
 
             pr.enable()
