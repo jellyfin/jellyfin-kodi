@@ -44,17 +44,16 @@ class ImageCacheThread(threading.Thread):
 
     def run(self):
 
-        log.debug("Image Caching Thread Processing: %s" % self.url_to_process)
+        log.debug("Image Caching Thread Processing: %s", self.url_to_process)
         
         try:
             requests.head(
-                          url=(
-                               "http://%s:%s/image/image://%s"
-                               % (self.xbmc_host, self.xbmc_port, self.url_to_process)),
-                          auth=(self.xbmc_username, self.xbmc_password),
-                          timeout=(35.1, 35.1))
+                url=("http://%s:%s/image/image://%s"
+                    % (self.xbmc_host, self.xbmc_port, self.url_to_process)),
+                auth=(self.xbmc_username, self.xbmc_password),
+                timeout=(35.1, 35.1))
         # We don't need the result
-        except:
+        except Exception:
             pass
 
         log.debug("Image Caching Thread Exited")
