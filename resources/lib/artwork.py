@@ -254,7 +254,7 @@ class Artwork():
         
         while len(self.imageCacheThreads):
             for thread in self.imageCacheThreads:
-                if thread.isFinished:
+                if thread.is_finished:
                     self.imageCacheThreads.remove(thread)
             pdialog.update(100, "%s %s" % (lang(33046), len(self.imageCacheThreads)))
             log.info("Waiting for all threads to exit: %s" % len(self.imageCacheThreads))
@@ -267,15 +267,15 @@ class Artwork():
         while True:
             # removed finished
             for thread in self.imageCacheThreads:
-                if thread.isFinished:
+                if thread.is_finished:
                     self.imageCacheThreads.remove(thread)
 
             # add a new thread or wait and retry if we hit our limit
             if len(self.imageCacheThreads) < self.imageCacheLimitThreads:
-                newThread = image_cache_thread.image_cache_thread()
-                newThread.setUrl(self.double_urlencode(url))
-                newThread.setHost(self.xbmc_host, self.xbmc_port)
-                newThread.setAuth(self.xbmc_username, self.xbmc_password)
+                newThread = image_cache_thread.ImageCacheThread()
+                newThread.set_url(self.double_urlencode(url))
+                newThread.set_host(self.xbmc_host, self.xbmc_port)
+                newThread.set_auth(self.xbmc_username, self.xbmc_password)
                 newThread.start()
                 self.imageCacheThreads.append(newThread)
                 return

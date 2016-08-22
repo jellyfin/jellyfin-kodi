@@ -11,7 +11,7 @@ from utils import window
 
 
 def config():
-    
+
     logger = logging.getLogger('EMBY')
     logger.addHandler(LogHandler())
     logger.setLevel(logging.DEBUG)
@@ -20,19 +20,20 @@ def config():
 class LogHandler(logging.StreamHandler):
 
     def __init__(self):
-        
+
         logging.StreamHandler.__init__(self)
         self.setFormatter(MyFormatter())
 
     def emit(self, record):
 
-        if self._getLogLevel(record.levelno):
+        if self._get_log_level(record.levelno):
             try:
                 xbmc.log(self.format(record), level=xbmc.LOGNOTICE)
             except UnicodeEncodeError:
                 xbmc.log(self.format(record).encode('utf-8'), level=xbmc.LOGNOTICE)
 
-    def _getLogLevel(self, level):
+    @classmethod
+    def _get_log_level(cls, level):
 
         levels = {
             logging.ERROR: 0,
@@ -41,17 +42,17 @@ class LogHandler(logging.StreamHandler):
             logging.DEBUG: 2
         }
         try:
-            logLevel = int(window('emby_logLevel'))
+            log_level = int(window('emby_logLevel'))
         except ValueError:
-            logLevel = 0
+            log_level = 0
 
-        return logLevel >= levels[level]
+        return log_level >= levels[level]
 
 
 class MyFormatter(logging.Formatter):
 
     def __init__(self, fmt="%(name)s -> %(message)s"):
-        
+
         logging.Formatter.__init__(self, fmt)
 
     def format(self, record):
