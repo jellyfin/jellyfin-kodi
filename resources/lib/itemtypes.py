@@ -1277,8 +1277,8 @@ class TVShows(Items):
             airsBeforeSeason = item['AirsAfterSeasonNumber']
             airsBeforeEpisode = 4096 # Kodi default number for afterseason ordering
         else:
-            airsBeforeSeason = item.get('AirsBeforeSeasonNumber')
-            airsBeforeEpisode = item.get('AirsBeforeEpisodeNumber')
+            airsBeforeSeason = item.get('AirsBeforeSeasonNumber', -1)
+            airsBeforeEpisode = item.get('AirsBeforeEpisodeNumber', -1)
 
         # Append multi episodes to title
         if item.get('IndexNumberEnd'):              
