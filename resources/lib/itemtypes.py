@@ -2304,7 +2304,10 @@ class Music(Items):
 
         elif mediatype == "album":
             # Process playstates
-            query = "UPDATE album SET iRating = ? WHERE idAlbum = ?"
+            if self.kodiversion >= 17:
+                query = "UPDATE album SET fRating = ? WHERE idAlbum = ?"
+            else:
+                query = "UPDATE album SET iRating = ? WHERE idAlbum = ?"            
             kodicursor.execute(query, (rating, kodiid))
 
         emby_db.updateReference(itemid, checksum)
