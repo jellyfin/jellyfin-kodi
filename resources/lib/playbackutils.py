@@ -301,10 +301,9 @@ class PlaybackUtils():
             del response
             raise
         else:
-            f = open(path, 'wb')
-            f.write(response.content)
-            f.close()
-            del response
+            with open(path, 'wb') as f:
+                f.write(response.content)
+                del response
 
             return path
 
