@@ -4,11 +4,15 @@
 
 import json
 import logging
+import requests
+import os
+import shutil
 import sys
 
 import xbmc
 import xbmcgui
 import xbmcplugin
+import xbmcvfs
 
 import api
 import artwork
@@ -246,6 +250,9 @@ class PlaybackUtils():
         except (TypeError, KeyError, IndexError):
             return
 
+        temp = xbmc.translatePath(
+               "special://profile/addon_data/plugin.video.emby/temp/").decode('utf-8')
+
         kodiindex = 0
         for stream in mediastreams:
 
@@ -258,16 +265,48 @@ class PlaybackUtils():
                 # Direct stream
                 url = ("%s/Videos/%s/%s/Subtitles/%s/Stream.srt"
                         % (self.server, itemid, itemid, index))
+
+                if settings('downloadExternalSubs') == "true":
+                
+                    filename = "Stream.%s.srt" % stream['Language']
+                    try:
+                        path = self._download_external_subs(url, temp, filename)
+                        externalsubs.append(path)
+                    except Exception as e:
+                        log.error(e)
+                        continue
+                else:
+                    externalsubs.append(url)
                 
                 # map external subtitles for mapping
                 mapping[kodiindex] = index
-                externalsubs.append(url)
                 kodiindex += 1
         
         mapping = json.dumps(mapping)
         window('emby_%s.indexMapping' % playurl, value=mapping)
 
         return externalsubs
+
+    def _download_external_subs(self, src, dst, filename):
+
+        if not xbmcvfs.exists(dst):
+            xbmcvfs.mkdir(dst)
+
+        path = os.path.join(dst, filename)
+
+        try:
+            response = requests.get(src, stream=True)
+            response.raise_for_status()
+        except Exception as e:
+            del response
+            raise
+        else:
+            f = open(path, 'wb')
+            f.write(response.content)
+            f.close()
+            del response
+
+            return path
 
     def setArtwork(self, listItem):
         # Set up item and item info

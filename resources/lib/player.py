@@ -6,6 +6,7 @@ import json
 import logging
 
 import xbmc
+import xbmcvfs
 import xbmcgui
 
 import clientinfo
@@ -473,6 +474,7 @@ class Player(xbmc.Player):
                         else:
                             log.info("User skipped deletion.")
 
+
                 self.stopPlayback(data)
 
                 # Stop transcoding
@@ -481,6 +483,13 @@ class Player(xbmc.Player):
                     deviceId = self.clientInfo.getDeviceId()
                     url = "{server}/emby/Videos/ActiveEncodings?DeviceId=%s" % deviceId
                     self.doUtils(url, action_type="DELETE")
+
+                path = xbmc.translatePath(
+                       "special://profile/addon_data/plugin.video.emby/temp/").decode('utf-8')
+
+                dirs, files = xbmcvfs.listdir(path)
+                for file in files:
+                    xbmcvfs.delete("%s%s" % (path, file))
     
         self.played_info.clear()
     
