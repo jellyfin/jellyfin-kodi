@@ -1,3 +1,11 @@
+version 2.2.20
+- NEW: Default to HTTP playback when using add-on playback mode out of the box.
+- Add string translation (German, French and Portuguese)
+- Add option to download external subtitles when playing from HTTP (add-on settings > playback)
+- Fix navigation not waking up display
+- Fix fast sync being used to save update times when plugin is not installed
+- Fix tv show detection when verifying if file exists.
+
 version 2.2.19
 - Fix transcode (logging error)
 
