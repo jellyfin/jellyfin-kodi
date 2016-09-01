@@ -1,3 +1,6 @@
+version 2.2.21
+- Fix new external subtitles from preventing playback in the event the subtitles had no language tag
+
 version 2.2.20
 - NEW: Default to HTTP playback when using add-on playback mode out of the box.
 - Add string translation (German, French and Portuguese)
