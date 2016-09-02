@@ -56,5 +56,5 @@ Have a look at our [Trello board](https://trello.com/b/qBJ49ka4/emby-for-kodi) t
 Solutions to the following issues are unlikely due to Kodi limitations.
 - Chapter images are missing unless native playback mode is used.
 - Certain add-ons that depend on seeing where your content is located will not work unless native playback mode is selected.
-- External subtitles (in separate files, e.g. mymovie.srt) can be used, but it is impossible to label them correctly unless direct playing
+- ~~External subtitles (in separate files, e.g. mymovie.srt) can be used, but it is impossible to label them correctly unless direct playing~~
 - Kodi only accepts direct paths for music content unlike the video library. Your Emby music library path will need to be formatted appropriately to work in Kodi (e.g: "\\\\server\Music\Album\song.ext"). See the [Emby wiki](https://github.com/MediaBrowser/Wiki/wiki/Path%20Substitution) for additional information.
