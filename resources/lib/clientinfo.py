@@ -62,10 +62,12 @@ class ClientInfo():
             return "iOS"
         elif xbmc.getCondVisibility('system.platform.windows'):
             return "Windows"
-        elif xbmc.getCondVisibility('system.platform.linux'):
-            return "Linux/RPi"
-        elif xbmc.getCondVisibility('system.platform.android'): 
+        elif xbmc.getCondVisibility('system.platform.android'):
             return "Linux/Android"
+        elif xbmc.getCondVisibility('system.platform.linux.raspberrypi'): 
+            return "Linux/RPi"
+        elif xbmc.getCondVisibility('system.platform.linux'): 
+            return "Linux"
         else:
             return "Unknown"
 
