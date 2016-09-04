@@ -143,6 +143,7 @@ class UserClient(threading.Thread):
         settings('markPlayed', value=str(self._server['MaxResumePct']))
 
         self._user = self.download("{server}/emby/Users/{UserId}?format=json")
+        settings('username', value=self._user['Name'])
         if "PrimaryImageTag" in self._user:
             window('EmbyUserImage',
                    value=artwork.Artwork().getUserArtwork(self._user['Id'], 'Primary'))
