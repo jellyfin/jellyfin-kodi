@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
 	<category label="30014"><!-- Emby -->
-		<!-- Primary address -->
-		<setting id="ipaddress" label="30000" type="text" default="" />
-		<setting id="port" label="30030" type="number" default="8096" />
-		<setting id="https" label="30243" type="bool" default="false" />
-		<setting id="sslverify" subsetting="true" label="30500" type="bool" default="false" visible="eq(-1,true)" />
-		<setting id="sslcert" subsetting="true" label="30501" type="file" default="None" visible="eq(-2,true)" />
-		<!-- Secondary address -->
-		<setting id="altip" label="30502" type="bool" default="false" />
-		<setting id="secondipaddress" subsetting="true" label="30503" type="text" default="" visible="eq(-1,true)" />
-		<setting id="secondport" subsetting="true" label="30030" type="number" default="8096" visible="eq(-2,true)" />
-		<setting id="secondhttps" subsetting="true" label="30243" type="bool" default="false" visible="eq(-3,true)" />
-		<setting id="secondsslverify" subsetting="true" label="30500" type="bool" default="false" visible="eq(-1,true)" />
-		<setting id="secondsslcert" subsetting="true" label="30501" type="file" default="None" visible="eq(-2,true)" />
+		<setting id="idMethod" label="Login method" type="enum" values="Manual|Emby Connect" default="0" />
+		<!-- Manual address -->
+		<setting id="username" label="30024" type="text" default="" visible="eq(-1,0)" />
+		<setting id="serverName" label="30000" type="text" default="" />
+		<setting id="server" type="text" default="" visible="false" />
+		<setting id="sslverify" label="30500" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
+		<setting id="sslcert" label="30501" type="file" default="None" visible="eq(-2,true)" subsetting="true" />
+		<!-- Emby Connect -->
+		<setting id="connectUsername" label="30543" type="text" default="" visible="!eq(0,) + eq(-7,1)" />
+		<setting label="30600" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=connect)" visible="eq(-7,1) + eq(-1,)" option="close" />
+		<setting label="30618" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=connect)" visible="eq(-8,1) + !eq(-2,)" option="close" />
 		<!-- User settings -->
-		<setting id="username" label="30024" type="text" default="" />
+		<setting id="accessToken" type="text" default="" visible="false" />
+		<setting id="userId" type="text" default="" visible="false" />
+		<!-- Device settings -->
 		<setting type="sep" />
 		<setting id="deviceNameOpt" label="30504" type="bool" default="false" />
-		<setting id="deviceName" label="30016" type="text" visible="eq(-1,true)" default="Kodi" />
-		<setting label="30505" type="action" visible="eq(1,) + !eq(-15,)" action="RunPlugin(plugin://plugin.video.emby?mode=resetauth)" option="close" />
-		<setting id="accessToken" type="text" visible="false" default="" />
-		<setting id="pathsub" type="bool" visible="false" default="false" />
+		<setting id="deviceName" label="30016" type="text" default="Kodi" visible="eq(-1,true)" />
 	</category>
 
 	<category label="30506"><!-- Sync Options -->

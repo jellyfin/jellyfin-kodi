@@ -10,7 +10,7 @@ import xbmc
 import xbmcgui
 
 import clientinfo
-from utils import window, settings
+from utils import window, settings, language as lang
 
 ##################################################################################################
 
@@ -40,11 +40,6 @@ class DownloadUtils():
         self.__dict__ = self._shared_state
 
 
-    def setUsername(self, username):
-        # Reserved for userclient only
-        self.username = username
-        log.debug("Set username: %s" % username)
-
     def setUserId(self, userId):
         # Reserved for userclient only
         self.userId = userId
@@ -60,12 +55,10 @@ class DownloadUtils():
         self.token = token
         log.debug("Set token: %s" % token)
 
-    def setSSL(self, ssl, sslclient):
+    def setSSL(self, ssl):
         # Reserved for userclient only
         self.sslverify = ssl
-        self.sslclient = sslclient
-        log.debug("Verify SSL host certificate: %s" % ssl)
-        log.debug("SSL client side certificate: %s" % sslclient)
+        log.debug("Verify SSL verify/certificate: %s" % ssl)
 
 
     def postCapabilities(self, deviceId):
@@ -149,8 +142,6 @@ class DownloadUtils():
         # If user enabled host certificate verification
         try:
             verify = self.sslverify
-            if self.sslclient is not None:
-                verify = self.sslclient
         except:
             log.info("Could not load SSL settings.")
 
@@ -214,46 +205,30 @@ class DownloadUtils():
         default_link = ""
 
         try:
-            if authenticate:
+            if self.s is not None:
+                session = self.s
+            else:
+                # request session does not exists
+                # Get user information
+                self.userId = window('emby_currUser')
+                self.server = window('emby_server%s' % self.userId)
+                self.token = window('emby_accessToken%s' % self.userId)
+                verifyssl = False
 
-                if self.s is not None:
-                    session = self.s
-                else:
-                    # request session does not exists
-                    # Get user information
-                    self.userId = window('emby_currUser')
-                    self.server = window('emby_server%s' % self.userId)
-                    self.token = window('emby_accessToken%s' % self.userId)
-                    verifyssl = False
-
-                    # IF user enables ssl verification
-                    if settings('sslverify') == "true":
-                        verifyssl = True
-                    if settings('sslcert') != "None":
-                        verifyssl = settings('sslcert')
-
-                    kwargs.update({
-                        'verify': verifyssl,
-                        'headers': self.getHeader()
-                    })
-
-                # Replace for the real values
-                url = url.replace("{server}", self.server)
-                url = url.replace("{UserId}", self.userId)
-
-            else: # User is not authenticated
-                # If user enables ssl verification
-                try:
-                    verifyssl = self.sslverify
-                    if self.sslclient is not None:
-                        verifyssl = self.sslclient
-                except AttributeError:
-                    verifyssl = False
+                # IF user enables ssl verification
+                if settings('sslverify') == "true":
+                    verifyssl = True
+                if settings('sslcert') != "None":
+                    verifyssl = settings('sslcert')
 
                 kwargs.update({
                     'verify': verifyssl,
-                    'headers': self.getHeader(authenticate=False)
+                    'headers': self.getHeader(authenticate)
                 })
+
+            # Replace for the real values
+            url = url.replace("{server}", self.server)
+            url = url.replace("{UserId}", self.userId)
 
             ##### PREPARE REQUEST #####
             kwargs.update({
@@ -310,13 +285,15 @@ class DownloadUtils():
                     # Emby server errors
                     if r.headers['X-Application-Error-Code'] == "ParentalControl":
                         # Parental control - access restricted
+                        if status != "restricted":
+                            xbmcgui.Dialog().notification(
+                                                    heading=lang(29999),
+                                                    message="Access restricted.",
+                                                    icon=xbmcgui.NOTIFICATION_ERROR,
+                                                    time=5000)
+                        
                         window('emby_serverStatus', value="restricted")
-                        xbmcgui.Dialog().notification(
-                                                heading="Emby server",
-                                                message="Access restricted.",
-                                                icon=xbmcgui.NOTIFICATION_ERROR,
-                                                time=5000)
-                        return False
+                        raise Warning('restricted')
 
                     elif r.headers['X-Application-Error-Code'] == "UnauthorizedAccessException":
                         # User tried to do something his emby account doesn't allow
@@ -330,7 +307,7 @@ class DownloadUtils():
                                             heading="Error connecting",
                                             message="Unauthorized.",
                                             icon=xbmcgui.NOTIFICATION_ERROR)
-                    return 401
+                    raise Warning('401')
 
             elif r.status_code in (301, 302):
                 # Redirects

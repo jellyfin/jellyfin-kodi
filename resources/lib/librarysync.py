@@ -905,6 +905,9 @@ class LibrarySync(threading.Thread):
 
         try:
             self.run_internal()
+        except Warning as e:
+            if "restricted" in e:
+                pass
         except Exception as e:
             window('emby_dbScan', clear=True)
             log.exception(e)

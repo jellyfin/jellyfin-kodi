@@ -3,13 +3,13 @@
 
     <!-- Add-on settings -->
     <string id="29999">Emby for Kodi</string>
-    <string id="30000">Primary Server Address</string><!-- Verified -->
-    <string id="30002">Play from HTTP instead of SMB</string><!-- Verified -->
-    <string id="30004">Log level</string><!-- Verified -->
-    <string id="30016">Device Name</string><!-- Verified -->
+    <string id="30000">Primary Server Address</string>
+    <string id="30002">Play from HTTP instead of SMB</string>
+    <string id="30004">Log level</string>
+    <string id="30016">Device Name</string>
     <string id="30022">Advanced</string>
-    <string id="30024">Username</string><!-- Verified -->
-    <string id="30030">Port Number</string><!-- Verified -->
+    <string id="30024">Username</string>
+    <string id="30030">Port Number</string>
 
     <string id="30035">Number of recent Music Albums to show:</string>
     <string id="30036">Number of recent Movies to show:</string>
@@ -232,12 +232,23 @@
 
     <!-- dialogs -->
     <string id="30600">Sign in with Emby Connect</string>
-    <string id="30601">Username or email:</string>
-    <string id="30602">Password:</string>
+    <string id="30602">Password</string>
     <string id="30603">Please see our terms of use. The use of any Emby software constitutes acceptance of these terms.</string>
     <string id="30604">Scan me</string>
     <string id="30605">Sign in</string>
-    <string id="30606">Remind me later</string>
+    <string id="30606">Cancel</string>
+    <string id="30607">Select main server</string>
+    <string id="30608">Username or password cannot be empty</string>
+    <string id="30609">Unable to connect to the selected server</string>
+    <string id="30610">Connect to</string><!-- Connect to {server} -->
+    <string id="30611">Manually add server</string>
+    <string id="30612">Please sign in</string>
+    <string id="30613">Username cannot be empty</string>
+    <string id="30614">Connect to server</string>
+    <string id="30615">Host</string>
+    <string id="30616">Connect</string>
+    <string id="30617">Server or port cannot be empty</string>
+    <string id="30618">Change Emby Connect user</string>
 
     <!-- service add-on -->
     <string id="33000">Welcome</string>

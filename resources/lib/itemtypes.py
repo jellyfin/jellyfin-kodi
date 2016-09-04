@@ -1207,6 +1207,10 @@ class TVShows(Items):
         artwork = self.artwork
         API = api.API(item)
 
+        if item.get('LocationType') == "Virtual": # TODO: Filter via api instead
+            log.info("Skipping virtual episode: %s", item['Name'])
+            return
+
         # If the item already exist in the local Kodi DB we'll perform a full item update
         # If the item doesn't exist, we'll add it to the database
         update_item = True

@@ -72,7 +72,8 @@ class Main():
             'recentepisodes': entrypoint.getRecentEpisodes,
             'refreshplaylist': entrypoint.refreshPlaylist,
             'deviceid': entrypoint.resetDeviceId,
-            'delete': entrypoint.deleteItem
+            'delete': entrypoint.deleteItem,
+            'connect': entrypoint.emby_connect
         }
         
         if "/extrafanart" in sys.argv[0]:

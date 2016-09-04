@@ -251,7 +251,7 @@ class WebSocket_Client(threading.Thread):
 
         elif messageType == "UserConfigurationUpdated":
             # Update user data set in userclient
-            userclient.UserClient().userSettings = data
+            userclient.UserClient().get_user(data)
             self.librarySync.refresh_views = True
 
     def on_close(self, ws):

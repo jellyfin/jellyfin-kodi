@@ -408,12 +408,14 @@ def reset():
     # Remove emby info
     resp = dialog.yesno(language(29999), language(33087))
     if resp:
+        import connectmanager
         # Delete the settings
         addon = xbmcaddon.Addon()
         addondir = xbmc.translatePath(addon.getAddonInfo('profile')).decode('utf-8')
         dataPath = "%ssettings.xml" % addondir
         xbmcvfs.delete(dataPath)
         log.info("Deleting: settings.xml")
+        connectmanager.ConnectManager().clear_data()
 
     dialog.ok(heading=language(29999), line1=language(33088))
     xbmc.executebuiltin('RestartApp')

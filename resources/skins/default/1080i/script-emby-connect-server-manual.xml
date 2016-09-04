@@ -14,16 +14,16 @@
 		<control type="group">
 			<width>600</width>
 			<left>35%</left>
-			<top>15%</top>
+			<top>20%</top>
 			<control type="image">
 				<description>Background box</description>
 				<texture colordiffuse="ff111111">white.png</texture>
 				<width>600</width>
-				<height>700</height>
+				<height>525</height>
 			</control>
 
 			<control type="group" id="202">
-				<top>705</top>
+				<top>530</top>
 				<visible>False</visible>
 				<control type="image">
 					<description>Error box</description>
@@ -45,7 +45,8 @@
 			<control type="image">
 				<description>Emby logo</description>
 				<texture>logo-white.png</texture>
-				<width>160</width>
+				<aspectratio>keep</aspectratio>
+				<width>120</width>
 				<height>49</height>
 				<top>30</top>
 				<left>25</left>
@@ -55,19 +56,21 @@
 				<width>500</width>
 				<left>50</left>
 				<control type="label">
-					<description>Sign in emby connect</description>
-					<label>$ADDON[plugin.video.emby 30600]</label>
+					<description>Connect to server</description>
+					<label>$ADDON[plugin.video.emby 30614]</label>
 					<textcolor>white</textcolor>
 					<font>font12</font>
 					<aligny>top</aligny>
-					<top>115</top>
+					<align>center</align>
+					<width>100%</width>
+					<top>100</top>
 				</control>
 				
 				<control type="group">
-					<top>190</top>
+					<top>150</top>
 					<control type="label">
-						<description>Username email</description>
-						<label>$ADDON[plugin.video.emby 30543]</label>
+						<description>Host</description>
+						<label>$ADDON[plugin.video.emby 30615]</label>
 						<textcolor>ffa6a6a6</textcolor>
 						<font>font10</font>
 						<aligny>top</aligny>
@@ -81,14 +84,23 @@
 						<left>-10</left>
 						<texture colordiffuse="ff525252" border="90,3,90,3">emby-separator.png</texture>
 					</control>
+
+					<control type="label">
+						<description>Host example</description>
+						<label>192.168.1.100 or https://myserver.com</label>
+						<textcolor>ff464646</textcolor>
+						<font>font10</font>
+						<aligny>top</aligny>
+						<top>70</top>
+					</control>
 				</control>
 				
 				<control type="group">
-					<description>Password</description>
+					<description>Port</description>
 					<top>275</top>
 					<control type="label">
-						<description>Password label</description>
-						<label>$ADDON[plugin.video.emby 30602]</label>
+						<description>Port label</description>
+						<label>$ADDON[plugin.video.emby 30030]</label>
 						<textcolor>ffa6a6a6</textcolor>
 						<font>font10</font>
 						<aligny>top</aligny>
@@ -106,12 +118,12 @@
 
 				<control type="group">
 					<description>Buttons</description>
-					<top>385</top>
+					<top>380</top>
 					<control type="button" id="200">
-						<description>Sign in</description>
+						<description>Connect</description>
 						<texturenofocus border="5" colordiffuse="ff0b8628">box.png</texturenofocus>
 						<texturefocus border="5" colordiffuse="ff13a134">box.png</texturefocus>
-						<label>[UPPERCASE][B]$ADDON[plugin.video.emby 30605][/B][/UPPERCASE]</label>
+						<label>[UPPERCASE][B]$ADDON[plugin.video.emby 30616][/B][/UPPERCASE]</label>
 						<font>font10</font>
 						<textcolor>ffa6a6a6</textcolor>
 						<focusedcolor>white</focusedcolor>
@@ -134,43 +146,6 @@
 						<height>50</height>
 						<top>55</top>
 						<onup>200</onup>
-					</control>
-				</control>
-
-				<control type="group">
-					<description>Disclaimer</description>
-					<top>510</top>
-					<control type="label">
-						<description>Disclaimer label</description>
-						<label>$ADDON[plugin.video.emby 30603]</label>
-						<font>font10</font>
-						<textcolor>ff464646</textcolor>
-						<wrapmultiline>true</wrapmultiline>
-						<aligny>top</aligny>
-						<width>340</width>
-						<height>100%</height>
-					</control>
-
-					<control type="group">
-						<control type="label">
-							<description>Scan me</description>
-							<label>[UPPERCASE]$ADDON[plugin.video.emby 30604][/UPPERCASE]</label>
-							<font>font12</font>
-							<textcolor>ff0b8628</textcolor>
-							<aligny>top</aligny>
-							<width>200</width>
-							<top>120</top>
-							<left>230</left>
-						</control>
-
-						<control type="image">
-							<description>qrcode</description>
-							<texture>qrcode_disclaimer.png</texture>
-							<width>140</width>
-							<height>140</height>
-							<top>10</top>
-							<left>360</left>
-						</control>
 					</control>
 				</control>
 			</control>

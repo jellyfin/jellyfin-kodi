@@ -3,6 +3,7 @@
 #################################################################################################
 
 import logging
+import hashlib
 
 import xbmc
 
@@ -572,3 +573,19 @@ class Read_EmbyServer():
 
         url = "{server}/emby/Items/%s?format=json" % itemid
         self.doUtils(url, action_type="DELETE")
+
+    def getUsers(self, server):
+
+        url = "%s/emby/Users/Public?format=json" % server
+        users = self.doUtils(url, authenticate=False)
+
+        return users or []
+
+    def loginUser(self, server, username, password=None):
+
+        password = password or ""
+        url = "%s/emby/Users/AuthenticateByName?format=json" % server
+        data = {'username': username, 'password': hashlib.sha1(password).hexdigest()}
+        user = self.doUtils(url, postBody=data, action_type="POST", authenticate=False)
+
+        return user

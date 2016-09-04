@@ -43,7 +43,7 @@ log = logging.getLogger("EMBY.service")
 #################################################################################################
 
 
-class Service():
+class Service(object):
 
     welcome_msg = True
     server_online = True
@@ -59,7 +59,7 @@ class Service():
 
         self.clientInfo = clientinfo.ClientInfo()
         self.addonName = self.clientInfo.getAddonName()
-        logLevel = userclient.UserClient().getLogLevel()
+        logLevel = settings('logLevel')
         self.monitor = xbmc.Monitor()
 
         window('emby_logLevel', value=str(logLevel))
@@ -128,7 +128,7 @@ class Service():
                 
                 # Emby server is online
                 # Verify if user is set and has access to the server
-                if (user.currUser is not None) and user.HasAccess:
+                if user.get_user() is not None and user.get_access():
 
                      # If an item is playing
                     if xbmc.Player().isPlaying():
@@ -166,7 +166,7 @@ class Service():
                             # Reset authentication warnings
                             self.welcome_msg = False
                             # Get additional users
-                            additionalUsers = user.AdditionalUser
+                            additionalUsers = settings('additionalUsers')
                             if additionalUsers:
                                 add = ", %s" % ", ".join(additionalUsers)
                             else:
@@ -174,7 +174,7 @@ class Service():
                             xbmcgui.Dialog().notification(
                                         heading=lang(29999),
                                         message=("%s %s%s!"
-                                                % (lang(33000), user.currUser.decode('utf-8'),
+                                                % (lang(33000), user.get_username().decode('utf-8'),
                                                     add.decode('utf-8'))),
                                         icon="special://home/addons/plugin.video.emby/icon.png",
                                         time=2000,
@@ -194,7 +194,7 @@ class Service():
                             library.start()
                 else:
                     
-                    if (user.currUser is None) and self.warn_auth:
+                    if (user.get_user() is None) and self.warn_auth:
                         # Alert user is not authenticated and suppress future warning
                         self.warn_auth = False
                         log.info("Not authenticated yet.")
@@ -202,10 +202,8 @@ class Service():
                     # User access is restricted.
                     # Keep verifying until access is granted
                     # unless server goes offline or Kodi is shut down.
-                    while user.HasAccess == False:
+                    while not user.get_access():
                         # Verify access with an API call
-                        user.hasAccess()
-
                         if window('emby_online') != "true":
                             # Server went offline
                             break
@@ -218,11 +216,11 @@ class Service():
                 # or Kodi is shut down.
                 while not monitor.abortRequested():
                     
-                    if user.getServer() == False:
+                    if user.get_server() is None:
                         # No server info set in add-on settings
                         pass
                     
-                    elif user.getPublicUsers() == False:
+                    elif not user.verify_server():
                         # Server is offline.
                         # Alert the user and suppress future warning
                         if self.server_online:
@@ -287,7 +285,7 @@ class Service():
         ##### Emby thread is terminating. #####
 
         if self.userclient_running:
-            user.stopClient()
+            user.stop_client()
             
         if self.library_running:
             library.stopThread()
