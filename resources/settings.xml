@@ -4,15 +4,15 @@
 		<setting id="idMethod" label="Login method" type="enum" values="Manual|Emby Connect" default="0" />
 		<!-- Manual address -->
 		<setting id="username" label="30024" type="text" default="" visible="eq(-1,0)" />
+		<!-- Emby Connect -->
+		<setting id="connectUsername" label="30543" type="text" default="" visible="!eq(0,) + eq(-2,1)" />
+		<setting label="30600" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=connect)" visible="eq(-3,1) + eq(-1,)" option="close" />
+		<setting label="30618" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=connect)" visible="eq(-4,1) + !eq(-2,)" option="close" />
+		<!-- User settings -->
 		<setting id="serverName" label="30000" type="text" default="" />
 		<setting id="server" type="text" default="" visible="false" />
-		<setting id="sslverify" label="30500" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
-		<setting id="sslcert" label="30501" type="file" default="None" visible="eq(-2,true)" subsetting="true" />
-		<!-- Emby Connect -->
-		<setting id="connectUsername" label="30543" type="text" default="" visible="!eq(0,) + eq(-7,1)" />
-		<setting label="30600" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=connect)" visible="eq(-7,1) + eq(-1,)" option="close" />
-		<setting label="30618" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=connect)" visible="eq(-8,1) + !eq(-2,)" option="close" />
-		<!-- User settings -->
+		<setting id="sslverify" label="30500" type="bool" default="false" visible="!eq(-1,)" subsetting="true" />
+		<setting id="sslcert" label="30501" type="file" default="None" visible="eq(-1,true)" subsetting="true" />
 		<setting id="accessToken" type="text" default="" visible="false" />
 		<setting id="userId" type="text" default="" visible="false" />
 		<!-- Device settings -->
