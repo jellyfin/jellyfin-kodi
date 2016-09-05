@@ -606,7 +606,6 @@ class ConnectionManager(object):
                         'X-MediaBrowser-Token': server['AccessToken']
                     }
                 })
-                # TODO: add apiclient
 
         except Exception:
             server['UserId'] = None

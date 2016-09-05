@@ -155,7 +155,7 @@ class LibrarySync(threading.Thread):
         overlap = 2
 
         try: # datetime fails when used more than once, TypeError
-            if isFastSync:
+            if self.isFastSync:
                 result = self.doUtils("{server}/emby/Emby.Kodi.SyncQueue/GetServerDateTime?format=json")
                 server_time = result['ServerDateTime']
                 server_time = utils.convertDate(server_time)
