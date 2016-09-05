@@ -136,7 +136,7 @@ class Read_EmbyServer():
             'Limit': limit,
             'SortBy': sortby,
             'SortOrder': sortorder,
-            'Filters': filter,
+            'Filters': filter_type,
             'Fields': (
 
                 "Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,"
