@@ -907,6 +907,8 @@ class LibrarySync(threading.Thread):
         except Warning as e:
             if "restricted" in e:
                 pass
+            elif "401" in e:
+                pass
         except Exception as e:
             window('emby_dbScan', clear=True)
             log.exception(e)

@@ -50,7 +50,8 @@ class ClientInfo(object):
 
         return device_name
 
-    def get_platform(self):
+    @classmethod
+    def get_platform(cls):
 
         if xbmc.getCondVisibility('system.platform.osx'):
             return "OSX"
