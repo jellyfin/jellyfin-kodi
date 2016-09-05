@@ -60,7 +60,7 @@ class UserClient(threading.Thread):
     @classmethod
     def get_server(cls):
 
-        ###$ Begin transition phase $###
+        ###$ Begin migration $###
         if settings('server') == "":
             http = "https" if settings('https') == "true" else "http"
             host = settings('ipaddress')
@@ -68,7 +68,7 @@ class UserClient(threading.Thread):
 
             if host and port:
                 settings('server', value="%s://%s:%s" % (http, host, port))
-        ###$ End transition phase $###
+        ###$ End migration $###
 
         return settings('server') or None
 
@@ -120,20 +120,20 @@ class UserClient(threading.Thread):
     @classmethod
     def get_userid(cls):
 
-        ###$ Begin transition phase $###
+        ###$ Begin migration $###
         if settings('userId') == "":
             settings('userId', value=settings('userId%s' % settings('username')))
-        ###$ End transition phase $###
+        ###$ End migration $###
 
         return settings('userId') or None
 
     @classmethod
     def get_token(cls):
 
-        ###$ Begin transition phase $###
+        ###$ Begin migration $###
         if settings('token') == "":
             settings('token', value=settings('accessToken'))
-        ###$ End transition phase $###
+        ###$ End migration $###
 
         return settings('token') or None
 

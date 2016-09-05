@@ -19,28 +19,26 @@ log = logging.getLogger("EMBY."+__name__)
 ##################################################################################################
 
 
-class ClientInfo():
+class ClientInfo(object):
 
 
     def __init__(self):
 
         self.addon = xbmcaddon.Addon()
-        self.addonName = self.getAddonName()
-
 
     def getAddonName(self):
         # Used for logging
         return self.addon.getAddonInfo('name').upper()
 
-    def getAddonId(self):
-
+    @classmethod
+    def getAddonId(cls):
         return "plugin.video.emby"
 
     def getVersion(self):
-
         return self.addon.getAddonInfo('version')
 
-    def getDeviceName(self):
+    @classmethod
+    def getDeviceName(cls):
 
         if settings('deviceNameOpt') == "false":
             # Use Kodi's deviceName
@@ -64,42 +62,49 @@ class ClientInfo():
             return "Windows"
         elif xbmc.getCondVisibility('system.platform.android'):
             return "Linux/Android"
-        elif xbmc.getCondVisibility('system.platform.linux.raspberrypi'): 
+        elif xbmc.getCondVisibility('system.platform.linux.raspberrypi'):
             return "Linux/RPi"
-        elif xbmc.getCondVisibility('system.platform.linux'): 
+        elif xbmc.getCondVisibility('system.platform.linux'):
             return "Linux"
         else:
             return "Unknown"
 
     def getDeviceId(self, reset=False):
 
-        clientId = window('emby_deviceId')
-        if clientId:
-            return clientId
+        client_id = window('emby_deviceId')
+        if client_id:
+            return client_id
 
-        addon_path = self.addon.getAddonInfo('path').decode('utf-8')
-        if os.path.supports_unicode_filenames:
-            path = os.path.join(addon_path, "machine_guid")
-        else:
-            path = os.path.join(addon_path.encode('utf-8'), "machine_guid")
+        emby_guid = xbmc.translatePath("special://temp/emby_guid").decode('utf-8')
         
-        GUID_file = xbmc.translatePath(path).decode('utf-8')
-        
-        if reset and xbmcvfs.exists(GUID_file):
+        ###$ Begin migration $###
+        if not xbmcvfs.exists(emby_guid):
+            addon_path = self.addon.getAddonInfo('path').decode('utf-8')
+            if os.path.supports_unicode_filenames:
+                path = os.path.join(addon_path, "machine_guid")
+            else:
+                path = os.path.join(addon_path.encode('utf-8'), "machine_guid")
+            
+            guid_file = xbmc.translatePath(path).decode('utf-8')
+            if xbmcvfs.exists(guid_file):
+                xbmcvfs.copy(guid_file, emby_guid)
+        ###$ End migration $###
+
+        if reset and xbmcvfs.exists(emby_guid):
             # Reset the file
-            xbmcvfs.delete(GUID_file)
+            xbmcvfs.delete(emby_guid)
 
-        GUID = xbmcvfs.File(GUID_file)
-        clientId = GUID.read()
-        if not clientId:
-            log.info("Generating a new deviceid...")
-            clientId = str("%012X" % uuid4())
-            GUID = xbmcvfs.File(GUID_file, 'w')
-            GUID.write(clientId)
+        guid = xbmcvfs.File(emby_guid)
+        client_id = guid.read()
+        if not client_id:
+            log.info("Generating a new guid...")
+            client_id = str("%012X" % uuid4())
+            guid = xbmcvfs.File(emby_guid, 'w')
+            guid.write(client_id)
 
-        GUID.close()
+        guid.close()
 
-        log.info("DeviceId loaded: %s" % clientId)
-        window('emby_deviceId', value=clientId)
-        
-        return clientId
+        log.info("DeviceId loaded: %s", client_id)
+        window('emby_deviceId', value=client_id)
+
+        return client_id

@@ -40,14 +40,14 @@ class InitialSetup(object):
 
         log.debug("Initial setup called.")
 
-        ###$ Begin transition phase $###
+        ###$ Begin migration $###
         if settings('server') == "":
             current_server = self.user_client.get_server()
             server = self.connectmanager.get_server(current_server)
             settings('ServerId', value=server['Id'])
             self.user_client.get_userid()
             self.user_client.get_token()
-        ###$ End transition phase $###
+        ###$ End migration $###
 
         if settings('server'):
             current_state = self.connectmanager.get_state()
