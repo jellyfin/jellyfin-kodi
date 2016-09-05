@@ -139,14 +139,14 @@ class UserClient(threading.Thread):
 
     def _set_user_server(self):
 
-        self._server = self.download("{server}/emby/System/Configuration?format=json")
-        settings('markPlayed', value=str(self._server['MaxResumePct']))
-
         self._user = self.download("{server}/emby/Users/{UserId}?format=json")
         settings('username', value=self._user['Name'])
         if "PrimaryImageTag" in self._user:
             window('EmbyUserImage',
                    value=artwork.Artwork().getUserArtwork(self._user['Id'], 'Primary'))
+
+        self._server = self.download("{server}/emby/System/Configuration?format=json")
+        settings('markPlayed', value=str(self._server['MaxResumePct']))
 
     def _authenticate(self):
 
@@ -223,10 +223,10 @@ class UserClient(threading.Thread):
         doutils.startSession()
 
         # Set _user and _server
+        self._set_user_server()
         # verify user access
         try:
             self._set_access()
-            self._set_user_server()
         except Warning: # We don't need to raise any exceptions
             pass
 
