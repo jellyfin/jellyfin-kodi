@@ -254,6 +254,10 @@ class WebSocket_Client(threading.Thread):
             userclient.UserClient().get_user(data)
             self.librarySync.refresh_views = True
 
+        elif messageType == "ServerShuttingDown":
+            # Server went offline
+            window('emby_online', value="false")
+
     def on_close(self, ws):
         log.debug("Closed.")
 

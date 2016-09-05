@@ -67,6 +67,7 @@
 		<setting id="additionalUsers" type="text" label="30528" default="" />
 		<setting type="lsep" label="30534" />
 		<setting id="connectMsg" type="bool" label="30249" default="true" />
+		<setting id="offlinetMsg" type="bool" label="30545" default="true" />
         <setting id="restartMsg" type="bool" label="30530" default="false" />
         <setting id="newContent" type="bool" label="30531" default="false" />
         <setting id="newvideotime" type="number" label="30532" visible="eq(-1,true)" default="5" option="int" subsetting="true" />

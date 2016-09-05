@@ -227,11 +227,12 @@ class Service(object):
                             log.info("Server is offline.")
                             window('emby_online', value="false")
 
-                            xbmcgui.Dialog().notification(
-                                        heading=lang(33001),
-                                        message="%s %s" % (self.addonName, lang(33002)),
-                                        icon="special://home/addons/plugin.video.emby/icon.png",
-                                        sound=False)
+                            if settings('offlineMsg') == "true":
+                                xbmcgui.Dialog().notification(
+                                            heading=lang(33001),
+                                            message="%s %s" % (self.addonName, lang(33002)),
+                                            icon="special://home/addons/plugin.video.emby/icon.png",
+                                            sound=False)
                         
                         self.server_online = False
 
