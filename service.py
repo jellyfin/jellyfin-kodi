@@ -58,7 +58,7 @@ class Service(object):
     def __init__(self):
 
         self.clientInfo = clientinfo.ClientInfo()
-        self.addonName = self.clientInfo.getAddonName()
+        self.addonName = self.clientInfo.get_addon_name()
         logLevel = settings('logLevel')
         self.monitor = xbmc.Monitor()
 
@@ -68,9 +68,9 @@ class Service(object):
         # Initial logging
         log.warn("======== START %s ========" % self.addonName)
         log.warn("Python Version: %s", sys.version)
-        log.warn("Platform: %s" % (self.clientInfo.getPlatform()))
+        log.warn("Platform: %s" % (self.clientInfo.get_platform()))
         log.warn("KODI Version: %s" % xbmc.getInfoLabel('System.BuildVersion'))
-        log.warn("%s Version: %s" % (self.addonName, self.clientInfo.getVersion()))
+        log.warn("%s Version: %s" % (self.addonName, self.clientInfo.get_version()))
         log.warn("Using plugin paths: %s" % (settings('useDirectPaths') == "0"))
         log.warn("Log Level: %s" % logLevel)
 

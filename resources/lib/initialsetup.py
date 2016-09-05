@@ -26,7 +26,7 @@ class InitialSetup(object):
 
     def __init__(self):
 
-        self.addon_id = clientinfo.ClientInfo().getAddonId()
+        self.addon_id = clientinfo.ClientInfo().get_addon_id()
         self.user_client = userclient.UserClient()
         self.connectmanager = connectmanager.ConnectManager()
 
@@ -43,10 +43,12 @@ class InitialSetup(object):
         ###$ Begin migration $###
         if settings('server') == "":
             current_server = self.user_client.get_server()
-            server = self.connectmanager.get_server(current_server)
-            settings('ServerId', value=server['Id'])
-            self.user_client.get_userid()
-            self.user_client.get_token()
+            if current_server is not None:
+                server = self.connectmanager.get_server(current_server)
+                log.info(server)
+                settings('ServerId', value=server['Id'])
+                self.user_client.get_userid()
+                self.user_client.get_token()
         ###$ End migration $###
 
         if settings('server'):

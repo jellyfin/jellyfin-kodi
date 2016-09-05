@@ -480,7 +480,7 @@ class Player(xbmc.Player):
                 # Stop transcoding
                 if playMethod == "Transcode":
                     log.info("Transcoding for %s terminated." % itemid)
-                    deviceId = self.clientInfo.getDeviceId()
+                    deviceId = self.clientInfo.get_device_id()
                     url = "{server}/emby/Videos/ActiveEncodings?DeviceId=%s" % deviceId
                     self.doUtils(url, action_type="DELETE")
 

@@ -53,7 +53,6 @@ class LibrarySync(threading.Thread):
         self.monitor = xbmc.Monitor()
 
         self.clientInfo = clientinfo.ClientInfo()
-        self.addonName = self.clientInfo.getAddonName()
         self.doUtils = downloadutils.DownloadUtils().downloadUrl
         self.user = userclient.UserClient()
         self.emby = embyserver.Read_EmbyServer()
@@ -313,7 +312,7 @@ class LibrarySync(threading.Thread):
         embycursor.close()
 
         settings('SyncInstallRunDone', value="true")
-        settings("dbCreatedWithVersion", self.clientInfo.getVersion())
+        settings("dbCreatedWithVersion", self.clientInfo.get_version())
         self.saveLastSync()
         xbmc.executebuiltin('UpdateLibrary(video)')
         elapsedtotal = datetime.now() - starttotal

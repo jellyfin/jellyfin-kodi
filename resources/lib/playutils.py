@@ -261,7 +261,7 @@ class PlayUtils():
             playurl = self.directPlay()
         else:
             itemid = self.item['Id']
-            deviceId = self.clientInfo.getDeviceId()
+            deviceId = self.clientInfo.get_device_id()
             playurl = (
                 "%s/emby/Videos/%s/master.m3u8?MediaSourceId=%s"
                 % (self.server, itemid, itemid)

@@ -8,7 +8,6 @@ import logging
 import xbmc
 import xbmcgui
 
-import clientinfo
 import downloadutils
 import embydb_functions as embydb
 import playbackutils as pbutils
@@ -26,8 +25,6 @@ class KodiMonitor(xbmc.Monitor):
 
     def __init__(self):
 
-        self.clientInfo = clientinfo.ClientInfo()
-        self.addonName = self.clientInfo.getAddonName()
         self.doUtils = downloadutils.DownloadUtils()
 
         log.info("Kodi monitor started.")

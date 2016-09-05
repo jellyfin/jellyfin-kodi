@@ -13,7 +13,6 @@ import xbmcvfs
 
 import api
 import artwork
-import clientinfo
 import downloadutils
 import embydb_functions as embydb
 import kodidb_functions as kodidb
@@ -36,8 +35,6 @@ class Items(object):
         self.embycursor = embycursor
         self.kodicursor = kodicursor
 
-        self.clientInfo = clientinfo.ClientInfo()
-        self.addonName = self.clientInfo.getAddonName()
         self.doUtils = downloadutils.DownloadUtils()
 
         self.kodiversion = int(xbmc.getInfoLabel('System.BuildVersion')[:2])

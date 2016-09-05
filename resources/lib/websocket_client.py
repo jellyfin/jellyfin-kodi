@@ -39,7 +39,7 @@ class WebSocket_Client(threading.Thread):
         
         self.doUtils = downloadutils.DownloadUtils()
         self.clientInfo = clientinfo.ClientInfo()
-        self.deviceId = self.clientInfo.getDeviceId()
+        self.deviceId = self.clientInfo.get_device_id()
         self.librarySync = librarysync.LibrarySync()
         
         threading.Thread.__init__(self)

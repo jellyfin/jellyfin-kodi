@@ -143,7 +143,7 @@ def resetDeviceId():
     deviceId_old = window('emby_deviceId')
     try:
         window('emby_deviceId', clear=True)
-        deviceId = clientinfo.ClientInfo().getDeviceId(reset=True)
+        deviceId = clientinfo.ClientInfo().get_device_id(reset=True)
     except Exception as e:
         log.error("Failed to generate a new device Id: %s" % e)
         dialog.ok(
@@ -208,8 +208,8 @@ def addUser():
     doUtils = downloadutils.DownloadUtils()
     art = artwork.Artwork()
     clientInfo = clientinfo.ClientInfo()
-    deviceId = clientInfo.getDeviceId()
-    deviceName = clientInfo.getDeviceName()
+    deviceId = clientInfo.get_device_id()
+    deviceName = clientInfo.get_device_name()
     userid = window('emby_currUser')
     dialog = xbmcgui.Dialog()
 

@@ -26,31 +26,31 @@ class ClientInfo(object):
 
         self.addon = xbmcaddon.Addon()
 
-    def getAddonName(self):
+    def get_addon_name(self):
         # Used for logging
         return self.addon.getAddonInfo('name').upper()
 
     @classmethod
-    def getAddonId(cls):
+    def get_addon_id(cls):
         return "plugin.video.emby"
 
-    def getVersion(self):
+    def get_version(self):
         return self.addon.getAddonInfo('version')
 
     @classmethod
-    def getDeviceName(cls):
+    def get_device_name(cls):
 
         if settings('deviceNameOpt') == "false":
             # Use Kodi's deviceName
-            deviceName = xbmc.getInfoLabel('System.FriendlyName').decode('utf-8')
+            device_name = xbmc.getInfoLabel('System.FriendlyName').decode('utf-8')
         else:
-            deviceName = settings('deviceName')
-            deviceName = deviceName.replace("\"", "_")
-            deviceName = deviceName.replace("/", "_")
+            device_name = settings('deviceName')
+            device_name = device_name.replace("\"", "_")
+            device_name = device_name.replace("/", "_")
 
-        return deviceName
+        return device_name
 
-    def getPlatform(self):
+    def get_platform(self):
 
         if xbmc.getCondVisibility('system.platform.osx'):
             return "OSX"
@@ -69,14 +69,14 @@ class ClientInfo(object):
         else:
             return "Unknown"
 
-    def getDeviceId(self, reset=False):
+    def get_device_id(self, reset=False):
 
         client_id = window('emby_deviceId')
         if client_id:
             return client_id
 
         emby_guid = xbmc.translatePath("special://temp/emby_guid").decode('utf-8')
-        
+
         ###$ Begin migration $###
         if not xbmcvfs.exists(emby_guid):
             addon_path = self.addon.getAddonInfo('path').decode('utf-8')
@@ -84,7 +84,7 @@ class ClientInfo(object):
                 path = os.path.join(addon_path, "machine_guid")
             else:
                 path = os.path.join(addon_path.encode('utf-8'), "machine_guid")
-            
+
             guid_file = xbmc.translatePath(path).decode('utf-8')
             if xbmcvfs.exists(guid_file):
                 xbmcvfs.copy(guid_file, emby_guid)

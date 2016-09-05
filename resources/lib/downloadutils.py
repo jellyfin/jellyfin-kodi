@@ -132,7 +132,7 @@ class DownloadUtils():
 
     def startSession(self):
 
-        self.deviceId = self.clientInfo.getDeviceId()
+        self.deviceId = self.clientInfo.get_device_id()
 
         # User is identified from this point
         # Attach authenticated header to the session
@@ -163,10 +163,10 @@ class DownloadUtils():
 
     def getHeader(self, authenticate=True):
 
-        deviceName = self.clientInfo.getDeviceName()
+        deviceName = self.clientInfo.get_device_name()
         deviceName = deviceName.encode('utf-8')
-        deviceId = self.clientInfo.getDeviceId()
-        version = self.clientInfo.getVersion()
+        deviceId = self.clientInfo.get_device_id()
+        version = self.clientInfo.get_version()
 
         if authenticate:
             auth = (

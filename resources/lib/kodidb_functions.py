@@ -8,7 +8,6 @@ import xbmc
 
 import api
 import artwork
-import clientinfo
 
 #################################################################################################
 
@@ -25,8 +24,6 @@ class Kodidb_Functions():
         
         self.cursor = cursor
         
-        self.clientInfo = clientinfo.ClientInfo()
-        self.addonName = self.clientInfo.getAddonName()
         self.artwork = artwork.Artwork()
         
 

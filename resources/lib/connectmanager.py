@@ -35,9 +35,9 @@ class ConnectManager(object):
             client_info = clientinfo.ClientInfo()
             self.emby = embyserver.Read_EmbyServer()
 
-            version = client_info.getVersion()
-            device_name = client_info.getDeviceName()
-            device_id = client_info.getDeviceId()
+            version = client_info.get_version()
+            device_name = client_info.get_device_name()
+            device_id = client_info.get_device_id()
 
             self._connect = connectionmanager.ConnectionManager(appName="Kodi",
                                                                 appVersion=version,
