@@ -43,17 +43,20 @@ class InitialSetup(object):
         ###$ Begin transition phase $###
         if settings('server') == "":
             current_server = self.user_client.get_server()
-            self.connectmanager.get_server(current_server)
+            server = self.connectmanager.get_server(current_server)
+            settings('ServerId', value=server['Id'])
             self.user_client.get_userid()
             self.user_client.get_token()
         ###$ End transition phase $###
 
-        current_state = self.connectmanager.get_state()
-        if current_state['State'] == STATE['SignedIn']:
-            server = current_state['Servers'][0]
-            server_address = self.connectmanager.get_address(server)
-            self._set_server(server_address, server['Name'])
-            self._set_user(server['UserId'], server['AccessToken'])
+        if settings('server'):
+            current_state = self.connectmanager.get_state()
+            for server in current_state['Servers']:
+                if server['Id'] == settings('serverId'):
+                    server_address = self.connectmanager.get_address(server)
+                    self._set_server(server_address, server)
+                    self._set_user(server['UserId'], server['AccessToken'])
+                    break
             return
 
         try:
@@ -67,7 +70,7 @@ class InitialSetup(object):
 
         else:
             server_address = self.connectmanager.get_address(server)
-            self._set_server(server_address, server['Name'])
+            self._set_server(server_address, server)
 
             if not server.get('AccessToken') and not server.get('UserId'):
                 try:
@@ -113,11 +116,11 @@ class InitialSetup(object):
                     settings('streamMusic', value="true")
 
     @classmethod
-    def _set_server(cls, server, name):
+    def _set_server(cls, server_address, server):
 
-        settings('serverName', value=name)
-        settings('server', value=server)
-        log.info("Saved server information: %s", server)
+        settings('serverName', value=server['Name'])
+        settings('serverId', value=server['Id'])
+        settings('server', value=server_address)
 
     @classmethod
     def _set_user(cls, user_id, token):
