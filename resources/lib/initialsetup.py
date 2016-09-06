@@ -57,7 +57,7 @@ class InitialSetup(object):
                 if server['Id'] == settings('serverId'):
                     server_address = self.connectmanager.get_address(server)
                     self._set_server(server_address, server)
-                    self._set_user(server['UserId'], server['AccessToken'])
+                    #self._set_user(server['UserId'], server['AccessToken'])
                     break
             return
 

@@ -136,13 +136,13 @@ class DownloadUtils():
 
         # User is identified from this point
         # Attach authenticated header to the session
-        verify = False
         header = self.getHeader()
 
         # If user enabled host certificate verification
         try:
             verify = self.sslverify
         except:
+            verify = False
             log.info("Could not load SSL settings.")
 
         # Start session
@@ -172,6 +172,7 @@ class DownloadUtils():
             auth = (
                 'MediaBrowser UserId="%s", Client="Kodi", Device="%s", DeviceId="%s", Version="%s"'
                 % (self.userId, deviceName, deviceId, version))
+
             header = {
 
                 'Content-type': 'application/json',
@@ -185,6 +186,7 @@ class DownloadUtils():
             auth = (
                 'MediaBrowser Client="Kodi", Device="%s", DeviceId="%s", Version="%s"'
                 % (deviceName, deviceId, version))
+
             header = {
 
                 'Content-type': 'application/json',

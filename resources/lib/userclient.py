@@ -159,6 +159,7 @@ class UserClient(threading.Thread):
                 self._load_user()
             except Warning:
                 log.info("token is invalid")
+                self._reset_client()
             else:
                 log.info("current user: %s", self.get_username())
                 log.info("current userid: %s", self.get_userid())
@@ -176,7 +177,7 @@ class UserClient(threading.Thread):
                 user_found = user
                 break
         try:
-            user = self.connectmanager.login_manual(server, user_found)
+            user = connectmanager.ConnectManager().login_manual(server, user_found)
         except RuntimeError:
             window('emby_serverStatus', value="stop")
             self._auth = False
@@ -219,16 +220,16 @@ class UserClient(threading.Thread):
         doutils.setToken(token)
         doutils.setSSL(self.get_ssl())
 
-        # Start downloadutils.py session
-        doutils.startSession()
-
-        # Set _user and _server
-        self._set_user_server()
         # verify user access
         try:
             self._set_access()
         except Warning: # We don't need to raise any exceptions
             pass
+
+        # Start downloadutils.py session
+        doutils.startSession()
+        # Set _user and _server
+        self._set_user_server()
 
     def _reset_client(self):
 
@@ -245,7 +246,6 @@ class UserClient(threading.Thread):
     def run(self):
 
         monitor = xbmc.Monitor()
-        self.connectmanager = connectmanager.ConnectManager()
 
         log.warn("----===## Starting UserClient ##===----")
 
