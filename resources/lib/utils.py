@@ -50,6 +50,23 @@ def language(string_id):
     # Central string retrieval - unicode
     return xbmcaddon.Addon(id='plugin.video.emby').getLocalizedString(string_id)
 
+def dialog(type_, **kwargs):
+
+    d = xbmcgui.Dialog()
+
+    if "icon" in kwargs:
+        kwargs['icon'] = kwargs['icon'].replace("{default}",
+                                                "special://home/addons/plugin.video.emby/icon.png")
+
+    types = {
+        'yesno': d.yesno,
+        'ok': d.ok,
+        'notification': d.notification,
+        'input': d.input
+    }
+    return types[type_](**kwargs)
+
+
 class JSONRPC(object):
 
     id_ = 1

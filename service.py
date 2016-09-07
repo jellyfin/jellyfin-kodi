@@ -5,21 +5,19 @@
 import logging
 import os
 import sys
-import time
 import _strptime # Workaround for threads using datetime: _striptime is locked
 from datetime import datetime
 
 import xbmc
 import xbmcaddon
 import xbmcgui
-import xbmcvfs
 
 #################################################################################################
 
-_addon = xbmcaddon.Addon(id='plugin.video.emby')
-_addon_path = _addon.getAddonInfo('path').decode('utf-8')
-_base_resource = xbmc.translatePath(os.path.join(_addon_path, 'resources', 'lib')).decode('utf-8')
-sys.path.append(_base_resource)
+_ADDON = xbmcaddon.Addon(id='plugin.video.emby')
+_CWD = _ADDON.getAddonInfo('path').decode('utf-8')
+_BASE_LIB = xbmc.translatePath(os.path.join(_CWD, 'resources', 'lib')).decode('utf-8')
+sys.path.append(_BASE_LIB)
 
 #################################################################################################
 
@@ -31,7 +29,7 @@ import librarysync
 import player
 import videonodes
 import websocket_client as wsc
-from utils import window, settings, language as lang
+from utils import window, settings, dialog, language as lang
 
 #################################################################################################
 
@@ -66,13 +64,13 @@ class Service(object):
         window('emby_kodiProfile', value=xbmc.translatePath('special://profile'))
 
         # Initial logging
-        log.warn("======== START %s ========" % self.addonName)
+        log.warn("======== START %s ========", self.addonName)
         log.warn("Python Version: %s", sys.version)
-        log.warn("Platform: %s" % (self.clientInfo.get_platform()))
-        log.warn("KODI Version: %s" % xbmc.getInfoLabel('System.BuildVersion'))
-        log.warn("%s Version: %s" % (self.addonName, self.clientInfo.get_version()))
-        log.warn("Using plugin paths: %s" % (settings('useDirectPaths') == "0"))
-        log.warn("Log Level: %s" % logLevel)
+        log.warn("Platform: %s", self.clientInfo.get_platform())
+        log.warn("KODI Version: %s", xbmc.getInfoLabel('System.BuildVersion'))
+        log.warn("%s Version: %s", self.addonName, self.clientInfo.get_version())
+        log.warn("Using plugin paths: %s", settings('useDirectPaths') == "0")
+        log.warn("Log Level: %s", logLevel)
 
         # Reset window props for profile switch
         properties = [
@@ -87,12 +85,12 @@ class Service(object):
 
         # Clear video nodes properties
         videonodes.VideoNodes().clearProperties()
-        
+
         # Set the minimum database version
         window('emby_minDBVersion', value="1.1.63")
 
        
-    def ServiceEntryPoint(self):
+    def service_entry_point(self):
 
         # Important: Threads depending on abortRequest will not trigger
         # if profile switch happens more than once.
@@ -114,18 +112,17 @@ class Service(object):
 
             if window('emby_kodiProfile') != kodiProfile:
                 # Profile change happened, terminate this thread and others
-                log.info("Kodi profile was: %s and changed to: %s. Terminating old Emby thread."
-                    % (kodiProfile, window('emby_kodiProfile')))
-                
+                log.info("Kodi profile was: %s and changed to: %s. Terminating old Emby thread.",
+                         kodiProfile, window('emby_kodiProfile'))
                 break
-            
+
             # Before proceeding, need to make sure:
             # 1. Server is online
             # 2. User is set
             # 3. User has access to the server
 
             if window('emby_online') == "true":
-                
+
                 # Emby server is online
                 # Verify if user is set and has access to the server
                 if user.get_user() is not None and user.get_access():
@@ -171,14 +168,14 @@ class Service(object):
                                 add = ", %s" % ", ".join(additionalUsers)
                             else:
                                 add = ""
-                            xbmcgui.Dialog().notification(
-                                        heading=lang(29999),
-                                        message=("%s %s%s!"
-                                                % (lang(33000), user.get_username().decode('utf-8'),
-                                                    add.decode('utf-8'))),
-                                        icon="special://home/addons/plugin.video.emby/icon.png",
-                                        time=2000,
-                                        sound=False)
+                            dialog(type_="notification",
+                                   heading=lang(29999),
+                                   message=("%s %s%s!"
+                                            % (lang(33000), user.get_username().decode('utf-8'),
+                                                add.decode('utf-8'))),
+                                   icon="{default}",
+                                   time=2000,
+                                   sound=False)
 
                         # Start monitoring kodi events
                         if not self.kodimonitor_running:
@@ -228,11 +225,11 @@ class Service(object):
                             window('emby_online', value="false")
 
                             if settings('offlineMsg') == "true":
-                                xbmcgui.Dialog().notification(
-                                            heading=lang(33001),
-                                            message="%s %s" % (self.addonName, lang(33002)),
-                                            icon="special://home/addons/plugin.video.emby/icon.png",
-                                            sound=False)
+                                dialog(type_="notification",
+                                       heading=lang(33001),
+                                       message="%s %s" % (self.addonName, lang(33002)),
+                                       icon="{default}",
+                                       sound=False)
                         
                         self.server_online = False
 
@@ -257,22 +254,22 @@ class Service(object):
                                 # Abort was requested while waiting.
                                 break
                             # Alert the user that server is online.
-                            xbmcgui.Dialog().notification(
-                                        heading=lang(29999),
-                                        message=lang(33003),
-                                        icon="special://home/addons/plugin.video.emby/icon.png",
-                                        time=2000,
-                                        sound=False)
-                        
+                            dialog(type_="notification",
+                                   heading=lang(29999),
+                                   message=lang(33003),
+                                   icon="{default}",
+                                   time=2000,
+                                   sound=False)
+
                         self.server_online = True
                         log.info("Server is online and ready.")
                         window('emby_online', value="true")
-                        
+
                         # Start the userclient thread
                         if not self.userclient_running:
                             self.userclient_running = True
                             user.start()
-                        
+
                         break
 
                     if monitor.waitForAbort(1):
@@ -287,21 +284,21 @@ class Service(object):
 
         if self.userclient_running:
             user.stop_client()
-            
+
         if self.library_running:
             library.stopThread()
 
         if self.websocket_running:
             ws.stopClient()
 
-        log.warn("======== STOP %s ========" % self.addonName)
+        log.warn("======== STOP %s ========", self.addonName)
 
 # Delay option
-delay = int(settings('startupDelay'))
-log.warn("Delaying emby startup by: %s sec..." % delay)
+DELAY = int(settings('startupDelay'))
+log.warn("Delaying emby startup by: %s sec...", DELAY)
 
-if delay and xbmc.Monitor().waitForAbort(delay):
+if DELAY and xbmc.Monitor().waitForAbort(DELAY):
     # Start the service
     log.warn("Abort requested while waiting. Emby for kodi not started.")
 else:
-    Service().ServiceEntryPoint()
+    Service().service_entry_point()

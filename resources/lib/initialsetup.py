@@ -80,7 +80,6 @@ class InitialSetup(object):
             current_server = self.user_client.get_server()
             if current_server is not None:
                 server = self.connectmanager.get_server(current_server)
-                log.info(server)
                 settings('ServerId', value=server['Id'])
                 self.user_client.get_userid()
                 self.user_client.get_token()
@@ -95,7 +94,7 @@ class InitialSetup(object):
                     self._set_server(server_address, server)
                     #self._set_user(server['UserId'], server['AccessToken'])
                     return True
-        
+
         return False
 
     def _user_identification(self):
