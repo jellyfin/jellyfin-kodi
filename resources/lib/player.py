@@ -368,7 +368,7 @@ class Player(xbmc.Player):
             # Report progress via websocketclient
             postdata = json.dumps(postdata)
             log.debug("Report: %s" % postdata)
-            self.ws.sendProgressUpdate(postdata)
+            self.ws.send_progress_update(postdata)
 
     def onPlayBackPaused(self):
 

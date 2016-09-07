@@ -55,7 +55,7 @@ def dialog(type_, **kwargs):
     d = xbmcgui.Dialog()
 
     if "icon" in kwargs:
-        kwargs['icon'] = kwargs['icon'].replace("{default}",
+        kwargs['icon'] = kwargs['icon'].replace("{emby}",
                                                 "special://home/addons/plugin.video.emby/icon.png")
 
     types = {

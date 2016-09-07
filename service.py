@@ -10,7 +10,6 @@ from datetime import datetime
 
 import xbmc
 import xbmcaddon
-import xbmcgui
 
 #################################################################################################
 
@@ -55,22 +54,22 @@ class Service(object):
 
     def __init__(self):
 
-        self.clientInfo = clientinfo.ClientInfo()
-        self.addonName = self.clientInfo.get_addon_name()
-        logLevel = settings('logLevel')
+        self.client_info = clientinfo.ClientInfo()
+        self.addon_name = self.client_info.get_addon_name()
+        log_level = settings('logLevel')
         self.monitor = xbmc.Monitor()
 
-        window('emby_logLevel', value=str(logLevel))
+        window('emby_logLevel', value=str(log_level))
         window('emby_kodiProfile', value=xbmc.translatePath('special://profile'))
 
         # Initial logging
-        log.warn("======== START %s ========", self.addonName)
+        log.warn("======== START %s ========", self.addon_name)
         log.warn("Python Version: %s", sys.version)
-        log.warn("Platform: %s", self.clientInfo.get_platform())
+        log.warn("Platform: %s", self.client_info.get_platform())
         log.warn("KODI Version: %s", xbmc.getInfoLabel('System.BuildVersion'))
-        log.warn("%s Version: %s", self.addonName, self.clientInfo.get_version())
+        log.warn("%s Version: %s", self.addon_name, self.client_info.get_version())
         log.warn("Using plugin paths: %s", settings('useDirectPaths') == "0")
-        log.warn("Log Level: %s", logLevel)
+        log.warn("Log Level: %s", log_level)
 
         # Reset window props for profile switch
         properties = [
@@ -89,7 +88,7 @@ class Service(object):
         # Set the minimum database version
         window('emby_minDBVersion', value="1.1.63")
 
-       
+
     def service_entry_point(self):
 
         # Important: Threads depending on abortRequest will not trigger
@@ -173,7 +172,7 @@ class Service(object):
                                    message=("%s %s%s!"
                                             % (lang(33000), user.get_username().decode('utf-8'),
                                                 add.decode('utf-8'))),
-                                   icon="{default}",
+                                   icon="{emby}",
                                    time=2000,
                                    sound=False)
 
@@ -227,16 +226,16 @@ class Service(object):
                             if settings('offlineMsg') == "true":
                                 dialog(type_="notification",
                                        heading=lang(33001),
-                                       message="%s %s" % (self.addonName, lang(33002)),
-                                       icon="{default}",
+                                       message="%s %s" % (self.addon_name, lang(33002)),
+                                       icon="{emby}",
                                        sound=False)
-                        
+
                         self.server_online = False
 
                     elif window('emby_online') == "sleep":
                         # device going to sleep
                         if self.websocket_running:
-                            ws.stopClient()
+                            ws.stop_client()
                             ws = wsc.WebSocket_Client()
                             self.websocket_running = False
 
@@ -257,7 +256,7 @@ class Service(object):
                             dialog(type_="notification",
                                    heading=lang(29999),
                                    message=lang(33003),
-                                   icon="{default}",
+                                   icon="{emby}",
                                    time=2000,
                                    sound=False)
 
@@ -289,9 +288,9 @@ class Service(object):
             library.stopThread()
 
         if self.websocket_running:
-            ws.stopClient()
+            ws.stop_client()
 
-        log.warn("======== STOP %s ========", self.addonName)
+        log.warn("======== STOP %s ========", self.addon_name)
 
 # Delay option
 DELAY = int(settings('startupDelay'))
