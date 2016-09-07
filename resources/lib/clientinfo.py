@@ -89,6 +89,7 @@ class ClientInfo(object):
             guid_file = xbmc.translatePath(path).decode('utf-8')
             if xbmcvfs.exists(guid_file):
                 xbmcvfs.copy(guid_file, emby_guid)
+                log.info("guid migration completed")
         ###$ End migration $###
 
         if reset and xbmcvfs.exists(emby_guid):

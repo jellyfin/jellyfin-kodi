@@ -33,12 +33,47 @@ class InitialSetup(object):
 
     def setup(self):
         # Check server, user, direct paths, music, direct stream if not direct path.
-        addon_id = self.addon_id
         dialog = xbmcgui.Dialog()
 
-        ##### SERVER INFO #####
+        log.debug("Initial setup called")
 
-        log.debug("Initial setup called.")
+        if self._server_verification() and settings('userId'):
+            # Setup is already completed
+            return
+
+        if not self._user_identification():
+            # User failed to identify
+            return
+
+        ##### ADDITIONAL PROMPTS #####
+
+        direct_paths = dialog.yesno(heading=lang(30511),
+                                    line1=lang(33035),
+                                    nolabel=lang(33036),
+                                    yeslabel=lang(33037))
+        if direct_paths:
+            log.info("User opted to use direct paths")
+            settings('useDirectPaths', value="1")
+
+            # ask for credentials
+            credentials = dialog.yesno(heading=lang(30517), line1=lang(33038))
+            if credentials:
+                log.info("Presenting network credentials dialog")
+                passwordsXML()
+
+        music_disabled = dialog.yesno(heading=lang(29999), line1=lang(33039))
+        if music_disabled:
+            log.info("User opted to disable Emby music library")
+            settings('enableMusic', value="false")
+        else:
+            # Only prompt if the user didn't select direct paths for videos
+            if not direct_paths:
+                music_access = dialog.yesno(heading=lang(29999), line1=lang(33040))
+                if music_access:
+                    log.info("User opted to direct stream music")
+                    settings('streamMusic', value="true")
+
+    def _server_verification(self):
 
         ###$ Begin migration $###
         if settings('server') == "":
@@ -49,6 +84,7 @@ class InitialSetup(object):
                 settings('ServerId', value=server['Id'])
                 self.user_client.get_userid()
                 self.user_client.get_token()
+                log.info("server migration completed")
         ###$ End migration $###
 
         if settings('server'):
@@ -58,64 +94,34 @@ class InitialSetup(object):
                     server_address = self.connectmanager.get_address(server)
                     self._set_server(server_address, server)
                     #self._set_user(server['UserId'], server['AccessToken'])
-                    break
-            return
+                    return True
+        
+        return False
+
+    def _user_identification(self):
 
         try:
             server = self.connectmanager.select_servers()
             log.info("Server: %s", server)
-
-        except RuntimeError as error:
-            log.exception(error)
-            xbmc.executebuiltin('Addon.OpenSettings(%s)' % addon_id)
-            return
-
-        else:
             server_address = self.connectmanager.get_address(server)
             self._set_server(server_address, server)
 
             if not server.get('AccessToken') and not server.get('UserId'):
-                try:
-                    user = self.connectmanager.login(server)
-                    log.info("User authenticated: %s", user)
-                except RuntimeError as error:
-                    log.exception(error)
-                    xbmc.executebuiltin('Addon.OpenSettings(%s)' % addon_id)
-                    return
+                user = self.connectmanager.login(server)
+                log.info("User authenticated: %s", user)
                 settings('username', value=user['User']['Name'])
                 self._set_user(user['User']['Id'], user['AccessToken'])
-            else:
+            else: # Logged with Emby Connect
                 user = self.connectmanager.get_state()
                 settings('connectUsername', value=user['ConnectUser']['Name'])
                 self._set_user(server['UserId'], server['AccessToken'])
 
-        ##### ADDITIONAL PROMPTS #####
+            return True
 
-        direct_paths = dialog.yesno(heading=lang(30511),
-                                    line1=lang(33035),
-                                    nolabel=lang(33036),
-                                    yeslabel=lang(33037))
-        if direct_paths:
-            log.info("User opted to use direct paths.")
-            settings('useDirectPaths', value="1")
-
-            # ask for credentials
-            credentials = dialog.yesno(heading=lang(30517), line1=lang(33038))
-            if credentials:
-                log.info("Presenting network credentials dialog.")
-                passwordsXML()
-
-        music_disabled = dialog.yesno(heading=lang(29999), line1=lang(33039))
-        if music_disabled:
-            log.info("User opted to disable Emby music library.")
-            settings('enableMusic', value="false")
-        else:
-            # Only prompt if the user didn't select direct paths for videos
-            if not direct_paths:
-                music_access = dialog.yesno(heading=lang(29999), line1=lang(33040))
-                if music_access:
-                    log.info("User opted to direct stream music.")
-                    settings('streamMusic', value="true")
+        except RuntimeError as error:
+            log.exception(error)
+            xbmc.executebuiltin('Addon.OpenSettings(%s)' % self.addon_id)
+            return False
 
     @classmethod
     def _set_server(cls, server_address, server):

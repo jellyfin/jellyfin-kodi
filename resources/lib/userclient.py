@@ -68,6 +68,7 @@ class UserClient(threading.Thread):
 
             if host and port:
                 settings('server', value="%s://%s:%s" % (http, host, port))
+                log.info("server address migration completed")
         ###$ End migration $###
 
         return settings('server') or None
@@ -123,6 +124,7 @@ class UserClient(threading.Thread):
         ###$ Begin migration $###
         if settings('userId') == "":
             settings('userId', value=settings('userId%s' % settings('username')))
+            log.info("userid migration completed")
         ###$ End migration $###
 
         return settings('userId') or None
@@ -133,6 +135,7 @@ class UserClient(threading.Thread):
         ###$ Begin migration $###
         if settings('token') == "":
             settings('token', value=settings('accessToken'))
+            log.info("token migration completed")
         ###$ End migration $###
 
         return settings('token') or None
