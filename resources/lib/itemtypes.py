@@ -1192,7 +1192,7 @@ class TVShows(Items):
                 self.add_update(show)
                 return
         
-        seasonid = self.kodi_db.addSeason(showid, seasonnum)
+        seasonid = self.kodi_db.addSeason(showid, seasonnum, item['Name'])
         
         if item['LocationType'] != "Virtual":
             # Create the reference in emby table

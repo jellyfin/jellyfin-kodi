@@ -978,7 +978,7 @@ class Kodidb_Functions():
         ))
         self.cursor.execute(query, (movieid,))
 
-    def addSeason(self, showid, seasonnumber):
+    def addSeason(self, showid, seasonnumber, season_name=None):
 
         query = ' '.join((
 
@@ -995,6 +995,10 @@ class Kodidb_Functions():
             seasonid = self.cursor.fetchone()[0] + 1
             query = "INSERT INTO seasons(idSeason, idShow, season) values(?, ?, ?)"
             self.cursor.execute(query, (seasonid, showid, seasonnumber))
+
+        if self.kodiversion in (16,17) and season_name is not None:
+            query = "UPDATE seasons SET name = ? WHERE idSeason = ?"
+            self.cursor.execute(query, (season_name, seasonid))
 
         return seasonid
 
