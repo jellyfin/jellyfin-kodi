@@ -38,7 +38,7 @@ class Player(xbmc.Player):
 
         self.clientInfo = clientinfo.ClientInfo()
         self.doUtils = downloadutils.DownloadUtils().downloadUrl
-        self.ws = wsc.WebSocket_Client()
+        self.ws = wsc.WebSocketClient()
         self.xbmcplayer = xbmc.Player()
 
         log.debug("Starting playback monitor.")

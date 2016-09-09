@@ -98,9 +98,9 @@ class PlaybackUtils():
                 dummyPlaylist = True
                 playlist.add(playurl, listitem, index=startPos)
                 # Remove the original item from playlist 
-                self.pl.removefromPlaylist(startPos+1)
+                self.pl.remove_from_playlist(startPos+1)
                 # Readd the original item to playlist - via jsonrpc so we have full metadata
-                self.pl.insertintoPlaylist(currentPosition+1, dbid, self.item['Type'].lower())
+                self.pl.insert_to_playlist(currentPosition+1, dbid, self.item['Type'].lower())
                 currentPosition += 1
             
             ############### -- CHECK FOR INTROS ################
@@ -131,7 +131,7 @@ class PlaybackUtils():
                             pbutils = PlaybackUtils(intro)
                             pbutils.setProperties(introPlayurl, introListItem)
 
-                            self.pl.insertintoPlaylist(currentPosition, url=introPlayurl)
+                            self.pl.insert_to_playlist(currentPosition, url=introPlayurl)
                             introsPlaylist = True
                             currentPosition += 1
 
@@ -142,7 +142,7 @@ class PlaybackUtils():
                 # Extend our current playlist with the actual item to play
                 # only if there's no playlist first
                 log.info("Adding main item to playlist.")
-                self.pl.addtoPlaylist(dbid, self.item['Type'].lower())
+                self.pl.add_to_playlist(dbid, self.item['Type'].lower())
 
             # Ensure that additional parts are played after the main item
             currentPosition += 1
@@ -166,7 +166,7 @@ class PlaybackUtils():
                     pbutils.setArtwork(additionalListItem)
 
                     playlist.add(additionalPlayurl, additionalListItem, index=currentPosition)
-                    self.pl.verifyPlaylist()
+                    self.pl.verify_playlist()
                     currentPosition += 1
 
             if dummyPlaylist:
@@ -181,7 +181,7 @@ class PlaybackUtils():
             log.debug("Resetting properties playback flag.")
             window('emby_playbackProps', clear=True)
 
-        #self.pl.verifyPlaylist()
+        #self.pl.verify_playlist()
         ########## SETUP MAIN ITEM ##########
 
         # For transcoding only, ask for audio/subs pref

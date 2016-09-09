@@ -23,7 +23,7 @@ log = logging.getLogger("EMBY."+__name__)
 ##################################################################################################
 
 
-class WebSocket_Client(threading.Thread):
+class WebSocketClient(threading.Thread):
 
     _shared_state = {}
 
@@ -35,12 +35,12 @@ class WebSocket_Client(threading.Thread):
 
         self.__dict__ = self._shared_state
         self.monitor = xbmc.Monitor()
-        
+
         self.doutils = downloadutils.DownloadUtils()
         self.client_info = clientinfo.ClientInfo()
         self.device_id = self.client_info.get_device_id()
         self.library_sync = librarysync.LibrarySync()
-        
+
         threading.Thread.__init__(self)
 
 
@@ -66,15 +66,15 @@ class WebSocket_Client(threading.Thread):
         message_type = result['MessageType']
         data = result['Data']
 
-        if message_type not in ('SessionEnded'):
+        if message_type not in ('NotificationAdded', 'SessionEnded'):
             # Mute certain events
-            log.info("Message: %s" % message)
+            log.info("Message: %s", message)
 
-        if message_type == "Play":
+        if message_type == 'Play':
             # A remote control play command has been sent from the server.
             self._play_(data)
 
-        elif message_type == "Playstate":
+        elif message_type == 'Playstate':
             # A remote control update playstate command has been sent from the server.
             self._playstate_(data)
 
@@ -84,16 +84,7 @@ class WebSocket_Client(threading.Thread):
             self.library_sync.triage_items("userdata", userdata_list)
 
         elif message_type == "LibraryChanged":
-            
-            librarySync = self.library_sync
-            processlist = {
-
-                'added': data['ItemsAdded'],
-                'update': data['ItemsUpdated'],
-                'remove': data['ItemsRemoved']
-            }
-            for action in processlist:
-                librarySync.triage_items(action, processlist[action])
+            self._library_changed(data)
 
         elif message_type == "GeneralCommand":
             self._general_commands(data)
@@ -118,26 +109,26 @@ class WebSocket_Client(threading.Thread):
 
         playlist_ = playlist.Playlist()
 
-        if command == "PlayNow":
+        if command == 'PlayNow':
             startat = data.get('StartPositionTicks', 0)
-            playlist_.playAll(item_ids, startat)
+            playlist_.play_all(item_ids, startat)
             dialog(type_="notification",
-                   heading=lang(29999),
+                   heading="{emby}",
                    message="%s %s" % (len(item_ids), lang(33004)),
                    icon="{emby}",
                    sound=False)
 
-        elif command == "PlayNext":
-            newplaylist = playlist_.modifyPlaylist(item_ids)
+        elif command == 'PlayNext':
+            new_playlist = playlist_.modify_playlist(item_ids)
             dialog(type_="notification",
-                   heading=lang(29999),
+                   heading="{emby}",
                    message="%s %s" % (len(item_ids), lang(33005)),
                    icon="{emby}",
                    sound=False)
             player = xbmc.Player()
             if not player.isPlaying():
                 # Only start the playlist if nothing is playing
-                player.play(newplaylist)
+                player.play(new_playlist)
 
     @classmethod
     def _playstate_(cls, data):
@@ -151,20 +142,35 @@ class WebSocket_Client(threading.Thread):
             'Unpause': player.pause,
             'Pause': player.pause,
             'NextTrack': player.playnext,
-            'PreviousTrack': player.playprevious,
-            'Seek': player.seekTime
+            'PreviousTrack': player.playprevious
         }
-        action = actions[command]
-        if command == "Seek":
-            seekto = data['SeekPositionTicks']
-            seektime = seekto / 10000000.0
-            action(seektime)
-            log.info("Seek to %s", seektime)
-        else:
-            action()
+        if command == 'Seek':
+
+            seek_to = data['SeekPositionTicks']
+            seek_time = seek_to / 10000000.0
+            player.seekTime(seek_time)
+            log.info("Seek to %s", seek_time)
+
+        elif command in actions:
+            actions[command]()
             log.info("Command: %s completed", command)
 
+        else:
+            log.info("Unknown command: %s", command)
+            return
+
         window('emby_command', value="true")
+
+    def _library_changed(self, data):
+
+        process_list = {
+
+            'added': data['ItemsAdded'],
+            'update': data['ItemsUpdated'],
+            'remove': data['ItemsRemoved']
+        }
+        for action in process_list:
+            self.library_sync.triage_items(action, process_list[action])
 
     @classmethod
     def _general_commands(cls, data):
@@ -177,42 +183,46 @@ class WebSocket_Client(threading.Thread):
 
             player = xbmc.Player()
             # These commands need to be reported back
-            if command == "Mute":
+            if command == 'Mute':
                 xbmc.executebuiltin('Mute')
-            elif command == "Unmute":
+
+            elif command == 'Unmute':
                 xbmc.executebuiltin('Mute')
-            elif command == "SetVolume":
+
+            elif command == 'SetVolume':
                 volume = arguments['Volume']
                 xbmc.executebuiltin('SetVolume(%s[,showvolumebar])' % volume)
-            elif command == "SetAudioStreamIndex":
+
+            elif command == 'SetAudioStreamIndex':
                 index = int(arguments['Index'])
                 player.setAudioStream(index - 1)
-            elif command == "SetSubtitleStreamIndex":
-                embyindex = int(arguments['Index'])
-                currentFile = player.getPlayingFile()
 
-                mapping = window('emby_%s.indexMapping' % currentFile)
+            elif command == 'SetSubtitleStreamIndex':
+                emby_index = int(arguments['Index'])
+                current_file = player.getPlayingFile()
+
+                mapping = window('emby_%s.indexMapping' % current_file)
                 if mapping:
-                    externalIndex = json.loads(mapping)
+                    external_index = json.loads(mapping)
                     # If there's external subtitles added via playbackutils
-                    for index in externalIndex:
-                        if externalIndex[index] == embyindex:
+                    for index in external_index:
+                        if external_index[index] == emby_index:
                             player.setSubtitleStream(int(index))
                             break
                     else:
                         # User selected internal subtitles
-                        external = len(externalIndex)
-                        audioTracks = len(player.getAvailableAudioStreams())
-                        player.setSubtitleStream(external + embyindex - audioTracks - 1)
+                        external = len(external_index)
+                        audio_tracks = len(player.getAvailableAudioStreams())
+                        player.setSubtitleStream(external + emby_index - audio_tracks - 1)
                 else:
                     # Emby merges audio and subtitle index together
-                    audioTracks = len(player.getAvailableAudioStreams())
-                    player.setSubtitleStream(index - audioTracks - 1)
+                    audio_tracks = len(player.getAvailableAudioStreams())
+                    player.setSubtitleStream(index - audio_tracks - 1)
 
             # Let service know
             window('emby_command', value="true")
 
-        elif command == "DisplayMessage":
+        elif command == 'DisplayMessage':
 
             header = arguments['Header']
             text = arguments['Text']
@@ -222,26 +232,28 @@ class WebSocket_Client(threading.Thread):
                    icon="{emby}",
                    time=4000)
 
-        elif command == "SendString":
+        elif command == 'SendString':
 
             params = {
+
                 'text': arguments['String'],
                 'done': False
             }
-            result = JSONRPC("Input.SendText").execute(params)
+            JSONRPC('Input.SendText').execute(params)
 
-        elif command in ("MoveUp", "MoveDown", "MoveRight", "MoveLeft"):
+        elif command in ('MoveUp', 'MoveDown', 'MoveRight', 'MoveLeft'):
             # Commands that should wake up display
             actions = {
+
                 'MoveUp': "Input.Up",
                 'MoveDown': "Input.Down",
                 'MoveRight': "Input.Right",
                 'MoveLeft': "Input.Left"
             }
-            result = JSONRPC(actions[command]).execute()
+            JSONRPC(actions[command]).execute()
 
-        elif command == "GoHome":
-            result = JSONRPC("GUI.ActivateWindow").execute({"window":"home"})
+        elif command == 'GoHome':
+            JSONRPC('GUI.ActivateWindow').execute({'window': "home"})
 
         else:
             builtin = {
@@ -262,16 +274,15 @@ class WebSocket_Client(threading.Thread):
                 'VolumeUp': 'Action(VolumeUp)',
                 'VolumeDown': 'Action(VolumeDown)',
             }
-            action = builtin.get(command)
-            if action:
-                xbmc.executebuiltin(action)
-    
+            if command in builtin:
+                xbmc.executebuiltin(builtin[command])
+
     @classmethod
     def _server_restarting(cls):
 
         if settings('supressRestartMsg') == "true":
             dialog(type_="notification",
-                   heading=lang(29999),
+                   heading="{emby}",
                    message=lang(33006),
                    icon="{emby}")
 
@@ -282,6 +293,7 @@ class WebSocket_Client(threading.Thread):
         self.doutils.postCapabilities(self.device_id)
 
     def on_error(self, ws, error):
+
         if "10061" in str(error):
             # Server is offline
             pass
@@ -291,7 +303,6 @@ class WebSocket_Client(threading.Thread):
     def run(self):
 
         # websocket.enableTrace(True)
-
         user_id = window('emby_currUser')
         server = window('emby_server%s' % user_id)
         token = window('emby_accessToken%s' % user_id)
@@ -305,9 +316,9 @@ class WebSocket_Client(threading.Thread):
         log.info("websocket url: %s", websocket_url)
 
         self._client = websocket.WebSocketApp(websocket_url,
-                                             on_message=self.on_message,
-                                             on_error=self.on_error,
-                                             on_close=self.on_close)
+                                              on_message=self.on_message,
+                                              on_error=self.on_error,
+                                              on_close=self.on_close)
         self._client.on_open = self.on_open
         log.warn("----===## Starting WebSocketClient ##===----")
 

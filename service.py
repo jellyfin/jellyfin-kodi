@@ -25,14 +25,13 @@ import clientinfo
 import initialsetup
 import kodimonitor
 import librarysync
+import loghandler
 import player
 import videonodes
 import websocket_client as wsc
 from utils import window, settings, dialog, language as lang
 
 #################################################################################################
-
-import loghandler
 
 loghandler.config()
 log = logging.getLogger("EMBY.service")
@@ -101,7 +100,7 @@ class Service(object):
 
         # Initialize important threads
         user = userclient.UserClient()
-        ws = wsc.WebSocket_Client()
+        ws = wsc.WebSocketClient()
         library = librarysync.LibrarySync()
         kplayer = player.Player()
         # Sync and progress report
@@ -168,10 +167,10 @@ class Service(object):
                             else:
                                 add = ""
                             dialog(type_="notification",
-                                   heading=lang(29999),
+                                   heading="{emby}",
                                    message=("%s %s%s!"
                                             % (lang(33000), user.get_username().decode('utf-8'),
-                                                add.decode('utf-8'))),
+                                               add.decode('utf-8'))),
                                    icon="{emby}",
                                    time=2000,
                                    sound=False)
@@ -236,7 +235,7 @@ class Service(object):
                         # device going to sleep
                         if self.websocket_running:
                             ws.stop_client()
-                            ws = wsc.WebSocket_Client()
+                            ws = wsc.WebSocketClient()
                             self.websocket_running = False
 
                         if self.library_running:
@@ -254,7 +253,7 @@ class Service(object):
                                 break
                             # Alert the user that server is online.
                             dialog(type_="notification",
-                                   heading=lang(29999),
+                                   heading="{emby}",
                                    message=lang(33003),
                                    icon="{emby}",
                                    time=2000,
@@ -292,12 +291,14 @@ class Service(object):
 
         log.warn("======== STOP %s ========", self.addon_name)
 
-# Delay option
-DELAY = int(settings('startupDelay'))
-log.warn("Delaying emby startup by: %s sec...", DELAY)
 
-if DELAY and xbmc.Monitor().waitForAbort(DELAY):
-    # Start the service
-    log.warn("Abort requested while waiting. Emby for kodi not started.")
-else:
-    Service().service_entry_point()
+if __name__ == "__main__":
+    # Delay option
+    DELAY = int(settings('startupDelay'))
+    log.warn("Delaying emby startup by: %s sec...", DELAY)
+
+    if DELAY and xbmc.Monitor().waitForAbort(DELAY):
+        # Start the service
+        log.warn("Abort requested while waiting. Emby for kodi not started.")
+    else:
+        Service().service_entry_point()
