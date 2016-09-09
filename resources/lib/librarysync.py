@@ -126,6 +126,8 @@ class LibrarySync(threading.Thread):
             return False
 
         params = {'LastUpdateDT': lastSync}
+        if settings('enableMusic') != "true":
+            params['filter'] = "music"
         url = "{server}/emby/Emby.Kodi.SyncQueue/{UserId}/GetItems?format=json"
         result = self.doUtils(url, parameters=params)
 
