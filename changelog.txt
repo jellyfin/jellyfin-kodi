@@ -1,3 +1,9 @@
+version 2.2.24
+- Filter music from fast sync response if music is disabled in the Kodi profile
+- Fix restart server behavior in the add-on to fix post capabilities
+- Fix ubuntu importerror crash
+- Update Russian translation
+
 version 2.2.23
 - NEW! Emby connect integration. Find out more on the emby.media forums
 - Sync season name for Jarvis and higher
