@@ -81,7 +81,8 @@ class InitialSetup(object):
             if current_server is not None:
                 server = self.connectmanager.get_server(current_server)
                 log.info("Detected: %s", server)
-                settings('ServerId', value=server['Servers'][0]['Id'])
+                server_id = server['Servers'][0]['Id']
+                settings('serverId', value=server_id)
                 self.user_client.get_userid()
                 self.user_client.get_token()
                 log.info("server migration completed")
@@ -94,6 +95,7 @@ class InitialSetup(object):
                     server_address = self.connectmanager.get_address(server)
                     self._set_server(server_address, server)
                     #self._set_user(server['UserId'], server['AccessToken'])
+                    log.info("Found server!")
                     return True
 
         return False
