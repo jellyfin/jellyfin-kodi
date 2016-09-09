@@ -1,4 +1,4 @@
-version 2.2.22
+version 2.2.23
 - NEW! Emby connect integration. Find out more on the emby.media forums
 - Sync season name for Jarvis and higher
 - Expand video quality selection (25/30/35 Mpbs)
