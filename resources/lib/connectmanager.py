@@ -177,3 +177,7 @@ class ConnectManager(object):
             return user
         else:
             raise RuntimeError("User is not authenticated")
+
+    def update_token(self, servers, server):
+        self._connect.credentialProvider.addOrUpdateServer(servers, server)
+        self.update_state()

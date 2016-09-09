@@ -645,26 +645,6 @@ class ConnectionManager(object):
         
         return result
 
-    def onAuthenticated(self, result, options={}):
-
-        credentials = self.credentialProvider.getCredentials()
-        for s in credentials['Servers']:
-            if s['Id'] == result['ServerId']:
-                server = s
-                break
-        else: # Server not found?
-            return
-
-        if options.get('updateDateLastAccessed') is not False:
-            server['DateLastAccessed'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
-
-        server['UserId'] = result['User']['Id']
-        server['AccessToken'] = result['AccessToken']
-
-        self.credentialProvider.addOrUpdateServer(credentials['Servers'], server)
-        self._saveUserInfoIntoCredentials(server, result['User'])
-        self.credentialProvider.getCredentials(credentials)
-
     def _onConnectUserSignIn(self, user):
 
         self.connectUser = user

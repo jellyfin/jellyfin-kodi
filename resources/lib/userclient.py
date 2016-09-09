@@ -39,6 +39,7 @@ class UserClient(threading.Thread):
         self.doutils = downloadutils.DownloadUtils()
         self.download = self.doutils.downloadUrl
         self.emby = embyserver.Read_EmbyServer()
+        self.connectmanager = connectmanager.ConnectManager()
 
         threading.Thread.__init__(self)
 
@@ -180,7 +181,7 @@ class UserClient(threading.Thread):
                 user_found = user
                 break
         try:
-            user = connectmanager.ConnectManager().login_manual(server, user_found)
+            user = self.connectmanager.login_manual(server, user_found)
         except RuntimeError:
             window('emby_serverStatus', value="stop")
             self._auth = False
@@ -245,6 +246,14 @@ class UserClient(threading.Thread):
 
         self._user = None
         self.auth = None
+
+        current_state = self.connectmanager.get_state()
+        for server in current_state['Servers']:
+
+            if server['Id'] == settings('serverId'):
+                # Update token
+                server['AccessToken'] = None
+                self.connectmanager.update_token(current_state['Servers'], server)
 
     def run(self):
 

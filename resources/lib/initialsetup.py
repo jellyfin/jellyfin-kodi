@@ -91,10 +91,15 @@ class InitialSetup(object):
         if settings('server'):
             current_state = self.connectmanager.get_state()
             for server in current_state['Servers']:
+
                 if server['Id'] == settings('serverId'):
+                    # Update token
+                    server['UserId'] = settings('userId') or None
+                    server['AccessToken'] = settings('token') or None
+                    self.connectmanager.update_token(current_state['Servers'], server)
+
                     server_address = self.connectmanager.get_address(server)
                     self._set_server(server_address, server)
-                    #self._set_user(server['UserId'], server['AccessToken'])
                     log.info("Found server!")
                     return True
 
