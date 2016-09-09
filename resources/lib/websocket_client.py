@@ -66,7 +66,8 @@ class WebSocketClient(threading.Thread):
         message_type = result['MessageType']
         data = result['Data']
 
-        if message_type not in ('NotificationAdded', 'SessionEnded'):
+        if message_type not in ('NotificationAdded', 'SessionEnded', 'RestartRequired',
+                                'PackageInstalling'):
             # Mute certain events
             log.info("Message: %s", message)
 
@@ -285,6 +286,7 @@ class WebSocketClient(threading.Thread):
                    heading="{emby}",
                    message=lang(33006),
                    icon="{emby}")
+        window('emby_online', value="false")
 
     def on_close(self, ws):
         log.debug("closed")
