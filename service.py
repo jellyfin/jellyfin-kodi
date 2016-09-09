@@ -163,7 +163,7 @@ class Service(object):
                             # Get additional users
                             additionalUsers = settings('additionalUsers')
                             if additionalUsers:
-                                add = ", %s" % ", ".join(additionalUsers)
+                                add = ", %s" % ", ".join(additionalUsers.split(','))
                             else:
                                 add = ""
                             dialog(type_="notification",
