@@ -1,3 +1,12 @@
+version 2.2.22
+- NEW! Emby connect integration. Find out more on the emby.media forums
+- Sync season name for Jarvis and higher
+- Expand video quality selection (25/30/35 Mpbs)
+- Move deviceId to a permanent location to outlive reinstalls of the add-on
+- Fix virtual episodes crashing sync
+- Fix plugin listing such as home videos not loading
+- Fix platform detection
+
 version 2.2.21
 - Fix new external subtitles from preventing playback in the event the subtitles had no language tag
 
