@@ -134,6 +134,12 @@ class ConnectManager(object):
         server_address = connectionmanager.getServerAddress(server, server['LastConnectionMode'])
         users = self.emby.getUsers(server_address)
 
+        if not users:
+            try:
+                return self.login_manual(server_address)
+            except RuntimeError:
+                raise RuntimeError("No user selected")
+
         dialog = UsersConnect("script-emby-connect-users.xml", *XML_PATH)
         dialog.set_server(server_address)
         dialog.set_users(users)
