@@ -142,7 +142,7 @@ class Artwork(object):
         # ask to rest all existing or not
         if dialog(type_="yesno", heading="{emby}", line1=lang(33044)):
             log.info("Resetting all cache data first")
-            self._delete_cache()
+            self.delete_cache()
 
         # Cache all entries in video DB
         self._cache_all_video_entries(pdialog)
@@ -207,7 +207,7 @@ class Artwork(object):
             count += 1
 
     @classmethod
-    def _delete_cache(cls):
+    def delete_cache(cls):
         # Remove all existing textures first
         path = xbmc.translatePath('special://thumbnails/').decode('utf-8')
         if xbmcvfs.exists(path):
@@ -223,7 +223,7 @@ class Artwork(object):
                         filename = os.path.join(path.encode('utf-8') + directory, file_)
 
                     xbmcvfs.delete(filename)
-                    log.info("deleted: %s", filename)
+                    log.debug("deleted: %s", filename)
 
         # remove all existing data from texture DB
         conn = kodiSQL('texture')

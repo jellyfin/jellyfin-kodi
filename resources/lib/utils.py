@@ -396,32 +396,11 @@ def reset():
     cursor.close()
 
     # Offer to wipe cached thumbnails
-    resp = dialog.yesno(language(29999), language(33086))
-    if resp:
-        log.warn("Resetting all cached artwork.")
+    if dialog.yesno(language(29999), language(33086)):
+        log.warn("Resetting all cached artwork")
         # Remove all existing textures first
-        path = xbmc.translatePath("special://thumbnails/").decode('utf-8')
-        if xbmcvfs.exists(path):
-            allDirs, allFiles = xbmcvfs.listdir(path)
-            for dir in allDirs:
-                allDirs, allFiles = xbmcvfs.listdir(path+dir)
-                for file in allFiles:
-                    if os.path.supports_unicode_filenames:
-                        xbmcvfs.delete(os.path.join(path+dir.decode('utf-8'),file.decode('utf-8')))
-                    else:
-                        xbmcvfs.delete(os.path.join(path.encode('utf-8')+dir,file))
-
-        # remove all existing data from texture DB
-        connection = kodiSQL('texture')
-        cursor = connection.cursor()
-        cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
-        rows = cursor.fetchall()
-        for row in rows:
-            tableName = row[0]
-            if(tableName != "version"):
-                cursor.execute("DELETE FROM " + tableName)
-        connection.commit()
-        cursor.close()
+        import artwork
+        artwork.Artwork().delete_cache()
 
     # reset the install run flag
     settings('SyncInstallRunDone', value="false")
