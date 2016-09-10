@@ -1,3 +1,6 @@
+version 2.2.28
+- Fix user selection when all users are hidden
+
 version 2.2.24
 - Filter music from fast sync response if music is disabled in the Kodi profile
 - Fix restart server behavior in the add-on to fix post capabilities
