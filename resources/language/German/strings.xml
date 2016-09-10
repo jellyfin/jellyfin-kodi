@@ -74,7 +74,7 @@
     <!-- Verified -->
     <string id="30135">Fehler</string>
     <string id="30138">Suche</string>
-    <string id="30157">Deaktiviere erweiterte Bilder (z.B. CoverArt)</string>
+    <string id="30157">Aktiviere erweiterte Bilder (z.B. CoverArt)</string>
     <!-- Verified -->
     <string id="30158">Metadaten</string>
     <string id="30159">Artwork</string>
@@ -156,7 +156,7 @@
     <string id="30243">Aktiviere HTTPS</string>
     <!-- Verified -->
     <string id="30245">Erzwinge Transkodierung</string>
-    <string id="30249">Unterdrücke Server-Verbindungsmeldungen beim Starten</string>
+    <string id="30249">Aktiviere Server-Verbindungsmeldungen beim Starten</string>
     <!-- Verified -->
     <string id="30251">Kürzliche hinzugefügte Heimvideos</string>
     <!-- Verified -->
