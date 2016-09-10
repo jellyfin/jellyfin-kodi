@@ -432,7 +432,7 @@ def reset():
         import connectmanager
         # Delete the settings
         addon = xbmcaddon.Addon()
-        addondir = xbmc.translatePath(addon.getAddonInfo('profile')).decode('utf-8')
+        addondir = xbmc.translatePath("special://profile/addon_data/").decode('utf-8')
         dataPath = "%ssettings.xml" % addondir
         xbmcvfs.delete(dataPath)
         log.info("Deleting: settings.xml")

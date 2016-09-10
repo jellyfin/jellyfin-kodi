@@ -48,7 +48,7 @@ class ConnectManager(object):
                                                                 deviceName=device_name,
                                                                 deviceId=device_id)
             self._connect.setFilePath(xbmc.translatePath(
-                                      addon.getAddonInfo('profile')).decode('utf-8'))
+                                      "special://profile/addon_data/").decode('utf-8'))
             self.state = self._connect.connect()
             log.info("Started with: %s", self.state)
 
