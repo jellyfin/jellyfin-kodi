@@ -411,10 +411,10 @@ def reset():
         import connectmanager
         # Delete the settings
         addon = xbmcaddon.Addon()
-        addondir = xbmc.translatePath("special://profile/addon_data/").decode('utf-8')
+        addondir = xbmc.translatePath(
+                   "special://profile/addon_data/plugin.video.emby/").decode('utf-8')
         dataPath = "%ssettings.xml" % addondir
         xbmcvfs.delete(dataPath)
-        log.info("Deleting: settings.xml")
         connectmanager.ConnectManager().clear_data()
 
     dialog.ok(heading=language(29999), line1=language(33088))
