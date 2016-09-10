@@ -10,11 +10,7 @@ import xbmcaddon
 import clientinfo
 import read_embyserver as embyserver
 import connect.connectionmanager as connectionmanager
-from dialog.serverconnect import ServerConnect
-from dialog.usersconnect import UsersConnect
-from dialog.loginconnect import LoginConnect
-from dialog.loginmanual import LoginManual
-from dialog.servermanual import ServerManual
+from dialogs import ServerConnect, UsersConnect, LoginConnect, LoginManual, ServerManual
 
 ##################################################################################################
 
