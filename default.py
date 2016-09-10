@@ -70,7 +70,7 @@ class Main(object):
 
             elif mode == 'texturecache':
                 import artwork
-                artwork.Artwork().fullTextureCacheSync()
+                artwork.Artwork().texture_cache_sync()
             else:
                 entrypoint.doMainListing()
 
@@ -136,7 +136,7 @@ class Main(object):
             dialog(type_="ok",
                    heading="{emby}",
                    line1=lang(33034))
-            log.warn("Not connected to the emby server.")
+            log.warn("Not connected to the emby server")
 
         elif window('emby_dbScan') != "true":
             import librarysync
@@ -149,7 +149,7 @@ class Main(object):
             else:
                 library_sync.fullSync(repair=True)
         else:
-            log.warn("Database scan is already running.")
+            log.warn("Database scan is already running")
 
 
 if __name__ == "__main__":

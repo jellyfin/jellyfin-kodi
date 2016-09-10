@@ -74,7 +74,7 @@ def getAdditionalSongTags(embyid, emby_rating, API, kodicursor, emby_db, enablei
     emby = embyserver.Read_EmbyServer()
 
     previous_values = None
-    filename = API.getFilePath()
+    filename = API.get_file_path()
     rating = 0
     emby_rating = int(round(emby_rating, 0))
     

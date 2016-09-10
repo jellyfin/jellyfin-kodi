@@ -14,45 +14,42 @@ log = logging.getLogger("EMBY."+__name__)
 ##################################################################################################
 
 
-class API():
+class API(object):
 
     def __init__(self, item):
-        
         # item is the api response
         self.item = item
 
-    def getUserData(self):
+    def get_userdata(self):
         # Default
         favorite = False
         likes = None
         playcount = None
         played = False
-        lastPlayedDate = None
+        last_played = None
         resume = 0
-        userrating = 0
+        user_rating = 0
 
         try:
             userdata = self.item['UserData']
-
         except KeyError: # No userdata found.
             pass
-
         else:
             favorite = userdata['IsFavorite']
             likes = userdata.get('Likes')
             # Userrating is based on likes and favourite
             if favorite:
-                userrating = 5
+                user_rating = 5
             elif likes:
-                userrating = 3
-            elif likes == False:
-                userrating = 0
+                user_rating = 3
+            elif likes is False:
+                user_rating = 0
             else:
-                userrating = 1
+                user_rating = 1
 
-            lastPlayedDate = userdata.get('LastPlayedDate')
-            if lastPlayedDate:
-                lastPlayedDate = lastPlayedDate.split('.')[0].replace('T', " ")
+            last_played = userdata.get('LastPlayedDate')
+            if last_played:
+                last_played = last_played.split('.')[0].replace('T', " ")
 
             if userdata['Played']:
                 # Playcount is tied to the watch status
@@ -61,12 +58,12 @@ class API():
                 if playcount == 0:
                     playcount = 1
 
-                if lastPlayedDate is None:
-                    lastPlayedDate = self.getDateCreated()
+                if last_played is None:
+                    last_played = self.get_date_created()
 
-            playbackPosition = userdata.get('PlaybackPositionTicks')
-            if playbackPosition:
-                resume = playbackPosition / 10000000.0
+            playback_position = userdata.get('PlaybackPositionTicks')
+            if playback_position:
+                resume = playback_position / 10000000.0
 
         return {
 
@@ -74,12 +71,12 @@ class API():
             'Likes': likes,
             'PlayCount': playcount,
             'Played': played,
-            'LastPlayedDate': lastPlayedDate,
+            'LastPlayedDate': last_played,
             'Resume': resume,
-            'UserRating': userrating
+            'UserRating': user_rating
         }
 
-    def getPeople(self):
+    def get_people(self):
         # Process People
         director = []
         writer = []
@@ -87,21 +84,19 @@ class API():
 
         try:
             people = self.item['People']
-
         except KeyError:
             pass
-
         else:
             for person in people:
 
-                type = person['Type']
+                type_ = person['Type']
                 name = person['Name']
 
-                if "Director" in type:
+                if type_ == 'Director':
                     director.append(name)
-                elif "Actor" in type:
+                elif type_ == 'Actor':
                     cast.append(name)
-                elif type in ("Writing", "Writer"):
+                elif type_ in ('Writing', 'Writer'):
                     writer.append(name)
 
         return {
@@ -111,101 +106,115 @@ class API():
             'Cast': cast
         }
 
-    def getMediaStreams(self):
-        videotracks = []
-        audiotracks = []
-        subtitlelanguages = []
+    def get_media_streams(self):
+
+        video_tracks = []
+        audio_tracks = []
+        subtitle_languages = []
 
         try:
             media_streams = self.item['MediaSources'][0]['MediaStreams']
 
         except KeyError:
-            if not self.item.get("MediaStreams"): return None
+            if not self.item.get("MediaStreams"):
+                return None
             media_streams = self.item['MediaStreams']
 
         for media_stream in media_streams:
             # Sort through Video, Audio, Subtitle
             stream_type = media_stream['Type']
-            codec = media_stream.get('Codec', "").lower()
-            profile = media_stream.get('Profile', "").lower()
 
             if stream_type == "Video":
-                # Height, Width, Codec, AspectRatio, AspectFloat, 3D
-                track = {
-
-                    'codec': codec,
-                    'height': media_stream.get('Height'),
-                    'width': media_stream.get('Width'),
-                    'video3DFormat': self.item.get('Video3DFormat'),
-                    'aspect': 1.85
-                }
-
-                try:
-                    container = self.item['MediaSources'][0]['Container'].lower()
-                except:
-                    container = ""
-
-                # Sort codec vs container/profile
-                if "msmpeg4" in codec:
-                    track['codec'] = "divx"
-                elif "mpeg4" in codec:
-                    if "simple profile" in profile or not profile:
-                        track['codec'] = "xvid"
-                elif "h264" in codec:
-                    if container in ("mp4", "mov", "m4v"):
-                        track['codec'] = "avc1"
-
-                # Aspect ratio
-                if self.item.get('AspectRatio'):
-                    # Metadata AR
-                    aspect = self.item['AspectRatio']
-                else: # File AR
-                    aspect = media_stream.get('AspectRatio', "0")
-
-                try:
-                    aspectwidth, aspectheight = aspect.split(':')
-                    track['aspect'] = round(float(aspectwidth) / float(aspectheight), 6)
-
-                except (ValueError, ZeroDivisionError):
-                    width = track.get('width')
-                    height = track.get('height')
-
-                    if width and height:
-                        track['aspect'] = round(float(width / height), 6)
-                    else:
-                        track['aspect'] = 1.85
-
-                if self.item.get("RunTimeTicks"):
-                    track['duration'] = self.item.get("RunTimeTicks") / 10000000.0
-
-                videotracks.append(track)
+                self._video_stream(video_tracks, media_stream)
 
             elif stream_type == "Audio":
-                # Codec, Channels, language
-                track = {
-
-                    'codec': codec,
-                    'channels': media_stream.get('Channels'),
-                    'language': media_stream.get('Language')
-                }
-
-                if "dca" in codec and "dts-hd ma" in profile:
-                    track['codec'] = "dtshd_ma"
-
-                audiotracks.append(track)
+                self._audio_stream(audio_tracks, media_stream)
 
             elif stream_type == "Subtitle":
-                # Language
-                subtitlelanguages.append(media_stream.get('Language', "Unknown"))
+                subtitle_languages.append(media_stream.get('Language', "Unknown"))
 
         return {
 
-            'video': videotracks,
-            'audio': audiotracks,
-            'subtitle': subtitlelanguages
+            'video': video_tracks,
+            'audio': audio_tracks,
+            'subtitle': subtitle_languages
         }
 
-    def getRuntime(self):
+    def _video_stream(self, video_tracks, stream):
+
+        codec = stream.get('Codec', "").lower()
+        profile = stream.get('Profile', "").lower()
+
+        # Height, Width, Codec, AspectRatio, AspectFloat, 3D
+        track = {
+
+            'codec': codec,
+            'height': stream.get('Height'),
+            'width': stream.get('Width'),
+            'video3DFormat': self.item.get('Video3DFormat'),
+            'aspect': 1.85
+        }
+
+        try:
+            container = self.item['MediaSources'][0]['Container'].lower()
+        except Exception:
+            container = ""
+
+        # Sort codec vs container/profile
+        if "msmpeg4" in codec:
+            track['codec'] = "divx"
+        elif "mpeg4" in codec:
+            if "simple profile" in profile or not profile:
+                track['codec'] = "xvid"
+        elif "h264" in codec:
+            if container in ("mp4", "mov", "m4v"):
+                track['codec'] = "avc1"
+
+        # Aspect ratio
+        if 'AspectRatio' in self.item:
+            # Metadata AR
+            aspect = self.item['AspectRatio']
+        else: # File AR
+            aspect = stream.get('AspectRatio', "0")
+
+        try:
+            aspect_width, aspect_height = aspect.split(':')
+            track['aspect'] = round(float(aspect_width) / float(aspect_height), 6)
+
+        except (ValueError, ZeroDivisionError):
+
+            width = track.get('width')
+            height = track.get('height')
+
+            if width and height:
+                track['aspect'] = round(float(width / height), 6)
+            else:
+                track['aspect'] = 1.85
+
+        if 'RunTimeTicks' in self.item:
+            track['duration'] = self.get_runtime()
+
+        video_tracks.append(track)
+
+    def _audio_stream(self, audio_tracks, stream):
+
+        codec = stream.get('Codec', "").lower()
+        profile = stream.get('Profile', "").lower()
+        # Codec, Channels, language
+        track = {
+
+            'codec': codec,
+            'channels': stream.get('Channels'),
+            'language': stream.get('Language')
+        }
+
+        if "dca" in codec and "dts-hd ma" in profile:
+            track['codec'] = "dtshd_ma"
+
+        audio_tracks.append(track)
+
+    def get_runtime(self):
+
         try:
             runtime = self.item['RunTimeTicks'] / 10000000.0
 
@@ -214,7 +223,8 @@ class API():
 
         return runtime
 
-    def adjustResume(self, resume_seconds):
+    @classmethod
+    def adjust_resume(cls, resume_seconds):
 
         resume = 0
         if resume_seconds:
@@ -226,24 +236,23 @@ class API():
 
         return resume
 
-    def getStudios(self):
+    def get_studios(self):
         # Process Studios
         studios = []
-
         try:
             studio = self.item['SeriesStudio']
-            studios.append(self.verifyStudio(studio))
+            studios.append(self.verify_studio(studio))
 
         except KeyError:
-            studioList = self.item['Studios']
-            for studio in studioList:
+            for studio in self.item['Studios']:
 
                 name = studio['Name']
-                studios.append(self.verifyStudio(name))
+                studios.append(self.verify_studio(name))
 
         return studios
 
-    def verifyStudio(self, studioName):
+    @classmethod
+    def verify_studio(cls, studio_name):
         # Convert studio for Kodi to properly detect them
         studios = {
 
@@ -254,9 +263,9 @@ class API():
             'wgn america': "WGN"
         }
 
-        return studios.get(studioName.lower(), studioName)
+        return studios.get(studio_name.lower(), studio_name)
 
-    def getChecksum(self):
+    def get_checksum(self):
         # Use the etags checksum and userdata
         userdata = self.item['UserData']
 
@@ -265,7 +274,7 @@ class API():
             self.item['Etag'],
             userdata['Played'],
             userdata['IsFavorite'],
-            userdata.get('Likes',''),
+            userdata.get('Likes', ""),
             userdata['PlaybackPositionTicks'],
             userdata.get('UnplayedItemCount', ""),
             userdata.get('LastPlayedDate', "")
@@ -273,7 +282,7 @@ class API():
 
         return checksum
 
-    def getGenres(self):
+    def get_genres(self):
         all_genres = ""
         genres = self.item.get('Genres', self.item.get('SeriesGenres'))
 
@@ -282,17 +291,17 @@ class API():
 
         return all_genres
 
-    def getDateCreated(self):
+    def get_date_created(self):
 
         try:
-            dateadded = self.item['DateCreated']
-            dateadded = dateadded.split('.')[0].replace('T', " ")
+            date_added = self.item['DateCreated']
+            date_added = date_added.split('.')[0].replace('T', " ")
         except KeyError:
-            dateadded = None
+            date_added = None
 
-        return dateadded
+        return date_added
 
-    def getPremiereDate(self):
+    def get_premiere_date(self):
 
         try:
             premiere = self.item['PremiereDate']
@@ -302,7 +311,7 @@ class API():
 
         return premiere
 
-    def getOverview(self):
+    def get_overview(self):
 
         try:
             overview = self.item['Overview']
@@ -314,7 +323,7 @@ class API():
 
         return overview
 
-    def getTagline(self):
+    def get_tagline(self):
 
         try:
             tagline = self.item['Taglines'][0]
@@ -323,16 +332,16 @@ class API():
 
         return tagline
 
-    def getProvider(self, providername):
+    def get_provider(self, name):
 
         try:
-            provider = self.item['ProviderIds'][providername]
+            provider = self.item['ProviderIds'][name]
         except KeyError:
             provider = None
 
         return provider
 
-    def getMpaa(self):
+    def get_mpaa(self):
         # Convert more complex cases
         mpaa = self.item.get('OfficialRating', "")
 
@@ -342,7 +351,7 @@ class API():
 
         return mpaa
 
-    def getCountry(self):
+    def get_country(self):
 
         try:
             country = self.item['ProductionLocations'][0]
@@ -351,7 +360,7 @@ class API():
 
         return country
 
-    def getFilePath(self):
+    def get_file_path(self):
 
         try:
             filepath = self.item['Path']

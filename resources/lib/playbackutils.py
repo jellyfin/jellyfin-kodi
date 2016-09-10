@@ -82,8 +82,8 @@ class PlaybackUtils():
 
         ############### RESUME POINT ################
         
-        userdata = self.API.getUserData()
-        seektime = self.API.adjustResume(userdata['Resume'])
+        userdata = self.API.get_userdata()
+        seektime = self.API.adjust_resume(userdata['Resume'])
 
         # We need to ensure we add the intro and additional parts only once.
         # Otherwise we get a loop.
@@ -309,7 +309,7 @@ class PlaybackUtils():
 
     def setArtwork(self, listItem):
         # Set up item and item info
-        allartwork = self.artwork.getAllArtwork(self.item, parentInfo=True)
+        allartwork = self.artwork.get_all_artwork(self.item, parent_info=True)
         # Set artwork for listitem
         arttypes = {
 
@@ -346,20 +346,20 @@ class PlaybackUtils():
 
     def setListItem(self, listItem):
 
-        people = self.API.getPeople()
-        studios = self.API.getStudios()
+        people = self.API.get_people()
+        studios = self.API.get_studios()
 
         metadata = {
             
             'title': self.item.get('Name', "Missing name"),
             'year': self.item.get('ProductionYear'),
-            'plot': self.API.getOverview(),
+            'plot': self.API.get_overview(),
             'director': people.get('Director'),
             'writer': people.get('Writer'),
-            'mpaa': self.API.getMpaa(),
+            'mpaa': self.API.get_mpaa(),
             'genre': " / ".join(self.item['Genres']),
             'studio': " / ".join(studios),
-            'aired': self.API.getPremiereDate(),
+            'aired': self.API.get_premiere_date(),
             'rating': self.item.get('CommunityRating'),
             'votes': self.item.get('VoteCount')
         }

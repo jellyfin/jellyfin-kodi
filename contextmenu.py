@@ -109,7 +109,7 @@ class ContextMenu(object):
 
     def _select_menu(self):
         # Display select dialog
-        userdata = self.api.getUserData()
+        userdata = self.api.get_userdata()
         options = []
 
         if userdata['Favorite']:
@@ -178,7 +178,7 @@ class ContextMenu(object):
                     new_value = 5
 
                 if settings('enableUpdateSongRating') == "true":
-                    musicutils.updateRatingToFile(new_value, self.api.getFilePath())
+                    musicutils.updateRatingToFile(new_value, self.api.get_file_path())
 
                 query = "UPDATE song SET rating = ? WHERE idSong = ?"
                 cursor.execute(query, (new_value, self.kodi_id,))

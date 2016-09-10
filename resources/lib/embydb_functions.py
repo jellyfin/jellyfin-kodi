@@ -191,7 +191,7 @@ class Embydb_Functions():
         self.embycursor.execute(query, (parentid, mediatype,))
         return self.embycursor.fetchall()
 
-    def getChecksum(self, mediatype):
+    def get_checksum(self, mediatype):
 
         query = ' '.join((
 

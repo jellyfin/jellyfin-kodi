@@ -1049,12 +1049,12 @@ class ManualSync(LibrarySync):
 
         # Pull the list of movies and boxsets in Kodi
         try:
-            all_kodimovies = dict(emby_db.getChecksum('Movie'))
+            all_kodimovies = dict(emby_db.get_checksum('Movie'))
         except ValueError:
             all_kodimovies = {}
 
         try:
-            all_kodisets = dict(emby_db.getChecksum('BoxSet'))
+            all_kodisets = dict(emby_db.get_checksum('BoxSet'))
         except ValueError:
             all_kodisets = {}
 
@@ -1088,7 +1088,7 @@ class ManualSync(LibrarySync):
                 all_embymoviesIds.add(itemid)
 
 
-                if all_kodimovies.get(itemid) != API.getChecksum():
+                if all_kodimovies.get(itemid) != API.get_checksum():
                     # Only update if movie is not in Kodi or checksum is different
                     updatelist.append(itemid)
 
@@ -1179,7 +1179,7 @@ class ManualSync(LibrarySync):
 
         # Pull the list of musicvideos in Kodi
         try:
-            all_kodimvideos = dict(emby_db.getChecksum('MusicVideo'))
+            all_kodimvideos = dict(emby_db.get_checksum('MusicVideo'))
         except ValueError:
             all_kodimvideos = {}
 
@@ -1211,7 +1211,7 @@ class ManualSync(LibrarySync):
                 all_embymvideosIds.add(itemid)
 
 
-                if all_kodimvideos.get(itemid) != API.getChecksum():
+                if all_kodimvideos.get(itemid) != API.get_checksum():
                     # Only update if musicvideo is not in Kodi or checksum is different
                     updatelist.append(itemid)
 
@@ -1258,12 +1258,12 @@ class ManualSync(LibrarySync):
 
         # Pull the list of tvshows and episodes in Kodi
         try:
-            all_koditvshows = dict(emby_db.getChecksum('Series'))
+            all_koditvshows = dict(emby_db.get_checksum('Series'))
         except ValueError:
             all_koditvshows = {}
 
         try:
-            all_kodiepisodes = dict(emby_db.getChecksum('Episode'))
+            all_kodiepisodes = dict(emby_db.get_checksum('Episode'))
         except ValueError:
             all_kodiepisodes = {}
 
@@ -1297,7 +1297,7 @@ class ManualSync(LibrarySync):
                 all_embytvshowsIds.add(itemid)
 
 
-                if all_koditvshows.get(itemid) != API.getChecksum():
+                if all_koditvshows.get(itemid) != API.get_checksum():
                     # Only update if movie is not in Kodi or checksum is different
                     updatelist.append(itemid)
 
@@ -1341,7 +1341,7 @@ class ManualSync(LibrarySync):
                     itemid = embyepisode['Id']
                     all_embyepisodesIds.add(itemid)
 
-                    if all_kodiepisodes.get(itemid) != API.getChecksum():
+                    if all_kodiepisodes.get(itemid) != API.get_checksum():
                         # Only update if movie is not in Kodi or checksum is different
                         updatelist.append(itemid)
 
@@ -1388,17 +1388,17 @@ class ManualSync(LibrarySync):
 
         # Pull the list of artists, albums, songs
         try:
-            all_kodiartists = dict(emby_db.getChecksum('MusicArtist'))
+            all_kodiartists = dict(emby_db.get_checksum('MusicArtist'))
         except ValueError:
             all_kodiartists = {}
 
         try:
-            all_kodialbums = dict(emby_db.getChecksum('MusicAlbum'))
+            all_kodialbums = dict(emby_db.get_checksum('MusicAlbum'))
         except ValueError:
             all_kodialbums = {}
 
         try:
-            all_kodisongs = dict(emby_db.getChecksum('Audio'))
+            all_kodisongs = dict(emby_db.get_checksum('Audio'))
         except ValueError:
             all_kodisongs = {}
 
@@ -1429,17 +1429,17 @@ class ManualSync(LibrarySync):
                 itemid = embyitem['Id']
                 if data_type == "artists":
                     all_embyartistsIds.add(itemid)
-                    if all_kodiartists.get(itemid) != API.getChecksum():
+                    if all_kodiartists.get(itemid) != API.get_checksum():
                         # Only update if artist is not in Kodi or checksum is different
                         updatelist.append(itemid)
                 elif data_type == "albums":
                     all_embyalbumsIds.add(itemid)
-                    if all_kodialbums.get(itemid) != API.getChecksum():
+                    if all_kodialbums.get(itemid) != API.get_checksum():
                         # Only update if album is not in Kodi or checksum is different
                         updatelist.append(itemid)
                 else:
                     all_embysongsIds.add(itemid)
-                    if all_kodisongs.get(itemid) != API.getChecksum():
+                    if all_kodisongs.get(itemid) != API.get_checksum():
                         # Only update if songs is not in Kodi or checksum is different
                         updatelist.append(itemid)
             log.info("%s to update: %s" % (data_type, updatelist))
