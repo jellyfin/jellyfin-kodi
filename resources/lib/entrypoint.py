@@ -26,7 +26,7 @@ import playlist
 import playbackutils as pbutils
 import playutils
 import api
-from utils import window, settings, language as lang
+from utils import window, settings, dialog, language as lang
 
 #################################################################################################
 
@@ -126,12 +126,12 @@ def emby_connect():
         user = connectUser['User']
         token = connectUser['AccessToken']
         username = user['Name']
-        icon = user.get('ImageUrl') or "special://home/addons/plugin.video.emby/icon.png"
-        xbmcgui.Dialog().notification(heading=lang(29999),
-                                      message="%s %s" % (lang(33000), username.decode('utf-8')),
-                                      icon=icon,
-                                      time=1500,
-                                      sound=False)
+        dialog(type_="notification",
+               heading="{emby}",
+               message="%s %s" % (lang(33000), username.decode('utf-8')),
+               icon=user.get('ImageUrl') or "{emby}",
+               time=2000,
+               sound=False)
         
         settings('connectUsername', value=username)
 
