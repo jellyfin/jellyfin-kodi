@@ -64,7 +64,8 @@ class ConnectManager(object):
         return self.state
 
     def get_server(self, server):
-        return self._connect.connectToAddress(server)
+        self.state = self._connect.connectToAddress(server)
+        return self.state
 
     @classmethod
     def get_address(cls, server):
