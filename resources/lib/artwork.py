@@ -443,7 +443,7 @@ class Artwork(object):
             log.info("Database is locked. Skip deletion process.")
 
         else: # Delete thumbnail as well as the entry
-            thumbnails = xbmc.translatePath("special://thumbnails/%s", cached_url).decode('utf-8')
+            thumbnails = xbmc.translatePath("special://thumbnails/%s" % cached_url).decode('utf-8')
             log.info("Deleting cached thumbnail: %s", thumbnails)
             xbmcvfs.delete(thumbnails)
 
