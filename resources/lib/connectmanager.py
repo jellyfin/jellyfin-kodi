@@ -6,6 +6,7 @@ import logging
 
 import xbmc
 import xbmcaddon
+import xbmcvfs
 
 import clientinfo
 import read_embyserver as embyserver
@@ -43,8 +44,13 @@ class ConnectManager(object):
                                                                 appVersion=version,
                                                                 deviceName=device_name,
                                                                 deviceId=device_id)
-            self._connect.setFilePath(xbmc.translatePath(
-                                      "special://profile/addon_data/plugin.video.emby/").decode('utf-8'))
+            path = xbmc.translatePath(
+                   "special://profile/addon_data/plugin.video.emby/").decode('utf-8')
+
+            if not xbmcvfs.exists(path):
+                xbmcvfs.mkdirs(path)
+
+            self._connect.setFilePath(path)
             self.state = self._connect.connect()
             log.info("Started with: %s", self.state)
 
