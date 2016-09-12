@@ -4,6 +4,7 @@
 
 import logging
 
+import xbmc
 import xbmcgui
 
 ##################################################################################################
@@ -30,6 +31,7 @@ class UsersConnect(xbmcgui.WindowXMLDialog):
 
     def __init__(self, *args, **kwargs):
 
+        self.kodi_version = int(xbmc.getInfoLabel('System.BuildVersion')[:2])
         xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)
 
     def set_server(self, server):
@@ -58,12 +60,14 @@ class UsersConnect(xbmcgui.WindowXMLDialog):
 
         self.setFocus(self.list_)
 
-    @classmethod
-    def _add_listitem(cls, label, user_id, user_image):
+    def _add_listitem(self, label, user_id, user_image):
 
         item = xbmcgui.ListItem(label)
         item.setProperty('id', user_id)
-        item.setArt({'Icon': user_image})
+        if self.kodi_version > 15:
+            item.setArt({'Icon': user_image})
+        else:
+            item.setIconImage(user_image)
 
         return item
 
