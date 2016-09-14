@@ -567,6 +567,7 @@ class LibrarySync(threading.Thread):
         ##### PROCESS MOVIES #####
         for view in views:
 
+            log.info("Processing: %s", view)
             if self.shouldStop():
                 return False
 
