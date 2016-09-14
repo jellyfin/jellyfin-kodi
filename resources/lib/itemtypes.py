@@ -1052,6 +1052,28 @@ class TVShows(Items):
         studios = API.get_studios()
         studio = " / ".join(studios)
 
+        # Verify series pooling
+        if tvdb:
+            query = "SELECT idShow FROM tvshow WHERE C12 = ?"
+            kodicursor.execute(query, (tvdb,))
+            try:
+                showid = kodicursor.fetchone()[0]
+            except TypeError:
+                pass
+            else:
+                emby_other = emby_db.getItem_byKodiId(showid, "tvshow")
+                if viewid == emby_other[2]:
+                    log.info("Applying series pooling for %s", title)
+                    
+                    emby_other_item = emby_db.getItem_byId(emby_other[0])
+                    showid = emby_other_item[0]
+                    pathid = emby_other_item[2]
+                    log.info("showid: %s pathid: %s" % (showid, pathid))
+                    # Create the reference in emby table
+                    emby_db.addReference(itemid, showid, "Series", "tvshow", pathid=pathid,
+                                        checksum=checksum, mediafolderid=viewid)
+                    update_item = True
+
         
         ##### GET THE FILE AND PATH #####
         playurl = API.get_file_path()

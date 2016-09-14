@@ -159,7 +159,7 @@ class Embydb_Functions():
 
         query = ' '.join((
 
-            "SELECT emby_id, parent_id",
+            "SELECT emby_id, parent_id, media_folder",
             "FROM emby",
             "WHERE kodi_id = ?",
             "AND media_type = ?"
