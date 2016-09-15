@@ -311,10 +311,14 @@ class LibrarySync(threading.Thread):
         if pDialog:
             pDialog.close()
 
+        emby_db = embydb.Embydb_Functions(embycursor)
+        current_version = emby_db.get_version(self.clientInfo.get_version())
+        window('emby_version', current_version)
+        embyconn.commit()
         embycursor.close()
 
         settings('SyncInstallRunDone', value="true")
-        settings("dbCreatedWithVersion", self.clientInfo.get_version())
+
         self.saveLastSync()
         xbmc.executebuiltin('UpdateLibrary(video)')
         elapsedtotal = datetime.now() - starttotal
@@ -891,6 +895,7 @@ class LibrarySync(threading.Thread):
     def compareDBVersion(self, current, minimum):
         # It returns True is database is up to date. False otherwise.
         log.info("current: %s minimum: %s" % (current, minimum))
+
         currMajor, currMinor, currPatch = current.split(".")
         minMajor, minMinor, minPatch = minimum.split(".")
 
@@ -941,7 +946,20 @@ class LibrarySync(threading.Thread):
 
             if (window('emby_dbCheck') != "true" and settings('SyncInstallRunDone') == "true"):
                 # Verify the validity of the database
-                currentVersion = settings('dbCreatedWithVersion')
+
+                embyconn = utils.kodiSQL('emby')
+                embycursor = embyconn.cursor()
+                emby_db = embydb.Embydb_Functions(embycursor)
+                currentVersion = emby_db.get_version()
+                ###$ Begin migration $###
+                if currentVersion is None:
+                    currentVersion = emby_db.get_version(settings('dbCreatedWithVersion'))
+                    embyconn.commit()
+                    log.info("Migration of database version completed")
+                ###$ End migration $###
+                embycursor.close()
+                window('emby_version', value=currentVersion)
+
                 minVersion = window('emby_minDBVersion')
                 uptoDate = self.compareDBVersion(currentVersion, minVersion)
 
@@ -975,10 +993,11 @@ class LibrarySync(threading.Thread):
                     dialog.ok(
                             heading=lang(29999),
                             line1=lang(33024))
-                    break
+                    break                
+
 
                 # Run start up sync
-                log.warn("Database version: %s" % settings('dbCreatedWithVersion'))
+                log.warn("Database version: %s", window('emby_version'))
                 log.info("SyncDatabase (started)")
                 startTime = datetime.now()
                 librarySync = self.startSync()

@@ -392,6 +392,7 @@ def reset():
             cursor.execute("DELETE FROM " + tablename)
     cursor.execute('DROP table IF EXISTS emby')
     cursor.execute('DROP table IF EXISTS view')
+    cursor.execute("DELETE FROM version")
     connection.commit()
     cursor.close()
 
