@@ -1,3 +1,8 @@
+version 2.2.31
+- Support series pooling. Will require to reset local database. Once content is resynced, proceed with a manual sync to apply the series pooling.
+- Fix emby connect websocket issue, will also require updating server to beta 3.1.150 or higher
+- Fix initial sync artwork dialog for Isengard
+
 version 2.2.30
 - Update German translation
 - minor fixes
