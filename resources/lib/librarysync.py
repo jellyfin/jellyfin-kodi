@@ -567,7 +567,6 @@ class LibrarySync(threading.Thread):
         ##### PROCESS MOVIES #####
         for view in views:
 
-            log.info("Processing: %s", view)
             if self.shouldStop():
                 return False
 
@@ -1263,6 +1262,8 @@ class ManualSync(LibrarySync):
         except ValueError:
             all_koditvshows = {}
 
+        log.info("all_koditvshows = %s" % all_koditvshows)
+
         try:
             all_kodiepisodes = dict(emby_db.get_checksum('Episode'))
         except ValueError:
@@ -1319,6 +1320,7 @@ class ManualSync(LibrarySync):
 
                 itemid = embytvshow['Id']
                 title = embytvshow['Name']
+                all_embytvshowsIds.add(itemid)
                 if pdialog:
                     percentage = int((float(count) / float(total))*100)
                     pdialog.update(percentage, message=title)
@@ -1341,6 +1343,7 @@ class ManualSync(LibrarySync):
                     API = api.API(embyepisode)
                     itemid = embyepisode['Id']
                     all_embyepisodesIds.add(itemid)
+                    all_embytvshowsIds.add(embyepisode['SeriesId'])
 
                     if all_kodiepisodes.get(itemid) != API.get_checksum():
                         # Only update if movie is not in Kodi or checksum is different
@@ -1366,6 +1369,8 @@ class ManualSync(LibrarySync):
                     tvshows.add_updateEpisode(episode)
 
         ##### PROCESS DELETES #####
+
+        log.info("all_embytvshowsIds = %s " % all_embytvshowsIds)
 
         for koditvshow in all_koditvshows:
             if koditvshow not in all_embytvshowsIds:
