@@ -8,7 +8,7 @@ import os
 import xbmcgui
 import xbmcaddon
 
-from utils import language as lang
+from utils import window, language as lang
 
 ##################################################################################################
 
@@ -21,6 +21,7 @@ ACTION_BACK = 92
 ACTION_SELECT_ITEM = 7
 ACTION_MOUSE_LEFT_CLICK = 100
 LIST = 155
+USER_IMAGE = 150
 
 ##################################################################################################
 
@@ -45,6 +46,9 @@ class ContextMenu(xbmcgui.WindowXMLDialog):
         return self.selected_option
 
     def onInit(self):
+
+        if window('EmbyUserImage'):
+            self.getControl(USER_IMAGE).setImage(window('EmbyUserImage'))
 
         height = 479 + (len(self._options) * 55)
         log.info("options: %s", self._options)

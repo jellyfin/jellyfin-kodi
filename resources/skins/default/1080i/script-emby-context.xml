@@ -30,6 +30,15 @@
 				<left>370</left>
 			</control>
 
+			<control type="image" id="150">
+				<description>User image</description>
+				<texture diffuse="user_image.png"></texture>
+				<aspectratio>keep</aspectratio>
+				<height>44</height>
+				<top>14</top>
+				<left>261</left>
+			</control>
+
 			<control type="image">
 				<description>separator</description>
 				<width>100%</width>
