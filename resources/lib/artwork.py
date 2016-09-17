@@ -48,13 +48,13 @@ class Artwork(object):
 
     def _double_urlencode(self, text):
 
-        text = self._single_urlencode(text)
-        text = self._single_urlencode(text)
+        text = self.single_urlencode(text)
+        text = self.single_urlencode(text)
 
         return text
 
     @classmethod
-    def _single_urlencode(cls, text):
+    def single_urlencode(cls, text):
         # urlencode needs a utf- string
         text = urllib.urlencode({'blahblahblah': text.encode('utf-8')})
         text = text[13:]
