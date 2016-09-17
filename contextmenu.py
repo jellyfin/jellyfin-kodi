@@ -24,6 +24,7 @@ import read_embyserver as embyserver
 import embydb_functions as embydb
 import musicutils as musicutils
 from utils import settings, dialog, language as lang, kodiSQL
+from dialogs import context
 
 #################################################################################################
 
@@ -130,9 +131,13 @@ class ContextMenu(object):
         # Addon settings
         options.append(OPTIONS['Addon'])
 
-        resp = dialog(type_="select", heading=lang(30401), list=options)
-        if resp > -1:
-            self._selected_option = options[resp]
+        addon = xbmcaddon.Addon('plugin.video.emby')
+        XML_PATH = (addon.getAddonInfo('path'), "default", "1080i")
+        dialog = context.ContextMenu("script-emby-context.xml", *XML_PATH)
+        dialog.set_options(options)
+        dialog.doModal()
+        if dialog.is_selected():
+            self._selected_option = dialog.get_selected()
 
         return self._selected_option
 

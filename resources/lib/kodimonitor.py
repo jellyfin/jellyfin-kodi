@@ -49,6 +49,11 @@ class KodiMonitor(xbmc.Monitor):
             log.info("New log level: %s", current_log_level)
             window('emby_logLevel', value=current_log_level)
 
+        current_context = "true" if settings('enableContext') == "true" else ""
+        if window('emby_context') != current_context:
+            log.info("New context setting: %s", current_context)
+            window('emby_context', value=current_context)
+
     def onNotification(self, sender, method, data):
 
         if method not in ('Playlist.OnAdd', 'Player.OnStop', 'Player.OnClear'):

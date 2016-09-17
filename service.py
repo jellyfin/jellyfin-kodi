@@ -60,6 +60,8 @@ class Service(object):
 
         window('emby_logLevel', value=str(log_level))
         window('emby_kodiProfile', value=xbmc.translatePath('special://profile'))
+        context_menu = "true" if settings('enableContext') == "true" else ""
+        window('emby_context', value=context_menu)
 
         # Initial logging
         log.warn("======== START %s ========", self.addon_name)
