@@ -25,8 +25,8 @@
 				<description>Emby logo</description>
 				<texture>emby-icon.png</texture>
 				<aspectratio>keep</aspectratio>
-				<height>40</height>
-				<top>15</top>
+				<height>30</height>
+				<top>20</top>
 				<left>370</left>
 			</control>
 
@@ -34,9 +34,9 @@
 				<description>User image</description>
 				<texture diffuse="user_image.png"></texture>
 				<aspectratio>keep</aspectratio>
-				<height>44</height>
-				<top>14</top>
-				<left>261</left>
+				<height>34</height>
+				<top>20</top>
+				<left>285</left>
 			</control>
 
 			<control type="image">
