@@ -1,3 +1,7 @@
+version 2.2.32
+- Update the emby context menu
+- Add option to disable the context menu in the add-on settings > extras tab
+
 version 2.2.31
 - Support series pooling. Will require to reset local database. Once content is resynced, proceed with a manual sync to apply the series pooling.
 - Fix emby connect websocket issue, will also require updating server to beta 3.1.150 or higher
