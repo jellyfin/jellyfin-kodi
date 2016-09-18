@@ -95,7 +95,8 @@ class Main(object):
             'refreshplaylist': entrypoint.refreshPlaylist,
             'deviceid': entrypoint.resetDeviceId,
             'delete': entrypoint.deleteItem,
-            'connect': entrypoint.emby_connect
+            'connect': entrypoint.emby_connect,
+            'backup': entrypoint.emby_backup
         }
         if mode in modes:
             # Simple functions

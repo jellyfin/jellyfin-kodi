@@ -50,7 +50,7 @@ def language(string_id):
     # Central string retrieval - unicode
     return xbmcaddon.Addon(id='plugin.video.emby').getLocalizedString(string_id)
 
-def dialog(type_, **kwargs):
+def dialog(type_, *args, **kwargs):
 
     d = xbmcgui.Dialog()
 
@@ -68,7 +68,7 @@ def dialog(type_, **kwargs):
         'select': d.select,
         'numeric': d.numeric
     }
-    return types[type_](**kwargs)
+    return types[type_](*args, **kwargs)
 
 
 class JSONRPC(object):

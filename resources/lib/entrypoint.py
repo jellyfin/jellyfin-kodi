@@ -5,6 +5,7 @@
 import json
 import logging
 import os
+import shutil
 import sys
 import urlparse
 
@@ -112,6 +113,9 @@ def doMainListing():
     addDirectoryItem(lang(33058), "plugin://plugin.video.emby/?mode=reset")
     addDirectoryItem(lang(33059), "plugin://plugin.video.emby/?mode=texturecache")
     addDirectoryItem(lang(33060), "plugin://plugin.video.emby/?mode=thememedia")
+
+    if settings('backupPath'):
+        addDirectoryItem(lang(33092), "plugin://plugin.video.emby/?mode=backup")
     
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
@@ -134,6 +138,50 @@ def emby_connect():
                sound=False)
         
         settings('connectUsername', value=username)
+
+def emby_backup():
+    # Create a backup at specified location
+    path = settings('backupPath')
+
+    # filename
+    default_value = "Kodi%s.%s" % (xbmc.getInfoLabel('System.BuildVersion')[:2],
+                                   xbmc.getInfoLabel('System.Date(dd-mm-yy)'))
+    filename = dialog(type_="input",
+                      heading=lang(33089),
+                      defaultt=default_value)
+    if not filename:
+        return
+
+    backup = os.path.join(path, filename)
+    log.info("Backup: %s", backup)
+
+    # Create directory
+    if xbmcvfs.exists(backup+"\\"):
+        log.info("Existing directory!")
+        if not dialog(type_="yesno",
+                      heading="{emby}",
+                      line1=lang(33090)):
+            return emby_backup()
+        shutil.rmtree(backup)
+
+    # Addon_data
+    shutil.copytree(src=xbmc.translatePath(
+                        "special://profile/addon_data/plugin.video.emby").decode('utf-8'),
+                    dst=os.path.join(backup, "addon_data", "plugin.video.emby"))
+
+    # Database files
+    xbmcvfs.mkdir(os.path.join(backup, "Database"))
+
+    shutil.copy(src=utils.getKodiVideoDBPath(),
+                dst=os.path.join(backup, "Database"))
+    
+    if settings('enableMusic') == "true":
+        shutil.copy(src=utils.getKodiMusicDBPath(),
+                    dst=os.path.join(backup, "Database"))
+
+    dialog(type_="ok",
+           heading="{emby}",
+           line1="%s: %s" % (lang(33091), backup))
 
 ##### Generate a new deviceId
 def resetDeviceId():

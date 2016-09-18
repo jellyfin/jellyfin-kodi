@@ -342,5 +342,10 @@
     <string id="33086">Remove all cached artwork?</string>
     <string id="33087">Reset all Emby add-on settings?</string>
     <string id="33088">Database reset has completed, Kodi will now restart to apply the changes.</string>
+    <string id="33089">Enter folder name for backup</string>
+    <string id="33090">Replace existing backup?</string>
+    <string id="33091">Create backup at:</string>
+    <string id="33092">Create a backup</string>
+    <string id="33093">Backup folder</string>
 
 </strings>
