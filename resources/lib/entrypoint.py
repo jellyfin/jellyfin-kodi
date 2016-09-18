@@ -170,14 +170,15 @@ def emby_backup():
                     dst=os.path.join(backup, "addon_data", "plugin.video.emby"))
 
     # Database files
-    xbmcvfs.mkdir(os.path.join(backup, "Database"))
+    database = os.path.join(backup, "Database")
+    xbmcvfs.mkdir(database)
 
     shutil.copy(src=utils.getKodiVideoDBPath(),
-                dst=os.path.join(backup, "Database"))
+                dst=database)
     
     if settings('enableMusic') == "true":
         shutil.copy(src=utils.getKodiMusicDBPath(),
-                    dst=os.path.join(backup, "Database"))
+                    dst=database)
 
     dialog(type_="ok",
            heading="{emby}",
