@@ -85,7 +85,8 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
         if not self.emby_connect: # Change connect user
             self.getControl(EMBY_CONNECT).setLabel("[UPPERCASE][B]"+lang(30618)+"[/B][/UPPERCASE]")
 
-        self.setFocus(self.list_)
+        if self.servers:
+            self.setFocus(self.list_)
 
     @classmethod
     def _add_listitem(cls, label, server_id, server_type):
