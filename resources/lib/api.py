@@ -349,6 +349,9 @@ class API(object):
             # Kodi seems to not like NR, but will accept Not Rated
             mpaa = "Not Rated"
 
+        if "FSK-" in mpaa:
+            mpaa = mpaa.replace("-", " ")
+
         return mpaa
 
     def get_country(self):
