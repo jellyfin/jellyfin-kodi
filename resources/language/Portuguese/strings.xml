@@ -3,18 +3,12 @@
     <!-- Add-on settings -->
     <string id="29999">Emby for Kodi</string>
     <string id="30000">Endereço do Servidor Primário</string>
-    <!-- Verified -->
     <string id="30002">Reproduzir por HTTP ao invés de SMB</string>
-    <!-- Verified -->
     <string id="30004">Nível do log</string>
-    <!-- Verified -->
     <string id="30016">Nome do Dispositivo</string>
-    <!-- Verified -->
     <string id="30022">Avançado</string>
     <string id="30024">Nome do usuário</string>
-    <!-- Verified -->
     <string id="30030">Número da Porta</string>
-    <!-- Verified -->
     <string id="30035">Número de Álbuns de Música recentes a exibir:</string>
     <string id="30036">Número de Filmes recentes a exibir:</string>
     <string id="30037">Número de episódios de TV recentes a exibir:</string>
@@ -204,7 +198,7 @@
     <string id="30504">Usar Nome alternativo do dispositivo</string>
     <string id="30505">[COLOR yellow]Tentar Login Novamente[/COLOR]</string>
     <string id="30506">Opções de Sincronização</string>
-    <string id="30507">Exibir progresso de sincronização</string>
+    <string id="30507">Exibir progresso se a contagem de itens for maior que</string>
     <string id="30508">Sincronizar Séries de TV vazias</string>
     <string id="30509">Ativar Biblioteca de Música</string>
     <string id="30510">Stream direto da biblioteca de música</string>
@@ -236,6 +230,33 @@
     <string id="30536">Sincronizar quando o protetor de tela está desativado</string>
     <string id="30537">Forçar Transcodificação Hi10P</string>
     <string id="30538">Desativado</string>
+    <string id="30539">Login</string>
+    <string id="30540">Login Manual</string>
+    <string id="30541">Emby Connect</string>
+    <string id="30542">Servidor</string>
+    <string id="30543">Nome do usuário ou email</string>
+    <string id="30544">Ativar a correção para base de dados bloqueada (deixará o processo de sincronização mais lento)</string>
+    <string id="30545">Ativar mensagens offline do servidor</string>
+    <!-- dialogs -->
+    <string id="30600">Entrar com o Emby Connect</string>
+    <string id="30602">Senha</string>
+    <string id="30603">Por favor leia os termos de uso. O uso de qualquer software Emby constitui a aceitação desses termos.</string>
+    <string id="30604">Rastrear-me</string>
+    <string id="30605">Entrar</string>
+    <string id="30606">Cancelar</string>
+    <string id="30607">Selecione o servidor principal</string>
+    <string id="30608">O nome do usuário ou senha não podem estar em branco</string>
+    <string id="30609">Não foi possível conectar ao servidor selecionado</string>
+    <string id="30610">Conectar a</string>
+    <!-- Connect to {server} -->
+    <string id="30611">Adicionar servidor manualmente</string>
+    <string id="30612">Por favor, inicie a sessão</string>
+    <string id="30613">O nome do usuário não pode estar em branco</string>
+    <string id="30614">Conectar ao servidor</string>
+    <string id="30615">Servidor</string>
+    <string id="30616">Conectar</string>
+    <string id="30617">O servidor ou porta não podem estar em branco</string>
+    <string id="30618">Alterar o usuário do Emby Connect</string>
     <!-- service add-on -->
     <string id="33000">Bem vindo</string>
     <string id="33001">Erro na conexão</string>
