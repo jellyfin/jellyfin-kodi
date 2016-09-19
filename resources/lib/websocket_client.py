@@ -326,7 +326,9 @@ class WebSocketClient(threading.Thread):
 
         while not self.monitor.abortRequested():
 
-            self._client.run_forever(ping_interval=10)
+            if window('emby_online') == "true":
+                self._client.run_forever(ping_interval=10)
+                
             if self._stop_websocket:
                 break
 
