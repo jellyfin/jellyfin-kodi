@@ -90,8 +90,11 @@ class InitialSetup(object):
 
         if settings('server'):
             current_state = self.connectmanager.get_state()
-            for server in current_state['Servers']:
+            if current_state['State'] == STATE['ConnectSignIn']:
+                # Failed to identify server
+                return False
 
+            for server in current_state['Servers']:
                 if server['Id'] == settings('serverId'):
                     # Update token
                     server['UserId'] = settings('userId') or None
