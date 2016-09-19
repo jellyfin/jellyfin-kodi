@@ -1,3 +1,9 @@
+version 2.2.33
+- Fix manual sync crashing
+- Update Portuguese translation
+- Add support for German MPAA rating. You will need to reset your local database to apply the change.
+- Add a backup option. Find out more: https://github.com/MediaBrowser/plugin.video.emby/wiki/Create-and-restore-from-backup
+
 version 2.2.32
 - Update the emby context menu
 - Add option to disable the context menu in the add-on settings > extras tab
