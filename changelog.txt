@@ -1,3 +1,9 @@
+version 2.2.34
+- Repair sync can now be filtered by content type
+- Automatically download external subs with language tag
+- Fix broken music artwork
+- Fix to music direct stream
+
 version 2.2.33
 - Fix manual sync crashing
 - Update Portuguese translation
