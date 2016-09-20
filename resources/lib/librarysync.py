@@ -58,6 +58,8 @@ class LibrarySync(threading.Thread):
         self.emby = embyserver.Read_EmbyServer()
         self.vnodes = videonodes.VideoNodes()
 
+        self.kodi_version = int(xbmc.getInfoLabel('System.BuildVersion')[:2])
+
         threading.Thread.__init__(self)
 
 
@@ -241,6 +243,31 @@ class LibrarySync(threading.Thread):
             message = "Manual sync"
         elif repair:
             message = "Repair sync"
+            repair_list = []
+            choices = ['all', 'movies', 'musicvideos', 'tvshows']
+            if music_enabled:
+                choices.append('music')
+
+            if self.kodi_version > 15:
+                # Jarvis or higher
+                types = xbmcgui.Dialog().multiselect("Select content type to repair", choices)
+                if types is None:
+                    pass
+                elif 0 in types: # all
+                    choices.pop(0)
+                    repair_list.extend(choices)
+                else:
+                    for index in types:
+                        repair_list.append(choices[index])
+            else:
+                resp = xbmcgui.Dialog().select("Select content type to repair", choices)
+                if resp == 0: # all
+                    choices.pop(resp)
+                    repair_list.extend(choices)
+                else:
+                    repair_list.append(choices[resp])
+
+            log.info("Repair queued for: %s", repair_list)
         else:
             message = "Initial sync"
             window('emby_initialScan', value="true")
@@ -260,6 +287,10 @@ class LibrarySync(threading.Thread):
             'tvshows': self.tvshows
         }
         for itemtype in process:
+
+            if repair and itemtype not in repair_list:
+                continue
+
             startTime = datetime.now()
             completed = process[itemtype](embycursor, kodicursor, pDialog)
             if not completed:
@@ -285,28 +316,31 @@ class LibrarySync(threading.Thread):
         # sync music
         if music_enabled:
 
-            musicconn = utils.kodiSQL('music')
-            musiccursor = musicconn.cursor()
-
-            startTime = datetime.now()
-            completed = self.music(embycursor, musiccursor, pDialog)
-            if not completed:
-                xbmc.executebuiltin('InhibitIdleShutdown(false)')
-                utils.setScreensaver(value=screensaver)
-                window('emby_dbScan', clear=True)
-                if pDialog:
-                    pDialog.close()
-
-                embycursor.close()
-                musiccursor.close()
-                return False
+            if repair and 'music' not in repair_list:
+                pass
             else:
-                musicconn.commit()
-                embyconn.commit()
-                elapsedTime = datetime.now() - startTime
-                log.info("SyncDatabase (finished music in: %s)"
-                    % (str(elapsedTime).split('.')[0]))
-            musiccursor.close()
+                musicconn = utils.kodiSQL('music')
+                musiccursor = musicconn.cursor()
+
+                startTime = datetime.now()
+                completed = self.music(embycursor, musiccursor, pDialog)
+                if not completed:
+                    xbmc.executebuiltin('InhibitIdleShutdown(false)')
+                    utils.setScreensaver(value=screensaver)
+                    window('emby_dbScan', clear=True)
+                    if pDialog:
+                        pDialog.close()
+
+                    embycursor.close()
+                    musiccursor.close()
+                    return False
+                else:
+                    musicconn.commit()
+                    embyconn.commit()
+                    elapsedTime = datetime.now() - startTime
+                    log.info("SyncDatabase (finished music in: %s)"
+                        % (str(elapsedTime).split('.')[0]))
+                musiccursor.close()
 
         if pDialog:
             pDialog.close()
