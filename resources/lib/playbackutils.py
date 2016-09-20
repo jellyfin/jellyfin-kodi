@@ -266,7 +266,7 @@ class PlaybackUtils():
                 url = ("%s/Videos/%s/%s/Subtitles/%s/Stream.srt"
                         % (self.server, itemid, itemid, index))
 
-                if settings('downloadExternalSubs') == "true" and "Language" in stream:
+                if "Language" in stream:
                     
                     filename = "Stream.%s.srt" % stream['Language']
                     try:
