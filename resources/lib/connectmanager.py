@@ -153,15 +153,18 @@ class ConnectManager(object):
         dialog.doModal()
 
         if dialog.is_user_selected():
+            
             user = dialog.get_user()
+            username = user['Name']
+            
             if user['HasPassword']:
                 log.debug("User has password, present manual login")
                 try:
-                    return self.login_manual(server_address, user)
+                    return self.login_manual(server_address, username)
                 except RuntimeError:
                     return self.login(server)
             else:
-                user = self.emby.loginUser(server_address, user['Name'])
+                user = self.emby.loginUser(server_address, username)
                 self._connect.onAuthenticated(user)
                 return user
 
@@ -188,5 +191,13 @@ class ConnectManager(object):
             raise RuntimeError("User is not authenticated")
 
     def update_token(self, servers, server):
-        self._connect.credentialProvider.addOrUpdateServer(servers, server)
-        self.update_state()
+
+        credentials = self._connect.credentialProvider.getCredentials()
+        updated_server = self._connect.credentialProvider.addOrUpdateServer(servers, server)
+
+        for server in self.get_state()['Servers']:
+            if server['Id'] == updated_server['Id']:
+                # Update token saved in current state
+                server.update(updated_server)
+        # Update the token in data.txt
+        self._connect.credentialProvider.getCredentials(credentials)

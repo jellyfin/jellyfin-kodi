@@ -173,15 +173,9 @@ class UserClient(threading.Thread):
         ##### AUTHENTICATE USER #####
         server = self.get_server()
         username = self.get_username().decode('utf-8')
-        users = self.emby.getUsers(server)
-        user_found = None
 
-        for user in users:
-            if username == user['Name']:
-                user_found = user
-                break
         try:
-            user = self.connectmanager.login_manual(server, user_found)
+            user = self.connectmanager.login_manual(server, username)
         except RuntimeError:
             window('emby_serverStatus', value="stop")
             self._auth = False

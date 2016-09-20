@@ -35,6 +35,7 @@ class LoginManual(xbmcgui.WindowXMLDialog):
 
     _user = None
     error = None
+    username = None
 
 
     def __init__(self, *args, **kwargs):
@@ -49,7 +50,7 @@ class LoginManual(xbmcgui.WindowXMLDialog):
         self.server = server
 
     def set_user(self, user):
-        self.user = user or {}
+        self.username = user or {}
 
     def get_user(self):
         return self._user
@@ -63,8 +64,8 @@ class LoginManual(xbmcgui.WindowXMLDialog):
         self.user_field = self._add_editcontrol(725, 400, 40, 500)
         self.password_field = self._add_editcontrol(725, 475, 40, 500, password=1)
 
-        if "Name" in self.user:
-            self.user_field.setText(self.user['Name'])
+        if self.username:
+            self.user_field.setText(self.username)
             self.setFocus(self.password_field)
         else:
             self.setFocus(self.user_field)
