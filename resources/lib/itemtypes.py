@@ -2032,7 +2032,7 @@ class Music(Items):
             path = "%s/emby/Audio/%s/" % (self.server, itemid)
             extensions = ['mp3', 'aac', 'ogg', 'oga', 'webma', 'wma', 'flac']
 
-            if item['Container'].lower() in extensions:
+            if 'Container' in item and item['Container'].lower() in extensions:
                 filename = "stream.%s?static=true" % item['Container']
             else:
                 filename = "stream.mp3?static=true"
