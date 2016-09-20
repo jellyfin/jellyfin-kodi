@@ -250,7 +250,7 @@ class LibrarySync(threading.Thread):
 
             if self.kodi_version > 15:
                 # Jarvis or higher
-                types = xbmcgui.Dialog().multiselect("Select content type to repair", choices)
+                types = xbmcgui.Dialog().multiselect(lang(33094), choices)
                 if types is None:
                     pass
                 elif 0 in types: # all
@@ -260,7 +260,7 @@ class LibrarySync(threading.Thread):
                     for index in types:
                         repair_list.append(choices[index])
             else:
-                resp = xbmcgui.Dialog().select("Select content type to repair", choices)
+                resp = xbmcgui.Dialog().select(lang(33094), choices)
                 if resp == 0: # all
                     choices.pop(resp)
                     repair_list.extend(choices)
