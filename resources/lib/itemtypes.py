@@ -2030,7 +2030,12 @@ class Music(Items):
         ##### GET THE FILE AND PATH #####
         if self.directstream:
             path = "%s/emby/Audio/%s/" % (self.server, itemid)
-            filename = "stream.mp3?static=true"
+            extensions = ['mp3', 'aac', 'ogg', 'oga', 'webma', 'wma', 'flac']
+
+            if item['Container'].lower() in extensions:
+                filename = "stream.%s?static=true" % item['Container']
+            else:
+                filename = "stream.mp3?static=true"
         else:
             playurl = API.get_file_path()
 
