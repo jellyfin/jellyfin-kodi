@@ -201,7 +201,7 @@
     <string id="30513">Limit artwork cache threads (recommended for rpi)</string>
     <string id="30514">Enable fast startup (requires server plugin)</string>
     <string id="30515">Maximum items to request from the server at once</string>
-    <string id="30516">Playback</string>
+    <string id="30516">Video Playback</string>
     <string id="30517">Network credentials</string>
     <string id="30518">Enable Emby cinema mode</string>
     <string id="30519">Ask to play trailers</string>
