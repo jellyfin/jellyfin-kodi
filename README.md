@@ -47,6 +47,7 @@ Emby for Kodi is under constant development. The following features are currentl
 - Copy Theme Music locally for use with the TV Tunes addon
 - Copy ExtraFanart (rotating backgrounds) across for use with skins that support it
 - Offer to delete content after playback
+- **New!** Backup your emby kodi profile. See the [Emby backup option](https://github.com/MediaBrowser/plugin.video.emby/wiki/Create-and-restore-from-backup)
 - and more...
 
 ### What is being worked on
