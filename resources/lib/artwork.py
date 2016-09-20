@@ -504,7 +504,7 @@ class Artwork(object):
             'Backdrop': []
         }
 
-        def get_backdrops(backdrops):
+        def get_backdrops(item_id, backdrops):
 
             for index, tag in enumerate(backdrops):
                 artwork = ("%s/emby/Items/%s/Images/Backdrop/%s?"
@@ -513,7 +513,7 @@ class Artwork(object):
                               tag, custom_query))
                 all_artwork['Backdrop'].append(artwork)
 
-        def get_artwork(type_, tag):
+        def get_artwork(item_id, type_, tag):
 
             artwork = ("%s/emby/Items/%s/Images/%s/0?"
                        "MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s"
@@ -521,13 +521,13 @@ class Artwork(object):
             all_artwork[type_] = artwork
 
         # Process backdrops
-        get_backdrops(backdrops)
+        get_backdrops(item_id, backdrops)
 
         # Process the rest of the artwork
         for artwork in artworks:
             # Filter backcover
             if artwork != "BoxRear":
-                get_artwork(artwork, artworks[artwork])
+                get_artwork(item_id, artwork, artworks[artwork])
 
         # Process parent items if the main item is missing artwork
         if parent_info:
@@ -536,7 +536,7 @@ class Artwork(object):
 
                 if 'ParentBackdropItemId' in item:
                     # If there is a parent_id, go through the parent backdrop list
-                    get_backdrops(item['ParentBackdropImageTags'])
+                    get_backdrops(item['ParentBackdropItemId'], item['ParentBackdropImageTags'])
 
             # Process the rest of the artwork
             for parent_artwork in ('Logo', 'Art', 'Thumb'):
@@ -544,12 +544,13 @@ class Artwork(object):
                 if not all_artwork[parent_artwork]:
 
                     if 'Parent%sItemId' % parent_artwork in item:
-                        get_artwork(parent_artwork, item['Parent%sImageTag' % parent_artwork])
+                        get_artwork(item['Parent%sItemId' % parent_artwork], parent_artwork,
+                                    item['Parent%sImageTag' % parent_artwork])
 
             # Parent album works a bit differently
             if not all_artwork['Primary']:
 
                 if 'AlbumId' in item and 'AlbumPrimaryImageTag' in item:
-                    get_artwork('Primary', item['AlbumPrimaryImageTag'])
+                    get_artwork(item['AlbumId'], 'Primary', item['AlbumPrimaryImageTag'])
 
         return all_artwork
