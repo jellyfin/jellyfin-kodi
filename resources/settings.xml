@@ -9,8 +9,8 @@
 		<setting label="30600" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=connect)" visible="eq(-3,1) + eq(-1,)" option="close" />
 		<setting label="30618" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=connect)" visible="eq(-4,1) + !eq(-2,)" option="close" />
 		<!-- User settings -->
-		<setting id="serverName" label="30000" type="text" default="" />
-		<setting id="server" type="text" default="" visible="false" />
+		<setting id="serverName" label="30001" type="text" default="" />
+		<setting id="server" label="30000" type="text" default="" visible="!eq(-1,)" />
 		<setting id="sslverify" label="30500" type="bool" default="false" visible="!eq(-1,)" subsetting="true" />
 		<setting id="sslcert" label="30501" type="file" default="None" visible="eq(-1,true)" subsetting="true" />
 		<setting id="accessToken" type="text" default="" visible="false" />

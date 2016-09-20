@@ -3,7 +3,8 @@
 
     <!-- Add-on settings -->
     <string id="29999">Emby for Kodi</string>
-    <string id="30000">Primary Server Address</string>
+    <string id="30000">Server address</string>
+    <string id="30001">Server name</string>
     <string id="30002">Play from HTTP instead of SMB</string>
     <string id="30004">Log level</string>
     <string id="30016">Device Name</string>
@@ -188,7 +189,7 @@
     <string id="30501">Client SSL certificate</string>
     <string id="30502">Use alternate address</string>
     <string id="30503">Alternate Server Address</string>
-    <string id="30504">Use altername device Name</string>
+    <string id="30504">Use altername device name</string>
     <string id="30505">[COLOR yellow]Retry login[/COLOR]</string>
     <string id="30506">Sync Options</string>
     <string id="30507">Show progress if item count greater than</string>
