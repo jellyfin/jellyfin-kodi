@@ -38,12 +38,14 @@ Emby for Kodi is under constant development. The following features are currentl
   + TV Shows
   + Music Videos
   + Music
+  + Pictures
 - Emby for Kodi context menu:
   + Mark content as favorite
   + Refresh content
   + Delete content
 - Direct play and transcode
 - Watched state/resume status sync: This is a 2-way synchronisation. Any watched state or resume status will be instantly (within seconds) reflected to or from Kodi and the server.
+- Remote control your Kodi; send play commands from your Emby webclient or Emby mobile apps.
 - Copy Theme Music locally for use with the TV Tunes addon
 - Copy ExtraFanart (rotating backgrounds) across for use with skins that support it
 - Offer to delete content after playback
