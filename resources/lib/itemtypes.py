@@ -1297,7 +1297,7 @@ class TVShows(Items):
                 season = 1
                 episode = item['AbsoluteEpisodeNumber']
             else:
-                season = -1
+                season = -1 if "Specials" not in item['Path'] else 0
 
         # Specials ordering within season
         if item.get('AirsAfterSeasonNumber'):
