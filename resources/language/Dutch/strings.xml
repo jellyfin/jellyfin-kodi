@@ -9,12 +9,12 @@
     <string id="30022">Geavanceerd</string>
     <string id="30024">Gebruikersnaam</string>
     <string id="30030">Poortnummer</string>
-    <string id="30035">Aantal recente muziekalbums die getoond worden:</string>
-    <string id="30036">Aantal recente films die getoond worden:</string>
-    <string id="30037">Aantal recente TV-series die getoond worden:</string>
+    <string id="30035">Aantal te tonen recente Music Albums:</string>
+    <string id="30036">Aantal te tonen recente Films:</string>
+    <string id="30037">Aantal te tonen recente TV-series:</string>
     <string id="30042">Vernieuwen</string>
     <string id="30043">Wissen</string>
-    <string id="30044">Ongeldige gebruikersnaam/wachtwoord</string>
+    <string id="30044">Ongeldige Gebruikersnaam/Wachtwoord</string>
     <string id="30045">Gebruikersnaam niet gevonden</string>
     <string id="30052">Wissen...</string>
     <string id="30053">Wacht op server voor wissen</string>
@@ -35,16 +35,16 @@
     <string id="30082">Musical</string>
     <string id="30083">Mysterie</string>
     <string id="30084">Romantiek</string>
-    <string id="30085">Science Fiction</string>
+    <string id="30085">Sciencefiction</string>
     <string id="30086">Kort</string>
     <string id="30087">Spanning</string>
     <string id="30088">Thriller</string>
     <string id="30089">Western</string>
     <string id="30090">Genre Filter</string>
     <string id="30091">Bevestig bestandsverwijdering</string>
-    
-    <string id="30093">Bekeken markeren</string>
-    <string id="30094">Onbekeken markeren</string>
+    <!-- Verified -->
+    <string id="30093">Markeer als bekeken</string>
+    <string id="30094">Markeer als onbekeken</string>
     <string id="30097">Sorteer op</string>
     <string id="30098">Sorteer oplopend</string>
     <string id="30099">Sorteer aflopend</string>
@@ -52,48 +52,57 @@
     <string id="30105">Hervatten</string>
     <string id="30106">Hervatten vanaf</string>
     <string id="30107">Start vanaf begin</string>
-    <string id="30114">Toon verwijder mogelijkheid na het afspelen</string>
-    
+    <string id="30114">Verwijderen na afspelen aanbieden</string>
+    <!-- Verified -->
     <string id="30115">Voor Afleveringen</string>
-    
+    <!-- Verified -->
     <string id="30116">Voor Films</string>
-    
+    <!-- Verified -->
     <string id="30118">Hervat-percentage toevoegen</string>
     <string id="30119">Afleveringnummer toevoegen</string>
     <string id="30120">Toon voortgang</string>
-    <string id="30121">Laden van content</string>
-    <string id="30122">Ontvang Data</string>
+    <string id="30121">Inhoud laden</string>
+    <string id="30122">Data ontvangen</string>
     <string id="30125">Gereed</string>
     <string id="30132">Waarschuwing</string>
-    
+    <!-- Verified -->
     <string id="30135">Fout</string>
     <string id="30138">Zoeken</string>
     <string id="30157">Activeer speciale afbeeldingen (bijv. CoverArt)</string>
-    
+    <!-- Verified -->
     <string id="30158">Metadata</string>
     <string id="30159">Afbeeldingen</string>
     <string id="30160">Video kwaliteit</string>
-    
+    <!-- Verified -->
     <string id="30165">Direct Afspelen</string>
-    
+    <!-- Verified -->
     <string id="30166">Transcoderen</string>
     <string id="30167">Server Detectie Geslaagd</string>
     <string id="30168">Gevonden server</string>
     <string id="30169">Adres:</string>
     <!-- Video nodes -->
     <string id="30170">Onlangs toegevoegde TV-series</string>
+    <!-- Verified -->
     <string id="30171">Niet afgekeken TV-series</string>
+    <!-- Verified -->
     <string id="30172">Alle Muziek</string>
     <string id="30173">Kanalen</string>
+    <!-- Verified -->
     <string id="30174">Onlangs toegevoegde films</string>
+    <!-- Verified -->
     <string id="30175">Onlangs toegevoegde afleveringen</string>
+    <!-- Verified -->
     <string id="30176">Onlangs toegevoegde albums</string>
     <string id="30177">Niet afgekeken films</string>
+    <!-- Verified -->
     <string id="30178">Niet afgekeken afleveringen</string>
+    <!-- Verified -->
     <string id="30179">Volgende (NextUp) afleveringen</string>
+    <!-- Verified -->
     <string id="30180">Favoriete films</string>
+    <!-- Verified -->
     <string id="30181">Favoriete TV-series</string>
-    
+    <!-- Verified -->
     <string id="30182">Favoriete afleveringen</string>
     <string id="30183">Vaak afgespeelde albums</string>
     <string id="30184">Binnenkort op TV</string>
@@ -101,21 +110,21 @@
     <string id="30186">Trailers</string>
     <string id="30187">Muziek video's</string>
     <string id="30188">Foto's</string>
-    <string id="30189">Onbekeken films</string>
-    
+    <string id="30189">Onbekeken Films</string>
+    <!-- Verified -->
     <string id="30190">Film Genres</string>
     <string id="30191">Film Studio's</string>
     <string id="30192">Film Acteurs</string>
-    <string id="30193">Onbekeken afleveringen</string>
+    <string id="30193">Onbekeken Afleveringen</string>
     <string id="30194">TV Genres</string>
-    <string id="30195">TV Netwerken</string>
+    <string id="30195">TV Studio's</string>
     <string id="30196">TV Acteurs</string>
     <string id="30197">Afspeellijsten</string>
     <string id="30199">Weergaven instellen</string>
     <string id="30200">Selecteer gebruiker</string>
-    
+    <!-- Verified -->
     <string id="30204">Kan niet verbinden met server</string>
-    <string id="30207">Nummers</string>
+    <string id="30207">Titels</string>
     <string id="30208">Albums</string>
     <string id="30209">Album artiesten</string>
     <string id="30210">Artiesten</string>
@@ -128,27 +137,36 @@
     <string id="30227">Willekeurige Films</string>
     <string id="30228">Willekeurige Afleveringen</string>
     <string id="30229">Willekeurige Items</string>
-    
+    <!-- Verified -->
     <string id="30230">Aanbevolen Items</string>
+    <!-- Verified -->
     <string id="30235">Extra's</string>
-    
-    <string id="30236">Synchroniseer Thema Muziek</string>
+    <!-- Verified -->
+    <string id="30236">Synchroniseer Herkenningsmelodie</string>
     <string id="30237">Synchroniseer Extra Fanart</string>
     <string id="30238">Synchroniseer Film Boxsets</string>
     <string id="30239">Lokale Kodi database opnieuw instellen</string>
-    
+    <!-- Verified -->
     <string id="30243">Activeer HTTPS</string>
+    <!-- Verified -->
     <string id="30245">Forceer Transcoderen van Codecs</string>
     <string id="30249">Activeer server verbindings melding bij het opstarten</string>
+    <!-- Verified -->
     <string id="30251">Onlangs bekeken Thuis Video's</string>
+    <!-- Verified -->
     <string id="30252">Onlangs toegevoegde Foto's</string>
+    <!-- Verified -->
     <string id="30253">Favoriete Home Video's</string>
+    <!-- Verified -->
     <string id="30254">Favoriete Foto's</string>
+    <!-- Verified -->
     <string id="30255">Favoriete Albums</string>
     <string id="30256">Onlangs toegevoegde Muziek Video's</string>
+    <!-- Verified -->
     <string id="30257">Niet afgekeken Muziek Video's</string>
+    <!-- Verified -->
     <string id="30258">Onbekeken Muziek Video's</string>
-    
+    <!-- Verified -->
     <!-- Default views -->
     <string id="30300">Actief</string>
     <string id="30301">Herstel naar standaard</string>
@@ -167,11 +185,11 @@
     <string id="30401">Emby opties</string>
     <string id="30405">Toevoegen aan Emby favorieten</string>
     <string id="30406">Verwijderen uit Emby favorieten</string>
-    <string id="30407">Instellen aangepaste waardering nummers</string>
+    <string id="30407">Instellen aangepaste waardering titels</string>
     <string id="30408">Emby addon instellingen</string>
     <string id="30409">Verwijder item van de server</string>
     <string id="30410">Dit item vernieuwen</string>
-    <string id="30411">Instellen aangepaste waardering voor nummers (0-5)</string>
+    <string id="30411">Instellen aangepaste titel waardering (0-5)</string>
     <!-- add-on settings -->
     <string id="30500">Controleer Host SSL Certificaat</string>
     <string id="30501">Client SSL Certificaat</string>
@@ -179,26 +197,26 @@
     <string id="30503">Alternatief Serveradres</string>
     <string id="30504">Gebruik alternatieve apparaatnaam</string>
     <string id="30505">[COLOR yellow]Probeer opnieuw in te loggen[/COLOR]</string>
-    <string id="30506">Synchronisatie Opties</string>
-    <string id="30507">Toon synchronisatie voortgang</string>
+    <string id="30506">Synchronisatie</string>
+    <string id="30507">Toon voortgang indien meer items dan</string>
     <string id="30508">Synchroniseer lege TV-series</string>
     <string id="30509">Activeer Muziekbibliotheek</string>
     <string id="30510">Direct Stream muziekbibliotheek</string>
     <string id="30511">Afspeelmodus</string>
     <string id="30512">Forceer afbeelding caching</string>
     <string id="30513">Limiteer afbeelding cache threads (aanbevolen voor rpi)</string>
-    <string id="30514">Activeer \"fast startup\" (vereist server plugin)</string>
-    <string id="30515">Maximaal aantal items om tegelijk van de server op te vragen</string>
+    <string id="30514">Activeer [COLOR yellow]Fast Startup[/COLOR] (vereist server plugin)</string>
+    <string id="30515">Maximaal aantal ineens van de server op te vragen items</string>
     <string id="30516">Afspelen</string>
     <string id="30517">Netwerkreferenties</string>
     <string id="30518">Activeer Emby bioscoopmodus</string>
     <string id="30519">Vragen om trailers af te spelen</string>
-    <string id="30520">Sla Emby verwijderings bevestiging over voor het contextmenu (Gebruik op eigen risico)</string>
+    <string id="30520">Wis bevestiging in contextmenu overslaan (Eigen risico!)</string>
     <string id="30521">Spring terug op hervatten (in seconden)</string>
     <string id="30522">Forceer transcoderen H265</string>
     <string id="30523">Muziek metadata opties (niet compatibel met direct stream)</string>
-    <string id="30524">Importeer muziek lied waardering direct uit bestanden</string>
-    <string id="30525">Converteer muziek lied waardering naar Emby waardering</string>
+    <string id="30524">Importeer muziek titel waardering direct uit bestanden</string>
+    <string id="30525">Converteer muziek titel waardering naar Emby waardering</string>
     <string id="30526">Toestaan dat waardeing in muziekbestanden worden bijgewerkt</string>
     <string id="30527">Negeer specials in de volgende afleveringen</string>
     <string id="30528">Gebruikers permanent toevoegen aan de sessie</string>
@@ -212,6 +230,33 @@
     <string id="30536">Sync als screensaver is uitgeschakeld</string>
     <string id="30537">Forceer Transcoderen Hi10P</string>
     <string id="30538">Uitgeschakeld</string>
+    <string id="30539">Inloggen</string>
+    <string id="30540">Handmatig inloggen</string>
+    <string id="30541">Emby Connect</string>
+    <string id="30542">Server</string>
+    <string id="30543">Gebruikersnaam of e-mail</string>
+    <string id="30544">Activeer database Vergrendeld fix (synchronisatie proces zal vertragen)</string>
+    <string id="30545">Activeer server offline bericht</string>
+    <!-- dialogs -->
+    <string id="30600">Meld je aan met Emby Connect</string>
+    <string id="30602">Wachtwoord</string>
+    <string id="30603">Zie onze gebruiksvoorwaarden. Het gebruik van alle Emby software betekent acceptatie van deze voorwaarden.</string>
+    <string id="30604">Scan mij</string>
+    <string id="30605">Aanmelden</string>
+    <string id="30606">Annuleren</string>
+    <string id="30607">Hoofdserver selecteren</string>
+    <string id="30608">Gebruikersnaam of wachtwoord mag niet leeg zijn</string>
+    <string id="30609">Kan geen verbinding maken met de geselecteerde server</string>
+    <string id="30610">Verbinding maken met</string>
+    <!-- Connect to {server} -->
+    <string id="30611">Handmatig server toevoegen</string>
+    <string id="30612">Meld u aub aan</string>
+    <string id="30613">Gebruikersnaam mag niet leeg zijn</string>
+    <string id="30614">Verbinding maken met server</string>
+    <string id="30615">Host</string>
+    <string id="30616">Verbinden</string>
+    <string id="30617">Server of poort kan niet leeg zijn</string>
+    <string id="30618">Wissel van Emby Connect gebruiker</string>
     <!-- service add-on -->
     <string id="33000">Welkom</string>
     <string id="33001">Fout bij maken van verbinding</string>
@@ -223,36 +268,36 @@
     <string id="33007">Toegang is ingeschakeld</string>
     <string id="33008">Voer het wachtwoord in voor de gebruiker:</string>
     <string id="33009">Foutieve gebruikersnaam of wachtwoord</string>
-    <string id="33010">Niet te vaak te authenticeren</string>
+    <string id="33010">Te vaak mislukt te authenticeren</string>
     <string id="33011">Niet in staat om direct af te spelen</string>
     <string id="33012">Direct afspelen is 3x mislukt. Afspelen vanaf HTTP Ingeschakeld.</string>
     <string id="33013">Kies het audiokanaal</string>
     <string id="33014">Kies de ondertiteling</string>
-    <string id="33015">Verwijder bestand van Emby server?</string>
+    <string id="33015">Bestand van uw Emby server verwijderen?</string>
     <string id="33016">Trailers afspelen?</string>
-    <string id="33017">Verzamelen films van:</string>
-    <string id="33018">verzamelen boxsets</string>
-    <string id="33019">Verzamelen muziek-video's van:</string>
-    <string id="33020">Verzamelen TV-series van:</string>
+    <string id="33017">Films verzamelen van:</string>
+    <string id="33018">Boxsets verzamelen</string>
+    <string id="33019">Muziek-video's verzamelen van:</string>
+    <string id="33020">TV-series verzamelen van:</string>
     <string id="33021">Verzamelen:</string>
     <string id="33022">Gedetecteerd dat de database moet worden vernieuwd voor deze versie van Emby voor Kodi. Doorgaan?</string>
     <string id="33023">Emby voor Kodi kan mogelijk niet correct werken tot de database is teruggezet.</string>
     <string id="33024">Database synchronisatie proces geannuleerd. De huidige Kodi versie wordt niet ondersteund.</string>
     <string id="33025">voltooid in:</string>
-    <string id="33026">Vergelijken van films uit:</string>
-    <string id="33027">Vergelijken van boxsets</string>
-    <string id="33028">Vergelijken van muziek-video's uit:</string>
-    <string id="33029">Vergelijken van TV-series uit:</string>
-    <string id="33030">Vergelijken van afleveringen uit:</string>
+    <string id="33026">Films vergelijken met:</string>
+    <string id="33027">Boxsets vergelijken met</string>
+    <string id="33028">Muziek-video's vergelijken met:</string>
+    <string id="33029">TV-series vergelijken met:</string>
+    <string id="33030">Afleveringen vergelijken met:</string>
     <string id="33031">Vergelijken:</string>
-    <string id="33032">Mislukt een nieuw apparaat Id te genereren. Zie je logs voor meer informatie.</string>
-    <string id="33033">Er is een nieuw apparaat Id gegenereerd. Kodi zal nu opnieuw opstarten.</string>
+    <string id="33032">Nieuw apparaat Id genereren mislukt. Zie je logs voor meer informatie.</string>
+    <string id="33033">Nieuw apparaat Id gegenereerd. Kodi zal nu opnieuw opstarten.</string>
     <string id="33034">Verder gaan met de volgende server?</string>
-    <string id="33035">LET OP! Als u de modus Native kiest, zullen bepaalde Emby functies ontbreken, zoals: Emby bioscoop-modus, directe afspeel/transcodeer opties en ouderlijk-toezicht planner.</string>
+    <string id="33035">LET OP! Als u de Native modus kiest, zullen bepaalde Emby functies ontbreken, zoals: Emby bioscoop-modus, directe afspeel/transcodeer opties en de ouderlijk-toezicht planner.</string>
     <string id="33036">Addon (Standaard)</string>
     <string id="33037">Native (Directe paden)</string>
-    <string id="33038">Voeg netwerkreferenties toe aan Kodi om toegang tot uw content toe te staan? Belangrijk: Kodi moet opnieuw worden opgestart om de referenties te zien. Zij kunnen ook later worden toegevoegd.</string>
-    <string id="33039">Emby muziekbibliotheek uitschakelen?</string>
+    <string id="33038">Voeg netwerkreferenties toe aan Kodi om toegang tot uw inhoud toe te staan? Belangrijk: Kodi moet opnieuw worden opgestart om de referenties te zien. Zij kunnen ook later worden toegevoegd.</string>
+    <string id="33039">De-activeer Emby muziekbibliotheek?</string>
     <string id="33040">Direct Stream de muziekbibliotheek? Selecteer deze optie als de muziekbibliotheek op afstand worden benaderd.</string>
     <string id="33041">Bestand(en) van de Emby Server verwijderen? Dit zal de bestanden ook van de schijf verwijderen!</string>
     <string id="33042">Het uitvoeren van de caching proces kan enige tijd duren. Toch verder gaan?</string>
@@ -273,7 +318,7 @@
     <string id="33057">Reparatie lokale database (forceer-bijwerken van alle inhoud)</string>
     <string id="33058">Lokale database herstellen</string>
     <string id="33059">Cache alle afbeeldingen</string>
-    <string id="33060">Sync Emby Thema Media naar Kodi</string>
+    <string id="33060">Sync herkenningsmelodie/leaders van Emby naar Kodi</string>
     <string id="33061">Gebruiker toevoegen/verwijderen van de sessie</string>
     <string id="33062">Gebruiker toevoegen</string>
     <string id="33063">Gebruiker verwijderen</string>
@@ -285,9 +330,9 @@
     <string id="33069">De taak is geslaagd</string>
     <string id="33070">De taak is mislukt</string>
     <string id="33071">Direct Stream</string>
-    <string id="33072">Afspeel methode voor uw thema's</string>
+    <string id="33072">Afspeel methode voor uw herkenningsmelodie/leaders</string>
     <string id="33073">Het instellingenbestand bestaat niet in TV-Tunes. Wijzig een instelling en voer de taak opnieuw uit.</string>
-    <string id="33074">Weet u zeker dat u uw lokale Kodi database opnieuw wilt instellen?</string>
+    <string id="33074">Weet u zeker dat u uw lokale Kodi database opnieuw in wilt stellen?</string>
     <string id="33075">Wijzig/verwijder netwerkreferenties</string>
     <string id="33076">Wijzig</string>
     <string id="33077">Verwijder</string>
