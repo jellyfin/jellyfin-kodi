@@ -1058,14 +1058,13 @@ class TVShows(Items):
             query = "SELECT idShow FROM tvshow WHERE C12 = ?"
             kodicursor.execute(query, (tvdb,))
             try:
-                showid = kodicursor.fetchone()[0]
+                temp_showid = kodicursor.fetchone()[0]
             except TypeError:
                 pass
             else:
-                emby_other = emby_db.getItem_byKodiId(showid, "tvshow")
+                emby_other = emby_db.getItem_byKodiId(temp_showid, "tvshow")
                 if viewid == emby_other[2]:
                     log.info("Applying series pooling for %s", title)
-                    
                     emby_other_item = emby_db.getItem_byId(emby_other[0])
                     showid = emby_other_item[0]
                     pathid = emby_other_item[2]
