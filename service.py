@@ -35,7 +35,7 @@ if __name__ == "__main__":
     log.warn("Delaying emby startup by: %s sec...", DELAY)
 
     try:
-        if DELAY and xbmc.Monitor().waitForAbort(int(DELAY)):
+        if int(DELAY) and xbmc.Monitor().waitForAbort(int(DELAY)):
             raise RuntimeError("Abort event while waiting to start Emby for kodi")
         # Start the service
         Service().service_entry_point()
