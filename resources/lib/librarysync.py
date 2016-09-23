@@ -582,6 +582,8 @@ class LibrarySync(threading.Thread):
             totalnodes += 1
             self.vnodes.singleNode(totalnodes, "Favorite tvshows", "tvshows", "favourites")
             totalnodes += 1
+            self.vnodes.singleNode(totalnodes, "Favorite episodes", "episodes", "favourites")
+            totalnodes += 1
             self.vnodes.singleNode(totalnodes, "channels", "movies", "channels")
             totalnodes += 1
             # Save total

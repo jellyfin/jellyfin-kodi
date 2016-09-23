@@ -605,6 +605,9 @@ def BrowseContent(viewname, browse_type="", folderid=""):
             listing = emby.getFilteredSection(folderid, itemtype=itemtype.split(",")[0], sortby="Random", recursive=True, limit=150, sortorder="Descending")
         elif filter_type == "recommended":
             listing = emby.getFilteredSection(folderid, itemtype=itemtype.split(",")[0], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter_type="IsFavorite")
+        elif folderid == "favepisodes":
+            xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
+            listing = emby.getFilteredSection(None, itemtype="Episode", sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter_type="IsFavorite")
         elif filter_type == "sets":
             listing = emby.getFilteredSection(folderid, itemtype=itemtype.split(",")[1], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter_type="IsFavorite")
         else:

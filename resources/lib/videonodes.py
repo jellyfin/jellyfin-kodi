@@ -333,6 +333,7 @@ class VideoNodes(object):
 
             'Favorite movies': 30180,
             'Favorite tvshows': 30181,
+            'Favorite episodes': 30182,
             'channels': 30173
         }
         label = lang(labels[tagname])
@@ -349,6 +350,9 @@ class VideoNodes(object):
         if itemtype == "channels":
             root = self.commonRoot(order=1, label=label, tagname=tagname, roottype=2)
             etree.SubElement(root, 'path').text = "plugin://plugin.video.emby/?id=0&mode=channels"
+        elif itemtype == "favourites" and mediatype == "episodes":
+            root = self.commonRoot(order=1, label=label, tagname=tagname, roottype=2)
+            etree.SubElement(root, 'path').text = "plugin://plugin.video.emby/?id=%s&mode=browsecontent&type=%s&folderid=favepisodes" %(tagname, mediatype)
         else:
             root = self.commonRoot(order=1, label=label, tagname=tagname)
             etree.SubElement(root, 'order', {'direction': "ascending"}).text = "sorttitle"
