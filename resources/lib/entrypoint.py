@@ -78,23 +78,15 @@ def doMainListing():
             ''' because we do not use seperate entrypoints for each content type,
                 we need to figure out which items to show in each listing.
                 for now we just only show picture nodes in the picture library
-                video nodes in the video library and all nodes in any other window '''
-
-            '''if path and xbmc.getCondVisibility("Window.IsActive(Pictures)") and node == "photos":
-                addDirectoryItem(label, path)
-            elif path and xbmc.getCondVisibility("Window.IsActive(VideoLibrary)")
-                and node != "photos":
-                addDirectoryItem(label, path)
-            elif path and not xbmc.getCondVisibility("Window.IsActive(VideoLibrary) |
-                 Window.IsActive(Pictures) | Window.IsActive(MusicLibrary)"):
-                addDirectoryItem(label, path)'''
+                video nodes in the video library and all nodes in any other window 
+            '''
 
             if path:
                 if xbmc.getCondVisibility("Window.IsActive(Pictures)") and node == "photos":
                     addDirectoryItem(label, path)
-                elif xbmc.getCondVisibility("Window.IsActive(VideoLibrary)") and node != "photos":
+                elif xbmc.getCondVisibility("Window.IsActive(Videos)") and node != "photos":
                     addDirectoryItem(label, path)
-                elif not xbmc.getCondVisibility("Window.IsActive(VideoLibrary) | Window.IsActive(Pictures) | Window.IsActive(MusicLibrary)"):
+                elif not xbmc.getCondVisibility("Window.IsActive(Videos) | Window.IsActive(Pictures) | Window.IsActive(Music)"):
                     addDirectoryItem(label, path)
 
     # experimental live tv nodes
