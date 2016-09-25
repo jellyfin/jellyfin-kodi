@@ -1054,7 +1054,7 @@ class TVShows(Items):
         studio = " / ".join(studios)
 
         # Verify series pooling
-        if tvdb:
+        if not update_item and tvdb:
             query = "SELECT idShow FROM tvshow WHERE C12 = ?"
             kodicursor.execute(query, (tvdb,))
             try:
