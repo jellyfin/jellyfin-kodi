@@ -24,15 +24,15 @@ class ClientInfo(object):
 
     def __init__(self):
 
-        self.addon = xbmcaddon.Addon()
+        self.addon = xbmcaddon.Addon(self.get_addon_id())
+
+    @staticmethod
+    def get_addon_id():
+        return "plugin.video.emby"
 
     def get_addon_name(self):
         # Used for logging
         return self.addon.getAddonInfo('name').upper()
-
-    @classmethod
-    def get_addon_id(cls):
-        return "plugin.video.emby"
 
     def get_version(self):
         return self.addon.getAddonInfo('version')
