@@ -84,7 +84,7 @@ class ConnectManager(object):
             'connect_manager': self._connect,
             'username': user.get('DisplayName', ""),
             'user_image': user.get('ImageUrl'),
-            'servers': state['Servers'],
+            'servers': state.get('Servers') or [],
             'emby_connect': False if user else True
         }
         dialog.set_args(**kwargs)
