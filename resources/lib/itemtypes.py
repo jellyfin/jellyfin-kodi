@@ -1951,7 +1951,7 @@ class Music(Items):
                 # Artist does not exist in emby database.
                 artist = emby.getItem(parentId)
                 # Item may not be an artist, verification necessary.
-                if artist['Type'] == "MusicArtist":
+                if artist.get('Type') == "MusicArtist":
                     # Update with the parentId, for remove reference
                     emby_db.addReference(parentId, parentId, "MusicArtist", "artist")
                     emby_db.updateParentId(itemid, parentId)
