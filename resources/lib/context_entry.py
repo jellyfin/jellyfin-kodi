@@ -53,8 +53,11 @@ class ContextMenu(object):
             if self._select_menu():
                 self._action_menu()
 
-                #xbmc.sleep(500)
-                #xbmc.executebuiltin('Container.Refresh')
+                if self._selected_option in (OPTIONS['Delete'], OPTIONS['AddFav'],
+                                             OPTIONS['RemoveFav'], OPTIONS['RateSong']):
+                    log.info("refreshing container")
+                    xbmc.sleep(500)
+                    xbmc.executebuiltin('Container.Refresh')
 
     @classmethod
     def _get_item_type(cls):
