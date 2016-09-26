@@ -399,17 +399,30 @@ class Movies(Items):
             log.info("UPDATE movie itemid: %s - Title: %s" % (itemid, title))
 
             # Update the movie entry
-            query = ' '.join((
-                
-                "UPDATE movie",
-                "SET c00 = ?, c01 = ?, c02 = ?, c03 = ?, c04 = ?, c05 = ?, c06 = ?,",
-                    "c07 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?,",
-                    "c16 = ?, c18 = ?, c19 = ?, c21 = ?",
-                "WHERE idMovie = ?"
-            ))
-            kodicursor.execute(query, (title, plot, shortplot, tagline, votecount, rating, writer,
-                year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio, trailer,
-                country, movieid))
+            if self.kodiversion > 16:
+                query = ' '.join((
+                    
+                    "UPDATE movie",
+                    "SET c00 = ?, c01 = ?, c02 = ?, c03 = ?, c04 = ?, c05 = ?, c06 = ?,",
+                        "c07 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?,",
+                        "c16 = ?, c18 = ?, c19 = ?, c21 = ?, premiered = ?",
+                    "WHERE idMovie = ?"
+                ))
+                kodicursor.execute(query, (title, plot, shortplot, tagline, votecount, rating,
+                    writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio,
+                    trailer, country, year, movieid))
+            else:
+                query = ' '.join((
+                    
+                    "UPDATE movie",
+                    "SET c00 = ?, c01 = ?, c02 = ?, c03 = ?, c04 = ?, c05 = ?, c06 = ?,",
+                        "c07 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?,",
+                        "c16 = ?, c18 = ?, c19 = ?, c21 = ?",
+                    "WHERE idMovie = ?"
+                ))
+                kodicursor.execute(query, (title, plot, shortplot, tagline, votecount, rating,
+                    writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title, studio,
+                    trailer, country, movieid))
 
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
@@ -424,18 +437,32 @@ class Movies(Items):
             fileid = self.kodi_db.addFile(filename, pathid)
             
             # Create the movie entry
-            query = (
-                '''
-                INSERT INTO movie(
-                    idMovie, idFile, c00, c01, c02, c03, c04, c05, c06, c07, 
-                    c09, c10, c11, c12, c14, c15, c16, c18, c19, c21)
+            if self.kodiversion > 16:
+                query = (
+                    '''
+                    INSERT INTO movie(
+                        idMovie, idFile, c00, c01, c02, c03, c04, c05, c06, c07, 
+                        c09, c10, c11, c12, c14, c15, c16, c18, c19, c21, premiered)
 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                '''
-            )
-            kodicursor.execute(query, (movieid, fileid, title, plot, shortplot, tagline, votecount,
-                rating, writer, year, imdb, sorttitle, runtime, mpaa, genre, director, title,
-                studio, trailer, country))
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    '''
+                )
+                kodicursor.execute(query, (movieid, fileid, title, plot, shortplot, tagline,
+                    votecount, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre,
+                    director, title, studio, trailer, country, year))
+            else:
+                query = (
+                    '''
+                    INSERT INTO movie(
+                        idMovie, idFile, c00, c01, c02, c03, c04, c05, c06, c07, 
+                        c09, c10, c11, c12, c14, c15, c16, c18, c19, c21)
+
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    '''
+                )
+                kodicursor.execute(query, (movieid, fileid, title, plot, shortplot, tagline,
+                    votecount, rating, writer, year, imdb, sorttitle, runtime, mpaa, genre,
+                    director, title, studio, trailer, country))
 
             # Create the reference in emby table
             emby_db.addReference(itemid, movieid, "Movie", "movie", fileid, pathid, None, checksum, viewid)
