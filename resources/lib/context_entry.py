@@ -53,8 +53,8 @@ class ContextMenu(object):
             if self._select_menu():
                 self._action_menu()
 
-                xbmc.sleep(500)
-                xbmc.executebuiltin('Container.Refresh')
+                #xbmc.sleep(500)
+                #xbmc.executebuiltin('Container.Refresh')
 
     @classmethod
     def _get_item_type(cls):
