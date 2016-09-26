@@ -1,3 +1,9 @@
+version 2.2.37
+- Support favorite episodes
+- Update Dutch translation
+- Fix specials -1 bug
+- minor fixes
+
 version 2.2.34
 - Repair sync can now be filtered by content type
 - Automatically download external subs with language tag
