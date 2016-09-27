@@ -6,7 +6,6 @@ import json
 import requests
 import logging
 
-import xbmc
 import xbmcgui
 
 import clientinfo
@@ -79,7 +78,7 @@ class DownloadUtils(object):
         # Reserved for userclient only
         for server in self.servers:
             if server['ServerId'] == server_id:
-                self.servers.remove(s)
+                self.servers.pop(server)
                 window('emby_server%s.json' % server_id, clear=True)
                 window('emby_server%s.name' % server_id, clear=True)
                 log.info("removing %s from available servers", server_id)
@@ -216,12 +215,12 @@ class DownloadUtils(object):
                     authenticate=True, server_id=None):
 
         log.debug("===== ENTER downloadUrl =====")
-        
+
         session = requests
         kwargs = {}
         default_link = ""
 
-        try: 
+        try:
             # Ensure server info is loaded
             self._ensure_server(server_id)
             server = self.session if server_id is None else self.servers[server_id]
@@ -248,62 +247,63 @@ class DownloadUtils(object):
 
             ##### THE RESPONSE #####
             log.debug(kwargs)
-            r = self._requests(action_type, session, **kwargs)
+            response = self._requests(action_type, session, **kwargs)
 
-            if r.status_code == 204:
+            if response.status_code == 204:
                 # No body in the response
                 log.debug("====== 204 Success ======")
                 # Read response to release connection
-                r.content
+                response.content
 
-            elif r.status_code == requests.codes.ok:
+            elif response.status_code == requests.codes.ok:
                 try:
                     # UNICODE - JSON object
-                    r = r.json()
+                    response = response.json()
                     log.debug("====== 200 Success ======")
-                    log.debug("Response: %s" % r)
-                    return r
+                    log.debug("Response: %s", response)
+                    return response
 
                 except Exception:
-                    if r.headers.get('content-type') != "text/html":
-                        log.info("Unable to convert the response for: %s" % url)
+                    if response.headers.get('content-type') != "text/html":
+                        log.info("Unable to convert the response for: %s", url)
 
             else: # Bad status code
-                log.error("=== Bad status response: %s ===" % r.status_code)
-                r.raise_for_status()
+                log.error("=== Bad status response: %s ===", response.status_code)
+                response.raise_for_status()
 
         ##### EXCEPTIONS #####
 
-        except requests.exceptions.ConnectionError as e:
-            # Make the addon aware of status
-            if window('emby_online') != "false":
-                log.error("Server unreachable at: %s" % url)
-                window('emby_online', value="false")
+        except requests.exceptions.SSLError as error:
+            log.error("invalid SSL certificate for: %s", url)
 
         except requests.exceptions.ConnectTimeout as error:
             log.error("Server timeout at: %s", url)
 
+        except requests.exceptions.ConnectionError as error:
+            # Make the addon aware of status
+            if window('emby_online') != "false":
+                log.error("Server unreachable at: %s", url)
+                window('emby_online', value="false")
+
         except requests.exceptions.HTTPError as error:
 
-            if r.status_code == 401:
+            if response.status_code == 401:
                 # Unauthorized
                 status = window('emby_serverStatus')
 
-                if 'X-Application-Error-Code' in r.headers:
+                if 'X-Application-Error-Code' in response.headers:
                     # Emby server errors
-                    if r.headers['X-Application-Error-Code'] == "ParentalControl":
+                    if response.headers['X-Application-Error-Code'] == "ParentalControl":
                         # Parental control - access restricted
                         if status != "restricted":
-                            xbmcgui.Dialog().notification(
-                                                    heading=lang(29999),
-                                                    message="Access restricted.",
-                                                    icon=xbmcgui.NOTIFICATION_ERROR,
-                                                    time=5000)
-                        
+                            xbmcgui.Dialog().notification(heading=lang(29999),
+                                                          message="Access restricted.",
+                                                          icon=xbmcgui.NOTIFICATION_ERROR,
+                                                          time=5000)
                         window('emby_serverStatus', value="restricted")
                         raise Warning('restricted')
 
-                    elif r.headers['X-Application-Error-Code'] == "UnauthorizedAccessException":
+                    elif response.headers['X-Application-Error-Code'] == "UnauthorizedAccessException":
                         # User tried to do something his emby account doesn't allow
                         pass
 
@@ -311,21 +311,16 @@ class DownloadUtils(object):
                     # Tell userclient token has been revoked.
                     window('emby_serverStatus', value="401")
                     log.error("HTTP Error: %s", error)
-                    xbmcgui.Dialog().notification(
-                                            heading="Error connecting",
-                                            message="Unauthorized.",
-                                            icon=xbmcgui.NOTIFICATION_ERROR)
+                    xbmcgui.Dialog().notification(heading="Error connecting",
+                                                  message="Unauthorized.",
+                                                  icon=xbmcgui.NOTIFICATION_ERROR)
                     raise Warning('401')
 
-        except requests.exceptions.SSLError as error:
-            log.error("invalid SSL certificate for: %s", url)
-
         except requests.exceptions.RequestException as error:
-            log.error("unknown error connecting to: %s" % url)
+            log.error("unknown error connecting to: %s", url)
 
         return default_link
 
-    
     def _ensure_server(self, server_id=None):
 
         if server_id is None and self.session_requests is None:
@@ -342,7 +337,7 @@ class DownloadUtils(object):
 
     @classmethod
     def _get_session_info(cls, server_id=None):
-        
+
         info = {
             'UserId': "",
             'Server': "",
@@ -354,7 +349,7 @@ class DownloadUtils(object):
             server = window('emby_server.json')
         else: # Other connect servers
             server = window('emby_server%s.json' % server_id)
-        
+
         if server:
             info.update(json.loads(server))
 
