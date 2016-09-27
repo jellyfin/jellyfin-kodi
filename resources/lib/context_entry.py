@@ -24,7 +24,8 @@ OPTIONS = {
     'Addon': lang(30408),
     'AddFav': lang(30405),
     'RemoveFav': lang(30406),
-    'RateSong': lang(30407)
+    'RateSong': lang(30407),
+    'Transcode': lang(30412)
 }
 
 #################################################################################################
@@ -103,6 +104,10 @@ class ContextMenu(object):
         userdata = self.api.get_userdata()
         options = []
 
+        if self.item_type in ("movie", "episode", "song"):
+            #options.append(OPTIONS['Transcode'])
+            pass
+
         if userdata['Favorite']:
             # Remove from emby favourites
             options.append(OPTIONS['RemoveFav'])
@@ -136,7 +141,10 @@ class ContextMenu(object):
 
         selected = self._selected_option
 
-        if selected == OPTIONS['Refresh']:
+        if selected == OPTIONS['Transcode']:
+            pass
+
+        elif selected == OPTIONS['Refresh']:
             self.emby.refreshItem(self.item_id)
 
         elif selected == OPTIONS['AddFav']:

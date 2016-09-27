@@ -183,6 +183,7 @@
     <string id="30409">Delete item from the server</string>
     <string id="30410">Refresh this item</string>
     <string id="30411">Set custom song rating (0-5)</string>
+    <string id="30412">Transcode</string>
 
     <!-- add-on settings -->
     <string id="30500">Verify Host SSL Certificate</string>
