@@ -37,7 +37,7 @@ class Artwork(object):
 
         self.enable_texture_cache = settings('enableTextureCache') == "true"
         self.image_cache_limit = int(settings('imageCacheLimit')) * 5
-        log.info("image cache thread count: %s", self.image_cache_limit)
+        log.debug("image cache thread count: %s", self.image_cache_limit)
 
         if not self.xbmc_port and self.enable_texture_cache:
             self._set_webserver_details()

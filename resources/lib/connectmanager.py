@@ -18,6 +18,7 @@ from dialogs import ServerConnect, UsersConnect, LoginConnect, LoginManual, Serv
 log = logging.getLogger("EMBY."+__name__)
 addon = xbmcaddon.Addon(id='plugin.video.emby')
 
+STATE = connectionmanager.ConnectionState
 XML_PATH = (addon.getAddonInfo('path'), "default", "1080i")
 
 ##################################################################################################
@@ -201,3 +202,19 @@ class ConnectManager(object):
                 server.update(updated_server)
         # Update the token in data.txt
         self._connect.credentialProvider.getCredentials(credentials)
+
+    def get_connect_servers(self):
+
+        connect_servers = []
+        servers = self._connect.getAvailableServers()
+        for server in servers:
+            if 'ExchangeToken' in server:
+                result = self.connect_server(server)
+                if result['State'] == STATE['SignedIn']:
+                    connect_servers.append(server)
+
+        log.info(connect_servers)
+        return connect_servers
+
+    def connect_server(self, server):
+        return self._connect.connectToServer(server, {'updateDateLastAccessed': False})

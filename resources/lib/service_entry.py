@@ -33,9 +33,15 @@ class Service(object):
     warn_auth = True
 
     userclient_running = False
+    userclient_thread = None
+
     websocket_running = False
+    websocket_thread = None
+
     library_running = False
-    kodimonitor_running = False
+    library_thread = None
+
+    monitor = False
 
 
     def __init__(self):
@@ -43,7 +49,6 @@ class Service(object):
         self.client_info = clientinfo.ClientInfo()
         self.addon_name = self.client_info.get_addon_name()
         log_level = settings('logLevel')
-        self.monitor = xbmc.Monitor()
 
         window('emby_logLevel', value=str(log_level))
         window('emby_kodiProfile', value=xbmc.translatePath('special://profile'))
@@ -81,21 +86,21 @@ class Service(object):
 
         # Important: Threads depending on abortRequest will not trigger
         # if profile switch happens more than once.
-        monitor = self.monitor
+        self.monitor = kodimonitor.KodiMonitor()
         kodiProfile = xbmc.translatePath('special://profile')
 
         # Server auto-detect
         initialsetup.InitialSetup().setup()
 
         # Initialize important threads
-        user = userclient.UserClient()
-        ws = wsc.WebSocketClient()
-        library = librarysync.LibrarySync()
+        self.userclient_thread = userclient.UserClient()
+        self.websocket_thread = wsc.WebSocketClient()
+        self.library_thread = librarysync.LibrarySync()
         kplayer = player.Player()
         # Sync and progress report
         lastProgressUpdate = datetime.today()
 
-        while not monitor.abortRequested():
+        while not self.monitor.abortRequested():
 
             if window('emby_kodiProfile') != kodiProfile:
                 # Profile change happened, terminate this thread and others
@@ -112,7 +117,7 @@ class Service(object):
 
                 # Emby server is online
                 # Verify if user is set and has access to the server
-                if user.get_user() is not None and user.get_access():
+                if self.userclient_thread.get_user() is not None and self.userclient_thread.get_access():
 
                      # If an item is playing
                     if xbmc.Player().isPlaying():
@@ -158,27 +163,23 @@ class Service(object):
                             dialog(type_="notification",
                                    heading="{emby}",
                                    message=("%s %s%s!"
-                                            % (lang(33000), user.get_username().decode('utf-8'),
+                                            % (lang(33000), self.userclient_thread.get_username().decode('utf-8'),
                                                add.decode('utf-8'))),
                                    icon="{emby}",
                                    time=2000,
                                    sound=False)
 
-                        # Start monitoring kodi events
-                        if not self.kodimonitor_running:
-                            self.kodimonitor_running = kodimonitor.KodiMonitor()
-
                         # Start the Websocket Client
                         if not self.websocket_running:
                             self.websocket_running = True
-                            ws.start()
+                            self.websocket_thread.start()
                         # Start the syncing thread
                         if not self.library_running:
                             self.library_running = True
-                            library.start()
+                            self.library_thread.start()
                 else:
                     
-                    if (user.get_user() is None) and self.warn_auth:
+                    if (self.userclient_thread.get_user() is None) and self.warn_auth:
                         # Alert user is not authenticated and suppress future warning
                         self.warn_auth = False
                         log.info("Not authenticated yet.")
@@ -186,96 +187,106 @@ class Service(object):
                     # User access is restricted.
                     # Keep verifying until access is granted
                     # unless server goes offline or Kodi is shut down.
-                    while not user.get_access():
+                    while not self.userclient_thread.get_access():
                         # Verify access with an API call
+
                         if window('emby_online') != "true":
                             # Server went offline
                             break
 
-                        if monitor.waitForAbort(5):
+                        if self.monitor.waitForAbort(5):
                             # Abort was requested while waiting. We should exit
                             break
             else:
                 # Wait until Emby server is online
                 # or Kodi is shut down.
-                while not monitor.abortRequested():
-                    
-                    if user.get_server() is None:
-                        # No server info set in add-on settings
-                        pass
-                    
-                    elif not user.verify_server():
-                        # Server is offline.
-                        # Alert the user and suppress future warning
-                        if self.server_online:
-                            log.info("Server is offline.")
-                            window('emby_online', value="false")
+                self._server_online_check()
 
-                            if settings('offlineMsg') == "true":
-                                dialog(type_="notification",
-                                       heading=lang(33001),
-                                       message="%s %s" % (self.addon_name, lang(33002)),
-                                       icon="{emby}",
-                                       sound=False)
 
-                        self.server_online = False
-
-                    elif window('emby_online') == "sleep":
-                        # device going to sleep
-                        if self.websocket_running:
-                            ws.stop_client()
-                            ws = wsc.WebSocketClient()
-                            self.websocket_running = False
-
-                        if self.library_running:
-                            library.stopThread()
-                            library = librarysync.LibrarySync()
-                            self.library_running = False
-
-                    else:
-                        # Server is online
-                        if not self.server_online:
-                            # Server was offline when Kodi started.
-                            # Wait for server to be fully established.
-                            if monitor.waitForAbort(5):
-                                # Abort was requested while waiting.
-                                break
-                            # Alert the user that server is online.
-                            dialog(type_="notification",
-                                   heading="{emby}",
-                                   message=lang(33003),
-                                   icon="{emby}",
-                                   time=2000,
-                                   sound=False)
-
-                        self.server_online = True
-                        log.info("Server is online and ready.")
-                        window('emby_online', value="true")
-
-                        # Start the userclient thread
-                        if not self.userclient_running:
-                            self.userclient_running = True
-                            user.start()
-
-                        break
-
-                    if monitor.waitForAbort(1):
-                        # Abort was requested while waiting.
-                        break
-
-            if monitor.waitForAbort(1):
+            if self.monitor.waitForAbort(1):
                 # Abort was requested while waiting. We should exit
                 break
 
         ##### Emby thread is terminating. #####
+        self._shutdown()
+
+    def _server_online_check(self):
+        # Set emby_online true/false property
+        user = self.userclient_thread
+        while not self.monitor.abortRequested():
+            
+            if user.get_server() is None:
+                # No server info set in add-on settings
+                pass
+            
+            elif not user.verify_server():
+                # Server is offline.
+                # Alert the user and suppress future warning
+                if self.server_online:
+                    log.info("Server is offline")
+                    window('emby_online', value="false")
+
+                    if settings('offlineMsg') == "true":
+                        dialog(type_="notification",
+                               heading=lang(33001),
+                               message="%s %s" % (self.addon_name, lang(33002)),
+                               icon="{emby}",
+                               sound=False)
+
+                self.server_online = False
+
+            elif window('emby_online') == "sleep":
+                # device going to sleep
+                if self.websocket_running:
+                    self.websocket_thread.stop_client()
+                    self.websocket_thread = wsc.WebSocketClient()
+                    self.websocket_running = False
+
+                if self.library_running:
+                    self.library_thread.stopThread()
+                    self.library_thread = librarysync.LibrarySync()
+                    self.library_running = False
+
+            else:
+                # Server is online
+                if not self.server_online:
+                    # Server was offline when Kodi started.
+                    # Wait for server to be fully established.
+                    if self.monitor.waitForAbort(5):
+                        # Abort was requested while waiting.
+                        break
+                    # Alert the user that server is online.
+                    dialog(type_="notification",
+                           heading="{emby}",
+                           message=lang(33003),
+                           icon="{emby}",
+                           time=2000,
+                           sound=False)
+
+                self.server_online = True
+                window('emby_online', value="true")
+                log.info("Server is online and ready")
+
+                # Start the userclient thread
+                if not self.userclient_running:
+                    self.userclient_running = True
+                    user.start()
+
+                break
+
+            if self.monitor.waitForAbort(1):
+                # Abort was requested while waiting.
+                break
+
+    def _shutdown(self):
 
         if self.userclient_running:
-            user.stop_client()
+            self.userclient_thread.stop_client()
 
         if self.library_running:
-            library.stopThread()
+            self.library_thread.stopThread()
 
         if self.websocket_running:
-            ws.stop_client()
+            self.websocket_thread.stop_client()
 
         log.warn("======== STOP %s ========", self.addon_name)

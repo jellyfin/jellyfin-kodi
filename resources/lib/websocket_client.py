@@ -292,7 +292,7 @@ class WebSocketClient(threading.Thread):
         log.debug("closed")
 
     def on_open(self, ws):
-        self.doutils.postCapabilities(self.device_id)
+        self.doutils.post_capabilities(self.device_id)
 
     def on_error(self, ws, error):
 

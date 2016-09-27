@@ -2,6 +2,7 @@
 
 ##################################################################################################
 
+import json
 import logging
 import threading
 
@@ -213,10 +214,14 @@ class UserClient(threading.Thread):
                     raise
 
         # Set downloadutils.py values
-        doutils.setUserId(userid)
-        doutils.setServer(server)
-        doutils.setToken(token)
-        doutils.setSSL(self.get_ssl())
+        session = {
+            'UserId': userid,
+            'Server': server,
+            'ServerId': settings('serverId'),
+            'Token': token,
+            'SSL': self.get_ssl()
+        }
+        doutils._set_session(**session)
 
         # verify user access
         try:
@@ -225,9 +230,26 @@ class UserClient(threading.Thread):
             pass
 
         # Start downloadutils.py session
-        doutils.startSession()
+        doutils.start_session()
         # Set _user and _server
         self._set_user_server()
+
+    def load_connect_servers(self):
+        # Set connect servers
+        if not settings('connectUsername'):
+            return
+            
+        servers = self.connectmanager.get_connect_servers()
+        added_servers = []
+        for server in servers:
+            if server['Id'] != settings('serverId'):
+                # TODO: SSL setup
+                self.doutils.add_server(server, False)
+                added_servers.append(server['Id'])
+        
+        # Set properties
+        log.info(added_servers)
+        window('emby_servers', value=json.dumps(added_servers))
 
     def _reset_client(self):
 
@@ -295,7 +317,7 @@ class UserClient(threading.Thread):
                 # Abort was requested while waiting. We should exit
                 break
 
-        self.doutils.stopSession()
+        self.doutils.stop_session()
         log.warn("##===---- UserClient Stopped ----===##")
 
     def stop_client(self):

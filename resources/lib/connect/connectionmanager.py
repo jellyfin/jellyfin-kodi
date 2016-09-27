@@ -387,7 +387,7 @@ class ConnectionManager(object):
 
         return servers
 
-    def _getAvailableServers(self):
+    def getAvailableServers(self):
         
         log.info("Begin getAvailableServers")
 
@@ -512,7 +512,7 @@ class ConnectionManager(object):
 
         if mode == ConnectionMode['Local']:
             enableRetry = True
-            timeout = 8
+            timeout = 5
 
             if self._stringEqualsIgnoreCase(address, server.get('ManualAddress')):
                 log.info("skipping LocalAddress test because it is the same as ManualAddress")
@@ -522,7 +522,7 @@ class ConnectionManager(object):
 
             if self._stringEqualsIgnoreCase(address, server.get('LocalAddress')):
                 enableRetry = True
-                timeout = 8
+                timeout = 5
 
         if skipTest or not address:
             log.info("skipping test at index: %s" % index)
@@ -744,7 +744,7 @@ class ConnectionManager(object):
 
         log.info("Begin connect")
 
-        servers = self._getAvailableServers()
+        servers = self.getAvailableServers()
         return self._connectToServers(servers, options)
 
     def _connectToServers(self, servers, options):
