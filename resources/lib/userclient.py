@@ -112,12 +112,12 @@ class UserClient(threading.Thread):
         except Warning as error:
             if self._has_access and "restricted" in error:
                 self._has_access = False
-                log.info("Access is restricted")
+                log.info("access is restricted")
         else:
             if not self._has_access:
                 self._has_access = True
                 window('emby_serverStatus', clear=True)
-                log.info("Access is granted")
+                log.info("access is granted")
                 xbmcgui.Dialog().notification(lang(29999), lang(33007))
 
     @classmethod
@@ -200,9 +200,20 @@ class UserClient(threading.Thread):
         token = self.get_token()
 
         # Set properties
+        # TODO: Remove old reference once code converted
         window('emby_currUser', value=userid)
         window('emby_server%s' % userid, value=server)
         window('emby_accessToken%s' % userid, value=token)
+
+        server_json = {
+            'UserId': userid,
+            'Server': server,
+            'ServerId': settings('serverId'),
+            'Token': token,
+            'SSL': self.get_ssl()
+        }
+        # Set downloadutils.py values
+        doutils.set_session(**server_json)
 
         # Test the validity of the current token
         if not authenticated:
@@ -213,18 +224,7 @@ class UserClient(threading.Thread):
                     # Token is not longer valid
                     raise
 
-        # Set downloadutils.py values
-        session = {
-            'UserId': userid,
-            'Server': server,
-            'ServerId': settings('serverId'),
-            'Token': token,
-            'SSL': self.get_ssl()
-        }
-        doutils._set_session(**session)
-
-        # verify user access
-        try:
+        try: # verify user access
             self._set_access()
         except Warning: # We don't need to raise any exceptions
             pass
@@ -238,7 +238,7 @@ class UserClient(threading.Thread):
         # Set connect servers
         if not settings('connectUsername'):
             return
-            
+
         servers = self.connectmanager.get_connect_servers()
         added_servers = []
         for server in servers:
@@ -246,7 +246,7 @@ class UserClient(threading.Thread):
                 # TODO: SSL setup
                 self.doutils.add_server(server, False)
                 added_servers.append(server['Id'])
-        
+
         # Set properties
         log.info(added_servers)
         window('emby_servers', value=json.dumps(added_servers))
@@ -275,7 +275,7 @@ class UserClient(threading.Thread):
 
         monitor = xbmc.Monitor()
 
-        log.warn("----===## Starting UserClient ##===----")
+        log.warn("----====# Starting UserClient #====----")
 
         while not self._stop_thread:
 
@@ -318,7 +318,7 @@ class UserClient(threading.Thread):
                 break
 
         self.doutils.stop_session()
-        log.warn("##===---- UserClient Stopped ----===##")
+        log.warn("#====---- UserClient Stopped ----====#")
 
     def stop_client(self):
         self._stop_thread = True

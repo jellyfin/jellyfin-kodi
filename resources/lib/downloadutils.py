@@ -43,14 +43,16 @@ class DownloadUtils(object):
         self.client_info = clientinfo.ClientInfo()
 
 
-    def _set_session(self, **kwargs):
+    def set_session(self, **kwargs):
         # Reserved for userclient only
         info = {}
         for key in kwargs:
             info[key] = kwargs[key]
 
         self.session.update(info)
-        log.info("Set info for server %s: %s", self.session['ServerId'], self.session)
+        window('emby_server.json', value=json.dumps(self.session))
+
+        log.debug("Set info for server %s: %s", self.session['ServerId'], self.session)
 
     def add_server(self, server, ssl):
         # Reserved for userclient only
@@ -155,20 +157,19 @@ class DownloadUtils(object):
                             )
                             self.downloadUrl(url, postBody={}, action_type="POST")
 
-
     def start_session(self):
         # User is identified from this point
         # Attach authenticated header to the session
         # Start session
-        s = requests.Session()
-        s.headers = self.get_header()
-        s.verify = self.session['SSL']
+        session = requests.Session()
+        session.headers = self.get_header()
+        session.verify = self.session['SSL']
         # Retry connections to the server
-        s.mount("http://", requests.adapters.HTTPAdapter(max_retries=1))
-        s.mount("https://", requests.adapters.HTTPAdapter(max_retries=1))
-        self.session_requests = s
+        session.mount("http://", requests.adapters.HTTPAdapter(max_retries=1))
+        session.mount("https://", requests.adapters.HTTPAdapter(max_retries=1))
+        self.session_requests = session
 
-        log.info("Requests session started on: %s" % self.session['Server'])
+        log.info("requests session started on: %s", self.session['Server'])
 
     def stop_session(self):
         try:
@@ -185,7 +186,7 @@ class DownloadUtils(object):
 
         if authenticate:
 
-            user = self.get_user(server_id)
+            user = self._get_session_info(server_id)
             user_id = user['UserId']
             token = user['Token']
 
@@ -211,20 +212,6 @@ class DownloadUtils(object):
         })
         return header
 
-    def get_user(self, server_id=None):
-
-        if server_id is None:
-            return {
-                'UserId': self.session['UserId'],
-                'Token': self.session['Token']
-            }
-        else:
-            server = self.servers[server_id]
-            return {
-                'UserId': server['UserId'],
-                'Token': server['Token']
-            }
-
     def downloadUrl(self, url, postBody=None, action_type="GET", parameters=None,
                     authenticate=True, server_id=None):
 
@@ -234,30 +221,22 @@ class DownloadUtils(object):
         kwargs = {}
         default_link = ""
 
-        try: # Ensure server info is loaded
-            if not self._ensure_server(server_id):
-                raise AttributeError("unable to load server information: %s" % server_id)
+        try: 
+            # Ensure server info is loaded
+            self._ensure_server(server_id)
+            server = self.session if server_id is None else self.servers[server_id]
 
-            if server_id is None:
-                if self.session_requests is not None:
-                    session = self.session_requests
-                else:
-                    kwargs.update({
-                        'verify': self.session['SSL'],
-                        'headers': self.get_header(authenticate=authenticate)
-                    })
-                # Replace for the real values
-                url = url.replace("{server}", self.session['Server'])
-                url = url.replace("{UserId}", self.session['UserId'])
+            if server_id is None and self.session_requests is not None: # Main server
+                session = self.session_requests
             else:
-                server = self.servers[server_id]
                 kwargs.update({
                     'verify': server['SSL'],
                     'headers': self.get_header(server_id, authenticate)
                 })
-                # Replace for the real values
-                url = url.replace("{server}", server['Server'])
-                url = url.replace("{UserId}", server['UserId'])
+
+            # Replace for the real values
+            url = url.replace("{server}", server['Server'])
+            url = url.replace("{UserId}", server['UserId'])
 
             ##### PREPARE REQUEST #####
             kwargs.update({
@@ -285,7 +264,7 @@ class DownloadUtils(object):
                     log.debug("Response: %s" % r)
                     return r
 
-                except:
+                except Exception:
                     if r.headers.get('content-type') != "text/html":
                         log.info("Unable to convert the response for: %s" % url)
 
@@ -301,10 +280,10 @@ class DownloadUtils(object):
                 log.error("Server unreachable at: %s" % url)
                 window('emby_online', value="false")
 
-        except requests.exceptions.ConnectTimeout as e:
-            log.error("Server timeout at: %s" % url)
+        except requests.exceptions.ConnectTimeout as error:
+            log.error("Server timeout at: %s", url)
 
-        except requests.exceptions.HTTPError as e:
+        except requests.exceptions.HTTPError as error:
 
             if r.status_code == 401:
                 # Unauthorized
@@ -331,28 +310,18 @@ class DownloadUtils(object):
                 elif status not in ("401", "Auth"):
                     # Tell userclient token has been revoked.
                     window('emby_serverStatus', value="401")
-                    log.error("HTTP Error: %s" % e)
+                    log.error("HTTP Error: %s", error)
                     xbmcgui.Dialog().notification(
                                             heading="Error connecting",
                                             message="Unauthorized.",
                                             icon=xbmcgui.NOTIFICATION_ERROR)
                     raise Warning('401')
 
-            elif r.status_code in (301, 302):
-                # Redirects
-                pass
-            elif r.status_code == 400:
-                # Bad requests
-                pass
+        except requests.exceptions.SSLError as error:
+            log.error("invalid SSL certificate for: %s", url)
 
-        except requests.exceptions.SSLError as e:
-            log.error("Invalid SSL certificate for: %s" % url)
-
-        except requests.exceptions.RequestException as e:
-            log.error("Unknown error connecting to: %s" % url)
-
-        except AttributeError as error:
-            log.error(error)
+        except requests.exceptions.RequestException as error:
+            log.error("unknown error connecting to: %s" % url)
 
         return default_link
 
@@ -360,51 +329,39 @@ class DownloadUtils(object):
     def _ensure_server(self, server_id=None):
 
         if server_id is None and self.session_requests is None:
-            
-            server = self._get_session_info()
-            self.session.update(server)
+            if not self.session:
+                server = self._get_session_info()
+                self.session = server
 
         elif server_id and server_id not in self.servers:
-            
-            server = self._get_session_info(server_id)
-            if server is None:
-                return False
-
-            self.servers[server_id] = server
+            if server_id not in self.servers:
+                server = self._get_session_info(server_id)
+                self.servers[server_id] = server
 
         return True
 
     @classmethod
     def _get_session_info(cls, server_id=None):
         
-        info = {}
+        info = {
+            'UserId': "",
+            'Server': "",
+            'Token': "",
+            'SSL': False
+        }
 
         if server_id is None: # Main server
-
-            user_id = window('emby_currUser')
-            info.update({
-                'UserId': user_id,
-                'Server': window('emby_server%s' % user_id),
-                'Token': window('emby_accessToken%s' % user_id)
-            })
-            verifyssl = False
-            # If user enables ssl verification
-            if settings('sslverify') == "true":
-                verifyssl = True
-            if settings('sslcert') != "None":
-                verifyssl = settings('sslcert')
-
-            info['SSL'] = verifyssl
-
+            server = window('emby_server.json')
         else: # Other connect servers
             server = window('emby_server%s.json' % server_id)
-            if server:
-                info.update(json.loads(server))
+        
+        if server:
+            info.update(json.loads(server))
 
         return info
 
     @classmethod
-    def _requests(cls, action, session=requests, **kwargs):
+    def _requests(cls, action, session, **kwargs):
 
         if action == "GET":
             response = session.get(**kwargs)

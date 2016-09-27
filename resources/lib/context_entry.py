@@ -122,12 +122,13 @@ class ContextMenu(object):
         options.append(OPTIONS['Addon'])
 
         addon = xbmcaddon.Addon('plugin.video.emby')
-        XML_PATH = (addon.getAddonInfo('path'), "default", "1080i")
-        dialog = context.ContextMenu("script-emby-context.xml", *XML_PATH)
-        dialog.set_options(options)
-        dialog.doModal()
-        if dialog.is_selected():
-            self._selected_option = dialog.get_selected()
+        xml_path = (addon.getAddonInfo('path'), "default", "1080i")
+        context_menu = context.ContextMenu("script-emby-context.xml", *xml_path)
+        context_menu.set_options(options)
+        context_menu.doModal()
+
+        if context_menu.is_selected():
+            self._selected_option = context_menu.get_selected()
 
         return self._selected_option
 

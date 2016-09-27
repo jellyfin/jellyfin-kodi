@@ -8,7 +8,7 @@ import os
 import xbmcgui
 import xbmcaddon
 
-from utils import window, language as lang
+from utils import window
 
 ##################################################################################################
 

@@ -154,10 +154,10 @@ class ConnectManager(object):
         dialog.doModal()
 
         if dialog.is_user_selected():
-            
+
             user = dialog.get_user()
             username = user['Name']
-            
+
             if user['HasPassword']:
                 log.debug("User has password, present manual login")
                 try:
