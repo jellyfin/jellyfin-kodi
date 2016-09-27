@@ -1042,7 +1042,9 @@ class LibrarySync(threading.Thread):
                     % (str(elapsedTime).split('.')[0], librarySync))
 
                 # Add other servers at this point
-                self.user.load_connect_servers()
+                # TODO: re-add once plugin listing is created
+                # self.user.load_connect_servers()
+                
                 # Only try the initial sync once per kodi session regardless
                 # This will prevent an infinite loop in case something goes wrong.
                 startupComplete = True
