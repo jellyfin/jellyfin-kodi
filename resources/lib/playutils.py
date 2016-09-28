@@ -10,6 +10,7 @@ import xbmcgui
 import xbmcvfs
 
 import clientinfo
+import downloadutils
 from utils import window, settings, language as lang
 
 #################################################################################################
@@ -29,9 +30,39 @@ class PlayUtils():
 
         self.userid = window('emby_currUser')
         self.server = window('emby_server%s' % self.userid)
+        
+        self.doUtils = downloadutils.DownloadUtils().downloadUrl
     
-
     def getPlayUrl(self):
+        '''
+            New style to retrieve the best playback method based on sending the profile to the server
+            Based on capabilities the correct path is returned, including livestreams that need to be opened by the server
+            TODO: Close livestream if needed (RequiresClosing in livestream source)
+        '''
+        playurl = None
+        pbinfo = self.getPlaybackInfo()
+        if pbinfo:
+            xbmc.log("getPlayUrl pbinfo: %s" %(pbinfo))
+            
+            if pbinfo["Protocol"] == "SupportsDirectPlay":
+                playmethod = "DirectPlay"
+            elif pbinfo["Protocol"] == "SupportsDirectStream":
+                playmethod = "DirectStream"
+            elif pbinfo.get('LiveStreamId'):
+                playmethod = "LiveStream"
+            else:
+                playmethod = "Transcode"
+
+            playurl = pbinfo["Path"]
+            xbmc.log("getPlayUrl playmethod: %s - playurl: %s" %(playmethod, playurl))
+            window('emby_%s.playmethod' % playurl, value=playmethod)
+            if pbinfo["RequiresClosing"] and pbinfo.get('LiveStreamId'):
+                window('emby_%s.livestreamid' % playurl, value=pbinfo["LiveStreamId"])
+
+        return playurl
+
+
+    def getPlayUrlOld(self):
 
         playurl = None
         
@@ -40,7 +71,8 @@ class PlayUtils():
             # Play LiveTV or recordings
             log.info("File protocol is http (livetv).")
             playurl = "%s/emby/Videos/%s/stream.ts?audioCodec=copy&videoCodec=copy" % (self.server, self.item['Id'])
-            window('emby_%s.playmethod' % playurl, value="Transcode")
+            window('emby_%s.playmethod' % playurl, value="DirectPlay")
+            
 
         elif self.item.get('MediaSources') and self.item['MediaSources'][0]['Protocol'] == "Http":
             # Only play as http, used for channels, or online hosting of content
@@ -409,3 +441,191 @@ class PlayUtils():
             playurlprefs += "&AudioBitrate=192000"
 
         return playurlprefs
+    
+    def getPlaybackInfo(self):
+        #Gets the playback Info for the current item
+        url = "{server}/emby/Items/%s/PlaybackInfo?format=json" %self.item['Id']
+        body = {   
+                "UserId": self.userid,
+                "DeviceProfile": self.getDeviceProfile(),
+                "StartTimeTicks": 0, #TODO
+                "AudioStreamIndex": None, #TODO
+                "SubtitleStreamIndex": None, #TODO
+                "MediaSourceId": None, 
+                "LiveStreamId": None 
+                }
+        pbinfo = self.doUtils(url, postBody=body, action_type="POST")
+        xbmc.log("getPlaybackInfo: %s" %pbinfo)
+        mediaSource = self.getOptimalMediaSource(pbinfo["MediaSources"])
+        if mediaSource and mediaSource["RequiresOpening"]:
+            mediaSource = self.getLiveStream(pbinfo["PlaySessionId"], mediaSource)
+        
+        return mediaSource
+                
+        
+    def getOptimalMediaSource(self, mediasources):
+        '''
+        Select the best possible mediasource for playback
+        Because we posted our deviceprofile to the server, 
+        only streams will be returned that can actually be played by this client so no need to check bitrates etc.
+        '''
+        preferredStreamOrder = ["SupportsDirectPlay","SupportsDirectStream","SupportsTranscoding"]
+        bestSource = {}
+        for prefstream in preferredStreamOrder:
+            for source in mediasources:
+                if source[prefstream] == True:
+                    if prefstream == "SupportsDirectPlay":
+                        #always prefer direct play
+                        alt_playurl = self.checkDirectPlayPath(source["Path"])
+                        if alt_playurl:
+                            bestSource = source
+                            source["Path"] = alt_playurl
+                    elif bestSource.get("BitRate",0) < source.get("Bitrate",0):
+                        #prefer stream with highest bitrate for http sources
+                        bestSource = source
+                    elif not source.get("Bitrate") and source.get("RequiresOpening"):
+                        #livestream
+                        bestSource = source
+        xbmc.log("getOptimalMediaSource: %s" %bestSource)
+        return bestSource
+        
+    def getLiveStream(self, playSessionId, mediaSource):
+        url = "{server}/emby/LiveStreams/Open?format=json"
+        body = {   
+                "UserId": self.userid,
+                "DeviceProfile": self.getDeviceProfile(),
+                "ItemId": self.item["Id"],
+                "PlaySessionId": playSessionId,
+                "OpenToken": mediaSource["OpenToken"],
+                "StartTimeTicks": 0, #TODO
+                "AudioStreamIndex": None, #TODO
+                "SubtitleStreamIndex": None #TODO
+                }
+        streaminfo = self.doUtils(url, postBody=body, action_type="POST")
+        xbmc.log("getLiveStream: %s" %streaminfo)
+        return streaminfo["MediaSource"]
+            
+    def checkDirectPlayPath(self, playurl):
+
+        if self.item.get('VideoType'):
+            # Specific format modification
+            if self.item['VideoType'] == "Dvd":
+                playurl = "%s/VIDEO_TS/VIDEO_TS.IFO" % playurl
+            elif self.item['VideoType'] == "BluRay":
+                playurl = "%s/BDMV/index.bdmv" % playurl
+
+        # Assign network protocol
+        if playurl.startswith('\\\\'):
+            playurl = playurl.replace("\\\\", "smb://")
+            playurl = playurl.replace("\\", "/")
+            
+        if xbmcvfs.exists(playurl):
+            return playurl
+        else:
+            return None
+    
+    def getDeviceProfile(self):
+        return {
+            "Name": "Kodi",
+            "MaxStreamingBitrate": self.getBitrate()*1000,
+            "MusicStreamingTranscodingBitrate": 1280000,
+            "TimelineOffsetSeconds": 5,
+            
+            "Identification": {
+              "ModelName": "Kodi",
+              "Headers": [
+                {
+                  "Name": "User-Agent",
+                  "Value": "Kodi",
+                  "Match": 2
+                }
+              ]
+            },
+            
+            "TranscodingProfiles": [
+              {
+                "Container": "mp3",
+                "AudioCodec": "mp3",
+                "Type": 0
+              },
+              {
+                "Container": "ts",
+                "AudioCodec": "aac",
+                "VideoCodec": "h264",
+                "Type": 1
+              },
+              {
+                "Container": "jpeg",
+                "Type": 2
+              }
+            ],
+            
+            "DirectPlayProfiles": [
+              {
+                "Container": "",
+                "Type": 0
+              },
+              {
+                "Container": "",
+                "Type": 1
+              },
+              {
+                "Container": "",
+                "Type": 2
+              }
+            ],
+            
+            "ResponseProfiles": [],
+            "ContainerProfiles": [],
+            "CodecProfiles": [],
+            
+            "SubtitleProfiles": [
+              {
+                "Format": "srt",
+                "Method": 2
+              },
+              {
+                "Format": "sub",
+                "Method": 2
+              },
+              {
+                "Format": "srt",
+                "Method": 1
+              },
+              {
+                "Format": "ass",
+                "Method": 1,
+                "DidlMode": ""
+              },
+              {
+                "Format": "ssa",
+                "Method": 1,
+                "DidlMode": ""
+              },
+              {
+                "Format": "smi",
+                "Method": 1,
+                "DidlMode": ""
+              },
+              {
+                "Format": "dvdsub",
+                "Method": 1,
+                "DidlMode": ""
+              },
+              {
+                "Format": "pgs",
+                "Method": 1,
+                "DidlMode": ""
+              },
+              {
+                "Format": "pgssub",
+                "Method": 1,
+                "DidlMode": ""
+              },
+              {
+                "Format": "sub",
+                "Method": 1,
+                "DidlMode": ""
+              }
+            ]
+        }

@@ -509,3 +509,10 @@ class Player(xbmc.Player):
             'PositionTicks': positionTicks
         }
         self.doUtils(url, postBody=postdata, action_type="POST")
+        
+        #If needed, close any livestreams
+        livestreamid = window("emby_%s.livestreamid" % self.currentFile)
+        if livestreamid:
+            url = "{server}/emby/LiveStreams/Close"
+            postdata = { 'LiveStreamId': livestreamid }
+            self.doUtils(url, postBody=postdata, action_type="POST")
