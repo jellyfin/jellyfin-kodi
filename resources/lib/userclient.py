@@ -249,7 +249,7 @@ class UserClient(threading.Thread):
 
         # Set properties
         log.info(added_servers)
-        window('emby_servers', value=json.dumps(added_servers))
+        window('emby_servers.json', value=added_servers)
 
     def _reset_client(self):
 

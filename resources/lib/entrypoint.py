@@ -98,9 +98,8 @@ def doMainListing():
 
     '''
     TODO: Create plugin listing for servers
-    servers = window('emby_servers')
+    servers = window('emby_servers.json')
     if servers:
-        servers = json.loads(servers)
         for server in servers:
             log.info(window('emby_server%s.name' % server))
             addDirectoryItem(window('emby_server%s.name' % server), "plugin://plugin.video.emby/?mode=%s" % server)'''

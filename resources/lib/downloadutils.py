@@ -49,7 +49,7 @@ class DownloadUtils(object):
             info[key] = kwargs[key]
 
         self.session.update(info)
-        window('emby_server.json', value=json.dumps(self.session))
+        window('emby_server.json', value=self.session)
 
         log.debug("Set info for server %s: %s", self.session['ServerId'], self.session)
 
@@ -66,7 +66,7 @@ class DownloadUtils(object):
             if s == server_id:
                 s.update(info)
                 # Set window prop
-                self._set_server_properties(server_id, server['Name'], json.dumps(info))
+                self._set_server_properties(server_id, server['Name'], info)
                 log.info("updating %s to available servers: %s", server_id, self.servers)
                 break
         else:
@@ -351,7 +351,7 @@ class DownloadUtils(object):
             server = window('emby_server%s.json' % server_id)
 
         if server:
-            info.update(json.loads(server))
+            info.update(server)
 
         return info
 

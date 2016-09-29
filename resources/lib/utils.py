@@ -26,16 +26,21 @@ log = logging.getLogger("EMBY."+__name__)
 #################################################################################################
 # Main methods
 
-def window(property, value=None, clear=False, window_id=10000):
+def window(property_, value=None, clear=False, window_id=10000):
     # Get or set window property
     WINDOW = xbmcgui.Window(window_id)
 
     if clear:
-        WINDOW.clearProperty(property)
+        WINDOW.clearProperty(property_)
     elif value is not None:
-        WINDOW.setProperty(property, value)
+        if ".json" in property_:
+            value = json.dumps(value)
+        WINDOW.setProperty(property_, value)
     else:
-        return WINDOW.getProperty(property)
+        result = WINDOW.getProperty(property_)
+        if result and ".json" in property_:
+            result = json.loads(result)
+        return result
 
 def settings(setting, value=None):
     # Get or add addon setting
