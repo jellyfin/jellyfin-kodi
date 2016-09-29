@@ -33,7 +33,7 @@ class PlayUtils():
         
         self.doUtils = downloadutils.DownloadUtils().downloadUrl
     
-    def getPlayUrl(self):
+    def getPlayUrlNew(self):
         '''
             New style to retrieve the best playback method based on sending the profile to the server
             Based on capabilities the correct path is returned, including livestreams that need to be opened by the server
@@ -62,7 +62,7 @@ class PlayUtils():
         return playurl
 
 
-    def getPlayUrlOld(self):
+    def getPlayUrl(self):
 
         playurl = None
         
@@ -461,8 +461,7 @@ class PlayUtils():
             mediaSource = self.getLiveStream(pbinfo["PlaySessionId"], mediaSource)
         
         return mediaSource
-                
-        
+
     def getOptimalMediaSource(self, mediasources):
         '''
         Select the best possible mediasource for playback
