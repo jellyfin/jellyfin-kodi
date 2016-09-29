@@ -81,5 +81,6 @@
 		<setting label="30535" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=deviceid)" />
 		<setting label="33093" type="folder" id="backupPath" option="writeable" />
 		<setting label="33092" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=backup)" visible="!eq(-1,)" option="close" />
+        <setting id="experimentalPlayback" type="bool" label="Enable new experimental playback" default="false" />
 	</category>
 </settings>

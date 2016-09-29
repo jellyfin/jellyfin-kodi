@@ -37,32 +37,39 @@ class PlayUtils():
         '''
             New style to retrieve the best playback method based on sending the profile to the server
             Based on capabilities the correct path is returned, including livestreams that need to be opened by the server
-            TODO: Close livestream if needed (RequiresClosing in livestream source)
         '''
         playurl = None
         pbinfo = self.getPlaybackInfo()
         if pbinfo:
-            xbmc.log("getPlayUrl pbinfo: %s" %(pbinfo))
+            xbmc.log("getPlayUrl pbinfo: %s" %(pbinfo))#debug
             
-            if pbinfo["Protocol"] == "SupportsDirectPlay":
+            if pbinfo["SupportsDirectPlay"]:
                 playmethod = "DirectPlay"
-            elif pbinfo["Protocol"] == "SupportsDirectStream":
+                playurl = pbinfo["Path"]
+                
+            elif pbinfo["SupportsDirectStream"]:
                 playmethod = "DirectStream"
-            elif pbinfo.get('LiveStreamId'):
-                playmethod = "LiveStream"
+                playurl = self.directStream()
+
             else:
                 playmethod = "Transcode"
+                if pbinfo.get("TranscodingUrl"):
+                    playurl = self.server + pbinfo["TranscodingUrl"]
+                else:
+                    playurl = self.transcoding()
 
-            playurl = pbinfo["Path"]
-            xbmc.log("getPlayUrl playmethod: %s - playurl: %s" %(playmethod, playurl))
+            xbmc.log("getPlayUrl playmethod: %s - playurl: %s" %(playmethod, playurl))#debug
             window('emby_%s.playmethod' % playurl, value=playmethod)
             if pbinfo["RequiresClosing"] and pbinfo.get('LiveStreamId'):
                 window('emby_%s.livestreamid' % playurl, value=pbinfo["LiveStreamId"])
 
         return playurl
 
-
     def getPlayUrl(self):
+        
+        #TEMP !
+        if settings('experimentalPlayback') == "true":
+            return self.getPlayUrlNew()
 
         playurl = None
         
@@ -455,37 +462,51 @@ class PlayUtils():
                 "LiveStreamId": None 
                 }
         pbinfo = self.doUtils(url, postBody=body, action_type="POST")
-        xbmc.log("getPlaybackInfo: %s" %pbinfo)
+        xbmc.log("getPlaybackInfo: %s" %pbinfo)#debug
         mediaSource = self.getOptimalMediaSource(pbinfo["MediaSources"])
         if mediaSource and mediaSource["RequiresOpening"]:
             mediaSource = self.getLiveStream(pbinfo["PlaySessionId"], mediaSource)
+            
         
         return mediaSource
 
     def getOptimalMediaSource(self, mediasources):
         '''
         Select the best possible mediasource for playback
-        Because we posted our deviceprofile to the server, 
-        only streams will be returned that can actually be played by this client so no need to check bitrates etc.
+        We select the best stream based on a score
+        TODO: Incorporate user preferences for best stream selection
         '''
-        preferredStreamOrder = ["SupportsDirectPlay","SupportsDirectStream","SupportsTranscoding"]
         bestSource = {}
-        for prefstream in preferredStreamOrder:
-            for source in mediasources:
-                if source[prefstream] == True:
-                    if prefstream == "SupportsDirectPlay":
-                        #always prefer direct play
-                        alt_playurl = self.checkDirectPlayPath(source["Path"])
-                        if alt_playurl:
-                            bestSource = source
-                            source["Path"] = alt_playurl
-                    elif bestSource.get("BitRate",0) < source.get("Bitrate",0):
-                        #prefer stream with highest bitrate for http sources
-                        bestSource = source
-                    elif not source.get("Bitrate") and source.get("RequiresOpening"):
-                        #livestream
-                        bestSource = source
-        xbmc.log("getOptimalMediaSource: %s" %bestSource)
+        lastScore = 0
+        for mediasource in mediasources:
+            score = 0
+            #transform filepath to kodi compliant
+            if mediasource["Protocol"] == "File":
+                mediasource["Path"] = self.transformFilePath(mediasource["Path"])
+            
+            #The bitrate and video dimension is an important quality argument so also base our score on that
+            score += mediasource.get("Bitrate",0)
+            for stream in mediasource["MediaStreams"]:
+                if stream["Type"] == "Video" and stream.get("Width"):
+                    #some streams report high bitrate but have no video width so stream with video width has highest score
+                    #this is especially true for videos in channels, like trailers
+                    score += stream["Width"] * 10000 
+            
+            #directplay has the highest score
+            if mediasource["SupportsDirectPlay"] and self.supportsDirectPlay(mediasource):
+                score += 100000000
+            
+            #directstream also scores well, the transcode option has no points as its a last resort
+            if mediasource["SupportsDirectStream"]:
+                score += 5000000
+            
+            #TODO: If our user has any specific preferences we can alter the score
+            # For now we just select the highest quality as our prefered score
+            if score >= lastScore:
+                lastScore = score
+                bestSource = mediasource
+                
+        xbmc.log("getOptimalMediaSource: %s" %bestSource)#debug
         return bestSource
         
     def getLiveStream(self, playSessionId, mediaSource):
@@ -501,11 +522,12 @@ class PlayUtils():
                 "SubtitleStreamIndex": None #TODO
                 }
         streaminfo = self.doUtils(url, postBody=body, action_type="POST")
-        xbmc.log("getLiveStream: %s" %streaminfo)
+        xbmc.log("getLiveStream: %s" %streaminfo)#debug
+        streaminfo["MediaSource"]["SupportsDirectPlay"] = self.supportsDirectPlay(streaminfo["MediaSource"])
         return streaminfo["MediaSource"]
             
-    def checkDirectPlayPath(self, playurl):
-
+    def transformFilePath(self, playurl):
+        #Transform filepath to Kodi compatible path
         if self.item.get('VideoType'):
             # Specific format modification
             if self.item['VideoType'] == "Dvd":
@@ -518,10 +540,11 @@ class PlayUtils():
             playurl = playurl.replace("\\\\", "smb://")
             playurl = playurl.replace("\\", "/")
             
-        if xbmcvfs.exists(playurl):
-            return playurl
-        else:
-            return None
+        return playurl
+    
+    def supportsDirectPlay(self, mediasource):
+        #Figure out if the path can be directly played as the bool returned from the server response is not 100% reliable
+        return xbmcvfs.exists(mediasource["Path"])
     
     def getDeviceProfile(self):
         return {
