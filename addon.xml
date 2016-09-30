@@ -4,7 +4,7 @@
         version="2.2.38"
         provider-name="Emby.media">
   <requires>
-    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="xbmc.python" version="2.19.0"/>
     <import addon="script.module.requests" version="2.3.0" />
     <import addon="plugin.video.emby.movies" version="0.02" />
     <import addon="plugin.video.emby.tvshows" version="0.02" />
