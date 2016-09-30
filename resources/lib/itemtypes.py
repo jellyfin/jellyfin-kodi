@@ -1090,7 +1090,7 @@ class TVShows(Items):
                 pass
             else:
                 emby_other = emby_db.getItem_byKodiId(temp_showid, "tvshow")
-                if viewid == emby_other[2]:
+                if emby_other and viewid == emby_other[2]:
                     log.info("Applying series pooling for %s", title)
                     emby_other_item = emby_db.getItem_byId(emby_other[0])
                     showid = emby_other_item[0]
