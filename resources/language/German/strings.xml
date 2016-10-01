@@ -43,8 +43,8 @@
     <string id="30090">Genre-Filter</string>
     <string id="30091">Löschen von Dateien bestätigen</string>
     <!-- Verified -->
-    <string id="30093">Als \'gesehen\' markieren</string>
-    <string id="30094">Als \'ungesehen\' markieren</string>
+    <string id="30093">Als 'gesehen' markieren</string>
+    <string id="30094">Als 'ungesehen' markieren</string>
     <string id="30097">Sortieren nach</string>
     <string id="30098">Sortierreihenfolge absteigend</string>
     <string id="30099">Sortierreihenfolge aufsteigend</string>
@@ -280,8 +280,8 @@
     <string id="33019">Erfasse Musikvideos von:</string>
     <string id="33020">Erfasse Serien von:</string>
     <string id="33021">Erfassung:</string>
-    <string id="33022">Für diese Version von \'Emby für Kodi\' muss die Datenbank neu erstellt werden. Fortfahren?</string>
-    <string id="33023">\'Emby für Kodi\' funktioniert womöglich nicht richtig, bis die Datenbank zurückgesetzt wurde.</string>
+    <string id="33022">Für diese Version von 'Emby für Kodi' muss die Datenbank neu erstellt werden. Fortfahren?</string>
+    <string id="33023">'Emby für Kodi' funktioniert womöglich nicht richtig, bis die Datenbank zurückgesetzt wurde.</string>
     <string id="33024">Beende Datenbank-Synchronisationsprozess. Die aktuelle Kodi-Version wird nicht unterstützt.</string>
     <string id="33025">abgeschlossen in:</string>
     <string id="33026">Vergleiche Filme von:</string>
@@ -293,7 +293,7 @@
     <string id="33032">Erstellung einer neuen Geräte-ID fehlgeschlagen. Schau in die Logs für weitere Informationen.</string>
     <string id="33033">Einer neue Geräte-ID wurde erstellt. Kodi startet nun neu.</string>
     <string id="33034">Mit dem folgendem Server fortfahren?</string>
-    <string id="33035">Achtung! Wenn du den \'Nativen Modus\' auswählst, fehlen einige Emby Funktionalitäten, wie: Emby Kinomodus, Direct Stream/Transkodiereigenschaften und elterliche Zugangsplanung.</string>
+    <string id="33035">Achtung! Wenn du den 'Nativen Modus' auswählst, fehlen einige Emby Funktionalitäten, wie: Emby Kinomodus, Direct Stream/Transkodiereigenschaften und elterliche Zugangsplanung.</string>
     <string id="33036">Addon (Standard)</string>
     <string id="33037">Nativ (Direkte Pfade)</string>
     <string id="33038">Netzwerkanmeldeinformationen hinzufügen, um Kodi Zugriff auf die Inhalte zu geben? Wichtig: Kodi muss neugestartet werden, um die Netzwerk -Anmeldeinformationen zu sehen. Die Daten können auch später hinzugefügt werden.</string>
@@ -314,7 +314,7 @@
     <string id="33053">Einstellungen</string>
     <string id="33054">Füge Benutzer zur Sitzung hinzu</string>
     <string id="33055">Aktualisiere Emby Abspiellisten/Videoknoten</string>
-    <string id="33056">Manuelle Syncronisation</string>
+    <string id="33056">Manuelle Synchronisation ausführen</string>
     <string id="33057">Repariere lokale Datenbank (erzwinge Aktualisierung des gesamten Inhalts)</string>
     <string id="33058">Lokale Datenbank zurücksetzen</string>
     <string id="33059">Gesamtes Artwork cachen</string>
