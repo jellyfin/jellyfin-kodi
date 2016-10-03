@@ -192,11 +192,16 @@ class LibrarySync(threading.Thread):
     def dbCommit(self, connection):
         # Central commit, verifies if Kodi database update is running
         kodidb_scan = window('emby_kodiScan') == "true"
+        count = 0
 
         while kodidb_scan:
 
             log.info("Kodi scan is running. Waiting...")
             kodidb_scan = window('emby_kodiScan') == "true"
+
+            if count == 10:
+                log.info("Flag still active, but will try to commit")
+                window('emby_kodiScan', clear=True)
 
             if self.shouldStop():
                 log.info("Commit unsuccessful. Sync terminated.")
@@ -206,9 +211,18 @@ class LibrarySync(threading.Thread):
                 # Abort was requested while waiting. We should exit
                 log.info("Commit unsuccessful.")
                 break
-        else:
+
+            count += 1
+        
+        try:
             connection.commit()
             log.info("Commit successful.")
+        except sqlite3.OperationalError as error:
+            log.error(error)
+            if "database is locked" in error:
+                log.info("retrying...")
+                window('emby_kodiScan', value="true")
+                self.dbCommit(connection)
 
     def fullSync(self, manualrun=False, repair=False):
         # Only run once when first setting up. Can be run manually.
