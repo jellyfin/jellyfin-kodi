@@ -1,3 +1,8 @@
+version 2.2.39
+- Update German translation
+- Fix issue with throttle
+- Fix server detection
+
 version 2.2.38
 - Fix series pooling
 
