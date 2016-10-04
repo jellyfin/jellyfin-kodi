@@ -248,6 +248,7 @@ class DownloadUtils(object):
             ##### THE RESPONSE #####
             log.debug(kwargs)
             response = self._requests(action_type, session, **kwargs)
+            #response = requests.get('http://httpbin.org/status/400')
 
             if response.status_code == 204:
                 # No body in the response
@@ -286,6 +287,10 @@ class DownloadUtils(object):
                 window('emby_online', value="false")
 
         except requests.exceptions.HTTPError as error:
+
+            if response.status_code == 400:
+                log.error("Malformed request: %s", error)
+                raise Warning('400')
 
             if response.status_code == 401:
                 # Unauthorized

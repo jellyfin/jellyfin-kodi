@@ -186,7 +186,8 @@ class Read_EmbyServer():
         url = "{server}/emby/LiveTv/Recordings/?userid={UserId}&format=json"
         return self.doUtils(url, parameters=params)
     
-    def getSection(self, parentid, itemtype=None, sortby="SortName", basic=False, dialog=None):
+    def getSection(self, parentid, itemtype=None, sortby="SortName", basic=False, params=None,
+                   dialog=None):
 
         items = {
             
@@ -238,7 +239,7 @@ class Read_EmbyServer():
                 if basic:
                     params['Fields'] = "Etag"
                 else:
-                    params['Fields'] = (
+                    params['Fields'] = params or (
 
                         "Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,"
                         "CommunityRating,OfficialRating,CumulativeRunTimeTicks,"
@@ -247,9 +248,13 @@ class Read_EmbyServer():
                         "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers,"
                         "MediaSources,VoteCount"
                     )
-                result = self.doUtils(url, parameters=params)
                 try:
+                    result = self.doUtils(url, parameters=params)
                     items['Items'].extend(result['Items'])
+                except Warning as error:
+                    if error == "400":
+                        log.info("Something went wrong, aborting request.")
+                        break
                 except TypeError:
                     # Something happened to the connection
                     if not throttled:
