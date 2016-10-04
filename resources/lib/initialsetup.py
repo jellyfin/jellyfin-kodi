@@ -92,7 +92,7 @@ class InitialSetup(object):
             current_state = self.connectmanager.get_state()
             if current_state['State'] == STATE['ConnectSignIn']:
                 # Failed to identify server
-                return False
+                return True
 
             for server in current_state['Servers']:
                 if server['Id'] == settings('serverId'):
