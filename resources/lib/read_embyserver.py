@@ -186,8 +186,7 @@ class Read_EmbyServer():
         url = "{server}/emby/LiveTv/Recordings/?userid={UserId}&format=json"
         return self.doUtils(url, parameters=params)
     
-    def getSection(self, parentid, itemtype=None, sortby="SortName", basic=False, params=None,
-                   dialog=None):
+    def getSection(self, parentid, itemtype=None, sortby="SortName", basic=False, dialog=None):
 
         items = {
             
@@ -239,7 +238,7 @@ class Read_EmbyServer():
                 if basic:
                     params['Fields'] = "Etag"
                 else:
-                    params['Fields'] = params or (
+                    params['Fields'] = (
 
                         "Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,"
                         "CommunityRating,OfficialRating,CumulativeRunTimeTicks,"
