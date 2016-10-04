@@ -512,7 +512,7 @@ class ConnectionManager(object):
 
         if mode == ConnectionMode['Local']:
             enableRetry = True
-            timeout = 5
+            timeout = 8
 
             if self._stringEqualsIgnoreCase(address, server.get('ManualAddress')):
                 log.info("skipping LocalAddress test because it is the same as ManualAddress")
@@ -522,7 +522,7 @@ class ConnectionManager(object):
 
             if self._stringEqualsIgnoreCase(address, server.get('LocalAddress')):
                 enableRetry = True
-                timeout = 5
+                timeout = 8
 
         if skipTest or not address:
             log.info("skipping test at index: %s" % index)
