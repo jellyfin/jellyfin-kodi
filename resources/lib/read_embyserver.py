@@ -251,7 +251,7 @@ class Read_EmbyServer():
                     result = self.doUtils(url, parameters=params)
                     items['Items'].extend(result['Items'])
                 except Warning as error:
-                    if error == "400":
+                    if "400" in error:
                         log.info("Something went wrong, aborting request.")
                         break
                 except TypeError:
