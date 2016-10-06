@@ -253,7 +253,7 @@ class Read_EmbyServer():
                 except Warning as error:
                     if "400" in error:
                         log.info("Something went wrong, aborting request.")
-                        break
+                        index += jump
                 except TypeError:
                     # Something happened to the connection
                     if not throttled:
