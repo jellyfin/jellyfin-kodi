@@ -127,8 +127,8 @@ class ContextMenu(object):
         options.append(OPTIONS['Addon'])
 
         addon = xbmcaddon.Addon('plugin.video.emby')
-        xml_path = (addon.getAddonInfo('path'), "default", "1080i")
-        context_menu = context.ContextMenu("script-emby-context.xml", *xml_path)
+        context_menu = context.ContextMenu("script-emby-context.xml", addon.getAddonInfo('path'),
+                                           "default", "1080i")
         context_menu.set_options(options)
         context_menu.doModal()
 

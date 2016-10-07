@@ -3,8 +3,8 @@
 ##################################################################################################
 
 import json
-import requests
 import logging
+import requests
 
 import xbmcgui
 
@@ -62,9 +62,9 @@ class DownloadUtils(object):
             'Token': server['AccessToken'],
             'SSL': ssl
         }
-        for s in self.servers:
-            if s == server_id:
-                s.update(info)
+        for server_info in self.servers:
+            if server_info == server_id:
+                server_info.update(info)
                 # Set window prop
                 self._set_server_properties(server_id, server['Name'], info)
                 log.info("updating %s to available servers: %s", server_id, self.servers)
@@ -89,7 +89,6 @@ class DownloadUtils(object):
         window('emby_server%s.name' % server_id, value=name)
 
     def post_capabilities(self, device_id):
-
         # Post settings to session
         url = "{server}/emby/Sessions/Capabilities/Full?format=json"
         data = {
@@ -110,9 +109,6 @@ class DownloadUtils(object):
             )
         }
 
-        log.debug("capabilities URL: %s" % url)
-        log.debug("Postdata: %s" % data)
-
         self.downloadUrl(url, postBody=data, action_type="POST")
         log.debug("Posted capabilities to %s" % self.session['Server'])
 
@@ -120,46 +116,42 @@ class DownloadUtils(object):
         url = "{server}/emby/Sessions?DeviceId=%s&format=json" % device_id
         result = self.downloadUrl(url)
         try:
-            sessionId = result[0]['Id']
+            session_id = result[0]['Id']
 
         except (KeyError, TypeError):
-            log.info("Failed to retrieve sessionId.")
+            log.error("Failed to retrieve the session id.")
 
         else:
-            log.debug("Session: %s" % result)
-            log.info("SessionId: %s" % sessionId)
-            window('emby_sessionId', value=sessionId)
+            log.info("SessionId: %s", session_id)
+            window('emby_sessionId', value=session_id)
 
             # Post any permanent additional users
-            additionalUsers = settings('additionalUsers')
-            if additionalUsers:
+            additional_users = settings('additionalUsers')
+            if additional_users:
 
-                additionalUsers = additionalUsers.split(',')
-                log.info("List of permanent users added to the session: %s" % additionalUsers)
+                additional_users = additional_users.split(',')
+                log.info("List of permanent users added to the session: %s", additional_users)
 
                 # Get the user list from server to get the userId
                 url = "{server}/emby/Users?format=json"
                 result = self.downloadUrl(url)
 
-                for additional in additionalUsers:
-                    addUser = additional.decode('utf-8').lower()
+                for additional in additional_users:
+                    add_user = additional.decode('utf-8').lower()
 
                     # Compare to server users to list of permanent additional users
                     for user in result:
                         username = user['Name'].lower()
 
-                        if username in addUser:
-                            userId = user['Id']
-                            url = (
-                                    "{server}/emby/Sessions/%s/Users/%s?format=json"
-                                    % (sessionId, userId)
-                            )
+                        if username in add_user:
+                            user_id = user['Id']
+                            url = ("{server}/emby/Sessions/%s/Users/%s?format=json"
+                                   % (session_id, user_id))
                             self.downloadUrl(url, postBody={}, action_type="POST")
 
     def start_session(self):
         # User is identified from this point
         # Attach authenticated header to the session
-        # Start session
         session = requests.Session()
         session.headers = self.get_header()
         session.verify = self.session['SSL']
@@ -216,7 +208,6 @@ class DownloadUtils(object):
 
         log.debug("===== ENTER downloadUrl =====")
 
-        session = requests
         kwargs = {}
         default_link = ""
 
@@ -228,6 +219,7 @@ class DownloadUtils(object):
             if server_id is None and self.session_requests is not None: # Main server
                 session = self.session_requests
             else:
+                session = requests
                 kwargs.update({
                     'verify': server['SSL'],
                     'headers': self.get_header(server_id, authenticate)
@@ -308,7 +300,8 @@ class DownloadUtils(object):
                         window('emby_serverStatus', value="restricted")
                         raise Warning('restricted')
 
-                    elif response.headers['X-Application-Error-Code'] == "UnauthorizedAccessException":
+                    elif (response.headers['X-Application-Error-Code'] ==
+                            "UnauthorizedAccessException"):
                         # User tried to do something his emby account doesn't allow
                         pass
 

@@ -26,18 +26,21 @@ from utils import settings
 
 loghandler.config()
 log = logging.getLogger("EMBY.service")
-DELAY = settings('startupDelay') or 0
+DELAY = int(settings('startupDelay') or 0)
 
 #################################################################################################
 
 if __name__ == "__main__":
 
     log.warn("Delaying emby startup by: %s sec...", DELAY)
+    service = Service()
 
     try:
-        if int(DELAY) and xbmc.Monitor().waitForAbort(int(DELAY)):
+        if DELAY and xbmc.Monitor().waitForAbort(DELAY):
             raise RuntimeError("Abort event while waiting to start Emby for kodi")
         # Start the service
-        Service().service_entry_point()
+        service.service_entry_point()
     except Exception as error:
         log.exception(error)
+        log.info("Forcing shutdown")
+        service.shutdown()

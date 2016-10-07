@@ -42,6 +42,7 @@ class Player(xbmc.Player):
         self.xbmcplayer = xbmc.Player()
 
         log.debug("Starting playback monitor.")
+        xbmc.Player.__init__(self)
 
 
     def GetPlayStats(self):

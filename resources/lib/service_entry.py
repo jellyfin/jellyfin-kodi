@@ -28,20 +28,18 @@ log = logging.getLogger("EMBY."+__name__)
 
 class Service(object):
 
-    welcome_msg = True
+    startup = False
     server_online = True
     warn_auth = True
 
     userclient_running = False
     userclient_thread = None
-
     websocket_running = False
     websocket_thread = None
-
     library_running = False
     library_thread = None
 
-    monitor = False
+    last_progress = datetime.today()
 
 
     def __init__(self):
@@ -83,30 +81,29 @@ class Service(object):
 
 
     def service_entry_point(self):
-
         # Important: Threads depending on abortRequest will not trigger
         # if profile switch happens more than once.
         self.monitor = kodimonitor.KodiMonitor()
-        kodiProfile = xbmc.translatePath('special://profile')
+        self.kodi_player = player.Player()
+        kodi_profile = xbmc.translatePath('special://profile')
 
         # Server auto-detect
         initialsetup.InitialSetup().setup()
 
         # Initialize important threads
         self.userclient_thread = userclient.UserClient()
+        user_client = self.userclient_thread
         self.websocket_thread = wsc.WebSocketClient()
         self.library_thread = librarysync.LibrarySync()
-        kplayer = player.Player()
-        # Sync and progress report
-        lastProgressUpdate = datetime.today()
+
 
         while not self.monitor.abortRequested():
 
-            if window('emby_kodiProfile') != kodiProfile:
+            if window('emby_kodiProfile') != kodi_profile:
                 # Profile change happened, terminate this thread and others
                 log.info("Kodi profile was: %s and changed to: %s. Terminating old Emby thread.",
-                         kodiProfile, window('emby_kodiProfile'))
-                break
+                         kodi_profile, window('emby_kodiProfile'))
+                raise RuntimeError("Kodi profile changed detected")
 
             # Before proceeding, need to make sure:
             # 1. Server is online
@@ -117,69 +114,17 @@ class Service(object):
 
                 # Emby server is online
                 # Verify if user is set and has access to the server
-                if self.userclient_thread.get_user() is not None and self.userclient_thread.get_access():
+                if user_client.get_user() is not None and user_client.get_access():
 
-                     # If an item is playing
-                    if xbmc.Player().isPlaying():
-                        try:
-                            # Update and report progress
-                            playtime = xbmc.Player().getTime()
-                            totalTime = xbmc.Player().getTotalTime()
-                            currentFile = kplayer.currentFile
+                    # If an item is playing
+                    if self.kodi_player.isPlaying():
+                        self._report_progress()
 
-                            # Update positionticks
-                            if kplayer.played_info.get(currentFile) is not None:
-                                kplayer.played_info[currentFile]['currentPosition'] = playtime
-                            
-                            td = datetime.today() - lastProgressUpdate
-                            secDiff = td.seconds
-                            
-                            # Report progress to Emby server
-                            if (secDiff > 3):
-                                kplayer.reportPlayback()
-                                lastProgressUpdate = datetime.today()
-                            
-                            elif window('emby_command') == "true":
-                                # Received a remote control command that
-                                # requires updating immediately
-                                window('emby_command', clear=True)
-                                kplayer.reportPlayback()
-                                lastProgressUpdate = datetime.today()
-                            
-                        except Exception:
-                            log.exception("Exception in Playback Monitor Service")
-                    else:
-                        # Start up events
-                        self.warn_auth = True
-                        if settings('connectMsg') == "true" and self.welcome_msg:
-                            # Reset authentication warnings
-                            self.welcome_msg = False
-                            # Get additional users
-                            additionalUsers = settings('additionalUsers')
-                            if additionalUsers:
-                                add = ", %s" % ", ".join(additionalUsers.split(','))
-                            else:
-                                add = ""
-                            dialog(type_="notification",
-                                   heading="{emby}",
-                                   message=("%s %s%s!"
-                                            % (lang(33000), self.userclient_thread.get_username().decode('utf-8'),
-                                               add.decode('utf-8'))),
-                                   icon="{emby}",
-                                   time=2000,
-                                   sound=False)
-
-                        # Start the Websocket Client
-                        if not self.websocket_running:
-                            self.websocket_running = True
-                            self.websocket_thread.start()
-                        # Start the syncing thread
-                        if not self.library_running:
-                            self.library_running = True
-                            self.library_thread.start()
+                    elif not self.startup:
+                        self.startup = self._startup()
                 else:
-                    
-                    if (self.userclient_thread.get_user() is None) and self.warn_auth:
+
+                    if (user_client.get_user() is None) and self.warn_auth:
                         # Alert user is not authenticated and suppress future warning
                         self.warn_auth = False
                         log.info("Not authenticated yet.")
@@ -187,16 +132,7 @@ class Service(object):
                     # User access is restricted.
                     # Keep verifying until access is granted
                     # unless server goes offline or Kodi is shut down.
-                    while not self.userclient_thread.get_access():
-                        # Verify access with an API call
-
-                        if window('emby_online') != "true":
-                            # Server went offline
-                            break
-
-                        if self.monitor.waitForAbort(5):
-                            # Abort was requested while waiting. We should exit
-                            break
+                    self._access_check()
             else:
                 # Wait until Emby server is online
                 # or Kodi is shut down.
@@ -208,18 +144,44 @@ class Service(object):
                 break
 
         ##### Emby thread is terminating. #####
-        self._shutdown()
+        self.shutdown()
+
+    def _startup(self):
+        # Start up events
+        self.warn_auth = True
+
+        if settings('connectMsg') == "true":
+            # Get additional users
+            add_users = ", ".join(settings('additionalUsers').split(','))
+
+            dialog(type_="notification",
+                   heading="{emby}",
+                   message=("%s %s%s!"
+                            % (lang(33000), self.userclient_thread.get_username().decode('utf-8'),
+                               add_users.decode('utf-8'))),
+                   icon="{emby}",
+                   time=2000,
+                   sound=False)
+
+        # Start the Websocket Client
+        self.websocket_running = True
+        self.websocket_thread.start()
+        # Start the syncing thread
+        self.library_running = True
+        self.library_thread.start()
+
+        return True
 
     def _server_online_check(self):
         # Set emby_online true/false property
-        user = self.userclient_thread
+        user_client = self.userclient_thread
         while not self.monitor.abortRequested():
-            
-            if user.get_server() is None:
+
+            if user_client.get_server() is None:
                 # No server info set in add-on settings
                 pass
-            
-            elif not user.verify_server():
+
+            elif not user_client.verify_server():
                 # Server is offline.
                 # Alert the user and suppress future warning
                 if self.server_online:
@@ -270,7 +232,7 @@ class Service(object):
                 # Start the userclient thread
                 if not self.userclient_running:
                     self.userclient_running = True
-                    user.start()
+                    user_client.start()
 
                 break
 
@@ -278,7 +240,49 @@ class Service(object):
                 # Abort was requested while waiting.
                 break
 
-    def _shutdown(self):
+    def _access_check(self):
+        # Keep verifying until access is granted
+        # unless server goes offline or Kodi is shut down.
+        while not self.userclient_thread.get_access():
+
+            if window('emby_online') != "true":
+                # Server went offline
+                break
+
+            if self.monitor.waitForAbort(5):
+                # Abort was requested while waiting. We should exit
+                break
+
+    def _report_progress(self):
+        # Update and report playback progress
+        kodi_player = self.kodi_player
+        try:
+            play_time = kodi_player.getTime()
+            filename = kodi_player.currentFile
+
+            # Update positionticks
+            if filename in kodi_player.played_info:
+                kodi_player.played_info[filename]['currentPosition'] = play_time
+
+            difference = datetime.today() - self.last_progress
+            difference_seconds = difference.seconds
+
+            # Report progress to Emby server
+            if difference_seconds > 3:
+                kodi_player.reportPlayback()
+                self.last_progress = datetime.today()
+
+            elif window('emby_command') == "true":
+                # Received a remote control command that
+                # requires updating immediately
+                window('emby_command', clear=True)
+                kodi_player.reportPlayback()
+                self.last_progress = datetime.today()
+
+        except Exception as error:
+            log.exception(error)
+
+    def shutdown(self):
 
         if self.userclient_running:
             self.userclient_thread.stop_client()
