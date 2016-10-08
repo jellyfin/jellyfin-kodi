@@ -1396,23 +1396,23 @@ class TVShows(Items):
                 
                     "UPDATE episode",
                     "SET c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?,",
-                        "c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, idSeason = ?",
+                        "c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, idSeason = ?, idShow = ?",
                     "WHERE idEpisode = ?"
                 ))
                 kodicursor.execute(query, (title, plot, rating, writer, premieredate,
                     runtime, director, season, episode, title, airsBeforeSeason,
-                    airsBeforeEpisode, seasonid, episodeid))
+                    airsBeforeEpisode, seasonid, showid, episodeid))
             else:
                 query = ' '.join((
                     
                     "UPDATE episode",
                     "SET c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?,",
-                        "c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?",
+                        "c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, idShow = ?",
                     "WHERE idEpisode = ?"
                 ))
                 kodicursor.execute(query, (title, plot, rating, writer, premieredate,
                     runtime, director, season, episode, title, airsBeforeSeason,
-                    airsBeforeEpisode, episodeid))
+                    airsBeforeEpisode, showid, episodeid))
 
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
