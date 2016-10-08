@@ -358,7 +358,7 @@ class API(object):
 
         try:
             country = self.item['ProductionLocations'][0]
-        except IndexError:
+        except (IndexError, KeyError):
             country = None
 
         return country
