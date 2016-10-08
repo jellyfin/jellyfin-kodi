@@ -83,9 +83,10 @@ class InitialSetup(object):
                 log.info("Detected: %s", server)
                 server_id = server['Servers'][0]['Id']
                 settings('serverId', value=server_id)
-                self.user_client.get_userid()
-                self.user_client.get_token()
                 log.info("server migration completed")
+
+        self.user_client.get_userid()
+        self.user_client.get_token()
         ###$ End migration $###
 
         if settings('server'):
