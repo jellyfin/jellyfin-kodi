@@ -486,7 +486,8 @@ class Movies(Items):
         kodicursor.execute(query, (pathid, filename, dateadded, fileid))
         
         # Process countries
-        self.kodi_db.addCountries(movieid, item['ProductionLocations'], "movie")
+        if 'ProductionLocations' in item:
+            self.kodi_db.addCountries(movieid, item['ProductionLocations'], "movie")
         # Process cast
         people = artwork.get_people_artwork(item['People'])
         self.kodi_db.addPeople(movieid, people, "movie")
