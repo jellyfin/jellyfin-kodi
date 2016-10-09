@@ -1,3 +1,6 @@
+version 2.2.41
+- Emergency update
+
 version 2.2.40
 - Review throttle
 - Fix user migration for the new login method added after 2.2.19 (stable)
