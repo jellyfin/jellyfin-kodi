@@ -218,7 +218,7 @@ class WebSocketClient(threading.Thread):
                 else:
                     # Emby merges audio and subtitle index together
                     audio_tracks = len(player.getAvailableAudioStreams())
-                    player.setSubtitleStream(index - audio_tracks - 1)
+                    player.setSubtitleStream(emby_index - audio_tracks - 1)
 
             # Let service know
             window('emby_command', value="true")
