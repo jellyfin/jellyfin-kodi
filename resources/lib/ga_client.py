@@ -1,4 +1,5 @@
-
+import sys
+import os
 import requests
 import logging
 import clientinfo
@@ -25,6 +26,14 @@ class GoogleAnalytics():
         self.device_id = md5.new(self.device_id).hexdigest()
         self.user_name = md5.new(self.user_name).hexdigest()
     
+    def formatException(self):
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        errorMessage = "%s:%s-%s" % (fname, exc_tb.tb_lineno, exc_type.__name__)
+        del(exc_type, exc_obj, exc_tb)		
+        log.error(errorMessage)
+        return errorMessage
+	
     def sendEventData(self, eventCategory, eventAction):
         
         if(settings('metricLogging') == "false"):
@@ -68,5 +77,5 @@ class GoogleAnalytics():
             log.error(error)
         
         if(self.testing):
-            log.error("GA: " + r.text.encode('utf-8'))
+            log.info("GA: " + r.text.encode('utf-8'))
             

@@ -975,6 +975,9 @@ class LibrarySync(threading.Thread):
             elif "401" in e:
                 pass
         except Exception as e:
+            ga = GoogleAnalytics()
+            errStr = ga.formatException()
+            ga.sendEventData("Exception", errStr)
             window('emby_dbScan', clear=True)
             log.exception(e)
             xbmcgui.Dialog().ok(
@@ -982,7 +985,8 @@ class LibrarySync(threading.Thread):
                         line1=(
                             "Library sync thread has exited! "
                             "You should restart Kodi now. "
-                            "Please report this on the forum."))
+                            "Please report this on the forum."),
+                        line2=(errStr))
 
     def run_internal(self):
 
