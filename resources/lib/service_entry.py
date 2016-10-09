@@ -18,6 +18,7 @@ import player
 import videonodes
 import websocket_client as wsc
 from utils import window, settings, dialog, language as lang
+from ga_client import GoogleAnalytics
 
 #################################################################################################
 
@@ -147,6 +148,10 @@ class Service(object):
         self.shutdown()
 
     def _startup(self):
+    
+        ga = GoogleAnalytics()
+        ga.sendEventData("Application", "Startup")    
+    
         # Start up events
         self.warn_auth = True
 
@@ -283,6 +288,9 @@ class Service(object):
             log.exception(error)
 
     def shutdown(self):
+    
+        ga = GoogleAnalytics()
+        ga.sendEventData("Application", "Shutdown")     
 
         if self.userclient_running:
             self.userclient_thread.stop_client()
