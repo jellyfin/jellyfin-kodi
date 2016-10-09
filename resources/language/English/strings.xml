@@ -232,6 +232,7 @@
     <string id="30543">Username or email</string>
     <string id="30544">Enable database locked fix (will slow syncing process)</string>
     <string id="30545">Enable server offline message</string>
+	<string id="30546">Enable analytic metric logging</string>
 
     <!-- dialogs -->
     <string id="30600">Sign in with Emby Connect</string>

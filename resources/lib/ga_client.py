@@ -27,6 +27,9 @@ class GoogleAnalytics():
     
     def sendEventData(self, eventCategory, eventAction):
         
+        if(settings('metricLogging') == "false"):
+            return
+        
         # for info on the metrics that can be sent to Google Analytics
         # https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#events
         
@@ -52,15 +55,18 @@ class GoogleAnalytics():
         data['ea'] = eventAction # Event Action
         #data['el'] = 'Play' # Event Label
         
-        log.info("GOOGLEANALYTICS : " + str(data))
+        log.info("GA: " + str(data))
 
         if(self.testing):
             url = "https://www.google-analytics.com/debug/collect" # test URL
         else:
             url = "https://www.google-analytics.com/collect" # prod URL
         
-        r = requests.post(url, data)
+        try:
+            r = requests.post(url, data)
+        except Exception as error:
+            log.error(error)
         
         if(self.testing):
-            log.error("GOOGLEANALYTICS : " + r.text.encode('utf-8'))
+            log.error("GA: " + r.text.encode('utf-8'))
             
