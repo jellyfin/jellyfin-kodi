@@ -968,7 +968,6 @@ class LibrarySync(threading.Thread):
     def run(self):
 
         try:
-            val = 1/0
             self.run_internal()
         except Warning as e:
             if "restricted" in e:

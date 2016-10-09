@@ -92,6 +92,7 @@ class PlayUtils():
             
             log.info("File is direct streaming.")
             playurl = self.directStream()
+            playurl = playurl.encode('utf-8')
             # Set playmethod property
             window('emby_%s.playmethod' % playurl, value="DirectStream")
 
