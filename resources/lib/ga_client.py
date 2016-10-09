@@ -29,12 +29,13 @@ class GoogleAnalytics():
     def formatException(self):
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        errorMessage = "%s:%s-%s" % (fname, exc_tb.tb_lineno, exc_type.__name__)
+        errorFile = "%s:%s" % (fname, exc_tb.tb_lineno)
+        errorType = "%s" % (exc_type.__name__)
         del(exc_type, exc_obj, exc_tb)		
-        log.error(errorMessage)
-        return errorMessage
+        log.error(errorType + " - " + errorFile)
+        return errorType, errorFile
 	
-    def sendEventData(self, eventCategory, eventAction):
+    def sendEventData(self, eventCategory, eventAction, eventLabel=None):
         
         if(settings('metricLogging') == "false"):
             return
@@ -62,7 +63,9 @@ class GoogleAnalytics():
         data['t'] = 'event' # action type
         data['ec'] = eventCategory # Event Category
         data['ea'] = eventAction # Event Action
-        #data['el'] = 'Play' # Event Label
+
+        if(eventLabel != None):
+            data['el'] = eventLabel # Event Label
         
         log.info("GA: " + str(data))
 

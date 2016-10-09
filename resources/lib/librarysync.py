@@ -968,6 +968,7 @@ class LibrarySync(threading.Thread):
     def run(self):
 
         try:
+            val = 1/0
             self.run_internal()
         except Warning as e:
             if "restricted" in e:
@@ -976,8 +977,8 @@ class LibrarySync(threading.Thread):
                 pass
         except Exception as e:
             ga = GoogleAnalytics()
-            errStr = ga.formatException()
-            ga.sendEventData("Exception", errStr)
+            errStrings = ga.formatException()
+            ga.sendEventData("Exception", errStrings[0], errStrings[1])
             window('emby_dbScan', clear=True)
             log.exception(e)
             xbmcgui.Dialog().ok(
@@ -986,7 +987,7 @@ class LibrarySync(threading.Thread):
                             "Library sync thread has exited! "
                             "You should restart Kodi now. "
                             "Please report this on the forum."),
-                        line2=(errStr))
+                        line2=(errStrings[0] + " (" + errStrings[1] + ")"))
 
     def run_internal(self):
 
