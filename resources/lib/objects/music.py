@@ -195,7 +195,7 @@ class Music(common.Items):
             self.title = "%s - %s" % (item.get('AlbumArtist', "unknown"), self.title)
 
             if self.add_updateSong(item):
-                self.content_pop()
+                self.content_pop(self.title)
 
     @catch_except()
     def add_updateArtist(self, item, artisttype="MusicArtist"):

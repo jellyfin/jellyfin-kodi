@@ -125,7 +125,7 @@ class MusicVideos(common.Items):
     def added(self, items, total=None, view=None):
         for item in super(MusicVideos, self).added(items, total, True):
             if self.add_update(item, view):
-                self.content_pop()
+                self.content_pop(item.get('Name', "unknown"))
 
     @catch_except
     def add_update(self, item, view=None):

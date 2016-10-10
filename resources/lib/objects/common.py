@@ -5,7 +5,6 @@
 import logging
 
 import xbmc
-import xbmcgui
 import xbmcvfs
 
 import artwork
@@ -39,7 +38,8 @@ class Items(object):
         self.direct_path = settings('useDirectPaths') == "1"
         self.content_msg = settings('newContent') == "true"
 
-    def path_validation(self, path):
+    @classmethod
+    def path_validation(cls, path):
         # Verify if direct path is accessible or not
         if window('emby_pathverified') != "true" and not xbmcvfs.exists(path):
             if dialog(type_="yesno",
@@ -51,14 +51,14 @@ class Items(object):
 
         return True
 
-    def content_pop(self):
+    def content_pop(self, name):
         # It's possible for the time to be 0. It should be considered disabled in this case.
-        if not self.pdialog and self.content_msg and self.new_time: 
+        if not self.pdialog and self.content_msg and self.new_time:
             dialog(type_="notification",
                    heading="{emby}",
                    message="%s %s" % (lang(33049), name),
                    icon="{emby}",
-                   time=time,
+                   time=self.new_time,
                    sound=False)
 
     def update_pdialog(self):

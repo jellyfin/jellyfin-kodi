@@ -174,7 +174,7 @@ class Movies(common.Items):
 
         for item in super(Movies, self).added(items, total):
             if self.add_update(item, view):
-                self.content_pop()
+                self.content_pop(item.get('Name', "unknown"))
 
     @catch_except()
     def add_update(self, item, view=None):

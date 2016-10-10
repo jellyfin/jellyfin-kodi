@@ -226,7 +226,7 @@ class TVShows(common.Items):
             self.title = "%s - %s" % (item.get('SeriesName', "Unknown"), self.title)
 
             if self.add_updateEpisode(item):
-                self.content_pop()
+                self.content_pop(self.title)
 
     @catch_except()
     def add_update(self, item, view=None):
