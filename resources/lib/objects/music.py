@@ -75,8 +75,10 @@ class Music(common.Items):
         views = self.emby_db.getView_byType('music')
         try:
             all_kodiartists = dict(self.emby_db.get_checksum('MusicArtist'))
+            all_kodialbumartists = dict(self.emby_db.get_checksum('AlbumArtist'))
         except ValueError:
             all_kodiartists = {}
+            all_kodialbumartists = {}
 
         try:
             all_kodialbums = dict(self.emby_db.get_checksum('MusicAlbum'))
@@ -117,7 +119,11 @@ class Music(common.Items):
                     itemid = embyitem['Id']
                     if data_type == "artists":
                         all_embyartistsIds.add(itemid)
-                        if all_kodiartists.get(itemid) != API.get_checksum():
+                        if itemid in all_kodiartists:
+                            if all_kodiartists[itemid] != API.get_checksum():
+                                # Only update if artist is not in Kodi or checksum is different
+                                updatelist.append(itemid)
+                        elif all_kodialbumartists.get(itemid) != API.get_checksum():
                             # Only update if artist is not in Kodi or checksum is different
                             updatelist.append(itemid)
                     elif data_type == "albums":
