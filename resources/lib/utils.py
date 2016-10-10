@@ -109,6 +109,15 @@ class JSONRPC(object):
 #################################################################################################
 # Database related methods
 
+def should_stop():
+    # Checkpoint during the syncing process
+    if xbmc.Monitor().abortRequested():
+        return True
+    elif window('emby_shouldStop') == "true":
+        return True
+    else: # Keep going
+        return False
+
 def kodiSQL(media_type="video"):
 
     if media_type == "emby":
@@ -308,6 +317,21 @@ def indent(elem, level=0):
     else:
         if level and (not elem.tail or not elem.tail.strip()):
           elem.tail = i
+
+def catch_except(errors=(Exception, ), default_value=False):
+    # Will wrap method with try/except and print parameters for easier debugging
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except errors as error:
+                log.exception(error)
+                log.error("function: %s \n args: %s \n kwargs: %s",
+                          func.__name__, args, kwargs)
+                return default_value
+
+        return wrapper
+    return decorator
 
 def profiling(sortby="cumulative"):
     # Will print results to Kodi log

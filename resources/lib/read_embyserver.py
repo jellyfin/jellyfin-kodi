@@ -186,7 +186,7 @@ class Read_EmbyServer():
         url = "{server}/emby/LiveTv/Recordings/?userid={UserId}&format=json"
         return self.doUtils(url, parameters=params)
     
-    def getSection(self, parentid, itemtype=None, sortby="SortName", basic=False, dialog=None):
+    def getSection(self, parentid, itemtype=None, sortby="SortName", artist_id=None, basic=False, dialog=None):
 
         items = {
             
@@ -199,6 +199,7 @@ class Read_EmbyServer():
         params = {
 
             'ParentId': parentid,
+            'ArtistIds': artist_id,
             'IncludeItemTypes': itemtype,
             'CollapseBoxSetItems': False,
             'IsVirtualUnaired': False,
@@ -225,6 +226,7 @@ class Read_EmbyServer():
                 params = {
 
                     'ParentId': parentid,
+                    'ArtistIds': artist_id,
                     'IncludeItemTypes': itemtype,
                     'CollapseBoxSetItems': False,
                     'IsVirtualUnaired': False,
@@ -435,10 +437,11 @@ class Read_EmbyServer():
 
         return self.getSection(seasonId, "Episode")
 
-    def getArtists(self, dialog=None):
+    def getArtists(self, parent_id=None, dialog=None):
 
         items = {
 
+            'ParentId': parent_id,
             'Items': [],
             'TotalRecordCount': 0
         }
@@ -459,13 +462,14 @@ class Read_EmbyServer():
             log.debug("%s:%s Failed to retrieve the server response." % (url, params))
 
         else:
-            index = 1
+            index = 0
             jump = self.limitIndex
 
             while index < total:
                 # Get items by chunk to increase retrieval speed at scale
                 params = {
 
+                    'ParentId': parent_id,
                     'Recursive': True,
                     'IsVirtualUnaired': False,
                     'IsMissing': False,
@@ -495,7 +499,7 @@ class Read_EmbyServer():
 
     def getAlbumsbyArtist(self, artistId):
 
-        return self.getSection(artistId, "MusicAlbum", sortby="DateCreated")
+        return self.getSection(None, "MusicAlbum", sortby="DateCreated", artist_id=artistId)
 
     def getSongs(self, basic=False, dialog=None):
 
