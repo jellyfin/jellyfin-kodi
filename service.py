@@ -44,7 +44,7 @@ if __name__ == "__main__":
     except Exception as error:
         ga = GoogleAnalytics()
         errStrings = ga.formatException()
-        ga.sendEventData("Exception", errStrings[0], errStrings[1])    
+        ga.sendEventData("Exception", errStrings[0], errStrings[1])
         log.exception(error)
         log.info("Forcing shutdown")
         service.shutdown()

@@ -78,11 +78,11 @@ class Items(object):
         if self.pdialog and view:
             self.pdialog.update(heading="Processing %s / %s items" % (view['name'], total))
 
-        action = self._get_func(item_type, "added")
+        process = self._get_func(item_type, "added")
         if view:
-            action(items, total, view)
+            process(items, total, view)
         else:
-            action(items, total)
+            process(items, total)
 
     def process_all(self, item_type, action, items, total=None, view=None):
 

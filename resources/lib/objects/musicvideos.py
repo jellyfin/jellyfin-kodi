@@ -4,15 +4,12 @@
 
 import logging
 import urllib
-from ntpath import dirname
-from datetime import datetime
 
 import api
 import common
-import downloadutils
 import embydb_functions as embydb
 import kodidb_functions as kodidb
-from utils import window, settings, language as lang, catch_except
+from utils import window, language as lang, catch_except
 
 ##################################################################################################
 
@@ -23,15 +20,15 @@ log = logging.getLogger("EMBY."+__name__)
 
 class MusicVideos(common.Items):
 
-    
+
     def __init__(self, embycursor, kodicursor, pdialog=None):
-        
+
         self.embycursor = embycursor
         self.emby_db = embydb.Embydb_Functions(self.embycursor)
         self.kodicursor = kodicursor
         self.kodi_db = kodidb.Kodidb_Functions(self.kodicursor)
         self.pdialog = pdialog
-        
+
         common.Items.__init__(self)
 
     def _get_func(self, item_type, action):
@@ -53,7 +50,7 @@ class MusicVideos(common.Items):
         pdialog = self.pdialog
         # Pull the list of musicvideos in Kodi
         views = self.emby_db.getView_byType('musicvideos')
-        log.info("Media folders: %s" % views)
+        log.info("Media folders: %s", views)
 
         try:
             all_kodimvideos = dict(self.emby_db.get_checksum('MusicVideo'))
@@ -92,7 +89,7 @@ class MusicVideos(common.Items):
                     # Only update if musicvideo is not in Kodi or checksum is different
                     updatelist.append(itemid)
 
-            log.info("MusicVideos to update for %s: %s" % (viewName, updatelist))
+            log.info("MusicVideos to update for %s: %s", viewName, updatelist)
             embymvideos = self.emby.getFullItems(updatelist)
             self.total = len(updatelist)
             del updatelist[:]
@@ -116,9 +113,8 @@ class MusicVideos(common.Items):
         for kodimvideo in all_kodimvideos:
             if kodimvideo not in all_embymvideosIds:
                 self.remove(kodimvideo)
-        else:
-            log.info("MusicVideos compare finished.")
 
+        log.info("MusicVideos compare finished.")
         return True
 
 
@@ -144,11 +140,11 @@ class MusicVideos(common.Items):
             mvideoid = emby_dbitem[0]
             fileid = emby_dbitem[1]
             pathid = emby_dbitem[2]
-            log.info("mvideoid: %s fileid: %s pathid: %s" % (mvideoid, fileid, pathid))
-        
+            log.info("mvideoid: %s fileid: %s pathid: %s", mvideoid, fileid, pathid)
+
         except TypeError:
             update_item = False
-            log.debug("mvideoid: %s not found." % itemid)
+            log.debug("mvideoid: %s not found", itemid)
             # mvideoid
             kodicursor.execute("select coalesce(max(idMVideo),0) from musicvideo")
             mvideoid = kodicursor.fetchone()[0] + 1
@@ -162,12 +158,12 @@ class MusicVideos(common.Items):
             except TypeError:
                 # item is not found, let's recreate it.
                 update_item = False
-                log.info("mvideoid: %s missing from Kodi, repairing the entry." % mvideoid)
+                log.info("mvideoid: %s missing from Kodi, repairing the entry.", mvideoid)
 
         if not view:
             # Get view tag from emby
             viewtag, viewid, mediatype = self.emby.getView_embyId(itemid)
-            log.debug("View tag found: %s" % viewtag)
+            log.debug("View tag found: %s", viewtag)
         else:
             viewtag = view['name']
             viewid = view['id']
@@ -194,7 +190,7 @@ class MusicVideos(common.Items):
         people = API.get_people()
         director = " / ".join(people['Director'])
 
-        
+
         ##### GET THE FILE AND PATH #####
         playurl = API.get_file_path()
 
@@ -208,7 +204,7 @@ class MusicVideos(common.Items):
             # Direct paths is set the Kodi way
             if not self.path_validation(playurl):
                 return False
-            
+
             path = playurl.replace(filename, "")
             window('emby_pathverified', value="true")
         else:
@@ -226,8 +222,8 @@ class MusicVideos(common.Items):
 
         ##### UPDATE THE MUSIC VIDEO #####
         if update_item:
-            log.info("UPDATE mvideo itemid: %s - Title: %s" % (itemid, title))
-            
+            log.info("UPDATE mvideo itemid: %s - Title: %s", itemid, title)
+
             # Update path
             query = "UPDATE path SET strPath = ? WHERE idPath = ?"
             kodicursor.execute(query, (path, pathid))
@@ -238,22 +234,21 @@ class MusicVideos(common.Items):
 
             # Update the music video entry
             query = ' '.join((
-                
+
                 "UPDATE musicvideo",
                 "SET c00 = ?, c04 = ?, c05 = ?, c06 = ?, c07 = ?, c08 = ?, c09 = ?, c10 = ?,",
                     "c11 = ?, c12 = ?"
                 "WHERE idMVideo = ?"
             ))
             kodicursor.execute(query, (title, runtime, director, studio, year, plot, album,
-                artist, genre, track, mvideoid))
-
+                                       artist, genre, track, mvideoid))
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
-        
+
         ##### OR ADD THE MUSIC VIDEO #####
         else:
-            log.info("ADD mvideo itemid: %s - Title: %s" % (itemid, title))
-            
+            log.info("ADD mvideo itemid: %s - Title: %s", itemid, title)
+
             # Add path
             query = ' '.join((
 
@@ -289,7 +284,7 @@ class MusicVideos(common.Items):
                 '''
             )
             kodicursor.execute(query, (fileid, pathid, filename, dateadded))
-            
+
             # Create the musicvideo entry
             query = (
                 '''
@@ -300,13 +295,12 @@ class MusicVideos(common.Items):
                 '''
             )
             kodicursor.execute(query, (mvideoid, fileid, title, runtime, director, studio,
-                year, plot, album, artist, genre, track))
+                                       year, plot, album, artist, genre, track))
 
             # Create the reference in emby table
             emby_db.addReference(itemid, mvideoid, "MusicVideo", "musicvideo", fileid, pathid,
-                checksum=checksum, mediafolderid=viewid)
+                                 checksum=checksum, mediafolderid=viewid)
 
-        
         # Process cast
         people = item['People']
         artists = item['ArtistItems']
@@ -342,7 +336,7 @@ class MusicVideos(common.Items):
         # Poster with progress bar
         emby_db = self.emby_db
         API = api.API(item)
-        
+
         # Get emby information
         itemid = item['Id']
         checksum = API.get_checksum()
@@ -354,9 +348,7 @@ class MusicVideos(common.Items):
         try:
             mvideoid = emby_dbitem[0]
             fileid = emby_dbitem[1]
-            log.info(
-                "Update playstate for musicvideo: %s fileid: %s"
-                % (item['Name'], fileid))
+            log.info("Update playstate for musicvideo: %s fileid: %s", item['Name'], fileid)
         except TypeError:
             return
 
@@ -386,7 +378,7 @@ class MusicVideos(common.Items):
             mvideoid = emby_dbitem[0]
             fileid = emby_dbitem[1]
             pathid = emby_dbitem[2]
-            log.info("Removing mvideoid: %s fileid: %s" % (mvideoid, fileid, pathid))
+            log.info("Removing mvideoid: %s fileid: %s pathid: %s", mvideoid, fileid, pathid)
         except TypeError:
             return
 
@@ -400,7 +392,7 @@ class MusicVideos(common.Items):
         ))
         kodicursor.execute(query, (mvideoid,))
         for row in kodicursor.fetchall():
-            
+
             url = row[0]
             imagetype = row[1]
             if imagetype in ("poster", "fanart"):
@@ -412,4 +404,4 @@ class MusicVideos(common.Items):
             kodicursor.execute("DELETE FROM path WHERE idPath = ?", (pathid,))
         self.embycursor.execute("DELETE FROM emby WHERE emby_id = ?", (itemid,))
 
-        log.info("Deleted musicvideo %s from kodi database" % itemid)
+        log.info("Deleted musicvideo %s from kodi database", itemid)

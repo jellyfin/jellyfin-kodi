@@ -157,7 +157,7 @@ class Main(object):
 if __name__ == "__main__":
 
     log.info("plugin.video.emby started")
-    
+
     try:
         Main()
     except Exception as error:
@@ -165,5 +165,5 @@ if __name__ == "__main__":
         errStrings = ga.formatException()
         ga.sendEventData("Exception", errStrings[0], errStrings[1])
         log.exception(error)
-        
+
     log.info("plugin.video.emby stopped")

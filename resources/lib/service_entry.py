@@ -148,10 +148,10 @@ class Service(object):
         self.shutdown()
 
     def _startup(self):
-    
+
         ga = GoogleAnalytics()
         ga.sendEventData("Application", "Startup")    
-    
+
         # Start up events
         self.warn_auth = True
 
@@ -288,7 +288,7 @@ class Service(object):
             log.exception(error)
 
     def shutdown(self):
-    
+
         ga = GoogleAnalytics()
         ga.sendEventData("Application", "Shutdown")     
 

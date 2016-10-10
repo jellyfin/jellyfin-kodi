@@ -5,11 +5,9 @@
 import logging
 import urllib
 from ntpath import dirname
-from datetime import datetime
 
 import api
 import common
-import downloadutils
 import embydb_functions as embydb
 import kodidb_functions as kodidb
 from utils import window, settings, language as lang, catch_except
@@ -20,12 +18,12 @@ log = logging.getLogger("EMBY."+__name__)
 
 ##################################################################################################
 
-    
+
 class TVShows(common.Items):
 
-    
+
     def __init__(self, embycursor, kodicursor, pdialog=None):
-        
+
         self.embycursor = embycursor
         self.emby_db = embydb.Embydb_Functions(self.embycursor)
         self.kodicursor = kodicursor
@@ -33,7 +31,7 @@ class TVShows(common.Items):
         self.pdialog = pdialog
 
         self.new_time = int(settings('newvideotime'))*1000
-        
+
         common.Items.__init__(self)
 
     def _get_func(self, item_type, action):
@@ -69,7 +67,7 @@ class TVShows(common.Items):
         pdialog = self.pdialog
         views = self.emby_db.getView_byType('tvshows')
         views += self.emby_db.getView_byType('mixed')
-        log.info("Media folders: %s" % views)
+        log.info("Media folders: %s", views)
 
         # Pull the list of tvshows and episodes in Kodi
         try:
@@ -118,7 +116,7 @@ class TVShows(common.Items):
                     # Only update if movie is not in Kodi or checksum is different
                     updatelist.append(itemid)
 
-            log.info("TVShows to update for %s: %s" % (viewName, updatelist))
+            log.info("TVShows to update for %s: %s", viewName, updatelist)
             embytvshows = self.emby.getFullItems(updatelist)
             self.total = len(updatelist)
             del updatelist[:]
@@ -137,7 +135,7 @@ class TVShows(common.Items):
                 title = embytvshow['Name']
                 all_embytvshowsIds.add(itemid)
                 self.update_pdialog()
-                
+
                 self.add_update(embytvshow, view)
                 self.count += 1
 
@@ -164,7 +162,7 @@ class TVShows(common.Items):
                         # Only update if movie is not in Kodi or checksum is different
                         updatelist.append(itemid)
 
-                log.info("Episodes to update for %s: %s" % (viewName, updatelist))
+                log.info("Episodes to update for %s: %s", viewName, updatelist)
                 embyepisodes = self.emby.getFullItems(updatelist)
                 self.total = len(updatelist)
                 del updatelist[:]
@@ -181,19 +179,19 @@ class TVShows(common.Items):
 
         ##### PROCESS DELETES #####
 
-        log.info("all_embytvshowsIds = %s " % all_embytvshowsIds)
+        log.info("all_embytvshowsIds = %s ", all_embytvshowsIds)
 
         for koditvshow in all_koditvshows:
             if koditvshow not in all_embytvshowsIds:
                 self.remove(koditvshow)
-        else:
-            log.info("TVShows compare finished.")
+
+        log.info("TVShows compare finished.")
 
         for kodiepisode in all_kodiepisodes:
             if kodiepisode not in all_embyepisodesIds:
                 self.remove(kodiepisode)
-        else:
-            log.info("Episodes compare finished.")
+
+        log.info("Episodes compare finished.")
 
         return True
 
@@ -207,7 +205,7 @@ class TVShows(common.Items):
                 self.added_episode(all_episodes['Items'])
 
     def added_season(self, items, total=None, view=None):
-        
+
         update = True if not self.total else False
 
         for item in super(TVShows, self).added(items, total, update):
@@ -238,7 +236,7 @@ class TVShows(common.Items):
         API = api.API(item)
 
         if settings('syncEmptyShows') == "false" and not item.get('RecursiveItemCount'):
-            log.info("Skipping empty show: %s" % item['Name'])
+            log.info("Skipping empty show: %s", item['Name'])
             return
         # If the item already exist in the local Kodi DB we'll perform a full item update
         # If the item doesn't exist, we'll add it to the database
@@ -249,11 +247,11 @@ class TVShows(common.Items):
         try:
             showid = emby_dbitem[0]
             pathid = emby_dbitem[2]
-            log.info("showid: %s pathid: %s" % (showid, pathid))
-        
+            log.info("showid: %s pathid: %s", showid, pathid)
+
         except TypeError:
             update_item = False
-            log.debug("showid: %s not found." % itemid)
+            log.debug("showid: %s not found", itemid)
             kodicursor.execute("select coalesce(max(idShow),0) from tvshow")
             showid = kodicursor.fetchone()[0] + 1
 
@@ -266,7 +264,7 @@ class TVShows(common.Items):
             except TypeError:
                 # item is not found, let's recreate it.
                 update_item = False
-                log.info("showid: %s missing from Kodi, repairing the entry." % showid)
+                log.info("showid: %s missing from Kodi, repairing the entry", showid)
                 # Force re-add episodes after the show is re-created.
                 force_episodes = True
 
@@ -274,17 +272,14 @@ class TVShows(common.Items):
         if view is None:
             # Get view tag from emby
             viewtag, viewid, mediatype = emby.getView_embyId(itemid)
-            log.debug("View tag found: %s" % viewtag)
+            log.debug("View tag found: %s", viewtag)
         else:
             viewtag = view['name']
             viewid = view['id']
 
         # fileId information
         checksum = API.get_checksum()
-        dateadded = API.get_date_created()
         userdata = API.get_userdata()
-        playcount = userdata['PlayCount']
-        dateplayed = userdata['LastPlayedDate']
 
         # item details
         genres = item['Genres']
@@ -314,13 +309,13 @@ class TVShows(common.Items):
                     emby_other_item = emby_db.getItem_byId(emby_other[0])
                     showid = emby_other_item[0]
                     pathid = emby_other_item[2]
-                    log.info("showid: %s pathid: %s" % (showid, pathid))
+                    log.info("showid: %s pathid: %s", showid, pathid)
                     # Create the reference in emby table
                     emby_db.addReference(itemid, showid, "Series", "tvshow", pathid=pathid,
-                                        checksum=checksum, mediafolderid=viewid)
+                                         checksum=checksum, mediafolderid=viewid)
                     update_item = True
 
-        
+
         ##### GET THE FILE AND PATH #####
         playurl = API.get_file_path()
 
@@ -347,26 +342,26 @@ class TVShows(common.Items):
 
         ##### UPDATE THE TVSHOW #####
         if update_item:
-            log.info("UPDATE tvshow itemid: %s - Title: %s" % (itemid, title))
+            log.info("UPDATE tvshow itemid: %s - Title: %s", itemid, title)
 
             # Update the tvshow entry
             query = ' '.join((
-                
+
                 "UPDATE tvshow",
                 "SET c00 = ?, c01 = ?, c04 = ?, c05 = ?, c08 = ?, c09 = ?,",
                     "c12 = ?, c13 = ?, c14 = ?, c15 = ?",
                 "WHERE idShow = ?"
             ))
             kodicursor.execute(query, (title, plot, rating, premieredate, genre, title,
-                tvdb, mpaa, studio, sorttitle, showid))
+                                       tvdb, mpaa, studio, sorttitle, showid))
 
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
-        
+
         ##### OR ADD THE TVSHOW #####
         else:
-            log.info("ADD tvshow itemid: %s - Title: %s" % (itemid, title))
-            
+            log.info("ADD tvshow itemid: %s - Title: %s", itemid, title)
+
             # Add top path
             toppathid = self.kodi_db.addPath(toplevelpath)
             query = ' '.join((
@@ -376,21 +371,20 @@ class TVShows(common.Items):
                 "WHERE idPath = ?"
             ))
             kodicursor.execute(query, (toplevelpath, "tvshows", "metadata.local", 1, toppathid))
-            
+
             # Add path
             pathid = self.kodi_db.addPath(path)
-            
+
             # Create the tvshow entry
             query = (
                 '''
-                INSERT INTO tvshow(
-                    idShow, c00, c01, c04, c05, c08, c09, c12, c13, c14, c15) 
+                INSERT INTO tvshow(idShow, c00, c01, c04, c05, c08, c09, c12, c13, c14, c15)
 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 '''
             )
             kodicursor.execute(query, (showid, title, plot, rating, premieredate, genre,
-                title, tvdb, mpaa, studio, sorttitle))
+                                       title, tvdb, mpaa, studio, sorttitle))
 
             # Link the path
             query = "INSERT INTO tvshowlinkpath(idShow, idPath) values(?, ?)"
@@ -398,7 +392,7 @@ class TVShows(common.Items):
 
             # Create the reference in emby table
             emby_db.addReference(itemid, showid, "Series", "tvshow", pathid=pathid,
-                                checksum=checksum, mediafolderid=viewid)
+                                 checksum=checksum, mediafolderid=viewid)
 
         # Update the path
         query = ' '.join((
@@ -408,7 +402,7 @@ class TVShows(common.Items):
             "WHERE idPath = ?"
         ))
         kodicursor.execute(query, (path, None, None, 1, pathid))
-        
+
         # Process cast
         people = artwork.get_people_artwork(item['People'])
         self.kodi_db.addPeople(showid, people, "tvshow")
@@ -436,7 +430,7 @@ class TVShows(common.Items):
 
         if force_episodes:
             # We needed to recreate the show entry. Re-add episodes now.
-            log.info("Repairing episodes for showid: %s %s" % (showid, title))
+            log.info("Repairing episodes for showid: %s %s", showid, title)
             all_episodes = emby.getEpisodesbyShow(itemid)
             self.added_episode(all_episodes['Items'], None)
 
@@ -461,9 +455,9 @@ class TVShows(common.Items):
                 show = self.emby.getItem(seriesId)
                 self.add_update(show)
                 return
-        
+
         seasonid = self.kodi_db.addSeason(showid, seasonnum, item['Name'])
-        
+
         if item['LocationType'] != "Virtual":
             # Create the reference in emby table
             emby_db.addReference(item['Id'], seasonid, "Season", "season", parentid=showid)
@@ -494,11 +488,11 @@ class TVShows(common.Items):
             episodeid = emby_dbitem[0]
             fileid = emby_dbitem[1]
             pathid = emby_dbitem[2]
-            log.info("episodeid: %s fileid: %s pathid: %s" % (episodeid, fileid, pathid))
-        
+            log.info("episodeid: %s fileid: %s pathid: %s", episodeid, fileid, pathid)
+
         except TypeError:
             update_item = False
-            log.debug("episodeid: %s not found." % itemid)
+            log.debug("episodeid: %s not found", itemid)
             # episodeid
             kodicursor.execute("select coalesce(max(idEpisode),0) from episode")
             episodeid = kodicursor.fetchone()[0] + 1
@@ -512,7 +506,7 @@ class TVShows(common.Items):
             except TypeError:
                 # item is not found, let's recreate it.
                 update_item = False
-                log.info("episodeid: %s missing from Kodi, repairing the entry." % episodeid)
+                log.info("episodeid: %s missing from Kodi, repairing the entry", episodeid)
 
         # fileId information
         checksum = API.get_checksum()
@@ -536,12 +530,12 @@ class TVShows(common.Items):
             seriesId = item['SeriesId']
         except KeyError:
             # Missing seriesId, skip
-            log.error("Skipping: %s. SeriesId is missing." % itemid)
+            log.error("Skipping: %s. SeriesId is missing.", itemid)
             return False
-            
+
         season = item.get('ParentIndexNumber')
         episode = item.get('IndexNumber', -1)
-       
+
         if season is None:
             if item.get('AbsoluteEpisodeNumber'):
                 # Anime scenario
@@ -559,7 +553,7 @@ class TVShows(common.Items):
             airsBeforeEpisode = item.get('AirsBeforeEpisodeNumber')
 
         # Append multi episodes to title
-        if item.get('IndexNumberEnd'):              
+        if item.get('IndexNumberEnd'):
             title = "| %02d | %s" % (item['IndexNumberEnd'], title)
 
         # Get season id
@@ -574,12 +568,12 @@ class TVShows(common.Items):
             try:
                 showid = show[0]
             except TypeError:
-                log.error("Skipping: %s. Unable to add series: %s." % (itemid, seriesId))
+                log.error("Skipping: %s. Unable to add series: %s", itemid, seriesId)
                 return False
 
         seasonid = self.kodi_db.addSeason(showid, season)
 
-        
+
         ##### GET THE FILE AND PATH #####
         playurl = API.get_file_path()
 
@@ -593,7 +587,7 @@ class TVShows(common.Items):
             # Direct paths is set the Kodi way
             if not self.path_validation(playurl):
                 return False
-            
+
             path = playurl.replace(filename, "")
             window('emby_pathverified', value="true")
         else:
@@ -611,47 +605,46 @@ class TVShows(common.Items):
 
         ##### UPDATE THE EPISODE #####
         if update_item:
-            log.info("UPDATE episode itemid: %s - Title: %s" % (itemid, title))
+            log.info("UPDATE episode itemid: %s - Title: %s", itemid, title)
 
             # Update the movie entry
             if self.kodi_version in (16, 17):
                 # Kodi Jarvis, Krypton
                 query = ' '.join((
-                
+
                     "UPDATE episode",
                     "SET c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?,",
                         "c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, idSeason = ?, idShow = ?",
                     "WHERE idEpisode = ?"
                 ))
-                kodicursor.execute(query, (title, plot, rating, writer, premieredate,
-                    runtime, director, season, episode, title, airsBeforeSeason,
-                    airsBeforeEpisode, seasonid, showid, episodeid))
+                kodicursor.execute(query, (title, plot, rating, writer, premieredate, runtime,
+                                           director, season, episode, title, airsBeforeSeason,
+                                           airsBeforeEpisode, seasonid, showid, episodeid))
             else:
                 query = ' '.join((
-                    
+
                     "UPDATE episode",
                     "SET c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?,",
                         "c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, idShow = ?",
                     "WHERE idEpisode = ?"
                 ))
-                kodicursor.execute(query, (title, plot, rating, writer, premieredate,
-                    runtime, director, season, episode, title, airsBeforeSeason,
-                    airsBeforeEpisode, showid, episodeid))
-
+                kodicursor.execute(query, (title, plot, rating, writer, premieredate, runtime,
+                                           director, season, episode, title, airsBeforeSeason,
+                                           airsBeforeEpisode, showid, episodeid))
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
             # Update parentid reference
             emby_db.updateParentId(itemid, seasonid)
-        
+
         ##### OR ADD THE EPISODE #####
         else:
-            log.info("ADD episode itemid: %s - Title: %s" % (itemid, title))
-            
+            log.info("ADD episode itemid: %s - Title: %s", itemid, title)
+
             # Add path
             pathid = self.kodi_db.addPath(path)
             # Add the file
             fileid = self.kodi_db.addFile(filename, pathid)
-            
+
             # Create the episode entry
             if self.kodi_version in (16, 17):
                 # Kodi Jarvis, Krypton
@@ -665,8 +658,8 @@ class TVShows(common.Items):
                     '''
                 )
                 kodicursor.execute(query, (episodeid, fileid, title, plot, rating, writer,
-                    premieredate, runtime, director, season, episode, title, showid,
-                    airsBeforeSeason, airsBeforeEpisode, seasonid))
+                                           premieredate, runtime, director, season, episode, title,
+                                           showid, airsBeforeSeason, airsBeforeEpisode, seasonid))
             else:
                 query = (
                     '''
@@ -678,12 +671,12 @@ class TVShows(common.Items):
                     '''
                 )
                 kodicursor.execute(query, (episodeid, fileid, title, plot, rating, writer,
-                    premieredate, runtime, director, season, episode, title, showid,
-                    airsBeforeSeason, airsBeforeEpisode))
+                                           premieredate, runtime, director, season, episode, title,
+                                           showid, airsBeforeSeason, airsBeforeEpisode))
 
             # Create the reference in emby table
             emby_db.addReference(itemid, episodeid, "Episode", "episode", fileid, pathid,
-                seasonid, checksum)
+                                 seasonid, checksum)
 
         # Update the path
         query = ' '.join((
@@ -702,7 +695,7 @@ class TVShows(common.Items):
             "WHERE idFile = ?"
         ))
         kodicursor.execute(query, (pathid, filename, dateadded, fileid))
-        
+
         # Process cast
         people = artwork.get_people_artwork(item['People'])
         self.kodi_db.addPeople(episodeid, people, "episode")
@@ -736,7 +729,7 @@ class TVShows(common.Items):
         # Poster with progress bar
         emby_db = self.emby_db
         API = api.API(item)
-        
+
         # Get emby information
         itemid = item['Id']
         checksum = API.get_checksum()
@@ -750,9 +743,7 @@ class TVShows(common.Items):
             kodiid = emby_dbitem[0]
             fileid = emby_dbitem[1]
             mediatype = emby_dbitem[4]
-            log.info(
-                "Update playstate for %s: %s fileid: %s"
-                % (mediatype, item['Name'], fileid))
+            log.info("Update playstate for %s: %s fileid: %s", mediatype, item['Name'], fileid)
         except TypeError:
             return
 
@@ -769,7 +760,7 @@ class TVShows(common.Items):
             resume = API.adjust_resume(userdata['Resume'])
             total = round(float(runtime), 6)
 
-            log.debug("%s New resume point: %s" % (itemid, resume))
+            log.debug("%s New resume point: %s", itemid, resume)
 
             self.kodi_db.addPlaystate(fileid, resume, total, playcount, dateplayed)
             if not self.direct_path and not resume:
@@ -796,18 +787,15 @@ class TVShows(common.Items):
     def remove(self, itemid):
         # Remove showid, fileid, pathid, emby reference
         emby_db = self.emby_db
-        embycursor = self.embycursor
         kodicursor = self.kodicursor
-        artwork = self.artwork
 
         emby_dbitem = emby_db.getItem_byId(itemid)
         try:
             kodiid = emby_dbitem[0]
             fileid = emby_dbitem[1]
-            pathid = emby_dbitem[2]
             parentid = emby_dbitem[3]
             mediatype = emby_dbitem[4]
-            log.info("Removing %s kodiid: %s fileid: %s" % (mediatype, kodiid, fileid))
+            log.info("Removing %s kodiid: %s fileid: %s", mediatype, kodiid, fileid)
         except TypeError:
             return
 
@@ -815,7 +803,6 @@ class TVShows(common.Items):
 
         # Remove the emby reference
         emby_db.removeItem(itemid)
-
 
         ##### IF EPISODE #####
 
@@ -829,7 +816,7 @@ class TVShows(common.Items):
                 showid = season[1]
             except TypeError:
                 return
-            
+
             season_episodes = emby_db.getItem_byParentId(parentid, "episode")
             if not season_episodes:
                 self.removeSeason(parentid)
@@ -886,7 +873,7 @@ class TVShows(common.Items):
             else:
                 # Remove emby episodes
                 emby_db.removeItems_byParentId(kodiid, "episode")
-            
+
             # Remove season
             self.removeSeason(kodiid)
 
@@ -897,14 +884,14 @@ class TVShows(common.Items):
                 self.removeShow(parentid)
                 emby_db.removeItem_byKodiId(parentid, "tvshow")
 
-        log.info("Deleted %s: %s from kodi database" % (mediatype, itemid))
+        log.info("Deleted %s: %s from kodi database", mediatype, itemid)
 
     def removeShow(self, kodiid):
         
         kodicursor = self.kodicursor
         self.artwork.delete_artwork(kodiid, "tvshow", kodicursor)
         kodicursor.execute("DELETE FROM tvshow WHERE idShow = ?", (kodiid,))
-        log.debug("Removed tvshow: %s." % kodiid)
+        log.debug("Removed tvshow: %s", kodiid)
 
     def removeSeason(self, kodiid):
         
@@ -912,7 +899,7 @@ class TVShows(common.Items):
 
         self.artwork.delete_artwork(kodiid, "season", kodicursor)
         kodicursor.execute("DELETE FROM seasons WHERE idSeason = ?", (kodiid,))
-        log.debug("Removed season: %s." % kodiid)
+        log.debug("Removed season: %s", kodiid)
 
     def removeEpisode(self, kodiid, fileid):
 
@@ -921,4 +908,4 @@ class TVShows(common.Items):
         self.artwork.delete_artwork(kodiid, "episode", kodicursor)
         kodicursor.execute("DELETE FROM episode WHERE idEpisode = ?", (kodiid,))
         kodicursor.execute("DELETE FROM files WHERE idFile = ?", (fileid,))
-        log.debug("Removed episode: %s." % kodiid)
+        log.debug("Removed episode: %s", kodiid)

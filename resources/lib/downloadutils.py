@@ -110,7 +110,7 @@ class DownloadUtils(object):
         }
 
         self.downloadUrl(url, postBody=data, action_type="POST")
-        log.debug("Posted capabilities to %s" % self.session['Server'])
+        log.debug("Posted capabilities to %s", self.session['Server'])
 
         # Attempt at getting sessionId
         url = "{server}/emby/Sessions?DeviceId=%s&format=json" % device_id
@@ -301,7 +301,7 @@ class DownloadUtils(object):
                         raise Warning('restricted')
 
                     elif (response.headers['X-Application-Error-Code'] ==
-                            "UnauthorizedAccessException"):
+                          "UnauthorizedAccessException"):
                         # User tried to do something his emby account doesn't allow
                         pass
 

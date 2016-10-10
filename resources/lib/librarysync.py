@@ -999,13 +999,10 @@ class ManualSync(LibrarySync):
 
 
     def __init__(self):
-
         LibrarySync.__init__(self)
 
     def sync(self):
-
         return self.fullSync(manualrun=True)
-
 
     def movies(self, embycursor, kodicursor, pdialog):
         return Movies(embycursor, kodicursor, pdialog).compare_all()
