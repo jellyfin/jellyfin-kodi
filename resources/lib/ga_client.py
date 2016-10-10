@@ -11,7 +11,7 @@ log = logging.getLogger("EMBY."+__name__)
 
 class GoogleAnalytics():
 
-    testing = True
+    testing = False
     
     def __init__(self):
     

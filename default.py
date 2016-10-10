@@ -22,6 +22,7 @@ sys.path.append(_BASE_LIB)
 import entrypoint
 import loghandler
 from utils import window, dialog, language as lang
+from ga_client import GoogleAnalytics
 
 #################################################################################################
 
@@ -156,5 +157,13 @@ class Main(object):
 if __name__ == "__main__":
 
     log.info("plugin.video.emby started")
-    Main()
+    
+    try:
+        Main()
+    except Exception as error:
+        ga = GoogleAnalytics()
+        errStrings = ga.formatException()
+        ga.sendEventData("Exception", errStrings[0], errStrings[1])
+        log.exception(error)
+        
     log.info("plugin.video.emby stopped")
