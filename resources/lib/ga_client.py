@@ -1,5 +1,6 @@
 import sys
 import os
+import traceback
 import requests
 import logging
 import clientinfo
@@ -10,7 +11,7 @@ log = logging.getLogger("EMBY."+__name__)
 
 class GoogleAnalytics():
 
-    testing = False
+    testing = True
     
     def __init__(self):
     
@@ -28,11 +29,25 @@ class GoogleAnalytics():
     
     def formatException(self):
         exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        errorFile = "%s:%s" % (fname, exc_tb.tb_lineno)
-        errorType = "%s" % (exc_type.__name__)
-        del(exc_type, exc_obj, exc_tb)		
-        log.error(errorType + " - " + errorFile)
+		
+        stackFrames = traceback.extract_tb(exc_tb)
+        if(len(stackFrames) > 0):
+            stackFrames = traceback.extract_tb(exc_tb)[-1]
+        else:
+            stackFrames = None
+        log.error(str(stackFrames))
+		
+        errorType = "NA"
+        errorFile = "NA"
+		
+        if(stackFrames != None):
+            fileName = os.path.split(stackFrames[0])[1]
+
+            errorFile = "%s:%s" % (fileName, stackFrames[1])
+            errorType = "%s" % (exc_type.__name__)
+            del(exc_type, exc_obj, exc_tb)
+            log.error(errorType + " - " + errorFile)
+			
         return errorType, errorFile
 	
     def sendEventData(self, eventCategory, eventAction, eventLabel=None):
