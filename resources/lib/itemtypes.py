@@ -111,17 +111,12 @@ class Items(object):
                 update_videolibrary = True
                 items_process = itemtypes[itemtype](embycursor, kodicursor, pdialog)
 
-            '''
-
-            if actions.get(process):
-
-            if process == "remove":
-                for item in itemlist:
-                    actions[process](item)'''
 
             if process == "added":
                 processItems = itemlist
                 items_process.add_all(itemtype, itemlist)
+            elif process == "remove":
+                items_process.remove_all(itemtype, itemlist)
             else:
                 processItems = emby.getFullItems(itemlist)
                 items_process.process_all(itemtype, process, processItems, total)

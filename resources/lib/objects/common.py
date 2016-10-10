@@ -106,6 +106,14 @@ class Items(object):
             process(item)
             self.count += 1
 
+    def remove_all(self, item_type, items):
+
+        log.debug("Processing removal: %s", items)
+
+        process = self._get_func(item_type, "remove")
+        for item in items:
+            process(item)
+
     def added(self, items, total=None, update=True):
         # Generator for newly added content
         if update:
