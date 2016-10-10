@@ -13,6 +13,7 @@ import read_embyserver as embyserver
 import connect.connectionmanager as connectionmanager
 from dialogs import ServerConnect, UsersConnect, LoginConnect, LoginManual, ServerManual
 from ga_client import GoogleAnalytics
+from utils import window
 
 ##################################################################################################
 
@@ -34,7 +35,7 @@ class ConnectManager(object):
 
         self.__dict__ = self._shared_state
 
-        if not self.state:
+        if not self.state and not window('emby_currUser'):
             client_info = clientinfo.ClientInfo()
             self.emby = embyserver.Read_EmbyServer()
 
@@ -138,10 +139,10 @@ class ConnectManager(object):
             raise RuntimeError("Connect user is not logged in")
 
     def login(self, server=None):
-    
+
         ga = GoogleAnalytics()
         ga.sendEventData("Connect", "UserLogin")
-    
+
         # Return user or raise error
         server = server or self.state['Servers'][0]
         server_address = connectionmanager.getServerAddress(server, server['LastConnectionMode'])
