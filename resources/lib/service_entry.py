@@ -161,7 +161,7 @@ class Service(object):
 
             dialog(type_="notification",
                    heading="{emby}",
-                   message=("%s %s%s!"
+                   message=("%s %s, %s!"
                             % (lang(33000), self.userclient_thread.get_username().decode('utf-8'),
                                add_users.decode('utf-8'))),
                    icon="{emby}",
