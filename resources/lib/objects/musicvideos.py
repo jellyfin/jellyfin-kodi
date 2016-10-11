@@ -123,7 +123,7 @@ class MusicVideos(common.Items):
             if self.add_update(item, view):
                 self.content_pop(item.get('Name', "unknown"))
 
-    @catch_except
+    @catch_except()
     def add_update(self, item, view=None):
         # Process single music video
         kodicursor = self.kodicursor
