@@ -1,3 +1,7 @@
+version 2.2.43
+- Review music
+- Clean up syncing code
+
 version 2.2.41
 - Emergency update
 
