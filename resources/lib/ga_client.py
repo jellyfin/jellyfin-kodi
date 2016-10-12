@@ -18,7 +18,7 @@ class GoogleAnalytics():
         client_info = clientinfo.ClientInfo()
         self.version = client_info.get_version()
         self.device_id = client_info.get_device_id()
-        self.device_name = client_info.get_device_name() + "-" + client_info.get_platform()
+        self.userAgent = "Emby4Kodi/" + self.version + " (" + client_info.get_platform() + ")"
         
         # Use set user name
         self.user_name = settings('username') or settings('connectUsername') or 'None'
@@ -71,9 +71,9 @@ class GoogleAnalytics():
         #data['aiid'] = '1.1' # App installer ID
 
         data['cid'] = self.device_id # Client ID
-        data['uid'] = self.user_name # User ID
+        #data['uid'] = self.user_name # User ID
 
-        data['ua'] = self.device_name # user agent string
+        #data['ua'] = self.userAgent # user agent string
         
         data['t'] = 'event' # action type
         data['ec'] = eventCategory # Event Category
