@@ -267,7 +267,7 @@ class KodiMusic(KodiItems):
             VALUES (?, ?, ?, ?, ?)
             '''
         )
-        self.cursor.execute(query, (albumid, args))
+        self.cursor.execute(query, (args))
 
     def add_single_14(self, *args):
         # TODO: Remove Helix code when Krypton is RC
@@ -278,7 +278,7 @@ class KodiMusic(KodiItems):
             VALUES (?, ?, ?, ?)
             '''
         )
-        self.cursor.execute(query, (albumid, genre, year, dateadded))
+        self.cursor.execute(query, (args))
 
     def add_song(self, *args):
         query = (
@@ -313,7 +313,7 @@ class KodiMusic(KodiItems):
                 VALUES (?, ?, ?, ?, ?)
                 '''
             )
-            kodicursor.execute(query, (kodi_id, song_id, 1, index, artist))
+            self.cursor.execute(query, (kodi_id, song_id, 1, index, artist))
         else:
             query = (
                 '''

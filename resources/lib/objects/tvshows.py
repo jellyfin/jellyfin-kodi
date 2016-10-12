@@ -8,7 +8,6 @@ from ntpath import dirname
 
 import api
 import embydb_functions as embydb
-import kodidb_functions as kodidb
 import _kodi_tvshows
 from _common import Items
 from utils import window, settings, language as lang, catch_except
@@ -796,14 +795,14 @@ class TVShows(Items):
         log.info("Deleted %s: %s from kodi database", mediatype, itemid)
 
     def removeShow(self, kodiid):
-        
+
         kodicursor = self.kodicursor
         self.artwork.delete_artwork(kodiid, "tvshow", kodicursor)
         self.kodi_db.remove_tvshow(kodiid)
         log.debug("Removed tvshow: %s", kodiid)
 
     def removeSeason(self, kodiid):
-        
+
         kodicursor = self.kodicursor
 
         self.artwork.delete_artwork(kodiid, "season", kodicursor)

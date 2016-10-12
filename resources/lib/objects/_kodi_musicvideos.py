@@ -51,7 +51,7 @@ class KodiMusicVideos(KodiItems):
         self.cursor.execute(query, (args))
 
     def update_musicvideo(self, *args):
-        
+
         query = ' '.join((
 
             "UPDATE musicvideo",

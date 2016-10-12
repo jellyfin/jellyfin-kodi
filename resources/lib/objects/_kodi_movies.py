@@ -77,7 +77,7 @@ class KodiMovies(KodiItems):
         self.cursor.execute(query, (args))
 
     def update_movie(self, *args):
-        
+
         query = ' '.join((
 
             "UPDATE movie",
@@ -105,9 +105,9 @@ class KodiMovies(KodiItems):
         self.cursor.execute("DELETE FROM files WHERE idFile = ?", (file_id,))
 
     def add_countries(self, kodi_id, countries):
-        
+
         if self.kodi_version > 14:
-            
+
             for country in countries:
                 country_id = self._get_country(country)
 
@@ -148,7 +148,7 @@ class KodiMovies(KodiItems):
                     '''
                 )
                 self.cursor.execute(query, (country_id, kodi_id))
-    
+
     def _add_country(self, country):
 
         country_id = self.create_entry_country()
@@ -221,5 +221,5 @@ class KodiMovies(KodiItems):
         ))
         self.cursor.execute(query, (movie_id,))
 
-    def remove_boxset(self, set_id):
+    def remove_boxset(self, kodi_id):
         self.cursor.execute("DELETE FROM sets WHERE idSet = ?", (kodi_id,))

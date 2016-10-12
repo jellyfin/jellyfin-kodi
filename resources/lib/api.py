@@ -28,7 +28,6 @@ class API(object):
         played = False
         last_played = None
         resume = 0
-        user_rating = 0
 
         try:
             userdata = self.item['UserData']

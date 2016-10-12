@@ -72,7 +72,7 @@ class KodiTVShows(KodiItems):
         self.cursor.execute(query, (args))
 
     def update_tvshow(self, *args):
-        
+
         query = ' '.join((
 
             "UPDATE tvshow",

@@ -15,19 +15,17 @@ log = logging.getLogger("EMBY."+__name__)
 
 #################################################################################################
 
-class Kodidb_Functions():
+class Kodidb_Functions(object):
 
     kodiversion = int(xbmc.getInfoLabel("System.BuildVersion")[:2])
     
 
     def __init__(self, cursor):
-        
+
         self.cursor = cursor
-        
         self.artwork = artwork.Artwork()
 
     def createTag(self, name):
-        
         # This will create and return the tag_id
         if self.kodiversion in (15, 16, 17):
             # Kodi Isengard, Jarvis, Krypton
@@ -41,14 +39,14 @@ class Kodidb_Functions():
             self.cursor.execute(query, (name,))
             try:
                 tag_id = self.cursor.fetchone()[0]
-            
+
             except TypeError:
                 self.cursor.execute("select coalesce(max(tag_id),0) from tag")
                 tag_id = self.cursor.fetchone()[0] + 1
 
                 query = "INSERT INTO tag(tag_id, name) values(?, ?)"
                 self.cursor.execute(query, (tag_id, name))
-                log.debug("Create tag_id: %s name: %s" % (tag_id, name))
+                log.debug("Create tag_id: %s name: %s", tag_id, name)
         else:
             # Kodi Helix
             query = ' '.join((
@@ -68,17 +66,17 @@ class Kodidb_Functions():
 
                 query = "INSERT INTO tag(idTag, strTag) values(?, ?)"
                 self.cursor.execute(query, (tag_id, name))
-                log.debug("Create idTag: %s name: %s" % (tag_id, name))
+                log.debug("Create idTag: %s name: %s", tag_id, name)
 
         return tag_id
 
     def updateTag(self, oldtag, newtag, kodiid, mediatype):
         # TODO: Move to video nodes eventually
-        log.debug("Updating: %s with %s for %s: %s" % (oldtag, newtag, mediatype, kodiid))
-        
+        log.debug("Updating: %s with %s for %s: %s", oldtag, newtag, mediatype, kodiid)
+
         if self.kodiversion in (15, 16, 17):
             # Kodi Isengard, Jarvis, Krypton
-            try: 
+            try:
                 query = ' '.join((
 
                     "UPDATE tag_link",
@@ -88,7 +86,7 @@ class Kodidb_Functions():
                     "AND tag_id = ?"
                 ))
                 self.cursor.execute(query, (newtag, kodiid, mediatype, oldtag,))
-            except Exception as e:
+            except Exception:
                 # The new tag we are going to apply already exists for this item
                 # delete current tag instead
                 query = ' '.join((
@@ -111,7 +109,7 @@ class Kodidb_Functions():
                     "AND idTag = ?"
                 ))
                 self.cursor.execute(query, (newtag, kodiid, mediatype, oldtag,))
-            except Exception as e:
+            except Exception:
                 # The new tag we are going to apply already exists for this item
                 # delete current tag instead
                 query = ' '.join((

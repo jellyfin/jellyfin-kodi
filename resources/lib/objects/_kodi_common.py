@@ -6,7 +6,6 @@ import logging
 
 import xbmc
 
-import api
 import artwork
 
 ##################################################################################################
@@ -110,7 +109,7 @@ class KodiItems(object):
         self.cursor.execute(query, (path, media_type, scraper, 1, path_id))
 
     def remove_path(self, path_id):
-        kodicursor.execute("DELETE FROM path WHERE idPath = ?", (path_id,))
+        self.cursor.execute("DELETE FROM path WHERE idPath = ?", (path_id,))
 
     def add_file(self, filename, path_id):
 
@@ -180,7 +179,7 @@ class KodiItems(object):
     def add_people(self, kodi_id, people, media_type):
 
         def add_thumbnail(person_id, person, type_):
-    
+
             thumbnail = person['imageurl']
             if thumbnail:
 
@@ -221,10 +220,10 @@ class KodiItems(object):
                     )
                     self.cursor.execute(query, (person_id, kodi_id, media_type, role, cast_order))
                     cast_order += 1
-                
+
                 elif type_ == "Director":
                     add_link("director_link", person_id, kodi_id, media_type)
-                
+
                 elif type_ in ("Writing", "Writer"):
                     add_link("writer_link", person_id, kodi_id, media_type)
 
@@ -292,7 +291,7 @@ class KodiItems(object):
                                 '''
                             )
                         else: return # Item is invalid
-                            
+
                         self.cursor.execute(query, (person_id, kodi_id, role, cast_order))
                         cast_order += 1
 
@@ -333,38 +332,32 @@ class KodiItems(object):
                         if media_type == "movie":
                             query = (
                                 '''
-                                INSERT OR REPLACE INTO writerlinkmovie(
-                                    idWriter, idMovie)
-
+                                INSERT OR REPLACE INTO writerlinkmovie(idWriter, idMovie)
                                 VALUES (?, ?)
                                 '''
                             )
                         elif media_type == "episode":
                             query = (
                                 '''
-                                INSERT OR REPLACE INTO writerlinkepisode(
-                                    idWriter, idEpisode)
-
+                                INSERT OR REPLACE INTO writerlinkepisode(idWriter, idEpisode)
                                 VALUES (?, ?)
                                 '''
                             )
                         else: return # Item is invalid
-                            
+
                         self.cursor.execute(query, (person_id, kodi_id))
 
                     elif type_ == "Artist":
                         query = (
                             '''
-                            INSERT OR REPLACE INTO artistlinkmusicvideo(
-                                idArtist, idMVideo)
-                            
+                            INSERT OR REPLACE INTO artistlinkmusicvideo(idArtist, idMVideo)
                             VALUES (?, ?)
                             '''
                         )
                         self.cursor.execute(query, (person_id, kodi_id))
 
                     add_thumbnail(person_id, person, type_)
-    
+
     def _add_person(self, name):
 
         person_id = self.create_entry_person()
@@ -384,7 +377,7 @@ class KodiItems(object):
             "COLLATE NOCASE"
         ))
         self.cursor.execute(query, (name,))
-        
+
         try:
             person_id = self.cursor.fetchone()[0]
         except TypeError:
@@ -406,7 +399,7 @@ class KodiItems(object):
 
             # Add genres
             for genre in genres:
-                
+
                 genre_id = self._get_genre(genre)
                 query = (
                     '''
@@ -475,7 +468,7 @@ class KodiItems(object):
                             '''
                         )
                     else: return # Item is invalid
-                        
+
                     self.cursor.execute(query, (genre_id, kodi_id))
 
     def _add_genre(self, genre):
@@ -514,9 +507,7 @@ class KodiItems(object):
                 studio_id = self._get_studio(studio)
                 query = (
                     '''
-                    INSERT OR REPLACE INTO studio_link(
-                        studio_id, media_id, media_type)
-                    
+                    INSERT OR REPLACE INTO studio_link(studio_id, media_id, media_type)
                     VALUES (?, ?, ?)
                     ''')
                 self.cursor.execute(query, (studio_id, kodi_id, media_type))
@@ -548,25 +539,25 @@ class KodiItems(object):
                     if media_type == "movie":
                         query = (
                             '''
-                            INSERT OR REPLACE INTO studiolinkmovie(idstudio, idMovie) 
+                            INSERT OR REPLACE INTO studiolinkmovie(idstudio, idMovie)
                             VALUES (?, ?)
                             ''')
                     elif media_type == "musicvideo":
                         query = (
                             '''
-                            INSERT OR REPLACE INTO studiolinkmusicvideo(idstudio, idMVideo) 
+                            INSERT OR REPLACE INTO studiolinkmusicvideo(idstudio, idMVideo)
                             VALUES (?, ?)
                             ''')
                     elif media_type == "tvshow":
                         query = (
                             '''
-                            INSERT OR REPLACE INTO studiolinktvshow(idstudio, idShow) 
+                            INSERT OR REPLACE INTO studiolinktvshow(idstudio, idShow)
                             VALUES (?, ?)
                             ''')
                     elif media_type == "episode":
                         query = (
                             '''
-                            INSERT OR REPLACE INTO studiolinkepisode(idstudio, idEpisode) 
+                            INSERT OR REPLACE INTO studiolinkepisode(idstudio, idEpisode)
                             VALUES (?, ?)
                             ''')
                     self.cursor.execute(query, (studio_id, kodi_id))
@@ -606,7 +597,7 @@ class KodiItems(object):
                 query = (
                     '''
                     INSERT INTO streamdetails(
-                        idFile, iStreamType, strVideoCodec, fVideoAspect, 
+                        idFile, iStreamType, strVideoCodec, fVideoAspect,
                         iVideoWidth, iVideoHeight, iVideoDuration ,strStereoMode)
 
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
