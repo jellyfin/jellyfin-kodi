@@ -548,7 +548,7 @@ def refreshPlaylist():
                 sound=False)
 
     except Exception as e:
-        log.error("Refresh playlists/nodes failed: %s" % e)
+        log.exception("Refresh playlists/nodes failed: %s" % e)
         dialog.notification(
             heading=lang(29999),
             message=lang(33070),
@@ -698,7 +698,7 @@ def createListItemFromEmbyItem(item,art=artwork.Artwork(),doUtils=downloadutils.
             playcount = 0
             
         rating = item.get('CommunityRating')
-        if not rating: rating = userdata['UserRating']
+        if not rating: rating = 0
 
         # Populate the extradata list and artwork
         extradata = {

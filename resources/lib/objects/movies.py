@@ -6,9 +6,9 @@ import logging
 import urllib
 
 import api
-import common
 import embydb_functions as embydb
-import kodidb_functions as kodidb
+import _kodi_movies
+from _common import Items
 from utils import window, settings, language as lang, catch_except
 
 ##################################################################################################
@@ -18,7 +18,7 @@ log = logging.getLogger("EMBY."+__name__)
 ##################################################################################################
 
 
-class Movies(common.Items):
+class Movies(Items):
 
 
     def __init__(self, embycursor, kodicursor, pdialog=None):
@@ -26,12 +26,12 @@ class Movies(common.Items):
         self.embycursor = embycursor
         self.emby_db = embydb.Embydb_Functions(self.embycursor)
         self.kodicursor = kodicursor
-        self.kodi_db = kodidb.Kodidb_Functions(self.kodicursor)
+        self.kodi_db = _kodi_movies.KodiMovies(self.kodicursor)
         self.pdialog = pdialog
 
         self.new_time = int(settings('newvideotime'))*1000
 
-        common.Items.__init__(self)
+        Items.__init__(self)
 
     def _get_func(self, item_type, action):
 
@@ -176,7 +176,6 @@ class Movies(common.Items):
     @catch_except()
     def add_update(self, item, view=None):
         # Process single movie
-        kodicursor = self.kodicursor
         emby_db = self.emby_db
         artwork = self.artwork
         API = api.API(item)
@@ -196,16 +195,10 @@ class Movies(common.Items):
             update_item = False
             log.debug("movieid: %s not found", itemid)
             # movieid
-            kodicursor.execute("select coalesce(max(idMovie),0) from movie")
-            movieid = kodicursor.fetchone()[0] + 1
+            movieid = self.kodi_db.create_entry()
 
         else:
-            # Verification the item is still in Kodi
-            query = "SELECT * FROM movie WHERE idMovie = ?"
-            kodicursor.execute(query, (movieid,))
-            try:
-                kodicursor.fetchone()[0]
-            except TypeError:
+            if self.kodi_db.get_movie(movieid) is None:
                 # item is not found, let's recreate it.
                 update_item = False
                 log.info("movieid: %s missing from Kodi, repairing the entry", movieid)
@@ -312,30 +305,15 @@ class Movies(common.Items):
 
             # Update the movie entry
             if self.kodi_version > 16:
-                query = ' '.join((
-
-                    "UPDATE movie",
-                    "SET c00 = ?, c01 = ?, c02 = ?, c03 = ?, c04 = ?, c05 = ?, c06 = ?,",
-                        "c07 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?,",
-                        "c16 = ?, c18 = ?, c19 = ?, c21 = ?, premiered = ?",
-                    "WHERE idMovie = ?"
-                ))
-                kodicursor.execute(query, (title, plot, shortplot, tagline, votecount, rating,
-                                           writer, year, imdb, sorttitle, runtime, mpaa, genre,
-                                           director, title, studio, trailer, country, year,
-                                           movieid))
+                self.kodi_db.update_movie_17(title, plot, shortplot, tagline, votecount, rating,
+                                             writer, year, imdb, sorttitle, runtime, mpaa, genre,
+                                             director, title, studio, trailer, country, year,
+                                             movieid)
             else:
-                query = ' '.join((
+                self.kodi_db.update_movie(title, plot, shortplot, tagline, votecount, rating,
+                                          writer, year, imdb, sorttitle, runtime, mpaa, genre,
+                                          director, title, studio, trailer, country, movieid)
 
-                    "UPDATE movie",
-                    "SET c00 = ?, c01 = ?, c02 = ?, c03 = ?, c04 = ?, c05 = ?, c06 = ?,",
-                        "c07 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?,",
-                        "c16 = ?, c18 = ?, c19 = ?, c21 = ?",
-                    "WHERE idMovie = ?"
-                ))
-                kodicursor.execute(query, (title, plot, shortplot, tagline, votecount, rating,
-                                           writer, year, imdb, sorttitle, runtime, mpaa, genre,
-                                           director, title, studio, trailer, country, movieid))
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
 
@@ -344,87 +322,57 @@ class Movies(common.Items):
             log.info("ADD movie itemid: %s - Title: %s", itemid, title)
 
             # Add path
-            pathid = self.kodi_db.addPath(path)
+            pathid = self.kodi_db.add_path(path)
             # Add the file
-            fileid = self.kodi_db.addFile(filename, pathid)
+            fileid = self.kodi_db.add_file(filename, pathid)
 
             # Create the movie entry
             if self.kodi_version > 16:
-                query = (
-                    '''
-                    INSERT INTO movie(
-                        idMovie, idFile, c00, c01, c02, c03, c04, c05, c06, c07,
-                        c09, c10, c11, c12, c14, c15, c16, c18, c19, c21, premiered)
-
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    '''
-                )
-                kodicursor.execute(query, (movieid, fileid, title, plot, shortplot, tagline,
-                                           votecount, rating, writer, year, imdb, sorttitle,
-                                           runtime, mpaa, genre, director, title, studio, trailer,
-                                           country, year))
+                self.kodi_db.add_movie_17(movieid, fileid, title, plot, shortplot, tagline,
+                                          votecount, rating, writer, year, imdb, sorttitle,
+                                          runtime, mpaa, genre, director, title, studio, trailer,
+                                          country, year)
             else:
-                query = (
-                    '''
-                    INSERT INTO movie(
-                        idMovie, idFile, c00, c01, c02, c03, c04, c05, c06, c07,
-                        c09, c10, c11, c12, c14, c15, c16, c18, c19, c21)
+                self.kodi_db.add_movie(movieid, fileid, title, plot, shortplot, tagline,
+                                       votecount, rating, writer, year, imdb, sorttitle,
+                                       runtime, mpaa, genre, director, title, studio, trailer,
+                                       country)
 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    '''
-                )
-                kodicursor.execute(query, (movieid, fileid, title, plot, shortplot, tagline,
-                                           votecount, rating, writer, year, imdb, sorttitle,
-                                           runtime, mpaa, genre, director, title, studio, trailer,
-                                           country))
             # Create the reference in emby table
             emby_db.addReference(itemid, movieid, "Movie", "movie", fileid, pathid, None,
                                  checksum, viewid)
 
         # Update the path
-        query = ' '.join((
-
-            "UPDATE path",
-            "SET strPath = ?, strContent = ?, strScraper = ?, noUpdate = ?",
-            "WHERE idPath = ?"
-        ))
-        kodicursor.execute(query, (path, "movies", "metadata.local", 1, pathid))
-
+        self.kodi_db.update_path(pathid, path, "movies", "metadata.local")
         # Update the file
-        query = ' '.join((
-
-            "UPDATE files",
-            "SET idPath = ?, strFilename = ?, dateAdded = ?",
-            "WHERE idFile = ?"
-        ))
-        kodicursor.execute(query, (pathid, filename, dateadded, fileid))
+        self.kodi_db.update_file(fileid, filename, pathid, dateadded)
 
         # Process countries
         if 'ProductionLocations' in item:
-            self.kodi_db.addCountries(movieid, item['ProductionLocations'], "movie")
+            self.kodi_db.add_countries(movieid, item['ProductionLocations'])
         # Process cast
         people = artwork.get_people_artwork(item['People'])
-        self.kodi_db.addPeople(movieid, people, "movie")
+        self.kodi_db.add_people(movieid, people, "movie")
         # Process genres
-        self.kodi_db.addGenres(movieid, genres, "movie")
+        self.kodi_db.add_genres(movieid, genres, "movie")
         # Process artwork
-        artwork.add_artwork(artwork.get_all_artwork(item), movieid, "movie", kodicursor)
+        artwork.add_artwork(artwork.get_all_artwork(item), movieid, "movie", self.kodicursor)
         # Process stream details
         streams = API.get_media_streams()
-        self.kodi_db.addStreams(fileid, streams, runtime)
+        self.kodi_db.add_streams(fileid, streams, runtime)
         # Process studios
-        self.kodi_db.addStudios(movieid, studios, "movie")
+        self.kodi_db.add_studios(movieid, studios, "movie")
         # Process tags: view, emby tags
         tags = [viewtag]
         tags.extend(item['Tags'])
         if userdata['Favorite']:
             tags.append("Favorite movies")
         log.info("Applied tags: %s", tags)
-        self.kodi_db.addTags(movieid, tags, "movie")
+        self.kodi_db.add_tags(movieid, tags, "movie")
         # Process playstates
         resume = API.adjust_resume(userdata['Resume'])
         total = round(float(runtime), 6)
-        self.kodi_db.addPlaystate(fileid, resume, total, playcount, dateplayed)
+        self.kodi_db.add_playstate(fileid, resume, total, playcount, dateplayed)
 
         return True
 
@@ -442,7 +390,7 @@ class Movies(common.Items):
             setid = emby_dbitem[0]
 
         except TypeError:
-            setid = self.kodi_db.createBoxset(title)
+            setid = self.kodi_db.add_boxset(title)
 
         # Process artwork
         artwork.add_artwork(artwork.get_all_artwork(boxset), setid, "set", self.kodicursor)
@@ -475,7 +423,7 @@ class Movies(common.Items):
                     continue
 
                 log.info("New addition to boxset %s: %s", title, movie['Name'])
-                self.kodi_db.assignBoxset(setid, movieid)
+                self.kodi_db.set_boxset(setid, movieid)
                 # Update emby reference
                 emby_db.updateParentId(itemid, setid)
             else:
@@ -486,7 +434,7 @@ class Movies(common.Items):
         for movie in process:
             movieid = current[movie]
             log.info("Remove from boxset %s: %s", title, movieid)
-            self.kodi_db.removefromBoxset(movieid)
+            self.kodi_db.remove_from_boxset(movieid)
             # Update emby reference
             emby_db.updateParentId(movie, None)
 
@@ -516,9 +464,9 @@ class Movies(common.Items):
 
         # Process favorite tags
         if userdata['Favorite']:
-            self.kodi_db.addTag(movieid, "Favorite movies", "movie")
+            self.kodi_db.get_tag(movieid, "Favorite movies", "movie")
         else:
-            self.kodi_db.removeTag(movieid, "Favorite movies", "movie")
+            self.kodi_db.remove_tag(movieid, "Favorite movies", "movie")
 
         # Process playstates
         playcount = userdata['PlayCount']
@@ -528,13 +476,12 @@ class Movies(common.Items):
 
         log.debug("%s New resume point: %s", itemid, resume)
 
-        self.kodi_db.addPlaystate(fileid, resume, total, playcount, dateplayed)
+        self.kodi_db.add_playstate(fileid, resume, total, playcount, dateplayed)
         emby_db.updateReference(itemid, checksum)
 
     def remove(self, itemid):
         # Remove movieid, fileid, emby reference
         emby_db = self.emby_db
-        kodicursor = self.kodicursor
         artwork = self.artwork
 
         emby_dbitem = emby_db.getItem_byId(itemid)
@@ -549,12 +496,10 @@ class Movies(common.Items):
         # Remove the emby reference
         emby_db.removeItem(itemid)
         # Remove artwork
-        artwork.delete_artwork(kodiid, mediatype, kodicursor)
+        artwork.delete_artwork(kodiid, mediatype, self.kodicursor)
 
         if mediatype == "movie":
-            # Delete kodi movie and file
-            kodicursor.execute("DELETE FROM movie WHERE idMovie = ?", (kodiid,))
-            kodicursor.execute("DELETE FROM files WHERE idFile = ?", (fileid,))
+            self.kodi_db.remove_movie(kodiid, fileid)
 
         elif mediatype == "set":
             # Delete kodi boxset
@@ -562,10 +507,10 @@ class Movies(common.Items):
             for movie in boxset_movies:
                 embyid = movie[0]
                 movieid = movie[1]
-                self.kodi_db.removefromBoxset(movieid)
+                self.kodi_db.remove_from_boxset(movieid)
                 # Update emby reference
                 emby_db.updateParentId(embyid, None)
 
-            kodicursor.execute("DELETE FROM sets WHERE idSet = ?", (kodiid,))
+            self.kodi_db.remove_boxset(kodiid)
 
         log.info("Deleted %s %s from kodi database", mediatype, itemid)

@@ -27,7 +27,7 @@ class Items(object):
     total = 0
 
 
-    def __init__(self, **kwargs):
+    def __init__(self):
 
         self.artwork = artwork.Artwork()
         self.emby = embyserver.Read_EmbyServer()

@@ -67,18 +67,17 @@ class VideoNodes(object):
                 dst=xbmc.translatePath("special://profile/library/video").decode('utf-8'))
             xbmcvfs.exists(path)
 
+        if delete:
+            dirs, files = xbmcvfs.listdir(nodepath)
+            for file in files:
+                xbmcvfs.delete(nodepath + file)
+
+            log.info("Sucessfully removed videonode: %s." % tagname)
+            return
         # Create the node directory
         if not xbmcvfs.exists(nodepath) and not mediatype == "photos":
             # We need to copy over the default items
             xbmcvfs.mkdirs(nodepath)
-        else:
-            if delete:
-                dirs, files = xbmcvfs.listdir(nodepath)
-                for file in files:
-                    xbmcvfs.delete(nodepath + file)
-
-                log.info("Sucessfully removed videonode: %s." % tagname)
-                return
 
         # Create index entry
         nodeXML = "%sindex.xml" % nodepath

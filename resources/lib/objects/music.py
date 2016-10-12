@@ -6,10 +6,10 @@ import logging
 from datetime import datetime
 
 import api
-import common
 import embydb_functions as embydb
-import kodidb_functions as kodidb
 import musicutils
+import _kodi_music
+from _common import Items
 from utils import window, settings, language as lang, catch_except
 
 ##################################################################################################
@@ -19,7 +19,7 @@ log = logging.getLogger("EMBY."+__name__)
 ##################################################################################################
 
 
-class Music(common.Items):
+class Music(Items):
 
 
     def __init__(self, embycursor, kodicursor, pdialog=None):
@@ -27,7 +27,7 @@ class Music(common.Items):
         self.embycursor = embycursor
         self.emby_db = embydb.Embydb_Functions(self.embycursor)
         self.kodicursor = kodicursor
-        self.kodi_db = kodidb.Kodidb_Functions(self.kodicursor)
+        self.kodi_db = _kodi_music.KodiMusic(self.kodicursor)
         self.pdialog = pdialog
 
         self.new_time = int(settings('newmusictime'))*1000
@@ -38,7 +38,7 @@ class Music(common.Items):
         self.userid = window('emby_currUser')
         self.server = window('emby_server%s' % self.userid)
 
-        common.Items.__init__(self)
+        Items.__init__(self)
 
     def _get_func(self, item_type, action):
 
@@ -218,6 +218,8 @@ class Music(common.Items):
         except TypeError:
             update_item = False
             log.debug("artistid: %s not found", itemid)
+        else:
+            pass
 
         ##### The artist details #####
         lastScraped = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -253,30 +255,15 @@ class Music(common.Items):
             log.info("ADD artist itemid: %s - Name: %s", itemid, name)
             # safety checks: It looks like Emby supports the same artist multiple times.
             # Kodi doesn't allow that. In case that happens we just merge the artist entries.
-            artistid = self.kodi_db.addArtist(name, musicBrainzId)
+            artistid = self.kodi_db.get_artist(name, musicBrainzId)
             # Create the reference in emby table
             emby_db.addReference(itemid, artistid, artisttype, "artist", checksum=checksum)
 
         # Process the artist
-        if self.kodi_version in (16, 17):
-            query = ' '.join((
-
-                "UPDATE artist",
-                "SET strGenres = ?, strBiography = ?, strImage = ?, strFanart = ?,",
-                    "lastScraped = ?",
-                "WHERE idArtist = ?"
-            ))
-            kodicursor.execute(query, (genres, bio, thumb, fanart, lastScraped, artistid))
+        if self.kodi_version > 15:
+            self.kodi_db.update_artist_16(genres, bio, thumb, fanart, lastScraped, artistid)
         else:
-            query = ' '.join((
-
-                "UPDATE artist",
-                "SET strGenres = ?, strBiography = ?, strImage = ?, strFanart = ?,",
-                    "lastScraped = ?, dateAdded = ?",
-                "WHERE idArtist = ?"
-            ))
-            kodicursor.execute(query, (genres, bio, thumb, fanart, lastScraped,
-                                       dateadded, artistid))
+            self.kodi_db.update_artist(genres, bio, thumb, fanart, lastScraped, dateadded, artistid)
 
         # Update artwork
         artwork.add_artwork(artworks, artistid, "artist", kodicursor)
@@ -313,7 +300,7 @@ class Music(common.Items):
         genres = item.get('Genres')
         genre = " / ".join(genres)
         bio = API.get_overview()
-        rating = userdata['UserRating']
+        rating = 0
         artists = item['AlbumArtists']
         artistname = []
         for artist in artists:
@@ -337,56 +324,27 @@ class Music(common.Items):
             log.info("ADD album itemid: %s - Name: %s", itemid, name)
             # safety checks: It looks like Emby supports the same artist multiple times.
             # Kodi doesn't allow that. In case that happens we just merge the artist entries.
-            albumid = self.kodi_db.addAlbum(name, musicBrainzId)
+            albumid = self.kodi_db.get_album(name, musicBrainzId)
             # Create the reference in emby table
             emby_db.addReference(itemid, albumid, "MusicAlbum", "album", checksum=checksum)
-
 
         # Process the album info
         if self.kodi_version == 17:
             # Kodi Krypton
-            query = ' '.join((
-
-                "UPDATE album",
-                "SET strArtists = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?,",
-                    "iUserrating = ?, lastScraped = ?, strReleaseType = ?",
-                "WHERE idAlbum = ?"
-            ))
-            kodicursor.execute(query, (artistname, year, genre, bio, thumb, rating, lastScraped,
-                                       "album", albumid))
+            self.kodi_db.update_album_17(artistname, year, genre, bio, thumb, rating, lastScraped,
+                                         "album", albumid)
         elif self.kodi_version == 16:
             # Kodi Jarvis
-            query = ' '.join((
-
-                "UPDATE album",
-                "SET strArtists = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?,",
-                    "iRating = ?, lastScraped = ?, strReleaseType = ?",
-                "WHERE idAlbum = ?"
-            ))
-            kodicursor.execute(query, (artistname, year, genre, bio, thumb, rating, lastScraped,
-                                       "album", albumid))
+            self.kodi_db.update_album(artistname, year, genre, bio, thumb, rating, lastScraped,
+                                      "album", albumid)
         elif self.kodi_version == 15:
             # Kodi Isengard
-            query = ' '.join((
-
-                "UPDATE album",
-                "SET strArtists = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?,",
-                    "iRating = ?, lastScraped = ?, dateAdded = ?, strReleaseType = ?",
-                "WHERE idAlbum = ?"
-            ))
-            kodicursor.execute(query, (artistname, year, genre, bio, thumb, rating, lastScraped,
-                                       dateadded, "album", albumid))
+            self.kodi_db.update_album_15(artistname, year, genre, bio, thumb, rating, lastScraped,
+                                         dateadded, "album", albumid)
         else:
-            # Kodi Helix
-            query = ' '.join((
-
-                "UPDATE album",
-                "SET strArtists = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?,",
-                    "iRating = ?, lastScraped = ?, dateAdded = ?",
-                "WHERE idAlbum = ?"
-            ))
-            kodicursor.execute(query, (artistname, year, genre, bio, thumb, rating, lastScraped,
-                                       dateadded, albumid))
+            # TODO: Remove Helix code when Krypton is RC
+            self.kodi_db.update_album_14(artistname, year, genre, bio, thumb, rating, lastScraped,
+                                         dateadded, albumid)
 
         # Assign main artists to album
         for artist in item['AlbumArtists']:
@@ -403,18 +361,10 @@ class Music(common.Items):
                 artistid = emby_dbartist[0]
             else:
                 # Best take this name over anything else.
-                query = "UPDATE artist SET strArtist = ? WHERE idArtist = ?"
-                kodicursor.execute(query, (artistname, artistid,))
+                self.kodi_db.update_artist_name(artistid, artistname)
 
             # Add artist to album
-            query = (
-                '''
-                INSERT OR REPLACE INTO album_artist(idArtist, idAlbum, strArtist)
-
-                VALUES (?, ?, ?)
-                '''
-            )
-            kodicursor.execute(query, (artistid, albumid, artistname))
+            self.kodi_db.link_artist(artistid, albumid, artistname)
             # Update emby reference with parentid
             emby_db.updateParentId(artistId, albumid)
 
@@ -427,17 +377,10 @@ class Music(common.Items):
                 pass
             else:
                 # Update discography
-                query = (
-                    '''
-                    INSERT OR REPLACE INTO discography(idArtist, strAlbum, strYear)
-
-                    VALUES (?, ?, ?)
-                    '''
-                )
-                kodicursor.execute(query, (artistid, name, year))
+                self.kodi_db.add_discography(artistid, name, year)
 
         # Add genres
-        self.kodi_db.addMusicGenres(albumid, genres, "album")
+        self.kodi_db.add_genres(albumid, genres, "album")
         # Update artwork
         artwork.add_artwork(artworks, albumid, "album", kodicursor)
 
@@ -462,6 +405,7 @@ class Music(common.Items):
         except TypeError:
             update_item = False
             log.debug("songid: %s not found", itemid)
+            songid = self.kodi_db.create_entry_song()
 
         ##### The song details #####
         checksum = API.get_checksum()
@@ -484,7 +428,7 @@ class Music(common.Items):
             track = disc*2**16 + tracknumber
         year = item.get('ProductionYear')
         duration = API.get_runtime()
-        rating = userdata['UserRating']
+        rating = 0
 
         #if enabled, try to get the rating from file and/or emby
         if not self.directstream:
@@ -524,20 +468,11 @@ class Music(common.Items):
             log.info("UPDATE song itemid: %s - Title: %s", itemid, title)
 
             # Update path
-            query = "UPDATE path SET strPath = ? WHERE idPath = ?"
-            kodicursor.execute(query, (path, pathid))
+            self.kodi_db.update_path(pathid, path)
 
             # Update the song entry
-            query = ' '.join((
-
-                "UPDATE song",
-                "SET idAlbum = ?, strArtists = ?, strGenres = ?, strTitle = ?, iTrack = ?,",
-                    "iDuration = ?, iYear = ?, strFilename = ?, iTimesPlayed = ?, lastplayed = ?,",
-                    "rating = ?, comment = ?",
-                "WHERE idSong = ?"
-            ))
-            kodicursor.execute(query, (albumid, artists, genre, title, track, duration, year,
-                                       filename, playcount, dateplayed, rating, comment, songid))
+            self.kodi_db.update_song(albumid, artists, genre, title, track, duration, year,
+                                     filename, playcount, dateplayed, rating, comment, songid)
 
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
@@ -547,7 +482,7 @@ class Music(common.Items):
             log.info("ADD song itemid: %s - Title: %s", itemid, title)
 
             # Add path
-            pathid = self.kodi_db.addPath(path)
+            pathid = self.kodi_db.add_path(path)
 
             try:
                 # Get the album
@@ -558,7 +493,7 @@ class Music(common.Items):
                 album_name = item.get('Album')
                 if album_name:
                     log.info("Creating virtual music album for song: %s", itemid)
-                    albumid = self.kodi_db.addAlbum(album_name, API.get_provider('MusicBrainzAlbum'))
+                    albumid = self.kodi_db.get_album(album_name, API.get_provider('MusicBrainzAlbum'))
                     emby_db.addReference("%salbum%s" % (itemid, albumid), albumid, "MusicAlbum_", "album")
                 else:
                     # No album Id associated to the song.
@@ -578,70 +513,30 @@ class Music(common.Items):
                 except TypeError:
                     # No album found, create a single's album
                     log.info("Failed to add album. Creating singles.")
-                    kodicursor.execute("select coalesce(max(idAlbum),0) from album")
-                    albumid = kodicursor.fetchone()[0] + 1
+                    album_id = self.kodi_db.create_entry_album()
                     if self.kodi_version == 16:
-                        # Kodi Jarvis
-                        query = (
-                            '''
-                            INSERT INTO album(idAlbum, strGenres, iYear, strReleaseType)
+                        self.kodi_db.add_single(albumid, genre, year, "single")
 
-                            VALUES (?, ?, ?, ?)
-                            '''
-                        )
-                        kodicursor.execute(query, (albumid, genre, year, "single"))
                     elif self.kodi_version == 15:
-                        # Kodi Isengard
-                        query = (
-                            '''
-                            INSERT INTO album(idAlbum, strGenres, iYear, dateAdded, strReleaseType)
+                        self.kodi_db.add_single_15(albumid, genre, year, dateadded, "single")
 
-                            VALUES (?, ?, ?, ?, ?)
-                            '''
-                        )
-                        kodicursor.execute(query, (albumid, genre, year, dateadded, "single"))
                     else:
-                        # Kodi Helix
-                        query = (
-                            '''
-                            INSERT INTO album(idAlbum, strGenres, iYear, dateAdded)
-
-                            VALUES (?, ?, ?, ?)
-                            '''
-                        )
-                        kodicursor.execute(query, (albumid, genre, year, dateadded))
+                        # TODO: Remove Helix code when Krypton is RC
+                        self.kodi_db.add_single_14(albumid, genre, year, dateadded)
 
             # Create the song entry
-            kodicursor.execute("select coalesce(max(idSong),0) from song")
-            songid = kodicursor.fetchone()[0] + 1
-            query = (
-                '''
-                INSERT INTO song(
-                    idSong, idAlbum, idPath, strArtists, strGenres, strTitle, iTrack,
-                    iDuration, iYear, strFileName, strMusicBrainzTrackID, iTimesPlayed, lastplayed,
-                    rating)
-
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                '''
-            )
-            kodicursor.execute(query, (songid, albumid, pathid, artists, genre, title, track,
-                                       duration, year, filename, musicBrainzId, playcount,
-                                       dateplayed, rating))
+            self.kodi_db.add_song(songid, albumid, pathid, artists, genre, title, track, duration,
+                                  year, filename, musicBrainzId, playcount, dateplayed, rating)
 
             # Create the reference in emby table
             emby_db.addReference(itemid, songid, "Audio", "song", pathid=pathid, parentid=albumid,
                                  checksum=checksum)
 
         # Link song to album
-        query = (
-            '''
-            INSERT OR REPLACE INTO albuminfosong(
-                idAlbumInfoSong, idAlbumInfo, iTrack, strTitle, iDuration)
-
-            VALUES (?, ?, ?, ?, ?)
-            '''
-        )
-        kodicursor.execute(query, (songid, albumid, track, title, duration))
+        self.kodi_db.link_song_album(songid, albumid, track, title, duration)
+        # Create default role
+        if self.kodi_version > 16:
+            self.kodi_db.add_role()
 
         # Link song to artists
         for index, artist in enumerate(item['ArtistItems']):
@@ -658,35 +553,8 @@ class Music(common.Items):
                 artist_edb = emby_db.getItem_byId(artist_eid)
                 artistid = artist_edb[0]
             finally:
-                if self.kodi_version >= 17:
-                    # Kodi Krypton
-                    query = (
-                        '''
-                        INSERT OR REPLACE INTO song_artist(idArtist, idSong, idRole, iOrder, strArtist)
-
-                        VALUES (?, ?, ?, ?, ?)
-                        '''
-                    )
-                    kodicursor.execute(query, (artistid, songid, 1, index, artist_name))
-
-                    # May want to look into only doing this once?
-                    query = (
-                        '''
-                        INSERT OR REPLACE INTO role(idRole, strRole)
-
-                        VALUES (?, ?)
-                        '''
-                    )
-                    kodicursor.execute(query, (1, 'Composer'))
-                else:
-                    query = (
-                        '''
-                        INSERT OR REPLACE INTO song_artist(idArtist, idSong, iOrder, strArtist)
-
-                        VALUES (?, ?, ?, ?)
-                        '''
-                    )
-                    kodicursor.execute(query, (artistid, songid, index, artist_name))
+                # Link song to artist
+                self.kodi_db.link_song_artist(artistid, songid, index, artist_name)
 
         # Verify if album artist exists
         album_artists = []
@@ -705,51 +573,18 @@ class Music(common.Items):
                 artist_edb = emby_db.getItem_byId(artist_eid)
                 artistid = artist_edb[0]
             finally:
-                query = (
-                    '''
-                    INSERT OR REPLACE INTO album_artist(idArtist, idAlbum, strArtist)
-
-                    VALUES (?, ?, ?)
-                    '''
-                )
-                kodicursor.execute(query, (artistid, albumid, artist_name))
+                # Link artist to album
+                self.kodi_db.link_artist(artistid, albumid, artist_name)
                 # Update discography
                 if item.get('Album'):
-                    query = (
-                        '''
-                        INSERT OR REPLACE INTO discography(idArtist, strAlbum, strYear)
+                    self.kodi_db.add_discography(artistid, item['Album'], 0)
 
-                        VALUES (?, ?, ?)
-                        '''
-                    )
-                    kodicursor.execute(query, (artistid, item['Album'], 0))
-
+        # Artist names
         album_artists = " / ".join(album_artists)
-        query = ' '.join((
-
-            "SELECT strArtists",
-            "FROM album",
-            "WHERE idAlbum = ?"
-        ))
-        kodicursor.execute(query, (albumid,))
-        result = kodicursor.fetchone()
-        if result and result[0] != album_artists:
-            # Field is empty
-            if self.kodi_version in (16, 17):
-                # Kodi Jarvis, Krypton
-                query = "UPDATE album SET strArtists = ? WHERE idAlbum = ?"
-                kodicursor.execute(query, (album_artists, albumid))
-            elif self.kodi_version == 15:
-                # Kodi Isengard
-                query = "UPDATE album SET strArtists = ? WHERE idAlbum = ?"
-                kodicursor.execute(query, (album_artists, albumid))
-            else:
-                # Kodi Helix
-                query = "UPDATE album SET strArtists = ? WHERE idAlbum = ?"
-                kodicursor.execute(query, (album_artists, albumid))
+        self.kodi_db.get_album_artist(albumid, album_artists)
 
         # Add genres
-        self.kodi_db.addMusicGenres(songid, genres, "song")
+        self.kodi_db.add_genres(songid, genres, "song")
 
         # Update artwork
         allart = artwork.get_all_artwork(item, parent_info=True)
@@ -774,7 +609,7 @@ class Music(common.Items):
         itemid = item['Id']
         checksum = API.get_checksum()
         userdata = API.get_userdata()
-        rating = userdata['UserRating']
+        rating = 0
 
         # Get Kodi information
         emby_dbitem = emby_db.getItem_byId(itemid)
@@ -799,17 +634,7 @@ class Music(common.Items):
 
             #process item ratings
             rating, comment, hasEmbeddedCover = musicutils.getAdditionalSongTags(itemid, rating, API, kodicursor, emby_db, self.enableimportsongrating, self.enableexportsongrating, self.enableupdatesongrating)
-
-            query = "UPDATE song SET iTimesPlayed = ?, lastplayed = ?, rating = ? WHERE idSong = ?"
-            kodicursor.execute(query, (playcount, dateplayed, rating, kodiid))
-
-        elif mediatype == "album":
-            # Process playstates
-            if self.kodi_version >= 17:
-                query = "UPDATE album SET fRating = ? WHERE idAlbum = ?"
-            else:
-                query = "UPDATE album SET iRating = ? WHERE idAlbum = ?"
-            kodicursor.execute(query, (rating, kodiid))
+            self.kodi_db.rate_song(playcount, dateplayed, rating, kodiid)
 
         emby_db.updateReference(itemid, checksum)
 
@@ -889,21 +714,19 @@ class Music(common.Items):
             # Remove artist
             self.removeArtist(kodiid)
 
-        log.info("Deleted %s: %s from kodi database" % (mediatype, itemid))
+        log.info("Deleted %s: %s from kodi database", mediatype, itemid)
 
-    def removeSong(self, kodiId):
+    def removeSong(self, kodi_id):
 
-        kodicursor = self.kodicursor
+        self.artwork.delete_artwork(kodi_id, "song", self.kodicursor)
+        self.kodi_db.remove_song(kodi_id)
 
-        self.artwork.delete_artwork(kodiId, "song", self.kodicursor)
-        self.kodicursor.execute("DELETE FROM song WHERE idSong = ?", (kodiId,))
+    def removeAlbum(self, kodi_id):
 
-    def removeAlbum(self, kodiId):
+        self.artwork.delete_artwork(kodi_id, "album", self.kodicursor)
+        self.kodi_db.remove_album(kodi_id)
 
-        self.artwork.delete_artwork(kodiId, "album", self.kodicursor)
-        self.kodicursor.execute("DELETE FROM album WHERE idAlbum = ?", (kodiId,))
+    def removeArtist(self, kodi_id):
 
-    def removeArtist(self, kodiId):
-
-        self.artwork.delete_artwork(kodiId, "artist", self.kodicursor)
-        self.kodicursor.execute("DELETE FROM artist WHERE idArtist = ?", (kodiId,))
+        self.artwork.delete_artwork(kodi_id, "artist", self.kodicursor)
+        self.kodi_db.remove_artist(kodi_id)

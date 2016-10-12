@@ -6,9 +6,9 @@ import logging
 import urllib
 
 import api
-import common
 import embydb_functions as embydb
-import kodidb_functions as kodidb
+import _kodi_musicvideos
+from _common import Items
 from utils import window, language as lang, catch_except
 
 ##################################################################################################
@@ -18,7 +18,7 @@ log = logging.getLogger("EMBY."+__name__)
 ##################################################################################################
 
 
-class MusicVideos(common.Items):
+class MusicVideos(Items):
 
 
     def __init__(self, embycursor, kodicursor, pdialog=None):
@@ -26,10 +26,10 @@ class MusicVideos(common.Items):
         self.embycursor = embycursor
         self.emby_db = embydb.Embydb_Functions(self.embycursor)
         self.kodicursor = kodicursor
-        self.kodi_db = kodidb.Kodidb_Functions(self.kodicursor)
+        self.kodi_db = _kodi_musicvideos.KodiMusicVideos(self.kodicursor)
         self.pdialog = pdialog
 
-        common.Items.__init__(self)
+        Items.__init__(self)
 
     def _get_func(self, item_type, action):
 
@@ -119,7 +119,7 @@ class MusicVideos(common.Items):
 
 
     def added(self, items, total=None, view=None):
-        for item in super(MusicVideos, self).added(items, total, True):
+        for item in super(MusicVideos, self).added(items, total):
             if self.add_update(item, view):
                 self.content_pop(item.get('Name', "unknown"))
 
@@ -146,16 +146,10 @@ class MusicVideos(common.Items):
             update_item = False
             log.debug("mvideoid: %s not found", itemid)
             # mvideoid
-            kodicursor.execute("select coalesce(max(idMVideo),0) from musicvideo")
-            mvideoid = kodicursor.fetchone()[0] + 1
+            mvideoid = self.kodi_db.create_entry()
 
         else:
-            # Verification the item is still in Kodi
-            query = "SELECT * FROM musicvideo WHERE idMVideo = ?"
-            kodicursor.execute(query, (mvideoid,))
-            try:
-                kodicursor.fetchone()[0]
-            except TypeError:
+            if self.kodi_db.get_musicvideo(mvideoid) is None:
                 # item is not found, let's recreate it.
                 update_item = False
                 log.info("mvideoid: %s missing from Kodi, repairing the entry.", mvideoid)
@@ -224,24 +218,10 @@ class MusicVideos(common.Items):
         if update_item:
             log.info("UPDATE mvideo itemid: %s - Title: %s", itemid, title)
 
-            # Update path
-            query = "UPDATE path SET strPath = ? WHERE idPath = ?"
-            kodicursor.execute(query, (path, pathid))
-
-            # Update the filename
-            query = "UPDATE files SET strFilename = ?, dateAdded = ? WHERE idFile = ?"
-            kodicursor.execute(query, (filename, dateadded, fileid))
-
             # Update the music video entry
-            query = ' '.join((
+            self.kodi_db.update_musicvideo(title, runtime, director, studio, year, plot, album,
+                                           artist, genre, track, mvideoid)
 
-                "UPDATE musicvideo",
-                "SET c00 = ?, c04 = ?, c05 = ?, c06 = ?, c07 = ?, c08 = ?, c09 = ?, c10 = ?,",
-                    "c11 = ?, c12 = ?"
-                "WHERE idMVideo = ?"
-            ))
-            kodicursor.execute(query, (title, runtime, director, studio, year, plot, album,
-                                       artist, genre, track, mvideoid))
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
 
@@ -250,56 +230,22 @@ class MusicVideos(common.Items):
             log.info("ADD mvideo itemid: %s - Title: %s", itemid, title)
 
             # Add path
-            query = ' '.join((
-
-                "SELECT idPath",
-                "FROM path",
-                "WHERE strPath = ?"
-            ))
-            kodicursor.execute(query, (path,))
-            try:
-                pathid = kodicursor.fetchone()[0]
-            except TypeError:
-                kodicursor.execute("select coalesce(max(idPath),0) from path")
-                pathid = kodicursor.fetchone()[0] + 1
-                query = (
-                    '''
-                    INSERT OR REPLACE INTO path(
-                        idPath, strPath, strContent, strScraper, noUpdate)
-
-                    VALUES (?, ?, ?, ?, ?)
-                    '''
-                )
-                kodicursor.execute(query, (pathid, path, "musicvideos", "metadata.local", 1))
-
+            pathid = self.kodi_db.add_path(path)
             # Add the file
-            kodicursor.execute("select coalesce(max(idFile),0) from files")
-            fileid = kodicursor.fetchone()[0] + 1
-            query = (
-                '''
-                INSERT INTO files(
-                    idFile, idPath, strFilename, dateAdded)
-
-                VALUES (?, ?, ?, ?)
-                '''
-            )
-            kodicursor.execute(query, (fileid, pathid, filename, dateadded))
+            fileid = self.kodi_db.add_file(filename, pathid)
 
             # Create the musicvideo entry
-            query = (
-                '''
-                INSERT INTO musicvideo(
-                    idMVideo, idFile, c00, c04, c05, c06, c07, c08, c09, c10, c11, c12)
-
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                '''
-            )
-            kodicursor.execute(query, (mvideoid, fileid, title, runtime, director, studio,
-                                       year, plot, album, artist, genre, track))
+            self.kodi_db.add_musicvideo(mvideoid, fileid, title, runtime, director, studio,
+                                        year, plot, album, artist, genre, track)
 
             # Create the reference in emby table
             emby_db.addReference(itemid, mvideoid, "MusicVideo", "musicvideo", fileid, pathid,
                                  checksum=checksum, mediafolderid=viewid)
+
+        # Update the path
+        self.kodi_db.update_path(pathid, path, "musicvideos", "metadata.local")
+        # Update the file
+        self.kodi_db.update_file(fileid, filename, pathid, dateadded)
 
         # Process cast
         people = item['People']
@@ -308,26 +254,26 @@ class MusicVideos(common.Items):
             artist['Type'] = "Artist"
         people.extend(artists)
         people = artwork.get_people_artwork(people)
-        self.kodi_db.addPeople(mvideoid, people, "musicvideo")
+        self.kodi_db.add_people(mvideoid, people, "musicvideo")
         # Process genres
-        self.kodi_db.addGenres(mvideoid, genres, "musicvideo")
+        self.kodi_db.add_genres(mvideoid, genres, "musicvideo")
         # Process artwork
         artwork.add_artwork(artwork.get_all_artwork(item), mvideoid, "musicvideo", kodicursor)
         # Process stream details
         streams = API.get_media_streams()
-        self.kodi_db.addStreams(fileid, streams, runtime)
+        self.kodi_db.add_streams(fileid, streams, runtime)
         # Process studios
-        self.kodi_db.addStudios(mvideoid, studios, "musicvideo")
+        self.kodi_db.add_studios(mvideoid, studios, "musicvideo")
         # Process tags: view, emby tags
         tags = [viewtag]
         tags.extend(item['Tags'])
         if userdata['Favorite']:
             tags.append("Favorite musicvideos")
-        self.kodi_db.addTags(mvideoid, tags, "musicvideo")
+        self.kodi_db.add_tags(mvideoid, tags, "musicvideo")
         # Process playstates
         resume = API.adjust_resume(userdata['Resume'])
         total = round(float(runtime), 6)
-        self.kodi_db.addPlaystate(fileid, resume, total, playcount, dateplayed)
+        self.kodi_db.add_playstate(fileid, resume, total, playcount, dateplayed)
 
         return True
 
@@ -354,9 +300,9 @@ class MusicVideos(common.Items):
 
         # Process favorite tags
         if userdata['Favorite']:
-            self.kodi_db.addTag(mvideoid, "Favorite musicvideos", "musicvideo")
+            self.kodi_db.get_tag(mvideoid, "Favorite musicvideos", "musicvideo")
         else:
-            self.kodi_db.removeTag(mvideoid, "Favorite musicvideos", "musicvideo")
+            self.kodi_db.remove_tag(mvideoid, "Favorite musicvideos", "musicvideo")
 
         # Process playstates
         playcount = userdata['PlayCount']
@@ -364,7 +310,7 @@ class MusicVideos(common.Items):
         resume = API.adjust_resume(userdata['Resume'])
         total = round(float(runtime), 6)
 
-        self.kodi_db.addPlaystate(fileid, resume, total, playcount, dateplayed)
+        self.kodi_db.add_playstate(fileid, resume, total, playcount, dateplayed)
         emby_db.updateReference(itemid, checksum)
 
     def remove(self, itemid):
@@ -382,26 +328,13 @@ class MusicVideos(common.Items):
         except TypeError:
             return
 
+        # Remove the emby reference
+        emby_db.removeItem(itemid)
         # Remove artwork
-        query = ' '.join((
+        artwork.delete_artwork(mvideoid, "musicvideo", self.kodicursor)
 
-            "SELECT url, type",
-            "FROM art",
-            "WHERE media_id = ?",
-            "AND media_type = 'musicvideo'"
-        ))
-        kodicursor.execute(query, (mvideoid,))
-        for row in kodicursor.fetchall():
-
-            url = row[0]
-            imagetype = row[1]
-            if imagetype in ("poster", "fanart"):
-                artwork.delete_cached_artwork(url)
-
-        kodicursor.execute("DELETE FROM musicvideo WHERE idMVideo = ?", (mvideoid,))
-        kodicursor.execute("DELETE FROM files WHERE idFile = ?", (fileid,))
+        self.kodi_db.remove_musicvideo(mvideoid, fileid)
         if self.direct_path:
-            kodicursor.execute("DELETE FROM path WHERE idPath = ?", (pathid,))
-        self.embycursor.execute("DELETE FROM emby WHERE emby_id = ?", (itemid,))
+            self.kodi_db.remove_path(pathid)
 
         log.info("Deleted musicvideo %s from kodi database", itemid)
