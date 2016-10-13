@@ -9,6 +9,9 @@ from utils import window, settings, language as lang
 
 log = logging.getLogger("EMBY."+__name__)
 
+# for info on the metrics that can be sent to Google Analytics
+# https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#events
+
 class GoogleAnalytics():
 
     testing = False
@@ -51,13 +54,7 @@ class GoogleAnalytics():
         return errorType, errorFile
 	
     def sendEventData(self, eventCategory, eventAction, eventLabel=None):
-        
-        if(settings('metricLogging') == "false"):
-            return
-        
-        # for info on the metrics that can be sent to Google Analytics
-        # https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#events
-        
+       
         # all the data we can send to Google Analytics
         data = {}
         data['v'] = '1'
@@ -82,8 +79,15 @@ class GoogleAnalytics():
         if(eventLabel != None):
             data['el'] = eventLabel # Event Label
         
+        self.sendData(data)
+            
+    def sendData(self, data):
+    
         log.info("GA: " + str(data))
 
+        if(settings('metricLogging') == "false"):
+            return
+        
         if(self.testing):
             url = "https://www.google-analytics.com/debug/collect" # test URL
         else:
@@ -96,4 +100,6 @@ class GoogleAnalytics():
         
         if(self.testing):
             log.info("GA: " + r.text.encode('utf-8'))
+            
+    
             

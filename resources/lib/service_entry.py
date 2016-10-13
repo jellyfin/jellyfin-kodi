@@ -4,6 +4,7 @@
 
 import logging
 import sys
+import time
 import _strptime # Workaround for threads using datetime: _striptime is locked
 from datetime import datetime
 
@@ -41,7 +42,7 @@ class Service(object):
     library_thread = None
 
     last_progress = datetime.today()
-
+    lastMetricPing = time.time()
 
     def __init__(self):
 
@@ -139,7 +140,14 @@ class Service(object):
                 # or Kodi is shut down.
                 self._server_online_check()
 
-
+            # ping metrics server to keep sessions alive
+            # ping every 3 min
+            timeSinceLastPing = time.time() - self.lastMetricPing
+            if(timeSinceLastPing > 180):
+                self.lastMetricPing = time.time()
+                ga = GoogleAnalytics()
+                ga.sendEventData("Application", "Ping")
+                
             if self.monitor.waitForAbort(1):
                 # Abort was requested while waiting. We should exit
                 break
