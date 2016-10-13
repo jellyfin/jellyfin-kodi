@@ -46,7 +46,8 @@ class GoogleAnalytics():
         if(stackFrames != None):
             fileName = os.path.split(stackFrames[0])[1]
 
-            errorFile = "%s:%s" % (fileName, stackFrames[1])
+            errorFile = "%s:%s(%s)(%s)" % (fileName, stackFrames[1], exc_obj.message, stackFrames[3].strip())
+            errorFile = errorFile[0:499]
             errorType = "%s" % (exc_type.__name__)
             del(exc_type, exc_obj, exc_tb)
             log.error(errorType + " - " + errorFile)
