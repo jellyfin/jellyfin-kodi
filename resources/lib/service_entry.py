@@ -120,6 +120,14 @@ class Service(object):
 
                     # If an item is playing
                     if self.kodi_player.isPlaying():
+                        # ping metrics server to keep sessions alive while playing
+                        # ping every 5 min
+                        timeSinceLastPing = time.time() - self.lastMetricPing
+                        if(timeSinceLastPing > 300):
+                            self.lastMetricPing = time.time()
+                            ga = GoogleAnalytics()
+                            ga.sendEventData("PlayAction", "PlayPing")
+
                         self._report_progress()
 
                     elif not self.startup:
@@ -139,15 +147,6 @@ class Service(object):
                 # Wait until Emby server is online
                 # or Kodi is shut down.
                 self._server_online_check()
-
-            # ping metrics server to keep sessions alive while playing
-            # ping every 5 min
-            timeSinceLastPing = time.time() - self.lastMetricPing
-            if(timeSinceLastPing > 300):
-                self.lastMetricPing = time.time()
-                if self.kodi_player.isPlaying():
-                    ga = GoogleAnalytics()
-                    ga.sendEventData("PlayAction", "PlayPing")
                 
             if self.monitor.waitForAbort(1):
                 # Abort was requested while waiting. We should exit
