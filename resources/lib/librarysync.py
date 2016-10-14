@@ -81,9 +81,6 @@ class LibrarySync(threading.Thread):
     
         # Run at start up - optional to use the server plugin
         if settings('SyncInstallRunDone') == "true":
-        
-            ga.sendEventData("SyncAction", "FastSync")
-        
             # Validate views
             self.refreshViews()
             completed = False
@@ -97,11 +94,13 @@ class LibrarySync(threading.Thread):
                     if plugin['Name'] == "Emby.Kodi Sync Queue":
                         log.debug("Found server plugin.")
                         self.isFastSync = True
+                        ga.sendEventData("SyncAction", "FastSync")
                         completed = self.fastSync()
                         break
 
             if not completed:
                 # Fast sync failed or server plugin is not found
+                ga.sendEventData("SyncAction", "Sync")
                 completed = ManualSync().sync()
         else:
             # Install sync is not completed

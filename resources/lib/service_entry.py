@@ -140,13 +140,14 @@ class Service(object):
                 # or Kodi is shut down.
                 self._server_online_check()
 
-            # ping metrics server to keep sessions alive
-            # ping every 3 min
+            # ping metrics server to keep sessions alive while playing
+            # ping every 5 min
             timeSinceLastPing = time.time() - self.lastMetricPing
-            if(timeSinceLastPing > 180):
+            if(timeSinceLastPing > 300):
                 self.lastMetricPing = time.time()
-                ga = GoogleAnalytics()
-                ga.sendEventData("Application", "Ping")
+                if self.kodi_player.isPlaying():
+                    ga = GoogleAnalytics()
+                    ga.sendEventData("PlayAction", "PlayPing")
                 
             if self.monitor.waitForAbort(1):
                 # Abort was requested while waiting. We should exit
@@ -297,8 +298,8 @@ class Service(object):
 
     def shutdown(self):
 
-        ga = GoogleAnalytics()
-        ga.sendEventData("Application", "Shutdown")     
+        #ga = GoogleAnalytics()
+        #ga.sendEventData("Application", "Shutdown")     
 
         if self.userclient_running:
             self.userclient_thread.stop_client()
