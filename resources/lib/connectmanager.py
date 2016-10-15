@@ -35,35 +35,39 @@ class ConnectManager(object):
 
         self.__dict__ = self._shared_state
 
-        if not self.state and not window('emby_currUser'):
-            client_info = clientinfo.ClientInfo()
-            self.emby = embyserver.Read_EmbyServer()
+        client_info = clientinfo.ClientInfo()
+        self.emby = embyserver.Read_EmbyServer()
 
-            version = client_info.get_version()
-            device_name = client_info.get_device_name()
-            device_id = client_info.get_device_id()
-
-            self._connect = connectionmanager.ConnectionManager(appName="Kodi",
-                                                                appVersion=version,
-                                                                deviceName=device_name,
-                                                                deviceId=device_id)
-            path = xbmc.translatePath(
+        version = client_info.get_version()
+        device_name = client_info.get_device_name()
+        device_id = client_info.get_device_id()
+        self._connect = connectionmanager.ConnectionManager(appName="Kodi",
+                                                            appVersion=version,
+                                                            deviceName=device_name,
+                                                            deviceId=device_id)
+        path = xbmc.translatePath(
                    "special://profile/addon_data/plugin.video.emby/").decode('utf-8')
 
-            if not xbmcvfs.exists(path):
-                xbmcvfs.mkdirs(path)
+        if not xbmcvfs.exists(path):
+            xbmcvfs.mkdirs(path)
 
-            self._connect.setFilePath(path)
+        self._connect.setFilePath(path)
+
+        if window('emby_state.json'):
+            self.state = window('emby_state.json')
+
+        elif not self.state:
             self.state = self._connect.connect()
             log.info("Started with: %s", self.state)
+            window('emby_state.json', value=self.state)
 
 
     def update_state(self):
-
         self.state = self._connect.connect({'updateDateLastAccessed': False})
-        return self.state
+        return self.get_state()
 
     def get_state(self):
+        window('emby_state.json', value=self.state)
         return self.state
 
     def get_server(self, server):

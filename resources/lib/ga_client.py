@@ -7,6 +7,7 @@ import clientinfo
 import md5
 import xbmc
 import platform
+import xbmcgui
 from utils import window, settings, language as lang
 
 log = logging.getLogger("EMBY."+__name__)
@@ -31,6 +32,10 @@ class GoogleAnalytics():
         # use md5 for client and user for analytics
         self.device_id = md5.new(self.device_id).hexdigest()
         self.user_name = md5.new(self.user_name).hexdigest()
+        
+        # resolution
+        self.height = xbmcgui.Window(10000).getHeight()
+        self.width = xbmcgui.Window(10000).getWidth()        
     
     def getUserAgentOS(self):
     
@@ -99,6 +104,9 @@ class GoogleAnalytics():
         data['t'] = 'event' # action type
         data['ec'] = eventCategory # Event Category
         data['ea'] = eventAction # Event Action
+        
+        # add width and height
+        data['sr'] = str(self.width) + "x" + str(self.height)
 
         if(eventLabel != None):
             data['el'] = eventLabel # Event Label

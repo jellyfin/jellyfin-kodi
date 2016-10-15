@@ -263,9 +263,15 @@ class ConnectionManager(object):
         
         log.debug("MultiGroup      : %s" % str(MULTI_GROUP))
         log.debug("Sending UDP Data: %s" % MESSAGE)
-        sock.sendto(MESSAGE, MULTI_GROUP)
-        
+
         servers = []
+
+        try:
+            sock.sendto(MESSAGE, MULTI_GROUP)
+        except Exception as error:
+            log.error(error)
+            return servers
+
         while True:
             try:
                 data, addr = sock.recvfrom(1024) # buffer size
