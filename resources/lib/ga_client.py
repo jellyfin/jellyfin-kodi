@@ -5,6 +5,8 @@ import requests
 import logging
 import clientinfo
 import md5
+import xbmc
+import platform
 from utils import window, settings, language as lang
 
 log = logging.getLogger("EMBY."+__name__)
@@ -20,8 +22,8 @@ class GoogleAnalytics():
     
         client_info = clientinfo.ClientInfo()
         self.version = client_info.get_version()
-        self.device_id = client_info.get_device_id()
-        self.userAgent = "Emby4Kodi/" + self.version + " (" + client_info.get_platform() + ")"
+        self.device_id = client_info.get_device_id()       
+        self.userAgent = "Kodi (" + self.getUserAgentOS() + ")"
         
         # Use set user name
         self.user_name = settings('username') or settings('connectUsername') or 'None'
@@ -30,6 +32,27 @@ class GoogleAnalytics():
         self.device_id = md5.new(self.device_id).hexdigest()
         self.user_name = md5.new(self.user_name).hexdigest()
     
+    def getUserAgentOS(self):
+    
+        return platform.system()
+    
+        '''
+        if xbmc.getCondVisibility('system.platform.osx'):
+            return "OSX"
+        elif xbmc.getCondVisibility('system.platform.ios'):
+            return "iOS"
+        elif xbmc.getCondVisibility('system.platform.windows'):
+            return "Windows"
+        elif xbmc.getCondVisibility('system.platform.android'):
+            return "Android"
+        elif xbmc.getCondVisibility('system.platform.linux.raspberrypi'):
+            return "Linux"
+        elif xbmc.getCondVisibility('system.platform.linux'):
+            return "Linux"
+        else:
+            return platform.system()
+        '''
+        
     def formatException(self):
         exc_type, exc_obj, exc_tb = sys.exc_info()
 		
@@ -71,7 +94,7 @@ class GoogleAnalytics():
         data['cid'] = self.device_id # Client ID
         #data['uid'] = self.user_name # User ID
 
-        #data['ua'] = self.userAgent # user agent string
+        data['ua'] = self.userAgent # user agent string
         
         data['t'] = 'event' # action type
         data['ec'] = eventCategory # Event Category
