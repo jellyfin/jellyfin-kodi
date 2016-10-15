@@ -39,9 +39,6 @@ class GoogleAnalytics():
     
     def getUserAgentOS(self):
     
-        return platform.system()
-    
-        '''
         if xbmc.getCondVisibility('system.platform.osx'):
             return "OSX"
         elif xbmc.getCondVisibility('system.platform.ios'):
@@ -55,8 +52,7 @@ class GoogleAnalytics():
         elif xbmc.getCondVisibility('system.platform.linux'):
             return "Linux"
         else:
-            return platform.system()
-        '''
+            return "Other"
         
     def formatException(self):
         exc_type, exc_obj, exc_tb = sys.exc_info()
