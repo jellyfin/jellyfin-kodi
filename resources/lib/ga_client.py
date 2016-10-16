@@ -34,8 +34,11 @@ class GoogleAnalytics():
         self.user_name = md5.new(self.user_name).hexdigest()
         
         # resolution
-        self.height = xbmcgui.Window(10000).getHeight()
-        self.width = xbmcgui.Window(10000).getWidth()        
+        self.screen_mode = xbmc.getInfoLabel("System.ScreenMode")
+        self.screen_height = xbmc.getInfoLabel("System.ScreenHeight")
+        self.screen_width = xbmc.getInfoLabel("System.ScreenWidth")
+
+        self.lang = xbmc.getInfoLabel("System.Language")
     
     def getUserAgentOS(self):
     
@@ -101,8 +104,11 @@ class GoogleAnalytics():
         data['ec'] = eventCategory # Event Category
         data['ea'] = eventAction # Event Action
         
-        # add width and height
-        data['sr'] = str(self.width) + "x" + str(self.height)
+        # add width and height, only add if full screen
+        if(self.screen_mode.lower().find("window") == -1):
+            data['sr'] = str(self.screen_width) + "x" + str(self.screen_height)
+        
+        data["ul"] = self.lang
 
         if(eventLabel != None):
             data['el'] = eventLabel # Event Label
