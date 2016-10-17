@@ -1,3 +1,15 @@
+version 2.2.50
+- Add Kodi version to logging
+
+version 2.2.49
+- Add OS, Resolution and Lang to logging
+
+version 2.2.47
+- Small fix for logging
+
+version 2.2.46
+- Error logging improvments
+
 version 2.2.43
 - Review music
 - Clean up syncing code
