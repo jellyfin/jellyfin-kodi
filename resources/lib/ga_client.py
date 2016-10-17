@@ -23,8 +23,16 @@ class GoogleAnalytics():
     
         client_info = clientinfo.ClientInfo()
         self.version = client_info.get_version()
-        self.device_id = client_info.get_device_id()       
-        self.userAgent = "Kodi (" + self.getUserAgentOS() + ")"
+        self.device_id = client_info.get_device_id()
+        
+        # user agent string, used for OS and Kodi version identification
+        kodi_ver = xbmc.getInfoLabel("System.BuildVersion")
+        if(not kodi_ver):
+            kodi_ver = "na"
+        kodi_ver = kodi_ver.strip()
+        if(kodi_ver.find(" ") > 0):
+            kodi_ver = kodi_ver[0:kodi_ver.find(" ")]
+        self.userAgent = "Kodi/" + kodi_ver + " (" + self.getUserAgentOS() + ")"
         
         # Use set user name
         self.user_name = settings('username') or settings('connectUsername') or 'None'
