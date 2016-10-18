@@ -1,3 +1,8 @@
+version 2.2.51
+- Rework manual sync
+- Review OS
+- Review view removal
+
 version 2.2.50
 - Add Kodi version to logging
 
