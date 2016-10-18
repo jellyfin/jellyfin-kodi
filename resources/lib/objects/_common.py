@@ -134,7 +134,29 @@ class Items(object):
             if update:
                 self.count += 1
 
-    def compare_checksum(self, items, compare_to):
+    def compare(self, item_type, items, compare_to, view=None):
+
+        view_name = view['name'] if view else item_type
+
+        update_list = self._compare_checksum(items, compare_to)
+        log.info("Update for %s: %s", view_name, update_list)
+
+        emby_items = self.emby.getFullItems(update_list)
+        total = len(update_list)
+
+        if self.pdialog:
+            self.pdialog.update(heading="Processing %s / %s items" % (view_name, total))
+
+        # Process additions and updates
+        if emby_items:
+            self.added(emby_items, total, view)
+        # Process deletes
+        if compare_to:
+            self.remove_all(item_type, compare_to.items())
+
+        return True
+
+    def _compare_checksum(self, items, compare_to):
 
         update_list = list()
 
