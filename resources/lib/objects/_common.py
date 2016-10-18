@@ -7,6 +7,7 @@ import logging
 import xbmc
 import xbmcvfs
 
+import api
 import artwork
 import downloadutils
 import read_embyserver as embyserver
@@ -132,3 +133,22 @@ class Items(object):
 
             if update:
                 self.count += 1
+
+    def compare_checksum(self, items, compare_to):
+
+        update_list = list()
+
+        for item in items:
+
+            if self.should_stop():
+                return False
+
+            item_id = item['Id']
+
+            if compare_to.get(item_id) != api.API(item).get_checksum():
+                # Only update if movie is not in Kodi or checksum is different
+                update_list.append(item_id)
+
+            compare_to.pop(item_id, None)
+
+        return update_list

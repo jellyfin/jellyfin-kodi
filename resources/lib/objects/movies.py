@@ -56,122 +56,88 @@ class Movies(Items):
 
     def compare_all(self):
         # Pull the list of movies and boxsets in Kodi
-        pdialog = self.pdialog
         views = self.emby_db.getView_byType('movies')
         views += self.emby_db.getView_byType('mixed')
         log.info("Media folders: %s", views)
 
-        try:
-            all_kodisets = dict(self.emby_db.get_checksum('BoxSet'))
-        except ValueError:
-            all_kodisets = {}
-
-        try:
-            all_kodimovies = dict(self.emby_db.get_checksum('Movie'))
-        except ValueError:
-            all_kodimovies = {}
-
-        all_embymoviesIds = set()
-        all_embyboxsetsIds = set()
-        updatelist = []
-
+        # Process movies
         for view in views:
 
             if self.should_stop():
                 return False
 
-            # Get items per view
-            viewId = view['id']
-            viewName = view['name']
-
-            if pdialog:
-                pdialog.update(
-                        heading=lang(29999),
-                        message="%s %s..." % (lang(33026), viewName))
-
-            all_embymovies = self.emby.getMovies(viewId, basic=True, dialog=pdialog)
-            for embymovie in all_embymovies['Items']:
-
-                if self.should_stop():
-                    return False
-
-                API = api.API(embymovie)
-                itemid = embymovie['Id']
-                all_embymoviesIds.add(itemid)
-
-
-                if all_kodimovies.get(itemid) != API.get_checksum():
-                    # Only update if movie is not in Kodi or checksum is different
-                    updatelist.append(itemid)
-
-            log.info("Movies to update for %s: %s", viewName, updatelist)
-            embymovies = self.emby.getFullItems(updatelist)
-            total = len(updatelist)
-            del updatelist[:]
-
-            if pdialog:
-                pdialog.update(heading="Processing %s / %s items" % (viewName, total))
-
-            self.added(embymovies, total, view)
-
-        boxsets = self.emby.getBoxset(dialog=pdialog)
-        embyboxsets = []
-
-        if pdialog:
-            pdialog.update(heading=lang(29999), message=lang(33027))
-
-        for boxset in boxsets['Items']:
-
-            if self.should_stop():
+            if not self.compare_movies(view):
                 return False
 
-            # Boxset has no real userdata, so using etag to compare
-            itemid = boxset['Id']
-            all_embyboxsetsIds.add(itemid)
-
-            if all_kodisets.get(itemid) != boxset['Etag']:
-                # Only update if boxset is not in Kodi or boxset['Etag'] is different
-                updatelist.append(itemid)
-                embyboxsets.append(boxset)
-
-        log.info("Boxsets to update: %s", updatelist)
-        self.total = len(updatelist)
-
-        if pdialog:
-            pdialog.update(heading="Processing Boxsets / %s items" % total)
-
-        self.count = 0
-        for boxset in embyboxsets:
-            # Process individual boxset
-            if self.should_stop():
-                return False
-            self.title = boxset['Name']
-            self.update_pdialog()
-            self.add_updateBoxset(boxset)
-            self.count += 1
-
-        ##### PROCESS DELETES #####
-
-        for kodimovie in all_kodimovies:
-            if kodimovie not in all_embymoviesIds:
-                self.remove(kodimovie)
-
-        log.info("Movies compare finished.")
-
-        for boxset in all_kodisets:
-            if boxset not in all_embyboxsetsIds:
-                self.remove(boxset)
-
-        log.info("Boxsets compare finished.")
+        # Process boxsets
+        if not self.compare_boxsets():
+            return False
 
         return True
 
+    def compare_movies(self, view):
+
+        view_id = view['id']
+        view_name = view['name']
+
+        if self.pdialog:
+            self.pdialog.update(heading=lang(29999), message="%s %s..." % (lang(33026), view_name))
+        
+        movies = dict(self.emby_db.get_checksum_by_view('Movie', view_id))        
+        emby_movies = self.emby.getMovies(view_id, basic=True, dialog=self.pdialog)
+
+        update_list = self.compare_checksum(emby_movies['Items'], movies)
+        log.info("Movies to update for %s: %s", view_name, update_list)
+        emby_movies = self.emby.getFullItems(update_list)
+        total = len(update_list)
+
+        if self.pdialog:
+            self.pdialog.update(heading="Processing %s / %s items" % (view_name, total))
+
+        # Process additions and updates
+        if emby_movies:
+            self.added(emby_movies, total, view)
+        # Process deletes
+        if movies:
+            self.remove_all("Movie", movies.items())
+
+        return True
+
+    def compare_boxsets(self):
+
+        if self.pdialog:
+            self.pdialog.update(heading=lang(29999), message=lang(33027))
+
+        boxsets = dict(self.emby_db.get_checksum('BoxSet'))
+        emby_boxsets = self.emby.getBoxset(dialog=self.pdialog)
+
+        update_list = self.compare_checksum(emby_boxsets['Items'], boxsets)
+        log.info("Boxsets to update: %s", update_list)
+        emby_boxsets = self.emby.getFullItems(update_list)
+        total = len(update_list)
+
+        if self.pdialog:
+            self.pdialog.update(heading="Processing Boxsets / %s items" % total)
+
+        # Processing additions and updates
+        if emby_boxsets:
+            self.added_boxset(emby_boxsets, total)
+        # Processing removals
+        if boxsets:
+            self.remove_all("BoxSet", boxsets.items())
+
+        return True
 
     def added(self, items, total=None, view=None):
 
         for item in super(Movies, self).added(items, total):
             if self.add_update(item, view):
                 self.content_pop(item.get('Name', "unknown"))
+
+    def added_boxset(self, items, total=None):
+
+        for item in super(Movies, self).added(items, total):
+            self.add_updateBoxset(item)
 
     @catch_except()
     def add_update(self, item, view=None):
@@ -381,10 +347,11 @@ class Movies(Items):
         emby = self.emby
         emby_db = self.emby_db
         artwork = self.artwork
+        API = api.API(boxset)
 
         boxsetid = boxset['Id']
         title = boxset['Name']
-        checksum = boxset['Etag']
+        checksum = API.get_checksum()
         emby_dbitem = emby_db.getItem_byId(boxsetid)
         try:
             setid = emby_dbitem[0]
