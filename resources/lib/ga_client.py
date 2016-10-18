@@ -68,25 +68,29 @@ class GoogleAnalytics():
     def formatException(self):
         exc_type, exc_obj, exc_tb = sys.exc_info()
 		
-        stackFrames = traceback.extract_tb(exc_tb)
-        if(len(stackFrames) > 0):
-            stackFrames = traceback.extract_tb(exc_tb)[-1]
-        else:
-            stackFrames = None
-        log.error(str(stackFrames))
+        latestStackFrame = None
+        allStackFrames = traceback.extract_tb(exc_tb)
+        if(len(allStackFrames) > 0):
+            latestStackFrame = allStackFrames[-1]
+        log.error(str(latestStackFrame))
 		
         errorType = "NA"
         errorFile = "NA"
 		
-        if(stackFrames != None):
-            fileName = os.path.split(stackFrames[0])[1]
+        if(latestStackFrame != None):
+            fileName = os.path.split(latestStackFrame[0])[1]
+            
+            codeLine = "NA"
+            if(len(latestStackFrame) > 3 and latestStackFrame[3] != None):
+                codeLine = latestStackFrame[3].strip()
 
-            errorFile = "%s:%s(%s)(%s)" % (fileName, stackFrames[1], exc_obj.message, stackFrames[3].strip())
+            errorFile = "%s:%s(%s)(%s)" % (fileName, latestStackFrame[1], exc_obj.message, codeLine)
             errorFile = errorFile[0:499]
             errorType = "%s" % (exc_type.__name__)
-            del(exc_type, exc_obj, exc_tb)
             log.error(errorType + " - " + errorFile)
 			
+        del(exc_type, exc_obj, exc_tb)
+        
         return errorType, errorFile
 	
     def sendEventData(self, eventCategory, eventAction, eventLabel=None):
