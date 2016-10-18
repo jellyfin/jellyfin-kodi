@@ -73,11 +73,11 @@ class WebSocketClient(threading.Thread):
 
         if message_type == 'Play':
             # A remote control play command has been sent from the server.
-            self._play_(data)
+            self._play(data)
 
         elif message_type == 'Playstate':
             # A remote control update playstate command has been sent from the server.
-            self._playstate_(data)
+            self._playstate(data)
 
         elif message_type == "UserDataChanged":
             # A user changed their personal rating for an item, or their playstate was updated
@@ -103,7 +103,7 @@ class WebSocketClient(threading.Thread):
             window('emby_online', value="false")
 
     @classmethod
-    def _play_(cls, data):
+    def _play(cls, data):
 
         item_ids = data['ItemIds']
         command = data['PlayCommand']
@@ -132,7 +132,7 @@ class WebSocketClient(threading.Thread):
                 player.play(new_playlist)
 
     @classmethod
-    def _playstate_(cls, data):
+    def _playstate(cls, data):
 
         command = data['Command']
         player = xbmc.Player()

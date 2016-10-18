@@ -86,7 +86,7 @@ class TVShows(Items):
         all_embyepisodesIds = set()
         updatelist = []
 
-
+        # TODO: Review once series pooling is explicitely returned in api
         for view in views:
 
             if self.should_stop():

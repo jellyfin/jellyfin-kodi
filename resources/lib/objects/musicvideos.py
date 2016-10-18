@@ -69,7 +69,7 @@ class MusicVideos(Items):
         if self.pdialog:
             self.pdialog.update(heading=lang(29999), message="%s %s..." % (lang(33028), view_name))
 
-        mvideos = dict(self.emby_db.get_checksum_by_view('MusicVideo', view_id))        
+        mvideos = dict(self.emby_db.get_checksum_by_view('MusicVideo', view_id))
         emby_mvideos = self.emby.getMusicVideos(view_id, basic=True, dialog=self.pdialog)
 
         return self.compare("MusicVideo", emby_mvideos['Items'], mvideos, view)

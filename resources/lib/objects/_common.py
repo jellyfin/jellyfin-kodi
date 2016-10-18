@@ -149,7 +149,7 @@ class Items(object):
 
         # Process additions and updates
         if emby_items:
-            self.added(emby_items, total, view)
+            self.process_all(item_type, "update", emby_items, total, view)
         # Process deletes
         if compare_to:
             self.remove_all(item_type, compare_to.items())
@@ -168,7 +168,7 @@ class Items(object):
             item_id = item['Id']
 
             if compare_to.get(item_id) != api.API(item).get_checksum():
-                # Only update if movie is not in Kodi or checksum is different
+                # Only update if item is not in Kodi or checksum is different
                 update_list.append(item_id)
 
             compare_to.pop(item_id, None)

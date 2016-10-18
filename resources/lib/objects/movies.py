@@ -83,7 +83,7 @@ class Movies(Items):
         if self.pdialog:
             self.pdialog.update(heading=lang(29999), message="%s %s..." % (lang(33026), view_name))
         
-        movies = dict(self.emby_db.get_checksum_by_view("Movie", view_id))        
+        movies = dict(self.emby_db.get_checksum_by_view("Movie", view_id))
         emby_movies = self.emby.getMovies(view_id, basic=True, dialog=self.pdialog)
 
         return self.compare("Movie", emby_movies['Items'], movies, view)

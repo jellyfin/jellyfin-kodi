@@ -70,107 +70,84 @@ class Music(Items):
 
     def compare_all(self):
         # Pull the list of artists, albums, songs
-        pdialog = self.pdialog
-
         views = self.emby_db.getView_byType('music')
-        try:
-            all_kodiartists = dict(self.emby_db.get_checksum('MusicArtist'))
-            all_kodialbumartists = dict(self.emby_db.get_checksum('AlbumArtist'))
-        except ValueError:
-            all_kodiartists = {}
-            all_kodialbumartists = {}
 
-        try:
-            all_kodialbums = dict(self.emby_db.get_checksum('MusicAlbum'))
-        except ValueError:
-            all_kodialbums = {}
-
-        try:
-            all_kodisongs = dict(self.emby_db.get_checksum('Audio'))
-        except ValueError:
-            all_kodisongs = {}
-
-        all_embyartistsIds = set()
-        all_embyalbumsIds = set()
-        all_embysongsIds = set()
-        updatelist = []
-
-        process = {
-
-            'artists': [self.emby.getArtists, self.add_updateArtist],
-            'albums': [self.emby.getAlbums, self.add_updateAlbum],
-            'songs': [self.emby.getSongs, self.add_updateSong]
-        }
         for view in views:
-            for data_type in ['artists', 'albums', 'songs']:
-                if pdialog:
-                    pdialog.update(
-                            heading=lang(29999),
-                            message="%s %s..." % (lang(33031), data_type))
-                if data_type != "artists":
-                    all_embyitems = process[data_type][0](basic=True, dialog=pdialog)
-                else:
-                    all_embyitems = process[data_type][0](view['id'], dialog=pdialog)
+            # Process artists
+            self.compare_artists(view)
+            # Process albums
+            self.compare_albums()
+            # Process songs
+            self.compare_songs()
 
-                for embyitem in all_embyitems['Items']:
-                    if self.should_stop():
-                        return False
-                    API = api.API(embyitem)
-                    itemid = embyitem['Id']
-                    if data_type == "artists":
-                        all_embyartistsIds.add(itemid)
-                        if itemid in all_kodiartists:
-                            if all_kodiartists[itemid] != API.get_checksum():
-                                # Only update if artist is not in Kodi or checksum is different
-                                updatelist.append(itemid)
-                        elif all_kodialbumartists.get(itemid) != API.get_checksum():
-                            # Only update if artist is not in Kodi or checksum is different
-                            updatelist.append(itemid)
-                    elif data_type == "albums":
-                        all_embyalbumsIds.add(itemid)
-                        if all_kodialbums.get(itemid) != API.get_checksum():
-                            # Only update if album is not in Kodi or checksum is different
-                            updatelist.append(itemid)
-                    else:
-                        all_embysongsIds.add(itemid)
-                        if all_kodisongs.get(itemid) != API.get_checksum():
-                            # Only update if songs is not in Kodi or checksum is different
-                            updatelist.append(itemid)
-                log.info("%s to update: %s", data_type, updatelist)
-                embyitems = self.emby.getFullItems(updatelist)
-                self.total = len(updatelist)
-                del updatelist[:]
-                if pdialog:
-                    pdialog.update(heading="Processing %s / %s items" % (data_type, self.total))
-                self.count = 0
-                for embyitem in embyitems:
-                    # Process individual item
-                    if self.should_stop():
-                        return False
-                    self.title = embyitem['Name']
-                    self.update_pdialog()
-                    process[data_type][1](embyitem)
-                    self.count += 1
-        ##### PROCESS DELETES #####
-        for kodiartist in all_kodiartists:
-            if kodiartist not in all_embyartistsIds and all_kodiartists[kodiartist] is not None:
-                self.remove(kodiartist)
-
-        log.info("Artist compare finished.")
-
-        for kodialbum in all_kodialbums:
-            if kodialbum not in all_embyalbumsIds:
-                self.remove(kodialbum)
-
-        log.info("Albums compare finished.")
-
-        for kodisong in all_kodisongs:
-            if kodisong not in all_embysongsIds:
-                self.remove(kodisong)
-
-        log.info("Songs compare finished.")
         return True
 
+    def compare_artists(self, view):
+
+        all_embyartistsIds = set()
+        update_list = list()
+
+        if self.pdialog:
+            self.pdialog.update(heading=lang(29999), message="%s Artists..." % lang(33031))
+
+        artists = dict(self.emby_db.get_checksum('MusicArtist'))
+        album_artists = dict(self.emby_db.get_checksum('AlbumArtist'))
+        emby_artists = self.emby.getArtists(view['id'], dialog=self.pdialog)
+
+        for item in emby_artists['Items']:
+
+            if self.should_stop():
+                    return False
+
+            item_id = item['Id']
+            API = api.API(item)
+
+            all_embyartistsIds.add(item_id)
+            if item_id in artists:
+                if artists[item_id] != API.get_checksum():
+                    # Only update if artist is not in Kodi or checksum is different
+                    update_list.append(item_id)
+            elif album_artists.get(item_id) != API.get_checksum():
+                # Only update if artist is not in Kodi or checksum is different
+                update_list.append(item_id)
+
+            #compare_to.pop(item_id, None)
+
+        log.info("Update for Artist: %s", update_list)
+
+        emby_items = self.emby.getFullItems(update_list)
+        total = len(update_list)
+
+        if self.pdialog:
+            self.pdialog.update(heading="Processing Artists / %s items" % total)
+
+        # Process additions and updates
+        if emby_items:
+            self.process_all("MusicArtist", "update", emby_items, total)
+        # Process removals
+        for artist in artists:
+            if artist not in all_embyartistsIds and artists[artist] is not None:
+                self.remove(artist)
+
+    def compare_albums(self):
+
+        if self.pdialog:
+            self.pdialog.update(heading=lang(29999), message="%s Albums..." % lang(33031))
+
+        albums = dict(self.emby_db.get_checksum('MusicAlbum'))
+        emby_albums = self.emby.getAlbums(basic=True, dialog=self.pdialog)
+
+        return self.compare("MusicAlbum", emby_albums['Items'], albums)
+
+    def compare_songs(self):
+
+        if self.pdialog:
+            self.pdialog.update(heading=lang(29999), message="%s Songs..." % lang(33031))
+
+        songs = dict(self.emby_db.get_checksum('Audio'))
+        emby_songs = self.emby.getSongs(basic=True, dialog=self.pdialog)
+
+        return self.compare("Audio", emby_songs['Items'], songs)
 
     def added(self, items, total=None):
 
@@ -192,7 +169,7 @@ class Music(Items):
                 all_songs = self.emby.getSongsbyAlbum(item['Id'])
                 self.added_song(all_songs['Items'])
 
-    def added_song(self, items, total=None):
+    def added_song(self, items, total=None, *args):
 
         update = True if not self.total else False
 
