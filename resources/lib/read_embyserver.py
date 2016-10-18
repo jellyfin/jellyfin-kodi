@@ -441,7 +441,6 @@ class Read_EmbyServer():
 
         items = {
 
-            'ParentId': parent_id,
             'Items': [],
             'TotalRecordCount': 0
         }
@@ -450,6 +449,7 @@ class Read_EmbyServer():
         url = "{server}/emby/Artists?UserId={UserId}&format=json"
         params = {
 
+            'ParentId': parent_id,
             'Recursive': True,
             'Limit': 1
         }
