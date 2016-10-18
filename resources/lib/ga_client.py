@@ -51,11 +51,11 @@ class GoogleAnalytics():
     def getUserAgentOS(self):
     
         if xbmc.getCondVisibility('system.platform.osx'):
-            return "OSX"
+            return "Mac OS X"
         elif xbmc.getCondVisibility('system.platform.ios'):
             return "iOS"
         elif xbmc.getCondVisibility('system.platform.windows'):
-            return "Windows"
+            return "Windows NT"
         elif xbmc.getCondVisibility('system.platform.android'):
             return "Android"
         elif xbmc.getCondVisibility('system.platform.linux.raspberrypi'):
