@@ -47,78 +47,35 @@ class MusicVideos(Items):
         return actions.get(action)
 
     def compare_all(self):
-        pdialog = self.pdialog
         # Pull the list of musicvideos in Kodi
         views = self.emby_db.getView_byType('musicvideos')
         log.info("Media folders: %s", views)
-
-        try:
-            all_kodimvideos = dict(self.emby_db.get_checksum('MusicVideo'))
-        except ValueError:
-            all_kodimvideos = {}
-
-        all_embymvideosIds = set()
-        updatelist = []
 
         for view in views:
 
             if self.should_stop():
                 return False
 
-            # Get items per view
-            viewId = view['id']
-            viewName = view['name']
+            if not self.compare_mvideos(view):
+                return False
 
-            if pdialog:
-                pdialog.update(
-                        heading=lang(29999),
-                        message="%s %s..." % (lang(33028), viewName))
-
-            all_embymvideos = self.emby.getMusicVideos(viewId, basic=True, dialog=pdialog)
-            for embymvideo in all_embymvideos['Items']:
-
-                if self.should_stop():
-                    return False
-
-                API = api.API(embymvideo)
-                itemid = embymvideo['Id']
-                all_embymvideosIds.add(itemid)
-
-
-                if all_kodimvideos.get(itemid) != API.get_checksum():
-                    # Only update if musicvideo is not in Kodi or checksum is different
-                    updatelist.append(itemid)
-
-            log.info("MusicVideos to update for %s: %s", viewName, updatelist)
-            embymvideos = self.emby.getFullItems(updatelist)
-            self.total = len(updatelist)
-            del updatelist[:]
-
-
-            if pdialog:
-                pdialog.update(heading="Processing %s / %s items" % (viewName, self.total))
-
-            self.count = 0
-            for embymvideo in embymvideos:
-                # Process individual musicvideo
-                if self.should_stop():
-                    return False
-                self.title = embymvideo['Name']
-                self.update_pdialog()
-                self.add_update(embymvideo, view)
-                self.count += 1
-
-        ##### PROCESS DELETES #####
-
-        for kodimvideo in all_kodimvideos:
-            if kodimvideo not in all_embymvideosIds:
-                self.remove(kodimvideo)
-
-        log.info("MusicVideos compare finished.")
         return True
 
+    def compare_mvideos(self, view):
+
+        view_id = view['id']
+        view_name = view['name']
+
+        if self.pdialog:
+            self.pdialog.update(heading=lang(29999), message="%s %s..." % (lang(33028), view_name))
+
+        mvideos = dict(self.emby_db.get_checksum_by_view('MusicVideo', view_id))        
+        emby_mvideos = self.emby.getMusicVideos(view_id, basic=True, dialog=self.pdialog)
+
+        return self.compare("MusicVideo", emby_mvideos['Items'], mvideos, view)
 
     def added(self, items, total=None, view=None):
+
         for item in super(MusicVideos, self).added(items, total):
             if self.add_update(item, view):
                 self.content_pop(item.get('Name', "unknown"))

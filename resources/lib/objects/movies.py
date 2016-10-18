@@ -83,25 +83,10 @@ class Movies(Items):
         if self.pdialog:
             self.pdialog.update(heading=lang(29999), message="%s %s..." % (lang(33026), view_name))
         
-        movies = dict(self.emby_db.get_checksum_by_view('Movie', view_id))        
+        movies = dict(self.emby_db.get_checksum_by_view("Movie", view_id))        
         emby_movies = self.emby.getMovies(view_id, basic=True, dialog=self.pdialog)
 
-        update_list = self.compare_checksum(emby_movies['Items'], movies)
-        log.info("Movies to update for %s: %s", view_name, update_list)
-        emby_movies = self.emby.getFullItems(update_list)
-        total = len(update_list)
-
-        if self.pdialog:
-            self.pdialog.update(heading="Processing %s / %s items" % (view_name, total))
-
-        # Process additions and updates
-        if emby_movies:
-            self.added(emby_movies, total, view)
-        # Process deletes
-        if movies:
-            self.remove_all("Movie", movies.items())
-
-        return True
+        return self.compare("Movie", emby_movies['Items'], movies, view)
 
     def compare_boxsets(self):
 
@@ -111,22 +96,7 @@ class Movies(Items):
         boxsets = dict(self.emby_db.get_checksum('BoxSet'))
         emby_boxsets = self.emby.getBoxset(dialog=self.pdialog)
 
-        update_list = self.compare_checksum(emby_boxsets['Items'], boxsets)
-        log.info("Boxsets to update: %s", update_list)
-        emby_boxsets = self.emby.getFullItems(update_list)
-        total = len(update_list)
-
-        if self.pdialog:
-            self.pdialog.update(heading="Processing Boxsets / %s items" % total)
-
-        # Processing additions and updates
-        if emby_boxsets:
-            self.added_boxset(emby_boxsets, total)
-        # Processing removals
-        if boxsets:
-            self.remove_all("BoxSet", boxsets.items())
-
-        return True
+        return self.compare("BoxSet", emby_boxsets['Items'], boxsets)
 
     def added(self, items, total=None, view=None):
 
