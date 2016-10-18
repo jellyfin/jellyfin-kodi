@@ -604,6 +604,11 @@ class LibrarySync(threading.Thread):
             log.info("Removing views: %s" % current_views)
             for view in current_views:
                 emby_db.removeView(view)
+                # Remove any items that belongs to the old view
+                items = emby_db.get_item_by_view(view)
+                items = [i[0] for i in items] # Convert list of tuple to list
+                self.triage_items("remove", items)
+
 
     def movies(self, embycursor, kodicursor, pdialog):
 
