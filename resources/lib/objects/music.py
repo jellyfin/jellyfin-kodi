@@ -169,7 +169,7 @@ class Music(Items):
                 all_songs = self.emby.getSongsbyAlbum(item['Id'])
                 self.added_song(all_songs['Items'])
 
-    def added_song(self, items, total=None, *args):
+    def added_song(self, items, total=None):
 
         update = True if not self.total else False
 
