@@ -795,6 +795,12 @@ def createListItem(item):
         'Playcount': item['playcount']
     }
 
+    if "episodeid" in item:
+        # Listitem of episode
+        metadata['mediatype'] = "episode"
+        metadata['dbid'] = item['episodeid']
+
+    # TODO: Review once Krypton is RC - probably no longer needed if there's dbid
     if "episode" in item:
         episode = item['episode']
         metadata['Episode'] = episode
@@ -842,7 +848,7 @@ def createListItem(item):
     for key, value in item['streamdetails'].iteritems():
         for stream in value:
             li.addStreamInfo(key, stream)
-    
+
     return li
 
 ##### GET NEXTUP EPISODES FOR TAGNAME #####    
