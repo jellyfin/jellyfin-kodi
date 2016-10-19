@@ -234,7 +234,7 @@ class WebSocketClient(threading.Thread):
                    heading=header,
                    message=text,
                    icon="{emby}",
-                   time=4000)
+                   time=7000)
 
         elif command == 'SendString':
 
