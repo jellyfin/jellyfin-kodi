@@ -105,7 +105,8 @@ class InitialSetup(object):
                     server_address = self.connectmanager.get_address(server)
                     self._set_server(server_address, server)
                     log.info("Found server!")
-                    return True
+            
+            return True
 
         return False
 
