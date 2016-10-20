@@ -963,7 +963,7 @@ class LibrarySync(threading.Thread):
                 startupComplete = True
 
             # Process updates
-            if window('emby_dbScan') != "true":
+            if window('emby_dbScan') != "true" and window('emby_shouldStop') != "true":
                 self.incrementalSync()
 
             if window('emby_onWake') == "true" and window('emby_online') == "true":
