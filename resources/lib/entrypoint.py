@@ -255,6 +255,9 @@ def deleteItem():
 ##### ADD ADDITIONAL USERS #####
 def addUser():
 
+    if window('emby_online') != "true":
+        return
+
     doUtils = downloadutils.DownloadUtils()
     art = artwork.Artwork()
     clientInfo = clientinfo.ClientInfo()
