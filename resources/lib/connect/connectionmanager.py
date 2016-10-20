@@ -172,7 +172,7 @@ class ConnectionManager(object):
             raise AttributeError("Request cannot be null")
 
         self._getHeaders(request)
-        request['timeout'] = request.get('timeout', self.default_timeout)
+        request['timeout'] = request.get('timeout') or self.default_timeout
         request['verify'] = request.get('ssl') or False
 
         action = request['type']
