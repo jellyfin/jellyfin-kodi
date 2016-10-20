@@ -144,8 +144,10 @@ class UserClient(threading.Thread):
 
     def _set_user_server(self):
 
-        self._user = self.download("{server}/emby/Users/{UserId}?format=json")
-        settings('username', value=self._user['Name'])
+        user = self.download("{server}/emby/Users/{UserId}?format=json")
+        settings('username', value=user['Name'])
+        self._user = user
+
         if "PrimaryImageTag" in self._user:
             window('EmbyUserImage',
                    value=artwork.Artwork().get_user_artwork(self._user['Id'], 'Primary'))
@@ -224,11 +226,8 @@ class UserClient(threading.Thread):
                     # Token is not longer valid
                     raise
 
-        try: # verify user access
-            self._set_access()
-        except Warning: # We don't need to raise any exceptions
-            pass
-
+        # verify user access
+        self._set_access()
         # Start downloadutils.py session
         doutils.start_session()
         # Set _user and _server

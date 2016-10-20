@@ -163,14 +163,15 @@ class Service(object):
         # Start up events
         self.warn_auth = True
 
-        if settings('connectMsg') == "true":
+        username = self.userclient_thread.get_username()
+        if settings('connectMsg') == "true" and username:
             # Get additional users
             add_users = ", ".join(settings('additionalUsers').split(','))
 
             dialog(type_="notification",
                    heading="{emby}",
                    message=("%s %s %s"
-                            % (lang(33000), self.userclient_thread.get_username().decode('utf-8'),
+                            % (lang(33000), username.decode('utf-8'),
                                add_users.decode('utf-8'))),
                    icon="{emby}",
                    time=2000,
