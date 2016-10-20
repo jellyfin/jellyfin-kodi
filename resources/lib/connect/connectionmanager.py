@@ -177,6 +177,7 @@ class ConnectionManager(object):
 
         action = request['type']
         request.pop('type')
+        request.pop('ssl')
 
         log.debug("ConnectionManager requesting %s" % request)
 
