@@ -751,7 +751,7 @@ class LibrarySync(threading.Thread):
             self.forceLibraryUpdate = True
             update_embydb = True
 
-        incSyncIndicator = int(settings('incSyncIndicator'))
+        incSyncIndicator = int(settings('incSyncIndicator') or 10)
         totalUpdates = len(self.addedItems) + len(self.updateItems) + len(self.userdataItems) + len(self.removeItems)
         
         if incSyncIndicator != -1 and totalUpdates > incSyncIndicator:
