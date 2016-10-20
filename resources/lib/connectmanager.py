@@ -70,8 +70,8 @@ class ConnectManager(object):
         window('emby_state.json', value=self.state)
         return self.state
 
-    def get_server(self, server):
-        self.state = self._connect.connectToAddress(server)
+    def get_server(self, server, options={}):
+        self.state = self._connect.connectToAddress(server, options)
         return self.get_state()
 
     @classmethod

@@ -79,10 +79,14 @@ class InitialSetup(object):
         if settings('server') == "":
             current_server = self.user_client.get_server()
             if current_server is not None:
-                server = self.connectmanager.get_server(current_server)
+                server = self.connectmanager.get_server(current_server,
+                                                        {'ssl': self.user_client.get_ssl()})
                 log.info("Detected: %s", server)
-                server_id = server['Servers'][0]['Id']
-                settings('serverId', value=server_id)
+                try:
+                    server_id = server['Servers'][0]['Id']
+                    settings('serverId', value=server_id)
+                except Exception as error:
+                    log.error(error)
                 log.info("server migration completed")
 
         self.user_client.get_userid()
