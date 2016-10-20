@@ -113,7 +113,7 @@ class Artwork(object):
         result = get_setting_value.execute(web_user)
         try:
             self.xbmc_username = result['result']['value']
-        except TypeError:
+        except (TypeError, KeyError):
             pass
 
         web_pass = {
@@ -123,7 +123,7 @@ class Artwork(object):
         result = get_setting_value.execute(web_pass)
         try:
             self.xbmc_password = result['result']['value']
-        except TypeError:
+        except (TypeError, KeyError):
             pass
 
     def texture_cache_sync(self):
