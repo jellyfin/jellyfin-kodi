@@ -1,3 +1,6 @@
+version 2.2.52
+- Fix bugs that slipped in the few previous builds
+
 version 2.2.51
 - Rework manual sync
 - Review OS
