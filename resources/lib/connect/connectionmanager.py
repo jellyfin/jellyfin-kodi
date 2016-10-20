@@ -176,8 +176,8 @@ class ConnectionManager(object):
         request['verify'] = request.get('ssl') or False
 
         action = request['type']
-        request.pop('type')
-        request.pop('ssl')
+        request.pop('type', None)
+        request.pop('ssl', None)
 
         log.debug("ConnectionManager requesting %s" % request)
 
@@ -187,7 +187,7 @@ class ConnectionManager(object):
             r.raise_for_status()
         
         except Exception as e: # Elaborate on exceptions?
-            log.error(e)
+            log.exception(e)
             raise
 
         else:
