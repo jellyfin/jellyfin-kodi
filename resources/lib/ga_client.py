@@ -59,7 +59,7 @@ class GoogleAnalytics():
         elif xbmc.getCondVisibility('system.platform.android'):
             return "Android"
         elif xbmc.getCondVisibility('system.platform.linux.raspberrypi'):
-            return "Linux"
+            return "Linux Rpi"
         elif xbmc.getCondVisibility('system.platform.linux'):
             return "Linux"
         else:
