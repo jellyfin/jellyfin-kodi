@@ -54,7 +54,7 @@ class Items(object):
         if total == 0:
             return False
 
-        log.info("Processing %s: %s", process, items)
+        #log.info("Processing %s: %s", process, items)
         if pdialog:
             pdialog.update(heading="Processing %s: %s items" % (process, total))
 

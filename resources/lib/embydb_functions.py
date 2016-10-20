@@ -23,6 +23,7 @@ class Embydb_Functions():
     def get_version(self, version=None):
 
         if version is not None:
+            self.embycursor.execute("DELETE FROM version")
             query = "INSERT INTO version(idVersion) VALUES (?)"
             self.embycursor.execute(query, (version,))
         else:
