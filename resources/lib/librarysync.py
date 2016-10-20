@@ -232,6 +232,8 @@ class LibrarySync(threading.Thread):
         # Add sources
         utils.sourcesXML()
 
+        embyconn = utils.kodiSQL('emby')
+        embycursor = conn.cursor()
         # content sync: movies, tvshows, musicvideos, music
         kodiconn = utils.kodiSQL('video')
         kodicursor = kodiconn.cursor()
