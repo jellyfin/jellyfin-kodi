@@ -585,7 +585,7 @@ class ConnectionManager(object):
             if self._validateAuthentication(server, connectionMode) is not False:
                 return self._afterConnectValidated(server, credentials, systemInfo, connectionMode, False, options)
 
-            return
+            return self._resolveFailure()
 
         self._updateServerInfo(server, systemInfo)
         server['LastConnectionMode'] = connectionMode
