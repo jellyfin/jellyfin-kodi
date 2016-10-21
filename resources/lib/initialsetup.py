@@ -99,16 +99,17 @@ class InitialSetup(object):
                 # Failed to identify server
                 return True
 
-            for server in current_state['Servers']:
-                if server['Id'] == settings('serverId'):
-                    # Update token
-                    server['UserId'] = settings('userId') or None
-                    server['AccessToken'] = settings('token') or None
-                    self.connectmanager.update_token(current_state['Servers'], server)
+            elif 'Servers' in current_state:
+                for server in current_state['Servers']:
+                    if server['Id'] == settings('serverId'):
+                        # Update token
+                        server['UserId'] = settings('userId') or None
+                        server['AccessToken'] = settings('token') or None
+                        self.connectmanager.update_token(current_state['Servers'], server)
 
-                    server_address = self.connectmanager.get_address(server)
-                    self._set_server(server_address, server)
-                    log.info("Found server!")
+                        server_address = self.connectmanager.get_address(server)
+                        self._set_server(server_address, server)
+                        log.info("Found server!")
             
             return True
 
