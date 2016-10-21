@@ -69,6 +69,7 @@
 		<setting id="connectMsg" type="bool" label="30249" default="true" />
 		<setting id="offlinetMsg" type="bool" label="30545" default="true" />
         <setting id="restartMsg" type="bool" label="30530" default="false" />
+        <setting id="displayMessage" type="slider" label="30547" default="4" range="4,1,20" option="int" />
         <setting id="newContent" type="bool" label="30531" default="false" />
         <setting id="newvideotime" type="number" label="30532" visible="eq(-1,true)" default="5" option="int" subsetting="true" />
         <setting id="newmusictime" type="number" label="30533" visible="eq(-2,true)" default="2" option="int" subsetting="true" />
