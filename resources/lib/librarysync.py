@@ -842,6 +842,7 @@ class LibrarySync(threading.Thread):
             # Database out of date.
             return False
 
+    @classmethod
     def _verify_emby_database(cls):
         # Create the tables for the emby database
         conn = utils.kodiSQL('emby')
