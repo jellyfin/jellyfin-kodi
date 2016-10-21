@@ -187,7 +187,7 @@ class ConnectionManager(object):
             r.raise_for_status()
         
         except Exception as e: # Elaborate on exceptions?
-            log.exception(e)
+            log.error(e)
             raise
 
         else:
