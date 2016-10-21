@@ -3,6 +3,7 @@
 ##################################################################################################
 
 import logging
+import os
 
 import xbmc
 import xbmcvfs
@@ -42,6 +43,9 @@ class Items(object):
     @classmethod
     def path_validation(cls, path):
         # Verify if direct path is accessible or not
+        if not os.path.supports_unicode_filenames:
+            path = path.encode('utf-8')
+
         if window('emby_pathverified') != "true" and not xbmcvfs.exists(path):
             if dialog(type_="yesno",
                       heading="{emby}",
