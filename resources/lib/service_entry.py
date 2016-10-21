@@ -67,7 +67,7 @@ class Service(object):
         # Reset window props for profile switch
         properties = [
 
-            "emby_online", "emby_state.json" "emby_serverStatus", "emby_onWake",
+            "emby_online", "emby_state.json", "emby_serverStatus", "emby_onWake",
             "emby_syncRunning", "emby_dbCheck", "emby_kodiScan",
             "emby_shouldStop", "emby_currUser", "emby_dbScan", "emby_sessionId",
             "emby_initialScan", "emby_customplaylist", "emby_playbackProps"
