@@ -62,9 +62,13 @@ class VideoNodes(object):
 
         # Verify the video directory
         if not xbmcvfs.exists(path):
-            shutil.copytree(
-                src=xbmc.translatePath("special://xbmc/system/library/video").decode('utf-8'),
-                dst=xbmc.translatePath("special://profile/library/video").decode('utf-8'))
+            try:
+                shutil.copytree(
+                    src=xbmc.translatePath("special://xbmc/system/library/video").decode('utf-8'),
+                    dst=xbmc.translatePath("special://profile/library/video").decode('utf-8'))
+            except Exception as error:
+                log.error(error)
+
             xbmcvfs.exists(path)
 
         if delete:

@@ -396,7 +396,7 @@ class LibrarySync(threading.Thread):
 
         # Get views
         result = self.doUtils("{server}/emby/Users/{UserId}/Views?format=json")
-        grouped_views = result['Items']
+        grouped_views = result['Items'] if 'Items' in result else []
         ordered_views = self.emby.getViews(sortedlist=True)
         all_views = []
         sorted_views = []
@@ -830,8 +830,11 @@ class LibrarySync(threading.Thread):
         # It returns True is database is up to date. False otherwise.
         log.info("current: %s minimum: %s" % (current, minimum))
 
-        currMajor, currMinor, currPatch = current.split(".")
-        minMajor, minMinor, minPatch = minimum.split(".")
+        try:
+            currMajor, currMinor, currPatch = current.split(".")
+            minMajor, minMinor, minPatch = minimum.split(".")
+        except ValueError as error:
+            raise ValueError("Unable to compare versions: %s, %s" % (current, minimum))
 
         if currMajor > minMajor:
             return True

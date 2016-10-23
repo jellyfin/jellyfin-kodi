@@ -95,11 +95,7 @@ class InitialSetup(object):
 
         if settings('server'):
             current_state = self.connectmanager.get_state()
-            if current_state['State'] == STATE['ConnectSignIn']:
-                # Failed to identify server
-                return True
-
-            elif 'Servers' in current_state:
+            try:
                 for server in current_state['Servers']:
                     if server['Id'] == settings('serverId'):
                         # Update token
@@ -110,6 +106,8 @@ class InitialSetup(object):
                         server_address = self.connectmanager.get_address(server)
                         self._set_server(server_address, server)
                         log.info("Found server!")
+            except Exception as error:
+                log.error(error)
             
             return True
 
