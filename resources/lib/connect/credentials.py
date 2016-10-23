@@ -17,12 +17,13 @@ log = logging.getLogger("EMBY."+__name__.split('.')[-1])
 
 class Credentials(object):
 
+    _shared_state = {} # Borg
     credentials = None
     path = ""
     
 
     def __init__(self):
-        pass
+        self.__dict__ = self._shared_state
 
     def setPath(self, path):
         # Path to save persistant data.txt

@@ -210,8 +210,7 @@ class ConnectManager(object):
             for cred_server in credentials['Servers']:
                 if server['Id'] == cred_server['Id']:
                     # Update token saved in current state
-                    server.update(server)
-                    log.info(self.get_state())
+                    server.update(cred_server)
         # Update the token in data.txt
         self._connect.credentialProvider.getCredentials(credentials)
 
