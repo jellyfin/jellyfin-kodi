@@ -166,11 +166,13 @@ class Service(object):
         username = self.userclient_thread.get_username()
         if settings('connectMsg') == "true" and username:
             # Get additional users
-            add_users = ","+", ".join(settings('additionalUsers').split(','))
+            add_users = settings('additionalUsers')
+            if add_users:
+                add_users = ", "+", ".join(add_users.split(','))
 
             dialog(type_="notification",
                    heading="{emby}",
-                   message=("%s %s %s"
+                   message=("%s %s%s"
                             % (lang(33000), username.decode('utf-8'),
                                add_users.decode('utf-8'))),
                    icon="{emby}",
