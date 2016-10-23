@@ -268,7 +268,7 @@ class UserClient(threading.Thread):
             if server['Id'] == settings('serverId'):
                 # Update token
                 server['AccessToken'] = None
-                self.connectmanager.update_token(current_state['Servers'], server)
+                self.connectmanager.update_token(server)
 
     def run(self):
 
