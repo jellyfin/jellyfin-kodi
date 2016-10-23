@@ -914,7 +914,7 @@ class LibrarySync(threading.Thread):
                 emby_db = embydb.Embydb_Functions(embycursor)
                 currentVersion = emby_db.get_version()
                 ###$ Begin migration $###
-                if currentVersion is None:
+                if not currentVersion:
                     currentVersion = emby_db.get_version(settings('dbCreatedWithVersion') or self.clientInfo.get_version())
                     embyconn.commit()
                     log.info("Migration of database version completed")
