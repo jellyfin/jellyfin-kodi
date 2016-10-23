@@ -1,4 +1,4 @@
-version 2.2.52-53
+version 2.2.52-54
 - Fix bugs that slipped in the few previous builds
 
 version 2.2.51
