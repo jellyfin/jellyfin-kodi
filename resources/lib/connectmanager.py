@@ -201,15 +201,17 @@ class ConnectManager(object):
         else:
             raise RuntimeError("User is not authenticated")
 
-    def update_token(self, servers, server):
+    def update_token(self, server):
 
         credentials = self._connect.credentialProvider.getCredentials()
-        updated_server = self._connect.credentialProvider.addOrUpdateServer(servers, server)
+        self._connect.credentialProvider.addOrUpdateServer(credentials['Servers'], server)
 
         for server in self.get_state()['Servers']:
-            if server['Id'] == updated_server['Id']:
-                # Update token saved in current state
-                server.update(updated_server)
+            for cred_server in credentials['Servers']:
+                if server['Id'] == cred_server['Id']:
+                    # Update token saved in current state
+                    server.update(server)
+                    log.info(self.get_state())
         # Update the token in data.txt
         self._connect.credentialProvider.getCredentials(credentials)
 

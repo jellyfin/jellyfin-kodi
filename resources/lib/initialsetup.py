@@ -101,7 +101,7 @@ class InitialSetup(object):
                         # Update token
                         server['UserId'] = settings('userId') or None
                         server['AccessToken'] = settings('token') or None
-                        self.connectmanager.update_token(current_state['Servers'], server)
+                        self.connectmanager.update_token(server)
 
                         server_address = self.connectmanager.get_address(server)
                         self._set_server(server_address, server)
