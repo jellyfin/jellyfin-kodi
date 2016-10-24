@@ -231,6 +231,7 @@ class Player(xbmc.Player):
 
                 ga = GoogleAnalytics()
                 ga.sendEventData("PlayAction", itemType, playMethod)
+                ga.sendScreenView(itemType)
 
     def reportPlayback(self):
         

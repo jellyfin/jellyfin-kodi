@@ -93,8 +93,8 @@ class GoogleAnalytics():
         
         return errorType, errorFile
 	
-    def sendEventData(self, eventCategory, eventAction, eventLabel=None):
-       
+    def getBaseData(self):
+    
         # all the data we can send to Google Analytics
         data = {}
         data['v'] = '1'
@@ -112,16 +112,29 @@ class GoogleAnalytics():
 
         data['ua'] = self.userAgent # user agent string
         
-        data['t'] = 'event' # action type
-        data['ec'] = eventCategory # Event Category
-        data['ea'] = eventAction # Event Action
-        
         # add width and height, only add if full screen
         if(self.screen_mode.lower().find("window") == -1):
             data['sr'] = str(self.screen_width) + "x" + str(self.screen_height)
         
         data["ul"] = self.lang
-
+        
+        return data
+    
+    def sendScreenView(self, name):
+    
+        data = self.getBaseData()
+        data['t'] = 'screenview' # action type
+        data['cd'] = name
+    
+        self.sendData(data)
+    
+    def sendEventData(self, eventCategory, eventAction, eventLabel=None):
+        
+        data = self.getBaseData()
+        data['t'] = 'event' # action type
+        data['ec'] = eventCategory # Event Category
+        data['ea'] = eventAction # Event Action
+        
         if(eventLabel != None):
             data['el'] = eventLabel # Event Label
         
