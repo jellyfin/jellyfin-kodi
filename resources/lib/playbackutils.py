@@ -298,6 +298,7 @@ class PlaybackUtils():
 
         try:
             response = requests.get(src, stream=True)
+            response.encoding = 'utf-8'
             response.raise_for_status()
         except Exception as e:
             del response
