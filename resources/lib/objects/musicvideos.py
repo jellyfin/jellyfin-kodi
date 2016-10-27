@@ -9,7 +9,7 @@ import api
 import embydb_functions as embydb
 import _kodi_musicvideos
 from _common import Items
-from utils import window, language as lang, catch_except
+from utils import window, settings, language as lang, catch_except
 
 ##################################################################################################
 
