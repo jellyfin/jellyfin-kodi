@@ -174,9 +174,13 @@ def emby_backup():
     database = os.path.join(backup, "Database")
     xbmcvfs.mkdir(database)
 
+    # Emby database
+    shutil.copy(src=xbmc.translatePath("special://database/emby.db").decode('utf-8'),
+                dst=database)
+    # Videos database
     shutil.copy(src=utils.getKodiVideoDBPath(),
                 dst=database)
-    
+    # Music database
     if settings('enableMusic') == "true":
         shutil.copy(src=utils.getKodiMusicDBPath(),
                     dst=database)
