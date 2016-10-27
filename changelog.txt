@@ -1,3 +1,7 @@
+version 2.2.57
+- Fix for external subtitles while using HTTP playback
+- Minor bug fixes
+
 version 2.2.52-54
 - Fix bugs that slipped in the few previous builds
 
