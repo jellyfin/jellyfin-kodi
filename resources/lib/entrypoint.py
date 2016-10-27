@@ -364,9 +364,14 @@ def addUser():
             break
         window('EmbyAdditionalUserImage.%s' % i, clear=True)
 
-    url = "{server}/emby/Sessions?DeviceId=%s" % deviceId
+    url = "{server}/emby/Sessions?DeviceId=%s&format=json" % deviceId
     result = doUtils.downloadUrl(url)
-    additionalUsers = result[0]['AdditionalUsers']
+    try:
+        additionalUsers = result[0]['AdditionalUsers']
+    except (KeyError, TypeError) as error:
+        log.error(error)
+        additionaluser = []
+
     count = 0
     for additionaluser in additionalUsers:
         userid = additionaluser['UserId']
