@@ -9,6 +9,7 @@ import logging
 import sqlite3
 import StringIO
 import os
+import sys
 import time
 import unicodedata
 import xml.etree.ElementTree as etree
@@ -17,6 +18,7 @@ from datetime import datetime
 import xbmc
 import xbmcaddon
 import xbmcgui
+import xbmcplugin
 import xbmcvfs
 
 #################################################################################################
@@ -437,6 +439,7 @@ def reset():
 
     dialog.ok(heading=language(29999), line1=language(33088))
     xbmc.executebuiltin('RestartApp')
+    return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, xbmcgui.ListItem())
 
 def sourcesXML():
     # To make Master lock compatible
