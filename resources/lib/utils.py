@@ -225,32 +225,19 @@ def querySQL(query, args=None, cursor=None, conntype=None):
 
 def getScreensaver():
     # Get the current screensaver value
-    query = {
-
-        'jsonrpc': "2.0",
-        'id': 0,
-        'method': "Settings.getSettingValue",
-        'params': {
-
-            'setting': "screensaver.mode"
-        }
-    }
-    return json.loads(xbmc.executeJSONRPC(json.dumps(query)))['result']['value']
+    result = JSONRPC('Settings.getSettingValues').execute({'setting': "screensaver.mode"})
+    try:
+        return result['result']['value']
+    except KeyError:
+        return ""
 
 def setScreensaver(value):
     # Toggle the screensaver
-    query = {
-
-        'jsonrpc': "2.0",
-        'id': 0,
-        'method': "Settings.setSettingValue",
-        'params': {
-
-            'setting': "screensaver.mode",
-            'value': value
-        }
+    params = {
+        'setting': "screensaver.mode",
+        'value': value
     }
-    result = xbmc.executeJSONRPC(json.dumps(query))
+    result = JSONRPC('Settings.setSettingValue').execute(params)
     log.info("Toggling screensaver: %s %s" % (value, result))
 
 def convertDate(date):
