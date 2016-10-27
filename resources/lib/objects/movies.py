@@ -44,7 +44,7 @@ class Movies(Items):
             }
         elif item_type == "BoxSet":
             actions = {
-                'added': self.added_boxset,
+                'added': self.add_updateBoxset,
                 'update': self.add_updateBoxset,
                 'remove': self.remove
             }
