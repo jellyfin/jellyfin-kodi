@@ -20,6 +20,7 @@ import videonodes
 import websocket_client as wsc
 from utils import window, settings, dialog, language as lang
 from ga_client import GoogleAnalytics
+import md5
 
 #################################################################################################
 
@@ -156,9 +157,13 @@ class Service(object):
         self.shutdown()
 
     def _startup(self):
-
+        
+        serverId = settings('serverId')
+        if(serverId != None):
+            serverId = md5.new(serverId).hexdigest()
+        
         ga = GoogleAnalytics()
-        ga.sendEventData("Application", "Startup")    
+        ga.sendEventData("Application", "Startup", serverId)
 
         # Start up events
         self.warn_auth = True
