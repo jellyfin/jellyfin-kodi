@@ -630,9 +630,7 @@ class LibrarySync(threading.Thread):
             pdialog.update(heading=lang(29999), message=lang(33018))
 
         boxsets = self.emby.getBoxset(dialog=pdialog)
-        total = boxsets['TotalRecordCount']
-
-        movies.process_all("BoxSet", "added", boxsets['Items'], total)
+        movies.add_all("BoxSet", boxsets)
         log.debug("Boxsets finished.")
 
         return True
