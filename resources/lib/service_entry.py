@@ -218,7 +218,7 @@ class Service(object):
 
                 self.server_online = False
 
-            elif window('emby_online') == "sleep":
+            elif window('emby_online') in ("sleep", "reset"):
                 # device going to sleep
                 if self.websocket_running:
                     self.websocket_thread.stop_client()

@@ -367,6 +367,7 @@ def reset():
         return
 
     # first stop any db sync
+    window('emby_online', value="reset")
     window('emby_shouldStop', value="true")
     count = 10
     while window('emby_dbScan') == "true":
