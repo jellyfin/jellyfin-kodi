@@ -400,9 +400,7 @@ def getThemeMedia():
         xbmcvfs.mkdir(library)
 
     # Set custom path for user
-    tvtunes_path = xbmc.translatePath(
-        "special://profile/addon_data/script.tvtunes/").decode('utf-8')
-    if xbmcvfs.exists(tvtunes_path):
+    if xbmc.getCondVisibility('System.HasAddon(script.tvtunes)'):
         tvtunes = xbmcaddon.Addon(id="script.tvtunes")
         tvtunes.setSetting('custom_path_enable', "true")
         tvtunes.setSetting('custom_path', library)
