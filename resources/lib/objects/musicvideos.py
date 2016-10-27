@@ -29,6 +29,8 @@ class MusicVideos(Items):
         self.kodi_db = _kodi_musicvideos.KodiMusicVideos(self.kodicursor)
         self.pdialog = pdialog
 
+        self.new_time = int(settings('newvideotime'))*1000
+
         Items.__init__(self)
 
     def _get_func(self, item_type, action):
