@@ -145,6 +145,9 @@ class Items(object):
         update_list = self._compare_checksum(items, compare_to)
         log.info("Update for %s: %s", view_name, update_list)
 
+        if self.should_stop():
+            return False
+
         emby_items = self.emby.getFullItems(update_list)
         total = len(update_list)
 
@@ -167,7 +170,7 @@ class Items(object):
         for item in items:
 
             if self.should_stop():
-                return False
+                break
 
             item_id = item['Id']
 
