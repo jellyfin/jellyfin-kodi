@@ -2,6 +2,7 @@
 
 Thanks you for contributing to Emby for Kodi!
 
-* Please make pull requests towards the **develop** branch, not the master branch.
-* Try to keep the maximum line length shorter than 100 characters to keep things clean and readable.
+* Make pull requests towards the **develop** branch;
+* Keep the maximum line length shorter than 100 characters to keep things clean and readable;
+* Follow pep8 style as closely as possible: https://www.python.org/dev/peps/pep-0008/
 * Add comments if necessary.

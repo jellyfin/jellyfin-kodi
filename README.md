@@ -8,7 +8,7 @@ The Emby addon for Kodi combines the best of Kodi - ultra smooth navigation, bea
 View this short [Youtube video](https://youtu.be/IaecDPcXI3I?t=119) to give you a better idea of the general process.
 
 1. Install the Emby for Kodi repository, from the repo install the Emby addon.
-2. Within a few seconds you should be prompted for your server-details (or it may be auto discovered). If not, try to restart Kodi
+2. Within a few seconds you should be prompted for your server-details.
 3. Once you're succesfully authenticated with your Emby server, the initial sync will start. 
 4. The first sync of the Emby server to the local Kodi database may take some time depending on your device and library size.
 5. Once the full sync is done, you can browse your media in Kodi, and syncs will be done automatically in the background.
@@ -38,6 +38,7 @@ Emby for Kodi is under constant development. The following features are currentl
   + TV Shows
   + Music Videos
   + Music
+  + Home Videos
   + Pictures
 - Emby for Kodi context menu:
   + Mark content as favorite
