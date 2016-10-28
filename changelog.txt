@@ -1,3 +1,110 @@
+version 2.3.0
+- New stable version
+
+version 2.2.57
+- Fix for external subtitles while using HTTP playback
+- Minor bug fixes
+
+version 2.2.52-54
+- Fix bugs that slipped in the few previous builds
+
+version 2.2.51
+- Rework manual sync
+- Review OS
+- Review view removal
+
+version 2.2.50
+- Add Kodi version to logging
+
+version 2.2.49
+- Add OS, Resolution and Lang to logging
+
+version 2.2.47
+- Small fix for logging
+
+version 2.2.46
+- Error logging improvments
+
+version 2.2.43
+- Review music
+- Clean up syncing code
+
+version 2.2.41
+- Emergency update
+
+version 2.2.40
+- Review throttle
+- Fix user migration for the new login method added after 2.2.19 (stable)
+- Clean up code
+
+version 2.2.39
+- Update German translation
+- Fix issue with throttle
+- Fix server detection
+
+version 2.2.38
+- Fix series pooling
+
+version 2.2.37
+- Support favorite episodes
+- Update Dutch translation
+- Fix specials -1 bug
+- minor fixes
+
+version 2.2.34
+- Repair sync can now be filtered by content type
+- Automatically download external subs with language tag
+- Fix broken music artwork
+- Fix to music direct stream
+
+version 2.2.33
+- Fix manual sync crashing
+- Update Portuguese translation
+- Add support for German MPAA rating. You will need to reset your local database to apply the change.
+- Add a backup option. Find out more: https://github.com/MediaBrowser/plugin.video.emby/wiki/Create-and-restore-from-backup
+
+version 2.2.32
+- Update the emby context menu
+- Add option to disable the context menu in the add-on settings > extras tab
+
+version 2.2.31
+- Support series pooling. Will require to reset local database. Once content is resynced, proceed with a manual sync to apply the series pooling.
+- Fix emby connect websocket issue, will also require updating server to beta 3.1.150 or higher
+- Fix initial sync artwork dialog for Isengard
+
+version 2.2.30
+- Update German translation
+- minor fixes
+
+version 2.2.28
+- Fix user selection when all users are hidden
+
+version 2.2.24
+- Filter music from fast sync response if music is disabled in the Kodi profile
+- Fix restart server behavior in the add-on to fix post capabilities
+- Fix ubuntu importerror crash
+- Update Russian translation
+
+version 2.2.23
+- NEW! Emby connect integration. Find out more on the emby.media forums
+- Sync season name for Jarvis and higher
+- Expand video quality selection (25/30/35 Mpbs)
+- Move deviceId to a permanent location to outlive reinstalls of the add-on
+- Fix virtual episodes crashing sync
+- Fix plugin listing such as home videos not loading
+- Fix platform detection
+
+version 2.2.21
+- Fix new external subtitles from preventing playback in the event the subtitles had no language tag
+
+version 2.2.20
+- NEW: Default to HTTP playback when using add-on playback mode out of the box.
+- Add string translation (German, French and Portuguese)
+- Add option to download external subtitles when playing from HTTP (add-on settings > playback)
+- Fix navigation not waking up display
+- Fix fast sync being used to save update times when plugin is not installed
+- Fix tv show detection when verifying if file exists.
+
 version 2.2.19
 - Fix transcode (logging error)
 

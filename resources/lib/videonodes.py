@@ -62,23 +62,26 @@ class VideoNodes(object):
 
         # Verify the video directory
         if not xbmcvfs.exists(path):
-            shutil.copytree(
-                src=xbmc.translatePath("special://xbmc/system/library/video").decode('utf-8'),
-                dst=xbmc.translatePath("special://profile/library/video").decode('utf-8'))
+            try:
+                shutil.copytree(
+                    src=xbmc.translatePath("special://xbmc/system/library/video").decode('utf-8'),
+                    dst=xbmc.translatePath("special://profile/library/video").decode('utf-8'))
+            except Exception as error:
+                log.error(error)
+
             xbmcvfs.exists(path)
 
+        if delete:
+            dirs, files = xbmcvfs.listdir(nodepath)
+            for file in files:
+                xbmcvfs.delete(nodepath + file)
+
+            log.info("Sucessfully removed videonode: %s." % tagname)
+            return
         # Create the node directory
         if not xbmcvfs.exists(nodepath) and not mediatype == "photos":
             # We need to copy over the default items
             xbmcvfs.mkdirs(nodepath)
-        else:
-            if delete:
-                dirs, files = xbmcvfs.listdir(nodepath)
-                for file in files:
-                    xbmcvfs.delete(nodepath + file)
-
-                log.info("Sucessfully removed videonode: %s." % tagname)
-                return
 
         # Create index entry
         nodeXML = "%sindex.xml" % nodepath
@@ -319,7 +322,7 @@ class VideoNodes(object):
         nodepath = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
         nodeXML = "%semby_%s.xml" % (nodepath, cleantagname)
         path = "library://video/emby_%s.xml" % cleantagname
-        windowpath = "ActivateWindow(Video,%s,return)" % path
+        windowpath = "ActivateWindow(Videos,%s,return)" % path
         
         # Create the video node directory
         if not xbmcvfs.exists(nodepath):
@@ -333,6 +336,7 @@ class VideoNodes(object):
 
             'Favorite movies': 30180,
             'Favorite tvshows': 30181,
+            'Favorite episodes': 30182,
             'channels': 30173
         }
         label = lang(labels[tagname])
@@ -349,6 +353,9 @@ class VideoNodes(object):
         if itemtype == "channels":
             root = self.commonRoot(order=1, label=label, tagname=tagname, roottype=2)
             etree.SubElement(root, 'path').text = "plugin://plugin.video.emby/?id=0&mode=channels"
+        elif itemtype == "favourites" and mediatype == "episodes":
+            root = self.commonRoot(order=1, label=label, tagname=tagname, roottype=2)
+            etree.SubElement(root, 'path').text = "plugin://plugin.video.emby/?id=%s&mode=browsecontent&type=%s&folderid=favepisodes" %(tagname, mediatype)
         else:
             root = self.commonRoot(order=1, label=label, tagname=tagname)
             etree.SubElement(root, 'order', {'direction': "ascending"}).text = "sorttitle"

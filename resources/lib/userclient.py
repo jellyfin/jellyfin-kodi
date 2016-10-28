@@ -2,18 +2,17 @@
 
 ##################################################################################################
 
-import hashlib
+import json
 import logging
 import threading
 
 import xbmc
 import xbmcgui
-import xbmcaddon
-import xbmcvfs
 
 import artwork
-import clientinfo
+import connectmanager
 import downloadutils
+import read_embyserver as embyserver
 from utils import window, settings, language as lang
 
 ##################################################################################################
@@ -22,426 +21,303 @@ log = logging.getLogger("EMBY."+__name__)
 
 ##################################################################################################
 
-
 class UserClient(threading.Thread):
 
-    # Borg - multiple instances, shared state
-    _shared_state = {}
+    _shared_state = {} # Borg
 
-    stop_thread = False
-    auth = True
-    retry = 0
+    _stop_thread = False
+    _user = None
+    _server = None
 
-    currUser = None
-    currUserId = None
-    currServer = None
-    currToken = None
-    HasAccess = True
-    AdditionalUser = []
-
-    userSettings = None
+    _auth = True
+    _has_access = True
 
 
     def __init__(self):
 
         self.__dict__ = self._shared_state
-        self.addon = xbmcaddon.Addon()
 
-        self.doUtils = downloadutils.DownloadUtils()
+        self.doutils = downloadutils.DownloadUtils()
+        self.download = self.doutils.downloadUrl
+        self.emby = embyserver.Read_EmbyServer()
+        self.connectmanager = connectmanager.ConnectManager()
 
         threading.Thread.__init__(self)
 
+    @classmethod
+    def get_username(cls):
+        return settings('username') or settings('connectUsername') or None
 
-    def getAdditionalUsers(self):
+    def get_user(self, data=None):
 
-        additionalUsers = settings('additionalUsers')
+        if data is not None:
+            self._user = data
+            self._set_user_server()
 
-        if additionalUsers:
-            self.AdditionalUser = additionalUsers.split(',')
+        return self._user
 
-    def getUsername(self):
+    def get_server_details(self):
+        return self._server
 
-        username = settings('username')
+    @classmethod
+    def get_server(cls):
 
-        if not username:
-            log.debug("No username saved.")
-            return ""
-
-        return username
-
-    def getLogLevel(self):
-
-        try:
-            logLevel = int(settings('logLevel'))
-        except ValueError:
-            logLevel = 0
-
-        return logLevel
-
-    def getUserId(self):
-
-        username = self.getUsername()
-        w_userId = window('emby_currUser')
-        s_userId = settings('userId%s' % username)
-
-        # Verify the window property
-        if w_userId:
-            if not s_userId:
-                # Save access token if it's missing from settings
-                settings('userId%s' % username, value=w_userId)
-            log.debug("Returning userId from WINDOW for username: %s UserId: %s"
-                % (username, w_userId))
-            return w_userId
-        # Verify the settings
-        elif s_userId:
-            log.debug("Returning userId from SETTINGS for username: %s userId: %s"
-                % (username, s_userId))
-            return s_userId
-        # No userId found
-        else:
-            log.info("No userId saved for username: %s." % username)
-
-    def getServer(self, prefix=True):
-
-        alternate = settings('altip') == "true"
-        if alternate:
-            # Alternate host
-            HTTPS = settings('secondhttps') == "true"
-            host = settings('secondipaddress')
-            port = settings('secondport')
-        else:
-            # Original host
-            HTTPS = settings('https') == "true"
+        ###$ Begin migration $###
+        if settings('server') == "":
+            http = "https" if settings('https') == "true" else "http"
             host = settings('ipaddress')
             port = settings('port')
 
-        server = host + ":" + port
+            if host and port:
+                settings('server', value="%s://%s:%s" % (http, host, port))
+                log.info("server address migration completed")
+        ###$ End migration $###
 
-        if not host:
-            log.debug("No server information saved.")
-            return False
+        return settings('server') or None
 
-        # If https is true
-        if prefix and HTTPS:
-            server = "https://%s" % server
-            return server
-        # If https is false
-        elif prefix and not HTTPS:
-            server = "http://%s" % server
-            return server
-        # If only the host:port is required
-        elif not prefix:
-            return server
+    def verify_server(self):
 
-    def getToken(self):
-
-        username = self.getUsername()
-        userId = self.getUserId()
-        w_token = window('emby_accessToken%s' % userId)
-        s_token = settings('accessToken')
-
-        # Verify the window property
-        if w_token:
-            if not s_token:
-                # Save access token if it's missing from settings
-                settings('accessToken', value=w_token)
-                log.debug("Returning accessToken from WINDOW for username: %s accessToken: %s"
-                % (username, w_token))
-            return w_token
-        # Verify the settings
-        elif s_token:
-            log.debug("Returning accessToken from SETTINGS for username: %s accessToken: %s"
-                % (username, s_token))
-            window('emby_accessToken%s' % username, value=s_token)
-            return s_token
-        else:
-            log.info("No token found.")
-            return ""
-
-    def getSSLverify(self):
-        # Verify host certificate
-        s_sslverify = settings('sslverify')
-        if settings('altip') == "true":
-            s_sslverify = settings('secondsslverify')
-
-        if s_sslverify == "true":
+        url = "%s/emby/Users/Public?format=json" % self.get_server()
+        result = self.download(url, authenticate=False)
+        if result != "": # Specific verification, due to possibility of returning empty dict
             return True
         else:
-            return False
-
-    def getSSL(self):
-        # Client side certificate
-        s_cert = settings('sslcert')
-        if settings('altip') == "true":
-            s_cert = settings('secondsslcert')
-
-        if s_cert == "None":
-            return None
-        else:
-            return s_cert
-
-    def setUserPref(self):
-
-        doUtils = self.doUtils.downloadUrl
-
-        result = doUtils("{server}/emby/Users/{UserId}?format=json")
-        self.userSettings = result
-        # Set user image for skin display
-        if result.get('PrimaryImageTag'):
-            window('EmbyUserImage', value=artwork.Artwork().getUserArtwork(result['Id'], 'Primary'))
-
-        # Set resume point max
-        result = doUtils("{server}/emby/System/Configuration?format=json")
-        settings('markPlayed', value=str(result['MaxResumePct']))
-
-    def getPublicUsers(self):
-        # Get public Users
-        url = "%s/emby/Users/Public?format=json" % self.getServer()
-        result = self.doUtils.downloadUrl(url, authenticate=False)
-        if result != "":
-            return result
-        else:
             # Server connection failed
             return False
 
+    @classmethod
+    def get_ssl(cls):
+        """
+            Returns boolean value or path to certificate
+            True: Verify ssl
+            False: Don't verify connection
+        """
+        certificate = settings('sslcert')
+        if certificate != "None":
+            return certificate
 
-    def hasAccess(self):
-        # hasAccess is verified in service.py
-        result = self.doUtils.downloadUrl("{server}/emby/Users?format=json")
+        return True if settings('sslverify') == "true" else False
 
-        if result == False:
-            # Access is restricted, set in downloadutils.py via exception
-            log.info("Access is restricted.")
-            self.HasAccess = False
+    def get_access(self):
 
-        elif window('emby_online') != "true":
-            # Server connection failed
-            pass
+        if not self._has_access:
+            self._set_access()
 
-        elif window('emby_serverStatus') == "restricted":
-            log.info("Access is granted.")
-            self.HasAccess = True
-            window('emby_serverStatus', clear=True)
-            xbmcgui.Dialog().notification(lang(29999), lang(33007))
+        return self._has_access
 
-    def loadCurrUser(self, authenticated=False):
+    def _set_access(self):
 
-        doUtils = self.doUtils
-        username = self.getUsername()
-        userId = self.getUserId()
+        try:
+            self.download("{server}/emby/Users?format=json")
+        except Warning as error:
+            if self._has_access and "restricted" in error:
+                self._has_access = False
+                log.info("access is restricted")
+        else:
+            if not self._has_access:
+                self._has_access = True
+                window('emby_serverStatus', clear=True)
+                log.info("access is granted")
+                xbmcgui.Dialog().notification(lang(29999), lang(33007))
 
-        # Only to be used if token exists
-        self.currUserId = userId
-        self.currServer = self.getServer()
-        self.currToken = self.getToken()
-        self.ssl = self.getSSLverify()
-        self.sslcert = self.getSSL()
+    @classmethod
+    def get_userid(cls):
 
-        # Test the validity of current token
-        if authenticated == False:
-            url = "%s/emby/Users/%s?format=json" % (self.currServer, userId)
-            window('emby_currUser', value=userId)
-            window('emby_accessToken%s' % userId, value=self.currToken)
-            result = doUtils.downloadUrl(url)
+        ###$ Begin migration $###
+        if settings('userId') == "":
+            settings('userId', value=settings('userId%s' % settings('username')))
+            log.info("userid migration completed")
+        ###$ End migration $###
 
-            if result == 401:
-                # Token is no longer valid
-                self.resetClient()
-                return False
+        return settings('userId') or None
 
-        # Set to windows property
-        window('emby_currUser', value=userId)
-        window('emby_accessToken%s' % userId, value=self.currToken)
-        window('emby_server%s' % userId, value=self.currServer)
-        window('emby_server_%s' % userId, value=self.getServer(prefix=False))
+    @classmethod
+    def get_token(cls):
 
-        # Set DownloadUtils values
-        doUtils.setUsername(username)
-        doUtils.setUserId(self.currUserId)
-        doUtils.setServer(self.currServer)
-        doUtils.setToken(self.currToken)
-        doUtils.setSSL(self.ssl, self.sslcert)
-        # parental control - let's verify if access is restricted
-        self.hasAccess()
-        # Start DownloadUtils session
-        doUtils.startSession()
-        self.getAdditionalUsers()
-        # Set user preferences in settings
-        self.currUser = username
-        self.setUserPref()
+        ###$ Begin migration $###
+        if settings('token') == "":
+            settings('token', value=settings('accessToken'))
+            log.info("token migration completed")
+        ###$ End migration $###
 
+        return settings('token') or None
 
-    def authenticate(self):
+    def _set_user_server(self):
 
-        dialog = xbmcgui.Dialog()
+        user = self.download("{server}/emby/Users/{UserId}?format=json")
+        settings('username', value=user['Name'])
+        self._user = user
 
-        # Get /profile/addon_data
-        addondir = xbmc.translatePath(self.addon.getAddonInfo('profile')).decode('utf-8')
-        hasSettings = xbmcvfs.exists("%ssettings.xml" % addondir)
+        if "PrimaryImageTag" in self._user:
+            window('EmbyUserImage',
+                   value=artwork.Artwork().get_user_artwork(self._user['Id'], 'Primary'))
 
-        username = self.getUsername()
-        server = self.getServer()
+        self._server = self.download("{server}/emby/System/Configuration?format=json")
+        settings('markPlayed', value=str(self._server['MaxResumePct']))
 
-        # If there's no settings.xml
-        if not hasSettings:
-            log.info("No settings.xml found.")
-            self.auth = False
-            return
-        # If no user information
-        elif not server or not username:
-            log.info("Missing server information.")
-            self.auth = False
-            return
-        # If there's a token, load the user
-        elif self.getToken():
-            result = self.loadCurrUser()
+    def _authenticate(self):
 
-            if result == False:
-                pass
+        if not self.get_server() or not self.get_username():
+            log.info('missing server or user information')
+            self._auth = False
+
+        elif self.get_token():
+            try:
+                self._load_user()
+            except Warning:
+                log.info("token is invalid")
+                self._reset_client()
             else:
-                log.info("Current user: %s" % self.currUser)
-                log.info("Current userId: %s" % self.currUserId)
-                log.debug("Current accessToken: %s" % self.currToken)
+                log.info("current user: %s", self.get_username())
+                log.info("current userid: %s", self.get_userid())
+                log.debug("current token: %s", self.get_token())
                 return
 
         ##### AUTHENTICATE USER #####
-
-        users = self.getPublicUsers()
-        password = ""
-
-        # Find user in list
-        for user in users:
-            name = user['Name']
-
-            if username.decode('utf-8') in name:
-                # If user has password
-                if user['HasPassword'] == True:
-                    password = dialog.input(
-                        heading="%s %s" % (lang(33008), username.decode('utf-8')),
-                        option=xbmcgui.ALPHANUM_HIDE_INPUT)
-                    # If password dialog is cancelled
-                    if not password:
-                        log.warn("No password entered.")
-                        window('emby_serverStatus', value="Stop")
-                        self.auth = False
-                        return
-                break
-        else:
-            # Manual login, user is hidden
-            password = dialog.input(
-                            heading="%s %s" % (lang(33008), username.decode('utf-8')),
-                            option=xbmcgui.ALPHANUM_HIDE_INPUT)
-        sha1 = hashlib.sha1(password)
-        sha1 = sha1.hexdigest()
-
-        # Authenticate username and password
-        data = {'username': username, 'password': sha1}
-        log.debug(data)
-
-        url = "%s/emby/Users/AuthenticateByName?format=json" % server
-        result = self.doUtils.downloadUrl(url, postBody=data, action_type="POST", authenticate=False)
+        server = self.get_server()
+        username = self.get_username().decode('utf-8')
 
         try:
-            log.info("Auth response: %s" % result)
-            accessToken = result['AccessToken']
-
-        except (KeyError, TypeError):
-            log.info("Failed to retrieve the api key.")
-            accessToken = None
-
-        if accessToken is not None:
-            self.currUser = username
-            dialog.notification(lang(29999),
-                                "%s %s!" % (lang(33000), self.currUser.decode('utf-8')))
-            settings('accessToken', value=accessToken)
-            settings('userId%s' % username, value=result['User']['Id'])
-            log.info("User Authenticated: %s" % accessToken)
-            self.loadCurrUser(authenticated=True)
-            window('emby_serverStatus', clear=True)
-            self.retry = 0
+            user = self.connectmanager.login_manual(server, username)
+        except RuntimeError:
+            window('emby_serverStatus', value="stop")
+            self._auth = False
+            return
         else:
-            log.error("User authentication failed.")
-            settings('accessToken', value="")
-            settings('userId%s' % username, value="")
-            dialog.ok(lang(33001), lang(33009))
+            log.info("user: %s", user)
+            settings('username', value=user['User']['Name'])
+            settings('token', value=user['AccessToken'])
+            settings('userId', value=user['User']['Id'])
+            xbmcgui.Dialog().notification(lang(29999),
+                                          "%s %s!" % (lang(33000), username))
+            self._load_user(authenticated=True)
+            window('emby_serverStatus', clear=True)
 
-            # Give two attempts at entering password
-            if self.retry == 2:
-                log.info("Too many retries. "
-                    "You can retry by resetting attempts in the addon settings.")
-                window('emby_serverStatus', value="Stop")
-                dialog.ok(lang(33001), lang(33010))
+    def _load_user(self, authenticated=False):
 
-            self.retry += 1
-            self.auth = False
+        doutils = self.doutils
 
-    def resetClient(self):
+        userid = self.get_userid()
+        server = self.get_server()
+        token = self.get_token()
 
-        log.info("Reset UserClient authentication.")
-        if self.currToken is not None:
-            # In case of 401, removed saved token
-            settings('accessToken', value="")
-            window('emby_accessToken%s' % self.getUserId(), clear=True)
-            self.currToken = None
-            log.info("User token has been removed.")
+        # Set properties
+        # TODO: Remove old reference once code converted
+        window('emby_currUser', value=userid)
+        window('emby_server%s' % userid, value=server)
+        window('emby_accessToken%s' % userid, value=token)
 
-        self.auth = True
-        self.currUser = None
+        server_json = {
+            'UserId': userid,
+            'Server': server,
+            'ServerId': settings('serverId'),
+            'Token': token,
+            'SSL': self.get_ssl()
+        }
+        # Set downloadutils.py values
+        doutils.set_session(**server_json)
+
+        # Test the validity of the current token
+        if not authenticated:
+            try:
+                self.download("{server}/emby/Users/{UserId}?format=json")
+            except Warning as error:
+                if "401" in error:
+                    # Token is not longer valid
+                    raise
+
+        # verify user access
+        self._set_access()
+        # Start downloadutils.py session
+        doutils.start_session()
+        # Set _user and _server
+        self._set_user_server()
+
+    def load_connect_servers(self):
+        # Set connect servers
+        if not settings('connectUsername'):
+            return
+
+        servers = self.connectmanager.get_connect_servers()
+        added_servers = []
+        for server in servers:
+            if server['Id'] != settings('serverId'):
+                # TODO: SSL setup
+                self.doutils.add_server(server, False)
+                added_servers.append(server['Id'])
+
+        # Set properties
+        log.info(added_servers)
+        window('emby_servers.json', value=added_servers)
+
+    def _reset_client(self):
+
+        log.info("reset UserClient authentication")
+
+        settings('accessToken', value="")
+        window('emby_accessToken', clear=True)
+
+        log.info("user token revoked.")
+
+        self._user = None
+        self.auth = None
+
+        current_state = self.connectmanager.get_state()
+        for server in current_state['Servers']:
+
+            if server['Id'] == settings('serverId'):
+                # Update token
+                server['AccessToken'] = None
+                self.connectmanager.update_token(server)
 
     def run(self):
 
         monitor = xbmc.Monitor()
-        log.warn("----===## Starting UserClient ##===----")
 
-        while not monitor.abortRequested():
+        log.warn("----====# Starting UserClient #====----")
+
+        while not self._stop_thread:
 
             status = window('emby_serverStatus')
             if status:
                 # Verify the connection status to server
                 if status == "restricted":
                     # Parental control is restricting access
-                    self.HasAccess = False
+                    self._has_access = False
 
                 elif status == "401":
                     # Unauthorized access, revoke token
-                    window('emby_serverStatus', value="Auth")
-                    self.resetClient()
+                    window('emby_serverStatus', value="auth")
+                    self._reset_client()
 
-            if self.auth and (self.currUser is None):
+            if self._auth and self._user is None:
                 # Try to authenticate user
                 status = window('emby_serverStatus')
-                if not status or status == "Auth":
+                if not status or status == "auth":
                     # Set auth flag because we no longer need
                     # to authenticate the user
-                    self.auth = False
-                    self.authenticate()
+                    self._auth = False
+                    self._authenticate()
 
-
-            if not self.auth and (self.currUser is None):
+            if not self._auth and self._user is None:
                 # If authenticate failed.
-                server = self.getServer()
-                username = self.getUsername()
+                server = self.get_server()
+                username = self.get_username()
                 status = window('emby_serverStatus')
 
                 # The status Stop is for when user cancelled password dialog.
-                if server and username and status != "Stop":
+                if server and username and status != "stop":
                     # Only if there's information found to login
-                    log.debug("Server found: %s" % server)
-                    log.debug("Username found: %s" % username)
-                    self.auth = True
-
-
-            if self.stop_thread == True:
-                # If stopping the client didn't work
-                break
+                    log.info("Server found: %s", server)
+                    log.info("Username found: %s", username)
+                    self._auth = True
 
             if monitor.waitForAbort(1):
                 # Abort was requested while waiting. We should exit
                 break
 
-        self.doUtils.stopSession()
-        log.warn("##===---- UserClient Stopped ----===##")
+        self.doutils.stop_session()
+        log.warn("#====---- UserClient Stopped ----====#")
 
-    def stopClient(self):
-        # When emby for kodi terminates
-        self.stop_thread = True
+    def stop_client(self):
+        self._stop_thread = True

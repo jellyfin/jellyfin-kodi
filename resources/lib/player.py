@@ -6,6 +6,7 @@ import json
 import logging
 
 import xbmc
+import xbmcvfs
 import xbmcgui
 
 import clientinfo
@@ -13,6 +14,7 @@ import downloadutils
 import kodidb_functions as kodidb
 import websocket_client as wsc
 from utils import window, settings, language as lang
+from ga_client import GoogleAnalytics
 
 #################################################################################################
 
@@ -27,7 +29,6 @@ class Player(xbmc.Player):
     _shared_state = {}
 
     played_info = {}
-    playStats = {}
     currentFile = None
 
 
@@ -37,14 +38,11 @@ class Player(xbmc.Player):
 
         self.clientInfo = clientinfo.ClientInfo()
         self.doUtils = downloadutils.DownloadUtils().downloadUrl
-        self.ws = wsc.WebSocket_Client()
+        self.ws = wsc.WebSocketClient()
         self.xbmcplayer = xbmc.Player()
 
         log.debug("Starting playback monitor.")
-
-
-    def GetPlayStats(self):
-        return self.playStats
+        xbmc.Player.__init__(self)
 
     def onPlayBackStarted(self):
         # Will be called when xbmc starts playing a file
@@ -231,20 +229,9 @@ class Player(xbmc.Player):
                 self.played_info[currentFile] = data
                 log.info("ADDING_FILE: %s" % self.played_info)
 
-                # log some playback stats
-                '''if(itemType != None):
-                    if(self.playStats.get(itemType) != None):
-                        count = self.playStats.get(itemType) + 1
-                        self.playStats[itemType] = count
-                    else:
-                        self.playStats[itemType] = 1
-                        
-                if(playMethod != None):
-                    if(self.playStats.get(playMethod) != None):
-                        count = self.playStats.get(playMethod) + 1
-                        self.playStats[playMethod] = count
-                    else:
-                        self.playStats[playMethod] = 1'''
+                ga = GoogleAnalytics()
+                ga.sendEventData("PlayAction", itemType, playMethod)
+                ga.sendScreenView(itemType)
 
     def reportPlayback(self):
         
@@ -367,7 +354,7 @@ class Player(xbmc.Player):
             # Report progress via websocketclient
             postdata = json.dumps(postdata)
             log.debug("Report: %s" % postdata)
-            self.ws.sendProgressUpdate(postdata)
+            self.ws.send_progress_update(postdata)
 
     def onPlayBackPaused(self):
 
@@ -441,6 +428,8 @@ class Player(xbmc.Player):
                 # Prevent manually mark as watched in Kodi monitor
                 window('emby_skipWatched%s' % itemid, value="true")
 
+                self.stopPlayback(data)
+
                 if currentPosition and runtime:
                     try:
                         percentComplete = (currentPosition * 10000000) / int(runtime)
@@ -473,16 +462,24 @@ class Player(xbmc.Player):
                         else:
                             log.info("User skipped deletion.")
 
-                self.stopPlayback(data)
-
                 # Stop transcoding
                 if playMethod == "Transcode":
                     log.info("Transcoding for %s terminated." % itemid)
-                    deviceId = self.clientInfo.getDeviceId()
+                    deviceId = self.clientInfo.get_device_id()
                     url = "{server}/emby/Videos/ActiveEncodings?DeviceId=%s" % deviceId
                     self.doUtils(url, action_type="DELETE")
+
+                path = xbmc.translatePath(
+                       "special://profile/addon_data/plugin.video.emby/temp/").decode('utf-8')
+
+                dirs, files = xbmcvfs.listdir(path)
+                for file in files:
+                    xbmcvfs.delete("%s%s" % (path, file))
     
         self.played_info.clear()
+        
+        ga = GoogleAnalytics()
+        ga.sendEventData("PlayAction", "Stopped")
     
     def stopPlayback(self, data):
         
@@ -500,3 +497,10 @@ class Player(xbmc.Player):
             'PositionTicks': positionTicks
         }
         self.doUtils(url, postBody=postdata, action_type="POST")
+        
+        #If needed, close any livestreams
+        livestreamid = window("emby_%s.livestreamid" % self.currentFile)
+        if livestreamid:
+            url = "{server}/emby/LiveStreams/Close"
+            postdata = { 'LiveStreamId': livestreamid }
+            self.doUtils(url, postBody=postdata, action_type="POST")

@@ -5,6 +5,7 @@
 import json
 import logging
 import os
+import shutil
 import sys
 import urlparse
 
@@ -17,6 +18,7 @@ import xbmcplugin
 import artwork
 import utils
 import clientinfo
+import connectmanager
 import downloadutils
 import librarysync
 import read_embyserver as embyserver
@@ -25,7 +27,7 @@ import playlist
 import playbackutils as pbutils
 import playutils
 import api
-from utils import window, settings, language as lang
+from utils import window, settings, dialog, language as lang
 
 #################################################################################################
 
@@ -76,23 +78,15 @@ def doMainListing():
             ''' because we do not use seperate entrypoints for each content type,
                 we need to figure out which items to show in each listing.
                 for now we just only show picture nodes in the picture library
-                video nodes in the video library and all nodes in any other window '''
-
-            '''if path and xbmc.getCondVisibility("Window.IsActive(Pictures)") and node == "photos":
-                addDirectoryItem(label, path)
-            elif path and xbmc.getCondVisibility("Window.IsActive(VideoLibrary)")
-                and node != "photos":
-                addDirectoryItem(label, path)
-            elif path and not xbmc.getCondVisibility("Window.IsActive(VideoLibrary) |
-                 Window.IsActive(Pictures) | Window.IsActive(MusicLibrary)"):
-                addDirectoryItem(label, path)'''
+                video nodes in the video library and all nodes in any other window 
+            '''
 
             if path:
                 if xbmc.getCondVisibility("Window.IsActive(Pictures)") and node == "photos":
                     addDirectoryItem(label, path)
-                elif xbmc.getCondVisibility("Window.IsActive(VideoLibrary)") and node != "photos":
+                elif xbmc.getCondVisibility("Window.IsActive(Videos)") and node != "photos":
                     addDirectoryItem(label, path)
-                elif not xbmc.getCondVisibility("Window.IsActive(VideoLibrary) | Window.IsActive(Pictures) | Window.IsActive(MusicLibrary)"):
+                elif not xbmc.getCondVisibility("Window.IsActive(Videos) | Window.IsActive(Pictures) | Window.IsActive(Music)"):
                     addDirectoryItem(label, path)
 
     # experimental live tv nodes
@@ -102,7 +96,14 @@ def doMainListing():
         addDirectoryItem(lang(33052),
             "plugin://plugin.video.emby/?mode=browsecontent&type=recordings&folderid=root")
 
-    # some extra entries for settings and stuff. TODO --> localize the labels
+    '''
+    TODO: Create plugin listing for servers
+    servers = window('emby_servers.json')
+    if servers:
+        for server in servers:
+            log.info(window('emby_server%s.name' % server))
+            addDirectoryItem(window('emby_server%s.name' % server), "plugin://plugin.video.emby/?mode=%s" % server)'''
+
     addDirectoryItem(lang(30517), "plugin://plugin.video.emby/?mode=passwords")
     addDirectoryItem(lang(33053), "plugin://plugin.video.emby/?mode=settings")
     addDirectoryItem(lang(33054), "plugin://plugin.video.emby/?mode=adduser")
@@ -112,8 +113,81 @@ def doMainListing():
     addDirectoryItem(lang(33058), "plugin://plugin.video.emby/?mode=reset")
     addDirectoryItem(lang(33059), "plugin://plugin.video.emby/?mode=texturecache")
     addDirectoryItem(lang(33060), "plugin://plugin.video.emby/?mode=thememedia")
+
+    if settings('backupPath'):
+        addDirectoryItem(lang(33092), "plugin://plugin.video.emby/?mode=backup")
     
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+def emby_connect():
+
+    # Login user to emby connect
+    connect = connectmanager.ConnectManager()
+    try:
+        connectUser = connect.login_connect()
+    except RuntimeError:
+        return
+    else:
+        user = connectUser['User']
+        token = connectUser['AccessToken']
+        username = user['Name']
+        dialog(type_="notification",
+               heading="{emby}",
+               message="%s %s" % (lang(33000), username.decode('utf-8')),
+               icon=user.get('ImageUrl') or "{emby}",
+               time=2000,
+               sound=False)
+        
+        settings('connectUsername', value=username)
+
+def emby_backup():
+    # Create a backup at specified location
+    path = settings('backupPath')
+
+    # filename
+    default_value = "Kodi%s.%s" % (xbmc.getInfoLabel('System.BuildVersion')[:2],
+                                   xbmc.getInfoLabel('System.Date(dd-mm-yy)'))
+    filename = dialog(type_="input",
+                      heading=lang(33089),
+                      defaultt=default_value)
+    if not filename:
+        return
+
+    backup = os.path.join(path, filename)
+    log.info("Backup: %s", backup)
+
+    # Create directory
+    if xbmcvfs.exists(backup+"\\"):
+        log.info("Existing directory!")
+        if not dialog(type_="yesno",
+                      heading="{emby}",
+                      line1=lang(33090)):
+            return emby_backup()
+        shutil.rmtree(backup)
+
+    # Addon_data
+    shutil.copytree(src=xbmc.translatePath(
+                        "special://profile/addon_data/plugin.video.emby").decode('utf-8'),
+                    dst=os.path.join(backup, "addon_data", "plugin.video.emby"))
+
+    # Database files
+    database = os.path.join(backup, "Database")
+    xbmcvfs.mkdir(database)
+
+    # Emby database
+    shutil.copy(src=xbmc.translatePath("special://database/emby.db").decode('utf-8'),
+                dst=database)
+    # Videos database
+    shutil.copy(src=utils.getKodiVideoDBPath(),
+                dst=database)
+    # Music database
+    if settings('enableMusic') == "true":
+        shutil.copy(src=utils.getKodiMusicDBPath(),
+                    dst=database)
+
+    dialog(type_="ok",
+           heading="{emby}",
+           line1="%s: %s" % (lang(33091), backup))
 
 ##### Generate a new deviceId
 def resetDeviceId():
@@ -123,7 +197,7 @@ def resetDeviceId():
     deviceId_old = window('emby_deviceId')
     try:
         window('emby_deviceId', clear=True)
-        deviceId = clientinfo.ClientInfo().getDeviceId(reset=True)
+        deviceId = clientinfo.ClientInfo().get_device_id(reset=True)
     except Exception as e:
         log.error("Failed to generate a new device Id: %s" % e)
         dialog.ok(
@@ -185,11 +259,15 @@ def deleteItem():
 ##### ADD ADDITIONAL USERS #####
 def addUser():
 
+    if window('emby_online') != "true":
+        log.info("server is offline")
+        return
+
     doUtils = downloadutils.DownloadUtils()
     art = artwork.Artwork()
     clientInfo = clientinfo.ClientInfo()
-    deviceId = clientInfo.getDeviceId()
-    deviceName = clientInfo.getDeviceName()
+    deviceId = clientInfo.get_device_id()
+    deviceName = clientInfo.get_device_name()
     userid = window('emby_currUser')
     dialog = xbmcgui.Dialog()
 
@@ -290,16 +368,21 @@ def addUser():
             break
         window('EmbyAdditionalUserImage.%s' % i, clear=True)
 
-    url = "{server}/emby/Sessions?DeviceId=%s" % deviceId
+    url = "{server}/emby/Sessions?DeviceId=%s&format=json" % deviceId
     result = doUtils.downloadUrl(url)
-    additionalUsers = result[0]['AdditionalUsers']
+    try:
+        additionalUsers = result[0]['AdditionalUsers']
+    except (KeyError, TypeError) as error:
+        log.error(error)
+        additionaluser = []
+
     count = 0
     for additionaluser in additionalUsers:
         userid = additionaluser['UserId']
         url = "{server}/emby/Users/%s?format=json" % userid
         result = doUtils.downloadUrl(url)
         window('EmbyAdditionalUserImage.%s' % count,
-            value=art.getUserArtwork(result['Id'], 'Primary'))
+            value=art.get_user_artwork(result['Id'], 'Primary'))
         window('EmbyAdditionalUserPosition.%s' % userid, value=str(count))
         count +=1
 
@@ -326,9 +409,7 @@ def getThemeMedia():
         xbmcvfs.mkdir(library)
 
     # Set custom path for user
-    tvtunes_path = xbmc.translatePath(
-        "special://profile/addon_data/script.tvtunes/").decode('utf-8')
-    if xbmcvfs.exists(tvtunes_path):
+    if xbmc.getCondVisibility('System.HasAddon(script.tvtunes)'):
         tvtunes = xbmcaddon.Addon(id="script.tvtunes")
         tvtunes.setSetting('custom_path_enable', "true")
         tvtunes.setSetting('custom_path', library)
@@ -461,6 +542,10 @@ def getThemeMedia():
 ##### REFRESH EMBY PLAYLISTS #####
 def refreshPlaylist():
 
+    if window('emby_online') != "true":
+        log.info("server is offline")
+        return
+
     lib = librarysync.LibrarySync()
     dialog = xbmcgui.Dialog()
     try:
@@ -478,7 +563,7 @@ def refreshPlaylist():
                 sound=False)
 
     except Exception as e:
-        log.error("Refresh playlists/nodes failed: %s" % e)
+        log.exception("Refresh playlists/nodes failed: %s" % e)
         dialog.notification(
             heading=lang(29999),
             message=lang(33070),
@@ -544,6 +629,9 @@ def BrowseContent(viewname, browse_type="", folderid=""):
             listing = emby.getFilteredSection(folderid, itemtype=itemtype.split(",")[0], sortby="Random", recursive=True, limit=150, sortorder="Descending")
         elif filter_type == "recommended":
             listing = emby.getFilteredSection(folderid, itemtype=itemtype.split(",")[0], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter_type="IsFavorite")
+        elif folderid == "favepisodes":
+            xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
+            listing = emby.getFilteredSection(None, itemtype="Episode", sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter_type="IsFavorite")
         elif filter_type == "sets":
             listing = emby.getFilteredSection(folderid, itemtype=itemtype.split(",")[1], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter_type="IsFavorite")
         else:
@@ -588,7 +676,7 @@ def createListItemFromEmbyItem(item,art=artwork.Artwork(),doUtils=downloadutils.
 
     li.setProperty("embyid",itemid)
     
-    allart = art.getAllArtwork(item)
+    allart = art.get_all_artwork(item)
     
     if item["Type"] == "Photo":
         #listitem setup for pictures...
@@ -601,16 +689,16 @@ def createListItemFromEmbyItem(item,art=artwork.Artwork(),doUtils=downloadutils.
                 li.setArt( {"fanart":  img_path}) #add image as fanart for use with skinhelper auto thumb/backgrund creation
             li.setInfo('pictures', infoLabels={ "picturepath": img_path, "date": premieredate, "size": picture.get("Size"), "exif:width": str(picture.get("Width")), "exif:height": str(picture.get("Height")), "title": title})
         li.setThumbnailImage(img_path)
-        li.setProperty("plot",API.getOverview())
+        li.setProperty("plot",API.get_overview())
         li.setIconImage('DefaultPicture.png')
     else:
         #normal video items
         li.setProperty('IsPlayable', 'true')
         path = "%s?id=%s&mode=play" % (sys.argv[0], item.get("Id"))
         li.setProperty("path",path)
-        genre = API.getGenres()
+        genre = API.get_genres()
         overlay = 0
-        userdata = API.getUserData()
+        userdata = API.get_userdata()
         runtime = item.get("RunTimeTicks",0)/ 10000000.0
         seektime = userdata['Resume']
         if seektime:
@@ -625,7 +713,7 @@ def createListItemFromEmbyItem(item,art=artwork.Artwork(),doUtils=downloadutils.
             playcount = 0
             
         rating = item.get('CommunityRating')
-        if not rating: rating = userdata['UserRating']
+        if not rating: rating = 0
 
         # Populate the extradata list and artwork
         extradata = {
@@ -635,7 +723,7 @@ def createListItemFromEmbyItem(item,art=artwork.Artwork(),doUtils=downloadutils.
             'genre': genre,
             'playcount': str(playcount),
             'title': title,
-            'plot': API.getOverview(),
+            'plot': API.get_overview(),
             'Overlay': str(overlay),
             'duration': runtime
         }
@@ -652,7 +740,7 @@ def createListItemFromEmbyItem(item,art=artwork.Artwork(),doUtils=downloadutils.
         else:
             pbutils.PlaybackUtils(item).setArtwork(li)
 
-        mediastreams = API.getMediaStreams()
+        mediastreams = API.get_media_streams()
         videostreamFound = False
         if mediastreams:
             for key, value in mediastreams.iteritems():
@@ -722,6 +810,12 @@ def createListItem(item):
         'Playcount': item['playcount']
     }
 
+    if "episodeid" in item:
+        # Listitem of episode
+        metadata['mediatype'] = "episode"
+        metadata['dbid'] = item['episodeid']
+
+    # TODO: Review once Krypton is RC - probably no longer needed if there's dbid
     if "episode" in item:
         episode = item['episode']
         metadata['Episode'] = episode
@@ -769,7 +863,7 @@ def createListItem(item):
     for key, value in item['streamdetails'].iteritems():
         for stream in value:
             li.addStreamInfo(key, stream)
-    
+
     return li
 
 ##### GET NEXTUP EPISODES FOR TAGNAME #####    
@@ -1064,7 +1158,7 @@ def getExtraFanArt(embyId,embyPath):
                 xbmcvfs.mkdirs(fanartDir)
                 item = emby.getItem(embyId)
                 if item:
-                    backdrops = art.getAllArtwork(item)['Backdrop']
+                    backdrops = art.get_all_artwork(item)['Backdrop']
                     tags = item['BackdropImageTags']
                     count = 0
                     for backdrop in backdrops:

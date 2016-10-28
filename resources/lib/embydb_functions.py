@@ -20,6 +20,22 @@ class Embydb_Functions():
         self.embycursor = embycursor
 
 
+    def get_version(self, version=None):
+
+        if version is not None:
+            self.embycursor.execute("DELETE FROM version")
+            query = "INSERT INTO version(idVersion) VALUES (?)"
+            self.embycursor.execute(query, (version,))
+        else:
+            query = "SELECT idVersion FROM version"
+            self.embycursor.execute(query)
+            try:
+                version = self.embycursor.fetchone()[0]
+            except TypeError:
+                pass
+
+        return version
+
     def getViews(self):
 
         views = []
@@ -155,11 +171,22 @@ class Embydb_Functions():
         self.embycursor.execute(query, (mediafolderid,))
         return self.embycursor.fetchall()
 
+    def get_item_by_view(self, view_id):
+
+        query = ' '.join((
+
+            "SELECT emby_id",
+            "FROM emby",
+            "WHERE media_folder = ?"
+        ))
+        self.embycursor.execute(query, (view_id,))
+        return self.embycursor.fetchall()
+
     def getItem_byKodiId(self, kodiid, mediatype):
 
         query = ' '.join((
 
-            "SELECT emby_id, parent_id",
+            "SELECT emby_id, parent_id, media_folder",
             "FROM emby",
             "WHERE kodi_id = ?",
             "AND media_type = ?"
@@ -191,7 +218,7 @@ class Embydb_Functions():
         self.embycursor.execute(query, (parentid, mediatype,))
         return self.embycursor.fetchall()
 
-    def getChecksum(self, mediatype):
+    def get_checksum(self, mediatype):
 
         query = ' '.join((
 
@@ -200,6 +227,18 @@ class Embydb_Functions():
             "WHERE emby_type = ?"
         ))
         self.embycursor.execute(query, (mediatype,))
+        return self.embycursor.fetchall()
+
+    def get_checksum_by_view(self, media_type, view_id):
+
+        query = ' '.join((
+
+            "SELECT emby_id, checksum",
+            "FROM emby",
+            "WHERE emby_type = ?",
+            "AND media_folder = ?"
+        ))
+        self.embycursor.execute(query, (media_type, view_id,))
         return self.embycursor.fetchall()
 
     def getMediaType_byId(self, embyid):

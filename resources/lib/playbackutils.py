@@ -4,11 +4,15 @@
 
 import json
 import logging
+import requests
+import os
+import shutil
 import sys
 
 import xbmc
 import xbmcgui
 import xbmcplugin
+import xbmcvfs
 
 import api
 import artwork
@@ -60,6 +64,8 @@ class PlaybackUtils():
             self.setProperties(playurl, listitem)
             return xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listitem)
 
+        # TODO: Review once Krypton is RC, no need for workaround.
+
         ############### ORGANIZE CURRENT PLAYLIST ################
         
         homeScreen = xbmc.getCondVisibility('Window.IsActive(home)')
@@ -78,8 +84,8 @@ class PlaybackUtils():
 
         ############### RESUME POINT ################
         
-        userdata = self.API.getUserData()
-        seektime = self.API.adjustResume(userdata['Resume'])
+        userdata = self.API.get_userdata()
+        seektime = self.API.adjust_resume(userdata['Resume'])
 
         # We need to ensure we add the intro and additional parts only once.
         # Otherwise we get a loop.
@@ -94,9 +100,9 @@ class PlaybackUtils():
                 dummyPlaylist = True
                 playlist.add(playurl, listitem, index=startPos)
                 # Remove the original item from playlist 
-                self.pl.removefromPlaylist(startPos+1)
+                self.pl.remove_from_playlist(startPos+1)
                 # Readd the original item to playlist - via jsonrpc so we have full metadata
-                self.pl.insertintoPlaylist(currentPosition+1, dbid, self.item['Type'].lower())
+                self.pl.insert_to_playlist(currentPosition+1, dbid, self.item['Type'].lower())
                 currentPosition += 1
             
             ############### -- CHECK FOR INTROS ################
@@ -127,7 +133,7 @@ class PlaybackUtils():
                             pbutils = PlaybackUtils(intro)
                             pbutils.setProperties(introPlayurl, introListItem)
 
-                            self.pl.insertintoPlaylist(currentPosition, url=introPlayurl)
+                            self.pl.insert_to_playlist(currentPosition, url=introPlayurl)
                             introsPlaylist = True
                             currentPosition += 1
 
@@ -138,7 +144,7 @@ class PlaybackUtils():
                 # Extend our current playlist with the actual item to play
                 # only if there's no playlist first
                 log.info("Adding main item to playlist.")
-                self.pl.addtoPlaylist(dbid, self.item['Type'].lower())
+                self.pl.add_to_playlist(dbid, self.item['Type'].lower())
 
             # Ensure that additional parts are played after the main item
             currentPosition += 1
@@ -162,7 +168,7 @@ class PlaybackUtils():
                     pbutils.setArtwork(additionalListItem)
 
                     playlist.add(additionalPlayurl, additionalListItem, index=currentPosition)
-                    self.pl.verifyPlaylist()
+                    self.pl.verify_playlist()
                     currentPosition += 1
 
             if dummyPlaylist:
@@ -177,7 +183,7 @@ class PlaybackUtils():
             log.debug("Resetting properties playback flag.")
             window('emby_playbackProps', clear=True)
 
-        #self.pl.verifyPlaylist()
+        #self.pl.verify_playlist()
         ########## SETUP MAIN ITEM ##########
 
         # For transcoding only, ask for audio/subs pref
@@ -246,6 +252,9 @@ class PlaybackUtils():
         except (TypeError, KeyError, IndexError):
             return
 
+        temp = xbmc.translatePath(
+               "special://profile/addon_data/plugin.video.emby/temp/").decode('utf-8')
+
         kodiindex = 0
         for stream in mediastreams:
 
@@ -258,10 +267,21 @@ class PlaybackUtils():
                 # Direct stream
                 url = ("%s/Videos/%s/%s/Subtitles/%s/Stream.srt"
                         % (self.server, itemid, itemid, index))
+
+                if "Language" in stream:
+                    
+                    filename = "Stream.%s.srt" % stream['Language']
+                    try:
+                        path = self._download_external_subs(url, temp, filename)
+                        externalsubs.append(path)
+                    except Exception as e:
+                        log.error(e)
+                        continue
+                else:
+                    externalsubs.append(url)
                 
                 # map external subtitles for mapping
                 mapping[kodiindex] = index
-                externalsubs.append(url)
                 kodiindex += 1
         
         mapping = json.dumps(mapping)
@@ -269,9 +289,30 @@ class PlaybackUtils():
 
         return externalsubs
 
+    def _download_external_subs(self, src, dst, filename):
+
+        if not xbmcvfs.exists(dst):
+            xbmcvfs.mkdir(dst)
+
+        path = os.path.join(dst, filename)
+
+        try:
+            response = requests.get(src, stream=True)
+            response.encoding = 'utf-8'
+            response.raise_for_status()
+        except Exception as e:
+            del response
+            raise
+        else:
+            with open(path, 'wb') as f:
+                f.write(response.content)
+                del response
+
+            return path
+
     def setArtwork(self, listItem):
         # Set up item and item info
-        allartwork = self.artwork.getAllArtwork(self.item, parentInfo=True)
+        allartwork = self.artwork.get_all_artwork(self.item, parent_info=True)
         # Set artwork for listitem
         arttypes = {
 
@@ -306,28 +347,32 @@ class PlaybackUtils():
         else:
             listItem.setArt({arttype: path})
 
-    def setListItem(self, listItem):
+    def setListItem(self, listItem, dbid=None):
 
-        people = self.API.getPeople()
-        studios = self.API.getStudios()
+        people = self.API.get_people()
+        studios = self.API.get_studios()
 
         metadata = {
             
             'title': self.item.get('Name', "Missing name"),
             'year': self.item.get('ProductionYear'),
-            'plot': self.API.getOverview(),
+            'plot': self.API.get_overview(),
             'director': people.get('Director'),
             'writer': people.get('Writer'),
-            'mpaa': self.API.getMpaa(),
+            'mpaa': self.API.get_mpaa(),
             'genre': " / ".join(self.item['Genres']),
             'studio': " / ".join(studios),
-            'aired': self.API.getPremiereDate(),
+            'aired': self.API.get_premiere_date(),
             'rating': self.item.get('CommunityRating'),
             'votes': self.item.get('VoteCount')
         }
 
         if "Episode" in self.item['Type']:
             # Only for tv shows
+            # For Kodi Krypton
+            metadata['mediatype'] = "episode"
+            metadata['dbid'] = dbid
+
             thumbId = self.item.get('SeriesId')
             season = self.item.get('ParentIndexNumber', -1)
             episode = self.item.get('IndexNumber', -1)
@@ -336,6 +381,11 @@ class PlaybackUtils():
             metadata['TVShowTitle'] = show
             metadata['season'] = season
             metadata['episode'] = episode
+
+        if "Movie" in self.item['Type']:
+            # For Kodi Krypton
+            metadata['mediatype'] = "movie"
+            metadata['dbid'] = dbid
 
         listItem.setProperty('IsPlayable', 'true')
         listItem.setProperty('IsFolder', 'false')

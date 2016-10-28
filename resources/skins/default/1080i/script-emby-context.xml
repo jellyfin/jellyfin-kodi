@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window>
+	<defaultcontrol always="true">155</defaultcontrol>
+	<zorder>0</zorder>
+	<include>dialogeffect</include>
+	<controls>
+		<control type="image">
+			<description>Background fade</description>
+			<width>100%</width>
+			<height>100%</height>
+			<texture>emby-bg-fade.png</texture>
+		</control>
+		
+		<control type="group">
+			<width>450</width>
+			<left>38%</left>
+			<top>36%</top>
+			<control type="image">
+				<description>Background box</description>
+				<texture colordiffuse="ff111111">white.png</texture>
+				<height>90</height>
+			</control>
+			
+			<control type="image">
+				<description>Emby logo</description>
+				<texture>emby-icon.png</texture>
+				<aspectratio>keep</aspectratio>
+				<height>30</height>
+				<top>20</top>
+				<left>370</left>
+			</control>
+
+			<control type="image" id="150">
+				<description>User image</description>
+				<texture diffuse="user_image.png"></texture>
+				<aspectratio>keep</aspectratio>
+				<height>34</height>
+				<top>20</top>
+				<left>285</left>
+			</control>
+
+			<control type="image">
+				<description>separator</description>
+				<width>100%</width>
+				<height>0.5</height>
+				<top>70</top>
+				<left>-5</left>
+				<texture colordiffuse="ff484848" border="90,3,90,3">emby-separator.png</texture>
+			</control>
+
+			<control type="group">
+				<width>450</width>
+				<top>90</top>
+				<control type="list" id="155">
+					<width>100%</width>
+					<height>100%</height>
+					<align>center</align>
+					<onup>155</onup>
+					<ondown>155</ondown>
+					<onleft>155</onleft>
+					<onright>155</onright>
+					<scrolltime>200</scrolltime>
+					<itemlayout height="55">
+						<control type="image">
+							<description>Background box</description>
+							<width>450</width>
+							<texture colordiffuse="ff111111">white.png</texture>
+						</control>
+						<control type="label">
+							<width>400</width>
+							<font>font11</font>
+							<textcolor>ff525252</textcolor>
+							<left>25</left>
+							<align>center</align>
+							<aligny>center</aligny>
+							<info>ListItem.Label</info>
+						</control>
+					</itemlayout>
+
+					<focusedlayout height="55">
+						<control type="image">
+							<description>Background box</description>
+							<width>450</width>
+							<texture colordiffuse="ff111111">white.png</texture>
+						</control>
+						<control type="image">
+							<width>400</width>
+							<left>25</left>
+							<align>center</align>
+							<texture border="5" colordiffuse="ff222222">white.png</texture>
+							<visible>Control.HasFocus(155)</visible>
+							<animation effect="fade" time="300">Visible</animation>
+							<animation effect="fade" time="300">Hidden</animation>
+						</control>
+						<control type="label">
+							<width>400</width>
+							<font>font11</font>
+							<textcolor>white</textcolor>
+							<left>25</left>
+							<align>center</align>
+							<aligny>center</aligny>
+							<info>ListItem.Label</info>
+						</control>
+					</focusedlayout>
+				</control>
+			</control>
+		</control>
+	</controls>
+</window>

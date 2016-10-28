@@ -3,13 +3,14 @@
 
     <!-- Add-on settings -->
     <string id="29999">Emby for Kodi</string>
-    <string id="30000">Primary Server Address</string><!-- Verified -->
-    <string id="30002">Play from HTTP instead of SMB</string><!-- Verified -->
-    <string id="30004">Log level</string><!-- Verified -->
-    <string id="30016">Device Name</string><!-- Verified -->
+    <string id="30000">Server address</string>
+    <string id="30001">Server name</string>
+    <string id="30002">Play from HTTP instead of SMB</string>
+    <string id="30004">Log level</string>
+    <string id="30016">Device Name</string>
     <string id="30022">Advanced</string>
-    <string id="30024">Username</string><!-- Verified -->
-    <string id="30030">Port Number</string><!-- Verified -->
+    <string id="30024">Username</string>
+    <string id="30030">Port Number</string>
 
     <string id="30035">Number of recent Music Albums to show:</string>
     <string id="30036">Number of recent Movies to show:</string>
@@ -182,13 +183,14 @@
     <string id="30409">Delete item from the server</string>
     <string id="30410">Refresh this item</string>
     <string id="30411">Set custom song rating (0-5)</string>
+    <string id="30412">Transcode</string>
 
     <!-- add-on settings -->
     <string id="30500">Verify Host SSL Certificate</string>
     <string id="30501">Client SSL certificate</string>
     <string id="30502">Use alternate address</string>
     <string id="30503">Alternate Server Address</string>
-    <string id="30504">Use altername device Name</string>
+    <string id="30504">Use altername device name</string>
     <string id="30505">[COLOR yellow]Retry login[/COLOR]</string>
     <string id="30506">Sync Options</string>
     <string id="30507">Show progress if item count greater than</string>
@@ -200,7 +202,7 @@
     <string id="30513">Limit artwork cache threads (recommended for rpi)</string>
     <string id="30514">Enable fast startup (requires server plugin)</string>
     <string id="30515">Maximum items to request from the server at once</string>
-    <string id="30516">Playback</string>
+    <string id="30516">Video Playback</string>
     <string id="30517">Network credentials</string>
     <string id="30518">Enable Emby cinema mode</string>
     <string id="30519">Ask to play trailers</string>
@@ -229,15 +231,29 @@
     <string id="30542">Server</string>
     <string id="30543">Username or email</string>
     <string id="30544">Enable database locked fix (will slow syncing process)</string>
+    <string id="30545">Enable server offline message</string>
+	<string id="30546">Enable analytic metric logging</string>
+    <string id="30547">Display message (in seconds)</string>
 
     <!-- dialogs -->
     <string id="30600">Sign in with Emby Connect</string>
-    <string id="30601">Username or email:</string>
-    <string id="30602">Password:</string>
+    <string id="30602">Password</string>
     <string id="30603">Please see our terms of use. The use of any Emby software constitutes acceptance of these terms.</string>
     <string id="30604">Scan me</string>
     <string id="30605">Sign in</string>
-    <string id="30606">Remind me later</string>
+    <string id="30606">Cancel</string>
+    <string id="30607">Select main server</string>
+    <string id="30608">Username or password cannot be empty</string>
+    <string id="30609">Unable to connect to the selected server</string>
+    <string id="30610">Connect to</string><!-- Connect to {server} -->
+    <string id="30611">Manually add server</string>
+    <string id="30612">Please sign in</string>
+    <string id="30613">Username cannot be empty</string>
+    <string id="30614">Connect to server</string>
+    <string id="30615">Host</string>
+    <string id="30616">Connect</string>
+    <string id="30617">Server or port cannot be empty</string>
+    <string id="30618">Change Emby Connect user</string>
 
     <!-- service add-on -->
     <string id="33000">Welcome</string>
@@ -330,5 +346,11 @@
     <string id="33086">Remove all cached artwork?</string>
     <string id="33087">Reset all Emby add-on settings?</string>
     <string id="33088">Database reset has completed, Kodi will now restart to apply the changes.</string>
+    <string id="33089">Enter folder name for backup</string>
+    <string id="33090">Replace existing backup?</string>
+    <string id="33091">Create backup at:</string>
+    <string id="33092">Create a backup</string>
+    <string id="33093">Backup folder</string>
+    <string id="33094">Select content type to repair</string>
 
 </strings>

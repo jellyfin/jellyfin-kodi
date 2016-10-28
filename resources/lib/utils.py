@@ -2,14 +2,14 @@
 
 #################################################################################################
 
-import cProfile
+
 import inspect
 import json
 import logging
-import pstats
 import sqlite3
 import StringIO
 import os
+import sys
 import time
 import unicodedata
 import xml.etree.ElementTree as etree
@@ -18,6 +18,7 @@ from datetime import datetime
 import xbmc
 import xbmcaddon
 import xbmcgui
+import xbmcplugin
 import xbmcvfs
 
 #################################################################################################
@@ -27,16 +28,21 @@ log = logging.getLogger("EMBY."+__name__)
 #################################################################################################
 # Main methods
 
-def window(property, value=None, clear=False, window_id=10000):
+def window(property_, value=None, clear=False, window_id=10000):
     # Get or set window property
     WINDOW = xbmcgui.Window(window_id)
 
     if clear:
-        WINDOW.clearProperty(property)
+        WINDOW.clearProperty(property_)
     elif value is not None:
-        WINDOW.setProperty(property, value)
+        if ".json" in property_:
+            value = json.dumps(value)
+        WINDOW.setProperty(property_, value)
     else:
-        return WINDOW.getProperty(property)
+        result = WINDOW.getProperty(property_)
+        if result and ".json" in property_:
+            result = json.loads(result)
+        return result
 
 def settings(setting, value=None):
     # Get or add addon setting
@@ -51,8 +57,68 @@ def language(string_id):
     # Central string retrieval - unicode
     return xbmcaddon.Addon(id='plugin.video.emby').getLocalizedString(string_id)
 
+def dialog(type_, *args, **kwargs):
+
+    d = xbmcgui.Dialog()
+
+    if "icon" in kwargs:
+        kwargs['icon'] = kwargs['icon'].replace("{emby}",
+                                                "special://home/addons/plugin.video.emby/icon.png")
+    if "heading" in kwargs:
+        kwargs['heading'] = kwargs['heading'].replace("{emby}", language(29999))
+
+    types = {
+        'yesno': d.yesno,
+        'ok': d.ok,
+        'notification': d.notification,
+        'input': d.input,
+        'select': d.select,
+        'numeric': d.numeric
+    }
+    return types[type_](*args, **kwargs)
+
+
+class JSONRPC(object):
+
+    id_ = 1
+    jsonrpc = "2.0"
+
+    def __init__(self, method, **kwargs):
+        
+        self.method = method
+
+        for arg in kwargs: # id_(int), jsonrpc(str)
+            self.arg = arg
+
+    def _query(self):
+
+        query = {
+            
+            'jsonrpc': self.jsonrpc,
+            'id': self.id_,
+            'method': self.method,
+        }
+        if self.params is not None:
+            query['params'] = self.params
+
+        return json.dumps(query)
+
+    def execute(self, params=None):
+
+        self.params = params
+        return json.loads(xbmc.executeJSONRPC(self._query()))
+
 #################################################################################################
 # Database related methods
+
+def should_stop():
+    # Checkpoint during the syncing process
+    if xbmc.Monitor().abortRequested():
+        return True
+    elif window('emby_shouldStop') == "true":
+        return True
+    else: # Keep going
+        return False
 
 def kodiSQL(media_type="video"):
 
@@ -161,32 +227,19 @@ def querySQL(query, args=None, cursor=None, conntype=None):
 
 def getScreensaver():
     # Get the current screensaver value
-    query = {
-
-        'jsonrpc': "2.0",
-        'id': 0,
-        'method': "Settings.getSettingValue",
-        'params': {
-
-            'setting': "screensaver.mode"
-        }
-    }
-    return json.loads(xbmc.executeJSONRPC(json.dumps(query)))['result']['value']
+    result = JSONRPC('Settings.getSettingValues').execute({'setting': "screensaver.mode"})
+    try:
+        return result['result']['value']
+    except KeyError:
+        return ""
 
 def setScreensaver(value):
     # Toggle the screensaver
-    query = {
-
-        'jsonrpc': "2.0",
-        'id': 0,
-        'method': "Settings.setSettingValue",
-        'params': {
-
-            'setting': "screensaver.mode",
-            'value': value
-        }
+    params = {
+        'setting': "screensaver.mode",
+        'value': value
     }
-    result = xbmc.executeJSONRPC(json.dumps(query))
+    result = JSONRPC('Settings.setSettingValue').execute(params)
     log.info("Toggling screensaver: %s %s" % (value, result))
 
 def convertDate(date):
@@ -254,11 +307,28 @@ def indent(elem, level=0):
         if level and (not elem.tail or not elem.tail.strip()):
           elem.tail = i
 
+def catch_except(errors=(Exception, ), default_value=False):
+    # Will wrap method with try/except and print parameters for easier debugging
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except errors as error:
+                log.exception(error)
+                log.error("function: %s \n args: %s \n kwargs: %s",
+                          func.__name__, args, kwargs)
+                return default_value
+
+        return wrapper
+    return decorator
+
 def profiling(sortby="cumulative"):
     # Will print results to Kodi log
     def decorator(func):
         def wrapper(*args, **kwargs):
-
+            import cProfile
+            import pstats
+            
             pr = cProfile.Profile()
 
             pr.enable()
@@ -286,6 +356,7 @@ def reset():
         return
 
     # first stop any db sync
+    window('emby_online', value="reset")
     window('emby_shouldStop', value="true")
     count = 10
     while window('emby_dbScan') == "true":
@@ -340,36 +411,16 @@ def reset():
             cursor.execute("DELETE FROM " + tablename)
     cursor.execute('DROP table IF EXISTS emby')
     cursor.execute('DROP table IF EXISTS view')
+    cursor.execute("DROP table IF EXISTS version")
     connection.commit()
     cursor.close()
 
     # Offer to wipe cached thumbnails
-    resp = dialog.yesno(language(29999), language(33086))
-    if resp:
-        log.warn("Resetting all cached artwork.")
+    if dialog.yesno(language(29999), language(33086)):
+        log.warn("Resetting all cached artwork")
         # Remove all existing textures first
-        path = xbmc.translatePath("special://thumbnails/").decode('utf-8')
-        if xbmcvfs.exists(path):
-            allDirs, allFiles = xbmcvfs.listdir(path)
-            for dir in allDirs:
-                allDirs, allFiles = xbmcvfs.listdir(path+dir)
-                for file in allFiles:
-                    if os.path.supports_unicode_filenames:
-                        xbmcvfs.delete(os.path.join(path+dir.decode('utf-8'),file.decode('utf-8')))
-                    else:
-                        xbmcvfs.delete(os.path.join(path.encode('utf-8')+dir,file))
-
-        # remove all existing data from texture DB
-        connection = kodiSQL('texture')
-        cursor = connection.cursor()
-        cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
-        rows = cursor.fetchall()
-        for row in rows:
-            tableName = row[0]
-            if(tableName != "version"):
-                cursor.execute("DELETE FROM " + tableName)
-        connection.commit()
-        cursor.close()
+        import artwork
+        artwork.Artwork().delete_cache()
 
     # reset the install run flag
     settings('SyncInstallRunDone', value="false")
@@ -377,15 +428,18 @@ def reset():
     # Remove emby info
     resp = dialog.yesno(language(29999), language(33087))
     if resp:
+        import connectmanager
         # Delete the settings
         addon = xbmcaddon.Addon()
-        addondir = xbmc.translatePath(addon.getAddonInfo('profile')).decode('utf-8')
+        addondir = xbmc.translatePath(
+                   "special://profile/addon_data/plugin.video.emby/").decode('utf-8')
         dataPath = "%ssettings.xml" % addondir
         xbmcvfs.delete(dataPath)
-        log.info("Deleting: settings.xml")
+        connectmanager.ConnectManager().clear_data()
 
     dialog.ok(heading=language(29999), line1=language(33088))
     xbmc.executebuiltin('RestartApp')
+    return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, xbmcgui.ListItem())
 
 def sourcesXML():
     # To make Master lock compatible

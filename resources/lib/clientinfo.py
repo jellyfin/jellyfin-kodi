@@ -19,40 +19,39 @@ log = logging.getLogger("EMBY."+__name__)
 ##################################################################################################
 
 
-class ClientInfo():
+class ClientInfo(object):
 
 
     def __init__(self):
 
-        self.addon = xbmcaddon.Addon()
-        self.addonName = self.getAddonName()
+        self.addon = xbmcaddon.Addon(self.get_addon_id())
 
+    @staticmethod
+    def get_addon_id():
+        return "plugin.video.emby"
 
-    def getAddonName(self):
+    def get_addon_name(self):
         # Used for logging
         return self.addon.getAddonInfo('name').upper()
 
-    def getAddonId(self):
-
-        return "plugin.video.emby"
-
-    def getVersion(self):
-
+    def get_version(self):
         return self.addon.getAddonInfo('version')
 
-    def getDeviceName(self):
+    @classmethod
+    def get_device_name(cls):
 
         if settings('deviceNameOpt') == "false":
             # Use Kodi's deviceName
-            deviceName = xbmc.getInfoLabel('System.FriendlyName').decode('utf-8')
+            device_name = xbmc.getInfoLabel('System.FriendlyName').decode('utf-8')
         else:
-            deviceName = settings('deviceName')
-            deviceName = deviceName.replace("\"", "_")
-            deviceName = deviceName.replace("/", "_")
+            device_name = settings('deviceName')
+            device_name = device_name.replace("\"", "_")
+            device_name = device_name.replace("/", "_")
 
-        return deviceName
+        return device_name
 
-    def getPlatform(self):
+    @classmethod
+    def get_platform(cls):
 
         if xbmc.getCondVisibility('system.platform.osx'):
             return "OSX"
@@ -62,42 +61,52 @@ class ClientInfo():
             return "iOS"
         elif xbmc.getCondVisibility('system.platform.windows'):
             return "Windows"
-        elif xbmc.getCondVisibility('system.platform.linux'):
-            return "Linux/RPi"
-        elif xbmc.getCondVisibility('system.platform.android'): 
+        elif xbmc.getCondVisibility('system.platform.android'):
             return "Linux/Android"
+        elif xbmc.getCondVisibility('system.platform.linux.raspberrypi'):
+            return "Linux/RPi"
+        elif xbmc.getCondVisibility('system.platform.linux'):
+            return "Linux"
         else:
             return "Unknown"
 
-    def getDeviceId(self, reset=False):
+    def get_device_id(self, reset=False):
 
-        clientId = window('emby_deviceId')
-        if clientId:
-            return clientId
+        client_id = window('emby_deviceId')
+        if client_id:
+            return client_id
 
-        addon_path = self.addon.getAddonInfo('path').decode('utf-8')
-        if os.path.supports_unicode_filenames:
-            path = os.path.join(addon_path, "machine_guid")
-        else:
-            path = os.path.join(addon_path.encode('utf-8'), "machine_guid")
-        
-        GUID_file = xbmc.translatePath(path).decode('utf-8')
-        
-        if reset and xbmcvfs.exists(GUID_file):
+        emby_guid = xbmc.translatePath("special://temp/emby_guid").decode('utf-8')
+
+        ###$ Begin migration $###
+        if not xbmcvfs.exists(emby_guid):
+            addon_path = self.addon.getAddonInfo('path').decode('utf-8')
+            if os.path.supports_unicode_filenames:
+                path = os.path.join(addon_path, "machine_guid")
+            else:
+                path = os.path.join(addon_path.encode('utf-8'), "machine_guid")
+
+            guid_file = xbmc.translatePath(path).decode('utf-8')
+            if xbmcvfs.exists(guid_file):
+                xbmcvfs.copy(guid_file, emby_guid)
+                log.info("guid migration completed")
+        ###$ End migration $###
+
+        if reset and xbmcvfs.exists(emby_guid):
             # Reset the file
-            xbmcvfs.delete(GUID_file)
+            xbmcvfs.delete(emby_guid)
 
-        GUID = xbmcvfs.File(GUID_file)
-        clientId = GUID.read()
-        if not clientId:
-            log.info("Generating a new deviceid...")
-            clientId = str("%012X" % uuid4())
-            GUID = xbmcvfs.File(GUID_file, 'w')
-            GUID.write(clientId)
+        guid = xbmcvfs.File(emby_guid)
+        client_id = guid.read()
+        if not client_id:
+            log.info("Generating a new guid...")
+            client_id = str("%012X" % uuid4())
+            guid = xbmcvfs.File(emby_guid, 'w')
+            guid.write(client_id)
 
-        GUID.close()
+        guid.close()
 
-        log.info("DeviceId loaded: %s" % clientId)
-        window('emby_deviceId', value=clientId)
-        
-        return clientId
+        log.info("DeviceId loaded: %s", client_id)
+        window('emby_deviceId', value=client_id)
+
+        return client_id

@@ -3,6 +3,7 @@
 #################################################################################################
 
 import logging
+import hashlib
 
 import xbmc
 
@@ -123,7 +124,7 @@ class Read_EmbyServer():
         return [viewName, viewId, mediatype]
     
     def getFilteredSection(self, parentid, itemtype=None, sortby="SortName", recursive=True,
-                        limit=None, sortorder="Ascending", filter=""):
+                        limit=None, sortorder="Ascending", filter_type=""):
         params = {
 
             'ParentId': parentid,
@@ -135,7 +136,7 @@ class Read_EmbyServer():
             'Limit': limit,
             'SortBy': sortby,
             'SortOrder': sortorder,
-            'Filters': filter,
+            'Filters': filter_type,
             'Fields': (
 
                 "Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,"
@@ -185,7 +186,7 @@ class Read_EmbyServer():
         url = "{server}/emby/LiveTv/Recordings/?userid={UserId}&format=json"
         return self.doUtils(url, parameters=params)
     
-    def getSection(self, parentid, itemtype=None, sortby="SortName", basic=False, dialog=None):
+    def getSection(self, parentid, itemtype=None, sortby="SortName", artist_id=None, basic=False, dialog=None):
 
         items = {
             
@@ -198,6 +199,7 @@ class Read_EmbyServer():
         params = {
 
             'ParentId': parentid,
+            'ArtistIds': artist_id,
             'IncludeItemTypes': itemtype,
             'CollapseBoxSetItems': False,
             'IsVirtualUnaired': False,
@@ -224,6 +226,7 @@ class Read_EmbyServer():
                 params = {
 
                     'ParentId': parentid,
+                    'ArtistIds': artist_id,
                     'IncludeItemTypes': itemtype,
                     'CollapseBoxSetItems': False,
                     'IsVirtualUnaired': False,
@@ -246,9 +249,13 @@ class Read_EmbyServer():
                         "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers,"
                         "MediaSources,VoteCount"
                     )
-                result = self.doUtils(url, parameters=params)
                 try:
+                    result = self.doUtils(url, parameters=params)
                     items['Items'].extend(result['Items'])
+                except Warning as error:
+                    if "400" in error:
+                        log.info("Something went wrong, aborting request.")
+                        index += jump
                 except TypeError:
                     # Something happened to the connection
                     if not throttled:
@@ -322,25 +329,14 @@ class Read_EmbyServer():
         else:
             for item in items:
 
-                item['Name'] = item['Name']
-                if item['Type'] == "Channel":
+                if item['Type'] in ("Channel", "PlaylistsFolder"):
                     # Filter view types
                     continue
 
                 # 3/4/2016 OriginalCollectionType is added
                 itemtype = item.get('OriginalCollectionType', item.get('CollectionType', "mixed"))
-
-                # 11/29/2015 Remove this once OriginalCollectionType is added to stable server.
-                # Assumed missing is mixed then.
-                '''if itemtype is None:
-                    url = "{server}/emby/Library/MediaFolders?format=json"
-                    result = self.doUtils(url)
-
-                    for folder in result['Items']:
-                        if item['Id'] == folder['Id']:
-                            itemtype = folder.get('CollectionType', "mixed")'''
                 
-                if item['Name'] not in ('Collections', 'Trailers'):
+                if item['Name'] not in ('Collections', 'Trailers', 'Playlists'):
                     
                     if sortedlist:
                         views.append({
@@ -441,7 +437,7 @@ class Read_EmbyServer():
 
         return self.getSection(seasonId, "Episode")
 
-    def getArtists(self, dialog=None):
+    def getArtists(self, parent_id=None, dialog=None):
 
         items = {
 
@@ -453,6 +449,7 @@ class Read_EmbyServer():
         url = "{server}/emby/Artists?UserId={UserId}&format=json"
         params = {
 
+            'ParentId': parent_id,
             'Recursive': True,
             'Limit': 1
         }
@@ -465,13 +462,14 @@ class Read_EmbyServer():
             log.debug("%s:%s Failed to retrieve the server response." % (url, params))
 
         else:
-            index = 1
+            index = 0
             jump = self.limitIndex
 
             while index < total:
                 # Get items by chunk to increase retrieval speed at scale
                 params = {
 
+                    'ParentId': parent_id,
                     'Recursive': True,
                     'IsVirtualUnaired': False,
                     'IsMissing': False,
@@ -501,7 +499,7 @@ class Read_EmbyServer():
 
     def getAlbumsbyArtist(self, artistId):
 
-        return self.getSection(artistId, "MusicAlbum", sortby="DateCreated")
+        return self.getSection(None, "MusicAlbum", sortby="DateCreated", artist_id=artistId)
 
     def getSongs(self, basic=False, dialog=None):
 
@@ -572,3 +570,19 @@ class Read_EmbyServer():
 
         url = "{server}/emby/Items/%s?format=json" % itemid
         self.doUtils(url, action_type="DELETE")
+
+    def getUsers(self, server):
+
+        url = "%s/emby/Users/Public?format=json" % server
+        users = self.doUtils(url, authenticate=False)
+
+        return users or []
+
+    def loginUser(self, server, username, password=None):
+
+        password = password or ""
+        url = "%s/emby/Users/AuthenticateByName?format=json" % server
+        data = {'username': username, 'password': hashlib.sha1(password).hexdigest()}
+        user = self.doUtils(url, postBody=data, action_type="POST", authenticate=False)
+
+        return user

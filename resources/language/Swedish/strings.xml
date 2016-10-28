@@ -273,7 +273,7 @@
     <string id="33032">Kunde inte generera ett nytt enhetsID. Se i loggarna för mer information.</string>
     <string id="33033">Ett nytt enhetsID har genererats. Kodi kommer nu starta om.</string>
     <string id="33034">Fortsätt med följande server?</string>
-    <string id="33035">OBS! Om du väljer \'Native\'-läget så tappar du vissa funktioner i Emby, som; Emby bioläge, direktströmning/omkodning och schema för föräldralås.</string>
+    <string id="33035">OBS! Om du väljer 'Native'-läget så tappar du vissa funktioner i Emby, som; Emby bioläge, direktströmning/omkodning och schema för föräldralås.</string>
     <string id="33036">Tillägg (Standard)</string>
     <string id="33037">Native (Direkta Sökvägar)</string>
     <string id="33038">Lägg till nätverksuppgifter för att ge Kodi åtkomst till ditt innehåll? Viktigt: Kodi kommer behöva startas om för att se uppgifterna. Dom kan också läggas till vid ett senare tillfälle.</string>

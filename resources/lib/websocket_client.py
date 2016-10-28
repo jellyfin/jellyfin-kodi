@@ -8,14 +8,13 @@ import threading
 import websocket
 
 import xbmc
-import xbmcgui
 
 import clientinfo
 import downloadutils
 import librarysync
 import playlist
 import userclient
-from utils import window, settings, language as lang
+from utils import window, settings, dialog, language as lang, JSONRPC
 
 ##################################################################################################
 
@@ -24,278 +23,316 @@ log = logging.getLogger("EMBY."+__name__)
 ##################################################################################################
 
 
-class WebSocket_Client(threading.Thread):
+class WebSocketClient(threading.Thread):
 
     _shared_state = {}
 
-    client = None
-    stopWebsocket = False
+    _client = None
+    _stop_websocket = False
 
 
     def __init__(self):
 
         self.__dict__ = self._shared_state
         self.monitor = xbmc.Monitor()
-        
-        self.doUtils = downloadutils.DownloadUtils()
-        self.clientInfo = clientinfo.ClientInfo()
-        self.deviceId = self.clientInfo.getDeviceId()
-        self.librarySync = librarysync.LibrarySync()
-        
+
+        self.doutils = downloadutils.DownloadUtils()
+        self.client_info = clientinfo.ClientInfo()
+        self.device_id = self.client_info.get_device_id()
+        self.library_sync = librarysync.LibrarySync()
+
         threading.Thread.__init__(self)
 
 
-    def sendProgressUpdate(self, data):
-        
+    def send_progress_update(self, data):
+
         log.debug("sendProgressUpdate")
         try:
-            messageData = {
+            message = {
 
                 'MessageType': "ReportPlaybackProgress",
                 'Data': data
             }
-            messageString = json.dumps(messageData)
-            self.client.send(messageString)
-            log.debug("Message data: %s" % messageString)
+            message_str = json.dumps(message)
+            self._client.send(message_str)
+            log.debug("Message data: %s", message_str)
 
-        except Exception as e:
-            log.exception(e)
+        except Exception as error:
+            log.exception(error)
 
     def on_message(self, ws, message):
 
         result = json.loads(message)
-        messageType = result['MessageType']
+        message_type = result['MessageType']
         data = result['Data']
-        dialog = xbmcgui.Dialog()
 
-        if messageType not in ('SessionEnded'):
+        if message_type not in ('NotificationAdded', 'SessionEnded', 'RestartRequired',
+                                'PackageInstalling'):
             # Mute certain events
-            log.info("Message: %s" % message)
+            log.info("Message: %s", message)
 
-        if messageType == "Play":
+        if message_type == 'Play':
             # A remote control play command has been sent from the server.
-            itemIds = data['ItemIds']
-            command = data['PlayCommand']
+            self._play(data)
 
-            pl = playlist.Playlist()
-
-            if command == "PlayNow":
-                dialog.notification(
-                        heading=lang(29999),
-                        message="%s %s" % (len(itemIds), lang(33004)),
-                        icon="special://home/addons/plugin.video.emby/icon.png",
-                        sound=False)
-                startat = data.get('StartPositionTicks', 0)
-                pl.playAll(itemIds, startat)
-
-            elif command == "PlayNext":
-                dialog.notification(
-                        heading=lang(29999),
-                        message="%s %s" % (len(itemIds), lang(33005)),
-                        icon="special://home/addons/plugin.video.emby/icon.png",
-                        sound=False)
-                newplaylist = pl.modifyPlaylist(itemIds)
-                player = xbmc.Player()
-                if not player.isPlaying():
-                    # Only start the playlist if nothing is playing
-                    player.play(newplaylist)
-
-        elif messageType == "Playstate":
+        elif message_type == 'Playstate':
             # A remote control update playstate command has been sent from the server.
-            command = data['Command']
-            player = xbmc.Player()
+            self._playstate(data)
 
-            actions = {
-
-                'Stop': player.stop,
-                'Unpause': player.pause,
-                'Pause': player.pause,
-                'NextTrack': player.playnext,
-                'PreviousTrack': player.playprevious,
-                'Seek': player.seekTime
-            }
-            action = actions[command]
-            if command == "Seek":
-                seekto = data['SeekPositionTicks']
-                seektime = seekto / 10000000.0
-                action(seektime)
-                log.info("Seek to %s." % seektime)
-            else:
-                action()
-                log.info("Command: %s completed." % command)
-
-            window('emby_command', value="true")
-
-        elif messageType == "UserDataChanged":
+        elif message_type == "UserDataChanged":
             # A user changed their personal rating for an item, or their playstate was updated
             userdata_list = data['UserDataList']
-            self.librarySync.triage_items("userdata", userdata_list)
+            self.library_sync.triage_items("userdata", userdata_list)
 
-        elif messageType == "LibraryChanged":
-            
-            librarySync = self.librarySync
-            processlist = {
+        elif message_type == "LibraryChanged":
+            self._library_changed(data)
 
-                'added': data['ItemsAdded'],
-                'update': data['ItemsUpdated'],
-                'remove': data['ItemsRemoved']
-            }
-            for action in processlist:
-                librarySync.triage_items(action, processlist[action])
+        elif message_type == "GeneralCommand":
+            self._general_commands(data)
 
-        elif messageType == "GeneralCommand":
-            
-            command = data['Name']
-            arguments = data['Arguments']
+        elif message_type == "ServerRestarting":
+            self._server_restarting()
 
-            if command in ('Mute', 'Unmute', 'SetVolume',
-                            'SetSubtitleStreamIndex', 'SetAudioStreamIndex'):
-
-                player = xbmc.Player()
-                # These commands need to be reported back
-                if command == "Mute":
-                    xbmc.executebuiltin('Mute')
-                elif command == "Unmute":
-                    xbmc.executebuiltin('Mute')
-                elif command == "SetVolume":
-                    volume = arguments['Volume']
-                    xbmc.executebuiltin('SetVolume(%s[,showvolumebar])' % volume)
-                elif command == "SetAudioStreamIndex":
-                    index = int(arguments['Index'])
-                    player.setAudioStream(index - 1)
-                elif command == "SetSubtitleStreamIndex":
-                    embyindex = int(arguments['Index'])
-                    currentFile = player.getPlayingFile()
-
-                    mapping = window('emby_%s.indexMapping' % currentFile)
-                    if mapping:
-                        externalIndex = json.loads(mapping)
-                        # If there's external subtitles added via playbackutils
-                        for index in externalIndex:
-                            if externalIndex[index] == embyindex:
-                                player.setSubtitleStream(int(index))
-                                break
-                        else:
-                            # User selected internal subtitles
-                            external = len(externalIndex)
-                            audioTracks = len(player.getAvailableAudioStreams())
-                            player.setSubtitleStream(external + embyindex - audioTracks - 1)
-                    else:
-                        # Emby merges audio and subtitle index together
-                        audioTracks = len(player.getAvailableAudioStreams())
-                        player.setSubtitleStream(index - audioTracks - 1)
-
-                # Let service know
-                window('emby_command', value="true")
-
-            elif command == "DisplayMessage":
-                
-                header = arguments['Header']
-                text = arguments['Text']
-                dialog.notification(
-                            heading=header,
-                            message=text,
-                            icon="special://home/addons/plugin.video.emby/icon.png",
-                            time=4000)
-
-            elif command == "SendString":
-                
-                string = arguments['String']
-                text = {
-
-                    'jsonrpc': "2.0",
-                    'id': 0,
-                    'method': "Input.SendText",
-                    'params': {
-
-                        'text': "%s" % string,
-                        'done': False
-                    }
-                }
-                result = xbmc.executeJSONRPC(json.dumps(text))
-
-            else:
-                builtin = {
-
-                    'ToggleFullscreen': 'Action(FullScreen)',
-                    'ToggleOsdMenu': 'Action(OSD)',
-                    'ToggleContextMenu': 'Action(ContextMenu)',
-                    'MoveUp': 'Action(Up)',
-                    'MoveDown': 'Action(Down)',
-                    'MoveLeft': 'Action(Left)',
-                    'MoveRight': 'Action(Right)',
-                    'Select': 'Action(Select)',
-                    'Back': 'Action(back)',
-                    'GoHome': 'ActivateWindow(Home)',
-                    'PageUp': 'Action(PageUp)',
-                    'NextLetter': 'Action(NextLetter)',
-                    'GoToSearch': 'VideoLibrary.Search',
-                    'GoToSettings': 'ActivateWindow(Settings)',
-                    'PageDown': 'Action(PageDown)',
-                    'PreviousLetter': 'Action(PrevLetter)',
-                    'TakeScreenshot': 'TakeScreenshot',
-                    'ToggleMute': 'Mute',
-                    'VolumeUp': 'Action(VolumeUp)',
-                    'VolumeDown': 'Action(VolumeDown)',
-                }
-                action = builtin.get(command)
-                if action:
-                    xbmc.executebuiltin(action)
-
-        elif messageType == "ServerRestarting":
-            if settings('supressRestartMsg') == "true":
-                dialog.notification(
-                            heading=lang(29999),
-                            message=lang(33006),
-                            icon="special://home/addons/plugin.video.emby/icon.png")
-
-        elif messageType == "UserConfigurationUpdated":
+        elif message_type == "UserConfigurationUpdated":
             # Update user data set in userclient
-            userclient.UserClient().userSettings = data
-            self.librarySync.refresh_views = True
+            userclient.UserClient().get_user(data)
+            self.library_sync.refresh_views = True
+
+        elif message_type == "ServerShuttingDown":
+            # Server went offline
+            window('emby_online', value="false")
+
+    @classmethod
+    def _play(cls, data):
+
+        item_ids = data['ItemIds']
+        command = data['PlayCommand']
+
+        playlist_ = playlist.Playlist()
+
+        if command == 'PlayNow':
+            startat = data.get('StartPositionTicks', 0)
+            playlist_.play_all(item_ids, startat)
+            dialog(type_="notification",
+                   heading="{emby}",
+                   message="%s %s" % (len(item_ids), lang(33004)),
+                   icon="{emby}",
+                   sound=False)
+
+        elif command == 'PlayNext':
+            new_playlist = playlist_.modify_playlist(item_ids)
+            dialog(type_="notification",
+                   heading="{emby}",
+                   message="%s %s" % (len(item_ids), lang(33005)),
+                   icon="{emby}",
+                   sound=False)
+            player = xbmc.Player()
+            if not player.isPlaying():
+                # Only start the playlist if nothing is playing
+                player.play(new_playlist)
+
+    @classmethod
+    def _playstate(cls, data):
+
+        command = data['Command']
+        player = xbmc.Player()
+
+        actions = {
+
+            'Stop': player.stop,
+            'Unpause': player.pause,
+            'Pause': player.pause,
+            'NextTrack': player.playnext,
+            'PreviousTrack': player.playprevious
+        }
+        if command == 'Seek':
+
+            seek_to = data['SeekPositionTicks']
+            seek_time = seek_to / 10000000.0
+            player.seekTime(seek_time)
+            log.info("Seek to %s", seek_time)
+
+        elif command in actions:
+            actions[command]()
+            log.info("Command: %s completed", command)
+
+        else:
+            log.info("Unknown command: %s", command)
+            return
+
+        window('emby_command', value="true")
+
+    def _library_changed(self, data):
+
+        process_list = {
+
+            'added': data['ItemsAdded'],
+            'update': data['ItemsUpdated'],
+            'remove': data['ItemsRemoved']
+        }
+        for action in process_list:
+            self.library_sync.triage_items(action, process_list[action])
+
+    @classmethod
+    def _general_commands(cls, data):
+
+        command = data['Name']
+        arguments = data['Arguments']
+
+        if command in ('Mute', 'Unmute', 'SetVolume',
+                       'SetSubtitleStreamIndex', 'SetAudioStreamIndex'):
+
+            player = xbmc.Player()
+            # These commands need to be reported back
+            if command == 'Mute':
+                xbmc.executebuiltin('Mute')
+
+            elif command == 'Unmute':
+                xbmc.executebuiltin('Mute')
+
+            elif command == 'SetVolume':
+                volume = arguments['Volume']
+                xbmc.executebuiltin('SetVolume(%s[,showvolumebar])' % volume)
+
+            elif command == 'SetAudioStreamIndex':
+                index = int(arguments['Index'])
+                player.setAudioStream(index - 1)
+
+            elif command == 'SetSubtitleStreamIndex':
+                emby_index = int(arguments['Index'])
+                current_file = player.getPlayingFile()
+                mapping = window('emby_%s.indexMapping' % current_file)
+
+                if emby_index == -1:
+                    player.showSubtitles(False)
+
+                elif mapping:
+                    external_index = json.loads(mapping)
+                    # If there's external subtitles added via playbackutils
+                    for index in external_index:
+                        if external_index[index] == emby_index:
+                            player.setSubtitleStream(int(index))
+                            break
+                    else:
+                        # User selected internal subtitles
+                        external = len(external_index)
+                        audio_tracks = len(player.getAvailableAudioStreams())
+                        player.setSubtitleStream(external + emby_index - audio_tracks - 1)
+                else:
+                    # Emby merges audio and subtitle index together
+                    audio_tracks = len(player.getAvailableAudioStreams())
+                    player.setSubtitleStream(emby_index - audio_tracks - 1)
+
+            # Let service know
+            window('emby_command', value="true")
+
+        elif command == 'DisplayMessage':
+
+            header = arguments['Header']
+            text = arguments['Text']
+            dialog(type_="notification",
+                   heading=header,
+                   message=text,
+                   icon="{emby}",
+                   time=int(settings('displayMessage'))*1000)
+
+        elif command == 'SendString':
+
+            params = {
+
+                'text': arguments['String'],
+                'done': False
+            }
+            JSONRPC('Input.SendText').execute(params)
+
+        elif command in ('MoveUp', 'MoveDown', 'MoveRight', 'MoveLeft'):
+            # Commands that should wake up display
+            actions = {
+
+                'MoveUp': "Input.Up",
+                'MoveDown': "Input.Down",
+                'MoveRight': "Input.Right",
+                'MoveLeft': "Input.Left"
+            }
+            JSONRPC(actions[command]).execute()
+
+        elif command == 'GoHome':
+            JSONRPC('GUI.ActivateWindow').execute({'window': "home"})
+
+        else:
+            builtin = {
+
+                'ToggleFullscreen': 'Action(FullScreen)',
+                'ToggleOsdMenu': 'Action(OSD)',
+                'ToggleContextMenu': 'Action(ContextMenu)',
+                'Select': 'Action(Select)',
+                'Back': 'Action(back)',
+                'PageUp': 'Action(PageUp)',
+                'NextLetter': 'Action(NextLetter)',
+                'GoToSearch': 'VideoLibrary.Search',
+                'GoToSettings': 'ActivateWindow(Settings)',
+                'PageDown': 'Action(PageDown)',
+                'PreviousLetter': 'Action(PrevLetter)',
+                'TakeScreenshot': 'TakeScreenshot',
+                'ToggleMute': 'Mute',
+                'VolumeUp': 'Action(VolumeUp)',
+                'VolumeDown': 'Action(VolumeDown)',
+            }
+            if command in builtin:
+                xbmc.executebuiltin(builtin[command])
+
+    @classmethod
+    def _server_restarting(cls):
+
+        if settings('supressRestartMsg') == "true":
+            dialog(type_="notification",
+                   heading="{emby}",
+                   message=lang(33006),
+                   icon="{emby}")
+        window('emby_online', value="false")
 
     def on_close(self, ws):
-        log.debug("Closed.")
+        log.debug("closed")
 
     def on_open(self, ws):
-        self.doUtils.postCapabilities(self.deviceId)
+        self.doutils.post_capabilities(self.device_id)
 
     def on_error(self, ws, error):
+
         if "10061" in str(error):
             # Server is offline
             pass
         else:
-            log.debug("Error: %s" % error)
+            log.debug("Error: %s", error)
 
     def run(self):
 
-        loglevel = int(window('emby_logLevel'))
         # websocket.enableTrace(True)
-
-        userId = window('emby_currUser')
-        server = window('emby_server%s' % userId)
-        token = window('emby_accessToken%s' % userId)
+        user_id = window('emby_currUser')
+        server = window('emby_server%s' % user_id)
+        token = window('emby_accessToken%s' % user_id)
         # Get the appropriate prefix for the websocket
         if "https" in server:
             server = server.replace('https', "wss")
         else:
             server = server.replace('http', "ws")
 
-        websocket_url = "%s?api_key=%s&deviceId=%s" % (server, token, self.deviceId)
-        log.info("websocket url: %s" % websocket_url)
+        websocket_url = "%s?api_key=%s&deviceId=%s" % (server, token, self.device_id)
+        log.info("websocket url: %s", websocket_url)
 
-        self.client = websocket.WebSocketApp(websocket_url,
-                                    on_message=self.on_message,
-                                    on_error=self.on_error,
-                                    on_close=self.on_close)
-        
-        self.client.on_open = self.on_open
+        self._client = websocket.WebSocketApp(websocket_url,
+                                              on_message=self.on_message,
+                                              on_error=self.on_error,
+                                              on_close=self.on_close)
+        self._client.on_open = self.on_open
         log.warn("----===## Starting WebSocketClient ##===----")
 
         while not self.monitor.abortRequested():
 
-            self.client.run_forever(ping_interval=10)
-            if self.stopWebsocket:
+            if window('emby_online') == "true":
+                self._client.run_forever(ping_interval=10)
+
+            if self._stop_websocket:
                 break
 
             if self.monitor.waitForAbort(5):
@@ -304,8 +341,8 @@ class WebSocket_Client(threading.Thread):
 
         log.warn("##===---- WebSocketClient Stopped ----===##")
 
-    def stopClient(self):
+    def stop_client(self):
 
-        self.stopWebsocket = True
-        self.client.close()
-        log.info("Stopping thread.")
+        self._stop_websocket = True
+        self._client.close()
+        log.info("Stopping thread")
