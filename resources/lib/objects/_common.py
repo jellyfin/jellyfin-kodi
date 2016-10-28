@@ -12,11 +12,13 @@ import api
 import artwork
 import downloadutils
 import read_embyserver as embyserver
+from ga_client import GoogleAnalytics
 from utils import window, settings, dialog, language as lang, should_stop
 
 ##################################################################################################
 
 log = logging.getLogger("EMBY."+__name__)
+ga = GoogleAnalytics()
 
 ##################################################################################################
 
@@ -27,6 +29,8 @@ def catch_except(errors=(Exception, ), default_value=False):
             try:
                 return func(*args, **kwargs)
             except errors as error:
+                errStrings = ga.formatException()
+                ga.sendEventData("Exception", errStrings[0], errStrings[1])
                 log.exception(error)
                 log.error("function: %s \n args: %s \n kwargs: %s",
                           func.__name__, args, kwargs)
