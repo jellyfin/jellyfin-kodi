@@ -1,3 +1,6 @@
+version 2.3.0
+- New stable version
+
 version 2.2.57
 - Fix for external subtitles while using HTTP playback
 - Minor bug fixes
