@@ -308,7 +308,7 @@ class ConnectionManager(object):
             return self._resolveFailure()
 
         try:
-            publicInfo = self._tryConnect(address, options)
+            publicInfo = self._tryConnect(address, options=options)
         except Exception:
             return _onFail()
         else:
