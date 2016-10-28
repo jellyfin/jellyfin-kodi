@@ -9,8 +9,8 @@ from ntpath import dirname
 import api
 import embydb_functions as embydb
 import _kodi_tvshows
-from _common import Items
-from utils import window, settings, language as lang, catch_except
+from _common import Items, catch_except
+from utils import window, settings, language as lang
 
 ##################################################################################################
 

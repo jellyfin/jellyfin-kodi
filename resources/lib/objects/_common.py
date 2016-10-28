@@ -20,6 +20,21 @@ log = logging.getLogger("EMBY."+__name__)
 
 ##################################################################################################
 
+def catch_except(errors=(Exception, ), default_value=False):
+# Will wrap method with try/except and print parameters for easier debugging
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except errors as error:
+                log.exception(error)
+                log.error("function: %s \n args: %s \n kwargs: %s",
+                          func.__name__, args, kwargs)
+                return default_value
+
+        return wrapper
+    return decorator
+
 
 class Items(object):
 
