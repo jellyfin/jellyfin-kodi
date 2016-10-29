@@ -1,3 +1,6 @@
+version 2.3.1
+- minor fixes
+
 version 2.3.0
 - New stable version
 
