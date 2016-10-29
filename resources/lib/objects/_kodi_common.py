@@ -746,8 +746,8 @@ class KodiItems(object):
             tag_id = self.cursor.fetchone()[0] + 1
 
             query = "INSERT INTO tag(idTag, strTag) values(?, ?)"
-            self.cursor.execute(query, (tag_id, name))
-            log.debug("Create idTag: %s name: %s", tag_id, name)
+            self.cursor.execute(query, (tag_id, tag))
+            log.debug("Create idTag: %s name: %s", tag_id, tag)
 
         finally:
             # Assign tag to item

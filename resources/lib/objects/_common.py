@@ -62,10 +62,11 @@ class Items(object):
     @classmethod
     def path_validation(cls, path):
         # Verify if direct path is accessible or not
+        verify_path = path
         if not os.path.supports_unicode_filenames:
-            path = path.encode('utf-8')
+            verify_path = path.encode('utf-8')
 
-        if window('emby_pathverified') != "true" and not xbmcvfs.exists(path):
+        if window('emby_pathverified') != "true" and not xbmcvfs.exists(verify_path):
             if dialog(type_="yesno",
                       heading="{emby}",
                       line1="%s %s. %s" % (lang(33047), path, lang(33048))):
