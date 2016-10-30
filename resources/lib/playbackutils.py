@@ -276,7 +276,7 @@ class PlaybackUtils():
                         externalsubs.append(path)
                     except Exception as e:
                         log.error(e)
-                        externalsubs.append(url)
+                        continue
                 else:
                     externalsubs.append(url)
                 
@@ -298,11 +298,12 @@ class PlaybackUtils():
 
         try:
             response = requests.get(src, stream=True)
+            response.encoding = 'utf-8'
             response.raise_for_status()
-        except Exception:
+        except Exception as e:
+            del response
             raise
         else:
-            response.encoding = 'utf-8'
             with open(path, 'wb') as f:
                 f.write(response.content)
                 del response
