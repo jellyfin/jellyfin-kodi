@@ -372,7 +372,7 @@ def addUser():
     result = doUtils.downloadUrl(url)
     try:
         additionalUsers = result[0]['AdditionalUsers']
-    except (IndexError, KeyError, TypeError) as error:
+    except (KeyError, TypeError) as error:
         log.error(error)
         additionaluser = []
 
