@@ -490,7 +490,7 @@ class Music(Items):
                 except TypeError:
                     # No album found, create a single's album
                     log.info("Failed to add album. Creating singles.")
-                    album_id = self.kodi_db.create_entry_album()
+                    albumid = self.kodi_db.create_entry_album()
                     if self.kodi_version == 16:
                         self.kodi_db.add_single(albumid, genre, year, "single")
 
