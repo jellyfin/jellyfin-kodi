@@ -307,7 +307,7 @@ def indent(elem, level=0):
         if level and (not elem.tail or not elem.tail.strip()):
           elem.tail = i
 
-def catch_except(errors=(Exception, ), default_value=False):
+def catch_except(errors=(Exception, )):
     # Will wrap method with try/except and print parameters for easier debugging
     def decorator(func):
         def wrapper(*args, **kwargs):
@@ -317,7 +317,7 @@ def catch_except(errors=(Exception, ), default_value=False):
                 log.exception(error)
                 log.error("function: %s \n args: %s \n kwargs: %s",
                           func.__name__, args, kwargs)
-                return default_value
+                raise
 
         return wrapper
     return decorator
