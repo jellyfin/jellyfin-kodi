@@ -1,3 +1,9 @@
+version 2.3.4
+- add throttling for error event logging
+
+version 2.3.3
+- minor fix to exception handling
+
 version 2.3.1
 - minor fixes
 
