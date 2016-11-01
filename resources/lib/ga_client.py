@@ -133,13 +133,13 @@ class GoogleAnalytics():
     
     def sendEventData(self, eventCategory, eventAction, eventLabel=None, throttle=False):
         
-        # if throttling is enabled then only log the same event every 60 seconds
+        # if throttling is enabled then only log the same event every 5 min
         if(throttle):
             throttleKey = eventCategory + "-" + eventAction + "-" + str(eventLabel)
             lastLogged = logEventHistory.get(throttleKey)
             if(lastLogged != None):
                 timeSinceLastLog = time.time() - lastLogged
-                if(timeSinceLastLog < 60):
+                if(timeSinceLastLog < 300):
                     log.info("SKIPPING_LOG_EVENT : " + str(timeSinceLastLog) + " " + throttleKey)
                     return
             logEventHistory[throttleKey] = time.time()
