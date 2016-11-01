@@ -22,7 +22,7 @@ ga = GoogleAnalytics()
 
 ##################################################################################################
 
-def catch_except(errors=(Exception, )):
+def catch_except(errors=(Exception, ), default_value=False):
 # Will wrap method with try/except and print parameters for easier debugging
     def decorator(func):
         def wrapper(*args, **kwargs):
@@ -30,11 +30,11 @@ def catch_except(errors=(Exception, )):
                 return func(*args, **kwargs)
             except errors as error:
                 errStrings = ga.formatException()
-                ga.sendEventData("Exception", errStrings[0], errStrings[1])
+                ga.sendEventData("Exception", errStrings[0], errStrings[1], True)
                 log.exception(error)
                 log.error("function: %s \n args: %s \n kwargs: %s",
                           func.__name__, args, kwargs)
-                raise
+                return default_value
 
         return wrapper
     return decorator

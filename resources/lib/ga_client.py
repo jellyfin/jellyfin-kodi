@@ -8,12 +8,15 @@ import md5
 import xbmc
 import platform
 import xbmcgui
+import time
 from utils import window, settings, language as lang
 
 log = logging.getLogger("EMBY."+__name__)
 
 # for info on the metrics that can be sent to Google Analytics
 # https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#events
+
+logEventHistory = {}
 
 class GoogleAnalytics():
 
@@ -128,7 +131,18 @@ class GoogleAnalytics():
     
         self.sendData(data)
     
-    def sendEventData(self, eventCategory, eventAction, eventLabel=None):
+    def sendEventData(self, eventCategory, eventAction, eventLabel=None, throttle=False):
+        
+        # if throttling is enabled then only log the same event every 60 seconds
+        if(throttle):
+            throttleKey = eventCategory + "-" + eventAction + "-" + str(eventLabel)
+            lastLogged = logEventHistory.get(throttleKey)
+            if(lastLogged != None):
+                timeSinceLastLog = time.time() - lastLogged
+                if(timeSinceLastLog < 60):
+                    log.info("SKIPPING_LOG_EVENT : " + str(timeSinceLastLog) + " " + throttleKey)
+                    return
+            logEventHistory[throttleKey] = time.time()
         
         data = self.getBaseData()
         data['t'] = 'event' # action type
