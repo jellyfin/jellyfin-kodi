@@ -3,18 +3,12 @@
     <!-- Add-on settings -->
     <string id="29999">Emby pour Kodi</string>
     <string id="30000">Adresse principale du serveur</string>
-    <!-- Verified -->
     <string id="30002">Lire avec HTTP à la place de SMB</string>
-    <!-- Verified -->
     <string id="30004">Niveau de journalisation</string>
-    <!-- Verified -->
     <string id="30016">Nom de l'appareil</string>
-    <!-- Verified -->
     <string id="30022">Avancé</string>
     <string id="30024">Nom d'utilisateur</string>
-    <!-- Verified -->
     <string id="30030">Numéro de port</string>
-    <!-- Verified -->
     <string id="30035">Nombre d'album de musique récents à afficher:</string>
     <string id="30036">Nombre de films récents à afficher:</string>
     <string id="30037">Nombre d'épisodes télévisés récents à afficher:</string>
@@ -204,7 +198,7 @@
     <string id="30504">Utiliser un nom alternatif de périphérique</string>
     <string id="30505">[COLOR yellow]Relancez la connexion[/COLOR]</string>
     <string id="30506">Options de synchronisation</string>
-    <string id="30507">Afficher l'avancement de la synchro</string>
+    <string id="30507">Afficher l'avancement si le total d'objets est supérieur à</string>
     <string id="30508">Sync Séries TV vides</string>
     <string id="30509">Activer la bibliothèque musicale</string>
     <string id="30510">Direct stream bibliothèque musicale</string>
@@ -236,6 +230,33 @@
     <string id="30536">Sync si l'écran est désactivé</string>
     <string id="30537">Force Transcode Hi10P</string>
     <string id="30538">Désactivé</string>
+    <string id="30539">Connexion</string>
+    <string id="30540">Connexion manuelle</string>
+    <string id="30541">Emby Connect</string>
+    <string id="30542">Serveur</string>
+    <string id="30543">Nom d'utilisateur ou adresse mail</string>
+    <string id="30544">Activer la protection anti-verrouillage de la base de données (cela ralentira la synchronisation)</string>
+    <string id="30545">Activer le message serveur hors-ligne</string>
+    <!-- dialogs -->
+    <string id="30600">Se connecter avec Emby Connect</string>
+    <string id="30602">Mot de passe</string>
+    <string id="30603">Merci de vous référer à nos conditions d'utilisations. L'utilisation de tout logiciel Emby nécessite l'adhésion à ces conditions.</string>
+    <string id="30604">Scannez-moi</string>
+    <string id="30605">Se connecter</string>
+    <string id="30606">Annuler</string>
+    <string id="30607">Sélectionner le serveur principal</string>
+    <string id="30608">Les champs Nom d'utilisateur ou Mot de passe ne peuvent pas être vide</string>
+    <string id="30609">Impossible de se connecter au serveur sélectionné</string>
+    <string id="30610">Se connecter à</string>
+    <!-- Connect to {server} -->
+    <string id="30611">Ajouter un serveur manuellement</string>
+    <string id="30612">Merci de vous identifier</string>
+    <string id="30613">Le nom d'utilisateur ne peut pas être vide</string>
+    <string id="30614">Se connecter au serveur</string>
+    <string id="30615">Hôte</string>
+    <string id="30616">Connexion</string>
+    <string id="30617">Le serveur ou le port ne peuvent pas être vide</string>
+    <string id="30618">Changer d'utilisateur Emby Connect</string>
     <!-- service add-on -->
     <string id="33000">Bienvenue</string>
     <string id="33001">Erreur de connexion</string>
@@ -248,7 +269,7 @@
     <string id="33008">Entrer le mot de passe pour l'utilisateur:</string>
     <string id="33009">Utilisateur ou mot de passe invalide</string>
     <string id="33010">Échec de l'authentification de trop nombreuses fois</string>
-    <string id="33011">Lecture directe impossible</string>
+    <string id="33011">Lecture directe du fichier impossible</string>
     <string id="33012">Lecture directe a échoué 3 fois. Activer la lecture a partir de HTTP.</string>
     <string id="33013">Choisissez le flux audio</string>
     <string id="33014">Choisissez le flux de sous-titres</string>
