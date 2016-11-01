@@ -30,7 +30,7 @@ def catch_except(errors=(Exception, ), default_value=False):
                 return func(*args, **kwargs)
             except errors as error:
                 errStrings = ga.formatException()
-                ga.sendEventData("Exception", errStrings[0], errStrings[1])
+                ga.sendEventData("Exception", errStrings[0], errStrings[1], True)
                 log.exception(error)
                 log.error("function: %s \n args: %s \n kwargs: %s",
                           func.__name__, args, kwargs)
