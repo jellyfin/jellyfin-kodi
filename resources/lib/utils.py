@@ -307,21 +307,6 @@ def indent(elem, level=0):
         if level and (not elem.tail or not elem.tail.strip()):
           elem.tail = i
 
-def catch_except(errors=(Exception, )):
-    # Will wrap method with try/except and print parameters for easier debugging
-    def decorator(func):
-        def wrapper(*args, **kwargs):
-            try:
-                return func(*args, **kwargs)
-            except errors as error:
-                log.exception(error)
-                log.error("function: %s \n args: %s \n kwargs: %s",
-                          func.__name__, args, kwargs)
-                raise
-
-        return wrapper
-    return decorator
-
 def profiling(sortby="cumulative"):
     # Will print results to Kodi log
     def decorator(func):
