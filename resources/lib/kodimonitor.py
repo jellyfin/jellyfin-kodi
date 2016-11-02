@@ -12,6 +12,7 @@ import downloadutils
 import embydb_functions as embydb
 import playbackutils as pbutils
 from utils import window, settings, kodiSQL
+from ga_client import log_error
 
 #################################################################################################
 
@@ -56,6 +57,7 @@ class KodiMonitor(xbmc.Monitor):
             log.info("New context setting: %s", current_context)
             window('emby_context', value=current_context)
 
+    @log_error()
     def onNotification(self, sender, method, data):
 
         if method not in ('Playlist.OnAdd', 'Player.OnStop', 'Player.OnClear'):
