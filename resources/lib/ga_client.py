@@ -4,7 +4,7 @@ import traceback
 import requests
 import logging
 import clientinfo
-import md5
+import hashlib
 import xbmc
 import platform
 import xbmcgui
@@ -59,8 +59,8 @@ class GoogleAnalytics():
         self.user_name = settings('username') or settings('connectUsername') or 'None'
         
         # use md5 for client and user for analytics
-        self.device_id = md5.new(self.device_id).hexdigest()
-        self.user_name = md5.new(self.user_name).hexdigest()
+        self.device_id = hashlib.md5(self.device_id).hexdigest()
+        self.user_name = hashlib.md5(self.user_name).hexdigest()
         
         # resolution
         self.screen_mode = xbmc.getInfoLabel("System.ScreenMode")
