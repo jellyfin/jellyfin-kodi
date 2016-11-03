@@ -1,3 +1,7 @@
+version 2.3.6
+- Update French translation
+- Fix screensaver bug
+
 version 2.3.4
 - add throttling for error event logging
 
