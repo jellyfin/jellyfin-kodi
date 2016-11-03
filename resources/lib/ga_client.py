@@ -9,7 +9,7 @@ import xbmc
 import platform
 import xbmcgui
 import time
-from utils import settings, language as lang
+from utils import window, settings, language as lang
 
 log = logging.getLogger("EMBY."+__name__)
 
