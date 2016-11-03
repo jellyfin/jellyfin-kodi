@@ -1,3 +1,7 @@
+version 2.3.4
+- add throttling for error event logging
+
+>>>>>>> refs/remotes/origin/master
 version 2.3.3
 - minor fix to exception handling
 
