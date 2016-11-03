@@ -227,7 +227,7 @@ def querySQL(query, args=None, cursor=None, conntype=None):
 
 def getScreensaver():
     # Get the current screensaver value
-    result = JSONRPC('Settings.getSettingValues').execute({'setting': "screensaver.mode"})
+    result = JSONRPC('Settings.getSettingValue').execute({'setting': "screensaver.mode"})
     try:
         return result['result']['value']
     except KeyError:
