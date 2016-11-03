@@ -15,6 +15,7 @@ import librarysync
 import playlist
 import userclient
 from utils import window, settings, dialog, language as lang, JSONRPC
+from ga_client import log_error
 
 ##################################################################################################
 
@@ -60,6 +61,7 @@ class WebSocketClient(threading.Thread):
         except Exception as error:
             log.exception(error)
 
+    @log_error()
     def on_message(self, ws, message):
 
         result = json.loads(message)
