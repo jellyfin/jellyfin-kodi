@@ -14,7 +14,7 @@ import downloadutils
 import kodidb_functions as kodidb
 import websocket_client as wsc
 from utils import window, settings, language as lang
-from ga_client import GoogleAnalytics
+from ga_client import GoogleAnalytics, log_error
 
 #################################################################################################
 
@@ -44,6 +44,7 @@ class Player(xbmc.Player):
         log.debug("Starting playback monitor.")
         xbmc.Player.__init__(self)
 
+    @log_error()
     def onPlayBackStarted(self):
         # Will be called when xbmc starts playing a file
         self.stopAll()
@@ -356,6 +357,7 @@ class Player(xbmc.Player):
             log.debug("Report: %s" % postdata)
             self.ws.send_progress_update(postdata)
 
+    @log_error()
     def onPlayBackPaused(self):
 
         currentFile = self.currentFile
@@ -366,6 +368,7 @@ class Player(xbmc.Player):
         
             self.reportPlayback()
 
+    @log_error()
     def onPlayBackResumed(self):
 
         currentFile = self.currentFile
@@ -376,6 +379,7 @@ class Player(xbmc.Player):
         
             self.reportPlayback()
 
+    @log_error()
     def onPlayBackSeek(self, time, seekOffset):
         # Make position when seeking a bit more accurate
         currentFile = self.currentFile
@@ -387,6 +391,7 @@ class Player(xbmc.Player):
 
             self.reportPlayback()
     
+    @log_error()
     def onPlayBackStopped(self):
         # Will be called when user stops xbmc playing a file
         log.debug("ONPLAYBACK_STOPPED")
@@ -396,6 +401,7 @@ class Player(xbmc.Player):
         log.info("Clear playlist properties.")
         self.stopAll()
 
+    @log_error()
     def onPlayBackEnded(self):
         # Will be called when xbmc stops playing a file
         log.debug("ONPLAYBACK_ENDED")

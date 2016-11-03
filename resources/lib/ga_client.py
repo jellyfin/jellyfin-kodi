@@ -18,6 +18,24 @@ log = logging.getLogger("EMBY."+__name__)
 
 logEventHistory = {}
 
+# wrap a function to catch, log and then re throw an exception
+def log_error(errors=(Exception, )):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except errors as error:
+                ga = GoogleAnalytics()
+                errStrings = ga.formatException()
+                ga.sendEventData("Exception", errStrings[0], errStrings[1], True)
+                log.exception(error)
+                log.error("log_error: %s \n args: %s \n kwargs: %s",
+                          func.__name__, args, kwargs)
+                raise
+        return wrapper
+    return decorator
+
+# main GA class
 class GoogleAnalytics():
 
     testing = False
