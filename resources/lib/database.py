@@ -88,8 +88,9 @@ class DatabaseConn(object):
         if exc_type is not None:
             # Errors were raised in the with statement
             log.error("rollback: Type: %s Value: %s", exc_type, exc_val)
-            self.conn.rollback()
-            if not "database is locked" in exc_val:
+            if "database is locked" in exc_val:
+                self.conn.rollback()
+            else:
                 raise
 
         elif self.commit_mode is not None and changes:
