@@ -37,7 +37,7 @@ class MusicVideos(Items):
 
         if item_type == "MusicVideo":
             actions = {
-                'added': self.added,
+                'added': self.add_mvideos,
                 'update': self.add_update,
                 'userdata': self.updateUserdata,
                 'remove': self.remove
@@ -76,9 +76,9 @@ class MusicVideos(Items):
 
         return self.compare("MusicVideo", emby_mvideos['Items'], mvideos, view)
 
-    def added(self, items, total=None, view=None):
+    def add_mvideos(self, items, total=None, view=None):
 
-        for item in super(MusicVideos, self).added(items, total):
+        for item in self.added(items, total):
             if self.add_update(item, view):
                 self.content_pop(item.get('Name', "unknown"))
 

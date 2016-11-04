@@ -37,14 +37,14 @@ class Movies(Items):
 
         if item_type == "Movie":
             actions = {
-                'added': self.added,
+                'added': self.add_movies,
                 'update': self.add_update,
                 'userdata': self.updateUserdata,
                 'remove': self.remove
             }
         elif item_type == "BoxSet":
             actions = {
-                'added': self.added_boxset,
+                'added': self.add_boxsets,
                 'update': self.add_updateBoxset,
                 'remove': self.remove
             }
@@ -98,15 +98,15 @@ class Movies(Items):
 
         return self.compare("BoxSet", emby_boxsets['Items'], boxsets)
 
-    def added(self, items, total=None, view=None):
+    def add_movies(self, items, total=None, view=None):
 
-        for item in super(Movies, self).added(items, total):
+        for item in self.added(items, total):
             if self.add_update(item, view):
                 self.content_pop(item.get('Name', "unknown"))
 
-    def added_boxset(self, items, total=None):
+    def add_boxsets(self, items, total=None):
 
-        for item in super(Movies, self).added(items, total):
+        for item in self.added(items, total):
             self.add_updateBoxset(item)
 
     @catch_except()

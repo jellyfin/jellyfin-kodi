@@ -44,20 +44,20 @@ class Music(Items):
 
         if item_type == "MusicAlbum":
             actions = {
-                'added': self.added_album,
+                'added': self.add_albums,
                 'update': self.add_updateAlbum,
                 'userdata': self.updateUserdata,
                 'remove': self.remove
             }
         elif item_type in ("MusicArtist", "AlbumArtist"):
             actions = {
-                'added': self.added,
+                'added': self.add_artists,
                 'update': self.add_updateArtist,
                 'remove': self.remove
             }
         elif item_type == "Audio":
             actions = {
-                'added': self.added_song,
+                'added': self.add_songs,
                 'update': self.add_updateSong,
                 'userdata': self.updateUserdata,
                 'remove': self.remove
@@ -149,19 +149,19 @@ class Music(Items):
 
         return self.compare("Audio", emby_songs['Items'], songs)
 
-    def added(self, items, total=None):
+    def add_artists(self, items, total=None):
 
-        for item in super(Music, self).added(items, total):
+        for item in self.added(items, total):
             if self.add_updateArtist(item):
                 # Add albums
                 all_albums = self.emby.getAlbumsbyArtist(item['Id'])
                 self.added_album(all_albums['Items'])
 
-    def added_album(self, items, total=None):
+    def add_albums(self, items, total=None):
 
         update = True if not self.total else False
 
-        for item in super(Music, self).added(items, total, update):
+        for item in self.added(items, total, update):
             self.title = "%s - %s" % (item.get('AlbumArtist', "unknown"), self.title)
 
             if self.add_updateAlbum(item):
@@ -169,11 +169,11 @@ class Music(Items):
                 all_songs = self.emby.getSongsbyAlbum(item['Id'])
                 self.added_song(all_songs['Items'])
 
-    def added_song(self, items, total=None):
+    def add_songs(self, items, total=None):
 
         update = True if not self.total else False
 
-        for item in super(Music, self).added(items, total, update):
+        for item in self.added(items, total, update):
             self.title = "%s - %s" % (item.get('AlbumArtist', "unknown"), self.title)
 
             if self.add_updateSong(item):

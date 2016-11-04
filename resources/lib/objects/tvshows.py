@@ -38,20 +38,20 @@ class TVShows(Items):
 
         if item_type == "Series":
             actions = {
-                'added': self.added,
+                'added': self.add_shows,
                 'update': self.add_update,
                 'userdata': self.updateUserdata,
                 'remove': self.remove
             }
         elif item_type == "Season":
             actions = {
-                'added': self.added_season,
+                'added': self.add_seasons,
                 'update': self.add_updateSeason,
                 'remove': self.remove
             }
         elif item_type == "Episode":
             actions = {
-                'added': self.added_episode,
+                'added': self.add_episodes,
                 'update': self.add_updateEpisode,
                 'userdata': self.updateUserdata,
                 'remove': self.remove
@@ -196,19 +196,19 @@ class TVShows(Items):
         return True
 
 
-    def added(self, items, total=None, view=None):
+    def add_shows(self, items, total=None, view=None):
 
-        for item in super(TVShows, self).added(items, total):
+        for item in self.added(items, total):
             if self.add_update(item, view):
                 # Add episodes
                 all_episodes = self.emby.getEpisodesbyShow(item['Id'])
                 self.added_episode(all_episodes['Items'])
 
-    def added_season(self, items, total=None, view=None):
+    def add_seasons(self, items, total=None, view=None):
 
         update = True if not self.total else False
 
-        for item in super(TVShows, self).added(items, total, update):
+        for item in self.added(items, total, update):
             self.title = "%s - %s" % (item.get('SeriesName', "Unknown"), self.title)
 
             if self.add_updateSeason(item):
@@ -216,11 +216,11 @@ class TVShows(Items):
                 all_episodes = self.emby.getEpisodesbySeason(item['Id'])
                 self.added_episode(all_episodes['Items'])
 
-    def added_episode(self, items, total=None, view=None):
+    def add_episodes(self, items, total=None, view=None):
 
         update = True if not self.total else False
 
-        for item in super(TVShows, self).added(items, total, update):
+        for item in self.added(items, total, update):
             self.title = "%s - %s" % (item.get('SeriesName', "Unknown"), self.title)
 
             if self.add_updateEpisode(item):
