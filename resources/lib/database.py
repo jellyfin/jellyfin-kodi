@@ -7,6 +7,8 @@ import sqlite3
 
 import xbmc
 
+from utils import window, should_stop
+
 #################################################################################################
 
 log = logging.getLogger("EMBY."+__name__)
@@ -46,6 +48,33 @@ def music_database():
 
     return path
 
+def texture_database():
+    return xbmc.translatePath("special://database/Textures13.db").decode('utf-8')
+
+def emby_database():
+    return xbmc.translatePath("special://database/emby.db").decode('utf-8')
+
+def kodi_commit():
+    # verification for the Kodi video scan
+    kodi_scan = window('emby_kodiScan') == "true"
+    count = 0
+
+    while kodi_scan:
+        log.info("kodi scan is running, waiting...")
+
+        if count == 10:
+            log.info("flag still active, but will try to commit")
+            window('emby_kodiScan', clear=True)
+
+        elif should_stop() or xbmc.Monitor().waitForAbort(1):
+            log.info("commit unsuccessful. sync terminating")
+            return False
+
+        kodi_scan = window('emby_kodiScan') == "true"
+        count += 1
+
+    return True
+
 
 class DatabaseConn(object):
     # To be called as context manager - i.e. with DatabaseConn() as conn: #dostuff
@@ -70,16 +99,13 @@ class DatabaseConn(object):
 
     def _SQL(self, media_type):
 
-        if media_type == "emby":
-            return xbmc.translatePath("special://database/emby.db").decode('utf-8')
-        elif media_type == "texture":
-            return xbmc.translatePath("special://database/Textures13.db").decode('utf-8')
-        elif media_type == "music":
-            return music_database()
-        elif media_type == "video":
-            return video_database()
-        else: # custom path
-            return self.db_file
+        databases = {
+            'emby': emby_database,
+            'texture': texture_database,
+            'music': music_database,
+            'video': video_database
+        }
+        return databases[media_type]() if media_type in databases else self.db_file
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         # Close the connection
@@ -87,7 +113,7 @@ class DatabaseConn(object):
 
         if exc_type is not None:
             # Errors were raised in the with statement
-            log.error("rollback: Type: %s Value: %s", exc_type, exc_val)
+            log.error("Type: %s Value: %s", exc_type, exc_val)
             if "database is locked" in exc_val:
                 self.conn.rollback()
             else:
@@ -95,7 +121,10 @@ class DatabaseConn(object):
 
         elif self.commit_mode is not None and changes:
             log.info("number of rows updated: %s", changes)
-            self.conn.commit()
+            if self.db_file == "video" and kodi_commit():
+                self.conn.commit()
+            else:
+                self.conn.commit()
 
         log.info("close: %s", self.path)
         self.conn.close()
