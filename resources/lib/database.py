@@ -48,7 +48,7 @@ def music_database():
 
 
 class DatabaseConn(object):
-    # To be called as context manager - i.e. with DatabaseConn() as dbconn
+    # To be called as context manager - i.e. with DatabaseConn() as conn: #dostuff
 
     def __init__(self, database_file="video", commit_mode="", timeout=20):
         """
@@ -62,7 +62,7 @@ class DatabaseConn(object):
     def __enter__(self):
         # Open the connection
         self.path = self._SQL(self.db_file)
-        log.warn("opening database: %s", self.path)
+        log.info("opening database: %s", self.path)
         self.conn = sqlite3.connect(self.path,
                                     isolation_level=self.commit_mode,
                                     timeout=self.timeout)
@@ -83,6 +83,8 @@ class DatabaseConn(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         # Close the connection
+        changes = self.conn.total_changes
+
         if exc_type is not None:
             # Errors were raised in the with statement
             log.error("rollback: Type: %s Value: %s", exc_type, exc_val)
@@ -90,8 +92,9 @@ class DatabaseConn(object):
             if not "database is locked" in exc_val:
                 raise
 
-        elif self.commit_mode is not None:
-            log.warn("commit: %s", self.path)
+        elif self.commit_mode is not None and changes:
+            log.info("number of rows updated: %s", changes)
             self.conn.commit()
 
+        log.info("close: %s", self.path)
         self.conn.close()
