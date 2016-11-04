@@ -50,19 +50,22 @@ def music_database():
 class DatabaseConn(object):
     # To be called as context manager - i.e. with DatabaseConn() as dbconn
 
-    def __init__(self, database_file="video", commit_mode=""):
+    def __init__(self, database_file="video", commit_mode="", timeout=20):
         """
-        database_file can be custom: emby, texture, music, video, custom like :memory: or path
+        database_file can be custom: emby, texture, music, video, :memory: or path to the file
         commit_mode set to None to autocommit (isolation_level). See python documentation.
         """
         self.db_file = database_file
         self.commit_mode = commit_mode
+        self.timeout = timeout
 
     def __enter__(self):
         # Open the connection
         self.path = self._SQL(self.db_file)
         log.warn("opening database: %s", self.path)
-        self.conn = sqlite3.connect(self.path, isolation_level=self.commit_mode, timeout=20)
+        self.conn = sqlite3.connect(self.path,
+                                    isolation_level=self.commit_mode,
+                                    timeout=self.timeout)
         return self.conn
 
     def _SQL(self, media_type):
@@ -84,6 +87,7 @@ class DatabaseConn(object):
             # Errors were raised in the with statement
             log.error("rollback: Type: %s Value: %s", exc_type, exc_val)
             self.conn.rollback()
+            raise
 
         elif self.commit_mode is not None:
             log.warn("commit: %s", self.path)
@@ -91,7 +95,7 @@ class DatabaseConn(object):
 
         self.conn.close()
 
-def query(execute_query, connection=None, conn_type=None, *args):
+'''def query(execute_query, connection=None, conn_type=None, *args):
     
     """
     connection is sqlite.connect
@@ -122,12 +126,12 @@ def query(execute_query, connection=None, conn_type=None, *args):
                     return conn.execute(query, args)
             
         except sqlite3.OperationalError as e:
-            if "database is locked" in str(e):
+            if "database is locked" in e:
                 # Database is locked, retry
                 attempts -= 1
-                xbmc.sleep(1000)
+                xbmc.sleep(500)
             else:
                 raise
 
         if not attempts:
-            return False
+            return False'''
