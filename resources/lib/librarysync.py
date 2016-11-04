@@ -860,6 +860,7 @@ class LibrarySync(threading.Thread):
         cursor.execute("CREATE TABLE IF NOT EXISTS version(idVersion TEXT)")
         
         conn.commit()
+        cursor.close()
 
     def run(self):
 
