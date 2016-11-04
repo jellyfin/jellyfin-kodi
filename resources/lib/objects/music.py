@@ -155,7 +155,7 @@ class Music(Items):
             if self.add_updateArtist(item):
                 # Add albums
                 all_albums = self.emby.getAlbumsbyArtist(item['Id'])
-                self.added_album(all_albums['Items'])
+                self.add_albums(all_albums['Items'])
 
     def add_albums(self, items, total=None):
 
@@ -167,7 +167,7 @@ class Music(Items):
             if self.add_updateAlbum(item):
                 # Add songs
                 all_songs = self.emby.getSongsbyAlbum(item['Id'])
-                self.added_song(all_songs['Items'])
+                self.add_songs(all_songs['Items'])
 
     def add_songs(self, items, total=None):
 

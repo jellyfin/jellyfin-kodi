@@ -202,7 +202,7 @@ class TVShows(Items):
             if self.add_update(item, view):
                 # Add episodes
                 all_episodes = self.emby.getEpisodesbyShow(item['Id'])
-                self.added_episode(all_episodes['Items'])
+                self.add_episodes(all_episodes['Items'])
 
     def add_seasons(self, items, total=None, view=None):
 
@@ -214,7 +214,7 @@ class TVShows(Items):
             if self.add_updateSeason(item):
                 # Add episodes
                 all_episodes = self.emby.getEpisodesbySeason(item['Id'])
-                self.added_episode(all_episodes['Items'])
+                self.add_episodes(all_episodes['Items'])
 
     def add_episodes(self, items, total=None, view=None):
 
