@@ -12,6 +12,7 @@ import xbmcgui
 import xbmcvfs
 
 import api
+import database
 import utils
 import clientinfo
 import downloadutils
@@ -55,6 +56,7 @@ class LibrarySync(threading.Thread):
         self.monitor = xbmc.Monitor()
 
         self.clientInfo = clientinfo.ClientInfo()
+        self.database = database.DatabaseConn
         self.doUtils = downloadutils.DownloadUtils().downloadUrl
         self.user = userclient.UserClient()
         self.emby = embyserver.Read_EmbyServer()
@@ -746,6 +748,7 @@ class LibrarySync(threading.Thread):
             # Received userconfig update
             self.refresh_views = False
             self.maintainViews(embycursor, kodicursor)
+            embycursor.commit()
             self.forceLibraryUpdate = True
             update_embydb = True
 
@@ -843,24 +846,20 @@ class LibrarySync(threading.Thread):
             # Database out of date.
             return False
 
-    @classmethod
-    def _verify_emby_database(cls):
+    def _verify_emby_database(self):
         # Create the tables for the emby database
-        conn = utils.kodiSQL('emby')
-        cursor = conn.cursor()
-        # emby, view, version
-        cursor.execute(
-            """CREATE TABLE IF NOT EXISTS emby(
-            emby_id TEXT UNIQUE, media_folder TEXT, emby_type TEXT, media_type TEXT,
-            kodi_id INTEGER, kodi_fileid INTEGER, kodi_pathid INTEGER, parent_id INTEGER,
-            checksum INTEGER)""")
-        cursor.execute(
-            """CREATE TABLE IF NOT EXISTS view(
-            view_id TEXT UNIQUE, view_name TEXT, media_type TEXT, kodi_tagid INTEGER)""")
-        cursor.execute("CREATE TABLE IF NOT EXISTS version(idVersion TEXT)")
-        
-        conn.commit()
-        cursor.close()
+        with self.database('emby') as conn:
+            cursor = conn.cursor()
+            # emby, view, version
+            cursor.execute(
+                """CREATE TABLE IF NOT EXISTS emby(
+                emby_id TEXT UNIQUE, media_folder TEXT, emby_type TEXT, media_type TEXT,
+                kodi_id INTEGER, kodi_fileid INTEGER, kodi_pathid INTEGER, parent_id INTEGER,
+                checksum INTEGER)""")
+            cursor.execute(
+                """CREATE TABLE IF NOT EXISTS view(
+                view_id TEXT UNIQUE, view_name TEXT, media_type TEXT, kodi_tagid INTEGER)""")
+            cursor.execute("CREATE TABLE IF NOT EXISTS version(idVersion TEXT)")
 
     def run(self):
 
