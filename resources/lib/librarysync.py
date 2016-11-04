@@ -25,6 +25,7 @@ import videonodes
 from objects import Movies, MusicVideos, TVShows, Music
 from utils import window, settings, language as lang, should_stop
 from ga_client import GoogleAnalytics
+from contextlib import closing
 
 ##################################################################################################
 
@@ -849,17 +850,17 @@ class LibrarySync(threading.Thread):
     def _verify_emby_database(self):
         # Create the tables for the emby database
         with self.database('emby') as conn:
-            cursor = conn.cursor()
-            # emby, view, version
-            cursor.execute(
-                """CREATE TABLE IF NOT EXISTS emby(
-                emby_id TEXT UNIQUE, media_folder TEXT, emby_type TEXT, media_type TEXT,
-                kodi_id INTEGER, kodi_fileid INTEGER, kodi_pathid INTEGER, parent_id INTEGER,
-                checksum INTEGER)""")
-            cursor.execute(
-                """CREATE TABLE IF NOT EXISTS view(
-                view_id TEXT UNIQUE, view_name TEXT, media_type TEXT, kodi_tagid INTEGER)""")
-            cursor.execute("CREATE TABLE IF NOT EXISTS version(idVersion TEXT)")
+            with closing(conn.cursor()) as cursor:
+                # emby, view, version
+                cursor.execute(
+                    """CREATE TABLE IF NOT EXISTS emby(
+                    emby_id TEXT UNIQUE, media_folder TEXT, emby_type TEXT, media_type TEXT,
+                    kodi_id INTEGER, kodi_fileid INTEGER, kodi_pathid INTEGER, parent_id INTEGER,
+                    checksum INTEGER)""")
+                cursor.execute(
+                    """CREATE TABLE IF NOT EXISTS view(
+                    view_id TEXT UNIQUE, view_name TEXT, media_type TEXT, kodi_tagid INTEGER)""")
+                cursor.execute("CREATE TABLE IF NOT EXISTS version(idVersion TEXT)")
 
     def run(self):
 

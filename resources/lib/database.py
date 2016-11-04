@@ -7,7 +7,7 @@ import sqlite3
 
 import xbmc
 
-from utils import window, should_stop
+from utils import window, should_stop, settings
 
 #################################################################################################
 
@@ -79,22 +79,25 @@ def kodi_commit():
 class DatabaseConn(object):
     # To be called as context manager - i.e. with DatabaseConn() as conn: #dostuff
 
-    def __init__(self, database_file="video", commit_mode="", timeout=20):
+    def __init__(self, database_file="video", commit_on_close=True, timeout=120):
         """
         database_file can be custom: emby, texture, music, video, :memory: or path to the file
         commit_mode set to None to autocommit (isolation_level). See python documentation.
         """
         self.db_file = database_file
-        self.commit_mode = commit_mode
+        self.commit_on_close = commit_on_close
         self.timeout = timeout
 
     def __enter__(self):
         # Open the connection
         self.path = self._SQL(self.db_file)
         log.info("opening database: %s", self.path)
-        self.conn = sqlite3.connect(self.path,
-                                    isolation_level=self.commit_mode,
-                                    timeout=self.timeout)
+        
+        if settings('dblock') == "true":
+            self.conn = sqlite3.connect(self.path, isolation_level=None, timeout=self.timeout)
+        else:
+            self.conn = sqlite3.connect(self.path, timeout=self.timeout)
+            
         return self.conn
 
     def _SQL(self, media_type):
@@ -114,17 +117,11 @@ class DatabaseConn(object):
         if exc_type is not None:
             # Errors were raised in the with statement
             log.error("Type: %s Value: %s", exc_type, exc_val)
-            if "database is locked" in exc_val:
-                self.conn.rollback()
-            else:
-                raise
 
-        elif self.commit_mode is not None and changes:
+        if self.commit_on_close == True and changes:
             log.info("number of rows updated: %s", changes)
-            if self.db_file == "video" and kodi_commit():
-                self.conn.commit()
-            else:
-                self.conn.commit()
+            kodi_commit()
+            self.conn.commit()
 
         log.info("close: %s", self.path)
         self.conn.close()
