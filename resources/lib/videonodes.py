@@ -58,7 +58,7 @@ class VideoNodes(object):
         
         path = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
         nodepath = xbmc.translatePath(
-                    "special://profile/library/video/Emby - %s/" % dirname).decode('utf-8')
+                    "special://profile/library/video/emby/%s/" % dirname).decode('utf-8')
 
         # Verify the video directory
         if not xbmcvfs.exists(path):
@@ -86,7 +86,7 @@ class VideoNodes(object):
         # Create index entry
         nodeXML = "%sindex.xml" % nodepath
         # Set windows property
-        path = "library://video/Emby - %s/" % dirname
+        path = "library://video/emby/%s/" % dirname
         for i in range(1, indexnumber):
             # Verify to make sure we don't create duplicates
             if window('Emby.nodes.%s.index' % i) == path:
@@ -178,7 +178,7 @@ class VideoNodes(object):
         for node in nodes:
 
             nodetype = nodetypes[node]
-            nodeXML = "%s%s_%s.xml" % (nodepath, viewid, nodetype)
+            nodeXML = "%s%s.xml" % (nodepath, nodetype)
             # Get label
             stringid = nodes[node]
             if node != "1":
@@ -207,7 +207,7 @@ class VideoNodes(object):
                 # Custom query
                 path = "plugin://plugin.video.emby/?id=%s&mode=inprogressepisodes&limit=25"% tagname
             else:
-                path = "library://video/Emby - %s/%s_%s.xml" % (dirname, viewid, nodetype)
+                path = "library://video/emby/%s/%s.xml" % (viewid, nodetype)
             
             if mediatype == "photos":
                 windowpath = "ActivateWindow(Pictures,%s,return)" % path

@@ -47,11 +47,11 @@ def window(property_, value=None, clear=False, window_id=10000):
 def settings(setting, value=None):
     # Get or add addon setting
     addon = xbmcaddon.Addon(id='plugin.video.emby')
-    
+
     if value is not None:
         addon.setSetting(setting, value)
     else: # returns unicode object
-        return addon.getSetting(setting) 
+        return addon.getSetting(setting)
 
 def language(string_id):
     # Central string retrieval - unicode
@@ -572,6 +572,13 @@ def deleteNodes():
 
     # Clean up video nodes
     import shutil
+    path = xbmc.translatePath("special://profile/library/video/emby/").decode('utf-8')
+    if (xbmcvfs.exists(path)):
+        try:
+            shutil.rmtree(path)
+        except:
+            log.warn("Failed to delete directory: %s" % path)
+    # Old cleanup code kept for cleanup of old style nodes
     path = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
     dirs, files = xbmcvfs.listdir(path)
     for dir in dirs:
