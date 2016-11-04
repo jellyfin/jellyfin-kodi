@@ -87,51 +87,11 @@ class DatabaseConn(object):
             # Errors were raised in the with statement
             log.error("rollback: Type: %s Value: %s", exc_type, exc_val)
             self.conn.rollback()
-            raise
+            if not "database is locked" in exc_val:
+                raise
 
         elif self.commit_mode is not None:
             log.warn("commit: %s", self.path)
             self.conn.commit()
 
         self.conn.close()
-
-'''def query(execute_query, connection=None, conn_type=None, *args):
-    
-    """
-    connection is sqlite.connect
-    conn_type is only required if a connection is not provided
-    *args are tuple values that contain the corresponding data for the query
-    i.e     args_executemany = (('value1', 'value2'),('value1', 'value2'))
-            args_execute = ('value1', 'value2')
-    tip: to build args_executemany, build a list of sets [(v1,v2),(v1,v2)], then pass it as *args
-    """
-    
-    if connection is None:
-        if conn_type is None:
-            return False
-        else:
-            connection = DatabaseConn(conn_type)
-
-    attempts = 3
-    while True:
-        try:
-            with connection as conn:
-                # raise sqlite3.OperationalError("database is locked")
-                if not args:
-                    return conn.execute(query)
-                elif isinstance(args[0], tuple):
-                    # Multiple entries for the same query
-                    return conn.executemany(query, args)
-                else:
-                    return conn.execute(query, args)
-            
-        except sqlite3.OperationalError as e:
-            if "database is locked" in e:
-                # Database is locked, retry
-                attempts -= 1
-                xbmc.sleep(500)
-            else:
-                raise
-
-        if not attempts:
-            return False'''

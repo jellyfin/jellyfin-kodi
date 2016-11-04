@@ -169,59 +169,6 @@ def getKodiMusicDBPath():
                 % dbVersion.get(xbmc.getInfoLabel('System.BuildVersion')[:2], "")).decode('utf-8')
     return dbPath
 
-def querySQL(query, args=None, cursor=None, conntype=None):
-
-    result = None
-    manualconn = False
-    failed = False
-
-    if cursor is None:
-        if conntype is None:
-            log.info("New connection type is missing.")
-            return result
-        else:
-            manualconn = True
-            connection = kodiSQL(conntype)
-            cursor = connection.cursor()
-
-    attempts = 0
-    while attempts < 3:
-        try:
-            log.debug("Query: %s Args: %s" % (query, args))
-            if args is None:
-                result = cursor.execute(query)
-            else:
-                result = cursor.execute(query, args)
-            break # Query successful, break out of while loop
-        except sqlite3.OperationalError as e:
-            if "database is locked" in e:
-                log.warn("%s...Attempt: %s" % (e, attempts))
-                attempts += 1
-                xbmc.sleep(1000)
-            else:
-                log.error(e)
-                if manualconn:
-                    cursor.close()
-                raise
-        except sqlite3.Error as e:
-            log.error(e)
-            if manualconn:
-                cursor.close()
-            raise
-    else:
-        failed = True
-        log.info("FAILED // Query: %s Args: %s" % (query, args))
-
-    if manualconn:
-        if failed:
-            cursor.close()
-        else:
-            connection.commit()
-            cursor.close()
-
-    log.debug(result)
-    return result
-
 #################################################################################################
 # Utility methods
 
