@@ -24,7 +24,7 @@ import videonodes
 from objects import Movies, MusicVideos, TVShows, Music
 from utils import window, settings, language as lang, should_stop
 from ga_client import GoogleAnalytics
-from database import DatabaseConn
+from database import DatabaseConn, db_reset
 from contextlib import closing
 
 ##################################################################################################
@@ -714,86 +714,92 @@ class LibrarySync(threading.Thread):
             processlist[process].extend(items)
 
     def incrementalSync(self):
-        
-        with DatabaseConn('emby') as conn_emby, DatabaseConn('video') as conn_video:
-            with closing(conn_emby.cursor()) as cursor_emby, closing(conn_video.cursor()) as cursor_video:            
-        
-                emby_db = embydb.Embydb_Functions(cursor_emby)
-                pDialog = None
-                update_embydb = False
 
-                if self.refresh_views:
+        update_embydb = False
+        pDialog = None
+
+        # do a view update if needed
+        if self.refresh_views:
+            with DatabaseConn('emby') as conn_emby, DatabaseConn('video') as conn_video:
+                with closing(conn_emby.cursor()) as cursor_emby, closing(conn_video.cursor()) as cursor_video:
                     # Received userconfig update
                     self.refresh_views = False
                     self.maintainViews(cursor_emby, cursor_video)
                     self.forceLibraryUpdate = True
                     update_embydb = True
 
-                incSyncIndicator = int(settings('incSyncIndicator') or 10)
-                totalUpdates = len(self.addedItems) + len(self.updateItems) + len(self.userdataItems) + len(self.removeItems)
-                
-                if incSyncIndicator != -1 and totalUpdates > incSyncIndicator:
-                    # Only present dialog if we are going to process items
-                    pDialog = self.progressDialog('Incremental sync')
-                    log.info("incSyncIndicator=" + str(incSyncIndicator) + " totalUpdates=" + str(totalUpdates))
+        # do a lib update if any items in list
+        totalUpdates = len(self.addedItems) + len(self.updateItems) + len(self.userdataItems) + len(self.removeItems)
+        if totalUpdates > 0:
+            with DatabaseConn('emby') as conn_emby, DatabaseConn('video') as conn_video:
+                with closing(conn_emby.cursor()) as cursor_emby, closing(conn_video.cursor()) as cursor_video:
 
-                process = {
+                    emby_db = embydb.Embydb_Functions(cursor_emby)
 
-                    'added': self.addedItems,
-                    'update': self.updateItems,
-                    'userdata': self.userdataItems,
-                    'remove': self.removeItems
-                }
-                for process_type in ['added', 'update', 'userdata', 'remove']:
+                    incSyncIndicator = int(settings('incSyncIndicator') or 10)
+                    if incSyncIndicator != -1 and totalUpdates > incSyncIndicator:
+                        # Only present dialog if we are going to process items
+                        pDialog = self.progressDialog('Incremental sync')
+                        log.info("incSyncIndicator=" + str(incSyncIndicator) + " totalUpdates=" + str(totalUpdates))
 
-                    if process[process_type] and window('emby_kodiScan') != "true":
+                    process = {
 
-                        listItems = list(process[process_type])
-                        del process[process_type][:] # Reset class list
+                        'added': self.addedItems,
+                        'update': self.updateItems,
+                        'userdata': self.userdataItems,
+                        'remove': self.removeItems
+                    }
+                    for process_type in ['added', 'update', 'userdata', 'remove']:
 
-                        items_process = itemtypes.Items(cursor_emby, cursor_video)
-                        update = False
+                        if process[process_type] and window('emby_kodiScan') != "true":
 
-                        # Prepare items according to process process_type
-                        if process_type == "added":
-                            items = self.emby.sortby_mediatype(listItems)
+                            listItems = list(process[process_type])
+                            del process[process_type][:] # Reset class list
 
-                        elif process_type in ("userdata", "remove"):
-                            items = emby_db.sortby_mediaType(listItems, unsorted=False)
+                            items_process = itemtypes.Items(cursor_emby, cursor_video)
+                            update = False
 
-                        else:
-                            items = emby_db.sortby_mediaType(listItems)
-                            if items.get('Unsorted'):
-                                sorted_items = self.emby.sortby_mediatype(items['Unsorted'])
-                                doupdate = items_process.itemsbyId(sorted_items, "added", pDialog)
-                                if doupdate:
-                                    embyupdate, kodiupdate_video = doupdate
-                                    if embyupdate:
-                                        update_embydb = True
-                                    if kodiupdate_video:
-                                        self.forceLibraryUpdate = True
-                                del items['Unsorted']
+                            # Prepare items according to process process_type
+                            if process_type == "added":
+                                items = self.emby.sortby_mediatype(listItems)
 
-                        doupdate = items_process.itemsbyId(items, process_type, pDialog)
-                        if doupdate:
-                            embyupdate, kodiupdate_video = doupdate
-                            if embyupdate:
-                                update_embydb = True
-                            if kodiupdate_video:
-                                self.forceLibraryUpdate = True
+                            elif process_type in ("userdata", "remove"):
+                                items = emby_db.sortby_mediaType(listItems, unsorted=False)
 
-                if update_embydb:
-                    update_embydb = False
-                    log.info("Updating emby database.")
-                    self.saveLastSync()
+                            else:
+                                items = emby_db.sortby_mediaType(listItems)
+                                if items.get('Unsorted'):
+                                    sorted_items = self.emby.sortby_mediatype(items['Unsorted'])
+                                    doupdate = items_process.itemsbyId(sorted_items, "added", pDialog)
+                                    if doupdate:
+                                        embyupdate, kodiupdate_video = doupdate
+                                        if embyupdate:
+                                            update_embydb = True
+                                        if kodiupdate_video:
+                                            self.forceLibraryUpdate = True
+                                    del items['Unsorted']
 
-                if self.forceLibraryUpdate:
-                    # Force update the Kodi library
-                    self.forceLibraryUpdate = False
+                            doupdate = items_process.itemsbyId(items, process_type, pDialog)
+                            if doupdate:
+                                embyupdate, kodiupdate_video = doupdate
+                                if embyupdate:
+                                    update_embydb = True
+                                if kodiupdate_video:
+                                    self.forceLibraryUpdate = True
 
-                    log.info("Updating video library.")
-                    window('emby_kodiScan', value="true")
-                    xbmc.executebuiltin('UpdateLibrary(video)')
+        # if stuff happened then do some stuff
+        if update_embydb:
+            update_embydb = False
+            log.info("Updating emby database.")
+            self.saveLastSync()
+
+        if self.forceLibraryUpdate:
+            # Force update the Kodi library
+            self.forceLibraryUpdate = False
+
+            log.info("Updating video library.")
+            window('emby_kodiScan', value="true")
+            xbmc.executebuiltin('UpdateLibrary(video)')
 
         if pDialog:
             pDialog.close()
@@ -904,7 +910,7 @@ class LibrarySync(threading.Thread):
                         log.warn("Database version is out of date! USER IGNORED!")
                         dialog.ok(lang(29999), lang(33023))
                     else:
-                        database.db_reset()
+                        db_reset()
 
                     break
 
