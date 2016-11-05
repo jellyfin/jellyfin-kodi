@@ -5,6 +5,7 @@
 import logging
 import shutil
 import os
+import unicodedata
 import xml.etree.ElementTree as etree
 
 import xbmc
@@ -25,13 +26,6 @@ KODI = int(xbmc.getInfoLabel('System.BuildVersion')[:2])
 
 class Views(object):
 
-    total_nodes = 0
-    nodes = list()
-    playlists = list()
-    views = list()
-    sorted_views = list()
-    grouped_views = list()
-
     media_types = {
         'movies': "Movie",
         'tvshows': "Series",
@@ -44,6 +38,13 @@ class Views(object):
     def __init__(self, emby_cursor, kodi_cursor):
         self.emby_cursor = emby_cursor
         self.kodi_cursor = kodi_cursor
+
+        self.total_nodes = 0
+        self.nodes = list()
+        self.playlists = list()
+        self.views = list()
+        self.sorted_views = list()
+        self.grouped_views = list()
 
         self.video_nodes = VideoNodes()
         self.playlist = Playlist()
@@ -288,7 +289,7 @@ class Views(object):
         # Create the video node
         if view_name not in self.nodes and media_type not in ('musicvideos', 'music'):
             index = self.sorted_views.index(view_name)
-            self.video_nodes.viewNode(index, view_name, media_type,view_type, view_id)
+            self.video_nodes.viewNode(index, view_name, media_type, view_type, view_id)
             
             if view_type == "mixed": # Change the value
                 self.sorted_views[index] = "%ss" % view_name
@@ -374,7 +375,7 @@ class Playlist(object):
                 '</smartplaylist>'
                 % (special_types.get(media_type, media_type), name, tag))
             f.close()
-        log.info("successfully added playlist: %s" % tag)
+        log.info("successfully added playlist: %s", tag)
 
     @classmethod
     def _delete_playlist(cls, path):
@@ -443,7 +444,6 @@ class VideoNodes(object):
             dirname = "%s - %s" % (viewid, mediatype)
         else:
             dirname = viewid
-        
         
         nodepath = xbmc.translatePath(
                     "special://profile/library/video/emby/%s/" % dirname).decode('utf-8')
