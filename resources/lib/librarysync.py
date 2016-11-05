@@ -933,7 +933,7 @@ class LibrarySync(threading.Thread):
                         log.warn("Database version is out of date! USER IGNORED!")
                         dialog.ok(lang(29999), lang(33023))
                     else:
-                        utils.reset()
+                        database.db_reset()
 
                     break
 
