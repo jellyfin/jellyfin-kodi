@@ -11,7 +11,7 @@ import xbmcgui
 import downloadutils
 import embydb_functions as embydb
 import playbackutils as pbutils
-from utils import window, settings, kodiSQL
+from utils import window, settings
 from ga_client import log_error
 from database import DatabaseConn
 from contextlib import closing

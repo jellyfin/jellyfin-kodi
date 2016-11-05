@@ -6,7 +6,9 @@ import logging
 
 import read_embyserver as embyserver
 from objects import Movies, MusicVideos, TVShows, Music
-from utils import settings, kodiSQL
+from utils import settings
+from database import DatabaseConn
+from contextlib import closing
 
 #################################################################################################
 
@@ -58,46 +60,40 @@ class Items(object):
         if pdialog:
             pdialog.update(heading="Processing %s: %s items" % (process, total))
 
-        for itemtype in items:
+        # this is going to open a music connection even if it is not needed but
+        # I feel that is better than trying to sort out the login yourself
+        with DatabaseConn('music') as conn:
+            with closing(conn.cursor()) as cursor_music:
+            
+                for itemtype in items:
 
-            # Safety check
-            if not itemtypes.get(itemtype):
-                # We don't process this type of item
-                continue
+                    # Safety check
+                    if not itemtypes.get(itemtype):
+                        # We don't process this type of item
+                        continue
 
-            itemlist = items[itemtype]
-            if not itemlist:
-                # The list to process is empty
-                continue
+                    itemlist = items[itemtype]
+                    if not itemlist:
+                        # The list to process is empty
+                        continue
 
-            musicconn = None
+                    if itemtype in ('MusicAlbum', 'MusicArtist', 'AlbumArtist', 'Audio'):
+                        if self.music_enabled:
+                            items_process = itemtypes[itemtype](embycursor, cursor_music, pdialog) # see note above
+                        else:
+                            # Music is not enabled, do not proceed with itemtype
+                            continue
+                    else:
+                        update_videolibrary = True
+                        items_process = itemtypes[itemtype](embycursor, kodicursor, pdialog)
 
-            if itemtype in ('MusicAlbum', 'MusicArtist', 'AlbumArtist', 'Audio'):
-                if self.music_enabled:
-                    musicconn = kodiSQL('music')
-                    musiccursor = musicconn.cursor()
-                    items_process = itemtypes[itemtype](embycursor, musiccursor, pdialog)
-                else:
-                    # Music is not enabled, do not proceed with itemtype
-                    continue
-            else:
-                update_videolibrary = True
-                items_process = itemtypes[itemtype](embycursor, kodicursor, pdialog)
+                    if process == "added":
+                        items_process.add_all(itemtype, itemlist)
+                    elif process == "remove":
+                        items_process.remove_all(itemtype, itemlist)
+                    else:
+                        process_items = self.emby.getFullItems(itemlist)
+                        items_process.process_all(itemtype, process, process_items, total)
 
-
-            if process == "added":
-                items_process.add_all(itemtype, itemlist)
-            elif process == "remove":
-                items_process.remove_all(itemtype, itemlist)
-            else:
-                process_items = self.emby.getFullItems(itemlist)
-                items_process.process_all(itemtype, process, process_items, total)
-
-
-            if musicconn is not None:
-                # close connection for special types
-                log.info("updating music database")
-                musicconn.commit()
-                musiccursor.close()
 
         return (True, update_videolibrary)

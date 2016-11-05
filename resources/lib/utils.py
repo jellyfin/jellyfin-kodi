@@ -120,55 +120,6 @@ def should_stop():
     else: # Keep going
         return False
 
-def kodiSQL(media_type="video"):
-
-    if media_type == "emby":
-        dbPath = xbmc.translatePath("special://database/emby.db").decode('utf-8')
-    elif media_type == "texture":
-        dbPath = xbmc.translatePath("special://database/Textures13.db").decode('utf-8')
-    elif media_type == "music":
-        dbPath = getKodiMusicDBPath()
-    else:
-        dbPath = getKodiVideoDBPath()
-
-    if settings('dblock') == "true":
-        connection = sqlite3.connect(dbPath, isolation_level=None, timeout=20)
-    else:
-        connection = sqlite3.connect(dbPath, timeout=20)
-    return connection
-
-def getKodiVideoDBPath():
-
-    dbVersion = {
-
-        "13": 78,   # Gotham
-        "14": 90,   # Helix
-        "15": 93,   # Isengard
-        "16": 99,   # Jarvis
-        "17": 107   # Krypton
-    }
-
-    dbPath = xbmc.translatePath(
-                "special://database/MyVideos%s.db"
-                % dbVersion.get(xbmc.getInfoLabel('System.BuildVersion')[:2], "")).decode('utf-8')
-    return dbPath
-
-def getKodiMusicDBPath():
-
-    dbVersion = {
-
-        "13": 46,   # Gotham
-        "14": 48,   # Helix
-        "15": 52,   # Isengard
-        "16": 56,   # Jarvis
-        "17": 60    # Krypton
-    }
-
-    dbPath = xbmc.translatePath(
-                "special://database/MyMusic%s.db"
-                % dbVersion.get(xbmc.getInfoLabel('System.BuildVersion')[:2], "")).decode('utf-8')
-    return dbPath
-
 #################################################################################################
 # Utility methods
 

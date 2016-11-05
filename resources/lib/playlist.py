@@ -11,7 +11,7 @@ import playutils
 import playbackutils
 import embydb_functions as embydb
 import read_embyserver as embyserver
-from utils import window, kodiSQL, JSONRPC
+from utils import window, JSONRPC
 from database import DatabaseConn
 from contextlib import closing
 

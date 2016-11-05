@@ -291,7 +291,7 @@ class LibrarySync(threading.Thread):
                         continue
 
                     startTime = datetime.now()
-                    completed = process[itemtype](cursor_emby, kodicursor, pDialog)
+                    completed = process[itemtype](cursor_emby, cursor_video, pDialog)
                     if not completed:
                         xbmc.executebuiltin('InhibitIdleShutdown(false)')
                         utils.setScreensaver(value=screensaver)
@@ -913,7 +913,7 @@ class LibrarySync(threading.Thread):
 
             if not startupComplete:
                 # Verify the video database can be found
-                videoDb = utils.getKodiVideoDBPath()
+                videoDb = DatabaseConn()._SQL('video')
                 if not xbmcvfs.exists(videoDb):
                     # Database does not exists
                     log.error(

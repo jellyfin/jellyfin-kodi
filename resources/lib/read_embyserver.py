@@ -8,7 +8,7 @@ import hashlib
 import xbmc
 
 import downloadutils
-from utils import window, settings, kodiSQL
+from utils import window, settings
 from database import DatabaseConn
 from contextlib import closing
 

@@ -180,12 +180,10 @@ def emby_backup():
     shutil.copy(src=xbmc.translatePath("special://database/emby.db").decode('utf-8'),
                 dst=database)
     # Videos database
-    shutil.copy(src=utils.getKodiVideoDBPath(),
-                dst=database)
+    shutil.copy(src=DatabaseConn()._SQL('video'), dst=database)
     # Music database
     if settings('enableMusic') == "true":
-        shutil.copy(src=utils.getKodiMusicDBPath(),
-                    dst=database)
+        shutil.copy(src=DatabaseConn()._SQL('music'), dst=database)
 
     dialog(type_="ok",
            heading="{emby}",
