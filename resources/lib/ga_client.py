@@ -6,8 +6,6 @@ import logging
 import clientinfo
 import hashlib
 import xbmc
-import platform
-import xbmcgui
 import time
 from utils import window, settings, language as lang
 
@@ -93,7 +91,7 @@ class GoogleAnalytics():
         allStackFrames = traceback.extract_tb(exc_tb)
         if(len(allStackFrames) > 0):
             latestStackFrame = allStackFrames[-1]
-        log.error(str(latestStackFrame))
+        #log.error(str(latestStackFrame))
 		
         errorType = "NA"
         errorFile = "NA"
@@ -108,7 +106,7 @@ class GoogleAnalytics():
             errorFile = "%s:%s(%s)(%s)" % (fileName, latestStackFrame[1], exc_obj.message, codeLine)
             errorFile = errorFile[0:499]
             errorType = "%s" % (exc_type.__name__)
-            log.error(errorType + " - " + errorFile)
+            #log.error(errorType + " - " + errorFile)
 			
         del(exc_type, exc_obj, exc_tb)
         
@@ -158,7 +156,7 @@ class GoogleAnalytics():
             if(lastLogged != None):
                 timeSinceLastLog = time.time() - lastLogged
                 if(timeSinceLastLog < 300):
-                    log.info("SKIPPING_LOG_EVENT : " + str(timeSinceLastLog) + " " + throttleKey)
+                    #log.info("SKIPPING_LOG_EVENT : " + str(timeSinceLastLog) + " " + throttleKey)
                     return
             logEventHistory[throttleKey] = time.time()
         
@@ -173,23 +171,25 @@ class GoogleAnalytics():
         self.sendData(data)
             
     def sendData(self, data):
-    
-        log.info("GA: " + str(data))
 
         if(settings('metricLogging') == "false"):
             return
+
+        if (self.testing):
+            log.info("GA: " + str(data))
         
         if(self.testing):
             url = "https://www.google-analytics.com/debug/collect" # test URL
         else:
             url = "https://www.google-analytics.com/collect" # prod URL
-        
+
         try:
             r = requests.post(url, data)
         except Exception as error:
             log.error(error)
+            r = None
         
-        if(self.testing):
+        if(self.testing and r != None):
             log.info("GA: " + r.text.encode('utf-8'))
             
     
