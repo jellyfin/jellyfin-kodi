@@ -8,7 +8,9 @@ import hashlib
 import xbmc
 
 import downloadutils
-from utils import window, settings, kodiSQL
+from utils import window, settings
+from database import DatabaseConn
+from contextlib import closing
 
 #################################################################################################
 
@@ -102,24 +104,23 @@ class Read_EmbyServer():
                 viewId = view['Id']
 
         # Compare to view table in emby database
-        emby = kodiSQL('emby')
-        cursor_emby = emby.cursor()
-        query = ' '.join((
+        with DatabaseConn('emby') as conn:
+            with closing(conn.cursor()) as cursor:
+                query = ' '.join((
 
-            "SELECT view_name, media_type",
-            "FROM view",
-            "WHERE view_id = ?"
-        ))
-        cursor_emby.execute(query, (viewId,))
-        result = cursor_emby.fetchone()
-        try:
-            viewName = result[0]
-            mediatype = result[1]
-        except TypeError:
-            viewName = None
-            mediatype = None
+                    "SELECT view_name, media_type",
+                    "FROM view",
+                    "WHERE view_id = ?"
+                ))
+                cursor.execute(query, (viewId,))
+                result = cursor.fetchone()
+                try:
+                    viewName = result[0]
+                    mediatype = result[1]
+                except TypeError:
+                    viewName = None
+                    mediatype = None
 
-        cursor_emby.close()
 
         return [viewName, viewId, mediatype]
     

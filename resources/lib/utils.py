@@ -2,7 +2,6 @@
 
 #################################################################################################
 
-
 import inspect
 import json
 import logging
@@ -14,6 +13,7 @@ import time
 import unicodedata
 import xml.etree.ElementTree as etree
 from datetime import datetime
+
 
 import xbmc
 import xbmcaddon
@@ -119,55 +119,6 @@ def should_stop():
         return True
     else: # Keep going
         return False
-
-def kodiSQL(media_type="video"):
-
-    if media_type == "emby":
-        dbPath = xbmc.translatePath("special://database/emby.db").decode('utf-8')
-    elif media_type == "texture":
-        dbPath = xbmc.translatePath("special://database/Textures13.db").decode('utf-8')
-    elif media_type == "music":
-        dbPath = getKodiMusicDBPath()
-    else:
-        dbPath = getKodiVideoDBPath()
-
-    if settings('dblock') == "true":
-        connection = sqlite3.connect(dbPath, isolation_level=None, timeout=20)
-    else:
-        connection = sqlite3.connect(dbPath, timeout=20)
-    return connection
-
-def getKodiVideoDBPath():
-
-    dbVersion = {
-
-        "13": 78,   # Gotham
-        "14": 90,   # Helix
-        "15": 93,   # Isengard
-        "16": 99,   # Jarvis
-        "17": 107   # Krypton
-    }
-
-    dbPath = xbmc.translatePath(
-                "special://database/MyVideos%s.db"
-                % dbVersion.get(xbmc.getInfoLabel('System.BuildVersion')[:2], "")).decode('utf-8')
-    return dbPath
-
-def getKodiMusicDBPath():
-
-    dbVersion = {
-
-        "13": 46,   # Gotham
-        "14": 48,   # Helix
-        "15": 52,   # Isengard
-        "16": 56,   # Jarvis
-        "17": 60    # Krypton
-    }
-
-    dbPath = xbmc.translatePath(
-                "special://database/MyMusic%s.db"
-                % dbVersion.get(xbmc.getInfoLabel('System.BuildVersion')[:2], "")).decode('utf-8')
-    return dbPath
 
 #################################################################################################
 # Utility methods
@@ -279,99 +230,6 @@ def profiling(sortby="cumulative"):
 
 #################################################################################################
 # Addon utilities
-
-def reset():
-
-    dialog = xbmcgui.Dialog()
-
-    if not dialog.yesno(language(29999), language(33074)):
-        return
-
-    # first stop any db sync
-    window('emby_online', value="reset")
-    window('emby_shouldStop', value="true")
-    count = 10
-    while window('emby_dbScan') == "true":
-        log.info("Sync is running, will retry: %s..." % count)
-        count -= 1
-        if count == 0:
-            dialog.ok(language(29999), language(33085))
-            return
-        xbmc.sleep(1000)
-
-    # Clean up the playlists
-    deletePlaylists()
-
-    # Clean up the video nodes
-    deleteNodes()
-
-    # Wipe the kodi databases
-    log.warn("Resetting the Kodi video database.")
-    connection = kodiSQL('video')
-    cursor = connection.cursor()
-    cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
-    rows = cursor.fetchall()
-    for row in rows:
-        tablename = row[0]
-        if tablename != "version":
-            cursor.execute("DELETE FROM " + tablename)
-    connection.commit()
-    cursor.close()
-
-    if settings('enableMusic') == "true":
-        log.warn("Resetting the Kodi music database.")
-        connection = kodiSQL('music')
-        cursor = connection.cursor()
-        cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
-        rows = cursor.fetchall()
-        for row in rows:
-            tablename = row[0]
-            if tablename != "version":
-                cursor.execute("DELETE FROM " + tablename)
-        connection.commit()
-        cursor.close()
-
-    # Wipe the emby database
-    log.warn("Resetting the Emby database.")
-    connection = kodiSQL('emby')
-    cursor = connection.cursor()
-    cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
-    rows = cursor.fetchall()
-    for row in rows:
-        tablename = row[0]
-        if tablename != "version":
-            cursor.execute("DELETE FROM " + tablename)
-    cursor.execute('DROP table IF EXISTS emby')
-    cursor.execute('DROP table IF EXISTS view')
-    cursor.execute("DROP table IF EXISTS version")
-    connection.commit()
-    cursor.close()
-
-    # Offer to wipe cached thumbnails
-    if dialog.yesno(language(29999), language(33086)):
-        log.warn("Resetting all cached artwork")
-        # Remove all existing textures first
-        import artwork
-        artwork.Artwork().delete_cache()
-
-    # reset the install run flag
-    settings('SyncInstallRunDone', value="false")
-
-    # Remove emby info
-    resp = dialog.yesno(language(29999), language(33087))
-    if resp:
-        import connectmanager
-        # Delete the settings
-        addon = xbmcaddon.Addon()
-        addondir = xbmc.translatePath(
-                   "special://profile/addon_data/plugin.video.emby/").decode('utf-8')
-        dataPath = "%ssettings.xml" % addondir
-        xbmcvfs.delete(dataPath)
-        connectmanager.ConnectManager().clear_data()
-
-    dialog.ok(heading=language(29999), line1=language(33088))
-    xbmc.executebuiltin('RestartApp')
-    return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, xbmcgui.ListItem())
 
 def sourcesXML():
     # To make Master lock compatible

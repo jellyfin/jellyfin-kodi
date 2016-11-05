@@ -13,7 +13,9 @@ import xbmcvfs
 import requests
 
 import image_cache_thread
-from utils import window, settings, dialog, language as lang, kodiSQL, JSONRPC
+from utils import window, settings, dialog, language as lang, JSONRPC
+from database import DatabaseConn
+from contextlib import closing
 
 ##################################################################################################
 
@@ -164,47 +166,49 @@ class Artwork(object):
 
     def _cache_all_video_entries(self, pdialog):
 
-        conn = kodiSQL('video')
-        cursor = conn.cursor()
-        cursor.execute("SELECT url FROM art WHERE media_type != 'actor'") # dont include actors
-        result = cursor.fetchall()
-        total = len(result)
-        log.info("Image cache sync about to process %s images", total)
-        cursor.close()
+        with DatabaseConn('video') as conn:
+            with closing(conn.cursor()) as cursor_video:    
+            
+                cursor_video.execute("SELECT url FROM art WHERE media_type != 'actor'") # dont include actors
+                result = cursor_video.fetchall()
+                total = len(result)
+                log.info("Image cache sync about to process %s images", total)
+                cursor_video.close()
 
-        count = 0
-        for url in result:
+                count = 0
+                for url in result:
 
-            if pdialog.iscanceled():
-                break
+                    if pdialog.iscanceled():
+                        break
 
-            percentage = int((float(count) / float(total))*100)
-            message = "%s of %s (%s)" % (count, total, len(self.image_cache_threads))
-            pdialog.update(percentage, "%s %s" % (lang(33045), message))
-            self.cache_texture(url[0])
-            count += 1
+                    percentage = int((float(count) / float(total))*100)
+                    message = "%s of %s (%s)" % (count, total, len(self.image_cache_threads))
+                    pdialog.update(percentage, "%s %s" % (lang(33045), message))
+                    self.cache_texture(url[0])
+                    count += 1
 
     def _cache_all_music_entries(self, pdialog):
 
-        conn = kodiSQL('music')
-        cursor = conn.cursor()
-        cursor.execute("SELECT url FROM art")
-        result = cursor.fetchall()
-        total = len(result)
-        log.info("Image cache sync about to process %s images", total)
-        cursor.close()
+        with DatabaseConn('music') as conn:
+            with closing(conn.cursor()) as cursor_music:        
+        
+                cursor_music.execute("SELECT url FROM art")
+                result = cursor_music.fetchall()
+                total = len(result)
+                
+                log.info("Image cache sync about to process %s images", total)
 
-        count = 0
-        for url in result:
+                count = 0
+                for url in result:
 
-            if pdialog.iscanceled():
-                break
+                    if pdialog.iscanceled():
+                        break
 
-            percentage = int((float(count) / float(total))*100)
-            message = "%s of %s" % (count, total)
-            pdialog.update(percentage, "%s %s" % (lang(33045), message))
-            self.cache_texture(url[0])
-            count += 1
+                    percentage = int((float(count) / float(total))*100)
+                    message = "%s of %s" % (count, total)
+                    pdialog.update(percentage, "%s %s" % (lang(33045), message))
+                    self.cache_texture(url[0])
+                    count += 1
 
     @classmethod
     def delete_cache(cls):
@@ -226,16 +230,14 @@ class Artwork(object):
                     log.debug("deleted: %s", filename)
 
         # remove all existing data from texture DB
-        conn = kodiSQL('texture')
-        cursor = conn.cursor()
-        cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
-        rows = cursor.fetchall()
-        for row in rows:
-            table_name = row[0]
-            if table_name != "version":
-                cursor.execute("DELETE FROM " + table_name)
-        conn.commit()
-        cursor.close()
+        with DatabaseConn('texture') as conn:
+            with closing(conn.cursor()) as cursor_texture:  
+                cursor_texture.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
+                rows = cursor_texture.fetchall()
+                for row in rows:
+                    table_name = row[0]
+                    if table_name != "version":
+                        cursor_texture.execute("DELETE FROM " + table_name)
 
     def _add_worker_image_thread(self, url):
 
@@ -428,33 +430,29 @@ class Artwork(object):
 
     @classmethod
     def delete_cached_artwork(cls, url):
-        # Only necessary to remove and apply a new backdrop or poster
-        conn = kodiSQL('texture')
-        cursor = conn.cursor()
+        # Only necessary to remove and apply a new backdrop or poster       
+        with DatabaseConn('texture') as conn:
+            with closing(conn.cursor()) as cursor_texture:  
+                try:
+                    cursor_texture.execute("SELECT cachedurl FROM texture WHERE url = ?", (url,))
+                    cached_url = cursor_texture.fetchone()[0]
 
-        try:
-            cursor.execute("SELECT cachedurl FROM texture WHERE url = ?", (url,))
-            cached_url = cursor.fetchone()[0]
+                except TypeError:
+                    log.info("Could not find cached url")
 
-        except TypeError:
-            log.info("Could not find cached url")
+                except OperationalError:
+                    log.info("Database is locked. Skip deletion process.")
 
-        except OperationalError:
-            log.info("Database is locked. Skip deletion process.")
+                else: # Delete thumbnail as well as the entry
+                    thumbnails = xbmc.translatePath("special://thumbnails/%s" % cached_url).decode('utf-8')
+                    log.info("Deleting cached thumbnail: %s", thumbnails)
+                    xbmcvfs.delete(thumbnails)
 
-        else: # Delete thumbnail as well as the entry
-            thumbnails = xbmc.translatePath("special://thumbnails/%s" % cached_url).decode('utf-8')
-            log.info("Deleting cached thumbnail: %s", thumbnails)
-            xbmcvfs.delete(thumbnails)
+                    try:
+                        cursor_texture.execute("DELETE FROM texture WHERE url = ?", (url,))
+                    except OperationalError:
+                        log.debug("Issue deleting url from cache. Skipping.")
 
-            try:
-                cursor.execute("DELETE FROM texture WHERE url = ?", (url,))
-                conn.commit()
-            except OperationalError:
-                log.debug("Issue deleting url from cache. Skipping.")
-
-        finally:
-            cursor.close()
 
     def get_people_artwork(self, people):
         # append imageurl if existing

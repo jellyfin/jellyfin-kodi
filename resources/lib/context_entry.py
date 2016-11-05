@@ -11,8 +11,10 @@ import api
 import read_embyserver as embyserver
 import embydb_functions as embydb
 import musicutils as musicutils
-from utils import settings, dialog, language as lang, kodiSQL
+from utils import settings, dialog, language as lang
 from dialogs import context
+from database import DatabaseConn
+from contextlib import closing
 
 #################################################################################################
 
@@ -87,15 +89,14 @@ class ContextMenu(object):
 
         if not item_id and kodi_id and item_type:
 
-            conn = kodiSQL('emby')
-            cursor = conn.cursor()
-            emby_db = embydb.Embydb_Functions(cursor)
-            item = emby_db.getItem_byKodiId(kodi_id, item_type)
-            cursor.close()
-            try:
-                item_id = item[0]
-            except TypeError:
-                pass
+            with DatabaseConn('emby') as conn:
+                with closing(conn.cursor()) as cursor:            
+                    emby_db = embydb.Embydb_Functions(cursor)
+                    item = emby_db.getItem_byKodiId(kodi_id, item_type)
+                    try:
+                        item_id = item[0]
+                    except TypeError:
+                        pass
 
         return item_id
 
@@ -164,31 +165,28 @@ class ContextMenu(object):
 
     def _rate_song(self):
 
-        conn = kodiSQL('music')
-        cursor = conn.cursor()
-        query = "SELECT rating FROM song WHERE idSong = ?"
-        cursor.execute(query, (self.kodi_id,))
-        try:
-            value = cursor.fetchone()[0]
-            current_value = int(round(float(value), 0))
-        except TypeError:
-            pass
-        else:
-            new_value = dialog("numeric", 0, lang(30411), str(current_value))
-            if new_value > -1:
+        with DatabaseConn('music') as conn:
+            with closing(conn.cursor()) as cursor_music:            
+                query = "SELECT rating FROM song WHERE idSong = ?"
+                cursor_music.execute(query, (self.kodi_id,))
+                try:
+                    value = cursor_music.fetchone()[0]
+                    current_value = int(round(float(value), 0))
+                except TypeError:
+                    pass
+                else:
+                    new_value = dialog("numeric", 0, lang(30411), str(current_value))
+                    if new_value > -1:
 
-                new_value = int(new_value)
-                if new_value > 5:
-                    new_value = 5
+                        new_value = int(new_value)
+                        if new_value > 5:
+                            new_value = 5
 
-                if settings('enableUpdateSongRating') == "true":
-                    musicutils.updateRatingToFile(new_value, self.api.get_file_path())
+                        if settings('enableUpdateSongRating') == "true":
+                            musicutils.updateRatingToFile(new_value, self.api.get_file_path())
 
-                query = "UPDATE song SET rating = ? WHERE idSong = ?"
-                cursor.execute(query, (new_value, self.kodi_id,))
-                conn.commit()
-        finally:
-            cursor.close()
+                        query = "UPDATE song SET rating = ? WHERE idSong = ?"
+                        cursor_music.execute(query, (new_value, self.kodi_id,))
 
     def _delete_item(self):
 

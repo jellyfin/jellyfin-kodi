@@ -23,6 +23,7 @@ import entrypoint
 import loghandler
 from utils import window, dialog, language as lang
 from ga_client import GoogleAnalytics
+import database
 
 #################################################################################################
 
@@ -80,7 +81,7 @@ class Main(object):
         import utils
         modes = {
 
-            'reset': utils.reset,
+            'reset': database.db_reset,
             'resetauth': entrypoint.resetAuth,
             'play': entrypoint.doPlayback,
             'passwords': utils.passwordsXML,

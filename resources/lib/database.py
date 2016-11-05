@@ -4,10 +4,17 @@
 
 import logging
 import sqlite3
+from contextlib import closing
+import sys
+import traceback
 
 import xbmc
+import xbmcaddon
+import xbmcgui
+import xbmcplugin
+import xbmcvfs
 
-from utils import window, should_stop
+from utils import window, should_stop, settings, language, deletePlaylists, deleteNodes
 
 #################################################################################################
 
@@ -79,22 +86,26 @@ def kodi_commit():
 class DatabaseConn(object):
     # To be called as context manager - i.e. with DatabaseConn() as conn: #dostuff
 
-    def __init__(self, database_file="video", commit_mode="", timeout=20):
+    def __init__(self, database_file="video", commit_on_close=True, timeout=120):
         """
         database_file can be custom: emby, texture, music, video, :memory: or path to the file
         commit_mode set to None to autocommit (isolation_level). See python documentation.
         """
         self.db_file = database_file
-        self.commit_mode = commit_mode
+        self.commit_on_close = commit_on_close
         self.timeout = timeout
 
     def __enter__(self):
         # Open the connection
         self.path = self._SQL(self.db_file)
-        log.info("opening database: %s", self.path)
-        self.conn = sqlite3.connect(self.path,
-                                    isolation_level=self.commit_mode,
-                                    timeout=self.timeout)
+        log.info("opening: %s", self.path)
+        #traceback.print_stack()
+        
+        if settings('dblock') == "true":
+            self.conn = sqlite3.connect(self.path, isolation_level=None, timeout=self.timeout)
+        else:
+            self.conn = sqlite3.connect(self.path, timeout=self.timeout)
+            
         return self.conn
 
     def _SQL(self, media_type):
@@ -114,17 +125,102 @@ class DatabaseConn(object):
         if exc_type is not None:
             # Errors were raised in the with statement
             log.error("Type: %s Value: %s", exc_type, exc_val)
-            if "database is locked" in exc_val:
-                self.conn.rollback()
-            else:
-                raise
 
-        elif self.commit_mode is not None and changes:
+        if self.commit_on_close == True and changes:
             log.info("number of rows updated: %s", changes)
-            if self.db_file == "video" and kodi_commit():
-                self.conn.commit()
-            else:
-                self.conn.commit()
+            if self.db_file == "video":
+                kodi_commit()
+            self.conn.commit()
+            log.info("commit: %s", self.path)
 
-        log.info("close: %s", self.path)
+        log.info("closing: %s", self.path)
         self.conn.close()
+
+        
+def db_reset():
+
+    dialog = xbmcgui.Dialog()
+
+    if not dialog.yesno(language(29999), language(33074)):
+        return
+
+    # first stop any db sync
+    window('emby_online', value="reset")
+    window('emby_shouldStop', value="true")
+    count = 10
+    while window('emby_dbScan') == "true":
+        log.info("Sync is running, will retry: %s..." % count)
+        count -= 1
+        if count == 0:
+            dialog.ok(language(29999), language(33085))
+            return
+        xbmc.sleep(1000)
+
+    # Clean up the playlists
+    deletePlaylists()
+
+    # Clean up the video nodes
+    deleteNodes()
+
+    # Wipe the kodi databases
+    log.warn("Resetting the Kodi video database.")
+    with DatabaseConn('video') as conn:
+        with closing(conn.cursor()) as cursor:
+            cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
+            rows = cursor.fetchall()
+            for row in rows:
+                tablename = row[0]
+                if tablename != "version":
+                    cursor.execute("DELETE FROM " + tablename)
+
+    if settings('enableMusic') == "true":
+        log.warn("Resetting the Kodi music database.")
+        with DatabaseConn('music') as conn:
+            with closing(conn.cursor()) as cursor:           
+                cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
+                rows = cursor.fetchall()
+                for row in rows:
+                    tablename = row[0]
+                    if tablename != "version":
+                        cursor.execute("DELETE FROM " + tablename)
+
+    # Wipe the emby database
+    log.warn("Resetting the Emby database.")
+    with DatabaseConn('emby') as conn:
+        with closing(conn.cursor()) as cursor:    
+            cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
+            rows = cursor.fetchall()
+            for row in rows:
+                tablename = row[0]
+                if tablename != "version":
+                    cursor.execute("DELETE FROM " + tablename)
+            cursor.execute('DROP table IF EXISTS emby')
+            cursor.execute('DROP table IF EXISTS view')
+            cursor.execute("DROP table IF EXISTS version")
+
+    # Offer to wipe cached thumbnails
+    if dialog.yesno(language(29999), language(33086)):
+        log.warn("Resetting all cached artwork")
+        # Remove all existing textures first
+        import artwork
+        artwork.Artwork().delete_cache()
+
+    # reset the install run flag
+    settings('SyncInstallRunDone', value="false")
+
+    # Remove emby info
+    resp = dialog.yesno(language(29999), language(33087))
+    if resp:
+        import connectmanager
+        # Delete the settings
+        addon = xbmcaddon.Addon()
+        addondir = xbmc.translatePath(
+                   "special://profile/addon_data/plugin.video.emby/").decode('utf-8')
+        dataPath = "%ssettings.xml" % addondir
+        xbmcvfs.delete(dataPath)
+        connectmanager.ConnectManager().clear_data()
+
+    dialog.ok(heading=language(29999), line1=language(33088))
+    xbmc.executebuiltin('RestartApp')
+    return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, xbmcgui.ListItem())
+    

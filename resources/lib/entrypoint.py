@@ -28,6 +28,8 @@ import playbackutils as pbutils
 import playutils
 import api
 from utils import window, settings, dialog, language as lang
+from database import DatabaseConn
+from contextlib import closing
 
 #################################################################################################
 
@@ -178,12 +180,10 @@ def emby_backup():
     shutil.copy(src=xbmc.translatePath("special://database/emby.db").decode('utf-8'),
                 dst=database)
     # Videos database
-    shutil.copy(src=utils.getKodiVideoDBPath(),
-                dst=database)
+    shutil.copy(src=DatabaseConn()._SQL('video'), dst=database)
     # Music database
     if settings('enableMusic') == "true":
-        shutil.copy(src=utils.getKodiMusicDBPath(),
-                    dst=database)
+        shutil.copy(src=DatabaseConn()._SQL('music'), dst=database)
 
     dialog(type_="ok",
            heading="{emby}",
@@ -234,11 +234,10 @@ def deleteItem():
                 log.info("Unknown type, unable to proceed.")
                 return
 
-        embyconn = utils.kodiSQL('emby')
-        embycursor = embyconn.cursor()
-        emby_db = embydb.Embydb_Functions(embycursor)
-        item = emby_db.getItem_byKodiId(dbId, itemType)
-        embycursor.close()
+        with DatabaseConn('emby') as conn:
+            with closing(conn.cursor()) as cursor:
+                emby_db = embydb.Embydb_Functions(cursor)
+                item = emby_db.getItem_byKodiId(dbId, itemType)
 
         try:
             itemId = item[0]
@@ -422,11 +421,10 @@ def getThemeMedia():
         return
         
     # Get every user view Id
-    embyconn = utils.kodiSQL('emby')
-    embycursor = embyconn.cursor()
-    emby_db = embydb.Embydb_Functions(embycursor)
-    viewids = emby_db.getViews()
-    embycursor.close()
+    with DatabaseConn('emby') as conn:
+        with closing(conn.cursor()) as cursor:
+            emby_db = embydb.Embydb_Functions(cursor)
+            viewids = emby_db.getViews()
 
     # Get Ids with Theme Videos
     itemIds = {}
