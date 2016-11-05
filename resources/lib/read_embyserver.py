@@ -27,7 +27,6 @@ class Read_EmbyServer():
     def __init__(self):
 
         self.doUtils = downloadutils.DownloadUtils().downloadUrl
-        self.database = database.DatabaseConn
         self.userId = window('emby_currUser')
         self.server = window('emby_server%s' % self.userId)
 
@@ -107,7 +106,7 @@ class Read_EmbyServer():
                 viewId = view['Id']
 
         # Compare to view table in emby database
-        with self.database('emby') as conn:
+        with database.DatabaseConn('emby') as conn:
             with closing(conn.cursor()) as cursor:
                 query = ' '.join((
 
