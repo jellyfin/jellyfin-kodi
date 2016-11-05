@@ -13,6 +13,8 @@ import embydb_functions as embydb
 import musicutils as musicutils
 from utils import settings, dialog, language as lang, kodiSQL
 from dialogs import context
+from database import DatabaseConn
+from contextlib import closing
 
 #################################################################################################
 
@@ -87,15 +89,14 @@ class ContextMenu(object):
 
         if not item_id and kodi_id and item_type:
 
-            conn = kodiSQL('emby')
-            cursor = conn.cursor()
-            emby_db = embydb.Embydb_Functions(cursor)
-            item = emby_db.getItem_byKodiId(kodi_id, item_type)
-            cursor.close()
-            try:
-                item_id = item[0]
-            except TypeError:
-                pass
+            with DatabaseConn('emby') as conn:
+                with closing(conn.cursor()) as cursor:            
+                    emby_db = embydb.Embydb_Functions(cursor)
+                    item = emby_db.getItem_byKodiId(kodi_id, item_type)
+                    try:
+                        item_id = item[0]
+                    except TypeError:
+                        pass
 
         return item_id
 
