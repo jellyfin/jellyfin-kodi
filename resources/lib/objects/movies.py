@@ -325,7 +325,7 @@ class Movies(Items):
         emby_dbitem = emby_db.getItem_byId(boxsetid)
         try:
             setid = emby_dbitem[0]
-
+            self.kodi_db.update_boxset(setid, title)
         except TypeError:
             setid = self.kodi_db.add_boxset(title)
 

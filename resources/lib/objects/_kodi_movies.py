@@ -51,7 +51,6 @@ class KodiMovies(KodiItems):
         return kodi_id
 
     def add_movie(self, *args):
-
         query = (
             '''
             INSERT INTO movie(
@@ -77,7 +76,6 @@ class KodiMovies(KodiItems):
         self.cursor.execute(query, (args))
 
     def update_movie(self, *args):
-
         query = ' '.join((
 
             "UPDATE movie",
@@ -89,7 +87,6 @@ class KodiMovies(KodiItems):
         self.cursor.execute(query, (args))
 
     def update_movie_17(self, *args):
-
         query = ' '.join((
 
             "UPDATE movie",
@@ -159,7 +156,6 @@ class KodiMovies(KodiItems):
         return country_id
 
     def _get_country(self, country):
-
         query = ' '.join((
 
             "SELECT country_id",
@@ -176,7 +172,6 @@ class KodiMovies(KodiItems):
         return country_id
 
     def add_boxset(self, boxset):
-
         query = ' '.join((
 
             "SELECT idSet",
@@ -201,8 +196,16 @@ class KodiMovies(KodiItems):
 
         return set_id
 
-    def set_boxset(self, set_id, movie_id):
+    def update_boxset(self, set_id, boxset):
+        query = ' '.join((
 
+            "UPDATE sets",
+            "SET strSet = ?",
+            "WHERE idSet = ?"
+        ))
+        self.cursor.execute(query, (boxset, set_id,))
+
+    def set_boxset(self, set_id, movie_id):
         query = ' '.join((
 
             "UPDATE movie",
@@ -212,7 +215,6 @@ class KodiMovies(KodiItems):
         self.cursor.execute(query, (set_id, movie_id,))
 
     def remove_from_boxset(self, movie_id):
-
         query = ' '.join((
 
             "UPDATE movie",
