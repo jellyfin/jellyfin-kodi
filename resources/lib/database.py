@@ -6,6 +6,7 @@ import logging
 import sqlite3
 from contextlib import closing
 import sys
+import traceback
 
 import xbmc
 import xbmcaddon
@@ -97,7 +98,8 @@ class DatabaseConn(object):
     def __enter__(self):
         # Open the connection
         self.path = self._SQL(self.db_file)
-        log.info("opening database: %s", self.path)
+        log.info("opening: %s", self.path)
+        #traceback.print_stack()
         
         if settings('dblock') == "true":
             self.conn = sqlite3.connect(self.path, isolation_level=None, timeout=self.timeout)
@@ -131,7 +133,7 @@ class DatabaseConn(object):
             self.conn.commit()
             log.info("commit: %s", self.path)
 
-        log.info("close: %s", self.path)
+        log.info("closing: %s", self.path)
         self.conn.close()
 
         

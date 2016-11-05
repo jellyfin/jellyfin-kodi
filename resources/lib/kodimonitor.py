@@ -13,6 +13,8 @@ import embydb_functions as embydb
 import playbackutils as pbutils
 from utils import window, settings, kodiSQL
 from ga_client import log_error
+from database import DatabaseConn
+from contextlib import closing
 
 #################################################################################################
 
@@ -165,11 +167,10 @@ class KodiMonitor(xbmc.Monitor):
 
         item_id = None
 
-        conn = kodiSQL('emby')
-        cursor = conn.cursor()
-        emby_db = embydb.Embydb_Functions(cursor)
-        db_item = emby_db.getItem_byKodiId(kodi_id, item_type)
-        cursor.close()
+        with DatabaseConn('emby') as conn:
+            with closing(conn.cursor()) as cursor:
+                emby_db = embydb.Embydb_Functions(cursor)
+                db_item = emby_db.getItem_byKodiId(kodi_id, item_type)
 
         try:
             item_id = db_item[0]
