@@ -129,6 +129,7 @@ class DatabaseConn(object):
             if self.db_file == "video":
                 kodi_commit()
             self.conn.commit()
+            log.info("commit: %s", self.path)
 
         log.info("close: %s", self.path)
         self.conn.close()
