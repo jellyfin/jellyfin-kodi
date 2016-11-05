@@ -312,19 +312,22 @@ class Read_EmbyServer():
                         log.info("Increase jump limit to: %s" % jump)
         return items
 
-    def getViews(self, mediatype="", root=False, sortedlist=False):
-        # Build a list of user views
-        views = []
-        mediatype = mediatype.lower()
+    def get_views(self, root=False):
 
         if not root:
             url = "{server}/emby/Users/{UserId}/Views?format=json"
         else: # Views ungrouped
             url = "{server}/emby/Users/{UserId}/Items?Sortby=SortName&format=json"
 
-        result = self.doUtils(url)
+        return self.doUtils(url)
+
+    def getViews(self, mediatype="", root=False, sortedlist=False):
+        # Build a list of user views
+        views = []
+        mediatype = mediatype.lower()
+
         try:
-            items = result['Items']
+            items = self.get_views(root)['Items']
         except TypeError:
             log.debug("Error retrieving views for type: %s" % mediatype)
         else:
