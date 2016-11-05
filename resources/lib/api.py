@@ -249,9 +249,11 @@ class API(object):
             'fox (us)': "FOX",
             'mtv (us)': "MTV",
             'showcase (ca)': "Showcase",
-            'wgn america': "WGN"
+            'wgn america': "WGN",
+            'bravo (us)': "Bravo",
+            'tnt (us)': "TNT",
+            'comedy central': "Comedy Central (US)"
         }
-
         return studios.get(studio_name.lower(), studio_name)
 
     def get_checksum(self):
