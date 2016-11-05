@@ -11,7 +11,6 @@ import xbmcgui
 
 import clientinfo
 import downloadutils
-import kodidb_functions as kodidb
 import websocket_client as wsc
 from utils import window, settings, language as lang
 from ga_client import GoogleAnalytics, log_error

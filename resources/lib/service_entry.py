@@ -16,8 +16,8 @@ import initialsetup
 import kodimonitor
 import librarysync
 import player
-import videonodes
 import websocket_client as wsc
+from views import VideoNodes
 from utils import window, settings, dialog, language as lang
 from ga_client import GoogleAnalytics
 import hashlib
@@ -77,7 +77,7 @@ class Service(object):
             window(prop, clear=True)
 
         # Clear video nodes properties
-        videonodes.VideoNodes().clearProperties()
+        VideoNodes().clearProperties()
 
         # Set the minimum database version
         window('emby_minDBVersion', value="1.1.63")

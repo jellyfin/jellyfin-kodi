@@ -17,10 +17,9 @@ import clientinfo
 import downloadutils
 import itemtypes
 import embydb_functions as embydb
-import kodidb_functions as kodidb
 import read_embyserver as embyserver
 import userclient
-import videonodes
+import views
 from objects import Movies, MusicVideos, TVShows, Music
 from utils import window, settings, language as lang, should_stop
 from ga_client import GoogleAnalytics
@@ -60,7 +59,6 @@ class LibrarySync(threading.Thread):
         self.doUtils = downloadutils.DownloadUtils().downloadUrl
         self.user = userclient.UserClient()
         self.emby = embyserver.Read_EmbyServer()
-        self.vnodes = videonodes.VideoNodes()
 
         self.kodi_version = int(xbmc.getInfoLabel('System.BuildVersion')[:2])
 
@@ -276,7 +274,9 @@ class LibrarySync(threading.Thread):
                 starttotal = datetime.now()
 
                 # Set views
-                self.maintainViews(cursor_emby, cursor_video)
+                views.Views(cursor_emby, cursor_video).maintain()
+                conn_emby.commit()
+                #self.maintainViews(cursor_emby, cursor_video)
 
                 # Sync video library
                 process = {
@@ -362,222 +362,10 @@ class LibrarySync(threading.Thread):
 
     def refreshViews(self):
         
-        with DatabaseConn('emby') as conn_emby, DatabaseConn('video') as conn_video:
+        with DatabaseConn('emby') as conn_emby, DatabaseConn() as conn_video:
             with closing(conn_emby.cursor()) as cursor_emby, closing(conn_video.cursor()) as cursor_video:
                 # Compare views, assign correct tags to items
-                self.maintainViews(cursor_emby, cursor_video)
-
-
-    def maintainViews(self, embycursor, kodicursor):
-
-        # Compare the views to emby
-        emby = self.emby
-        emby_db = embydb.Embydb_Functions(embycursor)
-        kodi_db = kodidb.Kodidb_Functions(kodicursor)
-
-        # Get views
-        result = self.doUtils("{server}/emby/Users/{UserId}/Views?format=json")
-        grouped_views = result['Items'] if 'Items' in result else []
-        ordered_views = self.emby.getViews(sortedlist=True)
-        all_views = []
-        sorted_views = []
-        for view in ordered_views:
-            all_views.append(view['name'])
-            if view['type'] == "music":
-                continue
-
-            if view['type'] == "mixed":
-                sorted_views.append(view['name'])
-            sorted_views.append(view['name'])
-        log.info("Sorted views: %s" % sorted_views)
-
-        # total nodes for window properties
-        self.vnodes.clearProperties()
-        totalnodes = len(sorted_views) + 0
-
-        current_views = emby_db.getViews()
-        # Set views for supported media type
-        emby_mediatypes = {
-
-            'movies': "Movie",
-            'tvshows': "Series",
-            'musicvideos': "MusicVideo",
-            'homevideos': "Video",
-            'music': "Audio",
-            'photos': "Photo"
-        }
-        for mediatype in ['movies', 'tvshows', 'musicvideos', 'homevideos', 'music', 'photos']:
-
-            nodes = [] # Prevent duplicate for nodes of the same type
-            playlists = [] # Prevent duplicate for playlists of the same type
-            # Get media folders from server
-            folders = self.emby.getViews(mediatype, root=True)
-            for folder in folders:
-
-                folderid = folder['id']
-                foldername = folder['name']
-                viewtype = folder['type']
-
-                if foldername not in all_views:
-                    # Media folders are grouped into userview
-                    params = {
-                        'ParentId': folderid,
-                        'Recursive': True,
-                        'Limit': 1,
-                        'IncludeItemTypes': emby_mediatypes[mediatype]
-                    } # Get one item from server using the folderid
-                    url = "{server}/emby/Users/{UserId}/Items?format=json"
-                    result = self.doUtils(url, parameters=params)
-                    try:
-                        verifyitem = result['Items'][0]['Id']
-                    except (TypeError, IndexError):
-                        # Something is wrong. Keep the same folder name.
-                        # Could be the view is empty or the connection
-                        pass
-                    else:
-                        for grouped_view in grouped_views:
-                            # This is only reserved for the detection of grouped views
-                            if (grouped_view['Type'] == "UserView" and
-                                grouped_view.get('CollectionType') == mediatype):
-                                # Take the userview, and validate the item belong to the view
-                                if self.emby.verifyView(grouped_view['Id'], verifyitem):
-                                    # Take the name of the userview
-                                    log.info("Found corresponding view: %s %s"
-                                        % (grouped_view['Name'], grouped_view['Id']))
-                                    foldername = grouped_view['Name']
-                                    break
-                        else:
-                            # Unable to find a match, add the name to our sorted_view list
-                            sorted_views.append(foldername)
-                            log.info("Couldn't find corresponding grouped view: %s" % sorted_views)
-
-                # Failsafe
-                try:
-                    sorted_views.index(foldername)
-                except ValueError:
-                    sorted_views.append(foldername)
-
-                # Get current media folders from emby database
-                view = emby_db.getView_byId(folderid)
-                try:
-                    current_viewname = view[0]
-                    current_viewtype = view[1]
-                    current_tagid = view[2]
-
-                except TypeError:
-                    log.info("Creating viewid: %s in Emby database." % folderid)
-                    tagid = kodi_db.createTag(foldername)
-                    # Create playlist for the video library
-                    if (foldername not in playlists and
-                            mediatype in ('movies', 'tvshows', 'musicvideos')):
-                        utils.playlistXSP(mediatype, foldername, folderid, viewtype)
-                        playlists.append(foldername)
-                    # Create the video node
-                    if foldername not in nodes and mediatype not in ("musicvideos", "music"):
-                        self.vnodes.viewNode(sorted_views.index(foldername), foldername, mediatype,
-                            viewtype, folderid)
-                        if viewtype == "mixed": # Change the value
-                            sorted_views[sorted_views.index(foldername)] = "%ss" % foldername
-                        nodes.append(foldername)
-                        totalnodes += 1
-                    # Add view to emby database
-                    emby_db.addView(folderid, foldername, viewtype, tagid)
-
-                else:
-                    log.debug(' '.join((
-
-                        "Found viewid: %s" % folderid,
-                        "viewname: %s" % current_viewname,
-                        "viewtype: %s" % current_viewtype,
-                        "tagid: %s" % current_tagid)))
-
-                    # View is still valid
-                    try:
-                        current_views.remove(folderid)
-                    except ValueError:
-                        # View was just created, nothing to remove
-                        pass
-
-                    # View was modified, update with latest info
-                    if current_viewname != foldername:
-                        log.info("viewid: %s new viewname: %s" % (folderid, foldername))
-                        tagid = kodi_db.createTag(foldername)
-
-                        # Update view with new info
-                        emby_db.updateView(foldername, tagid, folderid)
-
-                        if mediatype != "music":
-                            if emby_db.getView_byName(current_viewname) is None:
-                                # The tag could be a combined view. Ensure there's no other tags
-                                # with the same name before deleting playlist.
-                                utils.playlistXSP(
-                                    mediatype, current_viewname, folderid, current_viewtype, True)
-                                # Delete video node
-                                if mediatype != "musicvideos":
-                                    self.vnodes.viewNode(
-                                        indexnumber=None,
-                                        tagname=current_viewname,
-                                        mediatype=mediatype,
-                                        viewtype=current_viewtype,
-                                        viewid=folderid,
-                                        delete=True)
-                            # Added new playlist
-                            if (foldername not in playlists and
-                                    mediatype in ('movies', 'tvshows', 'musicvideos')):
-                                utils.playlistXSP(mediatype, foldername, folderid, viewtype)
-                                playlists.append(foldername)
-                            # Add new video node
-                            if foldername not in nodes and mediatype != "musicvideos":
-                                self.vnodes.viewNode(sorted_views.index(foldername), foldername,
-                                    mediatype, viewtype, folderid)
-                                if viewtype == "mixed": # Change the value
-                                    sorted_views[sorted_views.index(foldername)] = "%ss" % foldername
-                                nodes.append(foldername)
-                                totalnodes += 1
-
-                        # Update items with new tag
-                        items = emby_db.getItem_byView(folderid)
-                        for item in items:
-                            # Remove the "s" from viewtype for tags
-                            kodi_db.updateTag(
-                                current_tagid, tagid, item[0], current_viewtype[:-1])
-                    else:
-                        # Validate the playlist exists or recreate it
-                        if mediatype != "music":
-                            if (foldername not in playlists and
-                                    mediatype in ('movies', 'tvshows', 'musicvideos')):
-                                utils.playlistXSP(mediatype, foldername, folderid, viewtype)
-                                playlists.append(foldername)
-                            # Create the video node if not already exists
-                            if foldername not in nodes and mediatype != "musicvideos":
-                                self.vnodes.viewNode(sorted_views.index(foldername), foldername,
-                                    mediatype, viewtype, folderid)
-                                if viewtype == "mixed": # Change the value
-                                    sorted_views[sorted_views.index(foldername)] = "%ss" % foldername
-                                nodes.append(foldername)
-                                totalnodes += 1
-        else:
-            # Add video nodes listings
-            self.vnodes.singleNode(totalnodes, "Favorite movies", "movies", "favourites")
-            totalnodes += 1
-            self.vnodes.singleNode(totalnodes, "Favorite tvshows", "tvshows", "favourites")
-            totalnodes += 1
-            self.vnodes.singleNode(totalnodes, "Favorite episodes", "episodes", "favourites")
-            totalnodes += 1
-            self.vnodes.singleNode(totalnodes, "channels", "movies", "channels")
-            totalnodes += 1
-            # Save total
-            window('Emby.nodes.total', str(totalnodes))
-
-            # Remove any old referenced views
-            log.info("Removing views: %s" % current_views)
-            for view in current_views:
-                emby_db.removeView(view)
-                # Remove any items that belongs to the old view
-                items = emby_db.get_item_by_view(view)
-                items = [i[0] for i in items] # Convert list of tuple to list
-                self.triage_items("remove", items)
-
+                views.Views(cursor_emby, cursor_video).maintain()
 
     def movies(self, embycursor, kodicursor, pdialog):
 

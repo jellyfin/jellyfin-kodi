@@ -31,6 +31,9 @@ class Read_EmbyServer():
         self.userId = window('emby_currUser')
         self.server = window('emby_server%s' % self.userId)
 
+    def get_emby_url(self, handler):
+        return "{server}/emby/%s" % handler
+
 
     def split_list(self, itemlist, size):
         # Split up list in pieces of size. Will generate a list of lists
@@ -590,3 +593,14 @@ class Read_EmbyServer():
         user = self.doUtils(url, postBody=data, action_type="POST", authenticate=False)
 
         return user
+
+    def get_single_item(self, media_type, parent_id):
+
+        params = {
+            'ParentId': parent_id,
+            'Recursive': True,
+            'Limit': 1,
+            'IncludeItemTypes': media_type
+        }
+        url = self.get_emby_url('Users/{UserId}/Items?format=json')
+        return self.doUtils(url, parameters=params)
