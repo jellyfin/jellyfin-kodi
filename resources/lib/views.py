@@ -13,7 +13,7 @@ import xbmcvfs
 
 import read_embyserver as embyserver
 import embydb_functions as embydb
-from utils import window, language as lang, normalize_nodes, indent as xml_indent
+from utils import window, language as lang, indent as xml_indent
 
 #################################################################################################
 
@@ -33,7 +33,6 @@ class Views(object):
     grouped_views = list()
 
     media_types = {
-
         'movies': "Movie",
         'tvshows': "Series",
         'musicvideos': "MusicVideo",
@@ -79,7 +78,7 @@ class Views(object):
 
             self.nodes = list() # Prevent duplicate for nodes of the same type
             self.playlists = list() # Prevent duplicate for playlists of the same type
-            # Get media folders from the ordered
+            # Get media folders to include mixed views as well
             for folder in self.emby.getViews(media_type, root=True):
 
                 view_id = folder['id']
@@ -287,7 +286,15 @@ class Views(object):
             self.playlist.process_playlist(media_type, view_id, view_name, view_type)
             self.playlists.append(view_name)
         # Create the video node
-        self._create_node(media_type, view_id, view_name, view_type)
+        if view_name not in self.nodes and media_type not in ('musicvideos', 'music'):
+            index = self.sorted_views.index(view_name)
+            self.video_nodes.viewNode(index, view_name, media_type,view_type, view_id)
+            
+            if view_type == "mixed": # Change the value
+                self.sorted_views[index] = "%ss" % view_name
+            
+            self.nodes.append(view_name)
+            self.total_nodes += 1
 
     def delete_playlist_node(self, media_type, view_id, view_name, view_type):
 
@@ -302,19 +309,8 @@ class Views(object):
             if media_type != "musicvideos":
                 self.video_nodes.viewNode(None, view_name, media_type, view_type, view_id, True)
 
-    def _create_node(self, media_type, view_id, view_name, view_type):
-
-        if view_name not in self.nodes and media_type not in ('musicvideos', 'music'):
-            index = self.sorted_views.index(view_name)
-            self.video_nodes.viewNode(index, view_name, media_type,view_type, view_id)
-            
-            if view_type == "mixed": # Change the value
-                self.sorted_views[index] = "%ss" % view_name
-            
-            self.nodes.append(view_name)
-            self.total_nodes += 1
-
     def add_single_nodes(self):
+
         singles = [
             ("Favorite movies", "movies", "favourites"),
             ("Favorite tvshows", "tvshows", "favourites"),
@@ -385,12 +381,40 @@ class Playlist(object):
         xbmcvfs.delete(path)
         log.info("successfully removed playlist: %s", path)
 
+    def delete_playlists(self):
+        # Clean up the playlists
+        path = xbmc.translatePath("special://profile/playlists/video/").decode('utf-8')
+        dirs, files = xbmcvfs.listdir(path)
+        for file in files:
+            if file.decode('utf-8').startswith('Emby'):
+                self._delete_playlist(os.path.join(path, file))
+
 
 class VideoNodes(object):
 
 
     def __init__(self):
         pass
+
+    def normalize_nodes(self, text):
+        # For video nodes
+        text = text.replace(":", "")
+        text = text.replace("/", "-")
+        text = text.replace("\\", "-")
+        text = text.replace("<", "")
+        text = text.replace(">", "")
+        text = text.replace("*", "")
+        text = text.replace("?", "")
+        text = text.replace('|', "")
+        text = text.replace('(', "")
+        text = text.replace(')', "")
+        text = text.strip()
+        # Remove dots from the last character as windows can not have directories
+        # with dots at the end
+        text = text.rstrip('.')
+        text = unicodedata.normalize('NFKD', unicode(text, 'utf-8')).encode('ascii', 'ignore')
+
+        return text
 
     def commonRoot(self, order, label, tagname="", roottype=1):
 
@@ -693,7 +717,7 @@ class VideoNodes(object):
     def singleNode(self, indexnumber, tagname, mediatype, itemtype):
 
         tagname = tagname.encode('utf-8')
-        cleantagname = normalize_nodes(tagname)
+        cleantagname = self.normalize_nodes(tagname)
         nodepath = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
         nodeXML = "%semby_%s.xml" % (nodepath, cleantagname)
         path = "library://video/emby_%s.xml" % cleantagname
@@ -741,6 +765,30 @@ class VideoNodes(object):
             xml_indent(root)
         except: pass
         etree.ElementTree(root).write(nodeXML)
+
+    def deleteNodes(self):
+        # Clean up video nodes
+        path = xbmc.translatePath("special://profile/library/video/emby/").decode('utf-8')
+        if (xbmcvfs.exists(path)):
+            try:
+                shutil.rmtree(path)
+            except:
+                log.warn("Failed to delete directory: %s" % path)
+        # Old cleanup code kept for cleanup of old style nodes
+        path = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
+        dirs, files = xbmcvfs.listdir(path)
+        for dir in dirs:
+            if dir.decode('utf-8').startswith('Emby'):
+                try:
+                    shutil.rmtree("%s%s" % (path, dir.decode('utf-8')))
+                except:
+                    log.warn("Failed to delete directory: %s" % dir.decode('utf-8'))
+        for file in files:
+            if file.decode('utf-8').startswith('emby'):
+                try:
+                    xbmcvfs.delete("%s%s" % (path, file.decode('utf-8')))
+                except:
+                    log.warn("Failed to delete file: %s" % file.decode('utf-8'))
 
     def clearProperties(self):
 

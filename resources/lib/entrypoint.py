@@ -27,6 +27,7 @@ import playlist
 import playbackutils as pbutils
 import playutils
 import api
+from views import Playlist, VideoNodes
 from utils import window, settings, dialog, language as lang
 from database import DatabaseConn
 from contextlib import closing
@@ -548,9 +549,9 @@ def refreshPlaylist():
     dialog = xbmcgui.Dialog()
     try:
         # First remove playlists
-        utils.deletePlaylists()
+        Playlist().delete_playlists()
         # Remove video nodes
-        utils.deleteNodes()
+        VideoNodes().deleteNodes()
         # Refresh views
         lib.refreshViews()
         dialog.notification(

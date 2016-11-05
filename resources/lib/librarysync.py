@@ -508,13 +508,9 @@ class LibrarySync(threading.Thread):
 
         # do a view update if needed
         if self.refresh_views:
-            with DatabaseConn('emby') as conn_emby, DatabaseConn('video') as conn_video:
-                with closing(conn_emby.cursor()) as cursor_emby, closing(conn_video.cursor()) as cursor_video:
-                    # Received userconfig update
-                    self.refresh_views = False
-                    self.maintainViews(cursor_emby, cursor_video)
-                    self.forceLibraryUpdate = True
-                    update_embydb = True
+            self.refreshViews()
+            self.refresh_views = False
+            self.forceLibraryUpdate = True
 
         # do a lib update if any items in list
         totalUpdates = len(self.addedItems) + len(self.updateItems) + len(self.userdataItems) + len(self.removeItems)

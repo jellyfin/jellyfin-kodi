@@ -14,7 +14,8 @@ import xbmcgui
 import xbmcplugin
 import xbmcvfs
 
-from utils import window, should_stop, settings, language, deletePlaylists, deleteNodes
+from views import Playlist, VideoNodes
+from utils import window, should_stop, settings, language
 
 #################################################################################################
 
@@ -157,10 +158,10 @@ def db_reset():
         xbmc.sleep(1000)
 
     # Clean up the playlists
-    deletePlaylists()
+    Playlist().delete_playlists()
 
     # Clean up the video nodes
-    deleteNodes()
+    VideoNodes().deleteNodes()
 
     # Wipe the kodi databases
     log.warn("Resetting the Kodi video database.")
