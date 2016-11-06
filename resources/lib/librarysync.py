@@ -703,7 +703,7 @@ class LibrarySync(threading.Thread):
 
             if not startupComplete:
                 # Verify the video database can be found
-                videoDb = database.DatabaseConn()._SQL('video')
+                videoDb = database.video_database()
                 if not xbmcvfs.exists(videoDb):
                     # Database does not exists
                     log.error(
