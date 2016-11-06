@@ -23,7 +23,7 @@ import views
 from objects import Movies, MusicVideos, TVShows, Music
 from utils import window, settings, language as lang, should_stop
 from ga_client import GoogleAnalytics
-from database import DatabaseConn, db_reset
+import database
 from contextlib import closing
 
 ##################################################################################################
@@ -233,7 +233,7 @@ class LibrarySync(threading.Thread):
         utils.sourcesXML()
 
         # use emby and video DBs
-        with DatabaseConn('emby') as conn_emby, DatabaseConn('video') as conn_video:
+        with database.DatabaseConn('emby') as conn_emby, database.DatabaseConn('video') as conn_video:
             with closing(conn_emby.cursor()) as cursor_emby, closing(conn_video.cursor()) as cursor_video:        
                 # content sync: movies, tvshows, musicvideos, music
 
@@ -312,7 +312,7 @@ class LibrarySync(threading.Thread):
             if repair and 'music' not in repair_list:
                 pass
             else:
-                with DatabaseConn('emby') as conn_emby, DatabaseConn('music') as conn_music:
+                with database.DatabaseConn('emby') as conn_emby, database.DatabaseConn('music') as conn_music:
                     with closing(conn_emby.cursor()) as cursor_emby, closing(conn_music.cursor()) as cursor_music:
                         startTime = datetime.now()
                         completed = self.music(cursor_emby, cursor_music, pDialog)
@@ -332,7 +332,7 @@ class LibrarySync(threading.Thread):
         if pDialog:
             pDialog.close()
 
-        with DatabaseConn('emby') as conn_emby:
+        with database.DatabaseConn('emby') as conn_emby:
             with closing(conn_emby.cursor()) as cursor_emby:
                 emby_db = embydb.Embydb_Functions(cursor_emby)
                 current_version = emby_db.get_version(self.clientInfo.get_version())
@@ -362,7 +362,7 @@ class LibrarySync(threading.Thread):
 
     def refreshViews(self):
         
-        with DatabaseConn('emby') as conn_emby, DatabaseConn() as conn_video:
+        with database.DatabaseConn('emby') as conn_emby, database.DatabaseConn() as conn_video:
             with closing(conn_emby.cursor()) as cursor_emby, closing(conn_video.cursor()) as cursor_video:
                 # Compare views, assign correct tags to items
                 views.Views(cursor_emby, cursor_video).maintain()
@@ -515,7 +515,7 @@ class LibrarySync(threading.Thread):
         # do a lib update if any items in list
         totalUpdates = len(self.addedItems) + len(self.updateItems) + len(self.userdataItems) + len(self.removeItems)
         if totalUpdates > 0:
-            with DatabaseConn('emby') as conn_emby, DatabaseConn('video') as conn_video:
+            with database.DatabaseConn('emby') as conn_emby, database.DatabaseConn('video') as conn_video:
                 with closing(conn_emby.cursor()) as cursor_emby, closing(conn_video.cursor()) as cursor_video:
 
                     emby_db = embydb.Embydb_Functions(cursor_emby)
@@ -610,7 +610,7 @@ class LibrarySync(threading.Thread):
 
     def _verify_emby_database(self):
         # Create the tables for the emby database
-        with DatabaseConn('emby') as conn:
+        with database.DatabaseConn('emby') as conn:
             with closing(conn.cursor()) as cursor:
                 # emby, view, version
                 cursor.execute(
@@ -669,7 +669,7 @@ class LibrarySync(threading.Thread):
             if (window('emby_dbCheck') != "true" and settings('SyncInstallRunDone') == "true"):
                 # Verify the validity of the database
                 log.info("Doing DB Version Check")
-                with DatabaseConn('emby') as conn:
+                with database.DatabaseConn('emby') as conn:
                     with closing(conn.cursor()) as cursor:                
 
                         emby_db = embydb.Embydb_Functions(cursor)
@@ -694,7 +694,7 @@ class LibrarySync(threading.Thread):
                         log.warn("Database version is out of date! USER IGNORED!")
                         dialog.ok(lang(29999), lang(33023))
                     else:
-                        db_reset()
+                        database.db_reset()
 
                     break
 
@@ -703,7 +703,7 @@ class LibrarySync(threading.Thread):
 
             if not startupComplete:
                 # Verify the video database can be found
-                videoDb = DatabaseConn()._SQL('video')
+                videoDb = database.DatabaseConn()._SQL('video')
                 if not xbmcvfs.exists(videoDb):
                     # Database does not exists
                     log.error(

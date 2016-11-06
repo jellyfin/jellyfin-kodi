@@ -106,7 +106,8 @@ class DatabaseConn(object):
             self.conn = sqlite3.connect(self.path, isolation_level=None, timeout=self.timeout)
         else:
             self.conn = sqlite3.connect(self.path, timeout=self.timeout)
-            
+
+        log.info("opened: %s - %s", self.path, id(self.conn))
         return self.conn
 
     def _SQL(self, media_type):
@@ -134,7 +135,7 @@ class DatabaseConn(object):
             self.conn.commit()
             log.info("commit: %s", self.path)
 
-        log.info("closing: %s", self.path)
+        log.info("closing: %s - %s", self.path, id(self.conn))
         self.conn.close()
 
         
