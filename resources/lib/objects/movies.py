@@ -141,7 +141,7 @@ class Movies(Items):
 
         if not view:
             # Get view tag from emby
-            viewtag, viewid, mediatype = self.emby.getView_embyId(itemid)
+            viewtag, viewid = emby_db.getView_embyId(itemid)
             log.debug("View tag found: %s", viewtag)
         else:
             viewtag = view['name']

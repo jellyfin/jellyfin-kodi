@@ -266,7 +266,7 @@ class TVShows(Items):
 
         if view is None:
             # Get view tag from emby
-            viewtag, viewid, mediatype = emby.getView_embyId(itemid)
+            viewtag, viewid = emby_db.getView_embyId(itemid)
             log.debug("View tag found: %s", viewtag)
         else:
             viewtag = view['name']

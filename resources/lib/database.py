@@ -99,7 +99,6 @@ class DatabaseConn(object):
     def __enter__(self):
         # Open the connection
         self.path = self._SQL(self.db_file)
-        log.info("opening: %s", self.path)
         #traceback.print_stack()
         
         if settings('dblock') == "true":

@@ -5,6 +5,8 @@
 import logging
 from sqlite3 import OperationalError
 
+import downloadutils
+
 ##################################################################################################
 
 log = logging.getLogger("EMBY."+__name__)
@@ -18,6 +20,7 @@ class Embydb_Functions():
     def __init__(self, embycursor):
 
         self.embycursor = embycursor
+        self.download = downloadutils.DownloadUtils().downloadUrl
 
 
     def get_version(self, version=None):
@@ -51,6 +54,33 @@ class Embydb_Functions():
             views.append(row[0])
         
         return views
+
+    def getView_embyId(self, item_id):
+        # Returns ancestors using embyId
+        url = "{server}/emby/Items/%s/Ancestors?UserId={UserId}&format=json" % item_id
+        for view in self.download(url):
+
+            if view['Type'] == "CollectionFolder":
+                # Found view
+                view_id = view['Id']
+                break
+        else: # No view found
+            return [None, None]
+
+        # Compare to view table in emby database
+        query = ' '.join((
+
+            "SELECT view_name",
+            "FROM view",
+            "WHERE view_id = ?"
+        ))
+        self.embycursor.execute(query, (view_id,))
+        try:
+            view_name = self.embycursor.fetchone()[0]
+        except TypeError:
+            view_name = None
+
+        return [view_name, view_id]
 
     def getView_byId(self, viewid):
 
