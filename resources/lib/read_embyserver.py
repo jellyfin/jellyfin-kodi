@@ -93,38 +93,6 @@ class Read_EmbyServer():
                 items.extend(result['Items'])
 
         return items
-
-    def getView_embyId(self, itemid):
-        # Returns ancestors using embyId
-        viewId = None
-
-        url = "{server}/emby/Items/%s/Ancestors?UserId={UserId}&format=json" % itemid
-        for view in self.doUtils(url):
-
-            if view['Type'] == "CollectionFolder":
-                # Found view
-                viewId = view['Id']
-
-        # Compare to view table in emby database
-        with database.DatabaseConn('emby') as conn:
-            with closing(conn.cursor()) as cursor:
-                query = ' '.join((
-
-                    "SELECT view_name, media_type",
-                    "FROM view",
-                    "WHERE view_id = ?"
-                ))
-                cursor.execute(query, (viewId,))
-                result = cursor.fetchone()
-                try:
-                    viewName = result[0]
-                    mediatype = result[1]
-                except TypeError:
-                    viewName = None
-                    mediatype = None
-
-
-        return [viewName, viewId, mediatype]
     
     def getFilteredSection(self, parentid, itemtype=None, sortby="SortName", recursive=True,
                         limit=None, sortorder="Ascending", filter_type=""):
