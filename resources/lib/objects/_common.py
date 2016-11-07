@@ -29,9 +29,8 @@ def catch_except(errors=(Exception, ), default_value=False):
         def wrapper(*args, **kwargs):
             try:
                 return func(*args, **kwargs)
-            except sqlite3.OperationalError as error:
-                if "database is locked" in error:
-                    raise
+            except sqlite3.Error as error:
+                raise
             except errors as error:
                 errStrings = ga.formatException()
                 ga.sendEventData("Exception", errStrings[0], errStrings[1], True)
