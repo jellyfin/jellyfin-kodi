@@ -9,7 +9,6 @@ import sys
 import traceback
 
 import xbmc
-import xbmcaddon
 import xbmcgui
 import xbmcplugin
 import xbmcvfs
@@ -25,7 +24,6 @@ KODI = xbmc.getInfoLabel('System.BuildVersion')[:2]
 #################################################################################################
 
 def video_database():
-        
     db_version = {
 
         '13': 78, # Gotham
@@ -34,14 +32,10 @@ def video_database():
         '16': 99, # Jarvis
         '17': 107 # Krypton
     }
-
-    path = xbmc.translatePath("special://database/MyVideos%s.db"
-        % db_version.get(KODI, "")).decode('utf-8')
-
-    return path
+    return xbmc.translatePath("special://database/MyVideos%s.db"
+                              % db_version.get(KODI, "")).decode('utf-8')
 
 def music_database():
-    
     db_version = {
 
         '13': 46, # Gotham
@@ -50,11 +44,8 @@ def music_database():
         '16': 56, # Jarvis
         '17': 60  # Krypton
     }
-
-    path = xbmc.translatePath("special://database/MyMusic%s.db"
-        % db_version.get(KODI, "")).decode('utf-8')
-
-    return path
+    return xbmc.translatePath("special://database/MyMusic%s.db"
+                              % db_version.get(KODI, "")).decode('utf-8')
 
 def texture_database():
     return xbmc.translatePath("special://database/Textures13.db").decode('utf-8')
@@ -214,7 +205,6 @@ def db_reset():
     if resp:
         import connectmanager
         # Delete the settings
-        addon = xbmcaddon.Addon()
         addondir = xbmc.translatePath(
                    "special://profile/addon_data/plugin.video.emby/").decode('utf-8')
         dataPath = "%ssettings.xml" % addondir
