@@ -30,7 +30,6 @@ import api
 from views import Playlist, VideoNodes
 from utils import window, settings, dialog, language as lang
 from database import DatabaseConn
-from contextlib import closing
 
 #################################################################################################
 
@@ -235,10 +234,9 @@ def deleteItem():
                 log.info("Unknown type, unable to proceed.")
                 return
 
-        with DatabaseConn('emby') as conn:
-            with closing(conn.cursor()) as cursor:
-                emby_db = embydb.Embydb_Functions(cursor)
-                item = emby_db.getItem_byKodiId(dbId, itemType)
+        with DatabaseConn('emby') as cursor:
+            emby_db = embydb.Embydb_Functions(cursor)
+            item = emby_db.getItem_byKodiId(dbId, itemType)
 
         try:
             itemId = item[0]
@@ -422,10 +420,9 @@ def getThemeMedia():
         return
         
     # Get every user view Id
-    with DatabaseConn('emby') as conn:
-        with closing(conn.cursor()) as cursor:
-            emby_db = embydb.Embydb_Functions(cursor)
-            viewids = emby_db.getViews()
+    with DatabaseConn('emby') as cursor:
+        emby_db = embydb.Embydb_Functions(cursor)
+        viewids = emby_db.getViews()
 
     # Get Ids with Theme Videos
     itemIds = {}

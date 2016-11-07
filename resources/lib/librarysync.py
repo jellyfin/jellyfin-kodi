@@ -14,6 +14,7 @@ import xbmcvfs
 import api
 import utils
 import clientinfo
+import database
 import downloadutils
 import itemtypes
 import embydb_functions as embydb
@@ -23,8 +24,6 @@ import views
 from objects import Movies, MusicVideos, TVShows, Music
 from utils import window, settings, language as lang, should_stop
 from ga_client import GoogleAnalytics
-import database
-from contextlib import closing
 
 ##################################################################################################
 
@@ -233,8 +232,8 @@ class LibrarySync(threading.Thread):
         utils.sourcesXML()
 
         # use emby and video DBs
-        with database.DatabaseConn('emby') as conn_emby, database.DatabaseConn('video') as conn_video:
-            with closing(conn_emby.cursor()) as cursor_emby, closing(conn_video.cursor()) as cursor_video:        
+        with database.DatabaseConn('emby') as cursor_emby:
+            with database.DatabaseConn('video') as cursor_video:    
                 # content sync: movies, tvshows, musicvideos, music
 
                 if manualrun:
@@ -275,7 +274,7 @@ class LibrarySync(threading.Thread):
 
                 # Set views
                 views.Views(cursor_emby, cursor_video).maintain()
-                conn_emby.commit()
+                cursor_emby.connection.commit()
                 #self.maintainViews(cursor_emby, cursor_video)
 
                 # Sync video library
@@ -312,8 +311,8 @@ class LibrarySync(threading.Thread):
             if repair and 'music' not in repair_list:
                 pass
             else:
-                with database.DatabaseConn('emby') as conn_emby, database.DatabaseConn('music') as conn_music:
-                    with closing(conn_emby.cursor()) as cursor_emby, closing(conn_music.cursor()) as cursor_music:
+                with database.DatabaseConn('emby') as cursor_emby:
+                    with database.DatabaseConn('music') as cursor_music:
                         startTime = datetime.now()
                         completed = self.music(cursor_emby, cursor_music, pDialog)
                         if not completed:
@@ -332,10 +331,9 @@ class LibrarySync(threading.Thread):
         if pDialog:
             pDialog.close()
 
-        with database.DatabaseConn('emby') as conn_emby:
-            with closing(conn_emby.cursor()) as cursor_emby:
-                emby_db = embydb.Embydb_Functions(cursor_emby)
-                current_version = emby_db.get_version(self.clientInfo.get_version())
+        with database.DatabaseConn('emby') as cursor_emby:
+            emby_db = embydb.Embydb_Functions(cursor_emby)
+            current_version = emby_db.get_version(self.clientInfo.get_version())
                 
         window('emby_version', current_version)
 
@@ -362,8 +360,8 @@ class LibrarySync(threading.Thread):
 
     def refreshViews(self):
         
-        with database.DatabaseConn('emby') as conn_emby, database.DatabaseConn() as conn_video:
-            with closing(conn_emby.cursor()) as cursor_emby, closing(conn_video.cursor()) as cursor_video:
+        with database.DatabaseConn('emby') as cursor_emby:
+            with database.DatabaseConn() as cursor_video:
                 # Compare views, assign correct tags to items
                 views.Views(cursor_emby, cursor_video).maintain()
 
@@ -515,8 +513,8 @@ class LibrarySync(threading.Thread):
         # do a lib update if any items in list
         totalUpdates = len(self.addedItems) + len(self.updateItems) + len(self.userdataItems) + len(self.removeItems)
         if totalUpdates > 0:
-            with database.DatabaseConn('emby') as conn_emby, database.DatabaseConn('video') as conn_video:
-                with closing(conn_emby.cursor()) as cursor_emby, closing(conn_video.cursor()) as cursor_video:
+            with database.DatabaseConn('emby') as cursor_emby:
+                with database.DatabaseConn('video') as cursor_video:
 
                     emby_db = embydb.Embydb_Functions(cursor_emby)
 
@@ -610,18 +608,17 @@ class LibrarySync(threading.Thread):
 
     def _verify_emby_database(self):
         # Create the tables for the emby database
-        with database.DatabaseConn('emby') as conn:
-            with closing(conn.cursor()) as cursor:
-                # emby, view, version
-                cursor.execute(
-                    """CREATE TABLE IF NOT EXISTS emby(
-                    emby_id TEXT UNIQUE, media_folder TEXT, emby_type TEXT, media_type TEXT,
-                    kodi_id INTEGER, kodi_fileid INTEGER, kodi_pathid INTEGER, parent_id INTEGER,
-                    checksum INTEGER)""")
-                cursor.execute(
-                    """CREATE TABLE IF NOT EXISTS view(
-                    view_id TEXT UNIQUE, view_name TEXT, media_type TEXT, kodi_tagid INTEGER)""")
-                cursor.execute("CREATE TABLE IF NOT EXISTS version(idVersion TEXT)")
+        with database.DatabaseConn('emby') as cursor:
+            # emby, view, version
+            cursor.execute(
+                """CREATE TABLE IF NOT EXISTS emby(
+                emby_id TEXT UNIQUE, media_folder TEXT, emby_type TEXT, media_type TEXT,
+                kodi_id INTEGER, kodi_fileid INTEGER, kodi_pathid INTEGER, parent_id INTEGER,
+                checksum INTEGER)""")
+            cursor.execute(
+                """CREATE TABLE IF NOT EXISTS view(
+                view_id TEXT UNIQUE, view_name TEXT, media_type TEXT, kodi_tagid INTEGER)""")
+            cursor.execute("CREATE TABLE IF NOT EXISTS version(idVersion TEXT)")
 
     def run(self):
 
@@ -669,16 +666,14 @@ class LibrarySync(threading.Thread):
             if (window('emby_dbCheck') != "true" and settings('SyncInstallRunDone') == "true"):
                 # Verify the validity of the database
                 log.info("Doing DB Version Check")
-                with database.DatabaseConn('emby') as conn:
-                    with closing(conn.cursor()) as cursor:                
-
-                        emby_db = embydb.Embydb_Functions(cursor)
-                        currentVersion = emby_db.get_version()
-                        ###$ Begin migration $###
-                        if not currentVersion:
-                            currentVersion = emby_db.get_version(settings('dbCreatedWithVersion') or self.clientInfo.get_version())
-                            log.info("Migration of database version completed")
-                        ###$ End migration $###
+                with database.DatabaseConn('emby') as cursor:
+                    emby_db = embydb.Embydb_Functions(cursor)
+                    currentVersion = emby_db.get_version()
+                    ###$ Begin migration $###
+                    if not currentVersion:
+                        currentVersion = emby_db.get_version(settings('dbCreatedWithVersion') or self.clientInfo.get_version())
+                        log.info("Migration of database version completed")
+                    ###$ End migration $###
 
                 window('emby_version', value=currentVersion)
 

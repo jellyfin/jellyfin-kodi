@@ -15,7 +15,6 @@ import requests
 import image_cache_thread
 from utils import window, settings, dialog, language as lang, JSONRPC
 from database import DatabaseConn
-from contextlib import closing
 
 ##################################################################################################
 
@@ -166,49 +165,47 @@ class Artwork(object):
 
     def _cache_all_video_entries(self, pdialog):
 
-        with DatabaseConn('video') as conn:
-            with closing(conn.cursor()) as cursor_video:    
-            
-                cursor_video.execute("SELECT url FROM art WHERE media_type != 'actor'") # dont include actors
-                result = cursor_video.fetchall()
-                total = len(result)
-                log.info("Image cache sync about to process %s images", total)
-                cursor_video.close()
+        with DatabaseConn('video') as cursor_video:
 
-                count = 0
-                for url in result:
+            cursor_video.execute("SELECT url FROM art WHERE media_type != 'actor'") # dont include actors
+            result = cursor_video.fetchall()
+            total = len(result)
+            log.info("Image cache sync about to process %s images", total)
+            cursor_video.close()
 
-                    if pdialog.iscanceled():
-                        break
+            count = 0
+            for url in result:
 
-                    percentage = int((float(count) / float(total))*100)
-                    message = "%s of %s (%s)" % (count, total, len(self.image_cache_threads))
-                    pdialog.update(percentage, "%s %s" % (lang(33045), message))
-                    self.cache_texture(url[0])
-                    count += 1
+                if pdialog.iscanceled():
+                    break
+
+                percentage = int((float(count) / float(total))*100)
+                message = "%s of %s (%s)" % (count, total, len(self.image_cache_threads))
+                pdialog.update(percentage, "%s %s" % (lang(33045), message))
+                self.cache_texture(url[0])
+                count += 1
 
     def _cache_all_music_entries(self, pdialog):
 
-        with DatabaseConn('music') as conn:
-            with closing(conn.cursor()) as cursor_music:        
+        with DatabaseConn('music') as cursor_music:
         
-                cursor_music.execute("SELECT url FROM art")
-                result = cursor_music.fetchall()
-                total = len(result)
-                
-                log.info("Image cache sync about to process %s images", total)
+            cursor_music.execute("SELECT url FROM art")
+            result = cursor_music.fetchall()
+            total = len(result)
+            
+            log.info("Image cache sync about to process %s images", total)
 
-                count = 0
-                for url in result:
+            count = 0
+            for url in result:
 
-                    if pdialog.iscanceled():
-                        break
+                if pdialog.iscanceled():
+                    break
 
-                    percentage = int((float(count) / float(total))*100)
-                    message = "%s of %s" % (count, total)
-                    pdialog.update(percentage, "%s %s" % (lang(33045), message))
-                    self.cache_texture(url[0])
-                    count += 1
+                percentage = int((float(count) / float(total))*100)
+                message = "%s of %s" % (count, total)
+                pdialog.update(percentage, "%s %s" % (lang(33045), message))
+                self.cache_texture(url[0])
+                count += 1
 
     @classmethod
     def delete_cache(cls):
@@ -230,14 +227,13 @@ class Artwork(object):
                     log.debug("deleted: %s", filename)
 
         # remove all existing data from texture DB
-        with DatabaseConn('texture') as conn:
-            with closing(conn.cursor()) as cursor_texture:  
-                cursor_texture.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
-                rows = cursor_texture.fetchall()
-                for row in rows:
-                    table_name = row[0]
-                    if table_name != "version":
-                        cursor_texture.execute("DELETE FROM " + table_name)
+        with DatabaseConn('texture') as cursor_texture:
+            cursor_texture.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
+            rows = cursor_texture.fetchall()
+            for row in rows:
+                table_name = row[0]
+                if table_name != "version":
+                    cursor_texture.execute("DELETE FROM " + table_name)
 
     def _add_worker_image_thread(self, url):
 
@@ -431,28 +427,26 @@ class Artwork(object):
     @classmethod
     def delete_cached_artwork(cls, url):
         # Only necessary to remove and apply a new backdrop or poster       
-        with DatabaseConn('texture') as conn:
-            with closing(conn.cursor()) as cursor_texture:  
+        with DatabaseConn('texture') as cursor_texture:  
+            try:
+                cursor_texture.execute("SELECT cachedurl FROM texture WHERE url = ?", (url,))
+                cached_url = cursor_texture.fetchone()[0]
+
+            except TypeError:
+                log.info("Could not find cached url")
+
+            except OperationalError:
+                log.info("Database is locked. Skip deletion process.")
+
+            else: # Delete thumbnail as well as the entry
+                thumbnails = xbmc.translatePath("special://thumbnails/%s" % cached_url).decode('utf-8')
+                log.info("Deleting cached thumbnail: %s", thumbnails)
+                xbmcvfs.delete(thumbnails)
+
                 try:
-                    cursor_texture.execute("SELECT cachedurl FROM texture WHERE url = ?", (url,))
-                    cached_url = cursor_texture.fetchone()[0]
-
-                except TypeError:
-                    log.info("Could not find cached url")
-
+                    cursor_texture.execute("DELETE FROM texture WHERE url = ?", (url,))
                 except OperationalError:
-                    log.info("Database is locked. Skip deletion process.")
-
-                else: # Delete thumbnail as well as the entry
-                    thumbnails = xbmc.translatePath("special://thumbnails/%s" % cached_url).decode('utf-8')
-                    log.info("Deleting cached thumbnail: %s", thumbnails)
-                    xbmcvfs.delete(thumbnails)
-
-                    try:
-                        cursor_texture.execute("DELETE FROM texture WHERE url = ?", (url,))
-                    except OperationalError:
-                        log.debug("Issue deleting url from cache. Skipping.")
-
+                    log.debug("Issue deleting url from cache. Skipping.")
 
     def get_people_artwork(self, people):
         # append imageurl if existing

@@ -4,7 +4,6 @@
 
 import logging
 import sqlite3
-from contextlib import closing
 import sys
 import traceback
 
@@ -98,7 +97,8 @@ class DatabaseConn(object):
             self.conn = sqlite3.connect(self.path, timeout=self.timeout)
 
         log.info("opened: %s - %s", self.path, id(self.conn))
-        return self.conn
+        self.cursor = self.conn.cursor()
+        return self.conn.cursor()
 
     def _SQL(self, media_type):
 
@@ -126,6 +126,7 @@ class DatabaseConn(object):
             log.info("commit: %s", self.path)
 
         log.info("closing: %s - %s", self.path, id(self.conn))
+        self.cursor.close()
         self.conn.close()
 
         
@@ -156,39 +157,36 @@ def db_reset():
 
     # Wipe the kodi databases
     log.warn("Resetting the Kodi video database.")
-    with DatabaseConn('video') as conn:
-        with closing(conn.cursor()) as cursor:
-            cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
-            rows = cursor.fetchall()
-            for row in rows:
-                tablename = row[0]
-                if tablename != "version":
-                    cursor.execute("DELETE FROM " + tablename)
+    with DatabaseConn('video') as cursor:
+        cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
+        rows = cursor.fetchall()
+        for row in rows:
+            tablename = row[0]
+            if tablename != "version":
+                cursor.execute("DELETE FROM " + tablename)
 
     if settings('enableMusic') == "true":
         log.warn("Resetting the Kodi music database.")
-        with DatabaseConn('music') as conn:
-            with closing(conn.cursor()) as cursor:           
-                cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
-                rows = cursor.fetchall()
-                for row in rows:
-                    tablename = row[0]
-                    if tablename != "version":
-                        cursor.execute("DELETE FROM " + tablename)
-
-    # Wipe the emby database
-    log.warn("Resetting the Emby database.")
-    with DatabaseConn('emby') as conn:
-        with closing(conn.cursor()) as cursor:    
+        with DatabaseConn('music') as cursor:         
             cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
             rows = cursor.fetchall()
             for row in rows:
                 tablename = row[0]
                 if tablename != "version":
                     cursor.execute("DELETE FROM " + tablename)
-            cursor.execute('DROP table IF EXISTS emby')
-            cursor.execute('DROP table IF EXISTS view')
-            cursor.execute("DROP table IF EXISTS version")
+
+    # Wipe the emby database
+    log.warn("Resetting the Emby database.")
+    with DatabaseConn('emby') as cursor:    
+        cursor.execute('SELECT tbl_name FROM sqlite_master WHERE type="table"')
+        rows = cursor.fetchall()
+        for row in rows:
+            tablename = row[0]
+            if tablename != "version":
+                cursor.execute("DELETE FROM " + tablename)
+        cursor.execute('DROP table IF EXISTS emby')
+        cursor.execute('DROP table IF EXISTS view')
+        cursor.execute("DROP table IF EXISTS version")
 
     # Offer to wipe cached thumbnails
     if dialog.yesno(language(29999), language(33086)):
