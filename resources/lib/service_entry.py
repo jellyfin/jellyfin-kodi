@@ -7,6 +7,7 @@ import sys
 import time
 import _strptime # Workaround for threads using datetime: _striptime is locked
 from datetime import datetime
+import platform
 
 import xbmc
 
@@ -164,6 +165,8 @@ class Service(object):
         
         ga = GoogleAnalytics()
         ga.sendEventData("Application", "Startup", serverId)
+        ga.sendEventData("Version", "OS", platform.platform())
+        ga.sendEventData("Version", "Python", platform.python_version())
 
         # Start up events
         self.warn_auth = True
