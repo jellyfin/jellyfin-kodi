@@ -401,7 +401,7 @@ class TVShows(Items):
             # We needed to recreate the show entry. Re-add episodes now.
             log.info("Repairing episodes for showid: %s %s", showid, title)
             all_episodes = emby.getEpisodesbyShow(itemid)
-            self.add_episode(all_episodes['Items'], None)
+            self.add_episodes(all_episodes['Items'], None)
 
         return True
 
