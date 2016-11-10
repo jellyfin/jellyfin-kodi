@@ -385,10 +385,15 @@ class Player(xbmc.Player):
         log.debug("PLAYBACK_SEEK: %s" % currentFile)
 
         if self.played_info.get(currentFile):
-            position = self.xbmcplayer.getTime()
-            self.played_info[currentFile]['currentPosition'] = position
+            position = None
+            try:
+                position = self.xbmcplayer.getTime()
+            except:
+                pass
 
-            self.reportPlayback()
+            if position is not None:
+                self.played_info[currentFile]['currentPosition'] = position
+                self.reportPlayback()
     
     @log_error()
     def onPlayBackStopped(self):
