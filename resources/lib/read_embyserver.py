@@ -174,7 +174,6 @@ class Read_EmbyServer():
             'IncludeItemTypes': itemtype,
             'CollapseBoxSetItems': False,
             'IsVirtualUnaired': False,
-            'IsMissing': False,
             'Recursive': True,
             'Limit': 1
         }
@@ -201,7 +200,6 @@ class Read_EmbyServer():
                     'IncludeItemTypes': itemtype,
                     'CollapseBoxSetItems': False,
                     'IsVirtualUnaired': False,
-                    'IsMissing': False,
                     'Recursive': True,
                     'StartIndex': index,
                     'Limit': jump,
@@ -340,7 +338,6 @@ class Read_EmbyServer():
             'ParentId': parentid,
             'CollapseBoxSetItems': False,
             'IsVirtualUnaired': False,
-            'IsMissing': False,
             'Recursive': True,
             'Ids': itemid
         }
@@ -446,7 +443,6 @@ class Read_EmbyServer():
                     'ParentId': parent_id,
                     'Recursive': True,
                     'IsVirtualUnaired': False,
-                    'IsMissing': False,
                     'StartIndex': index,
                     'Limit': jump,
                     'SortBy': "SortName",
