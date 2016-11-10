@@ -165,8 +165,11 @@ class Service(object):
         
         ga = GoogleAnalytics()
         ga.sendEventData("Application", "Startup", serverId)
-        ga.sendEventData("Version", "OS", platform.platform())
-        ga.sendEventData("Version", "Python", platform.python_version())
+        try:
+            ga.sendEventData("Version", "OS", platform.platform())
+            ga.sendEventData("Version", "Python", platform.python_version())
+        except Exception:
+            pass
 
         # Start up events
         self.warn_auth = True
