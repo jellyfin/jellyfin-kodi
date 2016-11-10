@@ -172,7 +172,6 @@ class Read_EmbyServer():
             'ParentId': parentid,
             'ArtistIds': artist_id,
             'IncludeItemTypes': itemtype,
-            'IncludeLocationType': "Offline,FileSystem",
             'CollapseBoxSetItems': False,
             'IsVirtualUnaired': False,
             'IsMissing': False,
@@ -201,7 +200,6 @@ class Read_EmbyServer():
                     'ArtistIds': artist_id,
                     'IncludeItemTypes': itemtype,
                     'CollapseBoxSetItems': False,
-                    'IncludeLocationType': "Offline,FileSystem",
                     'IsVirtualUnaired': False,
                     'IsMissing': False,
                     'Recursive': True,
@@ -341,7 +339,6 @@ class Read_EmbyServer():
 
             'ParentId': parentid,
             'CollapseBoxSetItems': False,
-            'IncludeLocationType': "Offline,FileSystem",
             'IsVirtualUnaired': False,
             'IsMissing': False,
             'Recursive': True,
@@ -427,7 +424,6 @@ class Read_EmbyServer():
         params = {
 
             'ParentId': parent_id,
-            'IncludeLocationType': "Offline,FileSystem",
             'Recursive': True,
             'Limit': 1
         }
@@ -450,7 +446,6 @@ class Read_EmbyServer():
                     'ParentId': parent_id,
                     'Recursive': True,
                     'IsVirtualUnaired': False,
-                    'IncludeLocationType': "Offline,FileSystem",
                     'StartIndex': index,
                     'Limit': jump,
                     'SortBy': "SortName",
