@@ -1,3 +1,8 @@
+version 2.3.12
+- Fix virtual episodes being processed
+- Return offline items so they don't get removed in kodi
+- other minor fixes
+
 version 2.3.8
 - Fix database connection
 - other minor fixes
