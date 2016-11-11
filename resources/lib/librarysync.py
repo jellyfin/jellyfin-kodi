@@ -651,9 +651,6 @@ class LibrarySync(threading.Thread):
 
         log.warn("---===### Starting LibrarySync ###===---")
 
-        # Verify database structure, otherwise create it.
-        self._verify_emby_database()
-
         while not self.monitor.abortRequested():
 
             # In the event the server goes offline
