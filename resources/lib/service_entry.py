@@ -100,9 +100,6 @@ class Service(object):
         self.websocket_thread = wsc.WebSocketClient()
         self.library_thread = librarysync.LibrarySync()
 
-        # Verify database structure, otherwise create it.
-        self.library_thread._verify_emby_database()
-
         while not self.monitor.abortRequested():
 
             if window('emby_kodiProfile') != kodi_profile:

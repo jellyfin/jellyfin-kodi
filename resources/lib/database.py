@@ -98,6 +98,11 @@ class DatabaseConn(object):
 
         log.info("opened: %s - %s", self.path, id(self.conn))
         self.cursor = self.conn.cursor()
+
+        if self.db_file == "emby":
+            verify_emby_database(self.cursor)
+            self.conn.commit()
+
         return self.cursor
 
     def _SQL(self, media_type):
@@ -129,7 +134,24 @@ class DatabaseConn(object):
         self.cursor.close()
         self.conn.close()
 
-        
+
+def verify_emby_database(cursor):
+    # Create the tables for the emby database
+    # emby, view, version
+
+    if window('emby_db_checked') != "true":
+        log.info("Verifying emby DB")
+        cursor.execute(
+            """CREATE TABLE IF NOT EXISTS emby(
+            emby_id TEXT UNIQUE, media_folder TEXT, emby_type TEXT, media_type TEXT,
+            kodi_id INTEGER, kodi_fileid INTEGER, kodi_pathid INTEGER, parent_id INTEGER,
+            checksum INTEGER)""")
+        cursor.execute(
+            """CREATE TABLE IF NOT EXISTS view(
+            view_id TEXT UNIQUE, view_name TEXT, media_type TEXT, kodi_tagid INTEGER)""")
+        cursor.execute("CREATE TABLE IF NOT EXISTS version(idVersion TEXT)")
+        window('emby_db_checked', value="true")
+
 def db_reset():
 
     dialog = xbmcgui.Dialog()

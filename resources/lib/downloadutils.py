@@ -209,7 +209,6 @@ class DownloadUtils(object):
         log.debug("===== ENTER downloadUrl =====")
 
         kwargs = {}
-        default_link = ""
 
         try:
             # Ensure server info is loaded
@@ -247,18 +246,17 @@ class DownloadUtils(object):
                 log.debug("====== 204 Success ======")
                 # Read response to release connection
                 response.content
+                if action_type == "GET":
+                    raise Warning("Response Code 204: No Content for GET request")
+                else:
+                    return None
 
             elif response.status_code == requests.codes.ok:
-                try:
-                    # UNICODE - JSON object
-                    response = response.json()
-                    log.debug("====== 200 Success ======")
-                    log.debug("Response: %s", response)
-                    return response
-
-                except Exception:
-                    if response.headers.get('content-type') != "text/html":
-                        log.info("Unable to convert the response for: %s", url)
+                # UNICODE - JSON object
+                json_data = response.json()
+                log.debug("====== 200 Success ======")
+                log.debug("Response: %s", json_data)
+                return json_data
 
             else: # Bad status code
                 log.error("=== Bad status response: %s ===", response.status_code)
@@ -282,7 +280,7 @@ class DownloadUtils(object):
 
             if response.status_code == 400:
                 log.error("Malformed request: %s", error)
-                raise Warning('400')
+                raise Warning('400:' + str(error))
 
             if response.status_code == 401:
                 # Unauthorized
@@ -312,12 +310,13 @@ class DownloadUtils(object):
                     xbmcgui.Dialog().notification(heading="Error connecting",
                                                   message="Unauthorized.",
                                                   icon=xbmcgui.NOTIFICATION_ERROR)
-                    raise Warning('401')
+                    raise Warning('401:' + str(error))
 
         except requests.exceptions.RequestException as error:
             log.error("unknown error connecting to: %s", url)
 
-        return default_link
+        # something went wrong so return a None as we have no valid data
+        return None
 
     def _ensure_server(self, server_id=None):
 
