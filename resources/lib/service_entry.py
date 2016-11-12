@@ -7,6 +7,7 @@ import sys
 import time
 import _strptime # Workaround for threads using datetime: _striptime is locked
 from datetime import datetime
+import platform
 
 import xbmc
 
@@ -99,6 +100,8 @@ class Service(object):
         self.websocket_thread = wsc.WebSocketClient()
         self.library_thread = librarysync.LibrarySync()
 
+        # Verify database structure, otherwise create it.
+        self.library_thread._verify_emby_database()
 
         while not self.monitor.abortRequested():
 
@@ -164,6 +167,11 @@ class Service(object):
         
         ga = GoogleAnalytics()
         ga.sendEventData("Application", "Startup", serverId)
+        try:
+            ga.sendEventData("Version", "OS", platform.platform())
+            ga.sendEventData("Version", "Python", platform.python_version())
+        except Exception:
+            pass
 
         # Start up events
         self.warn_auth = True

@@ -98,7 +98,7 @@ class DatabaseConn(object):
 
         log.info("opened: %s - %s", self.path, id(self.conn))
         self.cursor = self.conn.cursor()
-        return self.conn.cursor()
+        return self.cursor
 
     def _SQL(self, media_type):
 
