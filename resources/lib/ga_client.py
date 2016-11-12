@@ -36,7 +36,7 @@ def log_error(errors=(Exception, )):
 # main GA class
 class GoogleAnalytics():
 
-    testing = True
+    testing = False
     
     def __init__(self):
     
