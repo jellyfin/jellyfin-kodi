@@ -36,7 +36,7 @@ def log_error(errors=(Exception, )):
 # main GA class
 class GoogleAnalytics():
 
-    testing = False
+    testing = True
     
     def __init__(self):
     
@@ -85,33 +85,64 @@ class GoogleAnalytics():
             return "Other"
         
     def formatException(self):
+
+        stack = traceback.extract_stack()
         exc_type, exc_obj, exc_tb = sys.exc_info()
-		
+        tb = traceback.extract_tb(exc_tb)
+        full_tb = stack[:-1] + tb
+        #log.error(str(full_tb))
+
+		# get last stack frame
         latestStackFrame = None
-        allStackFrames = traceback.extract_tb(exc_tb)
-        if(len(allStackFrames) > 0):
-            latestStackFrame = allStackFrames[-1]
-        #log.error(str(latestStackFrame))
-		
+        if(len(tb) > 0):
+            latestStackFrame = tb[-1]
+        #log.error(str(tb))
+
+        fileStackTrace = ""
+        try:
+            # get files from stack
+            stackFileList = []
+            for frame in full_tb:
+                #log.error(str(frame))
+                frameFile = (os.path.split(frame[0])[1])[:-3]
+                frameLine = frame[1]
+                if(len(stackFileList) == 0 or stackFileList[-1][0] != frameFile):
+                    stackFileList.append([frameFile, [str(frameLine)]])
+                else:
+                    file = stackFileList[-1][0]
+                    lines = stackFileList[-1][1]
+                    lines.append(str(frameLine))
+                    stackFileList[-1] = [file, lines]
+            #log.error(str(stackFileList))
+
+            for item in stackFileList:
+                lines = ",".join(item[1])
+                fileStackTrace += item[0] + "," + lines + ":"
+            #log.error(str(fileStackTrace))
+        except Exception as e:
+            fileStackTrace = None
+            log.error(e)
+
         errorType = "NA"
         errorFile = "NA"
-		
-        if(latestStackFrame != None):
-            fileName = os.path.split(latestStackFrame[0])[1]
+
+        if latestStackFrame is not None:
+            if fileStackTrace is None:
+                fileStackTrace = os.path.split(latestStackFrame[0])[1] + ":" + str(latestStackFrame[1])
             
             codeLine = "NA"
             if(len(latestStackFrame) > 3 and latestStackFrame[3] != None):
                 codeLine = latestStackFrame[3].strip()
 
-            errorFile = "%s:%s(%s)(%s)" % (fileName, latestStackFrame[1], exc_obj.message, codeLine)
+            errorFile = "%s(%s)(%s)" % (fileStackTrace, exc_obj.message, codeLine)
             errorFile = errorFile[0:499]
             errorType = "%s" % (exc_type.__name__)
             #log.error(errorType + " - " + errorFile)
-			
+
         del(exc_type, exc_obj, exc_tb)
         
         return errorType, errorFile
-	
+
     def getBaseData(self):
     
         # all the data we can send to Google Analytics
