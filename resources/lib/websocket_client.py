@@ -346,5 +346,6 @@ class WebSocketClient(threading.Thread):
     def stop_client(self):
 
         self._stop_websocket = True
-        self._client.close()
+        if self._client is not None:
+            self._client.close()
         log.info("Stopping thread")
