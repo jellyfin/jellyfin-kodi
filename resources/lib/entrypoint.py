@@ -372,7 +372,7 @@ def addUser():
         additionalUsers = result[0]['AdditionalUsers']
     except (IndexError, KeyError, TypeError) as error:
         log.error(error)
-        additionaluser = []
+        additionalUsers = []
 
     count = 0
     for additionaluser in additionalUsers:
