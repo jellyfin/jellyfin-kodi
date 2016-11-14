@@ -11,6 +11,7 @@ import xbmcgui
 import clientinfo
 import connect.connectionmanager as connectionmanager
 from utils import window, settings, language as lang
+import internal_exceptions
 
 ##################################################################################################
 
@@ -267,18 +268,18 @@ class DownloadUtils(object):
 
         except requests.exceptions.SSLError as error:
             log.error("invalid SSL certificate for: %s", url)
-            raise
+            raise internal_exceptions.ExceptionWrapper(error)
 
         except requests.exceptions.ConnectTimeout as error:
             log.error("Server timeout at: %s", url)
-            raise
+            raise internal_exceptions.ExceptionWrapper(error)
 
         except requests.exceptions.ConnectionError as error:
             # Make the addon aware of status
             if window('emby_online') != "false":
                 log.error("Server unreachable at: %s", url)
                 window('emby_online', value="false")
-            raise
+            raise internal_exceptions.ExceptionWrapper(error)
 
         except requests.exceptions.HTTPError as error:
 
@@ -300,12 +301,12 @@ class DownloadUtils(object):
                                                           icon=xbmcgui.NOTIFICATION_ERROR,
                                                           time=5000)
                         window('emby_serverStatus', value="restricted")
-                        raise Warning('restricted')
+                        raise internal_exceptions.ExceptionWrapper("restricted: " + str(error))
 
                     elif (response.headers['X-Application-Error-Code'] ==
                           "UnauthorizedAccessException"):
                         # User tried to do something his emby account doesn't allow
-                        raise Warning('UnauthorizedAccessException')
+                        raise internal_exceptions.ExceptionWrapper("UnauthorizedAccessException: " + str(error))
 
                 elif status not in ("401", "Auth"):
                     # Tell userclient token has been revoked.
@@ -314,7 +315,7 @@ class DownloadUtils(object):
                     xbmcgui.Dialog().notification(heading="Error connecting",
                                                   message="Unauthorized.",
                                                   icon=xbmcgui.NOTIFICATION_ERROR)
-                    raise Warning('401:' + str(error))
+                    raise internal_exceptions.ExceptionWrapper("401: " + str(error))
 
         except requests.exceptions.RequestException as error:
             log.error("unknown error connecting to: %s", url)

@@ -15,6 +15,7 @@ import downloadutils
 import read_embyserver as embyserver
 from ga_client import GoogleAnalytics
 from utils import window, settings, dialog, language as lang, should_stop
+import internal_exceptions
 
 ##################################################################################################
 
@@ -29,6 +30,9 @@ def catch_except(errors=(Exception, ), default_value=False):
         def wrapper(*args, **kwargs):
             try:
                 return func(*args, **kwargs)
+            except internal_exceptions.ExceptionWrapper as error:
+                log.exception(error)
+                raise
             except sqlite3.Error as error:
                 raise
             except errors as error:
