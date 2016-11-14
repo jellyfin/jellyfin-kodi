@@ -251,12 +251,25 @@ class Artwork(object):
                 new_thread.set_host(self.xbmc_host, self.xbmc_port)
                 new_thread.set_auth(self.xbmc_username, self.xbmc_password)
 
-                new_thread.start()
-                self.image_cache_threads.append(new_thread)
-                return
+                counter = 0
+                worked = False
+                while counter < 10:
+                    try:
+                        new_thread.start()
+                        worked = True
+                        break
+                    except:
+                        counter = counter + 1
+                        xbmc.sleep(1000)
+
+                if(worked):
+                    self.image_cache_threads.append(new_thread)
+                    return True
+                else:
+                    return False
             else:
                 log.info("Waiting for empty queue spot: %s", len(self.image_cache_threads))
-                xbmc.sleep(50)
+                xbmc.sleep(100)
 
     def cache_texture(self, url):
         # Cache a single image url to the texture cache
