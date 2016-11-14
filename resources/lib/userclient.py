@@ -77,11 +77,11 @@ class UserClient(threading.Thread):
 
     def verify_server(self):
 
-        url = "%s/emby/Users/Public?format=json" % self.get_server()
-        result = self.download(url, authenticate=False)
-        if result != "": # Specific verification, due to possibility of returning empty dict
+        try:
+            url = "%s/emby/Users/Public?format=json" % self.get_server()
+            self.download(url, authenticate=False)
             return True
-        else:
+        except:
             # Server connection failed
             return False
 

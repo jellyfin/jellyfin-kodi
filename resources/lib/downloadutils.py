@@ -249,6 +249,7 @@ class DownloadUtils(object):
                 if action_type == "GET":
                     raise Warning("Response Code 204: No Content for GET request")
                 else:
+                    # this is probably valid for DELETE and PUT
                     return None
 
             elif response.status_code == requests.codes.ok:
@@ -266,15 +267,18 @@ class DownloadUtils(object):
 
         except requests.exceptions.SSLError as error:
             log.error("invalid SSL certificate for: %s", url)
+            raise
 
         except requests.exceptions.ConnectTimeout as error:
             log.error("Server timeout at: %s", url)
+            raise
 
         except requests.exceptions.ConnectionError as error:
             # Make the addon aware of status
             if window('emby_online') != "false":
                 log.error("Server unreachable at: %s", url)
                 window('emby_online', value="false")
+            raise
 
         except requests.exceptions.HTTPError as error:
 
@@ -301,7 +305,7 @@ class DownloadUtils(object):
                     elif (response.headers['X-Application-Error-Code'] ==
                           "UnauthorizedAccessException"):
                         # User tried to do something his emby account doesn't allow
-                        pass
+                        raise Warning('UnauthorizedAccessException')
 
                 elif status not in ("401", "Auth"):
                     # Tell userclient token has been revoked.
@@ -314,6 +318,7 @@ class DownloadUtils(object):
 
         except requests.exceptions.RequestException as error:
             log.error("unknown error connecting to: %s", url)
+            raise
 
         # something went wrong so return a None as we have no valid data
         return None
