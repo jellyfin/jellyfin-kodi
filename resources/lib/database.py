@@ -233,5 +233,5 @@ def db_reset():
 
     dialog.ok(heading=language(29999), line1=language(33088))
     xbmc.executebuiltin('RestartApp')
-    return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, xbmcgui.ListItem())
+    #return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, xbmcgui.ListItem())
     
