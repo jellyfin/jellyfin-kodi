@@ -225,17 +225,13 @@ class DownloadUtils(object):
                     'headers': self.get_header(server_id, authenticate)
                 })
 
-            if not server['Server'] or not server['UserId']:
-                log.error("Server or UserId not set, not logged in, returning None")
-                xbmcgui.Dialog().notification(heading=lang(29999),
-                                              message="Not Logged In",
-                                              icon=xbmcgui.NOTIFICATION_ERROR,
-                                              time=5000)
-                raise internal_exceptions.ExceptionWrapper("Not Logged In")
-
             # Replace for the real values
             url = url.replace("{server}", server['Server'])
             url = url.replace("{UserId}", server['UserId'])
+
+            # does the URL look ok
+            if url.startswith('/'):
+                raise internal_exceptions.ExceptionWrapper("URL Error: " + url)
 
             ##### PREPARE REQUEST #####
             kwargs.update({
