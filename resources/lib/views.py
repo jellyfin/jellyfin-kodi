@@ -54,7 +54,10 @@ class Views(object):
     def _populate_views(self):
         # Will get emby views and views in Kodi
         grouped_views = self.emby.get_views()
-        self.grouped_views = grouped_views['Items'] if "Items" in grouped_views else []
+        if grouped_views is not None and "Items" in grouped_views:
+            self.grouped_views = grouped_views['Items']
+        else:
+            self.grouped_views = []
 
         for view in self.emby.getViews(sortedlist=True):
             self.views.append(view['name'])

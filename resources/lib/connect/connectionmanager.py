@@ -144,6 +144,9 @@ class ConnectionManager(object):
 
     def _updateServerInfo(self, server, systemInfo):
 
+        if server is None or systemInfo is None:
+            return
+
         server['Name'] = systemInfo['ServerName']
         server['Id'] = systemInfo['Id']
 
