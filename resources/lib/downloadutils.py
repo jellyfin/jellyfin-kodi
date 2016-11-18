@@ -275,7 +275,11 @@ class DownloadUtils(object):
             raise internal_exceptions.ExceptionWrapper(error)
 
         except requests.exceptions.ConnectTimeout as error:
-            log.error("Server timeout at: %s", url)
+            log.error("ConnectTimeout at: %s", url)
+            raise internal_exceptions.ExceptionWrapper(error)
+
+        except requests.exceptions.ReadTimeout as error:
+            log.error("ReadTimeout at: %s", url)
             raise internal_exceptions.ExceptionWrapper(error)
 
         except requests.exceptions.ConnectionError as error:
