@@ -303,6 +303,11 @@ class PlayUtils():
                 "%s&VideoCodec=h264&AudioCodec=ac3&MaxAudioChannels=6&deviceId=%s&VideoBitrate=%s"
                 % (playurl, deviceId, self.getBitrate()*1000))
 
+            # Limit to 8 bit if user selected transcode Hi10P
+            transcodeHi10P = settings('transcodeHi10P')
+            if transcodeHi10P == "true":
+                playurl = "%s&MaxVideoBitDepth=8" % playurl
+
         return playurl
 
     def getBitrate(self):
