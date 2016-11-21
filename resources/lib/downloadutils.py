@@ -293,7 +293,7 @@ class DownloadUtils(object):
 
             if response.status_code == 400:
                 log.error("Malformed request: %s", error)
-                raise Warning('400:' + str(error))
+                raise internal_exceptions.ExceptionWrapper(error)
 
             if response.status_code == 401:
                 # Unauthorized

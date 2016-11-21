@@ -178,17 +178,17 @@ class Movies(Items):
         except IndexError:
             studio = None
 
-        if item.get('LocalTrailerCount'):
+        if int(item.get('LocalTrailerCount', 0)) > 0:
             # There's a local trailer
             url = (
                 "{server}/emby/Users/{UserId}/Items/%s/LocalTrailers?format=json"
                 % itemid
             )
-            result = self.do_url(url)
             try:
+                result = self.do_url(url)
                 trailer = "plugin://plugin.video.emby/trailer/?id=%s&mode=play" % result[0]['Id']
-            except IndexError:
-                log.info("Failed to process local trailer.")
+            except Exception as error:
+                log.info("Failed to process local trailer: " + str(error))
                 trailer = None
         else:
             # Try to get the youtube trailer
