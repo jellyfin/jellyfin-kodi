@@ -24,7 +24,6 @@ import views
 from objects import Movies, MusicVideos, TVShows, Music
 from utils import window, settings, language as lang, should_stop
 from ga_client import GoogleAnalytics
-import internal_exceptions
 
 ##################################################################################################
 
@@ -619,7 +618,7 @@ class LibrarySync(threading.Thread):
         except Exception as e:
             ga = GoogleAnalytics()
             errStrings = ga.formatException()
-            if type(e) != internal_exceptions.ExceptionWrapper:
+            if not (hasattr(e, 'quiet') and e.quiet):
                 ga.sendEventData("Exception", errStrings[0], errStrings[1])
             window('emby_dbScan', clear=True)
             log.exception(e)

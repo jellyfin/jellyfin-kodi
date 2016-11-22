@@ -24,7 +24,6 @@ import loghandler
 from utils import window, dialog, language as lang
 from ga_client import GoogleAnalytics
 import database
-import internal_exceptions
 
 #################################################################################################
 
@@ -162,13 +161,11 @@ if __name__ == "__main__":
 
     try:
         Main()
-    except internal_exceptions.ExceptionWrapper as error:
-        log.exception(error)
-        raise
     except Exception as error:
-        ga = GoogleAnalytics()
-        errStrings = ga.formatException()
-        ga.sendEventData("Exception", errStrings[0], errStrings[1])
+        if not (hasattr(error, 'quiet') and error.quiet):
+            ga = GoogleAnalytics()
+            errStrings = ga.formatException()
+            ga.sendEventData("Exception", errStrings[0], errStrings[1])
         log.exception(error)
         raise
 

@@ -22,7 +22,6 @@ from views import VideoNodes
 from utils import window, settings, dialog, language as lang
 from ga_client import GoogleAnalytics
 import hashlib
-import internal_exceptions
 
 #################################################################################################
 
@@ -107,7 +106,9 @@ class Service(object):
                 # Profile change happened, terminate this thread and others
                 log.info("Kodi profile was: %s and changed to: %s. Terminating old Emby thread.",
                          kodi_profile, window('emby_kodiProfile'))
-                raise internal_exceptions.ExceptionWrapper("Kodi profile changed detected")
+                exc = Exception("Kodi profile changed detected")
+                exc.quiet = True
+                raise exc
 
             # Before proceeding, need to make sure:
             # 1. Server is online

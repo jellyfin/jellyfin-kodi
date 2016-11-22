@@ -11,7 +11,6 @@ import xbmcgui
 import clientinfo
 import connect.connectionmanager as connectionmanager
 from utils import window, settings, language as lang
-import internal_exceptions
 
 ##################################################################################################
 
@@ -231,7 +230,9 @@ class DownloadUtils(object):
 
             # does the URL look ok
             if url.startswith('/'):
-                raise internal_exceptions.ExceptionWrapper("URL Error: " + url)
+                exc = Exception("URL Error: " + url)
+                exc.quiet = True
+                raise exc
 
             ##### PREPARE REQUEST #####
             kwargs.update({
@@ -272,28 +273,33 @@ class DownloadUtils(object):
 
         except requests.exceptions.SSLError as error:
             log.error("invalid SSL certificate for: %s", url)
-            raise internal_exceptions.ExceptionWrapper(error)
+            error.quiet = True
+            raise
 
         except requests.exceptions.ConnectTimeout as error:
             log.error("ConnectTimeout at: %s", url)
-            raise internal_exceptions.ExceptionWrapper(error)
+            error.quiet = True
+            raise
 
         except requests.exceptions.ReadTimeout as error:
             log.error("ReadTimeout at: %s", url)
-            raise internal_exceptions.ExceptionWrapper(error)
+            error.quiet = True
+            raise
 
         except requests.exceptions.ConnectionError as error:
             # Make the addon aware of status
             if window('emby_online') != "false":
                 log.error("Server unreachable at: %s", url)
                 window('emby_online', value="false")
-            raise internal_exceptions.ExceptionWrapper(error)
+            error.quiet = True
+            raise
 
         except requests.exceptions.HTTPError as error:
 
             if response.status_code == 400:
                 log.error("Malformed request: %s", error)
-                raise internal_exceptions.ExceptionWrapper(error)
+                error.quiet = True
+                raise
 
             if response.status_code == 401:
                 # Unauthorized
@@ -309,12 +315,16 @@ class DownloadUtils(object):
                                                           icon=xbmcgui.NOTIFICATION_ERROR,
                                                           time=5000)
                         window('emby_serverStatus', value="restricted")
-                        raise internal_exceptions.ExceptionWrapper("restricted: " + str(error))
+                        exc = Exception("restricted: " + str(error))
+                        exc.quiet = True
+                        raise exc
 
                     elif (response.headers['X-Application-Error-Code'] ==
                           "UnauthorizedAccessException"):
                         # User tried to do something his emby account doesn't allow
-                        raise internal_exceptions.ExceptionWrapper("UnauthorizedAccessException: " + str(error))
+                        exc = Exception("UnauthorizedAccessException: " + str(error))
+                        exc.quiet = True
+                        raise exc
 
                 elif status not in ("401", "Auth"):
                     # Tell userclient token has been revoked.
@@ -323,7 +333,9 @@ class DownloadUtils(object):
                     xbmcgui.Dialog().notification(heading="Error connecting",
                                                   message="Unauthorized.",
                                                   icon=xbmcgui.NOTIFICATION_ERROR)
-                    raise internal_exceptions.ExceptionWrapper("401: " + str(error))
+                    exc = Exception("401: " + str(error))
+                    exc.quiet = True
+                    raise exc
 
         except requests.exceptions.RequestException as error:
             log.error("unknown error connecting to: %s", url)

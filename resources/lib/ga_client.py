@@ -8,7 +8,6 @@ import hashlib
 import xbmc
 import time
 from utils import window, settings, language as lang
-import internal_exceptions
 
 log = logging.getLogger("EMBY."+__name__)
 
@@ -23,15 +22,11 @@ def log_error(errors=(Exception, )):
         def wrapper(*args, **kwargs):
             try:
                 return func(*args, **kwargs)
-            except internal_exceptions.ExceptionWrapper as error:
-                log.exception(error)
-                log.error("log_error: %s \n args: %s \n kwargs: %s",
-                          func.__name__, args, kwargs)
-                raise
             except errors as error:
-                ga = GoogleAnalytics()
-                errStrings = ga.formatException()
-                ga.sendEventData("Exception", errStrings[0], errStrings[1], True)
+                if not (hasattr(error, 'quiet') and error.quiet):
+                    ga = GoogleAnalytics()
+                    errStrings = ga.formatException()
+                    ga.sendEventData("Exception", errStrings[0], errStrings[1], True)
                 log.exception(error)
                 log.error("log_error: %s \n args: %s \n kwargs: %s",
                           func.__name__, args, kwargs)

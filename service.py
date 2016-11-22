@@ -22,7 +22,6 @@ import loghandler
 from service_entry import Service
 from utils import settings
 from ga_client import GoogleAnalytics
-import internal_exceptions
 
 #################################################################################################
 
@@ -42,14 +41,11 @@ if __name__ == "__main__":
             raise RuntimeError("Abort event while waiting to start Emby for kodi")
         # Start the service
         service.service_entry_point()
-    except internal_exceptions.ExceptionWrapper as error:
-        log.exception(error)
-        log.info("Forcing shutdown")
-        service.shutdown()
     except Exception as error:
-        ga = GoogleAnalytics()
-        errStrings = ga.formatException()
-        ga.sendEventData("Exception", errStrings[0], errStrings[1])
+        if not (hasattr(error, 'quiet') and error.quiet):
+            ga = GoogleAnalytics()
+            errStrings = ga.formatException()
+            ga.sendEventData("Exception", errStrings[0], errStrings[1])
         log.exception(error)
         log.info("Forcing shutdown")
         service.shutdown()
