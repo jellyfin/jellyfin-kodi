@@ -4,6 +4,7 @@
 
 import logging
 import sys
+import urllib
 
 import xbmc
 import xbmcgui
@@ -190,6 +191,10 @@ class PlayUtils():
         if "apple.com" in playurl:
             USER_AGENT = "QuickTime/7.7.4"
             playurl += "?|User-Agent=%s" % USER_AGENT
+
+        # Strm
+        if playurl.endswith('.strm'):
+            playurl = urllib.urlencode(playurl)
 
         return playurl
 
