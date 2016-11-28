@@ -149,7 +149,7 @@ class LibrarySync(threading.Thread):
 
         except (KeyError, TypeError):
             log.error("Failed to retrieve latest updates using fast sync.")
-            xbmcgui.Dialog().ok(language(29999), language(33095))
+            xbmcgui.Dialog().ok(lang(29999), lang(33095))
             return False
 
         else:
