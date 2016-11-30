@@ -5,6 +5,7 @@
 import json
 import logging
 import os
+import ntpath
 import shutil
 import sys
 import urlparse
@@ -19,6 +20,7 @@ import artwork
 import utils
 import clientinfo
 import connectmanager
+import database
 import downloadutils
 import librarysync
 import read_embyserver as embyserver
@@ -29,7 +31,6 @@ import playutils
 import api
 from views import Playlist, VideoNodes
 from utils import window, settings, dialog, language as lang
-from database import DatabaseConn
 
 #################################################################################################
 
@@ -149,13 +150,13 @@ def emby_backup():
     # filename
     default_value = "Kodi%s.%s" % (xbmc.getInfoLabel('System.BuildVersion')[:2],
                                    xbmc.getInfoLabel('System.Date(dd-mm-yy)'))
-    filename = dialog(type_="input",
-                      heading=lang(33089),
-                      defaultt=default_value)
-    if not filename:
+    folder_name = dialog(type_="input",
+                         heading=lang(33089),
+                         defaultt=default_value)
+    if not folder_name:
         return
 
-    backup = os.path.join(path, filename)
+    backup = os.path.join(path, folder_name)
     log.info("Backup: %s", backup)
 
     # Create directory
@@ -168,22 +169,35 @@ def emby_backup():
         shutil.rmtree(backup)
 
     # Addon_data
-    shutil.copytree(src=xbmc.translatePath(
-                        "special://profile/addon_data/plugin.video.emby").decode('utf-8'),
-                    dst=os.path.join(backup, "addon_data", "plugin.video.emby"))
+    addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.emby").decode('utf-8')
+    try:
+        shutil.copytree(src=addon_data,
+                        dst=os.path.join(backup, "addon_data", "plugin.video.emby"))
+    except shutil.Error as error:
+        log.error(error)
 
     # Database files
-    database = os.path.join(backup, "Database")
-    xbmcvfs.mkdir(database)
+    database_folder = os.path.join(backup, "Database")
+    if not xbmcvfs.mkdir(database_folder):
+        try:
+            os.makedirs(database_folder)
+        except OSError as error:
+            log.error(error)
+            dialog(type_="ok",
+                   heading="{emby}",
+                   line1="Failed to create backup")
+        return
 
     # Emby database
-    shutil.copy(src=xbmc.translatePath("special://database/emby.db").decode('utf-8'),
-                dst=database)
+    emby_path = database.emby_database()
+    xbmcvfs.copy(emby_path, os.path.join(database_folder, ntpath.basename(emby_path)))
     # Videos database
-    shutil.copy(src=DatabaseConn()._SQL('video'), dst=database)
+    video_path = database.video_database()
+    xbmcvfs.copy(video_path, os.path.join(database_folder, ntpath.basename(video_path)))
     # Music database
     if settings('enableMusic') == "true":
-        shutil.copy(src=DatabaseConn()._SQL('music'), dst=database)
+        music_path = database.music_database()
+        xbmcvfs.copy(music_path, os.path.join(database_folder, ntpath.basename(music_path)))
 
     dialog(type_="ok",
            heading="{emby}",
@@ -234,7 +248,7 @@ def deleteItem():
                 log.info("Unknown type, unable to proceed.")
                 return
 
-        with DatabaseConn('emby') as cursor:
+        with database.DatabaseConn('emby') as cursor:
             emby_db = embydb.Embydb_Functions(cursor)
             item = emby_db.getItem_byKodiId(dbId, itemType)
 
@@ -420,7 +434,7 @@ def getThemeMedia():
         return
         
     # Get every user view Id
-    with DatabaseConn('emby') as cursor:
+    with database.DatabaseConn('emby') as cursor:
         emby_db = embydb.Embydb_Functions(cursor)
         viewids = emby_db.getViews()
 
