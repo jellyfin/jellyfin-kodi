@@ -136,9 +136,9 @@ class LibrarySync(threading.Thread):
         if settings('enableMusic') != "true":
             params['filter'] = "music"
         url = "{server}/emby/Emby.Kodi.SyncQueue/{UserId}/GetItems?format=json"
-        result = self.doUtils(url, parameters=params)
 
         try:
+            result = self.doUtils(url, parameters=params)
             processlist = {
 
                 'added': result['ItemsAdded'],
@@ -149,13 +149,13 @@ class LibrarySync(threading.Thread):
 
         except (KeyError, TypeError):
             log.error("Failed to retrieve latest updates using fast sync.")
+            xbmcgui.Dialog().ok(lang(29999), lang(33095))
             return False
 
         else:
             log.info("Fast sync changes: %s" % result)
             for action in processlist:
                 self.triage_items(action, processlist[action])
-
             return True
 
     def saveLastSync(self):
