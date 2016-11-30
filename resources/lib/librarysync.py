@@ -147,7 +147,8 @@ class LibrarySync(threading.Thread):
                 'remove': result['ItemsRemoved']
             }
 
-        except (KeyError, TypeError):
+        except Exception as error: # To be reviewed to only catch specific errors.
+            log.error(error)
             log.error("Failed to retrieve latest updates using fast sync.")
             xbmcgui.Dialog().ok(lang(29999), lang(33095))
             return False
