@@ -38,7 +38,6 @@ class UserClient(threading.Thread):
         self.__dict__ = self._shared_state
 
         self.doutils = downloadutils.DownloadUtils()
-        self.download = self.doutils.downloadUrl
         self.emby = embyserver.Read_EmbyServer()
         self.connectmanager = connectmanager.ConnectManager()
 
@@ -79,10 +78,11 @@ class UserClient(threading.Thread):
 
         try:
             url = "%s/emby/Users/Public?format=json" % self.get_server()
-            self.download(url, authenticate=False)
+            self.doutils.downloadUrl(url, authenticate=False)
             return True
-        except:
+        except Exception as error:
             # Server connection failed
+            log.error(error)
             return False
 
     @classmethod
@@ -108,8 +108,8 @@ class UserClient(threading.Thread):
     def _set_access(self):
 
         try:
-            self.download("{server}/emby/Users?format=json")
-        except Warning as error:
+            self.doutils.downloadUrl("{server}/emby/Users?format=json")
+        except Exception as error:
             if self._has_access and "restricted" in error:
                 self._has_access = False
                 log.info("access is restricted")
@@ -144,7 +144,7 @@ class UserClient(threading.Thread):
 
     def _set_user_server(self):
 
-        user = self.download("{server}/emby/Users/{UserId}?format=json")
+        user = self.doutils.downloadUrl("{server}/emby/Users/{UserId}?format=json")
         settings('username', value=user['Name'])
         self._user = user
 
@@ -152,7 +152,7 @@ class UserClient(threading.Thread):
             window('EmbyUserImage',
                    value=artwork.Artwork().get_user_artwork(self._user['Id'], 'Primary'))
 
-        self._server = self.download("{server}/emby/System/Configuration?format=json")
+        self._server = self.doutils.downloadUrl("{server}/emby/System/Configuration?format=json")
         settings('markPlayed', value=str(self._server['MaxResumePct']))
 
     def _authenticate(self):
@@ -164,9 +164,10 @@ class UserClient(threading.Thread):
         elif self.get_token():
             try:
                 self._load_user()
-            except Warning:
-                log.info("token is invalid")
-                self._reset_client()
+            except Exception as error:
+                if "401" in error:
+                    log.info("token is invalid")
+                    self._reset_client()
             else:
                 log.info("current user: %s", self.get_username())
                 log.info("current userid: %s", self.get_userid())
@@ -220,8 +221,8 @@ class UserClient(threading.Thread):
         # Test the validity of the current token
         if not authenticated:
             try:
-                self.download("{server}/emby/Users/{UserId}?format=json")
-            except Warning as error:
+                self.doutils.downloadUrl("{server}/emby/Users/{UserId}?format=json")
+            except Exception as error:
                 if "401" in error:
                     # Token is not longer valid
                     raise
