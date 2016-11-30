@@ -303,7 +303,6 @@ class Movies(Items):
         tags.extend(item['Tags'])
         if userdata['Favorite']:
             tags.append("Favorite movies")
-        log.info("Applied tags: %s", tags)
         self.kodi_db.add_tags(movieid, tags, "movie")
         # Process playstates
         resume = API.adjust_resume(userdata['Resume'])

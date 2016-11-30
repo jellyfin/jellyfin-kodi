@@ -25,7 +25,8 @@
 		<setting id="dblock" type="bool" label="30544" default="false" />
 		<setting id="serverSync" type="bool" label="30514" default="true" />
 		<setting id="incSyncIndicator" label="30507" type="number" default="10" visible="eq(-1,true)" subsetting="true"/>
-		<setting id="limitindex" type="number" label="30515" default="200" option="int" />
+		<setting id="limitindex" type="number" label="30515" default="15" option="int" />
+		<setting id="downloadThreads" type="slider" label="Download Threads (recommended: 2-3)" default="3" range="1,1,7" option="int" />
 		<setting id="enableTextureCache" label="30512"  type="bool" default="true" />
         <setting id="imageCacheLimit" type="enum" label="30513" values="Unlimited|5|10|15|20|25" default="5" visible="eq(-1,true)" subsetting="true" />
 		<setting id="syncEmptyShows" type="bool" label="30508" default="false" />
