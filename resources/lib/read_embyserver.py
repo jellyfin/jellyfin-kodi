@@ -42,8 +42,13 @@ class Read_EmbyServer():
         # This will return the full item
         item = {}
 
-        result = self.doUtils("{server}/emby/Users/{UserId}/Items/%s?format=json" % itemid)
-        if result:
+        try:
+            result = self.doUtils("{server}/emby/Users/{UserId}/Items/%s?format=json" % itemid)
+        except Exception as error:
+            log.info("Error getting item from server: " + str(error))
+            result = None
+
+        if result is not None:
             item = result
 
         return item
@@ -61,8 +66,14 @@ class Read_EmbyServer():
                 'Fields': "Etag"
             }
             url = "{server}/emby/Users/{UserId}/Items?&format=json"
-            result = self.doUtils(url, parameters=params)
-            if result:
+
+            try:
+                result = self.doUtils(url, parameters=params)
+            except Exception as error:
+                log.info("Error getting items form server: " + str(error))
+                result = None
+
+            if result is not None:
                 items.extend(result['Items'])
 
         return items
@@ -88,8 +99,13 @@ class Read_EmbyServer():
                 )
             }
             url = "{server}/emby/Users/{UserId}/Items?format=json"
-            result = self.doUtils(url, parameters=params)
-            if result:
+            try:
+                result = self.doUtils(url, parameters=params)
+            except Exception as error:
+                log.info("Error getting full items: " + str(error))
+                result = None
+
+            if result is not None:
                 items.extend(result['Items'])
 
         return items
@@ -179,14 +195,13 @@ class Read_EmbyServer():
             'Recursive': True,
             'Limit': 1
         }
-        result = self.doUtils(url, parameters=params)
+
         try:
+            result = self.doUtils(url, parameters=params)
             total = result['TotalRecordCount']
             items['TotalRecordCount'] = total
-
-        except TypeError: # Failed to retrieve
-            log.debug("%s:%s Failed to retrieve the server response." % (url, params))
-
+        except Exception as error: # Failed to retrieve
+            log.debug("%s:%s Failed to retrieve the server response: %s" % (url, params, error))
         else:
             index = 0
             jump = self.limitIndex
@@ -229,7 +244,7 @@ class Read_EmbyServer():
                     if "400" in error:
                         log.info("Something went wrong, aborting request.")
                         index += jump
-                except TypeError:
+                except Exception as error:
                     # Something happened to the connection
                     if not throttled:
                         throttled = True
@@ -300,8 +315,8 @@ class Read_EmbyServer():
 
         try:
             items = self.get_views(root)['Items']
-        except TypeError:
-            log.debug("Error retrieving views for type: %s" % mediatype)
+        except Exception as error:
+            log.debug("Error retrieving views for type: %s error:%s" % (mediatype, error))
         else:
             for item in items:
 
@@ -347,11 +362,13 @@ class Read_EmbyServer():
             'Recursive': True,
             'Ids': itemid
         }
-        result = self.doUtils("{server}/emby/Users/{UserId}/Items?format=json", parameters=params)
+
         try:
+            result = self.doUtils("{server}/emby/Users/{UserId}/Items?format=json", parameters=params)
             total = result['TotalRecordCount']
-        except TypeError:
+        except Exception as error:
             # Something happened to the connection
+            log.info("Error getting item count: " + str(error))
             pass
         else:
             if total:
@@ -396,8 +413,14 @@ class Read_EmbyServer():
             'Fields': "Etag"
         }
         url = "{server}/emby/Shows/%s/Seasons?UserId={UserId}&format=json" % showId
-        result = self.doUtils(url, parameters=params)
-        if result:
+
+        try:
+            result = self.doUtils(url, parameters=params)
+        except Exception as error:
+            log.info("Error getting Seasons form server: " + str(error))
+            result = None
+
+        if result is not None:
             items = result
 
         return items
@@ -430,14 +453,13 @@ class Read_EmbyServer():
             'Recursive': True,
             'Limit': 1
         }
-        result = self.doUtils(url, parameters=params)
+
         try:
+            result = self.doUtils(url, parameters=params)
             total = result['TotalRecordCount']
             items['TotalRecordCount'] = total
-
-        except TypeError: # Failed to retrieve
-            log.debug("%s:%s Failed to retrieve the server response." % (url, params))
-
+        except Exception as error: # Failed to retrieve
+            log.debug("%s:%s Failed to retrieve the server response: %s" % (url, params, error))
         else:
             index = 0
             jump = self.limitIndex
@@ -462,10 +484,14 @@ class Read_EmbyServer():
                         "AirTime,DateCreated,MediaStreams,People,ProviderIds,Overview"
                     )
                 }
-                result = self.doUtils(url, parameters=params)
-                items['Items'].extend(result['Items'])
 
-                index += jump
+                try:
+                    result = self.doUtils(url, parameters=params)
+                    items['Items'].extend(result['Items'])
+                    index += jump
+                except Exception as error:
+                    log.debug("Error getting artists from server: " + str(error))
+
                 if dialog:
                     percentage = int((float(index) / float(total))*100)
                     dialog.update(percentage)
@@ -495,8 +521,14 @@ class Read_EmbyServer():
             'TotalRecordCount': 0
         }
         url = "{server}/emby/Videos/%s/AdditionalParts?UserId={UserId}&format=json" % itemId
-        result = self.doUtils(url)
-        if result:
+
+        try:
+            result = self.doUtils(url)
+        except Exception as error:
+            log.info("Error getting additional parts form server: " + str(error))
+            result = None
+
+        if result is not None:
             items = result
 
         return items
@@ -552,9 +584,13 @@ class Read_EmbyServer():
     def getUsers(self, server):
 
         url = "%s/emby/Users/Public?format=json" % server
-        users = self.doUtils(url, authenticate=False)
+        try:
+            users = self.doUtils(url, authenticate=False)
+        except Exception as error:
+            log.info("Error getting users from server: " + str(error))
+            users = []
 
-        return users or []
+        return users
 
     def loginUser(self, server, username, password=None):
 

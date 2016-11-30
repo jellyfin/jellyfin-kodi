@@ -53,7 +53,12 @@ class Views(object):
 
     def _populate_views(self):
         # Will get emby views and views in Kodi
-        grouped_views = self.emby.get_views()
+        try:
+            grouped_views = self.emby.get_views()
+        except Exception as error:
+            log.info("Error getting views from server: " + str(error))
+            grouped_views = None
+
         if grouped_views is not None and "Items" in grouped_views:
             self.grouped_views = grouped_views['Items']
         else:
@@ -114,10 +119,11 @@ class Views(object):
 
     def _get_grouped_view(self, media_type, view_id, view_name):
         # Get single item from view to compare
-        result = self.emby.get_single_item(self.media_types[media_type], view_id)
         try:
+            result = self.emby.get_single_item(self.media_types[media_type], view_id)
             item = result['Items'][0]['Id']
-        except (TypeError, IndexError):
+        except Exception as error:
+            log.info("Error getting single item form server: " + str(error))
             # Something is wrong. Keep the same folder name.
             # Could be the view is empty or the connection
             pass

@@ -125,8 +125,13 @@ class LoginManual(xbmcgui.WindowXMLDialog):
 
     def _login(self, username, password):
 
-        result = self.emby.loginUser(self.server, username, password)
-        if not result:
+        try:
+            result = self.emby.loginUser(self.server, username, password)
+        except Exception as error:
+            log.info("Error doing login: " + str(error))
+            result = None
+
+        if result is None:
             self._error(ERROR['Invalid'], lang(33009))
             return False
         else:

@@ -150,7 +150,12 @@ class ConnectManager(object):
         # Return user or raise error
         server = server or self.state['Servers'][0]
         server_address = connectionmanager.getServerAddress(server, server['LastConnectionMode'])
-        users = self.emby.getUsers(server_address)
+
+        users = "";
+        try:
+            users = self.emby.getUsers(server_address)
+        except Exception as error:
+            log.info("Error getting users from server: " + str(error))
 
         if not users:
             try:
@@ -175,7 +180,12 @@ class ConnectManager(object):
                 except RuntimeError:
                     return self.login(server)
             else:
-                user = self.emby.loginUser(server_address, username)
+                try:
+                    user = self.emby.loginUser(server_address, username)
+                except Exception as error:
+                    log.info("Error logging in user: " + str(error))
+                    raise
+
                 self._connect.onAuthenticated(user)
                 return user
 
