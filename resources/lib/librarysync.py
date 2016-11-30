@@ -118,10 +118,11 @@ class LibrarySync(threading.Thread):
         log.info("Last sync run: %s" % lastSyncTime)
 
         # get server RetentionDateTime
-        result = self.doUtils("{server}/emby/Emby.Kodi.SyncQueue/GetServerDateTime?format=json")
         try:
+            result = self.doUtils("{server}/emby/Emby.Kodi.SyncQueue/GetServerDateTime?format=json")
             retention_time = result['RetentionDateTime']
-        except (TypeError, KeyError):
+        except Exception as error:
+            log.error(error)
             retention_time = "2010-01-01T00:00:00Z"
 
         retention_time = utils.convertDate(retention_time)
