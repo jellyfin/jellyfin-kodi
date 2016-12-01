@@ -285,9 +285,9 @@ def addUser():
 
     # Get session
     url = "{server}/emby/Sessions?DeviceId=%s&format=json" % deviceId
-    result = doUtils.downloadUrl(url)
-    
+
     try:
+        result = doUtils.downloadUrl(url)
         sessionId = result[0]['Id']
         additionalUsers = result[0]['AdditionalUsers']
         # Add user to session
@@ -365,8 +365,8 @@ def addUser():
                     icon="special://home/addons/plugin.video.emby/icon.png",
                     time=1000)
 
-    except:
-        log.error("Failed to add user to session.")
+    except Exception as error:
+        log.error("Failed to add user to session: " + str(error))
         dialog.notification(
                 heading=lang(29999),
                 message=lang(33068),
@@ -381,10 +381,11 @@ def addUser():
         window('EmbyAdditionalUserImage.%s' % i, clear=True)
 
     url = "{server}/emby/Sessions?DeviceId=%s&format=json" % deviceId
-    result = doUtils.downloadUrl(url)
+
     try:
+        result = doUtils.downloadUrl(url)
         additionalUsers = result[0]['AdditionalUsers']
-    except (IndexError, KeyError, TypeError) as error:
+    except Exception as error:
         log.error(error)
         additionalUsers = []
 
@@ -692,8 +693,13 @@ def createListItemFromEmbyItem(item,art=artwork.Artwork(),doUtils=downloadutils.
         #listitem setup for pictures...
         img_path = allart.get('Primary')
         li.setProperty("path",img_path)
-        picture = doUtils.downloadUrl("{server}/Items/%s/Images" %itemid)
-        if picture:
+        try:
+            picture = doUtils.downloadUrl("{server}/Items/%s/Images" %itemid)
+        except Exception as error:
+            lof.info("Error getting images from server: " + str(error))
+            picture = None
+
+        if picture is not None:
             picture = picture[0]
             if picture.get("Width") > picture.get("Height"):
                 li.setArt( {"fanart":  img_path}) #add image as fanart for use with skinhelper auto thumb/backgrund creation
@@ -781,8 +787,13 @@ def BrowseChannels(itemid, folderid=None):
     else:
         url = "{server}/emby/Channels/%s/Items?UserId={UserId}&format=json" % itemid
 
-    result = doUtils.downloadUrl(url)
-    if result and result.get("Items"):
+    try:
+        result = doUtils.downloadUrl(url)
+    except Exception as error:
+        log.info("Error getting channel: " + str(error))
+        result = None
+
+    if result is not None and result.get("Items"):
         for item in result.get("Items"):
             itemid = item['Id']
             itemtype = item['Type']

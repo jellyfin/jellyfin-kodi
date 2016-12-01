@@ -87,7 +87,12 @@ class LibrarySync(threading.Thread):
             if settings('serverSync') == "true":
                 # Try to use fast start up
                 url = "{server}/emby/Plugins?format=json"
-                result = self.doUtils(url)
+
+                try:
+                    result = self.doUtils(url)
+                except Exception as error:
+                    log.info("Error getting plugin list form server: " + str(error))
+                    result = []
 
                 for plugin in result:
                     if plugin['Name'] == "Emby.Kodi Sync Queue":

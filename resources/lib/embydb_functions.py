@@ -58,9 +58,13 @@ class Embydb_Functions():
     def getView_embyId(self, item_id):
         # Returns ancestors using embyId
         url = "{server}/emby/Items/%s/Ancestors?UserId={UserId}&format=json" % item_id
-        view_list = self.download(url)
-        if view_list is None:
+
+        try:
+            view_list = self.download(url)
+        except Exception as error:
+            log.info("Error getting views: " + str(error))
             view_list = []
+
         for view in view_list:
 
             if view['Type'] == "CollectionFolder":

@@ -114,12 +114,13 @@ class DownloadUtils(object):
 
         # Attempt at getting sessionId
         url = "{server}/emby/Sessions?DeviceId=%s&format=json" % device_id
-        result = self.downloadUrl(url)
+
         try:
+            result = self.downloadUrl(url)
             session_id = result[0]['Id']
 
-        except (KeyError, TypeError):
-            log.error("Failed to retrieve the session id.")
+        except Exception as error:
+            log.error("Failed to retrieve the session id: " + str(error))
 
         else:
             log.info("SessionId: %s", session_id)
