@@ -201,7 +201,7 @@
     <string id="30512">Force artwork caching</string>
     <string id="30513">Limit artwork cache threads (recommended for rpi)</string>
     <string id="30514">Enable fast startup (requires server plugin)</string>
-    <string id="30515">Maximum items to request from the server at once</string>
+    <string id="30515">Maximum items to request from the server per download thread</string>
     <string id="30516">Video Playback</string>
     <string id="30517">Network credentials</string>
     <string id="30518">Enable Emby cinema mode</string>
@@ -234,6 +234,7 @@
     <string id="30545">Enable server offline message</string>
 	<string id="30546">Enable analytic metric logging</string>
     <string id="30547">Display message (in seconds)</string>
+    <string id="30548">Download threads (recommended: 2-3)</string>
 
     <!-- dialogs -->
     <string id="30600">Sign in with Emby Connect</string>
