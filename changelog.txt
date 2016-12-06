@@ -1,3 +1,7 @@
+version 2.3.24
+- Fix bug in the manual sync
+- Add Italian translation
+
 version 2.3.23
 - Adjustments to the download throttle. See github wiki docs.
 - Fix the fast sync
