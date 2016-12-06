@@ -183,7 +183,7 @@ class Items(object):
             self.process_all(item_type, "update", emby_items, total, view)
         # Process deletes
         if compare_to:
-            self.remove_all(item_type, compare_to.items())
+            self.remove_all(item_type, compare_to.keys())
 
         return True
 
