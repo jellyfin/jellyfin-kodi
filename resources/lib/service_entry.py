@@ -236,6 +236,8 @@ class Service(object):
                     self.library_thread.stopThread()
                     self.library_thread = librarysync.LibrarySync()
                     self.library_running = False
+                # set flag to reset startup process
+                self.startup = False
 
             else:
                 # Server is online
