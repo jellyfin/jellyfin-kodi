@@ -135,6 +135,15 @@ class Service(object):
 
                     elif not self.startup:
                         self.startup = self._startup()
+
+                    if not self.websocket_running:
+                        # Start the Websocket Client
+                        self.websocket_running = True
+                        self.websocket_thread.start()
+                    if not self.library_running:
+                        # Start the syncing thread
+                        self.library_running = True
+                        self.library_thread.start()
                 else:
 
                     if (user_client.get_user() is None) and self.warn_auth:
@@ -190,14 +199,6 @@ class Service(object):
                    icon="{emby}",
                    time=2000,
                    sound=False)
-
-        # Start the Websocket Client
-        self.websocket_running = True
-        self.websocket_thread.start()
-        # Start the syncing thread
-        self.library_running = True
-        self.library_thread.start()
-
         return True
 
     def _server_online_check(self):
@@ -236,9 +237,6 @@ class Service(object):
                     self.library_thread.stopThread()
                     self.library_thread = librarysync.LibrarySync()
                     self.library_running = False
-                # set flag to reset startup process
-                self.startup = False
-
             else:
                 # Server is online
                 if not self.server_online:
