@@ -1,3 +1,6 @@
+version 2.3.25
+- Fix on-wake sync
+
 version 2.3.24
 - Fix bug in the manual sync
 - Add Italian translation
