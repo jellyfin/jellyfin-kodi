@@ -481,12 +481,11 @@ def getThemeMedia():
         result = doUtils.downloadUrl(url)
 
         # May be more than one theme
-        for theme in result['Items']:
-            putils = playutils.PlayUtils(theme)  
+        for theme in result['Items']: 
             if playback == "DirectPlay":
-                playurl = putils.directPlay()
+                playurl = api.API(theme).get_file_path()
             else:
-                playurl = putils.directStream()
+                playurl = playutils.PlayUtils(theme).directStream()
             pathstowrite += ('<file>%s</file>' % playurl.encode('utf-8'))
 
         nfo_file.write(
@@ -530,11 +529,10 @@ def getThemeMedia():
         pathstowrite = ""
         # May be more than one theme
         for theme in result['Items']: 
-            putils = playutils.PlayUtils(theme)
             if playback == "DirectPlay":
-                playurl = putils.directPlay()
+                playurl = api.API(theme).get_file_path()
             else:
-                playurl = putils.directStream()
+                playurl = playutils.PlayUtils(theme).directStream()
             pathstowrite += ('<file>%s</file>' % playurl.encode('utf-8'))
 
         nfo_file.write(
