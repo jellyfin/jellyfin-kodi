@@ -315,6 +315,11 @@ class Movies(Items):
 
             self.kodi_db.add_ratings(ratingid, movieid, "movie", "default", rating, votecount)
 
+        # update new uniqueid Kodi 17 - todo get uniqueid_id for updates from embydb
+        if self.kodi_version > 16:
+            uniqueid =  self.kodi_db.create_entry_uniqueid()
+
+            self.kodi_db.add_uniqueid(uniqueid, movieid, "movie", imdb, "imdb")
         return True
 
     def add_updateBoxset(self, boxset):

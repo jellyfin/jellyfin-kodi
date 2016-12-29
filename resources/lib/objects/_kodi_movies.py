@@ -21,6 +21,12 @@ class KodiMovies(KodiItems):
 
         KodiItems.__init__(self)
 
+    def create_entry_uniqueid(self):
+        self.cursor.execute("select coalesce(max(uniqueid_id),0) from uniqueid")
+        kodi_id = self.cursor.fetchone()[0] + 1
+
+        return kodi_id
+
     def create_entry_rating(self):
         self.cursor.execute("select coalesce(max(rating_id),0) from rating")
         kodi_id = self.cursor.fetchone()[0] + 1
@@ -125,6 +131,26 @@ class KodiMovies(KodiItems):
             "UPDATE rating",
             "SET media_id = ?, media_type = ?, rating_type = ?, rating = ?, votes = ?",
             "WHERE rating_id = ?"
+        ))
+        self.cursor.execute(query, (args))
+
+    def add_uniqueid(self, *args):
+        query = (
+            '''
+            INSERT INTO uniqueid(
+                uniqueid_id, media_id, media_type, value, type)
+
+            VALUES (?, ?, ?, ?, ?)
+            '''
+        )
+        self.cursor.execute(query, (args))
+
+    def update_uniqueid(self, *args):
+        query = ' '.join((
+
+            "UPDATE uniqueid",
+            "SET media_id = ?, media_type = ?, value = ?, type = ?",
+            "WHERE uniqueid_id = ?"
         ))
         self.cursor.execute(query, (args))
 
