@@ -309,6 +309,12 @@ class Movies(Items):
         total = round(float(runtime), 6)
         self.kodi_db.add_playstate(fileid, resume, total, playcount, dateplayed)
 
+        # update new ratings Kodi 17 - todo get ratingid for updates from embydb
+        if self.kodi_version > 16:
+            ratingid =  self.kodi_db.create_entry_rating()
+
+            self.kodi_db.add_ratings(ratingid, movieid, "movie", "default", rating, votecount)
+
         return True
 
     def add_updateBoxset(self, boxset):
