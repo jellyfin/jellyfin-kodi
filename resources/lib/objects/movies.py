@@ -234,6 +234,18 @@ class Movies(Items):
             }
             filename = "%s?%s" % (path, urllib.urlencode(params))
 
+        # update new ratings Kodi 17 - todo get ratingid for updates from embydb
+        if self.kodi_version > 16:
+            ratingid =  self.kodi_db.create_entry_rating()
+
+            self.kodi_db.add_ratings(ratingid, movieid, "movie", "default", rating, votecount)
+
+        # update new uniqueid Kodi 17 - todo get uniqueid_id for updates from embydb
+        if self.kodi_version > 16:
+            uniqueid =  self.kodi_db.create_entry_uniqueid()
+
+            self.kodi_db.add_uniqueid(uniqueid, movieid, "movie", imdb, "imdb")
+
 
         ##### UPDATE THE MOVIE #####
         if update_item:
@@ -241,8 +253,8 @@ class Movies(Items):
 
             # Update the movie entry
             if self.kodi_version > 16:
-                self.kodi_db.update_movie_17(title, plot, shortplot, tagline, votecount, rating,
-                                             writer, year, imdb, sorttitle, runtime, mpaa, genre,
+                self.kodi_db.update_movie_17(title, plot, shortplot, tagline, votecount, uniqueid,
+                                             writer, year, uniqueid, sorttitle, runtime, mpaa, genre,
                                              director, title, studio, trailer, country, year,
                                              movieid)
             else:
@@ -265,7 +277,7 @@ class Movies(Items):
             # Create the movie entry
             if self.kodi_version > 16:
                 self.kodi_db.add_movie_17(movieid, fileid, title, plot, shortplot, tagline,
-                                          votecount, rating, writer, year, imdb, sorttitle,
+                                          votecount, uniqueid, writer, year, uniqueid, sorttitle,
                                           runtime, mpaa, genre, director, title, studio, trailer,
                                           country, year)
             else:
@@ -309,17 +321,6 @@ class Movies(Items):
         total = round(float(runtime), 6)
         self.kodi_db.add_playstate(fileid, resume, total, playcount, dateplayed)
 
-        # update new ratings Kodi 17 - todo get ratingid for updates from embydb
-        if self.kodi_version > 16:
-            ratingid =  self.kodi_db.create_entry_rating()
-
-            self.kodi_db.add_ratings(ratingid, movieid, "movie", "default", rating, votecount)
-
-        # update new uniqueid Kodi 17 - todo get uniqueid_id for updates from embydb
-        if self.kodi_version > 16:
-            uniqueid =  self.kodi_db.create_entry_uniqueid()
-
-            self.kodi_db.add_uniqueid(uniqueid, movieid, "movie", imdb, "imdb")
         return True
 
     def add_updateBoxset(self, boxset):

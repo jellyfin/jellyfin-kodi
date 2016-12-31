@@ -335,15 +335,29 @@ class TVShows(Items):
             toplevelpath = "plugin://plugin.video.emby.tvshows/"
             path = "%s%s/" % (toplevelpath, itemid)
 
+        # update new ratings Kodi 17 - todo get ratingid for updates from embydb
+        if self.kodi_version > 16:
+            ratingid =  self.kodi_db.create_entry_rating()
+
+            self.kodi_db.add_ratings(ratingid, showid, "tvshow", "default", rating, votecount)
+
+        # update new uniqueid Kodi 17 - todo get uniqueid_id for updates from embydb
+        if self.kodi_version > 16:
+            uniqueid =  self.kodi_db.create_entry_uniqueid()
+
+            self.kodi_db.add_uniqueid(uniqueid, showid, "tvshow", tvdb, "tvdb")
 
         ##### UPDATE THE TVSHOW #####
         if update_item:
             log.info("UPDATE tvshow itemid: %s - Title: %s", itemid, title)
 
             # Update the tvshow entry
-            self.kodi_db.update_tvshow(title, plot, rating, premieredate, genre, title,
-                                       tvdb, mpaa, studio, sorttitle, showid)
-
+            if self.kodi_version > 16:
+                self.kodi_db.update_tvshow(title, plot, uniqueid, premieredate, genre, title,
+                                             uniqueid, mpaa, studio, sorttitle, showid)
+            else:
+                self.kodi_db.update_tvshow(title, plot, rating, premieredate, genre, title,
+                                           tvdb, mpaa, studio, sorttitle, showid)
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
 
@@ -359,8 +373,12 @@ class TVShows(Items):
             pathid = self.kodi_db.add_path(path)
 
             # Create the tvshow entry
-            self.kodi_db.add_tvshow(showid, title, plot, rating, premieredate, genre,
-                                    title, tvdb, mpaa, studio, sorttitle)
+            if self.kodi_version > 16:
+                self.kodi_db.add_tvshow(showid, title, plot, uniqueid, premieredate, genre,
+                                    title, uniqueid, mpaa, studio, sorttitle)
+            else:
+                self.kodi_db.add_tvshow(showid, title, plot, rating, premieredate, genre,
+                                        title, tvdb, mpaa, studio, sorttitle)
 
             # Create the reference in emby table
             emby_db.addReference(itemid, showid, "Series", "tvshow", pathid=pathid,
@@ -403,18 +421,6 @@ class TVShows(Items):
             log.info("Repairing episodes for showid: %s %s", showid, title)
             all_episodes = emby.getEpisodesbyShow(itemid)
             self.add_episodes(all_episodes['Items'], None)
-
-        # update new ratings Kodi 17 - todo get ratingid for updates from embydb
-        if self.kodi_version > 16:
-            ratingid =  self.kodi_db.create_entry_rating()
-
-            self.kodi_db.add_ratings(ratingid, showid, "tvshow", "default", rating, votecount)
-
-        # update new uniqueid Kodi 17 - todo get uniqueid_id for updates from embydb
-        if self.kodi_version > 16:
-            uniqueid =  self.kodi_db.create_entry_uniqueid()
-
-            self.kodi_db.add_uniqueid(uniqueid, showid, "tvshow", tvdb, "tvdb")
 
         return True
 
@@ -582,14 +588,30 @@ class TVShows(Items):
             }
             filename = "%s?%s" % (path, urllib.urlencode(params))
 
+        # update new ratings Kodi 17 - todo get ratingid for updates from embydb
+        if self.kodi_version > 16:
+            ratingid =  self.kodi_db.create_entry_rating()
+
+            self.kodi_db.add_ratings(ratingid, showid, "episode", "default", rating, votecount)
+
+        # update new uniqueid Kodi 17 - todo get uniqueid_id for updates from embydb
+        if self.kodi_version > 16:
+            uniqueid =  self.kodi_db.create_entry_uniqueid()
+
+            self.kodi_db.add_uniqueid(uniqueid, showid, "episode", tvdb, "tvdb")
 
         ##### UPDATE THE EPISODE #####
         if update_item:
             log.info("UPDATE episode itemid: %s - Title: %s", itemid, title)
 
-            # Update the movie entry
-            if self.kodi_version in (16, 17):
-                # Kodi Jarvis, Krypton
+            # Update the episode entry
+            if self.kodi_version > 16:
+                # Kodi Krypton
+                self.kodi_db.update_episode_16(title, plot, uniqueid, writer, premieredate, runtime,
+                                               director, season, episode, title, airsBeforeSeason,
+                                               airsBeforeEpisode, seasonid, showid, episodeid)
+            elif self.kodi_version in 16:
+                # Kodi Jarvis
                 self.kodi_db.update_episode_16(title, plot, rating, writer, premieredate, runtime,
                                                director, season, episode, title, airsBeforeSeason,
                                                airsBeforeEpisode, seasonid, showid, episodeid)
@@ -613,8 +635,13 @@ class TVShows(Items):
             fileid = self.kodi_db.add_file(filename, pathid)
 
             # Create the episode entry
-            if self.kodi_version in (16, 17):
-                # Kodi Jarvis, Krypton
+            if self.kodi_version > 16:
+                # Kodi Krypton
+                self.kodi_db.add_episode_16(episodeid, fileid, title, plot, uniqueid, writer,
+                                            premieredate, runtime, director, season, episode, title,
+                                            showid, airsBeforeSeason, airsBeforeEpisode, seasonid)
+            elif self.kodi_version in 16:
+                # Kodi Jarvis
                 self.kodi_db.add_episode_16(episodeid, fileid, title, plot, rating, writer,
                                             premieredate, runtime, director, season, episode, title,
                                             showid, airsBeforeSeason, airsBeforeEpisode, seasonid)
@@ -651,18 +678,6 @@ class TVShows(Items):
             tempfileid = self.kodi_db.add_file(filename, temppathid)
             self.kodi_db.update_file(tempfileid, filename, temppathid, dateadded)
             self.kodi_db.add_playstate(tempfileid, resume, total, playcount, dateplayed)
-
-        # update new ratings Kodi 17 - todo get ratingid for updates from embydb
-        if self.kodi_version > 16:
-            ratingid =  self.kodi_db.create_entry_rating()
-
-            self.kodi_db.add_ratings(ratingid, showid, "episode", "default", rating, votecount)
-
-        # update new uniqueid Kodi 17 - todo get uniqueid_id for updates from embydb
-        if self.kodi_version > 16:
-            uniqueid =  self.kodi_db.create_entry_uniqueid()
-
-            self.kodi_db.add_uniqueid(uniqueid, showid, "episode", tvdb, "tvdb")
 
         return True
 
