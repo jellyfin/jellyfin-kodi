@@ -281,6 +281,7 @@ class TVShows(Items):
         title = item['Name']
         plot = API.get_overview()
         rating = item.get('CommunityRating')
+        votecount = item.get('VoteCount')
         premieredate = API.get_premiere_date()
         tvdb = API.get_provider('Tvdb')
         sorttitle = item['SortName']
@@ -403,6 +404,18 @@ class TVShows(Items):
             all_episodes = emby.getEpisodesbyShow(itemid)
             self.add_episodes(all_episodes['Items'], None)
 
+        # update new ratings Kodi 17 - todo get ratingid for updates from embydb
+        if self.kodi_version > 16:
+            ratingid =  self.kodi_db.create_entry_rating()
+
+            self.kodi_db.add_ratings(ratingid, showid, "tvshow", "default", rating, votecount)
+
+        # update new uniqueid Kodi 17 - todo get uniqueid_id for updates from embydb
+        if self.kodi_version > 16:
+            uniqueid =  self.kodi_db.create_entry_uniqueid()
+
+            self.kodi_db.add_uniqueid(uniqueid, showid, "tvshow", tvdb, "tvdb")
+
         return True
 
     def add_updateSeason(self, item, showid=None):
@@ -488,6 +501,9 @@ class TVShows(Items):
         rating = item.get('CommunityRating')
         runtime = API.get_runtime()
         premieredate = API.get_premiere_date()
+
+        votecount = item.get('VoteCount')
+        tvdb = API.get_provider('Tvdb')
 
         # episode details
         try:
@@ -635,6 +651,18 @@ class TVShows(Items):
             tempfileid = self.kodi_db.add_file(filename, temppathid)
             self.kodi_db.update_file(tempfileid, filename, temppathid, dateadded)
             self.kodi_db.add_playstate(tempfileid, resume, total, playcount, dateplayed)
+
+        # update new ratings Kodi 17 - todo get ratingid for updates from embydb
+        if self.kodi_version > 16:
+            ratingid =  self.kodi_db.create_entry_rating()
+
+            self.kodi_db.add_ratings(ratingid, showid, "episode", "default", rating, votecount)
+
+        # update new uniqueid Kodi 17 - todo get uniqueid_id for updates from embydb
+        if self.kodi_version > 16:
+            uniqueid =  self.kodi_db.create_entry_uniqueid()
+
+            self.kodi_db.add_uniqueid(uniqueid, showid, "episode", tvdb, "tvdb")
 
         return True
 
