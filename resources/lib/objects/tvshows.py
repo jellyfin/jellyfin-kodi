@@ -284,6 +284,7 @@ class TVShows(Items):
         votecount = item.get('VoteCount')
         premieredate = API.get_premiere_date()
         tvdb = API.get_provider('Tvdb')
+        imdb = API.get_provider('Imdb')
         sorttitle = item['SortName']
         mpaa = API.get_mpaa()
         genre = " / ".join(genres)
@@ -345,7 +346,7 @@ class TVShows(Items):
         if self.kodi_version > 16:
             uniqueid =  self.kodi_db.create_entry_uniqueid()
 
-            self.kodi_db.add_uniqueid(uniqueid, showid, "tvshow", tvdb, "tvdb")
+            self.kodi_db.add_uniqueid(uniqueid, showid, "tvshow", imdb, "imdb")
 
         ##### UPDATE THE TVSHOW #####
         if update_item:
