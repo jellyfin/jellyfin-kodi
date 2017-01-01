@@ -607,24 +607,24 @@ class TVShows(Items):
             log.info("UPDATE episode itemid: %s - Title: %s", itemid, title)
 
             # update new ratings Kodi 17
-            if self.kodi_version > 16:
+            if self.kodi_version >= 17:
                 ratingid =  self.kodi_db.get_ratingid(episodeid)
 
                 self.kodi_db.update_ratings(episodeid, "episode", "default", rating, votecount,ratingid)
 
             # update new uniqueid Kodi 17
-            if self.kodi_version > 16:
+            if self.kodi_version >= 17:
                 uniqueid =  self.kodi_db.get_uniqueid(episodeid)
 
                 self.kodi_db.update_uniqueid(episodeid, "episode", tvdb, "tvdb",uniqueid)
 
             # Update the episode entry
-            if self.kodi_version > 16:
+            if self.kodi_version >= 17:
                 # Kodi Krypton
                 self.kodi_db.update_episode_16(title, plot, uniqueid, writer, premieredate, runtime,
                                                director, season, episode, title, airsBeforeSeason,
                                                airsBeforeEpisode, seasonid, showid, episodeid)
-            elif self.kodi_version in 16:
+            elif self.kodi_version > 16 and self.kodi_version < 17:
                 # Kodi Jarvis
                 self.kodi_db.update_episode_16(title, plot, rating, writer, premieredate, runtime,
                                                director, season, episode, title, airsBeforeSeason,
@@ -644,13 +644,13 @@ class TVShows(Items):
             log.info("ADD episode itemid: %s - Title: %s", itemid, title)
 
             # add new ratings Kodi 17
-            if self.kodi_version > 16:
+            if self.kodi_version >= 17:
                 ratingid =  self.kodi_db.create_entry_rating()
 
                 self.kodi_db.add_ratings(ratingid, showid, "episode", "default", rating, votecount)
 
             # add new uniqueid Kodi 17
-            if self.kodi_version > 16:
+            if self.kodi_version >= 17:
                 uniqueid =  self.kodi_db.create_entry_uniqueid()
 
                 self.kodi_db.add_uniqueid(uniqueid, showid, "episode", tvdb, "tvdb")
@@ -661,12 +661,12 @@ class TVShows(Items):
             fileid = self.kodi_db.add_file(filename, pathid)
 
             # Create the episode entry
-            if self.kodi_version > 16:
+            if self.kodi_version >= 17:
                 # Kodi Krypton
                 self.kodi_db.add_episode_16(episodeid, fileid, title, plot, uniqueid, writer,
                                             premieredate, runtime, director, season, episode, title,
                                             showid, airsBeforeSeason, airsBeforeEpisode, seasonid)
-            elif self.kodi_version in 16:
+            elif self.kodi_version > 16 and self.kodi_version < 17:
                 # Kodi Jarvis
                 self.kodi_db.add_episode_16(episodeid, fileid, title, plot, rating, writer,
                                             premieredate, runtime, director, season, episode, title,

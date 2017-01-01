@@ -240,19 +240,19 @@ class Movies(Items):
             log.info("UPDATE movie itemid: %s - Title: %s", itemid, title)
 
             # update new ratings Kodi 17
-            if self.kodi_version > 16:
+            if self.kodi_version >= 17:
                 ratingid =  self.kodi_db.get_ratingid(movieid)
 
                 self.kodi_db.update_ratings(movieid, "movie", "default", rating, votecount,ratingid)
 
             # update new uniqueid Kodi 17
-            if self.kodi_version > 16:
+            if self.kodi_version >= 17:
                 uniqueid =  self.kodi_db.get_uniqueid(movieid)
 
                 self.kodi_db.update_uniqueid(movieid, "movie", imdb, "imdb",uniqueid)
 
             # Update the movie entry
-            if self.kodi_version > 16:
+            if self.kodi_version >= 17:
                 self.kodi_db.update_movie_17(title, plot, shortplot, tagline, votecount, uniqueid,
                                              writer, year, uniqueid, sorttitle, runtime, mpaa, genre,
                                              director, title, studio, trailer, country, year,
