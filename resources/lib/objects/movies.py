@@ -270,13 +270,13 @@ class Movies(Items):
             log.info("ADD movie itemid: %s - Title: %s", itemid, title)
 
             # add new ratings Kodi 17
-            if self.kodi_version > 16:
+            if self.kodi_version >= 17:
                 ratingid =  self.kodi_db.create_entry_rating()
 
                 self.kodi_db.add_ratings(ratingid, movieid, "movie", "default", rating, votecount)
 
             # add new uniqueid Kodi 17
-            if self.kodi_version > 16:
+            if self.kodi_version >= 17:
                 uniqueid =  self.kodi_db.create_entry_uniqueid()
 
                 self.kodi_db.add_uniqueid(uniqueid, movieid, "movie", imdb, "imdb")
@@ -287,7 +287,7 @@ class Movies(Items):
             fileid = self.kodi_db.add_file(filename, pathid)
 
             # Create the movie entry
-            if self.kodi_version > 16:
+            if self.kodi_version >= 17:
                 self.kodi_db.add_movie_17(movieid, fileid, title, plot, shortplot, tagline,
                                           votecount, uniqueid, writer, year, uniqueid, sorttitle,
                                           runtime, mpaa, genre, director, title, studio, trailer,
