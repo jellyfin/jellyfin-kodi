@@ -624,7 +624,7 @@ class TVShows(Items):
                 self.kodi_db.update_episode_16(title, plot, uniqueid, writer, premieredate, runtime,
                                                director, season, episode, title, airsBeforeSeason,
                                                airsBeforeEpisode, seasonid, showid, episodeid)
-            elif self.kodi_version > 16 and self.kodi_version < 17:
+            elif self.kodi_version >= 16 and self.kodi_version < 17:
                 # Kodi Jarvis
                 self.kodi_db.update_episode_16(title, plot, rating, writer, premieredate, runtime,
                                                director, season, episode, title, airsBeforeSeason,
@@ -666,7 +666,7 @@ class TVShows(Items):
                 self.kodi_db.add_episode_16(episodeid, fileid, title, plot, uniqueid, writer,
                                             premieredate, runtime, director, season, episode, title,
                                             showid, airsBeforeSeason, airsBeforeEpisode, seasonid)
-            elif self.kodi_version > 16 and self.kodi_version < 17:
+            elif self.kodi_version >= 16 and self.kodi_version < 17:
                 # Kodi Jarvis
                 self.kodi_db.add_episode_16(episodeid, fileid, title, plot, rating, writer,
                                             premieredate, runtime, director, season, episode, title,
