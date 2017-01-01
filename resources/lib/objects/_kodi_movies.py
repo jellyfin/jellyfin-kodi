@@ -113,6 +113,16 @@ class KodiMovies(KodiItems):
         self.cursor.execute("DELETE FROM movie WHERE idMovie = ?", (kodi_id,))
         self.cursor.execute("DELETE FROM files WHERE idFile = ?", (file_id,))
 
+    def get_ratingid(self, media_id):
+
+        query = "SELECT rating_id FROM rating WHERE media_id = ?"
+        self.cursor.execute(query, (media_id,))
+        try:
+            ratingid = self.cursor.fetchone()[0]
+        except TypeError:
+            ratingid = None
+
+        return ratingid
 
     def add_ratings(self, *args):
         query = (
@@ -133,6 +143,17 @@ class KodiMovies(KodiItems):
             "WHERE rating_id = ?"
         ))
         self.cursor.execute(query, (args))
+
+    def get_uniqueid(self, media_id):
+
+        query = "SELECT uniqueid_id FROM uniqueid WHERE media_id = ?"
+        self.cursor.execute(query, (media_id,))
+        try:
+            uniqueid = self.cursor.fetchone()[0]
+        except TypeError:
+            uniqueid = None
+
+        return uniqueid
 
     def add_uniqueid(self, *args):
         query = (

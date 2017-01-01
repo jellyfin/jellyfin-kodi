@@ -336,21 +336,22 @@ class TVShows(Items):
             toplevelpath = "plugin://plugin.video.emby.tvshows/"
             path = "%s%s/" % (toplevelpath, itemid)
 
-        # update new ratings Kodi 17 - todo get ratingid for updates from embydb
-        if self.kodi_version > 16:
-            ratingid =  self.kodi_db.create_entry_rating()
-
-            self.kodi_db.add_ratings(ratingid, showid, "tvshow", "default", rating, votecount)
-
-        # update new uniqueid Kodi 17 - todo get uniqueid_id for updates from embydb
-        if self.kodi_version > 16:
-            uniqueid =  self.kodi_db.create_entry_uniqueid()
-
-            self.kodi_db.add_uniqueid(uniqueid, showid, "tvshow", imdb, "imdb")
 
         ##### UPDATE THE TVSHOW #####
         if update_item:
             log.info("UPDATE tvshow itemid: %s - Title: %s", itemid, title)
+
+            # update new ratings Kodi 17
+            if self.kodi_version > 16:
+                ratingid =  self.kodi_db.get_ratingid(showid)
+
+                self.kodi_db.update_ratings(showid, "tvshow", "default", rating, votecount,ratingid)
+
+            # update new uniqueid Kodi 17
+            if self.kodi_version > 16:
+                uniqueid =  self.kodi_db.get_uniqueid(showid)
+
+                self.kodi_db.update_uniqueid(showid, "tvshow", imdb, "imdb",uniqueid)
 
             # Update the tvshow entry
             if self.kodi_version > 16:
@@ -365,6 +366,18 @@ class TVShows(Items):
         ##### OR ADD THE TVSHOW #####
         else:
             log.info("ADD tvshow itemid: %s - Title: %s", itemid, title)
+
+            # add new ratings Kodi 17
+            if self.kodi_version > 16:
+                ratingid =  self.kodi_db.create_entry_rating()
+
+                self.kodi_db.add_ratings(ratingid, showid, "tvshow", "default", rating, votecount)
+
+            # add new uniqueid Kodi 17
+            if self.kodi_version > 16:
+                uniqueid =  self.kodi_db.create_entry_uniqueid()
+
+                self.kodi_db.add_uniqueid(uniqueid, showid, "tvshow", imdb, "imdb")
 
             # Add top path
             toppathid = self.kodi_db.add_path(toplevelpath)
@@ -589,21 +602,21 @@ class TVShows(Items):
             }
             filename = "%s?%s" % (path, urllib.urlencode(params))
 
-        # update new ratings Kodi 17 - todo get ratingid for updates from embydb
-        if self.kodi_version > 16:
-            ratingid =  self.kodi_db.create_entry_rating()
-
-            self.kodi_db.add_ratings(ratingid, showid, "episode", "default", rating, votecount)
-
-        # update new uniqueid Kodi 17 - todo get uniqueid_id for updates from embydb
-        if self.kodi_version > 16:
-            uniqueid =  self.kodi_db.create_entry_uniqueid()
-
-            self.kodi_db.add_uniqueid(uniqueid, showid, "episode", tvdb, "tvdb")
-
         ##### UPDATE THE EPISODE #####
         if update_item:
             log.info("UPDATE episode itemid: %s - Title: %s", itemid, title)
+
+            # update new ratings Kodi 17
+            if self.kodi_version > 16:
+                ratingid =  self.kodi_db.get_ratingid(episodeid)
+
+                self.kodi_db.update_ratings(episodeid, "episode", "default", rating, votecount,ratingid)
+
+            # update new uniqueid Kodi 17
+            if self.kodi_version > 16:
+                uniqueid =  self.kodi_db.get_uniqueid(episodeid)
+
+                self.kodi_db.update_uniqueid(episodeid, "episode", tvdb, "tvdb",uniqueid)
 
             # Update the episode entry
             if self.kodi_version > 16:
@@ -629,6 +642,18 @@ class TVShows(Items):
         ##### OR ADD THE EPISODE #####
         else:
             log.info("ADD episode itemid: %s - Title: %s", itemid, title)
+
+            # add new ratings Kodi 17
+            if self.kodi_version > 16:
+                ratingid =  self.kodi_db.create_entry_rating()
+
+                self.kodi_db.add_ratings(ratingid, showid, "episode", "default", rating, votecount)
+
+            # add new uniqueid Kodi 17
+            if self.kodi_version > 16:
+                uniqueid =  self.kodi_db.create_entry_uniqueid()
+
+                self.kodi_db.add_uniqueid(uniqueid, showid, "episode", tvdb, "tvdb")
 
             # Add path
             pathid = self.kodi_db.add_path(path)

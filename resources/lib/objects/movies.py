@@ -234,22 +234,22 @@ class Movies(Items):
             }
             filename = "%s?%s" % (path, urllib.urlencode(params))
 
-        # update new ratings Kodi 17 - todo get ratingid for updates from embydb
-        if self.kodi_version > 16:
-            ratingid =  self.kodi_db.create_entry_rating()
-
-            self.kodi_db.add_ratings(ratingid, movieid, "movie", "default", rating, votecount)
-
-        # update new uniqueid Kodi 17 - todo get uniqueid_id for updates from embydb
-        if self.kodi_version > 16:
-            uniqueid =  self.kodi_db.create_entry_uniqueid()
-
-            self.kodi_db.add_uniqueid(uniqueid, movieid, "movie", imdb, "imdb")
-
 
         ##### UPDATE THE MOVIE #####
         if update_item:
             log.info("UPDATE movie itemid: %s - Title: %s", itemid, title)
+
+            # update new ratings Kodi 17
+            if self.kodi_version > 16:
+                ratingid =  self.kodi_db.get_ratingid(movieid)
+
+                self.kodi_db.update_ratings(movieid, "movie", "default", rating, votecount,ratingid)
+
+            # update new uniqueid Kodi 17
+            if self.kodi_version > 16:
+                uniqueid =  self.kodi_db.get_uniqueid(movieid)
+
+                self.kodi_db.update_uniqueid(movieid, "movie", imdb, "imdb",uniqueid)
 
             # Update the movie entry
             if self.kodi_version > 16:
@@ -268,6 +268,18 @@ class Movies(Items):
         ##### OR ADD THE MOVIE #####
         else:
             log.info("ADD movie itemid: %s - Title: %s", itemid, title)
+
+            # add new ratings Kodi 17
+            if self.kodi_version > 16:
+                ratingid =  self.kodi_db.create_entry_rating()
+
+                self.kodi_db.add_ratings(ratingid, movieid, "movie", "default", rating, votecount)
+
+            # add new uniqueid Kodi 17
+            if self.kodi_version > 16:
+                uniqueid =  self.kodi_db.create_entry_uniqueid()
+
+                self.kodi_db.add_uniqueid(uniqueid, movieid, "movie", imdb, "imdb")
 
             # Add path
             pathid = self.kodi_db.add_path(path)
