@@ -65,6 +65,9 @@ class Embydb_Functions():
             log.info("Error getting views: " + str(error))
             view_list = []
 
+        if view_list is None:
+            view_list = []
+
         for view in view_list:
 
             if view['Type'] == "CollectionFolder":
