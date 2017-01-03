@@ -66,7 +66,6 @@ class WebSocketClient(threading.Thread):
 
         result = json.loads(message)
         message_type = result['MessageType']
-        data = result['Data']
 
         if message_type not in ('NotificationAdded', 'SessionEnded', 'RestartRequired',
                                 'PackageInstalling'):
@@ -75,21 +74,26 @@ class WebSocketClient(threading.Thread):
 
         if message_type == 'Play':
             # A remote control play command has been sent from the server.
+            data = result['Data']
             self._play(data)
 
         elif message_type == 'Playstate':
             # A remote control update playstate command has been sent from the server.
+            data = result['Data']
             self._playstate(data)
 
         elif message_type == "UserDataChanged":
             # A user changed their personal rating for an item, or their playstate was updated
+            data = result['Data']
             userdata_list = data['UserDataList']
             self.library_sync.triage_items("userdata", userdata_list)
 
         elif message_type == "LibraryChanged":
+            data = result['Data']
             self._library_changed(data)
 
         elif message_type == "GeneralCommand":
+            data = result['Data']
             self._general_commands(data)
 
         elif message_type == "ServerRestarting":
@@ -97,6 +101,7 @@ class WebSocketClient(threading.Thread):
 
         elif message_type == "UserConfigurationUpdated":
             # Update user data set in userclient
+            data = result['Data']
             userclient.UserClient().get_user(data)
             self.library_sync.refresh_views = True
 
@@ -149,10 +154,11 @@ class WebSocketClient(threading.Thread):
         }
         if command == 'Seek':
 
-            seek_to = data['SeekPositionTicks']
-            seek_time = seek_to / 10000000.0
-            player.seekTime(seek_time)
-            log.info("Seek to %s", seek_time)
+            if player.isPlaying():
+                seek_to = data['SeekPositionTicks']
+                seek_time = seek_to / 10000000.0
+                player.seekTime(seek_time)
+                log.info("Seek to %s", seek_time)
 
         elif command in actions:
             actions[command]()
