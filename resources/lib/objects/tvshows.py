@@ -236,7 +236,8 @@ class TVShows(Items):
         API = api.API(item)
 
         if settings('syncEmptyShows') == "false" and not item.get('RecursiveItemCount'):
-            log.info("Skipping empty show: %s", item['Name'])
+            if item.get('Name', None) is not None:
+                log.info("Skipping empty show: %s", item['Name'])
             return
         # If the item already exist in the local Kodi DB we'll perform a full item update
         # If the item doesn't exist, we'll add it to the database
