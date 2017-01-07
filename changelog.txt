@@ -1,3 +1,11 @@
+version 2.3.35
+ - DB connection management revamped
+ - Emby video nodes now have their own parent node
+ - Kodi 17 Ratings
+ - Thread pool system for Emby data loading
+ - A lot of small bug fixes
+ - Some code refactoring
+
 version 2.3.25
 - Fix on-wake sync
 
