@@ -82,9 +82,23 @@ class Read_EmbyServer():
             if len(self.download_threads) < self.download_limit:
                 # Start new "daemon thread" - actual daemon thread is not supported in Kodi
                 new_thread = DownloadThreader(queue, output)
-                new_thread.start()
-                self.download_threads.append(new_thread)
-                return True
+
+                counter = 0
+                worked = False
+                while counter < 10:
+                    try:
+                        new_thread.start()
+                        worked = True
+                        break
+                    except:
+                        counter = counter + 1
+                        xbmc.sleep(1000)
+
+                if worked:
+                    self.download_threads.append(new_thread)
+                    return True
+                else:
+                    return False
             else:
                 log.info("Waiting for empty download spot: %s", len(self.download_threads))
                 xbmc.sleep(100)

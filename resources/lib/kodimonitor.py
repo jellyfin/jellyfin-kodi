@@ -64,8 +64,12 @@ class KodiMonitor(xbmc.Monitor):
         if method not in ('Playlist.OnAdd', 'Player.OnStop', 'Player.OnClear'):
             log.info("Method: %s Data: %s", method, data)
 
-        if data:
-            data = json.loads(data, 'utf-8')
+        try:
+            if data:
+                data = json.loads(data, 'utf-8')
+        except:
+            log.info("Error parsing message data: %s", data)
+            return
 
         if method == 'Player.OnPlay':
             self._on_play_(data)

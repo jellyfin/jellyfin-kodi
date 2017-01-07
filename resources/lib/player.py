@@ -215,8 +215,12 @@ class Player(xbmc.Player):
             try:
                 runtime = int(runtime)
             except ValueError:
-                runtime = self.xbmcplayer.getTotalTime()
-                log.info("Runtime is missing, Kodi runtime: %s" % runtime)
+                try:
+                    runtime = int(self.xbmcplayer.getTotalTime())
+                    log.info("Runtime is missing, Kodi runtime: %s" % runtime)
+                except:
+                    runtime = 0
+                    log.info("Runtime is missing, Using Zero")
 
             # Save data map for updates and position calls
             data = {
