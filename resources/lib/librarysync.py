@@ -645,10 +645,6 @@ class LibrarySync(threading.Thread):
 
         log.warn("---===### Starting LibrarySync ###===---")
 
-        # reset the internal emby tables check status
-        # we need to check at least once per run or on switching profiles
-        window('emby_db_checked', value="false")
-
         while not self.monitor.abortRequested():
 
             # In the event the server goes offline
