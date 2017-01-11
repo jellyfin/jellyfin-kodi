@@ -216,6 +216,10 @@ class DownloadUtils(object):
             self._ensure_server(server_id)
             server = self.session if server_id is None else self.servers[server_id]
 
+            if server is None or server.get("Server", None) is None or server.get("UserId", None) is None:
+                log.info("Aborting download, Server Details Error: %s", server)
+                return None
+
             if server_id is None and self.session_requests is not None: # Main server
                 session = self.session_requests
             else:
