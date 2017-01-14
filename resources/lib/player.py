@@ -167,21 +167,20 @@ class Player(xbmc.Player):
                 except:
                     tracks_data = None
 
-                if tracks_data is not None:
-                    try: # Audio tracks
-                        indexAudio = tracks_data['currentaudiostream']['index']
-                    except (KeyError, TypeError):
-                        indexAudio = 0
+                try: # Audio tracks
+                    indexAudio = tracks_data['currentaudiostream']['index']
+                except:
+                    indexAudio = 0
 
-                    try: # Subtitles tracks
-                        indexSubs = tracks_data['currentsubtitle']['index']
-                    except (KeyError, TypeError):
-                        indexSubs = 0
+                try: # Subtitles tracks
+                    indexSubs = tracks_data['currentsubtitle']['index']
+                except:
+                    indexSubs = 0
 
-                    try: # If subtitles are enabled
-                        subsEnabled = tracks_data['subtitleenabled']
-                    except (KeyError, TypeError):
-                        subsEnabled = ""
+                try: # If subtitles are enabled
+                    subsEnabled = tracks_data['subtitleenabled']
+                except:
+                    subsEnabled = ""
 
                 # Postdata for the audio
                 postdata['AudioStreamIndex'] = indexAudio + 1
