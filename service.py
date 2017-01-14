@@ -37,10 +37,14 @@ if __name__ == "__main__":
     service = Service()
 
     try:
+        abort = False
         if DELAY and xbmc.Monitor().waitForAbort(DELAY):
-            raise RuntimeError("Abort event while waiting to start Emby for kodi")
+            log.info("Abort event while waiting to start Emby for kodi")
+            abort = True
         # Start the service
-        service.service_entry_point()
+        if abort == False:
+            service.service_entry_point()
+
     except Exception as error:
         if not (hasattr(error, 'quiet') and error.quiet):
             ga = GoogleAnalytics()
