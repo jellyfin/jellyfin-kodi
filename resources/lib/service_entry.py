@@ -86,10 +86,6 @@ class Service(object):
 
     def service_entry_point(self):
 
-        # reset the internal emby tables check status
-        # we need to check at least once per run or on switching profiles
-        window('emby_db_checked', value="false")
-
         # Important: Threads depending on abortRequest will not trigger
         # if profile switch happens more than once.
         self.monitor = kodimonitor.KodiMonitor()
