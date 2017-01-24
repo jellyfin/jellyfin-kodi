@@ -110,17 +110,7 @@ class Read_EmbyServer():
 
     def getItem(self, itemid):
         # This will return the full item
-        item = {}
-
-        try:
-            result = self.doUtils.downloadUrl("{server}/emby/Users/{UserId}/Items/%s?format=json" % itemid)
-        except Exception as error:
-            log.info("Error getting item from server: " + str(error))
-            result = None
-
-        if result is not None:
-            item = result
-
+        item = self.doUtils.downloadUrl("{server}/emby/Users/{UserId}/Items/%s?format=json" % itemid)
         return item
 
     def getItems(self, item_list):
