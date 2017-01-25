@@ -197,8 +197,11 @@ class API(object):
             'language': stream.get('Language')
         }
 
-        if "dca" in codec and "dts-hd ma" in profile:
+        if "dts-hd ma" in profile:
             track['codec'] = "dtshd_ma"
+
+        if "dts-hd hra" in profile:
+            track['codec'] = "dtshd_hra"
 
         audio_tracks.append(track)
 
