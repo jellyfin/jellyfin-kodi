@@ -65,6 +65,9 @@ class PlayUtils():
 
     def getPlayUrl(self):
 
+        # log filename, used by other addons eg subtitles which require the file name
+        window('embyfilename', value=self.directPlay())
+
         playurl = None
         
         if (self.item.get('Type') in ("Recording", "TvChannel") and self.item.get('MediaSources')
