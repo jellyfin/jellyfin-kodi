@@ -217,8 +217,10 @@ class DownloadUtils(object):
             server = self.session if server_id is None else self.servers[server_id]
 
             if server is None or server.get("Server", None) is None or server.get("UserId", None) is None:
-                log.info("Aborting download, Server Details Error: %s", server)
-                return None
+                log.info("Aborting download, Server Details Error: %s url=%s" % (server, url))
+                exc = Exception("Aborting download, Server Details Error: %s url=%s" % (server, url))
+                #exc.quiet = True
+                raise exc
 
             if server_id is None and self.session_requests is not None: # Main server
                 session = self.session_requests
@@ -345,9 +347,6 @@ class DownloadUtils(object):
         except requests.exceptions.RequestException as error:
             log.error("unknown error connecting to: %s", url)
             raise
-
-        # something went wrong so return a None as we have no valid data
-        return None
 
     def _ensure_server(self, server_id=None):
 
