@@ -238,7 +238,7 @@ class DownloadUtils(object):
             # does the URL look ok
             if url.startswith('/'):
                 exc = Exception("URL Error: " + url)
-                exc.quiet = True
+                #exc.quiet = True
                 raise exc
 
             ##### PREPARE REQUEST #####
@@ -260,7 +260,7 @@ class DownloadUtils(object):
                 # Read response to release connection
                 response.content
                 if action_type == "GET":
-                    raise Warning("Response Code 204: No Content for GET request")
+                    raise Exception("Response Code 204 for GET request")
                 else:
                     # this is probably valid for DELETE and PUT
                     return None
@@ -279,7 +279,7 @@ class DownloadUtils(object):
         ##### EXCEPTIONS #####
 
         except requests.exceptions.SSLError as error:
-            log.error("invalid SSL certificate for: %s", url)
+            log.error("Invalid SSL certificate for: %s", url)
             error.quiet = True
             raise
 
@@ -303,11 +303,6 @@ class DownloadUtils(object):
 
         except requests.exceptions.HTTPError as error:
 
-            if response.status_code == 400:
-                log.error("Malformed request: %s", error)
-                error.quiet = True
-                raise
-
             if response.status_code == 401:
                 # Unauthorized
                 status = window('emby_serverStatus')
@@ -322,16 +317,6 @@ class DownloadUtils(object):
                                                           icon=xbmcgui.NOTIFICATION_ERROR,
                                                           time=5000)
                         window('emby_serverStatus', value="restricted")
-                        exc = Exception("restricted: " + str(error))
-                        exc.quiet = True
-                        raise exc
-
-                    elif (response.headers['X-Application-Error-Code'] ==
-                          "UnauthorizedAccessException"):
-                        # User tried to do something his emby account doesn't allow
-                        exc = Exception("UnauthorizedAccessException: " + str(error))
-                        exc.quiet = True
-                        raise exc
 
                 elif status not in ("401", "Auth"):
                     # Tell userclient token has been revoked.
@@ -340,13 +325,15 @@ class DownloadUtils(object):
                     xbmcgui.Dialog().notification(heading="Error connecting",
                                                   message="Unauthorized.",
                                                   icon=xbmcgui.NOTIFICATION_ERROR)
-                    exc = Exception("401: " + str(error))
-                    exc.quiet = True
-                    raise exc
 
-        except requests.exceptions.RequestException as error:
-            log.error("unknown error connecting to: %s", url)
-            raise
+            exc = Exception("HTTPError : " + str(response.status_code) + " : " + str(error))
+            #exc.quiet = True
+            raise exc
+
+        # if we got to here and did not process the download for some reason then that is bad
+        exc = Exception("Unhandled Download : %s", url)
+        #exc.quiet = True
+        raise exc
 
     def _ensure_server(self, server_id=None):
 
