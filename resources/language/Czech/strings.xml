@@ -1,0 +1,358 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+
+    <!-- Add-on settings -->
+    <string id="29999">Emby pro Kodi</string>
+    <string id="30000">IP Adresa serveru</string>
+    <string id="30001">Název serveru</string>
+    <string id="30002">Přehrávat přes HTTP místo SMB</string>
+    <string id="30004">Úroveň záznamů</string>
+    <string id="30016">Název zařízení</string>
+    <string id="30022">Rozšířené</string>
+    <string id="30024">Uživ. jméno</string>
+    <string id="30030">Číslo portu</string>
+
+    <string id="30035">Zobrazit počet naposledy přidaných hudebních alb:</string>
+    <string id="30036">Zobrazit počet naposledy přidaných filmů:</string>
+    <string id="30037">Zobrazit počet naposledy přidaných epizod seriálů:</string>
+
+    <string id="30042">Obnovit</string>
+    <string id="30043">Smazat</string>
+    <string id="30044">Nesprávné uživatelské jméno nebo heslo</string>
+    <string id="30045">Uživatelské jméno nenalezeno</string>
+    <string id="30052">Mažu</string>
+    <string id="30053">Čekám až server provede smazání</string>
+    
+    <string id="30068">Třídit podle:</string>
+    <string id="30069">Žádný</string>
+    <string id="30070">Akční</string>
+    <string id="30071">Dobrodružný</string>
+    <string id="30072">Animovaný</string>
+    <string id="30073">Kriminální</string>
+    <string id="30074">Komedie</string>
+    <string id="30075">Dokumentární</string>
+    <string id="30076">Drama</string>
+    <string id="30077">Fantasy</string>
+    <string id="30078">Zahraniční</string>
+    <string id="30079">Historický</string>
+    <string id="30080">Horor</string>
+    <string id="30081">Hudební</string>
+    <string id="30082">Muzikál</string>
+    <string id="30083">Tajemný</string>
+    <string id="30084">Romantický</string>
+    <string id="30085">Vědeckofantastický</string>
+    <string id="30086">Krátký</string>
+    <string id="30087">Napínavý</string>
+    <string id="30088">Thriller</string>
+    <string id="30089">Western</string>
+    
+    <string id="30090">Filtr žánrů</string>
+    <string id="30091">Potvrdit smazání</string><!-- Verified -->
+    
+    <string id="30093">Označit jako shlédnuté</string>
+    <string id="30094">Označit jako neshlédnuté</string>
+
+    <string id="30097">Řadit podle</string>
+    <string id="30098">Řadit sestupně</string>
+    <string id="30099">Řadit vzestupně</string>
+
+    <!-- resume dialog -->
+    <string id="30105">Pokračovat</string>
+    <string id="30106">Pokračovat od</string>
+    <string id="30107">Přehrát od začáku</string>
+    
+    <string id="30114">>Nabídnout smazání po skončení přehrávání</string><!-- Verified -->
+    <string id="30115">Pro epizody</string><!-- Verified -->
+    <string id="30116">Pro filmy</string><!-- Verified -->
+
+    <string id="30118">Přidat procenta obnovení</string>
+    <string id="30119">Přidat číslo epizody</string>
+    <string id="30120">Zobrazit průběh načítání</string>
+    <string id="30121">Načítám obsah</string>
+    <string id="30122">Přijímám data</string>
+
+    <string id="30125">Hotovo</string>
+    <string id="30132">Varování</string><!-- Verified -->
+    <string id="30135">Chyba</string>
+    <string id="30138">Vyhledat</string>
+    
+    <string id="30157">Povolit rozšířené obrázky (např. CoverArt)</string><!-- Verified -->
+    <string id="30158">Metadata</string>
+    <string id="30159">Obrázky</string>
+    <string id="30160">Kvalita videa</string><!-- Verified -->
+    
+    <string id="30165">Přímé přehrávání</string><!-- Verified -->
+    <string id="30166">Překódování</string>     
+    <string id="30167">Zjištění serveru uspělo</string>     
+    <string id="30168">Nalezen server</string>     
+    <string id="30169">Adresa:</string>     
+    
+    <!-- Video nodes -->
+    <string id="30170">Naposledy přidané seriály</string><!-- Verified -->
+    <string id="30171">Rozkoukané seriály</string><!-- Verified -->
+    <string id="30172">Všechna hudba</string>              
+    <string id="30173">Kanály</string><!-- Verified -->
+    <string id="30174">Naposledy přidané filmy</string><!-- Verified -->
+    <string id="30175">Naposledy přidané epizody</string><!-- Verified -->
+    <string id="30176">Naposledy přidaná alba</string>  
+    <string id="30177">Rozkoukané filmy</string><!-- Verified -->
+    <string id="30178">Rozkoukané epizody</string><!-- Verified -->
+    <string id="30179">Další epizody</string><!-- Verified -->
+    <string id="30180">Oblíbené filmy</string><!-- Verified -->      
+    <string id="30181">Oblíbené seriály</string><!-- Verified -->
+    <string id="30182">Oblíbené epizody</string>      
+    <string id="30183">Často přehrávaná alba</string> 
+    <string id="30184">Nadcházející epizody</string>            
+    <string id="30185">Kolekce</string>                
+    <string id="30186">Ukázky</string>               
+    <string id="30187">Videoklipy</string>           
+    <string id="30188">Fotky</string>                 
+    <string id="30189">Neshlédnuté filmy</string><!-- Verified -->
+    <string id="30190">Žánry filmů</string>           
+    <string id="30191">Filmová studia</string>          
+    <string id="30192">Filmoví herci</string>           
+    <string id="30193">Neshlédnuté epizody</string>     
+    <string id="30194">Žánry seriálů</string>              
+    <string id="30195">Televizní stanice</string>            
+    <string id="30196">Televizní herci</string>              
+    <string id="30197">Playlisty</string>
+
+    <string id="30199">Nastavit náhledy</string>
+    <string id="30200">Vybrat uživatele</string><!-- Verified -->           
+    <string id="30204">Nemohu se připojit k serveru</string>         
+    
+    <string id="30207">Skladby</string>
+    <string id="30208">Alba</string>
+    <string id="30209">Interpreti alba</string>
+    <string id="30210">Interpreti</string>
+    <string id="30211">Hudební žánry</string>
+
+    <string id="30220">Poslední</string>
+    <string id="30221">Rozkoukané</string>
+    <string id="30222">Nadcházející</string>
+    <string id="30223">Uživatelské náhledy</string>
+    <string id="30224">Hlášení metriky</string>
+
+    <string id="30227">Náhodné filmy</string>
+    <string id="30228">Náhodné epizody</string>
+    <string id="30229">Náhodné položky</string><!-- Verified -->
+    <string id="30230">Doporučené položky</string><!-- Verified -->
+    
+    <string id="30235">Extra</string><!-- Verified -->
+    <string id="30236">Synchronizovat tématickou hudbu</string>
+    <string id="30237">Synchronizovat Extra Fanart</string>
+    <string id="30238">Synchronizovat kolekce filmů</string>
+    
+    <string id="30239">Resetovat místní databázi Kodi</string><!-- Verified -->
+    <string id="30243">Povolit HTTPS</string><!-- Verified -->
+    <string id="30245">Kodeky vynuceného překódování</string>
+    
+    <string id="30249">Povolit zprávu o připojení k serveru po spuštění</string><!-- Verified -->
+    
+    <string id="30251">Naposledy přidaná domácí videa</string><!-- Verified -->
+    <string id="30252">Naposledy přidané fotky</string><!-- Verified -->
+    <string id="30253">Oblíbená domácí videa</string><!-- Verified -->
+    <string id="30254">Oblíbené fotky</string><!-- Verified -->
+    <string id="30255">Oblíbená alba</string>
+    
+    <string id="30256">Naposledy přidané videoklipy</string><!-- Verified -->
+    <string id="30257">Rozkoukané videoklipy</string><!-- Verified -->
+    <string id="30258">Neshlédnuté videoklipy</string><!-- Verified -->
+    
+    <!-- Default views -->
+    <string id="30300">Aktivní</string>              
+    <string id="30301">Vyčistit nastavení</string>              
+    <string id="30302">Filmy</string>              
+    <string id="30303">Kolekce</string>              
+    <string id="30304">Ukázky</string>              
+    <string id="30305">Seriály</string>              
+    <string id="30306">Sezóny</string>              
+    <string id="30307">Episody</string>              
+    <string id="30308">Hudební interpreti</string>              
+    <string id="30309">Hudební alba</string>              
+    <string id="30310">Videoklipy</string>              
+    <string id="30311">Skladby</string>
+    <string id="30312">Kanály</string>  
+    
+    <!-- contextmenu -->
+    <string id="30401">Nastavení Emby</string>
+    <string id="30405">Přidat do oblíbených Emby</string>
+    <string id="30406">Odstranit z oblíbených Emby</string>
+    <string id="30407">Nastavit vlastní hodnocení skladby</string>
+    <string id="30408">Nastavení doplňku Emby</string>
+    <string id="30409">Smazat položku ze serveru</string>
+    <string id="30410">Obnovit tuto položku</string>
+    <string id="30411">Nastavit vlastní hodnocení skladby (0-5)</string>
+    <string id="30412">Překódovat</string>
+
+    <!-- add-on settings -->
+    <string id="30500">Ověřit hostitelův SSL certifikát</string>
+    <string id="30501">Klientský SSL certifikát</string>
+    <string id="30502">Použít alternativní adresu</string>
+    <string id="30503">Alternativní adresa serveru</string>
+    <string id="30504">Použít alternativní název zařízení</string>
+    <string id="30505">[COLOR yellow]Opakovat přihlášení[/COLOR]</string>
+    <string id="30506">Synchronizace</string>
+    <string id="30507">Zobrazovat průběh pokud je položek více než</string>
+    <string id="30508">Synchronizovat prázdné seriály</string>
+    <string id="30509">Povolit hudební knihovnu</string>
+    <string id="30510">Přímé streamování hudební knihovny</string>
+    <string id="30511">Režim přehrávání</string>
+    <string id="30512">Vynutit ukládání obrázků do mezipaměti</string>
+    <string id="30513">Omezit vlákna mezipaměti obrázků (doporučeno pro rpi)</string>
+    <string id="30514">Povolit rychlé spuštění (vyžaduje plugin na serveru)</string>
+    <string id="30515">Maximální počet položek vyžádaných najednou</string>
+    <string id="30516">Přehrávání videa</string>
+    <string id="30517">Přihlašovací údaje k síti</string>
+    <string id="30518">Povolit režim Emby cinema</string>
+    <string id="30519">Zeptat se na přehrání ukázek</string>
+    <string id="30520">Přeskočit potvrzení Emby o smazání (používejte na vlastní riziko)</string>
+    <string id="30521">Poskočit vzad při obnovení přehrávání (v sekundách)</string>
+    <string id="30522">Vynutit překódování H265</string>
+    <string id="30523">Nastavení hudebních metadat (není kompatibilní s přímým streamováním)</string>
+    <string id="30524">Načíst hodnocení skladeb přímo ze souborů</string>
+    <string id="30525">Převést hodnocení hudby na hodnocení Emby</string>
+    <string id="30526">Povolit aktualizaci hodnocení skladeb přímo v souborech</string>
+    <string id="30527">Ignorovat speciály v nadcházejících epizodách</string>
+    <string id="30528">Stálí uživatelé pro přidání do relace</string>
+    <string id="30529">Zpoždění startu (v sekundách)</string>
+    <string id="30530">Povolit zprávu o restartu serveru</string>
+    <string id="30531">Povolit upozornění na nový obsah</string>
+    <string id="30532">Doba zobrazení upozornění video knihovny (v sekundách)</string>
+    <string id="30533">Doba zobrazení upozornění hudební knihovny (v sekundách)</string>
+    <string id="30534">Zprávy serveru</string>
+    <string id="30535">Vygenerovat nový identifikátor zařízení</string>
+    <string id="30536">Synchronizovat při vypnutém šetřiči obrazovky</string>
+    <string id="30537">Vynutit překódování Hi10P</string>
+    <string id="30538">Vypnuté</string>
+    <string id="30539">Přihlášení</string>
+    <string id="30540">Ruční přihlášení</string>
+    <string id="30541">Emby Connect</string>
+    <string id="30542">Server</string>
+    <string id="30543">Uživ. jméno nebo mail</string>
+    <string id="30544">Povolit opravu uzamčené databáze (zpomalí průběh synchronizace)</string>
+    <string id="30545">Zobrazit zprávu o odpojení serveru</string>
+	<string id="30546">Povolit sběr analytických dat</string>
+    <string id="30547">Zobrazit zprávu (v sekundách)</string>
+    <string id="30548">Stahovací vlákna (doporučeno: 2-3)</string>
+
+    <!-- dialogs -->
+    <string id="30600">Přihlásit pomocí Emby Connect</string>
+    <string id="30602">Password</string>
+    <string id="30603">Prosím přečtěte si podmínky použití. Použití jakéhokoliv softwaru Emby je podmíněno souhlasem s nimi.</string>
+    <string id="30604">Oskenuj si</string>
+    <string id="30605">Přihlásit</string>
+    <string id="30606">Zrušit</string>
+    <string id="30607">Vybrat hlavní server</string>
+    <string id="30608">Uživatelské jméno nebo heslo nemohou být prázdné</string>
+    <string id="30609">Nemohu se připojit ke zvolenému serveru</string>
+    <string id="30610">Přihlásit k</string><!-- Connect to {server} -->
+    <string id="30611">Ručně přidat server</string>
+    <string id="30612">Prosím přihlaste se</string>
+    <string id="30613">Uživatelské jméno nemůže být prázdné</string>
+    <string id="30614">Připojit k serveru</string>
+    <string id="30615">Hostitel</string>
+    <string id="30616">Připojit</string>
+    <string id="30617">Server nebo port nemůžou být prázdné</string>
+    <string id="30618">Změnit uživatele Emby Connect</string>
+
+    <!-- service add-on -->
+    <string id="33000">Vítáme uživatele</string>
+    <string id="33001">Chyba připojení</string>
+    <string id="33002">Server je nedosažitelný</string>
+    <string id="33003">Server je online</string>
+    <string id="33004">položek přidáno do playlistu</string>
+    <string id="33005">položek zařazeno do fronty playlistu</string>
+    <string id="33006">Server se restartuje</string>
+    <string id="33007">Přístup je povolen</string>
+    <string id="33008">Zadejte heslo pro uživatele:</string>
+    <string id="33009">Neplatné uživatelské jméno nebo heslo</string>
+    <string id="33010">Proběhlo moc neúspěšných pokusů o ověření</string>
+    <string id="33011">Nemohu přehrávat přímo</string>
+    <string id="33012">Přímé přehrávání 3x neuspělo. Povolte přehrávání přes HTTP.</string>
+    <string id="33013">Zvolte audiostopu</string>
+    <string id="33014">Zvolte titulkovou stopu</string>
+    <string id="33015">Smazat soubor ze serveru Emby?</string>
+    <string id="33016">Přehrát ukázky?</string>
+    <string id="33017">Shromažďuji filmy z:</string>
+    <string id="33018">Shromažďuji kolekce</string>
+    <string id="33019">Shromažďuji videoklipy z:</string>
+    <string id="33020">Shromažďuji seriály z:</string>
+    <string id="33021">Shromažďuji:</string>
+    <string id="33022">Zjištěná databáze musí být pro tuto verzi Emby pro Kodi znovu vytvořena. Pokračovat?</string>
+    <string id="33023">Emby pro Kodi nemusí fungovat správně dokud nebude databáze resetována.</string>
+    <string id="33024">Ruším synchronizaci databáze. Tato verze Kodi není podporována.</string>
+    <string id="33025">dokončeno za:</string>
+    <string id="33026">Porovnávám filmy z:</string>
+    <string id="33027">Porovnávám kolekce</string>
+    <string id="33028">Porovnávám videoklipy z:</string>
+    <string id="33029">Porovnávám seriály z:</string>
+    <string id="33030">Porovnávám epizody z:</string>
+    <string id="33031">Porovnávám:</string>
+    <string id="33032">Nepodařilo se vygenerovat nový identifikátor zařízení. Pro více informací se podívejte do záznamu.</string>
+    <string id="33033">Byl vygenerován nový identifikátor. Kodi se nyní restartuje.</string>
+
+    <string id="33034">Použít následující server?</string>
+    <string id="33035">POZOR! Pokud zvolíte "Nativní" režim, přijdete o některé funkce Emby, jako např. režim Emby cinema, nastavení přímého přehrávání a překódování a rodičovská nastavení.</string>
+    <string id="33036">Doplněk (výchozí)</string>
+    <string id="33037">Nativní (přímé cesty)</string>
+    <string id="33038">Přidat síťové přihlašovací údaje pro přístup Kodi k vašemu obsahu? Důležité: Pro použití údajů musí být Kodi restartováno. Údaje můžete zadat i později.</string>
+    <string id="33039">Zakázat hudební knihovnu Emby?</string>
+    <string id="33040">Přímo přehrávat hudební knihovnu? Zvolte tuto položku pokud bude k hudební knihovně přistupováno vzdáleně.</string>
+    <string id="33041">Smazat soubor(y) z Emby serveru? Tímto úplně smažete soubor(y) z disku!</string>
+    <string id="33042">Spuštění procesu ukládání do mezipaměti bude nějakou chvílit trvat. Pokračovat?</string>
+    <string id="33043">Synchronizace mezipaměti obrázků</string>
+    <string id="33044">Resetovat stávající mezipaměť obrázků?</string>
+    <string id="33045">Aktualizuji mezipaměť obrázků:</string>
+    <string id="33046">Čekám na ukončení všech vláken:</string>
+    <string id="33047">Kodi nemůže najít soubor:</string>
+    <string id="33048">Zkontrolujte přihlašovací údaje k síti v nastavení doplňku, nebo použijte nahrazování cest (Nástěnka Emby > knihovna). Zastavit synchronizaci?</string>
+    <string id="33049">Přidáno:</string>
+    <string id="33050">Pokud přihlášení neuspěje mockrát, může Emby server zablokovat váš účet. Přesto pokračovat?</string>
+    <string id="33051">Živé televizní vysílání (experimentální)</string>
+    <string id="33052">Nahrávky televizního vysílání (experimentální)</string>
+    <string id="33053">Nastavení</string>
+    <string id="33054">Přidat uživatele k relaci</string>
+    <string id="33055">Obnovit playlisty/video uzly Emby</string>
+    <string id="33056">Provést ruční synchronizaci</string>
+    <string id="33057">Opravit místní databázi (vynutit aktualizaci všeho obsahu)</string>
+    <string id="33058">Provést reset místní databáze</string>
+    <string id="33059">Uložit všechny obrázky do mezipaměti</string>
+    <string id="33060">Synchronizovat tématickou hudbu do Kodi</string>
+    <string id="33061">Přidat/odebrat uživatele do relace</string>
+    <string id="33062">Přidat uživatele</string>
+    <string id="33063">Odebrat uživatele</string>
+    <string id="33064">Odebrat uživatele z relace</string>
+    <string id="33065">Úspěch!</string>
+    <string id="33066">Odstraněno z relace:</string>
+    <string id="33067">Přidáno do relace:</string>
+    <string id="33068">Nemohu přidat/odebrat uživatele do relace.</string>
+    <string id="33069">Úkol dokončen</string>
+    <string id="33070">Úkol neuspěl</string>
+    <string id="33071">Přímé přehrávání</string>
+    <string id="33072">Metoda přehrávání pro tématickou hudbu</string>
+    <string id="33073">Soubor nastavení TV Tunes neexistuje. Zkontrolujte nastavení a opakujte úkol.</string>
+    <string id="33074">Opravdu chcete resetovat místní databázi Kodi?</string>
+    <string id="33075">Změnit/odstranit síťové přihlašovací údaje</string>
+    <string id="33076">Změnit</string>
+    <string id="33077">Odstranit</string>
+    <string id="33078">Odstraněno:</string>
+    <string id="33079">Zadejte síťové uživ. jméno</string>
+    <string id="33080">Zadejte síťové heslo</string>
+    <string id="33081">Přidány síťové přihlašovací údaje pro:</string>
+    <string id="33082">Zadejte název serveru, nebo IP adresu podle vašich cest ke knihovnám Emby. Např. název serveru: \\\\SERVER-PC\\cesta\\ je "SERVER-PC"</string>
+    <string id="33083">Změnit název serveru, nebo IP adresu</string>
+    <string id="33084">Zadejte název serveru nebo IP adresu</string>
+    <string id="33085">Nemohu provést reset databáze. Zkuste to znovu.</string>
+    <string id="33086">Odstranit všechny obrázky v mezipaměti?</string>
+    <string id="33087">Resetovat všechna nastavení doplňku Emby?</string>
+    <string id="33088">Reset databáze dokončen, pro provedení změn je potřeba restartovat Kodi.</string>
+    <string id="33089">Zadejte složku pro zálohy</string>
+    <string id="33090">Nahradit existující zálohu?</string>
+    <string id="33091">Vytvořit zálohu v:</string>
+    <string id="33092">Vytvořit zálohu</string>
+    <string id="33093">Složka zálohy</string>
+    <string id="33094">Zvolte typ obsahu k opravě</string>
+    <string id="33095">Nepovedlo se získat poslední položky pomocí rychlé synchronizace, bude použita plná synchronizace.</string>
+
+</strings>
