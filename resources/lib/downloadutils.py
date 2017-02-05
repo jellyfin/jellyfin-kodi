@@ -216,10 +216,10 @@ class DownloadUtils(object):
             self._ensure_server(server_id)
             server = self.session if server_id is None else self.servers[server_id]
 
-            if server is None or server.get("Server", None) is None or server.get("UserId", None) is None:
+            if not server or not server.get("Server") or not server.get("UserId"):
                 log.info("Aborting download, Server Details Error: %s url=%s" % (server, url))
                 exc = Exception("Aborting download, Server Details Error: %s url=%s" % (server, url))
-                #exc.quiet = True
+                exc.quiet = True
                 raise exc
 
             if server_id is None and self.session_requests is not None: # Main server
@@ -238,7 +238,7 @@ class DownloadUtils(object):
             # does the URL look ok
             if url.startswith('/'):
                 exc = Exception("URL Error: " + url)
-                #exc.quiet = True
+                exc.quiet = True
                 raise exc
 
             ##### PREPARE REQUEST #####
@@ -326,9 +326,8 @@ class DownloadUtils(object):
                                                   message="Unauthorized.",
                                                   icon=xbmcgui.NOTIFICATION_ERROR)
 
-            exc = Exception("HTTPError : " + str(response.status_code) + " : " + str(error))
-            #exc.quiet = True
-            raise exc
+            error.quiet = True
+            raise
 
         # if we got to here and did not process the download for some reason then that is bad
         exc = Exception("Unhandled Download : %s", url)
