@@ -216,7 +216,11 @@ class DownloadUtils(object):
             self._ensure_server(server_id)
             server = self.session if server_id is None else self.servers[server_id]
 
-            if not server or not server.get("Server") or not server.get("UserId"):
+            requires_server = False
+            if url.find("{server}") > -1 or url.find("{UserId}") > -1:
+                requires_server = True
+
+            if requires_server and (not server or not server.get("Server") or not server.get("UserId")):
                 log.info("Aborting download, Server Details Error: %s url=%s" % (server, url))
                 exc = Exception("Aborting download, Server Details Error: %s url=%s" % (server, url))
                 exc.quiet = True
@@ -232,8 +236,9 @@ class DownloadUtils(object):
                 })
 
             # Replace for the real values
-            url = url.replace("{server}", server['Server'])
-            url = url.replace("{UserId}", server['UserId'])
+            if requires_server:
+                url = url.replace("{server}", server['Server'])
+                url = url.replace("{UserId}", server['UserId'])
 
             # does the URL look ok
             if url.startswith('/'):
