@@ -96,7 +96,8 @@ class KodiMonitor(xbmc.Monitor):
             item_type = item['type']
         except (KeyError, TypeError):
             log.info("Item is invalid for playstate update")
-        else:
+            (kodi_id, item_type) = self._get_kodi_id_from_currentfile()
+        if kodi_id:
             if ((settings('useDirectPaths') == "1" and not item_type == "song") or
                     (item_type == "song" and settings('enableMusic') == "true")):
                 # Set up properties for player
@@ -180,3 +181,98 @@ class KodiMonitor(xbmc.Monitor):
             log.info("Could not retrieve item Id")
 
         return item_id
+
+    @classmethod
+    def _get_kodi_id_from_currentfile(cls):
+        currentfile = None
+        count = 0
+        while not currentfile and count < 2:
+            try:
+                currentfile = xbmc.Player().getPlayingFile()
+                try:
+                    filename = currentfile.rsplit('/', 1)[1]
+                    path = currentfile.rsplit('/', 1)[0] + '/'
+                except IndexError:
+                    filename = currentfile.rsplit('\\', 1)[1]
+                    path = currentfile.rsplit('\\', 1)[0] + '\\'
+                log.info('Trying to figure out kodi_id from filename: %s '
+                         'and path: %s' % (filename, path))
+            except RuntimeError:
+                count += 1
+                xbmc.sleep(200)
+
+            with DatabaseConn('video') as cursor:
+                query = ' '.join((
+                    "SELECT idFile, idPath",
+                    "FROM files",
+                    "WHERE strFilename = ?"
+                ))
+                cursor.execute(query, (filename,))
+                files = cursor.fetchall()
+                if len(files) == 0:
+                    log.info('Did not find any file, abort')
+                    return
+                query = ' '.join((
+                    "SELECT strPath",
+                    "FROM path",
+                    "WHERE idPath = ?"
+                ))
+                # result will contain a list of all idFile with matching filename and
+                # matching path
+                result = []
+                for file in files:
+                    # Use idPath to get path as a string
+                    cursor.execute(query, (file[1],))
+                    try:
+                        strPath = cursor.fetchone()[0]
+                    except TypeError:
+                        # idPath not found; skip
+                        continue
+                    # For whatever reason, double might have become triple
+                    strPath = strPath.replace('///', '//')
+                    strPath = strPath.replace('\\\\\\', '\\\\')
+                    if strPath == path:
+                        result.append(file[0])
+                if len(result) == 0:
+                    log.info('Did not find matching paths, abort')
+                    return
+                log.info('Result: %s' % result)
+                # Kodi seems to make ONE temporary entry; we only want the earlier,
+                # permanent one
+                if len(result) > 2:
+                    log.info('We found too many items with matching filenames and '
+                             ' paths, aborting')
+                    return
+                idFile = result[0]
+                log.info('idFile: %s' % idFile)
+
+                # Try movies first
+                query = ' '.join((
+                    "SELECT idMovie",
+                    "FROM movie",
+                    "WHERE idFile = ?"
+                ))
+                cursor.execute(query, (idFile,))
+                try:
+                    kodi_id = cursor.fetchone()[0]
+                    item_type = 'movie'
+                    log.info('Found kodi_id = %s item_type = %s' % (kodi_id, item_type))
+                except TypeError:
+                    # Try tv shows next
+                    query = ' '.join((
+                        "SELECT idEpisode",
+                        "FROM episode",
+                        "WHERE idFile = ?"
+                    ))
+                    cursor.execute(query, (idFile,))
+                    try:
+                        kodi_id = cursor.fetchone()[0]
+                        item_type = 'episode'
+                        log.info('Found kodi_id = %s item_type = %s' % (kodi_id, item_type))
+                    except TypeError:
+                        log.info('Unexpectantly did not find a match!')
+                        return
+
+        return kodi_id, item_type
+
+
