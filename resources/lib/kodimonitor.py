@@ -18,6 +18,7 @@ from database import DatabaseConn
 #################################################################################################
 
 log = logging.getLogger("EMBY."+__name__)
+KODI = int(xbmc.getInfoLabel('System.BuildVersion')[:2])
 
 #################################################################################################
 
@@ -91,9 +92,16 @@ class KodiMonitor(xbmc.Monitor):
     def _on_play_(self, data):
         # Set up report progress for emby playback
         try:
-            item = data['item']
-            kodi_id = item['id']
-            item_type = item['type']
+            if KODI >= 17:
+                item = xbmc.Player().getVideoInfoTag()
+                kodi_id = item.getDbId()
+                item_type = item.getMediaType()
+                log.info("kodi_id: %s item_type: %s", kodi_id, item_type)             
+            else:
+                item = data['item']
+                kodi_id = item['id']
+                item_type = item['type']
+                log.info("kodi_id: %s item_type: %s", kodi_id, item_type)
         except (KeyError, TypeError):
             log.info("Item is invalid for playstate update")
         else:
