@@ -202,7 +202,7 @@ class PlaybackUtils():
 
         if homeScreen and seektime and window('emby_customPlaylist') != "true":
             log.info("Play as a widget item.")
-            self.setListItem(listitem)
+            self.setListItem(listitem, dbid)
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listitem)
 
         elif ((introsPlaylist and window('emby_customPlaylist') == "true") or
