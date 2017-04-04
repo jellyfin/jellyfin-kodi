@@ -1,3 +1,7 @@
+version 2.3.47
+ - Fix encoding error in context menu for non-ascii characters
+ - Fix playback reporting monitor for Kodi 17
+ 
 version 2.3.35
  - DB connection management revamped
  - Emby video nodes now have their own parent node
