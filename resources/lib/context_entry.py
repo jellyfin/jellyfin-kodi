@@ -138,7 +138,7 @@ class ContextMenu(object):
 
     def _action_menu(self):
 
-        selected = self._selected_option
+        selected = self._selected_option.decode('utf-8')
 
         if selected == OPTIONS['Transcode']:
             pass
