@@ -340,17 +340,19 @@ class TVShows(Items):
 
         ##### UPDATE THE TVSHOW #####
         if update_item:
-            log.info("UPDATE tvshow itemid: %s - Title: %s", itemid, title)
+            log.info("UPDATE tvshow itemid: %s - Title: %s - ShowID: %s", itemid, title, showid)
 
             # update new ratings Kodi 17
             if self.kodi_version > 16:
                 ratingid =  self.kodi_db.get_ratingid(showid)
+                log.info("RETURNED ratingid: %s", ratingid)
 
                 self.kodi_db.update_ratings(showid, "tvshow", "default", rating, votecount,ratingid)
 
             # update new uniqueid Kodi 17
             if self.kodi_version > 16:
                 uniqueid =  self.kodi_db.get_uniqueid(showid)
+                log.info("RETURNED uniqueid: %s", uniqueid)
 
                 self.kodi_db.update_uniqueid(showid, "tvshow", imdb, "imdb",uniqueid)
 
@@ -605,17 +607,19 @@ class TVShows(Items):
 
         ##### UPDATE THE EPISODE #####
         if update_item:
-            log.info("UPDATE episode itemid: %s - Title: %s", itemid, title)
+            log.info("UPDATE episode itemid: %s - Title: %s - EpisodeD: %s", itemid, title, episodeid)
 
             # update new ratings Kodi 17
             if self.kodi_version >= 17:
                 ratingid =  self.kodi_db.get_ratingid(episodeid)
+                log.info("RETURNED ratingid: %s", ratingid)
 
                 self.kodi_db.update_ratings(episodeid, "episode", "default", rating, votecount,ratingid)
 
             # update new uniqueid Kodi 17
             if self.kodi_version >= 17:
                 uniqueid =  self.kodi_db.get_uniqueid(episodeid)
+                log.info("RETURNED uniqueid: %s", uniqueid)
 
                 self.kodi_db.update_uniqueid(episodeid, "episode", tvdb, "tvdb",uniqueid)
 
@@ -648,13 +652,13 @@ class TVShows(Items):
             if self.kodi_version >= 17:
                 ratingid =  self.kodi_db.create_entry_rating()
 
-                self.kodi_db.add_ratings(ratingid, showid, "episode", "default", rating, votecount)
+                self.kodi_db.add_ratings(ratingid, episodeid, "episode", "default", rating, votecount)
 
             # add new uniqueid Kodi 17
             if self.kodi_version >= 17:
                 uniqueid =  self.kodi_db.create_entry_uniqueid()
 
-                self.kodi_db.add_uniqueid(uniqueid, showid, "episode", tvdb, "tvdb")
+                self.kodi_db.add_uniqueid(uniqueid, episodeid, "episode", tvdb, "tvdb")
 
             # Add path
             pathid = self.kodi_db.add_path(path)
