@@ -340,19 +340,17 @@ class TVShows(Items):
 
         ##### UPDATE THE TVSHOW #####
         if update_item:
-            log.info("UPDATE tvshow itemid: %s - Title: %s - ShowID: %s", itemid, title, showid)
+            log.info("UPDATE tvshow itemid: %s - Title: %s", itemid, title)
 
             # update new ratings Kodi 17
             if self.kodi_version > 16:
                 ratingid =  self.kodi_db.get_ratingid(showid)
-                log.info("RETURNED ratingid: %s", ratingid)
 
                 self.kodi_db.update_ratings(showid, "tvshow", "default", rating, votecount,ratingid)
 
             # update new uniqueid Kodi 17
             if self.kodi_version > 16:
                 uniqueid =  self.kodi_db.get_uniqueid(showid)
-                log.info("RETURNED uniqueid: %s", uniqueid)
 
                 self.kodi_db.update_uniqueid(showid, "tvshow", imdb, "imdb",uniqueid)
 
@@ -607,19 +605,17 @@ class TVShows(Items):
 
         ##### UPDATE THE EPISODE #####
         if update_item:
-            log.info("UPDATE episode itemid: %s - Title: %s - EpisodeD: %s", itemid, title, episodeid)
+            log.info("UPDATE episode itemid: %s - Title: %s", itemid, title)
 
             # update new ratings Kodi 17
             if self.kodi_version >= 17:
                 ratingid =  self.kodi_db.get_ratingid(episodeid)
-                log.info("RETURNED ratingid: %s", ratingid)
 
                 self.kodi_db.update_ratings(episodeid, "episode", "default", rating, votecount,ratingid)
 
             # update new uniqueid Kodi 17
             if self.kodi_version >= 17:
                 uniqueid =  self.kodi_db.get_uniqueid(episodeid)
-                log.info("RETURNED uniqueid: %s", uniqueid)
 
                 self.kodi_db.update_uniqueid(episodeid, "episode", tvdb, "tvdb",uniqueid)
 
