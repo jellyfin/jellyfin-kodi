@@ -648,13 +648,13 @@ class TVShows(Items):
             if self.kodi_version >= 17:
                 ratingid =  self.kodi_db.create_entry_rating()
 
-                self.kodi_db.add_ratings(ratingid, showid, "episode", "default", rating, votecount)
+                self.kodi_db.add_ratings(ratingid, episodeid, "episode", "default", rating, votecount)
 
             # add new uniqueid Kodi 17
             if self.kodi_version >= 17:
                 uniqueid =  self.kodi_db.create_entry_uniqueid()
 
-                self.kodi_db.add_uniqueid(uniqueid, showid, "episode", tvdb, "tvdb")
+                self.kodi_db.add_uniqueid(uniqueid, episodeid, "episode", tvdb, "tvdb")
 
             # Add path
             pathid = self.kodi_db.add_path(path)
