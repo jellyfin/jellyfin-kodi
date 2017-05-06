@@ -72,12 +72,14 @@ class PlayUtils():
             log.info("Could not get file path for embyfilename window prop")
 
         playurl = None
+        user_token = downloadutils.DownloadUtils().get_token()
         
         if (self.item.get('Type') in ("Recording", "TvChannel") and self.item.get('MediaSources')
                 and self.item['MediaSources'][0]['Protocol'] == "Http"):
             # Play LiveTV or recordings
             log.info("File protocol is http (livetv).")
             playurl = "%s/emby/Videos/%s/stream.ts?audioCodec=copy&videoCodec=copy" % (self.server, self.item['Id'])
+            playurl += "&api_key=" + str(user_token)
             window('emby_%s.playmethod' % playurl, value="DirectPlay")
             
 
@@ -123,6 +125,8 @@ class PlayUtils():
         else:
             playurl = "%s/emby/Videos/%s/stream?static=true" % (self.server, itemid)
 
+        user_token = downloadutils.DownloadUtils().get_token()
+        playurl += "&api_key=" + str(user_token)
         return playurl
 
     def isDirectPlay(self):
@@ -273,6 +277,8 @@ class PlayUtils():
         else:
             playurl = "%s/emby/Videos/%s/stream?static=true" % (self.server, self.item['Id'])
 
+        user_token = downloadutils.DownloadUtils().get_token()
+        playurl += "&api_key=" + str(user_token)
         return playurl
 
     def isNetworkSufficient(self):
@@ -318,6 +324,9 @@ class PlayUtils():
             transcodeHi10P = settings('transcodeHi10P')
             if transcodeHi10P == "true":
                 playurl = "%s&MaxVideoBitDepth=8" % playurl
+
+            user_token = downloadutils.DownloadUtils().get_token()
+            playurl += "&api_key=" + str(user_token)
 
         return playurl
 
