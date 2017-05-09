@@ -267,6 +267,9 @@ class WebSocketClient(threading.Thread):
         elif command == 'GoHome':
             JSONRPC('GUI.ActivateWindow').execute({'window': "home"})
 
+        elif command == "Guide":
+            JSONRPC('GUI.ActivateWindow').execute({'window': "tvguide"})
+
         else:
             builtin = {
 
