@@ -147,7 +147,10 @@ class PlayUtils():
 
         if transcodeH265 in ("1", "2", "3") and ("HEVC" in videotrack or "H265" in videotrack):
             # Avoid H265/HEVC depending on the resolution
-            resolution = int(videotrack.split("P", 1)[0])
+            try:
+                resolution = int(videotrack.split("P", 1)[0])
+            except ValueError: # 4k resolution
+                resolution = 3064
             res = {
 
                 '1': 480,
@@ -242,7 +245,10 @@ class PlayUtils():
 
         if transcodeH265 in ("1", "2", "3") and ("HEVC" in videotrack or "H265" in videotrack):
             # Avoid H265/HEVC depending on the resolution
-            resolution = int(videotrack.split("P", 1)[0])
+            try:
+                resolution = int(videotrack.split("P", 1)[0])
+            except ValueError: # 4k resolution
+                resolution = 3064
             res = {
 
                 '1': 480,
