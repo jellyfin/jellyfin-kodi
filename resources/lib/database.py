@@ -29,7 +29,8 @@ def video_database():
         '14': 90, # Helix
         '15': 93, # Isengard
         '16': 99, # Jarvis
-        '17': 107 # Krypton
+        '17': 107,# Krypton
+        '18': 108 # Leia
     }
     return xbmc.translatePath("special://database/MyVideos%s.db"
                               % db_version.get(KODI, "")).decode('utf-8')
@@ -41,7 +42,8 @@ def music_database():
         '14': 48, # Helix
         '15': 52, # Isengard
         '16': 56, # Jarvis
-        '17': 60  # Krypton
+        '17': 60, # Krypton
+        '18': 65  # Leia
     }
     return xbmc.translatePath("special://database/MyMusic%s.db"
                               % db_version.get(KODI, "")).decode('utf-8')
