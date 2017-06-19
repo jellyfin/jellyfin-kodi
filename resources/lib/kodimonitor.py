@@ -94,7 +94,7 @@ class KodiMonitor(xbmc.Monitor):
         try:
             kodi_id = None
 
-            if KODI >= 17:
+            if KODI >= 17 and data['item']['type'] != "song":
                 item = xbmc.Player().getVideoInfoTag()
                 kodi_id = item.getDbId()
                 item_type = item.getMediaType()
