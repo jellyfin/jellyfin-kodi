@@ -818,6 +818,7 @@ def BrowseChannels(itemid, folderid=None):
 def createListItem(item):
 
     title = item['title']
+    label2 = ""
     li = xbmcgui.ListItem(title)
     li.setProperty('IsPlayable', "true")
     
@@ -828,6 +829,10 @@ def createListItem(item):
         'Plot': item['plot'],
         'Playcount': item['playcount']
     }
+
+    if "showtitle" in item:
+        metadata['TVshowTitle'] = item['showtitle']
+        label2 = item['showtitle']
 
     if "episodeid" in item:
         # Listitem of episode
@@ -844,13 +849,12 @@ def createListItem(item):
         metadata['Season'] = season
 
     if season and episode:
-        li.setProperty('episodeno', "s%.2de%.2d" % (season, episode))
+        episodeno = "s%.2de%.2d" % (season, episode)
+        li.setProperty('episodeno', episodeno)
+        label2 = "%s - %s" % (label2, episodeno) if label2 else episodeno
 
     if "firstaired" in item:
         metadata['Premiered'] = item['firstaired']
-
-    if "showtitle" in item:
-        metadata['TVshowTitle'] = item['showtitle']
 
     if "rating" in item:
         metadata['Rating'] = str(round(float(item['rating']),1))
@@ -871,6 +875,7 @@ def createListItem(item):
         metadata['Cast'] = cast
         metadata['CastAndRole'] = castandrole
 
+    li.setLabel2(label2)
     li.setInfo(type="Video", infoLabels=metadata)  
     li.setProperty('resumetime', str(item['resume']['position']))
     li.setProperty('totaltime', str(item['resume']['total']))
