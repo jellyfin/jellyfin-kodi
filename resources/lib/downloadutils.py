@@ -178,13 +178,13 @@ class DownloadUtils(object):
     def get_header(self, server_id=None, authenticate=True):
 
         device_name = self.client_info.get_device_name().encode('utf-8')
-        device_id = self.client_info.get_device_id()
-        version = self.client_info.get_version()
+        device_id = self.client_info.get_device_id().encode('utf-8')
+        version = self.client_info.get_version().encode('utf-8')
 
         if authenticate:
 
             user = self._get_session_info(server_id)
-            user_id = user['UserId']
+            user_id = user['UserId'].encode('utf-8')
             token = user['Token']
 
             auth = (
@@ -208,6 +208,7 @@ class DownloadUtils(object):
             'Accept-Charset': 'UTF-8,*',
         })
         return header
+
 
     def downloadUrl(self, url, postBody=None, action_type="GET", parameters=None,
                     authenticate=True, server_id=None):
