@@ -243,13 +243,13 @@ class Movies(Items):
             if self.kodi_version >= 17:
                 ratingid =  self.kodi_db.get_ratingid(movieid)
 
-                self.kodi_db.update_ratings(movieid, "movie", "default", rating, votecount,ratingid)
+                self.kodi_db.update_ratings(movieid, "movie", "default", rating, votecount, ratingid)
 
             # update new uniqueid Kodi 17
             if self.kodi_version >= 17:
                 uniqueid =  self.kodi_db.get_uniqueid(movieid)
 
-                self.kodi_db.update_uniqueid(movieid, "movie", imdb, "imdb",uniqueid)
+                self.kodi_db.update_uniqueid(movieid, "movie", imdb, "imdb", uniqueid)
 
             # Update the movie entry
             if self.kodi_version >= 17:
