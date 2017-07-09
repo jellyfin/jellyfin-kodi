@@ -265,8 +265,8 @@ class PlaybackUtils():
                     stream['IsExternal'] and stream['IsTextSubtitleStream']):
 
                 # Direct stream
-                url = ("%s/Videos/%s/%s/Subtitles/%s/Stream.srt"
-                        % (self.server, itemid, itemid, index))
+                url = ("%s/Videos/%s/%s/Subtitles/%s/Stream.%s"
+                        % (self.server, itemid, itemid, index, stream['Codec']))
 
                 if "Language" in stream:
                     
