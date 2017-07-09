@@ -74,10 +74,10 @@ class KodiTVShows(KodiItems):
 
         return kodi_id
 
-    def get_ratingid(self, media_id):
+    def get_ratingid(self, media_type, media_id):
 
-        query = "SELECT rating_id FROM rating WHERE media_id = ?"
-        self.cursor.execute(query, (media_id,))
+        query = "SELECT rating_id FROM rating WHERE media_type = ? AND media_id = ?"
+        self.cursor.execute(query, (media_type, media_id,))
         try:
             ratingid = self.cursor.fetchone()[0]
         except TypeError:
@@ -105,10 +105,10 @@ class KodiTVShows(KodiItems):
         ))
         self.cursor.execute(query, (args))
 
-    def get_uniqueid(self, media_id):
+    def get_uniqueid(self, media_type, media_id):
 
-        query = "SELECT uniqueid_id FROM uniqueid WHERE media_id = ?"
-        self.cursor.execute(query, (media_id,))
+        query = "SELECT uniqueid_id FROM uniqueid WHERE media_type = ? AND media_id = ?"
+        self.cursor.execute(query, (media_type, media_id,))
         try:
             uniqueid = self.cursor.fetchone()[0]
         except TypeError:
