@@ -1,0 +1,358 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+
+    <!-- Add-on settings -->
+    <string id="29999">Emby dla Kodi</string>
+    <string id="30000">Adres serwera</string>
+    <string id="30001">Nazwa serwera</string>
+    <string id="30002">Odtwarzaj za pomocą HTTP zamiast SMB</string>
+    <string id="30004">Poziom szczegółowości diagnostyki</string>
+    <string id="30016">Nazwa urządzenia</string>
+    <string id="30022">Zaawansowane</string>
+    <string id="30024">Użytkownik</string>
+    <string id="30030">Numer portu</string>
+
+    <string id="30035">Liczba wyświetlanych Albumów ostatnio dodanych:</string>
+    <string id="30036">Liczba wyświetlanych Filmów ostatnio dodanych:</string>
+    <string id="30037">Liczba wyświetlanych Seriali ostatnio dodanych:</string>
+
+    <string id="30042">Odśwież</string>
+    <string id="30043">Usuń</string>
+    <string id="30044">Niepoprawna nazwa/hasło użytkownika</string>
+    <string id="30045">Użytkownik o podanej nazwie nie istnieje</string>
+    <string id="30052">Trwa usuwanie</string>
+    <string id="30053">Oczekiwanie na zakończenie usuwania przez serwer</string>
+    
+    <string id="30068">Sortowanie</string>
+    <string id="30069">Brak</string>
+    <string id="30070">Akcja</string>
+    <string id="30071">Przygoda</string>
+    <string id="30072">Animacja</string>
+    <string id="30073">Kryminał</string>
+    <string id="30074">Komedia</string>
+    <string id="30075">Dokument</string>
+    <string id="30076">Dramat</string>
+    <string id="30077">Fantazja</string>
+    <string id="30078">Zagraniczny</string>
+    <string id="30079">Historyczny</string>
+    <string id="30080">Horror</string>
+    <string id="30081">Muzyczny</string>
+    <string id="30082">Muzykal</string>
+    <string id="30083">Tajemnica</string>
+    <string id="30084">Romans</string>
+    <string id="30085">Fantastyka</string>
+    <string id="30086">Krótkometrażowy</string>
+    <string id="30087">Suspense</string>
+    <string id="30088">Dreszczowiec</string>
+    <string id="30089">Western</string>
+    
+    <string id="30090">Filtr gatunku</string>
+    <string id="30091">Potwierdzaj usuwanie pliku</string><!-- Verified -->
+    
+    <string id="30093">Oznacz jako obejrzane</string>
+    <string id="30094">Oznacz jako nieobejrzane</string>
+
+    <string id="30097">Sortowanie</string>
+    <string id="30098">Sortowanie malejące</string>
+    <string id="30099">Sortowanie rosnące</string>
+
+    <!-- resume dialog -->
+    <string id="30105">Wznów odtwarzanie</string>
+    <string id="30106">Wznów odtwarzanie od</string>
+    <string id="30107">Odtwarzaj od początku</string>
+    
+    <string id="30114">Oferuj usuwanie po zakończeniu odtwarzania</string><!-- Verified -->
+    <string id="30115">Dla odcinków</string><!-- Verified -->
+    <string id="30116">Dla filmów</string><!-- Verified -->
+
+    <string id="30118">Dodawaj postęp odtwarzania</string>
+    <string id="30119">Dodawaj numer odcinka</string>
+    <string id="30120">Pokazuj postęp wczytywania</string>
+    <string id="30121">Trwa wczytywanie zawartości</string>
+    <string id="30122">Trwa pobieranie danych</string>
+
+    <string id="30125">Zakończone</string>
+    <string id="30132">Ostrzeżenie</string><!-- Verified -->
+    <string id="30135">Błąd</string>
+    <string id="30138">Szukaj</string>
+    `
+    <string id="30157">Aktywuj obsługę dodatkowych grafik (np. okładek)</string><!-- Verified -->
+    <string id="30158">Metadane</string>
+    <string id="30159">Grafika</string>
+    <string id="30160">Jakość wideo</string><!-- Verified -->
+    
+    <string id="30165">Odtwarzanie bezpośrednie</string><!-- Verified -->
+    <string id="30166">Transkodowanie</string>     
+    <string id="30167">Detekcja serwera zakończona powodzeniem</string>     
+    <string id="30168">Odnaleziono serwer</string>     
+    <string id="30169">Adres:</string>
+    
+    <!-- Video nodes -->
+    <string id="30170">Seriale ostatnio dodane</string><!-- Verified -->
+    <string id="30171">Seriale w trakcie oglądania</string><!-- Verified -->
+    <string id="30172">Biblioteka muzyki</string>              
+    <string id="30173">Kanały</string><!-- Verified -->
+    <string id="30174">Filmy ostatnio dodane</string><!-- Verified -->
+    <string id="30175">Odcinki ostatnio dodane</string><!-- Verified -->
+    <string id="30176">Albumy ostatnio dodane</string>  
+    <string id="30177">Filmy  w trakcie oglądania</string><!-- Verified -->
+    <string id="30178">Odcinki w trakcie oglądania</string><!-- Verified -->
+    <string id="30179">Kolejne odcinki</string><!-- Verified -->
+    <string id="30180">Filmy ulubione</string><!-- Verified -->      
+    <string id="30181">Seriale ulubione</string><!-- Verified -->
+    <string id="30182">Odcinki ulubione</string>
+    <string id="30183">Albumy często odtwarzane</string>
+    <string id="30184">Wkrótce na antenie</string>
+    <string id="30185">Serie filmowe</string>
+    <string id="30186">Zwiastuny</string>
+    <string id="30187">Teledyski</string>
+    <string id="30188">Obrazy</string>
+    <string id="30189">Filmy nieobejrzane</string><!-- Verified -->
+    <string id="30190">Gatunki filmowe</string>           
+    <string id="30191">Wytwórnie filmowe</string>          
+    <string id="30192">Aktorzy filmowi</string>           
+    <string id="30193">Odcinki nieobejrzane</string>     
+    <string id="30194">Gatunki telewizyjne</string>              
+    <string id="30195">Sieci telewizyjne</string>            
+    <string id="30196">Aktorzy telewizyjni</string>              
+    <string id="30197">Listy odtwarzania</string>
+
+    <string id="30199">Ustaw widoki</string>
+    <string id="30200">Wybierz użytkownika</string><!-- Verified -->           
+    <string id="30204">Nieudane połączenie z serwerem</string>         
+    
+    <string id="30207">Utwory</string>
+    <string id="30208">Albumy</string>
+    <string id="30209">Wykonawcy albumów</string>
+    <string id="30210">Wykonawcy</string>
+    <string id="30211">Gatunki muzyki</string>
+
+    <string id="30220">Ostatnio dodane</string>
+    <string id="30221">W trakcie oglądania</string>
+    <string id="30222">Kolejne odcinki</string>
+    <string id="30223">Widoki użytkownika</string>
+    <string id="30224">Metryki raportowe</string>
+
+    <string id="30227">Filmy losowe</string>
+    <string id="30228">Odcinki losowe</string>
+    <string id="30229">Pozycje losowe</string><!-- Verified -->
+    <string id="30230">Pozycje polecane</string><!-- Verified -->
+    
+    <string id="30235">Dodatkowe</string><!-- Verified -->
+    <string id="30236">Synchronizuj motywy muzyczne</string>
+    <string id="30237">Synchronizuj dodatkowe fototapety</string>
+    <string id="30238">Synchronizuj serie filmowe</string>
+    
+    <string id="30239">Wyczyść lokalną bazę</string><!-- Verified -->
+    <string id="30243">Używaj połączenia HTTPS</string><!-- Verified -->
+    <string id="30245">Wymuszaj kodeki transkodowania</string>
+    
+    <string id="30249">Pokazuj powiadomienie o połączeniu z serwerem</string><!-- Verified -->
+    
+    <string id="30251">Nagrania prywatne ostatnio dodane</string><!-- Verified -->
+    <string id="30252">Obrazy ostatnio dodane</string><!-- Verified -->
+    <string id="30253">Nagrania prywatne ulubione</string><!-- Verified -->
+    <string id="30254">Obrazy ulubione</string><!-- Verified -->
+    <string id="30255">Albumy ulubione</string>
+    
+    <string id="30256">Teledyski ostatnio dodane</string><!-- Verified -->
+    <string id="30257">Teledyski w trakcie oglądania</string><!-- Verified -->
+    <string id="30258">Teledyski nieodtwarzane</string><!-- Verified -->
+    
+    <!-- Default views -->
+    <string id="30300">Aktywne</string>              
+    <string id="30301">Wyczyść ustawienia</string>              
+    <string id="30302">Filmy</string>              
+    <string id="30303">Serie filmowe</string>              
+    <string id="30304">Zwiastuny</string>
+    <string id="30305">Seriale</string>              
+    <string id="30306">Sezony</string>              
+    <string id="30307">Odcinki</string>              
+    <string id="30308">Wykonawcy</string>              
+    <string id="30309">Albumy</string>              
+    <string id="30310">Teledyski</string>              
+    <string id="30311">Utwory</string>
+    <string id="30312">Kanały</string>  
+    
+    <!-- contextmenu -->
+    <string id="30401">Opcje Emby</string>
+    <string id="30405">Dodaj do ulubionych</string>
+    <string id="30406">Usuń z ulubionych</string>
+    <string id="30407">Ustaw ocenę utworu</string>
+    <string id="30408">Ustawienia dodatku</string>
+    <string id="30409">Usuń pozycję z serwera</string>
+    <string id="30410">Odśwież pozycję</string>
+    <string id="30411">Ustaw ocenę utworu (0-5)</string>
+    <string id="30412">Transkoduj</string>
+
+    <!-- add-on settings -->
+    <string id="30500">Weryfikuj certyfikat SSL serwera</string>
+    <string id="30501">Certyfikat SSL klienta</string>
+    <string id="30502">Używaj alternatywnego adresu</string>
+    <string id="30503">Alternatywny adres serwera</string>
+    <string id="30504">Używaj alternatywnej nazwy urządzenia</string>
+    <string id="30505">[COLOR yellow]Ponów próbę logowania[/COLOR]</string>
+    <string id="30506">Synchronizacja</string>
+    <string id="30507">Pokazuj postęp dla liczby pozycji powyżej</string>
+    <string id="30508">Synchronizuj seriale bez odcinków</string>
+    <string id="30509">Aktywuj bibliotekę muzyki</string>
+    <string id="30510">Bezpośrednia transmisja biblioteki muzyki</string>
+    <string id="30511">Tryb odtwarzania</string>
+    <string id="30512">Wymuszaj buforowanie grafik</string>
+    <string id="30513">Limit wątków bufora grafik (rekomendowane dla RPi)</string>
+    <string id="30514">Aktywuj szybkie uruchamianie (wymagana wtyczka serwera)</string>
+	<string id="30515">Limit pozycji pobieranych z serwera per wątek</string>
+    <string id="30516">Odtwarzanie</string>
+    <string id="30517">Poświadczenia sieciowe</string>
+    <string id="30518">Aktywuj Tryb kinowy Emby</string>
+    <string id="30519">Potwierdzaj odtwarzanie zwiastunów</string>
+    <string id="30520">Pomijaj potwierdzenie usuwania dla menu kontekstowego (używasz na własne ryzyko)</string>
+    <string id="30521">Cofaj przed wznowieniem odtwarzania (w sekundach)</string>
+    <string id="30522">Wymuszaj transkodowanie H265</string>
+    <string id="30523">Opcje metadanych muzyki (niekompatybilne z transmisją bezpośrednią)</string>
+    <string id="30524">Importuj ocenę utworów z plików</string>
+    <string id="30525">Konwertuj ocenę utworu do oceny Emby</string>
+    <string id="30526">Zezwalaj na aktualizację oceny w plikach utworów</string>
+    <string id="30527">Pomijaj odcinki specjalne na liście kolejnych odcinków</string>
+    <string id="30528">Stali użytkownicy dodawani do sesji</string>
+    <string id="30529">Opóźniaj uruchomienie (w sekundach)</string>
+    <string id="30530">Pokazuj powiadomienie o ponownym uruchomieniu serwera</string>
+    <string id="30531">Pokazuj powiadomienie o nowej zawartości</string>
+    <string id="30532">Czas widoczności powiadomień biblioteki wideo (w sekundach)</string>
+    <string id="30533">Czas widoczności powiadomień biblioteki muzyki (w sekundach)</string>
+    <string id="30534">Powiadomienia serwera</string>
+    <string id="30535">Generuj nowy identyfikator urządzenia</string>
+    <string id="30536">Synchronizuj podczas nieaktywności wygaszacza ekranu</string>
+    <string id="30537">Wymuszaj transkodowanie Hi10P</string>
+    <string id="30538">Nieaktywne</string>
+    <string id="30539">Logowanie</string>
+    <string id="30540">Logowanie manualne</string>
+    <string id="30541">Emby Connect</string>
+    <string id="30542">Serwer</string>
+    <string id="30543">Nazwa użytkownika lub adres pocztowy</string>
+    <string id="30544">Aktywuj poprawkę blokowania bazy (zwalnia proces synchronizacji)</string>
+    <string id="30545">Pokazuj powiadomienie o niedostępności serwera</string>
+	<string id="30546">Aktywuj rejestrowanie metryk analitycznych</string>
+    <string id="30547">Wyświetlaj powiadomienia (w sekundach)</string>
+    <string id="30548">Liczba wątków pobierania (rekomendowane: 2-3)</string>
+
+    <!-- dialogs -->
+    <string id="30600">Logowanie Emby Connect</string>
+    <string id="30602">Hasło</string>
+    <string id="30603">Prosimy o zapoznanie się z warunkami użytkowania. Korzystanie z oprogramowania Emby oznacza akceptację tych warunków.</string>
+    <string id="30604">Skanuj</string>
+    <string id="30605">Zaloguj</string>
+    <string id="30606">Anuluj</string>
+    <string id="30607">Wybierz serwer podstawowy</string>
+    <string id="30608">Nazwa użytkownika i hasło nie mogą być puste</string>
+    <string id="30609">Nieudane połączenie z wybranym serwerem</string>
+    <string id="30610">Połącz z</string><!-- Connect to {server} -->
+    <string id="30611">Dodaj serwer manualnie</string>
+    <string id="30612">Prosimy o zalogowanie</string>
+    <string id="30613">Nazwa użytkownika nie może być pusta</string>
+    <string id="30614">Połącz z serwerem</string>
+    <string id="30615">Serwer</string>
+    <string id="30616">Połącz</string>
+    <string id="30617">Serwer i port nie mogę być puste</string>
+    <string id="30618">Zmień użytkownika Emby Connect</string>
+
+    <!-- service add-on -->
+    <string id="33000">Witaj</string>
+    <string id="33001">Połączenie nieudane</string>
+    <string id="33002">Serwer jest niedostępny</string>
+    <string id="33003">Serwer jest dostępny</string>
+    <string id="33004">pozycji dodanych do listy odtwarzania</string>
+    <string id="33005">pozycji dodanych do kolejki do listy odtwarzania</string>
+    <string id="33006">Trwa ponowne uruchomienie serwera</string>
+    <string id="33007">Dostęp aktywowany</string>
+    <string id="33008">Wprowadź hasło użytkownika:</string>
+    <string id="33009">Niepoprawna nazwa lub hasło użytkownika</string>
+    <string id="33010">Przekroczono limit nieudanych prób uwierzytelnienia</string>
+    <string id="33011">Nieudana bezpośrednia transmisja pliku</string>
+    <string id="33012">Nieudana 3 próba bezpośredniej transmisji. Aktywowano transmisję za pomocą protokołu HTTP.</string>
+    <string id="33013">Wybierz ścieżkę dźwiękową</string>
+    <string id="33013">Wybierz ścieżkę napisów</string>
+    <string id="33015">Czy usunąć plik z serwera Emby?</string>
+    <string id="33016">Czy odtwarzać zwiastuny?</string>
+    <string id="33017">Pobieranie filmów z:</string>
+    <string id="33018">Pobieranie serii filmowych</string>
+    <string id="33019">Pobieranie teledysków z:</string>
+    <string id="33020">Pobieranie seriali z:</string>
+    <string id="33021">Pobieranie:</string>
+    <string id="33022">Wykryta baza wymaga przebudowy dla aktualnej wersji dodatku Emby. Kontynuować?</string>
+    <string id="33023">Dodatek Emby może działać nieprawidłowo do czasu wyczyszczenia bazy.</string>
+    <string id="33024">Trwa anulowanie procesu synchronizacji bazy. Aktualna wersja Kodi nie jest obsługiwana.</string>
+    <string id="33025">zakończono w ciągu:</string>
+    <string id="33026">Trwa porównywanie listy filmów z:</string>
+    <string id="33027">Trwa porównywanie listy serii filmowych</string>
+    <string id="33028">Trwa porównywanie listy teledysków z:</string>
+    <string id="33029">Trwa porównywanie listy seriali z:</string>
+    <string id="33030">Trwa porównywanie listy odcinków z:</string>
+    <string id="33031">Trwa porównywanie:</string>
+    <string id="33032">Generowanie nowego identyfikatora urządzenia zakończone niepowodzeniem. Sprawdź szczegóły w pliku dziennika diagnostycznego.</string>
+    <string id="33033">Generowanie nowego identyfikatora urządzenia zakończone powodzeniem. Kodi zostanie teraz uruchomione ponownie.</string>
+
+    <string id="33034">Kontynuować z następnym serwerem?</string>
+	<string id="33035">Uwaga! W przypadku wyboru trybu natywnego, niektóre funkcje Emby będą niedostępne, w tym: Tryb kinowy, transmisje bezpośrednie i transkodowanie, harmonogram dostępu kontroli rodzicielskiej.</string>
+    <string id="33036">Dodatek (Domyślne)</string>
+    <string id="33037">Natywne (Udziały sieciowe)</string>
+	<string id="33038">Czy dodać poświadczenia sieciowe, aby umożliwić Kodi bezpośredni dostęp do zawartości? Uwaga: Kodi będzie wymagać ponownego uruchomienia, aby móc korzystać z poświadczeń. Poświadczenia mogą zostać dodane później.</string>
+	<string id="33039">Czy dezaktywować bibliotekę muzyki Emby?</string>
+    <string id="33040">Czy transmitować bibliotekę muzyki bezpośrednio? Wybierz tę opcję w przypadku, gdy biblioteka muzyki jest dostępna zdalnie.</string>
+    <string id="33041">Czy usunąć plik(i) z serwera Emby? Spowoduje to także usunięcie pliku(ów) z dysku!</string>
+    <string id="33042">Proces buforowania może trwać bardzo długo. Czy mimo to kontynuować?</string>
+    <string id="33043">Synchronizacja bufora grafik</string>
+    <string id="33044">Czy wyczyścić istniejący bufor grafik?</string>
+    <string id="33045">Trwa aktualizacja bufora grafik:</string>
+    <string id="33046">Trwa oczekiwanie na zakończenie wszystkich procesów:</string>
+    <string id="33047">Kodi nie może zlokalizować pliku:</string>
+    <string id="33048">Poświadczenia sieciowe wymagają weryfikacji w ustawieniach dodatku lub skorzystaj z mapowania ścieżek, w celu poprawnego formatowania ścieżek (Kokpit Emby > Biblioteka). Zatrzymać synchronizację?</string>
+    <string id="33049">Dodano:</string>
+    <string id="33050">W przypadku przekroczonego limitu prób logowania, Twoje konto może zostać zablokowane na serwerze Emby. Czy mimo to kontynuować?</string>
+    <string id="33051">Kanały telewizyjne (eksperymentalne)</string>
+    <string id="33052">Nagrania telewizyjne (eksperymentalne)</string>
+    <string id="33053">Ustawienia</string>
+    <string id="33054">Dodaj użytkownika do sesji</string>
+    <string id="33055">Odśwież listy odtwarzania i bibliotekę wideo</string>
+    <string id="33056">Uruchom synchronizację</string>
+    <string id="33057">Napraw lokalną bazę (wymusza aktualizację całej zawartości)</string>
+    <string id="33058">Uruchom czyszczenie lokalnej bazy</string>
+    <string id="33059">Buforuj wszystkie grafiki</string>
+    <string id="33060">Synchronizuj motywy muzyczne</string>
+    <string id="33061">Dodaj/Usuń użytkownika</string>
+    <string id="33062">Dodaj użytkownika</string>
+    <string id="33063">Usuń użytkownika</string>
+    <string id="33064">Usuń użytkownika z sesji</string>
+    <string id="33065">Sukces!</string>
+    <string id="33066">Usunięto z sesji przeglądania:</string>
+    <string id="33067">Dodano do sesji przeglądania:</string>
+    <string id="33068">Nieudane dodawanie/usuwanie użytkownika.</string>
+    <string id="33069">Zadanie zakończone powodzeniem</string>
+    <string id="33070">Zadanie zakończone niepowodzeniem</string>
+    <string id="33071">Transmisja bezpośrednia</string>
+    <string id="33072">Metoda odtwarzania motywów muzycznych</string>
+    <string id="33073">Plik ustawień motywów muzycznych nie istnieje. Zmień ustawienie i uruchom zadanie ponownie.</string>
+    <string id="33074">Czy jesteś pewien, że chcesz wyczyścić lokalną bazę Kodi?</string>
+    <string id="33075">Modyfikuj/Usuń poświadczenia sieciowe</string>
+    <string id="33076">Modyfikuj</string>
+    <string id="33077">Usuń</string>
+    <string id="33078">Usunięto:</string>
+    <string id="33079">Wprowadź nazwę użytkownika sieciowego</string>
+    <string id="33080">Wprowadź hasło użytkownika sieciowego</string>
+    <string id="33081">Dodano poświadczenia sieciowe dla:</string>
+    <string id="33082">Wprowadź nazwę lub adres IP serwera - podanych w ścieżkach biblioteki serwera Emby. Na przykład, nazwą serwera \\\\Mój-Server\\ścieżka\\ jest "Mój-Server"</string>
+    <string id="33083">Modyfikuj nazwę serwera lub adres IP</string>
+    <string id="33084">Wprowadź nazwę serwera lub adres IP</string>
+    <string id="33085">Wyczyszczenie bazy było niemożliwe. Spróbuj ponownie.</string>
+    <string id="33086">Czy usunąć z bufora wszystkie grafiki?</string>
+    <string id="33087">Czy wyczyścić wszystkie ustawienia dodatku?</string>
+    <string id="33088">Czyszczenie bazy mediów zakończone powodzeniem, teraz nastąpi ponowne uruchomienie Kodi, w celu zastosowania zmian.</string>
+    <string id="33089">Wprowadź nazwę folderu kopii zapasowej</string>
+    <string id="33090">Czy zastąpić istniejącą kopię zapasową?</string>
+    <string id="33091">Utwórz kopię zapasową o:</string>
+    <string id="33092">Utwórz kopię zapasową</string>
+    <string id="33093">Folder kopii zapasowej</string>
+    <string id="33094">Wybierz typ zawartości do naprawy</string>
+    <string id="33095">Nieudane pobieranie najnowszych aktualizacji przy pomocy szybkiej sychronizacji, rozpoczęto pełną sychronizację.</string>
+
+</strings>
