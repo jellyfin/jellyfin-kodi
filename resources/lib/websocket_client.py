@@ -328,7 +328,7 @@ class WebSocketClient(threading.Thread):
         else:
             server = server.replace('http', "ws")
 
-        websocket_url = "%s?api_key=%s&deviceId=%s" % (server, token, self.device_id)
+        websocket_url = "%s/embywebsocket?api_key=%s&deviceId=%s" % (server, token, self.device_id)
         log.info("websocket url: %s", websocket_url)
 
         self._client = websocket.WebSocketApp(websocket_url,
