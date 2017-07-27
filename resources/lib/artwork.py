@@ -520,6 +520,8 @@ class Artwork(object):
 
         def get_artwork(item_id, type_, tag):
 
+            if not tag: return
+
             artwork = ("%s/emby/Items/%s/Images/%s/0?"
                        "MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s"
                        % (self.server, item_id, type_, max_width, max_height, tag, custom_query))
