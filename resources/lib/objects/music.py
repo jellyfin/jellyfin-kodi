@@ -69,20 +69,17 @@ class Music(Items):
         return actions.get(action)
 
     def compare_all(self):
-        # Pull the list of artists, albums, songs
-        views = self.emby_db.getView_byType('music')
 
-        for view in views:
-            # Process artists
-            self.compare_artists(view)
-            # Process albums
-            self.compare_albums()
-            # Process songs
-            self.compare_songs()
+        # Process artists
+        self.compare_artists()
+        # Process albums
+        self.compare_albums()
+        # Process songs
+        self.compare_songs()
 
         return True
 
-    def compare_artists(self, view):
+    def compare_artists(self):
 
         all_embyartistsIds = set()
         update_list = list()
@@ -92,7 +89,7 @@ class Music(Items):
 
         artists = dict(self.emby_db.get_checksum('MusicArtist'))
         album_artists = dict(self.emby_db.get_checksum('AlbumArtist'))
-        emby_artists = self.emby.getArtists(view['id'], dialog=self.pdialog)
+        emby_artists = self.emby.getArtists(dialog=self.pdialog)
 
         for item in emby_artists['Items']:
 
