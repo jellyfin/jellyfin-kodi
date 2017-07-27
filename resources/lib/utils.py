@@ -320,19 +320,20 @@ def passwordsXML():
     for path in root.findall('.//path'):
         if path.find('.//from').text.lower() == "smb://%s/" % server.lower():
             # Found the server, rewrite credentials
-            path.find('.//to').text = "smb://%s:%s@%s/" % (user, password, server)
+            topath = "smb://%s:%s@%s/" % (user, password, server)
+            path.find('.//to').text = topath.replace("\\", ";")
             break
     else:
         # Server not found, add it.
         path = etree.SubElement(root, 'path')
         etree.SubElement(path, 'from', attrib={'pathversion': "1"}).text = "smb://%s/" % server
         topath = "smb://%s:%s@%s/" % (user, password, server)
-        etree.SubElement(path, 'to', attrib={'pathversion': "1"}).text = topath
+        etree.SubElement(path, 'to', attrib={'pathversion': "1"}).text = topath.replace("\\", ";")
         # Force Kodi to see the credentials without restarting
         xbmcvfs.exists(topath)
 
     # Add credentials
-    settings('networkCreds', value="%s" % server)
+    settings('networkCreds', value=server)
     log.info("Added server: %s to passwords.xml" % server)
     # Prettify and write to file
     try:
