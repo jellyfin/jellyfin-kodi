@@ -44,7 +44,7 @@ class Main(object):
         base_url = sys.argv[0]
         path = sys.argv[2]
         params = urlparse.parse_qs(path[1:])
-        log.warn("Parameter string: %s", path)
+        log.warn("Parameter string: %s params: %s", path, params)
         try:
             mode = params['mode'][0]
         except (IndexError, KeyError):
@@ -111,7 +111,11 @@ class Main(object):
                 database_id = params.get('dbid')
                 action(item_id, database_id)
 
-            elif mode in ('nextup', 'inprogressepisodes', 'recentepisodes'):
+            elif mode == 'recentepisodes':
+                limit = int(params['limit'][0])
+                action(item_id, limit, params.get('filters', [""])[0])
+
+            elif mode in ('nextup', 'inprogressepisodes'):
                 limit = int(params['limit'][0])
                 action(item_id, limit)
 

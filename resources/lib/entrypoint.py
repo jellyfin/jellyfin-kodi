@@ -1060,9 +1060,10 @@ def getInProgressEpisodes(tagname, limit):
     xbmcplugin.endOfDirectory(handle=int(sys.argv[1]))
 
 ##### GET RECENT EPISODES FOR TAGNAME #####    
-def getRecentEpisodes(tagname, limit):
+def getRecentEpisodes(tagname, limit, filters=""):
     
     count = 0
+    filters = filters.split(',') if filters else []
     # if the addon is called with recentepisodes parameter,
     # we return the recentepisodes list of the given tagname
     xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
@@ -1076,7 +1077,7 @@ def getRecentEpisodes(tagname, limit):
 
             'sort': {'order': "descending", 'method': "dateadded"},
             'filter': {'operator': "is", 'field': "tag", 'value': "%s" % tagname},
-            'properties': ["title","sorttitle"]
+            'properties': ["title", "sorttitle"]
         }
     }
     result = xbmc.executeJSONRPC(json.dumps(query))
@@ -1087,9 +1088,7 @@ def getRecentEpisodes(tagname, limit):
     except (KeyError, TypeError):
         pass
     else:
-        allshowsIds = set()
-        for item in items:
-            allshowsIds.add(item['tvshowid'])
+        allshowsIds = set(item['tvshowid'] for item in items)
 
         query = {
 
@@ -1099,15 +1098,17 @@ def getRecentEpisodes(tagname, limit):
             'params': {
 
                 'sort': {'order': "descending", 'method': "dateadded"},
-                'filter': {'operator': "lessthan", 'field': "playcount", 'value': "1"},
                 'properties': [
                     "title", "playcount", "season", "episode", "showtitle", "plot",
                     "file", "rating", "resume", "tvshowid", "art", "streamdetails",
                     "firstaired", "runtime", "cast", "writer", "dateadded", "lastplayed"
                 ],
-                "limits": {"end": limit}
+                "limits": {"end": limit*5}
             }
         }
+        if 'playcount' not in filters:
+            query['params']['filter'] = {'operator': "lessthan", 'field': "playcount", 'value': "1"}
+
         result = xbmc.executeJSONRPC(json.dumps(query))
         result = json.loads(result)
         try:
