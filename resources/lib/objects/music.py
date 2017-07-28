@@ -415,7 +415,7 @@ class Music(Items):
         ##### GET THE FILE AND PATH #####
         if self.directstream:
             path = "%s/emby/Audio/%s/" % (self.server, itemid)
-            filename = "stream.%s?static=true" % item['Container']
+            filename = "stream.%s?static=true" % item['MediaSources'][0]['Container']
         else:
             playurl = API.get_file_path()
 
