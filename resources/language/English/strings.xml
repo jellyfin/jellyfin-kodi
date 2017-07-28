@@ -354,5 +354,6 @@
     <string id="33093">Backup folder</string>
     <string id="33094">Select content type to repair</string>
     <string id="33095">Failed to retrieve latest updates using fast sync, using full sync.</string>
+    <string id="33096">Important, cleanonupdate was removed in your advanced settings to prevent conflict with Emby for Kodi. Kodi will restart now.</string>
 
 </strings>

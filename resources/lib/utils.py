@@ -347,3 +347,36 @@ def passwordsXML():
             icon="special://home/addons/plugin.video.emby/icon.png",
             time=1000,
             sound=False)
+
+def verify_advancedsettings():
+    # Track the existance of <cleanonupdate>true</cleanonupdate>
+    # incompatible with plugin paths
+    log.info("verifying advanced settings")
+    if settings('useDirectPaths') != "0": return
+
+    path = xbmc.translatePath("special://userdata/").decode('utf-8')
+    xmlpath = "%sadvancedsettings.xml" % path
+
+    try:
+        xmlparse = etree.parse(xmlpath)
+    except: # Document is blank or missing
+        return
+    else:
+        root = xmlparse.getroot()
+
+    video = root.find('videolibrary')
+    if video is not None:
+        cleanonupdate = video.find('cleanonupdate')
+        if cleanonupdate is not None and cleanonupdate.text == "true":
+            log.warn("cleanonupdate disabled")
+            video.remove(cleanonupdate)
+            
+            try:
+                indent(root)
+            except: pass
+            etree.ElementTree(root).write(xmlpath)
+            
+            xbmcgui.Dialog().ok(heading=language(29999), line1=language(33096))
+            xbmc.executebuiltin('RestartApp')
+            return True
+    return

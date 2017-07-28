@@ -644,6 +644,10 @@ class LibrarySync(threading.Thread):
         startupComplete = False
 
         log.warn("---===### Starting LibrarySync ###===---")
+        if utils.verify_advancedsettings():
+            # Advancedsettings was modified, Kodi needs to restart
+            log.warn("###===--- LibrarySync Aborted ---===###")
+            return
 
         while not self.monitor.abortRequested():
 
