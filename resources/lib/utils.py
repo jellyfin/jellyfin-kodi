@@ -376,7 +376,7 @@ def verify_advancedsettings():
             except: pass
             etree.ElementTree(root).write(xmlpath)
             
-            xbmcgui.Dialog().ok(heading=language(29999), line1=language(33096))
+            xbmcgui.Dialog().ok(heading=language(29999), line1=language(33097))
             xbmc.executebuiltin('RestartApp')
             return True
     return
