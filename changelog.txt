@@ -1,3 +1,12 @@
+version 2.3.49
+- Update the websocket url for reverse proxy. wss://{server}/embywebsocket?api..
+- Fix music support for multiple Emby music libraries
+- Fix music direct stream to use the original file container rather than defaulting to mp3
+- Fix subtitles to use original file container rather than defaulting to srt
+- Fix network credentials using backslash for domain in their username
+- Fix playback report to your Emby dashboard
+- Add Polish translation
+
 version 2.3.47
  - Fix encoding error in context menu for non-ascii characters
  - Fix playback reporting monitor for Kodi 17
