@@ -249,7 +249,8 @@ class Service(object):
                     # Alert the user that server is online.
                     dialog(type_="notification",
                            heading="{emby}",
-                           message=lang(33003),
+                           message=("%s %s"
+                                    % (lang(33000), user_client.get_username().decode('utf-8'))),
                            icon="{emby}",
                            time=2000,
                            sound=False)
