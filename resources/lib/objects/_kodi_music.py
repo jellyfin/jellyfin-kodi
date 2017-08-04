@@ -22,7 +22,9 @@ class KodiMusic(KodiItems):
         KodiItems.__init__(self)
 
     def create_entry(self):
-        self.cursor.execute("select coalesce(max(idArtist),0) from artist")
+        # Krypton has a dummy first entry
+        # idArtist: 1  strArtist: [Missing Tag]  strMusicBrainzArtistID: Artist Tag Missing
+        self.cursor.execute("select coalesce(max(idArtist),1) from artist")
         kodi_id = self.cursor.fetchone()[0] + 1
 
         return kodi_id
