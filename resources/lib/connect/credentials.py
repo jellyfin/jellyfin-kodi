@@ -57,9 +57,7 @@ class Credentials(object):
             self.credentials = data
             # Set credentials to file
             with open(os.path.join(self.path, 'data.txt'), 'w') as outfile:
-                for server in data['Servers']:
-                    server['Name'] = server['Name'].encode('utf-8')
-                json.dump(data, outfile, ensure_ascii=False)
+                json.dump(data, outfile, ensure_ascii=True)
         else:
             self._clear()
 
