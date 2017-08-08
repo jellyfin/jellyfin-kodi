@@ -354,5 +354,7 @@
     <string id="33093">Folder kopii zapasowej</string>
     <string id="33094">Wybierz typ zawartości do naprawy</string>
     <string id="33095">Nieudane pobieranie najnowszych aktualizacji przy pomocy szybkiej sychronizacji, rozpoczęto pełną sychronizację.</string>
+    <string id="33096">Ograniczaj rozdzielczość wideo do rozdzielczości wyświetlacza</string>
+    <string id="33097">Uwaga! Opcja cleanonupdate została usunięta z pliku ustawień zaawansowanych, aby zapobiec konfliktom z dodatkiem Emby. Kodi zostanie teraz uruchomione ponownie.</string>
 
 </strings>
