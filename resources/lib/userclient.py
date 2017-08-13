@@ -77,7 +77,7 @@ class UserClient(threading.Thread):
     def verify_server(self):
 
         try:
-            url = "%s/emby/Users/Public?format=json" % self.get_server()
+            url = "%s/emby/system/info/public?format=json" % self.get_server()
             self.doutils.downloadUrl(url, authenticate=False)
             return True
         except Exception as error:
