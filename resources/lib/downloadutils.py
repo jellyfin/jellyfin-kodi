@@ -108,7 +108,7 @@ class DownloadUtils(object):
                 "GoToSettings,PageDown,PreviousLetter,TakeScreenshot,"
                 "VolumeUp,VolumeDown,ToggleMute,SendString,DisplayMessage,"
                 "SetAudioStreamIndex,SetSubtitleStreamIndex,"
-
+                "SetRepeatMode,"
                 "Mute,Unmute,SetVolume,"
                 "Play,Playstate,PlayNext"
             )
