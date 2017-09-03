@@ -188,7 +188,7 @@ class WebSocketClient(threading.Thread):
         arguments = data['Arguments']
 
         if command in ('Mute', 'Unmute', 'SetVolume',
-                       'SetSubtitleStreamIndex', 'SetAudioStreamIndex'):
+                       'SetSubtitleStreamIndex', 'SetAudioStreamIndex', 'SetRepeatMode'):
 
             player = xbmc.Player()
             # These commands need to be reported back
@@ -205,6 +205,10 @@ class WebSocketClient(threading.Thread):
             elif command == 'SetAudioStreamIndex':
                 index = int(arguments['Index'])
                 player.setAudioStream(index - 1)
+
+            elif command == 'SetRepeatMode':
+                mode = arguments['RepeatMode']
+                xbmc.executebuiltin('xbmc.PlayerControl(%s)' % mode)
 
             elif command == 'SetSubtitleStreamIndex':
                 emby_index = int(arguments['Index'])
