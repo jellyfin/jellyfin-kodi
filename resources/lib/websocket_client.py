@@ -149,6 +149,7 @@ class WebSocketClient(threading.Thread):
             'Stop': player.stop,
             'Unpause': player.pause,
             'Pause': player.pause,
+            'PlayPause': player.pause,
             'NextTrack': player.playnext,
             'PreviousTrack': player.playprevious
         }
