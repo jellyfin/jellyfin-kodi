@@ -245,25 +245,6 @@ class TVShows(Items):
         force_episodes = False
         itemid = item['Id']
         emby_dbitem = emby_db.getItem_byId(itemid)
-        try:
-            showid = emby_dbitem[0]
-            pathid = emby_dbitem[2]
-            log.info("showid: %s pathid: %s", showid, pathid)
-
-        except TypeError:
-            update_item = False
-            log.debug("showid: %s not found", itemid)
-            showid = self.kodi_db.create_entry()
-
-        else:
-            # Verification the item is still in Kodi
-            if self.kodi_db.get_tvshow(showid) is None:
-                # item is not found, let's recreate it.
-                update_item = False
-                log.info("showid: %s missing from Kodi, repairing the entry", showid)
-                # Force re-add episodes after the show is re-created.
-                force_episodes = True
-
 
         if view is None:
             # Get view tag from emby
@@ -292,28 +273,6 @@ class TVShows(Items):
         studios = API.get_studios()
         studio = " / ".join(studios)
 
-        # Verify series pooling
-        if not update_item and tvdb:
-            query = "SELECT idShow FROM tvshow WHERE C12 = ?"
-            kodicursor.execute(query, (tvdb,))
-            try:
-                temp_showid = kodicursor.fetchone()[0]
-            except TypeError:
-                pass
-            else:
-                emby_other = emby_db.getItem_byKodiId(temp_showid, "tvshow")
-                if emby_other and viewid == emby_other[2]:
-                    log.info("Applying series pooling for %s", title)
-                    emby_other_item = emby_db.getItem_byId(emby_other[0])
-                    showid = emby_other_item[0]
-                    pathid = emby_other_item[2]
-                    log.info("showid: %s pathid: %s", showid, pathid)
-                    # Create the reference in emby table
-                    emby_db.addReference(itemid, showid, "Series", "tvshow", pathid=pathid,
-                                         checksum=checksum, mediafolderid=viewid)
-                    update_item = True
-
-
         ##### GET THE FILE AND PATH #####
         playurl = API.get_file_path()
 
@@ -336,6 +295,74 @@ class TVShows(Items):
             # Set plugin path
             toplevelpath = "plugin://plugin.video.emby.tvshows/"
             path = "%s%s/" % (toplevelpath, itemid)
+
+
+        try:
+            showid = emby_dbitem[0]
+            pathid = emby_dbitem[2]
+            log.info("showid: %s pathid: %s", showid, pathid)
+
+        except TypeError:
+            update_item = False
+            showid = None
+            log.debug("showid: %s not found", itemid)
+
+            if self.emby_db.get_view_grouped_series(viewid) and imdb:
+                # search kodi db for same provider id
+                if self.kodi_version > 16:
+                    query = "SELECT idShow FROM tvshow_view WHERE uniqueid_value = ?"
+                    kodicursor.execute(query, (imdb,))
+                else:
+                    query = "SELECT idShow FROM tvshow WHERE C12 = ?"
+                    kodicursor.execute(query, (tvdb,))
+
+                try:
+                    temps_showid = kodicursor.fetchall()
+                except TypeError: pass
+                else:
+                    for temp_showid in temps_showid:
+                        emby_other = emby_db.getItem_byKodiId(temp_showid[0], "tvshow")
+                        if emby_other and viewid == emby_other[2]:
+                            log.info("Applying series pooling for: %s %s", itemid, title)
+                            emby_other_item = emby_db.getItem_byId(emby_other[0])
+                            showid = emby_other_item[0]
+                            pathid = self.kodi_db.add_path(path)
+                            emby_db.addReference(itemid, showid, "Series", "tvshow", pathid=pathid,
+                                                 checksum=checksum, mediafolderid=viewid)
+                            return
+
+            showid = self.kodi_db.create_entry()
+
+        else:
+            # Verification the item is still in Kodi
+            if self.kodi_db.get_tvshow(showid) is None:
+                # item is not found, let's recreate it.
+                update_item = False
+                log.info("showid: %s missing from Kodi, repairing the entry", showid)
+                # Force re-add episodes after the show is re-created.
+                force_episodes = True
+
+
+        # Verify series pooling
+        """if not update_item and tvdb:
+            query = "SELECT idShow FROM tvshow WHERE C12 = ?"
+            kodicursor.execute(query, (tvdb,))
+            try:
+                temp_showid = kodicursor.fetchone()[0]
+            except TypeError:
+                pass
+            else:
+                emby_other = emby_db.getItem_byKodiId(temp_showid, "tvshow")
+                if emby_other and viewid == emby_other[2]:
+                    log.info("Applying series pooling for %s", title)
+                    emby_other_item = emby_db.getItem_byId(emby_other[0])
+                    showid = emby_other_item[0]
+                    pathid = emby_other_item[2]
+                    log.info("showid: %s pathid: %s", showid, pathid)
+                    # Create the reference in emby table
+                    emby_db.addReference(itemid, showid, "Series", "tvshow", pathid=pathid,
+                                         checksum=checksum, mediafolderid=viewid)
+                    update_item = True"""
 
 
         ##### UPDATE THE TVSHOW #####
@@ -390,7 +417,7 @@ class TVShows(Items):
             # Create the tvshow entry
             if self.kodi_version > 16:
                 self.kodi_db.add_tvshow(showid, title, plot, uniqueid, premieredate, genre,
-                                    title, uniqueid, mpaa, studio, sorttitle)
+                                        title, uniqueid, mpaa, studio, sorttitle)
             else:
                 self.kodi_db.add_tvshow(showid, title, plot, rating, premieredate, genre,
                                         title, tvdb, mpaa, studio, sorttitle)
@@ -424,6 +451,7 @@ class TVShows(Items):
         # Process seasons
         all_seasons = emby.getSeasons(itemid)
         for season in all_seasons['Items']:
+            log.info("found season: %s", season)
             self.add_updateSeason(season, showid=showid)
         else:
             # Finally, refresh the all season entry
@@ -468,6 +496,7 @@ class TVShows(Items):
         # Process artwork
         artwork.add_artwork(artwork.get_all_artwork(item), seasonid, "season", kodicursor)
 
+        log.info("Processed seasonid: %s index: %s", item['Id'], seasonnum)
         return True
 
     @catch_except()
@@ -886,3 +915,9 @@ class TVShows(Items):
         self.artwork.delete_artwork(kodiid, "episode", kodicursor)
         self.kodi_db.remove_episode(kodiid, fileid)
         log.debug("Removed episode: %s", kodiid)
+
+    def add_tvshow(self, item, view):
+        # The only way to keep things together is to drill down, like in the webclient.
+        # If series pooling is true, they will share the showid, extra tvshow entries
+        # will be added to emby.db due to server events. 
+        pass

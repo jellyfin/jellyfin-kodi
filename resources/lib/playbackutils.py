@@ -270,7 +270,7 @@ class PlaybackUtils():
 
                 if "Language" in stream:
                     
-                    filename = "Stream.%s.srt" % stream['Language']
+                    filename = "Stream.%s.%s" % (stream['Language'], stream['Codec'])
                     try:
                         path = self._download_external_subs(url, temp, filename)
                         externalsubs.append(path)

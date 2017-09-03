@@ -458,6 +458,8 @@ class LibrarySync(threading.Thread):
                         message="%s %s..." % (lang(33020), view['name']))
 
             all_tvshows = self.emby.getShows(view['id'], dialog=pdialog)
+            #log.info([item['Id'] for item in all_tvshows['Items']])
+            #for all_tvshows in self.emby.get_parent_child(view['id'], "Series"):
             tvshows.add_all("Series", all_tvshows, view)
 
         else:

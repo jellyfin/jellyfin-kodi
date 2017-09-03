@@ -119,9 +119,7 @@ class KodiTVShows(KodiItems):
     def add_uniqueid(self, *args):
         query = (
             '''
-            INSERT INTO uniqueid(
-                uniqueid_id, media_id, media_type, value, type)
-
+            INSERT INTO uniqueid(uniqueid_id, media_id, media_type, value, type)
             VALUES (?, ?, ?, ?, ?)
             '''
         )

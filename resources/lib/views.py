@@ -147,7 +147,8 @@ class Views(object):
 
         self.add_playlist_node(media_type, view_id, view_name, view_type)
         # Add view to emby database
-        self.emby_db.addView(view_id, view_name, view_type, tag_id)
+        group_series = self.emby.get_view_options(view_id)['EnableAutomaticSeriesGrouping'] if view_type == "tvshows" else None
+        self.emby_db.addView(view_id, view_name, view_type, tag_id, group_series)
 
     def compare_view(self, media_type, view_id, view_name, view_type):
 

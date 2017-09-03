@@ -144,17 +144,30 @@ class Embydb_Functions():
 
         return view
 
-    def addView(self, embyid, name, mediatype, tagid):
+    def addView(self, embyid, name, mediatype, tagid, group_series):
 
         query = (
             '''
             INSERT INTO view(
-                view_id, view_name, media_type, kodi_tagid)
+                view_id, view_name, media_type, kodi_tagid, group_series)
 
-            VALUES (?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?)
             '''
         )
-        self.embycursor.execute(query, (embyid, name, mediatype, tagid))
+        self.embycursor.execute(query, (embyid, name, mediatype, tagid, group_series))
+
+    def get_view_grouped_series(self, view_id):
+
+        query = ' '.join((
+
+            "SELECT group_series",
+            "FROM view",
+            "WHERE view_id = ?"
+        ))
+        try:
+            self.embycursor.execute(query, (view_id,))
+            return self.embycursor.fetchone()
+        except: return False
 
     def updateView(self, name, tagid, mediafolderid):
 

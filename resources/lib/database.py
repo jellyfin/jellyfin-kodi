@@ -149,8 +149,14 @@ def verify_emby_database(cursor):
         checksum INTEGER)""")
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS view(
-        view_id TEXT UNIQUE, view_name TEXT, media_type TEXT, kodi_tagid INTEGER)""")
+        view_id TEXT UNIQUE, view_name TEXT, media_type TEXT, kodi_tagid INTEGER, group_series TEXT)""")
     cursor.execute("CREATE TABLE IF NOT EXISTS version(idVersion TEXT)")
+
+    columns = cursor.execute("SELECT * FROM view")
+    if 'group_series' not in [description[0] for description in columns.description]:
+        log.info("Add missing column group_series")
+        cursor.execute("ALTER TABLE view ADD COLUMN group_series 'TEXT'")
+
 
 def db_reset():
 

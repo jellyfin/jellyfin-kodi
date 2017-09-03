@@ -601,3 +601,49 @@ class Read_EmbyServer():
         }
         url = self.get_emby_url('Users/{UserId}/Items?format=json')
         return self.doUtils.downloadUrl(url, parameters=params)
+
+    # NEW CODE ----------------------------------------------------
+
+    @classmethod
+    def _get_full_details(cls, params):
+        params.update({
+            'Fields': (
+
+                "Path,Genres,SortName,Studios,Writer,ProductionYear,Taglines,"
+                "CommunityRating,OfficialRating,CumulativeRunTimeTicks,"
+                "Metascore,AirTime,DateCreated,MediaStreams,People,Overview,"
+                "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
+                "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers,"
+                "MediaSources,VoteCount"
+            )
+        })
+        return params
+
+    def get_parent_child(self, parent_id, media_format=None):
+
+        url = self.get_emby_url('Users/{UserId}/Items')
+        params = {
+            'SortBy': "SortName",
+            'SortOrder': "Ascending",
+            'IncludeItemTypes': media_format,
+            'Recursive': True,
+            'Limit': 1,
+            'ParentId': parent_id
+        }
+        result = self.doUtils.downloadUrl(url, parameters=params)
+        params['Limit'] = self.limitIndex
+        params = self._get_full_details(params)
+
+        index = 0
+        while index < result['TotalRecordCount']:
+            params['StartIndex'] = index
+            yield self.doUtils.downloadUrl(url, parameters=params)
+
+            index += self.limitIndex
+
+    def get_view_options(self, view_id):
+
+        url = self.get_emby_url('Library/VirtualFolders')
+        for library in self.doUtils.downloadUrl(url):
+            if library['ItemId'] == view_id:
+                return library['LibraryOptions']
