@@ -147,8 +147,15 @@ class Views(object):
 
         self.add_playlist_node(media_type, view_id, view_name, view_type)
         # Add view to emby database
-        group_series = self.emby.get_view_options(view_id)['EnableAutomaticSeriesGrouping'] if view_type == "tvshows" else None
+        group_series = self.is_grouped_series(view_id, view_type)
         self.emby_db.addView(view_id, view_name, view_type, tag_id, group_series)
+
+    def is_grouped_series(self, view_id, view_type):
+        try:
+            return self.emby.get_view_options(view_id)['EnableAutomaticSeriesGrouping'] if view_type == "tvshows" else None
+        except Exception as error: # Currently admin only api entrypoint
+            log.error(error)
+            return None
 
     def compare_view(self, media_type, view_id, view_name, view_type):
 
@@ -176,6 +183,8 @@ class Views(object):
             # Update items with new tag
             self._update_items_tag(curr_view_type[:-1], view_id, curr_tag_id, tag_id)
 
+        group_series = self.is_grouped_series(view_id, view_type)
+        self.emby_db.update_view_grouped_series(view_id, group_series)
         # Verify existance of playlist and nodes
         self.add_playlist_node(media_type, view_id, view_name, view_type)
         return True

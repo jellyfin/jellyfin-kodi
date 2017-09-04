@@ -169,6 +169,16 @@ class Embydb_Functions():
             return self.embycursor.fetchone()
         except: return False
 
+    def update_view_grouped_series(self, view_id, group_series):
+
+        query = ' '.join((
+
+            "UPDATE view",
+            "SET group_series = ?",
+            "WHERE view_id = ?"
+        ))
+        self.embycursor.execute(query, (group_series, view_id))
+
     def updateView(self, name, tagid, mediafolderid):
 
         query = ' '.join((
