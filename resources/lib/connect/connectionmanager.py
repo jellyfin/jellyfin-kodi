@@ -407,7 +407,7 @@ class ConnectionManager(object):
 
         connectServers = self._getConnectServers(credentials)
         foundServers = self._findServers(self._serverDiscovery())
-        if not connectServers or not foundServers: # back out right away, no point in continuing
+        if not connectServers and not foundServers: # back out right away, no point in continuing
             log.info("Found no servers")
             return []
 
