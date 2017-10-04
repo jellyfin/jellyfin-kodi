@@ -151,10 +151,14 @@ class Views(object):
         self.emby_db.addView(view_id, view_name, view_type, tag_id, group_series)
 
     def is_grouped_series(self, view_id, view_type):
-        try:
-            return self.emby.get_view_options(view_id)['EnableAutomaticSeriesGrouping'] if view_type == "tvshows" else None
-        except Exception as error: # Currently admin only api entrypoint
-            log.error(error)
+
+        if window('emby.userinfo.json')['Policy']['IsAdministrator']:
+            try:
+                return self.emby.get_view_options(view_id)['EnableAutomaticSeriesGrouping'] if view_type == "tvshows" else None
+            except Exception as error: # Currently admin only api entrypoint
+                log.error(error)
+                return None
+        else:
             return None
 
     def compare_view(self, media_type, view_id, view_name, view_type):
@@ -343,6 +347,29 @@ class Views(object):
     def _single_node(self, index, tag, media_type, view_type):
         self.video_nodes.singleNode(index, tag, media_type, view_type)
         self.total_nodes += 1
+
+    def offline_mode(self):
+        # Just reads from the db and populate views that way
+        # total nodes for window properties
+        self.video_nodes.clearProperties()
+
+        for media_type in ('movies', 'tvshows', 'musicvideos', 'homevideos', 'music', 'photos'):
+
+            self.nodes = list() # Prevent duplicate for nodes of the same type
+            self.playlists = list() # Prevent duplicate for playlists of the same type
+
+            views = self.emby_db.getView_byType(media_type)
+            for view in views:
+
+                try: # Make sure the view is in sorted views before proceeding
+                    self.sorted_views.index(view['name'])
+                except ValueError:
+                    self.sorted_views.append(view['name'])
+
+                self.add_playlist_node(media_type, view['id'], view['name'], view['mediatype'])
+
+        self.add_single_nodes()
+        window('Emby.nodes.total', str(self.total_nodes))
 
 
 class Playlist(object):

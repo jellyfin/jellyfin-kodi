@@ -79,6 +79,9 @@ class Service(object):
 
         # Clear video nodes properties
         VideoNodes().clearProperties()
+        # assume offline mode
+        log.info("Loading existing views...")
+        librarysync.LibrarySync().offline_mode_views()
 
         # Set the minimum database version
         window('emby_minDBVersion', value="1.1.63")

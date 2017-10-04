@@ -77,7 +77,7 @@ class UserClient(threading.Thread):
     def verify_server(self):
 
         try:
-            url = "%s/emby/system/info/public?format=json" % self.get_server()
+            url = "%s/emby/system/info/public?format=json" % self.get_server() # tried system/public but can't get reliable response from the server?
             self.doutils.downloadUrl(url, authenticate=False)
             return True
         except Exception as error:
@@ -147,7 +147,7 @@ class UserClient(threading.Thread):
         user = self.doutils.downloadUrl("{server}/emby/Users/{UserId}?format=json")
         settings('username', value=user['Name'])
         self._user = user
-
+        window('emby.userinfo.json', user)
         if "PrimaryImageTag" in self._user:
             window('EmbyUserImage',
                    value=artwork.Artwork().get_user_artwork(self._user['Id'], 'Primary'))

@@ -372,6 +372,12 @@ class LibrarySync(threading.Thread):
                 # Compare views, assign correct tags to items
                 views.Views(cursor_emby, cursor_video).maintain()
 
+    def offline_mode_views(self):
+
+        with database.DatabaseConn('emby') as cursor_emby:
+            with database.DatabaseConn() as cursor_video:
+                views.Views(cursor_emby, cursor_video).offline_mode()
+
     def movies(self, embycursor, kodicursor, pdialog):
 
         # Get movies from emby

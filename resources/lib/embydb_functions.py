@@ -122,8 +122,26 @@ class Embydb_Functions():
             views.append({
 
                 'id': row[0],
-                'name': row[1]
+                'name': row[1],
+                'mediatype': mediatype
             })
+
+        if mediatype in ('tvshows', 'movies'):
+            query = ' '.join((
+                "SELECT view_id, view_name",
+                "FROM view",
+                "WHERE media_type = ?"
+            ))
+
+            self.embycursor.execute(query, ("mixed",))
+            rows = self.embycursor.fetchall()
+            for row in rows:
+                views.append({
+
+                    'id': row[0],
+                    'name': row[1],
+                    'mediatype': "mixed"
+                })
 
         return views
 
