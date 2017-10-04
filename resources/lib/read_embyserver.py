@@ -647,3 +647,8 @@ class Read_EmbyServer():
         for library in self.doUtils.downloadUrl(url):
             if library['ItemId'] == view_id:
                 return library['LibraryOptions']
+
+    def get_server_transcoding_settings(self):
+
+        url = self.get_emby_url('/System/Configuration/encoding')
+        return self.doUtils.downloadUrl(url)

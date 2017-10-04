@@ -12,6 +12,7 @@ import xbmcvfs
 
 import clientinfo
 import downloadutils
+import read_embyserver as embyserver
 from utils import window, settings, language as lang
 
 #################################################################################################
@@ -28,6 +29,7 @@ class PlayUtils():
 
         self.item = item
         self.clientInfo = clientinfo.ClientInfo()
+        self.emby = embyserver.Read_EmbyServer()
 
         self.userid = window('emby_currUser')
         self.server = window('emby_server%s' % self.userid)
@@ -121,7 +123,7 @@ class PlayUtils():
         mediatype = self.item['MediaType']
 
         if mediatype == "Audio":
-            playurl = "%s/emby/Audio/%s/stream" % (self.server, itemid)
+            playurl = "%s/emby/Audio/%s/stream?" % (self.server, itemid)
         else:
             playurl = "%s/emby/Videos/%s/stream?static=true" % (self.server, itemid)
 
@@ -289,7 +291,7 @@ class PlayUtils():
             # Allow strm loading when direct streaming
             playurl = self.directPlay()
         elif self.item['Type'] == "Audio":
-            playurl = "%s/emby/Audio/%s/stream.mp3" % (self.server, self.item['Id'])
+            playurl = "%s/emby/Audio/%s/stream.mp3?" % (self.server, self.item['Id'])
         else:
             playurl = "%s/emby/Videos/%s/stream?static=true" % (self.server, self.item['Id'])
 
@@ -429,7 +431,7 @@ class PlayUtils():
 
                 default = stream['IsDefault']
                 forced = stream['IsForced']
-                downloadable = stream['IsTextSubtitleStream']
+                downloadable = stream['SupportsExternalStream']
 
                 if default:
                     track = "%s - Default" % track
@@ -464,9 +466,10 @@ class PlayUtils():
                 # User selected subtitles
                 selected = subtitleStreams[resp]
                 selectSubsIndex = subtitleStreamsList[selected]
+                settings = self.emby.get_server_transcoding_settings()
 
                 # Load subtitles in the listitem if downloadable
-                if selectSubsIndex in downloadableStreams:
+                if settings['EnableSubtitleExtraction'] and selectSubsIndex in downloadableStreams:
 
                     itemid = self.item['Id']
                     url = [("%s/Videos/%s/%s/Subtitles/%s/Stream.srt"
@@ -680,6 +683,10 @@ class PlayUtils():
         if settings('limitResolution') == "true":
             screenRes = self.getScreenResolution()
             videoRes = self.getVideoResolution()
+            
+            if not videoRes:
+                return False
+
             return videoRes['width'] > screenRes['width'] or videoRes['height'] > screenRes['height']
         else:
             return False
@@ -690,6 +697,9 @@ class PlayUtils():
                 'height' : wind.getHeight()}
 
     def getVideoResolution(self):
-        return {'width' : self.item['MediaStreams'][0]['Width'],
-                'height' : self.item['MediaStreams'][0]['Height']}
+        try:
+            return {'width' : self.item['MediaStreams'][0]['Width'],
+                    'height' : self.item['MediaStreams'][0]['Height']}
+        except KeyError as error:
+            return False
 
