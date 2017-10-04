@@ -407,6 +407,9 @@ class ConnectionManager(object):
 
         connectServers = self._getConnectServers(credentials)
         foundServers = self._findServers(self._serverDiscovery())
+        if not connectServers or not foundServers: # back out right away, no point in continuing
+            log.info("Found no servers")
+            return []
 
         servers = list(credentials['Servers'])
         self._mergeServers(servers, foundServers)
@@ -760,6 +763,9 @@ class ConnectionManager(object):
         log.info("Begin connect")
 
         servers = self.getAvailableServers()
+        if not servers:
+            return ConnectionState['Unavailable']
+
         return self._connectToServers(servers, options)
 
     def _connectToServers(self, servers, options):
