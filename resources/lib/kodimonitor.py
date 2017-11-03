@@ -25,6 +25,7 @@ KODI = int(xbmc.getInfoLabel('System.BuildVersion')[:2])
 
 class KodiMonitor(xbmc.Monitor):
 
+    retry = True
 
     def __init__(self):
 
@@ -108,6 +109,11 @@ class KodiMonitor(xbmc.Monitor):
 
         except (KeyError, TypeError):
             log.info("Item is invalid for playstate update")
+            # Retry once, sometimes xbmc.Player().isPlayingVideo() will return false when played from widget.
+            if self.retry:
+                self.retry = False
+                xbmc.sleep(200)
+                return self._on_play_(data)
         else:
             if ((settings('useDirectPaths') == "1" and not item_type == "song") or
                     (item_type == "song" and settings('enableMusic') == "true")):
