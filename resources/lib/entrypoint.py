@@ -111,6 +111,7 @@ def doMainListing():
     addDirectoryItem(lang(33053), "plugin://plugin.video.emby/?mode=settings")
     addDirectoryItem(lang(33054), "plugin://plugin.video.emby/?mode=adduser")
     addDirectoryItem(lang(33055), "plugin://plugin.video.emby/?mode=refreshplaylist")
+    addDirectoryItem(lang(33098), "plugin://plugin.video.emby/?mode=refreshboxsets")
     addDirectoryItem(lang(33056), "plugin://plugin.video.emby/?mode=manualsync")
     addDirectoryItem(lang(33057), "plugin://plugin.video.emby/?mode=repair")
     addDirectoryItem(lang(33058), "plugin://plugin.video.emby/?mode=reset")

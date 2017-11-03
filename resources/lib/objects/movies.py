@@ -54,6 +54,17 @@ class Movies(Items):
 
         return actions.get(action)
 
+    def force_refresh_boxsets(self):
+
+        if self.pdialog:
+            self.pdialog.update(heading=lang(29999), message=lang(33018))
+
+        boxsets = self.emby.getBoxset(dialog=self.pdialog)
+        self.add_all("BoxSet", boxsets)
+
+        log.debug("Boxsets finished.")
+        return True
+
     def compare_all(self):
         # Pull the list of movies and boxsets in Kodi
         views = self.emby_db.getView_byType('movies')

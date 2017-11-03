@@ -356,4 +356,5 @@
     <string id="33095">Failed to retrieve latest updates using fast sync, using full sync.</string>
     <string id="33096">Limit video resolution to screen resolution</string>
     <string id="33097">Important, cleanonupdate was removed in your advanced settings to prevent conflict with Emby for Kodi. Kodi will restart now.</string>
+    <string id="33098">Refresh boxsets</string>
 </strings>

@@ -288,6 +288,7 @@ class LibrarySync(threading.Thread):
                 process = {
 
                     'movies': self.movies,
+                    'boxsets': self.boxsets,
                     'musicvideos': self.musicvideos,
                     'tvshows': self.tvshows
                 }
@@ -404,15 +405,19 @@ class LibrarySync(threading.Thread):
             movies.add_all("Movie", all_movies, view)
 
         log.debug("Movies finished.")
+        return True
 
-        ##### PROCESS BOXSETS #####
+    def boxsets(self, embycursor, kodicursor, pdialog):
+
+        movies = Movies(embycursor, kodicursor, pdialog)
+
         if pdialog:
             pdialog.update(heading=lang(29999), message=lang(33018))
 
         boxsets = self.emby.getBoxset(dialog=pdialog)
         movies.add_all("BoxSet", boxsets)
-        log.debug("Boxsets finished.")
 
+        log.debug("Boxsets finished.")
         return True
 
     def musicvideos(self, embycursor, kodicursor, pdialog):
@@ -775,11 +780,34 @@ class ManualSync(LibrarySync):
     def __init__(self):
         LibrarySync.__init__(self)
 
-    def sync(self):
-        return self.fullSync(manualrun=True)
+    def sync(self, mediatype=None):
+
+        if mediatype in ('movies', 'boxsets', 'musicvideos', 'tvshows'):
+            with database.DatabaseConn('emby') as cursor_emby:
+                with database.DatabaseConn('video') as cursor_video:
+                    pDialog = self.progressDialog("Manual Sync: %s" % mediatype)
+                    if mediatype == 'movies':
+                        return self.movies(cursor_emby, cursor_video, pDialog)
+                    elif mediatype == "boxsets":
+                        return self.boxsets(cursor_emby, cursor_video, pDialog)
+                    elif mediatype =='musicvideos':
+                        return self.musicvideos(cursor_emby, cursor_video, pDialog)
+                    elif mediatype == 'tvshows':
+                        return self.tvshows(cursor_emby, cursor_video, pDialog)
+
+        elif mediatype == 'music':
+            with database.DatabaseConn('emby') as cursor_emby:
+                with database.DatabaseConn('music') as cursor_music:
+                    pDialog = self.progressDialog("Manual Sync: %s" % mediatype)
+                    return self.music(cursor_emby, cursor_music, pDialog)
+        else:
+            return self.fullSync(manualrun=True)
 
     def movies(self, embycursor, kodicursor, pdialog):
         return Movies(embycursor, kodicursor, pdialog).compare_all()
+
+    def boxsets(self, embycursor, kodicursor, pdialog):
+        return Movies(embycursor, kodicursor, pdialog).force_refresh_boxsets()
 
     def musicvideos(self, embycursor, kodicursor, pdialog):
         return MusicVideos(embycursor, kodicursor, pdialog).compare_all()

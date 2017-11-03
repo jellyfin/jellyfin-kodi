@@ -67,7 +67,7 @@ class Main(object):
             if mode == 'settings':
                 xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
 
-            elif mode in ('manualsync', 'fastsync', 'repair'):
+            elif mode in ('manualsync', 'fastsync', 'repair', 'refreshboxsets'):
                 self._library_sync(mode)
 
             elif mode == 'texturecache':
@@ -75,6 +75,10 @@ class Main(object):
                 artwork.Artwork().texture_cache_sync()
             else:
                 entrypoint.doMainListing()
+
+        try:
+            xbmcplugin.endOfDirectory(int(sys.argv[1]))
+        except Exception: pass
 
     @classmethod
     def _modes(cls, mode, params):
@@ -153,6 +157,8 @@ class Main(object):
                 librarysync.ManualSync().sync()
             elif mode == 'fastsync':
                 library_sync.startSync()
+            elif mode == 'refreshboxsets':
+                librarysync.ManualSync().sync('boxsets')
             else:
                 library_sync.fullSync(repair=True)
         else:
