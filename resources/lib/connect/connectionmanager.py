@@ -54,7 +54,7 @@ def getServerAddress(server, mode):
 
 class ConnectionManager(object):
 
-    default_timeout = 20
+    default_timeout = 10
     apiClients = []
     minServerVersion = "3.0.5930"
     connectUser = None
@@ -763,9 +763,6 @@ class ConnectionManager(object):
         log.info("Begin connect")
 
         servers = self.getAvailableServers()
-        if not servers:
-            return ConnectionState['Unavailable']
-
         return self._connectToServers(servers, options)
 
     def _connectToServers(self, servers, options):
