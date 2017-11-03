@@ -79,10 +79,10 @@ class ServerManual(xbmcgui.WindowXMLDialog):
             server = self.host_field.getText()
             port = self.port_field.getText()
 
-            if not server or not port:
+            if not server:
                 # Display error
                 self._error(ERROR['Empty'], lang(30617))
-                log.error("Server or port cannot be null")
+                log.error("Server cannot be null")
 
             elif self._connect_to_server(server, port):
                 self.close()
@@ -117,7 +117,7 @@ class ServerManual(xbmcgui.WindowXMLDialog):
 
     def _connect_to_server(self, server, port):
 
-        server_address = "%s:%s" % (server, port)
+        server_address = "%s:%s" % (server, port) if port else server
         self._message("%s %s..." % (lang(30610), server_address))
         result = self.connect_manager.connectToAddress(server_address)
 
