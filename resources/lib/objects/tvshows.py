@@ -3,14 +3,13 @@
 ##################################################################################################
 
 import logging
-import urllib
 from ntpath import dirname
 
 import api
 import embydb_functions as embydb
 import _kodi_tvshows
 from _common import Items, catch_except
-from utils import window, settings, language as lang
+from utils import window, settings, language as lang, plugin_path
 
 ##################################################################################################
 
@@ -630,7 +629,7 @@ class TVShows(Items):
                 'dbid': episodeid,
                 'mode': "play"
             }
-            filename = "%s?%s" % (path, urllib.urlencode(params))
+            filename = plugin_path(path, params)
 
         ##### UPDATE THE EPISODE #####
         if update_item:

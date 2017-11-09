@@ -10,6 +10,7 @@ import StringIO
 import os
 import sys
 import time
+import urllib
 import unicodedata
 import xml.etree.ElementTree as etree
 from datetime import datetime
@@ -76,6 +77,9 @@ def dialog(type_, *args, **kwargs):
         'numeric': d.numeric
     }
     return types[type_](*args, **kwargs)
+
+def plugin_path(plugin, params):
+    return "%s?%s" % (plugin, urllib.urlencode(params))
 
 
 class JSONRPC(object):

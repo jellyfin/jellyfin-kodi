@@ -30,7 +30,7 @@ import playbackutils as pbutils
 import playutils
 import api
 from views import Playlist, VideoNodes
-from utils import window, settings, dialog, language as lang
+from utils import window, settings, dialog, language as lang, plugin_path
 
 #################################################################################################
 
@@ -85,7 +85,7 @@ def doMainListing():
             '''
 
             if path:
-                if xbmc.getCondVisibility("Window.IsActive(Pictures)") and node == "photos":
+                if xbmc.getCondVisibility("Window.IsActive(Pictures)") and node in ("photos", "homevideos"):
                     addDirectoryItem(label, path)
                 elif xbmc.getCondVisibility("Window.IsActive(Videos)") and node != "photos":
                     addDirectoryItem(label, path)
@@ -620,11 +620,8 @@ def BrowseContent(viewname, browse_type="", folderid=""):
     #only proceed if we have a folderid
     if folderid:
         if browse_type.lower() == "homevideos":
-            xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
-            itemtype = "Video,Folder,PhotoAlbum"
-        elif browse_type.lower() == "photos":
             xbmcplugin.setContent(int(sys.argv[1]), 'files')
-            itemtype = "Photo,PhotoAlbum,Folder"
+            itemtype = "Video,Folder,PhotoAlbum,Photo"
         else:
             itemtype = ""
         
@@ -653,7 +650,14 @@ def BrowseContent(viewname, browse_type="", folderid=""):
                 li = createListItemFromEmbyItem(item,art,doUtils)
                 if item.get("IsFolder") == True:
                     #for folders we add an additional browse request, passing the folderId
-                    path = "%s?id=%s&mode=browsecontent&type=%s&folderid=%s" % (sys.argv[0].decode('utf-8'), viewname.decode('utf-8'), browse_type.decode('utf-8'), item.get("Id").decode('utf-8'))
+                    params = {
+
+                        'id': viewname.encode('utf-8'),
+                        'mode': "browsecontent",
+                        'type': browse_type,
+                        'folderid': item['Id']
+                    }
+                    path = plugin_path("plugin://plugin.video.emby/", params)
                     xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=path, listitem=li, isFolder=True)
                 else:
                     #playable item, set plugin path and mediastreams
