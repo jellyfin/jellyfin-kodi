@@ -198,6 +198,16 @@ class KodiMusic(KodiItems):
         ))
         self.cursor.execute(query, (args))
 
+    def update_album_18(self, *args):
+        query = ' '.join((
+
+            "UPDATE album",
+            "SET strArtistsDisp = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?,",
+            "iUserrating = ?, lastScraped = ?, strReleaseType = ?",
+            "WHERE idAlbum = ?"
+        ))
+        self.cursor.execute(query, (args))
+
     def update_album_17(self, *args):
         query = ' '.join((
 
@@ -246,9 +256,31 @@ class KodiMusic(KodiItems):
         if curr_artists != artists:
             self._update_album_artist(album_id, artists)
 
+    def get_album_artist_18(self, album_id, artists):
+
+        query = ' '.join((
+
+            "SELECT strArtistDisp",
+            "FROM album",
+            "WHERE idAlbum = ?"
+        ))
+        self.cursor.execute(query, (album_id,))
+        try:
+            curr_artists = self.cursor.fetchone()[0]
+        except TypeError:
+            return
+
+        if curr_artists != artists:
+            self._update_album_artist_18(album_id, artists)
+
     def _update_album_artist(self, album_id, artists):
 
         query = "UPDATE album SET strArtists = ? WHERE idAlbum = ?"
+        self.cursor.execute(query, (artists, album_id))
+
+    def _update_album_artist_18(self, album_id, artists):
+
+        query = "UPDATE album SET strArtistDisp = ? WHERE idAlbum = ?"
         self.cursor.execute(query, (artists, album_id))
 
     def add_single(self, *args):
@@ -295,6 +327,19 @@ class KodiMusic(KodiItems):
         )
         self.cursor.execute(query, (args))
 
+    def add_song_18(self, *args):
+        query = (
+            '''
+            INSERT INTO song(
+                idSong, idAlbum, idPath, strArtistDisp, strGenres, strTitle, iTrack,
+                iDuration, iYear, strFileName, strMusicBrainzTrackID, iTimesPlayed, lastplayed,
+                rating)
+
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            '''
+        )
+        self.cursor.execute(query, (args))
+
     def update_song(self, *args):
         query = ' '.join((
 
@@ -302,6 +347,17 @@ class KodiMusic(KodiItems):
             "SET idAlbum = ?, strArtists = ?, strGenres = ?, strTitle = ?, iTrack = ?,",
                 "iDuration = ?, iYear = ?, strFilename = ?, iTimesPlayed = ?, lastplayed = ?,",
                 "rating = ?, comment = ?",
+            "WHERE idSong = ?"
+        ))
+        self.cursor.execute(query, (args))
+
+    def update_song_18(self, *args):
+        query = ' '.join((
+
+            "UPDATE song",
+            "SET idAlbum = ?, strArtistDisp = ?, strGenres = ?, strTitle = ?, iTrack = ?,",
+            "iDuration = ?, iYear = ?, strFilename = ?, iTimesPlayed = ?, lastplayed = ?,",
+            "rating = ?, comment = ?",
             "WHERE idSong = ?"
         ))
         self.cursor.execute(query, (args))

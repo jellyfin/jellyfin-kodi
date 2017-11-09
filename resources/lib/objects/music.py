@@ -303,8 +303,8 @@ class Music(Items):
             emby_db.addReference(itemid, albumid, "MusicAlbum", "album", checksum=checksum)
 
         # Process the album info
-        if self.kodi_version == 17:
-            # Kodi Krypton
+        if self.kodi_version in [17,18]:
+            # Kodi Krypton/Leia
             self.kodi_db.update_album_17(artistname, year, genre, bio, thumb, rating, lastScraped,
                                          "album", albumid)
         elif self.kodi_version == 16:
@@ -440,8 +440,12 @@ class Music(Items):
             self.kodi_db.update_path(pathid, path)
 
             # Update the song entry
-            self.kodi_db.update_song(albumid, artists, genre, title, track, duration, year,
+            if self.kodi_version < 18:
+                self.kodi_db.update_song(albumid, artists, genre, title, track, duration, year,
                                      filename, playcount, dateplayed, rating, comment, songid)
+            else:
+                self.kodi_db.update_song_18(albumid, artists, genre, title, track, duration, year,
+                                         filename, playcount, dateplayed, rating, comment, songid)
 
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
@@ -494,15 +498,20 @@ class Music(Items):
                         self.kodi_db.add_single_14(albumid, genre, year, dateadded)
 
             # Create the song entry
-            self.kodi_db.add_song(songid, albumid, pathid, artists, genre, title, track, duration,
+            if self.kodi_version < 18:
+                self.kodi_db.add_song(songid, albumid, pathid, artists, genre, title, track, duration,
                                   year, filename, musicBrainzId, playcount, dateplayed, rating)
+            else:
+                self.kodi_db.add_song_18(songid, albumid, pathid, artists, genre, title, track, duration,
+                                      year, filename, musicBrainzId, playcount, dateplayed, rating)
 
             # Create the reference in emby table
             emby_db.addReference(itemid, songid, "Audio", "song", pathid=pathid, parentid=albumid,
                                  checksum=checksum)
 
         # Link song to album
-        self.kodi_db.link_song_album(songid, albumid, track, title, duration)
+        if self.kodi_version < 18:
+            self.kodi_db.link_song_album(songid, albumid, track, title, duration)
         # Create default role
         if self.kodi_version > 16:
             self.kodi_db.add_role()
@@ -553,7 +562,10 @@ class Music(Items):
 
         # Artist names
         album_artists = " / ".join(album_artists)
-        self.kodi_db.get_album_artist(albumid, album_artists)
+        if self.kodi_version < 18:
+            self.kodi_db.get_album_artist(albumid, album_artists)
+        else:
+            self.kodi_db.get_album_artist_18(albumid, album_artists)
 
         # Add genres
         self.kodi_db.add_genres(songid, genres, "song")

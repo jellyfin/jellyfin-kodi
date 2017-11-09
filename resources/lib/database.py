@@ -43,7 +43,7 @@ def music_database():
         '15': 52, # Isengard
         '16': 56, # Jarvis
         '17': 60, # Krypton
-        '18': 65  # Leia
+        '18': 67  # Leia
     }
     return xbmc.translatePath("special://database/MyMusic%s.db"
                               % db_version.get(KODI, "")).decode('utf-8')

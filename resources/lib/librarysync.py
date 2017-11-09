@@ -787,19 +787,24 @@ class ManualSync(LibrarySync):
                 with database.DatabaseConn('video') as cursor_video:
                     pDialog = self.progressDialog("Manual Sync: %s" % mediatype)
                     if mediatype == 'movies':
-                        return self.movies(cursor_emby, cursor_video, pDialog)
+                        self.movies(cursor_emby, cursor_video, pDialog)
                     elif mediatype == "boxsets":
-                        return self.boxsets(cursor_emby, cursor_video, pDialog)
+                        self.boxsets(cursor_emby, cursor_video, pDialog)
                     elif mediatype =='musicvideos':
-                        return self.musicvideos(cursor_emby, cursor_video, pDialog)
+                        self.musicvideos(cursor_emby, cursor_video, pDialog)
                     elif mediatype == 'tvshows':
-                        return self.tvshows(cursor_emby, cursor_video, pDialog)
+                        self.tvshows(cursor_emby, cursor_video, pDialog)
+
+                    pDialog.close()
+                    return
 
         elif mediatype == 'music':
             with database.DatabaseConn('emby') as cursor_emby:
                 with database.DatabaseConn('music') as cursor_music:
                     pDialog = self.progressDialog("Manual Sync: %s" % mediatype)
-                    return self.music(cursor_emby, cursor_music, pDialog)
+                    self.music(cursor_emby, cursor_music, pDialog)
+                    pDialog.close()
+                    return
         else:
             return self.fullSync(manualrun=True)
 
