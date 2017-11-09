@@ -1,3 +1,6 @@
+version 2.3.57
+- Close dialog after syncing collections
+
 version 2.3.56
 - Fixed connection not falling back to external when local is unavailable
 - Support server address without a port number
