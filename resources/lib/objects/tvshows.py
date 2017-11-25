@@ -265,7 +265,6 @@ class TVShows(Items):
         votecount = item.get('VoteCount')
         premieredate = API.get_premiere_date()
         tvdb = API.get_provider('Tvdb')
-        imdb = API.get_provider('Imdb')
         sorttitle = item['SortName']
         mpaa = API.get_mpaa()
         genre = " / ".join(genres)
@@ -306,11 +305,11 @@ class TVShows(Items):
             showid = None
             log.debug("showid: %s not found", itemid)
 
-            if self.emby_db.get_view_grouped_series(viewid) and imdb:
+            if self.emby_db.get_view_grouped_series(viewid) and tvdb:
                 # search kodi db for same provider id
                 if self.kodi_version > 16:
                     query = "SELECT idShow FROM tvshow_view WHERE uniqueid_value = ?"
-                    kodicursor.execute(query, (imdb,))
+                    kodicursor.execute(query, (tvdb,))
                 else:
                     query = "SELECT idShow FROM tvshow WHERE C12 = ?"
                     kodicursor.execute(query, (tvdb,))
@@ -378,7 +377,7 @@ class TVShows(Items):
             if self.kodi_version > 16:
                 uniqueid =  self.kodi_db.get_uniqueid("tvshow", showid)
 
-                self.kodi_db.update_uniqueid(showid, "tvshow", imdb, "imdb",uniqueid)
+                self.kodi_db.update_uniqueid(showid, "tvshow", tvdb, "unknown", uniqueid)
 
             # Update the tvshow entry
             if self.kodi_version > 16:
@@ -404,7 +403,7 @@ class TVShows(Items):
             if self.kodi_version > 16:
                 uniqueid =  self.kodi_db.create_entry_uniqueid()
 
-                self.kodi_db.add_uniqueid(uniqueid, showid, "tvshow", imdb, "imdb")
+                self.kodi_db.add_uniqueid(uniqueid, showid, "tvshow", tvdb, "unknown")
 
             # Add top path
             toppathid = self.kodi_db.add_path(toplevelpath)
