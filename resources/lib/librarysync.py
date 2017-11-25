@@ -46,6 +46,7 @@ class LibrarySync(threading.Thread):
     userdataItems = []
     removeItems = []
     forceLibraryUpdate = False
+    incremental_count = 0
     refresh_views = False
 
 
@@ -521,6 +522,7 @@ class LibrarySync(threading.Thread):
 
     def incrementalSync(self):
 
+        self.incremental_count += 1
         update_embydb = False
         pDialog = None
 
@@ -532,7 +534,7 @@ class LibrarySync(threading.Thread):
 
         # do a lib update if any items in list
         totalUpdates = len(self.addedItems) + len(self.updateItems) + len(self.userdataItems) + len(self.removeItems)
-        if totalUpdates > 0:
+        if totalUpdates > 0 and window('emby_kodiScan') != "true":
             with database.DatabaseConn('emby') as cursor_emby:
                 with database.DatabaseConn('video') as cursor_video:
 
@@ -553,7 +555,7 @@ class LibrarySync(threading.Thread):
                     }
                     for process_type in ['added', 'update', 'userdata', 'remove']:
 
-                        if process[process_type] and window('emby_kodiScan') != "true":
+                        if process[process_type]:
 
                             listItems = list(process[process_type])
                             del process[process_type][:] # Reset class list
@@ -600,12 +602,12 @@ class LibrarySync(threading.Thread):
             self.forceLibraryUpdate = False
 
             log.info("Updating video library.")
+            self.incremental_count = 0
             window('emby_kodiScan', value="true")
             xbmc.executebuiltin('UpdateLibrary(video)')
 
         if pDialog:
             pDialog.close()
-
 
     def compareDBVersion(self, current, minimum):
         # It returns True is database is up to date. False otherwise.
@@ -738,6 +740,10 @@ class LibrarySync(threading.Thread):
                 startupComplete = True
 
             # Process updates
+            if self.incremental_count > 5:
+                self.incremental_count = 0
+                window('emby_kodiScan', clear=True)
+
             if window('emby_dbScan') != "true" and window('emby_shouldStop') != "true":
                 self.incrementalSync()
 
