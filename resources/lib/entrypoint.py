@@ -619,8 +619,8 @@ def BrowseContent(viewname, browse_type="", folderid=""):
     #set the correct params for the content type
     #only proceed if we have a folderid
     if folderid:
-        if browse_type.lower() == "homevideos":
-            xbmcplugin.setContent(int(sys.argv[1]), 'files')
+        if browse_type == "homevideos":
+            #xbmcplugin.setContent(int(sys.argv[1]), 'files')
             itemtype = "Video,Folder,PhotoAlbum,Photo"
         else:
             itemtype = ""
@@ -637,7 +637,7 @@ def BrowseContent(viewname, browse_type="", folderid=""):
         elif filter_type == "recommended":
             listing = emby.getFilteredSection(folderid, itemtype=itemtype.split(",")[0], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter_type="IsFavorite")
         elif folderid == "favepisodes":
-            xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
+            #xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
             listing = emby.getFilteredSection(None, itemtype="Episode", sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter_type="IsFavorite")
         elif filter_type == "sets":
             listing = emby.getFilteredSection(folderid, itemtype=itemtype.split(",")[1], sortby="SortName", recursive=True, limit=25, sortorder="Ascending", filter_type="IsFavorite")
@@ -659,8 +659,8 @@ def BrowseContent(viewname, browse_type="", folderid=""):
                     }
                     path = plugin_path("plugin://plugin.video.emby/", params)
                     xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=path, listitem=li, isFolder=True)
-                else:
-                    #playable item, set plugin path and mediastreams
+                else: #playable item, set plugin path and mediastreams
+                    xbmcplugin.setContent(int(sys.argv[1]), 'episodes' if folderid else 'files')
                     xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=li.getProperty("path"), listitem=li)
 
 
@@ -710,6 +710,15 @@ def createListItemFromEmbyItem(item,art=artwork.Artwork(),doUtils=downloadutils.
         li.setThumbnailImage(img_path)
         li.setProperty("plot",API.get_overview())
         li.setIconImage('DefaultPicture.png')
+
+    elif item['Type'] == "PhotoAlbum":
+        img_path = allart.get('Primary')
+        li.setProperty("path", img_path)
+        li.setThumbnailImage(img_path)
+        li.setIconImage('DefaultPicture.png')
+        backdrop = allart.get('Backdrop')
+        if backdrop:
+            li.setArt({ 'fanart': backdrop[0] })
     else:
         #normal video items
         li.setProperty('IsPlayable', 'true')

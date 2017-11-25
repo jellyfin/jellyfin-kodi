@@ -76,9 +76,9 @@ class Main(object):
             else:
                 entrypoint.doMainListing()
 
-        try:
+        """try:
             xbmcplugin.endOfDirectory(int(sys.argv[1]))
-        except Exception: pass
+        except Exception: pass"""
 
     @classmethod
     def _modes(cls, mode, params):
