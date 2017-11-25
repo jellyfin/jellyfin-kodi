@@ -43,7 +43,7 @@ class KodiMonitor(xbmc.Monitor):
 
     def onScanFinished(self, library):
 
-        log.debug("Kodi library scan %s finished", library)
+        log.info("Kodi library scan %s finished", library)
         if library == "video":
             window('emby_kodiScan', clear=True)
 
@@ -74,6 +74,7 @@ class KodiMonitor(xbmc.Monitor):
             return
 
         if method == 'Player.OnPlay':
+            self.retry = True
             self._on_play_(data)
 
         elif method == 'VideoLibrary.OnUpdate':

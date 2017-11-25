@@ -291,17 +291,16 @@ class Service(object):
         kodi_player = self.kodi_player
         try:
             play_time = kodi_player.getTime()
-            filename = kodi_player.currentFile
-
+            filename = kodi_player.getPlayingFile()
             # Update positionticks
-            if filename in kodi_player.played_info:
+            if filename in kodi_player.played_info and play_time > 0:
                 kodi_player.played_info[filename]['currentPosition'] = play_time
 
             difference = datetime.today() - self.last_progress
             difference_seconds = difference.seconds
 
             # Report progress to Emby server
-            if difference_seconds > 3:
+            if difference_seconds > 9:
                 kodi_player.reportPlayback()
                 self.last_progress = datetime.today()
 
