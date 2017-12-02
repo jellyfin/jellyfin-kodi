@@ -1,5 +1,9 @@
 version 2.3.57
 - Close dialog after syncing collections
+- Update Leia support
+- Fix trakt/watched status issues caused by tvshows being assigned their imdb id instead of tvdb. You'll need to reset your database to fix this (or a repair might do the trick too)
+- Update photod (well now home videos and photos) library to properly display.
+- Few other fixes.
 
 version 2.3.56
 - Fixed connection not falling back to external when local is unavailable
