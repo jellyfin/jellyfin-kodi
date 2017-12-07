@@ -138,13 +138,14 @@ class PlayUtils():
             # User forcing to play via HTTP
             log.info("Can't direct play, play from HTTP enabled.")
             return False
-
-        videotrack = self.item['MediaSources'][0]['Name']
+        
+        vid = self.getVideoStreamID()
+        videotrack = self.item['MediaStreams'][vid]['DisplayTitle']
         transcodeH265 = settings('transcodeH265')
-        videoprofiles = [x['Profile'] for x in self.item['MediaSources'][0]['MediaStreams'] if 'Profile' in x]
+        videoprofile = self.item['MediaStreams'][vid]['Profile']
         transcodeHi10P = settings('transcodeHi10P')        
 
-        if transcodeHi10P == "true" and "H264" in videotrack and "High 10" in videoprofiles:
+        if transcodeHi10P == "true" and ("Main 10" in videoprofile or "High 10" in videoprofile) and ("H264" in videotrack or "H265" in videotrack or "HEVC" in videotrack):
             return False   
 
         if transcodeH265 in ("1", "2", "3") and ("HEVC" in videotrack or "H265" in videotrack):
@@ -241,13 +242,14 @@ class PlayUtils():
             return False
 
     def isDirectStream(self):
-
-        videotrack = self.item['MediaSources'][0]['Name']
+        
+        vid = self.getVideoStreamID()
+        videotrack = self.item['MediaStreams'][vid]['DisplayTitle']
         transcodeH265 = settings('transcodeH265')
-        videoprofiles = [x['Profile'] for x in self.item['MediaSources'][0]['MediaStreams'] if 'Profile' in x]
+        videoprofile = self.item['MediaStreams'][vid]['Profile']
         transcodeHi10P = settings('transcodeHi10P')        
 
-        if transcodeHi10P == "true" and "H264" in videotrack and "High 10" in videoprofiles:
+        if transcodeHi10P == "true" and ("Main 10" in videoprofile or "High 10" in videoprofile) and ("H264" in videotrack or "H265" in videotrack or "HEVC" in videotrack):
             return False   
 
         if transcodeH265 in ("1", "2", "3") and ("HEVC" in videotrack or "H265" in videotrack):
@@ -703,3 +705,7 @@ class PlayUtils():
         except KeyError as error:
             return False
 
+    def getVideoStreamID(self):
+        # Sometimes video stream is not 0, this locates it.    
+        videx = [x['Index'] for x in self.item['MediaSources'][0]['MediaStreams'] if 'Video' in x['Type']]
+        return videx[0]

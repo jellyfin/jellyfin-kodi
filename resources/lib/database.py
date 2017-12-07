@@ -30,7 +30,7 @@ def video_database():
         '15': 93, # Isengard
         '16': 99, # Jarvis
         '17': 107,# Krypton
-        '18': 108 # Leia
+        '18': 109 # Leia
     }
     return xbmc.translatePath("special://database/MyVideos%s.db"
                               % db_version.get(KODI, "")).decode('utf-8')
