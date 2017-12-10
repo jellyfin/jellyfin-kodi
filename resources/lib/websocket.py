@@ -130,6 +130,22 @@ def getdefaulttimeout():
     return default_timeout
 
 
+def _wrap_sni_socket(sock, sslopt, hostname):
+    context = ssl.SSLContext(sslopt.get('ssl_version', ssl.PROTOCOL_SSLv23))
+
+    if sslopt.get('cert_reqs', ssl.CERT_NONE) != ssl.CERT_NONE:
+        capath = ssl.get_default_verify_paths().capath
+        context.load_verify_locations(cafile=sslopt.get('ca_certs', None),
+                capath=sslopt.get('ca_cert_path', capath))
+
+    return context.wrap_socket(
+        sock,
+        do_handshake_on_connect=sslopt.get('do_handshake_on_connect', True),
+        suppress_ragged_eofs=sslopt.get('suppress_ragged_eofs', True),
+        server_hostname=hostname,
+    )
+
+
 def _parse_url(url):
     """
     parse url and the result is tuple of
@@ -448,7 +464,10 @@ class WebSocket(object):
                     sslopt = {}
                 else:
                     sslopt = self.sslopt
-                self.sock = ssl.wrap_socket(self.sock, **sslopt)
+                if ssl.HAS_SNI:
+                    self.sock = _wrap_sni_socket(self.sock, sslopt, hostname)
+                else:
+                    self.sock = ssl.wrap_socket(self.sock, **sslopt)
             else:
                 raise WebSocketException("SSL not available.")
 
