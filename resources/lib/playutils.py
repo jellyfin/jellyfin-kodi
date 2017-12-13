@@ -702,7 +702,9 @@ class PlayUtils():
         try:
             return {'width' : self.item['MediaStreams'][0]['Width'],
                     'height' : self.item['MediaStreams'][0]['Height']}
-        except KeyError as error:
+        except (KeyError, IndexError) as error:
+            log.debug(error)
+            log.debug(self.item)
             return False
 
     def getVideoStreamID(self):

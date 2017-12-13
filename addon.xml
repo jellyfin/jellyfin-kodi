@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon  id="plugin.video.emby"
         name="Emby" 
-        version="2.3.57"
+        version="2.3.59"
         provider-name="Emby.media">
   <requires>
     <import addon="xbmc.python" version="2.19.0"/>
@@ -17,6 +17,11 @@
   <extension point="xbmc.service" library="service.py" start="login">
   </extension>
   <extension point="kodi.context.item" library="contextmenu.py">
+    <item>
+      <label>Select video</label>
+            <description>Select the video track</description>
+            <visible>[!IsEmpty(ListItem.DBID) + !StringCompare(ListItem.DBID,-1) | !IsEmpty(ListItem.Property(embyid))] + !IsEmpty(Window(10000).Property(emby_context))</visible>
+    </item>
     <item>
       <label>30401</label>
             <description>Settings for the Emby Server</description>
