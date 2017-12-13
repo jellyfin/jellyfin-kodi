@@ -4,6 +4,8 @@
 
 import logging
 import urllib
+import datetime
+import re
 
 import api
 import embydb_functions as embydb
@@ -133,6 +135,12 @@ class MusicVideos(Items):
         plot = API.get_overview()
         title = item['Name']
         year = item.get('ProductionYear')
+        # Some kodi views/skins rely on the "premiered" field to display by year.
+        # So, if we don't get the premiere date from Emby, just set it to Jan 1st
+        # of the video's "year", so that Kodi has a year to work with.
+        premiered = item.get('PremiereDate')
+        if premiered is None and year is not None:
+            premiered = datetime.date(year, 1, 1)
         genres = item['Genres']
         genre = " / ".join(genres)
         studios = API.get_studios()
@@ -140,9 +148,16 @@ class MusicVideos(Items):
         artist = " / ".join(item.get('Artists'))
         album = item.get('Album')
         track = item.get('Track')
+        # If we don't get the track number from Emby, see if we can infer it
+        # from the sortname attribute.
+        if track is None:
+            sortname = item.get('SortName')
+            if sortname is not None:
+                search = re.search(r'^\d+\s?', sortname)
+                if search is not None:
+                    track = search.group()
         people = API.get_people()
         director = " / ".join(people['Director'])
-
 
         ##### GET THE FILE AND PATH #####
         playurl = API.get_file_path()
@@ -179,7 +194,7 @@ class MusicVideos(Items):
 
             # Update the music video entry
             self.kodi_db.update_musicvideo(title, runtime, director, studio, year, plot, album,
-                                           artist, genre, track, mvideoid)
+                                           artist, genre, track, premiered, mvideoid)
 
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
@@ -195,7 +210,7 @@ class MusicVideos(Items):
 
             # Create the musicvideo entry
             self.kodi_db.add_musicvideo(mvideoid, fileid, title, runtime, director, studio,
-                                        year, plot, album, artist, genre, track)
+                                        year, plot, album, artist, genre, track, premiered)
 
             # Create the reference in emby table
             emby_db.addReference(itemid, mvideoid, "MusicVideo", "musicvideo", fileid, pathid,

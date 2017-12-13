@@ -43,9 +43,9 @@ class KodiMusicVideos(KodiItems):
         query = (
             '''
             INSERT INTO musicvideo(
-                idMVideo, idFile, c00, c04, c05, c06, c07, c08, c09, c10, c11, c12)
+                idMVideo, idFile, c00, c04, c05, c06, c07, c08, c09, c10, c11, c12, premiered)
 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             '''
         )
         self.cursor.execute(query, (args))
@@ -56,7 +56,7 @@ class KodiMusicVideos(KodiItems):
 
             "UPDATE musicvideo",
             "SET c00 = ?, c04 = ?, c05 = ?, c06 = ?, c07 = ?, c08 = ?, c09 = ?, c10 = ?,",
-                "c11 = ?, c12 = ?"
+                "c11 = ?, c12 = ?, premiered = ?"
             "WHERE idMVideo = ?"
         ))
         self.cursor.execute(query, (args))
