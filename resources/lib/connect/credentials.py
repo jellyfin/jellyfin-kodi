@@ -27,7 +27,7 @@ class Credentials(object):
 
     def setPath(self, path):
         # Path to save persistant data.txt
-        self.path = path
+        self.path = path.encode('utf-8')
 
     def _ensure(self):
         
