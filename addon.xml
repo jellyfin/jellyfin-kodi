@@ -18,11 +18,6 @@
   </extension>
   <extension point="kodi.context.item" library="contextmenu.py">
     <item>
-      <label>Select video</label>
-            <description>Select the video track</description>
-            <visible>[!IsEmpty(ListItem.DBID) + !StringCompare(ListItem.DBID,-1) | !IsEmpty(ListItem.Property(embyid))] + !IsEmpty(Window(10000).Property(emby_context))</visible>
-    </item>
-    <item>
       <label>30401</label>
             <description>Settings for the Emby Server</description>
             <visible>[!IsEmpty(ListItem.DBID) + !StringCompare(ListItem.DBID,-1) | !IsEmpty(ListItem.Property(embyid))] + !IsEmpty(Window(10000).Property(emby_context))</visible>
