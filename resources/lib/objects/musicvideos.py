@@ -193,8 +193,12 @@ class MusicVideos(Items):
             log.info("UPDATE mvideo itemid: %s - Title: %s", itemid, title)
 
             # Update the music video entry
-            self.kodi_db.update_musicvideo(title, runtime, director, studio, year, plot, album,
-                                           artist, genre, track, premiered, mvideoid)
+            if self.kodi_version > 16: #Krypton and later
+                self.kodi_db.update_musicvideo(title, runtime, director, studio, year, plot, album,
+                                               artist, genre, track, premiered, mvideoid)
+            else:
+                self.kodi_db.update_musicvideo_16(title, runtime, director, studio, year, plot, album,
+                                                  artist, genre, track, mvideoid)
 
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
@@ -209,8 +213,12 @@ class MusicVideos(Items):
             fileid = self.kodi_db.add_file(filename, pathid)
 
             # Create the musicvideo entry
-            self.kodi_db.add_musicvideo(mvideoid, fileid, title, runtime, director, studio,
-                                        year, plot, album, artist, genre, track, premiered)
+            if self.kodi_version > 16: #Krypton and later
+                self.kodi_db.add_musicvideo(mvideoid, fileid, title, runtime, director, studio,
+                                            year, plot, album, artist, genre, track, premiered)
+            else:
+                self.kodi_db.add_musicvideo_16(mvideoid, fileid, title, runtime, director, studio,
+                                               year, plot, album, artist, genre, track)
 
             # Create the reference in emby table
             emby_db.addReference(itemid, mvideoid, "MusicVideo", "musicvideo", fileid, pathid,
