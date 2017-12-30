@@ -41,10 +41,16 @@ class ContextMenu(object):
 
         self.emby = embyserver.Read_EmbyServer()
 
-        self.kodi_id = xbmc.getInfoLabel('ListItem.DBID').decode('utf-8')
-        self.item_type = self._get_item_type()
+        if xbmc.getCondVisibility('Window.IsVisible(10000)'):
+            # Widget listitems need a container id.
+            container = xbmc.getInfoLabel('System.CurrentControlID')
+            self.kodi_id = xbmc.getInfoLabel('Container(%s).ListItem.DBID' % container).decode('utf-8')
+            self.item_type = self._get_item_type('Container(%s).ListItem.DBTYPE' % container)
+        else:
+            self.kodi_id = xbmc.getInfoLabel('ListItem.DBID').decode('utf-8')
+            self.item_type = self._get_item_type('ListItem.DBTYPE')
+        
         self.item_id = self._get_item_id(self.kodi_id, self.item_type)
-
         log.info("Found item_id: %s item_type: %s", self.item_id, self.item_type)
 
         if self.item_id:
@@ -62,9 +68,9 @@ class ContextMenu(object):
                     xbmc.executebuiltin('Container.Refresh')
 
     @classmethod
-    def _get_item_type(cls):
+    def _get_item_type(cls, infolabel):
 
-        item_type = xbmc.getInfoLabel('ListItem.DBTYPE').decode('utf-8')
+        item_type = xbmc.getInfoLabel(infolabel).decode('utf-8')
 
         if not item_type:
 
