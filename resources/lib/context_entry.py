@@ -3,6 +3,7 @@
 #################################################################################################
 
 import logging
+import sys
 
 import xbmc
 import xbmcaddon
@@ -41,9 +42,8 @@ class ContextMenu(object):
 
         self.emby = embyserver.Read_EmbyServer()
 
-        container = xbmc.getInfoLabel('System.CurrentControlID')
-        self.kodi_id = xbmc.getInfoLabel('Container(%s).ListItem.DBID' % container).decode('utf-8')
-        self.item_type = self._get_item_type('Container(%s).ListItem.DBTYPE' % container)
+        self.kodi_id = sys.listitem.getVideoInfoTag().getDbId()
+        self.item_type = self._get_item_type()
         
         self.item_id = self._get_item_id(self.kodi_id, self.item_type)
         log.info("Found item_id: %s item_type: %s", self.item_id, self.item_type)
@@ -63,9 +63,9 @@ class ContextMenu(object):
                     xbmc.executebuiltin('Container.Refresh')
 
     @classmethod
-    def _get_item_type(cls, infolabel):
+    def _get_item_type(cls):
 
-        item_type = xbmc.getInfoLabel(infolabel).decode('utf-8')
+        item_type = sys.listitem.getVideoInfoTag().getMediaType().decode('utf-8')
 
         if not item_type:
 
