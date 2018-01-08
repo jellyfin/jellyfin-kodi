@@ -193,48 +193,7 @@ class KodiMusic(KodiItems):
 
             "UPDATE album",
             "SET strArtists = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?,",
-                "iRating = ?, lastScraped = ?, strReleaseType = ?",
-            "WHERE idAlbum = ?"
-        ))
-        self.cursor.execute(query, (args))
-
-    def update_album_18(self, *args):
-        query = ' '.join((
-
-            "UPDATE album",
-            "SET strArtistsDisp = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?,",
-            "iUserrating = ?, lastScraped = ?, strReleaseType = ?",
-            "WHERE idAlbum = ?"
-        ))
-        self.cursor.execute(query, (args))
-
-    def update_album_17(self, *args):
-        query = ' '.join((
-
-            "UPDATE album",
-            "SET strArtists = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?,",
                 "iUserrating = ?, lastScraped = ?, strReleaseType = ?",
-            "WHERE idAlbum = ?"
-        ))
-        self.cursor.execute(query, (args))
-
-    def update_album_15(self, *args):
-        query = ' '.join((
-
-            "UPDATE album",
-            "SET strArtists = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?,",
-                "iRating = ?, lastScraped = ?, dateAdded = ?, strReleaseType = ?",
-            "WHERE idAlbum = ?"
-        ))
-        self.cursor.execute(query, (args))
-
-    def update_album_14(self, *args):
-        # TODO: Remove Helix code when Krypton is RC
-        query = ' '.join((
-
-            "UPDATE album",
-            "SET strArtists = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?,",
-                "iRating = ?, lastScraped = ?, dateAdded = ?",
             "WHERE idAlbum = ?"
         ))
         self.cursor.execute(query, (args))
@@ -356,8 +315,8 @@ class KodiMusic(KodiItems):
 
             "UPDATE song",
             "SET idAlbum = ?, strArtistDisp = ?, strGenres = ?, strTitle = ?, iTrack = ?,",
-            "iDuration = ?, iYear = ?, strFilename = ?, iTimesPlayed = ?, lastplayed = ?,",
-            "rating = ?, comment = ?",
+                "iDuration = ?, iYear = ?, strFilename = ?, iTimesPlayed = ?, lastplayed = ?,",
+                "rating = ?, comment = ?",
             "WHERE idSong = ?"
         ))
         self.cursor.execute(query, (args))

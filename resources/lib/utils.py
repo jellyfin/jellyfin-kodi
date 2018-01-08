@@ -78,7 +78,7 @@ def dialog(type_, *args, **kwargs):
     }
     return types[type_](*args, **kwargs)
 
-def plugin_path(plugin, params):
+def urllib_path(plugin, params):
     return "%s?%s" % (plugin, urllib.urlencode(params))
 
 

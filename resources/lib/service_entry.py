@@ -10,6 +10,7 @@ from datetime import datetime
 import platform
 
 import xbmc
+import xbmcgui
 
 import userclient
 import clientinfo
@@ -52,10 +53,11 @@ class Service(object):
         self.addon_name = self.client_info.get_addon_name()
         log_level = settings('logLevel')
 
+        # General settings which are used by other entrypoints
         window('emby_logLevel', value=str(log_level))
         window('emby_kodiProfile', value=xbmc.translatePath('special://profile'))
-        context_menu = "true" if settings('enableContext') == "true" else ""
-        window('emby_context', value=context_menu)
+        window('emby_context', value="true" if settings('enableContext') == "true" else "")
+        window('emby_context_transcode', value="true" if settings('enableContextTranscode') == "true" else "")
 
         # Initial logging
         log.warn("======== START %s ========", self.addon_name)
@@ -72,7 +74,8 @@ class Service(object):
             "emby_online", "emby_state.json", "emby_serverStatus", "emby_onWake",
             "emby_syncRunning", "emby_dbCheck", "emby_kodiScan",
             "emby_shouldStop", "emby_currUser", "emby_dbScan", "emby_sessionId",
-            "emby_initialScan", "emby_customplaylist", "emby_playbackProps"
+            "emby_initialScan", "emby_customplaylist", "emby_playbackProps",
+            "emby.external_check", "emby.external", "emby.resume"
         ]
         for prop in properties:
             window(prop, clear=True)
@@ -318,6 +321,9 @@ class Service(object):
 
         #ga = GoogleAnalytics()
         #ga.sendEventData("Application", "Shutdown")     
+
+        if self.monitor.special_monitor:
+            self.monitor.special_monitor.stop_monitor()
 
         if self.userclient_running:
             self.userclient_thread.stop_client()

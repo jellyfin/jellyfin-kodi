@@ -22,6 +22,8 @@ SIGN_IN = 200
 CANCEL = 201
 ERROR_TOGGLE = 202
 ERROR_MSG = 203
+USER = 204
+PASSWORD = 205
 ERROR = {
     'Invalid': 1,
     'Empty': 2
@@ -52,20 +54,13 @@ class LoginConnect(xbmcgui.WindowXMLDialog):
 
     def onInit(self):
 
-        self.user_field = self._add_editcontrol(725, 385, 40, 500)
+        self.user_field = self.getControl(USER)
         self.setFocus(self.user_field)
-        self.password_field = self._add_editcontrol(725, 470, 40, 500, password=1)
+        self.password_field = self.getControl(PASSWORD)
         self.signin_button = self.getControl(SIGN_IN)
         self.remind_button = self.getControl(CANCEL)
         self.error_toggle = self.getControl(ERROR_TOGGLE)
         self.error_msg = self.getControl(ERROR_MSG)
-
-        self.user_field.controlUp(self.remind_button)
-        self.user_field.controlDown(self.password_field)
-        self.password_field.controlUp(self.user_field)
-        self.password_field.controlDown(self.signin_button)
-        self.signin_button.controlUp(self.password_field)
-        self.remind_button.controlDown(self.user_field)
 
     def onClick(self, control):
 
@@ -96,23 +91,6 @@ class LoginConnect(xbmcgui.WindowXMLDialog):
 
         if action in (ACTION_BACK, ACTION_PARENT_DIR, ACTION_PREVIOUS_MENU):
             self.close()
-
-    def _add_editcontrol(self, x, y, height, width, password=0):
-
-        media = os.path.join(addon.getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
-        control = xbmcgui.ControlEdit(0, 0, 0, 0,
-                                      label="User",
-                                      font="font10",
-                                      textColor="ff525252",
-                                      focusTexture=os.path.join(media, "button-focus.png"),
-                                      noFocusTexture=os.path.join(media, "button-focus.png"),
-                                      isPassword=password)
-        control.setPosition(x, y)
-        control.setHeight(height)
-        control.setWidth(width)
-
-        self.addControl(control)
-        return control
 
     def _login(self, username, password):
 

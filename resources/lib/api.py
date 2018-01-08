@@ -7,6 +7,8 @@
 import logging
 from utils import settings
 
+import artwork
+
 ##################################################################################################
 
 log = logging.getLogger("EMBY."+__name__)
@@ -19,6 +21,7 @@ class API(object):
     def __init__(self, item):
         # item is the api response
         self.item = item
+        self.artwork = artwork.Artwork()
 
     def get_userdata(self):
         # Default
@@ -71,12 +74,8 @@ class API(object):
         writer = []
         cast = []
 
-        try:
-            people = self.item['People']
-        except KeyError:
-            pass
-        else:
-            for person in people:
+        if 'People' in self.item:
+            for person in self.item['People']:
 
                 type_ = person['Type']
                 name = person['Name']
@@ -94,6 +93,26 @@ class API(object):
             'Writer': writer,
             'Cast': cast
         }
+
+    def get_actors(self):
+
+        cast = []
+
+        if 'People' in self.item:
+
+            self.artwork.get_people_artwork(self.item['People'])
+
+            for person in self.item['People']:
+
+                if person['Type'] == "Actor":
+                    cast.append({
+                        'name': person['Name'],
+                        'role': person['Role'],
+                        'order': len(cast) + 1,
+                        'thumbnail': person['imageurl']
+                    })
+
+        return cast
 
     def get_media_streams(self):
 

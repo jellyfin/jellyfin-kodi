@@ -174,9 +174,8 @@ class KodiTVShows(KodiItems):
         except TypeError:
             season_id = self._add_season(show_id, number)
 
-        if self.kodi_version > 15 and name is not None:
-            query = "UPDATE seasons SET name = ? WHERE idSeason = ?"
-            self.cursor.execute(query, (name, season_id))
+        query = "UPDATE seasons SET name = ? WHERE idSeason = ?"
+        self.cursor.execute(query, (name, season_id))
 
         return season_id
 
@@ -193,18 +192,6 @@ class KodiTVShows(KodiItems):
             '''
             INSERT INTO episode(
                 idEpisode, idFile, c00, c01, c03, c04, c05, c09, c10, c12, c13, c14,
-                idShow, c15, c16)
-
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            '''
-        )
-        self.cursor.execute(query, (args))
-
-    def add_episode_16(self, *args):
-        query = (
-            '''
-            INSERT INTO episode(
-                idEpisode, idFile, c00, c01, c03, c04, c05, c09, c10, c12, c13, c14,
                 idShow, c15, c16, idSeason)
 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -213,16 +200,6 @@ class KodiTVShows(KodiItems):
         self.cursor.execute(query, (args))
 
     def update_episode(self, *args):
-        query = ' '.join((
-
-            "UPDATE episode",
-            "SET c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?,",
-                "c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, idShow = ?",
-            "WHERE idEpisode = ?"
-        ))
-        self.cursor.execute(query, (args))
-
-    def update_episode_16(self, *args):
         query = ' '.join((
 
             "UPDATE episode",

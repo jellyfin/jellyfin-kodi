@@ -21,6 +21,8 @@ import playutils as putils
 import playlist
 import read_embyserver as embyserver
 import shutil
+import embydb_functions as embydb
+from database import DatabaseConn
 from utils import window, settings, language as lang
 
 #################################################################################################
@@ -30,329 +32,147 @@ log = logging.getLogger("EMBY."+__name__)
 #################################################################################################
 
 
-class PlaybackUtils():
-    
-    
-    def __init__(self, item):
+class PlaybackUtils(object):
 
-        self.item = item
-        self.API = api.API(self.item)
 
-        self.doUtils = downloadutils.DownloadUtils().downloadUrl
-
-        self.userid = window('emby_currUser')
-        self.server = window('emby_server%s' % self.userid)
+    def __init__(self, item=None, item_id=None):
 
         self.artwork = artwork.Artwork()
         self.emby = embyserver.Read_EmbyServer()
-        self.pl = playlist.Playlist()
 
+        self.item = item or self.emby.getItem(item_id)
+        self.API = api.API(self.item)
 
-    def play(self, itemid, dbid=None):
+        self.server = window('emby_server%s' % window('emby_currUser'))
+
+        self.stack = []
+
+        if self.item['Type'] == "Audio":
+            self.playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC)
+        else:
+            self.playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
+
+    def play(self, item_id, dbid=None, force_transcode=False):
 
         listitem = xbmcgui.ListItem()
-        playutils = putils.PlayUtils(self.item)
 
-        log.info("Play called.")
-        playurl = playutils.getPlayUrl()
-        if not playurl:
+        log.info("Play called: %s", self.item['Name'])
+
+        resume = window('emby.resume')
+        window('emby.resume', clear=True)
+
+        play_url = putils.PlayUtils(self.item, listitem).get_play_url(force_transcode)
+
+        if not play_url:
+            if play_url == False: # User backed-out of menu
+                self.playlist.clear()
             return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, listitem)
 
-        if dbid is None:
-            # Item is not in Kodi database
-            listitem.setPath(playurl)
-            self.setProperties(playurl, listitem)
-            return xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listitem)
+        seektime = 0 if resume == "true" else self.API.adjust_resume(self.API.get_userdata()['Resume'])
 
-        # TODO: Review once Krypton is RC, no need for workaround.
+        if force_transcode:
+            log.info("Clear the playlist.")
+            self.playlist.clear()
 
-        ############### ORGANIZE CURRENT PLAYLIST ################
-        
-        homeScreen = xbmc.getCondVisibility('Window.IsActive(home)')
-        playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
-        startPos = max(playlist.getposition(), 0) # Can return -1
-        sizePlaylist = playlist.size()
-        currentPosition = startPos
+        self.set_playlist(play_url, item_id, listitem, seektime, dbid)
 
-        propertiesPlayback = window('emby_playbackProps') == "true"
-        introsPlaylist = False
-        dummyPlaylist = False
+        ##### SETUP PLAYBACK
 
-        log.debug("Playlist start position: %s" % startPos)
-        log.debug("Playlist plugin position: %s" % currentPosition)
-        log.debug("Playlist size: %s" % sizePlaylist)
+        ''' To get everything to work together, play the first item in the stack with setResolvedUrl,
+            add the rest to the regular playlist.
+        '''
 
-        ############### RESUME POINT ################
-        
-        userdata = self.API.get_userdata()
-        seektime = self.API.adjust_resume(userdata['Resume'])
+        index = max(self.playlist.getposition(), 0) + 1 # Can return -1
+        force_play = False
 
-        # We need to ensure we add the intro and additional parts only once.
-        # Otherwise we get a loop.
-        if not propertiesPlayback:
-
-            window('emby_playbackProps', value="true")
-            log.info("Setting up properties in playlist.")
-
-            if not homeScreen and not seektime and window('emby_customPlaylist') != "true":
-                
-                log.debug("Adding dummy file to playlist.")
-                dummyPlaylist = True
-                playlist.add(playurl, listitem, index=startPos)
-                # Remove the original item from playlist 
-                self.pl.remove_from_playlist(startPos+1)
-                # Readd the original item to playlist - via jsonrpc so we have full metadata
-                self.pl.insert_to_playlist(currentPosition+1, dbid, self.item['Type'].lower())
-                currentPosition += 1
-            
-            ############### -- CHECK FOR INTROS ################
-
-            if settings('enableCinema') == "true" and not seektime:
-                # if we have any play them when the movie/show is not being resumed
-                url = "{server}/emby/Users/{UserId}/Items/%s/Intros?format=json" % itemid    
-                intros = self.doUtils(url)
-
-                if intros['TotalRecordCount'] != 0:
-                    getTrailers = True
-
-                    if settings('askCinema') == "true":
-                        resp = xbmcgui.Dialog().yesno("Emby for Kodi", lang(33016))
-                        if not resp:
-                            # User selected to not play trailers
-                            getTrailers = False
-                            log.info("Skip trailers.")
-                    
-                    if getTrailers:
-                        for intro in intros['Items']:
-                            # The server randomly returns intros, process them.
-                            introListItem = xbmcgui.ListItem()
-                            introPlayurl = putils.PlayUtils(intro).getPlayUrl()
-                            log.info("Adding Intro: %s" % introPlayurl)
-
-                            # Set listitem and properties for intros
-                            pbutils = PlaybackUtils(intro)
-                            pbutils.setProperties(introPlayurl, introListItem)
-
-                            self.pl.insert_to_playlist(currentPosition, url=introPlayurl)
-                            introsPlaylist = True
-                            currentPosition += 1
-
-
-            ############### -- ADD MAIN ITEM ONLY FOR HOMESCREEN ###############
-
-            if homeScreen and not seektime and not sizePlaylist:
-                # Extend our current playlist with the actual item to play
-                # only if there's no playlist first
-                log.info("Adding main item to playlist.")
-                self.pl.add_to_playlist(dbid, self.item['Type'].lower())
-
-            # Ensure that additional parts are played after the main item
-            currentPosition += 1
-
-            ############### -- CHECK FOR ADDITIONAL PARTS ################
-            
-            if self.item.get('PartCount'):
-                # Only add to the playlist after intros have played
-                partcount = self.item['PartCount']
-                url = "{server}/emby/Videos/%s/AdditionalParts?format=json" % itemid
-                parts = self.doUtils(url)
-                for part in parts['Items']:
-
-                    additionalListItem = xbmcgui.ListItem()
-                    additionalPlayurl = putils.PlayUtils(part).getPlayUrl()
-                    log.info("Adding additional part: %s" % partcount)
-
-                    # Set listitem and properties for each additional parts
-                    pbutils = PlaybackUtils(part)
-                    pbutils.setProperties(additionalPlayurl, additionalListItem)
-                    pbutils.setArtwork(additionalListItem)
-
-                    playlist.add(additionalPlayurl, additionalListItem, index=currentPosition)
-                    self.pl.verify_playlist()
-                    currentPosition += 1
-
-            if dummyPlaylist:
-                # Added a dummy file to the playlist,
-                # because the first item is going to fail automatically.
-                log.info("Processed as a playlist. First item is skipped.")
-                return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, listitem)
-                
-
-        # We just skipped adding properties. Reset flag for next time.
-        elif propertiesPlayback:
-            log.debug("Resetting properties playback flag.")
-            window('emby_playbackProps', clear=True)
-
-        #self.pl.verify_playlist()
-        ########## SETUP MAIN ITEM ##########
-
-        # For transcoding only, ask for audio/subs pref
-        if window('emby_%s.playmethod' % playurl) == "Transcode":
-            # Filter ISO since Emby does not probe anymore
-            if self.item.get('VideoType') == "Iso":
-                log.info("Skipping audio/subs prompt, ISO detected.")
-            else:
-                playurl = playutils.audioSubsPref(playurl, listitem)
-                window('emby_%s.playmethod' % playurl, value="Transcode")
-
-        listitem.setPath(playurl)
-        self.setProperties(playurl, listitem)
-
-        ############### PLAYBACK ################
-
-        if homeScreen and seektime and window('emby_customPlaylist') != "true":
-            log.info("Play as a widget item.")
-            self.setListItem(listitem, dbid)
-            xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listitem)
-
-        elif ((introsPlaylist and window('emby_customPlaylist') == "true") or
-                (homeScreen and not sizePlaylist)):
-            # Playlist was created just now, play it.
-            log.info("Play playlist.")
-            xbmc.Player().play(playlist, startpos=startPos)
-
-        else:
-            log.info("Play as a regular item.")
-            xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, listitem)
-
-    def setProperties(self, playurl, listitem):
-
-        # Set all properties necessary for plugin path playback
-        itemid = self.item['Id']
-        itemtype = self.item['Type']
-
-        embyitem = "emby_%s" % playurl
-        window('%s.runtime' % embyitem, value=str(self.item.get('RunTimeTicks')))
-        window('%s.type' % embyitem, value=itemtype)
-        window('%s.itemid' % embyitem, value=itemid)
-
-        if itemtype == "Episode":
-            window('%s.refreshid' % embyitem, value=self.item.get('SeriesId'))
-        else:
-            window('%s.refreshid' % embyitem, value=itemid)
-
-        # Append external subtitles to stream
-        playmethod = window('%s.playmethod' % embyitem)
-        # Only for direct stream
-        if playmethod in ("DirectStream") and settings('enableExternalSubs') == "true":
-            # Direct play automatically appends external
-            subtitles = self.externalSubs(playurl)
-            listitem.setSubtitles(subtitles)
-
-        self.setArtwork(listitem)
-
-    def externalSubs(self, playurl):
-
-        externalsubs = []
-        mapping = {}
-
-        itemid = self.item['Id']
+        # Stack: [(url, listitem), (url, ...), ...]
+        self.stack[0][1].setPath(self.stack[0][0])
         try:
-            mediastreams = self.item['MediaSources'][0]['MediaStreams']
-        except (TypeError, KeyError, IndexError):
-            return
+            #if not xbmc.getCondVisibility('Window.IsVisible(MyVideoNav.xml)'): # Causes infinite loop with play from here
+            if xbmc.getCondVisibility('Window.IsVisible(10000).xml'):
+                # widgets do not fill artwork correctly
+                log.info("Detected widget.")
+                raise IndexError
 
-        temp = xbmc.translatePath(
-               "special://profile/addon_data/plugin.video.emby/temp/").decode('utf-8')
+            xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, self.stack[0][1])
+            self.stack.pop(0) # remove the first item we just started.
+        except IndexError:
+            log.info("Playback activated via the context menu or widgets.")
+            force_play = True
+            self.stack[0][1].setProperty('StartOffset', str(seektime))
 
-        kodiindex = 0
-        for stream in mediastreams:
+        for stack in self.stack:
+            self.playlist.add(url=stack[0], listitem=stack[1], index=index)
+            index += 1
 
-            index = stream['Index']
-            # Since Emby returns all possible tracks together, have to pull only external subtitles.
-            # IsTextSubtitleStream if true, is available to download from emby.
-            if (stream['Type'] == "Subtitle" and 
-                    stream['IsExternal'] and stream['IsTextSubtitleStream']):
+        if force_play:
+            xbmc.Player().play(self.playlist)
 
-                # Direct stream
-                url = ("%s/Videos/%s/%s/Subtitles/%s/Stream.%s"
-                        % (self.server, itemid, itemid, index, stream['Codec']))
+    def set_playlist(self, play_url, item_id, listitem, seektime=None, db_id=None):
 
-                if "Language" in stream:
-                    
-                    filename = "Stream.%s.%s" % (stream['Language'], stream['Codec'])
-                    try:
-                        path = self._download_external_subs(url, temp, filename)
-                        externalsubs.append(path)
-                    except Exception as e:
-                        log.error(e)
-                        externalsubs.append(url)
-                else:
-                    externalsubs.append(url)
-                
-                # map external subtitles for mapping
-                mapping[kodiindex] = index
-                kodiindex += 1
-        
-        mapping = json.dumps(mapping)
-        window('emby_%s.indexMapping' % playurl, value=mapping)
+        ##### CHECK FOR INTROS
 
-        return externalsubs
+        if settings('enableCinema') == "true" and not seektime:
+            self._set_intros(item_id)
 
-    def _download_external_subs(self, src, dst, filename):
+        ##### ADD MAIN ITEM
 
-        if not xbmcvfs.exists(dst):
-            xbmcvfs.mkdir(dst)
+        self.set_properties(play_url, listitem)
+        self.set_listitem(listitem, db_id)
+        self.stack.append([play_url, listitem])
 
-        path = os.path.join(dst, filename)
+        ##### ADD ADDITIONAL PARTS
 
-        try:
-            response = requests.get(src, stream=True)
-            response.raise_for_status()
-        except Exception as e:
-            raise
-        else:
-            response.encoding = 'utf-8'
-            with open(path, 'wb') as f:
-                f.write(response.content)
-                del response
+        if self.item.get('PartCount'):
+            self._set_additional_parts(item_id)
 
-            return path
+    def _set_intros(self, item_id):
+        # if we have any play them when the movie/show is not being resumed
+        intros = self.emby.get_intros(item_id)
 
-    def setArtwork(self, listItem):
-        # Set up item and item info
-        allartwork = self.artwork.get_all_artwork(self.item, parent_info=True)
-        # Set artwork for listitem
-        arttypes = {
+        if intros['Items']:
+            enabled = True
 
-            'poster': "Primary",
-            'tvshow.poster': "Primary",
-            'clearart': "Art",
-            'tvshow.clearart': "Art",
-            'clearlogo': "Logo",
-            'tvshow.clearlogo': "Logo",
-            'discart': "Disc",
-            'fanart_image': "Backdrop",
-            'landscape': "Thumb"
-        }
-        for arttype in arttypes:
+            if settings('askCinema') == "true":
 
-            art = arttypes[arttype]
-            if art == "Backdrop":
-                try: # Backdrop is a list, grab the first backdrop
-                    self.setArtProp(listItem, arttype, allartwork[art][0])
-                except: pass
-            else:
-                self.setArtProp(listItem, arttype, allartwork[art])
+                resp = xbmcgui.Dialog().yesno("Emby for Kodi", lang(33016))
+                if not resp:
+                    # User selected to not play trailers
+                    enabled = False
+                    log.info("Skip trailers.")
 
-    def setArtProp(self, listItem, arttype, path):
-        
-        if arttype in (
-                'thumb', 'fanart_image', 'small_poster', 'tiny_poster',
-                'medium_landscape', 'medium_poster', 'small_fanartimage',
-                'medium_fanartimage', 'fanart_noindicators'):
-            
-            listItem.setProperty(arttype, path)
-        else:
-            listItem.setArt({arttype: path})
+            if enabled:
+                for intro in intros['Items']:
 
-    def setListItem(self, listItem, dbid=None):
+                    listitem = xbmcgui.ListItem()
+                    url = putils.PlayUtils(intro, listitem).get_play_url()
+                    log.info("Adding Intro: %s" % url)
+
+                    self.stack.append([url, listitem])
+
+    def _set_additional_parts(self, item_id):
+
+        parts = self.emby.get_additional_parts(item_id)
+
+        for part in parts['Items']:
+
+            listitem = xbmcgui.ListItem()
+            url = putils.PlayUtils(part, listitem).get_play_url()
+            log.info("Adding additional part: %s" % url)
+
+            # Set listitem and properties for each additional parts
+            pb = PlaybackUtils(part)
+            pb.set_properties(url, listitem)
+            pb.setArtwork(listitem)
+
+            self.stack.append([url, listitem])
+
+    def set_listitem(self, listitem, dbid=None):
 
         people = self.API.get_people()
-        studios = self.API.get_studios()
+        mediatype = self.item['Type']
 
         metadata = {
-            
             'title': self.item.get('Name', "Missing name"),
             'year': self.item.get('ProductionYear'),
             'plot': self.API.get_overview(),
@@ -360,33 +180,151 @@ class PlaybackUtils():
             'writer': people.get('Writer'),
             'mpaa': self.API.get_mpaa(),
             'genre': " / ".join(self.item['Genres']),
-            'studio': " / ".join(studios),
+            'studio': " / ".join(self.API.get_studios()),
             'aired': self.API.get_premiere_date(),
             'rating': self.item.get('CommunityRating'),
             'votes': self.item.get('VoteCount')
         }
 
-        if "Episode" in self.item['Type']:
+        if mediatype == "Episode":
             # Only for tv shows
-            # For Kodi Krypton
             metadata['mediatype'] = "episode"
-            metadata['dbid'] = dbid
+            metadata['TVShowTitle'] = self.item.get('SeriesName', "")
+            metadata['season'] = self.item.get('ParentIndexNumber', -1)
+            metadata['episode'] = self.item.get('IndexNumber', -1)
 
-            thumbId = self.item.get('SeriesId')
-            season = self.item.get('ParentIndexNumber', -1)
-            episode = self.item.get('IndexNumber', -1)
-            show = self.item.get('SeriesName', "")
-
-            metadata['TVShowTitle'] = show
-            metadata['season'] = season
-            metadata['episode'] = episode
-
-        if "Movie" in self.item['Type']:
-            # For Kodi Krypton
+        elif mediatype == "Movie":
             metadata['mediatype'] = "movie"
+
+        elif mediatype == "MusicVideo":
+            metadata['mediatype'] = "musicvideo"
+
+        elif mediatype == "Audio":
+            metadata['mediatype'] = "song"
+
+        if dbid:
             metadata['dbid'] = dbid
 
-        listItem.setProperty('IsPlayable', 'true')
-        listItem.setProperty('IsFolder', 'false')
-        listItem.setLabel(metadata['title'])
-        listItem.setInfo('video', infoLabels=metadata)
+        listitem.setProperty('IsPlayable', 'true')
+        listitem.setProperty('IsFolder', 'false')
+        listitem.setLabel(metadata['title'])
+        listitem.setInfo('Music' if mediatype == "Audio" else 'Video', infoLabels=metadata)
+
+    def set_properties(self, url, listitem):
+
+        # Set all properties necessary for plugin path playback
+
+        item_id = self.item['Id']
+        item_type = self.item['Type']
+
+        play_method = window('emby_%s.playmethod' % url)
+        window('emby_%s.playmethod' % url, clear=True)
+        window('emby_%s.json' % url, {
+
+            'url': url,
+            'runtime': str(self.item.get('RunTimeTicks')),
+            'type': item_type,
+            'id': item_id,
+            'refreshid': self.item.get('SeriesId') if item_type == "Episode" else item_id,
+            'playmethod': play_method
+        })
+
+        self.set_artwork(listitem, item_type)
+        listitem.setCast(self.API.get_actors())
+
+    def set_artwork(self, listitem, item_type):
+
+        all_artwork = self.artwork.get_all_artwork(self.item, parent_info=True)
+        # Set artwork for listitem
+        if item_type == "Episode":
+            art = {
+                'poster': "Series.Primary",
+                'tvshow.poster': "Series.Primary",
+                'clearart': "Art",
+                'tvshow.clearart': "Art",
+                'clearlogo': "Logo",
+                'tvshow.clearlogo': "Logo",
+                'discart': "Disc",
+                'fanart_image': "Backdrop",
+                'landscape': "Thumb",
+                'tvshow.landscape': "Thumb",
+                'thumb': "Primary"
+            }
+        else:
+            art = {
+                'poster': "Primary",
+                'clearart': "Art",
+                'clearlogo': "Logo",
+                'discart': "Disc",
+                'fanart_image': "Backdrop",
+                'landscape': "Thumb",
+                'thumb': "Primary"
+            }
+
+        for k_art, e_art in art.items():
+
+            if e_art == "Backdrop" and all_artwork[e_art]:
+                self._set_art(listitem, k_art, all_artwork[e_art][0])
+            else:
+                self._set_art(listitem, k_art, all_artwork.get(e_art))
+
+    def _set_art(self, listitem, art, path):
+        
+        if path:
+            if art in ('fanart_image', 'small_poster', 'tiny_poster',
+                       'medium_landscape', 'medium_poster', 'small_fanartimage',
+                       'medium_fanartimage', 'fanart_noindicators'):
+                
+                listitem.setProperty(art, path)
+            else:
+                listitem.setArt({art: path})
+
+    def play_all(self, item_ids, seektime=None, **kwargs):
+
+        self.playlist.clear()
+        started = False
+
+        for item_id in item_ids:
+
+            listitem = xbmcgui.ListItem()
+            db_id = None
+
+            item = self.emby.getItem(item_id)
+            play_url = putils.PlayUtils(item, listitem, **kwargs if item_ids.index(item_id) == 0 else {}).get_play_url()
+
+            if not play_url:
+                log.info("Failed to retrieve playurl")
+                continue
+
+            log.info("Playurl: %s", play_url)
+
+            with DatabaseConn('emby') as cursor:
+                item_db = embydb.Embydb_Functions(cursor).getItem_byId(item_id)
+                db_id = item_db[0] if item_db else None
+
+            pbutils = PlaybackUtils(item)
+            pbutils.set_playlist(play_url, item_id, listitem, seektime if item_ids.index(item_id) == 1 else None, db_id)
+
+            if item_ids.index(item_id) == 1 and seektime:
+                log.info("Seektime detected: %s", self.API.adjust_resume(seektime))
+                listitem.setProperty('StartOffset', str(self.API.adjust_resume(seektime)))
+                
+
+            index = max(pbutils.playlist.getposition(), 0) + 1 # Can return -1
+            for stack in pbutils.stack:
+                pbutils.playlist.add(url=stack[0], listitem=stack[1], index=index)
+                index += 1
+
+            if not started:
+                started = True
+
+                item = window('emby_%s.json' % play_url)
+                item['forcedaudio'] = kwargs.get('AudioStreamIndex')
+                item['forcedsubs'] = kwargs.get('SubtitleStreamIndex')
+                window('emby_%s.json' % play_url, value=item)
+
+                player = xbmc.Player()
+                player.play(pbutils.playlist)
+
+        if started:
+            return True

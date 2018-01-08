@@ -303,22 +303,8 @@ class Music(Items):
             emby_db.addReference(itemid, albumid, "MusicAlbum", "album", checksum=checksum)
 
         # Process the album info
-        if self.kodi_version in [17,18]:
-            # Kodi Krypton/Leia
-            self.kodi_db.update_album_17(artistname, year, genre, bio, thumb, rating, lastScraped,
-                                         "album", albumid)
-        elif self.kodi_version == 16:
-            # Kodi Jarvis
-            self.kodi_db.update_album(artistname, year, genre, bio, thumb, rating, lastScraped,
-                                      "album", albumid)
-        elif self.kodi_version == 15:
-            # Kodi Isengard
-            self.kodi_db.update_album_15(artistname, year, genre, bio, thumb, rating, lastScraped,
-                                         dateadded, "album", albumid)
-        else:
-            # TODO: Remove Helix code when Krypton is RC
-            self.kodi_db.update_album_14(artistname, year, genre, bio, thumb, rating, lastScraped,
-                                         dateadded, albumid)
+        self.kodi_db.update_album(artistname, year, genre, bio, thumb, rating, lastScraped,
+                                  "album", albumid)
 
         # Assign main artists to album
         for artist in item['AlbumArtists']:

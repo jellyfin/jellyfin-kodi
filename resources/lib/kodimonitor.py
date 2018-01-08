@@ -4,6 +4,7 @@
 
 import json
 import logging
+import threading
 
 import xbmc
 import xbmcgui
@@ -26,10 +27,14 @@ KODI = int(xbmc.getInfoLabel('System.BuildVersion')[:2])
 class KodiMonitor(xbmc.Monitor):
 
     retry = True
+    special_monitor = None
 
     def __init__(self):
 
         xbmc.Monitor.__init__(self)
+
+        if settings('useDirectPaths') == "0":
+            self.special_monitor = SpecialMonitor().start()
 
         self.download = downloadutils.DownloadUtils().downloadUrl
         log.info("Kodi monitor started")
@@ -59,6 +64,11 @@ class KodiMonitor(xbmc.Monitor):
         if window('emby_context') != current_context:
             log.info("New context setting: %s", current_context)
             window('emby_context', value=current_context)
+
+        current_context = "true" if settings('enableContextTranscode') == "true" else ""
+        if window('emby_context_transcode') != current_context:
+            log.info("New context transcode setting: %s", current_context)
+            window('emby_context_transcode', value=current_context)
 
     @log_error()
     def onNotification(self, sender, method, data):
@@ -142,7 +152,7 @@ class KodiMonitor(xbmc.Monitor):
                             else:
                                 window('emby_%s.playmethod' % playurl, value="DirectPlay")
                             # Set properties for player.py
-                            playback.setProperties(playurl, listitem)
+                            playback.set_properties(playurl, listitem)
 
     def _video_update(self, data):
         # Manually marking as watched/unwatched
@@ -199,3 +209,58 @@ class KodiMonitor(xbmc.Monitor):
             log.info("Could not retrieve item Id")
 
         return item_id
+
+
+class SpecialMonitor(threading.Thread):
+
+    _stop_thread = False
+    external_count = 0
+
+    def run(self):
+
+        ''' Detect the resume dialog for widgets.
+            Detect external players.
+        '''
+        monitor = xbmc.Monitor()
+
+        log.warn("----====# Starting Special Monitor #====----")
+
+        while not self._stop_thread:
+
+            player = xbmc.Player()
+            isPlaying = player.isPlaying()
+
+            if (not isPlaying and xbmc.getCondVisibility('Window.IsVisible(DialogContextMenu.xml)') and
+                not xbmc.getCondVisibility('Window.IsVisible(MyVideoNav.xml)') and
+                xbmc.getInfoLabel('Control.GetLabel(1002)') == xbmc.getLocalizedString(12021)):
+
+                control = int(xbmcgui.Window(10106).getFocusId())
+                if control == 1002: # Start from beginning
+                    log.info("Resume dialog: Start from beginning selected.")
+                    window('emby.resume', value="true")
+                else:
+                    window('emby.resume', clear=True)
+
+            elif isPlaying and not window('emby.external_check'):
+                time = player.getTime()
+
+                if time > 1:
+                    window('emby.external_check', value="true")
+                    self.external_count = 0
+                elif self.external_count == 15:
+                    log.info("External player detected.")
+                    window('emby.external', value="true")
+                    window('emby.external_check', value="true")
+                    self.external_count = 0
+                elif time == 0:
+                    self.external_count += 1
+
+
+            if monitor.waitForAbort(0.5):
+                # Abort was requested while waiting. We should exit
+                break
+
+        log.warn("#====---- Special Monitor Stopped ----====#")
+
+    def stop_monitor(self):
+        self._stop_thread = True

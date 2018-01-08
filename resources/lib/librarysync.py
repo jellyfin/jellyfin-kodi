@@ -241,7 +241,7 @@ class LibrarySync(threading.Thread):
 
         # use emby and video DBs
         with database.DatabaseConn('emby') as cursor_emby:
-            with database.DatabaseConn('video') as cursor_video:    
+            with database.DatabaseConn('video') as cursor_video:
                 # content sync: movies, tvshows, musicvideos, music
 
                 if manualrun:

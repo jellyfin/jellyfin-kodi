@@ -57,7 +57,6 @@ class ContextMenu(xbmcgui.WindowXMLDialog):
         for option in self._options:
             self.list_.addItem(self._add_listitem(option))
 
-        self.background = self._add_editcontrol(730, height, 30, 450)
         self.setFocus(self.list_)
 
     def onAction(self, action):

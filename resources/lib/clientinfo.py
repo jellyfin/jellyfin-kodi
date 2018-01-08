@@ -78,22 +78,7 @@ class ClientInfo(object):
 
         emby_guid = xbmc.translatePath("special://temp/emby_guid").decode('utf-8')
 
-        ###$ Begin migration $###
-        if not xbmcvfs.exists(emby_guid):
-            addon_path = self.addon.getAddonInfo('path').decode('utf-8')
-            if os.path.supports_unicode_filenames:
-                path = os.path.join(addon_path, "machine_guid")
-            else:
-                path = os.path.join(addon_path.encode('utf-8'), "machine_guid")
-
-            guid_file = xbmc.translatePath(path).decode('utf-8')
-            if xbmcvfs.exists(guid_file):
-                xbmcvfs.copy(guid_file, emby_guid)
-                log.info("guid migration completed")
-        ###$ End migration $###
-
         if reset and xbmcvfs.exists(emby_guid):
-            # Reset the file
             xbmcvfs.delete(emby_guid)
 
         guid = xbmcvfs.File(emby_guid)

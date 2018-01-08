@@ -110,7 +110,7 @@ class DownloadUtils(object):
                 "SetAudioStreamIndex,SetSubtitleStreamIndex,"
                 "SetRepeatMode,"
                 "Mute,Unmute,SetVolume,"
-                "Play,Playstate,PlayNext"
+                "Play,Playstate,PlayNext,PlayMediaSource"
             )
         }
 

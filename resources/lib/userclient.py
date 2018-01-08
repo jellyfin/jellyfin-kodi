@@ -313,7 +313,7 @@ class UserClient(threading.Thread):
                     log.info("Username found: %s", username)
                     self._auth = True
 
-            if monitor.waitForAbort(1):
+            if monitor.waitForAbort(2):
                 # Abort was requested while waiting. We should exit
                 break
 

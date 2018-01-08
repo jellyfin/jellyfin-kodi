@@ -250,28 +250,18 @@ class Movies(Items):
         if update_item:
             log.info("UPDATE movie itemid: %s - Title: %s", itemid, title)
 
-            # update new ratings Kodi 17
-            if self.kodi_version >= 17:
-                ratingid =  self.kodi_db.get_ratingid(movieid)
+            # update ratings
+            ratingid =  self.kodi_db.get_ratingid(movieid)
+            self.kodi_db.update_ratings(movieid, "movie", "default", rating, votecount, ratingid)
 
-                self.kodi_db.update_ratings(movieid, "movie", "default", rating, votecount, ratingid)
-
-            # update new uniqueid Kodi 17
-            if self.kodi_version >= 17:
-                uniqueid =  self.kodi_db.get_uniqueid(movieid)
-
-                self.kodi_db.update_uniqueid(movieid, "movie", imdb, "imdb", uniqueid)
+            # update uniqueid
+            uniqueid =  self.kodi_db.get_uniqueid(movieid)
+            self.kodi_db.update_uniqueid(movieid, "movie", imdb, "imdb", uniqueid)
 
             # Update the movie entry
-            if self.kodi_version >= 17:
-                self.kodi_db.update_movie_17(title, plot, shortplot, tagline, votecount, uniqueid,
-                                             writer, year, uniqueid, sorttitle, runtime, mpaa, genre,
-                                             director, title, studio, trailer, country, year,
-                                             movieid)
-            else:
-                self.kodi_db.update_movie(title, plot, shortplot, tagline, votecount, rating,
-                                          writer, year, imdb, sorttitle, runtime, mpaa, genre,
-                                          director, title, studio, trailer, country, movieid)
+            self.kodi_db.update_movie(title, plot, shortplot, tagline, votecount, uniqueid,
+                                      writer, year, uniqueid, sorttitle, runtime, mpaa, genre,
+                                      director, title, studio, trailer, country, year, movieid)
 
             # Update the checksum in emby table
             emby_db.updateReference(itemid, checksum)
@@ -280,17 +270,13 @@ class Movies(Items):
         else:
             log.info("ADD movie itemid: %s - Title: %s", itemid, title)
 
-            # add new ratings Kodi 17
-            if self.kodi_version >= 17:
-                ratingid =  self.kodi_db.create_entry_rating()
+            # Add ratings
+            ratingid =  self.kodi_db.create_entry_rating()
+            self.kodi_db.add_ratings(ratingid, movieid, "movie", "default", rating, votecount)
 
-                self.kodi_db.add_ratings(ratingid, movieid, "movie", "default", rating, votecount)
-
-            # add new uniqueid Kodi 17
-            if self.kodi_version >= 17:
-                uniqueid =  self.kodi_db.create_entry_uniqueid()
-
-                self.kodi_db.add_uniqueid(uniqueid, movieid, "movie", imdb, "imdb")
+            # Add uniqueid
+            uniqueid =  self.kodi_db.create_entry_uniqueid()
+            self.kodi_db.add_uniqueid(uniqueid, movieid, "movie", imdb, "imdb")
 
             # Add path
             pathid = self.kodi_db.add_path(path)
@@ -298,16 +284,10 @@ class Movies(Items):
             fileid = self.kodi_db.add_file(filename, pathid)
 
             # Create the movie entry
-            if self.kodi_version >= 17:
-                self.kodi_db.add_movie_17(movieid, fileid, title, plot, shortplot, tagline,
-                                          votecount, uniqueid, writer, year, uniqueid, sorttitle,
-                                          runtime, mpaa, genre, director, title, studio, trailer,
-                                          country, year)
-            else:
-                self.kodi_db.add_movie(movieid, fileid, title, plot, shortplot, tagline,
-                                       votecount, rating, writer, year, imdb, sorttitle,
-                                       runtime, mpaa, genre, director, title, studio, trailer,
-                                       country)
+            self.kodi_db.add_movie(movieid, fileid, title, plot, shortplot, tagline,
+                                   votecount, uniqueid, writer, year, uniqueid, sorttitle,
+                                   runtime, mpaa, genre, director, title, studio, trailer,
+                                   country, year)
 
             # Create the reference in emby table
             emby_db.addReference(itemid, movieid, "Movie", "movie", fileid, pathid, None,

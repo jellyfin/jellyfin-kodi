@@ -30,11 +30,14 @@ import playbackutils as pbutils
 import playutils
 import api
 from views import Playlist, VideoNodes
-from utils import window, settings, dialog, language as lang, plugin_path
+from utils import window, settings, dialog, language as lang, urllib_path
 
 #################################################################################################
 
 log = logging.getLogger("EMBY."+__name__)
+
+addon = xbmcaddon.Addon(id='plugin.video.emby')
+XML_PATH = (addon.getAddonInfo('path'), "default", "1080i")
 
 #################################################################################################
 
@@ -107,6 +110,12 @@ def doMainListing():
             log.info(window('emby_server%s.name' % server))
             addDirectoryItem(window('emby_server%s.name' % server), "plugin://plugin.video.emby/?mode=%s" % server)'''
 
+    addDirectoryItem("Manual login dialog", "plugin://plugin.video.emby/?mode=manuallogin")
+    addDirectoryItem("Connect login dialog", "plugin://plugin.video.emby/?mode=connectlogin")
+    addDirectoryItem("Manual server dialog", "plugin://plugin.video.emby/?mode=manualserver")
+    addDirectoryItem("Connect servers dialog", "plugin://plugin.video.emby/?mode=connectservers")
+    addDirectoryItem("Connect users dialog", "plugin://plugin.video.emby/?mode=connectusers")
+
     addDirectoryItem(lang(30517), "plugin://plugin.video.emby/?mode=passwords")
     addDirectoryItem(lang(33053), "plugin://plugin.video.emby/?mode=settings")
     addDirectoryItem(lang(33054), "plugin://plugin.video.emby/?mode=adduser")
@@ -122,6 +131,140 @@ def doMainListing():
         addDirectoryItem(lang(33092), "plugin://plugin.video.emby/?mode=backup")
     
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+def test_manual_login():
+    from dialogs import LoginManual
+    dialog = LoginManual("script-emby-connect-login-manual.xml", *XML_PATH)
+    dialog.set_server("Test server")
+    dialog.set_user("Test user")
+    dialog.doModal()
+
+def test_connect_login():
+    from dialogs import LoginConnect
+    dialog = LoginConnect("script-emby-connect-login.xml", *XML_PATH)
+    dialog.doModal()
+
+def test_manual_server():
+    from dialogs import ServerManual
+    dialog = ServerManual("script-emby-connect-server-manual.xml", *XML_PATH)
+    dialog.doModal()
+
+def test_connect_servers():
+    from dialogs import ServerConnect
+    dialog = ServerConnect("script-emby-connect-server.xml", *XML_PATH)
+    test_servers = [
+      {
+        u'LastConnectionMode': 2,
+        u'Name': u'Server Name',
+        u'AccessToken': u'Token',
+        u'RemoteAddress': u'http://remote.address:8096',
+        u'UserId': u'd4000909883845059aadef13b7110375',
+        u'ManualAddress': u'http://manual.address:8096',
+        u'DateLastAccessed': '2018-01-01T02:36:58Z',
+        u'LocalAddress': u'http://local.address:8096',
+        u'Id': u'b1ef1940b1964e2188f00b73611d53fd',
+        u'Users': [
+          {
+            u'IsSignedInOffline': True,
+            u'Id': u'd4000909883845059aadef13b7110375'
+          }
+        ]
+      }
+    ]
+    kwargs = {
+        'username': "Test user",
+        'user_image': None,
+        'servers': test_servers,
+        'emby_connect': True
+    }
+    dialog.set_args(**kwargs)
+    dialog.doModal()
+
+def test_connect_users():
+    from dialogs import UsersConnect
+    test_users = [{
+            u'Name': u'Guest',
+            u'HasConfiguredEasyPassword': False,
+            u'LastActivityDate': u'2018-01-01T04:10:15.4195197Z',
+            u'HasPassword': False,
+            u'LastLoginDate': u'2017-12-28T02:53:01.5770625Z',
+            u'Policy': {
+              u'EnabledDevices': [
+                
+              ],
+              u'EnableMediaPlayback': True,
+              u'EnableRemoteControlOfOtherUsers': False,
+              u'RemoteClientBitrateLimit': 0,
+              u'BlockUnratedItems': [
+                
+              ],
+              u'EnableAllDevices': True,
+              u'InvalidLoginAttemptCount': 0,
+              u'EnableUserPreferenceAccess': True,
+              u'EnableLiveTvManagement': False,
+              u'EnableLiveTvAccess': False,
+              u'IsAdministrator': False,
+              u'EnableContentDeletion': False,
+              u'EnabledChannels': [
+                
+              ],
+              u'IsDisabled': False,
+              u'EnableSyncTranscoding': False,
+              u'EnableAudioPlaybackTranscoding': True,
+              u'EnableSharedDeviceControl': False,
+              u'AccessSchedules': [
+                
+              ],
+              u'IsHidden': False,
+              u'EnableContentDeletionFromFolders': [
+                
+              ],
+              u'EnableContentDownloading': False,
+              u'EnableVideoPlaybackTranscoding': True,
+              u'EnabledFolders': [
+                u'0c41907140d802bb58430fed7e2cd79e',
+                u'a329cda1727467c08a8f1493195d32d3',
+                u'f137a2dd21bbc1b99aa5c0f6bf02a805',
+                u'4514ec850e5ad0c47b58444e17b6346c'
+              ],
+              u'EnableAllChannels': False,
+              u'BlockedTags': [
+                
+              ],
+              u'EnableAllFolders': False,
+              u'EnablePublicSharing': False,
+              u'EnablePlaybackRemuxing': True
+            },
+            u'ServerId': u'Test',
+            u'Configuration': {
+              u'SubtitleMode': u'Default',
+              u'HidePlayedInLatest': True,
+              u'GroupedFolders': [
+                
+              ],
+              u'DisplayCollectionsView': False,
+              u'OrderedViews': [
+                
+              ],
+              u'SubtitleLanguagePreference': u'',
+              u'AudioLanguagePreference': u'',
+              u'LatestItemsExcludes': [
+                
+              ],
+              u'EnableLocalPassword': False,
+              u'RememberAudioSelections': True,
+              u'RememberSubtitleSelections': True,
+              u'DisplayMissingEpisodes': False,
+              u'PlayDefaultAudioTrack': True,
+              u'EnableNextEpisodeAutoPlay': True
+            },
+            u'Id': u'a9d56d37cb6b47a3bfd3453c55138ff1',
+            u'HasConfiguredPassword': False
+          }]
+    dialog = UsersConnect("script-emby-connect-users.xml", *XML_PATH)
+    dialog.set_server("Test server")
+    dialog.set_users(test_users)
+    dialog.doModal()
 
 def emby_connect():
 
@@ -657,7 +800,7 @@ def BrowseContent(viewname, browse_type="", folderid=""):
                         'type': browse_type,
                         'folderid': item['Id']
                     }
-                    path = plugin_path("plugin://plugin.video.emby/", params)
+                    path = urllib_path("plugin://plugin.video.emby/", params)
                     xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=path, listitem=li, isFolder=True)
                 else: #playable item, set plugin path and mediastreams
                     xbmcplugin.setContent(int(sys.argv[1]), 'episodes' if folderid else 'files')

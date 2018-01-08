@@ -5,7 +5,7 @@
     <string id="29999">Emby for Kodi</string>
     <string id="30000">Server address</string>
     <string id="30001">Server name</string>
-    <string id="30002">Play from HTTP instead of SMB</string>
+    <string id="30002">Enable HTTP playback</string>
     <string id="30004">Log level</string>
     <string id="30016">Device Name</string>
     <string id="30022">Advanced</string>
@@ -175,7 +175,8 @@
     <string id="30312">Channels</string>  
     
     <!-- contextmenu -->
-    <string id="30401">Emby options</string>
+    <string id="30401">Emby Options</string>
+    <string id="30402">Emby Force transcode</string>
     <string id="30405">Add to Emby favorites</string>
     <string id="30406">Remove from Emby favorites</string>
     <string id="30407">Set custom song rating</string>
@@ -206,7 +207,7 @@
     <string id="30517">Network credentials</string>
     <string id="30518">Enable Emby cinema mode</string>
     <string id="30519">Ask to play trailers</string>
-    <string id="30520">Skip Emby delete confirmation for the context menu (use at your own risk)</string>
+    <string id="30520">Skip Emby delete confirmation (use at your own risk)</string>
     <string id="30521">Jump back on resume (in seconds)</string>
     <string id="30522">Force transcode H265</string>
     <string id="30523">Music metadata options (not compatible with direct stream)</string>

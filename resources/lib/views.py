@@ -14,7 +14,7 @@ import xbmcvfs
 
 import read_embyserver as embyserver
 import embydb_functions as embydb
-from utils import window, language as lang, indent as xml_indent, plugin_path
+from utils import window, language as lang, indent as xml_indent, urllib_path
 
 #################################################################################################
 
@@ -641,7 +641,7 @@ class VideoNodes(object):
                     'mode': "browsecontent",
                     'type': mediatype
                 }
-                path = plugin_path("plugin://plugin.video.emby/", params)
+                path = urllib_path("plugin://plugin.video.emby/", params)
 
             elif (mediatype == "homevideos" or mediatype == "photos"):
                 params = {
@@ -651,7 +651,7 @@ class VideoNodes(object):
                     'type': mediatype,
                     'folderid': nodetype
                 }
-                path = plugin_path("plugin://plugin.video.emby/", params)
+                path = urllib_path("plugin://plugin.video.emby/", params)
 
             elif nodetype == "nextepisodes":
                 params = {
@@ -660,7 +660,7 @@ class VideoNodes(object):
                     'mode': "nextup",
                     'limit': 25
                 }
-                path = plugin_path("plugin://plugin.video.emby/", params)
+                path = urllib_path("plugin://plugin.video.emby/", params)
 
             elif KODI == 14 and nodetype == "recentepisodes":
                 params = {
@@ -669,7 +669,7 @@ class VideoNodes(object):
                     'mode': "recentepisodes",
                     'limit': 25
                 }
-                path = plugin_path("plugin://plugin.video.emby/", params)
+                path = urllib_path("plugin://plugin.video.emby/", params)
 
             elif KODI == 14 and nodetype == "inprogressepisodes":
                 params = {
@@ -678,7 +678,7 @@ class VideoNodes(object):
                     'mode': "inprogressepisodes",
                     'limit': 25
                 }
-                path = plugin_path("plugin://plugin.video.emby/", params)
+                path = urllib_path("plugin://plugin.video.emby/", params)
             else:
                 path = "library://video/emby/%s/%s.xml" % (viewid, nodetype)
             

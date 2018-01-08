@@ -14,6 +14,7 @@ import downloadutils
 import librarysync
 import playlist
 import userclient
+import playbackutils
 from utils import window, settings, dialog, language as lang, JSONRPC
 from ga_client import log_error
 
@@ -112,19 +113,31 @@ class WebSocketClient(threading.Thread):
     @classmethod
     def _play(cls, data):
 
+        ''' {"Id":"e2c106a953bfc0d9c191a49cda6561de",
+             "ItemIds":["52f0c57e2133e1c11d36c59edcd835fc"],
+             "PlayCommand":"PlayNow","ControllingUserId":"d40000000000000000000000000000000",
+             "SubtitleStreamIndex":3,"AudioStreamIndex":1,
+             "MediaSourceId":"ba83c549ac5c0e4180ae33ebdf813c51"}}
+        '''
+
         item_ids = data['ItemIds']
+        kwargs = {
+
+            'SubtitleStreamIndex': data.get('SubtitleStreamIndex'),
+            'AudioStreamIndex': data.get('AudioStreamIndex'),
+            'MediaSourceId': data.get('MediaSourceId')
+        }
         command = data['PlayCommand']
 
         playlist_ = playlist.Playlist()
 
         if command == 'PlayNow':
-            startat = data.get('StartPositionTicks', 0)
-            playlist_.play_all(item_ids, startat)
-            dialog(type_="notification",
-                   heading="{emby}",
-                   message="%s %s" % (len(item_ids), lang(33004)),
-                   icon="{emby}",
-                   sound=False)
+            if playbackutils.PlaybackUtils(None, item_ids[0]).play_all(item_ids, data.get('StartPositionTicks', 0), **kwargs):
+                dialog(type_="notification",
+                       heading="{emby}",
+                       message="%s %s" % (len(item_ids), lang(33004)),
+                       icon="{emby}",
+                       sound=False)
 
         elif command == 'PlayNext':
             new_playlist = playlist_.modify_playlist(item_ids)
@@ -214,7 +227,7 @@ class WebSocketClient(threading.Thread):
             elif command == 'SetSubtitleStreamIndex':
                 emby_index = int(arguments['Index'])
                 current_file = player.getPlayingFile()
-                mapping = window('emby_%s.indexMapping' % current_file)
+                mapping = window('emby_%s.indexMapping.json' % current_file)
 
                 if emby_index == -1:
                     player.showSubtitles(False)

@@ -151,7 +151,7 @@ class Read_EmbyServer():
                         "Metascore,AirTime,DateCreated,MediaStreams,People,Overview,"
                         "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
                         "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers,"
-                        "MediaSources,VoteCount"
+                        "MediaSources,VoteCount,ItemCounts"
                 )
             }
             queue.put({'url': url, 'params': params})
@@ -182,7 +182,7 @@ class Read_EmbyServer():
                 "CommunityRating,OfficialRating,CumulativeRunTimeTicks,"
                 "Metascore,AirTime,DateCreated,MediaStreams,People,Overview,"
                 "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
-                "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers"
+                "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers,ItemCounts"
             )
         }
         return self.doUtils.downloadUrl("{server}/emby/Users/{UserId}/Items?format=json", parameters=params)
@@ -198,7 +198,7 @@ class Read_EmbyServer():
                 "CommunityRating,OfficialRating,CumulativeRunTimeTicks,"
                 "Metascore,AirTime,DateCreated,MediaStreams,People,Overview,"
                 "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
-                "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers"
+                "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers,ItemCounts"
             )
         }
         url = "{server}/emby/LiveTv/Channels/?userid={UserId}&format=json"
@@ -219,7 +219,7 @@ class Read_EmbyServer():
                 "CommunityRating,OfficialRating,CumulativeRunTimeTicks,"
                 "Metascore,AirTime,DateCreated,MediaStreams,People,Overview,"
                 "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
-                "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers"
+                "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers,ItemCounts"
             )
         }
         url = "{server}/emby/LiveTv/Recordings/?userid={UserId}&format=json"
@@ -285,7 +285,7 @@ class Read_EmbyServer():
                         "Metascore,AirTime,DateCreated,MediaStreams,People,Overview,"
                         "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
                         "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers,"
-                        "MediaSources,VoteCount"
+                        "MediaSources,VoteCount,ItemCounts"
                     )
                 queue.put({'url': url, 'params': params})
                 if not self._add_worker_thread(queue, items['Items']):
@@ -472,7 +472,7 @@ class Read_EmbyServer():
 
                         "Etag,Genres,SortName,Studios,Writer,ProductionYear,"
                         "CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,"
-                        "AirTime,DateCreated,MediaStreams,People,ProviderIds,Overview"
+                        "AirTime,DateCreated,MediaStreams,People,ProviderIds,Overview,ItemCounts"
                     )
                 }
                 queue.put({'url': url, 'params': params})
@@ -614,7 +614,7 @@ class Read_EmbyServer():
                 "Metascore,AirTime,DateCreated,MediaStreams,People,Overview,"
                 "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
                 "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers,"
-                "MediaSources,VoteCount"
+                "MediaSources,VoteCount,ItemCounts"
             )
         })
         return params
@@ -649,6 +649,39 @@ class Read_EmbyServer():
                 return library['LibraryOptions']
 
     def get_server_transcoding_settings(self):
+        return self.doUtils.downloadUrl(self.get_emby_url('System/Configuration/encoding'))
 
-        url = self.get_emby_url('/System/Configuration/encoding')
-        return self.doUtils.downloadUrl(url)
+    def get_intros(self, item_id):
+        return self.doUtils.downloadUrl(self.get_emby_url('Users/{UserId}/Items/%s/Intros' % item_id))
+
+    def get_additional_parts(self, item_id):
+        return self.doUtils.downloadUrl(self.get_emby_url('Videos/%s/AdditionalParts' % item_id))
+
+    def get_playback_info(self, item_id, profile, offset=0, audio=None, subtitles=None):
+
+        url = self.get_emby_url('Items/%s/PlaybackInfo' % item_id)
+        return self.doUtils.downloadUrl(url, action_type="POST", postBody={ 
+
+            'UserId': self.userId,
+            'DeviceProfile': profile,
+            'StartTimeTicks': offset, #TODO
+            'AudioStreamIndex': audio, #TODO
+            'SubtitleStreamIndex': subtitles, #TODO
+            'MediaSourceId': None, 
+            'LiveStreamId': None 
+        })
+
+    def get_live_stream(self, item_id, profile, session_id, token, offset=0, audio=None, subtitles=None):
+
+        url = self.get_emby_url('/LiveStreams/Open')
+        return self.doUtils.downloadUrl(url, action_type="POST", postBody={
+
+            'UserId': self.userId,
+            'DeviceProfile': profile,
+            'ItemId': item_id,
+            'PlaySessionId': session_id,
+            'OpenToken': token,
+            'StartTimeTicks': offset, #TODO
+            'AudioStreamIndex': audio, #TODO
+            'SubtitleStreamIndex': subtitles #TODO
+        })

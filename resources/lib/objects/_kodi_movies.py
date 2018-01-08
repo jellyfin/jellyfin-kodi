@@ -63,18 +63,6 @@ class KodiMovies(KodiItems):
         return kodi_id
 
     def add_movie(self, *args):
-        query = (
-            '''
-            INSERT INTO movie(
-                idMovie, idFile, c00, c01, c02, c03, c04, c05, c06, c07,
-                c09, c10, c11, c12, c14, c15, c16, c18, c19, c21)
-
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            '''
-        )
-        self.cursor.execute(query, (args))
-
-    def add_movie_17(self, *args):
         # Create the movie entry
         query = (
             '''
@@ -88,17 +76,6 @@ class KodiMovies(KodiItems):
         self.cursor.execute(query, (args))
 
     def update_movie(self, *args):
-        query = ' '.join((
-
-            "UPDATE movie",
-            "SET c00 = ?, c01 = ?, c02 = ?, c03 = ?, c04 = ?, c05 = ?, c06 = ?,",
-                "c07 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?,",
-                "c16 = ?, c18 = ?, c19 = ?, c21 = ?",
-            "WHERE idMovie = ?"
-        ))
-        self.cursor.execute(query, (args))
-
-    def update_movie_17(self, *args):
         query = ' '.join((
 
             "UPDATE movie",
@@ -177,48 +154,16 @@ class KodiMovies(KodiItems):
 
     def add_countries(self, kodi_id, countries):
 
-        if self.kodi_version > 14:
+        for country in countries:
+            country_id = self._get_country(country)
 
-            for country in countries:
-                country_id = self._get_country(country)
-
-                query = (
-                    '''
-                    INSERT OR REPLACE INTO country_link(country_id, media_id, media_type)
-                    VALUES (?, ?, ?)
-                    '''
-                )
-                self.cursor.execute(query, (country_id, kodi_id, "movie"))
-        else:
-            # TODO: Remove Helix code when Krypton is RC
-            for country in countries:
-                query = ' '.join((
-
-                    "SELECT idCountry",
-                    "FROM country",
-                    "WHERE strCountry = ?",
-                    "COLLATE NOCASE"
-                ))
-                self.cursor.execute(query, (country,))
-
-                try:
-                    country_id = self.cursor.fetchone()[0]
-                except TypeError:
-                    # Create a new entry
-                    self.cursor.execute("select coalesce(max(idCountry),0) from country")
-                    country_id = self.cursor.fetchone()[0] + 1
-
-                    query = "INSERT INTO country(idCountry, strCountry) values(?, ?)"
-                    self.cursor.execute(query, (country_id, country))
-                    log.debug("Add country to media, processing: %s", country)
-
-                query = (
-                    '''
-                    INSERT OR REPLACE INTO countrylinkmovie(idCountry, idMovie)
-                    VALUES (?, ?)
-                    '''
-                )
-                self.cursor.execute(query, (country_id, kodi_id))
+            query = (
+                '''
+                INSERT OR REPLACE INTO country_link(country_id, media_id, media_type)
+                VALUES (?, ?, ?)
+                '''
+            )
+            self.cursor.execute(query, (country_id, kodi_id, "movie"))
 
     def _add_country(self, country):
 

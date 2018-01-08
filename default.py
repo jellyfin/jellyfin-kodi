@@ -102,7 +102,13 @@ class Main(object):
             'deviceid': entrypoint.resetDeviceId,
             'delete': entrypoint.deleteItem,
             'connect': entrypoint.emby_connect,
-            'backup': entrypoint.emby_backup
+            'backup': entrypoint.emby_backup,
+
+            'manuallogin': entrypoint.test_manual_login,
+            'connectlogin': entrypoint.test_connect_login,
+            'manualserver': entrypoint.test_manual_server,
+            'connectservers': entrypoint.test_connect_servers,
+            'connectusers': entrypoint.test_connect_users
         }
         if mode in modes:
             # Simple functions
