@@ -32,9 +32,7 @@ class KodiMonitor(xbmc.Monitor):
     def __init__(self):
 
         xbmc.Monitor.__init__(self)
-
-        if settings('useDirectPaths') == "0":
-            self.special_monitor = SpecialMonitor().start()
+        self.special_monitor = SpecialMonitor().start()
 
         self.download = downloadutils.DownloadUtils().downloadUrl
         log.info("Kodi monitor started")
@@ -221,8 +219,8 @@ class SpecialMonitor(threading.Thread):
         ''' Detect the resume dialog for widgets.
             Detect external players.
         '''
-        monitor = xbmc.Monitor()
 
+        monitor = xbmc.Monitor()
         log.warn("----====# Starting Special Monitor #====----")
 
         while not self._stop_thread:
