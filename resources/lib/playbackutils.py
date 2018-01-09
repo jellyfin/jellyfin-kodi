@@ -88,8 +88,7 @@ class PlaybackUtils(object):
         # Stack: [(url, listitem), (url, ...), ...]
         self.stack[0][1].setPath(self.stack[0][0])
         try:
-            #if not xbmc.getCondVisibility('Window.IsVisible(MyVideoNav.xml)'): # Causes infinite loop with play from here
-            if xbmc.getCondVisibility('Window.IsVisible(10000).xml'):
+            if not xbmc.getCondVisibility('Window.IsVisible(MyVideoNav.xml)') and not xbmc.getCondVisibility('Window.IsVisible(VideoFullScreen.xml)'):
                 # widgets do not fill artwork correctly
                 log.info("Detected widget.")
                 raise IndexError
