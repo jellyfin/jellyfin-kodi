@@ -497,6 +497,7 @@ class Player(xbmc.Player):
                     playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
 
                 if playlist.getposition < 0:
+                    log.info("Clear playlist, end detected.")
                     playlist.clear()
 
                 # Stop transcoding
