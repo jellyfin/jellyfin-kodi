@@ -85,14 +85,6 @@ class PlaybackUtils(object):
         index = max(self.playlist.getposition(), 0) + 1 # Can return -1
         force_play = False
 
-        ##### Track end of playlist
-        playlist_verify = playlist.Playlist().verify_playlist()
-        try:
-            if playlist_verify['result']['limits']['end'] >= index:
-                window('emby.playlist_end', value="true")
-        except Exception:
-            pass
-
         # Stack: [(url, listitem), (url, ...), ...]
         self.stack[0][1].setPath(self.stack[0][0])
         try:

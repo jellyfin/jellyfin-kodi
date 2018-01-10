@@ -425,7 +425,7 @@ class Player(xbmc.Player):
     def stopAll(self):
 
         if not self.played_info:
-            return 
+            return
             
         log.info("Played_information: %s" % self.played_info)
         # Process each items
@@ -444,14 +444,6 @@ class Player(xbmc.Player):
                 currentFile = data['currentfile']
                 media_type = data['Type']
                 playMethod = data['playmethod']
-
-                if window('emby.playlist_end', value="true"):
-                    window('emby.playlist_end', clear=True)
-
-                    if media_type == "Audio":
-                        xbmc.PlayList(xbmc.PLAYLIST_MUSIC).clear()
-                    else:
-                        xbmc.PlayList(xbmc.PLAYLIST_VIDEO).clear()
 
                 # Prevent manually mark as watched in Kodi monitor
                 window('emby_skipWatched%s' % itemid, value="true")
@@ -497,6 +489,15 @@ class Player(xbmc.Player):
                             log.info("User skipped deletion.")
 
                 window('emby.external_check', clear=True)
+
+                ##### Track end of playlist
+                if media_type == "Audio":
+                    playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC)
+                else:
+                    playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
+
+                if playlist.getposition < 0:
+                    playlist.clear()
 
                 # Stop transcoding
                 if playMethod == "Transcode":
