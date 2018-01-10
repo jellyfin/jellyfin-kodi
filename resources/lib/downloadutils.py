@@ -54,9 +54,7 @@ class DownloadUtils(object):
         log.debug("Set info for server %s: %s", self.session['ServerId'], self.session)
 
     def get_token(self):
-        user = self._get_session_info()
-        token = user['Token']
-        return token
+        return self._get_session_info()['Token']
 
     def add_server(self, server, ssl):
         # Reserved for userclient only

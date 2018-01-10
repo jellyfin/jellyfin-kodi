@@ -548,6 +548,7 @@ def getThemeMedia():
 
     doUtils = downloadutils.DownloadUtils()
     dialog = xbmcgui.Dialog()
+    dummy_listitem = xbmcgui.ListItem()
     playback = None
 
     # Choose playback method
@@ -613,11 +614,11 @@ def getThemeMedia():
         pathstowrite = ""
         # May be more than one theme
         for theme in result['Items']:
-            putils = playutils.PlayUtils(theme)
+            putils = playutils.PlayUtils(theme, dummy_listitem)
             if playback == "DirectPlay":
-                playurl = putils.directPlay()
+                playurl = api.API(theme).get_file_path()
             else:
-                playurl = putils.directStream()
+                playurl = putils.get_direct_url(theme['MediaSources'][0])
             pathstowrite += ('<file>%s</file>' % playurl.encode('utf-8'))
         
         # Check if the item has theme songs and add them   
@@ -629,7 +630,7 @@ def getThemeMedia():
             if playback == "DirectPlay":
                 playurl = api.API(theme).get_file_path()
             else:
-                playurl = playutils.PlayUtils(theme).directStream()
+                playurl = playutils.PlayUtils(theme, dummy_listitem).get_direct_url(theme['MediaSources'][0])
             pathstowrite += ('<file>%s</file>' % playurl.encode('utf-8'))
 
         nfo_file.write(
@@ -676,7 +677,7 @@ def getThemeMedia():
             if playback == "DirectPlay":
                 playurl = api.API(theme).get_file_path()
             else:
-                playurl = playutils.PlayUtils(theme).directStream()
+                playurl = playutils.PlayUtils(theme, dummy_listitem).get_direct_url(theme['MediaSources'][0])
             pathstowrite += ('<file>%s</file>' % playurl.encode('utf-8'))
 
         nfo_file.write(
