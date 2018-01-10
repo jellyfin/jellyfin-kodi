@@ -208,6 +208,9 @@ class PlayUtils():
                     break
 
         play_url = self.get_transcode_url(source) if transcode else self.get_direct_url(source)
+
+        user_token = downloadutils.DownloadUtils().get_token()
+        play_url += "&api_key=" + user_token
         
         return play_url
 
@@ -223,9 +226,6 @@ class PlayUtils():
         # Append external subtitles
         if settings('enableExternalSubs') == "true":
             self.set_external_subs(source, play_url)
-
-        user_token = downloadutils.DownloadUtils().get_token()
-        play_url += "&api_key=" + user_token
 
         return play_url
 
@@ -251,9 +251,6 @@ class PlayUtils():
         play_url += "&maxWidth=%s&maxHeight=%s" % (self.get_resolution())
         # Select audio and subtitles
         play_url += self.get_audio_subs(source)
-
-        user_token = downloadutils.DownloadUtils().get_token()
-        play_url += "&api_key=" + user_token
 
         return play_url
 
