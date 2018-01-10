@@ -413,14 +413,6 @@ class Player(xbmc.Player):
         # Will be called when user stops xbmc playing a file
         log.debug("ONPLAYBACK_STOPPED")
         window('emby_customPlaylist.seektime', clear=True)
-
-        if self.currentFile in self.played_info:
-            log.info("Clear playlist.")
-            if self.played_info[self.currentFile]['Type'] == "Audio":
-                xbmc.PlayList(xbmc.PLAYLIST_MUSIC).clear()
-            else:
-                xbmc.PlayList(xbmc.PLAYLIST_VIDEO).clear()
-
         self.stopAll()
 
     @log_error()
@@ -452,6 +444,14 @@ class Player(xbmc.Player):
                 currentFile = data['currentfile']
                 media_type = data['Type']
                 playMethod = data['playmethod']
+
+                if window('emby.playlist_end', value="true"):
+                    window('emby.playlist_end', clear=True)
+
+                    if media_type == "Audio":
+                        xbmc.PlayList(xbmc.PLAYLIST_MUSIC).clear()
+                    else:
+                        xbmc.PlayList(xbmc.PLAYLIST_VIDEO).clear()
 
                 # Prevent manually mark as watched in Kodi monitor
                 window('emby_skipWatched%s' % itemid, value="true")

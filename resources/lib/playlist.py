@@ -144,8 +144,12 @@ class Playlist(object):
         log.debug(JSONRPC('Playlist.Insert').execute(params))
 
     @classmethod
-    def verify_playlist(cls):
-        log.info(JSONRPC('Playlist.GetItems').execute({'playlistid': 1}))
+    def verify_playlist(cls, playlist_id=1):
+
+        result = JSONRPC('Playlist.GetItems').execute({'playlistid': playlist_id})
+        log.info(result)
+
+        return result
 
     @classmethod
     def remove_from_playlist(cls, position):
