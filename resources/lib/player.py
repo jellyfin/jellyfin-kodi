@@ -496,7 +496,11 @@ class Player(xbmc.Player):
                 else:
                     playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
 
-                if playlist.getposition < 0:
+                if int(playlist.getposition()) < 0:
+                    ''' If playback is stopped within the first 30 seconds,
+                        Kodi doesn't consider this watched and playlist should not be cleared.
+                        When the end is reached, position is -1.
+                    '''
                     log.info("Clear playlist, end detected.")
                     playlist.clear()
 
