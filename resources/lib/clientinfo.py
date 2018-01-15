@@ -10,7 +10,7 @@ import xbmc
 import xbmcaddon
 import xbmcvfs
 
-from utils import window, settings
+from utils import window, settings, create_id
 
 ##################################################################################################
 
@@ -85,7 +85,7 @@ class ClientInfo(object):
         client_id = guid.read()
         if not client_id:
             log.info("Generating a new guid...")
-            client_id = str("%012X" % uuid4())
+            client_id = str("%012X" % create_id())
             guid = xbmcvfs.File(emby_guid, 'w')
             guid.write(client_id)
 

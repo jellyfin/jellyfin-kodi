@@ -14,6 +14,7 @@ import urllib
 import unicodedata
 import xml.etree.ElementTree as etree
 from datetime import datetime
+from uuid import uuid4
 
 
 import xbmc
@@ -81,6 +82,8 @@ def dialog(type_, *args, **kwargs):
 def urllib_path(plugin, params):
     return "%s?%s" % (plugin, urllib.urlencode(params))
 
+def create_id():
+    return uuid4()
 
 class JSONRPC(object):
 
