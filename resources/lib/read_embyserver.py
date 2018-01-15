@@ -671,17 +671,13 @@ class Read_EmbyServer():
             'LiveStreamId': None 
         })
 
-    def get_live_stream(self, item_id, profile, session_id, token, offset=0, audio=None, subtitles=None):
+    def stop_playback(self, item_id, position, playsession_id, mediasource_id=None):
 
-        url = self.get_emby_url('/LiveStreams/Open')
+        url = self.get_emby_url('/Sessions/Playing/Stopped')
         return self.doUtils.downloadUrl(url, action_type="POST", postBody={
 
-            'UserId': self.userId,
-            'DeviceProfile': profile,
             'ItemId': item_id,
-            'PlaySessionId': session_id,
-            'OpenToken': token,
-            'StartTimeTicks': offset, #TODO
-            'AudioStreamIndex': audio, #TODO
-            'SubtitleStreamIndex': subtitles #TODO
+            'MediaSourceId': mediasource_id or item_id,
+            'PositionTicks': position,
+            'PlaySessionId': playsession_id
         })
