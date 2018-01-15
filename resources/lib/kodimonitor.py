@@ -12,7 +12,7 @@ import xbmcgui
 import downloadutils
 import embydb_functions as embydb
 import playbackutils as pbutils
-from utils import window, settings
+from utils import window, settings, create_id
 from ga_client import log_error
 from database import DatabaseConn
 
@@ -125,7 +125,7 @@ class KodiMonitor(xbmc.Monitor):
                 return self._on_play_(data)
         else:
             if ((settings('useDirectPaths') == "1" and not item_type == "song") or
-                    (item_type == "song" and settings('enableMusic') == "true")):
+                (item_type == "song" and settings('enableMusic') == "true")):
                 # Set up properties for player
                 item_id = self._get_item_id(kodi_id, item_type)
                 if item_id:
@@ -142,15 +142,13 @@ class KodiMonitor(xbmc.Monitor):
                             count += 1
                             xbmc.sleep(200)
                         else:
-                            listitem = xbmcgui.ListItem()
-                            playback = pbutils.PlaybackUtils(result)
+                            window('emby_%s.play.json' % playurl, {
 
-                            if item_type == "song" and settings('streamMusic') == "true":
-                                window('emby_%s.playmethod' % playurl, value="DirectStream")
-                            else:
-                                window('emby_%s.playmethod' % playurl, value="DirectPlay")
-                            # Set properties for player.py
-                            playback.set_properties(playurl, listitem)
+                                'playmethod': "DirectStream" if item_type == "song" and settings('streamMusic') == "true" else "DirectPlay",
+                                'playsession_id': str(create_id()).replace("-", "")
+                            })
+                            listitem = xbmcgui.ListItem()
+                            pbutils.PlaybackUtils(result).set_properties(playurl, listitem)
 
     def _video_update(self, data):
         # Manually marking as watched/unwatched
@@ -242,7 +240,7 @@ class SpecialMonitor(threading.Thread):
             elif isPlaying and not window('emby.external_check'):
                 time = player.getTime()
 
-                if time > 1:
+                if time > 1: # Not external player.
                     window('emby.external_check', value="true")
                     self.external_count = 0
                 elif self.external_count == 15:

@@ -4,6 +4,7 @@
 
 import collections
 import logging
+import requests
 import os
 import urllib
 
@@ -14,7 +15,7 @@ import xbmcvfs
 import clientinfo
 import downloadutils
 import read_embyserver as embyserver
-from utils import window, settings, language as lang, urllib_path
+from utils import window, settings, language as lang, urllib_path, create_id
 
 #################################################################################################
 
@@ -25,6 +26,7 @@ log = logging.getLogger("EMBY."+__name__)
 
 class PlayUtils():
     
+    play_session_id = None
     method = "DirectPlay"
     force_transcode = False
 
@@ -40,6 +42,7 @@ class PlayUtils():
         self.emby = embyserver.Read_EmbyServer()
 
         self.server = window('emby_server%s' % window('emby_currUser'))
+        self.play_session_id = str(create_id()).replace("-", "")
 
     def get_play_url(self, force_transcode=False):
 
@@ -50,20 +53,25 @@ class PlayUtils():
 
         self.force_transcode = force_transcode
         info = self.get_playback_info()
-        play_url = False if info == False else None
+        url = False if info == False else None
 
         if info:
-            play_url = info['Path'].encode('utf-8')
-            window('emby_%s.playmethod' % play_url, value=self.method)
+            url = info['Path'].encode('utf-8')
+            window('emby_%s.play.json' % url, {
+
+                'playmethod': self.method,
+                'playsession_id': self.play_session_id,
+                'mediasource_id': info.get('Id') or self.item['Id']
+            })
 
             if self.method == "DirectPlay":
                 # Log filename, used by other addons eg subtitles which require the file name
-                window('embyfilename', value=play_url)
+                window('embyfilename', value=url)
 
             log.info("playback info: %s", info)
-            log.info("play method: %s play url: %s", self.method, play_url)
+            log.info("play method: %s play url: %s", self.method, url)
 
-        return play_url
+        return url
 
     def get_playback_info(self):
 
@@ -208,35 +216,35 @@ class PlayUtils():
                     transcode = False
                     break
 
-        play_url = self.get_transcode_url(source) if transcode else self.get_direct_url(source)
-
-        user_token = downloadutils.DownloadUtils().get_token()
-        play_url += "&api_key=" + user_token
+        url = self.get_transcode_url(source) if transcode else self.get_direct_url(source)
+        url += "&MediaSourceId=%s" % source['Id']
+        url += "&PlaySessionId=%s" % self.play_session_id
+        url += "&api_key=%s" % downloadutils.DownloadUtils().get_token()
         
-        return play_url
+        return url
 
     def get_direct_url(self, source):
 
         self.method = "DirectStream"
 
         if self.item['Type'] == "Audio":
-            play_url = "%s/emby/Audio/%s/stream.%s?static=true" % (self.server, self.item['Id'], self.item['MediaSources'][0]['Container'])
+            url = "%s/emby/Audio/%s/stream.%s?static=true" % (self.server, self.item['Id'], self.item['MediaSources'][0]['Container'])
         else:
-            play_url = "%s/emby/Videos/%s/stream?static=true" % (self.server, self.item['Id'])
+            url = "%s/emby/Videos/%s/stream?static=true" % (self.server, self.item['Id'])
 
         # Append external subtitles
         if settings('enableExternalSubs') == "true":
-            self.set_external_subs(source, play_url)
+            self.set_external_subs(source, url)
 
-        return play_url
+        return url
 
     def get_transcode_url(self, source):
 
         self.method = "Transcode"
 
         item_id = self.item['Id']
-        play_url = urllib_path("%s/emby/Videos/%s/master.m3u8" % (self.server, item_id), {
-            'MediaSourceId': source['Id'],
+        url = urllib_path("%s/emby/Videos/%s/master.m3u8" % (self.server, item_id), {
+
             'VideoCodec': "h264",
             'AudioCodec': "ac3",
             'MaxAudioChannels': 6,
@@ -246,14 +254,14 @@ class PlayUtils():
 
         # Limit to 8 bit if user selected transcode Hi10P
         if settings('transcodeHi10P') == "true":
-            play_url += "&MaxVideoBitDepth=8"
+            url += "&MaxVideoBitDepth=8"
 
         # Adjust the video resolution
-        play_url += "&maxWidth=%s&maxHeight=%s" % (self.get_resolution())
+        url += "&maxWidth=%s&maxHeight=%s" % (self.get_resolution())
         # Select audio and subtitles
-        play_url += self.get_audio_subs(source)
+        url += self.get_audio_subs(source)
 
-        return play_url
+        return url
 
     def set_external_subs(self, source, play_url):
 

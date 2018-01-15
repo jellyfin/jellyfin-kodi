@@ -11,6 +11,7 @@ import xbmcgui
 
 import clientinfo
 import downloadutils
+import read_embyserver as embyserver
 import websocket_client as wsc
 from utils import window, settings, language as lang, JSONRPC
 from ga_client import GoogleAnalytics, log_error
@@ -37,6 +38,7 @@ class Player(xbmc.Player):
 
         self.clientInfo = clientinfo.ClientInfo()
         self.doUtils = downloadutils.DownloadUtils().downloadUrl
+        self.emby = embyserver.Read_EmbyServer()
         self.ws = wsc.WebSocketClient()
         self.xbmcplayer = xbmc.Player()
 
@@ -128,6 +130,9 @@ class Player(xbmc.Player):
             refresh_id = item.get('refreshid')
             play_method = item.get('playmethod')
             item_type = item.get('type')
+            playsession_id = item.get('playsession_id')
+            mediasource_id = item.get('mediasource_id')
+
 
             #self.set_audio_subs(item.get('forcedaudio'), item.get('forcedsubs'))
 
@@ -156,14 +161,15 @@ class Player(xbmc.Player):
             url = "{server}/emby/Sessions/Playing"
             postdata = {
 
-                'QueueableMediaTypes': "Video",
+                'QueueableMediaTypes': "Video,Audio",
                 'CanSeek': True,
                 'ItemId': item_id,
-                'MediaSourceId': item_id,
+                'MediaSourceId': mediasource_id or item_id,
                 'PlayMethod': play_method,
                 'VolumeLevel': volume,
                 'PositionTicks': int(seekTime * 10000000),
-                'IsMuted': muted
+                'IsMuted': muted,
+                'PlaySessionId': playsession_id
             }
 
             # Get the current audio track and subtitles
@@ -249,13 +255,15 @@ class Player(xbmc.Player):
 
                 'runtime': runtime,
                 'item_id': item_id,
+                'mediasource_id': mediasource_id,
                 'refresh_id': refresh_id,
                 'currentfile': currentFile,
                 'AudioStreamIndex': postdata['AudioStreamIndex'],
                 'SubtitleStreamIndex': postdata['SubtitleStreamIndex'],
                 'playmethod': play_method,
                 'Type': item_type,
-                'currentPosition': int(seekTime)
+                'currentPosition': int(seekTime),
+                'playsession_id': playsession_id
             }
 
             self.played_info[currentFile] = data
@@ -282,6 +290,8 @@ class Player(xbmc.Player):
             playTime = data['currentPosition']
             playMethod = data['playmethod']
             paused = data.get('paused', False)
+            playsession_id = data.get('playsession_id')
+            mediasource_id = data.get('mediasource_id')
 
 
             # Get playback volume
@@ -297,12 +307,13 @@ class Player(xbmc.Player):
                 'QueueableMediaTypes': "Video",
                 'CanSeek': True,
                 'ItemId': itemId,
-                'MediaSourceId': itemId,
+                'MediaSourceId': mediasource_id or itemId,
                 'PlayMethod': playMethod,
                 'PositionTicks': int(playTime * 10000000),
                 'IsPaused': paused,
                 'VolumeLevel': volume,
-                'IsMuted': muted
+                'IsMuted': muted,
+                'PlaySessionId': playsession_id
             }
 
             if playMethod == "Transcode":
@@ -525,24 +536,9 @@ class Player(xbmc.Player):
     
     def stopPlayback(self, data):
         
-        log.debug("stopPlayback called")
-        
-        itemId = data['item_id']
-        currentPosition = data['currentPosition']
-        positionTicks = int(currentPosition * 10000000)
+        log.debug("stopPlayback called.")
 
-        url = "{server}/emby/Sessions/Playing/Stopped"
-        postdata = {
-            
-            'ItemId': itemId,
-            'MediaSourceId': itemId,
-            'PositionTicks': positionTicks
-        }
-        self.doUtils(url, postBody=postdata, action_type="POST")
-        
-        #If needed, close any livestreams
-        livestreamid = window("emby_%s.livestreamid" % self.currentFile)
-        if livestreamid:
-            url = "{server}/emby/LiveStreams/Close"
-            postdata = { 'LiveStreamId': livestreamid }
-            self.doUtils(url, postBody=postdata, action_type="POST")
+        position_ticks = int(data['currentPosition'] * 10000000)
+        position = data['runtime'] if position_ticks and window('emby.external') else position_ticks
+
+        self.emby.stop_playback(data['item_id'], position, data['playsession_id'], data.get('mediasource_id'))

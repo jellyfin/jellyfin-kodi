@@ -163,7 +163,7 @@ class PlaybackUtils(object):
             # Set listitem and properties for each additional parts
             pb = PlaybackUtils(part)
             pb.set_properties(url, listitem)
-            pb.setArtwork(listitem)
+            pb.set_artwork(listitem, part['Type'])
 
             self.stack.append([url, listitem])
 
@@ -217,16 +217,19 @@ class PlaybackUtils(object):
         item_id = self.item['Id']
         item_type = self.item['Type']
 
-        play_method = window('emby_%s.playmethod' % url)
-        window('emby_%s.playmethod' % url, clear=True)
+        info = window('emby_%s.play.json' % url)
+        window('emby_%s.play.json' % url, clear=True)
+
         window('emby_%s.json' % url, {
 
             'url': url,
             'runtime': str(self.item.get('RunTimeTicks')),
             'type': item_type,
             'id': item_id,
+            'mediasource_id': info.get('mediasource_id', item_id),
             'refreshid': self.item.get('SeriesId') if item_type == "Episode" else item_id,
-            'playmethod': play_method
+            'playmethod': info['playmethod'],
+            'playsession_id': info['playsession_id']
         })
 
         self.set_artwork(listitem, item_type)
@@ -278,6 +281,7 @@ class PlaybackUtils(object):
                 listitem.setProperty(art, path)
             else:
                 listitem.setArt({art: path})
+
 
     def play_all(self, item_ids, seektime=None, **kwargs):
 
