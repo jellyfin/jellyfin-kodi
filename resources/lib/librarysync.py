@@ -744,7 +744,7 @@ class LibrarySync(threading.Thread):
                 self.incremental_count = 0
                 window('emby_kodiScan', clear=True)
 
-            if window('emby_dbScan') != "true" and window('emby_shouldStop') != "true":
+            if not xbmc.Player().isPlaying() and window('emby_dbScan') != "true" and window('emby_shouldStop') != "true":
                 self.incrementalSync()
 
             if window('emby_onWake') == "true" and window('emby_online') == "true":
