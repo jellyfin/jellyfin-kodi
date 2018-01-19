@@ -110,11 +110,11 @@ def doMainListing():
             log.info(window('emby_server%s.name' % server))
             addDirectoryItem(window('emby_server%s.name' % server), "plugin://plugin.video.emby/?mode=%s" % server)'''
 
-    addDirectoryItem("Manual login dialog", "plugin://plugin.video.emby/?mode=manuallogin")
-    addDirectoryItem("Connect login dialog", "plugin://plugin.video.emby/?mode=connectlogin")
-    addDirectoryItem("Manual server dialog", "plugin://plugin.video.emby/?mode=manualserver")
-    addDirectoryItem("Connect servers dialog", "plugin://plugin.video.emby/?mode=connectservers")
-    addDirectoryItem("Connect users dialog", "plugin://plugin.video.emby/?mode=connectusers")
+    #addDirectoryItem("Manual login dialog", "plugin://plugin.video.emby/?mode=manuallogin")
+    #addDirectoryItem("Connect login dialog", "plugin://plugin.video.emby/?mode=connectlogin")
+    #addDirectoryItem("Manual server dialog", "plugin://plugin.video.emby/?mode=manualserver")
+    #addDirectoryItem("Connect servers dialog", "plugin://plugin.video.emby/?mode=connectservers")
+    #addDirectoryItem("Connect users dialog", "plugin://plugin.video.emby/?mode=connectusers")
 
     addDirectoryItem(lang(30517), "plugin://plugin.video.emby/?mode=passwords")
     addDirectoryItem(lang(33053), "plugin://plugin.video.emby/?mode=settings")

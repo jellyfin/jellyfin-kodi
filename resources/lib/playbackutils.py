@@ -74,7 +74,7 @@ class PlaybackUtils(object):
             log.info("Clear the playlist.")
             self.playlist.clear()
 
-        self.set_playlist(play_url, item_id, listitem, seektime, dbid)
+        self.set_playlist(play_url, item_id, listitem, seektime, dbid, force_transcode)
 
         ##### SETUP PLAYBACK
 
@@ -99,7 +99,6 @@ class PlaybackUtils(object):
         except IndexError:
             log.info("Playback activated via the context menu or widgets.")
             force_play = True
-            self.stack[0][1].setProperty('StartOffset', str(seektime))
 
         for stack in self.stack:
             self.playlist.add(url=stack[0], listitem=stack[1], index=index)
@@ -108,7 +107,7 @@ class PlaybackUtils(object):
         if force_play:
             xbmc.Player().play(self.playlist)
 
-    def set_playlist(self, play_url, item_id, listitem, seektime=None, db_id=None):
+    def set_playlist(self, play_url, item_id, listitem, seektime=None, db_id=None, force_transcode=False):
 
         ##### CHECK FOR INTROS
 
@@ -120,6 +119,9 @@ class PlaybackUtils(object):
         self.set_properties(play_url, listitem)
         self.set_listitem(listitem, db_id)
         self.stack.append([play_url, listitem])
+
+        if force_transcode and seektime:
+            listitem.setProperty('StartOffset', str(seektime))
 
         ##### ADD ADDITIONAL PARTS
 
@@ -148,6 +150,9 @@ class PlaybackUtils(object):
                     url = putils.PlayUtils(intro, listitem).get_play_url()
                     log.info("Adding Intro: %s" % url)
 
+                    pb = PlaybackUtils(intro)
+                    pb.set_listitem(listitem)
+
                     self.stack.append([url, listitem])
 
     def _set_additional_parts(self, item_id):
@@ -163,7 +168,6 @@ class PlaybackUtils(object):
             # Set listitem and properties for each additional parts
             pb = PlaybackUtils(part)
             pb.set_properties(url, listitem)
-            pb.set_artwork(listitem, part['Type'])
 
             self.stack.append([url, listitem])
 
@@ -204,6 +208,8 @@ class PlaybackUtils(object):
 
         if dbid:
             metadata['dbid'] = dbid
+        else:
+            metadata['dbid'] = None
 
         listitem.setProperty('IsPlayable', 'true')
         listitem.setProperty('IsFolder', 'false')
