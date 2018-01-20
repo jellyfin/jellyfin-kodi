@@ -152,6 +152,7 @@ class PlaybackUtils(object):
 
                     pb = PlaybackUtils(intro)
                     pb.set_listitem(listitem)
+                    pb.set_artwork(listitem, intro['Type'])
 
                     self.stack.append([url, listitem])
 
@@ -272,21 +273,20 @@ class PlaybackUtils(object):
 
         for k_art, e_art in art.items():
 
-            if e_art == "Backdrop" and all_artwork[e_art]:
-                self._set_art(listitem, k_art, all_artwork[e_art][0])
+            if e_art == "Backdrop":
+                self._set_art(listitem, k_art, all_artwork[e_art][0] if all_artwork[e_art] else " ")
             else:
-                self._set_art(listitem, k_art, all_artwork.get(e_art))
+                self._set_art(listitem, k_art, all_artwork.get(e_art, " "))
 
     def _set_art(self, listitem, art, path):
-        
-        if path:
-            if art in ('fanart_image', 'small_poster', 'tiny_poster',
-                       'medium_landscape', 'medium_poster', 'small_fanartimage',
-                       'medium_fanartimage', 'fanart_noindicators'):
-                
-                listitem.setProperty(art, path)
-            else:
-                listitem.setArt({art: path})
+
+        if art in ('fanart_image', 'small_poster', 'tiny_poster',
+                   'medium_landscape', 'medium_poster', 'small_fanartimage',
+                   'medium_fanartimage', 'fanart_noindicators'):
+            
+            listitem.setProperty(art, path)
+        else:
+            listitem.setArt({art: path})
 
 
     def play_all(self, item_ids, seektime=None, **kwargs):
