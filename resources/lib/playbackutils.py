@@ -74,7 +74,7 @@ class PlaybackUtils(object):
             log.info("Clear the playlist.")
             self.playlist.clear()
 
-        self.set_playlist(play_url, item_id, listitem, seektime, dbid, force_transcode)
+        self.set_playlist(play_url, item_id, listitem, seektime, dbid)
 
         ##### SETUP PLAYBACK
 
@@ -99,6 +99,7 @@ class PlaybackUtils(object):
         except IndexError:
             log.info("Playback activated via the context menu or widgets.")
             force_play = True
+            listitem.setProperty('StartOffset', str(seektime))
 
         for stack in self.stack:
             self.playlist.add(url=stack[0], listitem=stack[1], index=index)
@@ -107,7 +108,7 @@ class PlaybackUtils(object):
         if force_play:
             xbmc.Player().play(self.playlist)
 
-    def set_playlist(self, play_url, item_id, listitem, seektime=None, db_id=None, force_transcode=False):
+    def set_playlist(self, play_url, item_id, listitem, seektime=None, db_id=None):
 
         ##### CHECK FOR INTROS
 
@@ -119,9 +120,6 @@ class PlaybackUtils(object):
         self.set_properties(play_url, listitem)
         self.set_listitem(listitem, db_id)
         self.stack.append([play_url, listitem])
-
-        if force_transcode and seektime:
-            listitem.setProperty('StartOffset', str(seektime))
 
         ##### ADD ADDITIONAL PARTS
 
