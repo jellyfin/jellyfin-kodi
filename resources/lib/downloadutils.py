@@ -204,6 +204,7 @@ class DownloadUtils(object):
             'Content-type': 'application/json',
             'Accept-encoding': 'gzip',
             'Accept-Charset': 'UTF-8,*',
+            'User-Agent': 'Emby-Kodi'
         })
         return header
 
