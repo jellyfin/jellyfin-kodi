@@ -88,8 +88,9 @@ class PlaybackUtils(object):
         # Stack: [(url, listitem), (url, ...), ...]
         self.stack[0][1].setPath(self.stack[0][0])
         try:
-            if (not xbmc.getCondVisibility('Window.IsMedia') and
-                not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(video),1)')):
+            if  (not xbmc.getCondVisibility('Window.IsMedia') and
+                (self.item['Type'] == "Audio" and not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(music),1)')) or
+                (not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(video),1)'))):
                 # widgets do not fill artwork correctly
                 log.info("Detected widget.")
                 raise IndexError
@@ -146,7 +147,7 @@ class PlaybackUtils(object):
 
                     listitem = xbmcgui.ListItem()
                     url = putils.PlayUtils(intro, listitem).get_play_url()
-                    log.info("Adding Intro: %s" % url)
+                    log.info("Adding Intro: %s", url)
 
                     pb = PlaybackUtils(intro)
                     pb.set_listitem(listitem)
@@ -162,7 +163,7 @@ class PlaybackUtils(object):
 
             listitem = xbmcgui.ListItem()
             url = putils.PlayUtils(part, listitem).get_play_url()
-            log.info("Adding additional part: %s" % url)
+            log.info("Adding additional part: %s", url)
 
             # Set listitem and properties for each additional parts
             pb = PlaybackUtils(part)
