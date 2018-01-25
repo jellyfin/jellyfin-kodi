@@ -123,7 +123,7 @@ class Player(xbmc.Player):
 
         else:
             item_id = item.get('id')
-            log.info("ONPLAYBACK_STARTED: %s itemid: %s" % (currentFile, item_id))
+            log.info("ONPLAYBACK_STARTED: %s itemid: %s", currentFile.decode('utf-8'), item_id)
 
             # Only proceed if an itemId was found.
             runtime = item.get('runtime')
@@ -140,7 +140,7 @@ class Player(xbmc.Player):
             customseek = window('emby_customPlaylist.seektime')
             if window('emby_customPlaylist') == "true" and customseek:
                 # Start at, when using custom playlist (play to Kodi from webclient)
-                log.info("Seeking to: %s" % customseek)
+                log.info("Seeking to: %s", customseek)
                 self.xbmcplayer.seekTime(int(customseek)/10000000.0)
                 window('emby_customPlaylist.seektime', clear=True)
 
@@ -218,7 +218,7 @@ class Player(xbmc.Player):
 
                     if mapping: # Set in playbackutils.py
 
-                        log.debug("Mapping for external subtitles index: %s" % mapping)
+                        log.debug("Mapping for external subtitles index: %s", mapping)
                         externalIndex = json.loads(mapping)
 
                         if externalIndex.get(str(indexSubs)):
@@ -236,7 +236,7 @@ class Player(xbmc.Player):
 
 
             # Post playback to server
-            log.debug("Sending POST play started: %s." % postdata)
+            log.debug("Sending POST play started: %s.", postdata)
             self.doUtils(url, postBody=postdata, action_type="POST")
 
             # Ensure we do have a runtime
@@ -267,7 +267,7 @@ class Player(xbmc.Player):
             }
 
             self.played_info[currentFile] = data
-            log.info("ADDING_FILE: %s" % self.played_info)
+            log.info("ADDING_FILE: %s", self.played_info)
 
             ga = GoogleAnalytics()
             ga.sendEventData("PlayAction", item_type, play_method)
