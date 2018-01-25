@@ -538,6 +538,10 @@ class LibrarySync(threading.Thread):
             with database.DatabaseConn('emby') as cursor_emby:
                 with database.DatabaseConn('video') as cursor_video:
 
+                    xbmc.executebuiltin('InhibitIdleShutdown(true)')
+                    screensaver = utils.getScreensaver()
+                    utils.setScreensaver(value="")
+
                     emby_db = embydb.Embydb_Functions(cursor_emby)
 
                     incSyncIndicator = int(settings('incSyncIndicator') or 10)
@@ -590,6 +594,9 @@ class LibrarySync(threading.Thread):
                                     update_embydb = True
                                 if kodiupdate_video:
                                     self.forceLibraryUpdate = True
+
+                    xbmc.executebuiltin('InhibitIdleShutdown(false)')
+                    utils.setScreensaver(value=screensaver)
 
         # if stuff happened then do some stuff
         if update_embydb:
@@ -744,7 +751,9 @@ class LibrarySync(threading.Thread):
                 self.incremental_count = 0
                 window('emby_kodiScan', clear=True)
 
-            if not xbmc.Player().isPlaying() and window('emby_dbScan') != "true" and window('emby_shouldStop') != "true":
+            if ((not xbmc.Player().isPlaying() or xbmc.getCondVisibility('VideoPlayer.Content(livetv)')) and
+                window('emby_dbScan') != "true" and window('emby_shouldStop') != "true"):
+                
                 self.incrementalSync()
 
             if window('emby_onWake') == "true" and window('emby_online') == "true":
