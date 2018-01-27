@@ -227,7 +227,6 @@ class SpecialMonitor(threading.Thread):
             isPlaying = player.isPlaying()
 
             if (not isPlaying and xbmc.getCondVisibility('Window.IsVisible(DialogContextMenu.xml)') and
-                not xbmc.getCondVisibility('Window.IsVisible(MyVideoNav.xml)') and
                 xbmc.getInfoLabel('Control.GetLabel(1002)') == xbmc.getLocalizedString(12021)):
 
                 control = int(xbmcgui.Window(10106).getFocusId())

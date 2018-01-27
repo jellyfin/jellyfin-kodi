@@ -86,26 +86,18 @@ class PlaybackUtils(object):
         force_play = False
 
         ''' Krypton 17.6 broke StartOffset. Seems to be working in Leia.
-            For now, set up using StartPercent.
+            For now, set up using StartPercent and adjust a bit to compensate.
             TODO: Once Leia is fully supported, move back to StartOffset.
         '''
 
-        seektime_percent = (seektime/self.API.get_runtime()) * 100
-        log.info("seektime detected (percent): %s", seektime_percent)
-        listitem.setProperty('StartPercent', str(seektime_percent))
+        if seektime:
+            seektime_percent = ((seektime/self.API.get_runtime()) * 100) - 0.40
+            log.info("seektime detected (percent): %s", seektime_percent)
+            listitem.setProperty('StartPercent', str(seektime_percent))
 
         # Stack: [(url, listitem), (url, ...), ...]
         self.stack[0][1].setPath(self.stack[0][0])
-        try:
-            if not xbmc.getCondVisibility('Window.IsMedia'):
-                log.debug("Window.IsMedia detected.")
-
-            if self.item['Type'] == "Audio" and not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(music),1)'):
-                log.debug("Music playlist length detected.")
-
-            if not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(video),1)'):
-                log.debug("Video playlist length detected.")
-            
+        try:           
             if  (not xbmc.getCondVisibility('Window.IsMedia') and
                 ((self.item['Type'] == "Audio" and not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(music),1)')) or
                 not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(video),1)'))):
