@@ -98,7 +98,7 @@ class PlaybackUtils(object):
         # Stack: [(url, listitem), (url, ...), ...]
         self.stack[0][1].setPath(self.stack[0][0])
         try:           
-            if  (not xbmc.getCondVisibility('Window.IsMedia') and
+            if (not xbmc.getCondVisibility('Window.IsMedia') and
                 ((self.item['Type'] == "Audio" and not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(music),1)')) or
                 not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(video),1)'))):
                 # widgets do not fill artwork correctly
