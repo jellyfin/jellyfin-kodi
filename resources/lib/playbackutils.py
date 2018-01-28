@@ -160,6 +160,8 @@ class PlaybackUtils(object):
 
                     self.stack.append([url, listitem])
 
+                window('emby.skip.%s' % self.item['Id'], value="true")
+
     def _set_additional_parts(self, item_id):
 
         parts = self.emby.get_additional_parts(item_id)
@@ -211,6 +213,9 @@ class PlaybackUtils(object):
         elif mediatype == "Audio":
             metadata['mediatype'] = "song"
 
+        else:
+            metadata['mediatype'] = "video"
+
         if dbid:
             metadata['dbid'] = dbid
         else:
@@ -219,7 +224,7 @@ class PlaybackUtils(object):
         listitem.setProperty('IsPlayable', 'true')
         listitem.setProperty('IsFolder', 'false')
         listitem.setLabel(metadata['title'])
-        listitem.setInfo('Music' if mediatype == "Audio" else 'Video', infoLabels=metadata)
+        listitem.setInfo('music' if mediatype == "Audio" else 'video', infoLabels=metadata)
 
     def set_properties(self, url, listitem):
 

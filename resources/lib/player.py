@@ -136,7 +136,6 @@ class Player(xbmc.Player):
 
             #self.set_audio_subs(item.get('forcedaudio'), item.get('forcedsubs'))
 
-            window('emby_skipWatched%s' % item_id, value="true")
             customseek = window('emby_customPlaylist.seektime')
             if window('emby_customPlaylist') == "true" and customseek:
                 # Start at, when using custom playlist (play to Kodi from webclient)
@@ -457,7 +456,7 @@ class Player(xbmc.Player):
                 playMethod = data['playmethod']
 
                 # Prevent manually mark as watched in Kodi monitor
-                window('emby_skipWatched%s' % itemid, value="true")
+                window('emby.skip.%s' % itemid, value="true")
 
                 self.stopPlayback(data)
 

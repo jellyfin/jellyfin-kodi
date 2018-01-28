@@ -163,9 +163,9 @@ class KodiMonitor(xbmc.Monitor):
             item_id = self._get_item_id(kodi_id, item_type)
             if item_id:
                 # Stop from manually marking as watched unwatched, with actual playback.
-                if window('emby_skipWatched%s' % item_id) == "true":
+                if window('emby.skip.%s' % item_id) == "true":
                     # property is set in player.py
-                    window('emby_skipWatched%s' % item_id, clear=True)
+                    window('emby.skip.%s' % item_id, clear=True)
                 else:
                     # notify the server
                     url = "{server}/emby/Users/{UserId}/PlayedItems/%s?format=json" % item_id
