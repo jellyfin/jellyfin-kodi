@@ -166,11 +166,8 @@ class PlaybackUtils(object):
                     url = putils.PlayUtils(intro, listitem).get_play_url()
                     log.info("Adding Intro: %s", url)
 
-                    pb = PlaybackUtils(intro)
-                    pb.set_artwork(listitem, intro['Type'])
-
-                    if self._detect_widgets():
-                        pb.set_listitem(listitem)
+                    self.set_artwork(listitem, self.item['Type'])
+                    self.set_listitem(listitem)
 
                     self.stack.append([url, listitem])
 
