@@ -402,4 +402,9 @@ class API(object):
                 # Local path scenario, with special videotype
                 filepath = filepath.replace("/", "\\")
 
+            if "://" in filepath:
+                # Protocol needs to be lowercase, otherwise weird things happen.
+                protocol = filepath.split('://')[0]
+                filepath = filepath.replace(protocol, protocol.lower())
+
         return filepath
