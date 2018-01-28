@@ -390,12 +390,10 @@ class API(object):
                 filepath = filepath.replace("\\\\", "smb://")
                 filepath = filepath.replace("\\", "/")
 
-            if self.item.get('VideoType'):
-                videotype = self.item['VideoType']
-                # Specific format modification
-                if 'Dvd'in videotype:
+            if 'VideoType' in self.item:
+                if self.item['VideoType'] == "Dvd":
                     filepath = "%s/VIDEO_TS/VIDEO_TS.IFO" % filepath
-                elif 'BluRay' in videotype:
+                elif self.item['VideoType'] == "BluRay":
                     filepath = "%s/BDMV/index.bdmv" % filepath
 
             if "\\" in filepath:

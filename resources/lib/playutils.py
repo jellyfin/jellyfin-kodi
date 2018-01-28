@@ -202,6 +202,11 @@ class PlayUtils():
             path = path.replace('\\\\', "smb://")
             path = path.replace('\\', "/")
 
+        if "://" in path:
+            # Protocol needs to be lowercase, otherwise weird things happen.
+            protocol = path.split('://')[0]
+            path = path.replace(protocol, protocol.lower())
+
         return path
 
     def get_http_path(self, source, transcode=False):
