@@ -52,6 +52,16 @@ class PlaybackUtils(object):
         else:
             self.playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
 
+    def _detect_widgets(self):
+
+        if (not xbmc.getCondVisibility('Window.IsMedia') and
+            ((self.item['Type'] == "Audio" and not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(music),1)')) or
+            not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(video),1)'))):
+
+            return True
+
+        return False
+
     def play(self, item_id, dbid=None, force_transcode=False):
 
         listitem = xbmcgui.ListItem()
@@ -98,9 +108,7 @@ class PlaybackUtils(object):
         # Stack: [(url, listitem), (url, ...), ...]
         self.stack[0][1].setPath(self.stack[0][0])
         try:           
-            if (not xbmc.getCondVisibility('Window.IsMedia') and
-                ((self.item['Type'] == "Audio" and not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(music),1)')) or
-                not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(video),1)'))):
+            if self._detect_widgets():
                 # widgets do not fill artwork correctly
                 log.info("Detected widget.")
                 raise IndexError
@@ -157,6 +165,12 @@ class PlaybackUtils(object):
                     listitem = xbmcgui.ListItem()
                     url = putils.PlayUtils(intro, listitem).get_play_url()
                     log.info("Adding Intro: %s", url)
+
+                    pb = PlaybackUtils(intro)
+                    pb.set_artwork(listitem, intro['Type'])
+
+                    if self._detect_widgets():
+                        pb.set_listitem(listitem)
 
                     self.stack.append([url, listitem])
 
