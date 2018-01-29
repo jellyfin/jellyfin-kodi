@@ -73,6 +73,26 @@ class PlayUtils():
 
         return url
 
+    def _is_media_selection(self):
+
+        if self.item['MediaType'] != 'Video':
+            log.debug("MediaType not video detected.")
+            return False
+
+        if self.item['Type'] == 'TvChannel':
+            log.debug("TvChannel detected.")
+            return False
+
+        if len(self.item['MediaSources']) == 1 and self.item['MediaSources'][0]['Type'] == 'Placeholder':
+            log.debug("Placeholder detected.")
+            return False
+
+        if 'SourceType' in self.item and self.item['SourceType'] != 'Library':
+            log.debug("SourceType not library detected.")
+            return False
+
+        return True
+
     def get_playback_info(self):
 
         # Get the playback info for the current item
@@ -93,10 +113,8 @@ class PlayUtils():
                     selected_source = source
                     break
 
-        elif (self.item['MediaType'] != 'Video' or self.item['Type'] == 'TvChannel' or
-              self.item.get('SourceType') != 'Library'):
-            # Do nothing
-            log.info("Special case, skip media sources selection.")
+        elif not self._is_media_selection():
+            log.info("Special media type detected. Skip source selection.")
 
         elif len(media_sources) > 1:
             # Offer choices
