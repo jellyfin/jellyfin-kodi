@@ -93,7 +93,7 @@ class PlayUtils():
                     selected_source = source
                     break
 
-        elif (self.item['MediaType'] != 'Video' and self.item['Type'] == 'TvChannel' and
+        elif (self.item['MediaType'] != 'Video' or self.item['Type'] == 'TvChannel' or
               self.item.get('SourceType') != 'Library'):
             # Do nothing
             log.info("Special case, skip media sources selection.")
