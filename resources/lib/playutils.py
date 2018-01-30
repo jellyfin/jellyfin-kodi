@@ -79,15 +79,15 @@ class PlayUtils():
             log.debug("MediaType not video detected.")
             return False
 
-        if self.item['Type'] == 'TvChannel':
+        elif self.item['Type'] == 'TvChannel':
             log.debug("TvChannel detected.")
             return False
 
-        if len(self.item['MediaSources']) == 1 and self.item['MediaSources'][0]['Type'] == 'Placeholder':
+        elif len(self.item['MediaSources']) == 1 and self.item['MediaSources'][0]['Type'] == 'Placeholder':
             log.debug("Placeholder detected.")
             return False
 
-        if 'SourceType' in self.item and self.item['SourceType'] != 'Library':
+        elif 'SourceType' in self.item and self.item['SourceType'] != 'Library':
             log.debug("SourceType not library detected.")
             return False
 
@@ -137,8 +137,8 @@ class PlayUtils():
             returned that can actually be played by this client so no need to check bitrates etc.
         '''
 
-        if (not self.force_transcode and self.is_h265(source) or self.is_strm(source) or
-            (source['SupportsDirectPlay'] and settings('playFromStream') == "false" and self.is_file_exists(source))):
+        if (not self.force_transcode and (self.is_h265(source) or self.is_strm(source) or
+            (source['SupportsDirectPlay'] and settings('playFromStream') == "false" and self.is_file_exists(source)))):
             # Do nothing, path is updated with our verification if applies.
             pass
         else:
@@ -411,6 +411,7 @@ class PlayUtils():
 
             if self.info.get('AudioStreamIndex'):
                 audio_selected = self.info['AudioStreamIndex']
+
             elif skip_dialog in (0, 1):
                 if len(audio_streams) > 1:
                     selection = list(audio_streams.keys())
@@ -458,7 +459,9 @@ class PlayUtils():
 
     def get_bitrate(self):
 
-        # get the addon video quality
+        ''' Get the addon video quality
+            Max bit rate supported by server: 2147483 (max signed 32bit integer)
+        '''
 
         bitrate = {
 
@@ -485,7 +488,6 @@ class PlayUtils():
             '17': 100000,
             '18': 1000000
         }
-        # max bit rate supported by server (max signed 32bit integer)
         return bitrate.get(settings('videoBitrate'), 2147483)
     
     def get_device_profile(self):
