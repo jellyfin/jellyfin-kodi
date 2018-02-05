@@ -387,7 +387,7 @@ class Playlist(object):
             xsp_path = os.path.join(path, "Emby %s - %s.xsp" % (view_id, media_type))
         else:
             playlist_name = tag
-            xsp_path = os.path.join(path, "Emby %s" % view_id)
+            xsp_path = os.path.join(path, "Emby %s.xsp" % view_id)
 
         # Only add the playlist if it doesn't exist
         if xbmcvfs.exists(xsp_path):
