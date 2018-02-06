@@ -79,7 +79,7 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
             self.getControl(USER_IMAGE).setImage(self.user_image)
 
         if not self.emby_connect: # Change connect user
-            self.getControl(EMBY_CONNECT).setLabel("[UPPERCASE][B]%s[/B][/UPPERCASE]" % lang(30618))
+            self.getControl(EMBY_CONNECT).setLabel("[B]%s[/B]" % lang(30618))
 
         if self.servers:
             self.setFocus(self.list_)
