@@ -265,8 +265,8 @@ class ConnectionManager(object):
         sock.setsockopt(socket.SOL_IP, socket.IP_MULTICAST_LOOP, 1)
         sock.setsockopt(socket.IPPROTO_IP, socket.SO_REUSEADDR, 1)
         
-        log.debug("MultiGroup      : %s" % str(MULTI_GROUP))
-        log.debug("Sending UDP Data: %s" % MESSAGE)
+        log.debug("MultiGroup      : %s", str(MULTI_GROUP))
+        log.debug("Sending UDP Data: %s", MESSAGE)
 
         servers = []
 
@@ -282,11 +282,11 @@ class ConnectionManager(object):
                 servers.append(json.loads(data))
             
             except socket.timeout:
-                log.info("Found Servers: %s" % servers)
+                log.info("Found Servers: %s", servers)
                 return servers
             
             except Exception as e:
-                log.error("Error trying to find servers: %s" % e)
+                log.error("Error trying to find servers: %s", e)
                 return servers
 
     def _normalizeAddress(self, address):
@@ -779,8 +779,7 @@ class ConnectionManager(object):
 
         firstServer = self._getLastUsedServer()
         # See if we have any saved credentials and can auto sign in
-        if firstServer:
-            
+        if firstServer and firstServer['DateLastAccessed'] != "2001-01-01T00:00:00Z":
             result = self.connectToServer(firstServer, options)
             if result and result.get('State') == ConnectionState['SignedIn']:
                 return result
