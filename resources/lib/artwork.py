@@ -512,19 +512,16 @@ class Artwork(object):
         def get_backdrops(item_id, backdrops):
 
             for index, tag in enumerate(backdrops):
-                artwork = ("%s/emby/Items/%s/Images/Backdrop/%s?"
-                           "MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s"
-                           % (self.server, item_id, index, max_width, max_height,
-                              tag, custom_query))
+                artwork = ("%s/emby/Items/%s/Images/Backdrop/%s?Format=original&Tag=%s%s"
+                           % (self.server, item_id, index, tag, custom_query))
                 all_artwork['Backdrop'].append(artwork)
 
         def get_artwork(item_id, type_, tag, override_name=None):
 
             if not tag: return
 
-            artwork = ("%s/emby/Items/%s/Images/%s/0?"
-                       "MaxWidth=%s&MaxHeight=%s&Format=original&Tag=%s%s"
-                       % (self.server, item_id, type_, max_width, max_height, tag, custom_query))
+            artwork = ("%s/emby/Items/%s/Images/%s/0?Format=original&Tag=%s%s"
+                       % (self.server, item_id, type_, tag, custom_query))
             all_artwork[override_name or type_] = artwork
 
         # Process backdrops
