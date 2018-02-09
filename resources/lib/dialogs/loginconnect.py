@@ -3,7 +3,6 @@
 ##################################################################################################
 
 import logging
-import os
 
 import xbmcgui
 import xbmcaddon
