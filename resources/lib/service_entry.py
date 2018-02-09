@@ -285,7 +285,7 @@ class Service(object):
                 # Server went offline
                 break
 
-            if self.monitor.waitForAbort(5):
+            if self.monitor.waitForAbort(30):
                 # Abort was requested while waiting. We should exit
                 break
 
