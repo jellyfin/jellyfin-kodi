@@ -458,7 +458,7 @@ class Player(xbmc.Player):
                 media_type = data['Type']
                 playMethod = data['playmethod']
 
-                self.stopPlayback(data)
+                self.stop_playback(data)
 
                 if currentPosition and runtime:
                     try:
@@ -514,13 +514,6 @@ class Player(xbmc.Player):
                     log.info("Clear playlist, end detected.")
                     playlist.clear()
 
-                # Stop transcoding
-                if playMethod == "Transcode":
-                    log.info("Transcoding for %s terminated." % itemid)
-                    deviceId = self.clientInfo.get_device_id()
-                    url = "{server}/emby/Videos/ActiveEncodings?DeviceId=%s" % deviceId
-                    self.doUtils(url, action_type="DELETE")
-
                 path = xbmc.translatePath(
                        "special://profile/addon_data/plugin.video.emby/temp/").decode('utf-8')
 
@@ -533,11 +526,17 @@ class Player(xbmc.Player):
         ga = GoogleAnalytics()
         ga.sendEventData("PlayAction", "Stopped")
     
-    def stopPlayback(self, data):
+    def stop_playback(self, data):
         
-        log.debug("stopPlayback called.")
+        log.debug("stop playback called.")
 
         position_ticks = int(data['currentPosition'] * 10000000)
         position = data['runtime'] if position_ticks and window('emby.external') else position_ticks
 
         self.emby.stop_playback(data['item_id'], position, data['playsession_id'], data.get('mediasource_id'))
+
+        # Stop transcode
+        if data['playmethod'] == "Transcode":
+            log.info("Transcoding for %s terminated." % data['item_id'])
+            url = "{server}/emby/Videos/ActiveEncodings?DeviceId=%s" % self.clientInfo.get_device_id()
+            self.doUtils(url, action_type="DELETE")
