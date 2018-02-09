@@ -23,8 +23,6 @@ SIGN_IN = 200
 CANCEL = 201
 ERROR_TOGGLE = 202
 ERROR_MSG = 203
-USER = 204
-PASSWORD = 205
 ERROR = {
     'Invalid': 1,
     'Empty': 2
@@ -52,7 +50,7 @@ class LoginManual(xbmcgui.WindowXMLDialog):
         self.server = server
 
     def set_user(self, user):
-        self.username = user or None
+        self.username = user or {}
 
     def get_user(self):
         return self._user
@@ -63,14 +61,21 @@ class LoginManual(xbmcgui.WindowXMLDialog):
         self.cancel_button = self.getControl(CANCEL)
         self.error_toggle = self.getControl(ERROR_TOGGLE)
         self.error_msg = self.getControl(ERROR_MSG)
-        self.user_field = self.getControl(USER)
-        self.password_field = self.getControl(PASSWORD)
+        self.user_field = self._add_editcontrol(755, 458, 40, 415)
+        self.password_field = self._add_editcontrol(755, 558, 40, 415, password=1)
 
         if self.username:
             self.user_field.setText(self.username)
             self.setFocus(self.password_field)
         else:
             self.setFocus(self.user_field)
+
+        self.user_field.controlUp(self.cancel_button)
+        self.user_field.controlDown(self.password_field)
+        self.password_field.controlUp(self.user_field)
+        self.password_field.controlDown(self.signin_button)
+        self.signin_button.controlUp(self.password_field)
+        self.cancel_button.controlDown(self.user_field)
 
     def onClick(self, control):
 
@@ -100,6 +105,24 @@ class LoginManual(xbmcgui.WindowXMLDialog):
 
         if action in (ACTION_BACK, ACTION_PARENT_DIR, ACTION_PREVIOUS_MENU):
             self.close()
+
+    def _add_editcontrol(self, x, y, height, width, password=0):
+
+        media = os.path.join(addon.getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
+        control = xbmcgui.ControlEdit(0, 0, 0, 0,
+                                      label="User",
+                                      font="font10",
+                                      textColor="FF52b54b",
+                                      disabledColor="FF888888",
+                                      focusTexture="-",
+                                      noFocusTexture="-",
+                                      isPassword=password)
+        control.setPosition(x, y)
+        control.setHeight(height)
+        control.setWidth(width)
+
+        self.addControl(control)
+        return control
 
     def _login(self, username, password):
 

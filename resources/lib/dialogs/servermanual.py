@@ -24,8 +24,6 @@ CONNECT = 200
 CANCEL = 201
 ERROR_TOGGLE = 202
 ERROR_MSG = 203
-HOST = 204
-PORT = 205
 ERROR = {
     'Invalid': 1,
     'Empty': 2
@@ -59,11 +57,18 @@ class ServerManual(xbmcgui.WindowXMLDialog):
         self.cancel_button = self.getControl(CANCEL)
         self.error_toggle = self.getControl(ERROR_TOGGLE)
         self.error_msg = self.getControl(ERROR_MSG)
-        self.host_field = self.getControl(HOST)
-        self.port_field = self.getControl(PORT)
+        self.host_field = self._add_editcontrol(755, 458, 40, 415)
+        self.port_field = self._add_editcontrol(755, 558, 40, 415)
 
         self.port_field.setText('8096')
         self.setFocus(self.host_field)
+
+        self.host_field.controlUp(self.cancel_button)
+        self.host_field.controlDown(self.port_field)
+        self.port_field.controlUp(self.host_field)
+        self.port_field.controlDown(self.connect_button)
+        self.connect_button.controlUp(self.port_field)
+        self.cancel_button.controlDown(self.host_field)
 
     def onClick(self, control):
 
@@ -93,6 +98,23 @@ class ServerManual(xbmcgui.WindowXMLDialog):
 
         if action in (ACTION_BACK, ACTION_PARENT_DIR, ACTION_PREVIOUS_MENU):
             self.close()
+
+    def _add_editcontrol(self, x, y, height, width):
+
+        media = os.path.join(addon.getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
+        control = xbmcgui.ControlEdit(0, 0, 0, 0,
+                                      label="User",
+                                      font="font10",
+                                      textColor="FF52b54b",
+                                      disabledColor="FF888888",
+                                      focusTexture="-",
+                                      noFocusTexture="-")
+        control.setPosition(x, y)
+        control.setHeight(height)
+        control.setWidth(width)
+
+        self.addControl(control)
+        return control
 
     def _connect_to_server(self, server, port):
 

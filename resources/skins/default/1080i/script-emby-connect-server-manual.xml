@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <window>
 	<defaultcontrol always="true">200</defaultcontrol>
-	<zorder>0</zorder>
+	<animation type="WindowOpen" reversible="false">
+		<effect type="zoom" start="80" end="100" center="960,540" delay="160" tween="circle" easin="out" time="240" />
+		<effect type="fade" delay="160" end="100" time="240" />
+	</animation>
+	<animation type="WindowClose" reversible="false">
+		<effect type="zoom" start="100" end="80" center="960,540" easing="in" tween="circle" easin="out" time="240" />
+		<effect type="fade" start="100" end="0" time="240" />
+	</animation>
 	<controls>
 		<control type="group">
 			<control type="image">
-				<top>0</top>
-				<bottom>0</bottom>
-				<left>0</left>
-				<right>0</right>
+				<top>-200</top>
+				<bottom>-200</bottom>
+				<left>-200</left>
+				<right>-200</right>
 				<texture colordiffuse="CC000000">white.png</texture>
 				<aspectratio>stretch</aspectratio>				
 				<animation effect="fade" end="100" time="200">WindowOpen</animation>
 				<animation effect="fade" start="100" end="0" time="200">WindowClose</animation>
 			</control>
 			<control type="group">
-				<animation type="WindowOpen" reversible="false">
-					<effect type="zoom" start="80" end="100" center="960,540" delay="160" tween="circle" easin="out" time="240" />
-					<effect type="fade" delay="160" end="100" time="240" />
-				</animation>
-				<animation type="WindowClose" reversible="false">
-					<effect type="zoom" start="100" end="80" center="960,540" easing="in" tween="circle" easin="out" time="240" />
-					<effect type="fade" start="100" end="0" time="240" />
-				</animation>
 				<centerleft>50%</centerleft>
 				<centertop>50%</centertop>
 				<width>470</width>
@@ -70,19 +69,8 @@
 								<aligny>top</aligny>
 								<textoffsetx>20</textoffsetx>
 							</control>
-							<control id="204" type="edit">
-								<top>35</top>
-								<left>20</left>
-								<right>20</right>
+							<control type="label">
 								<height>50</height>
-								<font>font10</font>
-								<textcolor>FF888888</textcolor>
-								<focusedcolor>FF52b54b</focusedcolor>
-								<shadowcolor>66000000</shadowcolor>
-								<ondown>205</ondown>								
-								<hinttext>[COLOR ff464646]IP or https://myserver.com[/COLOR]</hinttext>
-								<texturefocus>-</texturefocus>
-								<texturenofocus>-</texturenofocus>
 							</control>
 							<control type="image">
 								<left>20</left>
@@ -102,19 +90,8 @@
 								<aligny>top</aligny>
 								<textoffsetx>20</textoffsetx>
 							</control>
-							<control id="205" type="edit">
-								<top>35</top>
-								<left>20</left>
-								<right>20</right>
+							<control type="label">
 								<height>50</height>
-								<font>font10</font>
-								<textcolor>FF888888</textcolor>
-								<focusedcolor>FF52b54b</focusedcolor>
-								<shadowcolor>66000000</shadowcolor>
-								<onup>204</onup>
-								<ondown>200</ondown>
-								<texturefocus>-</texturefocus>
-								<texturenofocus>-</texturenofocus>
 							</control>
 							<control type="image">
 								<description>separator</description>
