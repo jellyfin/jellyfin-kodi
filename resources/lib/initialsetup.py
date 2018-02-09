@@ -75,19 +75,9 @@ class InitialSetup(object):
 
     def _server_verification(self):
 
-        ###$ Begin migration $###
-        if settings('server') == "":
-            self.user_client.get_server()
-            log.info("server migration completed")
-
-        self.user_client.get_userid()
-        self.user_client.get_token()
-        ###$ End migration $###
-
         current_server = self.user_client.get_server()
         if current_server and not settings('serverId'):
-            server = self.connectmanager.get_server(current_server,
-                                                        {'ssl': self.user_client.get_ssl()})
+            server = self.connectmanager.get_server(current_server, {'ssl': self.user_client.get_ssl()})
             log.info("Detected: %s", server)
             try:
                 server_id = server['Servers'][0]['Id']
