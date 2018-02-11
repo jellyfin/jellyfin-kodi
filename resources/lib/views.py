@@ -662,23 +662,6 @@ class VideoNodes(object):
                 }
                 path = urllib_path("plugin://plugin.video.emby/", params)
 
-            elif KODI == 14 and nodetype == "recentepisodes":
-                params = {
-
-                    'id': tagname.encode('utf-8'),
-                    'mode': "recentepisodes",
-                    'limit': 25
-                }
-                path = urllib_path("plugin://plugin.video.emby/", params)
-
-            elif KODI == 14 and nodetype == "inprogressepisodes":
-                params = {
-
-                    'id': tagname.encode('utf-8'),
-                    'mode': "inprogressepisodes",
-                    'limit': 25
-                }
-                path = urllib_path("plugin://plugin.video.emby/", params)
             else:
                 path = "library://video/emby/%s/%s.xml" % (viewid, nodetype)
             
@@ -716,8 +699,7 @@ class VideoNodes(object):
                 continue
 
             # Create the root
-            if (nodetype == "nextepisodes" or mediatype == "homevideos" or
-                    (KODI == 14 and nodetype in ('recentepisodes', 'inprogressepisodes'))):
+            if (nodetype == "nextepisodes" or mediatype == "homevideos"):
                 # Folder type with plugin path
                 root = self.commonRoot(order=node, label=label, tagname=tagname, roottype=2)
                 etree.SubElement(root, 'path').text = path
