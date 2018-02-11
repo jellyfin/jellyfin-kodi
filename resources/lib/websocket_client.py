@@ -45,23 +45,6 @@ class WebSocketClient(threading.Thread):
 
         threading.Thread.__init__(self)
 
-
-    def send_progress_update(self, data):
-
-        log.debug("sendProgressUpdate")
-        try:
-            message = {
-
-                'MessageType': "ReportPlaybackProgress",
-                'Data': data
-            }
-            message_str = json.dumps(message)
-            self._client.send(message_str)
-            log.debug("Message data: %s", message_str)
-
-        except Exception as error:
-            log.exception(error)
-
     @log_error()
     def on_message(self, ws, message):
 
@@ -364,7 +347,7 @@ class WebSocketClient(threading.Thread):
             if self._stop_websocket:
                 break
 
-            if self.monitor.waitForAbort(10):
+            if self.monitor.waitForAbort(5):
                 # Abort was requested, exit
                 break
 

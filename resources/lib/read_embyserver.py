@@ -673,7 +673,7 @@ class Read_EmbyServer():
 
     def stop_playback(self, item_id, position, playsession_id, mediasource_id=None):
 
-        url = self.get_emby_url('/Sessions/Playing/Stopped')
+        url = self.get_emby_url('Sessions/Playing/Stopped')
         return self.doUtils.downloadUrl(url, action_type="POST", postBody={
 
             'ItemId': item_id,
@@ -681,3 +681,7 @@ class Read_EmbyServer():
             'PositionTicks': position,
             'PlaySessionId': playsession_id
         })
+
+    def progress_report(self, data):
+        url = self.get_emby_url('Sessions/Playing/Progress')
+        return self.doUtils.downloadUrl(url, action_type="POST", postBody=data)

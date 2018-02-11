@@ -488,8 +488,6 @@ class Artwork(object):
         artworks = item['ImageTags']
         backdrops = item.get('BackdropImageTags', [])
 
-        max_height = 10000
-        max_width = 10000
         custom_query = ""
 
         if settings('compressArt') == "true":

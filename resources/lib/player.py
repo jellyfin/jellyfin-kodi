@@ -378,9 +378,8 @@ class Player(xbmc.Player):
                     data['SubtitleStreamIndex'], postdata['SubtitleStreamIndex'] = [""] * 2
 
             # Report progress via websocketclient
-            postdata = json.dumps(postdata)
-            log.debug("Report: %s" % postdata)
-            self.ws.send_progress_update(postdata)
+            log.debug("Report: %s", postdata)
+            self.emby.progress_report(postdata)
 
     @log_error()
     def onPlayBackPaused(self):
@@ -528,7 +527,7 @@ class Player(xbmc.Player):
     
     def stop_playback(self, data):
         
-        log.debug("stop playback called.")
+        log.info("stop playback called.")
 
         position_ticks = int(data['currentPosition'] * 10000000)
         position = data['runtime'] if position_ticks and window('emby.external') else position_ticks
