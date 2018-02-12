@@ -12,6 +12,7 @@ import xbmc
 import xbmcaddon
 import xbmcvfs
 
+import artwork
 import read_embyserver as embyserver
 import embydb_functions as embydb
 from utils import window, language as lang, indent as xml_indent, urllib_path
@@ -50,6 +51,7 @@ class Views(object):
         self.playlist = Playlist()
         self.emby = embyserver.Read_EmbyServer()
         self.emby_db = embydb.Embydb_Functions(emby_cursor)
+        self.artwork = artwork.Artwork()
 
     def _populate_views(self):
         # Will get emby views and views in Kodi
@@ -313,6 +315,12 @@ class Views(object):
         if view_name not in self.nodes and media_type not in ('musicvideos', 'music'):
             index = self.sorted_views.index(view_name)
             self.video_nodes.viewNode(index, view_name, media_type, view_type, view_id)
+
+            if window('emby_online') == "true":
+                # Only pull artwork if server is online
+                art = self.artwork.get_all_artwork(self.emby.getItem(view_id))
+                if art.get('Primary'):
+                    window("Emby.nodes.%s.artwork" % index, art['Primary'])
             
             if view_type == "mixed": # Change the value
                 self.sorted_views[index] = "%ss" % view_name
