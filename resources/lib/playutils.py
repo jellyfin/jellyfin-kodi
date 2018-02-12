@@ -435,7 +435,7 @@ class PlayUtils():
                     else:
                         prefs += "&SubtitleStreamIndex=%s" % index
 
-            elif (skip_dialog in (0, 2) and len(subs_streams) > 1):
+            elif skip_dialog in (0, 2) and len(subs_streams):
                 selection = list(['No subtitles']) + list(subs_streams.keys())
                 resp = dialog.select(lang(33014), selection)
                 if resp:
