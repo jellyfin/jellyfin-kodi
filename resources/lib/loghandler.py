@@ -5,7 +5,7 @@
 import logging
 import xbmc
 
-from utils import window
+from utils import window, settings
 
 ##################################################################################################
 
@@ -27,10 +27,13 @@ class LogHandler(logging.StreamHandler):
     def emit(self, record):
 
         if self._get_log_level(record.levelno):
+            string = self.format(record)
+            string = string.replace(settings('server') or "{server}", "{emby-server}")
+            string = string.replace(settings('token') or "{token}", "{emby-token}")
             try:
-                xbmc.log(self.format(record), level=xbmc.LOGNOTICE)
+                xbmc.log(string, level=xbmc.LOGNOTICE)
             except UnicodeEncodeError:
-                xbmc.log(self.format(record).encode('utf-8'), level=xbmc.LOGNOTICE)
+                xbmc.log(string.encode('utf-8'), level=xbmc.LOGNOTICE)
 
     @classmethod
     def _get_log_level(cls, level):

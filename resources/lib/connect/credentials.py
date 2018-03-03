@@ -43,7 +43,7 @@ class Credentials(object):
                 log.warn(e)
                 self.credentials = {}
 
-            log.info("credentials initialized with: %s" % self.credentials)
+            log.debug("credentials initialized with: %s" % self.credentials)
             self.credentials['Servers'] = self.credentials.setdefault('Servers', [])
 
     def _get(self):
