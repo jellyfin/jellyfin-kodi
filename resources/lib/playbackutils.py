@@ -54,6 +54,22 @@ class PlaybackUtils(object):
 
     def _detect_widgets(self):
 
+        kodi_version = xbmc.getInfoLabel('System.BuildVersion')
+
+        if kodi_version and "Git:" in kodi_version and int(kodi_version.split('Git:')[1].split("-")[0]) <= 20171119:
+            log.info("Build does not require workaround for widgets?")
+            return False
+
+        ''' if not xbmc.getCondVisibility('Window.IsMedia'):
+            log.info("Not Window.IsMedia")
+
+        if self.item['Type'] == "Audio" and not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(music),1)'):
+            log.info("Audio and not playlist")
+
+        if not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(video),1)'):
+            log.info("Not video playlist")
+        '''
+
         if (not xbmc.getCondVisibility('Window.IsMedia') and
             ((self.item['Type'] == "Audio" and not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(music),1)')) or
             not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(video),1)'))):
@@ -166,6 +182,7 @@ class PlaybackUtils(object):
                     url = putils.PlayUtils(intro, listitem).get_play_url()
                     log.info("Adding Intro: %s", url)
 
+                    PlaybackUtils(intro).set_properties(url, listitem)
                     self.set_artwork(listitem, self.item['Type'])
                     self.set_listitem(listitem)
 

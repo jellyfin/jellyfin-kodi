@@ -60,18 +60,6 @@ class UserClient(threading.Thread):
 
     @classmethod
     def get_server(cls):
-
-        ###$ Begin migration $###
-        if settings('server') == "":
-            http = "https" if settings('https') == "true" else "http"
-            host = settings('ipaddress')
-            port = settings('port')
-
-            if host and port:
-                settings('server', value="%s://%s:%s" % (http, host, port))
-                log.info("server address migration completed")
-        ###$ End migration $###
-
         return settings('server') or None
 
     def verify_server(self):
