@@ -151,7 +151,7 @@ class PlayUtils():
 
         path = self.get_direct_path(source)
 
-        if xbmcvfs.exists(path) or ":" not in path:
+        if xbmcvfs.exists(path): # or ":" not in path:
             log.info("Path exists or assumed linux or web.")
 
             self.method = "DirectPlay"
