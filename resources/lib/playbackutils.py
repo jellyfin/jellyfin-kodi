@@ -56,7 +56,8 @@ class PlaybackUtils(object):
 
         kodi_version = xbmc.getInfoLabel('System.BuildVersion')
 
-        if kodi_version and "Git:" in kodi_version and int(kodi_version.split('Git:')[1].split("-")[0]) <= 20171119:
+        if kodi_version and "Git:" in kodi_version and kodi_version.split('Git:')[1].split("-")[0] == '20171119':
+            #TODO: To be reviewed once Leia is out.
             log.info("Build does not require workaround for widgets?")
             return False
 
@@ -120,6 +121,9 @@ class PlaybackUtils(object):
             seektime_percent = ((seektime/self.API.get_runtime()) * 100) - 0.40
             log.info("seektime detected (percent): %s", seektime_percent)
             listitem.setProperty('StartPercent', str(seektime_percent))
+
+        # Prevent manually mark as watched in Kodi monitor
+        window('emby.skip.%s' % item_id, value="true")
 
         # Stack: [(url, listitem), (url, ...), ...]
         self.stack[0][1].setPath(self.stack[0][0])
@@ -350,11 +354,18 @@ class PlaybackUtils(object):
                 db_id = item_db[0] if item_db else None
 
             pbutils = PlaybackUtils(item)
-            pbutils.set_playlist(play_url, item_id, listitem, seektime if item_ids.index(item_id) == 1 else None, db_id)
+            pbutils.set_playlist(play_url, item_id, listitem, seektime if item_ids.index(item_id) == 0 else None, db_id)
 
-            if item_ids.index(item_id) == 1 and seektime:
+            if item_ids.index(item_id) == 0 and seektime:
+
                 log.info("Seektime detected: %s", self.API.adjust_resume(seektime))
                 listitem.setProperty('StartOffset', str(self.API.adjust_resume(seektime)))
+
+                '''
+                seektime_percent = ((seektime/self.API.get_runtime()) * 100) - 0.40
+                log.info("seektime detected (percent): %s", seektime_percent)
+                listitem.setProperty('StartPercent', str(seektime_percent))
+                '''
                 
 
             index = max(pbutils.playlist.getposition(), 0) + 1 # Can return -1
@@ -375,3 +386,4 @@ class PlaybackUtils(object):
 
         if started:
             return True
+
