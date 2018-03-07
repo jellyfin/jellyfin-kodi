@@ -131,6 +131,16 @@ class KodiMusic(KodiItems):
         ))
         self.cursor.execute(query, (args))
 
+    def update_artist_18(self, *args):
+        query = ' '.join((
+
+            "UPDATE artist",
+            "SET strGenres = ?, strBiography = ?, strImage = ?, strFanart = ?,",
+                "lastScraped = ?",
+            "WHERE idArtist = ?"
+        ))
+        self.cursor.execute(query, (args))
+
     def link_artist(self, kodi_id, album_id, name):
         query = (
             '''
@@ -168,23 +178,13 @@ class KodiMusic(KodiItems):
     def _add_album(self, name, musicbrainz):
 
         album_id = self.create_entry_album()
-        if self.kodi_version > 14:
-            query = (
-                '''
-                INSERT INTO album(idAlbum, strAlbum, strMusicBrainzAlbumID, strReleaseType)
-                VALUES (?, ?, ?, ?)
-                '''
-            )
-            self.cursor.execute(query, (album_id, name, musicbrainz, "album"))
-        else:
-            # TODO: Remove Helix code when Krypton is RC
-            query = (
-                '''
-                INSERT INTO album(idAlbum, strAlbum, strMusicBrainzAlbumID)
-                VALUES (?, ?, ?)
-                '''
-            )
-            self.cursor.execute(query, (album_id, name, musicbrainz))
+        query = (
+            '''
+            INSERT INTO album(idAlbum, strAlbum, strMusicBrainzAlbumID, strReleaseType)
+            VALUES (?, ?, ?, ?)
+            '''
+        )
+        self.cursor.execute(query, (album_id, name, musicbrainz, "album"))
 
         return album_id
 
@@ -192,7 +192,17 @@ class KodiMusic(KodiItems):
         query = ' '.join((
 
             "UPDATE album",
-            "SET strArtists = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?,",
+            "SET strArtist = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?,",
+                "iUserrating = ?, lastScraped = ?, strReleaseType = ?",
+            "WHERE idAlbum = ?"
+        ))
+        self.cursor.execute(query, (args))
+
+    def update_album_18(self, *args):
+        query = ' '.join((
+
+            "UPDATE album",
+            "SET strArtistDisp = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?,",
                 "iUserrating = ?, lastScraped = ?, strReleaseType = ?",
             "WHERE idAlbum = ?"
         ))
@@ -246,27 +256,6 @@ class KodiMusic(KodiItems):
         query = (
             '''
             INSERT INTO album(idAlbum, strGenres, iYear, strReleaseType)
-
-            VALUES (?, ?, ?, ?)
-            '''
-        )
-        self.cursor.execute(query, (args))
-
-    def add_single_15(self, *args):
-        query = (
-            '''
-            INSERT INTO album(idAlbum, strGenres, iYear, dateAdded, strReleaseType)
-
-            VALUES (?, ?, ?, ?, ?)
-            '''
-        )
-        self.cursor.execute(query, (args))
-
-    def add_single_14(self, *args):
-        # TODO: Remove Helix code when Krypton is RC
-        query = (
-            '''
-            INSERT INTO album(idAlbum, strGenres, iYear, dateAdded)
 
             VALUES (?, ?, ?, ?)
             '''

@@ -234,10 +234,10 @@ class Music(Items):
             emby_db.addReference(itemid, artistid, artisttype, "artist", checksum=checksum)
 
         # Process the artist
-        if self.kodi_version > 15:
-            self.kodi_db.update_artist_16(genres, bio, thumb, fanart, lastScraped, artistid)
-        else:
+        if self.kodi_version > 18:
             self.kodi_db.update_artist(genres, bio, thumb, fanart, lastScraped, dateadded, artistid)
+        else:
+            self.kodi_db.update_artist_18(genres, bio, thumb, fanart, lastScraped, artistid)
 
         # Update artwork
         artwork.add_artwork(artworks, artistid, "artist", kodicursor)
@@ -303,8 +303,12 @@ class Music(Items):
             emby_db.addReference(itemid, albumid, "MusicAlbum", "album", checksum=checksum)
 
         # Process the album info
-        self.kodi_db.update_album(artistname, year, genre, bio, thumb, rating, lastScraped,
-                                  "album", albumid)
+        if self.kodi_version > 18:
+            self.kodi_db.update_album(artistname, year, genre, bio, thumb, rating, lastScraped,
+                                      "album", albumid)
+        else:
+            self.kodi_db.update_album_18(artistname, year, genre, bio, thumb, rating, lastScraped,
+                                         "album", albumid)
 
         # Assign main artists to album
         for artist in item['AlbumArtists']:
@@ -340,7 +344,8 @@ class Music(Items):
                 self.kodi_db.add_discography(artistid, name, year)
 
         # Add genres
-        self.kodi_db.add_genres(albumid, genres, "album")
+        if self.kodi_version > 18:
+            self.kodi_db.add_genres(albumid, genres, "album")
         # Update artwork
         artwork.add_artwork(artworks, albumid, "album", kodicursor)
 

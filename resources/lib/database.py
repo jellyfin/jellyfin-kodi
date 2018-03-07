@@ -25,10 +25,6 @@ KODI = xbmc.getInfoLabel('System.BuildVersion')[:2]
 def video_database():
     db_version = {
 
-        '13': 78, # Gotham
-        '14': 90, # Helix
-        '15': 93, # Isengard
-        '16': 99, # Jarvis
         '17': 107,# Krypton
         '18': 109 # Leia
     }
@@ -38,12 +34,8 @@ def video_database():
 def music_database():
     db_version = {
 
-        '13': 46, # Gotham
-        '14': 48, # Helix
-        '15': 52, # Isengard
-        '16': 56, # Jarvis
         '17': 60, # Krypton
-        '18': 68  # Leia
+        '18': 70  # Leia
     }
     return xbmc.translatePath("special://database/MyMusic%s.db"
                               % db_version.get(KODI, "")).decode('utf-8')
