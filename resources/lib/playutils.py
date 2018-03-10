@@ -68,6 +68,9 @@ class PlayUtils():
                 # Log filename, used by other addons eg subtitles which require the file name
                 window('embyfilename', value=url)
 
+            if 'RequiredHttpHeaders' in info and 'User-Agent' in info['RequiredHttpHeaders']:
+                self.listitem.setProperty('User-Agent', info['RequiredHttpHeaders']['User-Agent'])
+
             log.info("playback info: %s", info)
             log.info("play method: %s play url: %s", self.method, url)
 
@@ -129,9 +132,9 @@ class PlayUtils():
                 log.info("No media source selected.")
                 return False
 
-        return self.get_optimal_source(selected_source)
+        return self.get_optimal_track(selected_source)
 
-    def get_optimal_source(self, source):
+    def get_optimal_track(self, source):
 
         ''' Because we posted our deviceprofile to the server, only streams will be
             returned that can actually be played by this client so no need to check bitrates etc.
@@ -142,7 +145,7 @@ class PlayUtils():
             # Do nothing, path is updated with our verification if applies.
             pass
         else:
-            source['Path'] = self.get_http_path(source, self.force_transcode or source['SupportsDirectStream'] == False)
+            source['Path'] = self.get_http_path(source, self.force_transcode)
 
         log.debug('get source: %s', source)
         return source
@@ -439,7 +442,7 @@ class PlayUtils():
                 selection = list(['No subtitles']) + list(subs_streams.keys())
                 resp = dialog.select(lang(33014), selection)
                 if resp:
-                    index = subs_streams[selection[resp]] if resp > -1 else sources.get('DefaultSubtitleStreamIndex')
+                    index = subs_streams[selection[resp]] if resp > -1 else source.get('DefaultSubtitleStreamIndex')
                     if index is not None:
                         server_settings = self.emby.get_server_transcoding_settings()
                         if server_settings['EnableSubtitleExtraction'] and streams[index]['SupportsExternalStream']:
