@@ -192,7 +192,7 @@ class KodiMusic(KodiItems):
         query = ' '.join((
 
             "UPDATE album",
-            "SET strArtist = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?,",
+            "SET strArtists = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?,",
                 "iUserrating = ?, lastScraped = ?, strReleaseType = ?",
             "WHERE idAlbum = ?"
         ))

@@ -234,7 +234,7 @@ class Music(Items):
             emby_db.addReference(itemid, artistid, artisttype, "artist", checksum=checksum)
 
         # Process the artist
-        if self.kodi_version > 18:
+        if self.kodi_version < 18:
             self.kodi_db.update_artist(genres, bio, thumb, fanart, lastScraped, dateadded, artistid)
         else:
             self.kodi_db.update_artist_18(genres, bio, thumb, fanart, lastScraped, artistid)
@@ -303,7 +303,7 @@ class Music(Items):
             emby_db.addReference(itemid, albumid, "MusicAlbum", "album", checksum=checksum)
 
         # Process the album info
-        if self.kodi_version > 18:
+        if self.kodi_version < 18:
             self.kodi_db.update_album(artistname, year, genre, bio, thumb, rating, lastScraped,
                                       "album", albumid)
         else:
@@ -344,7 +344,7 @@ class Music(Items):
                 self.kodi_db.add_discography(artistid, name, year)
 
         # Add genres
-        if self.kodi_version > 18:
+        if self.kodi_version < 18:
             self.kodi_db.add_genres(albumid, genres, "album")
         # Update artwork
         artwork.add_artwork(artworks, albumid, "album", kodicursor)
@@ -503,9 +503,9 @@ class Music(Items):
         # Link song to album
         if self.kodi_version < 18:
             self.kodi_db.link_song_album(songid, albumid, track, title, duration)
+        
         # Create default role
-        if self.kodi_version > 16:
-            self.kodi_db.add_role()
+        self.kodi_db.add_role()
 
         # Link song to artists
         for index, artist in enumerate(item['ArtistItems']):
