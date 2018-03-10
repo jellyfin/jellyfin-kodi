@@ -61,6 +61,12 @@ class PlaybackUtils(object):
             log.info("Build does not require workaround for widgets?")
             return False
 
+        '''
+        elif int(kodi_version[:2]):
+            log.info("Kodi Leia")
+            return False
+        '''
+
         ''' if not xbmc.getCondVisibility('Window.IsMedia'):
             log.info("Not Window.IsMedia")
 
@@ -226,7 +232,8 @@ class PlaybackUtils(object):
             'studio': " / ".join(self.API.get_studios()),
             'aired': self.API.get_premiere_date(),
             'rating': self.item.get('CommunityRating'),
-            'votes': self.item.get('VoteCount')
+            'votes': self.item.get('VoteCount'),
+            'dbid': dbid or None
         }
 
         if mediatype == "Episode":
@@ -247,11 +254,6 @@ class PlaybackUtils(object):
 
         else:
             metadata['mediatype'] = "video"
-
-        if dbid:
-            metadata['dbid'] = dbid
-        else:
-            metadata['dbid'] = None
 
         listitem.setProperty('IsPlayable', 'true')
         listitem.setProperty('IsFolder', 'false')
@@ -354,19 +356,13 @@ class PlaybackUtils(object):
                 db_id = item_db[0] if item_db else None
 
             pbutils = PlaybackUtils(item)
-            pbutils.set_playlist(play_url, item_id, listitem, seektime if item_ids.index(item_id) == 0 else None, db_id)
 
             if item_ids.index(item_id) == 0 and seektime:
-
+                seektime = seektime / 10000000.0 if seektime else None
                 log.info("Seektime detected: %s", self.API.adjust_resume(seektime))
-                listitem.setProperty('StartOffset', str(self.API.adjust_resume(seektime)))
-
-                '''
-                seektime_percent = ((seektime/self.API.get_runtime()) * 100) - 0.40
-                log.info("seektime detected (percent): %s", seektime_percent)
-                listitem.setProperty('StartPercent', str(seektime_percent))
-                '''
+                listitem.setProperty('startoffset', str(self.API.adjust_resume(seektime)))
                 
+            pbutils.set_playlist(play_url, item_id, listitem, seektime if item_ids.index(item_id) == 0 else None, db_id)
 
             index = max(pbutils.playlist.getposition(), 0) + 1 # Can return -1
             for stack in pbutils.stack:
@@ -384,6 +380,4 @@ class PlaybackUtils(object):
                 player = xbmc.Player()
                 player.play(pbutils.playlist)
 
-        if started:
-            return True
-
+        return True
