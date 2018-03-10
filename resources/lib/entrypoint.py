@@ -37,7 +37,7 @@ from utils import window, settings, dialog, language as lang, urllib_path
 log = logging.getLogger("EMBY."+__name__)
 
 addon = xbmcaddon.Addon(id='plugin.video.emby')
-XML_PATH = (addon.getAddonInfo('path'), "default", "1080i")
+XML_PATH = (addon.getAddonInfo('path'), "default", "1080i", True)
 
 #################################################################################################
 
@@ -96,19 +96,21 @@ def doMainListing():
                     addDirectoryItem(label, path)
 
     # experimental live tv nodes
+    '''
     if not xbmc.getCondVisibility("Window.IsActive(Pictures)"):
         addDirectoryItem(lang(33051),
             "plugin://plugin.video.emby/?mode=browsecontent&type=tvchannels&folderid=root")
         addDirectoryItem(lang(33052),
             "plugin://plugin.video.emby/?mode=browsecontent&type=recordings&folderid=root")
-
+    '''
     '''
     TODO: Create plugin listing for servers
     servers = window('emby_servers.json')
     if servers:
         for server in servers:
             log.info(window('emby_server%s.name' % server))
-            addDirectoryItem(window('emby_server%s.name' % server), "plugin://plugin.video.emby/?mode=%s" % server)'''
+            addDirectoryItem(window('emby_server%s.name' % server), "plugin://plugin.video.emby/?mode=%s" % server)
+    '''
 
     #addDirectoryItem("Manual login dialog", "plugin://plugin.video.emby/?mode=manuallogin")
     #addDirectoryItem("Connect login dialog", "plugin://plugin.video.emby/?mode=connectlogin")
