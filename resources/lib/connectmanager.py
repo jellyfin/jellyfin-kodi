@@ -21,7 +21,7 @@ log = logging.getLogger("EMBY."+__name__)
 addon = xbmcaddon.Addon(id='plugin.video.emby')
 
 STATE = connectionmanager.ConnectionState
-XML_PATH = (addon.getAddonInfo('path'), "default", "1080i")
+XML_PATH = (addon.getAddonInfo('path'), "default", "1080i", True)
 
 ##################################################################################################
 

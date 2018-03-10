@@ -73,7 +73,7 @@ class ContextMenu(object):
     @classmethod
     def _get_item_type(cls):
 
-        item_type = sys.listitem.getVideoInfoTag().getMediaType().decode('utf-8')
+        item_type = sys.listitem.getVideoInfoTag().getMediaType()
 
         if not item_type:
 
@@ -88,7 +88,7 @@ class ContextMenu(object):
             else:
                 log.info("item_type is unknown")
 
-        return item_type
+        return item_type.decode('utf-8')
 
     @classmethod
     def _get_item_id(cls, kodi_id, item_type):
