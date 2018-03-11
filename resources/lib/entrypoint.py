@@ -37,7 +37,7 @@ from utils import window, settings, dialog, language as lang, urllib_path
 log = logging.getLogger("EMBY."+__name__)
 
 addon = xbmcaddon.Addon(id='plugin.video.emby')
-XML_PATH = (addon.getAddonInfo('path'), "default", "1080i", True)
+XML_PATH = (addon.getAddonInfo('path'), "default", "1080i")
 
 #################################################################################################
 
