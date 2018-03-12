@@ -347,7 +347,7 @@ class Views(object):
             ("Favorite movies", "movies", "favourites"),
             ("Favorite tvshows", "tvshows", "favourites"),
             ("Favorite episodes", "episodes", "favourites"),
-            ("channels", "movies", "channels")
+            #("channels", "movies", "channels")
         ]
         for args in singles:
             self._single_node(self.total_nodes, *args)

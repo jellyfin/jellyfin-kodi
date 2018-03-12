@@ -118,21 +118,21 @@ def doMainListing():
     #addDirectoryItem("Connect servers dialog", "plugin://plugin.video.emby/?mode=connectservers")
     #addDirectoryItem("Connect users dialog", "plugin://plugin.video.emby/?mode=connectusers")
 
-    addDirectoryItem(lang(30517), "plugin://plugin.video.emby/?mode=passwords")
-    addDirectoryItem(lang(33053), "plugin://plugin.video.emby/?mode=settings")
-    addDirectoryItem(lang(33054), "plugin://plugin.video.emby/?mode=adduser")
-    addDirectoryItem(lang(33055), "plugin://plugin.video.emby/?mode=refreshplaylist")
-    addDirectoryItem(lang(33098), "plugin://plugin.video.emby/?mode=refreshboxsets")
-    addDirectoryItem(lang(33056), "plugin://plugin.video.emby/?mode=manualsync")
-    addDirectoryItem(lang(33057), "plugin://plugin.video.emby/?mode=repair")
-    addDirectoryItem(lang(33058), "plugin://plugin.video.emby/?mode=reset")
-    addDirectoryItem(lang(33059), "plugin://plugin.video.emby/?mode=texturecache")
-    addDirectoryItem(lang(33060), "plugin://plugin.video.emby/?mode=thememedia")
+    addDirectoryItem(lang(30517), "plugin://plugin.video.emby/?mode=passwords", False)
+    addDirectoryItem(lang(33053), "plugin://plugin.video.emby/?mode=settings", False)
+    addDirectoryItem(lang(33054), "plugin://plugin.video.emby/?mode=adduser", False)
+    addDirectoryItem(lang(33055), "plugin://plugin.video.emby/?mode=refreshplaylist", False)
+    addDirectoryItem(lang(33098), "plugin://plugin.video.emby/?mode=refreshboxsets", False)
+    addDirectoryItem(lang(33056), "plugin://plugin.video.emby/?mode=manualsync", False)
+    addDirectoryItem(lang(33057), "plugin://plugin.video.emby/?mode=repair", False)
+    addDirectoryItem(lang(33058), "plugin://plugin.video.emby/?mode=reset", False)
+    addDirectoryItem(lang(33059), "plugin://plugin.video.emby/?mode=texturecache", False)
+    addDirectoryItem(lang(33060), "plugin://plugin.video.emby/?mode=thememedia", False)
 
     if settings('backupPath'):
-        addDirectoryItem(lang(33092), "plugin://plugin.video.emby/?mode=backup")
+        addDirectoryItem(lang(33092), "plugin://plugin.video.emby/?mode=backup", False)
     
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    #xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 def test_manual_login():
     from dialogs import LoginManual
@@ -735,7 +735,7 @@ def GetSubFolders(nodeindex):
         if title:
             path = window('Emby.nodes.%s%s.content' %(nodeindex,node))
             addDirectoryItem(title, path)
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    #xbmcplugin.endOfDirectory(int(sys.argv[1]))
               
 ##### BROWSE EMBY NODES DIRECTLY #####    
 def BrowseContent(viewname, browse_type="", folderid=""):
@@ -1314,7 +1314,7 @@ def getVideoFiles(embyId,embyPath):
                 dir = filelocation + dir
                 li = xbmcgui.ListItem(dir, path=dir)
                 xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=dir, listitem=li, isFolder=True)
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    #xbmcplugin.endOfDirectory(int(sys.argv[1]))
     
 ##### GET EXTRAFANART FOR LISTITEM #####
 def getExtraFanArt(embyId,embyPath):
@@ -1375,4 +1375,4 @@ def getExtraFanArt(embyId,embyPath):
         log.error("Error getting extrafanart: %s" % e)
     
     # Always do endofdirectory to prevent errors in the logs
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    #xbmcplugin.endOfDirectory(int(sys.argv[1]))

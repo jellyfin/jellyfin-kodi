@@ -9,6 +9,7 @@ import urlparse
 
 import xbmc
 import xbmcaddon
+import xbmcplugin
 
 #################################################################################################
 
@@ -76,9 +77,8 @@ class Main(object):
             else:
                 entrypoint.doMainListing()
 
-        """try:
+        if sys.argv:
             xbmcplugin.endOfDirectory(int(sys.argv[1]))
-        except Exception: pass"""
 
     @classmethod
     def _modes(cls, mode, params):
