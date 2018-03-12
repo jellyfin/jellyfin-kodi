@@ -235,7 +235,7 @@ class Music(Items):
 
         # Process the artist
         if self.kodi_version < 18:
-            self.kodi_db.update_artist(genres, bio, thumb, fanart, lastScraped, dateadded, artistid)
+            self.kodi_db.update_artist(genres, bio, thumb, fanart, lastScraped, artistid)
         else:
             self.kodi_db.update_artist_18(genres, bio, thumb, fanart, lastScraped, artistid)
 

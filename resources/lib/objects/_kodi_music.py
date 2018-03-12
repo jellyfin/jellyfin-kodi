@@ -126,7 +126,7 @@ class KodiMusic(KodiItems):
 
             "UPDATE artist",
             "SET strGenres = ?, strBiography = ?, strImage = ?, strFanart = ?,",
-                "lastScraped = ?, dateAdded = ?",
+                "lastScraped = ?",
             "WHERE idArtist = ?"
         ))
         self.cursor.execute(query, (args))
@@ -159,15 +159,25 @@ class KodiMusic(KodiItems):
         )
         self.cursor.execute(query, (kodi_id, album, year))
 
-    def get_album(self, name, musicbrainz):
+    def get_album(self, name, musicbrainz=None):
 
-        query = ' '.join((
+        if musicbrainz is not None:
+            query = ' '.join((
 
-            "SELECT idAlbum",
-            "FROM album",
-            "WHERE strMusicBrainzAlbumID = ?"
-        ))
-        self.cursor.execute(query, (musicbrainz,))
+                "SELECT idAlbum",
+                "FROM album",
+                "WHERE strMusicBrainzAlbumID = ?"
+            ))
+            self.cursor.execute(query, (musicbrainz,))
+        else:
+            query = ' '.join((
+
+                "SELECT idAlbum",
+                "FROM album",
+                "WHERE strMusicBrainzAlbumID = ?"
+            ))
+            self.cursor.execute(query, (name,))
+
         try:
             album_id = self.cursor.fetchone()[0]
         except TypeError:
