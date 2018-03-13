@@ -6,6 +6,7 @@ import logging
 from ntpath import dirname
 
 import api
+import emby as mb
 import embydb_functions as embydb
 import _kodi_tvshows
 from _common import Items, catch_except
@@ -202,8 +203,8 @@ class TVShows(Items):
         for item in self.added(items, total):
             if self.add_update(item, view):
                 # Add episodes
-                all_episodes = self.emby.getEpisodesbyShow(item['Id'])
-                self.add_episodes(all_episodes['Items'])
+                for all_episodes in mb.get_items(item['Id'], "Episode"):
+                    self.add_episodes(all_episodes['Items'])
 
     def add_seasons(self, items, total=None, view=None):
 
@@ -214,8 +215,8 @@ class TVShows(Items):
 
             if self.add_updateSeason(item):
                 # Add episodes
-                all_episodes = self.emby.getEpisodesbySeason(item['Id'])
-                self.add_episodes(all_episodes['Items'])
+                for all_episodes in mb.get_items(item['Id'], "Episode"):
+                    self.add_episodes(all_episodes['Items'])
 
     def add_episodes(self, items, total=None, view=None):
 
