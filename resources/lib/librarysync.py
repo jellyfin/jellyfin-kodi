@@ -17,6 +17,7 @@ import clientinfo
 import database
 import downloadutils
 import itemtypes
+import emby as mb
 import embydb_functions as embydb
 import read_embyserver as embyserver
 import userclient
@@ -59,7 +60,6 @@ class LibrarySync(threading.Thread):
         self.doUtils = downloadutils.DownloadUtils().downloadUrl
         self.user = userclient.UserClient()
         self.emby = embyserver.Read_EmbyServer()
-
         self.kodi_version = int(xbmc.getInfoLabel('System.BuildVersion')[:2])
 
         threading.Thread.__init__(self)
@@ -402,8 +402,8 @@ class LibrarySync(threading.Thread):
                         heading=lang(29999),
                         message="%s %s..." % (lang(33017), view_name))
 
-            all_movies = self.emby.getMovies(view['id'], dialog=pdialog)
-            movies.add_all("Movie", all_movies, view)
+            for all_movies in mb.get_items(view['id'], "Movie"):
+                movies.add_all("Movie", all_movies['Items'], view)
 
         log.debug("Movies finished.")
         return True
@@ -415,8 +415,8 @@ class LibrarySync(threading.Thread):
         if pdialog:
             pdialog.update(heading=lang(29999), message=lang(33018))
 
-        boxsets = self.emby.getBoxset(dialog=pdialog)
-        movies.add_all("BoxSet", boxsets)
+        for boxsets in mb.get_items(None, "BoxSet"):
+            movies.add_all("BoxSet", boxsets)
 
         log.debug("Boxsets finished.")
         return True
@@ -434,7 +434,6 @@ class LibrarySync(threading.Thread):
             log.info("Processing: %s", view)
 
             # Get items per view
-            viewId = view['id']
             viewName = view['name']
 
             if pdialog:
@@ -443,8 +442,8 @@ class LibrarySync(threading.Thread):
                         message="%s %s..." % (lang(33019), viewName))
 
             # Initial or repair sync
-            all_mvideos = self.emby.getMusicVideos(viewId, dialog=pdialog)
-            mvideos.add_all("MusicVideo", all_mvideos, view)
+            for all_mvideos in mb.get_items(view['id'], "MusicVideo"):
+                mvideos.add_all("MusicVideo", all_mvideos['Items'], view)
 
         else:
             log.debug("MusicVideos finished.")
@@ -469,10 +468,8 @@ class LibrarySync(threading.Thread):
                         heading=lang(29999),
                         message="%s %s..." % (lang(33020), view['name']))
 
-            all_tvshows = self.emby.getShows(view['id'], dialog=pdialog)
-            #log.info([item['Id'] for item in all_tvshows['Items']])
-            #for all_tvshows in self.emby.get_parent_child(view['id'], "Series"):
-            tvshows.add_all("Series", all_tvshows, view)
+            for all_tvshows in mb.get_items(view['id'], "Series"):
+                tvshows.add_all("Series", all_tvshows['Items'], view)
 
         else:
             log.debug("TVShows finished.")

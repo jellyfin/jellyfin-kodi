@@ -63,6 +63,8 @@ class TVShows(Items):
 
     def compare_all(self):
         # Pull the list of movies and boxsets in Kodi
+        import emby as mb
+
         pdialog = self.pdialog
         views = self.emby_db.getView_byType('tvshows')
         views += self.emby_db.getView_byType('mixed')
@@ -116,7 +118,7 @@ class TVShows(Items):
                     updatelist.append(itemid)
 
             log.info("TVShows to update for %s: %s", viewName, updatelist)
-            embytvshows = self.emby.getFullItems(updatelist)
+            embytvshows = (items['Items'] for items in mb.get_item_list(updatelist, True))
             self.total = len(updatelist)
             del updatelist[:]
 
