@@ -490,8 +490,9 @@ class LibrarySync(threading.Thread):
                            message="%s Music..." % lang(33021))
 
         for view in views:
-            all_artists = self.emby.getArtists(view['id'], dialog=pdialog)
-            music.add_all("MusicArtist", all_artists)
+
+            for all_artists in mb.get_artists(view['id']):
+                music.add_all("MusicArtist", all_artists['Items'])
 
         log.debug("Finished syncing music")
 
@@ -748,7 +749,7 @@ class LibrarySync(threading.Thread):
                 self.incremental_count = 0
                 window('emby_kodiScan', clear=True)
 
-            if ((not xbmc.Player().isPlaying() or xbmc.getCondVisibility('VideoPlayer.Content(livetv)')) and
+            if ((not xbmc.Player().isPlayingVideo() or xbmc.getCondVisibility('VideoPlayer.Content(livetv)')) and
                 window('emby_dbScan') != "true" and window('emby_shouldStop') != "true"):
                 
                 self.incrementalSync()

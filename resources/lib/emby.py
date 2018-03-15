@@ -88,7 +88,7 @@ def show(handler, params):
 
 #################################################################################################
 
-# Single item functions
+# Single result functions
 
 #################################################################################################
 
@@ -107,7 +107,7 @@ def get_seasons(self, show_id):
 
 #################################################################################################
 
-# Get multiple items (Generator)
+# Multiple calls to get multiple items (Generator)
 
 ''' This should help with memory issues.
     for items in generator(...):
@@ -119,7 +119,7 @@ def get_seasons(self, show_id):
 
 #################################################################################################
 
-def get_items(parent_id, item_type, basic=False):
+def get_items(parent_id, item_type=None, basic=False, params=None):
 
     query = {
         'url': "Users/{UserId}/Items",
@@ -127,9 +127,14 @@ def get_items(parent_id, item_type, basic=False):
             'ParentId': parent_id,
             'IncludeItemTypes': item_type,
             'SortBy': "SortName",
+            'SortOrder': "Ascending",
             'Fields': basic_info() if basic else complete_info()
         }
     }
+
+    if params:
+        query['params'].update(params)
+
     for items in _get_items(query):
         yield items
 
@@ -145,6 +150,33 @@ def get_item_list(item_list, basic=False):
         }
         for items in _get_items(query):
             yield items
+
+def get_artists(parent_id=None):
+
+    query = {
+        'url': "Artists?UserId={UserId}",
+        'params': {
+            'ParentId': parent_id,
+            'SortBy': "SortName",
+            'SortOrder': "Ascending",
+            'Fields': (
+                "Etag,Genres,SortName,Studios,Writer,ProductionYear,"
+                "CommunityRating,OfficialRating,CumulativeRunTimeTicks,Metascore,"
+                "AirTime,DateCreated,MediaStreams,People,ProviderIds,Overview,ItemCounts"
+            )
+        }
+    }
+    for items in _get_items(query):
+        yield items
+
+def get_albums_by_artist(artist_id):
+
+    params = {
+        'SortBy': "DateCreated",
+        'ArtistIds': artist_id
+    }
+    for items in get_items(None, "MusicAlbum", params=params):
+        yield items
 
 def _split_list(item_list, size):
     # Split up list in pieces of size. Will generate a list of lists
@@ -171,8 +203,7 @@ def _get_items(query):
         'EnableTotalRecordCount': False,
         'LocationTypes': "FileSystem,Remote,Offline",
         'IsMissing': False,
-        'Recursive': True,
-        'SortOrder': "Ascending"
+        'Recursive': True
     })
 
     try:

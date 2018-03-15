@@ -6,6 +6,7 @@ import logging
 from datetime import datetime
 
 import api
+import emby as mb
 import embydb_functions as embydb
 import musicutils
 import _kodi_music
@@ -89,7 +90,7 @@ class Music(Items):
 
         artists = dict(self.emby_db.get_checksum('MusicArtist'))
         album_artists = dict(self.emby_db.get_checksum('AlbumArtist'))
-        emby_artists = self.emby.getArtists(dialog=self.pdialog)
+        emby_artists = (items['Items'] for items in mb.get_artists())
 
         for item in emby_artists['Items']:
 
@@ -151,8 +152,8 @@ class Music(Items):
         for item in self.added(items, total):
             if self.add_updateArtist(item):
                 # Add albums
-                all_albums = self.emby.getAlbumsbyArtist(item['Id'])
-                self.add_albums(all_albums['Items'])
+                for all_albums in mb.get_albums_by_artist(item['Id']):
+                    self.add_albums(all_albums['Items'])
 
     def add_albums(self, items, total=None):
 
@@ -163,8 +164,8 @@ class Music(Items):
 
             if self.add_updateAlbum(item):
                 # Add songs
-                all_songs = self.emby.getSongsbyAlbum(item['Id'])
-                self.add_songs(all_songs['Items'])
+                for all_songs in mb.get_items(item['Id'], "Audio"):
+                    self.add_songs(all_songs['Items'])
 
     def add_songs(self, items, total=None):
 
