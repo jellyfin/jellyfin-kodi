@@ -139,8 +139,7 @@ class PlayUtils():
         ''' Because we posted our deviceprofile to the server, only streams will be
             returned that can actually be played by this client so no need to check bitrates etc.
         '''
-
-        if (not self.force_transcode and (self.is_h265(source) or self.is_strm(source) or
+        if (not self.force_transcode and (self.is_strm(source) or self.is_h265(source) or
             (source['SupportsDirectPlay'] and settings('playFromStream') == "false" and self.is_file_exists(source)))):
             # Do nothing, path is updated with our verification if applies.
             pass
@@ -155,7 +154,7 @@ class PlayUtils():
         path = self.get_direct_path(source)
 
         if xbmcvfs.exists(path): # or ":" not in path:
-            log.info("Path exists or assumed linux or web.")
+            log.info("Path exists.")
 
             self.method = "DirectPlay"
             source['Path'] = path
@@ -166,8 +165,8 @@ class PlayUtils():
         return False
 
     def is_strm(self, source):
-        
-        if source['Container'] == "strm":
+
+        if source['Container'] == "strm" or '.strm' in self.item['Path']:
             log.info('Strm detected.')
 
             self.method = "DirectPlay"
