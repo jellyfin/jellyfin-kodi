@@ -61,13 +61,12 @@ class PlaybackUtils(object):
             log.info("Build does not require workaround for widgets?")
             return False
 
-        '''
-        elif int(kodi_version[:2]):
+        elif int(kodi_version[:2]) == 18:
             log.info("Kodi Leia")
             return False
-        '''
 
-        ''' if not xbmc.getCondVisibility('Window.IsMedia'):
+        ''' 
+        if not xbmc.getCondVisibility('Window.IsMedia'):
             log.info("Not Window.IsMedia")
 
         if self.item['Type'] == "Audio" and not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(music),1)'):
