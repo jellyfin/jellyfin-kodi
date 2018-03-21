@@ -8,10 +8,12 @@ import requests
 import os
 import shutil
 import sys
+from datetime import timedelta
 
 import xbmc
 import xbmcgui
 import xbmcplugin
+import xbmcaddon
 import xbmcvfs
 
 import api
@@ -23,11 +25,13 @@ import read_embyserver as embyserver
 import shutil
 import embydb_functions as embydb
 from database import DatabaseConn
+from dialogs import resume
 from utils import window, settings, language as lang
 
 #################################################################################################
 
 log = logging.getLogger("EMBY."+__name__)
+KODI_V = int(xbmc.getInfoLabel('System.BuildVersion')[:2])
 
 #################################################################################################
 
@@ -61,7 +65,7 @@ class PlaybackUtils(object):
             log.info("Build does not require workaround for widgets?")
             return False
 
-        elif int(kodi_version[:2]) == 18:
+        elif KODI_V == 18:
             log.info("Kodi Leia")
             return False
 
@@ -93,6 +97,8 @@ class PlaybackUtils(object):
         resume = window('emby.resume')
         window('emby.resume', clear=True)
 
+        log.info(sys.argv)
+
         play_url = putils.PlayUtils(self.item, listitem).get_play_url(force_transcode)
 
         if not play_url:
@@ -100,7 +106,17 @@ class PlaybackUtils(object):
                 self.playlist.clear()
             return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, listitem)
 
-        seektime = 0 if resume == "true" else self.API.adjust_resume(self.API.get_userdata()['Resume'])
+        if KODI_V == 18 or (KODI_V == 17 and force_transcode):
+            
+            seektime = self.API.get_userdata()['Resume']
+            if seektime:
+                resume = self.resume_dialog(seektime)
+                if resume is None:
+                    return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, listitem)
+                elif not resume:
+                    seektime = 0
+        else:
+            seektime = 0 if resume == "true" else self.API.adjust_resume(self.API.get_userdata()['Resume'])
 
         if force_transcode:
             log.info("Clear the playlist.")
@@ -330,6 +346,23 @@ class PlaybackUtils(object):
         else:
             listitem.setArt({art: path})
 
+    def resume_dialog(self, seektime):
+
+        log.info("Resume dialog called.")
+        XML_PATH = (xbmcaddon.Addon('plugin.video.emby').getAddonInfo('path'), "default", "1080i")
+
+        dialog = resume.ResumeDialog("script-emby-resume.xml", *XML_PATH)
+        dialog.set_resume_point("Resume from %s" % str(timedelta(seconds=seektime)).split(".")[0])
+        dialog.doModal()
+
+        if dialog.is_selected():
+            if not dialog.get_selected(): # Start from beginning selected.
+                return False
+        else: # User backed out
+            log.info("User exited without a selection.")
+            return
+
+        return True
 
     def play_all(self, item_ids, seektime=None, **kwargs):
 

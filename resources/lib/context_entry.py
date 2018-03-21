@@ -201,20 +201,4 @@ class ContextMenu(object):
     def _force_transcode(self):
 
         log.info("Force transcode called.")
-        seektime = self.api.adjust_resume(self.api.get_userdata()['Resume'])
-
-        if seektime:
-            log.info("Resume dialog called.")
-
-            dialog = resume.ResumeDialog("script-emby-resume.xml", *XML_PATH)
-            dialog.set_resume_point("Resume from %s" % str(timedelta(seconds=seektime)).split(".")[0])
-            dialog.doModal()
-
-            if dialog.is_selected():
-                if not dialog.get_selected(): # Start from beginning selected.
-                    self.item['UserData']['PlaybackPositionTicks'] = 0
-            else: # User backed out
-                log.info("User exited without a selection.")
-                return
-
         pbutils.PlaybackUtils(self.item).play(self.item['Id'], self.kodi_id, True)
