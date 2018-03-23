@@ -119,7 +119,6 @@ class Items(object):
 
         process = self._get_func(item_type, action)
         self.total = total or len(items)
-        self.count = 0
 
         for item in items:
 
@@ -147,7 +146,6 @@ class Items(object):
         # Generator for newly added content
         if update:
             self.total = total or len(items)
-            self.count = 0
 
         for item in items:
 
@@ -156,8 +154,8 @@ class Items(object):
 
             self.title = item.get('Name', "unknown")
 
-            yield item
             self.update_pdialog()
+            yield item
 
             if update:
                 self.count += 1

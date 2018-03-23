@@ -402,8 +402,9 @@ class LibrarySync(threading.Thread):
                         heading=lang(29999),
                         message="%s %s..." % (lang(33017), view_name))
 
+            movies.count = 0
             for all_movies in mb.get_items(view['id'], "Movie"):
-                movies.add_all("Movie", all_movies['Items'], view)
+                movies.add_all("Movie", all_movies, view)
 
         log.debug("Movies finished.")
         return True
@@ -415,6 +416,7 @@ class LibrarySync(threading.Thread):
         if pdialog:
             pdialog.update(heading=lang(29999), message=lang(33018))
 
+        movies.count = 0
         for boxsets in mb.get_items(None, "BoxSet"):
             movies.add_all("BoxSet", boxsets)
 
@@ -442,8 +444,9 @@ class LibrarySync(threading.Thread):
                         message="%s %s..." % (lang(33019), viewName))
 
             # Initial or repair sync
+            mvideos.count = 0
             for all_mvideos in mb.get_items(view['id'], "MusicVideo"):
-                mvideos.add_all("MusicVideo", all_mvideos['Items'], view)
+                mvideos.add_all("MusicVideo", all_mvideos, view)
 
         else:
             log.debug("MusicVideos finished.")
@@ -468,8 +471,9 @@ class LibrarySync(threading.Thread):
                         heading=lang(29999),
                         message="%s %s..." % (lang(33020), view['name']))
 
+            tvshows.count = 0
             for all_tvshows in mb.get_items(view['id'], "Series"):
-                tvshows.add_all("Series", all_tvshows['Items'], view)
+                tvshows.add_all("Series", all_tvshows, view)
 
         else:
             log.debug("TVShows finished.")
@@ -491,8 +495,9 @@ class LibrarySync(threading.Thread):
 
         for view in views:
 
+            music.count = 0
             for all_artists in mb.get_artists(view['id']):
-                music.add_all("MusicArtist", all_artists['Items'])
+                music.add_all("MusicArtist", all_artists)
 
         log.debug("Finished syncing music")
 
