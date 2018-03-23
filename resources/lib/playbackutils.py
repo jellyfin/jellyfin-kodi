@@ -114,7 +114,7 @@ class PlaybackUtils(object):
                 elif not resume:
                     seektime = 0
         else:
-            seektime = 0 if resume == "true" else self.API.adjust_resume(self.API.get_userdata()['Resume'])
+            seektime = self.API.adjust_resume(self.API.get_userdata()['Resume']) if resume == "true" else 0
 
         if force_transcode:
             log.info("Clear the playlist.")

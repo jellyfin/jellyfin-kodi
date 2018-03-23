@@ -232,9 +232,9 @@ class SpecialMonitor(threading.Thread):
                 control = int(xbmcgui.Window(10106).getFocusId())
                 if control == 1002: # Start from beginning
                     log.info("Resume dialog: Start from beginning selected.")
-                    window('emby.resume', value="true")
-                else:
                     window('emby.resume', clear=True)
+                else:
+                    window('emby.resume', value="true")
 
             elif isPlaying and not window('emby.external_check'):
                 time = player.getTime()
