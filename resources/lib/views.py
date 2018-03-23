@@ -799,8 +799,7 @@ class VideoNodes(object):
 
             'Favorite movies': 30180,
             'Favorite tvshows': 30181,
-            'Favorite episodes': 30182,
-            'channels': 30173
+            'Favorite episodes': 30182
         }
         label = lang(labels[tagname])
         embynode = "Emby.nodes.%s" % indexnumber

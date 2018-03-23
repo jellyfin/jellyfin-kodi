@@ -96,7 +96,7 @@ class LibrarySync(threading.Thread):
                     result = []
 
                 for plugin in result:
-                    if plugin['Name'] == "Emby.Kodi Sync Queue":
+                    if plugin['Name'] == "Kodi companion":
                         log.debug("Found server plugin.")
                         self.isFastSync = True
                         ga.sendEventData("SyncAction", "FastSync")
