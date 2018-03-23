@@ -90,7 +90,7 @@ class Music(Items):
 
         artists = dict(self.emby_db.get_checksum('MusicArtist'))
         album_artists = dict(self.emby_db.get_checksum('AlbumArtist'))
-        emby_artists = (items['Items'] for items in mb.get_artists())
+        emby_artists = self.emby.getArtists(dialog=self.pdialog)
 
         for item in emby_artists['Items']:
 
