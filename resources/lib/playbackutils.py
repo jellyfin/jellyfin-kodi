@@ -97,8 +97,6 @@ class PlaybackUtils(object):
         resume = window('emby.resume')
         window('emby.resume', clear=True)
 
-        log.info(sys.argv)
-
         play_url = putils.PlayUtils(self.item, listitem).get_play_url(force_transcode)
 
         if not play_url:
