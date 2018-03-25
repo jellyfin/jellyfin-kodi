@@ -64,12 +64,7 @@ class PlaybackUtils(object):
             #TODO: To be reviewed once Leia is out.
             log.info("Build does not require workaround for widgets?")
             return False
-
-        elif KODI_V == 18:
-            log.info("Kodi Leia")
-            return False
-
-        ''' 
+        '''         
         if not xbmc.getCondVisibility('Window.IsMedia'):
             log.info("Not Window.IsMedia")
 
@@ -146,7 +141,7 @@ class PlaybackUtils(object):
 
         # Stack: [(url, listitem), (url, ...), ...]
         self.stack[0][1].setPath(self.stack[0][0])
-        try:           
+        try: 
             if self._detect_widgets():
                 # widgets do not fill artwork correctly
                 log.info("Detected widget.")
@@ -163,7 +158,9 @@ class PlaybackUtils(object):
             index += 1
 
         if force_play:
+            xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, self.stack[0][1])
             xbmc.Player().play(self.playlist)
+
 
     def set_playlist(self, play_url, item_id, listitem, seektime=None, db_id=None):
 
