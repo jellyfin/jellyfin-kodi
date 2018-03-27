@@ -158,8 +158,8 @@ class PlaybackUtils(object):
             index += 1
 
         if force_play:
-            xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, self.stack[0][1])
-            xbmc.Player().play(self.playlist)
+            if len(sys.argv) > 1: xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, self.stack[0][1])
+            xbmc.Player().play(self.playlist, windowed=False)
 
 
     def set_playlist(self, play_url, item_id, listitem, seektime=None, db_id=None):
