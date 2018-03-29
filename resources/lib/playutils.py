@@ -64,10 +64,6 @@ class PlayUtils():
                 'mediasource_id': info.get('Id') or self.item['Id']
             })
 
-            if self.method == "DirectPlay":
-                # Log filename, used by other addons eg subtitles which require the file name
-                window('embyfilename', value=url)
-
             if 'RequiredHttpHeaders' in info and 'User-Agent' in info['RequiredHttpHeaders']:
                 self.listitem.setProperty('User-Agent', info['RequiredHttpHeaders']['User-Agent'])
 
@@ -139,6 +135,10 @@ class PlayUtils():
         ''' Because we posted our deviceprofile to the server, only streams will be
             returned that can actually be played by this client so no need to check bitrates etc.
         '''
+
+        # Log filename, used by other addons eg subtitles which require the file name
+        window('embyfilename', value=self.get_direct_path(source))
+
         if (not self.force_transcode and (self.is_strm(source) or self.is_h265(source) or
             (source['SupportsDirectPlay'] and settings('playFromStream') == "false" and self.is_file_exists(source)))):
             # Do nothing, path is updated with our verification if applies.
