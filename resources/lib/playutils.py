@@ -144,7 +144,7 @@ class PlayUtils():
             # Do nothing, path is updated with our verification if applies.
             pass
         else:
-            source['Path'] = self.get_http_path(source, self.force_transcode)
+            source['Path'] = self.get_http_path(source, True if not source['SupportsDirectStream'] else self.force_transcode)
 
         log.debug('get source: %s', source)
         return source
@@ -247,9 +247,6 @@ class PlayUtils():
                     break
 
         url = self.get_transcode_url(source) if transcode else self.get_direct_url(source)
-        url += "&MediaSourceId=%s" % source['Id']
-        url += "&PlaySessionId=%s" % self.play_session_id
-        url += "&api_key=%s" % downloadutils.DownloadUtils().get_token()
         
         return url
 
@@ -266,21 +263,31 @@ class PlayUtils():
         if settings('enableExternalSubs') == "true":
             self.set_external_subs(source, url)
 
+        url = self._append_http_url(source, url)
+
         return url
 
     def get_transcode_url(self, source):
 
         self.method = "Transcode"
 
-        item_id = self.item['Id']
-        url = urllib_path("%s/emby/Videos/%s/master.m3u8" % (self.server, item_id), {
+        if source.get('TranscodingUrl'):
+            url = "%s/emby%s" % (self.server, source['TranscodingUrl'])
+            url = url.replace('stream.ts', 'master.m3u8')
+        else:
+            item_id = self.item['Id']
+            url = urllib_path("%s/emby/Videos/%s/master.m3u8" % (self.server, item_id), {
 
-            'VideoCodec': "h264",
-            'AudioCodec': "ac3",
-            'MaxAudioChannels': 6,
-            'deviceId': self.clientInfo.get_device_id(),
-            'VideoBitrate': self.get_bitrate() * 1000
-        })
+                'VideoCodec': "h264",
+                'AudioCodec': "ac3",
+                'MaxAudioChannels': 6,
+                'DeviceId': self.clientInfo.get_device_id(),
+                'VideoBitrate': self.get_bitrate() * 1000
+            })
+
+            # Select audio and subtitles
+            url += self.get_audio_subs(source)
+            url = self._append_http_url(source, url)
 
         # Limit to 8 bit if user selected transcode Hi10P
         if settings('transcodeHi10P') == "true":
@@ -288,8 +295,14 @@ class PlayUtils():
 
         # Adjust the video resolution
         url += "&maxWidth=%s&maxHeight=%s" % (self.get_resolution())
-        # Select audio and subtitles
-        url += self.get_audio_subs(source)
+
+        return url
+
+    def _append_http_url(self, source, url):
+
+        url += "&MediaSourceId=%s" % source['Id']
+        url += "&PlaySessionId=%s" % self.play_session_id
+        url += "&api_key=%s" % downloadutils.DownloadUtils().get_token()
 
         return url
 
@@ -519,7 +532,7 @@ class PlayUtils():
                 },
                 {
                     "Container": "ts",
-                    "AudioCodec": "aac",
+                    "AudioCodec": "ac3",
                     "VideoCodec": "h264",
                     "Type": 1
                 },
