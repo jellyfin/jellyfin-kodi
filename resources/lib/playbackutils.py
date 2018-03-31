@@ -60,7 +60,10 @@ class PlaybackUtils(object):
 
         kodi_version = xbmc.getInfoLabel('System.BuildVersion')
 
-        if kodi_version and "Git:" in kodi_version and kodi_version.split('Git:')[1].split("-")[0] == '20171119':
+        if KODI_V == 18:
+            return False
+
+        elif kodi_version and "Git:" in kodi_version and kodi_version.split('Git:')[1].split("-")[0] == '20171119':
             #TODO: To be reviewed once Leia is out.
             log.info("Build does not require workaround for widgets?")
             return False
