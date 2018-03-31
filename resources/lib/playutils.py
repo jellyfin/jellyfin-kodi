@@ -255,15 +255,14 @@ class PlayUtils():
     def get_direct_url(self, source):
 
         self.method = "DirectStream"
-        media_type = self.item['Type']
 
-        if media_type == "Audio":
+        if self.item['Type'] == "Audio":
             url = "%s/emby/Audio/%s/stream.%s?static=true" % (self.server, self.item['Id'], self.item['MediaSources'][0]['Container'])
         else:
             url = "%s/emby/Videos/%s/stream?static=true" % (self.server, self.item['Id'])
 
         # Append external subtitles
-        if media_type in ('Movie', 'Episode') and settings('enableExternalSubs') == "true":
+        if settings('enableExternalSubs') == "true":
             self.set_external_subs(source, url)
 
         return url
@@ -273,7 +272,6 @@ class PlayUtils():
         self.method = "Transcode"
 
         item_id = self.item['Id']
-        media_type = self.item['Type']
         url = urllib_path("%s/emby/Videos/%s/master.m3u8" % (self.server, item_id), {
 
             'VideoCodec': "h264",
@@ -284,8 +282,7 @@ class PlayUtils():
         })
 
         # Select audio and subtitles
-        if media_type in ('Movie', 'Episode'):
-            url += self.get_audio_subs(source)
+        url += self.get_audio_subs(source)
 
         # Limit to 8 bit if user selected transcode Hi10P
         if settings('transcodeHi10P') == "true":
