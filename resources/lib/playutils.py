@@ -224,7 +224,8 @@ class PlayUtils():
 
         # Assign network protocol
         if path.startswith('\\\\'):
-            path = path.replace('\\\\', "smb://")
+            path = path.replace('\\\\', "smb://", 1)
+            path = path.replace('\\\\', "\\")
             path = path.replace('\\', "/")
 
         if "://" in path:

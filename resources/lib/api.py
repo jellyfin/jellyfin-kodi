@@ -385,9 +385,10 @@ class API(object):
             filepath = ""
 
         else:
-            if "\\\\" in filepath:
+            if filepath.startswith('\\\\'):
                 # append smb protocol
-                filepath = filepath.replace("\\\\", "smb://")
+                filepath = filepath.replace("\\\\", "smb://", 1)
+                filepath = filepath.replace("\\\\", "\\")
                 filepath = filepath.replace("\\", "/")
 
             if 'VideoType' in self.item:
@@ -395,6 +396,9 @@ class API(object):
                     filepath = "%s/VIDEO_TS/VIDEO_TS.IFO" % filepath
                 elif self.item['VideoType'] == "BluRay":
                     filepath = "%s/BDMV/index.bdmv" % filepath
+
+            # In case user made a mistake with the network share
+            filepath = filepath.replace("\\\\", "\\")
 
             if "\\" in filepath:
                 # Local path scenario, with special videotype
