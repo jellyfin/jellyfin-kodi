@@ -325,9 +325,11 @@ class PlayUtils():
             if stream['Type'] == "Subtitle" and stream['IsExternal'] and stream['IsTextSubtitleStream']:
                 index = stream['Index']
 
-                url = self.server + stream['DeliveryUrl']
+                url = self.server + stream['DeliveryUrl'] if 'DeliveryUrl' in stream else stream.get('Path')
+                if url is None:
+                    continue
 
-                if 'Language' in stream:
+                if 'Language' in stream and 'DeliveryUrl' in stream:
                     filename = "Stream.%s.%s" % (stream['Language'].encode('utf-8'), stream['Codec'])
                     try:
                         subs.append(self._download_external_subs(url, temp, filename))
