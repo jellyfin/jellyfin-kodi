@@ -4,6 +4,7 @@
 
 import logging
 
+import emby as mb
 import read_embyserver as embyserver
 from objects import Movies, MusicVideos, TVShows, Music
 from utils import settings
@@ -90,7 +91,7 @@ class Items(object):
                 elif process == "remove":
                     items_process.remove_all(itemtype, itemlist)
                 else:
-                    process_items = self.emby.getFullItems(itemlist)
+                    process_items = mb.get_all(mb.get_item_list(itemlist))
                     items_process.process_all(itemtype, process, process_items, total)
 
 

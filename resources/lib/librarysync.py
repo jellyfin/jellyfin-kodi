@@ -572,7 +572,7 @@ class LibrarySync(threading.Thread):
 
                             # Prepare items according to process process_type
                             if process_type == "added":
-                                items = self.emby.sortby_mediatype(listItems)
+                                items = mb.sortby_mediatype(listItems)
 
                             elif process_type in ("userdata", "remove"):
                                 items = emby_db.sortby_mediaType(listItems, unsorted=False)
@@ -580,7 +580,7 @@ class LibrarySync(threading.Thread):
                             else:
                                 items = emby_db.sortby_mediaType(listItems)
                                 if items.get('Unsorted'):
-                                    sorted_items = self.emby.sortby_mediatype(items['Unsorted'])
+                                    sorted_items = mb.sortby_mediatype(items['Unsorted'])
                                     doupdate = items_process.itemsbyId(sorted_items, "added", pDialog)
                                     if doupdate:
                                         embyupdate, kodiupdate_video = doupdate

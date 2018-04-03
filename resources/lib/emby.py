@@ -119,6 +119,14 @@ def get_seasons(self, show_id):
 
 #################################################################################################
 
+def get_all(generator):
+
+    items = []
+    for item in generator:
+        items.extend(item['Items'])
+
+    return items
+
 def get_items(parent_id, item_type=None, basic=False, params=None):
 
     query = {
@@ -177,6 +185,20 @@ def get_albums_by_artist(artist_id):
     }
     for items in get_items(None, "MusicAlbum", params=params):
         yield items
+
+def sortby_mediatype(item_ids):
+
+    sorted_items = {}
+
+    items = get_all(get_item_list(item_ids))
+    for item in items:
+
+        mediatype = item.get('Type')
+        if mediatype:
+            sorted_items.setdefault(mediatype, []).append(item)
+
+    return sorted_items
+
 
 def _split_list(item_list, size):
     # Split up list in pieces of size. Will generate a list of lists
