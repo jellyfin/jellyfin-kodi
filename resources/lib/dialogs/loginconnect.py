@@ -52,9 +52,9 @@ class LoginConnect(xbmcgui.WindowXMLDialog):
 
     def onInit(self):
 
-        self.user_field = self._add_editcontrol(755, 358, 40, 415)
+        self.user_field = self._add_editcontrol(755, 338, 40, 415)
         self.setFocus(self.user_field)
-        self.password_field = self._add_editcontrol(755, 458, 40, 415, password=1)
+        self.password_field = self._add_editcontrol(755, 448, 40, 415, password=1)
         self.signin_button = self.getControl(SIGN_IN)
         self.remind_button = self.getControl(CANCEL)
         self.error_toggle = self.getControl(ERROR_TOGGLE)
@@ -102,7 +102,7 @@ class LoginConnect(xbmcgui.WindowXMLDialog):
         media = os.path.join(addon.getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
         control = xbmcgui.ControlEdit(0, 0, 0, 0,
                                       label="User",
-                                      font="font10",
+                                      font="font13",
                                       textColor="FF52b54b",
                                       disabledColor="FF888888",
                                       focusTexture="-",

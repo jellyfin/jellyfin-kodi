@@ -61,8 +61,8 @@ class LoginManual(xbmcgui.WindowXMLDialog):
         self.cancel_button = self.getControl(CANCEL)
         self.error_toggle = self.getControl(ERROR_TOGGLE)
         self.error_msg = self.getControl(ERROR_MSG)
-        self.user_field = self._add_editcontrol(755, 458, 40, 415)
-        self.password_field = self._add_editcontrol(755, 558, 40, 415, password=1)
+        self.user_field = self._add_editcontrol(755, 433, 40, 415)
+        self.password_field = self._add_editcontrol(755, 543, 40, 415, password=1)
 
         if self.username:
             self.user_field.setText(self.username)
@@ -111,7 +111,7 @@ class LoginManual(xbmcgui.WindowXMLDialog):
         media = os.path.join(addon.getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
         control = xbmcgui.ControlEdit(0, 0, 0, 0,
                                       label="User",
-                                      font="font10",
+                                      font="font13",
                                       textColor="FF52b54b",
                                       disabledColor="FF888888",
                                       focusTexture="-",

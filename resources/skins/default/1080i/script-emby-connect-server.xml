@@ -17,15 +17,15 @@
 				<left>-200</left>
 				<right>-200</right>
 				<texture colordiffuse="CC000000">white.png</texture>
-				<aspectratio>stretch</aspectratio>				
+				<aspectratio>stretch</aspectratio>
 				<animation effect="fade" end="100" time="200">WindowOpen</animation>
 				<animation effect="fade" start="100" end="0" time="200">WindowClose</animation>
 			</control>
 			<control type="group">
 				<centerleft>50%</centerleft>
 				<centertop>50%</centertop>
-				<width>470</width>
-				<height>480</height>
+				<width>520</width>
+				<height>525</height>
 				<control type="group">
 					<top>-30</top>
 					<control type="image">
@@ -45,14 +45,14 @@
 				</control>
 				<control type="image">
 					<width>100%</width>
-					<height>480</height>
+					<height>525</height>
 					<texture colordiffuse="ff222326" border="10">dialogs/dialog_back.png</texture>
 				</control>
 				<control type="group">
 					<centerleft>50%</centerleft>
 					<top>10</top>
-					<width>460</width>
-					<height>460</height>
+					<width>510</width>
+					<height>515</height>
 					<control type="grouplist" id="100">
 						<orientation>vertical</orientation>
 						<itemgap>0</itemgap>
@@ -61,7 +61,7 @@
 							<height>75</height>
 							<aligny>center</aligny>
 							<textoffsetx>20</textoffsetx>
-							<font>font10</font>
+							<font>font13</font>
 							<textcolor>white</textcolor>
 							<textshadow>66000000</textshadow>
 							<label>[B]$ADDON[plugin.video.emby 30607][/B]</label>
@@ -70,13 +70,13 @@
 							<height>200</height>
 							<control type="list" id="155">
 								<centerleft>50%</centerleft>
-								<width>460</width>
-								<height>200</height>
+								<width>510</width>
+								<height>195</height>
 								<onup>noop</onup>
 								<onleft>close</onleft>
 								<onright>close</onright>
 								<ondown>205</ondown>
-								<itemlayout width="460" height="50">
+								<itemlayout width="510" height="65">
 									<control type="group">
 										<left>20</left>
 										<top>5</top>
@@ -94,25 +94,25 @@
 									</control>
 									<control type="label">
 										<left>50</left>
-										<height>50</height>
+										<height>65</height>
 										<aligny>center</aligny>
 										<textoffsetx>20</textoffsetx>
-										<font>font10</font>
+										<font>font13</font>
 										<textcolor>ffe1e1e1</textcolor>
 										<shadowcolor>66000000</shadowcolor>
 										<label>$INFO[ListItem.Label]</label>
 									</control>
 								</itemlayout>
-								<focusedlayout width="460" height="50">
+								<focusedlayout width="510" height="65">
 									<control type="image">
 										<width>100%</width>
-										<height>50</height>
+										<height>65</height>
 										<texture colordiffuse="ff222326">white.png</texture>
 										<visible>!Control.HasFocus(155)</visible>
 									</control>
 									<control type="image">
 										<width>100%</width>
-										<height>50</height>
+										<height>65</height>
 										<texture colordiffuse="ff303034">white.png</texture>
 										<visible>Control.HasFocus(155)</visible>
 									</control>
@@ -134,10 +134,10 @@
 									</control>
 									<control type="label">
 										<left>50</left>
-										<height>50</height>
+										<height>65</height>
 										<aligny>center</aligny>
 										<textoffsetx>20</textoffsetx>
-										<font>font10</font>
+										<font>font13</font>
 										<scroll>true</scroll>
 										<textcolor>ffe1e1e1</textcolor>
 										<shadowcolor>66000000</shadowcolor>
@@ -162,9 +162,9 @@
 						</control>
 						<control type="button" id="205">
 							<label>[B]$ADDON[plugin.video.emby 30600][/B]</label>
-							<width>426</width>
-							<height>50</height>
-							<font>font10</font>
+							<width>476</width>
+							<height>65</height>
+							<font>font13</font>
 							<textcolor>ffe1e1e1</textcolor>
 							<focusedcolor>white</focusedcolor>
 							<selectedcolor>ffe1e1e1</selectedcolor>
@@ -180,9 +180,9 @@
 						</control>
 						<control type="button" id="206">
 							<label>[B]$ADDON[plugin.video.emby 30611][/B]</label>
-							<width>426</width>
-							<height>50</height>
-							<font>font10</font>
+							<width>476</width>
+							<height>65</height>
+							<font>font13</font>
 							<textcolor>ffe1e1e1</textcolor>
 							<focusedcolor>white</focusedcolor>
 							<selectedcolor>ffe1e1e1</selectedcolor>
@@ -198,9 +198,9 @@
 						</control>
 						<control type="button" id="201">
 							<label>[B]$ADDON[plugin.video.emby 30606][/B]</label>
-							<width>426</width>
-							<height>50</height>
-							<font>font10</font>
+							<width>476</width>
+							<height>65</height>
+							<font>font13</font>
 							<textcolor>ffe1e1e1</textcolor>
 							<focusedcolor>white</focusedcolor>
 							<selectedcolor>ffe1e1e1</selectedcolor>
@@ -217,8 +217,8 @@
 					</control>
 				</control>
 				<control type="group" id="202">
-					<top>480</top>
-					<visible>False</visible>
+					<top>525</top>
+					<visible>false</visible>
 					<control type="image">
 						<width>100%</width>
 						<height>70</height>
@@ -230,7 +230,7 @@
 						<textcolor>ffe1e1e1</textcolor>
 						<scroll>true</scroll>
 						<shadowcolor>66000000</shadowcolor>
-						<font>font10</font>
+						<font>font12</font>
 						<textoffsetx>20</textoffsetx>
 						<aligny>center</aligny>
 						<align>center</align>>

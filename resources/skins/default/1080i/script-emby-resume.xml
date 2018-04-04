@@ -9,7 +9,7 @@
 				<left>0</left>
 				<right>0</right>
 				<texture colordiffuse="CC000000">white.png</texture>
-				<aspectratio>stretch</aspectratio>				
+				<aspectratio>stretch</aspectratio>
 				<animation effect="fade" end="100" time="200">WindowOpen</animation>
 				<animation effect="fade" start="100" end="0" time="200">WindowClose</animation>
 			</control>
@@ -70,11 +70,11 @@
 					</control>
 					<control type="button" id="3010">
 						<width>100%</width>
-						<height>50</height>
+						<height>65</height>
 						<align>left</align>
 						<aligny>center</aligny>
 						<textoffsetx>20</textoffsetx>
-						<font>font10</font>
+						<font>font13</font>
 						<textcolor>ffe1e1e1</textcolor>
 						<shadowcolor>66000000</shadowcolor>
 						<disabledcolor>FF404040</disabledcolor>
@@ -85,11 +85,11 @@
 					</control>
 					<control type="button" id="3011">
 						<width>100%</width>
-						<height>50</height>
+						<height>65</height>
 						<align>left</align>
 						<aligny>center</aligny>
 						<textoffsetx>20</textoffsetx>
-						<font>font10</font>
+						<font>font13</font>
 						<textcolor>ffe1e1e1</textcolor>
 						<shadowcolor>66000000</shadowcolor>
 						<disabledcolor>FF404040</disabledcolor>
