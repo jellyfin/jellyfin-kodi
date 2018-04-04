@@ -242,7 +242,7 @@ class SpecialMonitor(threading.Thread):
                 if time > 1: # Not external player.
                     window('emby.external_check', value="true")
                     self.external_count = 0
-                elif self.external_count == 15:
+                elif self.external_count == 120:
                     log.info("External player detected.")
                     window('emby.external', value="true")
                     window('emby.external_check', value="true")
