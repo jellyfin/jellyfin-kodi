@@ -9,7 +9,7 @@
 				<left>0</left>
 				<right>0</right>
 				<texture colordiffuse="CC000000">white.png</texture>
-				<aspectratio>stretch</aspectratio>				
+				<aspectratio>stretch</aspectratio>
 				<animation effect="fade" end="100" time="200">WindowOpen</animation>
 				<animation effect="fade" start="100" end="0" time="200">WindowClose</animation>
 			</control>
@@ -24,8 +24,8 @@
 				</animation>
 				<centerleft>50%</centerleft>
 				<centertop>50%</centertop>
-				<width>370</width>
-				<height>220</height>
+				<width>500</width>
+				<height>280</height>
 				<control type="group">
 					<top>-30</top>
 					<control type="image">
@@ -45,49 +45,49 @@
 				</control>
 				<control type="image">
 					<width>100%</width>
-					<height>220</height>
+					<height>280</height>
 					<texture colordiffuse="ff222326" border="10">dialogs/dialog_back.png</texture>
 				</control>
 				<control type="list" id="155">
 					<centerleft>50%</centerleft>
 					<top>10</top>
-					<width>360</width>
-					<height>200</height>
+					<width>490</width>
+					<height>260</height>
 					<onup>noop</onup>
 					<onleft>close</onleft>
 					<onright>close</onright>
 					<ondown>noop</ondown>
-					<itemlayout width="360" height="50">
+					<itemlayout width="490" height="65">
 						<control type="label">
 							<width>100%</width>
-							<height>50</height>
+							<height>65</height>
 							<aligny>center</aligny>
 							<textoffsetx>20</textoffsetx>
-							<font>font10</font>
+							<font>font13</font>
 							<textcolor>ffe1e1e1</textcolor>
 							<shadowcolor>66000000</shadowcolor>
 							<label>$INFO[ListItem.Label]</label>
 						</control>
 					</itemlayout>
-					<focusedlayout width="360" height="50">
+					<focusedlayout width="490" height="65">
 						<control type="image">
 							<width>100%</width>
-							<height>50</height>
+							<height>65</height>
 							<texture colordiffuse="ff222326">white.png</texture>
 							<visible>!Control.HasFocus(155)</visible>
 						</control>
 						<control type="image">
 							<width>100%</width>
-							<height>50</height>
+							<height>65</height>
 							<texture colordiffuse="ff303034">white.png</texture>
 							<visible>Control.HasFocus(155)</visible>
 						</control>
 						<control type="label">
 							<width>100%</width>
-							<height>50</height>
+							<height>65</height>
 							<aligny>center</aligny>
 							<textoffsetx>20</textoffsetx>
-							<font>font10</font>
+							<font>font13</font>
 							<scroll>true</scroll>
 							<textcolor>ffe1e1e1</textcolor>
 							<shadowcolor>66000000</shadowcolor>

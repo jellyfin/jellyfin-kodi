@@ -17,7 +17,7 @@
 				<left>-200</left>
 				<right>-200</right>
 				<texture colordiffuse="CC000000">white.png</texture>
-				<aspectratio>stretch</aspectratio>				
+				<aspectratio>stretch</aspectratio>
 				<animation effect="fade" end="100" time="200">WindowOpen</animation>
 				<animation effect="fade" start="100" end="0" time="200">WindowClose</animation>
 			</control>
@@ -25,7 +25,7 @@
 				<centerleft>50%</centerleft>
 				<centertop>50%</centertop>
 				<width>920</width>
-				<height>570</height>
+				<height>605</height>
 				<control type="group">
 					<top>-30</top>
 					<control type="image">
@@ -38,14 +38,14 @@
 				</control>
 				<control type="image">
 					<width>100%</width>
-					<height>570</height>
+					<height>605</height>
 					<texture colordiffuse="ff222326" border="10">dialogs/dialog_back.png</texture>
 				</control>
 				<control type="group">
 					<centerleft>50%</centerleft>
 					<top>10</top>
 					<width>908</width>
-					<height>550</height>
+					<height>580</height>
 					<control type="grouplist" id="100">
 						<orientation>vertical</orientation>
 						<itemgap>0</itemgap>
@@ -54,7 +54,7 @@
 							<height>75</height>
 							<aligny>center</aligny>
 							<textoffsetx>20</textoffsetx>
-							<font>font10</font>
+							<font>font13</font>
 							<textcolor>white</textcolor>
 							<textshadow>66000000</textshadow>
 							<label>[B]$ADDON[plugin.video.emby 30612][/B]</label>
@@ -83,12 +83,6 @@
 									</control>
 									<control type="image">
 										<width>276</width>
-										<height>322</height>
-										<texture colordiffuse="ff121314">white.png</texture>
-										<aspectratio scalediffuse="false">stretch</aspectratio>
-									</control>
-									<control type="image">
-										<width>276</width>
 										<height>276</height>
 										<texture colordiffuse="ff0288d1" diffuse="items/mask_square.png">white.png</texture>
 										<aspectratio>stretch</aspectratio>
@@ -107,7 +101,7 @@
 											<width>100%</width>
 											<height>30</height>
 											<label>$INFO[ListItem.Label]</label>
-											<font>font10</font>
+											<font>font12</font>
 											<textcolor>ffe1e1e1</textcolor>
 											<shadowcolor>66000000</shadowcolor>
 											<scroll>Control.HasFocus(155)</scroll>
@@ -126,12 +120,6 @@
 										<width>282</width>
 										<height>282</height>
 										<texture>items/shadow_square.png</texture>
-									</control>
-									<control type="image">
-										<width>276</width>
-										<height>322</height>
-										<texture colordiffuse="ff121314">white.png</texture>
-										<aspectratio scalediffuse="false">stretch</aspectratio>
 									</control>
 									<control type="image">
 										<width>276</width>
@@ -164,7 +152,7 @@
 											<width>100%</width>
 											<height>30</height>
 											<label>$INFO[ListItem.Label]</label>
-											<font>font10</font>
+											<font>font12</font>
 											<textcolor>white</textcolor>
 											<shadowcolor>66000000</shadowcolor>
 											<scroll>Control.HasFocus(155)</scroll>
@@ -175,7 +163,7 @@
 											<width>100%</width>
 											<height>30</height>
 											<label>$INFO[ListItem.Label]</label>
-											<font>font10</font>
+											<font>font12</font>
 											<textcolor>ffe1e1e1</textcolor>
 											<shadowcolor>66000000</shadowcolor>
 											<scroll>false</scroll>
@@ -189,8 +177,8 @@
 						<control type="button" id="200">
 							<label>[B]$ADDON[plugin.video.emby 30540][/B]</label>
 							<width>874</width>
-							<height>50</height>
-							<font>font10</font>
+							<height>65</height>
+							<font>font13</font>
 							<textcolor>ffe1e1e1</textcolor>
 							<focusedcolor>white</focusedcolor>
 							<selectedcolor>ffe1e1e1</selectedcolor>
@@ -207,8 +195,8 @@
 						<control type="button" id="201">
 							<label>[B]$ADDON[plugin.video.emby 30606][/B]</label>
 							<width>874</width>
-							<height>50</height>
-							<font>font10</font>
+							<height>65</height>
+							<font>font13</font>
 							<textcolor>ffe1e1e1</textcolor>
 							<focusedcolor>white</focusedcolor>
 							<selectedcolor>ffe1e1e1</selectedcolor>
