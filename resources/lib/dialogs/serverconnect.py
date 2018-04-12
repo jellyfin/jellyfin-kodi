@@ -106,7 +106,7 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
                 log.info('Server Id selected: %s', selected_id)
 
                 if self._connect_server(selected_id):
-                    self.message_box.setVisibleCondition('False')
+                    self.message_box.setVisibleCondition('false')
                     self.close()
 
     def onClick(self, control):
@@ -127,12 +127,12 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
 
         server = self.connect_manager.getServerInfo(server_id)
         self.message.setLabel("%s %s..." % (lang(30610), server['Name']))
-        self.message_box.setVisibleCondition('True')
-        self.busy.setVisibleCondition('True')
+        self.message_box.setVisibleCondition('true')
+        self.busy.setVisibleCondition('true')
         result = self.connect_manager.connectToServer(server)
 
         if result['State'] == CONN_STATE['Unavailable']:
-            self.busy.setVisibleCondition('False')
+            self.busy.setVisibleCondition('false')
             self.message.setLabel(lang(30609))
             return False
         else:

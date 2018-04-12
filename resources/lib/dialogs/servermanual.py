@@ -132,15 +132,15 @@ class ServerManual(xbmcgui.WindowXMLDialog):
     def _message(self, message):
 
         self.error_msg.setLabel(message)
-        self.error_toggle.setVisibleCondition('True')
+        self.error_toggle.setVisibleCondition('true')
 
     def _error(self, state, message):
 
         self.error = state
         self.error_msg.setLabel(message)
-        self.error_toggle.setVisibleCondition('True')
+        self.error_toggle.setVisibleCondition('true')
 
     def _disable_error(self):
 
         self.error = None
-        self.error_toggle.setVisibleCondition('False')
+        self.error_toggle.setVisibleCondition('false')

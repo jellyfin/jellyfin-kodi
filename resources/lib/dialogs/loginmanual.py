@@ -143,9 +143,9 @@ class LoginManual(xbmcgui.WindowXMLDialog):
 
         self.error = state
         self.error_msg.setLabel(message)
-        self.error_toggle.setVisibleCondition('True')
+        self.error_toggle.setVisibleCondition('true')
 
     def _disable_error(self):
 
         self.error = None
-        self.error_toggle.setVisibleCondition('False')
+        self.error_toggle.setVisibleCondition('false')
