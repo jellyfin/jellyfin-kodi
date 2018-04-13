@@ -102,7 +102,7 @@ class PlaybackUtils(object):
                 self.playlist.clear()
             return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, listitem)
 
-        if KODI_V == 18 or (KODI_V == 17 and force_transcode):
+        if force_transcode:
             
             seektime = self.API.get_userdata()['Resume']
             if seektime:
