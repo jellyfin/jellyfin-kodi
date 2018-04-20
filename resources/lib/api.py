@@ -329,8 +329,9 @@ class API(object):
         try:
             overview = self.item['Overview']
             overview = overview.replace("\"", "\'")
-            overview = overview.replace("\n", " ")
+            overview = overview.replace("\n", "[CR]")
             overview = overview.replace("\r", " ")
+            overview = overview.replace("<br>", "[CR]")
         except KeyError:
             overview = ""
 
