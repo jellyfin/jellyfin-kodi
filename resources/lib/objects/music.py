@@ -193,8 +193,12 @@ class Music(Items):
         except TypeError:
             update_item = False
             log.debug("artistid: %s not found", itemid)
+            artistid = None
         else:
-            pass
+            if self.kodi_db.validate_artist(artistid) is None:
+                # item is not found, let's recreate it.
+                update_item = False
+                log.info("artistid: %s missing from Kodi, repairing the entry", artistid)
 
         ##### The artist details #####
         lastScraped = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -230,7 +234,7 @@ class Music(Items):
             log.info("ADD artist itemid: %s - Name: %s", itemid, name)
             # safety checks: It looks like Emby supports the same artist multiple times.
             # Kodi doesn't allow that. In case that happens we just merge the artist entries.
-            artistid = self.kodi_db.get_artist(name, musicBrainzId)
+            artistid = self.kodi_db.get_artist(name, musicBrainzId, artistid)
             # Create the reference in emby table
             emby_db.addReference(itemid, artistid, artisttype, "artist", checksum=checksum)
 
@@ -262,6 +266,12 @@ class Music(Items):
         except TypeError:
             update_item = False
             log.debug("albumid: %s not found", itemid)
+            albumid = None
+        else:
+            if self.kodi_db.validate_album(albumid) is None:
+                # item is not found, let's recreate it.
+                update_item = False
+                log.info("albumid: %s missing from Kodi, repairing the entry", albumid)
 
         ##### The album details #####
         lastScraped = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -299,7 +309,7 @@ class Music(Items):
             log.info("ADD album itemid: %s - Name: %s", itemid, name)
             # safety checks: It looks like Emby supports the same artist multiple times.
             # Kodi doesn't allow that. In case that happens we just merge the artist entries.
-            albumid = self.kodi_db.get_album(name, musicBrainzId)
+            albumid = self.kodi_db.get_album(name, musicBrainzId, albumid)
             # Create the reference in emby table
             emby_db.addReference(itemid, albumid, "MusicAlbum", "album", checksum=checksum)
 
@@ -372,6 +382,11 @@ class Music(Items):
             update_item = False
             log.debug("songid: %s not found", itemid)
             songid = self.kodi_db.create_entry_song()
+        else:
+            if self.kodi_db.validate_song(songid) is None:
+                # item is not found, let's recreate it.
+                update_item = False
+                log.info("songid: %s missing from Kodi, repairing the entry", songid)
 
         ##### The song details #####
         checksum = API.get_checksum()

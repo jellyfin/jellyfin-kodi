@@ -61,7 +61,7 @@ class KodiMusic(KodiItems):
         )
         self.cursor.execute(query, (1, 'Composer'))
 
-    def get_artist(self, name, musicbrainz):
+    def get_artist(self, name, musicbrainz, artist_id=None):
 
         query = ' '.join((
 
@@ -75,14 +75,14 @@ class KodiMusic(KodiItems):
             artist_id = result[0]
             artist_name = result[1]
         except TypeError:
-            artist_id = self._add_artist(name, musicbrainz)
+            artist_id = self._add_artist(name, musicbrainz, artist_id)
         else:
             if artist_name != name:
                 self.update_artist_name(artist_id, name)
 
         return artist_id
 
-    def _add_artist(self, name, musicbrainz):
+    def _add_artist(self, name, musicbrainz, artist_id=None):
 
         query = ' '.join((
             # Safety check, when musicbrainz does not exist
@@ -95,7 +95,7 @@ class KodiMusic(KodiItems):
         try:
             artist_id = self.cursor.fetchone()[0]
         except TypeError:
-            artist_id = self.create_entry()
+            artist_id = artist_id or self.create_entry()
             query = (
                 '''
                 INSERT INTO artist(idArtist, strArtist, strMusicBrainzArtistID)
@@ -159,7 +159,40 @@ class KodiMusic(KodiItems):
         )
         self.cursor.execute(query, (kodi_id, album, year))
 
-    def get_album(self, name, musicbrainz=None):
+    def validate_artist(self, kodi_id):
+
+        query = "SELECT * FROM artist WHERE idArtist = ?"
+        self.cursor.execute(query, (kodi_id,))
+        try:
+            kodi_id = self.cursor.fetchone()[0]
+        except TypeError:
+            kodi_id = None
+
+        return kodi_id
+
+    def validate_album(self, kodi_id):
+
+        query = "SELECT * FROM album WHERE idAlbum = ?"
+        self.cursor.execute(query, (kodi_id,))
+        try:
+            kodi_id = self.cursor.fetchone()[0]
+        except TypeError:
+            kodi_id = None
+
+        return kodi_id
+
+    def validate_song(self, kodi_id):
+
+        query = "SELECT * FROM song WHERE idSong = ?"
+        self.cursor.execute(query, (kodi_id,))
+        try:
+            kodi_id = self.cursor.fetchone()[0]
+        except TypeError:
+            kodi_id = None
+
+        return kodi_id
+
+    def get_album(self, name, musicbrainz=None, album_id=None):
 
         if musicbrainz is not None:
             query = ' '.join((
@@ -174,20 +207,20 @@ class KodiMusic(KodiItems):
 
                 "SELECT idAlbum",
                 "FROM album",
-                "WHERE strMusicBrainzAlbumID = ?"
+                "WHERE strAlbum = ?"
             ))
             self.cursor.execute(query, (name,))
 
         try:
             album_id = self.cursor.fetchone()[0]
         except TypeError:
-            album_id = self._add_album(name, musicbrainz)
+            album_id = self._add_album(name, musicbrainz, album_id)
 
         return album_id
 
-    def _add_album(self, name, musicbrainz):
+    def _add_album(self, name, musicbrainz, album_id=None):
 
-        album_id = self.create_entry_album()
+        album_id = album_id or self.create_entry_album()
         query = (
             '''
             INSERT INTO album(idAlbum, strAlbum, strMusicBrainzAlbumID, strReleaseType)
