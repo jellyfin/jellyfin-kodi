@@ -347,7 +347,7 @@ class WebSocketClient(threading.Thread):
             if self._stop_websocket:
                 break
 
-            if self.monitor.waitForAbort(5):
+            if self.monitor.waitForAbort(120):
                 # Abort was requested, exit
                 break
 
