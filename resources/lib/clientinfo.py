@@ -70,7 +70,8 @@ class ClientInfo(object):
         else:
             return "Unknown"
 
-    def get_device_id(self, reset=False):
+    @classmethod
+    def get_device_id(cls, reset=False):
 
         client_id = window('emby_deviceId')
         if client_id:

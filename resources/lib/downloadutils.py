@@ -91,7 +91,7 @@ class DownloadUtils(object):
         window('emby_server%s.json' % server_id, value=info)
         window('emby_server%s.name' % server_id, value=name)
 
-    def post_capabilities(self, device_id):
+    def post_capabilities(self, device_id=clientinfo.ClientInfo.get_device_id()):
         # Post settings to session
         url = "{server}/emby/Sessions/Capabilities/Full?format=json"
         data = {

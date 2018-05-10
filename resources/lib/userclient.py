@@ -222,6 +222,10 @@ class UserClient(threading.Thread):
         # Set _user and _server
         self._set_user_server()
 
+    def post_capabilities(self):
+        log.info("post capabilities")
+        self.doutils.post_capabilities()
+
     def load_connect_servers(self):
         # Set connect servers
         if not settings('connectUsername'):

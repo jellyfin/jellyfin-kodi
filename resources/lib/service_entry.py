@@ -35,6 +35,7 @@ class Service(object):
 
     startup = False
     server_online = True
+    capabitilities = False
     warn_auth = True
 
     userclient_running = False
@@ -151,6 +152,9 @@ class Service(object):
                         # Start the syncing thread
                         self.library_running = True
                         self.library_thread.start()
+                    if not self.capabitilities:
+                        self.capabitilities = True
+                        user_client.post_capabilities()
                 else:
 
                     if (user_client.get_user() is None) and self.warn_auth:
@@ -262,6 +266,7 @@ class Service(object):
                            sound=False)
 
                 self.server_online = True
+                self.capabitilities = False
                 window('emby_online', value="true")
                 log.info("Server is online and ready")
 
