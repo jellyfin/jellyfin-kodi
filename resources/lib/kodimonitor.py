@@ -105,11 +105,15 @@ class KodiMonitor(xbmc.Monitor):
             kodi_id = None
 
             if KODI >= 17 and xbmc.Player().isPlayingVideo():
+                ''' Seems to misbehave when playback is not terminated prior to playing new content.
+                    The kodi id remains that of the previous title. Maybe onPlay happens before
+                    this information is updated. Added a failsafe further below.
+                '''
                 item = xbmc.Player().getVideoInfoTag()
                 kodi_id = item.getDbId()
                 item_type = item.getMediaType()
 
-            if kodi_id is None or int(kodi_id) == -1:
+            if kodi_id is None or int(kodi_id) == -1 or 'item' in data and data['item'].get('id') != kodi_id:
                 item = data['item']
                 kodi_id = item['id']
                 item_type = item['type']
@@ -227,13 +231,14 @@ class SpecialMonitor(threading.Thread):
             isPlaying = player.isPlaying()
 
             if (not isPlaying and xbmc.getCondVisibility('Window.IsVisible(DialogContextMenu.xml)') and
-                xbmc.getInfoLabel('Control.GetLabel(1002)') == xbmc.getLocalizedString(12021)):
+                xbmc.getInfoLabel('Control.GetLabel(1002)').decode('utf-8') == xbmc.getLocalizedString(12021)):
 
                 control = int(xbmcgui.Window(10106).getFocusId())
                 if control == 1002: # Start from beginning
                     log.info("Resume dialog: Start from beginning selected.")
                     window('emby.resume', clear=True)
                 else:
+                    log.info("Resume dialog: Resume selected.")
                     window('emby.resume', value="true")
 
             elif isPlaying and not window('emby.external_check'):
