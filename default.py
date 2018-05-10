@@ -99,7 +99,7 @@ class Main(object):
             'inprogressepisodes': entrypoint.getInProgressEpisodes,
             'recentepisodes': entrypoint.getRecentEpisodes,
             'refreshplaylist': entrypoint.refreshPlaylist,
-            'deviceid': entrypoint.resetDeviceId,
+            #'deviceid': entrypoint.resetDeviceId,
             'delete': entrypoint.deleteItem,
             'connect': entrypoint.emby_connect,
             'backup': entrypoint.emby_backup,

@@ -87,7 +87,7 @@
 		<setting id="metricLogging" type="bool" label="30546" default="true" />
 		<setting id="startupDelay" type="number" label="30529" default="0" option="int" />
 		<setting label="30239" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=reset)" option="close" />
-		<setting label="30535" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=deviceid)" />
+		<!--<setting label="30535" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=deviceid)" />-->
 		<setting label="33093" type="folder" id="backupPath" option="writeable" />
 		<setting label="33092" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=backup)" visible="!eq(-1,)" option="close" />
 	</category>

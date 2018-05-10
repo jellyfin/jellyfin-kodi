@@ -3,8 +3,9 @@
 #################################################################################################
 
 import logging
+import hashlib
 import os
-from uuid import uuid4
+import platform
 
 import xbmc
 import xbmcaddon
@@ -71,12 +72,13 @@ class ClientInfo(object):
             return "Unknown"
 
     @classmethod
-    def get_device_id(cls, reset=False):
+    def get_device_id(cls):
 
         client_id = window('emby_deviceId')
         if client_id:
             return client_id
 
+        """
         emby_guid = xbmc.translatePath("special://temp/emby_guid").decode('utf-8')
 
         if reset and xbmcvfs.exists(emby_guid):
@@ -91,8 +93,12 @@ class ClientInfo(object):
             guid.write(client_id)
 
         guid.close()
+        """
 
-        log.info("DeviceId loaded: %s", client_id)
+        guid = xbmc.getInfoLabel('Network.MacAddress') or ''.join(platform.uname())
+        client_id = hashlib.sha1(guid).hexdigest().upper()
+
+        xbmc.log("EMBY DeviceId: %s" % client_id, level=xbmc.LOGNOTICE)
         window('emby_deviceId', value=client_id)
 
         return client_id
