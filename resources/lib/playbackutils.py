@@ -26,7 +26,7 @@ import shutil
 import embydb_functions as embydb
 from database import DatabaseConn
 from dialogs import resume
-from utils import window, settings, language as lang
+from utils import window, settings, language as lang, JSONRPC
 
 #################################################################################################
 
@@ -90,7 +90,7 @@ class PlaybackUtils(object):
 
         listitem = xbmcgui.ListItem()
 
-        log.info("Play called: %s", self.item['Name'])
+        log.info("Play called %s: %s", item_id, self.item['Name'])
 
         resume = window('emby.resume')
         window('emby.resume', clear=True)
@@ -102,17 +102,27 @@ class PlaybackUtils(object):
                 self.playlist.clear()
             return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, listitem)
 
-        if force_transcode:
-            
-            seektime = self.API.get_userdata()['Resume']
-            if seektime:
-                resume = self.resume_dialog(seektime)
-                if resume is None:
-                    return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, listitem)
-                elif not resume:
-                    seektime = 0
-        else:
-            seektime = self.API.adjust_resume(self.API.get_userdata()['Resume']) if resume == "true" else 0
+
+        if self.item['Type'] != "Audio":
+
+            ''' Detect the seektime for video type content.
+                Verify the default video action set in Kodi for accurate resume behavior.
+            '''
+            if self.get_play_action() == "Resume":
+                resume = "true"
+
+            if force_transcode:
+                seektime = self.API.get_userdata()['Resume']
+
+                if seektime and resume != "true":
+                    resume = self.resume_dialog(seektime)
+
+                    if resume is None:
+                        return xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, listitem)
+                    elif not resume:
+                        seektime = 0
+            else:
+                seektime = self.API.adjust_resume(self.API.get_userdata()['Resume']) if resume == "true" else 0
 
         if force_transcode:
             log.info("Clear the playlist.")
@@ -161,9 +171,24 @@ class PlaybackUtils(object):
             index += 1
 
         if force_play:
-            if len(sys.argv) > 1: xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, self.stack[0][1])
+            if len(sys.argv):
+                xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, self.stack[0][1])
+
             xbmc.Player().play(self.playlist, windowed=False)
 
+    @classmethod
+    def get_play_action(cls):
+
+        ''' I could not figure out a way to listen to kodi setting changes?
+            For now, verify the play action every time play is called.
+        '''
+        options = ['Choose', 'Play', 'Resume', 'Show information']
+        result = JSONRPC('Settings.GetSettingValue').execute({'setting': "myvideos.selectaction"})
+        try:
+            return options[result['result']['value']]
+        except Exception as error:
+            log.error("Returning play action due to error: %s", error)
+            return options[1]
 
     def set_playlist(self, play_url, item_id, listitem, seektime=None, db_id=None):
 
