@@ -96,7 +96,7 @@ class Player(xbmc.Player):
                     currentFile = self.xbmcplayer.getPlayingFile()
                 except: pass
 
-                if count == 5: # try 5 times
+                if count == 10: # try 5 times
                     log.info("Cancelling playback report...")
                     break
                 else: count += 1
