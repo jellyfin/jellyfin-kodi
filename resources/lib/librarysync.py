@@ -24,7 +24,7 @@ import userclient
 import views
 from objects import Movies, MusicVideos, TVShows, Music
 from utils import window, settings, language as lang, should_stop
-from ga_client import GoogleAnalytics
+#from ga_client import GoogleAnalytics
 
 ##################################################################################################
 
@@ -77,7 +77,7 @@ class LibrarySync(threading.Thread):
 
     def startSync(self):
 
-        ga = GoogleAnalytics()
+        #ga = GoogleAnalytics()
     
         # Run at start up - optional to use the server plugin
         if settings('SyncInstallRunDone') == "true":
@@ -99,17 +99,17 @@ class LibrarySync(threading.Thread):
                     if plugin['Name'] in ("Emby.Kodi Sync Queue", "Kodi companion"):
                         log.debug("Found server plugin.")
                         self.isFastSync = True
-                        ga.sendEventData("SyncAction", "FastSync")
+                        #ga.sendEventData("SyncAction", "FastSync")
                         completed = self.fastSync()
                         break
 
             if not completed:
                 # Fast sync failed or server plugin is not found
-                ga.sendEventData("SyncAction", "Sync")
+                #ga.sendEventData("SyncAction", "Sync")
                 completed = ManualSync().sync()
         else:
             # Install sync is not completed
-            ga.sendEventData("SyncAction", "FullSync")
+            #ga.sendEventData("SyncAction", "FullSync")
             completed = self.fullSync()
 
         return completed
@@ -648,10 +648,12 @@ class LibrarySync(threading.Thread):
             elif "401" in e:
                 pass
         except Exception as e:
+            """
             ga = GoogleAnalytics()
             errStrings = ga.formatException()
             if not (hasattr(e, 'quiet') and e.quiet):
                 ga.sendEventData("Exception", errStrings[0], errStrings[1])
+            """
             window('emby_dbScan', clear=True)
             log.exception(e)
             xbmcgui.Dialog().ok(
@@ -659,8 +661,8 @@ class LibrarySync(threading.Thread):
                         line1=(
                             "Library sync thread has exited! "
                             "You should restart Kodi now. "
-                            "Please report this on the forum."),
-                        line2=(errStrings[0] + " (" + errStrings[1] + ")"))
+                            "Please report this on the forum."))
+                        #line2=(errStrings[0] + " (" + errStrings[1] + ")"))
 
     def run_internal(self):
 

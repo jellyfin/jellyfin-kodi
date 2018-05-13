@@ -13,13 +13,13 @@ import api
 import artwork
 import downloadutils
 import read_embyserver as embyserver
-from ga_client import GoogleAnalytics
+#from ga_client import GoogleAnalytics
 from utils import window, settings, dialog, language as lang, should_stop
 
 ##################################################################################################
 
 log = logging.getLogger("EMBY."+__name__)
-ga = GoogleAnalytics()
+#ga = GoogleAnalytics()
 
 ##################################################################################################
 
@@ -32,9 +32,11 @@ def catch_except(errors=(Exception, ), default_value=False):
             except sqlite3.Error as error:
                 raise
             except errors as error:
+                """
                 if not (hasattr(error, 'quiet') and error.quiet):
                     errStrings = ga.formatException()
                     ga.sendEventData("Exception", errStrings[0], errStrings[1], True)
+                """
                 log.exception(error)
                 log.error("function: %s \n args: %s \n kwargs: %s",
                           func.__name__, args, kwargs)

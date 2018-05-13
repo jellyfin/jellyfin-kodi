@@ -21,7 +21,7 @@ sys.path.append(_BASE_LIB)
 import loghandler
 from service_entry import Service
 from utils import settings
-from ga_client import GoogleAnalytics
+#from ga_client import GoogleAnalytics
 
 #################################################################################################
 
@@ -46,10 +46,12 @@ if __name__ == "__main__":
             service.service_entry_point()
 
     except Exception as error:
+        """
         if not (hasattr(error, 'quiet') and error.quiet):
             ga = GoogleAnalytics()
             errStrings = ga.formatException()
             ga.sendEventData("Exception", errStrings[0], errStrings[1])
+        """
         log.exception(error)
         log.info("Forcing shutdown")
         service.shutdown()

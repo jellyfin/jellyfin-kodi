@@ -13,7 +13,7 @@ import downloadutils
 import embydb_functions as embydb
 import playbackutils as pbutils
 from utils import window, settings, create_id
-from ga_client import log_error
+#from ga_client import log_error
 from database import DatabaseConn
 
 #################################################################################################
@@ -68,7 +68,7 @@ class KodiMonitor(xbmc.Monitor):
             log.info("New context transcode setting: %s", current_context)
             window('emby_context_transcode', value=current_context)
 
-    @log_error()
+    #@log_error()
     def onNotification(self, sender, method, data):
 
         if method not in ('Playlist.OnAdd', 'Player.OnStop', 'Player.OnClear'):

@@ -21,7 +21,7 @@ import player
 import websocket_client as wsc
 from views import VideoNodes
 from utils import window, settings, dialog, language as lang
-from ga_client import GoogleAnalytics
+#from ga_client import GoogleAnalytics
 import hashlib
 
 #################################################################################################
@@ -136,8 +136,10 @@ class Service(object):
                         timeSinceLastPing = time.time() - self.lastMetricPing
                         if(timeSinceLastPing > 300):
                             self.lastMetricPing = time.time()
+                            """
                             ga = GoogleAnalytics()
                             ga.sendEventData("PlayAction", "PlayPing")
+                            """
 
                         self._report_progress()
 
@@ -184,6 +186,7 @@ class Service(object):
         if(serverId != None):
             serverId = hashlib.md5(serverId).hexdigest()
         
+        """
         ga = GoogleAnalytics()
         ga.sendEventData("Application", "Startup", serverId)
         try:
@@ -191,6 +194,7 @@ class Service(object):
             ga.sendEventData("Version", "Python", platform.python_version())
         except Exception:
             pass
+        """
 
         # Start up events
         self.warn_auth = True

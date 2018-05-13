@@ -23,7 +23,7 @@ sys.path.append(_BASE_LIB)
 import entrypoint
 import loghandler
 from utils import window, dialog, language as lang
-from ga_client import GoogleAnalytics
+#from ga_client import GoogleAnalytics
 import database
 
 #################################################################################################
@@ -178,10 +178,12 @@ if __name__ == "__main__":
     try:
         Main()
     except Exception as error:
+        """
         if not (hasattr(error, 'quiet') and error.quiet):
             ga = GoogleAnalytics()
             errStrings = ga.formatException()
             ga.sendEventData("Exception", errStrings[0], errStrings[1])
+        """
         log.exception(error)
         raise
 

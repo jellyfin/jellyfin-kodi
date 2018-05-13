@@ -14,7 +14,7 @@ import downloadutils
 import read_embyserver as embyserver
 import websocket_client as wsc
 from utils import window, settings, language as lang, JSONRPC
-from ga_client import GoogleAnalytics, log_error
+#from ga_client import GoogleAnalytics, log_error
 
 #################################################################################################
 
@@ -78,7 +78,7 @@ class Player(xbmc.Player):
                 audio_tracks = len(player.getAvailableAudioStreams())
                 player.setSubtitleStream(subs_index - audio_tracks - 1)
 
-    @log_error()
+    #@log_error()
     def onPlayBackStarted(self):
         # Will be called when xbmc starts playing a file
         self.stopAll()
@@ -271,9 +271,11 @@ class Player(xbmc.Player):
             self.played_info[currentFile] = data
             log.info("ADDING_FILE: %s", self.played_info)
 
+            """
             ga = GoogleAnalytics()
             ga.sendEventData("PlayAction", item_type, play_method)
             ga.sendScreenView(item_type)
+            """
 
     def reportPlayback(self):
         
@@ -381,7 +383,7 @@ class Player(xbmc.Player):
             log.debug("Report: %s", postdata)
             self.emby.progress_report(postdata)
 
-    @log_error()
+    #@log_error()
     def onPlayBackPaused(self):
 
         currentFile = self.currentFile
@@ -392,7 +394,7 @@ class Player(xbmc.Player):
         
             self.reportPlayback()
 
-    @log_error()
+    #@log_error()
     def onPlayBackResumed(self):
 
         currentFile = self.currentFile
@@ -403,7 +405,7 @@ class Player(xbmc.Player):
         
             self.reportPlayback()
 
-    @log_error()
+    #@log_error()
     def onPlayBackSeek(self, time, seekOffset):
         # Make position when seeking a bit more accurate
         currentFile = self.currentFile
@@ -420,14 +422,14 @@ class Player(xbmc.Player):
                 self.played_info[currentFile]['currentPosition'] = position
                 self.reportPlayback()
     
-    @log_error()
+    #@log_error()
     def onPlayBackStopped(self):
         # Will be called when user stops xbmc playing a file
         log.debug("ONPLAYBACK_STOPPED")
         window('emby_customPlaylist.seektime', clear=True)
         self.stopAll()
 
-    @log_error()
+    #@log_error()
     def onPlayBackEnded(self):
         # Will be called when xbmc stops playing a file
         log.debug("ONPLAYBACK_ENDED")
@@ -522,8 +524,10 @@ class Player(xbmc.Player):
     
         self.played_info.clear()
         
+        """
         ga = GoogleAnalytics()
         ga.sendEventData("PlayAction", "Stopped")
+        """
     
     def stop_playback(self, data):
         
