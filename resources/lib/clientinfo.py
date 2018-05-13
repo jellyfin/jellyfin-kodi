@@ -95,7 +95,7 @@ class ClientInfo(object):
         guid.close()
         """
 
-        guid = xbmc.getInfoLabel('Network.MacAddress') or ''.join(platform.uname())
+        guid = ''.join(platform.uname())
         client_id = hashlib.sha1(guid).hexdigest().upper()
 
         xbmc.log("EMBY DeviceId: %s" % client_id, level=xbmc.LOGNOTICE)
