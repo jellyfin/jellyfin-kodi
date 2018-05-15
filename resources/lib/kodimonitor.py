@@ -113,7 +113,7 @@ class KodiMonitor(xbmc.Monitor):
                 kodi_id = item.getDbId()
                 item_type = item.getMediaType()
 
-            if kodi_id is None or int(kodi_id) == -1 or 'item' in data and data['item'].get('id') != kodi_id:
+            if kodi_id is None or int(kodi_id) == -1 or 'item' in data and 'id' in data['item'] and data['item']['id'] != kodi_id:
                 item = data['item']
                 kodi_id = item['id']
                 item_type = item['type']
