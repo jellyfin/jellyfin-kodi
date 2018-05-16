@@ -349,7 +349,6 @@ def emby_backup():
            heading="{emby}",
            line1="%s: %s" % (lang(33091), backup))
 
-"""
 ##### Generate a new deviceId
 def resetDeviceId():
 
@@ -370,7 +369,6 @@ def resetDeviceId():
             heading=lang(29999),
             line1=lang(33033))
         xbmc.executebuiltin('RestartApp')
-"""
 
 ##### Delete Item
 def deleteItem():
