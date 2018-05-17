@@ -146,7 +146,7 @@ class PlayUtils():
         else:
             source['Path'] = self.get_http_path(source, True if not source['SupportsDirectStream'] else self.force_transcode)
 
-        log.debug('get source: %s', source)
+        log.debug("get source: %s", source)
         return source
 
     def is_file_exists(self, source):
@@ -271,15 +271,23 @@ class PlayUtils():
 
         self.method = "Transcode"
 
-        item_id = self.item['Id']
-        url = urllib_path("%s/emby/Videos/%s/master.m3u8" % (self.server, item_id), {
+        if 'TranscodingUrl' in source:
+            base, params = source['TranscodingUrl'].split("?")
+            url_parsed = params.split("&")
+            for i in url_parsed:
+                if 'AudioStreamIndex' in i or 'AudioBitrate' in i: #handle manually
+                    url_parsed.remove(i)
+            url = "%s/emby%s?%s" % (self.server, base.replace("stream", "master"), '&'.join(url_parsed))
+        else:
+            item_id = self.item['Id']
+            url = urllib_path("%s/emby/Videos/%s/master.m3u8" % (self.server, item_id), {
 
-            'VideoCodec': "h264",
-            'AudioCodec': "ac3",
-            'MaxAudioChannels': 6,
-            'DeviceId': self.clientInfo.get_device_id(),
-            'VideoBitrate': self.get_bitrate() * 1000
-        })
+                'VideoCodec': "h264",
+                'AudioCodec': "ac3",
+                'MaxAudioChannels': 6,
+                'DeviceId': self.clientInfo.get_device_id(),
+                'VideoBitrate': self.get_bitrate() * 1000
+            })
 
         # Select audio and subtitles
         url += self.get_audio_subs(source)
@@ -528,7 +536,7 @@ class PlayUtils():
                     "Type": 0
                 },
                 {
-                    "Container": "ts",
+                    "Container": "m3u8",
                     "AudioCodec": "ac3",
                     "VideoCodec": "h264",
                     "Type": 1
