@@ -112,7 +112,7 @@ def doMainListing():
             addDirectoryItem(window('emby_server%s.name' % server), "plugin://plugin.video.emby/?mode=%s" % server)
     '''
 
-    #addDirectoryItem("Manual login dialog", "plugin://plugin.video.emby/?mode=manuallogin")
+    #addDirectoryItem("Manual login dialog", "plugin://plugin.video.emby/?mode=manuallogin", False)
     #addDirectoryItem("Connect login dialog", "plugin://plugin.video.emby/?mode=connectlogin")
     #addDirectoryItem("Manual server dialog", "plugin://plugin.video.emby/?mode=manualserver")
     #addDirectoryItem("Connect servers dialog", "plugin://plugin.video.emby/?mode=connectservers")
@@ -135,11 +135,14 @@ def doMainListing():
     #xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 def test_manual_login():
+    """
     from dialogs import LoginManual
     dialog = LoginManual("script-emby-connect-login-manual.xml", *XML_PATH)
     dialog.set_server("Test server")
     dialog.set_user("Test user")
     dialog.doModal()
+    """
+    window('emby_test', value="false")
 
 def test_connect_login():
     from dialogs import LoginConnect

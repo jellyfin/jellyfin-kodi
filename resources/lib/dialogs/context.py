@@ -73,20 +73,6 @@ class ContextMenu(xbmcgui.WindowXMLDialog):
 
                 self.close()
 
-    def _add_editcontrol(self, x, y, height, width, password=0):
-
-        media = os.path.join(addon.getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
-        control = xbmcgui.ControlImage(0, 0, 0, 0,
-                                       filename=os.path.join(media, "white.png"),
-                                       aspectRatio=0,
-                                       colorDiffuse="ff111111")
-        control.setPosition(x, y)
-        control.setHeight(height)
-        control.setWidth(width)
-
-        self.addControl(control)
-        return control
-
     @classmethod
     def _add_listitem(cls, label):
         return xbmcgui.ListItem(label)
