@@ -361,63 +361,74 @@ class Artwork(object):
                                     cursor=cursor)
 
     def add_update_art(self, image_url, kodi_id, media_type, image_type, cursor):
-        # Possible that the imageurl is an empty string
-        if image_url:
 
-            cache_image = False
+        ''' Add or update the artwork (if it changed) to the Kodi database. Update the cache if
+            backdrop or poster image_type.
 
-            query = ' '.join((
+            Possible to an empty imageurl since the process is automated.
+        '''
+        if image_type == 'poster' and media_type in ('song', 'artist', 'album'):
 
-                "SELECT url",
-                "FROM art",
-                "WHERE media_id = ?",
-                "AND media_type = ?",
-                "AND type = ?"
-            ))
-            cursor.execute(query, (kodi_id, media_type, image_type,))
-            try: # Update the artwork
-                url = cursor.fetchone()[0]
+            log.info("skipping poster for songs, artists, albums.")
+            return
 
-            except TypeError: # Add the artwork
+        if not image_url:
+
+            log.warn("empty url for: %s/%s", kodi_id, media_type)
+            return
+
+        cache_image = False
+
+        query = ' '.join((
+
+            "SELECT url",
+            "FROM art",
+            "WHERE media_id = ?",
+            "AND media_type = ?",
+            "AND type = ?"
+        ))
+        cursor.execute(query, (kodi_id, media_type, image_type,))
+        try:
+            url = cursor.fetchone()[0]
+
+        except TypeError:
+            cache_image = True
+            log.debug("Adding Art Link for kodiId: %s (%s)", kodi_id, image_url)
+
+            query = (
+                '''
+                INSERT INTO art(media_id, media_type, type, url)
+
+                VALUES (?, ?, ?, ?)
+                '''
+            )
+            cursor.execute(query, (kodi_id, media_type, image_type, image_url))
+
+        else:
+            if url != image_url:
+
                 cache_image = True
-                log.debug("Adding Art Link for kodiId: %s (%s)", kodi_id, image_url)
 
-                query = (
-                    '''
-                    INSERT INTO art(media_id, media_type, type, url)
+                if (window('emby_initialScan') != "true" and
+                        image_type in ("fanart", "poster")):
+                    # Delete current entry before updating with the new one
+                    self.delete_cached_artwork(url)
 
-                    VALUES (?, ?, ?, ?)
-                    '''
-                )
-                cursor.execute(query, (kodi_id, media_type, image_type, image_url))
+                log.info("Updating Art url for %s kodiId: %s (%s) -> (%s)",
+                         image_type, kodi_id, url, image_url)
 
-            else: # Only cache artwork if it changed
-                if url != image_url:
+                query = ' '.join((
 
-                    cache_image = True
+                    "UPDATE art",
+                    "SET url = ?",
+                    "WHERE media_id = ?",
+                    "AND media_type = ?",
+                    "AND type = ?"
+                ))
+                cursor.execute(query, (image_url, kodi_id, media_type, image_type))
 
-                    # Only for the main backdrop, poster
-                    if (window('emby_initialScan') != "true" and
-                            image_type in ("fanart", "poster")):
-                        # Delete current entry before updating with the new one
-                        self.delete_cached_artwork(url)
-
-                    log.info("Updating Art url for %s kodiId: %s (%s) -> (%s)",
-                             image_type, kodi_id, url, image_url)
-
-                    query = ' '.join((
-
-                        "UPDATE art",
-                        "SET url = ?",
-                        "WHERE media_id = ?",
-                        "AND media_type = ?",
-                        "AND type = ?"
-                    ))
-                    cursor.execute(query, (image_url, kodi_id, media_type, image_type))
-
-            # Cache fanart and poster in Kodi texture cache
-            if cache_image and image_type in ("fanart", "poster"):
-                self.cache_texture(image_url)
+        if cache_image and image_type in ("fanart", "poster"):
+            self.cache_texture(image_url)
 
     def delete_artwork(self, kodi_id, media_type, cursor):
 
