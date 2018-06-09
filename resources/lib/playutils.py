@@ -43,6 +43,7 @@ class PlayUtils():
 
         self.server = window('emby_server%s' % window('emby_currUser'))
         self.play_session_id = str(create_id()).replace("-", "")
+        self.token = downloadutils.DownloadUtils().get_token()
 
     def get_play_url(self, force_transcode=False):
 
@@ -139,10 +140,10 @@ class PlayUtils():
         # Log filename, used by other addons eg subtitles which require the file name
         window('embyfilename', value=self.get_direct_path(source))
 
-        if (not self.force_transcode and (self.is_strm(source) or self.is_h265(source) or
-            (source['SupportsDirectPlay'] and settings('playFromStream') == "false" and self.is_file_exists(source)))):
-            # Do nothing, path is updated with our verification if applies.
-            pass
+        if (not self.force_transcode and (self.is_strm(source) or self.is_h265(source) or (settings('playFromStream') == "false" and self.is_file_exists(source)))):
+            # Append external subtitles
+            if settings('enableExternalSubs') == "true":
+                self.set_external_subs(source, source['Path'])
         else:
             source['Path'] = self.get_http_path(source, True if not source['SupportsDirectStream'] else self.force_transcode)
 
@@ -305,7 +306,7 @@ class PlayUtils():
 
         url += "&MediaSourceId=%s" % source['Id']
         url += "&PlaySessionId=%s" % self.play_session_id
-        url += "&api_key=%s" % downloadutils.DownloadUtils().get_token()
+        url += "&api_key=%s" % self.token
 
         return url
 
@@ -333,11 +334,18 @@ class PlayUtils():
             if stream['Type'] == "Subtitle" and stream['IsExternal'] and stream['IsTextSubtitleStream']:
                 index = stream['Index']
 
-                url = self.server + stream['DeliveryUrl'] if 'DeliveryUrl' in stream else stream.get('Path')
+                if 'Path' in stream and xbmcvfs.exists(self.get_direct_path(stream)):
+                    url = None if self.method == "DirectPlay" else self.get_direct_path(stream)
+                elif 'DeliveryUrl' in stream:
+                    url = self.server + "/emby" + stream['DeliveryUrl']
+                else:
+                    url = self.server + "/emby/Videos/%s/%s/Subtitles/%s/Stream.%s?api_key=%s" % (item_id, source['Id'], index, stream['Codec'], self.token)
+
+                log.info("Subtitle url: %s", url)
                 if url is None:
                     continue
 
-                if 'Language' in stream and 'DeliveryUrl' in stream:
+                if 'Language' in stream:
                     filename = "Stream.%s.%s" % (stream['Language'].encode('utf-8'), stream['Codec'])
                     try:
                         subs.append(self._download_external_subs(url, temp, filename))

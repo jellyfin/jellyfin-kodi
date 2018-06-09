@@ -328,6 +328,7 @@ class PlaybackUtils(object):
         all_artwork = self.artwork.get_all_artwork(self.item, parent_info=True)
         # Set artwork for listitem
         if item_type == "Episode":
+
             art = {
                 'poster': "Series.Primary",
                 'tvshow.poster': "Series.Primary",
@@ -339,6 +340,16 @@ class PlaybackUtils(object):
                 'fanart_image': "Backdrop",
                 'landscape': "Thumb",
                 'tvshow.landscape': "Thumb",
+                'thumb': "Primary",
+                'fanart': "Backdrop"
+            }
+        elif item_type in ("Artist", "Audio", "MusicAlbum"):
+
+            art = {
+                'clearlogo': "Logo",
+                'discart': "Disc",
+                'fanart': "Backdrop",
+                'fanart_image': "Backdrop", # in case
                 'thumb': "Primary"
             }
         else:
@@ -349,7 +360,8 @@ class PlaybackUtils(object):
                 'discart': "Disc",
                 'fanart_image': "Backdrop",
                 'landscape': "Thumb",
-                'thumb': "Primary"
+                'thumb': "Primary",
+                'fanart': "Backdrop"
             }
 
         for k_art, e_art in art.items():
