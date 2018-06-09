@@ -23,6 +23,11 @@ log = logging.getLogger("EMBY."+__name__)
 
 ##################################################################################################
 
+class HTTPException(Exception):
+    # Emby HTTP exception
+    def __init__(self, status):
+        self.status = status
+
 
 class DownloadUtils(object):
 
@@ -56,14 +61,13 @@ class DownloadUtils(object):
     def get_token(self):
         return self._get_session_info()['Token']
 
-    def add_server(self, server, ssl):
+    def add_server(self, server):
         # Reserved for userclient only
         server_id = server['Id']
         info = {
             'UserId': server['UserId'],
             'Server': connectionmanager.getServerAddress(server, server['LastConnectionMode']),
             'Token': server['AccessToken'],
-            'SSL': ssl
         }
         for server_info in self.servers:
             if server_info == server_id:
@@ -158,10 +162,9 @@ class DownloadUtils(object):
         # Attach authenticated header to the session
         session = requests.Session()
         session.headers = self.get_header()
-        session.verify = self.session['SSL']
         # Retry connections to the server
-        session.mount("http://", requests.adapters.HTTPAdapter(max_retries=1))
-        session.mount("https://", requests.adapters.HTTPAdapter(max_retries=1))
+        session.mount("http://", requests.adapters.HTTPAdapter(max_retries=3))
+        session.mount("https://", requests.adapters.HTTPAdapter(max_retries=3))
         self.session_requests = session
 
         log.info("requests session started on: %s", self.session['Server'])
@@ -227,16 +230,13 @@ class DownloadUtils(object):
 
             if requires_server and (not server or not server.get("Server") or not server.get("UserId")):
                 log.info("Aborting download, Server Details Error: %s url=%s" % (server, url))
-                exc = Exception("Aborting download, Server Details Error: %s url=%s" % (server, url))
-                exc.quiet = True
-                raise exc
+                raise Exception("Aborting download, Server Details Error: %s url=%s" % (server, url))
 
             if server_id is None and self.session_requests is not None: # Main server
                 session = self.session_requests
             else:
                 session = requests
                 kwargs.update({
-                    'verify': server['SSL'],
                     'headers': self.get_header(server_id, authenticate)
                 })
 
@@ -247,9 +247,7 @@ class DownloadUtils(object):
 
             # does the URL look ok
             if url.startswith('/'):
-                exc = Exception("URL Error: " + url)
-                exc.quiet = True
-                raise exc
+                raise Exception("URL Error: " + url)
 
             ##### PREPARE REQUEST #####
             kwargs.update({
@@ -263,6 +261,8 @@ class DownloadUtils(object):
             log.debug(kwargs)
             response = self._requests(action_type, session, **kwargs)
             #response = requests.get('http://httpbin.org/status/400')
+            if window('emby_test') == "false":
+                raise requests.exceptions.ConnectionError
 
             if response.status_code == 204:
                 # No body in the response
@@ -288,28 +288,19 @@ class DownloadUtils(object):
 
         ##### EXCEPTIONS #####
 
-        except requests.exceptions.SSLError as error:
-            log.error("Invalid SSL certificate for: %s", url)
-            error.quiet = True
-            raise
-
-        except requests.exceptions.ConnectTimeout as error:
-            log.error("ConnectTimeout at: %s", url)
-            error.quiet = True
-            raise
-
-        except requests.exceptions.ReadTimeout as error:
-            log.error("ReadTimeout at: %s", url)
-            error.quiet = True
-            raise
-
         except requests.exceptions.ConnectionError as error:
             # Make the addon aware of status
+            window('emby_test', value="true")
+
             if window('emby_online') != "false":
                 log.error("Server unreachable at: %s", url)
                 window('emby_online', value="false")
-            error.quiet = True
-            raise
+
+            raise HTTPException(None)
+
+        except requests.exceptions.ReadTimeout as error:
+            log.error("ReadTimeout at: %s", url)
+            raise HTTPException(None)
 
         except requests.exceptions.HTTPError as error:
 
@@ -335,14 +326,10 @@ class DownloadUtils(object):
                     xbmcgui.Dialog().notification(heading="Error connecting",
                                                   message="Unauthorized.",
                                                   icon=xbmcgui.NOTIFICATION_ERROR)
-
-            error.quiet = True
-            raise
+            raise HTTPException(response.status_code)
 
         # if we got to here and did not process the download for some reason then that is bad
-        exc = Exception("Unhandled Download : %s", url)
-        #exc.quiet = True
-        raise exc
+        raise Exception("Unhandled Download : %s", url)
 
     def _ensure_server(self, server_id=None):
 
@@ -364,8 +351,7 @@ class DownloadUtils(object):
         info = {
             'UserId': "",
             'Server': "",
-            'Token': "",
-            'SSL': False
+            'Token': ""
         }
 
         if server_id is None: # Main server

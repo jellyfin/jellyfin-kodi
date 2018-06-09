@@ -73,19 +73,6 @@ class UserClient(threading.Thread):
             log.error(error)
             return False
 
-    @classmethod
-    def get_ssl(cls):
-        """
-            Returns boolean value or path to certificate
-            True: Verify ssl
-            False: Don't verify connection
-        """
-        certificate = settings('sslcert')
-        if certificate != "None":
-            return certificate
-
-        return True if settings('sslverify') == "true" else False
-
     def get_access(self):
 
         if not self._has_access:
@@ -200,8 +187,7 @@ class UserClient(threading.Thread):
             'UserId': userid,
             'Server': server,
             'ServerId': settings('serverId'),
-            'Token': token,
-            'SSL': self.get_ssl()
+            'Token': token
         }
         # Set downloadutils.py values
         doutils.set_session(**server_json)
@@ -235,7 +221,6 @@ class UserClient(threading.Thread):
         added_servers = []
         for server in servers:
             if server['Id'] != settings('serverId'):
-                # TODO: SSL setup
                 self.doutils.add_server(server, False)
                 added_servers.append(server['Id'])
 
