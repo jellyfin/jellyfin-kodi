@@ -50,7 +50,23 @@ def _http(action, url, request={}):
     #request.update({'type': action, 'url': url})
     #return  HTTP.request_url(request)
 
-    return do.downloadUrl(url, action_type=action, parameters=request['params'])
+    while True:
+
+        try:
+            return do.downloadUrl(url, action_type=action, parameters=request['params'])
+        except downloadutils.HTTPException as error:
+
+            if error.status is None:
+                while True:
+
+                    if xbmc.Monitor().waitForAbort(15):
+                        raise
+
+                    if window('emby_online') == "true":
+                        log.info("Retrying http query...")
+                        break
+            else:
+                raise
 
 def _get(handler, params=None):
     return  _http("GET", get_embyserver_url(handler), {'params': params})
@@ -122,6 +138,7 @@ def get_seasons(self, show_id):
 def get_all(generator):
 
     items = []
+
     for item in generator:
         items.extend(item['Items'])
 
@@ -148,7 +165,8 @@ def get_items(parent_id, item_type=None, basic=False, params=None):
 
 def get_item_list(item_list, basic=False):
 
-    for item_ids in _split_list(item_list, limit):
+    for item_ids in _split_list(item_list[:], limit):
+
         query = {
             'url': "Users/{UserId}/Items",
             'params': {
@@ -156,6 +174,7 @@ def get_item_list(item_list, basic=False):
                 'Fields': basic_info() if basic else complete_info()
             }
         }
+
         for items in _get_items(query):
             yield items
 
@@ -204,6 +223,17 @@ def _split_list(item_list, size):
     # Split up list in pieces of size. Will generate a list of lists
     return [item_list[i:i + size] for i in range(0, len(item_list), size)]
 
+def _test_params(url, params):
+
+    params['Limit'] = 1
+    params['EnableTotalRecordCount'] = True
+
+    try:
+        return _get(url, params)
+
+    except Exception as error:
+        raise
+
 def _get_items(query):
 
     ''' query = {
@@ -228,30 +258,20 @@ def _get_items(query):
         'Recursive': True
     })
 
-    try:
-        test_params = dict(params)
-        test_params['Limit'] = 1
-        test_params['EnableTotalRecordCount'] = True
+    items['TotalRecordCount'] = _test_params(url, dict(params))['TotalRecordCount']
 
-        items['TotalRecordCount'] = _get(url, test_params)['TotalRecordCount']
+    index = params.get('StartIndex', 0)
+    total = items['TotalRecordCount']
 
-    except Exception as error:
-        log.error("Failed to retrieve the server response %s: %s params:%s", url, error, params)
+    while index < total:
 
-    else:
-        index = params.get('StartIndex', 0)
-        total = items['TotalRecordCount']
+        params['StartIndex'] = index
+        params['Limit'] = limit
+        result = _get(url, params) # Could raise an HTTP error.
 
-        while index < total:
+        items['Items'].extend(result['Items'])
+        items['RestorePoint'] = query
+        yield items
 
-            params['StartIndex'] = index
-            params['Limit'] = limit
-            result = _get(url, params)
-
-            items['Items'].extend(result['Items'])
-            items['RestorePoint'] = query
-            yield items
-
-            del items['Items'][:]
-            index += limit
-
+        del items['Items'][:]
+        index += limit
