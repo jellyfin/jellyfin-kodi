@@ -404,6 +404,10 @@ class LibrarySync(threading.Thread):
 
             movies.count = 0
             for all_movies in mb.get_items(view['id'], "Movie"):
+
+                if should_stop():
+                    return False
+
                 movies.add_all("Movie", all_movies, view)
 
         log.debug("Movies finished.")
@@ -418,6 +422,10 @@ class LibrarySync(threading.Thread):
 
         movies.count = 0
         for boxsets in mb.get_items(None, "BoxSet"):
+
+            if should_stop():
+                return False
+
             movies.add_all("BoxSet", boxsets)
 
         log.debug("Boxsets finished.")
@@ -446,6 +454,10 @@ class LibrarySync(threading.Thread):
             # Initial or repair sync
             mvideos.count = 0
             for all_mvideos in mb.get_items(view['id'], "MusicVideo"):
+
+                if should_stop():
+                    return False
+
                 mvideos.add_all("MusicVideo", all_mvideos, view)
 
         else:
@@ -473,6 +485,10 @@ class LibrarySync(threading.Thread):
 
             tvshows.count = 0
             for all_tvshows in mb.get_items(view['id'], "Series"):
+
+                if should_stop():
+                    return False
+
                 tvshows.add_all("Series", all_tvshows, view)
 
         else:
@@ -497,6 +513,10 @@ class LibrarySync(threading.Thread):
 
             music.count = 0
             for all_artists in mb.get_artists(view['id']):
+
+                if should_stop():
+                    return False
+
                 music.add_all("MusicArtist", all_artists)
 
         log.debug("Finished syncing music")
@@ -750,6 +770,7 @@ class LibrarySync(threading.Thread):
                 # Only try the initial sync once per kodi session regardless
                 # This will prevent an infinite loop in case something goes wrong.
                 startupComplete = True
+                window('emby.connected', value="true")
 
             # Process updates
             if self.incremental_count > 5:
