@@ -174,8 +174,10 @@ class KodiTVShows(KodiItems):
         except TypeError:
             season_id = self._add_season(show_id, number)
 
-        query = "UPDATE seasons SET name = ? WHERE idSeason = ?"
-        self.cursor.execute(query, (name, season_id))
+        if name:
+
+            query = "UPDATE seasons SET name = ? WHERE idSeason = ?"
+            self.cursor.execute(query, (name, season_id,))
 
         return season_id
 
