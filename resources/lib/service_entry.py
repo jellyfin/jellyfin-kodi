@@ -241,6 +241,10 @@ class Service(object):
 
                 self.server_online = False
 
+                if self.monitor.waitForAbort(7):
+                    # Abort was requested while waiting.
+                    break
+
             elif window('emby_online') in ("sleep", "reset"):
                 # device going to sleep
                 if self.websocket_running:
