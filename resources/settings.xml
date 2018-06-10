@@ -11,8 +11,8 @@
 		<!-- User settings -->
 		<setting id="serverName" label="30001" type="text" default="" />
 		<setting id="server" label="30000" type="text" default="" visible="!eq(-1,)" />
-		<setting id="sslverify" label="30500" type="bool" default="false" visible="!eq(-1,)" subsetting="true" />
-		<setting id="sslcert" label="30501" type="file" default="None" visible="eq(-1,true)" subsetting="true" />
+		<setting id="sslverify" label="30500" type="bool" default="true" visible="!eq(-1,)" subsetting="true" />
+		<!--<setting id="sslcert" label="30501" type="file" default="None" visible="eq(-1,true)" subsetting="true" />==>
 		<setting id="accessToken" type="text" default="" visible="false" />
 		<setting id="userId" type="text" default="" visible="false" />
 		<!-- Device settings -->

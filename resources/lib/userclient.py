@@ -70,7 +70,6 @@ class UserClient(threading.Thread):
             return True
         except Exception as error:
             # Server connection failed
-            log.error(error)
             return False
 
     @classmethod
@@ -80,11 +79,7 @@ class UserClient(threading.Thread):
             True: Verify ssl
             False: Don't verify connection
         """
-        certificate = settings('sslcert')
-        if certificate != "None":
-            return certificate
-
-        return True if settings('sslverify') == "true" else False
+        return settings('sslverify') == "true"
 
     def get_access(self):
 
