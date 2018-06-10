@@ -26,7 +26,7 @@ def video_database():
     db_version = {
 
         '17': 107,# Krypton
-        '18': 109 # Leia
+        '18': 110 # Leia
     }
     return xbmc.translatePath("special://database/MyVideos%s.db"
                               % db_version.get(KODI, "")).decode('utf-8')
