@@ -374,7 +374,7 @@ class Artwork(object):
 
         if not image_url:
 
-            log.warn("empty url for: %s/%s", kodi_id, media_type)
+            log.debug("empty url for: %s/%s/%s", kodi_id, media_type, image_type)
             return
 
         cache_image = False

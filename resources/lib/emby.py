@@ -19,7 +19,7 @@ import xbmc
 
 import downloadutils
 import database
-from utils import window, settings
+from utils import window, settings, should_stop
 from contextlib import closing
 
 #################################################################################################
@@ -56,10 +56,13 @@ def _http(action, url, request={}):
             return do.downloadUrl(url, action_type=action, parameters=request['params'])
         except downloadutils.HTTPException as error:
 
-            if error.status is None:
+            if error.status is None or error.status == 502:
                 while True:
 
                     if xbmc.Monitor().waitForAbort(15):
+                        raise
+
+                    if should_stop():
                         raise
 
                     if window('emby_online') == "true":

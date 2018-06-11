@@ -577,7 +577,7 @@ class Read_EmbyServer():
         try:
             users = self.doUtils.downloadUrl(url, authenticate=False)
         except Exception as error:
-            log.info("Error getting users from server: " + str(error))
+            log.info("Error getting users from server: %s", str(error))
             users = []
 
         return users
