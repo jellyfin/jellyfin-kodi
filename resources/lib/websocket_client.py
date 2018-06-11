@@ -165,8 +165,6 @@ class WebSocketClient(threading.Thread):
             log.info("Unknown command: %s", command)
             return
 
-        window('emby_command', value="true")
-
     def _library_changed(self, data):
 
         process_list = {

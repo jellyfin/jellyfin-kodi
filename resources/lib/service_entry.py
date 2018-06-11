@@ -130,20 +130,7 @@ class Service(object):
                 if user_client.get_user() is not None and user_client.get_access():
 
                     # If an item is playing
-                    if self.kodi_player.isPlaying():
-                        # ping metrics server to keep sessions alive while playing
-                        # ping every 5 min
-                        timeSinceLastPing = time.time() - self.lastMetricPing
-                        if(timeSinceLastPing > 300):
-                            self.lastMetricPing = time.time()
-                            """
-                            ga = GoogleAnalytics()
-                            ga.sendEventData("PlayAction", "PlayPing")
-                            """
-
-                        self._report_progress()
-
-                    elif not self.startup:
+                    if not self.startup:
                         self.startup = self._startup()
 
                     if not self.websocket_running:
@@ -154,9 +141,12 @@ class Service(object):
                         # Start the syncing thread
                         self.library_running = True
                         self.library_thread.start()
-                    if not self.capabitilities:
+                    if not self.capabitilities and user_client.post_capabilities():
                         self.capabitilities = True
-                        user_client.post_capabilities()
+
+                    if self.monitor.waitForAbort(15):
+                        # Abort was requested while waiting. We should exit
+                        break
                 else:
 
                     if (user_client.get_user() is None) and self.warn_auth:
@@ -181,20 +171,6 @@ class Service(object):
         self.shutdown()
 
     def _startup(self):
-        
-        serverId = settings('serverId')
-        if(serverId != None):
-            serverId = hashlib.md5(serverId).hexdigest()
-        
-        """
-        ga = GoogleAnalytics()
-        ga.sendEventData("Application", "Startup", serverId)
-        try:
-            ga.sendEventData("Version", "OS", platform.platform())
-            ga.sendEventData("Version", "Python", platform.python_version())
-        except Exception:
-            pass
-        """
 
         # Start up events
         self.warn_auth = True
@@ -302,6 +278,7 @@ class Service(object):
                 # Abort was requested while waiting. We should exit
                 break
 
+    """
     def _report_progress(self):
         # Update and report playback progress
         kodi_player = self.kodi_player
@@ -329,6 +306,7 @@ class Service(object):
 
         except Exception as error:
             log.exception(error)
+    """
 
     def shutdown(self):
 
