@@ -39,7 +39,6 @@ class Player(xbmc.Player):
         self.doUtils = downloadutils.DownloadUtils().downloadUrl
         self.emby = embyserver.Read_EmbyServer()
         self.ws = wsc.WebSocketClient()
-        self.xbmcplayer = xbmc.Player()
 
         log.debug("Starting playback monitor.")
         xbmc.Player.__init__(self)
@@ -84,7 +83,7 @@ class Player(xbmc.Player):
 
         # Get current file
         try:
-            currentFile = self.xbmcplayer.getPlayingFile()
+            currentFile = self.getPlayingFile()
             xbmc.sleep(300)
         except:
             currentFile = ""
@@ -92,7 +91,7 @@ class Player(xbmc.Player):
             while not currentFile:
                 xbmc.sleep(100)
                 try:
-                    currentFile = self.xbmcplayer.getPlayingFile()
+                    currentFile = self.getPlayingFile()
                 except: pass
 
                 if count == 10: # try 5 times
@@ -142,11 +141,11 @@ class Player(xbmc.Player):
             if window('emby_customPlaylist') == "true" and customseek:
                 # Start at, when using custom playlist (play to Kodi from webclient)
                 log.info("Seeking to: %s", customseek)
-                self.xbmcplayer.seekTime(int(customseek)/10000000.0)
+                self.seekTime(int(customseek)/10000000.0)
                 window('emby_customPlaylist.seektime', clear=True)
 
             try:
-                seekTime = self.xbmcplayer.getTime()
+                seekTime = self.getTime()
             except:
                 # at this point we should be playing and if not then bail out
                 return
@@ -245,7 +244,7 @@ class Player(xbmc.Player):
                 runtime = int(runtime)
             except ValueError:
                 try:
-                    runtime = int(self.xbmcplayer.getTotalTime())
+                    runtime = int(self.getTotalTime())
                     log.info("Runtime is missing, Kodi runtime: %s" % runtime)
                 except:
                     runtime = 0
