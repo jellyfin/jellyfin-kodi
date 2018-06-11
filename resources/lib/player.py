@@ -14,7 +14,6 @@ import downloadutils
 import read_embyserver as embyserver
 import websocket_client as wsc
 from utils import window, settings, language as lang, JSONRPC
-#from ga_client import GoogleAnalytics, log_error
 
 #################################################################################################
 
@@ -271,12 +270,6 @@ class Player(xbmc.Player):
             self.played_info[currentFile] = data
             log.info("ADDING_FILE: %s", self.played_info)
 
-            """
-            ga = GoogleAnalytics()
-            ga.sendEventData("PlayAction", item_type, play_method)
-            ga.sendScreenView(item_type)
-            """
-
     def reportPlayback(self):
         
         log.debug("reportPlayback Called")
@@ -390,8 +383,9 @@ class Player(xbmc.Player):
         log.debug("PLAYBACK_PAUSED: %s" % currentFile)
 
         if self.played_info.get(currentFile):
+
             self.played_info[currentFile]['paused'] = True
-        
+            self.played_info[currentFile]['currentPosition'] = self.getTime()
             self.reportPlayback()
 
     #@log_error()
@@ -401,8 +395,9 @@ class Player(xbmc.Player):
         log.debug("PLAYBACK_RESUMED: %s" % currentFile)
 
         if self.played_info.get(currentFile):
+
             self.played_info[currentFile]['paused'] = False
-        
+            self.played_info[currentFile]['currentPosition'] = self.getTime()
             self.reportPlayback()
 
     #@log_error()
@@ -414,7 +409,7 @@ class Player(xbmc.Player):
         if self.played_info.get(currentFile):
             position = None
             try:
-                position = self.xbmcplayer.getTime()
+                position = self.getTime()
             except:
                 pass
 
@@ -523,11 +518,6 @@ class Player(xbmc.Player):
                     xbmcvfs.delete("%s%s" % (path, file))
     
         self.played_info.clear()
-        
-        """
-        ga = GoogleAnalytics()
-        ga.sendEventData("PlayAction", "Stopped")
-        """
     
     def stop_playback(self, data):
         
