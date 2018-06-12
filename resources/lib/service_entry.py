@@ -46,7 +46,6 @@ class Service(object):
     library_thread = None
 
     last_progress = datetime.today()
-    lastMetricPing = time.time()
 
     def __init__(self):
 
@@ -128,6 +127,9 @@ class Service(object):
                 # Emby server is online
                 # Verify if user is set and has access to the server
                 if user_client.get_user() is not None and user_client.get_access():
+
+                    if self.kodi_player.isPlaying():
+                        self._report_progress()
 
                     # If an item is playing
                     if not self.startup:
@@ -278,7 +280,6 @@ class Service(object):
                 # Abort was requested while waiting. We should exit
                 break
 
-    """
     def _report_progress(self):
         # Update and report playback progress
         kodi_player = self.kodi_player
@@ -292,26 +293,15 @@ class Service(object):
             difference = datetime.today() - self.last_progress
             difference_seconds = difference.seconds
 
-            # Report progress to Emby server
-            if difference_seconds > 9:
-                kodi_player.reportPlayback()
-                self.last_progress = datetime.today()
-
-            elif window('emby_command') == "true":
-                # Received a remote control command that
-                # requires updating immediately
-                window('emby_command', clear=True)
+            # Ping session every 4-5 minutes
+            if difference_seconds > 270:
                 kodi_player.reportPlayback()
                 self.last_progress = datetime.today()
 
         except Exception as error:
             log.exception(error)
-    """
 
     def shutdown(self):
-
-        #ga = GoogleAnalytics()
-        #ga.sendEventData("Application", "Shutdown")     
 
         if self.monitor.special_monitor:
             self.monitor.special_monitor.stop_monitor()
