@@ -138,7 +138,7 @@ class PlayUtils():
         '''
 
         # Log filename, used by other addons eg subtitles which require the file name
-        window('embyfilename', value=self.get_direct_path(source))
+        window('embyfilename', value=self.get_direct_path(source).encode('utf-8'))
 
         if (not self.force_transcode and (self.is_strm(source) or self.is_h265(source) or (settings('playFromStream') == "false" and self.is_file_exists(source)))):
             # Append external subtitles
@@ -359,7 +359,7 @@ class PlayUtils():
                 mapping[kodi_index] = index
                 kodi_index += 1
 
-        window('emby_%s.indexMapping.json' % play_url, value=mapping)
+        window('emby_%s.indexMapping.json' % play_url.encode('utf-8'), value=mapping)
         self.listitem.setSubtitles(subs)
 
         return
