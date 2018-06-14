@@ -74,11 +74,12 @@ class UserClient(threading.Thread):
 
     @classmethod
     def get_ssl(cls):
-        """
+
+        '''
             Returns boolean value or path to certificate
             True: Verify ssl
             False: Don't verify connection
-        """
+        '''
         return settings('sslverify') == "true"
 
     def get_access(self):
@@ -219,7 +220,7 @@ class UserClient(threading.Thread):
 
     def post_capabilities(self):
         log.info("post capabilities")
-        self.doutils.post_capabilities()
+        return self.doutils.post_capabilities()
 
     def load_connect_servers(self):
         # Set connect servers
