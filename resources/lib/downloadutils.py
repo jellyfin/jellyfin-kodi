@@ -233,7 +233,7 @@ class DownloadUtils(object):
                 requires_server = True
 
             if requires_server and (not server or not server.get("Server") or not server.get("UserId")):
-                log.info("Aborting download, Server Details Error: %s url=%s" % (server, url))
+                xbmcgui.Dialog().ok('Emby for Kodi', "You are not connected to your emby server.")
                 raise Exception("Aborting download, Server Details Error: %s url=%s" % (server, url))
 
             if server_id is None and self.session_requests is not None: # Main server
@@ -266,8 +266,6 @@ class DownloadUtils(object):
             log.debug(kwargs)
             response = self._requests(action_type, session, **kwargs)
             #response = requests.get('http://httpbin.org/status/400')
-            if window('emby_test') == "false":
-                raise requests.exceptions.ConnectionError
 
             if response.status_code == 204:
                 # No body in the response
@@ -295,8 +293,6 @@ class DownloadUtils(object):
 
         except requests.exceptions.ConnectionError as error:
             # Make the addon aware of status
-            window('emby_test', value="true")
-
             if window('emby_online') != "false":
                 log.error("Server unreachable at: %s", url)
                 window('emby_online', value="false")
