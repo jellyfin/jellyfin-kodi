@@ -241,7 +241,7 @@ class DownloadUtils(object):
             else:
                 session = requests
                 kwargs.update({
-                    'verify': server['SSL'],
+                    'verify': server.get('SSL', False),
                     'headers': self.get_header(server_id, authenticate)
                 })
 
@@ -354,8 +354,7 @@ class DownloadUtils(object):
         info = {
             'UserId': "",
             'Server': "",
-            'Token': "",
-            'SSL': True
+            'Token': ""
         }
 
         if server_id is None: # Main server
