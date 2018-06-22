@@ -84,7 +84,7 @@ class Items(object):
 
     def content_pop(self, name):
         # It's possible for the time to be 0. It should be considered disabled in this case.
-        if not self.pdialog and self.content_msg and self.new_time:
+        if not self.pdialog and self.content_msg and self.new_time and (not xbmc.Player().isPlayingVideo() or xbmc.getCondVisibility('VideoPlayer.Content(livetv)')):
             dialog(type_="notification",
                    heading="{emby}",
                    message="%s %s" % (lang(33049), name),
