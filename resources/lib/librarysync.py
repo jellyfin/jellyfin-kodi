@@ -232,9 +232,12 @@ class LibrarySync(threading.Thread):
         # Only run once when first setting up. Can be run manually.
         music_enabled = settings('enableMusic') == "true"
 
-        xbmc.executebuiltin('InhibitIdleShutdown(true)')
-        screensaver = utils.getScreensaver()
-        utils.setScreensaver(value="")
+        if settings('dbSyncScreensaver') == "true":
+
+            xbmc.executebuiltin('InhibitIdleShutdown(true)')
+            screensaver = utils.getScreensaver()
+            utils.setScreensaver(value="")
+
         window('emby_dbScan', value="true")
         # Add sources
         utils.sourcesXML()
@@ -352,8 +355,11 @@ class LibrarySync(threading.Thread):
         xbmc.executebuiltin('UpdateLibrary(video)')
         elapsedtotal = datetime.now() - starttotal
 
-        xbmc.executebuiltin('InhibitIdleShutdown(false)')
-        utils.setScreensaver(value=screensaver)
+        if settings('dbSyncScreensaver') == "true":
+
+            xbmc.executebuiltin('InhibitIdleShutdown(false)')
+            utils.setScreensaver(value=screensaver)
+
         window('emby_dbScan', clear=True)
         window('emby_initialScan', clear=True)
 
@@ -561,9 +567,11 @@ class LibrarySync(threading.Thread):
             with database.DatabaseConn('emby') as cursor_emby:
                 with database.DatabaseConn('video') as cursor_video:
 
-                    xbmc.executebuiltin('InhibitIdleShutdown(true)')
-                    screensaver = utils.getScreensaver()
-                    utils.setScreensaver(value="")
+                    if settings('dbSyncScreensaver') == "true":
+
+                        xbmc.executebuiltin('InhibitIdleShutdown(true)')
+                        screensaver = utils.getScreensaver()
+                        utils.setScreensaver(value="")
 
                     emby_db = embydb.Embydb_Functions(cursor_emby)
 
@@ -618,8 +626,10 @@ class LibrarySync(threading.Thread):
                                 if kodiupdate_video:
                                     self.forceLibraryUpdate = True
 
-                    xbmc.executebuiltin('InhibitIdleShutdown(false)')
-                    utils.setScreensaver(value=screensaver)
+                    if settings('dbSyncScreensaver') == "true":
+
+                        xbmc.executebuiltin('InhibitIdleShutdown(false)')
+                        utils.setScreensaver(value=screensaver)
 
         # if stuff happened then do some stuff
         if update_embydb:
