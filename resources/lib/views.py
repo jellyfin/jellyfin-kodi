@@ -442,7 +442,7 @@ class Playlist(object):
         dirs, files = xbmcvfs.listdir(path)
         for file in files:
             if file.decode('utf-8').startswith('Emby'):
-                self._delete_playlist(os.path.join(path, file))
+                self._delete_playlist(os.path.join(path, file.decode('utf-8')))
 
 
 class VideoNodes(object):
