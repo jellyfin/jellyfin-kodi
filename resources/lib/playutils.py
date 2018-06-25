@@ -526,47 +526,33 @@ class PlayUtils():
             "MusicStreamingTranscodingBitrate": 1280000,
             "TimelineOffsetSeconds": 5,
 
-            "Identification": {
-                "ModelName": "Kodi",
-                "Headers": [
-                    {
-                        "Name": "User-Agent",
-                        "Value": "Kodi",
-                        "Match": 2
-                    }
-                ]
-            },
-
             "TranscodingProfiles": [
                 {
                     "Container": "mp3",
                     "AudioCodec": "mp3",
-                    "Type": 0
+                    "Type": "Audio"
                 },
                 {
                     "Container": "m3u8",
                     "AudioCodec": "ac3",
                     "VideoCodec": "h264",
-                    "Type": 1
+                    "Type": "Video"
                 },
                 {
                     "Container": "jpeg",
-                    "Type": 2
+                    "Type": "Photo"
                 }
             ],
 
             "DirectPlayProfiles": [
                 {
-                    "Container": "",
-                    "Type": 0
+                    "Type": "Video"
                 },
                 {
-                    "Container": "",
-                    "Type": 1
+                    "Type": "Audio"
                 },
                 {
-                    "Container": "",
-                    "Type": 2
+                    "Type": "Photo"
                 }
             ],
 
@@ -577,50 +563,67 @@ class PlayUtils():
             "SubtitleProfiles": [
                 {
                     "Format": "srt",
-                    "Method": 2
-                },
-                {
-                    "Format": "sub",
-                    "Method": 2
+                    "Method": "External"
                 },
                 {
                     "Format": "srt",
-                    "Method": 1
+                    "Method": "Embed"
                 },
                 {
                     "Format": "ass",
-                    "Method": 1,
-                    "DidlMode": ""
+                    "Method": "External"
                 },
                 {
-                    "Format": "ssa",
-                    "Method": 1,
-                    "DidlMode": ""
-                },
-                {
-                    "Format": "smi",
-                    "Method": 1,
-                    "DidlMode": ""
-                },
-                {
-                    "Format": "dvdsub",
-                    "Method": 1,
-                    "DidlMode": ""
-                },
-                {
-                    "Format": "pgs",
-                    "Method": 1,
-                    "DidlMode": ""
-                },
-                {
-                    "Format": "pgssub",
-                    "Method": 1,
-                    "DidlMode": ""
+                    "Format": "ass",
+                    "Method": "Embed"
                 },
                 {
                     "Format": "sub",
-                    "Method": 1,
-                    "DidlMode": ""
+                    "Method": "Embed"
+                },
+                {
+                    "Format": "sub",
+                    "Method": "External"
+                },
+                {
+                    "Format": "ssa",
+                    "Method": "Embed"
+                },
+                {
+                    "Format": "ssa",
+                    "Method": "External"
+                },
+                {
+                    "Format": "smi",
+                    "Method": "Embed"
+                },
+                {
+                    "Format": "smi",
+                    "Method": "External"
+                },
+                {
+                    "Format": "pgssub",
+                    "Method": "Embed"
+                },
+                {
+                    "Format": "pgssub",
+                    "Method": "External"
+                },
+                {
+                    "Format": "dvdsub",
+                    "Method": "Embed"
+                },
+                {
+                    "Format": "dvdsub",
+                    "Method": "External"
+                },
+                {
+                    "Format": "pgs",
+                    "Method": "Embed"
+                },
+                {
+                    "Format": "pgs",
+                    "Method": "External"
                 }
             ]
         }
