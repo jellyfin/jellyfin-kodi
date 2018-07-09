@@ -351,7 +351,7 @@ class TVShows(Items):
 
             # update uniqueid
             uniqueid =  self.kodi_db.get_uniqueid("tvshow", showid)
-            self.kodi_db.update_uniqueid(showid, "tvshow", tvdb, "unknown", uniqueid)
+            self.kodi_db.update_uniqueid(showid, "tvshow", tvdb, "tvdb", uniqueid)
 
             # Update the tvshow entry
             self.kodi_db.update_tvshow(title, plot, uniqueid, premieredate, genre, title,
@@ -370,7 +370,7 @@ class TVShows(Items):
 
             # add uniqueid
             uniqueid =  self.kodi_db.create_entry_uniqueid()
-            self.kodi_db.add_uniqueid(uniqueid, showid, "tvshow", tvdb, "unknown")
+            self.kodi_db.add_uniqueid(uniqueid, showid, "tvshow", tvdb, "tvdb")
 
             # Add top path
             toppathid = self.kodi_db.add_path(toplevelpath)
