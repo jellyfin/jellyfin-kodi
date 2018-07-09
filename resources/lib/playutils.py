@@ -276,7 +276,7 @@ class PlayUtils():
             base, params = source['TranscodingUrl'].split("?")
             url_parsed = params.split("&")
             for i in url_parsed:
-                if 'AudioStreamIndex' in i or 'AudioBitrate' in i: #handle manually
+                if 'AudioStreamIndex' in i or 'AudioBitrate' in i or 'PlaySessionId' in i or 'MediaSourceId' in i or 'api_key' in i: #handle manually
                     url_parsed.remove(i)
             url = "%s/emby%s?%s" % (self.server, base.replace("stream", "master"), '&'.join(url_parsed))
         else:

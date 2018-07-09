@@ -453,6 +453,8 @@ class Player(xbmc.Player):
                 media_type = data['Type']
                 playMethod = data['playmethod']
 
+                window('emby.skip.%s' % itemid, value="true")
+
                 self.stop_playback(data)
 
                 if currentPosition and runtime:
