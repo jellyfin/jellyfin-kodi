@@ -114,7 +114,8 @@ class DownloadUtils(object):
                 "SetRepeatMode,"
                 "Mute,Unmute,SetVolume,"
                 "Play,Playstate,PlayNext,PlayMediaSource"
-            )
+            ),
+            'IconUrl': "https://kodi.wiki/images/8/8e/Thumbnail-symbol-transparent.png",
         }
 
         try:
@@ -233,7 +234,7 @@ class DownloadUtils(object):
                 requires_server = True
 
             if requires_server and (not server or not server.get("Server") or not server.get("UserId")):
-                xbmcgui.Dialog().ok('Emby for Kodi', "You are not connected to your emby server.")
+                #xbmcgui.Dialog().ok('Emby for Kodi', "You are not connected to your emby server.")
                 raise Exception("Aborting download, Server Details Error: %s url=%s" % (server, url))
 
             if server_id is None and self.session_requests is not None: # Main server
