@@ -107,9 +107,9 @@ class API(object):
                 if person['Type'] == "Actor":
                     cast.append({
                         'name': person['Name'],
-                        'role': person['Role'],
+                        'role': person.get('Role', "Unknown"),
                         'order': len(cast) + 1,
-                        'thumbnail': person['imageurl']
+                        'thumbnail': person.get('imageurl')
                     })
 
         return cast
