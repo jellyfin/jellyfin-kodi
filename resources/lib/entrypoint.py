@@ -801,7 +801,7 @@ def BrowseContent(viewname, browse_type="", folderid=""):
                     #for folders we add an additional browse request, passing the folderId
                     params = {
 
-                        'id': viewname.encode('utf-8'),
+                        'id': viewname,
                         'mode': "browsecontent",
                         'type': browse_type,
                         'folderid': item['Id']
