@@ -235,7 +235,9 @@ class DownloadUtils(object):
 
             if requires_server and (not server or not server.get("Server") or not server.get("UserId")):
                 #xbmcgui.Dialog().ok('Emby for Kodi', "You are not connected to your emby server.")
-                raise Exception("Aborting download, Server Details Error: %s url=%s" % (server, url))
+                #raise Exception("Aborting download, Server Details Error: %s url=%s" % (server, url))
+                log.error("Aborting download, Server Details Error: %s url=%s", server, url)
+                return
 
             if server_id is None and self.session_requests is not None: # Main server
                 session = self.session_requests

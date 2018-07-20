@@ -44,6 +44,9 @@ XML_PATH = (addon.getAddonInfo('path'), "default", "1080i")
 
 def doPlayback(itemId, dbId):
 
+    if window('emby_online') != "true":
+        return
+
     emby = embyserver.Read_EmbyServer()
     item = emby.getItem(itemId)
     pbutils.PlaybackUtils(item).play(itemId, dbId)
