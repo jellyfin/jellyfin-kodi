@@ -115,7 +115,7 @@ class DownloadUtils(object):
                 "Mute,Unmute,SetVolume,"
                 "Play,Playstate,PlayNext,PlayMediaSource"
             ),
-            'IconUrl': "https://github.com/MediaBrowser/plugin.video.emby/blob/develop/kodi_icon.png",
+            'IconUrl': "https://raw.githubusercontent.com/MediaBrowser/Emby.Resources/master/images/devices/kodi.png",
         }
 
         try:
