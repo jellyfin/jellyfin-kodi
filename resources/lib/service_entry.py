@@ -294,7 +294,8 @@ class Service(object):
             difference_seconds = difference.seconds
 
             # Ping session every 4-5 minutes
-            if difference_seconds > 270:
+            if difference_seconds > 270 and window('emby_command') == "true":
+                window('emby_command', clear=True)
                 kodi_player.reportPlayback()
                 self.last_progress = datetime.today()
 

@@ -85,6 +85,9 @@ class KodiMonitor(xbmc.Monitor):
             self.retry = True
             self._on_play_(data)
 
+        elif method == 'Player.OnSeek':
+            window('emby_command', value="true")
+
         elif method == 'VideoLibrary.OnUpdate':
             self._video_update(data)
 
