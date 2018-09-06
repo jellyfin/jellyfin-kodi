@@ -227,7 +227,12 @@ def get_sync():
         with open(os.path.join(path, 'sync.json')) as infile:
             sync = json.load(infile)
     except Exception:
-        sync = {'Libraries': [], 'RestorePoint': {}, 'Whitelist': []}
+        sync = {}
+
+    sync['Libraries'] = sync.get('Libraries', [])
+    sync['RestorePoint'] = sync.get('RestorePoint', {})
+    sync['Whitelist'] = sync.get('Whitelist', [])
+    sync['SortedViews'] = sync.get('SortedViews', [])
 
     return sync
 
@@ -254,7 +259,9 @@ def get_credentials():
         with open(os.path.join(path, 'data.json')) as infile:
             credentials = json.load(infile)
     except Exception:
-        credentials = {'Servers': []}
+        credentials = {}
+
+    credentials['Servers'] = credentials.get('Servers', [])
 
     return credentials
 
