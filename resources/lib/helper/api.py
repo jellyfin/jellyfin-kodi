@@ -33,80 +33,6 @@ class API(object):
         '''
         return (playcount or 1) if played else None
 
-
-
-
-    def get_userdata(self):
-        # Default
-        favorite = False
-        likes = None
-        playcount = None
-        played = False
-        last_played = None
-        resume = 0
-
-        try:
-            userdata = self.item['UserData']
-        except KeyError: # No userdata found.
-            pass
-        else:
-            favorite = userdata['IsFavorite']
-            likes = userdata.get('Likes')
-
-            last_played = userdata.get('LastPlayedDate')
-            if last_played:
-                last_played = last_played.split('.')[0].replace('T', " ")
-
-            if userdata['Played']:
-                # Playcount is tied to the watch status
-                played = True
-                playcount = userdata['PlayCount']
-                if playcount == 0:
-                    playcount = 1
-
-                if last_played is None:
-                    last_played = self.get_date_created()
-
-            playback_position = userdata.get('PlaybackPositionTicks')
-            if playback_position:
-                resume = playback_position / 10000000.0
-
-        return {
-
-            'Favorite': favorite,
-            'Likes': likes,
-            'PlayCount': playcount,
-            'Played': played,
-            'LastPlayedDate': last_played,
-            'Resume': resume
-        }
-
-    def get_people(self):
-        # Process People
-        director = []
-        writer = []
-        cast = []
-
-        if 'People' in self.item:
-            for person in self.item['People']:
-
-                type_ = person['Type']
-                name = person['Name']
-
-                if type_ == 'Director':
-                    director.append(name)
-                elif type_ == 'Actor':
-                    cast.append(name)
-                elif type_ in ('Writing', 'Writer'):
-                    writer.append(name)
-
-        return {
-
-            'Director': director,
-            'Writer': writer,
-            'Cast': cast
-        }
-
     def get_actors(self):
         cast = []
 
@@ -124,40 +50,6 @@ class API(object):
                     })
 
         return cast
-
-    def get_media_streams(self):
-
-        video_tracks = []
-        audio_tracks = []
-        subtitle_languages = []
-
-        try:
-            media_streams = self.item['MediaSources'][0]['MediaStreams']
-
-        except KeyError:
-            if not self.item.get("MediaStreams"):
-                return None
-            media_streams = self.item['MediaStreams']
-
-        for media_stream in media_streams:
-            # Sort through Video, Audio, Subtitle
-            stream_type = media_stream['Type']
-
-            if stream_type == "Video":
-                self._video_stream(video_tracks, media_stream)
-
-            elif stream_type == "Audio":
-                self._audio_stream(audio_tracks, media_stream)
-
-            elif stream_type == "Subtitle":
-                subtitle_languages.append(media_stream.get('Language', "Unknown"))
-
-        return {
-
-            'video': video_tracks,
-            'audio': audio_tracks,
-            'subtitle': subtitle_languages
-        }
 
     def media_streams(self, video, audio, subtitles):
         return  {
@@ -247,21 +139,6 @@ class API(object):
 
         return resume
 
-    def get_studios(self):
-        # Process Studios
-        studios = []
-        try:
-            studio = self.item['SeriesStudio']
-            studios.append(self.validate_studio(studio))
-
-        except KeyError:
-            for studio in self.item['Studios']:
-
-                name = studio['Name']
-                studios.append(self.validate_studio(name))
-
-        return studios
-
     def validate_studio(self, studio_name):
         # Convert studio for Kodi to properly detect them
         studios = {
@@ -277,36 +154,6 @@ class API(object):
         }
         return studios.get(studio_name.lower(), studio_name)
 
-    def get_genres(self):
-
-        all_genres = ""
-        genres = self.item.get('Genres', self.item.get('SeriesGenres'))
-
-        if genres:
-            all_genres = " / ".join(genres)
-
-        return all_genres
-
-    def get_date_created(self):
-
-        try:
-            date_added = self.item['DateCreated']
-            date_added = date_added.split('.')[0].replace('T', " ")
-        except KeyError:
-            date_added = None
-
-        return date_added
-
-    def get_premiere_date(self):
-
-        try:
-            premiere = self.item['PremiereDate']
-            premiere = premiere.split('.')[0].replace('T', " ")
-        except KeyError:
-            premiere = None
-
-        return premiere
-
     def get_overview(self, overview=None):
 
         overview = overview or self.item.get('Overview')
@@ -321,24 +168,6 @@ class API(object):
 
         return overview
 
-    def get_tagline(self):
-
-        try:
-            tagline = self.item['Taglines'][0]
-        except IndexError:
-            tagline = None
-
-        return tagline
-
-    def get_provider(self, name):
-
-        try:
-            provider = self.item['ProviderIds'][name]
-        except KeyError:
-            provider = None
-
-        return provider
-
     def get_mpaa(self):
         # Convert more complex cases
         mpaa = self.item.get('OfficialRating', "")
@@ -351,15 +180,6 @@ class API(object):
             mpaa = mpaa.replace("-", " ")
 
         return mpaa
-
-    def get_country(self):
-
-        try:
-            country = self.item['ProductionLocations'][0]
-        except (IndexError, KeyError):
-            country = None
-
-        return country
 
     def get_file_path(self, path=None):
 

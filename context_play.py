@@ -28,7 +28,7 @@ LOG = logging.getLogger("EMBY.context")
 
 if __name__ == "__main__":
 
-    LOG.info("--->[ context ]")
+    LOG.debug("--->[ context ]")
 
     try:
         Context(True)

@@ -121,8 +121,7 @@ class Views(object):
 
     def get_views(self):
         
-        ''' Get all views and the media folders that make up the views.
-            Add custom views that are not media folders but should still be added
+        ''' Get the media folders. Add or remove them.
         '''
         media = {
             'movies': "Movie",

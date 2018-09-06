@@ -31,7 +31,7 @@ DELAY = int(settings('startupDelay') or 0)
 
 if __name__ == "__main__":
 
-    LOG.info("--->[ service ]")
+    LOG.warn("--->[ service ]")
     LOG.warn("Delay startup by %s seconds.", DELAY)
 
     session = Service()
@@ -46,4 +46,4 @@ if __name__ == "__main__":
         LOG.exception(error)
         session.shutdown()
 
-    LOG.info("---<[ service ]")
+    LOG.warn("---<[ service ]")
