@@ -3,863 +3,752 @@
 #################################################################################################
 
 import logging
-import shutil
 import os
-import unicodedata
+import shutil
+import urllib
 import xml.etree.ElementTree as etree
 
 import xbmc
-import xbmcaddon
 import xbmcvfs
 
-import artwork
-import read_embyserver as embyserver
-import embydb_functions as embydb
-from utils import window, language as lang, indent as xml_indent, urllib_path
+import downloader as server
+from database import Database, emby_db, get_sync, save_sync
+from objects.kodi import kodi
+from helper import _, api, indent, write_xml, window
+from emby import Emby
 
 #################################################################################################
 
-log = logging.getLogger("EMBY."+__name__)
-KODI = int(xbmc.getInfoLabel('System.BuildVersion')[:2])
+LOG = logging.getLogger("EMBY."+__name__)
+NODES = {
+    'tvshows': [
+        ('all', None),
+        ('recent', _(30170)),
+        ('recentepisodes', _(30175)),
+        ('inprogress', _(30171)),
+        ('inprogressepisodes', _(30178)),
+        ('nextepisodes', _(30179)),
+        ('genres', 135),
+        ('random', _(30229)),
+        ('recommended', _(30230))
+    ],
+    'movies': [
+        ('all', None),
+        ('recent', _(30174)),
+        ('inprogress', _(30177)),
+        ('unwatched', _(30189)),
+        ('sets', 20434),
+        ('genres', 135),
+        ('random', _(30229)),
+        ('recommended', _(30230))
+    ],
+    'musicvideos': [
+        ('all', None),
+        ('recent', _(30256)),
+        ('inprogress', _(30257)),
+        ('unwatched', _(30258))
+    ],
+    'homevideos': [
+        ('all', None),
+        ('recent', _(30251)),
+        ('recommended', _(30253))
+    ],
+    'photos': [
+        ('all', None),
+        ('recent', _(30252)),
+        ('sets', _(30255)),
+        ('recommended', _(30254))
+    ]
+}
 
 #################################################################################################
 
 
-class Views(object):
+def verify_kodi_defaults():
 
-    media_types = {
-        'movies': "Movie",
-        'tvshows': "Series",
-        'musicvideos': "MusicVideo",
-        'homevideos': "Video",
-        'music': "Audio",
-        'photos': "Photo"
-    }
+    ''' Make sure we have the kodi default folder in place.
+    '''
+    node_path = xbmc.translatePath("special://profile/library/video").decode('utf-8')
 
-    def __init__(self, emby_cursor, kodi_cursor):
-        self.emby_cursor = emby_cursor
-        self.kodi_cursor = kodi_cursor
-
-        self.total_nodes = 0
-        self.nodes = list()
-        self.playlists = list()
-        self.views = list()
-        self.sorted_views = list()
-        self.grouped_views = list()
-
-        self.video_nodes = VideoNodes()
-        self.playlist = Playlist()
-        self.emby = embyserver.Read_EmbyServer()
-        self.emby_db = embydb.Embydb_Functions(emby_cursor)
-        self.artwork = artwork.Artwork()
-
-    def _populate_views(self):
-        # Will get emby views and views in Kodi
+    if not xbmcvfs.exists(node_path):
         try:
-            grouped_views = self.emby.get_views()
-        except Exception as error:
-            log.info("Error getting views from server: " + str(error))
-            grouped_views = None
-
-        if grouped_views is not None and "Items" in grouped_views:
-            self.grouped_views = grouped_views['Items']
-        else:
-            self.grouped_views = []
-
-        for view in self.emby.getViews(sortedlist=True):
-            self.views.append(view['name'])
-            if view['type'] == "music":
-                continue
-
-            if view['type'] == "mixed":
-                self.sorted_views.append(view['name'])
-            self.sorted_views.append(view['name'])
-
-        log.info("sorted views: %s", self.sorted_views)
-        self.total_nodes = len(self.sorted_views)
-
-    def maintain(self):
-        # Compare views to emby
-        self._populate_views()
-        curr_views = self.emby_db.getViews()
-        # total nodes for window properties
-        self.video_nodes.clearProperties()
-
-        for media_type in ('movies', 'tvshows', 'musicvideos', 'homevideos', 'music', 'photos'):
-
-            self.nodes = list() # Prevent duplicate for nodes of the same type
-            self.playlists = list() # Prevent duplicate for playlists of the same type
-            # Get media folders to include mixed views as well
-            for folder in self.emby.getViews(media_type, root=True):
-
-                view_id = folder['id']
-                view_name = folder['name']
-                view_type = folder['type']
-
-                if view_name not in self.views:
-                    # Media folders are grouped into userview
-                    view_name = self._get_grouped_view(media_type, view_id, view_name)
-                
-                try: # Make sure the view is in sorted views before proceeding
-                    self.sorted_views.index(view_name)
-                except ValueError:
-                    self.sorted_views.append(view_name)
-
-                # Get current media folders from emby database and compare
-                if self.compare_view(media_type, view_id, view_name, view_type):
-                    if view_id in curr_views: # View is still valid
-                        curr_views.remove(view_id)
-
-        # Add video nodes listings
-        self.add_single_nodes()
-        # Save total
-        window('Emby.nodes.total', str(self.total_nodes))
-        # Remove any old referenced views
-        log.info("Removing views: %s", curr_views)
-        for view in curr_views:
-            self.remove_view(view)
-
-    def _get_grouped_view(self, media_type, view_id, view_name):
-        # Get single item from view to compare
-        try:
-            result = self.emby.get_single_item(self.media_types[media_type], view_id)
-            item = result['Items'][0]['Id']
-        except Exception as error:
-            log.info("Error getting single item form server: " + str(error))
-            # Something is wrong. Keep the same folder name.
-            # Could be the view is empty or the connection
-            pass
-        else:
-            for view in self.grouped_views:
-                if view['Type'] == "UserView" and view.get('CollectionType') == media_type:
-                    # Take the userview, and validate the item belong to the view
-                    if self.emby.verifyView(view['Id'], item):
-                        log.info("found corresponding view: %s %s", view['Name'], view['Id'])
-                        view_name = view['Name']
-                        break
-            else: # Unable to find a match, add the name to our sorted_view list
-                log.info("couldn't find corresponding grouped view: %s", self.sorted_views)
-
-        return view_name
-
-    def add_view(self, media_type, view_id, view_name, view_type):
-        # Generate view, playlist and video node
-        log.info("creating view %s: %s", view_name, view_id)
-        tag_id = self.get_tag(view_name)
-
-        self.add_playlist_node(media_type, view_id, view_name, view_type)
-        # Add view to emby database
-        group_series = self.is_grouped_series(view_id, view_type)
-        self.emby_db.addView(view_id, view_name, view_type, tag_id, group_series)
-
-    def is_grouped_series(self, view_id, view_type):
-
-        if window('emby.userinfo.json')['Policy']['IsAdministrator']:
-            try:
-                return self.emby.get_view_options(view_id)['EnableAutomaticSeriesGrouping'] if view_type == "tvshows" else None
-            except Exception as error: # Currently admin only api entrypoint
-                log.error(error)
-                return None
-        else:
-            return None
-
-    def compare_view(self, media_type, view_id, view_name, view_type):
-
-        curr_view = self.emby_db.getView_byId(view_id)
-        try:
-            curr_view_name = curr_view[0]
-            curr_view_type = curr_view[1]
-            curr_tag_id = curr_view[2]
-        except TypeError:
-            self.add_view(media_type, view_id, view_name, view_type)
-            return False
-        
-        # View is still valid
-        log.debug("Found viewid: %s viewname: %s viewtype: %s tagid: %s",
-                  view_id, curr_view_name, curr_view_type, curr_tag_id)
-
-        if curr_view_name != view_name:
-            # View was modified, update with latest info
-            log.info("viewid: %s new viewname: %s", view_id, view_name)
-            tag_id = self.get_tag(view_name)
-            # Update view with new info
-            self.emby_db.updateView(view_name, tag_id, view_id)
-            # Delete old playlists and video nodes
-            self.delete_playlist_node(media_type, curr_view_name, view_id, curr_view_type)
-            # Update items with new tag
-            self._update_items_tag(curr_view_type[:-1], view_id, curr_tag_id, tag_id)
-
-        group_series = self.is_grouped_series(view_id, view_type)
-        self.emby_db.update_view_grouped_series(view_id, group_series)
-        # Verify existance of playlist and nodes
-        self.add_playlist_node(media_type, view_id, view_name, view_type)
-        return True
-
-    def remove_view(self, view):
-        # Remove any items that belongs to the old view
-        items = self.emby_db.get_item_by_view(view)
-        items = [i[0] for i in items] # Convert list of tuple to list
-        # TODO: Triage not accessible from here yet
-        #self.triage_items("remove", items)
-
-    def _update_items_tag(self, media_type, view_id, tag, new_tag):
-        items = self.emby_db.getItem_byView(view_id)
-        for item in items:
-            # Remove the "s" from viewtype for tags
-            self._update_tag(tag, new_tag, item[0], media_type)
-
-    def get_tag(self, tag):
-        # This will create and return the tag_id
-        if KODI > 14:
-            # Kodi Isengard and up
-            query = ' '.join((
-
-                "SELECT tag_id",
-                "FROM tag",
-                "WHERE name = ?",
-                "COLLATE NOCASE"
-            ))
-            self.kodi_cursor.execute(query, (tag,))
-            try:
-                tag_id = self.kodi_cursor.fetchone()[0]
-            except TypeError:
-                tag_id = self._add_tag(tag)
-        else:# TODO: Remove once Kodi Krypton is RC
-            query = ' '.join((
-
-                "SELECT idTag",
-                "FROM tag",
-                "WHERE strTag = ?",
-                "COLLATE NOCASE"
-            ))
-            self.kodi_cursor.execute(query, (tag,))
-            try:
-                tag_id = self.kodi_cursor.fetchone()[0]
-            except TypeError:
-                self.kodi_cursor.execute("select coalesce(max(idTag),0) from tag")
-                tag_id = self.kodi_cursor.fetchone()[0] + 1
-
-                query = "INSERT INTO tag(idTag, strTag) values(?, ?)"
-                self.kodi_cursor.execute(query, (tag_id, tag))
-                log.debug("Create idTag: %s name: %s", tag_id, tag)
-
-        return tag_id
-
-    def _add_tag(self, tag):
-
-        self.kodi_cursor.execute("select coalesce(max(tag_id),0) from tag")
-        tag_id = self.kodi_cursor.fetchone()[0] + 1
-
-        query = "INSERT INTO tag(tag_id, name) values(?, ?)"
-        self.kodi_cursor.execute(query, (tag_id, tag))
-        log.debug("Create tag_id: %s name: %s", tag_id, tag)
-
-        return tag_id
-
-    def _update_tag(self, tag, new_tag, kodi_id, media_type):
-
-        log.debug("Updating: %s with %s for %s: %s", tag, new_tag, media_type, kodi_id)
-
-        if KODI > 14:
-            # Kodi Isengard and up
-            try:
-                query = ' '.join((
-
-                    "UPDATE tag_link",
-                    "SET tag_id = ?",
-                    "WHERE media_id = ?",
-                    "AND media_type = ?",
-                    "AND tag_id = ?"
-                ))
-                self.kodi_cursor.execute(query, (new_tag, kodi_id, media_type, tag,))
-            except sqlite3.IntegrityError:
-                # The new tag we are going to apply already exists for this item
-                # delete current tag instead
-                query = ' '.join((
-
-                    "DELETE FROM tag_link",
-                    "WHERE media_id = ?",
-                    "AND media_type = ?",
-                    "AND tag_id = ?"
-                ))
-                self.kodi_cursor.execute(query, (kodi_id, media_type, tag,))
-        else:# TODO: Remove once Kodi Krypton is RC
-            try:
-                query = ' '.join((
-
-                    "UPDATE taglinks",
-                    "SET idTag = ?",
-                    "WHERE idMedia = ?",
-                    "AND media_type = ?",
-                    "AND idTag = ?"
-                ))
-                self.kodi_cursor.execute(query, (new_tag, kodi_id, media_type, tag,))
-            except sqlite3.IntegrityError:
-                # The new tag we are going to apply already exists for this item
-                # delete current tag instead
-                query = ' '.join((
-
-                    "DELETE FROM taglinks",
-                    "WHERE idMedia = ?",
-                    "AND media_type = ?",
-                    "AND idTag = ?"
-                ))
-                self.kodi_cursor.execute(query, (kodi_id, media_type, tag,))
-
-    def add_playlist_node(self, media_type, view_id, view_name, view_type):
-        # Create playlist for the video library
-        if view_name not in self.playlists and media_type in ('movies', 'tvshows', 'musicvideos'):
-            self.playlist.process_playlist(media_type, view_id, view_name, view_type)
-            self.playlists.append(view_name)
-        # Create the video node
-        if view_name not in self.nodes and media_type not in ('musicvideos', 'music'):
-            index = self.sorted_views.index(view_name)
-            self.video_nodes.viewNode(index, view_name, media_type, view_type, view_id)
-
-            if window('emby_online') == "true":
-                # Only pull artwork if server is online
-                art = self.artwork.get_all_artwork(self.emby.getItem(view_id))
-                if art.get('Primary'):
-                    window("Emby.nodes.%s.artwork" % index, art['Primary'])
-            
-            if view_type == "mixed": # Change the value
-                self.sorted_views[index] = "%ss" % view_name
-            
-            self.nodes.append(view_name)
-            self.total_nodes += 1
-
-    def delete_playlist_node(self, media_type, view_id, view_name, view_type):
-
-        if media_type == "music":
-            return
-
-        if self.emby_db.getView_byName(view_name) is None:
-            # The tag could be a combined view. Ensure there's no other tags
-            # with the same name before deleting playlist.
-            self.playlist.process_playlist(media_type, view_id, view_name, view_type, True)
-            # Delete video node
-            if media_type != "musicvideos":
-                self.video_nodes.viewNode(None, view_name, media_type, view_type, view_id, True)
-
-    def add_single_nodes(self):
-
-        singles = [
-            ("Favorite movies", "movies", "favourites"),
-            ("Favorite tvshows", "tvshows", "favourites"),
-            ("Favorite episodes", "episodes", "favourites"),
-            #("channels", "movies", "channels")
-        ]
-        for args in singles:
-            self._single_node(self.total_nodes, *args)
-
-    def _single_node(self, index, tag, media_type, view_type):
-        self.video_nodes.singleNode(index, tag, media_type, view_type)
-        self.total_nodes += 1
-
-    def offline_mode(self):
-        # Just reads from the db and populate views that way
-        # total nodes for window properties
-        self.video_nodes.clearProperties()
-
-        for media_type in ('movies', 'tvshows', 'musicvideos', 'homevideos', 'music', 'photos'):
-
-            self.nodes = list() # Prevent duplicate for nodes of the same type
-            self.playlists = list() # Prevent duplicate for playlists of the same type
-
-            views = self.emby_db.getView_byType(media_type)
-            for view in views:
-
-                try: # Make sure the view is in sorted views before proceeding
-                    self.sorted_views.index(view['name'])
-                except ValueError:
-                    self.sorted_views.append(view['name'])
-
-                self.add_playlist_node(media_type, view['id'], view['name'], view['mediatype'])
-
-        self.add_single_nodes()
-        window('Emby.nodes.total', str(self.total_nodes))
-
-
-class Playlist(object):
-
-    def __init__(self):
-        pass
-
-    def process_playlist(self, media_type, view_id, view_name, view_type, delete=False):
-        # Tagname is in unicode - actions: add or delete
-        tag = view_name.encode('utf-8')
-        path = xbmc.translatePath("special://profile/playlists/video/").decode('utf-8')
-
-        if view_type == "mixed":
-            playlist_name = "%s - %s" % (tag, media_type)
-            xsp_path = os.path.join(path, "Emby %s - %s.xsp" % (view_id, media_type))
-        else:
-            playlist_name = tag
-            xsp_path = os.path.join(path, "Emby %s.xsp" % view_id)
-
-        # Only add the playlist if it doesn't exist
-        if xbmcvfs.exists(xsp_path):
-            if delete:
-                self._delete_playlist(xsp_path)
-            return
-
-        elif not xbmcvfs.exists(path):
-            log.info("creating directory: %s", path)
-            xbmcvfs.mkdirs(path)
-
-        self._add_playlist(tag, playlist_name, xsp_path, media_type)
-
-    def _add_playlist(self, tag, name, path, media_type):
-        # Using write process since there's no guarantee the xml declaration works with etree
-        special_types = {'homevideos': "movies"}
-        log.info("writing playlist to: %s", path)
-        try:
-            f = xbmcvfs.File(path, 'w')
-        except:
-            log.info("failed to create playlist: %s", path)
-        else:
-            f.write(
-                '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>\n'
-                '<smartplaylist type="%s">\n\t'
-                    '<name>Emby %s</name>\n\t'
-                    '<match>all</match>\n\t'
-                    '<rule field="tag" operator="is">\n\t\t'
-                        '<value>%s</value>\n\t'
-                    '</rule>'
-                '</smartplaylist>'
-                % (special_types.get(media_type, media_type), name, tag))
-            f.close()
-        log.info("successfully added playlist: %s", tag)
-
-    @classmethod
-    def _delete_playlist(cls, path):
-        xbmcvfs.delete(path)
-        log.info("successfully removed playlist: %s", path)
-
-    def delete_playlists(self):
-        # Clean up the playlists
-        path = xbmc.translatePath("special://profile/playlists/video/").decode('utf-8')
-        dirs, files = xbmcvfs.listdir(path)
-        for file in files:
-            if file.decode('utf-8').startswith('Emby'):
-                self._delete_playlist(os.path.join(path, file.decode('utf-8')))
-
-
-class VideoNodes(object):
-
-
-    def __init__(self):
-        pass
-
-    def normalize_nodes(self, text):
-        # For video nodes
-        text = text.replace(":", "")
-        text = text.replace("/", "-")
-        text = text.replace("\\", "-")
-        text = text.replace("<", "")
-        text = text.replace(">", "")
-        text = text.replace("*", "")
-        text = text.replace("?", "")
-        text = text.replace('|', "")
-        text = text.replace('(', "")
-        text = text.replace(')', "")
-        text = text.strip()
-        # Remove dots from the last character as windows can not have directories
-        # with dots at the end
-        text = text.rstrip('.')
-        text = unicodedata.normalize('NFKD', unicode(text, 'utf-8')).encode('ascii', 'ignore')
-
-        return text
-
-    def commonRoot(self, order, label, tagname="", roottype=1):
-
-        if roottype == 0:
-            # Index
-            root = etree.Element('node', attrib={'order': "%s" % order})
-        elif roottype == 1:
-            # Filter
-            root = etree.Element('node', attrib={'order': "%s" % order, 'type': "filter"})
-            etree.SubElement(root, 'match').text = "all"
-            # Add tag rule
-            rule = etree.SubElement(root, 'rule', attrib={'field': "tag", 'operator': "is"})
-            etree.SubElement(rule, 'value').text = tagname
-        else:
-            # Folder
-            root = etree.Element('node', attrib={'order': "%s" % order, 'type': "folder"})
-
-        etree.SubElement(root, 'label').text = label
-        etree.SubElement(root, 'icon').text = "special://home/addons/plugin.video.emby/icon.png"
-
-        return root
-
-    def viewNode(self, indexnumber, tagname, mediatype, viewtype, viewid, delete=False):
-
-        if viewtype == "mixed":
-            dirname = "%s - %s" % (viewid, mediatype)
-        else:
-            dirname = viewid
-        
-        nodepath = xbmc.translatePath(
-                    "special://profile/library/video/emby/%s/" % dirname).decode('utf-8')
-
-        if delete:
-            dirs, files = xbmcvfs.listdir(nodepath)
-            for file in files:
-                xbmcvfs.delete(nodepath + file)
-
-            log.info("Sucessfully removed videonode: %s." % tagname)
-            return
-
-        # Verify the video directory
-        path = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
-        if not xbmcvfs.exists(path):
-            try:
-                shutil.copytree(
-                    src=xbmc.translatePath("special://xbmc/system/library/video").decode('utf-8'),
-                    dst=xbmc.translatePath("special://profile/library/video").decode('utf-8'))
-            except Exception as error:
-                log.error(error)
-
-            xbmcvfs.mkdir(path)
-
-        embypath = xbmc.translatePath("special://profile/library/video/emby/").decode('utf-8')
-        if not xbmcvfs.exists(embypath):
-            xbmcvfs.mkdir(embypath)
-            root = self.commonRoot(order=0, label="Emby", roottype=0)
-            try:
-                xml_indent(root)
-            except: pass
-            etree.ElementTree(root).write(os.path.join(embypath, "index.xml"))
-
-        # Create the node directory
-        if not xbmcvfs.exists(nodepath) and not mediatype == "photos":
-            # We need to copy over the default items
-            xbmcvfs.mkdir(nodepath)
-
-        # Create index entry
-        nodeXML = "%sindex.xml" % nodepath
-        # Set windows property
-        path = "library://video/emby/%s/" % dirname
-        for i in range(1, indexnumber):
-            # Verify to make sure we don't create duplicates
-            if window('Emby.nodes.%s.index' % i) == path:
-                return
-
-        if mediatype == "photos":
-            path = "plugin://plugin.video.emby/?id=%s&mode=getsubfolders" % indexnumber
-            
-        window('Emby.nodes.%s.index' % indexnumber, value=path)
-        
-        # Root
-        if not mediatype == "photos":
-            if viewtype == "mixed":
-                specialtag = "%s - %s" % (tagname, mediatype)
-                root = self.commonRoot(order=0, label=specialtag, tagname=tagname, roottype=0)
-            else:
-                root = self.commonRoot(order=0, label=tagname, tagname=tagname, roottype=0)
-            try:
-                xml_indent(root)
-            except: pass
-            etree.ElementTree(root).write(nodeXML)
-
-        nodetypes = {
-
-            '1': "all",
-            '2': "recent",
-            '3': "recentepisodes",
-            '4': "inprogress",
-            '5': "inprogressepisodes",
-            '6': "unwatched",
-            '7': "nextepisodes",
-            '8': "sets",
-            '9': "genres",
-            '10': "random",
-            '11': "recommended",
-        }
-        mediatypes = {
-            # label according to nodetype per mediatype
-            'movies': 
-                {
-                '1': tagname,
-                '2': 30174,
-                '4': 30177,
-                '6': 30189,
-                '8': 20434,
-                '9': 135,
-                '10': 30229,
-                '11': 30230
-                },
-
-            'tvshows': 
-                {
-                '1': tagname,
-                '2': 30170,
-                '3': 30175,
-                '4': 30171,
-                '5': 30178,
-                '7': 30179,
-                '9': 135,
-                '10': 30229,
-                '11': 30230
-                },
-                
-            'homevideos': 
-                {
-                '1': tagname,
-                '2': 30251,
-                '11': 30253
-                },
-                
-            'photos': 
-                {
-                '1': tagname,
-                '2': 30252,
-                '8': 30255,
-                '11': 30254
-                },
-
-            'musicvideos': 
-                {
-                '1': tagname,
-                '2': 30256,
-                '4': 30257,
-                '6': 30258
-                }
-        }
-
-        nodes = mediatypes[mediatype]
-        for node in nodes:
-
-            nodetype = nodetypes[node]
-            nodeXML = "%s%s.xml" % (nodepath, nodetype)
-            # Get label
-            stringid = nodes[node]
-            if node != "1":
-                label = lang(stringid)
-                if not label:
-                    label = xbmc.getLocalizedString(stringid)
-            else:
-                label = stringid
-
-            # Set window properties
-            if (mediatype == "homevideos" or mediatype == "photos") and nodetype == "all":
-                params = {
-
-                    'id': tagname.encode('utf-8'),
-                    'mode': "browsecontent",
-                    'type': mediatype
-                }
-                path = urllib_path("plugin://plugin.video.emby/", params)
-
-            elif (mediatype == "homevideos" or mediatype == "photos"):
-                params = {
-
-                    'id': tagname.encode('utf-8'),
-                    'mode': "browsecontent",
-                    'type': mediatype,
-                    'folderid': nodetype
-                }
-                path = urllib_path("plugin://plugin.video.emby/", params)
-
-            elif nodetype == "nextepisodes":
-                params = {
-
-                    'id': tagname.encode('utf-8'),
-                    'mode': "nextup",
-                    'limit': 25
-                }
-                path = urllib_path("plugin://plugin.video.emby/", params)
-
-            else:
-                path = "library://video/emby/%s/%s.xml" % (viewid, nodetype)
-            
-            if mediatype == "photos":
-                windowpath = "ActivateWindow(Pictures,%s,return)" % path
-            else:
-                windowpath = "ActivateWindow(Videos,%s,return)" % path
-            
-            if nodetype == "all":
-
-                if viewtype == "mixed":
-                    templabel = "%s - %s" % (tagname, mediatype)
-                else:
-                    templabel = label
-
-                embynode = "Emby.nodes.%s" % indexnumber
-                window('%s.title' % embynode, value=templabel)
-                window('%s.path' % embynode, value=windowpath)
-                window('%s.content' % embynode, value=path)
-                window('%s.type' % embynode, value=mediatype)
-            else:
-                embynode = "Emby.nodes.%s.%s" % (indexnumber, nodetype)
-                window('%s.title' % embynode, value=label)
-                window('%s.path' % embynode, value=windowpath)
-                window('%s.content' % embynode, value=path)
-
-            if mediatype == "photos":
-                # For photos, we do not create a node in videos but we do want the window props
-                # to be created.
-                # To do: add our photos nodes to kodi picture sources somehow
-                continue
-            
-            if xbmcvfs.exists(nodeXML):
-                # Don't recreate xml if already exists
-                continue
-
-            # Create the root
-            if (nodetype == "nextepisodes" or mediatype == "homevideos"):
-                # Folder type with plugin path
-                root = self.commonRoot(order=node, label=label, tagname=tagname, roottype=2)
-                etree.SubElement(root, 'path').text = path
-                etree.SubElement(root, 'content').text = "episodes"
-            else:
-                root = self.commonRoot(order=node, label=label, tagname=tagname)
-                if nodetype in ('recentepisodes', 'inprogressepisodes'):
-                    etree.SubElement(root, 'content').text = "episodes"
-                else:
-                    etree.SubElement(root, 'content').text = mediatype
-
-                limit = "25"
-                # Elements per nodetype
-                if nodetype == "all":
-                    etree.SubElement(root, 'order', {'direction': "ascending"}).text = "sorttitle"
-                
-                elif nodetype == "recent":
-                    etree.SubElement(root, 'order', {'direction': "descending"}).text = "dateadded"
-                    etree.SubElement(root, 'limit').text = limit
-                    rule = etree.SubElement(root, 'rule', {'field': "playcount", 'operator': "is"})
-                    etree.SubElement(rule, 'value').text = "0"
-                
-                elif nodetype == "inprogress":
-                    etree.SubElement(root, 'rule', {'field': "inprogress", 'operator': "true"})
-                    etree.SubElement(root, 'limit').text = limit
-
-                elif nodetype == "genres":
-                    etree.SubElement(root, 'order', {'direction': "ascending"}).text = "sorttitle"
-                    etree.SubElement(root, 'group').text = "genres"
-                
-                elif nodetype == "unwatched":
-                    etree.SubElement(root, 'order', {'direction': "ascending"}).text = "sorttitle"
-                    rule = etree.SubElement(root, "rule", {'field': "playcount", 'operator': "is"})
-                    etree.SubElement(rule, 'value').text = "0"
-
-                elif nodetype == "sets":
-                    etree.SubElement(root, 'order', {'direction': "ascending"}).text = "sorttitle"
-                    etree.SubElement(root, 'group').text = "sets"
-
-                elif nodetype == "random":
-                    etree.SubElement(root, 'order', {'direction': "ascending"}).text = "random"
-                    etree.SubElement(root, 'limit').text = limit
-
-                elif nodetype == "recommended":
-                    etree.SubElement(root, 'order', {'direction': "descending"}).text = "rating"
-                    etree.SubElement(root, 'limit').text = limit
-                    rule = etree.SubElement(root, 'rule', {'field': "playcount", 'operator': "is"})
-                    etree.SubElement(rule, 'value').text = "0"
-                    rule2 = etree.SubElement(root, 'rule',
-                        attrib={'field': "rating", 'operator': "greaterthan"})
-                    etree.SubElement(rule2, 'value').text = "7"
-
-                elif nodetype == "recentepisodes":
-                    # Kodi Isengard, Jarvis
-                    etree.SubElement(root, 'order', {'direction': "descending"}).text = "dateadded"
-                    etree.SubElement(root, 'limit').text = limit
-                    rule = etree.SubElement(root, 'rule', {'field': "playcount", 'operator': "is"})
-                    etree.SubElement(rule, 'value').text = "0"
-
-                elif nodetype == "inprogressepisodes":
-                    # Kodi Isengard, Jarvis
-                    etree.SubElement(root, 'limit').text = "25"
-                    rule = etree.SubElement(root, 'rule',
-                        attrib={'field': "inprogress", 'operator':"true"})
-
-            try:
-                xml_indent(root)
-            except: pass
-            etree.ElementTree(root).write(nodeXML)
-
-    def singleNode(self, indexnumber, tagname, mediatype, itemtype):
-
-        tagname = tagname.encode('utf-8')
-        cleantagname = self.normalize_nodes(tagname)
-        nodepath = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
-        nodeXML = "%semby_%s.xml" % (nodepath, cleantagname)
-        path = "library://video/emby_%s.xml" % cleantagname
-        windowpath = "ActivateWindow(Videos,%s,return)" % path
-        
-        # Create the video node directory
-        if not xbmcvfs.exists(nodepath):
-            # We need to copy over the default items
             shutil.copytree(
                 src=xbmc.translatePath("special://xbmc/system/library/video").decode('utf-8'),
                 dst=xbmc.translatePath("special://profile/library/video").decode('utf-8'))
-            xbmcvfs.exists(path)
+        except Exception as error:
+            xbmcvfs.mkdir(node_path)
 
-        labels = {
+    for index, node in enumerate(['movies', 'tvshows', 'musicvideos']):
+        file = os.path.join(node_path, node, "index.xml")
+        xml = etree.parse(file).getroot()
+        xml.set('order', str(17 + index))
+        indent(xml)
+        write_xml(etree.tostring(xml, 'UTF-8'), file)
 
-            'Favorite movies': 30180,
-            'Favorite tvshows': 30181,
-            'Favorite episodes': 30182
+    playlist_path = xbmc.translatePath("special://profile/playlists/video").decode('utf-8')
+
+    if not xbmcvfs.exists(playlist_path):
+        xbmcvfs.mkdirs(playlist_path)
+
+class Views(object):
+
+    sync = None
+    limit = 25
+
+    def __init__(self):
+
+        self.sync = get_sync()
+        self.window = {}
+        self.server = Emby()
+
+    def add_library(self, view):
+
+        ''' Add entry to view table in emby database.
+        '''
+        with Database('emby') as embydb:
+            emby_db.EmbyDatabase(embydb.cursor).add_view(view['Id'], view['Name'], view['Media'])
+
+    def remove_library(self, view_id):
+
+        ''' Remove entry from view table in emby database.
+        '''
+        with Database('emby') as embydb:
+            emby_db.EmbyDatabase(embydb.cursor).remove_view(view_id)
+
+        self.delete_playlist_by_id(view_id)
+        self.delete_node_by_id(view_id)
+        self.get_views()
+
+    def get_views(self):
+        
+        ''' Get all views and the media folders that make up the views.
+            Add custom views that are not media folders but should still be added
+        '''
+        media = {
+            'movies': "Movie",
+            'tvshows': "Series",
+            'musicvideos': "MusicVideo"
         }
-        label = lang(labels[tagname])
-        embynode = "Emby.nodes.%s" % indexnumber
-        window('%s.title' % embynode, value=label)
-        window('%s.path' % embynode, value=windowpath)
-        window('%s.content' % embynode, value=path)
-        window('%s.type' % embynode, value=itemtype)
+        try:
+            libraries = self.server['api'].get_media_folders()['Items']
+        except Exception as error:
+            LOG.error("Unable to process libraries: %s", error)
 
-        if xbmcvfs.exists(nodeXML):
-            # Don't recreate xml if already exists
             return
 
-        if itemtype == "channels":
-            root = self.commonRoot(order=1, label=label, tagname=tagname, roottype=2)
-            etree.SubElement(root, 'path').text = "plugin://plugin.video.emby/?id=0&mode=channels"
-        elif itemtype == "favourites" and mediatype == "episodes":
-            root = self.commonRoot(order=1, label=label, tagname=tagname, roottype=2)
-            etree.SubElement(root, 'path').text = "plugin://plugin.video.emby/?id=%s&mode=browsecontent&type=%s&folderid=favepisodes" %(tagname, mediatype)
-        else:
-            root = self.commonRoot(order=1, label=label, tagname=tagname)
-            etree.SubElement(root, 'order', {'direction': "ascending"}).text = "sorttitle"
+        self.sync['SortedViews'] = [x['Id'] for x in libraries]
 
-        etree.SubElement(root, 'content').text = mediatype
+        for library in libraries:
+
+            if library['Type'] == 'Channel':
+                library['Media'] = "channels"
+            else:
+                library['Media'] = library.get('OriginalCollectionType', library.get('CollectionType', "mixed"))
+
+            self.add_library(library)
+
+        save_sync(self.sync)
+
+    def get_nodes(self):
+        
+        ''' Set up playlists, video nodes, window prop.
+        '''
+        node_path = xbmc.translatePath("special://profile/library/video").decode('utf-8')
+        playlist_path = xbmc.translatePath("special://profile/playlists/video").decode('utf-8')
+        index = 0
+
+        with Database('emby') as embydb:
+            db = emby_db.EmbyDatabase(embydb.cursor)
+
+            for library in self.sync['Whitelist']:
+
+                library = library.replace('Mixed:', "")
+                view = db.get_view(library)
+                view = {'Id': library, 'Name': view[0], 'Tag': view[0], 'Media': view[1]}
+
+                if view['Media'] == 'mixed':
+                    for media in ('movies', 'tvshows'):
+
+                        temp_view = dict(view)
+                        temp_view['Media'] = media
+                        self.add_playlist(playlist_path, temp_view, True)
+                        self.add_nodes(node_path, temp_view, True)
+                    else: # Compensate for the duplicate.
+                        index += 1
+                else:
+                    if view['Media'] in ('movies', 'tvshows', 'musicvideos'):
+                        self.add_playlist(playlist_path, view)
+
+                    if view['Media'] not in ('music'):
+                        self.add_nodes(node_path, view)
+
+                index += 1
+
+        for single in [{'Name': _('fav_movies'), 'Tag': "Favorite movies", 'Media': "movies"},
+                       {'Name': _('fav_tvshows'), 'Tag': "Favorite tvshows", 'Media': "tvshows"},
+                       {'Name': _('fav_episodes'), 'Tag': "Favorite episodes", 'Media': "episodes"}]:
+            
+            self.add_single_node(node_path, index, "favorites", single)
+            index += 1
+
+        self.window_nodes()
+
+    def add_playlist(self, path, view, mixed=False):
+        
+        ''' Create or update the xps file.
+        '''
+        file = os.path.join(path, "emby%s%s.xsp" % (view['Media'], view['Id']))
+        
+        try:
+            xml = etree.parse(file).getroot()
+        except Exception:
+            xml = etree.Element('smartplaylist', {'type': view['Media']})
+            etree.SubElement(xml, 'name')
+            etree.SubElement(xml, 'match')
+
+        name = xml.find('name')
+        name.text = view['Name'] if not mixed else "%s (%s)" % (view['Name'], view['Media'])
+
+        match = xml.find('match')
+        match.text = "all"
+
+        for rule in xml.findall('.//value'):
+            if rule.text == view['Tag']:
+                break
+        else:
+            rule = etree.SubElement(xml, 'rule', {'field': "tag", 'operator': "is"})
+            etree.SubElement(rule, 'value').text = view['Tag']
+
+        indent(xml)
+        write_xml(etree.tostring(xml, 'UTF-8'), file)
+
+    def add_nodes(self, path, view, mixed=False):
+
+        ''' Create or update the video node file.
+        '''
+        folder = os.path.join(path, "emby%s%s" % (view['Media'], view['Id']))
+
+        if not xbmcvfs.exists(folder):
+            xbmcvfs.mkdir(folder)
+
+        self.node_index(folder, view, mixed)
+
+        if view['Media'] == 'tvshows':
+            self.node_tvshow(folder, view)
+        else:
+            self.node(folder, view)
+
+    def add_single_node(self, path, index, item_type, view):
+
+        file = os.path.join(path, "emby_%s.xml" % view['Tag'].replace(" ", ""))
 
         try:
-            xml_indent(root)
-        except: pass
-        etree.ElementTree(root).write(nodeXML)
+            xml = etree.parse(file).getroot()
+        except Exception:
+            xml = self.node_root('folder' if item_type == 'favorites' and view['Media'] == 'episodes' else 'filter', index)
+            etree.SubElement(xml, 'label')
+            etree.SubElement(xml, 'match')
+            etree.SubElement(xml, 'content')
 
-    def deleteNodes(self):
-        # Clean up video nodes
-        path = xbmc.translatePath("special://profile/library/video/emby/").decode('utf-8')
-        if (xbmcvfs.exists(path)):
-            try:
-                shutil.rmtree(path)
-            except:
-                log.warn("Failed to delete directory: %s" % path)
-        # Old cleanup code kept for cleanup of old style nodes
-        path = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
-        dirs, files = xbmcvfs.listdir(path)
-        for dir in dirs:
-            if dir.decode('utf-8').startswith('Emby'):
-                try:
-                    shutil.rmtree("%s%s" % (path, dir.decode('utf-8')))
-                except:
-                    log.warn("Failed to delete directory: %s" % dir.decode('utf-8'))
-        for file in files:
-            if file.decode('utf-8').startswith('emby'):
-                try:
-                    xbmcvfs.delete("%s%s" % (path, file.decode('utf-8')))
-                except:
-                    log.warn("Failed to delete file: %s" % file.decode('utf-8'))
+        label = xml.find('label')
+        label.text = view['Name']
 
-    def clearProperties(self):
+        content = xml.find('content')
+        content.text = view['Media']
 
-        log.info("Clearing nodes properties.")
-        embyprops = window('Emby.nodes.total')
-        propnames = [
+        match = xml.find('match')
+        match.text = "all"
+
+        if view['Media'] != 'episodes':
+
+            for rule in xml.findall('.//value'):
+                if rule.text == view['Tag']:
+                    break
+            else:
+                rule = etree.SubElement(xml, 'rule', {'field': "tag", 'operator': "is"})
+                etree.SubElement(rule, 'value').text = view['Tag']
+
+        if item_type == 'favorites' and view['Media'] == 'episodes':
+            path = self.window_browse(view, 'FavEpisodes')
+            self.node_favepisodes(xml, path)
+        else:
+            self.node_all(xml)
+
+        indent(xml)
+        write_xml(etree.tostring(xml, 'UTF-8'), file)
+
+    def node_root(self, root, index):
+
+        ''' Create the root element
+        '''
+        if root == 'main':
+            element = etree.Element('node', {'order': str(index)})
+        elif root == 'filter':
+            element = etree.Element('node', {'order': str(index), 'type': "filter"})
+        else:
+            element = etree.Element('node', {'order': str(index), 'type': "folder"})
+
+        etree.SubElement(element, 'icon').text = "special://home/addons/plugin.video.emby/icon.png"
+
+        return element
+
+    def node_index(self, folder, view, mixed=False):
+
+        file = os.path.join(folder, "index.xml")
+        index = self.sync['SortedViews'].index(view['Id'])
+
+        try:
+            xml = etree.parse(file).getroot()
+            xml.set('order', str(index))
+        except Exception:
+            xml = self.node_root('main', index)
+            etree.SubElement(xml, 'label')
+
+        label = xml.find('label')
+        label.text = view['Name'] if not mixed else "%s (%s)" % (view['Name'], _(view['Media']))
+
+        indent(xml)
+        write_xml(etree.tostring(xml, 'UTF-8'), file)
+
+    def node(self, folder, view):
+
+        for node in NODES[view['Media']]:
+
+            xml_name = node[0]
+            xml_label = node[1] or view['Name'].encode('utf-8')
+            file = os.path.join(folder, "%s.xml" % xml_name)
+            self.add_node(NODES[view['Media']].index(node), file, view, xml_name, xml_label)
+
+    def node_tvshow(self, folder, view):
+
+        for node in NODES[view['Media']]:
+
+            xml_name = node[0]
+            xml_label = node[1] or view['Name'].encode('utf-8')
+            xml_index = NODES[view['Media']].index(node)
+            file = os.path.join(folder, "%s.xml" % xml_name)
+
+            if xml_name == 'nextepisodes':
+                path = self.window_nextepisodes(view)
+                self.add_dynamic_node(xml_index, file, view, xml_name, xml_label, path)
+            else:
+                self.add_node(xml_index, file, view, xml_name, xml_label)
+
+    def add_node(self, index, file, view, node, name):
+
+        try:
+            xml = etree.parse(file).getroot()
+        except Exception:
+            xml = self.node_root('filter', index)
+            etree.SubElement(xml, 'label')
+            etree.SubElement(xml, 'match')
+            etree.SubElement(xml, 'content')
+
+        label = xml.find('label')
+        label.text = str(name) if type(name) == int else name
+
+        content = xml.find('content')
+        content.text = view['Media']
+
+        match = xml.find('match')
+        match.text = "all"
+
+        for rule in xml.findall('.//value'):
+            if rule.text == view['Tag']:
+                break
+        else:
+            rule = etree.SubElement(xml, 'rule', {'field': "tag", 'operator': "is"})
+            etree.SubElement(rule, 'value').text = view['Tag']
+
+        getattr(self, 'node_' + node)(xml)
+        indent(xml)
+        write_xml(etree.tostring(xml, 'UTF-8'), file)
+
+    def add_dynamic_node(self, index, file, view, node, name, path):
+
+        try:
+            xml = etree.parse(file).getroot()
+        except Exception:
+            xml = self.node_root('folder', index)
+            etree.SubElement(xml, 'label')
+            etree.SubElement(xml, 'content')
+
+        label = xml.find('label')
+        label.text = name
+
+        getattr(self, 'node_' + node)(xml, path)
+        indent(xml)
+        write_xml(etree.tostring(xml, 'UTF-8'), file)
+
+    def node_all(self, root):
+
+        for rule in root.findall('.//order'):
+            if rule.text == "sorttitle":
+                break
+        else:
+            etree.SubElement(root, 'order', {'direction': "ascending"}).text = "sorttitle"
+
+    def node_nextepisodes(self, root, path):
+
+        for rule in root.findall('.//path'):
+            rule.text = path
+            break
+        else:
+            etree.SubElement(root, 'path').text = path
+
+        for rule in root.findall('.//content'):
+            rule.text = "episodes"
+            break
+        else:
+            etree.SubElement(root, 'content').text = "episodes"
+
+    def node_recent(self, root):
+
+        for rule in root.findall('.//order'):
+            if rule.text == "dateadded":
+                break
+        else:
+            etree.SubElement(root, 'order', {'direction': "descending"}).text = "dateadded"
+
+        for rule in root.findall('.//limit'):
+            rule.text = str(self.limit)
+            break
+        else:
+            etree.SubElement(root, 'limit').text = str(self.limit)
+
+        for rule in root.findall('.//rule'):
+            if rule.attrib['field'] == 'playcount':
+                rule.find('value').text = "0"
+                break
+        else:
+            rule = etree.SubElement(root, 'rule', {'field': "playcount", 'operator': "is"})
+            etree.SubElement(rule, 'value').text = "0"
+
+    def node_inprogress(self, root):
+
+        for rule in root.findall('.//rule'):
+            if rule.attrib['field'] == 'inprogress':
+                break
+        else:
+            etree.SubElement(root, 'rule', {'field': "inprogress", 'operator': "true"})
+
+        for rule in root.findall('.//limit'):
+            rule.text = str(self.limit)
+            break
+        else:
+            etree.SubElement(root, 'limit').text = str(self.limit)
+
+    def node_genres(self, root):
+
+        for rule in root.findall('.//order'):
+            if rule.text == "sorttitle":
+                break
+        else:
+            etree.SubElement(root, 'order', {'direction': "ascending"}).text = "sorttitle"
+
+        for rule in root.findall('.//group'):
+            rule.text = "genres"
+            break
+        else:
+            etree.SubElement(root, 'group').text = "genres"
         
-            "index","path","title","content",
+    def node_unwatched(self, root):
+
+        for rule in root.findall('.//order'):
+            if rule.text == "sorttitle":
+                break
+        else:
+            etree.SubElement(root, 'order', {'direction': "ascending"}).text = "sorttitle"
+
+        for rule in root.findall('.//rule'):
+            if rule.attrib['field'] == 'playcount':
+                rule.find('value').text = "0"
+                break
+        else:
+            rule = etree.SubElement(root, "rule", {'field': "playcount", 'operator': "is"})
+            etree.SubElement(rule, 'value').text = "0"
+
+    def node_sets(self, root):
+
+        for rule in root.findall('.//order'):
+            if rule.text == "sorttitle":
+                break
+        else:
+            etree.SubElement(root, 'order', {'direction': "ascending"}).text = "sorttitle"
+
+        for rule in root.findall('.//group'):
+            rule.text = "sets"
+            break
+        else:
+            etree.SubElement(root, 'group').text = "sets"
+
+    def node_random(self, root):
+
+        for rule in root.findall('.//order'):
+            if rule.text == "random":
+                break
+        else:
+            etree.SubElement(root, 'order', {'direction': "ascending"}).text = "random"
+
+        for rule in root.findall('.//limit'):
+            rule.text = str(self.limit)
+            break
+        else:
+            etree.SubElement(root, 'limit').text = str(self.limit)
+
+    def node_recommended(self, root):
+
+        for rule in root.findall('.//order'):
+            if rule.text == "rating":
+                break
+        else:
+            etree.SubElement(root, 'order', {'direction': "descending"}).text = "rating"
+
+        for rule in root.findall('.//limit'):
+            rule.text = str(self.limit)
+            break
+        else:
+            etree.SubElement(root, 'limit').text = str(self.limit)
+        
+        for rule in root.findall('.//rule'):
+            if rule.attrib['field'] == 'playcount':
+                rule.find('value').text = "0"
+                break
+        else:
+            rule = etree.SubElement(root, 'rule', {'field': "playcount", 'operator': "is"})
+            etree.SubElement(rule, 'value').text = "0"
+
+        for rule in root.findall('.//rule'):
+            if rule.attrib['field'] == 'rating':
+                rule.find('value').text = "7"
+                break
+        else:
+            rule = etree.SubElement(root, 'rule', {'field': "rating", 'operator': "greaterthan"})
+            etree.SubElement(rule, 'value').text = "7"
+
+    def node_recentepisodes(self, root):
+
+        for rule in root.findall('.//order'):
+            if rule.text == "dateadded":
+                break
+        else:
+            etree.SubElement(root, 'order', {'direction': "descending"}).text = "dateadded"
+
+        for rule in root.findall('.//limit'):
+            rule.text = str(self.limit)
+            break
+        else:
+            etree.SubElement(root, 'limit').text = str(self.limit)
+
+        for rule in root.findall('.//rule'):
+            if rule.attrib['field'] == 'playcount':
+                rule.find('value').text = "0"
+                break
+        else:
+            rule = etree.SubElement(root, 'rule', {'field': "playcount", 'operator': "is"})
+            etree.SubElement(rule, 'value').text = "0"
+
+        content = root.find('content')
+        content.text = "episodes"
+
+    def node_inprogressepisodes(self, root):
+
+        for rule in root.findall('.//limit'):
+            rule.text = str(self.limit)
+            break
+        else:
+            etree.SubElement(root, 'limit').text = str(self.limit)
+        
+        for rule in root.findall('.//rule'):
+            if rule.attrib['field'] == 'inprogress':
+                break
+        else:
+            etree.SubElement(root, 'rule', {'field': "inprogress", 'operator':"true"})
+
+        content = root.find('content')
+        content.text = "episodes"
+
+    def node_favepisodes(self, root, path):
+
+        for rule in root.findall('.//path'):
+            rule.text = path
+            break
+        else:
+            etree.SubElement(root, 'path').text = path
+
+        for rule in root.findall('.//content'):
+            rule.text = "episodes"
+            break
+        else:
+            etree.SubElement(root, 'content').text = "episodes"
+
+
+    def order_media_folders(self, folders):
+
+        ''' Returns a list of sorted media folders based on the Emby views.
+            Insert them in SortedViews and remove Views that are not in media folders.
+        '''
+        if not folders:
+            return folders
+
+        sorted_views = list(self.sync['SortedViews'])
+        unordered = [x[0] for x in folders]
+        grouped = [x for x in unordered if x not in sorted_views]
+
+        for library in grouped:
+            sorted_views.append(library)
+
+        sorted_folders = [x for x in sorted_views if x in unordered]
+
+        return [folders[unordered.index(x)] for x in sorted_folders]
+
+    def window_nodes(self):
+
+        ''' Just read from the database and populate based on SortedViews
+            Setup the window properties that reflect the emby server views and more.
+        '''
+        self.window_clear()
+
+        with Database('emby') as embydb:
+            libraries = emby_db.EmbyDatabase(embydb.cursor).get_views()
+
+        libraries = self.order_media_folders(libraries or [])
+        index = 0
+
+        for library in (libraries or []):
+            view = {'Id': library[0], 'Name': library[1], 'Tag': library[1], 'Media': library[2]}
+
+            if library[0] in self.sync['Whitelist']: # Synced libraries
+
+                if view['Media'] in ('movies', 'tvshows', 'musicvideos', 'mixed'):
+                    for node in NODES[view['Media']]:
+
+                        if view['Media'] == 'mixed':
+                            for media in ('movies', 'tvshows'):
+
+                                temp_view = dict(view)
+                                temp_view['Media'] = media
+                                temp_view['Name'] = "%s (%s)" % (view['Name'], _(media))
+                                self.window_node(index, temp_view, *node)
+                            else: # Add one to compensate for the duplicate.
+                                index += 1
+                        else:
+                            self.window_node(index, view, *node)
+
+                elif view['Media'] == 'music':
+                    self.window_node(index, view, 'music')
+            else: # Dynamic entry
+                self.window_node(index, view, 'browse')
+
+            index += 1
+
+        for single in [{'Name': _('fav_movies'), 'Tag': "Favorite movies", 'Media': "movies"},
+                       {'Name': _('fav_tvshows'), 'Tag': "Favorite tvshows", 'Media': "tvshows"},
+                       {'Name': _('fav_episodes'), 'Tag': "Favorite episodes", 'Media': "episodes"}]:
+            
+            self.window_single_node(index, "favorites", single)
+            index += 1
+
+        window('Emby.nodes.total', str(index))
+
+    def window_node(self, index, view, node=None, node_label=None):
+
+        ''' Leads to another listing of nodes.
+        '''
+        if view['Media'] in ('homevideos', 'photos'):
+            path = self.window_browse(view, None if node in ('all', 'browse') else node)
+        elif node == 'nextepisodes':
+            path = self.window_nextepisodes(view)
+        elif node == 'music':
+            path = self.window_music(view)
+        elif node == 'browse':
+            path = self.window_browse(view)
+        else:
+            path = self.window_path(view, node)
+
+        if node == 'music':
+            window_path = "ActivateWindow(Music,%s,return)" % path
+        elif node in ('browse', 'homevideos', 'photos'):
+            window_path = path
+        else:
+            window_path = "ActivateWindow(Videos,%s,return)" % path
+
+        if node in ('all', 'music'):
+
+            window_prop = "Emby.nodes.%s" % index
+            window('%s.index' % window_prop, path.replace('all.xml', "")) # dir
+            window('%s.title' % window_prop, view['Name'])
+            window('%s.content' % window_prop, path)
+
+        elif node == 'browse':
+
+            window_prop = "Emby.nodes.%s" % index
+            window('%s.title' % window_prop, view['Name'])
+        else:
+            window_prop = "Emby.nodes.%s.%s" % (index, node)
+            window('%s.title' % window_prop, str(node_label) or view['Name'])
+            window('%s.content' % window_prop, path)
+
+        window('%s.id' % window_prop, view['Id'])
+        window('%s.path' % window_prop, window_path)
+        window('%s.type' % window_prop, view['Media'])
+
+        if self.server['connected']:
+
+            artwork = api.API(None, self.server['auth/server-address']).get_artwork(view['Id'], 'Primary')
+            window('%s.artwork' % window_prop, artwork)
+
+    def window_single_node(self, index, item_type, view):
+
+        ''' Single destination node.
+        '''
+        path = "library://video/emby_%s.xml" % view['Tag'].replace(" ", "")
+        window_path = "ActivateWindow(Videos,%s,return)" % path
+
+        window_prop = "Emby.nodes.%s" % index
+        window('%s.title' % window_prop, view['Name'])
+        window('%s.path' % window_prop, window_path)
+        window('%s.content' % window_prop, path)
+        window('%s.type' % window_prop, item_type)
+
+    def window_path(self, view, node):
+        return "library://video/emby%s%s/%s.xml" % (view['Media'], view['Id'], node)
+
+    def window_music(self, view):
+        return "library://music/"
+
+    def window_nextepisodes(self, view):
+
+        params = {
+            'id': view['Id'],
+            'mode': "nextepisodes",
+            'limit': self.limit
+        }
+        return "%s?%s" % ("plugin://plugin.video.emby", urllib.urlencode(params))
+
+    def window_browse(self, view, node=None):
+
+        params = {
+            'mode': "browse",
+            'type': view['Media']
+        }
+
+        if view.get('Id'):
+            params['id'] = view['Id']
+
+        if node:
+            params['folder'] = node
+
+        return "%s?%s" % ("plugin://plugin.video.emby", urllib.urlencode(params))
+
+    def window_clear(self):
+
+        ''' Clearing window prop setup for Views.
+        '''
+        total = int(window('Emby.nodes.total') or 0)
+        props = [
+        
+            "index","id","path","title","content","type"
             "inprogress.content","inprogress.title",
             "inprogress.content","inprogress.path",
             "nextepisodes.title","nextepisodes.content",
@@ -870,9 +759,77 @@ class VideoNodes(object):
             "recentepisodes.path","inprogressepisodes.title",
             "inprogressepisodes.content","inprogressepisodes.path"
         ]
+        for i in range(total):
+            for prop in props:
+                window('Emby.nodes.%s.%s' % (str(i), prop), clear=True)
 
-        if embyprops:
-            totalnodes = int(embyprops)
-            for i in range(totalnodes):
-                for prop in propnames:
-                    window('Emby.nodes.%s.%s' % (str(i), prop), clear=True)
+    def delete_playlist(self, path):
+
+        xbmcvfs.delete(path)
+        LOG.info("DELETE playlist %s", path)
+
+    def delete_playlists(self):
+        
+        ''' Remove all emby playlists.
+        '''
+        path = xbmc.translatePath("special://profile/playlists/video/").decode('utf-8')
+        _, files = xbmcvfs.listdir(path)
+        for file in files:
+            if file.decode('utf-8').startswith('emby'):
+                self.delete_playlist(os.path.join(path, file.decode('utf-8')))
+
+    def delete_playlist_by_id(self, view_id):
+
+        ''' Remove playlist based based on view_id.
+        '''
+        path = xbmc.translatePath("special://profile/playlists/video/").decode('utf-8')
+        _, files = xbmcvfs.listdir(path)
+        for file in files:
+            file = file.decode('utf-8')
+
+            if file.startswith('emby') and file.endswith('%s.xsp' % view_id):
+                self.delete_playlist(os.path.join(path, file.decode('utf-8')))
+
+    def delete_node(self, path):
+
+        xbmcvfs.delete(path)
+        LOG.info("DELETE node %s", path)
+
+    def delete_nodes(self):
+
+        ''' Remove node and children files.
+        '''
+        path = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
+        dirs, files = xbmcvfs.listdir(path)
+
+        for file in files:
+
+            if file.startswith('emby'):
+                self.delete_node(os.path.join(path, file.decode('utf-8')))
+
+        for directory in dirs:
+
+            if directory.startswith('emby'):
+                _, files = xbmcvfs.listdir(os.path.join(path, directory.decode('utf-8')))
+
+                for file in files:
+                    self.delete_node(os.path.join(path, directory.decode('utf-8'), file.decode('utf-8')))
+
+                xbmcvfs.rmdir(os.path.join(path, directory.decode('utf-8')))
+
+    def delete_node_by_id(self, view_id):
+
+        ''' Remove node and children files based on view_id.
+        '''
+        path = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
+        dirs, files = xbmcvfs.listdir(path)
+
+        for directory in dirs:
+
+            if directory.startswith('emby') and directory.endswith(view_id):
+                _, files = xbmcvfs.listdir(os.path.join(path, directory.decode('utf-8')))
+
+                for file in files:
+                    self.delete_node(os.path.join(path, directory.decode('utf-8'), file.decode('utf-8')))
+
+                xbmcvfs.rmdir(os.path.join(path, directory.decode('utf-8')))

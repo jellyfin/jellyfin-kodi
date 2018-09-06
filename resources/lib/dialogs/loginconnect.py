@@ -8,13 +8,11 @@ import os
 import xbmcgui
 import xbmcaddon
 
-from utils import language as lang
+from helper import _, addon_id, settings, dialog
 
 ##################################################################################################
 
-log = logging.getLogger("EMBY."+__name__)
-addon = xbmcaddon.Addon('plugin.video.emby')
-
+LOG = logging.getLogger("EMBY."+__name__)
 ACTION_PARENT_DIR = 9
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACK = 92
@@ -40,8 +38,10 @@ class LoginConnect(xbmcgui.WindowXMLDialog):
 
         xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)
 
-    def set_connect_manager(self, connect_manager):
-        self.connect_manager = connect_manager
+    def set_args(self, **kwargs):
+        # connect_manager, user_image, servers, emby_connect
+        for key, value in kwargs.iteritems():
+            setattr(self, key, value)
 
     def is_logged_in(self):
         return True if self._user else False
@@ -78,8 +78,8 @@ class LoginConnect(xbmcgui.WindowXMLDialog):
 
             if not user or not password:
                 # Display error
-                self._error(ERROR['Empty'], lang(30608))
-                log.error("Username or password cannot be null")
+                self._error(ERROR['Empty'], _('empty_user_pass'))
+                LOG.error("Username or password cannot be null")
 
             elif self._login(user, password):
                 self.close()
@@ -99,7 +99,7 @@ class LoginConnect(xbmcgui.WindowXMLDialog):
 
     def _add_editcontrol(self, x, y, height, width, password=0):
 
-        media = os.path.join(addon.getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
+        media = os.path.join(xbmcaddon.Addon(addon_id()).getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
         control = xbmcgui.ControlEdit(0, 0, 0, 0,
                                       label="User",
                                       font="font13",
@@ -117,13 +117,23 @@ class LoginConnect(xbmcgui.WindowXMLDialog):
 
     def _login(self, username, password):
 
-        result = self.connect_manager.loginToConnect(username, password)
+        result = self.connect_manager['login-connect'](username, password)
         if result is False:
-            self._error(ERROR['Invalid'], lang(33009))
+            self._error(ERROR['Invalid'], _('invalid_auth'))
+
             return False
-        else:
-            self._user = result
-            return True
+
+        self._user = result
+        username = result['User']['Name']
+        settings('connectUsername', value=username)
+        settings('idMethod', value="1")
+
+        dialog("notification", heading="{emby}", message="%s %s" % (_(33000), username.decode('utf-8')),
+               icon=result['User'].get('ImageUrl') or "{emby}",
+               time=2000,
+               sound=False)
+
+        return True
 
     def _error(self, state, message):
 

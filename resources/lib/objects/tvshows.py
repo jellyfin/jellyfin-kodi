@@ -2,853 +2,574 @@
 
 ##################################################################################################
 
+import json
 import logging
 from ntpath import dirname
+import urllib
 
-import api
-import emby as mb
-import embydb_functions as embydb
-import _kodi_tvshows
-from _common import Items, catch_except
-from utils import window, settings, language as lang, urllib_path
-
-##################################################################################################
-
-log = logging.getLogger("EMBY."+__name__)
+from obj import Objects
+from kodi import TVShows as KodiDb, queries as QU
+import downloader as server
+from database import emby_db, queries as QUEM
+from helper import api, catch, stop, validate, emby_item, library_check, settings, values
 
 ##################################################################################################
 
+LOG = logging.getLogger("EMBY."+__name__)
 
-class TVShows(Items):
+##################################################################################################
 
 
-    def __init__(self, embycursor, kodicursor, pdialog=None):
+class TVShows(KodiDb):
 
-        self.embycursor = embycursor
-        self.emby_db = embydb.Embydb_Functions(self.embycursor)
-        self.kodicursor = kodicursor
-        self.kodi_db = _kodi_tvshows.KodiTVShows(self.kodicursor)
-        self.pdialog = pdialog
+    def __init__(self, server, embydb, videodb, direct_path):
 
-        self.new_time = int(settings('newvideotime'))*1000
+        self.server = server
+        self.emby = embydb
+        self.video = videodb
+        self.direct_path = direct_path
 
-        Items.__init__(self)
+        self.emby_db = emby_db.EmbyDatabase(embydb.cursor)
+        self.objects = Objects()
 
-    def _get_func(self, item_type, action):
+        KodiDb.__init__(self, videodb.cursor)
 
-        if item_type == "Series":
-            actions = {
-                'added': self.add_shows,
-                'update': self.add_update,
-                'userdata': self.updateUserdata,
-                'remove': self.remove
-            }
-        elif item_type == "Season":
-            actions = {
-                'added': self.add_seasons,
-                'update': self.add_updateSeason,
-                'remove': self.remove
-            }
-        elif item_type == "Episode":
-            actions = {
-                'added': self.add_episodes,
-                'update': self.add_updateEpisode,
-                'userdata': self.updateUserdata,
-                'remove': self.remove
-            }
-        else:
-            log.info("Unsupported item_type: %s", item_type)
-            actions = {}
+    def __getitem__(self, key):
 
-        return actions.get(action)
+        if key == 'Series':
+            return self.tvshow
+        elif key == 'Season':
+            return self.season
+        elif key == 'Episode':
+            return self.episode
+        elif key == 'UserData':
+            return self.userdata
+        elif key in 'Removed':
+            return self.remove
 
-    def compare_all(self):
-        # Pull the list of movies and boxsets in Kodi
-        import emby as mb
+    @stop()
+    @emby_item()
+    @library_check()
+    def tvshow(self, item, e_item, library):
 
-        pdialog = self.pdialog
-        views = self.emby_db.getView_byType('tvshows')
-        views += self.emby_db.getView_byType('mixed')
-        log.info("Media folders: %s", views)
+        ''' If item does not exist, entry will be added.
+            If item exists, entry will be updated.
 
-        # Pull the list of tvshows and episodes in Kodi
-        try:
-            all_koditvshows = dict(self.emby_db.get_checksum('Series'))
-        except ValueError:
-            all_koditvshows = {}
+            If the show is empty, try to remove it.
+            Process seasons.
+            Apply series pooling.
+        '''
+        API = api.API(item, self.server['auth/server-address'])
+        obj = self.objects.map(item, 'Series')
+        update = True
 
-        log.info("all_koditvshows = %s", all_koditvshows)
+        if not settings('syncEmptyShows.bool') and not obj['RecursiveCount']:
 
-        try:
-            all_kodiepisodes = dict(self.emby_db.get_checksum('Episode'))
-        except ValueError:
-            all_kodiepisodes = {}
+            LOG.info("Skipping empty show %s: %s", obj['Title'], obj['Id'])
+            self.remove(obj['Id'])
 
-        all_embytvshowsIds = set()
-        all_embyepisodesIds = set()
-        updatelist = []
-
-        # TODO: Review once series pooling is explicitely returned in api
-        for view in views:
-
-            if self.should_stop():
-                return False
-
-            # Get items per view
-            viewId = view['id']
-            viewName = view['name']
-
-            if pdialog:
-                pdialog.update(
-                        heading=lang(29999),
-                        message="%s %s..." % (lang(33029), viewName))
-
-            all_embytvshows = self.emby.getShows(viewId, basic=True, dialog=pdialog)
-            for embytvshow in all_embytvshows['Items']:
-
-                if self.should_stop():
-                    return False
-
-                API = api.API(embytvshow)
-                itemid = embytvshow['Id']
-                all_embytvshowsIds.add(itemid)
-
-
-                if all_koditvshows.get(itemid) != API.get_checksum():
-                    # Only update if movie is not in Kodi or checksum is different
-                    updatelist.append(itemid)
-
-            log.info("TVShows to update for %s: %s", viewName, updatelist)
-            embytvshows = (items['Items'] for items in mb.get_item_list(updatelist, True))
-            self.total = len(updatelist)
-            del updatelist[:]
-
-
-            if pdialog:
-                pdialog.update(heading="Processing %s / %s items" % (viewName, self.total))
-
-            self.count = 0
-            for embytvshow in embytvshows:
-                # Process individual show
-                if self.should_stop():
-                    return False
-
-                itemid = embytvshow['Id']
-                title = embytvshow['Name']
-                all_embytvshowsIds.add(itemid)
-                self.update_pdialog()
-
-                self.add_update(embytvshow, view)
-                self.count += 1
-
-            else:
-                # Get all episodes in view
-                if pdialog:
-                    pdialog.update(
-                            heading=lang(29999),
-                            message="%s %s..." % (lang(33030), viewName))
-
-                all_embyepisodes = self.emby.getEpisodes(viewId, basic=True, dialog=pdialog)
-                for embyepisode in all_embyepisodes['Items']:
-
-                    if self.should_stop():
-                        return False
-
-                    API = api.API(embyepisode)
-                    itemid = embyepisode['Id']
-                    all_embyepisodesIds.add(itemid)
-                    if "SeriesId" in embyepisode:
-                        all_embytvshowsIds.add(embyepisode['SeriesId'])
-
-                    if all_kodiepisodes.get(itemid) != API.get_checksum():
-                        # Only update if movie is not in Kodi or checksum is different
-                        updatelist.append(itemid)
-
-                log.info("Episodes to update for %s: %s", viewName, updatelist)
-                embyepisodes = self.emby.getFullItems(updatelist)
-                self.total = len(updatelist)
-                del updatelist[:]
-
-                self.count = 0
-                for episode in embyepisodes:
-
-                    # Process individual episode
-                    if self.should_stop():
-                        return False
-                    self.title = "%s - %s" % (episode.get('SeriesName', "Unknown"), episode['Name'])
-                    self.add_updateEpisode(episode)
-                    self.count += 1
-
-        ##### PROCESS DELETES #####
-
-        log.info("all_embytvshowsIds = %s ", all_embytvshowsIds)
-
-        for koditvshow in all_koditvshows:
-            if koditvshow not in all_embytvshowsIds:
-                self.remove(koditvshow)
-
-        log.info("TVShows compare finished.")
-
-        for kodiepisode in all_kodiepisodes:
-            if kodiepisode not in all_embyepisodesIds:
-                self.remove(kodiepisode)
-
-        log.info("Episodes compare finished.")
-
-        return True
-
-
-    def add_shows(self, items, total=None, view=None):
-
-        for item in self.added(items, total):
-            if self.add_update(item, view):
-                # Add episodes
-                for all_episodes in mb.get_items(item['Id'], "Episode"):
-                    self.add_episodes(all_episodes['Items'])
-
-    def add_seasons(self, items, total=None, view=None):
-
-        update = True if not self.total else False
-
-        for item in self.added(items, total, update):
-            self.title = "%s - %s" % (item.get('SeriesName', "Unknown"), self.title)
-
-            if self.add_updateSeason(item):
-                # Add episodes
-                for all_episodes in mb.get_items(item['Id'], "Episode"):
-                    self.add_episodes(all_episodes['Items'])
-
-    def add_episodes(self, items, total=None, view=None):
-
-        update = True if not self.total else False
-
-        for item in self.added(items, total, update):
-            self.title = "%s - %s" % (item.get('SeriesName', "Unknown"), self.title)
-
-            if self.add_updateEpisode(item):
-                self.content_pop(self.title)
-
-    @catch_except()
-    def add_update(self, item, view=None):
-        # Process single tvshow
-        kodicursor = self.kodicursor
-        emby = self.emby
-        emby_db = self.emby_db
-        artwork = self.artwork
-        API = api.API(item)
-
-        # If the show is empty, try to remove it.
-        if settings('syncEmptyShows') == "false" and not item.get('RecursiveItemCount'):
-            log.info("Skipping empty show: %s", item.get('Name', item['Id']))
-            return self.remove(item['Id'])
-
-        # If the item already exist in the local Kodi DB we'll perform a full item update
-        # If the item doesn't exist, we'll add it to the database
-        update_item = True
-        force_episodes = False
-        itemid = item['Id']
-        emby_dbitem = emby_db.getItem_byId(itemid)
-
-        if view is None:
-            # Get view tag from emby
-            viewtag, viewid = emby_db.getView_embyId(itemid)
-            log.debug("View tag found: %s", viewtag)
-        else:
-            viewtag = view['name']
-            viewid = view['id']
-
-        # fileId information
-        checksum = API.get_checksum()
-        userdata = API.get_userdata()
-
-        # item details
-        genres = item['Genres']
-        title = item['Name']
-        plot = API.get_overview()
-        rating = item.get('CommunityRating')
-        votecount = item.get('VoteCount')
-        premieredate = API.get_premiere_date()
-        tvdb = API.get_provider('Tvdb')
-        sorttitle = item['SortName']
-        mpaa = API.get_mpaa()
-        genre = " / ".join(genres)
-        studios = API.get_studios()
-        studio = " / ".join(studios)
-
-        ##### GET THE FILE AND PATH #####
-        playurl = API.get_file_path()
-
-        if self.direct_path:
-            # Direct paths is set the Kodi way
-            if "\\" in playurl:
-                # Local path
-                path = "%s\\" % playurl
-                toplevelpath = "%s\\" % dirname(dirname(path))
-            else:
-                # Network path
-                path = "%s/" % playurl
-                toplevelpath = "%s/" % dirname(dirname(path))
-
-            if not self.path_validation(path):
-                return False
-
-            window('emby_pathverified', value="true")
-        else:
-            # Set plugin path
-            toplevelpath = "plugin://plugin.video.emby.tvshows/"
-            path = "%s%s/" % (toplevelpath, itemid)
-
-
-        try:
-            showid = emby_dbitem[0]
-            pathid = emby_dbitem[2]
-            log.info("showid: %s pathid: %s", showid, pathid)
-
-        except TypeError:
-            update_item = False
-            showid = None
-            log.debug("showid: %s not found", itemid)
-
-            if self.emby_db.get_view_grouped_series(viewid) and tvdb:
-                # search kodi db for same provider id
-                query = "SELECT idShow FROM tvshow_view WHERE uniqueid_value = ?"
-                kodicursor.execute(query, (tvdb,))
-
-                try:
-                    temps_showid = kodicursor.fetchall()
-                except TypeError: pass
-                else:
-                    for temp_showid in temps_showid:
-                        emby_other = emby_db.getItem_byKodiId(temp_showid[0], "tvshow")
-                        if emby_other and viewid == emby_other[2]:
-                            log.info("Applying series pooling for: %s %s", itemid, title)
-                            emby_other_item = emby_db.getItem_byId(emby_other[0])
-                            showid = emby_other_item[0]
-                            pathid = self.kodi_db.add_path(path)
-                            emby_db.addReference(itemid, showid, "Series", "tvshow", pathid=pathid,
-                                                 checksum=checksum, mediafolderid=viewid)
-                            return
-
-            showid = self.kodi_db.create_entry()
-
-        else:
-            # Verification the item is still in Kodi
-            if self.kodi_db.get_tvshow(showid) is None:
-                # item is not found, let's recreate it.
-                update_item = False
-                log.info("showid: %s missing from Kodi, repairing the entry", showid)
-                # Force re-add episodes after the show is re-created.
-                force_episodes = True
-
-
-        ##### UPDATE THE TVSHOW #####
-        if update_item:
-            log.info("UPDATE tvshow itemid: %s - Title: %s", itemid, title)
-
-            # update ratings
-            ratingid =  self.kodi_db.get_ratingid("tvshow", showid)
-            self.kodi_db.update_ratings(showid, "tvshow", "default", rating, votecount,ratingid)
-
-            # update uniqueid
-            uniqueid =  self.kodi_db.get_uniqueid("tvshow", showid)
-            self.kodi_db.update_uniqueid(showid, "tvshow", tvdb, "tvdb", uniqueid)
-
-            # Update the tvshow entry
-            self.kodi_db.update_tvshow(title, plot, uniqueid, premieredate, genre, title,
-                                       uniqueid, mpaa, studio, sorttitle, showid)
-
-            # Update the checksum in emby table
-            emby_db.updateReference(itemid, checksum)
-
-        ##### OR ADD THE TVSHOW #####
-        else:
-            log.info("ADD tvshow itemid: %s - Title: %s", itemid, title)
-
-            # add ratings
-            ratingid =  self.kodi_db.create_entry_rating()
-            self.kodi_db.add_ratings(ratingid, showid, "tvshow", "default", rating, votecount)
-
-            # add uniqueid
-            uniqueid =  self.kodi_db.create_entry_uniqueid()
-            self.kodi_db.add_uniqueid(uniqueid, showid, "tvshow", tvdb, "tvdb")
-
-            # Add top path
-            toppathid = self.kodi_db.add_path(toplevelpath)
-            self.kodi_db.update_path(toppathid, toplevelpath, "tvshows", "metadata.local")
-
-            # Add path
-            pathid = self.kodi_db.add_path(path)
-
-            # Create the tvshow entry
-            self.kodi_db.add_tvshow(showid, title, plot, uniqueid, premieredate, genre,
-                                    title, uniqueid, mpaa, studio, sorttitle)
-
-            # Create the reference in emby table
-            emby_db.addReference(itemid, showid, "Series", "tvshow", pathid=pathid,
-                                 checksum=checksum, mediafolderid=viewid)
-
-
-        # Link the path
-        self.kodi_db.link_tvshow(showid, pathid)
-
-        # Update the path
-        self.kodi_db.update_path(pathid, path, None, None)
-
-        # Process cast
-        people = artwork.get_people_artwork(item['People'])
-        self.kodi_db.add_people(showid, people, "tvshow")
-        # Process genres
-        self.kodi_db.add_genres(showid, genres, "tvshow")
-        # Process artwork
-        artwork.add_artwork(artwork.get_all_artwork(item), showid, "tvshow", kodicursor)
-        # Process studios
-        self.kodi_db.add_studios(showid, studios, "tvshow")
-        # Process tags: view, emby tags
-        tags = [viewtag]
-        tags.extend(item['Tags'])
-        if userdata['Favorite']:
-            tags.append("Favorite tvshows")
-        self.kodi_db.add_tags(showid, tags, "tvshow")
-        # Process seasons
-        all_seasons = emby.getSeasons(itemid)
-        for season in all_seasons['Items']:
-            log.info("found season: %s", season)
-            self.add_updateSeason(season, showid=showid)
-        else:
-            # Finally, refresh the all season entry
-            seasonid = self.kodi_db.get_season(showid, -1)
-            # Process artwork
-            artwork.add_artwork(artwork.get_all_artwork(item), seasonid, "season", kodicursor)
-
-        if force_episodes:
-            # We needed to recreate the show entry. Re-add episodes now.
-            log.info("Repairing episodes for showid: %s %s", showid, title)
-            all_episodes = emby.getEpisodesbyShow(itemid)
-            self.add_episodes(all_episodes['Items'], None)
-
-        return True
-
-    def add_updateSeason(self, item, showid=None):
-
-        kodicursor = self.kodicursor
-        emby_db = self.emby_db
-        artwork = self.artwork
-
-        seasonnum = item.get('IndexNumber', 1)
-
-        if showid is None:
-            try:
-                seriesId = item['SeriesId']
-                showid = emby_db.getItem_byId(seriesId)[0]
-            except KeyError:
-                return
-            except TypeError:
-                # Show is missing, update show instead.
-                show = self.emby.getItem(seriesId)
-                self.add_update(show)
-                return
-
-        seasonid = self.kodi_db.get_season(showid, seasonnum, item['Name'])
-
-        if item['LocationType'] != "Virtual":
-            # Create the reference in emby table
-            emby_db.addReference(item['Id'], seasonid, "Season", "season", parentid=showid)
-
-        # Process artwork
-        artwork.add_artwork(artwork.get_all_artwork(item), seasonid, "season", kodicursor)
-
-        log.info("Processed seasonid: %s index: %s", item['Id'], seasonnum)
-        return True
-
-    @catch_except()
-    def add_updateEpisode(self, item):
-        # Process single episode
-        kodicursor = self.kodicursor
-        emby_db = self.emby_db
-        artwork = self.artwork
-        API = api.API(item)
-
-        if item.get('LocationType') == "Virtual": # TODO: Filter via api instead
-            log.info("Skipping virtual episode: %s", item['Name'])
-            return
-
-        # If the item already exist in the local Kodi DB we'll perform a full item update
-        # If the item doesn't exist, we'll add it to the database
-        update_item = True
-        itemid = item['Id']
-        emby_dbitem = emby_db.getItem_byId(itemid)
-        try:
-            episodeid = emby_dbitem[0]
-            fileid = emby_dbitem[1]
-            pathid = emby_dbitem[2]
-            log.info("episodeid: %s fileid: %s pathid: %s", episodeid, fileid, pathid)
-
-        except TypeError:
-            update_item = False
-            log.debug("episodeid: %s not found", itemid)
-            # episodeid
-            episodeid = self.kodi_db.create_entry_episode()
-
-        else:
-            # Verification the item is still in Kodi
-            if self.kodi_db.get_episode(episodeid) is None:
-                # item is not found, let's recreate it.
-                update_item = False
-                log.info("episodeid: %s missing from Kodi, repairing the entry", episodeid)
-
-        # fileId information
-        checksum = API.get_checksum()
-        dateadded = API.get_date_created()
-        userdata = API.get_userdata()
-        playcount = userdata['PlayCount']
-        dateplayed = userdata['LastPlayedDate']
-
-        # item details
-        people = API.get_people()
-        writer = " / ".join(people['Writer'])
-        director = " / ".join(people['Director'])
-        title = item['Name']
-        plot = API.get_overview()
-        rating = item.get('CommunityRating')
-        runtime = API.get_runtime()
-        premieredate = API.get_premiere_date()
-
-        votecount = item.get('VoteCount')
-        tvdb = API.get_provider('Tvdb')
-
-        # episode details
-        try:
-            seriesId = item['SeriesId']
-        except KeyError:
-            # Missing seriesId, skip
-            log.error("Skipping: %s. SeriesId is missing.", itemid)
             return False
 
-        season = item.get('ParentIndexNumber')
-        episode = item.get('IndexNumber', -1)
-
-        if season is None:
-            if item.get('AbsoluteEpisodeNumber'):
-                # Anime scenario
-                season = 1
-                episode = item['AbsoluteEpisodeNumber']
-            else:
-                season = -1 if "Specials" not in item['Path'] else 0
-
-        # Specials ordering within season
-        if item.get('AirsAfterSeasonNumber'):
-            airsBeforeSeason = item['AirsAfterSeasonNumber']
-            airsBeforeEpisode = 4096 # Kodi default number for afterseason ordering
-        else:
-            airsBeforeSeason = item.get('AirsBeforeSeasonNumber')
-            airsBeforeEpisode = item.get('AirsBeforeEpisodeNumber')
-
-        # Append multi episodes to title
-        if item.get('IndexNumberEnd'):
-            title = "| %02d | %s" % (item['IndexNumberEnd'], title)
-
-        # Get season id
-        show = emby_db.getItem_byId(seriesId)
         try:
-            showid = show[0]
-        except TypeError:
-            # Show is missing from database
-            show = self.emby.getItem(seriesId)
-            self.add_update(show)
-            show = emby_db.getItem_byId(seriesId)
+            obj['ShowId'] = e_item[0]
+            obj['PathId'] = e_item[2]
+        except TypeError as error:
+
+            update = False
+            LOG.debug("ShowId %s not found", obj['Id'])
+            obj['ShowId'] = self.create_entry()
+        else:
+            if self.get(*values(obj, QU.get_tvshow_obj)) is None:
+
+                update = False
+                LOG.info("ShowId %s missing from kodi. repairing the entry.", obj['ShowId'])
+
+
+        obj['Path'] = API.get_file_path(obj['Path'])
+        obj['LibraryId'] = library['Id']
+        obj['LibraryName'] = library['Name']
+        obj['Genres'] = obj['Genres'] or []
+        obj['People'] = obj['People'] or []
+        obj['Studios'] = [API.validate_studio(studio) for studio in (obj['Studios'] or [])]
+        obj['Genre'] = " / ".join(obj['Genres'])
+        obj['People'] = API.get_people_artwork(obj['People'])
+        obj['Plot'] = API.get_overview(obj['Plot'])
+        obj['Studio'] = " / ".join(obj['Studios'])
+        obj['Artwork'] = API.get_all_artwork(self.objects.map(item, 'Artwork'))
+
+        self.get_path_filename(obj)
+
+        if obj['Premiere']:
+            obj['Premiere'] = str(obj['Premiere']).split('.')[0].replace('T', " ")
+
+        tags = []
+        tags.extend(obj['Tags'] or [])
+        tags.append(obj['LibraryName'])
+
+        if obj['Favorite']:
+            tags.append('Favorite tvshows')
+
+        obj['Tags'] = tags
+
+
+        if update:
+            self.tvshow_update(obj)
+        else:
+            self.tvshow_add(obj)
+
+
+        self.link(*values(obj, QU.update_tvshow_link_obj))
+        self.update_path(*values(obj, QU.update_path_tvshow_obj))
+        self.add_tags(*values(obj, QU.add_tags_tvshow_obj))
+        self.add_people(*values(obj, QU.add_people_tvshow_obj))
+        self.add_genres(*values(obj, QU.add_genres_tvshow_obj))
+        self.add_studios(*values(obj, QU.add_studios_tvshow_obj))
+        self.artwork.add(obj['Artwork'], obj['ShowId'], "tvshow")
+
+        season_episodes = []
+
+        for season in self.server['api'].get_seasons(obj['Id'])['Items']:
+            self.season(season, obj['ShowId'])
+
+            if season['SeriesId'] != obj['Id']:
+                obj['SeriesId'] = season['SeriesId']
+
+                try:
+                    self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))[0]
+                except TypeError:
+
+                    self.emby_db.add_reference(*values(obj, QUEM.add_reference_pool_obj))
+                    season_episodes.append(season['Id'])
+                    LOG.info("POOL %s [%s/%s]", obj['Title'], obj['Id'], obj['SeriesId'])
+        else:
+            season_id = self.get_season(*values(obj, QU.get_season_special_obj))
+            self.artwork.add(obj['Artwork'], season_id, "season")
+
+        for season in season_episodes:
+            for episodes in server.get_items(season, "Episode"):
+
+                for episode in episodes['Items']:
+                    self.episode(episode)
+
+    def tvshow_add(self, obj):
+
+        ''' Add object to kodi.
+        '''
+        obj['RatingId'] =  self.create_entry_rating()
+        self.add_ratings(*values(obj, QU.add_rating_tvshow_obj))
+
+        obj['Unique'] =  self.create_entry_unique_id()
+        self.add_unique_id(*values(obj, QU.add_unique_id_tvshow_obj))
+
+        obj['TopPathId'] = self.add_path(obj['TopLevel'])
+        self.update_path(*values(obj, QU.update_path_toptvshow_obj))
+
+        obj['PathId'] = self.add_path(*values(obj, QU.get_path_obj))
+
+        self.add(*values(obj, QU.add_tvshow_obj))
+        self.emby_db.add_reference(*values(obj, QUEM.add_reference_tvshow_obj))
+        LOG.info("ADD tvshow [%s/%s/%s] %s: %s", obj['TopPathId'], obj['PathId'], obj['ShowId'], obj['Title'], obj['Id'])
+
+    def tvshow_update(self, obj):
+        
+        ''' Update object to kodi.
+        '''
+        obj['RatingId'] =  self.get_rating_id(*values(obj, QU.get_unique_id_tvshow_obj))
+        self.update_ratings(*values(obj, QU.update_rating_tvshow_obj))
+
+        obj['Unique'] =  self.get_unique_id(*values(obj, QU.get_unique_id_tvshow_obj))
+        self.update_unique_id(*values(obj, QU.update_unique_id_tvshow_obj))
+
+        self.update(*values(obj, QU.update_tvshow_obj))
+        self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
+        LOG.info("UPDATE tvshow [%s/%s] %s: %s", obj['PathId'], obj['ShowId'], obj['Title'], obj['Id'])
+
+    def get_path_filename(self, obj):
+
+        ''' Get the path and build it into protocol://path
+        '''
+        if self.direct_path:
+
+            if '\\' in obj['Path']:
+                obj['Path'] = "%s\\" % obj['Path']
+                obj['TopLevel'] = "%s\\" % dirname(dirname(obj['Path']))
+            else:
+                obj['Path'] = "%s/" % obj['Path']
+                obj['TopLevel'] = "%s/" % dirname(dirname(obj['Path']))
+
+            if not validate(obj['Path']):
+                raise Exception("Failed to validate path. User stopped.")
+        else:
+            obj['TopLevel'] = "plugin://plugin.video.emby.tvshows/"
+            obj['Path'] = "%s%s/" % (obj['TopLevel'], obj['Id'])
+
+
+    @stop()
+    def season(self, item, show_id=None):
+
+        ''' If item does not exist, entry will be added.
+            If item exists, entry will be updated.
+
+            If the show is empty, try to remove it.
+        '''
+        API = api.API(item, self.server['auth/server-address'])
+        obj = self.objects.map(item, 'Season')
+
+        obj['ShowId'] = show_id
+
+        if obj['ShowId'] is None:
+
             try:
-                showid = show[0]
-            except TypeError:
-                log.error("Skipping: %s. Unable to add series: %s", itemid, seriesId)
+                obj['ShowId'] = self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))[0]
+            except (KeyError, TypeError):
+                LOG.error("Unable to add series %s", obj['SeriesId'])
+
                 return False
 
-        seasonid = self.kodi_db.get_season(showid, season)
+        obj['SeasonId'] = self.get_season(*values(obj, QU.get_season_obj))
+        obj['Artwork'] = API.get_all_artwork(self.objects.map(item, 'Artwork'))
+
+        if obj['Location'] != "Virtual":
+            self.emby_db.add_reference(*values(obj, QUEM.add_reference_season_obj))
+
+        self.artwork.add(obj['Artwork'], obj['SeasonId'], "season")
+        LOG.info("UPDATE season [%s/%s] %s: %s", obj['ShowId'], obj['SeasonId'], obj['Title'] or obj['Index'], obj['Id'])
 
 
-        ##### GET THE FILE AND PATH #####
-        playurl = API.get_file_path()
+    @stop()
+    @emby_item()
+    def episode(self, item, e_item):
 
-        if "\\" in playurl:
-            # Local path
-            filename = playurl.rsplit("\\", 1)[1]
-        else: # Network share
-            filename = playurl.rsplit("/", 1)[1]
+        ''' If item does not exist, entry will be added.
+            If item exists, entry will be updated.
+
+            Create additional entry for widgets.
+            This is only required for plugin/episode.
+        '''
+        API = api.API(item, self.server['auth/server-address'])
+        obj = self.objects.map(item, 'Episode')
+        update = True
+
+        if obj['Location'] == "Virtual":
+            LOG.info("Skipping virtual episode %s: %s", obj['Title'], obj['Id'])
+
+            return
+
+        elif obj['SeriesId'] is None:
+            LOG.info("Skipping episode %s with missing SeriesId", obj['Id'])
+
+            return
+
+        try:
+            obj['EpisodeId'] = e_item[0]
+            obj['FileId'] = e_item[1]
+            obj['PathId'] = e_item[2]
+        except TypeError as error:
+
+            update = False
+            LOG.debug("EpisodeId %s not found", obj['Id'])
+            obj['EpisodeId'] = self.create_entry_episode()
+        else:
+            if self.get_episode(*values(obj, QU.get_episode_obj)) is None:
+
+                update = False
+                LOG.info("EpisodeId %s missing from kodi. repairing the entry.", obj['EpisodeId'])
+
+
+        obj['Path'] = API.get_file_path(obj['Path'])
+        obj['Index'] = obj['Index'] or -1
+        obj['Writers'] = " / ".join(obj['Writers'] or [])
+        obj['Directors'] = " / ".join(obj['Directors'] or [])
+        obj['Plot'] = API.get_overview(obj['Plot'])
+        obj['Resume'] = API.adjust_resume((obj['Resume'] or 0) / 10000000.0)
+        obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
+        obj['People'] = API.get_people_artwork(obj['People'] or [])
+        obj['DateAdded'] = obj['DateAdded'].split('.')[0].replace('T', " ")
+        obj['DatePlayed'] = (obj['DatePlayed'] or obj['DateAdded']).split('.')[0].replace('T', " ")
+        obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount'])
+        obj['Artwork'] = API.get_all_artwork(self.objects.map(item, 'Artwork'))
+        obj['Video'] = API.video_streams(obj['Video'] or [], obj['Container'])
+        obj['Audio'] = API.audio_streams(obj['Audio'] or [])
+        obj['Streams'] = API.media_streams(obj['Video'], obj['Audio'], obj['Subtitles'])
+
+        self.get_episode_path_filename(obj)
+
+        if obj['Premiere']:
+            obj['Premiere'] = obj['Premiere'].split('.')[0].replace('T', " ")
+
+        if obj['Season'] is None:
+            if obj['AbsoluteNumber']:
+
+                obj['Season'] = 1
+                obj['Index'] = obj['AbsoluteNumber']
+            else:
+                obj['Season'] = 0
+
+        if obj['AirsAfterSeason']:
+
+            obj['AirsBeforeSeason'] = obj['AirsAfterSeason']
+            obj['AirsBeforeEpisode'] = 4096 # Kodi default number for afterseason ordering
+
+        if obj['MultiEpisode']:
+            obj['MultiEpisode'] = "| %02d | %s" % (obj['MultiEpisode'], obj['Title'])
+
+        if not self.get_show_id(obj):
+            return False
+
+        obj['SeasonId'] = self.get_season(*values(obj, QU.get_season_episode_obj))
+
+
+        if update:
+            self.episode_update(obj)
+        else:
+            self.episode_add(obj)
+
+
+        self.update_path(*values(obj, QU.update_path_episode_obj))
+        self.update_file(*values(obj, QU.update_file_obj))
+        self.add_people(*values(obj, QU.add_people_episode_obj))
+        self.add_streams(*values(obj, QU.add_streams_obj))
+        self.add_playstate(*values(obj, QU.add_bookmark_obj))
+        self.artwork.update(obj['Artwork']['Primary'], obj['EpisodeId'], "episode", "thumb")
+
+        if not self.direct_path and obj['Resume']:
+
+            temp_obj = dict(obj)
+            temp_obj['Path'] = "plugin://plugin.video.emby.tvshows/"
+            temp_obj['PathId'] = self.get_path(*values(temp_obj, QU.get_path_obj))
+            temp_obj['FileId'] = self.add_file(*values(temp_obj, QU.add_file_obj))
+            self.update_file(*values(temp_obj, QU.update_file_obj))
+            self.add_playstate(*values(temp_obj, QU.add_bookmark_obj))
+
+    def episode_add(self, obj):
+        
+        ''' Add object to kodi.
+        '''
+        obj['RatingId'] =  self.create_entry_rating()
+        self.add_ratings(*values(obj, QU.add_rating_episode_obj))
+
+        obj['Unique'] =  self.create_entry_unique_id()
+        self.add_unique_id(*values(obj, QU.add_unique_id_episode_obj))
+
+        obj['PathId'] = self.add_path(*values(obj, QU.add_path_obj))
+        obj['FileId'] = self.add_file(*values(obj, QU.add_file_obj))
+
+        self.add_episode(*values(obj, QU.add_episode_obj))
+        self.emby_db.add_reference(*values(obj, QUEM.add_reference_episode_obj))
+        LOG.debug("ADD episode [%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['Id'], obj['Title'])
+
+    def episode_update(self, obj):
+        
+        ''' Update object to kodi.
+        '''        
+        obj['RatingId'] = self.get_rating_id(*values(obj, QU.get_rating_episode_obj))
+        self.update_ratings(*values(obj, QU.update_rating_episode_obj))
+
+        obj['Unique'] =  self.get_unique_id(*values(obj, QU.get_unique_id_episode_obj))
+        self.update_unique_id(*values(obj, QU.update_unique_id_episode_obj))
+
+        self.update_episode(*values(obj, QU.update_episode_obj))
+
+        self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
+        self.emby_db.update_parent_id(*values(obj, QUEM.update_parent_episode_obj))
+        LOG.debug("UPDATE episode [%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['Id'], obj['Title'])
+
+    def get_episode_path_filename(self, obj):
+
+        ''' Get the path and build it into protocol://path
+        '''
+        if '\\' in obj['Path']:
+            obj['Filename'] = obj['Path'].rsplit('\\', 1)[1]
+        else:
+            obj['Filename'] = obj['Path'].rsplit('/', 1)[1]
 
         if self.direct_path:
-            # Direct paths is set the Kodi way
-            if not self.path_validation(playurl):
-                return False
 
-            path = playurl.replace(filename, "")
-            window('emby_pathverified', value="true")
+            if not validate(obj['Path']):
+                raise Exception("Failed to validate path. User stopped.")
+
+            obj['Path'] = obj['Path'].replace(obj['Filename'], "")
         else:
-            # Set plugin path and media flags using real filename
-            path = "plugin://plugin.video.emby.tvshows/%s/" % seriesId
+            obj['Path'] = "plugin://plugin.video.emby.tvshows/%s/" % obj['SeriesId']
             params = {
-
-                'filename': filename.encode('utf-8'),
-                'id': itemid,
-                'dbid': episodeid,
+                'filename': obj['Filename'].encode('utf-8'),
+                'id': obj['Id'],
+                'dbid': obj['EpisodeId'],
                 'mode': "play"
             }
-            filename = urllib_path(path, params)
+            obj['Filename'] = "%s?%s" % (obj['Path'], urllib.urlencode(params))
 
-        ##### UPDATE THE EPISODE #####
-        if update_item:
-            log.info("UPDATE episode itemid: %s - Title: %s", itemid, title)
+    def get_show_id(self, obj):
+        obj['ShowId'] = self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))
 
-            # update ratings
-            ratingid =  self.kodi_db.get_ratingid("episode", episodeid)
-            self.kodi_db.update_ratings(episodeid, "episode", "default", rating, votecount, ratingid)
+        if obj['ShowId'] is None:
 
-            # update uniqueid
-            uniqueid =  self.kodi_db.get_uniqueid("episode", episodeid)
-            self.kodi_db.update_uniqueid(episodeid, "episode", tvdb, "tvdb", uniqueid)
+            try:
+                self.tvshow(self.server['api'].get_item(obj['SeriesId']), None)
+                obj['ShowId'] = self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))[0]
+            except (TypeError, KeyError):
+                LOG.error("Unable to add series %s", obj['SeriesId'])
 
-            # Update the episode entry
-            self.kodi_db.update_episode(title, plot, uniqueid, writer, premieredate, runtime,
-                                        director, season, episode, title, airsBeforeSeason,
-                                        airsBeforeEpisode, seasonid, showid, episodeid)
-
-            # Update the checksum in emby table
-            emby_db.updateReference(itemid, checksum)
-            # Update parentid reference
-            emby_db.updateParentId(itemid, seasonid)
-
-        ##### OR ADD THE EPISODE #####
+                return False
         else:
-            log.info("ADD episode itemid: %s - Title: %s", itemid, title)
-
-            # add ratings
-            ratingid =  self.kodi_db.create_entry_rating()
-            self.kodi_db.add_ratings(ratingid, episodeid, "episode", "default", rating, votecount)
-
-            # add uniqueid
-            uniqueid =  self.kodi_db.create_entry_uniqueid()
-            self.kodi_db.add_uniqueid(uniqueid, episodeid, "episode", tvdb, "tvdb")
-
-            # Add path
-            pathid = self.kodi_db.add_path(path)
-            # Add the file
-            fileid = self.kodi_db.add_file(filename, pathid)
-
-            # Create the episode entry
-            self.kodi_db.add_episode(episodeid, fileid, title, plot, uniqueid, writer,
-                                     premieredate, runtime, director, season, episode, title,
-                                     showid, airsBeforeSeason, airsBeforeEpisode, seasonid)
-
-            # Create the reference in emby table
-            emby_db.addReference(itemid, episodeid, "Episode", "episode", fileid, pathid,
-                                 seasonid, checksum)
-
-        # Update the path
-        self.kodi_db.update_path(pathid, path, None, None)
-        # Update the file
-        self.kodi_db.update_file(fileid, filename, pathid, dateadded)
-
-        # Process cast
-        people = artwork.get_people_artwork(item['People'])
-        self.kodi_db.add_people(episodeid, people, "episode")
-        # Process artwork
-        artworks = artwork.get_all_artwork(item)
-        artwork.add_update_art(artworks['Primary'], episodeid, "episode", "thumb", kodicursor)
-        # Process stream details
-        streams = API.get_media_streams()
-        self.kodi_db.add_streams(fileid, streams, runtime)
-        # Process playstates
-        resume = API.adjust_resume(userdata['Resume'])
-        total = round(float(runtime), 6)
-        self.kodi_db.add_playstate(fileid, resume, total, playcount, dateplayed)
-        if not self.direct_path and resume:
-            # Create additional entry for widgets. This is only required for plugin/episode.
-            temppathid = self.kodi_db.get_path("plugin://plugin.video.emby.tvshows/")
-            tempfileid = self.kodi_db.add_file(filename, temppathid)
-            self.kodi_db.update_file(tempfileid, filename, temppathid, dateadded)
-            self.kodi_db.add_playstate(tempfileid, resume, total, playcount, dateplayed)
+            obj['ShowId'] = obj['ShowId'][0]
 
         return True
 
-    def updateUserdata(self, item):
-        # This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
-        # Poster with progress bar
-        emby_db = self.emby_db
-        API = api.API(item)
 
-        # Get emby information
-        itemid = item['Id']
-        checksum = API.get_checksum()
-        userdata = API.get_userdata()
-        runtime = API.get_runtime()
-        dateadded = API.get_date_created()
+    @stop()
+    @emby_item()
+    def userdata(self, item, e_item):
+        
+        ''' This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
+            Poster with progress bar
 
-        # Get Kodi information
-        emby_dbitem = emby_db.getItem_byId(itemid)
+            Make sure there's no other bookmarks created by widget.
+            Create additional entry for widgets. This is only required for plugin/episode.
+        '''
+        API = api.API(item, self.server['auth/server-address'])
+        obj = self.objects.map(item, 'EpisodeUserData')
+
         try:
-            kodiid = emby_dbitem[0]
-            fileid = emby_dbitem[1]
-            mediatype = emby_dbitem[4]
-            log.info("Update playstate for %s: %s fileid: %s", mediatype, item['Name'], fileid)
+            obj['KodiId'] = e_item[0]
+            obj['FileId'] = e_item[1]
+            obj['Media'] = e_item[4]
         except TypeError:
             return
 
-        # Process favorite tags
-        if mediatype == "tvshow":
-            if userdata['Favorite']:
-                self.kodi_db.get_tag(kodiid, "Favorite tvshows", "tvshow")
+        if obj['Media'] == "tvshow":
+
+            if obj['Favorite']:
+                self.get_tag(*values(obj, QU.get_tag_episode_obj))
             else:
-                self.kodi_db.remove_tag(kodiid, "Favorite tvshows", "tvshow")
-        elif mediatype == "episode":
-            # Process playstates
-            playcount = userdata['PlayCount']
-            dateplayed = userdata['LastPlayedDate']
-            resume = API.adjust_resume(userdata['Resume'])
-            total = round(float(runtime), 6)
+                self.remove_tag(*values(obj, QU.delete_tag_episode_obj))
 
-            log.debug("%s New resume point: %s", itemid, resume)
+        elif obj['Media'] == "episode":
+            
+            obj['Resume'] = API.adjust_resume((obj['Resume'] or 0) / 10000000.0)
+            obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
+            obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount'])
 
-            self.kodi_db.add_playstate(fileid, resume, total, playcount, dateplayed)
-            if not self.direct_path and not resume:
-                # Make sure there's no other bookmarks created by widget.
-                filename = self.kodi_db.get_filename(fileid)
-                self.kodi_db.remove_file("plugin://plugin.video.emby.tvshows/", filename)
+            if obj['DatePlayed']:
+                obj['DatePlayed'] = obj['DatePlayed'].split('.')[0].replace('T', " ")
 
-            if not self.direct_path and resume:
-                # Create additional entry for widgets. This is only required for plugin/episode.
-                filename = self.kodi_db.get_filename(fileid)
-                temppathid = self.kodi_db.get_path("plugin://plugin.video.emby.tvshows/")
-                tempfileid = self.kodi_db.add_file(filename, temppathid)
-                self.kodi_db.update_file(tempfileid, filename, temppathid, dateadded)
-                self.kodi_db.add_playstate(tempfileid, resume, total, playcount, dateplayed)
+            if obj['DateAdded']:
+                obj['DateAdded'] = obj['DateAdded'].split('.')[0].replace('T', " ")
 
-        emby_db.updateReference(itemid, checksum)
+            self.add_playstate(*values(obj, QU.add_bookmark_obj))
 
-    def remove(self, itemid):
-        # Remove showid, fileid, pathid, emby reference
-        emby_db = self.emby_db
-        kodicursor = self.kodicursor
+            if not self.direct_path and not obj['Resume']:
 
-        emby_dbitem = emby_db.getItem_byId(itemid)
+                temp_obj = dict(obj)
+                temp_obj['Filename'] = self.get_filename(*values(temp_obj, QU.get_file_obj))
+                temp_obj['Path'] = "plugin://plugin.video.emby.tvshows/"
+                self.remove_file(*values(temp_obj, QU.delete_file_obj))
+
+            elif not self.direct_path and obj['Resume']:
+
+                temp_obj = dict(obj)
+                temp_obj['Filename'] = self.get_filename(*values(temp_obj, QU.get_file_obj))
+                temp_obj['PathId'] = self.get_path("plugin://plugin.video.emby.tvshows/")
+                temp_obj['FileId'] = self.add_file(*values(temp_obj, QU.add_file_obj))
+                self.update_file(*values(temp_obj, QU.update_file_obj))
+                self.add_playstate(*values(temp_obj, QU.add_bookmark_obj))
+
+        self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
+        LOG.info("USERDATA %s [%s/%s] %s: %s", obj['Media'], obj['FileId'], obj['KodiId'], obj['Id'], obj['Title'])
+
+    @stop()
+    @emby_item()
+    def remove(self, item_id, e_item):
+        
+        ''' Remove showid, fileid, pathid, emby reference.
+            There's no episodes left, delete show and any possible remaining seasons
+        '''
+        obj = {'Id': item_id}
+
         try:
-            kodiid = emby_dbitem[0]
-            fileid = emby_dbitem[1]
-            parentid = emby_dbitem[3]
-            mediatype = emby_dbitem[4]
-            log.info("Removing %s kodiid: %s fileid: %s", mediatype, kodiid, fileid)
+            obj['KodiId'] = e_item[0]
+            obj['FileId'] = e_item[1]
+            obj['ParentId'] = e_item[3]
+            obj['Media'] = e_item[4]
         except TypeError:
             return
 
-        ##### PROCESS ITEM #####
+        if obj['Media'] == 'episode':
 
-        # Remove the emby reference
-        emby_db.removeItem(itemid)
+            temp_obj = dict(obj)
+            self.remove_episode(obj['KodiId'], obj['FileId'], obj['Id'])
+            season = self.emby_db.get_full_item_by_kodi_id(*values(obj, QUEM.delete_item_by_parent_season_obj))
 
-        ##### IF EPISODE #####
-
-        if mediatype == "episode":
-            # Delete kodi episode and file, verify season and tvshow
-            self.removeEpisode(kodiid, fileid)
-
-            # Season verification
-            season = emby_db.getItem_byKodiId(parentid, "season")
             try:
-                showid = season[1]
+                temp_obj['Id'] = season[0]
+                temp_obj['ParentId'] = season[1]
             except TypeError:
                 return
 
-            season_episodes = emby_db.getItem_byParentId(parentid, "episode")
-            if not season_episodes:
-                self.removeSeason(parentid)
-                emby_db.removeItem(season[0])
+            if not self.emby_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_episode_obj)):
 
-            # Show verification
-            show = emby_db.getItem_byKodiId(showid, "tvshow")
-            query = ' '.join((
+                self.remove_season(obj['ParentId'], obj['Id'])
+                self.emby_db.remove_item(*values(temp_obj, QUEM.delete_item_obj))
 
-                "SELECT totalCount",
-                "FROM tvshowcounts",
-                "WHERE idShow = ?"
-            ))
-            kodicursor.execute(query, (showid,))
-            result = kodicursor.fetchone()
-            if result and result[0] is None:
-                # There's no episodes left, delete show and any possible remaining seasons
-                seasons = emby_db.getItem_byParentId(showid, "season")
-                for season in seasons:
-                    self.removeSeason(season[1])
+            temp_obj['Id'] = self.emby_db.get_item_by_kodi_id(*values(temp_obj, QUEM.get_item_by_parent_tvshow_obj))
+
+            if not self.get_total_episodes(*values(temp_obj, QU.get_total_episodes_obj)):
+
+                for season in self.emby_db.get_item_by_parent_id(*values(temp_obj, QUEM.get_item_by_parent_season_obj)):
+                    self.remove_season(season[1], obj['Id'])
                 else:
-                    # Delete emby season entries
-                    emby_db.removeItems_byParentId(showid, "season")
-                self.removeShow(showid)
-                emby_db.removeItem(show[0])
+                    self.emby_db.remove_items_by_parent_id(*values(temp_obj, QUEM.delete_item_by_parent_season_obj))
 
-        ##### IF TVSHOW #####
+                self.remove_tvshow(temp_obj['ParentId'], obj['Id'])
+                self.emby_db.remove_item(*values(temp_obj, QUEM.delete_item_obj))
 
-        elif mediatype == "tvshow":
-            # Remove episodes, seasons, tvshow
-            seasons = emby_db.getItem_byParentId(kodiid, "season")
-            for season in seasons:
-                seasonid = season[1]
-                season_episodes = emby_db.getItem_byParentId(seasonid, "episode")
-                for episode in season_episodes:
-                    self.removeEpisode(episode[1], episode[2])
+        elif obj['Media'] == 'tvshow':
+            obj['ParentId'] = obj['KodiId']
+
+            for season in self.emby_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_season_obj)):
+                
+                temp_obj = dict(obj)
+                temp_obj['ParentId'] = season[1]
+
+                for episode in self.emby_db.get_item_by_parent_id(*values(temp_obj, QUEM.get_item_by_parent_episode_obj)):
+                    self.remove_episode(episode[1], episode[2], obj['Id'])
                 else:
-                    # Remove emby episodes
-                    emby_db.removeItems_byParentId(seasonid, "episode")
+                    self.emby_db.remove_items_by_parent_id(*values(temp_obj, QUEM.delete_item_by_parent_episode_obj))
             else:
-                # Remove emby seasons
-                emby_db.removeItems_byParentId(kodiid, "season")
+                self.emby_db.remove_items_by_parent_id(*values(obj, QUEM.delete_item_by_parent_season_obj))
 
-            # Remove tvshow
-            self.removeShow(kodiid)
+            self.remove_tvshow(obj['KodiId'], obj['Id'])
 
-        ##### IF SEASON #####
+        elif obj['Media'] == 'season':
 
-        elif mediatype == "season":
-            # Remove episodes, season, verify tvshow
-            season_episodes = emby_db.getItem_byParentId(kodiid, "episode")
-            for episode in season_episodes:
-                self.removeEpisode(episode[1], episode[2])
+            for episode in self.emby_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_episode_obj)):
+                self.remove_episode(episode[1], episode[2], obj['Id'])
             else:
-                # Remove emby episodes
-                emby_db.removeItems_byParentId(kodiid, "episode")
+                self.emby_db.remove_items_by_parent_id(*values(obj, QUEM.delete_item_by_parent_episode_obj))
 
-            # Remove season
-            self.removeSeason(kodiid)
+            self.remove_season(obj['KodiId'], obj['Id'])
 
-            # Show verification
-            seasons = emby_db.getItem_byParentId(parentid, "season")
-            if not seasons:
-                # There's no seasons, delete the show
-                self.removeShow(parentid)
-                emby_db.removeItem_byKodiId(parentid, "tvshow")
+            if not self.emby_db.get_item_by_parent_id(*values(obj, QUEM.delete_item_by_parent_season_obj)):
 
-        log.info("Deleted %s: %s from kodi database", mediatype, itemid)
+                self.remove_show(obj['ParentId'], obj['Id'])
+                self.emby_db.remove_item_by_kodi_id(*values(obj, QUEM.delete_item_by_parent_tvshow_obj))
 
-    def removeShow(self, kodiid):
+        self.emby_db.remove_item(*values(obj, QUEM.delete_item_obj))
 
-        kodicursor = self.kodicursor
-        self.artwork.delete_artwork(kodiid, "tvshow", kodicursor)
-        self.kodi_db.remove_tvshow(kodiid)
-        log.debug("Removed tvshow: %s", kodiid)
+    def remove_tvshow(self, kodi_id, item_id):
+        
+        self.artwork.delete(kodi_id, "tvshow")
+        self.delete_tvshow(kodi_id)
+        LOG.debug("DELETE tvshow [%s] %s", kodi_id, item_id)
 
-    def removeSeason(self, kodiid):
+    def remove_season(self, kodi_id, item_id):
 
-        kodicursor = self.kodicursor
+        self.artwork.delete(kodi_id, "season")
+        self.delete_season(kodi_id)
+        LOG.info("DELETE season [%s] %s", kodi_id, item_id)
 
-        self.artwork.delete_artwork(kodiid, "season", kodicursor)
-        self.kodi_db.remove_season(kodiid)
-        log.debug("Removed season: %s", kodiid)
+    def remove_episode(self, kodi_id, file_id, item_id):
 
-    def removeEpisode(self, kodiid, fileid):
-
-        kodicursor = self.kodicursor
-
-        self.artwork.delete_artwork(kodiid, "episode", kodicursor)
-        self.kodi_db.remove_episode(kodiid, fileid)
-        log.debug("Removed episode: %s", kodiid)
-
-    def add_tvshow(self, item, view):
-        # The only way to keep things together is to drill down, like in the webclient.
-        # If series pooling is true, they will share the showid, extra tvshow entries
-        # will be added to emby.db due to server events. 
-        pass
+        self.artwork.delete(kodi_id, "episode")
+        self.delete_episode(kodi_id, file_id)
+        LOG.info("DELETE episode [%s/%s] %s", file_id, kodi_id, item_id)

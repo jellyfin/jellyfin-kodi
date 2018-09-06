@@ -8,15 +8,12 @@ import os
 import xbmcgui
 import xbmcaddon
 
-import connect.connectionmanager as connectionmanager
-from utils import language as lang
+from helper import _, addon_id
+from emby.core.connection_manager import CONNECTION_STATE
 
 ##################################################################################################
 
-log = logging.getLogger("EMBY."+__name__)
-addon = xbmcaddon.Addon('plugin.video.emby')
-
-CONN_STATE = connectionmanager.ConnectionState
+LOG = logging.getLogger("EMBY."+__name__)
 ACTION_PARENT_DIR = 9
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACK = 92
@@ -42,8 +39,10 @@ class ServerManual(xbmcgui.WindowXMLDialog):
 
         xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)
 
-    def set_connect_manager(self, connect_manager):
-        self.connect_manager = connect_manager
+    def set_args(self, **kwargs):
+        # connect_manager, user_image, servers, emby_connect
+        for key, value in kwargs.iteritems():
+            setattr(self, key, value)
 
     def is_connected(self):
         return True if self._server else False
@@ -81,8 +80,8 @@ class ServerManual(xbmcgui.WindowXMLDialog):
 
             if not server:
                 # Display error
-                self._error(ERROR['Empty'], lang(30617))
-                log.error("Server cannot be null")
+                self._error(ERROR['Empty'], _('empty_server'))
+                LOG.error("Server cannot be null")
 
             elif self._connect_to_server(server, port):
                 self.close()
@@ -101,7 +100,7 @@ class ServerManual(xbmcgui.WindowXMLDialog):
 
     def _add_editcontrol(self, x, y, height, width):
 
-        media = os.path.join(addon.getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
+        media = os.path.join(xbmcaddon.Addon(addon_id()).getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
         control = xbmcgui.ControlEdit(0, 0, 0, 0,
                                       label="User",
                                       font="font13",
@@ -119,11 +118,11 @@ class ServerManual(xbmcgui.WindowXMLDialog):
     def _connect_to_server(self, server, port):
 
         server_address = "%s:%s" % (server, port) if port else server
-        self._message("%s %s..." % (lang(30610), server_address))
-        result = self.connect_manager.connectToAddress(server_address)
+        self._message("%s %s..." % (_(30610), server_address))
+        result = self.connect_manager['manual-server'](server_address)
 
-        if result['State'] == CONN_STATE['Unavailable']:
-            self._message(lang(30609))
+        if result['State'] == CONNECTION_STATE['Unavailable']:
+            self._message(_(30609))
             return False
         else:
             self._server = result['Servers'][0]

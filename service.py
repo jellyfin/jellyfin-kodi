@@ -11,47 +11,39 @@ import xbmcaddon
 
 #################################################################################################
 
-_ADDON = xbmcaddon.Addon(id='plugin.video.emby')
-_CWD = _ADDON.getAddonInfo('path').decode('utf-8')
-_BASE_LIB = xbmc.translatePath(os.path.join(_CWD, 'resources', 'lib')).decode('utf-8')
-sys.path.append(_BASE_LIB)
+__addon__ = xbmcaddon.Addon(id='plugin.video.emby').getAddonInfo('path').decode('utf-8')
+__base__ = xbmc.translatePath(os.path.join(__addon__, 'resources', 'lib')).decode('utf-8')
+sys.path.append(__base__)
 
 #################################################################################################
 
-import loghandler
-from service_entry import Service
-from utils import settings
-#from ga_client import GoogleAnalytics
+from entrypoint import Service
+from helper import settings
+from emby import Emby
 
 #################################################################################################
 
-loghandler.config()
-log = logging.getLogger("EMBY.service")
+LOG = logging.getLogger("EMBY.service")
 DELAY = int(settings('startupDelay') or 0)
 
 #################################################################################################
 
+
 if __name__ == "__main__":
 
-    log.warn("Delaying emby startup by: %s sec...", DELAY)
-    service = Service()
+    LOG.info("--->[ service ]")
+    LOG.warn("Delay startup by %s seconds.", DELAY)
+
+    session = Service()
 
     try:
-        abort = False
         if DELAY and xbmc.Monitor().waitForAbort(DELAY):
-            log.info("Abort event while waiting to start Emby for kodi")
-            abort = True
-        # Start the service
-        if abort == False:
-            service.service_entry_point()
+            raise Exception("Aborted during startup delay")
 
+        session.service()
     except Exception as error:
-        """
-        if not (hasattr(error, 'quiet') and error.quiet):
-            ga = GoogleAnalytics()
-            errStrings = ga.formatException()
-            ga.sendEventData("Exception", errStrings[0], errStrings[1])
-        """
-        log.exception(error)
-        log.info("Forcing shutdown")
-        service.shutdown()
+
+        LOG.exception(error)
+        session.shutdown()
+
+    LOG.info("---<[ service ]")

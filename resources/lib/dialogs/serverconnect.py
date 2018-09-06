@@ -7,14 +7,12 @@ import logging
 import xbmc
 import xbmcgui
 
-import connect.connectionmanager as connectionmanager
-from utils import language as lang
+from helper import _
+from emby.core.connection_manager import CONNECTION_STATE
 
 ##################################################################################################
 
-log = logging.getLogger("EMBY."+__name__)
-
-CONN_STATE = connectionmanager.ConnectionState
+LOG = logging.getLogger("EMBY."+__name__)
 ACTION_PARENT_DIR = 9
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACK = 92
@@ -79,7 +77,7 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
             self.getControl(USER_IMAGE).setImage(self.user_image)
 
         if not self.emby_connect: # Change connect user
-            self.getControl(EMBY_CONNECT).setLabel("[B]%s[/B]" % lang(30618))
+            self.getControl(EMBY_CONNECT).setLabel("[B]%s[/B]" % _(30618))
 
         if self.servers:
             self.setFocus(self.list_)
@@ -103,7 +101,7 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
             if self.getFocusId() == LIST:
                 server = self.list_.getSelectedItem()
                 selected_id = server.getProperty('id')
-                log.info('Server Id selected: %s', selected_id)
+                LOG.info('Server Id selected: %s', selected_id)
 
                 if self._connect_server(selected_id):
                     self.message_box.setVisibleCondition('false')
@@ -112,7 +110,7 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
     def onClick(self, control):
 
         if control == EMBY_CONNECT:
-            self.connect_manager.clearData()
+            self.connect_manager.clear_data()
             self._connect_login = True
             self.close()
 
@@ -125,15 +123,18 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
 
     def _connect_server(self, server_id):
 
-        server = self.connect_manager.getServerInfo(server_id)
-        self.message.setLabel("%s %s..." % (lang(30610), server['Name']))
+        server = self.connect_manager.get_server_info(server_id)
+        self.message.setLabel("%s %s..." % (_(30610), server['Name']))
+
         self.message_box.setVisibleCondition('true')
         self.busy.setVisibleCondition('true')
-        result = self.connect_manager.connectToServer(server)
 
-        if result['State'] == CONN_STATE['Unavailable']:
+        result = self.connect_manager['connect-to-server'](server)
+
+        if result['State'] == CONNECTION_STATE['Unavailable']:
             self.busy.setVisibleCondition('false')
-            self.message.setLabel(lang(30609))
+
+            self.message.setLabel(_(30609))
             return False
         else:
             xbmc.sleep(1000)

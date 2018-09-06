@@ -5,6 +5,48 @@
 import logging
 import os
 import sys
+
+import xbmc
+import xbmcaddon
+
+#################################################################################################
+
+__addon__ = xbmcaddon.Addon(id='plugin.video.emby').getAddonInfo('path').decode('utf-8')
+__base__ = xbmc.translatePath(os.path.join(__addon__, 'resources', 'lib')).decode('utf-8')
+sys.path.append(__base__)
+
+#################################################################################################
+
+from entrypoint import Events
+
+#################################################################################################
+
+LOG = logging.getLogger("EMBY.default")
+
+#################################################################################################
+
+
+if __name__ == "__main__":
+
+    LOG.info("--->[ default ]")
+
+    try:
+        Events()
+    except Exception as error:
+        LOG.exception(error)
+
+    LOG.info("---<[ default ]")
+
+
+"""
+
+# -*- coding: utf-8 -*-
+
+#################################################################################################
+
+import logging
+import os
+import sys
 import urlparse
 
 import xbmc
@@ -23,7 +65,7 @@ sys.path.append(_BASE_LIB)
 import entrypoint
 import loghandler
 from utils import window, dialog, language as lang
-#from ga_client import GoogleAnalytics
+from ga_client import GoogleAnalytics
 import database
 
 #################################################################################################
@@ -178,13 +220,13 @@ if __name__ == "__main__":
     try:
         Main()
     except Exception as error:
-        """
         if not (hasattr(error, 'quiet') and error.quiet):
             ga = GoogleAnalytics()
             errStrings = ga.formatException()
             ga.sendEventData("Exception", errStrings[0], errStrings[1])
-        """
         log.exception(error)
         raise
 
     log.info("plugin.video.emby stopped")
+
+"""

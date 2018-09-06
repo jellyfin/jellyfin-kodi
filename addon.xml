@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon  id="plugin.video.emby"
         name="Emby" 
-        version="3.0.34a"
+        version="3.0.35a"
         provider-name="Emby.media">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
-    <import addon="script.module.requests" version="2.9.1" />
-    <import addon="plugin.video.emby.movies" version="0.11" />
-    <import addon="plugin.video.emby.tvshows" version="0.11" />
-    <import addon="plugin.video.emby.musicvideos" version="0.11" />
+    <import addon="plugin.video.emby.movies" version="0.12" />
+    <import addon="plugin.video.emby.tvshows" version="0.12" />
+    <import addon="plugin.video.emby.musicvideos" version="0.12" />
   </requires>
   <extension    point="xbmc.python.pluginsource"
                 library="default.py">
@@ -18,11 +17,11 @@
   </extension>
   <extension point="kodi.context.item">
     <menu id="kodi.core.main">
-      <item library="contextmenu.py">
+      <item library="context.py">
         <label>30401</label>
         <visible>[!String.IsEmpty(ListItem.DBID) + !String.IsEqual(ListItem.DBID,-1) | !String.IsEmpty(ListItem.Property(embyid))] + !String.IsEmpty(Window(10000).Property(emby_context))</visible>
       </item>
-      <item library="contextmenu_play.py">
+      <item library="context_play.py">
         <label>30402</label>
         <visible>[[!String.IsEmpty(ListItem.DBID) + !String.IsEqual(ListItem.DBID,-1) | !String.IsEmpty(ListItem.Property(embyid))] + [String.IsEqual(ListItem.DBTYPE,movie) | String.IsEqual(ListItem.DBTYPE,episode)]] + !String.IsEmpty(Window(10000).Property(emby_context)) + !String.IsEmpty(Window(10000).Property(emby_context_transcode))</visible>
       </item>

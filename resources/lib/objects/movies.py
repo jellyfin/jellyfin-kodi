@@ -2,466 +2,346 @@
 
 ##################################################################################################
 
+import json
 import logging
 import urllib
 
-import api
-import embydb_functions as embydb
-import _kodi_movies
-from _common import Items, catch_except
-from utils import window, settings, language as lang
+import downloader as server
+from obj import Objects
+from kodi import Movies as KodiDb, queries as QU
+from database import emby_db, queries as QUEM
+from helper import api, catch, stop, validate, emby_item, library_check, values
 
 ##################################################################################################
 
-log = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("EMBY."+__name__)
 
 ##################################################################################################
 
 
-class Movies(Items):
+class Movies(KodiDb):
 
+    def __init__(self, server, embydb, videodb, direct_path):
 
-    def __init__(self, embycursor, kodicursor, pdialog=None):
+        self.server = server
+        self.emby = embydb
+        self.video = videodb
+        self.direct_path = direct_path
 
-        self.embycursor = embycursor
-        self.emby_db = embydb.Embydb_Functions(self.embycursor)
-        self.kodicursor = kodicursor
-        self.kodi_db = _kodi_movies.KodiMovies(self.kodicursor)
-        self.pdialog = pdialog
+        self.emby_db = emby_db.EmbyDatabase(embydb.cursor)
+        self.objects = Objects()
 
-        self.new_time = int(settings('newvideotime'))*1000
+        KodiDb.__init__(self, videodb.cursor)
 
-        Items.__init__(self)
+    def __getitem__(self, key):
 
-    def _get_func(self, item_type, action):
+        if key == 'Movie':
+            return self.movie
+        elif key == 'BoxSet':
+            return self.boxset
+        elif key == 'UserData':
+            return self.userdata
+        elif key in 'Removed':
+            return self.remove
 
-        if item_type == "Movie":
-            actions = {
-                'added': self.add_movies,
-                'update': self.add_update,
-                'userdata': self.updateUserdata,
-                'remove': self.remove
-            }
-        elif item_type == "BoxSet":
-            actions = {
-                'added': self.add_boxsets,
-                'update': self.add_updateBoxset,
-                'remove': self.remove
-            }
-        else:
-            log.info("Unsupported item_type: %s", item_type)
-            actions = {}
-
-        return actions.get(action)
-
-    def force_refresh_boxsets(self):
-
-        if self.pdialog:
-            self.pdialog.update(heading=lang(29999), message=lang(33018))
-
-        boxsets = self.emby.getBoxset(dialog=self.pdialog)
-        self.add_all("BoxSet", boxsets)
-
-        log.debug("Boxsets finished.")
-        return True
-
-    def compare_all(self):
-        # Pull the list of movies and boxsets in Kodi
-        views = self.emby_db.getView_byType('movies')
-        views += self.emby_db.getView_byType('mixed')
-        log.info("Media folders: %s", views)
-
-        # Process movies
-        for view in views:
-
-            if self.should_stop():
-                return False
-
-            if not self.compare_movies(view):
-                return False
-
-        # Process boxsets
-        if not self.compare_boxsets():
-            return False
-
-        return True
-
-    def compare_movies(self, view):
-
-        view_id = view['id']
-        view_name = view['name']
-
-        if self.pdialog:
-            self.pdialog.update(heading=lang(29999), message="%s %s..." % (lang(33026), view_name))
+    @stop()
+    @emby_item()
+    @library_check()
+    def movie(self, item, e_item, library):
         
-        movies = dict(self.emby_db.get_checksum_by_view("Movie", view_id))
-        emby_movies = self.emby.getMovies(view_id, basic=True, dialog=self.pdialog)
+        ''' If item does not exist, entry will be added.
+            If item exists, entry will be updated.
+        '''
+        API = api.API(item, self.server['auth/server-address'])
+        obj = self.objects.map(item, 'Movie')
+        update = True
 
-        return self.compare("Movie", emby_movies['Items'], movies, view)
-
-    def compare_boxsets(self):
-
-        if self.pdialog:
-            self.pdialog.update(heading=lang(29999), message=lang(33027))
-
-        boxsets = dict(self.emby_db.get_checksum('BoxSet'))
-        emby_boxsets = self.emby.getBoxset(dialog=self.pdialog)
-
-        return self.compare("BoxSet", emby_boxsets['Items'], boxsets)
-
-    def add_movies(self, items, total=None, view=None):
-
-        for item in self.added(items, total):
-            if self.add_update(item, view):
-                self.content_pop(item.get('Name', "unknown"))
-
-    def add_boxsets(self, items, total=None):
-
-        for item in self.added(items, total):
-            self.add_updateBoxset(item)
-
-    @catch_except()
-    def add_update(self, item, view=None):
-        # Process single movie
-        emby_db = self.emby_db
-        artwork = self.artwork
-        API = api.API(item)
-
-        # If the item already exist in the local Kodi DB we'll perform a full item update
-        # If the item doesn't exist, we'll add it to the database
-        update_item = True
-        itemid = item['Id']
-        emby_dbitem = emby_db.getItem_byId(itemid)
         try:
-            movieid = emby_dbitem[0]
-            fileid = emby_dbitem[1]
-            pathid = emby_dbitem[2]
-            log.info("movieid: %s fileid: %s pathid: %s", movieid, fileid, pathid)
+            obj['MovieId'] = e_item[0]
+            obj['FileId'] = e_item[1]
+            obj['PathId'] = e_item[2]
+        except TypeError as error:
 
-        except TypeError:
-            update_item = False
-            log.debug("movieid: %s not found", itemid)
-            # movieid
-            movieid = self.kodi_db.create_entry()
-
+            update = False
+            LOG.debug("MovieId %s not found", obj['Id'])
+            obj['MovieId'] = self.create_entry()
         else:
-            if self.kodi_db.get_movie(movieid) is None:
-                # item is not found, let's recreate it.
-                update_item = False
-                log.info("movieid: %s missing from Kodi, repairing the entry", movieid)
+            if self.get(*values(obj, QU.get_movie_obj)) is None:
 
-        if not view:
-            # Get view tag from emby
-            viewtag, viewid = emby_db.getView_embyId(itemid)
-            log.debug("View tag found: %s", viewtag)
+                update = False
+                LOG.info("MovieId %s missing from kodi. repairing the entry.", obj['MovieId'])
+
+
+        obj['Path'] = API.get_file_path(obj['Path'])
+        obj['LibraryId'] = library['Id']
+        obj['LibraryName'] = library['Name']
+        obj['Genres'] = obj['Genres'] or []
+        obj['Studios'] = [API.validate_studio(studio) for studio in (obj['Studios'] or [])]
+        obj['People'] = obj['People'] or []
+        obj['Genre'] = " / ".join(obj['Genres'])
+        obj['Writers'] = " / ".join(obj['Writers'] or [])
+        obj['Directors'] = " / ".join(obj['Directors'] or [])
+        obj['Plot'] = API.get_overview(obj['Plot'])
+        obj['Resume'] = API.adjust_resume((obj['Resume'] or 0) / 10000000.0)
+        obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
+        obj['People'] = API.get_people_artwork(obj['People'])
+        obj['DateAdded'] = obj['DateAdded'].split('.')[0].replace('T', " ")
+        obj['DatePlayed'] = (obj['DatePlayed'] or obj['DateAdded']).split('.')[0].replace('T', " ")
+        obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount'])
+        obj['Artwork'] = API.get_all_artwork(self.objects.map(item, 'Artwork'))
+        obj['Video'] = API.video_streams(obj['Video'] or [], obj['Container'])
+        obj['Audio'] = API.audio_streams(obj['Audio'] or [])
+        obj['Streams'] = API.media_streams(obj['Video'], obj['Audio'], obj['Subtitles'])
+
+        self.get_path_filename(obj)
+        self.trailer(obj)
+
+        if obj['Countries']:
+            self.add_countries(*values(obj, QU.update_country_obj))
+
+        tags = []
+        tags.extend(obj['Tags'] or [])
+        tags.append(obj['LibraryName'])
+
+        if obj['Favorite']:
+            tags.append('Favorite movies')
+
+        obj['Tags'] = tags
+
+
+        if update:
+            self.movie_update(obj)
         else:
-            viewtag = view['name']
-            viewid = view['id']
+            self.movie_add(obj)
 
-        # fileId information
-        checksum = API.get_checksum()
-        dateadded = API.get_date_created()
-        userdata = API.get_userdata()
-        playcount = userdata['PlayCount']
-        dateplayed = userdata['LastPlayedDate']
 
-        # item details
-        people = API.get_people()
-        writer = " / ".join(people['Writer'])
-        director = " / ".join(people['Director'])
-        genres = item['Genres']
-        title = item['Name']
-        plot = API.get_overview()
-        shortplot = item.get('ShortOverview')
-        tagline = API.get_tagline()
-        votecount = item.get('VoteCount')
-        rating = item.get('CommunityRating')
-        year = item.get('ProductionYear')
-        imdb = API.get_provider('Imdb')
-        sorttitle = item['SortName']
-        runtime = API.get_runtime()
-        mpaa = API.get_mpaa()
-        genre = " / ".join(genres)
-        country = API.get_country()
-        studios = API.get_studios()
+        self.update_path(*values(obj, QU.update_path_movie_obj))
+        self.update_file(*values(obj, QU.update_file_obj))
+        self.add_tags(*values(obj, QU.add_tags_movie_obj))
+        self.add_genres(*values(obj, QU.add_genres_movie_obj))
+        self.add_studios(*values(obj, QU.add_studios_movie_obj))
+        self.add_playstate(*values(obj, QU.add_bookmark_obj))
+        self.add_people(*values(obj, QU.add_people_movie_obj))
+        self.add_streams(*values(obj, QU.add_streams_obj))
+        self.artwork.add(obj['Artwork'], obj['MovieId'], "movie")
+
+    def movie_add(self, obj):
+
+        ''' Add object to kodi.
+        '''
+        obj['RatingId'] = self.create_entry_rating()
+        self.add_ratings(*values(obj, QU.add_rating_movie_obj))
+
+        obj['Unique'] = self.create_entry_unique_id()
+        self.add_unique_id(*values(obj, QU.add_unique_id_movie_obj))
+
+        obj['PathId'] = self.add_path(*values(obj, QU.add_path_obj))
+        obj['FileId'] = self.add_file(*values(obj, QU.add_file_obj))
+
+        self.add(*values(obj, QU.add_movie_obj))
+        self.emby_db.add_reference(*values(obj, QUEM.add_reference_movie_obj))
+        LOG.info("ADD movie [%s/%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['MovieId'], obj['Id'], obj['Title'])
+
+    def movie_update(self, obj):
+
+        ''' Update object to kodi.
+        '''
+        obj['RatingId'] = self.get_rating_id(*values(obj, QU.get_rating_movie_obj))
+        self.update_ratings(*values(obj, QU.update_rating_movie_obj))
+
+        obj['Unique'] = self.get_unique_id(*values(obj, QU.get_unique_id_movie_obj))
+        self.update_unique_id(*values(obj, QU.update_unique_id_movie_obj))
+
+        self.update(*values(obj, QU.update_movie_obj))
+        self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
+        LOG.info("UPDATE movie [%s/%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['MovieId'], obj['Id'], obj['Title'])
+
+    def trailer(self, obj):
+
         try:
-            studio = studios[0]
-        except IndexError:
-            studio = None
+            if obj['LocalTrailer']:
 
-        if int(item.get('LocalTrailerCount', 0)) > 0:
-            # There's a local trailer
-            url = (
-                "{server}/emby/Users/{UserId}/Items/%s/LocalTrailers?format=json"
-                % itemid
-            )
-            try:
-                result = self.do_url(url)
-                trailer = "plugin://plugin.video.emby/trailer/?id=%s&mode=play" % result[0]['Id']
-            except Exception as error:
-                log.info("Failed to process local trailer: " + str(error))
-                trailer = None
-        else:
-            # Try to get the youtube trailer
-            try:
-                trailer = item['RemoteTrailers'][0]['Url']
-            except (KeyError, IndexError):
-                trailer = None
-            else:
-                try:
-                    trailer_id = trailer.rsplit('=', 1)[1]
-                except IndexError:
-                    log.info("Failed to process trailer: %s", trailer)
-                    trailer = None
-                else:
-                    trailer = "plugin://plugin.video.youtube/play/?video_id=%s" % trailer_id
+                trailer = self.server['api'].get_local_trailers(obj['Id'])
+                obj['Trailer'] = "plugin://plugin.video.emby/trailer?id=%s&mode=play" % trailer[0]['Id']
 
+            elif obj['Trailer']:
+                obj['Trailer'] = "plugin://plugin.video.youtube/play/?video_id=%s" % obj['Trailer'].rsplit('=', 1)[1]
+        except Exception as error:
 
-        ##### GET THE FILE AND PATH #####
-        playurl = API.get_file_path()
+            LOG.error("Failed to get trailer: %s", error)
+            obj['Trailer'] = None
 
-        if "\\" in playurl:
-            # Local path
-            filename = playurl.rsplit("\\", 1)[1]
-        else: # Network share
-            filename = playurl.rsplit("/", 1)[1]
+    def get_path_filename(self, obj):
+
+        ''' Get the path and filename and build it into protocol://path
+        '''
+        obj['Filename'] = obj['Path'].rsplit('\\', 1)[1] if '\\' in obj['Path'] else obj['Path'].rsplit('/', 1)[1]
 
         if self.direct_path:
-            # Direct paths is set the Kodi way
-            if not self.path_validation(playurl):
-                return False
 
-            path = playurl.replace(filename, "")
-            window('emby_pathverified', value="true")
+            if not validate(obj['Path']):
+                raise Exception("Failed to validate path. User stopped.")
+
+            obj['Path'] = obj['Path'].replace(obj['Filename'], "")
+
         else:
-            # Set plugin path and media flags using real filename
-            path = "plugin://plugin.video.emby.movies/"
+            obj['Path'] = "plugin://plugin.video.emby.movies/"
             params = {
-
-                'filename': filename.encode('utf-8'),
-                'id': itemid,
-                'dbid': movieid,
+                'filename': obj['Filename'].encode('utf-8'),
+                'id': obj['Id'],
+                'dbid': obj['MovieId'],
                 'mode': "play"
             }
-            filename = "%s?%s" % (path, urllib.urlencode(params))
+            obj['Filename'] = "%s?%s" % (obj['Path'], urllib.urlencode(params))
 
 
-        ##### UPDATE THE MOVIE #####
-        if update_item:
-            log.info("UPDATE movie itemid: %s - Title: %s", itemid, title)
+    @stop()
+    @emby_item()
+    def boxset(self, item, e_item):
+                
+        ''' If item does not exist, entry will be added.
+            If item exists, entry will be updated.
 
-            # update ratings
-            ratingid =  self.kodi_db.get_ratingid(movieid)
-            self.kodi_db.update_ratings(movieid, "movie", "default", rating, votecount, ratingid)
+            Process movies inside boxset.
+            Process removals from boxset.
+        '''
+        API = api.API(item, self.server['auth/server-address'])
+        obj = self.objects.map(item, 'Boxset')
 
-            # update uniqueid
-            uniqueid =  self.kodi_db.get_uniqueid(movieid)
-            self.kodi_db.update_uniqueid(movieid, "movie", imdb, "imdb", uniqueid)
+        obj['Overview'] = API.get_overview(obj['Overview'])
 
-            # Update the movie entry
-            self.kodi_db.update_movie(title, plot, shortplot, tagline, votecount, uniqueid,
-                                      writer, year, uniqueid, sorttitle, runtime, mpaa, genre,
-                                      director, title, studio, trailer, country, year, movieid)
-
-            # Update the checksum in emby table
-            emby_db.updateReference(itemid, checksum)
-
-        ##### OR ADD THE MOVIE #####
-        else:
-            log.info("ADD movie itemid: %s - Title: %s", itemid, title)
-
-            # Add ratings
-            ratingid =  self.kodi_db.create_entry_rating()
-            self.kodi_db.add_ratings(ratingid, movieid, "movie", "default", rating, votecount)
-
-            # Add uniqueid
-            uniqueid =  self.kodi_db.create_entry_uniqueid()
-            self.kodi_db.add_uniqueid(uniqueid, movieid, "movie", imdb, "imdb")
-
-            # Add path
-            pathid = self.kodi_db.add_path(path)
-            # Add the file
-            fileid = self.kodi_db.add_file(filename, pathid)
-
-            # Create the movie entry
-            self.kodi_db.add_movie(movieid, fileid, title, plot, shortplot, tagline,
-                                   votecount, uniqueid, writer, year, uniqueid, sorttitle,
-                                   runtime, mpaa, genre, director, title, studio, trailer,
-                                   country, year)
-
-            # Create the reference in emby table
-            emby_db.addReference(itemid, movieid, "Movie", "movie", fileid, pathid, None,
-                                 checksum, viewid)
-
-        # Update the path
-        self.kodi_db.update_path(pathid, path, "movies", "metadata.local")
-        # Update the file
-        self.kodi_db.update_file(fileid, filename, pathid, dateadded)
-
-        # Process countries
-        if 'ProductionLocations' in item:
-            self.kodi_db.add_countries(movieid, item['ProductionLocations'])
-        # Process cast
-        people = artwork.get_people_artwork(item['People'])
-        self.kodi_db.add_people(movieid, people, "movie")
-        # Process genres
-        self.kodi_db.add_genres(movieid, genres, "movie")
-        # Process artwork
-        artwork.add_artwork(artwork.get_all_artwork(item), movieid, "movie", self.kodicursor)
-        # Process stream details
-        streams = API.get_media_streams()
-        self.kodi_db.add_streams(fileid, streams, runtime)
-        # Process studios
-        self.kodi_db.add_studios(movieid, studios, "movie")
-        # Process tags: view, emby tags
-        tags = [viewtag]
-        tags.extend(item['Tags'])
-        if userdata['Favorite']:
-            tags.append("Favorite movies")
-        self.kodi_db.add_tags(movieid, tags, "movie")
-        # Process playstates
-        resume = API.adjust_resume(userdata['Resume'])
-        total = round(float(runtime), 6)
-        self.kodi_db.add_playstate(fileid, resume, total, playcount, dateplayed)
-
-        return True
-
-    def add_updateBoxset(self, boxset):
-
-        emby = self.emby
-        emby_db = self.emby_db
-        artwork = self.artwork
-        API = api.API(boxset)
-
-        boxsetid = boxset['Id']
-        title = boxset['Name']
-        checksum = API.get_checksum()
-        emby_dbitem = emby_db.getItem_byId(boxsetid)
         try:
-            setid = emby_dbitem[0]
-            self.kodi_db.update_boxset(setid, title)
-        except TypeError:
-            setid = self.kodi_db.add_boxset(title)
+            obj['SetId'] = e_item[0]
+            self.update_boxset(*values(obj, QU.update_set_obj))
+        except TypeError as error:
 
-        # Process artwork
-        artwork.add_artwork(artwork.get_all_artwork(boxset), setid, "set", self.kodicursor)
+            LOG.debug("SetId %s not found", obj['Id'])
+            obj['SetId'] = self.add_boxset(*values(obj, QU.add_set_obj))
 
-        # Process movies inside boxset
-        current_movies = emby_db.getItemId_byParentId(setid, "movie")
-        process = []
+        self.boxset_current(obj)
+        obj['Artwork'] = API.get_all_artwork(self.objects.map(item, 'Artwork'))
+
+        for movie in obj['Current']:
+
+            temp_obj = dict(obj)
+            temp_obj['Movie'] = movie
+            temp_obj['MovieId'] = obj['Current'][temp_obj['Movie']]
+            self.remove_from_boxset(*values(temp_obj, QU.delete_movie_set_obj))
+            self.emby_db.update_parent_id(*values(temp_obj, QUEM.delete_parent_boxset_obj))
+            LOG.info("DELETE from boxset [%s] %s: %s", temp_obj['SetId'], temp_obj['Title'], temp_obj['MovieId'])
+
+        self.artwork.add(obj['Artwork'], obj['SetId'], "set")
+        self.emby_db.add_reference(*values(obj, QUEM.add_reference_boxset_obj))
+        LOG.info("UPDATE boxset [%s] %s", obj['SetId'], obj['Title'])
+
+    def boxset_current(self, obj):
+
+        ''' Add or removes movies based on the current movies found in the boxset.
+        '''
+        obj['Current'] = []
         try:
-            # Try to convert tuple to dictionary
-            current = dict(current_movies)
+            movies = dict(self.emby_db.get_item_id_by_parent_id(*values(obj, QUEM.get_item_id_by_parent_boxset_obj)))
         except ValueError:
-            current = {}
+            movies = {}
 
-        # Sort current titles
-        for current_movie in current:
-            process.append(current_movie)
+        for movie in movies:
+            obj['Current'].append(movie)
 
-        # New list to compare
-        for movie in emby.getMovies_byBoxset(boxsetid)['Items']:
 
-            itemid = movie['Id']
+        for all_movies in server.get_movies_by_boxset(obj['Id']):
+            for movie in all_movies['Items']:
 
-            if not current.get(itemid):
-                # Assign boxset to movie
-                emby_dbitem = emby_db.getItem_byId(itemid)
+                temp_obj = dict(obj)
+                temp_obj['Title'] = movie['Name']
+                temp_obj['Id'] = movie['Id']
+
                 try:
-                    movieid = emby_dbitem[0]
+                    temp_obj['MovieId'] = self.emby_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
                 except TypeError:
-                    log.info("Failed to add: %s to boxset", movie['Name'])
+                    LOG.info("Failed to process %s to boxset.", temp_obj['Title'])
+
                     continue
 
-                log.info("New addition to boxset %s: %s", title, movie['Name'])
-                self.kodi_db.set_boxset(setid, movieid)
-                # Update emby reference
-                emby_db.updateParentId(itemid, setid)
-            else:
-                # Remove from process, because the item still belongs
-                process.remove(itemid)
+                if temp_obj['Id'] not in movies:
 
-        # Process removals from boxset
-        for movie in process:
-            movieid = current[movie]
-            log.info("Remove from boxset %s: %s", title, movieid)
-            self.kodi_db.remove_from_boxset(movieid)
-            # Update emby reference
-            emby_db.updateParentId(movie, None)
+                    self.set_boxset(*values(temp_obj, QU.update_movie_set_obj))
+                    self.emby_db.update_parent_id(*values(temp_obj, QUEM.update_parent_movie_obj))
+                    LOG.info("ADD to boxset [%s/%s] %s: %s to boxset", temp_obj['SetId'], temp_obj['MovieId'], temp_obj['Title'], temp_obj['Id'])
+                else:
+                    obj['Current'].remove(temp_obj['Id'])
 
-        # Update the reference in the emby table
-        emby_db.addReference(boxsetid, setid, "BoxSet", mediatype="set", checksum=checksum)
+    def boxsets_reset(self):
 
-    def updateUserdata(self, item):
-        # This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
-        # Poster with progress bar
-        emby_db = self.emby_db
-        API = api.API(item)
+        ''' Special function to remove all existing boxsets.
+        '''
+        boxsets = self.emby_db.get_items_by_media('set')
+        for boxset in boxsets:
+            self.remove(boxset[0])
 
-        # Get emby information
-        itemid = item['Id']
-        checksum = API.get_checksum()
-        userdata = API.get_userdata()
-        runtime = API.get_runtime()
+    @stop()
+    @emby_item()
+    def userdata(self, item, e_item):
+        
+        ''' This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
+            Poster with progress bar
+        '''
+        API = api.API(item, self.server['auth/server-address'])
+        obj = self.objects.map(item, 'MovieUserData')
 
-        # Get Kodi information
-        emby_dbitem = emby_db.getItem_byId(itemid)
         try:
-            movieid = emby_dbitem[0]
-            fileid = emby_dbitem[1]
-            log.info("Update playstate for movie: %s fileid: %s", item['Name'], fileid)
+            obj['MovieId'] = e_item[0]
+            obj['FileId'] = e_item[1]
         except TypeError:
             return
 
-        # Process favorite tags
-        if userdata['Favorite']:
-            self.kodi_db.get_tag(movieid, "Favorite movies", "movie")
+        obj['Resume'] = API.adjust_resume((obj['Resume'] or 0) / 10000000.0)
+        obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
+        obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount'])
+
+        if obj['DatePlayed']:
+            obj['DatePlayed'] = obj['DatePlayed'].split('.')[0].replace('T', " ")
+
+        if obj['Favorite']:
+            self.get_tag(*values(obj, QU.get_tag_movie_obj))
         else:
-            self.kodi_db.remove_tag(movieid, "Favorite movies", "movie")
+            self.remove_tag(*values(obj, QU.delete_tag_movie_obj))
 
-        # Process playstates
-        playcount = userdata['PlayCount']
-        dateplayed = userdata['LastPlayedDate']
-        resume = API.adjust_resume(userdata['Resume'])
-        total = round(float(runtime), 6)
+        LOG.debug("New resume point %s: %s", obj['Id'], obj['Resume'])
+        self.add_playstate(*values(obj, QU.add_bookmark_obj))
+        self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
+        LOG.info("USERDATA movie [%s/%s] %s: %s", obj['FileId'], obj['MovieId'], obj['Id'], obj['Title'])
 
-        log.debug("%s New resume point: %s", itemid, resume)
+    @stop()
+    @emby_item()
+    def remove(self, item_id, e_item):
 
-        self.kodi_db.add_playstate(fileid, resume, total, playcount, dateplayed)
-        emby_db.updateReference(itemid, checksum)
+        ''' Remove movieid, fileid, emby reference.
+            Remove artwork, boxset
+        '''
+        obj = {'Id': item_id}
 
-    def remove(self, itemid):
-        # Remove movieid, fileid, emby reference
-        emby_db = self.emby_db
-        artwork = self.artwork
-
-        emby_dbitem = emby_db.getItem_byId(itemid)
         try:
-            kodiid = emby_dbitem[0]
-            fileid = emby_dbitem[1]
-            mediatype = emby_dbitem[4]
-            log.info("Removing %sid: %s fileid: %s", mediatype, kodiid, fileid)
+            obj['KodiId'] = e_item[0]
+            obj['FileId'] = e_item[1]
+            obj['Media'] = e_item[4]
         except TypeError:
             return
 
-        # Remove the emby reference
-        emby_db.removeItem(itemid)
-        # Remove artwork
-        artwork.delete_artwork(kodiid, mediatype, self.kodicursor)
+        self.artwork.delete(obj['KodiId'], obj['Media'])
 
-        if mediatype == "movie":
-            self.kodi_db.remove_movie(kodiid, fileid)
+        if obj['Media'] == 'movie':
+            self.delete(*values(obj, QU.delete_movie_obj))
+        elif obj['Media'] == 'set':
 
-        elif mediatype == "set":
-            # Delete kodi boxset
-            boxset_movies = emby_db.getItem_byParentId(kodiid, "movie")
-            for movie in boxset_movies:
-                embyid = movie[0]
-                movieid = movie[1]
-                self.kodi_db.remove_from_boxset(movieid)
-                # Update emby reference
-                emby_db.updateParentId(embyid, None)
+            for movie in self.emby_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_movie_obj)):
+                
+                temp_obj = dict(obj)
+                temp_obj['MovieId'] = movie[1]
+                temp_obj['Movie'] = movie[0]
+                self.remove_from_boxset(*values(temp_obj, QU.delete_movie_set_obj))
+                self.emby_db.update_parent_id(*values(temp_obj, QUEM.delete_parent_boxset_obj))
 
-            self.kodi_db.remove_boxset(kodiid)
+            self.delete_boxset(*values(obj, QU.delete_set_obj))
 
-        log.info("Deleted %s %s from kodi database", mediatype, itemid)
+        self.emby_db.remove_item(*values(obj, QUEM.delete_item_obj))
+        LOG.info("DELETE %s [%s/%s] %s", obj['Media'], obj['FileId'], obj['KodiId'], obj['Id'])

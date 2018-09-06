@@ -2,321 +2,236 @@
 
 ##################################################################################################
 
-import logging
-import urllib
 import datetime
+import logging
 import re
+import urllib
 
-import api
-import embydb_functions as embydb
-import _kodi_musicvideos
-from _common import Items, catch_except
-from utils import window, settings, language as lang
-
-##################################################################################################
-
-log = logging.getLogger("EMBY."+__name__)
+from obj import Objects
+from kodi import MusicVideos as KodiDb, queries as QU
+from database import emby_db, queries as QUEM
+from helper import api, catch, stop, validate, library_check, emby_item, values
 
 ##################################################################################################
 
+LOG = logging.getLogger("EMBY."+__name__)
 
-class MusicVideos(Items):
+##################################################################################################
 
 
-    def __init__(self, embycursor, kodicursor, pdialog=None):
+class MusicVideos(KodiDb):
 
-        self.embycursor = embycursor
-        self.emby_db = embydb.Embydb_Functions(self.embycursor)
-        self.kodicursor = kodicursor
-        self.kodi_db = _kodi_musicvideos.KodiMusicVideos(self.kodicursor)
-        self.pdialog = pdialog
+    def __init__(self, server, embydb, videodb, direct_path):
 
-        self.new_time = int(settings('newvideotime'))*1000
+        self.server = server
+        self.emby = embydb
+        self.video = videodb
+        self.direct_path = direct_path
 
-        Items.__init__(self)
+        self.emby_db = emby_db.EmbyDatabase(embydb.cursor)
+        self.objects = Objects()
 
-    def _get_func(self, item_type, action):
+        KodiDb.__init__(self, videodb.cursor)
 
-        if item_type == "MusicVideo":
-            actions = {
-                'added': self.add_mvideos,
-                'update': self.add_update,
-                'userdata': self.updateUserdata,
-                'remove': self.remove
-            }
-        else:
-            log.info("Unsupported item_type: %s", item_type)
-            actions = {}
+    def __getitem__(self, key):
 
-        return actions.get(action)
+        if key == 'MusicVideo':
+            return self.musicvideo
+        elif key == 'UserData':
+            return self.userdata
+        elif key in 'Removed':
+            return self.remove
 
-    def compare_all(self):
-        # Pull the list of musicvideos in Kodi
-        views = self.emby_db.getView_byType('musicvideos')
-        log.info("Media folders: %s", views)
+    @stop()
+    @emby_item()
+    @library_check()
+    def musicvideo(self, item, e_item, library):
 
-        for view in views:
+        ''' If item does not exist, entry will be added.
+            If item exists, entry will be updated.
 
-            if self.should_stop():
-                return False
+            If we don't get the track number from Emby, see if we can infer it
+            from the sortname attribute.
+        '''
+        API = api.API(item, self.server['auth/server-address'])
+        obj = self.objects.map(item, 'MusicVideo')
+        update = True
 
-            if not self.compare_mvideos(view):
-                return False
-
-        return True
-
-    def compare_mvideos(self, view):
-
-        view_id = view['id']
-        view_name = view['name']
-
-        if self.pdialog:
-            self.pdialog.update(heading=lang(29999), message="%s %s..." % (lang(33028), view_name))
-
-        mvideos = dict(self.emby_db.get_checksum_by_view('MusicVideo', view_id))
-        emby_mvideos = self.emby.getMusicVideos(view_id, basic=True, dialog=self.pdialog)
-
-        return self.compare("MusicVideo", emby_mvideos['Items'], mvideos, view)
-
-    def add_mvideos(self, items, total=None, view=None):
-
-        for item in self.added(items, total):
-            if self.add_update(item, view):
-                self.content_pop(item.get('Name', "unknown"))
-
-    @catch_except()
-    def add_update(self, item, view=None):
-        # Process single music video
-        kodicursor = self.kodicursor
-        emby_db = self.emby_db
-        artwork = self.artwork
-        API = api.API(item)
-
-        # If the item already exist in the local Kodi DB we'll perform a full item update
-        # If the item doesn't exist, we'll add it to the database
-        update_item = True
-        itemid = item['Id']
-        emby_dbitem = emby_db.getItem_byId(itemid)
         try:
-            mvideoid = emby_dbitem[0]
-            fileid = emby_dbitem[1]
-            pathid = emby_dbitem[2]
-            log.info("mvideoid: %s fileid: %s pathid: %s", mvideoid, fileid, pathid)
+            obj['MvideoId'] = e_item[0]
+            obj['FileId'] = e_item[1]
+            obj['PathId'] = e_item[2]
+        except TypeError as error:
 
-        except TypeError:
-            update_item = False
-            log.debug("mvideoid: %s not found", itemid)
-            # mvideoid
-            mvideoid = self.kodi_db.create_entry()
-
+            update = False
+            LOG.debug("MvideoId for %s not found", obj['Id'])
+            obj['MvideoId'] = self.create_entry()
         else:
-            if self.kodi_db.get_musicvideo(mvideoid) is None:
-                # item is not found, let's recreate it.
-                update_item = False
-                log.info("mvideoid: %s missing from Kodi, repairing the entry.", mvideoid)
+            if self.get(*values(obj, QU.get_musicvideo_obj)) is None:
 
-        if not view:
-            # Get view tag from emby
-            viewtag, viewid = emby_db.getView_embyId(itemid)
-            log.debug("View tag found: %s", viewtag)
+                update = False
+                LOG.info("MvideoId %s missing from kodi. repairing the entry.", obj['MvideoId'])
+
+        obj['Path'] = API.get_file_path(obj['Path'])
+        obj['LibraryId'] = library['Id']
+        obj['LibraryName'] = library['Name']
+        obj['Genres'] = obj['Genres'] or []
+        obj['ArtistItems'] = obj['ArtistItems'] or []
+        obj['Studios'] = [API.validate_studio(studio) for studio in (obj['Studios'] or [])]
+        obj['Plot'] = API.get_overview(obj['Plot'])
+        obj['DateAdded'] = obj['DateAdded'].split('.')[0].replace('T', " ")
+        obj['DatePlayed'] = (obj['DatePlayed'] or obj['DateAdded']).split('.')[0].replace('T', " ")
+        obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount'])
+        obj['Resume'] = API.adjust_resume((obj['Resume'] or 0) / 10000000.0)
+        obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
+        obj['Premiere'] = obj['Premiere'] or datetime.date(obj['Year'] or 2021, 1, 1)
+        obj['Genre'] = " / ".join(obj['Genres'])
+        obj['Studio'] = " / ".join(obj['Studios'])
+        obj['Artists'] = " / ".join(obj['Artists'] or [])
+        obj['Directors'] = " / ".join(obj['Directors'] or [])
+        obj['Video'] = API.video_streams(obj['Video'] or [], obj['Container'])
+        obj['Audio'] = API.audio_streams(obj['Audio'] or [])
+        obj['Streams'] = API.media_streams(obj['Video'], obj['Audio'], obj['Subtitles'])
+        obj['Artwork'] = API.get_all_artwork(self.objects.map(item, 'Artwork'))
+
+        self.get_path_filename(obj)
+
+        if obj['Premiere']:
+            obj['Premiere'] = str(obj['Premiere']).split('.')[0].replace('T', " ")
+
+        for artist in obj['ArtistItems']:
+            artist['Type'] = "Artist"
+
+        obj['People'] = obj['People'] or [] + obj['ArtistItems']
+        obj['People'] = API.get_people_artwork(obj['People'])
+
+        if obj['Index'] is None and obj['SortTitle'] is not None:
+            search = re.search(r'^\d+\s?', obj['SortTitle'])
+
+            if search:
+                obj['Index'] = search.group()
+
+        tags = []
+        tags.extend(obj['Tags'] or [])
+        tags.append(obj['LibraryName'])
+
+        if obj['Favorite']:
+            tags.append('Favorite musicvideos')
+
+        obj['Tags'] = tags
+
+
+        if update:
+            self.musicvideo_update(obj)
         else:
-            viewtag = view['name']
-            viewid = view['id']
+            self.musicvideo_add(obj)
 
-        # fileId information
-        checksum = API.get_checksum()
-        dateadded = API.get_date_created()
-        userdata = API.get_userdata()
-        playcount = userdata['PlayCount']
-        dateplayed = userdata['LastPlayedDate']
 
-        # item details
-        runtime = API.get_runtime()
-        plot = API.get_overview()
-        title = item['Name']
-        year = item.get('ProductionYear')
-        # Some kodi views/skins rely on the "premiered" field to display by year.
-        # So, if we don't get the premiere date from Emby, just set it to Jan 1st
-        # of the video's "year", so that Kodi has a year to work with.
-        premiered = item.get('PremiereDate')
-        if premiered is None and year is not None:
-            premiered = datetime.date(year, 1, 1)
-        genres = item['Genres']
-        genre = " / ".join(genres)
-        studios = API.get_studios()
-        studio = " / ".join(studios)
-        artist = " / ".join(item.get('Artists'))
-        album = item.get('Album')
-        track = item.get('Track')
-        # If we don't get the track number from Emby, see if we can infer it
-        # from the sortname attribute.
-        if track is None:
-            sortname = item.get('SortName')
-            if sortname is not None:
-                search = re.search(r'^\d+\s?', sortname)
-                if search is not None:
-                    track = search.group()
-        people = API.get_people()
-        director = " / ".join(people['Director'])
+        self.update_path(*values(obj, QU.update_path_mvideo_obj))
+        self.update_file(*values(obj, QU.update_file_obj))
+        self.add_tags(*values(obj, QU.add_tags_mvideo_obj))
+        self.add_genres(*values(obj, QU.add_genres_mvideo_obj))
+        self.add_studios(*values(obj, QU.add_studios_mvideo_obj))
+        self.add_playstate(*values(obj, QU.add_bookmark_obj))
+        self.add_people(*values(obj, QU.add_people_mvideo_obj))
+        self.add_streams(*values(obj, QU.add_streams_obj))
+        self.artwork.add(obj['Artwork'], obj['MvideoId'], "musicvideo")
 
-        ##### GET THE FILE AND PATH #####
-        playurl = API.get_file_path()
+    def musicvideo_add(self, obj):
+        
+        ''' Add object to kodi.
+        '''
+        obj['PathId'] = self.add_path(*values(obj, QU.add_path_obj))
+        obj['FileId'] = self.add_file(*values(obj, QU.add_file_obj))
 
-        if "\\" in playurl:
-            # Local path
-            filename = playurl.rsplit("\\", 1)[1]
-        else: # Network share
-            filename = playurl.rsplit("/", 1)[1]
+        self.add(*values(obj, QU.add_musicvideo_obj))
+        self.emby_db.add_reference(*values(obj, QUEM.add_reference_mvideo_obj))
+        LOG.info("ADD mvideo [%s/%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['MvideoId'], obj['Id'], obj['Title'])
+
+    def musicvideo_update(self, obj):
+        
+        ''' Update object to kodi.
+        '''
+        self.update(*values(obj, QU.update_musicvideo_obj))
+        self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
+        LOG.info("UPDATE mvideo [%s/%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['MvideoId'], obj['Id'], obj['Title'])
+
+    def get_path_filename(self, obj):
+        
+        ''' Get the path and filename and build it into protocol://path
+        '''
+        obj['Filename'] = obj['Path'].rsplit('\\', 1)[1] if '\\' in obj['Path'] else obj['Path'].rsplit('/', 1)[1]
 
         if self.direct_path:
-            # Direct paths is set the Kodi way
-            if not self.path_validation(playurl):
-                return False
 
-            path = playurl.replace(filename, "")
-            window('emby_pathverified', value="true")
+            if not validate(obj['Path']):
+                raise Exception("Failed to validate path. User stopped.")
+
+            obj['Path'] = obj['Path'].replace(obj['Filename'], "")
+
         else:
-            # Set plugin path and media flags using real filename
-            path = "plugin://plugin.video.emby.musicvideos/"
+            obj['Path'] = "plugin://plugin.video.emby.musicvideos/"
             params = {
-
-                'filename': filename.encode('utf-8'),
-                'id': itemid,
-                'dbid': mvideoid,
+                'filename': obj['Filename'].encode('utf-8'),
+                'id': obj['Id'],
+                'dbid': obj['MvideoId'],
                 'mode': "play"
             }
-            filename = "%s?%s" % (path, urllib.urlencode(params))
+            obj['Filename'] = "%s?%s" % (obj['Path'], urllib.urlencode(params))
 
 
-        ##### UPDATE THE MUSIC VIDEO #####
-        if update_item:
-            log.info("UPDATE mvideo itemid: %s - Title: %s", itemid, title)
+    @stop()
+    @emby_item()
+    def userdata(self, item, e_item):
+        
+        ''' This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
+            Poster with progress bar
+        '''
+        API = api.API(item, self.server['auth/server-address'])
+        obj = self.objects.map(item, 'MusicVideoUserData')
 
-            # Update the music video entry
-            if self.kodi_version > 16: #Krypton and later
-                self.kodi_db.update_musicvideo(title, runtime, director, studio, year, plot, album,
-                                               artist, genre, track, premiered, mvideoid)
-            else:
-                self.kodi_db.update_musicvideo_16(title, runtime, director, studio, year, plot, album,
-                                                  artist, genre, track, mvideoid)
-
-            # Update the checksum in emby table
-            emby_db.updateReference(itemid, checksum)
-
-        ##### OR ADD THE MUSIC VIDEO #####
-        else:
-            log.info("ADD mvideo itemid: %s - Title: %s", itemid, title)
-
-            # Add path
-            pathid = self.kodi_db.add_path(path)
-            # Add the file
-            fileid = self.kodi_db.add_file(filename, pathid)
-
-            # Create the musicvideo entry
-            if self.kodi_version > 16: #Krypton and later
-                self.kodi_db.add_musicvideo(mvideoid, fileid, title, runtime, director, studio,
-                                            year, plot, album, artist, genre, track, premiered)
-            else:
-                self.kodi_db.add_musicvideo_16(mvideoid, fileid, title, runtime, director, studio,
-                                               year, plot, album, artist, genre, track)
-
-            # Create the reference in emby table
-            emby_db.addReference(itemid, mvideoid, "MusicVideo", "musicvideo", fileid, pathid,
-                                 checksum=checksum, mediafolderid=viewid)
-
-        # Update the path
-        self.kodi_db.update_path(pathid, path, "musicvideos", "metadata.local")
-        # Update the file
-        self.kodi_db.update_file(fileid, filename, pathid, dateadded)
-
-        # Process cast
-        people = item['People']
-        artists = item['ArtistItems']
-        for artist in artists:
-            artist['Type'] = "Artist"
-        people.extend(artists)
-        people = artwork.get_people_artwork(people)
-        self.kodi_db.add_people(mvideoid, people, "musicvideo")
-        # Process genres
-        self.kodi_db.add_genres(mvideoid, genres, "musicvideo")
-        # Process artwork
-        artwork.add_artwork(artwork.get_all_artwork(item), mvideoid, "musicvideo", kodicursor)
-        # Process stream details
-        streams = API.get_media_streams()
-        self.kodi_db.add_streams(fileid, streams, runtime)
-        # Process studios
-        self.kodi_db.add_studios(mvideoid, studios, "musicvideo")
-        # Process tags: view, emby tags
-        tags = [viewtag]
-        tags.extend(item['Tags'])
-        if userdata['Favorite']:
-            tags.append("Favorite musicvideos")
-        self.kodi_db.add_tags(mvideoid, tags, "musicvideo")
-        # Process playstates
-        resume = API.adjust_resume(userdata['Resume'])
-        total = round(float(runtime), 6)
-        self.kodi_db.add_playstate(fileid, resume, total, playcount, dateplayed)
-
-        return True
-
-    def updateUserdata(self, item):
-        # This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
-        # Poster with progress bar
-        emby_db = self.emby_db
-        API = api.API(item)
-
-        # Get emby information
-        itemid = item['Id']
-        checksum = API.get_checksum()
-        userdata = API.get_userdata()
-        runtime = API.get_runtime()
-
-        # Get Kodi information
-        emby_dbitem = emby_db.getItem_byId(itemid)
         try:
-            mvideoid = emby_dbitem[0]
-            fileid = emby_dbitem[1]
-            log.info("Update playstate for musicvideo: %s fileid: %s", item['Name'], fileid)
+            obj['MvideoId'] = e_item[0]
+            obj['FileId'] = e_item[1]
         except TypeError:
             return
 
-        # Process favorite tags
-        if userdata['Favorite']:
-            self.kodi_db.get_tag(mvideoid, "Favorite musicvideos", "musicvideo")
+        obj['Resume'] = API.adjust_resume((obj['Resume'] or 0) / 10000000.0)
+        obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
+        obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount'])
+
+        if obj['DatePlayed']:
+            obj['DatePlayed'] = obj['DatePlayed'].split('.')[0].replace('T', " ")
+
+        if obj['Favorite']:
+            self.get_tag(*values(obj, QU.get_tag_mvideo_obj))
         else:
-            self.kodi_db.remove_tag(mvideoid, "Favorite musicvideos", "musicvideo")
+            self.remove_tag(*values(obj, QU.delete_tag_mvideo_obj))
 
-        # Process playstates
-        playcount = userdata['PlayCount']
-        dateplayed = userdata['LastPlayedDate']
-        resume = API.adjust_resume(userdata['Resume'])
-        total = round(float(runtime), 6)
+        self.add_playstate(*values(obj, QU.add_bookmark_obj))
+        self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
+        LOG.info("USERDATA mvideo [%s/%s] %s: %s", obj['FileId'], obj['MvideoId'], obj['Id'], obj['Title'])
 
-        self.kodi_db.add_playstate(fileid, resume, total, playcount, dateplayed)
-        emby_db.updateReference(itemid, checksum)
+    @stop()
+    @emby_item()
+    def remove(self, item_id, e_item):
 
-    def remove(self, itemid):
-        # Remove mvideoid, fileid, pathid, emby reference
-        emby_db = self.emby_db
-        kodicursor = self.kodicursor
-        artwork = self.artwork
+        ''' Remove mvideoid, fileid, pathid, emby reference. 
+        '''
+        obj = {'Id': item_id}
 
-        emby_dbitem = emby_db.getItem_byId(itemid)
         try:
-            mvideoid = emby_dbitem[0]
-            fileid = emby_dbitem[1]
-            pathid = emby_dbitem[2]
-            log.info("Removing mvideoid: %s fileid: %s pathid: %s", mvideoid, fileid, pathid)
+            obj['MvideoId'] = e_item[0]
+            obj['FileId'] = e_item[1]
+            obj['PathId'] = e_item[2]
         except TypeError:
             return
 
-        # Remove the emby reference
-        emby_db.removeItem(itemid)
-        # Remove artwork
-        artwork.delete_artwork(mvideoid, "musicvideo", self.kodicursor)
+        self.artwork.delete(obj['MvideoId'], "musicvideo")
+        self.delete(*values(obj, QU.delete_musicvideo_obj))
 
-        self.kodi_db.remove_musicvideo(mvideoid, fileid)
         if self.direct_path:
-            self.kodi_db.remove_path(pathid)
+            self.remove_path(*values(obj, QU.delete_path_obj))
 
-        log.info("Deleted musicvideo %s from kodi database", itemid)
+        self.emby_db.remove_item(*values(obj, QUEM.delete_item_obj))
+        LOG.info("DELETE musicvideo %s [%s/%s] %s", obj['MvideoId'], obj['PathId'], obj['FileId'], obj['Id'])
