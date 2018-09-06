@@ -117,7 +117,6 @@ class Views(object):
 
         self.delete_playlist_by_id(view_id)
         self.delete_node_by_id(view_id)
-        self.get_views()
 
     def get_views(self):
         
@@ -145,6 +144,14 @@ class Views(object):
                 library['Media'] = library.get('OriginalCollectionType', library.get('CollectionType', "mixed"))
 
             self.add_library(library)
+
+        with Database('emby') as embydb:
+            views = emby_db.EmbyDatabase(embydb.cursor).get_views()
+            
+            for view in views:
+
+                if view[0] not in self.sync['SortedViews']:
+                    self.remove_library(view[0])
 
         save_sync(self.sync)
 

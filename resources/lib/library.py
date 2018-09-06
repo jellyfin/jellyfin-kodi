@@ -376,6 +376,7 @@ class Library(threading.Thread):
 
             return False
 
+        Views().get_views()
         Views().get_nodes()
 
         return True
