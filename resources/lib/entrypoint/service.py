@@ -98,9 +98,9 @@ class Service(xbmc.Monitor):
                 if self.monitor.player.isPlaying():
                     difference = datetime.today() - self.settings['last_progress']
 
-                    if difference.seconds > 270:
+                    if difference.seconds > 10:
 
-                        event("ReportProgressRequested", None)
+                        event('ReportProgressRequested', {'Report': difference.seconds > 270})
                         self.settings['last_progress'] = datetime.today()
 
             if self.waitForAbort(1):

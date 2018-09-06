@@ -100,10 +100,12 @@ class Player(xbmc.Player):
             'SubtitleStreamIndex': item['SubtitleStreamIndex']
         }
         item['Server']['api'].session_playing(data)
-        self.set_audio_subs(item['AudioStreamIndex'], item['SubtitleStreamIndex'])
-        self.detect_audio_subs(item)
-
         window('emby.skip.%s.bool' % item['Id'], True)
+
+        if monitor.waitForAbort(2):
+            return
+
+        self.set_audio_subs(item['AudioStreamIndex'], item['SubtitleStreamIndex'])
 
     def set_item(self, file, item):
 
@@ -131,7 +133,7 @@ class Player(xbmc.Player):
 
         item.update({
             'File': file,
-            'CurrentPosition': int(seektime),
+            'CurrentPosition': item.get('CurrentPosition') or int(seektime),
             'Muted': muted,
             'Volume': volume,
             'Server': Emby(item['ServerId']),
@@ -244,7 +246,7 @@ class Player(xbmc.Player):
             self.report_playback()
             LOG.debug("--[ seek ]")
 
-    def report_playback(self):
+    def report_playback(self, report=True):
 
         ''' Report playback progress to emby server.
         '''
@@ -254,6 +256,12 @@ class Player(xbmc.Player):
             return
 
         item = self.played[current_file]
+
+        if not report:
+            item['CurrentPosition'] = int(self.getTime())
+
+            return
+
         result = JSONRPC('Application.GetProperties').execute({'properties': ["volume", "muted"]})
         result = result.get('result', {})
         item['Volume'] = result.get('volume')
@@ -309,7 +317,7 @@ class Player(xbmc.Player):
                 if item['CurrentPosition'] and item['Runtime']:
 
                     try:
-                        if window('emby.external'):
+                        if window('emby.external.bool'):
                             window('emby.external', clear=True)
                             raise ValueError
 

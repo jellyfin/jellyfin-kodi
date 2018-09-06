@@ -45,7 +45,8 @@ def set_properties(item, method, server_id=None):
         'DeviceId': client.get_device_id(),
         'SubsMapping': info.get('Subtitles'),
         'AudioStreamIndex': info.get('AudioStreamIndex'),
-        'SubtitleStreamIndex': info.get('SubtitleStreamIndex')
+        'SubtitleStreamIndex': info.get('SubtitleStreamIndex'),
+        'CurrentPosition': info.get('CurrentPosition')
     })
 
     window('emby_play.json', current)

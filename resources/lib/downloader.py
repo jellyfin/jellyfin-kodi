@@ -301,7 +301,7 @@ def get_objects(src, filename):
     if not xbmcvfs.exists(temp):
         xbmcvfs.mkdir(temp)
     else:
-        delete_build(temp)
+        delete_build()
 
     path = os.path.join(temp, filename)
     try:

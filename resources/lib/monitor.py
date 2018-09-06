@@ -189,7 +189,7 @@ class Monitor(xbmc.Monitor):
                            data.get('SubtitleStreamIndex')).start()
 
         elif method == 'ReportProgressRequested':
-            self.player.report_playback()
+            self.player.report_playback(data['Report'])
 
         elif method == 'Playstate':
             self.playstate(data)
