@@ -90,6 +90,7 @@ class TVShows(KodiDb):
         obj['LibraryName'] = library['Name']
         obj['Genres'] = obj['Genres'] or []
         obj['People'] = obj['People'] or []
+        obj['Mpaa'] = API.get_mpaa(obj['Mpaa'])
         obj['Studios'] = [API.validate_studio(studio) for studio in (obj['Studios'] or [])]
         obj['Genre'] = " / ".join(obj['Genres'])
         obj['People'] = API.get_people_artwork(obj['People'])

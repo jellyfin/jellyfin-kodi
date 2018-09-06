@@ -82,6 +82,7 @@ class Movies(KodiDb):
         obj['Writers'] = " / ".join(obj['Writers'] or [])
         obj['Directors'] = " / ".join(obj['Directors'] or [])
         obj['Plot'] = API.get_overview(obj['Plot'])
+        obj['Mpaa'] = API.get_mpaa(obj['Mpaa'])
         obj['Resume'] = API.adjust_resume((obj['Resume'] or 0) / 10000000.0)
         obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
         obj['People'] = API.get_people_artwork(obj['People'])

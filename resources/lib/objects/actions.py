@@ -246,6 +246,7 @@ class Actions(object):
         obj['Genres'] = " / ".join(obj['Genres'] or [])
         obj['Studios'] = [API.validate_studio(studio) for studio in (obj['Studios'] or [])]
         obj['Studios'] = " / ".join(obj['Studios'])
+        obj['Mpaa'] = API.get_mpaa(obj['Mpaa'])
         obj['People'] = obj['People'] or []
         obj['Countries'] = " / ".join(obj['Countries'] or [])
         obj['Directors'] = " / ".join(obj['Directors'] or [])
