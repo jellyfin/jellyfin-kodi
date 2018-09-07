@@ -276,7 +276,10 @@ class Actions(object):
         if obj['Premiere']:
             obj['Premiere'] = obj['Premiere'].split('T')[0]
 
-        if obj['DatePlayed']:
+        if not obj['Played']:
+            obj['DatePlayed'] = None
+
+        elif obj['DatePlayed']:
             obj['DatePlayed'] = obj['DatePlayed'].split('.')[0].replace('T', " ")
 
         metadata = {
@@ -420,7 +423,9 @@ class Actions(object):
         obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount']) or 0
         obj['Rating'] = obj['Rating'] or 0
 
-        if obj['FileDate'] or obj['DatePlayed']:
+        if not obj['Played']:
+            obj['DatePlayed'] = None
+        elif obj['FileDate'] or obj['DatePlayed']:
             obj['DatePlayed'] = (obj['DatePlayed'] or obj['FileDate']).split('.')[0].replace('T', " ")
 
         obj['FileDate'] = "%s.%s.%s" % tuple(reversed(obj['FileDate'].split('T')[0].split('-')))

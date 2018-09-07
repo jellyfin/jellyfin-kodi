@@ -197,7 +197,6 @@ class Connect(object):
         else:
             raise RuntimeError("No server selected")
 
-        LOG.info(self.client.get_credentials())
         return self.select_servers()
 
     def setup_manual_server(self):

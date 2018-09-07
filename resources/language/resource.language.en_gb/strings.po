@@ -667,7 +667,7 @@ msgid "Add server"
 msgstr ""
 
 msgctxt "#33135"
-msgid "Kodi will now restart to apply a small patch for your database version."
+msgid "Kodi will now restart to apply a small patch for your Kodi version."
 msgstr ""
 
 msgctxt "#33136"
