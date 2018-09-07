@@ -278,7 +278,6 @@ class Actions(object):
 
         if not obj['Played']:
             obj['DatePlayed'] = None
-
         elif obj['DatePlayed']:
             obj['DatePlayed'] = obj['DatePlayed'].split('.')[0].replace('T', " ")
 

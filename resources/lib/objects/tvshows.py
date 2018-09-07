@@ -286,7 +286,7 @@ class TVShows(KodiDb):
         obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
         obj['People'] = API.get_people_artwork(obj['People'] or [])
         obj['DateAdded'] = obj['DateAdded'].split('.')[0].replace('T', " ")
-        obj['DatePlayed'] = (obj['DatePlayed'] or obj['DateAdded']).split('.')[0].replace('T', " ")
+        obj['DatePlayed'] = None if not obj['Played'] else (obj['DatePlayed'] or obj['DateAdded']).split('.')[0].replace('T', " ")
         obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount'])
         obj['Artwork'] = API.get_all_artwork(self.objects.map(item, 'Artwork'))
         obj['Video'] = API.video_streams(obj['Video'] or [], obj['Container'])
@@ -451,7 +451,9 @@ class TVShows(KodiDb):
             obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
             obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount'])
 
-            if obj['DatePlayed']:
+            if not obj['Played']:
+                obj['DatePlayed'] = None
+            elif obj['DatePlayed']:
                 obj['DatePlayed'] = obj['DatePlayed'].split('.')[0].replace('T', " ")
 
             if obj['DateAdded']:

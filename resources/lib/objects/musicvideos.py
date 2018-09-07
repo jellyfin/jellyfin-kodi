@@ -80,7 +80,7 @@ class MusicVideos(KodiDb):
         obj['Studios'] = [API.validate_studio(studio) for studio in (obj['Studios'] or [])]
         obj['Plot'] = API.get_overview(obj['Plot'])
         obj['DateAdded'] = obj['DateAdded'].split('.')[0].replace('T', " ")
-        obj['DatePlayed'] = (obj['DatePlayed'] or obj['DateAdded']).split('.')[0].replace('T', " ")
+        obj['DatePlayed'] = None if not obj['Played'] else (obj['DatePlayed'] or obj['DateAdded']).split('.')[0].replace('T', " ")
         obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount'])
         obj['Resume'] = API.adjust_resume((obj['Resume'] or 0) / 10000000.0)
         obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
@@ -200,7 +200,9 @@ class MusicVideos(KodiDb):
         obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
         obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount'])
 
-        if obj['DatePlayed']:
+        if not obj['Played']:
+            obj['DatePlayed'] = None
+        elif obj['DatePlayed']:
             obj['DatePlayed'] = obj['DatePlayed'].split('.')[0].replace('T', " ")
 
         if obj['Favorite']:
