@@ -41,7 +41,9 @@ class FullSync(object):
         else:
             self.mapping()
 
-        self.start()
+        xmls.sources()
+        if not xmls.advanced_settings():
+            self.start()
 
     def mapping(self):
 
@@ -111,7 +113,6 @@ class FullSync(object):
         
         ''' Main sync process.
         '''
-        xmls.sources()
         start_time = datetime.datetime.now()
 
         for library in list(self.sync['Libraries']):

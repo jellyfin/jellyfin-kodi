@@ -9,7 +9,7 @@ import xml.etree.ElementTree as etree
 
 import xbmc
 
-from . import _, indent, write_xml
+from . import _, indent, write_xml, dialog
 
 #################################################################################################
 
@@ -80,37 +80,36 @@ def tvtunes_nfo(path, urls):
     indent(xml)
     write_xml(etree.tostring(xml, 'UTF-8'), path)
 
-"""
-def verify_advancedsettings():
-    # Track the existance of <cleanonupdate>true</cleanonupdate>
-    # incompatible with plugin paths
-    log.info("verifying advanced settings")
-    if settings('useDirectPaths') != "0": return
+def advanced_settings():
 
-    path = xbmc.translatePath("special://userdata/").decode('utf-8')
-    xmlpath = "%sadvancedsettings.xml" % path
+    ''' Track the existence of <cleanonupdate>true</cleanonupdate>
+        It is incompatible with plugin paths.
+    '''
+    if settings('useDirectPaths') != "0":
+        return
+
+    path = xbmc.translatePath("special://profile/").decode('utf-8')
+    file = os.path.join(path, 'advancedsettings.xml')
 
     try:
-        xmlparse = etree.parse(xmlpath)
-    except: # Document is blank or missing
+        xml = etree.parse(file).getroot()
+    except Exception:
         return
-    else:
-        root = xmlparse.getroot()
 
     video = root.find('videolibrary')
+
     if video is not None:
         cleanonupdate = video.find('cleanonupdate')
+
         if cleanonupdate is not None and cleanonupdate.text == "true":
-            log.warn("cleanonupdate disabled")
+
+            LOG.warn("cleanonupdate disabled")
             video.remove(cleanonupdate)
-            
-            try:
-                indent(root)
-            except: pass
-            etree.ElementTree(root).write(xmlpath)
-            
+
+            indent(xml)
+            write_xml(etree.tostring(xml, 'UTF-8'), path)
+
             xbmcgui.Dialog().ok(heading=language(29999), line1=language(33097))
             xbmc.executebuiltin('RestartApp')
+
             return True
-    return
-"""
