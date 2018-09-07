@@ -91,15 +91,14 @@ class Actions(object):
         seektime = window('emby.resume.bool')
         window('emby.resume', clear=True)
 
-        if item['Type'] != 'Audio':
+        if item['MediaType'] == 'Video':
+            resume = item['UserData'].get('PlaybackPositionTicks')
 
-            if get_play_action() == "Resume":
-                seektime = True
+            if resume:
+                if get_play_action() == "Resume":
+                    seektime = True
 
-            if transcode and not seektime:
-                resume = item['UserData'].get('PlaybackPositionTicks')
-
-                if resume:
+                if transcode and not seektime and resume:
                     choice = self.resume_dialog(api.API(item, self.server).adjust_resume((resume or 0) / 10000000.0))
                     
                     if choice is None:
@@ -143,8 +142,7 @@ class Actions(object):
 
                     play = playutils.PlayUtils(intro, False, self.server_id, self.server)
                     source = play.select_source(play.get_sources())
-                    self.set_listitem(intro, listitem)
-                    listitem.setProperty('embyintro', "true")
+                    self.set_listitem(intro, listitem, intro=True)
                     listitem.setPath(intro['PlaybackInfo']['Path'])
                     playutils.set_properties(intro, intro['PlaybackInfo']['Method'], self.server_id)
 
@@ -176,7 +174,7 @@ class Actions(object):
 
         ''' Play a list of items. Creates a new playlist.
         '''
-        playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
+        playlist = self.get_playlist(items[0])
         started = False
 
         if clear:
@@ -211,7 +209,7 @@ class Actions(object):
                 started = True
                 xbmc.Player().play(playlist)
 
-    def set_listitem(self, item, listitem, db_id=None, seektime=None):
+    def set_listitem(self, item, listitem, db_id=None, seektime=None, intro=False):
 
         objects = Objects()
         API = api.API(item, self.server)
@@ -233,9 +231,13 @@ class Actions(object):
             obj = objects.map(item, 'BrowseVideo')
             obj['DbId'] = db_id
             obj['Artwork'] = API.get_all_artwork(objects.map(item, 'ArtworkParent'), True)
+
+            if intro:
+                obj['Artwork']['Primary'] = "&KodiCinemaMode=true"
+
             self.listitem_video(obj, listitem, item, seektime)
 
-            if 'PlaybackInfo' in item:
+            if 'PlaybackInfo' in item and seektime:
                 item['PlaybackInfo']['CurrentPosition'] = obj['Resume']
 
         listitem.setContentLookup(False)
@@ -709,7 +711,7 @@ def special_listener():
         if control == 1002: # Start from beginning
 
             LOG.info("Resume dialog: Start from beginning selected.")
-            window('emby.resume', clear=True)
+            window('emby.resume.bool', False)
         else:
             LOG.info("Resume dialog: Resume selected.")
             window('emby.resume.bool', True)

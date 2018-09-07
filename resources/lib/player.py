@@ -239,6 +239,9 @@ class Player(xbmc.Player):
             LOG.debug("--<[ paused ]")
 
     def onPlayBackSeek(self, time, seekOffset):
+
+        ''' Does not seem to work??
+        '''
         current_file = self.getPlayingFile()
 
         if current_file in self.played:
@@ -249,6 +252,7 @@ class Player(xbmc.Player):
     def report_playback(self, report=True):
 
         ''' Report playback progress to emby server.
+            Check if the user seek.
         '''
         current_file = self.getPlayingFile()
 
@@ -258,9 +262,13 @@ class Player(xbmc.Player):
         item = self.played[current_file]
 
         if not report:
+
+            previous = item['CurrentPosition']
             item['CurrentPosition'] = int(self.getTime())
 
-            return
+            if (item['CurrentPosition'] - previous) < 30:
+
+                return
 
         result = JSONRPC('Application.GetProperties').execute({'properties': ["volume", "muted"]})
         result = result.get('result', {})
