@@ -226,18 +226,22 @@ def write_xml(content, file):
         content = content.replace('?>', ' standalone="yes" ?>', 1)
         infile.write(content)
 
-def delete_build():
+def delete_folder(path=None):
 
     ''' Delete objects from kodi cache
     '''
-    LOG.debug("--[ delete objects ]")
-    path = xbmc.translatePath('special://temp/emby/').decode('utf-8')
+    LOG.debug("--[ delete folder ]")
+
+    path = path or xbmc.translatePath('special://temp/emby').decode('utf-8')
     dirs, files = xbmcvfs.listdir(path)
 
     delete_recursive(path, dirs)
 
     for file in files:
         xbmcvfs.delete(os.path.join(path, file.decode('utf-8')))
+
+    xbmcvfs.delete(path)
+    LOG.info("deleted %s", path)
 
 def delete_recursive(path, dirs):
 

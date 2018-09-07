@@ -6,14 +6,17 @@ import json
 import logging
 import Queue
 import threading
+import urllib
+import shutil
 import os
+import zipfile
 
 import xbmc
 import xbmcvfs
 
 from libraries import requests
-from helper.utils import should_stop, delete_build
-from helper import settings, stop, event, window
+from helper.utils import should_stop, delete_folder
+from helper import settings, stop, event, window, kodi_version
 from emby import Emby
 from emby.core import api
 from emby.core.exceptions import HTTPException
@@ -296,13 +299,11 @@ def get_objects(src, filename):
 
     ''' Download objects dependency to temp cache folder.
     '''
-    temp = xbmc.translatePath('special://temp/emby/').decode('utf-8')
+    temp = xbmc.translatePath('special://temp/emby').decode('utf-8')
+    final = os.path.join(temp, "objects")
+    delete_folder()
 
-    if not xbmcvfs.exists(temp):
-        xbmcvfs.mkdir(temp)
-    else:
-        delete_build()
-
+    LOG.info(src)
     path = os.path.join(temp, filename)
     try:
         response = requests.get(src, stream=True)
@@ -310,9 +311,19 @@ def get_objects(src, filename):
     except Exception as error:
         raise
     else:
-        with open(path, 'wb') as f:
-            f.write(response.content)
-            del response
+        dl = xbmcvfs.File(path, 'w')
+        dl.write(response.content)
+        dl.close()
+        del response
 
-    xbmc.executebuiltin('Extract(%s, %s)' % (path, temp))
-    xbmcvfs.delete(path)
+    with zipfile.ZipFile(path) as zf:
+        zf.extractall(temp)
+
+    dirs, files = xbmcvfs.listdir('zip://%s' % urllib.quote_plus(path))
+    extracted = os.path.join(temp, dirs[0])
+
+    try:
+        shutil.copytree(src=os.path.join(extracted, "objects"), dst=final)
+        delete_folder(extracted)
+    except Exception as error:
+        raise

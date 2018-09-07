@@ -408,7 +408,7 @@ class PlayUtils(object):
             Since Emby returns all possible tracks together, sort them.
             IsTextSubtitleStream if true, is available to download from server.
         '''
-        if not source['MediaStreams']:
+        if not settings('enableExternalSubs.bool') or not source['MediaStreams']:
             return
 
         subs = []

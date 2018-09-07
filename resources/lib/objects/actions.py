@@ -234,6 +234,9 @@ class Actions(object):
             obj['Artwork'] = API.get_all_artwork(objects.map(item, 'ArtworkParent'), True)
             self.listitem_video(obj, listitem, item, seektime)
 
+            if 'PlaybackInfo' in item:
+                item['PlaybackInfo']['CurrentPosition'] = obj['Resume']
+
         listitem.setContentLookup(False)
 
     def listitem_video(self, obj, listitem, item, seektime=None):

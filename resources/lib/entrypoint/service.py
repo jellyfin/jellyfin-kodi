@@ -11,16 +11,15 @@ from datetime import datetime
 import xbmc
 import xbmcgui
 
+import objects
 import connect
 import client
 import library
 import setup
 import monitor
-import objects.utils
 from libraries import requests
 from views import Views, verify_kodi_defaults
 from helper import _, window, settings, event, dialog, find
-from objects import version
 from downloader import get_objects
 from emby import Emby
 
@@ -137,29 +136,22 @@ class Service(xbmc.Monitor):
         url = "https://sheets.googleapis.com/v4/spreadsheets/1cKWQCVL0lVONulO2KyGzBilzhGvsyuSjFvrqe8g6nJw/values/A2:B?key=AIzaSyAP-1mcBglk9zIofJlqGpvKXkff3GRMhdI"
 
         try:
-            self.versions = {k.lower(): v for k, v in dict(requests.get(url).json()['values']).items()}
-            build = find(self.versions, kodi)
+            versions = {k.lower(): v for k, v in dict(requests.get(url).json()['values']).items()}
+            build = find(versions, kodi.lower())
 
             if not build:
-                raise Exception("build %s incompatible?!", kodi)
+                raise Exception("build %s incompatible?!" % kodi)
 
             label, zipfile = build.split('-', 1)
 
-            if label == version:
-                LOG.info("--[ objects/%s ]", version)
+            if label == objects.version:
+                LOG.info("--[ objects/%s ]", objects.version)
 
                 return
 
             get_objects(zipfile, label + '.zip')
         except Exception as error:
-
             LOG.info(error)
-            self.shutdown()
-
-            return
-
-        dialog("ok", heading="{emby}", line1=_(33135))
-        xbmc.executebuiltin('RestartApp')
     
     def onNotification(self, sender, method, data):
 
@@ -397,65 +389,3 @@ class Service(xbmc.Monitor):
             self.monitor.listener.stop()
 
         LOG.warn("---<<<[ %s ]", client.get_addon_name())
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
-            if window('emby_online') == "true":
-
-                # Emby server is online
-                # Verify if user is set and has access to the server
-                if user_client.get_user() is not None and user_client.get_access():
-
-                    if self.kodi_player.isPlaying():
-                        self._report_progress()
-
-                    # If an item is playing
-                    if not self.startup:
-                        self.startup = self._startup()
-
-                    if not self.websocket_running:
-                        # Start the Websocket Client
-                        self.websocket_running = True
-                        self.websocket_thread.start()
-                    if not self.library_running:
-                        # Start the syncing thread
-                        self.library_running = True
-                        self.library_thread.start()
-                    if not self.capabitilities and user_client.post_capabilities():
-                        self.capabitilities = True
-
-                    if self.monitor.waitForAbort(15):
-                        # Abort was requested while waiting. We should exit
-                        break
-                else:
-
-                    if (user_client.get_user() is None) and self.warn_auth:
-                        # Alert user is not authenticated and suppress future warning
-                        self.warn_auth = False
-                        log.info("Not authenticated yet.")
-
-                    # User access is restricted.
-                    # Keep verifying until access is granted
-                    # unless server goes offline or Kodi is shut down.
-                    self._access_check()
-            else:
-                # Wait until Emby server is online
-                # or Kodi is shut down.
-                self._server_online_check()
-                
-            if self.monitor.waitForAbort(1):
-                # Abort was requested while waiting. We should exit
-                break
-"""
