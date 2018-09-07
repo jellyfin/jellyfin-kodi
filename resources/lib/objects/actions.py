@@ -247,7 +247,7 @@ class Actions(object):
         ''' Set listitem for video content. That also include streams.
         '''
         API = api.API(item, self.server)
-        is_video = obj['MediaType'] == 'Video'
+        is_video = obj['MediaType'] in ('Video', 'Audio') # audiobook
 
         obj['Genres'] = " / ".join(obj['Genres'] or [])
         obj['Studios'] = [API.validate_studio(studio) for studio in (obj['Studios'] or [])]
