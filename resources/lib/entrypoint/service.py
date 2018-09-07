@@ -131,7 +131,7 @@ class Service(xbmc.Monitor):
         ''' Check for objects build version and compare.
             This pulls a dict that contains all the information for the build needed.
         '''
-        LOG.info("--[ check updates ]")
+        LOG.info("--[ check updates/%s ]", objects.version)
         kodi = xbmc.getInfoLabel('System.BuildVersion')
         url = "https://sheets.googleapis.com/v4/spreadsheets/1cKWQCVL0lVONulO2KyGzBilzhGvsyuSjFvrqe8g6nJw/values/A2:B?key=AIzaSyAP-1mcBglk9zIofJlqGpvKXkff3GRMhdI"
 
@@ -152,6 +152,9 @@ class Service(xbmc.Monitor):
             get_objects(zipfile, label + '.zip')
         except Exception as error:
             LOG.info(error)
+
+        dialog("ok", heading="{emby}", line1=_(33135))  
+        xbmc.executebuiltin('RestartApp')
     
     def onNotification(self, sender, method, data):
 
