@@ -14,7 +14,7 @@ import xbmcvfs
 import downloader as server
 from database import Database, emby_db, get_sync, save_sync
 from objects.kodi import kodi
-from helper import _, api, indent, write_xml, window
+from helper import _, api, indent, write_xml, window, event
 from emby import Emby
 
 #################################################################################################
@@ -146,12 +146,17 @@ class Views(object):
             self.add_library(library)
 
         with Database('emby') as embydb:
+
             views = emby_db.EmbyDatabase(embydb.cursor).get_views()
-            
+            removed = []
+
             for view in views:
 
                 if view[0] not in self.sync['SortedViews']:
-                    self.remove_library(view[0])
+                    removed.append(view[0])
+            
+            if removed:     
+                event('RemoveLibrary', {'Id': ','.join(removed)})
 
         save_sync(self.sync)
 
