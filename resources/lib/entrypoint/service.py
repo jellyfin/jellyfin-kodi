@@ -170,7 +170,8 @@ class Service(xbmc.Monitor):
             if method not in ('ServerUnreachable', 'ServerShuttingDown', 'UserDataChanged', 'ServerConnect',
                               'LibraryChanged', 'ServerOnline', 'SyncLibrary', 'RepairLibrary', 'RemoveLibrary',
                               'EmbyConnect', 'SyncLibrarySelection', 'RepairLibrarySelection', 'AddServer',
-                              'Unauthorized', 'UpdateServer', 'UserConfigurationUpdated', 'ServerRestarting'):
+                              'Unauthorized', 'UpdateServer', 'UserConfigurationUpdated', 'ServerRestarting',
+                              'RemoveServer'):
                 return
 
             data = json.loads(data)[0]

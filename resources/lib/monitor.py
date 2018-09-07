@@ -51,7 +51,7 @@ class Monitor(xbmc.Monitor):
         if sender == 'plugin.video.emby':
             method = method.split('.')[1]
 
-            if method not in ('GetItem', 'ReportProgressRequested', 'ServerOnline', 'LoadServer',
+            if method not in ('GetItem', 'ReportProgressRequested', 'LoadServer',
                               'GetServerAddress', 'GetPlaybackInfo', 'Browse', 'GetImages', 'GetToken',
                               'PlayPlaylist', 'Play', 'GetIntros', 'GetAdditionalParts', 'RefreshItem',
                               'FavoriteItem', 'DeleteItem', 'AddUser', 'GetSession', 'GetUsers', 'GetThemes',

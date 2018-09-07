@@ -161,7 +161,7 @@ def listing():
         context = []
 
         if server.get('ManualAddress'):
-            context.append((_(33141), "RunPlugin(plugin://plugin.video.emby/?mode=removeserver&server=%s)"))
+            context.append((_(33141), "RunPlugin(plugin://plugin.video.emby/?mode=removeserver&server=%s)" % server['Id']))
 
         if 'AccessToken' not in server:
             directory("%s (%s)" % (server['Name'], _(30539)), "plugin://plugin.video.emby/?mode=login&server=%s" % server['Id'], False, context=context)
