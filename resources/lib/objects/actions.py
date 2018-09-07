@@ -144,6 +144,7 @@ class Actions(object):
                     play = playutils.PlayUtils(intro, False, self.server_id, self.server)
                     source = play.select_source(play.get_sources())
                     self.set_listitem(intro, listitem)
+                    listitem.setProperty('embyintro', "true")
                     listitem.setPath(intro['PlaybackInfo']['Path'])
                     playutils.set_properties(intro, intro['PlaybackInfo']['Method'], self.server_id)
 
