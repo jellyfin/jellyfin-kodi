@@ -96,7 +96,7 @@ def advanced_settings():
     except Exception:
         return
 
-    video = root.find('videolibrary')
+    video = xml.find('videolibrary')
 
     if video is not None:
         cleanonupdate = video.find('cleanonupdate')
