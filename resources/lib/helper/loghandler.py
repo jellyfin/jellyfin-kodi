@@ -34,7 +34,9 @@ class LogHandler(logging.StreamHandler):
                 self.sensitive['Token'].append(server['AccessToken'])
 
             self.sensitive['Server'].append(server['LocalAddress'].split('://')[1])
-            self.sensitive['Server'].append(server.get('RemoteAddress').split('://')[1])
+
+            if server.get('RemoteAddress'):
+                self.sensitive['Server'].append(server['RemoteAddress'].split('://')[1])
 
             if server.get('ManualAddress'):
                 self.sensitive['Server'].append(server['ManualAddress'].split('://')[1])
