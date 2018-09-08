@@ -9,12 +9,11 @@ from uuid import uuid4
 
 import xbmc
 import xbmcvfs
-import xbmcgui
 
 import api
 import database
 import client
-from . import _, settings, window
+from . import _, settings, window, dialog
 from libraries import requests
 from downloader import TheVoid
 from emby import Emby
@@ -111,7 +110,7 @@ class PlayUtils(object):
             for source in sources:
                 selection.append(source.get('Name', "na"))
 
-            resp = xbmcgui.Dialog().select(_(33130), selection)
+            resp = dialog("select", _(33130), selection)
             if resp > -1:
                 source = sources[resp]
             else:
