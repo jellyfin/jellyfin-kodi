@@ -321,6 +321,7 @@ class Player(xbmc.Player):
             item = self.played[file]
 
             if item:
+                window('emby.skip.%s.bool' % item['Id'], True)
 
                 if item['CurrentPosition'] and item['Runtime']:
 
