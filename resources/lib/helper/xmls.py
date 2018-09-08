@@ -9,7 +9,7 @@ import xml.etree.ElementTree as etree
 
 import xbmc
 
-from . import _, indent, write_xml, dialog
+from . import _, indent, write_xml, dialog, settings
 
 #################################################################################################
 
@@ -109,7 +109,7 @@ def advanced_settings():
             indent(xml)
             write_xml(etree.tostring(xml, 'UTF-8'), path)
 
-            xbmcgui.Dialog().ok(heading=language(29999), line1=language(33097))
+            dialog("ok", heading="{emby}", line1=_(33097))
             xbmc.executebuiltin('RestartApp')
 
             return True

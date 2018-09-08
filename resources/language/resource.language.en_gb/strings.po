@@ -518,6 +518,10 @@ msgctxt "#33093"
 msgid "Backup folder"
 msgstr ""
 
+msgctxt "#33097"
+msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Emby for Kodi. Kodi will restart now."
+msgstr ""
+
 msgctxt "#33098"
 msgid "Refresh boxsets"
 msgstr ""
