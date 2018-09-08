@@ -171,7 +171,7 @@ class Service(xbmc.Monitor):
                               'LibraryChanged', 'ServerOnline', 'SyncLibrary', 'RepairLibrary', 'RemoveLibrary',
                               'EmbyConnect', 'SyncLibrarySelection', 'RepairLibrarySelection', 'AddServer',
                               'Unauthorized', 'UpdateServer', 'UserConfigurationUpdated', 'ServerRestarting',
-                              'RemoveServer', 'AddLibrarySelection'):
+                              'RemoveServer', 'AddLibrarySelection', 'CheckUpdate'):
                 return
 
             data = json.loads(data)[0]
@@ -325,6 +325,10 @@ class Service(xbmc.Monitor):
 
             if data.get('ServerId') is None:
                 Views().get_views()
+
+        elif method == 'CheckUpdate':
+            if not self.check_update():
+                dialog("notification", heading="{emby}", message=_(21341), icon="{emby}", sound=False)
 
     def onSettingsChanged(self):
 
