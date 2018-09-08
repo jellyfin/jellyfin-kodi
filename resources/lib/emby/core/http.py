@@ -53,10 +53,10 @@ class HTTP(object):
     def _replace_user_info(self, string):
 
         if self.config['auth.server']:
-            string = string.replace("{server}", self.config['auth.server'])
+            string = string.decode('utf-8').replace("{server}", self.config['auth.server'])
 
         if self.config['auth.user_id']:
-            string = string.replace("{UserId}", self.config['auth.user_id'])
+            string = string.decode('utf-8').replace("{UserId}", self.config['auth.user_id'])
 
         return string
 
