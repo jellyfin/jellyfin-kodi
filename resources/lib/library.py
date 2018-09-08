@@ -214,6 +214,7 @@ class Library(threading.Thread):
                     raise Exception("Failed to retrieve latest updates")
             else:
                 FullSync(self)
+                Views().get_nodes()
 
             self.started = True
             return True

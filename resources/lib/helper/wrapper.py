@@ -35,8 +35,7 @@ def progress(message=None):
             if item:
                 args = (item,) + args
 
-            kwargs['dialog'] = dialog
-            result = func(self, *args, **kwargs)
+            result = func(self, dialog=dialog, *args, **kwargs)
             dialog.close()
 
             return result
