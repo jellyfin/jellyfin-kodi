@@ -269,6 +269,9 @@ class Service(xbmc.Monitor):
             self.library_thread.select_libraries(method)
 
         elif method == 'SyncLibrary':
+            if not data.get('Id'):
+                return
+
             libraries = data['Id'].split(',')
 
             for lib in libraries:
@@ -277,6 +280,9 @@ class Service(xbmc.Monitor):
             xbmc.executebuiltin("Container.Refresh")
 
         elif method == 'RepairLibrary':
+            if not data.get('Id'):
+                return
+
             libraries = data['Id'].split(',')
 
             for lib in libraries:
