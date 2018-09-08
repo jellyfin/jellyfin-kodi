@@ -186,7 +186,7 @@ class Music(KodiDb):
 
         ''' Update the artist's discography.
         '''
-        for artist in obj['ArtistItems']:
+        for artist in (obj['ArtistItems'] or []):
 
             temp_obj = dict(obj)
             temp_obj['Id'] = artist['Id']
@@ -206,7 +206,7 @@ class Music(KodiDb):
         ''' Assign main artists to album.
             Artist does not exist in emby database, create the reference.
         '''
-        for artist in obj['AlbumArtists']:
+        for artist in (obj['AlbumArtists'] or []):
 
             temp_obj = dict(obj)
             temp_obj['Name'] = artist['Name']
@@ -358,7 +358,7 @@ class Music(KodiDb):
         ''' Update the artist's discography.
         '''
         artists = []
-        for artist in obj['AlbumArtists']:
+        for artist in (obj['AlbumArtists'] or []):
 
             temp_obj = dict(obj)
             temp_obj['Name'] = artist['Name']
@@ -391,7 +391,7 @@ class Music(KodiDb):
         ''' Assign main artists to song.
             Artist does not exist in emby database, create the reference.
         '''
-        for index, artist in enumerate(obj['ArtistItems']):
+        for index, artist in enumerate(obj['ArtistItems'] or []):
 
             temp_obj = dict(obj)
             temp_obj['Name'] = artist['Name']
