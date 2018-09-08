@@ -753,3 +753,7 @@ msgstr ""
 msgctxt "#33155"
 msgid "The currently applied patch for Emby for Kodi is corrupted! Please post to the Emby for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
 msgstr ""
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr ""
