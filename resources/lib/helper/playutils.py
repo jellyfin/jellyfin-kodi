@@ -234,7 +234,7 @@ class PlayUtils(object):
         
         API = api.API(self.item, self.info['ServerAddress'])
         self.info['Method'] = "DirectPlay"
-        self.info['Path'] = API.get_file_path()
+        self.info['Path'] = API.get_file_path(source.get('Path'))
 
         return self.info['Path']
 
