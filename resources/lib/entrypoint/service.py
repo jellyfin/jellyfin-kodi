@@ -149,12 +149,11 @@ class Service(xbmc.Monitor):
 
                 return
 
-            get_objects(zipfile, label + '.zip')
+            if get_objects(zipfile, label + '.zip'): # no patch applied previously
+                dialog("ok", heading="{emby}", line1=_(33135))  
+                xbmc.executebuiltin('RestartApp')
         except Exception as error:
             LOG.info(error)
-
-        dialog("ok", heading="{emby}", line1=_(33135))  
-        xbmc.executebuiltin('RestartApp')
     
     def onNotification(self, sender, method, data):
 

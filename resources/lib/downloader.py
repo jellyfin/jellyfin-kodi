@@ -301,6 +301,8 @@ def get_objects(src, filename):
     '''
     temp = xbmc.translatePath('special://temp/emby').decode('utf-8')
     final = os.path.join(temp, "objects")
+    restart = not xbmcvfs.exists(final + '/') # add slash for verification
+
     delete_folder()
 
     LOG.info(src)
@@ -325,5 +327,7 @@ def get_objects(src, filename):
     try:
         shutil.copytree(src=os.path.join(extracted, "objects"), dst=final)
         delete_folder(extracted)
+
+        return restart
     except Exception as error:
         raise
