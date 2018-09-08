@@ -91,7 +91,7 @@ class Actions(object):
         seektime = window('emby.resume.bool')
         window('emby.resume', clear=True)
 
-        if item['MediaType'] == 'Video':
+        if item['MediaType'] in ('Video', 'Audio'):
             resume = item['UserData'].get('PlaybackPositionTicks')
 
             if resume:
