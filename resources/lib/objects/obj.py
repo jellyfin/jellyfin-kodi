@@ -93,7 +93,7 @@ class Objects(object):
                 elif '/' in obj_param:
                     obj = self.__recursive__(obj, obj_param)
 
-                elif obj is item:
+                elif obj is item and obj is not None:
                     obj = item.get(obj_param)
 
                 if obj_filters and obj:
