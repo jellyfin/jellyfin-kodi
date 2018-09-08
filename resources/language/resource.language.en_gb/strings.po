@@ -745,3 +745,7 @@ msgstr ""
 msgctxt "#33153"
 msgid "Your Emby theme media has been synced to Kodi"
 msgstr ""
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr ""

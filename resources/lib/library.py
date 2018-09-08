@@ -298,17 +298,30 @@ class Library(threading.Thread):
         ''' Select from libraries synced. Either update or repair libraries.
             Send event back to service.py
         '''
-        mode = mode or 'SyncLibrary'
+        modes = {
+            'SyncLibrarySelection': 'SyncLibrary',
+            'RepairLibrarySelection': 'RepairLibrary',
+            'AddLibrarySelection': 'SyncLibrary'
+        }
         sync = get_sync()
         libraries = []
 
         with Database('emby') as embydb:
             db = emby_db.EmbyDatabase(embydb.cursor)
 
-            for library in sync['Whitelist']:
+            if mode in ('SyncLibrarySelection', 'RepairLibrarySelection'):
+                for library in sync['Whitelist']:
 
-                name = db.get_view_name(library.replace('Mixed:', ""))
-                libraries.append({'Id': library, 'Name': name})
+                    name = db.get_view_name(library.replace('Mixed:', ""))
+                    libraries.append({'Id': library, 'Name': name})
+            else:
+                available = [x for x in sync['SortedViews'] if x not in [y.replace('Mixed:', "") for y in sync['Whitelist']]]
+
+                for library in available:
+                    name, media  = db.get_view(library)
+
+                    if media in ('movies', 'tvshows', 'musicvideos', 'mixed', 'music'):
+                        libraries.append({'Id': library, 'Name': name})
 
         choices = [x['Name'] for x in libraries]
         choices.insert(0, _(33121))
@@ -327,7 +340,7 @@ class Library(threading.Thread):
             library = libraries[x - 1]
             selected_libraries.append(library['Id'])
 
-        event(mode, {'Id': ','.join([libraries[x - 1]['Id'] for x in selection])})
+        event(modes[mode], {'Id': ','.join([libraries[x - 1]['Id'] for x in selection])})
 
     def add_library(self, library_id):
 

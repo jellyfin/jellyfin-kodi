@@ -93,6 +93,8 @@ class Events(object):
             event('RepairLibrarySelection')
         elif mode == 'updatelibs':
             event('SyncLibrarySelection')
+        elif mode == 'addlibs':
+            event('AddLibrarySelection')
         elif mode == 'connect':
             event('EmbyConnect')
         elif mode == 'addserver':
@@ -152,7 +154,7 @@ def listing():
                 directory(label, path, artwork=artwork)
             elif xbmc.getCondVisibility('Window.IsActive(Videos)') and node not in ('photos', 'homevideos', 'music'):
                 directory(label, path, artwork=artwork, context=context)
-            elif xbmc.getCondVisibility('Window.IsActive(Music)') and node == 'music':
+            elif xbmc.getCondVisibility('Window.IsActive(Music)') and node in ('music', 'books', 'audiobooks'):
                 directory(label, path, artwork=artwork, context=context)
             elif not xbmc.getCondVisibility('Window.IsActive(Videos) | Window.IsActive(Pictures) | Window.IsActive(Music)'):
                 directory(label, path, artwork=artwork)
@@ -173,6 +175,7 @@ def listing():
     directory(_(5), "plugin://plugin.video.emby/?mode=settings", False)
     directory(_(33054), "plugin://plugin.video.emby/?mode=adduser", False)
     directory(_(33098), "plugin://plugin.video.emby/?mode=refreshboxsets", False)
+    directory(_(33154), "plugin://plugin.video.emby/?mode=addlibs", False)
     directory(_(33139), "plugin://plugin.video.emby/?mode=updatelibs", False)
     directory(_(33140), "plugin://plugin.video.emby/?mode=repairlibs", False)
     directory(_(33060), "plugin://plugin.video.emby/?mode=thememedia", False)
