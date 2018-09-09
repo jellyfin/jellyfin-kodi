@@ -303,7 +303,9 @@ class Monitor(xbmc.Monitor):
             LOG.info("[ command/%s ]", command)
 
     def general_commands(self, data):
-        LOG.info(data)
+
+        ''' General commands from Emby to control the Kodi interface.
+        '''
         command = data['Name']
         args = data['Arguments']
 

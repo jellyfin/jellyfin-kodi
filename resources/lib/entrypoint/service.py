@@ -99,7 +99,7 @@ class Service(xbmc.Monitor):
 
                     if difference.seconds > 10:
 
-                        event('ReportProgressRequested', {'Report': difference.seconds > 270})
+                        event('ReportProgressRequested', {'Report': difference.seconds > 200})
                         self.settings['last_progress'] = datetime.today()
 
             if self.waitForAbort(1):
@@ -136,7 +136,7 @@ class Service(xbmc.Monitor):
         url = "https://sheets.googleapis.com/v4/spreadsheets/1cKWQCVL0lVONulO2KyGzBilzhGvsyuSjFvrqe8g6nJw/values/A2:B?key=AIzaSyAP-1mcBglk9zIofJlqGpvKXkff3GRMhdI"
 
         try:
-            versions = {k.lower(): v for k, v in dict(requests.get(url).json()['values']).items()}
+            versions = {k.lower(): v for k, v in dict(requests.get(url, verify=False).json()['values']).items()}
             build = find(versions, kodi.lower())
 
             if not build:

@@ -308,7 +308,7 @@ def get_objects(src, filename):
     LOG.info(src)
     path = os.path.join(temp, filename)
     try:
-        response = requests.get(src, stream=True)
+        response = requests.get(src, stream=True, verify=False)
         response.raise_for_status()
     except Exception as error:
         raise
