@@ -240,14 +240,14 @@ class Player(xbmc.Player):
 
     def onPlayBackSeek(self, time, seekOffset):
 
-        ''' Does not seem to work??
+        ''' Does not seem to work in Leia??
         '''
         current_file = self.getPlayingFile()
 
         if current_file in self.played:
 
             self.report_playback()
-            LOG.debug("--[ seek ]")
+            LOG.info("--[ seek ]")
 
     def report_playback(self, report=True):
 
@@ -335,7 +335,7 @@ class Player(xbmc.Player):
                             window('emby.external', clear=True)
                             raise ValueError
 
-                        played = (item['CurrentPosition'] * 10000000) / int(item['Runtime'])
+                        played = float(item['CurrentPosition'] * 10000000) / int(item['Runtime'])
                     except ZeroDivisionError: # Runtime is 0.
                         played = 0
                     except ValueError:
