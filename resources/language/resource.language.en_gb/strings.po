@@ -719,7 +719,7 @@ msgid "Removing library"
 msgstr ""
 
 msgctxt "#33145"
-msgid "If Kodi can't locate your files, navigate to your content via install from zip using smb. The path shown should match what's in Emby."
+msgid "Please make sure your Samba (smb) share of your Emby server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
 msgstr ""
 
 msgctxt "#33146"
