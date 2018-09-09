@@ -314,9 +314,12 @@ class Music(KodiDb):
         try:
             obj['AlbumId'] = self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_song_obj))[0]
         except TypeError:
-            self.album(self.server['api'].get_item(obj['SongAlbumId']))
 
             try:
+                if obj['SongAlbumId'] is None:
+                    raise TypeError("No album id found associated?")
+
+                self.album(self.server['api'].get_item(obj['SongAlbumId']))
                 obj['AlbumId'] = self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_song_obj))[0]
             except TypeError:
                 self.single(obj)
