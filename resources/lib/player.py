@@ -254,9 +254,14 @@ class Player(xbmc.Player):
         ''' Report playback progress to emby server.
             Check if the user seek.
         '''
-        current_file = self.getPlayingFile()
+        try:
+            current_file = self.getPlayingFile()
 
-        if current_file not in self.played:
+            if current_file not in self.played:
+                return
+        except Exception as error:
+            LOG.error(error)
+
             return
 
         item = self.played[current_file]
@@ -366,7 +371,7 @@ class Player(xbmc.Player):
 
                 elif item['PlayMethod'] == 'Transcode':
 
-                    LOG.info("Transcoding for %s terminated.", item['Id'])
+                    LOG.info("<[ transcode/%s ]", item['Id'])
                     item['Server']['api'].close_transcode(item['DeviceId'])
 
 

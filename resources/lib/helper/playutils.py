@@ -13,6 +13,7 @@ import xbmcvfs
 import api
 import database
 import client
+import collections
 from . import _, settings, window, dialog
 from libraries import requests
 from downloader import TheVoid
@@ -102,7 +103,7 @@ class PlayUtils(object):
 
         return sources
 
-    def select_source(self, sources):
+    def select_source(self, sources, audio=None, subtitle=None):
 
         if len(sources) > 1:
             selection = []
@@ -119,7 +120,7 @@ class PlayUtils(object):
         else:
             source = sources[0]
 
-        self.get(source)
+        self.get(source, audio, subtitle)
 
         return source
 
@@ -171,7 +172,7 @@ class PlayUtils(object):
 
         return False
 
-    def get(self, source):
+    def get(self, source, audio=None, subtitle=None):
 
         ''' The server returns sources based on the MaxStreamingBitrate value and other filters.
         '''
@@ -192,10 +193,10 @@ class PlayUtils(object):
 
         else:
             LOG.info("--[ transcode ]")
-            self.transcode(source)
+            self.transcode(source, audio, subtitle)
 
-        self.info['AudioStreamIndex'] = source.get('DefaultAudioStreamIndex')
-        self.info['SubtitleStreamIndex'] = source.get('DefaultSubtitleStreamIndex')
+        self.info['AudioStreamIndex'] = self.info.get('AudioStreamIndex') or source.get('DefaultAudioStreamIndex')
+        self.info['SubtitleStreamIndex'] = self.info.get('SubtitleStreamIndex') or source.get('DefaultSubtitleStreamIndex')
         self.item['PlaybackInfo'].update(self.info)
 
     def live_stream(self, source):
@@ -217,13 +218,23 @@ class PlayUtils(object):
 
         return info['MediaSource']
 
-    def transcode(self, source):
+    def transcode(self, source, audio=None, subtitle=None):
         
         if not 'TranscodingUrl' in source:
             raise Exception("use get_sources to get transcoding url")
 
         self.info['Method'] = "Transcode"
         base, params = source['TranscodingUrl'].split('?')
+
+        if settings('skipDialogTranscode') != "3" and source.get('MediaStreams'):
+            url_parsed = params.split('&')
+
+            for i in url_parsed:
+                if 'AudioStreamIndex' in i or 'AudioBitrate' in i or 'SubtitleStreamIndex' in i: # handle manually
+                    url_parsed.remove(i)
+
+            params = "%s%s" % ('&'.join(url_parsed), self.get_audio_subs(source, audio, subtitle))
+
         self.info['Path'] = "%s/emby%s?%s" % (self.info['ServerAddress'], base.replace('stream', "master"), params)
         self.info['Path'] += "&maxWidth=%s&maxHeight=%s" % (self.get_resolution())
 
@@ -422,8 +433,7 @@ class PlayUtils(object):
                 if 'DeliveryUrl' in stream:
                     url = "%s/emby%s" % (self.info['ServerAddress'], stream['DeliveryUrl'])
                 else:
-                    url = ("%s/emby/Videos/%s/%s/Subtitles/%s/Stream.%s?api_key=%s" %
-                          (self.info['ServerAddress'], self.item['Id'], source['Id'], index, stream['Codec'], self.info['Token']))
+                    url = self.get_subtitles(source, stream, index)
 
                 if url is None:
                     continue
@@ -462,7 +472,7 @@ class PlayUtils(object):
         path = os.path.join(temp, filename)
 
         try:
-            response = requests.get(src, stream=True)
+            response = requests.get(src, stream=True, verify=False)
             response.raise_for_status()
         except Exception as e:
             raise
@@ -473,3 +483,113 @@ class PlayUtils(object):
                 del response
 
         return path
+
+    def get_audio_subs(self, source, audio=None, subtitle=None):
+
+        ''' For transcoding only
+            Present the list of audio/subs to select from, before playback starts.
+
+            Since Emby returns all possible tracks together, sort them.
+            IsTextSubtitleStream if true, is available to download from server.
+        '''
+        prefs = ""
+        audio_streams = collections.OrderedDict()
+        subs_streams = collections.OrderedDict()
+        streams = source['MediaStreams']
+
+        for stream in streams:
+
+            index = stream['Index']
+            stream_type = stream['Type']
+
+            if stream_type == 'Audio':
+
+                codec = stream['Codec']
+                channel = stream.get('ChannelLayout', "")
+
+                if 'Language' in stream:
+                    track = "%s - %s - %s %s" % (index, stream['Language'], codec, channel)
+                else:
+                    track = "%s - %s %s" % (index, codec, channel)
+
+                audio_streams[track] = index
+
+            elif stream_type == 'Subtitle':
+
+                if 'Language' in stream:
+                    track = "%s - %s" % (index, stream['Language'])
+                else:
+                    track = "%s - %s" % (index, stream['Codec'])
+
+                if stream['IsDefault']:
+                    track = "%s - Default" % track
+                if stream['IsForced']:
+                    track = "%s - Forced" % track
+
+                subs_streams[track] = index
+
+        skip_dialog = int(settings('skipDialogTranscode') or 0)
+        audio_selected = None
+
+        if audio:
+            audio_selected = audio
+
+        elif skip_dialog in (0, 1):
+            if len(audio_streams) > 1:
+
+                selection = list(audio_streams.keys())
+                resp = dialog("select", _(33013), selection)
+                audio_selected = audio_streams[selection[resp]] if resp else source['DefaultAudioStreamIndex']
+            else: # Only one choice
+                audio_selected = audio_streams[next(iter(audio_streams))]
+        else:
+            audio_selected = source['DefaultAudioStreamIndex']
+
+        self.info['AudioStreamIndex'] = audio_selected
+        prefs += "&AudioStreamIndex=%s" % audio_selected
+        prefs += "&AudioBitrate=384000" if streams[audio_selected].get('Channels', 0) > 2 else "&AudioBitrate=192000"
+
+        if subtitle:
+
+            index = subtitle
+            server_settings = TheVoid('GetTranscodeOptions', {'ServerId': self.info['ServerId']}).get()
+            stream = streams[index]
+
+            if server_settings['EnableSubtitleExtraction'] and stream['SupportsExternalStream']:
+                self.info['SubtitleUrl'] = self.get_subtitles(source, stream, index)
+            else:
+                prefs += "&SubtitleStreamIndex=%s" % index
+
+            self.info['SubtitleStreamIndex'] = index
+
+        elif skip_dialog in (0, 2) and len(subs_streams):
+
+            selection = list(['No subtitles']) + list(subs_streams.keys())
+            resp = dialog("select", _(33014), selection)
+
+            if resp:
+                index = subs_streams[selection[resp]] if resp > -1 else source.get('DefaultSubtitleStreamIndex')
+
+                if index is not None:
+
+                    server_settings = TheVoid('GetTranscodeOptions', {'ServerId': self.info['ServerId']}).get()
+                    stream = streams[index]
+
+                    if server_settings['EnableSubtitleExtraction'] and stream['SupportsExternalStream']:
+                        self.info['SubtitleUrl'] = self.get_subtitles(source, stream, index)
+                    else:
+                        prefs += "&SubtitleStreamIndex=%s" % index
+
+                self.info['SubtitleStreamIndex'] = index
+
+        return prefs
+
+    def get_subtitles(self, source, stream, index):
+
+        if 'DeliveryUrl' in stream:
+            url = "%s/emby%s" % (self.info['ServerAddress'], stream['DeliveryUrl'])
+        else:
+            url = ("%s/emby/Videos/%s/%s/Subtitles/%s/Stream.%s?api_key=%s" %
+                  (self.info['ServerAddress'], self.item['Id'], source['Id'], index, stream['Codec'], self.info['Token']))
+
+        return url

@@ -418,6 +418,14 @@ msgctxt "#33009"
 msgid "Invalid username or password"
 msgstr ""
 
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr ""
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr ""
+
 msgctxt "#33015"
 msgid "Delete file from Emby?"
 msgstr ""
@@ -756,4 +764,16 @@ msgstr ""
 
 msgctxt "#33156"
 msgid "A patch has been applied!"
+msgstr ""
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr ""
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr ""
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
 msgstr ""

@@ -172,6 +172,9 @@ def delete_item(item_id):
 def get_local_trailers(item_id):
     return  user_items("/%s/LocalTrailers" % item_id)
 
+def get_transcode_settings():
+    return  _get('System/Configuration/encoding')
+
 def get_ancestors(item_id):
     return  items("/%s/Ancestors" % item_id, params={
                 'UserId': "{UserId}"

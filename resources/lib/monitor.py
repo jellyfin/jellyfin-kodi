@@ -55,7 +55,7 @@ class Monitor(xbmc.Monitor):
                               'GetServerAddress', 'GetPlaybackInfo', 'Browse', 'GetImages', 'GetToken',
                               'PlayPlaylist', 'Play', 'GetIntros', 'GetAdditionalParts', 'RefreshItem',
                               'FavoriteItem', 'DeleteItem', 'AddUser', 'GetSession', 'GetUsers', 'GetThemes',
-                              'GetTheme', 'Playstate', 'GeneralCommand'):
+                              'GetTheme', 'Playstate', 'GeneralCommand', 'GetTranscodeOptions'):
                 return
 
             data = json.loads(data)[0]
@@ -139,6 +139,12 @@ class Monitor(xbmc.Monitor):
             window('emby_%s.json' % data['VoidName'], users)
             LOG.debug("--->[ beacon/emby_%s.json ] sent", data['VoidName'])
 
+        elif method == 'GetTranscodeOptions':
+
+            result = server['api'].get_transcode_settings()
+            window('emby_%s.json' % data['VoidName'], result)
+            LOG.debug("--->[ beacon/emby_%s.json ] sent", data['VoidName'])
+
         elif method == 'GetThemes':
 
             if data['Type'] == 'Video':
@@ -183,8 +189,10 @@ class Monitor(xbmc.Monitor):
 
         elif method == 'Play':
 
-            items = server['api'].get_items(data['ItemIds'])
-            PlaylistWorker(data.get('ServerId'), items['Items'], data['PlayCommand'] == 'PlayNow',
+            item = server['api'].get_item(data['ItemIds'].pop(0))
+            data['ItemIds'].insert(0, item)
+
+            PlaylistWorker(data.get('ServerId'), data['ItemIds'], data['PlayCommand'] == 'PlayNow',
                            data.get('StartPositionTicks', 0), data.get('AudioStreamIndex'),
                            data.get('SubtitleStreamIndex')).start()
 

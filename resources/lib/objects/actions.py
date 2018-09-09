@@ -43,7 +43,7 @@ class Actions(object):
 
         return xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
 
-    def play(self, item, db_id=None, transcode=False):
+    def play(self, item, db_id=None, transcode=False, playlist=False):
 
         ''' Play item based on if playback started from widget ot not.
             To get everything to work together, play the first item in the stack with setResolvedUrl,
@@ -63,7 +63,7 @@ class Actions(object):
 
         self.stack[0][1].setPath(self.stack[0][0])
         try:
-            if self.detect_widgets(item):
+            if not playlist and self.detect_widgets(item):
                 LOG.info(" [ play/widget ]")
 
                 raise IndexError
@@ -172,10 +172,10 @@ class Actions(object):
 
     def play_playlist(self, items, clear=True, seektime=None, audio=None, subtitle=None):
 
-        ''' Play a list of items. Creates a new playlist.
+        ''' Play a list of items. Creates a new playlist. Add additional items as plugin listing.
         '''
-        playlist = self.get_playlist(items[0])
-        started = False
+        item = items[0]
+        playlist = self.get_playlist(item)
 
         if clear:
             playlist.clear()
@@ -183,31 +183,34 @@ class Actions(object):
         else:
             index = max(playlist.getposition(), 0) + 1 # Can return -1
 
-        for order, item in enumerate(items):
+        listitem = xbmcgui.ListItem()
+        LOG.info("[ playlist/%s ] %s", item['Id'], item['Name'])
 
+        play = playutils.PlayUtils(item, False, self.server_id, self.server)
+        source = play.select_source(play.get_sources())
+        play.set_external_subs(source, listitem)
+
+        item['PlaybackInfo']['AudioStreamIndex'] = audio or item['PlaybackInfo']['AudioStreamIndex']
+        item['PlaybackInfo']['SubtitleStreamIndex'] = subtitle or item['PlaybackInfo'].get('SubtitleStreamIndex')
+
+        self.set_listitem(item, listitem, None, True if seektime else False)
+        listitem.setPath(item['PlaybackInfo']['Path'])
+        playutils.set_properties(item, item['PlaybackInfo']['Method'], self.server_id)
+
+        playlist.add(item['PlaybackInfo']['Path'], listitem, index)
+        index += 1
+
+        if clear:
+            xbmc.Player().play(playlist)
+
+        for item in items[1:]:
             listitem = xbmcgui.ListItem()
-            LOG.info("[ playlist/%s ] %s", item['Id'], item['Name'])
+            LOG.info("[ playlist/%s ]", item)
+            path = "plugin://plugin.video.emby/?mode=play&id=%s&playlist=true" % item
 
-            play = playutils.PlayUtils(item, False, self.server_id, self.server)
-            source = play.select_source(play.get_sources())
-            play.set_external_subs(source, listitem)
-
-            if order == 0: # First item
-
-                item['PlaybackInfo']['AudioStreamIndex'] = audio or item['PlaybackInfo']['AudioStreamIndex']
-                item['PlaybackInfo']['SubtitleStreamIndex'] = subtitle or item['PlaybackInfo'].get('SubtitleStreamIndex')
-
-            self.set_listitem(item, listitem, None, True if order == 0 and seektime else False)
-            listitem.setPath(item['PlaybackInfo']['Path'])
-            playutils.set_properties(item, item['PlaybackInfo']['Method'], self.server_id)
-
-            playlist.add(item['PlaybackInfo']['Path'], listitem, index)
+            listitem.setPath(path)
+            playlist.add(path, listitem, index)
             index += 1
-
-            if not started and clear:
-
-                started = True
-                xbmc.Player().play(playlist)
 
     def set_listitem(self, item, listitem, db_id=None, seektime=None, intro=False):
 
@@ -237,8 +240,15 @@ class Actions(object):
 
             self.listitem_video(obj, listitem, item, seektime)
 
-            if 'PlaybackInfo' in item and seektime:
-                item['PlaybackInfo']['CurrentPosition'] = obj['Resume']
+            if 'PlaybackInfo' in item:
+
+                if seektime:
+                    item['PlaybackInfo']['CurrentPosition'] = obj['Resume']
+
+                if 'SubtitleUrl' in item['PlaybackInfo']:
+
+                    LOG.info("[ subtitles ] %s", item['PlaybackInfo']['SubtitleUrl'])
+                    listitem.setSubtitles([item['PlaybackInfo']['SubtitleUrl']])
 
         listitem.setContentLookup(False)
 
