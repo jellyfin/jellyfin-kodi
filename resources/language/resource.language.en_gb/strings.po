@@ -785,3 +785,7 @@ msgstr ""
 msgctxt "#33161"
 msgid "Check for updates"
 msgstr ""
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr ""

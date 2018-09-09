@@ -169,7 +169,7 @@ def reset_kodi():
             if name != 'version':
                 videodb.cursor.execute("DELETE FROM " + name)
 
-    if settings('enableMusic.bool'):
+    if settings('enableMusic.bool') or dialog("yesno", heading="{emby}", line1=_(33162)):
 
         with Database('music') as musicdb:
             musicdb.cursor.execute("SELECT tbl_name FROM sqlite_master WHERE type='table'")
