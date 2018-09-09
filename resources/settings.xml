@@ -86,7 +86,7 @@
 		<setting label="30529" id="startupDelay" type="number" default="0" option="int" />
 		<setting label="30239" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=reset)" option="close" />
 		<setting label="30535" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=deviceid)" option="close" />
-		<setting label="24034" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=checkupdate)" option="close" />
+		<setting label="33161" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=checkupdate)" option="close" />
 		
 		<setting type="sep"/>
 		<setting label="33104" type="lsep"/>

@@ -19,7 +19,7 @@ import setup
 import monitor
 from libraries import requests
 from views import Views, verify_kodi_defaults
-from helper import _, window, settings, event, dialog, find
+from helper import _, window, settings, event, dialog, find, compare_version
 from downloader import get_objects
 from emby import Emby
 
@@ -42,6 +42,7 @@ class Service(xbmc.Monitor):
 
     def __init__(self):
 
+        self.settings['addon_version'] = client.get_version()
         self.settings['profile'] = xbmc.translatePath('special://profile')
         self.settings['mode'] = settings('useDirectPaths')
         self.settings['log_level'] = settings('logLevel') or "1"
@@ -156,6 +157,12 @@ class Service(xbmc.Monitor):
                 xbmc.executebuiltin('RestartApp')
             else:
                 dialog("notification", heading="{emby}", message=_(33156), icon="{emby}")
+
+                try:
+                    if compare_version(self.settings['addon_version'], objects.embyversion) < 0:
+                        dialog("ok", heading="{emby}", line1="%s %s" % (_(33160), objects.embyversion))
+                except Exception:
+                    pass
 
         except Exception as error:
             LOG.exception(error)

@@ -86,6 +86,34 @@ def settings(setting, value=None):
 def create_id():
     return uuid4()
 
+def compare_version(a, b):
+
+    ''' -1 a is smaller
+        1 a is larger
+        0 equal
+    '''
+    a = a.split('.')
+    b = b.split('.')
+
+    for i in range(0, max(len(a), len(b)), 1):
+        try:
+            aVal = a[i]
+        except IndexError:
+            aVal = 0
+
+        try:    
+            bVal = b[i]
+        except IndexError:
+            bVal = 0
+
+        if aVal < bVal:
+            return -1
+
+        if aVal > bVal:
+            return 1
+
+    return 0
+
 def find(dict, item):
 
     ''' Find value in dictionary.
@@ -231,7 +259,7 @@ def delete_folder(path=None):
     ''' Delete objects from kodi cache
     '''
     LOG.debug("--[ delete folder ]")
-
+    delete_path = path is not None
     path = path or xbmc.translatePath('special://temp/emby').decode('utf-8')
     dirs, files = xbmcvfs.listdir(path)
 
@@ -240,8 +268,9 @@ def delete_folder(path=None):
     for file in files:
         xbmcvfs.delete(os.path.join(path, file.decode('utf-8')))
 
-    xbmcvfs.delete(path)
-    LOG.info("deleted %s", path)
+    if delete_path:
+        xbmcvfs.delete(path)
+    LOG.info("DELETE %s", path)
 
 def delete_recursive(path, dirs):
 

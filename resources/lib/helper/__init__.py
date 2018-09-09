@@ -13,6 +13,7 @@ from utils import values
 from utils import JSONRPC
 from utils import indent
 from utils import write_xml
+from utils import compare_version
 
 from wrapper import progress
 from wrapper import catch

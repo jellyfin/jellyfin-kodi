@@ -777,3 +777,11 @@ msgstr ""
 msgctxt "#33159"
 msgid "Enable audio/subtitles selection"
 msgstr ""
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Emby for Kodi to version: "
+msgstr ""
+
+msgctxt "#33161"
+msgid "Check for updates"
+msgstr ""
