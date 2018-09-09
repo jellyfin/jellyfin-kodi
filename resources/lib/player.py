@@ -113,7 +113,7 @@ class Player(xbmc.Player):
         '''
         try:
             item['Runtime'] = int(item['Runtime'])
-        except ValueError:
+        except (TypeError, ValueError):
             try:
                 item['Runtime'] = int(self.getTotalTime())
                 LOG.info("Runtime is missing, Kodi runtime: %s" % item['Runtime'])
