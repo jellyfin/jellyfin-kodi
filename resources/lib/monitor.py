@@ -60,7 +60,7 @@ class Monitor(xbmc.Monitor):
 
             data = json.loads(data)[0]
         else:
-            if method not in ('Player.OnPlay', 'VideoLibrary.OnUpdate', 'System.OnSleep'):
+            if method not in ('Player.OnPlay', 'VideoLibrary.OnUpdate', 'System.OnSleep', 'Player.OnAVChange'):
                 return
 
             data = json.loads(data)
@@ -196,8 +196,8 @@ class Monitor(xbmc.Monitor):
                            data.get('StartPositionTicks', 0), data.get('AudioStreamIndex'),
                            data.get('SubtitleStreamIndex')).start()
 
-        elif method == 'ReportProgressRequested':
-            self.player.report_playback(data['Report'])
+        elif method in ('ReportProgressRequested', 'Player.OnAVChange'):
+            self.player.report_playback(data.get('Report', True))
 
         elif method == 'Playstate':
             self.playstate(data)
