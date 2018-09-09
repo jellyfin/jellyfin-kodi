@@ -98,9 +98,11 @@ class Service(xbmc.Monitor):
                     difference = datetime.today() - self.settings['last_progress']
 
                     if difference.seconds > 10:
-
-                        event('ReportProgressRequested', {'Report': difference.seconds > 200})
-                        self.settings['last_progress'] = datetime.today()
+                        update = difference.seconds > 250
+                        event('ReportProgressRequested', {'Report': update})
+                        
+                        if update:
+                            self.settings['last_progress'] = datetime.today()
 
             if self.waitForAbort(1):
                 break
