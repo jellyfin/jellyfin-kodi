@@ -356,7 +356,7 @@ class Views(object):
             etree.SubElement(xml, 'content')
 
         label = xml.find('label')
-        label.text = str(name) if type(name) == int else name
+        label.text = str(name) if type(name) == int else name.encode('utf-8')
 
         content = xml.find('content')
         content.text = view['Media']
