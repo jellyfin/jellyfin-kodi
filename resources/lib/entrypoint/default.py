@@ -182,6 +182,7 @@ def listing():
     directory(_(33140), "plugin://plugin.video.emby/?mode=repairlibs", False)
     directory(_(33060), "plugin://plugin.video.emby/?mode=thememedia", False)
     directory(_(33058), "plugin://plugin.video.emby/?mode=reset", False)
+    directory(_(33163), None, False, artwork="special://home/addons/plugin.video.emby/donations.png")
 
     xbmcplugin.setContent(int(sys.argv[1]), 'files')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))

@@ -789,3 +789,7 @@ msgstr ""
 msgctxt "#33162"
 msgid "Reset the music library?"
 msgstr ""
+
+msgctxt "#33163"
+msgid "Support this project"
+msgstr ""
