@@ -678,7 +678,6 @@ class Views(object):
             index += 1
 
         window('Emby.nodes.total', str(index))
-        LOG.info(windex)
         window('Emby.wnodes.total', str(windex))
 
     def window_node(self, index, view, node=None, node_label=None):
