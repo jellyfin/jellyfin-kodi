@@ -7,6 +7,7 @@ import logging
 import os
 import re
 import unicodedata
+import urllib
 from uuid import uuid4
 
 import xbmc
@@ -277,7 +278,6 @@ def delete_recursive(path, dirs):
     ''' Delete files and dirs recursively.
     '''
     for directory in dirs:
-
         dirs2, files = xbmcvfs.listdir(os.path.join(path, directory.decode('utf-8')))
 
         for file in files:
@@ -285,6 +285,65 @@ def delete_recursive(path, dirs):
 
         delete_recursive(os.path.join(path, directory.decode('utf-8')), dirs2)
         xbmcvfs.rmdir(os.path.join(path, directory.decode('utf-8')))
+
+def unzip(path, dest, folder=None):
+
+    ''' Unzip file. zipfile module seems to fail on android.
+    '''
+    path = urllib.quote_plus(path)
+    root = "zip://" + path + '/'
+    
+    if folder:
+
+        xbmcvfs.mkdir(os.path.join(dest, folder))
+        dest = os.path.join(dest, folder)
+        root = get_zip_directory(root, folder)
+
+    dirs, files = xbmcvfs.listdir(root)
+
+    if dirs:
+        unzip_recursive(root, dirs, dest)
+
+    for file in files:
+        unzip_file(os.path.join(root, file.decode('utf-8')), os.path.join(dest, file.decode('utf-8')))
+
+    LOG.info("Unzipped %s", path)
+
+def unzip_recursive(path, dirs, dest):
+
+    for directory in dirs:
+
+        dirs_dir = os.path.join(path, directory.decode('utf-8'))
+        dest_dir = os.path.join(dest, directory.decode('utf-8'))
+        xbmcvfs.mkdir(dest_dir)
+        LOG.info("unzip: %s to %s", dirs_dir, dest_dir)
+
+        dirs2, files = xbmcvfs.listdir(dirs_dir)
+
+        if dirs2:
+            unzip_recursive(dirs_dir, dirs2, dest_dir)
+
+        for file in files:
+            unzip_file(os.path.join(dirs_dir, file.decode('utf-8')), os.path.join(dest_dir, file.decode('utf-8')))
+
+def unzip_file(path, dest):
+
+    ''' Unzip specific file. Path should start with zip://
+    '''
+    xbmcvfs.copy(path, dest)
+    LOG.info("unzip: %s to %s", path, dest)
+
+def get_zip_directory(path, folder):
+
+    dirs, files = xbmcvfs.listdir(path)
+
+    if folder in dirs:
+        return os.path.join(path, folder)
+
+    for directory in dirs:
+        result = get_zip_directory(os.path.join(path, directory.decode('utf-8')), folder)
+        if result:
+            return result
 
 def normalize_string(text):
 

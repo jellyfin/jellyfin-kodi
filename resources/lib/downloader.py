@@ -6,17 +6,14 @@ import json
 import logging
 import Queue
 import threading
-import urllib
-import shutil
 import os
-import zipfile
 
 import xbmc
 import xbmcvfs
 
 from libraries import requests
 from helper.utils import should_stop, delete_folder
-from helper import settings, stop, event, window, kodi_version
+from helper import settings, stop, event, window, kodi_version, unzip
 from emby import Emby
 from emby.core import api
 from emby.core.exceptions import HTTPException
@@ -300,34 +297,24 @@ def get_objects(src, filename):
     ''' Download objects dependency to temp cache folder.
     '''
     temp = xbmc.translatePath('special://temp/emby').decode('utf-8')
-    final = os.path.join(temp, "objects")
-    restart = not xbmcvfs.exists(final + '/') # add slash for verification
-
-    delete_folder()
-
-    LOG.info(src)
+    restart = not xbmcvfs.exists(os.path.join(temp, "objects") + '/')
     path = os.path.join(temp, filename)
-    try:
-        response = requests.get(src, stream=True, verify=False)
-        response.raise_for_status()
-    except Exception as error:
-        raise
-    else:
-        dl = xbmcvfs.File(path, 'w')
-        dl.write(response.content)
-        dl.close()
-        del response
 
-    with zipfile.ZipFile(path) as zf:
-        zf.extractall(temp)
+    if not xbmcvfs.exists(path):
+        delete_folder()
 
-    dirs, files = xbmcvfs.listdir('zip://%s' % urllib.quote_plus(path))
-    extracted = os.path.join(temp, dirs[0])
+        LOG.info("From %s to %s", src, path)
+        try:
+            response = requests.get(src, stream=True, verify=False)
+            response.raise_for_status()
+        except Exception as error:
+            raise
+        else:
+            dl = xbmcvfs.File(path, 'w')
+            dl.write(response.content)
+            dl.close()
+            del response
 
-    try:
-        shutil.copytree(src=os.path.join(extracted, "objects"), dst=final)
-        delete_folder(extracted)
+    unzip(path, temp, "objects")
 
-        return restart
-    except Exception as error:
-        raise
+    return restart

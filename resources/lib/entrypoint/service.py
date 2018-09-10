@@ -153,7 +153,8 @@ class Service(xbmc.Monitor):
                 return
 
             if get_objects(zipfile, label + '.zip'): # no patch applied previously
-                dialog("ok", heading="{emby}", line1=_(33135))  
+                LOG.info("No previous patch found.")
+                dialog("ok", heading="{emby}", line1=_(33135))
                 xbmc.executebuiltin('RestartApp')
             else:
                 dialog("notification", heading="{emby}", message=_(33156), icon="{emby}")
