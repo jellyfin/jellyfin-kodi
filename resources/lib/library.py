@@ -201,13 +201,14 @@ class Library(threading.Thread):
             if not settings('kodiCompanion.bool') and settings('SyncInstallRunDone.bool'):
                 return True
 
-            for plugin in self.server['api'].get_plugins():
-                if plugin['Name'] in ("Emby.Kodi Sync Queue", "Kodi companion"):
-                    fast_sync = True
+            if settings('kodiCompanion.bool'):
+                for plugin in self.server['api'].get_plugins():
+                    if plugin['Name'] in ("Emby.Kodi Sync Queue", "Kodi companion"):
+                        fast_sync = True
 
-                    break
-            else:
-                raise LibraryException('CompanionMissing')
+                        break
+                else:
+                    raise LibraryException('CompanionMissing')
 
             if settings('SyncInstallRunDone.bool'):
                 if fast_sync and not self.fast_sync():
