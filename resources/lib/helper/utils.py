@@ -316,7 +316,6 @@ def unzip_recursive(path, dirs, dest):
         dirs_dir = os.path.join(path, directory.decode('utf-8'))
         dest_dir = os.path.join(dest, directory.decode('utf-8'))
         xbmcvfs.mkdir(dest_dir)
-        LOG.info("unzip: %s to %s", dirs_dir, dest_dir)
 
         dirs2, files = xbmcvfs.listdir(dirs_dir)
 
@@ -331,7 +330,7 @@ def unzip_file(path, dest):
     ''' Unzip specific file. Path should start with zip://
     '''
     xbmcvfs.copy(path, dest)
-    LOG.info("unzip: %s to %s", path, dest)
+    LOG.debug("unzip: %s to %s", path, dest)
 
 def get_zip_directory(path, folder):
 
