@@ -80,10 +80,13 @@ def verify_kodi_defaults():
 
     for index, node in enumerate(['movies', 'tvshows', 'musicvideos']):
         file = os.path.join(node_path, node, "index.xml")
-        xml = etree.parse(file).getroot()
-        xml.set('order', str(17 + index))
-        indent(xml)
-        write_xml(etree.tostring(xml, 'UTF-8'), file)
+
+        if xbmcvfs.exists(file):
+
+            xml = etree.parse(file).getroot()
+            xml.set('order', str(17 + index))
+            indent(xml)
+            write_xml(etree.tostring(xml, 'UTF-8'), file)
 
     playlist_path = xbmc.translatePath("special://profile/playlists/video").decode('utf-8')
 
@@ -175,25 +178,27 @@ class Views(object):
 
                 library = library.replace('Mixed:', "")
                 view = db.get_view(library)
-                view = {'Id': library, 'Name': view[0], 'Tag': view[0], 'Media': view[1]}
 
-                if view['Media'] == 'mixed':
-                    for media in ('movies', 'tvshows'):
+                if view:
+                    view = {'Id': library, 'Name': view[0], 'Tag': view[0], 'Media': view[1]}
 
-                        temp_view = dict(view)
-                        temp_view['Media'] = media
-                        self.add_playlist(playlist_path, temp_view, True)
-                        self.add_nodes(node_path, temp_view, True)
-                    else: # Compensate for the duplicate.
-                        index += 1
-                else:
-                    if view['Media'] in ('movies', 'tvshows', 'musicvideos'):
-                        self.add_playlist(playlist_path, view)
+                    if view['Media'] == 'mixed':
+                        for media in ('movies', 'tvshows'):
 
-                    if view['Media'] not in ('music'):
-                        self.add_nodes(node_path, view)
+                            temp_view = dict(view)
+                            temp_view['Media'] = media
+                            self.add_playlist(playlist_path, temp_view, True)
+                            self.add_nodes(node_path, temp_view, True)
+                        else: # Compensate for the duplicate.
+                            index += 1
+                    else:
+                        if view['Media'] in ('movies', 'tvshows', 'musicvideos'):
+                            self.add_playlist(playlist_path, view)
 
-                index += 1
+                        if view['Media'] not in ('music'):
+                            self.add_nodes(node_path, view)
+
+                    index += 1
 
         for single in [{'Name': _('fav_movies'), 'Tag': "Favorite movies", 'Media': "movies"},
                        {'Name': _('fav_tvshows'), 'Tag': "Favorite tvshows", 'Media': "tvshows"},
@@ -326,7 +331,7 @@ class Views(object):
         for node in NODES[view['Media']]:
 
             xml_name = node[0]
-            xml_label = node[1] or view['Name'].encode('utf-8')
+            xml_label = node[1] or view['Name']
             file = os.path.join(folder, "%s.xml" % xml_name)
             self.add_node(NODES[view['Media']].index(node), file, view, xml_name, xml_label)
 
@@ -335,7 +340,7 @@ class Views(object):
         for node in NODES[view['Media']]:
 
             xml_name = node[0]
-            xml_label = node[1] or view['Name'].encode('utf-8')
+            xml_label = node[1] or view['Name']
             xml_index = NODES[view['Media']].index(node)
             file = os.path.join(folder, "%s.xml" % xml_name)
 
@@ -355,8 +360,9 @@ class Views(object):
             etree.SubElement(xml, 'match')
             etree.SubElement(xml, 'content')
 
+
         label = xml.find('label')
-        label.text = str(name) if type(name) == int else name.encode('utf-8')
+        label.text = str(name) if type(name) == int else name
 
         content = xml.find('content')
         content.text = view['Media']
@@ -702,6 +708,9 @@ class Views(object):
         else:
             window_path = "ActivateWindow(Videos,%s,return)" % path
 
+        node_label = _(node_label) if type(node_label) == int else node_label
+        node_label = node_label or view['Name']
+
         if node in ('all', 'music'):
 
             window_prop = "Emby.nodes.%s" % index
@@ -715,7 +724,7 @@ class Views(object):
             window('%s.title' % window_prop, view['Name'].encode('utf-8'))
         else:
             window_prop = "Emby.nodes.%s.%s" % (index, node)
-            window('%s.title' % window_prop, str(node_label) or view['Name'].encode('utf-8'))
+            window('%s.title' % window_prop, node_label.encode('utf-8'))
             window('%s.content' % window_prop, path)
 
         window('%s.id' % window_prop, view['Id'])
@@ -750,10 +759,13 @@ class Views(object):
         else:
             path = self.window_path(view, node)
 
-        if node in ('browse', 'homevideos', 'photos'):
+        if node in ('browse', 'books', 'audiobooks'):
             window_path = path
         else:
             window_path = "ActivateWindow(Videos,%s,return)" % path
+
+        node_label = _(node_label) if type(node_label) == int else node_label
+        node_label = node_label or view['Name']
 
         if node == 'all':
 
@@ -769,7 +781,7 @@ class Views(object):
             window('%s.content' % window_prop, path)
         else:
             window_prop = "Emby.wnodes.%s.%s" % (index, node)
-            window('%s.title' % window_prop, str(node_label) or view['Name'].encode('utf-8'))
+            window('%s.title' % window_prop, node_label.encode('utf-8'))
             window('%s.content' % window_prop, path)
 
         window('%s.id' % window_prop, view['Id'])
@@ -794,7 +806,7 @@ class Views(object):
             'mode': "nextepisodes",
             'limit': self.limit
         }
-        return "%s?%s" % ("plugin://plugin.video.emby", urllib.urlencode(params))
+        return "%s?%s" % ("plugin://plugin.video.emby/", urllib.urlencode(params))
 
     def window_browse(self, view, node=None):
 
@@ -809,7 +821,7 @@ class Views(object):
         if node:
             params['folder'] = node
 
-        return "%s?%s" % ("plugin://plugin.video.emby", urllib.urlencode(params))
+        return "%s?%s" % ("plugin://plugin.video.emby/", urllib.urlencode(params))
 
     def window_clear(self, name=None):
 
