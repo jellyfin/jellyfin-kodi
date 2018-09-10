@@ -12,7 +12,7 @@ import xbmcvfs
 
 import downloader as server
 import helper.xmls as xmls
-from database import Database, get_sync, save_sync
+from database import Database, get_sync, save_sync, emby_db
 from objects import Movies, TVShows, MusicVideos, Music
 from helper import _, settings, progress, dialog, LibraryException
 from emby import Emby
@@ -37,13 +37,30 @@ class FullSync(object):
         self.sync = get_sync()
 
         if library_id:
-            self.sync['Libraries'].append(library_id)
+            libraries = library_id.split(',')
+
+            for selected in libraries:
+                if selected not in [x.replace('Mixed:', "") for x in self.sync['Whitelist']]:
+                    library = self.get_libraries(selected)
+
+                    if library[1] == 'mixed':
+                        selected = "Mixed:%s" % selected
+
+                    self.sync['Libraries'].append(selected)
         else:
             self.mapping()
 
         xmls.sources()
         if not xmls.advanced_settings():
             self.start()
+
+    def get_libraries(self, library_id=None):
+
+        with Database('emby') as embydb:
+            if library_id is None:
+                return emby_db.EmbyDatabase(embydb.cursor).get_views()
+            else:
+                return emby_db.EmbyDatabase(embydb.cursor).get_view(library_id)
 
     def mapping(self):
 
@@ -61,13 +78,10 @@ class FullSync(object):
             LOG.info("generate full sync")
             libraries = []
 
-            for library in self.server['api'].get_media_folders()['Items']:
-                library['Media'] = library.get('OriginalCollectionType', library.get('CollectionType', "mixed"))
+            for library in self.get_libraries():
 
-                if library['Type'] in ('Channel', 'PlaylistsFolder') or library['Media'] not in ('movies', 'tvshows', 'musicvideos', 'music', 'mixed'):
-                    continue
-
-                libraries.append(library)
+                if library[2] in ('movies', 'tvshows', 'musicvideos', 'music', 'mixed'):
+                    libraries.append({'Id': library[0], 'Name': library[1], 'Media': library[2]})
 
             libraries = self.select_libraries(libraries)
 

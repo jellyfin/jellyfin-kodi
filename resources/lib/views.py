@@ -619,36 +619,53 @@ class Views(object):
             Setup the window properties that reflect the emby server views and more.
         '''
         self.window_clear()
+        self.window_clear('Emby.wnodes')
 
         with Database('emby') as embydb:
             libraries = emby_db.EmbyDatabase(embydb.cursor).get_views()
 
         libraries = self.order_media_folders(libraries or [])
         index = 0
+        windex = 0
 
         for library in (libraries or []):
             view = {'Id': library[0], 'Name': library[1], 'Tag': library[1], 'Media': library[2]}
 
-            if library[0] in self.sync['Whitelist']: # Synced libraries
+            if library[0] in [x.replace('Mixed:', "") for x in self.sync['Whitelist']]: # Synced libraries
 
                 if view['Media'] in ('movies', 'tvshows', 'musicvideos', 'mixed'):
-                    for node in NODES[view['Media']]:
 
-                        if view['Media'] == 'mixed':
-                            for media in ('movies', 'tvshows'):
+                    if view['Media'] == 'mixed':
+                        for media in ('movies', 'tvshows'):
+
+                            for node in NODES[media]:
 
                                 temp_view = dict(view)
                                 temp_view['Media'] = media
                                 temp_view['Name'] = "%s (%s)" % (view['Name'], _(media))
                                 self.window_node(index, temp_view, *node)
+                                self.window_wnode(windex, view, *node)
                             else: # Add one to compensate for the duplicate.
                                 index += 1
-                        else:
+                                windex += 1
+                    else:
+                        for node in NODES[view['Media']]:
+
                             self.window_node(index, view, *node)
+
+                            if view['Media'] in ('movies', 'tvshows'):
+                                self.window_wnode(windex, view, *node)
+                    
+                        if view['Media'] in ('movies', 'tvshows'):
+                            windex += 1
 
                 elif view['Media'] == 'music':
                     self.window_node(index, view, 'music')
             else: # Dynamic entry
+                if view['Media'] in ('homevideos', 'books', 'audiobooks'):
+                    self.window_wnode(windex, view, 'browse')
+                    windex += 1
+
                 self.window_node(index, view, 'browse')
 
             index += 1
@@ -661,6 +678,8 @@ class Views(object):
             index += 1
 
         window('Emby.nodes.total', str(index))
+        LOG.info(windex)
+        window('Emby.wnodes.total', str(windex))
 
     def window_node(self, index, view, node=None, node_label=None):
 
@@ -688,16 +707,16 @@ class Views(object):
 
             window_prop = "Emby.nodes.%s" % index
             window('%s.index' % window_prop, path.replace('all.xml', "")) # dir
-            window('%s.title' % window_prop, view['Name'])
+            window('%s.title' % window_prop, view['Name'].encode('utf-8'))
             window('%s.content' % window_prop, path)
 
         elif node == 'browse':
 
             window_prop = "Emby.nodes.%s" % index
-            window('%s.title' % window_prop, view['Name'])
+            window('%s.title' % window_prop, view['Name'].encode('utf-8'))
         else:
             window_prop = "Emby.nodes.%s.%s" % (index, node)
-            window('%s.title' % window_prop, str(node_label) or view['Name'])
+            window('%s.title' % window_prop, str(node_label) or view['Name'].encode('utf-8'))
             window('%s.content' % window_prop, path)
 
         window('%s.id' % window_prop, view['Id'])
@@ -721,6 +740,47 @@ class Views(object):
         window('%s.path' % window_prop, window_path)
         window('%s.content' % window_prop, path)
         window('%s.type' % window_prop, item_type)
+
+    def window_wnode(self, index, view, node=None, node_label=None):
+        
+        ''' Similar to window_node, but does not contain music, musicvideos.
+            Contains books, audiobooks.
+        '''
+        if view['Media'] in ('homevideos', 'photos'):
+            path = self.window_browse(view, None if node in ('all', 'browse') else node)
+        else:
+            path = self.window_path(view, node)
+
+        if node in ('browse', 'homevideos', 'photos'):
+            window_path = path
+        else:
+            window_path = "ActivateWindow(Videos,%s,return)" % path
+
+        if node == 'all':
+
+            window_prop = "Emby.wnodes.%s" % index
+            window('%s.index' % window_prop, path.replace('all.xml', "")) # dir
+            window('%s.title' % window_prop, view['Name'].encode('utf-8'))
+            window('%s.content' % window_prop, path)
+
+        elif node == 'browse':
+
+            window_prop = "Emby.wnodes.%s" % index
+            window('%s.title' % window_prop, view['Name'].encode('utf-8'))
+            window('%s.content' % window_prop, path)
+        else:
+            window_prop = "Emby.wnodes.%s.%s" % (index, node)
+            window('%s.title' % window_prop, str(node_label) or view['Name'].encode('utf-8'))
+            window('%s.content' % window_prop, path)
+
+        window('%s.id' % window_prop, view['Id'])
+        window('%s.path' % window_prop, window_path)
+        window('%s.type' % window_prop, view['Media'])
+
+        if self.server['connected']:
+
+            artwork = api.API(None, self.server['auth/server-address']).get_artwork(view['Id'], 'Primary')
+            window('%s.artwork' % window_prop, artwork)
 
     def window_path(self, view, node):
         return "library://video/emby%s%s/%s.xml" % (view['Media'], view['Id'], node)
@@ -752,11 +812,11 @@ class Views(object):
 
         return "%s?%s" % ("plugin://plugin.video.emby", urllib.urlencode(params))
 
-    def window_clear(self):
+    def window_clear(self, name=None):
 
         ''' Clearing window prop setup for Views.
         '''
-        total = int(window('Emby.nodes.total') or 0)
+        total = int(window((name or 'Emby.nodes') + '.total') or 0)
         props = [
         
             "index","id","path","title","content","type"

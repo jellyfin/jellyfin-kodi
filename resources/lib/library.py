@@ -219,15 +219,18 @@ class Library(threading.Thread):
                 FullSync(self)
                 Views().get_nodes()
 
-            self.started = True
             return True
 
         except LibraryException as error:
             LOG.error(error.status)
 
             if error.status in 'SyncLibraryLater':
+
                 dialog("ok", heading="{emby}", line1=_(33129))
                 settings('SyncInstallRunDone.bool', True)
+                sync = get_sync()
+                sync['Libraries'] = []
+                save_sync(sync)
 
                 return True
 
@@ -307,6 +310,7 @@ class Library(threading.Thread):
             'AddLibrarySelection': 'SyncLibrary'
         }
         sync = get_sync()
+        whitelist = [x.replace('Mixed:', "") for x in sync['Whitelist']]
         libraries = []
 
         with Database('emby') as embydb:
@@ -318,7 +322,7 @@ class Library(threading.Thread):
                     name = db.get_view_name(library.replace('Mixed:', ""))
                     libraries.append({'Id': library, 'Name': name})
             else:
-                available = [x for x in sync['SortedViews'] if x not in [y.replace('Mixed:', "") for y in sync['Whitelist']]]
+                available = [x for x in sync['SortedViews'] if x not in whitelist]
 
                 for library in available:
                     name, media  = db.get_view(library)
@@ -372,10 +376,25 @@ class Library(threading.Thread):
                 if items:
                     with self.music_database_lock if media == 'music' else self.database_lock:
                         with Database(media) as kodidb:
-                            obj = MEDIA[items[0][1]](self.server, embydb, kodidb, self.direct_path)['Remove']
 
-                            for item in items:
-                                obj(item[0])
+                            if library[1] == 'mixed':
+                                movies = [x for x in items if x[1] == 'Movie']
+                                tvshows = [x for x in items if x[1] == 'Series']
+
+                                obj = MEDIA['Movie'](self.server, embydb, kodidb, self.direct_path)['Remove']
+
+                                for item in movies:
+                                    obj(item[0])
+
+                                obj = MEDIA['Series'](self.server, embydb, kodidb, self.direct_path)['Remove']
+
+                                for item in tvshows:
+                                    obj(item[0])
+                            else:
+                                obj = MEDIA[items[0][1]](self.server, embydb, kodidb, self.direct_path)['Remove']
+
+                                for item in items:
+                                    obj(item[0])
 
             sync = get_sync()
 

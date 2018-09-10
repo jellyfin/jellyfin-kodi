@@ -139,7 +139,7 @@ class Service(xbmc.Monitor):
         url = "https://sheets.googleapis.com/v4/spreadsheets/1cKWQCVL0lVONulO2KyGzBilzhGvsyuSjFvrqe8g6nJw/values/A2:B?key=AIzaSyAP-1mcBglk9zIofJlqGpvKXkff3GRMhdI"
 
         try:
-            versions = {k.lower(): v for k, v in dict(requests.get(url, verify=False).json()['values']).items()}
+            versions = {k.lower(): v for k, v in dict(requests.get(url).json()['values']).items()}
             build = find(versions, kodi.lower())
 
             if not build:
@@ -284,11 +284,7 @@ class Service(xbmc.Monitor):
             if not data.get('Id'):
                 return
 
-            libraries = data['Id'].split(',')
-
-            for lib in libraries:
-                self.library_thread.add_library(lib)
-
+            self.library_thread.add_library(data['Id'])
             xbmc.executebuiltin("Container.Refresh")
 
         elif method == 'RepairLibrary':
@@ -299,8 +295,8 @@ class Service(xbmc.Monitor):
 
             for lib in libraries:
                 self.library_thread.remove_library(lib)
-                self.library_thread.add_library(lib)
-
+            
+            self.library_thread.add_library(data['Id'])
             xbmc.executebuiltin("Container.Refresh")
 
         elif method == 'RemoveLibrary':
@@ -398,7 +394,7 @@ class Service(xbmc.Monitor):
             "emby_state", "emby_serverStatus",
             "emby_syncRunning", "emby_dbCheck",
             "emby_currUser", "emby_dbScan",
-            "emby_initialScan", "emby_playbackProps",
+            "emby_initialScan",
 
             "emby_play", "emby_online", "emby.connected", "emby_should_stop", "emby.resume",
             "emby.external", "emby.external_check"

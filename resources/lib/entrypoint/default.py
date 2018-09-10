@@ -123,6 +123,7 @@ def listing():
     '''
     total = int(window('Emby.nodes.total') or 0)
     sync = get_sync()
+    whitelist = [x.replace('Mixed:', "") for x in sync['Whitelist']]
     servers = get_credentials()['Servers'][1:]
 
     for i in range(total):
@@ -139,11 +140,10 @@ def listing():
         view_id = window('%s.id' % window_prop)
         context = []
 
-        if view_id and node in ('movies', 'tvshows', 'musicvideos', 'music') and view_id not in sync['Whitelist']:
-
+        if view_id and node in ('movies', 'tvshows', 'musicvideos', 'music') and view_id not in whitelist:
             context.append((_(33123), "RunPlugin(plugin://plugin.video.emby?mode=synclib&id=%s)" % view_id))
 
-        if view_id and node in ('movies', 'tvshows', 'musicvideos', 'music') and view_id in sync['Whitelist']:
+        if view_id and node in ('movies', 'tvshows', 'musicvideos', 'music') and view_id in whitelist:
 
             context.append((_(33136), "RunPlugin(plugin://plugin.video.emby?mode=synclib&id=%s)" % view_id))
             context.append((_(33132), "RunPlugin(plugin://plugin.video.emby?mode=repairlib&id=%s)" % view_id))
