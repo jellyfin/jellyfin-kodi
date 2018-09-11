@@ -136,10 +136,9 @@ class Service(xbmc.Monitor):
         '''
         LOG.info("--[ check updates/%s ]", objects.version)
         kodi = xbmc.getInfoLabel('System.BuildVersion')
-        url = "https://sheets.googleapis.com/v4/spreadsheets/1cKWQCVL0lVONulO2KyGzBilzhGvsyuSjFvrqe8g6nJw/values/A2:B?key=AIzaSyAP-1mcBglk9zIofJlqGpvKXkff3GRMhdI"
 
         try:
-            versions = {k.lower(): v for k, v in dict(requests.get(url).json()['values']).items()}
+            versions = requests.get('http://kodi.emby.media/Public%20testing/Dependencies/databases.json').json()
             build = find(versions, kodi.lower())
 
             if not build:
