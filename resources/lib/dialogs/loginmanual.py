@@ -119,7 +119,9 @@ class LoginManual(xbmcgui.WindowXMLDialog):
 
     def _login(self, username, password):
 
-        result = self.connect_manager['login'](self.connect_manager['server-address'], username, password)
+        mode = self.connect_manager['server-mode']
+        server = self.connect_manager['server-address']
+        result = self.connect_manager['login'](server, username, password, False if mode == 1 and server.startswith('http://') else True)
 
         if not result:
             self._error(ERROR['Invalid'], _('invalid_auth'))

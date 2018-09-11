@@ -98,6 +98,9 @@ class ConnectionManager(object):
             return get_server_address(server, server['LastConnectionMode'])
         elif key == "revoke-token":
             return self.revoke_token()
+        elif key == "server-mode":
+            server = self.get_server_info(self.server_id)
+            return server['LastConnectionMode']
 
         return
 
@@ -188,7 +191,7 @@ class ConnectionManager(object):
 
         return result
 
-    def login(self, server, username, password="", options={}):
+    def login(self, server, username, password=None, clear=True, options={}):
 
         if not username:
             raise AttributeError("username cannot be empty")
@@ -197,14 +200,18 @@ class ConnectionManager(object):
             raise AttributeError("server cannot be empty")
 
         try:
-            result = self._request_url({
+            request = {
                 'type': "POST",
                 'url': self.get_emby_url(server, "Users/AuthenticateByName"),
                 'json': {
                     'username': username,
-                    'pw': password or ""
+                    'password': hashlib.sha1(password or "").hexdigest(),
                 }
-            }, False)
+            }
+            if clear:
+                request['json']['pw'] = password or ""
+
+            result = self._request_url(request, False)
         except Exception as error: # Failed to login
             LOG.error(error)
             return False
