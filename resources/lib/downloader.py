@@ -94,7 +94,7 @@ def get_filtered_section(parent_id, media=None, limit=None, recursive=None, sort
         'Filters': filters,
         'ImageTypeLimit': 1,
         'IsVirtualUnaired': False,
-        'CollapseBoxSetItems': not settings('groupedSets.bool'),
+        'CollapseBoxSetItems': settings('groupedSets.bool'),
         'Fields': browse_info()
     }
     if settings('getCast.bool'):
