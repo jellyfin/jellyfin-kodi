@@ -43,7 +43,7 @@ class FullSync(object):
                 if selected not in [x.replace('Mixed:', "") for x in self.sync['Whitelist']]:
                     library = self.get_libraries(selected)
 
-                    if library[1] == 'mixed':
+                    if library and library[1] == 'mixed':
                         selected = "Mixed:%s" % selected
 
                     self.sync['Libraries'].append(selected)
