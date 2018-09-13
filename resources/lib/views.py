@@ -97,6 +97,7 @@ class Views(object):
 
     sync = None
     limit = 25
+    media_folders = None
 
     def __init__(self):
 
@@ -730,11 +731,7 @@ class Views(object):
         window('%s.id' % window_prop, view['Id'])
         window('%s.path' % window_prop, window_path)
         window('%s.type' % window_prop, view['Media'])
-
-        if self.server['connected']:
-
-            artwork = api.API(None, self.server['auth/server-address']).get_artwork(view['Id'], 'Primary')
-            window('%s.artwork' % window_prop, artwork)
+        self.window_artwork(window_prop, view['Id'])
 
     def window_single_node(self, index, item_type, view):
 
@@ -759,7 +756,7 @@ class Views(object):
         else:
             path = self.window_path(view, node)
 
-        if node in ('browse', 'audiobooks'):
+        if node in ('browse', 'books', 'audiobooks'):
             window_path = path
         else:
             window_path = "ActivateWindow(Videos,%s,return)" % path
@@ -787,11 +784,23 @@ class Views(object):
         window('%s.id' % window_prop, view['Id'])
         window('%s.path' % window_prop, window_path)
         window('%s.type' % window_prop, view['Media'])
+        self.window_artwork(window_prop, view['Id'])
+
+    def window_artwork(self, prop, view_id):
 
         if self.server['connected']:
 
-            artwork = api.API(None, self.server['auth/server-address']).get_artwork(view['Id'], 'Primary')
-            window('%s.artwork' % window_prop, artwork)
+            if self.media_folders is None:
+                self.media_folders = self.server['api'].get_media_folders()['Items']
+
+            for library in self.media_folders:
+
+                if library['Id'] == view_id and 'Primary' in library.get('ImageTags', {}):
+
+                    artwork = api.API(None, self.server['auth/server-address']).get_artwork(view_id, 'Primary')
+                    window('%s.artwork' % prop, artwork)
+
+                    break
 
     def window_path(self, view, node):
         return "library://video/emby%s%s/%s.xml" % (view['Media'], view['Id'], node)

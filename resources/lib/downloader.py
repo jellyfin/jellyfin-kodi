@@ -105,17 +105,17 @@ def get_filtered_section(parent_id, media=None, limit=None, recursive=None, sort
 
     return  _get("Users/{UserId}/Items", params, server_id)
 
-def get_movies_by_boxset(boxset_id, server_id=None):
+def get_movies_by_boxset(boxset_id):
 
-    for items in get_items(boxset_id, "Movie", server_id=server_id):
+    for items in get_items(boxset_id, "Movie"):
         yield items
 
-def get_episode_by_show(show_id, server_id=None):
+def get_episode_by_show(show_id):
 
-    for items in get_items(show_id, "Episode", server_id=server_id):
+    for items in get_items(show_id, "Episode"):
         yield items
 
-def get_items(parent_id, item_type=None, basic=False, params=None, server_id=None):
+def get_items(parent_id, item_type=None, basic=False, params=None):
 
     query = {
         'url': "Users/{UserId}/Items",
@@ -127,11 +127,10 @@ def get_items(parent_id, item_type=None, basic=False, params=None, server_id=Non
             'Fields': api.basic_info() if basic else api.info()
         }
     }
-
     if params:
         query['params'].update(params)
 
-    for items in _get_items(query, server_id):
+    for items in _get_items(query):
         yield items
 
 def get_artists(parent_id=None, basic=False, params=None, server_id=None):
