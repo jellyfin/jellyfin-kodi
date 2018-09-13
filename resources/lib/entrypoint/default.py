@@ -215,6 +215,11 @@ def browse(media, view_id=None, folder=None, server_id=None):
     '''
     LOG.info("--[ v:%s/%s ] %s", view_id, media, folder)
 
+    if not window('emby_online.bool') and server_id is None:
+        LOG.error("Default server is not online.")
+
+        return
+
     if view_id:
 
         view = TheVoid('GetItem', {'ServerId': server_id, 'Id': view_id}).get()

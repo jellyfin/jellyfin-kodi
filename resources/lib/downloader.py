@@ -288,7 +288,9 @@ class TheVoid(object):
 
                 return response
 
-            if xbmc.Monitor().abortRequested():
+            if window('emby_should_stop.bool'):
+                LOG.info("Abandon mission! A black hole just swallowed [ %s ]", self.data['VoidName'])
+                
                 break
 
 def get_objects(src, filename):
