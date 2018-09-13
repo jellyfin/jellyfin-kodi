@@ -77,6 +77,8 @@ class Events(object):
             client.reset_device_id()
         elif mode == 'reset':
             reset()
+        elif mode == 'delete':
+            delete_item()
         elif mode == 'refreshboxsets':
             event('SyncLibrary', {'Id': "Boxsets:Refresh"})
         elif mode == 'nextepisodes':
@@ -676,3 +678,11 @@ def get_themes():
         tvtunes_nfo(nfo_file, paths)
 
     dialog("notification", heading="{emby}", message=_(33153), icon="{emby}", time=1000, sound=False)
+
+def delete_item():
+
+    ''' Delete keymap action.
+    '''
+    import context
+
+    context.Context(delete=True)

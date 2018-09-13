@@ -35,12 +35,22 @@ class Context(object):
 
     _selected_option = None
 
-    def __init__(self, transcode=False):
+    def __init__(self, transcode=False, delete=False):
         
-        self.kodi_id = sys.listitem.getVideoInfoTag().getDbId() or None
-        self.media = self.get_media_type()
-        self.server = sys.listitem.getProperty('embyserver') or None
-        item_id = sys.listitem.getProperty('embyid')
+        try:
+            self.kodi_id = sys.listitem.getVideoInfoTag().getDbId() or None
+            self.media = self.get_media_type()
+            self.server = sys.listitem.getProperty('embyserver') or None
+            item_id = sys.listitem.getProperty('embyid')
+        except AttributeError:
+            self.server = None
+
+            if xbmc.getInfoLabel('ListItem.Property(embyid)'):
+                item_id = xbmc.getInfoLabel('ListItem.Property(embyid)')
+            else:
+                self.kodi_id = xbmc.getInfoLabel('ListItem.DBID')
+                self.media = xbmc.getInfoLabel('ListItem.DBTYPE')
+                item_id = None
         
         if self.server or item_id:
             self.item = TheVoid('GetItem', {'ServerId': self.server, 'Id': item_id}).get()
@@ -51,6 +61,9 @@ class Context(object):
 
             if transcode:
                 self.transcode()
+
+            elif delete:
+                self.delete_item()
 
             elif self.select_menu():
                 self.action_menu()
@@ -143,15 +156,20 @@ class Context(object):
             xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
 
         elif selected == OPTIONS['Delete']:
-            delete = True
+            self.delete_item()
 
-            if not settings('skipContextMenu.bool'):
+    def delete_item(self):
 
-                if not dialog("yesno", heading="{emby}", line1=_(33015)):
-                    delete = False
+        delete = True
 
-            if delete:
-                TheVoid('DeleteItem', {'ServerId': self.server, 'Id': self.item['Id']})
+        if not settings('skipContextMenu.bool'):
+
+            if not dialog("yesno", heading="{emby}", line1=_(33015)):
+                delete = False
+
+        if delete:
+            LOG.info("fake deleted %s", self.item['Id'])
+            #TheVoid('DeleteItem', {'ServerId': self.server, 'Id': self.item['Id']})
 
     def transcode(self):
 
