@@ -167,9 +167,6 @@ class Music(KodiDb):
     def album_add(self, obj):
         
         ''' Add object to kodi.
-
-            safety checks: It looks like Emby supports the same artist multiple times.
-            Kodi doesn't allow that. In case that happens we just merge the artist entries.
         '''
         obj['AlbumId'] = self.get_album(*values(obj, QU.get_album_obj))
         self.emby_db.add_reference(*values(obj, QUEM.add_reference_album_obj))

@@ -39,7 +39,8 @@
 		"Subtitles": "MediaSources/0/MediaStreams:?Type=Subtitle$Language",
 		"Audio": "MediaSources/0/MediaStreams:?Type=Audio",
 		"Video": "MediaSources/0/MediaStreams:?Type=Video",
-		"Container": "MediaSources/0/Container"
+		"Container": "MediaSources/0/Container",
+		"EmbyParentId": "ParentId"
 	},
 	"MovieUserData": {
 		"Id": "Id",
@@ -74,7 +75,8 @@
 		"Studios": "Studios:?$Name",
 		"Tags": "Tags",
 		"Favorite": "UserData/IsFavorite",
-		"RecursiveCount": "RecursiveItemCount"
+		"RecursiveCount": "RecursiveItemCount",
+		"EmbyParentId": "ParentId"
 	},
 	"Season": {
 		"Id": "Id",
@@ -114,7 +116,8 @@
 		"Audio": "MediaSources/0/MediaStreams:?Type=Audio",
 		"Video": "MediaSources/0/MediaStreams:?Type=Video",
 		"Container": "MediaSources/0/Container",
-		"Location": "LocationType"
+		"Location": "LocationType",
+		"EmbyParentId": "ParentId"
 	},
 	"EpisodeUserData": {
 		"Id": "Id",
@@ -154,7 +157,8 @@
 		"Tags": "Tags",
 		"Played": "UserData/Played",
 		"Favorite": "UserData/IsFavorite",
-		"Directors": "People:?Type=Director$Name"
+		"Directors": "People:?Type=Director$Name",
+		"EmbyParentId": "ParentId"
 	},
 	"MusicVideoUserData": {
 		"Id": "Id",
@@ -170,7 +174,8 @@
 		"Name": "Name",
 		"UniqueId": "ProviderIds/MusicBrainzArtist",
 		"Genres": "Genres",
-		"Bio": "Overview"
+		"Bio": "Overview",
+		"EmbyParentId": "ParentId"
 	},
 	"Album": {
 		"Id": "Id",
@@ -181,7 +186,8 @@
 		"Bio": "Overview",
 		"AlbumArtists": "AlbumArtists",
 		"Artists": "AlbumArtists:?$Name",
-		"ArtistItems": "ArtistItems"
+		"ArtistItems": "ArtistItems",
+		"EmbyParentId": "ParentId"
 	},
 	"Song": {
 		"Id": "Id",
@@ -203,7 +209,8 @@
 		"AlbumArtists": "AlbumArtists",
 		"Album": "Album",
 		"SongAlbumId": "AlbumId",
-		"Container": "MediaSources/0/Container"
+		"Container": "MediaSources/0/Container",
+		"EmbyParentId": "ParentId"
 	},
 	"SongUserData": {
 		"Id": "Id",

@@ -121,14 +121,18 @@ class Music(Kodi):
         except TypeError:
             return
 
-    def get_album(self, album_id, name, musicbrainz, *args):
-
-        if musicbrainz is not None:
-            self.cursor.execute(QU.get_album, (musicbrainz,))
-        else:
-            self.cursor.execute(QU.get_album_by_name, (name,))
+    def get_album(self, album_id, name, musicbrainz, artists=None, *args):
 
         try:
+            if musicbrainz is not None:
+                self.cursor.execute(QU.get_album, (musicbrainz,))
+            else:
+                self.cursor.execute(QU.get_album_by_name, (name,))
+                album = self.cursor.fetchone()
+
+                if album[1] and album[1] not in artists.split(' / '):
+                    raise TypeError
+
             album_id = self.cursor.fetchone()[0]
         except TypeError:
             album_id = self.add_album(*(album_id, name, musicbrainz,) + args)

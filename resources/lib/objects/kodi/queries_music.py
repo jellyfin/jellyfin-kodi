@@ -47,9 +47,9 @@ get_album =     		"""	SELECT 	idAlbum
 							FROM 	album 
 							WHERE 	strMusicBrainzAlbumID = ? 
 						"""
-get_album_obj =             [   "{AlbumId}","{Title}","{UniqueId}","album"
+get_album_obj =             [   "{AlbumId}","{Title}","{UniqueId}","{Artists}","album"
                             ]
-get_album_by_name = 	"""	SELECT 	idAlbum 
+get_album_by_name = 	"""	SELECT 	idAlbum, strArtists  
 							FROM 	album 
 							WHERE 	strAlbum = ? 
 						"""
