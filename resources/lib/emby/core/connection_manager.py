@@ -461,7 +461,6 @@ class ConnectionManager(object):
     def _get_min_server_version(self, val=None):
 
         if val is not None:
-            LOG.info("hello?")
             self.min_server_version = val
 
         return self.min_server_version
@@ -809,9 +808,11 @@ class ConnectionManager(object):
                 }
             })
             self._update_server_info(server, system_info)
-        except Exception:
+        except Exception as error:
+
             server['UserId'] = None
             server['AccessToken'] = None
+
             return False
 
     def _update_server_info(self, server, system_info):

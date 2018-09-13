@@ -61,12 +61,15 @@ class EmbyClient(object):
 
         return state
 
-    def start(self, websocket=False):
+    def start(self, websocket=False, keep_alive=True):
 
         if not self.logged_in:
             raise ValueError("User is not authenticated.")
 
         self.http.start_session()
+
+        if keep_alive:
+            self.http.keep_alive = True
 
         if websocket:
             self.start_wsc()

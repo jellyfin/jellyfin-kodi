@@ -76,7 +76,12 @@ def get_device_id(reset=False):
     if client_id:
         return client_id
 
-    emby_guid = xbmc.translatePath('special://temp/emby_guid').decode('utf-8')
+    directory = xbmc.translatePath('special://special://profile/addon_data/plugin.video.emby/').decode('utf-8')
+
+    if not xbmcvfs.exists(directory):
+        xbmcvfs.mkdir(directory)
+
+    emby_guid = os.path.join(directory, "emby_guid")
     file_guid = xbmcvfs.File(emby_guid)
     client_id = file_guid.read()
 
