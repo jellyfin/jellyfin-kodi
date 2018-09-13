@@ -91,17 +91,26 @@ def get_filtered_section(parent_id, media=None, limit=None, recursive=None, sort
         'Limit': limit,
         'SortBy': sort or "SortName",
         'SortOrder': sort_order or "Ascending",
-        'Filters': filters,
         'ImageTypeLimit': 1,
         'IsVirtualUnaired': False,
-        'CollapseBoxSetItems': settings('groupedSets.bool'),
         'Fields': browse_info()
     }
+    if filters:
+
+        if 'Boxsets' in filters:
+
+            filters.remove('Boxsets')
+            params['CollapseBoxSetItems'] = settings('groupedSets.bool')
+
+        params['Filters'] = ','.join(filters)
+
     if settings('getCast.bool'):
         params['Fields'] += ",People"
 
     if media and 'Photo' in media:
         params['Fields'] += ",Width,Height"
+
+    LOG.info(params)
 
     return  _get("Users/{UserId}/Items", params, server_id)
 

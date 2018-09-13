@@ -235,15 +235,17 @@ def browse(media, view_id=None, folder=None, server_id=None):
         content_type = "images"
 
     if folder == 'FavEpisodes':
-        listing = TheVoid('Browse', {'Media': "Episode", 'ServerId': server_id, 'Limit': 25, 'Filters': "IsFavorite"}).get()
+        listing = TheVoid('Browse', {'Media': "Episode", 'ServerId': server_id, 'Limit': 25, 'Filters': ["IsFavorite"]}).get()
     elif media == 'homevideos':
         listing = TheVoid('Browse', {'Id': folder or view_id, 'Media': "Video,Folder,PhotoAlbum,Photo", 'ServerId': server_id, 'Recursive': False}).get()
     elif media == 'movies':
-        listing = TheVoid('Browse', {'Id': folder or view_id, 'Media': "Movie,BoxSet", 'ServerId': server_id, 'Recursive': True}).get()
+        listing = TheVoid('Browse', {'Id': folder or view_id, 'Media': "Movie,Boxset", 'ServerId': server_id, 'Recursive': True}).get()
+    elif media in ('boxset', 'library'):
+        listing = TheVoid('Browse', {'Id': folder or view_id, 'ServerId': server_id, 'Recursive': True}).get()
     elif media == 'episodes':
         listing = TheVoid('Browse', {'Id': folder or view_id, 'Media': "Episode", 'ServerId': server_id, 'Recursive': True}).get()
-    elif media == 'library':
-        listing = TheVoid('Browse', {'Id': folder or view_id, 'ServerId': server_id, 'Recursive': True}).get()
+    elif media == 'boxsets':
+        listing = TheVoid('Browse', {'Id': folder or view_id, 'ServerId': server_id, 'Recursive': False, 'Filters': ["Boxsets"]}).get()
     else:
         listing = TheVoid('Browse', {'Id': folder or view_id, 'ServerId': server_id, 'Recursive': False}).get()
 
@@ -322,7 +324,7 @@ def get_folder_type(item):
     elif media == 'Season':
         return "episodes"
     elif media == 'BoxSet':
-        return "movies"
+        return "boxset"
     elif media == 'MusicArtist':
         return "albums"
     elif media == 'MusicAlbum':
