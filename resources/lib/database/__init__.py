@@ -246,10 +246,10 @@ def get_sync():
     except Exception:
         sync = {}
 
-    sync['Libraries'] = sync.get('Libraries', [])
+    sync['Libraries'] = list(set(sync.get('Libraries', [])))
     sync['RestorePoint'] = sync.get('RestorePoint', {})
-    sync['Whitelist'] = sync.get('Whitelist', [])
-    sync['SortedViews'] = sync.get('SortedViews', [])
+    sync['Whitelist'] = list(set(sync.get('Whitelist', [])))
+    sync['SortedViews'] = list(set(sync.get('SortedViews', [])))
 
     return sync
 

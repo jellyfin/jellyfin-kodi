@@ -152,13 +152,13 @@ def get_artists(parent_id=None, basic=False, params=None, server_id=None):
     for items in _get_items(query, server_id):
         yield items
 
-def get_albums_by_artist(artist_id, basic=False, server_id=None):
+def get_albums_by_artist(artist_id, basic=False):
 
     params = {
         'SortBy': "DateCreated",
         'ArtistIds': artist_id
     }
-    for items in get_items(None, "MusicAlbum", basic, params, server_id):
+    for items in get_items(None, "MusicAlbum", basic, params):
         yield items
 
 @stop()

@@ -133,7 +133,7 @@ class FullSync(object):
 
             self.process_library(library)
 
-            if not library.startswith('Boxsets:'):
+            if not library.startswith('Boxsets:') and library not in self.sync['Whitelist']:
                 self.sync['Whitelist'].append(library)
 
             self.sync['Libraries'].pop(self.sync['Libraries'].index(library))
