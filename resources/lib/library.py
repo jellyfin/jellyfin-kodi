@@ -580,12 +580,17 @@ class SortWorker(threading.Thread):
 
                     return
 
-                media = database.get_media_by_id(item_id)
-
-                if media:
+                try:
+                    media = database.get_media_by_id(item_id)
                     self.output[media].put({'Id': item_id, 'Type': media})
-                else:
-                    LOG.info("Could not find media %s in the emby database.", item_id)
+                except Exception:
+                    items = database.get_media_by_parent_id(item_id)
+
+                    if not items:
+                        LOG.info("Could not find media %s in the emby database.", item_id)
+                    else:
+                        for item in items:
+                            self.output[item[1]].put({'Id': item[0], 'Type': item[1]})
 
                 self.queue.task_done()
 

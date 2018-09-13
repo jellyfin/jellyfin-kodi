@@ -61,8 +61,9 @@ class Database(object):
 
         LOG.debug("--->[ database: %s ] %s", self.db_file, id(self.conn))
 
-        if self.db_file == 'emby':
+        if not window('emby_db_check.bool') and self.db_file == 'emby':
 
+            window('emby_db_check.bool', True)
             emby_tables(self.cursor)
             self.conn.commit()
 
@@ -101,11 +102,17 @@ def emby_tables(cursor):
         """CREATE TABLE IF NOT EXISTS emby(
         emby_id TEXT UNIQUE, media_folder TEXT, emby_type TEXT, media_type TEXT,
         kodi_id INTEGER, kodi_fileid INTEGER, kodi_pathid INTEGER, parent_id INTEGER,
-        checksum INTEGER)""")
+        checksum INTEGER, emby_parent_id TEXT)""")
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS view(
         view_id TEXT UNIQUE, view_name TEXT, media_type TEXT)""")
     cursor.execute("CREATE TABLE IF NOT EXISTS version(idVersion TEXT)")
+
+    columns = cursor.execute("SELECT * FROM emby")
+    if 'emby_parent_id' not in [description[0] for description in columns.description]:
+        
+        LOG.info("Add missing column emby_parent_id")
+        cursor.execute("ALTER TABLE emby ADD COLUMN emby_parent_id 'TEXT'")
 
 def reset():
 

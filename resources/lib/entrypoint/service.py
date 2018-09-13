@@ -263,12 +263,14 @@ class Service(xbmc.Monitor):
             if data.get('ServerId'):
                 return
 
+            LOG.info("[ UserDataChanged ] %s", data)
             self.library_thread.userdata(data['UserDataList'])
 
         elif method == 'LibraryChanged' and self.library_thread:
             if data.get('ServerId'):
                 return
 
+            LOG.info("[ LibraryChanged ] %s", data)
             self.library_thread.updated(data['ItemsUpdated'] + data['ItemsAdded'])
             self.library_thread.removed(data['ItemsRemoved'])
 

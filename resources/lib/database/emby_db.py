@@ -88,6 +88,11 @@ class EmbyDatabase():
         except TypeError:
             return
 
+    def get_media_by_parent_id(self, *args):
+        self.cursor.execute(QU.get_media_by_parent_id, args)
+
+        return self.cursor.fetchall()
+
     def remove_item(self, *args):
         self.cursor.execute(QU.delete_item, args)
 

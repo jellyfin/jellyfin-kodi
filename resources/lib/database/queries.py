@@ -61,6 +61,10 @@ get_media_by_id =       """ SELECT  emby_type
                             FROM    emby 
                             WHERE   emby_id = ? 
                         """
+get_media_by_parent_id =    """ SELECT  emby_id, emby_type 
+                                FROM    emby 
+                                WHERE   emby_parent_id = ?
+                            """
 get_view =              """ SELECT  view_name, media_type 
                             FROM    view 
                             WHERE   view_id = ?
@@ -76,29 +80,34 @@ get_items_by_media =    """ SELECT  emby_id
 
 
 add_reference =	        """	INSERT OR REPLACE INTO	emby(emby_id, kodi_id, kodi_fileid, kodi_pathid, emby_type, 
-														 media_type, parent_id, checksum, media_folder) 
-                			VALUES 					(?, ?, ?, ?, ?, ?, ?, ?, ?) 
+														 media_type, parent_id, checksum, media_folder, emby_parent_id) 
+                			VALUES 					(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
                 		"""
-add_reference_movie_obj =   [   "{Id}","{MovieId}","{FileId}","{PathId}","Movie","movie", None,"{Checksum}","{LibraryId}"
+add_reference_movie_obj =   [   "{Id}","{MovieId}","{FileId}","{PathId}","Movie","movie", None,"{Checksum}","{LibraryId}",
+                                "{EmbyParentId}"
                             ]
-add_reference_boxset_obj =  [   "{Id}","{SetId}",None,None,"BoxSet","set",None,"{Checksum}",None
+add_reference_boxset_obj =  [   "{Id}","{SetId}",None,None,"BoxSet","set",None,"{Checksum}",None,None
                             ]
-add_reference_tvshow_obj =  [   "{Id}","{ShowId}",None,"{PathId}","Series","tvshow",None,"{Checksum}","{LibraryId}"
+add_reference_tvshow_obj =  [   "{Id}","{ShowId}",None,"{PathId}","Series","tvshow",None,"{Checksum}","{LibraryId}",
+                                "{EmbyParentId}"
                             ]
-add_reference_season_obj =  [   "{Id}","{SeasonId}",None,None,"Season","season","{ShowId}",None,None
+add_reference_season_obj =  [   "{Id}","{SeasonId}",None,None,"Season","season","{ShowId}",None,None,None
                             ]
-add_reference_pool_obj =    [   "{SeriesId}","{ShowId}",None,"{PathId}","Series","tvshow",None,"{Checksum}","{LibraryId}"
+add_reference_pool_obj =    [   "{SeriesId}","{ShowId}",None,"{PathId}","Series","tvshow",None,"{Checksum}","{LibraryId}",None
                             ]
-add_reference_episode_obj = [   "{Id}","{EpisodeId}","{FileId}","{PathId}","Episode","episode","{SeasonId}","{Checksum}",None
+add_reference_episode_obj = [   "{Id}","{EpisodeId}","{FileId}","{PathId}","Episode","episode","{SeasonId}","{Checksum}",
+                                None,"{EmbyParentId}"
                             ]
 add_reference_mvideo_obj =  [   "{Id}","{MvideoId}","{FileId}","{PathId}","MusicVideo","musicvideo",None,"{Checksum}",
-                                "{LibraryId}"
+                                "{LibraryId}","{EmbyParentId}"
                             ]
-add_reference_artist_obj =  [   "{Id}","{ArtistId}",None,None,"{ArtistType}","artist",None,"{Checksum}","{LibraryId}"
+add_reference_artist_obj =  [   "{Id}","{ArtistId}",None,None,"{ArtistType}","artist",None,"{Checksum}","{LibraryId}",
+                                "{EmbyParentId}"
                             ]
-add_reference_album_obj =   [   "{Id}","{AlbumId}",None,None,"MusicAlbum","album",None,"{Checksum}",None
+add_reference_album_obj =   [   "{Id}","{AlbumId}",None,None,"MusicAlbum","album",None,"{Checksum}",None,"{EmbyParentId}"
                             ]
-add_reference_song_obj =    [   "{Id}","{SongId}",None,"{PathId}","Audio","song","{AlbumId}","{Checksum}",None
+add_reference_song_obj =    [   "{Id}","{SongId}",None,"{PathId}","Audio","song","{AlbumId}","{Checksum}",
+                                None,"{EmbyParentId}"
                             ]
 add_view =              """ INSERT OR REPLACE INTO  view(view_id, view_name, media_type)
                             VALUES                  (?, ?, ?)

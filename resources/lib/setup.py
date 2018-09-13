@@ -32,16 +32,14 @@ class Setup(object):
         if settings('enableTextureCache.bool'):
 
             get_setting = JSONRPC('Settings.GetSettingValue')
-            enabled = self.get_web_server()
 
-            if not enabled:
+            if not self.get_web_server():
 
                 set_setting = JSONRPC('Settings.SetSetingValue')
                 set_setting.execute({'setting': "services.webserverport", 'value': 50325})
                 set_setting.execute({'setting': "services.webserver", 'value': True})
-                enabled = self.get_web_server()
 
-                if not enabled:
+                if not self.get_web_server():
 
                     settings('enableTextureCache.bool', False)
                     dialog("ok", heading="{emby}", line1=_(33103))

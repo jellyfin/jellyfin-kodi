@@ -203,8 +203,7 @@ def get_plugins():
 
 def get_seasons(show_id):
     return  shows("/%s/Seasons" % show_id, params={
-                'UserId': "{UserId}",
-                'Fields': basic_info()
+                'UserId': "{UserId}"
             })
 
 def get_date_modified(date, parent_id, media=None):

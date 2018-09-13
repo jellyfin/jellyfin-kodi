@@ -759,7 +759,7 @@ class Views(object):
         else:
             path = self.window_path(view, node)
 
-        if node in ('browse', 'books', 'audiobooks'):
+        if node in ('browse', 'audiobooks'):
             window_path = path
         else:
             window_path = "ActivateWindow(Videos,%s,return)" % path
