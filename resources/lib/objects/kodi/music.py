@@ -126,6 +126,7 @@ class Music(Kodi):
         try:
             if musicbrainz is not None:
                 self.cursor.execute(QU.get_album, (musicbrainz,))
+                album = None
             else:
                 self.cursor.execute(QU.get_album_by_name, (name,))
                 album = self.cursor.fetchone()
@@ -133,7 +134,7 @@ class Music(Kodi):
                 if album[1] and album[1] not in artists.split(' / '):
                     raise TypeError
 
-            album_id = self.cursor.fetchone()[0]
+            album_id = (album or self.cursor.fetchone())[0]
         except TypeError:
             album_id = self.add_album(*(album_id, name, musicbrainz,) + args)
 
