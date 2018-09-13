@@ -751,12 +751,12 @@ class Views(object):
         ''' Similar to window_node, but does not contain music, musicvideos.
             Contains books, audiobooks.
         '''
-        if view['Media'] in ('homevideos', 'photos'):
+        if view['Media'] in ('homevideos', 'photos', 'books', 'audiobooks'):
             path = self.window_browse(view, None if node in ('all', 'browse') else node)
         else:
             path = self.window_path(view, node)
 
-        if node in ('browse', 'books', 'audiobooks'):
+        if node in ('browse', 'homevideos', 'photos', 'books', 'audiobooks'):
             window_path = path
         else:
             window_path = "ActivateWindow(Videos,%s,return)" % path
