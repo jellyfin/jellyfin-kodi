@@ -793,3 +793,7 @@ msgstr ""
 msgctxt "#33163"
 msgid "Support this project"
 msgstr ""
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr ""

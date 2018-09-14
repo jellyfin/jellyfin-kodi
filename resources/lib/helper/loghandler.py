@@ -7,7 +7,7 @@ import logging
 import xbmc
 
 import database
-from . import window
+from . import window, settings
 
 ##################################################################################################
 
@@ -42,17 +42,20 @@ class LogHandler(logging.StreamHandler):
             if server.get('ManualAddress'):
                 self.sensitive['Server'].append(server['ManualAddress'].split('://')[1])
 
+        self.mask_info = settings('maskInfo.bool')
 
     def emit(self, record):
 
         if self._get_log_level(record.levelno):
             string = self.format(record)
 
-            for server in self.sensitive['Server']:
-                string = string.replace(server or "{server}", "{emby-server}")
+            if self.mask_info:
+                for server in self.sensitive['Server']:
+                    string = string.replace(server or "{server}", "{emby-server}")
 
-            for token in self.sensitive['Token']:
-                string = string.replace(token or "{token}", "{emby-token}")
+                for token in self.sensitive['Token']:
+                    string = string.replace(token or "{token}", "{emby-token}")
+
             try:
                 xbmc.log(string, level=xbmc.LOGNOTICE)
             except UnicodeEncodeError:
