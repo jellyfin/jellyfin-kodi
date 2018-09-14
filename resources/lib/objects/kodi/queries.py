@@ -90,11 +90,11 @@ get_tag =   			"""	SELECT	tag_id
 							WHERE	name = ? 
 							COLLATE NOCASE 
 						"""
-get_tag_movie_obj =         [   "{MovieId}", "Favorite movies", "movie"
+get_tag_movie_obj =         [   "Favorite movies","{MovieId}","movie"
                             ]
-get_tag_mvideo_obj =        [   "{MvideoId}", "Favorite musicvideos", "musicvideo"
+get_tag_mvideo_obj =        [   "Favorite musicvideos","{MvideoId}","musicvideo"
                             ]
-get_tag_episode_obj =       [   "{KodiId}", "Favorite tvshows", "tvshow"
+get_tag_episode_obj =       [   "Favorite tvshows","{KodiId}","tvshow"
                             ]
 get_art =   			"""	SELECT	url 
 							FROM	art 
@@ -503,15 +503,15 @@ delete_tags =   		"""	DELETE FROM	tag_link
 							AND 		media_type = ? 
 						"""
 delete_tag =    		"""	DELETE FROM	tag_link 
-							WHERE		tag_id = ?
+							WHERE		tag_id = ? 
+                            AND         media_id = ? 
 							AND 		media_type = ? 
-							AND 		media_id = ?
 						"""
-delete_tag_movie_obj =      [   "{MovieId}","Favorite movies","movie"
+delete_tag_movie_obj =      [   "Favorite movies","{MovieId}","movie"
                             ]
-delete_tag_mvideo_obj =     [   "{MvideoId}","Favorite musicvideos","musicvideo"
+delete_tag_mvideo_obj =     [   "Favorite musicvideos","{MvideoId}","musicvideo"
                             ]
-delete_tag_episode_obj =    [   "{KodiId}","Favorite tvshows","tvshow"
+delete_tag_episode_obj =    [   "Favorite tvshows","{KodiId}","tvshow"
                             ]
 delete_movie =  		"""	DELETE FROM	movie 
 							WHERE		idMovie = ? 

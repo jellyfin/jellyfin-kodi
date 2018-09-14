@@ -294,4 +294,4 @@ class Kodi(object):
         except TypeError:
             return
 
-        self.cursor.execute(QU.delete_tag, (tag,) + args)
+        self.cursor.execute(QU.delete_tag, (tag_id,) + args)
