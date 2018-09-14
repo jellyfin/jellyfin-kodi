@@ -210,13 +210,13 @@ def validate(path):
     path = path if os.path.supports_unicode_filenames else path.encode('utf-8')
 
     if not xbmcvfs.exists(path):
-        if dialog(type_="yesno",
-                  heading="{emby}",
-                  line1="%s %s. %s" % (_(33047), path, _(33048))):
+        LOG.info("Could not find %s", path)
+
+        if dialog("yesno", heading="{emby}", line1="%s %s. %s" % (_(33047), path, _(33048))):
 
             return False
 
-    window('emby_pathverified', "true")
+    window('emby_pathverified.bool', True)
 
     return True
 

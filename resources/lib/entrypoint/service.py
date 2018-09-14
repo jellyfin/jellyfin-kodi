@@ -399,7 +399,7 @@ class Service(xbmc.Monitor):
             "emby_initialScan",
 
             "emby_play", "emby_online", "emby.connected", "emby_should_stop", "emby.resume",
-            "emby.external", "emby.external_check", "emby_deviceId", "emby_db_check"
+            "emby.external", "emby.external_check", "emby_deviceId", "emby_db_check", "emby_pathverified"
         ]
         for prop in properties:
             window(prop, clear=True)
