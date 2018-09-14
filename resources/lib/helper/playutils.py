@@ -441,7 +441,7 @@ class PlayUtils(object):
                 LOG.info("[ subtitles/%s ] %s", index, url)
 
                 if 'Language' in stream:
-                    filename = "Stream.%s.%s" % (stream['Language'].encode('utf-8'), stream['Codec'])
+                    filename = "Stream.%s.%s" % (stream['Language'].encode('utf-8'), stream['Codec'].encode('utf-8'))
 
                     try:
                         subs.append(self.download_external_subs(url, filename))
