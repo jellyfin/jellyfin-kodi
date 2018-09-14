@@ -110,8 +110,6 @@ def get_filtered_section(parent_id, media=None, limit=None, recursive=None, sort
     if media and 'Photo' in media:
         params['Fields'] += ",Width,Height"
 
-    LOG.info(params)
-
     return  _get("Users/{UserId}/Items", params, server_id)
 
 def get_movies_by_boxset(boxset_id):

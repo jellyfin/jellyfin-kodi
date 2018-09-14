@@ -180,11 +180,14 @@ class Library(threading.Thread):
                                      not self.writer_threads['userdata'] and not self.writer_threads['removed']):
             self.pending_refresh = False
             self.save_last_sync()
+            xbmc.executebuiltin('UpdateLibrary(video)')
 
+            """
             if xbmc.getCondVisibility('Window.IsActive(home)'):
                 xbmc.executebuiltin('UpdateLibrary(video)')
             else:
                 xbmc.executebuiltin('Container.Refresh')
+            """
 
     def stop_client(self):
         self.stop_thread = True
