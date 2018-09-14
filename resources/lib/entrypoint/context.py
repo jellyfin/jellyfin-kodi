@@ -168,8 +168,7 @@ class Context(object):
                 delete = False
 
         if delete:
-            LOG.info("fake deleted %s", self.item['Id'])
-            #TheVoid('DeleteItem', {'ServerId': self.server, 'Id': self.item['Id']})
+            TheVoid('DeleteItem', {'ServerId': self.server, 'Id': self.item['Id']})
 
     def transcode(self):
 
