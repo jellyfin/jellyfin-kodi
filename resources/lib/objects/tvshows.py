@@ -406,7 +406,7 @@ class TVShows(KodiDb):
         if obj['ShowId'] is None:
 
             try:
-                self.tvshow(self.server['api'].get_item(obj['SeriesId']), None)
+                self.tvshow(self.server['api'].get_item(obj['SeriesId']), library=None)
                 obj['ShowId'] = self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))[0]
             except (TypeError, KeyError):
                 LOG.error("Unable to add series %s", obj['SeriesId'])
