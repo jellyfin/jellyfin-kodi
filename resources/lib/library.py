@@ -376,6 +376,9 @@ class Library(threading.Thread):
                 items = db.get_item_by_media_folder(library_id)
                 media = 'music' if library[1] == 'music' else 'video'
 
+                if media == 'music':
+                    settings('MusicRescan.bool', False)
+
                 if items:
                     with self.music_database_lock if media == 'music' else self.database_lock:
                         with Database(media) as kodidb:
