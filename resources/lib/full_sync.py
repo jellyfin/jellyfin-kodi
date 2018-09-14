@@ -40,7 +40,7 @@ class FullSync(object):
             libraries = library_id.split(',')
 
             for selected in libraries:
-                if selected not in [x.replace('Mixed:', "") for x in self.sync['Whitelist']]:
+                if selected not in [x.replace('Mixed:', "") for x in self.sync['Libraries']]:
                     library = self.get_libraries(selected)
 
                     if library and library[1] == 'mixed':
@@ -51,6 +51,7 @@ class FullSync(object):
             self.mapping()
 
         xmls.sources()
+
         if not xmls.advanced_settings():
             self.start()
 
@@ -189,9 +190,12 @@ class FullSync(object):
 
         except Exception as error:
 
-            dialog("ok", heading="{emby}", line1=_(33119))
+            if not 'Failed to validate path' in error:
+
+                dialog("ok", heading="{emby}", line1=_(33119))
+                LOG.error("full sync exited unexpectedly")
+
             save_sync(self.sync)
-            LOG.error("full sync exited unexpectedly")
 
             raise
 

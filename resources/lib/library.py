@@ -380,6 +380,8 @@ class Library(threading.Thread):
                     settings('MusicRescan.bool', False)
 
                 if items:
+                    count = 0
+
                     with self.music_database_lock if media == 'music' else self.database_lock:
                         with Database(media) as kodidb:
 
@@ -391,16 +393,22 @@ class Library(threading.Thread):
 
                                 for item in movies:
                                     obj(item[0])
+                                    dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
+                                    count += 1
 
                                 obj = MEDIA['Series'](self.server, embydb, kodidb, self.direct_path)['Remove']
 
                                 for item in tvshows:
                                     obj(item[0])
+                                    dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
+                                    count += 1
                             else:
                                 obj = MEDIA[items[0][1]](self.server, embydb, kodidb, self.direct_path)['Remove']
 
                                 for item in items:
                                     obj(item[0])
+                                    dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
+                                    count += 1
 
             sync = get_sync()
 
