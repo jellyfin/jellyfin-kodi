@@ -31,7 +31,9 @@ def sources():
 
         xml = etree.Element('sources')
         video = etree.SubElement(xml, 'video')
+        files = etree.SubElement(xml, 'files')
         etree.SubElement(video, 'default', attrib={'pathversion': "1"})
+        etree.SubElement(files, 'default', attrib={'pathversion': "1"})
 
     video = xml.find('video')
     count = 2
@@ -49,11 +51,13 @@ def sources():
             etree.SubElement(source, 'path', attrib={'pathversion': "1"}).text = "smb://"
             etree.SubElement(source, 'allowsharing').text = "true"
 
+    files = xml.find('files')
+
     for source in xml.findall('.//path'):
         if source.text == 'http://kodi.emby.media':
             break
     else:
-        source = etree.SubElement(video, 'source')
+        source = etree.SubElement(files, 'source')
         etree.SubElement(source, 'name').text = "kodi.emby.media"
         etree.SubElement(source, 'path', attrib={'pathversion': "1"}).text = "http://kodi.emby.media"
         etree.SubElement(source, 'allowsharing').text = "true"

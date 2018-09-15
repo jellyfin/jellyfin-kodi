@@ -96,6 +96,7 @@ class FullSync(object):
         ''' Select all or whitelist libraries. Provides a new list.
         '''
         if not dialog("yesno", heading="{emby}", line1=_(33125), nolabel=_(33126), yeslabel=_(33127)):
+            LOG.info("Selected sync later.")
             raise LibraryException('SyncLibraryLater')
 
         choices = [x['Name'] for x in libraries]
@@ -105,6 +106,7 @@ class FullSync(object):
         if selection is None:
             raise LibraryException('LibrarySelection')
         elif not selection:
+            LOG.info("Nothing was selected.")
             raise LibraryException('SyncLibraryLater')
 
         if 0 in selection:
@@ -128,6 +130,7 @@ class FullSync(object):
         
         ''' Main sync process.
         '''
+        LOG.info("starting sync with %s", self.sync['Libraries'])
         start_time = datetime.datetime.now()
 
         for library in list(self.sync['Libraries']):
