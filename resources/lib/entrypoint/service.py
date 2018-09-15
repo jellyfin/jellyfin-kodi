@@ -46,6 +46,7 @@ class Service(xbmc.Monitor):
         self.settings['profile'] = xbmc.translatePath('special://profile')
         self.settings['mode'] = settings('useDirectPaths')
         self.settings['log_level'] = settings('logLevel') or "1"
+        self.settings['auth_check'] = True
         self.settings['enable_context'] = settings('enableContext.bool')
         self.settings['enable_context_transcode'] = settings('enableContextTranscode.bool')
         self.settings['kodi_companion'] = settings('kodiCompanion.bool')
@@ -199,6 +200,7 @@ class Service(xbmc.Monitor):
             if data['ServerId'] is None:
 
                 window('emby_online.bool', True)
+                self.settings['auth_check'] = True
                 self.warn = True
 
                 if self.library_thread is None:
@@ -223,6 +225,16 @@ class Service(xbmc.Monitor):
 
         elif method == 'Unauthorized':
             dialog("notification", heading="{emby}", message=_(33147) if data['ServerId'] is None else _(33148), icon=xbmcgui.NOTIFICATION_ERROR)
+
+            if data.get('ServerId') is None and self.settings['auth_check']:
+
+                self.settings['auth_check'] = False
+                self.stop_default()
+
+                if self.waitForAbort(5):
+                    return
+                
+                self.start_default()
 
         elif method == 'ServerRestarting':
             if data.get('ServerId'):

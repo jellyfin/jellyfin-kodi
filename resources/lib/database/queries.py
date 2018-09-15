@@ -1,6 +1,6 @@
 
 get_item =              """ SELECT  kodi_id, kodi_fileid, kodi_pathid, parent_id, media_type, 
-						            emby_type, media_folder 
+						            emby_type, media_folder, emby_parent_id  
 				            FROM	emby 
 				            WHERE 	emby_id = ? 
 			            """
