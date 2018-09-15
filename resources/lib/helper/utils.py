@@ -123,7 +123,8 @@ def find(dict, item):
         return dict[item]
 
     for key,value in sorted(dict.iteritems(), key=lambda (k,v): (v,k)):
-        if re.match(key, item):
+
+        if re.match(key, item, re.I):
             return dict[key]
 
 def event(method, data=None):
