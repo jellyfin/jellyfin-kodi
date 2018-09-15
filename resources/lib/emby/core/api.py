@@ -101,11 +101,8 @@ def artwork(item_id, art, max_width, ext="jpg", index=None):
 
 #################################################################################################
 
-def get_users(disabled=False, hidden=False):
-    return  _get("Users", params={
-                'IsDisabled': disabled,
-                'IsHidden': hidden
-            })
+def get_users():
+    return  _get("Users")
 
 def get_public_users():
     return  _get("Users/Public")
