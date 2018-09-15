@@ -346,15 +346,15 @@ def get_fanart(item_id, path, server_id=None):
     LOG.info("[ extra fanart ] %s", item_id)
     objects = Objects()
     list_li = []
-    API = api.API(item, TheVoid('GetServerAddress', {'ServerId': server_id}).get())
     directory = xbmc.translatePath("special://thumbnails/emby/%s/" % item_id).decode('utf-8')
+    server = TheVoid('GetServerAddress', {'ServerId': server_id}).get()
 
     if not xbmcvfs.exists(directory):
 
         xbmcvfs.mkdirs(directory)
         item = TheVoid('GetItem', {'ServerId': server_id, 'Id': item_id}).get()
         obj = objects.map(item, 'Artwork')
-        backdrops = API.get_all_artwork(obj)
+        backdrops = api.API(item, server).get_all_artwork(obj)
         tags = obj['BackdropTags']
 
         for index, backdrop in enumerate(backdrops):
