@@ -53,11 +53,17 @@ class HTTP(object):
 
     def _replace_user_info(self, string):
 
-        if self.config['auth.server']:
-            string = string.decode('utf-8').replace("{server}", self.config['auth.server'])
+        if '{server}' in string:
+            if self.config['auth.server']:
+                string = string.decode('utf-8').replace("{server}", self.config['auth.server'])
+            else:
+                raise Exception("Server address not set.")
 
-        if self.config['auth.user_id']:
-            string = string.decode('utf-8').replace("{UserId}", self.config['auth.user_id'])
+        if '{UserId}'in string:
+            if self.config['auth.user_id']:
+                string = string.decode('utf-8').replace("{UserId}", self.config['auth.user_id'])
+            else:
+                raise Exception("UserId is not set.")
 
         return string
 
