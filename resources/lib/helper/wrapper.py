@@ -121,7 +121,6 @@ def library_check():
                     ancestors = self.server['api'].get_ancestors(item['Id'])
  
                     if not ancestors:
-
                         return
 
                     for ancestor in ancestors:
