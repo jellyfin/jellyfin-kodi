@@ -140,7 +140,7 @@ class Service(xbmc.Monitor):
 
         try:
             versions = requests.get('http://kodi.emby.media/Public%20testing/Dependencies/databases.json').json()
-            build = find(versions, kodi.lower())
+            build = find(versions, kodi)
 
             if not build:
                 raise Exception("build %s incompatible?!" % kodi)

@@ -111,7 +111,7 @@ def library_check():
 
                 if 'e_item' in kwargs:
                     try:
-                        view_id = kwargs['e_item'][7]
+                        view_id = kwargs['e_item'][6]
                         view_name = self.emby_db.get_view_name(view_id)
                         view = {'Name': view_name, 'Id': view_id}
                     except Exception:
@@ -119,7 +119,7 @@ def library_check():
 
                 if view is None:
                     ancestors = self.server['api'].get_ancestors(item['Id'])
-
+ 
                     if not ancestors:
 
                         return
