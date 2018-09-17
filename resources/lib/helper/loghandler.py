@@ -51,10 +51,10 @@ class LogHandler(logging.StreamHandler):
 
             if self.mask_info:
                 for server in self.sensitive['Server']:
-                    string = string.replace(server or "{server}", "{emby-server}")
+                    string = string.replace(server.encode('utf-8') or "{server}", "{emby-server}")
 
                 for token in self.sensitive['Token']:
-                    string = string.replace(token or "{token}", "{emby-token}")
+                    string = string.replace(token.encode('utf-8')  or "{token}", "{emby-token}")
 
             try:
                 xbmc.log(string, level=xbmc.LOGNOTICE)
