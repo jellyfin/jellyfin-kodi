@@ -53,6 +53,9 @@ def sources():
 
     files = xml.find('files')
 
+    if files is None:
+        files = etree.SubElement(xml, 'files')
+
     for source in xml.findall('.//path'):
         if source.text == 'http://kodi.emby.media':
             break
