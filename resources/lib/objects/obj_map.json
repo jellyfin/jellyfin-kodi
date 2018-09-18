@@ -217,7 +217,8 @@
 		"Title": "Name",
 		"PlayCount": "UserData/PlayCount",
 		"DatePlayed": "UserData/LastPlayedDate",
-		"DateAdded": "DateCreated"
+		"DateAdded": "DateCreated",
+		"Played": "UserData/Played"
 	},
 	"Artwork": {
 		"Id": "Id",
