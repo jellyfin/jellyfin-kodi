@@ -159,6 +159,7 @@ def reset():
     if xbmcvfs.exists(os.path.join(addon_data, "sync.json")):
         xbmcvfs.delete(os.path.join(addon_data, "sync.json"))
 
+    settings('enableMusic.bool', False)
     settings('MinimumSetup.bool', False)
     settings('MusicRescan.bool', False)
     settings('SyncInstallRunDone.bool', False)

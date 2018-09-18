@@ -115,6 +115,8 @@ class Events(object):
             event('UpdateServer')
         elif mode == 'thememedia':
             get_themes()
+        elif mode == 'backup':
+            backup()
         else:
             listing()
 
@@ -143,13 +145,13 @@ def listing():
         context = []
 
         if view_id and node in ('movies', 'tvshows', 'musicvideos', 'music') and view_id not in whitelist:
-            context.append((_(33123), "RunPlugin(plugin://plugin.video.emby?mode=synclib&id=%s)" % view_id))
+            context.append((_(33123), "RunPlugin(plugin://plugin.video.emby/?mode=synclib&id=%s)" % view_id))
 
         if view_id and node in ('movies', 'tvshows', 'musicvideos', 'music') and view_id in whitelist:
 
-            context.append((_(33136), "RunPlugin(plugin://plugin.video.emby?mode=synclib&id=%s)" % view_id))
-            context.append((_(33132), "RunPlugin(plugin://plugin.video.emby?mode=repairlib&id=%s)" % view_id))
-            context.append((_(33133), "RunPlugin(plugin://plugin.video.emby?mode=removelib&id=%s)" % view_id))
+            context.append((_(33136), "RunPlugin(plugin://plugin.video.emby/?mode=synclib&id=%s)" % view_id))
+            context.append((_(33132), "RunPlugin(plugin://plugin.video.emby/?mode=repairlib&id=%s)" % view_id))
+            context.append((_(33133), "RunPlugin(plugin://plugin.video.emby/?mode=removelib&id=%s)" % view_id))
 
         LOG.debug("--[ listing/%s/%s ] %s", node, label, path)
         
@@ -184,6 +186,10 @@ def listing():
     directory(_(33140), "plugin://plugin.video.emby/?mode=repairlibs", False)
     directory(_(33060), "plugin://plugin.video.emby/?mode=thememedia", False)
     directory(_(33058), "plugin://plugin.video.emby/?mode=reset", False)
+
+    if settings('backupPath'):
+        directory(_(33092), "plugin://plugin.video.emby/?mode=backup", False)
+
     directory(_(33163), None, False, artwork="special://home/addons/plugin.video.emby/donations.png")
 
     xbmcplugin.setContent(int(sys.argv[1]), 'files')
@@ -275,12 +281,12 @@ def browse(media, view_id=None, folder=None, server_id=None):
                 context = []
 
                 if item['Type'] in ('Series', 'Season', 'Playlist'):
-                    context.append(("Play", "RunPlugin(plugin://plugin.video.emby?mode=playlist&id=%s&server=%s)" % (item['Id'], server_id)))
+                    context.append(("Play", "RunPlugin(plugin://plugin.video.emby/?mode=playlist&id=%s&server=%s)" % (item['Id'], server_id)))
 
                 if item['UserData']['Played']:
-                    context.append((_(16104), "RunPlugin(plugin://plugin.video.emby?mode=unwatched&id=%s&server=%s)" % (item['Id'], server_id)))
+                    context.append((_(16104), "RunPlugin(plugin://plugin.video.emby/?mode=unwatched&id=%s&server=%s)" % (item['Id'], server_id)))
                 else:
-                    context.append((_(16103), "RunPlugin(plugin://plugin.video.emby?mode=watched&id=%s&server=%s)" % (item['Id'], server_id)))
+                    context.append((_(16103), "RunPlugin(plugin://plugin.video.emby/?mode=watched&id=%s&server=%s)" % (item['Id'], server_id)))
 
                 li.addContextMenuItems(context)
                 list_li.append((path, li, True))
@@ -293,12 +299,12 @@ def browse(media, view_id=None, folder=None, server_id=None):
                     }
                     path = "%s?%s" % ("plugin://plugin.video.emby", urllib.urlencode(params))
                     li.setProperty('path', path)
-                    context = [(_(13412), "RunPlugin(plugin://plugin.video.emby?mode=playlist&id=%s&server=%s)" % (item['Id'], server_id))]
+                    context = [(_(13412), "RunPlugin(plugin://plugin.video.emby/?mode=playlist&id=%s&server=%s)" % (item['Id'], server_id))]
 
                     if item['UserData']['Played']:
-                        context.append((_(16104), "RunPlugin(plugin://plugin.video.emby?mode=unwatched&id=%s&server=%s)" % (item['Id'], server_id)))
+                        context.append((_(16104), "RunPlugin(plugin://plugin.video.emby/?mode=unwatched&id=%s&server=%s)" % (item['Id'], server_id)))
                     else:
-                        context.append((_(16103), "RunPlugin(plugin://plugin.video.emby?mode=watched&id=%s&server=%s)" % (item['Id'], server_id)))
+                        context.append((_(16103), "RunPlugin(plugin://plugin.video.emby/?mode=watched&id=%s&server=%s)" % (item['Id'], server_id)))
 
                     li.addContextMenuItems(context)
 
@@ -688,3 +694,59 @@ def delete_item():
     import context
 
     context.Context(delete=True)
+
+def backup():
+
+    ''' Emby backup.
+    '''
+    from helper.utils import delete_folder, copytree
+
+    path = settings('backupPath')
+    folder_name = "Kodi%s.%s" % (xbmc.getInfoLabel('System.BuildVersion')[:2], xbmc.getInfoLabel('System.Date(dd-mm-yy)'))
+    folder_name = dialog("input", heading=_(33089), defaultt=folder_name)
+
+    if not folder_name:
+        return
+
+    backup = os.path.join(path, folder_name)
+
+    if xbmcvfs.exists(backup + '/'):
+        if not dialog("yesno", heading="{emby}", line1=_(33090)):
+
+            return backup()
+
+        delete_folder(backup)
+
+    addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.emby").decode('utf-8')
+    destination_data = os.path.join(backup, "addon_data", "plugin.video.emby")
+    destination_databases = os.path.join(backup, "Database")
+
+    if not xbmcvfs.mkdirs(path) or not xbmcvfs.mkdirs(destination_databases):
+
+        LOG.info("Unable to create all directories")
+        dialog("notification", heading="{emby}", icon="{emby}", message=_(33165), sound=False)
+
+        return
+
+    copytree(addon_data, destination_data)
+
+    databases = Objects().objects
+
+    db = xbmc.translatePath(databases['emby']).decode('utf-8')
+    xbmcvfs.copy(db, os.path.join(destination_databases, db.rsplit('\\', 1)[1]))
+    LOG.info("copied emby.db")
+
+    db = xbmc.translatePath(databases['video']).decode('utf-8')
+    filename = db.rsplit('\\', 1)[1]
+    xbmcvfs.copy(db, os.path.join(destination_databases, filename))
+    LOG.info("copied %s", filename)
+
+    if settings('enableMusic.bool'):
+
+        db = xbmc.translatePath(databases['music']).decode('utf-8')
+        filename = db.rsplit('\\', 1)[1]
+        xbmcvfs.copy(db, os.path.join(destination_databases, filename))
+        LOG.info("copied %s", filename)
+
+    LOG.info("backup completed")
+    dialog("ok", heading="{emby}", line1="%s %s" % (_(33091), backup))

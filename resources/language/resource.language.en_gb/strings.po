@@ -518,6 +518,18 @@ msgctxt "#33088"
 msgid "Database reset has completed, Kodi will now restart to apply the changes."
 msgstr ""
 
+msgctxt "#33089"
+msgid "Enter folder name for backup"
+msgstr ""
+
+msgctxt "#33090"
+msgid "Replace existing backup?"
+msgstr ""
+
+msgctxt "#33091"
+msgid "Created backup at:"
+msgstr ""
+
 msgctxt "#33092"
 msgid "Create a backup"
 msgstr ""
@@ -796,4 +808,8 @@ msgstr ""
 
 msgctxt "#33164"
 msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr ""
+
+msgctxt "#33165"
+msgid "Failed to create backup"
 msgstr ""

@@ -289,7 +289,7 @@ def delete_recursive(path, dirs):
 
 def unzip(path, dest, folder=None):
 
-    ''' Unzip file. zipfile module seems to fail on android.
+    ''' Unzip file. zipfile module seems to fail on android with badziperror.
     '''
     path = urllib.quote_plus(path)
     root = "zip://" + path + '/'
@@ -344,6 +344,43 @@ def get_zip_directory(path, folder):
         result = get_zip_directory(os.path.join(path, directory.decode('utf-8')), folder)
         if result:
             return result
+
+def copytree(path, dest):
+
+    ''' Copy folder content from one to another.
+    '''
+    dirs, files = xbmcvfs.listdir(path)
+
+    if dirs:
+        copy_recursive(path, dirs, dest)
+
+    for file in files:
+        copy_file(os.path.join(path, file.decode('utf-8')), os.path.join(dest, file.decode('utf-8')))
+
+    LOG.info("Copied %s", path)
+
+def copy_recursive(path, dirs, dest):
+
+    for directory in dirs:
+
+        dirs_dir = os.path.join(path, directory.decode('utf-8'))
+        dest_dir = os.path.join(dest, directory.decode('utf-8'))
+        xbmcvfs.mkdir(dest_dir)
+
+        dirs2, files = xbmcvfs.listdir(dirs_dir)
+
+        if dirs2:
+            copy_recursive(dirs_dir, dirs2, dest_dir)
+
+        for file in files:
+            copy_file(os.path.join(dirs_dir, file.decode('utf-8')), os.path.join(dest_dir, file.decode('utf-8')))
+
+def copy_file(path, dest):
+
+    ''' Copy specific file.
+    '''
+    xbmcvfs.copy(path, dest)
+    LOG.debug("copy: %s to %s", path, dest)
 
 def normalize_string(text):
 
