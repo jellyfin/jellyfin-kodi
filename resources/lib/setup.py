@@ -36,7 +36,7 @@ class Setup(object):
             if not self.get_web_server():
 
                 set_setting = JSONRPC('Settings.SetSetingValue')
-                set_setting.execute({'setting': "services.webserverport", 'value': 50325})
+                set_setting.execute({'setting': "services.webserverport", 'value': 8080})
                 set_setting.execute({'setting': "services.webserver", 'value': True})
 
                 if not self.get_web_server():

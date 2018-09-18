@@ -277,7 +277,15 @@ def get_credentials():
         with open(os.path.join(path, 'data.json')) as infile:
             credentials = json.load(infile)
     except Exception:
-        credentials = {}
+
+        try:
+            with open(os.path.join(path, 'data.txt')) as infile:
+                credentials = json.load(infile)
+                save_credentials(credentials)
+            
+            xbmcvfs.delete(os.path.join(path, 'data.txt'))
+        except Exception:
+            credentials = {}
 
     credentials['Servers'] = credentials.get('Servers', [])
 
