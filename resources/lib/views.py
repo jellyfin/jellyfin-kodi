@@ -102,7 +102,6 @@ class Views(object):
     def __init__(self):
 
         self.sync = get_sync()
-        self.window = {}
         self.server = Emby()
 
     def add_library(self, view):
@@ -651,7 +650,7 @@ class Views(object):
                                 temp_view['Media'] = media
                                 temp_view['Name'] = "%s (%s)" % (view['Name'], _(media))
                                 self.window_node(index, temp_view, *node)
-                                self.window_wnode(windex, view, *node)
+                                self.window_wnode(windex, temp_view, *node)
                             else: # Add one to compensate for the duplicate.
                                 index += 1
                                 windex += 1
