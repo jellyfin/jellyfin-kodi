@@ -306,7 +306,7 @@ def get_objects(src, filename):
     '''
     temp = xbmc.translatePath('special://temp/emby').decode('utf-8')
     restart = not xbmcvfs.exists(os.path.join(temp, "objects") + '/')
-    path = os.path.join(temp, filename)
+    path = os.path.join(temp, filename).decode('utf-8')
 
     if not xbmcvfs.exists(path):
         delete_folder()
