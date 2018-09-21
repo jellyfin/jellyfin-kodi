@@ -51,19 +51,19 @@ def sources():
             etree.SubElement(source, 'path', attrib={'pathversion': "1"}).text = "smb://"
             etree.SubElement(source, 'allowsharing').text = "true"
 
-    files = xml.find('files')
+    try:
+        files = xml.find('files') or etree.SubElement(xml, 'files')
 
-    if files is None:
-        files = etree.SubElement(xml, 'files')
-
-    for source in xml.findall('.//path'):
-        if source.text == 'http://kodi.emby.media':
-            break
-    else:
-        source = etree.SubElement(files, 'source')
-        etree.SubElement(source, 'name').text = "kodi.emby.media"
-        etree.SubElement(source, 'path', attrib={'pathversion': "1"}).text = "http://kodi.emby.media"
-        etree.SubElement(source, 'allowsharing').text = "true"
+        for source in xml.findall('.//path'):
+            if source.text == 'http://kodi.emby.media':
+                break
+        else:
+            source = etree.SubElement(files, 'source')
+            etree.SubElement(source, 'name').text = "kodi.emby.media"
+            etree.SubElement(source, 'path', attrib={'pathversion': "1"}).text = "http://kodi.emby.media"
+            etree.SubElement(source, 'allowsharing').text = "true"
+    except Exception as error:
+        LOG.exception(error)
 
     indent(xml)
     write_xml(etree.tostring(xml, 'UTF-8'), file)
