@@ -180,14 +180,11 @@ class Library(threading.Thread):
                                      not self.writer_threads['userdata'] and not self.writer_threads['removed']):
             self.pending_refresh = False
             self.save_last_sync()
-            xbmc.executebuiltin('UpdateLibrary(video)')
 
-            """
-            if xbmc.getCondVisibility('Window.IsActive(home)'):
-                xbmc.executebuiltin('UpdateLibrary(video)')
-            else:
+            if xbmc.getCondVisibility('Container.Content(musicvideos)'): # Prevent cursor from moving
                 xbmc.executebuiltin('Container.Refresh')
-            """
+            else:
+                xbmc.executebuiltin('UpdateLibrary(video)')
 
     def stop_client(self):
         self.stop_thread = True
@@ -218,6 +215,8 @@ class Library(threading.Thread):
                     dialog("ok", heading="{emby}", line1=_(33128))
 
                     raise Exception("Failed to retrieve latest updates")
+
+                LOG.info("--<[ retrieve changes ]")
             else:
                 FullSync(self)
                 Views().get_nodes()
@@ -296,8 +295,8 @@ class Library(threading.Thread):
         return True
 
     def save_last_sync(self):
-
-        time_now = datetime.utcnow() - timedelta(minutes=2)
+        
+        time_now = datetime.strptime(self.server['config/server-time'].split(', ', 1)[1], '%d %b %Y %H:%M:%S GMT') - timedelta(minutes=2)
         last_sync = time_now.strftime('%Y-%m-%dT%H:%M:%Sz')
         settings('LastIncrementalSync', value=last_sync)
         LOG.info("--[ sync/%s ]", last_sync)

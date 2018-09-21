@@ -160,6 +160,7 @@ class HTTP(object):
 
             else:
                 try:
+                    self.config['server-time'] = r.headers['Date']
                     elapsed = int(r.elapsed.total_seconds() * 1000)
                     response = r.json()
                     LOG.debug("---<[ http ][%s ms]", elapsed)
