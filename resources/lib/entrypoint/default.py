@@ -145,6 +145,7 @@ def listing():
         context = []
 
         if view_id and node in ('movies', 'tvshows', 'musicvideos', 'music') and view_id not in whitelist:
+            label = "%s %s" % (label, _(33166))
             context.append((_(33123), "RunPlugin(plugin://plugin.video.emby/?mode=synclib&id=%s)" % view_id))
 
         if view_id and node in ('movies', 'tvshows', 'musicvideos', 'music') and view_id in whitelist:
@@ -228,6 +229,14 @@ def browse(media, view_id=None, folder=None, server_id=None):
 
         return
 
+    folder = folder.lower() if folder else None
+
+    if folder is None and media in ('homevideos'):
+        return browse_subfolders(media, view_id, server_id)
+    
+    if folder and folder == 'firstletter':
+        return browse_letters(media, view_id, server_id)
+
     if view_id:
 
         view = TheVoid('GetItem', {'ServerId': server_id, 'Id': view_id}).get()
@@ -239,29 +248,54 @@ def browse(media, view_id=None, folder=None, server_id=None):
         content_type = media
     elif media in ('homevideos', 'photos'):
         content_type = "images"
+    elif media in ('books', 'audiobooks'):
+        content_type = "videos"
 
-    if folder == 'FavEpisodes':
-        listing = TheVoid('Browse', {'Media': "Episode", 'ServerId': server_id, 'Limit': 25, 'Filters': ["IsFavorite"]}).get()
+
+    if folder == 'recentlyadded':
+        listing = TheVoid('RecentlyAdded', {'Id': view_id, 'ServerId': server_id}).get()
+    elif folder == 'genres':
+        listing = TheVoid('Genres', {'Id': view_id, 'ServerId': server_id}).get()
+    elif folder == 'unwatched':
+        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Filters': ['IsUnplayed']}).get()
+    elif folder == 'favorite':
+        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Filters': ['IsFavorite']}).get()
+    elif folder == 'inprogress':
+        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Filters': ['IsResumable']}).get()
+    elif folder == 'boxsets':
+        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Media': get_media_type(content_type), 'Recursive': True}).get()
+    elif folder == 'random':
+        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Media': get_media_type(content_type),
+                          'Sort': "Random", 'Limit': 25, 'Recursive': True}).get()
+    elif (folder or "").startswith('firstletter'):
+        listing = TheVoid('NameStartsWith', {'Id': view_id, 'ServerId': server_id, 'Media': get_media_type(content_type), 'Filters': folder.split('-')[1]}).get()
+    elif folder == 'favepisodes':
+        listing = TheVoid('Browse', {'Media': get_media_type(content_type), 'ServerId': server_id, 'Limit': 25, 'Filters': ['IsFavorite']}).get()
     elif media == 'homevideos':
-        listing = TheVoid('Browse', {'Id': folder or view_id, 'Media': "Video,Folder,PhotoAlbum,Photo", 'ServerId': server_id, 'Recursive': False}).get()
+        listing = TheVoid('Browse', {'Id': folder or view_id, 'Media': get_media_type(content_type), 'ServerId': server_id, 'Recursive': False}).get()
     elif media == 'movies':
-        listing = TheVoid('Browse', {'Id': folder or view_id, 'Media': "Movie,Boxset", 'ServerId': server_id, 'Recursive': True}).get()
+        listing = TheVoid('Browse', {'Id': folder or view_id, 'Media': get_media_type(content_type), 'ServerId': server_id, 'Recursive': True}).get()
     elif media in ('boxset', 'library'):
         listing = TheVoid('Browse', {'Id': folder or view_id, 'ServerId': server_id, 'Recursive': True}).get()
     elif media == 'episodes':
-        listing = TheVoid('Browse', {'Id': folder or view_id, 'Media': "Episode", 'ServerId': server_id, 'Recursive': True}).get()
+        listing = TheVoid('Browse', {'Id': folder or view_id, 'Media': get_media_type(content_type), 'ServerId': server_id, 'Recursive': True}).get()
     elif media == 'boxsets':
         listing = TheVoid('Browse', {'Id': folder or view_id, 'ServerId': server_id, 'Recursive': False, 'Filters': ["Boxsets"]}).get()
+    elif media == 'tvshows':
+        listing = TheVoid('Browse', {'Id': folder or view_id, 'ServerId': server_id, 'Recursive': True, 'Media': get_media_type(content_type)}).get()
+    elif media == 'seasons':
+        listing = TheVoid('BrowseSeason', {'Id': folder, 'ServerId': server_id}).get()
     else:
         listing = TheVoid('Browse', {'Id': folder or view_id, 'ServerId': server_id, 'Recursive': False}).get()
 
 
-    if listing and listing.get('Items'):
+    if listing:
 
         actions = Actions(server_id)
         list_li = []
+        listing = listing if type(listing) == list else listing.get('Items', [])
 
-        for item in listing['Items']:
+        for item in listing:
 
             li = xbmcgui.ListItem()
             li.setProperty('embyid', item['Id'])
@@ -277,7 +311,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
                     'folder': item['Id'],
                     'server': server_id
                 }
-                path = "%s?%s" % ("plugin://plugin.video.emby",  urllib.urlencode(params))
+                path = "%s?%s" % ("plugin://plugin.video.emby/",  urllib.urlencode(params))
                 context = []
 
                 if item['Type'] in ('Series', 'Season', 'Playlist'):
@@ -297,7 +331,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
                         'mode': "play",
                         'server': server_id
                     }
-                    path = "%s?%s" % ("plugin://plugin.video.emby", urllib.urlencode(params))
+                    path = "%s?%s" % ("plugin://plugin.video.emby/", urllib.urlencode(params))
                     li.setProperty('path', path)
                     context = [(_(13412), "RunPlugin(plugin://plugin.video.emby/?mode=playlist&id=%s&server=%s)" % (item['Id'], server_id))]
 
@@ -321,6 +355,55 @@ def browse(media, view_id=None, folder=None, server_id=None):
     xbmcplugin.setContent(int(sys.argv[1]), content_type)
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
+def browse_subfolders(media, view_id, server_id=None):
+
+    ''' Display submenus for emby views.
+    '''
+    from views import DYNNODES
+
+    view = TheVoid('GetItem', {'ServerId': server_id, 'Id': view_id}).get()
+    xbmcplugin.setPluginCategory(int(sys.argv[1]), view['Name'])
+    nodes = DYNNODES[media]
+
+    for node in nodes:
+
+        params = {
+            'id': view_id,
+            'mode': "browse",
+            'type': media,
+            'folder': view_id if node[0] == 'all' else node[0],
+            'server': server_id
+        }
+        path = "%s?%s" % ("plugin://plugin.video.emby/",  urllib.urlencode(params))
+        directory(node[1] or view['Name'], path)
+
+    xbmcplugin.setContent(int(sys.argv[1]), 'files')
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
+def browse_letters(media, view_id, server_id=None):
+
+    ''' Display letters as options.
+    '''
+    letters = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+    view = TheVoid('GetItem', {'ServerId': server_id, 'Id': view_id}).get()
+    xbmcplugin.setPluginCategory(int(sys.argv[1]), view['Name'])
+
+    for node in letters:
+
+        params = {
+            'id': view_id,
+            'mode': "browse",
+            'type': media,
+            'folder': 'firstletter-%s' % node,
+            'server': server_id
+        }
+        path = "%s?%s" % ("plugin://plugin.video.emby/",  urllib.urlencode(params))
+        directory(node, path)
+
+    xbmcplugin.setContent(int(sys.argv[1]), 'files')
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
 def get_folder_type(item):
 
     media = item['Type']
@@ -337,6 +420,19 @@ def get_folder_type(item):
         return "songs"
     elif media == 'CollectionFolder':
         return item.get('CollectionType', 'library')
+
+def get_media_type(media):
+
+    if media == 'movies':
+        return "Movie,BoxSet"
+    elif media == 'homevideos':
+        return "Video,Folder,PhotoAlbum,Photo"
+    elif media == 'episodes':
+        return "Episode"
+    elif media == 'boxsets':
+        return "BoxSet"
+    elif media == 'tvshows':
+        return "Series"
 
 def get_fanart(item_id, path, server_id=None):
     

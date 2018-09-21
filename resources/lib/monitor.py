@@ -51,11 +51,12 @@ class Monitor(xbmc.Monitor):
         if sender == 'plugin.video.emby':
             method = method.split('.')[1]
 
-            if method not in ('GetItem', 'ReportProgressRequested', 'LoadServer',
+            if method not in ('GetItem', 'ReportProgressRequested', 'LoadServer', 'RandomItems', 'Recommended',
                               'GetServerAddress', 'GetPlaybackInfo', 'Browse', 'GetImages', 'GetToken',
-                              'PlayPlaylist', 'Play', 'GetIntros', 'GetAdditionalParts', 'RefreshItem',
+                              'PlayPlaylist', 'Play', 'GetIntros', 'GetAdditionalParts', 'RefreshItem', 'Genres',
                               'FavoriteItem', 'DeleteItem', 'AddUser', 'GetSession', 'GetUsers', 'GetThemes',
-                              'GetTheme', 'Playstate', 'GeneralCommand', 'GetTranscodeOptions'):
+                              'GetTheme', 'Playstate', 'GeneralCommand', 'GetTranscodeOptions', 'RecentlyAdded',
+                              'NameStartsWith', 'BrowseSeason'):
                 return
 
             data = json.loads(data)[0]
@@ -82,68 +83,57 @@ class Monitor(xbmc.Monitor):
         if method == 'GetItem':
 
             item = server['api'].get_item(data['Id'])
-            window('emby_%s.json' % data['VoidName'], item)
-            LOG.debug("--->[ beacon/emby_%s.json ] sent", data['VoidName'])
+            self.void_responder(data, item)
 
         elif method == 'GetAdditionalParts':
 
             item = server['api'].get_additional_parts(data['Id'])
-            window('emby_%s.json' % data['VoidName'], item)
-            LOG.debug("--->[ beacon/emby_%s.json ] sent", data['VoidName'])
+            self.void_responder(data, item)
 
         elif method == 'GetIntros':
 
             item = server['api'].get_intros(data['Id'])
-            window('emby_%s.json' % data['VoidName'], item)
-            LOG.debug("--->[ beacon/emby_%s.json ] sent", data['VoidName'])
+            self.void_responder(data, item)
 
         elif method == 'GetImages':
 
             item = server['api'].get_images(data['Id'])
-            window('emby_%s.json' % data['VoidName'], item)
-            LOG.debug("--->[ beacon/emby_%s.json ] sent", data['VoidName'])
+            self.void_responder(data, item)
 
         elif method == 'GetServerAddress':
 
             server_address = server['auth/server-address']
-            window('emby_%s.json' % data['VoidName'], server_address)
-            LOG.debug("--->[ beacon/emby_%s.json ] sent", data['VoidName'])
+            self.void_responder(data, server_address)
 
         elif method == 'GetPlaybackInfo':
 
             sources = server['api'].get_play_info(data['Id'], data['Profile'])
-            window('emby_%s.json' % data['VoidName'], sources)
-            LOG.debug("--->[ beacon/emby_%s.json ] sent", data['VoidName'])
+            self.void_responder(data, sources)
 
         elif method == 'GetLiveStream':
 
             sources = server['api'].get_play_info(data['Id'], data['PlaySessionId'], data['Token'], data['Profile'])
-            window('emby_%s.json' % data['VoidName'], sources)
-            LOG.debug("--->[ beacon/emby_%s.json ] sent", data['VoidName'])
+            self.void_responder(data, sources)
 
         elif method == 'GetToken':
 
             token = server['auth/token']
-            window('emby_%s.json' % data['VoidName'], token)
-            LOG.debug("--->[ beacon/emby_%s.json ] sent", data['VoidName'])
+            self.void_responder(data, token)
 
         elif method == 'GetSession':
 
             session = server['api'].get_device(self.device_id)
-            window('emby_%s.json' % data['VoidName'], session)
-            LOG.debug("--->[ beacon/emby_%s.json ] sent", data['VoidName'])
+            self.void_responder(data, session)
 
         elif method == 'GetUsers':
 
             users = server['api'].get_users(data.get('IsDisabled', True), data.get('IsHidden', True))
-            window('emby_%s.json' % data['VoidName'], users)
-            LOG.debug("--->[ beacon/emby_%s.json ] sent", data['VoidName'])
+            self.void_responder(data, users)
 
         elif method == 'GetTranscodeOptions':
 
             result = server['api'].get_transcode_settings()
-            window('emby_%s.json' % data['VoidName'], result)
-            LOG.debug("--->[ beacon/emby_%s.json ] sent", data['VoidName'])
+            self.void_responder(data, result)
 
         elif method == 'GetThemes':
 
@@ -152,23 +142,44 @@ class Monitor(xbmc.Monitor):
             else:
                 theme = server['api'].get_items_theme_song(data['Id'])
 
-            window('emby_%s.json' % data['VoidName'], theme)
-            LOG.debug("--->[ beacon/emby_%s.json ] sent", data['VoidName'])
+            self.void_responder(data, theme)
 
         elif method == 'GetTheme':
 
             theme = server['api'].get_themes(data['Id'])
-            window('emby_%s.json' % data['VoidName'], theme)
-            LOG.debug("--->[ beacon/emby_%s.json ] sent", data['VoidName'])
+            self.void_responder(data, theme)
 
         elif method == 'Browse':
 
             result = downloader.get_filtered_section(data.get('Id'), data.get('Media'), data.get('Limit'),
                                                      data.get('Recursive'), data.get('Sort'), data.get('SortOrder'), 
                                                      data.get('Filters'), data.get('ServerId'))
-            window('emby_%s.json' % data['VoidName'], result)
-            LOG.debug("--->[ beacon/emby_%s.json ] sent", data['VoidName'])
+            self.void_responder(data, result)
 
+        elif method == 'BrowseSeason':
+
+            result = server['api'].get_seasons(data['Id'])
+            self.void_responder(data, result)
+
+        elif method == 'RecentlyAdded':
+
+            result = server['api'].get_recently_added(data.get('Media'), data.get('Id'), data.get('Limit'))
+            self.void_responder(data, result)
+
+        elif method == 'Genres':
+
+            result = server['api'].get_genres(data.get('Id'))
+            self.void_responder(data, result)
+
+        elif method == 'NameStartsWith':
+
+            result = server['api'].get_items_by_letter(data.get('Id'), data.get('Media'), data.get('Filters'))
+            self.void_responder(data, result)
+
+        elif method == 'Recommended':
+
+            result = server['api'].get_recommendation(data.get('Id'), data.get('Limit'))
+            self.void_responder(data, result)
 
         elif method == 'RefreshItem':
             server['api'].refresh_item(data['Id'])
@@ -220,6 +231,11 @@ class Monitor(xbmc.Monitor):
 
         elif method == 'VideoLibrary.OnUpdate':
             on_update(data, server)
+
+    def void_responder(self, data, result):
+
+        window('emby_%s.json' % data['VoidName'], result)
+        LOG.debug("--->[ beacon/emby_%s.json ] sent", data['VoidName'])
 
     def server_instance(self, server_id=None):
 

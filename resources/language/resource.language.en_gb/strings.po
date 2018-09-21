@@ -813,3 +813,27 @@ msgstr ""
 msgctxt "#33165"
 msgid "Failed to create backup"
 msgstr ""
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr ""
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr ""
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr ""
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr ""
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr ""
+
+msgctxt "#33171"
+msgid "A-Z"
+msgstr ""

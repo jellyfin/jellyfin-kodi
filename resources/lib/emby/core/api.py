@@ -80,7 +80,7 @@ def items(handler="", action="GET", params=None, json=None):
         return  _get("Items%s" % handler, params)
 
 def user_items(handler="", params=None):
-    return  users("/Items%s" % handler, params)
+    return  users("/Items%s" % handler, params=params)
 
 def shows(handler, params):
     return  _get("Shows%s" % handler, params)
@@ -143,11 +143,13 @@ def get_suggestion(media="Movie,Episode", limit=1):
                 'Limit': limit
             })
 
-def get_recently_added(media=None, limit=20):
+def get_recently_added(media=None, parent_id=None, limit=20):
     return  user_items("/Latest", {
                 'Limit': limit,
                 'UserId': "{UserId}",
-                'IncludeItemTypes': media
+                'IncludeItemTypes': media,
+                'ParentId': parent_id,
+                'Fields': info()
             })
 
 def get_next(index=None, limit=1):
@@ -155,6 +157,30 @@ def get_next(index=None, limit=1):
                 'Limit': limit,
                 'UserId': "{UserId}",
                 'StartIndex': None if index is None else int(index)
+            })
+
+def get_genres(parent_id=None):
+    return  _get("Genres", {
+                'ParentId': parent_id,
+                'UserId': "{UserId}",
+                'Fields': info()
+            })
+
+def get_recommendation(parent_id=None, limit=20):
+    return  _get("Movies/Recommendations", {
+                'ParentId': parent_id,
+                'UserId': "{UserId}",
+                'Fields': info(),
+                'Limit': limit
+            })
+
+def get_items_by_letter(parent_id=None, media=None, letter=None):
+    return  user_items(params={
+                'ParentId': parent_id,
+                'NameStartsWith': letter,
+                'Fields': info(),
+                'Recursive': True,
+                'IncludeItemTypes': media
             })
 
 def get_intros(item_id):
@@ -201,7 +227,8 @@ def get_plugins():
 def get_seasons(show_id):
     return  shows("/%s/Seasons" % show_id, params={
                 'UserId': "{UserId}",
-                'EnableImages': True
+                'EnableImages': True,
+                'Fields': info()
             })
 
 def get_date_modified(date, parent_id, media=None):

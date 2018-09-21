@@ -47,17 +47,54 @@ NODES = {
         ('recent', _(30256)),
         ('inprogress', _(30257)),
         ('unwatched', _(30258))
+    ]
+}
+DYNNODES = {
+    'tvshows': [
+        ('all', None),
+        ('RecentlyAdded', _(30170)),
+        ('recentepisodes', _(30175)),
+        ('InProgress', _(30171)),
+        ('inprogressepisodes', _(30178)),
+        ('nextepisodes', _(30179)),
+        ('Genres', _(135)),
+        ('Random', _(30229)),
+        ('recommended', _(30230))
+    ],
+    'movies': [
+        ('all', None),
+        ('RecentlyAdded', _(30174)),
+        ('InProgress', _(30177)),
+        ('Boxsets', _(20434)),
+        ('Favorite', _(33168)),
+        ('FirstLetter', _(33171)),
+        ('Genres', _(135)),
+        ('Random', _(30229)),
+        #('Recommended', _(30230))
+    ],
+    'musicvideos': [
+        ('all', None),
+        ('RecentlyAdded', _(30256)),
+        ('InProgress', _(30257)),
+        ('Unwatched', _(30258))
     ],
     'homevideos': [
         ('all', None),
-        ('recent', _(30251)),
-        ('recommended', _(30253))
+        ('RecentlyAdded', _(33167)),
+        ('InProgress', _(33169)),
+        ('Favorite', _(33168))
     ],
-    'photos': [
+    'books': [
         ('all', None),
-        ('recent', _(30252)),
-        ('sets', _(30255)),
-        ('recommended', _(30254))
+        ('RecentlyAdded', _(33167)),
+        ('InProgress', _(33169)),
+        ('Favorite', _(33168))
+    ],
+    'audiobooks': [
+        ('all', None),
+        ('RecentlyAdded', _(33167)),
+        ('InProgress', _(33169)),
+        ('Favorite', _(33168))
     ]
 }
 
