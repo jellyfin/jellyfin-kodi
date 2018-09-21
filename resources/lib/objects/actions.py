@@ -381,7 +381,7 @@ class Actions(object):
             metadata.update({
                 'mediatype': "musicvideo",
                 'album': obj['Album'],
-                'artist': obj['Artists'],
+                'artist': obj['Artists'] or [],
                 'lastplayed': obj['DatePlayed'],
                 'duration': obj['Runtime']
             })

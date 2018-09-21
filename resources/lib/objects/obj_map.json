@@ -162,6 +162,7 @@
 	},
 	"MusicVideoUserData": {
 		"Id": "Id",
+		"Title": "Name",
 		"Runtime": "RunTimeTicks,CumulativeRunTimeTicks",
 		"Resume": "UserData/PlaybackPositionTicks",
 		"Favorite": "UserData/IsFavorite",
