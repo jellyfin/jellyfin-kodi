@@ -52,7 +52,10 @@ def sources():
             etree.SubElement(source, 'allowsharing').text = "true"
 
     try:
-        files = xml.find('files') or etree.SubElement(xml, 'files')
+        files = xml.find('files')
+
+        if not files:
+            files = etree.SubElement(xml, 'files')
 
         for source in xml.findall('.//path'):
             if source.text == 'http://kodi.emby.media':
