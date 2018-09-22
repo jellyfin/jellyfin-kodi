@@ -231,7 +231,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
 
     folder = folder.lower() if folder else None
 
-    if folder is None and media in ('homevideos'):
+    if folder is None and media in ('homevideos', 'movies'):
         return browse_subfolders(media, view_id, server_id)
     
     if folder and folder == 'firstletter':
@@ -263,12 +263,13 @@ def browse(media, view_id=None, folder=None, server_id=None):
     elif folder == 'inprogress':
         listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Filters': ['IsResumable']}).get()
     elif folder == 'boxsets':
-        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Media': get_media_type(content_type), 'Recursive': True}).get()
+        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Media': get_media_type('boxsets'), 'Recursive': True}).get()
     elif folder == 'random':
-        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Media': get_media_type(content_type),
-                          'Sort': "Random", 'Limit': 25, 'Recursive': True}).get()
-    elif (folder or "").startswith('firstletter'):
-        listing = TheVoid('NameStartsWith', {'Id': view_id, 'ServerId': server_id, 'Media': get_media_type(content_type), 'Filters': folder.split('-')[1]}).get()
+        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Media': get_media_type(content_type), 'Sort': "Random", 'Limit': 25, 'Recursive': True}).get()
+    elif (folder or "").startswith('firstletter-'):
+        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Media': get_media_type(content_type), 'Params': {'NameStartsWith': folder.split('-')[1]}}).get()
+    elif (folder or "").startswith('genres-'):
+        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Media': get_media_type(content_type), 'Params': {'GenreIds': folder.split('genres-')[1]}}).get()
     elif folder == 'favepisodes':
         listing = TheVoid('Browse', {'Media': get_media_type(content_type), 'ServerId': server_id, 'Limit': 25, 'Filters': ['IsFavorite']}).get()
     elif media == 'homevideos':
@@ -324,6 +325,19 @@ def browse(media, view_id=None, folder=None, server_id=None):
 
                 li.addContextMenuItems(context)
                 list_li.append((path, li, True))
+
+            elif item['Type'] == 'Genre':
+
+                params = {
+                    'id': view_id or item['Id'],
+                    'mode': "browse",
+                    'type': get_folder_type(item) or media,
+                    'folder': 'genres-%s' % item['Id'],
+                    'server': server_id
+                }
+                path = "%s?%s" % ("plugin://plugin.video.emby/",  urllib.urlencode(params))
+                list_li.append((path, li, True))
+
             else:
                 if item['Type'] not in ('Photo', 'PhotoAlbum'):
                     params = {

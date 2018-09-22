@@ -78,8 +78,8 @@ def get_single_item(parent_id, media):
                 'IncludeItemTypes': media
             })
 
-def get_filtered_section(parent_id, media=None, limit=None, recursive=None, sort=None, sort_order=None,
-                         filters=None, server_id=None):
+def get_filtered_section(parent_id=None, media=None, limit=None, recursive=None, sort=None, sort_order=None,
+                         filters=None, extra=None, server_id=None):
 
     ''' Get dynamic listings.
     '''
@@ -109,6 +109,9 @@ def get_filtered_section(parent_id, media=None, limit=None, recursive=None, sort
 
     if media and 'Photo' in media:
         params['Fields'] += ",Width,Height"
+
+    if extra is not None:
+        params.update(extra)
 
     return  _get("Users/{UserId}/Items", params, server_id)
 

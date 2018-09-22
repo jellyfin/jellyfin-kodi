@@ -839,7 +839,7 @@ msgid "Unwatched"
 msgstr ""
 
 msgctxt "#33171"
-msgid "A-Z"
+msgid "By first letter"
 msgstr ""
 
 msgctxt "#33172"
@@ -847,5 +847,5 @@ msgid "You have {number} updates pending. This may take a little while before se
 msgstr ""
 
 msgctxt "#33173"
-msgid "Forget about the previous sync?"
+msgid "Forget about the previous sync? This is not recommended."
 msgstr ""

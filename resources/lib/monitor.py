@@ -56,7 +56,7 @@ class Monitor(xbmc.Monitor):
                               'PlayPlaylist', 'Play', 'GetIntros', 'GetAdditionalParts', 'RefreshItem', 'Genres',
                               'FavoriteItem', 'DeleteItem', 'AddUser', 'GetSession', 'GetUsers', 'GetThemes',
                               'GetTheme', 'Playstate', 'GeneralCommand', 'GetTranscodeOptions', 'RecentlyAdded',
-                              'NameStartsWith', 'BrowseSeason'):
+                              'BrowseSeason'):
                 return
 
             data = json.loads(data)[0]
@@ -160,7 +160,7 @@ class Monitor(xbmc.Monitor):
 
             result = downloader.get_filtered_section(data.get('Id'), data.get('Media'), data.get('Limit'),
                                                      data.get('Recursive'), data.get('Sort'), data.get('SortOrder'), 
-                                                     data.get('Filters'), data.get('ServerId'))
+                                                     data.get('Filters'), data.get('Params'), data.get('ServerId'))
             self.void_responder(data, result)
 
         elif method == 'BrowseSeason':
@@ -176,11 +176,6 @@ class Monitor(xbmc.Monitor):
         elif method == 'Genres':
 
             result = server['api'].get_genres(data.get('Id'))
-            self.void_responder(data, result)
-
-        elif method == 'NameStartsWith':
-
-            result = server['api'].get_items_by_letter(data.get('Id'), data.get('Media'), data.get('Filters'))
             self.void_responder(data, result)
 
         elif method == 'Recommended':
