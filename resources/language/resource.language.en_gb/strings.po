@@ -671,7 +671,7 @@ msgid "Failed to retrieve latest content updates. No content updates will be app
 msgstr ""
 
 msgctxt "#33129"
-msgid "You can sync libraries by launching the Emby add-on, opening the context menu on the library of your choice (movies, tvshows, musicvideo or music) and selecting Sync to Kodi."
+msgid "You can sync libraries by launching the Emby add-on > Add libraries."
 msgstr ""
 
 msgctxt "#33130"
