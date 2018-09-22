@@ -262,7 +262,7 @@ class GetItemWorker(threading.Thread):
 
                 self.queue.task_done()
 
-                if xbmc.Monitor().abortRequested():
+                if window('emby_should_stop.bool'):
                     break
 
 class TheVoid(object):
@@ -282,10 +282,12 @@ class TheVoid(object):
         event(method, data)
         self.method = method
         self.data = data
+        self.monitor = xbmc.Monitor()
 
     def get(self):
 
         while True:
+
             response = window('emby_%s.json' % self.data['VoidName'])
 
             if response != "":
@@ -295,7 +297,7 @@ class TheVoid(object):
 
                 return response
 
-            if window('emby_should_stop.bool'):
+            if window('emby_should_stop.bool') or self.monitor.waitForAbort(0.2):
                 LOG.info("Abandon mission! A black hole just swallowed [ %s ]", self.data['VoidName'])
                 
                 break
@@ -306,7 +308,7 @@ def get_objects(src, filename):
     '''
     temp = xbmc.translatePath('special://temp/emby').decode('utf-8')
     restart = not xbmcvfs.exists(os.path.join(temp, "objects") + '/')
-    path = os.path.join(temp, filename).decode('utf-8')
+    path = os.path.join(temp, filename).encode('utf-8')
 
     if not xbmcvfs.exists(path):
         delete_folder()

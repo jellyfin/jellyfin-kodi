@@ -160,7 +160,7 @@ def should_stop():
 
     ''' Checkpoint during the sync process.
     '''
-    if xbmc.Monitor().abortRequested():
+    if xbmc.Monitor().waitForAbort(0.00001):
         return True
 
     if window('emby_should_stop.bool'):

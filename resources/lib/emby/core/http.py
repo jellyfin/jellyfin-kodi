@@ -46,7 +46,7 @@ class HTTP(object):
             return
 
         try:
-            LOG.warn("Closing session %s", id(self.session))
+            LOG.warn("--<[ session/%s ]", id(self.session))
             self.session.close()
         except Exception as error:
             LOG.warn("The requests session could not be terminated: %s", error)

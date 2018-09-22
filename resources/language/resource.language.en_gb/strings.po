@@ -845,3 +845,7 @@ msgstr ""
 msgctxt "#33172"
 msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Emby add-on > update libraries. Proceed anyway?"
 msgstr ""
+
+msgctxt "#33173"
+msgid "Forget about the previous sync?"
+msgstr ""

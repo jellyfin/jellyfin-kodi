@@ -40,19 +40,24 @@ class FullSync(object):
             libraries = library_id.split(',')
 
             for selected in libraries:
+
                 if selected not in [x.replace('Mixed:', "") for x in self.sync['Libraries']]:
                     library = self.get_libraries(selected)
 
-                    if library and library[1] == 'mixed':
-                        selected = "Mixed:%s" % selected
+                    if library:
 
-                    self.sync['Libraries'].append(selected)
+                        self.sync['Libraries'].append("Mixed:%s" % selected if library[1] == 'mixed' else selected)
+
+                        if library[1] in ('mixed', 'movies'):
+                            self.sync['Libraries'].append('Boxsets:%s' % selected)
+                    else:
+                        self.sync['Libraries'].append(selected)
         else:
             self.mapping()
 
         xmls.sources()
 
-        if not xmls.advanced_settings():
+        if not xmls.advanced_settings() and self.sync['Libraries']:
             self.start()
 
     def get_libraries(self, library_id=None):
@@ -71,10 +76,14 @@ class FullSync(object):
         if self.sync['Libraries']:
 
             if not dialog("yesno", heading="{emby}", line1=_(33102)):
-                dialog("ok", heading="{emby}", line1=_(33122))
 
-                raise LibraryException("ProgressStopped")
+                if not dialog("yesno", heading="{emby}", line1=_(33173)):
+                    dialog("ok", heading="{emby}", line1=_(33122))
 
+                    raise LibraryException("ProgressStopped")
+                else:
+                    self.sync['Libraries'] = []
+                    self.sync['RestorePoint'] = {}
         else:
             LOG.info("generate full sync")
             libraries = []
@@ -89,7 +98,7 @@ class FullSync(object):
             if [x['Media'] for x in libraries if x['Media'] in ('movies', 'mixed')]:
                 self.sync['Libraries'].append("Boxsets:")
 
-            save_sync(self.sync)
+        save_sync(self.sync)
 
     def select_libraries(self, libraries):
 
@@ -168,7 +177,7 @@ class FullSync(object):
                 if library_id.endswith('Refresh'):
                     self.refresh_boxsets()
                 else:
-                    self.boxsets()
+                    self.boxsets(library_id.split('Boxsets:')[1] if len(library_id) > len('Boxsets:') else None)
 
                 return
 
@@ -197,8 +206,8 @@ class FullSync(object):
 
                 dialog("ok", heading="{emby}", line1=_(33119))
                 LOG.error("full sync exited unexpectedly")
-
-            save_sync(self.sync)
+            else:
+                save_sync(self.sync)
 
             raise
 
@@ -306,7 +315,7 @@ class FullSync(object):
                                         obj.song(song)
 
     @progress(_(33018))
-    def boxsets(self, dialog):
+    def boxsets(self, library_id=None, dialog=None):
 
         ''' Process all boxsets.
         '''
@@ -314,7 +323,7 @@ class FullSync(object):
             with Database('emby') as embydb:
                 obj = Movies(self.server, embydb, videodb, self.direct_path)
 
-                for items in server.get_items(None, "BoxSet", False, self.sync['RestorePoint'].get('params')):
+                for items in server.get_items(library_id, "BoxSet", False, self.sync['RestorePoint'].get('params')):
 
                     self.sync['RestorePoint'] = items['RestorePoint']
                     start_index = items['RestorePoint']['params']['StartIndex']
@@ -336,4 +345,4 @@ class FullSync(object):
                 obj = Movies(self.server, embydb, videodb, self.direct_path)
                 obj.boxsets_reset()
 
-        self.boxsets()
+        self.boxsets(None)

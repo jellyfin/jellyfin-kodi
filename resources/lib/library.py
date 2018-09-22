@@ -15,7 +15,7 @@ from database import Database, emby_db, get_sync, save_sync
 from full_sync import FullSync
 from views import Views
 from downloader import GetItemWorker
-from helper import _, stop, settings, dialog, event, progress, LibraryException
+from helper import _, stop, settings, window, dialog, event, progress, LibraryException
 from emby import Emby
 
 ##################################################################################################
@@ -210,7 +210,13 @@ class Library(threading.Thread):
                 else:
                     raise LibraryException('CompanionMissing')
 
+            if get_sync()['Libraries']:
+
+                FullSync(self)
+                Views().get_nodes()
+
             if settings('SyncInstallRunDone.bool'):
+
                 if fast_sync and not self.fast_sync():
                     dialog("ok", heading="{emby}", line1=_(33128))
 
@@ -537,7 +543,7 @@ class UpdatedWorker(threading.Thread):
                         except Exception as error:
                             LOG.exception(error)
 
-                        if xbmc.Monitor().abortRequested():
+                        if window('emby_should_stop.bool'):
                             break
 
 class UserDataWorker(threading.Thread):
@@ -580,7 +586,7 @@ class UserDataWorker(threading.Thread):
                         except Exception as error:
                             LOG.exception(error)
 
-                        if xbmc.Monitor().abortRequested():
+                        if window('emby_should_stop.bool'):
                             break
 
 class SortWorker(threading.Thread):
@@ -624,7 +630,7 @@ class SortWorker(threading.Thread):
 
                 self.queue.task_done()
 
-                if xbmc.Monitor().abortRequested():
+                if window('emby_should_stop.bool'):
                     break
 
 class RemovedWorker(threading.Thread):
@@ -667,7 +673,7 @@ class RemovedWorker(threading.Thread):
                         except Exception as error:
                             LOG.exception(error)
 
-                        if xbmc.Monitor().abortRequested():
+                        if window('emby_should_stop.bool'):
                             break
 
 class NotifyWorker(threading.Thread):

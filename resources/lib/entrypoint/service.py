@@ -42,6 +42,8 @@ class Service(xbmc.Monitor):
 
     def __init__(self):
 
+        window('emby_should_stop', clear=True)
+
         self.settings['addon_version'] = client.get_version()
         self.settings['profile'] = xbmc.translatePath('special://profile')
         self.settings['mode'] = settings('useDirectPaths')
@@ -194,7 +196,7 @@ class Service(xbmc.Monitor):
 
             data = json.loads(data)
 
-        LOG.debug("[ %s: %s ] %s", sender, method, json.dumps(data, indent=4))
+        LOG.info("[ %s: %s ] %s", sender, method, json.dumps(data, indent=4))
 
         if method == 'ServerOnline':
             if data['ServerId'] is None:
@@ -410,7 +412,7 @@ class Service(xbmc.Monitor):
             "emby_currUser", "emby_dbScan",
             "emby_initialScan",
 
-            "emby_play", "emby_online", "emby.connected", "emby_should_stop", "emby.resume",
+            "emby_play", "emby_online", "emby.connected", "emby.resume",
             "emby.external", "emby.external_check", "emby_deviceId", "emby_db_check", "emby_pathverified"
         ]
         for prop in properties:

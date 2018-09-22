@@ -414,7 +414,7 @@ class Views(object):
             rule = etree.SubElement(xml, 'rule', {'field': "tag", 'operator': "is"})
             etree.SubElement(rule, 'value').text = view['Tag']
 
-        getattr(self, 'node_' + node)(xml)
+        getattr(self, 'node_' + node)(xml) # get node function based on node type
         indent(xml)
         write_xml(etree.tostring(xml, 'UTF-8'), file)
 
