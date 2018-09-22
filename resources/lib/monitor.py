@@ -66,19 +66,26 @@ class Monitor(xbmc.Monitor):
 
             data = json.loads(data)
 
-        if method != 'LoadServer' and data.get('ServerId') and data['ServerId'] not in self.servers:
+        LOG.info("[ %s: %s ] %s", sender, method, json.dumps(data, indent=4))
 
-            try:
-                connect.Connect().register(data['ServerId'])
-                self.server_instance(data['ServerId'])
-            except Exception as error:
+        try:
+            if method != 'LoadServer' and data.get('ServerId') and data['ServerId'] not in self.servers:
 
-                LOG.error(error)
-                dialog("ok", heading="{emby}", line1=_(33142))
+                try:
+                    connect.Connect().register(data['ServerId'])
+                    self.server_instance(data['ServerId'])
+                except Exception as error:
 
-                return
+                    LOG.error(error)
+                    dialog("ok", heading="{emby}", line1=_(33142))
 
-        server = Emby(data.get('ServerId'))
+                    return
+
+            server = Emby(data.get('ServerId'))
+        except Exception as error:
+
+            LOG.error(error)
+            server = Emby()
 
         if method == 'GetItem':
 
