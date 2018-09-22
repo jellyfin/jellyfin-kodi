@@ -258,10 +258,11 @@ class API(object):
 
         all_artwork['Backdrop'] = self.get_backdrops(obj['Id'], obj['BackdropTags'] or [], query)
 
-        for artwork in obj['Tags'] or []:
-            all_artwork[artwork] = self.get_artwork(obj['Id'], artwork, obj['Tags'][artwork])
+        for artwork in (obj['Tags'] or []):
+            all_artwork[artwork] = self.get_artwork(obj['Id'], artwork, obj['Tags'][artwork], query)
 
         if parent_info:
+
             if not all_artwork['Backdrop'] and obj['ParentBackdropId']:
                 all_artwork['Backdrop'] = self.get_backdrops(obj['ParentBackdropId'], obj['ParentBackdropTags'], query)
 
@@ -291,7 +292,7 @@ class API(object):
 
         for index, tag in enumerate(tags):
 
-            artwork = "%s/emby/Items/%s/Images/Backdrop/%s?Format=original&Tag=%s%s" % (self.server, item_id, index, tag, query or "")
+            artwork = "%s/emby/Items/%s/Images/Backdrop/%s?Format=original&Tag=%s%s" % (self.server, item_id, index, tag, (query or ""))
             backdrops.append(artwork)
 
         return backdrops
