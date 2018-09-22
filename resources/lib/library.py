@@ -319,7 +319,13 @@ class Library(threading.Thread):
 
     def save_last_sync(self):
         
-        time_now = datetime.strptime(self.server['config/server-time'].split(', ', 1)[1], '%d %b %Y %H:%M:%S GMT') - timedelta(minutes=2)
+        try:
+            time_now = datetime.strptime(self.server['config/server-time'].split(', ', 1)[1], '%d %b %Y %H:%M:%S GMT') - timedelta(minutes=2)
+        except Exception as error:
+
+            LOG.error(error)
+            time_now = datetime.utcnow() - timedelta(minutes=2)
+
         last_sync = time_now.strftime('%Y-%m-%dT%H:%M:%Sz')
         settings('LastIncrementalSync', value=last_sync)
         LOG.info("--[ sync/%s ]", last_sync)
