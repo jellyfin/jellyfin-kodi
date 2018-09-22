@@ -230,6 +230,10 @@ msgctxt "#30506"
 msgid "Sync"
 msgstr ""
 
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr ""
+
 msgctxt "#30508"
 msgid "Sync empty shows"
 msgstr ""
@@ -836,4 +840,8 @@ msgstr ""
 
 msgctxt "#33171"
 msgid "A-Z"
+msgstr ""
+
+msgctxt "#33172"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Emby add-on > update libraries. Proceed anyway?"
 msgstr ""

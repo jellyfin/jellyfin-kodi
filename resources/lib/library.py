@@ -264,12 +264,29 @@ class Library(threading.Thread):
             [self.updated_output[query['Type']].put(query) for query in data['Items']]
         """
         try:
+            updated = []
+            userdata = []
+            removed = []
+
             for media in filters:
                 result = self.server['api'].get_sync_queue(last_sync, ",".join([x for x in filters if x != media]))
-                self.updated(result['ItemsAdded'])
-                self.updated(result['ItemsUpdated'])
-                self.userdata(result['UserDataChanged'])
-                self.removed(result['ItemsRemoved'])
+                updated.extend(result['ItemsAdded'])
+                updated.extend(result['ItemsUpdated'])
+                userdata.extend(result['UserDataChanged'])
+                removed.extend(result['ItemsRemoved'])
+
+            total = len(updated) + len(userdata)
+
+            if total > int(settings('incSyncIndicator') or 99):
+
+                if not dialog("yesno", heading="{emby}", line1=_(33172).replace('{number}', str(total))):
+                    LOG.warn("Large updates skipped.")
+
+                    return True
+
+            self.updated(updated)
+            self.userdata(userdata)
+            self.removed(removed)
 
             """
             result = self.server['api'].get_sync_queue(last_sync)
