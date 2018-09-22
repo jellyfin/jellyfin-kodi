@@ -20,7 +20,7 @@
 
 	<category label="30506"><!-- Sync Options -->
 		<setting label="33137" id="kodiCompanion" type="bool" default="true" />
-		<setting label="30507" id="incSyncIndicator" type="number" default="99" visible="eq(-1,true)" subsetting="true"/>
+		<setting label="30507" id="syncIndicator" type="number" default="99" visible="eq(-1,true)" subsetting="true"/>
 		<setting label="33111" type="lsep" />
 		<setting label="30511" id="useDirectPaths" type="enum" lvalues="33036|33037" default="1" />
 

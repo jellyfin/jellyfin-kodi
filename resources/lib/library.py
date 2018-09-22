@@ -283,7 +283,7 @@ class Library(threading.Thread):
 
             total = len(updated) + len(userdata)
 
-            if total > int(settings('incSyncIndicator') or 99):
+            if total > int(settings('syncIndicator') or 99):
 
                 if not dialog("yesno", heading="{emby}", line1=_(33172).replace('{number}', str(total))):
                     LOG.warn("Large updates skipped.")

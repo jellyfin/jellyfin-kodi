@@ -272,6 +272,7 @@ def delete_folder(path=None):
 
     if delete_path:
         xbmcvfs.delete(path)
+    
     LOG.info("DELETE %s", path)
 
 def delete_recursive(path, dirs):

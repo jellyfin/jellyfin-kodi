@@ -316,7 +316,7 @@ def get_objects(src, filename):
     if not xbmcvfs.exists(path):
         delete_folder()
 
-        LOG.info("From %s to %s", src, path)
+        LOG.info("From %s to %s", src, path.decode('utf-8'))
         try:
             response = requests.get(src, stream=True, verify=False)
             response.raise_for_status()
