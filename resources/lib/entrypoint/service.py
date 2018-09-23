@@ -196,7 +196,7 @@ class Service(xbmc.Monitor):
 
             data = json.loads(data)
 
-        LOG.info("[ %s: %s ] %s", sender, method, json.dumps(data, indent=4))
+        LOG.debug("[ %s: %s ] %s", sender, method, json.dumps(data, indent=4))
 
         if method == 'ServerOnline':
             if data['ServerId'] is None:
