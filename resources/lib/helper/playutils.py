@@ -213,8 +213,8 @@ class PlayUtils(object):
         info = TheVoid('GetLiveStream', params).get()
         LOG.info(info)
 
-        if info['RequiresClosing']:
-            self.info['LiveStreamId'] = info['LiveStreamId']
+        if info['MediaSource'].get('RequiresClosing'):
+            self.info['LiveStreamId'] = info['MediaSource']['LiveStreamId']
 
         return info['MediaSource']
 
@@ -235,7 +235,8 @@ class PlayUtils(object):
 
             params = "%s%s" % ('&'.join(url_parsed), self.get_audio_subs(source, audio, subtitle))
 
-        self.info['Path'] = "%s/emby%s?%s" % (self.info['ServerAddress'], base.replace('stream', "master"), params)
+        video_type = 'live' if source.get('LiveStreamId') else 'master'
+        self.info['Path'] = "%s/emby%s?%s" % (self.info['ServerAddress'], base.replace('stream', video_type), params)
         self.info['Path'] += "&maxWidth=%s&maxHeight=%s" % (self.get_resolution())
 
         return self.info['Path']
@@ -293,7 +294,8 @@ class PlayUtils(object):
                 },
                 {
                     "Container": "m3u8",
-                    "Type": "Video"
+                    "Type": "Video",
+                    "AudioCodec": "aac,mp3,ac3,opus,flac,vorbis"
                 },
                 {
                     "Container": "jpeg",
@@ -409,6 +411,20 @@ class PlayUtils(object):
                     "Container": "strm"
                 }
             ]
+
+        if self.item['Type'] == 'TvChannel':
+            profile['TranscodingProfiles'].insert(0, {
+                "Container": "ts",
+                "Type": "Video",
+                "AudioCodec": "mp3,aac",
+                "VideoCodec": "h264",
+                "Context": "Streaming",
+                "Protocol": "hls",
+                "MaxAudioChannels": "2",
+                "MinSegments": "1",
+                "BreakOnNonKeyFrames": True
+            })
+
 
         return profile
 
