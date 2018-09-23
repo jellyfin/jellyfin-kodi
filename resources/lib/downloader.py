@@ -122,7 +122,31 @@ def get_movies_by_boxset(boxset_id):
 
 def get_episode_by_show(show_id):
 
-    for items in get_items(show_id, "Episode"):
+    query = {
+        'url': "Shows/%s/Episodes" % show_id,
+        'params': {
+            'EnableUserData': True, 
+            'EnableImages': True, 
+            'UserId': "{UserId}",
+            'Fields': api.info()
+        }
+    }
+    for items in _get_items(query):
+        yield items
+
+def get_episode_by_season(show_id, season_id):
+
+    query = {
+        'url': "Shows/%s/Episodes" % show_id,
+        'params': {
+            'SeasonId': season_id,
+            'EnableUserData': True, 
+            'EnableImages': True, 
+            'UserId': "{UserId}",
+            'Fields': api.info()
+        }
+    }
+    for items in _get_items(query):
         yield items
 
 def get_items(parent_id, item_type=None, basic=False, params=None):
@@ -134,7 +158,13 @@ def get_items(parent_id, item_type=None, basic=False, params=None):
             'IncludeItemTypes': item_type,
             'SortBy': "SortName",
             'SortOrder': "Ascending",
-            'Fields': api.basic_info() if basic else api.info()
+            'Fields': api.basic_info() if basic else api.info(),
+            'CollapseBoxSetItems': False,
+            'IsVirtualUnaired': False,
+            'EnableTotalRecordCount': False,
+            'LocationTypes': "FileSystem,Remote,Offline",
+            'IsMissing': False,
+            'Recursive': True
         }
     }
     if params:
@@ -152,7 +182,13 @@ def get_artists(parent_id=None, basic=False, params=None, server_id=None):
             'ParentId': parent_id,
             'SortBy': "SortName",
             'SortOrder': "Ascending",
-            'Fields': api.basic_info() if basic else api.music_info()
+            'Fields': api.basic_info() if basic else api.music_info(),
+            'CollapseBoxSetItems': False,
+            'IsVirtualUnaired': False,
+            'EnableTotalRecordCount': False,
+            'LocationTypes': "FileSystem,Remote,Offline",
+            'IsMissing': False,
+            'Recursive': True
         }
     }
 
@@ -187,14 +223,6 @@ def _get_items(query, server_id=None):
 
     url = query['url']
     params = query.get('params', {})
-    params.update({
-        'CollapseBoxSetItems': False,
-        'IsVirtualUnaired': False,
-        'EnableTotalRecordCount': False,
-        'LocationTypes': "FileSystem,Remote,Offline",
-        'IsMissing': False,
-        'Recursive': True
-    })
 
     try:
         test_params = dict(params)

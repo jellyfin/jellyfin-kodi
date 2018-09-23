@@ -105,9 +105,8 @@ def library_check():
         def wrapper(self, item, *args, **kwargs):
             from database import get_sync
 
-            sync = get_sync()
-
             if kwargs.get('library') is None:
+                sync = get_sync()
 
                 if 'e_item' in kwargs:
                     try:
@@ -131,7 +130,7 @@ def library_check():
 
                             break
 
-                    if view['Id'] not in sync['Whitelist']:
+                    if view['Id'] not in [x.replace('Mixed:', "") for x in sync['Whitelist'] + sync['Libraries']]:
                         LOG.info("Library %s is not synced. Skip update.", view['Id'])
 
                         return

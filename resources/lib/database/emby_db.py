@@ -140,6 +140,9 @@ class EmbyDatabase():
 
         return self.cursor.fetchall()
 
+    def remove_media_by_parent_id(self, *args):
+        self.cursor.execute(QU.delete_media_by_parent_id, args)
+
 
 
 

@@ -61,7 +61,7 @@ get_media_by_id =       """ SELECT  emby_type
                             FROM    emby 
                             WHERE   emby_id = ? 
                         """
-get_media_by_parent_id =    """ SELECT  emby_id, emby_type 
+get_media_by_parent_id =    """ SELECT  emby_id, emby_type, kodi_id, kodi_fileid  
                                 FROM    emby 
                                 WHERE   emby_parent_id = ?
                             """
@@ -165,3 +165,6 @@ delete_view =           """ DELETE FROM view
                         """
 delete_parent_boxset_obj = [    None, "{Movie}"
                            ]
+delete_media_by_parent_id = """ DELETE FROM emby 
+                                WHERE       emby_parent_id = ? 
+                            """

@@ -54,7 +54,7 @@ def sources():
     try:
         files = xml.find('files')
 
-        if not files:
+        if files is None:
             files = etree.SubElement(xml, 'files')
 
         for source in xml.findall('.//path'):

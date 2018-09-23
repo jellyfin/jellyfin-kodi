@@ -104,8 +104,9 @@ class FullSync(object):
 
         ''' Select all or whitelist libraries. Provides a new list.
         '''
-        if not dialog("yesno", heading="{emby}", line1=_(33125), nolabel=_(33126), yeslabel=_(33127)):
+        if dialog("yesno", heading="{emby}", line1=_(33125), nolabel=_(33127), yeslabel=_(33126)):
             LOG.info("Selected sync later.")
+
             raise LibraryException('SyncLibraryLater')
 
         choices = [x['Name'] for x in libraries]
@@ -116,6 +117,7 @@ class FullSync(object):
             raise LibraryException('LibrarySelection')
         elif not selection:
             LOG.info("Nothing was selected.")
+
             raise LibraryException('SyncLibraryLater')
 
         if 0 in selection:
@@ -140,6 +142,7 @@ class FullSync(object):
         ''' Main sync process.
         '''
         LOG.info("starting sync with %s", self.sync['Libraries'])
+        save_sync(self.sync)
         start_time = datetime.datetime.now()
 
         for library in list(self.sync['Libraries']):
@@ -254,7 +257,7 @@ class FullSync(object):
 
                         if obj.tvshow(show, library=library) != False:
 
-                            for episodes in server.get_items(show['Id'], "Episode"):
+                            for episodes in server.get_episode_by_show(show['Id']):
                                 for episode in episodes['Items']:
 
                                     dialog.update(percent, message="%s/%s" % (message, episode['Name'][:10]))

@@ -117,7 +117,7 @@
 		"Video": "MediaSources/0/MediaStreams:?Type=Video",
 		"Container": "MediaSources/0/Container",
 		"Location": "LocationType",
-		"EmbyParentId": "ParentId"
+		"EmbyParentId": "SeriesId,ParentId"
 	},
 	"EpisodeUserData": {
 		"Id": "Id",
@@ -333,5 +333,15 @@
 		"CameraModel": "CameraModel",
 		"ExposureTime": "ExposureTime",
 		"FocalLength": "FocalLength"
+	},
+	"BrowseChannel": {
+		"Id": "Id",
+		"Title": "Name",
+		"Type": "Type",
+		"ProgramName": "CurrentProgram/Name",
+		"Played": "CurrentProgram/UserData/Played",
+		"PlayCount": "CurrentProgram/UserData/PlayCount",
+		"Runtime": "CurrentProgram/RunTimeTicks",
+		"MediaType": "MediaType"
 	}
 }

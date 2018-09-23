@@ -230,6 +230,12 @@ class Actions(object):
             obj['Artwork'] = API.get_all_artwork(objects.map(item, 'Artwork'))
             self.listitem_photo(obj, listitem, item)
 
+        elif item['Type'] in ('TvChannel'):
+
+            obj = objects.map(item, 'BrowseChannel')
+            obj['Artwork'] = API.get_all_artwork(objects.map(item, 'Artwork'))
+            self.listitem_channel(obj, listitem, item)
+
         else:
             obj = objects.map(item, 'BrowseVideo')
             obj['DbId'] = db_id
@@ -423,6 +429,45 @@ class Actions(object):
 
             for track in obj['Streams']['subtitle']:
                 listitem.addStreamInfo('subtitle', {'language': track})
+
+        listitem.setLabel(obj['Title'])
+        listitem.setInfo('video', metadata)
+        listitem.setContentLookup(False)
+
+    def listitem_channel(self, obj, listitem, item):
+
+        ''' Set listitem for channel content.
+        '''
+        API = api.API(item, self.server)
+
+        obj['Title'] = "%s - %s" % (obj['Title'], obj['ProgramName'])
+        obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
+        obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount']) or 0
+        obj['Overlay'] = 7 if obj['Played'] else 6
+        obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or "special://home/addons/plugin.video.emby/icon.png"
+        obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] or "special://home/addons/plugin.video.emby/fanart.jpg"
+        obj['Artwork']['Backdrop'] = obj['Artwork']['Backdrop'] or ["special://home/addons/plugin.video.emby/fanart.jpg"]
+
+
+        metadata = {
+            'title': obj['Title'],
+            'originaltitle': obj['Title'],
+            'playcount': obj['PlayCount'],
+            'overlay': obj['Overlay']
+        }
+        listitem.setIconImage(obj['Artwork']['Thumb'])
+        listitem.setThumbnailImage(obj['Artwork']['Primary'])
+        self.set_artwork(obj['Artwork'], listitem, obj['Type'])
+
+        if obj['Artwork']['Primary']:
+            listitem.setThumbnailImage(obj['Artwork']['Primary'])
+
+        if not obj['Artwork']['Backdrop']:
+            listitem.setArt({'fanart': obj['Artwork']['Primary']})
+
+        listitem.setProperty('totaltime', str(obj['Runtime']))
+        listitem.setProperty('IsPlayable', 'true')
+        listitem.setProperty('IsFolder', 'false')
 
         listitem.setLabel(obj['Title'])
         listitem.setInfo('video', metadata)
