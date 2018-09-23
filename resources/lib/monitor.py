@@ -56,7 +56,7 @@ class Monitor(xbmc.Monitor):
                               'PlayPlaylist', 'Play', 'GetIntros', 'GetAdditionalParts', 'RefreshItem', 'Genres',
                               'FavoriteItem', 'DeleteItem', 'AddUser', 'GetSession', 'GetUsers', 'GetThemes',
                               'GetTheme', 'Playstate', 'GeneralCommand', 'GetTranscodeOptions', 'RecentlyAdded',
-                              'BrowseSeason'):
+                              'BrowseSeason', 'LiveTV', 'GetLiveStream'):
                 return
 
             data = json.loads(data)[0]
@@ -119,7 +119,7 @@ class Monitor(xbmc.Monitor):
 
         elif method == 'GetLiveStream':
 
-            sources = server['api'].get_play_info(data['Id'], data['PlaySessionId'], data['Token'], data['Profile'])
+            sources = server['api'].get_live_stream(data['Id'], data['PlaySessionId'], data['Token'], data['Profile'])
             self.void_responder(data, sources)
 
         elif method == 'GetToken':
@@ -166,6 +166,11 @@ class Monitor(xbmc.Monitor):
         elif method == 'BrowseSeason':
 
             result = server['api'].get_seasons(data['Id'])
+            self.void_responder(data, result)
+
+        elif method == 'LiveTV':
+
+            result = server['api'].get_channels()
             self.void_responder(data, result)
 
         elif method == 'RecentlyAdded':

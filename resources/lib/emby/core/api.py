@@ -183,6 +183,13 @@ def get_items_by_letter(parent_id=None, media=None, letter=None):
                 'IncludeItemTypes': media
             })
 
+def get_channels():
+    return  _get("LiveTv/Channels", {
+                'UserId': "{UserId}",
+                'EnableImages': True,
+                'EnableUserData': True
+            })
+
 def get_intros(item_id):
     return  user_items("/%s/Intros" % item_id)
 

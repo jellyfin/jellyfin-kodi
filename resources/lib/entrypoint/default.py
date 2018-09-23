@@ -256,6 +256,8 @@ def browse(media, view_id=None, folder=None, server_id=None):
         listing = TheVoid('RecentlyAdded', {'Id': view_id, 'ServerId': server_id}).get()
     elif folder == 'genres':
         listing = TheVoid('Genres', {'Id': view_id, 'ServerId': server_id}).get()
+    elif media == 'livetv':
+        listing = TheVoid('LiveTV', {'Id': view_id, 'ServerId': server_id}).get()
     elif folder == 'unwatched':
         listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Filters': ['IsUnplayed']}).get()
     elif folder == 'favorite':
