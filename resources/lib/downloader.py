@@ -328,7 +328,7 @@ class TheVoid(object):
 
                 return response
 
-            if window('emby_should_stop.bool') and self.monitor.waitForAbort(0.00001):
+            if window('emby_should_stop.bool') or self.monitor.waitForAbort(0.2):
                 LOG.info("Abandon mission! A black hole just swallowed [ %s ]", self.data['VoidName'])
                 
                 break
