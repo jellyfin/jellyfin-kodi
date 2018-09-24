@@ -450,8 +450,8 @@ update_tvshow =     	""" UPDATE 	tvshow
                 					c12 = ?, c13 = ?, c14 = ?, c15 = ? 
             				WHERE 	idShow = ? 
             			"""
-update_tvshow_obj =         [   "{ShowId}","{Title}","{Plot}","{RatingId}","{Premiere}","{Genre}","{Title}",
-                                "{Unique}","{Mpaa}","{Studio}","{SortTitle}"
+update_tvshow_obj =         [   "{Title}","{Plot}","{RatingId}","{Premiere}","{Genre}","{Title}",
+                                "{Unique}","{Mpaa}","{Studio}","{SortTitle}","{ShowId}"
                             ]
 update_tvshow_link =   	"""	INSERT OR REPLACE INTO	tvshowlinkpath(idShow, idPath) 
     						VALUES 					(?, ?) 
