@@ -30,6 +30,7 @@ class Movies(KodiDb):
 
         self.emby_db = emby_db.EmbyDatabase(embydb.cursor)
         self.objects = Objects()
+        self.item_ids = []
 
         KodiDb.__init__(self, videodb.cursor)
 
@@ -125,6 +126,8 @@ class Movies(KodiDb):
         self.add_people(*values(obj, QU.add_people_movie_obj))
         self.add_streams(*values(obj, QU.add_streams_obj))
         self.artwork.add(obj['Artwork'], obj['MovieId'], "movie")
+
+        self.item_ids.append(obj['Id'])
 
     def movie_add(self, obj):
 
@@ -239,15 +242,13 @@ class Movies(KodiDb):
 
         ''' Add or removes movies based on the current movies found in the boxset.
         '''
-        obj['Current'] = []
         try:
-            movies = dict(self.emby_db.get_item_id_by_parent_id(*values(obj, QUEM.get_item_id_by_parent_boxset_obj)))
+            current = self.emby_db.get_item_id_by_parent_id(*values(obj, QUEM.get_item_id_by_parent_boxset_obj))
+            movies = dict(current)
         except ValueError:
             movies = {}
 
-        for movie in movies:
-            obj['Current'].append(movie)
-
+        obj['Current'] = movies
 
         for all_movies in server.get_movies_by_boxset(obj['Id']):
             for movie in all_movies['Items']:
@@ -263,13 +264,13 @@ class Movies(KodiDb):
 
                     continue
 
-                if temp_obj['Id'] not in movies:
+                if temp_obj['Id'] not in obj['Current']:
 
                     self.set_boxset(*values(temp_obj, QU.update_movie_set_obj))
                     self.emby_db.update_parent_id(*values(temp_obj, QUEM.update_parent_movie_obj))
                     LOG.info("ADD to boxset [%s/%s] %s: %s to boxset", temp_obj['SetId'], temp_obj['MovieId'], temp_obj['Title'], temp_obj['Id'])
                 else:
-                    obj['Current'].remove(temp_obj['Id'])
+                    obj['Current'].pop(temp_obj['Id'])
 
     def boxsets_reset(self):
 
