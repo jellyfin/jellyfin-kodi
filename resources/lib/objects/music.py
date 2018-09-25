@@ -270,10 +270,8 @@ class Music(KodiDb):
         if obj['DateAdded']:
             obj['DateAdded'] = obj['DateAdded'].split('.')[0].replace('T', " ")
 
-        if not obj['Played']:
-            obj['DatePlayed'] = None
-        elif obj['DateAdded'] or obj['DatePlayed']:
-            obj['DatePlayed'] = (obj['DatePlayed'] or obj['DateAdded']).split('.')[0].replace('T', " ")
+        if obj['DatePlayed']:
+            obj['DatePlayed'] = obj['DatePlayed'].split('.')[0].replace('T', " ")
 
         if obj['Disc'] != 1:
             obj['Index'] = obj['Disc'] * 2 ** 16 + obj['Index']
@@ -323,7 +321,7 @@ class Music(KodiDb):
 
         self.add_song(*values(obj, QU.add_song_obj))
         self.emby_db.add_reference(*values(obj, QUEM.add_reference_song_obj))
-        LOG.debug("ADD song [%s/%s/%s] %s: %s", obj['PathId'], obj['AlbumId'], obj['SongId'], obj['Id'], obj['Title'])
+        LOG.info("ADD song [%s/%s/%s] %s: %s", obj['PathId'], obj['AlbumId'], obj['SongId'], obj['Id'], obj['Title'])
 
     def song_update(self, obj):
         
@@ -436,9 +434,7 @@ class Music(KodiDb):
 
         if obj['Media'] == 'song':
 
-            if not obj['Played']:
-                obj['DatePlayed'] = None
-            elif obj['DatePlayed']:
+            if obj['DatePlayed']:
                 obj['DatePlayed'] = obj['DatePlayed'].split('.')[0].replace('T', " ")
 
             self.rate_song(*values(obj, QU.update_song_rating_obj))

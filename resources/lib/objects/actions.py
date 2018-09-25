@@ -295,9 +295,7 @@ class Actions(object):
         if obj['Premiere']:
             obj['Premiere'] = obj['Premiere'].split('T')[0]
 
-        if not obj['Played']:
-            obj['DatePlayed'] = None
-        elif obj['DatePlayed']:
+        if obj['DatePlayed']:
             obj['DatePlayed'] = obj['DatePlayed'].split('.')[0].replace('T', " ")
 
         metadata = {
