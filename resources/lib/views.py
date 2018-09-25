@@ -158,6 +158,20 @@ class Views(object):
         self.delete_playlist_by_id(view_id)
         self.delete_node_by_id(view_id)
 
+    def get_libraries(self):
+
+        try:
+            libraries = self.server['api'].get_media_folders()['Items']
+            views = self.server['api'].get_views()['Items']
+        except Exception as error:
+            LOG.error("Unable to process libraries: %s", error)
+
+            return []
+
+        libraries.extend([x for x in views if x['Id'] not in [y['Id'] for y in libraries]])
+
+        return libraries
+
     def get_views(self):
         
         ''' Get the media folders. Add or remove them.
@@ -167,13 +181,7 @@ class Views(object):
             'tvshows': "Series",
             'musicvideos': "MusicVideo"
         }
-        try:
-            libraries = self.server['api'].get_media_folders()['Items']
-        except Exception as error:
-            LOG.error("Unable to process libraries: %s", error)
-
-            return
-
+        libraries = self.get_libraries()
         self.sync['SortedViews'] = [x['Id'] for x in libraries]
 
         for library in libraries:
@@ -827,7 +835,8 @@ class Views(object):
         if self.server['connected']:
 
             if self.media_folders is None:
-                self.media_folders = self.server['api'].get_media_folders()['Items']
+
+                self.media_folders = self.get_libraries()
 
             for library in self.media_folders:
 
