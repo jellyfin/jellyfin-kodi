@@ -7,13 +7,14 @@ import logging
 import Queue
 import threading
 import os
+from datetime import datetime
 
 import xbmc
 import xbmcvfs
 
 from libraries import requests
 from helper.utils import should_stop, delete_folder
-from helper import settings, stop, event, window, kodi_version, unzip
+from helper import settings, stop, event, window, kodi_version, unzip, create_id
 from emby import Emby
 from emby.core import api
 from emby.core.exceptions import HTTPException
@@ -268,7 +269,7 @@ class GetItemWorker(threading.Thread):
             while True:
 
                 try:
-                    item_id = self.queue.get(timeout=1)
+                    item_ids = self.queue.get(timeout=1)
                 except Queue.Empty:
 
                     self.is_done = True
@@ -276,17 +277,15 @@ class GetItemWorker(threading.Thread):
 
                     return
 
-                request = {'type': "GET", 'handler': "Users/{UserId}/Items/%s" % item_id}
                 try:
-                    result = self.server['http/request'](request, s)
+                    result = self.server['api'].get_items(item_ids)
 
-                    if result['Type'] in self.output:
-                        self.output[result['Type']].put(result)
+                    for item in result['Items']:
+
+                        if item['Type'] in self.output:
+                            self.output[item['Type']].put(item)
                 except HTTPException as error:
                     LOG.error("--[ http status: %s ]", error.status)
-
-                    if error.status != 500: # to retry
-                        continue
 
                 except Exception as error:
                     LOG.exception(error)
@@ -300,22 +299,25 @@ class TheVoid(object):
 
     def __init__(self, method, data):
 
-        ''' This will block until response is received.
-            This is meant to go as fast as possible, a response will always be returned.
+        ''' If you call get, this will block until response is received.
+            This is used to communicate between entrypoints.
         '''
         if type(data) != dict:
             raise Exception("unexpected data format")
 
-        data['VoidName'] = id(self)
+        data['VoidName'] = str(create_id())
         LOG.info("---[ contact mothership/%s ]", method)
         LOG.debug(data)
 
         event(method, data)
         self.method = method
         self.data = data
-        self.monitor = xbmc.Monitor()
 
-    def get(self):
+    def get(self, timeout=None, default=None):
+
+        ''' Timeout in seconds, if exceeded will return the default value.
+        '''
+        last_progress = datetime.today()
 
         while True:
 
@@ -328,10 +330,12 @@ class TheVoid(object):
 
                 return response
 
-            if window('emby_should_stop.bool') or self.monitor.waitForAbort(0.1):
-                LOG.info("Abandon mission! A black hole just swallowed [ %s ]", self.data['VoidName'])
+            if window('emby_should_stop.bool') or timeout and (datetime.today() - last_progress).seconds > timeout:
+                LOG.info("Abandon mission! A black hole just swallowed [ %s/%s ]", self.method, self.data['VoidName'])
                 
-                break
+                return default
+
+            xbmc.sleep(10)
 
 def get_objects(src, filename):
 

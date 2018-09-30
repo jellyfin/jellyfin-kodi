@@ -15,6 +15,7 @@ from utils import indent
 from utils import write_xml
 from utils import compare_version
 from utils import unzip
+from utils import create_id
 
 from wrapper import progress
 from wrapper import catch
