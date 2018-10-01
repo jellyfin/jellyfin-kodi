@@ -835,7 +835,6 @@ class Views(object):
         if self.server['connected']:
 
             if self.media_folders is None:
-
                 self.media_folders = self.get_libraries()
 
             for library in self.media_folders:

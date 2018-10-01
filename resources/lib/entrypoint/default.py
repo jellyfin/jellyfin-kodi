@@ -68,7 +68,7 @@ class Events(object):
 
         elif mode =='play':
 
-            item = TheVoid('GetItem', {'Id': params['id'], 'ServerId': server}).get()
+            item = TheVoid('GetItem', {'Id': params['id'], 'ServerId': server}).get(10, {'Items': {}})
             Actions(server).play(item, params.get('dbid'), playlist=params.get('playlist') == 'true')
 
         elif mode == 'playlist':
@@ -271,7 +271,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
     elif (folder or "").startswith('firstletter-'):
         listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Media': get_media_type(content_type), 'Params': {'NameStartsWith': folder.split('-')[1]}}).get()
     elif (folder or "").startswith('genres-'):
-        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Media': get_media_type(content_type), 'Params': {'GenreIds': folder.split('genres-')[1]}}).get()
+        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Media': get_media_type(content_type), 'Params': {'GenreIds': folder.split('-')[1]}}).get()
     elif folder == 'favepisodes':
         listing = TheVoid('Browse', {'Media': get_media_type(content_type), 'ServerId': server_id, 'Limit': 25, 'Filters': ['IsFavorite']}).get()
     elif media == 'homevideos':

@@ -102,6 +102,7 @@ class Service(xbmc.Monitor):
                     difference = datetime.today() - self.settings['last_progress']
 
                     if difference.seconds > 10:
+
                         update = difference.seconds > 250
                         event('ReportProgressRequested', {'Report': update})
                         
@@ -247,7 +248,7 @@ class Service(xbmc.Monitor):
 
             self.stop_default()
 
-            if self.waitForAbort(10):
+            if self.waitForAbort(15):
                 return
                 
             self.start_default()
@@ -324,7 +325,9 @@ class Service(xbmc.Monitor):
             xbmc.executebuiltin("Container.Refresh")
 
         elif method == 'System.OnSleep':
+            
             LOG.info("-->[ sleep ]")
+            window('emby_should_stop.bool', True)
 
             if self.library_thread is not None:
 
@@ -332,11 +335,15 @@ class Service(xbmc.Monitor):
                 self.library_thread = None
 
             Emby.close_all()
+            self.monitor.server = []
+            self.monitor.sleep = True
 
         elif method == 'System.OnWake':
 
             LOG.info("--<[ sleep ]")
             xbmc.sleep(10000)# Allow network to wake up
+            self.monitor.sleep = False
+            window('emby_should_stop', clear=True)
 
             try:
                 self.connect.register()

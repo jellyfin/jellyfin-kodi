@@ -28,6 +28,7 @@ LOG = logging.getLogger("EMBY."+__name__)
 class Monitor(xbmc.Monitor):
 
     servers = []
+    sleep = False
 
     def __init__(self):
 
@@ -61,15 +62,20 @@ class Monitor(xbmc.Monitor):
 
             data = json.loads(data)[0]
         else:
-            if method not in ('Player.OnPlay', 'VideoLibrary.OnUpdate', 'System.OnSleep', 'Player.OnAVChange'):
+            if method not in ('Player.OnPlay', 'VideoLibrary.OnUpdate', 'Player.OnAVChange'):
                 return
 
             data = json.loads(data)
 
-        LOG.info("[ %s: %s ] %s", sender, method, json.dumps(data, indent=4))
+        LOG.debug("[ %s: %s ] %s", sender, method, json.dumps(data, indent=4))
+
+        if self.sleep:
+            LOG.info("System.OnSleep detected, ignore monitor request.")
+
+            return
 
         try:
-            if method != 'LoadServer' and data.get('ServerId') and data['ServerId'] not in self.servers:
+            if method != 'LoadServer' and data['ServerId'] not in self.servers:
 
                 try:
                     connect.Connect().register(data['ServerId'])
@@ -81,10 +87,8 @@ class Monitor(xbmc.Monitor):
 
                     return
 
-            server = Emby(data.get('ServerId'))
-        except Exception as error:
-
-            LOG.error(error)
+            server = Emby(data['ServerId'])
+        except Exception:
             server = Emby()
 
         if method == 'GetItem':
@@ -229,9 +233,6 @@ class Monitor(xbmc.Monitor):
         elif method == 'AddUser':
             server['api'].session_add_user(server['config/app.session'], data['Id'], data['Add'])
             self.additional_users(server)
-
-        elif method == 'System.OnSleep':
-            self.servers = []
 
         elif method == 'Player.OnPlay':
             on_play(data, server)
