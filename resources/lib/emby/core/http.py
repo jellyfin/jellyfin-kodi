@@ -83,7 +83,7 @@ class HTTP(object):
             raise AttributeError("Request cannot be empty")
 
         data = self._request(data)
-        LOG.info("--->[ http ] %s", json.dumps(data, indent=4))
+        LOG.debug("--->[ http ] %s", json.dumps(data, indent=4))
         retry = data.pop('retry', 5)
 
         while True:

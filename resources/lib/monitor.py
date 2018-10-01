@@ -75,6 +75,9 @@ class Monitor(xbmc.Monitor):
             return
 
         try:
+            if not data.get('ServerId'):
+                raise Exception("ServerId undefined.")
+
             if method != 'LoadServer' and data['ServerId'] not in self.servers:
 
                 try:
