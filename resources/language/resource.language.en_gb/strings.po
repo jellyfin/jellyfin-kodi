@@ -849,3 +849,15 @@ msgstr ""
 msgctxt "#33173"
 msgid "Forget about the previous sync? This is not recommended."
 msgstr ""
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr ""
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Emby at the same time."
+msgstr ""
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr ""

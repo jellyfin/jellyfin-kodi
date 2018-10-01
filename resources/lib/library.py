@@ -16,11 +16,14 @@ from full_sync import FullSync
 from views import Views
 from downloader import GetItemWorker
 from helper import _, stop, settings, window, dialog, event, progress, LibraryException
+from helper.utils import split_list
 from emby import Emby
 
 ##################################################################################################
 
 LOG = logging.getLogger("EMBY."+__name__)
+LIMIT = min(int(settings('limitIndex') or 50), 50)
+DTHREADS = int(settings('limitThreads') or 3)
 MEDIA = {
     'Movie': Movies,
     'BoxSet': Movies,
@@ -119,7 +122,7 @@ class Library(threading.Thread):
                     threads.remove(thread)
 
         for queue in ((self.updated_queue, self.updated_output), (self.userdata_queue, self.userdata_output)):
-            if queue[0].qsize() and len(self.download_threads) < 5:
+            if queue[0].qsize() and len(self.download_threads) < DTHREADS:
                 
                 new_thread = GetItemWorker(self.server, queue[0], queue[1])
                 new_thread.start()
@@ -183,8 +186,10 @@ class Library(threading.Thread):
 
             if xbmc.getCondVisibility('Container.Content(musicvideos)'): # Prevent cursor from moving
                 xbmc.executebuiltin('Container.Refresh')
-            else:
+            elif not xbmc.getCondVisibility('Window.IsMedia'): # Update widgets
                 xbmc.executebuiltin('UpdateLibrary(video)')
+            else: # Update listing
+                xbmc.executebuiltin('Container.Refresh')
 
     def stop_client(self):
         self.stop_thread = True
@@ -467,14 +472,12 @@ class Library(threading.Thread):
         if not data:
             return
 
-        for item in data:
+        items = [x['ItemId'] for x in data]
 
-            if item in list(self.userdata_queue.queue):
-                continue
+        for item in split_list(items, LIMIT):
+            self.userdata_queue.put(item)
 
-            self.userdata_queue.put(item['ItemId'])
-
-        LOG.info("---[ userdata:%s ]", self.userdata_queue.qsize())
+        LOG.info("---[ userdata:%s ]", len(items))
 
     def updated(self, data):
 
@@ -483,14 +486,10 @@ class Library(threading.Thread):
         if not data:
             return
 
-        for item in data:
-
-            if item in list(self.updated_queue.queue):
-                continue
-
+        for item in split_list(data, LIMIT):
             self.updated_queue.put(item)
 
-        LOG.info("---[ updated:%s ]", self.updated_queue.qsize())
+        LOG.info("---[ updated:%s ]", len(data))
 
     def removed(self, data):
 
@@ -506,7 +505,7 @@ class Library(threading.Thread):
 
             self.removed_queue.put(item)
 
-        LOG.info("---[ removed:%s ]", self.removed_queue.qsize())
+        LOG.info("---[ removed:%s ]", len(data))
 
 
 class UpdatedWorker(threading.Thread):
