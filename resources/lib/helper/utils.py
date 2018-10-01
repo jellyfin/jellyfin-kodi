@@ -403,3 +403,7 @@ def normalize_string(text):
     text = unicodedata.normalize('NFKD', unicode(text, 'utf-8')).encode('ascii', 'ignore')
 
     return text
+
+def split_list(itemlist, size):
+    # Split up list in pieces of size. Will generate a list of lists
+    return [itemlist[i:i+size] for i in range(0, len(itemlist), size)]
