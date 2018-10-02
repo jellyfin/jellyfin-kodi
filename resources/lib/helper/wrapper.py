@@ -118,17 +118,26 @@ def library_check():
 
                 if view is None:
                     ancestors = self.server['api'].get_ancestors(item['Id'])
- 
+
                     if not ancestors:
-                        return
+                        if item['Type'] == 'MusicArtist':
 
-                    for ancestor in ancestors:
-                        if ancestor['Type'] == 'CollectionFolder':
+                            try:
+                                views = self.emby_db.get_views_by_media('music')[0]
+                            except Exception:
+                                return
 
-                            view = self.emby_db.get_view_name(ancestor['Id'])
-                            view = {'Id': None, 'Name': None} if view is None else {'Name': ancestor['Name'], 'Id': ancestor['Id']}
+                            view = {'Id': views[0], 'Name': views[1]}
+                        else: # Grab the first music library
+                            return
+                    else:
+                        for ancestor in ancestors:
+                            if ancestor['Type'] == 'CollectionFolder':
 
-                            break
+                                view = self.emby_db.get_view_name(ancestor['Id'])
+                                view = {'Id': None, 'Name': None} if view is None else {'Name': ancestor['Name'], 'Id': ancestor['Id']}
+
+                                break
 
                     if view['Id'] not in [x.replace('Mixed:', "") for x in sync['Whitelist'] + sync['Libraries']]:
                         LOG.info("Library %s is not synced. Skip update.", view['Id'])

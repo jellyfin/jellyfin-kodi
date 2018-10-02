@@ -72,6 +72,10 @@ get_view =              """ SELECT  view_name, media_type
 get_views =             """ SELECT  *
                             FROM    view
                         """
+get_views_by_media =    """ SELECT  * 
+                            FROM    view 
+                            WHERE   media_type = ? 
+                        """
 get_items_by_media =    """ SELECT  emby_id 
                             FROM    emby 
                             WHERE   media_type = ?

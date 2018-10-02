@@ -135,6 +135,11 @@ class EmbyDatabase():
 
         return self.cursor.fetchall()
 
+    def get_views_by_media(self, *args):
+        self.cursor.execute(QU.get_views_by_media, args)
+
+        return self.cursor.fetchall()
+
     def get_items_by_media(self, *args):
         self.cursor.execute(QU.get_items_by_media, args)
 
