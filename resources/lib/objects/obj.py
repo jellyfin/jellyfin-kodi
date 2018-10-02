@@ -111,7 +111,7 @@ class Objects(object):
 
         self.mapped_item['ProviderName'] = self.objects.get('%sProviderName' % mapping_name)
 
-        if not mapping_name.startswith('Browse'):
+        if not mapping_name.startswith('Browse') and not mapping_name.startswith('Artwork'):
             self.mapped_item['Checksum'] = json.dumps(item['UserData'])
 
         return self.mapped_item
