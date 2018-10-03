@@ -526,21 +526,21 @@ class UpdatedWorker(threading.Thread):
 
     def run(self):
 
-        with self.database as kodidb:
-            with Database('emby') as embydb:
+        with self.lock:
+            with self.database as kodidb:
+                with Database('emby') as embydb:
 
-                while True:
+                    while True:
 
-                    try:
-                        item = self.queue.get(timeout=3)
-                    except Queue.Empty:
+                        try:
+                            item = self.queue.get(timeout=3)
+                        except Queue.Empty:
 
-                        LOG.info("--<[ q:updated/%s ]", id(self))
-                        self.is_done = True
+                            LOG.info("--<[ q:updated/%s ]", id(self))
+                            self.is_done = True
 
-                        break
+                            break
 
-                    with self.lock:
                         obj = MEDIA[item['Type']](self.args[0], embydb, kodidb, self.args[1])[item['Type']]
 
                         try:
@@ -551,10 +551,10 @@ class UpdatedWorker(threading.Thread):
                         except Exception as error:
                             LOG.exception(error)
 
-                    self.queue.task_done()
+                        self.queue.task_done()
 
-                    if window('emby_should_stop.bool'):
-                        break
+                        if window('emby_should_stop.bool'):
+                            break
 
 class UserDataWorker(threading.Thread):
 
@@ -570,21 +570,21 @@ class UserDataWorker(threading.Thread):
 
     def run(self):
 
-        with self.database as kodidb:
-            with Database('emby') as embydb:
+        with self.lock:
+            with self.database as kodidb:
+                with Database('emby') as embydb:
 
-                while True:
+                    while True:
 
-                    try:
-                        item = self.queue.get(timeout=3)
-                    except Queue.Empty:
+                        try:
+                            item = self.queue.get(timeout=3)
+                        except Queue.Empty:
 
-                        LOG.info("--<[ q:userdata/%s ]", id(self))
-                        self.is_done = True
+                            LOG.info("--<[ q:userdata/%s ]", id(self))
+                            self.is_done = True
 
-                        break
+                            break
 
-                    with self.lock:
                         obj = MEDIA[item['Type']](self.args[0], embydb, kodidb, self.args[1])['UserData']
 
                         try:
@@ -595,10 +595,10 @@ class UserDataWorker(threading.Thread):
                         except Exception as error:
                             LOG.exception(error)
 
-                    self.queue.task_done()
+                        self.queue.task_done()
 
-                    if window('emby_should_stop.bool'):
-                        break
+                        if window('emby_should_stop.bool'):
+                            break
 
 class SortWorker(threading.Thread):
 
@@ -658,21 +658,21 @@ class RemovedWorker(threading.Thread):
 
     def run(self):
 
-        with self.database as kodidb:
-            with Database('emby') as embydb:
+        with self.lock:
+            with self.database as kodidb:
+                with Database('emby') as embydb:
 
-                while True:
+                    while True:
 
-                    try:
-                        item = self.queue.get(timeout=2)
-                    except Queue.Empty:
+                        try:
+                            item = self.queue.get(timeout=2)
+                        except Queue.Empty:
 
-                        LOG.info("--<[ q:removed/%s ]", id(self))
-                        self.is_done = True
+                            LOG.info("--<[ q:removed/%s ]", id(self))
+                            self.is_done = True
 
-                        break
+                            break
 
-                    with self.lock:
                         obj = MEDIA[item['Type']](self.args[0], embydb, kodidb, self.args[1])['Remove']
 
                         try:
@@ -683,10 +683,10 @@ class RemovedWorker(threading.Thread):
                         except Exception as error:
                             LOG.exception(error)
 
-                    self.queue.task_done()
+                        self.queue.task_done()
 
-                    if window('emby_should_stop.bool'):
-                        break
+                        if window('emby_should_stop.bool'):
+                            break
 
 class NotifyWorker(threading.Thread):
 
