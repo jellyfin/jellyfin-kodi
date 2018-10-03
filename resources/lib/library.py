@@ -16,7 +16,7 @@ from full_sync import FullSync
 from views import Views
 from downloader import GetItemWorker
 from helper import _, stop, settings, window, dialog, event, progress, LibraryException
-from helper.utils import split_list
+from helper.utils import split_list, set_screensaver, get_screensaver
 from emby import Emby
 
 ##################################################################################################
@@ -47,6 +47,7 @@ class Library(threading.Thread):
     stop_thread = False
     suspend = False
     pending_refresh = False
+    screensaver = ""
 
 
     def __init__(self, monitor):
@@ -89,6 +90,8 @@ class Library(threading.Thread):
 
         if not self.startup():
             self.stop_client()
+
+        window('emby_startup.bool', True)
 
         while not self.stop_thread:
 
@@ -178,18 +181,28 @@ class Library(threading.Thread):
                 LOG.info("-->[ q:removed/%s/%s ]", queues, id(new_thread))
                 self.writer_threads['removed'].append(new_thread)
                 self.pending_refresh = True
+
+        if self.pending_refresh:
+            if not settings('dbSyncScreensaver.bool'):
+
+                xbmc.executebuiltin('InhibitIdleShutdown(true)')
+                self.screensaver = get_screensaver()
+                set_screensaver(value="")
         
         if (self.pending_refresh and not self.download_threads and not self.writer_threads['updated'] and
                                      not self.writer_threads['userdata'] and not self.writer_threads['removed']):
             self.pending_refresh = False
             self.save_last_sync()
 
-            if xbmc.getCondVisibility('Container.Content(musicvideos)'): # Prevent cursor from moving
+            if not settings('dbSyncScreensaver.bool'):
+
+                xbmc.executebuiltin('InhibitIdleShutdown(false)')
+                set_screensaver(value=self.screensaver)
+
+            if xbmc.getCondVisibility('Container.Content(musicvideos)') or xbmc.getCondVisibility('Window.IsMedia'): # Prevent cursor from moving
                 xbmc.executebuiltin('Container.Refresh')
-            elif not xbmc.getCondVisibility('Window.IsMedia'): # Update widgets
+            else: # Update widgets
                 xbmc.executebuiltin('UpdateLibrary(video)')
-            else: # Update listing
-                xbmc.executebuiltin('Container.Refresh')
 
     def stop_client(self):
         self.stop_thread = True
@@ -198,42 +211,33 @@ class Library(threading.Thread):
 
         ''' Run at startup. Will check for the server plugin.
         '''
-        fast_sync = False
         Views().get_views()
         Views().get_nodes()
 
         try:
-            if not settings('kodiCompanion.bool') and settings('SyncInstallRunDone.bool'):
-                return True
-
-            if settings('kodiCompanion.bool'):
-                for plugin in self.server['api'].get_plugins():
-                    if plugin['Name'] in ("Emby.Kodi Sync Queue", "Kodi companion"):
-                        fast_sync = True
-
-                        break
-                else:
-                    raise LibraryException('CompanionMissing')
-
-            if get_sync()['Libraries']:
+            if get_sync()['Libraries'] or not settings('SyncInstallRunDone.bool'):
 
                 FullSync(self)
                 Views().get_nodes()
 
             if settings('SyncInstallRunDone.bool'):
+                if settings('kodiCompanion.bool'):
 
-                if fast_sync and not self.fast_sync():
-                    dialog("ok", heading="{emby}", line1=_(33128))
+                    for plugin in self.server['api'].get_plugins():
+                        if plugin['Name'] in ("Emby.Kodi Sync Queue", "Kodi companion"):
+                            
+                            if not self.fast_sync():
+                                dialog("ok", heading="{emby}", line1=_(33128))
 
-                    raise Exception("Failed to retrieve latest updates")
+                                raise Exception("Failed to retrieve latest updates")
 
-                LOG.info("--<[ retrieve changes ]")
-            else:
-                FullSync(self)
-                Views().get_nodes()
+                            LOG.info("--<[ retrieve changes ]")
+
+                            break
+                    else:
+                        raise LibraryException('CompanionMissing')
 
             return True
-
         except LibraryException as error:
             LOG.error(error.status)
 
@@ -522,34 +526,35 @@ class UpdatedWorker(threading.Thread):
 
     def run(self):
 
-        with self.lock:
-            with self.database as kodidb:
-                with Database('emby') as embydb:
+        with self.database as kodidb:
+            with Database('emby') as embydb:
 
-                    while True:
+                while True:
 
-                        try:
-                            item = self.queue.get(timeout=3)
-                        except Queue.Empty:
+                    try:
+                        item = self.queue.get(timeout=3)
+                    except Queue.Empty:
 
-                            LOG.info("--<[ q:updated/%s ]", id(self))
-                            self.is_done = True
+                        LOG.info("--<[ q:updated/%s ]", id(self))
+                        self.is_done = True
 
-                            break
+                        break
 
+                    with self.lock:
                         obj = MEDIA[item['Type']](self.args[0], embydb, kodidb, self.args[1])[item['Type']]
 
                         try:
                             obj(item)
-                            self.queue.task_done()
                         except LibraryException as error:
                             if error.status == 'StopCalled':
                                 break
                         except Exception as error:
                             LOG.exception(error)
 
-                        if window('emby_should_stop.bool'):
-                            break
+                    self.queue.task_done()
+
+                    if window('emby_should_stop.bool'):
+                        break
 
 class UserDataWorker(threading.Thread):
 
@@ -565,34 +570,35 @@ class UserDataWorker(threading.Thread):
 
     def run(self):
 
-        with self.lock:
-            with self.database as kodidb:
-                with Database('emby') as embydb:
+        with self.database as kodidb:
+            with Database('emby') as embydb:
 
-                    while True:
+                while True:
 
-                        try:
-                            item = self.queue.get(timeout=3)
-                        except Queue.Empty:
+                    try:
+                        item = self.queue.get(timeout=3)
+                    except Queue.Empty:
 
-                            LOG.info("--<[ q:userdata/%s ]", id(self))
-                            self.is_done = True
+                        LOG.info("--<[ q:userdata/%s ]", id(self))
+                        self.is_done = True
 
-                            break
+                        break
 
+                    with self.lock:
                         obj = MEDIA[item['Type']](self.args[0], embydb, kodidb, self.args[1])['UserData']
 
                         try:
                             obj(item)
-                            self.queue.task_done()
                         except LibraryException as error:
                             if error.status == 'StopCalled':
                                 break
                         except Exception as error:
                             LOG.exception(error)
 
-                        if window('emby_should_stop.bool'):
-                            break
+                    self.queue.task_done()
+
+                    if window('emby_should_stop.bool'):
+                        break
 
 class SortWorker(threading.Thread):
 
@@ -652,34 +658,35 @@ class RemovedWorker(threading.Thread):
 
     def run(self):
 
-        with self.lock:
-            with self.database as kodidb:
-                with Database('emby') as embydb:
+        with self.database as kodidb:
+            with Database('emby') as embydb:
 
-                    while True:
+                while True:
 
-                        try:
-                            item = self.queue.get(timeout=3)
-                        except Queue.Empty:
+                    try:
+                        item = self.queue.get(timeout=2)
+                    except Queue.Empty:
 
-                            LOG.info("--<[ q:removed/%s ]", id(self))
-                            self.is_done = True
+                        LOG.info("--<[ q:removed/%s ]", id(self))
+                        self.is_done = True
 
-                            break
+                        break
 
+                    with self.lock:
                         obj = MEDIA[item['Type']](self.args[0], embydb, kodidb, self.args[1])['Remove']
 
                         try:
                             obj(item['Id'])
-                            self.queue.task_done()
                         except LibraryException as error:
                             if error.status == 'StopCalled':
                                 break
                         except Exception as error:
                             LOG.exception(error)
 
-                        if window('emby_should_stop.bool'):
-                            break
+                    self.queue.task_done()
+
+                    if window('emby_should_stop.bool'):
+                        break
 
 class NotifyWorker(threading.Thread):
 

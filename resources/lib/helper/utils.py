@@ -172,6 +172,27 @@ def should_stop():
 
     return False
 
+def get_screensaver():
+    
+    ''' Get the current screensaver value.
+    '''
+    result = JSONRPC('Settings.getSettingValue').execute({'setting': "screensaver.mode"})
+    try:
+        return result['result']['value']
+    except KeyError:
+        return ""
+
+def set_screensaver(value):
+    
+    ''' Toggle the screensaver
+    '''
+    params = {
+        'setting': "screensaver.mode",
+        'value': value
+    }
+    result = JSONRPC('Settings.setSettingValue').execute(params)
+    LOG.info("---[ screensaver/%s ] %s", value, result)
+
 class JSONRPC(object):
 
     version = 1

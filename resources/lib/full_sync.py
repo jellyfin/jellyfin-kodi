@@ -15,6 +15,7 @@ import helper.xmls as xmls
 from database import Database, get_sync, save_sync, emby_db
 from objects import Movies, TVShows, MusicVideos, Music
 from helper import _, settings, progress, dialog, LibraryException
+from helper.utils import get_screensaver, set_screensaver
 from emby import Emby
 
 ##################################################################################################
@@ -102,7 +103,7 @@ class FullSync(object):
 
     def select_libraries(self, libraries):
 
-        ''' Select all or whitelist libraries. Provides a new list.
+        ''' Select all or certain libraries to be whitelisted.
         '''
         if dialog("yesno", heading="{emby}", line1=_(33125), nolabel=_(33127), yeslabel=_(33126)):
             LOG.info("Selected sync later.")
@@ -145,20 +146,36 @@ class FullSync(object):
         save_sync(self.sync)
         start_time = datetime.datetime.now()
 
-        for library in list(self.sync['Libraries']):
+        if not settings('dbSyncScreensaver.bool'):
 
-            self.process_library(library)
+            xbmc.executebuiltin('InhibitIdleShutdown(true)')
+            screensaver = get_screensaver()
+            set_screensaver(value="")
 
-            if not library.startswith('Boxsets:') and library not in self.sync['Whitelist']:
-                self.sync['Whitelist'].append(library)
+        try:
+            for library in list(self.sync['Libraries']):
 
-            self.sync['Libraries'].pop(self.sync['Libraries'].index(library))
-            self.sync['RestorePoint'] = {}
+                self.process_library(library)
+
+                if not library.startswith('Boxsets:') and library not in self.sync['Whitelist']:
+                    self.sync['Whitelist'].append(library)
+
+                self.sync['Libraries'].pop(self.sync['Libraries'].index(library))
+                self.sync['RestorePoint'] = {}
+        except Exception as error:
+
+            if not settings('dbSyncScreensaver.bool'):
+
+                xbmc.executebuiltin('InhibitIdleShutdown(false)')
+                set_screensaver(value=screensaver)
+
+            raise
 
         elapsed = datetime.datetime.now() - start_time
         settings('SyncInstallRunDone.bool', True)
         self.library.save_last_sync()
         save_sync(self.sync)
+
         xbmc.executebuiltin('UpdateLibrary(video)')
         dialog("notification", heading="{emby}", message="%s %s" % (_(33025), str(elapsed).split('.')[0]),
                icon="{emby}", sound=False)
@@ -219,133 +236,183 @@ class FullSync(object):
 
         ''' Process movies from a single library.
         '''
-        with Database() as videodb:
-            with Database('emby') as embydb:
-                obj = Movies(self.server, embydb, videodb, self.direct_path)
+        with self.library.database_lock:
+            with Database() as videodb:
+                with Database('emby') as embydb:
 
-                for items in server.get_items(library['Id'], "Movie", False, self.sync['RestorePoint'].get('params')):
-                    
-                    self.sync['RestorePoint'] = items['RestorePoint']
-                    start_index = items['RestorePoint']['params']['StartIndex']
+                    obj = Movies(self.server, embydb, videodb, self.direct_path)
 
-                    for index, movie in enumerate(items['Items']):
+                    for items in server.get_items(library['Id'], "Movie", False, self.sync['RestorePoint'].get('params')):
+                        
+                        self.sync['RestorePoint'] = items['RestorePoint']
+                        start_index = items['RestorePoint']['params']['StartIndex']
 
-                        dialog.update(int((float(start_index + index) / float(items['TotalRecordCount']))*100),
-                                      heading="%s: %s" % (_('addon_name'), library['Name']),
-                                      message=movie['Name'])
-                        obj.movie(movie, library=library)
+                        for index, movie in enumerate(items['Items']):
+
+                            dialog.update(int((float(start_index + index) / float(items['TotalRecordCount']))*100),
+                                          heading="%s: %s" % (_('addon_name'), library['Name']),
+                                          message=movie['Name'])
+                            obj.movie(movie, library=library)
+
+                    #self.movies_compare(library, obj, embydb)
+
+    def movies_compare(self, library, obj, embydb):
+
+        ''' Compare entries from library to what's in the embydb. Remove surplus
+        '''
+        db = emby_db.EmbyDatabase(embydb.cursor)
+
+        items = db.get_item_by_media_folder(library['Id'])
+        current = obj.item_ids
+
+        for x in items:
+            if x not in current:
+                obj.remove(x)
 
     @progress()
     def tvshows(self, library, dialog):
 
         ''' Process tvshows and episodes from a single library.
         '''
-        with Database() as videodb:
-            with Database('emby') as embydb:
-                obj = TVShows(self.server, embydb, videodb, self.direct_path)
+        with self.library.database_lock:
+            with Database() as videodb:
+                with Database('emby') as embydb:
+                    obj = TVShows(self.server, embydb, videodb, self.direct_path)
 
-                for items in server.get_items(library['Id'], "Series", False, self.sync['RestorePoint'].get('params')):
+                    for items in server.get_items(library['Id'], "Series", False, self.sync['RestorePoint'].get('params')):
 
-                    self.sync['RestorePoint'] = items['RestorePoint']
-                    start_index = items['RestorePoint']['params']['StartIndex']
+                        self.sync['RestorePoint'] = items['RestorePoint']
+                        start_index = items['RestorePoint']['params']['StartIndex']
 
-                    for index, show in enumerate(items['Items']):
+                        for index, show in enumerate(items['Items']):
 
-                        percent = int((float(start_index + index) / float(items['TotalRecordCount']))*100)
-                        message = show['Name']
-                        dialog.update(percent, heading="%s: %s" % (_('addon_name'), library['Name']), message=message)
+                            percent = int((float(start_index + index) / float(items['TotalRecordCount']))*100)
+                            message = show['Name']
+                            dialog.update(percent, heading="%s: %s" % (_('addon_name'), library['Name']), message=message)
 
-                        if obj.tvshow(show, library=library) != False:
+                            if obj.tvshow(show, library=library) != False:
 
-                            for episodes in server.get_episode_by_show(show['Id']):
-                                for episode in episodes['Items']:
+                                for episodes in server.get_episode_by_show(show['Id']):
+                                    for episode in episodes['Items']:
 
-                                    dialog.update(percent, message="%s/%s" % (message, episode['Name'][:10]))
-                                    obj.episode(episode)
+                                        dialog.update(percent, message="%s/%s" % (message, episode['Name'][:10]))
+                                        obj.episode(episode)
+
+    def tvshows_compare(self, library, obj, embydb):
+
+        ''' Compare entries from library to what's in the embydb. Remove surplus
+        '''
+        db = emby_db.EmbyDatabase(embydb.cursor)
+
+        items = db.get_item_by_media_folder(library['Id'])
+        current = obj.item_ids
+
+        for x in items:
+            if x not in current:
+                obj.remove(x)
 
     @progress()
     def musicvideos(self, library, dialog):
 
         ''' Process musicvideos from a single library.
         '''
-        with Database() as videodb:
-            with Database('emby') as embydb:
-                obj = MusicVideos(self.server, embydb, videodb, self.direct_path)
+        with self.library.database_lock:
+            with Database() as videodb:
+                with Database('emby') as embydb:
+                    obj = MusicVideos(self.server, embydb, videodb, self.direct_path)
 
-                for items in server.get_items(library['Id'], "MusicVideo", False, self.sync['RestorePoint'].get('params')):
+                    for items in server.get_items(library['Id'], "MusicVideo", False, self.sync['RestorePoint'].get('params')):
 
-                    self.sync['RestorePoint'] = items['RestorePoint']
-                    start_index = items['RestorePoint']['params']['StartIndex']
+                        self.sync['RestorePoint'] = items['RestorePoint']
+                        start_index = items['RestorePoint']['params']['StartIndex']
 
-                    for index, mvideo in enumerate(items['Items']):
+                        for index, mvideo in enumerate(items['Items']):
 
-                        dialog.update(int((float(start_index + index) / float(items['TotalRecordCount']))*100),
-                                      heading="%s: %s" % (_('addon_name'), library['Name']),
-                                      message=mvideo['Name'])
-                        obj.musicvideo(mvideo, library=library)
+                            dialog.update(int((float(start_index + index) / float(items['TotalRecordCount']))*100),
+                                          heading="%s: %s" % (_('addon_name'), library['Name']),
+                                          message=mvideo['Name'])
+                            obj.musicvideo(mvideo, library=library)
+
+                #self.movies_compare(library, obj, embydb)
+
+    def musicvideos_compare(self, library, obj, embydb):
+
+        ''' Compare entries from library to what's in the embydb. Remove surplus
+        '''
+        db = emby_db.EmbyDatabase(embydb.cursor)
+
+        items = db.get_item_by_media_folder(library['Id'])
+        current = obj.item_ids
+
+        for x in items:
+            if x not in current:
+                obj.remove(x)
 
     @progress()
     def music(self, library, dialog):
 
         ''' Process artists, album, songs from a single library.
         '''
-        with Database('music') as musicdb:
-            with Database('emby') as embydb:
-                obj = Music(self.server, embydb, musicdb, self.direct_path)
+        with self.library.music_database_lock:
+            with Database('music') as musicdb:
+                with Database('emby') as embydb:
+                    obj = Music(self.server, embydb, musicdb, self.direct_path)
 
-                for items in server.get_artists(library['Id'], False, self.sync['RestorePoint'].get('params')):
+                    for items in server.get_artists(library['Id'], False, self.sync['RestorePoint'].get('params')):
 
-                    self.sync['RestorePoint'] = items['RestorePoint']
-                    start_index = items['RestorePoint']['params']['StartIndex']
+                        self.sync['RestorePoint'] = items['RestorePoint']
+                        start_index = items['RestorePoint']['params']['StartIndex']
 
-                    for index, artist in enumerate(items['Items']):
+                        for index, artist in enumerate(items['Items']):
 
-                        percent = int((float(start_index + index) / float(items['TotalRecordCount']))*100)
-                        message = artist['Name']
-                        dialog.update(percent, heading="%s: %s" % (_('addon_name'), library['Name']), message=message)
-                        obj.artist(artist, library=library)
+                            percent = int((float(start_index + index) / float(items['TotalRecordCount']))*100)
+                            message = artist['Name']
+                            dialog.update(percent, heading="%s: %s" % (_('addon_name'), library['Name']), message=message)
+                            obj.artist(artist, library=library)
 
-                        for albums in server.get_albums_by_artist(artist['Id']):
-                            
-                            for album in albums['Items']:
-                                obj.album(album)
+                            for albums in server.get_albums_by_artist(artist['Id']):
+                                
+                                for album in albums['Items']:
+                                    obj.album(album)
 
-                                for songs in server.get_items(album['Id'], "Audio"):
-                                    for song in songs['Items']:
+                                    for songs in server.get_items(album['Id'], "Audio"):
+                                        for song in songs['Items']:
 
-                                        dialog.update(percent,
-                                                      message="%s/%s/%s" % (message, album['Name'][:7], song['Name'][:7]))
-                                        obj.song(song)
+                                            dialog.update(percent,
+                                                          message="%s/%s/%s" % (message, album['Name'][:7], song['Name'][:7]))
+                                            obj.song(song)
 
     @progress(_(33018))
     def boxsets(self, library_id=None, dialog=None):
 
         ''' Process all boxsets.
         '''
-        with Database() as videodb:
-            with Database('emby') as embydb:
-                obj = Movies(self.server, embydb, videodb, self.direct_path)
+        with self.library.database_lock:
+            with Database() as videodb:
+                with Database('emby') as embydb:
+                    obj = Movies(self.server, embydb, videodb, self.direct_path)
 
-                for items in server.get_items(library_id, "BoxSet", False, self.sync['RestorePoint'].get('params')):
+                    for items in server.get_items(library_id, "BoxSet", False, self.sync['RestorePoint'].get('params')):
 
-                    self.sync['RestorePoint'] = items['RestorePoint']
-                    start_index = items['RestorePoint']['params']['StartIndex']
+                        self.sync['RestorePoint'] = items['RestorePoint']
+                        start_index = items['RestorePoint']['params']['StartIndex']
 
-                    for index, boxset in enumerate(items['Items']):
+                        for index, boxset in enumerate(items['Items']):
 
-                        dialog.update(int((float(start_index + index) / float(items['TotalRecordCount']))*100),
-                                      heading="%s: %s" % (_('addon_name'), _('boxsets')),
-                                      message=boxset['Name'])
-                        obj.boxset(boxset)
+                            dialog.update(int((float(start_index + index) / float(items['TotalRecordCount']))*100),
+                                          heading="%s: %s" % (_('addon_name'), _('boxsets')),
+                                          message=boxset['Name'])
+                            obj.boxset(boxset)
 
     def refresh_boxsets(self):
 
         ''' Delete all exisitng boxsets and re-add.
         '''
-        with Database() as videodb:
-            with Database('emby') as embydb:
+        with self.library.database_lock:
+            with Database() as videodb:
+                with Database('emby') as embydb:
 
-                obj = Movies(self.server, embydb, videodb, self.direct_path)
-                obj.boxsets_reset()
+                    obj = Movies(self.server, embydb, videodb, self.direct_path)
+                    obj.boxsets_reset()
 
-        self.boxsets(None)
+            self.boxsets(None)

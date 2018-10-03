@@ -276,14 +276,14 @@ class Service(xbmc.Monitor):
             self.connect.setup_manual_server()
 
         elif method == 'UserDataChanged' and self.library_thread:
-            if data.get('ServerId'):
+            if data.get('ServerId') or not window('emby_startup.bool'):
                 return
 
             LOG.info("[ UserDataChanged ] %s", data)
             self.library_thread.userdata(data['UserDataList'])
 
         elif method == 'LibraryChanged' and self.library_thread:
-            if data.get('ServerId'):
+            if data.get('ServerId') or not window('emby_startup.bool'):
                 return
 
             LOG.info("[ LibraryChanged ] %s", data)
@@ -415,11 +415,9 @@ class Service(xbmc.Monitor):
 
         properties = [ # TODO: review
             "emby_state", "emby_serverStatus",
-            "emby_syncRunning", "emby_dbCheck",
-            "emby_currUser", "emby_dbScan",
-            "emby_initialScan",
+            "emby_syncRunning", "emby_currUser",
 
-            "emby_play", "emby_online", "emby.connected", "emby.resume",
+            "emby_play", "emby_online", "emby.connected", "emby.resume", "emby_startup",
             "emby.external", "emby.external_check", "emby_deviceId", "emby_db_check", "emby_pathverified"
         ]
         for prop in properties:
