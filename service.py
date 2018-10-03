@@ -38,19 +38,24 @@ DELAY = int(settings('startupDelay') or 0)
 
 if __name__ == "__main__":
 
-    LOG.warn("--->[ service ]")
+    LOG.warn("-->[ service ]")
     LOG.warn("Delay startup by %s seconds.", DELAY)
 
-    session = Service()
-
     try:
-        if DELAY and xbmc.Monitor().waitForAbort(DELAY):
-            raise Exception("Aborted during startup delay")
+        session = Service()
 
-        session.service()
+        try:
+            if DELAY and xbmc.Monitor().waitForAbort(DELAY):
+                raise Exception("Aborted during startup delay")
+
+            session.service()
+        except Exception as error: # TODO, build exceptions
+            LOG.exception(error)
+            session.shutdown()
+
     except Exception as error:
-
+        ''' Issue initializing the service.
+        '''
         LOG.exception(error)
-        session.shutdown()
 
-    LOG.warn("---<[ service ]")
+    LOG.warn("--<[ service ]")

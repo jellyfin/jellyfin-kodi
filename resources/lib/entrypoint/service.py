@@ -22,6 +22,7 @@ from views import Views, verify_kodi_defaults
 from helper import _, window, settings, event, dialog, find, compare_version
 from downloader import get_objects
 from emby import Emby
+from database import Database, emby_db, reset
 
 #################################################################################################
 
@@ -67,6 +68,8 @@ class Service(xbmc.Monitor):
         LOG.warn("Python Version: %s", sys.version)
         LOG.warn("Using dynamic paths: %s", settings('useDirectPaths') == "0")
         LOG.warn("Log Level: %s", self.settings['log_level'])
+
+        self.check_version()
 
         verify_kodi_defaults()
         Views().get_nodes()
@@ -132,6 +135,28 @@ class Service(xbmc.Monitor):
             self.library_thread.stop_client()
             self.library_thread = None
 
+    def check_version(self):
+
+        ''' Check the database version to ensure we do not need to do a reset.
+        '''
+        with Database('emby') as embydb:
+
+            version = emby_db.EmbyDatabase(embydb.cursor).get_version()
+            LOG.info("---[ db/%s ]", version)
+
+        if version and compare_version(version, "3.1.0") < 0:
+            resp = dialog("yesno", heading=_('addon_name'), line1=_(33022))
+
+            if not resp:
+
+                LOG.warn("Database version is out of date! USER IGNORED!")
+                dialog("ok", heading=_('addon_name'), line1=_(33023))
+
+                raise Exception("User backed out of a required database reset")
+            else:
+                reset()
+
+                raise Exception("Completed database reset")
 
     def check_update(self):
 

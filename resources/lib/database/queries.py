@@ -80,6 +80,9 @@ get_items_by_media =    """ SELECT  emby_id
                             FROM    emby 
                             WHERE   media_type = ?
                         """
+get_version =           """ SELECT  idVersion 
+                            FROM    version
+                        """
 
 
 
@@ -115,6 +118,9 @@ add_reference_song_obj =    [   "{Id}","{SongId}",None,"{PathId}","Audio","song"
                             ]
 add_view =              """ INSERT OR REPLACE INTO  view(view_id, view_name, media_type)
                             VALUES                  (?, ?, ?)
+                        """
+add_version =           """ INSERT OR REPLACE INTO  version(idVersion) 
+                            VALUES                  (?)
                         """
 
 
@@ -172,3 +178,5 @@ delete_parent_boxset_obj = [    None, "{Movie}"
 delete_media_by_parent_id = """ DELETE FROM emby 
                                 WHERE       emby_parent_id = ? 
                             """
+delete_version =        """ DELETE FROM version
+                        """
