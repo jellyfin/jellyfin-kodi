@@ -70,14 +70,17 @@ class Service(xbmc.Monitor):
         LOG.warn("Log Level: %s", self.settings['log_level'])
 
         self.check_version()
-
         verify_kodi_defaults()
-        Views().get_nodes()
-        window('emby.connected.bool', True)
 
-        xbmc.Monitor.__init__(self)
+        try:
+            Views().get_nodes()
+        except Exception as error:
+            LOG.error(error)
+
+        window('emby.connected.bool', True)
         self.check_update()
         settings('groupedSets.bool', objects.utils.get_grouped_set())
+        xbmc.Monitor.__init__(self)
 
     def service(self):
 
