@@ -28,8 +28,8 @@ def basic_info():
 
 def info():
     return  (
-                "Path,Genres,SortName,Studios,Writer,Taglines,"
-                "OfficialRating,CumulativeRunTimeTicks,"
+                "Path,Genres,SortName,Studios,Writer,Taglines,LocalTrailerCount,"
+                "OfficialRating,CumulativeRunTimeTicks,ItemCounts,"
                 "Metascore,AirTime,DateCreated,People,Overview,"
                 "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
                 "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers,"
