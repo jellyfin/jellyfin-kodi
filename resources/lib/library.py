@@ -9,6 +9,7 @@ import sys
 from datetime import datetime, timedelta
 
 import xbmc
+import xbmcgui
 
 from objects import Movies, TVShows, MusicVideos, Music
 from database import Database, emby_db, get_sync, save_sync
@@ -47,12 +48,15 @@ class Library(threading.Thread):
     stop_thread = False
     suspend = False
     pending_refresh = False
-    screensaver = ""
+    screensaver = None
+    progress_updates = None
+    total_updates = 0
 
 
     def __init__(self, monitor):
 
         self.direct_path = settings('useDirectPaths') == "1"
+        self.progress_display = int(settings('syncProgress') or 50)
         self.monitor = monitor
         self.server = Emby()
         self.updated_queue = Queue.Queue()
@@ -116,14 +120,82 @@ class Library(threading.Thread):
             Start new "daemon threads" to process library updates.
             (actual daemon thread is not supported in Kodi)
         '''
-        active_queues = []
-
         for threads in (self.download_threads, self.writer_threads['updated'],
                         self.writer_threads['userdata'], self.writer_threads['removed']):
             for thread in threads:
                 if thread.is_done:
                     threads.remove(thread)
 
+        self.worker_downloads()
+        self.worker_sort()
+
+        self.worker_updates()
+        self.worker_userdata()
+        self.worker_remove()
+
+        if self.pending_refresh:
+
+            if self.total_updates > self.progress_display:
+
+                if self.progress_updates is None:
+                    self.progress_updates = xbmcgui.DialogProgressBG()
+                    self.progress_updates.create(_('addon_name'), _(33178))
+                    self.progress_updates.update(int((float(self.total_updates - self.worker_queue_size()) / float(self.total_updates))*100))
+                else:
+                    self.progress_updates.update(int((float(self.total_updates - self.worker_queue_size()) / float(self.total_updates))*100))
+
+            if not settings('dbSyncScreensaver.bool') and self.screensaver is None:
+
+                xbmc.executebuiltin('InhibitIdleShutdown(true)')
+                self.screensaver = get_screensaver()
+                set_screensaver(value="")
+        
+        if (self.pending_refresh and not self.download_threads and not self.writer_threads['updated'] and
+                                     not self.writer_threads['userdata'] and not self.writer_threads['removed']):
+            self.pending_refresh = False
+            self.save_last_sync()
+            self.total_updates = 0
+
+            if self.progress_updates:
+
+                self.progress_updates.close()
+                self.progress_updates = None
+
+            if not settings('dbSyncScreensaver.bool') and self.screensaver is not None:
+
+                xbmc.executebuiltin('InhibitIdleShutdown(false)')
+                set_screensaver(value=self.screensaver)
+                self.screensaver = None
+
+            if xbmc.getCondVisibility('Container.Content(musicvideos)') or xbmc.getCondVisibility('Window.IsMedia'): # Prevent cursor from moving
+                xbmc.executebuiltin('Container.Refresh')
+            else: # Update widgets
+                xbmc.executebuiltin('UpdateLibrary(video)')
+
+    def stop_client(self):
+        self.stop_thread = True
+
+    def worker_queue_size(self):
+
+        ''' Get how many items are queued up for worker threads. Does not give exact 
+        '''
+        total = 0
+
+        for queues in self.updated_output:
+            total += self.updated_output[queues].qsize()
+
+        for queues in self.userdata_output:
+            total += self.userdata_output[queues].qsize()
+
+        for queues in self.removed_output:
+            total += self.removed_output[queues].qsize()
+
+        return total
+
+    def worker_downloads(self):
+
+        ''' Get items from emby and place them in the appropriate queues.
+        '''
         for queue in ((self.updated_queue, self.updated_output), (self.userdata_queue, self.userdata_output)):
             if queue[0].qsize() and len(self.download_threads) < DTHREADS:
                 
@@ -131,12 +203,20 @@ class Library(threading.Thread):
                 new_thread.start()
                 LOG.info("-->[ q:download/%s ]", id(new_thread))
 
+    def worker_sort(Self):
+
+        ''' Get items based on the local emby database and place item in appropriate queues.
+        '''
         if self.removed_queue.qsize() and len(self.emby_threads) < 2:
 
             new_thread = SortWorker(self.removed_queue, self.removed_output)
             new_thread.start()
             LOG.info("-->[ q:sort/%s ]", id(new_thread))
 
+    def worker_updates(self):
+
+        ''' Update items in the Kodi database.
+        '''
         for queues in self.updated_output:
             queue = self.updated_output[queues]
 
@@ -152,6 +232,10 @@ class Library(threading.Thread):
                 self.writer_threads['updated'].append(new_thread)
                 self.pending_refresh = True
 
+    def worker_userdata(self):
+
+        ''' Update userdata in the Kodi database.
+        '''
         for queues in self.userdata_output:
             queue = self.userdata_output[queues]
 
@@ -167,6 +251,10 @@ class Library(threading.Thread):
                 self.writer_threads['userdata'].append(new_thread)
                 self.pending_refresh = True
 
+    def worker_remove(self):
+
+        ''' Remove items from the Kodi database.
+        '''
         for queues in self.removed_output:
             queue = self.removed_output[queues]
 
@@ -182,31 +270,6 @@ class Library(threading.Thread):
                 self.writer_threads['removed'].append(new_thread)
                 self.pending_refresh = True
 
-        if self.pending_refresh:
-            if not settings('dbSyncScreensaver.bool') and self.screensaver is None:
-
-                xbmc.executebuiltin('InhibitIdleShutdown(true)')
-                self.screensaver = get_screensaver()
-                set_screensaver(value="")
-        
-        if (self.pending_refresh and not self.download_threads and not self.writer_threads['updated'] and
-                                     not self.writer_threads['userdata'] and not self.writer_threads['removed']):
-            self.pending_refresh = False
-            self.save_last_sync()
-
-            if not settings('dbSyncScreensaver.bool') and self.screensaver is not None:
-
-                xbmc.executebuiltin('InhibitIdleShutdown(false)')
-                set_screensaver(value=self.screensaver)
-                self.screensaver = None
-
-            if xbmc.getCondVisibility('Container.Content(musicvideos)') or xbmc.getCondVisibility('Window.IsMedia'): # Prevent cursor from moving
-                xbmc.executebuiltin('Container.Refresh')
-            else: # Update widgets
-                xbmc.executebuiltin('UpdateLibrary(video)')
-
-    def stop_client(self):
-        self.stop_thread = True
 
     def startup(self):
 
@@ -482,6 +545,7 @@ class Library(threading.Thread):
         for item in split_list(items, LIMIT):
             self.userdata_queue.put(item)
 
+        self.total_updates += len(items)
         LOG.info("---[ userdata:%s ]", len(items))
 
     def updated(self, data):
@@ -494,6 +558,7 @@ class Library(threading.Thread):
         for item in split_list(data, LIMIT):
             self.updated_queue.put(item)
 
+        self.total_updates += len(data)
         LOG.info("---[ updated:%s ]", len(data))
 
     def removed(self, data):
@@ -510,6 +575,7 @@ class Library(threading.Thread):
 
             self.removed_queue.put(item)
 
+        self.total_updates += len(data)
         LOG.info("---[ removed:%s ]", len(data))
 
 

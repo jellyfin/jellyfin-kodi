@@ -869,3 +869,11 @@ msgstr ""
 msgctxt "#33176"
 msgid "Update or repair your libraries to apply the changes below."
 msgstr ""
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr ""
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr ""
