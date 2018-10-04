@@ -112,6 +112,7 @@ class PlayUtils(object):
                 selection.append(source.get('Name', "na"))
 
             resp = dialog("select", _(33130), selection)
+
             if resp > -1:
                 source = sources[resp]
             else:
@@ -175,6 +176,7 @@ class PlayUtils(object):
     def get(self, source, audio=None, subtitle=None):
 
         ''' The server returns sources based on the MaxStreamingBitrate value and other filters.
+            prop: embyfilename for ?? I thought it was to pass the real path to subtitle add-ons but it's not working?
         '''
         self.info['MediaSourceId'] = source['Id']
 
@@ -198,6 +200,9 @@ class PlayUtils(object):
         self.info['AudioStreamIndex'] = self.info.get('AudioStreamIndex') or source.get('DefaultAudioStreamIndex')
         self.info['SubtitleStreamIndex'] = self.info.get('SubtitleStreamIndex') or source.get('DefaultSubtitleStreamIndex')
         self.item['PlaybackInfo'].update(self.info)
+
+        API = api.API(self.item, self.info['ServerAddress'])
+        window('embyfilename', value=API.get_file_path(source.get('Path')).encode('utf-8'))
 
     def live_stream(self, source):
 
@@ -259,8 +264,8 @@ class PlayUtils(object):
                                  source['Container'].split(',')[0],
                                  self.info['Token']))
         else:
-            self.info['Path'] = ("%s/emby/Videos/%s/stream?static=true&api_key=%s" %
-                                (self.info['ServerAddress'], self.item['Id'], self.info['Token']))
+            self.info['Path'] = ("%s/emby/Videos/%s/stream?static=true&MediaSourceId=%s&api_key=%s" %
+                                (self.info['ServerAddress'], self.item['Id'], source['Id'], self.info['Token']))
 
         return self.info['Path']
 
