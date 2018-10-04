@@ -254,7 +254,7 @@ class FullSync(object):
                                           message=movie['Name'])
                             obj.movie(movie, library=library)
 
-                    #self.movies_compare(library, obj, embydb)
+                    self.movies_compare(library, obj, embydb)
 
     def movies_compare(self, library, obj, embydb):
 
@@ -266,8 +266,8 @@ class FullSync(object):
         current = obj.item_ids
 
         for x in items:
-            if x not in current:
-                obj.remove(x)
+            if x[0] not in current:
+                obj.remove(x[0])
 
     @progress()
     def tvshows(self, library, dialog):
@@ -277,7 +277,7 @@ class FullSync(object):
         with self.library.database_lock:
             with Database() as videodb:
                 with Database('emby') as embydb:
-                    obj = TVShows(self.server, embydb, videodb, self.direct_path)
+                    obj = TVShows(self.server, embydb, videodb, self.direct_path, True)
 
                     for items in server.get_items(library['Id'], "Series", False, self.sync['RestorePoint'].get('params')):
 
@@ -298,6 +298,8 @@ class FullSync(object):
                                         dialog.update(percent, message="%s/%s" % (message, episode['Name'][:10]))
                                         obj.episode(episode)
 
+                    self.tvshows_compare(library, obj, embydb)
+
     def tvshows_compare(self, library, obj, embydb):
 
         ''' Compare entries from library to what's in the embydb. Remove surplus
@@ -305,11 +307,14 @@ class FullSync(object):
         db = emby_db.EmbyDatabase(embydb.cursor)
 
         items = db.get_item_by_media_folder(library['Id'])
+        for x in list(items):
+            items.extend(obj.get_child(x[0]))
+
         current = obj.item_ids
 
         for x in items:
-            if x not in current:
-                obj.remove(x)
+            if x[0] not in current:
+                obj.remove(x[0])
 
     @progress()
     def musicvideos(self, library, dialog):
@@ -333,7 +338,7 @@ class FullSync(object):
                                           message=mvideo['Name'])
                             obj.musicvideo(mvideo, library=library)
 
-                #self.movies_compare(library, obj, embydb)
+                    self.musicvideos_compare(library, obj, embydb)
 
     def musicvideos_compare(self, library, obj, embydb):
 
@@ -345,8 +350,8 @@ class FullSync(object):
         current = obj.item_ids
 
         for x in items:
-            if x not in current:
-                obj.remove(x)
+            if x[0] not in current:
+                obj.remove(x[0])
 
     @progress()
     def music(self, library, dialog):
@@ -381,6 +386,24 @@ class FullSync(object):
                                             dialog.update(percent,
                                                           message="%s/%s/%s" % (message, album['Name'][:7], song['Name'][:7]))
                                             obj.song(song)
+
+                    self.music_compare(library, obj, embydb)
+
+    def music_compare(self, library, obj, embydb):
+
+        ''' Compare entries from library to what's in the embydb. Remove surplus
+        '''
+        db = emby_db.EmbyDatabase(embydb.cursor)
+
+        items = db.get_item_by_media_folder(library['Id'])
+        for x in list(items):
+            items.extend(obj.get_child(x[0]))
+
+        current = obj.item_ids
+
+        for x in items:
+            if x[0] not in current:
+                obj.remove(x[0])
 
     @progress(_(33018))
     def boxsets(self, library_id=None, dialog=None):

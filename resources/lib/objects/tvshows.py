@@ -22,15 +22,17 @@ LOG = logging.getLogger("EMBY."+__name__)
 
 class TVShows(KodiDb):
 
-    def __init__(self, server, embydb, videodb, direct_path):
+    def __init__(self, server, embydb, videodb, direct_path, update_library=False):
 
         self.server = server
         self.emby = embydb
         self.video = videodb
         self.direct_path = direct_path
+        self.update_library = update_library
 
         self.emby_db = emby_db.EmbyDatabase(embydb.cursor)
         self.objects = Objects()
+        self.item_ids = []
 
         KodiDb.__init__(self, videodb.cursor)
 
@@ -126,6 +128,7 @@ class TVShows(KodiDb):
         self.add_genres(*values(obj, QU.add_genres_tvshow_obj))
         self.add_studios(*values(obj, QU.add_studios_tvshow_obj))
         self.artwork.add(obj['Artwork'], obj['ShowId'], "tvshow")
+        self.item_ids.append(obj['Id'])
 
         season_episodes = {}
 
@@ -133,9 +136,13 @@ class TVShows(KodiDb):
 
             if season['SeriesId'] != obj['Id']:
                 obj['SeriesId'] = season['SeriesId']
+                self.item_ids.append(season['SeriesId'])
 
                 try:
                     self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))[0]
+
+                    if self.update_library:
+                        season_episodes[season['Id']] = season['SeriesId']
                 except TypeError:
 
                     self.emby_db.add_reference(*values(obj, QUEM.add_reference_pool_obj))
@@ -144,6 +151,7 @@ class TVShows(KodiDb):
                 
             try:
                 self.emby_db.get_item_by_id(season['Id'])[0]
+                self.item_ids.append(season['Id'])
             except TypeError:
                 self.season(season, obj['ShowId'])
         else:
@@ -236,6 +244,7 @@ class TVShows(KodiDb):
 
         if obj['Location'] != "Virtual":
             self.emby_db.add_reference(*values(obj, QUEM.add_reference_season_obj))
+            self.item_ids.append(obj['Id'])
 
         self.artwork.add(obj['Artwork'], obj['SeasonId'], "season")
         LOG.info("UPDATE season [%s/%s] %s: %s", obj['ShowId'], obj['SeasonId'], obj['Title'] or obj['Index'], obj['Id'])
@@ -336,6 +345,7 @@ class TVShows(KodiDb):
         self.add_streams(*values(obj, QU.add_streams_obj))
         self.add_playstate(*values(obj, QU.add_bookmark_obj))
         self.artwork.update(obj['Artwork']['Primary'], obj['EpisodeId'], "episode", "thumb")
+        self.item_ids.append(obj['Id'])
 
         if not self.direct_path and obj['Resume']:
 
@@ -420,6 +430,8 @@ class TVShows(KodiDb):
                 return False
         else:
             obj['ShowId'] = obj['ShowId'][0]
+
+        self.item_ids.append(obj['SeriesId'])
 
         return True
 
@@ -558,7 +570,7 @@ class TVShows(KodiDb):
 
             if not self.emby_db.get_item_by_parent_id(*values(obj, QUEM.delete_item_by_parent_season_obj)):
 
-                self.remove_show(obj['ParentId'], obj['Id'])
+                self.remove_tvshow(obj['ParentId'], obj['Id'])
                 self.emby_db.remove_item_by_kodi_id(*values(obj, QUEM.delete_item_by_parent_tvshow_obj))
 
         # Remove any series pooling episodes
@@ -586,3 +598,35 @@ class TVShows(KodiDb):
         self.artwork.delete(kodi_id, "episode")
         self.delete_episode(kodi_id, file_id)
         LOG.info("DELETE episode [%s/%s] %s", file_id, kodi_id, item_id)
+
+    @emby_item()
+    def get_child(self, item_id, e_item):
+
+        ''' Get all child elements from tv show emby id.
+        '''
+        obj = {'Id': item_id}
+        child = []
+
+        try:
+            obj['KodiId'] = e_item[0]
+            obj['FileId'] = e_item[1]
+            obj['ParentId'] = e_item[3]
+            obj['Media'] = e_item[4]
+        except TypeError:
+            return child
+
+        obj['ParentId'] = obj['KodiId']
+
+        for season in self.emby_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_season_obj)):
+            
+            temp_obj = dict(obj)
+            temp_obj['ParentId'] = season[1]
+            child.append(season[0])
+
+            for episode in self.emby_db.get_item_by_parent_id(*values(temp_obj, QUEM.get_item_by_parent_episode_obj)):
+                child.append(episode[0])
+
+        for episode in self.emby_db.get_media_by_parent_id(obj['Id']):
+            child.append(episode[0])
+
+        return child

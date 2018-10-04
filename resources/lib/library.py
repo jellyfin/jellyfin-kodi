@@ -630,7 +630,7 @@ class UpdatedWorker(threading.Thread):
                             break
 
                         obj = MEDIA[item['Type']](self.args[0], embydb, kodidb, self.args[1])[item['Type']]
-                        LOG.info(item['Type'])
+
                         try:
                             if obj(item) and self.notify:
                                 self.notify_output.put((item['Type'], api.API(item).get_naming()))

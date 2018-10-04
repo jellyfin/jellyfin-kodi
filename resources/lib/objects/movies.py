@@ -126,7 +126,6 @@ class Movies(KodiDb):
         self.add_people(*values(obj, QU.add_people_movie_obj))
         self.add_streams(*values(obj, QU.add_streams_obj))
         self.artwork.add(obj['Artwork'], obj['MovieId'], "movie")
-
         self.item_ids.append(obj['Id'])
 
         return not update
