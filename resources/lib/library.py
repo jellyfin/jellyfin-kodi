@@ -136,13 +136,17 @@ class Library(threading.Thread):
         if self.pending_refresh:
 
             if self.total_updates > self.progress_display:
+                queue_size = self.worker_queue_size()
 
                 if self.progress_updates is None:
+
                     self.progress_updates = xbmcgui.DialogProgressBG()
                     self.progress_updates.create(_('addon_name'), _(33178))
-                    self.progress_updates.update(int((float(self.total_updates - self.worker_queue_size()) / float(self.total_updates))*100))
+                    self.progress_updates.update(int((float(self.total_updates - queue_size) / float(self.total_updates))*100), message="%s: %s" % (_(33178), queue_size))
+                elif queue_size:
+                    self.progress_updates.update(int((float(self.total_updates - queue_size) / float(self.total_updates))*100), message="%s: %s" % (_(33178), queue_size))
                 else:
-                    self.progress_updates.update(int((float(self.total_updates - self.worker_queue_size()) / float(self.total_updates))*100))
+                    self.progress_updates.update(int((float(self.total_updates - queue_size) / float(self.total_updates))*100), message=_(33178))
 
             if not settings('dbSyncScreensaver.bool') and self.screensaver is None:
 
@@ -177,7 +181,7 @@ class Library(threading.Thread):
 
     def worker_queue_size(self):
 
-        ''' Get how many items are queued up for worker threads. Does not give exact 
+        ''' Get how many items are queued up for worker threads.
         '''
         total = 0
 
@@ -203,7 +207,7 @@ class Library(threading.Thread):
                 new_thread.start()
                 LOG.info("-->[ q:download/%s ]", id(new_thread))
 
-    def worker_sort(Self):
+    def worker_sort(self):
 
         ''' Get items based on the local emby database and place item in appropriate queues.
         '''
@@ -600,7 +604,7 @@ class UpdatedWorker(threading.Thread):
                     while True:
 
                         try:
-                            item = self.queue.get(timeout=3)
+                            item = self.queue.get(timeout=1)
                         except Queue.Empty:
 
                             LOG.info("--<[ q:updated/%s ]", id(self))
@@ -644,7 +648,7 @@ class UserDataWorker(threading.Thread):
                     while True:
 
                         try:
-                            item = self.queue.get(timeout=3)
+                            item = self.queue.get(timeout=1)
                         except Queue.Empty:
 
                             LOG.info("--<[ q:userdata/%s ]", id(self))
@@ -732,7 +736,7 @@ class RemovedWorker(threading.Thread):
                     while True:
 
                         try:
-                            item = self.queue.get(timeout=2)
+                            item = self.queue.get(timeout=1)
                         except Queue.Empty:
 
                             LOG.info("--<[ q:removed/%s ]", id(self))
