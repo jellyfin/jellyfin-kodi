@@ -183,7 +183,7 @@ class Library(threading.Thread):
                 self.pending_refresh = True
 
         if self.pending_refresh:
-            if not settings('dbSyncScreensaver.bool'):
+            if not settings('dbSyncScreensaver.bool') and self.screensaver is None:
 
                 xbmc.executebuiltin('InhibitIdleShutdown(true)')
                 self.screensaver = get_screensaver()
@@ -194,10 +194,11 @@ class Library(threading.Thread):
             self.pending_refresh = False
             self.save_last_sync()
 
-            if not settings('dbSyncScreensaver.bool'):
+            if not settings('dbSyncScreensaver.bool') and self.screensaver is not None:
 
                 xbmc.executebuiltin('InhibitIdleShutdown(false)')
                 set_screensaver(value=self.screensaver)
+                self.screensaver = None
 
             if xbmc.getCondVisibility('Container.Content(musicvideos)') or xbmc.getCondVisibility('Window.IsMedia'): # Prevent cursor from moving
                 xbmc.executebuiltin('Container.Refresh')
