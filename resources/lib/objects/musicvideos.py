@@ -137,6 +137,8 @@ class MusicVideos(KodiDb):
         self.add_streams(*values(obj, QU.add_streams_obj))
         self.artwork.add(obj['Artwork'], obj['MvideoId'], "musicvideo")
 
+        return not update
+
     def musicvideo_add(self, obj):
         
         ''' Add object to kodi.

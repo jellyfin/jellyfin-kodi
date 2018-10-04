@@ -21,7 +21,6 @@
 	<category label="30506"><!-- Sync Options -->
 		<setting label="33137" id="kodiCompanion" type="bool" default="true" />
 		<setting label="30507" id="syncIndicator" type="number" default="99" visible="eq(-1,true)" subsetting="true"/>
-		<setting label="33177" id="syncProgress" type="number" default="15" visible="true" />
 		<setting label="30536" id="dbSyncScreensaver" type="bool" default="true" />
 		<setting label="33111" type="lsep" />
 		<setting label="30511" id="useDirectPaths" type="enum" lvalues="33036|33037" default="1" />
@@ -75,6 +74,7 @@
 		<setting label="30530" id="restartMsg" type="bool" default="true" />
         <setting label="30547" id="displayMessage" type="slider" default="4" range="4,1,20" option="int" />
         <setting label="33108" type="lsep" />
+        <setting label="33177" id="syncProgress" type="number" default="15" visible="true" />
         <setting label="30531" id="newContent" type="bool" default="false" />
         <setting label="30532" id="newvideotime" type="number" visible="eq(-1,true)" default="5" option="int" subsetting="true" />
         <setting label="30533" id="newmusictime" type="number" visible="eq(-2,true)" default="2" option="int" subsetting="true" />

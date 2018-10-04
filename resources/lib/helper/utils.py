@@ -406,8 +406,9 @@ def copy_file(path, dest):
 
 def normalize_string(text):
 
-    ''' For theme media, do not modify unless
-        modified in TV Tunes.
+    ''' For theme media, do not modify unless modified in TV Tunes.
+        Remove dots from the last character as windows can not have directories
+        with dots at the end
     '''
     text = text.replace(":", "")
     text = text.replace("/", "-")
@@ -418,13 +419,14 @@ def normalize_string(text):
     text = text.replace("?", "")
     text = text.replace('|', "")
     text = text.strip()
-    # Remove dots from the last character as windows can not have directories
-    # with dots at the end
+
     text = text.rstrip('.')
     text = unicodedata.normalize('NFKD', unicode(text, 'utf-8')).encode('ascii', 'ignore')
 
     return text
 
 def split_list(itemlist, size):
-    # Split up list in pieces of size. Will generate a list of lists
+    
+    ''' Split up list in pieces of size. Will generate a list of lists
+    '''
     return [itemlist[i:i+size] for i in range(0, len(itemlist), size)]

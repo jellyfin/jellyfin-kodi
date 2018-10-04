@@ -18,10 +18,10 @@ LOG = logging.getLogger("EMBY."+__name__)
 class API(object):
 
 
-    def __init__(self, item, server):
+    def __init__(self, item, server=None):
         
         ''' Get item information in special cases.
-            server is the server address
+            server is the server address, provide if your functions requires it.
         '''
         self.item = item
         self.server = server
@@ -32,6 +32,25 @@ class API(object):
             the Kodi equivalent. The playcount is tied to the watch status.
         '''
         return (playcount or 1) if played else None
+
+    def get_naming(self):
+
+        if self.item['Type'] == 'Episode':
+
+            if 'SeriesName' in self.item:
+                return "%s: %s" % (self.item['SeriesName'], self.item['Name'])
+
+        elif self.item['Type'] == 'MusicAlbum':
+
+            if 'AlbumArtist' in self.item:
+                return "%s: %s" % (self.item['AlbumArtist'], self.item['Name'])
+
+        elif self.item['Type'] == 'Audio':
+
+            if self.item.get('Artists'):
+                return "%s: %s" % (self.item['Artists'][0], self.item['Name'])
+
+        return self.item['Name']
 
     def get_actors(self):
         cast = []

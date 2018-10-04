@@ -294,6 +294,8 @@ class Music(KodiDb):
         if obj['SongAlbumId'] is None:
             self.artwork.add(obj['Artwork'], obj['AlbumId'], "album")
 
+        return not update
+
     def song_add(self, obj):
         
         ''' Add object to kodi.

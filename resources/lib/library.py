@@ -16,7 +16,7 @@ from database import Database, emby_db, get_sync, save_sync
 from full_sync import FullSync
 from views import Views
 from downloader import GetItemWorker
-from helper import _, stop, settings, window, dialog, event, progress, LibraryException
+from helper import _, api, stop, settings, window, dialog, event, progress, LibraryException
 from helper.utils import split_list, set_screensaver, get_screensaver
 from emby import Emby
 
@@ -58,6 +58,7 @@ class Library(threading.Thread):
         self.direct_path = settings('useDirectPaths') == "1"
         self.progress_display = int(settings('syncProgress') or 50)
         self.monitor = monitor
+        self.player = monitor.monitor.player
         self.server = Emby()
         self.updated_queue = Queue.Queue()
         self.userdata_queue = Queue.Queue()
@@ -65,9 +66,11 @@ class Library(threading.Thread):
         self.updated_output = self.__new_queues__()
         self.userdata_output = self.__new_queues__()
         self.removed_output = self.__new_queues__()
+        self.notify_output = Queue.Queue()
 
         self.emby_threads = []
         self.download_threads = []
+        self.notify_threads = []
         self.writer_threads = {'updated': [], 'userdata': [], 'removed': []}
         self.database_lock = threading.Lock()
         self.music_database_lock = threading.Lock()
@@ -132,10 +135,11 @@ class Library(threading.Thread):
         self.worker_updates()
         self.worker_userdata()
         self.worker_remove()
+        self.worker_notify()
 
         if self.pending_refresh:
 
-            if self.total_updates > self.progress_display:
+            if self.total_updates > self.progress_display and (not self.player.isPlayingVideo() or xbmc.getCondVisibility('VideoPlayer.Content(livetv)')):
                 queue_size = self.worker_queue_size()
 
                 if self.progress_updates is None:
@@ -227,9 +231,9 @@ class Library(threading.Thread):
             if queue.qsize() and len(self.writer_threads['updated']) < 4:
 
                 if queues in ('Audio', 'MusicArtist', 'AlbumArtist', 'MusicAlbum'):
-                    new_thread = UpdatedWorker(queue, self.music_database_lock, "music", self.server, self.direct_path)
+                    new_thread = UpdatedWorker(queue, self.notify_output, self.music_database_lock, "music", self.server, self.direct_path)
                 else:
-                    new_thread = UpdatedWorker(queue, self.database_lock, "video", self.server, self.direct_path)
+                    new_thread = UpdatedWorker(queue, self.notify_output, self.database_lock, "video", self.server, self.direct_path)
 
                 new_thread.start()
                 LOG.info("-->[ q:updated/%s/%s ]", queues, id(new_thread))
@@ -273,6 +277,17 @@ class Library(threading.Thread):
                 LOG.info("-->[ q:removed/%s/%s ]", queues, id(new_thread))
                 self.writer_threads['removed'].append(new_thread)
                 self.pending_refresh = True
+
+    def worker_notify(self):
+
+        ''' Notify the user of new additions.
+        '''
+        if self.notify_output.qsize() and len(self.notify_threads) < 1:
+
+            new_thread = NotifyWorker(self.notify_output, self.player)
+            new_thread.start()
+            LOG.info("-->[ q:notify/%s ]", id(new_thread))
+            self.notify_threads.append(new_thread)
 
 
     def startup(self):
@@ -587,9 +602,11 @@ class UpdatedWorker(threading.Thread):
 
     is_done = False
 
-    def __init__(self, queue, lock, database, *args):
+    def __init__(self, queue, notify, lock, database, *args):
 
         self.queue = queue
+        self.notify_output = notify
+        self.notify = settings('newContent.bool')
         self.lock = lock
         self.database = Database(database)
         self.args = args
@@ -613,9 +630,10 @@ class UpdatedWorker(threading.Thread):
                             break
 
                         obj = MEDIA[item['Type']](self.args[0], embydb, kodidb, self.args[1])[item['Type']]
-
+                        LOG.info(item['Type'])
                         try:
-                            obj(item)
+                            if obj(item) and self.notify:
+                                self.notify_output.put((item['Type'], api.API(item).get_naming()))
                         except LibraryException as error:
                             if error.status == 'StopCalled':
                                 break
@@ -763,8 +781,13 @@ class NotifyWorker(threading.Thread):
 
     is_done = False
 
-    def __init__(self, queue):
+    def __init__(self, queue, player):
+
         self.queue = queue
+        self.video_time = int(settings('newvideotime')) * 1000
+        self.music_time = int(settings('newmusictime')) * 1000
+        self.player = player
+        threading.Thread.__init__(self)
 
     def run(self):
 
@@ -779,11 +802,13 @@ class NotifyWorker(threading.Thread):
 
                 break
 
+            time = self.music_time if item[0] == 'Audio' else self.video_time
+
+            if time and (not self.player.isPlayingVideo() or xbmc.getCondVisibility('VideoPlayer.Content(livetv)')):
+                dialog("notification", heading="%s %s" % (_(33049), item[0]), message=item[1],
+                       icon="{emby}", time=time, sound=False)
+
             self.queue.task_done()
 
-            if xbmc.Monitor().abortRequested():
+            if window('emby_should_stop.bool'):
                 break
-
-        if not self.pdialog and self.content_msg and self.new_time and (not xbmc.Player().isPlayingVideo() or xbmc.getCondVisibility('VideoPlayer.Content(livetv)')):
-            dialog("notification", heading="{emby}", message="%s %s" % (lang(33049), name),
-                   icon="{emby}", time=self.new_time, sound=False)

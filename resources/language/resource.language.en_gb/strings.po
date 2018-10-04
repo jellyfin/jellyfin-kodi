@@ -486,6 +486,10 @@ msgctxt "#33048"
 msgid "You may need to verify your network credentials in the add-on settings or use the Emby path substitution to format your path correctly (Emby dashboard > library). Stop syncing?"
 msgstr ""
 
+msgctxt "#33049"
+msgid "New"
+msgstr ""
+
 msgctxt "#33054"
 msgid "Add user to session"
 msgstr ""

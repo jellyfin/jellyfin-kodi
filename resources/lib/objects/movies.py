@@ -129,6 +129,8 @@ class Movies(KodiDb):
 
         self.item_ids.append(obj['Id'])
 
+        return not update
+
     def movie_add(self, obj):
 
         ''' Add object to kodi.

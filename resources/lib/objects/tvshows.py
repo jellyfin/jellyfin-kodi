@@ -346,6 +346,8 @@ class TVShows(KodiDb):
             self.update_file(*values(temp_obj, QU.update_file_obj))
             self.add_playstate(*values(temp_obj, QU.add_bookmark_obj))
 
+        return not update
+
     def episode_add(self, obj):
         
         ''' Add object to kodi.
