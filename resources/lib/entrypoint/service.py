@@ -228,7 +228,7 @@ class Service(xbmc.Monitor):
         LOG.debug("[ %s: %s ] %s", sender, method, json.dumps(data, indent=4))
 
         if method == 'ServerOnline':
-            if data['ServerId'] is None:
+            if data.get('ServerId') is None:
 
                 window('emby_online.bool', True)
                 self.settings['auth_check'] = True

@@ -277,8 +277,17 @@ class GetItemWorker(threading.Thread):
 
                     return
 
+                request = {
+                    'type': "GET",
+                    'handler': "Users/{UserId}/Items",
+                    'params': {
+                        'Ids': ','.join(str(x) for x in item_ids),
+                        'Fields': api.info()
+                    }
+                }
+
                 try:
-                    result = self.server['api'].get_items(item_ids)
+                    result = self.server['http/request'](request, s)
 
                     for item in result['Items']:
 
@@ -313,11 +322,7 @@ class TheVoid(object):
         self.method = method
         self.data = data
 
-    def get(self, timeout=None, default=None):
-
-        ''' Timeout in seconds, if exceeded will return the default value.
-        '''
-        last_progress = datetime.today()
+    def get(self):
 
         while True:
 
@@ -330,12 +335,12 @@ class TheVoid(object):
 
                 return response
 
-            if window('emby_should_stop.bool') or timeout and (datetime.today() - last_progress).seconds > timeout:
+            if window('emby_should_stop.bool'):
                 LOG.info("Abandon mission! A black hole just swallowed [ %s/%s ]", self.method, self.data['VoidName'])
                 
                 return default
 
-            xbmc.sleep(10)
+            xbmc.sleep(100)
 
 def get_objects(src, filename):
 

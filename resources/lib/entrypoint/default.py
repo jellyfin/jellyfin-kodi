@@ -68,7 +68,7 @@ class Events(object):
 
         elif mode =='play':
 
-            item = TheVoid('GetItem', {'Id': params['id'], 'ServerId': server}).get(10, {'Items': {}})
+            item = TheVoid('GetItem', {'Id': params['id'], 'ServerId': server}).get()
             Actions(server).play(item, params.get('dbid'), playlist=params.get('playlist') == 'true')
 
         elif mode == 'playlist':
