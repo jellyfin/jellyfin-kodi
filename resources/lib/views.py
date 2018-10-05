@@ -830,9 +830,14 @@ class Views(object):
         window('%s.type' % window_prop, view['Media'])
         self.window_artwork(window_prop, view['Id'])
 
+        LOG.debug("--[ wnode/%s/%s ] %s", index, window('%s.title' % window_prop), window('%s.artwork' % window_prop))
+
     def window_artwork(self, prop, view_id):
 
-        if self.server['connected']:
+        if not self.server['connected']:
+            window('%s.artwork' % prop, clear=True)
+
+        elif self.server['connected']:
 
             if self.media_folders is None:
                 self.media_folders = self.get_libraries()
@@ -845,6 +850,8 @@ class Views(object):
                     window('%s.artwork' % prop, artwork)
 
                     break
+            else:
+                window('%s.artwork' % prop, clear=True)
 
     def window_path(self, view, node):
         return "library://video/emby%s%s/%s.xml" % (view['Media'], view['Id'], node)
@@ -883,7 +890,7 @@ class Views(object):
         total = int(window((name or 'Emby.nodes') + '.total') or 0)
         props = [
         
-            "index","id","path","title","content","type"
+            "index","id","path","artwork","title","content","type"
             "inprogress.content","inprogress.title",
             "inprogress.content","inprogress.path",
             "nextepisodes.title","nextepisodes.content",
@@ -897,6 +904,9 @@ class Views(object):
         for i in range(total):
             for prop in props:
                 window('Emby.nodes.%s.%s' % (str(i), prop), clear=True)
+
+        for prop in props:
+            window('Emby.nodes.%s' % prop, clear=True)
 
     def delete_playlist(self, path):
 
