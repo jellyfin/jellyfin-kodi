@@ -296,6 +296,11 @@ class GetItemWorker(threading.Thread):
                 except HTTPException as error:
                     LOG.error("--[ http status: %s ]", error.status)
 
+                    if error.status == 'ServerUnreachable':
+                        self.is_done = True
+
+                        break
+
                 except Exception as error:
                     LOG.exception(error)
 
