@@ -226,7 +226,6 @@ class FullSync(object):
 
                 dialog("ok", heading="{emby}", line1=_(33119))
                 LOG.error("full sync exited unexpectedly")
-            else:
                 save_sync(self.sync)
 
             raise
