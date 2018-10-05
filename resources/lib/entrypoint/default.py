@@ -244,12 +244,14 @@ def browse(media, view_id=None, folder=None, server_id=None):
 
     content_type = "files"
 
-    if media in ('tvshows', 'seasons', 'episodes', 'movies', 'musicvideos'):
+    if media in ('tvshows', 'seasons', 'episodes', 'movies', 'musicvideos', 'songs', 'albums'):
         content_type = media
     elif media in ('homevideos', 'photos'):
         content_type = "images"
     elif media in ('books', 'audiobooks'):
         content_type = "videos"
+    elif media == 'music':
+        content_type = "artists"
 
 
     if folder == 'recentlyadded':
@@ -288,6 +290,8 @@ def browse(media, view_id=None, folder=None, server_id=None):
         listing = TheVoid('Browse', {'Id': folder or view_id, 'ServerId': server_id, 'Recursive': True, 'Media': get_media_type(content_type)}).get()
     elif media == 'seasons':
         listing = TheVoid('BrowseSeason', {'Id': folder, 'ServerId': server_id}).get()
+    elif media != 'files':
+        listing = TheVoid('Browse', {'Id': folder or view_id, 'ServerId': server_id, 'Recursive': False, 'Media': get_media_type(content_type)}).get()
     else:
         listing = TheVoid('Browse', {'Id': folder or view_id, 'ServerId': server_id, 'Recursive': False}).get()
 
@@ -310,7 +314,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
                 params = {
                     'id': view_id or item['Id'],
                     'mode': "browse",
-                    'type': get_folder_type(item) or media,
+                    'type': get_folder_type(item, media) or media,
                     'folder': item['Id'],
                     'server': server_id
                 }
@@ -333,7 +337,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
                 params = {
                     'id': view_id or item['Id'],
                     'mode': "browse",
-                    'type': get_folder_type(item) or media,
+                    'type': get_folder_type(item, media) or media,
                     'folder': 'genres-%s' % item['Id'],
                     'server': server_id
                 }
@@ -368,6 +372,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
         xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_VIDEO_RATING)
         xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_VIDEO_RUNTIME)
 
+    LOG.info(content_type)
     xbmcplugin.setContent(int(sys.argv[1]), content_type)
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
@@ -420,7 +425,7 @@ def browse_letters(media, view_id, server_id=None):
     xbmcplugin.setContent(int(sys.argv[1]), 'files')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
-def get_folder_type(item):
+def get_folder_type(item, content_type=None):
 
     media = item['Type']
 
@@ -436,6 +441,9 @@ def get_folder_type(item):
         return "songs"
     elif media == 'CollectionFolder':
         return item.get('CollectionType', 'library')
+    elif media == 'Folder' and content_type == 'music':
+        return "albums"
+
 
 def get_media_type(media):
 
@@ -449,6 +457,8 @@ def get_media_type(media):
         return "BoxSet"
     elif media == 'tvshows':
         return "Series"
+    elif media == 'music':
+        return "MusicArtist,MusicAlbum,Audio"
 
 def get_fanart(item_id, path, server_id=None):
     
