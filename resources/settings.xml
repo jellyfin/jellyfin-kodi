@@ -41,8 +41,9 @@
 		<setting label="30518" id="enableCinema" type="bool" default="true" />
 		<setting label="30519" id="askCinema" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
 		<setting label="30002" id="playFromStream" type="bool" default="true" />
-	    <setting label="30522" id="transcode_h265" type="bool" default="false" />
-	    <setting label="30537" id="transcodeHi10P" type="bool" default="false"/>
+		<setting label="33179" id="playFromTranscode" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
+	    <setting label="30522" id="transcode_h265" type="bool" default="false" visible="eq(-1,false)" />
+	    <setting label="30537" id="transcodeHi10P" type="bool" default="false" visible="eq(-2,false)" />
 	    <setting label="33114" id="enableExternalSubs" type="bool" default="true" />
 	    <setting label="33159" id="skipDialogTranscode" type="enum" lvalues="305|33157|33158|13106" visible="true" default="3" />
 	    <setting label="33115" type="lsep" />
