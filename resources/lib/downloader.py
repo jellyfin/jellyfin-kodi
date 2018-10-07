@@ -355,6 +355,11 @@ def get_objects(src, filename):
     restart = not xbmcvfs.exists(os.path.join(temp, "objects") + '/')
     path = os.path.join(temp, filename).encode('utf-8')
 
+    if restart and (settings('appliedPatch') or "") == filename:
+
+        LOG.warn("Something went wrong applying this patch %s previously.", filename)
+        restart = False
+
     if not xbmcvfs.exists(path):
         delete_folder()
 
@@ -369,6 +374,8 @@ def get_objects(src, filename):
             dl.write(response.content)
             dl.close()
             del response
+
+            settings('appliedPatch', filename)
 
     unzip(path, temp, "objects")
 
