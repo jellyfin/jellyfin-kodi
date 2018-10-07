@@ -9,9 +9,9 @@
 ___
 **A whole new way to manage and view your media library.**
 
-The Emby for Kodi add-on combines the best of Kodi - ultra smooth navigation, beautiful UIs and playback of any file under the sun, and Emby - the most powerful open source multi-client media metadata indexer and server. Retire your MySQL setup in favor of a more flexible setup.
+The Emby for Kodi add-on combines the best of Kodi - ultra smooth navigation, beautiful UIs and playback of any file under the sun, and Emby - the most powerful open source multi-client media metadata indexer and server. You can now retire your MySQL setup in favor of a more flexible setup.
 
-Synchronize your media on your Emby server to the native Kodi database, browsing your media at full speed, while retaining the ability to use other Kodi add-ons to enhance your experience. In addition, you can also use any Kodi skin you'd like!
+Synchronize your media on your Emby server to the native Kodi database, browsing your media at full speed, while retaining the ability to use other Kodi add-ons to enhance your experience. In addition, you can use any Kodi skin you'd like!
 ___
 
 ### Supported
@@ -29,8 +29,8 @@ The add-on supports a hybrid approach. You can decide which Emby libraries to sy
   + Playlists
   + Theme media
 - Direct play and transcode
-- Watched and resume state. This is a 2-way synchronisation. Your content will receive updates across Kodi setups and your server.
-- Remote control your Kodi; send play commands from your Emby webclient or Emby mobile apps.
+- A 2-way watched and resume state between your server and Kodi. This is a near instant feature.
+- Remote control your Kodi; send play commands from your Emby web client or Emby mobile apps.
 - Extrafanart (rotating backgrounds) for skins that support it
 - Offer to delete content after playback
 - Backup your emby kodi profile. See the [Emby backup option](https://github.com/MediaBrowser/plugin.video.emby/wiki/Create-and-restore-from-backup)
@@ -53,4 +53,3 @@ View this short [Youtube video](https://youtu.be/IaecDPcXI3I?t=119) to give you 
 ### Known limitations
 - Chapter images are missing unless native playback mode is used.
 - Certain add-ons that depend on seeing where your content is located will not work unless native playback mode is selected.
-- ~~External subtitles (in separate files, e.g. mymovie.srt) can be used, but it is impossible to label them correctly unless direct playing~~
