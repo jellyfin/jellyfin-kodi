@@ -95,6 +95,11 @@ DYNNODES = {
         ('RecentlyAdded', _(33167)),
         ('InProgress', _(33169)),
         ('Favorite', _(33168))
+    ],
+    'music': [
+        ('all', None),
+        ('RecentlyAdded', _(33167)),
+        ('Favorite', _(33168))
     ]
 }
 

@@ -242,7 +242,10 @@ class Player(xbmc.Player):
 
         ''' Does not seem to work in Leia??
         '''
-        current_file = self.getPlayingFile()
+        try:
+            current_file = self.getPlayingFile()
+        except Exception:
+            return
 
         if current_file in self.played:
 

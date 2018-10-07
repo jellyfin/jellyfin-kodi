@@ -159,9 +159,9 @@ def listing():
         if path:
             if xbmc.getCondVisibility('Window.IsActive(Pictures)') and node in ('photos', 'homevideos'):
                 directory(label, path, artwork=artwork)
-            elif xbmc.getCondVisibility('Window.IsActive(Videos)') and node not in ('photos', 'homevideos', 'music', 'books', 'audiobooks'):
+            elif xbmc.getCondVisibility('Window.IsActive(Videos)') and node not in ('photos', 'homevideos', 'music'):
                 directory(label, path, artwork=artwork, context=context)
-            elif xbmc.getCondVisibility('Window.IsActive(Music)') and node in ('music', 'books', 'audiobooks'):
+            elif xbmc.getCondVisibility('Window.IsActive(Music)') and node in ('music'):
                 directory(label, path, artwork=artwork, context=context)
             elif not xbmc.getCondVisibility('Window.IsActive(Videos) | Window.IsActive(Pictures) | Window.IsActive(Music)'):
                 directory(label, path, artwork=artwork)
@@ -231,7 +231,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
 
     folder = folder.lower() if folder else None
 
-    if folder is None and media in ('homevideos', 'movies'):
+    if folder is None and media in ('homevideos', 'movies', 'books', 'audiobooks'):
         return browse_subfolders(media, view_id, server_id)
     
     if folder and folder == 'firstletter':
