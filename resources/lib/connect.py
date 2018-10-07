@@ -110,13 +110,6 @@ class Connect(object):
                     settings('serverName', client['config/auth.server-name'])
                     settings('server', client['config/auth.server'])
 
-                    if settings('connectMsg.bool'):
-
-                        users = [user for user in settings('additionalUsers').split(',') if user]
-                        users.insert(0, self.user['Name'])
-                        dialog("notification", heading="{emby}", message="%s %s" % (_(33000), ", ".join(users)),
-                                icon="{emby}", time=1500, sound=False)
-
                 event('ServerOnline', {'ServerId': server_id})
                 event('LoadServer', {'ServerId': server_id})
 

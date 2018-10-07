@@ -234,6 +234,13 @@ class Service(xbmc.Monitor):
                 self.settings['auth_check'] = True
                 self.warn = True
 
+                if settings('connectMsg.bool'):
+
+                    users = [user for user in (settings('additionalUsers') or "").split(',') if user]
+                    users.insert(0, settings('username'))
+                    dialog("notification", heading="{emby}", message="%s %s" % (_(33000), ", ".join(users)),
+                            icon="{emby}", time=1500, sound=False)
+
                 if self.library_thread is None:
 
                     self.library_thread = library.Library(self)
