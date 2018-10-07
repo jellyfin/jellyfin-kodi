@@ -229,20 +229,24 @@ class PlayUtils(object):
             raise Exception("use get_sources to get transcoding url")
 
         self.info['Method'] = "Transcode"
-        base, params = source['TranscodingUrl'].split('?')
 
-        if settings('skipDialogTranscode') != "3" and source.get('MediaStreams'):
-            url_parsed = params.split('&')
+        if self.item['MediaType'] == 'Video':
+            base, params = source['TranscodingUrl'].split('?')
 
-            for i in url_parsed:
-                if 'AudioStreamIndex' in i or 'AudioBitrate' in i or 'SubtitleStreamIndex' in i: # handle manually
-                    url_parsed.remove(i)
+            if settings('skipDialogTranscode') != "3" and source.get('MediaStreams'):
+                url_parsed = params.split('&')
 
-            params = "%s%s" % ('&'.join(url_parsed), self.get_audio_subs(source, audio, subtitle))
+                for i in url_parsed:
+                    if 'AudioStreamIndex' in i or 'AudioBitrate' in i or 'SubtitleStreamIndex' in i: # handle manually
+                        url_parsed.remove(i)
 
-        video_type = 'live' if source.get('LiveStreamId') else 'master'
-        self.info['Path'] = "%s/emby%s?%s" % (self.info['ServerAddress'], base.replace('stream', video_type), params)
-        self.info['Path'] += "&maxWidth=%s&maxHeight=%s" % (self.get_resolution())
+                params = "%s%s" % ('&'.join(url_parsed), self.get_audio_subs(source, audio, subtitle))
+
+            video_type = 'live' if source.get('LiveStreamId') else 'master'
+            self.info['Path'] = "%s/emby%s?%s" % (self.info['ServerAddress'], base.replace('stream', video_type), params)
+            self.info['Path'] += "&maxWidth=%s&maxHeight=%s" % (self.get_resolution())
+        else:
+            self.info['Path'] = "%s/emby%s" % (self.info['ServerAddress'], source['TranscodingUrl'])
 
         return self.info['Path']
 
@@ -429,7 +433,6 @@ class PlayUtils(object):
                 "MinSegments": "1",
                 "BreakOnNonKeyFrames": True
             })
-
 
         return profile
 
