@@ -228,7 +228,7 @@ class Library(threading.Thread):
         for queues in self.updated_output:
             queue = self.updated_output[queues]
 
-            if queue.qsize() and len(self.writer_threads['updated']) < 4:
+            if queue.qsize() and not len(self.writer_threads['updated']):
 
                 if queues in ('Audio', 'MusicArtist', 'AlbumArtist', 'MusicAlbum'):
                     new_thread = UpdatedWorker(queue, self.notify_output, self.music_database_lock, "music", self.server, self.direct_path)
@@ -247,7 +247,7 @@ class Library(threading.Thread):
         for queues in self.userdata_output:
             queue = self.userdata_output[queues]
 
-            if queue.qsize() and len(self.writer_threads['userdata']) < 4:
+            if queue.qsize() and not len(self.writer_threads['userdata']):
 
                 if queues in ('Audio', 'MusicArtist', 'AlbumArtist', 'MusicAlbum'):
                     new_thread = UserDataWorker(queue, self.music_database_lock, "music", self.server, self.direct_path)
@@ -266,7 +266,7 @@ class Library(threading.Thread):
         for queues in self.removed_output:
             queue = self.removed_output[queues]
 
-            if queue.qsize() and len(self.writer_threads['removed']) < 2:
+            if queue.qsize() and not len(self.writer_threads['removed']):
 
                 if queues in ('Audio', 'MusicArtist', 'AlbumArtist', 'MusicAlbum'):
                     new_thread = RemovedWorker(queue, self.music_database_lock, "music", self.server, self.direct_path)
@@ -282,7 +282,7 @@ class Library(threading.Thread):
 
         ''' Notify the user of new additions.
         '''
-        if self.notify_output.qsize() and len(self.notify_threads) < 1:
+        if self.notify_output.qsize() and not len(self.notify_threads):
 
             new_thread = NotifyWorker(self.notify_output, self.player)
             new_thread.start()
