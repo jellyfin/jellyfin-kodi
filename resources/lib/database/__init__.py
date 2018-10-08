@@ -56,7 +56,7 @@ class Database(object):
         self.conn = sqlite3.connect(self._sql(self.db_file), timeout=self.timeout)
         self.cursor = self.conn.cursor()
 
-        if self.db_file in ('video', 'music', 'texture'):
+        if self.db_file in ('video', 'music', 'texture', 'emby'):
             self.conn.execute("PRAGMA journal_mode=WAL")
 
         LOG.debug("--->[ database: %s ] %s", self.db_file, id(self.conn))
