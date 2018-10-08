@@ -236,8 +236,8 @@ class Service(xbmc.Monitor):
 
                 if settings('connectMsg.bool'):
 
-                    users = [user for user in (settings('additionalUsers') or "").split(',') if user]
-                    users.insert(0, settings('username'))
+                    users = [user for user in (settings('additionalUsers') or "").decode('utf-8').split(',') if user]
+                    users.insert(0, settings('username').decode('utf-8'))
                     dialog("notification", heading="{emby}", message="%s %s" % (_(33000), ", ".join(users)),
                             icon="{emby}", time=1500, sound=False)
 
