@@ -118,6 +118,7 @@ class Service(xbmc.Monitor):
             if self.waitForAbort(1):
                 break
 
+        window('emby_should_stop.bool', True)
         self.shutdown()
 
     def start_default(self):

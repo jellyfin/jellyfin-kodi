@@ -623,10 +623,6 @@ class UpdatedWorker(threading.Thread):
                         try:
                             item = self.queue.get(timeout=1)
                         except Queue.Empty:
-
-                            LOG.info("--<[ q:updated/%s ]", id(self))
-                            self.is_done = True
-
                             break
 
                         obj = MEDIA[item['Type']](self.args[0], embydb, kodidb, self.args[1])[item['Type']]
@@ -644,6 +640,9 @@ class UpdatedWorker(threading.Thread):
 
                         if window('emby_should_stop.bool'):
                             break
+
+        LOG.info("--<[ q:updated/%s ]", id(self))
+        self.is_done = True
 
 class UserDataWorker(threading.Thread):
 
@@ -668,10 +667,6 @@ class UserDataWorker(threading.Thread):
                         try:
                             item = self.queue.get(timeout=1)
                         except Queue.Empty:
-
-                            LOG.info("--<[ q:userdata/%s ]", id(self))
-                            self.is_done = True
-
                             break
 
                         obj = MEDIA[item['Type']](self.args[0], embydb, kodidb, self.args[1])['UserData']
@@ -688,6 +683,9 @@ class UserDataWorker(threading.Thread):
 
                         if window('emby_should_stop.bool'):
                             break
+
+        LOG.info("--<[ q:userdata/%s ]", id(self))
+        self.is_done = True
 
 class SortWorker(threading.Thread):
 
@@ -710,11 +708,7 @@ class SortWorker(threading.Thread):
                 try:
                     item_id = self.queue.get(timeout=1)
                 except Queue.Empty:
-
-                    self.is_done = True
-                    LOG.info("--<[ q:sort/%s ]", id(self))
-
-                    return
+                    break
 
                 try:
                     media = database.get_media_by_id(item_id)
@@ -732,6 +726,9 @@ class SortWorker(threading.Thread):
 
                 if window('emby_should_stop.bool'):
                     break
+
+        LOG.info("--<[ q:sort/%s ]", id(self))
+        self.is_done = True
 
 class RemovedWorker(threading.Thread):
 
@@ -756,10 +753,6 @@ class RemovedWorker(threading.Thread):
                         try:
                             item = self.queue.get(timeout=1)
                         except Queue.Empty:
-
-                            LOG.info("--<[ q:removed/%s ]", id(self))
-                            self.is_done = True
-
                             break
 
                         obj = MEDIA[item['Type']](self.args[0], embydb, kodidb, self.args[1])['Remove']
@@ -776,6 +769,9 @@ class RemovedWorker(threading.Thread):
 
                         if window('emby_should_stop.bool'):
                             break
+
+        LOG.info("--<[ q:removed/%s ]", id(self))
+        self.is_done = True
 
 class NotifyWorker(threading.Thread):
 
@@ -796,10 +792,6 @@ class NotifyWorker(threading.Thread):
             try:
                 item = self.queue.get(timeout=3)
             except Queue.Empty:
-
-                LOG.info("--<[ q:notify/%s ]", id(self))
-                self.is_done = True
-
                 break
 
             time = self.music_time if item[0] == 'Audio' else self.video_time
@@ -812,3 +804,6 @@ class NotifyWorker(threading.Thread):
 
             if window('emby_should_stop.bool'):
                 break
+
+        LOG.info("--<[ q:notify/%s ]", id(self))
+        self.is_done = True
