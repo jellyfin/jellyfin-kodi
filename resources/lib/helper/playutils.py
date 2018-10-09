@@ -183,7 +183,7 @@ class PlayUtils(object):
         if source['RequiresOpening']:
             source = self.live_stream(source)
 
-        if source['SupportsDirectPlay'] and (self.is_strm(source) or not settings('playFromStream.bool') and self.is_file_exists(source)):
+        if source.get('Protocol') == 'Http' or source['SupportsDirectPlay'] and (self.is_strm(source) or not settings('playFromStream.bool') and self.is_file_exists(source)):
 
             LOG.info("--[ direct play ]")
             self.direct_play(source)
@@ -304,7 +304,9 @@ class PlayUtils(object):
                 {
                     "Container": "m3u8",
                     "Type": "Video",
-                    "AudioCodec": "aac,mp3,ac3,opus,flac,vorbis"
+                    "AudioCodec": "aac,mp3,ac3,opus,flac,vorbis",
+                    "VideoCodec": "h264,mpeg4,mpeg2video",
+                    "MaxAudioChannels": "6"
                 },
                 {
                     "Container": "jpeg",

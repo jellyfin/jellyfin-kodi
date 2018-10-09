@@ -79,8 +79,7 @@ class Player(xbmc.Player):
 
                 break
         else:
-            item = items[0]
-            items.pop(0)
+            item = items.pop(0)
 
         window('emby_play.json', items)
 
