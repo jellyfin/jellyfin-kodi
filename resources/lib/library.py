@@ -298,8 +298,16 @@ class Library(threading.Thread):
         Views().get_nodes()
 
         try:
-            if get_sync()['Libraries'] or not settings('SyncInstallRunDone.bool'):
+            if get_sync()['Libraries']:
 
+                try:
+                    FullSync(self)
+                    Views().get_nodes()
+                except Exception as error:
+                    LOG.error(error)
+
+            elif not settings('SyncInstallRunDone.bool'):
+                
                 FullSync(self)
                 Views().get_nodes()
 
