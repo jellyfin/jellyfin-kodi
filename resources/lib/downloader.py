@@ -243,8 +243,8 @@ def _get_items(query, server_id=None):
 
             params['StartIndex'] = index
             params['Limit'] = LIMIT
-            result = _get(url, params, server_id=server_id)
-
+            result = _get(url, params, server_id=server_id) or {'Items': []}
+            
             items['Items'].extend(result['Items'])
             items['RestorePoint'] = query
             yield items
@@ -320,7 +320,7 @@ class TheVoid(object):
             raise Exception("unexpected data format")
 
         data['VoidName'] = str(create_id())
-        LOG.info("---[ contact mothership/%s ]", method)
+        LOG.info("---[ contact MU-TH-UR 6000/%s ]", method)
         LOG.debug(data)
 
         event(method, data)
@@ -335,7 +335,7 @@ class TheVoid(object):
 
             if response != "":
 
-                LOG.debug("--<[ beacon/emby_%s.json ]", self.data['VoidName'])
+                LOG.debug("--<[ nostromo/emby_%s.json ]", self.data['VoidName'])
                 window('emby_%s' % self.data['VoidName'], clear=True)
 
                 return response
@@ -346,6 +346,7 @@ class TheVoid(object):
                 return default
 
             xbmc.sleep(100)
+            LOG.info("--[ void/%s ]", self.data['VoidName'])
 
 def get_objects(src, filename):
 

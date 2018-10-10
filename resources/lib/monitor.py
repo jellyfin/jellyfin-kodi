@@ -246,7 +246,7 @@ class Monitor(xbmc.Monitor):
     def void_responder(self, data, result):
 
         window('emby_%s.json' % data['VoidName'], result)
-        LOG.debug("--->[ beacon/emby_%s.json ] sent", data['VoidName'])
+        LOG.debug("--->[ nostromo/emby_%s.json ] sent", data['VoidName'])
 
     def server_instance(self, server_id=None):
 
