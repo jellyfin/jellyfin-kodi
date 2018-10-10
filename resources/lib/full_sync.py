@@ -437,4 +437,4 @@ class FullSync(object):
                     obj = Movies(self.server, embydb, videodb, self.direct_path)
                     obj.boxsets_reset()
 
-            self.boxsets(None)
+        self.boxsets(None)
