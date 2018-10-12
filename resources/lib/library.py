@@ -311,6 +311,8 @@ class Library(threading.Thread):
                 FullSync(self)
                 Views().get_nodes()
 
+                return True
+
             if settings('SyncInstallRunDone.bool'):
                 if settings('kodiCompanion.bool'):
 
