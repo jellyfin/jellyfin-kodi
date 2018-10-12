@@ -345,6 +345,7 @@ class Player(xbmc.Player):
                         item['CurrentPosition'] = int(item['Runtime'])
 
                     marker = float(settings('markPlayed')) / 100
+                    LOG.info("Percent played: %s Mark played at: %s", played, marker)
                     delete = False
 
                     if item['Type'] == 'Episode' and settings('deleteTV.bool'):

@@ -154,8 +154,8 @@ class Connect(object):
         if 'PrimaryImageTag' in self.user:
             window('EmbyUserImage', api.API(self.user, client['auth/server-address']).get_user_artwork(self.user['Id']))
 
-        self.server = client['api'].get_system_info()
-        settings('markPlayed', value=str(self.server['MaxResumePct']))
+        server_info = client['api'].get_system_info()
+        settings('markPlayed', value=str(server_info.get('MaxResumePct', 90)))
 
     def select_servers(self, state=None):
 
