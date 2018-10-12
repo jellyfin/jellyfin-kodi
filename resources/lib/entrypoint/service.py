@@ -182,24 +182,24 @@ class Service(xbmc.Monitor):
             if label == objects.version:
                 LOG.info("--[ objects/%s ]", objects.version)
 
-                return
+                return False
 
-            if get_objects(zipfile, label + '.zip'):
+            get_objects(zipfile, label + '.zip')
+            reload(objects) # to apply latest changes
 
-                LOG.info("No previous patch found.")
-                dialog("ok", heading="{emby}", line1=_(33135))
-                xbmc.executebuiltin('RestartApp')
-            else:
-                dialog("notification", heading="{emby}", message=_(33156), icon="{emby}")
+            dialog("notification", heading="{emby}", message=_(33156), icon="{emby}")
+            LOG.info("--[ new objects/%s ]", objects.version)
 
-                try:
-                    if compare_version(self.settings['addon_version'], objects.embyversion) < 0:
-                        dialog("ok", heading="{emby}", line1="%s %s" % (_(33160), objects.embyversion))
-                except Exception:
-                    pass
+            try:
+                if compare_version(self.settings['addon_version'], objects.embyversion) < 0:
+                    dialog("ok", heading="{emby}", line1="%s %s" % (_(33160), objects.embyversion))
+            except Exception:
+                pass
 
         except Exception as error:
             LOG.exception(error)
+
+        return True
     
     def onNotification(self, sender, method, data):
 

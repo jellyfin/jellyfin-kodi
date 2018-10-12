@@ -12,14 +12,18 @@ import xbmcaddon
 
 #################################################################################################
 
-cache = xbmc.translatePath('special://temp/emby').decode('utf-8')
+__addon__ = xbmcaddon.Addon(id='plugin.video.emby')
+__base__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'resources', 'lib')).decode('utf-8')
+__pcache__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('profile'), 'emby')).decode('utf-8')
+__cache__ = xbmc.translatePath('special://temp/emby').decode('utf-8')
 
-if not xbmcvfs.exists(cache):
-    xbmcvfs.mkdir(cache)
+if not xbmcvfs.exists(__pcache__ + '/'):
+    from resources.lib.helper.utils import copytree
 
-sys.path.insert(0, cache)
-__addon__ = xbmcaddon.Addon(id='plugin.video.emby').getAddonInfo('path').decode('utf-8')
-__base__ = xbmc.translatePath(os.path.join(__addon__, 'resources', 'lib')).decode('utf-8')
+    copytree(os.path.join(__base__, 'objects').decode('utf-8'), os.path.join(__pcache__, 'objects').decode('utf-8'))
+
+sys.path.insert(0, __cache__)
+sys.path.insert(0, __pcache__)
 sys.path.append(__base__)
 
 #################################################################################################

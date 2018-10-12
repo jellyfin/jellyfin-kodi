@@ -373,6 +373,9 @@ def copytree(path, dest):
     '''
     dirs, files = xbmcvfs.listdir(path)
 
+    if not xbmcvfs.exists(dest):
+        xbmcvfs.mkdirs(dest)
+
     if dirs:
         copy_recursive(path, dirs, dest)
 
@@ -401,6 +404,9 @@ def copy_file(path, dest):
 
     ''' Copy specific file.
     '''
+    if path.endswith('.pyo'):
+        return
+
     xbmcvfs.copy(path, dest)
     LOG.debug("copy: %s to %s", path, dest)
 

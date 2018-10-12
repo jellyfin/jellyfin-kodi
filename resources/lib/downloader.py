@@ -11,6 +11,7 @@ from datetime import datetime
 
 import xbmc
 import xbmcvfs
+import xbmcaddon
 
 from libraries import requests
 from helper.utils import should_stop, delete_folder
@@ -23,6 +24,7 @@ from emby.core.exceptions import HTTPException
 
 LOG = logging.getLogger("EMBY."+__name__)
 LIMIT = min(int(settings('limitIndex') or 50), 50)
+CACHE = xbmc.translatePath(os.path.join(xbmcaddon.Addon(id='plugin.video.emby').getAddonInfo('profile').decode('utf-8'), 'emby')).decode('utf-8')
 
 #################################################################################################
 
@@ -352,7 +354,7 @@ def get_objects(src, filename):
 
     ''' Download objects dependency to temp cache folder.
     '''
-    temp = xbmc.translatePath('special://temp/emby').decode('utf-8')
+    temp = CACHE
     restart = not xbmcvfs.exists(os.path.join(temp, "objects") + '/')
     path = os.path.join(temp, filename).encode('utf-8')
 
@@ -362,7 +364,7 @@ def get_objects(src, filename):
         restart = False
 
     if not xbmcvfs.exists(path):
-        delete_folder()
+        delete_folder(CACHE)
 
         LOG.info("From %s to %s", src, path.decode('utf-8'))
         try:

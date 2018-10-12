@@ -745,10 +745,10 @@ def get_themes():
     from helper.playutils import PlayUtils
     from helper.xmls import tvtunes_nfo
 
-    library = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library/").decode('utf-8')
+    library = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library").decode('utf-8')
     play = settings('useDirectPaths') == "1"
 
-    if not xbmcvfs.exists(library):
+    if not xbmcvfs.exists(library + '/'):
         xbmcvfs.mkdir(library)
 
     if xbmc.getCondVisibility('System.HasAddon(script.tvtunes)'):
