@@ -344,23 +344,6 @@ class Player(xbmc.Player):
                         played = 100
                         item['CurrentPosition'] = int(item['Runtime'])
 
-                    marker = float(settings('markPlayed')) / 100
-                    LOG.info("Percent played: %s Mark played at: %s", played, marker)
-                    delete = False
-
-                    if item['Type'] == 'Episode' and settings('deleteTV.bool'):
-                        delete = True
-                    elif item['Type'] == 'Movie' and settings('deleteMovies.bool'):
-                        delete = True
-
-                    if not settings('offerDelete.bool'):
-                        delete = False
-
-                    if played >= marker and delete:
-
-                        if dialog("yesno", heading=_(30091), line1=_(33015), autoclose=120000):
-                            item['Server']['api'].delete_item(item['Id'])
-
                 data = {
                     'ItemId': item['Id'],
                     'MediaSourceId': item['MediaSourceId'],
@@ -385,6 +368,24 @@ class Player(xbmc.Player):
 
                     for file in files:
                         xbmcvfs.delete(os.path.join(path, file.decode('utf-8')))
+
+                result = item['Server']['api'].get_item(item['Id']) or {}
+
+                if 'UserData' in result and result['UserData']['Played']:
+                    delete = False
+
+                    if result['Type'] == 'Episode' and settings('deleteTV.bool'):
+                        delete = True
+                    elif result['Type'] == 'Movie' and settings('deleteMovies.bool'):
+                        delete = True
+
+                    if not settings('offerDelete.bool'):
+                        delete = False
+
+                    if delete:
+
+                        if dialog("yesno", heading=_(30091), line1=_(33015), autoclose=120000):
+                            item['Server']['api'].delete_item(item['Id'])
 
                 window('emby.external_check', clear=True)
 
