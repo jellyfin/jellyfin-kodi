@@ -341,7 +341,7 @@ class Service(xbmc.Monitor):
             if not data.get('Id'):
                 return
 
-            self.library_thread.add_library(data['Id'])
+            self.library_thread.add_library(data['Id'], data.get('Update', False))
             xbmc.executebuiltin("Container.Refresh")
 
         elif method == 'RepairLibrary':

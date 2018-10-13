@@ -29,11 +29,11 @@ class FullSync(object):
 
     sync = None
 
-    def __init__(self, library, library_id=None):
+    def __init__(self, library, library_id=None, update=False):
 
         self.library = library
         self.direct_path = settings('useDirectPaths') == "1"
-
+        self.update_library = update
         self.server = Emby()
         self.sync = get_sync()
 
@@ -253,7 +253,8 @@ class FullSync(object):
                                           message=movie['Name'])
                             obj.movie(movie, library=library)
 
-                    self.movies_compare(library, obj, embydb)
+                    if self.update_library:
+                        self.movies_compare(library, obj, embydb)
 
     def movies_compare(self, library, obj, embydb):
 
@@ -297,7 +298,8 @@ class FullSync(object):
                                         dialog.update(percent, message="%s/%s" % (message, episode['Name'][:10]))
                                         obj.episode(episode)
 
-                    self.tvshows_compare(library, obj, embydb)
+                    if self.update_library:
+                        self.tvshows_compare(library, obj, embydb)
 
     def tvshows_compare(self, library, obj, embydb):
 
@@ -337,7 +339,8 @@ class FullSync(object):
                                           message=mvideo['Name'])
                             obj.musicvideo(mvideo, library=library)
 
-                    self.musicvideos_compare(library, obj, embydb)
+                    if self.update_library:
+                        self.musicvideos_compare(library, obj, embydb)
 
     def musicvideos_compare(self, library, obj, embydb):
 
@@ -386,7 +389,8 @@ class FullSync(object):
                                                           message="%s/%s/%s" % (message, album['Name'][:7], song['Name'][:7]))
                                             obj.song(song)
 
-                    self.music_compare(library, obj, embydb)
+                    if self.update_library:
+                        self.music_compare(library, obj, embydb)
 
     def music_compare(self, library, obj, embydb):
 

@@ -87,6 +87,8 @@ class Events(object):
             browse(params.get('type'), params.get('id'), params.get('folder'), server)
         elif mode == 'synclib':
             event('SyncLibrary', {'Id': params.get('id')})
+        elif mode == 'updatelib':
+            event('SyncLibrary', {'Id': params.get('id'), 'Update': True})
         elif mode == 'repairlib':
             event('RepairLibrary', {'Id': params.get('id')})
         elif mode == 'removelib':
@@ -117,6 +119,8 @@ class Events(object):
             get_themes()
         elif mode == 'backup':
             backup()
+        elif mode == 'restartservice':
+            window('emby.restart.bool', True)
         else:
             listing()
 
@@ -150,7 +154,7 @@ def listing():
 
         if view_id and node in ('movies', 'tvshows', 'musicvideos', 'music') and view_id in whitelist:
 
-            context.append((_(33136), "RunPlugin(plugin://plugin.video.emby/?mode=synclib&id=%s)" % view_id))
+            context.append((_(33136), "RunPlugin(plugin://plugin.video.emby/?mode=updatelib&id=%s)" % view_id))
             context.append((_(33132), "RunPlugin(plugin://plugin.video.emby/?mode=repairlib&id=%s)" % view_id))
             context.append((_(33133), "RunPlugin(plugin://plugin.video.emby/?mode=removelib&id=%s)" % view_id))
 

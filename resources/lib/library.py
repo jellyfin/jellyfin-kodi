@@ -480,12 +480,12 @@ class Library(threading.Thread):
             library = libraries[x - 1]
             selected_libraries.append(library['Id'])
 
-        event(modes[mode], {'Id': ','.join([libraries[x - 1]['Id'] for x in selection])})
+        event(modes[mode], {'Id': ','.join([libraries[x - 1]['Id'] for x in selection]), 'Update': mode == 'SyncLibrarySelection'})
 
-    def add_library(self, library_id):
+    def add_library(self, library_id, update=False):
 
         try:
-            FullSync(self, library_id)
+            FullSync(self, library_id, update=update)
         except Exception as error:
             LOG.exception(error)
 

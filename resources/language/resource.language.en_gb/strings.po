@@ -885,3 +885,11 @@ msgstr ""
 msgctxt "#33179"
 msgid "Force transcode"
 msgstr ""
+
+msgctxt "#33180"
+msgid "Restart Emby for Kodi"
+msgstr ""
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr ""
