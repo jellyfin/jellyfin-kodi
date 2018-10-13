@@ -53,3 +53,7 @@ View this short [Youtube video](https://youtu.be/IaecDPcXI3I?t=119) to give you 
 ### Known limitations
 - Chapter images are missing unless native playback mode is used.
 - Certain add-ons that depend on seeing where your content is located will not work unless native playback mode is selected.
+
+___
+### Help translate
+Check [Transifex](https://www.transifex.com/emby-for-kodi/emby-for-kodi/stringspo/) to help translate this project. Thank you!
