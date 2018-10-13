@@ -5,9 +5,9 @@
         provider-name="angelblue05">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
-    <import addon="plugin.video.emby.movies" version="0.12" />
-    <import addon="plugin.video.emby.tvshows" version="0.12" />
-    <import addon="plugin.video.emby.musicvideos" version="0.12" />
+    <import addon="plugin.video.emby.movies" version="0.13" />
+    <import addon="plugin.video.emby.tvshows" version="0.13" />
+    <import addon="plugin.video.emby.musicvideos" version="0.13" />
   </requires>
   <extension    point="xbmc.python.pluginsource"
                 library="default.py">
