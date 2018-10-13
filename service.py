@@ -45,21 +45,33 @@ if __name__ == "__main__":
     LOG.warn("-->[ service ]")
     LOG.warn("Delay startup by %s seconds.", DELAY)
 
-    try:
-        session = Service()
+    while True:
 
         try:
-            if DELAY and xbmc.Monitor().waitForAbort(DELAY):
-                raise Exception("Aborted during startup delay")
+            session = Service()
 
-            session.service()
-        except Exception as error: # TODO, build exceptions
+            try:
+                if DELAY and xbmc.Monitor().waitForAbort(DELAY):
+                    raise Exception("Aborted during startup delay")
+
+                session.service()
+
+                break
+            except Exception as error: # TODO, build exceptions
+
+                LOG.exception(error)
+                session.shutdown()
+
+                if 'RestartService' not in error:
+                    LOG.warn("--<<[ service ]")
+                    
+                    break
+
+        except Exception as error:
+            ''' Issue initializing the service.
+            '''
             LOG.exception(error)
-            session.shutdown()
 
-    except Exception as error:
-        ''' Issue initializing the service.
-        '''
-        LOG.exception(error)
+            break
 
     LOG.warn("--<[ service ]")

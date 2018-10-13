@@ -115,10 +115,14 @@ class Service(xbmc.Monitor):
                         if update:
                             self.settings['last_progress'] = datetime.today()
 
+            if window('emby.restart.bool'):
+                window('emby.restart', clear=True)
+
+                raise Exception('RestartService')
+
             if self.waitForAbort(1):
                 break
 
-        window('emby_should_stop.bool', True)
         self.shutdown()
 
     def start_default(self):
@@ -400,8 +404,12 @@ class Service(xbmc.Monitor):
                 Views().get_views()
 
         elif method == 'CheckUpdate':
+
             if not self.check_update():
                 dialog("notification", heading="{emby}", message=_(21341), icon="{emby}", sound=False)
+            else:
+                dialog("notification", heading="{emby}", message=_(33181), icon="{emby}", sound=False)
+                window('emby.restart.bool', True)
 
     def onSettingsChanged(self):
 
@@ -448,6 +456,7 @@ class Service(xbmc.Monitor):
     def shutdown(self):
 
         LOG.warn("---<[ EXITING ]")
+        window('emby_should_stop.bool', True)
 
         properties = [ # TODO: review
             "emby_state", "emby_serverStatus",
