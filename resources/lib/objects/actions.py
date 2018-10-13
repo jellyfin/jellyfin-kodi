@@ -99,14 +99,13 @@ class Actions(object):
                 if get_play_action() == "Resume":
                     seektime = True
 
-                if transcode and not seektime and resume:
+                if transcode and not seektime:
                     choice = self.resume_dialog(api.API(item, self.server).adjust_resume((resume or 0) / 10000000.0))
                     
                     if choice is None:
-                        return
+                        raise Exception("User backed out of resume dialog.")
 
-                    elif not choice:
-                        seektime = False
+                    seektime = False if not choice else True
 
         if settings('enableCinema.bool') and not seektime:
             self._set_intros(item)
