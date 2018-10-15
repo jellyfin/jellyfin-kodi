@@ -343,5 +343,17 @@
 		"PlayCount": "CurrentProgram/UserData/PlayCount",
 		"Runtime": "CurrentProgram/RunTimeTicks",
 		"MediaType": "MediaType"
+	},
+	"UpNext": {
+		"episodeid": "Id",
+		"tvshowid": "SeriesId",
+		"plot": "Overview",
+		"showtitle": "SeriesName",
+		"title": "Name",
+		"playcount": "UserData/PlayCount",
+		"season": "ParentIndexNumber",
+		"episode": "IndexNumber",
+		"rating": "CommunityRating",
+		"firstaired": "ProductionYear"
 	}
 }

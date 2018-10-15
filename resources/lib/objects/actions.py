@@ -256,6 +256,17 @@ class Actions(object):
                     LOG.info("[ subtitles ] %s", item['PlaybackInfo']['SubtitleUrl'])
                     listitem.setSubtitles([item['PlaybackInfo']['SubtitleUrl']])
 
+                if item['Type'] == 'Episode':
+
+                    item['PlaybackInfo']['CurrentEpisode'] = objects.map(item, "UpNext")
+                    item['PlaybackInfo']['CurrentEpisode']['art'] = {
+                        'tvshow.poster': obj['Artwork'].get('Series.Primary'),
+                        'thumb': obj['Artwork'].get('Primary'),
+                        'tvshow.fanart': None
+                    }
+                    if obj['Artwork']['Backdrop']:
+                        item['PlaybackInfo']['CurrentEpisode']['art']['tvshow.fanart'] = obj['Artwork']['Backdrop'][0]
+
         listitem.setContentLookup(False)
 
     def listitem_video(self, obj, listitem, item, seektime=None):

@@ -109,9 +109,9 @@ class Objects(object):
                 self.mapped_item[key] = obj
                 break
 
-        self.mapped_item['ProviderName'] = self.objects.get('%sProviderName' % mapping_name)
+        if not mapping_name.startswith('Browse') and not mapping_name.startswith('Artwork') and not mapping_name.startswith('UpNext'):
 
-        if not mapping_name.startswith('Browse') and not mapping_name.startswith('Artwork'):
+            self.mapped_item['ProviderName'] = self.objects.get('%sProviderName' % mapping_name)
             self.mapped_item['Checksum'] = json.dumps(item['UserData'])
 
         return self.mapped_item
