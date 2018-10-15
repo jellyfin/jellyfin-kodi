@@ -14,21 +14,13 @@ import xbmcvfs
 import emby_db
 from helper.utils import delete_folder
 from helper import _, settings, window, dialog
+from objects import obj
 
 #################################################################################################
 
 LOG = logging.getLogger("EMBY."+__name__)
 
 #################################################################################################
-
-try:
-    from objects import obj
-except Exception as error:
-    # clear patch
-    LOG.exception(error)
-    delete_folder()
-    dialog("ok", heading="{emby}", line1=_(33155))
-    xbmc.executebuiltin('RestartApp')
 
 
 class Database(object):

@@ -55,17 +55,13 @@ if __name__ == "__main__":
                     raise Exception("Aborted during startup delay")
 
                 session.service()
-
-                break
             except Exception as error: # TODO, build exceptions
 
                 LOG.exception(error)
                 session.shutdown()
 
-                if 'RestartService' not in error:
-                    LOG.warn("--<<[ service ]")
-                    
-                    break
+                if 'RestartService' in error:
+                    continue
 
         except Exception as error:
             ''' Issue initializing the service.
@@ -73,5 +69,7 @@ if __name__ == "__main__":
             LOG.exception(error)
 
             break
+
+        break
 
     LOG.warn("--<[ service ]")
