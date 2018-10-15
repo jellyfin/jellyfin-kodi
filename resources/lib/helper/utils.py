@@ -2,6 +2,7 @@
 
 #################################################################################################
 
+import binascii
 import json
 import logging
 import os
@@ -127,13 +128,20 @@ def find(dict, item):
         if re.match(key, item, re.I):
             return dict[key]
 
-def event(method, data=None):
+def event(method, data=None, sender=None, hexlify=False):
 
     ''' Data is a dictionary.
     '''
     data = data or {}
-    xbmc.executebuiltin('NotifyAll(plugin.video.emby, %s, "[%s]")' % (method, json.dumps(data).replace('"', '\\"')))
-    LOG.debug("---[ event: %s ] %s", method, data)
+    sender = sender or "plugin.video.emby"
+
+    if hexlify:
+        data = '\\"[\\"{0}\\"]\\"'.format(binascii.hexlify(json.dumps(data)))
+    else:
+        data = '"[%s]"' % json.dumps(data).replace('"', '\\"')
+
+    xbmc.executebuiltin('NotifyAll(%s, %s, %s)' % (sender, method, data))
+    LOG.debug("---[ event: %s/%s ] %s", sender, method, data)
 
 def dialog(dialog_type, *args, **kwargs):
 

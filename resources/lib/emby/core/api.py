@@ -159,6 +159,13 @@ def get_next(index=None, limit=1):
                 'StartIndex': None if index is None else int(index)
             })
 
+def get_adjacent_episodes(show_id, item_id):
+    return  shows("/%s/Episodes" % show_id, {
+                'UserId': "{UserId}",
+                'AdjacentTo': item_id,
+                'Fields': "Overview"
+            })
+
 def get_genres(parent_id=None):
     return  _get("Genres", {
                 'ParentId': parent_id,

@@ -2,6 +2,7 @@
 
 #################################################################################################
 
+import binascii
 import json
 import logging
 import threading
@@ -45,8 +46,8 @@ class Monitor(xbmc.Monitor):
         LOG.info("--<[ kodi scan/%s ]", library)
 
     def onNotification(self, sender, method, data):
-        
-        if sender.lower() not in ('plugin.video.emby', 'xbmc'):
+    
+        if sender.lower() not in ('plugin.video.emby', 'xbmc', 'upnextprovider'):
             return
 
         if sender == 'plugin.video.emby':
@@ -61,6 +62,18 @@ class Monitor(xbmc.Monitor):
                 return
 
             data = json.loads(data)[0]
+
+        elif sender == 'upnextprovider':
+            method = method.split('.')[1]
+
+            if method not in ('plugin.video.emby_play_action'):
+                return
+
+            data = json.loads(data)
+            method = "Play"
+
+            if data:
+                data = json.loads(binascii.unhexlify(data[0]))
         else:
             if method not in ('Player.OnPlay', 'VideoLibrary.OnUpdate', 'Player.OnAVChange'):
                 return

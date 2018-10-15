@@ -46,7 +46,8 @@ def set_properties(item, method, server_id=None):
         'SubsMapping': info.get('Subtitles'),
         'AudioStreamIndex': info.get('AudioStreamIndex'),
         'SubtitleStreamIndex': info.get('SubtitleStreamIndex'),
-        'CurrentPosition': info.get('CurrentPosition')
+        'CurrentPosition': info.get('CurrentPosition'),
+        'CurrentEpisode': info.get('CurrentEpisode')
     })
 
     window('emby_play.json', current)
@@ -400,6 +401,14 @@ class PlayUtils(object):
         }
         if settings('transcode_h265.bool'):
             profile['DirectPlayProfiles'][0]['VideoCodec'] = "h264,mpeg4,mpeg2video"
+        else:
+            profile['TranscodingProfiles'].insert(0, {
+                "Container": "m3u8",
+                "Type": "Video",
+                "AudioCodec": "aac,mp3,ac3,opus,flac,vorbis",
+                "VideoCodec": "h264,h265,hevc,mpeg4,mpeg2video",
+                "MaxAudioChannels": "6"
+            })
 
         if settings('transcodeHi10P.bool'):
             profile['CodecProfiles'].append(

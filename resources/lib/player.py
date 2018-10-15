@@ -9,7 +9,8 @@ import os
 import xbmc
 import xbmcvfs
 
-from helper import _, window, settings, dialog, JSONRPC
+from objects.obj import Objects
+from helper import _, api, window, settings, dialog, event, JSONRPC
 from emby import Emby
 
 #################################################################################################
@@ -24,6 +25,7 @@ class Player(xbmc.Player):
     # Borg - multiple instances, shared state
     _shared_state = {}
     played = {}
+    up_next = False
 
     def __init__(self):
 
@@ -35,6 +37,7 @@ class Player(xbmc.Player):
         ''' We may need to wait for info to be set in kodi monitor.
             Accounts for scenario where Kodi starts playback and exits immediately.
         '''
+        self.up_next = False
         count = 0
         monitor = xbmc.Monitor()
 
@@ -219,6 +222,49 @@ class Player(xbmc.Player):
         else:
             item['SubtitleStreamIndex'] = subs + tracks + 1
 
+    def next_up(self):
+
+        current_file = self.getPlayingFile()
+        item = self.played[current_file]
+        objects = Objects()
+
+        if item['Type'] != 'Episode':
+            return
+
+        next_items = item['Server']['api'].get_adjacent_episodes(item['CurrentEpisode']['tvshowid'], item['Id'])
+
+        for index, next_item in enumerate(next_items['Items']):
+            if next_item['Id'] == item['Id']:
+
+                try:
+                    next_item = next_items['Items'][index + 1]
+                except IndexError:
+                    LOG.warn("No next up episode.")
+
+                    return
+
+                break
+
+        API = api.API(next_item, item['Server']['auth/server-address'])
+        data = objects.map(next_item, "UpNext")
+        artwork = API.get_all_artwork(objects.map(next_item, 'ArtworkParent'), True)
+        data['art'] = {
+            'tvshow.poster': artwork.get('Series.Primary'),
+            'tvshow.fanart': None,
+            'thumb': artwork.get('Primary')
+        }
+        if artwork['Backdrop']:
+            data['art']['tvshow.fanart'] = artwork['Backdrop'][0]
+
+        next_info = {
+            'play_info': {'ItemIds': [data['episodeid']], 'ServerId': item['ServerId'], 'PlayCommand': 'PlayNow'},
+            'current_episode': item['CurrentEpisode'],
+            'next_episode': data
+        }
+
+        LOG.debug("--[ next up ] %s", json.dumps(next_info, indent=4))
+        event("upnext_data", next_info, hexlify=True)
+
     def onPlayBackPaused(self):
         current_file = self.getPlayingFile()
 
@@ -268,14 +314,31 @@ class Player(xbmc.Player):
 
         item = self.played[current_file]
 
+        if window('emby.external.bool'):
+            return
+
         if not report:
 
             previous = item['CurrentPosition']
             item['CurrentPosition'] = int(self.getTime())
 
+            if int(item['CurrentPosition']) == 1:
+                return
+
+            try:
+                played = float(item['CurrentPosition'] * 10000000) / int(item['Runtime']) * 100
+            except ZeroDivisionError: # Runtime is 0.
+                played = 0
+
+            if played > 2.0 and not self.up_next:
+
+                self.up_next = True
+                self.next_up()
+
             if (item['CurrentPosition'] - previous) < 30:
 
                 return
+
 
         result = JSONRPC('Application.GetProperties').execute({'properties': ["volume", "muted"]})
         result = result.get('result', {})
@@ -330,18 +393,10 @@ class Player(xbmc.Player):
             if item:
                 window('emby.skip.%s.bool' % item['Id'], True)
 
-                if item['CurrentPosition'] and item['Runtime']:
+                if window('emby.external.bool'):
+                    window('emby.external', clear=True)
 
-                    try:
-                        if window('emby.external.bool'):
-                            window('emby.external', clear=True)
-                            raise ValueError
-
-                        played = float(item['CurrentPosition'] * 10000000) / int(item['Runtime'])
-                    except ZeroDivisionError: # Runtime is 0.
-                        played = 0
-                    except ValueError:
-                        played = 100
+                    if int(item['CurrentPosition']) == 1:
                         item['CurrentPosition'] = int(item['Runtime'])
 
                 data = {
