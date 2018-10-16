@@ -380,6 +380,11 @@ class Service(xbmc.Monitor):
 
         elif method == 'System.OnWake':
 
+            if not self.monitor.sleep:
+                LOG.warn("System.OnSleep was never called, skip System.OnWake")
+
+                return
+
             LOG.info("--<[ sleep ]")
             xbmc.sleep(10000)# Allow network to wake up
             self.monitor.sleep = False
