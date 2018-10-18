@@ -282,6 +282,7 @@ class Monitor(xbmc.Monitor):
             self.additional_users(server)
 
     def post_capabilities(self, server):
+        LOG.info("--[ post capabilities/%s ]", server['auth/server-id'])
 
         server['api'].post_capabilities({
             'PlayableMediaTypes': "Audio,Video",

@@ -252,8 +252,18 @@ def get_date_modified(date, parent_id, media=None):
                 'IsMissing': False,
                 'IsVirtualUnaired': False,
                 'IncludeItemTypes': media or None,
-                #'MinDateLastSavedForUser': date,
                 'MinDateLastSaved': date,
+                'Fields': info()
+            })
+
+def get_userdata_date_modified(date, parent_id, media=None):
+    return  users("/Items", params={
+                'ParentId': parent_id,
+                'Recursive': True,
+                'IsMissing': False,
+                'IsVirtualUnaired': False,
+                'IncludeItemTypes': media or None,
+                'MinDateLastSavedForUser': date,
                 'Fields': info()
             })
 

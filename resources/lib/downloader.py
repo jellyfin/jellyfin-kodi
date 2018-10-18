@@ -345,7 +345,7 @@ class TheVoid(object):
             if window('emby_should_stop.bool'):
                 LOG.info("Abandon mission! A black hole just swallowed [ %s/%s ]", self.method, self.data['VoidName'])
                 
-                return default
+                return
 
             xbmc.sleep(100)
             LOG.info("--[ void/%s ]", self.data['VoidName'])
