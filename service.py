@@ -20,7 +20,7 @@ __cache__ = xbmc.translatePath('special://temp/emby').decode('utf-8')
 if not xbmcvfs.exists(__pcache__ + '/'):
     from resources.lib.helper.utils import copytree
 
-    copytree(os.path.join(__base__, 'objects').decode('utf-8'), os.path.join(__pcache__, 'objects').decode('utf-8'))
+    copytree(os.path.join(__base__, 'objects'), os.path.join(__pcache__, 'objects'))
 
 sys.path.insert(0, __cache__)
 sys.path.insert(0, __pcache__)
