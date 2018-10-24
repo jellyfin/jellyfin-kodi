@@ -387,7 +387,9 @@ class Library(threading.Thread):
 
             if total > int(settings('syncIndicator') or 99):
 
-                if not dialog("yesno", heading="{emby}", line1=_(33172).replace('{number}', str(total))):
+                ''' Inverse yes no, in case the dialog is forced closed by Kodi.
+                '''
+                if dialog("yesno", heading="{emby}", line1=_(33172).replace('{number}', str(total)), nolabel=_(107), yeslabel=_(106)):
                     LOG.warn("Large updates skipped.")
 
                     return True
