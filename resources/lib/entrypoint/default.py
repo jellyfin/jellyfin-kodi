@@ -229,9 +229,18 @@ def browse(media, view_id=None, folder=None, server_id=None):
     LOG.info("--[ v:%s/%s ] %s", view_id, media, folder)
 
     if not window('emby_online.bool') and server_id is None:
-        LOG.error("Default server is not online.")
 
-        return
+        monitor = xbmc.Monitor()
+
+        for i in range(300):
+            if window('emby_online.bool'):
+                break
+            elif monitor.waitForAbort(0.1):
+                return
+        else:
+            LOG.error("Default server is not online.")
+
+            return
 
     folder = folder.lower() if folder else None
 
@@ -376,7 +385,6 @@ def browse(media, view_id=None, folder=None, server_id=None):
         xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_VIDEO_RATING)
         xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_VIDEO_RUNTIME)
 
-    LOG.info(content_type)
     xbmcplugin.setContent(int(sys.argv[1]), content_type)
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
