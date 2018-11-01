@@ -228,7 +228,7 @@ class Player(xbmc.Player):
         item = self.played[current_file]
         objects = Objects()
 
-        if item['Type'] != 'Episode':
+        if item['Type'] != 'Episode' or not item.get('CurrentEpisode'):
             return
 
         next_items = item['Server']['api'].get_adjacent_episodes(item['CurrentEpisode']['tvshowid'], item['Id'])
@@ -262,7 +262,7 @@ class Player(xbmc.Player):
             'next_episode': data
         }
 
-        LOG.debug("--[ next up ] %s", json.dumps(next_info, indent=4))
+        LOG.info("--[ next up ] %s", next_info)
         event("upnext_data", next_info, hexlify=True)
 
     def onPlayBackPaused(self):
