@@ -2,10 +2,10 @@
 
 [![EmbyKodi_Banner](https://i.imgur.com/hx4cx41.png)](https://emby.media/community/index.php?/forum/99-kodi/)
 
-[![Wiki](https://img.shields.io/badge/wiki-get%20started-brightgreen.svg)](https://github.com/MediaBrowser/plugin.video.emby/wiki) 
-[![Forums](https://img.shields.io/badge/forums-report%20issues-3960C1.svg)](https://emby.media/community/index.php?/forum/99-kodi/)
-[![Donate](https://img.shields.io/badge/kofi-donate-blue.svg)](https://ko-fi.com/A5354BI)
-[![Emby](https://img.shields.io/badge/emby-server-lightgray.svg)](https://emby.media/)
+[![Wiki](https://img.shields.io/badge/get%20started-wiki-brightgreen.svg)](https://github.com/MediaBrowser/plugin.video.emby/wiki) 
+[![Forums](https://img.shields.io/badge/report%20issues-forums-3960C1.svg)](https://emby.media/community/index.php?/forum/99-kodi/)
+[![Donate](https://img.shields.io/badge/donate-kofi-blue.svg)](https://ko-fi.com/A5354BI)
+[![Emby](https://img.shields.io/badge/server-emby-lightgray.svg)](https://emby.media/)
 ___
 **A whole new way to manage and view your media library.**
 
