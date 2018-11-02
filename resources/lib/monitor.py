@@ -400,7 +400,6 @@ class Monitor(xbmc.Monitor):
 
         else:
             builtin = {
-
                 'ToggleFullscreen': 'Action(FullScreen)',
                 'ToggleOsdMenu': 'Action(OSD)',
                 'ToggleContextMenu': 'Action(ContextMenu)',

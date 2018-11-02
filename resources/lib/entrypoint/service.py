@@ -55,16 +55,17 @@ class Service(xbmc.Monitor):
         self.settings['kodi_companion'] = settings('kodiCompanion.bool')
         window('emby_logLevel', value=str(self.settings['log_level']))
         window('emby_kodiProfile', value=self.settings['profile'])
+        settings('platformDetected', client.get_platform())
 
         if self.settings['enable_context']:
-            window('emby_context', value="true")
+            window('emby_context.bool', True)
         if self.settings['enable_context_transcode']:
-            window('emby_context_transcode', value="true")
+            window('emby_context_transcode.bool', True)
 
         LOG.warn("--->>>[ %s ]", client.get_addon_name())
         LOG.warn("Version: %s", client.get_version())
         LOG.warn("KODI Version: %s", xbmc.getInfoLabel('System.BuildVersion'))
-        LOG.warn("Platform: %s", client.get_platform())
+        LOG.warn("Platform: %s", settings('platformDetected'))
         LOG.warn("Python Version: %s", sys.version)
         LOG.warn("Using dynamic paths: %s", settings('useDirectPaths') == "0")
         LOG.warn("Log Level: %s", self.settings['log_level'])

@@ -32,6 +32,12 @@ def get_platform():
 
     if xbmc.getCondVisibility('system.platform.osx'):
         return "OSX"
+    elif xbmc.getCondVisibility('System.HasAddon(service.coreelec.settings)'):
+        return "CoreElec"
+    elif xbmc.getCondVisibility('System.HasAddon(service.libreelec.settings)'):
+        return "LibreElec"
+    elif xbmc.getCondVisibility('System.HasAddon(service.osmc.settings)'):
+        return "OSMC"
     elif xbmc.getCondVisibility('system.platform.atv2'):
         return "ATV2"
     elif xbmc.getCondVisibility('system.platform.ios'):
