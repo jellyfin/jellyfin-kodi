@@ -38,7 +38,7 @@ class Service(xbmc.Monitor):
     monitor = None
     play_event = None
     warn = True
-    settings = {'last_progress': datetime.today()}
+    settings = {'last_progress': datetime.today(), 'last_progress_report': datetime.today()}
 
 
     def __init__(self):
@@ -109,12 +109,13 @@ class Service(xbmc.Monitor):
                     difference = datetime.today() - self.settings['last_progress']
 
                     if difference.seconds > 10:
+                        self.settings['last_progress'] = datetime.today()
 
-                        update = difference.seconds > 250
+                        update = (datetime.today() - self.settings['last_progress_report']).seconds > 250
                         event('ReportProgressRequested', {'Report': update})
-                        
+
                         if update:
-                            self.settings['last_progress'] = datetime.today()
+                            self.settings['last_progress_report'] = datetime.today()
 
             if window('emby.restart.bool'):
                 window('emby.restart', clear=True)

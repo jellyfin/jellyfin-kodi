@@ -82,6 +82,11 @@ class WSClient(threading.Thread):
         message = json.loads(message)
         data = message.get('Data', {})
 
+        if message['MessageType'] in ('RefreshProgress'):
+            LOG.debug("Ignoring %s", message)
+
+            return
+
         if not self.client['config/app.default']:
             data['ServerId'] = self.client['auth/server-id']
 
