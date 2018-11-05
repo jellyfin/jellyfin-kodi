@@ -165,7 +165,7 @@ class Player(xbmc.Player):
 
             tracks = len(self.getAvailableAudioStreams())
 
-            if subtitle == -1:
+            if subtitle == -1 or subtitle is None:
                 self.showSubtitles(False)
 
             elif mapping:
@@ -438,6 +438,7 @@ class Player(xbmc.Player):
                         delete = False
 
                     if delete:
+                        LOG.info("Offer delete option")
 
                         if dialog("yesno", heading=_(30091), line1=_(33015), autoclose=120000):
                             item['Server']['api'].delete_item(item['Id'])
