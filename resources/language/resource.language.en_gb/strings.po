@@ -893,3 +893,11 @@ msgstr ""
 msgctxt "#33181"
 msgid "Restarting to apply the patch"
 msgstr ""
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr ""
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr ""

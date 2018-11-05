@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon  id="plugin.video.emby"
         name="Emby" 
-        version="3.1.32a"
+        version="3.1.33a"
         provider-name="angelblue05">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -23,7 +23,7 @@
       </item>
       <item library="context_play.py">
         <label>30402</label>
-        <visible>[[!String.IsEmpty(ListItem.DBID) + !String.IsEqual(ListItem.DBID,-1) | !String.IsEmpty(ListItem.Property(embyid))] + [String.IsEqual(ListItem.DBTYPE,movie) | String.IsEqual(ListItem.DBTYPE,episode)]] + !String.IsEmpty(Window(10000).Property(emby_context)) + !String.IsEmpty(Window(10000).Property(emby_context_transcode))</visible>
+        <visible>[[!String.IsEmpty(ListItem.DBID) + !String.IsEqual(ListItem.DBID,-1) | !String.IsEmpty(ListItem.Property(embyid))] + [String.IsEqual(ListItem.DBTYPE,movie) | String.IsEqual(ListItem.DBTYPE,episode)]] + !String.IsEmpty(Window(10000).Property(emby_context_transcode))</visible>
       </item>
     </menu>
   </extension>
