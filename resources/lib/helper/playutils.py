@@ -319,10 +319,6 @@ class PlayUtils(object):
                     "Type": "Video"
                 },
                 {
-                    "Type": "Video",
-                    "Container": "strm"
-                },
-                {
                     "Type": "Audio"
                 },
                 {
@@ -424,13 +420,8 @@ class PlayUtils(object):
                 }
             )
 
-        if self.info['ForceTranscode'] or self.item['LocationType'] == 'Remote':
-            profile['DirectPlayProfiles'] = [
-                {
-                    "Type": "Video",
-                    "Container": "strm"
-                }
-            ]
+        if self.info['ForceTranscode']:
+            profile['DirectPlayProfiles'] = [{}]
 
         if self.item['Type'] == 'TvChannel':
             profile['TranscodingProfiles'].insert(0, {
