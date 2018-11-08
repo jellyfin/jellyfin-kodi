@@ -61,6 +61,21 @@ def catch(errors=(Exception,)):
         return wrapper
     return decorator
 
+def silent_catch(errors=(Exception,)):
+
+    ''' Wrapper to catch exceptions and ignore them
+    '''
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+
+            try:
+                return func(*args, **kwargs)
+            except errors as error:
+                LOG.error(error)
+
+        return wrapper
+    return decorator
+
 def stop(default=None):
 
     ''' Wrapper to catch exceptions and return using catch
