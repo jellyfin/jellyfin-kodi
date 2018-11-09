@@ -92,6 +92,7 @@ class Service(xbmc.Monitor):
             Threads depending on abortRequest will not trigger.
         '''
         self.monitor = monitor.Monitor()
+        player = self.monitor.player
         self.connect = connect.Connect()
         self.start_default()
 
@@ -105,7 +106,7 @@ class Service(xbmc.Monitor):
 
                     break
 
-                if self.monitor.player.isPlaying():
+                if player.isPlaying() and player.is_playing_file(player.get_playing_file()):
                     difference = datetime.today() - self.settings['last_progress']
 
                     if difference.seconds > 10:

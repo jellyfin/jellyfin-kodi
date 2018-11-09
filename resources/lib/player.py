@@ -10,7 +10,7 @@ import xbmc
 import xbmcvfs
 
 from objects.obj import Objects
-from helper import _, api, window, settings, dialog, event, JSONRPC
+from helper import _, api, window, settings, dialog, event, silent_catch, JSONRPC
 from emby import Emby
 
 #################################################################################################
@@ -31,6 +31,17 @@ class Player(xbmc.Player):
 
         self.__dict__ = self._shared_state
         xbmc.Player.__init__(self)
+
+    @silent_catch()
+    def get_playing_file(self):
+        return self.getPlayingFile()
+
+    @silent_catch()
+    def get_file_info(self, file):
+        return self.played[file]
+
+    def is_playing_file(self, file):
+        return file in self.played
 
     def onPlayBackStarted(self):
 
@@ -150,11 +161,11 @@ class Player(xbmc.Player):
         ''' Only for after playback started
         '''
         LOG.info("Setting audio: %s subs: %s", audio, subtitle)
-        current_file = self.getPlayingFile()
+        current_file = self.get_playing_file()
 
-        if current_file in self.played:
+        if self.is_playing_file(current_file):
 
-            item = self.played[current_file]
+            item = self.get_file_info(current_file)
             mapping = item['SubsMapping']
 
             if audio and len(self.getAvailableAudioStreams()) > 1:
@@ -224,8 +235,7 @@ class Player(xbmc.Player):
 
     def next_up(self):
 
-        current_file = self.getPlayingFile()
-        item = self.played[current_file]
+        item = self.get_file_info(self.get_playing_file())
         objects = Objects()
 
         if item['Type'] != 'Episode' or not item.get('CurrentEpisode'):
@@ -266,20 +276,20 @@ class Player(xbmc.Player):
         event("upnext_data", next_info, hexlify=True)
 
     def onPlayBackPaused(self):
-        current_file = self.getPlayingFile()
+        current_file = self.get_playing_file()
 
-        if current_file in self.played:
+        if self.is_playing_file(current_file):
 
-            self.played[current_file]['Paused'] = True
+            self.get_file_info(current_file)['Paused'] = True
             self.report_playback()
             LOG.debug("-->[ paused ]")
 
     def onPlayBackResumed(self):
-        current_file = self.getPlayingFile()
+        current_file = self.get_playing_file()
 
-        if current_file in self.played:
+        if self.is_playing_file(current_file):
 
-            self.played[current_file]['Paused'] = False
+            self.get_file_info(current_file)['Paused'] = False
             self.report_playback()
             LOG.debug("--<[ paused ]")
 
@@ -287,12 +297,7 @@ class Player(xbmc.Player):
 
         ''' Does not seem to work in Leia??
         '''
-        try:
-            current_file = self.getPlayingFile()
-        except Exception:
-            return
-
-        if current_file in self.played:
+        if self.is_playing_file(self.get_playing_file()):
 
             self.report_playback()
             LOG.info("--[ seek ]")
@@ -302,17 +307,12 @@ class Player(xbmc.Player):
         ''' Report playback progress to emby server.
             Check if the user seek.
         '''
-        try:
-            current_file = self.getPlayingFile()
+        current_file = self.get_playing_file()
 
-            if current_file not in self.played:
-                return
-        except Exception as error:
-            LOG.error(error)
-
+        if not self.is_playing_file(current_file):
             return
 
-        item = self.played[current_file]
+        item = self.get_file_info(current_file)
 
         if window('emby.external.bool'):
             return
@@ -388,7 +388,7 @@ class Player(xbmc.Player):
         LOG.info("Played info: %s", self.played)
 
         for file in self.played:
-            item = self.played[file]
+            item = self.get_file_info(file)
 
             if item:
                 window('emby.skip.%s.bool' % item['Id'], True)
@@ -408,6 +408,8 @@ class Player(xbmc.Player):
                 item['Server']['api'].session_stop(data)
 
                 if item.get('LiveStreamId'):
+
+                    LOG.info("<[ livestream/%s ]", item['LiveStreamId'])
                     item['Server']['api'].close_live_stream(item['LiveStreamId'])
 
                 elif item['PlayMethod'] == 'Transcode':
