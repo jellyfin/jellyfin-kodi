@@ -442,7 +442,8 @@ class Library(threading.Thread):
         modes = {
             'SyncLibrarySelection': 'SyncLibrary',
             'RepairLibrarySelection': 'RepairLibrary',
-            'AddLibrarySelection': 'SyncLibrary'
+            'AddLibrarySelection': 'SyncLibrary',
+            'RemoveLibrarySelection': 'RemoveLibrary'
         }
         sync = get_sync()
         whitelist = [x.replace('Mixed:', "") for x in sync['Whitelist']]
@@ -451,7 +452,7 @@ class Library(threading.Thread):
         with Database('emby') as embydb:
             db = emby_db.EmbyDatabase(embydb.cursor)
 
-            if mode in ('SyncLibrarySelection', 'RepairLibrarySelection'):
+            if mode in ('SyncLibrarySelection', 'RepairLibrarySelection', 'RemoveLibrarySelection'):
                 for library in sync['Whitelist']:
 
                     name = db.get_view_name(library.replace('Mixed:', ""))
@@ -504,8 +505,8 @@ class Library(threading.Thread):
             with Database('emby') as embydb:
 
                 db = emby_db.EmbyDatabase(embydb.cursor)
-                library = db.get_view(library_id)
-                items = db.get_item_by_media_folder(library_id)
+                library = db.get_view(library_id.replace('Mixed:', ""))
+                items = db.get_item_by_media_folder(library_id.replace('Mixed:', ""))
                 media = 'music' if library[1] == 'music' else 'video'
 
                 if media == 'music':

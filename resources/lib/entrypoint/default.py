@@ -97,6 +97,8 @@ class Events(object):
             event('RepairLibrarySelection')
         elif mode == 'updatelibs':
             event('SyncLibrarySelection')
+        elif mode == 'removelibs':
+            event('RemoveLibrarySelection')
         elif mode == 'addlibs':
             event('AddLibrarySelection')
         elif mode == 'connect':
@@ -148,7 +150,7 @@ def listing():
         view_id = window('%s.id' % window_prop)
         context = []
 
-        if view_id and node in ('movies', 'tvshows', 'musicvideos', 'music') and view_id not in whitelist:
+        if view_id and node in ('movies', 'tvshows', 'musicvideos', 'music', 'mixed') and view_id not in whitelist:
             label = "%s %s" % (label, _(33166))
             context.append((_(33123), "RunPlugin(plugin://plugin.video.emby/?mode=synclib&id=%s)" % view_id))
 
@@ -189,6 +191,7 @@ def listing():
     directory(_(33154), "plugin://plugin.video.emby/?mode=addlibs", False)
     directory(_(33139), "plugin://plugin.video.emby/?mode=updatelibs", False)
     directory(_(33140), "plugin://plugin.video.emby/?mode=repairlibs", False)
+    directory(_(33184), "plugin://plugin.video.emby/?mode=removelibs", False)
     directory(_(33060), "plugin://plugin.video.emby/?mode=thememedia", False)
     directory(_(33058), "plugin://plugin.video.emby/?mode=reset", False)
 

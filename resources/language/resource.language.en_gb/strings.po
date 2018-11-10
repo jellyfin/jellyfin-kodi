@@ -901,3 +901,7 @@ msgstr ""
 msgctxt "#33183"
 msgid "Enable the option to play with cinema mode"
 msgstr ""
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr ""

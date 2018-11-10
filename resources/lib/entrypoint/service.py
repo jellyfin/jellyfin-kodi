@@ -223,7 +223,7 @@ class Service(xbmc.Monitor):
                               'LibraryChanged', 'ServerOnline', 'SyncLibrary', 'RepairLibrary', 'RemoveLibrary',
                               'EmbyConnect', 'SyncLibrarySelection', 'RepairLibrarySelection', 'AddServer',
                               'Unauthorized', 'UpdateServer', 'UserConfigurationUpdated', 'ServerRestarting',
-                              'RemoveServer', 'AddLibrarySelection', 'CheckUpdate'):
+                              'RemoveServer', 'AddLibrarySelection', 'CheckUpdate', 'RemoveLibrarySelection'):
                 return
 
             data = json.loads(data)[0]
@@ -337,7 +337,7 @@ class Service(xbmc.Monitor):
             window('emby_should_stop.bool', True)
             self.running = False
 
-        elif method in ('SyncLibrarySelection', 'RepairLibrarySelection', 'AddLibrarySelection'):
+        elif method in ('SyncLibrarySelection', 'RepairLibrarySelection', 'AddLibrarySelection', 'RemoveLibrarySelection'):
             self.library_thread.select_libraries(method)
 
         elif method == 'SyncLibrary':
