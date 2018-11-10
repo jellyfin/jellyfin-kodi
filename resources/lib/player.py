@@ -171,15 +171,14 @@ class Player(xbmc.Player):
             if audio and len(self.getAvailableAudioStreams()) > 1:
                 self.setAudioStream(audio - 1)
 
-            if subtitle is None:
+            if subtitle == -1 or subtitle is None:
+                self.showSubtitles(False)
+
                 return
 
             tracks = len(self.getAvailableAudioStreams())
 
-            if subtitle == -1 or subtitle is None:
-                self.showSubtitles(False)
-
-            elif mapping:
+            if mapping:
                 for index in mapping:
 
                     if mapping[index] == subtitle:
@@ -390,61 +389,60 @@ class Player(xbmc.Player):
         for file in self.played:
             item = self.get_file_info(file)
 
-            if item:
-                window('emby.skip.%s.bool' % item['Id'], True)
+            window('emby.skip.%s.bool' % item['Id'], True)
 
-                if window('emby.external.bool'):
-                    window('emby.external', clear=True)
+            if window('emby.external.bool'):
+                window('emby.external', clear=True)
 
-                    if int(item['CurrentPosition']) == 1:
-                        item['CurrentPosition'] = int(item['Runtime'])
+                if int(item['CurrentPosition']) == 1:
+                    item['CurrentPosition'] = int(item['Runtime'])
 
-                data = {
-                    'ItemId': item['Id'],
-                    'MediaSourceId': item['MediaSourceId'],
-                    'PositionTicks': int(item['CurrentPosition'] * 10000000),
-                    'PlaySessionId': item['PlaySessionId']
-                }
-                item['Server']['api'].session_stop(data)
+            data = {
+                'ItemId': item['Id'],
+                'MediaSourceId': item['MediaSourceId'],
+                'PositionTicks': int(item['CurrentPosition'] * 10000000),
+                'PlaySessionId': item['PlaySessionId']
+            }
+            item['Server']['api'].session_stop(data)
 
-                if item.get('LiveStreamId'):
+            if item.get('LiveStreamId'):
 
-                    LOG.info("<[ livestream/%s ]", item['LiveStreamId'])
-                    item['Server']['api'].close_live_stream(item['LiveStreamId'])
+                LOG.info("<[ livestream/%s ]", item['LiveStreamId'])
+                item['Server']['api'].close_live_stream(item['LiveStreamId'])
 
-                elif item['PlayMethod'] == 'Transcode':
+            elif item['PlayMethod'] == 'Transcode':
 
-                    LOG.info("<[ transcode/%s ]", item['Id'])
-                    item['Server']['api'].close_transcode(item['DeviceId'])
+                LOG.info("<[ transcode/%s ]", item['Id'])
+                item['Server']['api'].close_transcode(item['DeviceId'])
 
 
-                path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/temp/").decode('utf-8')
+            path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/temp/").decode('utf-8')
 
-                if xbmcvfs.exists(path):
-                    dirs, files = xbmcvfs.listdir(path)
+            if xbmcvfs.exists(path):
+                dirs, files = xbmcvfs.listdir(path)
 
-                    for file in files:
-                        xbmcvfs.delete(os.path.join(path, file.decode('utf-8')))
+                for file in files:
+                    xbmcvfs.delete(os.path.join(path, file.decode('utf-8')))
 
-                result = item['Server']['api'].get_item(item['Id']) or {}
+            result = item['Server']['api'].get_item(item['Id']) or {}
 
-                if 'UserData' in result and result['UserData']['Played']:
+            if 'UserData' in result and result['UserData']['Played']:
+                delete = False
+
+                if result['Type'] == 'Episode' and settings('deleteTV.bool'):
+                    delete = True
+                elif result['Type'] == 'Movie' and settings('deleteMovies.bool'):
+                    delete = True
+
+                if not settings('offerDelete.bool'):
                     delete = False
 
-                    if result['Type'] == 'Episode' and settings('deleteTV.bool'):
-                        delete = True
-                    elif result['Type'] == 'Movie' and settings('deleteMovies.bool'):
-                        delete = True
+                if delete:
+                    LOG.info("Offer delete option")
 
-                    if not settings('offerDelete.bool'):
-                        delete = False
+                    if dialog("yesno", heading=_(30091), line1=_(33015), autoclose=120000):
+                        item['Server']['api'].delete_item(item['Id'])
 
-                    if delete:
-                        LOG.info("Offer delete option")
-
-                        if dialog("yesno", heading=_(30091), line1=_(33015), autoclose=120000):
-                            item['Server']['api'].delete_item(item['Id'])
-
-                window('emby.external_check', clear=True)
+            window('emby.external_check', clear=True)
 
         self.played.clear()
