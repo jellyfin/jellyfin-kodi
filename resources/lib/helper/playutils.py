@@ -182,11 +182,11 @@ class PlayUtils(object):
         self.info['MediaSourceId'] = source['Id']
 
         if source.get('RequiresClosing'):
-            ''' Server is returning live tv stream with hardcoded 127.0.0.1. Skip over direct play/stream until fixed.
+
+            ''' Server is returning live tv stream for direct play is hardcoded with 127.0.0.1.
             '''
             self.info['LiveStreamId'] = source['LiveStreamId']
             source['SupportsDirectPlay'] = False
-            source['SupportsDirectStream'] = False
             source['Protocol'] = "LiveTV"
 
         if source.get('Protocol') == 'Http' or source['SupportsDirectPlay'] and (self.is_strm(source) or not settings('playFromStream.bool') and self.is_file_exists(source)):
@@ -441,8 +441,6 @@ class PlayUtils(object):
                 "MinSegments": "1",
                 "BreakOnNonKeyFrames": True
             })
-
-            profile['DirectPlayProfiles'] = []
 
         return profile
 
