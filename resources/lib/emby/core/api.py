@@ -312,7 +312,8 @@ def get_server_time():
 def get_play_info(item_id, profile):
     return  items("/%s/PlaybackInfo" % item_id, "POST", json={
                 'UserId': "{UserId}",
-                'DeviceProfile': profile
+                'DeviceProfile': profile,
+                'AutoOpenLiveStream': True
             })
 
 def get_live_stream(item_id, play_id, token, profile):

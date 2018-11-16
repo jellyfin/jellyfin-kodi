@@ -181,8 +181,13 @@ class PlayUtils(object):
         '''
         self.info['MediaSourceId'] = source['Id']
 
-        if source['RequiresOpening']:
-            source = self.live_stream(source)
+        if source.get('RequiresClosing'):
+
+            ''' Server returning live tv stream for direct play is hardcoded with 127.0.0.1.
+            '''
+            self.info['LiveStreamId'] = source['LiveStreamId']
+            source['SupportsDirectPlay'] = False
+            source['Protocol'] = "LiveTV"
 
         if source.get('Protocol') == 'Http' or source['SupportsDirectPlay'] and (self.is_strm(source) or not settings('playFromStream.bool') and self.is_file_exists(source)):
 
@@ -220,7 +225,7 @@ class PlayUtils(object):
         LOG.info(info)
 
         if info['MediaSource'].get('RequiresClosing'):
-            self.info['LiveStreamId'] = info['MediaSource']['LiveStreamId']
+            self.info['LiveStreamId'] = source['LiveStreamId']
 
         return info['MediaSource']
 
@@ -243,8 +248,9 @@ class PlayUtils(object):
 
                 params = "%s%s" % ('&'.join(url_parsed), self.get_audio_subs(source, audio, subtitle))
 
-            video_type = 'live' if source.get('LiveStreamId') else 'master'
-            self.info['Path'] = "%s/emby%s?%s" % (self.info['ServerAddress'], base.replace('stream', video_type), params)
+            video_type = 'live' if source['Protocol'] == 'LiveTV' else 'master'
+            base = base.replace('stream' if 'stream' in base else 'master', video_type, 1)
+            self.info['Path'] = "%s/emby%s?%s" % (self.info['ServerAddress'], base, params)
             self.info['Path'] += "&maxWidth=%s&maxHeight=%s" % (self.get_resolution())
         else:
             self.info['Path'] = "%s/emby%s" % (self.info['ServerAddress'], source['TranscodingUrl'])
@@ -421,7 +427,7 @@ class PlayUtils(object):
             )
 
         if self.info['ForceTranscode']:
-            profile['DirectPlayProfiles'] = [{}]
+            profile['DirectPlayProfiles'] = []
 
         if self.item['Type'] == 'TvChannel':
             profile['TranscodingProfiles'].insert(0, {
