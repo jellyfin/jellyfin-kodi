@@ -129,17 +129,19 @@ class Library(threading.Thread):
                 if thread.is_done:
                     threads.remove(thread)
 
-        self.worker_downloads()
-        self.worker_sort()
+        if (self.player.isPlayingVideo() and settings('syncDuringPlay.bool')) or xbmc.getCondVisibility('VideoPlayer.Content(livetv)'):
 
-        self.worker_updates()
-        self.worker_userdata()
-        self.worker_remove()
-        self.worker_notify()
+            self.worker_downloads()
+            self.worker_sort()
+
+            self.worker_updates()
+            self.worker_userdata()
+            self.worker_remove()
+            self.worker_notify()
 
         if self.pending_refresh:
 
-            if self.total_updates > self.progress_display and (not self.player.isPlayingVideo() or xbmc.getCondVisibility('VideoPlayer.Content(livetv)')):
+            if self.total_updates > self.progress_display:
                 queue_size = self.worker_queue_size()
 
                 if self.progress_updates is None:

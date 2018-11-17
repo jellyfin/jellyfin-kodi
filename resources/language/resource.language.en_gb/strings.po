@@ -905,3 +905,11 @@ msgstr ""
 msgctxt "#33184"
 msgid "Remove libraries"
 msgstr ""
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr ""
+
+msgctxt "#33186"
+msgid "The Kodi companion speeds up the start up sync. Other syncs are triggered by server events."
+msgstr ""
