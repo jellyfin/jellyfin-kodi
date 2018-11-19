@@ -129,7 +129,7 @@ class Library(threading.Thread):
                 if thread.is_done:
                     threads.remove(thread)
 
-        if (self.player.isPlayingVideo() and settings('syncDuringPlay.bool')) or xbmc.getCondVisibility('VideoPlayer.Content(livetv)'):
+        if not self.player.isPlayingVideo() or settings('syncDuringPlay.bool') or xbmc.getCondVisibility('VideoPlayer.Content(livetv)'):
 
             self.worker_downloads()
             self.worker_sort()
