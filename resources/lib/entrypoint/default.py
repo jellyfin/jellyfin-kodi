@@ -151,7 +151,7 @@ def listing():
         context = []
 
         if view_id and node in ('movies', 'tvshows', 'musicvideos', 'music', 'mixed') and view_id not in whitelist:
-            label = "%s %s" % (label, _(33166))
+            label = "%s %s" % (label.decode('utf-8'), _(33166))
             context.append((_(33123), "RunPlugin(plugin://plugin.video.emby/?mode=synclib&id=%s)" % view_id))
 
         if view_id and node in ('movies', 'tvshows', 'musicvideos', 'music') and view_id in whitelist:
