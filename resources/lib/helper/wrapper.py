@@ -118,6 +118,9 @@ def library_check():
     '''
     def decorator(func):
         def wrapper(self, item, *args, **kwargs):
+
+            ''' TODO: Rethink this one... songs and albums cannot be found by library. expensive.
+            '''
             from database import get_sync
 
             if kwargs.get('library') is None:
