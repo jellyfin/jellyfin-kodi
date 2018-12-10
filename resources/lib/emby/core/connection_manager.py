@@ -724,10 +724,10 @@ class ConnectionManager(object):
             raise KeyError("credentials['ConnectUserId'] cannot be null")
 
         auth =  "MediaBrowser "
-        auth += "Client='%s', " % self.config['app.name']
-        auth += "Device='%s', " % self.config['app.device_name']
-        auth += "DeviceId='%s', " % self.config['app.device_id']
-        auth += "Version='%s' " % self.config['app.version']
+        auth += "Client=%s, " % self.config['app.name']
+        auth += "Device=%s, " % self.config['app.device_name']
+        auth += "DeviceId=%s, " % self.config['app.device_id']
+        auth += "Version=%s " % self.config['app.version']
 
         try:
             auth = self._request_url({
