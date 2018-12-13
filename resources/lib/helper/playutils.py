@@ -38,6 +38,7 @@ def set_properties(item, method, server_id=None):
         'Id': item['Id'],
         'Path': info['Path'],
         'PlayMethod': method,
+        'PlayOption': 'Addon' if info.get('PlaySessionId') else 'Native',
         'MediaSourceId': info.get('MediaSourceId', item['Id']),
         'Runtime': item.get('RunTimeTicks'),
         'PlaySessionId': info.get('PlaySessionId', str(uuid4()).replace("-", "")),

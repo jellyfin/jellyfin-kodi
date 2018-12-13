@@ -118,7 +118,8 @@ class Player(xbmc.Player):
         if monitor.waitForAbort(2):
             return
 
-        self.set_audio_subs(item['AudioStreamIndex'], item['SubtitleStreamIndex'])
+        if item['PlayOption'] == 'Addon':
+            self.set_audio_subs(item['AudioStreamIndex'], item['SubtitleStreamIndex'])
 
     def set_item(self, file, item):
 
