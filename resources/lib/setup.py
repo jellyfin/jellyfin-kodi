@@ -6,7 +6,7 @@ import logging
 
 import xbmc
 
-from helper import _, settings, dialog, JSONRPC
+from helper import _, settings, dialog, JSONRPC, compare_version
 
 #################################################################################################
 
@@ -65,17 +65,29 @@ class Setup(object):
 
     def setup(self):
 
-        minimum = "3.0.23"
+        minimum = "3.0.24"
+        cached = settings('MinimumSetup')
 
-        if settings('MinimumSetup') == minimum:
+        if cached == minimum:
             return
 
-        self._is_mode()
-        LOG.info("Add-on playback: %s", settings('useDirectPaths') == "0")
-        self._is_artwork_caching()
-        LOG.info("Artwork caching: %s", settings('enableTextureCache.bool'))
-        self._is_empty_shows()
-        LOG.info("Sync empty shows: %s", settings('syncEmptyShows.bool'))
+        if not cached:
+
+            self._is_mode()
+            LOG.info("Add-on playback: %s", settings('useDirectPaths') == "0")
+            self._is_artwork_caching()
+            LOG.info("Artwork caching: %s", settings('enableTextureCache.bool'))
+            self._is_empty_shows()
+            LOG.info("Sync empty shows: %s", settings('syncEmptyShows.bool'))
+            self._is_rotten_tomatoes()
+            LOG.info("Sync rotten tomatoes: %s", settings('syncRottenTomatoes.bool'))
+
+        """
+        if compare_version(cached or minimum, "3.0.24") <= 0:
+
+            self._is_rotten_tomatoes()
+            LOG.info("Sync rotten tomatoes: %s", settings('syncRottenTomatoes.bool'))
+        """
 
         # Setup completed
         settings('MinimumSetup', minimum)
@@ -104,6 +116,11 @@ class Setup(object):
 
         value = dialog("yesno", heading="{emby}", line1=_(33100))
         settings('syncEmptyShows.bool', value)
+
+    def _is_rotten_tomatoes(self):
+
+        value = dialog("yesno", heading="{emby}", line1=_(33188))
+        settings('syncRottenTomatoes.bool', value)
 
     def _is_music(self):
 

@@ -152,7 +152,7 @@ def reset():
         xbmcvfs.delete(os.path.join(addon_data, "sync.json"))
 
     settings('enableMusic.bool', False)
-    settings('MinimumSetup.bool', False)
+    settings('MinimumSetup', "")
     settings('MusicRescan.bool', False)
     settings('SyncInstallRunDone.bool', False)
     dialog("ok", heading="{emby}", line1=_(33088))

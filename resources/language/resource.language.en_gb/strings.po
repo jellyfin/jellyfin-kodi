@@ -917,3 +917,7 @@ msgstr ""
 msgctxt "#33187"
 msgid "Sync rotten tomatoes ratings"
 msgstr ""
+
+msgctxt "#33188"
+msgid "Would you like to sync rotten tomatoes ratings?"
+msgstr ""
