@@ -363,7 +363,7 @@ def get_objects(src, filename):
         LOG.warn("Something went wrong applying this patch %s previously.", filename)
         restart = False
 
-    if not xbmcvfs.exists(path):
+    if not xbmcvfs.exists(path) or filename.startswith('DEV'):
         delete_folder(CACHE)
 
         LOG.info("From %s to %s", src, path.decode('utf-8'))
