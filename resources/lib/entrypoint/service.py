@@ -169,16 +169,13 @@ class Service(xbmc.Monitor):
 
                 raise Exception("Completed database reset")
 
-    def check_update(self):
+    def check_update(self, forced=False):
 
         ''' Check for objects build version and compare.
             This pulls a dict that contains all the information for the build needed.
         '''
         LOG.info("--[ check updates/%s ]", objects.version)
-        kodi = xbmc.getInfoLabel('System.BuildVersion')
-
-        if settings('devMode'):
-            kodi = "DEV"
+        kodi = "DEV" if settings('devMode') else xbmc.getInfoLabel('System.BuildVersion')
 
         try:
             versions = requests.get('http://kodi.emby.media/Public%20testing/Dependencies/databases.json').json()
@@ -189,7 +186,10 @@ class Service(xbmc.Monitor):
 
             label, zipfile = build.split('-', 1)
 
-            if label == objects.version:
+            if label == 'DEV' and forced:
+                LOG.info("--[ force/objects/%s ]", label)
+
+            elif label == objects.version:
                 LOG.info("--[ objects/%s ]", objects.version)
 
                 return False
@@ -416,7 +416,7 @@ class Service(xbmc.Monitor):
 
         elif method == 'CheckUpdate':
 
-            if not self.check_update():
+            if not self.check_update(True):
                 dialog("notification", heading="{emby}", message=_(21341), icon="{emby}", sound=False)
             else:
                 dialog("notification", heading="{emby}", message=_(33181), icon="{emby}", sound=False)
