@@ -97,8 +97,10 @@
 		<setting label="30535" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=deviceid)" option="close" />
 		<setting label="33161" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=checkupdate)" option="close" />
 		<setting label="33180" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=restartservice)" option="close" />
+		<setting type="sep" />
+		<setting label="Developer mode" id="devMode" type="bool" default="false" />
 		
-		<setting type="sep"/>
+		<setting type="sep" />
 		<setting label="33104" type="lsep"/>
 		<setting label="33093" type="folder" id="backupPath" option="writeable" />
 		<setting label="33092" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=backup)" visible="!eq(-1,)" option="close" />

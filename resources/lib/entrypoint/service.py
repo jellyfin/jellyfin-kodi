@@ -177,6 +177,9 @@ class Service(xbmc.Monitor):
         LOG.info("--[ check updates/%s ]", objects.version)
         kodi = xbmc.getInfoLabel('System.BuildVersion')
 
+        if settings('devMode'):
+            kodi = "DEV"
+
         try:
             versions = requests.get('http://kodi.emby.media/Public%20testing/Dependencies/databases.json').json()
             build = find(versions, kodi)
