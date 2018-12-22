@@ -369,14 +369,14 @@ class Player(xbmc.Player):
         '''
         window('emby_play', clear=True)
         self.stop_playback()
-        LOG.debug("--<[ playback ]")
+        LOG.info("--<[ playback ]")
 
     def onPlayBackEnded(self):
         
         ''' Will be called when kodi stops playing a file.
         '''
         self.stop_playback()
-        LOG.debug("--<<[ playback ]")
+        LOG.info("--<<[ playback ]")
 
     def stop_playback(self):
         
