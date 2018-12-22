@@ -368,17 +368,21 @@ def get_objects(src, filename):
 
         LOG.info("From %s to %s", src, path.decode('utf-8'))
         try:
-            response = requests.get(src, stream=True, verify=False)
+            response = requests.get(src, stream=True, verify=True)
             response.raise_for_status()
+        except requests.exceptions.SSLError as error:
+
+            LOG.error(error)
+            response = requests.get(src, stream=True, verify=False)
         except Exception as error:
             raise
-        else:
-            dl = xbmcvfs.File(path, 'w')
-            dl.write(response.content)
-            dl.close()
-            del response
 
-            settings('appliedPatch', filename)
+        dl = xbmcvfs.File(path, 'w')
+        dl.write(response.content)
+        dl.close()
+        del response
+
+        settings('appliedPatch', filename)
 
     unzip(path, temp, "objects")
 
