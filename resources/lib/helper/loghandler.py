@@ -36,9 +36,6 @@ class LogHandler(logging.StreamHandler):
             if server.get('LocalAddress'):
                 self.sensitive['Server'].append(server['LocalAddress'].split('://')[1])
 
-            if server.get('RemoteAddress'):
-                self.sensitive['Server'].append(server['RemoteAddress'].split('://')[1])
-
             if server.get('ManualAddress'):
                 self.sensitive['Server'].append(server['ManualAddress'].split('://')[1])
 
