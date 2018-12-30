@@ -169,9 +169,7 @@ class Views(object):
             libraries = self.server['api'].get_media_folders()['Items']
             views = self.server['api'].get_views()['Items']
         except Exception as error:
-            LOG.error("Unable to process libraries: %s", error)
-
-            return []
+            raise IndexError("Unable to retrieve libraries: %s" % error)
 
         libraries.extend([x for x in views if x['Id'] not in [y['Id'] for y in libraries]])
 
@@ -179,14 +177,21 @@ class Views(object):
 
     def get_views(self):
         
-        ''' Get the media folders. Add or remove them.
+        ''' Get the media folders. Add or remove them. Do not proceed if issue getting libraries.
         '''
         media = {
             'movies': "Movie",
             'tvshows': "Series",
             'musicvideos': "MusicVideo"
         }
-        libraries = self.get_libraries()
+
+        try:
+            libraries = self.get_libraries()
+        except IndexError as error:
+            LOG.error(error)
+
+            return
+
         self.sync['SortedViews'] = [x['Id'] for x in libraries]
 
         for library in libraries:
@@ -684,6 +689,11 @@ class Views(object):
         index = 0
         windex = 0
 
+        try:
+            self.media_folders = self.get_libraries()
+        except IndexError as error:
+            LOG.error(error)
+
         for library in (libraries or []):
             view = {'Id': library[0], 'Name': library[1], 'Tag': library[1], 'Media': library[2]}
 
@@ -842,11 +852,7 @@ class Views(object):
         if not self.server['connected']:
             window('%s.artwork' % prop, clear=True)
 
-        elif self.server['connected']:
-
-            if self.media_folders is None:
-                self.media_folders = self.get_libraries()
-
+        elif self.server['connected'] and self.media_folders is not None:
             for library in self.media_folders:
 
                 if library['Id'] == view_id and 'Primary' in library.get('ImageTags', {}):
