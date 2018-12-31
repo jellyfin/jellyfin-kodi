@@ -17,6 +17,7 @@ import xbmcgui
 import xbmcvfs
 
 from . import _
+from libraries.dateutil import tz, parser
 
 #################################################################################################
 
@@ -444,3 +445,19 @@ def split_list(itemlist, size):
     ''' Split up list in pieces of size. Will generate a list of lists
     '''
     return [itemlist[i:i+size] for i in range(0, len(itemlist), size)]
+
+def convert_to_local(date):
+
+    ''' Convert the local datetime to local.
+    '''
+    date = convert_str_to_date(date) if type(date) in (unicode, str) else date
+    date = date.replace(tzinfo=tz.tzutc())
+    date = date.astimezone(tz.tzlocal())
+
+    return date.strftime('%Y-%m-%dT%H:%M:%S')
+
+def convert_str_to_date(date):
+
+    ''' Convert string to date.
+    '''
+    return parser.parse(date)

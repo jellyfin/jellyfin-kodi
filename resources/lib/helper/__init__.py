@@ -16,6 +16,7 @@ from utils import write_xml
 from utils import compare_version
 from utils import unzip
 from utils import create_id
+from utils import convert_to_local as Local
 
 from wrapper import progress
 from wrapper import catch
