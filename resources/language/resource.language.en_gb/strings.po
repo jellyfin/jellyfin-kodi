@@ -451,7 +451,7 @@ msgid "Detected the database needs to be recreated for this version of Emby for 
 msgstr ""
 
 msgctxt "#33023"
-msgid "Emby for Kodi will work correctly until the database is reset."
+msgid "Emby for Kodi will not work correctly until the database is reset."
 msgstr ""
 
 msgctxt "#33025"
