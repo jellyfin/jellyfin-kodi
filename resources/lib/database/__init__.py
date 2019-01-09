@@ -45,13 +45,14 @@ class Database(object):
             This is to allow for both the cursor and conn to be accessible.
             at any time.
         '''
-        self.conn = sqlite3.connect(self._sql(self.db_file), timeout=self.timeout)
+        self.path = self._sql(self.db_file)
+        self.conn = sqlite3.connect(self.path, timeout=self.timeout)
         self.cursor = self.conn.cursor()
 
         if self.db_file in ('video', 'music', 'texture', 'emby'):
             self.conn.execute("PRAGMA journal_mode=WAL")
 
-        LOG.debug("--->[ database: %s ] %s", self.db_file, id(self.conn))
+        LOG.info("--->[ database: %s ] %s", self.db_file, id(self.conn))
 
         if not window('emby_db_check.bool') and self.db_file == 'emby':
 
@@ -61,11 +62,41 @@ class Database(object):
 
         return self
 
+    def _get_database(self, path):
+
+        path = xbmc.translatePath(path).decode('utf-8')
+
+        if not xbmcvfs.exists(path):
+            raise Exception("Database: %s missing" % path)
+
+        return path
+
     def _sql(self, file):
 
+        ''' Get the database path based on the file objects/obj_map.json
+            Compatible check, in the event multiple db version are supported with the same Kodi version.
+        '''
         databases = obj.Objects().objects
 
-        return xbmc.translatePath(databases[file]).decode('utf-8') if file in databases else file
+        try:
+            return self._get_database(databases[file]) if file in databases else file
+
+        except Exception as error:
+            LOG.error(error)
+
+            for i in range(1, 10):
+                alt_file = "%s-%s" % (file, i)
+
+                try:
+                    databases[file] = self._get_database(databases[alt_file])
+
+                    return databases[file]
+                except IndexError: # No other db options
+                    break
+                except Exception:
+                    pass
+
+        return xbmc.translatePath(databases[file]).decode('utf-8')
 
     def __exit__(self, exc_type, exc_val, exc_tb):
 
