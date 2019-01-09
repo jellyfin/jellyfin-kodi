@@ -921,3 +921,15 @@ msgstr ""
 msgctxt "#33188"
 msgid "Would you like to sync Rotten Tomatoes ratings?"
 msgstr ""
+
+msgctxt "#33191"
+msgid "Restart Emby for Kodi to apply this change?"
+msgstr ""
+
+msgctxt "#33192"
+msgid "Restart Emby for Kodi"
+msgstr ""
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr ""

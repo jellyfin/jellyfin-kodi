@@ -119,7 +119,9 @@ class Service(xbmc.Monitor):
                             self.settings['last_progress_report'] = datetime.today()
 
             if window('emby.restart.bool'):
+
                 window('emby.restart', clear=True)
+                dialog("notification", heading="{emby}", message=_(33193), icon="{emby}", time=1000, sound=False)
 
                 raise Exception('RestartService')
 

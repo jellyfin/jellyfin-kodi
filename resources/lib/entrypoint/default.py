@@ -194,6 +194,7 @@ def listing():
     directory(_(33184), "plugin://plugin.video.emby/?mode=removelibs", False)
     directory(_(33060), "plugin://plugin.video.emby/?mode=thememedia", False)
     directory(_(33058), "plugin://plugin.video.emby/?mode=reset", False)
+    directory(_(33192), "plugin://plugin.video.emby/?mode=restartservice", False)
 
     if settings('backupPath'):
         directory(_(33092), "plugin://plugin.video.emby/?mode=backup", False)
