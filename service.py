@@ -4,6 +4,7 @@
 
 import logging
 import os
+import threading
 import sys
 
 import xbmc
@@ -40,6 +41,30 @@ DELAY = int(settings('startupDelay') or 0)
 #################################################################################################
 
 
+class ServiceManager(threading.Thread):
+
+    ''' Service thread. 
+        To allow to restart and reload modules internally. 
+    '''
+    exception = None
+
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+    def run(self):
+
+        service = Service()
+
+        try:
+            service.service()
+        except Exception as error:
+            
+            if not 'ExitService' in error:
+                service.shutdown()
+
+            self.exception = error
+
+
 if __name__ == "__main__":
 
     LOG.warn("-->[ service ]")
@@ -48,27 +73,20 @@ if __name__ == "__main__":
     while True:
 
         try:
-            session = Service()
+            if DELAY and xbmc.Monitor().waitForAbort(DELAY):
+                raise Exception("Aborted during startup delay")
 
-            try:
-                if DELAY and xbmc.Monitor().waitForAbort(DELAY):
-                    raise Exception("Aborted during startup delay")
+            session = ServiceManager()
+            session.start()
+            session.join() # Block until the thread exits.
 
-                session.service()
-            except Exception as error: # TODO, build exceptions
-
-                LOG.exception(error)
-                session.shutdown()
-
-                if 'RestartService' in error:
-                    continue
+            if 'RestartService' in session.exception:
+                continue
 
         except Exception as error:
             ''' Issue initializing the service.
             '''
             LOG.exception(error)
-
-            break
 
         break
 

@@ -128,6 +128,8 @@ class Service(xbmc.Monitor):
 
         self.shutdown()
 
+        raise Exception("ExitService")
+
     def start_default(self):
 
         try:
