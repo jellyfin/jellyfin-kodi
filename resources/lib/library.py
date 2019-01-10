@@ -116,6 +116,27 @@ class Library(threading.Thread):
 
         LOG.warn("---<[ library ]")
 
+    def test_databases(self):
+
+        ''' Open the databases to test if the file exists.
+        '''
+        with Database('video') as kodidb:
+            with Database('music') as musicdb:
+
+                if kodidb.discovered or musicdb.discovered:
+                    if kodidb.path != settings('DiscoveredDatabase'):
+
+                        LOG.info("Newly discovered database: %s", kodidb.path)
+                        settings('DiscoveredDatabase', kodidb.path)
+                        self.monitor.settings['enable_db_discovery'] = False
+                        settings('AskDiscoverDatabase.bool', False)
+
+                    return False
+                else:
+                    settings('DiscoveredDatabase', "")
+
+                    return True
+
     @stop()
     def service(self):
         
@@ -294,8 +315,28 @@ class Library(threading.Thread):
 
     def startup(self):
 
-        ''' Run at startup. Will check for the server plugin.
+        ''' Run at startup. 
+            Check databases. 
+            Check for the server plugin.
         '''
+        if not self.test_databases():
+            if settings('AskDiscoverDatabase.bool'):
+
+                self.monitor.settings['enable_db_discovery'] = False
+                settings('AskDiscoverDatabase.bool', False)
+                result = dialog("yesno", heading="{emby}", line1=_(33189))
+                settings('DiscoverDatabase.bool', result == 1)
+
+                if not result:
+                    LOG.info("Do not discover database again.")
+
+                    return False
+
+            elif not settings('DiscoverDatabase.bool'):
+                LOG.info("Do not re-discover database again.")
+
+                return False
+
         Views().get_views()
         Views().get_nodes()
 

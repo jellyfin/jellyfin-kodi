@@ -31,6 +31,7 @@ class Database(object):
             db.conn.commit()
     '''
     timeout = 120
+    discovered = False
 
     def __init__(self, file=None, commit_close=True):
 
@@ -42,17 +43,16 @@ class Database(object):
     def __enter__(self):
 
         ''' Open the connection and return the Database class.
-            This is to allow for both the cursor and conn to be accessible.
-            at any time.
+            This is to allow for the cursor, conn and others to be accessible.
         '''
         self.path = self._sql(self.db_file)
         self.conn = sqlite3.connect(self.path, timeout=self.timeout)
         self.cursor = self.conn.cursor()
 
         if self.db_file in ('video', 'music', 'texture', 'emby'):
-            self.conn.execute("PRAGMA journal_mode=WAL")
+            self.conn.execute("PRAGMA journal_mode=WAL") # to avoid writing conflict with kodi
 
-        LOG.info("--->[ database: %s ] %s", self.db_file, id(self.conn))
+        LOG.debug("--->[ database: %s ] %s", self.db_file, id(self.conn))
 
         if not window('emby_db_check.bool') and self.db_file == 'emby':
 
@@ -71,10 +71,32 @@ class Database(object):
 
         return path
 
+    def _discover_database(self, database):
+        
+        ''' Grab the first database encountered, by most recent.
+            Will likely not work, but heck.
+        '''
+        types = {
+            'video': "MyVideos",
+            'music': "MyMusic",
+            'texture': "Textures"
+        }
+        database = types[database]
+        dirs, files = xbmcvfs.listdir(xbmc.translatePath("special://database/").decode('utf-8'))
+
+        for file in reversed(files):
+            if file.startswith(database) and not file.endswith('-wal') and not file.endswith('-shm'):
+
+                LOG.info("Found database: %s", file)
+                self.discovered = True
+               
+                return xbmc.translatePath("special://database/%s" % file.decode('utf-8')).decode('utf-8')
+
     def _sql(self, file):
 
         ''' Get the database path based on the file objects/obj_map.json
             Compatible check, in the event multiple db version are supported with the same Kodi version.
+            Discover by file as a last resort.
         '''
         databases = obj.Objects().objects
 
@@ -91,12 +113,12 @@ class Database(object):
                     databases[file] = self._get_database(databases[alt_file])
 
                     return databases[file]
-                except IndexError: # No other db options
-                    break
+                except KeyError: # No other db options
+                    databases[file] = self._discover_database(file)
+                    
+                    return databases[file]
                 except Exception:
                     pass
-
-        return xbmc.translatePath(databases[file]).decode('utf-8')
 
     def __exit__(self, exc_type, exc_val, exc_tb):
 

@@ -53,6 +53,7 @@ class Service(xbmc.Monitor):
         self.settings['enable_context'] = settings('enableContext.bool')
         self.settings['enable_context_transcode'] = settings('enableContextTranscode.bool')
         self.settings['kodi_companion'] = settings('kodiCompanion.bool')
+        self.settings['enable_db_discovery'] = settings('AskDiscoverDatabase.bool')
         window('emby_logLevel', value=str(self.settings['log_level']))
         window('emby_kodiProfile', value=self.settings['profile'])
         settings('platformDetected', client.get_platform())
@@ -122,6 +123,7 @@ class Service(xbmc.Monitor):
 
                 window('emby.restart', clear=True)
                 dialog("notification", heading="{emby}", message=_(33193), icon="{emby}", time=1000, sound=False)
+                reload(objects)
 
                 raise Exception('RestartService')
 
@@ -451,6 +453,14 @@ class Service(xbmc.Monitor):
             window('emby_context_transcode', settings('enableContextTranscode'))
             self.settings['enable_context_transcode'] = settings('enableContextTranscode.bool')
             LOG.warn("New context transcode setting: %s", self.settings['enable_context_transcode'])
+
+        if settings('AskDiscoverDatabase.bool') != self.settings['enable_db_discovery']:
+            LOG.warn(self.settings['enable_db_discovery'])
+            self.settings['enable_db_discovery'] = settings('AskDiscoverDatabase.bool')
+            LOG.warn("Enable database discovery: %s", self.settings['enable_db_discovery'])
+
+            if dialog("yesno", heading="{emby}", line1=_(33191)):
+                window('emby.restart.bool', True)
 
         if settings('useDirectPaths') != self.settings['mode'] and self.library_thread.started:
 
