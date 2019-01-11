@@ -1,4 +1,4 @@
-from six import PY3
+from ..six import PY3
 
 from functools import wraps
 
