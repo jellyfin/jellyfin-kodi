@@ -81,6 +81,8 @@ if __name__ == "__main__":
             session.join() # Block until the thread exits.
 
             if 'RestartService' in session.exception:
+                LOG.warn("--[ RESTART ]")
+
                 continue
 
         except Exception as error:
