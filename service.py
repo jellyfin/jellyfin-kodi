@@ -36,7 +36,7 @@ from emby import Emby
 #################################################################################################
 
 LOG = logging.getLogger("EMBY.service")
-DELAY = int(settings('startupDelay') or 0)
+DELAY = int(settings('startupDelay') if settings('SyncInstallRunDone.bool') else 4 or 0)
 
 #################################################################################################
 
