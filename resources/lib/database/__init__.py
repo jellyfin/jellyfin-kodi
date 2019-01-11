@@ -62,11 +62,11 @@ class Database(object):
 
         return self
 
-    def _get_database(self, path):
+    def _get_database(self, path, silent=False):
 
         path = xbmc.translatePath(path).decode('utf-8')
 
-        if not xbmcvfs.exists(path):
+        if not xbmcvfs.exists(path) and not silent:
             raise Exception("Database: %s missing" % path)
 
         return path
@@ -110,6 +110,9 @@ class Database(object):
                 alt_file = "%s-%s" % (file, i)
 
                 try:
+                    if file not in ('video', 'music', 'texture'):
+                        return self._get_database(databases[file], True)
+
                     databases[file] = self._get_database(databases[alt_file])
 
                     return databases[file]
