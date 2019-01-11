@@ -17,7 +17,6 @@ import xbmcgui
 import xbmcvfs
 
 from . import _
-from libraries.dateutil import tz, parser
 
 #################################################################################################
 
@@ -450,8 +449,10 @@ def convert_to_local(date):
 
     ''' Convert the local datetime to local.
     '''
+    from libraries.dateutil import tz, parser
+
     try:
-        date = convert_str_to_date(date) if type(date) in (unicode, str) else date
+        date = parser.parse(date) if type(date) in (unicode, str) else date
         date = date.replace(tzinfo=tz.tzutc())
         date = date.astimezone(tz.tzlocal())
 
@@ -460,9 +461,3 @@ def convert_to_local(date):
         LOG.error(error)
 
         return str(date)
-
-def convert_str_to_date(date):
-
-    ''' Convert string to date.
-    '''
-    return parser.parse(date)
