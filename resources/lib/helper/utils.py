@@ -450,11 +450,16 @@ def convert_to_local(date):
 
     ''' Convert the local datetime to local.
     '''
-    date = convert_str_to_date(date) if type(date) in (unicode, str) else date
-    date = date.replace(tzinfo=tz.tzutc())
-    date = date.astimezone(tz.tzlocal())
+    try:
+        date = convert_str_to_date(date) if type(date) in (unicode, str) else date
+        date = date.replace(tzinfo=tz.tzutc())
+        date = date.astimezone(tz.tzlocal())
 
-    return date.strftime('%Y-%m-%dT%H:%M:%S')
+        return date.strftime('%Y-%m-%dT%H:%M:%S')
+    except Exception as error:
+        LOG.error(error)
+
+        return str(date)
 
 def convert_str_to_date(date):
 
