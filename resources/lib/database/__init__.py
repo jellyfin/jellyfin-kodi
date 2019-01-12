@@ -66,8 +66,19 @@ class Database(object):
 
         path = xbmc.translatePath(path).decode('utf-8')
 
-        if not xbmcvfs.exists(path) and not silent:
-            raise Exception("Database: %s missing" % path)
+        if not silent:
+
+            if not xbmcvfs.exists(path):
+                raise Exception("Database: %s missing" % path)
+
+            conn = sqlite3.connect(path)
+            cursor = conn.cursor()
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+            tables = cursor.fetchall()
+            conn.close()
+
+            if not len(tables):
+                raise Exception("Database: %s malformed?" % path)
 
         return path
 
@@ -76,21 +87,32 @@ class Database(object):
         ''' Grab the first database encountered, by most recent.
             Will likely not work, but heck.
         '''
+        databases = xbmc.translatePath("special://database/").decode('utf-8')
         types = {
             'video': "MyVideos",
             'music': "MyMusic",
             'texture': "Textures"
         }
         database = types[database]
-        dirs, files = xbmcvfs.listdir(xbmc.translatePath("special://database/").decode('utf-8'))
+        dirs, files = xbmcvfs.listdir(databases)
+        modified = {'file': None, 'time': 0}
 
         for file in reversed(files):
             if file.startswith(database) and not file.endswith('-wal') and not file.endswith('-shm'):
 
-                LOG.info("Found database: %s", file)
-                self.discovered = True
-               
-                return xbmc.translatePath("special://database/%s" % file.decode('utf-8')).decode('utf-8')
+                st = xbmcvfs.Stat(databases + file.decode('utf-8'))
+                modified_int = st.st_mtime()
+                LOG.debug("Database detected: %s time: %s", file.decode('utf-8'), modified_int)
+
+                if modified_int > modified['time']:
+
+                    modified['time'] = modified_int
+                    modified['file'] = file.decode('utf-8')
+
+        LOG.info("Loading discovered database: %s", modified)
+        self.discovered = True
+
+        return xbmc.translatePath("special://database/%s" % modified['file'])
 
     def _sql(self, file):
 

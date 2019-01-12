@@ -128,8 +128,6 @@ class Library(threading.Thread):
 
                         LOG.info("Newly discovered database: %s", kodidb.path)
                         settings('DiscoveredDatabase', kodidb.path)
-                        self.monitor.settings['enable_db_discovery'] = False
-                        settings('AskDiscoverDatabase.bool', False)
 
                     return False
                 else:
