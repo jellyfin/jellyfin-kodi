@@ -110,7 +110,6 @@ class Database(object):
                     modified['file'] = file.decode('utf-8')
 
         LOG.info("Discovered database: %s", modified)
-        self.discovered = True
 
         return xbmc.translatePath("special://database/%s" % modified['file']).decode('utf-8')
 
@@ -144,7 +143,12 @@ class Database(object):
                 except Exception:
                     pass
 
-        databases[file] = discovered if discovered and discovered != loaded else loaded
+        if discovered and discovered != loaded:
+            databases[file] = discovered
+            self.discovered = True
+        else:
+            databases[file] = loaded
+
         databases['database_set%s' % file] = True
         LOG.info("Database locked in: %s", databases[file])
 
