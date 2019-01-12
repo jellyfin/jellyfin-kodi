@@ -168,7 +168,7 @@ class PlayUtils(object):
 
     def is_strm(self, source):
 
-        if source['Container'] == 'strm' or self.item['Path'].endswith('.strm'):
+        if source.get('Container') == 'strm' or self.item['Path'].endswith('.strm'):
             LOG.info("strm detected")
 
             return True
@@ -273,7 +273,7 @@ class PlayUtils(object):
         if self.item['Type'] == "Audio":
             self.info['Path'] = ("%s/emby/Audio/%s/stream.%s?static=true&api_key=%s" %
                                 (self.info['ServerAddress'], self.item['Id'],
-                                 source['Container'].split(',')[0],
+                                 source.get('Container', "mp4").split(',')[0],
                                  self.info['Token']))
         else:
             self.info['Path'] = ("%s/emby/Videos/%s/stream?static=true&MediaSourceId=%s&api_key=%s" %
