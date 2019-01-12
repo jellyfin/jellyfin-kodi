@@ -109,10 +109,10 @@ class Database(object):
                     modified['time'] = modified_int
                     modified['file'] = file.decode('utf-8')
 
-        LOG.info("Loading discovered database: %s", modified)
+        LOG.info("Discovered database: %s", modified)
         self.discovered = True
 
-        return xbmc.translatePath("special://database/%s" % modified['file'])
+        return xbmc.translatePath("special://database/%s" % modified['file']).decode('utf-8')
 
     def _sql(self, file):
 
@@ -122,9 +122,13 @@ class Database(object):
         '''
         databases = obj.Objects().objects
 
-        try:
-            return self._get_database(databases[file]) if file in databases else file
+        if file not in ('video', 'music', 'texture') or databases.get('database_set%s' % file):
+            return self._get_database(databases[file], True)
 
+        discovered = self._discover_database(file) if not databases.get('database_set%s' % file) else None
+
+        try:
+            loaded = self._get_database(databases[file]) if file in databases else file
         except Exception as error:
             LOG.error(error)
 
@@ -132,18 +136,19 @@ class Database(object):
                 alt_file = "%s-%s" % (file, i)
 
                 try:
-                    if file not in ('video', 'music', 'texture'):
-                        return self._get_database(databases[file], True)
-
-                    databases[file] = self._get_database(databases[alt_file])
-
-                    return databases[file]
+                    loaded = self._get_database(databases[alt_file])
                 except KeyError: # No other db options
-                    databases[file] = self._discover_database(file)
-                    
-                    return databases[file]
+                    loaded = None
+
+                    break
                 except Exception:
                     pass
+
+        databases[file] = discovered if discovered and discovered != loaded else loaded
+        databases['database_set%s' % file] = True
+        LOG.info("Database locked in: %s", databases[file])
+
+        return databases[file]
 
     def __exit__(self, exc_type, exc_val, exc_tb):
 
