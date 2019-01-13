@@ -21,7 +21,7 @@
 	<category label="30506"><!-- Sync Options -->
 		<setting label="33186" type="lsep" />
 		<setting label="33137" id="kodiCompanion" type="bool" default="true" />
-		<setting label="30507" id="syncIndicator" type="number" default="99" visible="eq(-1,true)" subsetting="true"/>
+		<setting label="30507" id="syncIndicator" type="number" default="999" visible="eq(-1,true)" subsetting="true"/>
 		<setting label="33185" id="syncDuringPlay" type="bool" default="true" />
 		<setting label="30536" id="dbSyncScreensaver" type="bool" default="true" />
 		<setting label="33190" id="AskDiscoverDatabase" type="bool" default="true" />
