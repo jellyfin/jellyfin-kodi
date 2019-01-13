@@ -123,7 +123,6 @@ class Service(xbmc.Monitor):
 
                 window('emby.restart', clear=True)
                 dialog("notification", heading="{emby}", message=_(33193), icon="{emby}", time=1000, sound=False)
-                reload(objects)
 
                 raise Exception('RestartService')
 
@@ -215,7 +214,7 @@ class Service(xbmc.Monitor):
         except Exception as error:
             LOG.exception(error)
 
-        return True
+        raise Exception("RestartService")
     
     def onNotification(self, sender, method, data):
 
@@ -422,11 +421,14 @@ class Service(xbmc.Monitor):
 
         elif method == 'CheckUpdate':
 
-            if not self.check_update(True):
+            try:
+                self.check_update(True)
                 dialog("notification", heading="{emby}", message=_(21341), icon="{emby}", sound=False)
-            else:
-                dialog("notification", heading="{emby}", message=_(33181), icon="{emby}", sound=False)
-                window('emby.restart.bool', True)
+            except Exception as error:
+                if 'RestartService' in error:
+    
+                    dialog("notification", heading="{emby}", message=_(33181), icon="{emby}", sound=False)
+                    window('emby.restart.bool', True)
 
     def onSettingsChanged(self):
 
@@ -499,6 +501,8 @@ class Service(xbmc.Monitor):
             self.library_thread.stop_client()
 
         if self.monitor is not None:
+
             self.monitor.listener.stop()
+            self.monitor.webservice.stop()
 
         LOG.warn("---<<<[ %s ]", client.get_addon_name())

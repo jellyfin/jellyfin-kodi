@@ -52,14 +52,18 @@ class ServiceManager(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-
-        service = Service()
+        service = None
 
         try:
+            service = Service()
+
+            if DELAY and xbmc.Monitor().waitForAbort(DELAY):
+                raise Exception("Aborted during startup delay")
+
             service.service()
         except Exception as error:
-            
-            if not 'ExitService' in error:
+
+            if not 'ExitService' in error and service is not None:
                 service.shutdown()
 
             self.exception = error
@@ -73,15 +77,35 @@ if __name__ == "__main__":
     while True:
 
         try:
-            if DELAY and xbmc.Monitor().waitForAbort(DELAY):
-                raise Exception("Aborted during startup delay")
-
             session = ServiceManager()
             session.start()
             session.join() # Block until the thread exits.
 
             if 'RestartService' in session.exception:
+
+                ''' Reload objects which depends on the patch module.
+                '''
                 LOG.warn("--[ RESTART ]")
+
+                import objects
+                import library
+                import full_sync
+                import monitor
+
+                reload_modules = ['objects.movies', 'objects.musicvideos', 'objects.tvshows',
+                                  'objects.music', 'objects.obj', 'objects.actions', 'objects.kodi.kodi',
+                                  'objects.kodi.movies', 'objects.kodi.musicvideos', 'objects.kodi.tvshows',
+                                  'objects.kodi.music', 'objects.kodi.artwork', 'objects.kodi.queries',
+                                  'objects.kodi.queries_music', 'objects.kodi.queries_texture']
+
+                for mod in reload_modules:
+                    del sys.modules[mod]
+
+                reload(objects.kodi)
+                reload(objects)
+                reload(library)
+                reload(full_sync)
+                reload(monitor)
 
                 continue
 

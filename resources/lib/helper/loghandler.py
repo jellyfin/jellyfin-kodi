@@ -18,6 +18,11 @@ def config():
     logger.addHandler(LogHandler())
     logger.setLevel(logging.DEBUG)
 
+def reset():
+
+    for handler in logging.getLogger('EMBY').handlers:
+        logging.getLogger('EMBY').removeHandler(handler)
+
 
 class LogHandler(logging.StreamHandler):
 
