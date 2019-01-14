@@ -210,6 +210,15 @@ def get_albums_by_artist(artist_id, basic=False):
     for items in get_items(None, "MusicAlbum", basic, params):
         yield items
 
+def get_songs_by_artist(artist_id, basic=False):
+
+    params = {
+        'SortBy': "DateCreated",
+        'ArtistIds': artist_id
+    }
+    for items in get_items(None, "Audio", basic, params):
+        yield items
+
 @stop()
 def _get_items(query, server_id=None):
 

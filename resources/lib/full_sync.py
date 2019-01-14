@@ -389,6 +389,13 @@ class FullSync(object):
                                                           message="%s/%s/%s" % (message, album['Name'][:7], song['Name'][:7]))
                                             obj.song(song)
 
+                            for songs in server.get_songs_by_artist(artist['Id']):
+                                for song in songs['Items']:
+
+                                    dialog.update(percent, message="%s/%s" % (message, song['Name']))
+                                    obj.song(song)
+
+
                     if self.update_library:
                         self.music_compare(library, obj, embydb)
 
