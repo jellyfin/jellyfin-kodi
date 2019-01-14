@@ -124,10 +124,10 @@ class Library(threading.Thread):
             with Database('music') as musicdb:
 
                 if kodidb.discovered or musicdb.discovered:
-                    if kodidb.path != settings('DiscoveredDatabase'):
+                    if kodidb.discovered_file != settings('DiscoveredDatabase'):
 
                         LOG.info("Newly discovered database: %s", kodidb.path)
-                        settings('DiscoveredDatabase', kodidb.path)
+                        settings('DiscoveredDatabase', kodidb.discovered_file)
                         self.monitor.settings['enable_db_discovery'] = True
                         settings('AskDiscoverDatabase.bool', True)
 

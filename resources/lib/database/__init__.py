@@ -32,6 +32,7 @@ class Database(object):
     '''
     timeout = 120
     discovered = False
+    discovered_file = None
 
     def __init__(self, file=None, commit_close=True):
 
@@ -110,6 +111,7 @@ class Database(object):
                     modified['file'] = file.decode('utf-8')
 
         LOG.info("Discovered database: %s", modified)
+        self.discovered_file = modified['file']
 
         return xbmc.translatePath("special://database/%s" % modified['file']).decode('utf-8')
 
@@ -129,13 +131,14 @@ class Database(object):
         try:
             loaded = self._get_database(databases[file]) if file in databases else file
         except Exception as error:
-            LOG.error(error)
 
             for i in range(1, 10):
                 alt_file = "%s-%s" % (file, i)
 
                 try:
                     loaded = self._get_database(databases[alt_file])
+
+                    break
                 except KeyError: # No other db options
                     loaded = None
 
@@ -144,6 +147,7 @@ class Database(object):
                     pass
 
         if discovered and discovered != loaded:
+
             databases[file] = discovered
             self.discovered = True
         else:
