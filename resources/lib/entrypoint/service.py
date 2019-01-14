@@ -214,7 +214,7 @@ class Service(xbmc.Monitor):
         except Exception as error:
             LOG.exception(error)
 
-        raise Exception("RestartService")
+        return True
     
     def onNotification(self, sender, method, data):
 
@@ -421,14 +421,11 @@ class Service(xbmc.Monitor):
 
         elif method == 'CheckUpdate':
 
-            try:
-                self.check_update(True)
+            if not self.check_update(True):
                 dialog("notification", heading="{emby}", message=_(21341), icon="{emby}", sound=False)
-            except Exception as error:
-                if 'RestartService' in error:
-    
-                    dialog("notification", heading="{emby}", message=_(33181), icon="{emby}", sound=False)
-                    window('emby.restart.bool', True)
+            else:
+                dialog("notification", heading="{emby}", message=_(33181), icon="{emby}", sound=False)
+                window('emby.restart.bool', True)
 
     def onSettingsChanged(self):
 
