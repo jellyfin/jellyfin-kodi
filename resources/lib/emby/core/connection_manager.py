@@ -359,7 +359,7 @@ class ConnectionManager(object):
         if first_server is not None and first_server['DateLastAccessed'] != "2001-01-01T00:00:00Z":
             result = self.connect_to_server(first_server, options)
 
-            if result['State'] == CONNECTION_STATE['SignedIn']:
+            if result['State'] in (CONNECTION_STATE['SignedIn'], CONNECTION_STATE['Unavailable']):
                 return result
 
         # Return loaded credentials if exists
