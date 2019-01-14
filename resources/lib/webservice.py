@@ -111,6 +111,12 @@ class StoppableHttpRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         except Exception:
             pass
 
+    def log_message(self, format, *args):
+
+        ''' Mute the webservice requests.
+        '''
+        pass
+
     def do_QUIT(self):
 
         ''' send 200 OK response, and set server.stop to True
@@ -159,18 +165,22 @@ class StoppableHttpRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         try:
             params = self.get_params()
             LOG.info("Webservice called with params: %s", params)
+
             path = ("plugin://plugin.video.emby?mode=play&id=%s&dbid=%s&filename=%s&transcode=%s"
                     % (params.get('Id'), params.get('KodiId'), params.get('Name'), params.get('transcode') or False))
+            
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
             self.send_header('Content-Length', len(path))
             self.end_headers()
-            self.wfile.write(path)
+
+            if not headers_only:
+                self.wfile.write(path)
 
         except Exception as error:
 
             LOG.exception(error)
-            self.send_error(500, 'Exception occurred: %s' % error)
+            self.send_error(500, "Exception occurred: %s" % error)
 
         return
 
