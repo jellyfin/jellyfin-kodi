@@ -69,7 +69,7 @@ class Events(object):
         elif mode =='play':
 
             item = TheVoid('GetItem', {'Id': params['id'], 'ServerId': server}).get()
-            Actions(server).play(item, params.get('dbid'), playlist=params.get('playlist') == 'true')
+            Actions(server).play(item, params.get('dbid'), True if params.get('transcode') == 'True' else False, playlist=params.get('playlist') == 'true')
 
         elif mode == 'playlist':
             event('PlayPlaylist', {'Id': params['id'], 'ServerId': server})
@@ -163,7 +163,7 @@ def listing():
             context.append((_(33133), "RunPlugin(plugin://plugin.video.emby/?mode=removelib&id=%s)" % view_id))
 
         LOG.debug("--[ listing/%s/%s ] %s", node, label, path)
-        
+
         if path:
             if xbmc.getCondVisibility('Window.IsActive(Pictures)') and node in ('photos', 'homevideos'):
                 directory(label, path, artwork=artwork)
@@ -259,7 +259,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
 
     if folder is None and media in ('homevideos', 'movies', 'books', 'audiobooks'):
         return browse_subfolders(media, view_id, server_id)
-    
+
     if folder and folder == 'firstletter':
         return browse_letters(media, view_id, server_id)
 
@@ -486,7 +486,7 @@ def get_media_type(media):
         return "MusicArtist,MusicAlbum,Audio"
 
 def get_fanart(item_id, path, server_id=None):
-    
+
     ''' Get extra fanart for listitems. This is called by skinhelper.
         Images are stored locally, due to the Kodi caching system.
     '''
@@ -571,7 +571,7 @@ def get_video_extras(item_id, path, server_id=None):
     """
 
 def get_next_episodes(item_id, limit):
-    
+
     ''' Only for synced content.
     '''
     with Database('emby') as embydb:
@@ -658,7 +658,7 @@ def create_listitem(item):
     label2 = ""
     li = xbmcgui.ListItem(title)
     li.setProperty('IsPlayable', "true")
-    
+
     metadata = {
         'Title': title,
         'duration': str(item['runtime']/60),
@@ -712,7 +712,7 @@ def create_listitem(item):
         metadata['CastAndRole'] = castandrole
 
     li.setLabel2(label2)
-    li.setInfo(type="Video", infoLabels=metadata)  
+    li.setInfo(type="Video", infoLabels=metadata)
     li.setProperty('resumetime', str(item['resume']['position']))
     li.setProperty('totaltime', str(item['resume']['total']))
     li.setArt(item['art'])
@@ -794,7 +794,7 @@ def get_themes():
 
     items = {}
     server = TheVoid('GetServerAddress', {'ServerId': None}).get()
-    token = TheVoid('GetToken', {'ServerId': None}).get() 
+    token = TheVoid('GetToken', {'ServerId': None}).get()
 
     for view in views:
         result = TheVoid('GetThemes', {'Type': "Video", 'Id': view}).get()

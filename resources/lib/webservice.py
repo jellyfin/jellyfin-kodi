@@ -84,11 +84,11 @@ class Request(object):
 
 
 class StoppableHttpServer(BaseHTTPServer.HTTPServer):
-    
+
     ''' Http server that reacts to self.stop flag.
     '''
     def serve_forever(self):
-        
+
         ''' Handle one request at a time until stopped.
         '''
         self.stop = False
@@ -100,7 +100,7 @@ class StoppableHttpServer(BaseHTTPServer.HTTPServer):
 
 
 class StoppableHttpRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
-    
+
     ''' http request handler with QUIT stopping the server
     '''
     raw_requestline = ""
@@ -120,16 +120,16 @@ class StoppableHttpRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         self.server.stop = True
 
     def parse_request(self):
-    
+
         ''' Modify here to workaround unencoded requests.
-        '''        
+        '''
         retval = SimpleHTTPServer.SimpleHTTPRequestHandler.parse_request(self)
         self.request = Request(self.path, self.headers, self.rfile)
-        
+
         return retval
 
     def do_HEAD(self):
-        
+
         ''' Called on HEAD requests
         '''
         self.handle_request(True)
@@ -137,7 +137,7 @@ class StoppableHttpRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         return
 
     def get_params(self):
-        
+
         ''' Get the params
         '''
         try:
@@ -153,15 +153,14 @@ class StoppableHttpRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         return params
 
     def handle_request(self, headers_only=False):
-        
+
         ''' Send headers and reponse
         '''
         try:
             params = self.get_params()
             LOG.info("Webservice called with params: %s", params)
-
-            path = ("plugin://plugin.video.emby?mode=play&id=%s&dbid=%s&filename=%s" 
-                    % (params.get('Id'), params.get('KodiId'), params.get('Name')))
+            path = ("plugin://plugin.video.emby?mode=play&id=%s&dbid=%s&filename=%s&transcode=%s"
+                    % (params.get('Id'), params.get('KodiId'), params.get('Name'), params.get('transcode') or False))
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
             self.send_header('Content-Length', len(path))
@@ -176,7 +175,7 @@ class StoppableHttpRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         return
 
     def do_GET(self):
-        
+
         ''' Called on GET requests
         '''
         self.handle_request()
