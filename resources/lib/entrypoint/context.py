@@ -172,5 +172,5 @@ class Context(object):
 
     def transcode(self):
         filename = xbmc.getInfoLabel("ListItem.Filenameandpath")
-        filename += "&transcode=True"
+        filename += "&transcode=true"
         xbmc.executebuiltin("PlayMedia(%s)" % filename)

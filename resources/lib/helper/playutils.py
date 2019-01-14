@@ -190,6 +190,11 @@ class PlayUtils(object):
             source['SupportsDirectPlay'] = False
             source['Protocol'] = "LiveTV"
 
+        if self.info['ForceTranscode']:
+
+            source['SupportsDirectPlay'] = False
+            source['SupportsDirectStream'] = False
+
         if source.get('Protocol') == 'Http' or source['SupportsDirectPlay'] and (self.is_strm(source) or not settings('playFromStream.bool') and self.is_file_exists(source)):
 
             LOG.info("--[ direct play ]")
