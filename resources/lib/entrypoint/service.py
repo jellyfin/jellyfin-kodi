@@ -272,7 +272,7 @@ class Service(xbmc.Monitor):
             if data.get('ServerId') is None:
                 self.stop_default()
 
-                if self.waitForAbort(20):
+                if self.waitForAbort(120):
                     return
                 
                 self.start_default()
