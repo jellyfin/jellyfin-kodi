@@ -151,7 +151,7 @@ class Artwork(object):
             if thread.is_done:
                 self.threads.remove(thread)
 
-        if self.queue.qsize() and len(self.threads) < 3:
+        if self.queue.qsize() and len(self.threads) < 2:
 
             new_thread = GetArtworkWorker(self.kodi, self.queue)
             new_thread.start()

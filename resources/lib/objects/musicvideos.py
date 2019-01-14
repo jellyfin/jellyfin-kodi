@@ -10,7 +10,7 @@ import urllib
 from obj import Objects
 from kodi import MusicVideos as KodiDb, queries as QU
 from database import emby_db, queries as QUEM
-from helper import api, catch, stop, validate, library_check, emby_item, values
+from helper import api, catch, stop, validate, library_check, emby_item, values, Local
 
 ##################################################################################################
 
@@ -80,12 +80,12 @@ class MusicVideos(KodiDb):
         obj['ArtistItems'] = obj['ArtistItems'] or []
         obj['Studios'] = [API.validate_studio(studio) for studio in (obj['Studios'] or [])]
         obj['Plot'] = API.get_overview(obj['Plot'])
-        obj['DateAdded'] = obj['DateAdded'].split('.')[0].replace('T', " ")
-        obj['DatePlayed'] = None if not obj['DatePlayed'] else obj['DatePlayed'].split('.')[0].replace('T', " ")
+        obj['DateAdded'] = Local(obj['DateAdded']).split('.')[0].replace('T', " ")
+        obj['DatePlayed'] = None if not obj['DatePlayed'] else Local(obj['DatePlayed']).split('.')[0].replace('T', " ")
         obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount'])
         obj['Resume'] = API.adjust_resume((obj['Resume'] or 0) / 10000000.0)
         obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
-        obj['Premiere'] = obj['Premiere'] or datetime.date(obj['Year'] or 2021, 1, 1)
+        obj['Premiere'] = Local(obj['Premiere']) if obj['Premiere'] else datetime.date(obj['Year'] or 2021, 1, 1)
         obj['Genre'] = " / ".join(obj['Genres'])
         obj['Studio'] = " / ".join(obj['Studios'])
         obj['Artists'] = " / ".join(obj['Artists'] or [])
@@ -205,7 +205,7 @@ class MusicVideos(KodiDb):
         obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount'])
 
         if obj['DatePlayed']:
-            obj['DatePlayed'] = obj['DatePlayed'].split('.')[0].replace('T', " ")
+            obj['DatePlayed'] = Local(obj['DatePlayed']).split('.')[0].replace('T', " ")
 
         if obj['Favorite']:
             self.get_tag(*values(obj, QU.get_tag_mvideo_obj))

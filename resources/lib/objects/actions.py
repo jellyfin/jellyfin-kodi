@@ -176,9 +176,13 @@ class Actions(object):
         '''
         item = items[0]
         playlist = self.get_playlist(item)
+        player = xbmc.Player()
 
         if clear:
-            playlist.clear()
+            if player.isPlaying():
+                player.stop()
+
+            xbmc.executebuiltin('ActivateWindow(busydialognocancel)')
             index = 0
         else:
             index = max(playlist.getposition(), 0) + 1 # Can return -1
@@ -201,14 +205,16 @@ class Actions(object):
         index += 1
 
         if clear:
-            xbmc.Player().play(playlist)
+            xbmc.executebuiltin('Dialog.Close(busydialognocancel)')
+            player.play(playlist)
 
         for item in items[1:]:
             listitem = xbmcgui.ListItem()
             LOG.info("[ playlist/%s ]", item)
-            path = "plugin://plugin.video.emby/?mode=play&id=%s&playlist=true" % item
 
+            path = "plugin://plugin.video.emby/?mode=play&id=%s&playlist=true" % item
             listitem.setPath(path)
+    
             playlist.add(path, listitem, index)
             index += 1
 
@@ -334,15 +340,17 @@ class Actions(object):
             'dbid': obj['DbId']
         }
         listitem.setCast(API.get_actors())
-        listitem.setIconImage(obj['Artwork']['Thumb'])
-        listitem.setThumbnailImage(obj['Artwork']['Primary'])
-        self.set_artwork(obj['Artwork'], listitem, obj['Type'])
 
-        if obj['Artwork']['Primary']:
+        if obj['Type'] == 'Video':
+            listitem.setIconImage('DefaultVideo.png')
+            listitem.setThumbnailImage(obj['Artwork']['Primary'] or obj['Artwork']['Thumb'])
+        else:
+            listitem.setIconImage(obj['Artwork']['Thumb'])
             listitem.setThumbnailImage(obj['Artwork']['Primary'])
+            self.set_artwork(obj['Artwork'], listitem, obj['Type'])
 
-        if not obj['Artwork']['Backdrop']:
-            listitem.setArt({'fanart': obj['Artwork']['Primary']})
+            if not obj['Artwork']['Backdrop']:
+                listitem.setArt({'fanart': obj['Artwork']['Primary']})
 
         if obj['Premiere']:
             metadata['premieredate'] = obj['Premiere']
@@ -374,9 +382,14 @@ class Actions(object):
             listitem.setProperty('IsFolder', 'true')
 
         elif obj['Type'] == 'Series':
+
+            if obj['Status'] != 'Ended':
+                obj['Status'] = None
+
             metadata.update({
                 'mediatype': "tvshow",
-                'tvshowtitle': obj['Title']
+                'tvshowtitle': obj['Title'],
+                'status': obj['Status']
             })
             listitem.setProperty('TotalSeasons', str(obj['ChildCount']))
             listitem.setProperty('TotalEpisodes', str(obj['RecursiveCount']))
@@ -389,7 +402,8 @@ class Actions(object):
                 'mediatype': "movie",
                 'imdbnumber': obj['UniqueId'],
                 'lastplayed': obj['DatePlayed'],
-                'duration': obj['Runtime']
+                'duration': obj['Runtime'],
+                'userrating': obj['CriticRating']
             })
 
         elif obj['Type'] == 'MusicVideo':
@@ -550,8 +564,6 @@ class Actions(object):
         }
         listitem.setProperty('path', obj['Artwork']['Primary'])
         listitem.setThumbnailImage(obj['Artwork']['Primary'])
-        listitem.setIconImage(obj['Artwork']['Primary'] or "special://home/addons/plugin.video.emby/icon.png")
-        listitem.setArt({'fanart': obj['Artwork']['Primary'] or "special://home/addons/plugin.video.emby/fanart.jpg"})
 
         if obj['Type'] == 'Photo':
             metadata.update({
@@ -567,11 +579,10 @@ class Actions(object):
             })
             listitem.setProperty('plot', obj['Overview'])
             listitem.setProperty('IsFolder', 'false')
+            listitem.setIconImage('DefaultPicture.png')
         else:
-            if obj['Artwork']['Backdrop']:
-                listitem.setArt({'fanart': obj['Artwork']['Backdrop'][0]})
-
             listitem.setProperty('IsFolder', 'true')
+            listitem.setIconImage('DefaultFolder.png')
 
         listitem.setProperty('IsPlayable', 'false')
         listitem.setLabel(obj['Title'])

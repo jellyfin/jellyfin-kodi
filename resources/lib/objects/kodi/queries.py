@@ -279,13 +279,13 @@ add_art =   			"""	INSERT INTO	art(media_id, media_type, type, url)
 							VALUES		(?, ?, ?, ?) 
 						"""
 add_movie =     		"""	INSERT INTO	movie(idMovie, idFile, c00, c01, c02, c03, c04, c05, c06, c07,
-                							  c09, c10, c11, c12, c14, c15, c16, c18, c19, c21, premiered) 
-                			VALUES 		(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+                							  c09, c10, c11, c12, c14, c15, c16, c18, c19, c21, userrating, premiered) 
+                			VALUES 		(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
                 		"""
 add_movie_obj =             [   "{MovieId}","{FileId}","{Title}","{Plot}","{ShortPlot}","{Tagline}",
                                 "{Votes}","{RatingId}","{Writers}","{Year}","{Unique}","{SortTitle}",
                                 "{Runtime}","{Mpaa}","{Genre}","{Directors}","{Title}","{Studio}",
-                                "{Trailer}","{Country}","{Year}"
+                                "{Trailer}","{Country}","{CriticRating}","{Year}"
                             ]
 add_rating =    		"""	INSERT INTO rating(rating_id, media_id, media_type, rating_type, rating, votes) 
     						VALUES 		(?, ?, ?, ?, ?, ?) 
@@ -320,10 +320,10 @@ add_musicvideo =    	"""	INSERT INTO musicvideo(idMVideo,idFile, c00, c04, c05, 
 add_musicvideo_obj =        [   "{MvideoId}","{FileId}","{Title}","{Runtime}","{Directors}","{Studio}","{Year}",
                                 "{Plot}","{Album}","{Artists}","{Genre}","{Index}","{Premiere}"
                             ]
-add_tvshow =    		""" INSERT INTO	tvshow(idShow, c00, c01, c04, c05, c08, c09, c12, c13, c14, c15) 
-            				VALUES 		(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+add_tvshow =    		""" INSERT INTO	tvshow(idShow, c00, c01, c02, c04, c05, c08, c09, c12, c13, c14, c15) 
+            				VALUES 		(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
             			"""
-add_tvshow_obj =            [   "{ShowId}","{Title}","{Plot}","{RatingId}","{Premiere}","{Genre}","{Title}",
+add_tvshow_obj =            [   "{ShowId}","{Title}","{Plot}","{Status}","{RatingId}","{Premiere}","{Genre}","{Title}",
                                 "{Unique}","{Mpaa}","{Studio}","{SortTitle}"
                             ]
 add_season =    		"""	INSERT INTO seasons(idSeason, idShow, season) 
@@ -392,13 +392,13 @@ update_link =   		""" INSERT OR REPLACE INTO	{LinkType}(actor_id, media_id, medi
 update_movie =  		"""	UPDATE 	movie 
 							SET 	c00 = ?, c01 = ?, c02 = ?, c03 = ?, c04 = ?, c05 = ?, c06 = ?,
                 					c07 = ?, c09 = ?, c10 = ?, c11 = ?, c12 = ?, c14 = ?, c15 = ?,
-                					c16 = ?, c18 = ?, c19 = ?, c21 = ?, premiered = ? 
+                					c16 = ?, c18 = ?, c19 = ?, c21 = ?, userrating = ?, premiered = ? 
                 			WHERE 	idMovie = ? 
                 		"""
 update_movie_obj =          [   "{Title}","{Plot}","{ShortPlot}","{Tagline}","{Votes}","{RatingId}",
                                 "{Writers}","{Year}","{Unique}","{SortTitle}","{Runtime}",
                                 "{Mpaa}","{Genre}","{Directors}","{Title}","{Studio}","{Trailer}",
-                                "{Country}","{Year}","{MovieId}"
+                                "{Country}","{CriticRating}","{Year}","{MovieId}"
                             ]
 update_rating =     	"""	UPDATE 	rating 
     						SET 	media_id = ?, media_type = ?, rating_type = ?, rating = ?, votes = ? 
@@ -446,11 +446,11 @@ update_musicvideo_obj =     [   "{Title}","{Runtime}","{Directors}","{Studio}","
                                 "{Artists}","{Genre}","{Index}","{Premiere}","{MvideoId}"
                             ]
 update_tvshow =     	""" UPDATE 	tvshow 
-            				SET 	c00 = ?, c01 = ?, c04 = ?, c05 = ?, c08 = ?, c09 = ?, 
+            				SET 	c00 = ?, c01 = ?, c02 = ?, c04 = ?, c05 = ?, c08 = ?, c09 = ?, 
                 					c12 = ?, c13 = ?, c14 = ?, c15 = ? 
             				WHERE 	idShow = ? 
             			"""
-update_tvshow_obj =         [   "{Title}","{Plot}","{RatingId}","{Premiere}","{Genre}","{Title}",
+update_tvshow_obj =         [   "{Title}","{Plot}","{Status}","{RatingId}","{Premiere}","{Genre}","{Title}",
                                 "{Unique}","{Mpaa}","{Studio}","{SortTitle}","{ShowId}"
                             ]
 update_tvshow_link =   	"""	INSERT OR REPLACE INTO	tvshowlinkpath(idShow, idPath) 

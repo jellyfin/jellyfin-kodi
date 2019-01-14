@@ -10,7 +10,7 @@ import downloader as server
 from obj import Objects
 from kodi import Movies as KodiDb, queries as QU
 from database import emby_db, queries as QUEM
-from helper import api, catch, stop, validate, emby_item, library_check, values
+from helper import api, catch, stop, validate, emby_item, library_check, values, settings, Local
 
 ##################################################################################################
 
@@ -72,6 +72,8 @@ class Movies(KodiDb):
                 update = False
                 LOG.info("MovieId %s missing from kodi. repairing the entry.", obj['MovieId'])
 
+        if not settings('syncRottenTomatoes.bool'):
+            obj['CriticRating'] = None
 
         obj['Path'] = API.get_file_path(obj['Path'])
         obj['LibraryId'] = library['Id']
@@ -87,8 +89,8 @@ class Movies(KodiDb):
         obj['Resume'] = API.adjust_resume((obj['Resume'] or 0) / 10000000.0)
         obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
         obj['People'] = API.get_people_artwork(obj['People'])
-        obj['DateAdded'] = obj['DateAdded'].split('.')[0].replace('T', " ")
-        obj['DatePlayed'] = None if not obj['DatePlayed'] else obj['DatePlayed'].split('.')[0].replace('T', " ")
+        obj['DateAdded'] = Local(obj['DateAdded']).split('.')[0].replace('T', " ")
+        obj['DatePlayed'] = None if not obj['DatePlayed'] else Local(obj['DatePlayed']).split('.')[0].replace('T', " ")
         obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount'])
         obj['Artwork'] = API.get_all_artwork(self.objects.map(item, 'Artwork'))
         obj['Video'] = API.video_streams(obj['Video'] or [], obj['Container'])
@@ -302,7 +304,7 @@ class Movies(KodiDb):
         obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount'])
 
         if obj['DatePlayed']:
-            obj['DatePlayed'] = obj['DatePlayed'].split('.')[0].replace('T', " ")
+            obj['DatePlayed'] = Local(obj['DatePlayed']).split('.')[0].replace('T', " ")
 
         if obj['Favorite']:
             self.get_tag(*values(obj, QU.get_tag_movie_obj))
