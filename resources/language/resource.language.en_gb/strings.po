@@ -941,3 +941,7 @@ msgstr ""
 msgctxt "#33193"
 msgid "Restarting..."
 msgstr ""
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr ""

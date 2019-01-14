@@ -119,6 +119,8 @@ class Events(object):
             event('UpdateServer')
         elif mode == 'thememedia':
             get_themes()
+        elif mode == 'managelibs':
+            manage_libraries()
         elif mode == 'backup':
             backup()
         elif mode == 'restartservice':
@@ -184,15 +186,10 @@ def listing():
             directory(server['Name'], "plugin://plugin.video.emby/?mode=browse&server=%s" % server['Id'], context=context)
 
 
+    directory(_(33194), "plugin://plugin.video.emby/?mode=managelibs", True)
     directory(_(33134), "plugin://plugin.video.emby/?mode=addserver", False)
-    directory(_(5), "plugin://plugin.video.emby/?mode=settings", False)
     directory(_(33054), "plugin://plugin.video.emby/?mode=adduser", False)
-    directory(_(33098), "plugin://plugin.video.emby/?mode=refreshboxsets", False)
-    directory(_(33154), "plugin://plugin.video.emby/?mode=addlibs", False)
-    directory(_(33139), "plugin://plugin.video.emby/?mode=updatelibs", False)
-    directory(_(33140), "plugin://plugin.video.emby/?mode=repairlibs", False)
-    directory(_(33184), "plugin://plugin.video.emby/?mode=removelibs", False)
-    directory(_(33060), "plugin://plugin.video.emby/?mode=thememedia", False)
+    directory(_(5), "plugin://plugin.video.emby/?mode=settings", False)
     directory(_(33058), "plugin://plugin.video.emby/?mode=reset", False)
     directory(_(33192), "plugin://plugin.video.emby/?mode=restartservice", False)
 
@@ -225,6 +222,18 @@ def dir_listitem(label, path, artwork=None, fanart=None):
     li.setArt({"landscape": artwork or fanart or "special://home/addons/plugin.video.emby/fanart.jpg"})
 
     return li
+
+def manage_libraries():
+
+    directory(_(33098), "plugin://plugin.video.emby/?mode=refreshboxsets", False)
+    directory(_(33154), "plugin://plugin.video.emby/?mode=addlibs", False)
+    directory(_(33139), "plugin://plugin.video.emby/?mode=updatelibs", False)
+    directory(_(33140), "plugin://plugin.video.emby/?mode=repairlibs", False)
+    directory(_(33184), "plugin://plugin.video.emby/?mode=removelibs", False)
+    directory(_(33060), "plugin://plugin.video.emby/?mode=thememedia", False)
+
+    xbmcplugin.setContent(int(sys.argv[1]), 'files')
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
 def browse(media, view_id=None, folder=None, server_id=None):
 
