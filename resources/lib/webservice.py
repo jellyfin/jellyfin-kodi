@@ -141,7 +141,12 @@ class StoppableHttpRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         ''' Get the params
         '''
         try:
-            params = dict(urlparse.parse_qsl(self.path[1:]))
+            path = self.path[1:]
+
+            if '?' in path:
+                path = path.split('?', 1)[1]
+
+            params = dict(urlparse.parse_qsl(path))
         except Exception:
             params = {}
 
@@ -161,7 +166,7 @@ class StoppableHttpRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             self.send_header('Content-type', 'text/html')
             self.send_header('Content-Length', len(path))
             self.end_headers()
-            self.wfile.write(path.encode('utf-8'))
+            self.wfile.write(path)
 
         except Exception as error:
 
