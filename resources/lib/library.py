@@ -132,10 +132,8 @@ class Library(threading.Thread):
                         settings('AskDiscoverDatabase.bool', True)
 
                     return False
-                else:
-                    settings('DiscoveredDatabase', "")
 
-                    return True
+                return True
 
     @stop()
     def service(self):
