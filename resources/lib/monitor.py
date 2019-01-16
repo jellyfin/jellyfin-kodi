@@ -182,7 +182,7 @@ class Monitor(xbmc.Monitor):
         elif method == 'Browse':
 
             result = downloader.get_filtered_section(data.get('Id'), data.get('Media'), data.get('Limit'),
-                                                     data.get('Recursive'), data.get('Sort'), data.get('SortOrder'), 
+                                                     data.get('Recursive'), data.get('Sort'), data.get('SortOrder'),
                                                      data.get('Filters'), data.get('Params'), data.get('ServerId'))
             self.void_responder(data, result)
 
@@ -230,10 +230,9 @@ class Monitor(xbmc.Monitor):
 
         elif method == 'Play':
 
-            item = server['api'].get_item(data['ItemIds'].pop(0))
-            data['ItemIds'].insert(0, item)
+            items = server['api'].get_items(data['ItemIds'])
 
-            PlaylistWorker(data.get('ServerId'), data['ItemIds'], data['PlayCommand'] == 'PlayNow',
+            PlaylistWorker(data.get('ServerId'), items, data['PlayCommand'] == 'PlayNow',
                            data.get('StartPositionTicks', 0), data.get('AudioStreamIndex'),
                            data.get('SubtitleStreamIndex')).start()
 
