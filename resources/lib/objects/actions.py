@@ -174,9 +174,11 @@ class Actions(object):
 
         ''' Play a list of items. Creates a new playlist. Add additional items as plugin listing.
         '''
-        item = items[0]
+        item = items['Items'][0]
         playlist = self.get_playlist(item)
         player = xbmc.Player()
+
+        #xbmc.executebuiltin("Playlist.Clear") # Clear playlist to remove the previous item from playlist position no.2
 
         if clear:
             if player.isPlaying():
@@ -208,11 +210,12 @@ class Actions(object):
             xbmc.executebuiltin('Dialog.Close(busydialognocancel)')
             player.play(playlist)
 
-        for item in items[1:]:
+        for item in items['Items'][1:]:
             listitem = xbmcgui.ListItem()
-            LOG.info("[ playlist/%s ]", item)
+            LOG.info("[ playlist/%s ] %s", item['Id'], item['Name'])
 
-            path = "plugin://plugin.video.emby/?mode=play&id=%s&playlist=true" % item
+            self.set_listitem(item, listitem, None, False)
+            path = "plugin://plugin.video.emby/?mode=play&id=%s&playlist=true" % item['Id']
             listitem.setPath(path)
 
             playlist.add(path, listitem, index)
