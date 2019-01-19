@@ -422,6 +422,7 @@ class PlayUtils(object):
             profile['CodecProfiles'].append(
                 {
                     'Type': 'Video',
+                    'codec': 'h264',
                     'Conditions': [
                         {
                             'Condition': "LessThanEqual",
