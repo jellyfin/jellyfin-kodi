@@ -84,9 +84,9 @@ class Monitor(xbmc.Monitor):
                     Otherwise the next played item will be added the previous queue.
                 '''
                 if method == "Player.OnStop":
-                    xbmc.sleep(2000) # let's wait for the player so we don't clear the canceled playlist by mistake.
+                    xbmc.sleep(3000) # let's wait for the player so we don't clear the canceled playlist by mistake.
 
-                    if xbmc.getCondVisibility("!Player.HasMedia"):
+                    if xbmc.getCondVisibility("!Player.HasMedia + !Window.IsVisible(busydialog)"):
 
                         xbmc.executebuiltin("Playlist.Clear")
                         LOG.info("[ playlist ] cleared")
