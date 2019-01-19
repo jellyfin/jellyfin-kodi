@@ -67,7 +67,7 @@ class PlayUtils(object):
             'ServerId': server_id,
             'ServerAddress': server,
             'ForceTranscode': force_transcode,
-            'Token': token or TheVoid('GetToken', {'ServerId': server_id}).get() 
+            'Token': token or TheVoid('GetToken', {'ServerId': server_id}).get()
         }
 
     def get_sources(self, source_id=None):
@@ -118,7 +118,7 @@ class PlayUtils(object):
             if resp > -1:
                 source = sources[resp]
             else:
-                log.info("No media source selected.")
+                LOG.info("No media source selected.")
                 return False
         else:
             source = sources[0]
@@ -236,7 +236,7 @@ class PlayUtils(object):
         return info['MediaSource']
 
     def transcode(self, source, audio=None, subtitle=None):
-        
+
         if not 'TranscodingUrl' in source:
             raise Exception("use get_sources to get transcoding url")
 
@@ -264,7 +264,7 @@ class PlayUtils(object):
         return self.info['Path']
 
     def direct_play(self, source):
-        
+
         API = api.API(self.item, self.info['ServerAddress'])
         self.info['Method'] = "DirectPlay"
         self.info['Path'] = API.get_file_path(source.get('Path'))
@@ -272,7 +272,7 @@ class PlayUtils(object):
         return self.info['Path']
 
     def direct_url(self, source):
-        
+
         self.info['Method'] = "DirectStream"
 
         if self.item['Type'] == "Audio":
@@ -300,7 +300,7 @@ class PlayUtils(object):
 
     def get_resolution(self):
         return int(xbmc.getInfoLabel('System.ScreenWidth')), int(xbmc.getInfoLabel('System.ScreenHeight'))
-    
+
     def get_device_profile(self):
 
         ''' Get device profile based on the add-on settings.
