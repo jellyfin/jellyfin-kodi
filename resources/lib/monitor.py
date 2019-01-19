@@ -79,6 +79,18 @@ class Monitor(xbmc.Monitor):
                 data = json.loads(binascii.unhexlify(data[0]))
         else:
             if method not in ('Player.OnPlay', 'VideoLibrary.OnUpdate', 'Player.OnAVChange'):
+
+                ''' We have to clear the playlist if it was stopped before it has been played completely.
+                    Otherwise the next played item will be added the previous queue.
+                '''
+                if method == "Player.OnStop":
+                    xbmc.sleep(2000) # let's wait for the player so we don't clear the canceled playlist by mistake.
+
+                    if xbmc.getCondVisibility("!Player.HasMedia"):
+
+                        xbmc.executebuiltin("Playlist.Clear")
+                        LOG.info("[ playlist ] cleared")
+
                 return
 
             data = json.loads(data)
