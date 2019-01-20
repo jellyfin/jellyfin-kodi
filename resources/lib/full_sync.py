@@ -266,7 +266,7 @@ class FullSync(object):
         current = obj.item_ids
 
         for x in items:
-            if x[0] not in current and current[1] == 'Movie':
+            if x[0] not in current and x[1] == 'Movie':
                 obj.remove(x[0])
 
     @progress()
@@ -314,7 +314,7 @@ class FullSync(object):
         current = obj.item_ids
 
         for x in items:
-            if x[0] not in current and current[1] == 'Series':
+            if x[0] not in current and x[1] == 'Series':
                 obj.remove(x[0])
 
     @progress()
@@ -352,7 +352,7 @@ class FullSync(object):
         current = obj.item_ids
 
         for x in items:
-            if x[0] not in current and current[1] == 'MusicVideo':
+            if x[0] not in current and x[1] == 'MusicVideo':
                 obj.remove(x[0])
 
     @progress()
@@ -412,7 +412,7 @@ class FullSync(object):
         current = obj.item_ids
 
         for x in items:
-            if x[0] not in current and current[1] == 'MusicArtist':
+            if x[0] not in current and x[1] == 'MusicArtist':
                 obj.remove(x[0])
 
     @progress(_(33018))
