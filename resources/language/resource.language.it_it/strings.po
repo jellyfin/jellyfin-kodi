@@ -3,14 +3,14 @@
 # Addon id: plugin.video.emby
 # Addon Provider: angelblue05
 # Translators:
-# Felix, 2019
+# EffeF, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Emby for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: 2018-09-07 20:10+0000\n"
-"Last-Translator: Felix, 2019\n"
+"Last-Translator: EffeF, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/emby-for-kodi/teams/91090/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -461,6 +461,7 @@ msgstr ""
 msgctxt "#33023"
 msgid "Emby for Kodi will not work correctly until the database is reset."
 msgstr ""
+"Emby per Kodi non funzionerà correttamente fino al ripristino del database."
 
 msgctxt "#33025"
 msgid "Completed in:"
@@ -1045,9 +1046,21 @@ msgctxt "#33188"
 msgid "Would you like to sync Rotten Tomatoes ratings?"
 msgstr "Vorresti sincronizzare le valutazioni di Rotten Tomatoes?"
 
+msgctxt "#33189"
+msgid ""
+"The database version detected is unsupported. Syncing may not work, proceed "
+"anyway?"
+msgstr ""
+"La versione del database rilevata non è supportata. La sincronizzazione "
+"potrebbe non funzionare, procedere comunque?"
+
+msgctxt "#33190"
+msgid "Enable Kodi database discovery"
+msgstr "Abilita il rilevamento del database Kodi"
+
 msgctxt "#33191"
 msgid "Restart Emby for Kodi to apply this change?"
-msgstr ""
+msgstr "Riavvia Emby per Kodi per applicare questo cambiamento?"
 
 msgctxt "#33192"
 msgid "Restart Emby for Kodi"
@@ -1055,4 +1068,8 @@ msgstr "Riavvia Emby per Kodi"
 
 msgctxt "#33193"
 msgid "Restarting..."
-msgstr ""
+msgstr "Riavvio..."
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "Gestisci le librerie"
