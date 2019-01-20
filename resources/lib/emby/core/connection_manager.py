@@ -255,8 +255,8 @@ class ConnectionManager(object):
         tests = []
 
         if server.get('LastConnectionMode') is not None:
-            #tests.append(server['LastConnectionMode'])
-            pass
+            tests.append(server['LastConnectionMode'])
+
         if CONNECTION_MODE['Manual'] not in tests:
             tests.append(CONNECTION_MODE['Manual'])
         if CONNECTION_MODE['Local'] not in tests:
