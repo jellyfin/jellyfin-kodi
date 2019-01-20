@@ -65,6 +65,8 @@ class ServiceManager(threading.Thread):
 
             if not 'ExitService' in error and service is not None:
                 service.shutdown()
+            elif 'RestartService' in error:
+                service.reload_objects()
 
             self.exception = error
 
@@ -82,31 +84,6 @@ if __name__ == "__main__":
             session.join() # Block until the thread exits.
 
             if 'RestartService' in session.exception:
-
-                ''' Reload objects which depends on the patch module.
-                '''
-                LOG.warn("--[ RESTART ]")
-
-                import objects
-                import library
-                import full_sync
-                import monitor
-
-                reload_modules = ['objects.movies', 'objects.musicvideos', 'objects.tvshows',
-                                  'objects.music', 'objects.obj', 'objects.actions', 'objects.kodi.kodi',
-                                  'objects.kodi.movies', 'objects.kodi.musicvideos', 'objects.kodi.tvshows',
-                                  'objects.kodi.music', 'objects.kodi.artwork', 'objects.kodi.queries',
-                                  'objects.kodi.queries_music', 'objects.kodi.queries_texture']
-
-                for mod in reload_modules:
-                    del sys.modules[mod]
-
-                reload(objects.kodi)
-                reload(objects)
-                reload(library)
-                reload(full_sync)
-                reload(monitor)
-
                 continue
 
         except Exception as error:

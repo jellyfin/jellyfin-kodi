@@ -200,7 +200,7 @@ class Service(xbmc.Monitor):
                 return False
 
             get_objects(zipfile, label + '.zip')
-            reload(objects) # to apply latest changes
+            self.reload_objects()
 
             dialog("notification", heading="{emby}", message=_(33156), icon="{emby}")
             LOG.info("--[ new objects/%s ]", objects.version)
@@ -476,6 +476,30 @@ class Service(xbmc.Monitor):
 
             if not self.settings['kodi_companion']:
                 dialog("ok", heading="{emby}", line1=_(33138))
+
+    def reload_objects(self):
+
+        ''' Reload objects which depends on the patch module.
+            This allows to see the changes in code without restarting the python interpreter.
+        '''
+        import full_sync
+
+        reload_modules = ['objects.movies', 'objects.musicvideos', 'objects.tvshows',
+                          'objects.music', 'objects.obj', 'objects.actions', 'objects.kodi.kodi',
+                          'objects.kodi.movies', 'objects.kodi.musicvideos', 'objects.kodi.tvshows',
+                          'objects.kodi.music', 'objects.kodi.artwork', 'objects.kodi.queries',
+                          'objects.kodi.queries_music', 'objects.kodi.queries_texture']
+
+        for mod in reload_modules:
+            del sys.modules[mod]
+
+        reload(objects.kodi)
+        reload(objects)
+        reload(library)
+        reload(full_sync)
+        reload(monitor)
+
+        LOG.warn("---[ objects reloaded ]")
 
     def shutdown(self):
 

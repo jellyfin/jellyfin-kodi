@@ -99,7 +99,8 @@ class Database(object):
         modified = {'file': None, 'time': 0}
 
         for file in reversed(files):
-            if file.startswith(database) and not file.endswith('-wal') and not file.endswith('-shm'):
+            if (file.startswith(database) and not file.endswith('-wal') and
+                not file.endswith('-shm') and not file.endswith('db-journal')):
 
                 st = xbmcvfs.Stat(databases + file.decode('utf-8'))
                 modified_int = st.st_mtime()
