@@ -130,7 +130,7 @@ class Database(object):
         '''
         databases = obj.Objects().objects
 
-        if file not in ('video', 'music') or databases.get('database_set%s' % file):
+        if file not in ('video', 'music', 'texture') or databases.get('database_set%s' % file):
             return self._get_database(databases[file], True)
 
         discovered = self._discover_database(file) if not databases.get('database_set%s' % file) else None
