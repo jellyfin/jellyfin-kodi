@@ -196,10 +196,13 @@ class Library(threading.Thread):
                 set_screensaver(value=self.screensaver)
                 self.screensaver = None
 
-            if xbmc.getCondVisibility('Container.Content(musicvideos)') or xbmc.getCondVisibility('Window.IsMedia'): # Prevent cursor from moving
+            if xbmc.getCondVisibility('Container.Content(musicvideos)'): # Prevent cursor from moving
                 xbmc.executebuiltin('Container.Refresh')
             else: # Update widgets
                 xbmc.executebuiltin('UpdateLibrary(video)')
+
+                if xbmc.getCondVisibility('Window.IsMedia'):
+                    xbmc.executebuiltin('Container.Refresh')
 
     def stop_client(self):
         self.stop_thread = True
