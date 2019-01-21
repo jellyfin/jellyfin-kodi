@@ -85,9 +85,14 @@ class Database(object):
 
     def _discover_database(self, database):
         
-        ''' Grab the first database encountered, by most recent.
-            Will likely not work, but heck.
+        ''' Use UpdateLibrary(video) to update the date modified
+            on the database file used by Kodi.
         '''
+        if database == 'video':
+
+            xbmc.executebuiltin('UpdateLibrary(video)')
+            xbmc.sleep(200)
+
         databases = xbmc.translatePath("special://database/").decode('utf-8')
         types = {
             'video': "MyVideos",
@@ -99,6 +104,7 @@ class Database(object):
         modified = {'file': None, 'time': 0}
 
         for file in reversed(files):
+
             if (file.startswith(database) and not file.endswith('-wal') and
                 not file.endswith('-shm') and not file.endswith('db-journal')):
 
@@ -124,7 +130,7 @@ class Database(object):
         '''
         databases = obj.Objects().objects
 
-        if file not in ('video', 'music', 'texture') or databases.get('database_set%s' % file):
+        if file not in ('video', 'music') or databases.get('database_set%s' % file):
             return self._get_database(databases[file], True)
 
         discovered = self._discover_database(file) if not databases.get('database_set%s' % file) else None
