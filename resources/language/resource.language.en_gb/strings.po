@@ -945,3 +945,11 @@ msgstr ""
 msgctxt "#33194"
 msgid "Manage libraries"
 msgstr ""
+
+msgctxt "#33195"
+msgid "Enable Emby for Kodi"
+msgstr ""
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr ""
