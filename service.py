@@ -78,6 +78,11 @@ if __name__ == "__main__":
 
     while True:
 
+        if not settings('enableAddon.bool'):
+            LOG.warn("Emby for Kodi is not enabled.")
+
+            break
+
         try:
             session = ServiceManager()
             session.start()
