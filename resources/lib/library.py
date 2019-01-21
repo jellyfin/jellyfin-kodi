@@ -122,18 +122,7 @@ class Library(threading.Thread):
         '''
         with Database('video') as kodidb:
             with Database('music') as musicdb:
-
-                if kodidb.discovered or musicdb.discovered:
-                    if kodidb.discovered_file != settings('DiscoveredDatabase'):
-
-                        LOG.info("Newly discovered database: %s", kodidb.path)
-                        settings('DiscoveredDatabase', kodidb.discovered_file)
-                        self.monitor.settings['enable_db_discovery'] = True
-                        settings('AskDiscoverDatabase.bool', True)
-
-                    return False
-
-                return True
+                pass
 
     @stop()
     def service(self):
@@ -320,23 +309,7 @@ class Library(threading.Thread):
             Check databases. 
             Check for the server plugin.
         '''
-        if not self.test_databases():
-            if settings('AskDiscoverDatabase.bool'):
-
-                self.monitor.settings['enable_db_discovery'] = False
-                settings('AskDiscoverDatabase.bool', False)
-                result = dialog("yesno", heading="{emby}", line1=_(33189))
-                settings('DiscoverDatabase.bool', result == 1)
-
-                if not result:
-                    LOG.info("Do not discover database again.")
-
-                    return False
-
-            elif not settings('DiscoverDatabase.bool'):
-                LOG.info("Do not re-discover database again.")
-
-                return False
+        self.test_databases()
 
         Views().get_views()
         Views().get_nodes()
