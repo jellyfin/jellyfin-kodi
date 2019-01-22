@@ -253,7 +253,7 @@ class Actions(object):
             if intro:
                 obj['Artwork']['Primary'] = "&KodiCinemaMode=true"
 
-            self.listitem_video(obj, listitem, item, seektime)
+            self.listitem_video(obj, listitem, item, seektime, intro)
 
             if 'PlaybackInfo' in item:
 
@@ -278,7 +278,7 @@ class Actions(object):
 
         listitem.setContentLookup(False)
 
-    def listitem_video(self, obj, listitem, item, seektime=None):
+    def listitem_video(self, obj, listitem, item, seektime=None, intro=False):
 
         ''' Set listitem for video content. That also include streams.
         '''
@@ -311,7 +311,7 @@ class Actions(object):
         obj['Artwork']['Backdrop'] = obj['Artwork']['Backdrop'] or []
         obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] or ""
 
-        if obj['Type'] == 'Video' and not obj['Type'] == 'Trailer':
+        if not intro and not obj['Type'] == 'Trailer':
             obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or "special://home/addons/plugin.video.emby/icon.png"
         else:
             obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or obj['Artwork']['Thumb'] or (obj['Artwork']['Backdrop'][0] if len(obj['Artwork']['Backdrop']) else "special://home/addons/plugin.video.emby/fanart.jpg")
@@ -320,7 +320,7 @@ class Actions(object):
 
         self.set_artwork(obj['Artwork'], listitem, obj['Type'])
 
-        if obj['Type'] == 'Video' or obj['Type'] == 'Trailer':
+        if intro or obj['Type'] == 'Trailer':
             listitem.setArt({'poster': ""}) # Clear the poster value for intros / trailers to prevent issues in skins
 
         listitem.setIconImage('DefaultVideo.png')

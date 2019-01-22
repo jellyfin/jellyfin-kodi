@@ -360,7 +360,7 @@ msgstr "Hasło"
 
 msgctxt "#30605"
 msgid "Sign in"
-msgstr "Zalogu"
+msgstr "Zaloguj"
 
 msgctxt "#30606"
 msgid "Cancel"
@@ -461,6 +461,8 @@ msgstr ""
 msgctxt "#33023"
 msgid "Emby for Kodi will not work correctly until the database is reset."
 msgstr ""
+"Emby dla Kodi nie będzie działało poprawnie dopóki baza nie zostanie "
+"zresetowana."
 
 msgctxt "#33025"
 msgid "Completed in:"
@@ -1033,7 +1035,7 @@ msgstr "Czy synchronizować ocenę z Rotten Tomatoes?"
 
 msgctxt "#33191"
 msgid "Restart Emby for Kodi to apply this change?"
-msgstr ""
+msgstr "Zrestartować Emby dla Kodi by zaaplikować tę zmianę?"
 
 msgctxt "#33192"
 msgid "Restart Emby for Kodi"
@@ -1041,4 +1043,16 @@ msgstr "Zrestartuj Emby dla Kodi"
 
 msgctxt "#33193"
 msgid "Restarting..."
+msgstr "Restartowanie..."
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "Zarządzaj bibliotekami"
+
+msgctxt "#33195"
+msgid "Enable Emby for Kodi"
+msgstr ""
+
+msgctxt "#33196"
+msgid "Advanced options"
 msgstr ""
