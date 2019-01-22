@@ -63,10 +63,13 @@ class ServiceManager(threading.Thread):
             service.service()
         except Exception as error:
 
-            if not 'ExitService' in error and service is not None:
-                service.shutdown()
-            elif 'RestartService' in error:
-                service.reload_objects()
+            if service is not None:
+
+                if not 'ExitService' in error:
+                    service.shutdown()
+                
+                if 'RestartService' in error:
+                    service.reload_objects()
 
             self.exception = error
 
