@@ -17,6 +17,7 @@ LOG = logging.getLogger('Emby.'+__name__)
 #################################################################################################
 
 def callback(message, data):
+
     ''' Callback function should received message, data            
         message: string
         data: json dictionary
@@ -35,8 +36,7 @@ class EmbyClient(object):
         self.http = HTTP(self)
         self.wsc = WSClient(self)
         self.auth = ConnectionManager(self)
-        self.emby = api
-        self.emby.client = self.http
+        self.emby = api.API(self.http)
         self.callback_ws = callback
         self.callback = callback
 
@@ -100,8 +100,6 @@ class EmbyClient(object):
             return self.auth.__shortcuts__(key.replace('auth/', "", 1))
 
         elif key.startswith('api'):
-            self.emby.client = self.http # Since api is not a class, re-assign global var to correct http adapter
-
             return self.emby
 
         elif key == 'connected':
