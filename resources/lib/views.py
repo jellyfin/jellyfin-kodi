@@ -176,7 +176,7 @@ class Views(object):
         return libraries
 
     def get_views(self):
-        
+
         ''' Get the media folders. Add or remove them. Do not proceed if issue getting libraries.
         '''
         media = {
@@ -212,14 +212,14 @@ class Views(object):
 
                 if view[0] not in self.sync['SortedViews']:
                     removed.append(view[0])
-            
-            if removed:     
+
+            if removed:
                 event('RemoveLibrary', {'Id': ','.join(removed)})
 
         save_sync(self.sync)
 
     def get_nodes(self):
-        
+
         ''' Set up playlists, video nodes, window prop.
         '''
         node_path = xbmc.translatePath("special://profile/library/video").decode('utf-8')
@@ -258,18 +258,18 @@ class Views(object):
         for single in [{'Name': _('fav_movies'), 'Tag': "Favorite movies", 'Media': "movies"},
                        {'Name': _('fav_tvshows'), 'Tag': "Favorite tvshows", 'Media': "tvshows"},
                        {'Name': _('fav_episodes'), 'Tag': "Favorite episodes", 'Media': "episodes"}]:
-            
+
             self.add_single_node(node_path, index, "favorites", single)
             index += 1
 
         self.window_nodes()
 
     def add_playlist(self, path, view, mixed=False):
-        
+
         ''' Create or update the xps file.
         '''
         file = os.path.join(path, "emby%s%s.xsp" % (view['Media'], view['Id']))
-        
+
         try:
             xml = etree.parse(file).getroot()
         except Exception:
@@ -523,7 +523,7 @@ class Views(object):
             break
         else:
             etree.SubElement(root, 'group').text = "genres"
-        
+
     def node_unwatched(self, root):
 
         for rule in root.findall('.//order'):
@@ -581,7 +581,7 @@ class Views(object):
             break
         else:
             etree.SubElement(root, 'limit').text = str(self.limit)
-        
+
         for rule in root.findall('.//rule'):
             if rule.attrib['field'] == 'playcount':
                 rule.find('value').text = "0"
@@ -630,7 +630,7 @@ class Views(object):
             break
         else:
             etree.SubElement(root, 'limit').text = str(self.limit)
-        
+
         for rule in root.findall('.//rule'):
             if rule.attrib['field'] == 'inprogress':
                 break
@@ -721,14 +721,14 @@ class Views(object):
 
                             if view['Media'] in ('movies', 'tvshows'):
                                 self.window_wnode(windex, view, *node)
-                    
+
                         if view['Media'] in ('movies', 'tvshows'):
                             windex += 1
 
                 elif view['Media'] == 'music':
                     self.window_node(index, view, 'music')
             else: # Dynamic entry
-                if view['Media'] in ('homevideos', 'books', 'audiobooks'):
+                if view['Media'] in ('homevideos', 'books', 'audiobooks', 'playlists'):
                     self.window_wnode(windex, view, 'browse')
                     windex += 1
 
@@ -739,7 +739,7 @@ class Views(object):
         for single in [{'Name': _('fav_movies'), 'Tag': "Favorite movies", 'Media': "movies"},
                        {'Name': _('fav_tvshows'), 'Tag': "Favorite tvshows", 'Media': "tvshows"},
                        {'Name': _('fav_episodes'), 'Tag': "Favorite episodes", 'Media': "episodes"}]:
-            
+
             self.window_single_node(index, "favorites", single)
             index += 1
 
@@ -806,16 +806,16 @@ class Views(object):
         window('%s.type' % window_prop, item_type)
 
     def window_wnode(self, index, view, node=None, node_label=None):
-        
+
         ''' Similar to window_node, but does not contain music, musicvideos.
             Contains books, audiobooks.
         '''
-        if view['Media'] in ('homevideos', 'photos', 'books', 'audiobooks'):
+        if view['Media'] in ('homevideos', 'photos', 'books', 'audiobooks', 'playlists'):
             path = self.window_browse(view, None if node in ('all', 'browse') else node)
         else:
             path = self.window_path(view, node)
 
-        if node in ('browse', 'homevideos', 'photos', 'books', 'audiobooks'):
+        if node in ('browse', 'homevideos', 'photos', 'books', 'audiobooks', 'playlists'):
             window_path = path
         else:
             window_path = "ActivateWindow(Videos,%s,return)" % path
@@ -900,7 +900,7 @@ class Views(object):
         '''
         total = int(window((name or 'Emby.nodes') + '.total') or 0)
         props = [
-        
+
             "index","id","path","artwork","title","content","type"
             "inprogress.content","inprogress.title",
             "inprogress.content","inprogress.path",
@@ -925,7 +925,7 @@ class Views(object):
         LOG.info("DELETE playlist %s", path)
 
     def delete_playlists(self):
-        
+
         ''' Remove all emby playlists.
         '''
         path = xbmc.translatePath("special://profile/playlists/video/").decode('utf-8')
