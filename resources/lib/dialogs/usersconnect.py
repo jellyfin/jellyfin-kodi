@@ -9,8 +9,7 @@ import xbmcgui
 
 ##################################################################################################
 
-log = logging.getLogger("EMBY."+__name__)
-
+LOG = logging.getLogger("EMBY."+__name__)
 ACTION_PARENT_DIR = 9
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACK = 92
@@ -34,11 +33,10 @@ class UsersConnect(xbmcgui.WindowXMLDialog):
         self.kodi_version = int(xbmc.getInfoLabel('System.BuildVersion')[:2])
         xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)
 
-    def set_server(self, server):
-        self.server = server
-
-    def set_users(self, users):
-        self.users = users
+    def set_args(self, **kwargs):
+        # connect_manager, user_image, servers, emby_connect
+        for key, value in kwargs.iteritems():
+            setattr(self, key, value)
 
     def is_user_selected(self):
         return True if self._user else False
@@ -54,7 +52,7 @@ class UsersConnect(xbmcgui.WindowXMLDialog):
 
         self.list_ = self.getControl(LIST)
         for user in self.users:
-            user_image = ("userflyoutdefault2.png" if 'PrimaryImageTag' not in user
+            user_image = ("items/logindefault.png" if 'PrimaryImageTag' not in user
                           else self._get_user_artwork(user['Id'], 'Primary'))
             self.list_.addItem(self._add_listitem(user['Name'], user['Id'], user_image))
 
@@ -81,7 +79,7 @@ class UsersConnect(xbmcgui.WindowXMLDialog):
             if self.getFocusId() == LIST:
                 user = self.list_.getSelectedItem()
                 selected_id = user.getProperty('id')
-                log.info('User Id selected: %s', selected_id)
+                LOG.info('User Id selected: %s', selected_id)
 
                 for user in self.users:
                     if user['Id'] == selected_id:

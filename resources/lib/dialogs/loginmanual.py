@@ -8,14 +8,11 @@ import os
 import xbmcgui
 import xbmcaddon
 
-import read_embyserver as embyserver
-from utils import language as lang
+from helper import _, addon_id
 
 ##################################################################################################
 
-log = logging.getLogger("EMBY."+__name__)
-addon = xbmcaddon.Addon('plugin.video.emby')
-
+LOG = logging.getLogger("EMBY."+__name__)
 ACTION_PARENT_DIR = 9
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACK = 92
@@ -23,10 +20,7 @@ SIGN_IN = 200
 CANCEL = 201
 ERROR_TOGGLE = 202
 ERROR_MSG = 203
-ERROR = {
-    'Invalid': 1,
-    'Empty': 2
-}
+ERROR = {'Invalid': 1, 'Empty': 2}
 
 ##################################################################################################
 
@@ -39,18 +33,15 @@ class LoginManual(xbmcgui.WindowXMLDialog):
 
 
     def __init__(self, *args, **kwargs):
-
-        self.emby = embyserver.Read_EmbyServer()
         xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)
+
+    def set_args(self, **kwargs):
+        # connect_manager, user_image, servers, emby_connect
+        for key, value in kwargs.iteritems():
+            setattr(self, key, value)
 
     def is_logged_in(self):
         return True if self._user else False
-
-    def set_server(self, server):
-        self.server = server
-
-    def set_user(self, user):
-        self.username = user or {}
 
     def get_user(self):
         return self._user
@@ -61,10 +52,11 @@ class LoginManual(xbmcgui.WindowXMLDialog):
         self.cancel_button = self.getControl(CANCEL)
         self.error_toggle = self.getControl(ERROR_TOGGLE)
         self.error_msg = self.getControl(ERROR_MSG)
-        self.user_field = self._add_editcontrol(725, 400, 40, 500)
-        self.password_field = self._add_editcontrol(725, 475, 40, 500, password=1)
+        self.user_field = self._add_editcontrol(755, 433, 40, 415)
+        self.password_field = self._add_editcontrol(755, 543, 40, 415, password=1)
 
         if self.username:
+
             self.user_field.setText(self.username)
             self.setFocus(self.password_field)
         else:
@@ -88,8 +80,8 @@ class LoginManual(xbmcgui.WindowXMLDialog):
 
             if not user:
                 # Display error
-                self._error(ERROR['Empty'], lang(30613))
-                log.error("Username cannot be null")
+                self._error(ERROR['Empty'], _('empty_user'))
+                LOG.error("Username cannot be null")
 
             elif self._login(user, password):
                 self.close()
@@ -108,31 +100,31 @@ class LoginManual(xbmcgui.WindowXMLDialog):
 
     def _add_editcontrol(self, x, y, height, width, password=0):
 
-        media = os.path.join(addon.getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
+        media = os.path.join(xbmcaddon.Addon(addon_id()).getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
         control = xbmcgui.ControlEdit(0, 0, 0, 0,
                                       label="User",
-                                      font="font10",
-                                      textColor="ff525252",
-                                      focusTexture=os.path.join(media, "button-focus.png"),
-                                      noFocusTexture=os.path.join(media, "button-focus.png"),
+                                      font="font13",
+                                      textColor="FF52b54b",
+                                      disabledColor="FF888888",
+                                      focusTexture="-",
+                                      noFocusTexture="-",
                                       isPassword=password)
         control.setPosition(x, y)
         control.setHeight(height)
         control.setWidth(width)
 
         self.addControl(control)
+
         return control
 
     def _login(self, username, password):
 
-        try:
-            result = self.emby.loginUser(self.server, username, password)
-        except Exception as error:
-            log.info("Error doing login: " + str(error))
-            result = None
+        mode = self.connect_manager['server-mode']
+        server = self.connect_manager['server-address']
+        result = self.connect_manager['login'](server, username, password, False if mode == 1 and server.startswith('http://') else True)
 
-        if result is None:
-            self._error(ERROR['Invalid'], lang(33009))
+        if not result:
+            self._error(ERROR['Invalid'], _('invalid_auth'))
             return False
         else:
             self._user = result
@@ -142,9 +134,9 @@ class LoginManual(xbmcgui.WindowXMLDialog):
 
         self.error = state
         self.error_msg.setLabel(message)
-        self.error_toggle.setVisibleCondition('True')
+        self.error_toggle.setVisibleCondition('true')
 
     def _disable_error(self):
 
         self.error = None
-        self.error_toggle.setVisibleCondition('False')
+        self.error_toggle.setVisibleCondition('false')

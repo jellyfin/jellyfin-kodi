@@ -8,13 +8,11 @@ import os
 import xbmcgui
 import xbmcaddon
 
-from utils import window
+from helper import window, addon_id
 
 ##################################################################################################
 
-log = logging.getLogger("EMBY."+__name__)
-addon = xbmcaddon.Addon('plugin.video.emby')
-
+LOG = logging.getLogger("EMBY."+__name__)
 ACTION_PARENT_DIR = 9
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACK = 92
@@ -51,13 +49,12 @@ class ContextMenu(xbmcgui.WindowXMLDialog):
             self.getControl(USER_IMAGE).setImage(window('EmbyUserImage'))
 
         height = 479 + (len(self._options) * 55)
-        log.info("options: %s", self._options)
+        LOG.info("options: %s", self._options)
         self.list_ = self.getControl(LIST)
 
         for option in self._options:
             self.list_.addItem(self._add_listitem(option))
 
-        self.background = self._add_editcontrol(730, height, 30, 450)
         self.setFocus(self.list_)
 
     def onAction(self, action):
@@ -70,13 +67,13 @@ class ContextMenu(xbmcgui.WindowXMLDialog):
             if self.getFocusId() == LIST:
                 option = self.list_.getSelectedItem()
                 self.selected_option = option.getLabel()
-                log.info('option selected: %s', self.selected_option)
+                LOG.info('option selected: %s', self.selected_option)
 
                 self.close()
 
     def _add_editcontrol(self, x, y, height, width, password=0):
 
-        media = os.path.join(addon.getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
+        media = os.path.join(xbmcaddon.Addon(addon_id()).getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
         control = xbmcgui.ControlImage(0, 0, 0, 0,
                                        filename=os.path.join(media, "white.png"),
                                        aspectRatio=0,

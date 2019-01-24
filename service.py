@@ -4,48 +4,101 @@
 
 import logging
 import os
+import threading
 import sys
 
 import xbmc
+import xbmcvfs
 import xbmcaddon
 
 #################################################################################################
 
-_ADDON = xbmcaddon.Addon(id='plugin.video.emby')
-_CWD = _ADDON.getAddonInfo('path').decode('utf-8')
-_BASE_LIB = xbmc.translatePath(os.path.join(_CWD, 'resources', 'lib')).decode('utf-8')
-sys.path.append(_BASE_LIB)
+__addon__ = xbmcaddon.Addon(id='plugin.video.emby')
+__base__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'resources', 'lib')).decode('utf-8')
+__pcache__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('profile'), 'emby')).decode('utf-8')
+__cache__ = xbmc.translatePath('special://temp/emby').decode('utf-8')
+
+if not xbmcvfs.exists(__pcache__ + '/'):
+    from resources.lib.helper.utils import copytree
+
+    copytree(os.path.join(__base__, 'objects'), os.path.join(__pcache__, 'objects'))
+
+sys.path.insert(0, __cache__)
+sys.path.insert(0, __pcache__)
+sys.path.append(__base__)
 
 #################################################################################################
 
-import loghandler
-from service_entry import Service
-from utils import settings
-from ga_client import GoogleAnalytics
+from entrypoint import Service
+from helper import settings
+from emby import Emby
 
 #################################################################################################
 
-loghandler.config()
-log = logging.getLogger("EMBY.service")
-DELAY = int(settings('startupDelay') or 0)
+LOG = logging.getLogger("EMBY.service")
+DELAY = int(settings('startupDelay') if settings('SyncInstallRunDone.bool') else 4 or 0)
 
 #################################################################################################
+
+
+class ServiceManager(threading.Thread):
+
+    ''' Service thread. 
+        To allow to restart and reload modules internally. 
+    '''
+    exception = None
+
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+    def run(self):
+        service = None
+
+        try:
+            service = Service()
+
+            if DELAY and xbmc.Monitor().waitForAbort(DELAY):
+                raise Exception("Aborted during startup delay")
+
+            service.service()
+        except Exception as error:
+
+            if service is not None:
+
+                if not 'ExitService' in error:
+                    service.shutdown()
+                
+                if 'RestartService' in error:
+                    service.reload_objects()
+
+            self.exception = error
+
 
 if __name__ == "__main__":
 
-    log.warn("Delaying emby startup by: %s sec...", DELAY)
-    service = Service()
+    LOG.warn("-->[ service ]")
+    LOG.warn("Delay startup by %s seconds.", DELAY)
 
-    try:
-        if DELAY and xbmc.Monitor().waitForAbort(DELAY):
-            raise RuntimeError("Abort event while waiting to start Emby for kodi")
-        # Start the service
-        service.service_entry_point()
-    except Exception as error:
-        if not (hasattr(error, 'quiet') and error.quiet):
-            ga = GoogleAnalytics()
-            errStrings = ga.formatException()
-            ga.sendEventData("Exception", errStrings[0], errStrings[1])
-        log.exception(error)
-        log.info("Forcing shutdown")
-        service.shutdown()
+    while True:
+
+        if not settings('enableAddon.bool'):
+            LOG.warn("Emby for Kodi is not enabled.")
+
+            break
+
+        try:
+            session = ServiceManager()
+            session.start()
+            session.join() # Block until the thread exits.
+
+            if 'RestartService' in session.exception:
+                continue
+
+        except Exception as error:
+            ''' Issue initializing the service.
+            '''
+            LOG.exception(error)
+
+        break
+
+    LOG.warn("--<[ service ]")

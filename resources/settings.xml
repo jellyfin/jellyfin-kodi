@@ -1,88 +1,110 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
-	<category label="30014"><!-- Emby -->
-		<setting id="idMethod" label="Login method" type="enum" values="Manual|Emby Connect" default="0" />
-		<!-- Manual address -->
-		<setting id="username" label="30024" type="text" default="" visible="eq(-1,0)" />
-		<!-- Emby Connect -->
-		<setting id="connectUsername" label="30543" type="text" default="" visible="!eq(0,) + eq(-2,1)" />
+
+	<category label="29999"><!-- Emby -->
+		<setting label="30003" id="idMethod" type="enum" values="Manual|Emby Connect" default="0" />
+		<setting label="30024" id="username" type="text" default="" visible="eq(-1,0)" />
+		<setting label="30543" id="connectUsername" type="text" default="" visible="!eq(0,) + eq(-2,1)" />
 		<setting label="30600" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=connect)" visible="eq(-3,1) + eq(-1,)" option="close" />
 		<setting label="30618" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=connect)" visible="eq(-4,1) + !eq(-2,)" option="close" />
-		<!-- User settings -->
-		<setting id="serverName" label="30001" type="text" default="" />
-		<setting id="server" label="30000" type="text" default="" visible="!eq(-1,)" />
-		<setting id="sslverify" label="30500" type="bool" default="false" visible="!eq(-1,)" subsetting="true" />
-		<setting id="sslcert" label="30501" type="file" default="None" visible="eq(-1,true)" subsetting="true" />
-		<setting id="accessToken" type="text" default="" visible="false" />
-		<setting id="userId" type="text" default="" visible="false" />
-		<!-- Device settings -->
+		<setting label="30001" id="serverName" type="text" default="" />
+		<setting label="30000" id="server" type="text" default="" visible="true" />
+		<setting label="33150" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=updateserver)" visible="!eq(-1,)" option="close" />
+		<setting label="30500" id="sslverify" type="bool" default="true" visible="true" />
+
 		<setting type="sep" />
-		<setting id="deviceNameOpt" label="30504" type="bool" default="false" />
-		<setting id="deviceName" label="30016" type="text" default="Kodi" visible="eq(-1,true)" subsetting="true" />
+		<setting label="33110" type="lsep" />
+		<setting label="30504" id="deviceNameOpt" type="bool" default="false" />
+		<setting label="30016" id="deviceName" type="text" default="Kodi" visible="eq(-1,true)" subsetting="true" />
 	</category>
 
 	<category label="30506"><!-- Sync Options -->
-		<setting id="dblock" type="bool" label="30544" default="false" />
-		<setting id="serverSync" type="bool" label="30514" default="true" />
-		<setting id="incSyncIndicator" label="30507" type="number" default="10" visible="eq(-1,true)" subsetting="true"/>
-		<setting id="limitIndex" type="number" label="30515" default="15" option="int" />
-		<setting id="downloadThreads" type="slider" label="30548" default="3" range="1,1,7" option="int" subsetting="true" />
-		<setting id="enableTextureCache" label="30512"  type="bool" default="true" />
-        <setting id="imageCacheLimit" type="enum" label="30513" values="Unlimited|5|10|15|20|25" default="5" visible="eq(-1,true)" subsetting="true" />
-		<setting id="syncEmptyShows" type="bool" label="30508" default="false" />
-		<setting id="dbSyncScreensaver" label="30536" type="bool" default="false" />
-		<setting id="useDirectPaths" type="enum" label="30511" lvalues="33036|33037" default="0" />
-		<setting id="enableMusic" type="bool" label="30509" default="true" />
-		<setting id="streamMusic" type="bool" label="30510" default="false" visible="eq(-1,true)" subsetting="true" />
-		<setting type="lsep" label="30523" />
-        <setting id="enableImportSongRating" type="bool" label="30524" default="true" />
-        <setting id="enableExportSongRating" type="bool" label="30525" default="false" />
-        <setting id="enableUpdateSongRating" type="bool" label="30526" default="false" />
+		<setting label="33186" type="lsep" />
+		<setting label="33137" id="kodiCompanion" type="bool" default="true" />
+		<setting label="30507" id="syncIndicator" type="number" default="999" visible="eq(-1,true)" subsetting="true"/>
+		<setting label="33185" id="syncDuringPlay" type="bool" default="true" />
+		<setting label="30536" id="dbSyncScreensaver" type="bool" default="true" />
+		<setting label="33111" type="lsep" />
+		<setting label="30511" id="useDirectPaths" type="enum" lvalues="33036|33037" default="1" />
+
+		<setting label="33175" type="lsep" />
+		<setting label="30515" id="limitIndex" type="number" default="15" option="int" />
+		<setting label="33174" id="limitThreads" type="number" default="3" option="int" />
+		<setting label="33176" type="lsep" />
+		<setting label="30512" id="enableTextureCache" type="bool" default="true" />
+		<setting label="30157" id="enableCoverArt" type="bool" default="true" />
+		<setting label="33116" id="compressArt" type="bool" default="false" />
+		<setting label="30508" id="syncEmptyShows" type="bool" default="false" />
+		<setting label="33187" id="syncRottenTomatoes" type="bool" default="true" />
+		<setting id="enableMusic" visible="false" default="false" />
 	</category>
 	
 	<category label="30516"><!-- Playback -->
-		<setting label="30517" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=passwords)" option="close" />
+		<setting label="33113" type="lsep" />
+		<setting label="30518" id="enableCinema" type="bool" default="true" />
+		<setting label="30519" id="askCinema" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
+		<setting label="30002" id="playFromStream" type="bool" default="true" />
+		<setting label="33179" id="playFromTranscode" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
+	    <setting label="30522" id="transcode_h265" type="bool" default="false" visible="eq(-1,false)" />
+	    <setting label="30537" id="transcodeHi10P" type="bool" default="false" visible="eq(-2,false)" />
+	    <setting label="33114" id="enableExternalSubs" type="bool" default="true" />
+	    <setting label="33159" id="skipDialogTranscode" type="enum" lvalues="305|33157|33158|13106" visible="true" default="3" />
+	    <setting label="33115" type="lsep" />
+	    <setting label="30160" id="videoBitrate" type="enum" values="664 Kbps SD|996 Kbps HD|1.3 Mbps HD|2.0 Mbps HD|3.2 Mbps HD|4.7 Mbps HD|6.2 Mbps HD|7.7 Mbps HD|9.2 Mbps HD|10.7 Mbps HD|12.2 Mbps HD|13.7 Mbps HD|15.2 Mbps HD|16.7 Mbps HD|18.2 Mbps HD|20.0 Mbps HD|25.0 Mbps HD|30.0 Mbps HD|35.0 Mbps HD|40.0 Mbps HD|100.0 Mbps HD [default]|1000.0 Mbps HD" visible="true" default="20" />
+
 		<setting type="sep" />
-		<setting id="enableCinema" type="bool" label="30518" default="true" />
-		<setting id="askCinema" type="bool" label="30519" default="false" visible="eq(-1,true)" subsetting="true" />
-        <setting id="offerDelete" type="bool" label="30114" default="false" />
-		<setting id="deleteTV" type="bool" label="30115" visible="eq(-1,true)" default="false" subsetting="true" />
-		<setting id="deleteMovies" type="bool" label="30116" visible="eq(-2,true)" default="false" subsetting="true" />
-		<setting id="resumeJumpBack" type="slider" label="30521" default="10" range="0,1,120" option="int" />
-		<setting type="sep" />
-	    <setting id="playFromStream" type="bool" label="30002" default="true" />
-	    <setting id="videoBitrate" type="enum" label="30160" values="664 Kbps SD|996 Kbps HD|1.3 Mbps HD|2.0 Mbps HD|3.2 Mbps HD|4.7 Mbps HD|6.2 Mbps HD|7.7 Mbps HD|9.2 Mbps HD|10.7 Mbps HD|12.2 Mbps HD|13.7 Mbps HD|15.2 Mbps HD|16.7 Mbps HD|18.2 Mbps HD|20.0 Mbps HD|25.0 Mbps HD|30.0 Mbps HD|35.0 Mbps HD|40.0 Mbps HD|100.0 Mbps HD [default]|1000.0 Mbps HD" visible="true" default="20" subsetting="true" />
-	    <setting id="enableExternalSubs" type="bool" label="Enable external subs for direct stream" default="true" />
-	    <setting id="transcodeH265" type="enum" label="30522" default="0" values="Disabled|480p(and higher)|720p(and higher)|1080p" />
-	    <setting id="transcodeHi10P" type="bool" label="30537" default="false"/>	    
+		<setting label="33112" type="lsep" />
+		<setting label="30521" id="resumeJumpBack" type="slider" default="10" range="0,1,120" option="int" />
+		<setting label="30114" id="offerDelete" type="bool" default="false" />
+		<setting label="30115" id="deleteTV" type="bool" visible="eq(-1,true)" default="false" subsetting="true" />
+		<setting label="30116" id="deleteMovies" type="bool" visible="eq(-2,true)" default="false" subsetting="true" />
+
 	    <setting id="markPlayed" type="number" visible="false" default="90" />
-	    <setting id="failedCount" type="number" visible="false" default="0" />
-	    <setting id="networkCreds" type="text" visible="false" default="" />
 	</category>
 	
-	<category label="30235"><!-- Extras -->
-	    <setting id="enableCoverArt" type="bool" label="30157" default="true" />
-	    <setting id="ignoreSpecialsNextEpisodes" type="bool" label="30527" default="false" />
-	    <setting id="enableContext" type="bool" label="Enable the Emby context menu" default="true" />
-	    <setting id="skipContextMenu" type="bool" label="30520" default="false" visible="eq(-1,true)" subsetting="true" />
-		<setting id="additionalUsers" type="text" label="30528" default="" />
-		<setting type="lsep" label="30534" />
-		<setting id="connectMsg" type="bool" label="30249" default="true" />
-		<setting id="offlinetMsg" type="bool" label="30545" default="true" />
-        <setting id="restartMsg" type="bool" label="30530" default="false" />
-        <setting id="displayMessage" type="slider" label="30547" default="4" range="4,1,20" option="int" />
-        <setting id="newContent" type="bool" label="30531" default="false" />
-        <setting id="newvideotime" type="number" label="30532" visible="eq(-1,true)" default="5" option="int" subsetting="true" />
-        <setting id="newmusictime" type="number" label="30533" visible="eq(-2,true)" default="2" option="int" subsetting="true" />
+	<category label="30235"><!-- Interface -->
+	    <setting label="33105" id="enableContext" type="bool" default="true" />
+	    <setting label="33106" id="enableContextTranscode" type="bool" visible="eq(-1,true)" default="true" subsetting="true" />
+	    <setting label="33143" id="enableContextDelete" type="bool" visible="eq(-2,true)" default="true" subsetting="true" />
+	    <setting label="30520" id="skipContextMenu" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
+
+	    <setting label="33107" type="lsep" />
+		<setting label="30528" id="additionalUsers" type="text" default="" />
+
+		<setting type="sep"/>
+		<setting label="30534" type="lsep" />
+		<setting label="30249" id="connectMsg" type="bool" default="true" />
+		<setting label="30545" id="offlinetMsg" type="bool" default="true" />
+		<setting label="30530" id="restartMsg" type="bool" default="true" />
+        <setting label="30547" id="displayMessage" type="slider" default="4" range="4,1,20" option="int" />
+        <setting label="33108" type="lsep" />
+        <setting label="33177" id="syncProgress" type="number" default="15" visible="true" />
+        <setting label="30531" id="newContent" type="bool" default="false" />
+        <setting label="30532" id="newvideotime" type="number" visible="eq(-1,true)" default="5" option="int" subsetting="true" />
+        <setting label="30533" id="newmusictime" type="number" visible="eq(-2,true)" default="2" option="int" subsetting="true" />
+	</category>
+
+	<category label="33109"><!-- Plugin -->
+		<setting id="ignoreSpecialsNextEpisodes" type="bool" label="30527" default="false" />
+		<setting id="getCast" type="bool" label="33124" default="false" />
 	</category>
 	
 	<category label="30022"><!-- Advanced -->
-		<setting id="logLevel" type="enum" label="30004" values="Disabled|Info|Debug" default="1" />
-		<setting id="metricLogging" type="bool" label="30546" default="true" />
-		<setting id="startupDelay" type="number" label="30529" default="0" option="int" />
+		<setting label="30004" id="logLevel" type="enum" values="Disabled|Info|Debug" default="1" />
+		<setting label="33164" id="maskInfo" type="bool" default="true" />
 		<setting label="30239" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=reset)" option="close" />
-		<setting label="30535" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=deviceid)" />
+		<setting label="30535" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=deviceid)" option="close" />
+		<setting label="33196" type="lsep" />
+		<setting label="33195" id="enableAddon" type="bool" default="true" />
+		<setting label="33180" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=restartservice)" option="close" />
+		<setting label="30529" id="startupDelay" type="number" default="0" option="int" />
+		<setting label="33161" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=checkupdate)" option="close" />
+		<setting label="Developer mode" id="devMode" type="bool" default="false" />
+		
+		<setting type="sep" />
+		<setting label="33104" type="lsep"/>
 		<setting label="33093" type="folder" id="backupPath" option="writeable" />
 		<setting label="33092" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=backup)" visible="!eq(-1,)" option="close" />
 	</category>
+
 </settings>

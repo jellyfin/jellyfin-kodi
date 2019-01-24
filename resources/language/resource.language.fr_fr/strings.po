@@ -1,0 +1,1066 @@
+# Emby for Kodi language file
+# Addon Name: Emby for Kodi
+# Addon id: plugin.video.emby
+# Addon Provider: angelblue05
+# Translators:
+# Jean Fontaine <balayop@yahoo.fr>, 2018
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Emby for Kodi\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2018-09-07 20:10+0000\n"
+"Last-Translator: Jean Fontaine <balayop@yahoo.fr>, 2018\n"
+"Language-Team: French (https://www.transifex.com/emby-for-kodi/teams/91090/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgctxt "#29999"
+msgid "Emby for Kodi"
+msgstr "Emby pour Kodi"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Adresse du serveur"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Nom du serveur"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "Forcer la lecture HTTP"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Méthode de connexion"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Niveau de journalisation"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Nil du périphérique"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Avancé"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+msgctxt "#30030"
+msgid "Port number"
+msgstr "Numéro du port"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Confirmer la suppression du fichier"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Proposer la suppression après la lecture"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Pour les épisodes"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Pour les films"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Activer les illustrations avancées (i.e. couvertures)"
+
+msgctxt "#30160"
+msgid "Video quality"
+msgstr "Qualité vidéo"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Séries TV ajoutés récemment"
+
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "Séries TV en cours"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "Films ajoutés récemment"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "Épisodes ajoutés récemment"
+
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "Films en cours"
+
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "Épisodes en cours"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Épisodes à venir"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Films favoris"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "Séries TV favorites"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Épisodes favoris"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Sagas"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Films non vus"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Éléments aléatoires"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Éléments recommandés"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "Interface"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "Réinitialiser la base de données Kodi locale"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "Activer le message de bienvenue"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Vidéos personnelles ajoutées récemment"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "Photos ajoutées récemment"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Vidéos personnelles favorites"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "Photos favorites"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "Albums favoris"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "Vidéos musicales ajoutées récemment"
+
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "Vidéos musicales en cours"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "Vidéos musicales non vues"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "Films"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "Séries TV"
+
+msgctxt "#30401"
+msgid "Emby options"
+msgstr "Options Emby"
+
+msgctxt "#30402"
+msgid "Emby transcode"
+msgstr "Emby transcodage"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "Ajouter aux favoris"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "Retirer des favoris"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "Paramètres"
+
+msgctxt "#30409"
+msgid "Delete from Emby"
+msgstr "Supprimer d'Emby"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "Actualiser cet élément"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "Transcodage"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "Vérifier la connexion"
+
+msgctxt "#30504"
+msgid "Use altername device name"
+msgstr "Utiliser un nom de périphérique alternatif"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "Synchroniser"
+
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "Activer la notification si le nombre de mises à jour est supérieur à"
+
+msgctxt "#30508"
+msgid "Sync empty shows"
+msgstr "Synchroniser les séries TV vides"
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "Activer la médiathèque musicale"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "Mode de lecture"
+
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "Activer la mise en cache des illustrations"
+
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "Pagination - nombre maximum d'éléments demandés (par défaut : 15)"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "Lecture"
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "Identifiants réseau"
+
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "Activer le mode cinéma"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "Demander à jouer les bandes-annonces"
+
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr ""
+"Ignorer la confirmation de suppression (à utiliser à vos risques et péril)"
+
+msgctxt "#30521"
+msgid "Jump back on resume (in seconds)"
+msgstr "Retour arrière à la reprise de la lecture (en secondes)"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "Transcodage H265/HEVC"
+
+msgctxt "#30527"
+msgid "Ignore specials in next episodes"
+msgstr "Ignorer les épisodes spéciaux pour les prochains épisodes"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "Utilisateurs permanents"
+
+msgctxt "#30529"
+msgid "Startup delay (in seconds)"
+msgstr "Retard au démarrage (en secondes)"
+
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "Activer le message de redémarrage du serveur"
+
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "Activer le nouveau contenu"
+
+msgctxt "#30532"
+msgid "Duration of the video library pop up"
+msgstr "Durée de la fenêtre contextuelle de la librairie vidéo"
+
+msgctxt "#30533"
+msgid "Duration of the music library pop up"
+msgstr "Durée de la fenêtre contextuelle de la librairie musicale"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "Notifications (en secondes)"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "Générer un nouvel ID au périphérique"
+
+msgctxt "#30536"
+msgid "Allow the screensaver during syncs"
+msgstr "Autoriser l'économiseur d'écran pendant les synchronisations"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "Transcodage Hi10P"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "Connexion"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "Connexion manuelle"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "Nom d'utilisateur ou mail"
+
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "Activer le serveur hors ligne"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "Afficher le message"
+
+msgctxt "#30600"
+msgid "Sign in with Emby Connect"
+msgstr "S'identifier avec Emby Connect"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "Mot de passe"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "Identification"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "Annuler"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "Sélectionner le serveur principal"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "Le nom d'utilisateur ou le mot de passe ne peuvent pas être vides"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "Impossible de se connecter au serveur sélectionné"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "Se connecter à"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "Ajouter un serveur manuellement"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "Veuillez vous identifier"
+
+msgctxt "#30613"
+msgid "Change Emby Connect user"
+msgstr "Changer d'utilisateur Emby Connect"
+
+msgctxt "#30614"
+msgid "Connect to server"
+msgstr "Se connecter au serveur"
+
+msgctxt "#30615"
+msgid "Host"
+msgstr "Hôte"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "Connecter"
+
+msgctxt "#30617"
+msgid "Server or port cannot be empty"
+msgstr "Le serveur ou le port ne peuvent pas être vides"
+
+msgctxt "#30618"
+msgid "Change Emby Connect user"
+msgstr "Changer d'utilisateur Emby Connect"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "Bienvenue"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "Le serveur est en cours de redémarrage"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "Nom d'utilisateur ou mot de passe invalide"
+
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr "Choisissez le flux audio"
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr "Choisissez le flux de sous-titres"
+
+msgctxt "#33015"
+msgid "Delete file from Emby?"
+msgstr "Supprimer le fichier depuis Emby ?"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "Jouer les bandes-annonces ?"
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "Rassemblage des sagas"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "Rassemblage:"
+
+msgctxt "#33022"
+msgid ""
+"Detected the database needs to be recreated for this version of Emby for "
+"Kodi. Proceed?"
+msgstr ""
+"La base de données doit être recréée pour cette version d'Emby pour Kodi. "
+"Continuer ?"
+
+msgctxt "#33023"
+msgid "Emby for Kodi will not work correctly until the database is reset."
+msgstr ""
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "Terminé en :"
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr ""
+"Un nouvel ID de périphérique a été généré. Kodi va maintenant redémarrer."
+
+msgctxt "#33035"
+msgid ""
+"Caution! If you choose Native mode, certain Emby features will be missing, "
+"such as: Emby cinema mode, direct stream/transcode options and parental "
+"access schedule."
+msgstr ""
+"Attention ! Si vous choisissez le mode natif, certaines fonctions Emby "
+"seront manquantes, telles que : le mode cinéma d'Emby, les options de flux "
+"direct/transcodage et la planification de l'accès parental."
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "Extension (défaut)"
+
+msgctxt "#33037"
+msgid "Native (direct paths)"
+msgstr "Natif (chemins directs)"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "Activer la médiathèque musicale ?"
+
+msgctxt "#33047"
+msgid "Kodi can't locate file:"
+msgstr "Kodi ne peut pas localiser le fichier :"
+
+msgctxt "#33048"
+msgid ""
+"You may need to verify your network credentials in the add-on settings or "
+"use the Emby path substitution to format your path correctly (Emby dashboard"
+" > library). Stop syncing?"
+msgstr ""
+"Vous devez peut-être vérifier vos identifiants réseau dans les paramètres de"
+" l'extension ou utiliser la substitution de chemin Emby pour formater "
+"correctement votre chemin (tableau de bord Emby > bibliothèque). Arrêter de "
+"synchroniser ?"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "Nouveau"
+
+msgctxt "#33054"
+msgid "Add user to session"
+msgstr "Ajouter l'utilisateur à la session"
+
+msgctxt "#33058"
+msgid "Perform local database reset"
+msgstr "Réinitialisation de la base de données locale"
+
+msgctxt "#33060"
+msgid "Sync theme media"
+msgstr "Synchroniser les médias de thèmes"
+
+msgctxt "#33061"
+msgid "Add/Remove user from the session"
+msgstr "Ajout/Suppression de l'utilisateur à la session"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "Ajouter l'utilisateur"
+
+msgctxt "#33063"
+msgid "Remove user"
+msgstr "Supprimer l'utilisateur"
+
+msgctxt "#33064"
+msgid "Remove user from the session"
+msgstr "Supprimer l'utilisateur de la session"
+
+msgctxt "#33074"
+msgid "Are you sure you want to reset your local Kodi database?"
+msgstr ""
+"Êtes-vous sûr de vouloir réinitialiser votre base de données Kodi locale ?"
+
+msgctxt "#33086"
+msgid "Remove all cached artwork?"
+msgstr "Supprimer toutes les illustrations en cache ?"
+
+msgctxt "#33087"
+msgid "Reset all Emby add-on settings?"
+msgstr "Réinitialiser tous les paramètres de l'extension Emby ?"
+
+msgctxt "#33088"
+msgid ""
+"Database reset has completed, Kodi will now restart to apply the changes."
+msgstr ""
+"La réinitialisation de la base de données est terminée, Kodi va maintenant "
+"redémarrer pour appliquer les changements."
+
+msgctxt "#33089"
+msgid "Enter folder name for backup"
+msgstr "Entrez le nom du dossier pour la sauvegarde"
+
+msgctxt "#33090"
+msgid "Replace existing backup?"
+msgstr "Remplacer la sauvegarde existante ?"
+
+msgctxt "#33091"
+msgid "Created backup at:"
+msgstr "Sauvegarde créée à :"
+
+msgctxt "#33092"
+msgid "Create a backup"
+msgstr "Effectuer une sauvegarde"
+
+msgctxt "#33093"
+msgid "Backup folder"
+msgstr "Dossier de sauvegarde"
+
+msgctxt "#33097"
+msgid ""
+"Important, cleanonupdate was removed in your advanced settings to prevent "
+"conflict with Emby for Kodi. Kodi will restart now."
+msgstr ""
+"Important, cleanonupdate a été supprimé dans vos paramètres avancés pour "
+"éviter tout conflit avec Emby pour Kodi. Kodi va redémarrer maintenant."
+
+msgctxt "#33098"
+msgid "Refresh boxsets"
+msgstr "Rafraîchir les sagas"
+
+msgctxt "#33099"
+msgid ""
+"Install the server plugin Kodi companion to automatically apply emby library"
+" updates at startup. This setting can be found in the add-on settings > sync"
+" options > Enable Kodi Companion."
+msgstr ""
+"Installez le plugin serveur Kodi companion pour appliquer automatiquement "
+"les mises à jour de la bibliothèque emby au démarrage. Ce paramètre se "
+"trouve dans les paramètres complémentaires > options de synchronisation > "
+"Activer Kodi Companion."
+
+msgctxt "#33100"
+msgid "Would you like to sync empty shows?"
+msgstr "Voulez-vous synchroniser les séries TV vides ?"
+
+msgctxt "#33101"
+msgid ""
+"Since you are using native playback mode with music enabled, do you want to "
+"import music rating from files?"
+msgstr ""
+"Vous utilisez le mode de lecture natif pour la musique. Souhaitez-vous "
+"importer la notation musicale à partir des fichiers ?"
+
+msgctxt "#33102"
+msgid "Resume the previous sync?"
+msgstr "Reprendre la synchronisation précédente ?"
+
+msgctxt "#33103"
+msgid ""
+"Enable the webserver service in the Kodi settings to allow artwork caching."
+msgstr ""
+"Activer le serveur Web dans les paramètres Kodi pour permettre la mise en "
+"cache des illustrations."
+
+msgctxt "#33104"
+msgid "Find more info in the github wiki/Create-and-restore-from-backup."
+msgstr ""
+"Vous trouverez plus d'informations dans le wiki Github/Création et "
+"restauration à partir de la sauvegarde."
+
+msgctxt "#33105"
+msgid "Enable the context menu"
+msgstr "Activer le menu contextuel"
+
+msgctxt "#33106"
+msgid "Enable the option to transcode"
+msgstr "Activer l'option de transcodage"
+
+msgctxt "#33107"
+msgid ""
+"Users added to the session (no space between users). (eg username,username2)"
+msgstr ""
+"Utilisateurs ajoutés à la session (pas d'espace entre les utilisateurs). (ex"
+" : nom d'utilisateur,nom d'utilisateur2)"
+
+msgctxt "#33108"
+msgid "Notifications are delayed during video playback (except live tv)."
+msgstr ""
+"Les notifications sont différées pendant la lecture vidéo (sauf pour la TV "
+"en directe)."
+
+msgctxt "#33109"
+msgid "Plugin"
+msgstr "Plugin"
+
+msgctxt "#33110"
+msgid "Restart Kodi to take effect."
+msgstr "Redémarrez Kodi pour prendre effet."
+
+msgctxt "#33111"
+msgid "Reset the local database to apply the playback mode change."
+msgstr ""
+"Réinitialiser la base de données locale pour appliquer le changement de mode"
+" de lecture."
+
+msgctxt "#33112"
+msgid "Applies to Native and Add-on playback mode"
+msgstr "S'applique aux modes de lecture Natif et Add-on"
+
+msgctxt "#33113"
+msgid "Applies to Add-on playback mode only"
+msgstr "S'applique uniquement au mode de lecture Add-on"
+
+msgctxt "#33114"
+msgid "Enable external subtitles"
+msgstr "Activer les sous-titres externes"
+
+msgctxt "#33115"
+msgid "Adjust for remote connection"
+msgstr "Ajuster pour la connexion à distance"
+
+msgctxt "#33116"
+msgid "Compress artwork (reduces quality)"
+msgstr "Compresser les illustrations (réduit la qualité)"
+
+msgctxt "#33117"
+msgid ""
+"Enable artwork caching? If not, Kodi will still cache your artwork at a "
+"slower pace."
+msgstr ""
+"Activer la mise en cache des illustrations ? Sinon, Kodi mettra en cache, "
+"mais plus lentement."
+
+msgctxt "#33118"
+msgid ""
+"You've change the playback mode. Kodi needs to be reset to apply the change,"
+" would you like to do this now?"
+msgstr ""
+"Vous avez changé le mode de lecture. Kodi a besoin d'être réinitialisé pour "
+"appliquer le changement, voulez-vous le faire maintenant ?"
+
+msgctxt "#33119"
+msgid ""
+"Something went wrong during the sync. You'll be able to restore progress "
+"when restarting Kodi. If the problem persists, please report on the Emby for"
+" Kodi forums, with your Kodi log."
+msgstr ""
+"Quelque chose s'est mal passé pendant la synchronisation. Vous pourrez "
+"restaurer la progression au redémarrage de Kodi. Si le problème persiste, "
+"merci de nous le signaler sur les forums Emby pour Kodi, avec votre journal "
+"Kodi."
+
+msgctxt "#33120"
+msgid "Select the libraries to add"
+msgstr "Sélectionner les médiathèques à ajouter"
+
+msgctxt "#33121"
+msgid "All"
+msgstr "Tout"
+
+msgctxt "#33122"
+msgid "Restart Kodi to resume where you left off."
+msgstr "Redémarrer Kodi pour reprendre là où vous vous étiez arrêté."
+
+msgctxt "#33123"
+msgid "Sync library to Kodi"
+msgstr "Synchroniser la médiathèque vers Kodi"
+
+msgctxt "#33124"
+msgid "Include people (slow)"
+msgstr "Inclure les individus (lent)"
+
+msgctxt "#33125"
+msgid ""
+"Choose the Emby views to sync to Kodi. You can optionally sync libraries at "
+"a later time."
+msgstr ""
+"Choisir les vues Emby à synchroniser avec Kodi. Vous pouvez éventuellement "
+"synchroniser les médiathèques ultérieurement."
+
+msgctxt "#33126"
+msgid "Sync later"
+msgstr "Synchroniser plus tard"
+
+msgctxt "#33127"
+msgid "Proceed"
+msgstr "Poursuivre"
+
+msgctxt "#33128"
+msgid ""
+"Failed to retrieve latest content updates. No content updates will be "
+"applied until Kodi is restarted. If this issue persists, please report on "
+"the Emby for Kodi forums, with your Kodi log."
+msgstr ""
+"Impossible de récupérer les dernières mises à jour du contenu. Aucune mise à"
+" jour du contenu ne sera appliquée tant que Kodi n'aura pas redémarré. Si ce"
+" problème persiste, merci de le signaler sur les forums Emby pour Kodi, avec"
+" votre journal Kodi."
+
+msgctxt "#33129"
+msgid "You can sync libraries by launching the Emby add-on > Add libraries."
+msgstr ""
+"Vous pouvez synchroniser les médiathèques en lançant l'add-on Emby > Ajouter"
+" des médiathèques."
+
+msgctxt "#33130"
+msgid "Select the source"
+msgstr "Sélectionner la source"
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "Actualisation des sagas"
+
+msgctxt "#33132"
+msgid "Repair library"
+msgstr "Réparer la médiathèque"
+
+msgctxt "#33133"
+msgid "Remove library from Kodi"
+msgstr "Supprimer la médiathèque de Kodi"
+
+msgctxt "#33134"
+msgid "Add server"
+msgstr "Ajouter un serveur"
+
+msgctxt "#33135"
+msgid "Kodi will now restart to apply a small patch for your Kodi version."
+msgstr ""
+"Kodi va maintenant redémarrer pour appliquer un petit patch pour votre "
+"version de Kodi."
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "Mise à jour de la médiathèque"
+
+msgctxt "#33137"
+msgid "Enable Kodi companion"
+msgstr "Activer Kodi companion"
+
+msgctxt "#33138"
+msgid ""
+"You can update your library manually rather than rely on the server plugin "
+"Kodi companion. Launch the add-on and update libraries (or per library). To "
+"remove content, you'll need to repair the library."
+msgstr ""
+"Vous pouvez mettre à jour votre médiathèque manuellement plutôt que par le "
+"plugin serveur Kodi companion. Lancez l'add-on et mettez à jour les "
+"médiathèques (ou par médiathèque). Pour supprimer du contenu, vous devrez "
+"réparer la médiathèque."
+
+msgctxt "#33139"
+msgid "Update libraries"
+msgstr "Mise à jour des médiathèques"
+
+msgctxt "#33140"
+msgid "Repair libraries"
+msgstr "Réparer les médiathèques"
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "Supprimer le serveur"
+
+msgctxt "#33142"
+msgid "Something went wrong. Try again later."
+msgstr "Quelque chose s'est mal passé. Réessayez plus tard."
+
+msgctxt "#33143"
+msgid "Enable the option to delete"
+msgstr "Activer l'option pour supprimer"
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "Suppression de la médiathèque"
+
+msgctxt "#33145"
+msgid ""
+"Please make sure your Samba (smb) share of your Emby server is accessible to"
+" your Kodi installation and that you have path substitution configured on "
+"your server. Otherwise, Kodi may fail to locate your files."
+msgstr ""
+"Veuillez vous assurer que le partage Samba (smb) de votre serveur Emby est "
+"accessible à votre installation Kodi et que vous avez configuré la "
+"substitution de chemin sur votre serveur. Sinon, Kodi pourrait ne pas "
+"localiser vos fichiers."
+
+msgctxt "#33146"
+msgid "Unable to connect to Emby."
+msgstr "Impossible de se connecter à Emby."
+
+msgctxt "#33147"
+msgid "Your access to Emby is restricted."
+msgstr "Votre accès à Emby est limité."
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "Votre accès à ce serveur est limité."
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "Impossible de se connecter à ce serveur."
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "Mise à jour des informations du serveur"
+
+msgctxt "#33151"
+msgid ""
+"Reconnect to the same server that was previously loaded. If you want to use "
+"a different server, reset your local database, including your user "
+"information."
+msgstr ""
+"Se reconnecter au même serveur que celui qui a été utilisé précédemment. Si "
+"vous souhaitez utiliser un autre serveur, réinitialisez votre base de "
+"données locale, ainsi que vos informations utilisateur."
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "Impossible de trouver TV Tunes dans Kodi."
+
+msgctxt "#33153"
+msgid "Your Emby theme media has been synced to Kodi"
+msgstr "Votre média de thème Emby a été synchronisé avec Kodi"
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "Ajouter des médiathèques"
+
+msgctxt "#33155"
+msgid ""
+"The currently applied patch for Emby for Kodi is corrupted! Please post to "
+"the Emby for Kodi forums if this issue persists. This will need to be fixed "
+"as soon as possible."
+msgstr ""
+"Le patch actuellement appliqué pour Emby pour Kodi est corrompu ! Veuillez "
+"poster sur les forums Emby pour Kodi si ce problème persiste. Cette "
+"situation devra être corrigée dès que possible."
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "Un correctif a été appliqué !"
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "Audio seulement"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "Sous-titres seulement"
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "Activer la sélection audio/sous-titres"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Emby for Kodi to version: "
+msgstr ""
+"Pour éviter les erreurs, veuillez mettre à jour la version d'Emby pour Kodi "
+": "
+
+msgctxt "#33161"
+msgid "Check for updates"
+msgstr "Rechercher des mises à jour"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "Réinitialiser la médiathèque musicale ?"
+
+msgctxt "#33163"
+msgid "Support this project"
+msgstr "Soutenir ce projet"
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr ""
+"Masquer les informations sensibles dans le journal (ne s'applique pas à la "
+"journalisation kodi)"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "Échec de la création de sauvegarde"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "(dynamique)"
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "Récemment ajouté"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "Favoris"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "En cours"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "Non vu"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "Par première lettre"
+
+msgctxt "#33172"
+msgid ""
+"You have {number} updates pending. This may take a little while before "
+"seeing new content. It might be faster to update your libraries via "
+"launching the Emby add-on > update libraries. Proceed anyway?"
+msgstr ""
+"Vous avez {number} mises à jour en attente. Cela peut prendre un peu de "
+"temps avant de voir le nouveau contenu. Il peut être plus rapide de mettre à"
+" jour vos médiathèques en lançant l'add-on Emby > mettre à jour les "
+"médiathèques. Procéder quand même ?"
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "Oublier la synchronisation précédente ? Ceci n'est pas recommandé."
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr ""
+
+msgctxt "#33175"
+msgid ""
+"Paging tip: Each download thread requests your max items value from Emby at "
+"the same time."
+msgstr ""
+"Conseil de pagination : Chaque téléchargement demande la valeur maximale des"
+" éléments d'Emby en même temps."
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr ""
+"Mettre à jour ou réparer vos médiathèques pour appliquer les changements ci-"
+"dessous."
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr ""
+"Afficher la barre de progression si le nombre de mises à jour est supérieur "
+"à"
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr "Traitement des mises à jour"
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "Forcer le transcodage"
+
+msgctxt "#33180"
+msgid "Restart Emby for Kodi"
+msgstr ""
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr ""
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr ""
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr ""
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr ""
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr ""
+
+msgctxt "#33186"
+msgid ""
+"The Kodi companion speeds up the start up sync. Other syncs are triggered by"
+" server events."
+msgstr ""
+
+msgctxt "#33187"
+msgid "Sync Rotten Tomatoes ratings"
+msgstr ""
+
+msgctxt "#33188"
+msgid "Would you like to sync Rotten Tomatoes ratings?"
+msgstr ""
+
+msgctxt "#33191"
+msgid "Restart Emby for Kodi to apply this change?"
+msgstr ""
+
+msgctxt "#33192"
+msgid "Restart Emby for Kodi"
+msgstr ""
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr ""

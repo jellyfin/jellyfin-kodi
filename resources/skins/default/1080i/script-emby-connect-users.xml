@@ -1,194 +1,214 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <window>
 	<defaultcontrol always="true">155</defaultcontrol>
-	<zorder>0</zorder>
-	<include>dialogeffect</include>
+	<animation type="WindowOpen" reversible="false">
+		<effect type="zoom" start="80" end="100" center="960,540" delay="160" tween="circle" easin="out" time="240" />
+		<effect type="fade" delay="160" end="100" time="240" />
+	</animation>
+	<animation type="WindowClose" reversible="false">
+		<effect type="zoom" start="100" end="80" center="960,540" easing="in" tween="circle" easin="out" time="240" />
+		<effect type="fade" start="100" end="0" time="240" />
+	</animation>
 	<controls>
-		<control type="image">
-			<description>Background fade</description>
-			<width>100%</width>
-			<height>100%</height>
-			<texture>emby-bg-fade.png</texture>
-		</control>
-		
 		<control type="group">
-			<width>715</width>
-			<left>32%</left>
-			<top>20%</top>
 			<control type="image">
-				<description>Background box</description>
-				<texture border="6" colordiffuse="ff111111">white.png</texture>
-				<width>100%</width>
-				<height>525</height>
+				<top>-200</top>
+				<bottom>-200</bottom>
+				<left>-200</left>
+				<right>-200</right>
+				<texture colordiffuse="CC000000">white.png</texture>
+				<aspectratio>stretch</aspectratio>
+				<animation effect="fade" end="100" time="200">WindowOpen</animation>
+				<animation effect="fade" start="100" end="0" time="200">WindowClose</animation>
 			</control>
-
-			<control type="image">
-				<description>Emby logo</description>
-				<texture>logo-white.png</texture>
-				<aspectratio>keep</aspectratio>
-				<width>120</width>
-				<height>49</height>
-				<top>30</top>
-				<left>25</left>
-			</control>
-
-			<control type="label">
-				<description>Please sign in</description>
-				<label>$ADDON[plugin.video.emby 30612]</label>
-				<textcolor>white</textcolor>
-				<font>font12</font>
-				<aligny>top</aligny>
-				<align>center</align>
-				<top>80</top>
-				<width>100%</width>
-			</control>
-
 			<control type="group">
-				<top>100</top>
-				<width>620</width>
-				<height>245</height>
-				<left>50</left>
-				<control type="list" id="155">
-					<description>Select User</description>
-					<focusposition>0</focusposition>
-					<width>100%</width>
-					<top>40</top>
-					<onleft>155</onleft>
-					<onright>155</onright>
-					<ondown>200</ondown>
-					<pagecontrol>60</pagecontrol>
-					<orientation>horizontal</orientation>
-					<scrolltime tween="sine" easing="out">250</scrolltime>
-					<itemlayout width="155">
-						<control type="group">
-							<width>150</width>
-							<control type="image">
-								<description>User image</description>
-								<colordiffuse>ff888888</colordiffuse>
-								<info>ListItem.Icon</info>
-								<aspectratio>keep</aspectratio>
-								<width>100%</width>
-								<height>150</height>
-							</control>
-
-							<control type="image">
-								<description>Background label</description>
-								<texture colordiffuse="ff222222">white.png</texture>
-								<width>100%</width>
-								<height>50</height>
-								<top>150</top>
-							</control>
-
-							<control type="label">
-								<width>100%</width>
-								<align>center</align>
-								<height>50</height>
-								<top>150</top>
-								<font>font10</font>
-								<textcolor>white</textcolor>
-								<info>ListItem.Label</info>
-							</control>
-						</control>
-					</itemlayout>
-					<focusedlayout width="155">
-						<control type="group">
-							<width>150</width>
-							<control type="image">
-								<description>User image</description>
-								<info>ListItem.Icon</info>
-								<aspectratio>keep</aspectratio>
-								<width>100%</width>
-								<height>150</height>
-								<visible>Control.HasFocus(155)</visible>
-							</control>
-							<control type="image">
-								<description>User image</description>
-								<colordiffuse>ff888888</colordiffuse>
-								<info>ListItem.Icon</info>
-								<aspectratio>keep</aspectratio>
-								<width>100%</width>
-								<height>150</height>
-								<visible>!Control.HasFocus(155)</visible>
-							</control>
-
-							<control type="image">
-								<description>Background label</description>
-								<texture colordiffuse="ff333333">white.png</texture>
-								<width>100%</width>
-								<height>50</height>
-								<top>150</top>
-								<visible>Control.HasFocus(155)</visible>
-							</control>
-							<control type="image">
-								<description>Background label</description>
-								<texture colordiffuse="ff222222">white.png</texture>
-								<width>100%</width>
-								<height>50</height>
-								<top>150</top>
-								<visible>!Control.HasFocus(155)</visible>
-							</control>
-
-							<control type="label">
-								<width>100%</width>
-								<align>center</align>
-								<height>50</height>
-								<top>150</top>
-								<font>font10</font>
-								<textcolor>white</textcolor>
-								<info>ListItem.Label</info>
-							</control>
-						</control>
-					</focusedlayout>
-				</control>
-
-				<control type="scrollbar" id="60">
-					<top>100%</top>
-					<width>615</width>
-					<height>5</height>
-					<onleft>155</onleft>
-					<onleft>60</onleft>
-					<onright>60</onright>
-					<texturesliderbackground colordiffuse="ff000000" border="4">box.png</texturesliderbackground>
-					<texturesliderbar colordiffuse="ff222222" border="4">box.png</texturesliderbar>
-					<texturesliderbarfocus colordiffuse="ff222222" border="4">box.png</texturesliderbarfocus>
-					<showonepage>false</showonepage>
-					<orientation>horizontal</orientation>
-				</control>
-
+				<centerleft>50%</centerleft>
+				<centertop>50%</centertop>
+				<width>920</width>
+				<height>605</height>
 				<control type="group">
-					<width>615</width>
-					<height>325</height>
-					<top>100%</top>
-					<control type="group">
-						<control type="button" id="200">
-							<description>Manual Login button</description>
-							<texturenofocus border="5" colordiffuse="ff464646">box.png</texturenofocus>
-							<texturefocus border="5" colordiffuse="ff585858">box.png</texturefocus>
-							<label>[UPPERCASE][B]$ADDON[plugin.video.emby 30540][/B][/UPPERCASE]</label>
-							<align>center</align>
+					<top>-30</top>
+					<control type="image">
+						<left>20</left>
+						<width>100%</width>
+						<height>25</height>
+						<texture>logo-white.png</texture>
+						<aspectratio align="left">keep</aspectratio>
+					</control>
+				</control>
+				<control type="image">
+					<width>100%</width>
+					<height>605</height>
+					<texture colordiffuse="ff222326" border="10">dialogs/dialog_back.png</texture>
+				</control>
+				<control type="group">
+					<centerleft>50%</centerleft>
+					<top>10</top>
+					<width>908</width>
+					<height>580</height>
+					<control type="grouplist" id="100">
+						<orientation>vertical</orientation>
+						<itemgap>0</itemgap>
+						<control type="label">
 							<width>100%</width>
-							<height>50</height>
-							<top>35</top>
-							<font>font10</font>
-							<textcolor>ffa6a6a6</textcolor>
-							<focusedcolor>white</focusedcolor>
-							<ondown>201</ondown>
-							<onup>155</onup>
+							<height>75</height>
+							<aligny>center</aligny>
+							<textoffsetx>20</textoffsetx>
+							<font>font13</font>
+							<textcolor>white</textcolor>
+							<textshadow>66000000</textshadow>
+							<label>[B]$ADDON[plugin.video.emby 30612][/B]</label>
 						</control>
-
-						<control type="button" id="201">
-							<description>Cancel</description>
-							<texturenofocus border="5" colordiffuse="ff464646">box.png</texturenofocus>
-							<texturefocus border="5" colordiffuse="ff585858">box.png</texturefocus>
-							<label>[UPPERCASE][B]$ADDON[plugin.video.emby 30606][/B][/UPPERCASE]</label>
-							<font>font10</font>
-							<textcolor>ffa6a6a6</textcolor>
+						<control type="list" id="155">
+							<animation effect="slide" time="0" start="0,0" end="148,0" condition="Integer.IsEqual(Container(155).NumItems,2)">Conditional</animation>
+							<animation effect="slide" time="0" start="0,0" end="296,0" condition="Integer.IsEqual(Container(155).NumItems,1)">Conditional</animation>
+							<centerleft>50%</centerleft>
+							<width>908</width>
+							<height>362</height>
+							<onup>noop</onup>
+							<onleft>noop</onleft>
+							<onright>noop</onright>
+							<ondown>200</ondown>
+							<orientation>horizontal</orientation>
+							<itemlayout width="296">
+								<control type="group">
+									<left>20</left>
+									<top>10</top>
+									<control type="image">
+										<top>-2</top>
+										<left>-2</left>
+										<width>282</width>
+										<height>282</height>
+										<texture>items/shadow_square.png</texture>
+									</control>
+									<control type="image">
+										<width>276</width>
+										<height>276</height>
+										<texture colordiffuse="ff0288d1" diffuse="items/mask_square.png">white.png</texture>
+										<aspectratio>stretch</aspectratio>
+										<visible>String.IsEmpty(ListItem.Icon) | String.Contains(ListItem.Icon,logindefault.png)</visible>
+									</control>
+									<control type="image">
+										<width>276</width>
+										<height>276</height>
+										<texture diffuse="items/mask_square.png" background="true">$INFO[ListItem.Icon]</texture>
+										<aspectratio scalediffuse="false">stretch</aspectratio>
+									</control>
+									<control type="group">
+										<top>285</top>
+										<width>276</width>
+										<control type="label">
+											<width>100%</width>
+											<height>30</height>
+											<label>$INFO[ListItem.Label]</label>
+											<font>font12</font>
+											<textcolor>ffe1e1e1</textcolor>
+											<shadowcolor>66000000</shadowcolor>
+											<scroll>Control.HasFocus(155)</scroll>
+											<align>center</align>
+										</control>
+									</control>
+								</control>
+							</itemlayout>
+							<focusedlayout width="296">
+								<control type="group">
+									<left>20</left>
+									<top>10</top>
+									<control type="image">
+										<top>-2</top>
+										<left>-2</left>
+										<width>282</width>
+										<height>282</height>
+										<texture>items/shadow_square.png</texture>
+									</control>
+									<control type="image">
+										<width>276</width>
+										<height>276</height>
+										<texture colordiffuse="ff0288d1" diffuse="items/mask_square.png">white.png</texture>
+										<aspectratio>stretch</aspectratio>
+										<visible>String.IsEmpty(ListItem.Icon) | String.Contains(ListItem.Icon,logindefault.png)</visible>
+									</control>
+									<control type="image">
+										<width>276</width>
+										<height>276</height>
+										<texture diffuse="items/mask_square.png" background="true">$INFO[ListItem.Icon]</texture>
+										<aspectratio scalediffuse="false">stretch</aspectratio>
+									</control>
+									<control type="image">
+										<left>-12</left>
+										<top>-7</top>
+										<width>300</width>
+										<height>300</height>
+										<texture colordiffuse="FF388e3c">items/focus_square.png</texture>
+										<aspectratio>scale</aspectratio>
+										<animation effect="fade" start="0" end="100" time="200" tween="sine">Focus</animation>
+										<animation effect="fade" start="100" end="0" time="0">UnFocus</animation>
+										<visible>Control.HasFocus(155)</visible>
+									</control>
+									<control type="group">
+										<top>285</top>
+										<width>276</width>
+										<control type="label">
+											<width>100%</width>
+											<height>30</height>
+											<label>$INFO[ListItem.Label]</label>
+											<font>font12</font>
+											<textcolor>white</textcolor>
+											<shadowcolor>66000000</shadowcolor>
+											<scroll>Control.HasFocus(155)</scroll>
+											<align>center</align>
+											<visible>Control.HasFocus(155)</visible>
+										</control>
+										<control type="label">
+											<width>100%</width>
+											<height>30</height>
+											<label>$INFO[ListItem.Label]</label>
+											<font>font12</font>
+											<textcolor>ffe1e1e1</textcolor>
+											<shadowcolor>66000000</shadowcolor>
+											<scroll>false</scroll>
+											<align>center</align>
+											<visible>!Control.HasFocus(155)</visible>
+										</control>
+									</control>
+								</control>
+							</focusedlayout>
+						</control>
+						<control type="button" id="200">
+							<label>[B]$ADDON[plugin.video.emby 30540][/B]</label>
+							<width>874</width>
+							<height>65</height>
+							<font>font13</font>
+							<textcolor>ffe1e1e1</textcolor>
 							<focusedcolor>white</focusedcolor>
+							<selectedcolor>ffe1e1e1</selectedcolor>
+							<shadowcolor>66000000</shadowcolor>
+							<textoffsetx>20</textoffsetx>
+							<aligny>center</aligny>
 							<align>center</align>
-							<width>100%</width>
-							<height>50</height>
-							<top>90</top>
-							<onup>200</onup>
+							<texturefocus border="10" colordiffuse="ff52b54b">buttons/shadow_smallbutton.png</texturefocus>
+							<texturenofocus border="10" colordiffuse="ff464646">buttons/shadow_smallbutton.png</texturenofocus>
+							<pulseonselect>no</pulseonselect>
+							<onup>155</onup>
+							<animation effect="slide" time="0" end="17,0" condition="true">Conditional</animation>
+						</control>
+						<control type="button" id="201">
+							<label>[B]$ADDON[plugin.video.emby 30606][/B]</label>
+							<width>874</width>
+							<height>65</height>
+							<font>font13</font>
+							<textcolor>ffe1e1e1</textcolor>
+							<focusedcolor>white</focusedcolor>
+							<selectedcolor>ffe1e1e1</selectedcolor>
+							<shadowcolor>66000000</shadowcolor>
+							<textoffsetx>20</textoffsetx>
+							<aligny>center</aligny>
+							<align>center</align>
+							<texturefocus border="10" colordiffuse="ff52b54b">buttons/shadow_smallbutton.png</texturefocus>
+							<texturenofocus border="10" colordiffuse="ff464646">buttons/shadow_smallbutton.png</texturenofocus>
+							<pulseonselect>no</pulseonselect>
+							<onup>155</onup>
+							<animation effect="slide" time="0" end="17,0" condition="true">Conditional</animation>
 						</control>
 					</control>
 				</control>
