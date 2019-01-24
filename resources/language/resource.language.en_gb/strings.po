@@ -945,3 +945,7 @@ msgstr ""
 msgctxt "#33196"
 msgid "Advanced options"
 msgstr ""
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr ""
