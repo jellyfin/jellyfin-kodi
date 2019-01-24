@@ -728,7 +728,7 @@ class Views(object):
                 elif view['Media'] == 'music':
                     self.window_node(index, view, 'music')
             else: # Dynamic entry
-                if view['Media'] in ('homevideos', 'books', 'audiobooks', 'playlists'):
+                if view['Media'] in ('homevideos', 'books', 'playlists'):
                     self.window_wnode(windex, view, 'browse')
                     windex += 1
 
@@ -810,12 +810,12 @@ class Views(object):
         ''' Similar to window_node, but does not contain music, musicvideos.
             Contains books, audiobooks.
         '''
-        if view['Media'] in ('homevideos', 'photos', 'books', 'audiobooks', 'playlists'):
+        if view['Media'] in ('homevideos', 'photos', 'books', 'playlists'):
             path = self.window_browse(view, None if node in ('all', 'browse') else node)
         else:
             path = self.window_path(view, node)
 
-        if node in ('browse', 'homevideos', 'photos', 'books', 'audiobooks', 'playlists'):
+        if node in ('browse', 'homevideos', 'photos', 'books', 'playlists'):
             window_path = path
         else:
             window_path = "ActivateWindow(Videos,%s,return)" % path
