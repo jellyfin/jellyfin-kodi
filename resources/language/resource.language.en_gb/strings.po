@@ -223,7 +223,7 @@ msgid "Verify connection"
 msgstr ""
 
 msgctxt "#30504"
-msgid "Use altername device name"
+msgid "Use alternate device name"
 msgstr ""
 
 msgctxt "#30506"
@@ -944,4 +944,8 @@ msgstr ""
 
 msgctxt "#33196"
 msgid "Advanced options"
+msgstr ""
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
 msgstr ""

@@ -466,10 +466,10 @@ class PlayUtils(object):
 
         for stream in source['MediaStreams']:
 
-            if stream['Type'] == 'Subtitle' and stream['IsExternal'] and stream['IsTextSubtitleStream']:
+            if stream['Type'] == 'Subtitle' and stream['IsExternal']:
                 index = stream['Index']
 
-                if 'DeliveryUrl' in stream and stream['DeliveryUrl'].lower().startswith('http'):
+                if 'DeliveryUrl' in stream and stream['DeliveryUrl'].lower().startswith('/videos'):
                     url = "%s/emby%s" % (self.info['ServerAddress'], stream['DeliveryUrl'])
                 else:
                     url = self.get_subtitles(source, stream, index)
@@ -625,7 +625,7 @@ class PlayUtils(object):
 
     def get_subtitles(self, source, stream, index):
 
-        if 'DeliveryUrl' in stream and stream['DeliveryUrl'].lower().startswith('http'):
+        if stream['IsTextSubtitleStream'] and 'DeliveryUrl' in stream and stream['DeliveryUrl'].lower().startswith('/videos'):
             url = "%s/emby%s" % (self.info['ServerAddress'], stream['DeliveryUrl'])
         else:
             url = ("%s/emby/Videos/%s/%s/Subtitles/%s/Stream.%s?api_key=%s" %

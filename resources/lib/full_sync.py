@@ -27,39 +27,55 @@ LOG = logging.getLogger("EMBY."+__name__)
 
 class FullSync(object):
 
+    # Borg - multiple instances, shared state
+    _shared_state = {}
     sync = None
+    running = False
 
     def __init__(self, library, library_id=None, update=False):
 
-        self.library = library
-        self.direct_path = settings('useDirectPaths') == "1"
-        self.update_library = update
-        self.server = Emby()
-        self.sync = get_sync()
+        ''' Map the syncing process and start the sync. Ensure only one sync is running.
+        '''
+        self.__dict__ = self._shared_state
 
-        if library_id:
-            libraries = library_id.split(',')
+        if not self.running:
 
-            for selected in libraries:
+            self.running = True
+            self.library = library
+            self.direct_path = settings('useDirectPaths') == "1"
+            self.update_library = update
+            self.server = Emby()
+            self.sync = get_sync()
 
-                if selected not in [x.replace('Mixed:', "") for x in self.sync['Libraries']]:
-                    library = self.get_libraries(selected)
+            if library_id:
+                libraries = library_id.split(',')
 
-                    if library:
+                for selected in libraries:
 
-                        self.sync['Libraries'].append("Mixed:%s" % selected if library[1] == 'mixed' else selected)
+                    if selected not in [x.replace('Mixed:', "") for x in self.sync['Libraries']]:
+                        library = self.get_libraries(selected)
 
-                        if library[1] in ('mixed', 'movies'):
-                            self.sync['Libraries'].append('Boxsets:%s' % selected)
-                    else:
-                        self.sync['Libraries'].append(selected)
+                        if library:
+
+                            self.sync['Libraries'].append("Mixed:%s" % selected if library[1] == 'mixed' else selected)
+
+                            if library[1] in ('mixed', 'movies'):
+                                self.sync['Libraries'].append('Boxsets:%s' % selected)
+                        else:
+                            self.sync['Libraries'].append(selected)
+            else:
+                self.mapping()
+
+            xmls.sources()
+
+            if not xmls.advanced_settings() and self.sync['Libraries']:
+                self.start()
+            else:
+                self.running = False
         else:
-            self.mapping()
+            dialog("ok", heading="{emby}", line1=_(33197))
 
-        xmls.sources()
-
-        if not xmls.advanced_settings() and self.sync['Libraries']:
-            self.start()
+            raise Exception("Sync is already running.")
 
     def get_libraries(self, library_id=None):
 
@@ -169,6 +185,8 @@ class FullSync(object):
                 xbmc.executebuiltin('InhibitIdleShutdown(false)')
                 set_screensaver(value=screensaver)
 
+            self.running = False
+
             raise
 
         elapsed = datetime.datetime.now() - start_time
@@ -180,6 +198,7 @@ class FullSync(object):
         dialog("notification", heading="{emby}", message="%s %s" % (_(33025), str(elapsed).split('.')[0]),
                icon="{emby}", sound=False)
         LOG.info("Full sync completed in: %s", str(elapsed).split('.')[0])
+        self.running = False
 
     def process_library(self, library_id):
 
