@@ -25,7 +25,6 @@ The add-on supports a hybrid approach. You can decide which Emby libraries to sy
 - Other features supported:
   + Simple Live TV presentation
   + Home Videos & photos
-  + Audiobooks
   + Playlists
   + Theme media
 - Direct play and transcode
@@ -36,19 +35,8 @@ The add-on supports a hybrid approach. You can decide which Emby libraries to sy
 - Backup your emby kodi profile. See the [Emby backup option](https://github.com/MediaBrowser/plugin.video.emby/wiki/Create-and-restore-from-backup)
 - and more...
 
-### Download and installation
-**Important notes**
-- To achieve direct play, you will need to ensure your Emby library paths point to network paths (e.g: "\\\\server\Media\Movies"). See the [Emby wiki](https://github.com/MediaBrowser/Wiki/wiki/Path%20Substitution) for additional information.
-- **The addon is not (and will not be) compatible with the MySQL database replacement in Kodi.** In fact, Emby takes over the point of having a MySQL database because it acts as a "man in the middle" for your entire media library.
-- Emby for Kodi is not currently compatible with Kodi's Video Extras addon unless native playback mode is used. **Deactivate Video Extras if content start randomly playing.**
-
-View this short [Youtube video](https://youtu.be/IaecDPcXI3I?t=119) to give you a better idea of the general process.
-
-1. Install the Emby for Kodi repository, from the repo install the Emby addon.
-2. Within a few seconds you should be prompted for your server-details.
-3. Once you're succesfully authenticated with your Emby server, the initial sync will start. 
-4. The first sync of the Emby server to the local Kodi database may take some time depending on your device and library size.
-5. Once the full sync is done, you can browse your media in Kodi, and syncs will be done automatically in the background.
+### Install Emby for Kodi
+Get started with the [wiki guide](https://github.com/MediaBrowser/plugin.video.emby/wiki)
 
 ### Known limitations
 - Chapter images are missing unless native playback mode is used.
