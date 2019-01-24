@@ -223,7 +223,7 @@ msgid "Verify connection"
 msgstr ""
 
 msgctxt "#30504"
-msgid "Use altername device name"
+msgid "Use alternate device name"
 msgstr ""
 
 msgctxt "#30506"
