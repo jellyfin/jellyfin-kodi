@@ -498,11 +498,11 @@ class Service(xbmc.Monitor):
         window('emby_should_stop.bool', True)
 
         properties = [ # TODO: review
-            "emby_state", "emby_serverStatus",
-            "emby_syncRunning", "emby_currUser",
+            "emby_state", "emby_serverStatus", "emby_currUser",
 
             "emby_play", "emby_online", "emby.connected", "emby.resume", "emby_startup",
-            "emby.external", "emby.external_check", "emby_deviceId", "emby_db_check", "emby_pathverified"
+            "emby.external", "emby.external_check", "emby_deviceId", "emby_db_check", "emby_pathverified",
+            "emby_sync"
         ]
         for prop in properties:
             window(prop, clear=True)

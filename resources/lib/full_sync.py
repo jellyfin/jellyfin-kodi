@@ -14,7 +14,7 @@ import downloader as server
 import helper.xmls as xmls
 from database import Database, get_sync, save_sync, emby_db
 from objects import Movies, TVShows, MusicVideos, Music
-from helper import _, settings, progress, dialog, LibraryException
+from helper import _, settings, window, progress, dialog, LibraryException
 from helper.utils import get_screensaver, set_screensaver
 from emby import Emby
 
@@ -31,12 +31,20 @@ class FullSync(object):
     _shared_state = {}
     sync = None
     running = False
+    screensaver = None
 
     def __init__(self, library, library_id=None, update=False):
 
         ''' Map the syncing process and start the sync. Ensure only one sync is running.
         '''
         self.__dict__ = self._shared_state
+        window('emby_sync.bool', True)
+
+        if not settings('dbSyncScreensaver.bool'):
+
+            xbmc.executebuiltin('InhibitIdleShutdown(true)')
+            self.screensaver = get_screensaver()
+            set_screensaver(value="")
 
         if not self.running:
 
@@ -162,32 +170,15 @@ class FullSync(object):
         save_sync(self.sync)
         start_time = datetime.datetime.now()
 
-        if not settings('dbSyncScreensaver.bool'):
+        for library in list(self.sync['Libraries']):
 
-            xbmc.executebuiltin('InhibitIdleShutdown(true)')
-            screensaver = get_screensaver()
-            set_screensaver(value="")
+            self.process_library(library)
 
-        try:
-            for library in list(self.sync['Libraries']):
+            if not library.startswith('Boxsets:') and library not in self.sync['Whitelist']:
+                self.sync['Whitelist'].append(library)
 
-                self.process_library(library)
-
-                if not library.startswith('Boxsets:') and library not in self.sync['Whitelist']:
-                    self.sync['Whitelist'].append(library)
-
-                self.sync['Libraries'].pop(self.sync['Libraries'].index(library))
-                self.sync['RestorePoint'] = {}
-        except Exception as error:
-
-            if not settings('dbSyncScreensaver.bool'):
-
-                xbmc.executebuiltin('InhibitIdleShutdown(false)')
-                set_screensaver(value=screensaver)
-
-            self.running = False
-
-            raise
+            self.sync['Libraries'].pop(self.sync['Libraries'].index(library))
+            self.sync['RestorePoint'] = {}
 
         elapsed = datetime.datetime.now() - start_time
         settings('SyncInstallRunDone.bool', True)
@@ -198,7 +189,6 @@ class FullSync(object):
         dialog("notification", heading="{emby}", message="%s %s" % (_(33025), str(elapsed).split('.')[0]),
                icon="{emby}", sound=False)
         LOG.info("Full sync completed in: %s", str(elapsed).split('.')[0])
-        self.running = False
 
     def process_library(self, library_id):
 
@@ -248,6 +238,19 @@ class FullSync(object):
                 save_sync(self.sync)
 
             raise
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+
+        ''' Exiting sync
+        '''
+        self.running = False
+        window('emby_sync', clear=True)
+
+        if not settings('dbSyncScreensaver.bool'):
+
+            xbmc.executebuiltin('InhibitIdleShutdown(false)')
+            set_screensaver(value=self.screensaver)
+
 
     @progress()
     def movies(self, library, dialog):
