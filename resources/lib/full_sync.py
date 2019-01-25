@@ -13,10 +13,9 @@ import xbmcvfs
 import downloader as server
 import helper.xmls as xmls
 from database import Database, get_sync, save_sync, emby_db
-from objects import Movies, TVShows, MusicVideos, Music
 from helper import _, settings, window, progress, dialog, LibraryException
 from helper.utils import get_screensaver, set_screensaver
-from emby import Emby
+from views import Views
 
 ##################################################################################################
 
@@ -27,18 +26,37 @@ LOG = logging.getLogger("EMBY."+__name__)
 
 class FullSync(object):
 
+    ''' This should be called like a context.
+        i.e. with FullSync('emby') as sync:
+            sync.libraries()
+    '''
     # Borg - multiple instances, shared state
     _shared_state = {}
     sync = None
     running = False
     screensaver = None
 
-    def __init__(self, library, library_id=None, update=False):
 
-        ''' Map the syncing process and start the sync. Ensure only one sync is running.
+    def __init__(self, library, server):
+
+        ''' You can call all big syncing methods here. 
+            Initial, update, repair, remove.
         '''
         self.__dict__ = self._shared_state
-        window('emby_sync.bool', True)
+
+        if self.running:
+            dialog("ok", heading="{emby}", line1=_(33197))
+
+            raise Exception("Sync is already running.")
+
+        self.library = library
+        self.server = server
+
+    def __enter__(self):
+
+        ''' Do everything we need before the sync
+        '''
+        LOG.info("-->[ fullsync ]")
 
         if not settings('dbSyncScreensaver.bool'):
 
@@ -46,44 +64,43 @@ class FullSync(object):
             self.screensaver = get_screensaver()
             set_screensaver(value="")
 
-        if not self.running:
+        self.running = True
+        window('emby_sync.bool', True)
 
-            self.running = True
-            self.library = library
-            self.direct_path = settings('useDirectPaths') == "1"
-            self.update_library = update
-            self.server = Emby()
-            self.sync = get_sync()
+        return self
 
-            if library_id:
-                libraries = library_id.split(',')
 
-                for selected in libraries:
+    def libraries(self, library_id=None, update=False):
 
-                    if selected not in [x.replace('Mixed:', "") for x in self.sync['Libraries']]:
-                        library = self.get_libraries(selected)
+        ''' Map the syncing process and start the sync. Ensure only one sync is running.
+        '''
+        self.direct_path = settings('useDirectPaths') == "1"
+        self.update_library = update
+        self.sync = get_sync()
 
-                        if library:
+        if library_id:
+            libraries = library_id.split(',')
 
-                            self.sync['Libraries'].append("Mixed:%s" % selected if library[1] == 'mixed' else selected)
+            for selected in libraries:
 
-                            if library[1] in ('mixed', 'movies'):
-                                self.sync['Libraries'].append('Boxsets:%s' % selected)
-                        else:
-                            self.sync['Libraries'].append(selected)
-            else:
-                self.mapping()
+                if selected not in [x.replace('Mixed:', "") for x in self.sync['Libraries']]:
+                    library = self.get_libraries(selected)
 
-            xmls.sources()
+                    if library:
 
-            if not xmls.advanced_settings() and self.sync['Libraries']:
-                self.start()
-            else:
-                self.running = False
+                        self.sync['Libraries'].append("Mixed:%s" % selected if library[1] == 'mixed' else selected)
+
+                        if library[1] in ('mixed', 'movies'):
+                            self.sync['Libraries'].append('Boxsets:%s' % selected)
+                    else:
+                        self.sync['Libraries'].append(selected)
         else:
-            dialog("ok", heading="{emby}", line1=_(33197))
+            self.mapping()
 
-            raise Exception("Sync is already running.")
+        xmls.sources()
+
+        if not xmls.advanced_settings() and self.sync['Libraries']:
+            self.start()
 
     def get_libraries(self, library_id=None):
 
@@ -162,6 +179,7 @@ class FullSync(object):
 
         return [libraries[x - 1] for x in selection]
 
+
     def start(self):
         
         ''' Main sync process.
@@ -239,24 +257,13 @@ class FullSync(object):
 
             raise
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-
-        ''' Exiting sync
-        '''
-        self.running = False
-        window('emby_sync', clear=True)
-
-        if not settings('dbSyncScreensaver.bool'):
-
-            xbmc.executebuiltin('InhibitIdleShutdown(false)')
-            set_screensaver(value=self.screensaver)
-
-
     @progress()
     def movies(self, library, dialog):
 
         ''' Process movies from a single library.
         '''
+        Movies = self.library.media['Movies']
+
         with self.library.database_lock:
             with Database() as videodb:
                 with Database('emby') as embydb:
@@ -296,6 +303,8 @@ class FullSync(object):
 
         ''' Process tvshows and episodes from a single library.
         '''
+        TVShows = self.library.media['TVShows']
+
         with self.library.database_lock:
             with Database() as videodb:
                 with Database('emby') as embydb:
@@ -344,6 +353,8 @@ class FullSync(object):
 
         ''' Process musicvideos from a single library.
         '''
+        MusicVideos = self.library.media['MusicVideos']
+
         with self.library.database_lock:
             with Database() as videodb:
                 with Database('emby') as embydb:
@@ -382,6 +393,8 @@ class FullSync(object):
 
         ''' Process artists, album, songs from a single library.
         '''
+        Music = self.library.media['Music']
+
         with self.library.music_database_lock:
             with Database('music') as musicdb:
                 with Database('emby') as embydb:
@@ -442,6 +455,8 @@ class FullSync(object):
 
         ''' Process all boxsets.
         '''
+        Movies = self.library.media['Movies']
+
         with self.library.database_lock:
             with Database() as videodb:
                 with Database('emby') as embydb:
@@ -463,6 +478,8 @@ class FullSync(object):
 
         ''' Delete all exisitng boxsets and re-add.
         '''
+        Movies = self.library.media['Movies']
+
         with self.library.database_lock:
             with Database() as videodb:
                 with Database('emby') as embydb:
@@ -471,3 +488,81 @@ class FullSync(object):
                     obj.boxsets_reset()
 
         self.boxsets(None)
+
+    @progress(_(33144))
+    def remove_library(self, library_id, dialog):
+
+        ''' Remove library by their id from the Kodi database.
+        '''
+        MEDIA = self.library.MEDIA
+        direct_path = self.library.direct_path
+
+        with Database('emby') as embydb:
+
+            db = emby_db.EmbyDatabase(embydb.cursor)
+            library = db.get_view(library_id.replace('Mixed:', ""))
+            items = db.get_item_by_media_folder(library_id.replace('Mixed:', ""))
+            media = 'music' if library[1] == 'music' else 'video'
+
+            if media == 'music':
+                settings('MusicRescan.bool', False)
+
+            if items:
+                count = 0
+
+                with self.library.music_database_lock if media == 'music' else self.library.database_lock:
+                    with Database(media) as kodidb:
+
+                        if library[1] == 'mixed':
+
+                            movies = [x for x in items if x[1] == 'Movie']
+                            tvshows = [x for x in items if x[1] == 'Series']
+
+                            obj = MEDIA['Movie'](self.server, embydb, kodidb, direct_path)['Remove']
+
+                            for item in movies:
+
+                                obj(item[0])
+                                dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
+                                count += 1
+
+                            obj = MEDIA['Series'](self.server, embydb, kodidb, direct_path)['Remove']
+
+                            for item in tvshows:
+
+                                obj(item[0])
+                                dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
+                                count += 1
+                        else:
+                            obj = MEDIA[items[0][1]](self.server, embydb, kodidb, direct_path)['Remove']
+
+                            for item in items:
+
+                                obj(item[0])
+                                dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
+                                count += 1
+
+        self.sync = get_sync()
+
+        if library_id in self.sync['Whitelist']:
+            self.sync['Whitelist'].remove(library_id)
+        
+        elif 'Mixed:%s' % library_id in self.sync['Whitelist']:
+            self.sync['Whitelist'].remove('Mixed:%s' % library_id)
+
+        save_sync(self.sync)
+
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+
+        ''' Exiting sync
+        '''
+        self.running = False
+        window('emby_sync', clear=True)
+
+        if not settings('dbSyncScreensaver.bool') and self.screensaver is not None:
+
+            xbmc.executebuiltin('InhibitIdleShutdown(false)')
+            set_screensaver(value=self.screensaver)
+
+        LOG.info("--<[ fullsync ]")

@@ -55,11 +55,14 @@ class Library(threading.Thread):
 
     def __init__(self, monitor):
 
+        self.media = {'Movies': Movies, 'TVShows': TVShows, 'MusicVideos': MusicVideos, 'Music': Music}
+        self.MEDIA = MEDIA
+
         self.direct_path = settings('useDirectPaths') == "1"
         self.progress_display = int(settings('syncProgress') or 50)
         self.monitor = monitor
         self.player = monitor.monitor.player
-        self.server = Emby()
+        self.server = Emby().get_client()
         self.updated_queue = Queue.Queue()
         self.userdata_queue = Queue.Queue()
         self.removed_queue = Queue.Queue()
@@ -326,14 +329,18 @@ class Library(threading.Thread):
             if get_sync()['Libraries']:
 
                 try:
-                    FullSync(self)
+                    with FullSync(self, self.server) as sync:
+                        sync.libraries()
+
                     Views().get_nodes()
                 except Exception as error:
                     LOG.error(error)
 
             elif not settings('SyncInstallRunDone.bool'):
                 
-                FullSync(self)
+                with FullSync(self, self.server) as sync:
+                    sync.libraries()
+
                 Views().get_nodes()
 
                 return True
@@ -513,7 +520,8 @@ class Library(threading.Thread):
     def add_library(self, library_id, update=False):
 
         try:
-            FullSync(self, library_id, update=update)
+            with FullSync(self, server=self.server) as sync:
+                sync.libraries(library_id, update)
         except Exception as error:
             LOG.exception(error)
 
@@ -523,69 +531,18 @@ class Library(threading.Thread):
 
         return True
 
-    @progress(_(33144))
-    def remove_library(self, library_id, dialog):
-        window('emby_sync.bool', True)
+    def remove_library(self, library_id):
 
         try:
-            with Database('emby') as embydb:
+            with FullSync(self, self.server) as sync:
+                sync.remove_library(library_id)
 
-                db = emby_db.EmbyDatabase(embydb.cursor)
-                library = db.get_view(library_id.replace('Mixed:', ""))
-                items = db.get_item_by_media_folder(library_id.replace('Mixed:', ""))
-                media = 'music' if library[1] == 'music' else 'video'
-
-                if media == 'music':
-                    settings('MusicRescan.bool', False)
-
-                if items:
-                    count = 0
-
-                    with self.music_database_lock if media == 'music' else self.database_lock:
-                        with Database(media) as kodidb:
-
-                            if library[1] == 'mixed':
-                                movies = [x for x in items if x[1] == 'Movie']
-                                tvshows = [x for x in items if x[1] == 'Series']
-
-                                obj = MEDIA['Movie'](self.server, embydb, kodidb, self.direct_path)['Remove']
-
-                                for item in movies:
-                                    obj(item[0])
-                                    dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
-                                    count += 1
-
-                                obj = MEDIA['Series'](self.server, embydb, kodidb, self.direct_path)['Remove']
-
-                                for item in tvshows:
-                                    obj(item[0])
-                                    dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
-                                    count += 1
-                            else:
-                                obj = MEDIA[items[0][1]](self.server, embydb, kodidb, self.direct_path)['Remove']
-
-                                for item in items:
-                                    obj(item[0])
-                                    dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
-                                    count += 1
-
-            sync = get_sync()
-
-            if library_id in sync['Whitelist']:
-                sync['Whitelist'].remove(library_id)
-            elif 'Mixed:%s' % library_id in sync['Whitelist']:
-                sync['Whitelist'].remove('Mixed:%s' % library_id)
-
-            save_sync(sync)
             Views().remove_library(library_id)
         except Exception as error:
-
             LOG.exception(error)
-            window('emby_sync', clear=True)
 
             return False
 
-        window('emby_sync', clear=True)
         Views().get_views()
         Views().get_nodes()
 

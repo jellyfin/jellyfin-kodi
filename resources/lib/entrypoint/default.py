@@ -21,7 +21,6 @@ from database import reset, get_sync, Database, emby_db, get_credentials
 from objects import Objects, Actions
 from downloader import TheVoid
 from helper import _, event, settings, window, dialog, api, JSONRPC
-from emby import Emby
 
 #################################################################################################
 

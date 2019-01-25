@@ -51,7 +51,7 @@ def window(key, value=None, clear=False, window_id=10000):
             key = key.replace('.bool', "")
             value = "true" if value else "false"
 
-        window.setProperty(key.replace('.json', "").replace('.bool', ""), value)
+        window.setProperty(key, value)
     else:
         result = window.getProperty(key.replace('.json', "").replace('.bool', ""))
 
