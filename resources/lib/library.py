@@ -173,6 +173,7 @@ class Library(threading.Thread):
             self.pending_refresh = False
             self.save_last_sync()
             self.total_updates = 0
+            window('emby_sync', clear=True)
 
             if self.progress_updates:
 
@@ -195,6 +196,13 @@ class Library(threading.Thread):
 
     def stop_client(self):
         self.stop_thread = True
+
+    def enable_pending_refresh(self):
+
+        ''' When there's an active thread. Let the main thread know.
+        '''
+        self.pending_refresh = True
+        window('emby_sync.bool', True)
 
     def worker_queue_size(self):
 
@@ -251,7 +259,7 @@ class Library(threading.Thread):
                 new_thread.start()
                 LOG.info("-->[ q:updated/%s/%s ]", queues, id(new_thread))
                 self.writer_threads['updated'].append(new_thread)
-                self.pending_refresh = True
+                self.enable_pending_refresh()
 
     def worker_userdata(self):
 
@@ -270,7 +278,7 @@ class Library(threading.Thread):
                 new_thread.start()
                 LOG.info("-->[ q:userdata/%s/%s ]", queues, id(new_thread))
                 self.writer_threads['userdata'].append(new_thread)
-                self.pending_refresh = True
+                self.enable_pending_refresh()
 
     def worker_remove(self):
 
@@ -289,7 +297,7 @@ class Library(threading.Thread):
                 new_thread.start()
                 LOG.info("-->[ q:removed/%s/%s ]", queues, id(new_thread))
                 self.writer_threads['removed'].append(new_thread)
-                self.pending_refresh = True
+                self.enable_pending_refresh()
 
     def worker_notify(self):
 
@@ -517,7 +525,8 @@ class Library(threading.Thread):
 
     @progress(_(33144))
     def remove_library(self, library_id, dialog):
-        
+        window('emby_sync.bool', True)
+
         try:
             with Database('emby') as embydb:
 
@@ -572,10 +581,11 @@ class Library(threading.Thread):
         except Exception as error:
 
             LOG.exception(error)
-            dialog.close()
+            window('emby_sync', clear=True)
 
             return False
 
+        window('emby_sync', clear=True)
         Views().get_views()
         Views().get_nodes()
 

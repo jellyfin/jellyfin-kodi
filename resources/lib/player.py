@@ -148,7 +148,7 @@ class Player(xbmc.Player):
             'CurrentPosition': item.get('CurrentPosition') or int(seektime),
             'Muted': muted,
             'Volume': volume,
-            'Server': Emby(item['ServerId']),
+            'Server': Emby(item['ServerId']).get_client(),
             'Paused': False
         })
 
