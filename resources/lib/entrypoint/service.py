@@ -361,7 +361,9 @@ class Service(xbmc.Monitor):
             libraries = data['Id'].split(',')
 
             for lib in libraries:
-                self.library_thread.remove_library(lib)
+
+                if not self.library_thread.remove_library(lib):
+                    return
             
             self.library_thread.add_library(data['Id'])
             xbmc.executebuiltin("Container.Refresh")
@@ -370,7 +372,9 @@ class Service(xbmc.Monitor):
             libraries = data['Id'].split(',')
 
             for lib in libraries:
-                self.library_thread.remove_library(lib)
+                
+                if not self.library_thread.remove_library(lib):
+                    return
 
             xbmc.executebuiltin("Container.Refresh")
 
@@ -473,8 +477,6 @@ class Service(xbmc.Monitor):
         ''' Reload objects which depends on the patch module.
             This allows to see the changes in code without restarting the python interpreter.
         '''
-        import full_sync
-
         reload_modules = ['objects.movies', 'objects.musicvideos', 'objects.tvshows',
                           'objects.music', 'objects.obj', 'objects.actions', 'objects.kodi.kodi',
                           'objects.kodi.movies', 'objects.kodi.musicvideos', 'objects.kodi.tvshows',
@@ -487,7 +489,6 @@ class Service(xbmc.Monitor):
         reload(objects.kodi)
         reload(objects)
         reload(library)
-        reload(full_sync)
         reload(monitor)
 
         LOG.warn("---[ objects reloaded ]")
