@@ -40,11 +40,16 @@ def ensure_client():
 
 class Emby(object):
 
-    ''' This is your Embyclient, you can create more than one. The server_id is only a temporary thing.
+    ''' This is your Embyclient, you can create more than one. The server_id is only a temporary thing
+        to communicate with the EmbyClient().
+
         from emby import Emby
 
-        default_client = Emby()['config/app']
-        another_client = Emby('123456')['config/app']
+        Emby('123456')['config/app']
+
+        # Permanent client reference
+        client = Emby('123456').get_client()
+        client['config/app']
     '''
 
     # Borg - multiple instances, shared state
@@ -56,6 +61,9 @@ class Emby(object):
     def __init__(self, server_id=None):
         self.__dict__ = self._shared_state
         self.server_id = server_id or "default"
+
+    def get_client(self):
+        return self.client[self.server_id]
 
     @classmethod
     def set_loghandler(cls, func=loghandler, level=logging.INFO):
