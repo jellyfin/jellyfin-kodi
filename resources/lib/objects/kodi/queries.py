@@ -320,11 +320,11 @@ add_musicvideo =    	"""	INSERT INTO musicvideo(idMVideo,idFile, c00, c04, c05, 
 add_musicvideo_obj =        [   "{MvideoId}","{FileId}","{Title}","{Runtime}","{Directors}","{Studio}","{Year}",
                                 "{Plot}","{Album}","{Artists}","{Genre}","{Index}","{Premiere}"
                             ]
-add_tvshow =    		""" INSERT INTO	tvshow(idShow, c00, c01, c02, c04, c05, c08, c09, c12, c13, c14, c15) 
-            				VALUES 		(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+add_tvshow =    		""" INSERT INTO	tvshow(idShow, c00, c01, c02, c04, c05, c08, c09, c10, c12, c13, c14, c15) 
+            				VALUES 		(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
             			"""
 add_tvshow_obj =            [   "{ShowId}","{Title}","{Plot}","{Status}","{RatingId}","{Premiere}","{Genre}","{Title}",
-                                "{Unique}","{Mpaa}","{Studio}","{SortTitle}"
+                                "disintegrate browse bug", "{Unique}","{Mpaa}","{Studio}","{SortTitle}"
                             ]
 add_season =    		"""	INSERT INTO seasons(idSeason, idShow, season) 
     						VALUES 		(?, ?, ?) 
@@ -446,12 +446,12 @@ update_musicvideo_obj =     [   "{Title}","{Runtime}","{Directors}","{Studio}","
                                 "{Artists}","{Genre}","{Index}","{Premiere}","{MvideoId}"
                             ]
 update_tvshow =     	""" UPDATE 	tvshow 
-            				SET 	c00 = ?, c01 = ?, c02 = ?, c04 = ?, c05 = ?, c08 = ?, c09 = ?, 
+            				SET 	c00 = ?, c01 = ?, c02 = ?, c04 = ?, c05 = ?, c08 = ?, c09 = ?, c10 = ?,
                 					c12 = ?, c13 = ?, c14 = ?, c15 = ? 
             				WHERE 	idShow = ? 
             			"""
 update_tvshow_obj =         [   "{Title}","{Plot}","{Status}","{RatingId}","{Premiere}","{Genre}","{Title}",
-                                "{Unique}","{Mpaa}","{Studio}","{SortTitle}","{ShowId}"
+                                "disintegrate browse bug","{Unique}","{Mpaa}","{Studio}","{SortTitle}","{ShowId}"
                             ]
 update_tvshow_link =   	"""	INSERT OR REPLACE INTO	tvshowlinkpath(idShow, idPath) 
     						VALUES 					(?, ?) 

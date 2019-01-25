@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon  id="plugin.video.emby"
         name="Emby" 
-        version="4.0.0"
+        version="4.0.1"
         provider-name="angelblue05">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -39,6 +39,7 @@
     <news>
       New stable release
       The wiki has been updated: https://github.com/MediaBrowser/plugin.video.emby/wiki
+      Small fixes
     </news>
   </extension>
 </addon>

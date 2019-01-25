@@ -215,17 +215,17 @@ class HTTP(object):
     def _authorization(self, data):
 
         auth =  "MediaBrowser "
-        auth += "Client=%s, " % self.config['app.name']
-        auth += "Device=%s, " % self.config['app.device_name']
-        auth += "DeviceId=%s, " % self.config['app.device_id']
-        auth += "Version=%s" % self.config['app.version']
+        auth += "Client=%s, " % self.config['app.name'].encode('utf-8')
+        auth += "Device=%s, " % self.config['app.device_name'].encode('utf-8')
+        auth += "DeviceId=%s, " % self.config['app.device_id'].encode('utf-8')
+        auth += "Version=%s" % self.config['app.version'].encode('utf-8')
 
         data['headers'].update({'Authorization': auth})
 
         if self.config['auth.token']:
 
-            auth += ', UserId=%s' % self.config['auth.user_id']
-            data['headers'].update({'Authorization': auth, 'X-MediaBrowser-Token': self.config['auth.token']})
+            auth += ', UserId=%s' % self.config['auth.user_id'].encode('utf-8')
+            data['headers'].update({'Authorization': auth, 'X-MediaBrowser-Token': self.config['auth.token'].encode('utf-8')})
 
         return data
 
