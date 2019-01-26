@@ -36,20 +36,25 @@ def sources():
         etree.SubElement(files, 'default', attrib={'pathversion': "1"})
 
     video = xml.find('video')
-    count = 2
+    count_http = 1
+    count_smb = 1
 
     for source in xml.findall('.//path'):
         if source.text == 'smb://':
-            count -= 1
+            count_smb -= 1
+        elif source.text == 'http://':
+            count_http -= 1
 
-        if count == 0:
+        if not count_http and not count_smb:
             break
     else:
-        for i in range(0, count):
-            source = etree.SubElement(video, 'source')
-            etree.SubElement(source, 'name').text = "Emby"
-            etree.SubElement(source, 'path', attrib={'pathversion': "1"}).text = "smb://"
-            etree.SubElement(source, 'allowsharing').text = "true"
+        for protocol in ('smb://', 'http://'):
+            if (protocol == 'smb://' and count_smb > 0) or (protocol == 'http://' and count_http > 0):
+
+                source = etree.SubElement(video, 'source')
+                etree.SubElement(source, 'name').text = "Emby"
+                etree.SubElement(source, 'path', attrib={'pathversion': "1"}).text = protocol
+                etree.SubElement(source, 'allowsharing').text = "true"
 
     try:
         files = xml.find('files')
