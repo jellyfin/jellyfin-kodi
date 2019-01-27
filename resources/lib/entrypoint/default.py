@@ -166,7 +166,7 @@ def listing():
         if path:
             if xbmc.getCondVisibility('Window.IsActive(Pictures)') and node in ('photos', 'homevideos'):
                 directory(label, path, artwork=artwork)
-            elif xbmc.getCondVisibility('Window.IsActive(Videos)') and node not in ('photos', 'homevideos', 'music', 'audiobooks'):
+            elif xbmc.getCondVisibility('Window.IsActive(Videos)') and node not in ('photos', 'music', 'audiobooks'):
                 directory(label, path, artwork=artwork, context=context)
             elif xbmc.getCondVisibility('Window.IsActive(Music)') and node in ('music'):
                 directory(label, path, artwork=artwork, context=context)
