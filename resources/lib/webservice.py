@@ -164,6 +164,10 @@ class StoppableHttpRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         '''
         try:
             params = self.get_params()
+
+            if not params.get('Id').isdigit():
+                raise IndexError("Incorrect Id format: %s" % params.get('Id'))
+            
             LOG.info("Webservice called with params: %s", params)
 
             path = ("plugin://plugin.video.emby?mode=play&id=%s&dbid=%s&filename=%s&transcode=%s"
@@ -176,6 +180,10 @@ class StoppableHttpRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
             if not headers_only:
                 self.wfile.write(path)
+        except IndexError as error:
+
+            LOG.error(error)
+            self.send_error(403)
 
         except Exception as error:
 
