@@ -6,7 +6,7 @@ import json
 import logging
 import time
 
-from libraries import requests
+import requests
 from exceptions import HTTPException
 
 #################################################################################################

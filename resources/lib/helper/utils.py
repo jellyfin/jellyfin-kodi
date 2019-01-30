@@ -17,6 +17,7 @@ import xbmcgui
 import xbmcvfs
 
 from . import _
+from dateutil import tz, parser
 
 #################################################################################################
 
@@ -449,8 +450,6 @@ def convert_to_local(date):
 
     ''' Convert the local datetime to local.
     '''
-    from libraries.dateutil import tz, parser
-
     try:
         date = parser.parse(date) if type(date) in (unicode, str) else date
         date = date.replace(tzinfo=tz.tzutc())
