@@ -24,7 +24,7 @@ from emby.core.exceptions import HTTPException
 
 LOG = logging.getLogger("EMBY."+__name__)
 LIMIT = min(int(settings('limitIndex') or 50), 50)
-CACHE = xbmc.translatePath(os.path.join(xbmcaddon.Addon(id='plugin.video.emby').getAddonInfo('profile').decode('utf-8'), 'emby')).decode('utf-8')
+CACHE = xbmc.translatePath(os.path.join(xbmcaddon.Addon(id='plugin.video.jellyfin').getAddonInfo('profile').decode('utf-8'), 'emby')).decode('utf-8')
 
 #################################################################################################
 

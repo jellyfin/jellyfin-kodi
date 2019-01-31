@@ -238,7 +238,7 @@ def reset():
     if dialog("yesno", heading="{emby}", line1=_(33086)):
         reset_artwork()
 
-    addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/").decode('utf-8')
+    addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
 
     if dialog("yesno", heading="{emby}", line1=_(33087)):
 
@@ -326,7 +326,7 @@ def reset_artwork():
 
 def get_sync():
 
-    path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/").decode('utf-8')
+    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
     
     if not xbmcvfs.exists(path):
         xbmcvfs.mkdirs(path)
@@ -346,7 +346,7 @@ def get_sync():
 
 def save_sync(sync):
 
-    path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/").decode('utf-8')
+    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
     
     if not xbmcvfs.exists(path):
         xbmcvfs.mkdirs(path)
@@ -358,7 +358,7 @@ def save_sync(sync):
 
 def get_credentials():
 
-    path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/").decode('utf-8')
+    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
     
     if not xbmcvfs.exists(path):
         xbmcvfs.mkdirs(path)
@@ -384,7 +384,7 @@ def get_credentials():
 def save_credentials(credentials):
 
     credentials = credentials or {}
-    path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/").decode('utf-8')
+    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
     
     if not xbmcvfs.exists(path):
         xbmcvfs.mkdirs(path)

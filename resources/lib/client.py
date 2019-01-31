@@ -82,7 +82,7 @@ def get_device_id(reset=False):
     if client_id:
         return client_id
 
-    directory = xbmc.translatePath('special://profile/addon_data/plugin.video.emby/').decode('utf-8')
+    directory = xbmc.translatePath('special://profile/addon_data/plugin.video.jellyfin/').decode('utf-8')
 
     if not xbmcvfs.exists(directory):
         xbmcvfs.mkdir(directory)

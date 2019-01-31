@@ -217,7 +217,7 @@ class TVShows(KodiDb):
             if not validate(obj['Path']):
                 raise Exception("Failed to validate path. User stopped.")
         else:
-            obj['TopLevel'] = "plugin://plugin.video.emby.tvshows/"
+            obj['TopLevel'] = "plugin://plugin.video.jellyfin/"
             obj['Path'] = "%s%s/" % (obj['TopLevel'], obj['Id'])
 
 
@@ -354,7 +354,7 @@ class TVShows(KodiDb):
         if not self.direct_path and obj['Resume']:
 
             temp_obj = dict(obj)
-            temp_obj['Path'] = "plugin://plugin.video.emby.tvshows/"
+            temp_obj['Path'] = "plugin://plugin.video.jellyfin/"
             temp_obj['PathId'] = self.get_path(*values(temp_obj, QU.get_path_obj))
             temp_obj['FileId'] = self.add_file(*values(temp_obj, QU.add_file_obj))
             self.update_file(*values(temp_obj, QU.update_file_obj))
@@ -419,7 +419,7 @@ class TVShows(KodiDb):
 
             obj['Path'] = obj['Path'].replace(obj['Filename'], "")
         else:
-            obj['Path'] = "plugin://plugin.video.emby.tvshows/%s/" % obj['SeriesId']
+            obj['Path'] = "plugin://plugin.video.jellyfin/%s/" % obj['SeriesId']
             params = {
                 'filename': obj['Filename'].encode('utf-8'),
                 'id': obj['Id'],
@@ -493,14 +493,14 @@ class TVShows(KodiDb):
 
                 temp_obj = dict(obj)
                 temp_obj['Filename'] = self.get_filename(*values(temp_obj, QU.get_file_obj))
-                temp_obj['Path'] = "plugin://plugin.video.emby.tvshows/"
+                temp_obj['Path'] = "plugin://plugin.video.jellyfin/"
                 self.remove_file(*values(temp_obj, QU.delete_file_obj))
 
             elif not self.direct_path and obj['Resume']:
 
                 temp_obj = dict(obj)
                 temp_obj['Filename'] = self.get_filename(*values(temp_obj, QU.get_file_obj))
-                temp_obj['PathId'] = self.get_path("plugin://plugin.video.emby.tvshows/")
+                temp_obj['PathId'] = self.get_path("plugin://plugin.video.jellyfin/")
                 temp_obj['FileId'] = self.add_file(*values(temp_obj, QU.add_file_obj))
                 self.update_file(*values(temp_obj, QU.update_file_obj))
                 self.add_playstate(*values(temp_obj, QU.add_bookmark_obj))

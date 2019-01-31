@@ -359,7 +359,7 @@ class Views(object):
         else:
             element = etree.Element('node', {'order': str(index), 'type': "folder"})
 
-        etree.SubElement(element, 'icon').text = "special://home/addons/plugin.video.emby/icon.png"
+        etree.SubElement(element, 'icon').text = "special://home/addons/plugin.video.jellyfin/icon.png"
 
         return element
 
@@ -877,7 +877,7 @@ class Views(object):
             'mode': "nextepisodes",
             'limit': self.limit
         }
-        return "%s?%s" % ("plugin://plugin.video.emby/", urllib.urlencode(params))
+        return "%s?%s" % ("plugin://plugin.video.jellyfin/", urllib.urlencode(params))
 
     def window_browse(self, view, node=None):
 
@@ -892,7 +892,7 @@ class Views(object):
         if node:
             params['folder'] = node
 
-        return "%s?%s" % ("plugin://plugin.video.emby/", urllib.urlencode(params))
+        return "%s?%s" % ("plugin://plugin.video.jellyfin/", urllib.urlencode(params))
 
     def window_clear(self, name=None):
 

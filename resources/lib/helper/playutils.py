@@ -503,7 +503,7 @@ class PlayUtils(object):
         ''' Download external subtitles to temp folder
             to be able to have proper names to streams.
         '''
-        temp = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/temp/").decode('utf-8')
+        temp = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/temp/").decode('utf-8')
 
         if not xbmcvfs.exists(temp):
             xbmcvfs.mkdir(temp)

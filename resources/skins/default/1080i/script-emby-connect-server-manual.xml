@@ -57,12 +57,12 @@
 							<font>font13</font>
 							<textcolor>white</textcolor>
 							<textshadow>66000000</textshadow>
-							<label>[B]$ADDON[plugin.video.emby 30614][/B]</label>
+							<label>[B]$ADDON[plugin.video.jellyfin 30614][/B]</label>
 						</control>
 						<control type="group" id="101">
 							<height>110</height>
 							<control type="label">
-								<label>$ADDON[plugin.video.emby 30615]</label>
+								<label>$ADDON[plugin.video.jellyfin 30615]</label>
 								<textcolor>ffe1e1e1</textcolor>
 								<shadowcolor>66000000</shadowcolor>
 								<font>font12</font>
@@ -83,7 +83,7 @@
 						<control type="group" id="102">
 							<height>110</height>
 							<control type="label">
-								<label>$ADDON[plugin.video.emby 30030]</label>
+								<label>$ADDON[plugin.video.jellyfin 30030]</label>
 								<textcolor>ffe1e1e1</textcolor>
 								<textshadow>66000000</textshadow>
 								<font>font12</font>
@@ -103,7 +103,7 @@
 							</control>
 						</control>
 						<control type="button" id="200">
-							<label>[B]$ADDON[plugin.video.emby 30616][/B]</label>
+							<label>[B]$ADDON[plugin.video.jellyfin 30616][/B]</label>
 							<width>426</width>
 							<height>65</height>
 							<font>font13</font>
@@ -120,7 +120,7 @@
 							<animation effect="slide" time="0" end="17,0" condition="true">Conditional</animation>
 						</control>
 						<control type="button" id="201">
-							<label>[B]$ADDON[plugin.video.emby 30606][/B]</label>
+							<label>[B]$ADDON[plugin.video.jellyfin 30606][/B]</label>
 							<width>426</width>
 							<height>65</height>
 							<font>font13</font>

@@ -18,7 +18,7 @@ from objects import Actions
 #################################################################################################
 
 LOG = logging.getLogger("EMBY."+__name__)
-XML_PATH = (xbmcaddon.Addon('plugin.video.emby').getAddonInfo('path'), "default", "1080i")
+XML_PATH = (xbmcaddon.Addon('plugin.video.jellyfin').getAddonInfo('path'), "default", "1080i")
 OPTIONS = {
     'Refresh': _(30410),
     'Delete': _(30409),
@@ -153,7 +153,7 @@ class Context(object):
             TheVoid('FavoriteItem', {'ServerId': self.server, 'Id': self.item['Id'], 'Favorite': False})
 
         elif selected == OPTIONS['Addon']:
-            xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
+            xbmc.executebuiltin('Addon.OpenSettings(plugin.video.jellyfin)')
 
         elif selected == OPTIONS['Delete']:
             self.delete_item()

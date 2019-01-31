@@ -57,7 +57,7 @@
 							<font>font13</font>
 							<textcolor>white</textcolor>
 							<textshadow>66000000</textshadow>
-							<label>[B]$ADDON[plugin.video.emby 30612][/B]</label>
+							<label>[B]$ADDON[plugin.video.jellyfin 30612][/B]</label>
 						</control>
 						<control type="list" id="155">
 							<animation effect="slide" time="0" start="0,0" end="148,0" condition="Integer.IsEqual(Container(155).NumItems,2)">Conditional</animation>
@@ -175,7 +175,7 @@
 							</focusedlayout>
 						</control>
 						<control type="button" id="200">
-							<label>[B]$ADDON[plugin.video.emby 30540][/B]</label>
+							<label>[B]$ADDON[plugin.video.jellyfin 30540][/B]</label>
 							<width>874</width>
 							<height>65</height>
 							<font>font13</font>
@@ -193,7 +193,7 @@
 							<animation effect="slide" time="0" end="17,0" condition="true">Conditional</animation>
 						</control>
 						<control type="button" id="201">
-							<label>[B]$ADDON[plugin.video.emby 30606][/B]</label>
+							<label>[B]$ADDON[plugin.video.jellyfin 30606][/B]</label>
 							<width>874</width>
 							<height>65</height>
 							<font>font13</font>

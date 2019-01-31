@@ -415,7 +415,7 @@ class Player(xbmc.Player):
                 item['Server']['api'].close_transcode(item['DeviceId'])
 
 
-            path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/temp/").decode('utf-8')
+            path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/temp/").decode('utf-8')
 
             if xbmcvfs.exists(path):
                 dirs, files = xbmcvfs.listdir(path)

@@ -43,7 +43,7 @@ def get_server_address(server, mode):
 
 class ConnectionManager(object):
 
-    min_server_version = "3.0.5930"
+    min_server_version = "10.1.0"
     server_version = min_server_version
     user = {}
     server_id = None

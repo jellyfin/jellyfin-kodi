@@ -109,7 +109,7 @@ class Events(object):
         elif mode == 'removeserver':
             event('RemoveServer', {'Id': server})
         elif mode == 'settings':
-            xbmc.executebuiltin('Addon.OpenSettings(plugin.video.emby)')
+            xbmc.executebuiltin('Addon.OpenSettings(plugin.video.jellyfin)')
         elif mode == 'adduser':
             add_user()
         elif mode == 'checkupdate':
@@ -153,13 +153,13 @@ def listing():
 
         if view_id and node in ('movies', 'tvshows', 'musicvideos', 'music', 'mixed') and view_id not in whitelist:
             label = "%s %s" % (label.decode('utf-8'), _(33166))
-            context.append((_(33123), "RunPlugin(plugin://plugin.video.emby/?mode=synclib&id=%s)" % view_id))
+            context.append((_(33123), "RunPlugin(plugin://plugin.video.jellyfin/?mode=synclib&id=%s)" % view_id))
 
         if view_id and node in ('movies', 'tvshows', 'musicvideos', 'music') and view_id in whitelist:
 
-            context.append((_(33136), "RunPlugin(plugin://plugin.video.emby/?mode=updatelib&id=%s)" % view_id))
-            context.append((_(33132), "RunPlugin(plugin://plugin.video.emby/?mode=repairlib&id=%s)" % view_id))
-            context.append((_(33133), "RunPlugin(plugin://plugin.video.emby/?mode=removelib&id=%s)" % view_id))
+            context.append((_(33136), "RunPlugin(plugin://plugin.video.jellyfin/?mode=updatelib&id=%s)" % view_id))
+            context.append((_(33132), "RunPlugin(plugin://plugin.video.jellyfin/?mode=repairlib&id=%s)" % view_id))
+            context.append((_(33133), "RunPlugin(plugin://plugin.video.jellyfin/?mode=removelib&id=%s)" % view_id))
 
         LOG.debug("--[ listing/%s/%s ] %s", node, label, path)
 
@@ -177,25 +177,25 @@ def listing():
         context = []
 
         if server.get('ManualAddress'):
-            context.append((_(33141), "RunPlugin(plugin://plugin.video.emby/?mode=removeserver&server=%s)" % server['Id']))
+            context.append((_(33141), "RunPlugin(plugin://plugin.video.jellyfin/?mode=removeserver&server=%s)" % server['Id']))
 
         if 'AccessToken' not in server:
-            directory("%s (%s)" % (server['Name'], _(30539)), "plugin://plugin.video.emby/?mode=login&server=%s" % server['Id'], False, context=context)
+            directory("%s (%s)" % (server['Name'], _(30539)), "plugin://plugin.video.jellyfin/?mode=login&server=%s" % server['Id'], False, context=context)
         else:
-            directory(server['Name'], "plugin://plugin.video.emby/?mode=browse&server=%s" % server['Id'], context=context)
+            directory(server['Name'], "plugin://plugin.video.jellyfin/?mode=browse&server=%s" % server['Id'], context=context)
 
 
-    directory(_(33194), "plugin://plugin.video.emby/?mode=managelibs", True)
-    directory(_(33134), "plugin://plugin.video.emby/?mode=addserver", False)
-    directory(_(33054), "plugin://plugin.video.emby/?mode=adduser", False)
-    directory(_(5), "plugin://plugin.video.emby/?mode=settings", False)
-    directory(_(33058), "plugin://plugin.video.emby/?mode=reset", False)
-    directory(_(33192), "plugin://plugin.video.emby/?mode=restartservice", False)
+    directory(_(33194), "plugin://plugin.video.jellyfin/?mode=managelibs", True)
+    directory(_(33134), "plugin://plugin.video.jellyfin/?mode=addserver", False)
+    directory(_(33054), "plugin://plugin.video.jellyfin/?mode=adduser", False)
+    directory(_(5), "plugin://plugin.video.jellyfin/?mode=settings", False)
+    directory(_(33058), "plugin://plugin.video.jellyfin/?mode=reset", False)
+    directory(_(33192), "plugin://plugin.video.jellyfin/?mode=restartservice", False)
 
     if settings('backupPath'):
-        directory(_(33092), "plugin://plugin.video.emby/?mode=backup", False)
+        directory(_(33092), "plugin://plugin.video.jellyfin/?mode=backup", False)
 
-    directory(_(33163), None, False, artwork="special://home/addons/plugin.video.emby/donations.png")
+    directory(_(33163), None, False, artwork="special://home/addons/plugin.video.jellyfin/donations.png")
 
     xbmcplugin.setContent(int(sys.argv[1]), 'files')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
@@ -216,20 +216,20 @@ def directory(label, path, folder=True, artwork=None, fanart=None, context=None)
 def dir_listitem(label, path, artwork=None, fanart=None):
 
     li = xbmcgui.ListItem(label, path=path)
-    li.setThumbnailImage(artwork or "special://home/addons/plugin.video.emby/icon.png")
-    li.setArt({"fanart": fanart or "special://home/addons/plugin.video.emby/fanart.jpg"})
-    li.setArt({"landscape": artwork or fanart or "special://home/addons/plugin.video.emby/fanart.jpg"})
+    li.setThumbnailImage(artwork or "special://home/addons/plugin.video.jellyfin/icon.png")
+    li.setArt({"fanart": fanart or "special://home/addons/plugin.video.jellyfin/fanart.jpg"})
+    li.setArt({"landscape": artwork or fanart or "special://home/addons/plugin.video.jellyfin/fanart.jpg"})
 
     return li
 
 def manage_libraries():
 
-    directory(_(33098), "plugin://plugin.video.emby/?mode=refreshboxsets", False)
-    directory(_(33154), "plugin://plugin.video.emby/?mode=addlibs", False)
-    directory(_(33139), "plugin://plugin.video.emby/?mode=updatelibs", False)
-    directory(_(33140), "plugin://plugin.video.emby/?mode=repairlibs", False)
-    directory(_(33184), "plugin://plugin.video.emby/?mode=removelibs", False)
-    directory(_(33060), "plugin://plugin.video.emby/?mode=thememedia", False)
+    directory(_(33098), "plugin://plugin.video.jellyfin/?mode=refreshboxsets", False)
+    directory(_(33154), "plugin://plugin.video.jellyfin/?mode=addlibs", False)
+    directory(_(33139), "plugin://plugin.video.jellyfin/?mode=updatelibs", False)
+    directory(_(33140), "plugin://plugin.video.jellyfin/?mode=repairlibs", False)
+    directory(_(33184), "plugin://plugin.video.jellyfin/?mode=removelibs", False)
+    directory(_(33060), "plugin://plugin.video.jellyfin/?mode=thememedia", False)
 
     xbmcplugin.setContent(int(sys.argv[1]), 'files')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
@@ -343,16 +343,16 @@ def browse(media, view_id=None, folder=None, server_id=None):
                     'folder': item['Id'],
                     'server': server_id
                 }
-                path = "%s?%s" % ("plugin://plugin.video.emby/",  urllib.urlencode(params))
+                path = "%s?%s" % ("plugin://plugin.video.jellyfin/",  urllib.urlencode(params))
                 context = []
 
                 if item['Type'] in ('Series', 'Season', 'Playlist'):
-                    context.append(("Play", "RunPlugin(plugin://plugin.video.emby/?mode=playlist&id=%s&server=%s)" % (item['Id'], server_id)))
+                    context.append(("Play", "RunPlugin(plugin://plugin.video.jellyfin/?mode=playlist&id=%s&server=%s)" % (item['Id'], server_id)))
 
                 if item['UserData']['Played']:
-                    context.append((_(16104), "RunPlugin(plugin://plugin.video.emby/?mode=unwatched&id=%s&server=%s)" % (item['Id'], server_id)))
+                    context.append((_(16104), "RunPlugin(plugin://plugin.video.jellyfin/?mode=unwatched&id=%s&server=%s)" % (item['Id'], server_id)))
                 else:
-                    context.append((_(16103), "RunPlugin(plugin://plugin.video.emby/?mode=watched&id=%s&server=%s)" % (item['Id'], server_id)))
+                    context.append((_(16103), "RunPlugin(plugin://plugin.video.jellyfin/?mode=watched&id=%s&server=%s)" % (item['Id'], server_id)))
 
                 li.addContextMenuItems(context)
                 list_li.append((path, li, True))
@@ -366,7 +366,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
                     'folder': 'genres-%s' % item['Id'],
                     'server': server_id
                 }
-                path = "%s?%s" % ("plugin://plugin.video.emby/",  urllib.urlencode(params))
+                path = "%s?%s" % ("plugin://plugin.video.jellyfin/",  urllib.urlencode(params))
                 list_li.append((path, li, True))
 
             else:
@@ -376,14 +376,14 @@ def browse(media, view_id=None, folder=None, server_id=None):
                         'mode': "play",
                         'server': server_id
                     }
-                    path = "%s?%s" % ("plugin://plugin.video.emby/", urllib.urlencode(params))
+                    path = "%s?%s" % ("plugin://plugin.video.jellyfin/", urllib.urlencode(params))
                     li.setProperty('path', path)
-                    context = [(_(13412), "RunPlugin(plugin://plugin.video.emby/?mode=playlist&id=%s&server=%s)" % (item['Id'], server_id))]
+                    context = [(_(13412), "RunPlugin(plugin://plugin.video.jellyfin/?mode=playlist&id=%s&server=%s)" % (item['Id'], server_id))]
 
                     if item['UserData']['Played']:
-                        context.append((_(16104), "RunPlugin(plugin://plugin.video.emby/?mode=unwatched&id=%s&server=%s)" % (item['Id'], server_id)))
+                        context.append((_(16104), "RunPlugin(plugin://plugin.video.jellyfin/?mode=unwatched&id=%s&server=%s)" % (item['Id'], server_id)))
                     else:
-                        context.append((_(16103), "RunPlugin(plugin://plugin.video.emby/?mode=watched&id=%s&server=%s)" % (item['Id'], server_id)))
+                        context.append((_(16103), "RunPlugin(plugin://plugin.video.jellyfin/?mode=watched&id=%s&server=%s)" % (item['Id'], server_id)))
 
                     li.addContextMenuItems(context)
 
@@ -419,7 +419,7 @@ def browse_subfolders(media, view_id, server_id=None):
             'folder': view_id if node[0] == 'all' else node[0],
             'server': server_id
         }
-        path = "%s?%s" % ("plugin://plugin.video.emby/",  urllib.urlencode(params))
+        path = "%s?%s" % ("plugin://plugin.video.jellyfin/",  urllib.urlencode(params))
         directory(node[1] or view['Name'], path)
 
     xbmcplugin.setContent(int(sys.argv[1]), 'files')
@@ -443,7 +443,7 @@ def browse_letters(media, view_id, server_id=None):
             'folder': 'firstletter-%s' % node,
             'server': server_id
         }
-        path = "%s?%s" % ("plugin://plugin.video.emby/",  urllib.urlencode(params))
+        path = "%s?%s" % ("plugin://plugin.video.jellyfin/",  urllib.urlencode(params))
         directory(node, path)
 
     xbmcplugin.setContent(int(sys.argv[1]), 'files')
@@ -489,7 +489,7 @@ def get_fanart(item_id, path, server_id=None):
     ''' Get extra fanart for listitems. This is called by skinhelper.
         Images are stored locally, due to the Kodi caching system.
     '''
-    if not item_id and 'plugin.video.emby' in path:
+    if not item_id and 'plugin.video.jellyfin' in path:
         item_id = path.split('/')[-2]
 
     if not item_id:
@@ -533,7 +533,7 @@ def get_video_extras(item_id, path, server_id=None):
     ''' Returns the video files for the item as plugin listing, can be used
         to browse actual files or video extras, etc.
     '''
-    if not item_id and 'plugin.video.emby' in path:
+    if not item_id and 'plugin.video.jellyfin' in path:
         item_id = path.split('/')[-2]
 
     if not item_id:
@@ -547,7 +547,7 @@ def get_video_extras(item_id, path, server_id=None):
         #returns the video files for the item as plugin listing, can be used for browsing the actual files or videoextras etc.
         emby = embyserver.Read_EmbyServer()
         if not embyId:
-            if "plugin.video.emby" in embyPath:
+            if "plugin.video.jellyfin" in embyPath:
                 embyId = embyPath.split("/")[-2]
         if embyId:
             item = emby.getItem(embyId)
@@ -769,7 +769,7 @@ def get_themes():
     from helper.playutils import PlayUtils
     from helper.xmls import tvtunes_nfo
 
-    library = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/library").decode('utf-8')
+    library = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/library").decode('utf-8')
     play = settings('useDirectPaths') == "1"
 
     if not xbmcvfs.exists(library + '/'):
@@ -863,8 +863,8 @@ def backup():
 
         delete_folder(backup)
 
-    addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.emby").decode('utf-8')
-    destination_data = os.path.join(backup, "addon_data", "plugin.video.emby")
+    addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin").decode('utf-8')
+    destination_data = os.path.join(backup, "addon_data", "plugin.video.jellyfin")
     destination_databases = os.path.join(backup, "Database")
 
     if not xbmcvfs.mkdirs(path) or not xbmcvfs.mkdirs(destination_databases):

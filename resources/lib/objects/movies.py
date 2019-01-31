@@ -169,7 +169,7 @@ class Movies(KodiDb):
             if obj['LocalTrailer']:
 
                 trailer = self.server['api'].get_local_trailers(obj['Id'])
-                obj['Trailer'] = "plugin://plugin.video.emby/trailer?id=%s&mode=play" % trailer[0]['Id']
+                obj['Trailer'] = "plugin://plugin.video.jellyfin/trailer?id=%s&mode=play" % trailer[0]['Id']
 
             elif obj['Trailer']:
                 obj['Trailer'] = "plugin://plugin.video.youtube/play/?video_id=%s" % obj['Trailer'].rsplit('=', 1)[1]
@@ -192,7 +192,7 @@ class Movies(KodiDb):
             obj['Path'] = obj['Path'].replace(obj['Filename'], "")
 
         else:
-            obj['Path'] = "plugin://plugin.video.emby.movies/"
+            obj['Path'] = "plugin://plugin.video.jellyfin/"
             params = {
                 'filename': obj['Filename'].encode('utf-8'),
                 'id': obj['Id'],

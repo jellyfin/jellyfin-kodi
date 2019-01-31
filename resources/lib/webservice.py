@@ -126,7 +126,7 @@ class requestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
             xbmc.log("[ webservice ] path: %s params: %s" % (str(self.path), str(params)), xbmc.LOGWARNING)
 
-            path = ("plugin://plugin.video.emby?mode=play&id=%s&dbid=%s&filename=%s&transcode=%s"
+            path = ("plugin://plugin.video.jellyfin?mode=play&id=%s&dbid=%s&filename=%s&transcode=%s"
                     % (params.get('Id'), params.get('KodiId'), params.get('Name'), params.get('transcode') or False))
 
             self.send_response(200)

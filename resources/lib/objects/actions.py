@@ -215,7 +215,7 @@ class Actions(object):
             LOG.info("[ playlist/%s ] %s", item['Id'], item['Name'])
 
             self.set_listitem(item, listitem, None, False)
-            path = "plugin://plugin.video.emby/?mode=play&id=%s&playlist=true" % item['Id']
+            path = "plugin://plugin.video.jellyfin/?mode=play&id=%s&playlist=true" % item['Id']
             listitem.setPath(path)
 
             playlist.add(path, listitem, index)
@@ -312,9 +312,9 @@ class Actions(object):
         obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] or ""
 
         if not intro and not obj['Type'] == 'Trailer':
-            obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or "special://home/addons/plugin.video.emby/icon.png"
+            obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or "special://home/addons/plugin.video.jellyfin/icon.png"
         else:
-            obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or obj['Artwork']['Thumb'] or (obj['Artwork']['Backdrop'][0] if len(obj['Artwork']['Backdrop']) else "special://home/addons/plugin.video.emby/fanart.jpg")
+            obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or obj['Artwork']['Thumb'] or (obj['Artwork']['Backdrop'][0] if len(obj['Artwork']['Backdrop']) else "special://home/addons/plugin.video.jellyfin/fanart.jpg")
             obj['Artwork']['Primary'] += "&KodiTrailer=true" if obj['Type'] == 'Trailer' else "&KodiCinemaMode=true"
             obj['Artwork']['Backdrop'] = [obj['Artwork']['Primary']]
 
@@ -472,9 +472,9 @@ class Actions(object):
         obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
         obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount']) or 0
         obj['Overlay'] = 7 if obj['Played'] else 6
-        obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or "special://home/addons/plugin.video.emby/icon.png"
-        obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] or "special://home/addons/plugin.video.emby/fanart.jpg"
-        obj['Artwork']['Backdrop'] = obj['Artwork']['Backdrop'] or ["special://home/addons/plugin.video.emby/fanart.jpg"]
+        obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or "special://home/addons/plugin.video.jellyfin/icon.png"
+        obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] or "special://home/addons/plugin.video.jellyfin/fanart.jpg"
+        obj['Artwork']['Backdrop'] = obj['Artwork']['Backdrop'] or ["special://home/addons/plugin.video.jellyfin/fanart.jpg"]
 
 
         metadata = {
@@ -657,7 +657,7 @@ class Actions(object):
         ''' Base resume dialog based on Kodi settings.
         '''
         LOG.info("Resume dialog called.")
-        XML_PATH = (xbmcaddon.Addon('plugin.video.emby').getAddonInfo('path'), "default", "1080i")
+        XML_PATH = (xbmcaddon.Addon('plugin.video.jellyfin').getAddonInfo('path'), "default", "1080i")
 
         dialog = resume.ResumeDialog("script-emby-resume.xml", *XML_PATH)
         dialog.set_resume_point("Resume from %s" % str(timedelta(seconds=seektime)).split(".")[0])

@@ -174,7 +174,7 @@ class MusicVideos(KodiDb):
             obj['Path'] = obj['Path'].replace(obj['Filename'], "")
 
         else:
-            obj['Path'] = "plugin://plugin.video.emby.musicvideos/"
+            obj['Path'] = "plugin://plugin.video.jellyfin/"
             params = {
                 'filename': obj['Filename'].encode('utf-8'),
                 'id': obj['Id'],

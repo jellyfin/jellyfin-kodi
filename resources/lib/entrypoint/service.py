@@ -180,7 +180,8 @@ class Service(xbmc.Monitor):
         '''
         LOG.info("--[ check updates/%s ]", objects.version)
         kodi = "DEV" if settings('devMode.bool') else xbmc.getInfoLabel('System.BuildVersion')
-
+        # FIXME we do not want their updates
+        return False
         try:
             versions = requests.get('http://kodi.emby.media/Public%20testing/Dependencies/databases.json').json()
             build = find(versions, kodi)
@@ -220,10 +221,10 @@ class Service(xbmc.Monitor):
         ''' All notifications are sent via NotifyAll built-in or Kodi.
             Central hub.
         '''
-        if sender.lower() not in ('plugin.video.emby', 'xbmc'):
+        if sender.lower() not in ('plugin.video.jellyfin', 'xbmc'):
             return
 
-        if sender == 'plugin.video.emby':
+        if sender == 'plugin.video.jellyfin':
             method = method.split('.')[1]
 
             if method not in ('ServerUnreachable', 'ServerShuttingDown', 'UserDataChanged', 'ServerConnect',

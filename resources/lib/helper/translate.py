@@ -22,7 +22,7 @@ def _(string):
     if type(string) != int:
         string = STRINGS[string]
 
-    result = xbmcaddon.Addon('plugin.video.emby').getLocalizedString(string)
+    result = xbmcaddon.Addon('plugin.video.jellyfin').getLocalizedString(string)
 
     if not result:
         result = xbmc.getLocalizedString(string)

@@ -1,6 +1,6 @@
 # Emby for Kodi language file
 # Addon Name: Emby for Kodi
-# Addon id: plugin.video.emby
+# Addon id: plugin.video.jellyfin
 # Addon Provider: angelblue05
 # Translators:
 # Michał Sawicz <michal@sawicz.net>, 2019

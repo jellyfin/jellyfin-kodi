@@ -26,7 +26,7 @@ LOG = logging.getLogger("EMBY."+__name__)
 #################################################################################################
 
 def addon_id():
-    return "plugin.video.emby"
+    return "plugin.video.jellyfin"
 
 def kodi_version():
     return xbmc.getInfoLabel('System.BuildVersion')[:2]
@@ -134,7 +134,7 @@ def event(method, data=None, sender=None, hexlify=False):
     ''' Data is a dictionary.
     '''
     data = data or {}
-    sender = sender or "plugin.video.emby"
+    sender = sender or "plugin.video.jellyfin"
 
     if hexlify:
         data = '\\"[\\"{0}\\"]\\"'.format(binascii.hexlify(json.dumps(data)))
@@ -150,7 +150,7 @@ def dialog(dialog_type, *args, **kwargs):
 
     if "icon" in kwargs:
         kwargs['icon'] = kwargs['icon'].replace("{emby}",
-                                                "special://home/addons/plugin.video.emby/icon.png")
+                                                "special://home/addons/plugin.video.jellyfin/icon.png")
     if "heading" in kwargs:
         kwargs['heading'] = kwargs['heading'].replace("{emby}", _('addon_name'))
 

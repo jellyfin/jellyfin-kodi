@@ -50,10 +50,10 @@ class Monitor(xbmc.Monitor):
 
     def onNotification(self, sender, method, data):
 
-        if sender.lower() not in ('plugin.video.emby', 'xbmc', 'upnextprovider.signal'):
+        if sender.lower() not in ('plugin.video.jellyfin', 'xbmc', 'upnextprovider.signal'):
             return
 
-        if sender == 'plugin.video.emby':
+        if sender == 'plugin.video.jellyfin':
             method = method.split('.')[1]
 
             if method not in ('GetItem', 'ReportProgressRequested', 'LoadServer', 'RandomItems', 'Recommended',
@@ -69,7 +69,7 @@ class Monitor(xbmc.Monitor):
         elif sender.startswith('upnextprovider'):
             method = method.split('.')[1]
 
-            if method not in ('plugin.video.emby_play_action'):
+            if method not in ('plugin.video.jellyfin_play_action'):
                 return
 
             data = json.loads(data)
@@ -312,7 +312,7 @@ class Monitor(xbmc.Monitor):
                 "Mute,Unmute,SetVolume,"
                 "Play,Playstate,PlayNext,PlayMediaSource"
             ),
-            'IconUrl': "https://raw.githubusercontent.com/MediaBrowser/plugin.video.emby/develop/kodi_icon.png",
+            'IconUrl': "https://raw.githubusercontent.com/MediaBrowser/plugin.video.jellyfin/develop/kodi_icon.png",
         })
 
         session = server['api'].get_device(self.device_id)
