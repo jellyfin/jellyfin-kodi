@@ -21,8 +21,6 @@ class WebService(threading.Thread):
 
     ''' Run a webservice to trigger playback.
     '''
-    stop_thread = False
-
     def __init__(self):
         threading.Thread.__init__(self)
 
@@ -34,7 +32,6 @@ class WebService(threading.Thread):
             conn = httplib.HTTPConnection("127.0.0.1:%d" % PORT)
             conn.request("QUIT", "/")
             conn.getresponse()
-            self.stop_thread = True
         except Exception as error:
             pass
 
@@ -71,13 +68,23 @@ class HttpServer(BaseHTTPServer.HTTPServer):
 
 class requestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
-    #Handler for the GET requests
+    ''' Http request handler. Do not use LOG here,
+        it will hang requests in Kodi > show information dialog.
+    '''
 
     def log_message(self, format, *args):
 
         ''' Mute the webservice requests.
         '''
         pass
+
+    def do_QUIT(self):
+
+        ''' send 200 OK response, and set server.stop to True
+        '''
+        self.send_response(200)
+        self.end_headers()
+        self.server.stop = True
 
     def get_params(self):
 
