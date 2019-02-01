@@ -222,7 +222,7 @@ class HTTP(object):
 
         data['headers'].update({'Authorization': auth})
 
-        if self.config['auth.token']:
+        if self.config['auth.token'] and self.config['auth.user_id']:
 
             auth += ', UserId=%s' % self.config['auth.user_id'].encode('utf-8')
             data['headers'].update({'Authorization': auth, 'X-MediaBrowser-Token': self.config['auth.token'].encode('utf-8')})
