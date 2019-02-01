@@ -21,7 +21,7 @@
 	<category label="30506"><!-- Sync Options -->
 		<setting label="33186" type="lsep" />
 		<setting label="33137" id="kodiCompanion" type="bool" default="true" />
-		<setting label="30507" id="syncIndicator" type="number" default="99" visible="eq(-1,true)" subsetting="true"/>
+		<setting label="30507" id="syncIndicator" type="number" default="999" visible="eq(-1,true)" subsetting="true"/>
 		<setting label="33185" id="syncDuringPlay" type="bool" default="true" />
 		<setting label="30536" id="dbSyncScreensaver" type="bool" default="true" />
 		<setting label="33111" type="lsep" />
@@ -92,13 +92,16 @@
 	<category label="30022"><!-- Advanced -->
 		<setting label="30004" id="logLevel" type="enum" values="Disabled|Info|Debug" default="1" />
 		<setting label="33164" id="maskInfo" type="bool" default="true" />
-		<setting label="30529" id="startupDelay" type="number" default="0" option="int" />
 		<setting label="30239" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=reset)" option="close" />
 		<setting label="30535" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=deviceid)" option="close" />
-		<setting label="33161" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=checkupdate)" option="close" />
+		<setting label="33196" type="lsep" />
+		<setting label="33195" id="enableAddon" type="bool" default="true" />
 		<setting label="33180" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=restartservice)" option="close" />
+		<setting label="30529" id="startupDelay" type="number" default="0" option="int" />
+		<setting label="33161" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=checkupdate)" option="close" />
+		<setting label="Developer mode" id="devMode" type="bool" default="false" />
 		
-		<setting type="sep"/>
+		<setting type="sep" />
 		<setting label="33104" type="lsep"/>
 		<setting label="33093" type="folder" id="backupPath" option="writeable" />
 		<setting label="33092" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=backup)" visible="!eq(-1,)" option="close" />

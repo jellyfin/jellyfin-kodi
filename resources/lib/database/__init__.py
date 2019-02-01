@@ -31,6 +31,8 @@ class Database(object):
             db.conn.commit()
     '''
     timeout = 120
+    discovered = False
+    discovered_file = None
 
     def __init__(self, file=None, commit_close=True):
 
@@ -42,14 +44,14 @@ class Database(object):
     def __enter__(self):
 
         ''' Open the connection and return the Database class.
-            This is to allow for both the cursor and conn to be accessible.
-            at any time.
+            This is to allow for the cursor, conn and others to be accessible.
         '''
-        self.conn = sqlite3.connect(self._sql(self.db_file), timeout=self.timeout)
+        self.path = self._sql(self.db_file)
+        self.conn = sqlite3.connect(self.path, timeout=self.timeout)
         self.cursor = self.conn.cursor()
 
         if self.db_file in ('video', 'music', 'texture', 'emby'):
-            self.conn.execute("PRAGMA journal_mode=WAL")
+            self.conn.execute("PRAGMA journal_mode=WAL") # to avoid writing conflict with kodi
 
         LOG.debug("--->[ database: %s ] %s", self.db_file, id(self.conn))
 
@@ -61,11 +63,107 @@ class Database(object):
 
         return self
 
+    def _get_database(self, path, silent=False):
+
+        path = xbmc.translatePath(path).decode('utf-8')
+
+        if not silent:
+
+            if not xbmcvfs.exists(path):
+                raise Exception("Database: %s missing" % path)
+
+            conn = sqlite3.connect(path)
+            cursor = conn.cursor()
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+            tables = cursor.fetchall()
+            conn.close()
+
+            if not len(tables):
+                raise Exception("Database: %s malformed?" % path)
+
+        return path
+
+    def _discover_database(self, database):
+        
+        ''' Use UpdateLibrary(video) to update the date modified
+            on the database file used by Kodi.
+        '''
+        if database == 'video':
+
+            xbmc.executebuiltin('UpdateLibrary(video)')
+            xbmc.sleep(200)
+
+        databases = xbmc.translatePath("special://database/").decode('utf-8')
+        types = {
+            'video': "MyVideos",
+            'music': "MyMusic",
+            'texture': "Textures"
+        }
+        database = types[database]
+        dirs, files = xbmcvfs.listdir(databases)
+        modified = {'file': None, 'time': 0}
+
+        for file in reversed(files):
+
+            if (file.startswith(database) and not file.endswith('-wal') and
+                not file.endswith('-shm') and not file.endswith('db-journal')):
+
+                st = xbmcvfs.Stat(databases + file.decode('utf-8'))
+                modified_int = st.st_mtime()
+                LOG.debug("Database detected: %s time: %s", file.decode('utf-8'), modified_int)
+
+                if modified_int > modified['time']:
+
+                    modified['time'] = modified_int
+                    modified['file'] = file.decode('utf-8')
+
+        LOG.info("Discovered database: %s", modified)
+        self.discovered_file = modified['file']
+
+        return xbmc.translatePath("special://database/%s" % modified['file']).decode('utf-8')
+
     def _sql(self, file):
 
+        ''' Get the database path based on the file objects/obj_map.json
+            Compatible check, in the event multiple db version are supported with the same Kodi version.
+            Discover by file as a last resort.
+        '''
         databases = obj.Objects().objects
 
-        return xbmc.translatePath(databases[file]).decode('utf-8') if file in databases else file
+        if file not in ('video', 'music', 'texture') or databases.get('database_set%s' % file):
+            return self._get_database(databases[file], True)
+
+        discovered = self._discover_database(file) if not databases.get('database_set%s' % file) else None
+
+        try:
+            loaded = self._get_database(databases[file]) if file in databases else file
+        except Exception as error:
+
+            for i in range(1, 10):
+                alt_file = "%s-%s" % (file, i)
+
+                try:
+                    loaded = self._get_database(databases[alt_file])
+
+                    break
+                except KeyError: # No other db options
+                    loaded = None
+
+                    break
+                except Exception:
+                    pass
+
+        if discovered and discovered != loaded:
+
+            databases[file] = discovered
+            self.discovered = True
+        else:
+            databases[file] = loaded
+
+        databases['database_set%s' % file] = True
+        LOG.info("Database locked in: %s", databases[file])
+
+        return databases[file]
 
     def __exit__(self, exc_type, exc_val, exc_tb):
 
@@ -152,7 +250,7 @@ def reset():
         xbmcvfs.delete(os.path.join(addon_data, "sync.json"))
 
     settings('enableMusic.bool', False)
-    settings('MinimumSetup.bool', False)
+    settings('MinimumSetup', "")
     settings('MusicRescan.bool', False)
     settings('SyncInstallRunDone.bool', False)
     dialog("ok", heading="{emby}", line1=_(33088))

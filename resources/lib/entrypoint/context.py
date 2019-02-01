@@ -36,7 +36,7 @@ class Context(object):
     _selected_option = None
 
     def __init__(self, transcode=False, delete=False):
-        
+
         try:
             self.kodi_id = sys.listitem.getVideoInfoTag().getDbId() or None
             self.media = self.get_media_type()
@@ -51,7 +51,7 @@ class Context(object):
                 self.kodi_id = xbmc.getInfoLabel('ListItem.DBID')
                 self.media = xbmc.getInfoLabel('ListItem.DBTYPE')
                 item_id = None
-        
+
         if self.server or item_id:
             self.item = TheVoid('GetItem', {'ServerId': self.server, 'Id': item_id}).get()
         else:
@@ -171,6 +171,6 @@ class Context(object):
             TheVoid('DeleteItem', {'ServerId': self.server, 'Id': self.item['Id']})
 
     def transcode(self):
-
-        item = TheVoid('GetItem', {'Id': self.item['Id'], 'ServerId': self.server}).get()
-        Actions(self.server).play(item, self.kodi_id, True)
+        filename = xbmc.getInfoLabel("ListItem.Filenameandpath")
+        filename += "&transcode=true"
+        xbmc.executebuiltin("PlayMedia(%s)" % filename)

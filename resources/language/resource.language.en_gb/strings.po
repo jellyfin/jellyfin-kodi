@@ -223,7 +223,7 @@ msgid "Verify connection"
 msgstr ""
 
 msgctxt "#30504"
-msgid "Use altername device name"
+msgid "Use alternate device name"
 msgstr ""
 
 msgctxt "#30506"
@@ -451,7 +451,7 @@ msgid "Detected the database needs to be recreated for this version of Emby for 
 msgstr ""
 
 msgctxt "#33023"
-msgid "Emby for Kodi will work correctly until the database is reset."
+msgid "Emby for Kodi will not work correctly until the database is reset."
 msgstr ""
 
 msgctxt "#33025"
@@ -915,5 +915,37 @@ msgid "The Kodi companion speeds up the start up sync. Other syncs are triggered
 msgstr ""
 
 msgctxt "#33187"
-msgid "Sync rotten tomatoes ratings"
+msgid "Sync Rotten Tomatoes ratings"
+msgstr ""
+
+msgctxt "#33188"
+msgid "Would you like to sync Rotten Tomatoes ratings?"
+msgstr ""
+
+msgctxt "#33191"
+msgid "Restart Emby for Kodi to apply this change?"
+msgstr ""
+
+msgctxt "#33192"
+msgid "Restart Emby for Kodi"
+msgstr ""
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr ""
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr ""
+
+msgctxt "#33195"
+msgid "Enable Emby for Kodi"
+msgstr ""
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr ""
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
 msgstr ""

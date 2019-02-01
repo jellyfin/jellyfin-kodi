@@ -18,6 +18,7 @@ from client import get_device_id
 from objects import Actions, PlaylistWorker, on_play, on_update, special_listener
 from helper import _, settings, window, dialog, event, api, JSONRPC
 from emby import Emby
+from webservice import WebService
 
 #################################################################################################
 
@@ -37,6 +38,8 @@ class Monitor(xbmc.Monitor):
         self.device_id = get_device_id()
         self.listener = Listener(self)
         self.listener.start()
+        self.webservice = WebService()
+        self.webservice.start()
         xbmc.Monitor.__init__(self)
 
     def onScanStarted(self, library):
@@ -76,6 +79,18 @@ class Monitor(xbmc.Monitor):
                 data = json.loads(binascii.unhexlify(data[0]))
         else:
             if method not in ('Player.OnPlay', 'VideoLibrary.OnUpdate', 'Player.OnAVChange'):
+
+                ''' We have to clear the playlist if it was stopped before it has been played completely.
+                    Otherwise the next played item will be added the previous queue.
+                '''
+                if method == "Player.OnStop":
+                    xbmc.sleep(3000) # let's wait for the player so we don't clear the canceled playlist by mistake.
+
+                    if xbmc.getCondVisibility("!Player.HasMedia + !Window.IsVisible(busydialog)"):
+
+                        xbmc.executebuiltin("Playlist.Clear")
+                        LOG.info("[ playlist ] cleared")
+
                 return
 
             data = json.loads(data)
@@ -179,7 +194,7 @@ class Monitor(xbmc.Monitor):
         elif method == 'Browse':
 
             result = downloader.get_filtered_section(data.get('Id'), data.get('Media'), data.get('Limit'),
-                                                     data.get('Recursive'), data.get('Sort'), data.get('SortOrder'), 
+                                                     data.get('Recursive'), data.get('Sort'), data.get('SortOrder'),
                                                      data.get('Filters'), data.get('Params'), data.get('ServerId'))
             self.void_responder(data, result)
 
@@ -227,10 +242,9 @@ class Monitor(xbmc.Monitor):
 
         elif method == 'Play':
 
-            item = server['api'].get_item(data['ItemIds'].pop(0))
-            data['ItemIds'].insert(0, item)
+            items = server['api'].get_items(data['ItemIds'])
 
-            PlaylistWorker(data.get('ServerId'), data['ItemIds'], data['PlayCommand'] == 'PlayNow',
+            PlaylistWorker(data.get('ServerId'), items, data['PlayCommand'] == 'PlayNow',
                            data.get('StartPositionTicks', 0), data.get('AudioStreamIndex'),
                            data.get('SubtitleStreamIndex')).start()
 

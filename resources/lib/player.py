@@ -22,14 +22,10 @@ LOG = logging.getLogger("EMBY."+__name__)
 
 class Player(xbmc.Player):
 
-    # Borg - multiple instances, shared state
-    _shared_state = {}
     played = {}
     up_next = False
 
     def __init__(self):
-
-        self.__dict__ = self._shared_state
         xbmc.Player.__init__(self)
 
     @silent_catch()
@@ -47,7 +43,9 @@ class Player(xbmc.Player):
 
         ''' We may need to wait for info to be set in kodi monitor.
             Accounts for scenario where Kodi starts playback and exits immediately.
+            First, ensure previous playback terminated correctly in Emby.
         '''
+        self.stop_playback()
         self.up_next = False
         count = 0
         monitor = xbmc.Monitor()
@@ -118,7 +116,8 @@ class Player(xbmc.Player):
         if monitor.waitForAbort(2):
             return
 
-        self.set_audio_subs(item['AudioStreamIndex'], item['SubtitleStreamIndex'])
+        if item['PlayOption'] == 'Addon':
+            self.set_audio_subs(item['AudioStreamIndex'], item['SubtitleStreamIndex'])
 
     def set_item(self, file, item):
 
@@ -149,7 +148,7 @@ class Player(xbmc.Player):
             'CurrentPosition': item.get('CurrentPosition') or int(seektime),
             'Muted': muted,
             'Volume': volume,
-            'Server': Emby(item['ServerId']),
+            'Server': Emby(item['ServerId']).get_client(),
             'Paused': False
         })
 
@@ -368,14 +367,14 @@ class Player(xbmc.Player):
         '''
         window('emby_play', clear=True)
         self.stop_playback()
-        LOG.debug("--<[ playback ]")
+        LOG.info("--<[ playback ]")
 
     def onPlayBackEnded(self):
         
         ''' Will be called when kodi stops playing a file.
         '''
         self.stop_playback()
-        LOG.debug("--<<[ playback ]")
+        LOG.info("--<<[ playback ]")
 
     def stop_playback(self):
         

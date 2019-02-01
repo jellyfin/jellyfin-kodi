@@ -13,7 +13,7 @@ import xbmc
 import xbmcvfs
 import xbmcaddon
 
-from libraries import requests
+import requests
 from helper.utils import should_stop, delete_folder
 from helper import settings, stop, event, window, kodi_version, unzip, create_id
 from emby import Emby
@@ -210,6 +210,15 @@ def get_albums_by_artist(artist_id, basic=False):
     for items in get_items(None, "MusicAlbum", basic, params):
         yield items
 
+def get_songs_by_artist(artist_id, basic=False):
+
+    params = {
+        'SortBy': "DateCreated",
+        'ArtistIds': artist_id
+    }
+    for items in get_items(None, "Audio", basic, params):
+        yield items
+
 @stop()
 def _get_items(query, server_id=None):
 
@@ -363,22 +372,26 @@ def get_objects(src, filename):
         LOG.warn("Something went wrong applying this patch %s previously.", filename)
         restart = False
 
-    if not xbmcvfs.exists(path):
+    if not xbmcvfs.exists(path) or filename.startswith('DEV'):
         delete_folder(CACHE)
 
         LOG.info("From %s to %s", src, path.decode('utf-8'))
         try:
-            response = requests.get(src, stream=True, verify=False)
+            response = requests.get(src, stream=True, verify=True)
             response.raise_for_status()
+        except requests.exceptions.SSLError as error:
+
+            LOG.error(error)
+            response = requests.get(src, stream=True, verify=False)
         except Exception as error:
             raise
-        else:
-            dl = xbmcvfs.File(path, 'w')
-            dl.write(response.content)
-            dl.close()
-            del response
 
-            settings('appliedPatch', filename)
+        dl = xbmcvfs.File(path, 'w')
+        dl.write(response.content)
+        dl.close()
+        del response
+
+        settings('appliedPatch', filename)
 
     unzip(path, temp, "objects")
 

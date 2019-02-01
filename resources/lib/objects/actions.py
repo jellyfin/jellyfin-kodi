@@ -101,7 +101,7 @@ class Actions(object):
 
                 if transcode and not seektime:
                     choice = self.resume_dialog(api.API(item, self.server).adjust_resume((resume or 0) / 10000000.0))
-                    
+
                     if choice is None:
                         raise Exception("User backed out of resume dialog.")
 
@@ -118,7 +118,7 @@ class Actions(object):
             self._set_additional_parts(item['Id'])
 
     def _set_intros(self, item):
-        
+
         ''' if we have any play them when the movie/show is not being resumed.
         '''
         intros = TheVoid('GetIntros', {'ServerId': self.server_id, 'Id': item['Id']}).get()
@@ -174,11 +174,17 @@ class Actions(object):
 
         ''' Play a list of items. Creates a new playlist. Add additional items as plugin listing.
         '''
-        item = items[0]
+        item = items['Items'][0]
         playlist = self.get_playlist(item)
+        player = xbmc.Player()
+
+        #xbmc.executebuiltin("Playlist.Clear") # Clear playlist to remove the previous item from playlist position no.2
 
         if clear:
-            playlist.clear()
+            if player.isPlaying():
+                player.stop()
+
+            xbmc.executebuiltin('ActivateWindow(busydialognocancel)')
             index = 0
         else:
             index = max(playlist.getposition(), 0) + 1 # Can return -1
@@ -201,14 +207,17 @@ class Actions(object):
         index += 1
 
         if clear:
-            xbmc.Player().play(playlist)
+            xbmc.executebuiltin('Dialog.Close(busydialognocancel)')
+            player.play(playlist)
 
-        for item in items[1:]:
+        for item in items['Items'][1:]:
             listitem = xbmcgui.ListItem()
-            LOG.info("[ playlist/%s ]", item)
-            path = "plugin://plugin.video.emby/?mode=play&id=%s&playlist=true" % item
+            LOG.info("[ playlist/%s ] %s", item['Id'], item['Name'])
 
+            self.set_listitem(item, listitem, None, False)
+            path = "plugin://plugin.video.emby/?mode=play&id=%s&playlist=true" % item['Id']
             listitem.setPath(path)
+
             playlist.add(path, listitem, index)
             index += 1
 
@@ -244,7 +253,7 @@ class Actions(object):
             if intro:
                 obj['Artwork']['Primary'] = "&KodiCinemaMode=true"
 
-            self.listitem_video(obj, listitem, item, seektime)
+            self.listitem_video(obj, listitem, item, seektime, intro)
 
             if 'PlaybackInfo' in item:
 
@@ -269,7 +278,7 @@ class Actions(object):
 
         listitem.setContentLookup(False)
 
-    def listitem_video(self, obj, listitem, item, seektime=None):
+    def listitem_video(self, obj, listitem, item, seektime=None, intro=False):
 
         ''' Set listitem for video content. That also include streams.
         '''
@@ -296,12 +305,26 @@ class Actions(object):
         obj['Video'] = API.video_streams(obj['Video'] or [], obj['Container'])
         obj['Audio'] = API.audio_streams(obj['Audio'] or [])
         obj['Streams'] = API.media_streams(obj['Video'], obj['Audio'], obj['Subtitles'])
-        obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or "special://home/addons/plugin.video.emby/icon.png"
-        obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] or "special://home/addons/plugin.video.emby/fanart.jpg"
-        obj['Artwork']['Backdrop'] = obj['Artwork']['Backdrop'] or ["special://home/addons/plugin.video.emby/fanart.jpg"]
         obj['ChildCount'] = obj['ChildCount'] or 0
         obj['RecursiveCount'] = obj['RecursiveCount'] or 0
         obj['Unwatched'] = obj['Unwatched'] or 0
+        obj['Artwork']['Backdrop'] = obj['Artwork']['Backdrop'] or []
+        obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] or ""
+
+        if not intro and not obj['Type'] == 'Trailer':
+            obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or "special://home/addons/plugin.video.emby/icon.png"
+        else:
+            obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or obj['Artwork']['Thumb'] or (obj['Artwork']['Backdrop'][0] if len(obj['Artwork']['Backdrop']) else "special://home/addons/plugin.video.emby/fanart.jpg")
+            obj['Artwork']['Primary'] += "&KodiTrailer=true" if obj['Type'] == 'Trailer' else "&KodiCinemaMode=true"
+            obj['Artwork']['Backdrop'] = [obj['Artwork']['Primary']]
+
+        self.set_artwork(obj['Artwork'], listitem, obj['Type'])
+
+        if intro or obj['Type'] == 'Trailer':
+            listitem.setArt({'poster': ""}) # Clear the poster value for intros / trailers to prevent issues in skins
+
+        listitem.setIconImage('DefaultVideo.png')
+        listitem.setThumbnailImage(obj['Artwork']['Primary'])
 
         if obj['Premiere']:
             obj['Premiere'] = obj['Premiere'].split('T')[0]
@@ -327,27 +350,16 @@ class Actions(object):
             'tagline': obj['Tagline'],
             'writer': obj['Writers'],
             'premiered': obj['Premiere'],
-            'aired': obj['Premiere'],
             'votes': obj['Votes'],
             'dateadded': obj['DateAdded'],
+            'aired': obj['Year'],
             'date': obj['FileDate'],
             'dbid': obj['DbId']
         }
         listitem.setCast(API.get_actors())
-        listitem.setIconImage(obj['Artwork']['Thumb'])
-        listitem.setThumbnailImage(obj['Artwork']['Primary'])
-        self.set_artwork(obj['Artwork'], listitem, obj['Type'])
-
-        if obj['Artwork']['Primary']:
-            listitem.setThumbnailImage(obj['Artwork']['Primary'])
-
-        if not obj['Artwork']['Backdrop']:
-            listitem.setArt({'fanart': obj['Artwork']['Primary']})
 
         if obj['Premiere']:
-            metadata['premieredate'] = obj['Premiere']
             metadata['date'] = obj['Premiere']
-
 
         if obj['Type'] == 'Episode':
             metadata.update({
@@ -358,7 +370,8 @@ class Actions(object):
                 'episode': obj['Index'] or 0,
                 'sortepisode': obj['Index'] or 0,
                 'lastplayed': obj['DatePlayed'],
-                'duration': obj['Runtime']
+                'duration': obj['Runtime'],
+                'aired': obj['Premiere'],
             })
 
         elif obj['Type'] == 'Season':
@@ -374,9 +387,14 @@ class Actions(object):
             listitem.setProperty('IsFolder', 'true')
 
         elif obj['Type'] == 'Series':
+
+            if obj['Status'] != 'Ended':
+                obj['Status'] = None
+
             metadata.update({
                 'mediatype': "tvshow",
-                'tvshowtitle': obj['Title']
+                'tvshowtitle': obj['Title'],
+                'status': obj['Status']
             })
             listitem.setProperty('TotalSeasons', str(obj['ChildCount']))
             listitem.setProperty('TotalEpisodes', str(obj['RecursiveCount']))
@@ -389,7 +407,8 @@ class Actions(object):
                 'mediatype': "movie",
                 'imdbnumber': obj['UniqueId'],
                 'lastplayed': obj['DatePlayed'],
-                'duration': obj['Runtime']
+                'duration': obj['Runtime'],
+                'userrating': obj['CriticRating']
             })
 
         elif obj['Type'] == 'MusicVideo':
@@ -400,7 +419,7 @@ class Actions(object):
                 'lastplayed': obj['DatePlayed'],
                 'duration': obj['Runtime']
             })
-        
+
         elif obj['Type'] == 'BoxSet':
             metadata['mediatype'] = "set"
             listitem.setProperty('IsFolder', 'true')
@@ -408,9 +427,9 @@ class Actions(object):
             metadata.update({
                 'mediatype': "video",
                 'lastplayed': obj['DatePlayed'],
+                'year': obj['Year'],
                 'duration': obj['Runtime']
             })
-
 
         if is_video:
 
@@ -550,8 +569,6 @@ class Actions(object):
         }
         listitem.setProperty('path', obj['Artwork']['Primary'])
         listitem.setThumbnailImage(obj['Artwork']['Primary'])
-        listitem.setIconImage(obj['Artwork']['Primary'] or "special://home/addons/plugin.video.emby/icon.png")
-        listitem.setArt({'fanart': obj['Artwork']['Primary'] or "special://home/addons/plugin.video.emby/fanart.jpg"})
 
         if obj['Type'] == 'Photo':
             metadata.update({
@@ -567,11 +584,10 @@ class Actions(object):
             })
             listitem.setProperty('plot', obj['Overview'])
             listitem.setProperty('IsFolder', 'false')
+            listitem.setIconImage('DefaultPicture.png')
         else:
-            if obj['Artwork']['Backdrop']:
-                listitem.setArt({'fanart': obj['Artwork']['Backdrop'][0]})
-
             listitem.setProperty('IsFolder', 'true')
+            listitem.setIconImage('DefaultFolder.png')
 
         listitem.setProperty('IsPlayable', 'false')
         listitem.setLabel(obj['Title'])
@@ -631,7 +647,7 @@ class Actions(object):
                    'medium_landscape', 'medium_poster', 'small_fanartimage',
                    'medium_fanartimage', 'fanart_noindicators', 'discart',
                    'tvshow.poster'):
-            
+
             listitem.setProperty(art, path)
         else:
             listitem.setArt({art: path})
@@ -688,14 +704,14 @@ class PlaylistWorker(threading.Thread):
 
 
 def on_update(data, server):
-    
+
     ''' Only for manually marking as watched/unwatched
     '''
     try:
         kodi_id = data['item']['id']
         media = data['item']['type']
         playcount = int(data['playcount'])
-        LOG.info(" [ update/%s ] kodi_id: %s media: %s", playcount, kodi_id, media)   
+        LOG.info(" [ update/%s ] kodi_id: %s media: %s", playcount, kodi_id, media)
     except (KeyError, TypeError):
         LOG.debug("Invalid playstate update")
 
@@ -735,7 +751,7 @@ def on_play(data, server):
             kodi_id = item['id']
             media = item['type']
 
-        LOG.info(" [ play ] kodi_id: %s media: %s", kodi_id, media)             
+        LOG.info(" [ play ] kodi_id: %s media: %s", kodi_id, media)
 
     except (KeyError, TypeError):
         LOG.debug("Invalid playstate update")

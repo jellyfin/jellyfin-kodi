@@ -3,14 +3,14 @@
 # Addon id: plugin.video.emby
 # Addon Provider: angelblue05
 # Translators:
-# EffeF, 2018
+# EffeF, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Emby for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: 2018-09-07 20:10+0000\n"
-"Last-Translator: EffeF, 2018\n"
+"Last-Translator: EffeF, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/emby-for-kodi/teams/91090/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -459,9 +459,9 @@ msgstr ""
 "per Kodi. Procedere?"
 
 msgctxt "#33023"
-msgid "Emby for Kodi will work correctly until the database is reset."
+msgid "Emby for Kodi will not work correctly until the database is reset."
 msgstr ""
-"Emby for Kodi funzionerà correttamente fino al ripristino del database."
+"Emby per Kodi non funzionerà correttamente fino al ripristino del database."
 
 msgctxt "#33025"
 msgid "Completed in:"
@@ -1011,3 +1011,65 @@ msgstr "Riavvia Emby per Kodi"
 msgctxt "#33181"
 msgid "Restarting to apply the patch"
 msgstr "Riavvia per applicare la patch"
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "Riproduci con la modalita cinema"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "Abilita l'opzione per la riproduzione con la modalità cinema"
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "Rimuovi librerie"
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr ""
+"Abilita la sincronizzazione durante la riproduzione (potrebbe causare alcuni"
+" lag)"
+
+msgctxt "#33186"
+msgid ""
+"The Kodi companion speeds up the start up sync. Other syncs are triggered by"
+" server events."
+msgstr ""
+"Kodi companion accelera la sincronizzazione all'avvio. Altre "
+"sincronizzazioni sono attivate da eventi del server."
+
+msgctxt "#33187"
+msgid "Sync Rotten Tomatoes ratings"
+msgstr "Sincronizza valutazioni di Rotten Tomatoes"
+
+msgctxt "#33188"
+msgid "Would you like to sync Rotten Tomatoes ratings?"
+msgstr "Vorresti sincronizzare le valutazioni di Rotten Tomatoes?"
+
+msgctxt "#33189"
+msgid ""
+"The database version detected is unsupported. Syncing may not work, proceed "
+"anyway?"
+msgstr ""
+"La versione del database rilevata non è supportata. La sincronizzazione "
+"potrebbe non funzionare, procedere comunque?"
+
+msgctxt "#33190"
+msgid "Enable Kodi database discovery"
+msgstr "Abilita il rilevamento del database Kodi"
+
+msgctxt "#33191"
+msgid "Restart Emby for Kodi to apply this change?"
+msgstr "Riavvia Emby per Kodi per applicare questo cambiamento?"
+
+msgctxt "#33192"
+msgid "Restart Emby for Kodi"
+msgstr "Riavvia Emby per Kodi"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "Riavvio..."
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "Gestisci le librerie"

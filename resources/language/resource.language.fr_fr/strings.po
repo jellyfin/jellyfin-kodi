@@ -4,11 +4,12 @@
 # Addon Provider: angelblue05
 # Translators:
 # Jean Fontaine <balayop@yahoo.fr>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Emby for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2018-09-07 20:10+0000\n"
 "Last-Translator: Jean Fontaine <balayop@yahoo.fr>, 2018\n"
 "Language-Team: French (https://www.transifex.com/emby-for-kodi/teams/91090/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -459,10 +460,8 @@ msgstr ""
 "Continuer ?"
 
 msgctxt "#33023"
-msgid "Emby for Kodi will work correctly until the database is reset."
+msgid "Emby for Kodi will not work correctly until the database is reset."
 msgstr ""
-"Emby pour Kodi fonctionnera normalement jusqu'à ce que la base de données "
-"soit réinitialisée."
 
 msgctxt "#33025"
 msgid "Completed in:"
@@ -1015,3 +1014,53 @@ msgstr "Traitement des mises à jour"
 msgctxt "#33179"
 msgid "Force transcode"
 msgstr "Forcer le transcodage"
+
+msgctxt "#33180"
+msgid "Restart Emby for Kodi"
+msgstr ""
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr ""
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr ""
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr ""
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr ""
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr ""
+
+msgctxt "#33186"
+msgid ""
+"The Kodi companion speeds up the start up sync. Other syncs are triggered by"
+" server events."
+msgstr ""
+
+msgctxt "#33187"
+msgid "Sync Rotten Tomatoes ratings"
+msgstr ""
+
+msgctxt "#33188"
+msgid "Would you like to sync Rotten Tomatoes ratings?"
+msgstr ""
+
+msgctxt "#33191"
+msgid "Restart Emby for Kodi to apply this change?"
+msgstr ""
+
+msgctxt "#33192"
+msgid "Restart Emby for Kodi"
+msgstr ""
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr ""

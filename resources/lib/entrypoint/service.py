@@ -17,7 +17,7 @@ import client
 import library
 import setup
 import monitor
-from libraries import requests
+import requests
 from views import Views, verify_kodi_defaults
 from helper import _, window, settings, event, dialog, find, compare_version
 from downloader import get_objects
@@ -119,7 +119,9 @@ class Service(xbmc.Monitor):
                             self.settings['last_progress_report'] = datetime.today()
 
             if window('emby.restart.bool'):
+
                 window('emby.restart', clear=True)
+                dialog("notification", heading="{emby}", message=_(33193), icon="{emby}", time=1000, sound=False)
 
                 raise Exception('RestartService')
 
@@ -127,6 +129,8 @@ class Service(xbmc.Monitor):
                 break
 
         self.shutdown()
+
+        raise Exception("ExitService")
 
     def start_default(self):
 
@@ -169,13 +173,13 @@ class Service(xbmc.Monitor):
 
                 raise Exception("Completed database reset")
 
-    def check_update(self):
+    def check_update(self, forced=False):
 
         ''' Check for objects build version and compare.
             This pulls a dict that contains all the information for the build needed.
         '''
         LOG.info("--[ check updates/%s ]", objects.version)
-        kodi = xbmc.getInfoLabel('System.BuildVersion')
+        kodi = "DEV" if settings('devMode.bool') else xbmc.getInfoLabel('System.BuildVersion')
 
         try:
             versions = requests.get('http://kodi.emby.media/Public%20testing/Dependencies/databases.json').json()
@@ -186,13 +190,16 @@ class Service(xbmc.Monitor):
 
             label, zipfile = build.split('-', 1)
 
-            if label == objects.version:
+            if label == 'DEV' and forced:
+                LOG.info("--[ force/objects/%s ]", label)
+
+            elif label == objects.version:
                 LOG.info("--[ objects/%s ]", objects.version)
 
                 return False
 
             get_objects(zipfile, label + '.zip')
-            reload(objects) # to apply latest changes
+            self.reload_objects()
 
             dialog("notification", heading="{emby}", message=_(33156), icon="{emby}")
             LOG.info("--[ new objects/%s ]", objects.version)
@@ -264,7 +271,7 @@ class Service(xbmc.Monitor):
             if data.get('ServerId') is None:
                 self.stop_default()
 
-                if self.waitForAbort(20):
+                if self.waitForAbort(120):
                     return
                 
                 self.start_default()
@@ -354,7 +361,9 @@ class Service(xbmc.Monitor):
             libraries = data['Id'].split(',')
 
             for lib in libraries:
-                self.library_thread.remove_library(lib)
+
+                if not self.library_thread.remove_library(lib):
+                    return
             
             self.library_thread.add_library(data['Id'])
             xbmc.executebuiltin("Container.Refresh")
@@ -363,7 +372,9 @@ class Service(xbmc.Monitor):
             libraries = data['Id'].split(',')
 
             for lib in libraries:
-                self.library_thread.remove_library(lib)
+                
+                if not self.library_thread.remove_library(lib):
+                    return
 
             xbmc.executebuiltin("Container.Refresh")
 
@@ -413,7 +424,7 @@ class Service(xbmc.Monitor):
 
         elif method == 'CheckUpdate':
 
-            if not self.check_update():
+            if not self.check_update(True):
                 dialog("notification", heading="{emby}", message=_(21341), icon="{emby}", sound=False)
             else:
                 dialog("notification", heading="{emby}", message=_(33181), icon="{emby}", sound=False)
@@ -461,17 +472,38 @@ class Service(xbmc.Monitor):
             if not self.settings['kodi_companion']:
                 dialog("ok", heading="{emby}", line1=_(33138))
 
+    def reload_objects(self):
+
+        ''' Reload objects which depends on the patch module.
+            This allows to see the changes in code without restarting the python interpreter.
+        '''
+        reload_modules = ['objects.movies', 'objects.musicvideos', 'objects.tvshows',
+                          'objects.music', 'objects.obj', 'objects.actions', 'objects.kodi.kodi',
+                          'objects.kodi.movies', 'objects.kodi.musicvideos', 'objects.kodi.tvshows',
+                          'objects.kodi.music', 'objects.kodi.artwork', 'objects.kodi.queries',
+                          'objects.kodi.queries_music', 'objects.kodi.queries_texture']
+
+        for mod in reload_modules:
+            del sys.modules[mod]
+
+        reload(objects.kodi)
+        reload(objects)
+        reload(library)
+        reload(monitor)
+
+        LOG.warn("---[ objects reloaded ]")
+
     def shutdown(self):
 
         LOG.warn("---<[ EXITING ]")
         window('emby_should_stop.bool', True)
 
         properties = [ # TODO: review
-            "emby_state", "emby_serverStatus",
-            "emby_syncRunning", "emby_currUser",
+            "emby_state", "emby_serverStatus", "emby_currUser",
 
             "emby_play", "emby_online", "emby.connected", "emby.resume", "emby_startup",
-            "emby.external", "emby.external_check", "emby_deviceId", "emby_db_check", "emby_pathverified"
+            "emby.external", "emby.external_check", "emby_deviceId", "emby_db_check", "emby_pathverified",
+            "emby_sync"
         ]
         for prop in properties:
             window(prop, clear=True)
@@ -482,6 +514,8 @@ class Service(xbmc.Monitor):
             self.library_thread.stop_client()
 
         if self.monitor is not None:
+
             self.monitor.listener.stop()
+            self.monitor.webservice.stop()
 
         LOG.warn("---<<<[ %s ]", client.get_addon_name())

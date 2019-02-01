@@ -100,7 +100,7 @@ class Objects(object):
                     if not self.__filters__(obj, obj_filters):
                         obj = None
 
-                if not obj and len(params) != params.index(param):
+                if obj is None and len(params) != params.index(param):
                     continue
 
                 if obj_key:

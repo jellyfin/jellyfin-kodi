@@ -17,6 +17,7 @@ import xbmcgui
 import xbmcvfs
 
 from . import _
+from dateutil import tz, parser
 
 #################################################################################################
 
@@ -51,7 +52,7 @@ def window(key, value=None, clear=False, window_id=10000):
             key = key.replace('.bool', "")
             value = "true" if value else "false"
 
-        window.setProperty(key.replace('.json', "").replace('.bool', ""), value)
+        window.setProperty(key, value)
     else:
         result = window.getProperty(key.replace('.json', "").replace('.bool', ""))
 
@@ -444,3 +445,18 @@ def split_list(itemlist, size):
     ''' Split up list in pieces of size. Will generate a list of lists
     '''
     return [itemlist[i:i+size] for i in range(0, len(itemlist), size)]
+
+def convert_to_local(date):
+
+    ''' Convert the local datetime to local.
+    '''
+    try:
+        date = parser.parse(date) if type(date) in (unicode, str) else date
+        date = date.replace(tzinfo=tz.tzutc())
+        date = date.astimezone(tz.tzlocal())
+
+        return date.strftime('%Y-%m-%dT%H:%M:%S')
+    except Exception as error:
+        LOG.error(error)
+
+        return str(date)

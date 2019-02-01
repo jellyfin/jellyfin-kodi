@@ -55,11 +55,14 @@ class Library(threading.Thread):
 
     def __init__(self, monitor):
 
+        self.media = {'Movies': Movies, 'TVShows': TVShows, 'MusicVideos': MusicVideos, 'Music': Music}
+        self.MEDIA = MEDIA
+
         self.direct_path = settings('useDirectPaths') == "1"
         self.progress_display = int(settings('syncProgress') or 50)
         self.monitor = monitor
         self.player = monitor.monitor.player
-        self.server = Emby()
+        self.server = Emby().get_client()
         self.updated_queue = Queue.Queue()
         self.userdata_queue = Queue.Queue()
         self.removed_queue = Queue.Queue()
@@ -116,6 +119,14 @@ class Library(threading.Thread):
 
         LOG.warn("---<[ library ]")
 
+    def test_databases(self):
+
+        ''' Open the databases to test if the file exists.
+        '''
+        with Database('video') as kodidb:
+            with Database('music') as musicdb:
+                pass
+
     @stop()
     def service(self):
         
@@ -140,6 +151,7 @@ class Library(threading.Thread):
             self.worker_notify()
 
         if self.pending_refresh:
+            window('emby_sync.bool', True)
 
             if self.total_updates > self.progress_display:
                 queue_size = self.worker_queue_size()
@@ -165,6 +177,7 @@ class Library(threading.Thread):
             self.pending_refresh = False
             self.save_last_sync()
             self.total_updates = 0
+            window('emby_sync', clear=True)
 
             if self.progress_updates:
 
@@ -177,13 +190,23 @@ class Library(threading.Thread):
                 set_screensaver(value=self.screensaver)
                 self.screensaver = None
 
-            if xbmc.getCondVisibility('Container.Content(musicvideos)') or xbmc.getCondVisibility('Window.IsMedia'): # Prevent cursor from moving
+            if xbmc.getCondVisibility('Container.Content(musicvideos)'): # Prevent cursor from moving
                 xbmc.executebuiltin('Container.Refresh')
             else: # Update widgets
                 xbmc.executebuiltin('UpdateLibrary(video)')
 
+                if xbmc.getCondVisibility('Window.IsMedia'):
+                    xbmc.executebuiltin('Container.Refresh')
+
     def stop_client(self):
         self.stop_thread = True
+
+    def enable_pending_refresh(self):
+
+        ''' When there's an active thread. Let the main thread know.
+        '''
+        self.pending_refresh = True
+        window('emby_sync.bool', True)
 
     def worker_queue_size(self):
 
@@ -240,7 +263,7 @@ class Library(threading.Thread):
                 new_thread.start()
                 LOG.info("-->[ q:updated/%s/%s ]", queues, id(new_thread))
                 self.writer_threads['updated'].append(new_thread)
-                self.pending_refresh = True
+                self.enable_pending_refresh()
 
     def worker_userdata(self):
 
@@ -259,7 +282,7 @@ class Library(threading.Thread):
                 new_thread.start()
                 LOG.info("-->[ q:userdata/%s/%s ]", queues, id(new_thread))
                 self.writer_threads['userdata'].append(new_thread)
-                self.pending_refresh = True
+                self.enable_pending_refresh()
 
     def worker_remove(self):
 
@@ -278,7 +301,7 @@ class Library(threading.Thread):
                 new_thread.start()
                 LOG.info("-->[ q:removed/%s/%s ]", queues, id(new_thread))
                 self.writer_threads['removed'].append(new_thread)
-                self.pending_refresh = True
+                self.enable_pending_refresh()
 
     def worker_notify(self):
 
@@ -294,8 +317,12 @@ class Library(threading.Thread):
 
     def startup(self):
 
-        ''' Run at startup. Will check for the server plugin.
+        ''' Run at startup. 
+            Check databases. 
+            Check for the server plugin.
         '''
+        self.test_databases()
+
         Views().get_views()
         Views().get_nodes()
 
@@ -303,14 +330,18 @@ class Library(threading.Thread):
             if get_sync()['Libraries']:
 
                 try:
-                    FullSync(self)
+                    with FullSync(self, self.server) as sync:
+                        sync.libraries()
+
                     Views().get_nodes()
                 except Exception as error:
                     LOG.error(error)
 
             elif not settings('SyncInstallRunDone.bool'):
                 
-                FullSync(self)
+                with FullSync(self, self.server) as sync:
+                    sync.libraries()
+
                 Views().get_nodes()
 
                 return True
@@ -490,7 +521,8 @@ class Library(threading.Thread):
     def add_library(self, library_id, update=False):
 
         try:
-            FullSync(self, library_id, update=update)
+            with FullSync(self, server=self.server) as sync:
+                sync.libraries(library_id, update)
         except Exception as error:
             LOG.exception(error)
 
@@ -500,64 +532,15 @@ class Library(threading.Thread):
 
         return True
 
-    @progress(_(33144))
-    def remove_library(self, library_id, dialog):
-        
+    def remove_library(self, library_id):
+
         try:
-            with Database('emby') as embydb:
+            with FullSync(self, self.server) as sync:
+                sync.remove_library(library_id)
 
-                db = emby_db.EmbyDatabase(embydb.cursor)
-                library = db.get_view(library_id.replace('Mixed:', ""))
-                items = db.get_item_by_media_folder(library_id.replace('Mixed:', ""))
-                media = 'music' if library[1] == 'music' else 'video'
-
-                if media == 'music':
-                    settings('MusicRescan.bool', False)
-
-                if items:
-                    count = 0
-
-                    with self.music_database_lock if media == 'music' else self.database_lock:
-                        with Database(media) as kodidb:
-
-                            if library[1] == 'mixed':
-                                movies = [x for x in items if x[1] == 'Movie']
-                                tvshows = [x for x in items if x[1] == 'Series']
-
-                                obj = MEDIA['Movie'](self.server, embydb, kodidb, self.direct_path)['Remove']
-
-                                for item in movies:
-                                    obj(item[0])
-                                    dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
-                                    count += 1
-
-                                obj = MEDIA['Series'](self.server, embydb, kodidb, self.direct_path)['Remove']
-
-                                for item in tvshows:
-                                    obj(item[0])
-                                    dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
-                                    count += 1
-                            else:
-                                obj = MEDIA[items[0][1]](self.server, embydb, kodidb, self.direct_path)['Remove']
-
-                                for item in items:
-                                    obj(item[0])
-                                    dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
-                                    count += 1
-
-            sync = get_sync()
-
-            if library_id in sync['Whitelist']:
-                sync['Whitelist'].remove(library_id)
-            elif 'Mixed:%s' % library_id in sync['Whitelist']:
-                sync['Whitelist'].remove('Mixed:%s' % library_id)
-
-            save_sync(sync)
             Views().remove_library(library_id)
         except Exception as error:
-
             LOG.exception(error)
-            dialog.close()
 
             return False
 

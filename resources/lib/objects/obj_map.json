@@ -40,7 +40,8 @@
 		"Audio": "MediaSources/0/MediaStreams:?Type=Audio",
 		"Video": "MediaSources/0/MediaStreams:?Type=Video",
 		"Container": "MediaSources/0/Container",
-		"EmbyParentId": "ParentId"
+		"EmbyParentId": "ParentId",
+		"CriticRating": "CriticRating"
 	},
 	"MovieUserData": {
 		"Id": "Id",
@@ -76,7 +77,8 @@
 		"Tags": "Tags",
 		"Favorite": "UserData/IsFavorite",
 		"RecursiveCount": "RecursiveItemCount",
-		"EmbyParentId": "ParentId"
+		"EmbyParentId": "ParentId",
+		"Status": "Status"
 	},
 	"Season": {
 		"Id": "Id",
@@ -299,7 +301,9 @@
 		"Unwatched": "UserData/UnplayedItemCount",
 		"ChildCount": "ChildCount",
 		"RecursiveCount": "RecursiveItemCount",
-		"MediaType": "MediaType"
+		"MediaType": "MediaType",
+		"CriticRating": "CriticRating",
+		"Status": "Status"
 	},
 	"BrowseAudio": {
 		"Id": "Id",

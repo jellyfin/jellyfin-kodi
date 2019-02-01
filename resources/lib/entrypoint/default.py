@@ -21,7 +21,6 @@ from database import reset, get_sync, Database, emby_db, get_credentials
 from objects import Objects, Actions
 from downloader import TheVoid
 from helper import _, event, settings, window, dialog, api, JSONRPC
-from emby import Emby
 
 #################################################################################################
 
@@ -69,7 +68,7 @@ class Events(object):
         elif mode =='play':
 
             item = TheVoid('GetItem', {'Id': params['id'], 'ServerId': server}).get()
-            Actions(server).play(item, params.get('dbid'), playlist=params.get('playlist') == 'true')
+            Actions(server).play(item, params.get('dbid'), params.get('transcode') == 'true', playlist=params.get('playlist') == 'true')
 
         elif mode == 'playlist':
             event('PlayPlaylist', {'Id': params['id'], 'ServerId': server})
@@ -119,6 +118,8 @@ class Events(object):
             event('UpdateServer')
         elif mode == 'thememedia':
             get_themes()
+        elif mode == 'managelibs':
+            manage_libraries()
         elif mode == 'backup':
             backup()
         elif mode == 'restartservice':
@@ -161,11 +162,11 @@ def listing():
             context.append((_(33133), "RunPlugin(plugin://plugin.video.emby/?mode=removelib&id=%s)" % view_id))
 
         LOG.debug("--[ listing/%s/%s ] %s", node, label, path)
-        
+
         if path:
             if xbmc.getCondVisibility('Window.IsActive(Pictures)') and node in ('photos', 'homevideos'):
                 directory(label, path, artwork=artwork)
-            elif xbmc.getCondVisibility('Window.IsActive(Videos)') and node not in ('photos', 'homevideos', 'music'):
+            elif xbmc.getCondVisibility('Window.IsActive(Videos)') and node not in ('photos', 'music', 'audiobooks'):
                 directory(label, path, artwork=artwork, context=context)
             elif xbmc.getCondVisibility('Window.IsActive(Music)') and node in ('music'):
                 directory(label, path, artwork=artwork, context=context)
@@ -184,16 +185,12 @@ def listing():
             directory(server['Name'], "plugin://plugin.video.emby/?mode=browse&server=%s" % server['Id'], context=context)
 
 
+    directory(_(33194), "plugin://plugin.video.emby/?mode=managelibs", True)
     directory(_(33134), "plugin://plugin.video.emby/?mode=addserver", False)
-    directory(_(5), "plugin://plugin.video.emby/?mode=settings", False)
     directory(_(33054), "plugin://plugin.video.emby/?mode=adduser", False)
-    directory(_(33098), "plugin://plugin.video.emby/?mode=refreshboxsets", False)
-    directory(_(33154), "plugin://plugin.video.emby/?mode=addlibs", False)
-    directory(_(33139), "plugin://plugin.video.emby/?mode=updatelibs", False)
-    directory(_(33140), "plugin://plugin.video.emby/?mode=repairlibs", False)
-    directory(_(33184), "plugin://plugin.video.emby/?mode=removelibs", False)
-    directory(_(33060), "plugin://plugin.video.emby/?mode=thememedia", False)
+    directory(_(5), "plugin://plugin.video.emby/?mode=settings", False)
     directory(_(33058), "plugin://plugin.video.emby/?mode=reset", False)
+    directory(_(33192), "plugin://plugin.video.emby/?mode=restartservice", False)
 
     if settings('backupPath'):
         directory(_(33092), "plugin://plugin.video.emby/?mode=backup", False)
@@ -225,6 +222,18 @@ def dir_listitem(label, path, artwork=None, fanart=None):
 
     return li
 
+def manage_libraries():
+
+    directory(_(33098), "plugin://plugin.video.emby/?mode=refreshboxsets", False)
+    directory(_(33154), "plugin://plugin.video.emby/?mode=addlibs", False)
+    directory(_(33139), "plugin://plugin.video.emby/?mode=updatelibs", False)
+    directory(_(33140), "plugin://plugin.video.emby/?mode=repairlibs", False)
+    directory(_(33184), "plugin://plugin.video.emby/?mode=removelibs", False)
+    directory(_(33060), "plugin://plugin.video.emby/?mode=thememedia", False)
+
+    xbmcplugin.setContent(int(sys.argv[1]), 'files')
+    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
 def browse(media, view_id=None, folder=None, server_id=None):
 
     ''' Browse content dynamically.
@@ -249,7 +258,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
 
     if folder is None and media in ('homevideos', 'movies', 'books', 'audiobooks'):
         return browse_subfolders(media, view_id, server_id)
-    
+
     if folder and folder == 'firstletter':
         return browse_letters(media, view_id, server_id)
 
@@ -476,7 +485,7 @@ def get_media_type(media):
         return "MusicArtist,MusicAlbum,Audio"
 
 def get_fanart(item_id, path, server_id=None):
-    
+
     ''' Get extra fanart for listitems. This is called by skinhelper.
         Images are stored locally, due to the Kodi caching system.
     '''
@@ -561,7 +570,7 @@ def get_video_extras(item_id, path, server_id=None):
     """
 
 def get_next_episodes(item_id, limit):
-    
+
     ''' Only for synced content.
     '''
     with Database('emby') as embydb:
@@ -648,7 +657,7 @@ def create_listitem(item):
     label2 = ""
     li = xbmcgui.ListItem(title)
     li.setProperty('IsPlayable', "true")
-    
+
     metadata = {
         'Title': title,
         'duration': str(item['runtime']/60),
@@ -702,7 +711,7 @@ def create_listitem(item):
         metadata['CastAndRole'] = castandrole
 
     li.setLabel2(label2)
-    li.setInfo(type="Video", infoLabels=metadata)  
+    li.setInfo(type="Video", infoLabels=metadata)
     li.setProperty('resumetime', str(item['resume']['position']))
     li.setProperty('totaltime', str(item['resume']['total']))
     li.setArt(item['art'])
@@ -784,7 +793,7 @@ def get_themes():
 
     items = {}
     server = TheVoid('GetServerAddress', {'ServerId': None}).get()
-    token = TheVoid('GetToken', {'ServerId': None}).get() 
+    token = TheVoid('GetToken', {'ServerId': None}).get()
 
     for view in views:
         result = TheVoid('GetThemes', {'Type': "Video", 'Id': view}).get()

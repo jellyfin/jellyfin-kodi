@@ -13,6 +13,7 @@ from emby import Emby
 #################################################################################################
 
 Emby.set_loghandler(loghandler.LogHandler, logging.DEBUG)
+loghandler.reset()
 loghandler.config()
 LOG = logging.getLogger('EMBY.entrypoint')
 
