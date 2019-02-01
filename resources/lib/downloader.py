@@ -13,7 +13,7 @@ import xbmc
 import xbmcvfs
 import xbmcaddon
 
-from libraries import requests
+import requests
 from helper.utils import should_stop, delete_folder
 from helper import settings, stop, event, window, kodi_version, unzip, create_id
 from emby import Emby

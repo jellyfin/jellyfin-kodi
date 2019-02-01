@@ -14,8 +14,8 @@ import api
 import database
 import client
 import collections
+import requests
 from . import _, settings, window, dialog
-from libraries import requests
 from downloader import TheVoid
 from emby import Emby
 

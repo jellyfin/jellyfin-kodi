@@ -17,7 +17,7 @@ import client
 import library
 import setup
 import monitor
-from libraries import requests
+import requests
 from views import Views, verify_kodi_defaults
 from helper import _, window, settings, event, dialog, find, compare_version
 from downloader import get_objects

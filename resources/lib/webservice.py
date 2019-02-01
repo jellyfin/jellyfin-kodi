@@ -2,16 +2,13 @@
 
 #################################################################################################
 
-import SimpleHTTPServer
 import BaseHTTPServer
 import logging
 import httplib
 import threading
 import urlparse
-import urllib
 
 import xbmc
-import xbmcvfs
 
 #################################################################################################
 
@@ -20,14 +17,10 @@ LOG = logging.getLogger("EMBY."+__name__)
 
 #################################################################################################
 
-
 class WebService(threading.Thread):
 
     ''' Run a webservice to trigger playback.
-        Inspired from script.skin.helper.service by marcelveldt.
     '''
-    stop_thread = False
-
     def __init__(self):
         threading.Thread.__init__(self)
 
@@ -39,9 +32,8 @@ class WebService(threading.Thread):
             conn = httplib.HTTPConnection("127.0.0.1:%d" % PORT)
             conn.request("QUIT", "/")
             conn.getresponse()
-            self.stop_thread = True
         except Exception as error:
-            LOG.exception(error)
+            pass
 
     def run(self):
 
@@ -50,7 +42,7 @@ class WebService(threading.Thread):
         LOG.info("--->[ webservice/%s ]", PORT)
 
         try:
-            server = StoppableHttpServer(('127.0.0.1', PORT), StoppableHttpRequestHandler)
+            server = HttpServer(('127.0.0.1', PORT), requestHandler)
             server.serve_forever()
         except Exception as error:
 
@@ -60,30 +52,7 @@ class WebService(threading.Thread):
         LOG.info("---<[ webservice ]")
 
 
-class Request(object):
-
-    ''' Attributes from urlsplit that this class also sets
-    '''
-    uri_attrs = ('scheme', 'netloc', 'path', 'query', 'fragment')
-
-    def __init__(self, uri, headers, rfile=None):
-
-        self.uri = uri
-        self.headers = headers
-        parsed = urlparse.urlsplit(uri)
-
-        for i, attr in enumerate(self.uri_attrs):
-            setattr(self, attr, parsed[i])
-
-        try:
-            body_len = int(self.headers.get('Content-length', 0))
-        except ValueError:
-            body_len = 0
-
-        self.body = rfile.read(body_len) if body_len and rfile else None
-
-
-class StoppableHttpServer(BaseHTTPServer.HTTPServer):
+class HttpServer(BaseHTTPServer.HTTPServer):
 
     ''' Http server that reacts to self.stop flag.
     '''
@@ -94,22 +63,14 @@ class StoppableHttpServer(BaseHTTPServer.HTTPServer):
         self.stop = False
 
         while not self.stop:
-
             self.handle_request()
-            xbmc.sleep(100)
 
 
-class StoppableHttpRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+class requestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
-    ''' http request handler with QUIT stopping the server
+    ''' Http request handler. Do not use LOG here,
+        it will hang requests in Kodi > show information dialog.
     '''
-    raw_requestline = ""
-
-    def __init__(self, request, client_address, server):
-        try:
-            SimpleHTTPServer.SimpleHTTPRequestHandler.__init__(self, request, client_address, server)
-        except Exception:
-            pass
 
     def log_message(self, format, *args):
 
@@ -124,23 +85,6 @@ class StoppableHttpRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         self.send_response(200)
         self.end_headers()
         self.server.stop = True
-
-    def parse_request(self):
-
-        ''' Modify here to workaround unencoded requests.
-        '''
-        retval = SimpleHTTPServer.SimpleHTTPRequestHandler.parse_request(self)
-        self.request = Request(self.path, self.headers, self.rfile)
-
-        return retval
-
-    def do_HEAD(self):
-
-        ''' Called on HEAD requests
-        '''
-        self.handle_request(True)
-
-        return
 
     def get_params(self):
 
@@ -158,36 +102,47 @@ class StoppableHttpRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
         return params
 
-    def handle_request(self, headers_only=False):
+    def do_HEAD(self):
 
-        ''' Send headers and reponse
+        ''' Called on HEAD requests
         '''
-        try:
-            params = self.get_params()
-            LOG.info("Webservice called with params: %s", params)
-
-            path = ("plugin://plugin.video.emby?mode=play&id=%s&dbid=%s&filename=%s&transcode=%s"
-                    % (params.get('Id'), params.get('KodiId'), params.get('Name'), params.get('transcode') or False))
-            
-            self.send_response(200)
-            self.send_header('Content-type', 'text/html')
-            self.send_header('Content-Length', len(path))
-            self.end_headers()
-
-            if not headers_only:
-                self.wfile.write(path)
-
-        except Exception as error:
-
-            LOG.exception(error)
-            self.send_error(500, "Exception occurred: %s" % error)
+        self.send_response(200)
+        self.end_headers()
 
         return
 
     def do_GET(self):
 
-        ''' Called on GET requests
+        ''' Return plugin path
         '''
-        self.handle_request()
+        try:
+            params = self.get_params()
+
+            if not params:
+                raise IndexError("Incomplete URL format")
+
+            if not params.get('Id').isdigit():
+                raise IndexError("Incorrect Id format %s" % params.get('Id'))
+
+            xbmc.log("[ webservice ] path: %s params: %s" % (str(self.path), str(params)), xbmc.LOGWARNING)
+
+            path = ("plugin://plugin.video.emby?mode=play&id=%s&dbid=%s&filename=%s&transcode=%s"
+                    % (params.get('Id'), params.get('KodiId'), params.get('Name'), params.get('transcode') or False))
+
+            self.send_response(200)
+            self.send_header('Content-type','text/html')
+            self.end_headers()
+            self.wfile.write(path)
+
+        except IndexError as error:
+
+            xbmc.log(str(error), xbmc.LOGWARNING)
+            self.send_error(404, "Exception occurred: %s" % error)
+
+        except Exception as error:
+
+            xbmc.log(str(error), xbmc.LOGWARNING)
+            self.send_error(500, "Exception occurred: %s" % error)
 
         return
+

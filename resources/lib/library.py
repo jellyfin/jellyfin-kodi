@@ -151,6 +151,7 @@ class Library(threading.Thread):
             self.worker_notify()
 
         if self.pending_refresh:
+            window('emby_sync.bool', True)
 
             if self.total_updates > self.progress_display:
                 queue_size = self.worker_queue_size()

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon  id="plugin.video.emby"
         name="Emby" 
-        version="4.0.1"
+        version="4.0.2"
         provider-name="angelblue05">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
-    <import addon="plugin.video.emby.movies" version="0.13" />
-    <import addon="plugin.video.emby.tvshows" version="0.13" />
-    <import addon="plugin.video.emby.musicvideos" version="0.13" />
+    <import addon="plugin.video.emby.movies" version="0.14" />
+    <import addon="plugin.video.emby.tvshows" version="0.14" />
+    <import addon="plugin.video.emby.musicvideos" version="0.14" />
   </requires>
   <extension    point="xbmc.python.pluginsource"
                 library="default.py">
@@ -38,8 +38,11 @@
     <description lang="en">Welcome to Emby for Kodi A whole new way to manage and view your media library. The Emby addon for Kodi combines the best of Kodi - ultra smooth navigation, beautiful UIs and playback of any file under the sun, and Emby - the most powerful fully open source multi-client media metadata indexer and server.&#10;&#10;Emby for Kodi is the absolute best way to enjoy the incredible Kodi playback engine combined with the power of Emby's centralized database. Features: Direct integration with the Kodi library for native Kodi speed Instant synchronization with the Emby server Full support for Movie, TV and Music collections Emby Server direct stream and transcoding support - use Kodi when you are away from home!</description>
     <news>
       New stable release
-      The wiki has been updated: https://github.com/MediaBrowser/plugin.video.emby/wiki
-      Small fixes
+      The wiki has been updated, PLEASE READ: https://github.com/MediaBrowser/plugin.video.emby/wiki
+      Fix playback for Kodi Leia
+      Fix masterlock
+      Home videos and pictures now show under videos and picture add-ons
+      Dependencies were updated to 0.14!
     </news>
   </extension>
 </addon>
