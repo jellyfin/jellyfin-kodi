@@ -13,7 +13,7 @@ import xbmcvfs
 import queries as QU
 import queries_texture as QUTEX
 from helper import window, settings
-from libraries import requests
+import requests
 
 ##################################################################################################
 
