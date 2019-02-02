@@ -12,7 +12,7 @@ import xbmcvfs
 
 import client
 from database import get_credentials, save_credentials
-from dialogs import ServerConnect, UsersConnect, LoginConnect, LoginManual, ServerManual
+from dialogs import ServerConnect, UsersConnect, LoginManual, ServerManual
 from helper import _, settings, addon_id, event, api, dialog, window
 from emby import Emby
 from emby.core.connection_manager import get_server_address, CONNECTION_STATE
@@ -164,20 +164,13 @@ class Connect(object):
             'connect_manager': self.connect_manager,
             'username': user.get('DisplayName', ""),
             'user_image': user.get('ImageUrl'),
-            'servers': state.get('Servers', []),
-            'jellyfin_connect': False if user else True
+            'servers': state.get('Servers', [])
         })
         dialog.doModal()
 
         if dialog.is_server_selected():
             LOG.debug("Server selected: %s", dialog.get_server())
             return
-
-        elif dialog.is_connect_login():
-            LOG.debug("Login with jellyfin connect")
-            try:
-                self.login_connect()
-            except RuntimeError: pass
 
         elif dialog.is_manual_server():
             LOG.debug("Adding manual server")
@@ -217,35 +210,6 @@ class Connect(object):
             return dialog.get_server()
         else:
             raise RuntimeError("Server is not connected")
-
-    def setup_login_connect(self):
-
-        ''' Setup jellyfin connect by itself.
-        '''
-        client = self.get_client()
-        client.set_credentials(get_credentials())
-        manager = client.auth
-
-        try:
-            self.login_connect(manager)
-        except RuntimeError:
-            return
-
-        credentials = client.get_credentials()
-        save_credentials(credentials)
-
-    def login_connect(self, manager=None):
-
-        ''' Return connect user or raise error.
-        '''
-        dialog = LoginConnect("script-jellyfin-connect-login.xml", *XML_PATH)
-        dialog.set_args(**{'connect_manager': manager or self.connect_manager})
-        dialog.doModal()
-
-        if dialog.is_logged_in():
-            return dialog.get_user()
-        else:
-            raise RuntimeError("Connect user is not logged in")
 
     def login(self):
 

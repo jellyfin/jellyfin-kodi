@@ -308,9 +308,6 @@ class Service(xbmc.Monitor):
             self.connect.register(data['Id'])
             xbmc.executebuiltin("Container.Refresh")
 
-        elif method == 'JellyfinConnect':
-            self.connect.setup_login_connect()
-
         elif method == 'AddServer':
 
             self.connect.setup_manual_server()

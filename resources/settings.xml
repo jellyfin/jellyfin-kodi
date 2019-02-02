@@ -5,8 +5,6 @@
 		<setting label="30003" id="idMethod" type="enum" values="Manual|Jellyfin Connect" default="0" />
 		<setting label="30024" id="username" type="text" default="" visible="eq(-1,0)" />
 		<setting label="30543" id="connectUsername" type="text" default="" visible="!eq(0,) + eq(-2,1)" />
-		<setting label="30600" type="action" action="RunPlugin(plugin://plugin.video.jellyfin?mode=connect)" visible="eq(-3,1) + eq(-1,)" option="close" />
-		<setting label="30618" type="action" action="RunPlugin(plugin://plugin.video.jellyfin?mode=connect)" visible="eq(-4,1) + !eq(-2,)" option="close" />
 		<setting label="30001" id="serverName" type="text" default="" />
 		<setting label="30000" id="server" type="text" default="" visible="true" />
 		<setting label="33150" type="action" action="RunPlugin(plugin://plugin.video.jellyfin?mode=updateserver)" visible="!eq(-1,)" option="close" />

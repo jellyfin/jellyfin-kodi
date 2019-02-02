@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <window>
-	<defaultcontrol always="true">205</defaultcontrol>
+	<defaultcontrol always="true">206</defaultcontrol>
 	<animation type="WindowOpen" reversible="false">
 		<effect type="zoom" start="80" end="100" center="960,540" delay="160" tween="circle" easin="out" time="240" />
 		<effect type="fade" delay="160" end="100" time="240" />
@@ -159,24 +159,6 @@
 						<control type="label" id="102">
 							<description>spacer</description>
 							<height>20</height>
-						</control>
-						<control type="button" id="205">
-							<label>[B]$ADDON[plugin.video.jellyfin 30600][/B]</label>
-							<width>476</width>
-							<height>65</height>
-							<font>font13</font>
-							<textcolor>ffe1e1e1</textcolor>
-							<focusedcolor>white</focusedcolor>
-							<selectedcolor>ffe1e1e1</selectedcolor>
-							<shadowcolor>66000000</shadowcolor>
-							<textoffsetx>20</textoffsetx>
-							<aligny>center</aligny>
-							<align>center</align>
-							<texturefocus border="10" colordiffuse="ff52b54b">buttons/shadow_smallbutton.png</texturefocus>
-							<texturenofocus border="10" colordiffuse="ff464646">buttons/shadow_smallbutton.png</texturenofocus>
-							<pulseonselect>no</pulseonselect>
-							<onup>155</onup>
-							<animation effect="slide" time="0" end="17,0" condition="true">Conditional</animation>
 						</control>
 						<control type="button" id="206">
 							<label>[B]$ADDON[plugin.video.jellyfin 30611][/B]</label>

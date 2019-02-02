@@ -350,10 +350,6 @@ msgctxt "#30547"
 msgid "Display message"
 msgstr "Wyświetl wiadomość"
 
-msgctxt "#30600"
-msgid "Sign in with Jellyfin Connect"
-msgstr "Zaloguj z Jellyfin Connect"
-
 msgctxt "#30602"
 msgid "Password"
 msgstr "Hasło"
@@ -409,10 +405,6 @@ msgstr "Połącz"
 msgctxt "#30617"
 msgid "Server or port cannot be empty"
 msgstr "Nazwa hosta i port nie mogą być puste"
-
-msgctxt "#30618"
-msgid "Change Jellyfin Connect user"
-msgstr "Zmień użytkownika Jellyfin Connect"
 
 msgctxt "#33000"
 msgid "Welcome"

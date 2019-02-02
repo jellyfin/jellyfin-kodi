@@ -352,10 +352,6 @@ msgctxt "#30547"
 msgid "Display message"
 msgstr "Nachricht anzeigen"
 
-msgctxt "#30600"
-msgid "Sign in with Jellyfin Connect"
-msgstr "Mit Jellyfin Connect anmelden"
-
 msgctxt "#30602"
 msgid "Password"
 msgstr "Passwort"
@@ -411,10 +407,6 @@ msgstr "Verbinden"
 msgctxt "#30617"
 msgid "Server or port cannot be empty"
 msgstr "Server oder Port muss eingetragen werden"
-
-msgctxt "#30618"
-msgid "Change Jellyfin Connect user"
-msgstr "Jellyfin Connect Benutzer wechseln"
 
 msgctxt "#33000"
 msgid "Welcome"

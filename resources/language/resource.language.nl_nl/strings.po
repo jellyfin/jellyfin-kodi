@@ -350,10 +350,6 @@ msgctxt "#30547"
 msgid "Display message"
 msgstr "Melding tonen"
 
-msgctxt "#30600"
-msgid "Sign in with Jellyfin Connect"
-msgstr "Aanmelden met Jellyfin Connect"
-
 msgctxt "#30602"
 msgid "Password"
 msgstr "Wachtwoord"
@@ -409,10 +405,6 @@ msgstr "Verbinden"
 msgctxt "#30617"
 msgid "Server or port cannot be empty"
 msgstr "Server of poort kan niet leeg zijn"
-
-msgctxt "#30618"
-msgid "Change Jellyfin Connect user"
-msgstr "Jellyfin Connect gebruiker wijzigen"
 
 msgctxt "#33000"
 msgid "Welcome"

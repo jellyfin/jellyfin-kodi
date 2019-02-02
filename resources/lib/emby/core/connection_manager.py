@@ -69,8 +69,6 @@ class ConnectionManager(object):
             return self.connect
         elif key == "login":
             return self.login
-        elif key == "login-connect":
-            return self.login_to_connect
         elif key == "connect-user":
             return self.connect_user()
         elif key == "connect-token":
@@ -158,38 +156,6 @@ class ConnectionManager(object):
         self.credentials.get_credentials(credentials)
 
         return servers
-
-    def login_to_connect(self, username, password):
-
-        if not username:
-            raise AttributeError("username cannot be empty")
-
-        if not password:
-            raise AttributeError("password cannot be empty")
-
-        try:
-            result = self._request_url({
-                'type': "POST",
-                'url': self.get_connect_url("user/authenticate"),
-                'data': {
-                    'nameOrEmail': username,
-                    'password': self._get_connect_password_hash(password)
-                },
-                'dataType': "json"
-            })
-        except Exception as error: # Failed to login
-            LOG.error(error)
-            return False
-        else:
-            credentials = self.credentials.get_credentials()
-            credentials['ConnectAccessToken'] = result['AccessToken']
-            credentials['ConnectUserId'] = result['User']['Id']
-            credentials['ConnectUser'] = result['User']['DisplayName']
-            self.credentials.get_credentials(credentials)
-            # Signed in
-            self._on_connect_user_signin(result['User'])
-
-        return result
 
     def login(self, server, username, password=None, clear=True, options={}):
 

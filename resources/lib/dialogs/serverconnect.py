@@ -24,7 +24,6 @@ CANCEL = 201
 MESSAGE_BOX = 202
 MESSAGE = 203
 BUSY = 204
-EMBY_CONNECT = 205
 MANUAL_SERVER = 206
 
 ##################################################################################################
@@ -45,7 +44,7 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
         xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)
 
     def set_args(self, **kwargs):
-        # connect_manager, user_image, servers, jellyfin_connect
+        # connect_manager, user_image, servers
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
 
@@ -75,9 +74,6 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
 
         if self.user_image is not None:
             self.getControl(USER_IMAGE).setImage(self.user_image)
-
-        if not self.jellyfin_connect: # Change connect user
-            self.getControl(EMBY_CONNECT).setLabel("[B]%s[/B]" % _(30618))
 
         if self.servers:
             self.setFocus(self.list_)
@@ -109,12 +105,7 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
 
     def onClick(self, control):
 
-        if control == EMBY_CONNECT:
-            self.connect_manager.clear_data()
-            self._connect_login = True
-            self.close()
-
-        elif control == MANUAL_SERVER:
+        if control == MANUAL_SERVER:
             self._manual_server = True
             self.close()
 
