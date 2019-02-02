@@ -34,7 +34,8 @@ The add-on supports a hybrid approach. You can decide which Jellyfin libraries t
 - Remote control your Kodi; send play commands from your Jellyfin web client or Jellyfin mobile apps.
 - Extrafanart (rotating backgrounds) for skins that support it
 - Offer to delete content after playback
-- Backup your Jellyfin Kodi profile.
+- Backup your Jellyfin Kodi profile ([Create and restore from backup
+](https://web.archive.org/web/20190202213116/https://github.com/MediaBrowser/plugin.video.emby/wiki/create-and-restore-from-backup))
 - and more...
 
 ### Install Jellyfin for Kodi
