@@ -250,7 +250,7 @@ class Views(object):
                         if view['Media'] in ('movies', 'tvshows', 'musicvideos'):
                             self.add_playlist(playlist_path, view)
 
-                        if view['Media'] not in ('music'):
+                        if view['Media'] not in ('music',):
                             self.add_nodes(node_path, view)
 
                     index += 1

@@ -69,7 +69,7 @@ class Monitor(xbmc.Monitor):
         elif sender.startswith('upnextprovider'):
             method = method.split('.')[1]
 
-            if method not in ('plugin.video.jellyfin_play_action'):
+            if method not in ('plugin.video.jellyfin_play_action',):
                 return
 
             data = json.loads(data)

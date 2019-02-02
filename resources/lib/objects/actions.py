@@ -238,7 +238,7 @@ class Actions(object):
             obj['Artwork'] = API.get_all_artwork(objects.map(item, 'Artwork'))
             self.listitem_photo(obj, listitem, item)
 
-        elif item['Type'] in ('TvChannel'):
+        elif item['Type'] in ('TvChannel',):
 
             obj = objects.map(item, 'BrowseChannel')
             obj['Artwork'] = API.get_all_artwork(objects.map(item, 'Artwork'))
