@@ -115,7 +115,7 @@ add_reference_album_obj =   [   "{Id}","{AlbumId}",None,None,"MusicAlbum","album
                             ]
 add_reference_song_obj =    [   "{Id}","{SongId}",None,"{PathId}","Audio","song","{AlbumId}","{Checksum}",
                                 None,"{JellyfinParentId}"
-                            ]  
+                            ]
 add_view =              """ INSERT OR REPLACE INTO  view(view_id, view_name, media_type)
                             VALUES                  (?, ?, ?)
                         """
