@@ -14,7 +14,7 @@ from http import HTTP
 
 #################################################################################################
 
-LOG = logging.getLogger('Emby.'+__name__)
+LOG = logging.getLogger('JELLYFIN.'+__name__)
 CONNECTION_STATE = {
     'Unavailable': 0,
     'ServerSelection': 1,
@@ -516,7 +516,7 @@ class ConnectionManager(object):
     def _server_discovery(self):
         
         MULTI_GROUP = ("<broadcast>", 7359)
-        MESSAGE = "who is EmbyServer?"
+        MESSAGE = "who is JellyfinServer?"
         
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.settimeout(1.0) # This controls the socket.timeout exception

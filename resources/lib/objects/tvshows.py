@@ -16,7 +16,7 @@ from helper import api, catch, stop, validate, emby_item, library_check, setting
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 ##################################################################################################
 
@@ -512,7 +512,7 @@ class TVShows(KodiDb):
     @emby_item()
     def remove(self, item_id, e_item):
         
-        ''' Remove showid, fileid, pathid, emby reference.
+        ''' Remove showid, fileid, pathid, jellyfin reference.
             There's no episodes left, delete show and any possible remaining seasons
         '''
         obj = {'Id': item_id}
@@ -614,7 +614,7 @@ class TVShows(KodiDb):
     @emby_item()
     def get_child(self, item_id, e_item):
 
-        ''' Get all child elements from tv show emby id.
+        ''' Get all child elements from tv show jellyfin id.
         '''
         obj = {'Id': item_id}
         child = []

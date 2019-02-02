@@ -51,8 +51,8 @@
 							<width>100%</width>
 							<height>25</height>
 							<aspectratio align="right">keep</aspectratio>
-							<texture diffuse="user_image.png">$INFO[Window(Home).Property(EmbyUserImage)]</texture>
-							<visible>!String.IsEmpty(Window(Home).Property(EmbyUserImage))</visible>
+							<texture diffuse="user_image.png">$INFO[Window(Home).Property(JellyfinUserImage)]</texture>
+							<visible>!String.IsEmpty(Window(Home).Property(JellyfinUserImage))</visible>
 						</control>
 						<control type="image">
 							<right>20</right>
@@ -60,7 +60,7 @@
 							<height>25</height>
 							<aspectratio align="right">keep</aspectratio>
 							<texture diffuse="user_image.png">userflyoutdefault.png</texture>
-							<visible>String.IsEmpty(Window(Home).Property(EmbyUserImage))</visible>
+							<visible>String.IsEmpty(Window(Home).Property(JellyfinUserImage))</visible>
 						</control>
 					</control>
 					<control type="image">

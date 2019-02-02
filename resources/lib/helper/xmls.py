@@ -13,14 +13,14 @@ from . import _, indent, write_xml, dialog, settings
 
 #################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 #################################################################################################
 
 def sources():
 
     ''' Create master lock compatible sources.
-        Also add the kodi.emby.media source.
+        Also add the kodi.jellyfin.media source.
     '''
     path = xbmc.translatePath("special://profile/").decode('utf-8')
     file = os.path.join(path, 'sources.xml')
@@ -52,7 +52,7 @@ def sources():
             if (protocol == 'smb://' and count_smb > 0) or (protocol == 'http://' and count_http > 0):
 
                 source = etree.SubElement(video, 'source')
-                etree.SubElement(source, 'name').text = "Emby"
+                etree.SubElement(source, 'name').text = "Jellyfin"
                 etree.SubElement(source, 'path', attrib={'pathversion': "1"}).text = protocol
                 etree.SubElement(source, 'allowsharing').text = "true"
 
@@ -63,12 +63,13 @@ def sources():
             files = etree.SubElement(xml, 'files')
 
         for source in xml.findall('.//path'):
-            if source.text == 'http://kodi.emby.media':
+            # TODO get a repo url
+            if source.text == 'http://kodi.jellyfin.media':
                 break
         else:
             source = etree.SubElement(files, 'source')
-            etree.SubElement(source, 'name').text = "kodi.emby.media"
-            etree.SubElement(source, 'path', attrib={'pathversion': "1"}).text = "http://kodi.emby.media"
+            etree.SubElement(source, 'name').text = "kodi.jellyfin.media"
+            etree.SubElement(source, 'path', attrib={'pathversion': "1"}).text = "http://kodi.jellyfin.media"
             etree.SubElement(source, 'allowsharing').text = "true"
     except Exception as error:
         LOG.exception(error)
@@ -124,7 +125,7 @@ def advanced_settings():
             indent(xml)
             write_xml(etree.tostring(xml, 'UTF-8'), path)
 
-            dialog("ok", heading="{emby}", line1=_(33097))
+            dialog("ok", heading="{jellyfin}", line1=_(33097))
             xbmc.executebuiltin('RestartApp')
 
             return True

@@ -26,7 +26,7 @@ from database import Database, emby_db, reset
 
 #################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 #################################################################################################
 
@@ -43,7 +43,7 @@ class Service(xbmc.Monitor):
 
     def __init__(self):
 
-        window('emby_should_stop', clear=True)
+        window('jellyfin_should_stop', clear=True)
 
         self.settings['addon_version'] = client.get_version()
         self.settings['profile'] = xbmc.translatePath('special://profile')
@@ -53,14 +53,14 @@ class Service(xbmc.Monitor):
         self.settings['enable_context'] = settings('enableContext.bool')
         self.settings['enable_context_transcode'] = settings('enableContextTranscode.bool')
         self.settings['kodi_companion'] = settings('kodiCompanion.bool')
-        window('emby_logLevel', value=str(self.settings['log_level']))
-        window('emby_kodiProfile', value=self.settings['profile'])
+        window('jellyfin_logLevel', value=str(self.settings['log_level']))
+        window('jellyfin_kodiProfile', value=self.settings['profile'])
         settings('platformDetected', client.get_platform())
 
         if self.settings['enable_context']:
-            window('emby_context.bool', True)
+            window('jellyfin_context.bool', True)
         if self.settings['enable_context_transcode']:
-            window('emby_context_transcode.bool', True)
+            window('jellyfin_context_transcode.bool', True)
 
         LOG.warn("--->>>[ %s ]", client.get_addon_name())
         LOG.warn("Version: %s", client.get_version())
@@ -78,7 +78,7 @@ class Service(xbmc.Monitor):
         except Exception as error:
             LOG.error(error)
 
-        window('emby.connected.bool', True)
+        window('jellyfin.connected.bool', True)
         self.check_update()
         settings('groupedSets.bool', objects.utils.get_grouped_set())
         xbmc.Monitor.__init__(self)
@@ -99,9 +99,9 @@ class Service(xbmc.Monitor):
         self.settings['mode'] = settings('useDirectPaths')
 
         while self.running:
-            if window('emby_online.bool'):
+            if window('jellyfin_online.bool'):
 
-                if self.settings['profile'] != window('emby_kodiProfile'):
+                if self.settings['profile'] != window('jellyfin_kodiProfile'):
                     LOG.info("[ profile switch ] %s", self.settings['profile'])
 
                     break
@@ -118,10 +118,10 @@ class Service(xbmc.Monitor):
                         if update:
                             self.settings['last_progress_report'] = datetime.today()
 
-            if window('emby.restart.bool'):
+            if window('jellyfin.restart.bool'):
 
-                window('emby.restart', clear=True)
-                dialog("notification", heading="{emby}", message=_(33193), icon="{emby}", time=1000, sound=False)
+                window('jellyfin.restart', clear=True)
+                dialog("notification", heading="{jellyfin}", message=_(33193), icon="{jellyfin}", time=1000, sound=False)
 
                 raise Exception('RestartService')
 
@@ -142,7 +142,7 @@ class Service(xbmc.Monitor):
 
     def stop_default(self):
 
-        window('emby_online', clear=True)
+        window('jellyfin_online', clear=True)
         Emby().close()
 
         if self.library_thread is not None:
@@ -154,7 +154,7 @@ class Service(xbmc.Monitor):
 
         ''' Check the database version to ensure we do not need to do a reset.
         '''
-        with Database('emby') as embydb:
+        with Database('jellyfin') as embydb:
 
             version = emby_db.EmbyDatabase(embydb.cursor).get_version()
             LOG.info("---[ db/%s ]", version)
@@ -202,12 +202,12 @@ class Service(xbmc.Monitor):
             get_objects(zipfile, label + '.zip')
             self.reload_objects()
 
-            dialog("notification", heading="{emby}", message=_(33156), icon="{emby}")
+            dialog("notification", heading="{jellyfin}", message=_(33156), icon="{jellyfin}")
             LOG.info("--[ new objects/%s ]", objects.version)
 
             try:
                 if compare_version(self.settings['addon_version'], objects.embyversion) < 0:
-                    dialog("ok", heading="{emby}", line1="%s %s" % (_(33160), objects.embyversion))
+                    dialog("ok", heading="{jellyfin}", line1="%s %s" % (_(33160), objects.embyversion))
             except Exception:
                 pass
 
@@ -229,7 +229,7 @@ class Service(xbmc.Monitor):
 
             if method not in ('ServerUnreachable', 'ServerShuttingDown', 'UserDataChanged', 'ServerConnect',
                               'LibraryChanged', 'ServerOnline', 'SyncLibrary', 'RepairLibrary', 'RemoveLibrary',
-                              'EmbyConnect', 'SyncLibrarySelection', 'RepairLibrarySelection', 'AddServer',
+                              'JellyfinConnect', 'SyncLibrarySelection', 'RepairLibrarySelection', 'AddServer',
                               'Unauthorized', 'UpdateServer', 'UserConfigurationUpdated', 'ServerRestarting',
                               'RemoveServer', 'AddLibrarySelection', 'CheckUpdate', 'RemoveLibrarySelection'):
                 return
@@ -246,7 +246,7 @@ class Service(xbmc.Monitor):
         if method == 'ServerOnline':
             if data.get('ServerId') is None:
 
-                window('emby_online.bool', True)
+                window('jellyfin_online.bool', True)
                 self.settings['auth_check'] = True
                 self.warn = True
 
@@ -254,8 +254,8 @@ class Service(xbmc.Monitor):
 
                     users = [user for user in (settings('additionalUsers') or "").decode('utf-8').split(',') if user]
                     users.insert(0, settings('username').decode('utf-8'))
-                    dialog("notification", heading="{emby}", message="%s %s" % (_(33000), ", ".join(users)),
-                            icon="{emby}", time=1500, sound=False)
+                    dialog("notification", heading="{jellyfin}", message="%s %s" % (_(33000), ", ".join(users)),
+                            icon="{jellyfin}", time=1500, sound=False)
 
                 if self.library_thread is None:
 
@@ -267,7 +267,7 @@ class Service(xbmc.Monitor):
             if self.warn or data.get('ServerId'):
 
                 self.warn = data.get('ServerId') is not None
-                dialog("notification", heading="{emby}", message=_(33146) if data.get('ServerId') is None else _(33149), icon=xbmcgui.NOTIFICATION_ERROR)
+                dialog("notification", heading="{jellyfin}", message=_(33146) if data.get('ServerId') is None else _(33149), icon=xbmcgui.NOTIFICATION_ERROR)
 
             if data.get('ServerId') is None:
                 self.stop_default()
@@ -278,7 +278,7 @@ class Service(xbmc.Monitor):
                 self.start_default()
 
         elif method == 'Unauthorized':
-            dialog("notification", heading="{emby}", message=_(33147) if data['ServerId'] is None else _(33148), icon=xbmcgui.NOTIFICATION_ERROR)
+            dialog("notification", heading="{jellyfin}", message=_(33147) if data['ServerId'] is None else _(33148), icon=xbmcgui.NOTIFICATION_ERROR)
 
             if data.get('ServerId') is None and self.settings['auth_check']:
 
@@ -295,7 +295,7 @@ class Service(xbmc.Monitor):
                 return
             
             if settings('restartMsg.bool'):
-                dialog("notification", heading="{emby}", message=_(33006), icon="{emby}")
+                dialog("notification", heading="{jellyfin}", message=_(33006), icon="{jellyfin}")
 
             self.stop_default()
 
@@ -308,7 +308,7 @@ class Service(xbmc.Monitor):
             self.connect.register(data['Id'])
             xbmc.executebuiltin("Container.Refresh")
 
-        elif method == 'EmbyConnect':
+        elif method == 'JellyfinConnect':
             self.connect.setup_login_connect()
 
         elif method == 'AddServer':
@@ -323,18 +323,18 @@ class Service(xbmc.Monitor):
 
         elif method == 'UpdateServer':
 
-            dialog("ok", heading="{emby}", line1=_(33151))
+            dialog("ok", heading="{jellyfin}", line1=_(33151))
             self.connect.setup_manual_server()
 
         elif method == 'UserDataChanged' and self.library_thread:
-            if data.get('ServerId') or not window('emby_startup.bool'):
+            if data.get('ServerId') or not window('jellyfin_startup.bool'):
                 return
 
             LOG.info("[ UserDataChanged ] %s", data)
             self.library_thread.userdata(data['UserDataList'])
 
         elif method == 'LibraryChanged' and self.library_thread:
-            if data.get('ServerId') or not window('emby_startup.bool'):
+            if data.get('ServerId') or not window('jellyfin_startup.bool'):
                 return
 
             LOG.info("[ LibraryChanged ] %s", data)
@@ -342,7 +342,7 @@ class Service(xbmc.Monitor):
             self.library_thread.removed(data['ItemsRemoved'])
 
         elif method == 'System.OnQuit':
-            window('emby_should_stop.bool', True)
+            window('jellyfin_should_stop.bool', True)
             self.running = False
 
         elif method in ('SyncLibrarySelection', 'RepairLibrarySelection', 'AddLibrarySelection', 'RemoveLibrarySelection'):
@@ -382,7 +382,7 @@ class Service(xbmc.Monitor):
         elif method == 'System.OnSleep':
             
             LOG.info("-->[ sleep ]")
-            window('emby_should_stop.bool', True)
+            window('jellyfin_should_stop.bool', True)
 
             if self.library_thread is not None:
 
@@ -403,7 +403,7 @@ class Service(xbmc.Monitor):
             LOG.info("--<[ sleep ]")
             xbmc.sleep(10000)# Allow network to wake up
             self.monitor.sleep = False
-            window('emby_should_stop', clear=True)
+            window('jellyfin_should_stop', clear=True)
 
             try:
                 self.connect.register()
@@ -426,34 +426,34 @@ class Service(xbmc.Monitor):
         elif method == 'CheckUpdate':
 
             if not self.check_update(True):
-                dialog("notification", heading="{emby}", message=_(21341), icon="{emby}", sound=False)
+                dialog("notification", heading="{jellyfin}", message=_(21341), icon="{jellyfin}", sound=False)
             else:
-                dialog("notification", heading="{emby}", message=_(33181), icon="{emby}", sound=False)
-                window('emby.restart.bool', True)
+                dialog("notification", heading="{jellyfin}", message=_(33181), icon="{jellyfin}", sound=False)
+                window('jellyfin.restart.bool', True)
 
     def onSettingsChanged(self):
 
         ''' React to setting changes that impact window values.
         '''
-        if window('emby_should_stop.bool'):
+        if window('jellyfin_should_stop.bool'):
             return
 
         if settings('logLevel') != self.settings['log_level']:
 
             log_level = settings('logLevel')
-            window('emby_logLevel', str(log_level))
+            window('jellyfin_logLevel', str(log_level))
             self.settings['logLevel'] = log_level
             LOG.warn("New log level: %s", log_level)
 
         if settings('enableContext.bool') != self.settings['enable_context']:
 
-            window('emby_context', settings('enableContext'))
+            window('jellyfin_context', settings('enableContext'))
             self.settings['enable_context'] = settings('enableContext.bool')
             LOG.warn("New context setting: %s", self.settings['enable_context'])
 
         if settings('enableContextTranscode.bool') != self.settings['enable_context_transcode']:
 
-            window('emby_context_transcode', settings('enableContextTranscode'))
+            window('jellyfin_context_transcode', settings('enableContextTranscode'))
             self.settings['enable_context_transcode'] = settings('enableContextTranscode.bool')
             LOG.warn("New context transcode setting: %s", self.settings['enable_context_transcode'])
 
@@ -465,13 +465,13 @@ class Service(xbmc.Monitor):
             if not self.settings.get('mode_warn'):
 
                 self.settings['mode_warn'] = True
-                dialog("yesno", heading="{emby}", line1=_(33118))
+                dialog("yesno", heading="{jellyfin}", line1=_(33118))
 
         if settings('kodiCompanion.bool') != self.settings['kodi_companion']:
             self.settings['kodi_companion'] = settings('kodiCompanion.bool')
 
             if not self.settings['kodi_companion']:
-                dialog("ok", heading="{emby}", line1=_(33138))
+                dialog("ok", heading="{jellyfin}", line1=_(33138))
 
     def reload_objects(self):
 
@@ -497,14 +497,14 @@ class Service(xbmc.Monitor):
     def shutdown(self):
 
         LOG.warn("---<[ EXITING ]")
-        window('emby_should_stop.bool', True)
+        window('jellyfin_should_stop.bool', True)
 
         properties = [ # TODO: review
-            "emby_state", "emby_serverStatus", "emby_currUser",
+            "jellyfin_state", "jellyfin_serverStatus", "jellyfin_currUser",
 
-            "emby_play", "emby_online", "emby.connected", "emby.resume", "emby_startup",
-            "emby.external", "emby.external_check", "emby_deviceId", "emby_db_check", "emby_pathverified",
-            "emby_sync"
+            "jellyfin_play", "jellyfin_online", "jellyfin.connected", "jellyfin.resume", "jellyfin_startup",
+            "jellyfin.external", "jellyfin.external_check", "jellyfin_deviceId", "jellyfin_db_check", "jellyfin_pathverified",
+            "jellyfin_sync"
         ]
         for prop in properties:
             window(prop, clear=True)

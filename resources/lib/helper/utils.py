@@ -21,7 +21,7 @@ from dateutil import tz, parser
 
 #################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 #################################################################################################
 
@@ -149,10 +149,10 @@ def dialog(dialog_type, *args, **kwargs):
     d = xbmcgui.Dialog()
 
     if "icon" in kwargs:
-        kwargs['icon'] = kwargs['icon'].replace("{emby}",
+        kwargs['icon'] = kwargs['icon'].replace("{jellyfin}",
                                                 "special://home/addons/plugin.video.jellyfin/icon.png")
     if "heading" in kwargs:
-        kwargs['heading'] = kwargs['heading'].replace("{emby}", _('addon_name'))
+        kwargs['heading'] = kwargs['heading'].replace("{jellyfin}", _('addon_name'))
 
     types = {
         'yesno': d.yesno,
@@ -172,11 +172,11 @@ def should_stop():
     if xbmc.Monitor().waitForAbort(0.00001):
         return True
 
-    if window('emby_should_stop.bool'):
+    if window('jellyfin_should_stop.bool'):
         LOG.info("exiiiiitttinggg")
         return True
 
-    if not window('emby_online.bool'):
+    if not window('jellyfin_online.bool'):
         return True
 
     return False
@@ -235,7 +235,7 @@ def validate(path):
 
     ''' Verify if path is accessible.
     '''
-    if window('emby_pathverified.bool'):
+    if window('jellyfin_pathverified.bool'):
         return True
 
     path = path if os.path.supports_unicode_filenames else path.encode('utf-8')
@@ -243,11 +243,11 @@ def validate(path):
     if not xbmcvfs.exists(path):
         LOG.info("Could not find %s", path)
 
-        if dialog("yesno", heading="{emby}", line1="%s %s. %s" % (_(33047), path, _(33048))):
+        if dialog("yesno", heading="{jellyfin}", line1="%s %s. %s" % (_(33047), path, _(33048))):
 
             return False
 
-    window('emby_pathverified.bool', True)
+    window('jellyfin_pathverified.bool', True)
 
     return True
 
@@ -292,7 +292,7 @@ def delete_folder(path=None):
     '''
     LOG.debug("--[ delete folder ]")
     delete_path = path is not None
-    path = path or xbmc.translatePath('special://temp/emby').decode('utf-8')
+    path = path or xbmc.translatePath('special://temp/jellyfin').decode('utf-8')
     dirs, files = xbmcvfs.listdir(path)
 
     delete_recursive(path, dirs)

@@ -11,7 +11,7 @@ from utils import should_stop
 
 #################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 #################################################################################################
 
@@ -101,7 +101,7 @@ def stop(default=None):
 
 def emby_item():
 
-    ''' Wrapper to retrieve the emby_db item.
+    ''' Wrapper to retrieve the jellyfin_db item.
     '''
     def decorator(func):
         def wrapper(self, item, *args, **kwargs):

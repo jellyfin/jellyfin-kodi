@@ -10,7 +10,7 @@ from . import settings
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 ##################################################################################################
 
@@ -28,7 +28,7 @@ class API(object):
 
     def get_playcount(self, played, playcount):
 
-        ''' Convert Emby played/playcount into
+        ''' Convert Jellyfin played/playcount into
             the Kodi equivalent. The playcount is tied to the watch status.
         '''
         return (playcount or 1) if played else None
@@ -231,7 +231,7 @@ class API(object):
 
     def get_user_artwork(self, user_id):
     
-        ''' Get emby user profile picture.
+        ''' Get jellyfin user profile picture.
         '''
         return "%s/emby/Users/%s/Images/Primary?Format=original" % (self.server, user_id)
 
@@ -302,7 +302,7 @@ class API(object):
 
     def get_backdrops(self, item_id, tags, query=None):
 
-        ''' Get backdrops based of "BackdropImageTags" in the emby object.
+        ''' Get backdrops based of "BackdropImageTags" in the jellyfin object.
         '''
         backdrops = []
 

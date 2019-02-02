@@ -14,7 +14,7 @@ from helper import api, catch, stop, validate, library_check, emby_item, values,
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 ##################################################################################################
 
@@ -51,7 +51,7 @@ class MusicVideos(KodiDb):
         ''' If item does not exist, entry will be added.
             If item exists, entry will be updated.
 
-            If we don't get the track number from Emby, see if we can infer it
+            If we don't get the track number from Jellyfin, see if we can infer it
             from the sortname attribute.
         '''
         API = api.API(item, self.server['auth/server-address'])
@@ -220,7 +220,7 @@ class MusicVideos(KodiDb):
     @emby_item()
     def remove(self, item_id, e_item):
 
-        ''' Remove mvideoid, fileid, pathid, emby reference. 
+        ''' Remove mvideoid, fileid, pathid, jellyfin reference. 
         '''
         obj = {'Id': item_id}
 

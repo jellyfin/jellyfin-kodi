@@ -24,7 +24,7 @@ from helper import _, event, settings, window, dialog, api, JSONRPC
 
 #################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 #################################################################################################
 
@@ -55,15 +55,15 @@ class Events(object):
 
         if '/extrafanart' in base_url:
 
-            emby_path = path[1:]
-            emby_id = params.get('id')
-            get_fanart(emby_id, emby_path, server)
+            jellyfin_path = path[1:]
+            jellyfin_id = params.get('id')
+            get_fanart(jellyfin_id, jellyfin_path, server)
 
         elif '/Extras' in base_url or '/VideoFiles' in base_url:
 
-            emby_path = path[1:]
-            emby_id = params.get('id')
-            get_video_extras(emby_id, emby_path, server)
+            jellyfin_path = path[1:]
+            jellyfin_id = params.get('id')
+            get_video_extras(jellyfin_id, jellyfin_path, server)
 
         elif mode =='play':
 
@@ -101,7 +101,7 @@ class Events(object):
         elif mode == 'addlibs':
             event('AddLibrarySelection')
         elif mode == 'connect':
-            event('EmbyConnect')
+            event('jellyfinConnect')
         elif mode == 'addserver':
             event('AddServer')
         elif mode == 'login':
@@ -123,14 +123,14 @@ class Events(object):
         elif mode == 'backup':
             backup()
         elif mode == 'restartservice':
-            window('emby.restart.bool', True)
+            window('jellyfin.restart.bool', True)
         else:
             listing()
 
 
 def listing():
 
-    ''' Display all emby nodes and dynamic entries when appropriate.
+    ''' Display all jellyfin nodes and dynamic entries when appropriate.
     '''
     total = int(window('Emby.nodes.total') or 0)
     sync = get_sync()
@@ -240,12 +240,12 @@ def browse(media, view_id=None, folder=None, server_id=None):
     '''
     LOG.info("--[ v:%s/%s ] %s", view_id, media, folder)
 
-    if not window('emby_online.bool') and server_id is None:
+    if not window('jellyfin_online.bool') and server_id is None:
 
         monitor = xbmc.Monitor()
 
         for i in range(300):
-            if window('emby_online.bool'):
+            if window('jellyfin_online.bool'):
                 break
             elif monitor.waitForAbort(0.1):
                 return
@@ -330,8 +330,8 @@ def browse(media, view_id=None, folder=None, server_id=None):
         for item in listing:
 
             li = xbmcgui.ListItem()
-            li.setProperty('embyid', item['Id'])
-            li.setProperty('embyserver', server_id)
+            li.setProperty('jellyfinid', item['Id'])
+            li.setProperty('jellyfinserver', server_id)
             actions.set_listitem(item, li)
 
             if item.get('IsFolder'):
@@ -402,7 +402,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
 
 def browse_subfolders(media, view_id, server_id=None):
 
-    ''' Display submenus for emby views.
+    ''' Display submenus for jellyfin views.
     '''
     from views import DYNNODES
 
@@ -498,7 +498,7 @@ def get_fanart(item_id, path, server_id=None):
     LOG.info("[ extra fanart ] %s", item_id)
     objects = Objects()
     list_li = []
-    directory = xbmc.translatePath("special://thumbnails/emby/%s/" % item_id).decode('utf-8')
+    directory = xbmc.translatePath("special://thumbnails/jellyfin/%s/" % item_id).decode('utf-8')
     server = TheVoid('GetServerAddress', {'ServerId': server_id}).get()
 
     if not xbmcvfs.exists(directory):
@@ -543,7 +543,7 @@ def get_video_extras(item_id, path, server_id=None):
     # TODO
 
     """
-    def getVideoFiles(embyId,embyPath):
+    def getVideoFiles(jellyfinId,jellyfinPath):
         #returns the video files for the item as plugin listing, can be used for browsing the actual files or videoextras etc.
         emby = embyserver.Read_EmbyServer()
         if not embyId:
@@ -573,7 +573,7 @@ def get_next_episodes(item_id, limit):
 
     ''' Only for synced content.
     '''
-    with Database('emby') as embydb:
+    with Database('jellyfin') as embydb:
 
         db = emby_db.EmbyDatabase(embydb.cursor)
         library = db.get_view_name(item_id)
@@ -730,7 +730,7 @@ def add_user():
 
     ''' Add or remove users from the default server session.
     '''
-    if not window('emby_online.bool'):
+    if not window('jellyfin_online.bool'):
         return
 
     session = TheVoid('GetSession', {}).get()
@@ -782,11 +782,11 @@ def get_themes():
         tvtunes.setSetting('custom_path', library)
         LOG.info("TV Tunes custom path is enabled and set.")
     else:
-        dialog("ok", heading="{emby}", line1=_(33152))
+        dialog("ok", heading="{jellyfin}", line1=_(33152))
 
         return
 
-    with Database('emby') as embydb:
+    with Database('jellyfin') as embydb:
         all_views = emby_db.EmbyDatabase(embydb.cursor).get_views()
         views = [x[0] for x in all_views if x[2] in ('movies', 'tvshows', 'mixed')]
 
@@ -831,7 +831,7 @@ def get_themes():
 
         tvtunes_nfo(nfo_file, paths)
 
-    dialog("notification", heading="{emby}", message=_(33153), icon="{emby}", time=1000, sound=False)
+    dialog("notification", heading="{jellyfin}", message=_(33153), icon="{jellyfin}", time=1000, sound=False)
 
 def delete_item():
 
@@ -843,7 +843,7 @@ def delete_item():
 
 def backup():
 
-    ''' Emby backup.
+    ''' Jellyfin backup.
     '''
     from helper.utils import delete_folder, copytree
 
@@ -857,7 +857,7 @@ def backup():
     backup = os.path.join(path, folder_name)
 
     if xbmcvfs.exists(backup + '/'):
-        if not dialog("yesno", heading="{emby}", line1=_(33090)):
+        if not dialog("yesno", heading="{jellyfin}", line1=_(33090)):
 
             return backup()
 
@@ -870,7 +870,7 @@ def backup():
     if not xbmcvfs.mkdirs(path) or not xbmcvfs.mkdirs(destination_databases):
 
         LOG.info("Unable to create all directories")
-        dialog("notification", heading="{emby}", icon="{emby}", message=_(33165), sound=False)
+        dialog("notification", heading="{jellyfin}", icon="{jellyfin}", message=_(33165), sound=False)
 
         return
 
@@ -878,9 +878,9 @@ def backup():
 
     databases = Objects().objects
 
-    db = xbmc.translatePath(databases['emby']).decode('utf-8')
+    db = xbmc.translatePath(databases['jellyfin']).decode('utf-8')
     xbmcvfs.copy(db, os.path.join(destination_databases, db.rsplit('\\', 1)[1]))
-    LOG.info("copied emby.db")
+    LOG.info("copied jellyfin.db")
 
     db = xbmc.translatePath(databases['video']).decode('utf-8')
     filename = db.rsplit('\\', 1)[1]
@@ -895,4 +895,4 @@ def backup():
         LOG.info("copied %s", filename)
 
     LOG.info("backup completed")
-    dialog("ok", heading="{emby}", line1="%s %s" % (_(33091), backup))
+    dialog("ok", heading="{jellyfin}", line1="%s %s" % (_(33091), backup))

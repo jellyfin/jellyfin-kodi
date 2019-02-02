@@ -14,7 +14,7 @@ from helper import api, catch, stop, validate, emby_item, library_check, values,
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 ##################################################################################################
 
@@ -320,7 +320,7 @@ class Movies(KodiDb):
     @emby_item()
     def remove(self, item_id, e_item):
 
-        ''' Remove movieid, fileid, emby reference.
+        ''' Remove movieid, fileid, jellyfin reference.
             Remove artwork, boxset
         '''
         obj = {'Id': item_id}

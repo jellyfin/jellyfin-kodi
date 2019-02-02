@@ -22,9 +22,9 @@ from emby.core.exceptions import HTTPException
 
 #################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 LIMIT = min(int(settings('limitIndex') or 50), 50)
-CACHE = xbmc.translatePath(os.path.join(xbmcaddon.Addon(id='plugin.video.jellyfin').getAddonInfo('profile').decode('utf-8'), 'emby')).decode('utf-8')
+CACHE = xbmc.translatePath(os.path.join(xbmcaddon.Addon(id='plugin.video.jellyfin').getAddonInfo('profile').decode('utf-8'), 'jellyfin')).decode('utf-8')
 
 #################################################################################################
 
@@ -317,7 +317,7 @@ class GetItemWorker(threading.Thread):
 
                 self.queue.task_done()
 
-                if window('emby_should_stop.bool'):
+                if window('jellyfin_should_stop.bool'):
                     break
 
 class TheVoid(object):
@@ -342,16 +342,16 @@ class TheVoid(object):
 
         while True:
 
-            response = window('emby_%s.json' % self.data['VoidName'])
+            response = window('jellyfin_%s.json' % self.data['VoidName'])
 
             if response != "":
 
-                LOG.debug("--<[ nostromo/emby_%s.json ]", self.data['VoidName'])
-                window('emby_%s' % self.data['VoidName'], clear=True)
+                LOG.debug("--<[ nostromo/jellyfin_%s.json ]", self.data['VoidName'])
+                window('jellyfin_%s' % self.data['VoidName'], clear=True)
 
                 return response
 
-            if window('emby_should_stop.bool'):
+            if window('jellyfin_should_stop.bool'):
                 LOG.info("Abandon mission! A black hole just swallowed [ %s/%s ]", self.method, self.data['VoidName'])
                 
                 return

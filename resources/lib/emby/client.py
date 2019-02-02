@@ -12,7 +12,7 @@ from core.connection_manager import ConnectionManager, CONNECTION_STATE
 
 #################################################################################################
 
-LOG = logging.getLogger('Emby.'+__name__)
+LOG = logging.getLogger('JELLYFIN.'+__name__)
 
 #################################################################################################
 
@@ -30,7 +30,7 @@ class EmbyClient(object):
     logged_in = False
 
     def __init__(self):
-        LOG.debug("EmbyClient initializing...")
+        LOG.debug("JellyfinClient initializing...")
 
         self.config = Config()
         self.http = HTTP(self)

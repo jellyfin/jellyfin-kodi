@@ -20,7 +20,7 @@ from emby.core.exceptions import HTTPException
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 XML_PATH = (xbmcaddon.Addon(addon_id()).getAddonInfo('path'), "default", "1080i")
 
 ##################################################################################################
@@ -78,11 +78,11 @@ class Connect(object):
 
     def get_client(self, server_id=None):
 
-        ''' Get Emby client.
+        ''' Get Jellyfin client.
         '''
         client = Emby(server_id)
         client['config/app']("Kodi", self.info['Version'], self.info['DeviceName'], self.info['DeviceId'])
-        client['config']['http.user_agent'] = "Emby-Kodi/%s" % self.info['Version']
+        client['config']['http.user_agent'] = "Jellyfin-Kodi/%s" % self.info['Version']
         client['config']['auth.ssl'] = self.get_ssl()
 
         return client
@@ -152,20 +152,20 @@ class Connect(object):
         settings('username', self.user['Name'])
 
         if 'PrimaryImageTag' in self.user:
-            window('EmbyUserImage', api.API(self.user, client['auth/server-address']).get_user_artwork(self.user['Id']))
+            window('JellyfinUserImage', api.API(self.user, client['auth/server-address']).get_user_artwork(self.user['Id']))
 
     def select_servers(self, state=None):
 
         state = state or self.connect_manager.connect({'enableAutoLogin': False})
         user = state.get('ConnectUser') or {}
 
-        dialog = ServerConnect("script-emby-connect-server.xml", *XML_PATH)
+        dialog = ServerConnect("script-jellyfin-connect-server.xml", *XML_PATH)
         dialog.set_args(**{
             'connect_manager': self.connect_manager,
             'username': user.get('DisplayName', ""),
             'user_image': user.get('ImageUrl'),
             'servers': state.get('Servers', []),
-            'emby_connect': False if user else True
+            'jellyfin_connect': False if user else True
         })
         dialog.doModal()
 
@@ -174,7 +174,7 @@ class Connect(object):
             return
 
         elif dialog.is_connect_login():
-            LOG.debug("Login with emby connect")
+            LOG.debug("Login with jellyfin connect")
             try:
                 self.login_connect()
             except RuntimeError: pass
@@ -209,7 +209,7 @@ class Connect(object):
 
         ''' Return server or raise error.
         '''
-        dialog = ServerManual("script-emby-connect-server-manual.xml", *XML_PATH)
+        dialog = ServerManual("script-jellyfin-connect-server-manual.xml", *XML_PATH)
         dialog.set_args(**{'connect_manager': manager or self.connect_manager})
         dialog.doModal()
 
@@ -220,7 +220,7 @@ class Connect(object):
 
     def setup_login_connect(self):
 
-        ''' Setup emby connect by itself.
+        ''' Setup jellyfin connect by itself.
         '''
         client = self.get_client()
         client.set_credentials(get_credentials())
@@ -238,7 +238,7 @@ class Connect(object):
 
         ''' Return connect user or raise error.
         '''
-        dialog = LoginConnect("script-emby-connect-login.xml", *XML_PATH)
+        dialog = LoginConnect("script-jellyfin-connect-login.xml", *XML_PATH)
         dialog.set_args(**{'connect_manager': manager or self.connect_manager})
         dialog.doModal()
 
@@ -258,7 +258,7 @@ class Connect(object):
             except RuntimeError:
                 raise RuntimeError("No user selected")
 
-        dialog = UsersConnect("script-emby-connect-users.xml", *XML_PATH)
+        dialog = UsersConnect("script-jellyfin-connect-users.xml", *XML_PATH)
         dialog.set_args(**{'server': server, 'users': users})
         dialog.doModal()
 
@@ -303,7 +303,7 @@ class Connect(object):
         
         ''' Return manual login user authenticated or raise error.
         '''
-        dialog = LoginManual("script-emby-connect-login-manual.xml", *XML_PATH)
+        dialog = LoginManual("script-jellyfin-connect-login-manual.xml", *XML_PATH)
         dialog.set_args(**{'connect_manager': manager or self.connect_manager, 'username': user or {}})
         dialog.doModal()
 

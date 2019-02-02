@@ -22,7 +22,7 @@ from emby import Emby
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 LIMIT = min(int(settings('limitIndex') or 50), 50)
 DTHREADS = int(settings('limitThreads') or 3)
 MEDIA = {
@@ -101,7 +101,7 @@ class Library(threading.Thread):
         if not self.startup():
             self.stop_client()
 
-        window('emby_startup.bool', True)
+        window('jellyfin_startup.bool', True)
 
         while not self.stop_thread:
 
@@ -151,7 +151,7 @@ class Library(threading.Thread):
             self.worker_notify()
 
         if self.pending_refresh:
-            window('emby_sync.bool', True)
+            window('jellyfin_sync.bool', True)
 
             if self.total_updates > self.progress_display:
                 queue_size = self.worker_queue_size()
@@ -177,7 +177,7 @@ class Library(threading.Thread):
             self.pending_refresh = False
             self.save_last_sync()
             self.total_updates = 0
-            window('emby_sync', clear=True)
+            window('jellyfin_sync', clear=True)
 
             if self.progress_updates:
 
@@ -206,7 +206,7 @@ class Library(threading.Thread):
         ''' When there's an active thread. Let the main thread know.
         '''
         self.pending_refresh = True
-        window('emby_sync.bool', True)
+        window('jellyfin_sync.bool', True)
 
     def worker_queue_size(self):
 
@@ -227,7 +227,7 @@ class Library(threading.Thread):
 
     def worker_downloads(self):
 
-        ''' Get items from emby and place them in the appropriate queues.
+        ''' Get items from jellyfin and place them in the appropriate queues.
         '''
         for queue in ((self.updated_queue, self.updated_output), (self.userdata_queue, self.userdata_output)):
             if queue[0].qsize() and len(self.download_threads) < DTHREADS:
@@ -238,7 +238,7 @@ class Library(threading.Thread):
 
     def worker_sort(self):
 
-        ''' Get items based on the local emby database and place item in appropriate queues.
+        ''' Get items based on the local jellyfin database and place item in appropriate queues.
         '''
         if self.removed_queue.qsize() and len(self.emby_threads) < 2:
 
@@ -350,10 +350,10 @@ class Library(threading.Thread):
                 if settings('kodiCompanion.bool'):
 
                     for plugin in self.server['api'].get_plugins():
-                        if plugin['Name'] in ("Emby.Kodi Sync Queue", "Kodi companion"):
+                        if plugin['Name'] in ("Jellyfin.Kodi Sync Queue", "Kodi companion"):
                             
                             if not self.fast_sync():
-                                dialog("ok", heading="{emby}", line1=_(33128))
+                                dialog("ok", heading="{jellyfin}", line1=_(33128))
 
                                 raise Exception("Failed to retrieve latest updates")
 
@@ -369,7 +369,7 @@ class Library(threading.Thread):
 
             if error.status in 'SyncLibraryLater':
 
-                dialog("ok", heading="{emby}", line1=_(33129))
+                dialog("ok", heading="{jellyfin}", line1=_(33129))
                 settings('SyncInstallRunDone.bool', True)
                 sync = get_sync()
                 sync['Libraries'] = []
@@ -379,7 +379,7 @@ class Library(threading.Thread):
 
             elif error.status == 'CompanionMissing':
 
-                dialog("ok", heading="{emby}", line1=_(33099))
+                dialog("ok", heading="{jellyfin}", line1=_(33099))
                 settings('kodiCompanion.bool', False)
 
                 return True
@@ -422,7 +422,7 @@ class Library(threading.Thread):
 
                 ''' Inverse yes no, in case the dialog is forced closed by Kodi.
                 '''
-                if dialog("yesno", heading="{emby}", line1=_(33172).replace('{number}', str(total)), nolabel=_(107), yeslabel=_(106)):
+                if dialog("yesno", heading="{jellyfin}", line1=_(33172).replace('{number}', str(total)), nolabel=_(107), yeslabel=_(106)):
                     LOG.warn("Large updates skipped.")
 
                     return True
@@ -482,7 +482,7 @@ class Library(threading.Thread):
         whitelist = [x.replace('Mixed:', "") for x in sync['Whitelist']]
         libraries = []
 
-        with Database('emby') as embydb:
+        with Database('jellyfin') as embydb:
             db = emby_db.EmbyDatabase(embydb.cursor)
 
             if mode in ('SyncLibrarySelection', 'RepairLibrarySelection', 'RemoveLibrarySelection'):
@@ -614,7 +614,7 @@ class UpdatedWorker(threading.Thread):
 
         with self.lock:
             with self.database as kodidb:
-                with Database('emby') as embydb:
+                with Database('jellyfin') as embydb:
 
                     while True:
 
@@ -636,7 +636,7 @@ class UpdatedWorker(threading.Thread):
 
                         self.queue.task_done()
 
-                        if window('emby_should_stop.bool'):
+                        if window('jellyfin_should_stop.bool'):
                             break
 
         LOG.info("--<[ q:updated/%s ]", id(self))
@@ -658,7 +658,7 @@ class UserDataWorker(threading.Thread):
 
         with self.lock:
             with self.database as kodidb:
-                with Database('emby') as embydb:
+                with Database('jellyfin') as embydb:
 
                     while True:
 
@@ -679,7 +679,7 @@ class UserDataWorker(threading.Thread):
 
                         self.queue.task_done()
 
-                        if window('emby_should_stop.bool'):
+                        if window('jellyfin_should_stop.bool'):
                             break
 
         LOG.info("--<[ q:userdata/%s ]", id(self))
@@ -698,7 +698,7 @@ class SortWorker(threading.Thread):
 
     def run(self):
 
-        with Database('emby') as embydb:
+        with Database('jellyfin') as embydb:
             database = emby_db.EmbyDatabase(embydb.cursor)
 
             while True:
@@ -715,14 +715,14 @@ class SortWorker(threading.Thread):
                     items = database.get_media_by_parent_id(item_id)
 
                     if not items:
-                        LOG.info("Could not find media %s in the emby database.", item_id)
+                        LOG.info("Could not find media %s in the jellyfin database.", item_id)
                     else:
                         for item in items:
                             self.output[item[1]].put({'Id': item[0], 'Type': item[1]})
 
                 self.queue.task_done()
 
-                if window('emby_should_stop.bool'):
+                if window('jellyfin_should_stop.bool'):
                     break
 
         LOG.info("--<[ q:sort/%s ]", id(self))
@@ -744,7 +744,7 @@ class RemovedWorker(threading.Thread):
 
         with self.lock:
             with self.database as kodidb:
-                with Database('emby') as embydb:
+                with Database('jellyfin') as embydb:
 
                     while True:
 
@@ -765,7 +765,7 @@ class RemovedWorker(threading.Thread):
 
                         self.queue.task_done()
 
-                        if window('emby_should_stop.bool'):
+                        if window('jellyfin_should_stop.bool'):
                             break
 
         LOG.info("--<[ q:removed/%s ]", id(self))
@@ -796,11 +796,11 @@ class NotifyWorker(threading.Thread):
 
             if time and (not self.player.isPlayingVideo() or xbmc.getCondVisibility('VideoPlayer.Content(livetv)')):
                 dialog("notification", heading="%s %s" % (_(33049), item[0]), message=item[1],
-                       icon="{emby}", time=time, sound=False)
+                       icon="{jellyfin}", time=time, sound=False)
 
             self.queue.task_done()
 
-            if window('emby_should_stop.bool'):
+            if window('jellyfin_should_stop.bool'):
                 break
 
         LOG.info("--<[ q:notify/%s ]", id(self))

@@ -21,7 +21,7 @@ from emby import Emby
 
 #################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 #################################################################################################
 
@@ -32,7 +32,7 @@ def set_properties(item, method, server_id=None):
     '''
     info = item.get('PlaybackInfo') or {}
 
-    current = window('emby_play.json') or []
+    current = window('jellyfin_play.json') or []
     current.append({
         'Type': item['Type'],
         'Id': item['Id'],
@@ -51,7 +51,7 @@ def set_properties(item, method, server_id=None):
         'CurrentEpisode': info.get('CurrentEpisode')
     })
 
-    window('emby_play.json', current)
+    window('jellyfin_play.json', current)
 
 class PlayUtils(object):
 
@@ -178,7 +178,7 @@ class PlayUtils(object):
     def get(self, source, audio=None, subtitle=None):
 
         ''' The server returns sources based on the MaxStreamingBitrate value and other filters.
-            prop: embyfilename for ?? I thought it was to pass the real path to subtitle add-ons but it's not working?
+            prop: jellyfinfilename for ?? I thought it was to pass the real path to subtitle add-ons but it's not working?
         '''
         self.info['MediaSourceId'] = source['Id']
 
@@ -214,7 +214,7 @@ class PlayUtils(object):
         self.item['PlaybackInfo'].update(self.info)
 
         API = api.API(self.item, self.info['ServerAddress'])
-        window('embyfilename', value=API.get_file_path(source.get('Path')).encode('utf-8'))
+        window('jellyfinfilename', value=API.get_file_path(source.get('Path')).encode('utf-8'))
 
     def live_stream(self, source):
 
@@ -454,7 +454,7 @@ class PlayUtils(object):
     def set_external_subs(self, source, listitem):
 
         ''' Try to download external subs locally so we can label them.
-            Since Emby returns all possible tracks together, sort them.
+            Since Jellyfin returns all possible tracks together, sort them.
             IsTextSubtitleStream if true, is available to download from server.
         '''
         if not settings('enableExternalSubs.bool') or not source['MediaStreams']:
@@ -528,7 +528,7 @@ class PlayUtils(object):
         ''' For transcoding only
             Present the list of audio/subs to select from, before playback starts.
 
-            Since Emby returns all possible tracks together, sort them.
+            Since Jellyfin returns all possible tracks together, sort them.
             IsTextSubtitleStream if true, is available to download from server.
         '''
         prefs = ""

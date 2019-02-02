@@ -3,7 +3,7 @@
 #################################################################################################
 
 class HTTPException(Exception):
-    # Emby HTTP exception
+    # Jellyfin HTTP exception
     def __init__(self, status, message):
         self.status = status
         self.message = message

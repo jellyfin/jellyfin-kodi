@@ -19,7 +19,7 @@ from views import Views
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 ##################################################################################################
 
@@ -27,7 +27,7 @@ LOG = logging.getLogger("EMBY."+__name__)
 class FullSync(object):
 
     ''' This should be called like a context.
-        i.e. with FullSync('emby') as sync:
+        i.e. with FullSync('jellyfin') as sync:
             sync.libraries()
     '''
     # Borg - multiple instances, shared state
@@ -45,7 +45,7 @@ class FullSync(object):
         self.__dict__ = self._shared_state
 
         if self.running:
-            dialog("ok", heading="{emby}", line1=_(33197))
+            dialog("ok", heading="{jellyfin}", line1=_(33197))
 
             raise Exception("Sync is already running.")
 
@@ -65,7 +65,7 @@ class FullSync(object):
             set_screensaver(value="")
 
         self.running = True
-        window('emby_sync.bool', True)
+        window('jellyfin_sync.bool', True)
 
         return self
 
@@ -104,7 +104,7 @@ class FullSync(object):
 
     def get_libraries(self, library_id=None):
 
-        with Database('emby') as embydb:
+        with Database('jellyfin') as embydb:
             if library_id is None:
                 return emby_db.EmbyDatabase(embydb.cursor).get_views()
             else:
@@ -117,10 +117,10 @@ class FullSync(object):
         '''
         if self.sync['Libraries']:
 
-            if not dialog("yesno", heading="{emby}", line1=_(33102)):
+            if not dialog("yesno", heading="{jellyfin}", line1=_(33102)):
 
-                if not dialog("yesno", heading="{emby}", line1=_(33173)):
-                    dialog("ok", heading="{emby}", line1=_(33122))
+                if not dialog("yesno", heading="{jellyfin}", line1=_(33173)):
+                    dialog("ok", heading="{jellyfin}", line1=_(33122))
 
                     raise LibraryException("ProgressStopped")
                 else:
@@ -146,7 +146,7 @@ class FullSync(object):
 
         ''' Select all or certain libraries to be whitelisted.
         '''
-        if dialog("yesno", heading="{emby}", line1=_(33125), nolabel=_(33127), yeslabel=_(33126)):
+        if dialog("yesno", heading="{jellyfin}", line1=_(33125), nolabel=_(33127), yeslabel=_(33126)):
             LOG.info("Selected sync later.")
 
             raise LibraryException('SyncLibraryLater')
@@ -204,8 +204,8 @@ class FullSync(object):
         save_sync(self.sync)
 
         xbmc.executebuiltin('UpdateLibrary(video)')
-        dialog("notification", heading="{emby}", message="%s %s" % (_(33025), str(elapsed).split('.')[0]),
-               icon="{emby}", sound=False)
+        dialog("notification", heading="{jellyfin}", message="%s %s" % (_(33025), str(elapsed).split('.')[0]),
+               icon="{jellyfin}", sound=False)
         LOG.info("Full sync completed in: %s", str(elapsed).split('.')[0])
 
     def process_library(self, library_id):
@@ -251,7 +251,7 @@ class FullSync(object):
 
             if not 'Failed to validate path' in error:
 
-                dialog("ok", heading="{emby}", line1=_(33119))
+                dialog("ok", heading="{jellyfin}", line1=_(33119))
                 LOG.error("full sync exited unexpectedly")
                 save_sync(self.sync)
 
@@ -266,7 +266,7 @@ class FullSync(object):
 
         with self.library.database_lock:
             with Database() as videodb:
-                with Database('emby') as embydb:
+                with Database('jellyfin') as embydb:
 
                     obj = Movies(self.server, embydb, videodb, self.direct_path)
 
@@ -287,7 +287,7 @@ class FullSync(object):
 
     def movies_compare(self, library, obj, embydb):
 
-        ''' Compare entries from library to what's in the embydb. Remove surplus
+        ''' Compare entries from library to what's in the jellyfindb. Remove surplus
         '''
         db = emby_db.EmbyDatabase(embydb.cursor)
 
@@ -307,7 +307,7 @@ class FullSync(object):
 
         with self.library.database_lock:
             with Database() as videodb:
-                with Database('emby') as embydb:
+                with Database('jellyfin') as embydb:
                     obj = TVShows(self.server, embydb, videodb, self.direct_path, True)
 
                     for items in server.get_items(library['Id'], "Series", False, self.sync['RestorePoint'].get('params')):
@@ -357,7 +357,7 @@ class FullSync(object):
 
         with self.library.database_lock:
             with Database() as videodb:
-                with Database('emby') as embydb:
+                with Database('jellyfin') as embydb:
                     obj = MusicVideos(self.server, embydb, videodb, self.direct_path)
 
                     for items in server.get_items(library['Id'], "MusicVideo", False, self.sync['RestorePoint'].get('params')):
@@ -397,7 +397,7 @@ class FullSync(object):
 
         with self.library.music_database_lock:
             with Database('music') as musicdb:
-                with Database('emby') as embydb:
+                with Database('jellyfin') as embydb:
                     obj = Music(self.server, embydb, musicdb, self.direct_path)
 
                     for items in server.get_artists(library['Id'], False, self.sync['RestorePoint'].get('params')):
@@ -459,7 +459,7 @@ class FullSync(object):
 
         with self.library.database_lock:
             with Database() as videodb:
-                with Database('emby') as embydb:
+                with Database('jellyfin') as embydb:
                     obj = Movies(self.server, embydb, videodb, self.direct_path)
 
                     for items in server.get_items(library_id, "BoxSet", False, self.sync['RestorePoint'].get('params')):
@@ -482,7 +482,7 @@ class FullSync(object):
 
         with self.library.database_lock:
             with Database() as videodb:
-                with Database('emby') as embydb:
+                with Database('jellyfin') as embydb:
 
                     obj = Movies(self.server, embydb, videodb, self.direct_path)
                     obj.boxsets_reset()
@@ -497,7 +497,7 @@ class FullSync(object):
         MEDIA = self.library.MEDIA
         direct_path = self.library.direct_path
 
-        with Database('emby') as embydb:
+        with Database('jellyfin') as embydb:
 
             db = emby_db.EmbyDatabase(embydb.cursor)
             library = db.get_view(library_id.replace('Mixed:', ""))
@@ -558,7 +558,7 @@ class FullSync(object):
         ''' Exiting sync
         '''
         self.running = False
-        window('emby_sync', clear=True)
+        window('jellyfin_sync', clear=True)
 
         if not settings('dbSyncScreensaver.bool') and self.screensaver is not None:
 

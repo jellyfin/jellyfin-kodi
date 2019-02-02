@@ -22,7 +22,7 @@ from webservice import WebService
 
 #################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 #################################################################################################
 
@@ -114,7 +114,7 @@ class Monitor(xbmc.Monitor):
                 except Exception as error:
 
                     LOG.error(error)
-                    dialog("ok", heading="{emby}", line1=_(33142))
+                    dialog("ok", heading="{jellyfin}", line1=_(33142))
 
                     return
 
@@ -272,8 +272,8 @@ class Monitor(xbmc.Monitor):
 
     def void_responder(self, data, result):
 
-        window('emby_%s.json' % data['VoidName'], result)
-        LOG.debug("--->[ nostromo/emby_%s.json ] sent", data['VoidName'])
+        window('jellyfin_%s.json' % data['VoidName'], result)
+        LOG.debug("--->[ nostromo/jellyfin_%s.json ] sent", data['VoidName'])
 
     def server_instance(self, server_id=None):
 
@@ -323,7 +323,7 @@ class Monitor(xbmc.Monitor):
         ''' Setup additional users images.
         '''
         for i in range(10):
-            window('EmbyAdditionalUserImage.%s' % i, clear=True)
+            window('JellyfinAdditionalUserImage.%s' % i, clear=True)
 
         try:
             session = server['api'].get_device(self.device_id)
@@ -336,12 +336,12 @@ class Monitor(xbmc.Monitor):
 
             info = server['api'].get_user(user['UserId'])
             image = api.API(info, server['config/auth.server']).get_user_artwork(user['UserId'])
-            window('EmbyAdditionalUserImage.%s' % index, image)
-            window('EmbyAdditionalUserPosition.%s' % user['UserId'], str(index))
+            window('JellyfinAdditionalUserImage.%s' % index, image)
+            window('JellyfinAdditionalUserPosition.%s' % user['UserId'], str(index))
 
     def playstate(self, data):
 
-        ''' Emby playstate updates.
+        ''' Jellyfin playstate updates.
         '''
         command = data['Command']
         actions = {
@@ -367,7 +367,7 @@ class Monitor(xbmc.Monitor):
 
     def general_commands(self, data):
 
-        ''' General commands from Emby to control the Kodi interface.
+        ''' General commands from Jellyfin to control the Kodi interface.
         '''
         command = data['Name']
         args = data['Arguments']
@@ -392,7 +392,7 @@ class Monitor(xbmc.Monitor):
 
         elif command == 'DisplayMessage':
             dialog("notification", heading=args['Header'], message=args['Text'],
-                   icon="{emby}", time=int(settings('displayMessage'))*1000)
+                   icon="{jellyfin}", time=int(settings('displayMessage'))*1000)
 
         elif command == 'SendString':
             JSONRPC('Input.SendText').execute({'text': args['String'], 'done': False})

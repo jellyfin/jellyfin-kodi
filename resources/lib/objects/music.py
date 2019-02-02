@@ -14,7 +14,7 @@ from helper import api, catch, stop, validate, emby_item, values, library_check,
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 ##################################################################################################
 
@@ -103,7 +103,7 @@ class Music(KodiDb):
         
         ''' Add object to kodi.
 
-            safety checks: It looks like Emby supports the same artist multiple times.
+            safety checks: It looks like Jellyfin supports the same artist multiple times.
             Kodi doesn't allow that. In case that happens we just merge the artist entries.
         '''
         obj['ArtistId'] = self.get(*values(obj, QU.get_artist_obj))
@@ -203,7 +203,7 @@ class Music(KodiDb):
     def artist_link(self, obj):
 
         ''' Assign main artists to album.
-            Artist does not exist in emby database, create the reference.
+            Artist does not exist in jellyfin database, create the reference.
         '''
         for artist in (obj['AlbumArtists'] or []):
 
@@ -392,7 +392,7 @@ class Music(KodiDb):
     def song_artist_link(self, obj):
         
         ''' Assign main artists to song.
-            Artist does not exist in emby database, create the reference.
+            Artist does not exist in jellyfin database, create the reference.
         '''
         for index, artist in enumerate(obj['ArtistItems'] or []):
 
@@ -533,7 +533,7 @@ class Music(KodiDb):
     @emby_item()
     def get_child(self, item_id, e_item):
 
-        ''' Get all child elements from tv show emby id.
+        ''' Get all child elements from tv show jellyfin id.
         '''
         obj = {'Id': item_id}
         child = []

@@ -3,7 +3,7 @@
 #################################################################################################
 
 class LibraryException(Exception):
-    # Emby library sync exception
+    # Jellyfin library sync exception
     def __init__(self, status):
         self.status = status
 

@@ -17,7 +17,7 @@ from objects import Actions
 
 #################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 XML_PATH = (xbmcaddon.Addon('plugin.video.jellyfin').getAddonInfo('path'), "default", "1080i")
 OPTIONS = {
     'Refresh': _(30410),
@@ -40,13 +40,13 @@ class Context(object):
         try:
             self.kodi_id = sys.listitem.getVideoInfoTag().getDbId() or None
             self.media = self.get_media_type()
-            self.server = sys.listitem.getProperty('embyserver') or None
-            item_id = sys.listitem.getProperty('embyid')
+            self.server = sys.listitem.getProperty('jellyfinserver') or None
+            item_id = sys.listitem.getProperty('jellyfinid')
         except AttributeError:
             self.server = None
 
-            if xbmc.getInfoLabel('ListItem.Property(embyid)'):
-                item_id = xbmc.getInfoLabel('ListItem.Property(embyid)')
+            if xbmc.getInfoLabel('ListItem.Property(jellyfinid)'):
+                item_id = xbmc.getInfoLabel('ListItem.Property(jellyfinid)')
             else:
                 self.kodi_id = xbmc.getInfoLabel('ListItem.DBID')
                 self.media = xbmc.getInfoLabel('ListItem.DBTYPE')
@@ -96,7 +96,7 @@ class Context(object):
 
     def get_item_id(self):
 
-        ''' Get synced item from embydb.
+        ''' Get synced item from jellyfindb.
         '''
         item = database.get_item(self.kodi_id, self.media)
 
@@ -130,7 +130,7 @@ class Context(object):
 
         options.append(OPTIONS['Addon'])
 
-        context_menu = context.ContextMenu("script-emby-context.xml", *XML_PATH)
+        context_menu = context.ContextMenu("script-jellyfin-context.xml", *XML_PATH)
         context_menu.set_options(options)
         context_menu.doModal()
 
@@ -164,7 +164,7 @@ class Context(object):
 
         if not settings('skipContextMenu.bool'):
 
-            if not dialog("yesno", heading="{emby}", line1=_(33015)):
+            if not dialog("yesno", heading="{jellyfin}", line1=_(33015)):
                 delete = False
 
         if delete:

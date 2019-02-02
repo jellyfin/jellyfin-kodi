@@ -12,7 +12,7 @@ from emby.core.connection_manager import CONNECTION_STATE
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 ACTION_PARENT_DIR = 9
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACK = 92
@@ -45,7 +45,7 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
         xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)
 
     def set_args(self, **kwargs):
-        # connect_manager, user_image, servers, emby_connect
+        # connect_manager, user_image, servers, jellyfin_connect
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
 
@@ -76,7 +76,7 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
         if self.user_image is not None:
             self.getControl(USER_IMAGE).setImage(self.user_image)
 
-        if not self.emby_connect: # Change connect user
+        if not self.jellyfin_connect: # Change connect user
             self.getControl(EMBY_CONNECT).setLabel("[B]%s[/B]" % _(30618))
 
         if self.servers:

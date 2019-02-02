@@ -12,7 +12,7 @@ from helper import _, addon_id, settings, dialog
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 ACTION_PARENT_DIR = 9
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACK = 92
@@ -39,7 +39,7 @@ class LoginConnect(xbmcgui.WindowXMLDialog):
         xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)
 
     def set_args(self, **kwargs):
-        # connect_manager, user_image, servers, emby_connect
+        # connect_manager, user_image, servers, jellyfin_connect
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
 
@@ -70,7 +70,7 @@ class LoginConnect(xbmcgui.WindowXMLDialog):
     def onClick(self, control):
 
         if control == SIGN_IN:
-            # Sign in to emby connect
+            # Sign in to jellyfin connect
             self._disable_error()
 
             user = self.user_field.getText()
@@ -128,8 +128,8 @@ class LoginConnect(xbmcgui.WindowXMLDialog):
         settings('connectUsername', value=username)
         settings('idMethod', value="1")
 
-        dialog("notification", heading="{emby}", message="%s %s" % (_(33000), username.decode('utf-8')),
-               icon=result['User'].get('ImageUrl') or "{emby}",
+        dialog("notification", heading="{jellyfin}", message="%s %s" % (_(33000), username.decode('utf-8')),
+               icon=result['User'].get('ImageUrl') or "{jellyfin}",
                time=2000,
                sound=False)
 
