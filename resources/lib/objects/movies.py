@@ -9,8 +9,8 @@ import urllib
 import downloader as server
 from obj import Objects
 from kodi import Movies as KodiDb, queries as QU
-from database import emby_db, queries as QUEM
-from helper import api, catch, stop, validate, emby_item, library_check, values, settings, Local
+from database import jellyfin_db, queries as QUEM
+from helper import api, catch, stop, validate, jellyfin_item, library_check, values, settings, Local
 
 ##################################################################################################
 
@@ -21,14 +21,14 @@ LOG = logging.getLogger("JELLYFIN."+__name__)
 
 class Movies(KodiDb):
 
-    def __init__(self, server, embydb, videodb, direct_path):
+    def __init__(self, server, jellyfindb, videodb, direct_path):
 
         self.server = server
-        self.emby = embydb
+        self.jellyfin = jellyfindb
         self.video = videodb
         self.direct_path = direct_path
 
-        self.emby_db = emby_db.EmbyDatabase(embydb.cursor)
+        self.jellyfin_db = jellyfin_db.JellyfinDatabase(jellyfindb.cursor)
         self.objects = Objects()
         self.item_ids = []
 
@@ -46,7 +46,7 @@ class Movies(KodiDb):
             return self.remove
 
     @stop()
-    @emby_item()
+    @jellyfin_item()
     @library_check()
     def movie(self, item, e_item, library):
         
@@ -146,7 +146,7 @@ class Movies(KodiDb):
         obj['FileId'] = self.add_file(*values(obj, QU.add_file_obj))
 
         self.add(*values(obj, QU.add_movie_obj))
-        self.emby_db.add_reference(*values(obj, QUEM.add_reference_movie_obj))
+        self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_movie_obj))
         LOG.info("ADD movie [%s/%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['MovieId'], obj['Id'], obj['Title'])
 
     def movie_update(self, obj):
@@ -160,7 +160,7 @@ class Movies(KodiDb):
         self.update_unique_id(*values(obj, QU.update_unique_id_movie_obj))
 
         self.update(*values(obj, QU.update_movie_obj))
-        self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
+        self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
         LOG.info("UPDATE movie [%s/%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['MovieId'], obj['Id'], obj['Title'])
 
     def trailer(self, obj):
@@ -203,7 +203,7 @@ class Movies(KodiDb):
 
 
     @stop()
-    @emby_item()
+    @jellyfin_item()
     def boxset(self, item, e_item):
                 
         ''' If item does not exist, entry will be added.
@@ -234,11 +234,11 @@ class Movies(KodiDb):
             temp_obj['Movie'] = movie
             temp_obj['MovieId'] = obj['Current'][temp_obj['Movie']]
             self.remove_from_boxset(*values(temp_obj, QU.delete_movie_set_obj))
-            self.emby_db.update_parent_id(*values(temp_obj, QUEM.delete_parent_boxset_obj))
+            self.jellyfin_db.update_parent_id(*values(temp_obj, QUEM.delete_parent_boxset_obj))
             LOG.info("DELETE from boxset [%s] %s: %s", temp_obj['SetId'], temp_obj['Title'], temp_obj['MovieId'])
 
         self.artwork.add(obj['Artwork'], obj['SetId'], "set")
-        self.emby_db.add_reference(*values(obj, QUEM.add_reference_boxset_obj))
+        self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_boxset_obj))
         LOG.info("UPDATE boxset [%s] %s", obj['SetId'], obj['Title'])
 
     def boxset_current(self, obj):
@@ -246,7 +246,7 @@ class Movies(KodiDb):
         ''' Add or removes movies based on the current movies found in the boxset.
         '''
         try:
-            current = self.emby_db.get_item_id_by_parent_id(*values(obj, QUEM.get_item_id_by_parent_boxset_obj))
+            current = self.jellyfin_db.get_item_id_by_parent_id(*values(obj, QUEM.get_item_id_by_parent_boxset_obj))
             movies = dict(current)
         except ValueError:
             movies = {}
@@ -261,7 +261,7 @@ class Movies(KodiDb):
                 temp_obj['Id'] = movie['Id']
 
                 try:
-                    temp_obj['MovieId'] = self.emby_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
+                    temp_obj['MovieId'] = self.jellyfin_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
                 except TypeError:
                     LOG.info("Failed to process %s to boxset.", temp_obj['Title'])
 
@@ -270,7 +270,7 @@ class Movies(KodiDb):
                 if temp_obj['Id'] not in obj['Current']:
 
                     self.set_boxset(*values(temp_obj, QU.update_movie_set_obj))
-                    self.emby_db.update_parent_id(*values(temp_obj, QUEM.update_parent_movie_obj))
+                    self.jellyfin_db.update_parent_id(*values(temp_obj, QUEM.update_parent_movie_obj))
                     LOG.info("ADD to boxset [%s/%s] %s: %s to boxset", temp_obj['SetId'], temp_obj['MovieId'], temp_obj['Title'], temp_obj['Id'])
                 else:
                     obj['Current'].pop(temp_obj['Id'])
@@ -279,12 +279,12 @@ class Movies(KodiDb):
 
         ''' Special function to remove all existing boxsets.
         '''
-        boxsets = self.emby_db.get_items_by_media('set')
+        boxsets = self.jellyfin_db.get_items_by_media('set')
         for boxset in boxsets:
             self.remove(boxset[0])
 
     @stop()
-    @emby_item()
+    @jellyfin_item()
     def userdata(self, item, e_item):
         
         ''' This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
@@ -313,11 +313,11 @@ class Movies(KodiDb):
 
         LOG.debug("New resume point %s: %s", obj['Id'], obj['Resume'])
         self.add_playstate(*values(obj, QU.add_bookmark_obj))
-        self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
+        self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
         LOG.info("USERDATA movie [%s/%s] %s: %s", obj['FileId'], obj['MovieId'], obj['Id'], obj['Title'])
 
     @stop()
-    @emby_item()
+    @jellyfin_item()
     def remove(self, item_id, e_item):
 
         ''' Remove movieid, fileid, jellyfin reference.
@@ -338,15 +338,15 @@ class Movies(KodiDb):
             self.delete(*values(obj, QU.delete_movie_obj))
         elif obj['Media'] == 'set':
 
-            for movie in self.emby_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_movie_obj)):
+            for movie in self.jellyfin_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_movie_obj)):
                 
                 temp_obj = dict(obj)
                 temp_obj['MovieId'] = movie[1]
                 temp_obj['Movie'] = movie[0]
                 self.remove_from_boxset(*values(temp_obj, QU.delete_movie_set_obj))
-                self.emby_db.update_parent_id(*values(temp_obj, QUEM.delete_parent_boxset_obj))
+                self.jellyfin_db.update_parent_id(*values(temp_obj, QUEM.delete_parent_boxset_obj))
 
             self.delete_boxset(*values(obj, QU.delete_set_obj))
 
-        self.emby_db.remove_item(*values(obj, QUEM.delete_item_obj))
+        self.jellyfin_db.remove_item(*values(obj, QUEM.delete_item_obj))
         LOG.info("DELETE %s [%s/%s] %s", obj['Media'], obj['FileId'], obj['KodiId'], obj['Id'])

@@ -12,7 +12,7 @@ import xbmcvfs
 
 import downloader as server
 import helper.xmls as xmls
-from database import Database, get_sync, save_sync, emby_db
+from database import Database, get_sync, save_sync, jellyfin_db
 from helper import _, settings, window, progress, dialog, LibraryException
 from helper.utils import get_screensaver, set_screensaver
 from views import Views
@@ -104,11 +104,11 @@ class FullSync(object):
 
     def get_libraries(self, library_id=None):
 
-        with Database('jellyfin') as embydb:
+        with Database('jellyfin') as jellyfindb:
             if library_id is None:
-                return emby_db.EmbyDatabase(embydb.cursor).get_views()
+                return jellyfin_db.JellyfinDatabase(jellyfindb.cursor).get_views()
             else:
-                return emby_db.EmbyDatabase(embydb.cursor).get_view(library_id)
+                return jellyfin_db.JellyfinDatabase(jellyfindb.cursor).get_view(library_id)
 
     def mapping(self):
 
@@ -266,9 +266,9 @@ class FullSync(object):
 
         with self.library.database_lock:
             with Database() as videodb:
-                with Database('jellyfin') as embydb:
+                with Database('jellyfin') as jellyfindb:
 
-                    obj = Movies(self.server, embydb, videodb, self.direct_path)
+                    obj = Movies(self.server, jellyfindb, videodb, self.direct_path)
 
                     for items in server.get_items(library['Id'], "Movie", False, self.sync['RestorePoint'].get('params')):
                         
@@ -283,13 +283,13 @@ class FullSync(object):
                             obj.movie(movie, library=library)
 
                     if self.update_library:
-                        self.movies_compare(library, obj, embydb)
+                        self.movies_compare(library, obj, jellyfindb)
 
-    def movies_compare(self, library, obj, embydb):
+    def movies_compare(self, library, obj, jellyfinydb):
 
         ''' Compare entries from library to what's in the jellyfindb. Remove surplus
         '''
-        db = emby_db.EmbyDatabase(embydb.cursor)
+        db = jellyfin_db.JellyfinDatabase(jellyfinydb.cursor)
 
         items = db.get_item_by_media_folder(library['Id'])
         current = obj.item_ids
@@ -307,8 +307,8 @@ class FullSync(object):
 
         with self.library.database_lock:
             with Database() as videodb:
-                with Database('jellyfin') as embydb:
-                    obj = TVShows(self.server, embydb, videodb, self.direct_path, True)
+                with Database('jellyfin') as jellyfindb:
+                    obj = TVShows(self.server, jellyfindb, videodb, self.direct_path, True)
 
                     for items in server.get_items(library['Id'], "Series", False, self.sync['RestorePoint'].get('params')):
 
@@ -330,13 +330,13 @@ class FullSync(object):
                                         obj.episode(episode)
 
                     if self.update_library:
-                        self.tvshows_compare(library, obj, embydb)
+                        self.tvshows_compare(library, obj, jellyfindb)
 
-    def tvshows_compare(self, library, obj, embydb):
+    def tvshows_compare(self, library, obj, jellyfindb):
 
-        ''' Compare entries from library to what's in the embydb. Remove surplus
+        ''' Compare entries from library to what's in the jellyfindb. Remove surplus
         '''
-        db = emby_db.EmbyDatabase(embydb.cursor)
+        db = jellyfin_db.JellyfinDatabase(jellyfindb.cursor)
 
         items = db.get_item_by_media_folder(library['Id'])
         for x in list(items):
@@ -357,8 +357,8 @@ class FullSync(object):
 
         with self.library.database_lock:
             with Database() as videodb:
-                with Database('jellyfin') as embydb:
-                    obj = MusicVideos(self.server, embydb, videodb, self.direct_path)
+                with Database('jellyfin') as jellyfindb:
+                    obj = MusicVideos(self.server, jellyfindb, videodb, self.direct_path)
 
                     for items in server.get_items(library['Id'], "MusicVideo", False, self.sync['RestorePoint'].get('params')):
 
@@ -373,13 +373,13 @@ class FullSync(object):
                             obj.musicvideo(mvideo, library=library)
 
                     if self.update_library:
-                        self.musicvideos_compare(library, obj, embydb)
+                        self.musicvideos_compare(library, obj, jellyfindb)
 
-    def musicvideos_compare(self, library, obj, embydb):
+    def musicvideos_compare(self, library, obj, jellyfindb):
 
-        ''' Compare entries from library to what's in the embydb. Remove surplus
+        ''' Compare entries from library to what's in the jellyfindb. Remove surplus
         '''
-        db = emby_db.EmbyDatabase(embydb.cursor)
+        db = jellyfin_db.JellyfinDatabase(jellyfindb.cursor)
 
         items = db.get_item_by_media_folder(library['Id'])
         current = obj.item_ids
@@ -397,8 +397,8 @@ class FullSync(object):
 
         with self.library.music_database_lock:
             with Database('music') as musicdb:
-                with Database('jellyfin') as embydb:
-                    obj = Music(self.server, embydb, musicdb, self.direct_path)
+                with Database('jellyfin') as jellyfindb:
+                    obj = Music(self.server, jellyfindb, musicdb, self.direct_path)
 
                     for items in server.get_artists(library['Id'], False, self.sync['RestorePoint'].get('params')):
 
@@ -432,13 +432,13 @@ class FullSync(object):
 
 
                     if self.update_library:
-                        self.music_compare(library, obj, embydb)
+                        self.music_compare(library, obj, jellyfindb)
 
-    def music_compare(self, library, obj, embydb):
+    def music_compare(self, library, obj, jellyfindb):
 
-        ''' Compare entries from library to what's in the embydb. Remove surplus
+        ''' Compare entries from library to what's in the jellyfindb. Remove surplus
         '''
-        db = emby_db.EmbyDatabase(embydb.cursor)
+        db = jellyfin_db.JellyfinDatabase(jellyfindb.cursor)
 
         items = db.get_item_by_media_folder(library['Id'])
         for x in list(items):
@@ -459,8 +459,8 @@ class FullSync(object):
 
         with self.library.database_lock:
             with Database() as videodb:
-                with Database('jellyfin') as embydb:
-                    obj = Movies(self.server, embydb, videodb, self.direct_path)
+                with Database('jellyfin') as jellyfindb:
+                    obj = Movies(self.server, jellyfindb, videodb, self.direct_path)
 
                     for items in server.get_items(library_id, "BoxSet", False, self.sync['RestorePoint'].get('params')):
 
@@ -482,9 +482,9 @@ class FullSync(object):
 
         with self.library.database_lock:
             with Database() as videodb:
-                with Database('jellyfin') as embydb:
+                with Database('jellyfin') as jellyfindb:
 
-                    obj = Movies(self.server, embydb, videodb, self.direct_path)
+                    obj = Movies(self.server, jellyfindb, videodb, self.direct_path)
                     obj.boxsets_reset()
 
         self.boxsets(None)
@@ -497,9 +497,9 @@ class FullSync(object):
         MEDIA = self.library.MEDIA
         direct_path = self.library.direct_path
 
-        with Database('jellyfin') as embydb:
+        with Database('jellyfin') as jellyfindb:
 
-            db = emby_db.EmbyDatabase(embydb.cursor)
+            db = jellyfin_db.JellyfinDatabase(jellyfindb.cursor)
             library = db.get_view(library_id.replace('Mixed:', ""))
             items = db.get_item_by_media_folder(library_id.replace('Mixed:', ""))
             media = 'music' if library[1] == 'music' else 'video'
@@ -518,7 +518,7 @@ class FullSync(object):
                             movies = [x for x in items if x[1] == 'Movie']
                             tvshows = [x for x in items if x[1] == 'Series']
 
-                            obj = MEDIA['Movie'](self.server, embydb, kodidb, direct_path)['Remove']
+                            obj = MEDIA['Movie'](self.server, jellyfindb, kodidb, direct_path)['Remove']
 
                             for item in movies:
 
@@ -526,7 +526,7 @@ class FullSync(object):
                                 dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
                                 count += 1
 
-                            obj = MEDIA['Series'](self.server, embydb, kodidb, direct_path)['Remove']
+                            obj = MEDIA['Series'](self.server, jellyfindb, kodidb, direct_path)['Remove']
 
                             for item in tvshows:
 
@@ -534,7 +534,7 @@ class FullSync(object):
                                 dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
                                 count += 1
                         else:
-                            obj = MEDIA[items[0][1]](self.server, embydb, kodidb, direct_path)['Remove']
+                            obj = MEDIA[items[0][1]](self.server, jellyfindb, kodidb, direct_path)['Remove']
 
                             for item in items:
 

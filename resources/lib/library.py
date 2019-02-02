@@ -12,13 +12,13 @@ import xbmc
 import xbmcgui
 
 from objects import Movies, TVShows, MusicVideos, Music
-from database import Database, emby_db, get_sync, save_sync
+from database import Database, jellyfin_db, get_sync, save_sync
 from full_sync import FullSync
 from views import Views
 from downloader import GetItemWorker
 from helper import _, api, stop, settings, window, dialog, event, progress, LibraryException
 from helper.utils import split_list, set_screensaver, get_screensaver
-from emby import Emby
+from jellyfin import Jellyfin
 
 ##################################################################################################
 
@@ -62,7 +62,7 @@ class Library(threading.Thread):
         self.progress_display = int(settings('syncProgress') or 50)
         self.monitor = monitor
         self.player = monitor.monitor.player
-        self.server = Emby().get_client()
+        self.server = Jellyfin().get_client()
         self.updated_queue = Queue.Queue()
         self.userdata_queue = Queue.Queue()
         self.removed_queue = Queue.Queue()
@@ -71,7 +71,7 @@ class Library(threading.Thread):
         self.removed_output = self.__new_queues__()
         self.notify_output = Queue.Queue()
 
-        self.emby_threads = []
+        self.jellyfin_threads = []
         self.download_threads = []
         self.notify_threads = []
         self.writer_threads = {'updated': [], 'userdata': [], 'removed': []}
@@ -240,7 +240,7 @@ class Library(threading.Thread):
 
         ''' Get items based on the local jellyfin database and place item in appropriate queues.
         '''
-        if self.removed_queue.qsize() and len(self.emby_threads) < 2:
+        if self.removed_queue.qsize() and len(self.jellyfin_threads) < 2:
 
             new_thread = SortWorker(self.removed_queue, self.removed_output)
             new_thread.start()
@@ -482,8 +482,8 @@ class Library(threading.Thread):
         whitelist = [x.replace('Mixed:', "") for x in sync['Whitelist']]
         libraries = []
 
-        with Database('jellyfin') as embydb:
-            db = emby_db.EmbyDatabase(embydb.cursor)
+        with Database('jellyfin') as jellyfindb:
+            db = jellyfin_db.JellyfinDatabase(jellyfindb.cursor)
 
             if mode in ('SyncLibrarySelection', 'RepairLibrarySelection', 'RemoveLibrarySelection'):
                 for library in sync['Whitelist']:
@@ -614,7 +614,7 @@ class UpdatedWorker(threading.Thread):
 
         with self.lock:
             with self.database as kodidb:
-                with Database('jellyfin') as embydb:
+                with Database('jellyfin') as jellyfindb:
 
                     while True:
 
@@ -623,7 +623,7 @@ class UpdatedWorker(threading.Thread):
                         except Queue.Empty:
                             break
 
-                        obj = MEDIA[item['Type']](self.args[0], embydb, kodidb, self.args[1])[item['Type']]
+                        obj = MEDIA[item['Type']](self.args[0], jellyfindb, kodidb, self.args[1])[item['Type']]
 
                         try:
                             if obj(item) and self.notify:
@@ -658,7 +658,7 @@ class UserDataWorker(threading.Thread):
 
         with self.lock:
             with self.database as kodidb:
-                with Database('jellyfin') as embydb:
+                with Database('jellyfin') as jellyfindb:
 
                     while True:
 
@@ -667,7 +667,7 @@ class UserDataWorker(threading.Thread):
                         except Queue.Empty:
                             break
 
-                        obj = MEDIA[item['Type']](self.args[0], embydb, kodidb, self.args[1])['UserData']
+                        obj = MEDIA[item['Type']](self.args[0], jellyfindb, kodidb, self.args[1])['UserData']
 
                         try:
                             obj(item)
@@ -698,8 +698,8 @@ class SortWorker(threading.Thread):
 
     def run(self):
 
-        with Database('jellyfin') as embydb:
-            database = emby_db.EmbyDatabase(embydb.cursor)
+        with Database('jellyfin') as jellyfindb:
+            database = jellyfin_db.JellyfinDatabase(jellyfindb.cursor)
 
             while True:
 
@@ -744,7 +744,7 @@ class RemovedWorker(threading.Thread):
 
         with self.lock:
             with self.database as kodidb:
-                with Database('jellyfin') as embydb:
+                with Database('jellyfin') as jellyfindb:
 
                     while True:
 
@@ -753,7 +753,7 @@ class RemovedWorker(threading.Thread):
                         except Queue.Empty:
                             break
 
-                        obj = MEDIA[item['Type']](self.args[0], embydb, kodidb, self.args[1])['Remove']
+                        obj = MEDIA[item['Type']](self.args[0], jellyfindb, kodidb, self.args[1])['Remove']
 
                         try:
                             obj(item['Id'])

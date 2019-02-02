@@ -13,7 +13,7 @@ LOG = logging.getLogger("JELLYFIN."+__name__)
 ##################################################################################################
 
 
-class EmbyDatabase():
+class JellyfinDatabase():
 
 
     def __init__(self, cursor):

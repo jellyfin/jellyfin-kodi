@@ -25,7 +25,7 @@ def callback(message, data):
     pass
 
 
-class EmbyClient(object):
+class JellyfinClient(object):
 
     logged_in = False
 
@@ -36,7 +36,7 @@ class EmbyClient(object):
         self.http = HTTP(self)
         self.wsc = WSClient(self)
         self.auth = ConnectionManager(self)
-        self.emby = api.API(self.http)
+        self.jellyfin = api.API(self.http)
         self.callback_ws = callback
         self.callback = callback
 
@@ -100,7 +100,7 @@ class EmbyClient(object):
             return self.auth.__shortcuts__(key.replace('auth/', "", 1))
 
         elif key.startswith('api'):
-            return self.emby
+            return self.jellyfin
 
         elif key == 'connected':
             return self.logged_in

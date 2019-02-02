@@ -18,7 +18,6 @@ from downloader import TheVoid
 from obj import Objects
 from helper import _, playutils, api, window, settings, dialog, JSONRPC
 from dialogs import resume
-from emby import Emby
 from utils import get_play_action
 
 #################################################################################################

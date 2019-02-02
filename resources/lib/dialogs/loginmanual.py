@@ -72,7 +72,6 @@ class LoginManual(xbmcgui.WindowXMLDialog):
     def onClick(self, control):
 
         if control == SIGN_IN:
-            # Sign in to emby connect
             self._disable_error()
 
             user = self.user_field.getText()

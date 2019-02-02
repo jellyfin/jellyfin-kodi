@@ -75,11 +75,11 @@ class ConnectionManager(object):
         elif key == "server-version":
             return self.server_version
         elif key == "user-id":
-            return self.emby_user_id()
+            return self.jellyfin_user_id()
         elif key == "public-users":
             return self.get_public_users()
         elif key == "token":
-            return self.emby_token()
+            return self.jellyfin_token()
         elif key == "manual-server":
             return self.connect_to_address
         elif key == "connect-to-server":
@@ -154,7 +154,7 @@ class ConnectionManager(object):
         try:
             request = {
                 'type': "POST",
-                'url': self.get_emby_url(server, "Users/AuthenticateByName"),
+                'url': self.get_jellyfin_url(server, "Users/AuthenticateByName"),
                 'json': {
                     'username': username,
                     'password': hashlib.sha1(password or "").hexdigest(),
@@ -226,10 +226,10 @@ class ConnectionManager(object):
         LOG.info("Begin connect")
         return self._connect_to_servers(self.get_available_servers(), options)
 
-    def emby_user_id(self):
+    def jellyfin_user_id(self):
         return self.get_server_info(self.server_id)['UserId']
 
-    def emby_token(self):
+    def jellyfin_token(self):
         return self.get_server_info(self.server_id)['AccessToken']
 
     def get_server_info(self, server_id):
@@ -245,9 +245,9 @@ class ConnectionManager(object):
                 return server
 
     def get_public_users(self):
-        return self.client.emby.get_public_users()
+        return self.client.jellyfin.get_public_users()
 
-    def get_emby_url(self, base, handler):
+    def get_jellyfin_url(self, base, handler):
         return "%s/emby/%s" % (base, handler)
 
     def _request_url(self, request, headers=True):
@@ -306,7 +306,7 @@ class ConnectionManager(object):
 
     def _try_connect(self, url, timeout=None, options={}):
 
-        url = self.get_emby_url(url, "system/info/public")
+        url = self.get_jellyfin_url(url, "system/info/public")
         LOG.info("tryConnect url: %s", url)
 
         return self._request_url({
@@ -582,7 +582,7 @@ class ConnectionManager(object):
         try:
             system_info = self._request_url({
                 'type': "GET",
-                'url': self.get_emby_url(get_server_address(server, connection_mode), "System/Info"),
+                'url': self.get_jellyfin_url(get_server_address(server, connection_mode), "System/Info"),
                 'verify': options.get('ssl'),
                 'dataType': "json",
                 'headers': {

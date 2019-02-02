@@ -34,7 +34,6 @@ sys.path.append(__base__)
 
 from entrypoint import Service
 from helper import settings
-from emby import Emby
 
 #################################################################################################
 

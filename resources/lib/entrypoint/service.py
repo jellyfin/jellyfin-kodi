@@ -21,8 +21,8 @@ import requests
 from views import Views, verify_kodi_defaults
 from helper import _, window, settings, event, dialog, find, compare_version
 from downloader import get_objects
-from emby import Emby
-from database import Database, emby_db, reset
+from jellyfin import Jellyfin
+from database import Database, jellyfin_db, reset
 
 #################################################################################################
 
@@ -143,7 +143,7 @@ class Service(xbmc.Monitor):
     def stop_default(self):
 
         window('jellyfin_online', clear=True)
-        Emby().close()
+        Jellyfin().close()
 
         if self.library_thread is not None:
 
@@ -154,9 +154,9 @@ class Service(xbmc.Monitor):
 
         ''' Check the database version to ensure we do not need to do a reset.
         '''
-        with Database('jellyfin') as embydb:
+        with Database('jellyfin') as jellyfindb:
 
-            version = emby_db.EmbyDatabase(embydb.cursor).get_version()
+            version = jellyfin_db.JellyfinDatabase(jellyfindb.cursor).get_version()
             LOG.info("---[ db/%s ]", version)
 
         if version and compare_version(version, "3.1.0") < 0:
@@ -206,8 +206,8 @@ class Service(xbmc.Monitor):
             LOG.info("--[ new objects/%s ]", objects.version)
 
             try:
-                if compare_version(self.settings['addon_version'], objects.embyversion) < 0:
-                    dialog("ok", heading="{jellyfin}", line1="%s %s" % (_(33160), objects.embyversion))
+                if compare_version(self.settings['addon_version'], objects.jellyfinversion) < 0:
+                    dialog("ok", heading="{jellyfin}", line1="%s %s" % (_(33160), objects.jellyfinversion))
             except Exception:
                 pass
 
@@ -386,7 +386,7 @@ class Service(xbmc.Monitor):
                 self.library_thread.stop_client()
                 self.library_thread = None
 
-            Emby.close_all()
+            Jellyfin.close_all()
             self.monitor.server = []
             self.monitor.sleep = True
 
@@ -506,7 +506,7 @@ class Service(xbmc.Monitor):
         for prop in properties:
             window(prop, clear=True)
 
-        Emby.close_all()
+        Jellyfin.close_all()
 
         if self.library_thread is not None:
             self.library_thread.stop_client()

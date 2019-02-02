@@ -9,7 +9,7 @@ import xbmcgui
 import xbmcaddon
 
 from helper import _, addon_id
-from emby.core.connection_manager import CONNECTION_STATE
+from jellyfin.core.connection_manager import CONNECTION_STATE
 
 ##################################################################################################
 
@@ -72,7 +72,6 @@ class ServerManual(xbmcgui.WindowXMLDialog):
     def onClick(self, control):
 
         if control == CONNECT:
-            # Sign in to jellyfin connect
             self._disable_error()
 
             server = self.host_field.getText()

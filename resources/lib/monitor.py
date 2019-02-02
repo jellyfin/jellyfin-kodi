@@ -17,7 +17,7 @@ import player
 from client import get_device_id
 from objects import Actions, PlaylistWorker, on_play, on_update, special_listener
 from helper import _, settings, window, dialog, event, api, JSONRPC
-from emby import Emby
+from jellyfin import Jellyfin
 from webservice import WebService
 
 #################################################################################################
@@ -118,9 +118,9 @@ class Monitor(xbmc.Monitor):
 
                     return
 
-            server = Emby(data['ServerId'])
+            server = Jellyfin(data['ServerId'])
         except Exception:
-            server = Emby()
+            server = Jellyfin()
 
         if method == 'GetItem':
 
@@ -169,7 +169,7 @@ class Monitor(xbmc.Monitor):
 
         elif method == 'GetUsers':
 
-            users = server['api'].get_users(data.get('IsDisabled', True), data.get('IsHidden', True))
+            users = server['api'].get_users()
             self.void_responder(data, users)
 
         elif method == 'GetTranscodeOptions':
@@ -277,7 +277,7 @@ class Monitor(xbmc.Monitor):
 
     def server_instance(self, server_id=None):
 
-        server = Emby(server_id)
+        server = Jellyfin(server_id)
         self.post_capabilities(server)
 
         if server_id is not None:

@@ -17,7 +17,6 @@ import collections
 import requests
 from . import _, settings, window, dialog
 from downloader import TheVoid
-from emby import Emby
 
 #################################################################################################
 

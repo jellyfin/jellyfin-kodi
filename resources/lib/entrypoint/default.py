@@ -17,7 +17,7 @@ import xbmcplugin
 import xbmcaddon
 
 import client
-from database import reset, get_sync, Database, emby_db, get_credentials
+from database import reset, get_sync, Database, jellyfin_db, get_credentials
 from objects import Objects, Actions
 from downloader import TheVoid
 from helper import _, event, settings, window, dialog, api, JSONRPC
@@ -130,14 +130,14 @@ def listing():
 
     ''' Display all jellyfin nodes and dynamic entries when appropriate.
     '''
-    total = int(window('Emby.nodes.total') or 0)
+    total = int(window('Jellyfin.nodes.total') or 0)
     sync = get_sync()
     whitelist = [x.replace('Mixed:', "") for x in sync['Whitelist']]
     servers = get_credentials()['Servers'][1:]
 
     for i in range(total):
 
-        window_prop = "Emby.nodes.%s" % i
+        window_prop = "Jellyfin.nodes.%s" % i
         path = window('%s.index' % window_prop)
 
         if not path:
@@ -543,12 +543,12 @@ def get_video_extras(item_id, path, server_id=None):
     """
     def getVideoFiles(jellyfinId,jellyfinPath):
         #returns the video files for the item as plugin listing, can be used for browsing the actual files or videoextras etc.
-        emby = embyserver.Read_EmbyServer()
-        if not embyId:
-            if "plugin.video.jellyfin" in embyPath:
-                embyId = embyPath.split("/")[-2]
-        if embyId:
-            item = emby.getItem(embyId)
+        jellyfin = jellyfinserver.Read_JellyfinServer()
+        if not jellyfinId:
+            if "plugin.video.jellyfin" in jellyfinPath:
+                jellyfinId = jellyfinPath.split("/")[-2]
+        if jellyfinId:
+            item = jellyfin.getItem(jellyfinId)
             putils = playutils.PlayUtils(item)
             if putils.isDirectPlay():
                 #only proceed if we can access the files directly. TODO: copy local on the fly if accessed outside
@@ -571,9 +571,9 @@ def get_next_episodes(item_id, limit):
 
     ''' Only for synced content.
     '''
-    with Database('jellyfin') as embydb:
+    with Database('jellyfin') as jellyfindb:
 
-        db = emby_db.EmbyDatabase(embydb.cursor)
+        db = jellyfin_db.JellyfinDatabase(jellyfindb.cursor)
         library = db.get_view_name(item_id)
 
         if not library:
@@ -784,8 +784,8 @@ def get_themes():
 
         return
 
-    with Database('jellyfin') as embydb:
-        all_views = emby_db.EmbyDatabase(embydb.cursor).get_views()
+    with Database('jellyfin') as jellyfindb:
+        all_views = jellyfin_db.JellyfinDatabase(jellyfindb.cursor).get_views()
         views = [x[0] for x in all_views if x[2] in ('movies', 'tvshows', 'mixed')]
 
 

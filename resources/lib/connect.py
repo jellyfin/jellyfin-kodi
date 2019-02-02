@@ -14,9 +14,9 @@ import client
 from database import get_credentials, save_credentials
 from dialogs import ServerConnect, UsersConnect, LoginManual, ServerManual
 from helper import _, settings, addon_id, event, api, dialog, window
-from emby import Emby
-from emby.core.connection_manager import get_server_address, CONNECTION_STATE
-from emby.core.exceptions import HTTPException
+from jellyfin import Jellyfin
+from jellyfin.core.connection_manager import get_server_address, CONNECTION_STATE
+from jellyfin.core.exceptions import HTTPException
 
 ##################################################################################################
 
@@ -65,7 +65,7 @@ class Connect(object):
         save_credentials(credentials)
 
         try:
-            Emby(server_id).start(True)
+            Jellyfin(server_id).start(True)
         except ValueError as error:
             LOG.error(error)
 
@@ -80,7 +80,7 @@ class Connect(object):
 
         ''' Get Jellyfin client.
         '''
-        client = Emby(server_id)
+        client = Jellyfin(server_id)
         client['config/app']("Kodi", self.info['Version'], self.info['DeviceName'], self.info['DeviceId'])
         client['config']['http.user_agent'] = "Jellyfin-Kodi/%s" % self.info['Version']
         client['config']['auth.ssl'] = self.get_ssl()
@@ -280,7 +280,7 @@ class Connect(object):
 
         ''' Stop client and remove server.
         '''
-        Emby(server_id).close()
+        Jellyfin(server_id).close()
         credentials = get_credentials()
 
         for server in credentials['Servers']:

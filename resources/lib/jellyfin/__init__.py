@@ -4,7 +4,7 @@
 
 import logging
 
-from client import EmbyClient
+from client import JellyfinClient
 from helpers import has_attribute
 
 #################################################################################################
@@ -21,7 +21,7 @@ LOG = logging.getLogger('Jellyfin')
 def config(level=logging.INFO):
 
     logger = logging.getLogger('Jellyfin')
-    logger.addHandler(Emby.loghandler())
+    logger.addHandler(Jellyfin.loghandler())
     logger.setLevel(level)
 
 def ensure_client():
@@ -38,7 +38,7 @@ def ensure_client():
     return decorator
 
 
-class Emby(object):
+class Jellyfin(object):
 
     ''' This is your Jellyfinclient, you can create more than one. The server_id is only a temporary thing
         to communicate with the JellyfinClient().
@@ -92,7 +92,7 @@ class Emby(object):
             cls.client[client].stop()
 
         cls.client = {}
-        LOG.info("---[ STOPPED ALL JELLYFINCLIENT ]---")
+        LOG.info("---[ STOPPED ALL JELLYFINCLIENTS ]---")
 
     @classmethod
     def get_active_clients(cls):
@@ -102,7 +102,7 @@ class Emby(object):
     def __setattr__(self, name, value):
 
         if has_attribute(self, name):
-            return super(Emby, self).__setattr__(name, value)
+            return super(Jellyfin, self).__setattr__(name, value)
 
         setattr(self.client[self.server_id], name, value)
 
@@ -116,7 +116,7 @@ class Emby(object):
 
     def construct(self):
 
-        self.client[self.server_id] = EmbyClient()
+        self.client[self.server_id] = JellyfinClient()
 
         if self.server_id == 'default':
             LOG.info("---[ START JELLYFINCLIENT ]---")

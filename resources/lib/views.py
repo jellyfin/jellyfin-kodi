@@ -12,10 +12,10 @@ import xbmc
 import xbmcvfs
 
 import downloader as server
-from database import Database, emby_db, get_sync, save_sync
+from database import Database, jellyfin_db, get_sync, save_sync
 from objects.kodi import kodi
 from helper import _, api, indent, write_xml, window, event
-from emby import Emby
+from jellyfin import Jellyfin
 
 #################################################################################################
 
@@ -144,21 +144,21 @@ class Views(object):
     def __init__(self):
 
         self.sync = get_sync()
-        self.server = Emby()
+        self.server = Jellyfin()
 
     def add_library(self, view):
 
         ''' Add entry to view table in jellyfin database.
         '''
-        with Database('jellyfin') as embydb:
-            emby_db.EmbyDatabase(embydb.cursor).add_view(view['Id'], view['Name'], view['Media'])
+        with Database('jellyfin') as jellyfindb:
+            jellyfin_db.JellyfinDatabase(jellyfindb.cursor).add_view(view['Id'], view['Name'], view['Media'])
 
     def remove_library(self, view_id):
 
         ''' Remove entry from view table in jellyfin database.
         '''
-        with Database('jellyfin') as embydb:
-            emby_db.EmbyDatabase(embydb.cursor).remove_view(view_id)
+        with Database('jellyfin') as jellyfindb:
+            jellyfin_db.JellyfinDatabase(jellyfindb.cursor).remove_view(view_id)
 
         self.delete_playlist_by_id(view_id)
         self.delete_node_by_id(view_id)
@@ -203,9 +203,9 @@ class Views(object):
 
             self.add_library(library)
 
-        with Database('jellyfin') as embydb:
+        with Database('jellyfin') as jellyfindb:
 
-            views = emby_db.EmbyDatabase(embydb.cursor).get_views()
+            views = jellyfin_db.JellyfinDatabase(jellyfindb.cursor).get_views()
             removed = []
 
             for view in views:
@@ -226,8 +226,8 @@ class Views(object):
         playlist_path = xbmc.translatePath("special://profile/playlists/video").decode('utf-8')
         index = 0
 
-        with Database('jellyfin') as embydb:
-            db = emby_db.EmbyDatabase(embydb.cursor)
+        with Database('jellyfin') as jellyfindb:
+            db = jellyfin_db.JellyfinDatabase(jellyfindb.cursor)
 
             for library in self.sync['Whitelist']:
 
@@ -682,8 +682,8 @@ class Views(object):
         self.window_clear()
         self.window_clear('Jellyfin.wnodes')
 
-        with Database('jellyfin') as embydb:
-            libraries = emby_db.EmbyDatabase(embydb.cursor).get_views()
+        with Database('jellyfin') as jellyfindb:
+            libraries = jellyfin_db.JellyfinDatabase(jellyfindb.cursor).get_views()
 
         libraries = self.order_media_folders(libraries or [])
         index = 0

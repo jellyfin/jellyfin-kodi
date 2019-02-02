@@ -11,7 +11,7 @@ import xbmcvfs
 
 from objects.obj import Objects
 from helper import _, api, window, settings, dialog, event, silent_catch, JSONRPC
-from emby import Emby
+from jellyfin import Jellyfin
 
 #################################################################################################
 
@@ -148,7 +148,7 @@ class Player(xbmc.Player):
             'CurrentPosition': item.get('CurrentPosition') or int(seektime),
             'Muted': muted,
             'Volume': volume,
-            'Server': Emby(item['ServerId']).get_client(),
+            'Server': Jellyfin(item['ServerId']).get_client(),
             'Paused': False
         })
 

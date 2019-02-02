@@ -11,7 +11,7 @@ import sqlite3
 import xbmc
 import xbmcvfs
 
-import emby_db
+import jellyfin_db
 from helper.utils import delete_folder
 from helper import _, settings, window, dialog
 from objects import obj
@@ -58,7 +58,7 @@ class Database(object):
         if not window('jellyfin_db_check.bool') and self.db_file == 'jellyfin':
 
             window('jellyfin_db_check.bool', True)
-            emby_tables(self.cursor)
+            jellyfin_tables(self.cursor)
             self.conn.commit()
 
         return self
@@ -183,7 +183,7 @@ class Database(object):
         self.cursor.close()
         self.conn.close()
 
-def emby_tables(cursor):
+def jellyfin_tables(cursor):
 
     ''' Create the tables for the jellyfin database.
         jellyfin, view, version
@@ -231,7 +231,7 @@ def reset():
             return
 
     reset_kodi()
-    reset_emby()
+    reset_jellyfin()
     views.delete_playlists()
     views.delete_nodes()
 
@@ -280,20 +280,20 @@ def reset_kodi():
 
     LOG.warn("[ reset kodi ]")
 
-def reset_emby():
+def reset_jellyfin():
     
-    with Database('jellyfin') as embydb:    
-        embydb.cursor.execute("SELECT tbl_name FROM sqlite_master WHERE type='table'")
+    with Database('jellyfin') as jellyfindb:
+        jellyfindb.cursor.execute("SELECT tbl_name FROM sqlite_master WHERE type='table'")
 
-        for table in embydb.cursor.fetchall():
+        for table in jellyfindb.cursor.fetchall():
             name = table[0]
 
             if name not in ('version', 'view'):
-                embydb.cursor.execute("DELETE FROM " + name)
+                jellyfindb.cursor.execute("DELETE FROM " + name)
 
-            embydb.cursor.execute("DROP table IF EXISTS jellyfin")
-            embydb.cursor.execute("DROP table IF EXISTS view")
-            embydb.cursor.execute("DROP table IF EXISTS version")
+            jellyfindb.cursor.execute("DROP table IF EXISTS jellyfin")
+            jellyfindb.cursor.execute("DROP table IF EXISTS view")
+            jellyfindb.cursor.execute("DROP table IF EXISTS version")
 
     LOG.warn("[ reset jellyfin ]")
 
@@ -396,7 +396,7 @@ def get_item(kodi_id, media):
     ''' Get jellyfin item based on kodi id and media.
     '''
     with Database('jellyfin') as jellyfindb:
-        item = emby_db.EmbyDatabase(embydb.cursor).get_full_item_by_kodi_id(kodi_id, media)
+        item = jellyfin_db.JellyfinDatabase(jellyfindb.cursor).get_full_item_by_kodi_id(kodi_id, media)
 
         if not item:
             LOG.debug("Not an jellyfin item")
