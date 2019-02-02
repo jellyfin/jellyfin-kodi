@@ -1,5 +1,6 @@
 # Jellyfin for Kodi
-
+<!--
+TODO
 [![EmbyKodi_Banner](https://i.imgur.com/hx4cx41.png)](https://forum.jellyfin.org/)
 
 [![Wiki](https://img.shields.io/badge/get%20started-wiki-brightgreen.svg)](https://github.com/MediaBrowser/plugin.video.emby/wiki) 
@@ -7,6 +8,7 @@
 [![Donate](https://img.shields.io/badge/donate-kofi-blue.svg)](https://ko-fi.com/A5354BI)
 [![Emby](https://img.shields.io/badge/server-emby-52b54b.svg)](https://jellyfin.media/)
 ___
+-->
 **A whole new way to manage and view your media library.**
 
 The Jellyfin for Kodi add-on combines the best of Kodi - ultra smooth navigation, beautiful UIs and playback of any file under the sun, and Jellyfin - the most powerful open source multi-client media metadata indexer and server. You can now retire your MySQL setup in favor of a more flexible setup.
@@ -32,16 +34,18 @@ The add-on supports a hybrid approach. You can decide which Jellyfin libraries t
 - Remote control your Kodi; send play commands from your Jellyfin web client or Jellyfin mobile apps.
 - Extrafanart (rotating backgrounds) for skins that support it
 - Offer to delete content after playback
-- Backup your Jellyfin Kodi profile. See the [Jellyfin backup option](https://github.com/MediaBrowser/plugin.video.emby/wiki/Create-and-restore-from-backup)
+- Backup your Jellyfin Kodi profile.
 - and more...
 
 ### Install Jellyfin for Kodi
-Get started with the [wiki guide](https://github.com/MediaBrowser/plugin.video.emby/wiki)
+1. Install Jellyfin for Kodi from zip.
+2. Within a few seconds you should be prompted for your server-details.
+3. Once you're succesfully authenticated with your Emby server, the initial sync will start. 
+4. The first sync of the Emby server to the local Kodi database may take some time depending on your device and library size.
+5. Once the full sync is done, you can browse your media in Kodi, and syncs will be done automatically in the background.
+
+<!-- Get started with the [wiki guide](https://github.com/MediaBrowser/plugin.video.emby/wiki) -->
 
 ### Known limitations
 - Chapter images are missing unless native playback mode is used.
 - Certain add-ons that depend on seeing where your content is located will not work unless native playback mode is selected.
-
-___
-### Help translate
-Check [Transifex](https://www.transifex.com/emby-for-kodi/emby-for-kodi/stringspo/) to help translate this project. Thank you!
