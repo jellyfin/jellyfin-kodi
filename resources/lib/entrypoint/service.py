@@ -79,7 +79,6 @@ class Service(xbmc.Monitor):
             LOG.error(error)
 
         window('jellyfin.connected.bool', True)
-        self.check_update()
         settings('groupedSets.bool', objects.utils.get_grouped_set())
         xbmc.Monitor.__init__(self)
 
@@ -173,49 +172,6 @@ class Service(xbmc.Monitor):
 
                 raise Exception("Completed database reset")
 
-    def check_update(self, forced=False):
-
-        ''' Check for objects build version and compare.
-            This pulls a dict that contains all the information for the build needed.
-        '''
-        LOG.info("--[ check updates/%s ]", objects.version)
-        kodi = "DEV" if settings('devMode.bool') else xbmc.getInfoLabel('System.BuildVersion')
-        # FIXME we do not want their updates
-        return False
-        try:
-            versions = requests.get('http://kodi.emby.media/Public%20testing/Dependencies/databases.json').json()
-            build = find(versions, kodi)
-
-            if not build:
-                raise Exception("build %s incompatible?!" % kodi)
-
-            label, zipfile = build.split('-', 1)
-
-            if label == 'DEV' and forced:
-                LOG.info("--[ force/objects/%s ]", label)
-
-            elif label == objects.version:
-                LOG.info("--[ objects/%s ]", objects.version)
-
-                return False
-
-            get_objects(zipfile, label + '.zip')
-            self.reload_objects()
-
-            dialog("notification", heading="{jellyfin}", message=_(33156), icon="{jellyfin}")
-            LOG.info("--[ new objects/%s ]", objects.version)
-
-            try:
-                if compare_version(self.settings['addon_version'], objects.jellyfinversion) < 0:
-                    dialog("ok", heading="{jellyfin}", line1="%s %s" % (_(33160), objects.jellyfinversion))
-            except Exception:
-                pass
-
-        except Exception as error:
-            LOG.exception(error)
-
-        return True
-    
     def onNotification(self, sender, method, data):
 
         ''' All notifications are sent via NotifyAll built-in or Kodi.
@@ -231,7 +187,7 @@ class Service(xbmc.Monitor):
                               'LibraryChanged', 'ServerOnline', 'SyncLibrary', 'RepairLibrary', 'RemoveLibrary',
                               'SyncLibrarySelection', 'RepairLibrarySelection', 'AddServer',
                               'Unauthorized', 'UpdateServer', 'UserConfigurationUpdated', 'ServerRestarting',
-                              'RemoveServer', 'AddLibrarySelection', 'CheckUpdate', 'RemoveLibrarySelection'):
+                              'RemoveServer', 'AddLibrarySelection', 'RemoveLibrarySelection'):
                 return
 
             data = json.loads(data)[0]
@@ -419,14 +375,6 @@ class Service(xbmc.Monitor):
 
             if data.get('ServerId') is None:
                 Views().get_views()
-
-        elif method == 'CheckUpdate':
-
-            if not self.check_update(True):
-                dialog("notification", heading="{jellyfin}", message=_(21341), icon="{jellyfin}", sound=False)
-            else:
-                dialog("notification", heading="{jellyfin}", message=_(33181), icon="{jellyfin}", sound=False)
-                window('jellyfin.restart.bool', True)
 
     def onSettingsChanged(self):
 

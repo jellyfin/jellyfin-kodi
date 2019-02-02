@@ -901,10 +901,6 @@ msgctxt "#33160"
 msgid "To avoid errors, please update Jellyfin for Kodi to version: "
 msgstr "Om problemen voorkomen, update Jellyfin for Kodi naar versie:"
 
-msgctxt "#33161"
-msgid "Check for updates"
-msgstr "Naar updates zoeken"
-
 msgctxt "#33162"
 msgid "Reset the music library?"
 msgstr "Muziek bibliotheek resetten?"

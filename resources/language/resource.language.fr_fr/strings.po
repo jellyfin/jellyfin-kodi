@@ -914,10 +914,6 @@ msgstr ""
 "Pour éviter les erreurs, veuillez mettre à jour la version d'Jellyfin pour Kodi "
 ": "
 
-msgctxt "#33161"
-msgid "Check for updates"
-msgstr "Rechercher des mises à jour"
-
 msgctxt "#33162"
 msgid "Reset the music library?"
 msgstr "Réinitialiser la médiathèque musicale ?"

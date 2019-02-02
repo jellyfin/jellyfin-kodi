@@ -96,7 +96,6 @@
 		<setting label="33195" id="enableAddon" type="bool" default="true" />
 		<setting label="33180" type="action" action="RunPlugin(plugin://plugin.video.jellyfin?mode=restartservice)" option="close" />
 		<setting label="30529" id="startupDelay" type="number" default="0" option="int" />
-		<setting label="33161" type="action" action="RunPlugin(plugin://plugin.video.jellyfin?mode=checkupdate)" option="close" />
 		<setting label="Developer mode" id="devMode" type="bool" default="false" />
 		
 		<setting type="sep" />
