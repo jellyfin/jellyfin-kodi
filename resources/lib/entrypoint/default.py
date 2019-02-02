@@ -191,8 +191,6 @@ def listing():
     if settings('backupPath'):
         directory(_(33092), "plugin://plugin.video.jellyfin/?mode=backup", False)
 
-    directory(_(33163), None, False, artwork="special://home/addons/plugin.video.jellyfin/donations.png")
-
     xbmcplugin.setContent(int(sys.argv[1]), 'files')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 

@@ -901,10 +901,6 @@ msgctxt "#33162"
 msgid "Reset the music library?"
 msgstr "Zresetować bibliotekę muzyki?"
 
-msgctxt "#33163"
-msgid "Support this project"
-msgstr "Wesprzyj projekt"
-
 msgctxt "#33164"
 msgid "Mask sensitive information in log (does not apply to kodi logging)"
 msgstr ""
