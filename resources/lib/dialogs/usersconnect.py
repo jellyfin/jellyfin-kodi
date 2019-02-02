@@ -34,7 +34,7 @@ class UsersConnect(xbmcgui.WindowXMLDialog):
         xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)
 
     def set_args(self, **kwargs):
-        # connect_manager, user_image, servers, jellyfin_connect
+        # connect_manager, user_image, servers
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
 
@@ -46,7 +46,6 @@ class UsersConnect(xbmcgui.WindowXMLDialog):
 
     def is_manual_login(self):
         return self._manual_login
-
 
     def onInit(self):
 

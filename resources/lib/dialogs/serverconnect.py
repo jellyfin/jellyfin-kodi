@@ -54,12 +54,8 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
     def get_server(self):
         return self._selected_server
 
-    def is_connect_login(self):
-        return self._connect_login
-
     def is_manual_server(self):
         return self._manual_server
-
 
     def onInit(self):
 

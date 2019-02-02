@@ -115,7 +115,7 @@ class Connect(object):
 
                 return state['Credentials']
 
-            elif (server_selection or state['State'] in (CONNECTION_STATE['ConnectSignIn'], CONNECTION_STATE['ServerSelection']) or 
+            elif (server_selection or state['State'] == CONNECTION_STATE['ServerSelection'] or 
                   state['State'] == CONNECTION_STATE['Unavailable'] and not settings('SyncInstallRunDone.bool')):
 
                 self.select_servers(state)
@@ -157,7 +157,7 @@ class Connect(object):
     def select_servers(self, state=None):
 
         state = state or self.connect_manager.connect({'enableAutoLogin': False})
-        user = state.get('ConnectUser') or {}
+        user = {}
 
         dialog = ServerConnect("script-jellyfin-connect-server.xml", *XML_PATH)
         dialog.set_args(**{

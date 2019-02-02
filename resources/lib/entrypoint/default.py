@@ -100,8 +100,6 @@ class Events(object):
             event('RemoveLibrarySelection')
         elif mode == 'addlibs':
             event('AddLibrarySelection')
-        elif mode == 'connect':
-            event('jellyfinConnect')
         elif mode == 'addserver':
             event('AddServer')
         elif mode == 'login':
