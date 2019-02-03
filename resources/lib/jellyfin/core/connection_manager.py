@@ -206,7 +206,8 @@ class ConnectionManager(object):
 
         tests = []
 
-        if server.get('LastConnectionMode') is not None:
+
+        if server.get('LastConnectionMode') is not None and server.get('AccessToken'):
             tests.append(server['LastConnectionMode'])
 
         if CONNECTION_MODE['Manual'] not in tests:
