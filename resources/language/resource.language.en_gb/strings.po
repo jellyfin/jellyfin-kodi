@@ -1,10 +1,10 @@
-# Emby for Kodi language file
-# Addon Name: Emby for Kodi
-# Addon id: plugin.video.emby
+# Jellyfin for Kodi language file
+# Addon Name: Jellyfin for Kodi
+# Addon id: plugin.video.jellyfin
 # Addon Provider: angelblue05
 msgid ""
 msgstr ""
-"Project-Id-Version: Emby for Kodi\n"
+"Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language-Team: \n"
@@ -15,7 +15,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgctxt "#29999"
-msgid "Emby for Kodi"
+msgid "Jellyfin for Kodi"
 msgstr ""
 
 msgctxt "#30000"
@@ -187,11 +187,11 @@ msgid "TV Shows"
 msgstr ""
 
 msgctxt "#30401"
-msgid "Emby options"
+msgid "Jellyfin options"
 msgstr ""
 
 msgctxt "#30402"
-msgid "Emby transcode"
+msgid "Jellyfin transcode"
 msgstr ""
 
 msgctxt "#30405"
@@ -207,7 +207,7 @@ msgid "Settings"
 msgstr ""
 
 msgctxt "#30409"
-msgid "Delete from Emby"
+msgid "Delete from Jellyfin"
 msgstr ""
 
 msgctxt "#30410"
@@ -346,10 +346,6 @@ msgctxt "#30547"
 msgid "Display message"
 msgstr ""
 
-msgctxt "#30600"
-msgid "Sign in with Emby Connect"
-msgstr ""
-
 msgctxt "#30602"
 msgid "Password"
 msgstr ""
@@ -387,7 +383,7 @@ msgid "Please sign in"
 msgstr ""
 
 msgctxt "#30613"
-msgid "Change Emby Connect user"
+msgid "Change Jellyfin Connect user"
 msgstr ""
 
 msgctxt "#30614"
@@ -404,10 +400,6 @@ msgstr ""
 
 msgctxt "#30617"
 msgid "Server or port cannot be empty"
-msgstr ""
-
-msgctxt "#30618"
-msgid "Change Emby Connect user"
 msgstr ""
 
 msgctxt "#33000"
@@ -431,7 +423,7 @@ msgid "Choose the subtitles stream"
 msgstr ""
 
 msgctxt "#33015"
-msgid "Delete file from Emby?"
+msgid "Delete file from Jellyfin?"
 msgstr ""
 
 msgctxt "#33016"
@@ -447,11 +439,11 @@ msgid "Gathering:"
 msgstr ""
 
 msgctxt "#33022"
-msgid "Detected the database needs to be recreated for this version of Emby for Kodi. Proceed?"
+msgid "Detected the database needs to be recreated for this version of Jellyfin for Kodi. Proceed?"
 msgstr ""
 
 msgctxt "#33023"
-msgid "Emby for Kodi will not work correctly until the database is reset."
+msgid "Jellyfin for Kodi will not work correctly until the database is reset."
 msgstr ""
 
 msgctxt "#33025"
@@ -463,7 +455,7 @@ msgid "A new device Id has been generated. Kodi will now restart."
 msgstr ""
 
 msgctxt "#33035"
-msgid "Caution! If you choose Native mode, certain Emby features will be missing, such as: Emby cinema mode, direct stream/transcode options and parental access schedule."
+msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
 msgstr ""
 
 msgctxt "#33036"
@@ -483,7 +475,7 @@ msgid "Kodi can't locate file:"
 msgstr ""
 
 msgctxt "#33048"
-msgid "You may need to verify your network credentials in the add-on settings or use the Emby path substitution to format your path correctly (Emby dashboard > library). Stop syncing?"
+msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
 msgstr ""
 
 msgctxt "#33049"
@@ -527,7 +519,7 @@ msgid "Remove all cached artwork?"
 msgstr ""
 
 msgctxt "#33087"
-msgid "Reset all Emby add-on settings?"
+msgid "Reset all Jellyfin add-on settings?"
 msgstr ""
 
 msgctxt "#33088"
@@ -555,7 +547,7 @@ msgid "Backup folder"
 msgstr ""
 
 msgctxt "#33097"
-msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Emby for Kodi. Kodi will restart now."
+msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
 msgstr ""
 
 msgctxt "#33098"
@@ -563,7 +555,7 @@ msgid "Refresh boxsets"
 msgstr ""
 
 msgctxt "#33099"
-msgid "Install the server plugin Kodi companion to automatically apply emby library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Companion."
+msgid "Install the server plugin Kodi companion to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Companion."
 msgstr ""
 
 msgctxt "#33100"
@@ -643,7 +635,7 @@ msgid "You've change the playback mode. Kodi needs to be reset to apply the chan
 msgstr ""
 
 msgctxt "#33119"
-msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Emby for Kodi forums, with your Kodi log."
+msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
 msgstr ""
 
 msgctxt "#33120"
@@ -667,7 +659,7 @@ msgid "Include people (slow)"
 msgstr ""
 
 msgctxt "#33125"
-msgid "Choose the Emby views to sync to Kodi. You can optionally sync libraries at a later time."
+msgid "Choose the Jellyfin views to sync to Kodi. You can optionally sync libraries at a later time."
 msgstr ""
 
 msgctxt "#33126"
@@ -679,11 +671,11 @@ msgid "Proceed"
 msgstr ""
 
 msgctxt "#33128"
-msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Emby for Kodi forums, with your Kodi log."
+msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
 msgstr ""
 
 msgctxt "#33129"
-msgid "You can sync libraries by launching the Emby add-on > Add libraries."
+msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
 msgstr ""
 
 msgctxt "#33130"
@@ -747,15 +739,15 @@ msgid "Removing library"
 msgstr ""
 
 msgctxt "#33145"
-msgid "Please make sure your Samba (smb) share of your Emby server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
+msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
 msgstr ""
 
 msgctxt "#33146"
-msgid "Unable to connect to Emby."
+msgid "Unable to connect to Jellyfin."
 msgstr ""
 
 msgctxt "#33147"
-msgid "Your access to Emby is restricted."
+msgid "Your access to Jellyfin is restricted."
 msgstr ""
 
 msgctxt "#33148"
@@ -779,7 +771,7 @@ msgid "Unable to locate TV Tunes in Kodi."
 msgstr ""
 
 msgctxt "#33153"
-msgid "Your Emby theme media has been synced to Kodi"
+msgid "Your Jellyfin theme media has been synced to Kodi"
 msgstr ""
 
 msgctxt "#33154"
@@ -787,7 +779,7 @@ msgid "Add libraries"
 msgstr ""
 
 msgctxt "#33155"
-msgid "The currently applied patch for Emby for Kodi is corrupted! Please post to the Emby for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
+msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
 msgstr ""
 
 msgctxt "#33156"
@@ -807,19 +799,11 @@ msgid "Enable audio/subtitles selection"
 msgstr ""
 
 msgctxt "#33160"
-msgid "To avoid errors, please update Emby for Kodi to version: "
-msgstr ""
-
-msgctxt "#33161"
-msgid "Check for updates"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
 msgstr ""
 
 msgctxt "#33162"
 msgid "Reset the music library?"
-msgstr ""
-
-msgctxt "#33163"
-msgid "Support this project"
 msgstr ""
 
 msgctxt "#33164"
@@ -855,7 +839,7 @@ msgid "By first letter"
 msgstr ""
 
 msgctxt "#33172"
-msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Emby add-on > update libraries. Proceed anyway?"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
 msgstr ""
 
 msgctxt "#33173"
@@ -867,7 +851,7 @@ msgid "Paging - download threads (default: 3)"
 msgstr ""
 
 msgctxt "#33175"
-msgid "Paging tip: Each download thread requests your max items value from Emby at the same time."
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
 msgstr ""
 
 msgctxt "#33176"
@@ -887,7 +871,7 @@ msgid "Force transcode"
 msgstr ""
 
 msgctxt "#33180"
-msgid "Restart Emby for Kodi"
+msgid "Restart Jellyfin for Kodi"
 msgstr ""
 
 msgctxt "#33181"
@@ -923,11 +907,11 @@ msgid "Would you like to sync Rotten Tomatoes ratings?"
 msgstr ""
 
 msgctxt "#33191"
-msgid "Restart Emby for Kodi to apply this change?"
+msgid "Restart Jellyfin for Kodi to apply this change?"
 msgstr ""
 
 msgctxt "#33192"
-msgid "Restart Emby for Kodi"
+msgid "Restart Jellyfin for Kodi"
 msgstr ""
 
 msgctxt "#33193"
@@ -939,7 +923,7 @@ msgid "Manage libraries"
 msgstr ""
 
 msgctxt "#33195"
-msgid "Enable Emby for Kodi"
+msgid "Enable Jellyfin for Kodi"
 msgstr ""
 
 msgctxt "#33196"

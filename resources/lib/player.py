@@ -11,11 +11,11 @@ import xbmcvfs
 
 from objects.obj import Objects
 from helper import _, api, window, settings, dialog, event, silent_catch, JSONRPC
-from emby import Emby
+from jellyfin import Jellyfin
 
 #################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 #################################################################################################
 
@@ -43,7 +43,7 @@ class Player(xbmc.Player):
 
         ''' We may need to wait for info to be set in kodi monitor.
             Accounts for scenario where Kodi starts playback and exits immediately.
-            First, ensure previous playback terminated correctly in Emby.
+            First, ensure previous playback terminated correctly in Jellyfin.
         '''
         self.stop_playback()
         self.up_next = False
@@ -69,7 +69,7 @@ class Player(xbmc.Player):
 
                 return
 
-        items = window('emby_play.json')
+        items = window('jellyfin_play.json')
         item = None
 
         while not items:
@@ -77,11 +77,11 @@ class Player(xbmc.Player):
             if monitor.waitForAbort(2):
                 return
 
-            items = window('emby_play.json')
+            items = window('jellyfin_play.json')
             count += 1
 
             if count == 20:
-                LOG.info("Could not find emby prop...")
+                LOG.info("Could not find jellyfin prop...")
 
                 return
 
@@ -93,7 +93,7 @@ class Player(xbmc.Player):
         else:
             item = items.pop(0)
 
-        window('emby_play.json', items)
+        window('jellyfin_play.json', items)
 
         self.set_item(current_file, item)
         data = {
@@ -111,7 +111,7 @@ class Player(xbmc.Player):
             'SubtitleStreamIndex': item['SubtitleStreamIndex']
         }
         item['Server']['api'].session_playing(data)
-        window('emby.skip.%s.bool' % item['Id'], True)
+        window('jellyfin.skip.%s.bool' % item['Id'], True)
 
         if monitor.waitForAbort(2):
             return
@@ -148,7 +148,7 @@ class Player(xbmc.Player):
             'CurrentPosition': item.get('CurrentPosition') or int(seektime),
             'Muted': muted,
             'Volume': volume,
-            'Server': Emby(item['ServerId']).get_client(),
+            'Server': Jellyfin(item['ServerId']).get_client(),
             'Paused': False
         })
 
@@ -302,7 +302,7 @@ class Player(xbmc.Player):
 
     def report_playback(self, report=True):
 
-        ''' Report playback progress to emby server.
+        ''' Report playback progress to jellyfin server.
             Check if the user seek.
         '''
         current_file = self.get_playing_file()
@@ -312,7 +312,7 @@ class Player(xbmc.Player):
 
         item = self.get_file_info(current_file)
 
-        if window('emby.external.bool'):
+        if window('jellyfin.external.bool'):
             return
 
         if not report:
@@ -365,7 +365,7 @@ class Player(xbmc.Player):
         
         ''' Will be called when user stops playing a file.
         '''
-        window('emby_play', clear=True)
+        window('jellyfin_play', clear=True)
         self.stop_playback()
         LOG.info("--<[ playback ]")
 
@@ -388,10 +388,10 @@ class Player(xbmc.Player):
         for file in self.played:
             item = self.get_file_info(file)
 
-            window('emby.skip.%s.bool' % item['Id'], True)
+            window('jellyfin.skip.%s.bool' % item['Id'], True)
 
-            if window('emby.external.bool'):
-                window('emby.external', clear=True)
+            if window('jellyfin.external.bool'):
+                window('jellyfin.external', clear=True)
 
                 if int(item['CurrentPosition']) == 1:
                     item['CurrentPosition'] = int(item['Runtime'])
@@ -415,7 +415,7 @@ class Player(xbmc.Player):
                 item['Server']['api'].close_transcode(item['DeviceId'])
 
 
-            path = xbmc.translatePath("special://profile/addon_data/plugin.video.emby/temp/").decode('utf-8')
+            path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/temp/").decode('utf-8')
 
             if xbmcvfs.exists(path):
                 dirs, files = xbmcvfs.listdir(path)
@@ -442,6 +442,6 @@ class Player(xbmc.Player):
                     if dialog("yesno", heading=_(30091), line1=_(33015), autoclose=120000):
                         item['Server']['api'].delete_item(item['Id'])
 
-            window('emby.external_check', clear=True)
+            window('jellyfin.external_check', clear=True)
 
         self.played.clear()

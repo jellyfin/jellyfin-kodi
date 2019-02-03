@@ -9,7 +9,7 @@ import xbmcgui
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 ACTION_PARENT_DIR = 9
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACK = 92
@@ -34,7 +34,7 @@ class UsersConnect(xbmcgui.WindowXMLDialog):
         xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)
 
     def set_args(self, **kwargs):
-        # connect_manager, user_image, servers, emby_connect
+        # connect_manager, user_image, servers
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
 
@@ -46,7 +46,6 @@ class UsersConnect(xbmcgui.WindowXMLDialog):
 
     def is_manual_login(self):
         return self._manual_login
-
 
     def onInit(self):
 

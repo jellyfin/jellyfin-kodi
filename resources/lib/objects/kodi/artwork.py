@@ -17,7 +17,7 @@ import requests
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 ##################################################################################################
 
@@ -247,7 +247,7 @@ from __objs__ import QU
 
 ##################################################################################################
 
-log = logging.getLogger("EMBY."+__name__)
+log = logging.getLogger("JELLYFIN."+__name__)
 
 ##################################################################################################
 
@@ -278,7 +278,7 @@ class Artwork(object):
         # This method will sync all Kodi artwork to textures13.db
         # and cache them locally. This takes diskspace!
         if not dialog(type_="yesno",
-                      heading="{emby}",
+                      heading="{jellyfin}",
                       line1=_(33042)):
             return
 
@@ -288,7 +288,7 @@ class Artwork(object):
         pdialog.create(_(29999), _(33043))
 
         # ask to rest all existing or not
-        if dialog(type_="yesno", heading="{emby}", line1=_(33044)):
+        if dialog(type_="yesno", heading="{jellyfin}", line1=_(33044)):
             log.info("Resetting all cache data first")
             self.delete_cache()
 

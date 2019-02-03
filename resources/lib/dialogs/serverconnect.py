@@ -8,11 +8,11 @@ import xbmc
 import xbmcgui
 
 from helper import _
-from emby.core.connection_manager import CONNECTION_STATE
+from jellyfin.core.connection_manager import CONNECTION_STATE
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 ACTION_PARENT_DIR = 9
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACK = 92
@@ -24,7 +24,6 @@ CANCEL = 201
 MESSAGE_BOX = 202
 MESSAGE = 203
 BUSY = 204
-EMBY_CONNECT = 205
 MANUAL_SERVER = 206
 
 ##################################################################################################
@@ -45,7 +44,7 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
         xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)
 
     def set_args(self, **kwargs):
-        # connect_manager, user_image, servers, emby_connect
+        # connect_manager, user_image, servers
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
 
@@ -55,12 +54,8 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
     def get_server(self):
         return self._selected_server
 
-    def is_connect_login(self):
-        return self._connect_login
-
     def is_manual_server(self):
         return self._manual_server
-
 
     def onInit(self):
 
@@ -75,9 +70,6 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
 
         if self.user_image is not None:
             self.getControl(USER_IMAGE).setImage(self.user_image)
-
-        if not self.emby_connect: # Change connect user
-            self.getControl(EMBY_CONNECT).setLabel("[B]%s[/B]" % _(30618))
 
         if self.servers:
             self.setFocus(self.list_)
@@ -109,12 +101,7 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
 
     def onClick(self, control):
 
-        if control == EMBY_CONNECT:
-            self.connect_manager.clear_data()
-            self._connect_login = True
-            self.close()
-
-        elif control == MANUAL_SERVER:
+        if control == MANUAL_SERVER:
             self._manual_server = True
             self.close()
 

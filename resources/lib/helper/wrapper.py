@@ -11,7 +11,7 @@ from utils import should_stop
 
 #################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 #################################################################################################
 
@@ -99,13 +99,13 @@ def stop(default=None):
         return wrapper
     return decorator
 
-def emby_item():
+def jellyfin_item():
 
-    ''' Wrapper to retrieve the emby_db item.
+    ''' Wrapper to retrieve the jellyfin_db item.
     '''
     def decorator(func):
         def wrapper(self, item, *args, **kwargs):
-            e_item = self.emby_db.get_item_by_id(item['Id'] if type(item) == dict else item)
+            e_item = self.jellyfin_db.get_item_by_id(item['Id'] if type(item) == dict else item)
 
             return func(self, item, e_item=e_item, *args, **kwargs)
 
@@ -129,7 +129,7 @@ def library_check():
                 if 'e_item' in kwargs:
                     try:
                         view_id = kwargs['e_item'][6]
-                        view_name = self.emby_db.get_view_name(view_id)
+                        view_name = self.jellyfin_db.get_view_name(view_id)
                         view = {'Name': view_name, 'Id': view_id}
                     except Exception:
                         view = None
@@ -141,7 +141,7 @@ def library_check():
                         if item['Type'] == 'MusicArtist':
 
                             try:
-                                views = self.emby_db.get_views_by_media('music')[0]
+                                views = self.jellyfin_db.get_views_by_media('music')[0]
                             except Exception:
                                 return
 
@@ -152,7 +152,7 @@ def library_check():
                         for ancestor in ancestors:
                             if ancestor['Type'] == 'CollectionFolder':
 
-                                view = self.emby_db.get_view_name(ancestor['Id'])
+                                view = self.jellyfin_db.get_view_name(ancestor['Id'])
                                 view = {'Id': None, 'Name': None} if view is None else {'Name': ancestor['Name'], 'Id': ancestor['Id']}
 
                                 break

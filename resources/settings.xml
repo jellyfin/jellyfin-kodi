@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
 
-	<category label="29999"><!-- Emby -->
-		<setting label="30003" id="idMethod" type="enum" values="Manual|Emby Connect" default="0" />
-		<setting label="30024" id="username" type="text" default="" visible="eq(-1,0)" />
-		<setting label="30543" id="connectUsername" type="text" default="" visible="!eq(0,) + eq(-2,1)" />
-		<setting label="30600" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=connect)" visible="eq(-3,1) + eq(-1,)" option="close" />
-		<setting label="30618" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=connect)" visible="eq(-4,1) + !eq(-2,)" option="close" />
+	<category label="29999"><!-- Jellyfin -->
+		<setting label="30003" id="idMethod" type="enum" values="Manual" default="0" />
+		<setting label="30024" id="username" type="text" default="" visible="true" />
 		<setting label="30001" id="serverName" type="text" default="" />
 		<setting label="30000" id="server" type="text" default="" visible="true" />
-		<setting label="33150" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=updateserver)" visible="!eq(-1,)" option="close" />
+		<setting label="33150" type="action" action="RunPlugin(plugin://plugin.video.jellyfin?mode=updateserver)" visible="!eq(-1,)" option="close" />
 		<setting label="30500" id="sslverify" type="bool" default="true" visible="true" />
 
 		<setting type="sep" />
@@ -92,19 +89,18 @@
 	<category label="30022"><!-- Advanced -->
 		<setting label="30004" id="logLevel" type="enum" values="Disabled|Info|Debug" default="1" />
 		<setting label="33164" id="maskInfo" type="bool" default="true" />
-		<setting label="30239" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=reset)" option="close" />
-		<setting label="30535" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=deviceid)" option="close" />
+		<setting label="30239" type="action" action="RunPlugin(plugin://plugin.video.jellyfin?mode=reset)" option="close" />
+		<setting label="30535" type="action" action="RunPlugin(plugin://plugin.video.jellyfin?mode=deviceid)" option="close" />
 		<setting label="33196" type="lsep" />
 		<setting label="33195" id="enableAddon" type="bool" default="true" />
-		<setting label="33180" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=restartservice)" option="close" />
+		<setting label="33180" type="action" action="RunPlugin(plugin://plugin.video.jellyfin?mode=restartservice)" option="close" />
 		<setting label="30529" id="startupDelay" type="number" default="0" option="int" />
-		<setting label="33161" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=checkupdate)" option="close" />
 		<setting label="Developer mode" id="devMode" type="bool" default="false" />
 		
 		<setting type="sep" />
 		<setting label="33104" type="lsep"/>
 		<setting label="33093" type="folder" id="backupPath" option="writeable" />
-		<setting label="33092" type="action" action="RunPlugin(plugin://plugin.video.emby?mode=backup)" visible="!eq(-1,)" option="close" />
+		<setting label="33092" type="action" action="RunPlugin(plugin://plugin.video.jellyfin?mode=backup)" visible="!eq(-1,)" option="close" />
 	</category>
 
 </settings>

@@ -4,7 +4,7 @@
 
 import logging
 
-from client import EmbyClient
+from client import JellyfinClient
 from helpers import has_attribute
 
 #################################################################################################
@@ -14,14 +14,14 @@ class NullHandler(logging.Handler):
         print(self.format(record))
 
 loghandler = NullHandler
-LOG = logging.getLogger('Emby')
+LOG = logging.getLogger('Jellyfin')
 
 #################################################################################################
 
 def config(level=logging.INFO):
 
-    logger = logging.getLogger('Emby')
-    logger.addHandler(Emby.loghandler())
+    logger = logging.getLogger('Jellyfin')
+    logger.addHandler(Jellyfin.loghandler())
     logger.setLevel(level)
 
 def ensure_client():
@@ -38,17 +38,17 @@ def ensure_client():
     return decorator
 
 
-class Emby(object):
+class Jellyfin(object):
 
-    ''' This is your Embyclient, you can create more than one. The server_id is only a temporary thing
-        to communicate with the EmbyClient().
+    ''' This is your Jellyfinclient, you can create more than one. The server_id is only a temporary thing
+        to communicate with the JellyfinClient().
 
-        from emby import Emby
+        from jellyfin import Jellyfin
 
-        Emby('123456')['config/app']
+        Jellyfin('123456')['config/app']
 
         # Permanent client reference
-        client = Emby('123456').get_client()
+        client = Jellyfin('123456').get_client()
         client['config/app']
     '''
 
@@ -68,9 +68,9 @@ class Emby(object):
     @classmethod
     def set_loghandler(cls, func=loghandler, level=logging.INFO):
 
-        for handler in logging.getLogger('Emby').handlers:
+        for handler in logging.getLogger('Jellyfin').handlers:
             if isinstance(handler, cls.loghandler):
-                logging.getLogger('Emby').removeHandler(handler)
+                logging.getLogger('Jellyfin').removeHandler(handler)
 
         cls.loghandler = func
         config(level)
@@ -83,7 +83,7 @@ class Emby(object):
         self.client[self.server_id].stop()
         self.client.pop(self.server_id, None)
 
-        LOG.info("---[ STOPPED EMBYCLIENT: %s ]---", self.server_id)
+        LOG.info("---[ STOPPED JELLYFINCLIENT: %s ]---", self.server_id)
 
     @classmethod
     def close_all(cls):
@@ -92,7 +92,7 @@ class Emby(object):
             cls.client[client].stop()
 
         cls.client = {}
-        LOG.info("---[ STOPPED ALL EMBYCLIENTS ]---")
+        LOG.info("---[ STOPPED ALL JELLYFINCLIENTS ]---")
 
     @classmethod
     def get_active_clients(cls):
@@ -102,7 +102,7 @@ class Emby(object):
     def __setattr__(self, name, value):
 
         if has_attribute(self, name):
-            return super(Emby, self).__setattr__(name, value)
+            return super(Jellyfin, self).__setattr__(name, value)
 
         setattr(self.client[self.server_id], name, value)
 
@@ -116,11 +116,11 @@ class Emby(object):
 
     def construct(self):
 
-        self.client[self.server_id] = EmbyClient()
+        self.client[self.server_id] = JellyfinClient()
 
         if self.server_id == 'default':
-            LOG.info("---[ START EMBYCLIENT ]---")
+            LOG.info("---[ START JELLYFINCLIENT ]---")
         else:
-            LOG.info("---[ START EMBYCLIENT: %s ]---", self.server_id)
+            LOG.info("---[ START JELLYFINCLIENT: %s ]---", self.server_id)
 
 config()

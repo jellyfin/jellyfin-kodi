@@ -1,6 +1,6 @@
 # How to contribute
 
-Thanks you for contributing to Emby for Kodi!
+Thanks you for contributing to Jellyfin for Kodi!
 
 * Make pull requests towards the **master** branch;
 * Keep the maximum line length shorter than 100 characters to keep things clean and readable;

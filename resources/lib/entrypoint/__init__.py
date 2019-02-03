@@ -8,14 +8,14 @@ import xbmc
 import xbmcvfs
 
 from helper import loghandler
-from emby import Emby
+from jellyfin import Jellyfin
 
 #################################################################################################
 
-Emby.set_loghandler(loghandler.LogHandler, logging.DEBUG)
+Jellyfin.set_loghandler(loghandler.LogHandler, logging.DEBUG)
 loghandler.reset()
 loghandler.config()
-LOG = logging.getLogger('EMBY.entrypoint')
+LOG = logging.getLogger('JELLYFIN.entrypoint')
 
 #################################################################################################
 

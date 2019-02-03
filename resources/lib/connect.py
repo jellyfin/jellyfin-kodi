@@ -12,15 +12,15 @@ import xbmcvfs
 
 import client
 from database import get_credentials, save_credentials
-from dialogs import ServerConnect, UsersConnect, LoginConnect, LoginManual, ServerManual
+from dialogs import ServerConnect, UsersConnect, LoginManual, ServerManual
 from helper import _, settings, addon_id, event, api, dialog, window
-from emby import Emby
-from emby.core.connection_manager import get_server_address, CONNECTION_STATE
-from emby.core.exceptions import HTTPException
+from jellyfin import Jellyfin
+from jellyfin.core.connection_manager import get_server_address, CONNECTION_STATE
+from jellyfin.core.exceptions import HTTPException
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 XML_PATH = (xbmcaddon.Addon(addon_id()).getAddonInfo('path'), "default", "1080i")
 
 ##################################################################################################
@@ -65,7 +65,7 @@ class Connect(object):
         save_credentials(credentials)
 
         try:
-            Emby(server_id).start(True)
+            Jellyfin(server_id).start(True)
         except ValueError as error:
             LOG.error(error)
 
@@ -78,11 +78,11 @@ class Connect(object):
 
     def get_client(self, server_id=None):
 
-        ''' Get Emby client.
+        ''' Get Jellyfin client.
         '''
-        client = Emby(server_id)
+        client = Jellyfin(server_id)
         client['config/app']("Kodi", self.info['Version'], self.info['DeviceName'], self.info['DeviceId'])
-        client['config']['http.user_agent'] = "Emby-Kodi/%s" % self.info['Version']
+        client['config']['http.user_agent'] = "Jellyfin-Kodi/%s" % self.info['Version']
         client['config']['auth.ssl'] = self.get_ssl()
 
         return client
@@ -115,7 +115,7 @@ class Connect(object):
 
                 return state['Credentials']
 
-            elif (server_selection or state['State'] in (CONNECTION_STATE['ConnectSignIn'], CONNECTION_STATE['ServerSelection']) or 
+            elif (server_selection or state['State'] == CONNECTION_STATE['ServerSelection'] or 
                   state['State'] == CONNECTION_STATE['Unavailable'] and not settings('SyncInstallRunDone.bool')):
 
                 self.select_servers(state)
@@ -152,32 +152,25 @@ class Connect(object):
         settings('username', self.user['Name'])
 
         if 'PrimaryImageTag' in self.user:
-            window('EmbyUserImage', api.API(self.user, client['auth/server-address']).get_user_artwork(self.user['Id']))
+            window('JellyfinUserImage', api.API(self.user, client['auth/server-address']).get_user_artwork(self.user['Id']))
 
     def select_servers(self, state=None):
 
         state = state or self.connect_manager.connect({'enableAutoLogin': False})
-        user = state.get('ConnectUser') or {}
+        user = {}
 
-        dialog = ServerConnect("script-emby-connect-server.xml", *XML_PATH)
+        dialog = ServerConnect("script-jellyfin-connect-server.xml", *XML_PATH)
         dialog.set_args(**{
             'connect_manager': self.connect_manager,
             'username': user.get('DisplayName', ""),
             'user_image': user.get('ImageUrl'),
-            'servers': state.get('Servers', []),
-            'emby_connect': False if user else True
+            'servers': state.get('Servers', [])
         })
         dialog.doModal()
 
         if dialog.is_server_selected():
             LOG.debug("Server selected: %s", dialog.get_server())
             return
-
-        elif dialog.is_connect_login():
-            LOG.debug("Login with emby connect")
-            try:
-                self.login_connect()
-            except RuntimeError: pass
 
         elif dialog.is_manual_server():
             LOG.debug("Adding manual server")
@@ -209,7 +202,7 @@ class Connect(object):
 
         ''' Return server or raise error.
         '''
-        dialog = ServerManual("script-emby-connect-server-manual.xml", *XML_PATH)
+        dialog = ServerManual("script-jellyfin-connect-server-manual.xml", *XML_PATH)
         dialog.set_args(**{'connect_manager': manager or self.connect_manager})
         dialog.doModal()
 
@@ -217,35 +210,6 @@ class Connect(object):
             return dialog.get_server()
         else:
             raise RuntimeError("Server is not connected")
-
-    def setup_login_connect(self):
-
-        ''' Setup emby connect by itself.
-        '''
-        client = self.get_client()
-        client.set_credentials(get_credentials())
-        manager = client.auth
-
-        try:
-            self.login_connect(manager)
-        except RuntimeError:
-            return
-
-        credentials = client.get_credentials()
-        save_credentials(credentials)
-
-    def login_connect(self, manager=None):
-
-        ''' Return connect user or raise error.
-        '''
-        dialog = LoginConnect("script-emby-connect-login.xml", *XML_PATH)
-        dialog.set_args(**{'connect_manager': manager or self.connect_manager})
-        dialog.doModal()
-
-        if dialog.is_logged_in():
-            return dialog.get_user()
-        else:
-            raise RuntimeError("Connect user is not logged in")
 
     def login(self):
 
@@ -258,7 +222,7 @@ class Connect(object):
             except RuntimeError:
                 raise RuntimeError("No user selected")
 
-        dialog = UsersConnect("script-emby-connect-users.xml", *XML_PATH)
+        dialog = UsersConnect("script-jellyfin-connect-users.xml", *XML_PATH)
         dialog.set_args(**{'server': server, 'users': users})
         dialog.doModal()
 
@@ -303,7 +267,7 @@ class Connect(object):
         
         ''' Return manual login user authenticated or raise error.
         '''
-        dialog = LoginManual("script-emby-connect-login-manual.xml", *XML_PATH)
+        dialog = LoginManual("script-jellyfin-connect-login-manual.xml", *XML_PATH)
         dialog.set_args(**{'connect_manager': manager or self.connect_manager, 'username': user or {}})
         dialog.doModal()
 
@@ -316,7 +280,7 @@ class Connect(object):
 
         ''' Stop client and remove server.
         '''
-        Emby(server_id).close()
+        Jellyfin(server_id).close()
         credentials = get_credentials()
 
         for server in credentials['Servers']:

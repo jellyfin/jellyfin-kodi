@@ -14,14 +14,14 @@ from . import window, settings
 
 def config():
 
-    logger = logging.getLogger('EMBY')
+    logger = logging.getLogger('JELLYFIN')
     logger.addHandler(LogHandler())
     logger.setLevel(logging.DEBUG)
 
 def reset():
 
-    for handler in logging.getLogger('EMBY').handlers:
-        logging.getLogger('EMBY').removeHandler(handler)
+    for handler in logging.getLogger('JELLYFIN').handlers:
+        logging.getLogger('JELLYFIN').removeHandler(handler)
 
 
 class LogHandler(logging.StreamHandler):
@@ -56,10 +56,10 @@ class LogHandler(logging.StreamHandler):
 
             if self.mask_info:
                 for server in self.sensitive['Server']:
-                    string = string.replace(server.encode('utf-8') or "{server}", "{emby-server}")
+                    string = string.replace(server.encode('utf-8') or "{server}", "{jellyfin-server}")
 
                 for token in self.sensitive['Token']:
-                    string = string.replace(token.encode('utf-8')  or "{token}", "{emby-token}")
+                    string = string.replace(token.encode('utf-8')  or "{token}", "{jellyfin-token}")
 
             try:
                 xbmc.log(string, level=xbmc.LOGNOTICE)
@@ -76,7 +76,7 @@ class LogHandler(logging.StreamHandler):
             logging.DEBUG: 2
         }
         try:
-            log_level = int(window('emby_logLevel'))
+            log_level = int(window('jellyfin_logLevel'))
         except ValueError:
             log_level = 0
 

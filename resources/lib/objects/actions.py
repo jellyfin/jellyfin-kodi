@@ -18,12 +18,11 @@ from downloader import TheVoid
 from obj import Objects
 from helper import _, playutils, api, window, settings, dialog, JSONRPC
 from dialogs import resume
-from emby import Emby
 from utils import get_play_action
 
 #################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 #################################################################################################
 
@@ -89,8 +88,8 @@ class Actions(object):
             Detect the seektime for video type content.
             Verify the default video action set in Kodi for accurate resume behavior.
         '''
-        seektime = window('emby.resume.bool')
-        window('emby.resume', clear=True)
+        seektime = window('jellyfin.resume.bool')
+        window('jellyfin.resume', clear=True)
 
         if item['MediaType'] in ('Video', 'Audio'):
             resume = item['UserData'].get('PlaybackPositionTicks')
@@ -128,7 +127,7 @@ class Actions(object):
 
             if settings('askCinema') == "true":
 
-                resp = dialog("yesno", heading="{emby}", line1=_(33016))
+                resp = dialog("yesno", heading="{jellyfin}", line1=_(33016))
                 if not resp:
 
                     enabled = False
@@ -148,7 +147,7 @@ class Actions(object):
 
                     self.stack.append([intro['PlaybackInfo']['Path'], listitem])
 
-                window('emby.skip.%s' % intro['Id'], value="true")
+                window('jellyfin.skip.%s' % intro['Id'], value="true")
 
     def _set_additional_parts(self, item_id):
 
@@ -215,7 +214,7 @@ class Actions(object):
             LOG.info("[ playlist/%s ] %s", item['Id'], item['Name'])
 
             self.set_listitem(item, listitem, None, False)
-            path = "plugin://plugin.video.emby/?mode=play&id=%s&playlist=true" % item['Id']
+            path = "plugin://plugin.video.jellyfin/?mode=play&id=%s&playlist=true" % item['Id']
             listitem.setPath(path)
 
             playlist.add(path, listitem, index)
@@ -239,7 +238,7 @@ class Actions(object):
             obj['Artwork'] = API.get_all_artwork(objects.map(item, 'Artwork'))
             self.listitem_photo(obj, listitem, item)
 
-        elif item['Type'] in ('TvChannel'):
+        elif item['Type'] in ('TvChannel',):
 
             obj = objects.map(item, 'BrowseChannel')
             obj['Artwork'] = API.get_all_artwork(objects.map(item, 'Artwork'))
@@ -312,9 +311,9 @@ class Actions(object):
         obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] or ""
 
         if not intro and not obj['Type'] == 'Trailer':
-            obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or "special://home/addons/plugin.video.emby/icon.png"
+            obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or "special://home/addons/plugin.video.jellyfin/icon.png"
         else:
-            obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or obj['Artwork']['Thumb'] or (obj['Artwork']['Backdrop'][0] if len(obj['Artwork']['Backdrop']) else "special://home/addons/plugin.video.emby/fanart.jpg")
+            obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or obj['Artwork']['Thumb'] or (obj['Artwork']['Backdrop'][0] if len(obj['Artwork']['Backdrop']) else "special://home/addons/plugin.video.jellyfin/fanart.jpg")
             obj['Artwork']['Primary'] += "&KodiTrailer=true" if obj['Type'] == 'Trailer' else "&KodiCinemaMode=true"
             obj['Artwork']['Backdrop'] = [obj['Artwork']['Primary']]
 
@@ -472,9 +471,9 @@ class Actions(object):
         obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
         obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount']) or 0
         obj['Overlay'] = 7 if obj['Played'] else 6
-        obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or "special://home/addons/plugin.video.emby/icon.png"
-        obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] or "special://home/addons/plugin.video.emby/fanart.jpg"
-        obj['Artwork']['Backdrop'] = obj['Artwork']['Backdrop'] or ["special://home/addons/plugin.video.emby/fanart.jpg"]
+        obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or "special://home/addons/plugin.video.jellyfin/icon.png"
+        obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] or "special://home/addons/plugin.video.jellyfin/fanart.jpg"
+        obj['Artwork']['Backdrop'] = obj['Artwork']['Backdrop'] or ["special://home/addons/plugin.video.jellyfin/fanart.jpg"]
 
 
         metadata = {
@@ -657,9 +656,9 @@ class Actions(object):
         ''' Base resume dialog based on Kodi settings.
         '''
         LOG.info("Resume dialog called.")
-        XML_PATH = (xbmcaddon.Addon('plugin.video.emby').getAddonInfo('path'), "default", "1080i")
+        XML_PATH = (xbmcaddon.Addon('plugin.video.jellyfin').getAddonInfo('path'), "default", "1080i")
 
-        dialog = resume.ResumeDialog("script-emby-resume.xml", *XML_PATH)
+        dialog = resume.ResumeDialog("script-jellyfin-resume.xml", *XML_PATH)
         dialog.set_resume_point("Resume from %s" % str(timedelta(seconds=seektime)).split(".")[0])
         dialog.doModal()
 
@@ -721,14 +720,14 @@ def on_update(data, server):
 
     if item:
 
-        if not window('emby.skip.%s.bool' % item[0]):
+        if not window('jellyfin.skip.%s.bool' % item[0]):
             server['api'].item_played(item[0], playcount)
 
-        window('emby.skip.%s' % item[0], clear=True)
+        window('jellyfin.skip.%s' % item[0], clear=True)
 
 def on_play(data, server):
 
-    ''' Setup progress for emby playback.
+    ''' Setup progress for jellyfin playback.
     '''
     player = xbmc.Player()
 
@@ -781,7 +780,7 @@ def special_listener():
     '''
     player = xbmc.Player()
     isPlaying = player.isPlaying()
-    count = int(window('emby.external_count') or 0)
+    count = int(window('jellyfin.external_count') or 0)
 
     if (not isPlaying and xbmc.getCondVisibility('Window.IsVisible(DialogContextMenu.xml)') and
         xbmc.getInfoLabel('Control.GetLabel(1002)') == xbmc.getLocalizedString(12021)):
@@ -791,24 +790,24 @@ def special_listener():
         if control == 1002: # Start from beginning
 
             LOG.info("Resume dialog: Start from beginning selected.")
-            window('emby.resume.bool', False)
+            window('jellyfin.resume.bool', False)
         else:
             LOG.info("Resume dialog: Resume selected.")
-            window('emby.resume.bool', True)
+            window('jellyfin.resume.bool', True)
 
-    elif isPlaying and not window('emby.external_check'):
+    elif isPlaying and not window('jellyfin.external_check'):
         time = player.getTime()
 
         if time > 1: # Not external player.
 
-            window('emby.external_check', value="true")
-            window('emby.external_count', value="0")
+            window('jellyfin.external_check', value="true")
+            window('jellyfin.external_count', value="0")
         elif count == 120:
 
             LOG.info("External player detected.")
-            window('emby.external.bool', True)
-            window('emby.external_check.bool', True)
-            window('emby.external_count', value="0")
+            window('jellyfin.external.bool', True)
+            window('jellyfin.external_check.bool', True)
+            window('jellyfin.external_count', value="0")
 
         elif time == 0:
-            window('emby.external_count', value=str(count + 1))
+            window('jellyfin.external_count', value=str(count + 1))

@@ -10,7 +10,7 @@ from helper import _, settings, dialog, JSONRPC, compare_version
 
 #################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 #################################################################################################
 
@@ -42,7 +42,7 @@ class Setup(object):
                 if not self.get_web_server():
 
                     settings('enableTextureCache.bool', False)
-                    dialog("ok", heading="{emby}", line1=_(33103))
+                    dialog("ok", heading="{jellyfin}", line1=_(33103))
                     
                     return
 
@@ -105,24 +105,24 @@ class Setup(object):
         settings('useDirectPaths', value="1" if value else "0")
 
         if value:
-            dialog("ok", heading="{emby}", line1=_(33145))
+            dialog("ok", heading="{jellyfin}", line1=_(33145))
 
     def _is_artwork_caching(self):
 
-        value = dialog("yesno", heading="{emby}", line1=_(33117))
+        value = dialog("yesno", heading="{jellyfin}", line1=_(33117))
         settings('enableTextureCache.bool', value)
 
     def _is_empty_shows(self):
 
-        value = dialog("yesno", heading="{emby}", line1=_(33100))
+        value = dialog("yesno", heading="{jellyfin}", line1=_(33100))
         settings('syncEmptyShows.bool', value)
 
     def _is_rotten_tomatoes(self):
 
-        value = dialog("yesno", heading="{emby}", line1=_(33188))
+        value = dialog("yesno", heading="{jellyfin}", line1=_(33188))
         settings('syncRottenTomatoes.bool', value)
 
     def _is_music(self):
 
-        value = dialog("yesno", heading="{emby}", line1=_(33039))
+        value = dialog("yesno", heading="{jellyfin}", line1=_(33039))
         settings('enableMusic.bool', value=value)

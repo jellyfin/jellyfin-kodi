@@ -8,12 +8,12 @@ import queries as QU
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 ##################################################################################################
 
 
-class EmbyDatabase():
+class JellyfinDatabase():
 
 
     def __init__(self, cursor):

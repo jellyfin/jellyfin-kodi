@@ -1,5 +1,5 @@
 
-''' Queries for the Kodi database. obj reflect key/value to retrieve from emby items.
+''' Queries for the Kodi database. obj reflect key/value to retrieve from jellyfin items.
     Some functions require additional information, therefore obj do not always reflect
     the Kodi database query values.
 '''

@@ -13,11 +13,11 @@ import xbmcaddon
 
 #################################################################################################
 
-__addon__ = xbmcaddon.Addon(id='plugin.video.emby')
+__addon__ = xbmcaddon.Addon(id='plugin.video.jellyfin')
 __base__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'resources', 'lib')).decode('utf-8')
 __libraries__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'libraries')).decode('utf-8')
-__pcache__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('profile'), 'emby')).decode('utf-8')
-__cache__ = xbmc.translatePath('special://temp/emby').decode('utf-8')
+__pcache__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('profile'), 'jellyfin')).decode('utf-8')
+__cache__ = xbmc.translatePath('special://temp/jellyfin').decode('utf-8')
 
 sys.path.insert(0, __libraries__)
 
@@ -34,11 +34,10 @@ sys.path.append(__base__)
 
 from entrypoint import Service
 from helper import settings
-from emby import Emby
 
 #################################################################################################
 
-LOG = logging.getLogger("EMBY.service")
+LOG = logging.getLogger("JELLYFIN.service")
 DELAY = int(settings('startupDelay') if settings('SyncInstallRunDone.bool') else 4 or 0)
 
 #################################################################################################
@@ -85,7 +84,7 @@ if __name__ == "__main__":
     while True:
 
         if not settings('enableAddon.bool'):
-            LOG.warn("Emby for Kodi is not enabled.")
+            LOG.warn("Jellyfin for Kodi is not enabled.")
 
             break
 

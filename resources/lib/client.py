@@ -15,7 +15,7 @@ from helper.utils import create_id
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 ##################################################################################################
 
@@ -71,45 +71,45 @@ def get_device_name():
 def get_device_id(reset=False):
 
     ''' Return the device_id if already loaded.
-        It will load from emby_guid file. If it's a fresh
+        It will load from jellyfin_guid file. If it's a fresh
         setup, it will generate a new GUID to uniquely
         identify the setup for all users.
 
-        window prop: emby_deviceId
+        window prop: jellyfin_deviceId
     '''
-    client_id = window('emby_deviceId')
+    client_id = window('jellyfin_deviceId')
 
     if client_id:
         return client_id
 
-    directory = xbmc.translatePath('special://profile/addon_data/plugin.video.emby/').decode('utf-8')
+    directory = xbmc.translatePath('special://profile/addon_data/plugin.video.jellyfin/').decode('utf-8')
 
     if not xbmcvfs.exists(directory):
         xbmcvfs.mkdir(directory)
 
-    emby_guid = os.path.join(directory, "emby_guid")
-    file_guid = xbmcvfs.File(emby_guid)
+    jellyfin_guid = os.path.join(directory, "jellyfin_guid")
+    file_guid = xbmcvfs.File(jellyfin_guid)
     client_id = file_guid.read()
 
     if not client_id or reset:
         LOG.info("Generating a new GUID.")
 
         client_id = str("%012X" % create_id())
-        file_guid = xbmcvfs.File(emby_guid, 'w')
+        file_guid = xbmcvfs.File(jellyfin_guid, 'w')
         file_guid.write(client_id)
 
     file_guid.close()
 
     LOG.info("DeviceId loaded: %s", client_id)
-    window('emby_deviceId', value=client_id)
+    window('jellyfin_deviceId', value=client_id)
 
     return client_id
 
 def reset_device_id():
 
-    window('emby_deviceId', clear=True)
+    window('jellyfin_deviceId', clear=True)
     get_device_id(True)
-    dialog("ok", heading="{emby}", line1=_(33033))
+    dialog("ok", heading="{jellyfin}", line1=_(33033))
     xbmc.executebuiltin('RestartApp')
 
 def get_info():

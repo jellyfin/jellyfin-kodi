@@ -22,5 +22,5 @@ from wrapper import progress
 from wrapper import catch
 from wrapper import silent_catch
 from wrapper import stop
-from wrapper import emby_item
+from wrapper import jellyfin_item
 from wrapper import library_check

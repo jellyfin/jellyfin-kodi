@@ -2,7 +2,7 @@
 
 #################################################################################################
 
-def emby_url(client, handler):
+def jellyfin_url(client, handler):
     return  "%s/emby/%s" % (client.config['auth.server'], handler)
 
 def basic_info():
@@ -50,7 +50,7 @@ class API(object):
 
     #################################################################################################
 
-    # Bigger section of the Emby api
+    # Bigger section of the Jellyfin api
 
     #################################################################################################
 
@@ -96,9 +96,9 @@ class API(object):
     def artwork(self, item_id, art, max_width, ext="jpg", index=None):
 
         if index is None:
-            return  emby_url(self.client, "Items/%s/Images/%s?MaxWidth=%s&format=%s" % (item_id, art, max_width, ext))
+            return  jellyfin_url(self.client, "Items/%s/Images/%s?MaxWidth=%s&format=%s" % (item_id, art, max_width, ext))
 
-        return emby_url(self.client, "Items/%s/Images/%s/%s?MaxWidth=%s&format=%s" % (item_id, art, index, max_width, ext))
+        return jellyfin_url(self.client, "Items/%s/Images/%s/%s?MaxWidth=%s&format=%s" % (item_id, art, index, max_width, ext))
 
     #################################################################################################
 
@@ -306,13 +306,13 @@ class API(object):
         return  self.users("/PlayedItems/%s" % item_id, "POST" if watched else "DELETE")
 
     def get_sync_queue(self, date, filters=None):
-        return  self._get("Emby.Kodi.SyncQueue/{UserId}/GetItems", params={
+        return  self._get("Jellyfin.Plugin.KodiSyncQueue/{UserId}/GetItems", params={
                     'LastUpdateDT': date,
                     'filter': filters or None
                 })
 
     def get_server_time(self):
-        return  self._get("Emby.Kodi.SyncQueue/GetServerDateTime")
+        return  self._get("Jellyfin.Plugin.KodiSyncQueue/GetServerDateTime")
 
     def get_play_info(self, item_id, profile):
         return  self.items("/%s/PlaybackInfo" % item_id, "POST", json={

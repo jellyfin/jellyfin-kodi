@@ -9,26 +9,26 @@ import urllib
 
 from obj import Objects
 from kodi import MusicVideos as KodiDb, queries as QU
-from database import emby_db, queries as QUEM
-from helper import api, catch, stop, validate, library_check, emby_item, values, Local
+from database import jellyfin_db, queries as QUEM
+from helper import api, catch, stop, validate, library_check, jellyfin_item, values, Local
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 ##################################################################################################
 
 
 class MusicVideos(KodiDb):
 
-    def __init__(self, server, embydb, videodb, direct_path):
+    def __init__(self, server, jellyfindb, videodb, direct_path):
 
         self.server = server
-        self.emby = embydb
+        self.jellyfin = jellyfindb
         self.video = videodb
         self.direct_path = direct_path
 
-        self.emby_db = emby_db.EmbyDatabase(embydb.cursor)
+        self.jellyfin_db = jellyfin_db.JellyfinDatabase(jellyfindb.cursor)
         self.objects = Objects()
         self.item_ids = []
 
@@ -44,14 +44,14 @@ class MusicVideos(KodiDb):
             return self.remove
 
     @stop()
-    @emby_item()
+    @jellyfin_item()
     @library_check()
     def musicvideo(self, item, e_item, library):
 
         ''' If item does not exist, entry will be added.
             If item exists, entry will be updated.
 
-            If we don't get the track number from Emby, see if we can infer it
+            If we don't get the track number from Jellyfin, see if we can infer it
             from the sortname attribute.
         '''
         API = api.API(item, self.server['auth/server-address'])
@@ -149,7 +149,7 @@ class MusicVideos(KodiDb):
         obj['FileId'] = self.add_file(*values(obj, QU.add_file_obj))
 
         self.add(*values(obj, QU.add_musicvideo_obj))
-        self.emby_db.add_reference(*values(obj, QUEM.add_reference_mvideo_obj))
+        self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_mvideo_obj))
         LOG.info("ADD mvideo [%s/%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['MvideoId'], obj['Id'], obj['Title'])
 
     def musicvideo_update(self, obj):
@@ -157,7 +157,7 @@ class MusicVideos(KodiDb):
         ''' Update object to kodi.
         '''
         self.update(*values(obj, QU.update_musicvideo_obj))
-        self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
+        self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
         LOG.info("UPDATE mvideo [%s/%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['MvideoId'], obj['Id'], obj['Title'])
 
     def get_path_filename(self, obj):
@@ -174,7 +174,7 @@ class MusicVideos(KodiDb):
             obj['Path'] = obj['Path'].replace(obj['Filename'], "")
 
         else:
-            obj['Path'] = "plugin://plugin.video.emby.musicvideos/"
+            obj['Path'] = "plugin://plugin.video.jellyfin/"
             params = {
                 'filename': obj['Filename'].encode('utf-8'),
                 'id': obj['Id'],
@@ -185,7 +185,7 @@ class MusicVideos(KodiDb):
 
 
     @stop()
-    @emby_item()
+    @jellyfin_item()
     def userdata(self, item, e_item):
         
         ''' This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
@@ -213,14 +213,14 @@ class MusicVideos(KodiDb):
             self.remove_tag(*values(obj, QU.delete_tag_mvideo_obj))
 
         self.add_playstate(*values(obj, QU.add_bookmark_obj))
-        self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
+        self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
         LOG.info("USERDATA mvideo [%s/%s] %s: %s", obj['FileId'], obj['MvideoId'], obj['Id'], obj['Title'])
 
     @stop()
-    @emby_item()
+    @jellyfin_item()
     def remove(self, item_id, e_item):
 
-        ''' Remove mvideoid, fileid, pathid, emby reference. 
+        ''' Remove mvideoid, fileid, pathid, jellyfin reference. 
         '''
         obj = {'Id': item_id}
 
@@ -237,5 +237,5 @@ class MusicVideos(KodiDb):
         if self.direct_path:
             self.remove_path(*values(obj, QU.delete_path_obj))
 
-        self.emby_db.remove_item(*values(obj, QUEM.delete_item_obj))
+        self.jellyfin_db.remove_item(*values(obj, QUEM.delete_item_obj))
         LOG.info("DELETE musicvideo %s [%s/%s] %s", obj['MvideoId'], obj['PathId'], obj['FileId'], obj['Id'])

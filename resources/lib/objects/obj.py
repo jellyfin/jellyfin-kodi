@@ -8,7 +8,7 @@ import os
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 ##################################################################################################
 
@@ -37,7 +37,7 @@ class Objects(object):
         ''' Syntax to traverse the item dictionary.
             This of the query almost as a url.
 
-            Item is the Emby item json object structure
+            Item is the Jellyfin item json object structure
 
             ",": each element will be used as a fallback until a value is found.
             "?": split filters and key name from the query part, i.e. MediaSources/0?$Name

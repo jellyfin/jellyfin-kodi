@@ -16,19 +16,19 @@ import xbmcaddon
 import requests
 from helper.utils import should_stop, delete_folder
 from helper import settings, stop, event, window, kodi_version, unzip, create_id
-from emby import Emby
-from emby.core import api
-from emby.core.exceptions import HTTPException
+from jellyfin import Jellyfin
+from jellyfin.core import api
+from jellyfin.core.exceptions import HTTPException
 
 #################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 LIMIT = min(int(settings('limitIndex') or 50), 50)
-CACHE = xbmc.translatePath(os.path.join(xbmcaddon.Addon(id='plugin.video.emby').getAddonInfo('profile').decode('utf-8'), 'emby')).decode('utf-8')
+CACHE = xbmc.translatePath(os.path.join(xbmcaddon.Addon(id='plugin.video.jellyfin').getAddonInfo('profile').decode('utf-8'), 'jellyfin')).decode('utf-8')
 
 #################################################################################################
 
-def get_embyserver_url(handler):
+def get_jellyfinserver_url(handler):
 
     if handler.startswith('/'):
 
@@ -46,16 +46,16 @@ def browse_info():
 def _http(action, url, request={}, server_id=None):
     request.update({'url': url, 'type': action})
     
-    return Emby(server_id)['http/request'](request)
+    return Jellyfin(server_id)['http/request'](request)
 
 def _get(handler, params=None, server_id=None):
-    return  _http("GET", get_embyserver_url(handler), {'params': params}, server_id)
+    return  _http("GET", get_jellyfinserver_url(handler), {'params': params}, server_id)
 
 def _post(handler, json=None, params=None, server_id=None):
-    return  _http("POST", get_embyserver_url(handler), {'params': params, 'json': json}, server_id)
+    return  _http("POST", get_jellyfinserver_url(handler), {'params': params, 'json': json}, server_id)
 
 def _delete(handler, params=None, server_id=None):
-    return  _http("DELETE", get_embyserver_url(handler), {'params': params}, server_id)
+    return  _http("DELETE", get_jellyfinserver_url(handler), {'params': params}, server_id)
 
 def validate_view(library_id, item_id):
 
@@ -317,7 +317,7 @@ class GetItemWorker(threading.Thread):
 
                 self.queue.task_done()
 
-                if window('emby_should_stop.bool'):
+                if window('jellyfin_should_stop.bool'):
                     break
 
 class TheVoid(object):
@@ -342,16 +342,16 @@ class TheVoid(object):
 
         while True:
 
-            response = window('emby_%s.json' % self.data['VoidName'])
+            response = window('jellyfin_%s.json' % self.data['VoidName'])
 
             if response != "":
 
-                LOG.debug("--<[ nostromo/emby_%s.json ]", self.data['VoidName'])
-                window('emby_%s' % self.data['VoidName'], clear=True)
+                LOG.debug("--<[ nostromo/jellyfin_%s.json ]", self.data['VoidName'])
+                window('jellyfin_%s' % self.data['VoidName'], clear=True)
 
                 return response
 
-            if window('emby_should_stop.bool'):
+            if window('jellyfin_should_stop.bool'):
                 LOG.info("Abandon mission! A black hole just swallowed [ %s/%s ]", self.method, self.data['VoidName'])
                 
                 return

@@ -12,7 +12,7 @@ from core.connection_manager import ConnectionManager, CONNECTION_STATE
 
 #################################################################################################
 
-LOG = logging.getLogger('Emby.'+__name__)
+LOG = logging.getLogger('JELLYFIN.'+__name__)
 
 #################################################################################################
 
@@ -25,18 +25,18 @@ def callback(message, data):
     pass
 
 
-class EmbyClient(object):
+class JellyfinClient(object):
 
     logged_in = False
 
     def __init__(self):
-        LOG.debug("EmbyClient initializing...")
+        LOG.debug("JellyfinClient initializing...")
 
         self.config = Config()
         self.http = HTTP(self)
         self.wsc = WSClient(self)
         self.auth = ConnectionManager(self)
-        self.emby = api.API(self.http)
+        self.jellyfin = api.API(self.http)
         self.callback_ws = callback
         self.callback = callback
 
@@ -100,7 +100,7 @@ class EmbyClient(object):
             return self.auth.__shortcuts__(key.replace('auth/', "", 1))
 
         elif key.startswith('api'):
-            return self.emby
+            return self.jellyfin
 
         elif key == 'connected':
             return self.logged_in

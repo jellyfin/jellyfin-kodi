@@ -14,13 +14,12 @@ from http import HTTP
 
 #################################################################################################
 
-LOG = logging.getLogger('Emby.'+__name__)
+LOG = logging.getLogger('JELLYFIN.'+__name__)
 CONNECTION_STATE = {
     'Unavailable': 0,
     'ServerSelection': 1,
     'ServerSignIn': 2,
     'SignedIn': 3,
-    'ConnectSignIn': 4,
     'ServerUpdateNeeded': 5
 }
 CONNECTION_MODE = {
@@ -43,7 +42,7 @@ def get_server_address(server, mode):
 
 class ConnectionManager(object):
 
-    min_server_version = "3.0.5930"
+    min_server_version = "10.1.0"
     server_version = min_server_version
     user = {}
     server_id = None
@@ -69,14 +68,6 @@ class ConnectionManager(object):
             return self.connect
         elif key == "login":
             return self.login
-        elif key == "login-connect":
-            return self.login_to_connect
-        elif key == "connect-user":
-            return self.connect_user()
-        elif key == "connect-token":
-            return self.connect_token()
-        elif key == "connect-user-id":
-            return self.connect_user_id()
         elif key == "server":
             return self.get_server_info(self.server_id)
         elif key == "server-id":
@@ -84,11 +75,11 @@ class ConnectionManager(object):
         elif key == "server-version":
             return self.server_version
         elif key == "user-id":
-            return self.emby_user_id()
+            return self.jellyfin_user_id()
         elif key == "public-users":
             return self.get_public_users()
         elif key == "token":
-            return self.emby_token()
+            return self.jellyfin_token()
         elif key == "manual-server":
             return self.connect_to_address
         elif key == "connect-to-server":
@@ -113,8 +104,6 @@ class ConnectionManager(object):
 
         self.user = None
         credentials = self.credentials.get_credentials()
-        credentials['ConnectAccessToken'] = None
-        credentials['ConnectUserId'] = None
         credentials['Servers'] = list()
         self.credentials.get_credentials(credentials)
 
@@ -135,19 +124,14 @@ class ConnectionManager(object):
 
         # Clone the credentials
         credentials = self.credentials.get_credentials()
-        connect_servers = self._get_connect_servers(credentials)
         found_servers = self._find_servers(self._server_discovery())
 
-        if not connect_servers and not found_servers and not credentials['Servers']: # back out right away, no point in continuing
+        if not found_servers and not credentials['Servers']: # back out right away, no point in continuing
             LOG.info("Found no servers")
-
             return list()
 
         servers = list(credentials['Servers'])
         self._merge_servers(servers, found_servers)
-        self._merge_servers(servers, connect_servers)
-
-        servers = self._filter_servers(servers, connect_servers)
 
         try:
             servers.sort(key=lambda x: datetime.strptime(x['DateLastAccessed'], "%Y-%m-%dT%H:%M:%SZ"), reverse=True)
@@ -158,38 +142,6 @@ class ConnectionManager(object):
         self.credentials.get_credentials(credentials)
 
         return servers
-
-    def login_to_connect(self, username, password):
-
-        if not username:
-            raise AttributeError("username cannot be empty")
-
-        if not password:
-            raise AttributeError("password cannot be empty")
-
-        try:
-            result = self._request_url({
-                'type': "POST",
-                'url': self.get_connect_url("user/authenticate"),
-                'data': {
-                    'nameOrEmail': username,
-                    'password': self._get_connect_password_hash(password)
-                },
-                'dataType': "json"
-            })
-        except Exception as error: # Failed to login
-            LOG.error(error)
-            return False
-        else:
-            credentials = self.credentials.get_credentials()
-            credentials['ConnectAccessToken'] = result['AccessToken']
-            credentials['ConnectUserId'] = result['User']['Id']
-            credentials['ConnectUser'] = result['User']['DisplayName']
-            self.credentials.get_credentials(credentials)
-            # Signed in
-            self._on_connect_user_signin(result['User'])
-
-        return result
 
     def login(self, server, username, password=None, clear=True, options={}):
 
@@ -202,7 +154,7 @@ class ConnectionManager(object):
         try:
             request = {
                 'type': "POST",
-                'url': self.get_emby_url(server, "Users/AuthenticateByName"),
+                'url': self.get_jellyfin_url(server, "Users/AuthenticateByName"),
                 'json': {
                     'username': username,
                     'password': hashlib.sha1(password or "").hexdigest(),
@@ -274,19 +226,10 @@ class ConnectionManager(object):
         LOG.info("Begin connect")
         return self._connect_to_servers(self.get_available_servers(), options)
 
-    def connect_user(self):
-        return self.user
-
-    def connect_user_id(self):
-        return self.credentials.get_credentials().get('ConnectUserId')
-
-    def connect_token(self):
-        return self.credentials.get_credentials().get('ConnectAccessToken')
-
-    def emby_user_id(self):
+    def jellyfin_user_id(self):
         return self.get_server_info(self.server_id)['UserId']
 
-    def emby_token(self):
+    def jellyfin_token(self):
         return self.get_server_info(self.server_id)['AccessToken']
 
     def get_server_info(self, server_id):
@@ -302,12 +245,9 @@ class ConnectionManager(object):
                 return server
 
     def get_public_users(self):
-        return self.client.emby.get_public_users()
+        return self.client.jellyfin.get_public_users()
 
-    def get_connect_url(self, handler):
-        return "https://connect.emby.media/service/%s" % handler
-
-    def get_emby_url(self, base, handler):
+    def get_jellyfin_url(self, base, handler):
         return "%s/emby/%s" % (base, handler)
 
     def _request_url(self, request, headers=True):
@@ -344,12 +284,6 @@ class ConnectionManager(object):
 
         if len(servers) == 1:
             result = self.connect_to_server(servers[0], options)
-
-            """
-            if result['State'] == CONNECTION_STATE['Unavailable']:
-                result['State'] = CONNECTION_STATE['ConnectSignIn'] if result['ConnectUser'] is None else CONNECTION_STATE['ServerSelection']
-            """
-
             LOG.debug("resolving connectToServers with result['State']: %s", result)
 
             return result
@@ -364,17 +298,15 @@ class ConnectionManager(object):
 
         # Return loaded credentials if exists
         credentials = self.credentials.get_credentials()
-        self._ensure_connect_user(credentials)
 
         return {
             'Servers': servers,
-            'State': CONNECTION_STATE['ConnectSignIn'] if (not len(servers) and not self.connect_user()) else (result.get('State') or CONNECTION_STATE['ServerSelection']),
-            'ConnectUser': self.connect_user()
+            'State': result.get('State') or CONNECTION_STATE['ServerSelection'],
         }
 
     def _try_connect(self, url, timeout=None, options={}):
 
-        url = self.get_emby_url(url, "system/info/public")
+        url = self.get_jellyfin_url(url, "system/info/public")
         LOG.info("tryConnect url: %s", url)
 
         return self._request_url({
@@ -442,20 +374,11 @@ class ConnectionManager(object):
     def _on_successful_connection(self, server, system_info, connection_mode, options):
 
         credentials = self.credentials.get_credentials()
-
-        if credentials.get('ConnectAccessToken') and options.get('enableAutoLogin') is not False:
-            
-            if self._ensure_connect_user(credentials) is not False:
-
-                if server.get('ExchangeToken'):
-                    self._add_authentication_info_from_connect(server, connection_mode, credentials, options)
-
         return self._after_connect_validated(server, credentials, system_info, connection_mode, True, options)
 
     def _resolve_failure(self):
         return {
-            'State': CONNECTION_STATE['Unavailable'],
-            'ConnectUser': self.connect_user()
+            'State': CONNECTION_STATE['Unavailable']
         }
 
     def _get_min_server_version(self, val=None):
@@ -496,27 +419,10 @@ class ConnectionManager(object):
     def _string_equals_ignore_case(self, str1, str2):
         return (str1 or "").lower() == (str2 or "").lower()
 
-    def _get_connect_user(self, user_id, access_token):
-
-        if not user_id:
-            raise AttributeError("null userId")
-
-        if not access_token:
-            raise AttributeError("null accessToken")
-
-        return self._request_url({
-            'type': "GET",
-            'url': self.get_connect_url('user?id=%s' % user_id),
-            'dataType': "json",
-            'headers': {
-                'X-Connect-UserToken': access_token
-            }
-        })
-
     def _server_discovery(self):
         
         MULTI_GROUP = ("<broadcast>", 7359)
-        MESSAGE = "who is EmbyServer?"
+        MESSAGE = "who is JellyfinServer?"
         
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.settimeout(1.0) # This controls the socket.timeout exception
@@ -549,37 +455,6 @@ class ConnectionManager(object):
             except Exception as e:
                 LOG.error("Error trying to find servers: %s", e)
                 return servers
-
-    def _get_connect_servers(self, credentials):
-
-        LOG.info("Begin getConnectServers")
-        
-        servers = list()
-
-        if not credentials.get('ConnectAccessToken') or not credentials.get('ConnectUserId'):
-            return servers
-
-        url = self.get_connect_url("servers?userId=%s" % credentials['ConnectUserId'])
-        request = {
-            'type': "GET",
-            'url': url,
-            'dataType': "json",
-            'headers': {
-                'X-Connect-UserToken': credentials['ConnectAccessToken']
-            }
-        }
-        for server in self._request_url(request):
-            servers.append({
-                'ExchangeToken': server['AccessKey'],
-                'ConnectServerId': server['Id'],
-                'Id': server['SystemId'],
-                'Name': server['Name'],
-                'RemoteAddress': server['Url'],
-                'LocalAddress': server['LocalAddress'],
-                'UserLinkType': "Guest" if server['UserType'].lower() == "guest" else "LinkedUser",
-            })
-
-        return servers
 
     def _get_last_used_server(self):
 
@@ -624,22 +499,6 @@ class ConnectionManager(object):
         else:
             return servers
 
-    def _filter_servers(self, servers, connect_servers):
-        
-        filtered = list()
-        for server in servers:
-            if server.get('ExchangeToken') is None:
-                # It's not a connect server, so assume it's still valid
-                filtered.append(server)
-                continue
-
-            for connect_server in connect_servers:
-                if server['Id'] == connect_server['Id']:
-                    filtered.append(server)
-                    break
-
-        return filtered
-
     def _convert_endpoint_address_to_manual_address(self, info):
         
         if info.get('Address') and info.get('EndpointAddress'):
@@ -668,45 +527,6 @@ class ConnectionManager(object):
 
         return address
 
-    def _get_connect_password_hash(self, password):
-
-        password = self._clean_connect_password(password)
-        return hashlib.md5(password).hexdigest()
-
-    def _clean_connect_password(self, password):
-
-        password = password or ""
-
-        password = password.replace("&", '&amp;')
-        password = password.replace("/", '&#092;')
-        password = password.replace("!", '&#33;')
-        password = password.replace("$", '&#036;')
-        password = password.replace("\"", '&quot;')
-        password = password.replace("<", '&lt;')
-        password = password.replace(">", '&gt;')
-        password = password.replace("'", '&#39;')
-
-        return password
-
-    def _ensure_connect_user(self, credentials):
-
-        if self.user and self.user['Id'] == credentials['ConnectUserId']:
-            return
-
-        elif credentials.get('ConnectUserId') and credentials.get('ConnectAccessToken'):
-            self.user = None
-
-            try:
-                result = self._get_connect_user(credentials['ConnectUserId'], credentials['ConnectAccessToken'])
-                self._on_connect_user_signin(result)
-            except Exception:
-                return False
-
-    def _on_connect_user_signin(self, user):
-
-        self.user = user
-        LOG.info("connectusersignedin %s", user)
-
     def _save_user_info_into_credentials(self, server, user):
 
         info = {
@@ -714,43 +534,6 @@ class ConnectionManager(object):
             'IsSignedInOffline': True
         }
         self.credentials.add_update_user(server, info)
-
-    def _add_authentication_info_from_connect(self, server, connection_mode, credentials, options={}):
-
-        if not server.get('ExchangeToken'):
-            raise KeyError("server['ExchangeToken'] cannot be null")
-
-        if not credentials.get('ConnectUserId'):
-            raise KeyError("credentials['ConnectUserId'] cannot be null")
-
-        auth =  "MediaBrowser "
-        auth += "Client=%s, " % self.config['app.name']
-        auth += "Device=%s, " % self.config['app.device_name']
-        auth += "DeviceId=%s, " % self.config['app.device_id']
-        auth += "Version=%s " % self.config['app.version']
-
-        try:
-            auth = self._request_url({
-                'url': self.get_emby_url(get_server_address(server, connection_mode), "Connect/Exchange"),
-                'type': "GET",
-                'dataType': "json",
-                'verify': options.get('ssl'),
-                'params': {
-                    'ConnectUserId': credentials['ConnectUserId']
-                },
-                'headers': {
-                    'X-MediaBrowser-Token': server['ExchangeToken'],
-                    'X-Emby-Authorization': auth
-                }
-            })
-        except Exception:
-            server['UserId'] = None
-            server['AccessToken'] = None
-            return False
-        else:
-            server['UserId'] = auth['LocalUserId']
-            server['AccessToken'] = auth['AccessToken']
-            return auth
 
     def _after_connect_validated(self, server, credentials, system_info, connection_mode, verify_authentication, options):
 
@@ -787,8 +570,7 @@ class ConnectionManager(object):
         self.config['auth.ssl'] = options.get('ssl', self.config['auth.ssl'])
 
         result = {
-            'Servers': [server],
-            'ConnectUser': self.connect_user()
+            'Servers': [server]
         }
 
         result['State'] = CONNECTION_STATE['SignedIn'] if server.get('AccessToken') else CONNECTION_STATE['ServerSignIn']
@@ -800,7 +582,7 @@ class ConnectionManager(object):
         try:
             system_info = self._request_url({
                 'type': "GET",
-                'url': self.get_emby_url(get_server_address(server, connection_mode), "System/Info"),
+                'url': self.get_jellyfin_url(get_server_address(server, connection_mode), "System/Info"),
                 'verify': options.get('ssl'),
                 'dataType': "json",
                 'headers': {

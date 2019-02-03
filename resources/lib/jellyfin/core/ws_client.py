@@ -13,7 +13,7 @@ from ..resources import websocket
 
 ##################################################################################################
 
-LOG = logging.getLogger('Emby.'+__name__)
+LOG = logging.getLogger('JELLYFIN.'+__name__)
 
 ##################################################################################################
 
@@ -82,7 +82,7 @@ class WSClient(threading.Thread):
         message = json.loads(message)
         data = message.get('Data', {})
 
-        if message['MessageType'] in ('RefreshProgress'):
+        if message['MessageType'] in ('RefreshProgress',):
             LOG.debug("Ignoring %s", message)
 
             return

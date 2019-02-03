@@ -12,14 +12,14 @@ import xbmc
 import xbmcvfs
 
 import downloader as server
-from database import Database, emby_db, get_sync, save_sync
+from database import Database, jellyfin_db, get_sync, save_sync
 from objects.kodi import kodi
 from helper import _, api, indent, write_xml, window, event
-from emby import Emby
+from jellyfin import Jellyfin
 
 #################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 NODES = {
     'tvshows': [
         ('all', None),
@@ -144,21 +144,21 @@ class Views(object):
     def __init__(self):
 
         self.sync = get_sync()
-        self.server = Emby()
+        self.server = Jellyfin()
 
     def add_library(self, view):
 
-        ''' Add entry to view table in emby database.
+        ''' Add entry to view table in jellyfin database.
         '''
-        with Database('emby') as embydb:
-            emby_db.EmbyDatabase(embydb.cursor).add_view(view['Id'], view['Name'], view['Media'])
+        with Database('jellyfin') as jellyfindb:
+            jellyfin_db.JellyfinDatabase(jellyfindb.cursor).add_view(view['Id'], view['Name'], view['Media'])
 
     def remove_library(self, view_id):
 
-        ''' Remove entry from view table in emby database.
+        ''' Remove entry from view table in jellyfin database.
         '''
-        with Database('emby') as embydb:
-            emby_db.EmbyDatabase(embydb.cursor).remove_view(view_id)
+        with Database('jellyfin') as jellyfindb:
+            jellyfin_db.JellyfinDatabase(jellyfindb.cursor).remove_view(view_id)
 
         self.delete_playlist_by_id(view_id)
         self.delete_node_by_id(view_id)
@@ -203,9 +203,9 @@ class Views(object):
 
             self.add_library(library)
 
-        with Database('emby') as embydb:
+        with Database('jellyfin') as jellyfindb:
 
-            views = emby_db.EmbyDatabase(embydb.cursor).get_views()
+            views = jellyfin_db.JellyfinDatabase(jellyfindb.cursor).get_views()
             removed = []
 
             for view in views:
@@ -226,8 +226,8 @@ class Views(object):
         playlist_path = xbmc.translatePath("special://profile/playlists/video").decode('utf-8')
         index = 0
 
-        with Database('emby') as embydb:
-            db = emby_db.EmbyDatabase(embydb.cursor)
+        with Database('jellyfin') as jellyfindb:
+            db = jellyfin_db.JellyfinDatabase(jellyfindb.cursor)
 
             for library in self.sync['Whitelist']:
 
@@ -250,7 +250,7 @@ class Views(object):
                         if view['Media'] in ('movies', 'tvshows', 'musicvideos'):
                             self.add_playlist(playlist_path, view)
 
-                        if view['Media'] not in ('music'):
+                        if view['Media'] not in ('music',):
                             self.add_nodes(node_path, view)
 
                     index += 1
@@ -268,7 +268,7 @@ class Views(object):
 
         ''' Create or update the xps file.
         '''
-        file = os.path.join(path, "emby%s%s.xsp" % (view['Media'], view['Id']))
+        file = os.path.join(path, "jellyfin%s%s.xsp" % (view['Media'], view['Id']))
 
         try:
             xml = etree.parse(file).getroot()
@@ -297,7 +297,7 @@ class Views(object):
 
         ''' Create or update the video node file.
         '''
-        folder = os.path.join(path, "emby%s%s" % (view['Media'], view['Id']))
+        folder = os.path.join(path, "jellyfin%s%s" % (view['Media'], view['Id']))
 
         if not xbmcvfs.exists(folder):
             xbmcvfs.mkdir(folder)
@@ -311,7 +311,7 @@ class Views(object):
 
     def add_single_node(self, path, index, item_type, view):
 
-        file = os.path.join(path, "emby_%s.xml" % view['Tag'].replace(" ", ""))
+        file = os.path.join(path, "jellyfin_%s.xml" % view['Tag'].replace(" ", ""))
 
         try:
             xml = etree.parse(file).getroot()
@@ -359,7 +359,7 @@ class Views(object):
         else:
             element = etree.Element('node', {'order': str(index), 'type': "folder"})
 
-        etree.SubElement(element, 'icon').text = "special://home/addons/plugin.video.emby/icon.png"
+        etree.SubElement(element, 'icon').text = "special://home/addons/plugin.video.jellyfin/icon.png"
 
         return element
 
@@ -657,7 +657,7 @@ class Views(object):
 
     def order_media_folders(self, folders):
 
-        ''' Returns a list of sorted media folders based on the Emby views.
+        ''' Returns a list of sorted media folders based on the Jellyfin views.
             Insert them in SortedViews and remove Views that are not in media folders.
         '''
         if not folders:
@@ -677,13 +677,13 @@ class Views(object):
     def window_nodes(self):
 
         ''' Just read from the database and populate based on SortedViews
-            Setup the window properties that reflect the emby server views and more.
+            Setup the window properties that reflect the jellyfin server views and more.
         '''
         self.window_clear()
-        self.window_clear('Emby.wnodes')
+        self.window_clear('Jellyfin.wnodes')
 
-        with Database('emby') as embydb:
-            libraries = emby_db.EmbyDatabase(embydb.cursor).get_views()
+        with Database('jellyfin') as jellyfindb:
+            libraries = jellyfin_db.JellyfinDatabase(jellyfindb.cursor).get_views()
 
         libraries = self.order_media_folders(libraries or [])
         index = 0
@@ -743,8 +743,8 @@ class Views(object):
             self.window_single_node(index, "favorites", single)
             index += 1
 
-        window('Emby.nodes.total', str(index))
-        window('Emby.wnodes.total', str(windex))
+        window('Jellyfin.nodes.total', str(index))
+        window('Jellyfin.wnodes.total', str(windex))
 
     def window_node(self, index, view, node=None, node_label=None):
 
@@ -773,17 +773,17 @@ class Views(object):
 
         if node in ('all', 'music'):
 
-            window_prop = "Emby.nodes.%s" % index
+            window_prop = "Jellyfin.nodes.%s" % index
             window('%s.index' % window_prop, path.replace('all.xml', "")) # dir
             window('%s.title' % window_prop, view['Name'].encode('utf-8'))
             window('%s.content' % window_prop, path)
 
         elif node == 'browse':
 
-            window_prop = "Emby.nodes.%s" % index
+            window_prop = "Jellyfin.nodes.%s" % index
             window('%s.title' % window_prop, view['Name'].encode('utf-8'))
         else:
-            window_prop = "Emby.nodes.%s.%s" % (index, node)
+            window_prop = "Jellyfin.nodes.%s.%s" % (index, node)
             window('%s.title' % window_prop, node_label.encode('utf-8'))
             window('%s.content' % window_prop, path)
 
@@ -796,10 +796,10 @@ class Views(object):
 
         ''' Single destination node.
         '''
-        path = "library://video/emby_%s.xml" % view['Tag'].replace(" ", "")
+        path = "library://video/jellyfin_%s.xml" % view['Tag'].replace(" ", "")
         window_path = "ActivateWindow(Videos,%s,return)" % path
 
-        window_prop = "Emby.nodes.%s" % index
+        window_prop = "Jellyfin.nodes.%s" % index
         window('%s.title' % window_prop, view['Name'])
         window('%s.path' % window_prop, window_path)
         window('%s.content' % window_prop, path)
@@ -825,18 +825,18 @@ class Views(object):
 
         if node == 'all':
 
-            window_prop = "Emby.wnodes.%s" % index
+            window_prop = "Jellyfin.wnodes.%s" % index
             window('%s.index' % window_prop, path.replace('all.xml', "")) # dir
             window('%s.title' % window_prop, view['Name'].encode('utf-8'))
             window('%s.content' % window_prop, path)
 
         elif node == 'browse':
 
-            window_prop = "Emby.wnodes.%s" % index
+            window_prop = "Jellyfin.wnodes.%s" % index
             window('%s.title' % window_prop, view['Name'].encode('utf-8'))
             window('%s.content' % window_prop, path)
         else:
-            window_prop = "Emby.wnodes.%s.%s" % (index, node)
+            window_prop = "Jellyfin.wnodes.%s.%s" % (index, node)
             window('%s.title' % window_prop, node_label.encode('utf-8'))
             window('%s.content' % window_prop, path)
 
@@ -865,7 +865,7 @@ class Views(object):
                 window('%s.artwork' % prop, clear=True)
 
     def window_path(self, view, node):
-        return "library://video/emby%s%s/%s.xml" % (view['Media'], view['Id'], node)
+        return "library://video/jellyfin%s%s/%s.xml" % (view['Media'], view['Id'], node)
 
     def window_music(self, view):
         return "library://music/"
@@ -877,7 +877,7 @@ class Views(object):
             'mode': "nextepisodes",
             'limit': self.limit
         }
-        return "%s?%s" % ("plugin://plugin.video.emby/", urllib.urlencode(params))
+        return "%s?%s" % ("plugin://plugin.video.jellyfin/", urllib.urlencode(params))
 
     def window_browse(self, view, node=None):
 
@@ -892,13 +892,13 @@ class Views(object):
         if node:
             params['folder'] = node
 
-        return "%s?%s" % ("plugin://plugin.video.emby/", urllib.urlencode(params))
+        return "%s?%s" % ("plugin://plugin.video.jellyfin/", urllib.urlencode(params))
 
     def window_clear(self, name=None):
 
         ''' Clearing window prop setup for Views.
         '''
-        total = int(window((name or 'Emby.nodes') + '.total') or 0)
+        total = int(window((name or 'Jellyfin.nodes') + '.total') or 0)
         props = [
 
             "index","id","path","artwork","title","content","type"
@@ -914,10 +914,10 @@ class Views(object):
         ]
         for i in range(total):
             for prop in props:
-                window('Emby.nodes.%s.%s' % (str(i), prop), clear=True)
+                window('Jellyfin.nodes.%s.%s' % (str(i), prop), clear=True)
 
         for prop in props:
-            window('Emby.nodes.%s' % prop, clear=True)
+            window('Jellyfin.nodes.%s' % prop, clear=True)
 
     def delete_playlist(self, path):
 
@@ -926,12 +926,12 @@ class Views(object):
 
     def delete_playlists(self):
 
-        ''' Remove all emby playlists.
+        ''' Remove all jellyfin playlists.
         '''
         path = xbmc.translatePath("special://profile/playlists/video/").decode('utf-8')
         _, files = xbmcvfs.listdir(path)
         for file in files:
-            if file.decode('utf-8').startswith('emby'):
+            if file.decode('utf-8').startswith('jellyfin'):
                 self.delete_playlist(os.path.join(path, file.decode('utf-8')))
 
     def delete_playlist_by_id(self, view_id):
@@ -943,7 +943,7 @@ class Views(object):
         for file in files:
             file = file.decode('utf-8')
 
-            if file.startswith('emby') and file.endswith('%s.xsp' % view_id):
+            if file.startswith('jellyfin') and file.endswith('%s.xsp' % view_id):
                 self.delete_playlist(os.path.join(path, file.decode('utf-8')))
 
     def delete_node(self, path):
@@ -960,12 +960,12 @@ class Views(object):
 
         for file in files:
 
-            if file.startswith('emby'):
+            if file.startswith('jellyfin'):
                 self.delete_node(os.path.join(path, file.decode('utf-8')))
 
         for directory in dirs:
 
-            if directory.startswith('emby'):
+            if directory.startswith('jellyfin'):
                 _, files = xbmcvfs.listdir(os.path.join(path, directory.decode('utf-8')))
 
                 for file in files:
@@ -982,7 +982,7 @@ class Views(object):
 
         for directory in dirs:
 
-            if directory.startswith('emby') and directory.endswith(view_id):
+            if directory.startswith('jellyfin') and directory.endswith(view_id):
                 _, files = xbmcvfs.listdir(os.path.join(path, directory.decode('utf-8')))
 
                 for file in files:

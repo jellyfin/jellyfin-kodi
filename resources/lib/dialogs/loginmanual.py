@@ -12,7 +12,7 @@ from helper import _, addon_id
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 ACTION_PARENT_DIR = 9
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACK = 92
@@ -36,7 +36,7 @@ class LoginManual(xbmcgui.WindowXMLDialog):
         xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)
 
     def set_args(self, **kwargs):
-        # connect_manager, user_image, servers, emby_connect
+        # connect_manager, user_image, servers
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
 
@@ -72,7 +72,6 @@ class LoginManual(xbmcgui.WindowXMLDialog):
     def onClick(self, control):
 
         if control == SIGN_IN:
-            # Sign in to emby connect
             self._disable_error()
 
             user = self.user_field.getText()

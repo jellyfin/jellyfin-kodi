@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <window>
+	<defaultcontrol always="true">200</defaultcontrol>
 	<animation type="WindowOpen" reversible="false">
 		<effect type="zoom" start="80" end="100" center="960,540" delay="160" tween="circle" easin="out" time="240" />
 		<effect type="fade" delay="160" end="100" time="240" />
@@ -24,7 +25,7 @@
 				<centerleft>50%</centerleft>
 				<centertop>50%</centertop>
 				<width>470</width>
-				<height>660</height>
+				<height>470</height>
 				<control type="group">
 					<top>-30</top>
 					<control type="image">
@@ -37,14 +38,14 @@
 				</control>
 				<control type="image">
 					<width>100%</width>
-					<height>660</height>
+					<height>470</height>
 					<texture colordiffuse="ff222326" border="10">dialogs/dialog_back.png</texture>
 				</control>
 				<control type="group">
 					<centerleft>50%</centerleft>
 					<top>10</top>
 					<width>460</width>
-					<height>660</height>
+					<height>470</height>
 					<control type="grouplist" id="100">
 						<orientation>vertical</orientation>
 						<itemgap>0</itemgap>
@@ -56,12 +57,12 @@
 							<font>font13</font>
 							<textcolor>white</textcolor>
 							<textshadow>66000000</textshadow>
-							<label>[B]$ADDON[plugin.video.emby 30612][/B]</label>
+							<label>[B]$ADDON[plugin.video.jellyfin 30614][/B]</label>
 						</control>
 						<control type="group" id="101">
 							<height>110</height>
 							<control type="label">
-								<label>$ADDON[plugin.video.emby 30024]</label>
+								<label>$ADDON[plugin.video.jellyfin 30615]</label>
 								<textcolor>ffe1e1e1</textcolor>
 								<shadowcolor>66000000</shadowcolor>
 								<font>font12</font>
@@ -82,7 +83,7 @@
 						<control type="group" id="102">
 							<height>110</height>
 							<control type="label">
-								<label>$ADDON[plugin.video.emby 30602]</label>
+								<label>$ADDON[plugin.video.jellyfin 30030]</label>
 								<textcolor>ffe1e1e1</textcolor>
 								<textshadow>66000000</textshadow>
 								<font>font12</font>
@@ -102,7 +103,7 @@
 							</control>
 						</control>
 						<control type="button" id="200">
-							<label>[B]$ADDON[plugin.video.emby 30605][/B]</label>
+							<label>[B]$ADDON[plugin.video.jellyfin 30616][/B]</label>
 							<width>426</width>
 							<height>65</height>
 							<font>font13</font>
@@ -119,7 +120,7 @@
 							<animation effect="slide" time="0" end="17,0" condition="true">Conditional</animation>
 						</control>
 						<control type="button" id="201">
-							<label>[B]$ADDON[plugin.video.emby 30606][/B]</label>
+							<label>[B]$ADDON[plugin.video.jellyfin 30606][/B]</label>
 							<width>426</width>
 							<height>65</height>
 							<font>font13</font>
@@ -135,49 +136,10 @@
 							<pulseonselect>no</pulseonselect>
 							<animation effect="slide" time="0" end="17,0" condition="true">Conditional</animation>
 						</control>
-						<control type="label">
-							<description>spacer</description>
-							<height>20</height>
-						</control>
-						<control type="group">
-							<control type="label">
-								<label>$ADDON[plugin.video.emby 30603]</label>
-								<font>font_flag</font>
-								<textcolor>ff464646</textcolor>
-								<shadowcolor>66000000</shadowcolor>
-								<wrapmultiline>true</wrapmultiline>
-								<scroll>true</scroll>
-								<aligny>top</aligny>
-								<height>160</height>
-								<left>20</left>
-								<right>160</right>
-							</control>
-							<control type="group">
-								<top>10</top>
-								<right>20</right>
-								<width>130</width>
-								<control type="image">
-									<width>130</width>
-									<height>130</height>
-									<description>qrcode</description>
-									<texture>qrcode_disclaimer.png</texture>
-								</control>
-								<control type="label">
-									<top>135</top>
-									<align>center</align>
-									<label>[UPPERCASE]$ADDON[plugin.video.emby 30604][/UPPERCASE]</label>
-									<font>font_flag</font>
-									<scroll>true</scroll>
-									<textcolor>FF52b54b</textcolor>
-									<shadowcolor>66000000</shadowcolor>
-									<aligny>top</aligny>
-								</control>
-							</control>
-						</control>
 					</control>
 				</control>
 				<control type="group" id="202">
-					<top>660</top>
+					<top>470</top>
 					<visible>false</visible>
 					<control type="image">
 						<description>Error box</description>

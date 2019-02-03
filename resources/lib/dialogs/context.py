@@ -12,7 +12,7 @@ from helper import window, addon_id
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 ACTION_PARENT_DIR = 9
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACK = 92
@@ -45,8 +45,8 @@ class ContextMenu(xbmcgui.WindowXMLDialog):
 
     def onInit(self):
 
-        if window('EmbyUserImage'):
-            self.getControl(USER_IMAGE).setImage(window('EmbyUserImage'))
+        if window('JellyfinUserImage'):
+            self.getControl(USER_IMAGE).setImage(window('JellyfinUserImage'))
 
         height = 479 + (len(self._options) * 55)
         LOG.info("options: %s", self._options)

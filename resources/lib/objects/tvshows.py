@@ -11,27 +11,27 @@ from ntpath import dirname
 from obj import Objects
 from kodi import TVShows as KodiDb, queries as QU
 import downloader as server
-from database import emby_db, queries as QUEM
-from helper import api, catch, stop, validate, emby_item, library_check, settings, values, Local
+from database import jellyfin_db, queries as QUEM
+from helper import api, catch, stop, validate, jellyfin_item, library_check, settings, values, Local
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 ##################################################################################################
 
 
 class TVShows(KodiDb):
 
-    def __init__(self, server, embydb, videodb, direct_path, update_library=False):
+    def __init__(self, server, jellyfindb, videodb, direct_path, update_library=False):
 
         self.server = server
-        self.emby = embydb
+        self.jellyfin = jellyfindb
         self.video = videodb
         self.direct_path = direct_path
         self.update_library = update_library
 
-        self.emby_db = emby_db.EmbyDatabase(embydb.cursor)
+        self.jellyfin_db = jellyfin_db.JellyfinDatabase(jellyfindb.cursor)
         self.objects = Objects()
         self.item_ids = []
 
@@ -51,7 +51,7 @@ class TVShows(KodiDb):
             return self.remove
 
     @stop()
-    @emby_item()
+    @jellyfin_item()
     @library_check()
     def tvshow(self, item, e_item, library):
 
@@ -143,18 +143,18 @@ class TVShows(KodiDb):
                 self.item_ids.append(season['SeriesId'])
 
                 try:
-                    self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))[0]
+                    self.jellyfin_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))[0]
 
                     if self.update_library:
                         season_episodes[season['Id']] = season['SeriesId']
                 except TypeError:
 
-                    self.emby_db.add_reference(*values(obj, QUEM.add_reference_pool_obj))
+                    self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_pool_obj))
                     LOG.info("POOL %s [%s/%s]", obj['Title'], obj['Id'], obj['SeriesId'])
                     season_episodes[season['Id']] = season['SeriesId']
                 
             try:
-                self.emby_db.get_item_by_id(season['Id'])[0]
+                self.jellyfin_db.get_item_by_id(season['Id'])[0]
                 self.item_ids.append(season['Id'])
             except TypeError:
                 self.season(season, obj['ShowId'])
@@ -184,7 +184,7 @@ class TVShows(KodiDb):
         obj['PathId'] = self.add_path(*values(obj, QU.get_path_obj))
 
         self.add(*values(obj, QU.add_tvshow_obj))
-        self.emby_db.add_reference(*values(obj, QUEM.add_reference_tvshow_obj))
+        self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_tvshow_obj))
         LOG.info("ADD tvshow [%s/%s/%s] %s: %s", obj['TopPathId'], obj['PathId'], obj['ShowId'], obj['Title'], obj['Id'])
 
     def tvshow_update(self, obj):
@@ -198,7 +198,7 @@ class TVShows(KodiDb):
         self.update_unique_id(*values(obj, QU.update_unique_id_tvshow_obj))
 
         self.update(*values(obj, QU.update_tvshow_obj))
-        self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
+        self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
         LOG.info("UPDATE tvshow [%s/%s] %s: %s", obj['PathId'], obj['ShowId'], obj['Title'], obj['Id'])
 
     def get_path_filename(self, obj):
@@ -217,7 +217,7 @@ class TVShows(KodiDb):
             if not validate(obj['Path']):
                 raise Exception("Failed to validate path. User stopped.")
         else:
-            obj['TopLevel'] = "plugin://plugin.video.emby.tvshows/"
+            obj['TopLevel'] = "plugin://plugin.video.jellyfin/"
             obj['Path'] = "%s%s/" % (obj['TopLevel'], obj['Id'])
 
 
@@ -237,7 +237,7 @@ class TVShows(KodiDb):
         if obj['ShowId'] is None:
 
             try:
-                obj['ShowId'] = self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))[0]
+                obj['ShowId'] = self.jellyfin_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))[0]
             except (KeyError, TypeError):
                 LOG.error("Unable to add series %s", obj['SeriesId'])
 
@@ -247,7 +247,7 @@ class TVShows(KodiDb):
         obj['Artwork'] = API.get_all_artwork(self.objects.map(item, 'Artwork'))
 
         if obj['Location'] != "Virtual":
-            self.emby_db.add_reference(*values(obj, QUEM.add_reference_season_obj))
+            self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_season_obj))
             self.item_ids.append(obj['Id'])
 
         self.artwork.add(obj['Artwork'], obj['SeasonId'], "season")
@@ -255,7 +255,7 @@ class TVShows(KodiDb):
 
 
     @stop()
-    @emby_item()
+    @jellyfin_item()
     def episode(self, item, e_item):
 
         ''' If item does not exist, entry will be added.
@@ -354,7 +354,7 @@ class TVShows(KodiDb):
         if not self.direct_path and obj['Resume']:
 
             temp_obj = dict(obj)
-            temp_obj['Path'] = "plugin://plugin.video.emby.tvshows/"
+            temp_obj['Path'] = "plugin://plugin.video.jellyfin/"
             temp_obj['PathId'] = self.get_path(*values(temp_obj, QU.get_path_obj))
             temp_obj['FileId'] = self.add_file(*values(temp_obj, QU.add_file_obj))
             self.update_file(*values(temp_obj, QU.update_file_obj))
@@ -384,7 +384,7 @@ class TVShows(KodiDb):
 
             return self.episode_add(obj)
 
-        self.emby_db.add_reference(*values(obj, QUEM.add_reference_episode_obj))
+        self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_episode_obj))
         LOG.debug("ADD episode [%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['Id'], obj['Title'])
 
     def episode_update(self, obj):
@@ -399,8 +399,8 @@ class TVShows(KodiDb):
 
         self.update_episode(*values(obj, QU.update_episode_obj))
 
-        self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
-        self.emby_db.update_parent_id(*values(obj, QUEM.update_parent_episode_obj))
+        self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
+        self.jellyfin_db.update_parent_id(*values(obj, QUEM.update_parent_episode_obj))
         LOG.debug("UPDATE episode [%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['Id'], obj['Title'])
 
     def get_episode_path_filename(self, obj):
@@ -419,7 +419,7 @@ class TVShows(KodiDb):
 
             obj['Path'] = obj['Path'].replace(obj['Filename'], "")
         else:
-            obj['Path'] = "plugin://plugin.video.emby.tvshows/%s/" % obj['SeriesId']
+            obj['Path'] = "plugin://plugin.video.jellyfin/%s/" % obj['SeriesId']
             params = {
                 'filename': obj['Filename'].encode('utf-8'),
                 'id': obj['Id'],
@@ -429,13 +429,13 @@ class TVShows(KodiDb):
             obj['Filename'] = "%s?%s" % (obj['Path'], urllib.urlencode(params))
 
     def get_show_id(self, obj):
-        obj['ShowId'] = self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))
+        obj['ShowId'] = self.jellyfin_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))
 
         if obj['ShowId'] is None:
 
             try:
                 self.tvshow(self.server['api'].get_item(obj['SeriesId']), library=None)
-                obj['ShowId'] = self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))[0]
+                obj['ShowId'] = self.jellyfin_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))[0]
             except (TypeError, KeyError):
                 LOG.error("Unable to add series %s", obj['SeriesId'])
 
@@ -449,7 +449,7 @@ class TVShows(KodiDb):
 
 
     @stop()
-    @emby_item()
+    @jellyfin_item()
     def userdata(self, item, e_item):
         
         ''' This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
@@ -493,26 +493,26 @@ class TVShows(KodiDb):
 
                 temp_obj = dict(obj)
                 temp_obj['Filename'] = self.get_filename(*values(temp_obj, QU.get_file_obj))
-                temp_obj['Path'] = "plugin://plugin.video.emby.tvshows/"
+                temp_obj['Path'] = "plugin://plugin.video.jellyfin/"
                 self.remove_file(*values(temp_obj, QU.delete_file_obj))
 
             elif not self.direct_path and obj['Resume']:
 
                 temp_obj = dict(obj)
                 temp_obj['Filename'] = self.get_filename(*values(temp_obj, QU.get_file_obj))
-                temp_obj['PathId'] = self.get_path("plugin://plugin.video.emby.tvshows/")
+                temp_obj['PathId'] = self.get_path("plugin://plugin.video.jellyfin/")
                 temp_obj['FileId'] = self.add_file(*values(temp_obj, QU.add_file_obj))
                 self.update_file(*values(temp_obj, QU.update_file_obj))
                 self.add_playstate(*values(temp_obj, QU.add_bookmark_obj))
 
-        self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
+        self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
         LOG.info("USERDATA %s [%s/%s] %s: %s", obj['Media'], obj['FileId'], obj['KodiId'], obj['Id'], obj['Title'])
 
     @stop()
-    @emby_item()
+    @jellyfin_item()
     def remove(self, item_id, e_item):
         
-        ''' Remove showid, fileid, pathid, emby reference.
+        ''' Remove showid, fileid, pathid, jellyfin reference.
             There's no episodes left, delete show and any possible remaining seasons
         '''
         obj = {'Id': item_id}
@@ -529,7 +529,7 @@ class TVShows(KodiDb):
 
             temp_obj = dict(obj)
             self.remove_episode(obj['KodiId'], obj['FileId'], obj['Id'])
-            season = self.emby_db.get_full_item_by_kodi_id(*values(obj, QUEM.delete_item_by_parent_season_obj))
+            season = self.jellyfin_db.get_full_item_by_kodi_id(*values(obj, QUEM.delete_item_by_parent_season_obj))
 
             try:
                 temp_obj['Id'] = season[0]
@@ -537,61 +537,61 @@ class TVShows(KodiDb):
             except TypeError:
                 return
 
-            if not self.emby_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_episode_obj)):
+            if not self.jellyfin_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_episode_obj)):
 
                 self.remove_season(obj['ParentId'], obj['Id'])
-                self.emby_db.remove_item(*values(temp_obj, QUEM.delete_item_obj))
+                self.jellyfin_db.remove_item(*values(temp_obj, QUEM.delete_item_obj))
 
-            temp_obj['Id'] = self.emby_db.get_item_by_kodi_id(*values(temp_obj, QUEM.get_item_by_parent_tvshow_obj))
+            temp_obj['Id'] = self.jellyfin_db.get_item_by_kodi_id(*values(temp_obj, QUEM.get_item_by_parent_tvshow_obj))
 
             if not self.get_total_episodes(*values(temp_obj, QU.get_total_episodes_obj)):
 
-                for season in self.emby_db.get_item_by_parent_id(*values(temp_obj, QUEM.get_item_by_parent_season_obj)):
+                for season in self.jellyfin_db.get_item_by_parent_id(*values(temp_obj, QUEM.get_item_by_parent_season_obj)):
                     self.remove_season(season[1], obj['Id'])
                 else:
-                    self.emby_db.remove_items_by_parent_id(*values(temp_obj, QUEM.delete_item_by_parent_season_obj))
+                    self.jellyfin_db.remove_items_by_parent_id(*values(temp_obj, QUEM.delete_item_by_parent_season_obj))
 
                 self.remove_tvshow(temp_obj['ParentId'], obj['Id'])
-                self.emby_db.remove_item(*values(temp_obj, QUEM.delete_item_obj))
+                self.jellyfin_db.remove_item(*values(temp_obj, QUEM.delete_item_obj))
 
         elif obj['Media'] == 'tvshow':
             obj['ParentId'] = obj['KodiId']
 
-            for season in self.emby_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_season_obj)):
+            for season in self.jellyfin_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_season_obj)):
                 
                 temp_obj = dict(obj)
                 temp_obj['ParentId'] = season[1]
 
-                for episode in self.emby_db.get_item_by_parent_id(*values(temp_obj, QUEM.get_item_by_parent_episode_obj)):
+                for episode in self.jellyfin_db.get_item_by_parent_id(*values(temp_obj, QUEM.get_item_by_parent_episode_obj)):
                     self.remove_episode(episode[1], episode[2], obj['Id'])
                 else:
-                    self.emby_db.remove_items_by_parent_id(*values(temp_obj, QUEM.delete_item_by_parent_episode_obj))
+                    self.jellyfin_db.remove_items_by_parent_id(*values(temp_obj, QUEM.delete_item_by_parent_episode_obj))
             else:
-                self.emby_db.remove_items_by_parent_id(*values(obj, QUEM.delete_item_by_parent_season_obj))
+                self.jellyfin_db.remove_items_by_parent_id(*values(obj, QUEM.delete_item_by_parent_season_obj))
 
             self.remove_tvshow(obj['KodiId'], obj['Id'])
 
         elif obj['Media'] == 'season':
 
-            for episode in self.emby_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_episode_obj)):
+            for episode in self.jellyfin_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_episode_obj)):
                 self.remove_episode(episode[1], episode[2], obj['Id'])
             else:
-                self.emby_db.remove_items_by_parent_id(*values(obj, QUEM.delete_item_by_parent_episode_obj))
+                self.jellyfin_db.remove_items_by_parent_id(*values(obj, QUEM.delete_item_by_parent_episode_obj))
 
             self.remove_season(obj['KodiId'], obj['Id'])
 
-            if not self.emby_db.get_item_by_parent_id(*values(obj, QUEM.delete_item_by_parent_season_obj)):
+            if not self.jellyfin_db.get_item_by_parent_id(*values(obj, QUEM.delete_item_by_parent_season_obj)):
 
                 self.remove_tvshow(obj['ParentId'], obj['Id'])
-                self.emby_db.remove_item_by_kodi_id(*values(obj, QUEM.delete_item_by_parent_tvshow_obj))
+                self.jellyfin_db.remove_item_by_kodi_id(*values(obj, QUEM.delete_item_by_parent_tvshow_obj))
 
         # Remove any series pooling episodes
-        for episode in self.emby_db.get_media_by_parent_id(obj['Id']):
+        for episode in self.jellyfin_db.get_media_by_parent_id(obj['Id']):
             self.remove_episode(episode[2], episode[3], obj['Id'])
         else:
-            self.emby_db.remove_media_by_parent_id(obj['Id'])
+            self.jellyfin_db.remove_media_by_parent_id(obj['Id'])
 
-        self.emby_db.remove_item(*values(obj, QUEM.delete_item_obj))
+        self.jellyfin_db.remove_item(*values(obj, QUEM.delete_item_obj))
 
     def remove_tvshow(self, kodi_id, item_id):
         
@@ -611,10 +611,10 @@ class TVShows(KodiDb):
         self.delete_episode(kodi_id, file_id)
         LOG.info("DELETE episode [%s/%s] %s", file_id, kodi_id, item_id)
 
-    @emby_item()
+    @jellyfin_item()
     def get_child(self, item_id, e_item):
 
-        ''' Get all child elements from tv show emby id.
+        ''' Get all child elements from tv show jellyfin id.
         '''
         obj = {'Id': item_id}
         child = []
@@ -629,16 +629,16 @@ class TVShows(KodiDb):
 
         obj['ParentId'] = obj['KodiId']
 
-        for season in self.emby_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_season_obj)):
+        for season in self.jellyfin_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_season_obj)):
             
             temp_obj = dict(obj)
             temp_obj['ParentId'] = season[1]
             child.append(season[0])
 
-            for episode in self.emby_db.get_item_by_parent_id(*values(temp_obj, QUEM.get_item_by_parent_episode_obj)):
+            for episode in self.jellyfin_db.get_item_by_parent_id(*values(temp_obj, QUEM.get_item_by_parent_episode_obj)):
                 child.append(episode[0])
 
-        for episode in self.emby_db.get_media_by_parent_id(obj['Id']):
+        for episode in self.jellyfin_db.get_media_by_parent_id(obj['Id']):
             child.append(episode[0])
 
         return child

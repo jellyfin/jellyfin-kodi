@@ -9,26 +9,26 @@ import urllib
 
 from obj import Objects
 from kodi import Music as KodiDb, queries_music as QU
-from database import emby_db, queries as QUEM
-from helper import api, catch, stop, validate, emby_item, values, library_check, settings, Local
+from database import jellyfin_db, queries as QUEM
+from helper import api, catch, stop, validate, jellyfin_item, values, library_check, settings, Local
 
 ##################################################################################################
 
-LOG = logging.getLogger("EMBY."+__name__)
+LOG = logging.getLogger("JELLYFIN."+__name__)
 
 ##################################################################################################
 
 
 class Music(KodiDb):
 
-    def __init__(self, server, embydb, musicdb, direct_path):
+    def __init__(self, server, jellyfindb, musicdb, direct_path):
 
         self.server = server
-        self.emby = embydb
+        self.jellyfin = jellyfindb
         self.music = musicdb
         self.direct_path = direct_path
 
-        self.emby_db = emby_db.EmbyDatabase(embydb.cursor)
+        self.jellyfin_db = jellyfin_db.JellyfinDatabase(jellyfindb.cursor)
         self.objects = Objects()
         self.item_ids = []
 
@@ -48,7 +48,7 @@ class Music(KodiDb):
             return self.remove
 
     @stop()
-    @emby_item()
+    @jellyfin_item()
     @library_check()
     def artist(self, item, e_item, library):
 
@@ -103,23 +103,23 @@ class Music(KodiDb):
         
         ''' Add object to kodi.
 
-            safety checks: It looks like Emby supports the same artist multiple times.
+            safety checks: It looks like Jellyfin supports the same artist multiple times.
             Kodi doesn't allow that. In case that happens we just merge the artist entries.
         '''
         obj['ArtistId'] = self.get(*values(obj, QU.get_artist_obj))
-        self.emby_db.add_reference(*values(obj, QUEM.add_reference_artist_obj))
+        self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_artist_obj))
         LOG.info("ADD artist [%s] %s: %s", obj['ArtistId'], obj['Name'], obj['Id'])
 
     def artist_update(self, obj):
 
         ''' Update object to kodi.
         '''
-        self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
+        self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
         LOG.info("UPDATE artist [%s] %s: %s", obj['ArtistId'], obj['Name'], obj['Id'])
 
 
     @stop()
-    @emby_item()
+    @jellyfin_item()
     def album(self, item, e_item):
 
         ''' Update object to kodi.
@@ -172,14 +172,14 @@ class Music(KodiDb):
         ''' Add object to kodi.
         '''
         obj['AlbumId'] = self.get_album(*values(obj, QU.get_album_obj))
-        self.emby_db.add_reference(*values(obj, QUEM.add_reference_album_obj))
+        self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_album_obj))
         LOG.info("ADD album [%s] %s: %s", obj['AlbumId'], obj['Title'], obj['Id'])
 
     def album_update(self, obj):
         
         ''' Update object to kodi.
         '''
-        self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
+        self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
         LOG.info("UPDATE album [%s] %s: %s", obj['AlbumId'], obj['Title'], obj['Id'])
 
     def artist_discography(self, obj):
@@ -193,17 +193,17 @@ class Music(KodiDb):
             temp_obj['AlbumId'] = obj['Id']
 
             try:
-                temp_obj['ArtistId'] = self.emby_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
+                temp_obj['ArtistId'] = self.jellyfin_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
             except TypeError:
                 continue
 
             self.add_discography(*values(temp_obj, QU.update_discography_obj))
-            self.emby_db.update_parent_id(*values(temp_obj, QUEM.update_parent_album_obj))
+            self.jellyfin_db.update_parent_id(*values(temp_obj, QUEM.update_parent_album_obj))
 
     def artist_link(self, obj):
 
         ''' Assign main artists to album.
-            Artist does not exist in emby database, create the reference.
+            Artist does not exist in jellyfin database, create the reference.
         '''
         for artist in (obj['AlbumArtists'] or []):
 
@@ -212,12 +212,12 @@ class Music(KodiDb):
             temp_obj['Id'] = artist['Id']
 
             try:
-                temp_obj['ArtistId'] = self.emby_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
+                temp_obj['ArtistId'] = self.jellyfin_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
             except TypeError:
 
                 try:
                     self.artist(self.server['api'].get_item(temp_obj['Id']), library=None)
-                    temp_obj['ArtistId'] = self.emby_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
+                    temp_obj['ArtistId'] = self.jellyfin_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
                 except Exception as error:
                     LOG.error(error)
                     continue
@@ -228,7 +228,7 @@ class Music(KodiDb):
 
 
     @stop()
-    @emby_item()
+    @jellyfin_item()
     def song(self, item, e_item):
 
         ''' Update object to kodi.
@@ -310,7 +310,7 @@ class Music(KodiDb):
         obj['PathId'] = self.add_path(obj['Path'])
 
         try:
-            obj['AlbumId'] = self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_song_obj))[0]
+            obj['AlbumId'] = self.jellyfin_db.get_item_by_id(*values(obj, QUEM.get_item_song_obj))[0]
         except TypeError:
 
             try:
@@ -318,12 +318,12 @@ class Music(KodiDb):
                     raise TypeError("No album id found associated?")
 
                 self.album(self.server['api'].get_item(obj['SongAlbumId']))
-                obj['AlbumId'] = self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_song_obj))[0]
+                obj['AlbumId'] = self.jellyfin_db.get_item_by_id(*values(obj, QUEM.get_item_song_obj))[0]
             except TypeError:
                 self.single(obj)
 
         self.add_song(*values(obj, QU.add_song_obj))
-        self.emby_db.add_reference(*values(obj, QUEM.add_reference_song_obj))
+        self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_song_obj))
         LOG.debug("ADD song [%s/%s/%s] %s: %s", obj['PathId'], obj['AlbumId'], obj['SongId'], obj['Id'], obj['Title'])
 
     def song_update(self, obj):
@@ -333,7 +333,7 @@ class Music(KodiDb):
         self.update_path(*values(obj, QU.update_path_obj))
 
         self.update_song(*values(obj, QU.update_song_obj))
-        self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
+        self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
         LOG.info("UPDATE song [%s/%s/%s] %s: %s", obj['PathId'], obj['AlbumId'], obj['SongId'], obj['Id'], obj['Title'])
 
     def get_song_path_filename(self, obj, api):
@@ -368,12 +368,12 @@ class Music(KodiDb):
             artists.append(temp_obj['Name'])
 
             try:
-                temp_obj['ArtistId'] = self.emby_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
+                temp_obj['ArtistId'] = self.jellyfin_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
             except TypeError:
 
                 try:
                     self.artist(self.server['api'].get_item(temp_obj['Id']), library=None)
-                    temp_obj['ArtistId'] = self.emby_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
+                    temp_obj['ArtistId'] = self.jellyfin_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
                 except Exception as error:
                     LOG.error(error)
                     continue
@@ -392,7 +392,7 @@ class Music(KodiDb):
     def song_artist_link(self, obj):
         
         ''' Assign main artists to song.
-            Artist does not exist in emby database, create the reference.
+            Artist does not exist in jellyfin database, create the reference.
         '''
         for index, artist in enumerate(obj['ArtistItems'] or []):
 
@@ -402,12 +402,12 @@ class Music(KodiDb):
             temp_obj['Index'] = index
 
             try:
-                temp_obj['ArtistId'] = self.emby_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
+                temp_obj['ArtistId'] = self.jellyfin_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
             except TypeError:
 
                 try:
                     self.artist(self.server['api'].get_item(temp_obj['Id']), library=None)
-                    temp_obj['ArtistId'] = self.emby_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
+                    temp_obj['ArtistId'] = self.jellyfin_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
                 except Exception as error:
                     LOG.error(error)
                     continue
@@ -422,7 +422,7 @@ class Music(KodiDb):
 
 
     @stop()
-    @emby_item()
+    @jellyfin_item()
     def userdata(self, item, e_item):
         
         ''' This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
@@ -446,11 +446,11 @@ class Music(KodiDb):
 
             self.rate_song(*values(obj, QU.update_song_rating_obj))
 
-        self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
+        self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
         LOG.info("USERDATA %s [%s] %s: %s", obj['Media'], obj['KodiId'], obj['Id'], obj['Title'])
 
     @stop()
-    @emby_item()
+    @jellyfin_item()
     def remove(self, item_id, e_item):
         
         ''' This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
@@ -470,47 +470,47 @@ class Music(KodiDb):
         if obj['Media'] == 'song':
             
             self.remove_song(obj['KodiId'], obj['Id'])
-            self.emby_db.remove_wild_item(obj['id'])
+            self.jellyfin_db.remove_wild_item(obj['id'])
 
-            for item in self.emby_get_item_by_wild_id(*values(obj, QUEM.get_item_by_wild_obj)):
+            for item in self.jellyfin_db.get_item_by_wild_id(*values(obj, QUEM.get_item_by_wild_obj)):
                 if item[1] == 'album':
 
                     temp_obj = dict(obj)
                     temp_obj['ParentId'] = item[0]
 
-                    if not self.emby_db.get_item_by_parent_id(*values(temp_obj, QUEM.get_item_by_parent_song_obj)):
+                    if not self.jellyfin_db.get_item_by_parent_id(*values(temp_obj, QUEM.get_item_by_parent_song_obj)):
                         self.remove_album(temp_obj['ParentId'], obj['Id'])
 
         elif obj['Media'] == 'album':
             obj['ParentId'] = obj['KodiId']
 
-            for song in self.emby_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_song_obj)):
+            for song in self.jellyfin_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_song_obj)):
                 self.remove_song(song[1], obj['Id'])
             else:
-                self.emby_db.remove_items_by_parent_id(*values(obj, QUEM.delete_item_by_parent_song_obj))
+                self.jellyfin_db.remove_items_by_parent_id(*values(obj, QUEM.delete_item_by_parent_song_obj))
 
             self.remove_album(obj['KodiId'], obj['Id'])
 
         elif obj['Media'] == 'artist':
             obj['ParentId'] = obj['KodiId']
 
-            for album in self.emby_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_album_obj)):
+            for album in self.jellyfin_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_album_obj)):
 
                 temp_obj = dict(obj)
                 temp_obj['ParentId'] = album[1]
 
-                for song in self.emby_db.get_item_by_parent_id(*values(temp_obj, QUEM.get_item_by_parent_song_obj)):
+                for song in self.jellyfin_db.get_item_by_parent_id(*values(temp_obj, QUEM.get_item_by_parent_song_obj)):
                     self.remove_song(song[1], obj['Id'])
                 else:
-                    self.emby_db.remove_items_by_parent_id(*values(temp_obj, QUEM.delete_item_by_parent_song_obj))
-                    self.emby_db.remove_items_by_parent_id(*values(temp_obj, QUEM.delete_item_by_parent_artist_obj))
+                    self.jellyfin_db.remove_items_by_parent_id(*values(temp_obj, QUEM.delete_item_by_parent_song_obj))
+                    self.jellyfin_db.remove_items_by_parent_id(*values(temp_obj, QUEM.delete_item_by_parent_artist_obj))
                     self.remove_album(temp_obj['ParentId'], obj['Id'])
             else:
-                self.emby_db.remove_items_by_parent_id(*values(obj, QUEM.delete_item_by_parent_album_obj))
+                self.jellyfin_db.remove_items_by_parent_id(*values(obj, QUEM.delete_item_by_parent_album_obj))
 
             self.remove_artist(obj['KodiId'], obj['Id'])
 
-        self.emby_db.remove_item(*values(obj, QUEM.delete_item_obj))
+        self.jellyfin_db.remove_item(*values(obj, QUEM.delete_item_obj))
 
     def remove_artist(self, kodi_id, item_id):
         
@@ -530,10 +530,10 @@ class Music(KodiDb):
         self.delete_song(kodi_id)
         LOG.info("DELETE song [%s] %s", kodi_id, item_id)
 
-    @emby_item()
+    @jellyfin_item()
     def get_child(self, item_id, e_item):
 
-        ''' Get all child elements from tv show emby id.
+        ''' Get all child elements from tv show jellyfin id.
         '''
         obj = {'Id': item_id}
         child = []
@@ -548,13 +548,13 @@ class Music(KodiDb):
 
         obj['ParentId'] = obj['KodiId']
 
-        for album in self.emby_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_album_obj)):
+        for album in self.jellyfin_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_album_obj)):
 
             temp_obj = dict(obj)
             temp_obj['ParentId'] = album[1]
             child.append((album[0],))
 
-            for song in self.emby_db.get_item_by_parent_id(*values(temp_obj, QUEM.get_item_by_parent_song_obj)):
+            for song in self.jellyfin_db.get_item_by_parent_id(*values(temp_obj, QUEM.get_item_by_parent_song_obj)):
                 child.append((song[0],))
 
         return child

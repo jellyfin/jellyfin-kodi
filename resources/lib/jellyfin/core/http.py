@@ -11,7 +11,7 @@ from exceptions import HTTPException
 
 #################################################################################################
 
-LOG = logging.getLogger('Emby.'+__name__)
+LOG = logging.getLogger('Jellyfin.'+__name__)
 
 #################################################################################################
 
@@ -69,7 +69,7 @@ class HTTP(object):
 
     def request(self, data, session=None):
 
-        ''' Give a chance to retry the connection. Emby sometimes can be slow to answer back
+        ''' Give a chance to retry the connection. Jellyfin sometimes can be slow to answer back
             data dictionary can contain:
             type: GET, POST, etc.
             url: (optional)
