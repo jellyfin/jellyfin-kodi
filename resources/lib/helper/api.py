@@ -2,8 +2,6 @@
 
 ##################################################################################################
 
-import json
-import datetime
 import logging
 
 from . import settings
@@ -16,8 +14,6 @@ LOG = logging.getLogger("JELLYFIN."+__name__)
 
 
 class API(object):
-
-
     def __init__(self, item, server=None):
         
         ''' Get item information in special cases.
@@ -71,7 +67,7 @@ class API(object):
         return cast
 
     def media_streams(self, video, audio, subtitles):
-        return  {
+        return {
             'video': video or [],
             'audio': audio or [],
             'subtitle': subtitles or []
@@ -161,7 +157,6 @@ class API(object):
     def validate_studio(self, studio_name):
         # Convert studio for Kodi to properly detect them
         studios = {
-
             'abc (us)': "ABC",
             'fox (us)': "FOX",
             'mtv (us)': "MTV",

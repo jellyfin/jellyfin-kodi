@@ -2,20 +2,18 @@
 
 #################################################################################################
 
-import json
 import logging
 import Queue
 import threading
 import os
-from datetime import datetime
 
 import xbmc
 import xbmcvfs
 import xbmcaddon
 
 import requests
-from helper.utils import should_stop, delete_folder
-from helper import settings, stop, event, window, kodi_version, unzip, create_id
+from helper.utils import delete_folder
+from helper import settings, stop, event, window, unzip, create_id
 from jellyfin import Jellyfin
 from jellyfin.core import api
 from jellyfin.core.exceptions import HTTPException
@@ -28,6 +26,7 @@ CACHE = xbmc.translatePath(os.path.join(xbmcaddon.Addon(id='plugin.video.jellyfi
 
 #################################################################################################
 
+
 def get_jellyfinserver_url(handler):
 
     if handler.startswith('/'):
@@ -35,27 +34,33 @@ def get_jellyfinserver_url(handler):
         handler = handler[1:]
         LOG.warn("handler starts with /: %s", handler)
 
-    return  "{server}/emby/%s" % handler
+    return "{server}/emby/%s" % handler
+
 
 def browse_info():
-    return  (  
-                "DateCreated,EpisodeCount,SeasonCount,Path,Genres,Studios,Taglines,MediaStreams,Overview,Etag,"
-                "ProductionLocations,Width,Height,RecursiveItemCount,ChildCount"
-            )
+    return (
+        "DateCreated,EpisodeCount,SeasonCount,Path,Genres,Studios,Taglines,MediaStreams,Overview,Etag,"
+        "ProductionLocations,Width,Height,RecursiveItemCount,ChildCount"
+        )
+
 
 def _http(action, url, request={}, server_id=None):
     request.update({'url': url, 'type': action})
     
     return Jellyfin(server_id)['http/request'](request)
 
+
 def _get(handler, params=None, server_id=None):
-    return  _http("GET", get_jellyfinserver_url(handler), {'params': params}, server_id)
+    return http("GET", get_jellyfinserver_url(handler), {'params': params}, server_id)
+
 
 def _post(handler, json=None, params=None, server_id=None):
-    return  _http("POST", get_jellyfinserver_url(handler), {'params': params, 'json': json}, server_id)
+    return http("POST", get_jellyfinserver_url(handler), {'params': params, 'json': json}, server_id)
+
 
 def _delete(handler, params=None, server_id=None):
-    return  _http("DELETE", get_jellyfinserver_url(handler), {'params': params}, server_id)
+    return _http("DELETE", get_jellyfinserver_url(handler), {'params': params}, server_id)
+
 
 def validate_view(library_id, item_id):
 
@@ -73,13 +78,15 @@ def validate_view(library_id, item_id):
 
     return True if len(result['Items']) else False
 
+
 def get_single_item(parent_id, media):
-    return  _get("Users/{UserId}/Items", {
-                'ParentId': parent_id,
-                'Recursive': True,
-                'Limit': 1,
-                'IncludeItemTypes': media
-            })
+    return _get("Users/{UserId}/Items", {
+        'ParentId': parent_id,
+        'Recursive': True,
+        'Limit': 1,
+        'IncludeItemTypes': media
+    })
+
 
 def get_filtered_section(parent_id=None, media=None, limit=None, recursive=None, sort=None, sort_order=None,
                          filters=None, extra=None, server_id=None):
@@ -99,9 +106,7 @@ def get_filtered_section(parent_id=None, media=None, limit=None, recursive=None,
         'Fields': browse_info()
     }
     if filters:
-
         if 'Boxsets' in filters:
-
             filters.remove('Boxsets')
             params['CollapseBoxSetItems'] = settings('groupedSets.bool')
 
@@ -116,12 +121,14 @@ def get_filtered_section(parent_id=None, media=None, limit=None, recursive=None,
     if extra is not None:
         params.update(extra)
 
-    return  _get("Users/{UserId}/Items", params, server_id)
+    return _get("Users/{UserId}/Items", params, server_id)
+
 
 def get_movies_by_boxset(boxset_id):
 
     for items in get_items(boxset_id, "Movie"):
         yield items
+
 
 def get_episode_by_show(show_id):
 
@@ -137,6 +144,7 @@ def get_episode_by_show(show_id):
     for items in _get_items(query):
         yield items
 
+
 def get_episode_by_season(show_id, season_id):
 
     query = {
@@ -151,6 +159,7 @@ def get_episode_by_season(show_id, season_id):
     }
     for items in _get_items(query):
         yield items
+
 
 def get_items(parent_id, item_type=None, basic=False, params=None):
 
@@ -175,6 +184,7 @@ def get_items(parent_id, item_type=None, basic=False, params=None):
 
     for items in _get_items(query):
         yield items
+
 
 def get_artists(parent_id=None, basic=False, params=None, server_id=None):
 
@@ -201,6 +211,7 @@ def get_artists(parent_id=None, basic=False, params=None, server_id=None):
     for items in _get_items(query, server_id):
         yield items
 
+
 def get_albums_by_artist(artist_id, basic=False):
 
     params = {
@@ -210,6 +221,7 @@ def get_albums_by_artist(artist_id, basic=False):
     for items in get_items(None, "MusicAlbum", basic, params):
         yield items
 
+
 def get_songs_by_artist(artist_id, basic=False):
 
     params = {
@@ -218,6 +230,7 @@ def get_songs_by_artist(artist_id, basic=False):
     }
     for items in get_items(None, "Audio", basic, params):
         yield items
+
 
 @stop()
 def _get_items(query, server_id=None):
@@ -263,6 +276,7 @@ def _get_items(query, server_id=None):
             del items['Items'][:]
             index += LIMIT
 
+
 class GetItemWorker(threading.Thread):
 
     is_done = False
@@ -275,10 +289,8 @@ class GetItemWorker(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-
         with requests.Session() as s:
             while True:
-
                 try:
                     item_ids = self.queue.get(timeout=1)
                 except Queue.Empty:
@@ -320,6 +332,7 @@ class GetItemWorker(threading.Thread):
                 if window('jellyfin_should_stop.bool'):
                     break
 
+
 class TheVoid(object):
 
     def __init__(self, method, data):
@@ -359,6 +372,7 @@ class TheVoid(object):
             xbmc.sleep(100)
             LOG.info("--[ void/%s ]", self.data['VoidName'])
 
+
 def get_objects(src, filename):
 
     ''' Download objects dependency to temp cache folder.
@@ -383,7 +397,7 @@ def get_objects(src, filename):
 
             LOG.error(error)
             response = requests.get(src, stream=True, verify=False)
-        except Exception as error:
+        except Exception:
             raise
 
         dl = xbmcvfs.File(path, 'w')

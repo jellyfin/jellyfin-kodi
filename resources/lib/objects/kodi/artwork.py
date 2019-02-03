@@ -165,7 +165,6 @@ class Artwork(object):
         from database import Database
 
         with Database('texture') as texturedb:
-
             try:
                 texturedb.cursor.execute(QUTEX.get_cache, (url,))
                 cached = texturedb.cursor.fetchone()[0]
@@ -195,7 +194,6 @@ class GetArtworkWorker(threading.Thread):
         '''
         with requests.Session() as s:
             while True:
-
                 try:
                     url = self.queue.get(timeout=2)
                 except Queue.Empty:
