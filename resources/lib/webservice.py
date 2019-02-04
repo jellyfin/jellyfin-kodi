@@ -121,9 +121,6 @@ class requestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             if not params or params.get('Id') is None:
                 raise IndexError("Incomplete URL format")
 
-            if 'extrafanart' in params['Id']:
-                raise IndexError("Incorrect Id format %s" % params['Id'])
-
             xbmc.log("[ webservice ] path: %s params: %s" % (str(self.path), str(params)), xbmc.LOGWARNING)
 
             path = ("plugin://plugin.video.jellyfin?mode=play&id=%s&dbid=%s&filename=%s&transcode=%s"
