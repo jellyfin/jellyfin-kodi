@@ -8,6 +8,7 @@ import hashlib
 import socket
 import time
 from datetime import datetime
+from distutils.version import LooseVersion
 
 from credentials import Credentials
 from http import HTTP
@@ -394,26 +395,15 @@ class ConnectionManager(object):
             1 a is larger
             0 equal
         '''
-        a = a.split('.')
-        b = b.split('.')
+        a = LooseVersion(a)
+        b = LooseVersion(b)
 
-        for i in range(0, max(len(a), len(b)), 1):
-            try:
-                aVal = a[i]
-            except IndexError:
-                aVal = 0
+        if a < b:
+            return -1
 
-            try:    
-                bVal = b[i]
-            except IndexError:
-                bVal = 0
-
-            if aVal < bVal:
-                return -1
-
-            if aVal > bVal:
-                return 1
-
+        if a > b:
+            return 1
+        
         return 0
 
     def _string_equals_ignore_case(self, str1, str2):
