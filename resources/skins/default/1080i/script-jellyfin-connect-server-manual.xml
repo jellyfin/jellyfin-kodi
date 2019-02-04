@@ -114,7 +114,7 @@
 							<textoffsetx>20</textoffsetx>
 							<aligny>center</aligny>
 							<align>center</align>
-							<texturefocus border="10" colordiffuse="ff52b54b">buttons/shadow_smallbutton.png</texturefocus>
+							<texturefocus border="10" colordiffuse="ff00A4DC">buttons/shadow_smallbutton.png</texturefocus>
 							<texturenofocus border="10" colordiffuse="ff464646">buttons/shadow_smallbutton.png</texturenofocus>
 							<pulseonselect>no</pulseonselect>
 							<animation effect="slide" time="0" end="17,0" condition="true">Conditional</animation>
@@ -131,7 +131,7 @@
 							<textoffsetx>20</textoffsetx>
 							<aligny>center</aligny>
 							<align>center</align>
-							<texturefocus border="10" colordiffuse="ff52b54b">buttons/shadow_smallbutton.png</texturefocus>
+							<texturefocus border="10" colordiffuse="ff00A4DC">buttons/shadow_smallbutton.png</texturefocus>
 							<texturenofocus border="10" colordiffuse="ff464646">buttons/shadow_smallbutton.png</texturenofocus>
 							<pulseonselect>no</pulseonselect>
 							<animation effect="slide" time="0" end="17,0" condition="true">Conditional</animation>
