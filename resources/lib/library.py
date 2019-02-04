@@ -123,9 +123,8 @@ class Library(threading.Thread):
 
         ''' Open the databases to test if the file exists.
         '''
-        with Database('video') as kodidb:
-            with Database('music') as musicdb:
-                pass
+        with Database('video'), Database('music'):
+            pass
 
     @stop()
     def service(self):
@@ -611,33 +610,29 @@ class UpdatedWorker(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
+        with self.lock, self.database as kodidb, Database('jellyfin') as jellyfindb:
+            while True:
 
-        with self.lock:
-            with self.database as kodidb:
-                with Database('jellyfin') as jellyfindb:
+                try:
+                    item = self.queue.get(timeout=1)
+                except Queue.Empty:
+                    break
 
-                    while True:
+                obj = MEDIA[item['Type']](self.args[0], jellyfindb, kodidb, self.args[1])[item['Type']]
 
-                        try:
-                            item = self.queue.get(timeout=1)
-                        except Queue.Empty:
-                            break
+                try:
+                    if obj(item) and self.notify:
+                        self.notify_output.put((item['Type'], api.API(item).get_naming()))
+                except LibraryException as error:
+                    if error.status == 'StopCalled':
+                        break
+                except Exception as error:
+                    LOG.exception(error)
 
-                        obj = MEDIA[item['Type']](self.args[0], jellyfindb, kodidb, self.args[1])[item['Type']]
+                self.queue.task_done()
 
-                        try:
-                            if obj(item) and self.notify:
-                                self.notify_output.put((item['Type'], api.API(item).get_naming()))
-                        except LibraryException as error:
-                            if error.status == 'StopCalled':
-                                break
-                        except Exception as error:
-                            LOG.exception(error)
-
-                        self.queue.task_done()
-
-                        if window('jellyfin_should_stop.bool'):
-                            break
+                if window('jellyfin_should_stop.bool'):
+                    break
 
         LOG.info("--<[ q:updated/%s ]", id(self))
         self.is_done = True
@@ -656,31 +651,28 @@ class UserDataWorker(threading.Thread):
 
     def run(self):
 
-        with self.lock:
-            with self.database as kodidb:
-                with Database('jellyfin') as jellyfindb:
+        with self.lock, self.database as kodidb, Database('jellyfin') as jellyfindb:
+            while True:
 
-                    while True:
+                try:
+                    item = self.queue.get(timeout=1)
+                except Queue.Empty:
+                    break
 
-                        try:
-                            item = self.queue.get(timeout=1)
-                        except Queue.Empty:
-                            break
+                obj = MEDIA[item['Type']](self.args[0], jellyfindb, kodidb, self.args[1])['UserData']
 
-                        obj = MEDIA[item['Type']](self.args[0], jellyfindb, kodidb, self.args[1])['UserData']
+                try:
+                    obj(item)
+                except LibraryException as error:
+                    if error.status == 'StopCalled':
+                        break
+                except Exception as error:
+                    LOG.exception(error)
 
-                        try:
-                            obj(item)
-                        except LibraryException as error:
-                            if error.status == 'StopCalled':
-                                break
-                        except Exception as error:
-                            LOG.exception(error)
+                self.queue.task_done()
 
-                        self.queue.task_done()
-
-                        if window('jellyfin_should_stop.bool'):
-                            break
+                if window('jellyfin_should_stop.bool'):
+                    break
 
         LOG.info("--<[ q:userdata/%s ]", id(self))
         self.is_done = True
@@ -742,31 +734,28 @@ class RemovedWorker(threading.Thread):
 
     def run(self):
 
-        with self.lock:
-            with self.database as kodidb:
-                with Database('jellyfin') as jellyfindb:
+        with self.lock, self.database as kodidb, Database('jellyfin') as jellyfindb:
+            while True:
 
-                    while True:
+                try:
+                    item = self.queue.get(timeout=1)
+                except Queue.Empty:
+                    break
 
-                        try:
-                            item = self.queue.get(timeout=1)
-                        except Queue.Empty:
-                            break
+                obj = MEDIA[item['Type']](self.args[0], jellyfindb, kodidb, self.args[1])['Remove']
 
-                        obj = MEDIA[item['Type']](self.args[0], jellyfindb, kodidb, self.args[1])['Remove']
+                try:
+                    obj(item['Id'])
+                except LibraryException as error:
+                    if error.status == 'StopCalled':
+                        break
+                except Exception as error:
+                    LOG.exception(error)
 
-                        try:
-                            obj(item['Id'])
-                        except LibraryException as error:
-                            if error.status == 'StopCalled':
-                                break
-                        except Exception as error:
-                            LOG.exception(error)
+                self.queue.task_done()
 
-                        self.queue.task_done()
-
-                        if window('jellyfin_should_stop.bool'):
-                            break
+                if window('jellyfin_should_stop.bool'):
+                    break
 
         LOG.info("--<[ q:removed/%s ]", id(self))
         self.is_done = True
