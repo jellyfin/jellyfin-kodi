@@ -51,11 +51,11 @@ def _http(action, url, request={}, server_id=None):
 
 
 def _get(handler, params=None, server_id=None):
-    return http("GET", get_jellyfinserver_url(handler), {'params': params}, server_id)
+    return _http("GET", get_jellyfinserver_url(handler), {'params': params}, server_id)
 
 
 def _post(handler, json=None, params=None, server_id=None):
-    return http("POST", get_jellyfinserver_url(handler), {'params': params, 'json': json}, server_id)
+    return _http("POST", get_jellyfinserver_url(handler), {'params': params, 'json': json}, server_id)
 
 
 def _delete(handler, params=None, server_id=None):

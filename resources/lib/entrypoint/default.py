@@ -211,8 +211,8 @@ def dir_listitem(label, path, artwork=None, fanart=None):
 
     li = xbmcgui.ListItem(label, path=path)
     li.setThumbnailImage(artwork or "special://home/addons/plugin.video.jellyfin/icon.png")
-    li.setArt({"fanart": fanart or "special://home/addons/plugin.video.jellyfin/fanart.jpg"})
-    li.setArt({"landscape": artwork or fanart or "special://home/addons/plugin.video.jellyfin/fanart.jpg"})
+    li.setArt({"fanart": fanart or "special://home/addons/plugin.video.jellyfin/fanart.png"})
+    li.setArt({"landscape": artwork or fanart or "special://home/addons/plugin.video.jellyfin/fanart.png"})
 
     return li
 

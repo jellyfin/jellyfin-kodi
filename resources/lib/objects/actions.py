@@ -313,7 +313,7 @@ class Actions(object):
         if not intro and not obj['Type'] == 'Trailer':
             obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or "special://home/addons/plugin.video.jellyfin/icon.png"
         else:
-            obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or obj['Artwork']['Thumb'] or (obj['Artwork']['Backdrop'][0] if len(obj['Artwork']['Backdrop']) else "special://home/addons/plugin.video.jellyfin/fanart.jpg")
+            obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or obj['Artwork']['Thumb'] or (obj['Artwork']['Backdrop'][0] if len(obj['Artwork']['Backdrop']) else "special://home/addons/plugin.video.jellyfin/fanart.png")
             obj['Artwork']['Primary'] += "&KodiTrailer=true" if obj['Type'] == 'Trailer' else "&KodiCinemaMode=true"
             obj['Artwork']['Backdrop'] = [obj['Artwork']['Primary']]
 
@@ -472,8 +472,8 @@ class Actions(object):
         obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount']) or 0
         obj['Overlay'] = 7 if obj['Played'] else 6
         obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or "special://home/addons/plugin.video.jellyfin/icon.png"
-        obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] or "special://home/addons/plugin.video.jellyfin/fanart.jpg"
-        obj['Artwork']['Backdrop'] = obj['Artwork']['Backdrop'] or ["special://home/addons/plugin.video.jellyfin/fanart.jpg"]
+        obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] or "special://home/addons/plugin.video.jellyfin/fanart.png"
+        obj['Artwork']['Backdrop'] = obj['Artwork']['Backdrop'] or ["special://home/addons/plugin.video.jellyfin/fanart.png"]
 
 
         metadata = {

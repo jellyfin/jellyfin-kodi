@@ -139,7 +139,7 @@
 										<top>-7</top>
 										<width>300</width>
 										<height>300</height>
-										<texture colordiffuse="FF388e3c">items/focus_square.png</texture>
+										<texture colordiffuse="FF00A4DC">items/focus_square.png</texture>
 										<aspectratio>scale</aspectratio>
 										<animation effect="fade" start="0" end="100" time="200" tween="sine">Focus</animation>
 										<animation effect="fade" start="100" end="0" time="0">UnFocus</animation>
@@ -186,7 +186,7 @@
 							<textoffsetx>20</textoffsetx>
 							<aligny>center</aligny>
 							<align>center</align>
-							<texturefocus border="10" colordiffuse="ff52b54b">buttons/shadow_smallbutton.png</texturefocus>
+							<texturefocus border="10" colordiffuse="FF00A4DC">buttons/shadow_smallbutton.png</texturefocus>
 							<texturenofocus border="10" colordiffuse="ff464646">buttons/shadow_smallbutton.png</texturenofocus>
 							<pulseonselect>no</pulseonselect>
 							<onup>155</onup>
@@ -204,7 +204,7 @@
 							<textoffsetx>20</textoffsetx>
 							<aligny>center</aligny>
 							<align>center</align>
-							<texturefocus border="10" colordiffuse="ff52b54b">buttons/shadow_smallbutton.png</texturefocus>
+							<texturefocus border="10" colordiffuse="FF00A4DC">buttons/shadow_smallbutton.png</texturefocus>
 							<texturenofocus border="10" colordiffuse="ff464646">buttons/shadow_smallbutton.png</texturenofocus>
 							<pulseonselect>no</pulseonselect>
 							<onup>155</onup>

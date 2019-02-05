@@ -103,7 +103,7 @@ class LoginManual(xbmcgui.WindowXMLDialog):
         control = xbmcgui.ControlEdit(0, 0, 0, 0,
                                       label="User",
                                       font="font13",
-                                      textColor="FF52b54b",
+                                      textColor="FF00A4DC",
                                       disabledColor="FF888888",
                                       focusTexture="-",
                                       noFocusTexture="-",
