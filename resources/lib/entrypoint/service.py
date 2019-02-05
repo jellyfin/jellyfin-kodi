@@ -437,6 +437,8 @@ class Service(xbmc.Monitor):
         reload(library)
         reload(monitor)
 
+        objects.obj.Objects().mapping()
+
         LOG.warn("---[ objects reloaded ]")
 
     def shutdown(self):

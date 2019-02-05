@@ -118,11 +118,8 @@ class requestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         try:
             params = self.get_params()
 
-            if not params:
+            if not params or params.get('Id') is None:
                 raise IndexError("Incomplete URL format")
-
-            if not params.get('Id').isdigit():
-                raise IndexError("Incorrect Id format %s" % params.get('Id'))
 
             xbmc.log("[ webservice ] path: %s params: %s" % (str(self.path), str(params)), xbmc.LOGWARNING)
 
