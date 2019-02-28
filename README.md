@@ -39,11 +39,37 @@ The add-on supports a hybrid approach. You can decide which Jellyfin libraries t
 - and more...
 
 ### Install Jellyfin for Kodi
-1. Install Jellyfin for Kodi from zip.
-2. Within a few seconds you should be prompted for your server-details.
-3. Once you're succesfully authenticated with your Jellyfin server, the initial sync will start. 
-4. The first sync of the Jellyfin server to the local Kodi database may take some time depending on your device and library size.
-5. Once the full sync is done, you can browse your media in Kodi, and syncs will be done automatically in the background.
+
+1. Download the add-on as a [zip file](../../archive/master.zip)
+   - It will be saved as `jellyfin-kodi-master.zip`
+2. Install Jellyfin for Kodi
+   - Navigate to "Add-on Browser"
+   - Select "Install from zip file"
+     + If prompted, enter settings and enable "Unknown Sources", then go back
+   - Select the newly downloaded file and it will be installed
+3. Within a few seconds you should be prompted for your server-details.
+   - If a Jellyfin server is detected on your local network, it will displayed in the popup
+   - If a Jellyfin server is not detected on your local network, select "Manually add server"
+     + Enter the server name or IP address and the port number (default is 8096)
+     + If using SSL and a reverse proxy, enter the full URL scheme in the "Host" field
+       * Host: https://jellyfin.example.com
+       * Port: 443
+   - Select user account and input password
+4. Once you're succesfully authenticated with your Jellyfin server, configure the libraries to sync to this device
+   - Select "Proceed" to continue setup now
+   - Select "All" when asked about libraries.  This will poll your server to see what is available later
+   - Choose between Native and Add-on mode (Add-on is recommended)
+   - Choose your artwork caching preferences
+   - Choose your empty show preferences
+   - Choose your ratings preferences
+   - Select "Proceed" to continue setup now
+   - Select the libraries you would like to keep synced with this device
+5. The first sync of the Jellyfin server to the local Kodi database may take some time depending on your device and library size
+6. Once the full sync is done, you can browse your media in Kodi, and syncs will be done automatically in the background
+
+**Note: It's recommended to install the `Kodi Sync Queue` plugin into the Jellyfin server as well**
+
+This will help keep your media libraries up to date without waiting for a periodic resync from Kodi.
 
 <!-- Get started with the [wiki guide](https://github.com/MediaBrowser/plugin.video.emby/wiki) -->
 
