@@ -49,11 +49,11 @@ get_album =     		"""	SELECT 	idAlbum
 						"""
 get_album_obj =             [   "{AlbumId}","{Title}","{UniqueId}","{Artists}","album"
                             ]
-get_album_by_name = 	"""	SELECT 	idAlbum, strArtists  
+get_album_by_name = 	"""	SELECT 	idAlbum, strArtistDisp  
 							FROM 	album 
 							WHERE 	strAlbum = ? 
 						"""
-get_album_artist =  	"""	SELECT 	strArtists 
+get_album_artist =  	"""	SELECT 	strArtistDisp 
 							FROM 	album 
 							WHERE 	idAlbum = ? 
 						"""
@@ -82,7 +82,7 @@ add_single =    		"""	INSERT INTO	album(idAlbum, strGenres, iYear, strReleaseTyp
     					"""
 add_single_obj =            [   "{AlbumId}","{Genre}","{Year}","single"
                             ]
-add_song =	     		"""	INSERT INTO song(idSong, idAlbum, idPath, strArtists, strGenres, strTitle, iTrack, 
+add_song =	     		"""	INSERT INTO song(idSong, idAlbum, idPath, strArtistDisp, strGenres, strTitle, iTrack, 
                 							 iDuration, iYear, strFileName, strMusicBrainzTrackID, iTimesPlayed, lastplayed, 
                 							 rating, comment, dateAdded) 
             				VALUES 		(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
@@ -131,7 +131,7 @@ update_discography =    """	INSERT OR REPLACE INTO	discography(idArtist, strAlbu
 update_discography_obj =    [   "{ArtistId}","{Title}","{Year}"
                             ]
 update_album =  		"""	UPDATE 	album 
-				            SET 	strArtists = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?, 
+				            SET 	strArtistDisp = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?, 
 				                	iUserrating = ?, lastScraped = ?, strReleaseType = ? 
 				            WHERE 	idAlbum = ? 
 				        """
@@ -139,11 +139,11 @@ update_album_obj =          [   "{Artists}","{Year}","{Genre}","{Bio}","{Thumb}"
                                 "album","{AlbumId}"
                             ]
 update_album_artist =	"""	UPDATE 	album 
-							SET 	strArtists = ? 
+							SET 	strArtistDisp = ? 
 							WHERE 	idAlbum = ? 
 						"""
 update_song =   		"""	UPDATE 	song 
-            				SET 	idAlbum = ?, strArtists = ?, strGenres = ?, strTitle = ?, iTrack = ?, 
+            				SET 	idAlbum = ?, strArtistDisp = ?, strGenres = ?, strTitle = ?, iTrack = ?, 
                 					iDuration = ?, iYear = ?, strFilename = ?, iTimesPlayed = ?, lastplayed = ?, 
                 					rating = ?, comment = ?, dateAdded = ? 
             				WHERE 	idSong = ? 
@@ -157,7 +157,7 @@ update_song_artist =	""" INSERT OR REPLACE INTO	song_artist(idArtist, idSong, id
             			"""
 update_song_artist_obj =    [   "{ArtistId}","{SongId}",1,"{Index}","{Name}"
                             ]
-update_song_album = 	"""	INSERT OR REPLACE INTO albuminfosong(idAlbumInfoSong, idAlbumInfo, iTrack, 
+update_song_album = 	"""	INSERT OR REPLACE INTO song(idSong, idAlbum, iTrack, 
     															 strTitle, iDuration) 
     				        VALUES (?, ?, ?, ?, ?) 
     				    """

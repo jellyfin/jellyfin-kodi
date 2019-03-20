@@ -189,14 +189,15 @@ class Music(Kodi):
 
         ''' Add genres, but delete current genres first.
         '''
+		#Removed for DB version 72
         if media == 'album':
-            self.cursor.execute(QU.delete_genres_album, (kodi_id,))
-
+            #self.cursor.execute(QU.delete_genres_album, (kodi_id,))
+		
             for genre in genres:
-
+		
                 genre_id = self.get_genre(genre)
-                self.cursor.execute(QU.update_genre_album, (genre_id, kodi_id))
-
+                #self.cursor.execute(QU.update_genre_album, (genre_id, kodi_id))
+		
         elif media == 'song':
             self.cursor.execute(QU.delete_genres_song, (kodi_id,))
 
