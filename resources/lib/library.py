@@ -349,7 +349,7 @@ class Library(threading.Thread):
                 if settings('kodiCompanion.bool'):
 
                     for plugin in self.server['api'].get_plugins():
-                        if plugin['Name'] in ("Jellyfin.Kodi Sync Queue", "Kodi companion"):
+                        if plugin['Name'] in ("Jellyfin.Kodi Sync Queue", "Kodi companion","Kodi Sync Queue"):
                             
                             if not self.fast_sync():
                                 dialog("ok", heading="{jellyfin}", line1=_(33128))
