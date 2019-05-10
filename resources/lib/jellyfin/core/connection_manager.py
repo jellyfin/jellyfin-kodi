@@ -157,12 +157,10 @@ class ConnectionManager(object):
                 'type': "POST",
                 'url': self.get_jellyfin_url(server, "Users/AuthenticateByName"),
                 'json': {
-                    'username': username,
-                    'password': hashlib.sha1(password or "").hexdigest(),
+                    'Username': username,
+                    'Pw': password or ""
                 }
             }
-            if clear:
-                request['json']['pw'] = password or ""
 
             result = self._request_url(request, False)
         except Exception as error: # Failed to login
