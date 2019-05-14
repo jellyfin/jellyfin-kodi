@@ -39,11 +39,8 @@ The add-on supports a hybrid approach. You can decide which Jellyfin libraries t
 - and more...
 
 ### Install Jellyfin for Kodi
-1. Install Jellyfin for Kodi from zip.
-2. Within a few seconds you should be prompted for your server-details.
-3. Once you're succesfully authenticated with your Jellyfin server, the initial sync will start. 
-4. The first sync of the Jellyfin server to the local Kodi database may take some time depending on your device and library size.
-5. Once the full sync is done, you can browse your media in Kodi, and syncs will be done automatically in the background.
+
+Detailed installation instructions can be found on [readthedocs](https://jellyfin.readthedocs.io/en/latest/clients/#jellyfin-for-kodi).
 
 <!-- Get started with the [wiki guide](https://github.com/MediaBrowser/plugin.video.emby/wiki) -->
 
