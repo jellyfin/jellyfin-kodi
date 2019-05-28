@@ -16,10 +16,11 @@ LOG = logging.getLogger("JELLYFIN."+__name__)
 
 class Music(Kodi):
 
-
     def __init__(self, cursor):
 
         self.cursor = cursor
+        self.version_id = self.get_version()
+        self.update_versiontagscan()
         Kodi.__init__(self)
 
     def create_entry(self):
@@ -128,7 +129,10 @@ class Music(Kodi):
                 self.cursor.execute(QU.get_album, (musicbrainz,))
                 album = None
             else:
-                self.cursor.execute(QU.get_album_by_name, (name,))
+                if self.version_id < 72:
+                    self.cursor.execute(QU.get_album_by_name, (name,))
+                else:
+                    self.cursor.execute(QU.get_album_by_name72, (name,))
                 album = self.cursor.fetchone()
 
                 if album[1] and album[1].split(' / ')[0] not in artists.split(' / '):
@@ -146,41 +150,59 @@ class Music(Kodi):
     def add_album(self, album_id, *args):
 
         album_id = album_id or self.create_entry_album()
-        self.cursor.execute(QU.add_album, (album_id,) + args)
-
+        if self.version_id < 72:
+            self.cursor.execute(QU.add_album, (album_id,) + args)
+        else:
+            self.cursor.execute(QU.add_album72, (album_id,) + args)
         return album_id
 
     def update_album(self, *args):
-        self.cursor.execute(QU.update_album, args)
+        if self.version_id < 72:
+            self.cursor.execute(QU.update_album, args)
+        else:
+            self.cursor.execute(QU.update_album72, args)
 
     def get_album_artist(self, album_id, artists):
 
         try:
-            self.cursor.execute(QU.get_album_artist, (album_id,))
+            if self.version_id < 72:
+                self.cursor.execute(QU.get_album_artist, (album_id,))
+            else:
+                self.cursor.execute(QU.get_album_artist72, (album_id,))
             curr_artists = self.cursor.fetchone()[0]
         except TypeError:
             return
 
         if curr_artists != artists:
-            self.update_album_artist(artists, album_id)
+                self.update_album_artist(artists, album_id)
 
     def update_album_artist(self, *args):
-        self.cursor.execute(QU.update_album_artist, args)
+        if self.version_id < 72:
+            self.cursor.execute(QU.update_album_artist, args)
+        else:
+            self.cursor.execute(QU.update_album_artist72, args)
 
     def add_single(self, *args):
         self.cursor.execute(QU.add_single, args)
 
     def add_song(self, *args):
-        self.cursor.execute(QU.add_song, args)
+        if self.version_id < 72:
+            self.cursor.execute(QU.add_song, args)
+        else:
+            self.cursor.execute(QU.add_song72, args)
 
     def update_song(self, *args):
-        self.cursor.execute(QU.update_song, args)
+        if self.version_id < 72:
+            self.cursor.execute(QU.update_song, args)
+        else:
+            self.cursor.execute(QU.update_song72, args)
 
     def link_song_artist(self, *args):
         self.cursor.execute(QU.update_song_artist, args)
 
     def link_song_album(self, *args):
-        self.cursor.execute(QU.update_song_album, args)
+        if self.version_id < 72:
+            self.cursor.execute(QU.update_song_album, args)
 
     def rate_song(self, *args):
         self.cursor.execute(QU.update_song_rating, args)
@@ -188,8 +210,9 @@ class Music(Kodi):
     def add_genres(self, kodi_id, genres, media):
 
         ''' Add genres, but delete current genres first.
+            Album_genres was removed in kodi 18
         '''
-        if media == 'album':
+        if media == 'album' and self.version_id < 72 :
             self.cursor.execute(QU.delete_genres_album, (kodi_id,))
 
             for genre in genres:
@@ -197,7 +220,7 @@ class Music(Kodi):
                 genre_id = self.get_genre(genre)
                 self.cursor.execute(QU.update_genre_album, (genre_id, kodi_id))
 
-        elif media == 'song':
+        if media == 'song':
             self.cursor.execute(QU.delete_genres_song, (kodi_id,))
 
             for genre in genres:
@@ -229,3 +252,17 @@ class Music(Kodi):
 
     def delete_song(self, *args):
         self.cursor.execute(QU.delete_song, args)
+
+    def get_version(self):
+        self.cursor.execute(QU.get_version)
+
+        return self.cursor.fetchone()[0]
+
+    #current bug in Kodi 18 that will ask for a scan of music tags unless this is set without a lastscanned
+    def update_versiontagscan(self):
+        if self.version_id < 72:
+            return
+        else:
+            self.cursor.execute(QU.get_versiontagcount)
+            if self.cursor.fetchone()[0] == 0:
+                self.cursor.execute(QU.update_versiontag, (self.version_id,))
