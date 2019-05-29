@@ -174,7 +174,7 @@ class Music(Kodi):
             return
 
         if curr_artists != artists:
-                self.update_album_artist(artists, album_id)
+            self.update_album_artist(artists, album_id)
 
     def update_album_artist(self, *args):
         if self.version_id < 72:
