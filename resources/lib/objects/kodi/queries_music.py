@@ -53,7 +53,15 @@ get_album_by_name = 	"""	SELECT 	idAlbum, strArtists
 							FROM 	album 
 							WHERE 	strAlbum = ? 
 						"""
+get_album_by_name72 = 	"""	SELECT 	idAlbum, strArtistDisp  
+							FROM 	album 
+							WHERE 	strAlbum = ? 
+						"""
 get_album_artist =  	"""	SELECT 	strArtists 
+							FROM 	album 
+							WHERE 	idAlbum = ? 
+						"""
+get_album_artist72 =  	"""	SELECT 	strArtistDisp 
 							FROM 	album 
 							WHERE 	idAlbum = ? 
 						"""
@@ -77,12 +85,20 @@ add_artist =    		"""	INSERT INTO	artist(idArtist, strArtist, strMusicBrainzArti
 add_album =     		"""	INSERT INTO	album(idAlbum, strAlbum, strMusicBrainzAlbumID, strReleaseType) 
             				VALUES 		(?, ?, ?, ?) 
             			"""
+add_album72 =     		"""	INSERT INTO	album(idAlbum, strAlbum, strMusicBrainzAlbumID, strReleaseType, bScrapedMBID) 
+            				VALUES 		(?, ?, ?, ?, 1) 
+            			"""
 add_single =    		"""	INSERT INTO	album(idAlbum, strGenres, iYear, strReleaseType)
     						VALUES		(?, ?, ?, ?)
     					"""
 add_single_obj =            [   "{AlbumId}","{Genre}","{Year}","single"
                             ]
 add_song =	     		"""	INSERT INTO song(idSong, idAlbum, idPath, strArtists, strGenres, strTitle, iTrack, 
+                							 iDuration, iYear, strFileName, strMusicBrainzTrackID, iTimesPlayed, lastplayed, 
+                							 rating, comment, dateAdded) 
+            				VALUES 		(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+            			"""
+add_song72 =	     		"""	INSERT INTO song(idSong, idAlbum, idPath, strArtistDisp, strGenres, strTitle, iTrack, 
                 							 iDuration, iYear, strFileName, strMusicBrainzTrackID, iTimesPlayed, lastplayed, 
                 							 rating, comment, dateAdded) 
             				VALUES 		(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
@@ -135,15 +151,31 @@ update_album =  		"""	UPDATE 	album
 				                	iUserrating = ?, lastScraped = ?, strReleaseType = ? 
 				            WHERE 	idAlbum = ? 
 				        """
+update_album72 =  		"""	UPDATE 	album 
+				            SET 	strArtistDisp = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?, 
+				                	iUserrating = ?, lastScraped = ?, bScrapedMBID = 1, strReleaseType = ? 
+				            WHERE 	idAlbum = ? 
+				        """
 update_album_obj =          [   "{Artists}","{Year}","{Genre}","{Bio}","{Thumb}","{Rating}","{LastScraped}",
                                 "album","{AlbumId}"
+
                             ]
 update_album_artist =	"""	UPDATE 	album 
 							SET 	strArtists = ? 
 							WHERE 	idAlbum = ? 
 						"""
+update_album_artist72 =	"""	UPDATE 	album 
+							SET 	strArtistDisp = ? 
+							WHERE 	idAlbum = ? 
+						"""
 update_song =   		"""	UPDATE 	song 
             				SET 	idAlbum = ?, strArtists = ?, strGenres = ?, strTitle = ?, iTrack = ?, 
+                					iDuration = ?, iYear = ?, strFilename = ?, iTimesPlayed = ?, lastplayed = ?, 
+                					rating = ?, comment = ?, dateAdded = ? 
+            				WHERE 	idSong = ? 
+            			"""
+update_song72 =   		"""	UPDATE 	song 
+            				SET 	idAlbum = ?, strArtistDisp = ?, strGenres = ?, strTitle = ?, iTrack = ?, 
                 					iDuration = ?, iYear = ?, strFilename = ?, iTimesPlayed = ?, lastplayed = ?, 
                 					rating = ?, comment = ?, dateAdded = ? 
             				WHERE 	idSong = ? 
@@ -195,3 +227,12 @@ delete_album =			""" DELETE FROM album
 delete_song =			"""	DELETE FROM song 
    							WHERE 		idSong = ? 
    						"""
+get_version =			"""	SELECT idVersion
+                            FROM version
+   						"""
+update_versiontag =     """ INSERT OR REPLACE INTO	versiontagscan(idVersion, iNeedsScan) 
+							VALUES 					(?, 0)
+                        """
+get_versiontagcount =   """ SELECT COUNT(*)
+                            FROM versiontagscan 
+                        """
