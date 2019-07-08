@@ -109,7 +109,6 @@ class MyFormatter(logging.Formatter):
         self._gen_rel_path(record)
 
         # Replace the original format with one customized by logging level
-        #if record.levelno not in [logging.INFO]:
         self._fmt = '%(name)s -> %(levelname)s::%(relpath)s:%(lineno)s %(message)s'
 
         # Call the original formatter class to do the grunt work

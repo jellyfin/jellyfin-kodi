@@ -118,6 +118,7 @@ def verify_kodi_defaults():
                 src=xbmc.translatePath("special://xbmc/system/library/video").decode('utf-8'),
                 dst=xbmc.translatePath("special://profile/library/video").decode('utf-8'))
         except Exception as error:
+            LOG.warning(error)
             xbmcvfs.mkdir(node_path)
 
     for index, node in enumerate(['movies', 'tvshows', 'musicvideos']):
@@ -169,6 +170,7 @@ class Views(object):
             libraries = self.server['api'].get_media_folders()['Items']
             views = self.server['api'].get_views()['Items']
         except Exception as error:
+            LOG.exception(error)
             raise IndexError("Unable to retrieve libraries: %s" % error)
 
         libraries.extend([x for x in views if x['Id'] not in [y['Id'] for y in libraries]])
@@ -188,7 +190,7 @@ class Views(object):
         try:
             libraries = self.get_libraries()
         except IndexError as error:
-            LOG.error(error)
+            LOG.exception(error)
 
             return
 
@@ -273,6 +275,7 @@ class Views(object):
         try:
             xml = etree.parse(file).getroot()
         except Exception:
+            LOG.warning("Unable to parse file '%s'", file)
             xml = etree.Element('smartplaylist', {'type': view['Media']})
             etree.SubElement(xml, 'name')
             etree.SubElement(xml, 'match')
@@ -316,6 +319,7 @@ class Views(object):
         try:
             xml = etree.parse(file).getroot()
         except Exception:
+            LOG.warning("Unable to parse file '%s'", file)
             xml = self.node_root('folder' if item_type == 'favorites' and view['Media'] == 'episodes' else 'filter', index)
             etree.SubElement(xml, 'label')
             etree.SubElement(xml, 'match')
@@ -371,7 +375,8 @@ class Views(object):
         try:
             xml = etree.parse(file).getroot()
             xml.set('order', str(index))
-        except Exception:
+        except Exception as error:
+            LOG.exception(error)
             xml = self.node_root('main', index)
             etree.SubElement(xml, 'label')
 
@@ -410,6 +415,7 @@ class Views(object):
         try:
             xml = etree.parse(file).getroot()
         except Exception:
+            LOG.warning("Unable to parse file '%s'", file)
             xml = self.node_root('filter', index)
             etree.SubElement(xml, 'label')
             etree.SubElement(xml, 'match')
@@ -441,6 +447,7 @@ class Views(object):
         try:
             xml = etree.parse(file).getroot()
         except Exception:
+            LOG.warning("Unable to parse file '%s'", file)
             xml = self.node_root('folder', index)
             etree.SubElement(xml, 'label')
             etree.SubElement(xml, 'content')
@@ -692,7 +699,7 @@ class Views(object):
         try:
             self.media_folders = self.get_libraries()
         except IndexError as error:
-            LOG.error(error)
+            LOG.exception(error)
 
         for library in (libraries or []):
             view = {'Id': library[0], 'Name': library[1], 'Tag': library[1], 'Media': library[2]}

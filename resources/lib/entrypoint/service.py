@@ -76,7 +76,7 @@ class Service(xbmc.Monitor):
         try:
             Views().get_nodes()
         except Exception as error:
-            LOG.error(error)
+            LOG.exception(error)
 
         window('jellyfin.connected.bool', True)
         settings('groupedSets.bool', objects.utils.get_grouped_set())
@@ -87,7 +87,7 @@ class Service(xbmc.Monitor):
         ''' Keeps the service monitor going.
             Exit on Kodi shutdown or profile switch.
 
-            if profile switch happens more than once, 
+            if profile switch happens more than once,
             Threads depending on abortRequest will not trigger.
         '''
         self.monitor = monitor.Monitor()
@@ -230,7 +230,7 @@ class Service(xbmc.Monitor):
 
                 if self.waitForAbort(120):
                     return
-                
+
                 self.start_default()
 
         elif method == 'Unauthorized':
@@ -243,13 +243,13 @@ class Service(xbmc.Monitor):
 
                 if self.waitForAbort(5):
                     return
-                
+
                 self.start_default()
 
         elif method == 'ServerRestarting':
             if data.get('ServerId'):
                 return
-            
+
             if settings('restartMsg.bool'):
                 dialog("notification", heading="{jellyfin}", message=_(33006), icon="{jellyfin}")
 
@@ -257,7 +257,7 @@ class Service(xbmc.Monitor):
 
             if self.waitForAbort(15):
                 return
-                
+
             self.start_default()
 
         elif method == 'ServerConnect':
@@ -318,7 +318,7 @@ class Service(xbmc.Monitor):
 
                 if not self.library_thread.remove_library(lib):
                     return
-            
+
             self.library_thread.add_library(data['Id'])
             xbmc.executebuiltin("Container.Refresh")
 
@@ -326,14 +326,14 @@ class Service(xbmc.Monitor):
             libraries = data['Id'].split(',')
 
             for lib in libraries:
-                
+
                 if not self.library_thread.remove_library(lib):
                     return
 
             xbmc.executebuiltin("Container.Refresh")
 
         elif method == 'System.OnSleep':
-            
+
             LOG.info("-->[ sleep ]")
             window('jellyfin_should_stop.bool', True)
 
