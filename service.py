@@ -45,8 +45,8 @@ DELAY = int(settings('startupDelay') if settings('SyncInstallRunDone.bool') else
 
 class ServiceManager(threading.Thread):
 
-    ''' Service thread. 
-        To allow to restart and reload modules internally. 
+    ''' Service thread.
+        To allow to restart and reload modules internally.
     '''
     exception = None
 
@@ -64,12 +64,13 @@ class ServiceManager(threading.Thread):
 
             service.service()
         except Exception as error:
+            LOG.exception(error)
 
             if service is not None:
 
-                if not 'ExitService' in error:
+                if 'ExitService' not in error:
                     service.shutdown()
-                
+
                 if 'RestartService' in error:
                     service.reload_objects()
 
@@ -91,7 +92,7 @@ if __name__ == "__main__":
         try:
             session = ServiceManager()
             session.start()
-            session.join() # Block until the thread exits.
+            session.join()  # Block until the thread exits.
 
             if 'RestartService' in session.exception:
                 continue

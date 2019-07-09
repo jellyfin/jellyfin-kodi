@@ -137,7 +137,7 @@ class Service(xbmc.Monitor):
             self.connect.register()
             setup.Setup()
         except Exception as error:
-            LOG.error(error)
+            LOG.exception(error)
 
     def stop_default(self):
 
@@ -361,7 +361,7 @@ class Service(xbmc.Monitor):
             try:
                 self.connect.register()
             except Exception as error:
-                LOG.error(error)
+                LOG.exception(error)
 
         elif method == 'GUI.OnScreensaverDeactivated':
 

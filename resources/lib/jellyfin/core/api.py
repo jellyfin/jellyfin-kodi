@@ -334,6 +334,3 @@ class API(object):
         return self._delete("Videos/ActiveEncodings", params={
             'DeviceId': device_id
         })
-
-    def delete_item(self, item_id):
-        return self.items("/%s" % item_id, "DELETE")

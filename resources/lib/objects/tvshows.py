@@ -38,6 +38,7 @@ class TVShows(KodiDb):
         KodiDb.__init__(self, videodb.cursor)
 
     def __getitem__(self, key):
+        LOG.debug("__getitem__(%r)", key)
 
         if key == 'Series':
             return self.tvshow
@@ -152,7 +153,7 @@ class TVShows(KodiDb):
                     self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_pool_obj))
                     LOG.info("POOL %s [%s/%s]", obj['Title'], obj['Id'], obj['SeriesId'])
                     season_episodes[season['Id']] = season['SeriesId']
-                
+
             try:
                 self.jellyfin_db.get_item_by_id(season['Id'])[0]
                 self.item_ids.append(season['Id'])
@@ -188,7 +189,7 @@ class TVShows(KodiDb):
         LOG.info("ADD tvshow [%s/%s/%s] %s: %s", obj['TopPathId'], obj['PathId'], obj['ShowId'], obj['Title'], obj['Id'])
 
     def tvshow_update(self, obj):
-        
+
         ''' Update object to kodi.
         '''
         obj['RatingId'] =  self.get_rating_id(*values(obj, QU.get_unique_id_tvshow_obj))
@@ -363,7 +364,7 @@ class TVShows(KodiDb):
         return not update
 
     def episode_add(self, obj):
-        
+
         ''' Add object to kodi.
         '''
         obj['RatingId'] =  self.create_entry_rating()
@@ -388,9 +389,9 @@ class TVShows(KodiDb):
         LOG.debug("ADD episode [%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['Id'], obj['Title'])
 
     def episode_update(self, obj):
-        
+
         ''' Update object to kodi.
-        '''        
+        '''
         obj['RatingId'] = self.get_rating_id(*values(obj, QU.get_rating_episode_obj))
         self.update_ratings(*values(obj, QU.update_rating_episode_obj))
 
@@ -451,7 +452,7 @@ class TVShows(KodiDb):
     @stop()
     @jellyfin_item()
     def userdata(self, item, e_item):
-        
+
         ''' This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
             Poster with progress bar
 
@@ -476,7 +477,7 @@ class TVShows(KodiDb):
                 self.remove_tag(*values(obj, QU.delete_tag_episode_obj))
 
         elif obj['Media'] == "episode":
-            
+
             obj['Resume'] = API.adjust_resume((obj['Resume'] or 0) / 10000000.0)
             obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
             obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount'])
@@ -511,7 +512,7 @@ class TVShows(KodiDb):
     @stop()
     @jellyfin_item()
     def remove(self, item_id, e_item):
-        
+
         ''' Remove showid, fileid, pathid, jellyfin reference.
             There's no episodes left, delete show and any possible remaining seasons
         '''
@@ -558,7 +559,7 @@ class TVShows(KodiDb):
             obj['ParentId'] = obj['KodiId']
 
             for season in self.jellyfin_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_season_obj)):
-                
+
                 temp_obj = dict(obj)
                 temp_obj['ParentId'] = season[1]
 
@@ -594,7 +595,7 @@ class TVShows(KodiDb):
         self.jellyfin_db.remove_item(*values(obj, QUEM.delete_item_obj))
 
     def remove_tvshow(self, kodi_id, item_id):
-        
+
         self.artwork.delete(kodi_id, "tvshow")
         self.delete_tvshow(kodi_id)
         LOG.debug("DELETE tvshow [%s] %s", kodi_id, item_id)
@@ -630,7 +631,7 @@ class TVShows(KodiDb):
         obj['ParentId'] = obj['KodiId']
 
         for season in self.jellyfin_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_season_obj)):
-            
+
             temp_obj = dict(obj)
             temp_obj['ParentId'] = season[1]
             child.append(season[0])

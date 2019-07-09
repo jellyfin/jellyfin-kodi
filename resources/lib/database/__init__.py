@@ -84,7 +84,7 @@ class Database(object):
         return path
 
     def _discover_database(self, database):
-        
+
         ''' Use UpdateLibrary(video) to update the date modified
             on the database file used by Kodi.
         '''
@@ -138,6 +138,7 @@ class Database(object):
         try:
             loaded = self._get_database(databases[file]) if file in databases else file
         except Exception as error:
+            LOG.exception(error)
 
             for i in range(1, 10):
                 alt_file = "%s-%s" % (file, i)
@@ -150,8 +151,8 @@ class Database(object):
                     loaded = None
 
                     break
-                except Exception:
-                    pass
+                except Exception as error:
+                    LOG.exception(error)
 
         if discovered and discovered != loaded:
 
@@ -200,7 +201,7 @@ def jellyfin_tables(cursor):
 
     columns = cursor.execute("SELECT * FROM jellyfin")
     if 'jellyfin_parent_id' not in [description[0] for description in columns.description]:
-        
+
         LOG.info("Add missing column jellyfin_parent_id")
         cursor.execute("ALTER TABLE jellyfin ADD COLUMN jellyfin_parent_id 'TEXT'")
 
@@ -281,7 +282,7 @@ def reset_kodi():
     LOG.warn("[ reset kodi ]")
 
 def reset_jellyfin():
-    
+
     with Database('jellyfin') as jellyfindb:
         jellyfindb.cursor.execute("SELECT tbl_name FROM sqlite_master WHERE type='table'")
 
@@ -327,7 +328,7 @@ def reset_artwork():
 def get_sync():
 
     path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
-    
+
     if not xbmcvfs.exists(path):
         xbmcvfs.mkdirs(path)
 
@@ -347,7 +348,7 @@ def get_sync():
 def save_sync(sync):
 
     path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
-    
+
     if not xbmcvfs.exists(path):
         xbmcvfs.mkdirs(path)
 
@@ -359,7 +360,7 @@ def save_sync(sync):
 def get_credentials():
 
     path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
-    
+
     if not xbmcvfs.exists(path):
         xbmcvfs.mkdirs(path)
 
@@ -372,7 +373,7 @@ def get_credentials():
             with open(os.path.join(path, 'data.txt')) as infile:
                 credentials = json.load(infile)
                 save_credentials(credentials)
-            
+
             xbmcvfs.delete(os.path.join(path, 'data.txt'))
         except Exception:
             credentials = {}
@@ -384,7 +385,7 @@ def get_credentials():
 def save_credentials(credentials):
     credentials = credentials or {}
     path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
-    
+
     if not xbmcvfs.exists(path):
         xbmcvfs.mkdirs(path)
 

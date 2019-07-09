@@ -172,7 +172,7 @@ def should_stop():
     return False
 
 def get_screensaver():
-    
+
     ''' Get the current screensaver value.
     '''
     result = JSONRPC('Settings.getSettingValue').execute({'setting': "screensaver.mode"})
@@ -182,7 +182,7 @@ def get_screensaver():
         return ""
 
 def set_screensaver(value):
-    
+
     ''' Toggle the screensaver
     '''
     params = {
@@ -198,7 +198,7 @@ class JSONRPC(object):
     jsonrpc = "2.0"
 
     def __init__(self, method, **kwargs):
-        
+
         self.method = method
 
         for arg in kwargs:
@@ -249,7 +249,7 @@ def values(item, keys):
     return (item[key.replace('{', "").replace('}', "")] if type(key) == str and key.startswith('{') else key for key in keys)
 
 def indent(elem, level=0):
-    
+
     ''' Prettify xml docs.
     '''
     try:
@@ -266,7 +266,8 @@ def indent(elem, level=0):
         else:
             if level and (not elem.tail or not elem.tail.strip()):
               elem.tail = i
-    except Exception:
+    except Exception as error:
+        LOG.exception(error)
         return
 
 def write_xml(content, file):
@@ -292,7 +293,7 @@ def delete_folder(path=None):
 
     if delete_path:
         xbmcvfs.delete(path)
-    
+
     LOG.info("DELETE %s", path)
 
 def delete_recursive(path, dirs):
@@ -314,7 +315,7 @@ def unzip(path, dest, folder=None):
     '''
     path = urllib.quote_plus(path)
     root = "zip://" + path + '/'
-    
+
     if folder:
 
         xbmcvfs.mkdir(os.path.join(dest, folder))
@@ -431,7 +432,7 @@ def normalize_string(text):
     return text
 
 def split_list(itemlist, size):
-    
+
     ''' Split up list in pieces of size. Will generate a list of lists
     '''
     return [itemlist[i:i+size] for i in range(0, len(itemlist), size)]
@@ -447,6 +448,6 @@ def convert_to_local(date):
 
         return date.strftime('%Y-%m-%dT%H:%M:%S')
     except Exception as error:
-        LOG.error(error)
+        LOG.exception(error)
 
         return str(date)

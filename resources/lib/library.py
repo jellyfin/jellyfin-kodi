@@ -128,7 +128,7 @@ class Library(threading.Thread):
 
     @stop()
     def service(self):
-        
+
         ''' If error is encountered, it will rerun this function.
             Start new "daemon threads" to process library updates.
             (actual daemon thread is not supported in Kodi)
@@ -170,7 +170,7 @@ class Library(threading.Thread):
                 xbmc.executebuiltin('InhibitIdleShutdown(true)')
                 self.screensaver = get_screensaver()
                 set_screensaver(value="")
-        
+
         if (self.pending_refresh and not self.download_threads and not self.writer_threads['updated'] and
                                      not self.writer_threads['userdata'] and not self.writer_threads['removed']):
             self.pending_refresh = False
@@ -230,7 +230,7 @@ class Library(threading.Thread):
         '''
         for queue in ((self.updated_queue, self.updated_output), (self.userdata_queue, self.userdata_output)):
             if queue[0].qsize() and len(self.download_threads) < DTHREADS:
-                
+
                 new_thread = GetItemWorker(self.server, queue[0], queue[1])
                 new_thread.start()
                 LOG.info("-->[ q:download/%s ]", id(new_thread))
@@ -296,7 +296,7 @@ class Library(threading.Thread):
                     new_thread = RemovedWorker(queue, self.music_database_lock, "music", self.server, self.direct_path)
                 else:
                     new_thread = RemovedWorker(queue, self.database_lock, "video", self.server, self.direct_path)
-                
+
                 new_thread.start()
                 LOG.info("-->[ q:removed/%s/%s ]", queues, id(new_thread))
                 self.writer_threads['removed'].append(new_thread)
@@ -316,8 +316,8 @@ class Library(threading.Thread):
 
     def startup(self):
 
-        ''' Run at startup. 
-            Check databases. 
+        ''' Run at startup.
+            Check databases.
             Check for the server plugin.
         '''
         self.test_databases()
@@ -334,10 +334,10 @@ class Library(threading.Thread):
 
                     Views().get_nodes()
                 except Exception as error:
-                    LOG.error(error)
+                    LOG.exception(error)
 
             elif not settings('SyncInstallRunDone.bool'):
-                
+
                 with FullSync(self, self.server) as sync:
                     sync.libraries()
 
@@ -350,7 +350,7 @@ class Library(threading.Thread):
 
                     for plugin in self.server['api'].get_plugins():
                         if plugin['Name'] in ("Jellyfin.Kodi Sync Queue", "Kodi companion", "Kodi Sync Queue"):
-                            
+
                             if not self.fast_sync():
                                 dialog("ok", heading="{jellyfin}", line1=_(33128))
 
@@ -435,7 +435,7 @@ class Library(threading.Thread):
             self.userdata(result['UserDataChanged'])
             self.removed(result['ItemsRemoved'])
 
-            
+
             filters.extend(["tvshows", "boxsets", "musicvideos", "music"])
 
             # Get only movies.
@@ -454,12 +454,12 @@ class Library(threading.Thread):
         return True
 
     def save_last_sync(self):
-        
+
         try:
             time_now = datetime.strptime(self.server['config/server-time'].split(', ', 1)[1], '%d %b %Y %H:%M:%S GMT') - timedelta(minutes=2)
         except Exception as error:
 
-            LOG.error(error)
+            LOG.exception(error)
             time_now = datetime.utcnow() - timedelta(minutes=2)
 
         last_sync = time_now.strftime('%Y-%m-%dT%H:%M:%Sz')
@@ -703,7 +703,9 @@ class SortWorker(threading.Thread):
                 try:
                     media = database.get_media_by_id(item_id)
                     self.output[media].put({'Id': item_id, 'Type': media})
-                except Exception:
+                except Exception as error:
+                    LOG.exception(error)
+
                     items = database.get_media_by_parent_id(item_id)
 
                     if not items:

@@ -633,7 +633,7 @@ class WebSocket(object):
                     self._cont_data[1] += frame.data
                 else:
                     self._cont_data = [frame.opcode, frame.data]
-                
+
                 if frame.fin:
                     data = self._cont_data
                     self._cont_data = None
@@ -706,12 +706,12 @@ class WebSocket(object):
 
         reason: the reason to close. This must be string.
         """
-        
+
         try:
             self.sock.shutdown(socket.SHUT_RDWR)
         except:
             pass
-            
+
         '''
         if self.connected:
             if status < 0 or status >= ABNF.LENGTH_16:
@@ -746,6 +746,7 @@ class WebSocket(object):
         except socket.timeout as e:
             raise WebSocketTimeoutException(e.args[0])
         except Exception as e:
+            logger.exception(e)
             if "timed out" in e.args[0]:
                 raise WebSocketTimeoutException(e.args[0])
             else:
@@ -844,7 +845,7 @@ class WebSocketApp(object):
         """
         self.keep_running = False
         if(self.sock != None):
-            self.sock.close()        
+            self.sock.close()
 
     def _send_ping(self, interval):
         while True:
@@ -885,20 +886,21 @@ class WebSocketApp(object):
                 thread.start()
 
             while self.keep_running:
-            
+
                 try:
                     data = self.sock.recv()
-                    
+
                     if data is None or self.keep_running == False:
                         break
-                    self._callback(self.on_message, data)                    
-                    
-                except Exception, e:
-                    #print str(e.args[0])
+                    self._callback(self.on_message, data)
+
+                except Exception as e:
                     if "timed out" not in e.args[0]:
+                        logger.exception(e)
                         raise e
 
-        except Exception, e:
+        except Exception as e:
+            logger.exception(e)
             self._callback(self.on_error, e)
         finally:
             if thread:
@@ -911,11 +913,8 @@ class WebSocketApp(object):
         if callback:
             try:
                 callback(self, *args)
-            except Exception, e:
-                logger.error(e)
-                if True:#logger.isEnabledFor(logging.DEBUG):
-                    _, _, tb = sys.exc_info()
-                    traceback.print_tb(tb)
+            except Exception as e:
+                logger.exception(e)
 
 
 if __name__ == "__main__":

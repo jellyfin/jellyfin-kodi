@@ -15,7 +15,6 @@ LOG = logging.getLogger("JELLYFIN."+__name__)
 
 class JellyfinDatabase():
 
-
     def __init__(self, cursor):
         self.cursor = cursor
 
@@ -31,7 +30,7 @@ class JellyfinDatabase():
         self.cursor.execute(QU.update_reference, args)
 
     def update_parent_id(self, *args):
-        
+
         ''' Parent_id is the parent Kodi id.
         '''
         self.cursor.execute(QU.update_parent, args)
@@ -62,7 +61,7 @@ class JellyfinDatabase():
         return self.cursor.fetchall()
 
     def get_item_by_kodi_id(self, *args):
-        
+
         try:
             self.cursor.execute(QU.get_item_by_kodi, args)
 
@@ -105,7 +104,6 @@ class JellyfinDatabase():
     def remove_wild_item(self, item_id):
         self.cursor.execute(QU.delete_item_by_wild, (item_id + "%",))
 
-
     def get_view_name(self, item_id):
 
         try:
@@ -113,6 +111,7 @@ class JellyfinDatabase():
 
             return self.cursor.fetchone()[0]
         except Exception as error:
+            LOG.exception(error)
             return
 
     def get_view(self, *args):
@@ -159,7 +158,6 @@ class JellyfinDatabase():
                 self.cursor.execute(QU.get_version)
                 version = self.cursor.fetchone()[0]
             except Exception as error:
-                pass
+                LOG.exception(error)
 
         return version
-        

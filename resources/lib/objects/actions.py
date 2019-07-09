@@ -765,7 +765,7 @@ def on_play(data, server):
             try:
                 file = player.getPlayingFile()
             except Exception as error:
-                LOG.error(error)
+                LOG.exception(error)
 
                 return
 

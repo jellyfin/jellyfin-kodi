@@ -39,7 +39,7 @@ class FullSync(object):
 
     def __init__(self, library, server):
 
-        ''' You can call all big syncing methods here. 
+        ''' You can call all big syncing methods here.
             Initial, update, repair, remove.
         '''
         self.__dict__ = self._shared_state
@@ -181,7 +181,7 @@ class FullSync(object):
 
 
     def start(self):
-        
+
         ''' Main sync process.
         '''
         LOG.info("starting sync with %s", self.sync['Libraries'])
@@ -248,8 +248,9 @@ class FullSync(object):
                 raise
 
         except Exception as error:
+            LOG.exception(error)
 
-            if not 'Failed to validate path' in error:
+            if 'Failed to validate path' not in error:
 
                 dialog("ok", heading="{jellyfin}", line1=_(33119))
                 LOG.error("full sync exited unexpectedly")
@@ -271,7 +272,7 @@ class FullSync(object):
                     obj = Movies(self.server, jellyfindb, videodb, self.direct_path)
 
                     for items in server.get_items(library['Id'], "Movie", False, self.sync['RestorePoint'].get('params')):
-                        
+
                         self.sync['RestorePoint'] = items['RestorePoint']
                         start_index = items['RestorePoint']['params']['StartIndex']
 
@@ -413,7 +414,7 @@ class FullSync(object):
                             obj.artist(artist, library=library)
 
                             for albums in server.get_albums_by_artist(artist['Id']):
-                                
+
                                 for album in albums['Items']:
                                     obj.album(album)
 
@@ -546,7 +547,7 @@ class FullSync(object):
 
         if library_id in self.sync['Whitelist']:
             self.sync['Whitelist'].remove(library_id)
-        
+
         elif 'Mixed:%s' % library_id in self.sync['Whitelist']:
             self.sync['Whitelist'].remove('Mixed:%s' % library_id)
 
