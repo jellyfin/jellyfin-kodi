@@ -48,8 +48,6 @@ class Config(object):
 
     def app(self, name, version, device_name, device_id, capabilities=None, device_pixel_ratio=None):
         LOG.info("Begin app constructor.")
-        # import traceback
-        # LOG.debug(''.join(['\n'] + traceback.format_stack()))
 
         self.data['app.name'] = name
         self.data['app.version'] = version
