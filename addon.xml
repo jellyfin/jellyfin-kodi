@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon  id="plugin.video.jellyfin"
-        name="Jellyfin" 
-        version="0.1.0"
-        provider-name="angelblue05">
+        name="Jellyfin"
+        version="0.2.0"
+        provider-name="Jellyfin Contributors, angelblue05">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
   </requires>
@@ -27,14 +27,16 @@
   <extension point="xbmc.addon.metadata">
     <platform>all</platform>
     <language>en</language>
-    <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
+    <license>GNU GENERAL PUBLIC LICENSE. Version 3, 29 June 2007</license>
     <forum>https://forum.jellyfin.org</forum>
     <website>https://jellyfin.media/</website>
     <source>https://github.com/jellyfin/jellyfin-kodi</source>
     <summary lang="en"></summary>
     <description lang="en">Welcome to Jellyfin for Kodi!&#10;A whole new way to manage and view your media library. The Jellyfin addon for Kodi combines the best of Kodi - ultra smooth navigation, beautiful UIs and playback of any file under the sun, and Jellyfin - the most powerful fully open source multi-client media metadata indexer and server.&#10;&#10;Jellyfin for Kodi is the absolute best way to enjoy the incredible Kodi playback engine combined with the power of Jellyfin's centralized database. Features:&#10;* Direct integration with the Kodi library for native Kodi speed&#10;* Instant synchronization with the Jellyfin server&#10;* Full support for Movie, TV and Music collections&#10;* Jellyfin Server direct stream and transcoding support - use Kodi when you are away from home!</description>
-    <news>
-      Rebrand in progress
+    <news>v0.2.0 (2019-07-11)
+      #38 Greatly increase the amount of logging information.
+      #32 Fix music syncing for Kodi 18 retaining Kodi 17 compatibility
+      #28 Always use plaintext login
     </news>
     <assets>
       <icon>icon.png</icon>
