@@ -39,7 +39,7 @@ class Credentials(object):
                 if not isinstance(self.credentials, dict):
                     raise ValueError("invalid credentials format")
 
-            except Exception as e: # File is either empty or missing
+            except Exception as e:  # File is either empty or missing
                 LOG.warn(e)
                 self.credentials = {}
 
@@ -83,7 +83,7 @@ class Credentials(object):
 
         for existing in servers:
             if existing['Id'] == server['Id']:
-                
+
                 # Merge the data
                 if server.get('DateLastAccessed'):
                     if self._date_object(server['DateLastAccessed']) > self._date_object(existing['DateLastAccessed']):
@@ -133,5 +133,5 @@ class Credentials(object):
             # TypeError: attribute of type 'NoneType' is not callable
             # Known Kodi/python error
             date_obj = datetime(*(time.strptime(date, "%Y-%m-%dT%H:%M:%SZ")[0:6]))
-        
+
         return date_obj

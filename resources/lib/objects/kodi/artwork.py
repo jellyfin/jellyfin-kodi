@@ -136,7 +136,7 @@ class Artwork(object):
         return text
 
     def single_urlencode(self, text):
-        
+
         ''' urlencode needs a utf-string.
             return the result as unicode
         '''
@@ -211,8 +211,8 @@ class GetArtworkWorker(threading.Thread):
                     prep.url = "http://%s:%s/image/image://%s" % (self.kodi['host'], self.kodi['port'], url)
                     s.send(prep, timeout=(0.01, 0.01))
                     s.content # release the connection
-                except Exception:
-                    pass
+                except Exception as error:
+                    LOG.exception(error)
 
                 self.queue.task_done()
 
@@ -361,11 +361,11 @@ class Artwork(object):
     def _cache_all_music_entries(self, pdialog):
 
         with Database('music') as cursor_music:
-        
+
             cursor_music.execute("SELECT url FROM art")
             result = cursor_music.fetchall()
             total = len(result)
-            
+
             log.info("Image cache sync about to process %s images", total)
 
             count = 0

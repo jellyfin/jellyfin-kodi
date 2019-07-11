@@ -1,13 +1,24 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
+from __future__ import print_function
+
 ##################################################################################################
 
+import os
 import logging
+import traceback
 
 import xbmc
-
+import xbmcaddon
 import database
+
 from . import window, settings
+
+##################################################################################################
+
+__addon__ = xbmcaddon.Addon(id='plugin.video.jellyfin')
+__pluginpath__ = xbmc.translatePath(__addon__.getAddonInfo('path').decode('utf-8'))
 
 ##################################################################################################
 
@@ -17,6 +28,7 @@ def config():
     logger = logging.getLogger('JELLYFIN')
     logger.addHandler(LogHandler())
     logger.setLevel(logging.DEBUG)
+
 
 def reset():
 
@@ -59,7 +71,7 @@ class LogHandler(logging.StreamHandler):
                     string = string.replace(server.encode('utf-8') or "{server}", "{jellyfin-server}")
 
                 for token in self.sensitive['Token']:
-                    string = string.replace(token.encode('utf-8')  or "{token}", "{jellyfin-token}")
+                    string = string.replace(token.encode('utf-8') or "{token}", "{jellyfin-token}")
 
             try:
                 xbmc.log(string, level=xbmc.LOGNOTICE)
@@ -95,9 +107,10 @@ class MyFormatter(logging.Formatter):
         # when the logger formatter was instantiated
         format_orig = self._fmt
 
+        self._gen_rel_path(record)
+
         # Replace the original format with one customized by logging level
-        if record.levelno in (logging.DEBUG, logging.ERROR):
-            self._fmt = '%(name)s -> %(levelname)s:: %(message)s'
+        self._fmt = '%(name)s -> %(levelname)s::%(relpath)s:%(lineno)s %(message)s'
 
         # Call the original formatter class to do the grunt work
         result = logging.Formatter.format(self, record)
@@ -106,3 +119,23 @@ class MyFormatter(logging.Formatter):
         self._fmt = format_orig
 
         return result
+
+    def formatException(self, exc_info):
+        _pluginpath_real = os.path.realpath(__pluginpath__)
+        res = []
+
+        for o in traceback.format_exception(*exc_info):
+            if o.startswith('  File "'):
+                # If this split can't handle your file names, you should seriously consider renaming your files.
+                fn = o.split('  File "', 2)[1].split('", line ', 1)[0]
+                rfn = os.path.realpath(fn)
+                if rfn.startswith(_pluginpath_real):
+                    o = o.replace(fn, os.path.relpath(rfn, _pluginpath_real))
+
+            res.append(o)
+
+        return ''.join(res)
+
+    def _gen_rel_path(self, record):
+        if record.pathname:
+            record.relpath = os.path.relpath(record.pathname, __pluginpath__)

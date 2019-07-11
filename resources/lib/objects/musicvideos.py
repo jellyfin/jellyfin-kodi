@@ -35,6 +35,7 @@ class MusicVideos(KodiDb):
         KodiDb.__init__(self, videodb.cursor)
 
     def __getitem__(self, key):
+        LOG.debug("__getitem__(%r)", key)
 
         if key == 'MusicVideo':
             return self.musicvideo
@@ -142,7 +143,7 @@ class MusicVideos(KodiDb):
         return not update
 
     def musicvideo_add(self, obj):
-        
+
         ''' Add object to kodi.
         '''
         obj['PathId'] = self.add_path(*values(obj, QU.add_path_obj))
@@ -153,7 +154,7 @@ class MusicVideos(KodiDb):
         LOG.info("ADD mvideo [%s/%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['MvideoId'], obj['Id'], obj['Title'])
 
     def musicvideo_update(self, obj):
-        
+
         ''' Update object to kodi.
         '''
         self.update(*values(obj, QU.update_musicvideo_obj))
@@ -161,7 +162,7 @@ class MusicVideos(KodiDb):
         LOG.info("UPDATE mvideo [%s/%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['MvideoId'], obj['Id'], obj['Title'])
 
     def get_path_filename(self, obj):
-        
+
         ''' Get the path and filename and build it into protocol://path
         '''
         obj['Filename'] = obj['Path'].rsplit('\\', 1)[1] if '\\' in obj['Path'] else obj['Path'].rsplit('/', 1)[1]
@@ -187,7 +188,7 @@ class MusicVideos(KodiDb):
     @stop()
     @jellyfin_item()
     def userdata(self, item, e_item):
-        
+
         ''' This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
             Poster with progress bar
         '''
@@ -220,7 +221,7 @@ class MusicVideos(KodiDb):
     @jellyfin_item()
     def remove(self, item_id, e_item):
 
-        ''' Remove mvideoid, fileid, pathid, jellyfin reference. 
+        ''' Remove mvideoid, fileid, pathid, jellyfin reference.
         '''
         obj = {'Id': item_id}
 

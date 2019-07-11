@@ -135,7 +135,7 @@ class Player(xbmc.Player):
 
         try:
             seektime = self.getTime()
-        except Exception: # at this point we should be playing and if not then bail out
+        except Exception:  # at this point we should be playing and if not then bail out
             return
 
         result = JSONRPC('Application.GetProperties').execute({'properties': ["volume", "muted"]})
@@ -193,22 +193,22 @@ class Player(xbmc.Player):
 
         params = {
             'playerid': 1,
-            'properties': ["currentsubtitle","currentaudiostream","subtitleenabled"]
+            'properties': ["currentsubtitle", "currentaudiostream", "subtitleenabled"]
         }
         result = JSONRPC('Player.GetProperties').execute(params)
         result = result.get('result')
 
-        try: # Audio tracks
+        try:  # Audio tracks
             audio = result['currentaudiostream']['index']
         except (KeyError, TypeError):
             audio = 0
-        
-        try: # Subtitles tracks
+
+        try:  # Subtitles tracks
             subs = result['currentsubtitle']['index']
         except (KeyError, TypeError):
             subs = 0
 
-        try: # If subtitles are enabled
+        try:  # If subtitles are enabled
             subs_enabled = result['subtitleenabled']
         except (KeyError, TypeError):
             subs_enabled = False
@@ -362,7 +362,7 @@ class Player(xbmc.Player):
         item['Server']['api'].session_progress(data)
 
     def onPlayBackStopped(self):
-        
+
         ''' Will be called when user stops playing a file.
         '''
         window('jellyfin_play', clear=True)
@@ -370,14 +370,14 @@ class Player(xbmc.Player):
         LOG.info("--<[ playback ]")
 
     def onPlayBackEnded(self):
-        
+
         ''' Will be called when kodi stops playing a file.
         '''
         self.stop_playback()
         LOG.info("--<<[ playback ]")
 
     def stop_playback(self):
-        
+
         ''' Stop all playback. Check for external player for positionticks.
         '''
         if not self.played:

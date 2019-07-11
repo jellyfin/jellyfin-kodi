@@ -33,7 +33,7 @@ class WebService(threading.Thread):
             conn.request("QUIT", "/")
             conn.getresponse()
         except Exception as error:
-            pass
+            LOG.exception(error)
 
     def run(self):
 
@@ -46,7 +46,7 @@ class WebService(threading.Thread):
             server.serve_forever()
         except Exception as error:
 
-            if '10053' not in error: # ignore host diconnected errors
+            if '10053' not in error:  # ignore host diconnected errors
                 LOG.exception(error)
 
         LOG.info("---<[ webservice ]")
@@ -132,13 +132,13 @@ class requestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             self.wfile.write(path)
 
         except IndexError as error:
+            LOG.exception(error)
 
-            xbmc.log(str(error), xbmc.LOGWARNING)
             self.send_error(404, "Exception occurred: %s" % error)
 
         except Exception as error:
+            LOG.exception(error)
 
-            xbmc.log(str(error), xbmc.LOGWARNING)
             self.send_error(500, "Exception occurred: %s" % error)
 
         return

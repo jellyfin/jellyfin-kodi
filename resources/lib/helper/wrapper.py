@@ -84,10 +84,11 @@ def stop(default=None):
         def wrapper(*args, **kwargs):
 
             try:
-                if should_stop():
+                if should_stop():  # ??? TODO: Fixme
                     raise Exception
 
             except Exception as error:
+                LOG.exception(error)
 
                 if default is not None:
                     return default
@@ -142,7 +143,8 @@ def library_check():
 
                             try:
                                 views = self.jellyfin_db.get_views_by_media('music')[0]
-                            except Exception:
+                            except Exception as error:
+                                LOG.exception(error)
                                 return
 
                             view = {'Id': views[0], 'Name': views[1]}

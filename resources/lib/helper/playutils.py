@@ -484,7 +484,7 @@ class PlayUtils(object):
                     try:
                         subs.append(self.download_external_subs(url, filename))
                     except Exception as error:
-                        LOG.error(error)
+                        LOG.exception(error)
                         subs.append(url)
                 else:
                     subs.append(url)
@@ -512,7 +512,8 @@ class PlayUtils(object):
         try:
             response = requests.get(src, stream=True, verify=False)
             response.raise_for_status()
-        except Exception as e:
+        except Exception as error:
+            LOG.exception(error)
             raise
         else:
             response.encoding = 'utf-8'

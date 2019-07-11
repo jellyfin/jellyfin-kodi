@@ -18,7 +18,7 @@ LOG = logging.getLogger('JELLYFIN.'+__name__)
 
 def callback(message, data):
 
-    ''' Callback function should received message, data            
+    ''' Callback function should received message, data
         message: string
         data: json dictionary
     '''
@@ -83,6 +83,7 @@ class JellyfinClient(object):
         self.http.stop_session()
 
     def __getitem__(self, key):
+        LOG.debug("__getitem__(%r)", key)
 
         if key.startswith('config'):
             return self.config[key.replace('config/', "", 1)] if "/" in key else self.config

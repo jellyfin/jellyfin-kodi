@@ -113,13 +113,14 @@ class Monitor(xbmc.Monitor):
                     self.server_instance(data['ServerId'])
                 except Exception as error:
 
-                    LOG.error(error)
+                    LOG.exception(error)
                     dialog("ok", heading="{jellyfin}", line1=_(33142))
 
                     return
 
             server = Jellyfin(data['ServerId'])
-        except Exception:
+        except Exception as error:
+            LOG.exception(error)
             server = Jellyfin()
 
         if method == 'GetItem':
@@ -328,7 +329,7 @@ class Monitor(xbmc.Monitor):
         try:
             session = server['api'].get_device(self.device_id)
         except Exception as error:
-            LOG.error(error)
+            LOG.exception(error)
 
             return
 

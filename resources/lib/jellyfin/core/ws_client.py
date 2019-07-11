@@ -31,6 +31,7 @@ class WSClient(threading.Thread):
         threading.Thread.__init__(self)
 
     def __shortcuts__(self, key):
+        LOG.debug("__shortcuts__(%r)", key)
 
         if key == "send":
             return self.send
@@ -54,7 +55,7 @@ class WSClient(threading.Thread):
         server = self.client['config/auth.server']
         server = server.replace('https', "wss") if server.startswith('https') else server.replace('http', "ws")
         wsc_url = "%s/embywebsocket?api_key=%s&device_id=%s" % (server, token, device_id)
-        
+
         LOG.info("Websocket url: %s", wsc_url)
 
         self.wsc = websocket.WebSocketApp(wsc_url,

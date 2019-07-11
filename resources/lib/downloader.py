@@ -46,7 +46,7 @@ def browse_info():
 
 def _http(action, url, request={}, server_id=None):
     request.update({'url': url, 'type': action})
-    
+
     return Jellyfin(server_id)['http/request'](request)
 
 
@@ -73,7 +73,8 @@ def validate_view(library_id, item_id):
                     'Recursive': True,
                     'Ids': item_id
                  })
-    except Exception:
+    except Exception as error:
+        LOG.exception(error)
         return False
 
     return True if len(result['Items']) else False
@@ -135,8 +136,8 @@ def get_episode_by_show(show_id):
     query = {
         'url': "Shows/%s/Episodes" % show_id,
         'params': {
-            'EnableUserData': True, 
-            'EnableImages': True, 
+            'EnableUserData': True,
+            'EnableImages': True,
             'UserId': "{UserId}",
             'Fields': api.info()
         }
@@ -151,8 +152,8 @@ def get_episode_by_season(show_id, season_id):
         'url': "Shows/%s/Episodes" % show_id,
         'params': {
             'SeasonId': season_id,
-            'EnableUserData': True, 
-            'EnableImages': True, 
+            'EnableUserData': True,
+            'EnableImages': True,
             'UserId': "{UserId}",
             'Fields': api.info()
         }
@@ -257,7 +258,7 @@ def _get_items(query, server_id=None):
         items['TotalRecordCount'] = _get(url, test_params, server_id=server_id)['TotalRecordCount']
 
     except Exception as error:
-        LOG.error("Failed to retrieve the server response %s: %s params:%s", url, error, params)
+        LOG.exception("Failed to retrieve the server response %s: %s params:%s", url, error, params)
 
     else:
         index = params.get('StartIndex', 0)
@@ -268,7 +269,7 @@ def _get_items(query, server_id=None):
             params['StartIndex'] = index
             params['Limit'] = LIMIT
             result = _get(url, params, server_id=server_id) or {'Items': []}
-            
+
             items['Items'].extend(result['Items'])
             items['RestorePoint'] = query
             yield items
@@ -366,7 +367,7 @@ class TheVoid(object):
 
             if window('jellyfin_should_stop.bool'):
                 LOG.info("Abandon mission! A black hole just swallowed [ %s/%s ]", self.method, self.data['VoidName'])
-                
+
                 return
 
             xbmc.sleep(100)
@@ -397,8 +398,6 @@ def get_objects(src, filename):
 
             LOG.error(error)
             response = requests.get(src, stream=True, verify=False)
-        except Exception:
-            raise
 
         dl = xbmcvfs.File(path, 'w')
         dl.write(response.content)

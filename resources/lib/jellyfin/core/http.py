@@ -15,6 +15,7 @@ LOG = logging.getLogger('Jellyfin.'+__name__)
 
 #################################################################################################
 
+
 class HTTP(object):
 
     session = None
@@ -26,6 +27,7 @@ class HTTP(object):
         self.config = client['config']
 
     def __shortcuts__(self, key):
+        LOG.debug("__shortcuts__(%r)", key)
 
         if key == "request":
             return self.request
@@ -33,7 +35,7 @@ class HTTP(object):
         return
 
     def start_session(self):
-        
+
         self.session = requests.Session()
 
         max_retries = self.config['http.max_retries']
@@ -41,7 +43,7 @@ class HTTP(object):
         self.session.mount("https://", requests.adapters.HTTPAdapter(max_retries=max_retries))
 
     def stop_session(self):
-        
+
         if self.session is None:
             return
 
@@ -90,7 +92,7 @@ class HTTP(object):
 
             try:
                 r = self._requests(session or self.session or requests, data.pop('type', "GET"), **data)
-                r.content # release the connection
+                r.content  # release the connection
 
                 if not self.keep_alive and self.session is not None:
                     self.stop_session()
@@ -137,7 +139,7 @@ class HTTP(object):
 
                         raise HTTPException("Unauthorized", error)
 
-                elif r.status_code == 500: # log and ignore.
+                elif r.status_code == 500:  # log and ignore.
                     LOG.error("--[ 500 response ] %s", error)
 
                     return
@@ -214,7 +216,7 @@ class HTTP(object):
 
     def _authorization(self, data):
 
-        auth =  "MediaBrowser "
+        auth = "MediaBrowser "
         auth += "Client=%s, " % self.config['app.name'].encode('utf-8')
         auth += "Device=%s, " % self.config['app.device_name'].encode('utf-8')
         auth += "DeviceId=%s, " % self.config['app.device_id'].encode('utf-8')

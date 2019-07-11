@@ -35,6 +35,7 @@ class Movies(KodiDb):
         KodiDb.__init__(self, videodb.cursor)
 
     def __getitem__(self, key):
+        LOG.debug("__getitem__(%r)", key)
 
         if key == 'Movie':
             return self.movie
@@ -49,7 +50,7 @@ class Movies(KodiDb):
     @jellyfin_item()
     @library_check()
     def movie(self, item, e_item, library):
-        
+
         ''' If item does not exist, entry will be added.
             If item exists, entry will be updated.
         '''
@@ -175,7 +176,7 @@ class Movies(KodiDb):
                 obj['Trailer'] = "plugin://plugin.video.youtube/play/?video_id=%s" % obj['Trailer'].rsplit('=', 1)[1]
         except Exception as error:
 
-            LOG.error("Failed to get trailer: %s", error)
+            LOG.exception("Failed to get trailer: %s", error)
             obj['Trailer'] = None
 
     def get_path_filename(self, obj):
@@ -205,7 +206,7 @@ class Movies(KodiDb):
     @stop()
     @jellyfin_item()
     def boxset(self, item, e_item):
-                
+
         ''' If item does not exist, entry will be added.
             If item exists, entry will be updated.
 
@@ -286,7 +287,7 @@ class Movies(KodiDb):
     @stop()
     @jellyfin_item()
     def userdata(self, item, e_item):
-        
+
         ''' This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
             Poster with progress bar
         '''
@@ -339,7 +340,7 @@ class Movies(KodiDb):
         elif obj['Media'] == 'set':
 
             for movie in self.jellyfin_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_movie_obj)):
-                
+
                 temp_obj = dict(obj)
                 temp_obj['MovieId'] = movie[1]
                 temp_obj['Movie'] = movie[0]

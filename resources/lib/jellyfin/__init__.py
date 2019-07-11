@@ -112,6 +112,7 @@ class Jellyfin(object):
 
     @ensure_client()
     def __getitem__(self, key):
+        LOG.debug("__getitem__(%r)", key)
         return self.client[self.server_id][key]
 
     def construct(self):
@@ -122,5 +123,6 @@ class Jellyfin(object):
             LOG.info("---[ START JELLYFINCLIENT ]---")
         else:
             LOG.info("---[ START JELLYFINCLIENT: %s ]---", self.server_id)
+
 
 config()

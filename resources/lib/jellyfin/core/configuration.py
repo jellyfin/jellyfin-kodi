@@ -16,6 +16,7 @@ LOG = logging.getLogger('JELLYFIN.'+__name__)
 
 #################################################################################################
 
+
 class Config(object):
 
     def __init__(self):
@@ -25,6 +26,7 @@ class Config(object):
         self.http()
 
     def __shortcuts__(self, key):
+        LOG.debug("__shortcuts__(%r)", key)
 
         if key == "auth":
             return self.auth
@@ -38,13 +40,13 @@ class Config(object):
         return
 
     def __getitem__(self, key):
+        LOG.debug("__getitem__(%r)", key)
         return self.data.get(key, self.__shortcuts__(key))
 
     def __setitem__(self, key, value):
         self.data[key] = value
 
     def app(self, name, version, device_name, device_id, capabilities=None, device_pixel_ratio=None):
-        
         LOG.info("Begin app constructor.")
 
         self.data['app.name'] = name

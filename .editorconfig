@@ -1,0 +1,25 @@
+# With more recent updates Visual Studio 2017 supports EditorConfig files out of the box
+# Visual Studio Code needs an extension: https://github.com/editorconfig/editorconfig-vscode
+# For emacs, vim, np++ and other editors, see here: https://github.com/editorconfig
+###############################
+# Core EditorConfig Options   #
+###############################
+root = true
+
+# All files
+[*]
+indent_style = space
+indent_size = 4
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+end_of_line = lf
+max_line_length = null
+
+# YAML indentation
+[*.{yml,yaml}]
+indent_size = 2
+
+# XML indentation
+[*.xml]
+indent_size = 2

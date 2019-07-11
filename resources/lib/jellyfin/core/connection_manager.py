@@ -60,6 +60,7 @@ class ConnectionManager(object):
         self.http = HTTP(client)
 
     def __shortcuts__(self, key):
+        LOG.debug("__shortcuts__(%r)", key)
 
         if key == "clear":
             return self.clear_data
@@ -97,6 +98,7 @@ class ConnectionManager(object):
         return
 
     def __getitem__(self, key):
+        LOG.debug("__getitem__(%r)", key)
         return self.__shortcuts__(key)
 
     def clear_data(self):
@@ -120,7 +122,7 @@ class ConnectionManager(object):
         self.config['auth.token'] = None
 
     def get_available_servers(self):
-        
+
         LOG.info("Begin getAvailableServers")
 
         # Clone the credentials
@@ -163,12 +165,12 @@ class ConnectionManager(object):
             }
 
             result = self._request_url(request, False)
-        except Exception as error: # Failed to login
-            LOG.error(error)
+        except Exception as error:  # Failed to login
+            LOG.exception(error)
             return False
         else:
             self._on_authenticated(result, options)
-        
+
         return result
 
     def connect_to_address(self, address, options={}):
@@ -184,7 +186,8 @@ class ConnectionManager(object):
 
         try:
             public_info = self._try_connect(address, options=options)
-        except Exception:
+        except Exception as error:
+            LOG.exception(error)
             return _on_fail()
         else:
             LOG.info("connectToAddress %s succeeded", address)
@@ -238,7 +241,7 @@ class ConnectionManager(object):
             return {}
 
         servers = self.credentials.get_credentials()['Servers']
-        
+
         for server in servers:
             if server['Id'] == server_id:
                 return server
@@ -258,14 +261,14 @@ class ConnectionManager(object):
         try:
             return self.http.request(request)
         except Exception as error:
-            LOG.error(error)
+            LOG.exception(error)
             raise
 
     def _add_app_info(self):
         return "%s/%s" % (self.config['app.name'], self.config['app.version'])
 
     def _get_headers(self, request):
-        
+
         headers = request.setdefault('headers', {})
 
         if request.get('dataType') == "json":
@@ -350,9 +353,9 @@ class ConnectionManager(object):
 
         try:
             result = self._try_connect(address, timeout, options)
-        
+
         except Exception:
-            LOG.error("test failed for connection mode %s with server %s", mode, server.get('Name'))
+            LOG.exception("test failed for connection mode %s with server %s", mode, server.get('Name'))
 
             if enable_retry:
                 # TODO: wake on lan and retry
@@ -401,17 +404,17 @@ class ConnectionManager(object):
 
         if a > b:
             return 1
-        
+
         return 0
 
     def _string_equals_ignore_case(self, str1, str2):
         return (str1 or "").lower() == (str2 or "").lower()
 
     def _server_discovery(self):
-        
+
         MULTI_GROUP = ("<broadcast>", 7359)
         MESSAGE = "who is JellyfinServer?"
-        
+
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.settimeout(1.0) # This controls the socket.timeout exception
 
@@ -419,7 +422,7 @@ class ConnectionManager(object):
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         sock.setsockopt(socket.SOL_IP, socket.IP_MULTICAST_LOOP, 1)
         sock.setsockopt(socket.IPPROTO_IP, socket.SO_REUSEADDR, 1)
-        
+
         LOG.debug("MultiGroup      : %s", str(MULTI_GROUP))
         LOG.debug("Sending UDP Data: %s", MESSAGE)
 
@@ -428,20 +431,20 @@ class ConnectionManager(object):
         try:
             sock.sendto(MESSAGE, MULTI_GROUP)
         except Exception as error:
-            LOG.error(error)
+            LOG.exception(error)
             return servers
 
         while True:
             try:
                 data, addr = sock.recvfrom(1024) # buffer size
                 servers.append(json.loads(data))
-            
+
             except socket.timeout:
                 LOG.info("Found Servers: %s", servers)
                 return servers
-            
+
             except Exception as e:
-                LOG.error("Error trying to find servers: %s", e)
+                LOG.exception("Error trying to find servers: %s", e)
                 return servers
 
     def _get_last_used_server(self):
@@ -488,7 +491,7 @@ class ConnectionManager(object):
             return servers
 
     def _convert_endpoint_address_to_manual_address(self, info):
-        
+
         if info.get('Address') and info.get('EndpointAddress'):
             address = info['EndpointAddress'].split(':')[0]
 
@@ -529,7 +532,7 @@ class ConnectionManager(object):
 
             self.config['auth.user_id'] = server.pop('UserId', None)
             self.config['auth.token'] = server.pop('AccessToken', None)
-        
+
         elif verify_authentication and server.get('AccessToken'):
 
             if self._validate_authentication(server, connection_mode, options) is not False:
@@ -579,6 +582,7 @@ class ConnectionManager(object):
             })
             self._update_server_info(server, system_info)
         except Exception as error:
+            LOG.exception(error)
 
             server['UserId'] = None
             server['AccessToken'] = None
