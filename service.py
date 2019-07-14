@@ -8,7 +8,6 @@ import threading
 import sys
 
 import xbmc
-import xbmcvfs
 import xbmcaddon
 
 #################################################################################################
@@ -16,18 +15,8 @@ import xbmcaddon
 __addon__ = xbmcaddon.Addon(id='plugin.video.jellyfin')
 __base__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'resources', 'lib')).decode('utf-8')
 __libraries__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'libraries')).decode('utf-8')
-__pcache__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('profile'), 'jellyfin')).decode('utf-8')
-__cache__ = xbmc.translatePath('special://temp/jellyfin').decode('utf-8')
 
 sys.path.insert(0, __libraries__)
-
-if not xbmcvfs.exists(__pcache__ + '/'):
-    from resources.lib.helper.utils import copytree
-
-    copytree(os.path.join(__base__, 'objects'), os.path.join(__pcache__, 'objects'))
-
-sys.path.insert(0, __cache__)
-sys.path.insert(0, __pcache__)
 sys.path.append(__base__)
 
 #################################################################################################

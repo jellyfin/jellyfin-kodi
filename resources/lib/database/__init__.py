@@ -12,7 +12,6 @@ import xbmc
 import xbmcvfs
 
 import jellyfin_db
-from helper.utils import delete_folder
 from helper import _, settings, window, dialog
 from objects import obj
 

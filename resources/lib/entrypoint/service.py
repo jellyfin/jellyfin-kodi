@@ -17,10 +17,8 @@ import client
 import library
 import setup
 import monitor
-import requests
 from views import Views, verify_kodi_defaults
-from helper import _, window, settings, event, dialog, find, compare_version
-from downloader import get_objects
+from helper import _, window, settings, event, dialog, compare_version
 from jellyfin import Jellyfin
 from database import Database, jellyfin_db, reset
 

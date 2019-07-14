@@ -277,13 +277,12 @@ def write_xml(content, file):
         content = content.replace('?>', ' standalone="yes" ?>', 1)
         infile.write(content)
 
-def delete_folder(path=None):
+
+def delete_folder(path):
 
     ''' Delete objects from kodi cache
     '''
     LOG.debug("--[ delete folder ]")
-    delete_path = path is not None
-    path = path or xbmc.translatePath('special://temp/jellyfin').decode('utf-8')
     dirs, files = xbmcvfs.listdir(path)
 
     delete_recursive(path, dirs)
@@ -291,10 +290,10 @@ def delete_folder(path=None):
     for file in files:
         xbmcvfs.delete(os.path.join(path, file.decode('utf-8')))
 
-    if delete_path:
-        xbmcvfs.delete(path)
+    xbmcvfs.delete(path)
 
     LOG.info("DELETE %s", path)
+
 
 def delete_recursive(path, dirs):
 
@@ -308,6 +307,7 @@ def delete_recursive(path, dirs):
 
         delete_recursive(os.path.join(path, directory.decode('utf-8')), dirs2)
         xbmcvfs.rmdir(os.path.join(path, directory.decode('utf-8')))
+
 
 def unzip(path, dest, folder=None):
 
