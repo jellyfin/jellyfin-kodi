@@ -17,7 +17,7 @@ __base__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'reso
 __libraries__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'libraries')).decode('utf-8')
 
 sys.path.insert(0, __libraries__)
-sys.path.append(__base__)
+sys.path.insert(0, __base__)
 
 #################################################################################################
 
