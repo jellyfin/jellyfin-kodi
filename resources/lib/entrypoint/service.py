@@ -60,13 +60,13 @@ class Service(xbmc.Monitor):
         if self.settings['enable_context_transcode']:
             window('jellyfin_context_transcode.bool', True)
 
-        LOG.warn("--->>>[ %s ]", client.get_addon_name())
-        LOG.warn("Version: %s", client.get_version())
-        LOG.warn("KODI Version: %s", xbmc.getInfoLabel('System.BuildVersion'))
-        LOG.warn("Platform: %s", settings('platformDetected'))
-        LOG.warn("Python Version: %s", sys.version)
-        LOG.warn("Using dynamic paths: %s", settings('useDirectPaths') == "0")
-        LOG.warn("Log Level: %s", self.settings['log_level'])
+        LOG.info("--->>>[ %s ]", client.get_addon_name())
+        LOG.info("Version: %s", client.get_version())
+        LOG.info("KODI Version: %s", xbmc.getInfoLabel('System.BuildVersion'))
+        LOG.info("Platform: %s", settings('platformDetected'))
+        LOG.info("Python Version: %s", sys.version)
+        LOG.info("Using dynamic paths: %s", settings('useDirectPaths') == "0")
+        LOG.info("Log Level: %s", self.settings['log_level'])
 
         self.check_version()
         verify_kodi_defaults()

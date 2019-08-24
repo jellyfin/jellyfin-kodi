@@ -15,7 +15,7 @@ from jellyfin import Jellyfin
 Jellyfin.set_loghandler(loghandler.LogHandler, logging.DEBUG)
 loghandler.reset()
 loghandler.config()
-LOG = logging.getLogger('JELLYFIN.entrypoint')
+LOG = logging.getLogger('JELLYFIN.' + __name__)
 
 #################################################################################################
 

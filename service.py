@@ -26,7 +26,7 @@ from helper import settings
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN.service")
+LOG = logging.getLogger("JELLYFIN." + __name__)
 DELAY = int(settings('startupDelay') if settings('SyncInstallRunDone.bool') else 4 or 0)
 
 #################################################################################################
@@ -68,8 +68,8 @@ class ServiceManager(threading.Thread):
 
 if __name__ == "__main__":
 
-    LOG.warn("-->[ service ]")
-    LOG.warn("Delay startup by %s seconds.", DELAY)
+    LOG.info("-->[ service ]")
+    LOG.info("Delay startup by %s seconds.", DELAY)
 
     while True:
 
@@ -93,4 +93,4 @@ if __name__ == "__main__":
 
         break
 
-    LOG.warn("--<[ service ]")
+    LOG.info("--<[ service ]")
