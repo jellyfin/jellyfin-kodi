@@ -16,11 +16,12 @@ from helper.utils import create_id
 ##################################################################################################
 
 LOG = logging.getLogger("JELLYFIN."+__name__)
+ADDON_DATA = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
 
 ##################################################################################################
 
 def get_addon_name():
-    
+
     ''' Used for logging.
     '''
     return xbmcaddon.Addon(addon_id()).getAddonInfo('name').upper()
@@ -82,12 +83,7 @@ def get_device_id(reset=False):
     if client_id:
         return client_id
 
-    directory = xbmc.translatePath('special://profile/addon_data/plugin.video.jellyfin/').decode('utf-8')
-
-    if not xbmcvfs.exists(directory):
-        xbmcvfs.mkdir(directory)
-
-    jellyfin_guid = os.path.join(directory, "jellyfin_guid")
+    jellyfin_guid = os.path.join(ADDON_DATA, "jellyfin_guid")
     file_guid = xbmcvfs.File(jellyfin_guid)
     client_id = file_guid.read()
 

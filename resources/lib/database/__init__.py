@@ -18,6 +18,7 @@ from objects import obj
 #################################################################################################
 
 LOG = logging.getLogger("JELLYFIN."+__name__)
+ADDON_DATA = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
 
 #################################################################################################
 
@@ -211,50 +212,37 @@ def reset():
     from views import Views
     views = Views()
 
-    if not dialog("yesno", heading="{jellyfin}", line1=_(33074)):
-        return
+    if window('jellyfin_sync.bool'):
+        dialog("ok", heading="{jellyfin}", line1=_(33085))
+    else:
+        if dialog("yesno", heading="{jellyfin}", line1=_(33074)):
+            reset_kodi()
+            reset_jellyfin()
+            views.delete_playlists()
+            views.delete_nodes()
+            LOG.info("[ reset kodi database ]")
 
-    window('jellyfin_should_stop.bool', True)
-    count = 10
+            if dialog("yesno", heading="{jellyfin}", line1=_(33086)):
+                reset_artwork()
 
-    while window('jellyfin_sync.bool'):
+            if dialog("yesno", heading="{jellyfin}", line1=_(33087)):
+                xbmcvfs.delete(os.path.join(ADDON_DATA, "settings.xml"))
+                xbmcvfs.delete(os.path.join(ADDON_DATA, "data.json"))
+                LOG.info("[ reset settings ]")
 
-        LOG.info("Sync is running...")
-        count -= 1
+            if xbmcvfs.exists(os.path.join(ADDON_DATA, "sync.json")):
+                xbmcvfs.delete(os.path.join(ADDON_DATA, "sync.json"))
 
-        if not count:
-            dialog("ok", heading="{jellyfin}", line1=_(33085))
+            settings('enableMusic.bool', False)
+            settings('MinimumSetup', "")
+            settings('MusicRescan.bool', False)
+            settings('SyncInstallRunDone.bool', False)
+            dialog("ok", heading="{jellyfin}", line1=_(33088))
+            xbmc.executebuiltin('RestartApp')
+        else:
+            pass
 
-            return
-
-        if xbmc.Monitor().waitForAbort(1):
-            return
-
-    reset_kodi()
-    reset_jellyfin()
-    views.delete_playlists()
-    views.delete_nodes()
-
-    if dialog("yesno", heading="{jellyfin}", line1=_(33086)):
-        reset_artwork()
-
-    addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
-
-    if dialog("yesno", heading="{jellyfin}", line1=_(33087)):
-
-        xbmcvfs.delete(os.path.join(addon_data, "settings.xml"))
-        xbmcvfs.delete(os.path.join(addon_data, "data.json"))
-        LOG.info("[ reset settings ]")
-
-    if xbmcvfs.exists(os.path.join(addon_data, "sync.json")):
-        xbmcvfs.delete(os.path.join(addon_data, "sync.json"))
-
-    settings('enableMusic.bool', False)
-    settings('MinimumSetup', "")
-    settings('MusicRescan.bool', False)
-    settings('SyncInstallRunDone.bool', False)
-    dialog("ok", heading="{jellyfin}", line1=_(33088))
-    xbmc.executebuiltin('RestartApp')
+    return
 
 def reset_kodi():
 
@@ -278,7 +266,7 @@ def reset_kodi():
                 if name != 'version':
                     musicdb.cursor.execute("DELETE FROM " + name)
 
-    LOG.warn("[ reset kodi ]")
+    LOG.info("[ reset kodi ]")
 
 def reset_jellyfin():
 
@@ -295,7 +283,7 @@ def reset_jellyfin():
             jellyfindb.cursor.execute("DROP table IF EXISTS view")
             jellyfindb.cursor.execute("DROP table IF EXISTS version")
 
-    LOG.warn("[ reset jellyfin ]")
+    LOG.info("[ reset jellyfin ]")
 
 def reset_artwork():
 
@@ -322,17 +310,12 @@ def reset_artwork():
             if name != 'version':
                 texdb.cursor.execute("DELETE FROM " + name)
 
-    LOG.warn("[ reset artwork ]")
+    LOG.info("[ reset artwork ]")
 
 def get_sync():
 
-    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
-
-    if not xbmcvfs.exists(path):
-        xbmcvfs.mkdirs(path)
-
     try:
-        with open(os.path.join(path, 'sync.json')) as infile:
+        with open(os.path.join(ADDON_DATA, 'sync.json')) as infile:
             sync = json.load(infile)
     except Exception:
         sync = {}
@@ -346,36 +329,25 @@ def get_sync():
 
 def save_sync(sync):
 
-    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
-
-    if not xbmcvfs.exists(path):
-        xbmcvfs.mkdirs(path)
-
     sync['Date'] = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 
-    with open(os.path.join(path, 'sync.json'), 'w') as outfile:
+    with open(os.path.join(ADDON_DATA, 'sync.json'), 'w') as outfile:
         json.dump(sync, outfile, sort_keys=True, indent=4, ensure_ascii=False)
 
 def get_credentials():
 
-    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
-
-    if not xbmcvfs.exists(path):
-        xbmcvfs.mkdirs(path)
-
     try:
-        with open(os.path.join(path, 'data.json')) as infile:
+        if os.path.exists(os.path.join(ADDON_DATA, 'data.json')):
+            pass
+        elif os.path.exists(os.path.join(ADDON_DATA, 'data.txt')):
+            os.rename(os.path.join(ADDON_DATA, 'data.txt'), os.path.join(ADDON_DATA, 'data.json'))
+        else:
+            open(os.path.join(ADDON_DATA, 'data.json'), 'a')
+
+        with open(os.path.join(ADDON_DATA, 'data.json')) as infile:
             credentials = json.load(infile)
     except Exception:
-
-        try:
-            with open(os.path.join(path, 'data.txt')) as infile:
-                credentials = json.load(infile)
-                save_credentials(credentials)
-
-            xbmcvfs.delete(os.path.join(path, 'data.txt'))
-        except Exception:
-            credentials = {}
+        credentials = {}
 
     credentials['Servers'] = credentials.get('Servers', [])
 
@@ -383,12 +355,8 @@ def get_credentials():
 
 def save_credentials(credentials):
     credentials = credentials or {}
-    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
 
-    if not xbmcvfs.exists(path):
-        xbmcvfs.mkdirs(path)
-
-    with open(os.path.join(path, 'data.json'), 'w') as outfile:
+    with open(os.path.join(ADDON_DATA, 'data.json'), 'w') as outfile:
         json.dump(credentials, outfile, sort_keys=True, indent=4, ensure_ascii=False)
 
 def get_item(kodi_id, media):

@@ -10,7 +10,7 @@ from helper import _, settings, dialog, JSONRPC, compare_version
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 #################################################################################################
 

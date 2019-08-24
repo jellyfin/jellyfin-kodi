@@ -22,7 +22,7 @@ from jellyfin import Jellyfin
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 LIMIT = min(int(settings('limitIndex') or 50), 50)
 DTHREADS = int(settings('limitThreads') or 3)
 MEDIA = {
@@ -96,7 +96,7 @@ class Library(threading.Thread):
 
     def run(self):
 
-        LOG.warn("--->[ library ]")
+        LOG.info("--->[ library ]")
 
         if not self.startup():
             self.stop_client()
@@ -117,7 +117,7 @@ class Library(threading.Thread):
             if self.monitor.waitForAbort(2):
                 break
 
-        LOG.warn("---<[ library ]")
+        LOG.info("---<[ library ]")
 
     def test_databases(self):
 

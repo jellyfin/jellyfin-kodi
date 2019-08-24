@@ -6,7 +6,7 @@
 # Wolfgang Petri <horstepipe@googlemail.com>, 2018
 # sualfred <su4lfred@gmail.com>, 2018
 # Benni <semool@secure-mail.biz>, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
@@ -537,6 +537,10 @@ msgstr "Benutzer aus der Sitzung entfernen"
 msgctxt "#33074"
 msgid "Are you sure you want to reset your local Kodi database?"
 msgstr "Möchtest du wirklich deine lokale Kodi Datenbank zurücksetzen?"
+
+msgctxt "#33085"
+msgid "Unable to reset Kodi database while sync is running"
+msgstr "Kodi-Datenbank kann während der Synchronisierung nicht zurückgesetzt werden"
 
 msgctxt "#33086"
 msgid "Remove all cached artwork?"

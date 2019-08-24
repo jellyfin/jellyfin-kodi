@@ -514,6 +514,10 @@ msgctxt "#33074"
 msgid "Are you sure you want to reset your local Kodi database?"
 msgstr ""
 
+msgctxt "#33085"
+msgid "Unable to reset Kodi database while sync is running"
+msgstr ""
+
 msgctxt "#33086"
 msgid "Remove all cached artwork?"
 msgstr ""

@@ -22,7 +22,7 @@ from webservice import WebService
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 #################################################################################################
 
@@ -449,7 +449,7 @@ class Listener(threading.Thread):
         ''' Detect the resume dialog for widgets.
             Detect external players.
         '''
-        LOG.warn("--->[ listener ]")
+        LOG.info("--->[ listener ]")
 
         while not self.stop_thread:
             special_listener()

@@ -9,6 +9,7 @@ import sys
 
 import xbmc
 import xbmcaddon
+import xbmcvfs
 
 #################################################################################################
 
@@ -27,6 +28,7 @@ from helper import settings
 #################################################################################################
 
 LOG = logging.getLogger("JELLYFIN." + __name__)
+ADDON_DATA = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
 DELAY = int(settings('startupDelay') if settings('SyncInstallRunDone.bool') else 4 or 0)
 
 #################################################################################################
@@ -71,26 +73,29 @@ if __name__ == "__main__":
     LOG.info("-->[ service ]")
     LOG.info("Delay startup by %s seconds.", DELAY)
 
+    if not xbmcvfs.exists(ADDON_DATA):
+        xbmcvfs.mkdirs(ADDON_DATA)
+
     while True:
 
-        if not settings('enableAddon.bool'):
-            LOG.warn("Jellyfin for Kodi is not enabled.")
+        if settings('enableAddon.bool'):
+            try:
+
+                session = ServiceManager()
+                session.start()
+                session.join()  # Block until the thread exits.
+
+                if 'RestartService' in session.exception:
+                    continue
+
+            except Exception as error:
+                ''' Issue initializing the service.
+                '''
+                LOG.exception(error)
 
             break
-
-        try:
-            session = ServiceManager()
-            session.start()
-            session.join()  # Block until the thread exits.
-
-            if 'RestartService' in session.exception:
-                continue
-
-        except Exception as error:
-            ''' Issue initializing the service.
-            '''
-            LOG.exception(error)
-
-        break
+        else:
+            LOG.warn("Jellyfin for Kodi is not enabled.")
+            break
 
     LOG.info("--<[ service ]")
