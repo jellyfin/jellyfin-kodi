@@ -342,7 +342,8 @@ def get_credentials():
         elif os.path.exists(os.path.join(ADDON_DATA, 'data.txt')):
             os.rename(os.path.join(ADDON_DATA, 'data.txt'), os.path.join(ADDON_DATA, 'data.json'))
         else:
-            open(os.path.join(ADDON_DATA, 'data.json'), 'a')
+            with open(os.path.join(ADDON_DATA, 'data.json'), 'w'):
+                pass
 
         with open(os.path.join(ADDON_DATA, 'data.json')) as infile:
             credentials = json.load(infile)
