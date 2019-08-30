@@ -209,7 +209,7 @@ class HTTP(object):
                 'User-Agent': self.config['http.user_agent'] or "%s/%s" % (self.config['app.name'], self.config['app.version'])
             })
 
-        if 'Authorization' not in data['headers']:
+        if 'x-emby-authorization' not in data['headers']:
             self._authorization(data)
 
         return data
@@ -222,12 +222,12 @@ class HTTP(object):
         auth += "DeviceId=%s, " % self.config['app.device_id'].encode('utf-8')
         auth += "Version=%s" % self.config['app.version'].encode('utf-8')
 
-        data['headers'].update({'Authorization': auth})
+        data['headers'].update({'x-emby-authorization': auth})
 
         if self.config['auth.token'] and self.config['auth.user_id']:
 
             auth += ', UserId=%s' % self.config['auth.user_id'].encode('utf-8')
-            data['headers'].update({'Authorization': auth, 'X-MediaBrowser-Token': self.config['auth.token'].encode('utf-8')})
+            data['headers'].update({'x-emby-authorization': auth, 'X-MediaBrowser-Token': self.config['auth.token'].encode('utf-8')})
 
         return data
 
