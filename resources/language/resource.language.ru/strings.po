@@ -6,70 +6,73 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2019-09-08 02:42+0000\n"
+"Last-Translator: WWWesten <wwwesten@gmail.com>\n"
+"Language-Team: Russian <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 3.8\n"
 
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
-msgstr ""
+msgstr "Jellyfin для Kodi"
 
 msgctxt "#30000"
 msgid "Server address"
-msgstr ""
+msgstr "Адрес сервера"
 
 msgctxt "#30001"
 msgid "Server name"
-msgstr ""
+msgstr "Имя сервера"
 
 msgctxt "#30002"
 msgid "Force HTTP playback"
-msgstr ""
+msgstr "Инициировать HTTP-воспроизведение"
 
 msgctxt "#30003"
 msgid "Login method"
-msgstr ""
+msgstr "Метод входа"
 
 msgctxt "#30004"
 msgid "Log level"
-msgstr ""
+msgstr "Уровень журналирования"
 
 msgctxt "#30016"
 msgid "Device name"
-msgstr ""
+msgstr "Имя устройства"
 
 msgctxt "#30022"
 msgid "Advanced"
-msgstr ""
+msgstr "Расширенное"
 
 msgctxt "#30024"
 msgid "Username"
-msgstr ""
+msgstr "Имя пользователя"
 
 msgctxt "#30030"
 msgid "Port number"
-msgstr ""
+msgstr "Номер порта"
 
 msgctxt "#30091"
 msgid "Confirm file deletion"
-msgstr ""
+msgstr "Подтверить удаление файла"
 
 msgctxt "#30114"
 msgid "Offer delete after playback"
-msgstr ""
+msgstr "Предложить удаление после воспроизведения"
 
 msgctxt "#30115"
 msgid "For Episodes"
-msgstr ""
+msgstr "Для эпизодов"
 
 msgctxt "#30116"
 msgid "For Movies"
-msgstr ""
+msgstr "Для фильмов"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
@@ -77,67 +80,67 @@ msgstr ""
 
 msgctxt "#30160"
 msgid "Video quality"
-msgstr ""
+msgstr "Качество видео"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
-msgstr ""
+msgstr "Недавно добавленные ТВ-передачи"
 
 msgctxt "#30171"
 msgid "In Progress TV Shows"
-msgstr ""
+msgstr "ТВ-передачи в процессе"
 
 msgctxt "#30174"
 msgid "Recently Added Movies"
-msgstr ""
+msgstr "Недавно добавленные фильмы"
 
 msgctxt "#30175"
 msgid "Recently Added Episodes"
-msgstr ""
+msgstr "Недавно добавленные эпизоды"
 
 msgctxt "#30177"
 msgid "In Progress Movies"
-msgstr ""
+msgstr "Фильмы в процессе"
 
 msgctxt "#30178"
 msgid "In Progress Episodes"
-msgstr ""
+msgstr "Эпизоды в процессе"
 
 msgctxt "#30179"
 msgid "Next Episodes"
-msgstr ""
+msgstr "Следующие эпизоды"
 
 msgctxt "#30180"
 msgid "Favorite Movies"
-msgstr ""
+msgstr "Избранные фильмы"
 
 msgctxt "#30181"
 msgid "Favorite Shows"
-msgstr ""
+msgstr "Избранные передачи"
 
 msgctxt "#30182"
 msgid "Favorite Episodes"
-msgstr ""
+msgstr "Избранные эпизоды"
 
 msgctxt "#30185"
 msgid "Boxsets"
-msgstr ""
+msgstr "Коллекции"
 
 msgctxt "#30189"
 msgid "Unwatched Movies"
-msgstr ""
+msgstr "Непросмотренные фильмы"
 
 msgctxt "#30229"
 msgid "Random Items"
-msgstr ""
+msgstr "Случайные элементы"
 
 msgctxt "#30230"
 msgid "Recommended Items"
-msgstr ""
+msgstr "Предлагаемые элементы"
 
 msgctxt "#30235"
 msgid "Interface"
-msgstr ""
+msgstr "Интерфейс"
 
 msgctxt "#30239"
 msgid "Reset local Kodi database"
@@ -149,27 +152,27 @@ msgstr ""
 
 msgctxt "#30251"
 msgid "Recently added Home Videos"
-msgstr ""
+msgstr "Недавно добавленные домашние видео"
 
 msgctxt "#30252"
 msgid "Recently added Photos"
-msgstr ""
+msgstr "Недавно добавленные фото"
 
 msgctxt "#30253"
 msgid "Favourite Home Videos"
-msgstr ""
+msgstr "Избранные домашние видео"
 
 msgctxt "#30254"
 msgid "Favourite Photos"
-msgstr ""
+msgstr "Избранные фото"
 
 msgctxt "#30255"
 msgid "Favourite Albums"
-msgstr ""
+msgstr "Избранные альбомы"
 
 msgctxt "#30256"
 msgid "Recently added Music videos"
-msgstr ""
+msgstr "Недавно добавленные музыкальные видео"
 
 msgctxt "#30257"
 msgid "In progress Music videos"
@@ -181,43 +184,43 @@ msgstr ""
 
 msgctxt "#30302"
 msgid "Movies"
-msgstr ""
+msgstr "Фильмы"
 
 msgctxt "#30305"
 msgid "TV Shows"
-msgstr ""
+msgstr "ТВ-передачи"
 
 msgctxt "#30401"
 msgid "Jellyfin options"
-msgstr ""
+msgstr "Опции Jellyfin"
 
 msgctxt "#30402"
 msgid "Jellyfin transcode"
-msgstr ""
+msgstr "Перекодирование Jellyfin"
 
 msgctxt "#30405"
 msgid "Add to favorites"
-msgstr ""
+msgstr "Добавить в Избранное"
 
 msgctxt "#30406"
 msgid "Remove from favorites"
-msgstr ""
+msgstr "Удалить из Избранного"
 
 msgctxt "#30408"
 msgid "Settings"
-msgstr ""
+msgstr "Параметры"
 
 msgctxt "#30409"
 msgid "Delete from Jellyfin"
-msgstr ""
+msgstr "Удалить из Jellyfin"
 
 msgctxt "#30410"
 msgid "Refresh this item"
-msgstr ""
+msgstr "Подновить этот элемент"
 
 msgctxt "#30412"
 msgid "Transcode"
-msgstr ""
+msgstr "Перекодировка"
 
 msgctxt "#30500"
 msgid "Verify connection"
@@ -229,7 +232,7 @@ msgstr ""
 
 msgctxt "#30506"
 msgid "Sync"
-msgstr ""
+msgstr "Синхро"
 
 msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
@@ -257,7 +260,7 @@ msgstr ""
 
 msgctxt "#30516"
 msgid "Playback"
-msgstr ""
+msgstr "Воспроизведение"
 
 msgctxt "#30517"
 msgid "Network credentials"
@@ -265,7 +268,7 @@ msgstr ""
 
 msgctxt "#30518"
 msgid "Enable cinema mode"
-msgstr ""
+msgstr "Включить режим кинозала"
 
 msgctxt "#30519"
 msgid "Ask to play trailers"
@@ -313,7 +316,7 @@ msgstr ""
 
 msgctxt "#30534"
 msgid "Notifications (in seconds)"
-msgstr ""
+msgstr "Уведомления, с"
 
 msgctxt "#30535"
 msgid "Generate a new device Id"
@@ -329,11 +332,11 @@ msgstr ""
 
 msgctxt "#30539"
 msgid "Login"
-msgstr ""
+msgstr "Вход"
 
 msgctxt "#30540"
 msgid "Manual login"
-msgstr ""
+msgstr "Войти вручную"
 
 msgctxt "#30543"
 msgid "Username or email"
@@ -349,15 +352,15 @@ msgstr ""
 
 msgctxt "#30602"
 msgid "Password"
-msgstr ""
+msgstr "Пароль"
 
 msgctxt "#30605"
 msgid "Sign in"
-msgstr ""
+msgstr "Вход"
 
 msgctxt "#30606"
 msgid "Cancel"
-msgstr ""
+msgstr "Отменить"
 
 msgctxt "#30607"
 msgid "Select main server"
@@ -373,15 +376,15 @@ msgstr ""
 
 msgctxt "#30610"
 msgid "Connect to"
-msgstr ""
+msgstr "Соединение с"
 
 msgctxt "#30611"
 msgid "Manually add server"
-msgstr ""
+msgstr "Добавить сервер вручную"
 
 msgctxt "#30612"
 msgid "Please sign in"
-msgstr ""
+msgstr "Выполните вход"
 
 msgctxt "#30613"
 msgid "Change Jellyfin Connect user"
@@ -389,15 +392,15 @@ msgstr ""
 
 msgctxt "#30614"
 msgid "Connect to server"
-msgstr ""
+msgstr "Соединение с сервером"
 
 msgctxt "#30615"
 msgid "Host"
-msgstr ""
+msgstr "Узел"
 
 msgctxt "#30616"
 msgid "Connect"
-msgstr ""
+msgstr "Подсоединиться"
 
 msgctxt "#30617"
 msgid "Server or port cannot be empty"
@@ -405,15 +408,15 @@ msgstr ""
 
 msgctxt "#33000"
 msgid "Welcome"
-msgstr ""
+msgstr "Приступить к работе"
 
 msgctxt "#33006"
 msgid "Server is restarting"
-msgstr ""
+msgstr "Сервер перезапускается"
 
 msgctxt "#33009"
 msgid "Invalid username or password"
-msgstr ""
+msgstr "Недопустимое имя пользователя или пароль"
 
 msgctxt "#33013"
 msgid "Choose the audio stream"
@@ -429,7 +432,7 @@ msgstr ""
 
 msgctxt "#33016"
 msgid "Play trailers?"
-msgstr ""
+msgstr "Воспроизвести рейлеры?"
 
 msgctxt "#33018"
 msgid "Gathering boxsets"
@@ -473,7 +476,7 @@ msgstr ""
 
 msgctxt "#33047"
 msgid "Kodi can't locate file:"
-msgstr ""
+msgstr "Kodi не может  разместить файл:"
 
 msgctxt "#33048"
 msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
@@ -481,35 +484,35 @@ msgstr ""
 
 msgctxt "#33049"
 msgid "New"
-msgstr ""
+msgstr "Новое"
 
 msgctxt "#33054"
 msgid "Add user to session"
-msgstr ""
+msgstr "Добавить пользователя к сеансу"
 
 msgctxt "#33058"
 msgid "Perform local database reset"
-msgstr ""
+msgstr "Выполнить сброс локальной базы данных"
 
 msgctxt "#33060"
 msgid "Sync theme media"
-msgstr ""
+msgstr "Синхронизировать тематические медиаданные"
 
 msgctxt "#33061"
 msgid "Add/Remove user from the session"
-msgstr ""
+msgstr "Добавить/изъять пользователя в сеансе"
 
 msgctxt "#33062"
 msgid "Add user"
-msgstr ""
+msgstr "Добавить пользователя"
 
 msgctxt "#33063"
 msgid "Remove user"
-msgstr ""
+msgstr "Изъять пользователя"
 
 msgctxt "#33064"
 msgid "Remove user from the session"
-msgstr ""
+msgstr "Изъять пользователя из сеанса"
 
 msgctxt "#33074"
 msgid "Are you sure you want to reset your local Kodi database?"
@@ -597,7 +600,7 @@ msgstr ""
 
 msgctxt "#33109"
 msgid "Plugin"
-msgstr ""
+msgstr "Плагин"
 
 msgctxt "#33110"
 msgid "Restart Kodi to take effect."
@@ -645,7 +648,7 @@ msgstr ""
 
 msgctxt "#33121"
 msgid "All"
-msgstr ""
+msgstr "Все"
 
 msgctxt "#33122"
 msgid "Restart Kodi to resume where you left off."
@@ -669,7 +672,7 @@ msgstr ""
 
 msgctxt "#33127"
 msgid "Proceed"
-msgstr ""
+msgstr "Приступить"
 
 msgctxt "#33128"
 msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
@@ -697,7 +700,7 @@ msgstr ""
 
 msgctxt "#33134"
 msgid "Add server"
-msgstr ""
+msgstr "Добавить сервер"
 
 msgctxt "#33135"
 msgid "Kodi will now restart to apply a small patch for your Kodi version."
@@ -817,27 +820,27 @@ msgstr ""
 
 msgctxt "#33166"
 msgid "(dynamic)"
-msgstr ""
+msgstr "(динамически)"
 
 msgctxt "#33167"
 msgid "Recently added"
-msgstr ""
+msgstr "Недавно добавлено"
 
 msgctxt "#33168"
 msgid "Favourites"
-msgstr ""
+msgstr "Избранное"
 
 msgctxt "#33169"
 msgid "In Progress"
-msgstr ""
+msgstr "В процессе"
 
 msgctxt "#33170"
 msgid "Unwatched"
-msgstr ""
+msgstr "Непросмотрено"
 
 msgctxt "#33171"
 msgid "By first letter"
-msgstr ""
+msgstr "По первой букве"
 
 msgctxt "#33172"
 msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
@@ -917,19 +920,19 @@ msgstr ""
 
 msgctxt "#33193"
 msgid "Restarting..."
-msgstr ""
+msgstr "Перезапускается…"
 
 msgctxt "#33194"
 msgid "Manage libraries"
-msgstr ""
+msgstr "Управление медиатеками"
 
 msgctxt "#33195"
 msgid "Enable Jellyfin for Kodi"
-msgstr ""
+msgstr "Включить Jellyfin для Kodi"
 
 msgctxt "#33196"
 msgid "Advanced options"
-msgstr ""
+msgstr "Расширенные опции"
 
 msgctxt "#33197"
 msgid "A sync is already running, please wait until it completes and try again."
