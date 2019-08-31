@@ -99,9 +99,6 @@ class Credentials(object):
                 if server.get('ExchangeToken'):
                     existing['ExchangeToken'] = server['ExchangeToken']
 
-                if server.get('RemoteAddress'):
-                    existing['RemoteAddress'] = server['RemoteAddress']
-
                 if server.get('ManualAddress'):
                     existing['ManualAddress'] = server['ManualAddress']
 

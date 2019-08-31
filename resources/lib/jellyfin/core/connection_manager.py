@@ -599,8 +599,6 @@ class ConnectionManager(object):
 
         if system_info.get('LocalAddress'):
             server['LocalAddress'] = system_info['LocalAddress']
-        if system_info.get('WanAddress'):
-            server['RemoteAddress'] = system_info['WanAddress']
         if 'MacAddress' in system_info:
             server['WakeOnLanInfos'] = [{'MacAddress': system_info['MacAddress']}]
 
