@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2019-08-27 02:04+0000\n"
-"Last-Translator: zhang1340 <zhangxuan1340@hotmail.com>\n"
+"PO-Revision-Date: 2019-09-07 18:53+0000\n"
+"Last-Translator: qqq-qqqq <qxc9302@163.com>\n"
 "Language-Team: Chinese (Simplified) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -111,15 +111,15 @@ msgstr "下一个剧集"
 
 msgctxt "#30180"
 msgid "Favorite Movies"
-msgstr "喜爱的电影"
+msgstr "最爱的电影"
 
 msgctxt "#30181"
 msgid "Favorite Shows"
-msgstr "喜爱的节目"
+msgstr "最爱的节目"
 
 msgctxt "#30182"
 msgid "Favorite Episodes"
-msgstr "喜爱的剧集"
+msgstr "最爱的剧集"
 
 msgctxt "#30185"
 msgid "Boxsets"
@@ -127,7 +127,7 @@ msgstr ""
 
 msgctxt "#30189"
 msgid "Unwatched Movies"
-msgstr "为观看的影片"
+msgstr "未观看的影片"
 
 msgctxt "#30229"
 msgid "Random Items"
@@ -691,25 +691,27 @@ msgctxt "#33131"
 msgid "Refreshing boxsets"
 msgstr ""
 
+#, fuzzy
 msgctxt "#33132"
 msgid "Repair library"
-msgstr ""
+msgstr "修复库"
 
 msgctxt "#33133"
 msgid "Remove library from Kodi"
-msgstr ""
+msgstr "从Kodi中移除库"
 
 msgctxt "#33134"
 msgid "Add server"
-msgstr ""
+msgstr "添加服务器"
 
 msgctxt "#33135"
 msgid "Kodi will now restart to apply a small patch for your Kodi version."
 msgstr ""
 
+#, fuzzy
 msgctxt "#33136"
 msgid "Update library"
-msgstr ""
+msgstr "更新库"
 
 msgctxt "#33137"
 msgid "Enable Kodi companion"
@@ -729,27 +731,29 @@ msgstr ""
 
 msgctxt "#33141"
 msgid "Remove server"
-msgstr ""
+msgstr "移除服务器"
 
 msgctxt "#33142"
 msgid "Something went wrong. Try again later."
-msgstr ""
+msgstr "出错了。请稍后重试。"
 
 msgctxt "#33143"
 msgid "Enable the option to delete"
 msgstr ""
 
+#, fuzzy
 msgctxt "#33144"
 msgid "Removing library"
-msgstr ""
+msgstr "正在移除库"
 
 msgctxt "#33145"
 msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
 msgstr ""
 
+#, fuzzy
 msgctxt "#33146"
 msgid "Unable to connect to Jellyfin."
-msgstr ""
+msgstr "无法连接到Jellyfin服务器。"
 
 msgctxt "#33147"
 msgid "Your access to Jellyfin is restricted."
@@ -761,55 +765,59 @@ msgstr ""
 
 msgctxt "#33149"
 msgid "Unable to connect to this server."
-msgstr ""
+msgstr "无法连接到这个服务器。"
 
 msgctxt "#33150"
 msgid "Update server information"
-msgstr ""
+msgstr "更新服务器信息"
 
+#, fuzzy
 msgctxt "#33151"
 msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
-msgstr ""
+msgstr "重新连接到之前已加载的服务器。如果你想使用一个不同的服务器，请重置本地数据库，包括你的用户信息。"
 
 msgctxt "#33152"
 msgid "Unable to locate TV Tunes in Kodi."
 msgstr ""
 
+#, fuzzy
 msgctxt "#33153"
 msgid "Your Jellyfin theme media has been synced to Kodi"
-msgstr ""
+msgstr "你的Jellyfin媒体主题已被同步到Kodi"
 
 msgctxt "#33154"
 msgid "Add libraries"
 msgstr ""
 
+#, fuzzy
 msgctxt "#33155"
 msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
-msgstr ""
+msgstr "当前Kodi中应用的Jellyfin更新已损坏！如果一直存在这一问题，请到Jellyfin for Kodi论坛发帖。这需要被尽快修复。"
 
+#, fuzzy
 msgctxt "#33156"
 msgid "A patch has been applied!"
-msgstr ""
+msgstr "一个更新已被应用！"
 
 msgctxt "#33157"
 msgid "Audio only"
-msgstr ""
+msgstr "仅限音频"
 
 msgctxt "#33158"
 msgid "Subtitles only"
-msgstr ""
+msgstr "仅限字幕"
 
 msgctxt "#33159"
 msgid "Enable audio/subtitles selection"
-msgstr ""
+msgstr "启用音频/字幕选择"
 
 msgctxt "#33160"
 msgid "To avoid errors, please update Jellyfin for Kodi to version: "
-msgstr ""
+msgstr "为了避免错误，请更新Jellyfin for Kodi到版本： "
 
 msgctxt "#33162"
 msgid "Reset the music library?"
-msgstr ""
+msgstr "重置音乐库？"
 
 msgctxt "#33164"
 msgid "Mask sensitive information in log (does not apply to kodi logging)"
@@ -817,7 +825,7 @@ msgstr ""
 
 msgctxt "#33165"
 msgid "Failed to create backup"
-msgstr ""
+msgstr "创建备份失败"
 
 msgctxt "#33166"
 msgid "(dynamic)"
@@ -825,47 +833,51 @@ msgstr ""
 
 msgctxt "#33167"
 msgid "Recently added"
-msgstr ""
+msgstr "最近添加"
 
 msgctxt "#33168"
 msgid "Favourites"
-msgstr ""
+msgstr "最喜欢的"
 
 msgctxt "#33169"
 msgid "In Progress"
-msgstr ""
+msgstr "正在播放"
 
 msgctxt "#33170"
 msgid "Unwatched"
-msgstr ""
+msgstr "未观看"
 
 msgctxt "#33171"
 msgid "By first letter"
-msgstr ""
+msgstr "按首字母"
 
+#, fuzzy
 msgctxt "#33172"
 msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
-msgstr ""
+msgstr "你有{number}个更新等待进行。可能在一段时间后才能看到新的内容。可能通过启动Jellyfin插件 > 更换库来更新库会更快。仍要继续？"
 
 msgctxt "#33173"
 msgid "Forget about the previous sync? This is not recommended."
 msgstr ""
 
+#, fuzzy
 msgctxt "#33174"
 msgid "Paging - download threads (default: 3)"
-msgstr ""
+msgstr "分页 - 下载线程数 (默认值: 3)"
 
+#, fuzzy
 msgctxt "#33175"
 msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
-msgstr ""
+msgstr "分页提示：每个下载线程会同时从Jellyfin服务器请求最大项数。"
 
 msgctxt "#33176"
 msgid "Update or repair your libraries to apply the changes below."
-msgstr ""
+msgstr "更新或修复库以应用下面的改动。"
 
+#, fuzzy
 msgctxt "#33177"
 msgid "Display the progress bar if update count greater than"
-msgstr ""
+msgstr "显示进度条当更新数大于"
 
 msgctxt "#33178"
 msgid "Processing updates"
@@ -873,15 +885,15 @@ msgstr ""
 
 msgctxt "#33179"
 msgid "Force transcode"
-msgstr ""
+msgstr "强制转码"
 
 msgctxt "#33180"
 msgid "Restart Jellyfin for Kodi"
-msgstr ""
+msgstr "重启Jellyfin for Kodi"
 
 msgctxt "#33181"
 msgid "Restarting to apply the patch"
-msgstr ""
+msgstr "重启以应用更新"
 
 msgctxt "#33182"
 msgid "Play with cinema mode"
@@ -897,31 +909,34 @@ msgstr ""
 
 msgctxt "#33185"
 msgid "Enable sync during playback (may cause some lag)"
-msgstr ""
+msgstr "在播放时启用同步 (可能引起卡顿)"
 
+#, fuzzy
 msgctxt "#33186"
 msgid "The Kodi companion speeds up the start up sync. Other syncs are triggered by server events."
-msgstr ""
+msgstr "Kodi companion加速启动时的同步。其他同步由服务器事件触发。"
 
+#, fuzzy
 msgctxt "#33187"
 msgid "Sync Rotten Tomatoes ratings"
-msgstr ""
+msgstr "同步烂番茄评分"
 
+#, fuzzy
 msgctxt "#33188"
 msgid "Would you like to sync Rotten Tomatoes ratings?"
-msgstr ""
+msgstr "你想要同步烂番茄评分吗？"
 
 msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
-msgstr ""
+msgstr "重启Jellyfin for Kodi以应用更改？"
 
 msgctxt "#33192"
 msgid "Restart Jellyfin for Kodi"
-msgstr ""
+msgstr "重启Jellyfin for Kodi"
 
 msgctxt "#33193"
 msgid "Restarting..."
-msgstr ""
+msgstr "重启中..."
 
 msgctxt "#33194"
 msgid "Manage libraries"
@@ -929,12 +944,13 @@ msgstr ""
 
 msgctxt "#33195"
 msgid "Enable Jellyfin for Kodi"
-msgstr ""
+msgstr "启用Jellyfin for Kodi"
 
 msgctxt "#33196"
 msgid "Advanced options"
-msgstr ""
+msgstr "高级选项"
 
+#, fuzzy
 msgctxt "#33197"
 msgid "A sync is already running, please wait until it completes and try again."
-msgstr ""
+msgstr "同步正在执行，请等待同步结束后重试。"
