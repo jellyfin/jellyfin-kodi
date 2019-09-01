@@ -5,6 +5,8 @@
         provider-name="Jellyfin Contributors, angelblue05">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
+    <import addon="script.module.requests" version="2.22.0"/>
+    <import addon="script.module.dateutil" version="2.7.3"/>
   </requires>
   <extension    point="xbmc.python.pluginsource"
                 library="default.py">
