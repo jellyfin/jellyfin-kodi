@@ -25,7 +25,6 @@ CONNECTION_STATE = {
 }
 CONNECTION_MODE = {
     'Local': 0,
-    'Remote': 1,
     'Manual': 2
 }
 
@@ -35,10 +34,9 @@ def get_server_address(server, mode):
 
     modes = {
         CONNECTION_MODE['Local']: server.get('LocalAddress'),
-        CONNECTION_MODE['Remote']: server.get('RemoteAddress'),
         CONNECTION_MODE['Manual']: server.get('ManualAddress')
     }
-    return modes.get(mode) or server.get('ManualAddress', server.get('LocalAddress', server.get('RemoteAddress')))
+    return modes.get(mode) or server.get('ManualAddress', server.get('LocalAddress'))
 
 
 class ConnectionManager(object):
@@ -215,8 +213,6 @@ class ConnectionManager(object):
             tests.append(CONNECTION_MODE['Manual'])
         if CONNECTION_MODE['Local'] not in tests:
             tests.append(CONNECTION_MODE['Local'])
-        if CONNECTION_MODE['Remote'] not in tests:
-            tests.append(CONNECTION_MODE['Remote'])
 
         # TODO: begin to wake server
 
@@ -599,8 +595,6 @@ class ConnectionManager(object):
 
         if system_info.get('LocalAddress'):
             server['LocalAddress'] = system_info['LocalAddress']
-        if system_info.get('WanAddress'):
-            server['RemoteAddress'] = system_info['WanAddress']
         if 'MacAddress' in system_info:
             server['WakeOnLanInfos'] = [{'MacAddress': system_info['MacAddress']}]
 
