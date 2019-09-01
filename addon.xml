@@ -39,8 +39,8 @@
       #44 Remove code caching, fixing Kodi 18 Music syncing for existing installs.
     </news>
     <assets>
-      <icon>icon.png</icon>
-      <fanart>fanart.png</fanart>
+      <icon>resources/icon.png</icon>
+      <fanart>resources/fanart.png</fanart>
     </assets>
   </extension>
 </addon>
