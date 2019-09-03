@@ -40,9 +40,7 @@ def browse_info():
 
 def _http(action, url, request={}, server_id=None):
     request.update({'url': url, 'type': action})
-
-    return Jellyfin(server_id)['http/request'](request)
-
+    return Jellyfin(server_id).http.request(request)
 
 def _get(handler, params=None, server_id=None):
     return _http("GET", get_jellyfinserver_url(handler), {'params': params}, server_id)
