@@ -89,7 +89,7 @@ class JellyfinClient(object):
             return self.config[key.replace('config/', "", 1)] if "/" in key else self.config
 
         elif key.startswith('http'):
-            return self.http.__shortcuts__(key.replace('http/', "", 1))
+            return self.http.request
 
         elif key.startswith('websocket'):
             return self.wsc.__shortcuts__(key.replace('websocket/', "", 1))
