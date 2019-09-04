@@ -313,7 +313,6 @@ class Monitor(xbmc.Monitor):
                 "Mute,Unmute,SetVolume,"
                 "Play,Playstate,PlayNext,PlayMediaSource"
             ),
-            'IconUrl': "https://raw.githubusercontent.com/jellyfin/jellyfin-kodi/master/kodi_icon.png",
         })
 
         session = server['api'].get_device(self.device_id)
