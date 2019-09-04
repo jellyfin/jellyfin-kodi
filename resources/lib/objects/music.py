@@ -217,7 +217,7 @@ class Music(KodiDb):
             except TypeError:
 
                 try:
-                    self.artist(self.server['api'].get_item(temp_obj['Id']), library=None)
+                    self.artist(self.server.jellyfin.get_item(temp_obj['Id']), library=None)
                     temp_obj['ArtistId'] = self.jellyfin_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
                 except Exception as error:
                     LOG.exception(error)
@@ -318,7 +318,7 @@ class Music(KodiDb):
                 if obj['SongAlbumId'] is None:
                     raise TypeError("No album id found associated?")
 
-                self.album(self.server['api'].get_item(obj['SongAlbumId']))
+                self.album(self.server.jellyfin.get_item(obj['SongAlbumId']))
                 obj['AlbumId'] = self.jellyfin_db.get_item_by_id(*values(obj, QUEM.get_item_song_obj))[0]
             except TypeError:
                 self.single(obj)
@@ -373,7 +373,7 @@ class Music(KodiDb):
             except TypeError:
 
                 try:
-                    self.artist(self.server['api'].get_item(temp_obj['Id']), library=None)
+                    self.artist(self.server.jellyfin.get_item(temp_obj['Id']), library=None)
                     temp_obj['ArtistId'] = self.jellyfin_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
                 except Exception as error:
                     LOG.exception(error)
@@ -407,7 +407,7 @@ class Music(KodiDb):
             except TypeError:
 
                 try:
-                    self.artist(self.server['api'].get_item(temp_obj['Id']), library=None)
+                    self.artist(self.server.jellyfin.get_item(temp_obj['Id']), library=None)
                     temp_obj['ArtistId'] = self.jellyfin_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
                 except Exception as error:
                     LOG.exception(error)

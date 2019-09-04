@@ -97,9 +97,6 @@ class JellyfinClient(object):
         elif key.startswith('auth'):
             return self.auth.__shortcuts__(key.replace('auth/', "", 1))
 
-        elif key.startswith('api'):
-            return self.jellyfin
-
         elif key == 'connected':
             return self.logged_in
 

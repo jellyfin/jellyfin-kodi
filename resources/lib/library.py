@@ -348,7 +348,7 @@ class Library(threading.Thread):
             if settings('SyncInstallRunDone.bool'):
                 if settings('kodiCompanion.bool'):
 
-                    for plugin in self.server['api'].get_plugins():
+                    for plugin in self.server.jellyfin.get_plugins():
                         if plugin['Name'] in ("Jellyfin.Kodi Sync Queue", "Kodi companion", "Kodi Sync Queue"):
 
                             if not self.fast_sync():
@@ -400,7 +400,7 @@ class Library(threading.Thread):
         """
         for library in sync['Whitelist']:
 
-            data = self.server['api'].get_date_modified(last_sync, library.replace('Mixed:', ""), "Series,Episode,BoxSet,Movie,MusicVideo,MusicArtist,MusicAlbum,Audio")
+            data = self.server.jellyfin.get_date_modified(last_sync, library.replace('Mixed:', ""), "Series,Episode,BoxSet,Movie,MusicVideo,MusicArtist,MusicAlbum,Audio")
             [self.updated_output[query['Type']].put(query) for query in data['Items']]
         """
         try:
@@ -409,7 +409,7 @@ class Library(threading.Thread):
             removed = []
 
             for media in filters:
-                result = self.server['api'].get_sync_queue(last_sync, ",".join([x for x in filters if x != media]))
+                result = self.server.jellyfin.get_sync_queue(last_sync, ",".join([x for x in filters if x != media]))
                 updated.extend(result['ItemsAdded'])
                 updated.extend(result['ItemsUpdated'])
                 userdata.extend(result['UserDataChanged'])
@@ -431,7 +431,7 @@ class Library(threading.Thread):
             self.removed(removed)
 
             """
-            result = self.server['api'].get_sync_queue(last_sync)
+            result = self.server.jellyfin.get_sync_queue(last_sync)
             self.userdata(result['UserDataChanged'])
             self.removed(result['ItemsRemoved'])
 
@@ -439,7 +439,7 @@ class Library(threading.Thread):
             filters.extend(["tvshows", "boxsets", "musicvideos", "music"])
 
             # Get only movies.
-            result = self.server['api'].get_sync_queue(last_sync, ",".join(filters))
+            result = self.server.jellyfin.get_sync_queue(last_sync, ",".join(filters))
             self.updated(result['ItemsAdded'])
             self.updated(result['ItemsUpdated'])
             self.userdata(result['UserDataChanged'])

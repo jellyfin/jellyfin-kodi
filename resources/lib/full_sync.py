@@ -228,7 +228,7 @@ class FullSync(object):
 
                 return
 
-            library = self.server['api'].get_item(library_id.replace('Mixed:', ""))
+            library = self.server.jellyfin.get_item(library_id.replace('Mixed:', ""))
 
             if library_id.startswith('Mixed:'):
                 for mixed in ('movies', 'tvshows'):

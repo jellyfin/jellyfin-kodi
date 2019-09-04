@@ -721,7 +721,7 @@ def on_update(data, server):
     if item:
 
         if not window('jellyfin.skip.%s.bool' % item[0]):
-            server['api'].item_played(item[0], playcount)
+            server.jellyfin.item_played(item[0], playcount)
 
         window('jellyfin.skip.%s' % item[0], clear=True)
 
@@ -769,7 +769,7 @@ def on_play(data, server):
 
                 return
 
-            item = server['api'].get_item(item[0])
+            item = server.jellyfin.get_item(item[0])
             item['PlaybackInfo'] = {'Path': file}
             playutils.set_properties(item, 'DirectStream' if settings('useDirectPaths') == '0' else 'DirectPlay')
 

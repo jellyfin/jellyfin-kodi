@@ -136,7 +136,7 @@ def library_check():
                         view = None
 
                 if view is None:
-                    ancestors = self.server['api'].get_ancestors(item['Id'])
+                    ancestors = self.server.jellyfin.get_ancestors(item['Id'])
 
                     if not ancestors:
                         if item['Type'] == 'MusicArtist':
