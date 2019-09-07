@@ -856,10 +856,10 @@ class Views(object):
 
     def window_artwork(self, prop, view_id):
 
-        if not self.server['connected']:
+        if not self.server.logged_in:
             window('%s.artwork' % prop, clear=True)
 
-        elif self.server['connected'] and self.media_folders is not None:
+        elif self.server.logged_in and self.media_folders is not None:
             for library in self.media_folders:
 
                 if library['Id'] == view_id and 'Primary' in library.get('ImageTags', {}):
