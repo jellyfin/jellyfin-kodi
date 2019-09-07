@@ -118,7 +118,7 @@ class ServerManual(xbmcgui.WindowXMLDialog):
 
         server_address = "%s:%s" % (server, port) if port else server
         self._message("%s %s..." % (_(30610), server_address))
-        result = self.connect_manager['manual-server'](server_address)
+        result = self.connect_manager.connect_to_address(server_address)
 
         if result['State'] == CONNECTION_STATE['Unavailable']:
             self._message(_(30609))

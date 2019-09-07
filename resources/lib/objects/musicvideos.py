@@ -55,7 +55,9 @@ class MusicVideos(KodiDb):
             If we don't get the track number from Jellyfin, see if we can infer it
             from the sortname attribute.
         '''
-        API = api.API(item, self.server['auth/server-address'])
+        server_data = self.server.auth.get_server_info(self.server.auth.server_id)
+        server_address = self.server.auth.get_server_address(server_data, server_data['LastConnectionMode'])
+        API = api.API(item, server_address)
         obj = self.objects.map(item, 'MusicVideo')
         update = True
 
@@ -192,7 +194,9 @@ class MusicVideos(KodiDb):
         ''' This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
             Poster with progress bar
         '''
-        API = api.API(item, self.server['auth/server-address'])
+        server_data = self.server.auth.get_server_info(self.server.auth.server_id)
+        server_address = self.server.auth.get_server_address(server_data, server_data['LastConnectionMode'])        
+        API = api.API(item, server_address)
         obj = self.objects.map(item, 'MusicVideoUserData')
 
         try:

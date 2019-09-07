@@ -89,7 +89,7 @@ class WSClient(threading.Thread):
             return
 
         if not self.client.config.data['app.default']:
-            data['ServerId'] = self.client['auth/server-id']
+            data['ServerId'] = self.client.auth.server_id
 
         self.client['callback_ws'](message['MessageType'], data)
 

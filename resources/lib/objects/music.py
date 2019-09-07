@@ -56,7 +56,9 @@ class Music(KodiDb):
         ''' If item does not exist, entry will be added.
             If item exists, entry will be updated.
         '''
-        API = api.API(item, self.server['auth/server-address'])
+        server_data = self.server.auth.get_server_info(self.server.auth.server_id)
+        server_address = self.server.auth.get_server_address(server_data, server_data['LastConnectionMode'])
+        API = api.API(item, server_address)
         obj = self.objects.map(item, 'Artist')
         update = True
 
@@ -125,7 +127,9 @@ class Music(KodiDb):
 
         ''' Update object to kodi.
         '''
-        API = api.API(item, self.server['auth/server-address'])
+        server_data = self.server.auth.get_server_info(self.server.auth.server_id)
+        server_address = self.server.auth.get_server_address(server_data, server_data['LastConnectionMode'])
+        API = api.API(item, server_address)
         obj = self.objects.map(item, 'Album')
         update = True
 
@@ -234,7 +238,9 @@ class Music(KodiDb):
 
         ''' Update object to kodi.
         '''
-        API = api.API(item, self.server['auth/server-address'])
+        server_data = self.server.auth.get_server_info(self.server.auth.server_id)
+        server_address = self.server.auth.get_server_address(server_data, server_data['LastConnectionMode'])
+        API = api.API(item, server_address)
         obj = self.objects.map(item, 'Song')
         update = True
 
@@ -352,7 +358,9 @@ class Music(KodiDb):
             obj['Path'] = obj['Path'].replace(obj['Filename'], "")
 
         else:
-            obj['Path'] = "%s/emby/Audio/%s/" % (self.server['auth/server-address'], obj['Id'])
+            server_data = self.server.auth.get_server_info(self.server.auth.server_id)
+            server_address = self.server.auth.get_server_address(server_data, server_data['LastConnectionMode'])
+            obj['Path'] = "%s/emby/Audio/%s/" % (server_address, obj['Id'])
             obj['Filename'] = "stream.%s?static=true" % obj['Container']
 
     def song_artist_discography(self, obj):
@@ -429,7 +437,9 @@ class Music(KodiDb):
         ''' This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
             Poster with progress bar
         '''
-        API = api.API(item, self.server['auth/server-address'])
+        server_data = self.server.auth.get_server_info(self.server.auth.server_id)
+        server_address = self.server.auth.get_server_address(server_data, server_data['LastConnectionMode'])
+        API = api.API(item, server_address)
         obj = self.objects.map(item, 'SongUserData')
 
         try:

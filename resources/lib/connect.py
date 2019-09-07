@@ -152,7 +152,9 @@ class Connect(object):
         settings('username', self.user['Name'])
 
         if 'PrimaryImageTag' in self.user:
-            window('JellyfinUserImage', api.API(self.user, client['auth/server-address']).get_user_artwork(self.user['Id']))
+            server_data = client.auth.get_server_info(client.auth.server_id)
+            server_address = client.auth.get_server_address(server_data, server_data['LastConnectionMode'])
+            window('JellyfinUserImage', api.API(self.user, server_address).get_user_artwork(self.user['Id']))
 
     def select_servers(self, state=None):
 
@@ -213,8 +215,9 @@ class Connect(object):
 
     def login(self):
 
-        users = self.connect_manager['public-users']
-        server = self.connect_manager['server-address']
+        users = self.connect_manager.get_public_users()
+        server_data = self.connect_manager.get_server_info(self.connect_manager.server_id)
+        server = self.connect_manager.get_server_address(server_data, server_data['LastConnectionMode'])
 
         if not users:
             try:
@@ -236,7 +239,7 @@ class Connect(object):
                     return self.login_manual(username)
                 except RuntimeError: pass
             else:
-                return self.connect_manager['login'](server, username)
+                return self.connect_manager.login(server, username)
 
         elif dialog.is_manual_login():
             try:

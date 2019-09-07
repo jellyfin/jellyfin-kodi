@@ -55,7 +55,7 @@ class JellyfinClient(object):
 
             LOG.info("User is authenticated.")
             self.logged_in = True
-            self.callback("ServerOnline", {'Id': self['auth/server-id']})
+            self.callback("ServerOnline", {'Id': self.auth.server_id})
 
         state['Credentials'] = self.get_credentials()
 
