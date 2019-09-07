@@ -91,7 +91,7 @@ class WSClient(threading.Thread):
         if not self.client.config.data['app.default']:
             data['ServerId'] = self.client.auth.server_id
 
-        self.client['callback_ws'](message['MessageType'], data)
+        self.client.callback(message['MessageType'], data)
 
     def stop_client(self):
 

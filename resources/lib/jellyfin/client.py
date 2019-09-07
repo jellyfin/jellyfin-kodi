@@ -88,7 +88,4 @@ class JellyfinClient(object):
         if key.startswith('websocket'):
             return self.wsc.__shortcuts__(key.replace('websocket/', "", 1))
 
-        elif key.startswith('callback'):
-            return self.callback_ws if 'ws' in key else self.callback
-
         return
