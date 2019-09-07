@@ -50,9 +50,9 @@ class WSClient(threading.Thread):
     def run(self):
 
         monitor = xbmc.Monitor()
-        token = self.client['config/auth.token']
-        device_id = self.client['config/app.device_id']
-        server = self.client['config/auth.server']
+        token = self.client.config.data['auth.token']
+        device_id = self.client.config.data['app.device_id']
+        server = self.client.config.data['auth.server']
         server = server.replace('https', "wss") if server.startswith('https') else server.replace('http', "ws")
         wsc_url = "%s/embywebsocket?api_key=%s&device_id=%s" % (server, token, device_id)
 
@@ -88,7 +88,7 @@ class WSClient(threading.Thread):
 
             return
 
-        if not self.client['config/app.default']:
+        if not self.client.config.data['app.default']:
             data['ServerId'] = self.client['auth/server-id']
 
         self.client['callback_ws'](message['MessageType'], data)

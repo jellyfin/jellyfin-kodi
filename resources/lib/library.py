@@ -456,7 +456,7 @@ class Library(threading.Thread):
     def save_last_sync(self):
 
         try:
-            time_now = datetime.strptime(self.server['config/server-time'].split(', ', 1)[1], '%d %b %Y %H:%M:%S GMT') - timedelta(minutes=2)
+            time_now = datetime.strptime(self.server.config.data['server-time'].split(', ', 1)[1], '%d %b %Y %H:%M:%S GMT') - timedelta(minutes=2)
         except Exception as error:
 
             LOG.exception(error)

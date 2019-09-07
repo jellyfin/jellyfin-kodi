@@ -81,9 +81,9 @@ class Connect(object):
         ''' Get Jellyfin client.
         '''
         client = Jellyfin(server_id)
-        client['config/app']("Kodi", self.info['Version'], self.info['DeviceName'], self.info['DeviceId'])
-        client['config']['http.user_agent'] = "Jellyfin-Kodi/%s" % self.info['Version']
-        client['config']['auth.ssl'] = self.get_ssl()
+        client.config.app("Kodi", self.info['Version'], self.info['DeviceName'], self.info['DeviceId'])
+        client.config.data['http.user_agent'] = "Jellyfin-Kodi/%s" % self.info['Version']
+        client.config.data['auth.ssl'] = self.get_ssl()
 
         return client
 
@@ -94,7 +94,7 @@ class Connect(object):
         self.connect_manager = client.auth
 
         if server_id is None:
-            client['config']['app.default'] = True
+            client.config.data['app.default'] = True
 
         try:
             state = client.authenticate(credentials or {}, options or {})
@@ -107,8 +107,8 @@ class Connect(object):
                     client.callback = event
                     self.get_user(client)
 
-                    settings('serverName', client['config/auth.server-name'])
-                    settings('server', client['config/auth.server'])
+                    settings('serverName', client.config.data['auth.server-name'])
+                    settings('server', client.config.data['auth.server'])
 
                 event('ServerOnline', {'ServerId': server_id})
                 event('LoadServer', {'ServerId': server_id})

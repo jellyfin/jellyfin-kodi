@@ -235,7 +235,11 @@ class Monitor(xbmc.Monitor):
 
         elif method == 'PlayPlaylist':
 
+<<<<<<< HEAD
             server['api'].post_session(server['config/app.session'], "Playing", {
+=======
+            server.jellyfin.post_session(server.config.data['app.session'], "Playing", {
+>>>>>>> 66679ce... client.py - remove "config" & configuration.py - removed shortcuts and get/set item functions
                 'PlayCommand': "PlayNow",
                 'ItemIds': data['Id'],
                 'StartPositionTicks': 0
@@ -262,7 +266,11 @@ class Monitor(xbmc.Monitor):
             self.server_instance(data['ServerId'])
 
         elif method == 'AddUser':
+<<<<<<< HEAD
             server['api'].session_add_user(server['config/app.session'], data['Id'], data['Add'])
+=======
+            server.jellyfin.session_add_user(server.config.data['app.session'], data['Id'], data['Add'])
+>>>>>>> 66679ce... client.py - remove "config" & configuration.py - removed shortcuts and get/set item functions
             self.additional_users(server)
 
         elif method == 'Player.OnPlay':
@@ -292,7 +300,11 @@ class Monitor(xbmc.Monitor):
                 for user in all_users:
 
                     if user['Name'].lower() in additional.decode('utf-8').lower():
+<<<<<<< HEAD
                         server['api'].session_add_user(server['config/app.session'], user['Id'], True)
+=======
+                        server.jellyfin.session_add_user(server.config.data['app.session'], user['Id'], True)
+>>>>>>> 66679ce... client.py - remove "config" & configuration.py - removed shortcuts and get/set item functions
 
             self.additional_users(server)
 
@@ -316,8 +328,13 @@ class Monitor(xbmc.Monitor):
             'IconUrl': "https://raw.githubusercontent.com/jellyfin/jellyfin-kodi/master/kodi_icon.png",
         })
 
+<<<<<<< HEAD
         session = server['api'].get_device(self.device_id)
         server['config']['app.session'] = session[0]['Id']
+=======
+        session = server.jellyfin.get_device(self.device_id)
+        server.config.data['app.session'] = session[0]['Id']
+>>>>>>> 66679ce... client.py - remove "config" & configuration.py - removed shortcuts and get/set item functions
 
     def additional_users(self, server):
 
@@ -335,8 +352,13 @@ class Monitor(xbmc.Monitor):
 
         for index, user in enumerate(session[0]['AdditionalUsers']):
 
+<<<<<<< HEAD
             info = server['api'].get_user(user['UserId'])
             image = api.API(info, server['config/auth.server']).get_user_artwork(user['UserId'])
+=======
+            info = server.jellyfin.get_user(user['UserId'])
+            image = api.API(info, server.config.data['auth.server']).get_user_artwork(user['UserId'])
+>>>>>>> 66679ce... client.py - remove "config" & configuration.py - removed shortcuts and get/set item functions
             window('JellyfinAdditionalUserImage.%s' % index, image)
             window('JellyfinAdditionalUserPosition.%s' % user['UserId'], str(index))
 

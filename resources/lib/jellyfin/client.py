@@ -85,6 +85,7 @@ class JellyfinClient(object):
     def __getitem__(self, key):
         LOG.debug("__getitem__(%r)", key)
 
+<<<<<<< HEAD
         if key.startswith('config'):
             return self.config[key.replace('config/', "", 1)] if "/" in key else self.config
 
@@ -92,6 +93,9 @@ class JellyfinClient(object):
             return self.http.__shortcuts__(key.replace('http/', "", 1))
 
         elif key.startswith('websocket'):
+=======
+        if key.startswith('websocket'):
+>>>>>>> 66679ce... client.py - remove "config" & configuration.py - removed shortcuts and get/set item functions
             return self.wsc.__shortcuts__(key.replace('websocket/', "", 1))
 
         elif key.startswith('callback'):
