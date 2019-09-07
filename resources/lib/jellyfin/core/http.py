@@ -127,7 +127,7 @@ class HTTP(object):
                         raise HTTPException("AccessRestricted", error)
                     else:
                         self.client['callback']("Unauthorized", {'ServerId': self.config.data['auth.server-id']})
-                        self.client['auth/revoke-token']
+                        self.client.auth.revoke_token() 
 
                         raise HTTPException("Unauthorized", error)
 

@@ -116,7 +116,7 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
         self.message_box.setVisibleCondition('true')
         self.busy.setVisibleCondition('true')
 
-        result = self.connect_manager['connect-to-server'](server)
+        result = self.connect_manager.connect_to_server(server)
 
         if result['State'] == CONNECTION_STATE['Unavailable']:
             self.busy.setVisibleCondition('false')

@@ -252,8 +252,9 @@ class Player(xbmc.Player):
                     return
 
                 break
-
-        API = api.API(next_item, item['Server']['auth/server-address'])
+        server_data = item['Server'].auth.get_server_info(item['Server'].auth.server_id)
+        server_address = item['Server'].auth.get_server_address(server_data, server_data['LastConnectionMode'])
+        API = api.API(next_item, server_address)
         data = objects.map(next_item, "UpNext")
         artwork = API.get_all_artwork(objects.map(next_item, 'ArtworkParent'), True)
         data['art'] = {

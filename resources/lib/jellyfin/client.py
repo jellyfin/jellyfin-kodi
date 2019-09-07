@@ -55,7 +55,7 @@ class JellyfinClient(object):
 
             LOG.info("User is authenticated.")
             self.logged_in = True
-            self.callback("ServerOnline", {'Id': self['auth/server-id']})
+            self.callback("ServerOnline", {'Id': self.auth.server_id})
 
         state['Credentials'] = self.get_credentials()
 
@@ -90,8 +90,5 @@ class JellyfinClient(object):
 
         elif key.startswith('callback'):
             return self.callback_ws if 'ws' in key else self.callback
-
-        elif key.startswith('auth'):
-            return self.auth.__shortcuts__(key.replace('auth/', "", 1))
 
         return

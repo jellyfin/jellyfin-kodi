@@ -144,8 +144,9 @@ class Monitor(xbmc.Monitor):
             self.void_responder(data, item)
 
         elif method == 'GetServerAddress':
-
-            server_address = server['auth/server-address']
+            
+            server_data = server.auth.get_server_info(server.auth.server_id)
+            server_address = server.auth.get_server_address(server_data, server_data['LastConnectionMode'])
             self.void_responder(data, server_address)
 
         elif method == 'GetPlaybackInfo':
@@ -160,7 +161,7 @@ class Monitor(xbmc.Monitor):
 
         elif method == 'GetToken':
 
-            token = server['auth/token']
+            token = server.auth.jellyfin_token()
             self.void_responder(data, token)
 
         elif method == 'GetSession':
@@ -297,7 +298,7 @@ class Monitor(xbmc.Monitor):
             self.additional_users(server)
 
     def post_capabilities(self, server):
-        LOG.info("--[ post capabilities/%s ]", server['auth/server-id'])
+        LOG.info("--[ post capabilities/%s ]", server.auth.server_id)
 
         server.jellyfin.post_capabilities({
             'PlayableMediaTypes': "Audio,Video",
