@@ -117,7 +117,7 @@ class ConnectionManager(object):
         self['server']['AccessToken'] = None
         self.credentials.get_credentials(self.credentials.get_credentials())
 
-        self.config['auth.token'] = None
+        self.config.data['auth.token'] = None
 
     def get_available_servers(self):
 
@@ -261,7 +261,7 @@ class ConnectionManager(object):
             raise
 
     def _add_app_info(self):
-        return "%s/%s" % (self.config['app.name'], self.config['app.version'])
+        return "%s/%s" % (self.config.data['app.name'], self.config.data['app.version'])
 
     def _get_headers(self, request):
 
@@ -526,15 +526,15 @@ class ConnectionManager(object):
 
         if options.get('enableAutoLogin') == False:
 
-            self.config['auth.user_id'] = server.pop('UserId', None)
-            self.config['auth.token'] = server.pop('AccessToken', None)
+            self.config.data['auth.user_id'] = server.pop('UserId', None)
+            self.config.data['auth.token'] = server.pop('AccessToken', None)
 
         elif verify_authentication and server.get('AccessToken'):
 
             if self._validate_authentication(server, connection_mode, options) is not False:
 
-                self.config['auth.user_id'] = server['UserId']
-                self.config['auth.token'] = server['AccessToken']
+                self.config.data['auth.user_id'] = server['UserId']
+                self.config.data['auth.token'] = server['AccessToken']
                 return self._after_connect_validated(server, credentials, system_info, connection_mode, False, options)
 
             return self._resolve_failure()
@@ -551,10 +551,10 @@ class ConnectionManager(object):
         self.server_id = server['Id']
 
         # Update configs
-        self.config['auth.server'] = get_server_address(server, connection_mode)
-        self.config['auth.server-name'] = server['Name']
-        self.config['auth.server=id'] = server['Id']
-        self.config['auth.ssl'] = options.get('ssl', self.config['auth.ssl'])
+        self.config.data['auth.server'] = get_server_address(server, connection_mode)
+        self.config.data['auth.server-name'] = server['Name']
+        self.config.data['auth.server=id'] = server['Id']
+        self.config.data['auth.ssl'] = options.get('ssl', self.config.data['auth.ssl'])
 
         result = {
             'Servers': [server]
@@ -602,8 +602,8 @@ class ConnectionManager(object):
 
         credentials = self.credentials.get_credentials()
 
-        self.config['auth.user_id'] = result['User']['Id']
-        self.config['auth.token'] = result['AccessToken']
+        self.config.data['auth.user_id'] = result['User']['Id']
+        self.config.data['auth.token'] = result['AccessToken']
 
         for server in credentials['Servers']:
             if server['Id'] == result['ServerId']:

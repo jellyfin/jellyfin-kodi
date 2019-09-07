@@ -45,11 +45,11 @@ class Jellyfin(object):
 
         from jellyfin import Jellyfin
 
-        Jellyfin('123456')['config/app']
+        Jellyfin('123456').config.data['app']
 
         # Permanent client reference
         client = Jellyfin('123456').get_client()
-        client['config/app']
+        client.config.data['app']
     '''
 
     # Borg - multiple instances, shared state

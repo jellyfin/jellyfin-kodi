@@ -24,13 +24,13 @@ class HTTP(object):
     def __init__(self, client):
 
         self.client = client
-        self.config = client['config']
+        self.config = client.config
 
     def start_session(self):
 
         self.session = requests.Session()
 
-        max_retries = self.config['http.max_retries']
+        max_retries = self.config.data['http.max_retries']
         self.session.mount("http://", requests.adapters.HTTPAdapter(max_retries=max_retries))
         self.session.mount("https://", requests.adapters.HTTPAdapter(max_retries=max_retries))
 
@@ -48,14 +48,14 @@ class HTTP(object):
     def _replace_user_info(self, string):
 
         if '{server}' in string:
-            if self.config['auth.server']:
-                string = string.decode('utf-8').replace("{server}", self.config['auth.server'])
+            if self.config.data['auth.server']:
+                string = string.decode('utf-8').replace("{server}", self.config.data['auth.server'])
             else:
                 raise Exception("Server address not set.")
 
         if '{UserId}'in string:
-            if self.config['auth.user_id']:
-                string = string.decode('utf-8').replace("{UserId}", self.config['auth.user_id'])
+            if self.config.data['auth.user_id']:
+                string = string.decode('utf-8').replace("{UserId}", self.config.data['auth.user_id'])
             else:
                 raise Exception("UserId is not set.")
 
@@ -100,7 +100,7 @@ class HTTP(object):
                     continue
 
                 LOG.error(error)
-                self.client['callback']("ServerUnreachable", {'ServerId': self.config['auth.server-id']})
+                self.client['callback']("ServerUnreachable", {'ServerId': self.config.data['auth.server-id']})
 
                 raise HTTPException("ServerUnreachable", error)
 
@@ -122,11 +122,11 @@ class HTTP(object):
                 if r.status_code == 401:
 
                     if 'X-Application-Error-Code' in r.headers:
-                        self.client['callback']("AccessRestricted", {'ServerId': self.config['auth.server-id']})
+                        self.client['callback']("AccessRestricted", {'ServerId': self.config.data['auth.server-id']})
 
                         raise HTTPException("AccessRestricted", error)
                     else:
-                        self.client['callback']("Unauthorized", {'ServerId': self.config['auth.server-id']})
+                        self.client['callback']("Unauthorized", {'ServerId': self.config.data['auth.server-id']})
                         self.client['auth/revoke-token']
 
                         raise HTTPException("Unauthorized", error)
@@ -147,14 +147,14 @@ class HTTP(object):
                 raise HTTPException(r.status_code, error)
 
             except requests.exceptions.MissingSchema as error:
-                raise HTTPException("MissingSchema", {'Id': self.config['auth.server']})
+                raise HTTPException("MissingSchema", {'Id': self.config.data['auth.server']})
 
             except Exception as error:
                 raise
 
             else:
                 try:
-                    self.config['server-time'] = r.headers['Date']
+                    self.config.data['server-time'] = r.headers['Date']
                     elapsed = int(r.elapsed.total_seconds() * 1000)
                     response = r.json()
                     LOG.debug("---<[ http ][%s ms]", elapsed)
@@ -167,11 +167,11 @@ class HTTP(object):
     def _request(self, data):
 
         if 'url' not in data:
-            data['url'] = "%s/emby/%s" % (self.config['auth.server'], data.pop('handler', ""))
+            data['url'] = "%s/emby/%s" % (self.config.data['auth.server'], data.pop('handler', ""))
 
         self._get_header(data)
-        data['timeout'] = data.get('timeout') or self.config['http.timeout']
-        data['verify'] = data.get('verify') or self.config['auth.ssl'] or False
+        data['timeout'] = data.get('timeout') or self.config.data['http.timeout']
+        data['verify'] = data.get('verify') or self.config.data['auth.ssl'] or False
         data['url'] = self._replace_user_info(data['url'])
         self._process_params(data.get('params') or {})
         self._process_params(data.get('json') or {})
@@ -198,7 +198,7 @@ class HTTP(object):
                 'Content-type': "application/json",
                 'Accept-Charset': "UTF-8,*",
                 'Accept-encoding': "gzip",
-                'User-Agent': self.config['http.user_agent'] or "%s/%s" % (self.config['app.name'], self.config['app.version'])
+                'User-Agent': self.config.data['http.user_agent'] or "%s/%s" % (self.config.data['app.name'], self.config.data['app.version'])
             })
 
         if 'x-emby-authorization' not in data['headers']:
@@ -209,17 +209,17 @@ class HTTP(object):
     def _authorization(self, data):
 
         auth = "MediaBrowser "
-        auth += "Client=%s, " % self.config['app.name'].encode('utf-8')
-        auth += "Device=%s, " % self.config['app.device_name'].encode('utf-8')
-        auth += "DeviceId=%s, " % self.config['app.device_id'].encode('utf-8')
-        auth += "Version=%s" % self.config['app.version'].encode('utf-8')
+        auth += "Client=%s, " % self.config.data['app.name'].encode('utf-8')
+        auth += "Device=%s, " % self.config.data['app.device_name'].encode('utf-8')
+        auth += "DeviceId=%s, " % self.config.data['app.device_id'].encode('utf-8')
+        auth += "Version=%s" % self.config.data['app.version'].encode('utf-8')
 
         data['headers'].update({'x-emby-authorization': auth})
 
-        if self.config['auth.token'] and self.config['auth.user_id']:
+        if self.config.data.get('auth.token') and self.config.data.get('auth.user_id'):
 
-            auth += ', UserId=%s' % self.config['auth.user_id'].encode('utf-8')
-            data['headers'].update({'x-emby-authorization': auth, 'X-MediaBrowser-Token': self.config['auth.token'].encode('utf-8')})
+            auth += ', UserId=%s' % self.config.data['auth.user_id'].encode('utf-8')
+            data['headers'].update({'x-emby-authorization': auth, 'X-MediaBrowser-Token': self.config.data['auth.token'].encode('utf-8')})
 
         return data
 
