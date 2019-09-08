@@ -303,7 +303,7 @@ class GetItemWorker(threading.Thread):
                 }
 
                 try:
-                    result = self.server['http/request'](request, s)
+                    result = self.server.http.request(request, s)
 
                     for item in result['Items']:
 
