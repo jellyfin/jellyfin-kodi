@@ -88,9 +88,6 @@ class JellyfinClient(object):
         if key.startswith('config'):
             return self.config[key.replace('config/', "", 1)] if "/" in key else self.config
 
-        elif key.startswith('http'):
-            return self.http.__shortcuts__(key.replace('http/', "", 1))
-
         elif key.startswith('websocket'):
             return self.wsc.__shortcuts__(key.replace('websocket/', "", 1))
 
@@ -99,9 +96,6 @@ class JellyfinClient(object):
 
         elif key.startswith('auth'):
             return self.auth.__shortcuts__(key.replace('auth/', "", 1))
-
-        elif key.startswith('api'):
-            return self.jellyfin
 
         elif key == 'connected':
             return self.logged_in

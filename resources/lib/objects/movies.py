@@ -169,7 +169,7 @@ class Movies(KodiDb):
         try:
             if obj['LocalTrailer']:
 
-                trailer = self.server['api'].get_local_trailers(obj['Id'])
+                trailer = self.server.jellyfin.get_local_trailers(obj['Id'])
                 obj['Trailer'] = "plugin://plugin.video.jellyfin/trailer?id=%s&mode=play" % trailer[0]['Id']
 
             elif obj['Trailer']:

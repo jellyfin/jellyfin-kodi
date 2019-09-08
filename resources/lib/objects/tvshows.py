@@ -137,7 +137,7 @@ class TVShows(KodiDb):
 
         season_episodes = {}
 
-        for season in self.server['api'].get_seasons(obj['Id'])['Items']:
+        for season in self.server.jellyfin.get_seasons(obj['Id'])['Items']:
 
             if season['SeriesId'] != obj['Id']:
                 obj['SeriesId'] = season['SeriesId']
@@ -435,7 +435,7 @@ class TVShows(KodiDb):
         if obj['ShowId'] is None:
 
             try:
-                self.tvshow(self.server['api'].get_item(obj['SeriesId']), library=None)
+                self.tvshow(self.server.jellyfin.get_item(obj['SeriesId']), library=None)
                 obj['ShowId'] = self.jellyfin_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))[0]
             except (TypeError, KeyError):
                 LOG.error("Unable to add series %s", obj['SeriesId'])
