@@ -110,11 +110,6 @@ class Jellyfin(object):
     def __getattr__(self, name):
         return getattr(self.client[self.server_id], name)
 
-    @ensure_client()
-    def __getitem__(self, key):
-        LOG.debug("__getitem__(%r)", key)
-        return self.client[self.server_id][key]
-
     def construct(self):
 
         self.client[self.server_id] = JellyfinClient()
