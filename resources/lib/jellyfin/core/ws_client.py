@@ -30,16 +30,6 @@ class WSClient(threading.Thread):
         self.client = client
         threading.Thread.__init__(self)
 
-    def __shortcuts__(self, key):
-        LOG.debug("__shortcuts__(%r)", key)
-
-        if key == "send":
-            return self.send
-        elif key == "stop":
-            return self.stop_client()
-
-        return
-
     def send(self, message, data=""):
 
         if self.wsc is None:

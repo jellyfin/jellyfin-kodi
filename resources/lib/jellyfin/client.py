@@ -81,11 +81,3 @@ class JellyfinClient(object):
 
         self.wsc.stop_client()
         self.http.stop_session()
-
-    def __getitem__(self, key):
-        LOG.debug("__getitem__(%r)", key)
-
-        if key.startswith('websocket'):
-            return self.wsc.__shortcuts__(key.replace('websocket/', "", 1))
-
-        return
