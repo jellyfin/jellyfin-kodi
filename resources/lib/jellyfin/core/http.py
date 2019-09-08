@@ -26,14 +26,6 @@ class HTTP(object):
         self.client = client
         self.config = client.config
 
-    def __shortcuts__(self, key):
-        LOG.debug("__shortcuts__(%r)", key)
-
-        if key == "request":
-            return self.request
-
-        return
-
     def start_session(self):
 
         self.session = requests.Session()

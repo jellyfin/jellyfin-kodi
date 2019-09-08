@@ -209,10 +209,12 @@ def directory(label, path, folder=True, artwork=None, fanart=None, context=None)
 
 def dir_listitem(label, path, artwork=None, fanart=None):
 
+    ''' Gets the icon paths for default node listings
+    '''
     li = xbmcgui.ListItem(label, path=path)
-    li.setThumbnailImage(artwork or "special://home/addons/plugin.video.jellyfin/icon.png")
-    li.setArt({"fanart": fanart or "special://home/addons/plugin.video.jellyfin/fanart.png"})
-    li.setArt({"landscape": artwork or fanart or "special://home/addons/plugin.video.jellyfin/fanart.png"})
+    li.setThumbnailImage(artwork or "special://home/addons/plugin.video.jellyfin/resources/icon.png")
+    li.setArt({"fanart": fanart or "special://home/addons/plugin.video.jellyfin/resources/fanart.png"})
+    li.setArt({"landscape": artwork or fanart or "special://home/addons/plugin.video.jellyfin/resources/fanart.png"})
 
     return li
 

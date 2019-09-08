@@ -263,7 +263,6 @@ class Monitor(xbmc.Monitor):
             self.server_instance(data['ServerId'])
 
         elif method == 'AddUser':
-
             server.jellyfin.session_add_user(server.config.data['app.session'], data['Id'], data['Add'])
             self.additional_users(server)
 
@@ -315,10 +314,7 @@ class Monitor(xbmc.Monitor):
                 "Mute,Unmute,SetVolume,"
                 "Play,Playstate,PlayNext,PlayMediaSource"
             ),
-            'IconUrl': "https://raw.githubusercontent.com/jellyfin/jellyfin-kodi/master/kodi_icon.png",
         })
-
-
         session = server.jellyfin.get_device(self.device_id)
         server.config.data['app.session'] = session[0]['Id']
 

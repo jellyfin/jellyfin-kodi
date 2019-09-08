@@ -363,7 +363,7 @@ class Views(object):
         else:
             element = etree.Element('node', {'order': str(index), 'type': "folder"})
 
-        etree.SubElement(element, 'icon').text = "special://home/addons/plugin.video.jellyfin/icon.png"
+        etree.SubElement(element, 'icon').text = "special://home/addons/plugin.video.jellyfin/resources/icon.png"
 
         return element
 

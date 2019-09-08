@@ -311,10 +311,16 @@ class Actions(object):
         obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] or ""
 
         if not intro and not obj['Type'] == 'Trailer':
-            obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or "special://home/addons/plugin.video.jellyfin/icon.png"
+            obj['Artwork']['Primary'] = obj['Artwork']['Primary'] \
+                    or "special://home/addons/plugin.video.jellyfin/resources/icon.png"
         else:
-            obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or obj['Artwork']['Thumb'] or (obj['Artwork']['Backdrop'][0] if len(obj['Artwork']['Backdrop']) else "special://home/addons/plugin.video.jellyfin/fanart.png")
-            obj['Artwork']['Primary'] += "&KodiTrailer=true" if obj['Type'] == 'Trailer' else "&KodiCinemaMode=true"
+            obj['Artwork']['Primary'] = obj['Artwork']['Primary'] \
+                    or obj['Artwork']['Thumb'] \
+                    or (obj['Artwork']['Backdrop'][0] \
+                    if len(obj['Artwork']['Backdrop']) \
+                    else "special://home/addons/plugin.video.jellyfin/resources/fanart.png")
+            obj['Artwork']['Primary'] += "&KodiTrailer=true" \
+                    if obj['Type'] == 'Trailer' else "&KodiCinemaMode=true"
             obj['Artwork']['Backdrop'] = [obj['Artwork']['Primary']]
 
         self.set_artwork(obj['Artwork'], listitem, obj['Type'])
@@ -471,10 +477,12 @@ class Actions(object):
         obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
         obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount']) or 0
         obj['Overlay'] = 7 if obj['Played'] else 6
-        obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or "special://home/addons/plugin.video.jellyfin/icon.png"
-        obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] or "special://home/addons/plugin.video.jellyfin/fanart.png"
-        obj['Artwork']['Backdrop'] = obj['Artwork']['Backdrop'] or ["special://home/addons/plugin.video.jellyfin/fanart.png"]
-
+        obj['Artwork']['Primary'] = obj['Artwork']['Primary'] \
+                or "special://home/addons/plugin.video.jellyfin/resources/icon.png"
+        obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] \
+                or "special://home/addons/plugin.video.jellyfin/resources/fanart.png"
+        obj['Artwork']['Backdrop'] = obj['Artwork']['Backdrop'] \
+                or ["special://home/addons/plugin.video.jellyfin/resources/fanart.png"]
 
         metadata = {
             'title': obj['Title'],

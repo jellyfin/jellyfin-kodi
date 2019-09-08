@@ -140,7 +140,7 @@ def dialog(dialog_type, *args, **kwargs):
 
     if "icon" in kwargs:
         kwargs['icon'] = kwargs['icon'].replace("{jellyfin}",
-                                                "special://home/addons/plugin.video.jellyfin/icon.png")
+                "special://home/addons/plugin.video.jellyfin/resources/icon.png")
     if "heading" in kwargs:
         kwargs['heading'] = kwargs['heading'].replace("{jellyfin}", _('addon_name'))
 
