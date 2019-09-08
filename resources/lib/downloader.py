@@ -41,7 +41,7 @@ def browse_info():
 def _http(action, url, request={}, server_id=None):
     request.update({'url': url, 'type': action})
 
-    return Jellyfin(server_id)['http/request'](request)
+    return Jellyfin(server_id).http.request(request)
 
 
 def _get(handler, params=None, server_id=None):
@@ -305,7 +305,7 @@ class GetItemWorker(threading.Thread):
                 }
 
                 try:
-                    result = self.server['http/request'](request, s)
+                    result = self.server.http.request(request, s)
 
                     for item in result['Items']:
 

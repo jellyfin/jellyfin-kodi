@@ -110,7 +110,7 @@ class Player(xbmc.Player):
             'AudioStreamIndex': item['AudioStreamIndex'],
             'SubtitleStreamIndex': item['SubtitleStreamIndex']
         }
-        item['Server']['api'].session_playing(data)
+        item['Server'].jellyfin.session_playing(data)
         window('jellyfin.skip.%s.bool' % item['Id'], True)
 
         if monitor.waitForAbort(2):
@@ -239,7 +239,7 @@ class Player(xbmc.Player):
         if item['Type'] != 'Episode' or not item.get('CurrentEpisode'):
             return
 
-        next_items = item['Server']['api'].get_adjacent_episodes(item['CurrentEpisode']['tvshowid'], item['Id'])
+        next_items = item['Server'].jellyfin.get_adjacent_episodes(item['CurrentEpisode']['tvshowid'], item['Id'])
 
         for index, next_item in enumerate(next_items['Items']):
             if next_item['Id'] == item['Id']:
@@ -360,7 +360,7 @@ class Player(xbmc.Player):
             'AudioStreamIndex': item['AudioStreamIndex'],
             'SubtitleStreamIndex': item['SubtitleStreamIndex']
         }
-        item['Server']['api'].session_progress(data)
+        item['Server'].jellyfin.session_progress(data)
 
     def onPlayBackStopped(self):
 
@@ -403,17 +403,17 @@ class Player(xbmc.Player):
                 'PositionTicks': int(item['CurrentPosition'] * 10000000),
                 'PlaySessionId': item['PlaySessionId']
             }
-            item['Server']['api'].session_stop(data)
+            item['Server'].jellyfin.session_stop(data)
 
             if item.get('LiveStreamId'):
 
                 LOG.info("<[ livestream/%s ]", item['LiveStreamId'])
-                item['Server']['api'].close_live_stream(item['LiveStreamId'])
+                item['Server'].jellyfin.close_live_stream(item['LiveStreamId'])
 
             elif item['PlayMethod'] == 'Transcode':
 
                 LOG.info("<[ transcode/%s ]", item['Id'])
-                item['Server']['api'].close_transcode(item['DeviceId'])
+                item['Server'].jellyfin.close_transcode(item['DeviceId'])
 
 
             path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/temp/").decode('utf-8')
@@ -424,7 +424,7 @@ class Player(xbmc.Player):
                 for file in files:
                     xbmcvfs.delete(os.path.join(path, file.decode('utf-8')))
 
-            result = item['Server']['api'].get_item(item['Id']) or {}
+            result = item['Server'].jellyfin.get_item(item['Id']) or {}
 
             if 'UserData' in result and result['UserData']['Played']:
                 delete = False
@@ -441,7 +441,7 @@ class Player(xbmc.Player):
                     LOG.info("Offer delete option")
 
                     if dialog("yesno", heading=_(30091), line1=_(33015), autoclose=120000):
-                        item['Server']['api'].delete_item(item['Id'])
+                        item['Server'].jellyfin.delete_item(item['Id'])
 
             window('jellyfin.external_check', clear=True)
 

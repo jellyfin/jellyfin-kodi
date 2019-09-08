@@ -125,22 +125,22 @@ class Monitor(xbmc.Monitor):
 
         if method == 'GetItem':
 
-            item = server['api'].get_item(data['Id'])
+            item = server.jellyfin.get_item(data['Id'])
             self.void_responder(data, item)
 
         elif method == 'GetAdditionalParts':
 
-            item = server['api'].get_additional_parts(data['Id'])
+            item = server.jellyfin.get_additional_parts(data['Id'])
             self.void_responder(data, item)
 
         elif method == 'GetIntros':
 
-            item = server['api'].get_intros(data['Id'])
+            item = server.jellyfin.get_intros(data['Id'])
             self.void_responder(data, item)
 
         elif method == 'GetImages':
 
-            item = server['api'].get_images(data['Id'])
+            item = server.jellyfin.get_images(data['Id'])
             self.void_responder(data, item)
 
         elif method == 'GetServerAddress':
@@ -151,12 +151,12 @@ class Monitor(xbmc.Monitor):
 
         elif method == 'GetPlaybackInfo':
 
-            sources = server['api'].get_play_info(data['Id'], data['Profile'])
+            sources = server.jellyfin.get_play_info(data['Id'], data['Profile'])
             self.void_responder(data, sources)
 
         elif method == 'GetLiveStream':
 
-            sources = server['api'].get_live_stream(data['Id'], data['PlaySessionId'], data['Token'], data['Profile'])
+            sources = server.jellyfin.get_live_stream(data['Id'], data['PlaySessionId'], data['Token'], data['Profile'])
             self.void_responder(data, sources)
 
         elif method == 'GetToken':
@@ -166,31 +166,31 @@ class Monitor(xbmc.Monitor):
 
         elif method == 'GetSession':
 
-            session = server['api'].get_device(self.device_id)
+            session = server.jellyfin.get_device(self.device_id)
             self.void_responder(data, session)
 
         elif method == 'GetUsers':
 
-            users = server['api'].get_users()
+            users = server.jellyfin.get_users()
             self.void_responder(data, users)
 
         elif method == 'GetTranscodeOptions':
 
-            result = server['api'].get_transcode_settings()
+            result = server.jellyfin.get_transcode_settings()
             self.void_responder(data, result)
 
         elif method == 'GetThemes':
 
             if data['Type'] == 'Video':
-                theme = server['api'].get_items_theme_video(data['Id'])
+                theme = server.jellyfin.get_items_theme_video(data['Id'])
             else:
-                theme = server['api'].get_items_theme_song(data['Id'])
+                theme = server.jellyfin.get_items_theme_song(data['Id'])
 
             self.void_responder(data, theme)
 
         elif method == 'GetTheme':
 
-            theme = server['api'].get_themes(data['Id'])
+            theme = server.jellyfin.get_themes(data['Id'])
             self.void_responder(data, theme)
 
         elif method == 'Browse':
@@ -202,45 +202,41 @@ class Monitor(xbmc.Monitor):
 
         elif method == 'BrowseSeason':
 
-            result = server['api'].get_seasons(data['Id'])
+            result = server.jellyfin.get_seasons(data['Id'])
             self.void_responder(data, result)
 
         elif method == 'LiveTV':
 
-            result = server['api'].get_channels()
+            result = server.jellyfin.get_channels()
             self.void_responder(data, result)
 
         elif method == 'RecentlyAdded':
 
-            result = server['api'].get_recently_added(data.get('Media'), data.get('Id'), data.get('Limit'))
+            result = server.jellyfin.get_recently_added(data.get('Media'), data.get('Id'), data.get('Limit'))
             self.void_responder(data, result)
 
         elif method == 'Genres':
 
-            result = server['api'].get_genres(data.get('Id'))
+            result = server.jellyfin.get_genres(data.get('Id'))
             self.void_responder(data, result)
 
         elif method == 'Recommended':
 
-            result = server['api'].get_recommendation(data.get('Id'), data.get('Limit'))
+            result = server.jellyfin.get_recommendation(data.get('Id'), data.get('Limit'))
             self.void_responder(data, result)
 
         elif method == 'RefreshItem':
-            server['api'].refresh_item(data['Id'])
+            server.jellyfin.refresh_item(data['Id'])
 
         elif method == 'FavoriteItem':
-            server['api'].favorite(data['Id'], data['Favorite'])
+            server.jellyfin.favorite(data['Id'], data['Favorite'])
 
         elif method == 'DeleteItem':
-            server['api'].delete_item(data['Id'])
+            server.jellyfin.delete_item(data['Id'])
 
         elif method == 'PlayPlaylist':
 
-<<<<<<< HEAD
-            server['api'].post_session(server['config/app.session'], "Playing", {
-=======
             server.jellyfin.post_session(server.config.data['app.session'], "Playing", {
->>>>>>> 66679ce... client.py - remove "config" & configuration.py - removed shortcuts and get/set item functions
                 'PlayCommand': "PlayNow",
                 'ItemIds': data['Id'],
                 'StartPositionTicks': 0
@@ -248,7 +244,7 @@ class Monitor(xbmc.Monitor):
 
         elif method == 'Play':
 
-            items = server['api'].get_items(data['ItemIds'])
+            items = server.jellyfin.get_items(data['ItemIds'])
 
             PlaylistWorker(data.get('ServerId'), items, data['PlayCommand'] == 'PlayNow',
                            data.get('StartPositionTicks', 0), data.get('AudioStreamIndex'),
@@ -267,11 +263,8 @@ class Monitor(xbmc.Monitor):
             self.server_instance(data['ServerId'])
 
         elif method == 'AddUser':
-<<<<<<< HEAD
-            server['api'].session_add_user(server['config/app.session'], data['Id'], data['Add'])
-=======
+
             server.jellyfin.session_add_user(server.config.data['app.session'], data['Id'], data['Add'])
->>>>>>> 66679ce... client.py - remove "config" & configuration.py - removed shortcuts and get/set item functions
             self.additional_users(server)
 
         elif method == 'Player.OnPlay':
@@ -295,24 +288,20 @@ class Monitor(xbmc.Monitor):
         elif settings('additionalUsers'):
 
             users = settings('additionalUsers').split(',')
-            all_users = server['api'].get_users()
+            all_users = server.jellyfin.get_users()
 
             for additional in users:
                 for user in all_users:
 
                     if user['Name'].lower() in additional.decode('utf-8').lower():
-<<<<<<< HEAD
-                        server['api'].session_add_user(server['config/app.session'], user['Id'], True)
-=======
                         server.jellyfin.session_add_user(server.config.data['app.session'], user['Id'], True)
->>>>>>> 66679ce... client.py - remove "config" & configuration.py - removed shortcuts and get/set item functions
 
             self.additional_users(server)
 
     def post_capabilities(self, server):
         LOG.info("--[ post capabilities/%s ]", server.auth.server_id)
 
-        server['api'].post_capabilities({
+        server.jellyfin.post_capabilities({
             'PlayableMediaTypes': "Audio,Video",
             'SupportsMediaControl': True,
             'SupportedCommands': (
@@ -329,13 +318,9 @@ class Monitor(xbmc.Monitor):
             'IconUrl': "https://raw.githubusercontent.com/jellyfin/jellyfin-kodi/master/kodi_icon.png",
         })
 
-<<<<<<< HEAD
-        session = server['api'].get_device(self.device_id)
-        server['config']['app.session'] = session[0]['Id']
-=======
+
         session = server.jellyfin.get_device(self.device_id)
         server.config.data['app.session'] = session[0]['Id']
->>>>>>> 66679ce... client.py - remove "config" & configuration.py - removed shortcuts and get/set item functions
 
     def additional_users(self, server):
 
@@ -345,7 +330,7 @@ class Monitor(xbmc.Monitor):
             window('JellyfinAdditionalUserImage.%s' % i, clear=True)
 
         try:
-            session = server['api'].get_device(self.device_id)
+            session = server.jellyfin.get_device(self.device_id)
         except Exception as error:
             LOG.exception(error)
 
@@ -353,13 +338,8 @@ class Monitor(xbmc.Monitor):
 
         for index, user in enumerate(session[0]['AdditionalUsers']):
 
-<<<<<<< HEAD
-            info = server['api'].get_user(user['UserId'])
-            image = api.API(info, server['config/auth.server']).get_user_artwork(user['UserId'])
-=======
             info = server.jellyfin.get_user(user['UserId'])
             image = api.API(info, server.config.data['auth.server']).get_user_artwork(user['UserId'])
->>>>>>> 66679ce... client.py - remove "config" & configuration.py - removed shortcuts and get/set item functions
             window('JellyfinAdditionalUserImage.%s' % index, image)
             window('JellyfinAdditionalUserPosition.%s' % user['UserId'], str(index))
 

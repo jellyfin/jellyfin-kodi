@@ -108,7 +108,7 @@ class HTTP(object):
                     continue
 
                 LOG.error(error)
-                self.client['callback']("ServerUnreachable", {'ServerId': self.config.data['auth.server-id']})
+                self.client.callback("ServerUnreachable", {'ServerId': self.config.data['auth.server-id']})
 
                 raise HTTPException("ServerUnreachable", error)
 
@@ -130,11 +130,11 @@ class HTTP(object):
                 if r.status_code == 401:
 
                     if 'X-Application-Error-Code' in r.headers:
-                        self.client['callback']("AccessRestricted", {'ServerId': self.config.data['auth.server-id']})
+                        self.client.callback("AccessRestricted", {'ServerId': self.config.data['auth.server-id']})
 
                         raise HTTPException("AccessRestricted", error)
                     else:
-                        self.client['callback']("Unauthorized", {'ServerId': self.config.data['auth.server-id']})
+                        self.client.callback("Unauthorized", {'ServerId': self.config.data['auth.server-id']})
                         self.client.auth.revoke_token() 
 
                         raise HTTPException("Unauthorized", error)

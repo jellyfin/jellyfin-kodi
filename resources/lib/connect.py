@@ -148,7 +148,7 @@ class Connect(object):
 
         ''' Save user info.
         '''
-        self.user = client['api'].get_user()
+        self.user = client.jellyfin.get_user()
         settings('username', self.user['Name'])
 
         if 'PrimaryImageTag' in self.user:
