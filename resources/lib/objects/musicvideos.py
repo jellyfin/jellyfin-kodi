@@ -34,16 +34,6 @@ class MusicVideos(KodiDb):
 
         KodiDb.__init__(self, videodb.cursor)
 
-    def __getitem__(self, key):
-        LOG.debug("__getitem__(%r)", key)
-
-        if key == 'MusicVideo':
-            return self.musicvideo
-        elif key == 'UserData':
-            return self.userdata
-        elif key in 'Removed':
-            return self.remove
-
     @stop()
     @jellyfin_item()
     @library_check()

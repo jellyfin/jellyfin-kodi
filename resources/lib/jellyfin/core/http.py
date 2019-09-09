@@ -122,11 +122,19 @@ class HTTP(object):
                 if r.status_code == 401:
 
                     if 'X-Application-Error-Code' in r.headers:
+<<<<<<< HEAD
                         self.client.callback("AccessRestricted", {'ServerId': self.config.data['auth.server-id']})
 
                         raise HTTPException("AccessRestricted", error)
                     else:
                         self.client.callback("Unauthorized", {'ServerId': self.config.data['auth.server-id']})
+=======
+                        self.client['callback']("AccessRestricted", {'ServerId': self.config.data['auth.server-id']})
+
+                        raise HTTPException("AccessRestricted", error)
+                    else:
+                        self.client['callback']("Unauthorized", {'ServerId': self.config.data['auth.server-id']})
+>>>>>>> 8268ec3f44657ec4dc448a8a02bbb51841972be9
                         self.client.auth.revoke_token() 
 
                         raise HTTPException("Unauthorized", error)
