@@ -30,16 +30,6 @@ class WSClient(threading.Thread):
         self.client = client
         threading.Thread.__init__(self)
 
-    def __shortcuts__(self, key):
-        LOG.debug("__shortcuts__(%r)", key)
-
-        if key == "send":
-            return self.send
-        elif key == "stop":
-            return self.stop_client()
-
-        return
-
     def send(self, message, data=""):
 
         if self.wsc is None:
@@ -50,9 +40,9 @@ class WSClient(threading.Thread):
     def run(self):
 
         monitor = xbmc.Monitor()
-        token = self.client['config/auth.token']
-        device_id = self.client['config/app.device_id']
-        server = self.client['config/auth.server']
+        token = self.client.config.data['auth.token']
+        device_id = self.client.config.data['app.device_id']
+        server = self.client.config.data['auth.server']
         server = server.replace('https', "wss") if server.startswith('https') else server.replace('http', "ws")
         wsc_url = "%s/embywebsocket?api_key=%s&device_id=%s" % (server, token, device_id)
 
@@ -88,10 +78,10 @@ class WSClient(threading.Thread):
 
             return
 
-        if not self.client['config/app.default']:
-            data['ServerId'] = self.client['auth/server-id']
+        if not self.client.config.data['app.default']:
+            data['ServerId'] = self.client.auth.server_id
 
-        self.client['callback_ws'](message['MessageType'], data)
+        self.client.callback(message['MessageType'], data)
 
     def stop_client(self):
 

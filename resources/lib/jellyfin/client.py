@@ -55,7 +55,7 @@ class JellyfinClient(object):
 
             LOG.info("User is authenticated.")
             self.logged_in = True
-            self.callback("ServerOnline", {'Id': self['auth/server-id']})
+            self.callback("ServerOnline", {'Id': self.auth.server_id})
 
         state['Credentials'] = self.get_credentials()
 
@@ -81,23 +81,3 @@ class JellyfinClient(object):
 
         self.wsc.stop_client()
         self.http.stop_session()
-
-    def __getitem__(self, key):
-        LOG.debug("__getitem__(%r)", key)
-
-        if key.startswith('config'):
-            return self.config[key.replace('config/', "", 1)] if "/" in key else self.config
-
-        elif key.startswith('websocket'):
-            return self.wsc.__shortcuts__(key.replace('websocket/', "", 1))
-
-        elif key.startswith('callback'):
-            return self.callback_ws if 'ws' in key else self.callback
-
-        elif key.startswith('auth'):
-            return self.auth.__shortcuts__(key.replace('auth/', "", 1))
-
-        elif key == 'connected':
-            return self.logged_in
-
-        return

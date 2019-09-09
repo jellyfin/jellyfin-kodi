@@ -25,27 +25,6 @@ class Config(object):
         self.data = {}
         self.http()
 
-    def __shortcuts__(self, key):
-        LOG.debug("__shortcuts__(%r)", key)
-
-        if key == "auth":
-            return self.auth
-        elif key == "app":
-            return self.app
-        elif key == "http":
-            return self.http
-        elif key == "data":
-            return self
-
-        return
-
-    def __getitem__(self, key):
-        LOG.debug("__getitem__(%r)", key)
-        return self.data.get(key, self.__shortcuts__(key))
-
-    def __setitem__(self, key, value):
-        self.data[key] = value
-
     def app(self, name, version, device_name, device_id, capabilities=None, device_pixel_ratio=None):
         LOG.info("Begin app constructor.")
 

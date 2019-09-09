@@ -856,15 +856,16 @@ class Views(object):
 
     def window_artwork(self, prop, view_id):
 
-        if not self.server['connected']:
+        if not self.server.logged_in:
             window('%s.artwork' % prop, clear=True)
 
-        elif self.server['connected'] and self.media_folders is not None:
+        elif self.server.logged_in and self.media_folders is not None:
             for library in self.media_folders:
 
                 if library['Id'] == view_id and 'Primary' in library.get('ImageTags', {}):
-
-                    artwork = api.API(None, self.server['auth/server-address']).get_artwork(view_id, 'Primary')
+                    server_data = self.server.auth.get_server_info(self.server.auth.server_id)
+                    server_address = self.server.auth.get_server_address(server_data, server_data['LastConnectionMode'])
+                    artwork = api.API(None, server_address).get_artwork(view_id, 'Primary')
                     window('%s.artwork' % prop, artwork)
 
                     break

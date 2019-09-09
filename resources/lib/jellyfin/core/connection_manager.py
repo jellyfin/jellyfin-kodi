@@ -57,48 +57,6 @@ class ConnectionManager(object):
 
         self.http = HTTP(client)
 
-    def __shortcuts__(self, key):
-        LOG.debug("__shortcuts__(%r)", key)
-
-        if key == "clear":
-            return self.clear_data
-        elif key == "servers":
-            return self.get_available_servers()
-        elif key in ("reconnect", "refresh"):
-            return self.connect
-        elif key == "login":
-            return self.login
-        elif key == "server":
-            return self.get_server_info(self.server_id)
-        elif key == "server-id":
-            return self.server_id
-        elif key == "server-version":
-            return self.server_version
-        elif key == "user-id":
-            return self.jellyfin_user_id()
-        elif key == "public-users":
-            return self.get_public_users()
-        elif key == "token":
-            return self.jellyfin_token()
-        elif key == "manual-server":
-            return self.connect_to_address
-        elif key == "connect-to-server":
-            return self.connect_to_server
-        elif key == "server-address":
-            server = self.get_server_info(self.server_id)
-            return get_server_address(server, server['LastConnectionMode'])
-        elif key == "revoke-token":
-            return self.revoke_token()
-        elif key == "server-mode":
-            server = self.get_server_info(self.server_id)
-            return server['LastConnectionMode']
-
-        return
-
-    def __getitem__(self, key):
-        LOG.debug("__getitem__(%r)", key)
-        return self.__shortcuts__(key)
-
     def clear_data(self):
 
         LOG.info("connection manager clearing data")
@@ -117,7 +75,7 @@ class ConnectionManager(object):
         self['server']['AccessToken'] = None
         self.credentials.get_credentials(self.credentials.get_credentials())
 
-        self.config['auth.token'] = None
+        self.config.data['auth.token'] = None
 
     def get_available_servers(self):
 
@@ -151,7 +109,7 @@ class ConnectionManager(object):
 
         if not server:
             raise AttributeError("server cannot be empty")
-
+            
         try:
             request = {
                 'type': "POST",
@@ -219,6 +177,14 @@ class ConnectionManager(object):
         LOG.info("beginning connection tests")
         return self._test_next_connection_mode(tests, 0, server, options)
 
+    def get_server_address(self, server, mode): #TODO: De-duplicated (Duplicated from above when getting rid of shortcuts)
+
+        modes = {
+            CONNECTION_MODE['Local']: server.get('LocalAddress'),
+            CONNECTION_MODE['Manual']: server.get('ManualAddress')
+        }
+        return modes.get(mode) or server.get('ManualAddress', server.get('LocalAddress'))
+
     def connect(self, options={}):
 
         LOG.info("Begin connect")
@@ -261,7 +227,7 @@ class ConnectionManager(object):
             raise
 
     def _add_app_info(self):
-        return "%s/%s" % (self.config['app.name'], self.config['app.version'])
+        return "%s/%s" % (self.config.data['app.name'], self.config.data['app.version'])
 
     def _get_headers(self, request):
 
@@ -526,15 +492,15 @@ class ConnectionManager(object):
 
         if options.get('enableAutoLogin') == False:
 
-            self.config['auth.user_id'] = server.pop('UserId', None)
-            self.config['auth.token'] = server.pop('AccessToken', None)
+            self.config.data['auth.user_id'] = server.pop('UserId', None)
+            self.config.data['auth.token'] = server.pop('AccessToken', None)
 
         elif verify_authentication and server.get('AccessToken'):
 
             if self._validate_authentication(server, connection_mode, options) is not False:
 
-                self.config['auth.user_id'] = server['UserId']
-                self.config['auth.token'] = server['AccessToken']
+                self.config.data['auth.user_id'] = server['UserId']
+                self.config.data['auth.token'] = server['AccessToken']
                 return self._after_connect_validated(server, credentials, system_info, connection_mode, False, options)
 
             return self._resolve_failure()
@@ -551,10 +517,10 @@ class ConnectionManager(object):
         self.server_id = server['Id']
 
         # Update configs
-        self.config['auth.server'] = get_server_address(server, connection_mode)
-        self.config['auth.server-name'] = server['Name']
-        self.config['auth.server=id'] = server['Id']
-        self.config['auth.ssl'] = options.get('ssl', self.config['auth.ssl'])
+        self.config.data['auth.server'] = get_server_address(server, connection_mode)
+        self.config.data['auth.server-name'] = server['Name']
+        self.config.data['auth.server=id'] = server['Id']
+        self.config.data['auth.ssl'] = options.get('ssl', self.config.data['auth.ssl'])
 
         result = {
             'Servers': [server]
@@ -602,8 +568,8 @@ class ConnectionManager(object):
 
         credentials = self.credentials.get_credentials()
 
-        self.config['auth.user_id'] = result['User']['Id']
-        self.config['auth.token'] = result['AccessToken']
+        self.config.data['auth.user_id'] = result['User']['Id']
+        self.config.data['auth.token'] = result['AccessToken']
 
         for server in credentials['Servers']:
             if server['Id'] == result['ServerId']:

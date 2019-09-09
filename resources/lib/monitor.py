@@ -144,8 +144,9 @@ class Monitor(xbmc.Monitor):
             self.void_responder(data, item)
 
         elif method == 'GetServerAddress':
-
-            server_address = server['auth/server-address']
+            
+            server_data = server.auth.get_server_info(server.auth.server_id)
+            server_address = server.auth.get_server_address(server_data, server_data['LastConnectionMode'])
             self.void_responder(data, server_address)
 
         elif method == 'GetPlaybackInfo':
@@ -160,7 +161,7 @@ class Monitor(xbmc.Monitor):
 
         elif method == 'GetToken':
 
-            token = server['auth/token']
+            token = server.auth.jellyfin_token()
             self.void_responder(data, token)
 
         elif method == 'GetSession':
@@ -235,7 +236,7 @@ class Monitor(xbmc.Monitor):
 
         elif method == 'PlayPlaylist':
 
-            server.jellyfin.post_session(server['config/app.session'], "Playing", {
+            server.jellyfin.post_session(server.config.data['app.session'], "Playing", {
                 'PlayCommand': "PlayNow",
                 'ItemIds': data['Id'],
                 'StartPositionTicks': 0
@@ -262,7 +263,7 @@ class Monitor(xbmc.Monitor):
             self.server_instance(data['ServerId'])
 
         elif method == 'AddUser':
-            server.jellyfin.session_add_user(server['config/app.session'], data['Id'], data['Add'])
+            server.jellyfin.session_add_user(server.config.data['app.session'], data['Id'], data['Add'])
             self.additional_users(server)
 
         elif method == 'Player.OnPlay':
@@ -292,12 +293,12 @@ class Monitor(xbmc.Monitor):
                 for user in all_users:
 
                     if user['Name'].lower() in additional.decode('utf-8').lower():
-                        server.jellyfin.session_add_user(server['config/app.session'], user['Id'], True)
+                        server.jellyfin.session_add_user(server.config.data['app.session'], user['Id'], True)
 
             self.additional_users(server)
 
     def post_capabilities(self, server):
-        LOG.info("--[ post capabilities/%s ]", server['auth/server-id'])
+        LOG.info("--[ post capabilities/%s ]", server.auth.server_id)
 
         server.jellyfin.post_capabilities({
             'PlayableMediaTypes': "Audio,Video",
@@ -314,9 +315,8 @@ class Monitor(xbmc.Monitor):
                 "Play,Playstate,PlayNext,PlayMediaSource"
             ),
         })
-
         session = server.jellyfin.get_device(self.device_id)
-        server['config']['app.session'] = session[0]['Id']
+        server.config.data['app.session'] = session[0]['Id']
 
     def additional_users(self, server):
 
@@ -335,7 +335,7 @@ class Monitor(xbmc.Monitor):
         for index, user in enumerate(session[0]['AdditionalUsers']):
 
             info = server.jellyfin.get_user(user['UserId'])
-            image = api.API(info, server['config/auth.server']).get_user_artwork(user['UserId'])
+            image = api.API(info, server.config.data['auth.server']).get_user_artwork(user['UserId'])
             window('JellyfinAdditionalUserImage.%s' % index, image)
             window('JellyfinAdditionalUserPosition.%s' % user['UserId'], str(index))
 
