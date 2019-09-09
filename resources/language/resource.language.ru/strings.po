@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2019-09-08 02:42+0000\n"
+"PO-Revision-Date: 2019-09-11 02:13+0000\n"
 "Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Russian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ru/>\n"
@@ -76,7 +76,7 @@ msgstr "Для фильмов"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
-msgstr ""
+msgstr "Включить улучшенную графику (нпр., обложку)"
 
 msgctxt "#30160"
 msgid "Video quality"
@@ -144,11 +144,11 @@ msgstr "Интерфейс"
 
 msgctxt "#30239"
 msgid "Reset local Kodi database"
-msgstr ""
+msgstr "Сбросить локальную базу данных Kodi"
 
 msgctxt "#30249"
 msgid "Enable welcome message"
-msgstr ""
+msgstr "Включить приветственное сообщение"
 
 msgctxt "#30251"
 msgid "Recently added Home Videos"
@@ -176,11 +176,11 @@ msgstr "Недавно добавленные музыкальные видео"
 
 msgctxt "#30257"
 msgid "In progress Music videos"
-msgstr ""
+msgstr "Музыкальные видео в процессе"
 
 msgctxt "#30258"
 msgid "Unwatched Music videos"
-msgstr ""
+msgstr "Непросмотренные музыкальные видео"
 
 msgctxt "#30302"
 msgid "Movies"
@@ -224,11 +224,11 @@ msgstr "Перекодировка"
 
 msgctxt "#30500"
 msgid "Verify connection"
-msgstr ""
+msgstr "Подтвердить соединение"
 
 msgctxt "#30504"
 msgid "Use alternate device name"
-msgstr ""
+msgstr "Использовать альтернативное имя устройства"
 
 msgctxt "#30506"
 msgid "Sync"
@@ -236,23 +236,23 @@ msgstr "Синхро"
 
 msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
-msgstr ""
+msgstr "Включить уведомление, если счётчик обновлений больше чем"
 
 msgctxt "#30508"
 msgid "Sync empty shows"
-msgstr ""
+msgstr "Синхронизировать пустые передачи"
 
 msgctxt "#30509"
 msgid "Enable music library"
-msgstr ""
+msgstr "Включить музыкальную медиатеку"
 
 msgctxt "#30511"
 msgid "Playback mode"
-msgstr ""
+msgstr "Режим воспроизведения"
 
 msgctxt "#30512"
 msgid "Enable artwork caching"
-msgstr ""
+msgstr "Включить кэширование"
 
 msgctxt "#30515"
 msgid "Paging - max items requested (default: 15)"
@@ -264,7 +264,7 @@ msgstr "Воспроизведение"
 
 msgctxt "#30517"
 msgid "Network credentials"
-msgstr ""
+msgstr "Сетевые учётные данные"
 
 msgctxt "#30518"
 msgid "Enable cinema mode"
@@ -272,7 +272,7 @@ msgstr "Включить режим кинозала"
 
 msgctxt "#30519"
 msgid "Ask to play trailers"
-msgstr ""
+msgstr "Запрашивать воспроизведение трейлеров"
 
 msgctxt "#30520"
 msgid "Skip the delete confirmation (use at your own risk)"
@@ -284,35 +284,35 @@ msgstr ""
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
-msgstr ""
+msgstr "Перекодировать H265/HEVC"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
-msgstr ""
+msgstr "Игнорировать спецэпизоды в последующих эпизодах"
 
 msgctxt "#30528"
 msgid "Permanent users"
-msgstr ""
+msgstr "Постоянные пользователи"
 
 msgctxt "#30529"
 msgid "Startup delay (in seconds)"
-msgstr ""
+msgstr "Задержка запуска, с"
 
 msgctxt "#30530"
 msgid "Enable server restart message"
-msgstr ""
+msgstr "Включить сообщение о перезапуске сервера"
 
 msgctxt "#30531"
 msgid "Enable new content"
-msgstr ""
+msgstr "Включить новое содержание"
 
 msgctxt "#30532"
 msgid "Duration of the video library pop up"
-msgstr ""
+msgstr "Длительность всплывающей видео медиатеки"
 
 msgctxt "#30533"
 msgid "Duration of the music library pop up"
-msgstr ""
+msgstr "Длительность всплывающей музыкальной медиатеки"
 
 msgctxt "#30534"
 msgid "Notifications (in seconds)"
@@ -320,7 +320,7 @@ msgstr "Уведомления, с"
 
 msgctxt "#30535"
 msgid "Generate a new device Id"
-msgstr ""
+msgstr "Генерировать новый ID устройства"
 
 msgctxt "#30536"
 msgid "Allow the screensaver during syncs"
@@ -328,7 +328,7 @@ msgstr ""
 
 msgctxt "#30537"
 msgid "Transcode Hi10P"
-msgstr ""
+msgstr "Перекодировать Hi10P"
 
 msgctxt "#30539"
 msgid "Login"
@@ -340,15 +340,15 @@ msgstr "Войти вручную"
 
 msgctxt "#30543"
 msgid "Username or email"
-msgstr ""
+msgstr "Имя пользователя или э-почта"
 
 msgctxt "#30545"
 msgid "Enable server offline"
-msgstr ""
+msgstr "Включить сервер автономно"
 
 msgctxt "#30547"
 msgid "Display message"
-msgstr ""
+msgstr "Отображать сообщение"
 
 msgctxt "#30602"
 msgid "Password"
@@ -364,11 +364,11 @@ msgstr "Отменить"
 
 msgctxt "#30607"
 msgid "Select main server"
-msgstr ""
+msgstr "Выбрать главный сервер"
 
 msgctxt "#30608"
 msgid "Username or password cannot be empty"
-msgstr ""
+msgstr "Имя пользователя или пароль не могут быть пустыми"
 
 msgctxt "#30609"
 msgid "Unable to connect to the selected server"
@@ -404,7 +404,7 @@ msgstr "Подсоединиться"
 
 msgctxt "#30617"
 msgid "Server or port cannot be empty"
-msgstr ""
+msgstr "Сервер или порт не могут быть пустыми"
 
 msgctxt "#33000"
 msgid "Welcome"
@@ -420,15 +420,15 @@ msgstr "Недопустимое имя пользователя или паро
 
 msgctxt "#33013"
 msgid "Choose the audio stream"
-msgstr ""
+msgstr "Выбрать поток аудио"
 
 msgctxt "#33014"
 msgid "Choose the subtitles stream"
-msgstr ""
+msgstr "Выбрать поток субтитров"
 
 msgctxt "#33015"
 msgid "Delete file from Jellyfin?"
-msgstr ""
+msgstr "Удалить из Jellyfin?"
 
 msgctxt "#33016"
 msgid "Play trailers?"
@@ -452,7 +452,7 @@ msgstr ""
 
 msgctxt "#33025"
 msgid "Completed in:"
-msgstr ""
+msgstr "Завершится в течение:"
 
 msgctxt "#33033"
 msgid "A new device Id has been generated. Kodi will now restart."
