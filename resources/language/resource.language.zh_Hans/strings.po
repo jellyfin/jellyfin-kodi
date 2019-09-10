@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2019-09-10 01:09+0000\n"
-"Last-Translator: qqq-qqqq <qxc9302@163.com>\n"
+"PO-Revision-Date: 2019-09-10 01:11+0000\n"
+"Last-Translator: biAji <biaji@biaji.net>\n"
 "Language-Team: Chinese (Simplified) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -829,7 +829,7 @@ msgstr "创建备份失败"
 
 msgctxt "#33166"
 msgid "(dynamic)"
-msgstr ""
+msgstr "（动态）"
 
 msgctxt "#33167"
 msgid "Recently added"
@@ -858,7 +858,7 @@ msgstr "你有{number}个更新等待进行。可能在一段时间后才能看�
 
 msgctxt "#33173"
 msgid "Forget about the previous sync? This is not recommended."
-msgstr ""
+msgstr "不推荐此操作，是否忘记前次同步？"
 
 #, fuzzy
 msgctxt "#33174"
