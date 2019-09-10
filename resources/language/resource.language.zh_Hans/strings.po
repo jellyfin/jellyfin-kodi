@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2019-09-10 01:11+0000\n"
-"Last-Translator: qqq-qqqq <qxc9302@163.com>\n"
+"PO-Revision-Date: 2019-09-11 02:13+0000\n"
+"Last-Translator: biAji <biaji@biaji.net>\n"
 "Language-Team: Chinese (Simplified) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -691,10 +691,9 @@ msgctxt "#33131"
 msgid "Refreshing boxsets"
 msgstr "刷新电影集"
 
-#, fuzzy
 msgctxt "#33132"
 msgid "Repair library"
-msgstr "修复库"
+msgstr "修复媒体库"
 
 msgctxt "#33133"
 msgid "Remove library from Kodi"
@@ -706,12 +705,11 @@ msgstr "添加服务器"
 
 msgctxt "#33135"
 msgid "Kodi will now restart to apply a small patch for your Kodi version."
-msgstr "Kodi将会重启以应用针对您Kodi版本的小补丁"
+msgstr "Kodi将会重启以应用针对您Kodi版本的小补丁。"
 
-#, fuzzy
 msgctxt "#33136"
 msgid "Update library"
-msgstr "更新库"
+msgstr "更新媒体库"
 
 msgctxt "#33137"
 msgid "Enable Kodi companion"
@@ -741,10 +739,9 @@ msgctxt "#33143"
 msgid "Enable the option to delete"
 msgstr "启用选项以支持删除操作"
 
-#, fuzzy
 msgctxt "#33144"
 msgid "Removing library"
-msgstr "正在移除库"
+msgstr "正在移除媒体库"
 
 msgctxt "#33145"
 msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
@@ -901,11 +898,11 @@ msgstr "以影院模式播放"
 
 msgctxt "#33183"
 msgid "Enable the option to play with cinema mode"
-msgstr "启用选项以以影院模式播放"
+msgstr "启用选项以用影院模式播放"
 
 msgctxt "#33184"
 msgid "Remove libraries"
-msgstr ""
+msgstr "移除媒体库"
 
 msgctxt "#33185"
 msgid "Enable sync during playback (may cause some lag)"
@@ -940,7 +937,7 @@ msgstr "重启中..."
 
 msgctxt "#33194"
 msgid "Manage libraries"
-msgstr ""
+msgstr "管理媒体库"
 
 msgctxt "#33195"
 msgid "Enable Jellyfin for Kodi"
