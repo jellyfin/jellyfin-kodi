@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: 2019-09-10 01:04+0000\n"
-"Last-Translator: biAji <biaji@biaji.net>\n"
+"Last-Translator: qqq-qqqq <qxc9302@163.com>\n"
 "Language-Team: Chinese (Simplified) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -279,7 +279,7 @@ msgstr "跳过删除确认（使用风险自担）"
 
 msgctxt "#30521"
 msgid "Jump back on resume (in seconds)"
-msgstr ""
+msgstr "继续播放时回跳 (秒)"
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
@@ -706,7 +706,7 @@ msgstr "添加服务器"
 
 msgctxt "#33135"
 msgid "Kodi will now restart to apply a small patch for your Kodi version."
-msgstr ""
+msgstr "Kodi将会重启以应用针对你的Kodi版本的更新"
 
 #, fuzzy
 msgctxt "#33136"
