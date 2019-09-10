@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2019-09-07 18:53+0000\n"
-"Last-Translator: qqq-qqqq <qxc9302@163.com>\n"
+"PO-Revision-Date: 2019-09-10 01:04+0000\n"
+"Last-Translator: biAji <biaji@biaji.net>\n"
 "Language-Team: Chinese (Simplified) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -123,7 +123,7 @@ msgstr "最爱的剧集"
 
 msgctxt "#30185"
 msgid "Boxsets"
-msgstr ""
+msgstr "电影集"
 
 msgctxt "#30189"
 msgid "Unwatched Movies"
@@ -435,7 +435,7 @@ msgstr "播放预告片？"
 
 msgctxt "#33018"
 msgid "Gathering boxsets"
-msgstr ""
+msgstr "搜集中的电影集"
 
 msgctxt "#33021"
 msgid "Gathering:"
@@ -555,7 +555,7 @@ msgstr "重要提示，在高级设置中删除了 cleanon 更新，以防止与
 
 msgctxt "#33098"
 msgid "Refresh boxsets"
-msgstr ""
+msgstr "刷新电影集"
 
 msgctxt "#33099"
 msgid "Install the server plugin Kodi companion to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Companion."
@@ -689,7 +689,7 @@ msgstr "选择源"
 
 msgctxt "#33131"
 msgid "Refreshing boxsets"
-msgstr ""
+msgstr "刷新电影集"
 
 #, fuzzy
 msgctxt "#33132"
