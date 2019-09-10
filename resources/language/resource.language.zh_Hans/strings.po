@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: 2019-09-10 01:08+0000\n"
-"Last-Translator: biAji <biaji@biaji.net>\n"
+"Last-Translator: qqq-qqqq <qxc9302@163.com>\n"
 "Language-Team: Chinese (Simplified) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -778,7 +778,7 @@ msgstr "重新连接到之前已加载的服务器。如果你想使用一个不
 
 msgctxt "#33152"
 msgid "Unable to locate TV Tunes in Kodi."
-msgstr ""
+msgstr "在Kodi中无法找到的电视调谐器。"
 
 #, fuzzy
 msgctxt "#33153"
