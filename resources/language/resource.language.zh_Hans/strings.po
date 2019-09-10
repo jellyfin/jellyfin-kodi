@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: 2019-09-10 01:07+0000\n"
-"Last-Translator: biAji <biaji@biaji.net>\n"
+"Last-Translator: qqq-qqqq <qxc9302@163.com>\n"
 "Language-Team: Chinese (Simplified) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -748,7 +748,7 @@ msgstr "正在移除库"
 
 msgctxt "#33145"
 msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
-msgstr ""
+msgstr "请保证Jellyfin服务器的Samba共享可以在Kodi的安装位置访问，并且已在服务器上配置路径替换。否则，Kodi可能无法定位你的文件。"
 
 #, fuzzy
 msgctxt "#33146"
@@ -757,7 +757,7 @@ msgstr "无法连接到Jellyfin服务器。"
 
 msgctxt "#33147"
 msgid "Your access to Jellyfin is restricted."
-msgstr ""
+msgstr "你对Jellyfin服务器的访问受限。"
 
 msgctxt "#33148"
 msgid "Your access to this server is restricted."
