@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "PO-Revision-Date: 2019-09-10 01:07+0000\n"
-"Last-Translator: qqq-qqqq <qxc9302@163.com>\n"
+"Last-Translator: biAji <biaji@biaji.net>\n"
 "Language-Team: Chinese (Simplified) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -739,7 +739,7 @@ msgstr "出错了。请稍后重试。"
 
 msgctxt "#33143"
 msgid "Enable the option to delete"
-msgstr "启用选项以删除"
+msgstr "启用选项以支持删除操作"
 
 #, fuzzy
 msgctxt "#33144"
