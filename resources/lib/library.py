@@ -350,12 +350,12 @@ class Library(threading.Thread):
 
                     if self.server.jellyfin.check_companion_installed():
 
-                            if not self.fast_sync():
-                                dialog("ok", heading="{jellyfin}", line1=_(33128))
+                        if not self.fast_sync():
+                            dialog("ok", heading="{jellyfin}", line1=_(33128))
 
-                                raise Exception("Failed to retrieve latest updates")
+                            raise Exception("Failed to retrieve latest updates")
 
-                            LOG.info("--<[ retrieve changes ]")
+                        LOG.info("--<[ retrieve changes ]")
 
                     else:
                         raise LibraryException('CompanionMissing')
