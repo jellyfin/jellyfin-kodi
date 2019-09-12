@@ -238,6 +238,13 @@ class API(object):
     def get_plugins(self):
         return self._get("Plugins")
 
+    def check_companion_installed(self):
+        try:
+            self._get("/Jellyfin.Plugin.KodiSyncQueue/GetServerDateTime")
+            return True
+        except Exception:
+            return False
+
     def get_seasons(self, show_id):
         return self.shows("/%s/Seasons" % show_id, params={
             'UserId': "{UserId}",
