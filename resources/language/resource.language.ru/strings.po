@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2019-09-11 02:13+0000\n"
+"PO-Revision-Date: 2019-09-16 08:13+0000\n"
 "Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Russian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ru/>\n"
@@ -436,11 +436,11 @@ msgstr "Воспроизвести рейлеры?"
 
 msgctxt "#33018"
 msgid "Gathering boxsets"
-msgstr ""
+msgstr "Сбор коллекций"
 
 msgctxt "#33021"
 msgid "Gathering:"
-msgstr ""
+msgstr "Сбор:"
 
 msgctxt "#33022"
 msgid "Detected the database needs to be recreated for this version of Jellyfin for Kodi. Proceed?"
@@ -464,15 +464,15 @@ msgstr ""
 
 msgctxt "#33036"
 msgid "Add-on (default)"
-msgstr ""
+msgstr "Надстройка (по умолчанию)"
 
 msgctxt "#33037"
 msgid "Native (direct paths)"
-msgstr ""
+msgstr "Встроенное (прямые пути)"
 
 msgctxt "#33039"
 msgid "Enable music library?"
-msgstr ""
+msgstr "Включить музыкальную медиатеку?"
 
 msgctxt "#33047"
 msgid "Kodi can't locate file:"
@@ -536,19 +536,19 @@ msgstr ""
 
 msgctxt "#33090"
 msgid "Replace existing backup?"
-msgstr ""
+msgstr "Заменить существующую резервную копию?"
 
 msgctxt "#33091"
 msgid "Created backup at:"
-msgstr ""
+msgstr "Создана резервная копия в:"
 
 msgctxt "#33092"
 msgid "Create a backup"
-msgstr ""
+msgstr "Создать резервную копию"
 
 msgctxt "#33093"
 msgid "Backup folder"
-msgstr ""
+msgstr "Папка для резервного копирования"
 
 msgctxt "#33097"
 msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
@@ -556,7 +556,7 @@ msgstr ""
 
 msgctxt "#33098"
 msgid "Refresh boxsets"
-msgstr ""
+msgstr "Подновить коллекции"
 
 msgctxt "#33099"
 msgid "Install the server plugin Kodi companion to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Companion."
@@ -780,7 +780,7 @@ msgstr ""
 
 msgctxt "#33154"
 msgid "Add libraries"
-msgstr ""
+msgstr "Добавить медиатеки"
 
 msgctxt "#33155"
 msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
@@ -792,11 +792,11 @@ msgstr ""
 
 msgctxt "#33157"
 msgid "Audio only"
-msgstr ""
+msgstr "Только аудио"
 
 msgctxt "#33158"
 msgid "Subtitles only"
-msgstr ""
+msgstr "Только субтитры"
 
 msgctxt "#33159"
 msgid "Enable audio/subtitles selection"
@@ -868,23 +868,23 @@ msgstr ""
 
 msgctxt "#33178"
 msgid "Processing updates"
-msgstr ""
+msgstr "Обрабатываются обновления"
 
 msgctxt "#33179"
 msgid "Force transcode"
-msgstr ""
+msgstr "Форсировать перекодировку"
 
 msgctxt "#33180"
 msgid "Restart Jellyfin for Kodi"
-msgstr ""
+msgstr "Перезапустить Jellyfin для Kodi"
 
 msgctxt "#33181"
 msgid "Restarting to apply the patch"
-msgstr ""
+msgstr "Перезапускается для применения исправления"
 
 msgctxt "#33182"
 msgid "Play with cinema mode"
-msgstr ""
+msgstr "Воспроизводить в режиме кинозала"
 
 msgctxt "#33183"
 msgid "Enable the option to play with cinema mode"
@@ -892,7 +892,7 @@ msgstr ""
 
 msgctxt "#33184"
 msgid "Remove libraries"
-msgstr ""
+msgstr "Изъять медиатеки"
 
 msgctxt "#33185"
 msgid "Enable sync during playback (may cause some lag)"
@@ -916,7 +916,7 @@ msgstr ""
 
 msgctxt "#33192"
 msgid "Restart Jellyfin for Kodi"
-msgstr ""
+msgstr "Перезапустить Jellyfin для Kodi"
 
 msgctxt "#33193"
 msgid "Restarting..."
