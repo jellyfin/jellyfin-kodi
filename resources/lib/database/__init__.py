@@ -7,6 +7,7 @@ import logging
 import json
 import os
 import sqlite3
+from io import open
 
 import xbmc
 import xbmcvfs
@@ -354,7 +355,8 @@ def save_sync(sync):
     sync['Date'] = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 
     with open(os.path.join(path, 'sync.json'), 'w') as outfile:
-        json.dump(sync, outfile, sort_keys=True, indent=4, ensure_ascii=False)
+        data = json.dumps(sync, sort_keys=True, indent=4, ensure_ascii=False)
+        outfile.write(unicode(data))
 
 def get_credentials():
 
@@ -364,7 +366,7 @@ def get_credentials():
         xbmcvfs.mkdirs(path)
 
     try:
-        with open(os.path.join(path, 'data.json')) as infile:
+        with open(os.path.join(path, 'data.json'), encoding='utf8') as infile:
             credentials = json.load(infile)
     except Exception:
 
@@ -387,9 +389,12 @@ def save_credentials(credentials):
 
     if not xbmcvfs.exists(path):
         xbmcvfs.mkdirs(path)
-
-    with open(os.path.join(path, 'data.json'), 'w') as outfile:
-        json.dump(credentials, outfile, sort_keys=True, indent=4, ensure_ascii=False)
+    try: 
+        with open(os.path.join(path, 'data.json'), 'w', encoding='utf8') as outfile:
+            data = json.dumps(credentials, sort_keys=True, indent=4, ensure_ascii=False)
+            outfile.write(unicode(data))
+    except Exception as e:
+        LOG.error("Failed to save credentials: {}".format(e))
 
 def get_item(kodi_id, media):
 
@@ -404,3 +409,4 @@ def get_item(kodi_id, media):
             return
 
     return item
+    
