@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2019-09-11 02:13+0000\n"
-"Last-Translator: biAji <biaji@biaji.net>\n"
+"PO-Revision-Date: 2019-09-18 09:13+0000\n"
+"Last-Translator: zhang1340 <zhangxuan1340@hotmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -747,7 +747,6 @@ msgctxt "#33145"
 msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
 msgstr "请保证Jellyfin服务器的Samba共享可以在Kodi的安装位置访问，并且已在服务器上配置路径替换。否则，Kodi可能无法定位你的文件。"
 
-#, fuzzy
 msgctxt "#33146"
 msgid "Unable to connect to Jellyfin."
 msgstr "无法连接到Jellyfin服务器。"
@@ -768,7 +767,6 @@ msgctxt "#33150"
 msgid "Update server information"
 msgstr "更新服务器信息"
 
-#, fuzzy
 msgctxt "#33151"
 msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
 msgstr "重新连接到之前已加载的服务器。如果你想使用一个不同的服务器，请重置本地数据库，包括你的用户信息。"
@@ -777,21 +775,18 @@ msgctxt "#33152"
 msgid "Unable to locate TV Tunes in Kodi."
 msgstr "在Kodi中无法找到电视调谐器。"
 
-#, fuzzy
 msgctxt "#33153"
 msgid "Your Jellyfin theme media has been synced to Kodi"
-msgstr "你的Jellyfin媒体主题已被同步到Kodi"
+msgstr "你的 Jellyfin 媒体主题已被同步到Kodi"
 
 msgctxt "#33154"
 msgid "Add libraries"
 msgstr "添加媒体库"
 
-#, fuzzy
 msgctxt "#33155"
 msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
 msgstr "当前Kodi中应用的Jellyfin更新已损坏！如果一直存在这一问题，请到Jellyfin for Kodi论坛发帖。这需要被尽快修复。"
 
-#, fuzzy
 msgctxt "#33156"
 msgid "A patch has been applied!"
 msgstr "一个更新已被应用！"
@@ -848,7 +843,6 @@ msgctxt "#33171"
 msgid "By first letter"
 msgstr "按首字母"
 
-#, fuzzy
 msgctxt "#33172"
 msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
 msgstr "你有{number}个更新等待进行。可能在一段时间后才能看到新的内容。可能通过启动Jellyfin插件 > 更换库来更新库会更快。仍要继续？"
@@ -857,12 +851,10 @@ msgctxt "#33173"
 msgid "Forget about the previous sync? This is not recommended."
 msgstr "不推荐此操作，是否忘记前次同步？"
 
-#, fuzzy
 msgctxt "#33174"
 msgid "Paging - download threads (default: 3)"
 msgstr "分页 - 下载线程数 (默认值: 3)"
 
-#, fuzzy
 msgctxt "#33175"
 msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
 msgstr "分页提示：每个下载线程会同时从Jellyfin服务器请求最大项数。"
@@ -947,7 +939,6 @@ msgctxt "#33196"
 msgid "Advanced options"
 msgstr "高级选项"
 
-#, fuzzy
 msgctxt "#33197"
 msgid "A sync is already running, please wait until it completes and try again."
 msgstr "同步正在执行，请等待同步结束后重试。"
