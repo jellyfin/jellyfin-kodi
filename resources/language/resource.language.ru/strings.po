@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2019-09-16 08:13+0000\n"
+"PO-Revision-Date: 2019-09-19 10:13+0000\n"
 "Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Russian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ru/>\n"
@@ -324,7 +324,7 @@ msgstr "Генерировать новый ID устройства"
 
 msgctxt "#30536"
 msgid "Allow the screensaver during syncs"
-msgstr ""
+msgstr "Разрешить заставку во время синхронизации"
 
 msgctxt "#30537"
 msgid "Transcode Hi10P"
@@ -372,7 +372,7 @@ msgstr "Имя пользователя или пароль не могут бы
 
 msgctxt "#30609"
 msgid "Unable to connect to the selected server"
-msgstr ""
+msgstr "Невозможно подключиться к выбранному серверу"
 
 msgctxt "#30610"
 msgid "Connect to"
