@@ -348,17 +348,15 @@ class Library(threading.Thread):
             if settings('SyncInstallRunDone.bool'):
                 if settings('kodiCompanion.bool'):
 
-                    for plugin in self.server.jellyfin.get_plugins():
-                        if plugin['Name'] in ("Jellyfin.Kodi Sync Queue", "Kodi companion", "Kodi Sync Queue"):
+                    if self.server.jellyfin.check_companion_installed():
 
-                            if not self.fast_sync():
-                                dialog("ok", heading="{jellyfin}", line1=_(33128))
+                        if not self.fast_sync():
+                            dialog("ok", heading="{jellyfin}", line1=_(33128))
 
-                                raise Exception("Failed to retrieve latest updates")
+                            raise Exception("Failed to retrieve latest updates")
 
-                            LOG.info("--<[ retrieve changes ]")
+                        LOG.info("--<[ retrieve changes ]")
 
-                            break
                     else:
                         raise LibraryException('CompanionMissing')
 
