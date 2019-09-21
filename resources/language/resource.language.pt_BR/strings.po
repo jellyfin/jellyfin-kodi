@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2019-09-21 16:13+0000\n"
+"PO-Revision-Date: 2019-09-23 10:13+0000\n"
 "Last-Translator: Mário Victor Ribeiro Silva <mariovictorrs@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/pt_BR/>\n"
@@ -31,7 +31,7 @@ msgstr "Nome do Servidor"
 
 msgctxt "#30002"
 msgid "Force HTTP playback"
-msgstr ""
+msgstr "Forçar reprodução em HTTP"
 
 msgctxt "#30003"
 msgid "Login method"
@@ -63,7 +63,7 @@ msgstr "Confirme exclusão de arquivo"
 
 msgctxt "#30114"
 msgid "Offer delete after playback"
-msgstr ""
+msgstr "Oferecer deletar depois de reproduzir"
 
 msgctxt "#30115"
 msgid "For Episodes"
@@ -75,7 +75,7 @@ msgstr "Para Filmes"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
-msgstr ""
+msgstr "Ativar Artes Melhoradas (Ex: Capa)"
 
 msgctxt "#30160"
 msgid "Video quality"
@@ -115,11 +115,11 @@ msgstr "Filmes Favoritos"
 
 msgctxt "#30181"
 msgid "Favorite Shows"
-msgstr ""
+msgstr "Programas Favortios"
 
 msgctxt "#30182"
 msgid "Favorite Episodes"
-msgstr ""
+msgstr "Episódios Favoritos"
 
 msgctxt "#30185"
 msgid "Boxsets"
@@ -127,27 +127,27 @@ msgstr ""
 
 msgctxt "#30189"
 msgid "Unwatched Movies"
-msgstr ""
+msgstr "Filmes não Assistidos"
 
 msgctxt "#30229"
 msgid "Random Items"
-msgstr ""
+msgstr "Itens Aleatórios"
 
 msgctxt "#30230"
 msgid "Recommended Items"
-msgstr ""
+msgstr "Itens Recomendados"
 
 msgctxt "#30235"
 msgid "Interface"
-msgstr ""
+msgstr "Interface"
 
 msgctxt "#30239"
 msgid "Reset local Kodi database"
-msgstr ""
+msgstr "Reiniciar banco de dados local do kodi"
 
 msgctxt "#30249"
 msgid "Enable welcome message"
-msgstr ""
+msgstr "Ativar mensagem de Boas Vindas"
 
 msgctxt "#30251"
 msgid "Recently added Home Videos"
@@ -155,7 +155,7 @@ msgstr ""
 
 msgctxt "#30252"
 msgid "Recently added Photos"
-msgstr ""
+msgstr "Fotos adicionadas recentemente"
 
 msgctxt "#30253"
 msgid "Favourite Home Videos"
@@ -163,11 +163,11 @@ msgstr ""
 
 msgctxt "#30254"
 msgid "Favourite Photos"
-msgstr ""
+msgstr "Fotos Favoritas"
 
 msgctxt "#30255"
 msgid "Favourite Albums"
-msgstr ""
+msgstr "Albuns Favoritos"
 
 msgctxt "#30256"
 msgid "Recently added Music videos"
@@ -183,59 +183,59 @@ msgstr ""
 
 msgctxt "#30302"
 msgid "Movies"
-msgstr ""
+msgstr "Filmes"
 
 msgctxt "#30305"
 msgid "TV Shows"
-msgstr ""
+msgstr "Séries"
 
 msgctxt "#30401"
 msgid "Jellyfin options"
-msgstr ""
+msgstr "Opções do Jellyfin"
 
 msgctxt "#30402"
 msgid "Jellyfin transcode"
-msgstr ""
+msgstr "Transcodificar Jellyfin"
 
 msgctxt "#30405"
 msgid "Add to favorites"
-msgstr ""
+msgstr "Adicionar aos Favoritos"
 
 msgctxt "#30406"
 msgid "Remove from favorites"
-msgstr ""
+msgstr "Remover dos Favoritos"
 
 msgctxt "#30408"
 msgid "Settings"
-msgstr ""
+msgstr "Configurações"
 
 msgctxt "#30409"
 msgid "Delete from Jellyfin"
-msgstr ""
+msgstr "Deletar do Jellyfin"
 
 msgctxt "#30410"
 msgid "Refresh this item"
-msgstr ""
+msgstr "Recarregar este item"
 
 msgctxt "#30412"
 msgid "Transcode"
-msgstr ""
+msgstr "Transcodificar"
 
 msgctxt "#30500"
 msgid "Verify connection"
-msgstr ""
+msgstr "Verificar Conexão"
 
 msgctxt "#30504"
 msgid "Use alternate device name"
-msgstr ""
+msgstr "Usar nome de dispositivo alternativo"
 
 msgctxt "#30506"
 msgid "Sync"
-msgstr ""
+msgstr "Sincronizar"
 
 msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
-msgstr ""
+msgstr "Ativar notificação se contagem de atualização for maior que"
 
 msgctxt "#30508"
 msgid "Sync empty shows"
@@ -243,47 +243,48 @@ msgstr ""
 
 msgctxt "#30509"
 msgid "Enable music library"
-msgstr ""
+msgstr "Ativar biblioteca de música"
 
 msgctxt "#30511"
 msgid "Playback mode"
-msgstr ""
+msgstr "Modo de Reprodução"
 
 msgctxt "#30512"
 msgid "Enable artwork caching"
-msgstr ""
+msgstr "Ativar cache de arte"
 
 msgctxt "#30515"
 msgid "Paging - max items requested (default: 15)"
-msgstr ""
+msgstr "Paginação - Máximo de itens requisitados (Padrão: 15)"
 
 msgctxt "#30516"
 msgid "Playback"
-msgstr ""
+msgstr "Reprodução"
 
 msgctxt "#30517"
 msgid "Network credentials"
-msgstr ""
+msgstr "Credenciais de Rede"
 
 msgctxt "#30518"
 msgid "Enable cinema mode"
-msgstr ""
+msgstr "Ativar modo de cinema"
 
 msgctxt "#30519"
 msgid "Ask to play trailers"
-msgstr ""
+msgstr "Peguntar para reproduzir trailers"
 
 msgctxt "#30520"
 msgid "Skip the delete confirmation (use at your own risk)"
-msgstr ""
+msgstr "Ignorar confirmação de exclusão (Use por sua conta e risco)"
 
 msgctxt "#30521"
 msgid "Jump back on resume (in seconds)"
-msgstr ""
+msgstr "Voltar ao continuar (em segundos)"
 
+#, fuzzy
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
-msgstr ""
+msgstr "Transcodificar H265/HVENC"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
@@ -291,19 +292,20 @@ msgstr ""
 
 msgctxt "#30528"
 msgid "Permanent users"
-msgstr ""
+msgstr "Usuários Permanentes"
 
 msgctxt "#30529"
 msgid "Startup delay (in seconds)"
-msgstr ""
+msgstr "Atraso de Inicialização (em segundos)"
 
+#, fuzzy
 msgctxt "#30530"
 msgid "Enable server restart message"
-msgstr ""
+msgstr "Ativar mensagem de reinicialização do servidor"
 
 msgctxt "#30531"
 msgid "Enable new content"
-msgstr ""
+msgstr "Ativar novo conteúdo"
 
 msgctxt "#30532"
 msgid "Duration of the video library pop up"
@@ -315,11 +317,11 @@ msgstr ""
 
 msgctxt "#30534"
 msgid "Notifications (in seconds)"
-msgstr ""
+msgstr "Notificações (em segundos)"
 
 msgctxt "#30535"
 msgid "Generate a new device Id"
-msgstr ""
+msgstr "Gerar novo ID de dispositivo"
 
 msgctxt "#30536"
 msgid "Allow the screensaver during syncs"
