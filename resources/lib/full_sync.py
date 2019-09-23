@@ -535,7 +535,7 @@ class FullSync(object):
                                 dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
                                 count += 1
                         else:
-                            obj = MEDIA[items[0][1]](self.server, jellyfindb, kodidb, direct_path)['Remove']
+                            obj = MEDIA[items[0][1]](self.server, jellyfindb, kodidb, direct_path).remove
 
                             for item in items:
 
