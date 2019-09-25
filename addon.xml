@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon  id="plugin.video.jellyfin"
         name="Jellyfin"
-        version="0.2.1"
+        version="0.3.0"
         provider-name="Jellyfin Contributors, angelblue05">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -35,7 +35,25 @@
     <source>https://github.com/jellyfin/jellyfin-kodi</source>
     <summary lang="en"></summary>
     <description lang="en">Welcome to Jellyfin for Kodi!&#10;A whole new way to manage and view your media library. The Jellyfin addon for Kodi combines the best of Kodi - ultra smooth navigation, beautiful UIs and playback of any file under the sun, and Jellyfin - the most powerful fully open source multi-client media metadata indexer and server.&#10;&#10;Jellyfin for Kodi is the absolute best way to enjoy the incredible Kodi playback engine combined with the power of Jellyfin's centralized database. Features:&#10;* Direct integration with the Kodi library for native Kodi speed&#10;* Instant synchronization with the Jellyfin server&#10;* Full support for Movie, TV and Music collections&#10;* Jellyfin Server direct stream and transcoding support - use Kodi when you are away from home!</description>
-    <news>v0.2.1 (2019-07-14)
+    <news>
+    v0.3.0 (2019-09-25)
+	  Various translations via Weblate
+      #82 Update documentation link to point to main site
+      #81 Fix missed getitem references
+      #78 Remove unused image files
+      #74 Update file handling to support unicode
+      #71 Change companion detection to endpoint check #23
+      #69 Complete shortcuts and getitem cleanup
+      #68 Add issue template
+      #66 Cleanup shortcuts in client.py and associated code
+      #64 Remove shortcuts in http.py and some in client.py #27
+      #62 Updates project structure to Kodi v17
+      #60 Remove dependency on WAN IP Address
+      #57 Removed bundled libraries
+      #56 Change server identification header to allow for basic auth support #52
+      #54 Make sure base is the first place we look for packages. bug cleanup
+      #48 Add Simplified Chinese translation
+    v0.2.1 (2019-07-14)
       #44 Remove code caching, fixing Kodi 18 Music syncing for existing installs.
     </news>
     <assets>
