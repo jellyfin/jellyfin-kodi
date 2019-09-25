@@ -657,7 +657,7 @@ class UserDataWorker(threading.Thread):
                 except Queue.Empty:
                     break
 
-                obj = MEDIA[item['Type']](self.args[0], jellyfindb, kodidb, self.args[1])['UserData']
+                obj = MEDIA[item['Type']](self.args[0], jellyfindb, kodidb, self.args[1]).userdata
 
                 try:
                     obj(item)
@@ -742,7 +742,7 @@ class RemovedWorker(threading.Thread):
                 except Queue.Empty:
                     break
 
-                obj = MEDIA[item['Type']](self.args[0], jellyfindb, kodidb, self.args[1])['Remove']
+                obj = MEDIA[item['Type']](self.args[0], jellyfindb, kodidb, self.args[1]).remove
 
                 try:
                     obj(item['Id'])
