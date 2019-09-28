@@ -519,7 +519,7 @@ class FullSync(object):
                             movies = [x for x in items if x[1] == 'Movie']
                             tvshows = [x for x in items if x[1] == 'Series']
 
-                            obj = MEDIA['Movie'](self.server, jellyfindb, kodidb, direct_path)['Remove']
+                            obj = Movies(self.server, jellyfindb, kodidb, direct_path).remove
 
                             for item in movies:
 
@@ -527,7 +527,7 @@ class FullSync(object):
                                 dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
                                 count += 1
 
-                            obj = MEDIA['Series'](self.server, jellyfindb, kodidb, direct_path)['Remove']
+                            obj = TVShows(self.server, jellyfindb, kodidb, direct_path).remove
 
                             for item in tvshows:
 
@@ -535,6 +535,13 @@ class FullSync(object):
                                 dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
                                 count += 1
                         else:
+                            # from mcarlton: I'm not sure what triggers this.
+                            # I've added and removed every media type except
+                            # for music videos (because i don't have any) and
+                            # can't find it, but I'm not comfortable
+                            # removing it right now
+                            LOG.info('Triggered the mystery function')
+                            LOG.debug('Mystery function item type: {}'.format('items[0][1]))
                             obj = MEDIA[items[0][1]](self.server, jellyfindb, kodidb, direct_path).remove
 
                             for item in items:
