@@ -134,8 +134,6 @@ class ConnectionManager(object):
         if not address:
             return False
 
-        address = self._normalize_address(address)
-
         def _on_fail():
             LOG.error("connectToAddress %s failed", address)
             return self._resolve_failure()
