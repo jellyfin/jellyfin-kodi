@@ -541,7 +541,7 @@ class FullSync(object):
                             # can't find it, but I'm not comfortable
                             # removing it right now
                             LOG.info('Triggered the mystery function')
-                            LOG.debug('Mystery function item type: {}'.format('items[0][1]))
+                            LOG.debug('Mystery function item type: {}'.format(items[0][1]))
                             obj = MEDIA[items[0][1]](self.server, jellyfindb, kodidb, direct_path).remove
 
                             for item in items:
