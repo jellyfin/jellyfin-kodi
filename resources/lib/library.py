@@ -616,7 +616,26 @@ class UpdatedWorker(threading.Thread):
                 except Queue.Empty:
                     break
 
-                obj = MEDIA[item['Type']](self.args[0], jellyfindb, kodidb, self.args[1])[item['Type']]
+                if item['Type'] == 'Movie':
+                    obj = Movies(self.args[0], jellyfindb, kodidb, self.args[1]).movie
+                elif item['Type'] == 'Boxset':
+                    obj = Movies(self.args[0], jellyfindb, kodidb, self.args[1]).boxset
+                elif item['Type'] == 'Series':
+                    obj = TVShows(self.args[0], jellyfindb, kodidb, self.args[1]).tvshow
+                elif item['Type'] == 'Season':
+                    obj = TVShows(self.args[0], jellyfindb, kodidb, self.args[1]).season
+                elif item['Type'] == 'Episode':
+                    obj = TVShows(self.args[0], jellyfindb, kodidb, self.args[1]).episode
+                elif item['Type'] == 'MusicVideo':
+                    obj = MusicVideos(self.args[0], jellyfindb, kodidb, self.args[1]).musicvideo
+                elif item['Type'] == 'MusicAlbum':
+                    obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).album
+                elif item['Type'] == 'MusicArtist':
+                    obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).artist
+                elif item['Type'] == 'AlbumArtist':
+                    obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).albumartist
+                elif item['Type'] == 'Audio':
+                    obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).song
 
                 try:
                     if obj(item) and self.notify:
@@ -657,7 +676,10 @@ class UserDataWorker(threading.Thread):
                 except Queue.Empty:
                     break
 
-                obj = MEDIA[item['Type']](self.args[0], jellyfindb, kodidb, self.args[1]).userdata
+                if item['Type'] == 'Movie':
+                    obj = Movies(self.args[0], jellyfindb, kodidb, self.args[1]).userdata(item)
+                elif item['Type'] in ['Series', 'Season', 'Episode']:
+                    obj = TVShows(self.args[0], jellyfindb, kodidb, self.args[1]).userdata(item)
 
                 try:
                     obj(item)
@@ -742,7 +764,14 @@ class RemovedWorker(threading.Thread):
                 except Queue.Empty:
                     break
 
-                obj = MEDIA[item['Type']](self.args[0], jellyfindb, kodidb, self.args[1]).remove
+                if item['Type'] == 'Movie':
+                    obj = Movies(self.args[0], jellyfindb, kodidb, self.args[1]).remove
+                elif item['Type'] in ['Series', 'Season', 'Episode']:
+                    obj = TVShows(self.args[0], jellyfindb, kodidb, self.args[1]).remove
+                elif item['Type'] in ['MusicAlbum', 'MusicArtist', 'AlbumArtist', 'Audio']:
+                    obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).remove
+                elif item['Type'] == 'MusicVideo':
+                    obj = MusicVideos(self.args[0], jellyfindb, kodidb, self.args[1]).remove
 
                 try:
                     obj(item['Id'])
