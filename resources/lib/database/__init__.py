@@ -333,7 +333,7 @@ def get_sync():
         xbmcvfs.mkdirs(path)
 
     try:
-        with open(os.path.join(path, 'sync.json')) as infile:
+        with open(os.path.join(path, 'sync.json'), encoding='utf-8') as infile:
             sync = json.load(infile)
     except Exception:
         sync = {}
@@ -354,7 +354,7 @@ def save_sync(sync):
 
     sync['Date'] = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 
-    with open(os.path.join(path, 'sync.json'), 'w') as outfile:
+    with open(os.path.join(path, 'sync.json'), 'w', encoding='utf-8') as outfile:
         data = json.dumps(sync, sort_keys=True, indent=4, ensure_ascii=False)
         outfile.write(unicode(data))
 
@@ -371,7 +371,7 @@ def get_credentials():
     except Exception:
 
         try:
-            with open(os.path.join(path, 'data.txt')) as infile:
+            with open(os.path.join(path, 'data.txt'), encoding='utf-8') as infile:
                 credentials = json.load(infile)
                 save_credentials(credentials)
 
