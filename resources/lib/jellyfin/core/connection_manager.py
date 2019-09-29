@@ -4,11 +4,12 @@
 
 import json
 import logging
-import hashlib
 import socket
 import time
 from datetime import datetime
 from distutils.version import LooseVersion
+
+import urllib3
 
 from credentials import Credentials
 from http import HTTP
@@ -109,7 +110,7 @@ class ConnectionManager(object):
 
         if not server:
             raise AttributeError("server cannot be empty")
-            
+
         try:
             request = {
                 'type': "POST",
@@ -133,6 +134,8 @@ class ConnectionManager(object):
 
         if not address:
             return False
+
+        address = self._normalize_address(address)
 
         def _on_fail():
             LOG.error("connectToAddress %s failed", address)
@@ -470,13 +473,18 @@ class ConnectionManager(object):
 
     def _normalize_address(self, address):
         # Attempt to correct bad input
-        address = address.strip()
-        address = address.lower()
+        url = urllib3.util.parse_url(address.strip())
 
-        if 'http' not in address:
-            address = "http://%s" % address
+        if url.scheme is None:
+            url = url._replace(scheme='http')
 
-        return address
+        if url.scheme == 'http' and url.port == 80:
+            url = url._replace(port=None)
+
+        if url.scheme == 'https' and url.port == 443:
+            url = url._replace(port=None)
+
+        return url.url
 
     def _save_user_info_into_credentials(self, server, user):
 
