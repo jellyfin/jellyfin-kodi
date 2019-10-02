@@ -26,7 +26,7 @@ def get_jellyfinserver_url(handler):
     if handler.startswith('/'):
 
         handler = handler[1:]
-        LOG.warn("handler starts with /: %s", handler)
+        LOG.info("handler starts with /: %s", handler)
 
     return "{server}/emby/%s" % handler
 

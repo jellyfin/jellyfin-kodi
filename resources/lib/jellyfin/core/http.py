@@ -40,10 +40,10 @@ class HTTP(object):
             return
 
         try:
-            LOG.warn("--<[ session/%s ]", id(self.session))
+            LOG.info("--<[ session/%s ]", id(self.session))
             self.session.close()
         except Exception as error:
-            LOG.warn("The requests session could not be terminated: %s", error)
+            LOG.warning("The requests session could not be terminated: %s", error)
 
     def _replace_user_info(self, string):
 

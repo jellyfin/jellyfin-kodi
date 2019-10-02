@@ -60,13 +60,13 @@ class Service(xbmc.Monitor):
         if self.settings['enable_context_transcode']:
             window('jellyfin_context_transcode.bool', True)
 
-        LOG.warn("--->>>[ %s ]", client.get_addon_name())
-        LOG.warn("Version: %s", client.get_version())
-        LOG.warn("KODI Version: %s", xbmc.getInfoLabel('System.BuildVersion'))
-        LOG.warn("Platform: %s", settings('platformDetected'))
-        LOG.warn("Python Version: %s", sys.version)
-        LOG.warn("Using dynamic paths: %s", settings('useDirectPaths') == "0")
-        LOG.warn("Log Level: %s", self.settings['log_level'])
+        LOG.info("--->>>[ %s ]", client.get_addon_name())
+        LOG.info("Version: %s", client.get_version())
+        LOG.info("KODI Version: %s", xbmc.getInfoLabel('System.BuildVersion'))
+        LOG.info("Platform: %s", settings('platformDetected'))
+        LOG.info("Python Version: %s", sys.version)
+        LOG.info("Using dynamic paths: %s", settings('useDirectPaths') == "0")
+        LOG.info("Log Level: %s", self.settings['log_level'])
 
         self.check_version()
         verify_kodi_defaults()
@@ -161,7 +161,7 @@ class Service(xbmc.Monitor):
 
             if not resp:
 
-                LOG.warn("Database version is out of date! USER IGNORED!")
+                LOG.warning("Database version is out of date! USER IGNORED!")
                 dialog("ok", heading=_('addon_name'), line1=_(33023))
 
                 raise Exception("User backed out of a required database reset")
@@ -347,7 +347,7 @@ class Service(xbmc.Monitor):
         elif method == 'System.OnWake':
 
             if not self.monitor.sleep:
-                LOG.warn("System.OnSleep was never called, skip System.OnWake")
+                LOG.warning("System.OnSleep was never called, skip System.OnWake")
 
                 return
 
@@ -386,24 +386,24 @@ class Service(xbmc.Monitor):
             log_level = settings('logLevel')
             window('jellyfin_logLevel', str(log_level))
             self.settings['logLevel'] = log_level
-            LOG.warn("New log level: %s", log_level)
+            LOG.info("New log level: %s", log_level)
 
         if settings('enableContext.bool') != self.settings['enable_context']:
 
             window('jellyfin_context', settings('enableContext'))
             self.settings['enable_context'] = settings('enableContext.bool')
-            LOG.warn("New context setting: %s", self.settings['enable_context'])
+            LOG.info("New context setting: %s", self.settings['enable_context'])
 
         if settings('enableContextTranscode.bool') != self.settings['enable_context_transcode']:
 
             window('jellyfin_context_transcode', settings('enableContextTranscode'))
             self.settings['enable_context_transcode'] = settings('enableContextTranscode.bool')
-            LOG.warn("New context transcode setting: %s", self.settings['enable_context_transcode'])
+            LOG.info("New context transcode setting: %s", self.settings['enable_context_transcode'])
 
         if settings('useDirectPaths') != self.settings['mode'] and self.library_thread.started:
 
             self.settings['mode'] = settings('useDirectPaths')
-            LOG.warn("New playback mode setting: %s", self.settings['mode'])
+            LOG.info("New playback mode setting: %s", self.settings['mode'])
 
             if not self.settings.get('mode_warn'):
 
@@ -437,11 +437,11 @@ class Service(xbmc.Monitor):
 
         objects.obj.Objects().mapping()
 
-        LOG.warn("---[ objects reloaded ]")
+        LOG.info("---[ objects reloaded ]")
 
     def shutdown(self):
 
-        LOG.warn("---<[ EXITING ]")
+        LOG.info("---<[ EXITING ]")
         window('jellyfin_should_stop.bool', True)
 
         properties = [ # TODO: review
@@ -464,4 +464,4 @@ class Service(xbmc.Monitor):
             self.monitor.listener.stop()
             self.monitor.webservice.stop()
 
-        LOG.warn("---<<<[ %s ]", client.get_addon_name())
+        LOG.info("---<<<[ %s ]", client.get_addon_name())

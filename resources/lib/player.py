@@ -247,7 +247,7 @@ class Player(xbmc.Player):
                 try:
                     next_item = next_items['Items'][index + 1]
                 except IndexError:
-                    LOG.warn("No next up episode.")
+                    LOG.warning("No next up episode.")
 
                     return
 
