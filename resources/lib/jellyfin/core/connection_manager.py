@@ -327,7 +327,7 @@ class ConnectionManager(object):
                 return self._test_next_connection_mode(tests, index + 1, server, options)
         else:
             if self._compare_versions(self._get_min_server_version(), result['Version']) == 1:
-                LOG.warn("minServerVersion requirement not met. Server version: %s", result['Version'])
+                LOG.warning("minServerVersion requirement not met. Server version: %s", result['Version'])
                 return {
                     'State': CONNECTION_STATE['ServerUpdateNeeded'],
                     'Servers': [server]

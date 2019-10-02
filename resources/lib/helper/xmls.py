@@ -119,7 +119,7 @@ def advanced_settings():
 
         if cleanonupdate is not None and cleanonupdate.text == "true":
 
-            LOG.warn("cleanonupdate disabled")
+            LOG.warning("cleanonupdate disabled")
             video.remove(cleanonupdate)
 
             indent(xml)

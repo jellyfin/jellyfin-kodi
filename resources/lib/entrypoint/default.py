@@ -51,7 +51,7 @@ class Events(object):
         if server == 'None':
             server = None
 
-        LOG.warn("path: %s params: %s", path, json.dumps(params, indent=4))
+        LOG.info("path: %s params: %s", path, json.dumps(params, indent=4))
 
         if '/extrafanart' in base_url:
 

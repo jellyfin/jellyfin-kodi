@@ -448,7 +448,7 @@ class Listener(threading.Thread):
         ''' Detect the resume dialog for widgets.
             Detect external players.
         '''
-        LOG.warn("--->[ listener ]")
+        LOG.info("--->[ listener ]")
 
         while not self.stop_thread:
             special_listener()
@@ -457,7 +457,7 @@ class Listener(threading.Thread):
                 # Abort was requested while waiting. We should exit
                 break
 
-        LOG.warn("---<[ listener ]")
+        LOG.info("---<[ listener ]")
 
     def stop(self):
         self.stop_thread = True

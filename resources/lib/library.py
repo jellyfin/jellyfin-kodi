@@ -96,7 +96,7 @@ class Library(threading.Thread):
 
     def run(self):
 
-        LOG.warn("--->[ library ]")
+        LOG.info("--->[ library ]")
 
         if not self.startup():
             self.stop_client()
@@ -117,7 +117,7 @@ class Library(threading.Thread):
             if self.monitor.waitForAbort(2):
                 break
 
-        LOG.warn("---<[ library ]")
+        LOG.info("---<[ library ]")
 
     def test_databases(self):
 
@@ -420,7 +420,7 @@ class Library(threading.Thread):
                 ''' Inverse yes no, in case the dialog is forced closed by Kodi.
                 '''
                 if dialog("yesno", heading="{jellyfin}", line1=_(33172).replace('{number}', str(total)), nolabel=_(107), yeslabel=_(106)):
-                    LOG.warn("Large updates skipped.")
+                    LOG.warning("Large updates skipped.")
 
                     return True
 

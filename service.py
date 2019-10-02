@@ -68,13 +68,13 @@ class ServiceManager(threading.Thread):
 
 if __name__ == "__main__":
 
-    LOG.warn("-->[ service ]")
-    LOG.warn("Delay startup by %s seconds.", DELAY)
+    LOG.info("-->[ service ]")
+    LOG.info("Delay startup by %s seconds.", DELAY)
 
     while True:
 
         if not settings('enableAddon.bool'):
-            LOG.warn("Jellyfin for Kodi is not enabled.")
+            LOG.warning("Jellyfin for Kodi is not enabled.")
 
             break
 
@@ -93,4 +93,4 @@ if __name__ == "__main__":
 
         break
 
-    LOG.warn("--<[ service ]")
+    LOG.info("--<[ service ]")

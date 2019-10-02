@@ -279,7 +279,7 @@ def reset_kodi():
                 if name != 'version':
                     musicdb.cursor.execute("DELETE FROM " + name)
 
-    LOG.warn("[ reset kodi ]")
+    LOG.info("[ reset kodi ]")
 
 def reset_jellyfin():
 
@@ -296,7 +296,7 @@ def reset_jellyfin():
             jellyfindb.cursor.execute("DROP table IF EXISTS view")
             jellyfindb.cursor.execute("DROP table IF EXISTS version")
 
-    LOG.warn("[ reset jellyfin ]")
+    LOG.info("[ reset jellyfin ]")
 
 def reset_artwork():
 
@@ -323,7 +323,7 @@ def reset_artwork():
             if name != 'version':
                 texdb.cursor.execute("DELETE FROM " + name)
 
-    LOG.warn("[ reset artwork ]")
+    LOG.info("[ reset artwork ]")
 
 def get_sync():
 

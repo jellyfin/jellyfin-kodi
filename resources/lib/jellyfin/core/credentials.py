@@ -40,7 +40,7 @@ class Credentials(object):
                     raise ValueError("invalid credentials format")
 
             except Exception as e:  # File is either empty or missing
-                LOG.warn(e)
+                LOG.warning(e)
                 self.credentials = {}
 
             LOG.debug("credentials initialized with: %s", self.credentials)
