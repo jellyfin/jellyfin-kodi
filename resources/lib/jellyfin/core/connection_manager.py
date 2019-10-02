@@ -453,6 +453,7 @@ class ConnectionManager(object):
         else:
             return servers
 
+    # TODO: Make IPv6 compatable
     def _convert_endpoint_address_to_manual_address(self, info):
 
         if info.get('Address') and info.get('EndpointAddress'):
