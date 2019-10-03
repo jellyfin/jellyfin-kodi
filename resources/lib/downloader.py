@@ -15,7 +15,7 @@ from jellyfin.core.exceptions import HTTPException
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 LIMIT = min(int(settings('limitIndex') or 50), 50)
 
 #################################################################################################
@@ -35,12 +35,13 @@ def browse_info():
     return (
         "DateCreated,EpisodeCount,SeasonCount,Path,Genres,Studios,Taglines,MediaStreams,Overview,Etag,"
         "ProductionLocations,Width,Height,RecursiveItemCount,ChildCount"
-        )
+    )
 
 
 def _http(action, url, request={}, server_id=None):
     request.update({'url': url, 'type': action})
     return Jellyfin(server_id).http.request(request)
+
 
 def _get(handler, params=None, server_id=None):
     return _http("GET", get_jellyfinserver_url(handler), {'params': params}, server_id)
@@ -61,10 +62,10 @@ def validate_view(library_id, item_id):
     '''
     try:
         result = _get("Users/{UserId}/Items", {
-                    'ParentId': library_id,
-                    'Recursive': True,
-                    'Ids': item_id
-                 })
+            'ParentId': library_id,
+            'Recursive': True,
+            'Ids': item_id
+        })
     except Exception as error:
         LOG.exception(error)
         return False

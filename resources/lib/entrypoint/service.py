@@ -2,7 +2,7 @@
 
 #################################################################################################
 
-import _strptime # Workaround for threads using datetime: _striptime is locked
+import _strptime  # Workaround for threads using datetime: _striptime is locked
 import json
 import logging
 import sys
@@ -24,7 +24,7 @@ from database import Database, jellyfin_db, reset
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 #################################################################################################
 
@@ -37,7 +37,6 @@ class Service(xbmc.Monitor):
     play_event = None
     warn = True
     settings = {'last_progress': datetime.today(), 'last_progress_report': datetime.today()}
-
 
     def __init__(self):
 
@@ -209,7 +208,7 @@ class Service(xbmc.Monitor):
                     users = [user for user in (settings('additionalUsers') or "").decode('utf-8').split(',') if user]
                     users.insert(0, settings('username').decode('utf-8'))
                     dialog("notification", heading="{jellyfin}", message="%s %s" % (_(33000), ", ".join(users)),
-                            icon="{jellyfin}", time=1500, sound=False)
+                           icon="{jellyfin}", time=1500, sound=False)
 
                 if self.library_thread is None:
 
@@ -352,7 +351,7 @@ class Service(xbmc.Monitor):
                 return
 
             LOG.info("--<[ sleep ]")
-            xbmc.sleep(10000)# Allow network to wake up
+            xbmc.sleep(10000)  # Allow network to wake up
             self.monitor.sleep = False
             window('jellyfin_should_stop', clear=True)
 
@@ -444,7 +443,7 @@ class Service(xbmc.Monitor):
         LOG.info("---<[ EXITING ]")
         window('jellyfin_should_stop.bool', True)
 
-        properties = [ # TODO: review
+        properties = [  # TODO: review
             "jellyfin_state", "jellyfin_serverStatus", "jellyfin_currUser",
 
             "jellyfin_play", "jellyfin_online", "jellyfin.connected", "jellyfin.resume", "jellyfin_startup",

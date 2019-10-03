@@ -22,7 +22,7 @@ from jellyfin import Jellyfin
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 LIMIT = min(int(settings('limitIndex') or 50), 50)
 DTHREADS = int(settings('limitThreads') or 3)
 MEDIA = {
@@ -41,7 +41,6 @@ MEDIA = {
 ##################################################################################################
 
 
-
 class Library(threading.Thread):
 
     started = False
@@ -51,7 +50,6 @@ class Library(threading.Thread):
     screensaver = None
     progress_updates = None
     total_updates = 0
-
 
     def __init__(self, monitor):
 
@@ -159,11 +157,11 @@ class Library(threading.Thread):
 
                     self.progress_updates = xbmcgui.DialogProgressBG()
                     self.progress_updates.create(_('addon_name'), _(33178))
-                    self.progress_updates.update(int((float(self.total_updates - queue_size) / float(self.total_updates))*100), message="%s: %s" % (_(33178), queue_size))
+                    self.progress_updates.update(int((float(self.total_updates - queue_size) / float(self.total_updates)) * 100), message="%s: %s" % (_(33178), queue_size))
                 elif queue_size:
-                    self.progress_updates.update(int((float(self.total_updates - queue_size) / float(self.total_updates))*100), message="%s: %s" % (_(33178), queue_size))
+                    self.progress_updates.update(int((float(self.total_updates - queue_size) / float(self.total_updates)) * 100), message="%s: %s" % (_(33178), queue_size))
                 else:
-                    self.progress_updates.update(int((float(self.total_updates - queue_size) / float(self.total_updates))*100), message=_(33178))
+                    self.progress_updates.update(int((float(self.total_updates - queue_size) / float(self.total_updates)) * 100), message=_(33178))
 
             if not settings('dbSyncScreensaver.bool') and self.screensaver is None:
 
@@ -171,8 +169,7 @@ class Library(threading.Thread):
                 self.screensaver = get_screensaver()
                 set_screensaver(value="")
 
-        if (self.pending_refresh and not self.download_threads and not self.writer_threads['updated'] and
-                                     not self.writer_threads['userdata'] and not self.writer_threads['removed']):
+        if (self.pending_refresh and not self.download_threads and not self.writer_threads['updated'] and not self.writer_threads['userdata'] and not self.writer_threads['removed']):
             self.pending_refresh = False
             self.save_last_sync()
             self.total_updates = 0
@@ -189,9 +186,9 @@ class Library(threading.Thread):
                 set_screensaver(value=self.screensaver)
                 self.screensaver = None
 
-            if xbmc.getCondVisibility('Container.Content(musicvideos)'): # Prevent cursor from moving
+            if xbmc.getCondVisibility('Container.Content(musicvideos)'):  # Prevent cursor from moving
                 xbmc.executebuiltin('Container.Refresh')
-            else: # Update widgets
+            else:  # Update widgets
                 xbmc.executebuiltin('UpdateLibrary(video)')
 
                 if xbmc.getCondVisibility('Window.IsMedia'):
@@ -312,7 +309,6 @@ class Library(threading.Thread):
             new_thread.start()
             LOG.info("-->[ q:notify/%s ]", id(new_thread))
             self.notify_threads.append(new_thread)
-
 
     def startup(self):
 
@@ -491,7 +487,7 @@ class Library(threading.Thread):
                 available = [x for x in sync['SortedViews'] if x not in whitelist]
 
                 for library in available:
-                    name, media  = db.get_view(library)
+                    name, media = db.get_view(library)
 
                     if media in ('movies', 'tvshows', 'musicvideos', 'mixed', 'music'):
                         libraries.append({'Id': library, 'Name': name})
@@ -545,7 +541,6 @@ class Library(threading.Thread):
         Views().get_nodes()
 
         return True
-
 
     def userdata(self, data):
 
@@ -654,6 +649,7 @@ class UpdatedWorker(threading.Thread):
         LOG.info("--<[ q:updated/%s ]", id(self))
         self.is_done = True
 
+
 class UserDataWorker(threading.Thread):
 
     is_done = False
@@ -696,6 +692,7 @@ class UserDataWorker(threading.Thread):
 
         LOG.info("--<[ q:userdata/%s ]", id(self))
         self.is_done = True
+
 
 class SortWorker(threading.Thread):
 
@@ -741,6 +738,7 @@ class SortWorker(threading.Thread):
 
         LOG.info("--<[ q:sort/%s ]", id(self))
         self.is_done = True
+
 
 class RemovedWorker(threading.Thread):
 
@@ -788,6 +786,7 @@ class RemovedWorker(threading.Thread):
 
         LOG.info("--<[ q:removed/%s ]", id(self))
         self.is_done = True
+
 
 class NotifyWorker(threading.Thread):
 

@@ -9,20 +9,24 @@ from helpers import has_attribute
 
 #################################################################################################
 
+
 class NullHandler(logging.Handler):
     def emit(self, record):
         print(self.format(record))
+
 
 loghandler = NullHandler
 LOG = logging.getLogger('Jellyfin')
 
 #################################################################################################
 
+
 def config(level=logging.INFO):
 
     logger = logging.getLogger('Jellyfin')
     logger.addHandler(Jellyfin.loghandler())
     logger.setLevel(level)
+
 
 def ensure_client():
 
@@ -109,7 +113,7 @@ class Jellyfin(object):
     @ensure_client()
     def __getattr__(self, name):
         return getattr(self.client[self.server_id], name)
-        
+
     def construct(self):
 
         self.client[self.server_id] = JellyfinClient()

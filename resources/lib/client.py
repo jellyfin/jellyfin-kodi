@@ -15,18 +15,21 @@ from helper.utils import create_id
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 ##################################################################################################
 
+
 def get_addon_name():
-    
+
     ''' Used for logging.
     '''
     return xbmcaddon.Addon(addon_id()).getAddonInfo('name').upper()
 
+
 def get_version():
     return xbmcaddon.Addon(addon_id()).getAddonInfo('version')
+
 
 def get_platform():
 
@@ -53,6 +56,7 @@ def get_platform():
     else:
         return "Unknown"
 
+
 def get_device_name():
 
     ''' Detect the device name. If deviceNameOpt, then
@@ -67,6 +71,7 @@ def get_device_name():
         device_name = device_name.replace("/", "_")
 
     return device_name
+
 
 def get_device_id(reset=False):
 
@@ -105,12 +110,14 @@ def get_device_id(reset=False):
 
     return client_id
 
+
 def reset_device_id():
 
     window('jellyfin_deviceId', clear=True)
     get_device_id(True)
     dialog("ok", heading="{jellyfin}", line1=_(33033))
     xbmc.executebuiltin('RestartApp')
+
 
 def get_info():
     return {

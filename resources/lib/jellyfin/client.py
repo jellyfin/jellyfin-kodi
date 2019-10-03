@@ -12,9 +12,10 @@ from core.connection_manager import ConnectionManager, CONNECTION_STATE
 
 #################################################################################################
 
-LOG = logging.getLogger('JELLYFIN.'+__name__)
+LOG = logging.getLogger('JELLYFIN.' + __name__)
 
 #################################################################################################
+
 
 def callback(message, data):
 

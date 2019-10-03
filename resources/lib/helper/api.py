@@ -8,14 +8,14 @@ from . import settings
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 ##################################################################################################
 
 
 class API(object):
     def __init__(self, item, server=None):
-        
+
         ''' Get item information in special cases.
             server is the server address, provide if your functions requires it.
         '''
@@ -225,7 +225,7 @@ class API(object):
         return path
 
     def get_user_artwork(self, user_id):
-    
+
         ''' Get jellyfin user profile picture.
         '''
         return "%s/emby/Users/%s/Images/Primary?Format=original" % (self.server, user_id)
@@ -286,7 +286,7 @@ class API(object):
 
             if obj.get('SeriesTag'):
                 all_artwork['Series.Primary'] = self.get_artwork(obj['SeriesId'], "Primary", obj['SeriesTag'], query)
-                
+
                 if not all_artwork['Primary']:
                     all_artwork['Primary'] = all_artwork['Series.Primary']
 

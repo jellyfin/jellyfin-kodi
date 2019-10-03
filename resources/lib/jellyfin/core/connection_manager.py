@@ -16,7 +16,7 @@ from http import HTTP
 
 #################################################################################################
 
-LOG = logging.getLogger('JELLYFIN.'+__name__)
+LOG = logging.getLogger('JELLYFIN.' + __name__)
 CONNECTION_STATE = {
     'Unavailable': 0,
     'ServerSelection': 1,
@@ -30,6 +30,7 @@ CONNECTION_MODE = {
 }
 
 #################################################################################################
+
 
 def get_server_address(server, mode):
 
@@ -86,7 +87,7 @@ class ConnectionManager(object):
         credentials = self.credentials.get_credentials()
         found_servers = self._find_servers(self._server_discovery())
 
-        if not found_servers and not credentials['Servers']: # back out right away, no point in continuing
+        if not found_servers and not credentials['Servers']:  # back out right away, no point in continuing
             LOG.info("Found no servers")
             return list()
 
@@ -178,7 +179,7 @@ class ConnectionManager(object):
         LOG.info("beginning connection tests")
         return self._test_next_connection_mode(tests, 0, server, options)
 
-    def get_server_address(self, server, mode): #TODO: De-duplicated (Duplicated from above when getting rid of shortcuts)
+    def get_server_address(self, server, mode):  # TODO: De-duplicated (Duplicated from above when getting rid of shortcuts)
 
         modes = {
             CONNECTION_MODE['Local']: server.get('LocalAddress'),
@@ -239,8 +240,10 @@ class ConnectionManager(object):
             request.pop('dataType')
 
         headers['X-Application'] = self._add_app_info()
-        headers['Content-type'] = request.get('contentType',
-            'application/x-www-form-urlencoded; charset=UTF-8')
+        headers['Content-type'] = request.get(
+            'contentType',
+            'application/x-www-form-urlencoded; charset=UTF-8'
+        )
 
     def _connect_to_servers(self, servers, options):
 
@@ -379,7 +382,7 @@ class ConnectionManager(object):
         MESSAGE = "who is JellyfinServer?"
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.settimeout(1.0) # This controls the socket.timeout exception
+        sock.settimeout(1.0)  # This controls the socket.timeout exception
 
         sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 20)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
@@ -399,7 +402,7 @@ class ConnectionManager(object):
 
         while True:
             try:
-                data, addr = sock.recvfrom(1024) # buffer size
+                data, addr = sock.recvfrom(1024)  # buffer size
                 servers.append(json.loads(data))
 
             except socket.timeout:
@@ -446,7 +449,7 @@ class ConnectionManager(object):
                 'Id': found_server['Id'],
                 'LocalAddress': server or found_server['Address'],
                 'Name': found_server['Name']
-            } #TODO
+            }  # TODO
             info['LastConnectionMode'] = CONNECTION_MODE['Manual'] if info.get('ManualAddress') else CONNECTION_MODE['Local']
 
             servers.append(info)
@@ -461,7 +464,7 @@ class ConnectionManager(object):
             # Determine the port, if any
             parts = info['Address'].split(':')
             if len(parts) > 1:
-                port_string = parts[len(parts)-1]
+                port_string = parts[len(parts) - 1]
 
                 try:
                     address += ":%s" % int(port_string)
@@ -496,7 +499,7 @@ class ConnectionManager(object):
 
     def _after_connect_validated(self, server, credentials, system_info, connection_mode, verify_authentication, options):
 
-        if options.get('enableAutoLogin') == False:
+        if not options.get('enableAutoLogin'):
 
             self.config.data['auth.user_id'] = server.pop('UserId', None)
             self.config.data['auth.token'] = server.pop('AccessToken', None)
@@ -581,7 +584,8 @@ class ConnectionManager(object):
             if server['Id'] == result['ServerId']:
                 found_server = server
                 break
-        else: return # No server found
+        else:
+            return  # No server found
 
         if options.get('updateDateLastAccessed') is not False:
             found_server['DateLastAccessed'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')

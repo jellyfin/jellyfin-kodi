@@ -7,9 +7,10 @@ from uuid import uuid4
 
 #################################################################################################
 
-LOG = logging.getLogger('JELLYFIN.'+__name__)
+LOG = logging.getLogger('JELLYFIN.' + __name__)
 
 #################################################################################################
+
 
 def generate_client_id():
     return str("%012X" % uuid4())

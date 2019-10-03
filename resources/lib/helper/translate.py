@@ -11,9 +11,10 @@ import xbmcaddon
 
 ##################################################################################################
 
-LOG = logging.getLogger('JELLYFIN.'+__name__)
+LOG = logging.getLogger('JELLYFIN.' + __name__)
 
 ##################################################################################################
+
 
 def _(string):
 
@@ -26,7 +27,7 @@ def _(string):
 
     if not result:
         result = xbmc.getLocalizedString(string)
-        
+
     return result
 
 

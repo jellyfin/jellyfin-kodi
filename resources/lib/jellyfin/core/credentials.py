@@ -10,9 +10,10 @@ from datetime import datetime
 
 #################################################################################################
 
-LOG = logging.getLogger('JELLYFIN.'+__name__)
+LOG = logging.getLogger('JELLYFIN.' + __name__)
 
 #################################################################################################
+
 
 class Credentials(object):
 

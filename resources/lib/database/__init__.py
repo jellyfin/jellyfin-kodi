@@ -18,7 +18,7 @@ from objects import obj
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 #################################################################################################
 
@@ -51,7 +51,7 @@ class Database(object):
         self.cursor = self.conn.cursor()
 
         if self.db_file in ('video', 'music', 'texture', 'jellyfin'):
-            self.conn.execute("PRAGMA journal_mode=WAL") # to avoid writing conflict with kodi
+            self.conn.execute("PRAGMA journal_mode=WAL")  # to avoid writing conflict with kodi
 
         LOG.debug("--->[ database: %s ] %s", self.db_file, id(self.conn))
 
@@ -105,8 +105,7 @@ class Database(object):
 
         for file in reversed(files):
 
-            if (file.startswith(database) and not file.endswith('-wal') and
-                not file.endswith('-shm') and not file.endswith('db-journal')):
+            if (file.startswith(database) and not file.endswith('-wal') and not file.endswith('-shm') and not file.endswith('db-journal')):
 
                 st = xbmcvfs.Stat(databases + file.decode('utf-8'))
                 modified_int = st.st_mtime()
@@ -147,7 +146,7 @@ class Database(object):
                     loaded = self._get_database(databases[alt_file])
 
                     break
-                except KeyError: # No other db options
+                except KeyError:  # No other db options
                     loaded = None
 
                     break
@@ -172,7 +171,7 @@ class Database(object):
         '''
         changes = self.conn.total_changes
 
-        if exc_type is not None: # errors raised
+        if exc_type is not None:  # errors raised
             LOG.error("type: %s value: %s", exc_type, exc_val)
 
         if self.commit_close and changes:
@@ -183,6 +182,7 @@ class Database(object):
         LOG.debug("---<[ database: %s ] %s", self.db_file, id(self.conn))
         self.cursor.close()
         self.conn.close()
+
 
 def jellyfin_tables(cursor):
 
@@ -204,6 +204,7 @@ def jellyfin_tables(cursor):
 
         LOG.info("Add missing column jellyfin_parent_id")
         cursor.execute("ALTER TABLE jellyfin ADD COLUMN jellyfin_parent_id 'TEXT'")
+
 
 def reset():
 
@@ -257,6 +258,7 @@ def reset():
     dialog("ok", heading="{jellyfin}", line1=_(33088))
     xbmc.executebuiltin('RestartApp')
 
+
 def reset_kodi():
 
     with Database() as videodb:
@@ -281,6 +283,7 @@ def reset_kodi():
 
     LOG.info("[ reset kodi ]")
 
+
 def reset_jellyfin():
 
     with Database('jellyfin') as jellyfindb:
@@ -297,6 +300,7 @@ def reset_jellyfin():
             jellyfindb.cursor.execute("DROP table IF EXISTS version")
 
     LOG.info("[ reset jellyfin ]")
+
 
 def reset_artwork():
 
@@ -325,6 +329,7 @@ def reset_artwork():
 
     LOG.info("[ reset artwork ]")
 
+
 def get_sync():
 
     path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
@@ -345,6 +350,7 @@ def get_sync():
 
     return sync
 
+
 def save_sync(sync):
 
     path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
@@ -357,6 +363,7 @@ def save_sync(sync):
     with open(os.path.join(path, 'sync.json'), 'w', encoding='utf-8') as outfile:
         data = json.dumps(sync, sort_keys=True, indent=4, ensure_ascii=False)
         outfile.write(unicode(data))
+
 
 def get_credentials():
 
@@ -383,18 +390,20 @@ def get_credentials():
 
     return credentials
 
+
 def save_credentials(credentials):
     credentials = credentials or {}
     path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
 
     if not xbmcvfs.exists(path):
         xbmcvfs.mkdirs(path)
-    try: 
+    try:
         with open(os.path.join(path, 'data.json'), 'w', encoding='utf8') as outfile:
             data = json.dumps(credentials, sort_keys=True, indent=4, ensure_ascii=False)
             outfile.write(unicode(data))
     except Exception as e:
         LOG.error("Failed to save credentials: {}".format(e))
+
 
 def get_item(kodi_id, media):
 
@@ -409,4 +418,3 @@ def get_item(kodi_id, media):
             return
 
     return item
-    

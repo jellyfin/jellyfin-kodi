@@ -14,7 +14,7 @@ from helper import api, catch, stop, validate, jellyfin_item, library_check, val
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 ##################################################################################################
 
@@ -103,12 +103,10 @@ class Movies(KodiDb):
 
         obj['Tags'] = tags
 
-
         if update:
             self.movie_update(obj)
         else:
             self.movie_add(obj)
-
 
         self.update_path(*values(obj, QU.update_path_movie_obj))
         self.update_file(*values(obj, QU.update_file_obj))
@@ -191,7 +189,6 @@ class Movies(KodiDb):
                 'mode': "play"
             }
             obj['Filename'] = "%s?%s" % (obj['Path'], urllib.urlencode(params))
-
 
     @stop()
     @jellyfin_item()

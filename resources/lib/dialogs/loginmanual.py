@@ -12,7 +12,7 @@ from helper import _, addon_id
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 ACTION_PARENT_DIR = 9
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACK = 92
@@ -30,7 +30,6 @@ class LoginManual(xbmcgui.WindowXMLDialog):
     _user = None
     error = None
     username = None
-
 
     def __init__(self, *args, **kwargs):
         xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)

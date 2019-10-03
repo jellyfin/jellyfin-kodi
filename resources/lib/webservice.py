@@ -13,9 +13,10 @@ import xbmc
 #################################################################################################
 
 PORT = 57578
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 #################################################################################################
+
 
 class WebService(threading.Thread):
 
@@ -127,7 +128,7 @@ class requestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                     % (params.get('Id'), params.get('KodiId'), params.get('Name'), params.get('transcode') or False))
 
             self.send_response(200)
-            self.send_header('Content-type','text/html')
+            self.send_header('Content-type', 'text/html')
             self.end_headers()
             self.wfile.write(path)
 
@@ -142,4 +143,3 @@ class requestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             self.send_error(500, "Exception occurred: %s" % error)
 
         return
-

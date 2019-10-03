@@ -9,7 +9,7 @@ from kodi import Kodi
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 ##################################################################################################
 
@@ -34,17 +34,17 @@ class Music(Kodi):
 
     def create_entry_album(self):
         self.cursor.execute(QU.create_album)
-        
+
         return self.cursor.fetchone()[0] + 1
 
     def create_entry_song(self):
         self.cursor.execute(QU.create_song)
-        
+
         return self.cursor.fetchone()[0] + 1
 
     def create_entry_genre(self):
         self.cursor.execute(QU.create_genre)
-        
+
         return self.cursor.fetchone()[0] + 1
 
     def update_path(self, *args):
@@ -212,7 +212,7 @@ class Music(Kodi):
         ''' Add genres, but delete current genres first.
             Album_genres was removed in kodi 18
         '''
-        if media == 'album' and self.version_id < 72 :
+        if media == 'album' and self.version_id < 72:
             self.cursor.execute(QU.delete_genres_album, (kodi_id,))
 
             for genre in genres:
@@ -258,7 +258,7 @@ class Music(Kodi):
 
         return self.cursor.fetchone()[0]
 
-    #current bug in Kodi 18 that will ask for a scan of music tags unless this is set without a lastscanned
+    # current bug in Kodi 18 that will ask for a scan of music tags unless this is set without a lastscanned
     def update_versiontagscan(self):
         if self.version_id < 72:
             return

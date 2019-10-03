@@ -20,7 +20,7 @@ from downloader import TheVoid
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 #################################################################################################
 
@@ -52,8 +52,8 @@ def set_properties(item, method, server_id=None):
 
     window('jellyfin_play.json', current)
 
-class PlayUtils(object):
 
+class PlayUtils(object):
 
     def __init__(self, item, force_transcode=False, server_id=None, server=None, token=None):
 
@@ -236,7 +236,7 @@ class PlayUtils(object):
 
     def transcode(self, source, audio=None, subtitle=None):
 
-        if not 'TranscodingUrl' in source:
+        if 'TranscodingUrl' not in source:
             raise Exception("use get_sources to get transcoding url")
 
         self.info['Method'] = "Transcode"
@@ -248,7 +248,7 @@ class PlayUtils(object):
                 url_parsed = params.split('&')
 
                 for i in url_parsed:
-                    if 'AudioStreamIndex' in i or 'AudioBitrate' in i or 'SubtitleStreamIndex' in i: # handle manually
+                    if 'AudioStreamIndex' in i or 'AudioBitrate' in i or 'SubtitleStreamIndex' in i:  # handle manually
                         url_parsed.remove(i)
 
                 params = "%s%s" % ('&'.join(url_parsed), self.get_audio_subs(source, audio, subtitle))
@@ -275,13 +275,19 @@ class PlayUtils(object):
         self.info['Method'] = "DirectStream"
 
         if self.item['Type'] == "Audio":
-            self.info['Path'] = ("%s/emby/Audio/%s/stream.%s?static=true&api_key=%s" %
-                                (self.info['ServerAddress'], self.item['Id'],
-                                 source.get('Container', "mp4").split(',')[0],
-                                 self.info['Token']))
+            self.info['Path'] = "%s/emby/Audio/%s/stream.%s?static=true&api_key=%s" % (
+                self.info['ServerAddress'],
+                self.item['Id'],
+                source.get('Container', "mp4").split(',')[0],
+                self.info['Token']
+            )
         else:
-            self.info['Path'] = ("%s/emby/Videos/%s/stream?static=true&MediaSourceId=%s&api_key=%s" %
-                                (self.info['ServerAddress'], self.item['Id'], source['Id'], self.info['Token']))
+            self.info['Path'] = "%s/emby/Videos/%s/stream?static=true&MediaSourceId=%s&api_key=%s" % (
+                self.info['ServerAddress'],
+                self.item['Id'],
+                source['Id'],
+                self.info['Token']
+            )
 
         return self.info['Path']
 
@@ -495,7 +501,6 @@ class PlayUtils(object):
         listitem.setSubtitles(subs)
         self.item['PlaybackInfo']['Subtitles'] = mapping
 
-
     @classmethod
     def download_external_subs(cls, src, filename):
 
@@ -579,7 +584,7 @@ class PlayUtils(object):
                 selection = list(audio_streams.keys())
                 resp = dialog("select", _(33013), selection)
                 audio_selected = audio_streams[selection[resp]] if resp else source['DefaultAudioStreamIndex']
-            else: # Only one choice
+            else:  # Only one choice
                 audio_selected = audio_streams[next(iter(audio_streams))]
         else:
             audio_selected = source['DefaultAudioStreamIndex']
@@ -628,7 +633,13 @@ class PlayUtils(object):
         if stream['IsTextSubtitleStream'] and 'DeliveryUrl' in stream and stream['DeliveryUrl'].lower().startswith('/videos'):
             url = "%s/emby%s" % (self.info['ServerAddress'], stream['DeliveryUrl'])
         else:
-            url = ("%s/emby/Videos/%s/%s/Subtitles/%s/Stream.%s?api_key=%s" %
-                  (self.info['ServerAddress'], self.item['Id'], source['Id'], index, stream['Codec'], self.info['Token']))
+            url = "%s/emby/Videos/%s/%s/Subtitles/%s/Stream.%s?api_key=%s" % (
+                self.info['ServerAddress'],
+                self.item['Id'],
+                source['Id'],
+                index,
+                stream['Codec'],
+                self.info['Token']
+            )
 
         return url

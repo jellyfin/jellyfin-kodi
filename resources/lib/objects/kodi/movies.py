@@ -9,13 +9,12 @@ import queries as QU
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 ##################################################################################################
 
 
 class Movies(Kodi):
-
 
     def __init__(self, cursor):
 
@@ -29,7 +28,7 @@ class Movies(Kodi):
 
     def create_entry_rating(self):
         self.cursor.execute(QU.create_rating)
-        
+
         return self.cursor.fetchone()[0] + 1
 
     def create_entry(self):

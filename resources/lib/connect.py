@@ -20,7 +20,7 @@ from jellyfin.core.exceptions import HTTPException
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 XML_PATH = (xbmcaddon.Addon(addon_id()).getAddonInfo('path'), "default", "1080i")
 
 ##################################################################################################
@@ -42,7 +42,7 @@ class Connect(object):
 
         if server_id is None and credentials['Servers']:
             credentials['Servers'] = [credentials['Servers'][0]]
-        
+
         elif credentials['Servers']:
 
             for server in credentials['Servers']:
@@ -88,7 +88,7 @@ class Connect(object):
         return client
 
     def register_client(self, credentials=None, options=None, server_id=None, server_selection=False):
-        
+
         client = self.get_client(server_id)
         self.client = client
         self.connect_manager = client.auth
@@ -102,7 +102,7 @@ class Connect(object):
             if state['State'] == CONNECTION_STATE['SignedIn']:
                 client.callback_ws = event
 
-                if server_id is None: # Only assign for default server
+                if server_id is None:  # Only assign for default server
 
                     client.callback = event
                     self.get_user(client)
@@ -115,8 +115,7 @@ class Connect(object):
 
                 return state['Credentials']
 
-            elif (server_selection or state['State'] == CONNECTION_STATE['ServerSelection'] or 
-                  state['State'] == CONNECTION_STATE['Unavailable'] and not settings('SyncInstallRunDone.bool')):
+            elif (server_selection or state['State'] == CONNECTION_STATE['ServerSelection'] or state['State'] == CONNECTION_STATE['Unavailable'] and not settings('SyncInstallRunDone.bool')):
 
                 self.select_servers(state)
 
@@ -142,7 +141,6 @@ class Connect(object):
                 event('ServerUnreachable', {'ServerId': server_id})
 
             return client.get_credentials()
-
 
     def get_user(self, client):
 
@@ -178,7 +176,8 @@ class Connect(object):
             LOG.debug("Adding manual server")
             try:
                 self.manual_server()
-            except RuntimeError: pass
+            except RuntimeError:
+                pass
         else:
             raise RuntimeError("No server selected")
 
@@ -237,14 +236,16 @@ class Connect(object):
                 LOG.debug("User has password, present manual login")
                 try:
                     return self.login_manual(username)
-                except RuntimeError: pass
+                except RuntimeError:
+                    pass
             else:
                 return self.connect_manager.login(server, username)
 
         elif dialog.is_manual_login():
             try:
                 return self.login_manual()
-            except RuntimeError: pass
+            except RuntimeError:
+                pass
         else:
             raise RuntimeError("No user selected")
 
@@ -267,7 +268,7 @@ class Connect(object):
         save_credentials(credentials)
 
     def login_manual(self, user=None, manager=None):
-        
+
         ''' Return manual login user authenticated or raise error.
         '''
         dialog = LoginManual("script-jellyfin-connect-login-manual.xml", *XML_PATH)
@@ -294,4 +295,3 @@ class Connect(object):
 
         save_credentials(credentials)
         LOG.info("[ remove server ] %s", server_id)
-
