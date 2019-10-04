@@ -4,6 +4,7 @@
 
 import logging
 import os
+import ipaddress
 
 import xbmcgui
 import xbmcaddon
@@ -114,6 +115,12 @@ class ServerManual(xbmcgui.WindowXMLDialog):
         return control
 
     def _connect_to_server(self, server, port):
+        try:
+            addr = ipaddress.ip_address(server.decode('utf-8') if not isinstance(server, type(u'')) else server)
+            if addr.version == 6:
+                server = u"[%s]" % (addr.compressed)
+        except ValueError:
+            pass
 
         server_address = "%s:%s" % (server, port) if port else server
         self._message("%s %s..." % (_(30610), server_address))
