@@ -55,8 +55,7 @@ class MusicVideos(KodiDb):
             obj['MvideoId'] = e_item[0]
             obj['FileId'] = e_item[1]
             obj['PathId'] = e_item[2]
-        except TypeError as error:
-
+        except TypeError:
             update = False
             LOG.debug("MvideoId for %s not found", obj['Id'])
             obj['MvideoId'] = self.create_entry()

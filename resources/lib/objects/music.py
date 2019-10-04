@@ -48,8 +48,7 @@ class Music(KodiDb):
 
         try:
             obj['ArtistId'] = e_item[0]
-        except TypeError as error:
-
+        except TypeError:
             update = False
             obj['ArtistId'] = None
             LOG.debug("ArtistId %s not found", obj['Id'])
@@ -116,8 +115,7 @@ class Music(KodiDb):
 
         try:
             obj['AlbumId'] = e_item[0]
-        except TypeError as error:
-
+        except TypeError:
             update = False
             obj['AlbumId'] = None
             LOG.debug("AlbumId %s not found", obj['Id'])
@@ -226,8 +224,7 @@ class Music(KodiDb):
             obj['SongId'] = e_item[0]
             obj['PathId'] = e_item[2]
             obj['AlbumId'] = e_item[3]
-        except TypeError as error:
-
+        except TypeError:
             update = False
             obj['SongId'] = self.create_entry_song()
             LOG.debug("SongId %s not found", obj['Id'])

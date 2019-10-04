@@ -51,8 +51,7 @@ class Movies(KodiDb):
             obj['MovieId'] = e_item[0]
             obj['FileId'] = e_item[1]
             obj['PathId'] = e_item[2]
-        except TypeError as error:
-
+        except TypeError:
             update = False
             LOG.debug("MovieId %s not found", obj['Id'])
             obj['MovieId'] = self.create_entry()
@@ -209,8 +208,7 @@ class Movies(KodiDb):
         try:
             obj['SetId'] = e_item[0]
             self.update_boxset(*values(obj, QU.update_set_obj))
-        except TypeError as error:
-
+        except TypeError:
             LOG.debug("SetId %s not found", obj['Id'])
             obj['SetId'] = self.add_boxset(*values(obj, QU.add_set_obj))
 

@@ -64,8 +64,7 @@ class TVShows(KodiDb):
         try:
             obj['ShowId'] = e_item[0]
             obj['PathId'] = e_item[2]
-        except TypeError as error:
-
+        except TypeError:
             update = False
             LOG.debug("ShowId %s not found", obj['Id'])
             obj['ShowId'] = self.create_entry()
@@ -269,8 +268,7 @@ class TVShows(KodiDb):
             obj['EpisodeId'] = e_item[0]
             obj['FileId'] = e_item[1]
             obj['PathId'] = e_item[2]
-        except TypeError as error:
-
+        except TypeError:
             update = False
             LOG.debug("EpisodeId %s not found", obj['Id'])
             obj['EpisodeId'] = self.create_entry_episode()
@@ -361,8 +359,7 @@ class TVShows(KodiDb):
 
         try:
             self.add_episode(*values(obj, QU.add_episode_obj))
-        except sqlite3.IntegrityError as error:
-
+        except sqlite3.IntegrityError:
             LOG.error("IntegrityError for %s", obj)
             obj['EpisodeId'] = self.create_entry_episode()
 

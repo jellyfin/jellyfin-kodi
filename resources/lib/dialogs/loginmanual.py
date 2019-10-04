@@ -117,7 +117,6 @@ class LoginManual(xbmcgui.WindowXMLDialog):
 
     def _login(self, username, password):
 
-        mode = self.connect_manager.get_server_info(self.connect_manager.server_id)['LastConnectionMode']
         server_data = self.connect_manager.get_server_info(self.connect_manager.server_id)
         server = self.connect_manager.get_server_address(server_data, server_data['LastConnectionMode'])
         result = self.connect_manager.login(server, username, password)

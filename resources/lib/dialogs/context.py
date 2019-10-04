@@ -47,7 +47,6 @@ class ContextMenu(xbmcgui.WindowXMLDialog):
         if window('JellyfinUserImage'):
             self.getControl(USER_IMAGE).setImage(window('JellyfinUserImage'))
 
-        height = 479 + (len(self._options) * 55)
         LOG.info("options: %s", self._options)
         self.list_ = self.getControl(LIST)
 
