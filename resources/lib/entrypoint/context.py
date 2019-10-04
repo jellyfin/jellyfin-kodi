@@ -13,7 +13,6 @@ import database
 from dialogs import context
 from helper import _, settings, dialog
 from downloader import TheVoid
-from objects import Actions
 
 #################################################################################################
 

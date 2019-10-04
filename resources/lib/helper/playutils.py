@@ -2,21 +2,20 @@
 
 #################################################################################################
 
-import json
 import logging
 import os
 from uuid import uuid4
+import collections
 
 import xbmc
 import xbmcvfs
 
 import api
-import database
 import client
-import collections
 import requests
-from . import _, settings, window, dialog
 from downloader import TheVoid
+
+from . import _, settings, window, dialog
 
 #################################################################################################
 

@@ -4,8 +4,6 @@
 
 import logging
 
-import xbmc
-
 import artwork
 import queries as QU
 from helper import values

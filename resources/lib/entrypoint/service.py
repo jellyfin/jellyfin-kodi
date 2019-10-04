@@ -2,12 +2,13 @@
 
 #################################################################################################
 
-import _strptime  # Workaround for threads using datetime: _striptime is locked
 import json
 import logging
 import sys
 from datetime import datetime
 
+# Workaround for threads using datetime: _striptime is locked
+import _strptime  # noqa:F401
 import xbmc
 import xbmcgui
 

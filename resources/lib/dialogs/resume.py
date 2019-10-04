@@ -6,7 +6,6 @@ import logging
 
 import xbmc
 import xbmcgui
-import xbmcaddon
 
 ##################################################################################################
 

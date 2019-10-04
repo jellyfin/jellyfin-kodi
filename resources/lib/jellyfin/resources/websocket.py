@@ -841,7 +841,7 @@ class WebSocketApp(object):
         close websocket connection.
         """
         self.keep_running = False
-        if self.sock is None:
+        if self.sock is not None:
             self.sock.close()
 
     def _send_ping(self, interval):
@@ -887,7 +887,7 @@ class WebSocketApp(object):
                 try:
                     data = self.sock.recv()
 
-                    if data is None or not self.keep_running:
+                    if data is None or self.keep_running is False:
                         break
                     self._callback(self.on_message, data)
 

@@ -12,13 +12,14 @@ import urllib
 from uuid import uuid4
 from distutils.version import LooseVersion
 
+from dateutil import tz, parser
+
 import xbmc
 import xbmcaddon
 import xbmcgui
 import xbmcvfs
 
-from . import _
-from dateutil import tz, parser
+from .translate import _
 
 #################################################################################################
 

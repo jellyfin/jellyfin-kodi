@@ -5,7 +5,6 @@
 import logging
 import Queue
 import threading
-import sys
 from datetime import datetime, timedelta
 
 import xbmc
@@ -16,7 +15,7 @@ from database import Database, jellyfin_db, get_sync, save_sync
 from full_sync import FullSync
 from views import Views
 from downloader import GetItemWorker
-from helper import _, api, stop, settings, window, dialog, event, progress, LibraryException
+from helper import _, api, stop, settings, window, dialog, event, LibraryException
 from helper.utils import split_list, set_screensaver, get_screensaver
 from jellyfin import Jellyfin
 

@@ -2,7 +2,6 @@
 
 #################################################################################################
 
-import json
 import logging
 import os
 import xml.etree.ElementTree as etree

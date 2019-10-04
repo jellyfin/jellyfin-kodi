@@ -4,9 +4,7 @@
 
 import logging
 
-import xbmc
-
-from helper import _, settings, dialog, JSONRPC, compare_version
+from helper import _, settings, dialog, JSONRPC
 
 #################################################################################################
 

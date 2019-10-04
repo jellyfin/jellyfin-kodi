@@ -5,7 +5,6 @@
 import json
 import logging
 import threading
-import time
 
 import xbmc
 

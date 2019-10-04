@@ -11,9 +11,7 @@ import xml.etree.ElementTree as etree
 import xbmc
 import xbmcvfs
 
-import downloader as server
 from database import Database, jellyfin_db, get_sync, save_sync
-from objects.kodi import kodi
 from helper import _, api, indent, write_xml, window, event
 from jellyfin import Jellyfin
 

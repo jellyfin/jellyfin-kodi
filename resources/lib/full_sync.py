@@ -3,19 +3,15 @@
 ##################################################################################################
 
 import datetime
-import json
 import logging
-import os
 
 import xbmc
-import xbmcvfs
 
 import downloader as server
 import helper.xmls as xmls
 from database import Database, get_sync, save_sync, jellyfin_db
 from helper import _, settings, window, progress, dialog, LibraryException
 from helper.utils import get_screensaver, set_screensaver
-from views import Views
 
 ##################################################################################################
 
@@ -319,7 +315,7 @@ class FullSync(object):
                             message = show['Name']
                             dialog.update(percent, heading="%s: %s" % (_('addon_name'), library['Name']), message=message)
 
-                            if obj.tvshow(show, library=library):
+                            if obj.tvshow(show, library=library) is not False:
 
                                 for episodes in server.get_episode_by_show(show['Id']):
                                     for episode in episodes['Items']:

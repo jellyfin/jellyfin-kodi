@@ -2,7 +2,6 @@
 
 ##################################################################################################
 
-import json
 import logging
 import sqlite3
 import urllib
@@ -12,7 +11,7 @@ from obj import Objects
 from kodi import TVShows as KodiDb, queries as QU
 import downloader as server
 from database import jellyfin_db, queries as QUEM
-from helper import api, catch, stop, validate, jellyfin_item, library_check, settings, values, Local
+from helper import api, stop, validate, jellyfin_item, library_check, settings, values, Local
 
 ##################################################################################################
 

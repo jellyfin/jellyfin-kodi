@@ -19,8 +19,8 @@ sys.path.insert(0, __base__)
 
 #################################################################################################
 
-from entrypoint import Service
-from helper import settings
+from entrypoint import Service  # noqa: F402
+from helper import settings  # noqa: F402
 
 #################################################################################################
 

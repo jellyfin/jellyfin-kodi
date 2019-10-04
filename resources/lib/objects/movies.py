@@ -2,7 +2,6 @@
 
 ##################################################################################################
 
-import json
 import logging
 import urllib
 
@@ -10,7 +9,7 @@ import downloader as server
 from obj import Objects
 from kodi import Movies as KodiDb, queries as QU
 from database import jellyfin_db, queries as QUEM
-from helper import api, catch, stop, validate, jellyfin_item, library_check, values, settings, Local
+from helper import api, stop, validate, jellyfin_item, library_check, values, settings, Local
 
 ##################################################################################################
 

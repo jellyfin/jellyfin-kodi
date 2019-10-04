@@ -2,7 +2,6 @@
 
 #################################################################################################
 
-import json
 import logging
 import threading
 import sys
@@ -16,7 +15,7 @@ import xbmcaddon
 import database
 from downloader import TheVoid
 from obj import Objects
-from helper import _, playutils, api, window, settings, dialog, JSONRPC
+from helper import _, playutils, api, window, settings, dialog
 from dialogs import resume
 from utils import get_play_action
 
@@ -443,7 +442,7 @@ class Actions(object):
             listitem.setProperty('IsPlayable', 'true')
             listitem.setProperty('IsFolder', 'false')
 
-            if obj['Resume'] and seektime:
+            if obj['Resume'] and seektime is not False:
                 listitem.setProperty('resumetime', str(obj['Resume']))
                 listitem.setProperty('StartPercent', str(((obj['Resume'] / obj['Runtime']) * 100) - 0.40))
             else:

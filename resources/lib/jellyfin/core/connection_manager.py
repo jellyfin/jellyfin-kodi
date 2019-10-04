@@ -12,7 +12,7 @@ from distutils.version import LooseVersion
 import urllib3
 
 from credentials import Credentials
-from http import HTTP
+from http import HTTP  # noqa: I201,I100
 
 #################################################################################################
 
@@ -499,7 +499,7 @@ class ConnectionManager(object):
 
     def _after_connect_validated(self, server, credentials, system_info, connection_mode, verify_authentication, options):
 
-        if not options.get('enableAutoLogin'):
+        if options.get('enableAutoLogin') is False:
 
             self.config.data['auth.user_id'] = server.pop('UserId', None)
             self.config.data['auth.token'] = server.pop('AccessToken', None)

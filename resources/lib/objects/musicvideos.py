@@ -10,7 +10,7 @@ import urllib
 from obj import Objects
 from kodi import MusicVideos as KodiDb, queries as QU
 from database import jellyfin_db, queries as QUEM
-from helper import api, catch, stop, validate, library_check, jellyfin_item, values, Local
+from helper import api, stop, validate, library_check, jellyfin_item, values, Local
 
 ##################################################################################################
 

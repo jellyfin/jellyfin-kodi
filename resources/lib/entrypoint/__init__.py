@@ -10,6 +10,10 @@ import xbmcvfs
 from helper import loghandler
 from jellyfin import Jellyfin
 
+from .default import Events
+from .service import Service
+from .context import Context
+
 #################################################################################################
 
 Jellyfin.set_loghandler(loghandler.LogHandler, logging.DEBUG)
@@ -18,7 +22,3 @@ loghandler.config()
 LOG = logging.getLogger('JELLYFIN.entrypoint')
 
 #################################################################################################
-
-from default import Events
-from service import Service
-from context import Context

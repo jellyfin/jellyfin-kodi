@@ -6,17 +6,15 @@ import binascii
 import json
 import logging
 import threading
-import sys
 
 import xbmc
-import xbmcgui
 
 import connect
 import downloader
 import player
 from client import get_device_id
-from objects import Actions, PlaylistWorker, on_play, on_update, special_listener
-from helper import _, settings, window, dialog, event, api, JSONRPC
+from objects import PlaylistWorker, on_play, on_update, special_listener
+from helper import _, settings, window, dialog, api, JSONRPC
 from jellyfin import Jellyfin
 from webservice import WebService
 

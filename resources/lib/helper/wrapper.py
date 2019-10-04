@@ -6,8 +6,9 @@ import logging
 
 import xbmcgui
 
-from . import _, LibraryException
-from utils import should_stop
+from .utils import should_stop
+from .exceptions import LibraryException
+from .translate import _
 
 #################################################################################################
 
