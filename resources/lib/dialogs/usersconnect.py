@@ -9,7 +9,7 @@ import xbmcgui
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 ACTION_PARENT_DIR = 9
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACK = 92
@@ -26,7 +26,6 @@ class UsersConnect(xbmcgui.WindowXMLDialog):
 
     _user = None
     _manual_login = False
-
 
     def __init__(self, *args, **kwargs):
 

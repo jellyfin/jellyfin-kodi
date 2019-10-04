@@ -4,13 +4,11 @@
 
 import logging
 
-import xbmc
-
-from helper import _, settings, dialog, JSONRPC, compare_version
+from helper import _, settings, dialog, JSONRPC
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 #################################################################################################
 
@@ -43,7 +41,7 @@ class Setup(object):
 
                     settings('enableTextureCache.bool', False)
                     dialog("ok", heading="{jellyfin}", line1=_(33103))
-                    
+
                     return
 
             result = get_setting.execute({'setting': "services.webserverport"})

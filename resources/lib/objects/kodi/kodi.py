@@ -4,21 +4,18 @@
 
 import logging
 
-import xbmc
-
 import artwork
 import queries as QU
 from helper import values
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 ##################################################################################################
 
 
 class Kodi(object):
-
 
     def __init__(self):
         self.artwork = artwork.Artwork(self.cursor)
@@ -215,7 +212,7 @@ class Kodi(object):
             return self.add_studio(*args)
 
     def add_streams(self, file_id, streams, runtime):
-        
+
         ''' First remove any existing entries
             Then re-add video, audio and subtitles.
         '''

@@ -6,11 +6,10 @@ import logging
 
 import xbmc
 import xbmcgui
-import xbmcaddon
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 ACTION_PARENT_DIR = 9
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACK = 92
@@ -43,7 +42,7 @@ class ResumeDialog(xbmcgui.WindowXMLDialog):
         self.getControl(START_BEGINNING).setLabel(xbmc.getLocalizedString(12021))
 
     def onAction(self, action):
-        
+
         if action in (ACTION_BACK, ACTION_PARENT_DIR, ACTION_PREVIOUS_MENU):
             self.close()
 
@@ -52,7 +51,7 @@ class ResumeDialog(xbmcgui.WindowXMLDialog):
         if controlID == RESUME:
             self.selected_option = 1
             self.close()
-        
+
         if controlID == START_BEGINNING:
             self.selected_option = 0
             self.close()

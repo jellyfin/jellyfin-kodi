@@ -6,23 +6,21 @@ import binascii
 import json
 import logging
 import threading
-import sys
 
 import xbmc
-import xbmcgui
 
 import connect
 import downloader
 import player
 from client import get_device_id
-from objects import Actions, PlaylistWorker, on_play, on_update, special_listener
-from helper import _, settings, window, dialog, event, api, JSONRPC
+from objects import PlaylistWorker, on_play, on_update, special_listener
+from helper import _, settings, window, dialog, api, JSONRPC
 from jellyfin import Jellyfin
 from webservice import WebService
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 #################################################################################################
 
@@ -84,7 +82,7 @@ class Monitor(xbmc.Monitor):
                     Otherwise the next played item will be added the previous queue.
                 '''
                 if method == "Player.OnStop":
-                    xbmc.sleep(3000) # let's wait for the player so we don't clear the canceled playlist by mistake.
+                    xbmc.sleep(3000)  # let's wait for the player so we don't clear the canceled playlist by mistake.
 
                     if xbmc.getCondVisibility("!Player.HasMedia + !Window.IsVisible(busydialog)"):
 
@@ -144,7 +142,7 @@ class Monitor(xbmc.Monitor):
             self.void_responder(data, item)
 
         elif method == 'GetServerAddress':
-            
+
             server_data = server.auth.get_server_info(server.auth.server_id)
             server_address = server.auth.get_server_address(server_data, server_data['LastConnectionMode'])
             self.void_responder(data, server_address)
@@ -392,7 +390,7 @@ class Monitor(xbmc.Monitor):
 
         elif command == 'DisplayMessage':
             dialog("notification", heading=args['Header'], message=args['Text'],
-                   icon="{jellyfin}", time=int(settings('displayMessage'))*1000)
+                   icon="{jellyfin}", time=int(settings('displayMessage')) * 1000)
 
         elif command == 'SendString':
             JSONRPC('Input.SendText').execute({'text': args['String'], 'done': False})

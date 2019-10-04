@@ -9,13 +9,12 @@ from kodi import Kodi
 
 ##################################################################################################
 
-log = logging.getLogger("JELLYFIN."+__name__)
+log = logging.getLogger("JELLYFIN." + __name__)
 
 ##################################################################################################
 
 
 class MusicVideos(Kodi):
-
 
     def __init__(self, cursor):
 
@@ -31,7 +30,7 @@ class MusicVideos(Kodi):
 
         try:
             self.cursor.execute(QU.get_musicvideo, args)
-            
+
             return self.cursor.fetchone()[0]
         except TypeError:
             return

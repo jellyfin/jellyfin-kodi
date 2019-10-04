@@ -8,7 +8,7 @@ import os
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 ##################################################################################################
 
@@ -44,7 +44,7 @@ class Objects(object):
             "$": lead the key name with $. Only one key value can be requested per element.
             ":": indicates it's a list of elements [], i.e. MediaSources/0/MediaStreams:?$Name
                  MediaStreams is a list.
-            "/": indicates where to go directly 
+            "/": indicates where to go directly
         '''
         self.mapped_item = {}
 
@@ -145,7 +145,7 @@ class Objects(object):
         result = False
 
         for key, value in filters.iteritems():
-            
+
             inverse = False
 
             if value.startswith('!'):

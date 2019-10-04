@@ -12,7 +12,7 @@ from helper import _, addon_id
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 ACTION_PARENT_DIR = 9
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACK = 92
@@ -30,7 +30,6 @@ class LoginManual(xbmcgui.WindowXMLDialog):
     _user = None
     error = None
     username = None
-
 
     def __init__(self, *args, **kwargs):
         xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)
@@ -118,7 +117,6 @@ class LoginManual(xbmcgui.WindowXMLDialog):
 
     def _login(self, username, password):
 
-        mode = self.connect_manager.get_server_info(self.connect_manager.server_id)['LastConnectionMode']
         server_data = self.connect_manager.get_server_info(self.connect_manager.server_id)
         server = self.connect_manager.get_server_address(server_data, server_data['LastConnectionMode'])
         result = self.connect_manager.login(server, username, password)

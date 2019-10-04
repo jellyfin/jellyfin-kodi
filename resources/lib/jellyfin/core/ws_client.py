@@ -5,7 +5,6 @@
 import json
 import logging
 import threading
-import time
 
 import xbmc
 
@@ -13,7 +12,7 @@ from ..resources import websocket
 
 ##################################################################################################
 
-LOG = logging.getLogger('JELLYFIN.'+__name__)
+LOG = logging.getLogger('JELLYFIN.' + __name__)
 
 ##################################################################################################
 

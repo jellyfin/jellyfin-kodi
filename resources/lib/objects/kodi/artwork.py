@@ -12,12 +12,12 @@ import xbmcvfs
 
 import queries as QU
 import queries_texture as QUTEX
-from helper import window, settings
+from helper import settings
 import requests
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 ##################################################################################################
 
@@ -36,7 +36,6 @@ class Artwork(object):
             'host': "localhost",
             'port': settings('webServerPort')
         }
-
 
     def update(self, image_url, kodi_id, media, image):
 
@@ -210,7 +209,7 @@ class GetArtworkWorker(threading.Thread):
                     prep = req.prepare()
                     prep.url = "http://%s:%s/image/image://%s" % (self.kodi['host'], self.kodi['port'], url)
                     s.send(prep, timeout=(0.01, 0.01))
-                    s.content # release the connection
+                    s.content  # release the connection
                 except Exception as error:
                     LOG.exception(error)
 
@@ -218,8 +217,6 @@ class GetArtworkWorker(threading.Thread):
 
                 if xbmc.Monitor().abortRequested():
                     break
-
-
 
 
 """
@@ -381,4 +378,3 @@ class Artwork(object):
                 count += 1
 
 """
-

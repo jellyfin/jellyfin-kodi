@@ -2,7 +2,6 @@
 
 ##################################################################################################
 
-import json
 import logging
 import sqlite3
 import urllib
@@ -12,11 +11,11 @@ from obj import Objects
 from kodi import TVShows as KodiDb, queries as QU
 import downloader as server
 from database import jellyfin_db, queries as QUEM
-from helper import api, catch, stop, validate, jellyfin_item, library_check, settings, values, Local
+from helper import api, stop, validate, jellyfin_item, library_check, settings, values, Local
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 ##################################################################################################
 
@@ -65,8 +64,7 @@ class TVShows(KodiDb):
         try:
             obj['ShowId'] = e_item[0]
             obj['PathId'] = e_item[2]
-        except TypeError as error:
-
+        except TypeError:
             update = False
             LOG.debug("ShowId %s not found", obj['Id'])
             obj['ShowId'] = self.create_entry()
@@ -75,7 +73,6 @@ class TVShows(KodiDb):
 
                 update = False
                 LOG.info("ShowId %s missing from kodi. repairing the entry.", obj['ShowId'])
-
 
         obj['Path'] = API.get_file_path(obj['Path'])
         obj['LibraryId'] = library['Id']
@@ -107,12 +104,10 @@ class TVShows(KodiDb):
 
         obj['Tags'] = tags
 
-
         if update:
             self.tvshow_update(obj)
         else:
             self.tvshow_add(obj)
-
 
         self.link(*values(obj, QU.update_tvshow_link_obj))
         self.update_path(*values(obj, QU.update_path_tvshow_obj))
@@ -161,10 +156,10 @@ class TVShows(KodiDb):
 
         ''' Add object to kodi.
         '''
-        obj['RatingId'] =  self.create_entry_rating()
+        obj['RatingId'] = self.create_entry_rating()
         self.add_ratings(*values(obj, QU.add_rating_tvshow_obj))
 
-        obj['Unique'] =  self.create_entry_unique_id()
+        obj['Unique'] = self.create_entry_unique_id()
         self.add_unique_id(*values(obj, QU.add_unique_id_tvshow_obj))
 
         obj['TopPathId'] = self.add_path(obj['TopLevel'])
@@ -180,10 +175,10 @@ class TVShows(KodiDb):
 
         ''' Update object to kodi.
         '''
-        obj['RatingId'] =  self.get_rating_id(*values(obj, QU.get_unique_id_tvshow_obj))
+        obj['RatingId'] = self.get_rating_id(*values(obj, QU.get_unique_id_tvshow_obj))
         self.update_ratings(*values(obj, QU.update_rating_tvshow_obj))
 
-        obj['Unique'] =  self.get_unique_id(*values(obj, QU.get_unique_id_tvshow_obj))
+        obj['Unique'] = self.get_unique_id(*values(obj, QU.get_unique_id_tvshow_obj))
         self.update_unique_id(*values(obj, QU.update_unique_id_tvshow_obj))
 
         self.update(*values(obj, QU.update_tvshow_obj))
@@ -208,7 +203,6 @@ class TVShows(KodiDb):
         else:
             obj['TopLevel'] = "plugin://plugin.video.jellyfin/"
             obj['Path'] = "%s%s/" % (obj['TopLevel'], obj['Id'])
-
 
     @stop()
     def season(self, item, show_id=None):
@@ -244,7 +238,6 @@ class TVShows(KodiDb):
         self.artwork.add(obj['Artwork'], obj['SeasonId'], "season")
         LOG.info("UPDATE season [%s/%s] %s: %s", obj['ShowId'], obj['SeasonId'], obj['Title'] or obj['Index'], obj['Id'])
 
-
     @stop()
     @jellyfin_item()
     def episode(self, item, e_item):
@@ -275,8 +268,7 @@ class TVShows(KodiDb):
             obj['EpisodeId'] = e_item[0]
             obj['FileId'] = e_item[1]
             obj['PathId'] = e_item[2]
-        except TypeError as error:
-
+        except TypeError:
             update = False
             LOG.debug("EpisodeId %s not found", obj['Id'])
             obj['EpisodeId'] = self.create_entry_episode()
@@ -285,7 +277,6 @@ class TVShows(KodiDb):
 
                 update = False
                 LOG.info("EpisodeId %s missing from kodi. repairing the entry.", obj['EpisodeId'])
-
 
         obj['Path'] = API.get_file_path(obj['Path'])
         obj['Index'] = obj['Index'] or -1
@@ -319,7 +310,7 @@ class TVShows(KodiDb):
         if obj['AirsAfterSeason']:
 
             obj['AirsBeforeSeason'] = obj['AirsAfterSeason']
-            obj['AirsBeforeEpisode'] = 4096 # Kodi default number for afterseason ordering
+            obj['AirsBeforeEpisode'] = 4096  # Kodi default number for afterseason ordering
 
         if obj['MultiEpisode']:
             obj['Title'] = "| %02d | %s" % (obj['MultiEpisode'], obj['Title'])
@@ -329,12 +320,10 @@ class TVShows(KodiDb):
 
         obj['SeasonId'] = self.get_season(*values(obj, QU.get_season_episode_obj))
 
-
         if update:
             self.episode_update(obj)
         else:
             self.episode_add(obj)
-
 
         self.update_path(*values(obj, QU.update_path_episode_obj))
         self.update_file(*values(obj, QU.update_file_obj))
@@ -359,10 +348,10 @@ class TVShows(KodiDb):
 
         ''' Add object to kodi.
         '''
-        obj['RatingId'] =  self.create_entry_rating()
+        obj['RatingId'] = self.create_entry_rating()
         self.add_ratings(*values(obj, QU.add_rating_episode_obj))
 
-        obj['Unique'] =  self.create_entry_unique_id()
+        obj['Unique'] = self.create_entry_unique_id()
         self.add_unique_id(*values(obj, QU.add_unique_id_episode_obj))
 
         obj['PathId'] = self.add_path(*values(obj, QU.add_path_obj))
@@ -370,8 +359,7 @@ class TVShows(KodiDb):
 
         try:
             self.add_episode(*values(obj, QU.add_episode_obj))
-        except sqlite3.IntegrityError as error:
-
+        except sqlite3.IntegrityError:
             LOG.error("IntegrityError for %s", obj)
             obj['EpisodeId'] = self.create_entry_episode()
 
@@ -387,7 +375,7 @@ class TVShows(KodiDb):
         obj['RatingId'] = self.get_rating_id(*values(obj, QU.get_rating_episode_obj))
         self.update_ratings(*values(obj, QU.update_rating_episode_obj))
 
-        obj['Unique'] =  self.get_unique_id(*values(obj, QU.get_unique_id_episode_obj))
+        obj['Unique'] = self.get_unique_id(*values(obj, QU.get_unique_id_episode_obj))
         self.update_unique_id(*values(obj, QU.update_unique_id_episode_obj))
 
         self.update_episode(*values(obj, QU.update_episode_obj))
@@ -439,7 +427,6 @@ class TVShows(KodiDb):
         self.item_ids.append(obj['SeriesId'])
 
         return True
-
 
     @stop()
     @jellyfin_item()

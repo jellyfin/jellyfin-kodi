@@ -3,23 +3,19 @@
 ##################################################################################################
 
 import datetime
-import json
 import logging
-import os
 
 import xbmc
-import xbmcvfs
 
 import downloader as server
 import helper.xmls as xmls
 from database import Database, get_sync, save_sync, jellyfin_db
 from helper import _, settings, window, progress, dialog, LibraryException
 from helper.utils import get_screensaver, set_screensaver
-from views import Views
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 ##################################################################################################
 
@@ -35,7 +31,6 @@ class FullSync(object):
     sync = None
     running = False
     screensaver = None
-
 
     def __init__(self, library, server):
 
@@ -68,7 +63,6 @@ class FullSync(object):
         window('jellyfin_sync.bool', True)
 
         return self
-
 
     def libraries(self, library_id=None, update=False):
 
@@ -179,7 +173,6 @@ class FullSync(object):
 
         return [libraries[x - 1] for x in selection]
 
-
     def start(self):
 
         ''' Main sync process.
@@ -278,7 +271,7 @@ class FullSync(object):
 
                         for index, movie in enumerate(items['Items']):
 
-                            dialog.update(int((float(start_index + index) / float(items['TotalRecordCount']))*100),
+                            dialog.update(int((float(start_index + index) / float(items['TotalRecordCount'])) * 100),
                                           heading="%s: %s" % (_('addon_name'), library['Name']),
                                           message=movie['Name'])
                             obj.movie(movie, library=library)
@@ -318,11 +311,11 @@ class FullSync(object):
 
                         for index, show in enumerate(items['Items']):
 
-                            percent = int((float(start_index + index) / float(items['TotalRecordCount']))*100)
+                            percent = int((float(start_index + index) / float(items['TotalRecordCount'])) * 100)
                             message = show['Name']
                             dialog.update(percent, heading="%s: %s" % (_('addon_name'), library['Name']), message=message)
 
-                            if obj.tvshow(show, library=library) != False:
+                            if obj.tvshow(show, library=library) is not False:
 
                                 for episodes in server.get_episode_by_show(show['Id']):
                                     for episode in episodes['Items']:
@@ -368,7 +361,7 @@ class FullSync(object):
 
                         for index, mvideo in enumerate(items['Items']):
 
-                            dialog.update(int((float(start_index + index) / float(items['TotalRecordCount']))*100),
+                            dialog.update(int((float(start_index + index) / float(items['TotalRecordCount'])) * 100),
                                           heading="%s: %s" % (_('addon_name'), library['Name']),
                                           message=mvideo['Name'])
                             obj.musicvideo(mvideo, library=library)
@@ -408,7 +401,7 @@ class FullSync(object):
 
                         for index, artist in enumerate(items['Items']):
 
-                            percent = int((float(start_index + index) / float(items['TotalRecordCount']))*100)
+                            percent = int((float(start_index + index) / float(items['TotalRecordCount'])) * 100)
                             message = artist['Name']
                             dialog.update(percent, heading="%s: %s" % (_('addon_name'), library['Name']), message=message)
                             obj.artist(artist, library=library)
@@ -430,7 +423,6 @@ class FullSync(object):
 
                                     dialog.update(percent, message="%s/%s" % (message, song['Name']))
                                     obj.song(song)
-
 
                     if self.update_library:
                         self.music_compare(library, obj, jellyfindb)
@@ -470,7 +462,7 @@ class FullSync(object):
 
                         for index, boxset in enumerate(items['Items']):
 
-                            dialog.update(int((float(start_index + index) / float(items['TotalRecordCount']))*100),
+                            dialog.update(int((float(start_index + index) / float(items['TotalRecordCount'])) * 100),
                                           heading="%s: %s" % (_('addon_name'), _('boxsets')),
                                           message=boxset['Name'])
                             obj.boxset(boxset)
@@ -524,7 +516,7 @@ class FullSync(object):
                             for item in movies:
 
                                 obj(item[0])
-                                dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
+                                dialog.update(int((float(count) / float(len(items)) * 100)), heading="%s: %s" % (_('addon_name'), library[0]))
                                 count += 1
 
                             obj = TVShows(self.server, jellyfindb, kodidb, direct_path).remove
@@ -532,7 +524,7 @@ class FullSync(object):
                             for item in tvshows:
 
                                 obj(item[0])
-                                dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
+                                dialog.update(int((float(count) / float(len(items)) * 100)), heading="%s: %s" % (_('addon_name'), library[0]))
                                 count += 1
                         else:
                             # from mcarlton: I'm not sure what triggers this.
@@ -547,7 +539,7 @@ class FullSync(object):
                             for item in items:
 
                                 obj(item[0])
-                                dialog.update(int((float(count) / float(len(items))*100)), heading="%s: %s" % (_('addon_name'), library[0]))
+                                dialog.update(int((float(count) / float(len(items)) * 100)), heading="%s: %s" % (_('addon_name'), library[0]))
                                 count += 1
 
         self.sync = get_sync()
@@ -559,7 +551,6 @@ class FullSync(object):
             self.sync['Whitelist'].remove('Mixed:%s' % library_id)
 
         save_sync(self.sync)
-
 
     def __exit__(self, exc_type, exc_val, exc_tb):
 

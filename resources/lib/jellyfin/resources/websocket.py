@@ -43,8 +43,6 @@ import base64
 import threading
 import time
 import logging
-import traceback
-import sys
 
 """
 websocket python client.
@@ -89,11 +87,13 @@ class WebSocketConnectionClosedException(WebSocketException):
     """
     pass
 
+
 class WebSocketTimeoutException(WebSocketException):
     """
     WebSocketTimeoutException will be raised at socket timeout during read/write data.
     """
     pass
+
 
 default_timeout = None
 traceEnabled = False
@@ -135,8 +135,10 @@ def _wrap_sni_socket(sock, sslopt, hostname):
 
     if sslopt.get('cert_reqs', ssl.CERT_NONE) != ssl.CERT_NONE:
         capath = ssl.get_default_verify_paths().capath
-        context.load_verify_locations(cafile=sslopt.get('ca_certs', None),
-                capath=sslopt.get('ca_cert_path', capath))
+        context.load_verify_locations(
+            cafile=sslopt.get('ca_certs', None),
+            capath=sslopt.get('ca_cert_path', capath)
+        )
 
     return context.wrap_socket(
         sock,
@@ -217,9 +219,10 @@ def create_connection(url, timeout=None, **options):
     websock.connect(url, **options)
     return websock
 
-_MAX_INTEGER = (1 << 32) -1
+
+_MAX_INTEGER = (1 << 32) - 1
 _AVAILABLE_KEY_CHARS = range(0x21, 0x2f + 1) + range(0x3a, 0x7e + 1)
-_MAX_CHAR_BYTE = (1<<8) -1
+_MAX_CHAR_BYTE = (1 << 8) - 1
 
 # ref. Websocket gets an update, and it breaks stuff.
 # http://axod.blogspot.com/2010/06/websocket-gets-update-and-it-breaks.html
@@ -233,7 +236,7 @@ def _create_sec_websocket_key():
 _HEADERS_TO_CHECK = {
     "upgrade": "websocket",
     "connection": "upgrade",
-    }
+}
 
 
 class ABNF(object):
@@ -244,16 +247,16 @@ class ABNF(object):
     """
 
     # operation code values.
-    OPCODE_CONT   = 0x0
-    OPCODE_TEXT   = 0x1
+    OPCODE_CONT = 0x0
+    OPCODE_TEXT = 0x1
     OPCODE_BINARY = 0x2
-    OPCODE_CLOSE  = 0x8
-    OPCODE_PING   = 0x9
-    OPCODE_PONG   = 0xa
+    OPCODE_CLOSE = 0x8
+    OPCODE_PING = 0x9
+    OPCODE_PONG = 0xa
 
     # available operation code value tuple
     OPCODES = (OPCODE_CONT, OPCODE_TEXT, OPCODE_BINARY, OPCODE_CLOSE,
-                OPCODE_PING, OPCODE_PONG)
+               OPCODE_PING, OPCODE_PONG)
 
     # opcode human readable string
     OPCODE_MAP = {
@@ -263,10 +266,10 @@ class ABNF(object):
         OPCODE_CLOSE: "close",
         OPCODE_PING: "ping",
         OPCODE_PONG: "pong"
-        }
+    }
 
     # data length threashold.
-    LENGTH_7  = 0x7d
+    LENGTH_7 = 0x7d
     LENGTH_16 = 1 << 16
     LENGTH_63 = 1 << 63
 
@@ -287,8 +290,8 @@ class ABNF(object):
 
     def __str__(self):
         return "fin=" + str(self.fin) \
-                + " opcode=" + str(self.opcode) \
-                + " data=" + str(self.data)
+            + " opcode=" + str(self.opcode) \
+            + " data=" + str(self.data)
 
     @staticmethod
     def create_frame(data, opcode):
@@ -318,9 +321,7 @@ class ABNF(object):
         if length >= ABNF.LENGTH_63:
             raise ValueError("data is too long")
 
-        frame_header = chr(self.fin << 7
-                           | self.rsv1 << 6 | self.rsv2 << 5 | self.rsv3 << 4
-                           | self.opcode)
+        frame_header = chr(self.fin << 7 | self.rsv1 << 6 | self.rsv2 << 5 | self.rsv3 << 4 | self.opcode)
         if length < ABNF.LENGTH_7:
             frame_header += chr(self.mask << 7 | length)
         elif length < ABNF.LENGTH_16:
@@ -582,8 +583,7 @@ class WebSocket(object):
         if traceEnabled:
             logger.debug("send: " + repr(data))
         while data:
-            l = self._send(data)
-            data = data[l:]
+            data = data[self._send(data):]
         return length
 
     def send_binary(self, payload):
@@ -685,7 +685,6 @@ class WebSocket(object):
         self._frame_mask = None
         return ABNF(fin, rsv1, rsv2, rsv3, opcode, has_mask, payload)
 
-
     def send_close(self, status=STATUS_NORMAL, reason=""):
         """
         send close data to the server.
@@ -709,7 +708,7 @@ class WebSocket(object):
 
         try:
             self.sock.shutdown(socket.SHUT_RDWR)
-        except:
+        except:  # noqa: E722
             pass
 
         '''
@@ -766,7 +765,6 @@ class WebSocket(object):
             raise WebSocketConnectionClosedException()
         return bytes
 
-
     def _recv_strict(self, bufsize):
         shortage = bufsize - sum(len(x) for x in self._recv_buffer)
         while shortage > 0:
@@ -780,7 +778,6 @@ class WebSocket(object):
         else:
             self._recv_buffer = [unified[bufsize:]]
             return unified[:bufsize]
-
 
     def _recv_line(self):
         line = []
@@ -844,7 +841,7 @@ class WebSocketApp(object):
         close websocket connection.
         """
         self.keep_running = False
-        if(self.sock != None):
+        if self.sock is not None:
             self.sock.close()
 
     def _send_ping(self, interval):
@@ -890,7 +887,7 @@ class WebSocketApp(object):
                 try:
                     data = self.sock.recv()
 
-                    if data is None or self.keep_running == False:
+                    if data is None or self.keep_running is False:
                         break
                     self._callback(self.on_message, data)
 

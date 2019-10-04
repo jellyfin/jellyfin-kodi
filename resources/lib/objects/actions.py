@@ -2,7 +2,6 @@
 
 #################################################################################################
 
-import json
 import logging
 import threading
 import sys
@@ -16,13 +15,13 @@ import xbmcaddon
 import database
 from downloader import TheVoid
 from obj import Objects
-from helper import _, playutils, api, window, settings, dialog, JSONRPC
+from helper import _, playutils, api, window, settings, dialog
 from dialogs import resume
 from utils import get_play_action
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 #################################################################################################
 
@@ -58,7 +57,7 @@ class Actions(object):
         play.set_external_subs(source, listitem)
 
         self.set_playlist(item, listitem, db_id, transcode)
-        index = max(kodi_playlist.getposition(), 0) + 1 # Can return -1
+        index = max(kodi_playlist.getposition(), 0) + 1  # Can return -1
         force_play = False
 
         self.stack[0][1].setPath(self.stack[0][0])
@@ -79,7 +78,8 @@ class Actions(object):
             index += 1
 
         if force_play:
-            if len(sys.argv) > 1: xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, self.stack[0][1])
+            if len(sys.argv) > 1:
+                xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, self.stack[0][1])
             xbmc.Player().play(kodi_playlist, windowed=False)
 
     def set_playlist(self, item, listitem, db_id=None, transcode=False):
@@ -177,7 +177,7 @@ class Actions(object):
         playlist = self.get_playlist(item)
         player = xbmc.Player()
 
-        #xbmc.executebuiltin("Playlist.Clear") # Clear playlist to remove the previous item from playlist position no.2
+        # xbmc.executebuiltin("Playlist.Clear") # Clear playlist to remove the previous item from playlist position no.2
 
         if clear:
             if player.isPlaying():
@@ -186,7 +186,7 @@ class Actions(object):
             xbmc.executebuiltin('ActivateWindow(busydialognocancel)')
             index = 0
         else:
-            index = max(playlist.getposition(), 0) + 1 # Can return -1
+            index = max(playlist.getposition(), 0) + 1  # Can return -1
 
         listitem = xbmcgui.ListItem()
         LOG.info("[ playlist/%s ] %s", item['Id'], item['Name'])
@@ -282,7 +282,7 @@ class Actions(object):
         ''' Set listitem for video content. That also include streams.
         '''
         API = api.API(item, self.server)
-        is_video = obj['MediaType'] in ('Video', 'Audio') # audiobook
+        is_video = obj['MediaType'] in ('Video', 'Audio')  # audiobook
 
         obj['Genres'] = " / ".join(obj['Genres'] or [])
         obj['Studios'] = [API.validate_studio(studio) for studio in (obj['Studios'] or [])]
@@ -312,21 +312,21 @@ class Actions(object):
 
         if not intro and not obj['Type'] == 'Trailer':
             obj['Artwork']['Primary'] = obj['Artwork']['Primary'] \
-                    or "special://home/addons/plugin.video.jellyfin/resources/icon.png"
+                or "special://home/addons/plugin.video.jellyfin/resources/icon.png"
         else:
             obj['Artwork']['Primary'] = obj['Artwork']['Primary'] \
-                    or obj['Artwork']['Thumb'] \
-                    or (obj['Artwork']['Backdrop'][0] \
-                    if len(obj['Artwork']['Backdrop']) \
+                or obj['Artwork']['Thumb'] \
+                or (obj['Artwork']['Backdrop'][0]
+                    if len(obj['Artwork']['Backdrop'])
                     else "special://home/addons/plugin.video.jellyfin/resources/fanart.png")
             obj['Artwork']['Primary'] += "&KodiTrailer=true" \
-                    if obj['Type'] == 'Trailer' else "&KodiCinemaMode=true"
+                if obj['Type'] == 'Trailer' else "&KodiCinemaMode=true"
             obj['Artwork']['Backdrop'] = [obj['Artwork']['Primary']]
 
         self.set_artwork(obj['Artwork'], listitem, obj['Type'])
 
         if intro or obj['Type'] == 'Trailer':
-            listitem.setArt({'poster': ""}) # Clear the poster value for intros / trailers to prevent issues in skins
+            listitem.setArt({'poster': ""})  # Clear the poster value for intros / trailers to prevent issues in skins
 
         listitem.setIconImage('DefaultVideo.png')
         listitem.setThumbnailImage(obj['Artwork']['Primary'])
@@ -442,9 +442,9 @@ class Actions(object):
             listitem.setProperty('IsPlayable', 'true')
             listitem.setProperty('IsFolder', 'false')
 
-            if obj['Resume'] and seektime != False:
+            if obj['Resume'] and seektime is not False:
                 listitem.setProperty('resumetime', str(obj['Resume']))
-                listitem.setProperty('StartPercent', str(((obj['Resume']/obj['Runtime']) * 100) - 0.40))
+                listitem.setProperty('StartPercent', str(((obj['Resume'] / obj['Runtime']) * 100) - 0.40))
             else:
                 listitem.setProperty('resumetime', '0')
 
@@ -478,11 +478,11 @@ class Actions(object):
         obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount']) or 0
         obj['Overlay'] = 7 if obj['Played'] else 6
         obj['Artwork']['Primary'] = obj['Artwork']['Primary'] \
-                or "special://home/addons/plugin.video.jellyfin/resources/icon.png"
+            or "special://home/addons/plugin.video.jellyfin/resources/icon.png"
         obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] \
-                or "special://home/addons/plugin.video.jellyfin/resources/fanart.png"
+            or "special://home/addons/plugin.video.jellyfin/resources/fanart.png"
         obj['Artwork']['Backdrop'] = obj['Artwork']['Backdrop'] \
-                or ["special://home/addons/plugin.video.jellyfin/resources/fanart.png"]
+            or ["special://home/addons/plugin.video.jellyfin/resources/fanart.png"]
 
         metadata = {
             'title': obj['Title'],
@@ -625,7 +625,7 @@ class Actions(object):
                 'clearlogo': "Logo",
                 'discart': "Disc",
                 'fanart': "Backdrop",
-                'fanart_image': "Backdrop", # in case
+                'fanart_image': "Backdrop",  # in case
                 'thumb': "Primary"
             }
         else:
@@ -671,9 +671,9 @@ class Actions(object):
         dialog.doModal()
 
         if dialog.is_selected():
-            if not dialog.get_selected(): # Start from beginning selected.
+            if not dialog.get_selected():  # Start from beginning selected.
                 return False
-        else: # User backed out
+        else:  # User backed out
             LOG.info("User exited without a selection.")
             return
 
@@ -688,9 +688,7 @@ class Actions(object):
 
             return False
 
-        if (not xbmc.getCondVisibility('Window.IsMedia') and
-            ((item['Type'] == 'Audio' and not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(music),1)')) or
-            not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(video),1)'))):
+        if (not xbmc.getCondVisibility('Window.IsMedia') and ((item['Type'] == 'Audio' and not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(music),1)')) or not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(video),1)'))):
 
             return True
 
@@ -732,6 +730,7 @@ def on_update(data, server):
             server.jellyfin.item_played(item[0], playcount)
 
         window('jellyfin.skip.%s' % item[0], clear=True)
+
 
 def on_play(data, server):
 
@@ -781,6 +780,7 @@ def on_play(data, server):
             item['PlaybackInfo'] = {'Path': file}
             playutils.set_properties(item, 'DirectStream' if settings('useDirectPaths') == '0' else 'DirectPlay')
 
+
 def special_listener():
 
     ''' Corner cases that needs to be listened to.
@@ -790,12 +790,11 @@ def special_listener():
     isPlaying = player.isPlaying()
     count = int(window('jellyfin.external_count') or 0)
 
-    if (not isPlaying and xbmc.getCondVisibility('Window.IsVisible(DialogContextMenu.xml)') and
-        xbmc.getInfoLabel('Control.GetLabel(1002)') == xbmc.getLocalizedString(12021)):
+    if (not isPlaying and xbmc.getCondVisibility('Window.IsVisible(DialogContextMenu.xml)') and xbmc.getInfoLabel('Control.GetLabel(1002)') == xbmc.getLocalizedString(12021)):
 
         control = int(xbmcgui.Window(10106).getFocusId())
 
-        if control == 1002: # Start from beginning
+        if control == 1002:  # Start from beginning
 
             LOG.info("Resume dialog: Start from beginning selected.")
             window('jellyfin.resume.bool', False)
@@ -806,7 +805,7 @@ def special_listener():
     elif isPlaying and not window('jellyfin.external_check'):
         time = player.getTime()
 
-        if time > 1: # Not external player.
+        if time > 1:  # Not external player.
 
             window('jellyfin.external_check', value="true")
             window('jellyfin.external_count', value="0")

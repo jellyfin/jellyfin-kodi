@@ -2,19 +2,17 @@
 
 ##################################################################################################
 
-import json
 import datetime
 import logging
-import urllib
 
 from obj import Objects
 from kodi import Music as KodiDb, queries_music as QU
 from database import jellyfin_db, queries as QUEM
-from helper import api, catch, stop, validate, jellyfin_item, values, library_check, settings, Local
+from helper import api, stop, validate, jellyfin_item, values, library_check, Local
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 ##################################################################################################
 
@@ -50,8 +48,7 @@ class Music(KodiDb):
 
         try:
             obj['ArtistId'] = e_item[0]
-        except TypeError as error:
-
+        except TypeError:
             update = False
             obj['ArtistId'] = None
             LOG.debug("ArtistId %s not found", obj['Id'])
@@ -77,12 +74,10 @@ class Music(KodiDb):
         if obj['Backdrops']:
             obj['Backdrops'] = "<fanart>%s</fanart>" % obj['Backdrops'][0]
 
-
         if update:
             self.artist_update(obj)
         else:
             self.artist_add(obj)
-
 
         self.update(obj['Genre'], obj['Bio'], obj['Thumb'], obj['Backdrops'], obj['LastScraped'], obj['ArtistId'])
         self.artwork.add(obj['Artwork'], obj['ArtistId'], "artist")
@@ -106,7 +101,6 @@ class Music(KodiDb):
         self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
         LOG.info("UPDATE artist [%s] %s: %s", obj['ArtistId'], obj['Name'], obj['Id'])
 
-
     @stop()
     @jellyfin_item()
     def album(self, item, e_item):
@@ -121,8 +115,7 @@ class Music(KodiDb):
 
         try:
             obj['AlbumId'] = e_item[0]
-        except TypeError as error:
-
+        except TypeError:
             update = False
             obj['AlbumId'] = None
             LOG.debug("AlbumId %s not found", obj['Id'])
@@ -144,12 +137,10 @@ class Music(KodiDb):
         if obj['Thumb']:
             obj['Thumb'] = "<thumb>%s</thumb>" % obj['Thumb']
 
-
         if update:
             self.album_update(obj)
         else:
             self.album_add(obj)
-
 
         self.artist_link(obj)
         self.artist_discography(obj)
@@ -217,7 +208,6 @@ class Music(KodiDb):
             self.link(*values(temp_obj, QU.update_link_obj))
             self.item_ids.append(temp_obj['Id'])
 
-
     @stop()
     @jellyfin_item()
     def song(self, item, e_item):
@@ -234,8 +224,7 @@ class Music(KodiDb):
             obj['SongId'] = e_item[0]
             obj['PathId'] = e_item[2]
             obj['AlbumId'] = e_item[3]
-        except TypeError as error:
-
+        except TypeError:
             update = False
             obj['SongId'] = self.create_entry_song()
             LOG.debug("SongId %s not found", obj['Id'])
@@ -269,15 +258,13 @@ class Music(KodiDb):
         if obj['Disc'] != 1:
             obj['Index'] = obj['Disc'] * 2 ** 16 + obj['Index']
 
-
         if update:
             self.song_update(obj)
         else:
             self.song_add(obj)
 
-
         self.link_song_album(*values(obj, QU.update_song_album_obj))
-        self.add_role(*values(obj, QU.update_role_obj)) # defaultt role
+        self.add_role(*values(obj, QU.update_role_obj))  # defaultt role
         self.song_artist_link(obj)
         self.song_artist_discography(obj)
 
@@ -414,7 +401,6 @@ class Music(KodiDb):
 
         obj['AlbumId'] = self.create_entry_album()
         self.add_single(*values(obj, QU.add_single_obj))
-
 
     @stop()
     @jellyfin_item()

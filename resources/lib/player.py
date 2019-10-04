@@ -2,7 +2,6 @@
 
 #################################################################################################
 
-import json
 import logging
 import os
 
@@ -15,7 +14,7 @@ from jellyfin import Jellyfin
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 #################################################################################################
 
@@ -326,7 +325,7 @@ class Player(xbmc.Player):
 
             try:
                 played = float(item['CurrentPosition'] * 10000000) / int(item['Runtime']) * 100
-            except ZeroDivisionError: # Runtime is 0.
+            except ZeroDivisionError:  # Runtime is 0.
                 played = 0
 
             if played > 2.0 and not self.up_next:
@@ -337,7 +336,6 @@ class Player(xbmc.Player):
             if (item['CurrentPosition'] - previous) < 30:
 
                 return
-
 
         result = JSONRPC('Application.GetProperties').execute({'properties': ["volume", "muted"]})
         result = result.get('result', {})
@@ -414,7 +412,6 @@ class Player(xbmc.Player):
 
                 LOG.info("<[ transcode/%s ]", item['Id'])
                 item['Server'].jellyfin.close_transcode(item['DeviceId'])
-
 
             path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/temp/").decode('utf-8')
 

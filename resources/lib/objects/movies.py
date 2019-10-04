@@ -2,7 +2,6 @@
 
 ##################################################################################################
 
-import json
 import logging
 import urllib
 
@@ -10,11 +9,11 @@ import downloader as server
 from obj import Objects
 from kodi import Movies as KodiDb, queries as QU
 from database import jellyfin_db, queries as QUEM
-from helper import api, catch, stop, validate, jellyfin_item, library_check, values, settings, Local
+from helper import api, stop, validate, jellyfin_item, library_check, values, settings, Local
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 ##################################################################################################
 
@@ -52,8 +51,7 @@ class Movies(KodiDb):
             obj['MovieId'] = e_item[0]
             obj['FileId'] = e_item[1]
             obj['PathId'] = e_item[2]
-        except TypeError as error:
-
+        except TypeError:
             update = False
             LOG.debug("MovieId %s not found", obj['Id'])
             obj['MovieId'] = self.create_entry()
@@ -103,12 +101,10 @@ class Movies(KodiDb):
 
         obj['Tags'] = tags
 
-
         if update:
             self.movie_update(obj)
         else:
             self.movie_add(obj)
-
 
         self.update_path(*values(obj, QU.update_path_movie_obj))
         self.update_file(*values(obj, QU.update_file_obj))
@@ -192,7 +188,6 @@ class Movies(KodiDb):
             }
             obj['Filename'] = "%s?%s" % (obj['Path'], urllib.urlencode(params))
 
-
     @stop()
     @jellyfin_item()
     def boxset(self, item, e_item):
@@ -213,8 +208,7 @@ class Movies(KodiDb):
         try:
             obj['SetId'] = e_item[0]
             self.update_boxset(*values(obj, QU.update_set_obj))
-        except TypeError as error:
-
+        except TypeError:
             LOG.debug("SetId %s not found", obj['Id'])
             obj['SetId'] = self.add_boxset(*values(obj, QU.add_set_obj))
 

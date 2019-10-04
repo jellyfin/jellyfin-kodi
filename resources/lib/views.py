@@ -11,15 +11,13 @@ import xml.etree.ElementTree as etree
 import xbmc
 import xbmcvfs
 
-import downloader as server
 from database import Database, jellyfin_db, get_sync, save_sync
-from objects.kodi import kodi
 from helper import _, api, indent, write_xml, window, event
 from jellyfin import Jellyfin
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 NODES = {
     'tvshows': [
         ('all', None),
@@ -70,7 +68,7 @@ DYNNODES = {
         ('FirstLetter', _(33171)),
         ('Genres', _(135)),
         ('Random', _(30229)),
-        #('Recommended', _(30230))
+        # ('Recommended', _(30230))
     ],
     'musicvideos': [
         ('all', None),
@@ -135,6 +133,7 @@ def verify_kodi_defaults():
 
     if not xbmcvfs.exists(playlist_path):
         xbmcvfs.mkdirs(playlist_path)
+
 
 class Views(object):
 
@@ -246,7 +245,7 @@ class Views(object):
                             temp_view['Media'] = media
                             self.add_playlist(playlist_path, temp_view, True)
                             self.add_nodes(node_path, temp_view, True)
-                        else: # Compensate for the duplicate.
+                        else:  # Compensate for the duplicate.
                             index += 1
                     else:
                         if view['Media'] in ('movies', 'tvshows', 'musicvideos'):
@@ -421,7 +420,6 @@ class Views(object):
             etree.SubElement(xml, 'match')
             etree.SubElement(xml, 'content')
 
-
         label = xml.find('label')
         label.text = str(name) if type(name) == int else name
 
@@ -438,7 +436,7 @@ class Views(object):
             rule = etree.SubElement(xml, 'rule', {'field': "tag", 'operator': "is"})
             etree.SubElement(rule, 'value').text = view['Tag']
 
-        getattr(self, 'node_' + node)(xml) # get node function based on node type
+        getattr(self, 'node_' + node)(xml)  # get node function based on node type
         indent(xml)
         write_xml(etree.tostring(xml, 'UTF-8'), file)
 
@@ -642,7 +640,7 @@ class Views(object):
             if rule.attrib['field'] == 'inprogress':
                 break
         else:
-            etree.SubElement(root, 'rule', {'field': "inprogress", 'operator':"true"})
+            etree.SubElement(root, 'rule', {'field': "inprogress", 'operator': "true"})
 
         content = root.find('content')
         content.text = "episodes"
@@ -660,7 +658,6 @@ class Views(object):
             break
         else:
             etree.SubElement(root, 'content').text = "episodes"
-
 
     def order_media_folders(self, folders):
 
@@ -704,7 +701,7 @@ class Views(object):
         for library in (libraries or []):
             view = {'Id': library[0], 'Name': library[1], 'Tag': library[1], 'Media': library[2]}
 
-            if library[0] in [x.replace('Mixed:', "") for x in self.sync['Whitelist']]: # Synced libraries
+            if library[0] in [x.replace('Mixed:', "") for x in self.sync['Whitelist']]:  # Synced libraries
 
                 if view['Media'] in ('movies', 'tvshows', 'musicvideos', 'mixed'):
 
@@ -718,7 +715,7 @@ class Views(object):
                                 temp_view['Name'] = "%s (%s)" % (view['Name'], _(media))
                                 self.window_node(index, temp_view, *node)
                                 self.window_wnode(windex, temp_view, *node)
-                            else: # Add one to compensate for the duplicate.
+                            else:  # Add one to compensate for the duplicate.
                                 index += 1
                                 windex += 1
                     else:
@@ -734,7 +731,7 @@ class Views(object):
 
                 elif view['Media'] == 'music':
                     self.window_node(index, view, 'music')
-            else: # Dynamic entry
+            else:  # Dynamic entry
                 if view['Media'] in ('homevideos', 'books', 'playlists'):
                     self.window_wnode(windex, view, 'browse')
                     windex += 1
@@ -781,7 +778,7 @@ class Views(object):
         if node in ('all', 'music'):
 
             window_prop = "Jellyfin.nodes.%s" % index
-            window('%s.index' % window_prop, path.replace('all.xml', "")) # dir
+            window('%s.index' % window_prop, path.replace('all.xml', ""))  # dir
             window('%s.title' % window_prop, view['Name'].encode('utf-8'))
             window('%s.content' % window_prop, path)
 
@@ -833,7 +830,7 @@ class Views(object):
         if node == 'all':
 
             window_prop = "Jellyfin.wnodes.%s" % index
-            window('%s.index' % window_prop, path.replace('all.xml', "")) # dir
+            window('%s.index' % window_prop, path.replace('all.xml', ""))  # dir
             window('%s.title' % window_prop, view['Name'].encode('utf-8'))
             window('%s.content' % window_prop, path)
 
@@ -909,16 +906,16 @@ class Views(object):
         total = int(window((name or 'Jellyfin.nodes') + '.total') or 0)
         props = [
 
-            "index","id","path","artwork","title","content","type"
-            "inprogress.content","inprogress.title",
-            "inprogress.content","inprogress.path",
-            "nextepisodes.title","nextepisodes.content",
-            "nextepisodes.path","unwatched.title",
-            "unwatched.content","unwatched.path",
-            "recent.title","recent.content","recent.path",
-            "recentepisodes.title","recentepisodes.content",
-            "recentepisodes.path","inprogressepisodes.title",
-            "inprogressepisodes.content","inprogressepisodes.path"
+            "index", "id", "path", "artwork", "title", "content", "type"
+            "inprogress.content", "inprogress.title",
+            "inprogress.content", "inprogress.path",
+            "nextepisodes.title", "nextepisodes.content",
+            "nextepisodes.path", "unwatched.title",
+            "unwatched.content", "unwatched.path",
+            "recent.title", "recent.content", "recent.path",
+            "recentepisodes.title", "recentepisodes.content",
+            "recentepisodes.path", "inprogressepisodes.title",
+            "inprogressepisodes.content", "inprogressepisodes.path"
         ]
         for i in range(total):
             for prop in props:

@@ -10,11 +10,11 @@ import urllib
 from obj import Objects
 from kodi import MusicVideos as KodiDb, queries as QU
 from database import jellyfin_db, queries as QUEM
-from helper import api, catch, stop, validate, library_check, jellyfin_item, values, Local
+from helper import api, stop, validate, library_check, jellyfin_item, values, Local
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 ##################################################################################################
 
@@ -55,8 +55,7 @@ class MusicVideos(KodiDb):
             obj['MvideoId'] = e_item[0]
             obj['FileId'] = e_item[1]
             obj['PathId'] = e_item[2]
-        except TypeError as error:
-
+        except TypeError:
             update = False
             LOG.debug("MvideoId for %s not found", obj['Id'])
             obj['MvideoId'] = self.create_entry()
@@ -114,12 +113,10 @@ class MusicVideos(KodiDb):
 
         obj['Tags'] = tags
 
-
         if update:
             self.musicvideo_update(obj)
         else:
             self.musicvideo_add(obj)
-
 
         self.update_path(*values(obj, QU.update_path_mvideo_obj))
         self.update_file(*values(obj, QU.update_file_obj))
@@ -176,7 +173,6 @@ class MusicVideos(KodiDb):
             }
             obj['Filename'] = "%s?%s" % (obj['Path'], urllib.urlencode(params))
 
-
     @stop()
     @jellyfin_item()
     def userdata(self, item, e_item):
@@ -185,7 +181,7 @@ class MusicVideos(KodiDb):
             Poster with progress bar
         '''
         server_data = self.server.auth.get_server_info(self.server.auth.server_id)
-        server_address = self.server.auth.get_server_address(server_data, server_data['LastConnectionMode'])        
+        server_address = self.server.auth.get_server_address(server_data, server_data['LastConnectionMode'])
         API = api.API(item, server_address)
         obj = self.objects.map(item, 'MusicVideoUserData')
 

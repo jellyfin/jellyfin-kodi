@@ -2,7 +2,6 @@
 
 #################################################################################################
 
-import json
 import logging
 import os
 import xml.etree.ElementTree as etree
@@ -13,9 +12,10 @@ from . import _, indent, write_xml, dialog, settings
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 #################################################################################################
+
 
 def sources():
 
@@ -77,6 +77,7 @@ def sources():
     indent(xml)
     write_xml(etree.tostring(xml, 'UTF-8'), file)
 
+
 def tvtunes_nfo(path, urls):
 
     ''' Create tvtunes.nfo
@@ -95,6 +96,7 @@ def tvtunes_nfo(path, urls):
 
     indent(xml)
     write_xml(etree.tostring(xml, 'UTF-8'), path)
+
 
 def advanced_settings():
 

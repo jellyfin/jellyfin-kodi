@@ -6,14 +6,16 @@ import logging
 
 import xbmcgui
 
-from . import _, LibraryException
-from utils import should_stop
+from .utils import should_stop
+from .exceptions import LibraryException
+from .translate import _
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 #################################################################################################
+
 
 def progress(message=None):
 
@@ -61,6 +63,7 @@ def catch(errors=(Exception,)):
         return wrapper
     return decorator
 
+
 def silent_catch(errors=(Exception,)):
 
     ''' Wrapper to catch exceptions and ignore them
@@ -75,6 +78,7 @@ def silent_catch(errors=(Exception,)):
 
         return wrapper
     return decorator
+
 
 def stop(default=None):
 
@@ -100,6 +104,7 @@ def stop(default=None):
         return wrapper
     return decorator
 
+
 def jellyfin_item():
 
     ''' Wrapper to retrieve the jellyfin_db item.
@@ -112,6 +117,7 @@ def jellyfin_item():
 
         return wrapper
     return decorator
+
 
 def library_check():
 
@@ -148,7 +154,7 @@ def library_check():
                                 return
 
                             view = {'Id': views[0], 'Name': views[1]}
-                        else: # Grab the first music library
+                        else:  # Grab the first music library
                             return
                     else:
                         for ancestor in ancestors:

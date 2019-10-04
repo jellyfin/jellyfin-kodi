@@ -9,13 +9,12 @@ from kodi import Kodi
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 ##################################################################################################
 
 
 class TVShows(Kodi):
-
 
     def __init__(self, cursor):
 
@@ -24,7 +23,7 @@ class TVShows(Kodi):
 
     def create_entry_unique_id(self):
         self.cursor.execute(QU.create_unique_id)
-        
+
         return self.cursor.fetchone()[0] + 1
 
     def create_entry_rating(self):
@@ -39,12 +38,12 @@ class TVShows(Kodi):
 
     def create_entry_season(self):
         self.cursor.execute(QU.create_season)
-        
+
         return self.cursor.fetchone()[0] + 1
 
     def create_entry_episode(self):
         self.cursor.execute(QU.create_episode)
-        
+
         return self.cursor.fetchone()[0] + 1
 
     def get(self, *args):
@@ -69,7 +68,7 @@ class TVShows(Kodi):
 
         try:
             self.cursor.execute(QU.get_rating, args)
-            
+
             return self.cursor.fetchone()[0]
         except TypeError:
             return
@@ -93,7 +92,7 @@ class TVShows(Kodi):
 
         try:
             self.cursor.execute(QU.get_unique_id, args)
-            
+
             return self.cursor.fetchone()[0]
         except TypeError:
             return

@@ -225,15 +225,15 @@ class API(object):
 
     def get_themes(self, item_id):
         return self.items("/%s/ThemeMedia" % item_id, params={
-                    'UserId': "{UserId}",
-                    'InheritFromParent': True
-                })
+            'UserId': "{UserId}",
+            'InheritFromParent': True
+        })
 
     def get_items_theme_song(self, parent_id):
         return self.users("/Items", params={
-                    'HasThemeSong': True,
-                    'ParentId': parent_id
-                })
+            'HasThemeSong': True,
+            'ParentId': parent_id
+        })
 
     def get_plugins(self):
         return self._get("Plugins")

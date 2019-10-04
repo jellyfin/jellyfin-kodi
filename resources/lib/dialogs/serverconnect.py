@@ -12,7 +12,7 @@ from jellyfin.core.connection_manager import CONNECTION_STATE
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 ACTION_PARENT_DIR = 9
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACK = 92
@@ -37,7 +37,6 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
     _selected_server = None
     _connect_login = False
     _manual_server = False
-
 
     def __init__(self, *args, **kwargs):
 

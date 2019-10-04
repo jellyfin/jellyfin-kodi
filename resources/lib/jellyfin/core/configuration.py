@@ -12,7 +12,7 @@ import logging
 
 DEFAULT_HTTP_MAX_RETRIES = 3
 DEFAULT_HTTP_TIMEOUT = 30
-LOG = logging.getLogger('JELLYFIN.'+__name__)
+LOG = logging.getLogger('JELLYFIN.' + __name__)
 
 #################################################################################################
 

@@ -12,25 +12,29 @@ import urllib
 from uuid import uuid4
 from distutils.version import LooseVersion
 
+from dateutil import tz, parser
+
 import xbmc
 import xbmcaddon
 import xbmcgui
 import xbmcvfs
 
-from . import _
-from dateutil import tz, parser
+from .translate import _
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 #################################################################################################
+
 
 def addon_id():
     return "plugin.video.jellyfin"
 
+
 def kodi_version():
     return xbmc.getInfoLabel('System.BuildVersion')[:2]
+
 
 def window(key, value=None, clear=False, window_id=10000):
 
@@ -65,6 +69,7 @@ def window(key, value=None, clear=False, window_id=10000):
 
         return result
 
+
 def settings(setting, value=None):
 
     ''' Get or add add-on settings.
@@ -87,8 +92,10 @@ def settings(setting, value=None):
 
         return result
 
+
 def create_id():
     return uuid4()
+
 
 def compare_version(a, b):
 
@@ -107,6 +114,7 @@ def compare_version(a, b):
 
     return 0
 
+
 def find(dict, item):
 
     ''' Find value in dictionary.
@@ -114,10 +122,11 @@ def find(dict, item):
     if item in dict:
         return dict[item]
 
-    for key,value in sorted(dict.iteritems(), key=lambda (k,v): (v,k)):
+    for key, value in sorted(dict.iteritems(), key=lambda (k, v): (v, k)):
 
         if re.match(key, item, re.I):
             return dict[key]
+
 
 def event(method, data=None, sender=None, hexlify=False):
 
@@ -134,13 +143,16 @@ def event(method, data=None, sender=None, hexlify=False):
     xbmc.executebuiltin('NotifyAll(%s, %s, %s)' % (sender, method, data))
     LOG.debug("---[ event: %s/%s ] %s", sender, method, data)
 
+
 def dialog(dialog_type, *args, **kwargs):
 
     d = xbmcgui.Dialog()
 
     if "icon" in kwargs:
-        kwargs['icon'] = kwargs['icon'].replace("{jellyfin}",
-                "special://home/addons/plugin.video.jellyfin/resources/icon.png")
+        kwargs['icon'] = kwargs['icon'].replace(
+            "{jellyfin}",
+            "special://home/addons/plugin.video.jellyfin/resources/icon.png"
+        )
     if "heading" in kwargs:
         kwargs['heading'] = kwargs['heading'].replace("{jellyfin}", _('addon_name'))
 
@@ -154,6 +166,7 @@ def dialog(dialog_type, *args, **kwargs):
         'multi': d.multiselect
     }
     return types[dialog_type](*args, **kwargs)
+
 
 def should_stop():
 
@@ -171,6 +184,7 @@ def should_stop():
 
     return False
 
+
 def get_screensaver():
 
     ''' Get the current screensaver value.
@@ -180,6 +194,7 @@ def get_screensaver():
         return result['result']['value']
     except KeyError:
         return ""
+
 
 def set_screensaver(value):
 
@@ -191,6 +206,7 @@ def set_screensaver(value):
     }
     result = JSONRPC('Settings.setSettingValue').execute(params)
     LOG.info("---[ screensaver/%s ] %s", value, result)
+
 
 class JSONRPC(object):
 
@@ -221,6 +237,7 @@ class JSONRPC(object):
         self.params = params
         return json.loads(xbmc.executeJSONRPC(self._query()))
 
+
 def validate(path):
 
     ''' Verify if path is accessible.
@@ -241,12 +258,14 @@ def validate(path):
 
     return True
 
+
 def values(item, keys):
 
     ''' Grab the values in the item for a list of keys {key},{key1}....
         If the key has no brackets, the key will be passed as is.
     '''
     return (item[key.replace('{', "").replace('}', "")] if type(key) == str and key.startswith('{') else key for key in keys)
+
 
 def indent(elem, level=0):
 
@@ -256,19 +275,20 @@ def indent(elem, level=0):
         i = "\n" + level * "  "
         if len(elem):
             if not elem.text or not elem.text.strip():
-              elem.text = i + "  "
+                elem.text = i + "  "
             if not elem.tail or not elem.tail.strip():
-              elem.tail = i
+                elem.tail = i
             for elem in elem:
-              indent(elem, level + 1)
+                indent(elem, level + 1)
             if not elem.tail or not elem.tail.strip():
-              elem.tail = i
+                elem.tail = i
         else:
             if level and (not elem.tail or not elem.tail.strip()):
-              elem.tail = i
+                elem.tail = i
     except Exception as error:
         LOG.exception(error)
         return
+
 
 def write_xml(content, file):
     with open(file, 'w') as infile:
@@ -332,6 +352,7 @@ def unzip(path, dest, folder=None):
 
     LOG.info("Unzipped %s", path)
 
+
 def unzip_recursive(path, dirs, dest):
 
     for directory in dirs:
@@ -348,12 +369,14 @@ def unzip_recursive(path, dirs, dest):
         for file in files:
             unzip_file(os.path.join(dirs_dir, file.decode('utf-8')), os.path.join(dest_dir, file.decode('utf-8')))
 
+
 def unzip_file(path, dest):
 
     ''' Unzip specific file. Path should start with zip://
     '''
     xbmcvfs.copy(path, dest)
     LOG.debug("unzip: %s to %s", path, dest)
+
 
 def get_zip_directory(path, folder):
 
@@ -366,6 +389,7 @@ def get_zip_directory(path, folder):
         result = get_zip_directory(os.path.join(path, directory.decode('utf-8')), folder)
         if result:
             return result
+
 
 def copytree(path, dest):
 
@@ -384,6 +408,7 @@ def copytree(path, dest):
 
     LOG.info("Copied %s", path)
 
+
 def copy_recursive(path, dirs, dest):
 
     for directory in dirs:
@@ -400,6 +425,7 @@ def copy_recursive(path, dirs, dest):
         for file in files:
             copy_file(os.path.join(dirs_dir, file.decode('utf-8')), os.path.join(dest_dir, file.decode('utf-8')))
 
+
 def copy_file(path, dest):
 
     ''' Copy specific file.
@@ -409,6 +435,7 @@ def copy_file(path, dest):
 
     xbmcvfs.copy(path, dest)
     LOG.debug("copy: %s to %s", path, dest)
+
 
 def normalize_string(text):
 
@@ -431,11 +458,13 @@ def normalize_string(text):
 
     return text
 
+
 def split_list(itemlist, size):
 
     ''' Split up list in pieces of size. Will generate a list of lists
     '''
-    return [itemlist[i:i+size] for i in range(0, len(itemlist), size)]
+    return [itemlist[i:i + size] for i in range(0, len(itemlist), size)]
+
 
 def convert_to_local(date):
 

@@ -8,7 +8,6 @@ import sys
 import urlparse
 import urllib
 import os
-import sys
 
 import xbmc
 import xbmcvfs
@@ -24,13 +23,12 @@ from helper import _, event, settings, window, dialog, api, JSONRPC
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN."+__name__)
+LOG = logging.getLogger("JELLYFIN." + __name__)
 
 #################################################################################################
 
 
 class Events(object):
-
 
     def __init__(self):
 
@@ -65,7 +63,7 @@ class Events(object):
             jellyfin_id = params.get('id')
             get_video_extras(jellyfin_id, jellyfin_path, server)
 
-        elif mode =='play':
+        elif mode == 'play':
 
             item = TheVoid('GetItem', {'Id': params['id'], 'ServerId': server}).get()
             Actions(server).play(item, params.get('dbid'), params.get('transcode') == 'true', playlist=params.get('playlist') == 'true')
@@ -180,7 +178,6 @@ def listing():
         else:
             directory(server['Name'], "plugin://plugin.video.jellyfin/?mode=browse&server=%s" % server['Id'], context=context)
 
-
     directory(_(33194), "plugin://plugin.video.jellyfin/?mode=managelibs", True)
     directory(_(33134), "plugin://plugin.video.jellyfin/?mode=addserver", False)
     directory(_(33054), "plugin://plugin.video.jellyfin/?mode=adduser", False)
@@ -193,6 +190,7 @@ def listing():
 
     xbmcplugin.setContent(int(sys.argv[1]), 'files')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
 
 def directory(label, path, folder=True, artwork=None, fanart=None, context=None):
 
@@ -207,6 +205,7 @@ def directory(label, path, folder=True, artwork=None, fanart=None, context=None)
 
     return li
 
+
 def dir_listitem(label, path, artwork=None, fanart=None):
 
     ''' Gets the icon paths for default node listings
@@ -217,6 +216,7 @@ def dir_listitem(label, path, artwork=None, fanart=None):
     li.setArt({"landscape": artwork or fanart or "special://home/addons/plugin.video.jellyfin/resources/fanart.png"})
 
     return li
+
 
 def manage_libraries():
 
@@ -229,6 +229,7 @@ def manage_libraries():
 
     xbmcplugin.setContent(int(sys.argv[1]), 'files')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
 
 def browse(media, view_id=None, folder=None, server_id=None):
 
@@ -274,7 +275,6 @@ def browse(media, view_id=None, folder=None, server_id=None):
     elif media == 'music':
         content_type = "artists"
 
-
     if folder == 'recentlyadded':
         listing = TheVoid('RecentlyAdded', {'Id': view_id, 'ServerId': server_id}).get()
     elif folder == 'genres':
@@ -316,7 +316,6 @@ def browse(media, view_id=None, folder=None, server_id=None):
     else:
         listing = TheVoid('Browse', {'Id': folder or view_id, 'ServerId': server_id, 'Recursive': False}).get()
 
-
     if listing:
 
         actions = Actions(server_id)
@@ -339,7 +338,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
                     'folder': item['Id'],
                     'server': server_id
                 }
-                path = "%s?%s" % ("plugin://plugin.video.jellyfin/",  urllib.urlencode(params))
+                path = "%s?%s" % ("plugin://plugin.video.jellyfin/", urllib.urlencode(params))
                 context = []
 
                 if item['Type'] in ('Series', 'Season', 'Playlist'):
@@ -362,7 +361,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
                     'folder': 'genres-%s' % item['Id'],
                     'server': server_id
                 }
-                path = "%s?%s" % ("plugin://plugin.video.jellyfin/",  urllib.urlencode(params))
+                path = "%s?%s" % ("plugin://plugin.video.jellyfin/", urllib.urlencode(params))
                 list_li.append((path, li, True))
 
             else:
@@ -396,6 +395,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
     xbmcplugin.setContent(int(sys.argv[1]), content_type)
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
+
 def browse_subfolders(media, view_id, server_id=None):
 
     ''' Display submenus for jellyfin views.
@@ -415,11 +415,12 @@ def browse_subfolders(media, view_id, server_id=None):
             'folder': view_id if node[0] == 'all' else node[0],
             'server': server_id
         }
-        path = "%s?%s" % ("plugin://plugin.video.jellyfin/",  urllib.urlencode(params))
+        path = "%s?%s" % ("plugin://plugin.video.jellyfin/", urllib.urlencode(params))
         directory(node[1] or view['Name'], path)
 
     xbmcplugin.setContent(int(sys.argv[1]), 'files')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
 
 def browse_letters(media, view_id, server_id=None):
 
@@ -439,11 +440,12 @@ def browse_letters(media, view_id, server_id=None):
             'folder': 'firstletter-%s' % node,
             'server': server_id
         }
-        path = "%s?%s" % ("plugin://plugin.video.jellyfin/",  urllib.urlencode(params))
+        path = "%s?%s" % ("plugin://plugin.video.jellyfin/", urllib.urlencode(params))
         directory(node, path)
 
     xbmcplugin.setContent(int(sys.argv[1]), 'files')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
+
 
 def get_folder_type(item, content_type=None):
 
@@ -479,6 +481,7 @@ def get_media_type(media):
         return "Series"
     elif media == 'music':
         return "MusicArtist,MusicAlbum,Audio"
+
 
 def get_fanart(item_id, path, server_id=None):
 
@@ -524,6 +527,7 @@ def get_fanart(item_id, path, server_id=None):
     xbmcplugin.addDirectoryItems(int(sys.argv[1]), list_li, len(list_li))
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
+
 def get_video_extras(item_id, path, server_id=None):
 
     ''' Returns the video files for the item as plugin listing, can be used
@@ -565,6 +569,7 @@ def get_video_extras(item_id, path, server_id=None):
         #xbmcplugin.endOfDirectory(int(sys.argv[1]))
     """
 
+
 def get_next_episodes(item_id, limit):
 
     ''' Only for synced content.
@@ -578,14 +583,14 @@ def get_next_episodes(item_id, limit):
             return
 
     result = JSONRPC('VideoLibrary.GetTVShows').execute({
-                'sort': {'order': "descending", 'method': "lastplayed"},
-                'filter': {
-                    'and': [
-                        {'operator': "true", 'field': "inprogress", 'value': ""},
-                        {'operator': "is", 'field': "tag", 'value': "%s" % library}
-                    ]},
-                'properties': ['title', 'studio', 'mpaa', 'file', 'art']
-             })
+        'sort': {'order': "descending", 'method': "lastplayed"},
+        'filter': {
+            'and': [
+                {'operator': "true", 'field': "inprogress", 'value': ""},
+                {'operator': "is", 'field': "tag", 'value': "%s" % library}
+            ]},
+        'properties': ['title', 'studio', 'mpaa', 'file', 'art']
+    })
 
     try:
         items = result['result']['tvshows']
@@ -603,7 +608,7 @@ def get_next_episodes(item_id, limit):
                     'and': [
                         {'operator': "lessthan", 'field': "playcount", 'value': "1"},
                         {'operator': "greaterthan", 'field': "season", 'value': "0"}
-                ]},
+                    ]},
                 'properties': [
                     "title", "playcount", "season", "episode", "showtitle",
                     "plot", "file", "rating", "resume", "tvshowid", "art",
@@ -645,6 +650,7 @@ def get_next_episodes(item_id, limit):
     xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
 
+
 def create_listitem(item):
 
     ''' Listitem based on jsonrpc items.
@@ -656,7 +662,7 @@ def create_listitem(item):
 
     metadata = {
         'Title': title,
-        'duration': str(item['runtime']/60),
+        'duration': str(item['runtime'] / 60),
         'Plot': item['plot'],
         'Playcount': item['playcount']
     }
@@ -688,7 +694,7 @@ def create_listitem(item):
         metadata['Premiered'] = item['firstaired']
 
     if "rating" in item:
-        metadata['Rating'] = str(round(float(item['rating']),1))
+        metadata['Rating'] = str(round(float(item['rating']), 1))
 
     if "director" in item:
         metadata['Director'] = " / ".join(item['director'])
@@ -711,16 +717,17 @@ def create_listitem(item):
     li.setProperty('resumetime', str(item['resume']['position']))
     li.setProperty('totaltime', str(item['resume']['total']))
     li.setArt(item['art'])
-    li.setThumbnailImage(item['art'].get('thumb',''))
+    li.setThumbnailImage(item['art'].get('thumb', ''))
     li.setIconImage('DefaultTVShows.png')
     li.setProperty('dbid', str(item['episodeid']))
-    li.setProperty('fanart_image', item['art'].get('tvshow.fanart',''))
+    li.setProperty('fanart_image', item['art'].get('tvshow.fanart', ''))
 
     for key, value in item['streamdetails'].iteritems():
         for stream in value:
             li.addStreamInfo(key, stream)
 
     return li
+
 
 def add_user():
 
@@ -738,7 +745,7 @@ def add_user():
     if result < 0:
         return
 
-    if not result: # Add user
+    if not result:  # Add user
         eligible = [x for x in users if x['Id'] not in [current_user['UserId'] for current_user in current]]
         resp = dialog("select", _(33064), [x['Name'] for x in eligible])
 
@@ -747,7 +754,7 @@ def add_user():
 
         user = eligible[resp]
         event('AddUser', {'Id': user['Id'], 'Add': True})
-    else: # Remove user
+    else:  # Remove user
         resp = dialog("select", _(33064), [x['UserName'] for x in current])
 
         if resp < 0:
@@ -755,6 +762,7 @@ def add_user():
 
         user = current[resp]
         event('AddUser', {'Id': user['UserId'], 'Add': False})
+
 
 def get_themes():
 
@@ -785,7 +793,6 @@ def get_themes():
     with Database('jellyfin') as jellyfindb:
         all_views = jellyfin_db.JellyfinDatabase(jellyfindb.cursor).get_views()
         views = [x[0] for x in all_views if x[2] in ('movies', 'tvshows', 'mixed')]
-
 
     items = {}
     server = TheVoid('GetServerAddress', {'ServerId': None}).get()
@@ -829,6 +836,7 @@ def get_themes():
 
     dialog("notification", heading="{jellyfin}", message=_(33153), icon="{jellyfin}", time=1000, sound=False)
 
+
 def delete_item():
 
     ''' Delete keymap action.
@@ -836,6 +844,7 @@ def delete_item():
     import context
 
     context.Context(delete=True)
+
 
 def backup():
 
