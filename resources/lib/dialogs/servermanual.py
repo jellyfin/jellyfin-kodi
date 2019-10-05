@@ -4,7 +4,7 @@
 
 import logging
 import os
-import ipaddress
+import re
 
 import xbmcgui
 import xbmcaddon
@@ -27,6 +27,9 @@ ERROR = {
     'Empty': 2
 }
 
+# https://stackoverflow.com/a/17871737/1035647
+_IPV6_PATTERN = "^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$"
+_IPV6_RE = re.compile(_IPV6_PATTERN)
 ##################################################################################################
 
 
@@ -115,12 +118,8 @@ class ServerManual(xbmcgui.WindowXMLDialog):
         return control
 
     def _connect_to_server(self, server, port):
-        try:
-            addr = ipaddress.ip_address(server.decode('utf-8') if not isinstance(server, type(u'')) else server)
-            if addr.version == 6:
-                server = u"[%s]" % (addr.compressed)
-        except ValueError:
-            pass
+        if _IPV6_RE.match(server):
+            server = "[%s]" % (server)
 
         server_address = "%s:%s" % (server, port) if port else server
         self._message("%s %s..." % (_(30610), server_address))
