@@ -476,6 +476,10 @@ class ConnectionManager(object):
         return None
 
     def _normalize_address(self, address):
+        # TODO: Try HTTPS first, then HTTP if that fails.
+        if '://' not in address:
+            address = 'http://' + address
+
         # Attempt to correct bad input
         url = urllib3.util.parse_url(address.strip())
 
