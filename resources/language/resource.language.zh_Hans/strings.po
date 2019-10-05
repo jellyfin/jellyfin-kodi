@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2019-10-03 19:13+0000\n"
-"Last-Translator: WWWesten <wwwesten@gmail.com>\n"
+"PO-Revision-Date: 2019-10-06 19:14+0000\n"
+"Last-Translator: whxciotw <whxciotw@hotmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -900,10 +900,9 @@ msgctxt "#33185"
 msgid "Enable sync during playback (may cause some lag)"
 msgstr "在播放时启用同步 (可能引起卡顿)"
 
-#, fuzzy
 msgctxt "#33186"
 msgid "The Kodi companion speeds up the start up sync. Other syncs are triggered by server events."
-msgstr "Kodi companion加速启动时的同步。其他同步由服务器事件触发。"
+msgstr "Kodi伴侣将加速启动时的同步。其他的同步将由服务器事件触发。"
 
 #, fuzzy
 msgctxt "#33187"
