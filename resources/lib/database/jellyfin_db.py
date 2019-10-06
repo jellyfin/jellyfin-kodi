@@ -146,18 +146,3 @@ class JellyfinDatabase():
 
     def remove_media_by_parent_id(self, *args):
         self.cursor.execute(QU.delete_media_by_parent_id, args)
-
-    def get_version(self, version=None):
-
-        if version is not None:
-
-            self.cursor.execute(QU.delete_version)
-            self.cursor.execute(QU.add_version, (version,))
-        else:
-            try:
-                self.cursor.execute(QU.get_version)
-                version = self.cursor.fetchone()[0]
-            except Exception as error:
-                LOG.exception(error)
-
-        return version

@@ -442,18 +442,7 @@ msgctxt "#33021"
 msgid "Gathering:"
 msgstr "Raggruppa:"
 
-msgctxt "#33022"
-msgid ""
-"Detected the database needs to be recreated for this version of Jellyfin for "
-"Kodi. Proceed?"
-msgstr ""
-"Rilevato che il database deve essere ricreato per questa versione di Jellyfin "
-"per Kodi. Procedere?"
 
-msgctxt "#33023"
-msgid "Jellyfin for Kodi will not work correctly until the database is reset."
-msgstr ""
-"Jellyfin per Kodi non funzionerà correttamente fino al ripristino del database."
 
 msgctxt "#33025"
 msgid "Completed in:"
