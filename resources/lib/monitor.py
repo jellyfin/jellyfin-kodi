@@ -66,7 +66,7 @@ class Monitor(xbmc.Monitor):
 
         elif sender.startswith('upnextprovider'):
             LOG.info('Attempting to play the next episode via upnext')
-            method = '.'.join(method.split('.')[1:])
+            method = method.split('.', 1)[1]
 
             if method not in ('plugin.video.jellyfin_play_action',):
                 LOG.info('Received invalid upnext method: %s', method)
