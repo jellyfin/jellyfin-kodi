@@ -68,7 +68,6 @@ class Service(xbmc.Monitor):
         LOG.info("Using dynamic paths: %s", settings('useDirectPaths') == "0")
         LOG.info("Log Level: %s", self.settings['log_level'])
 
-        self.check_version()
         verify_kodi_defaults()
 
         try:
@@ -146,29 +145,6 @@ class Service(xbmc.Monitor):
 
             self.library_thread.stop_client()
             self.library_thread = None
-
-    def check_version(self):
-
-        ''' Check the database version to ensure we do not need to do a reset.
-        '''
-        with Database('jellyfin') as jellyfindb:
-
-            version = jellyfin_db.JellyfinDatabase(jellyfindb.cursor).get_version()
-            LOG.info("---[ db/%s ]", version)
-
-        if version and compare_version(version, "3.1.0") < 0:
-            resp = dialog("yesno", heading=_('addon_name'), line1=_(33022))
-
-            if not resp:
-
-                LOG.warning("Database version is out of date! USER IGNORED!")
-                dialog("ok", heading=_('addon_name'), line1=_(33023))
-
-                raise Exception("User backed out of a required database reset")
-            else:
-                reset()
-
-                raise Exception("Completed database reset")
 
     def onNotification(self, sender, method, data):
 

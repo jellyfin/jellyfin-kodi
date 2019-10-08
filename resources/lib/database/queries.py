@@ -88,7 +88,6 @@ SELECT      idVersion
 FROM        version
 """
 
-
 add_reference = """
 INSERT OR REPLACE INTO      jellyfin(jellyfin_id, kodi_id, kodi_fileid, kodi_pathid, jellyfin_type,
                             media_type, parent_id, checksum, media_folder, jellyfin_parent_id)
@@ -112,7 +111,6 @@ add_version = """
 INSERT OR REPLACE INTO      version(idVersion)
 VALUES                      (?)
 """
-
 
 update_reference = """
 UPDATE      jellyfin

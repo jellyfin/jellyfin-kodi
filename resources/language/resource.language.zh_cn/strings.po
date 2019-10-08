@@ -438,14 +438,6 @@ msgctxt "#33021"
 msgid "Gathering:"
 msgstr "收藏："
 
-msgctxt "#33022"
-msgid "Detected the database needs to be recreated for this version of Jellyfin for Kodi. Proceed?"
-msgstr "检测到的数据库必须由此版本Jellyfin for Kodi重建，是否继续？"
-
-msgctxt "#33023"
-msgid "Jellyfin for Kodi will not work correctly until the database is reset."
-msgstr "在数据库重置前，Jellyfin for Kodi无法正常使用"
-
 msgctxt "#33025"
 msgid "Completed in:"
 msgstr "剩余时间："
