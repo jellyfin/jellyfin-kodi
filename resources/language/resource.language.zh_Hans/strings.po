@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2019-10-10 07:14+0000\n"
-"Last-Translator: whxciotw <whxciotw@hotmail.com>\n"
+"PO-Revision-Date: 2019-10-17 03:14+0000\n"
+"Last-Translator: tpishere <taopeng000088@outlook.com>\n"
 "Language-Team: Chinese (Simplified) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -43,7 +43,7 @@ msgstr "日志级别"
 
 msgctxt "#30016"
 msgid "Device name"
-msgstr "设备名"
+msgstr "设备名称"
 
 msgctxt "#30022"
 msgid "Advanced"
@@ -59,7 +59,7 @@ msgstr "端口号"
 
 msgctxt "#30091"
 msgid "Confirm file deletion"
-msgstr "确认删除文件？"
+msgstr "确认删除文件"
 
 msgctxt "#30114"
 msgid "Offer delete after playback"
@@ -841,7 +841,7 @@ msgstr "你有{number}个更新等待进行。可能在一段时间后才能看�
 
 msgctxt "#33173"
 msgid "Forget about the previous sync? This is not recommended."
-msgstr "不推荐此操作，是否忘记前次同步？"
+msgstr "忘记以前的同步？不建议这样做。"
 
 msgctxt "#33174"
 msgid "Paging - download threads (default: 3)"
