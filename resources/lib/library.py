@@ -493,7 +493,16 @@ class Library(threading.Thread):
 
         choices = [x['Name'] for x in libraries]
         choices.insert(0, _(33121))
-        selection = dialog("multi", _(33120), choices)
+
+        titles = {
+            "RepairLibrarySelection": 33199,
+            "SyncLibrarySelection": 33198,
+            "RemoveLibrarySelection": 33200,
+            "AddLibrarySelection": 33120
+        }
+        title = titles.get(mode, "Failed to get title {}".format(mode))
+        
+        selection = dialog("multi", _(title), choices)
 
         if selection is None:
             return

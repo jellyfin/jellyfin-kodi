@@ -925,3 +925,15 @@ msgstr ""
 msgctxt "#33197"
 msgid "A sync is already running, please wait until it completes and try again."
 msgstr ""
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr ""
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr ""
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr ""
