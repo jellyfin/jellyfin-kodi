@@ -6,5 +6,6 @@ from obj import Objects
 from actions import Actions
 from actions import PlaylistWorker
 from actions import on_play, on_update, special_listener
+import utils
 
 Objects().mapping()
