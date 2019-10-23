@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2019-10-18 14:14+0000\n"
+"PO-Revision-Date: 2019-10-25 11:14+0000\n"
 "Last-Translator: nextlooper42 <nextlooper42@protonmail.com>\n"
 "Language-Team: Slovak <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sk/>\n"
@@ -51,7 +51,7 @@ msgstr "Pokročilé"
 
 msgctxt "#30024"
 msgid "Username"
-msgstr ""
+msgstr "Používateľské meno"
 
 msgctxt "#30030"
 msgid "Port number"
@@ -59,7 +59,7 @@ msgstr "Číslo portu"
 
 msgctxt "#30091"
 msgid "Confirm file deletion"
-msgstr ""
+msgstr "Potvrdiť vymazanie súboru"
 
 msgctxt "#30114"
 msgid "Offer delete after playback"
@@ -75,7 +75,7 @@ msgstr "Pre filmy"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
-msgstr ""
+msgstr "Povoliť rozšírené artworky (napr. obaly)"
 
 msgctxt "#30160"
 msgid "Video quality"
@@ -123,7 +123,7 @@ msgstr "Obľúbené epizódy"
 
 msgctxt "#30185"
 msgid "Boxsets"
-msgstr ""
+msgstr "Boxsety"
 
 msgctxt "#30189"
 msgid "Unwatched Movies"
@@ -131,11 +131,11 @@ msgstr ""
 
 msgctxt "#30229"
 msgid "Random Items"
-msgstr ""
+msgstr "Náhodné položky"
 
 msgctxt "#30230"
 msgid "Recommended Items"
-msgstr ""
+msgstr "Odporúčané položky"
 
 msgctxt "#30235"
 msgid "Interface"
@@ -195,43 +195,43 @@ msgstr "Nastavenia Jellyfinu"
 
 msgctxt "#30402"
 msgid "Jellyfin transcode"
-msgstr ""
+msgstr "Transkódovanie Jellyfinu"
 
 msgctxt "#30405"
 msgid "Add to favorites"
-msgstr ""
+msgstr "Pridať do obľúbených"
 
 msgctxt "#30406"
 msgid "Remove from favorites"
-msgstr ""
+msgstr "Odstrániť z obľúbených"
 
 msgctxt "#30408"
 msgid "Settings"
-msgstr ""
+msgstr "Nastavenia"
 
 msgctxt "#30409"
 msgid "Delete from Jellyfin"
-msgstr ""
+msgstr "Vymazať z Jellyfinu"
 
 msgctxt "#30410"
 msgid "Refresh this item"
-msgstr ""
+msgstr "Obnoviť túto položku"
 
 msgctxt "#30412"
 msgid "Transcode"
-msgstr ""
+msgstr "Transkódovať"
 
 msgctxt "#30500"
 msgid "Verify connection"
-msgstr ""
+msgstr "Overiť pripojenie"
 
 msgctxt "#30504"
 msgid "Use alternate device name"
-msgstr ""
+msgstr "Používať alternatívne meno zariadenia"
 
 msgctxt "#30506"
 msgid "Sync"
-msgstr ""
+msgstr "Synchronizácia"
 
 msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
@@ -239,19 +239,19 @@ msgstr ""
 
 msgctxt "#30508"
 msgid "Sync empty shows"
-msgstr ""
+msgstr "Synchronizovať prázdne seriály"
 
 msgctxt "#30509"
 msgid "Enable music library"
-msgstr ""
+msgstr "Povoliť hudobnú knižnicu"
 
 msgctxt "#30511"
 msgid "Playback mode"
-msgstr ""
+msgstr "Režim prehrávania"
 
 msgctxt "#30512"
 msgid "Enable artwork caching"
-msgstr ""
+msgstr "Povoliť cachovanie artworkov"
 
 msgctxt "#30515"
 msgid "Paging - max items requested (default: 15)"
@@ -259,7 +259,7 @@ msgstr ""
 
 msgctxt "#30516"
 msgid "Playback"
-msgstr ""
+msgstr "Prehrávanie"
 
 msgctxt "#30517"
 msgid "Network credentials"
@@ -267,7 +267,7 @@ msgstr ""
 
 msgctxt "#30518"
 msgid "Enable cinema mode"
-msgstr ""
+msgstr "Povoliť kino režim"
 
 msgctxt "#30519"
 msgid "Ask to play trailers"
@@ -283,7 +283,7 @@ msgstr ""
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
-msgstr ""
+msgstr "Transkódovať H265/HEVC"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
@@ -295,15 +295,15 @@ msgstr ""
 
 msgctxt "#30529"
 msgid "Startup delay (in seconds)"
-msgstr ""
+msgstr "Oneskorenie pri štarte (v sekundách)"
 
 msgctxt "#30530"
 msgid "Enable server restart message"
-msgstr ""
+msgstr "Povoliť správu o reštarte servera"
 
 msgctxt "#30531"
 msgid "Enable new content"
-msgstr ""
+msgstr "Povoliť nový obsah"
 
 msgctxt "#30532"
 msgid "Duration of the video library pop up"
@@ -315,59 +315,59 @@ msgstr ""
 
 msgctxt "#30534"
 msgid "Notifications (in seconds)"
-msgstr ""
+msgstr "Upozornenia (v sekundách)"
 
 msgctxt "#30535"
 msgid "Generate a new device Id"
-msgstr ""
+msgstr "Generovať nové ID zariadenia"
 
 msgctxt "#30536"
 msgid "Allow the screensaver during syncs"
-msgstr ""
+msgstr "Povoliť šetrič obrazovky počas synchronizácie"
 
 msgctxt "#30537"
 msgid "Transcode Hi10P"
-msgstr ""
+msgstr "Transkódovať Hi10P"
 
 msgctxt "#30539"
 msgid "Login"
-msgstr ""
+msgstr "Prihlásenie"
 
 msgctxt "#30540"
 msgid "Manual login"
-msgstr ""
+msgstr "Manuálne prihlásenie"
 
 msgctxt "#30543"
 msgid "Username or email"
-msgstr ""
+msgstr "Používateľské meno alebo email"
 
 msgctxt "#30545"
 msgid "Enable server offline"
-msgstr ""
+msgstr "Povoliť offline server"
 
 msgctxt "#30547"
 msgid "Display message"
-msgstr ""
+msgstr "Zobraziť správu"
 
 msgctxt "#30602"
 msgid "Password"
-msgstr ""
+msgstr "Heslo"
 
 msgctxt "#30605"
 msgid "Sign in"
-msgstr ""
+msgstr "Prihlásiť sa"
 
 msgctxt "#30606"
 msgid "Cancel"
-msgstr ""
+msgstr "Zrušiť"
 
 msgctxt "#30607"
 msgid "Select main server"
-msgstr ""
+msgstr "Vyber hlavný server"
 
 msgctxt "#30608"
 msgid "Username or password cannot be empty"
-msgstr ""
+msgstr "Používateľské meno alebo heslo nemôže byť prázdne"
 
 msgctxt "#30609"
 msgid "Unable to connect to the selected server"
@@ -375,23 +375,23 @@ msgstr ""
 
 msgctxt "#30610"
 msgid "Connect to"
-msgstr ""
+msgstr "Pripojiť k"
 
 msgctxt "#30611"
 msgid "Manually add server"
-msgstr ""
+msgstr "Manuálne pridanie serveru"
 
 msgctxt "#30612"
 msgid "Please sign in"
-msgstr ""
+msgstr "Prosím, prihlás sa"
 
 msgctxt "#30613"
 msgid "Change Jellyfin Connect user"
-msgstr ""
+msgstr "Zmeniť pripojeného používateľa Jellifinu"
 
 msgctxt "#30614"
 msgid "Connect to server"
-msgstr ""
+msgstr "Pripojiť k serveru"
 
 msgctxt "#30615"
 msgid "Host"
@@ -399,23 +399,23 @@ msgstr ""
 
 msgctxt "#30616"
 msgid "Connect"
-msgstr ""
+msgstr "Pripojiť"
 
 msgctxt "#30617"
 msgid "Server or port cannot be empty"
-msgstr ""
+msgstr "Server alebo port nemôže byť prázdny"
 
 msgctxt "#33000"
 msgid "Welcome"
-msgstr ""
+msgstr "Vitaj"
 
 msgctxt "#33006"
 msgid "Server is restarting"
-msgstr ""
+msgstr "Server sa reštartuje"
 
 msgctxt "#33009"
 msgid "Invalid username or password"
-msgstr ""
+msgstr "Neplatné používateľské meno alebo heslo"
 
 msgctxt "#33013"
 msgid "Choose the audio stream"
@@ -427,7 +427,7 @@ msgstr ""
 
 msgctxt "#33015"
 msgid "Delete file from Jellyfin?"
-msgstr ""
+msgstr "Vymazať súbor z Jellyfinu?"
 
 msgctxt "#33016"
 msgid "Play trailers?"
@@ -447,7 +447,7 @@ msgstr ""
 
 msgctxt "#33033"
 msgid "A new device Id has been generated. Kodi will now restart."
-msgstr ""
+msgstr "Nové ID zariadenia bolo vygenerované. Kodi sa teraz sám reštartuje."
 
 msgctxt "#33035"
 msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
@@ -455,19 +455,19 @@ msgstr ""
 
 msgctxt "#33036"
 msgid "Add-on (default)"
-msgstr ""
+msgstr "Doplnok (predvolené)"
 
 msgctxt "#33037"
 msgid "Native (direct paths)"
-msgstr ""
+msgstr "Natívne (priame pripojenie)"
 
 msgctxt "#33039"
 msgid "Enable music library?"
-msgstr ""
+msgstr "Povoliť hudobnú knižnicu?"
 
 msgctxt "#33047"
 msgid "Kodi can't locate file:"
-msgstr ""
+msgstr "Kodi nemôže nájsť súbor:"
 
 msgctxt "#33048"
 msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
@@ -475,7 +475,7 @@ msgstr ""
 
 msgctxt "#33049"
 msgid "New"
-msgstr ""
+msgstr "Nový"
 
 msgctxt "#33054"
 msgid "Add user to session"
@@ -483,7 +483,7 @@ msgstr ""
 
 msgctxt "#33058"
 msgid "Perform local database reset"
-msgstr ""
+msgstr "Vykonať lokálny reštart databázy"
 
 msgctxt "#33060"
 msgid "Sync theme media"
@@ -495,11 +495,11 @@ msgstr ""
 
 msgctxt "#33062"
 msgid "Add user"
-msgstr ""
+msgstr "Pridať používateľa"
 
 msgctxt "#33063"
 msgid "Remove user"
-msgstr ""
+msgstr "Odstrániť používateľa"
 
 msgctxt "#33064"
 msgid "Remove user from the session"
@@ -507,7 +507,7 @@ msgstr ""
 
 msgctxt "#33074"
 msgid "Are you sure you want to reset your local Kodi database?"
-msgstr ""
+msgstr "Si si istý, že chceš resetovať svoju lokálnu Kodi databázu?"
 
 msgctxt "#33086"
 msgid "Remove all cached artwork?"
@@ -515,7 +515,7 @@ msgstr ""
 
 msgctxt "#33087"
 msgid "Reset all Jellyfin add-on settings?"
-msgstr ""
+msgstr "Resetovať všetky nastavenia Jellyfin doplnku?"
 
 msgctxt "#33088"
 msgid "Database reset has completed, Kodi will now restart to apply the changes."
@@ -527,27 +527,30 @@ msgstr ""
 
 msgctxt "#33090"
 msgid "Replace existing backup?"
-msgstr ""
+msgstr "Nahradiť existujúcu zálohu?"
 
 msgctxt "#33091"
 msgid "Created backup at:"
-msgstr ""
+msgstr "Vytvoriť zálohu v:"
 
 msgctxt "#33092"
 msgid "Create a backup"
-msgstr ""
+msgstr "Vytvoriť zálohu"
 
 msgctxt "#33093"
 msgid "Backup folder"
-msgstr ""
+msgstr "Priečinok zálohy"
 
 msgctxt "#33097"
 msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
 msgstr ""
+"Dôležité, cleanonupdate bol odstránený z pokročilých nadstavení aby sa "
+"zabránilo konfliktom s doplnkom Jellyfin for Kodi. Kodi sa teraz sám "
+"reštartuje."
 
 msgctxt "#33098"
 msgid "Refresh boxsets"
-msgstr ""
+msgstr "Obnoviť boxsety"
 
 msgctxt "#33099"
 msgid "Install the server plugin Kodi companion to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Companion."
