@@ -19,9 +19,8 @@ import library
 import setup
 import monitor
 from views import Views, verify_kodi_defaults
-from helper import _, window, settings, event, dialog, compare_version
+from helper import _, window, settings, event, dialog
 from jellyfin import Jellyfin
-from database import Database, jellyfin_db, reset
 
 #################################################################################################
 
