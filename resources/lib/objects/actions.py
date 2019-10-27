@@ -17,7 +17,6 @@ from downloader import TheVoid
 from obj import Objects
 from helper import _, playutils, api, window, settings, dialog
 from dialogs import resume
-from utils import get_play_action
 
 #################################################################################################
 
@@ -94,17 +93,13 @@ class Actions(object):
         if item['MediaType'] in ('Video', 'Audio'):
             resume = item['UserData'].get('PlaybackPositionTicks')
 
-            if resume:
-                if get_play_action() == "Resume":
-                    seektime = True
+            if resume and transcode and not seektime:
+                choice = self.resume_dialog(api.API(item, self.server).adjust_resume((resume or 0) / 10000000.0))
 
-                if transcode and not seektime:
-                    choice = self.resume_dialog(api.API(item, self.server).adjust_resume((resume or 0) / 10000000.0))
+                if choice is None:
+                    raise Exception("User backed out of resume dialog.")
 
-                    if choice is None:
-                        raise Exception("User backed out of resume dialog.")
-
-                    seektime = False if not choice else True
+                seektime = False if not choice else True
 
         if settings('enableCinema.bool') and not seektime:
             self._set_intros(item)
