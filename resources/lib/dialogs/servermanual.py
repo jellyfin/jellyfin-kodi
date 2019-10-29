@@ -62,7 +62,6 @@ class ServerManual(xbmcgui.WindowXMLDialog):
         self.host_field = self._add_editcontrol(755, 433, 40, 415)
         self.port_field = self._add_editcontrol(755, 543, 40, 415)
 
-        self.port_field.setText('8096')
         self.setFocus(self.host_field)
 
         self.host_field.controlUp(self.cancel_button)
