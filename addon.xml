@@ -4,6 +4,7 @@
         version="0.3.4"
         provider-name="Jellyfin Contributors, angelblue05">
   <requires>
+    <import addon="script.module.web-pdb" />
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.requests" version="2.22.0"/>
     <import addon="script.module.dateutil" version="2.7.3"/>

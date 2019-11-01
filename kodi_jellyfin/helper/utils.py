@@ -19,7 +19,7 @@ import xbmcaddon
 import xbmcgui
 import xbmcvfs
 
-from .translate import _
+from translate import _
 
 #################################################################################################
 

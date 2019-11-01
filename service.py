@@ -13,14 +13,14 @@ import xbmcaddon
 #################################################################################################
 
 __addon__ = xbmcaddon.Addon(id='plugin.video.jellyfin')
-__base__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'resources', 'lib')).decode('utf-8')
+__base__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'kodi_jellyfin')).decode('utf-8')
 
 sys.path.insert(0, __base__)
 
 #################################################################################################
 
 from entrypoint import Service  # noqa: F402
-from helper import settings  # noqa: F402
+from helper.utils import settings  # noqa: F402
 
 #################################################################################################
 
@@ -65,12 +65,10 @@ class ServiceManager(threading.Thread):
 
 
 if __name__ == "__main__":
-
     LOG.info("-->[ service ]")
     LOG.info("Delay startup by %s seconds.", DELAY)
 
     while True:
-
         if not settings('enableAddon.bool'):
             LOG.warning("Jellyfin for Kodi is not enabled.")
 

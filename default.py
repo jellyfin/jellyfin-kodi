@@ -12,7 +12,7 @@ import xbmcaddon
 #################################################################################################
 
 __addon__ = xbmcaddon.Addon(id='plugin.video.jellyfin')
-__base__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'resources', 'lib')).decode('utf-8')
+__base__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'kodi_jellyfin')).decode('utf-8')
 
 sys.path.insert(0, __base__)
 
