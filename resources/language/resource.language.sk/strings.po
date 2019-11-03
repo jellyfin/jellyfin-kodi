@@ -53,10 +53,6 @@ msgctxt "#30024"
 msgid "Username"
 msgstr "Používateľské meno"
 
-msgctxt "#30030"
-msgid "Port number"
-msgstr "Číslo portu"
-
 msgctxt "#30091"
 msgid "Confirm file deletion"
 msgstr "Potvrdiť vymazanie súboru"

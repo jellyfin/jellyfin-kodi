@@ -53,10 +53,6 @@ msgctxt "#30024"
 msgid "Username"
 msgstr "Nombre de usuario"
 
-msgctxt "#30030"
-msgid "Port number"
-msgstr "Puerto"
-
 msgctxt "#30091"
 msgid "Confirm file deletion"
 msgstr "Conformar borrado de archivo"

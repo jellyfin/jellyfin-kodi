@@ -60,16 +60,12 @@ class ServerManual(xbmcgui.WindowXMLDialog):
         self.error_toggle = self.getControl(ERROR_TOGGLE)
         self.error_msg = self.getControl(ERROR_MSG)
         self.host_field = self._add_editcontrol(755, 433, 40, 415)
-        self.port_field = self._add_editcontrol(755, 543, 40, 415)
 
-        self.port_field.setText('8096')
         self.setFocus(self.host_field)
 
         self.host_field.controlUp(self.cancel_button)
-        self.host_field.controlDown(self.port_field)
-        self.port_field.controlUp(self.host_field)
-        self.port_field.controlDown(self.connect_button)
-        self.connect_button.controlUp(self.port_field)
+        self.host_field.controlDown(self.connect_button)
+        self.connect_button.controlUp(self.host_field)
         self.cancel_button.controlDown(self.host_field)
 
     def onClick(self, control):
@@ -78,14 +74,13 @@ class ServerManual(xbmcgui.WindowXMLDialog):
             self._disable_error()
 
             server = self.host_field.getText()
-            port = self.port_field.getText()
 
             if not server:
                 # Display error
                 self._error(ERROR['Empty'], _('empty_server'))
                 LOG.error("Server cannot be null")
 
-            elif self._connect_to_server(server, port):
+            elif self._connect_to_server(server):
                 self.close()
 
         elif control == CANCEL:
@@ -94,7 +89,7 @@ class ServerManual(xbmcgui.WindowXMLDialog):
 
     def onAction(self, action):
 
-        if self.error == ERROR['Empty'] and self.host_field.getText() and self.port_field.getText():
+        if self.error == ERROR['Empty'] and self.host_field.getText():
             self._disable_error()
 
         if action in (ACTION_BACK, ACTION_PARENT_DIR, ACTION_PREVIOUS_MENU):
@@ -117,13 +112,12 @@ class ServerManual(xbmcgui.WindowXMLDialog):
         self.addControl(control)
         return control
 
-    def _connect_to_server(self, server, port):
+    def _connect_to_server(self, server):
         if _IPV6_RE.match(server):
             server = "[%s]" % (server)
 
-        server_address = "%s:%s" % (server, port) if port else server
-        self._message("%s %s..." % (_(30610), server_address))
-        result = self.connect_manager.connect_to_address(server_address)
+        self._message("%s %s..." % (_(30610), server))
+        result = self.connect_manager.connect_to_address(server)
 
         if result['State'] == CONNECTION_STATE['Unavailable']:
             self._message(_(30609))
