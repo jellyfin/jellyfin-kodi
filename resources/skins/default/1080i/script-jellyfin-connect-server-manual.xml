@@ -80,28 +80,6 @@
 								<texture colordiffuse="ff525252">white.png</texture>
 							</control>
 						</control>
-						<control type="group" id="102">
-							<height>110</height>
-							<control type="label">
-								<label>$ADDON[plugin.video.jellyfin 30030]</label>
-								<textcolor>ffe1e1e1</textcolor>
-								<textshadow>66000000</textshadow>
-								<font>font12</font>
-								<aligny>top</aligny>
-								<textoffsetx>20</textoffsetx>
-							</control>
-							<control type="label">
-								<height>50</height>
-							</control>
-							<control type="image">
-								<description>separator</description>
-								<left>20</left>
-								<right>20</right>
-								<height>1</height>
-								<top>90</top>
-								<texture colordiffuse="ff525252">white.png</texture>
-							</control>
-						</control>
 						<control type="button" id="200">
 							<label>[B]$ADDON[plugin.video.jellyfin 30616][/B]</label>
 							<width>426</width>
