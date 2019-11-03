@@ -53,10 +53,6 @@ msgctxt "#30024"
 msgid "Username"
 msgstr "사용자 이름"
 
-msgctxt "#30030"
-msgid "Port number"
-msgstr "포트"
-
 msgctxt "#30091"
 msgid "Confirm file deletion"
 msgstr "파일 삭제 확인"

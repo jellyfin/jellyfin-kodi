@@ -53,10 +53,6 @@ msgctxt "#30024"
 msgid "Username"
 msgstr "Brukernavn"
 
-msgctxt "#30030"
-msgid "Port number"
-msgstr "Portnummer"
-
 msgctxt "#30091"
 msgid "Confirm file deletion"
 msgstr "Bekreft sletting av fil"

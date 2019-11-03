@@ -53,10 +53,6 @@ msgctxt "#30024"
 msgid "Username"
 msgstr "用户名"
 
-msgctxt "#30030"
-msgid "Port number"
-msgstr "端口号"
-
 msgctxt "#30091"
 msgid "Confirm file deletion"
 msgstr "确认删除文件"
