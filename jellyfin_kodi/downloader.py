@@ -10,8 +10,8 @@ import xbmc
 import requests
 from helper import settings, stop, event, window, create_id
 from jellyfin import Jellyfin
-from jellyfin.core import api
-from jellyfin.core.exceptions import HTTPException
+from jellyfin import api
+from jellyfin.exceptions import HTTPException
 
 #################################################################################################
 

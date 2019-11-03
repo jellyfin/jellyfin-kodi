@@ -8,7 +8,7 @@ import threading
 
 import xbmc
 
-from .. import websocket
+import websocket
 
 ##################################################################################################
 

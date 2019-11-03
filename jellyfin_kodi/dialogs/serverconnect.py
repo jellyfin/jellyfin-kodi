@@ -8,7 +8,7 @@ import xbmc
 import xbmcgui
 
 from helper import _
-from jellyfin.core.connection_manager import CONNECTION_STATE
+from jellyfin.connection_manager import CONNECTION_STATE
 
 ##################################################################################################
 

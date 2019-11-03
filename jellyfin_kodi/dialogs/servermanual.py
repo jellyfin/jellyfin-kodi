@@ -10,7 +10,7 @@ import xbmcgui
 import xbmcaddon
 
 from helper import _, addon_id
-from jellyfin.core.connection_manager import CONNECTION_STATE
+from jellyfin.connection_manager import CONNECTION_STATE
 
 ##################################################################################################
 
