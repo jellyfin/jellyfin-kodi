@@ -5,7 +5,7 @@
 import logging
 
 from client import JellyfinClient
-from helpers import has_attribute
+from helper import has_attribute
 
 #################################################################################################
 
