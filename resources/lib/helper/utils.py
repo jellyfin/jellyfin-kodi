@@ -293,7 +293,11 @@ def indent(elem, level=0):
 def write_xml(content, file):
     with open(file, 'w') as infile:
 
-        content = content.replace("'", '"')
+        # replace apostrophes with double quotes only in xml keys, not texts
+        def replace_apostrophes(match):
+            return match.group(0).replace("'", '"')
+        content = re.sub("<(.*?)>", replace_apostrophes, content)
+
         content = content.replace('?>', ' standalone="yes" ?>', 1)
         infile.write(content)
 
