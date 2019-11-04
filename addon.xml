@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon  id="plugin.video.jellyfin"
         name="Jellyfin"
-        version="0.3.4"
+        version="0.3.5"
         provider-name="Jellyfin Contributors, angelblue05">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -37,8 +37,12 @@
     <summary lang="en"></summary>
     <description lang="en">Welcome to Jellyfin for Kodi!&#10;A whole new way to manage and view your media library. The Jellyfin addon for Kodi combines the best of Kodi - ultra smooth navigation, beautiful UIs and playback of any file under the sun, and Jellyfin - the most powerful fully open source multi-client media metadata indexer and server.&#10;&#10;Jellyfin for Kodi is the absolute best way to enjoy the incredible Kodi playback engine combined with the power of Jellyfin's centralized database. Features:&#10;* Direct integration with the Kodi library for native Kodi speed&#10;* Instant synchronization with the Jellyfin server&#10;* Full support for Movie, TV and Music collections&#10;* Jellyfin Server direct stream and transcoding support - use Kodi when you are away from home!</description>
     <news>
-    v0.3.4 (2019-10-05)
-      #109 Remove dependency on `ipaddress` (not stdlib in py2)
+    v0.3.5 (2019-11-04)
+      #117 Add support for upnext addon
+      #124 Fixed incorrect window titles during library management
+      #127 Removed unused code
+      #128 Removed port field on server setup
+      #132 Fix libraries when they have an apostrophe in the name
     </news>
     <assets>
       <icon>resources/icon.png</icon>
