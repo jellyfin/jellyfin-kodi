@@ -891,14 +891,6 @@ msgctxt "#33186"
 msgid "The Kodi companion speeds up the start up sync. Other syncs are triggered by server events."
 msgstr "Kodi伴侣将加速启动时的同步。其他的同步将由服务器事件触发。"
 
-msgctxt "#33187"
-msgid "Sync Rotten Tomatoes ratings"
-msgstr "同步烂番茄评分"
-
-msgctxt "#33188"
-msgid "Would you like to sync Rotten Tomatoes ratings?"
-msgstr "你想要同步烂番茄评分吗？"
-
 msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
 msgstr "重启Jellyfin for Kodi以应用更改？"

@@ -958,14 +958,6 @@ msgstr ""
 "Kodi Companion acelera la sincronización inicial. Otras sincronizaciones se "
 "lanzan mediante eventos del servidor."
 
-msgctxt "#33187"
-msgid "Sync Rotten Tomatoes ratings"
-msgstr "Sincronizar calificaciones de Rotten Tomatoes"
-
-msgctxt "#33188"
-msgid "Would you like to sync Rotten Tomatoes ratings?"
-msgstr "¿Te gustaría sincronizar las calificaciones de Rotten Tomatoes?"
-
 msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
 msgstr "¿Reiniciar Jellyfin para Kodi para aplicar este cambio?"

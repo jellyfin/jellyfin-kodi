@@ -1013,14 +1013,6 @@ msgid ""
 " server events."
 msgstr ""
 
-msgctxt "#33187"
-msgid "Sync Rotten Tomatoes ratings"
-msgstr ""
-
-msgctxt "#33188"
-msgid "Would you like to sync Rotten Tomatoes ratings?"
-msgstr ""
-
 msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
 msgstr ""

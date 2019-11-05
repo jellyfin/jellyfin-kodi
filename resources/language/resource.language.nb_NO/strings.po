@@ -946,14 +946,6 @@ msgstr ""
 "Kodi companion får oppstartssynkroniseringen til å gå raskere. Andre "
 "synkroniseringer startes av serverhendelser."
 
-msgctxt "#33187"
-msgid "Sync Rotten Tomatoes ratings"
-msgstr "Synkroniser vurderinger fra Rotten Tomatoes"
-
-msgctxt "#33188"
-msgid "Would you like to sync Rotten Tomatoes ratings?"
-msgstr "Vil du synkronisere vurderinger fra Rotten Tomatoes?"
-
 msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
 msgstr ""
