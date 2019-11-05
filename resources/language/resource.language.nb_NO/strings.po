@@ -233,10 +233,6 @@ msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
 msgstr "Aktiver varsler hvis antall oppdateringer er større enn"
 
-msgctxt "#30508"
-msgid "Sync empty shows"
-msgstr "Synkroniser tomme serier"
-
 msgctxt "#30509"
 msgid "Enable music library"
 msgstr "Aktiver musikkbibliotek"
@@ -561,10 +557,6 @@ msgstr ""
 "Installer serverpluginen Kodi companion for å automatisk hente oppdateringer "
 "i Jellyfin-bibliotekene ved oppstart. Denne innstillingen kan finnes i "
 "tilleggsinnstillinger > synkroniseringsvalg > Aktiver Kodi Companion."
-
-msgctxt "#33100"
-msgid "Would you like to sync empty shows?"
-msgstr "Vil du synkronisere tomme serier?"
 
 msgctxt "#33101"
 msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"

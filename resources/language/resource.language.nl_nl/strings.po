@@ -234,10 +234,6 @@ msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
 msgstr "Melding inschakelen als er meer updates zijn dan"
 
-msgctxt "#30508"
-msgid "Sync empty shows"
-msgstr "Synchroniseer lege shows"
-
 msgctxt "#30509"
 msgid "Enable music library"
 msgstr "Muziek bibliotheek inschakelen"
@@ -579,10 +575,6 @@ msgstr ""
 "automatisch te laten lopen bij het opstarten. Deze instellingen kan gevonden"
 " worden in de add-on instellingen > synchroniseer opties > Kodi Companion "
 "inschakelen."
-
-msgctxt "#33100"
-msgid "Would you like to sync empty shows?"
-msgstr "Lege shows synchroniseren?"
 
 msgctxt "#33101"
 msgid ""

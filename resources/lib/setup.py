@@ -75,8 +75,6 @@ class Setup(object):
             LOG.info("Add-on playback: %s", settings('useDirectPaths') == "0")
             self._is_artwork_caching()
             LOG.info("Artwork caching: %s", settings('enableTextureCache.bool'))
-            self._is_empty_shows()
-            LOG.info("Sync empty shows: %s", settings('syncEmptyShows.bool'))
             self._is_rotten_tomatoes()
             LOG.info("Sync rotten tomatoes: %s", settings('syncRottenTomatoes.bool'))
 
@@ -109,11 +107,6 @@ class Setup(object):
 
         value = dialog("yesno", heading="{jellyfin}", line1=_(33117))
         settings('enableTextureCache.bool', value)
-
-    def _is_empty_shows(self):
-
-        value = dialog("yesno", heading="{jellyfin}", line1=_(33100))
-        settings('syncEmptyShows.bool', value)
 
     def _is_rotten_tomatoes(self):
 

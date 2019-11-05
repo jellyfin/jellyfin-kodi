@@ -233,10 +233,6 @@ msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
 msgstr ""
 
-msgctxt "#30508"
-msgid "Sync empty shows"
-msgstr ""
-
 msgctxt "#30509"
 msgid "Enable music library"
 msgstr ""
@@ -547,10 +543,6 @@ msgstr ""
 
 msgctxt "#33099"
 msgid "Install the server plugin Kodi companion to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Companion."
-msgstr ""
-
-msgctxt "#33100"
-msgid "Would you like to sync empty shows?"
 msgstr ""
 
 msgctxt "#33101"

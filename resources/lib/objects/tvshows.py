@@ -54,13 +54,6 @@ class TVShows(KodiDb):
         obj = self.objects.map(item, 'Series')
         update = True
 
-        if not settings('syncEmptyShows.bool') and not obj['RecursiveCount']:
-
-            LOG.info("Skipping empty show %s: %s", obj['Title'], obj['Id'])
-            self.remove(obj['Id'])
-
-            return False
-
         try:
             obj['ShowId'] = e_item[0]
             obj['PathId'] = e_item[2]
