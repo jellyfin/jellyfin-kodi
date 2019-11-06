@@ -174,8 +174,6 @@ class ConnectionManager(object):
         if CONNECTION_MODE['Local'] not in tests:
             tests.append(CONNECTION_MODE['Local'])
 
-        # TODO: begin to wake server
-
         LOG.info("beginning connection tests")
         return self._test_next_connection_mode(tests, 0, server, options)
 
@@ -322,12 +320,7 @@ class ConnectionManager(object):
 
         except Exception:
             LOG.exception("test failed for connection mode %s with server %s", mode, server.get('Name'))
-
-            if enable_retry:
-                # TODO: wake on lan and retry
-                return self._test_next_connection_mode(tests, index + 1, server, options)
-            else:
-                return self._test_next_connection_mode(tests, index + 1, server, options)
+            return self._test_next_connection_mode(tests, index + 1, server, options)
         else:
             if self._compare_versions(self._get_min_server_version(), result['Version']) == 1:
                 LOG.warning("minServerVersion requirement not met. Server version: %s", result['Version'])
@@ -575,8 +568,6 @@ class ConnectionManager(object):
 
         if system_info.get('LocalAddress'):
             server['LocalAddress'] = system_info['LocalAddress']
-        if 'MacAddress' in system_info:
-            server['WakeOnLanInfos'] = [{'MacAddress': system_info['MacAddress']}]
 
     def _on_authenticated(self, result, options={}):
 
