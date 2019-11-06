@@ -900,14 +900,6 @@ msgctxt "#33186"
 msgid "The Kodi companion speeds up the start up sync. Other syncs are triggered by server events."
 msgstr "Kodi 컴패니언은 시작시 동기화를 빠르게 해줍니다. 다른 동기화는 서버 이벤트에 의해 발생합니다."
 
-msgctxt "#33187"
-msgid "Sync Rotten Tomatoes ratings"
-msgstr "Rotten Tomatoes 평점 동기화"
-
-msgctxt "#33188"
-msgid "Would you like to sync Rotten Tomatoes ratings?"
-msgstr "Rotten Tomatoes 평점을 동기화하시겠습니까?"
-
 msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
 msgstr "변경사항을 적용하기위해 Jellyfin for Kodi를 재시작하시겠습니까?"

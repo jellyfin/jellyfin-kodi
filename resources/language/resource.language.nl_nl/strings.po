@@ -1002,14 +1002,6 @@ msgstr ""
 "De Kodi companion maakt het opstarten van de synchronisatie sneller. Andere "
 "synchronisaties worden aangeroepen door server voorvallen."
 
-msgctxt "#33187"
-msgid "Sync Rotten Tomatoes ratings"
-msgstr "Rotten Tomatoes ratings synchroniseren"
-
-msgctxt "#33188"
-msgid "Would you like to sync Rotten Tomatoes ratings?"
-msgstr "Rotten Tomatoes ratings synchroniseren?"
-
 msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
 msgstr "Jellyfin for Kodi opnieuw opstarten om de wijziging toe te passen?"

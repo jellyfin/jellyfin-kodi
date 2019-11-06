@@ -1007,14 +1007,6 @@ msgstr ""
 "Kodi companion accelera la sincronizzazione all'avvio. Altre "
 "sincronizzazioni sono attivate da eventi del server."
 
-msgctxt "#33187"
-msgid "Sync Rotten Tomatoes ratings"
-msgstr "Sincronizza valutazioni di Rotten Tomatoes"
-
-msgctxt "#33188"
-msgid "Would you like to sync Rotten Tomatoes ratings?"
-msgstr "Vorresti sincronizzare le valutazioni di Rotten Tomatoes?"
-
 msgctxt "#33189"
 msgid ""
 "The database version detected is unsupported. Syncing may not work, proceed "

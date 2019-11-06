@@ -61,9 +61,6 @@ class Movies(KodiDb):
                 update = False
                 LOG.info("MovieId %s missing from kodi. repairing the entry.", obj['MovieId'])
 
-        if not settings('syncRottenTomatoes.bool'):
-            obj['CriticRating'] = None
-
         obj['Path'] = API.get_file_path(obj['Path'])
         obj['LibraryId'] = library['Id']
         obj['LibraryName'] = library['Name']

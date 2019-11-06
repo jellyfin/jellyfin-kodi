@@ -994,14 +994,6 @@ msgstr ""
 "Wtyczka Kodi Companion przyspiesza synchronizację na starcie. Zdarzenia na "
 "serwerze także wywołują synchronizację."
 
-msgctxt "#33187"
-msgid "Sync Rotten Tomatoes ratings"
-msgstr "Synchronizuj ocenę z Rotten Tomatoes"
-
-msgctxt "#33188"
-msgid "Would you like to sync Rotten Tomatoes ratings?"
-msgstr "Czy synchronizować ocenę z Rotten Tomatoes?"
-
 msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
 msgstr "Zrestartować Jellyfin dla Kodi by zaaplikować tę zmianę?"
