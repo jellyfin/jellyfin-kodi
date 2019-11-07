@@ -75,15 +75,6 @@ class Setup(object):
             LOG.info("Add-on playback: %s", settings('useDirectPaths') == "0")
             self._is_artwork_caching()
             LOG.info("Artwork caching: %s", settings('enableTextureCache.bool'))
-            self._is_rotten_tomatoes()
-            LOG.info("Sync rotten tomatoes: %s", settings('syncRottenTomatoes.bool'))
-
-        """
-        if compare_version(cached or minimum, "3.0.24") <= 0:
-
-            self._is_rotten_tomatoes()
-            LOG.info("Sync rotten tomatoes: %s", settings('syncRottenTomatoes.bool'))
-        """
 
         # Setup completed
         settings('MinimumSetup', minimum)
@@ -107,11 +98,6 @@ class Setup(object):
 
         value = dialog("yesno", heading="{jellyfin}", line1=_(33117))
         settings('enableTextureCache.bool', value)
-
-    def _is_rotten_tomatoes(self):
-
-        value = dialog("yesno", heading="{jellyfin}", line1=_(33188))
-        settings('syncRottenTomatoes.bool', value)
 
     def _is_music(self):
 
