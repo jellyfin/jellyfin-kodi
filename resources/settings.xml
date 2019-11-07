@@ -31,7 +31,6 @@
 		<setting label="30512" id="enableTextureCache" type="bool" default="true" />
 		<setting label="30157" id="enableCoverArt" type="bool" default="true" />
 		<setting label="33116" id="compressArt" type="bool" default="false" />
-		<setting label="30508" id="syncEmptyShows" type="bool" default="false" />
 		<setting id="enableMusic" visible="false" default="false" />
 	</category>
 	

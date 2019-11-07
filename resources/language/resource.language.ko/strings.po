@@ -233,10 +233,6 @@ msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
 msgstr "업그레이드 카운트가 이 이상이 되면 알림"
 
-msgctxt "#30508"
-msgid "Sync empty shows"
-msgstr "빈 쇼 동기화"
-
 msgctxt "#30509"
 msgid "Enable music library"
 msgstr "음악 라이브러리 활성화"
@@ -559,10 +555,6 @@ msgid "Install the server plugin Kodi companion to automatically apply Jellyfin 
 msgstr ""
 "시작시 Jellyfin 라이브러리를 자동으로 업데이트하기 위해 Kodi 컴패니언 플러그인을 설치합니다. 이 설정은 애드온 설정 -> "
 "동기화 옵션 -> Kodi 컴패니언 활성화 에서도 찾아볼 수 있습니다."
-
-msgctxt "#33100"
-msgid "Would you like to sync empty shows?"
-msgstr "빈 쇼를 동기화하시겠습니까?"
 
 msgctxt "#33101"
 msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"

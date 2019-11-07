@@ -230,10 +230,6 @@ msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
 msgstr ""
 
-msgctxt "#30508"
-msgid "Sync empty shows"
-msgstr "同步空白节目"
-
 msgctxt "#30509"
 msgid "Enable music library"
 msgstr "启用音乐库"
@@ -545,10 +541,6 @@ msgstr ""
 msgctxt "#33099"
 msgid "Install the server plugin Kodi companion to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Companion."
 msgstr "安装服务器插件Kodi伴侣以在启动时自动更新Jellyfin媒体库。此设置位于插件设置 > 同步选项 > 启用Kodi伴侣"
-
-msgctxt "#33100"
-msgid "Would you like to sync empty shows?"
-msgstr "您是否想同步空节目？"
 
 msgctxt "#33101"
 msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"

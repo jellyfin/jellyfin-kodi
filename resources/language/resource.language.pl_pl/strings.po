@@ -234,10 +234,6 @@ msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
 msgstr "Wyświetl powiadomienie jeśli ilość aktualizacji przekroczy"
 
-msgctxt "#30508"
-msgid "Sync empty shows"
-msgstr "Synchronizuj puste seriale"
-
 msgctxt "#30509"
 msgid "Enable music library"
 msgstr "Włącz bibliotekę muzyki"
@@ -579,10 +575,6 @@ msgstr ""
 "Zainstaluj wtyczkę serwera Jellyfin \"Kodi Companion\" by automatycznie pobierać"
 " aktualizacje bazy danych. Właściwa opcja znajduje się w ustawieniach "
 "dodatku > Synchronizacja > Włącz Kodi Companion."
-
-msgctxt "#33100"
-msgid "Would you like to sync empty shows?"
-msgstr "Synchronizować puste seriale?"
 
 msgctxt "#33101"
 msgid ""

@@ -234,10 +234,6 @@ msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
 msgstr "Abilita notifiche se gli elementi aggiornati sono più di"
 
-msgctxt "#30508"
-msgid "Sync empty shows"
-msgstr "Sincronizza serie TV vuote"
-
 msgctxt "#30509"
 msgid "Enable music library"
 msgstr "Abilita libreria musicale"
@@ -578,10 +574,6 @@ msgstr ""
 "gli aggiornamenti della libreria Jellyfin all'avvio. Questa impostazione può "
 "essere trovata nelle impostazioni dell'add-on > opzioni di sincronizzazione>"
 " Abilita Kodi Companion."
-
-msgctxt "#33100"
-msgid "Would you like to sync empty shows?"
-msgstr "Vorresti sincronizzare gli spettacoli vuoti?"
 
 msgctxt "#33101"
 msgid ""
