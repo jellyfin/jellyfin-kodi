@@ -7,7 +7,6 @@ import logging
 import json
 import os
 import sqlite3
-from io import open
 
 import xbmc
 import xbmcvfs
@@ -21,6 +20,9 @@ from objects import obj
 LOG = logging.getLogger("JELLYFIN." + __name__)
 
 #################################################################################################
+
+
+UNICODE = type(u"")
 
 
 class Database(object):
@@ -338,8 +340,8 @@ def get_sync():
         xbmcvfs.mkdirs(path)
 
     try:
-        with open(os.path.join(path, 'sync.json'), encoding='utf-8') as infile:
-            sync = json.load(infile)
+        with open(os.path.join(path, 'sync.json'), 'rb') as infile:
+            sync = json.load(infile, encoding='utf-8')
     except Exception:
         sync = {}
 
@@ -360,9 +362,11 @@ def save_sync(sync):
 
     sync['Date'] = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 
-    with open(os.path.join(path, 'sync.json'), 'w', encoding='utf-8') as outfile:
+    with open(os.path.join(path, 'sync.json'), 'wb') as outfile:
         data = json.dumps(sync, sort_keys=True, indent=4, ensure_ascii=False)
-        outfile.write(unicode(data))
+        if isinstance(data, UNICODE):
+            data = data.encode('utf-8')
+        outfile.write(data)
 
 
 def get_credentials():
@@ -373,13 +377,13 @@ def get_credentials():
         xbmcvfs.mkdirs(path)
 
     try:
-        with open(os.path.join(path, 'data.json'), encoding='utf8') as infile:
-            credentials = json.load(infile)
+        with open(os.path.join(path, 'data.json'), 'rb') as infile:
+            credentials = json.load(infile, encoding='utf8')
     except Exception:
 
         try:
-            with open(os.path.join(path, 'data.txt'), encoding='utf-8') as infile:
-                credentials = json.load(infile)
+            with open(os.path.join(path, 'data.txt'), 'rb') as infile:
+                credentials = json.load(infile, encoding='utf-8')
                 save_credentials(credentials)
 
             xbmcvfs.delete(os.path.join(path, 'data.txt'))
@@ -398,11 +402,13 @@ def save_credentials(credentials):
     if not xbmcvfs.exists(path):
         xbmcvfs.mkdirs(path)
     try:
-        with open(os.path.join(path, 'data.json'), 'w', encoding='utf8') as outfile:
+        with open(os.path.join(path, 'data.json'), 'wb') as outfile:
             data = json.dumps(credentials, sort_keys=True, indent=4, ensure_ascii=False)
-            outfile.write(unicode(data))
-    except Exception as e:
-        LOG.error("Failed to save credentials: {}".format(e))
+            if isinstance(data, UNICODE):
+                data = data.encode('utf-8')
+            outfile.write(data)
+    except Exception:
+        LOG.exception("Failed to save credentials:")
 
 
 def get_item(kodi_id, media):
