@@ -107,9 +107,6 @@ class Credentials(object):
                 if server.get('Name'):
                     existing['Name'] = server['Name']
 
-                if server.get('WakeOnLanInfos'):
-                    existing['WakeOnLanInfos'] = server['WakeOnLanInfos']
-
                 if server.get('LastConnectionMode') is not None:
                     existing['LastConnectionMode'] = server['LastConnectionMode']
 
