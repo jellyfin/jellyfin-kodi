@@ -669,20 +669,6 @@ msgctxt "#33124"
 msgid "Include people (slow)"
 msgstr "Inkluder folk (tregt)"
 
-msgctxt "#33125"
-msgid "Choose the Jellyfin views to sync to Kodi. You can optionally sync libraries at a later time."
-msgstr ""
-"Velg Jellyfin-visningene som skal synkroniseres til Kodi. Du kan evt. velge "
-"å synkronisere biblioteker senere."
-
-msgctxt "#33126"
-msgid "Sync later"
-msgstr "Synkroniser senere"
-
-msgctxt "#33127"
-msgid "Proceed"
-msgstr "Fortsett"
-
 msgctxt "#33128"
 msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
 msgstr ""

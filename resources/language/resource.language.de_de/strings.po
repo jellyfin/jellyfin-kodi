@@ -6,7 +6,7 @@
 # Wolfgang Petri <horstepipe@googlemail.com>, 2018
 # sualfred <su4lfred@gmail.com>, 2018
 # Benni <semool@secure-mail.biz>, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
@@ -702,22 +702,6 @@ msgstr "Synchronisiere Datenbank zu Kodi"
 msgctxt "#33124"
 msgid "Include people (slow)"
 msgstr "Schließe Personen mit ein (langsam)"
-
-msgctxt "#33125"
-msgid ""
-"Choose the Jellyfin views to sync to Kodi. You can optionally sync libraries at "
-"a later time."
-msgstr ""
-"Wähle die Jellyfin Datenbanken, welche synchronisiert werden sollen. Optional "
-"können diese auch nachträglich synchronisiert werden."
-
-msgctxt "#33126"
-msgid "Sync later"
-msgstr "Später synchronisieren"
-
-msgctxt "#33127"
-msgid "Proceed"
-msgstr "Fortfahren"
 
 msgctxt "#33128"
 msgid ""

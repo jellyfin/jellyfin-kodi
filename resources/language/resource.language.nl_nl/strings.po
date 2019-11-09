@@ -4,7 +4,7 @@
 # Addon Provider: angelblue05
 # Translators:
 # 63ac71fcbd0581bb567b1f0d798c7970, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
@@ -698,22 +698,6 @@ msgstr "Synchroniseer bibliotheek naar Kodi"
 msgctxt "#33124"
 msgid "Include people (slow)"
 msgstr "Mensen meerekenen (langzaam)"
-
-msgctxt "#33125"
-msgid ""
-"Choose the Jellyfin views to sync to Kodi. You can optionally sync libraries at "
-"a later time."
-msgstr ""
-"Kies de Jellyfin zichten om naar Kodi te synchroniseren. U kunt later de "
-"bibliotheken optioneel synchroniseren."
-
-msgctxt "#33126"
-msgid "Sync later"
-msgstr "Later synchroniseren"
-
-msgctxt "#33127"
-msgid "Proceed"
-msgstr "Doorgaan"
 
 msgctxt "#33128"
 msgid ""

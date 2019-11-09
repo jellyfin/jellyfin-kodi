@@ -140,10 +140,6 @@ class FullSync(object):
 
         ''' Select all or certain libraries to be whitelisted.
         '''
-        if dialog("yesno", heading="{jellyfin}", line1=_(33125), nolabel=_(33127), yeslabel=_(33126)):
-            LOG.info("Selected sync later.")
-
-            raise LibraryException('SyncLibraryLater')
 
         choices = [x['Name'] for x in libraries]
         choices.insert(0, _(33121))
