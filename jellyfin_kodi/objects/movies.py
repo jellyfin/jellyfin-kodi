@@ -41,8 +41,7 @@ class Movies(KodiDb):
         ''' If item does not exist, entry will be added.
             If item exists, entry will be updated.
         '''
-        server_data = self.server.auth.get_server_info(self.server.auth.server_id)
-        server_address = self.server.auth.get_server_address(server_data, server_data['LastConnectionMode'])
+        server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
         API = api.API(item, server_address)
         obj = self.objects.map(item, 'Movie')
         update = True
@@ -195,8 +194,7 @@ class Movies(KodiDb):
             Process movies inside boxset.
             Process removals from boxset.
         '''
-        server_data = self.server.auth.get_server_info(self.server.auth.server_id)
-        server_address = self.server.auth.get_server_address(server_data, server_data['LastConnectionMode'])
+        server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
         API = api.API(item, server_address)
         obj = self.objects.map(item, 'Boxset')
 
@@ -274,8 +272,7 @@ class Movies(KodiDb):
         ''' This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
             Poster with progress bar
         '''
-        server_data = self.server.auth.get_server_info(self.server.auth.server_id)
-        server_address = self.server.auth.get_server_address(server_data, server_data['LastConnectionMode'])
+        server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
         API = api.API(item, server_address)
         obj = self.objects.map(item, 'MovieUserData')
 

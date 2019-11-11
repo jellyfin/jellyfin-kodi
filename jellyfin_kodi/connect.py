@@ -147,8 +147,7 @@ class Connect(object):
         settings('username', self.user['Name'])
 
         if 'PrimaryImageTag' in self.user:
-            server_data = client.auth.get_server_info(client.auth.server_id)
-            server_address = client.auth.get_server_address(server_data, server_data['LastConnectionMode'])
+            server_address = client.auth.get_server_info(client.auth.server_id)['address']
             window('JellyfinUserImage', api.API(self.user, server_address).get_user_artwork(self.user['Id']))
 
     def select_servers(self, state=None):
@@ -212,8 +211,7 @@ class Connect(object):
     def login(self):
 
         users = self.connect_manager.get_public_users()
-        server_data = self.connect_manager.get_server_info(self.connect_manager.server_id)
-        server = self.connect_manager.get_server_address(server_data, server_data['LastConnectionMode'])
+        server = self.connect_manager.get_server_info(self.connect_manager.server_id)['address']
 
         if not users:
             try:
