@@ -21,25 +21,10 @@ CONNECTION_STATE = {
     'Unavailable': 0,
     'ServerSelection': 1,
     'ServerSignIn': 2,
-    'SignedIn': 3,
-    'ServerUpdateNeeded': 5
-}
-CONNECTION_MODE = {
-    'Local': 0,
-    'Manual': 2
+    'SignedIn': 3
 }
 
 #################################################################################################
-
-
-def get_server_address(server, mode):
-
-    modes = {
-        CONNECTION_MODE['Local']: server.get('LocalAddress'),
-        CONNECTION_MODE['Manual']: server.get('ManualAddress')
-    }
-    return modes.get(mode) or server.get('ManualAddress', server.get('LocalAddress'))
-
 
 class ConnectionManager(object):
 
@@ -138,55 +123,41 @@ class ConnectionManager(object):
 
         address = self._normalize_address(address)
 
-        def _on_fail():
-            LOG.error("connectToAddress %s failed", address)
-            return self._resolve_failure()
-
         try:
             public_info = self._try_connect(address, options=options)
-        except Exception as error:
-            LOG.exception(error)
-            return _on_fail()
-        else:
             LOG.info("connectToAddress %s succeeded", address)
             server = {
-                'ManualAddress': address,
-                'LastConnectionMode': CONNECTION_MODE['Manual']
+                'address': address,
             }
             self._update_server_info(server, public_info)
             server = self.connect_to_server(server, options)
             if server is False:
-                return _on_fail()
+                LOG.error("connectToAddress %s failed", address)
+                return { 'State': CONNECTION_STATE['Unavailable'] }
 
             return server
+        except Exception as error:
+            LOG.exception(error)
+            LOG.error("connectToAddress %s failed", address)
+            return { 'State': CONNECTION_STATE['Unavailable'] }
+           
 
     def connect_to_server(self, server, options={}):
 
         LOG.info("begin connectToServer")
+        timeout = self.timeout
 
-        tests = []
+        try:
+            result = self._try_connect(server['address'], timeout, options)
+            LOG.info("calling onSuccessfulConnection with server %s", server.get('Name'))
+            credentials = self.credentials.get_credentials()
+            return self._after_connect_validated(server, credentials, result, True, options)
 
-        if server.get('LastConnectionMode') is not None and server.get('AccessToken'):
-            tests.append(server['LastConnectionMode'])
-
-        if CONNECTION_MODE['Manual'] not in tests:
-            tests.append(CONNECTION_MODE['Manual'])
-        if CONNECTION_MODE['Local'] not in tests:
-            tests.append(CONNECTION_MODE['Local'])
-
-        LOG.info("beginning connection tests")
-        return self._test_next_connection_mode(tests, 0, server, options)
-
-    def get_server_address(self, server, mode):  # TODO: De-duplicated (Duplicated from above when getting rid of shortcuts)
-
-        modes = {
-            CONNECTION_MODE['Local']: server.get('LocalAddress'),
-            CONNECTION_MODE['Manual']: server.get('ManualAddress')
-        }
-        return modes.get(mode) or server.get('ManualAddress', server.get('LocalAddress'))
+        except Exception as e:
+            LOG.info("Failing server connection. ERROR msg: {}".format(e))
+            return { 'State': CONNECTION_STATE['Unavailable'] }            
 
     def connect(self, options={}):
-
         LOG.info("Begin connect")
         return self._connect_to_servers(self.get_available_servers(), options)
 
@@ -284,91 +255,6 @@ class ConnectionManager(object):
             'retry': False
         })
 
-    def _test_next_connection_mode(self, tests, index, server, options):
-
-        if index >= len(tests):
-            LOG.info("Tested all connection modes. Failing server connection.")
-            return self._resolve_failure()
-
-        mode = tests[index]
-        address = get_server_address(server, mode)
-        enable_retry = False
-        skip_test = False
-        timeout = self.timeout
-
-        LOG.info("testing connection mode %s with server %s", mode, server.get('Name'))
-
-        if mode == CONNECTION_MODE['Local']:
-            enable_retry = True
-            timeout = 8
-
-            if self._string_equals_ignore_case(address, server.get('ManualAddress')):
-                LOG.info("skipping LocalAddress test because it is the same as ManualAddress")
-                skip_test = True
-
-        elif mode == CONNECTION_MODE['Manual']:
-            if self._string_equals_ignore_case(address, server.get('LocalAddress')):
-                enable_retry = True
-                timeout = 8
-
-        if skip_test or not address:
-            LOG.info("skipping test at index: %s", index)
-            return self._test_next_connection_mode(tests, index + 1, server, options)
-
-        try:
-            result = self._try_connect(address, timeout, options)
-
-        except Exception:
-            LOG.exception("test failed for connection mode %s with server %s", mode, server.get('Name'))
-            return self._test_next_connection_mode(tests, index + 1, server, options)
-        else:
-            if self._compare_versions(self._get_min_server_version(), result['Version']) == 1:
-                LOG.warning("minServerVersion requirement not met. Server version: %s", result['Version'])
-                return {
-                    'State': CONNECTION_STATE['ServerUpdateNeeded'],
-                    'Servers': [server]
-                }
-            else:
-                LOG.info("calling onSuccessfulConnection with connection mode %s with server %s", mode, server.get('Name'))
-                return self._on_successful_connection(server, result, mode, options)
-
-    def _on_successful_connection(self, server, system_info, connection_mode, options):
-
-        credentials = self.credentials.get_credentials()
-        return self._after_connect_validated(server, credentials, system_info, connection_mode, True, options)
-
-    def _resolve_failure(self):
-        return {
-            'State': CONNECTION_STATE['Unavailable']
-        }
-
-    def _get_min_server_version(self, val=None):
-
-        if val is not None:
-            self.min_server_version = val
-
-        return self.min_server_version
-
-    def _compare_versions(self, a, b):
-
-        ''' -1 a is smaller
-            1 a is larger
-            0 equal
-        '''
-        a = LooseVersion(a)
-        b = LooseVersion(b)
-
-        if a < b:
-            return -1
-
-        if a > b:
-            return 1
-
-        return 0
-
-    def _string_equals_ignore_case(self, str1, str2):
-        return (str1 or "").lower() == (str2 or "").lower()
-
     def _server_discovery(self):
 
         MULTI_GROUP = ("<broadcast>", 7359)
@@ -440,10 +326,9 @@ class ConnectionManager(object):
 
             info = {
                 'Id': found_server['Id'],
-                'LocalAddress': server or found_server['Address'],
+                'address': server or found_server['Address'],
                 'Name': found_server['Name']
-            }  # TODO
-            info['LastConnectionMode'] = CONNECTION_MODE['Manual'] if info.get('ManualAddress') else CONNECTION_MODE['Local']
+            } 
 
             servers.append(info)
         else:
@@ -495,26 +380,23 @@ class ConnectionManager(object):
         }
         self.credentials.add_update_user(server, info)
 
-    def _after_connect_validated(self, server, credentials, system_info, connection_mode, verify_authentication, options):
-
+    def _after_connect_validated(self, server, credentials, system_info, verify_authentication, options):
         if options.get('enableAutoLogin') is False:
 
             self.config.data['auth.user_id'] = server.pop('UserId', None)
             self.config.data['auth.token'] = server.pop('AccessToken', None)
 
         elif verify_authentication and server.get('AccessToken'):
-
-            if self._validate_authentication(server, connection_mode, options) is not False:
+            if self._validate_authentication(server, options) is not False:
 
                 self.config.data['auth.user_id'] = server['UserId']
                 self.config.data['auth.token'] = server['AccessToken']
-                return self._after_connect_validated(server, credentials, system_info, connection_mode, False, options)
+                return self._after_connect_validated(server, credentials, system_info, False, options)
 
-            return self._resolve_failure()
+            return { 'State': CONNECTION_STATE['Unavailable'] }
 
         self._update_server_info(server, system_info)
         self.server_version = system_info['Version']
-        server['LastConnectionMode'] = connection_mode
 
         if options.get('updateDateLastAccessed') is not False:
             server['DateLastAccessed'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
@@ -524,7 +406,7 @@ class ConnectionManager(object):
         self.server_id = server['Id']
 
         # Update configs
-        self.config.data['auth.server'] = get_server_address(server, connection_mode)
+        self.config.data['auth.server'] = server['address']
         self.config.data['auth.server-name'] = server['Name']
         self.config.data['auth.server=id'] = server['Id']
         self.config.data['auth.ssl'] = options.get('ssl', self.config.data['auth.ssl'])
@@ -537,12 +419,12 @@ class ConnectionManager(object):
         # Connected
         return result
 
-    def _validate_authentication(self, server, connection_mode, options={}):
+    def _validate_authentication(self, server, options={}):
 
         try:
             system_info = self._request_url({
                 'type': "GET",
-                'url': self.get_jellyfin_url(get_server_address(server, connection_mode), "System/Info"),
+                'url': self.get_jellyfin_url(server['address'], "System/Info"),
                 'verify': options.get('ssl'),
                 'dataType': "json",
                 'headers': {
@@ -566,8 +448,10 @@ class ConnectionManager(object):
         server['Name'] = system_info['ServerName']
         server['Id'] = system_info['Id']
 
-        if system_info.get('LocalAddress'):
-            server['LocalAddress'] = system_info['LocalAddress']
+        if system_info.get('address'):
+            server['address'] = system_info['address']
+
+        ## Finish updating server info 
 
     def _on_authenticated(self, result, options={}):
 
