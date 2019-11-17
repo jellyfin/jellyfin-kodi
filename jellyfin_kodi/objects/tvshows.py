@@ -48,8 +48,7 @@ class TVShows(KodiDb):
             Process seasons.
             Apply series pooling.
         '''
-        server_data = self.server.auth.get_server_info(self.server.auth.server_id)
-        server_address = self.server.auth.get_server_address(server_data, server_data['LastConnectionMode'])
+        server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
         API = api.API(item, server_address)
         obj = self.objects.map(item, 'Series')
         update = True
@@ -205,8 +204,7 @@ class TVShows(KodiDb):
 
             If the show is empty, try to remove it.
         '''
-        server_data = self.server.auth.get_server_info(self.server.auth.server_id)
-        server_address = self.server.auth.get_server_address(server_data, server_data['LastConnectionMode'])
+        server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
         API = api.API(item, server_address)
         obj = self.objects.map(item, 'Season')
 
@@ -241,8 +239,7 @@ class TVShows(KodiDb):
             Create additional entry for widgets.
             This is only required for plugin/episode.
         '''
-        server_data = self.server.auth.get_server_info(self.server.auth.server_id)
-        server_address = self.server.auth.get_server_address(server_data, server_data['LastConnectionMode'])
+        server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
         API = api.API(item, server_address)
         obj = self.objects.map(item, 'Episode')
         update = True
@@ -431,8 +428,7 @@ class TVShows(KodiDb):
             Make sure there's no other bookmarks created by widget.
             Create additional entry for widgets. This is only required for plugin/episode.
         '''
-        server_data = self.server.auth.get_server_info(self.server.auth.server_id)
-        server_address = self.server.auth.get_server_address(server_data, server_data['LastConnectionMode'])
+        server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
         API = api.API(item, server_address)
         obj = self.objects.map(item, 'EpisodeUserData')
 

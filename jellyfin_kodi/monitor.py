@@ -144,9 +144,8 @@ class Monitor(xbmc.Monitor):
             self.void_responder(data, item)
 
         elif method == 'GetServerAddress':
-
-            server_data = server.auth.get_server_info(server.auth.server_id)
-            server_address = server.auth.get_server_address(server_data, server_data['LastConnectionMode'])
+            
+            server_address = server.auth.get_server_info(server.auth.server_id)['address']
             self.void_responder(data, server_address)
 
         elif method == 'GetPlaybackInfo':
