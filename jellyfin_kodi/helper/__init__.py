@@ -1,4 +1,4 @@
-from translate import _
+from translate import translate
 from exceptions import LibraryException
 
 from utils import addon_id

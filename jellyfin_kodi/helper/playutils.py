@@ -15,7 +15,7 @@ import client
 import requests
 from downloader import TheVoid
 
-from . import _, settings, window, dialog
+from . import translate, settings, window, dialog
 
 #################################################################################################
 
@@ -111,7 +111,7 @@ class PlayUtils(object):
             for source in sources:
                 selection.append(source.get('Name', "na"))
 
-            resp = dialog("select", _(33130), selection)
+            resp = dialog("select", translate(33130), selection)
 
             if resp > -1:
                 source = sources[resp]
@@ -581,7 +581,7 @@ class PlayUtils(object):
             if len(audio_streams) > 1:
 
                 selection = list(audio_streams.keys())
-                resp = dialog("select", _(33013), selection)
+                resp = dialog("select", translate(33013), selection)
                 audio_selected = audio_streams[selection[resp]] if resp else source['DefaultAudioStreamIndex']
             else:  # Only one choice
                 audio_selected = audio_streams[next(iter(audio_streams))]
@@ -608,7 +608,7 @@ class PlayUtils(object):
         elif skip_dialog in (0, 2) and len(subs_streams):
 
             selection = list(['No subtitles']) + list(subs_streams.keys())
-            resp = dialog("select", _(33014), selection)
+            resp = dialog("select", translate(33014), selection)
 
             if resp:
                 index = subs_streams[selection[resp]] if resp > -1 else source.get('DefaultSubtitleStreamIndex')

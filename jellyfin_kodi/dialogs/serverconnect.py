@@ -7,7 +7,7 @@ import logging
 import xbmc
 import xbmcgui
 
-from helper import _
+from helper import translate
 from jellyfin.connection_manager import CONNECTION_STATE
 
 ##################################################################################################
@@ -110,7 +110,7 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
     def _connect_server(self, server_id):
 
         server = self.connect_manager.get_server_info(server_id)
-        self.message.setLabel("%s %s..." % (_(30610), server['Name']))
+        self.message.setLabel("%s %s..." % (translate(30610), server['Name']))
 
         self.message_box.setVisibleCondition('true')
         self.busy.setVisibleCondition('true')
@@ -120,7 +120,7 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
         if result['State'] == CONNECTION_STATE['Unavailable']:
             self.busy.setVisibleCondition('false')
 
-            self.message.setLabel(_(30609))
+            self.message.setLabel(translate(30609))
             return False
         else:
             xbmc.sleep(1000)

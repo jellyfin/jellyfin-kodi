@@ -10,7 +10,7 @@ import xbmc
 import downloader as server
 import helper.xmls as xmls
 from database import Database, get_sync, save_sync, jellyfin_db
-from helper import _, settings, window, progress, dialog, LibraryException
+from helper import translate, settings, window, progress, dialog, LibraryException
 from helper.utils import get_screensaver, set_screensaver
 
 ##################################################################################################
@@ -40,7 +40,7 @@ class FullSync(object):
         self.__dict__ = self._shared_state
 
         if self.running:
-            dialog("ok", heading="{jellyfin}", line1=_(33197))
+            dialog("ok", heading="{jellyfin}", line1=translate(33197))
 
             raise Exception("Sync is already running.")
 
@@ -111,10 +111,10 @@ class FullSync(object):
         '''
         if self.sync['Libraries']:
 
-            if not dialog("yesno", heading="{jellyfin}", line1=_(33102)):
+            if not dialog("yesno", heading="{jellyfin}", line1=translate(33102)):
 
-                if not dialog("yesno", heading="{jellyfin}", line1=_(33173)):
-                    dialog("ok", heading="{jellyfin}", line1=_(33122))
+                if not dialog("yesno", heading="{jellyfin}", line1=translate(33173)):
+                    dialog("ok", heading="{jellyfin}", line1=translate(33122))
 
                     raise LibraryException("ProgressStopped")
                 else:
@@ -142,8 +142,8 @@ class FullSync(object):
         '''
 
         choices = [x['Name'] for x in libraries]
-        choices.insert(0, _(33121))
-        selection = dialog("multi", _(33120), choices)
+        choices.insert(0, translate(33121))
+        selection = dialog("multi", translate(33120), choices)
 
         if selection is None:
             raise LibraryException('LibrarySelection')
@@ -193,7 +193,7 @@ class FullSync(object):
         save_sync(self.sync)
 
         xbmc.executebuiltin('UpdateLibrary(video)')
-        dialog("notification", heading="{jellyfin}", message="%s %s" % (_(33025), str(elapsed).split('.')[0]),
+        dialog("notification", heading="{jellyfin}", message="%s %s" % (translate(33025), str(elapsed).split('.')[0]),
                icon="{jellyfin}", sound=False)
         LOG.info("Full sync completed in: %s", str(elapsed).split('.')[0])
 
@@ -241,7 +241,7 @@ class FullSync(object):
 
             if 'Failed to validate path' not in error:
 
-                dialog("ok", heading="{jellyfin}", line1=_(33119))
+                dialog("ok", heading="{jellyfin}", line1=translate(33119))
                 LOG.error("full sync exited unexpectedly")
                 save_sync(self.sync)
 
@@ -268,7 +268,7 @@ class FullSync(object):
                         for index, movie in enumerate(items['Items']):
 
                             dialog.update(int((float(start_index + index) / float(items['TotalRecordCount'])) * 100),
-                                          heading="%s: %s" % (_('addon_name'), library['Name']),
+                                          heading="%s: %s" % (translate('addon_name'), library['Name']),
                                           message=movie['Name'])
                             obj.movie(movie, library=library)
 
@@ -309,7 +309,7 @@ class FullSync(object):
 
                             percent = int((float(start_index + index) / float(items['TotalRecordCount'])) * 100)
                             message = show['Name']
-                            dialog.update(percent, heading="%s: %s" % (_('addon_name'), library['Name']), message=message)
+                            dialog.update(percent, heading="%s: %s" % (translate('addon_name'), library['Name']), message=message)
 
                             if obj.tvshow(show, library=library) is not False:
 
@@ -358,7 +358,7 @@ class FullSync(object):
                         for index, mvideo in enumerate(items['Items']):
 
                             dialog.update(int((float(start_index + index) / float(items['TotalRecordCount'])) * 100),
-                                          heading="%s: %s" % (_('addon_name'), library['Name']),
+                                          heading="%s: %s" % (translate('addon_name'), library['Name']),
                                           message=mvideo['Name'])
                             obj.musicvideo(mvideo, library=library)
 
@@ -399,7 +399,7 @@ class FullSync(object):
 
                             percent = int((float(start_index + index) / float(items['TotalRecordCount'])) * 100)
                             message = artist['Name']
-                            dialog.update(percent, heading="%s: %s" % (_('addon_name'), library['Name']), message=message)
+                            dialog.update(percent, heading="%s: %s" % (translate('addon_name'), library['Name']), message=message)
                             obj.artist(artist, library=library)
 
                             for albums in server.get_albums_by_artist(artist['Id']):
@@ -439,7 +439,7 @@ class FullSync(object):
             if x[0] not in current and x[1] == 'MusicArtist':
                 obj.remove(x[0])
 
-    @progress(_(33018))
+    @progress(translate(33018))
     def boxsets(self, library_id=None, dialog=None):
 
         ''' Process all boxsets.
@@ -459,7 +459,7 @@ class FullSync(object):
                         for index, boxset in enumerate(items['Items']):
 
                             dialog.update(int((float(start_index + index) / float(items['TotalRecordCount'])) * 100),
-                                          heading="%s: %s" % (_('addon_name'), _('boxsets')),
+                                          heading="%s: %s" % (translate('addon_name'), translate('boxsets')),
                                           message=boxset['Name'])
                             obj.boxset(boxset)
 
@@ -478,7 +478,7 @@ class FullSync(object):
 
         self.boxsets(None)
 
-    @progress(_(33144))
+    @progress(translate(33144))
     def remove_library(self, library_id, dialog):
 
         ''' Remove library by their id from the Kodi database.
@@ -512,7 +512,7 @@ class FullSync(object):
                             for item in movies:
 
                                 obj(item[0])
-                                dialog.update(int((float(count) / float(len(items)) * 100)), heading="%s: %s" % (_('addon_name'), library[0]))
+                                dialog.update(int((float(count) / float(len(items)) * 100)), heading="%s: %s" % (translate('addon_name'), library[0]))
                                 count += 1
 
                             obj = TVShows(self.server, jellyfindb, kodidb, direct_path).remove
@@ -520,7 +520,7 @@ class FullSync(object):
                             for item in tvshows:
 
                                 obj(item[0])
-                                dialog.update(int((float(count) / float(len(items)) * 100)), heading="%s: %s" % (_('addon_name'), library[0]))
+                                dialog.update(int((float(count) / float(len(items)) * 100)), heading="%s: %s" % (translate('addon_name'), library[0]))
                                 count += 1
                         else:
                             # from mcarlton: I'm not sure what triggers this.
@@ -535,7 +535,7 @@ class FullSync(object):
                             for item in items:
 
                                 obj(item[0])
-                                dialog.update(int((float(count) / float(len(items)) * 100)), heading="%s: %s" % (_('addon_name'), library[0]))
+                                dialog.update(int((float(count) / float(len(items)) * 100)), heading="%s: %s" % (translate('addon_name'), library[0]))
                                 count += 1
 
         self.sync = get_sync()

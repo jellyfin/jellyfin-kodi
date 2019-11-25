@@ -14,7 +14,7 @@ import downloader
 import player
 from client import get_device_id
 from objects import PlaylistWorker, on_play, on_update, special_listener
-from helper import _, settings, window, dialog, api, JSONRPC
+from helper import translate, settings, window, dialog, api, JSONRPC
 from jellyfin import Jellyfin
 from webservice import WebService
 
@@ -114,7 +114,7 @@ class Monitor(xbmc.Monitor):
                 except Exception as error:
 
                     LOG.exception(error)
-                    dialog("ok", heading="{jellyfin}", line1=_(33142))
+                    dialog("ok", heading="{jellyfin}", line1=translate(33142))
 
                     return
 

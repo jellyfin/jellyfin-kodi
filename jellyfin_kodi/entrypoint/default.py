@@ -19,7 +19,7 @@ import client
 from database import reset, get_sync, Database, jellyfin_db, get_credentials
 from objects import Objects, Actions
 from downloader import TheVoid
-from helper import _, event, settings, window, dialog, api, JSONRPC
+from helper import translate, event, settings, window, dialog, api, JSONRPC
 
 #################################################################################################
 
@@ -146,14 +146,14 @@ def listing():
         context = []
 
         if view_id and node in ('movies', 'tvshows', 'musicvideos', 'music', 'mixed') and view_id not in whitelist:
-            label = "%s %s" % (label.decode('utf-8'), _(33166))
-            context.append((_(33123), "RunPlugin(plugin://plugin.video.jellyfin/?mode=synclib&id=%s)" % view_id))
+            label = "%s %s" % (label.decode('utf-8'), translate(33166))
+            context.append((translate(33123), "RunPlugin(plugin://plugin.video.jellyfin/?mode=synclib&id=%s)" % view_id))
 
         if view_id and node in ('movies', 'tvshows', 'musicvideos', 'music') and view_id in whitelist:
 
-            context.append((_(33136), "RunPlugin(plugin://plugin.video.jellyfin/?mode=updatelib&id=%s)" % view_id))
-            context.append((_(33132), "RunPlugin(plugin://plugin.video.jellyfin/?mode=repairlib&id=%s)" % view_id))
-            context.append((_(33133), "RunPlugin(plugin://plugin.video.jellyfin/?mode=removelib&id=%s)" % view_id))
+            context.append((translate(33136), "RunPlugin(plugin://plugin.video.jellyfin/?mode=updatelib&id=%s)" % view_id))
+            context.append((translate(33132), "RunPlugin(plugin://plugin.video.jellyfin/?mode=repairlib&id=%s)" % view_id))
+            context.append((translate(33133), "RunPlugin(plugin://plugin.video.jellyfin/?mode=removelib&id=%s)" % view_id))
 
         LOG.debug("--[ listing/%s/%s ] %s", node, label, path)
 
@@ -171,22 +171,22 @@ def listing():
         context = []
 
         if server.get('ManualAddress'):
-            context.append((_(33141), "RunPlugin(plugin://plugin.video.jellyfin/?mode=removeserver&server=%s)" % server['Id']))
+            context.append((translate(33141), "RunPlugin(plugin://plugin.video.jellyfin/?mode=removeserver&server=%s)" % server['Id']))
 
         if 'AccessToken' not in server:
-            directory("%s (%s)" % (server['Name'], _(30539)), "plugin://plugin.video.jellyfin/?mode=login&server=%s" % server['Id'], False, context=context)
+            directory("%s (%s)" % (server['Name'], translate(30539)), "plugin://plugin.video.jellyfin/?mode=login&server=%s" % server['Id'], False, context=context)
         else:
             directory(server['Name'], "plugin://plugin.video.jellyfin/?mode=browse&server=%s" % server['Id'], context=context)
 
-    directory(_(33194), "plugin://plugin.video.jellyfin/?mode=managelibs", True)
-    directory(_(33134), "plugin://plugin.video.jellyfin/?mode=addserver", False)
-    directory(_(33054), "plugin://plugin.video.jellyfin/?mode=adduser", False)
-    directory(_(5), "plugin://plugin.video.jellyfin/?mode=settings", False)
-    directory(_(33058), "plugin://plugin.video.jellyfin/?mode=reset", False)
-    directory(_(33192), "plugin://plugin.video.jellyfin/?mode=restartservice", False)
+    directory(translate(33194), "plugin://plugin.video.jellyfin/?mode=managelibs", True)
+    directory(translate(33134), "plugin://plugin.video.jellyfin/?mode=addserver", False)
+    directory(translate(33054), "plugin://plugin.video.jellyfin/?mode=adduser", False)
+    directory(translate(5), "plugin://plugin.video.jellyfin/?mode=settings", False)
+    directory(translate(33058), "plugin://plugin.video.jellyfin/?mode=reset", False)
+    directory(translate(33192), "plugin://plugin.video.jellyfin/?mode=restartservice", False)
 
     if settings('backupPath'):
-        directory(_(33092), "plugin://plugin.video.jellyfin/?mode=backup", False)
+        directory(translate(33092), "plugin://plugin.video.jellyfin/?mode=backup", False)
 
     xbmcplugin.setContent(int(sys.argv[1]), 'files')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
@@ -220,12 +220,12 @@ def dir_listitem(label, path, artwork=None, fanart=None):
 
 def manage_libraries():
 
-    directory(_(33098), "plugin://plugin.video.jellyfin/?mode=refreshboxsets", False)
-    directory(_(33154), "plugin://plugin.video.jellyfin/?mode=addlibs", False)
-    directory(_(33139), "plugin://plugin.video.jellyfin/?mode=updatelibs", False)
-    directory(_(33140), "plugin://plugin.video.jellyfin/?mode=repairlibs", False)
-    directory(_(33184), "plugin://plugin.video.jellyfin/?mode=removelibs", False)
-    directory(_(33060), "plugin://plugin.video.jellyfin/?mode=thememedia", False)
+    directory(translate(33098), "plugin://plugin.video.jellyfin/?mode=refreshboxsets", False)
+    directory(translate(33154), "plugin://plugin.video.jellyfin/?mode=addlibs", False)
+    directory(translate(33139), "plugin://plugin.video.jellyfin/?mode=updatelibs", False)
+    directory(translate(33140), "plugin://plugin.video.jellyfin/?mode=repairlibs", False)
+    directory(translate(33184), "plugin://plugin.video.jellyfin/?mode=removelibs", False)
+    directory(translate(33060), "plugin://plugin.video.jellyfin/?mode=thememedia", False)
 
     xbmcplugin.setContent(int(sys.argv[1]), 'files')
     xbmcplugin.endOfDirectory(int(sys.argv[1]))
@@ -345,9 +345,9 @@ def browse(media, view_id=None, folder=None, server_id=None):
                     context.append(("Play", "RunPlugin(plugin://plugin.video.jellyfin/?mode=playlist&id=%s&server=%s)" % (item['Id'], server_id)))
 
                 if item['UserData']['Played']:
-                    context.append((_(16104), "RunPlugin(plugin://plugin.video.jellyfin/?mode=unwatched&id=%s&server=%s)" % (item['Id'], server_id)))
+                    context.append((translate(16104), "RunPlugin(plugin://plugin.video.jellyfin/?mode=unwatched&id=%s&server=%s)" % (item['Id'], server_id)))
                 else:
-                    context.append((_(16103), "RunPlugin(plugin://plugin.video.jellyfin/?mode=watched&id=%s&server=%s)" % (item['Id'], server_id)))
+                    context.append((translate(16103), "RunPlugin(plugin://plugin.video.jellyfin/?mode=watched&id=%s&server=%s)" % (item['Id'], server_id)))
 
                 li.addContextMenuItems(context)
                 list_li.append((path, li, True))
@@ -373,12 +373,12 @@ def browse(media, view_id=None, folder=None, server_id=None):
                     }
                     path = "%s?%s" % ("plugin://plugin.video.jellyfin/", urllib.urlencode(params))
                     li.setProperty('path', path)
-                    context = [(_(13412), "RunPlugin(plugin://plugin.video.jellyfin/?mode=playlist&id=%s&server=%s)" % (item['Id'], server_id))]
+                    context = [(translate(13412), "RunPlugin(plugin://plugin.video.jellyfin/?mode=playlist&id=%s&server=%s)" % (item['Id'], server_id))]
 
                     if item['UserData']['Played']:
-                        context.append((_(16104), "RunPlugin(plugin://plugin.video.jellyfin/?mode=unwatched&id=%s&server=%s)" % (item['Id'], server_id)))
+                        context.append((translate(16104), "RunPlugin(plugin://plugin.video.jellyfin/?mode=unwatched&id=%s&server=%s)" % (item['Id'], server_id)))
                     else:
-                        context.append((_(16103), "RunPlugin(plugin://plugin.video.jellyfin/?mode=watched&id=%s&server=%s)" % (item['Id'], server_id)))
+                        context.append((translate(16103), "RunPlugin(plugin://plugin.video.jellyfin/?mode=watched&id=%s&server=%s)" % (item['Id'], server_id)))
 
                     li.addContextMenuItems(context)
 
@@ -740,14 +740,14 @@ def add_user():
     users = TheVoid('GetUsers', {'IsDisabled': False, 'IsHidden': False}).get()
     current = session[0]['AdditionalUsers']
 
-    result = dialog("select", _(33061), [_(33062), _(33063)] if current else [_(33062)])
+    result = dialog("select", translate(33061), [translate(33062), translate(33063)] if current else [translate(33062)])
 
     if result < 0:
         return
 
     if not result:  # Add user
         eligible = [x for x in users if x['Id'] not in [current_user['UserId'] for current_user in current]]
-        resp = dialog("select", _(33064), [x['Name'] for x in eligible])
+        resp = dialog("select", translate(33064), [x['Name'] for x in eligible])
 
         if resp < 0:
             return
@@ -755,7 +755,7 @@ def add_user():
         user = eligible[resp]
         event('AddUser', {'Id': user['Id'], 'Add': True})
     else:  # Remove user
-        resp = dialog("select", _(33064), [x['UserName'] for x in current])
+        resp = dialog("select", translate(33064), [x['UserName'] for x in current])
 
         if resp < 0:
             return
@@ -786,7 +786,7 @@ def get_themes():
         tvtunes.setSetting('custom_path', library)
         LOG.info("TV Tunes custom path is enabled and set.")
     else:
-        dialog("ok", heading="{jellyfin}", line1=_(33152))
+        dialog("ok", heading="{jellyfin}", line1=translate(33152))
 
         return
 
@@ -834,7 +834,7 @@ def get_themes():
 
         tvtunes_nfo(nfo_file, paths)
 
-    dialog("notification", heading="{jellyfin}", message=_(33153), icon="{jellyfin}", time=1000, sound=False)
+    dialog("notification", heading="{jellyfin}", message=translate(33153), icon="{jellyfin}", time=1000, sound=False)
 
 
 def delete_item():
@@ -854,7 +854,7 @@ def backup():
 
     path = settings('backupPath')
     folder_name = "Kodi%s.%s" % (xbmc.getInfoLabel('System.BuildVersion')[:2], xbmc.getInfoLabel('System.Date(dd-mm-yy)'))
-    folder_name = dialog("input", heading=_(33089), defaultt=folder_name)
+    folder_name = dialog("input", heading=translate(33089), defaultt=folder_name)
 
     if not folder_name:
         return
@@ -862,7 +862,7 @@ def backup():
     backup = os.path.join(path, folder_name)
 
     if xbmcvfs.exists(backup + '/'):
-        if not dialog("yesno", heading="{jellyfin}", line1=_(33090)):
+        if not dialog("yesno", heading="{jellyfin}", line1=translate(33090)):
 
             return backup()
 
@@ -875,7 +875,7 @@ def backup():
     if not xbmcvfs.mkdirs(path) or not xbmcvfs.mkdirs(destination_databases):
 
         LOG.info("Unable to create all directories")
-        dialog("notification", heading="{jellyfin}", icon="{jellyfin}", message=_(33165), sound=False)
+        dialog("notification", heading="{jellyfin}", icon="{jellyfin}", message=translate(33165), sound=False)
 
         return
 
@@ -900,4 +900,4 @@ def backup():
         LOG.info("copied %s", filename)
 
     LOG.info("backup completed")
-    dialog("ok", heading="{jellyfin}", line1="%s %s" % (_(33091), backup))
+    dialog("ok", heading="{jellyfin}", line1="%s %s" % (translate(33091), backup))
