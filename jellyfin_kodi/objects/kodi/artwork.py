@@ -236,7 +236,7 @@ import xbmcvfs
 import requests
 
 import resources.lib.image_cache_thread as image_cache_thread
-from resources.lib.helper import _, window, settings, JSONRPC
+from resources.lib.helper import translate, window, settings, JSONRPC
 from resources.lib.database import Database
 from __objs__ import QU
 
@@ -274,16 +274,16 @@ class Artwork(object):
         # and cache them locally. This takes diskspace!
         if not dialog(type_="yesno",
                       heading="{jellyfin}",
-                      line1=_(33042)):
+                      line1=translate(33042)):
             return
 
         log.info("Doing Image Cache Sync")
 
         pdialog = xbmcgui.DialogProgress()
-        pdialog.create(_(29999), _(33043))
+        pdialog.create(translate(29999), translate(33043))
 
         # ask to rest all existing or not
-        if dialog(type_="yesno", heading="{jellyfin}", line1=_(33044)):
+        if dialog(type_="yesno", heading="{jellyfin}", line1=translate(33044)):
             log.info("Resetting all cache data first")
             self.delete_cache()
 
@@ -292,14 +292,14 @@ class Artwork(object):
         # Cache all entries in music DB
         self._cache_all_music_entries(pdialog)
 
-        pdialog.update(100, "%s %s" % (_(33046), len(self.image_cache_threads)))
+        pdialog.update(100, "%s %s" % (translate(33046), len(self.image_cache_threads)))
         log.info("Waiting for all threads to exit")
 
         while len(self.image_cache_threads):
             for thread in self.image_cache_threads:
                 if thread.is_finished:
                     self.image_cache_threads.remove(thread)
-            pdialog.update(100, "%s %s" % (_(33046), len(self.image_cache_threads)))
+            pdialog.update(100, "%s %s" % (translate(33046), len(self.image_cache_threads)))
             log.info("Waiting for all threads to exit: %s", len(self.image_cache_threads))
             xbmc.sleep(500)
 
@@ -351,7 +351,7 @@ class Artwork(object):
 
                 percentage = int((float(count) / float(total))*100)
                 message = "%s of %s (%s)" % (count, total, len(self.image_cache_threads))
-                pdialog.update(percentage, "%s %s" % (_(33045), message))
+                pdialog.update(percentage, "%s %s" % (translate(33045), message))
                 self.cache_texture(url[0])
                 count += 1
 
@@ -373,7 +373,7 @@ class Artwork(object):
 
                 percentage = int((float(count) / float(total))*100)
                 message = "%s of %s" % (count, total)
-                pdialog.update(percentage, "%s %s" % (_(33045), message))
+                pdialog.update(percentage, "%s %s" % (translate(33045), message))
                 self.cache_texture(url[0])
                 count += 1
 

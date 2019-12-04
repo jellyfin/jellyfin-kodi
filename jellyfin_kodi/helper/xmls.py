@@ -8,7 +8,7 @@ import xml.etree.ElementTree as etree
 
 import xbmc
 
-from . import _, indent, write_xml, dialog, settings
+from . import translate, indent, write_xml, dialog, settings
 
 #################################################################################################
 
@@ -127,7 +127,7 @@ def advanced_settings():
             indent(xml)
             write_xml(etree.tostring(xml, 'UTF-8'), path)
 
-            dialog("ok", heading="{jellyfin}", line1=_(33097))
+            dialog("ok", heading="{jellyfin}", line1=translate(33097))
             xbmc.executebuiltin('RestartApp')
 
             return True

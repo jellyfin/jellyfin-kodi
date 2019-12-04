@@ -12,7 +12,7 @@ import xbmc
 import xbmcvfs
 
 from database import Database, jellyfin_db, get_sync, save_sync
-from helper import _, api, indent, write_xml, window, event
+from helper import translate, api, indent, write_xml, window, event
 from jellyfin import Jellyfin
 
 #################################################################################################
@@ -21,83 +21,83 @@ LOG = logging.getLogger("JELLYFIN." + __name__)
 NODES = {
     'tvshows': [
         ('all', None),
-        ('recent', _(30170)),
-        ('recentepisodes', _(30175)),
-        ('inprogress', _(30171)),
-        ('inprogressepisodes', _(30178)),
-        ('nextepisodes', _(30179)),
+        ('recent', translate(30170)),
+        ('recentepisodes', translate(30175)),
+        ('inprogress', translate(30171)),
+        ('inprogressepisodes', translate(30178)),
+        ('nextepisodes', translate(30179)),
         ('genres', 135),
-        ('random', _(30229)),
-        ('recommended', _(30230))
+        ('random', translate(30229)),
+        ('recommended', translate(30230))
     ],
     'movies': [
         ('all', None),
-        ('recent', _(30174)),
-        ('inprogress', _(30177)),
-        ('unwatched', _(30189)),
+        ('recent', translate(30174)),
+        ('inprogress', translate(30177)),
+        ('unwatched', translate(30189)),
         ('sets', 20434),
         ('genres', 135),
-        ('random', _(30229)),
-        ('recommended', _(30230))
+        ('random', translate(30229)),
+        ('recommended', translate(30230))
     ],
     'musicvideos': [
         ('all', None),
-        ('recent', _(30256)),
-        ('inprogress', _(30257)),
-        ('unwatched', _(30258))
+        ('recent', translate(30256)),
+        ('inprogress', translate(30257)),
+        ('unwatched', translate(30258))
     ]
 }
 DYNNODES = {
     'tvshows': [
         ('all', None),
-        ('RecentlyAdded', _(30170)),
-        ('recentepisodes', _(30175)),
-        ('InProgress', _(30171)),
-        ('inprogressepisodes', _(30178)),
-        ('nextepisodes', _(30179)),
-        ('Genres', _(135)),
-        ('Random', _(30229)),
-        ('recommended', _(30230))
+        ('RecentlyAdded', translate(30170)),
+        ('recentepisodes', translate(30175)),
+        ('InProgress', translate(30171)),
+        ('inprogressepisodes', translate(30178)),
+        ('nextepisodes', translate(30179)),
+        ('Genres', translate(135)),
+        ('Random', translate(30229)),
+        ('recommended', translate(30230))
     ],
     'movies': [
         ('all', None),
-        ('RecentlyAdded', _(30174)),
-        ('InProgress', _(30177)),
-        ('Boxsets', _(20434)),
-        ('Favorite', _(33168)),
-        ('FirstLetter', _(33171)),
-        ('Genres', _(135)),
-        ('Random', _(30229)),
-        # ('Recommended', _(30230))
+        ('RecentlyAdded', translate(30174)),
+        ('InProgress', translate(30177)),
+        ('Boxsets', translate(20434)),
+        ('Favorite', translate(33168)),
+        ('FirstLetter', translate(33171)),
+        ('Genres', translate(135)),
+        ('Random', translate(30229)),
+        # ('Recommended', translate(30230))
     ],
     'musicvideos': [
         ('all', None),
-        ('RecentlyAdded', _(30256)),
-        ('InProgress', _(30257)),
-        ('Unwatched', _(30258))
+        ('RecentlyAdded', translate(30256)),
+        ('InProgress', translate(30257)),
+        ('Unwatched', translate(30258))
     ],
     'homevideos': [
         ('all', None),
-        ('RecentlyAdded', _(33167)),
-        ('InProgress', _(33169)),
-        ('Favorite', _(33168))
+        ('RecentlyAdded', translate(33167)),
+        ('InProgress', translate(33169)),
+        ('Favorite', translate(33168))
     ],
     'books': [
         ('all', None),
-        ('RecentlyAdded', _(33167)),
-        ('InProgress', _(33169)),
-        ('Favorite', _(33168))
+        ('RecentlyAdded', translate(33167)),
+        ('InProgress', translate(33169)),
+        ('Favorite', translate(33168))
     ],
     'audiobooks': [
         ('all', None),
-        ('RecentlyAdded', _(33167)),
-        ('InProgress', _(33169)),
-        ('Favorite', _(33168))
+        ('RecentlyAdded', translate(33167)),
+        ('InProgress', translate(33169)),
+        ('Favorite', translate(33168))
     ],
     'music': [
         ('all', None),
-        ('RecentlyAdded', _(33167)),
-        ('Favorite', _(33168))
+        ('RecentlyAdded', translate(33167)),
+        ('Favorite', translate(33168))
     ]
 }
 
@@ -256,9 +256,9 @@ class Views(object):
 
                     index += 1
 
-        for single in [{'Name': _('fav_movies'), 'Tag': "Favorite movies", 'Media': "movies"},
-                       {'Name': _('fav_tvshows'), 'Tag': "Favorite tvshows", 'Media': "tvshows"},
-                       {'Name': _('fav_episodes'), 'Tag': "Favorite episodes", 'Media': "episodes"}]:
+        for single in [{'Name': translate('fav_movies'), 'Tag': "Favorite movies", 'Media': "movies"},
+                       {'Name': translate('fav_tvshows'), 'Tag': "Favorite tvshows", 'Media': "tvshows"},
+                       {'Name': translate('fav_episodes'), 'Tag': "Favorite episodes", 'Media': "episodes"}]:
 
             self.add_single_node(node_path, index, "favorites", single)
             index += 1
@@ -380,7 +380,7 @@ class Views(object):
             etree.SubElement(xml, 'label')
 
         label = xml.find('label')
-        label.text = view['Name'] if not mixed else "%s (%s)" % (view['Name'], _(view['Media']))
+        label.text = view['Name'] if not mixed else "%s (%s)" % (view['Name'], translate(view['Media']))
 
         indent(xml)
         write_xml(etree.tostring(xml, 'UTF-8'), file)
@@ -712,7 +712,7 @@ class Views(object):
 
                                 temp_view = dict(view)
                                 temp_view['Media'] = media
-                                temp_view['Name'] = "%s (%s)" % (view['Name'], _(media))
+                                temp_view['Name'] = "%s (%s)" % (view['Name'], translate(media))
                                 self.window_node(index, temp_view, *node)
                                 self.window_wnode(windex, temp_view, *node)
                             else:  # Add one to compensate for the duplicate.
@@ -740,9 +740,9 @@ class Views(object):
 
             index += 1
 
-        for single in [{'Name': _('fav_movies'), 'Tag': "Favorite movies", 'Media': "movies"},
-                       {'Name': _('fav_tvshows'), 'Tag': "Favorite tvshows", 'Media': "tvshows"},
-                       {'Name': _('fav_episodes'), 'Tag': "Favorite episodes", 'Media': "episodes"}]:
+        for single in [{'Name': translate('fav_movies'), 'Tag': "Favorite movies", 'Media': "movies"},
+                       {'Name': translate('fav_tvshows'), 'Tag': "Favorite tvshows", 'Media': "tvshows"},
+                       {'Name': translate('fav_episodes'), 'Tag': "Favorite episodes", 'Media': "episodes"}]:
 
             self.window_single_node(index, "favorites", single)
             index += 1
@@ -772,7 +772,7 @@ class Views(object):
         else:
             window_path = "ActivateWindow(Videos,%s,return)" % path
 
-        node_label = _(node_label) if type(node_label) == int else node_label
+        node_label = translate(node_label) if type(node_label) == int else node_label
         node_label = node_label or view['Name']
 
         if node in ('all', 'music'):
@@ -824,7 +824,7 @@ class Views(object):
         else:
             window_path = "ActivateWindow(Videos,%s,return)" % path
 
-        node_label = _(node_label) if type(node_label) == int else node_label
+        node_label = translate(node_label) if type(node_label) == int else node_label
         node_label = node_label or view['Name']
 
         if node == 'all':

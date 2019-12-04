@@ -9,7 +9,7 @@ import xbmc
 import xbmcaddon
 import xbmcvfs
 
-from helper import _, window, settings, addon_id, dialog
+from helper import translate, window, settings, addon_id, dialog
 from helper.utils import create_id
 
 ##################################################################################################
@@ -114,7 +114,7 @@ def reset_device_id():
 
     window('jellyfin_deviceId', clear=True)
     get_device_id(True)
-    dialog("ok", heading="{jellyfin}", line1=_(33033))
+    dialog("ok", heading="{jellyfin}", line1=translate(33033))
     xbmc.executebuiltin('RestartApp')
 
 

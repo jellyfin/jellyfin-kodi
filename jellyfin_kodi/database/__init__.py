@@ -12,7 +12,7 @@ import xbmc
 import xbmcvfs
 
 import jellyfin_db
-from helper import _, settings, window, dialog
+from helper import translate, settings, window, dialog
 from objects import obj
 
 #################################################################################################
@@ -215,7 +215,7 @@ def reset():
     from views import Views
     views = Views()
 
-    if not dialog("yesno", heading="{jellyfin}", line1=_(33074)):
+    if not dialog("yesno", heading="{jellyfin}", line1=translate(33074)):
         return
 
     window('jellyfin_should_stop.bool', True)
@@ -227,7 +227,7 @@ def reset():
         count -= 1
 
         if not count:
-            dialog("ok", heading="{jellyfin}", line1=_(33085))
+            dialog("ok", heading="{jellyfin}", line1=translate(33085))
 
             return
 
@@ -239,12 +239,12 @@ def reset():
     views.delete_playlists()
     views.delete_nodes()
 
-    if dialog("yesno", heading="{jellyfin}", line1=_(33086)):
+    if dialog("yesno", heading="{jellyfin}", line1=translate(33086)):
         reset_artwork()
 
     addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
 
-    if dialog("yesno", heading="{jellyfin}", line1=_(33087)):
+    if dialog("yesno", heading="{jellyfin}", line1=translate(33087)):
 
         xbmcvfs.delete(os.path.join(addon_data, "settings.xml"))
         xbmcvfs.delete(os.path.join(addon_data, "data.json"))
@@ -257,7 +257,7 @@ def reset():
     settings('MinimumSetup', "")
     settings('MusicRescan.bool', False)
     settings('SyncInstallRunDone.bool', False)
-    dialog("ok", heading="{jellyfin}", line1=_(33088))
+    dialog("ok", heading="{jellyfin}", line1=translate(33088))
     xbmc.executebuiltin('RestartApp')
 
 
@@ -272,7 +272,7 @@ def reset_kodi():
             if name != 'version':
                 videodb.cursor.execute("DELETE FROM " + name)
 
-    if settings('enableMusic.bool') or dialog("yesno", heading="{jellyfin}", line1=_(33162)):
+    if settings('enableMusic.bool') or dialog("yesno", heading="{jellyfin}", line1=translate(33162)):
 
         with Database('music') as musicdb:
             musicdb.cursor.execute("SELECT tbl_name FROM sqlite_master WHERE type='table'")

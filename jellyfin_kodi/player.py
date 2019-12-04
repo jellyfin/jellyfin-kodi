@@ -9,7 +9,7 @@ import xbmc
 import xbmcvfs
 
 from objects.obj import Objects
-from helper import _, api, window, settings, dialog, event, silent_catch, JSONRPC
+from helper import translate, api, window, settings, dialog, event, silent_catch, JSONRPC
 from jellyfin import Jellyfin
 
 #################################################################################################
@@ -436,7 +436,7 @@ class Player(xbmc.Player):
                 if delete:
                     LOG.info("Offer delete option")
 
-                    if dialog("yesno", heading=_(30091), line1=_(33015), autoclose=120000):
+                    if dialog("yesno", heading=translate(30091), line1=translate(33015), autoclose=120000):
                         item['Server'].jellyfin.delete_item(item['Id'])
 
             window('jellyfin.external_check', clear=True)

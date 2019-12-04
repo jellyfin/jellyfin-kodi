@@ -11,7 +11,7 @@ import xbmcaddon
 
 import database
 from dialogs import context
-from helper import _, settings, dialog
+from helper import translate, settings, dialog
 from downloader import TheVoid
 
 #################################################################################################
@@ -19,12 +19,12 @@ from downloader import TheVoid
 LOG = logging.getLogger("JELLYFIN." + __name__)
 XML_PATH = (xbmcaddon.Addon('plugin.video.jellyfin').getAddonInfo('path'), "default", "1080i")
 OPTIONS = {
-    'Refresh': _(30410),
-    'Delete': _(30409),
-    'Addon': _(30408),
-    'AddFav': _(30405),
-    'RemoveFav': _(30406),
-    'Transcode': _(30412)
+    'Refresh': translate(30410),
+    'Delete': translate(30409),
+    'Addon': translate(30408),
+    'AddFav': translate(30405),
+    'RemoveFav': translate(30406),
+    'Transcode': translate(30412)
 }
 
 #################################################################################################
@@ -163,7 +163,7 @@ class Context(object):
 
         if not settings('skipContextMenu.bool'):
 
-            if not dialog("yesno", heading="{jellyfin}", line1=_(33015)):
+            if not dialog("yesno", heading="{jellyfin}", line1=translate(33015)):
                 delete = False
 
         if delete:

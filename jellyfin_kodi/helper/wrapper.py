@@ -8,7 +8,7 @@ import xbmcgui
 
 from .utils import should_stop
 from .exceptions import LibraryException
-from .translate import _
+from .translate import translate
 
 #################################################################################################
 
@@ -28,10 +28,10 @@ def progress(message=None):
 
             if item and type(item) == dict:
 
-                dialog.create(_('addon_name'), "%s %s" % (_('gathering'), item['Name']))
+                dialog.create(translate('addon_name'), "%s %s" % (translate('gathering'), item['Name']))
                 LOG.info("Processing %s: %s", item['Name'], item['Id'])
             else:
-                dialog.create(_('addon_name'), message)
+                dialog.create(translate('addon_name'), message)
                 LOG.info("Processing %s", message)
 
             if item:

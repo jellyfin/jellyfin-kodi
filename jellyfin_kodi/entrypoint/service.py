@@ -19,7 +19,7 @@ import library
 import setup
 import monitor
 from views import Views, verify_kodi_defaults
-from helper import _, window, settings, event, dialog
+from helper import translate, window, settings, event, dialog
 from jellyfin import Jellyfin
 
 #################################################################################################
@@ -116,7 +116,7 @@ class Service(xbmc.Monitor):
             if window('jellyfin.restart.bool'):
 
                 window('jellyfin.restart', clear=True)
-                dialog("notification", heading="{jellyfin}", message=_(33193), icon="{jellyfin}", time=1000, sound=False)
+                dialog("notification", heading="{jellyfin}", message=translate(33193), icon="{jellyfin}", time=1000, sound=False)
 
                 raise Exception('RestartService')
 
@@ -183,7 +183,7 @@ class Service(xbmc.Monitor):
 
                     users = [user for user in (settings('additionalUsers') or "").decode('utf-8').split(',') if user]
                     users.insert(0, settings('username').decode('utf-8'))
-                    dialog("notification", heading="{jellyfin}", message="%s %s" % (_(33000), ", ".join(users)),
+                    dialog("notification", heading="{jellyfin}", message="%s %s" % (translate(33000), ", ".join(users)),
                            icon="{jellyfin}", time=1500, sound=False)
 
                 if self.library_thread is None:
@@ -196,7 +196,7 @@ class Service(xbmc.Monitor):
             if self.warn or data.get('ServerId'):
 
                 self.warn = data.get('ServerId') is not None
-                dialog("notification", heading="{jellyfin}", message=_(33146) if data.get('ServerId') is None else _(33149), icon=xbmcgui.NOTIFICATION_ERROR)
+                dialog("notification", heading="{jellyfin}", message=translate(33146) if data.get('ServerId') is None else translate(33149), icon=xbmcgui.NOTIFICATION_ERROR)
 
             if data.get('ServerId') is None:
                 self.stop_default()
@@ -207,7 +207,7 @@ class Service(xbmc.Monitor):
                 self.start_default()
 
         elif method == 'Unauthorized':
-            dialog("notification", heading="{jellyfin}", message=_(33147) if data['ServerId'] is None else _(33148), icon=xbmcgui.NOTIFICATION_ERROR)
+            dialog("notification", heading="{jellyfin}", message=translate(33147) if data['ServerId'] is None else translate(33148), icon=xbmcgui.NOTIFICATION_ERROR)
 
             if data.get('ServerId') is None and self.settings['auth_check']:
 
@@ -224,7 +224,7 @@ class Service(xbmc.Monitor):
                 return
 
             if settings('restartMsg.bool'):
-                dialog("notification", heading="{jellyfin}", message=_(33006), icon="{jellyfin}")
+                dialog("notification", heading="{jellyfin}", message=translate(33006), icon="{jellyfin}")
 
             self.stop_default()
 
@@ -249,7 +249,7 @@ class Service(xbmc.Monitor):
 
         elif method == 'UpdateServer':
 
-            dialog("ok", heading="{jellyfin}", line1=_(33151))
+            dialog("ok", heading="{jellyfin}", line1=translate(33151))
             self.connect.setup_manual_server()
 
         elif method == 'UserDataChanged' and self.library_thread:
@@ -383,13 +383,13 @@ class Service(xbmc.Monitor):
             if not self.settings.get('mode_warn'):
 
                 self.settings['mode_warn'] = True
-                dialog("yesno", heading="{jellyfin}", line1=_(33118))
+                dialog("yesno", heading="{jellyfin}", line1=translate(33118))
 
         if settings('kodiCompanion.bool') != self.settings['kodi_companion']:
             self.settings['kodi_companion'] = settings('kodiCompanion.bool')
 
             if not self.settings['kodi_companion']:
-                dialog("ok", heading="{jellyfin}", line1=_(33138))
+                dialog("ok", heading="{jellyfin}", line1=translate(33138))
 
     def reload_objects(self):
 
