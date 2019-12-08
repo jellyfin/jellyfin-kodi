@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2019-12-07 17:15+0000\n"
+"PO-Revision-Date: 2019-12-10 00:16+0000\n"
 "Last-Translator: tanto faz <xipeb30977@topmail2.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/pt_BR/>\n"
@@ -51,7 +51,7 @@ msgstr "Avançado"
 
 msgctxt "#30024"
 msgid "Username"
-msgstr "Nome de Usuário"
+msgstr "Usuário"
 
 msgctxt "#30091"
 msgid "Confirm file deletion"
@@ -59,7 +59,7 @@ msgstr "Confirme exclusão de arquivo"
 
 msgctxt "#30114"
 msgid "Offer delete after playback"
-msgstr "Oferecer deletar depois de reproduzir"
+msgstr "Oferecer para excluir depois de reproduzir"
 
 msgctxt "#30115"
 msgid "For Episodes"
@@ -69,13 +69,14 @@ msgctxt "#30116"
 msgid "For Movies"
 msgstr "Para Filmes"
 
+#, fuzzy
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
-msgstr "Ativar Artes Melhoradas (Ex: Capa)"
+msgstr "Ativar artes melhoradas (ex.: capa)"
 
 msgctxt "#30160"
 msgid "Video quality"
-msgstr "Qualidade de Video"
+msgstr "Qualidade de vídeo"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
@@ -111,7 +112,7 @@ msgstr "Filmes Favoritos"
 
 msgctxt "#30181"
 msgid "Favorite Shows"
-msgstr "Programas Favortios"
+msgstr "Séries Favoritas"
 
 msgctxt "#30182"
 msgid "Favorite Episodes"
@@ -213,11 +214,11 @@ msgstr "Configurações"
 
 msgctxt "#30409"
 msgid "Delete from Jellyfin"
-msgstr "Deletar do Jellyfin"
+msgstr "Excluir do Jellyfin"
 
 msgctxt "#30410"
 msgid "Refresh this item"
-msgstr "Recarregar este item"
+msgstr "Atualizar este item"
 
 msgctxt "#30412"
 msgid "Transcode"
@@ -273,7 +274,7 @@ msgstr "Perguntar ao reproduzir trailers"
 
 msgctxt "#30520"
 msgid "Skip the delete confirmation (use at your own risk)"
-msgstr "Ignorar confirmação de exclusão (Use por sua conta e risco)"
+msgstr "Ignorar confirmação de exclusão (use por sua conta e risco)"
 
 msgctxt "#30521"
 msgid "Jump back on resume (in seconds)"
@@ -422,7 +423,7 @@ msgstr "O servidor está reiniciando"
 
 msgctxt "#33009"
 msgid "Invalid username or password"
-msgstr "Usuário ou senha inválido"
+msgstr "Usuário ou senha inválidos"
 
 msgctxt "#33013"
 msgid "Choose the audio stream"
@@ -434,16 +435,15 @@ msgstr "Selecionar o stream de legendas"
 
 msgctxt "#33015"
 msgid "Delete file from Jellyfin?"
-msgstr "Apagar arquivo do Jellyfin?"
+msgstr "Excluir arquivo do Jellyfin?"
 
 msgctxt "#33016"
 msgid "Play trailers?"
 msgstr "Reproduzir trailers?"
 
-#, fuzzy
 msgctxt "#33018"
 msgid "Gathering boxsets"
-msgstr "Encontrando coleções"
+msgstr "Encontrando coletâneas"
 
 #, fuzzy
 msgctxt "#33021"
@@ -566,7 +566,7 @@ msgstr ""
 
 msgctxt "#33098"
 msgid "Refresh boxsets"
-msgstr "Atualizar coleções"
+msgstr "Atualizar coletâneas"
 
 msgctxt "#33099"
 msgid "Install the server plugin Kodi companion to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Companion."
