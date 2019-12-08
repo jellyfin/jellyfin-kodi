@@ -551,7 +551,7 @@ msgid "Refresh boxsets"
 msgstr ""
 
 msgctxt "#33099"
-msgid "Install the server plugin Kodi companion to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Companion."
+msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
 msgstr ""
 "시작시 Jellyfin 라이브러리를 자동으로 업데이트하기 위해 Kodi 컴패니언 플러그인을 설치합니다. 이 설정은 애드온 설정 -> "
 "동기화 옵션 -> Kodi 컴패니언 활성화 에서도 찾아볼 수 있습니다."
@@ -689,11 +689,11 @@ msgid "Update library"
 msgstr "라이브러리 업데이트"
 
 msgctxt "#33137"
-msgid "Enable Kodi companion"
+msgid "Enable Kodi Sync Queue"
 msgstr "Kodi 컴패니언 활성화"
 
 msgctxt "#33138"
-msgid "You can update your library manually rather than rely on the server plugin Kodi companion. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
+msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
 msgstr ""
 
 msgctxt "#33139"
@@ -877,7 +877,7 @@ msgid "Enable sync during playback (may cause some lag)"
 msgstr "재생중에 동기화 활성화 (약간의 렉을 유발할 수 있습니다.)"
 
 msgctxt "#33186"
-msgid "The Kodi companion speeds up the start up sync. Other syncs are triggered by server events."
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
 msgstr "Kodi 컴패니언은 시작시 동기화를 빠르게 해줍니다. 다른 동기화는 서버 이벤트에 의해 발생합니다."
 
 msgctxt "#33191"
