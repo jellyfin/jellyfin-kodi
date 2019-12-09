@@ -14,7 +14,7 @@ LOG = logging.getLogger('JELLYFIN.' + __name__)
 ##################################################################################################
 
 
-def _(string):
+def translate(string):
 
     ''' Get add-on string. Returns in unicode.
     '''

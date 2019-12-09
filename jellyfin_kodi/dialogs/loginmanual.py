@@ -8,7 +8,7 @@ import os
 import xbmcgui
 import xbmcaddon
 
-from helper import _, addon_id
+from helper import translate, addon_id
 
 ##################################################################################################
 
@@ -78,7 +78,7 @@ class LoginManual(xbmcgui.WindowXMLDialog):
 
             if not user:
                 # Display error
-                self._error(ERROR['Empty'], _('empty_user'))
+                self._error(ERROR['Empty'], translate('empty_user'))
                 LOG.error("Username cannot be null")
 
             elif self._login(user, password):
@@ -121,7 +121,7 @@ class LoginManual(xbmcgui.WindowXMLDialog):
         result = self.connect_manager.login(server, username, password)
 
         if not result:
-            self._error(ERROR['Invalid'], _('invalid_auth'))
+            self._error(ERROR['Invalid'], translate('invalid_auth'))
             return False
         else:
             self._user = result

@@ -15,7 +15,7 @@ import xbmcaddon
 import database
 from downloader import TheVoid
 from obj import Objects
-from helper import _, playutils, api, window, settings, dialog
+from helper import translate, playutils, api, window, settings, dialog
 from dialogs import resume
 
 #################################################################################################
@@ -122,7 +122,7 @@ class Actions(object):
 
             if settings('askCinema') == "true":
 
-                resp = dialog("yesno", heading="{jellyfin}", line1=_(33016))
+                resp = dialog("yesno", heading="{jellyfin}", line1=translate(33016))
                 if not resp:
 
                     enabled = False

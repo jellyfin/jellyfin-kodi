@@ -19,7 +19,7 @@ import xbmcaddon
 import xbmcgui
 import xbmcvfs
 
-from translate import _
+from translate import translate
 
 #################################################################################################
 
@@ -154,7 +154,7 @@ def dialog(dialog_type, *args, **kwargs):
             "special://home/addons/plugin.video.jellyfin/resources/icon.png"
         )
     if "heading" in kwargs:
-        kwargs['heading'] = kwargs['heading'].replace("{jellyfin}", _('addon_name'))
+        kwargs['heading'] = kwargs['heading'].replace("{jellyfin}", translate('addon_name'))
 
     types = {
         'yesno': d.yesno,
@@ -250,7 +250,7 @@ def validate(path):
     if not xbmcvfs.exists(path):
         LOG.info("Could not find %s", path)
 
-        if dialog("yesno", heading="{jellyfin}", line1="%s %s. %s" % (_(33047), path, _(33048))):
+        if dialog("yesno", heading="{jellyfin}", line1="%s %s. %s" % (translate(33047), path, translate(33048))):
 
             return False
 

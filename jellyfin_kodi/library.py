@@ -15,7 +15,7 @@ from database import Database, jellyfin_db, get_sync, save_sync
 from full_sync import FullSync
 from views import Views
 from downloader import GetItemWorker
-from helper import _, api, stop, settings, window, dialog, event, LibraryException
+from helper import translate, api, stop, settings, window, dialog, event, LibraryException
 from helper.utils import split_list, set_screensaver, get_screensaver
 from jellyfin import Jellyfin
 
@@ -155,12 +155,12 @@ class Library(threading.Thread):
                 if self.progress_updates is None:
 
                     self.progress_updates = xbmcgui.DialogProgressBG()
-                    self.progress_updates.create(_('addon_name'), _(33178))
-                    self.progress_updates.update(int((float(self.total_updates - queue_size) / float(self.total_updates)) * 100), message="%s: %s" % (_(33178), queue_size))
+                    self.progress_updates.create(translate('addon_name'), translate(33178))
+                    self.progress_updates.update(int((float(self.total_updates - queue_size) / float(self.total_updates)) * 100), message="%s: %s" % (translate(33178), queue_size))
                 elif queue_size:
-                    self.progress_updates.update(int((float(self.total_updates - queue_size) / float(self.total_updates)) * 100), message="%s: %s" % (_(33178), queue_size))
+                    self.progress_updates.update(int((float(self.total_updates - queue_size) / float(self.total_updates)) * 100), message="%s: %s" % (translate(33178), queue_size))
                 else:
-                    self.progress_updates.update(int((float(self.total_updates - queue_size) / float(self.total_updates)) * 100), message=_(33178))
+                    self.progress_updates.update(int((float(self.total_updates - queue_size) / float(self.total_updates)) * 100), message=translate(33178))
 
             if not settings('dbSyncScreensaver.bool') and self.screensaver is None:
 
@@ -346,7 +346,7 @@ class Library(threading.Thread):
                     if self.server.jellyfin.check_companion_installed():
 
                         if not self.fast_sync():
-                            dialog("ok", heading="{jellyfin}", line1=_(33128))
+                            dialog("ok", heading="{jellyfin}", line1=translate(33128))
 
                             raise Exception("Failed to retrieve latest updates")
 
@@ -361,7 +361,7 @@ class Library(threading.Thread):
 
             if error.status in 'SyncLibraryLater':
 
-                dialog("ok", heading="{jellyfin}", line1=_(33129))
+                dialog("ok", heading="{jellyfin}", line1=translate(33129))
                 settings('SyncInstallRunDone.bool', True)
                 sync = get_sync()
                 sync['Libraries'] = []
@@ -371,7 +371,7 @@ class Library(threading.Thread):
 
             elif error.status == 'CompanionMissing':
 
-                dialog("ok", heading="{jellyfin}", line1=_(33099))
+                dialog("ok", heading="{jellyfin}", line1=translate(33099))
                 settings('kodiCompanion.bool', False)
 
                 return True
@@ -408,7 +408,7 @@ class Library(threading.Thread):
 
                 ''' Inverse yes no, in case the dialog is forced closed by Kodi.
                 '''
-                if dialog("yesno", heading="{jellyfin}", line1=_(33172).replace('{number}', str(total)), nolabel=_(107), yeslabel=_(106)):
+                if dialog("yesno", heading="{jellyfin}", line1=translate(33172).replace('{number}', str(total)), nolabel=translate(107), yeslabel=translate(106)):
                     LOG.warning("Large updates skipped.")
 
                     return True
@@ -486,7 +486,7 @@ class Library(threading.Thread):
                         libraries.append({'Id': library, 'Name': name})
 
         choices = [x['Name'] for x in libraries]
-        choices.insert(0, _(33121))
+        choices.insert(0, translate(33121))
 
         titles = {
             "RepairLibrarySelection": 33199,
@@ -496,7 +496,7 @@ class Library(threading.Thread):
         }
         title = titles.get(mode, "Failed to get title {}".format(mode))
         
-        selection = dialog("multi", _(title), choices)
+        selection = dialog("multi", translate(title), choices)
 
         if selection is None:
             return
@@ -814,7 +814,7 @@ class NotifyWorker(threading.Thread):
             time = self.music_time if item[0] == 'Audio' else self.video_time
 
             if time and (not self.player.isPlayingVideo() or xbmc.getCondVisibility('VideoPlayer.Content(livetv)')):
-                dialog("notification", heading="%s %s" % (_(33049), item[0]), message=item[1],
+                dialog("notification", heading="%s %s" % (translate(33049), item[0]), message=item[1],
                        icon="{jellyfin}", time=time, sound=False)
 
             self.queue.task_done()

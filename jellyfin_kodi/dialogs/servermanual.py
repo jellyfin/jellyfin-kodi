@@ -9,7 +9,7 @@ import re
 import xbmcgui
 import xbmcaddon
 
-from helper import _, addon_id
+from helper import translate, addon_id
 from jellyfin.connection_manager import CONNECTION_STATE
 
 ##################################################################################################
@@ -77,7 +77,7 @@ class ServerManual(xbmcgui.WindowXMLDialog):
 
             if not server:
                 # Display error
-                self._error(ERROR['Empty'], _('empty_server'))
+                self._error(ERROR['Empty'], translate('empty_server'))
                 LOG.error("Server cannot be null")
 
             elif self._connect_to_server(server):
@@ -116,11 +116,11 @@ class ServerManual(xbmcgui.WindowXMLDialog):
         if _IPV6_RE.match(server):
             server = "[%s]" % (server)
 
-        self._message("%s %s..." % (_(30610), server))
+        self._message("%s %s..." % (translate(30610), server))
         result = self.connect_manager.connect_to_address(server)
 
         if result['State'] == CONNECTION_STATE['Unavailable']:
-            self._message(_(30609))
+            self._message(translate(30609))
             return False
         else:
             self._server = result['Servers'][0]

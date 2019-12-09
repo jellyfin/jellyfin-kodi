@@ -4,7 +4,7 @@
 
 import logging
 
-from helper import _, settings, dialog, JSONRPC
+from helper import translate, settings, dialog, JSONRPC
 
 #################################################################################################
 
@@ -40,7 +40,7 @@ class Setup(object):
                 if not self.get_web_server():
 
                     settings('enableTextureCache.bool', False)
-                    dialog("ok", heading="{jellyfin}", line1=_(33103))
+                    dialog("ok", heading="{jellyfin}", line1=translate(33103))
 
                     return
 
@@ -84,22 +84,22 @@ class Setup(object):
         ''' Setup playback mode. If native mode selected, check network credentials.
         '''
         value = dialog("yesno",
-                       heading=_('playback_mode'),
-                       line1=_(33035),
-                       nolabel=_('addon_mode'),
-                       yeslabel=_('native_mode'))
+                       heading=translate('playback_mode'),
+                       line1=translate(33035),
+                       nolabel=translate('addon_mode'),
+                       yeslabel=translate('native_mode'))
 
         settings('useDirectPaths', value="1" if value else "0")
 
         if value:
-            dialog("ok", heading="{jellyfin}", line1=_(33145))
+            dialog("ok", heading="{jellyfin}", line1=translate(33145))
 
     def _is_artwork_caching(self):
 
-        value = dialog("yesno", heading="{jellyfin}", line1=_(33117))
+        value = dialog("yesno", heading="{jellyfin}", line1=translate(33117))
         settings('enableTextureCache.bool', value)
 
     def _is_music(self):
 
-        value = dialog("yesno", heading="{jellyfin}", line1=_(33039))
+        value = dialog("yesno", heading="{jellyfin}", line1=translate(33039))
         settings('enableMusic.bool', value=value)
