@@ -390,12 +390,6 @@ class Library(threading.Thread):
         sync = get_sync()
         LOG.info("--[ retrieve changes ] %s", last_sync)
 
-        """
-        for library in sync['Whitelist']:
-
-            data = self.server.jellyfin.get_date_modified(last_sync, library.replace('Mixed:', ""), "Series,Episode,BoxSet,Movie,MusicVideo,MusicArtist,MusicAlbum,Audio")
-            [self.updated_output[query['Type']].put(query) for query in data['Items']]
-        """
         try:
             updated = []
             userdata = []
