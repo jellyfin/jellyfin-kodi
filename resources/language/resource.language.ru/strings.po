@@ -549,7 +549,7 @@ msgid "Refresh boxsets"
 msgstr "Подновить коллекции"
 
 msgctxt "#33099"
-msgid "Install the server plugin Kodi companion to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Companion."
+msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
 msgstr ""
 
 msgctxt "#33101"
@@ -700,11 +700,11 @@ msgid "Update library"
 msgstr "Обновить медиатеку"
 
 msgctxt "#33137"
-msgid "Enable Kodi companion"
-msgstr "Включить Kodi companion"
+msgid "Enable Kodi Sync Queue"
+msgstr "Включить Kodi Sync Queue"
 
 msgctxt "#33138"
-msgid "You can update your library manually rather than rely on the server plugin Kodi companion. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
+msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
 msgstr ""
 
 msgctxt "#33139"
@@ -897,9 +897,9 @@ msgstr ""
 "задержке)"
 
 msgctxt "#33186"
-msgid "The Kodi companion speeds up the start up sync. Other syncs are triggered by server events."
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
 msgstr ""
-"Kodi companion ускоряет синхронизацию при запуске. Другие синхронизации "
+"Kodi Sync Queue ускоряет синхронизацию при запуске. Другие синхронизации "
 "запускаются серверными событиями."
 
 msgctxt "#33191"

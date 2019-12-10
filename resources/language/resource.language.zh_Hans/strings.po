@@ -542,7 +542,7 @@ msgid "Refresh boxsets"
 msgstr "刷新合集"
 
 msgctxt "#33099"
-msgid "Install the server plugin Kodi companion to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Companion."
+msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
 msgstr "安装服务器插件Kodi 同步 自动应用Jellyfin 库更新启动。此设置可在加载项设置 > 同步选项 > 启用 Kodi 助手中找到。"
 
 msgctxt "#33101"
@@ -680,11 +680,11 @@ msgid "Update library"
 msgstr "更新媒体库"
 
 msgctxt "#33137"
-msgid "Enable Kodi companion"
+msgid "Enable Kodi Sync Queue"
 msgstr "启用Kodi伴侣"
 
 msgctxt "#33138"
-msgid "You can update your library manually rather than rely on the server plugin Kodi companion. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
+msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
 msgstr "您可以手动更新媒体库而不依赖服务端插件Kodi伴侣。启动插件并更新一个或多个库。如要移除内容，您需要修复库。"
 
 msgctxt "#33139"
@@ -868,7 +868,7 @@ msgid "Enable sync during playback (may cause some lag)"
 msgstr "在播放时启用同步 (可能引起卡顿)"
 
 msgctxt "#33186"
-msgid "The Kodi companion speeds up the start up sync. Other syncs are triggered by server events."
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
 msgstr "Kodi伴侣将加速启动时的同步。其他的同步将由服务器事件触发。"
 
 msgctxt "#33191"
