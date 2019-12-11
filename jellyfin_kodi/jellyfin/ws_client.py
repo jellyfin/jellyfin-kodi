@@ -43,7 +43,7 @@ class WSClient(threading.Thread):
         device_id = self.client.config.data['app.device_id']
         server = self.client.config.data['auth.server']
         server = server.replace('https', "wss") if server.startswith('https') else server.replace('http', "ws")
-        wsc_url = "%s/embywebsocket?api_key=%s&device_id=%s" % (server, token, device_id)
+        wsc_url = "%s/socket?api_key=%s&device_id=%s" % (server, token, device_id)
 
         LOG.info("Websocket url: %s", wsc_url)
 
