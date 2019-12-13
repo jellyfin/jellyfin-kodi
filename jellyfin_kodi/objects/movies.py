@@ -175,7 +175,7 @@ class Movies(KodiDb):
             obj['Path'] = obj['Path'].replace(obj['Filename'], "")
 
         else:
-            obj['Path'] = "plugin://plugin.video.jellyfin/"
+            obj['Path'] = "plugin://plugin.video.jellyfin/%s/" % obj['LibraryId']
             params = {
                 'filename': obj['Filename'].encode('utf-8'),
                 'id': obj['Id'],
