@@ -188,12 +188,12 @@ class TVShows(KodiDb):
                 obj['TopLevel'] = "%s\\" % dirname(dirname(obj['Path']))
             else:
                 obj['Path'] = "%s/" % obj['Path']
-                obj['TopLevel'] = "plugin://plugin.video.jellyfin/%s/" % obj['LibraryId']
+                obj['TopLevel'] = "plugin://plugin.video.jellyfin/"
 
             if not validate(obj['Path']):
                 raise Exception("Failed to validate path. User stopped.")
         else:
-            obj['TopLevel'] = "plugin://plugin.video.jellyfin/"
+            obj['TopLevel'] = "plugin://plugin.video.jellyfin/%s/" % obj['LibraryId']
             obj['Path'] = "%s%s/" % (obj['TopLevel'], obj['Id'])
 
     @stop()
