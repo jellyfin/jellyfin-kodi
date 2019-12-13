@@ -392,6 +392,15 @@ def get_credentials():
 
     credentials['Servers'] = credentials.get('Servers', [])
 
+    # Migration for #145
+    # TODO: CLEANUP for 1.0.0 release
+    for server in credentials['Servers']:
+        if 'LocalAddress' in server:
+            server['address'] = server['LocalAddress']
+            del server['LocalAddress']
+        if 'LastConnectionMode' in server:
+            del server['LastConnectionMode']
+
     return credentials
 
 
