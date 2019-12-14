@@ -401,6 +401,9 @@ def get_credentials():
             # If manual is present, local should always be here, but better to be safe
             if 'LocalAddress' in server:
                 del server['LocalAddress']
+            # Functionality removed in #60
+            if 'RemoteAddress' in server:
+                del server['RemoteAddress']
         elif 'LocalAddress' in server:
             server['address'] = server['LocalAddress']
             del server['LocalAddress']
