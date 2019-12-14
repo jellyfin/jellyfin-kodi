@@ -28,7 +28,7 @@ def get_jellyfinserver_url(handler):
         handler = handler[1:]
         LOG.info("handler starts with /: %s", handler)
 
-    return "{server}/emby/%s" % handler
+    return "{server}/%s" % handler
 
 
 def browse_info():

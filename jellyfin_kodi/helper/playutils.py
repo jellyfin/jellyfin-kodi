@@ -254,10 +254,10 @@ class PlayUtils(object):
 
             video_type = 'live' if source['Protocol'] == 'LiveTV' else 'master'
             base = base.replace('stream' if 'stream' in base else 'master', video_type, 1)
-            self.info['Path'] = "%s/emby%s?%s" % (self.info['ServerAddress'], base, params)
+            self.info['Path'] = "%s/%s?%s" % (self.info['ServerAddress'], base, params)
             self.info['Path'] += "&maxWidth=%s&maxHeight=%s" % (self.get_resolution())
         else:
-            self.info['Path'] = "%s/emby%s" % (self.info['ServerAddress'], source['TranscodingUrl'])
+            self.info['Path'] = "%s/%s" % (self.info['ServerAddress'], source['TranscodingUrl'])
 
         return self.info['Path']
 
@@ -274,14 +274,14 @@ class PlayUtils(object):
         self.info['Method'] = "DirectStream"
 
         if self.item['Type'] == "Audio":
-            self.info['Path'] = "%s/emby/Audio/%s/stream.%s?static=true&api_key=%s" % (
+            self.info['Path'] = "%s/Audio/%s/stream.%s?static=true&api_key=%s" % (
                 self.info['ServerAddress'],
                 self.item['Id'],
                 source.get('Container', "mp4").split(',')[0],
                 self.info['Token']
             )
         else:
-            self.info['Path'] = "%s/emby/Videos/%s/stream?static=true&MediaSourceId=%s&api_key=%s" % (
+            self.info['Path'] = "%s/Videos/%s/stream?static=true&MediaSourceId=%s&api_key=%s" % (
                 self.info['ServerAddress'],
                 self.item['Id'],
                 source['Id'],
@@ -474,7 +474,7 @@ class PlayUtils(object):
                 index = stream['Index']
 
                 if 'DeliveryUrl' in stream and stream['DeliveryUrl'].lower().startswith('/videos'):
-                    url = "%s/emby%s" % (self.info['ServerAddress'], stream['DeliveryUrl'])
+                    url = "%s/%s" % (self.info['ServerAddress'], stream['DeliveryUrl'])
                 else:
                     url = self.get_subtitles(source, stream, index)
 
@@ -630,9 +630,9 @@ class PlayUtils(object):
     def get_subtitles(self, source, stream, index):
 
         if stream['IsTextSubtitleStream'] and 'DeliveryUrl' in stream and stream['DeliveryUrl'].lower().startswith('/videos'):
-            url = "%s/emby%s" % (self.info['ServerAddress'], stream['DeliveryUrl'])
+            url = "%s/%s" % (self.info['ServerAddress'], stream['DeliveryUrl'])
         else:
-            url = "%s/emby/Videos/%s/%s/Subtitles/%s/Stream.%s?api_key=%s" % (
+            url = "%s/Videos/%s/%s/Subtitles/%s/Stream.%s?api_key=%s" % (
                 self.info['ServerAddress'],
                 self.item['Id'],
                 source['Id'],

@@ -97,4 +97,4 @@ class UsersConnect(xbmcgui.WindowXMLDialog):
 
     def _get_user_artwork(self, user_id, item_type):
         # Load user information set by UserClient
-        return "%s/emby/Users/%s/Images/%s?Format=original" % (self.server, user_id, item_type)
+        return "%s/Users/%s/Images/%s?Format=original" % (self.server, user_id, item_type)

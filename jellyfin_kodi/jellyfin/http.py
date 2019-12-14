@@ -167,7 +167,7 @@ class HTTP(object):
     def _request(self, data):
 
         if 'url' not in data:
-            data['url'] = "%s/emby/%s" % (self.config.data['auth.server'], data.pop('handler', ""))
+            data['url'] = "%s/%s" % (self.config.data['auth.server'], data.pop('handler', ""))
 
         self._get_header(data)
         data['timeout'] = data.get('timeout') or self.config.data['http.timeout']
