@@ -63,6 +63,15 @@ class Database(object):
             jellyfin_tables(self.cursor)
             self.conn.commit()
 
+        # Migration for #162
+        if self.db_file == 'music':
+            query = self.conn.execute('SELECT * FROM path WHERE strPath LIKE "%/emby/%"')
+            contents = query.fetchall()
+            if contents:
+                for item in contents:
+                    newPath = item[1].replace('/emby/', '/')
+                    self.conn.execute('UPDATE path SET strPath = "{}" WHERE idPath = "{}"'.format(newPath, item[0]))
+
         return self
 
     def _get_database(self, path, silent=False):
