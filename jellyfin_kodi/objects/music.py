@@ -329,7 +329,7 @@ class Music(KodiDb):
 
         else:
             server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
-            obj['Path'] = "%s/emby/Audio/%s/" % (server_address, obj['Id'])
+            obj['Path'] = "%s/Audio/%s/" % (server_address, obj['Id'])
             obj['Filename'] = "stream.%s?static=true" % obj['Container']
 
     def song_artist_discography(self, obj):
