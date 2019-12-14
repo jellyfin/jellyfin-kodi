@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2019-12-10 00:16+0000\n"
+"PO-Revision-Date: 2019-12-14 16:41+0000\n"
 "Last-Translator: tanto faz <xipeb30977@topmail2.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/pt_BR/>\n"
@@ -23,11 +23,11 @@ msgstr "Jellyfin para Kodi"
 
 msgctxt "#30000"
 msgid "Server address"
-msgstr "Endereço do Servidor"
+msgstr "Endereço do servidor"
 
 msgctxt "#30001"
 msgid "Server name"
-msgstr "Nome do Servidor"
+msgstr "Nome do servidor"
 
 msgctxt "#30002"
 msgid "Force HTTP playback"
@@ -35,7 +35,7 @@ msgstr "Forçar reprodução em HTTP"
 
 msgctxt "#30003"
 msgid "Login method"
-msgstr "Método de Login"
+msgstr "Método de login"
 
 msgctxt "#30004"
 msgid "Log level"
@@ -43,7 +43,7 @@ msgstr "Nível de Log"
 
 msgctxt "#30016"
 msgid "Device name"
-msgstr "Nome do Dispositivo"
+msgstr "Nome do dispositivo"
 
 msgctxt "#30022"
 msgid "Advanced"
@@ -125,7 +125,7 @@ msgstr "Coleções"
 
 msgctxt "#30189"
 msgid "Unwatched Movies"
-msgstr "Filmes não Assistidos"
+msgstr "Filmes Não Assistidos"
 
 msgctxt "#30229"
 msgid "Random Items"
@@ -206,7 +206,7 @@ msgstr "Adicionar aos Favoritos"
 
 msgctxt "#30406"
 msgid "Remove from favorites"
-msgstr "Remover dos Favoritos"
+msgstr "Remover dos favoritos"
 
 msgctxt "#30408"
 msgid "Settings"
