@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 def jellyfin_url(client, handler):
-    return "%s/emby/%s" % (client.config.data['auth.server'], handler)
+    return "%s/%s" % (client.config.data['auth.server'], handler)
 
 
 def basic_info():

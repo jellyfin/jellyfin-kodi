@@ -228,7 +228,7 @@ class API(object):
 
         ''' Get jellyfin user profile picture.
         '''
-        return "%s/emby/Users/%s/Images/Primary?Format=original" % (self.server, user_id)
+        return "%s/Users/%s/Images/Primary?Format=original" % (self.server, user_id)
 
     def get_people_artwork(self, people):
 
@@ -306,7 +306,7 @@ class API(object):
 
         for index, tag in enumerate(tags):
 
-            artwork = "%s/emby/Items/%s/Images/Backdrop/%s?Format=original&Tag=%s%s" % (self.server, item_id, index, tag, (query or ""))
+            artwork = "%s/Items/%s/Images/Backdrop/%s?Format=original&Tag=%s%s" % (self.server, item_id, index, tag, (query or ""))
             backdrops.append(artwork)
 
         return backdrops
@@ -318,7 +318,7 @@ class API(object):
         if item_id is None:
             return ""
 
-        url = "%s/emby/Items/%s/Images/%s/0?Format=original" % (self.server, item_id, image)
+        url = "%s/Items/%s/Images/%s/0?Format=original" % (self.server, item_id, image)
 
         if tag is not None:
             url += "&Tag=%s" % tag

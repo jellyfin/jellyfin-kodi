@@ -140,7 +140,7 @@ class ConnectionManager(object):
             LOG.exception(error)
             LOG.error("connectToAddress %s failed", address)
             return { 'State': CONNECTION_STATE['Unavailable'] }
-           
+
 
     def connect_to_server(self, server, options={}):
 
@@ -155,7 +155,7 @@ class ConnectionManager(object):
 
         except Exception as e:
             LOG.info("Failing server connection. ERROR msg: {}".format(e))
-            return { 'State': CONNECTION_STATE['Unavailable'] }            
+            return { 'State': CONNECTION_STATE['Unavailable'] }
 
     def connect(self, options={}):
         LOG.info("Begin connect")
@@ -183,7 +183,7 @@ class ConnectionManager(object):
         return self.client.jellyfin.get_public_users()
 
     def get_jellyfin_url(self, base, handler):
-        return "%s/emby/%s" % (base, handler)
+        return "%s/%s" % (base, handler)
 
     def _request_url(self, request, headers=True):
 
@@ -328,7 +328,7 @@ class ConnectionManager(object):
                 'Id': found_server['Id'],
                 'address': server or found_server['Address'],
                 'Name': found_server['Name']
-            } 
+            }
 
             servers.append(info)
         else:
@@ -451,7 +451,7 @@ class ConnectionManager(object):
         if system_info.get('address'):
             server['address'] = system_info['address']
 
-        ## Finish updating server info 
+        ## Finish updating server info
 
     def _on_authenticated(self, result, options={}):
 
