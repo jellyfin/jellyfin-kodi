@@ -404,15 +404,15 @@ def get_credentials():
     # Migration for #145
     # TODO: CLEANUP for 1.0.0 release
     for server in credentials['Servers']:
+        # Functionality removed in #60
+        if 'RemoteAddress' in server:
+            del server['RemoteAddress']
         if 'ManualAddress' in server:
             server['address'] = server['ManualAddress']
             del server['ManualAddress']
             # If manual is present, local should always be here, but better to be safe
             if 'LocalAddress' in server:
                 del server['LocalAddress']
-            # Functionality removed in #60
-            if 'RemoteAddress' in server:
-                del server['RemoteAddress']
         elif 'LocalAddress' in server:
             server['address'] = server['LocalAddress']
             del server['LocalAddress']
