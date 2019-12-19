@@ -127,7 +127,7 @@ class Database(object):
                     modified['time'] = modified_int
                     modified['file'] = file.decode('utf-8')
 
-        LOG.info("Discovered database: %s", modified)
+        LOG.debug("Discovered database: %s", modified)
         self.discovered_file = modified['file']
 
         return xbmc.translatePath("special://database/%s" % modified['file']).decode('utf-8')
@@ -187,7 +187,7 @@ class Database(object):
 
         if self.commit_close and changes:
 
-            LOG.info("[%s] %s rows updated.", self.db_file, changes)
+            LOG.debug("[%s] %s rows updated.", self.db_file, changes)
             self.conn.commit()
 
         LOG.debug("---<[ database: %s ] %s", self.db_file, id(self.conn))
@@ -213,7 +213,7 @@ def jellyfin_tables(cursor):
     columns = cursor.execute("SELECT * FROM jellyfin")
     if 'jellyfin_parent_id' not in [description[0] for description in columns.description]:
 
-        LOG.info("Add missing column jellyfin_parent_id")
+        LOG.debug("Add missing column jellyfin_parent_id")
         cursor.execute("ALTER TABLE jellyfin ADD COLUMN jellyfin_parent_id 'TEXT'")
 
 

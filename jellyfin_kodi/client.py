@@ -96,15 +96,15 @@ def get_device_id(reset=False):
     client_id = file_guid.read()
 
     if not client_id or reset:
-        LOG.info("Generating a new GUID.")
+        LOG.debug("Generating a new GUID.")
 
         client_id = str("%012X" % create_id())
         file_guid = xbmcvfs.File(jellyfin_guid, 'w')
         file_guid.write(client_id)
 
     file_guid.close()
-
-    LOG.info("DeviceId loaded: %s", client_id)
+    
+    LOG.debug("DeviceId loaded: %s", client_id)
     window('jellyfin_deviceId', value=client_id)
 
     return client_id

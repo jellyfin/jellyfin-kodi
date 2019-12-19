@@ -139,7 +139,7 @@ class MusicVideos(KodiDb):
 
         self.add(*values(obj, QU.add_musicvideo_obj))
         self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_mvideo_obj))
-        LOG.info("ADD mvideo [%s/%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['MvideoId'], obj['Id'], obj['Title'])
+        LOG.debug("ADD mvideo [%s/%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['MvideoId'], obj['Id'], obj['Title'])
 
     def musicvideo_update(self, obj):
 
@@ -147,7 +147,7 @@ class MusicVideos(KodiDb):
         '''
         self.update(*values(obj, QU.update_musicvideo_obj))
         self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
-        LOG.info("UPDATE mvideo [%s/%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['MvideoId'], obj['Id'], obj['Title'])
+        LOG.debug("UPDATE mvideo [%s/%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['MvideoId'], obj['Id'], obj['Title'])
 
     def get_path_filename(self, obj):
 
@@ -203,7 +203,7 @@ class MusicVideos(KodiDb):
 
         self.add_playstate(*values(obj, QU.add_bookmark_obj))
         self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
-        LOG.info("USERDATA mvideo [%s/%s] %s: %s", obj['FileId'], obj['MvideoId'], obj['Id'], obj['Title'])
+        LOG.debug("USERDATA mvideo [%s/%s] %s: %s", obj['FileId'], obj['MvideoId'], obj['Id'], obj['Title'])
 
     @stop()
     @jellyfin_item()
@@ -227,4 +227,4 @@ class MusicVideos(KodiDb):
             self.remove_path(*values(obj, QU.delete_path_obj))
 
         self.jellyfin_db.remove_item(*values(obj, QUEM.delete_item_obj))
-        LOG.info("DELETE musicvideo %s [%s/%s] %s", obj['MvideoId'], obj['PathId'], obj['FileId'], obj['Id'])
+        LOG.debug("DELETE musicvideo %s [%s/%s] %s", obj['MvideoId'], obj['PathId'], obj['FileId'], obj['Id'])

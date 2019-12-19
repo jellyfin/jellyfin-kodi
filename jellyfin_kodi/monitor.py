@@ -104,21 +104,21 @@ class Monitor(xbmc.Monitor):
 
         try:
             if not data.get('ServerId'):
-                raise Exception("ServerId undefined.")
+                server = Jellyfin()
+            else:
+                if method != 'LoadServer' and data['ServerId'] not in self.servers:
 
-            if method != 'LoadServer' and data['ServerId'] not in self.servers:
+                    try:
+                        connect.Connect().register(data['ServerId'])
+                        self.server_instance(data['ServerId'])
+                    except Exception as error:
 
-                try:
-                    connect.Connect().register(data['ServerId'])
-                    self.server_instance(data['ServerId'])
-                except Exception as error:
+                        LOG.exception(error)
+                        dialog("ok", heading="{jellyfin}", line1=translate(33142))
 
-                    LOG.exception(error)
-                    dialog("ok", heading="{jellyfin}", line1=translate(33142))
+                        return
 
-                    return
-
-            server = Jellyfin(data['ServerId'])
+                server = Jellyfin(data['ServerId'])
         except Exception as error:
             LOG.exception(error)
             server = Jellyfin()

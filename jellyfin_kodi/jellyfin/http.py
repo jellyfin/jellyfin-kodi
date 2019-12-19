@@ -48,16 +48,16 @@ class HTTP(object):
     def _replace_user_info(self, string):
 
         if '{server}' in string:
-            if self.config.data['auth.server']:
-                string = string.decode('utf-8').replace("{server}", self.config.data['auth.server'])
+            if self.config.data.get('auth.server', None):
+                string = string.decode('utf-8').replace("{server}", self.config.data.get('auth.server'))
             else:
-                raise Exception("Server address not set.")
+                LOG.debug("Server address not set")
 
         if '{UserId}'in string:
-            if self.config.data['auth.user_id']:
-                string = string.decode('utf-8').replace("{UserId}", self.config.data['auth.user_id'])
+            if self.config.data.get('auth.user_id', None):
+                string = string.decode('utf-8').replace("{UserId}", self.config.data.get('auth.user_id'))
             else:
-                raise Exception("UserId is not set.")
+                LOG.debug("UserId is not set.")
 
         return string
 
@@ -147,7 +147,8 @@ class HTTP(object):
                 raise HTTPException(r.status_code, error)
 
             except requests.exceptions.MissingSchema as error:
-                raise HTTPException("MissingSchema", {'Id': self.config.data['auth.server']})
+                LOG.error("Request missing Schema. "+str(error))
+                raise HTTPException("MissingSchema", {'Id': self.config.data.get('auth.server', "None")})
 
             except Exception as error:
                 raise
@@ -167,11 +168,11 @@ class HTTP(object):
     def _request(self, data):
 
         if 'url' not in data:
-            data['url'] = "%s/%s" % (self.config.data['auth.server'], data.pop('handler', ""))
+            data['url'] = "%s/%s" % (self.config.data.get("auth.server", ""), data.pop('handler', ""))
 
         self._get_header(data)
         data['timeout'] = data.get('timeout') or self.config.data['http.timeout']
-        data['verify'] = data.get('verify') or self.config.data['auth.ssl'] or False
+        data['verify'] = data.get('verify') or self.config.data.get('auth.ssl', False)
         data['url'] = self._replace_user_info(data['url'])
         self._process_params(data.get('params') or {})
         self._process_params(data.get('json') or {})
@@ -198,7 +199,7 @@ class HTTP(object):
                 'Content-type': "application/json",
                 'Accept-Charset': "UTF-8,*",
                 'Accept-encoding': "gzip",
-                'User-Agent': self.config.data['http.user_agent'] or "%s/%s" % (self.config.data['app.name'], self.config.data['app.version'])
+                'User-Agent': self.config.data['http.user_agent'] or "%s/%s" % (self.config.data.get('app.name', 'Jellyfin for Kodi'), self.config.data.get('app.version', "0.0.0"))
             })
 
         if 'x-emby-authorization' not in data['headers']:
@@ -209,17 +210,17 @@ class HTTP(object):
     def _authorization(self, data):
 
         auth = "MediaBrowser "
-        auth += "Client=%s, " % self.config.data['app.name'].encode('utf-8')
-        auth += "Device=%s, " % self.config.data['app.device_name'].encode('utf-8')
-        auth += "DeviceId=%s, " % self.config.data['app.device_id'].encode('utf-8')
-        auth += "Version=%s" % self.config.data['app.version'].encode('utf-8')
+        auth += "Client=%s, " % self.config.data.get('app.name', "Jellyfin for Kodi").encode('utf-8')
+        auth += "Device=%s, " % self.config.data.get('app.device_name', 'Unknown Device').encode('utf-8')
+        auth += "DeviceId=%s, " % self.config.data.get('app.device_id', 'Unknown Device id').encode('utf-8')
+        auth += "Version=%s" % self.config.data.get('app.version', '0.0.0').encode('utf-8')
 
         data['headers'].update({'x-emby-authorization': auth})
 
         if self.config.data.get('auth.token') and self.config.data.get('auth.user_id'):
 
-            auth += ', UserId=%s' % self.config.data['auth.user_id'].encode('utf-8')
-            data['headers'].update({'x-emby-authorization': auth, 'X-MediaBrowser-Token': self.config.data['auth.token'].encode('utf-8')})
+            auth += ', UserId=%s' % self.config.data.get('auth.user_id').encode('utf-8')
+            data['headers'].update({'x-emby-authorization': auth, 'X-MediaBrowser-Token': self.config.data.get('auth.token').encode('utf-8')})
 
         return data
 

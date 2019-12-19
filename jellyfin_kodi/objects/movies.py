@@ -130,7 +130,7 @@ class Movies(KodiDb):
 
         self.add(*values(obj, QU.add_movie_obj))
         self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_movie_obj))
-        LOG.info("ADD movie [%s/%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['MovieId'], obj['Id'], obj['Title'])
+        LOG.debug("ADD movie [%s/%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['MovieId'], obj['Id'], obj['Title'])
 
     def movie_update(self, obj):
 
@@ -144,7 +144,7 @@ class Movies(KodiDb):
 
         self.update(*values(obj, QU.update_movie_obj))
         self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
-        LOG.info("UPDATE movie [%s/%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['MovieId'], obj['Id'], obj['Title'])
+        LOG.debug("UPDATE movie [%s/%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['MovieId'], obj['Id'], obj['Title'])
 
     def trailer(self, obj):
 
@@ -217,11 +217,11 @@ class Movies(KodiDb):
             temp_obj['MovieId'] = obj['Current'][temp_obj['Movie']]
             self.remove_from_boxset(*values(temp_obj, QU.delete_movie_set_obj))
             self.jellyfin_db.update_parent_id(*values(temp_obj, QUEM.delete_parent_boxset_obj))
-            LOG.info("DELETE from boxset [%s] %s: %s", temp_obj['SetId'], temp_obj['Title'], temp_obj['MovieId'])
+            LOG.debug("DELETE from boxset [%s] %s: %s", temp_obj['SetId'], temp_obj['Title'], temp_obj['MovieId'])
 
         self.artwork.add(obj['Artwork'], obj['SetId'], "set")
         self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_boxset_obj))
-        LOG.info("UPDATE boxset [%s] %s", obj['SetId'], obj['Title'])
+        LOG.debug("UPDATE boxset [%s] %s", obj['SetId'], obj['Title'])
 
     def boxset_current(self, obj):
 
@@ -253,7 +253,7 @@ class Movies(KodiDb):
 
                     self.set_boxset(*values(temp_obj, QU.update_movie_set_obj))
                     self.jellyfin_db.update_parent_id(*values(temp_obj, QUEM.update_parent_movie_obj))
-                    LOG.info("ADD to boxset [%s/%s] %s: %s to boxset", temp_obj['SetId'], temp_obj['MovieId'], temp_obj['Title'], temp_obj['Id'])
+                    LOG.debug("ADD to boxset [%s/%s] %s: %s to boxset", temp_obj['SetId'], temp_obj['MovieId'], temp_obj['Title'], temp_obj['Id'])
                 else:
                     obj['Current'].pop(temp_obj['Id'])
 
@@ -297,7 +297,7 @@ class Movies(KodiDb):
         LOG.debug("New resume point %s: %s", obj['Id'], obj['Resume'])
         self.add_playstate(*values(obj, QU.add_bookmark_obj))
         self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
-        LOG.info("USERDATA movie [%s/%s] %s: %s", obj['FileId'], obj['MovieId'], obj['Id'], obj['Title'])
+        LOG.debug("USERDATA movie [%s/%s] %s: %s", obj['FileId'], obj['MovieId'], obj['Id'], obj['Title'])
 
     @stop()
     @jellyfin_item()
@@ -332,4 +332,4 @@ class Movies(KodiDb):
             self.delete_boxset(*values(obj, QU.delete_set_obj))
 
         self.jellyfin_db.remove_item(*values(obj, QUEM.delete_item_obj))
-        LOG.info("DELETE %s [%s/%s] %s", obj['Media'], obj['FileId'], obj['KodiId'], obj['Id'])
+        LOG.debug("DELETE %s [%s/%s] %s", obj['Media'], obj['FileId'], obj['KodiId'], obj['Id'])

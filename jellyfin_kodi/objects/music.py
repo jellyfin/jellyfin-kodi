@@ -91,14 +91,14 @@ class Music(KodiDb):
         '''
         obj['ArtistId'] = self.get(*values(obj, QU.get_artist_obj))
         self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_artist_obj))
-        LOG.info("ADD artist [%s] %s: %s", obj['ArtistId'], obj['Name'], obj['Id'])
+        LOG.debug("ADD artist [%s] %s: %s", obj['ArtistId'], obj['Name'], obj['Id'])
 
     def artist_update(self, obj):
 
         ''' Update object to kodi.
         '''
         self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
-        LOG.info("UPDATE artist [%s] %s: %s", obj['ArtistId'], obj['Name'], obj['Id'])
+        LOG.debug("UPDATE artist [%s] %s: %s", obj['ArtistId'], obj['Name'], obj['Id'])
 
     @stop()
     @jellyfin_item()
@@ -153,14 +153,14 @@ class Music(KodiDb):
         '''
         obj['AlbumId'] = self.get_album(*values(obj, QU.get_album_obj))
         self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_album_obj))
-        LOG.info("ADD album [%s] %s: %s", obj['AlbumId'], obj['Title'], obj['Id'])
+        LOG.debug("ADD album [%s] %s: %s", obj['AlbumId'], obj['Title'], obj['Id'])
 
     def album_update(self, obj):
 
         ''' Update object to kodi.
         '''
         self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
-        LOG.info("UPDATE album [%s] %s: %s", obj['AlbumId'], obj['Title'], obj['Id'])
+        LOG.debug("UPDATE album [%s] %s: %s", obj['AlbumId'], obj['Title'], obj['Id'])
 
     def artist_discography(self, obj):
 
@@ -311,7 +311,7 @@ class Music(KodiDb):
 
         self.update_song(*values(obj, QU.update_song_obj))
         self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
-        LOG.info("UPDATE song [%s/%s/%s] %s: %s", obj['PathId'], obj['AlbumId'], obj['SongId'], obj['Id'], obj['Title'])
+        LOG.debug("UPDATE song [%s/%s/%s] %s: %s", obj['PathId'], obj['AlbumId'], obj['SongId'], obj['Id'], obj['Title'])
 
     def get_song_path_filename(self, obj, api):
 
@@ -425,7 +425,7 @@ class Music(KodiDb):
             self.rate_song(*values(obj, QU.update_song_rating_obj))
 
         self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
-        LOG.info("USERDATA %s [%s] %s: %s", obj['Media'], obj['KodiId'], obj['Id'], obj['Title'])
+        LOG.debug("USERDATA %s [%s] %s: %s", obj['Media'], obj['KodiId'], obj['Id'], obj['Title'])
 
     @stop()
     @jellyfin_item()
@@ -494,19 +494,19 @@ class Music(KodiDb):
 
         self.artwork.delete(kodi_id, "artist")
         self.delete(kodi_id)
-        LOG.info("DELETE artist [%s] %s", kodi_id, item_id)
+        LOG.debug("DELETE artist [%s] %s", kodi_id, item_id)
 
     def remove_album(self, kodi_id, item_id):
 
         self.artwork.delete(kodi_id, "album")
         self.delete_album(kodi_id)
-        LOG.info("DELETE album [%s] %s", kodi_id, item_id)
+        LOG.debug("DELETE album [%s] %s", kodi_id, item_id)
 
     def remove_song(self, kodi_id, item_id):
 
         self.artwork.delete(kodi_id, "song")
         self.delete_song(kodi_id)
-        LOG.info("DELETE song [%s] %s", kodi_id, item_id)
+        LOG.debug("DELETE song [%s] %s", kodi_id, item_id)
 
     @jellyfin_item()
     def get_child(self, item_id, e_item):
