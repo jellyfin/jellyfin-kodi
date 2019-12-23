@@ -26,9 +26,9 @@ class Credentials(object):
     def get_credentials(self, data=None):
 
         if data is not None:
-            self._set(data)
+            self.set(data)
 
-        return self._get()
+        return self.get()
 
     def _ensure(self):
 
@@ -45,12 +45,12 @@ class Credentials(object):
             LOG.debug("credentials initialized with: %s", self.credentials)
             self.credentials['Servers'] = self.credentials.setdefault('Servers', [])
 
-    def _get(self):
+    def get(self):
         self._ensure()
 
         return self.credentials
 
-    def _set(self, data):
+    def set(self, data):
 
         if data:
             self.credentials.update(data)
