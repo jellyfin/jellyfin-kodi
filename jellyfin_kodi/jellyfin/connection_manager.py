@@ -7,7 +7,6 @@ import logging
 import socket
 import time
 from datetime import datetime
-from distutils.version import LooseVersion
 
 import urllib3
 
@@ -41,10 +40,9 @@ class ConnectionManager(object):
         self.config = client.config
         self.credentials = Credentials()
 
-        self.http = HTTP(client)
         self.API = API(client)
 
-    def clear_data(self): ## Never actually called
+    """def clear_data(self): ## Never called
 
         LOG.info("connection manager clearing data")
 
@@ -53,7 +51,7 @@ class ConnectionManager(object):
         credentials['Servers'] = list()
         self.credentials.set(credentials)
 
-        self.config.auth(None, None)
+        self.config.auth(None, None)"""
 
     def revoke_token(self): #Called once in http#L130
 
@@ -148,7 +146,7 @@ class ConnectionManager(object):
         address = self._normalize_address(address)
 
         try:
-            public_info = self._try_connect(address, options=options)
+            public_info = self.API.get_public_info(address)
             LOG.info("connectToAddress %s succeeded", address)
             server = {
                 'address': address,
@@ -171,7 +169,12 @@ class ConnectionManager(object):
         LOG.info("begin connectToServer")
 
         try:
-            result = self._try_connect(server['address'], self.timeout, options)
+            result = self.API.get_public_info(server.get('address'))
+
+            if not result:
+                LOG.error("Failed to connect to server: %s" % server.get('address'))
+                return { 'State': CONNECTION_STATE['Unavailable'] }
+
             LOG.info("calling onSuccessfulConnection with server %s", server.get('Name'))
 
             credentials = self.credentials.get()
@@ -218,52 +221,6 @@ class ConnectionManager(object):
     def get_public_users(self): ## Required in connect.py#L213
         return self.client.jellyfin.get_public_users()
 
-    def get_jellyfin_url(self, base, handler):
-        return "%s/%s" % (base, handler)
-
-    def _request_url(self, request, headers=True):
-
-        request['timeout'] = request.get('timeout') or self.timeout
-        if headers:
-            self._get_headers(request)
-
-        try:
-            return self.http.request(request)
-        except Exception as error:
-            LOG.exception(error)
-            raise
-
-    def _add_app_info(self):
-        return "%s/%s" % (self.config.data['app.name'], self.config.data['app.version'])
-
-    def _get_headers(self, request):
-
-        headers = request.setdefault('headers', {})
-
-        if request.get('dataType') == "json":
-            headers['Accept'] = "application/json"
-            request.pop('dataType')
-
-        headers['X-Application'] = self._add_app_info()
-        headers['Content-type'] = request.get(
-            'contentType',
-            'application/x-www-form-urlencoded; charset=UTF-8'
-        )
-
-    def _try_connect(self, url, timeout=None, options={}):
-
-        url = self.get_jellyfin_url(url, "system/info/public")
-        LOG.info("tryConnect url: %s", url)
-
-        return self._request_url({
-            'type': "GET",
-            'url': url,
-            'dataType': "json",
-            'timeout': timeout,
-            'verify': options.get('ssl'),
-            'retry': False
-        })
-
     def _server_discovery(self):
 
         MULTI_GROUP = ("<broadcast>", 7359)
@@ -301,7 +258,7 @@ class ConnectionManager(object):
                 LOG.exception("Error trying to find servers: %s", e)
                 return servers
 
-    def _get_last_used_server(self): ## Never used
+    """def _get_last_used_server(self): ## Never called
 
         servers = self.credentials.get()['Servers']
 
@@ -313,7 +270,7 @@ class ConnectionManager(object):
         except TypeError:
             servers.sort(key=lambda x: datetime(*(time.strptime(x['DateLastAccessed'], "%Y-%m-%dT%H:%M:%SZ")[0:6])), reverse=True)
 
-        return servers[0]
+        return servers[0]"""
 
     def _find_servers(self, found_servers):
 
@@ -334,7 +291,7 @@ class ConnectionManager(object):
             return servers
 
     # TODO: Make IPv6 compatable
-    def _convert_endpoint_address_to_manual_address(self, info):
+    def _convert_endpoint_address_to_manual_address(self, info): # Called once ^^ right there 
 
         if info.get('Address') and info.get('EndpointAddress'):
             address = info['EndpointAddress'].split(':')[0]
@@ -378,7 +335,7 @@ class ConnectionManager(object):
             self.config.data['auth.token'] = server.pop('AccessToken', None)
 
         elif verify_authentication and server.get('AccessToken'):
-            if self._validate_authentication(server, options):
+            if self._validate_authentication(server):
 
                 self.config.data['auth.user_id'] = server['UserId']
                 self.config.data['auth.token'] = server['AccessToken']
@@ -408,7 +365,7 @@ class ConnectionManager(object):
         # Connected
         return result
 
-    def _validate_authentication(self, server, options={}):
+    def _validate_authentication(self, server):
 
         system_info = self.API.validate_authentication_token(server)
 

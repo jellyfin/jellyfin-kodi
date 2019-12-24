@@ -394,7 +394,7 @@ class API(object):
         return {}
 
     def validate_authentication_token(self, server):
-        url = server['address']+"/System/Info"
+        url = "%s/%s" % (server['address'], "system/info")
         authTokenHeader = {
                     'X-MediaBrowser-Token': server['AccessToken']
                 }
@@ -402,6 +402,11 @@ class API(object):
         headers.update(authTokenHeader)
 
         response = requests.get(url, timeout=self.default_timeout, headers=headers, verify=settings('sslverify'))
-
         return response.json() if response.status_code == 200 else {}
 
+    def get_public_info(self, server_address):
+        url = "%s/%s" % (server_address, "system/info/public")
+        headers = self.get_default_headers()
+
+        response = requests.get(url, timeout=self.default_timeout, headers=headers, verify=settings('sslverify'))
+        return response.json() if response.status_code == 200 else {}
