@@ -371,6 +371,17 @@ class API(object):
             "x-emby-authorization": auth
         }
 
+    def send_request(self, method, url, path, timeout=self.default_timeout, headers=get_default_headers(), data=None):
+        import web_pdb; web_pdb.set_trace()
+        request_method = getattr(requests, method.lower(), "get") #Defaults to get request if none specified
+        url = "%s/%s" % (url, path)
+
+        if settings('sslverify'):
+            request_method(url, timeout=timeout, headers=headers, data=data)
+        else:
+            request_method(url, timeout=timeout, headers=headers, data=data, verify=False)
+
+
     def login(self, server_url, username, password):
         url = server_url+"/Users/AuthenticateByName"
         authData = {
@@ -394,6 +405,7 @@ class API(object):
         return {}
 
     def validate_authentication_token(self, server):
+
         url = "%s/%s" % (server['address'], "system/info")
         authTokenHeader = {
                     'X-MediaBrowser-Token': server['AccessToken']
@@ -401,7 +413,8 @@ class API(object):
         headers = self.get_default_headers()
         headers.update(authTokenHeader)
 
-        response = requests.get(url, timeout=self.default_timeout, headers=headers, verify=settings('sslverify'))
+        response = send_request("GET", server['address'], "system/info", headers=headers)
+        #response = requests.get(url, timeout=self.default_timeout, headers=headers, verify=settings('sslverify'))
         return response.json() if response.status_code == 200 else {}
 
     def get_public_info(self, server_address):

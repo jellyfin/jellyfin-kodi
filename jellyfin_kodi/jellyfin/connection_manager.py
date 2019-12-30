@@ -7,12 +7,14 @@ import logging
 import socket
 import time
 from datetime import datetime
+from operator import itemgetter 
 
 import urllib3
 
 from credentials import Credentials
 from http import HTTP  # noqa: I201,I100
 from api import API 
+
 
 #################################################################################################
 
@@ -41,17 +43,6 @@ class ConnectionManager(object):
         self.credentials = Credentials()
 
         self.API = API(client)
-
-    """def clear_data(self): ## Never called
-
-        LOG.info("connection manager clearing data")
-
-        self.user = None
-        credentials = self.credentials.get()
-        credentials['Servers'] = list()
-        self.credentials.set(credentials)
-
-        self.config.auth(None, None)"""
 
     def revoke_token(self): #Called once in http#L130
 
@@ -83,11 +74,7 @@ class ConnectionManager(object):
             except KeyError:
                 continue
 
-        try:
-            servers.sort(key=lambda x: datetime.strptime(x['DateLastAccessed'], "%Y-%m-%dT%H:%M:%SZ"), reverse=True)
-        except TypeError:
-            servers.sort(key=lambda x: datetime(*(time.strptime(x['DateLastAccessed'], "%Y-%m-%dT%H:%M:%SZ")[0:6])), reverse=True)
-
+        servers.sort(key=itemgetter('DateLastAccessed'), reverse=True)
         credentials['Servers'] = servers
         self.credentials.set(credentials)
 
@@ -200,9 +187,6 @@ class ConnectionManager(object):
 
         return result
 
-    def jellyfin_user_id(self): ## Never called
-        return self.get_server_info(self.server_id)['UserId']
-
     def jellyfin_token(self): ## Called once monitor.py#163
         return self.get_server_info(self.server_id)['AccessToken']
 
@@ -257,20 +241,6 @@ class ConnectionManager(object):
             except Exception as e:
                 LOG.exception("Error trying to find servers: %s", e)
                 return servers
-
-    """def _get_last_used_server(self): ## Never called
-
-        servers = self.credentials.get()['Servers']
-
-        if not len(servers):
-            return
-
-        try:
-            servers.sort(key=lambda x: datetime.strptime(x['DateLastAccessed'], "%Y-%m-%dT%H:%M:%SZ"), reverse=True)
-        except TypeError:
-            servers.sort(key=lambda x: datetime(*(time.strptime(x['DateLastAccessed'], "%Y-%m-%dT%H:%M:%SZ")[0:6])), reverse=True)
-
-        return servers[0]"""
 
     def _find_servers(self, found_servers):
 
@@ -388,5 +358,3 @@ class ConnectionManager(object):
 
         if system_info.get('address'):
             server['address'] = system_info['address']
-
-        ## Finish updating server info
