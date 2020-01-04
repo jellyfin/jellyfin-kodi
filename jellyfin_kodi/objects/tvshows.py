@@ -8,6 +8,7 @@ import sqlite3
 from ntpath import dirname
 
 from six.moves.urllib.parse import urlencode
+from kodi_six.utils import py2_encode
 
 from .obj import Objects
 from .kodi import TVShows as KodiDb, queries as QU
@@ -394,7 +395,7 @@ class TVShows(KodiDb):
         else:
             obj['Path'] = "plugin://plugin.video.jellyfin/%s/" % obj['SeriesId']
             params = {
-                'filename': obj['Filename'],
+                'filename': py2_encode(obj['Filename'], 'utf-8'),
                 'id': obj['Id'],
                 'dbid': obj['EpisodeId'],
                 'mode': "play"

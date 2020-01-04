@@ -5,6 +5,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import logging
 from six.moves.urllib.parse import urlencode
+from kodi_six.utils import py2_encode
 
 import downloader as server
 from .obj import Objects
@@ -178,7 +179,7 @@ class Movies(KodiDb):
         else:
             obj['Path'] = "plugin://plugin.video.jellyfin/%s/" % obj['LibraryId']
             params = {
-                'filename': obj['Filename'],
+                'filename': py2_encode(obj['Filename'], 'utf-8'),
                 'id': obj['Id'],
                 'dbid': obj['MovieId'],
                 'mode': "play"

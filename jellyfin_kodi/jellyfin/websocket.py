@@ -344,7 +344,7 @@ class ABNF(object):
 
     def _get_masked(self, mask_key):
         s = ABNF.mask(mask_key, self.data)
-        return mask_key + "".join(s)
+        return mask_key + b"".join(s)
 
     @staticmethod
     def mask(mask_key, data):
@@ -602,7 +602,7 @@ class WebSocket(object):
     def send_binary(self, payload):
         return self.send(payload, ABNF.OPCODE_BINARY)
 
-    def ping(self, payload=""):
+    def ping(self, payload=b""):
         """
         send ping data.
 
@@ -784,7 +784,7 @@ class WebSocket(object):
             _bytes = self._recv(shortage)
             self._recv_buffer.append(_bytes)
             shortage -= len(_bytes)
-        unified = "".join(self._recv_buffer)
+        unified = b"".join(self._recv_buffer)
         if shortage == 0:
             self._recv_buffer = []
             return unified
@@ -799,7 +799,7 @@ class WebSocket(object):
             line.append(c)
             if c == "\n":
                 break
-        return "".join(line)
+        return b"".join(line)
 
 
 class WebSocketApp(object):

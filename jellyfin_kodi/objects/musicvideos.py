@@ -7,6 +7,7 @@ import datetime
 import logging
 import re
 from six.moves.urllib.parse import urlencode
+from kodi_six.utils import py2_encode
 
 from .obj import Objects
 from .kodi import MusicVideos as KodiDb, queries as QU
@@ -166,7 +167,7 @@ class MusicVideos(KodiDb):
         else:
             obj['Path'] = "plugin://plugin.video.jellyfin/%s/" % obj['LibraryId']
             params = {
-                'filename': obj['Filename'],
+                'filename': py2_encode(obj['Filename'], 'utf-8'),
                 'id': obj['Id'],
                 'dbid': obj['MvideoId'],
                 'mode': "play"

@@ -263,7 +263,7 @@ def values(item, keys):
     ''' Grab the values in the item for a list of keys {key},{key1}....
         If the key has no brackets, the key will be passed as is.
     '''
-    return (item[key.replace('{', "").replace('}', "")] if type(key) == str and key.startswith('{') else key for key in keys)
+    return (item[key.replace('{', "").replace('}', "")] if isinstance(key, text_type) and key.startswith('{') else key for key in keys)
 
 
 def indent(elem, level=0):
