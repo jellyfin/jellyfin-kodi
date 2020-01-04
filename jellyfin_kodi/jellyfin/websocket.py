@@ -1,3 +1,4 @@
+from __future__ import division, absolute_import, print_function, unicode_literals
 """
 websocket - WebSocket client library for Python
 
@@ -33,7 +34,7 @@ except ImportError:
 
     HAVE_SSL = False
 
-from urlparse import urlparse
+
 import os
 import array
 import struct
@@ -43,6 +44,10 @@ import base64
 import threading
 import time
 import logging
+
+from six import text_type, string_types, iteritems, int2byte, indexbytes
+from six.moves import range
+from six.moves.urllib.parse import urlparse
 
 """
 websocket python client.
@@ -221,7 +226,7 @@ def create_connection(url, timeout=None, **options):
 
 
 _MAX_INTEGER = (1 << 32) - 1
-_AVAILABLE_KEY_CHARS = range(0x21, 0x2f + 1) + range(0x3a, 0x7e + 1)
+_AVAILABLE_KEY_CHARS = list(range(0x21, 0x2f + 1)) + list(range(0x3a, 0x7e + 1))
 _MAX_CHAR_BYTE = (1 << 8) - 1
 
 # ref. Websocket gets an update, and it breaks stuff.
@@ -304,7 +309,7 @@ class ABNF(object):
 
         opcode: operation code. please see OPCODE_XXX.
         """
-        if opcode == ABNF.OPCODE_TEXT and isinstance(data, unicode):
+        if opcode == ABNF.OPCODE_TEXT and isinstance(data, text_type):
             data = data.encode("utf-8")
         # mask must be set if send data from client
         return ABNF(1, 0, 0, 0, opcode, 1, data)
@@ -321,14 +326,14 @@ class ABNF(object):
         if length >= ABNF.LENGTH_63:
             raise ValueError("data is too long")
 
-        frame_header = chr(self.fin << 7 | self.rsv1 << 6 | self.rsv2 << 5 | self.rsv3 << 4 | self.opcode)
+        frame_header = int2byte(self.fin << 7 | self.rsv1 << 6 | self.rsv2 << 5 | self.rsv3 << 4 | self.opcode)
         if length < ABNF.LENGTH_7:
-            frame_header += chr(self.mask << 7 | length)
+            frame_header += int2byte(self.mask << 7 | length)
         elif length < ABNF.LENGTH_16:
-            frame_header += chr(self.mask << 7 | 0x7e)
+            frame_header += int2byte(self.mask << 7 | 0x7e)
             frame_header += struct.pack("!H", length)
         else:
-            frame_header += chr(self.mask << 7 | 0x7f)
+            frame_header += int2byte(self.mask << 7 | 0x7f)
             frame_header += struct.pack("!Q", length)
 
         if not self.mask:
@@ -352,7 +357,7 @@ class ABNF(object):
         """
         _m = array.array("B", mask_key)
         _d = array.array("B", data)
-        for i in xrange(len(_d)):
+        for i in range(len(_d)):
             _d[i] ^= _m[i % 4]
         return _d.tostring()
 
@@ -475,31 +480,39 @@ class WebSocket(object):
         self._handshake(hostname, port, resource, **options)
 
     def _handshake(self, host, port, resource, **options):
+        if isinstance(host, string_types):
+            host = host.encode('utf-8')
+        if isinstance(resource, string_types):
+            resource = resource.encode('utf-8')
+
         headers = []
-        headers.append("GET %s HTTP/1.1" % resource)
-        headers.append("Upgrade: websocket")
-        headers.append("Connection: Upgrade")
+        headers.append(b"GET %s HTTP/1.1" % resource)
+        headers.append(b"Upgrade: websocket")
+        headers.append(b"Connection: Upgrade")
         if port == 80:
             hostport = host
         else:
-            hostport = "%s:%d" % (host, port)
-        headers.append("Host: %s" % hostport)
+            hostport = b"%s:%d" % (host, port)
+        headers.append(b"Host: %s" % hostport)
 
         if "origin" in options:
-            headers.append("Origin: %s" % options["origin"])
+            headers.append(b"Origin: %s" % options["origin"])
         else:
-            headers.append("Origin: http://%s" % hostport)
+            headers.append(b"Origin: http://%s" % hostport)
 
         key = _create_sec_websocket_key()
-        headers.append("Sec-WebSocket-Key: %s" % key)
-        headers.append("Sec-WebSocket-Version: %s" % VERSION)
+        headers.append(b"Sec-WebSocket-Key: %s" % key)
+        headers.append(b"Sec-WebSocket-Version: %d" % VERSION)
         if "header" in options:
-            headers.extend(options["header"])
+            for header in options["header"]:
+                if isinstance(header, string_types):
+                    header = header.encode('utf-8')
+                headers.extend(header)
 
-        headers.append("")
-        headers.append("")
+        headers.append(b"")
+        headers.append(b"")
 
-        header_str = "\r\n".join(headers)
+        header_str = b"\r\n".join(headers)
         self._send(header_str)
         if traceEnabled:
             logger.debug("--- request header ---")
@@ -519,7 +532,7 @@ class WebSocket(object):
         self.connected = True
 
     def _validate_header(self, headers, key):
-        for k, v in _HEADERS_TO_CHECK.iteritems():
+        for k, v in iteritems(_HEADERS_TO_CHECK):
             r = headers.get(k, None)
             if not r:
                 return False
@@ -653,13 +666,13 @@ class WebSocket(object):
         # Header
         if self._frame_header is None:
             self._frame_header = self._recv_strict(2)
-        b1 = ord(self._frame_header[0])
+        b1 = indexbytes(self._frame_header, 0)
         fin = b1 >> 7 & 1
         rsv1 = b1 >> 6 & 1
         rsv2 = b1 >> 5 & 1
         rsv3 = b1 >> 4 & 1
         opcode = b1 & 0xf
-        b2 = ord(self._frame_header[1])
+        b2 = indexbytes(self._frame_header, 1)
         has_mask = b2 >> 7 & 1
         # Frame length
         if self._frame_length is None:
@@ -753,7 +766,7 @@ class WebSocket(object):
 
     def _recv(self, bufsize):
         try:
-            bytes = self.sock.recv(bufsize)
+            _bytes = self.sock.recv(bufsize)
         except socket.timeout as e:
             raise WebSocketTimeoutException(e.args[0])
         except SSLError as e:
@@ -761,16 +774,16 @@ class WebSocket(object):
                 raise WebSocketTimeoutException(e.args[0])
             else:
                 raise
-        if not bytes:
+        if not _bytes:
             raise WebSocketConnectionClosedException()
-        return bytes
+        return _bytes
 
     def _recv_strict(self, bufsize):
         shortage = bufsize - sum(len(x) for x in self._recv_buffer)
         while shortage > 0:
-            bytes = self._recv(shortage)
-            self._recv_buffer.append(bytes)
-            shortage -= len(bytes)
+            _bytes = self._recv(shortage)
+            self._recv_buffer.append(_bytes)
+            shortage -= len(_bytes)
         unified = "".join(self._recv_buffer)
         if shortage == 0:
             self._recv_buffer = []

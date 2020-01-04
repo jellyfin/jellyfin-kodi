@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 ##################################################################################################
 
 import datetime
 import logging
 import re
-import urllib
+from six.moves.urllib.parse import urlencode
 
-from obj import Objects
-from kodi import MusicVideos as KodiDb, queries as QU
+from .obj import Objects
+from .kodi import MusicVideos as KodiDb, queries as QU
 from database import jellyfin_db, queries as QUEM
 from helper import api, stop, validate, library_check, jellyfin_item, values, Local
 
@@ -165,12 +166,12 @@ class MusicVideos(KodiDb):
         else:
             obj['Path'] = "plugin://plugin.video.jellyfin/%s/" % obj['LibraryId']
             params = {
-                'filename': obj['Filename'].encode('utf-8'),
+                'filename': obj['Filename'],
                 'id': obj['Id'],
                 'dbid': obj['MvideoId'],
                 'mode': "play"
             }
-            obj['Filename'] = "%s?%s" % (obj['Path'], urllib.urlencode(params))
+            obj['Filename'] = "%s?%s" % (obj['Path'], urlencode(params))
 
     @stop()
     @jellyfin_item()

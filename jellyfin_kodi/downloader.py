@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
 import logging
-import Queue
 import threading
 
-import xbmc
+from six.moves import queue as Queue
+
+from kodi_six import xbmc
 import requests
 from helper import settings, stop, event, window, create_id
 from jellyfin import Jellyfin

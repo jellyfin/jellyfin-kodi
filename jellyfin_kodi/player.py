@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
 import logging
 import os
 
-import xbmc
-import xbmcvfs
+from kodi_six import xbmc, xbmcvfs
 
 from objects.obj import Objects
 from helper import translate, api, window, settings, dialog, event, silent_catch, JSONRPC
@@ -85,7 +85,7 @@ class Player(xbmc.Player):
                 return
 
         for item in items:
-            if item['Path'] == current_file.decode('utf-8'):
+            if item['Path'] == current_file:
                 items.pop(items.index(item))
 
                 break
@@ -412,13 +412,13 @@ class Player(xbmc.Player):
                 LOG.info("<[ transcode/%s ]", item['Id'])
                 item['Server'].jellyfin.close_transcode(item['DeviceId'])
 
-            path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/temp/").decode('utf-8')
+            path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/temp/")
 
             if xbmcvfs.exists(path):
                 dirs, files = xbmcvfs.listdir(path)
 
                 for file in files:
-                    xbmcvfs.delete(os.path.join(path, file.decode('utf-8')))
+                    xbmcvfs.delete(os.path.join(path, file))
 
             result = item['Server'].jellyfin.get_item(item['Id']) or {}
 

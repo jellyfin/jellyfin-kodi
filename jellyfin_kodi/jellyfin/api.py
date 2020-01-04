@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
+
+
 def jellyfin_url(client, handler):
     return "%s/%s" % (client.config.data['auth.server'], handler)
 
