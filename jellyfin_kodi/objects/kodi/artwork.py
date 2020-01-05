@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
 import logging
-import urllib
-import Queue
 import threading
 
-import xbmc
-import xbmcvfs
+from six.moves import queue as Queue
+from six.moves.urllib.parse import urlencode
 
-import queries as QU
-import queries_texture as QUTEX
+from kodi_six import xbmc, xbmcvfs
+
+from . import queries as QU
+from . import queries_texture as QUTEX
 from helper import settings
 import requests
 
@@ -139,10 +140,10 @@ class Artwork(object):
         ''' urlencode needs a utf-string.
             return the result as unicode
         '''
-        text = urllib.urlencode({'blahblahblah': text.encode('utf-8')})
+        text = urlencode({'blahblahblah': text})
         text = text[13:]
 
-        return text.decode('utf-8')
+        return text
 
     def add_worker(self):
 
@@ -170,7 +171,7 @@ class Artwork(object):
             except TypeError:
                 LOG.debug("Could not find cached url: %s", url)
             else:
-                thumbnails = xbmc.translatePath("special://thumbnails/%s" % cached).decode('utf-8')
+                thumbnails = xbmc.translatePath("special://thumbnails/%s" % cached)
                 xbmcvfs.delete(thumbnails)
                 texturedb.cursor.execute(QUTEX.delete_cache, (url,))
                 LOG.info("DELETE cached %s", cached)

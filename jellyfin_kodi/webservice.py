@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
-import BaseHTTPServer
+from six.moves import BaseHTTPServer
 import logging
-import httplib
+from six.moves import http_client as httplib
 import threading
-import urlparse
+from six.moves.urllib.parse import parse_qsl
 
-import xbmc
+from kodi_six import xbmc
 
 #################################################################################################
 
@@ -97,7 +98,7 @@ class requestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             if '?' in path:
                 path = path.split('?', 1)[1]
 
-            params = dict(urlparse.parse_qsl(path))
+            params = dict(parse_qsl(path))
         except Exception:
             params = {}
 

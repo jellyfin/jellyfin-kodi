@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
 import logging
 import os
 import shutil
-import urllib
 import xml.etree.ElementTree as etree
 
-import xbmc
-import xbmcvfs
+from six.moves.urllib.parse import urlencode
+from kodi_six import xbmc, xbmcvfs
 
 from database import Database, jellyfin_db, get_sync, save_sync
 from helper import translate, api, indent, write_xml, window, event
@@ -108,13 +108,13 @@ def verify_kodi_defaults():
 
     ''' Make sure we have the kodi default folder in place.
     '''
-    node_path = xbmc.translatePath("special://profile/library/video").decode('utf-8')
+    node_path = xbmc.translatePath("special://profile/library/video")
 
     if not xbmcvfs.exists(node_path):
         try:
             shutil.copytree(
-                src=xbmc.translatePath("special://xbmc/system/library/video").decode('utf-8'),
-                dst=xbmc.translatePath("special://profile/library/video").decode('utf-8'))
+                src=xbmc.translatePath("special://xbmc/system/library/video"),
+                dst=xbmc.translatePath("special://profile/library/video"))
         except Exception as error:
             LOG.warning(error)
             xbmcvfs.mkdir(node_path)
@@ -129,7 +129,7 @@ def verify_kodi_defaults():
             indent(xml)
             write_xml(etree.tostring(xml, 'UTF-8'), file)
 
-    playlist_path = xbmc.translatePath("special://profile/playlists/video").decode('utf-8')
+    playlist_path = xbmc.translatePath("special://profile/playlists/video")
 
     if not xbmcvfs.exists(playlist_path):
         xbmcvfs.mkdirs(playlist_path)
@@ -223,8 +223,8 @@ class Views(object):
 
         ''' Set up playlists, video nodes, window prop.
         '''
-        node_path = xbmc.translatePath("special://profile/library/video").decode('utf-8')
-        playlist_path = xbmc.translatePath("special://profile/playlists/video").decode('utf-8')
+        node_path = xbmc.translatePath("special://profile/library/video")
+        playlist_path = xbmc.translatePath("special://profile/playlists/video")
         index = 0
 
         with Database('jellyfin') as jellyfindb:
@@ -779,16 +779,16 @@ class Views(object):
 
             window_prop = "Jellyfin.nodes.%s" % index
             window('%s.index' % window_prop, path.replace('all.xml', ""))  # dir
-            window('%s.title' % window_prop, view['Name'].encode('utf-8'))
+            window('%s.title' % window_prop, view['Name'])
             window('%s.content' % window_prop, path)
 
         elif node == 'browse':
 
             window_prop = "Jellyfin.nodes.%s" % index
-            window('%s.title' % window_prop, view['Name'].encode('utf-8'))
+            window('%s.title' % window_prop, view['Name'])
         else:
             window_prop = "Jellyfin.nodes.%s.%s" % (index, node)
-            window('%s.title' % window_prop, node_label.encode('utf-8'))
+            window('%s.title' % window_prop, node_label)
             window('%s.content' % window_prop, path)
 
         window('%s.id' % window_prop, view['Id'])
@@ -831,17 +831,17 @@ class Views(object):
 
             window_prop = "Jellyfin.wnodes.%s" % index
             window('%s.index' % window_prop, path.replace('all.xml', ""))  # dir
-            window('%s.title' % window_prop, view['Name'].encode('utf-8'))
+            window('%s.title' % window_prop, view['Name'])
             window('%s.content' % window_prop, path)
 
         elif node == 'browse':
 
             window_prop = "Jellyfin.wnodes.%s" % index
-            window('%s.title' % window_prop, view['Name'].encode('utf-8'))
+            window('%s.title' % window_prop, view['Name'])
             window('%s.content' % window_prop, path)
         else:
             window_prop = "Jellyfin.wnodes.%s.%s" % (index, node)
-            window('%s.title' % window_prop, node_label.encode('utf-8'))
+            window('%s.title' % window_prop, node_label)
             window('%s.content' % window_prop, path)
 
         window('%s.id' % window_prop, view['Id'])
@@ -881,7 +881,7 @@ class Views(object):
             'mode': "nextepisodes",
             'limit': self.limit
         }
-        return "%s?%s" % ("plugin://plugin.video.jellyfin/", urllib.urlencode(params))
+        return "%s?%s" % ("plugin://plugin.video.jellyfin/", urlencode(params))
 
     def window_browse(self, view, node=None):
 
@@ -896,7 +896,7 @@ class Views(object):
         if node:
             params['folder'] = node
 
-        return "%s?%s" % ("plugin://plugin.video.jellyfin/", urllib.urlencode(params))
+        return "%s?%s" % ("plugin://plugin.video.jellyfin/", urlencode(params))
 
     def window_clear(self, name=None):
 
@@ -932,23 +932,23 @@ class Views(object):
 
         ''' Remove all jellyfin playlists.
         '''
-        path = xbmc.translatePath("special://profile/playlists/video/").decode('utf-8')
+        path = xbmc.translatePath("special://profile/playlists/video/")
         _, files = xbmcvfs.listdir(path)
         for file in files:
-            if file.decode('utf-8').startswith('jellyfin'):
-                self.delete_playlist(os.path.join(path, file.decode('utf-8')))
+            if file.startswith('jellyfin'):
+                self.delete_playlist(os.path.join(path, file))
 
     def delete_playlist_by_id(self, view_id):
 
         ''' Remove playlist based based on view_id.
         '''
-        path = xbmc.translatePath("special://profile/playlists/video/").decode('utf-8')
+        path = xbmc.translatePath("special://profile/playlists/video/")
         _, files = xbmcvfs.listdir(path)
         for file in files:
-            file = file.decode('utf-8')
+            file = file
 
             if file.startswith('jellyfin') and file.endswith('%s.xsp' % view_id):
-                self.delete_playlist(os.path.join(path, file.decode('utf-8')))
+                self.delete_playlist(os.path.join(path, file))
 
     def delete_node(self, path):
 
@@ -959,37 +959,37 @@ class Views(object):
 
         ''' Remove node and children files.
         '''
-        path = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
+        path = xbmc.translatePath("special://profile/library/video/")
         dirs, files = xbmcvfs.listdir(path)
 
         for file in files:
 
             if file.startswith('jellyfin'):
-                self.delete_node(os.path.join(path, file.decode('utf-8')))
+                self.delete_node(os.path.join(path, file))
 
         for directory in dirs:
 
             if directory.startswith('jellyfin'):
-                _, files = xbmcvfs.listdir(os.path.join(path, directory.decode('utf-8')))
+                _, files = xbmcvfs.listdir(os.path.join(path, directory))
 
                 for file in files:
-                    self.delete_node(os.path.join(path, directory.decode('utf-8'), file.decode('utf-8')))
+                    self.delete_node(os.path.join(path, directory, file))
 
-                xbmcvfs.rmdir(os.path.join(path, directory.decode('utf-8')))
+                xbmcvfs.rmdir(os.path.join(path, directory))
 
     def delete_node_by_id(self, view_id):
 
         ''' Remove node and children files based on view_id.
         '''
-        path = xbmc.translatePath("special://profile/library/video/").decode('utf-8')
+        path = xbmc.translatePath("special://profile/library/video/")
         dirs, files = xbmcvfs.listdir(path)
 
         for directory in dirs:
 
             if directory.startswith('jellyfin') and directory.endswith(view_id):
-                _, files = xbmcvfs.listdir(os.path.join(path, directory.decode('utf-8')))
+                _, files = xbmcvfs.listdir(os.path.join(path, directory))
 
                 for file in files:
-                    self.delete_node(os.path.join(path, directory.decode('utf-8'), file.decode('utf-8')))
+                    self.delete_node(os.path.join(path, directory, file))
 
-                xbmcvfs.rmdir(os.path.join(path, directory.decode('utf-8')))
+                xbmcvfs.rmdir(os.path.join(path, directory))

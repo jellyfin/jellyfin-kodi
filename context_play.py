@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
@@ -6,13 +7,12 @@ import logging
 import os
 import sys
 
-import xbmc
-import xbmcaddon
+from kodi_six import xbmc, xbmcaddon
 
 #################################################################################################
 
 __addon__ = xbmcaddon.Addon(id='plugin.video.jellyfin')
-__base__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'jellyfin_kodi')).decode('utf-8')
+__base__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'jellyfin_kodi'))
 
 sys.path.insert(0, __base__)
 

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
 import logging
 
-from client import JellyfinClient
+from .client import JellyfinClient
 from helper import has_attribute
 
 #################################################################################################

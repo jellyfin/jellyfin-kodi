@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
@@ -11,10 +12,15 @@ from operator import itemgetter
 
 import urllib3
 
+<<<<<<< HEAD
 from credentials import Credentials
 from http import HTTP  # noqa: I201,I100
 from api import API 
 
+=======
+from .credentials import Credentials
+from .http import HTTP  # noqa: I201,I100
+>>>>>>> 896c2fe6ec9f5fa03f7a4aa638bc8effd04ac182
 
 #################################################################################################
 
@@ -208,7 +214,7 @@ class ConnectionManager(object):
     def _server_discovery(self):
 
         MULTI_GROUP = ("<broadcast>", 7359)
-        MESSAGE = "who is JellyfinServer?"
+        MESSAGE = b"who is JellyfinServer?"
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.settimeout(1.0)  # This controls the socket.timeout exception

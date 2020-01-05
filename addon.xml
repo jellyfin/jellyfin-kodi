@@ -8,6 +8,8 @@
     <import addon="script.module.web-pdb" /> 
     <import addon="script.module.requests" version="2.22.0"/>
     <import addon="script.module.dateutil" version="2.7.3"/>
+    <import addon="script.module.six" />
+    <import addon="script.module.kodi-six" />
     <import addon="script.module.addon.signals" version="0.0.1"/>
   </requires>
   <extension    point="xbmc.python.pluginsource"

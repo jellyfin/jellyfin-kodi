@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 from __future__ import absolute_import
 from __future__ import print_function
@@ -9,8 +10,7 @@ import os
 import logging
 import traceback
 
-import xbmc
-import xbmcaddon
+from kodi_six import xbmc, xbmcaddon
 import database
 
 from . import window, settings
@@ -18,7 +18,7 @@ from . import window, settings
 ##################################################################################################
 
 __addon__ = xbmcaddon.Addon(id='plugin.video.jellyfin')
-__pluginpath__ = xbmc.translatePath(__addon__.getAddonInfo('path').decode('utf-8'))
+__pluginpath__ = xbmc.translatePath(__addon__.getAddonInfo('path'))
 
 ##################################################################################################
 
@@ -65,15 +65,15 @@ class LogHandler(logging.StreamHandler):
 
             if self.mask_info:
                 for server in self.sensitive['Server']:
-                    string = string.replace(server.encode('utf-8') or "{server}", "{jellyfin-server}")
+                    string = string.replace(server or "{server}", "{jellyfin-server}")
 
                 for token in self.sensitive['Token']:
-                    string = string.replace(token.encode('utf-8') or "{token}", "{jellyfin-token}")
+                    string = string.replace(token or "{token}", "{jellyfin-token}")
 
             try:
                 xbmc.log(string, level=xbmc.LOGNOTICE)
             except UnicodeEncodeError:
-                xbmc.log(string.encode('utf-8'), level=xbmc.LOGNOTICE)
+                xbmc.log(string, level=xbmc.LOGNOTICE)
 
     @classmethod
     def _get_log_level(cls, level):

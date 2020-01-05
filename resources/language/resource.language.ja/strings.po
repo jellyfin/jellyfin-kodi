@@ -6,53 +6,56 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2020-01-04 10:16+0000\n"
+"Last-Translator: tokiedokie <zatsumuudesuyo@gmail.com>\n"
+"Language-Team: Japanese <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 3.8\n"
 
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
-msgstr ""
+msgstr "Jekkyfin for Kodi"
 
 msgctxt "#30000"
 msgid "Server address"
-msgstr ""
+msgstr "サーバーアドレス"
 
 msgctxt "#30001"
 msgid "Server name"
-msgstr ""
+msgstr "サーバー名"
 
 msgctxt "#30002"
 msgid "Force HTTP playback"
-msgstr ""
+msgstr "強制的にHTTPプレイバック"
 
 msgctxt "#30003"
 msgid "Login method"
-msgstr ""
+msgstr "ログイン方法"
 
 msgctxt "#30004"
 msgid "Log level"
-msgstr ""
+msgstr "ログレベル"
 
 msgctxt "#30016"
 msgid "Device name"
-msgstr ""
+msgstr "デバイス名"
 
 msgctxt "#30022"
 msgid "Advanced"
-msgstr ""
+msgstr "高度な"
 
 msgctxt "#30024"
 msgid "Username"
-msgstr ""
+msgstr "ユーザー名"
 
 msgctxt "#30091"
 msgid "Confirm file deletion"
-msgstr ""
+msgstr "ファイルを削除"
 
 msgctxt "#30114"
 msgid "Offer delete after playback"
@@ -72,47 +75,47 @@ msgstr ""
 
 msgctxt "#30160"
 msgid "Video quality"
-msgstr ""
+msgstr "映像品質"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
-msgstr ""
+msgstr "最近ついされたTV番組"
 
 msgctxt "#30171"
 msgid "In Progress TV Shows"
-msgstr ""
+msgstr "進行中のTV番組"
 
 msgctxt "#30174"
 msgid "Recently Added Movies"
-msgstr ""
+msgstr "最近追加された映画"
 
 msgctxt "#30175"
 msgid "Recently Added Episodes"
-msgstr ""
+msgstr "最近追加されたエピソード"
 
 msgctxt "#30177"
 msgid "In Progress Movies"
-msgstr ""
+msgstr "進行中の映画"
 
 msgctxt "#30178"
 msgid "In Progress Episodes"
-msgstr ""
+msgstr "進行中のエピソード"
 
 msgctxt "#30179"
 msgid "Next Episodes"
-msgstr ""
+msgstr "次のエピソード"
 
 msgctxt "#30180"
 msgid "Favorite Movies"
-msgstr ""
+msgstr "お気に入り映画"
 
 msgctxt "#30181"
 msgid "Favorite Shows"
-msgstr ""
+msgstr "お気に入りの番組"
 
 msgctxt "#30182"
 msgid "Favorite Episodes"
-msgstr ""
+msgstr "お気に入りのエピソード"
 
 msgctxt "#30185"
 msgid "Boxsets"
@@ -120,127 +123,127 @@ msgstr ""
 
 msgctxt "#30189"
 msgid "Unwatched Movies"
-msgstr ""
+msgstr "未視聴の映画"
 
 msgctxt "#30229"
 msgid "Random Items"
-msgstr ""
+msgstr "ランダムアイテム"
 
 msgctxt "#30230"
 msgid "Recommended Items"
-msgstr ""
+msgstr "おすすめのアイテム"
 
 msgctxt "#30235"
 msgid "Interface"
-msgstr ""
+msgstr "インターフェース"
 
 msgctxt "#30239"
 msgid "Reset local Kodi database"
-msgstr ""
+msgstr "ローカルのKodiデータベースを再設定"
 
 msgctxt "#30249"
 msgid "Enable welcome message"
-msgstr ""
+msgstr "ウェルカムメッセージを有効化"
 
 msgctxt "#30251"
 msgid "Recently added Home Videos"
-msgstr ""
+msgstr "最近追加されたホームビデオ"
 
 msgctxt "#30252"
 msgid "Recently added Photos"
-msgstr ""
+msgstr "最近追加された写真"
 
 msgctxt "#30253"
 msgid "Favourite Home Videos"
-msgstr ""
+msgstr "お気に入りのホームビデオ"
 
 msgctxt "#30254"
 msgid "Favourite Photos"
-msgstr ""
+msgstr "お気に入りの写真"
 
 msgctxt "#30255"
 msgid "Favourite Albums"
-msgstr ""
+msgstr "お気に入りのアルバム"
 
 msgctxt "#30256"
 msgid "Recently added Music videos"
-msgstr ""
+msgstr "最近追加されたミュージックビデオ"
 
 msgctxt "#30257"
 msgid "In progress Music videos"
-msgstr ""
+msgstr "進行中のミュージックビデオ"
 
 msgctxt "#30258"
 msgid "Unwatched Music videos"
-msgstr ""
+msgstr "未視聴のミュージックビデオ"
 
 msgctxt "#30302"
 msgid "Movies"
-msgstr ""
+msgstr "映画"
 
 msgctxt "#30305"
 msgid "TV Shows"
-msgstr ""
+msgstr "TV番組"
 
 msgctxt "#30401"
 msgid "Jellyfin options"
-msgstr ""
+msgstr "Jekkyfin設定"
 
 msgctxt "#30402"
 msgid "Jellyfin transcode"
-msgstr ""
+msgstr "Jellyfinトランスコード"
 
 msgctxt "#30405"
 msgid "Add to favorites"
-msgstr ""
+msgstr "お気に入りに追加"
 
 msgctxt "#30406"
 msgid "Remove from favorites"
-msgstr ""
+msgstr "お気に入りから削除"
 
 msgctxt "#30408"
 msgid "Settings"
-msgstr ""
+msgstr "設定"
 
 msgctxt "#30409"
 msgid "Delete from Jellyfin"
-msgstr ""
+msgstr "Jellyfinから削除"
 
 msgctxt "#30410"
 msgid "Refresh this item"
-msgstr ""
+msgstr "このアイテムをリフレッシュ"
 
 msgctxt "#30412"
 msgid "Transcode"
-msgstr ""
+msgstr "トランスコード"
 
 msgctxt "#30500"
 msgid "Verify connection"
-msgstr ""
+msgstr "接続を確認"
 
 msgctxt "#30504"
 msgid "Use alternate device name"
-msgstr ""
+msgstr "代替デバイス名を使用"
 
 msgctxt "#30506"
 msgid "Sync"
-msgstr ""
+msgstr "同期"
 
 msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
-msgstr ""
+msgstr "アップデート数が多いときの通知を有効化"
 
 msgctxt "#30509"
 msgid "Enable music library"
-msgstr ""
+msgstr "音楽ライブラリを有効化"
 
 msgctxt "#30511"
 msgid "Playback mode"
-msgstr ""
+msgstr "プレイバックモード"
 
 msgctxt "#30512"
 msgid "Enable artwork caching"
-msgstr ""
+msgstr "アートワークキャッシュを有効化"
 
 msgctxt "#30515"
 msgid "Paging - max items requested (default: 15)"
@@ -248,35 +251,35 @@ msgstr ""
 
 msgctxt "#30516"
 msgid "Playback"
-msgstr ""
+msgstr "プレイバック"
 
 msgctxt "#30517"
 msgid "Network credentials"
-msgstr ""
+msgstr "ネットワーク資格情報"
 
 msgctxt "#30518"
 msgid "Enable cinema mode"
-msgstr ""
+msgstr "シネマモードを有効化"
 
 msgctxt "#30519"
 msgid "Ask to play trailers"
-msgstr ""
+msgstr "トレーラーを再生するか尋ねる"
 
 msgctxt "#30520"
 msgid "Skip the delete confirmation (use at your own risk)"
-msgstr ""
+msgstr "削除確認をスキップする (リスクがあります)"
 
 msgctxt "#30521"
 msgid "Jump back on resume (in seconds)"
-msgstr ""
+msgstr "続きに飛ぶ (秒)"
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
-msgstr ""
+msgstr "トランスコード H265/HEVC"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
-msgstr ""
+msgstr "次のエピソード内のスペシャルを無視"
 
 msgctxt "#30528"
 msgid "Permanent users"
@@ -284,51 +287,51 @@ msgstr ""
 
 msgctxt "#30529"
 msgid "Startup delay (in seconds)"
-msgstr ""
+msgstr "スタートアップ遅延 (秒)"
 
 msgctxt "#30530"
 msgid "Enable server restart message"
-msgstr ""
+msgstr "サーバー再起動時のメッセージを有効化"
 
 msgctxt "#30531"
 msgid "Enable new content"
-msgstr ""
+msgstr "新しいコンテンツを有効化"
 
 msgctxt "#30532"
 msgid "Duration of the video library pop up"
-msgstr ""
+msgstr "ビデオライブラリのポップアップの期間"
 
 msgctxt "#30533"
 msgid "Duration of the music library pop up"
-msgstr ""
+msgstr "音楽ライブラリのポップアップの期間"
 
 msgctxt "#30534"
 msgid "Notifications (in seconds)"
-msgstr ""
+msgstr "通知 (秒)"
 
 msgctxt "#30535"
 msgid "Generate a new device Id"
-msgstr ""
+msgstr "新しいデバイスIDを作成"
 
 msgctxt "#30536"
 msgid "Allow the screensaver during syncs"
-msgstr ""
+msgstr "同期中にスクリーンセーバーを許可"
 
 msgctxt "#30537"
 msgid "Transcode Hi10P"
-msgstr ""
+msgstr "トランスコード Hi10P"
 
 msgctxt "#30539"
 msgid "Login"
-msgstr ""
+msgstr "ログイン"
 
 msgctxt "#30540"
 msgid "Manual login"
-msgstr ""
+msgstr "手動ログイン"
 
 msgctxt "#30543"
 msgid "Username or email"
-msgstr ""
+msgstr "ユーザー名かEメール"
 
 msgctxt "#30545"
 msgid "Enable server offline"
@@ -336,91 +339,91 @@ msgstr ""
 
 msgctxt "#30547"
 msgid "Display message"
-msgstr ""
+msgstr "メッセージを表示"
 
 msgctxt "#30602"
 msgid "Password"
-msgstr ""
+msgstr "パスワード"
 
 msgctxt "#30605"
 msgid "Sign in"
-msgstr ""
+msgstr "サインイン"
 
 msgctxt "#30606"
 msgid "Cancel"
-msgstr ""
+msgstr "中止"
 
 msgctxt "#30607"
 msgid "Select main server"
-msgstr ""
+msgstr "主要サーバーを選択"
 
 msgctxt "#30608"
 msgid "Username or password cannot be empty"
-msgstr ""
+msgstr "ユーザー名又はパスワードは空にできません"
 
 msgctxt "#30609"
 msgid "Unable to connect to the selected server"
-msgstr ""
+msgstr "選択されたサーバーに接続できません"
 
 msgctxt "#30610"
 msgid "Connect to"
-msgstr ""
+msgstr "接続"
 
 msgctxt "#30611"
 msgid "Manually add server"
-msgstr ""
+msgstr "手動でサーバーを追加"
 
 msgctxt "#30612"
 msgid "Please sign in"
-msgstr ""
+msgstr "サインインしてください"
 
 msgctxt "#30613"
 msgid "Change Jellyfin Connect user"
-msgstr ""
+msgstr "Jellyfin接続ユーザーを変更"
 
 msgctxt "#30614"
 msgid "Connect to server"
-msgstr ""
+msgstr "サーバーに接続"
 
 msgctxt "#30615"
 msgid "Host"
-msgstr ""
+msgstr "ホスト"
 
 msgctxt "#30616"
 msgid "Connect"
-msgstr ""
+msgstr "接続"
 
 msgctxt "#30617"
 msgid "Server or port cannot be empty"
-msgstr ""
+msgstr "サーバー又はポートは空にできません"
 
 msgctxt "#33000"
 msgid "Welcome"
-msgstr ""
+msgstr "ようこそ"
 
 msgctxt "#33006"
 msgid "Server is restarting"
-msgstr ""
+msgstr "サーバーが再起動中"
 
 msgctxt "#33009"
 msgid "Invalid username or password"
-msgstr ""
+msgstr "ユーザー名又はパスワードが無効"
 
 msgctxt "#33013"
 msgid "Choose the audio stream"
-msgstr ""
+msgstr "音声ストリームの選択"
 
 msgctxt "#33014"
 msgid "Choose the subtitles stream"
-msgstr ""
+msgstr "字幕ストリームの選択"
 
 msgctxt "#33015"
 msgid "Delete file from Jellyfin?"
-msgstr ""
+msgstr "Jellyfinからファイルを削除しますか？"
 
 msgctxt "#33016"
 msgid "Play trailers?"
-msgstr ""
+msgstr "トレーラーを再生しますか？"
 
 msgctxt "#33018"
 msgid "Gathering boxsets"
@@ -452,7 +455,7 @@ msgstr ""
 
 msgctxt "#33036"
 msgid "Add-on (default)"
-msgstr ""
+msgstr "アドオン (デフォルト)"
 
 msgctxt "#33037"
 msgid "Native (direct paths)"
@@ -460,11 +463,11 @@ msgstr ""
 
 msgctxt "#33039"
 msgid "Enable music library?"
-msgstr ""
+msgstr "ミュージックライブラリを有効化しますか？"
 
 msgctxt "#33047"
 msgid "Kodi can't locate file:"
-msgstr ""
+msgstr "Kodiはファイルの場所を特定できません:"
 
 msgctxt "#33048"
 msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
@@ -472,11 +475,11 @@ msgstr ""
 
 msgctxt "#33049"
 msgid "New"
-msgstr ""
+msgstr "新しい"
 
 msgctxt "#33054"
 msgid "Add user to session"
-msgstr ""
+msgstr "セッションにユーザーを追加"
 
 msgctxt "#33058"
 msgid "Perform local database reset"
@@ -484,23 +487,23 @@ msgstr ""
 
 msgctxt "#33060"
 msgid "Sync theme media"
-msgstr ""
+msgstr "テーマメディアを同期"
 
 msgctxt "#33061"
 msgid "Add/Remove user from the session"
-msgstr ""
+msgstr "セッションからユーザーを追加/削除"
 
 msgctxt "#33062"
 msgid "Add user"
-msgstr ""
+msgstr "ユーザーを追加"
 
 msgctxt "#33063"
 msgid "Remove user"
-msgstr ""
+msgstr "ユーザーを削除"
 
 msgctxt "#33064"
 msgid "Remove user from the session"
-msgstr ""
+msgstr "セッションからユーザーを削除"
 
 msgctxt "#33074"
 msgid "Are you sure you want to reset your local Kodi database?"
@@ -508,11 +511,11 @@ msgstr ""
 
 msgctxt "#33086"
 msgid "Remove all cached artwork?"
-msgstr ""
+msgstr "すべてのキャッシュされたアートワークを削除しますか？"
 
 msgctxt "#33087"
 msgid "Reset all Jellyfin add-on settings?"
-msgstr ""
+msgstr "Jellyfinアドオン設定を再設定しますか？"
 
 msgctxt "#33088"
 msgid "Database reset has completed, Kodi will now restart to apply the changes."
@@ -520,23 +523,23 @@ msgstr ""
 
 msgctxt "#33089"
 msgid "Enter folder name for backup"
-msgstr ""
+msgstr "バックアップ用のフォルダーを入力"
 
 msgctxt "#33090"
 msgid "Replace existing backup?"
-msgstr ""
+msgstr "現在のバックアップを置き換えますか？"
 
 msgctxt "#33091"
 msgid "Created backup at:"
-msgstr ""
+msgstr "バックアップを作成:"
 
 msgctxt "#33092"
 msgid "Create a backup"
-msgstr ""
+msgstr "バックアップを作成"
 
 msgctxt "#33093"
 msgid "Backup folder"
-msgstr ""
+msgstr "フォルダーをバックアップ"
 
 msgctxt "#33097"
 msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
@@ -556,7 +559,7 @@ msgstr ""
 
 msgctxt "#33102"
 msgid "Resume the previous sync?"
-msgstr ""
+msgstr "前回の同期を再開しますか？"
 
 msgctxt "#33103"
 msgid "Enable the webserver service in the Kodi settings to allow artwork caching."
@@ -568,11 +571,11 @@ msgstr ""
 
 msgctxt "#33105"
 msgid "Enable the context menu"
-msgstr ""
+msgstr "コンテクストメニューを有効化"
 
 msgctxt "#33106"
 msgid "Enable the option to transcode"
-msgstr ""
+msgstr "トランスコードのオプションを有効化"
 
 msgctxt "#33107"
 msgid "Users added to the session (no space between users). (eg username,username2)"
@@ -584,11 +587,11 @@ msgstr ""
 
 msgctxt "#33109"
 msgid "Plugin"
-msgstr ""
+msgstr "プラグイン"
 
 msgctxt "#33110"
 msgid "Restart Kodi to take effect."
-msgstr ""
+msgstr "設定を適応するためにKodiを再起動する。"
 
 msgctxt "#33111"
 msgid "Reset the local database to apply the playback mode change."

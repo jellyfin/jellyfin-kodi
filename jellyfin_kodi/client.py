@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
 import logging
 import os
 
-import xbmc
-import xbmcaddon
-import xbmcvfs
+from kodi_six import xbmc, xbmcaddon, xbmcvfs
 
 from helper import translate, window, settings, addon_id, dialog
 from helper.utils import create_id
@@ -63,7 +62,7 @@ def get_device_name():
         Otherwise fallback to the Kodi device name.
     '''
     if not settings('deviceNameOpt.bool'):
-        device_name = xbmc.getInfoLabel('System.FriendlyName').decode('utf-8')
+        device_name = xbmc.getInfoLabel('System.FriendlyName')
     else:
         device_name = settings('deviceName')
         device_name = device_name.replace("\"", "_")
@@ -86,7 +85,7 @@ def get_device_id(reset=False):
     if client_id:
         return client_id
 
-    directory = xbmc.translatePath('special://profile/addon_data/plugin.video.jellyfin/').decode('utf-8')
+    directory = xbmc.translatePath('special://profile/addon_data/plugin.video.jellyfin/')
 
     if not xbmcvfs.exists(directory):
         xbmcvfs.mkdir(directory)
@@ -98,7 +97,7 @@ def get_device_id(reset=False):
     if not client_id or reset:
         LOG.info("Generating a new GUID.")
 
-        client_id = str("%012X" % create_id())
+        client_id = str(create_id())
         file_guid = xbmcvfs.File(jellyfin_guid, 'w')
         file_guid.write(client_id)
 

@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 ##################################################################################################
 
 import logging
 
-import xbmc
-import xbmcgui
+from six import iteritems
+from kodi_six import xbmc, xbmcgui
 
 ##################################################################################################
 
@@ -34,7 +35,7 @@ class UsersConnect(xbmcgui.WindowXMLDialog):
 
     def set_args(self, **kwargs):
         # connect_manager, user_image, servers
-        for key, value in kwargs.iteritems():
+        for key, value in iteritems(kwargs):
             setattr(self, key, value)
 
     def is_user_selected(self):
