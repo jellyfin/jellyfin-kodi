@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 ##################################################################################################
 
 import logging
 import os
 
-import xbmcgui
-import xbmcaddon
+from kodi_six import xbmcgui, xbmcaddon
 
 from helper import window, addon_id
 

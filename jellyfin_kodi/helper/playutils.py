@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
@@ -7,15 +8,13 @@ import os
 from uuid import uuid4
 import collections
 
-import xbmc
-import xbmcvfs
+from kodi_six import xbmc, xbmcvfs
 
-import api
 import client
 import requests
 from downloader import TheVoid
 
-from . import translate, settings, window, dialog
+from . import translate, settings, window, dialog, api
 
 #################################################################################################
 
@@ -212,7 +211,7 @@ class PlayUtils(object):
         self.item['PlaybackInfo'].update(self.info)
 
         API = api.API(self.item, self.info['ServerAddress'])
-        window('jellyfinfilename', value=API.get_file_path(source.get('Path')).encode('utf-8'))
+        window('jellyfinfilename', value=API.get_file_path(source.get('Path')))
 
     def live_stream(self, source):
 
@@ -484,7 +483,7 @@ class PlayUtils(object):
                 LOG.info("[ subtitles/%s ] %s", index, url)
 
                 if 'Language' in stream:
-                    filename = "Stream.%s.%s" % (stream['Language'].encode('utf-8'), stream['Codec'].encode('utf-8'))
+                    filename = "Stream.%s.%s" % (stream['Language'], stream['Codec'])
 
                     try:
                         subs.append(self.download_external_subs(url, filename))
@@ -506,7 +505,7 @@ class PlayUtils(object):
         ''' Download external subtitles to temp folder
             to be able to have proper names to streams.
         '''
-        temp = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/temp/").decode('utf-8')
+        temp = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/temp/")
 
         if not xbmcvfs.exists(temp):
             xbmcvfs.mkdir(temp)

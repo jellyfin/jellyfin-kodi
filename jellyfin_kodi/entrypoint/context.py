@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
@@ -6,8 +7,7 @@ import json
 import logging
 import sys
 
-import xbmc
-import xbmcaddon
+from kodi_six import xbmc, xbmcaddon
 
 import database
 from dialogs import context
@@ -67,7 +67,7 @@ class Context(object):
             elif self.select_menu():
                 self.action_menu()
 
-                if self._selected_option.decode('utf-8') in (OPTIONS['Delete'], OPTIONS['AddFav'], OPTIONS['RemoveFav']):
+                if self._selected_option in (OPTIONS['Delete'], OPTIONS['AddFav'], OPTIONS['RemoveFav']):
 
                     xbmc.sleep(500)
                     xbmc.executebuiltin('Container.Refresh')
@@ -91,7 +91,7 @@ class Context(object):
             else:
                 LOG.info("media is unknown")
 
-        return media.decode('utf-8')
+        return media
 
     def get_item_id(self):
 
@@ -140,7 +140,7 @@ class Context(object):
 
     def action_menu(self):
 
-        selected = self._selected_option.decode('utf-8')
+        selected = self._selected_option
 
         if selected == OPTIONS['Refresh']:
             TheVoid('RefreshItem', {'ServerId': self.server, 'Id': self.item['Id']})

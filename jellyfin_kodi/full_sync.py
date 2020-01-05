@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 ##################################################################################################
 
 import datetime
 import logging
 
-import xbmc
+from kodi_six import xbmc
 
 import downloader as server
 import helper.xmls as xmls

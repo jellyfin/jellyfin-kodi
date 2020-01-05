@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
 import logging
 
-import xbmc
-import xbmcvfs
+from kodi_six import xbmc, xbmcvfs
 
 from helper import loghandler
 from jellyfin import Jellyfin

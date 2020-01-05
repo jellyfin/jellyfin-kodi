@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
@@ -7,7 +8,9 @@ import logging
 import time
 
 import requests
-from exceptions import HTTPException
+from six import string_types
+
+from .exceptions import HTTPException
 
 #################################################################################################
 
@@ -49,13 +52,13 @@ class HTTP(object):
 
         if '{server}' in string:
             if self.config.data['auth.server']:
-                string = string.decode('utf-8').replace("{server}", self.config.data['auth.server'])
+                string = string.replace("{server}", self.config.data['auth.server'])
             else:
                 raise Exception("Server address not set.")
 
         if '{UserId}'in string:
             if self.config.data['auth.user_id']:
-                string = string.decode('utf-8').replace("{UserId}", self.config.data['auth.user_id'])
+                string = string.replace("{UserId}", self.config.data['auth.user_id'])
             else:
                 raise Exception("UserId is not set.")
 
@@ -186,7 +189,7 @@ class HTTP(object):
             if isinstance(value, dict):
                 self._process_params(value)
 
-            if isinstance(value, str):
+            if isinstance(value, string_types):
                 params[key] = self._replace_user_info(value)
 
     def _get_header(self, data):
@@ -209,17 +212,17 @@ class HTTP(object):
     def _authorization(self, data):
 
         auth = "MediaBrowser "
-        auth += "Client=%s, " % self.config.data['app.name'].encode('utf-8')
-        auth += "Device=%s, " % self.config.data['app.device_name'].encode('utf-8')
-        auth += "DeviceId=%s, " % self.config.data['app.device_id'].encode('utf-8')
-        auth += "Version=%s" % self.config.data['app.version'].encode('utf-8')
+        auth += "Client=%s, " % self.config.data['app.name']
+        auth += "Device=%s, " % self.config.data['app.device_name']
+        auth += "DeviceId=%s, " % self.config.data['app.device_id']
+        auth += "Version=%s" % self.config.data['app.version']
 
         data['headers'].update({'x-emby-authorization': auth})
 
         if self.config.data.get('auth.token') and self.config.data.get('auth.user_id'):
 
-            auth += ', UserId=%s' % self.config.data['auth.user_id'].encode('utf-8')
-            data['headers'].update({'x-emby-authorization': auth, 'X-MediaBrowser-Token': self.config.data['auth.token'].encode('utf-8')})
+            auth += ', UserId=%s' % self.config.data['auth.user_id']
+            data['headers'].update({'x-emby-authorization': auth, 'X-MediaBrowser-Token': self.config.data['auth.token']})
 
         return data
 

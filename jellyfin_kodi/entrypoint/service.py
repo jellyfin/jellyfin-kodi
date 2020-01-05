@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
@@ -9,8 +10,8 @@ from datetime import datetime
 
 # Workaround for threads using datetime: _striptime is locked
 import _strptime  # noqa:F401
-import xbmc
-import xbmcgui
+from kodi_six import xbmc, xbmcgui
+from six.moves import reload_module as reload
 
 import objects
 import connect
@@ -181,8 +182,8 @@ class Service(xbmc.Monitor):
 
                 if settings('connectMsg.bool'):
 
-                    users = [user for user in (settings('additionalUsers') or "").decode('utf-8').split(',') if user]
-                    users.insert(0, settings('username').decode('utf-8'))
+                    users = [user for user in (settings('additionalUsers') or "").split(',') if user]
+                    users.insert(0, settings('username'))
                     dialog("notification", heading="{jellyfin}", message="%s %s" % (translate(33000), ", ".join(users)),
                            icon="{jellyfin}", time=1500, sound=False)
 
