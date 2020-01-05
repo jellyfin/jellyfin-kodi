@@ -103,10 +103,9 @@ def get_device_id(reset=False):
         file_guid.write(client_id)
 
     file_guid.close()
-    
     LOG.debug("DeviceId loaded: %s", client_id)
     window('jellyfin_deviceId', value=client_id)
-
+    
     return client_id
 
 

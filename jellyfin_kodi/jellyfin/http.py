@@ -147,7 +147,7 @@ class HTTP(object):
                 raise HTTPException(r.status_code, error)
 
             except requests.exceptions.MissingSchema as error:
-                LOG.error("Request missing Schema. "+str(error))
+                LOG.error("Request missing Schema. " + str(error))
                 raise HTTPException("MissingSchema", {'Id': self.config.data.get('auth.server', "None")})
 
             except Exception as error:
