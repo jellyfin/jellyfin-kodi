@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
 import logging
 
-import api
-from configuration import Config
-from http import HTTP
-from ws_client import WSClient
-from connection_manager import ConnectionManager, CONNECTION_STATE
+from . import api
+from .configuration import Config
+from .http import HTTP
+from .ws_client import WSClient
+from .connection_manager import ConnectionManager, CONNECTION_STATE
 
 #################################################################################################
 

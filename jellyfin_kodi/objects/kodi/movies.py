@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 ##################################################################################################
 
 import logging
 
-from kodi import Kodi
-import queries as QU
+from .kodi import Kodi
+from . import queries as QU
 
 ##################################################################################################
 

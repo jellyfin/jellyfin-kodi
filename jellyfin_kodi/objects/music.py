@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 ##################################################################################################
 
 import datetime
 import logging
 
-from obj import Objects
-from kodi import Music as KodiDb, queries_music as QU
+from .obj import Objects
+from .kodi import Music as KodiDb, queries_music as QU
 from database import jellyfin_db, queries as QUEM
 from helper import api, stop, validate, jellyfin_item, values, library_check, Local
 

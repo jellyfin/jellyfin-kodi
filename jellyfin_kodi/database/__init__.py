@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from __future__ import division, absolute_import, print_function, unicode_literals
 #################################################################################################
 
 import datetime
@@ -8,10 +8,10 @@ import json
 import os
 import sqlite3
 
-import xbmc
-import xbmcvfs
+from kodi_six import xbmc, xbmcvfs
+from six import text_type
 
-import jellyfin_db
+from database import jellyfin_db
 from helper import translate, settings, window, dialog
 from objects import obj
 
@@ -20,9 +20,6 @@ from objects import obj
 LOG = logging.getLogger("JELLYFIN." + __name__)
 
 #################################################################################################
-
-
-UNICODE = type(u"")
 
 
 class Database(object):
@@ -76,7 +73,7 @@ class Database(object):
 
     def _get_database(self, path, silent=False):
 
-        path = xbmc.translatePath(path).decode('utf-8')
+        path = xbmc.translatePath(path)
 
         if not silent:
 
@@ -104,7 +101,7 @@ class Database(object):
             xbmc.executebuiltin('UpdateLibrary(video)')
             xbmc.sleep(200)
 
-        databases = xbmc.translatePath("special://database/").decode('utf-8')
+        databases = xbmc.translatePath("special://database/")
         types = {
             'video': "MyVideos",
             'music': "MyMusic",
@@ -118,19 +115,19 @@ class Database(object):
 
             if (file.startswith(database) and not file.endswith('-wal') and not file.endswith('-shm') and not file.endswith('db-journal')):
 
-                st = xbmcvfs.Stat(databases + file.decode('utf-8'))
+                st = xbmcvfs.Stat(databases + file)
                 modified_int = st.st_mtime()
-                LOG.debug("Database detected: %s time: %s", file.decode('utf-8'), modified_int)
+                LOG.debug("Database detected: %s time: %s", file, modified_int)
 
                 if modified_int > modified['time']:
 
                     modified['time'] = modified_int
-                    modified['file'] = file.decode('utf-8')
+                    modified['file'] = file
 
         LOG.debug("Discovered database: %s", modified)
         self.discovered_file = modified['file']
 
-        return xbmc.translatePath("special://database/%s" % modified['file']).decode('utf-8')
+        return xbmc.translatePath("special://database/%s" % modified['file'])
 
     def _sql(self, file):
 
@@ -251,7 +248,7 @@ def reset():
     if dialog("yesno", heading="{jellyfin}", line1=translate(33086)):
         reset_artwork()
 
-    addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
+    addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/")
 
     if dialog("yesno", heading="{jellyfin}", line1=translate(33087)):
 
@@ -317,17 +314,17 @@ def reset_artwork():
 
     ''' Remove all existing texture.
     '''
-    thumbnails = xbmc.translatePath('special://thumbnails/').decode('utf-8')
+    thumbnails = xbmc.translatePath('special://thumbnails/')
 
     if xbmcvfs.exists(thumbnails):
         dirs, ignore = xbmcvfs.listdir(thumbnails)
 
         for directory in dirs:
-            ignore, thumbs = xbmcvfs.listdir(os.path.join(thumbnails, directory.decode('utf-8')))
+            ignore, thumbs = xbmcvfs.listdir(os.path.join(thumbnails, directory))
 
             for thumb in thumbs:
                 LOG.debug("DELETE thumbnail %s", thumb)
-                xbmcvfs.delete(os.path.join(thumbnails, directory.decode('utf-8'), thumb.decode('utf-8')))
+                xbmcvfs.delete(os.path.join(thumbnails, directory, thumb))
 
     with Database('texture') as texdb:
         texdb.cursor.execute("SELECT tbl_name FROM sqlite_master WHERE type='table'")
@@ -343,7 +340,7 @@ def reset_artwork():
 
 def get_sync():
 
-    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
+    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/")
 
     if not xbmcvfs.exists(path):
         xbmcvfs.mkdirs(path)
@@ -364,7 +361,7 @@ def get_sync():
 
 def save_sync(sync):
 
-    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
+    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/")
 
     if not xbmcvfs.exists(path):
         xbmcvfs.mkdirs(path)
@@ -373,14 +370,14 @@ def save_sync(sync):
 
     with open(os.path.join(path, 'sync.json'), 'wb') as outfile:
         data = json.dumps(sync, sort_keys=True, indent=4, ensure_ascii=False)
-        if isinstance(data, UNICODE):
+        if isinstance(data, text_type):
             data = data.encode('utf-8')
         outfile.write(data)
 
 
 def get_credentials():
 
-    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
+    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/")
 
     if not xbmcvfs.exists(path):
         xbmcvfs.mkdirs(path)
@@ -424,14 +421,14 @@ def get_credentials():
 
 def save_credentials(credentials):
     credentials = credentials or {}
-    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/").decode('utf-8')
+    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/")
 
     if not xbmcvfs.exists(path):
         xbmcvfs.mkdirs(path)
     try:
         with open(os.path.join(path, 'data.json'), 'wb') as outfile:
             data = json.dumps(credentials, sort_keys=True, indent=4, ensure_ascii=False)
-            if isinstance(data, UNICODE):
+            if isinstance(data, text_type):
                 data = data.encode('utf-8')
             outfile.write(data)
     except Exception:

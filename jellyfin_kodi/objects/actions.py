@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
@@ -7,14 +8,11 @@ import threading
 import sys
 from datetime import timedelta
 
-import xbmc
-import xbmcgui
-import xbmcplugin
-import xbmcaddon
+from kodi_six import xbmc, xbmcgui, xbmcplugin, xbmcaddon
 
 import database
 from downloader import TheVoid
-from obj import Objects
+from .obj import Objects
 from helper import translate, playutils, api, window, settings, dialog
 from dialogs import resume
 

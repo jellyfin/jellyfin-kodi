@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 ##################################################################################################
 
 import json
 import logging
 import os
+
+from six import iteritems
 
 ##################################################################################################
 
@@ -53,7 +56,7 @@ class Objects(object):
 
         mapping = self.objects[mapping_name]
 
-        for key, value in mapping.iteritems():
+        for key, value in iteritems(mapping):
 
             self.mapped_item[key] = None
             params = value.split(',')
@@ -144,7 +147,7 @@ class Objects(object):
 
         result = False
 
-        for key, value in filters.iteritems():
+        for key, value in iteritems(filters):
 
             inverse = False
 

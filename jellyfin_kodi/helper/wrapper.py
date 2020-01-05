@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
 import logging
 
-import xbmcgui
+from kodi_six import xbmcgui
 
 from .utils import should_stop
 from .exceptions import LibraryException

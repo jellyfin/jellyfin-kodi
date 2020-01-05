@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 ##################################################################################################
 
 import logging
-import Queue
 import threading
 from datetime import datetime, timedelta
 
-import xbmc
-import xbmcgui
+from six.moves import queue as Queue
+
+from kodi_six import xbmc, xbmcgui
 
 from objects import Movies, TVShows, MusicVideos, Music
 from database import Database, jellyfin_db, get_sync, save_sync
@@ -495,7 +496,7 @@ class Library(threading.Thread):
             "AddLibrarySelection": 33120
         }
         title = titles.get(mode, "Failed to get title {}".format(mode))
-        
+
         selection = dialog("multi", translate(title), choices)
 
         if selection is None:

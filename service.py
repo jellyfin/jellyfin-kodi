@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
@@ -7,13 +8,12 @@ import os
 import threading
 import sys
 
-import xbmc
-import xbmcaddon
+from kodi_six import xbmc, xbmcaddon
 
 #################################################################################################
 
 __addon__ = xbmcaddon.Addon(id='plugin.video.jellyfin')
-__base__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'jellyfin_kodi')).decode('utf-8')
+__base__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'jellyfin_kodi'))
 
 sys.path.insert(0, __base__)
 
@@ -54,11 +54,11 @@ class ServiceManager(threading.Thread):
             LOG.exception(error)
 
             if service is not None:
-
-                if 'ExitService' not in error:
+                # TODO: fix this properly as to not match on str()
+                if 'ExitService' not in str(error):
                     service.shutdown()
 
-                if 'RestartService' in error:
+                if 'RestartService' in str(error):
                     service.reload_objects()
 
             self.exception = error
@@ -79,7 +79,7 @@ if __name__ == "__main__":
             session.start()
             session.join()  # Block until the thread exits.
 
-            if 'RestartService' in session.exception:
+            if 'RestartService' in str(session.exception):
                 continue
 
         except Exception as error:

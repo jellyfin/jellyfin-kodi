@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
@@ -6,9 +7,9 @@ import json
 import logging
 import threading
 
-import xbmc
+from kodi_six import xbmc
 
-import websocket
+from . import websocket
 
 ##################################################################################################
 

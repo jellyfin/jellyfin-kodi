@@ -1,19 +1,15 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
 import json
 import logging
 import sys
-import urlparse
-import urllib
 import os
 
-import xbmc
-import xbmcvfs
-import xbmcgui
-import xbmcplugin
-import xbmcaddon
+from six.moves.urllib.parse import parse_qsl, urlencode
+from kodi_six import xbmc, xbmcvfs, xbmcgui, xbmcplugin, xbmcaddon
 
 import client
 from database import reset, get_sync, Database, jellyfin_db, get_credentials
@@ -39,7 +35,7 @@ class Events(object):
         path = sys.argv[2]
 
         try:
-            params = dict(urlparse.parse_qsl(path[1:]))
+            params = dict(parse_qsl(path[1:]))
         except Exception:
             params = {}
 
@@ -146,7 +142,7 @@ def listing():
         context = []
 
         if view_id and node in ('movies', 'tvshows', 'musicvideos', 'music', 'mixed') and view_id not in whitelist:
-            label = "%s %s" % (label.decode('utf-8'), translate(33166))
+            label = "%s %s" % (label, translate(33166))
             context.append((translate(33123), "RunPlugin(plugin://plugin.video.jellyfin/?mode=synclib&id=%s)" % view_id))
 
         if view_id and node in ('movies', 'tvshows', 'musicvideos', 'music') and view_id in whitelist:
@@ -338,7 +334,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
                     'folder': item['Id'],
                     'server': server_id
                 }
-                path = "%s?%s" % ("plugin://plugin.video.jellyfin/", urllib.urlencode(params))
+                path = "%s?%s" % ("plugin://plugin.video.jellyfin/", urlencode(params))
                 context = []
 
                 if item['Type'] in ('Series', 'Season', 'Playlist'):
@@ -361,7 +357,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
                     'folder': 'genres-%s' % item['Id'],
                     'server': server_id
                 }
-                path = "%s?%s" % ("plugin://plugin.video.jellyfin/", urllib.urlencode(params))
+                path = "%s?%s" % ("plugin://plugin.video.jellyfin/", urlencode(params))
                 list_li.append((path, li, True))
 
             else:
@@ -371,7 +367,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
                         'mode': "play",
                         'server': server_id
                     }
-                    path = "%s?%s" % ("plugin://plugin.video.jellyfin/", urllib.urlencode(params))
+                    path = "%s?%s" % ("plugin://plugin.video.jellyfin/", urlencode(params))
                     li.setProperty('path', path)
                     context = [(translate(13412), "RunPlugin(plugin://plugin.video.jellyfin/?mode=playlist&id=%s&server=%s)" % (item['Id'], server_id))]
 
@@ -415,7 +411,7 @@ def browse_subfolders(media, view_id, server_id=None):
             'folder': view_id if node[0] == 'all' else node[0],
             'server': server_id
         }
-        path = "%s?%s" % ("plugin://plugin.video.jellyfin/", urllib.urlencode(params))
+        path = "%s?%s" % ("plugin://plugin.video.jellyfin/", urlencode(params))
         directory(node[1] or view['Name'], path)
 
     xbmcplugin.setContent(int(sys.argv[1]), 'files')
@@ -440,7 +436,7 @@ def browse_letters(media, view_id, server_id=None):
             'folder': 'firstletter-%s' % node,
             'server': server_id
         }
-        path = "%s?%s" % ("plugin://plugin.video.jellyfin/", urllib.urlencode(params))
+        path = "%s?%s" % ("plugin://plugin.video.jellyfin/", urlencode(params))
         directory(node, path)
 
     xbmcplugin.setContent(int(sys.argv[1]), 'files')
@@ -497,7 +493,7 @@ def get_fanart(item_id, path, server_id=None):
     LOG.info("[ extra fanart ] %s", item_id)
     objects = Objects()
     list_li = []
-    directory = xbmc.translatePath("special://thumbnails/jellyfin/%s/" % item_id).decode('utf-8')
+    directory = xbmc.translatePath("special://thumbnails/jellyfin/%s/" % item_id)
     server = TheVoid('GetServerAddress', {'ServerId': server_id}).get()
 
     if not xbmcvfs.exists(directory):
@@ -520,7 +516,7 @@ def get_fanart(item_id, path, server_id=None):
         dirs, files = xbmcvfs.listdir(directory)
 
         for file in files:
-            fanart = os.path.join(directory, file.decode('utf-8'))
+            fanart = os.path.join(directory, file)
             li = xbmcgui.ListItem(file, path=fanart)
             list_li.append((fanart, li, False))
 
@@ -773,7 +769,7 @@ def get_themes():
     from helper.playutils import PlayUtils
     from helper.xmls import tvtunes_nfo
 
-    library = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/library").decode('utf-8')
+    library = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/library")
     play = settings('useDirectPaths') == "1"
 
     if not xbmcvfs.exists(library + '/'):
@@ -803,14 +799,14 @@ def get_themes():
 
         for item in result['Items']:
 
-            folder = normalize_string(item['Name'].encode('utf-8'))
+            folder = normalize_string(item['Name'])
             items[item['Id']] = folder
 
         result = TheVoid('GetThemes', {'Type': "Song", 'Id': view}).get()
 
         for item in result['Items']:
 
-            folder = normalize_string(item['Name'].encode('utf-8'))
+            folder = normalize_string(item['Name'])
             items[item['Id']] = folder
 
     for item in items:
@@ -828,9 +824,9 @@ def get_themes():
             putils = PlayUtils(theme, False, None, server, token)
 
             if play:
-                paths.append(putils.direct_play(theme['MediaSources'][0]).encode('utf-8'))
+                paths.append(putils.direct_play(theme['MediaSources'][0]))
             else:
-                paths.append(putils.direct_url(theme['MediaSources'][0]).encode('utf-8'))
+                paths.append(putils.direct_url(theme['MediaSources'][0]))
 
         tvtunes_nfo(nfo_file, paths)
 
@@ -868,7 +864,7 @@ def backup():
 
         delete_folder(backup)
 
-    addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin").decode('utf-8')
+    addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin")
     destination_data = os.path.join(backup, "addon_data", "plugin.video.jellyfin")
     destination_databases = os.path.join(backup, "Database")
 
@@ -883,18 +879,18 @@ def backup():
 
     databases = Objects().objects
 
-    db = xbmc.translatePath(databases['jellyfin']).decode('utf-8')
+    db = xbmc.translatePath(databases['jellyfin'])
     xbmcvfs.copy(db, os.path.join(destination_databases, db.rsplit('\\', 1)[1]))
     LOG.info("copied jellyfin.db")
 
-    db = xbmc.translatePath(databases['video']).decode('utf-8')
+    db = xbmc.translatePath(databases['video'])
     filename = db.rsplit('\\', 1)[1]
     xbmcvfs.copy(db, os.path.join(destination_databases, filename))
     LOG.info("copied %s", filename)
 
     if settings('enableMusic.bool'):
 
-        db = xbmc.translatePath(databases['music']).decode('utf-8')
+        db = xbmc.translatePath(databases['music'])
         filename = db.rsplit('\\', 1)[1]
         xbmcvfs.copy(db, os.path.join(destination_databases, filename))
         LOG.info("copied %s", filename)

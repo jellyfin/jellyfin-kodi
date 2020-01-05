@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
@@ -6,7 +7,7 @@ import logging
 import os
 import xml.etree.ElementTree as etree
 
-import xbmc
+from kodi_six import xbmc
 
 from . import translate, indent, write_xml, dialog, settings
 
@@ -22,7 +23,7 @@ def sources():
     ''' Create master lock compatible sources.
         Also add the kodi.jellyfin.media source.
     '''
-    path = xbmc.translatePath("special://profile/").decode('utf-8')
+    path = xbmc.translatePath("special://profile/")
     file = os.path.join(path, 'sources.xml')
 
     try:
@@ -106,7 +107,7 @@ def advanced_settings():
     if settings('useDirectPaths') != "0":
         return
 
-    path = xbmc.translatePath("special://profile/").decode('utf-8')
+    path = xbmc.translatePath("special://profile/")
     file = os.path.join(path, 'advancedsettings.xml')
 
     try:

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
@@ -7,7 +8,7 @@ import json
 import logging
 import threading
 
-import xbmc
+from kodi_six import xbmc
 
 import connect
 import downloader
@@ -144,7 +145,7 @@ class Monitor(xbmc.Monitor):
             self.void_responder(data, item)
 
         elif method == 'GetServerAddress':
-            
+
             server_address = server.auth.get_server_info(server.auth.server_id)['address']
             self.void_responder(data, server_address)
 
@@ -291,7 +292,7 @@ class Monitor(xbmc.Monitor):
             for additional in users:
                 for user in all_users:
 
-                    if user['Name'].lower() in additional.decode('utf-8').lower():
+                    if user['Name'].lower() in additional.lower():
                         server.jellyfin.session_add_user(server.config.data['app.session'], user['Id'], True)
 
             self.additional_users(server)

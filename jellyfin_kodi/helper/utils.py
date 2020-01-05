@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import division, absolute_import, print_function, unicode_literals
 
 #################################################################################################
 
@@ -8,18 +9,16 @@ import logging
 import os
 import re
 import unicodedata
-import urllib
 from uuid import uuid4
 from distutils.version import LooseVersion
 
 from dateutil import tz, parser
+from six import text_type, string_types, iteritems
+from six.moves.urllib.parse import quote_plus
 
-import xbmc
-import xbmcaddon
-import xbmcgui
-import xbmcvfs
+from kodi_six import xbmc, xbmcaddon, xbmcgui, xbmcvfs
 
-from translate import translate
+from .translate import translate
 
 #################################################################################################
 
@@ -122,7 +121,7 @@ def find(dict, item):
     if item in dict:
         return dict[item]
 
-    for key, value in sorted(dict.iteritems(), key=lambda (k, v): (v, k)):
+    for key, value in sorted(iteritems(dict), key=lambda kv: (kv[1], kv[0])):
 
         if re.match(key, item, re.I):
             return dict[key]
@@ -245,7 +244,7 @@ def validate(path):
     if window('jellyfin_pathverified.bool'):
         return True
 
-    path = path if os.path.supports_unicode_filenames else path.encode('utf-8')
+    path = path if os.path.supports_unicode_filenames else path
 
     if not xbmcvfs.exists(path):
         LOG.info("Could not find %s", path)
@@ -264,7 +263,7 @@ def values(item, keys):
     ''' Grab the values in the item for a list of keys {key},{key1}....
         If the key has no brackets, the key will be passed as is.
     '''
-    return (item[key.replace('{', "").replace('}', "")] if type(key) == str and key.startswith('{') else key for key in keys)
+    return (item[key.replace('{', "").replace('}', "")] if isinstance(key, text_type) and key.startswith('{') else key for key in keys)
 
 
 def indent(elem, level=0):
@@ -291,14 +290,17 @@ def indent(elem, level=0):
 
 
 def write_xml(content, file):
-    with open(file, 'w') as infile:
+    if isinstance(content, text_type):
+        content = content.encode('utf-8')
+
+    with open(file, 'wb') as infile:
 
         # replace apostrophes with double quotes only in xml keys, not texts
         def replace_apostrophes(match):
-            return match.group(0).replace("'", '"')
-        content = re.sub("<(.*?)>", replace_apostrophes, content)
+            return match.group(0).replace(b"'", b'"')
+        content = re.sub(b"<(.*?)>", replace_apostrophes, content)
 
-        content = content.replace('?>', ' standalone="yes" ?>', 1)
+        content = content.replace(b'?>', b' standalone="yes" ?>', 1)
         infile.write(content)
 
 
@@ -312,7 +314,7 @@ def delete_folder(path):
     delete_recursive(path, dirs)
 
     for file in files:
-        xbmcvfs.delete(os.path.join(path, file.decode('utf-8')))
+        xbmcvfs.delete(os.path.join(path, file))
 
     xbmcvfs.delete(path)
 
@@ -324,20 +326,20 @@ def delete_recursive(path, dirs):
     ''' Delete files and dirs recursively.
     '''
     for directory in dirs:
-        dirs2, files = xbmcvfs.listdir(os.path.join(path, directory.decode('utf-8')))
+        dirs2, files = xbmcvfs.listdir(os.path.join(path, directory))
 
         for file in files:
-            xbmcvfs.delete(os.path.join(path, directory.decode('utf-8'), file.decode('utf-8')))
+            xbmcvfs.delete(os.path.join(path, directory, file))
 
-        delete_recursive(os.path.join(path, directory.decode('utf-8')), dirs2)
-        xbmcvfs.rmdir(os.path.join(path, directory.decode('utf-8')))
+        delete_recursive(os.path.join(path, directory), dirs2)
+        xbmcvfs.rmdir(os.path.join(path, directory))
 
 
 def unzip(path, dest, folder=None):
 
     ''' Unzip file. zipfile module seems to fail on android with badziperror.
     '''
-    path = urllib.quote_plus(path)
+    path = quote_plus(path)
     root = "zip://" + path + '/'
 
     if folder:
@@ -352,7 +354,7 @@ def unzip(path, dest, folder=None):
         unzip_recursive(root, dirs, dest)
 
     for file in files:
-        unzip_file(os.path.join(root, file.decode('utf-8')), os.path.join(dest, file.decode('utf-8')))
+        unzip_file(os.path.join(root, file), os.path.join(dest, file))
 
     LOG.info("Unzipped %s", path)
 
@@ -361,8 +363,8 @@ def unzip_recursive(path, dirs, dest):
 
     for directory in dirs:
 
-        dirs_dir = os.path.join(path, directory.decode('utf-8'))
-        dest_dir = os.path.join(dest, directory.decode('utf-8'))
+        dirs_dir = os.path.join(path, directory)
+        dest_dir = os.path.join(dest, directory)
         xbmcvfs.mkdir(dest_dir)
 
         dirs2, files = xbmcvfs.listdir(dirs_dir)
@@ -371,7 +373,7 @@ def unzip_recursive(path, dirs, dest):
             unzip_recursive(dirs_dir, dirs2, dest_dir)
 
         for file in files:
-            unzip_file(os.path.join(dirs_dir, file.decode('utf-8')), os.path.join(dest_dir, file.decode('utf-8')))
+            unzip_file(os.path.join(dirs_dir, file), os.path.join(dest_dir, file))
 
 
 def unzip_file(path, dest):
@@ -390,7 +392,7 @@ def get_zip_directory(path, folder):
         return os.path.join(path, folder)
 
     for directory in dirs:
-        result = get_zip_directory(os.path.join(path, directory.decode('utf-8')), folder)
+        result = get_zip_directory(os.path.join(path, directory), folder)
         if result:
             return result
 
@@ -408,7 +410,7 @@ def copytree(path, dest):
         copy_recursive(path, dirs, dest)
 
     for file in files:
-        copy_file(os.path.join(path, file.decode('utf-8')), os.path.join(dest, file.decode('utf-8')))
+        copy_file(os.path.join(path, file), os.path.join(dest, file))
 
     LOG.info("Copied %s", path)
 
@@ -417,8 +419,8 @@ def copy_recursive(path, dirs, dest):
 
     for directory in dirs:
 
-        dirs_dir = os.path.join(path, directory.decode('utf-8'))
-        dest_dir = os.path.join(dest, directory.decode('utf-8'))
+        dirs_dir = os.path.join(path, directory)
+        dest_dir = os.path.join(dest, directory)
         xbmcvfs.mkdir(dest_dir)
 
         dirs2, files = xbmcvfs.listdir(dirs_dir)
@@ -427,7 +429,7 @@ def copy_recursive(path, dirs, dest):
             copy_recursive(dirs_dir, dirs2, dest_dir)
 
         for file in files:
-            copy_file(os.path.join(dirs_dir, file.decode('utf-8')), os.path.join(dest_dir, file.decode('utf-8')))
+            copy_file(os.path.join(dirs_dir, file), os.path.join(dest_dir, file))
 
 
 def copy_file(path, dest):
@@ -458,7 +460,7 @@ def normalize_string(text):
     text = text.strip()
 
     text = text.rstrip('.')
-    text = unicodedata.normalize('NFKD', unicode(text, 'utf-8')).encode('ascii', 'ignore')
+    text = unicodedata.normalize('NFKD', text_type(text, 'utf-8')).encode('ascii', 'ignore')
 
     return text
 
@@ -475,7 +477,7 @@ def convert_to_local(date):
     ''' Convert the local datetime to local.
     '''
     try:
-        date = parser.parse(date) if type(date) in (unicode, str) else date
+        date = parser.parse(date) if isinstance(date, string_types) else date
         date = date.replace(tzinfo=tz.tzutc())
         date = date.astimezone(tz.tzlocal())
 
@@ -484,6 +486,7 @@ def convert_to_local(date):
         LOG.exception(error)
 
         return str(date)
+
 
 def has_attribute(obj, name):
     try:
