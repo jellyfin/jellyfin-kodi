@@ -164,7 +164,7 @@ class TVShows(KodiDb):
 
         self.add(*values(obj, QU.add_tvshow_obj))
         self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_tvshow_obj))
-        LOG.info("ADD tvshow [%s/%s/%s] %s: %s", obj['TopPathId'], obj['PathId'], obj['ShowId'], obj['Title'], obj['Id'])
+        LOG.debug("ADD tvshow [%s/%s/%s] %s: %s", obj['TopPathId'], obj['PathId'], obj['ShowId'], obj['Title'], obj['Id'])
 
     def tvshow_update(self, obj):
 
@@ -178,7 +178,7 @@ class TVShows(KodiDb):
 
         self.update(*values(obj, QU.update_tvshow_obj))
         self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
-        LOG.info("UPDATE tvshow [%s/%s] %s: %s", obj['PathId'], obj['ShowId'], obj['Title'], obj['Id'])
+        LOG.debug("UPDATE tvshow [%s/%s] %s: %s", obj['PathId'], obj['ShowId'], obj['Title'], obj['Id'])
 
     def get_path_filename(self, obj):
 
@@ -230,7 +230,7 @@ class TVShows(KodiDb):
             self.item_ids.append(obj['Id'])
 
         self.artwork.add(obj['Artwork'], obj['SeasonId'], "season")
-        LOG.info("UPDATE season [%s/%s] %s: %s", obj['ShowId'], obj['SeasonId'], obj['Title'] or obj['Index'], obj['Id'])
+        LOG.debug("UPDATE season [%s/%s] %s: %s", obj['ShowId'], obj['SeasonId'], obj['Title'] or obj['Index'], obj['Id'])
 
     @stop()
     @jellyfin_item()
@@ -480,7 +480,7 @@ class TVShows(KodiDb):
                 self.add_playstate(*values(temp_obj, QU.add_bookmark_obj))
 
         self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
-        LOG.info("USERDATA %s [%s/%s] %s: %s", obj['Media'], obj['FileId'], obj['KodiId'], obj['Id'], obj['Title'])
+        LOG.debug("USERDATA %s [%s/%s] %s: %s", obj['Media'], obj['FileId'], obj['KodiId'], obj['Id'], obj['Title'])
 
     @stop()
     @jellyfin_item()
@@ -577,13 +577,13 @@ class TVShows(KodiDb):
 
         self.artwork.delete(kodi_id, "season")
         self.delete_season(kodi_id)
-        LOG.info("DELETE season [%s] %s", kodi_id, item_id)
+        LOG.debug("DELETE season [%s] %s", kodi_id, item_id)
 
     def remove_episode(self, kodi_id, file_id, item_id):
 
         self.artwork.delete(kodi_id, "episode")
         self.delete_episode(kodi_id, file_id)
-        LOG.info("DELETE episode [%s/%s] %s", file_id, kodi_id, item_id)
+        LOG.debug("DELETE episode [%s/%s] %s", file_id, kodi_id, item_id)
 
     @jellyfin_item()
     def get_child(self, item_id, e_item):
