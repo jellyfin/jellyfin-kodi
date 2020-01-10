@@ -1,2 +1,125 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr ""
+"PO-Revision-Date: 2020-01-12 10:17+0000\n"
+"Last-Translator: Slobodan Simić <slsimic@gmail.com>\n"
+"Language-Team: Serbian <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/sr/>\n"
+"Language: sr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
+"4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 3.8\n"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "Недавно додате фотографије"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Недавно додати кућни видео"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "Укључи поруку добродошлице"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "Ресетуј локалну Кодијеву базу"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "Сучеље"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Препоручене ставке"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Насумичне ставке"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Неодгледани филмови"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Комплети"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Омиљене епизоде"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "Омиљене серије"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Омиљени филмови"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Следеће епизоде"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Недавно додате ТВ серије"
+
+msgctxt "#30160"
+msgid "Video quality"
+msgstr "Квалитет видеа"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "за филмове"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "за епизоде"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Понуди брисање након пуштања"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Потврдите брисање"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Корисничко име"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Напредно"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Назив уређаја"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Ниво записника"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Начин пријаве"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "Присили ХТТП пуштање"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Назив сервера"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Адреса сервера"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Џелифин за Кодија"
