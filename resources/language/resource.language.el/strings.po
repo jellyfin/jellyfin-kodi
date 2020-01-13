@@ -1,2 +1,25 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr ""
+"PO-Revision-Date: 2020-01-15 14:17+0000\n"
+"Last-Translator: Decoy7 <mikemike19991@gmail.com>\n"
+"Language-Team: Greek <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/el/>\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.8\n"
+
+#, fuzzy
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "Αναγκασμός αναπαραγωγής μεσώ HTTP"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Όνομα Διακομιστή"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Διεύθυνση διακομιστή"
