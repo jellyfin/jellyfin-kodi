@@ -12,15 +12,9 @@ from operator import itemgetter
 
 import urllib3
 
-<<<<<<< HEAD
-from credentials import Credentials
-from http import HTTP  # noqa: I201,I100
-from api import API 
-
-=======
 from .credentials import Credentials
 from .http import HTTP  # noqa: I201,I100
->>>>>>> 896c2fe6ec9f5fa03f7a4aa638bc8effd04ac182
+from .api import API 
 
 #################################################################################################
 
@@ -38,7 +32,6 @@ class ConnectionManager(object):
 
     user = {}
     server_id = None
-    timeout = 10
 
     def __init__(self, client):
 
@@ -99,7 +92,6 @@ class ConnectionManager(object):
         if not data:
             LOG.info("Failed to login as `"+username+"`")
             return {}
-
 
         ## TODO Change when moving to database storage of server details
         credentials = self.credentials.get()

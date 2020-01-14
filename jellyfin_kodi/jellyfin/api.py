@@ -1,8 +1,7 @@
+from __future__ import division, absolute_import, print_function, unicode_literals
 import requests
 from helper.utils import settings
 
-# -*- coding: utf-8 -*-
-from __future__ import division, absolute_import, print_function, unicode_literals
 
 
 def jellyfin_url(client, handler):
@@ -374,8 +373,10 @@ class API(object):
             "x-emby-authorization": auth
         }
 
-    def send_request(self, method, url, path, timeout=self.default_timeout, headers=get_default_headers(), data=None):
-        import web_pdb; web_pdb.set_trace()
+    def send_request(self, method, url, path, timeout=None, headers=get_default_headers(), data=None):
+        if not timeout:
+            timeout = self.timeout
+            
         request_method = getattr(requests, method.lower(), "get") #Defaults to get request if none specified
         url = "%s/%s" % (url, path)
 
@@ -394,7 +395,11 @@ class API(object):
         headers = self.get_default_headers()
 
         try:
-            response = requests.post(url, data=authData, timeout=self.default_timeout, headers=headers, verify=settings('sslverify'))
+            if settings('sslverify'):
+                response = requests.post(url, data=authData, timeout=self.default_timeout, headers=headers)
+            else:
+                response = requests.post(url, data=authData, timeout=self.default_timeout, headers=headers, verify=False)
+            
             if response.status_code == 200:
                 return response.json()
             else:
