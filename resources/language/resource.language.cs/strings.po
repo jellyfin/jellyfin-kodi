@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "PO-Revision-Date: 2020-02-04 06:17+0000\n"
-"Last-Translator: DJSweder <djsweder@gmail.com>\n"
+"Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/cs/>\n"
 "Language: cs\n"
@@ -575,3 +575,23 @@ msgstr "Sběratelské kolekce"
 msgctxt "#30185"
 msgid "Boxsets"
 msgstr "Kolekce"
+
+msgctxt "#33110"
+msgid "Restart Kodi to take effect."
+msgstr "Restartuje Kodi, aby se změna projevila."
+
+msgctxt "#33109"
+msgid "Plugin"
+msgstr "Plugin"
+
+msgctxt "#33108"
+msgid "Notifications are delayed during video playback (except live tv)."
+msgstr "Upozornění budou potlačena během přehrávání videa (s výjimkou Live TV)."
+
+msgctxt "#33107"
+msgid "Users added to the session (no space between users). (eg username,username2)"
+msgstr "Uživatelé přidaní do spojení (bez mezer) (např. uživatel,uživatel2)"
+
+msgctxt "#33106"
+msgid "Enable the option to transcode"
+msgstr "Povolit funkci překódování"
