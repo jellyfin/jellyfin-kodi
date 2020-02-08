@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-02-06 14:17+0000\n"
+"PO-Revision-Date: 2020-02-09 12:17+0000\n"
 "Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/cs/>\n"
@@ -731,3 +731,174 @@ msgstr "Platí pro nativní režim přehrávání a režim přes doplněk"
 msgctxt "#33111"
 msgid "Reset the local database to apply the playback mode change."
 msgstr "Resetuje lokální databázi Kodi, aby se mohl změnit režim přehrávání."
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "Odstranit knihovny"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "Zapnout volbu přehrávání v režimu kino"
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "Přehrát v režimu kino"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "Restart pro aplikování opravy"
+
+msgctxt "#33192"
+msgid "Restart Jellyfin for Kodi"
+msgstr "Restartovat Jellyfin pro Kodi"
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "Vynucení překódování"
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr "Zpracování aktualizací"
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr "Zobrazte ukazatel průběhu, pokud je počet aktualizací větší než"
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr "Aktualizujte nebo opravte knihovnu aby se změny projevily."
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr "Paging: Počet současně stahovaných vláken je určen v nastavení."
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "Paging - vlákna stahování (výchozí: 3)"
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "Zapomenout na předchozí synchronizaci?  To se nedoporučuje."
+
+msgctxt "#33172"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
+msgstr ""
+"Máte {number} čekajících aktualizací. Než se zobrazí nový obsah, může to "
+"chvíli trvat.  Aktualizace knihoven může být rychlejší spuštěním přes "
+"nastavení > Aktualizovat knihovny.  Přesto pokračovat?"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "Podle prvního písmena"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "Neshlédnuté"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "Sledování"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "Oblíbené"
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "Naposledy přidáno"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "(dynamicky)"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "Vytvoření zálohy se nezdařilo"
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr ""
+"Maskovat citlivé informace v protokolu (nevztahuje se na protokol z Kodi)"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "Resetovat databázi hudby?"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr ""
+"Chcete-li se vyhnout chybám, aktualizujte prosím Jellyfin pro Kodi na verzi: "
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "Zapnout výběr audia/titulků"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "Pouze titulky"
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "Pouze audio"
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "Oprava byla aplikována!"
+
+msgctxt "#33155"
+msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
+msgstr ""
+"Aktuálně použitá oprava Jellyfin pro Kodi je poškozená!  Pokud tento problém "
+"přetrvává, pošlete příspěvek na fórum Jellyfin pro Kodi.  To bude třeba "
+"opravit co nejdříve."
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "Přidat knihovny"
+
+msgctxt "#33153"
+msgid "Your Jellyfin theme media has been synced to Kodi"
+msgstr "Vaše tematická média z Jellyfin byla synchronizována do Kodi"
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "Nelze najít TV tunery v Kodi."
+
+msgctxt "#33151"
+msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
+msgstr ""
+"Znovu se připojit ke stejnému serveru, který byl dříve načten.  Pokud chcete "
+"použít jiný server, resetujte svou místní databázi, včetně vašich "
+"uživatelských informací."
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "Aktualizovat informace serveru"
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "Nelze se připojit k tomuto serveru."
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "Váš přístup k tomuto serveru je omezen."
+
+msgctxt "#33147"
+msgid "Your access to Jellyfin is restricted."
+msgstr "Váš přístup k Jellyfin je omezen."
+
+msgctxt "#33146"
+msgid "Unable to connect to Jellyfin."
+msgstr "Nelze se připojit k Jellyfin."
+
+msgctxt "#33145"
+msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
+msgstr ""
+"Ujistěte se, že vaše sdílení Samba (smb) vašeho serveru Jellyfin je "
+"přístupné pro vaši instalaci Kodi a zda jsou na vašem serveru "
+"nakonfigurována všechna umístění.  V opačném případě nemusí Kodi najít vaše "
+"soubory."
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "Obnova boxsetů"
