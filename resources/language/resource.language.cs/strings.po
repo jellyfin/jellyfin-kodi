@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-02-09 12:17+0000\n"
+"PO-Revision-Date: 2020-02-10 19:17+0000\n"
 "Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/cs/>\n"
@@ -902,3 +902,49 @@ msgstr ""
 msgctxt "#33131"
 msgid "Refreshing boxsets"
 msgstr "Obnova boxsetů"
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "Vyberte knihovny, které chcete odstranit"
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "Vyberte knihovny, které chcete opravit"
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "Vyberte knihovny, které chcete aktualizovat"
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr "Synchronizace již běží, počkejte prosím na dokončení a zkuste to znovu."
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr "Rozšířené možnosti"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "Povolit Jellyfin pro Kodi"
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "Spravovat knihovny"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "Restart..."
+
+msgctxt "#33191"
+msgid "Restart Jellyfin for Kodi to apply this change?"
+msgstr "Restartovat Jellyfin pro Kodi, aby se změna projevila?"
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr ""
+"Kodi Sync Queue urychluje počáteční synchronizaci. Ostatní synchronizace "
+"jsou spuštěny plánovačem na serveru."
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr "Povolit synchronizaci během přehrávání (může způsobit zpomalení)"
