@@ -680,13 +680,13 @@ class UserDataWorker(threading.Thread):
                 elif item['Type'] in ['Series', 'Season', 'Episode']:
                     obj = TVShows(self.args[0], jellyfindb, kodidb, self.args[1]).userdata(item)
                 elif item['Type'] == 'MusicAlbum':
-                        obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).album
+                    obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).album
                 elif item['Type'] == 'MusicArtist':
-                        obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).artist
+                    obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).artist
                 elif item['Type'] == 'AlbumArtist':
-                        obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).albumartist
+                    obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).albumartist
                 elif item['Type'] == 'Audio':
-                        obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).song
+                    obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).song
 
                 try:
                     obj(item)
