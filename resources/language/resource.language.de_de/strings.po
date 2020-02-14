@@ -1039,7 +1039,7 @@ msgstr "Markiere die zu aktualisierenden Bibliotheken"
 msgctxt "#33197"
 msgid "A sync is already running, please wait until it completes and try again."
 msgstr ""
-"Die Synchronisation läuft bereits, warte bitte bis es fertig ist und "
+"Eine Synchronisation läuft bereits, warte bitte bis diese fertig ist und "
 "versuche es später erneut."
 
 msgctxt "#33196"
