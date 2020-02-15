@@ -202,12 +202,16 @@ class Actions(object):
             xbmc.executebuiltin('Dialog.Close(busydialognocancel)')
             player.play(playlist)
 
+        server_address = item['PlaybackInfo']['ServerAddress']
+        token = item['PlaybackInfo']['Token']
+
         for item in items['Items'][1:]:
             listitem = xbmcgui.ListItem()
             LOG.info("[ playlist/%s ] %s", item['Id'], item['Name'])
 
             self.set_listitem(item, listitem, None, False)
-            path = "plugin://plugin.video.jellyfin/?mode=play&id=%s&playlist=true" % item['Id']
+            path = '{}/Audio/{}/stream.mp3?static=true&api_key={}'.format(
+                server_address, item['Id'], token)
             listitem.setPath(path)
 
             playlist.add(path, listitem, index)
