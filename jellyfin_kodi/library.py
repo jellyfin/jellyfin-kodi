@@ -139,7 +139,8 @@ class Library(threading.Thread):
 
         if not self.player.isPlayingVideo() or settings('syncDuringPlay.bool') or xbmc.getCondVisibility('VideoPlayer.Content(livetv)'):
 
-            self.worker_downloads()
+            while self.worker_downloads():
+                pass
             self.worker_sort()
 
             self.worker_updates()
@@ -225,6 +226,7 @@ class Library(threading.Thread):
 
         ''' Get items from jellyfin and place them in the appropriate queues.
         '''
+        added_threads = False
         for queue in ((self.updated_queue, self.updated_output), (self.userdata_queue, self.userdata_output)):
             if queue[0].qsize() and len(self.download_threads) < DTHREADS:
 
@@ -232,6 +234,8 @@ class Library(threading.Thread):
                 new_thread.start()
                 LOG.info("-->[ q:download/%s ]", id(new_thread))
                 self.download_threads.append(new_thread)
+                added_threads = True
+        return added_threads
 
     def worker_sort(self):
 
