@@ -231,6 +231,7 @@ class Library(threading.Thread):
                 new_thread = GetItemWorker(self.server, queue[0], queue[1])
                 new_thread.start()
                 LOG.info("-->[ q:download/%s ]", id(new_thread))
+                self.download_threads.append(new_thread)
 
     def worker_sort(self):
 
