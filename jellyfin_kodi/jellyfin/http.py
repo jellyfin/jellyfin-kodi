@@ -11,7 +11,6 @@ import requests
 from six import string_types
 
 from .exceptions import HTTPException
-from helper import debug
 
 #################################################################################################
 
@@ -81,7 +80,7 @@ class HTTP(object):
             raise AttributeError("Request cannot be empty")
 
         data = self._request(data)
-        LOG.debug("--->[ http ] %s", debug.JsonDebugPrinter(data))
+        LOG.debug("--->[ http ] %s", json.dumps(data, indent=4))
         retry = data.pop('retry', 5)
 
         while True:
@@ -163,7 +162,7 @@ class HTTP(object):
                     elapsed = int(r.elapsed.total_seconds() * 1000)
                     response = r.json()
                     LOG.debug("---<[ http ][%s ms]", elapsed)
-                    LOG.debug(debug.JsonDebugPrinter(response))
+                    LOG.debug(json.dumps(response, indent=4))
 
                     return response
                 except ValueError:
