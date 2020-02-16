@@ -147,9 +147,7 @@ class Artwork(object):
 
     def add_worker(self):
 
-        for thread in self.threads:
-            if thread.is_done:
-                self.threads.remove(thread)
+        self.threads = [thread for thread in self.threads if not thread.is_done]
 
         if self.queue.qsize() and len(self.threads) < 2:
 

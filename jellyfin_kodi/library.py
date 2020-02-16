@@ -131,11 +131,10 @@ class Library(threading.Thread):
             Start new "daemon threads" to process library updates.
             (actual daemon thread is not supported in Kodi)
         '''
-        for threads in (self.download_threads, self.writer_threads['updated'],
-                        self.writer_threads['userdata'], self.writer_threads['removed']):
-            for thread in threads:
-                if thread.is_done:
-                    threads.remove(thread)
+        self.download_threads = [thread for thread in self.download_threads if not thread.is_done]
+        self.writer_threads['updated'] = [thread for thread in self.writer_threads['updated'] if not thread.is_done]
+        self.writer_threads['userdata'] = [thread for thread in self.writer_threads['userdata'] if not thread.is_done]
+        self.writer_threads['removed'] = [thread for thread in self.writer_threads['removed'] if not thread.is_done]
 
         if not self.player.isPlayingVideo() or settings('syncDuringPlay.bool') or xbmc.getCondVisibility('VideoPlayer.Content(livetv)'):
 
