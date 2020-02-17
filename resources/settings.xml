@@ -25,8 +25,8 @@
 		<setting label="30511" id="useDirectPaths" type="enum" lvalues="33036|33037" default="1" />
 
 		<setting label="33175" type="lsep" />
-		<setting label="30515" id="limitIndex" type="number" default="15" option="int" />
-		<setting label="33174" id="limitThreads" type="number" default="3" option="int" />
+		<setting label="30515" id="limitIndex" type="slider" default="15" range="1, 1, 100" option="int" />
+		<setting label="33174" id="limitThreads" type="slider" default="3" range="1, 1, 50" option="int" />
 		<setting label="33176" type="lsep" />
 		<setting label="30512" id="enableTextureCache" type="bool" default="true" />
 		<setting label="30157" id="enableCoverArt" type="bool" default="true" />

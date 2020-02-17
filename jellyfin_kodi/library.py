@@ -23,7 +23,7 @@ from jellyfin import Jellyfin
 ##################################################################################################
 
 LOG = logging.getLogger("JELLYFIN." + __name__)
-LIMIT = min(int(settings('limitIndex') or 50), 50)
+LIMIT = int(settings('limitIndex') or 15)
 DTHREADS = int(settings('limitThreads') or 3)
 MEDIA = {
     'Movie': Movies,
