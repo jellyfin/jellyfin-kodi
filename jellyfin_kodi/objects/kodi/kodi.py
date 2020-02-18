@@ -15,16 +15,6 @@ LOG = logging.getLogger("JELLYFIN." + __name__)
 
 ##################################################################################################
 
-def cache(fn):
-    CACHE = {}
-    def cache_wrapper(*args):
-        try:
-            result = CACHE[args]
-        except KeyError:
-            result = fn(*args)
-            CACHE[args] = result
-        return result
-    return cache_wrapper
 
 class Kodi(object):
 
@@ -165,7 +155,6 @@ class Kodi(object):
 
         return person_id
 
-    @cache
     def get_person(self, *args):
 
         try:
