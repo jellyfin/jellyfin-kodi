@@ -22,8 +22,13 @@ class Kodi(object):
     def __init__(self):
         self.artwork = artwork.Artwork(self.cursor)
 
-        self.cursor.execute(QU.get_all_people)
-        self._people_cache = dict(self.cursor.fetchall())
+        try:
+            self.cursor.execute(QU.get_all_people)
+        except:
+            # Failed to load the table. Has the table been created?
+            self._people_cache = {}
+        else:
+            self._people_cache = dict(self.cursor.fetchall())
 
     def create_entry_path(self):
         self.cursor.execute(QU.create_path)
