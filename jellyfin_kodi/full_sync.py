@@ -11,7 +11,7 @@ from kodi_six import xbmc
 import downloader as server
 import helper.xmls as xmls
 from database import Database, get_sync, save_sync, jellyfin_db
-from helper import translate, settings, window, progress, dialog, LibraryException, debug
+from helper import translate, settings, window, progress, dialog, LibraryException
 from helper.utils import get_screensaver, set_screensaver
 
 ##################################################################################################
@@ -249,7 +249,6 @@ class FullSync(object):
             raise
 
     @progress()
-    @debug.profile
     def movies(self, library, dialog):
 
         ''' Process movies from a single library.
