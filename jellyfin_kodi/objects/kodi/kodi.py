@@ -8,6 +8,7 @@ import logging
 from . import artwork
 from . import queries as QU
 from helper import values
+from sqlite3 import IntegrityError
 
 ##################################################################################################
 
@@ -156,13 +157,13 @@ class Kodi(object):
         return person_id
 
     def get_person(self, *args):
-
         try:
-            self.cursor.execute(QU.get_person, args)
-
-            return self.cursor.fetchone()[0]
-        except TypeError:
             return self.add_person(*args)
+        except IntegrityError:
+            # The person already exists in the database
+            # Now we can do the expensive operation of fetching the id
+            self.cursor.execute(QU.get_person, args)
+            return self.cursor.fetchone()[0]
 
     def add_genres(self, genres, *args):
 
