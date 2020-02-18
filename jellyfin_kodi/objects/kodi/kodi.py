@@ -127,30 +127,35 @@ class Kodi(object):
 
                 self.artwork.update(person['imageurl'], person_id, art, "thumb")
 
-        def add_link(link, person_id):
-            self.cursor.execute(QU.update_link.replace("{LinkType}", link), (person_id,) + args)
-
         cast_order = 1
+
+        bulk_updates = {}
 
         for person in people:
             person_id = self.get_person(person['Name'])
 
             if person['Type'] == 'Actor':
-
+                sql = QU.update_actor
                 role = person.get('Role')
-                self.cursor.execute(QU.update_actor, (person_id,) + args + (role, cast_order,))
+                bulk_updates.setdefault(sql, []).append((person_id,) + args + (role, cast_order,))
                 cast_order += 1
 
             elif person['Type'] == 'Director':
-                add_link('director_link', person_id)
+                sql = QU.update_link.replace("{LinkType}", 'director_link')
+                bulk_updates.setdefault(sql, []).append((person_id,) + args)
 
             elif person['Type'] == 'Writer':
-                add_link('writer_link', person_id)
+                sql = QU.update_link.replace("{LinkType}", 'writer_link')
+                bulk_updates.setdefault(sql, []).append((person_id,) + args)
 
             elif person['Type'] == 'Artist':
-                add_link('actor_link', person_id)
+                sql = QU.update_link.replace("{LinkType}", 'actor_link')
+                bulk_updates.setdefault(sql, []).append((person_id,) + args)
 
             add_thumbnail(person_id, person, person['Type'])
+
+        for sql, parameters in bulk_updates.items():
+            self.cursor.executemany(sql, parameters)
 
     def add_person(self, *args):
 
