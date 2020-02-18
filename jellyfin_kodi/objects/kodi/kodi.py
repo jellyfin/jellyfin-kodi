@@ -22,6 +22,9 @@ class Kodi(object):
     def __init__(self):
         self.artwork = artwork.Artwork(self.cursor)
 
+        self.cursor.execute(QU.get_all_people)
+        self._people_cache = dict(self.cursor.fetchall())
+
     def create_entry_path(self):
         self.cursor.execute(QU.create_path)
 
@@ -156,7 +159,7 @@ class Kodi(object):
 
         return person_id
 
-    def get_person(self, *args):
+    def _get_person(self, *args):
         try:
             return self.add_person(*args)
         except IntegrityError:
@@ -164,6 +167,14 @@ class Kodi(object):
             # Now we can do the expensive operation of fetching the id
             self.cursor.execute(QU.get_person, args)
             return self.cursor.fetchone()[0]
+
+    def get_person(self, *args):
+        try:
+            return self._people_cache[args]
+        except KeyError:
+            person_id = self._get_person(*args)
+            self._people_cache[args] = person_id
+            return person_id
 
     def add_genres(self, genres, *args):
 
