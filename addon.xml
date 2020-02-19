@@ -10,6 +10,7 @@
     <import addon="script.module.six" />
     <import addon="script.module.kodi-six" />
     <import addon="script.module.addon.signals" version="0.0.1"/>
+    <import addon="script.module.futures" version="2.2.0"/>
   </requires>
   <extension    point="xbmc.python.pluginsource"
                 library="default.py">
