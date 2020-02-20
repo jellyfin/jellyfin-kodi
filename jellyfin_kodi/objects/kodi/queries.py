@@ -88,6 +88,10 @@ SELECT      strFilename
 FROM        files
 WHERE       idFile = ?
 """
+get_all_people = """
+SELECT      name, actor_id
+FROM        actor
+"""
 get_person = """
 SELECT      actor_id
 FROM        actor

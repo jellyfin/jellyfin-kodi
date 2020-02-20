@@ -8,6 +8,7 @@ import logging
 from . import artwork
 from . import queries as QU
 from helper import values
+from sqlite3 import IntegrityError
 
 ##################################################################################################
 
@@ -20,6 +21,14 @@ class Kodi(object):
 
     def __init__(self):
         self.artwork = artwork.Artwork(self.cursor)
+
+        try:
+            self.cursor.execute(QU.get_all_people)
+        except:
+            # Failed to load the table. Has the table been created?
+            self._people_cache = {}
+        else:
+            self._people_cache = dict(self.cursor.fetchall())
 
     def create_entry_path(self):
         self.cursor.execute(QU.create_path)
@@ -123,30 +132,35 @@ class Kodi(object):
 
                 self.artwork.update(person['imageurl'], person_id, art, "thumb")
 
-        def add_link(link, person_id):
-            self.cursor.execute(QU.update_link.replace("{LinkType}", link), (person_id,) + args)
-
         cast_order = 1
+
+        bulk_updates = {}
 
         for person in people:
             person_id = self.get_person(person['Name'])
 
             if person['Type'] == 'Actor':
-
+                sql = QU.update_actor
                 role = person.get('Role')
-                self.cursor.execute(QU.update_actor, (person_id,) + args + (role, cast_order,))
+                bulk_updates.setdefault(sql, []).append((person_id,) + args + (role, cast_order,))
                 cast_order += 1
 
             elif person['Type'] == 'Director':
-                add_link('director_link', person_id)
+                sql = QU.update_link.replace("{LinkType}", 'director_link')
+                bulk_updates.setdefault(sql, []).append((person_id,) + args)
 
             elif person['Type'] == 'Writer':
-                add_link('writer_link', person_id)
+                sql = QU.update_link.replace("{LinkType}", 'writer_link')
+                bulk_updates.setdefault(sql, []).append((person_id,) + args)
 
             elif person['Type'] == 'Artist':
-                add_link('actor_link', person_id)
+                sql = QU.update_link.replace("{LinkType}", 'actor_link')
+                bulk_updates.setdefault(sql, []).append((person_id,) + args)
 
             add_thumbnail(person_id, person, person['Type'])
+
+        for sql, parameters in bulk_updates.items():
+            self.cursor.executemany(sql, parameters)
 
     def add_person(self, *args):
 
@@ -155,14 +169,22 @@ class Kodi(object):
 
         return person_id
 
-    def get_person(self, *args):
-
+    def _get_person(self, *args):
         try:
-            self.cursor.execute(QU.get_person, args)
-
-            return self.cursor.fetchone()[0]
-        except TypeError:
             return self.add_person(*args)
+        except IntegrityError:
+            # The person already exists in the database
+            # Now we can do the expensive operation of fetching the id
+            self.cursor.execute(QU.get_person, args)
+            return self.cursor.fetchone()[0]
+
+    def get_person(self, *args):
+        try:
+            return self._people_cache[args]
+        except KeyError:
+            person_id = self._get_person(*args)
+            self._people_cache[args] = person_id
+            return person_id
 
     def add_genres(self, genres, *args):
 
