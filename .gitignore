@@ -7,3 +7,5 @@ machine_guid
 .idea/
 .DS_Store
 .vscode/
+pyinstrument/
+pyinstrument_cext.so
