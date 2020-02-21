@@ -3,6 +3,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 ##################################################################################################
 
+from contextlib import contextmanager
 import datetime
 import logging
 
@@ -248,6 +249,13 @@ class FullSync(object):
 
             raise
 
+    @contextmanager
+    def video_database_locks(self):
+        with self.library.database_lock:
+            with Database() as videodb:
+                with Database('jellyfin') as jellyfindb:
+                    yield videodb, jellyfindb
+
     @progress()
     def movies(self, library, dialog):
 
@@ -255,26 +263,26 @@ class FullSync(object):
         '''
         Movies = self.library.media['Movies']
 
-        with self.library.database_lock:
-            with Database() as videodb:
-                with Database('jellyfin') as jellyfindb:
+        for items in server.get_items(library['Id'], "Movie", False, self.sync['RestorePoint'].get('params')):
 
-                    obj = Movies(self.server, jellyfindb, videodb, self.direct_path)
+            with self.video_database_locks() as (videodb, jellyfindb):
+                obj = Movies(self.server, jellyfindb, videodb, self.direct_path)
 
-                    for items in server.get_items(library['Id'], "Movie", False, self.sync['RestorePoint'].get('params')):
+                self.sync['RestorePoint'] = items['RestorePoint']
+                start_index = items['RestorePoint']['params']['StartIndex']
 
-                        self.sync['RestorePoint'] = items['RestorePoint']
-                        start_index = items['RestorePoint']['params']['StartIndex']
+                for index, movie in enumerate(items['Items']):
 
-                        for index, movie in enumerate(items['Items']):
+                    dialog.update(int((float(start_index + index) / float(items['TotalRecordCount'])) * 100),
+                                  heading="%s: %s" % (translate('addon_name'), library['Name']),
+                                  message=movie['Name'])
+                    obj.movie(movie, library=library)
 
-                            dialog.update(int((float(start_index + index) / float(items['TotalRecordCount'])) * 100),
-                                          heading="%s: %s" % (translate('addon_name'), library['Name']),
-                                          message=movie['Name'])
-                            obj.movie(movie, library=library)
+        with self.video_database_locks() as (videodb, jellyfindb):
+            obj = Movies(self.server, jellyfindb, videodb, self.direct_path)
 
-                    if self.update_library:
-                        self.movies_compare(library, obj, jellyfindb)
+            if self.update_library:
+                self.movies_compare(library, obj, jellyfindb)
 
     def movies_compare(self, library, obj, jellyfinydb):
 
@@ -296,32 +304,32 @@ class FullSync(object):
         '''
         TVShows = self.library.media['TVShows']
 
-        with self.library.database_lock:
-            with Database() as videodb:
-                with Database('jellyfin') as jellyfindb:
-                    obj = TVShows(self.server, jellyfindb, videodb, self.direct_path, True)
+        for items in server.get_items(library['Id'], "Series", False, self.sync['RestorePoint'].get('params')):
 
-                    for items in server.get_items(library['Id'], "Series", False, self.sync['RestorePoint'].get('params')):
+            with self.video_database_locks() as (videodb, jellyfindb):
+                obj = TVShows(self.server, jellyfindb, videodb, self.direct_path, True)
 
-                        self.sync['RestorePoint'] = items['RestorePoint']
-                        start_index = items['RestorePoint']['params']['StartIndex']
+                self.sync['RestorePoint'] = items['RestorePoint']
+                start_index = items['RestorePoint']['params']['StartIndex']
 
-                        for index, show in enumerate(items['Items']):
+                for index, show in enumerate(items['Items']):
 
-                            percent = int((float(start_index + index) / float(items['TotalRecordCount'])) * 100)
-                            message = show['Name']
-                            dialog.update(percent, heading="%s: %s" % (translate('addon_name'), library['Name']), message=message)
+                    percent = int((float(start_index + index) / float(items['TotalRecordCount'])) * 100)
+                    message = show['Name']
+                    dialog.update(percent, heading="%s: %s" % (translate('addon_name'), library['Name']), message=message)
 
-                            if obj.tvshow(show, library=library) is not False:
+                    if obj.tvshow(show, library=library) is not False:
 
-                                for episodes in server.get_episode_by_show(show['Id']):
-                                    for episode in episodes['Items']:
+                        for episodes in server.get_episode_by_show(show['Id']):
+                            for episode in episodes['Items']:
 
-                                        dialog.update(percent, message="%s/%s" % (message, episode['Name'][:10]))
-                                        obj.episode(episode)
+                                dialog.update(percent, message="%s/%s" % (message, episode['Name'][:10]))
+                                obj.episode(episode)
 
-                    if self.update_library:
-                        self.tvshows_compare(library, obj, jellyfindb)
+        with self.video_database_locks() as (videodb, jellyfindb):
+            obj = TVShows(self.server, jellyfindb, videodb, self.direct_path, True)
+            if self.update_library:
+                self.tvshows_compare(library, obj, jellyfindb)
 
     def tvshows_compare(self, library, obj, jellyfindb):
 
@@ -346,25 +354,25 @@ class FullSync(object):
         '''
         MusicVideos = self.library.media['MusicVideos']
 
-        with self.library.database_lock:
-            with Database() as videodb:
-                with Database('jellyfin') as jellyfindb:
-                    obj = MusicVideos(self.server, jellyfindb, videodb, self.direct_path)
+        for items in server.get_items(library['Id'], "MusicVideo", False, self.sync['RestorePoint'].get('params')):
 
-                    for items in server.get_items(library['Id'], "MusicVideo", False, self.sync['RestorePoint'].get('params')):
+            with self.video_database_locks() as (videodb, jellyfindb):
+                obj = MusicVideos(self.server, jellyfindb, videodb, self.direct_path)
 
-                        self.sync['RestorePoint'] = items['RestorePoint']
-                        start_index = items['RestorePoint']['params']['StartIndex']
+                self.sync['RestorePoint'] = items['RestorePoint']
+                start_index = items['RestorePoint']['params']['StartIndex']
 
-                        for index, mvideo in enumerate(items['Items']):
+                for index, mvideo in enumerate(items['Items']):
 
-                            dialog.update(int((float(start_index + index) / float(items['TotalRecordCount'])) * 100),
-                                          heading="%s: %s" % (translate('addon_name'), library['Name']),
-                                          message=mvideo['Name'])
-                            obj.musicvideo(mvideo, library=library)
+                    dialog.update(int((float(start_index + index) / float(items['TotalRecordCount'])) * 100),
+                                  heading="%s: %s" % (translate('addon_name'), library['Name']),
+                                  message=mvideo['Name'])
+                    obj.musicvideo(mvideo, library=library)
 
-                    if self.update_library:
-                        self.musicvideos_compare(library, obj, jellyfindb)
+        with self.video_database_locks() as (videodb, jellyfindb):
+            obj = MusicVideos(self.server, jellyfindb, videodb, self.direct_path)
+            if self.update_library:
+                self.musicvideos_compare(library, obj, jellyfindb)
 
     def musicvideos_compare(self, library, obj, jellyfindb):
 
@@ -447,22 +455,20 @@ class FullSync(object):
         '''
         Movies = self.library.media['Movies']
 
-        with self.library.database_lock:
-            with Database() as videodb:
-                with Database('jellyfin') as jellyfindb:
-                    obj = Movies(self.server, jellyfindb, videodb, self.direct_path)
+        for items in server.get_items(library_id, "BoxSet", False, self.sync['RestorePoint'].get('params')):
 
-                    for items in server.get_items(library_id, "BoxSet", False, self.sync['RestorePoint'].get('params')):
+            with self.video_database_locks() as (videodb, jellyfindb):
+                obj = Movies(self.server, jellyfindb, videodb, self.direct_path)
 
-                        self.sync['RestorePoint'] = items['RestorePoint']
-                        start_index = items['RestorePoint']['params']['StartIndex']
+                self.sync['RestorePoint'] = items['RestorePoint']
+                start_index = items['RestorePoint']['params']['StartIndex']
 
-                        for index, boxset in enumerate(items['Items']):
+                for index, boxset in enumerate(items['Items']):
 
-                            dialog.update(int((float(start_index + index) / float(items['TotalRecordCount'])) * 100),
-                                          heading="%s: %s" % (translate('addon_name'), translate('boxsets')),
-                                          message=boxset['Name'])
-                            obj.boxset(boxset)
+                    dialog.update(int((float(start_index + index) / float(items['TotalRecordCount'])) * 100),
+                                  heading="%s: %s" % (translate('addon_name'), translate('boxsets')),
+                                  message=boxset['Name'])
+                    obj.boxset(boxset)
 
     def refresh_boxsets(self):
 
@@ -470,12 +476,9 @@ class FullSync(object):
         '''
         Movies = self.library.media['Movies']
 
-        with self.library.database_lock:
-            with Database() as videodb:
-                with Database('jellyfin') as jellyfindb:
-
-                    obj = Movies(self.server, jellyfindb, videodb, self.direct_path)
-                    obj.boxsets_reset()
+        with self.video_database_locks() as (videodb, jellyfindb):
+            obj = Movies(self.server, jellyfindb, videodb, self.direct_path)
+            obj.boxsets_reset()
 
         self.boxsets(None)
 
