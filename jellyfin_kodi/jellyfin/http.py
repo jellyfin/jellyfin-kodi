@@ -64,6 +64,20 @@ class HTTP(object):
 
         return string
 
+    def REQUEST(self, url, type, params=None, json=None, session=None):
+        request = {'url': url, 'type': type}
+        if params is not None:
+            request['params'] = params
+        if json is not None:
+            request['json'] = json
+        return self.request(request, session)
+
+
+    def get_handler_url(self, handler):
+        server = self.config.data.get("auth.server", "")
+        return "%s/%s" % (server, handler)
+
+
     def request(self, data, session=None):
 
         ''' Give a chance to retry the connection. Jellyfin sometimes can be slow to answer back

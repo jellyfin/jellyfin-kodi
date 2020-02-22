@@ -41,21 +41,21 @@ def browse_info():
     )
 
 
-def _http(action, url, request={}, server_id=None):
-    request.update({'url': url, 'type': action})
-    return Jellyfin(server_id).http.request(request)
-
-
 def _get(handler, params=None, server_id=None):
-    return _http("GET", get_jellyfinserver_url(handler), {'params': params}, server_id)
-
+    url = get_jellyfinserver_url(handler)
+    jf = Jellyfin(server_id)
+    return jf.http.REQUEST(url, "GET", params)
 
 def _post(handler, json=None, params=None, server_id=None):
-    return _http("POST", get_jellyfinserver_url(handler), {'params': params, 'json': json}, server_id)
+    url = get_jellyfinserver_url(handler)
+    jf = Jellyfin(server_id)
+    return jf.http.REQUEST(url, "POST", params, json)
 
 
 def _delete(handler, params=None, server_id=None):
-    return _http("DELETE", get_jellyfinserver_url(handler), {'params': params}, server_id)
+    url = get_jellyfinserver_url(handler)
+    jf = Jellyfin(server_id)
+    return jf.http.REQUEST(url, "DELETE", params)
 
 
 def validate_view(library_id, item_id):
@@ -314,17 +314,14 @@ class GetItemWorker(threading.Thread):
 
                     return
 
-                request = {
-                    'type': "GET",
-                    'handler': "Users/{UserId}/Items",
-                    'params': {
-                        'Ids': ','.join(str(x) for x in item_ids),
-                        'Fields': api.info()
-                    }
+                url = self.server.http.get_handler_url("Users/{UserId}/Items")
+                params = {
+                    'Ids': ','.join(str(x) for x in item_ids),
+                    'Fields': api.info()
                 }
 
                 try:
-                    result = self.server.http.request(request, s)
+                    result = self.server.http.REQUEST(url, "GET", params, s)
 
                     for item in result['Items']:
 
