@@ -16,6 +16,7 @@ import player
 from client import get_device_id
 from objects import PlaylistWorker, on_play, on_update, special_listener
 from helper import translate, settings, window, dialog, api, JSONRPC
+from helper.utils import JsonDebugPrinter
 from jellyfin import Jellyfin
 from webservice import WebService
 
@@ -96,7 +97,7 @@ class Monitor(xbmc.Monitor):
 
             data = json.loads(data)
 
-        LOG.debug("[ %s: %s ] %s", sender, method, json.dumps(data, indent=4))
+        LOG.debug("[ %s: %s ] %s", sender, method, JsonDebugPrinter(data))
 
         if self.sleep:
             LOG.info("System.OnSleep detected, ignore monitor request.")
