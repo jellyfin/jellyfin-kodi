@@ -191,24 +191,24 @@ class ConnectionManager(object):
             'url': url,
             'headers': headers,
         }
-        if timeout is not None:
-            data['timeout'] = timeout
         if verify is not None:
             data['verify'] = verify
         if retry is not None:
             data['retry'] = retry
         if json is not None:
             data['json'] = json
-        return self._request_url(data, data_type, timeout, additional_headers=additional_headers)
 
-    def _request_url(self, data, data_type=None, timeout=None, additional_headers=True):
-        data['timeout'] = timeout or self.timeout
+
+        timeput = timeout or self.timeout
+        data['timeout'] = timeout
         if additional_headers:
-            headers = self._get_headers(data_type)
-            data.setdefault('headers', {}).update(headers)
+            extra_headers = self._get_headers(data_type)
+            data['headers'].update(extra_headers)
+            headers = data['headers']
 
         try:
-            return self.http.request(data)
+            return self.http.REQUEST(url, type, json=json, headers=headers, \
+                    verify=verify, timeout=timeout, retry=retry)
         except Exception as error:
             LOG.exception(error)
             raise

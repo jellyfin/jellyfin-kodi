@@ -64,13 +64,24 @@ class HTTP(object):
 
         return string
 
-    def REQUEST(self, url, type, params=None, json=None, session=None):
-        request = {'url': url, 'type': type}
+    def REQUEST(self, url, type, params=None, json=None, session=None, \
+                    headers=None, verify=None, timeout=None, retry=None):
+        data = {'url': url, 'type': type}
         if params is not None:
-            request['params'] = params
+            data['params'] = params
         if json is not None:
-            request['json'] = json
-        return self.request(request, session)
+            data['json'] = json
+        if headers is not None:
+            data['headers'] = headers
+        if timeout is not None:
+            data['timeout'] = timeout
+        if verify is not None:
+            data['verify'] = verify
+        if retry is not None:
+            data['retry'] = retry
+        if json is not None:
+            data['json'] = json
+        return self.request(data, session)
 
 
     def get_handler_url(self, handler):
