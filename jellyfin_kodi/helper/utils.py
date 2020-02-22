@@ -494,3 +494,16 @@ def has_attribute(obj, name):
         return True
     except AttributeError:
         return False
+
+
+class JsonDebugPrinter(object):
+
+    ''' Helper class to defer converting data to JSON until it is needed.
+    See: https://github.com/jellyfin/jellyfin-kodi/pull/193
+    '''
+
+    def __init__(self, data):
+        self.data = data
+
+    def __str__(self):
+        return json.dumps(self.data, indent=4)
