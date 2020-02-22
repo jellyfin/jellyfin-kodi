@@ -99,16 +99,13 @@ class ConnectionManager(object):
             raise AttributeError("server cannot be empty")
 
         try:
-            request = {
-                'type': "POST",
-                'url': self.get_jellyfin_url(server, "Users/AuthenticateByName"),
-                'json': {
-                    'Username': username,
-                    'Pw': password or ""
-                }
+            url = self.get_jellyfin_url(server, "Users/AuthenticateByName")
+            json = {
+                'Username': username,
+                'Pw': password or ""
             }
+            result = self._REQUEST_URL(url, "POST", json=json, additional_headers=False)
 
-            result = self._request_url(request, False)
         except Exception as error:  # Failed to login
             LOG.exception(error)
             return False
@@ -155,6 +152,7 @@ class ConnectionManager(object):
             return self._after_connect_validated(server, credentials, result, True, options)
 
         except Exception as e:
+            raise
             LOG.info("Failing server connection. ERROR msg: {}".format(e))
             return { 'State': CONNECTION_STATE['Unavailable'] }
 
@@ -186,14 +184,31 @@ class ConnectionManager(object):
     def get_jellyfin_url(self, base, handler):
         return "%s/%s" % (base, handler)
 
-    def _request_url(self, request, headers=True):
+    def _REQUEST_URL(self, url, type, data_type=None, timeout=None, verify=None, retry=None,
+            headers={}, json=None, additional_headers=True):
+        data = {
+            'type': type,
+            'url': url,
+            'headers': headers,
+        }
+        if timeout is not None:
+            data['timeout'] = timeout
+        if verify is not None:
+            data['verify'] = verify
+        if retry is not None:
+            data['retry'] = retry
+        if json is not None:
+            data['json'] = json
+        return self._request_url(data, data_type, timeout, additional_headers=additional_headers)
 
-        request['timeout'] = request.get('timeout') or self.timeout
-        if headers:
-            self._get_headers(request)
+    def _request_url(self, data, data_type=None, timeout=None, additional_headers=True):
+        data['timeout'] = timeout or self.timeout
+        if additional_headers:
+            headers = self._get_headers(data_type)
+            data.setdefault('headers', {}).update(headers)
 
         try:
-            return self.http.request(request)
+            return self.http.request(data)
         except Exception as error:
             LOG.exception(error)
             raise
@@ -201,19 +216,16 @@ class ConnectionManager(object):
     def _add_app_info(self):
         return "%s/%s" % (self.config.data['app.name'], self.config.data['app.version'])
 
-    def _get_headers(self, request):
+    def _get_headers(self, data_type):
+        headers = {}
 
-        headers = request.setdefault('headers', {})
-
-        if request.get('dataType') == "json":
+        if data_type == "json":
             headers['Accept'] = "application/json"
-            request.pop('dataType')
 
         headers['X-Application'] = self._add_app_info()
-        headers['Content-type'] = request.get(
-            'contentType',
-            'application/x-www-form-urlencoded; charset=UTF-8'
-        )
+        headers['Content-type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+
+        return headers
 
     def _connect_to_servers(self, servers, options):
 
@@ -247,14 +259,8 @@ class ConnectionManager(object):
         url = self.get_jellyfin_url(url, "system/info/public")
         LOG.info("tryConnect url: %s", url)
 
-        return self._request_url({
-            'type': "GET",
-            'url': url,
-            'dataType': "json",
-            'timeout': timeout,
-            'verify': options.get('ssl'),
-            'retry': False
-        })
+        return self._REQUEST_URL(url, "GET", 'json', timeout, \
+                options.get('ssl'), retry=False)
 
     def _server_discovery(self):
 
@@ -423,15 +429,14 @@ class ConnectionManager(object):
     def _validate_authentication(self, server, options={}):
 
         try:
-            system_info = self._request_url({
-                'type': "GET",
-                'url': self.get_jellyfin_url(server['address'], "System/Info"),
-                'verify': options.get('ssl'),
-                'dataType': "json",
-                'headers': {
-                    'X-MediaBrowser-Token': server['AccessToken']
-                }
-            })
+            url = self.get_jellyfin_url(server['address'], "System/Info")
+            headers = {
+                'X-MediaBrowser-Token': server['AccessToken']
+            }
+
+            system_info = self._REQUEST_URL(url, "GET", 'json', \
+                    verify=options.get('ssl'), headers=headers)
+
             self._update_server_info(server, system_info)
         except Exception as error:
             LOG.exception(error)
