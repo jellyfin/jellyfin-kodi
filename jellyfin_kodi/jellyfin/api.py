@@ -36,19 +36,17 @@ class API(object):
     def __init__(self, client, *args, **kwargs):
         self.client = client
 
-    def _http(self, action, url, request={}):
-        request.update({'type': action, 'handler': url})
-
-        return self.client.request(request)
-
     def _get(self, handler, params=None):
-        return self._http("GET", handler, {'params': params})
+        url = self.client.get_handler_url(handler)
+        return self.client.REQUEST(url, "GET", params)
 
     def _post(self, handler, json=None, params=None):
-        return self._http("POST", handler, {'params': params, 'json': json})
+        url = self.client.get_handler_url(handler)
+        return self.client.REQUEST(url, "POST", params, json)
 
     def _delete(self, handler, params=None):
-        return self._http("DELETE", handler, {'params': params})
+        url = self.client.get_handler_url(handler)
+        return self.client.REQUEST(url, "DELETE", params)
 
     #################################################################################################
 
