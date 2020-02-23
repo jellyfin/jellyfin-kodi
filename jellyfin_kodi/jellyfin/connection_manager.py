@@ -104,8 +104,7 @@ class ConnectionManager(object):
                 'Username': username,
                 'Pw': password or ""
             }
-            result = self._REQUEST_URL(url, "POST", json=json, additional_headers=False)
-
+            result = self.http.REQUEST(url, "POST", json=json, timeout=self.timeout)
         except Exception as error:  # Failed to login
             LOG.exception(error)
             return False
@@ -184,27 +183,14 @@ class ConnectionManager(object):
     def get_jellyfin_url(self, base, handler):
         return "%s/%s" % (base, handler)
 
-    def _REQUEST_URL(self, url, type, data_type=None, timeout=None, verify=None, retry=None,
+    def _REQUEST_URL(self, url, type, data_type=None, timeout=None, verify=None, retry=5,
             headers={}, json=None, additional_headers=True):
-        data = {
-            'type': type,
-            'url': url,
-            'headers': headers,
-        }
-        if verify is not None:
-            data['verify'] = verify
-        if retry is not None:
-            data['retry'] = retry
-        if json is not None:
-            data['json'] = json
-
+        headers = dict(headers)
 
         timeout = timeout or self.timeout
-        data['timeout'] = timeout
         if additional_headers:
             extra_headers = self._get_headers(data_type)
-            data['headers'].update(extra_headers)
-            headers = data['headers']
+            headers.update(extra_headers)
 
         try:
             return self.http.REQUEST(url, type, json=json, headers=headers, \
