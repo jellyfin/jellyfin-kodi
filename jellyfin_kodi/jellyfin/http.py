@@ -65,56 +65,39 @@ class HTTP(object):
 
         return string
 
-    def REQUEST(self, url, type, params=None, json=None, session=None, \
-                    headers=None, verify=None, timeout=None, retry=None):
-        config = self.config.data
-
-        data = {'url': url, 'type': type}
-        if params is not None:
-            data['params'] = params
-        if json is not None:
-            data['json'] = json
-        if headers is not None:
-            data['headers'] = headers
-        if timeout is not None:
-            data['timeout'] = timeout
-        if verify is not None:
-            data['verify'] = verify
-        if retry is not None:
-            data['retry'] = retry
-        if json is not None:
-            data['json'] = json
-        return self.request(config, data, session)
-
 
     def get_handler_url(self, handler):
         server = self.config.data.get("auth.server", "")
         return "%s/%s" % (server, handler)
 
 
-    def request(self, config, data, session=None):
+    def REQUEST(self, url, type, params=None, json=None, session=None, \
+                    headers=None, verify=None, timeout=None, retry=None):
+        config = self.config.data
 
-        ''' Give a chance to retry the connection. Jellyfin sometimes can be slow to answer back
-            data dictionary can contain:
-            type: GET, POST, etc.
-            url: (optional)
-            handler: not considered when url is provided (optional)
-            params: request parameters (optional)
-            json: request body (optional)
-            headers: (optional),
-            verify: ssl certificate, True (verify using device built-in library) or False
-        '''
-        if not data:
-            raise AttributeError("Request cannot be empty")
+        url = self._replace_user_info(url)
+        data = {}
+        if params is not None:
+            data['params'] = params
+        if json is not None:
+            data['json'] = json
 
-        data = self._request(config, data)
+        headers = headers if headers is not None else {}
+        retry = retry if retry is not None else 5
+        timeout = timeout if timeout is not None else config['http.timeout']
+        verify = verify if verify is not None else config.get('auth.ssl', False)
+
+        headers = self._get_header(config, headers)
+        self._process_params(data.get('params') or {})
+        self._process_params(data.get('json') or {})
+
         LOG.debug("--->[ http ] %s", JsonDebugPrinter(data))
-        retry = data.pop('retry', 5)
 
         while True:
 
             try:
-                r = self._requests(session or self.session or requests, data.pop('type', "GET"), **data)
+                r = self._requests(session or self.session or requests, type, 
+                        url=url, headers=headers, verify=verify, timeout=timeout, **data)
                 r.content  # release the connection
 
                 if not self.keep_alive and self.session is not None:
@@ -195,21 +178,6 @@ class HTTP(object):
                     return response
                 except ValueError:
                     return
-
-    def _request(self, config, data):
-
-        if 'url' not in data:
-            data['url'] = "%s/%s" % (config.get("auth.server", ""), data.pop('handler', ""))
-
-        headers = self._get_header(config, data.get('headers', {}))
-        data['headers'] = headers
-        data['timeout'] = data.get('timeout') or config['http.timeout']
-        data['verify'] = data.get('verify') or config.get('auth.ssl', False)
-        data['url'] = self._replace_user_info(data['url'])
-        self._process_params(data.get('params') or {})
-        self._process_params(data.get('json') or {})
-
-        return data
 
     def _process_params(self, params):
 
