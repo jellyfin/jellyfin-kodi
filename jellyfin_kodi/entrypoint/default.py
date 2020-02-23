@@ -16,6 +16,7 @@ from database import reset, get_sync, Database, jellyfin_db, get_credentials
 from objects import Objects, Actions
 from downloader import TheVoid
 from helper import translate, event, settings, window, dialog, api, JSONRPC
+from helper.utils import JsonDebugPrinter
 
 #################################################################################################
 
@@ -45,7 +46,7 @@ class Events(object):
         if server == 'None':
             server = None
 
-        LOG.info("path: %s params: %s", path, json.dumps(params, indent=4))
+        LOG.info("path: %s params: %s", path, JsonDebugPrinter(params))
 
         if '/extrafanart' in base_url:
 

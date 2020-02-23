@@ -21,6 +21,7 @@ import setup
 import monitor
 from views import Views, verify_kodi_defaults
 from helper import translate, window, settings, event, dialog
+from helper.utils import JsonDebugPrinter
 from jellyfin import Jellyfin
 
 #################################################################################################
@@ -171,7 +172,7 @@ class Service(xbmc.Monitor):
 
             data = json.loads(data)
 
-        LOG.debug("[ %s: %s ] %s", sender, method, json.dumps(data, indent=4))
+        LOG.debug("[ %s: %s ] %s", sender, method, JsonDebugPrinter(data))
 
         if method == 'ServerOnline':
             if data.get('ServerId') is None:
