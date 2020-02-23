@@ -44,14 +44,6 @@ create_movie = """
 SELECT      coalesce(max(idMovie), 0)
 FROM        movie
 """
-create_set = """
-SELECT      coalesce(max(idSet), 0)
-FROM        sets
-"""
-create_country = """
-SELECT      coalesce(max(country_id), 0)
-FROM        country
-"""
 create_musicvideo = """
 SELECT      coalesce(max(idMVideo), 0)
 FROM        musicvideo
@@ -319,12 +311,12 @@ add_unique_id_movie_obj = ["{Unique}", "{MovieId}", "movie", "{UniqueId}", "{Pro
 add_unique_id_tvshow_obj = ["{Unique}", "{ShowId}", "tvshow", "{UniqueId}", "{ProviderName}"]
 add_unique_id_episode_obj = ["{Unique}", "{EpisodeId}", "episode", "{UniqueId}", "{ProviderName}"]
 add_country = """
-INSERT INTO     country(country_id, name)
-VALUES          (?, ?)
+INSERT INTO     country(name)
+VALUES          (?)
 """
 add_set = """
-INSERT INTO     sets(idSet, strSet, strOverview)
-VALUES          (?, ?, ?)
+INSERT INTO     sets(strSet, strOverview)
+VALUES          (?, ?)
 """
 add_set_obj = ["{Title}", "{Overview}"]
 add_musicvideo = """

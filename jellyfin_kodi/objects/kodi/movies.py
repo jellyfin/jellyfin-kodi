@@ -37,16 +37,6 @@ class Movies(Kodi):
 
         return self.cursor.fetchone()[0] + 1
 
-    def create_entry_set(self):
-        self.cursor.execute(QU.create_set)
-
-        return self.cursor.fetchone()[0] + 1
-
-    def create_entry_country(self):
-        self.cursor.execute(QU.create_country)
-
-        return self.cursor.fetchone()[0] + 1
-
     def get(self, *args):
 
         try:
@@ -114,11 +104,8 @@ class Movies(Kodi):
             self.cursor.execute(QU.update_country, (self.get_country(country),) + args)
 
     def add_country(self, *args):
-
-        country_id = self.create_entry_country()
-        self.cursor.execute(QU.add_country, (country_id,) + args)
-
-        return country_id
+        self.cursor.execute(QU.add_country, args)
+        return self.cursor.lastrowid
 
     def get_country(self, *args):
 
@@ -130,11 +117,8 @@ class Movies(Kodi):
             return self.add_country(*args)
 
     def add_boxset(self, *args):
-
-        set_id = self.create_entry_set()
-        self.cursor.execute(QU.add_set, (set_id,) + args)
-
-        return set_id
+        self.cursor.execute(QU.add_set, args)
+        return self.cursor.lastrowid
 
     def update_boxset(self, *args):
         self.cursor.execute(QU.update_set, args)
