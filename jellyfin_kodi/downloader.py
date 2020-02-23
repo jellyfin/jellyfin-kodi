@@ -15,6 +15,14 @@ from jellyfin import Jellyfin
 from jellyfin import api
 from jellyfin.exceptions import HTTPException
 
+# Python 2/3 Compatible things
+import sys
+if sys.version.startswith('3'):
+    xrange = range
+    izip = zip
+else:
+    from itertools import izip
+
 #################################################################################################
 
 LOG = logging.getLogger("JELLYFIN." + __name__)
@@ -269,7 +277,6 @@ def _get_items(query, server_id=None):
         query_params = [get_query_params(params, offset, LIMIT) \
                 for offset in xrange(params['StartIndex'], items['TotalRecordCount'], LIMIT)]
 
-        from itertools import izip
         # multiprocessing.dummy.Pool completes all requests in multiple threads but has to 
         # complete all tasks before allowing any results to be processed. ThreadPoolExecutor
         # allows for completed tasks to be processed while other tasks are completed on other
