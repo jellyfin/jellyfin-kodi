@@ -49,17 +49,17 @@ class HTTP(object):
         except Exception as error:
             LOG.warning("The requests session could not be terminated: %s", error)
 
-    def _replace_user_info(self, string):
+    def _replace_user_info(self, config, string):
 
         if '{server}' in string:
-            if self.config.data.get('auth.server', None):
-                string = string.replace("{server}", self.config.data['auth.server'])
+            if config.get('auth.server', None):
+                string = string.replace("{server}", config['auth.server'])
             else:
                 LOG.debug("Server address not set")
 
         if '{UserId}'in string:
-            if self.config.data.get('auth.user_id', None):
-                string = string.replace("{UserId}", self.config.data['auth.user_id'])
+            if config.get('auth.user_id', None):
+                string = string.replace("{UserId}", config['auth.user_id'])
             else:
                 LOG.debug("UserId is not set.")
 
@@ -72,35 +72,37 @@ class HTTP(object):
 
 
     def REQUEST(self, url, type, params=None, json=None, session=None, \
-                    headers=None, verify=None, timeout=None, retry=None):
+                    headers={}, verify=None, timeout=None, retry=5):
         config = self.config.data
 
-        url = self._replace_user_info(url)
-        data = {}
+        url = self._replace_user_info(config, url)
+        optional = {}
         if params is not None:
-            data['params'] = params
+            optional['params'] = params
         if json is not None:
-            data['json'] = json
+            optional['json'] = json
 
-        headers = headers if headers is not None else {}
-        retry = retry if retry is not None else 5
         timeout = timeout if timeout is not None else config['http.timeout']
         verify = verify if verify is not None else config.get('auth.ssl', False)
 
         headers = self._get_header(config, headers)
-        self._process_params(data.get('params') or {})
-        self._process_params(data.get('json') or {})
+        self._process_params(optional.get('params') or {})
+        self._process_params(optional.get('json') or {})
 
-        LOG.debug("--->[ http ] %s", JsonDebugPrinter(data))
+        LOG.debug("--->[ http ] %s", JsonDebugPrinter({
+            'url': url,
+            'headers': headers,
+            'optional': optional,
+        }))
 
         while True:
 
             try:
                 r = self._requests(session or self.session or requests, type, 
-                        url=url, headers=headers, verify=verify, timeout=timeout, **data)
+                        url=url, headers=headers, verify=verify, timeout=timeout, **optional)
                 r.content  # release the connection
 
-                if not self.keep_alive and self.session is not None:
+                if not self.keep_alive:
                     self.stop_session()
 
                 r.raise_for_status()
@@ -188,10 +190,12 @@ class HTTP(object):
                 self._process_params(value)
 
             if isinstance(value, string_types):
-                params[key] = self._replace_user_info(value)
+                params[key] = self._replace_user_info(self.config.data, value)
 
     def _get_header(self, config, headers):
-        if not headers:
+        if headers:
+            headers = dict(headers)
+        else:
             headers = {
                 'Content-type': "application/json",
                 'Accept-Charset': "UTF-8,*",
