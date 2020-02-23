@@ -6,7 +6,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import logging
 import threading
 
-from six.moves import queue as Queue
+from six.moves import range, queue as Queue, zip
 
 from kodi_six import xbmc
 import requests
@@ -14,14 +14,6 @@ from helper import settings, stop, event, window, create_id
 from jellyfin import Jellyfin
 from jellyfin import api
 from jellyfin.exceptions import HTTPException
-
-# Python 2/3 Compatible things
-import sys
-if sys.version.startswith('3'):
-    xrange = range
-    izip = zip
-else:
-    from itertools import izip
 
 #################################################################################################
 
@@ -275,9 +267,9 @@ def _get_items(query, server_id=None):
             return params_copy
 
         query_params = [get_query_params(params, offset, LIMIT) \
-                for offset in xrange(params['StartIndex'], items['TotalRecordCount'], LIMIT)]
+                for offset in range(params['StartIndex'], items['TotalRecordCount'], LIMIT)]
 
-        # multiprocessing.dummy.Pool completes all requests in multiple threads but has to 
+        # multiprocessing.dummy.Pool completes all requests in multiple threads but has to
         # complete all tasks before allowing any results to be processed. ThreadPoolExecutor
         # allows for completed tasks to be processed while other tasks are completed on other
         # threads. Dont be a dummy.Pool, be a ThreadPoolExecutor
@@ -286,7 +278,7 @@ def _get_items(query, server_id=None):
 
         results = p.map(lambda params: _get(url, params, server_id=server_id), query_params)
 
-        for params, result in izip(query_params, results):
+        for params, result in zip(query_params, results):
             query['params'] = params
 
             result = result or {'Items': []}
