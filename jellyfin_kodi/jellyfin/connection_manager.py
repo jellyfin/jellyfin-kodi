@@ -151,7 +151,6 @@ class ConnectionManager(object):
             return self._after_connect_validated(server, credentials, result, True, options)
 
         except Exception as e:
-            raise
             LOG.info("Failing server connection. ERROR msg: {}".format(e))
             return { 'State': CONNECTION_STATE['Unavailable'] }
 
