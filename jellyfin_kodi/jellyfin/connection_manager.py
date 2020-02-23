@@ -182,19 +182,12 @@ class ConnectionManager(object):
     def get_jellyfin_url(self, base, handler):
         return "%s/%s" % (base, handler)
 
-    def _add_app_info(self):
-        return "%s/%s" % (self.config.data['app.name'], self.config.data['app.version'])
-
-    def _get_headers(self, data_type):
-        headers = {}
-
-        if data_type == "json":
-            headers['Accept'] = "application/json"
-
-        headers['X-Application'] = self._add_app_info()
-        headers['Content-type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
-
-        return headers
+    def _get_headers(self):
+        return {
+            'Accept':         "application/json",
+            'X-Application':  "%s/%s" % (self.config.data['app.name'], self.config.data['app.version']),
+            'Content-type':   'application/x-www-form-urlencoded; charset=UTF-8',
+        }
 
     def _connect_to_servers(self, servers, options):
 
@@ -227,7 +220,7 @@ class ConnectionManager(object):
         url = self.get_jellyfin_url(url, "system/info/public")
         LOG.info("tryConnect url: %s", url)
         timeout = timeout or self.timeout
-        headers = self._get_headers('json')
+        headers = self._get_headers()
 
         try:
             return self.http.REQUEST(url, "GET", headers=headers, \
@@ -404,7 +397,7 @@ class ConnectionManager(object):
 
         try:
             url = self.get_jellyfin_url(server['address'], "System/Info")
-            headers = self._get_headers('json')
+            headers = self._get_headers()
             headers['X-MediaBrowser-Token'] = server['AccessToken']
 
             system_info = self.http.REQUEST(url, "GET", headers=headers, \
