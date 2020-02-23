@@ -158,11 +158,8 @@ class Kodi(object):
             self.cursor.executemany(sql, parameters)
 
     def add_person(self, *args):
-
         self.cursor.execute(QU.add_person, args)
         return self.cursor.lastrowid
-
-        return person_id
 
     def _get_person(self, *args):
         try:
