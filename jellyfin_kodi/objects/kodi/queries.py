@@ -12,10 +12,6 @@ create_file = """
 SELECT      coalesce(max(idFile), 0)
 FROM        files
 """
-create_person = """
-SELECT      coalesce(max(actor_id), 0)
-FROM        actor
-"""
 create_genre = """
 SELECT      coalesce(max(genre_id), 0)
 FROM        genre
@@ -225,8 +221,8 @@ VALUES          (?, ?, ?)
 """
 add_file_obj = ["{PathId}", "{Filename}"]
 add_person = """
-INSERT INTO     actor(actor_id, name)
-VALUES          (?, ?)
+INSERT INTO     actor(name)
+VALUES          (?)
 """
 add_people_movie_obj = ["{People}", "{MovieId}", "movie"]
 add_people_mvideo_obj = ["{People}", "{MvideoId}", "musicvideo"]

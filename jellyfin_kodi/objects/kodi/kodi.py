@@ -40,11 +40,6 @@ class Kodi(object):
 
         return self.cursor.fetchone()[0] + 1
 
-    def create_entry_person(self):
-        self.cursor.execute(QU.create_person)
-
-        return self.cursor.fetchone()[0] + 1
-
     def create_entry_genre(self):
         self.cursor.execute(QU.create_genre)
 
@@ -164,8 +159,8 @@ class Kodi(object):
 
     def add_person(self, *args):
 
-        person_id = self.create_entry_person()
-        self.cursor.execute(QU.add_person, (person_id,) + args)
+        self.cursor.execute(QU.add_person, args)
+        return self.cursor.lastrowid
 
         return person_id
 
