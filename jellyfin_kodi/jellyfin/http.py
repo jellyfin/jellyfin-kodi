@@ -204,8 +204,8 @@ class HTTP(object):
             }
 
         if 'x-emby-authorization' not in headers:
-            xxx = self._authorization(config)
-            headers.update(xxx)
+            auth_headers = self._authorization(config)
+            headers.update(auth_headers)
 
         return headers
 
@@ -220,10 +220,10 @@ class HTTP(object):
 
         if config.get('auth.token') and config.get('auth.user_id'):
             auth += ', UserId=%s' % config.get('auth.user_id')
-            xxx = {'x-emby-authorization': auth, 'X-MediaBrowser-Token': config.get('auth.token')}
+            headers = {'x-emby-authorization': auth, 'X-MediaBrowser-Token': config.get('auth.token')}
         else:
-            xxx = {'x-emby-authorization': auth}
-        return xxx
+            headers = {'x-emby-authorization': auth}
+        return headers
 
     def _requests(self, session, action, **kwargs):
 
