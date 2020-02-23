@@ -183,22 +183,6 @@ class ConnectionManager(object):
     def get_jellyfin_url(self, base, handler):
         return "%s/%s" % (base, handler)
 
-    def _REQUEST_URL(self, url, type, data_type=None, timeout=None, verify=None, retry=5,
-            headers={}, json=None, additional_headers=True):
-        headers = dict(headers)
-
-        timeout = timeout or self.timeout
-        if additional_headers:
-            extra_headers = self._get_headers(data_type)
-            headers.update(extra_headers)
-
-        try:
-            return self.http.REQUEST(url, type, json=json, headers=headers, \
-                    verify=verify, timeout=timeout, retry=retry)
-        except Exception as error:
-            LOG.exception(error)
-            raise
-
     def _add_app_info(self):
         return "%s/%s" % (self.config.data['app.name'], self.config.data['app.version'])
 
@@ -241,12 +225,17 @@ class ConnectionManager(object):
         }
 
     def _try_connect(self, url, timeout=None, options={}):
-
         url = self.get_jellyfin_url(url, "system/info/public")
         LOG.info("tryConnect url: %s", url)
+        timeout = timeout or self.timeout
+        headers = self._get_headers('json')
 
-        return self._REQUEST_URL(url, "GET", 'json', timeout, \
-                options.get('ssl'), retry=False)
+        try:
+            return self.http.REQUEST(url, "GET", headers=headers, \
+                    timeout=timeout, retry=False)
+        except Exception as error:
+            LOG.exception(error)
+            raise
 
     def _server_discovery(self):
 
@@ -416,12 +405,11 @@ class ConnectionManager(object):
 
         try:
             url = self.get_jellyfin_url(server['address'], "System/Info")
-            headers = {
-                'X-MediaBrowser-Token': server['AccessToken']
-            }
+            headers = self._get_headers('json')
+            headers['X-MediaBrowser-Token'] = server['AccessToken']
 
-            system_info = self._REQUEST_URL(url, "GET", 'json', \
-                    verify=options.get('ssl'), headers=headers)
+            system_info = self.http.REQUEST(url, "GET", headers=headers, \
+                    verify=options.get('ssl'), timeout=self.timeout)
 
             self._update_server_info(server, system_info)
         except Exception as error:
