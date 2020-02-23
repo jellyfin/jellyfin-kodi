@@ -199,7 +199,7 @@ class ConnectionManager(object):
             data['json'] = json
 
 
-        timeput = timeout or self.timeout
+        timeout = timeout or self.timeout
         data['timeout'] = timeout
         if additional_headers:
             extra_headers = self._get_headers(data_type)
