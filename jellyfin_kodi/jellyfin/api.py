@@ -38,15 +38,15 @@ class API(object):
 
     def _get(self, handler, params=None):
         url = self.client.get_handler_url(handler)
-        return self.client.REQUEST(url, "GET", params)
+        return self.client.request_url(url, "GET", params)
 
     def _post(self, handler, json=None, params=None):
         url = self.client.get_handler_url(handler)
-        return self.client.REQUEST(url, "POST", params, json)
+        return self.client.request_url(url, "POST", params, json)
 
     def _delete(self, handler, params=None):
         url = self.client.get_handler_url(handler)
-        return self.client.REQUEST(url, "DELETE", params)
+        return self.client.request_url(url, "DELETE", params)
 
     #################################################################################################
 

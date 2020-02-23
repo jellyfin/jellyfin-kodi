@@ -44,18 +44,18 @@ def browse_info():
 def _get(handler, params=None, server_id=None):
     url = get_jellyfinserver_url(handler)
     jf = Jellyfin(server_id)
-    return jf.http.REQUEST(url, "GET", params)
+    return jf.http.request_url(url, "GET", params)
 
 def _post(handler, json=None, params=None, server_id=None):
     url = get_jellyfinserver_url(handler)
     jf = Jellyfin(server_id)
-    return jf.http.REQUEST(url, "POST", params, json)
+    return jf.http.request_url(url, "POST", params, json)
 
 
 def _delete(handler, params=None, server_id=None):
     url = get_jellyfinserver_url(handler)
     jf = Jellyfin(server_id)
-    return jf.http.REQUEST(url, "DELETE", params)
+    return jf.http.request_url(url, "DELETE", params)
 
 
 def validate_view(library_id, item_id):
@@ -321,7 +321,7 @@ class GetItemWorker(threading.Thread):
                 }
 
                 try:
-                    result = self.server.http.REQUEST(url, "GET", params, s)
+                    result = self.server.http.request_url(url, "GET", params, s)
 
                     for item in result['Items']:
 

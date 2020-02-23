@@ -71,7 +71,7 @@ class HTTP(object):
         return "%s/%s" % (server, handler)
 
 
-    def REQUEST(self, url, type, params=None, json=None, session=None, \
+    def request_url(self, url, type, params=None, json=None, session=None, \
                     headers={}, verify=None, timeout=None, retry=5):
         config = self.config.data
 

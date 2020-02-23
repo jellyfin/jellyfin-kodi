@@ -104,7 +104,7 @@ class ConnectionManager(object):
                 'Username': username,
                 'Pw': password or ""
             }
-            result = self.http.REQUEST(url, "POST", json=json, timeout=self.timeout)
+            result = self.http.request_url(url, "POST", json=json, timeout=self.timeout)
         except Exception as error:  # Failed to login
             LOG.exception(error)
             return False
@@ -223,7 +223,7 @@ class ConnectionManager(object):
         headers = self._get_headers()
 
         try:
-            return self.http.REQUEST(url, "GET", headers=headers, \
+            return self.http.request_url(url, "GET", headers=headers, \
                     timeout=timeout, retry=False)
         except Exception as error:
             LOG.exception(error)
@@ -400,7 +400,7 @@ class ConnectionManager(object):
             headers = self._get_headers()
             headers['X-MediaBrowser-Token'] = server['AccessToken']
 
-            system_info = self.http.REQUEST(url, "GET", headers=headers, \
+            system_info = self.http.request_url(url, "GET", headers=headers, \
                     verify=options.get('ssl'), timeout=self.timeout)
 
             self._update_server_info(server, system_info)
