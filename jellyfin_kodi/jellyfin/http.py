@@ -201,7 +201,8 @@ class HTTP(object):
         if 'url' not in data:
             data['url'] = "%s/%s" % (config.get("auth.server", ""), data.pop('handler', ""))
 
-        self._get_header(config, data)
+        headers = self._get_header(config, data.get('headers', {}))
+        data['headers'] = headers
         data['timeout'] = data.get('timeout') or config['http.timeout']
         data['verify'] = data.get('verify') or config.get('auth.ssl', False)
         data['url'] = self._replace_user_info(data['url'])
@@ -221,24 +222,22 @@ class HTTP(object):
             if isinstance(value, string_types):
                 params[key] = self._replace_user_info(value)
 
-    def _get_header(self, config, data):
-
-        data['headers'] = data.setdefault('headers', {})
-
-        if not data['headers']:
-            data['headers'].update({
+    def _get_header(self, config, headers):
+        if not headers:
+            headers = {
                 'Content-type': "application/json",
                 'Accept-Charset': "UTF-8,*",
                 'Accept-encoding': "gzip",
                 'User-Agent': config['http.user_agent'] or "%s/%s" % (config.get('app.name', 'Jellyfin for Kodi'), config.get('app.version', "0.0.0"))
-            })
+            }
 
-        if 'x-emby-authorization' not in data['headers']:
-            self._authorization(config, data)
+        if 'x-emby-authorization' not in headers:
+            xxx = self._authorization(config)
+            headers.update(xxx)
 
-        return data
+        return headers
 
-    def _authorization(self, config, data):
+    def _authorization(self, config):
 
         auth = "MediaBrowser "
         auth += "Client=%s, " % config.get('app.name', "Jellyfin for Kodi")
@@ -246,14 +245,13 @@ class HTTP(object):
         auth += "DeviceId=%s, " % config.get('app.device_id', 'Unknown Device id')
         auth += "Version=%s" % config.get('app.version', '0.0.0')
 
-        data['headers'].update({'x-emby-authorization': auth})
 
         if config.get('auth.token') and config.get('auth.user_id'):
-            
             auth += ', UserId=%s' % config.get('auth.user_id')
-            data['headers'].update({'x-emby-authorization': auth, 'X-MediaBrowser-Token': config.get('auth.token')})
-
-        return data
+            xxx = {'x-emby-authorization': auth, 'X-MediaBrowser-Token': config.get('auth.token')}
+        else:
+            xxx = {'x-emby-authorization': auth}
+        return xxx
 
     def _requests(self, session, action, **kwargs):
 
