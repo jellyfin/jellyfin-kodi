@@ -478,12 +478,15 @@ def convert_to_local(date):
     '''
     try:
         date = parser.parse(date) if isinstance(date, string_types) else date
-        date = date.replace(tzinfo=tz.tzutc())
-        date = date.astimezone(tz.tzlocal())
-
-        return date.strftime('%Y-%m-%dT%H:%M:%S')
+        parsed_date = date.replace(tzinfo=tz.tzutc())
+        local_date = parsed_date.astimezone(tz.tzlocal())
+        # Bad metadata defaults to date 1-1-1.  Catch it and don't throw errors
+        if local_date.year == 1:
+            return str(date)
+        else:
+            return local_date.strftime('%Y-%m-%dT%H:%M:%S')
     except Exception as error:
-        LOG.exception(error)
+        LOG.exception('Item date: {} --- {}'.format(str(date), error))
 
         return str(date)
 
