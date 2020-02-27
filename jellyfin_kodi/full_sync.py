@@ -262,6 +262,7 @@ class FullSync(object):
         ''' Process movies from a single library.
         '''
         Movies = self.library.media['Movies']
+        processed_ids = []
 
         for items in server.get_items(library['Id'], "Movie", False, self.sync['RestorePoint'].get('params')):
 
@@ -277,9 +278,11 @@ class FullSync(object):
                                   heading="%s: %s" % (translate('addon_name'), library['Name']),
                                   message=movie['Name'])
                     obj.movie(movie, library=library)
+                    processed_ids.append(movie['Id'])
 
         with self.video_database_locks() as (videodb, jellyfindb):
             obj = Movies(self.server, jellyfindb, videodb, self.direct_path)
+            obj.item_ids = processed_ids
 
             if self.update_library:
                 self.movies_compare(library, obj, jellyfindb)
@@ -303,6 +306,7 @@ class FullSync(object):
         ''' Process tvshows and episodes from a single library.
         '''
         TVShows = self.library.media['TVShows']
+        processed_ids = []
 
         for items in server.get_items(library['Id'], "Series", False, self.sync['RestorePoint'].get('params')):
 
@@ -325,9 +329,11 @@ class FullSync(object):
 
                                 dialog.update(percent, message="%s/%s" % (message, episode['Name'][:10]))
                                 obj.episode(episode)
+                    processed_ids.append(show['Id'])
 
         with self.video_database_locks() as (videodb, jellyfindb):
             obj = TVShows(self.server, jellyfindb, videodb, self.direct_path, True)
+            obj.item_ids = processed_ids
             if self.update_library:
                 self.tvshows_compare(library, obj, jellyfindb)
 
