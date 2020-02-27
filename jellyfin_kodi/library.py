@@ -252,9 +252,9 @@ class Library(threading.Thread):
             if queue.qsize() and not len(self.writer_threads['updated']):
 
                 if queues in ('Audio', 'MusicArtist', 'AlbumArtist', 'MusicAlbum'):
-                    new_thread = UpdatedWorker(queue, self.notify_output, self.music_database_lock, "music", self.server, self.direct_path)
+                    new_thread = UpdateWorker(queue, self.notify_output, self.music_database_lock, "music", self.server, self.direct_path)
                 else:
-                    new_thread = UpdatedWorker(queue, self.notify_output, self.database_lock, "video", self.server, self.direct_path)
+                    new_thread = UpdateWorker(queue, self.notify_output, self.database_lock, "video", self.server, self.direct_path)
 
                 new_thread.start()
                 LOG.info("-->[ q:updated/%s/%s ]", queues, id(new_thread))
@@ -591,18 +591,19 @@ class Library(threading.Thread):
         LOG.info("---[ removed:%s ]", len(data))
 
 
-class UpdatedWorker(threading.Thread):
+class UpdateWorker(threading.Thread):
 
     is_done = False
 
-    def __init__(self, queue, notify, lock, database, *args):
-
+    def __init__(self, queue, notify, lock, database, server=None, direct_path=None, *args):
         self.queue = queue
         self.notify_output = notify
         self.notify = settings('newContent.bool')
         self.lock = lock
         self.database = Database(database)
         self.args = args
+        self.server = server
+        self.direct_path = direct_path
         threading.Thread.__init__(self)
 
     def run(self):
@@ -614,26 +615,27 @@ class UpdatedWorker(threading.Thread):
                 except Queue.Empty:
                     break
 
+                default_args = (self.server, jellyfindb, kodidb, self.direct_path)
                 if item['Type'] == 'Movie':
-                    obj = Movies(self.args[0], jellyfindb, kodidb, self.args[1]).movie
+                    obj = Movies(*default_args).movie
                 elif item['Type'] == 'Boxset':
-                    obj = Movies(self.args[0], jellyfindb, kodidb, self.args[1]).boxset
+                    obj = Movies(*default_args).boxset
                 elif item['Type'] == 'Series':
-                    obj = TVShows(self.args[0], jellyfindb, kodidb, self.args[1]).tvshow
+                    obj = TVShows(*default_args).tvshow
                 elif item['Type'] == 'Season':
-                    obj = TVShows(self.args[0], jellyfindb, kodidb, self.args[1]).season
+                    obj = TVShows(*default_args).season
                 elif item['Type'] == 'Episode':
-                    obj = TVShows(self.args[0], jellyfindb, kodidb, self.args[1]).episode
+                    obj = TVShows(*default_args).episode
                 elif item['Type'] == 'MusicVideo':
-                    obj = MusicVideos(self.args[0], jellyfindb, kodidb, self.args[1]).musicvideo
+                    obj = MusicVideos(*default_args).musicvideo
                 elif item['Type'] == 'MusicAlbum':
-                    obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).album
+                    obj = Music(*default_args).album
                 elif item['Type'] == 'MusicArtist':
-                    obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).artist
+                    obj = Music(*default_args).artist
                 elif item['Type'] == 'AlbumArtist':
-                    obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).albumartist
+                    obj = Music(s*default_args).albumartist
                 elif item['Type'] == 'Audio':
-                    obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).song
+                    obj = Music(*default_args).song
 
                 try:
                     if obj(item) and self.notify:
