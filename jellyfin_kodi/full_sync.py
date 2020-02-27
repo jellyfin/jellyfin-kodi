@@ -359,6 +359,7 @@ class FullSync(object):
         ''' Process musicvideos from a single library.
         '''
         MusicVideos = self.library.media['MusicVideos']
+        processed_ids = []
 
         for items in server.get_items(library['Id'], "MusicVideo", False, self.sync['RestorePoint'].get('params')):
 
@@ -374,9 +375,11 @@ class FullSync(object):
                                   heading="%s: %s" % (translate('addon_name'), library['Name']),
                                   message=mvideo['Name'])
                     obj.musicvideo(mvideo, library=library)
+                    processed_ids.append(mvideo['Id'])
 
         with self.video_database_locks() as (videodb, jellyfindb):
             obj = MusicVideos(self.server, jellyfindb, videodb, self.direct_path)
+            obj.item_ids = processed_ids
             if self.update_library:
                 self.musicvideos_compare(library, obj, jellyfindb)
 
