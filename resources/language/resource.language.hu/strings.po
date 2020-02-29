@@ -1,2 +1,104 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr ""
+"PO-Revision-Date: 2020-02-29 09:10+0000\n"
+"Last-Translator: Adam Bokor <bokoradam112@gmail.com>\n"
+"Language-Team: Hungarian <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/hu/>\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.11.2\n"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Kedvenc filmek"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Következő epizódok"
+
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "Folyamatban lévő epizódok"
+
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "Folyamatban lévő filmek"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "Nemrég hozzáadott epizódok"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "Nemrég hozzáadott filmek"
+
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "Folyamatban lévő TV műsorok"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Nemrég hozzáadott TV műsorok"
+
+msgctxt "#30160"
+msgid "Video quality"
+msgstr "Videó minősége"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Továbbfejlesztett alkotásokat engedélyezése (pl. borító)"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Filmekhez"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Epizódokhoz"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Törlés felkínálása lejátszás után"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Fájl törlésének megerősítése"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Felhasználónév"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Haladó"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Eszköz neve"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Naplózási szint"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Bejelentkezési mód"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "HTTP lejátszás kényszerítése"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Szerver neve"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Szerver címe"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Jellyfin a Kodihoz"
