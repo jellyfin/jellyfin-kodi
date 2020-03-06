@@ -59,7 +59,7 @@ class ConnectionManager(object):
 
         # Clone the credentials
         credentials = self.credentials.get()
-        found_servers = self._find_servers(self._server_discovery())
+        found_servers = self.process_found_servers(self._server_discovery())
 
         if not found_servers and not credentials['Servers']:  # back out right away, no point in continuing
             LOG.info("Found no servers")
@@ -245,7 +245,7 @@ class ConnectionManager(object):
                 LOG.exception("Error trying to find servers: %s", e)
                 return servers
 
-    def _find_servers(self, found_servers):
+    def process_found_servers(self, found_servers):
 
         servers = []
 

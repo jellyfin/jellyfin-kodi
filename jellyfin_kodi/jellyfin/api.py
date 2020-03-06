@@ -422,7 +422,7 @@ class API(object):
                 return response.json()
             else:
                 LOG.error("Failed to login to server with status code: "+str(response.status_code))
-                LOG.error(response.text)
+                LOG.error("Server Response:\n"+str(response.content))
                 LOG.debug(headers)
 
                 return {}
