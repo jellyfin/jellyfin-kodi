@@ -6,7 +6,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import logging
 import os
 import shutil
-from lxml import etree
+import xml.etree.ElementTree as etree
 
 from six.moves.urllib.parse import urlencode
 from kodi_six import xbmc, xbmcvfs
@@ -127,7 +127,7 @@ def verify_kodi_defaults():
             xml = etree.parse(file).getroot()
             xml.set('order', str(17 + index))
             tree = etree.ElementTree(xml)
-            tree.write(file, pretty_print=True)
+            tree.write(file)
 
     playlist_path = xbmc.translatePath("special://profile/playlists/video")
 
@@ -298,7 +298,7 @@ class Views(object):
             etree.SubElement(rule, 'value').text = view['Tag']
 
         tree = etree.ElementTree(xml)
-        tree.write(file, pretty_print=True)
+        tree.write(file)
 
     def add_nodes(self, path, view, mixed=False):
 
@@ -360,7 +360,7 @@ class Views(object):
             self.node_all(xml)
 
         tree = etree.ElementTree(xml)
-        tree.write(file, pretty_print=True)
+        tree.write(file)
 
     def node_root(self, root, index):
 
@@ -400,7 +400,7 @@ class Views(object):
         label.text = view['Name'] if not mixed else "%s (%s)" % (view['Name'], translate(view['Media']))
 
         tree = etree.ElementTree(xml)
-        tree.write(file, pretty_print=True)
+        tree.write(file)
 
     def node(self, folder, view):
 
@@ -462,7 +462,7 @@ class Views(object):
 
         getattr(self, 'node_' + node)(xml)  # get node function based on node type
         tree = etree.ElementTree(xml)
-        tree.write(file, pretty_print=True)
+        tree.write(file)
 
     def add_dynamic_node(self, index, file, view, node, name, path):
 
@@ -484,7 +484,7 @@ class Views(object):
 
         getattr(self, 'node_' + node)(xml, path)
         tree = etree.ElementTree(xml)
-        tree.write(file, pretty_print=True)
+        tree.write(file)
 
     def node_all(self, root):
 

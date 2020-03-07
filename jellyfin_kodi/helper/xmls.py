@@ -5,7 +5,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import logging
 import os
-from lxml import etree
+import xml.etree.ElementTree as etree
 
 from kodi_six import xbmc
 
@@ -76,7 +76,7 @@ def sources():
         LOG.exception(error)
 
     tree = etree.ElementTree(xml)
-    tree.write(file, pretty_print=True)
+    tree.write(file)
 
 
 def tvtunes_nfo(path, urls):
@@ -96,7 +96,7 @@ def tvtunes_nfo(path, urls):
         etree.SubElement(xml, 'file').text = url
 
     tree = etree.ElementTree(xml)
-    tree.write(path, pretty_print=True)
+    tree.write(path)
 
 
 def advanced_settings():
@@ -126,7 +126,7 @@ def advanced_settings():
             video.remove(cleanonupdate)
 
             tree = etree.ElementTree(xml)
-            tree.write(path, pretty_print=True)
+            tree.write(path)
 
             dialog("ok", heading="{jellyfin}", line1=translate(33097))
             xbmc.executebuiltin('RestartApp')
