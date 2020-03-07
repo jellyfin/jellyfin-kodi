@@ -110,7 +110,7 @@ def verify_kodi_defaults():
     '''
     node_path = xbmc.translatePath("special://profile/library/video")
 
-    if not xbmcvfs.exists(node_path):
+    if not os.path.exists(node_path):
         try:
             shutil.copytree(
                 src=xbmc.translatePath("special://xbmc/system/library/video"),
