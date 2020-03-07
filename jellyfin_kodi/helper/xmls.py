@@ -5,11 +5,11 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import logging
 import os
-import xml.etree.ElementTree as etree
+from lxml import etree
 
 from kodi_six import xbmc
 
-from . import translate, indent, write_xml, dialog, settings
+from . import translate, dialog, settings
 
 #################################################################################################
 
@@ -75,8 +75,8 @@ def sources():
     except Exception as error:
         LOG.exception(error)
 
-    indent(xml)
-    write_xml(etree.tostring(xml, 'UTF-8'), file)
+    tree = etree.ElementTree(xml)
+    tree.write(file, pretty_print=True)
 
 
 def tvtunes_nfo(path, urls):
@@ -95,8 +95,8 @@ def tvtunes_nfo(path, urls):
     for url in urls:
         etree.SubElement(xml, 'file').text = url
 
-    indent(xml)
-    write_xml(etree.tostring(xml, 'UTF-8'), path)
+    tree = etree.ElementTree(xml)
+    tree.write(path, pretty_print=True)
 
 
 def advanced_settings():
@@ -125,8 +125,8 @@ def advanced_settings():
             LOG.warning("cleanonupdate disabled")
             video.remove(cleanonupdate)
 
-            indent(xml)
-            write_xml(etree.tostring(xml, 'UTF-8'), path)
+            tree = etree.ElementTree(xml)
+            tree.write(path, pretty_print=True)
 
             dialog("ok", heading="{jellyfin}", line1=translate(33097))
             xbmc.executebuiltin('RestartApp')
