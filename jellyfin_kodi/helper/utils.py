@@ -266,44 +266,6 @@ def values(item, keys):
     return (item[key.replace('{', "").replace('}', "")] if isinstance(key, text_type) and key.startswith('{') else key for key in keys)
 
 
-def indent(elem, level=0):
-
-    ''' Prettify xml docs.
-    '''
-    try:
-        i = "\n" + level * "  "
-        if len(elem):
-            if not elem.text or not elem.text.strip():
-                elem.text = i + "  "
-            if not elem.tail or not elem.tail.strip():
-                elem.tail = i
-            for elem in elem:
-                indent(elem, level + 1)
-            if not elem.tail or not elem.tail.strip():
-                elem.tail = i
-        else:
-            if level and (not elem.tail or not elem.tail.strip()):
-                elem.tail = i
-    except Exception as error:
-        LOG.exception(error)
-        return
-
-
-def write_xml(content, file):
-    if isinstance(content, text_type):
-        content = content.encode('utf-8')
-
-    with open(file, 'wb') as infile:
-
-        # replace apostrophes with double quotes only in xml keys, not texts
-        def replace_apostrophes(match):
-            return match.group(0).replace(b"'", b'"')
-        content = re.sub(b"<(.*?)>", replace_apostrophes, content)
-
-        content = content.replace(b'?>', b' standalone="yes" ?>', 1)
-        infile.write(content)
-
-
 def delete_folder(path):
 
     ''' Delete objects from kodi cache

@@ -12,7 +12,7 @@ from six.moves.urllib.parse import urlencode
 from kodi_six import xbmc, xbmcvfs
 
 from database import Database, jellyfin_db, get_sync, save_sync
-from helper import translate, api, indent, write_xml, window, event
+from helper import translate, api, window, event
 from jellyfin import Jellyfin
 
 #################################################################################################
@@ -110,7 +110,7 @@ def verify_kodi_defaults():
     '''
     node_path = xbmc.translatePath("special://profile/library/video")
 
-    if not xbmcvfs.exists(node_path):
+    if not os.path.exists(node_path):
         try:
             shutil.copytree(
                 src=xbmc.translatePath("special://xbmc/system/library/video"),
@@ -126,8 +126,8 @@ def verify_kodi_defaults():
 
             xml = etree.parse(file).getroot()
             xml.set('order', str(17 + index))
-            indent(xml)
-            write_xml(etree.tostring(xml, 'UTF-8'), file)
+            tree = etree.ElementTree(xml)
+            tree.write(file)
 
     playlist_path = xbmc.translatePath("special://profile/playlists/video")
 
@@ -272,7 +272,12 @@ class Views(object):
         file = os.path.join(path, "jellyfin%s%s.xsp" % (view['Media'], view['Id']))
 
         try:
-            xml = etree.parse(file).getroot()
+            if os.path.isfile(file):
+                xml = etree.parse(file).getroot()
+            else:
+                xml = etree.Element('smartplaylist', {'type': view['Media']})
+                etree.SubElement(xml, 'name')
+                etree.SubElement(xml, 'match')
         except Exception:
             LOG.warning("Unable to parse file '%s'", file)
             xml = etree.Element('smartplaylist', {'type': view['Media']})
@@ -292,8 +297,8 @@ class Views(object):
             rule = etree.SubElement(xml, 'rule', {'field': "tag", 'operator': "is"})
             etree.SubElement(rule, 'value').text = view['Tag']
 
-        indent(xml)
-        write_xml(etree.tostring(xml, 'UTF-8'), file)
+        tree = etree.ElementTree(xml)
+        tree.write(file)
 
     def add_nodes(self, path, view, mixed=False):
 
@@ -316,7 +321,13 @@ class Views(object):
         file = os.path.join(path, "jellyfin_%s.xml" % view['Tag'].replace(" ", ""))
 
         try:
-            xml = etree.parse(file).getroot()
+            if os.path.isfile(file):
+                xml = etree.parse(file).getroot()
+            else:
+                xml = self.node_root('folder' if item_type == 'favorites' and view['Media'] == 'episodes' else 'filter', index)
+                etree.SubElement(xml, 'label')
+                etree.SubElement(xml, 'match')
+                etree.SubElement(xml, 'content')
         except Exception:
             LOG.warning("Unable to parse file '%s'", file)
             xml = self.node_root('folder' if item_type == 'favorites' and view['Media'] == 'episodes' else 'filter', index)
@@ -348,8 +359,8 @@ class Views(object):
         else:
             self.node_all(xml)
 
-        indent(xml)
-        write_xml(etree.tostring(xml, 'UTF-8'), file)
+        tree = etree.ElementTree(xml)
+        tree.write(file)
 
     def node_root(self, root, index):
 
@@ -372,8 +383,14 @@ class Views(object):
         index = self.sync['SortedViews'].index(view['Id'])
 
         try:
-            xml = etree.parse(file).getroot()
-            xml.set('order', str(index))
+            if os.path.isfile(file):
+                xml = etree.parse(file).getroot()
+                xml.set('order', str(index))
+            else:
+                xml = self.node_root('filter', index)
+                etree.SubElement(xml, 'label')
+                etree.SubElement(xml, 'match')
+                etree.SubElement(xml, 'content')
         except Exception as error:
             LOG.exception(error)
             xml = self.node_root('main', index)
@@ -382,8 +399,8 @@ class Views(object):
         label = xml.find('label')
         label.text = view['Name'] if not mixed else "%s (%s)" % (view['Name'], translate(view['Media']))
 
-        indent(xml)
-        write_xml(etree.tostring(xml, 'UTF-8'), file)
+        tree = etree.ElementTree(xml)
+        tree.write(file)
 
     def node(self, folder, view):
 
@@ -412,7 +429,14 @@ class Views(object):
     def add_node(self, index, file, view, node, name):
 
         try:
-            xml = etree.parse(file).getroot()
+            if os.path.isfile(file):
+                xml = etree.parse(file).getroot()
+            else:
+                xml = self.node_root('filter', index)
+                etree.SubElement(xml, 'label')
+                etree.SubElement(xml, 'match')
+                etree.SubElement(xml, 'content')
+
         except Exception:
             LOG.warning("Unable to parse file '%s'", file)
             xml = self.node_root('filter', index)
@@ -437,13 +461,18 @@ class Views(object):
             etree.SubElement(rule, 'value').text = view['Tag']
 
         getattr(self, 'node_' + node)(xml)  # get node function based on node type
-        indent(xml)
-        write_xml(etree.tostring(xml, 'UTF-8'), file)
+        tree = etree.ElementTree(xml)
+        tree.write(file)
 
     def add_dynamic_node(self, index, file, view, node, name, path):
 
         try:
-            xml = etree.parse(file).getroot()
+            if os.path.isfile(file):
+                xml = etree.parse(file).getroot()
+            else:
+                xml = self.node_root('filter', index)
+                etree.SubElement(xml, 'label')
+                etree.SubElement(xml, 'content')
         except Exception:
             LOG.warning("Unable to parse file '%s'", file)
             xml = self.node_root('folder', index)
@@ -454,8 +483,8 @@ class Views(object):
         label.text = name
 
         getattr(self, 'node_' + node)(xml, path)
-        indent(xml)
-        write_xml(etree.tostring(xml, 'UTF-8'), file)
+        tree = etree.ElementTree(xml)
+        tree.write(file)
 
     def node_all(self, root):
 

@@ -13,8 +13,6 @@ from .utils import event
 from .utils import validate
 from .utils import values
 from .utils import JSONRPC
-from .utils import indent
-from .utils import write_xml
 from .utils import compare_version
 from .utils import unzip
 from .utils import create_id
