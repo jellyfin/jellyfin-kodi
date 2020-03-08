@@ -399,7 +399,8 @@ class API(object):
             request_settings["verify"] = False
 
         LOG.info("Sending %s request to %s" % (method, path))
-        LOG.debug(request_settings['timeout'], request_settings['headers'])
+        LOG.debug(request_settings['timeout'])
+        LOG.debug(request_settings['headers'])
 
         return request_method(url, **request_settings)
 
