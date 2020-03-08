@@ -173,6 +173,7 @@ class ConnectionManager(object):
             return { 'State': CONNECTION_STATE['Unavailable'] }
 
     def connect(self, options={}):
+
         LOG.info("Begin connect")
 
         servers = self.get_available_servers()
@@ -207,7 +208,6 @@ class ConnectionManager(object):
         return self.client.jellyfin.get_public_users()
 
     def _server_discovery(self):
-
         MULTI_GROUP = ("<broadcast>", 7359)
         MESSAGE = b"who is JellyfinServer?"
 

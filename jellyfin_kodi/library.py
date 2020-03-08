@@ -127,6 +127,13 @@ class Library(threading.Thread):
     @stop()
     def service(self):
 
+        from kodi_six import xbmc, xbmcaddon
+        from datetime import datetime
+        path = xbmcaddon.Addon(id='plugin.video.jellyfin').getAddonInfo('path')
+        from pyinstrument import Profiler
+
+        profiler = Profiler()
+        profiler.start()
         ''' If error is encountered, it will rerun this function.
             Start new "daemon threads" to process library updates.
             (actual daemon thread is not supported in Kodi)
@@ -146,8 +153,17 @@ class Library(threading.Thread):
             self.worker_userdata()
             self.worker_remove()
             self.worker_notify()
-
+        profiler.stop()
+        with open(str(path)+'/output-'+str(datetime.now())+'.html', 'w+') as output:
+            output.write(profiler.output_html().encode('utf-8'))
         if self.pending_refresh:
+            from kodi_six import xbmc, xbmcaddon
+            from datetime import datetime
+            path = xbmcaddon.Addon(id='plugin.video.jellyfin').getAddonInfo('path')
+            from pyinstrument import Profiler
+
+            profiler = Profiler()
+            profiler.start()
             window('jellyfin_sync.bool', True)
 
             if self.total_updates > self.progress_display:
@@ -168,6 +184,11 @@ class Library(threading.Thread):
                 xbmc.executebuiltin('InhibitIdleShutdown(true)')
                 self.screensaver = get_screensaver()
                 set_screensaver(value="")
+
+            profiler.stop()
+            with open(str(path)+'/output-'+str(datetime.now())+'.html', 'w+') as output:
+                output.write(profiler.output_html().encode('utf-8'))
+
 
         if (self.pending_refresh and not self.download_threads and not self.writer_threads['updated'] and not self.writer_threads['userdata'] and not self.writer_threads['removed']):
             self.pending_refresh = False
@@ -193,6 +214,8 @@ class Library(threading.Thread):
 
                 if xbmc.getCondVisibility('Window.IsMedia'):
                     xbmc.executebuiltin('Container.Refresh')
+
+            
 
     def stop_client(self):
         self.stop_thread = True
