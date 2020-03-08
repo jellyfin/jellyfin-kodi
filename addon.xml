@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon  id="plugin.video.jellyfin"
         name="Jellyfin"
-        version="0.5.0"
+        version="0.5.1"
         provider-name="Jellyfin Contributors, angelblue05">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
@@ -40,25 +40,8 @@
     <summary lang="en"></summary>
     <description lang="en">Welcome to Jellyfin for Kodi!&#10;A whole new way to manage and view your media library. The Jellyfin addon for Kodi combines the best of Kodi - ultra smooth navigation, beautiful UIs and playback of any file under the sun, and Jellyfin - the most powerful fully open source multi-client media metadata indexer and server.&#10;&#10;Jellyfin for Kodi is the absolute best way to enjoy the incredible Kodi playback engine combined with the power of Jellyfin's centralized database. Features:&#10;* Direct integration with the Kodi library for native Kodi speed&#10;* Instant synchronization with the Jellyfin server&#10;* Full support for Movie, TV and Music collections&#10;* Jellyfin Server direct stream and transcoding support - use Kodi when you are away from home!</description>
     <news>
-    v0.5.0 (2020-03-04)
-      #167 Removed unnecessary log messages and changed some to debug
-      #172 Added support for Kodi 19 (and Python 3)
-      #188 Fix kodi 19 websocket control
-      #190 Fix Obj error
-      #192 Fix playlist paths
-      #193 Replaced debug output of json.dumps with an indirection to lazy __str__
-      #194 Dont modify a list as you are traversing it
-      #195 Fix empty download thread list
-      #197 Move the responsibility of the maximum number of threads to the UI
-      #200 Resort to the expensive database lookup only if the person exists in the database
-      #201 Allow for UI updates as the library is being sync'ed
-      #202 Parallelize multiple http GETs
-      #207 Make commands python 2/3 compatible
-      #209 Reduce execute and fetch one calls
-      #211 Finish getitem cleanup in library
-      #212 Bad dates are bad
-      #214 Fix re-running library updates
-      #215 Remove duplicated code and rename UpdatedWorker class
+    v0.5.1 (2020-03-08)
+      #224 Fix ascii errors
     </news>
     <assets>
       <icon>resources/icon.png</icon>
