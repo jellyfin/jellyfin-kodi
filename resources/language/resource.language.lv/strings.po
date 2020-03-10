@@ -1,2 +1,265 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr ""
+"PO-Revision-Date: 2020-03-10 02:39+0000\n"
+"Last-Translator: Mednis <mednisreinis@gmail.com>\n"
+"Language-Team: Latvian <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/lv/>\n"
+"Language: lv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
+"19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
+"X-Generator: Weblate 3.11.2\n"
+
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "Iespējot servera restarta ziņojumu"
+
+msgctxt "#30529"
+msgid "Startup delay (in seconds)"
+msgstr "Sāknēšanas aizkave (sekundes)"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "Patstāvīgie lietotāji"
+
+msgctxt "#30527"
+msgid "Ignore specials in next episodes"
+msgstr "Ignorēt speciālās epizodes nākamajās epizodēs"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "Trans-kodēt H265/HVEC"
+
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr "Izlaist dzēšanas apstiprinājumu (izmantot uz paša risku)"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "Vaicāt par treileru atskaņošanu"
+
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "Iespējot teātra režīmu"
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "Tīkla atkreditācija"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "Atskaņošana"
+
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "Iespējot mākslas kešošanu"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "Atskaņošanas režīms"
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "Iespējot mūzikas bibliotēku"
+
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "Iespējot paziņojumu, ja atjauninājumu daudzums ir lielāks par"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "Sinhronizēt"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "Izmantot citu ierīces nosaukumu"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "Pārbaudīt savienojumu"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "Trans-kodēšana"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "Atjaunot šo vienumu"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "Dzēst no Jellyfin"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "Iestatījumi"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "Noņemt no favorītiem"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "Pievienot favorītiem"
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "Jellyfin trans-kodēšana"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Jellyfin Opcijas"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "TV Raidījumi"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "Filmas"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "Neskatītie Mūzikas Video"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "Nesen pievienotie Mūzikas Video"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "Albumu Favorīti"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "Attēlu Favorīti"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Mājas Video Favorīti"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "Nesen Pievienotie Attēli"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Nesen pievienotie Mājas Video"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "Iespējot sveiciena ziņojumu"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "Atiestatīt vietējo kodi datubāzi"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "Interfeiss"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Ieteiktie Vienumi"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Nejauši Vienumi"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Neskatītas Filmas"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Kolekcijas"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Epizožu Favorīti"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "Raidījumu Favorīti"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Filmu Favorīti"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Nākamās Epizodes"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "Nesen Pievienotas Epizodes"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "Nesen Pievienotas Filmas"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Nesen Pievienotie TV Raidījumi"
+
+msgctxt "#30160"
+msgid "Video quality"
+msgstr "Video Kvalitāte"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Iespējot paplašinātos mākslas darbus (piem. Vāka attēlus)"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Priekš Filmām"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Priekš Epizodēm"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Piedāvāt dzēšanu pēc atskaņošanas"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Apstiprināt datnes dzēšanu"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Lietotājvārds"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Papildus"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Ierīces nosaukums"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Logošanas līmenis"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Piekļuves metode"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "Piespiest HTTP atskaņošanu"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Servera nosaukums"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Servera adrese"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Jellyfin priekš Kodi"
