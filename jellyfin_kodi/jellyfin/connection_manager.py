@@ -44,7 +44,7 @@ class ConnectionManager(object):
 
         self.API = API(client)
 
-    def revoke_token(self): #Called once in http#L130
+    def revoke_token(self):
 
         LOG.info("revoking token")
 
@@ -67,7 +67,7 @@ class ConnectionManager(object):
 
         servers = list(credentials['Servers'])
 
-        #Merges servers we already knew with newly found ones
+        # Merges servers we already knew with newly found ones
         for found_server in found_servers: 
             try:
                 self.credentials.add_update_server(servers, found_server)
@@ -95,7 +95,7 @@ class ConnectionManager(object):
             return {}
         
         LOG.info("Succesfully logged in as %s" % (username))
-        ## TODO Change when moving to database storage of server details
+        # TODO Change when moving to database storage of server details
         credentials = self.credentials.get()
 
         self.config.data['auth.user_id'] = data['User']['Id']
@@ -179,7 +179,7 @@ class ConnectionManager(object):
         servers = self.get_available_servers()
         LOG.info("connect has %s servers", len(servers))
 
-        if not (len(servers)): #No servers provided
+        if not (len(servers)): # No servers provided
             return {
                 'State': ['ServerSelection']
             }
@@ -189,7 +189,7 @@ class ConnectionManager(object):
 
         return result
 
-    def jellyfin_token(self): ## Called once monitor.py#163
+    def jellyfin_token(self): # Called once monitor.py#163
         return self.get_server_info(self.server_id)['AccessToken']
 
     def get_server_info(self, server_id):
@@ -204,7 +204,7 @@ class ConnectionManager(object):
             if server['Id'] == server_id:
                 return server
 
-    def get_public_users(self): ## Required in connect.py#L213
+    def get_public_users(self):
         return self.client.jellyfin.get_public_users()
 
     def _server_discovery(self):
@@ -264,7 +264,7 @@ class ConnectionManager(object):
             return servers
 
     # TODO: Make IPv6 compatable
-    def _convert_endpoint_address_to_manual_address(self, info): # Called once ^^ right there 
+    def _convert_endpoint_address_to_manual_address(self, info):
 
         if info.get('Address') and info.get('EndpointAddress'):
             address = info['EndpointAddress'].split(':')[0]

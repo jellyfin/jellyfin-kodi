@@ -148,7 +148,6 @@ class Library(threading.Thread):
             self.worker_notify()
 
         if self.pending_refresh:
-
             window('jellyfin_sync.bool', True)
 
             if self.total_updates > self.progress_display:
@@ -194,8 +193,6 @@ class Library(threading.Thread):
 
                 if xbmc.getCondVisibility('Window.IsMedia'):
                     xbmc.executebuiltin('Container.Refresh')
-
-            
 
     def stop_client(self):
         self.stop_thread = True

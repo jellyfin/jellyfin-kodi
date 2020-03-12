@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
 import requests
 import json
@@ -42,7 +43,6 @@ class API(object):
         self.client = client
         self.config = client.config
         self.default_timeout = 5
-
 
     def _http(self, action, url, request={}):
         request.update({'type': action, 'handler': url})
@@ -353,12 +353,6 @@ class API(object):
             'DeviceId': device_id
         })
 
-
-    #################################################################################################
-
-    # New API calls 
-
-    #################################################################################################
     def get_default_headers(self):
         auth = "MediaBrowser "
         auth += "Client=%s, " % self.config.data['app.name'].encode('utf-8')
@@ -376,17 +370,7 @@ class API(object):
             "x-emby-authorization": auth
         }
 
-    def send_request(self, url, path, method=None, timeout=None, headers=None, data=None):
-        if not timeout:
-            LOG.debug("No timeout set, using default")
-            timeout = self.default_timeout
-        if not headers:
-            LOG.debug("No headers set, using default")
-            headers = self.get_default_headers()
-        if not method:
-            LOG.debug("No method set, using default")
-            method = "get"  #Defaults to get request if none specified
-
+    def send_request(self, url, path, method="get", timeout=self.default_timeout, headers=self.get_default_headers(), data=None):
         request_method = getattr(requests, method.lower())
         url = "%s/%s" % (url, path)
         request_settings = {
@@ -405,11 +389,11 @@ class API(object):
         return request_method(url, **request_settings)
 
 
-    def login(self, server_url, username, password):
+    def login(self, server_url, username, password=""):
         path = "Users/AuthenticateByName"
         authData = {
                     "username": username,
-                    "Pw": password or ""
+                    "Pw": password
                 }
 
         headers = self.get_default_headers()
@@ -422,12 +406,12 @@ class API(object):
             if response.status_code == 200:
                 return response.json()
             else:
-                LOG.error("Failed to login to server with status code: "+str(response.status_code))
-                LOG.error("Server Response:\n"+str(response.content))
+                LOG.error("Failed to login to server with status code: " + str(response.status_code))
+                LOG.error("Server Response:\n" + str(response.content))
                 LOG.debug(headers)
 
                 return {}
-        except Exception as e: #Find exceptions for likely cases i.e, server timeout, etc
+        except Exception as e: # Find exceptions for likely cases i.e, server timeout, etc
             LOG.error(e) 
 
         return {}
