@@ -370,12 +370,12 @@ class API(object):
             "x-emby-authorization": auth
         }
 
-    def send_request(self, url, path, method="get", timeout=self.default_timeout, headers=self.get_default_headers(), data=None):
+    def send_request(self, url, path, method="get", timeout=None, headers=None, data=None):
         request_method = getattr(requests, method.lower())
         url = "%s/%s" % (url, path)
         request_settings = {
-            "timeout": timeout,
-            "headers": headers,
+            "timeout": timeout or self.default_timeout,
+            "headers": headers or self.get_default_headers(),
             "data": data
         }
 
