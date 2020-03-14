@@ -28,7 +28,6 @@
 		<setting label="30515" id="limitIndex" type="slider" default="15" range="1, 1, 100" option="int" />
 		<setting label="33174" id="limitThreads" type="slider" default="3" range="1, 1, 50" option="int" />
 		<setting label="33176" type="lsep" />
-		<setting label="30512" id="enableTextureCache" type="bool" default="true" />
 		<setting label="30157" id="enableCoverArt" type="bool" default="true" />
 		<setting label="33116" id="compressArt" type="bool" default="false" />
 		<setting id="enableMusic" visible="false" default="false" />
