@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-03-10 02:39+0000\n"
+"PO-Revision-Date: 2020-03-16 08:01+0000\n"
 "Last-Translator: Mednis <mednisreinis@gmail.com>\n"
 "Language-Team: Latvian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lv/>\n"
@@ -263,3 +263,447 @@ msgstr "Servera adrese"
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
 msgstr "Jellyfin priekš Kodi"
+
+msgctxt "#33155"
+msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
+msgstr ""
+"Pašlaik uzstādītais Jellyfin for Kodi ielāps ir bojāts! Lūdzu raksti "
+"Jellyfin for Kodi forumos ja problēma pastāv. To vajadzēs salabot tik ātri, "
+"cik iespējams."
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "Tikai audio"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "Tikai subtitri"
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "Iespējot audio/subtitru izvēli"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr "Lai izvairītos no kļūdām, lūdzu atjauno Jellyfin for Kodi uz versiju: "
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr "Paslēpt sensitīvu informāciju log failā (neatiecas uz Kodi logging)"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "Atiestatīt mūzikas bibliotēku?"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "Neizdevās izveidot dublējumu"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "Neskatīts"
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "Izvēlies bibliotēkas ko noņemt"
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "Izvēlies bibliotēkas ko atjaunot"
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "Izvēlies bibliotēkas ko atjaunot"
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr ""
+"Sinhronizācija jau iet, lūdzu uzgaidi līdz tā beidzas un mēģini vēlreiz."
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr "Papildu iestatījumi"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "Iespējot Jellyfin for Kodi"
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "Pārvaldīt bibliotēkas"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "Restartē..."
+
+msgctxt "#33191"
+msgid "Restart Jellyfin for Kodi to apply this change?"
+msgstr "Restartēt Jellyfin for Kodi lai pielietotu šo izmaiņu?"
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr "Iespējot sinhr. atskaņošanas laikā (var radīt aizķeršanos)"
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "Noņemt bibliotēkas"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "Iespējo šo opciju, lai atskaņotu ar teātra režīmu"
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "Atskaņot ar teātra režīmu"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "Restartē lai uzstādītu ielāpu"
+
+msgctxt "#33192"
+msgid "Restart Jellyfin for Kodi"
+msgstr "Restartēt Jellyfin priekš Kodi"
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "Piespiest transkodēšanu"
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr "Rādīt progresa joslu ja atjauninājumu skaits ir lielāks par"
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr "Atjauno vai salabo savas bibliotēkas lai pielietotu zemākās izmaiņas."
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "Aizmirst pēdējo sinhronizāciju ? Tas nav ieteicami."
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "Pēc pirmā burta"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "Favorīti"
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "Nesen pievienots"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "(dinamisks)"
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "Ielāps ticis uzstādīts!"
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "Visas bibliotēkas"
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "Atjauno servera informāciju"
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "Nespēj savienoties ar šo serveri."
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "Tava piekļuve šim serverim ir ierobežota."
+
+msgctxt "#33147"
+msgid "Your access to Jellyfin is restricted."
+msgstr "Tava piekļuve Jellyfin ir ierobežota."
+
+msgctxt "#33146"
+msgid "Unable to connect to Jellyfin."
+msgstr "Nespēj savienoties ar Jellyfin."
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "Noņem bibliotēku"
+
+msgctxt "#33143"
+msgid "Enable the option to delete"
+msgstr "Iespējo opciju lai izdzēstu"
+
+msgctxt "#33142"
+msgid "Something went wrong. Try again later."
+msgstr "Kaut kas nogāja greizi. Mēģini vēlreiz pēc brītiņa."
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "Noņemt serveri"
+
+msgctxt "#33140"
+msgid "Repair libraries"
+msgstr "Salabot bibliotēkas"
+
+msgctxt "#33139"
+msgid "Update libraries"
+msgstr "Atjaunot bibliotēkas"
+
+msgctxt "#33137"
+msgid "Enable Kodi Sync Queue"
+msgstr "Iespējot Kodi Sinhr. Rindu"
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "Atjaunot bibliotēku"
+
+msgctxt "#33135"
+msgid "Kodi will now restart to apply a small patch for your Kodi version."
+msgstr "Kodi tagad restartēsies, lai uzstādītu mazu ielāpu tavai Kodi versijai."
+
+msgctxt "#33134"
+msgid "Add server"
+msgstr "Pievienot serveri"
+
+msgctxt "#33133"
+msgid "Remove library from Kodi"
+msgstr "Noņemt bibliotēku no Kodi"
+
+msgctxt "#33132"
+msgid "Repair library"
+msgstr "Salabot bibliotēku"
+
+msgctxt "#33130"
+msgid "Select the source"
+msgstr "Izvēlies avotu"
+
+msgctxt "#33122"
+msgid "Restart Kodi to resume where you left off."
+msgstr "Restartē Kodi lai turpinātu kur paliki."
+
+msgctxt "#33123"
+msgid "Sync library to Kodi"
+msgstr "Sinhr. bibliotēku uz Kodi"
+
+msgctxt "#33121"
+msgid "All"
+msgstr "Viss"
+
+msgctxt "#33120"
+msgid "Select the libraries to add"
+msgstr "Izvēlies bibliotēkas, ko pievienot"
+
+msgctxt "#33119"
+msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"Kaut kas nogāja greizi sinhronizācijas laikā. Tu varēsi atjaunot progresu "
+"kad restartēsi Kodi. Ja problēma pastāv, lūdzu ziņo par to Jellyfin for Kodi "
+"forumos ar savu Kodi log datni."
+
+msgctxt "#33114"
+msgid "Enable external subtitles"
+msgstr "Iespējot ārējos subtitrus"
+
+msgctxt "#33110"
+msgid "Restart Kodi to take effect."
+msgstr "Restartē Kodi, lai pielietotu."
+
+msgctxt "#33109"
+msgid "Plugin"
+msgstr "Paplašinājums"
+
+msgctxt "#33105"
+msgid "Enable the context menu"
+msgstr "Iespējot konteksta izvēlni"
+
+msgctxt "#33103"
+msgid "Enable the webserver service in the Kodi settings to allow artwork caching."
+msgstr ""
+"Iespējo webserver servisu Kodi iestatījumos lai atļautu mākslas kešošanu."
+
+msgctxt "#33102"
+msgid "Resume the previous sync?"
+msgstr "Turpināt iepriekšējo sinhronizāciju?"
+
+msgctxt "#33093"
+msgid "Backup folder"
+msgstr "Dublējumu mape"
+
+msgctxt "#33092"
+msgid "Create a backup"
+msgstr "Izveidot dublējumu"
+
+msgctxt "#33091"
+msgid "Created backup at:"
+msgstr "Dublējums izveidots:"
+
+msgctxt "#33089"
+msgid "Enter folder name for backup"
+msgstr "Ievadi dublējuma mapes nosaukumu"
+
+msgctxt "#33064"
+msgid "Remove user from the session"
+msgstr "Noņemt lietotāju no sesijas"
+
+msgctxt "#33063"
+msgid "Remove user"
+msgstr "Noņemt lietotāju"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "Pievienot lietotāju"
+
+msgctxt "#33054"
+msgid "Add user to session"
+msgstr "Pievienot lietotāju sesijai"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "Jauns"
+
+msgctxt "#33047"
+msgid "Kodi can't locate file:"
+msgstr "Kodi nespēj atrast datni:"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "Iespējot mūzikas bibliotēku?"
+
+msgctxt "#33037"
+msgid "Native (direct paths)"
+msgstr "Tiešā (tiešie ceļi)"
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "Paplašinājums (noklusējums)"
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr "Jauns ierīces ID ģenerēts. Kodi tagad restartēsies."
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "Pabeigts pēc:"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "Savāc:"
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "Savāc vienumus"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "Atskaņot treilerus?"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "Dzēst datni no Jellyfin?"
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr "Izvēlies subtitru straumi"
+
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr "Izvēlies audio straumi"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "Nederīgs lietotājvārds vai parole"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "Serveris restartējas"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "Sveicināti"
+
+msgctxt "#30617"
+msgid "Server or port cannot be empty"
+msgstr "Serveris vai ports nevar būt tukši"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "Savienot"
+
+msgctxt "#30615"
+msgid "Host"
+msgstr "Resursdators"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "Nomainīt Jellyfin Connect lietotāju"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "Lūdzu ieiej"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "Manuāli pievienot serveri"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "Pievienoties"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "Neizdevās pievienoties izvēlētajam serverim"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "Lietotājvārds vai parole nevar būt tukši"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "Izvēlies galveno serveri"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "Atcelt"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "Ieiet"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "Parole"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "Rādīt ziņojumu"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "Lietotājvārds vai E-pasts"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "Manuāli Ieiet"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "Ieiet"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "Trans-kodēt Hi10P"
+
+msgctxt "#30536"
+msgid "Allow the screensaver during syncs"
+msgstr "Atļaut ekrānsaudzētāju sinhronizācijas laikā"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "Ģenerēt jaunu ierīces ID"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "Paziņojumi (Sekundēs)"
+
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "Iespējot jaunu saturu"
