@@ -282,6 +282,17 @@ def _get_items(query, server_id=None):
             query['params'] = params
 
             result = result or {'Items': []}
+
+            # Mitigates #216 till the server validates the date provided is valid
+            for count in range(0, len(result["Items"])):
+                if result["Items"][count].get('ProductionYear'):
+                    try:
+                        from datetime import date
+                        date(result["Items"][count]["ProductionYear"], 1, 1)
+                    except ValueError:
+                        LOG.info("#216 mitigation triggered. Setting ProductionYear to None")
+                        result["Items"][count]["ProductionYear"] = None
+
             items['Items'].extend(result['Items'])
             # Using items to return data and communicate a restore point back to the callee is
             # a violation of the SRP. TODO: Seperate responsibilities.
