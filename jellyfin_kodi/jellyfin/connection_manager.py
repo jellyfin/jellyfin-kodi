@@ -106,7 +106,7 @@ class ConnectionManager(object):
                 found_server = server
                 break
         else:
-            return  # No server found
+            return {} # No server found
 
         found_server['DateLastAccessed'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
         found_server['UserId'] = data['User']['Id']
