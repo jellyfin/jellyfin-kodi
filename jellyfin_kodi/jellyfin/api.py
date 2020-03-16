@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
+import requests
+import json
+import logging
+from helper.utils import settings
+
+LOG = logging.getLogger('JELLYFIN.' + __name__)
 
 
 def jellyfin_url(client, handler):
@@ -35,6 +41,8 @@ class API(object):
     '''
     def __init__(self, client, *args, **kwargs):
         self.client = client
+        self.config = client.config
+        self.default_timeout = 5
 
     def _http(self, action, url, request={}):
         request.update({'type': action, 'handler': url})
@@ -344,3 +352,82 @@ class API(object):
         return self._delete("Videos/ActiveEncodings", params={
             'DeviceId': device_id
         })
+
+    def get_default_headers(self):
+        auth = "MediaBrowser "
+        auth += "Client=%s, " % self.config.data['app.name'].encode('utf-8')
+        auth += "Device=%s, " % self.config.data['app.device_name'].encode('utf-8')
+        auth += "DeviceId=%s, " % self.config.data['app.device_id'].encode('utf-8')
+        auth += "Version=%s" % self.config.data['app.version'].encode('utf-8')
+
+        return {
+            "Accept": "application/json",
+            "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "X-Application": "%s/%s" % (self.config.data['app.name'], self.config.data['app.version']),
+            "Accept-Charset": "UTF-8,*",
+            "Accept-encoding": "gzip",
+            "User-Agent": self.config.data['http.user_agent'] or "%s/%s" % (self.config.data['app.name'], self.config.data['app.version']),
+            "x-emby-authorization": auth
+        }
+
+    def send_request(self, url, path, method="get", timeout=None, headers=None, data=None):
+        request_method = getattr(requests, method.lower())
+        url = "%s/%s" % (url, path)
+        request_settings = {
+            "timeout": timeout or self.default_timeout,
+            "headers": headers or self.get_default_headers(),
+            "data": data
+        }
+
+        if not settings('sslverify'):
+            request_settings["verify"] = False
+
+        LOG.info("Sending %s request to %s" % (method, path))
+        LOG.debug(request_settings['timeout'])
+        LOG.debug(request_settings['headers'])
+
+        return request_method(url, **request_settings)
+
+
+    def login(self, server_url, username, password=""):
+        path = "Users/AuthenticateByName"
+        authData = {
+                    "username": username,
+                    "Pw": password
+                }
+
+        headers = self.get_default_headers()
+        headers.update({'Content-type': "application/json"})
+
+        try:
+            LOG.info("Trying to login to %s/%s as %s" % (server_url, path, username))
+            response = self.send_request(server_url, path, method="post", headers=headers, data=json.dumps(authData))
+
+            if response.status_code == 200:
+                return response.json()
+            else:
+                LOG.error("Failed to login to server with status code: " + str(response.status_code))
+                LOG.error("Server Response:\n" + str(response.content))
+                LOG.debug(headers)
+
+                return {}
+        except Exception as e: # Find exceptions for likely cases i.e, server timeout, etc
+            LOG.error(e) 
+
+        return {}
+
+    def validate_authentication_token(self, server):
+
+        url = "%s/%s" % (server['address'], "system/info")
+        authTokenHeader = {
+                    'X-MediaBrowser-Token': server['AccessToken']
+                }
+        headers = self.get_default_headers()
+        headers.update(authTokenHeader)
+
+        response = self.send_request(server['address'], "system/info", headers=headers)
+        return response.json() if response.status_code == 200 else {}
+
+    def get_public_info(self, server_address):
+        response = self.send_request(server_address, "system/info/public")
+        return response.json() if response.status_code == 200 else {}
