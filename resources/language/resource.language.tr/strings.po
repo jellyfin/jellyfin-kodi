@@ -1,2 +1,296 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr ""
+"PO-Revision-Date: 2020-03-17 18:51+0000\n"
+"Last-Translator: Deniz <denizgezgin365@gmail.com>\n"
+"Language-Team: Turkish <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/tr/>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.11.2\n"
+
+msgctxt "#33120"
+msgid "Select the libraries to add"
+msgstr "Eklemek için kütüphane seçin"
+
+msgctxt "#33121"
+msgid "All"
+msgstr "Tümü"
+
+msgctxt "#33114"
+msgid "Enable external subtitles"
+msgstr "Harici alt yazıları aktif et"
+
+msgctxt "#33110"
+msgid "Restart Kodi to take effect."
+msgstr "Etkili olması için Kodiyi yeniden başlatın."
+
+msgctxt "#33109"
+msgid "Plugin"
+msgstr "Eklenti"
+
+msgctxt "#33093"
+msgid "Backup folder"
+msgstr "Yedekleme klasörü"
+
+msgctxt "#33089"
+msgid "Enter folder name for backup"
+msgstr "Yedeklemeler için klasör ismi girin"
+
+msgctxt "#33063"
+msgid "Remove user"
+msgstr "Kullanıcı sil"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "Kullanıcı ekle"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "Yeni"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "Geçersiz kullanıcı adı yada şifre"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "Sunucu yeniden başlatılıyor"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "Hoş Geldiniz"
+
+msgctxt "#30617"
+msgid "Server or port cannot be empty"
+msgstr "Sunucu yada port boş olamaz"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "Bağlan"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "Lütfen giriş yapın"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "Bağlan"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "Seçilen sunucuya bağlanılamıyor"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "Kullanıcı adı yada şifre boş olamaz"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "Ana sunucuyu seç"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "İptal"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "Giriş"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "Şifre"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "Kullanıcı adı yada e-posta"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "Manuel Giriş"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "Giriş"
+
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "Sinema modunu aktif et"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "Eşle"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "Alternatif cihaz adı kullan"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "Bağlantıyı doğrula"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "Video Kodlama"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "Nesneyi yenile"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "Jellyfinden sil"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "Ayarlar"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "Favorilerden çıkar"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "Favorilere ekle"
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "Jellyfin video kodlayıcı"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Jellyfin ayarları"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "Diziler"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "Filmler"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "Favori Albümler"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "Favori Resimler"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Favori Videolar"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "Son eklenen Fotoğraflar"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Son eklenen Videolar"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "Hoş geldin mesajını aktif et"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "Yerel Kodi veritabanını sıfırla"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "Arayüz"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Önerilenler"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Rastgele"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "İzlenmemiş Filmler"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Favori Bölümler"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "Favori Diziler"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Favori Filmler"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Sonraki Bölümler"
+
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "İzlenmekte Olan Bölümler"
+
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "İzlenmekte Olan Filmler"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "Son Eklenen Bölümler"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "Son Eklenen Filmler"
+
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "İzlenmekte Olan Diziler"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Son Eklenen Diziler"
+
+msgctxt "#30160"
+msgid "Video quality"
+msgstr "Video kalitesi"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Dosya silme işlemini onayla"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Kullanıcı Adı"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Gelişmiş"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Cihaz ismi"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Log seviyesi"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Giriş yöntemi"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Sunucu ismi"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Sunucu adresi"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Kodi için Jellyfin"
