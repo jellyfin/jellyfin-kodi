@@ -283,21 +283,22 @@ class ConnectionManager(object):
         return None
 
     def _normalize_address(self, address):
-        # TODO: Try HTTPS first, then HTTP if that fails.
-        if '://' not in address:
-            address = 'http://' + address
-
         # Attempt to correct bad input
         url = urllib3.util.parse_url(address.strip())
 
-        if url.scheme is None:
-            url = url._replace(scheme='http')
+        # Default to using https
+        url = url._replace(scheme='https')
 
-        if url.scheme == 'http' and url.port == 80:
-            url = url._replace(port=None)
-
-        if url.scheme == 'https' and url.port == 443:
-            url = url._replace(port=None)
+        # Test if server is reachable over https
+        if self.API.get_public_info(url):
+            if url.scheme == 'https' and url.port == 443:
+                url = url._replace(port=None)
+        else:
+            # Server didn't give an expected response over https
+            # Try http instead
+            url._replace(scheme='http')
+            if url.scheme == 'http' and url.port == 80:
+                url = url._replace(port=None)
 
         return url.url
 
