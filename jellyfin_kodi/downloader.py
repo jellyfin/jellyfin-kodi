@@ -6,6 +6,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import logging
 import threading
 import concurrent.futures
+from datetime import date
 
 from six.moves import range, queue as Queue, zip
 
