@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-03-16 08:01+0000\n"
+"PO-Revision-Date: 2020-03-18 20:31+0000\n"
 "Last-Translator: Mednis <mednisreinis@gmail.com>\n"
 "Language-Team: Latvian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lv/>\n"
@@ -707,3 +707,27 @@ msgstr "Paziņojumi (Sekundēs)"
 msgctxt "#30531"
 msgid "Enable new content"
 msgstr "Iespējot jaunu saturu"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "Iesākti"
+
+#, fuzzy
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "Iesākti Mūzikas Video"
+
+#, fuzzy
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "Iesāktas Epizodes"
+
+#, fuzzy
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "Iesāktas Filmas"
+
+#, fuzzy
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "Iesākti TV Raidijumi"
