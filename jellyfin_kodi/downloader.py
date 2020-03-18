@@ -5,6 +5,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import logging
 import threading
+import concurrent.futures
+from datetime import date
 
 from six.moves import range, queue as Queue, zip
 
@@ -273,7 +275,6 @@ def _get_items(query, server_id=None):
         # complete all tasks before allowing any results to be processed. ThreadPoolExecutor
         # allows for completed tasks to be processed while other tasks are completed on other
         # threads. Dont be a dummy.Pool, be a ThreadPoolExecutor
-        import concurrent.futures
         p = concurrent.futures.ThreadPoolExecutor(DTHREADS)
 
         results = p.map(lambda params: _get(url, params, server_id=server_id), query_params)
@@ -282,6 +283,15 @@ def _get_items(query, server_id=None):
             query['params'] = params
 
             result = result or {'Items': []}
+
+            # Mitigates #216 till the server validates the date provided is valid
+            if result['Items'][0].get('ProductionYear'):
+                try:
+                    date(result['Items'][0]['ProductionYear'], 1, 1)
+                except ValueError:
+                    LOG.info('#216 mitigation triggered. Setting ProductionYear to None')
+                    result['Items'][0]['ProductionYear'] = None
+
             items['Items'].extend(result['Items'])
             # Using items to return data and communicate a restore point back to the callee is
             # a violation of the SRP. TODO: Seperate responsibilities.
