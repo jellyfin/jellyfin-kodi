@@ -553,10 +553,6 @@ msgctxt "#33102"
 msgid "Resume the previous sync?"
 msgstr "是否继续上一次同步？"
 
-msgctxt "#33103"
-msgid "Enable the webserver service in the Kodi settings to allow artwork caching."
-msgstr "在 Kodi 设置中启用 Web 服务器服务以允许图稿缓存。"
-
 msgctxt "#33104"
 msgid "Find more info in the github wiki/Create-and-restore-from-backup."
 msgstr "在 github wiki/创建和从备份恢复中查找更多信息。"
@@ -608,10 +604,6 @@ msgstr "调整远程连接"
 msgctxt "#33116"
 msgid "Compress artwork (reduces quality)"
 msgstr "压缩图稿（降低质量）"
-
-msgctxt "#33117"
-msgid "Enable artwork caching? If not, Kodi will still cache your artwork at a slower pace."
-msgstr "启用图稿缓存？如果不是，Kodi 仍将以较慢的速度缓存您的图稿。"
 
 msgctxt "#33118"
 msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"

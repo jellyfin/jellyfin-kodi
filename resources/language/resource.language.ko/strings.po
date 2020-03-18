@@ -564,10 +564,6 @@ msgctxt "#33102"
 msgid "Resume the previous sync?"
 msgstr "이전 동기화를 재개하시겠습니까?"
 
-msgctxt "#33103"
-msgid "Enable the webserver service in the Kodi settings to allow artwork caching."
-msgstr "아트워크 캐싱을 위해 Kodi설정의 웹서버 서비스 활성화"
-
 msgctxt "#33104"
 msgid "Find more info in the github wiki/Create-and-restore-from-backup."
 msgstr "github wiki/Create-and-restore-from-backup에서 더 많은 정보를 확인할 수 있습니다."
@@ -619,10 +615,6 @@ msgstr ""
 msgctxt "#33116"
 msgid "Compress artwork (reduces quality)"
 msgstr "아트워크 압축 (품질 저하)"
-
-msgctxt "#33117"
-msgid "Enable artwork caching? If not, Kodi will still cache your artwork at a slower pace."
-msgstr "아트워크 캐싱을 활성화하시겠습니까? 비활성화 시, Kodi는 느린 속도로 아트워크를 캐싱 할 것입니다."
 
 msgctxt "#33118"
 msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
