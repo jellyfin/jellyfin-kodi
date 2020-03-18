@@ -567,12 +567,6 @@ msgctxt "#33102"
 msgid "Resume the previous sync?"
 msgstr "Возобновить предыдущую синхронизацию?"
 
-msgctxt "#33103"
-msgid "Enable the webserver service in the Kodi settings to allow artwork caching."
-msgstr ""
-"Включите службу веб-сервера в параметрах Kodi, чтобы разрешить кэширование "
-"иллюстраций."
-
 msgctxt "#33104"
 msgid "Find more info in the github wiki/Create-and-restore-from-backup."
 msgstr ""
@@ -631,12 +625,6 @@ msgstr "Регулировка для удаленного подключени�
 msgctxt "#33116"
 msgid "Compress artwork (reduces quality)"
 msgstr "Сжать иллюстрации (качество снижается)"
-
-msgctxt "#33117"
-msgid "Enable artwork caching? If not, Kodi will still cache your artwork at a slower pace."
-msgstr ""
-"Включить кэширование иллюстраций? Если нет, Kodi все еще будет кэшировать "
-"ваши иллюстрации в более низком темпе."
 
 msgctxt "#33118"
 msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"

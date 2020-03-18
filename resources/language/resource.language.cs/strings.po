@@ -496,12 +496,6 @@ msgctxt "#33104"
 msgid "Find more info in the github wiki/Create-and-restore-from-backup."
 msgstr "Více info naleznete na GitHub wiki/Create-and-restore-from-backup."
 
-msgctxt "#33103"
-msgid "Enable the webserver service in the Kodi settings to allow artwork caching."
-msgstr ""
-"Pro ukládání obrázků do mezipaměti povolte v nastavení Kodi službu webového "
-"serveru."
-
 msgctxt "#33102"
 msgid "Resume the previous sync?"
 msgstr "Pokračovat v předcházející synchronizaci?"
@@ -701,12 +695,6 @@ msgid "You've change the playback mode. Kodi needs to be reset to apply the chan
 msgstr ""
 "Změnili jste režim přehrávání.  Aby bylo možné tuto změnu použít, je třeba "
 "resetovat Kodi. Chcete to udělat nyní?"
-
-msgctxt "#33117"
-msgid "Enable artwork caching? If not, Kodi will still cache your artwork at a slower pace."
-msgstr ""
-"Povolit ukládání obrázků do mezipaměti?  Pokud ne, Kodi bude stále "
-"vykreslovat vaše obrázky pomalejším tempem."
 
 msgctxt "#33116"
 msgid "Compress artwork (reduces quality)"

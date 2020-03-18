@@ -550,10 +550,6 @@ msgctxt "#33102"
 msgid "Resume the previous sync?"
 msgstr ""
 
-msgctxt "#33103"
-msgid "Enable the webserver service in the Kodi settings to allow artwork caching."
-msgstr ""
-
 msgctxt "#33104"
 msgid "Find more info in the github wiki/Create-and-restore-from-backup."
 msgstr ""
@@ -604,10 +600,6 @@ msgstr ""
 
 msgctxt "#33116"
 msgid "Compress artwork (reduces quality)"
-msgstr ""
-
-msgctxt "#33117"
-msgid "Enable artwork caching? If not, Kodi will still cache your artwork at a slower pace."
 msgstr ""
 
 msgctxt "#33118"
