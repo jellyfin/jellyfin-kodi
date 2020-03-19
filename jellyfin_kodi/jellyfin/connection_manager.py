@@ -134,6 +134,10 @@ class ConnectionManager(object):
 
         try:
             public_info = self.API.get_public_info(address)
+            if not public_info:
+                LOG.error("connectToAddress %s failed", address)
+                return { 'State': CONNECTION_STATE['Unavailable'] }
+
             LOG.info("connectToAddress %s succeeded", address)
             server = {
                 'address': address,
@@ -286,18 +290,18 @@ class ConnectionManager(object):
         # Attempt to correct bad input
         url = urllib3.util.parse_url(address.strip())
 
-        # Default to using https
+         # Default to using https
         url = url._replace(scheme='https')
-
+      
         # Test if server is reachable over https
         if self.API.get_public_info(url):
-            if url.scheme == 'https' and url.port == 443:
+            if url.port == 443:
                 url = url._replace(port=None)
         else:
             # Server didn't give an expected response over https
             # Try http instead
-            url._replace(scheme='http')
-            if url.scheme == 'http' and url.port == 80:
+            url = url._replace(scheme='http')
+            if url.port == 80:
                 url = url._replace(port=None)
 
         return url.url

@@ -386,7 +386,22 @@ class API(object):
         LOG.debug(request_settings['timeout'])
         LOG.debug(request_settings['headers'])
 
-        return request_method(url, **request_settings)
+        try:
+            return request_method(url, **request_settings)
+        except requests.exceptions.SSLError as e:
+            LOG.error("Failed to connect to server. SSL Issue: %s" % e)
+            response = requests.Response()
+            response.code = "SSL Error: %s".format(e)
+            response.error_type = "SSLError"
+            response.status_code = 500
+            return response
+        except Exception as e:
+            LOG.error("Failed to connect to server. Unhandled Issue: %s" % e)
+            response = requests.Response()
+            response.code = e
+            response.error_type = "UnhandledError"
+            response.status_code = 500
+            return response
 
 
     def login(self, server_url, username, password=""):
