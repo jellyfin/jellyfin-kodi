@@ -618,7 +618,7 @@ class UpdateWorker(threading.Thread):
                 default_args = (self.server, jellyfindb, kodidb, self.direct_path)
                 if item['Type'] == 'Movie':
                     obj = Movies(*default_args).movie
-                elif item['Type'] == 'Boxset':
+                elif item['Type'] == 'BoxSet':
                     obj = Movies(*default_args).boxset
                 elif item['Type'] == 'Series':
                     obj = TVShows(*default_args).tvshow
