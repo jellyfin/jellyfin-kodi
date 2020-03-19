@@ -551,6 +551,11 @@ delete_episode = """
 DELETE FROM     episode
 WHERE           idEpisode = ?
 """
+delete_art = """
+DELETE FROM     art
+WHERE           media_id = ?
+AND             media_type = ?
+"""
 delete_backdrops = """
 DELETE FROM     art
 WHERE           media_id = ?
