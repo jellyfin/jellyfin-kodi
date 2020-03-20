@@ -291,6 +291,7 @@ class ConnectionManager(object):
         url = urllib3.util.parse_url(address.strip())
 
          # Default to using https
+        LOG.info("Attempting HTTPS connection")
         url = url._replace(scheme='https')
       
         # Test if server is reachable over https
@@ -300,6 +301,7 @@ class ConnectionManager(object):
         else:
             # Server didn't give an expected response over https
             # Try http instead
+            LOG.info("HTTPS connection failed. Falling back to HTTP")
             url = url._replace(scheme='http')
             if url.port == 80:
                 url = url._replace(port=None)
