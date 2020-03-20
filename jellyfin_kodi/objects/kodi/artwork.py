@@ -84,3 +84,9 @@ class Artwork(object):
 
             elif artwork.get(art):
                 self.update(*(artwork[art],) + args + (KODI[art],))
+
+    def delete(self, *args):
+
+        ''' Delete artwork from kodi database
+        '''
+        self.cursor.execute(QU.delete_art, args)
