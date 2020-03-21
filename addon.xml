@@ -7,7 +7,7 @@
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.requests" version="2.22.0"/>
     <import addon="script.module.dateutil" version="2.7.3"/>
-    <import addon="script.module.six" />
+    <import addon="script.module.six" version="1.13.0"/>
     <import addon="script.module.kodi-six" />
     <import addon="script.module.addon.signals" version="0.0.1"/>
     <import addon="script.module.futures" version="2.2.0"/>

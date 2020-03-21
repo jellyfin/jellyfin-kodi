@@ -7,6 +7,7 @@ import logging
 import os
 
 from kodi_six import xbmcgui, xbmcaddon
+from six import ensure_text
 
 from helper import window, addon_id
 
@@ -64,7 +65,7 @@ class ContextMenu(xbmcgui.WindowXMLDialog):
 
             if self.getFocusId() == LIST:
                 option = self.list_.getSelectedItem()
-                self.selected_option = option.getLabel()
+                self.selected_option = ensure_text(option.getLabel())
                 LOG.info('option selected: %s', self.selected_option)
 
                 self.close()
