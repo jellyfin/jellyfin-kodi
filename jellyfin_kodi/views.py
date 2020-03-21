@@ -387,10 +387,8 @@ class Views(object):
                 xml = etree.parse(file).getroot()
                 xml.set('order', str(index))
             else:
-                xml = self.node_root('filter', index)
+                xml = self.node_root('main', index)
                 etree.SubElement(xml, 'label')
-                etree.SubElement(xml, 'match')
-                etree.SubElement(xml, 'content')
         except Exception as error:
             LOG.exception(error)
             xml = self.node_root('main', index)
@@ -470,7 +468,7 @@ class Views(object):
             if os.path.isfile(file):
                 xml = etree.parse(file).getroot()
             else:
-                xml = self.node_root('filter', index)
+                xml = self.node_root('folder', index)
                 etree.SubElement(xml, 'label')
                 etree.SubElement(xml, 'content')
         except Exception:
@@ -478,6 +476,10 @@ class Views(object):
             xml = self.node_root('folder', index)
             etree.SubElement(xml, 'label')
             etree.SubElement(xml, 'content')
+
+        # Migration for https://github.com/jellyfin/jellyfin-kodi/issues/239
+        if xml.attrib.get('type') == 'filter':
+            xml.attrib = {'type': 'folder', 'order': '5'}
 
         label = xml.find('label')
         label.text = name
