@@ -412,7 +412,7 @@ class API(object):
 
                 return {}
         except Exception as e: # Find exceptions for likely cases i.e, server timeout, etc
-            LOG.error(e) 
+            LOG.error(e)
 
         return {}
 
@@ -431,3 +431,12 @@ class API(object):
     def get_public_info(self, server_address):
         response = self.send_request(server_address, "system/info/public")
         return response.json() if response.status_code == 200 else {}
+
+    def check_redirect(self, server_address):
+        ''' Checks if the server is redirecting traffic to a new URL and
+        returns the URL the server prefers to use
+        '''
+        response = self.send_request(server_address, "system/info/public")
+        url = response.url.replace('/system/info/public', '')
+        return url
+

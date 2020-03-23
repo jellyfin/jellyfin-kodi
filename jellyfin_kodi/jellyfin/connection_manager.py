@@ -8,13 +8,13 @@ import logging
 import socket
 import time
 from datetime import datetime
-from operator import itemgetter 
+from operator import itemgetter
 
 import urllib3
 
 from .credentials import Credentials
 from .http import HTTP  # noqa: I201,I100
-from .api import API 
+from .api import API
 import traceback
 
 #################################################################################################
@@ -68,7 +68,7 @@ class ConnectionManager(object):
         servers = list(credentials['Servers'])
 
         # Merges servers we already knew with newly found ones
-        for found_server in found_servers: 
+        for found_server in found_servers:
             try:
                 self.credentials.add_update_server(servers, found_server)
             except KeyError:
@@ -93,7 +93,7 @@ class ConnectionManager(object):
         if not data:
             LOG.info("Failed to login as `"+username+"`")
             return {}
-        
+
         LOG.info("Succesfully logged in as %s" % (username))
         # TODO Change when moving to database storage of server details
         credentials = self.credentials.get()
@@ -121,7 +121,7 @@ class ConnectionManager(object):
         self.credentials.add_update_user(server, info)
 
         self.credentials.set_credentials(credentials)
-        
+
         return data
 
 
@@ -133,12 +133,13 @@ class ConnectionManager(object):
         address = self._normalize_address(address)
 
         try:
-            public_info = self.API.get_public_info(address)
+            response_url = self.API.check_redirect(address)
+            if address != response_url:
+                address = response_url
             LOG.info("connectToAddress %s succeeded", address)
             server = {
                 'address': address,
             }
-            self._update_server_info(server, public_info)
             server = self.connect_to_server(server, options)
             if server is False:
                 LOG.error("connectToAddress %s failed", address)
@@ -164,6 +165,7 @@ class ConnectionManager(object):
 
             LOG.info("calling onSuccessfulConnection with server %s", server.get('Name'))
 
+            self._update_server_info(server, result)
             credentials = self.credentials.get()
             return self._after_connect_validated(server, credentials, result, True, options)
 
@@ -310,11 +312,11 @@ class ConnectionManager(object):
         elif verify_authentication and server.get('AccessToken'):
             system_info = self.API.validate_authentication_token(server)
             if system_info:
-                
+
                 self._update_server_info(server, system_info)
                 self.config.data['auth.user_id'] = server['UserId']
                 self.config.data['auth.token'] = server['AccessToken']
-                
+
                 return self._after_connect_validated(server, credentials, system_info, False, options)
 
             server['UserId'] = None
@@ -341,7 +343,7 @@ class ConnectionManager(object):
         result['State'] = CONNECTION_STATE['SignedIn'] if server.get('AccessToken') else CONNECTION_STATE['ServerSignIn']
         # Connected
         return result
-        
+
     def _update_server_info(self, server, system_info):
 
         if server is None or system_info is None:
