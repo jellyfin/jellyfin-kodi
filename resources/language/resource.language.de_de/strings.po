@@ -945,7 +945,7 @@ msgstr "Transkodierung erzwingen"
 
 msgctxt "#33180"
 msgid "Restart Jellyfin for Kodi"
-msgstr "'Jellyfin for Kodi' neustarten"
+msgstr "Jellyfin für Kodi neustarten"
 
 msgctxt "#33181"
 msgid "Restarting to apply the patch"
@@ -992,10 +992,6 @@ msgstr "'Kodi Datenbankerkennung' aktivieren?"
 msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
 msgstr "Jellyfin für Kodi Neustarten zum Anwenden der Änderung?"
-
-msgctxt "#33192"
-msgid "Restart Jellyfin for Kodi"
-msgstr "Jellyfin für Kodi neustarten"
 
 msgctxt "#33193"
 msgid "Restarting..."

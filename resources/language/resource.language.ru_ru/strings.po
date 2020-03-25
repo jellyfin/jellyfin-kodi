@@ -901,10 +901,6 @@ msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
 msgstr "Перезапустить Jellyfin для Kodi, чтобы применить это изменение?"
 
-msgctxt "#33192"
-msgid "Restart Jellyfin for Kodi"
-msgstr "Перезапустить Jellyfin для Kodi"
-
 msgctxt "#33193"
 msgid "Restarting..."
 msgstr "Перезапускается…"

@@ -891,7 +891,7 @@ msgstr "Forçar transcodificação"
 
 msgctxt "#33180"
 msgid "Restart Jellyfin for Kodi"
-msgstr ""
+msgstr "Reiniciar Jellyfin for Kodi"
 
 msgctxt "#33181"
 msgid "Restarting to apply the patch"
@@ -923,10 +923,6 @@ msgstr ""
 msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
 msgstr "Reinciar Jellyfin for Kodi para aplicar essa mudança?"
-
-msgctxt "#33192"
-msgid "Restart Jellyfin for Kodi"
-msgstr "Reiniciar Jellyfin for Kodi"
 
 msgctxt "#33193"
 msgid "Restarting..."

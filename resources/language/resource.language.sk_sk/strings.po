@@ -889,7 +889,7 @@ msgstr "Vynútiť transkódovanie"
 
 msgctxt "#33180"
 msgid "Restart Jellyfin for Kodi"
-msgstr ""
+msgstr "Reštartovať Jellyfin for Kodi"
 
 msgctxt "#33181"
 msgid "Restarting to apply the patch"
@@ -920,10 +920,6 @@ msgstr ""
 msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
 msgstr "Reštartovať Jellyfin pre Kodi pre aplikovanie zmien?"
-
-msgctxt "#33192"
-msgid "Restart Jellyfin for Kodi"
-msgstr "Reštartovať Jellyfin for Kodi"
 
 msgctxt "#33193"
 msgid "Restarting..."
