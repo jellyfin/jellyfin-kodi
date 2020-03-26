@@ -736,7 +736,7 @@ msgctxt "#33181"
 msgid "Restarting to apply the patch"
 msgstr "Restart pro aplikování opravy"
 
-msgctxt "#33192"
+msgctxt "#33180"
 msgid "Restart Jellyfin for Kodi"
 msgstr "Restartovat Jellyfin pro Kodi"
 

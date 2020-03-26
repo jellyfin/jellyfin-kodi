@@ -837,7 +837,7 @@ msgstr "强制转码"
 
 msgctxt "#33180"
 msgid "Restart Jellyfin for Kodi"
-msgstr "重启Jellyfin for Kodi"
+msgstr "重启Jellyfin的Kodi组件"
 
 msgctxt "#33181"
 msgid "Restarting to apply the patch"
@@ -866,10 +866,6 @@ msgstr "Kodi伴侣将加速启动时的同步。其他的同步将由服务器�
 msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
 msgstr "重启Jellyfin for Kodi以应用更改？"
-
-msgctxt "#33192"
-msgid "Restart Jellyfin for Kodi"
-msgstr "重启Jellyfin的Kodi组件"
 
 msgctxt "#33193"
 msgid "Restarting..."

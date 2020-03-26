@@ -180,7 +180,7 @@ def listing():
     directory(translate(33054), "plugin://plugin.video.jellyfin/?mode=adduser", False)
     directory(translate(5), "plugin://plugin.video.jellyfin/?mode=settings", False)
     directory(translate(33058), "plugin://plugin.video.jellyfin/?mode=reset", False)
-    directory(translate(33192), "plugin://plugin.video.jellyfin/?mode=restartservice", False)
+    directory(translate(33180), "plugin://plugin.video.jellyfin/?mode=restartservice", False)
 
     if settings('backupPath'):
         directory(translate(33092), "plugin://plugin.video.jellyfin/?mode=backup", False)

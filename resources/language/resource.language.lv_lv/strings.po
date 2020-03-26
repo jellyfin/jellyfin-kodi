@@ -360,7 +360,7 @@ msgctxt "#33181"
 msgid "Restarting to apply the patch"
 msgstr "Restartē lai uzstādītu ielāpu"
 
-msgctxt "#33192"
+msgctxt "#33180"
 msgid "Restart Jellyfin for Kodi"
 msgstr "Restartēt Jellyfin priekš Kodi"
 
