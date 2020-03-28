@@ -40,7 +40,7 @@ The add-on supports a hybrid approach. You can decide which Jellyfin libraries t
 
 ### Install Jellyfin for Kodi
 
-Detailed installation instructions can be found in the [Jellyfin Client Documentation](https://docs.jellyfin.org/general/clients/installing-kodi.html).
+Detailed installation instructions can be found in the [Jellyfin Client Documentation](https://docs.jellyfin.org/general/clients/kodi.html).
 
 <!-- Get started with the [wiki guide](https://github.com/MediaBrowser/plugin.video.emby/wiki) -->
 
