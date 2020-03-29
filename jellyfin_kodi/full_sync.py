@@ -530,15 +530,14 @@ class FullSync(object):
                             default_args = (self.server, jellyfindb, kodidb, direct_path)
                             for item in items:
                                 if item[1] in ('Series', 'Season', 'Episode'):
-                                    obj = TVShows(*default_args).remove
+                                    TVShows(*default_args).remove(item[0])
                                 elif item[1] in ('Movie', 'BoxSet'):
-                                    obj = Movies(*default_args).remove
+                                    Movies(*default_args).remove(item[0])
                                 elif item[1] in ('MusicAlbum', 'MusicArtist', 'AlbumArtist', 'Audio'):
-                                    obj = Music(*default_args).remove
+                                    Music(*default_args).remove(item[0])
                                 elif item[1] == 'MusicVideo':
-                                    obj = MusicVideos(*default_args).remove
+                                    MusicVideos(*default_args).remove(item[0])
 
-                                obj(item[0])
                                 dialog.update(int((float(count) / float(len(items)) * 100)), heading="%s: %s" % (translate('addon_name'), library[0]))
                                 count += 1
 
@@ -551,7 +550,6 @@ class FullSync(object):
             self.sync['Whitelist'].remove('Mixed:%s' % library_id)
 
         save_sync(self.sync)
-        xbmc.executebuiltin('ReloadSkin()')
 
     def __exit__(self, exc_type, exc_val, exc_tb):
 

@@ -46,7 +46,6 @@ class Monitor(xbmc.Monitor):
         LOG.info("-->[ kodi scan/%s ]", library)
 
     def onScanFinished(self, library):
-        xbmc.executebuiltin("ReloadSkin()")
         LOG.info("--<[ kodi scan/%s ]", library)
 
     def onNotification(self, sender, method, data):
