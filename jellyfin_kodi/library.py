@@ -618,7 +618,7 @@ class UpdateWorker(threading.Thread):
                 elif item['Type'] == 'MusicArtist':
                     obj = Music(*default_args).artist
                 elif item['Type'] == 'AlbumArtist':
-                    obj = Music(s*default_args).albumartist
+                    obj = Music(*default_args).albumartist
                 elif item['Type'] == 'Audio':
                     obj = Music(*default_args).song
 
