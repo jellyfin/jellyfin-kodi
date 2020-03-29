@@ -25,18 +25,6 @@ from jellyfin import Jellyfin
 LOG = logging.getLogger("JELLYFIN." + __name__)
 LIMIT = int(settings('limitIndex') or 15)
 DTHREADS = int(settings('limitThreads') or 3)
-MEDIA = {
-    'Movie': Movies,
-    'BoxSet': Movies,
-    'MusicVideo': MusicVideos,
-    'Series': TVShows,
-    'Season': TVShows,
-    'Episode': TVShows,
-    'MusicAlbum': Music,
-    'MusicArtist': Music,
-    'AlbumArtist': Music,
-    'Audio': Music
-}
 
 ##################################################################################################
 
@@ -52,9 +40,6 @@ class Library(threading.Thread):
     total_updates = 0
 
     def __init__(self, monitor):
-
-        self.media = {'Movies': Movies, 'TVShows': TVShows, 'MusicVideos': MusicVideos, 'Music': Music}
-        self.MEDIA = MEDIA
 
         self.direct_path = settings('useDirectPaths') == "1"
         self.progress_display = int(settings('syncProgress') or 50)
@@ -633,7 +618,7 @@ class UpdateWorker(threading.Thread):
                 elif item['Type'] == 'MusicArtist':
                     obj = Music(*default_args).artist
                 elif item['Type'] == 'AlbumArtist':
-                    obj = Music(*default_args).albumartist
+                    obj = Music(s*default_args).albumartist
                 elif item['Type'] == 'Audio':
                     obj = Music(*default_args).song
 
