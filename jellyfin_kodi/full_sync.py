@@ -11,6 +11,7 @@ from kodi_six import xbmc
 
 import downloader as server
 import helper.xmls as xmls
+from objects import Movies, TVShows, MusicVideos, Music
 from database import Database, get_sync, save_sync, jellyfin_db
 from helper import translate, settings, window, progress, dialog, LibraryException
 from helper.utils import get_screensaver, set_screensaver
@@ -261,7 +262,6 @@ class FullSync(object):
 
         ''' Process movies from a single library.
         '''
-        Movies = self.library.media['Movies']
         processed_ids = []
 
         for items in server.get_items(library['Id'], "Movie", False, self.sync['RestorePoint'].get('params')):
@@ -305,7 +305,6 @@ class FullSync(object):
 
         ''' Process tvshows and episodes from a single library.
         '''
-        TVShows = self.library.media['TVShows']
         processed_ids = []
 
         for items in server.get_items(library['Id'], "Series", False, self.sync['RestorePoint'].get('params')):
@@ -358,7 +357,6 @@ class FullSync(object):
 
         ''' Process musicvideos from a single library.
         '''
-        MusicVideos = self.library.media['MusicVideos']
         processed_ids = []
 
         for items in server.get_items(library['Id'], "MusicVideo", False, self.sync['RestorePoint'].get('params')):
@@ -401,8 +399,6 @@ class FullSync(object):
 
         ''' Process artists, album, songs from a single library.
         '''
-        Music = self.library.media['Music']
-
         with self.library.music_database_lock:
             with Database('music') as musicdb:
                 with Database('jellyfin') as jellyfindb:
@@ -462,8 +458,6 @@ class FullSync(object):
 
         ''' Process all boxsets.
         '''
-        Movies = self.library.media['Movies']
-
         for items in server.get_items(library_id, "BoxSet", False, self.sync['RestorePoint'].get('params')):
 
             with self.video_database_locks() as (videodb, jellyfindb):
@@ -483,8 +477,6 @@ class FullSync(object):
 
         ''' Delete all exisitng boxsets and re-add.
         '''
-        Movies = self.library.media['Movies']
-
         with self.video_database_locks() as (videodb, jellyfindb):
             obj = Movies(self.server, jellyfindb, videodb, self.direct_path)
             obj.boxsets_reset()
@@ -496,7 +488,6 @@ class FullSync(object):
 
         ''' Remove library by their id from the Kodi database.
         '''
-        MEDIA = self.library.MEDIA
         direct_path = self.library.direct_path
 
         with Database('jellyfin') as jellyfindb:
@@ -536,18 +527,17 @@ class FullSync(object):
                                 dialog.update(int((float(count) / float(len(items)) * 100)), heading="%s: %s" % (translate('addon_name'), library[0]))
                                 count += 1
                         else:
-                            # from mcarlton: I'm not sure what triggers this.
-                            # I've added and removed every media type except
-                            # for music videos (because i don't have any) and
-                            # can't find it, but I'm not comfortable
-                            # removing it right now
-                            LOG.info('Triggered the mystery function')
-                            LOG.debug('Mystery function item type: {}'.format(items[0][1]))
-                            obj = MEDIA[items[0][1]](self.server, jellyfindb, kodidb, direct_path).remove
-
+                            default_args = (self.server, jellyfindb, kodidb, direct_path)
                             for item in items:
+                                if item[1] in ('Series', 'Season', 'Episode'):
+                                    TVShows(*default_args).remove(item[0])
+                                elif item[1] in ('Movie', 'BoxSet'):
+                                    Movies(*default_args).remove(item[0])
+                                elif item[1] in ('MusicAlbum', 'MusicArtist', 'AlbumArtist', 'Audio'):
+                                    Music(*default_args).remove(item[0])
+                                elif item[1] == 'MusicVideo':
+                                    MusicVideos(*default_args).remove(item[0])
 
-                                obj(item[0])
                                 dialog.update(int((float(count) / float(len(items)) * 100)), heading="%s: %s" % (translate('addon_name'), library[0]))
                                 count += 1
 
