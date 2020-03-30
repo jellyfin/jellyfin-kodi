@@ -132,7 +132,8 @@ class Service(xbmc.Monitor):
 
         try:
             self.connect.register()
-            set_addon_mode()
+            if not settings('SyncInstallRunDone.bool'):
+                set_addon_mode()
         except Exception as error:
             LOG.exception(error)
 
