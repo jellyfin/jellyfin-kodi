@@ -161,7 +161,7 @@ class Service(xbmc.Monitor):
             if method not in ('ServerUnreachable', 'ServerShuttingDown', 'UserDataChanged', 'ServerConnect',
                               'LibraryChanged', 'ServerOnline', 'SyncLibrary', 'RepairLibrary', 'RemoveLibrary',
                               'SyncLibrarySelection', 'RepairLibrarySelection', 'AddServer',
-                              'Unauthorized', 'UpdateServer', 'UserConfigurationUpdated', 'ServerRestarting',
+                              'Unauthorized', 'UserConfigurationUpdated', 'ServerRestarting',
                               'RemoveServer', 'AddLibrarySelection', 'RemoveLibrarySelection'):
                 return
 
@@ -248,11 +248,6 @@ class Service(xbmc.Monitor):
 
             self.connect.remove_server(data['Id'])
             xbmc.executebuiltin("Container.Refresh")
-
-        elif method == 'UpdateServer':
-
-            dialog("ok", heading="{jellyfin}", line1=translate(33151))
-            self.connect.setup_manual_server()
 
         elif method == 'UserDataChanged' and self.library_thread:
             if data.get('ServerId') or not window('jellyfin_startup.bool'):
