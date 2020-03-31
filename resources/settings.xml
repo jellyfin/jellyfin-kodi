@@ -2,11 +2,10 @@
 <settings>
 
 	<category label="29999"><!-- Jellyfin -->
-		<setting label="30003" id="idMethod" type="enum" values="Manual" default="0" />
-		<setting label="30024" id="username" type="text" default="" visible="true" />
-		<setting label="30001" id="serverName" type="text" default="" />
-		<setting label="30000" id="server" type="text" default="" visible="true" />
-		<setting label="33150" type="action" action="RunPlugin(plugin://plugin.video.jellyfin?mode=updateserver)" visible="!eq(-1,)" option="close" />
+		<setting label="30003" id="idMethod" type="enum" values="Manual" default="0" enable="false" />
+		<setting label="30024" id="username" type="text" default="" visible="true" enable="false" />
+		<setting label="30001" id="serverName" type="text" default="" enable="false" />
+		<setting label="30000" id="server" type="text" default="" visible="true" enable="false" />
 		<setting label="30500" id="sslverify" type="bool" default="true" visible="true" />
 
 		<setting type="sep" />

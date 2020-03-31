@@ -105,8 +105,6 @@ class Events(object):
             xbmc.executebuiltin('Addon.OpenSettings(plugin.video.jellyfin)')
         elif mode == 'adduser':
             add_user()
-        elif mode == 'updateserver':
-            event('UpdateServer')
         elif mode == 'thememedia':
             get_themes()
         elif mode == 'managelibs':
