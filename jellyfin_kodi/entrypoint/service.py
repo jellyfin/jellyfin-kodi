@@ -17,10 +17,9 @@ import objects
 import connect
 import client
 import library
-import setup
 import monitor
 from views import Views, verify_kodi_defaults
-from helper import translate, window, settings, event, dialog
+from helper import translate, window, settings, event, dialog, set_addon_mode
 from helper.utils import JsonDebugPrinter
 from jellyfin import Jellyfin
 
@@ -133,7 +132,8 @@ class Service(xbmc.Monitor):
 
         try:
             self.connect.register()
-            setup.Setup()
+            if not settings('SyncInstallRunDone.bool'):
+                set_addon_mode()
         except Exception as error:
             LOG.exception(error)
 
