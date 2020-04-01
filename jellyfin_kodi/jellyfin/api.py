@@ -430,7 +430,12 @@ class API(object):
 
     def get_public_info(self, server_address):
         response = self.send_request(server_address, "system/info/public")
-        return response.json() if response.status_code == 200 else {}
+        try:
+            return response.json() if response.status_code == 200 else {}
+        except JSONDecodeError as e:
+            LOG.error("Failed to get server public info. JSON error: %s" % e)
+            LOG.error(response.content)
+            return {}
 
     def check_redirect(self, server_address):
         ''' Checks if the server is redirecting traffic to a new URL and
