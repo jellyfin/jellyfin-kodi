@@ -325,8 +325,10 @@ class Actions(object):
         if intro or obj['Type'] == 'Trailer':
             listitem.setArt({'poster': ""})  # Clear the poster value for intros / trailers to prevent issues in skins
 
-        listitem.setIconImage('DefaultVideo.png')
-        listitem.setThumbnailImage(obj['Artwork']['Primary'])
+        listitem.setArt({
+            'icon': 'DefaultVideo.png',
+            'thumb': obj['Artwork']['Primary'],
+        })
 
         if obj['Premiere']:
             obj['Premiere'] = obj['Premiere'].split('T')[0]
@@ -487,12 +489,17 @@ class Actions(object):
             'playcount': obj['PlayCount'],
             'overlay': obj['Overlay']
         }
-        listitem.setIconImage(obj['Artwork']['Thumb'])
-        listitem.setThumbnailImage(obj['Artwork']['Primary'])
+
+        listitem.setArt({
+            'icon': obj['Artwork']['Thumb'],
+            'thumb': obj['Artwork']['Primary'],
+        })
         self.set_artwork(obj['Artwork'], listitem, obj['Type'])
 
         if obj['Artwork']['Primary']:
-            listitem.setThumbnailImage(obj['Artwork']['Primary'])
+            listitem.setArt({
+                'thumb': obj['Artwork']['Primary'],
+            })
 
         if not obj['Artwork']['Backdrop']:
             listitem.setArt({'fanart': obj['Artwork']['Primary']})
@@ -572,7 +579,9 @@ class Actions(object):
             'title': obj['Title']
         }
         listitem.setProperty('path', obj['Artwork']['Primary'])
-        listitem.setThumbnailImage(obj['Artwork']['Primary'])
+        listitem.setArt({
+            'thumb': obj['Artwork']['Primary'],
+        })
 
         if obj['Type'] == 'Photo':
             metadata.update({
@@ -588,10 +597,14 @@ class Actions(object):
             })
             listitem.setProperty('plot', obj['Overview'])
             listitem.setProperty('IsFolder', 'false')
-            listitem.setIconImage('DefaultPicture.png')
+            listitem.setArt({
+                'icon': 'DefaultPicture.png',
+            })
         else:
             listitem.setProperty('IsFolder', 'true')
-            listitem.setIconImage('DefaultFolder.png')
+            listitem.setArt({
+                'icon': 'DefaultFolder.png',
+            })
 
         listitem.setProperty('IsPlayable', 'false')
         listitem.setLabel(obj['Title'])

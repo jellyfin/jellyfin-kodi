@@ -388,7 +388,6 @@ class API(object):
 
         return request_method(url, **request_settings)
 
-
     def login(self, server_url, username, password=""):
         path = "Users/AuthenticateByName"
         authData = {
@@ -411,7 +410,7 @@ class API(object):
                 LOG.debug(headers)
 
                 return {}
-        except Exception as e: # Find exceptions for likely cases i.e, server timeout, etc
+        except Exception as e:  # Find exceptions for likely cases i.e, server timeout, etc
             LOG.error(e)
 
         return {}
@@ -432,7 +431,7 @@ class API(object):
         response = self.send_request(server_address, "system/info/public")
         try:
             return response.json() if response.status_code == 200 else {}
-        except JSONDecodeError as e:
+        except json.JSONDecodeError as e:
             LOG.error("Failed to get server public info. JSON error: %s" % e)
             LOG.error(response.content)
             return {}
@@ -444,4 +443,3 @@ class API(object):
         response = self.send_request(server_address, "system/info/public")
         url = response.url.replace('/system/info/public', '')
         return url
-

@@ -3,11 +3,11 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import json
 import logging
 import sys
 import os
 
+from six import iteritems
 from six.moves.urllib.parse import parse_qsl, urlencode
 from kodi_six import xbmc, xbmcvfs, xbmcgui, xbmcplugin, xbmcaddon
 
@@ -206,9 +206,11 @@ def dir_listitem(label, path, artwork=None, fanart=None):
     ''' Gets the icon paths for default node listings
     '''
     li = xbmcgui.ListItem(label, path=path)
-    li.setThumbnailImage(artwork or "special://home/addons/plugin.video.jellyfin/resources/icon.png")
-    li.setArt({"fanart": fanart or "special://home/addons/plugin.video.jellyfin/resources/fanart.png"})
-    li.setArt({"landscape": artwork or fanart or "special://home/addons/plugin.video.jellyfin/resources/fanart.png"})
+    li.setArt({
+        "thumb": artwork or "special://home/addons/plugin.video.jellyfin/resources/icon.png",
+        "fanart": fanart or "special://home/addons/plugin.video.jellyfin/resources/fanart.png",
+        "landscape": artwork or fanart or "special://home/addons/plugin.video.jellyfin/resources/fanart.png",
+    })
 
     return li
 
@@ -712,12 +714,10 @@ def create_listitem(item):
     li.setProperty('resumetime', str(item['resume']['position']))
     li.setProperty('totaltime', str(item['resume']['total']))
     li.setArt(item['art'])
-    li.setThumbnailImage(item['art'].get('thumb', ''))
-    li.setIconImage('DefaultTVShows.png')
     li.setProperty('dbid', str(item['episodeid']))
     li.setProperty('fanart_image', item['art'].get('tvshow.fanart', ''))
 
-    for key, value in item['streamdetails'].iteritems():
+    for key, value in iteritems(item['streamdetails']):
         for stream in value:
             li.addStreamInfo(key, stream)
 
