@@ -48,7 +48,7 @@
       #252 Don't encode strings that don't need it
       #253 Remove MEDIA lookup dict
       #256 Moved setting addon mode to utils
-      #257 Disabled changing server details & Removed corresponding function
+      #257 Disabled changing server details &amp; Removed corresponding function
       #260 Added better error handling to public info check
     </news>
     <assets>
