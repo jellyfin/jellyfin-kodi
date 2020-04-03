@@ -460,6 +460,7 @@ def has_attribute(obj, name):
     except AttributeError:
         return False
 
+
 def set_addon_mode():
 
     ''' Setup playback mode. If native mode selected, check network credentials.
