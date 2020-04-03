@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-04-03 11:20+0000\n"
+"PO-Revision-Date: 2020-04-03 14:05+0000\n"
 "Last-Translator: 4d1m <silviu.dimulete@gmail.com>\n"
 "Language-Team: Romanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ro/>\n"
@@ -596,3 +596,34 @@ msgstr "Adresa serverului"
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
 msgstr "Jellyfin pentru Kodi"
+
+msgctxt "#33118"
+msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgstr ""
+"Ați schimbat modul de redare. Kodi trebuie resetat pentru a aplica "
+"modificarea, doriți să faceți acest lucru acum?"
+
+msgctxt "#33116"
+msgid "Compress artwork (reduces quality)"
+msgstr "Comprimați lucrările de artă (reduce calitatea)"
+
+msgctxt "#33115"
+msgid "Adjust for remote connection"
+msgstr "Reglați pentru conexiune distantă"
+
+msgctxt "#33114"
+msgid "Enable external subtitles"
+msgstr "Activați subtitrări externe"
+
+msgctxt "#33113"
+msgid "Applies to Add-on playback mode only"
+msgstr "Se aplică numai în modul de redare add-on"
+
+msgctxt "#33112"
+msgid "Applies to Native and Add-on playback mode"
+msgstr "Se aplică modului de redare nativ și suplimentar"
+
+msgctxt "#33111"
+msgid "Reset the local database to apply the playback mode change."
+msgstr ""
+"Resetați baza de date locală pentru a aplica modificarea modului de redare."
