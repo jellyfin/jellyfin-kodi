@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-04-03 14:05+0000\n"
+"PO-Revision-Date: 2020-04-07 10:57+0000\n"
 "Last-Translator: 4d1m <silviu.dimulete@gmail.com>\n"
 "Language-Team: Romanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ro/>\n"
@@ -627,3 +627,331 @@ msgctxt "#33111"
 msgid "Reset the local database to apply the playback mode change."
 msgstr ""
 "Resetați baza de date locală pentru a aplica modificarea modului de redare."
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "Selectați bibliotecile pe care să le eliminați"
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "Selectați bibliotecile pentru reparare"
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "Selectați bibliotecile pentru actualizare"
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr ""
+"O sincronizare este deja în curs, așteptați până când se finalizează și "
+"încercați din nou."
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr "Opțiuni avansate"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "Activați Jellyfin pentru Kodi"
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "Gestionează bibliotecile"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "Reinițializare..."
+
+msgctxt "#33191"
+msgid "Restart Jellyfin for Kodi to apply this change?"
+msgstr "Reporniți Jellyfin pentru Kodi ca să se aplice această modificare?"
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr ""
+"Kodi Sync Queue grăbește pornirea sincronizării. Alte sincronizări sunt "
+"declanșate de evenimentele serverului."
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr "Activați sincronizarea în timpul redării (poate provoca o întârziere)"
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "Eliminați bibliotecile"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "Activează opțiunea de a reda folosind modul cinema"
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "Redă cu modul cinema"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "Repornește pentru aplicarea corecției"
+
+msgctxt "#33180"
+msgid "Restart Jellyfin for Kodi"
+msgstr "Reporniți Jellyfin pentru Kodi"
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "Forțează transcodarea"
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr "Procesarea actualizărilor"
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr "Afișează bara de progres dacă numărul de actualizări este mai mare de"
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr ""
+"Actualizați sau reparați bibliotecile pentru a aplica modificările de mai "
+"jos."
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr ""
+"Sfat de paginare: Fiecare linie de descărcare solicită valoarea maximă a "
+"articolelor dvs. de la Jellyfin în același timp."
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "Paginare - linii descărcare (implicit: 3)"
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "Uitați de sincronizarea anterioară? Acest lucru nu este recomandat."
+
+msgctxt "#33172"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
+msgstr ""
+"Aveți {number} actualizări în așteptare. Acest lucru poate dura puțin "
+"înainte de a vedea conținut nou. S-ar putea să fie mai rapid să actualizați "
+"bibliotecile prin lansarea addon-ului Jellyfin > Actualizarea bibliotecilor. "
+"Continua oricum?"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "După prima literă"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "Nevizionat"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "În Progres"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "Favorite"
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "Adăugat recent"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "(dinamic)"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "Crearea backupului nu a reușit"
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr ""
+"Mascați informațiile sensibile în jurnal (nu se aplică la înregistrarea "
+"jurnalului Kodi)"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "Resetați biblioteca de muzică?"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr ""
+"Pentru a evita erorile, vă rugăm să actualizați Jellyfin pentru Kodi la "
+"versiunea: "
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "Activați selecția audio / subtitrare"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "Doar subtitrarile"
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "Doar audio"
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "A fost aplicată o actualizare!"
+
+msgctxt "#33155"
+msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
+msgstr ""
+"Patch-ul aplicat în prezent pe Jellyfin pentru Kodi este corupt! Vă rugăm să "
+"postați pe forumul Jellyfin pentru Kodi dacă această problemă persistă. "
+"Acest lucru va trebui să fie rezolvat cât mai curând posibil."
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "Adăugați biblioteci"
+
+msgctxt "#33153"
+msgid "Your Jellyfin theme media has been synced to Kodi"
+msgstr "Media dvs. tematică Jellyfin a fost sincronizată cu Kodi"
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "Imposibil de localizat TV Tunes în Kodi."
+
+msgctxt "#33151"
+msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
+msgstr ""
+"Reconectați-vă la același server care a fost încărcat anterior. Dacă doriți "
+"să utilizați un server diferit, resetați baza de date locală, inclusiv "
+"informațiile despre utilizator."
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "Actualizați informațiile despre server"
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "Nu s-a putut realiza conectarea la acest server."
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "Accesul dvs. la acest server este restricționat."
+
+msgctxt "#33147"
+msgid "Your access to Jellyfin is restricted."
+msgstr "Accesul dvs. la Jellyfin este restricționat."
+
+msgctxt "#33146"
+msgid "Unable to connect to Jellyfin."
+msgstr "Nu s-a putut conecta la Jellyfin."
+
+msgctxt "#33145"
+msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
+msgstr ""
+"Vă rugăm să vă asigurați că share-ul dvs. Samba (smb) al serverului dvs. "
+"Jellyfin este accesibil la instalarea Kodi și că aveți o substituție de cale "
+"configurată pe serverul dvs. În caz contrar, Kodi nu poate găsi fișierele "
+"dvs."
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "Scoaterea bibliotecii"
+
+msgctxt "#33143"
+msgid "Enable the option to delete"
+msgstr "Activează opțiunea de șters"
+
+msgctxt "#33142"
+msgid "Something went wrong. Try again later."
+msgstr "Ceva nu a funcționat. Încercați mai târziu."
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "Ștergeți serverul"
+
+msgctxt "#33140"
+msgid "Repair libraries"
+msgstr "Reparați bibliotecile"
+
+msgctxt "#33139"
+msgid "Update libraries"
+msgstr "Actualizați bibliotecile"
+
+msgctxt "#33138"
+msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
+msgstr ""
+"Puteți actualiza manual biblioteca în loc să vă bazați pe pluginul "
+"serverului Kodi Sync Queue. Lansați addon-ul și actualizați bibliotecile ("
+"sau per bibliotecă). Pentru a elimina conținutul, va trebui să reparați "
+"biblioteca."
+
+msgctxt "#33137"
+msgid "Enable Kodi Sync Queue"
+msgstr "Activați Kodi Sync Queue"
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "Actualizați biblioteca"
+
+msgctxt "#33135"
+msgid "Kodi will now restart to apply a small patch for your Kodi version."
+msgstr ""
+"Kodi va reporni acum pentru a aplica un update mic pentru versiunea dvs. "
+"Kodi."
+
+msgctxt "#33134"
+msgid "Add server"
+msgstr "Adaugă server"
+
+msgctxt "#33133"
+msgid "Remove library from Kodi"
+msgstr "Scoateți biblioteca din Kodi"
+
+msgctxt "#33132"
+msgid "Repair library"
+msgstr "Reparați biblioteca"
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "Reîmprospătați colecțiile"
+
+msgctxt "#33130"
+msgid "Select the source"
+msgstr "Selectați sursa"
+
+msgctxt "#33129"
+msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
+msgstr ""
+"Puteți sincroniza bibliotecile lansând add-on-ulJellyfin > Adaugă biblioteci."
+
+msgctxt "#33128"
+msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"Eșuare la preluarea ultimelor actualizări de conținut. Nu se vor aplica "
+"actualizări ale conținutului până la repornirea Kodi. Dacă această problemă "
+"persistă, vă rugăm să raportați la forumul Jellyfin pentru Kodi, cu jurnalul "
+"dvs. Kodi."
+
+msgctxt "#33124"
+msgid "Include people (slow)"
+msgstr "Includeți persoane (lent)"
+
+msgctxt "#33123"
+msgid "Sync library to Kodi"
+msgstr "Sincronizați biblioteca cu Kodi"
+
+msgctxt "#33122"
+msgid "Restart Kodi to resume where you left off."
+msgstr "Reporniți Kodi pentru a relua din locul unde ați lăsat."
+
+msgctxt "#33121"
+msgid "All"
+msgstr "Toate"
+
+msgctxt "#33120"
+msgid "Select the libraries to add"
+msgstr "Selectați bibliotecile de adăugat"
+
+msgctxt "#33119"
+msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"Ceva nu a funcționat bine în timpul sincronizării. Veți putea relua "
+"progresul atunci când reporniți Kodi. Dacă problema persistă, vă rugăm să "
+"raportați la forumul Jellyfin pentru Kodi, cu jurnalul dvs. Kodi."
