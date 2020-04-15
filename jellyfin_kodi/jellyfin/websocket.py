@@ -136,7 +136,9 @@ def getdefaulttimeout():
 
 
 def _wrap_sni_socket(sock, sslopt, hostname):
-    context = ssl.SSLContext(sslopt.get('ssl_version', ssl.PROTOCOL_SSLv23))
+    context = ssl.SSLContext(sslopt.get('ssl_version', ssl.PROTOCOL_TLS))
+    context.options |= ssl.OP_NO_SSLv2  # Explicitly disable SSLv2
+    context.options |= ssl.OP_NO_SSLv3  # Explicitly disable SSLv3
 
     if sslopt.get('cert_reqs', ssl.CERT_NONE) != ssl.CERT_NONE:
         capath = ssl.get_default_verify_paths().capath
@@ -547,7 +549,7 @@ class WebSocket(object):
 
         # https://tools.ietf.org/html/rfc6455#page-6
         magic_string = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11".encode()
-        value = key +  magic_string
+        value = key + magic_string
         hashed = base64.encodestring(hashlib.sha1(value).digest()).strip().lower().decode()
         return hashed == result
 
