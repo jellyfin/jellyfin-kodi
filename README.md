@@ -1,14 +1,31 @@
 # Jellyfin for Kodi
-<!--
-TODO
-[![EmbyKodi_Banner](https://i.imgur.com/hx4cx41.png)](https://forum.jellyfin.org/)
 
-[![Wiki](https://img.shields.io/badge/get%20started-wiki-brightgreen.svg)](https://github.com/MediaBrowser/plugin.video.emby/wiki) 
-[![Forums](https://img.shields.io/badge/report%20issues-forums-3960C1.svg)](https://forum.jellyfin.org/)
-[![Donate](https://img.shields.io/badge/donate-kofi-blue.svg)](https://ko-fi.com/A5354BI)
-[![Emby](https://img.shields.io/badge/server-emby-52b54b.svg)](https://jellyfin.media/)
+[![GPL 3.0 License](https://img.shields.io/github/license/jellyfin/jellyfin-kodi)](https://github.com/jellyfin/jellyfin-kodi)
+![GitHub top language](https://img.shields.io/github/languages/top/jellyfin/jellyfin-kodi)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/jellyfin/jellyfin-kodi)
+![GitHub issues](https://img.shields.io/github/issues/jellyfin/jellyfin-kodi)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/jellyfin/jellyfin-kodi)
+![GitHub stars](https://img.shields.io/github/stars/jellyfin/jellyfin-kodi?style=social)
+![GitHub forks](https://img.shields.io/github/forks/jellyfin/jellyfin-kodi?style=social)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/jellyfin/jellyfin-kodi)
+![GitHub Release Date](https://img.shields.io/github/release-date/jellyfin/jellyfin-kodi)
+![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/jellyfin/jellyfin-kodi/latest/master?sort=semver)
+![GitHub last commit](https://img.shields.io/github/last-commit/jellyfin/jellyfin-kodi)
+![GitHub contributors](https://img.shields.io/github/contributors/jellyfin/jellyfin-kodi)
+
+[![Translation status](https://translate.jellyfin.org/widgets/jellyfin/-/jellyfin-kodi/svg-badge.svg)](https://translate.jellyfin.org/engage/jellyfin/?utm_source=widget)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=alert_status)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=bugs)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=code_smells)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=ncloc)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=security_rating)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=sqale_index)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
 ___
--->
+
 **A whole new way to manage and view your media library.**
 
 The Jellyfin for Kodi add-on combines the best of Kodi - ultra smooth navigation, beautiful UIs and playback of any file under the sun, and Jellyfin - the most powerful open source multi-client media metadata indexer and server. You can now retire your MySQL setup in favor of a more flexible setup.
