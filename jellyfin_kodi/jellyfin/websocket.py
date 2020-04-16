@@ -139,6 +139,8 @@ def _wrap_sni_socket(sock, sslopt, hostname):
     context = ssl.SSLContext(sslopt.get('ssl_version', ssl.PROTOCOL_TLS))
     context.options |= ssl.OP_NO_SSLv2  # Explicitly disable SSLv2
     context.options |= ssl.OP_NO_SSLv3  # Explicitly disable SSLv3
+    context.options |= ssl.OP_NO_TLSv1  # Explicitly disable TLSv1.0
+    context.options |= ssl.OP_NO_TLSv1_1  # Explicitly disable TLSv1.1
 
     if sslopt.get('cert_reqs', ssl.CERT_NONE) != ssl.CERT_NONE:
         capath = ssl.get_default_verify_paths().capath
