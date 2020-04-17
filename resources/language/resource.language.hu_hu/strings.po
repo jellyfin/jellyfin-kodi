@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-04-14 12:43+0000\n"
+"PO-Revision-Date: 2020-04-17 19:47+0000\n"
 "Last-Translator: Muráncsik Sebestyén <smurancsik@outlook.com>\n"
 "Language-Team: Hungarian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hu/>\n"
@@ -313,15 +313,13 @@ msgctxt "#33025"
 msgid "Completed in:"
 msgstr "Kész:"
 
-#, fuzzy
 msgctxt "#33021"
 msgid "Gathering:"
-msgstr "Összegyűjtés:"
+msgstr "Csoportosítás:"
 
-#, fuzzy
 msgctxt "#33018"
 msgid "Gathering boxsets"
-msgstr "Dobozkészletek gyűjtése"
+msgstr "Kategorizálás dobozos kiadások alapján"
 
 msgctxt "#33016"
 msgid "Play trailers?"
@@ -942,10 +940,9 @@ msgctxt "#30189"
 msgid "Unwatched Movies"
 msgstr "Még nem látott filmek"
 
-#, fuzzy
 msgctxt "#30185"
 msgid "Boxsets"
-msgstr "Dobozos készletek"
+msgstr "Dobozos kiadások"
 
 msgctxt "#30182"
 msgid "Favorite Episodes"
