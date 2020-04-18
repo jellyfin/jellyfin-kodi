@@ -1,20 +1,70 @@
-# Jellyfin for Kodi
-<!--
-TODO
-[![EmbyKodi_Banner](https://i.imgur.com/hx4cx41.png)](https://forum.jellyfin.org/)
+<h1 align="center">Jellyfin for Kodi</h1>
+<h3 align="center">Part of the <a href="https://jellyfin.org">Jellyfin Project</a></h3>
 
-[![Wiki](https://img.shields.io/badge/get%20started-wiki-brightgreen.svg)](https://github.com/MediaBrowser/plugin.video.emby/wiki) 
-[![Forums](https://img.shields.io/badge/report%20issues-forums-3960C1.svg)](https://forum.jellyfin.org/)
-[![Donate](https://img.shields.io/badge/donate-kofi-blue.svg)](https://ko-fi.com/A5354BI)
-[![Emby](https://img.shields.io/badge/server-emby-52b54b.svg)](https://jellyfin.media/)
-___
--->
+---
+
+<p align="center">
+<img alt="Logo Banner" src="https://raw.githubusercontent.com/jellyfin/jellyfin-ux/master/branding/SVG/banner-logo-solid.svg?sanitize=true"/>
+<br/>
+<br/>
+<a href="https://github.com/jellyfin/jellyfin-kodi">
+<img src="https://img.shields.io/github/license/jellyfin/jellyfin-kodi" alt="GPL 3.0 License" />
+</a>
+<a href="https://github.com/jellyfin/jellyfin-kodi/releases">
+<img src="https://img.shields.io/github/v/release/jellyfin/jellyfin-kodi" alt="GitHub release (latest SemVer)" />
+</a>
+<a href="https://matrix.to/#/+jellyfin:matrix.org">
+<img alt="Chat on Matrix" src="https://img.shields.io/matrix/jellyfin:matrix.org.svg?logo=matrix"/>
+</a>
+<br />
+<a href="https://translate.jellyfin.org/engage/jellyfin/?utm_source=widget">
+<img src="https://translate.jellyfin.org/widgets/jellyfin/-/jellyfin-kodi/svg-badge.svg" alt="Translation status" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=alert_status" alt="Quality Gate Status" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=sqale_index" alt="Technical Debt" />
+</a>
+<br />
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=code_smells" alt="Code Smells" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=bugs" alt="Bugs" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=vulnerabilities" alt="Vulnerabilities" />
+</a>
+<br />
+<img src="https://img.shields.io/github/languages/code-size/jellyfin/jellyfin-kodi" alt="GitHub code size in bytes" />
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=ncloc" alt="Lines of Code" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=duplicated_lines_density" alt="Duplicated Lines (%)" />
+</a>
+<br />
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=sqale_rating" alt="Maintainability Rating" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=reliability_rating" alt="Reliability Rating" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=security_rating" alt="Security Rating" />
+</a>
+</p>
+
+---
+
 **A whole new way to manage and view your media library.**
 
 The Jellyfin for Kodi add-on combines the best of Kodi - ultra smooth navigation, beautiful UIs and playback of any file under the sun, and Jellyfin - the most powerful open source multi-client media metadata indexer and server. You can now retire your MySQL setup in favor of a more flexible setup.
 
 Synchronize your media on your Jellyfin server to the native Kodi database, browsing your media at full speed, while retaining the ability to use other Kodi add-ons to enhance your experience. In addition, you can use any Kodi skin you'd like!
-___
+
+---
 
 ### Supported
 
