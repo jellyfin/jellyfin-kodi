@@ -1,37 +1,71 @@
-# Jellyfin for Kodi
+<h1 align="center">Jellyfin for Kodi</h1>
+<h3 align="center">Part of the <a href="https://jellyfin.org">Jellyfin Project</a></h3>
 
-[![GPL 3.0 License](https://img.shields.io/github/license/jellyfin/jellyfin-kodi)](https://github.com/jellyfin/jellyfin-kodi)
-![GitHub top language](https://img.shields.io/github/languages/top/jellyfin/jellyfin-kodi)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/jellyfin/jellyfin-kodi)
-![GitHub issues](https://img.shields.io/github/issues/jellyfin/jellyfin-kodi)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/jellyfin/jellyfin-kodi)
-![GitHub stars](https://img.shields.io/github/stars/jellyfin/jellyfin-kodi?style=social)
-![GitHub forks](https://img.shields.io/github/forks/jellyfin/jellyfin-kodi?style=social)
-![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/jellyfin/jellyfin-kodi)
-![GitHub Release Date](https://img.shields.io/github/release-date/jellyfin/jellyfin-kodi)
-![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/jellyfin/jellyfin-kodi/latest/master?sort=semver)
-![GitHub last commit](https://img.shields.io/github/last-commit/jellyfin/jellyfin-kodi)
-![GitHub contributors](https://img.shields.io/github/contributors/jellyfin/jellyfin-kodi)
+---
 
-[![Translation status](https://translate.jellyfin.org/widgets/jellyfin/-/jellyfin-kodi/svg-badge.svg)](https://translate.jellyfin.org/engage/jellyfin/?utm_source=widget)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=alert_status)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=bugs)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=code_smells)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=ncloc)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
-[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=security_rating)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=sqale_index)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi)
-___
+<p align="center">
+<img alt="Logo Banner" src="https://raw.githubusercontent.com/jellyfin/jellyfin-ux/master/branding/SVG/banner-logo-solid.svg?sanitize=true"/>
+<br/>
+<br/>
+<a href="https://github.com/jellyfin/jellyfin-kodi">
+<img src="https://img.shields.io/github/license/jellyfin/jellyfin-kodi" alt="GPL 3.0 License" />
+</a>
+<img src="https://img.shields.io/github/languages/top/jellyfin/jellyfin-kodi" alt="GitHub top language" />
+<img src="https://img.shields.io/github/languages/code-size/jellyfin/jellyfin-kodi" alt="GitHub code size in bytes" />
+<img src="https://img.shields.io/github/issues/jellyfin/jellyfin-kodi" alt="GitHub issues" />
+<img src="https://img.shields.io/github/issues-pr/jellyfin/jellyfin-kodi" alt="GitHub pull requests" />
+<img src="https://img.shields.io/github/stars/jellyfin/jellyfin-kodi?style=social" alt="GitHub stars" />
+<img src="https://img.shields.io/github/forks/jellyfin/jellyfin-kodi?style=social" alt="GitHub forks" />
+<img src="https://img.shields.io/github/v/release/jellyfin/jellyfin-kodi" alt="GitHub release (latest SemVer)" />
+<img src="https://img.shields.io/github/release-date/jellyfin/jellyfin-kodi" alt="GitHub Release Date" />
+<img src="https://img.shields.io/github/commits-since/jellyfin/jellyfin-kodi/latest/master?sort=semver" alt="GitHub commits since latest release (by SemVer)" />
+<img src="https://img.shields.io/github/last-commit/jellyfin/jellyfin-kodi" alt="GitHub last commit" />
+<img src="https://img.shields.io/github/contributors/jellyfin/jellyfin-kodi" alt="GitHub contributors" />
+<br />
+<a href="https://translate.jellyfin.org/engage/jellyfin/?utm_source=widget">
+<img src="https://translate.jellyfin.org/widgets/jellyfin/-/jellyfin-kodi/svg-badge.svg" alt="Translation status" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=alert_status" alt="Quality Gate Status" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=bugs" alt="Bugs" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=code_smells" alt="Code Smells" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=ncloc" alt="Lines of Code" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=duplicated_lines_density" alt="Duplicated Lines (%)" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=sqale_rating" alt="Maintainability Rating" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=reliability_rating" alt="Reliability Rating" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=security_rating" alt="Security Rating" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=sqale_index" alt="Technical Debt" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=vulnerabilities" alt="Vulnerabilities" />
+</a>
+</p>
+
+---
 
 **A whole new way to manage and view your media library.**
 
 The Jellyfin for Kodi add-on combines the best of Kodi - ultra smooth navigation, beautiful UIs and playback of any file under the sun, and Jellyfin - the most powerful open source multi-client media metadata indexer and server. You can now retire your MySQL setup in favor of a more flexible setup.
 
 Synchronize your media on your Jellyfin server to the native Kodi database, browsing your media at full speed, while retaining the ability to use other Kodi add-ons to enhance your experience. In addition, you can use any Kodi skin you'd like!
-___
+
+---
 
 ### Supported
 
