@@ -10,17 +10,12 @@
 <a href="https://github.com/jellyfin/jellyfin-kodi">
 <img src="https://img.shields.io/github/license/jellyfin/jellyfin-kodi" alt="GPL 3.0 License" />
 </a>
-<img src="https://img.shields.io/github/languages/top/jellyfin/jellyfin-kodi" alt="GitHub top language" />
-<img src="https://img.shields.io/github/languages/code-size/jellyfin/jellyfin-kodi" alt="GitHub code size in bytes" />
-<img src="https://img.shields.io/github/issues/jellyfin/jellyfin-kodi" alt="GitHub issues" />
-<img src="https://img.shields.io/github/issues-pr/jellyfin/jellyfin-kodi" alt="GitHub pull requests" />
-<img src="https://img.shields.io/github/stars/jellyfin/jellyfin-kodi?style=social" alt="GitHub stars" />
-<img src="https://img.shields.io/github/forks/jellyfin/jellyfin-kodi?style=social" alt="GitHub forks" />
+<a href="https://github.com/jellyfin/jellyfin-kodi/releases">
 <img src="https://img.shields.io/github/v/release/jellyfin/jellyfin-kodi" alt="GitHub release (latest SemVer)" />
-<img src="https://img.shields.io/github/release-date/jellyfin/jellyfin-kodi" alt="GitHub Release Date" />
-<img src="https://img.shields.io/github/commits-since/jellyfin/jellyfin-kodi/latest/master?sort=semver" alt="GitHub commits since latest release (by SemVer)" />
-<img src="https://img.shields.io/github/last-commit/jellyfin/jellyfin-kodi" alt="GitHub last commit" />
-<img src="https://img.shields.io/github/contributors/jellyfin/jellyfin-kodi" alt="GitHub contributors" />
+</a>
+<a href="https://matrix.to/#/+jellyfin:matrix.org">
+<img alt="Chat on Matrix" src="https://img.shields.io/matrix/jellyfin:matrix.org.svg?logo=matrix"/>
+</a>
 <br />
 <a href="https://translate.jellyfin.org/engage/jellyfin/?utm_source=widget">
 <img src="https://translate.jellyfin.org/widgets/jellyfin/-/jellyfin-kodi/svg-badge.svg" alt="Translation status" />
@@ -29,17 +24,27 @@
 <img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=alert_status" alt="Quality Gate Status" />
 </a>
 <a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
-<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=bugs" alt="Bugs" />
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=sqale_index" alt="Technical Debt" />
 </a>
+<br />
 <a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
 <img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=code_smells" alt="Code Smells" />
 </a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=bugs" alt="Bugs" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=vulnerabilities" alt="Vulnerabilities" />
+</a>
+<br />
+<img src="https://img.shields.io/github/languages/code-size/jellyfin/jellyfin-kodi" alt="GitHub code size in bytes" />
 <a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
 <img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=ncloc" alt="Lines of Code" />
 </a>
 <a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
 <img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=duplicated_lines_density" alt="Duplicated Lines (%)" />
 </a>
+<br />
 <a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
 <img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=sqale_rating" alt="Maintainability Rating" />
 </a>
@@ -48,12 +53,6 @@
 </a>
 <a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
 <img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=security_rating" alt="Security Rating" />
-</a>
-<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
-<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=sqale_index" alt="Technical Debt" />
-</a>
-<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
-<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=vulnerabilities" alt="Vulnerabilities" />
 </a>
 </p>
 
