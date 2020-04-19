@@ -3,7 +3,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import logging
 import os
 
 from kodi_six import xbmc, xbmcvfs
@@ -11,10 +10,11 @@ from kodi_six import xbmc, xbmcvfs
 from objects.obj import Objects
 from helper import translate, api, window, settings, dialog, event, silent_catch, JSONRPC
 from jellyfin import Jellyfin
+from helper import LazyLogger
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 
 #################################################################################################
 

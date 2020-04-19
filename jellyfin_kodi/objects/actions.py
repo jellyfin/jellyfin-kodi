@@ -3,7 +3,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import logging
 import threading
 import sys
 from datetime import timedelta
@@ -15,10 +14,11 @@ from downloader import TheVoid
 from .obj import Objects
 from helper import translate, playutils, api, window, settings, dialog
 from dialogs import resume
+from helper import LazyLogger
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 
 #################################################################################################
 

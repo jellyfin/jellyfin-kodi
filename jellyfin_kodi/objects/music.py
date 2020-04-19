@@ -4,16 +4,16 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 ##################################################################################################
 
 import datetime
-import logging
 
 from .obj import Objects
 from .kodi import Music as KodiDb, queries_music as QU
 from database import jellyfin_db, queries as QUEM
 from helper import api, stop, validate, jellyfin_item, values, library_check, Local
+from helper import LazyLogger
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 
 ##################################################################################################
 

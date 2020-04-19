@@ -3,7 +3,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import logging
 import os
 import threading
 import sys
@@ -21,10 +20,11 @@ sys.path.insert(0, __base__)
 
 from entrypoint import Service  # noqa: F402
 from helper.utils import settings  # noqa: F402
+from helper import LazyLogger  # noqa: F402
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN.service")
+LOG = LazyLogger(__name__)
 DELAY = int(settings('startupDelay') if settings('SyncInstallRunDone.bool') else 4 or 0)
 
 #################################################################################################

@@ -3,7 +3,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import logging
 import os
 from uuid import uuid4
 import collections
@@ -15,10 +14,11 @@ import requests
 from downloader import TheVoid
 
 from . import translate, settings, window, dialog, api
+from helper import LazyLogger
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 
 #################################################################################################
 

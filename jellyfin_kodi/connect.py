@@ -3,8 +3,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 ##################################################################################################
 
-import logging
-
 from kodi_six import xbmc, xbmcaddon
 
 import client
@@ -14,10 +12,11 @@ from helper import settings, addon_id, event, api, window
 from jellyfin import Jellyfin
 from jellyfin.connection_manager import CONNECTION_STATE
 from jellyfin.exceptions import HTTPException
+from helper import LazyLogger
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 XML_PATH = (xbmcaddon.Addon(addon_id()).getAddonInfo('path'), "default", "1080i")
 
 ##################################################################################################

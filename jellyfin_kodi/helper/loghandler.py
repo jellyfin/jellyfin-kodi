@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
 
-from __future__ import absolute_import
-from __future__ import print_function
-
 ##################################################################################################
 
 import os
@@ -13,7 +10,7 @@ import traceback
 from kodi_six import xbmc, xbmcaddon
 import database
 
-from . import window, settings
+from . import settings
 
 ##################################################################################################
 
@@ -23,17 +20,11 @@ __pluginpath__ = xbmc.translatePath(__addon__.getAddonInfo('path'))
 ##################################################################################################
 
 
-def config():
+def getLogger(name=None):
+    if name is None:
+        return __LOGGER
 
-    logger = logging.getLogger('JELLYFIN')
-    logger.addHandler(LogHandler())
-    logger.setLevel(logging.DEBUG)
-
-
-def reset():
-
-    for handler in logging.getLogger('JELLYFIN').handlers:
-        logging.getLogger('JELLYFIN').removeHandler(handler)
+    return __LOGGER.getChild(name)
 
 
 class LogHandler(logging.StreamHandler):
@@ -70,10 +61,7 @@ class LogHandler(logging.StreamHandler):
                 for token in self.sensitive['Token']:
                     string = string.replace(token or "{token}", "{jellyfin-token}")
 
-            try:
-                xbmc.log(string, level=xbmc.LOGNOTICE)
-            except UnicodeEncodeError:
-                xbmc.log(string, level=xbmc.LOGNOTICE)
+            xbmc.log(string, level=xbmc.LOGNOTICE)
 
     @classmethod
     def _get_log_level(cls, level):
@@ -85,35 +73,23 @@ class LogHandler(logging.StreamHandler):
             logging.DEBUG: 2
         }
         try:
-            log_level = int(window('jellyfin_logLevel'))
+            log_level = int(settings('logLevel'))
         except ValueError:
-            log_level = 0
+            log_level = 2  # If getting settings fail, we probably want debug logging.
 
         return log_level >= levels[level]
 
 
 class MyFormatter(logging.Formatter):
 
-    def __init__(self, fmt="%(name)s -> %(message)s"):
-
+    def __init__(self, fmt='%(name)s -> %(levelname)s::%(relpath)s:%(lineno)s %(message)s'):
         logging.Formatter.__init__(self, fmt)
 
     def format(self, record):
-
-        # Save the original format configured by the user
-        # when the logger formatter was instantiated
-        format_orig = self._fmt
-
         self._gen_rel_path(record)
-
-        # Replace the original format with one customized by logging level
-        self._fmt = '%(name)s -> %(levelname)s::%(relpath)s:%(lineno)s %(message)s'
 
         # Call the original formatter class to do the grunt work
         result = logging.Formatter.format(self, record)
-
-        # Restore the original format configured by the user
-        self._fmt = format_orig
 
         return result
 
@@ -136,3 +112,11 @@ class MyFormatter(logging.Formatter):
     def _gen_rel_path(self, record):
         if record.pathname:
             record.relpath = os.path.relpath(record.pathname, __pluginpath__)
+
+
+__LOGGER = logging.getLogger('JELLYFIN')
+for handler in __LOGGER.handlers:
+    __LOGGER.removeHandler(handler)
+
+__LOGGER.addHandler(LogHandler())
+__LOGGER.setLevel(logging.DEBUG)

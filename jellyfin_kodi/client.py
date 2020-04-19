@@ -3,17 +3,17 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import logging
 import os
 
 from kodi_six import xbmc, xbmcaddon, xbmcvfs
 
 from helper import translate, window, settings, addon_id, dialog
 from helper.utils import create_id
+from helper import LazyLogger  # noqa: F402
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 
 ##################################################################################################
 
@@ -104,7 +104,7 @@ def get_device_id(reset=False):
     file_guid.close()
     LOG.debug("DeviceId loaded: %s", client_id)
     window('jellyfin_deviceId', value=client_id)
-    
+
     return client_id
 
 

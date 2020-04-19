@@ -3,7 +3,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import logging
 import os
 import sys
 
@@ -19,10 +18,11 @@ sys.path.insert(0, __base__)
 #################################################################################################
 
 from entrypoint import Events  # noqa: F402
+from helper import LazyLogger  # noqa: F402
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN.default")
+LOG = LazyLogger(__name__)
 
 #################################################################################################
 

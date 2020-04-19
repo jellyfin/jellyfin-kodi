@@ -2,10 +2,12 @@
 from __future__ import division, absolute_import, print_function, unicode_literals
 import requests
 import json
-import logging
-from helper.utils import settings
 
-LOG = logging.getLogger('JELLYFIN.' + __name__)
+from helper.utils import settings
+from helper import LazyLogger
+
+
+LOG = LazyLogger(__name__)
 
 
 def jellyfin_url(client, handler):

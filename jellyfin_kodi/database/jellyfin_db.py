@@ -2,13 +2,12 @@
 from __future__ import division, absolute_import, print_function, unicode_literals
 #################################################################################################
 
-import logging
-
 from database import queries as QU
+from helper import LazyLogger
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 
 ##################################################################################################
 

@@ -3,13 +3,14 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import logging
 import time
 from datetime import datetime
 
+from helper import LazyLogger
+
 #################################################################################################
 
-LOG = logging.getLogger('JELLYFIN.' + __name__)
+LOG = LazyLogger(__name__)
 
 #################################################################################################
 

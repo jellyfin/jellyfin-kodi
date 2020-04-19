@@ -4,7 +4,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 #################################################################################################
 
 import json
-import logging
 import socket
 import time
 from datetime import datetime
@@ -16,10 +15,11 @@ from .credentials import Credentials
 from .http import HTTP  # noqa: I201,I100
 from .api import API
 import traceback
+from helper import LazyLogger
 
 #################################################################################################
 
-LOG = logging.getLogger('JELLYFIN.' + __name__)
+LOG = LazyLogger(__name__)
 CONNECTION_STATE = {
     'Unavailable': 0,
     'ServerSelection': 1,

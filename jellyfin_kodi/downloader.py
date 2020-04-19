@@ -3,7 +3,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import logging
 import threading
 import concurrent.futures
 from datetime import date
@@ -16,10 +15,11 @@ from helper import settings, stop, event, window, create_id
 from jellyfin import Jellyfin
 from jellyfin import api
 from jellyfin.exceptions import HTTPException
+from helper import LazyLogger
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 LIMIT = min(int(settings('limitIndex') or 50), 50)
 DTHREADS = int(settings('limitThreads') or 3)
 

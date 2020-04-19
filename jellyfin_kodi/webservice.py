@@ -4,17 +4,18 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 #################################################################################################
 
 from six.moves import BaseHTTPServer
-import logging
 from six.moves import http_client as httplib
 import threading
 from six.moves.urllib.parse import parse_qsl
 
 from kodi_six import xbmc
 
+from helper import LazyLogger
+
 #################################################################################################
 
+LOG = LazyLogger(__name__)
 PORT = 57578
-LOG = logging.getLogger("JELLYFIN." + __name__)
 
 #################################################################################################
 
