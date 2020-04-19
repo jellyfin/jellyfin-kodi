@@ -24,7 +24,7 @@ from helper import LazyLogger  # noqa: F402
 
 #################################################################################################
 
-LOG = LazyLogger("service")
+LOG = LazyLogger(__name__)
 DELAY = int(settings('startupDelay') if settings('SyncInstallRunDone.bool') else 4 or 0)
 
 #################################################################################################
