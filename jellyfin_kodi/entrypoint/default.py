@@ -23,8 +23,11 @@ from helper import LazyLogger
 LOG = LazyLogger(__name__)
 
 ADDON_BASE_URL = sys.argv[0]
-PROCESS_HANDLE = int(sys.argv[1])
-QUERY_STRING = sys.argv[2]
+try:
+    PROCESS_HANDLE = int(sys.argv[1])
+    QUERY_STRING = sys.argv[2]
+except IndexError:
+    pass
 
 #################################################################################################
 
