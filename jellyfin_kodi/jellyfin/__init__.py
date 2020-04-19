@@ -5,8 +5,9 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import logging
 
-from .client import JellyfinClient
 from helper import has_attribute, LazyLogger
+
+from .client import JellyfinClient
 
 #################################################################################################
 

@@ -46,12 +46,12 @@ class ResumeDialog(xbmcgui.WindowXMLDialog):
         if action in (ACTION_BACK, ACTION_PARENT_DIR, ACTION_PREVIOUS_MENU):
             self.close()
 
-    def onClick(self, controlID):
+    def onClick(self, control_id):
 
-        if controlID == RESUME:
+        if control_id == RESUME:
             self.selected_option = 1
             self.close()
 
-        if controlID == START_BEGINNING:
+        if control_id == START_BEGINNING:
             self.selected_option = 0
             self.close()

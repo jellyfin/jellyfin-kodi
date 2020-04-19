@@ -43,7 +43,11 @@ def browse_info():
     )
 
 
-def _http(action, url, request={}, server_id=None):
+def _http(action, url, request=None, server_id=None):
+
+    if request is None:
+        request = {}
+
     request.update({'url': url, 'type': action})
     return Jellyfin(server_id).http.request(request)
 
@@ -268,8 +272,11 @@ def _get_items(query, server_id=None):
             params_copy['Limit'] = count
             return params_copy
 
-        query_params = [get_query_params(params, offset, LIMIT) \
-                for offset in range(params['StartIndex'], items['TotalRecordCount'], LIMIT)]
+        query_params = [
+            get_query_params(params, offset, LIMIT)
+            for offset
+            in range(params['StartIndex'], items['TotalRecordCount'], LIMIT)
+        ]
 
         # multiprocessing.dummy.Pool completes all requests in multiple threads but has to
         # complete all tasks before allowing any results to be processed. ThreadPoolExecutor

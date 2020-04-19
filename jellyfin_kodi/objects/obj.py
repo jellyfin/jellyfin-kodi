@@ -86,9 +86,7 @@ class Objects(object):
 
                     for d in self.__recursiveloop__(obj, obj_param):
 
-                        if obj_filters and self.__filters__(d, obj_filters):
-                            result.append(d)
-                        elif not obj_filters:
+                        if not obj_filters or self.__filters__(d, obj_filters):
                             result.append(d)
 
                     obj = result

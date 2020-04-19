@@ -90,7 +90,7 @@ class Library(threading.Thread):
 
             try:
                 self.service()
-            except LibraryException as error:
+            except LibraryException:
                 break
             except Exception as error:
                 LOG.exception(error)
@@ -662,20 +662,19 @@ class UserDataWorker(threading.Thread):
                 except Queue.Empty:
                     break
 
-
                 try:
                     if item['Type'] == 'Movie':
-                        obj = Movies(self.args[0], jellyfindb, kodidb, self.args[1]).userdata(item)
+                        Movies(self.args[0], jellyfindb, kodidb, self.args[1]).userdata(item)
                     elif item['Type'] in ['Series', 'Season', 'Episode']:
-                        obj = TVShows(self.args[0], jellyfindb, kodidb, self.args[1]).userdata(item)
+                        TVShows(self.args[0], jellyfindb, kodidb, self.args[1]).userdata(item)
                     elif item['Type'] == 'MusicAlbum':
-                        obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).album(item)
+                        Music(self.args[0], jellyfindb, kodidb, self.args[1]).album(item)
                     elif item['Type'] == 'MusicArtist':
-                        obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).artist(item)
+                        Music(self.args[0], jellyfindb, kodidb, self.args[1]).artist(item)
                     elif item['Type'] == 'AlbumArtist':
-                        obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).albumartist(item)
+                        Music(self.args[0], jellyfindb, kodidb, self.args[1]).albumartist(item)
                     elif item['Type'] == 'Audio':
-                        obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).song(item)
+                        Music(self.args[0], jellyfindb, kodidb, self.args[1]).song(item)
                 except LibraryException as error:
                     if error.status == 'StopCalled':
                         break

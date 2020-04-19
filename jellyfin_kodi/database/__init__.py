@@ -20,6 +20,8 @@ from helper import LazyLogger
 
 LOG = LazyLogger(__name__)
 
+ADDON_DATA = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/")
+
 #################################################################################################
 
 
@@ -67,8 +69,8 @@ class Database(object):
             contents = query.fetchall()
             if contents:
                 for item in contents:
-                    newPath = item[1].replace('/emby/', '/')
-                    self.conn.execute('UPDATE path SET strPath = "{}" WHERE idPath = "{}"'.format(newPath, item[0]))
+                    new_path = item[1].replace('/emby/', '/')
+                    self.conn.execute('UPDATE path SET strPath = "{}" WHERE idPath = "{}"'.format(new_path, item[0]))
 
         return self
 
@@ -249,16 +251,14 @@ def reset():
     if dialog("yesno", heading="{jellyfin}", line1=translate(33086)):
         reset_artwork()
 
-    addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/")
-
     if dialog("yesno", heading="{jellyfin}", line1=translate(33087)):
 
-        xbmcvfs.delete(os.path.join(addon_data, "settings.xml"))
-        xbmcvfs.delete(os.path.join(addon_data, "data.json"))
+        xbmcvfs.delete(os.path.join(ADDON_DATA, "settings.xml"))
+        xbmcvfs.delete(os.path.join(ADDON_DATA, "data.json"))
         LOG.info("[ reset settings ]")
 
-    if xbmcvfs.exists(os.path.join(addon_data, "sync.json")):
-        xbmcvfs.delete(os.path.join(addon_data, "sync.json"))
+    if xbmcvfs.exists(os.path.join(ADDON_DATA, "sync.json")):
+        xbmcvfs.delete(os.path.join(ADDON_DATA, "sync.json"))
 
     settings('enableMusic.bool', False)
     settings('MinimumSetup', "")
@@ -341,13 +341,11 @@ def reset_artwork():
 
 def get_sync():
 
-    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/")
-
-    if not xbmcvfs.exists(path):
-        xbmcvfs.mkdirs(path)
+    if not xbmcvfs.exists(ADDON_DATA):
+        xbmcvfs.mkdirs(ADDON_DATA)
 
     try:
-        with open(os.path.join(path, 'sync.json'), 'rb') as infile:
+        with open(os.path.join(ADDON_DATA, 'sync.json'), 'rb') as infile:
             sync = json.load(infile, encoding='utf-8')
     except Exception:
         sync = {}
@@ -362,14 +360,12 @@ def get_sync():
 
 def save_sync(sync):
 
-    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/")
-
-    if not xbmcvfs.exists(path):
-        xbmcvfs.mkdirs(path)
+    if not xbmcvfs.exists(ADDON_DATA):
+        xbmcvfs.mkdirs(ADDON_DATA)
 
     sync['Date'] = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 
-    with open(os.path.join(path, 'sync.json'), 'wb') as outfile:
+    with open(os.path.join(ADDON_DATA, 'sync.json'), 'wb') as outfile:
         data = json.dumps(sync, sort_keys=True, indent=4, ensure_ascii=False)
         if isinstance(data, text_type):
             data = data.encode('utf-8')
@@ -378,22 +374,20 @@ def save_sync(sync):
 
 def get_credentials():
 
-    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/")
-
-    if not xbmcvfs.exists(path):
-        xbmcvfs.mkdirs(path)
+    if not xbmcvfs.exists(ADDON_DATA):
+        xbmcvfs.mkdirs(ADDON_DATA)
 
     try:
-        with open(os.path.join(path, 'data.json'), 'rb') as infile:
+        with open(os.path.join(ADDON_DATA, 'data.json'), 'rb') as infile:
             credentials = json.load(infile, encoding='utf8')
     except Exception:
 
         try:
-            with open(os.path.join(path, 'data.txt'), 'rb') as infile:
+            with open(os.path.join(ADDON_DATA, 'data.txt'), 'rb') as infile:
                 credentials = json.load(infile, encoding='utf-8')
                 save_credentials(credentials)
 
-            xbmcvfs.delete(os.path.join(path, 'data.txt'))
+            xbmcvfs.delete(os.path.join(ADDON_DATA, 'data.txt'))
         except Exception:
             credentials = {}
 
@@ -422,12 +416,11 @@ def get_credentials():
 
 def save_credentials(credentials):
     credentials = credentials or {}
-    path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/")
 
-    if not xbmcvfs.exists(path):
-        xbmcvfs.mkdirs(path)
+    if not xbmcvfs.exists(ADDON_DATA):
+        xbmcvfs.mkdirs(ADDON_DATA)
     try:
-        with open(os.path.join(path, 'data.json'), 'wb') as outfile:
+        with open(os.path.join(ADDON_DATA, 'data.json'), 'wb') as outfile:
             data = json.dumps(credentials, sort_keys=True, indent=4, ensure_ascii=False)
             if isinstance(data, text_type):
                 data = data.encode('utf-8')

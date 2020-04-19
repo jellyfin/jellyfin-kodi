@@ -9,12 +9,13 @@ from ntpath import dirname
 from six.moves.urllib.parse import urlencode
 from kodi_six.utils import py2_encode
 
-from .obj import Objects
-from .kodi import TVShows as KodiDb, queries as QU
 import downloader as server
 from database import jellyfin_db, queries as QUEM
-from helper import api, stop, validate, jellyfin_item, library_check, settings, values, Local
+from helper import api, stop, validate, jellyfin_item, library_check, values, Local
 from helper import LazyLogger
+
+from .obj import Objects
+from .kodi import TVShows as KodiDb, queries as QU
 
 ##################################################################################################
 

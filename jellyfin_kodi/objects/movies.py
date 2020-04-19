@@ -7,11 +7,12 @@ from six.moves.urllib.parse import urlencode
 from kodi_six.utils import py2_encode
 
 import downloader as server
+from database import jellyfin_db, queries as QUEM
+from helper import api, stop, validate, jellyfin_item, library_check, values, Local
+from helper import LazyLogger
+
 from .obj import Objects
 from .kodi import Movies as KodiDb, queries as QU
-from database import jellyfin_db, queries as QUEM
-from helper import api, stop, validate, jellyfin_item, library_check, values, settings, Local
-from helper import LazyLogger
 
 ##################################################################################################
 
