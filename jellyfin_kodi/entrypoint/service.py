@@ -4,7 +4,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 #################################################################################################
 
 import json
-import logging
 import sys
 from datetime import datetime
 
@@ -22,10 +21,11 @@ from views import Views, verify_kodi_defaults
 from helper import translate, window, settings, event, dialog, set_addon_mode
 from helper.utils import JsonDebugPrinter
 from jellyfin import Jellyfin
+from helper import LazyLogger
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 
 #################################################################################################
 
@@ -51,7 +51,6 @@ class Service(xbmc.Monitor):
         self.settings['enable_context'] = settings('enableContext.bool')
         self.settings['enable_context_transcode'] = settings('enableContextTranscode.bool')
         self.settings['kodi_companion'] = settings('kodiCompanion.bool')
-        window('jellyfin_logLevel', value=str(self.settings['log_level']))
         window('jellyfin_kodiProfile', value=self.settings['profile'])
         settings('platformDetected', client.get_platform())
 
@@ -356,7 +355,6 @@ class Service(xbmc.Monitor):
         if settings('logLevel') != self.settings['log_level']:
 
             log_level = settings('logLevel')
-            window('jellyfin_logLevel', str(log_level))
             self.settings['logLevel'] = log_level
             LOG.info("New log level: %s", log_level)
 

@@ -3,7 +3,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 ##################################################################################################
 
-import logging
 import os
 import re
 
@@ -12,10 +11,11 @@ from kodi_six import xbmcgui, xbmcaddon
 
 from helper import translate, addon_id
 from jellyfin.connection_manager import CONNECTION_STATE
+from helper import LazyLogger
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 ACTION_PARENT_DIR = 9
 ACTION_PREVIOUS_MENU = 10
 ACTION_BACK = 92

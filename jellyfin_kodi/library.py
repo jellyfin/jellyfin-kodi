@@ -3,7 +3,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 ##################################################################################################
 
-import logging
 import threading
 from datetime import datetime, timedelta
 
@@ -19,10 +18,11 @@ from downloader import GetItemWorker
 from helper import translate, api, stop, settings, window, dialog, event, LibraryException
 from helper.utils import split_list, set_screensaver, get_screensaver
 from jellyfin import Jellyfin
+from helper import LazyLogger
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 LIMIT = int(settings('limitIndex') or 15)
 DTHREADS = int(settings('limitThreads') or 3)
 

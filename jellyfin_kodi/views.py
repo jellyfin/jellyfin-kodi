@@ -3,7 +3,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import logging
 import os
 import shutil
 import xml.etree.ElementTree as etree
@@ -14,10 +13,11 @@ from kodi_six import xbmc, xbmcvfs
 from database import Database, jellyfin_db, get_sync, save_sync
 from helper import translate, api, window, event
 from jellyfin import Jellyfin
+from helper import LazyLogger
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 NODES = {
     'tvshows': [
         ('all', None),

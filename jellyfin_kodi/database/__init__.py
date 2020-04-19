@@ -14,10 +14,11 @@ from six import text_type
 from database import jellyfin_db
 from helper import translate, settings, window, dialog
 from objects import obj
+from helper import LazyLogger
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 
 #################################################################################################
 

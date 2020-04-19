@@ -4,7 +4,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 #################################################################################################
 
 import json
-import logging
 import sys
 
 from kodi_six import xbmc, xbmcaddon
@@ -13,10 +12,11 @@ import database
 from dialogs import context
 from helper import translate, settings, dialog
 from downloader import TheVoid
+from helper import LazyLogger
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 XML_PATH = (xbmcaddon.Addon('plugin.video.jellyfin').getAddonInfo('path'), "default", "1080i")
 OPTIONS = {
     'Refresh': translate(30410),

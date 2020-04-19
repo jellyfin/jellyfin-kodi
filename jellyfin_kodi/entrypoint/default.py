@@ -3,7 +3,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import logging
 import sys
 import os
 
@@ -17,10 +16,11 @@ from objects import Objects, Actions
 from downloader import TheVoid
 from helper import translate, event, settings, window, dialog, api, JSONRPC
 from helper.utils import JsonDebugPrinter
+from helper import LazyLogger
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 
 #################################################################################################
 

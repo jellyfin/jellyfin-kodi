@@ -5,7 +5,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import binascii
 import json
-import logging
 import os
 import re
 import unicodedata
@@ -18,11 +17,12 @@ from six.moves.urllib.parse import quote_plus
 
 from kodi_six import xbmc, xbmcaddon, xbmcgui, xbmcvfs
 
+from . import LazyLogger
 from .translate import translate
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 
 #################################################################################################
 

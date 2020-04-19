@@ -4,7 +4,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 #################################################################################################
 
 import json
-import logging
 import time
 
 import requests
@@ -12,10 +11,11 @@ from six import string_types
 
 from .exceptions import HTTPException
 from helper.utils import JsonDebugPrinter
+from helper import LazyLogger
 
 #################################################################################################
 
-LOG = logging.getLogger('Jellyfin.' + __name__)
+LOG = LazyLogger(__name__)
 
 #################################################################################################
 
@@ -222,7 +222,7 @@ class HTTP(object):
         data['headers'].update({'x-emby-authorization': auth})
 
         if self.config.data.get('auth.token') and self.config.data.get('auth.user_id'):
-            
+
             auth += ', UserId=%s' % self.config.data.get('auth.user_id')
             data['headers'].update({'x-emby-authorization': auth, 'X-MediaBrowser-Token': self.config.data.get('auth.token')})
 

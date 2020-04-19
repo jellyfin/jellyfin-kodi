@@ -3,9 +3,9 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import logging
-
 from kodi_six import xbmcgui
+
+from helper import LazyLogger
 
 from .utils import should_stop
 from .exceptions import LibraryException
@@ -13,7 +13,7 @@ from .translate import translate
 
 #################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 
 #################################################################################################
 

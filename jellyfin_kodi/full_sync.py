@@ -5,7 +5,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 from contextlib import contextmanager
 import datetime
-import logging
 
 from kodi_six import xbmc
 
@@ -15,10 +14,11 @@ from objects import Movies, TVShows, MusicVideos, Music
 from database import Database, get_sync, save_sync, jellyfin_db
 from helper import translate, settings, window, progress, dialog, LibraryException
 from helper.utils import get_screensaver, set_screensaver
+from helper import LazyLogger
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 
 ##################################################################################################
 

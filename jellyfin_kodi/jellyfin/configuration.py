@@ -7,13 +7,13 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import logging
+from helper import LazyLogger
 
 #################################################################################################
 
+LOG = LazyLogger(__name__)
 DEFAULT_HTTP_MAX_RETRIES = 3
 DEFAULT_HTTP_TIMEOUT = 30
-LOG = logging.getLogger('JELLYFIN.' + __name__)
 
 #################################################################################################
 
@@ -27,7 +27,7 @@ class Config(object):
         self.http()
 
     def app(self, name, version, device_name, device_id, capabilities=None, device_pixel_ratio=None):
-        
+
         LOG.debug("Begin app constructor.")
         self.data['app.name'] = name
         self.data['app.version'] = version
@@ -38,7 +38,7 @@ class Config(object):
         self.data['app.default'] = False
 
     def auth(self, server, user_id, token=None, ssl=None):
-        
+
         LOG.debug("Begin auth constructor.")
         self.data['auth.server'] = server
         self.data['auth.user_id'] = user_id
@@ -46,7 +46,7 @@ class Config(object):
         self.data['auth.ssl'] = ssl
 
     def http(self, user_agent=None, max_retries=DEFAULT_HTTP_MAX_RETRIES, timeout=DEFAULT_HTTP_TIMEOUT):
-        
+
         LOG.debug("Begin http constructor.")
         self.data['http.max_retries'] = max_retries
         self.data['http.timeout'] = timeout

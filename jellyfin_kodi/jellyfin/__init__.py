@@ -6,27 +6,13 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import logging
 
 from .client import JellyfinClient
-from helper import has_attribute
+from helper import has_attribute, LazyLogger
 
 #################################################################################################
 
-
-class NullHandler(logging.Handler):
-    def emit(self, record):
-        print(self.format(record))
-
-
-loghandler = NullHandler
-LOG = logging.getLogger('Jellyfin')
+LOG = LazyLogger()
 
 #################################################################################################
-
-
-def config(level=logging.INFO):
-
-    logger = logging.getLogger('Jellyfin')
-    logger.addHandler(Jellyfin.loghandler())
-    logger.setLevel(level)
 
 
 def ensure_client():
@@ -61,7 +47,6 @@ class Jellyfin(object):
     _shared_state = {}
     client = {}
     server_id = "default"
-    loghandler = loghandler
 
     def __init__(self, server_id=None):
         self.__dict__ = self._shared_state
@@ -69,16 +54,6 @@ class Jellyfin(object):
 
     def get_client(self):
         return self.client[self.server_id]
-
-    @classmethod
-    def set_loghandler(cls, func=loghandler, level=logging.INFO):
-
-        for handler in logging.getLogger('Jellyfin').handlers:
-            if isinstance(handler, cls.loghandler):
-                logging.getLogger('Jellyfin').removeHandler(handler)
-
-        cls.loghandler = func
-        config(level)
 
     def close(self):
 
@@ -123,6 +98,3 @@ class Jellyfin(object):
             LOG.info("---[ START JELLYFINCLIENT ]---")
         else:
             LOG.info("---[ START JELLYFINCLIENT: %s ]---", self.server_id)
-
-
-config()

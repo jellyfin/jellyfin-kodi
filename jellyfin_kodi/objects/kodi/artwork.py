@@ -3,7 +3,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import logging
 import threading
 
 from six.moves import queue as Queue
@@ -15,10 +14,11 @@ from . import queries as QU
 from . import queries_texture as QUTEX
 from helper import settings
 import requests
+from helper import LazyLogger
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 
 ##################################################################################################
 

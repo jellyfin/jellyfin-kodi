@@ -4,14 +4,15 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 ##################################################################################################
 
 import json
-import logging
 import os
 
 from six import iteritems
 
+from helper import LazyLogger
+
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 
 ##################################################################################################
 

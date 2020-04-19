@@ -3,7 +3,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import logging
+from helper import LazyLogger
 
 from . import api
 from .configuration import Config
@@ -13,7 +13,7 @@ from .connection_manager import ConnectionManager, CONNECTION_STATE
 
 #################################################################################################
 
-LOG = logging.getLogger('JELLYFIN.' + __name__)
+LOG = LazyLogger(__name__)
 
 #################################################################################################
 

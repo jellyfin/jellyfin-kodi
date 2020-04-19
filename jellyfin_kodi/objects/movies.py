@@ -3,7 +3,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 ##################################################################################################
 
-import logging
 from six.moves.urllib.parse import urlencode
 from kodi_six.utils import py2_encode
 
@@ -12,10 +11,11 @@ from .obj import Objects
 from .kodi import Movies as KodiDb, queries as QU
 from database import jellyfin_db, queries as QUEM
 from helper import api, stop, validate, jellyfin_item, library_check, values, settings, Local
+from helper import LazyLogger
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 
 ##################################################################################################
 

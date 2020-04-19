@@ -1,5 +1,7 @@
 from __future__ import division, absolute_import, print_function, unicode_literals
 
+from .lazylogger import LazyLogger
+
 from .translate import translate
 from .exceptions import LibraryException
 

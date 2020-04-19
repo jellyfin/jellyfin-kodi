@@ -3,7 +3,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 ##################################################################################################
 
-import logging
 import sqlite3
 from ntpath import dirname
 
@@ -15,10 +14,11 @@ from .kodi import TVShows as KodiDb, queries as QU
 import downloader as server
 from database import jellyfin_db, queries as QUEM
 from helper import api, stop, validate, jellyfin_item, library_check, settings, values, Local
+from helper import LazyLogger
 
 ##################################################################################################
 
-LOG = logging.getLogger("JELLYFIN." + __name__)
+LOG = LazyLogger(__name__)
 
 ##################################################################################################
 
