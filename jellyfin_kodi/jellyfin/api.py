@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
-import requests
+
 import json
+
+import requests
 
 from helper.utils import settings
 from helper import LazyLogger
@@ -46,7 +48,10 @@ class API(object):
         self.config = client.config
         self.default_timeout = 5
 
-    def _http(self, action, url, request={}):
+    def _http(self, action, url, request=None):
+        if request is None:
+            request = {}
+
         request.update({'type': action, 'handler': url})
 
         return self.client.request(request)
@@ -392,7 +397,7 @@ class API(object):
 
     def login(self, server_url, username, password=""):
         path = "Users/AuthenticateByName"
-        authData = {
+        auth_data = {
                     "username": username,
                     "Pw": password
                 }
@@ -402,7 +407,7 @@ class API(object):
 
         try:
             LOG.info("Trying to login to %s/%s as %s" % (server_url, path, username))
-            response = self.send_request(server_url, path, method="post", headers=headers, data=json.dumps(authData))
+            response = self.send_request(server_url, path, method="post", headers=headers, data=json.dumps(auth_data))
 
             if response.status_code == 200:
                 return response.json()
@@ -418,13 +423,11 @@ class API(object):
         return {}
 
     def validate_authentication_token(self, server):
-
-        url = "%s/%s" % (server['address'], "system/info")
-        authTokenHeader = {
+        auth_token_header = {
                     'X-MediaBrowser-Token': server['AccessToken']
                 }
         headers = self.get_default_headers()
-        headers.update(authTokenHeader)
+        headers.update(auth_token_header)
 
         response = self.send_request(server['address'], "system/info", headers=headers)
         return response.json() if response.status_code == 200 else {}

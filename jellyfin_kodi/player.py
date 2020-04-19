@@ -290,7 +290,7 @@ class Player(xbmc.Player):
             self.report_playback()
             LOG.debug("--<[ paused ]")
 
-    def onPlayBackSeek(self, time, seekOffset):
+    def onPlayBackSeek(self, time, seek_offset):
 
         ''' Does not seem to work in Leia??
         '''

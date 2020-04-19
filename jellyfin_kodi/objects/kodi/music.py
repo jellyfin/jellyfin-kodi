@@ -61,15 +61,15 @@ class Music(Kodi):
         try:
             self.cursor.execute(QU.get_artist, (musicbrainz,))
             result = self.cursor.fetchone()
-            artist_id = result[0]
+            artist_id_res = result[0]
             artist_name = result[1]
         except TypeError:
-            artist_id = self.add_artist(artist_id, name, musicbrainz)
+            artist_id_res = self.add_artist(artist_id, name, musicbrainz)
         else:
             if artist_name != name:
                 self.update_artist_name(artist_id, name)
 
-        return artist_id
+        return artist_id_res
 
     def add_artist(self, artist_id, name, *args):
 
@@ -77,12 +77,12 @@ class Music(Kodi):
         '''
         try:
             self.cursor.execute(QU.get_artist_by_name, (name,))
-            artist_id = self.cursor.fetchone()[0]
+            artist_id_res = self.cursor.fetchone()[0]
         except TypeError:
-            artist_id = artist_id or self.create_entry()
+            artist_id_res = artist_id or self.create_entry()
             self.cursor.execute(QU.add_artist, (artist_id, name,) + args)
 
-        return artist_id
+        return artist_id_res
 
     def update_artist_name(self, *args):
         self.cursor.execute(QU.update_artist_name, args)

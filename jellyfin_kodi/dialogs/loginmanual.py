@@ -3,12 +3,10 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 ##################################################################################################
 
-import os
-
 from six import iteritems
-from kodi_six import xbmcgui, xbmcaddon
+from kodi_six import xbmcgui
 
-from helper import translate, addon_id
+from helper import translate
 from helper import LazyLogger
 
 ##################################################################################################
@@ -97,9 +95,8 @@ class LoginManual(xbmcgui.WindowXMLDialog):
         if action in (ACTION_BACK, ACTION_PARENT_DIR, ACTION_PREVIOUS_MENU):
             self.close()
 
-    def _add_editcontrol(self, x, y, height, width, password=0):
+    def _add_editcontrol(self, x, y, height, width, password=False):
 
-        media = os.path.join(xbmcaddon.Addon(addon_id()).getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
         control = xbmcgui.ControlEdit(0, 0, 0, 0,
                                       label="User",
                                       font="font13",

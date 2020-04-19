@@ -3,11 +3,13 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 ##################################################################################################
 
+from sqlite3 import IntegrityError
+
+from helper import values
+from helper import LazyLogger
+
 from . import artwork
 from . import queries as QU
-from helper import values
-from sqlite3 import IntegrityError
-from helper import LazyLogger
 
 ##################################################################################################
 
@@ -23,7 +25,7 @@ class Kodi(object):
 
         try:
             self.cursor.execute(QU.get_all_people)
-        except:
+        except Exception:
             # Failed to load the table. Has the table been created?
             self._people_cache = {}
         else:
@@ -276,7 +278,7 @@ class Kodi(object):
         self.cursor.execute(QU.delete_tags, args)
 
         for tag in tags:
-            tag_id = self.get_tag(tag, *args)
+            self.get_tag(tag, *args)
 
     def add_tag(self, *args):
 

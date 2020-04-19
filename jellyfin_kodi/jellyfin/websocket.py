@@ -727,7 +727,7 @@ class WebSocket(object):
 
         try:
             self.sock.shutdown(socket.SHUT_RDWR)
-        except:  # noqa: E722
+        except Exception:
             pass
 
         '''
@@ -813,7 +813,7 @@ class WebSocketApp(object):
     Higher level of APIs are provided.
     The interface is like JavaScript WebSocket object.
     """
-    def __init__(self, url, header=[],
+    def __init__(self, url, header=None,
                  on_open=None, on_message=None, on_error=None,
                  on_close=None, keep_running=True, get_mask_key=None):
         """
@@ -837,7 +837,10 @@ class WebSocketApp(object):
          docstring for more information
         """
         self.url = url
-        self.header = header
+        if header is None:
+            self.header = []
+        else:
+            self.header = header
         self.on_open = on_open
         self.on_message = on_message
         self.on_error = on_error

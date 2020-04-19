@@ -12,9 +12,9 @@ from kodi_six import xbmc, xbmcvfs
 import client
 import requests
 from downloader import TheVoid
+from helper import LazyLogger
 
 from . import translate, settings, window, dialog, api
-from helper import LazyLogger
 
 #################################################################################################
 
@@ -152,7 +152,7 @@ class PlayUtils(object):
 
     def is_file_exists(self, source):
 
-        path = self.direct_play(source)
+        self.direct_play(source)
 
         if xbmcvfs.exists(self.info['Path']):
             LOG.info("Path exists.")

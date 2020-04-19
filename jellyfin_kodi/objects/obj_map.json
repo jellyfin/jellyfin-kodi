@@ -286,7 +286,6 @@
 		"DatePlayed": "UserData/LastPlayedDate",
 		"Artists": "Artists",
 		"Album": "Album",
-		"Votes": "VoteCount",
 		"Path": "Path",
 		"LocalTrailer": "LocalTrailerCount",
 		"Trailer": "RemoteTrailers/0/Url",

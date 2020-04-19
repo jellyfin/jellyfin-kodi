@@ -244,8 +244,6 @@ def validate(path):
     if window('jellyfin_pathverified.bool'):
         return True
 
-    path = path if os.path.supports_unicode_filenames else path
-
     if not xbmcvfs.exists(path):
         LOG.info("Could not find %s", path)
 

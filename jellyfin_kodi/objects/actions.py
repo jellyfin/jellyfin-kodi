@@ -11,10 +11,11 @@ from kodi_six import xbmc, xbmcgui, xbmcplugin, xbmcaddon
 
 import database
 from downloader import TheVoid
-from .obj import Objects
 from helper import translate, playutils, api, window, settings, dialog
 from dialogs import resume
 from helper import LazyLogger
+
+from .obj import Objects
 
 #################################################################################################
 
@@ -133,7 +134,7 @@ class Actions(object):
                     LOG.info("[ intro/%s ] %s", intro['Id'], intro['Name'])
 
                     play = playutils.PlayUtils(intro, False, self.server_id, self.server)
-                    source = play.select_source(play.get_sources())
+                    play.select_source(play.get_sources())
                     self.set_listitem(intro, listitem, intro=True)
                     listitem.setPath(intro['PlaybackInfo']['Path'])
                     playutils.set_properties(intro, intro['PlaybackInfo']['Method'], self.server_id)
@@ -797,10 +798,10 @@ def special_listener():
         This is run in a loop within monitor.py
     '''
     player = xbmc.Player()
-    isPlaying = player.isPlaying()
+    is_playing = player.isPlaying()
     count = int(window('jellyfin.external_count') or 0)
 
-    if (not isPlaying and xbmc.getCondVisibility('Window.IsVisible(DialogContextMenu.xml)') and xbmc.getInfoLabel('Control.GetLabel(1002)') == xbmc.getLocalizedString(12021)):
+    if (not is_playing and xbmc.getCondVisibility('Window.IsVisible(DialogContextMenu.xml)') and xbmc.getInfoLabel('Control.GetLabel(1002)') == xbmc.getLocalizedString(12021)):
 
         control = int(xbmcgui.Window(10106).getFocusId())
 
@@ -812,7 +813,7 @@ def special_listener():
             LOG.info("Resume dialog: Resume selected.")
             window('jellyfin.resume.bool', True)
 
-    elif isPlaying and not window('jellyfin.external_check'):
+    elif is_playing and not window('jellyfin.external_check'):
         time = player.getTime()
 
         if time > 1:  # Not external player.

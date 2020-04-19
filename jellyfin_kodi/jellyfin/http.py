@@ -3,15 +3,15 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import json
 import time
 
 import requests
 from six import string_types
 
-from .exceptions import HTTPException
 from helper.utils import JsonDebugPrinter
 from helper import LazyLogger
+
+from .exceptions import HTTPException
 
 #################################################################################################
 
@@ -153,9 +153,6 @@ class HTTP(object):
             except requests.exceptions.MissingSchema as error:
                 LOG.error("Request missing Schema. " + str(error))
                 raise HTTPException("MissingSchema", {'Id': self.config.data.get('auth.server', "None")})
-
-            except Exception as error:
-                raise
 
             else:
                 try:

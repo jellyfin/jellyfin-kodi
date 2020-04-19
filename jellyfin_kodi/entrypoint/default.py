@@ -22,6 +22,13 @@ from helper import LazyLogger
 
 LOG = LazyLogger(__name__)
 
+ADDON_BASE_URL = sys.argv[0]
+try:
+    PROCESS_HANDLE = int(sys.argv[1])
+    QUERY_STRING = sys.argv[2]
+except IndexError:
+    pass
+
 #################################################################################################
 
 
@@ -32,8 +39,8 @@ class Events(object):
         ''' Parse the parameters. Reroute to our service.py
             where user is fully identified already.
         '''
-        base_url = sys.argv[0]
-        path = sys.argv[2]
+        base_url = ADDON_BASE_URL
+        path = QUERY_STRING
 
         try:
             params = dict(parse_qsl(path[1:]))
@@ -183,8 +190,8 @@ def listing():
     if settings('backupPath'):
         directory(translate(33092), "plugin://plugin.video.jellyfin/?mode=backup", False)
 
-    xbmcplugin.setContent(int(sys.argv[1]), 'files')
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    xbmcplugin.setContent(PROCESS_HANDLE, 'files')
+    xbmcplugin.endOfDirectory(PROCESS_HANDLE)
 
 
 def directory(label, path, folder=True, artwork=None, fanart=None, context=None):
@@ -196,7 +203,7 @@ def directory(label, path, folder=True, artwork=None, fanart=None, context=None)
     if context:
         li.addContextMenuItems(context)
 
-    xbmcplugin.addDirectoryItem(int(sys.argv[1]), path, li, folder)
+    xbmcplugin.addDirectoryItem(PROCESS_HANDLE, path, li, folder)
 
     return li
 
@@ -224,8 +231,8 @@ def manage_libraries():
     directory(translate(33184), "plugin://plugin.video.jellyfin/?mode=removelibs", False)
     directory(translate(33060), "plugin://plugin.video.jellyfin/?mode=thememedia", False)
 
-    xbmcplugin.setContent(int(sys.argv[1]), 'files')
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    xbmcplugin.setContent(PROCESS_HANDLE, 'files')
+    xbmcplugin.endOfDirectory(PROCESS_HANDLE)
 
 
 def browse(media, view_id=None, folder=None, server_id=None):
@@ -259,7 +266,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
     if view_id:
 
         view = TheVoid('GetItem', {'ServerId': server_id, 'Id': view_id}).get()
-        xbmcplugin.setPluginCategory(int(sys.argv[1]), view['Name'])
+        xbmcplugin.setPluginCategory(PROCESS_HANDLE, view['Name'])
 
     content_type = "files"
 
@@ -381,16 +388,16 @@ def browse(media, view_id=None, folder=None, server_id=None):
 
                 list_li.append((li.getProperty('path'), li, False))
 
-        xbmcplugin.addDirectoryItems(int(sys.argv[1]), list_li, len(list_li))
+        xbmcplugin.addDirectoryItems(PROCESS_HANDLE, list_li, len(list_li))
 
     if content_type == 'images':
-        xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_VIDEO_TITLE)
-        xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_DATE)
-        xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_VIDEO_RATING)
-        xbmcplugin.addSortMethod(int(sys.argv[1]), xbmcplugin.SORT_METHOD_VIDEO_RUNTIME)
+        xbmcplugin.addSortMethod(PROCESS_HANDLE, xbmcplugin.SORT_METHOD_VIDEO_TITLE)
+        xbmcplugin.addSortMethod(PROCESS_HANDLE, xbmcplugin.SORT_METHOD_DATE)
+        xbmcplugin.addSortMethod(PROCESS_HANDLE, xbmcplugin.SORT_METHOD_VIDEO_RATING)
+        xbmcplugin.addSortMethod(PROCESS_HANDLE, xbmcplugin.SORT_METHOD_VIDEO_RUNTIME)
 
-    xbmcplugin.setContent(int(sys.argv[1]), content_type)
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    xbmcplugin.setContent(PROCESS_HANDLE, content_type)
+    xbmcplugin.endOfDirectory(PROCESS_HANDLE)
 
 
 def browse_subfolders(media, view_id, server_id=None):
@@ -400,7 +407,7 @@ def browse_subfolders(media, view_id, server_id=None):
     from views import DYNNODES
 
     view = TheVoid('GetItem', {'ServerId': server_id, 'Id': view_id}).get()
-    xbmcplugin.setPluginCategory(int(sys.argv[1]), view['Name'])
+    xbmcplugin.setPluginCategory(PROCESS_HANDLE, view['Name'])
     nodes = DYNNODES[media]
 
     for node in nodes:
@@ -415,8 +422,8 @@ def browse_subfolders(media, view_id, server_id=None):
         path = "%s?%s" % ("plugin://plugin.video.jellyfin/", urlencode(params))
         directory(node[1] or view['Name'], path)
 
-    xbmcplugin.setContent(int(sys.argv[1]), 'files')
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    xbmcplugin.setContent(PROCESS_HANDLE, 'files')
+    xbmcplugin.endOfDirectory(PROCESS_HANDLE)
 
 
 def browse_letters(media, view_id, server_id=None):
@@ -426,7 +433,7 @@ def browse_letters(media, view_id, server_id=None):
     letters = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
     view = TheVoid('GetItem', {'ServerId': server_id, 'Id': view_id}).get()
-    xbmcplugin.setPluginCategory(int(sys.argv[1]), view['Name'])
+    xbmcplugin.setPluginCategory(PROCESS_HANDLE, view['Name'])
 
     for node in letters:
 
@@ -440,8 +447,8 @@ def browse_letters(media, view_id, server_id=None):
         path = "%s?%s" % ("plugin://plugin.video.jellyfin/", urlencode(params))
         directory(node, path)
 
-    xbmcplugin.setContent(int(sys.argv[1]), 'files')
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    xbmcplugin.setContent(PROCESS_HANDLE, 'files')
+    xbmcplugin.endOfDirectory(PROCESS_HANDLE)
 
 
 def get_folder_type(item, content_type=None):
@@ -521,8 +528,8 @@ def get_fanart(item_id, path, server_id=None):
             li = xbmcgui.ListItem(file, path=fanart)
             list_li.append((fanart, li, False))
 
-    xbmcplugin.addDirectoryItems(int(sys.argv[1]), list_li, len(list_li))
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    xbmcplugin.addDirectoryItems(PROCESS_HANDLE, list_li, len(list_li))
+    xbmcplugin.endOfDirectory(PROCESS_HANDLE)
 
 
 def get_video_extras(item_id, path, server_id=None):
@@ -536,8 +543,8 @@ def get_video_extras(item_id, path, server_id=None):
     if not item_id:
         return
 
-    item = TheVoid('GetItem', {'ServerId': server_id, 'Id': item_id}).get()
-    # TODO
+    TheVoid('GetItem', {'ServerId': server_id, 'Id': item_id}).get()
+    # TODO: Investigate the void (issue #228)
 
     """
     def getVideoFiles(jellyfinId,jellyfinPath):
@@ -558,12 +565,12 @@ def get_video_extras(item_id, path, server_id=None):
                 for file in files:
                     file = filelocation + file
                     li = xbmcgui.ListItem(file, path=file)
-                    xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=file, listitem=li)
+                    xbmcplugin.addDirectoryItem(handle=PROCESS_HANDLE, url=file, listitem=li)
                 for dir in dirs:
                     dir = filelocation + dir
                     li = xbmcgui.ListItem(dir, path=dir)
-                    xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=dir, listitem=li, isFolder=True)
-        #xbmcplugin.endOfDirectory(int(sys.argv[1]))
+                    xbmcplugin.addDirectoryItem(handle=PROCESS_HANDLE, url=dir, listitem=li, isFolder=True)
+        #xbmcplugin.endOfDirectory(PROCESS_HANDLE)
     """
 
 
@@ -643,9 +650,9 @@ def get_next_episodes(item_id, limit):
         if len(list_li) == limit:
             break
 
-    xbmcplugin.addDirectoryItems(int(sys.argv[1]), list_li, len(list_li))
-    xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
-    xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    xbmcplugin.addDirectoryItems(PROCESS_HANDLE, list_li, len(list_li))
+    xbmcplugin.setContent(PROCESS_HANDLE, 'episodes')
+    xbmcplugin.endOfDirectory(PROCESS_HANDLE)
 
 
 def create_listitem(item):

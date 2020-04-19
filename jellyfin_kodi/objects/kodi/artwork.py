@@ -3,18 +3,9 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import threading
-
-from six.moves import queue as Queue
-from six.moves.urllib.parse import urlencode
-
-from kodi_six import xbmc, xbmcvfs
+from helper import LazyLogger
 
 from . import queries as QU
-from . import queries_texture as QUTEX
-from helper import settings
-import requests
-from helper import LazyLogger
 
 ##################################################################################################
 

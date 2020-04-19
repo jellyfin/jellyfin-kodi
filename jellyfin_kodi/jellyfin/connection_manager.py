@@ -5,17 +5,16 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import json
 import socket
-import time
 from datetime import datetime
 from operator import itemgetter
+import traceback
 
 import urllib3
 
-from .credentials import Credentials
-from .http import HTTP  # noqa: I201,I100
-from .api import API
-import traceback
 from helper import LazyLogger
+
+from .credentials import Credentials
+from .api import API
 
 #################################################################################################
 
@@ -28,6 +27,7 @@ CONNECTION_STATE = {
 }
 
 #################################################################################################
+
 
 class ConnectionManager(object):
 
@@ -88,7 +88,7 @@ class ConnectionManager(object):
         if not server_url:
             raise AttributeError("server url cannot be empty")
 
-        data = self.API.login(server_url, username, password) # returns empty dict on failure
+        data = self.API.login(server_url, username, password)  # returns empty dict on failure
 
         if not data:
             LOG.info("Failed to login as `"+username+"`")
@@ -106,7 +106,7 @@ class ConnectionManager(object):
                 found_server = server
                 break
         else:
-            return {} # No server found
+            return {}  # No server found
 
         found_server['DateLastAccessed'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
         found_server['UserId'] = data['User']['Id']
@@ -123,7 +123,6 @@ class ConnectionManager(object):
         self.credentials.set_credentials(credentials)
 
         return data
-
 
     def connect_to_address(self, address, options={}):
 
@@ -143,14 +142,13 @@ class ConnectionManager(object):
             server = self.connect_to_server(server, options)
             if server is False:
                 LOG.error("connectToAddress %s failed", address)
-                return { 'State': CONNECTION_STATE['Unavailable'] }
+                return {'State': CONNECTION_STATE['Unavailable']}
 
             return server
         except Exception as error:
             LOG.exception(error)
             LOG.error("connectToAddress %s failed", address)
-            return { 'State': CONNECTION_STATE['Unavailable'] }
-
+            return {'State': CONNECTION_STATE['Unavailable']}
 
     def connect_to_server(self, server, options={}):
 
@@ -161,7 +159,7 @@ class ConnectionManager(object):
 
             if not result:
                 LOG.error("Failed to connect to server: %s" % server.get('address'))
-                return { 'State': CONNECTION_STATE['Unavailable'] }
+                return {'State': CONNECTION_STATE['Unavailable']}
 
             LOG.info("calling onSuccessfulConnection with server %s", server.get('Name'))
 
@@ -172,7 +170,7 @@ class ConnectionManager(object):
         except Exception as e:
             LOG.error(traceback.format_exc())
             LOG.error("Failing server connection. ERROR msg: {}".format(e))
-            return { 'State': CONNECTION_STATE['Unavailable'] }
+            return {'State': CONNECTION_STATE['Unavailable']}
 
     def connect(self, options={}):
 
@@ -181,7 +179,7 @@ class ConnectionManager(object):
         servers = self.get_available_servers()
         LOG.info("connect has %s servers", len(servers))
 
-        if not (len(servers)): # No servers provided
+        if not (len(servers)):  # No servers provided
             return {
                 'State': ['ServerSelection']
             }
@@ -191,7 +189,7 @@ class ConnectionManager(object):
 
         return result
 
-    def jellyfin_token(self): # Called once monitor.py#163
+    def jellyfin_token(self):  # Called once monitor.py#163
         return self.get_server_info(self.server_id)['AccessToken']
 
     def get_server_info(self, server_id):
@@ -321,7 +319,7 @@ class ConnectionManager(object):
 
             server['UserId'] = None
             server['AccessToken'] = None
-            return { 'State': CONNECTION_STATE['Unavailable'] }
+            return {'State': CONNECTION_STATE['Unavailable']}
 
         self._update_server_info(server, system_info)
 

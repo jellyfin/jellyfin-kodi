@@ -5,12 +5,12 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import datetime
 
-from .obj import Objects
-from .kodi import Music as KodiDb, queries_music as QU
 from database import jellyfin_db, queries as QUEM
 from helper import api, stop, validate, jellyfin_item, values, library_check, Local
 from helper import LazyLogger
 
+from .obj import Objects
+from .kodi import Music as KodiDb, queries_music as QU
 ##################################################################################################
 
 LOG = LazyLogger(__name__)
