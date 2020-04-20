@@ -5,8 +5,9 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import json
 import os
+import sys
 
-from six import iteritems
+from six import iteritems, ensure_text
 
 from helper import LazyLogger
 
@@ -33,7 +34,9 @@ class Objects(object):
 
         ''' Load objects mapping.
         '''
-        with open(os.path.join(os.path.dirname(__file__), 'obj_map.json')) as infile:
+        file_dir = os.path.dirname(ensure_text(__file__, sys.getfilesystemencoding()))
+
+        with open(os.path.join(file_dir, 'obj_map.json')) as infile:
             self.objects = json.load(infile)
 
     def map(self, item, mapping_name):
