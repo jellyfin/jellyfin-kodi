@@ -5,11 +5,10 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import json
 import os
-import sys
 
 from six import iteritems, ensure_text
 
-from helper import LazyLogger
+from helper import LazyLogger, get_filesystem_encoding
 
 ##################################################################################################
 
@@ -34,7 +33,7 @@ class Objects(object):
 
         ''' Load objects mapping.
         '''
-        file_dir = os.path.dirname(ensure_text(__file__, sys.getfilesystemencoding()))
+        file_dir = os.path.dirname(ensure_text(__file__, get_filesystem_encoding()))
 
         with open(os.path.join(file_dir, 'obj_map.json')) as infile:
             self.objects = json.load(infile)
