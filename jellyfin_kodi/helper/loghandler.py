@@ -4,14 +4,14 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 ##################################################################################################
 
 import os
-import sys
 import logging
 import traceback
 
 from six import ensure_text
-
 from kodi_six import xbmc, xbmcaddon
+
 import database
+from helper import get_filesystem_encoding
 
 from . import settings
 
@@ -90,7 +90,7 @@ class MyFormatter(logging.Formatter):
 
     def format(self, record):
         if record.pathname:
-            record.pathname = ensure_text(record.pathname, sys.getfilesystemencoding())
+            record.pathname = ensure_text(record.pathname, get_filesystem_encoding())
 
         self._gen_rel_path(record)
 
@@ -104,7 +104,7 @@ class MyFormatter(logging.Formatter):
         res = []
 
         for o in traceback.format_exception(*exc_info):
-            o = ensure_text(o, sys.getfilesystemencoding())
+            o = ensure_text(o, get_filesystem_encoding())
 
             if o.startswith('  File "'):
                 # If this split can't handle your file names, you should seriously consider renaming your files.

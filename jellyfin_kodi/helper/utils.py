@@ -6,6 +6,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import binascii
 import json
 import os
+import sys
 import re
 import unicodedata
 from uuid import uuid4
@@ -488,3 +489,15 @@ class JsonDebugPrinter(object):
 
     def __str__(self):
         return json.dumps(self.data, indent=4)
+
+
+def get_filesystem_encoding():
+    enc = sys.getfilesystemencoding()
+
+    if not enc:
+        enc = sys.getdefaultencoding()
+
+    if not enc or enc == 'ascii':
+        enc = 'utf-8'
+
+    return enc
