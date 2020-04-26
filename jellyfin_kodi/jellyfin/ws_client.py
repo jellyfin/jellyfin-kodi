@@ -47,11 +47,12 @@ class WSClient(threading.Thread):
         server = server.replace('https', "wss") if server.startswith('https') else server.replace('http', "ws")
         wsc_url = "%s/socket?api_key=%s&device_id=%s" % (server, token, device_id)
 
+        #import web_pdb; web_pdb.set_trace()
         LOG.info("Websocket url: %s", wsc_url)
 
         self.wsc = websocket.WebSocketApp(wsc_url,
-                                          on_message=self.on_message,
-                                          on_error=self.on_error)
+                                          on_message=lambda ws, message: self.on_message(ws, message),
+                                          on_error=lambda ws, error: self.on_error(ws, error))
         self.wsc.on_open = self.on_open
 
         while not self.stop:
@@ -71,6 +72,7 @@ class WSClient(threading.Thread):
 
     def on_message(self, ws, message):
 
+        import web_pdb; web_pdb.set_trace()
         message = json.loads(message)
         data = message.get('Data', {})
 
