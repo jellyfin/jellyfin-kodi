@@ -47,7 +47,6 @@ class WSClient(threading.Thread):
         server = server.replace('https', "wss") if server.startswith('https') else server.replace('http', "ws")
         wsc_url = "%s/socket?api_key=%s&device_id=%s" % (server, token, device_id)
 
-        #import web_pdb; web_pdb.set_trace()
         LOG.info("Websocket url: %s", wsc_url)
 
         self.wsc = websocket.WebSocketApp(wsc_url,
@@ -72,7 +71,6 @@ class WSClient(threading.Thread):
 
     def on_message(self, ws, message):
 
-        import web_pdb; web_pdb.set_trace()
         message = json.loads(message)
         data = message.get('Data', {})
 
