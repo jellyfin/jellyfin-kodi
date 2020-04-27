@@ -1,2 +1,167 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr ""
+"PO-Revision-Date: 2020-04-27 09:15+0000\n"
+"Last-Translator: Medzhnun <bnc98391@eoopy.com>\n"
+"Language-Team: Bulgarian <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/bg/>\n"
+"Language: bg\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.11.2\n"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "Синхронизация"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "Използване на алтернативно име на устройство"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "Проверете връзката"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "По първа буква"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "Грешно потребителско име или парола"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Опции за Jellyfin"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "Телевизионни предавания"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "Филми"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "Не изгледани музикални клипове"
+
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "Музикални клипове в ход"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Препоръчително съдържание"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Случайно съдържание"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Не изгледани филми"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Любими епизоди"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "Любими предавания"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Любими филми"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Следващи епизоди"
+
+#, fuzzy
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "Епизоди в ход"
+
+#, fuzzy
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "Филми в ход"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "Наскоро добавени епизоди"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "Наскоро добавени филми"
+
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "Телевизионни предавания в ход"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Наскоро добавени Телевизионни Предавания"
+
+msgctxt "#30160"
+msgid "Video quality"
+msgstr "Качество на видео"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Включване на разширени опции за изображенията (напр. обложка)"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "За Филми"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "За Епизоди"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Предложение за изтриване след изпълнение"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Потвърждение за изтриване на файл"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Потребителско име"
+
+#, fuzzy
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Разширени"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Име на устройство"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Ниво за логове"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Метод за Вход"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "Принудително възпроизвеждане чрез HTTP"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Име на сървъра"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Адрес на сървъра"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Jellyfin за Kodi"
