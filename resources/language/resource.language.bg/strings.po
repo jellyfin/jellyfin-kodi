@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-04-27 09:15+0000\n"
-"Last-Translator: Medzhnun <bnc98391@eoopy.com>\n"
+"PO-Revision-Date: 2020-04-27 16:03+0000\n"
+"Last-Translator: Medzhnun Mehmed <mecnun@mail.bg>\n"
 "Language-Team: Bulgarian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/bg/>\n"
 "Language: bg\n"
@@ -79,12 +79,10 @@ msgctxt "#30179"
 msgid "Next Episodes"
 msgstr "Следващи епизоди"
 
-#, fuzzy
 msgctxt "#30178"
 msgid "In Progress Episodes"
 msgstr "Епизоди в ход"
 
-#, fuzzy
 msgctxt "#30177"
 msgid "In Progress Movies"
 msgstr "Филми в ход"
@@ -133,7 +131,6 @@ msgctxt "#30024"
 msgid "Username"
 msgstr "Потребителско име"
 
-#, fuzzy
 msgctxt "#30022"
 msgid "Advanced"
 msgstr "Разширени"
