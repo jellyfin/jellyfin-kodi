@@ -1,10 +1,10 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-03-17 18:51+0000\n"
-"Last-Translator: Deniz <denizgezgin365@gmail.com>\n"
+"PO-Revision-Date: 2020-04-29 16:12+0000\n"
+"Last-Translator: Medzhnun Mehmed <mecnun@mail.bg>\n"
 "Language-Team: Turkish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/tr/>\n"
-"Language: tr\n"
+"Language: tr_tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -294,3 +294,49 @@ msgstr "Sunucu adresi"
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
 msgstr "Kodi için Jellyfin"
+
+#, fuzzy
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "Resimlerin önbelleğe alınmasını etkinleştir"
+
+#, fuzzy
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "Bildirimi etkinleştir, güncelleme sayısı şundan büyük ise"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "Oynatma modu"
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "Müzik kitaplığını etkinleştir"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "İzlenmeyen Müzik videoları"
+
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "Devam eden Müzik videoları"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "Son eklenen Müzik videoları"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Filmler için"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Bölümler için"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Oynatmadan sonra, silmeyi teklif et"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "HTTP den oynatmayı zorla"
