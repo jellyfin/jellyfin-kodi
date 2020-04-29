@@ -215,6 +215,12 @@ class Actions(object):
                 server_address, item['Id'], token)
             listitem.setPath(path)
 
+            play = playutils.PlayUtils(item, False, self.server_id, self.server)
+            source = play.select_source(play.get_sources())
+            play.set_external_subs(source, listitem)
+
+            playutils.set_properties(item, item['PlaybackInfo']['Method'], self.server_id)
+
             playlist.add(path, listitem, index)
             index += 1
 
