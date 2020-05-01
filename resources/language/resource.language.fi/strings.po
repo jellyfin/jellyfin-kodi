@@ -1,2 +1,96 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr ""
+"PO-Revision-Date: 2020-05-01 20:39+0000\n"
+"Last-Translator: Heikki Jetsonen <heikki.jetsonen@gmail.com>\n"
+"Language-Team: Finnish <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/fi/>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.11.2\n"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "Transkoodaa Hi10P"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "Transkoodaa H275/HEVC"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "Toistaminen"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "Synkronoi"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "Varmista yhteys"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "Transkoodaa"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "Päivitä kohde"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "Poista Jellyfinistä"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "Asetukset"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "Poista suosikeista"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "Lisää suosikkeihin"
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "Jellyfin-transkoodaus"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Jellyfin-asetukset"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "TV-sarjat"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "Elokuvat"
+
+msgctxt "#30160"
+msgid "Video quality"
+msgstr "Kuvanlaatu"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Varmista tiedoston poistaminen"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Käyttäjätunnus"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Edistynyt"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Lokitustaso"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Jellyfin for Kodi"
