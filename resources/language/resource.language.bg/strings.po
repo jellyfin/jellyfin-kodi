@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-04-27 16:03+0000\n"
-"Last-Translator: Medzhnun Mehmed <mecnun@mail.bg>\n"
+"PO-Revision-Date: 2020-05-10 15:51+0000\n"
+"Last-Translator: Miroslav Ivanov <mirochoni@gmail.com>\n"
 "Language-Team: Bulgarian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/bg/>\n"
 "Language: bg\n"
@@ -162,3 +162,59 @@ msgstr "Адрес на сървъра"
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
 msgstr "Jellyfin за Kodi"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "Обнови този елемент"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "Изтриване от Jellyfin"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "Настройки"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "Премахни от любими"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "Добави в любими"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "Новодобавени музикални видеа"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "Любими албуми"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "Любими снимки"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Любими видеа"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "Новодобавени снимки"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "Активиране на съобщение за \"Добре дошли'"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "Зануляване на локалната база-данни на Kodi"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "интерфейс"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "поредици"
