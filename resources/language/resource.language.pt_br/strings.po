@@ -6,16 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2019-12-23 00:16+0000\n"
-"Last-Translator: Vitorvlv <vitorvlv@protonmail.com>\n"
+"PO-Revision-Date: 2020-05-15 03:26+0000\n"
+"Last-Translator: Vitorvlv <vitorlourovaladares@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/pt_BR/>\n"
-"Language: pt_BR\n"
+"Language: pt_br\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 3.8\n"
+"X-Generator: Weblate 3.11.2\n"
 
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
@@ -297,15 +297,13 @@ msgctxt "#30531"
 msgid "Enable new content"
 msgstr "Ativar novo conteúdo"
 
-#, fuzzy
 msgctxt "#30532"
 msgid "Duration of the video library pop up"
-msgstr "Pop up da duração da biblioteca de vídeos"
+msgstr "Duração do pop up da biblioteca de vídeos"
 
-#, fuzzy
 msgctxt "#30533"
 msgid "Duration of the music library pop up"
-msgstr "Pop up da duração da biblioteca de músicas"
+msgstr "Duração do pop up da biblioteca de música"
 
 msgctxt "#30534"
 msgid "Notifications (in seconds)"
@@ -387,10 +385,9 @@ msgctxt "#30614"
 msgid "Connect to server"
 msgstr "Conectar ao servidor"
 
-#, fuzzy
 msgctxt "#30615"
 msgid "Host"
-msgstr "Servidor"
+msgstr "Servidor(Host)"
 
 msgctxt "#30616"
 msgid "Connect"
@@ -432,7 +429,6 @@ msgctxt "#33018"
 msgid "Gathering boxsets"
 msgstr "Encontrando coletâneas"
 
-#, fuzzy
 msgctxt "#33021"
 msgid "Gathering:"
 msgstr "Encontrando:"
@@ -573,7 +569,6 @@ msgctxt "#33102"
 msgid "Resume the previous sync?"
 msgstr "Retomar a sincronização previa?"
 
-#, fuzzy
 msgctxt "#33104"
 msgid "Find more info in the github wiki/Create-and-restore-from-backup."
 msgstr ""
@@ -867,11 +862,13 @@ msgstr "Esquecer sincronização anterior? Isso não é recomendado."
 
 msgctxt "#33174"
 msgid "Paging - download threads (default: 3)"
-msgstr ""
+msgstr "Paginação - threads de download (padrão: 3)"
 
 msgctxt "#33175"
 msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
 msgstr ""
+"Dica de paginação: Cada thread de download solicita o valor máximo de itens "
+"do Jellyfin ao mesmo tempo."
 
 msgctxt "#33176"
 msgid "Update or repair your libraries to apply the changes below."
