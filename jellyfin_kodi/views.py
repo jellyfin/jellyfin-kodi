@@ -166,13 +166,10 @@ class Views(object):
     def get_libraries(self):
 
         try:
-            libraries = self.server.jellyfin.get_media_folders()['Items']
-            views = self.server.jellyfin.get_views()['Items']
+            libraries = self.server.jellyfin.get_views()['Items']
         except Exception as error:
             LOG.exception(error)
             raise IndexError("Unable to retrieve libraries: %s" % error)
-
-        libraries.extend([x for x in views if x['Id'] not in [y['Id'] for y in libraries]])
 
         return libraries
 
