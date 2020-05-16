@@ -1,2 +1,388 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr ""
+"PO-Revision-Date: 2020-05-16 03:03+0000\n"
+"Last-Translator: Franco Castillo <castillofrancodamian@gmail.com>\n"
+"Language-Team: Spanish (Argentina) <https://translate.jellyfin.org/projects/"
+"jellyfin/jellyfin-kodi/es_AR/>\n"
+"Language: es_AR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.11.2\n"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "Conectar"
+
+msgctxt "#30615"
+msgid "Host"
+msgstr "Host"
+
+msgctxt "#30614"
+msgid "Connect to server"
+msgstr "Conectar al servidor"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "Cambiar usuario de Jellyfin Connect"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "Por favor, inicie sesión"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "Agregar servidor manualmente"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "Conectar a"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "No se puede conectar con el servidor seleccionado"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "El nombre de usuario o la contraseña no pueden estar vacíos"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "Seleccionar servidor principal"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "Iniciar sesión"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "Contraseña"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "Mostrar mensaje"
+
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "Habilitar servidor fuera de línea"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "Nombre de usuario o correo electrónico"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "Inicio de sesión manual"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "Iniciar sesión"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "Transcodificar Hi10P"
+
+msgctxt "#30536"
+msgid "Allow the screensaver during syncs"
+msgstr "Permitir el protector de pantalla durante las sincronizaciones"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "Generar una nueva ID de dispositivo"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "Notificaciones (en segundos)"
+
+msgctxt "#30533"
+msgid "Duration of the music library pop up"
+msgstr "Duración de la biblioteca de música emergente"
+
+msgctxt "#30532"
+msgid "Duration of the video library pop up"
+msgstr "Duración de la ventana emergente de la biblioteca de videos"
+
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "Habilitar nuevo contenido"
+
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "Habilitar mensaje de reinicio del servidor"
+
+msgctxt "#30529"
+msgid "Startup delay (in seconds)"
+msgstr "Retardo de inicio (en segundos)"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "Usuarios permanentes"
+
+msgctxt "#30527"
+msgid "Ignore specials in next episodes"
+msgstr "Ignorar ofertas especiales en los próximos episodios"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "Transcodificar H265/HEVC"
+
+msgctxt "#30521"
+msgid "Jump back on resume (in seconds)"
+msgstr "Volver a la reanudación (en segundos)"
+
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr "Omitir la confirmación de eliminación (use bajo su propio riesgo)"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "Preguntar para reproducir trailers"
+
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "Habilitar modo cine"
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "Credenciales de red"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "Reproducción"
+
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "Paginación: artículos máximos solicitados (predeterminado: 15)"
+
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "Habilitar el almacenamiento en caché de portada"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "Modo de reproducción"
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "Habilitar biblioteca de música"
+
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "Habilitar notificación si el recuento de actualizaciones es mayor que"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "Sincronizar"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "Usar nombre de dispositivo alternativo"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "Verificar conexión"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "Transcodificar"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "Actualizar este artículo"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "Eliminar de Jellyfin"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "Configuraciones"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "Quitar de favoritos"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "Agregar a favoritos"
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "Transcodificación Jellyfin"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Opciones de Jellyfin"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "Programas de TV"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "Películas"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "Videos musicales no vistos"
+
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "Videos musicales en curso"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "Videos musicales recientemente agregados"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "Álbumes favoritos"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "Fotos favoritas"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Videos caseros favoritos"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "Fotos agregadas recientemente"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Videos caseros recientemente agregados"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "Habilitar mensaje de bienvenida"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "Restablecer la base de datos local de Kodi"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "Interfaz"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Artículos recomendados"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Artículos aleatorios"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Películas no vistas"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Conjunto de cajas"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Episodios favoritos"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "Programas favoritos"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Películas favoritas"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Episodios siguientes"
+
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "Episodios en curso"
+
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "Películas en curso"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "Episodios añadidos recientemente"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "Películas agregadas recientemente"
+
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "Programas de TV en curso"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Programas de TV agregados recientemente"
+
+msgctxt "#30160"
+msgid "Video quality"
+msgstr "Calidad de video"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Habilitar ilustraciones mejoradas (es decir, portada)"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Para películas"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Para episodios"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Ofrecer eliminar después de la reproducción"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Confirmar eliminación de archivo"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Nombre de usuario"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Avanzado"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Nombre del dispositivo"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Nivel de registro"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Método de inicio de sesión"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "Forzar reproducción HTTP"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Nombre del servidor"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Dirección del servidor"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Jellyfin para Kodi"
