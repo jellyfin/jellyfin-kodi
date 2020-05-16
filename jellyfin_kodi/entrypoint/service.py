@@ -69,11 +69,6 @@ class Service(xbmc.Monitor):
 
         verify_kodi_defaults()
 
-        try:
-            Views().get_nodes()
-        except Exception as error:
-            LOG.exception(error)
-
         window('jellyfin.connected.bool', True)
         settings('groupedSets.bool', objects.utils.get_grouped_set())
         xbmc.Monitor.__init__(self)
