@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-05-16 03:03+0000\n"
+"PO-Revision-Date: 2020-05-17 20:29+0000\n"
 "Last-Translator: Franco Castillo <castillofrancodamian@gmail.com>\n"
 "Language-Team: Spanish (Argentina) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/es_AR/>\n"
@@ -386,3 +386,89 @@ msgstr "Dirección del servidor"
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
 msgstr "Jellyfin para Kodi"
+
+msgctxt "#33054"
+msgid "Add user to session"
+msgstr "Agregar usuario a la sesión"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "Nuevo"
+
+msgctxt "#33048"
+msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
+msgstr ""
+"Es posible que deba verificar sus credenciales de red en la configuración "
+"del complemento o usar la sustitución de ruta de Jellyfin para formatear su "
+"ruta correctamente (panel de Jellyfin > Biblioteca). ¿Dejar de sincronizar?"
+
+msgctxt "#33047"
+msgid "Kodi can't locate file:"
+msgstr "Kodi no puede localizar el archivo:"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "¿Habilitar biblioteca de música?"
+
+msgctxt "#33037"
+msgid "Native (direct paths)"
+msgstr "Nativo (rutas directas)"
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "Complemento (predeterminado)"
+
+msgctxt "#33035"
+msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
+msgstr ""
+"¡Precaución! Si elige el modo nativo, faltarán ciertas funciones de "
+"Jellyfin, como: modo de cine Jellyfin, opciones de transmisión directa/"
+"transcodificación y horario de acceso de los padres."
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr "Se ha generado una nueva ID de dispositivo. Kodi ahora se reiniciará."
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "Completado en:"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "Reunión:"
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "Reuniendo cajas"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "Reproducir tráilers?"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "¿Eliminar archivo de Jellyfin?"
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr "Elige la secuencia de subtítulos"
+
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr "Elige la transmisión de audio"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "Usuario o contraseña inválido/a"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "El servidor se está reiniciando"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "Bienvenidos"
+
+msgctxt "#30617"
+msgid "Server or port cannot be empty"
+msgstr "El servidor o el puerto no pueden estar vacíos"
