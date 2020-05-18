@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-04-03 15:14+0000\n"
-"Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
+"PO-Revision-Date: 2020-05-18 10:52+0000\n"
+"Last-Translator: Lukáš Kucharczyk <lukas@kucharczyk.xyz>\n"
 "Language-Team: Czech <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/cs/>\n"
 "Language: cs_cz\n"
@@ -206,11 +206,11 @@ msgstr "Upozornění (v sekundách)"
 
 msgctxt "#30533"
 msgid "Duration of the music library pop up"
-msgstr "Doba trvání vyskakovacího okna knihovny hudby"
+msgstr "Trvání vyskakovacího okna knihovny hudby"
 
 msgctxt "#30532"
 msgid "Duration of the video library pop up"
-msgstr "Doba trvání vyskakovacího okna knihovny videí"
+msgstr "Trvání vyskakovacího okna knihovny videí"
 
 msgctxt "#30531"
 msgid "Enable new content"
@@ -226,23 +226,23 @@ msgstr "Zpoždění spuštění (v sekundách)"
 
 msgctxt "#30528"
 msgid "Permanent users"
-msgstr "Trvalý uživatel"
+msgstr "Trvalí uživatelé"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
-msgstr "Ignorovat speciály v dalších epizodách"
+msgstr "Ignorovat speciály v přehledu dalších epizod"
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
-msgstr "Překódování H265/HEVC"
+msgstr "Překódování formátu H265/HEVC"
 
 msgctxt "#30521"
 msgid "Jump back on resume (in seconds)"
-msgstr "Velikost skoku zpět (v sekundách)"
+msgstr "Skok zpět při pokračování v přehrávání (v sekundách)"
 
 msgctxt "#30520"
 msgid "Skip the delete confirmation (use at your own risk)"
-msgstr "Přeskočit potvrzení o smazání (používáte na vlastní riziko)"
+msgstr "Přeskočit potvrzení o odstranění (použití na vlastní riziko)"
 
 msgctxt "#30519"
 msgid "Ask to play trailers"
@@ -262,11 +262,11 @@ msgstr "Přehrávání"
 
 msgctxt "#30515"
 msgid "Paging - max items requested (default: 15)"
-msgstr "Stránkování - maximální počet požadovaných položek (výchozí: 15)"
+msgstr "Stránkování — maximální počet požadovaných položek (výchozí: 15)"
 
 msgctxt "#30512"
 msgid "Enable artwork caching"
-msgstr "Zapnout cache obrázků"
+msgstr "Zapnout ukládání obrázků do mezipaměti"
 
 msgctxt "#30511"
 msgid "Playback mode"
@@ -278,7 +278,7 @@ msgstr "Zapnout knihovnu hudby"
 
 msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
-msgstr "Povolit upozornění, pokud je počet aktualizací větší než"
+msgstr "Povolit oznámení, pokud je počet aktualizací větší než"
 
 msgctxt "#30506"
 msgid "Sync"
@@ -298,11 +298,11 @@ msgstr "Překódování"
 
 msgctxt "#30410"
 msgid "Refresh this item"
-msgstr "Obnovit tuto položku"
+msgstr "Přeskenovat tuto položku"
 
 msgctxt "#30409"
 msgid "Delete from Jellyfin"
-msgstr "Smazat z Jellyfin"
+msgstr "Odstranit z Jellyfin"
 
 msgctxt "#30408"
 msgid "Settings"
@@ -334,7 +334,7 @@ msgstr "Filmy"
 
 msgctxt "#30258"
 msgid "Unwatched Music videos"
-msgstr "Neshlédnuté videoklipy"
+msgstr "Nezhlédnuté videoklipy"
 
 msgctxt "#30257"
 msgid "In progress Music videos"
@@ -342,7 +342,7 @@ msgstr "Probíhající videoklipy"
 
 msgctxt "#30256"
 msgid "Recently added Music videos"
-msgstr "Naposledy přidané videoklipy"
+msgstr "Nedávno přidané videoklipy"
 
 msgctxt "#30255"
 msgid "Favourite Albums"
@@ -358,11 +358,11 @@ msgstr "Oblíbená domácí videa"
 
 msgctxt "#30252"
 msgid "Recently added Photos"
-msgstr "Naposledy přidané fotografie"
+msgstr "Nedávno přidané fotografie"
 
 msgctxt "#30251"
 msgid "Recently added Home Videos"
-msgstr "Naposledy přidaná domácí videa"
+msgstr "Nedávno přidaná domácí videa"
 
 msgctxt "#30249"
 msgid "Enable welcome message"
@@ -370,7 +370,7 @@ msgstr "Zobrazit uvítací zprávu"
 
 msgctxt "#30239"
 msgid "Reset local Kodi database"
-msgstr "Resetovat lokální databázi Kodi"
+msgstr "Resetovat místní databázi Kodi"
 
 msgctxt "#30235"
 msgid "Interface"
@@ -386,7 +386,7 @@ msgstr "Náhodné položky"
 
 msgctxt "#30189"
 msgid "Unwatched Movies"
-msgstr "Neshlédnuté filmy"
+msgstr "Nezhlédnuté filmy"
 
 msgctxt "#30182"
 msgid "Favorite Episodes"
@@ -414,11 +414,11 @@ msgstr "Probíhající filmy"
 
 msgctxt "#30175"
 msgid "Recently Added Episodes"
-msgstr "Naposledy přidané epizody"
+msgstr "Nedávno přidané epizody"
 
 msgctxt "#30174"
 msgid "Recently Added Movies"
-msgstr "Naposledy přidané filmy"
+msgstr "Nedávno přidané filmy"
 
 msgctxt "#30171"
 msgid "In Progress TV Shows"
@@ -426,7 +426,7 @@ msgstr "Probíhající seriály"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
-msgstr "Naposledy přidané seriály"
+msgstr "Nedávno přidané seriály"
 
 msgctxt "#30160"
 msgid "Video quality"
@@ -434,7 +434,7 @@ msgstr "Kvalita videa"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
-msgstr "Povolit vylepšené kresby (např. obal)"
+msgstr "Povolit lepší obrázky (např. obaly)"
 
 msgctxt "#30116"
 msgid "For Movies"
@@ -446,7 +446,7 @@ msgstr "Pro epizody"
 
 msgctxt "#30114"
 msgid "Offer delete after playback"
-msgstr "Nabídka na smazání po přehrání"
+msgstr "Nabídnout odstranění po přehrání"
 
 msgctxt "#30091"
 msgid "Confirm file deletion"
@@ -466,7 +466,7 @@ msgstr "Název zařízení"
 
 msgctxt "#30004"
 msgid "Log level"
-msgstr "Úroveň protokolování"
+msgstr "Úroveň logování"
 
 msgctxt "#30003"
 msgid "Login method"
