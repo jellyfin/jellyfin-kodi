@@ -294,6 +294,8 @@ def browse(media, view_id=None, folder=None, server_id=None):
         listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Media': get_media_type(content_type), 'Params': {'GenreIds': folder.split('-')[1]}}).get()
     elif folder == 'favepisodes':
         listing = TheVoid('Browse', {'Media': get_media_type(content_type), 'ServerId': server_id, 'Limit': 25, 'Filters': ['IsFavorite']}).get()
+    elif folder and media == 'playlists':
+        listing = TheVoid('Browse', {'Id': folder, 'ServerId': server_id, 'Recursive': False, 'Sort': 'None'}).get()
     elif media == 'homevideos':
         listing = TheVoid('Browse', {'Id': folder or view_id, 'Media': get_media_type(content_type), 'ServerId': server_id, 'Recursive': False}).get()
     elif media == 'movies':
