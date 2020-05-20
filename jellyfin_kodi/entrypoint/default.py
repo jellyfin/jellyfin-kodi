@@ -112,6 +112,8 @@ class Events(object):
             xbmc.executebuiltin('Addon.OpenSettings(plugin.video.jellyfin)')
         elif mode == 'adduser':
             add_user()
+        elif mode == 'updatepassword':
+            event('UpdatePassword')
         elif mode == 'thememedia':
             get_themes()
         elif mode == 'managelibs':
@@ -177,6 +179,7 @@ def listing():
     directory(translate(33134), "plugin://plugin.video.jellyfin/?mode=addserver", False)
     directory(translate(33054), "plugin://plugin.video.jellyfin/?mode=adduser", False)
     directory(translate(5), "plugin://plugin.video.jellyfin/?mode=settings", False)
+    directory(translate(33161), "plugin://plugin.video.jellyfin/?mode=updatepassword", False)
     directory(translate(33058), "plugin://plugin.video.jellyfin/?mode=reset", False)
     directory(translate(33180), "plugin://plugin.video.jellyfin/?mode=restartservice", False)
 

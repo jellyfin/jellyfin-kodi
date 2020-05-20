@@ -253,8 +253,9 @@ class Connect(object):
         client.set_credentials(get_credentials())
         manager = client.auth
 
+        username = settings('username')
         try:
-            self.login_manual(manager=manager)
+            self.login_manual(user=username, manager=manager)
         except RuntimeError:
             return
 

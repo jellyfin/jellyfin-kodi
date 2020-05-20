@@ -801,6 +801,10 @@ msgctxt "#33160"
 msgid "To avoid errors, please update Jellyfin for Kodi to version: "
 msgstr "To avoid errors, please update Jellyfin for Kodi to version: "
 
+msgctxt "#33161"
+msgid "Update password"
+msgstr "Update password"
+
 msgctxt "#33162"
 msgid "Reset the music library?"
 msgstr "Reset the music library?"

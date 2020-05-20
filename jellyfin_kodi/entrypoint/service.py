@@ -156,7 +156,7 @@ class Service(xbmc.Monitor):
                               'LibraryChanged', 'ServerOnline', 'SyncLibrary', 'RepairLibrary', 'RemoveLibrary',
                               'SyncLibrarySelection', 'RepairLibrarySelection', 'AddServer',
                               'Unauthorized', 'UserConfigurationUpdated', 'ServerRestarting',
-                              'RemoveServer', 'AddLibrarySelection', 'RemoveLibrarySelection'):
+                              'RemoveServer', 'UpdatePassword', 'AddLibrarySelection', 'RemoveLibrarySelection'):
                 return
 
             data = json.loads(data)[0]
@@ -243,6 +243,8 @@ class Service(xbmc.Monitor):
             self.connect.remove_server(data['Id'])
             xbmc.executebuiltin("Container.Refresh")
 
+        elif method == 'UpdatePassword':
+            self.connect.setup_login_manual()
         elif method == 'UserDataChanged' and self.library_thread:
             if data.get('ServerId') or not window('jellyfin_startup.bool'):
                 return
