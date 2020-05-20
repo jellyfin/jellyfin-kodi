@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-05-17 20:29+0000\n"
+"PO-Revision-Date: 2020-05-21 04:09+0000\n"
 "Last-Translator: Franco Castillo <castillofrancodamian@gmail.com>\n"
 "Language-Team: Spanish (Argentina) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/es_AR/>\n"
@@ -472,3 +472,99 @@ msgstr "Bienvenidos"
 msgctxt "#30617"
 msgid "Server or port cannot be empty"
 msgstr "El servidor o el puerto no pueden estar vacíos"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "Sólo subtítulos"
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "Sólo audio"
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "Agregar bibliotecas"
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "Actualizar información del servidor"
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "Eliminando biblioteca"
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "Eliminar servidor"
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "Actualizar biblioteca"
+
+msgctxt "#33130"
+msgid "Select the source"
+msgstr "Selecciona la fuente"
+
+msgctxt "#33121"
+msgid "All"
+msgstr "Todos"
+
+msgctxt "#33116"
+msgid "Compress artwork (reduces quality)"
+msgstr "Comprimir carátula (reduce la calidad)"
+
+msgctxt "#33115"
+msgid "Adjust for remote connection"
+msgstr "Ajuste para conexión remota"
+
+msgctxt "#33114"
+msgid "Enable external subtitles"
+msgstr "Habilitar subtítulos externos"
+
+msgctxt "#33110"
+msgid "Restart Kodi to take effect."
+msgstr "Reinicia Kodi para que surta efecto."
+
+msgctxt "#33109"
+msgid "Plugin"
+msgstr "Complemento"
+
+msgctxt "#33093"
+msgid "Backup folder"
+msgstr "Carpeta de respaldo"
+
+msgctxt "#33092"
+msgid "Create a backup"
+msgstr "Crear una copia de seguridad"
+
+msgctxt "#33087"
+msgid "Reset all Jellyfin add-on settings?"
+msgstr "¿Restablecer todas las configuraciones de complementos de Jellyfin?"
+
+msgctxt "#33086"
+msgid "Remove all cached artwork?"
+msgstr "¿Eliminar todas las ilustraciones almacenadas en caché?"
+
+msgctxt "#33074"
+msgid "Are you sure you want to reset your local Kodi database?"
+msgstr "¿Está seguro de que desea restablecer su base de datos Kodi local?"
+
+msgctxt "#33064"
+msgid "Remove user from the session"
+msgstr "Eliminar usuario de la sesión"
+
+msgctxt "#33063"
+msgid "Remove user"
+msgstr "Eliminar usuario"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "Añadir usuario"
+
+msgctxt "#33060"
+msgid "Sync theme media"
+msgstr "Sincronizar medios temáticos"
+
+msgctxt "#33058"
+msgid "Perform local database reset"
+msgstr "Realizar restablecimiento de la base de datos local"
