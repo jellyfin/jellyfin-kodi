@@ -430,7 +430,11 @@ class API(object):
         headers.update(auth_token_header)
 
         response = self.send_request(server['address'], "system/info", headers=headers)
-        return response.json() if response.status_code == 200 else {}
+
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return response.status_code
 
     def get_public_info(self, server_address):
         response = self.send_request(server_address, "system/info/public")
