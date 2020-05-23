@@ -6,10 +6,10 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import time
 
 import requests
-from six import string_types
+from six import string_types, ensure_str
 
 from helper.utils import JsonDebugPrinter
-from helper import LazyLogger
+from helper import LazyLogger, get_filesystem_encoding
 
 from .exceptions import HTTPException
 
@@ -216,12 +216,14 @@ class HTTP(object):
         auth += "DeviceId=%s, " % self.config.data.get('app.device_id', 'Unknown Device id')
         auth += "Version=%s" % self.config.data.get('app.version', '0.0.0')
 
-        data['headers'].update({'x-emby-authorization': auth})
+        data['headers'].update({'x-emby-authorization': ensure_str(auth, get_filesystem_encoding())})
 
         if self.config.data.get('auth.token') and self.config.data.get('auth.user_id'):
 
             auth += ', UserId=%s' % self.config.data.get('auth.user_id')
-            data['headers'].update({'x-emby-authorization': auth, 'X-MediaBrowser-Token': self.config.data.get('auth.token')})
+            data['headers'].update({
+                'x-emby-authorization': ensure_str(auth, get_filesystem_encoding()),
+                'X-MediaBrowser-Token': self.config.data.get('auth.token')})
 
         return data
 
