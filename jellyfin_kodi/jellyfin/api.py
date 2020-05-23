@@ -7,6 +7,7 @@ import requests
 
 from helper.utils import settings
 from helper import LazyLogger
+from six import ensure_str
 
 
 LOG = LazyLogger(__name__)
@@ -374,7 +375,7 @@ class API(object):
             "Accept-Charset": "UTF-8,*",
             "Accept-encoding": "gzip",
             "User-Agent": self.config.data['http.user_agent'] or "%s/%s" % (self.config.data['app.name'], self.config.data['app.version']),
-            "x-emby-authorization": auth
+            "x-emby-authorization": ensure_str(auth, 'utf-8')
         }
 
     def send_request(self, url, path, method="get", timeout=None, headers=None, data=None):
