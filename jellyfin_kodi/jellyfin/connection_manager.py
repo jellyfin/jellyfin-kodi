@@ -309,7 +309,7 @@ class ConnectionManager(object):
 
         elif verify_authentication and server.get('AccessToken'):
             system_info = self.API.validate_authentication_token(server)
-            if system_info:
+            if 'Status_Code' not in system_info:
 
                 self._update_server_info(server, system_info)
                 self.config.data['auth.user_id'] = server['UserId']
@@ -319,7 +319,8 @@ class ConnectionManager(object):
 
             server['UserId'] = None
             server['AccessToken'] = None
-            return {'State': CONNECTION_STATE['Unavailable']}
+            system_info['State'] = CONNECTION_STATE['Unavailable']
+            return system_info
 
         self._update_server_info(server, system_info)
 
