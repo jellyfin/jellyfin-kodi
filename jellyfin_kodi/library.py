@@ -372,21 +372,36 @@ class Library(threading.Thread):
         ''' Movie and userdata not provided by server yet.
         '''
         last_sync = settings('LastIncrementalSync')
+        include = []
         filters = ["tvshows", "boxsets", "musicvideos", "music", "movies"]
         sync = get_sync()
         LOG.info("--[ retrieve changes ] %s", last_sync)
+
+        # Get the item type of each synced library and build list of types to request
+        for item_id in sync['Whitelist']:
+            library = self.server.jellyfin.get_item(item_id)
+            library_type = library.get('CollectionType')
+            if library_type in filters:
+                include.append(library_type)
+
+        # Include boxsets if movies are synced
+        if 'movies' in include:
+            include.append('boxsets')
+
+        # Filter down to the list of library types we want to exclude
+        query_filter = list(set(filters) - set(include))
 
         try:
             updated = []
             userdata = []
             removed = []
 
-            for media in filters:
-                result = self.server.jellyfin.get_sync_queue(last_sync, ",".join([x for x in filters if x != media]))
-                updated.extend(result['ItemsAdded'])
-                updated.extend(result['ItemsUpdated'])
-                userdata.extend(result['UserDataChanged'])
-                removed.extend(result['ItemsRemoved'])
+            # Get list of updates from server for synced library types and populate work queues
+            result = self.server.jellyfin.get_sync_queue(last_sync, ",".join([ x for x in query_filter ]))
+            updated.extend(result['ItemsAdded'])
+            updated.extend(result['ItemsUpdated'])
+            userdata.extend(result['UserDataChanged'])
+            removed.extend(result['ItemsRemoved'])
 
             total = len(updated) + len(userdata)
 
@@ -402,22 +417,6 @@ class Library(threading.Thread):
             self.updated(updated)
             self.userdata(userdata)
             self.removed(removed)
-
-            """
-            result = self.server.jellyfin.get_sync_queue(last_sync)
-            self.userdata(result['UserDataChanged'])
-            self.removed(result['ItemsRemoved'])
-
-
-            filters.extend(["tvshows", "boxsets", "musicvideos", "music"])
-
-            # Get only movies.
-            result = self.server.jellyfin.get_sync_queue(last_sync, ",".join(filters))
-            self.updated(result['ItemsAdded'])
-            self.updated(result['ItemsUpdated'])
-            self.userdata(result['UserDataChanged'])
-            self.removed(result['ItemsRemoved'])
-            """
 
         except Exception as error:
             LOG.exception(error)
@@ -715,17 +714,18 @@ class SortWorker(threading.Thread):
 
                 try:
                     media = database.get_media_by_id(item_id)
-                    self.output[media].put({'Id': item_id, 'Type': media})
+                    if media:
+                        self.output[media].put({'Id': item_id, 'Type': media})
+                    else:
+                        items = database.get_media_by_parent_id(item_id)
+
+                        if not items:
+                            LOG.info("Could not find media %s in the jellyfin database.", item_id)
+                        else:
+                            for item in items:
+                                self.output[item[1]].put({'Id': item[0], 'Type': item[1]})
                 except Exception as error:
                     LOG.exception(error)
-
-                    items = database.get_media_by_parent_id(item_id)
-
-                    if not items:
-                        LOG.info("Could not find media %s in the jellyfin database.", item_id)
-                    else:
-                        for item in items:
-                            self.output[item[1]].put({'Id': item[0], 'Type': item[1]})
 
                 self.queue.task_done()
 
