@@ -332,7 +332,7 @@ class Library(threading.Thread):
                     if self.server.jellyfin.check_companion_installed():
 
                         if not self.fast_sync():
-                            dialog("ok", heading="{jellyfin}", line1=translate(33128))
+                            dialog("ok", "{jellyfin}", translate(33128))
 
                             raise Exception("Failed to retrieve latest updates")
 
@@ -347,7 +347,7 @@ class Library(threading.Thread):
 
             if error.status in 'SyncLibraryLater':
 
-                dialog("ok", heading="{jellyfin}", line1=translate(33129))
+                dialog("ok", "{jellyfin}", translate(33129))
                 settings('SyncInstallRunDone.bool', True)
                 sync = get_sync()
                 sync['Libraries'] = []
@@ -357,7 +357,7 @@ class Library(threading.Thread):
 
             elif error.status == 'CompanionMissing':
 
-                dialog("ok", heading="{jellyfin}", line1=translate(33099))
+                dialog("ok", "{jellyfin}", translate(33099))
                 settings('kodiCompanion.bool', False)
 
                 return True
@@ -409,7 +409,7 @@ class Library(threading.Thread):
 
                 ''' Inverse yes no, in case the dialog is forced closed by Kodi.
                 '''
-                if dialog("yesno", heading="{jellyfin}", line1=translate(33172).replace('{number}', str(total)), nolabel=translate(107), yeslabel=translate(106)):
+                if dialog("yesno", "{jellyfin}", translate(33172).replace('{number}', str(total)), nolabel=translate(107), yeslabel=translate(106)):
                     LOG.warning("Large updates skipped.")
 
                     return True

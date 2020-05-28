@@ -129,7 +129,7 @@ def advanced_settings():
             tree = etree.ElementTree(xml)
             tree.write(path)
 
-            dialog("ok", heading="{jellyfin}", line1=translate(33097))
+            dialog("ok", "{jellyfin}", translate(33097))
             xbmc.executebuiltin('RestartApp')
 
             return True

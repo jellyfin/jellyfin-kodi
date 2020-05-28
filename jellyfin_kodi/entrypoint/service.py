@@ -375,13 +375,13 @@ class Service(xbmc.Monitor):
             if not self.settings.get('mode_warn'):
 
                 self.settings['mode_warn'] = True
-                dialog("yesno", heading="{jellyfin}", line1=translate(33118))
+                dialog("yesno", "{jellyfin}", translate(33118))
 
         if settings('kodiCompanion.bool') != self.settings['kodi_companion']:
             self.settings['kodi_companion'] = settings('kodiCompanion.bool')
 
             if not self.settings['kodi_companion']:
-                dialog("ok", heading="{jellyfin}", line1=translate(33138))
+                dialog("ok", "{jellyfin}", translate(33138))
 
     def reload_objects(self):
 

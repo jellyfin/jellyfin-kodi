@@ -436,7 +436,7 @@ class Player(xbmc.Player):
                 if delete:
                     LOG.info("Offer delete option")
 
-                    if dialog("yesno", heading=translate(30091), line1=translate(33015), autoclose=120000):
+                    if dialog("yesno", translate(30091), translate(33015), autoclose=120000):
                         item['Server'].jellyfin.delete_item(item['Id'])
 
             window('jellyfin.external_check', clear=True)

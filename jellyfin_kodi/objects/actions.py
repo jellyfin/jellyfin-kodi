@@ -121,7 +121,7 @@ class Actions(object):
 
             if settings('askCinema') == "true":
 
-                resp = dialog("yesno", heading="{jellyfin}", line1=translate(33016))
+                resp = dialog("yesno", "{jellyfin}", translate(33016))
                 if not resp:
 
                     enabled = False

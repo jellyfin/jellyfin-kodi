@@ -112,7 +112,7 @@ def reset_device_id():
 
     window('jellyfin_deviceId', clear=True)
     get_device_id(True)
-    dialog("ok", heading="{jellyfin}", line1=translate(33033))
+    dialog("ok", "{jellyfin}", translate(33033))
     xbmc.executebuiltin('RestartApp')
 
 

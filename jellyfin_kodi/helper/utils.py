@@ -156,6 +156,10 @@ def dialog(dialog_type, *args, **kwargs):
     if "heading" in kwargs:
         kwargs['heading'] = kwargs['heading'].replace("{jellyfin}", translate('addon_name'))
 
+    if args:
+        args = list(args)
+        args[0] = args[0].replace("{jellyfin}", translate('addon_name'))
+
     types = {
         'yesno': d.yesno,
         'ok': d.ok,
@@ -248,7 +252,7 @@ def validate(path):
     if not xbmcvfs.exists(path):
         LOG.info("Could not find %s", path)
 
-        if dialog("yesno", heading="{jellyfin}", line1="%s %s. %s" % (translate(33047), path, translate(33048))):
+        if dialog("yesno", "{jellyfin}", "%s %s. %s" % (translate(33047), path, translate(33048))):
 
             return False
 
@@ -465,15 +469,15 @@ def set_addon_mode():
     ''' Setup playback mode. If native mode selected, check network credentials.
     '''
     value = dialog("yesno",
-                   heading=translate('playback_mode'),
-                   line1=translate(33035),
+                   translate('playback_mode'),
+                   translate(33035),
                    nolabel=translate('addon_mode'),
                    yeslabel=translate('native_mode'))
 
     settings('useDirectPaths', value="1" if value else "0")
 
     if value:
-        dialog("ok", heading="{jellyfin}", line1=translate(33145))
+        dialog("ok", "{jellyfin}", translate(33145))
 
     LOG.info("Add-on playback: %s", settings('useDirectPaths') == "0")
 

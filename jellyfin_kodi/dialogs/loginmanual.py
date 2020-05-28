@@ -51,7 +51,7 @@ class LoginManual(xbmcgui.WindowXMLDialog):
         self.error_toggle = self.getControl(ERROR_TOGGLE)
         self.error_msg = self.getControl(ERROR_MSG)
         self.user_field = self._add_editcontrol(755, 433, 40, 415)
-        self.password_field = self._add_editcontrol(755, 543, 40, 415, password=1)
+        self.password_field = self._add_editcontrol(755, 543, 40, 415, password=True)
 
         if self.username:
 
@@ -103,13 +103,17 @@ class LoginManual(xbmcgui.WindowXMLDialog):
                                       textColor="FF00A4DC",
                                       disabledColor="FF888888",
                                       focusTexture="-",
-                                      noFocusTexture="-",
-                                      isPassword=password)
+                                      noFocusTexture="-")
+
         control.setPosition(x, y)
         control.setHeight(height)
         control.setWidth(width)
 
         self.addControl(control)
+
+        # setType has no effect before the control is added to a window
+        if password:
+            control.setType(xbmcgui.INPUT_TYPE_PASSWORD, "Please enter password")
 
         return control
 
