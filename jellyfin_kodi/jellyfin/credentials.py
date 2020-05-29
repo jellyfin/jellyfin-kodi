@@ -76,7 +76,7 @@ class Credentials(object):
             raise KeyError("Server['Id'] cannot be null or empty")
 
         # Add default DateLastAccessed if doesn't exist.
-        server.setdefault('DateLastAccessed', "2001-01-01T00:00:00Z")
+        server.setdefault('DateLastAccessed', "1970-01-01T00:00:00Z")
 
         for existing in servers:
             if existing['Id'] == server['Id']:

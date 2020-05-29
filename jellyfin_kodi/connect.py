@@ -159,12 +159,13 @@ class Connect(object):
         user = {}
 
         dialog = ServerConnect("script-jellyfin-connect-server.xml", *XML_PATH)
-        dialog.set_args(**{
-            'connect_manager': self.connect_manager,
-            'username': user.get('DisplayName', ""),
-            'user_image': user.get('ImageUrl'),
-            'servers': state.get('Servers', [])
-        })
+        dialog.set_args(
+            connect_manager=self.connect_manager,
+            username=user.get('DisplayName', ""),
+            user_image=user.get('ImageUrl'),
+            servers=self.connect_manager.get_available_servers()
+        )
+
         dialog.doModal()
 
         if dialog.is_server_selected():
