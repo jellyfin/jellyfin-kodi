@@ -33,7 +33,7 @@ def addon_id():
 
 
 def kodi_version():
-    return xbmc.getInfoLabel('System.BuildVersion')[:2]
+    return int(xbmc.getInfoLabel('System.BuildVersion').split('.')[0])
 
 
 def window(key, value=None, clear=False, window_id=10000):
