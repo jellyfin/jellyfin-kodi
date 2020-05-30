@@ -224,7 +224,7 @@ def reset():
     from views import Views
     views = Views()
 
-    if not dialog("yesno", heading="{jellyfin}", line1=translate(33074)):
+    if not dialog("yesno", "{jellyfin}", translate(33074)):
         return
 
     window('jellyfin_should_stop.bool', True)
@@ -236,7 +236,7 @@ def reset():
         count -= 1
 
         if not count:
-            dialog("ok", heading="{jellyfin}", line1=translate(33085))
+            dialog("ok", "{jellyfin}", translate(33085))
 
             return
 
@@ -248,10 +248,10 @@ def reset():
     views.delete_playlists()
     views.delete_nodes()
 
-    if dialog("yesno", heading="{jellyfin}", line1=translate(33086)):
+    if dialog("yesno", "{jellyfin}", translate(33086)):
         reset_artwork()
 
-    if dialog("yesno", heading="{jellyfin}", line1=translate(33087)):
+    if dialog("yesno", "{jellyfin}", translate(33087)):
 
         xbmcvfs.delete(os.path.join(ADDON_DATA, "settings.xml"))
         xbmcvfs.delete(os.path.join(ADDON_DATA, "data.json"))
@@ -264,7 +264,7 @@ def reset():
     settings('MinimumSetup', "")
     settings('MusicRescan.bool', False)
     settings('SyncInstallRunDone.bool', False)
-    dialog("ok", heading="{jellyfin}", line1=translate(33088))
+    dialog("ok", "{jellyfin}", translate(33088))
     xbmc.executebuiltin('RestartApp')
 
 
@@ -279,7 +279,7 @@ def reset_kodi():
             if name != 'version':
                 videodb.cursor.execute("DELETE FROM " + name)
 
-    if settings('enableMusic.bool') or dialog("yesno", heading="{jellyfin}", line1=translate(33162)):
+    if settings('enableMusic.bool') or dialog("yesno", "{jellyfin}", translate(33162)):
 
         with Database('music') as musicdb:
             musicdb.cursor.execute("SELECT tbl_name FROM sqlite_master WHERE type='table'")

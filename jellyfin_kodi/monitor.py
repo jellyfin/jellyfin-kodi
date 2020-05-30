@@ -116,7 +116,7 @@ class Monitor(xbmc.Monitor):
                     except Exception as error:
 
                         LOG.exception(error)
-                        dialog("ok", heading="{jellyfin}", line1=translate(33142))
+                        dialog("ok", "{jellyfin}", translate(33142))
 
                         return
 

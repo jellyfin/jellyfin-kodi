@@ -163,7 +163,7 @@ class Context(object):
 
         if not settings('skipContextMenu.bool'):
 
-            if not dialog("yesno", heading="{jellyfin}", line1=translate(33015)):
+            if not dialog("yesno", "{jellyfin}", translate(33015)):
                 delete = False
 
         if delete:

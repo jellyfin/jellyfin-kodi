@@ -43,7 +43,7 @@ class FullSync(object):
         self.__dict__ = self._shared_state
 
         if self.running:
-            dialog("ok", heading="{jellyfin}", line1=translate(33197))
+            dialog("ok", "{jellyfin}", translate(33197))
 
             raise Exception("Sync is already running.")
 
@@ -114,10 +114,10 @@ class FullSync(object):
         '''
         if self.sync['Libraries']:
 
-            if not dialog("yesno", heading="{jellyfin}", line1=translate(33102)):
+            if not dialog("yesno", "{jellyfin}", translate(33102)):
 
-                if not dialog("yesno", heading="{jellyfin}", line1=translate(33173)):
-                    dialog("ok", heading="{jellyfin}", line1=translate(33122))
+                if not dialog("yesno", "{jellyfin}", translate(33173)):
+                    dialog("ok", "{jellyfin}", translate(33122))
 
                     raise LibraryException("ProgressStopped")
                 else:
@@ -244,7 +244,7 @@ class FullSync(object):
 
             if 'Failed to validate path' not in error:
 
-                dialog("ok", heading="{jellyfin}", line1=translate(33119))
+                dialog("ok", "{jellyfin}", translate(33119))
                 LOG.error("full sync exited unexpectedly")
                 save_sync(self.sync)
 

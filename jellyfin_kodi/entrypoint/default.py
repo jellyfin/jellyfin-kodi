@@ -786,7 +786,7 @@ def get_themes():
         tvtunes.setSetting('custom_path', library)
         LOG.info("TV Tunes custom path is enabled and set.")
     else:
-        dialog("ok", heading="{jellyfin}", line1=translate(33152))
+        dialog("ok", "{jellyfin}", translate(33152))
 
         return
 
@@ -862,7 +862,7 @@ def backup():
     backup = os.path.join(path, folder_name)
 
     if xbmcvfs.exists(backup + '/'):
-        if not dialog("yesno", heading="{jellyfin}", line1=translate(33090)):
+        if not dialog("yesno", "{jellyfin}", translate(33090)):
 
             return backup()
 
@@ -900,4 +900,4 @@ def backup():
         LOG.info("copied %s", filename)
 
     LOG.info("backup completed")
-    dialog("ok", heading="{jellyfin}", line1="%s %s" % (translate(33091), backup))
+    dialog("ok", "{jellyfin}", "%s %s" % (translate(33091), backup))
