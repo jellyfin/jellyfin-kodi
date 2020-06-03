@@ -22,6 +22,7 @@
  - Jellyfin Version: [e.g. 10.0.1]
  - Kodi Version: [e.g. 18.3]
  - Addon Version: [e.g. 0.2.1]
+ - Playback Mode: [e.g. Add-On or Native]
 
 **Additional context**
 <!-- Add any other context about the problem here. -->
