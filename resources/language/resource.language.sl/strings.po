@@ -1,2 +1,395 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr ""
+"PO-Revision-Date: 2020-06-06 01:09+0000\n"
+"Last-Translator: SaddFox <filip.rutar@gmail.com>\n"
+"Language-Team: Slovenian <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/sl/>\n"
+"Language: sl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3;\n"
+"X-Generator: Weblate 3.11.2\n"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "Spremenite povezanega Jellyfin uporabnika"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "Prosimo prijavite se"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "Ročno dodaj strežnik"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "Poveži z"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "Poveza z izbranim strežnikom ni uspela"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "Uporabniško ime oziroma geslo ne more biti prazno"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "Izberite glavni strežnik"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "Prekliči"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "Prijava"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "Geslo"
+
+#, fuzzy
+msgctxt "#30547"
+msgid "Display message"
+msgstr "Pokaži sporočilo"
+
+#, fuzzy
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "Omogoči strežnik brez povezave"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "Uporabniško ime ali email"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "Ročna prijava"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "Prijava"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "Prekodiraj Hi10P"
+
+msgctxt "#30536"
+msgid "Allow the screensaver during syncs"
+msgstr "Dovoli ohranjevalnik zaslona med sinhronizacijo"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "Ustvari nov ID naprave"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "Obvestila (v sekundah)"
+
+msgctxt "#30533"
+msgid "Duration of the music library pop up"
+msgstr "Trajanje pojavnega okna zvočne knjižnice"
+
+#, fuzzy
+msgctxt "#30532"
+msgid "Duration of the video library pop up"
+msgstr "Trajanje pojavnega okna video knjižnice"
+
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "Omogoči nove vsebine"
+
+#, fuzzy
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "Omogoči obvestilo o ponovnem zagonu strežnika"
+
+msgctxt "#30529"
+msgid "Startup delay (in seconds)"
+msgstr "Zamik pri zagonu (v sekundah)"
+
+#, fuzzy
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "Stalni uporabniki"
+
+#, fuzzy
+msgctxt "#30527"
+msgid "Ignore specials in next episodes"
+msgstr "Ignoriraj posebne epizode pri naslednjih epizodah"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "Prekodiraj H265/HEVC"
+
+msgctxt "#30521"
+msgid "Jump back on resume (in seconds)"
+msgstr "Skoči nazaj pri nadaljevanju predvajanja (v sekundah)"
+
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr "Preskoči potrditev brisanja (uporabite na lastno odgovornost)"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "Vprašaj za predvajanje napovednikov"
+
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "Omogoči kino način"
+
+#, fuzzy
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "Omrežne poverilnice"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "Predvajanje"
+
+#, fuzzy
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "Zahtevano maksimalno število poizvedb (privzeto: 15)"
+
+#, fuzzy
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "Omogoči predpomnjenje slik"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "Način predvajanja"
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "Omogoči glasbeno knjižnico"
+
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "Omogoči obvestilo, če je število posodobitev večje kot"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "Sinhroniziraj"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "Uporabi alternativno ime naprave"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "Preveri povezavo"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "Prekodiranje"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "Osveži to vsebino"
+
+#, fuzzy
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "Izbriši iz Jellyfin strežnika"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "Nastavitve"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "Odstrani iz priljubljenih"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "Dodaj med priljubljene"
+
+#, fuzzy
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "Jellyfin prekodiranje"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Nastavitve Jellyfin"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "Serije"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "Filmi"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "Neogledani glasbeni videoposnetki"
+
+#, fuzzy
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "Glasbeni videoposnetki med ogledom"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "Nedavno dodani glasbeni videoposnetki"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "Priljubljeni albumi"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "Priljubljene fotografije"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Priljubljeni domači videoposnetki"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "Nedavno dodane fotografije"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Nedavno dodani domači videoposnetki"
+
+#, fuzzy
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "Omogoči sporočilo dobrodošlice"
+
+#, fuzzy
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "Ponastavi lokalno Kodi bazo podatkov"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "Vmesnik"
+
+#, fuzzy
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Priporočene vsebine"
+
+#, fuzzy
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Naključne vsebine"
+
+#, fuzzy
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Neogledani filmi"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Priljubljene epizode"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "Priljubljene serije"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Priljubljeni filmi"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Naslednje epizode"
+
+#, fuzzy
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "Epizode med ogledom"
+
+#, fuzzy
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "Filmi med ogledom"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "Nedavno dodane epizode"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "Nedavno dodani filmi"
+
+#, fuzzy
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "Trenutno gledane serije"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Nedavno dodane serije"
+
+msgctxt "#30160"
+msgid "Video quality"
+msgstr "Kvaliteta videa"
+
+#, fuzzy
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Omogoči izboljšane slike (npr. naslovne posterje)"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Za filme"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Za epizode"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Ponudi izbris po predvajanju"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Potrdite izbris datoteke"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Uporabniško ime"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Napredno"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Ime naprave"
+
+#, fuzzy
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Nivo beleženja dnevnika"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Način prijave"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "Vsili HTTP predvajanje"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Ime strežnika"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Naslov strežnika"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Jellyfin za Kodi"
