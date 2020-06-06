@@ -375,10 +375,11 @@ class Library(threading.Thread):
         include = []
         filters = ["tvshows", "boxsets", "musicvideos", "music", "movies"]
         sync = get_sync()
+        whitelist = [ x.replace('Mixed:', "") for x in sync['Whitelist'] ]
         LOG.info("--[ retrieve changes ] %s", last_sync)
 
         # Get the item type of each synced library and build list of types to request
-        for item_id in sync['Whitelist']:
+        for item_id in whitelist:
             library = self.server.jellyfin.get_item(item_id)
             library_type = library.get('CollectionType')
             if library_type in filters:
