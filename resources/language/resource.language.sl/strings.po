@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-06-06 01:09+0000\n"
+"PO-Revision-Date: 2020-06-06 13:41+0000\n"
 "Last-Translator: SaddFox <filip.rutar@gmail.com>\n"
 "Language-Team: Slovenian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sl/>\n"
@@ -393,3 +393,154 @@ msgstr "Naslov strežnika"
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
 msgstr "Jellyfin za Kodi"
+
+msgctxt "#33097"
+msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
+msgstr ""
+"Pomembno, za izogib konfliktu z Jellyfin za Kodi je bil cleanonupdate "
+"odstranjen iz vaših naprednih nastavitev. Kodi se bo zdaj ponovno zagnal."
+
+msgctxt "#33093"
+msgid "Backup folder"
+msgstr "Mapa varnostne kopije"
+
+msgctxt "#33092"
+msgid "Create a backup"
+msgstr "Ustvari varnostno kopijo"
+
+#, fuzzy
+msgctxt "#33091"
+msgid "Created backup at:"
+msgstr "Varnostna kopija ustvarjena v:"
+
+msgctxt "#33090"
+msgid "Replace existing backup?"
+msgstr "Nadomesti obstoječo varnostno kopijo?"
+
+msgctxt "#33089"
+msgid "Enter folder name for backup"
+msgstr "Vnesite ime mape za varnostno kopijo"
+
+msgctxt "#33088"
+msgid "Database reset has completed, Kodi will now restart to apply the changes."
+msgstr ""
+"Ponastavitev baze podatkov zaključena. Za uveljavitev sprememb se bo Kodi "
+"zdaj ponovno zagnal."
+
+msgctxt "#33087"
+msgid "Reset all Jellyfin add-on settings?"
+msgstr "Ponastavi vse nastavitve Jellyfin dodatka?"
+
+msgctxt "#33086"
+msgid "Remove all cached artwork?"
+msgstr "Odstrani vse predpomnjene slike?"
+
+msgctxt "#33074"
+msgid "Are you sure you want to reset your local Kodi database?"
+msgstr "Ste prepričani, da želite ponastaviti lokalno Kodi bazo podatkov?"
+
+msgctxt "#33064"
+msgid "Remove user from the session"
+msgstr "Odstrani uporabnika iz seje"
+
+msgctxt "#33063"
+msgid "Remove user"
+msgstr "Odstrani uporabnika"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "Dodaj uporabnika"
+
+msgctxt "#33061"
+msgid "Add/Remove user from the session"
+msgstr "Dodaj/Odstrani uporabnika iz seje"
+
+msgctxt "#33058"
+msgid "Perform local database reset"
+msgstr "Ponastavi lokalno bazo podatkov"
+
+msgctxt "#33054"
+msgid "Add user to session"
+msgstr "Dodaj uporabnika v sejo"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "Novo"
+
+#, fuzzy
+msgctxt "#33048"
+msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
+msgstr ""
+"Preveriti vaše omrežne poverilnice v nastavitvah dodatka ali uporabite "
+"Jellyfin zamenjavo poti za pravilno oblikovanje poti datotek (Jellyfin "
+"nadzorna plošča > Knjižnice). Želite preklicati sinhronizacijo?"
+
+msgctxt "#33047"
+msgid "Kodi can't locate file:"
+msgstr "Kodi ne more najti datoteke:"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "Omogoči glasbeno knjižnico?"
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "Dodatek (privzeto)"
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr "Ustvarjen je bil nov ID naprave. Kodi se bo zdaj znova zagnal."
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "Končano v:"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "Zbiranje:"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "Predvajaj napovednike?"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "Izbriši datoteko iz Jellyfin strežnika?"
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr "Izberite sled podnapisov"
+
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr "Izberite zvočno sled"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "Napačno uporabniško ime ali geslo"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "Strežnik se ponovno zaganja"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "Dobrodošli"
+
+#, fuzzy
+msgctxt "#30617"
+msgid "Server or port cannot be empty"
+msgstr "Strežnik oziroma vrata ne morejo biti prazna"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "Poveži"
+
+#, fuzzy
+msgctxt "#30615"
+msgid "Host"
+msgstr "Gostitelj"
+
+msgctxt "#30614"
+msgid "Connect to server"
+msgstr "Poveži s strežnikom"
