@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-06-06 20:21+0000\n"
+"PO-Revision-Date: 2020-06-06 22:17+0000\n"
 "Last-Translator: SaddFox <filip.rutar@gmail.com>\n"
 "Language-Team: Slovenian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sl/>\n"
@@ -555,3 +555,45 @@ msgstr ""
 "Namestite dodatek Kodi Sync Queue na strežnik za samodejne posodobitve Kodi "
 "knjižnice ob zagon. Nastavitev najdete v nastavitvah dodatka > možnosti "
 "sinhronizacije > Omogoči Kodi Sync Queue."
+
+msgctxt "#33114"
+msgid "Enable external subtitles"
+msgstr "Omogoči zunanje podnapise"
+
+msgctxt "#33111"
+msgid "Reset the local database to apply the playback mode change."
+msgstr ""
+"Za spremembo načina predvajanja je potrebno ponastaviti lokalno bazo "
+"podatkov."
+
+msgctxt "#33110"
+msgid "Restart Kodi to take effect."
+msgstr "Za uveljavitev sprememb ponovno zaženite Kodi."
+
+msgctxt "#33109"
+msgid "Plugin"
+msgstr "Dodatek"
+
+msgctxt "#33108"
+msgid "Notifications are delayed during video playback (except live tv)."
+msgstr "Obvestila so prestavljena med predvajanjem (razen za TV v živo)."
+
+msgctxt "#33107"
+msgid "Users added to the session (no space between users). (eg username,username2)"
+msgstr ""
+"Uporabniki dodani v sejo (brez presledka med uporabniki) (npr. "
+"uporabnik1,uporabnik2)"
+
+msgctxt "#33106"
+msgid "Enable the option to transcode"
+msgstr "Omogoči možnost prekodiranja"
+
+msgctxt "#33105"
+msgid "Enable the context menu"
+msgstr "Omogoči kontekstni meni"
+
+msgctxt "#33104"
+msgid "Find more info in the github wiki/Create-and-restore-from-backup."
+msgstr ""
+"Za več informacij obiščite Github wiki stran > Create-and-restore-from-"
+"backup."
