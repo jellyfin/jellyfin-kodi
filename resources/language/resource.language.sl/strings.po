@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-06-06 23:24+0000\n"
+"PO-Revision-Date: 2020-06-07 03:51+0000\n"
 "Last-Translator: SaddFox <filip.rutar@gmail.com>\n"
 "Language-Team: Slovenian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sl/>\n"
@@ -611,3 +611,18 @@ msgid "You've change the playback mode. Kodi needs to be reset to apply the chan
 msgstr ""
 "Spremenili ste način predvajanja. Za uveljavitev sprememb potrebuje Kodi "
 "ponoven zagon. Želite znova zagnati zdaj?"
+
+msgctxt "#33121"
+msgid "All"
+msgstr "Vse"
+
+msgctxt "#33120"
+msgid "Select the libraries to add"
+msgstr "Izberite knjižnice, ki jih želite dodati"
+
+msgctxt "#33119"
+msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"Pri sinhronizaciji je prišlo do napake. Po ponovnem zagonu Kodi-ja boste "
+"lahko nadaljevali s sinhronizacijo. Če napaka ostane jo prijavite na forumu "
+"za Jellyfin za Kodi, skupaj s Kodi dnevnikom."
