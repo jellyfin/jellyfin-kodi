@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-04-29 16:12+0000\n"
-"Last-Translator: Medzhnun Mehmed <mecnun@mail.bg>\n"
+"PO-Revision-Date: 2020-06-07 23:18+0000\n"
+"Last-Translator: Hasan Cem Safa Ece <hasancemsafaece@gmail.com>\n"
 "Language-Team: Turkish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/tr/>\n"
 "Language: tr_tr\n"
@@ -340,3 +340,27 @@ msgstr "Oynatmadan sonra, silmeyi teklif et"
 msgctxt "#30002"
 msgid "Force HTTP playback"
 msgstr "HTTP den oynatmayı zorla"
+
+#, fuzzy
+msgctxt "#30614"
+msgid "Connect to server"
+msgstr "Sunucuya bağlan"
+
+#, fuzzy
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "Bildirimler (saniye)"
+
+#, fuzzy
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "Yeni içeriğe izin ver"
+
+#, fuzzy
+msgctxt "#30529"
+msgid "Startup delay (in seconds)"
+msgstr "Başlangıç gecikmesi (saniye)"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "Daimi kullanıcılar"
