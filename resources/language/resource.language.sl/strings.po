@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-06-07 03:51+0000\n"
+"PO-Revision-Date: 2020-06-07 19:35+0000\n"
 "Last-Translator: SaddFox <filip.rutar@gmail.com>\n"
 "Language-Team: Slovenian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sl/>\n"
@@ -626,3 +626,127 @@ msgstr ""
 "Pri sinhronizaciji je prišlo do napake. Po ponovnem zagonu Kodi-ja boste "
 "lahko nadaljevali s sinhronizacijo. Če napaka ostane jo prijavite na forumu "
 "za Jellyfin za Kodi, skupaj s Kodi dnevnikom."
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "Dodaj knjižnice"
+
+msgctxt "#33151"
+msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
+msgstr ""
+"Poveži s prej izbranim strežnikom. Če se želite povezati z drugim "
+"strežnikom, ponastavite lokalno bazo podatkov, vključno z uporabniškimi "
+"podatki."
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "Posodobi podatke o strežniku"
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "Povezava s tem strežnikom ni uspela."
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "Vaš dostop do tega strežnika je omejen."
+
+msgctxt "#33147"
+msgid "Your access to Jellyfin is restricted."
+msgstr "Vaš dostop do Jellyfin je omejen."
+
+msgctxt "#33146"
+msgid "Unable to connect to Jellyfin."
+msgstr "Povezava s Jellyfin ni uspela."
+
+msgctxt "#33145"
+msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
+msgstr ""
+"Prosimo preverite, da je vaš Samba (smb) strežnik, ki ga uporablja Jellyfin "
+"dosegljiv tudi za Kodi in da je zamenjava poti pravilno nastavljena. V "
+"nasprotnem primeru Kodi ne bo našel vaših datotek."
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "Odstranjevanje knjižnice"
+
+msgctxt "#33143"
+msgid "Enable the option to delete"
+msgstr "Omogočite možnost za izbris"
+
+msgctxt "#33142"
+msgid "Something went wrong. Try again later."
+msgstr "Prišlo je do napake. Poskusite znova kasneje."
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "Odstrani strežnik"
+
+msgctxt "#33140"
+msgid "Repair libraries"
+msgstr "Popravi knjižnice"
+
+msgctxt "#33139"
+msgid "Update libraries"
+msgstr "Posodobi knjižnice"
+
+msgctxt "#33138"
+msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
+msgstr ""
+"Namesto da se zanašate na strežniški dodatek Kodi Sync Queue lahko knjižnice "
+"ročno posodobite. Odprite dodatek in posodobite knjižnice (ali posamezno "
+"knjižnico). Za odstranitev vsebin morate izbrati možnost popravi knjižnico."
+
+msgctxt "#33137"
+msgid "Enable Kodi Sync Queue"
+msgstr "Omogoči Kodi Sync Queue"
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "Posodobi knjižnico"
+
+msgctxt "#33135"
+msgid "Kodi will now restart to apply a small patch for your Kodi version."
+msgstr ""
+"Kodi se bo zdaj ponovno zagnal za uveljavitev manjšega popravka za vašo Kodi "
+"različico."
+
+msgctxt "#33134"
+msgid "Add server"
+msgstr "Dodaj strežnik"
+
+msgctxt "#33133"
+msgid "Remove library from Kodi"
+msgstr "Odstrani knjižnico iz Kodi-ja"
+
+msgctxt "#33132"
+msgid "Repair library"
+msgstr "Popravi knjižnico"
+
+msgctxt "#33130"
+msgid "Select the source"
+msgstr "Izberite vir"
+
+msgctxt "#33129"
+msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
+msgstr ""
+"Knjižnice lahko ročno sinhronizirate v nastavitvah Jellyfin dodatka > Dodaj "
+"knjižnice."
+
+msgctxt "#33128"
+msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"Pri pridobivanju novih vsebin je prišlo do napake. Spremembe ne bodo "
+"uveljavljene do ponovnega zagona. Če napaka ostane, jo prijavite na forumu "
+"za Jellyfin za Kodi skupaj s Kodi dnevnikom."
+
+msgctxt "#33124"
+msgid "Include people (slow)"
+msgstr "Vključi osebe (počasno)"
+
+msgctxt "#33123"
+msgid "Sync library to Kodi"
+msgstr "Sinhroniziraj knjižnico s Kodi-jem"
+
+msgctxt "#33122"
+msgid "Restart Kodi to resume where you left off."
+msgstr "Ponovno zaženite Kodi in nadaljujete kjer ste ostali."
