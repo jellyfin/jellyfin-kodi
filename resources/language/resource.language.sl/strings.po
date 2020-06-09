@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-06-07 19:35+0000\n"
+"PO-Revision-Date: 2020-06-09 17:49+0000\n"
 "Last-Translator: SaddFox <filip.rutar@gmail.com>\n"
 "Language-Team: Slovenian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sl/>\n"
@@ -750,3 +750,50 @@ msgstr "Sinhroniziraj knjižnico s Kodi-jem"
 msgctxt "#33122"
 msgid "Restart Kodi to resume where you left off."
 msgstr "Ponovno zaženite Kodi in nadaljujete kjer ste ostali."
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "Pozabi prejšnjo sinhronizacijo? To ni priporočeno."
+
+msgctxt "#33172"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
+msgstr ""
+"Imate {number} posodobitev na čakanju. Trajalo bo nekaj časa, preden boste "
+"videli nove vsebine. Morda bo hitreje, če ročno posodobite knjižnice, tako "
+"da odprete Jellyfin dodatek > Posodobi knjižnice. Nadaljuj kljub temu?"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "Po prvi črki"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "Neogledani"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "V teku"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "Priljubljeni"
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "Nedavno dodano"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "(dinamično)"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "Ustvarjanje varnostne kopije ni uspelo"
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr "Skrij občutljive informacije v dnevniku (ne velja za Kodi dnevnike)"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "Ponastavi glasbeno knjižnico?"
