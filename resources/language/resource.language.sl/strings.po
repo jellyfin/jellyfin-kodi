@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-06-09 17:49+0000\n"
+"PO-Revision-Date: 2020-06-09 23:59+0000\n"
 "Last-Translator: SaddFox <filip.rutar@gmail.com>\n"
 "Language-Team: Slovenian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sl/>\n"
@@ -797,3 +797,27 @@ msgstr "Skrij občutljive informacije v dnevniku (ne velja za Kodi dnevnike)"
 msgctxt "#33162"
 msgid "Reset the music library?"
 msgstr "Ponastavi glasbeno knjižnico?"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "Ponovni zagon za uveljavitev popravka"
+
+msgctxt "#33180"
+msgid "Restart Jellyfin for Kodi"
+msgstr "Ponovno zaženi Jellyfin za Kodi"
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "Vsili prekodiranje"
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr "Obdelovanje posodobitev"
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr "Prikaži vrstico napredka, če je število posodobitev večje kot"
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr "Posodobi ali popravi knjižnico za uveljavitev spodnjih sprememb."
