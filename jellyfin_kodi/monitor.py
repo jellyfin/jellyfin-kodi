@@ -389,6 +389,8 @@ class Monitor(xbmc.Monitor):
             elif command == 'SetSubtitleStreamIndex':
                 self.player.set_audio_subs(None, args['Index'])
 
+            # Kodi needs a bit of time to update it's current status
+            xbmc.sleep(500)
             self.player.report_playback()
 
         elif command == 'DisplayMessage':
