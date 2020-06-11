@@ -155,6 +155,10 @@ class Player(xbmc.Player):
         LOG.info("-->[ play/%s ] %s", item['Id'], item)
 
     def set_audio_subs(self, audio=None, subtitle=None):
+        if audio:
+            audio=int(audio)
+        if subtitle:
+            subtitle=int(subtitle)
 
         ''' Only for after playback started
         '''
@@ -169,7 +173,7 @@ class Player(xbmc.Player):
             if audio and len(self.getAvailableAudioStreams()) > 1:
                 self.setAudioStream(audio - 1)
 
-            if subtitle == -1 or subtitle is None:
+            if subtitle is None or subtitle == -1:
                 self.showSubtitles(False)
 
                 return
