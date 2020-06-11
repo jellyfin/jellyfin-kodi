@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-05-10 15:51+0000\n"
-"Last-Translator: Miroslav Ivanov <mirochoni@gmail.com>\n"
+"PO-Revision-Date: 2020-06-11 14:33+0000\n"
+"Last-Translator: Николай Иванов <nivanov@mail.bg>\n"
 "Language-Team: Bulgarian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/bg/>\n"
 "Language: bg\n"
@@ -218,3 +218,52 @@ msgstr "интерфейс"
 msgctxt "#30185"
 msgid "Boxsets"
 msgstr "поредици"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "Питай при възпроизвеждане на трейлъри"
+
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "Включи режим \"киносалон\""
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "Мрежови идентификационни данни"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "Възпроизвеждане"
+
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr ""
+"Номерация на страниците - максимално поискани елементи (по подразбиране:15)"
+
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "Включи кеширането на обложки"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "Режим на възпроизвеждане"
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "Включи музикалната библиотека"
+
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "Включи известяването, ако броя на актуализациите е по-голям от"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "Транскодиране"
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "Джелифин транскодиране"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Наскоро добавени домашни видеоклипове"
