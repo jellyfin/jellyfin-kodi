@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-06-12 16:01+0000\n"
+"PO-Revision-Date: 2020-06-12 18:40+0000\n"
 "Last-Translator: SaddFox <filip.rutar@gmail.com>\n"
 "Language-Team: Slovenian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sl/>\n"
@@ -881,3 +881,34 @@ msgstr "Omogoči sinhronizacijo med predvajanjem (lahko povzroči zatikanje)"
 msgctxt "#33184"
 msgid "Remove libraries"
 msgstr "Odstrani knjižnice"
+
+msgctxt "#33155"
+msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
+msgstr ""
+"Trenutno uveljavljen popravek za Jellyfin za Kodi je pokvarjen. Težavo "
+"morate odpraviti čim hitreje. Če težava ostane, jo prijavite na forumu za "
+"Jellyfin za Kodi."
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "Samo podnapisi"
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "Samo zvok"
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "Popravek je bil uveljavljen!"
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "Omogoči izbiro zvoka in podnapisov"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr "Za izogib težavam prosimo posodobite Jellyfin za Kodi na različico: "
+
+msgctxt "#33161"
+msgid "Update password"
+msgstr "Posodobi geslo"
