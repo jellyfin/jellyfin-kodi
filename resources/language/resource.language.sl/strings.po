@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-06-09 23:59+0000\n"
+"PO-Revision-Date: 2020-06-12 16:01+0000\n"
 "Last-Translator: SaddFox <filip.rutar@gmail.com>\n"
 "Language-Team: Slovenian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sl/>\n"
@@ -821,3 +821,63 @@ msgstr "Prikaži vrstico napredka, če je število posodobitev večje kot"
 msgctxt "#33176"
 msgid "Update or repair your libraries to apply the changes below."
 msgstr "Posodobi ali popravi knjižnico za uveljavitev spodnjih sprememb."
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "Predvajaj z Kino načinom"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "Omogoči možnost ogleda z Kino načinom"
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "Izberite knjižnice za odstranitev"
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "Izberite knjižnice za popravilo"
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "Izberite knjižnice za posodobitev"
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr ""
+"Sinhronizacija je že v teku. Prosimo počakajte, da se zaključi in poskusite "
+"znova."
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr "Napredne možnosti"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "Omogoči Jellyfin za Kodi"
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "Upravljaj knjižnice"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "Ponovni zagon..."
+
+msgctxt "#33191"
+msgid "Restart Jellyfin for Kodi to apply this change?"
+msgstr "Ponovno zaženi Jellyfin za Kodi za uveljavitev spremembe?"
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr ""
+"Kodi Sync Queue pohitri začetno sinhronizacijo knjižnice. Ostale "
+"sinhronizacije sproži strežnik."
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr "Omogoči sinhronizacijo med predvajanjem (lahko povzroči zatikanje)"
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "Odstrani knjižnice"
