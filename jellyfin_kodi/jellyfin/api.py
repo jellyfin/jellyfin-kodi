@@ -329,7 +329,7 @@ class API(object):
     def get_sync_queue(self, date, filters=None):
         return self._get("Jellyfin.Plugin.KodiSyncQueue/{UserId}/GetItems", params={
             'LastUpdateDT': date,
-            'filter': filters or None
+            'filter': filters or 'None'
         })
 
     def get_server_time(self):
