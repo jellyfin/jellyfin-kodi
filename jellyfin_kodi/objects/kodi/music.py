@@ -160,8 +160,10 @@ class Music(Kodi):
     def update_album(self, *args):
         if self.version_id < 72:
             self.cursor.execute(QU.update_album, args)
-        else:
+        elif self.version_id < 74:
             self.cursor.execute(QU.update_album72, args)
+        else:
+            self.cursor.execute(QU.update_album74, args)
 
     def get_album_artist(self, album_id, artists):
 
@@ -184,19 +186,26 @@ class Music(Kodi):
             self.cursor.execute(QU.update_album_artist72, args)
 
     def add_single(self, *args):
-        self.cursor.execute(QU.add_single, args)
+        if self.version_id < 74:
+            self.cursor.execute(QU.add_single, args)
+        else:
+            self.cursor.execute(QU.add_single74, args)
 
     def add_song(self, *args):
         if self.version_id < 72:
             self.cursor.execute(QU.add_song, args)
-        else:
+        elif self.version_id < 74:
             self.cursor.execute(QU.add_song72, args)
+        else:
+            self.cursor.execute(QU.add_song74, args)
 
     def update_song(self, *args):
         if self.version_id < 72:
             self.cursor.execute(QU.update_song, args)
-        else:
+        elif self.version_id < 74:
             self.cursor.execute(QU.update_song72, args)
+        else:
+            self.cursor.execute(QU.update_song74, args)
 
     def link_song_artist(self, *args):
         self.cursor.execute(QU.update_song_artist, args)

@@ -104,6 +104,10 @@ add_single = """
 INSERT INTO     album(idAlbum, strGenres, iYear, strReleaseType)
 VALUES          (?, ?, ?, ?)
 """
+add_single74 = """
+INSERT INTO     album(idAlbum, strGenres, strReleaseDate, strReleaseType)
+VALUES          (?, ?, ?, ?)
+"""
 add_single_obj = ["{AlbumId}", "{Genre}", "{Year}", "single"]
 add_song = """
 INSERT INTO     song(idSong, idAlbum, idPath, strArtists, strGenres, strTitle, iTrack,
@@ -114,6 +118,12 @@ VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 add_song72 = """
 INSERT INTO     song(idSong, idAlbum, idPath, strArtistDisp, strGenres, strTitle, iTrack,
                 iDuration, iYear, strFileName, strMusicBrainzTrackID, iTimesPlayed, lastplayed,
+                rating, comment, dateAdded)
+VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+"""
+add_song74 = """
+INSERT INTO     song(idSong, idAlbum, idPath, strArtistDisp, strGenres, strTitle, iTrack,
+                iDuration, strReleaseDate, strFileName, strMusicBrainzTrackID, iTimesPlayed, lastplayed,
                 rating, comment, dateAdded)
 VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 """
@@ -171,6 +181,12 @@ SET         strArtistDisp = ?, iYear = ?, strGenres = ?, strReview = ?, strImage
             iUserrating = ?, lastScraped = ?, bScrapedMBID = 1, strReleaseType = ?
 WHERE       idAlbum = ?
 """
+update_album74 = """
+UPDATE      album
+SET         strArtistDisp = ?, strReleaseDate = ?, strGenres = ?, strReview = ?, strImage = ?,
+            iUserrating = ?, lastScraped = ?, bScrapedMBID = 1, strReleaseType = ?
+WHERE       idAlbum = ?
+"""
 update_album_obj = ["{Artists}", "{Year}", "{Genre}", "{Bio}", "{Thumb}", "{Rating}", "{LastScraped}", "album", "{AlbumId}"]
 update_album_artist = """
 UPDATE      album
@@ -193,6 +209,13 @@ update_song72 = """
 UPDATE      song
 SET         idAlbum = ?, strArtistDisp = ?, strGenres = ?, strTitle = ?, iTrack = ?,
             iDuration = ?, iYear = ?, strFilename = ?, iTimesPlayed = ?, lastplayed = ?,
+            rating = ?, comment = ?, dateAdded = ?
+WHERE       idSong = ?
+"""
+update_song74 = """
+UPDATE      song
+SET         idAlbum = ?, strArtistDisp = ?, strGenres = ?, strTitle = ?, iTrack = ?,
+            iDuration = ?, strReleaseDate = ?, strFilename = ?, iTimesPlayed = ?, lastplayed = ?,
             rating = ?, comment = ?, dateAdded = ?
 WHERE       idSong = ?
 """
