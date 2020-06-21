@@ -10,7 +10,7 @@ from kodi_six import xbmc
 
 from helper import LazyLogger
 
-from . import websocket
+import websocket
 
 ##################################################################################################
 
