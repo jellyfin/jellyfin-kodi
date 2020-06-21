@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-05-21 04:09+0000\n"
+"PO-Revision-Date: 2020-06-21 21:33+0000\n"
 "Last-Translator: Franco Castillo <castillofrancodamian@gmail.com>\n"
 "Language-Team: Spanish (Argentina) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/es_AR/>\n"
@@ -568,3 +568,25 @@ msgstr "Sincronizar medios temáticos"
 msgctxt "#33058"
 msgid "Perform local database reset"
 msgstr "Realizar restablecimiento de la base de datos local"
+
+msgctxt "#33091"
+msgid "Created backup at:"
+msgstr "Copia de seguridad creada en:"
+
+msgctxt "#33090"
+msgid "Replace existing backup?"
+msgstr "¿Reemplazar copia de seguridad existente?"
+
+msgctxt "#33089"
+msgid "Enter folder name for backup"
+msgstr "Ingrese el nombre de la carpeta para la copia de seguridad"
+
+msgctxt "#33088"
+msgid "Database reset has completed, Kodi will now restart to apply the changes."
+msgstr ""
+"El restablecimiento de la base de datos se ha completado, Kodi ahora se "
+"reiniciará para aplicar los cambios."
+
+msgctxt "#33061"
+msgid "Add/Remove user from the session"
+msgstr "Agregar/Eliminar usuario de la sesión"
