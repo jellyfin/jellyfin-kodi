@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-06-24 20:08+0000\n"
+"PO-Revision-Date: 2020-06-24 20:21+0000\n"
 "Last-Translator: Sasa <sasablazek1@gmail.com>\n"
 "Language-Team: Croatian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hr/>\n"
@@ -23,3 +23,192 @@ msgstr "Adresa servera"
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
 msgstr "Jellyfin za Kodi"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "Koristi alternativni naziv uređaja"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "Verificiraj konekciju"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "Transkodiraj"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "Osvježi stavku"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "Obriši iz Jellyfin-a"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "Postavke"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "Ukloni iz favorita"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "Dodaj u favorite"
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "Jellyfin transkodiranje"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Jellyfin opcije"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "Serije"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "Filmovi"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "Glazbeni spotovi koji nisu pogledani"
+
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "Glazbeni spotovi u tijeku"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "Nedavno dodani glazbeni spotovi"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "Omiljeni albumi"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "Omiljene fotografije"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Omiljeni kućni video"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "Nedavno dodane fotografije"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Nedavno dodani kućni video"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "Omogući poruku dobrodošlice"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "Resetiraj lokalnu Kodi bazu podataka"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "Sučelje"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Preporučene stavke"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Filmovi koji nisu pogledani"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Omiljene epizode"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "Omiljene serije"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Omiljeni filmovi"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Slijedeće epizode"
+
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "Epizode u tijeku"
+
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "Filmovi u tijeku"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "Nedavno dodane epizode"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "Nedavno dodani filmovi"
+
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "Serije u tijeku"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Nedavno dodane serije"
+
+msgctxt "#30160"
+msgid "Video quality"
+msgstr "Kvaliteta videa"
+
+#, fuzzy
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Omogući proširene ilustracije"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Za filmove"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Za epizode"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Ponudi brisanje nakon reprodukcije"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Potvrdi brisanje datoteke"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Korisničko ime"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Napredno"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Naziv uređaja"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Razina log-a"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Metoda prijave"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "Forsiraj HTTP reprodukciju"
