@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-06-24 20:21+0000\n"
+"PO-Revision-Date: 2020-06-24 20:26+0000\n"
 "Last-Translator: Sasa <sasablazek1@gmail.com>\n"
 "Language-Team: Croatian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hr/>\n"
@@ -212,3 +212,35 @@ msgstr "Metoda prijave"
 msgctxt "#30002"
 msgid "Force HTTP playback"
 msgstr "Forsiraj HTTP reprodukciju"
+
+msgctxt "#33063"
+msgid "Remove user"
+msgstr "Ukloni korisnika"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "Dodaj korisnika"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "Reprodukcija"
+
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "Omogući spremanje ilustracija"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "Način reprodukcije"
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "Omogući biblioteku sa glazbom"
+
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "Omogući notifikaciju ako je broj ažuriranja veći od"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "Sinkroniziraj"
