@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-06-24 20:26+0000\n"
+"PO-Revision-Date: 2020-06-24 21:39+0000\n"
 "Last-Translator: Sasa <sasablazek1@gmail.com>\n"
 "Language-Team: Croatian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hr/>\n"
@@ -244,3 +244,23 @@ msgstr "Omogući notifikaciju ako je broj ažuriranja veći od"
 msgctxt "#30506"
 msgid "Sync"
 msgstr "Sinkroniziraj"
+
+msgctxt "#33134"
+msgid "Add server"
+msgstr "Dodaj server"
+
+msgctxt "#33121"
+msgid "All"
+msgstr "Sve"
+
+msgctxt "#33114"
+msgid "Enable external subtitles"
+msgstr "Omogući vanjske prijevode"
+
+msgctxt "#33093"
+msgid "Backup folder"
+msgstr "Mapa za sigurnosnu kopiju"
+
+msgctxt "#33092"
+msgid "Create a backup"
+msgstr "Napravi sigurnosnu kopiju"
