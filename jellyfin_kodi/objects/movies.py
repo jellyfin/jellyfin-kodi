@@ -180,7 +180,7 @@ class Movies(KodiDb):
             if validate_bluray_dir(obj['Path'] + obj['Filename']):
                 obj['Path'] = obj['Path'] + obj['Filename'] + '/BDMV/'
                 obj['Filename'] = 'index.bdmv'
-                LOG.debug("path redirect %s",obj['Path'])
+                LOG.debug("Bluray directry %s",obj['Path'])
 
         else:
             obj['Path'] = "plugin://plugin.video.jellyfin/%s/" % obj['LibraryId']

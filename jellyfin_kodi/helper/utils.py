@@ -268,8 +268,6 @@ def validate_bluray_dir(path):
 
     path = path + '/BDMV/'
 
-    path = path if os.path.supports_unicode_filenames else path
-
     if not xbmcvfs.exists(path):
         return False
 
