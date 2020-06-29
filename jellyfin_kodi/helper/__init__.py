@@ -14,6 +14,7 @@ from .utils import find
 from .utils import event
 from .utils import validate
 from .utils import validate_bluray_dir
+from .utils import validate_dvd_dir
 from .utils import values
 from .utils import JSONRPC
 from .utils import compare_version
