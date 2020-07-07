@@ -261,6 +261,21 @@ def validate(path):
     return True
 
 
+def validate_bluray_dir(path):
+
+    ''' Verify if path/BDMV/ is accessible.
+    '''
+
+    path = path + '/BDMV/'
+
+    if not xbmcvfs.exists(path):
+        return False
+
+    window('jellyfin_pathverified.bool', True)
+
+    return True
+
+
 def values(item, keys):
 
     ''' Grab the values in the item for a list of keys {key},{key1}....
