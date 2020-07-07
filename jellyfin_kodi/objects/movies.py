@@ -8,7 +8,7 @@ from kodi_six.utils import py2_encode
 
 import downloader as server
 from database import jellyfin_db, queries as QUEM
-from helper import api, stop, validate, validate_bluray_dir, jellyfin_item, library_check, values, Local
+from helper import api, stop, validate, validate_bluray_dir, validate_dvd_dir, jellyfin_item, library_check, values, Local
 from helper import LazyLogger
 
 from .obj import Objects
@@ -176,6 +176,13 @@ class Movies(KodiDb):
                 raise Exception("Failed to validate path. User stopped.")
 
             obj['Path'] = obj['Path'].replace(obj['Filename'], "")
+
+            '''check dvd directries and point it to ./VIDEO_TS/VIDEO_TS.IFO'''
+            if validate_dvd_dir(obj['Path'] + obj['Filename']):
+                obj['Path'] = obj['Path'] + obj['Filename'] + '/VIDEO_TS/'
+                obj['Filename'] = 'VIDEO_TS.IFO'
+                LOG.debug("DVD directry %s",obj['Path'])
+
             '''check bluray directries and point it to ./BDMV/index.bdmv'''
             if validate_bluray_dir(obj['Path'] + obj['Filename']):
                 obj['Path'] = obj['Path'] + obj['Filename'] + '/BDMV/'

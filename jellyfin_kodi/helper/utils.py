@@ -276,6 +276,21 @@ def validate_bluray_dir(path):
     return True
 
 
+def validate_dvd_dir(path):
+
+    ''' Verify if path/VIDEO_TS/ is accessible.
+    '''
+
+    path = path + '/VIDEO_TS/'
+
+    if not xbmcvfs.exists(path):
+        return False
+
+    window('jellyfin_pathverified.bool', True)
+
+    return True
+
+
 def values(item, keys):
 
     ''' Grab the values in the item for a list of keys {key},{key1}....
