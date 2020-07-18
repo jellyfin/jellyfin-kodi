@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon  id="plugin.video.jellyfin"
         name="Jellyfin"
-        version="0.5.8"
+        version=""
         provider-name="Jellyfin Contributors, angelblue05">
   <requires>
   </requires>

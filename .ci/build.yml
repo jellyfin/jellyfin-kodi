@@ -22,17 +22,17 @@ steps:
     - script: ls .
       displayName: 'home dir 2'
 
-#    - task: CopyFilesOverSSH@0
-#      displayName: 'Upload to repo server'
-#      inputs:
-#        sshEndpoint: repository
-#        sourceFolder: '${Agent.BuildDirectory}'
-#        contents: 'plugin.video.jellyfin*'
-#        targetFolder: '/srv/repository/incoming/kodi'
-#
-#    - task: SSH@0
-#      displayName: 'Add to Kodi repo'
-#      inputs:
-#        sshEndpoint: repository
-#        runOptions: 'inline'
-#        inline: 'python3 /usr/local/bin/kodirepo add /srv/repository/incoming/kodi/plugin.video.jellyfin-version-${ py_version } --datadir /srv/repository/releases/client/kodi/${ py_version }'
+    - task: CopyFilesOverSSH@0
+      displayName: 'Upload to repo server'
+      inputs:
+        sshEndpoint: repository
+        sourceFolder: '${Agent.BuildDirectory}'
+        contents: 'plugin.video.jellyfin*'
+        targetFolder: '/srv/repository/incoming/kodi'
+
+    - task: SSH@0
+      displayName: 'Add to Kodi repo'
+      inputs:
+        sshEndpoint: repository
+        runOptions: 'inline'
+        inline: 'python3 /usr/local/bin/kodirepo add /srv/repository/incoming/kodi/plugin.video.jellyfin-version-${ py_version } --datadir /srv/repository/releases/client/kodi/${ py_version }'
