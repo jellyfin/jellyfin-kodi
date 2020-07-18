@@ -9,3 +9,4 @@ machine_guid
 .vscode/
 pyinstrument/
 pyinstrument_cext.so
+addon.xml
