@@ -393,12 +393,16 @@ class Library(threading.Thread):
         query_filter = list(set(filters) - set(include))
 
         try:
+            # Get list of updates from server for synced library types and populate work queues
+            result = self.server.jellyfin.get_sync_queue(last_sync, ",".join([ x for x in query_filter ]))
+            
+            if result is None:
+                return True
+            
             updated = []
             userdata = []
             removed = []
-
-            # Get list of updates from server for synced library types and populate work queues
-            result = self.server.jellyfin.get_sync_queue(last_sync, ",".join([ x for x in query_filter ]))
+            
             updated.extend(result['ItemsAdded'])
             updated.extend(result['ItemsUpdated'])
             userdata.extend(result['UserDataChanged'])
