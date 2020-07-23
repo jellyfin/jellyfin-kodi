@@ -396,7 +396,7 @@ class Library(threading.Thread):
             # Get list of updates from server for synced library types and populate work queues
             result = self.server.jellyfin.get_sync_queue(last_sync, ",".join([ x for x in query_filter ]))
             
-            if result == None:
+            if result is None:
                 return True
             
             updated = []
