@@ -110,7 +110,7 @@ class Library(threading.Thread):
         with Database('video'), Database('music'):
             pass
 
-    @stop()
+    @stop
     def service(self):
 
         ''' If error is encountered, it will rerun this function.
