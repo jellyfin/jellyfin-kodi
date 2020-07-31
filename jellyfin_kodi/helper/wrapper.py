@@ -48,40 +48,6 @@ def progress(message=None):
     return decorator
 
 
-def catch(errors=(Exception,)):
-
-    ''' Wrapper to catch exceptions and return using catch
-    '''
-    def decorator(func):
-        def wrapper(*args, **kwargs):
-
-            try:
-                return func(*args, **kwargs)
-            except errors as error:
-                LOG.exception(error)
-
-                raise Exception("Caught exception")
-
-        return wrapper
-    return decorator
-
-
-def silent_catch(errors=(Exception,)):
-
-    ''' Wrapper to catch exceptions and ignore them
-    '''
-    def decorator(func):
-        def wrapper(*args, **kwargs):
-
-            try:
-                return func(*args, **kwargs)
-            except errors as error:
-                LOG.error(error)
-
-        return wrapper
-    return decorator
-
-
 def stop(func):
 
     ''' Wrapper to catch exceptions and return using catch

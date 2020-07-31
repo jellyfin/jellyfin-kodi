@@ -8,7 +8,7 @@ import os
 from kodi_six import xbmc, xbmcvfs
 
 from objects.obj import Objects
-from helper import translate, api, window, settings, dialog, event, silent_catch, JSONRPC
+from helper import translate, api, window, settings, dialog, event, JSONRPC
 from jellyfin import Jellyfin
 from helper import LazyLogger
 
@@ -27,13 +27,17 @@ class Player(xbmc.Player):
     def __init__(self):
         xbmc.Player.__init__(self)
 
-    @silent_catch()
     def get_playing_file(self):
-        return self.getPlayingFile()
+        try:
+            return self.getPlayingFile()
+        except Exception as error:
+            LOG.exception(error)
 
-    @silent_catch()
     def get_file_info(self, file):
-        return self.played[file]
+        try:
+            return self.played[file]
+        except Exception as error:
+            LOG.exception(error)
 
     def is_playing_file(self, file):
         return file in self.played

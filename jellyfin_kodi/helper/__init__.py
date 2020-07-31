@@ -25,8 +25,6 @@ from .utils import set_addon_mode
 from .utils import get_filesystem_encoding
 
 from .wrapper import progress
-from .wrapper import catch
-from .wrapper import silent_catch
 from .wrapper import stop
 from .wrapper import jellyfin_item
 from .wrapper import library_check
