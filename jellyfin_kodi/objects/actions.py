@@ -86,23 +86,22 @@ class Actions(object):
             Detect the seektime for video type content.
             Verify the default video action set in Kodi for accurate resume behavior.
         '''
-        seektime = None
 
         if item['MediaType'] in ('Video', 'Audio'):
             resume = item['UserData'].get('PlaybackPositionTicks')
 
-            if resume and transcode and not seektime:
+            if resume and transcode:
                 choice = self.resume_dialog(api.API(item, self.server).adjust_resume((resume or 0) / 10000000.0))
 
                 if choice is None:
                     raise Exception("User backed out of resume dialog.")
 
-                seektime = False if not choice else True
+                item["resumePlayback"] = False if not choice else True
 
-        if settings('enableCinema.bool') and not seektime:
+        if settings('enableCinema.bool') and not item["resumePlayback"]:
             self._set_intros(item)
 
-        self.set_listitem(item, listitem, db_id, seektime)
+        self.set_listitem(item, listitem, db_id, None)
         playutils.set_properties(item, item['PlaybackInfo']['Method'], self.server_id)
         self.stack.append([item['PlaybackInfo']['Path'], listitem])
 
@@ -446,12 +445,13 @@ class Actions(object):
             listitem.setProperty('totaltime', str(obj['Runtime']))
             listitem.setProperty('IsPlayable', 'true')
             listitem.setProperty('IsFolder', 'false')
-            
+
             if obj['Resume'] and item.get("resumePlayback"):
                 listitem.setProperty('resumetime', str(obj['Resume']))
                 listitem.setProperty('StartPercent', str(((obj['Resume'] / obj['Runtime']) * 100) - 0.40))
             else:
                 listitem.setProperty('resumetime', '0')
+                listitem.setProperty('StartPercent', '0')
 
             for track in obj['Streams']['video']:
                 listitem.addStreamInfo('video', {
