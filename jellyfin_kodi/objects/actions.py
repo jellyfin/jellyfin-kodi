@@ -86,8 +86,7 @@ class Actions(object):
             Detect the seektime for video type content.
             Verify the default video action set in Kodi for accurate resume behavior.
         '''
-        seektime = window('jellyfin.resume.bool')
-        window('jellyfin.resume', clear=True)
+        seektime = None
 
         if item['MediaType'] in ('Video', 'Audio'):
             resume = item['UserData'].get('PlaybackPositionTicks')
@@ -447,8 +446,8 @@ class Actions(object):
             listitem.setProperty('totaltime', str(obj['Runtime']))
             listitem.setProperty('IsPlayable', 'true')
             listitem.setProperty('IsFolder', 'false')
-
-            if obj['Resume'] and seektime is not False:
+            
+            if obj['Resume'] and item.get("resumePlayback"):
                 listitem.setProperty('resumetime', str(obj['Resume']))
                 listitem.setProperty('StartPercent', str(((obj['Resume'] / obj['Runtime']) * 100) - 0.40))
             else:
@@ -807,19 +806,7 @@ def special_listener():
     is_playing = player.isPlaying()
     count = int(window('jellyfin.external_count') or 0)
 
-    if (not is_playing and xbmc.getCondVisibility('Window.IsVisible(DialogContextMenu.xml)') and xbmc.getInfoLabel('Control.GetLabel(1002)') == xbmc.getLocalizedString(12021)):
-
-        control = int(xbmcgui.Window(10106).getFocusId())
-
-        if control == 1002:  # Start from beginning
-
-            LOG.info("Resume dialog: Start from beginning selected.")
-            window('jellyfin.resume.bool', False)
-        else:
-            LOG.info("Resume dialog: Resume selected.")
-            window('jellyfin.resume.bool', True)
-
-    elif is_playing and not window('jellyfin.external_check'):
+    if is_playing and not window('jellyfin.external_check'):
         time = player.getTime()
 
         if time > 1:  # Not external player.
