@@ -14,7 +14,7 @@ import requests
 from helper import settings, stop, event, window, create_id
 from jellyfin import Jellyfin
 from jellyfin import api
-from jellyfin.exceptions import HTTPException
+from helper.exceptions import HTTPException
 from helper import LazyLogger
 
 #################################################################################################

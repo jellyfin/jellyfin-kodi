@@ -10,6 +10,7 @@ import downloader as server
 from database import jellyfin_db, queries as QUEM
 from helper import api, stop, validate, validate_bluray_dir, validate_dvd_dir, jellyfin_item, library_check, values, Local
 from helper import LazyLogger
+from helper.exceptions import PathValidationException
 
 from .obj import Objects
 from .kodi import Movies as KodiDb, queries as QU
@@ -173,7 +174,7 @@ class Movies(KodiDb):
         if self.direct_path:
 
             if not validate(obj['Path']):
-                raise Exception("Failed to validate path. User stopped.")
+                raise PathValidationException("Failed to validate path. User stopped.")
 
             obj['Path'] = obj['Path'].replace(obj['Filename'], "")
 

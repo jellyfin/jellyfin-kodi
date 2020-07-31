@@ -8,9 +8,11 @@ import datetime
 from database import jellyfin_db, queries as QUEM
 from helper import api, stop, validate, jellyfin_item, values, library_check, Local
 from helper import LazyLogger
+from helper.exceptions import PathValidationException
 
 from .obj import Objects
 from .kodi import Music as KodiDb, queries_music as QU
+
 ##################################################################################################
 
 LOG = LazyLogger(__name__)
@@ -325,7 +327,7 @@ class Music(KodiDb):
         if self.direct_path:
 
             if not validate(obj['Path']):
-                raise Exception("Failed to validate path. User stopped.")
+                raise PathValidationException("Failed to validate path. User stopped.")
 
             obj['Path'] = obj['Path'].replace(obj['Filename'], "")
 

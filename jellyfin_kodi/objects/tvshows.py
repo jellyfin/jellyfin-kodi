@@ -13,6 +13,7 @@ import downloader as server
 from database import jellyfin_db, queries as QUEM
 from helper import api, stop, validate, jellyfin_item, library_check, values, Local
 from helper import LazyLogger
+from helper.exceptions import PathValidationException
 
 from .obj import Objects
 from .kodi import TVShows as KodiDb, queries as QU
@@ -195,7 +196,7 @@ class TVShows(KodiDb):
                 obj['TopLevel'] = "plugin://plugin.video.jellyfin/"
 
             if not validate(obj['Path']):
-                raise Exception("Failed to validate path. User stopped.")
+                raise PathValidationException("Failed to validate path. User stopped.")
         else:
             obj['TopLevel'] = "plugin://plugin.video.jellyfin/%s/" % obj['LibraryId']
             obj['Path'] = "%s%s/" % (obj['TopLevel'], obj['Id'])
@@ -218,8 +219,9 @@ class TVShows(KodiDb):
 
             try:
                 obj['ShowId'] = self.jellyfin_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))[0]
-            except (KeyError, TypeError):
+            except (KeyError, TypeError) as error:
                 LOG.error("Unable to add series %s", obj['SeriesId'])
+                LOG.exception(error)
 
                 return False
 
@@ -390,7 +392,7 @@ class TVShows(KodiDb):
         if self.direct_path:
 
             if not validate(obj['Path']):
-                raise Exception("Failed to validate path. User stopped.")
+                raise PathValidationException("Failed to validate path. User stopped.")
 
             obj['Path'] = obj['Path'].replace(obj['Filename'], "")
         else:
@@ -411,8 +413,9 @@ class TVShows(KodiDb):
             try:
                 self.tvshow(self.server.jellyfin.get_item(obj['SeriesId']), library=None)
                 obj['ShowId'] = self.jellyfin_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))[0]
-            except (TypeError, KeyError):
+            except (TypeError, KeyError) as error:
                 LOG.error("Unable to add series %s", obj['SeriesId'])
+                LOG.exception(error)
 
                 return False
         else:

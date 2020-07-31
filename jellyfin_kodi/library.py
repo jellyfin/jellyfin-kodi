@@ -15,8 +15,9 @@ from database import Database, jellyfin_db, get_sync, save_sync
 from full_sync import FullSync
 from views import Views
 from downloader import GetItemWorker
-from helper import translate, api, stop, settings, window, dialog, event, LibraryException
+from helper import translate, api, stop, settings, window, dialog, event
 from helper.utils import split_list, set_screensaver, get_screensaver
+from helper.exceptions import LibraryException
 from jellyfin import Jellyfin
 from helper import LazyLogger
 
@@ -395,14 +396,14 @@ class Library(threading.Thread):
         try:
             # Get list of updates from server for synced library types and populate work queues
             result = self.server.jellyfin.get_sync_queue(last_sync, ",".join([ x for x in query_filter ]))
-            
+
             if result is None:
                 return True
-            
+
             updated = []
             userdata = []
             removed = []
-            
+
             updated.extend(result['ItemsAdded'])
             updated.extend(result['ItemsUpdated'])
             userdata.extend(result['UserDataChanged'])
