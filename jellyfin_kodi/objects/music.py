@@ -210,7 +210,7 @@ class Music(KodiDb):
     @stop()
     @jellyfin_item()
     @library_check()
-    def song(self, item, e_item):
+    def song(self, item, e_item, library):
 
         ''' Update object to kodi.
         '''
