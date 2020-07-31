@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-05-16 03:03+0000\n"
+"PO-Revision-Date: 2020-07-31 17:38+0000\n"
 "Last-Translator: Mednis <mednisreinis@gmail.com>\n"
 "Language-Team: Latvian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lv/>\n"
@@ -815,3 +815,15 @@ msgstr "Atlēkt atpakaļ turpinot (sekundēs)"
 msgctxt "#30515"
 msgid "Paging - max items requested (default: 15)"
 msgstr "Lapošana - maksimālie pieprasītie vienumi (noklusējums: 15)"
+
+msgctxt "#33098"
+msgid "Refresh boxsets"
+msgstr "Atjaunot boxsetus"
+
+msgctxt "#30533"
+msgid "Duration of the music library pop up"
+msgstr "Mūzikas bibliotēkas uznirstošā loga ilgums"
+
+msgctxt "#30532"
+msgid "Duration of the video library pop up"
+msgstr "Video bibliotēkas uznirstošā loga ilgums"
