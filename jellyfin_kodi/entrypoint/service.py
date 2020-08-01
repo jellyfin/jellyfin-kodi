@@ -414,7 +414,7 @@ class Service(xbmc.Monitor):
         properties = [  # TODO: review
             "jellyfin_state", "jellyfin_serverStatus", "jellyfin_currUser",
 
-            "jellyfin_play", "jellyfin_online", "jellyfin.connected", "jellyfin.resume", "jellyfin_startup",
+            "jellyfin_play", "jellyfin_online", "jellyfin.connected", "jellyfin_startup",
             "jellyfin.external", "jellyfin.external_check", "jellyfin_deviceId", "jellyfin_db_check", "jellyfin_pathverified",
             "jellyfin_sync"
         ]
