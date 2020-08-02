@@ -22,7 +22,7 @@ LOG = LazyLogger(__name__)
 
 class Music(KodiDb):
 
-    def __init__(self, server, jellyfindb, musicdb, direct_path, library):
+    def __init__(self, server, jellyfindb, musicdb, direct_path, library=None):
 
         self.server = server
         self.jellyfin = jellyfindb

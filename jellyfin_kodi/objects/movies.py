@@ -24,7 +24,7 @@ LOG = LazyLogger(__name__)
 
 class Movies(KodiDb):
 
-    def __init__(self, server, jellyfindb, videodb, direct_path, library):
+    def __init__(self, server, jellyfindb, videodb, direct_path, library=None):
 
         self.server = server
         self.jellyfin = jellyfindb

@@ -772,13 +772,13 @@ class RemovedWorker(threading.Thread):
                     break
 
                 if item['Type'] == 'Movie':
-                    obj = Movies(self.args[0], jellyfindb, kodidb, self.args[1], library).remove
+                    obj = Movies(self.args[0], jellyfindb, kodidb, self.args[1]).remove
                 elif item['Type'] in ['Series', 'Season', 'Episode']:
-                    obj = TVShows(self.args[0], jellyfindb, kodidb, self.args[1], library).remove
+                    obj = TVShows(self.args[0], jellyfindb, kodidb, self.args[1]).remove
                 elif item['Type'] in ['MusicAlbum', 'MusicArtist', 'AlbumArtist', 'Audio']:
-                    obj = Music(self.args[0], jellyfindb, kodidb, self.args[1], library).remove
+                    obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).remove
                 elif item['Type'] == 'MusicVideo':
-                    obj = MusicVideos(self.args[0], jellyfindb, kodidb, self.args[1], library).remove
+                    obj = MusicVideos(self.args[0], jellyfindb, kodidb, self.args[1]).remove
 
                 try:
                     obj(item['Id'])
