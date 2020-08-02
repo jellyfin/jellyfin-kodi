@@ -177,12 +177,6 @@ class Views(object):
 
         ''' Get the media folders. Add or remove them. Do not proceed if issue getting libraries.
         '''
-        media = {
-            'movies': "Movie",
-            'tvshows': "Series",
-            'musicvideos': "MusicVideo"
-        }
-
         try:
             libraries = self.get_libraries()
         except IndexError as error:
