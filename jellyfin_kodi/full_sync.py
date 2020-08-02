@@ -214,10 +214,17 @@ class FullSync(object):
         try:
             if library_id.startswith('Boxsets:'):
 
-                if library_id.endswith('Refresh'):
-                    self.refresh_boxsets()
-                else:
-                    self.boxsets(library_id.split('Boxsets:')[1] if len(library_id) > len('Boxsets:') else None)
+                libraries = self.get_libraries(library_id.split('Boxsets:')[1] if len(library_id) > len('Boxsets:') else None)
+                for entry in libraries:
+                    if entry[2] == 'boxsets':
+                        boxset_library = {'Id': entry[0], 'Name': entry[1]}
+                        break
+
+                if boxset_library:
+                    if library_id.endswith('Refresh'):
+                        self.refresh_boxsets(boxset_library)
+                    else:
+                        self.boxsets(boxset_library)
 
                 return
 
@@ -461,11 +468,11 @@ class FullSync(object):
                 obj.remove(x[0])
 
     @progress(translate(33018))
-    def boxsets(self, library_id=None, dialog=None):
+    def boxsets(self, library, dialog=None):
 
         ''' Process all boxsets.
         '''
-        for items in server.get_items(library_id, "BoxSet", False, self.sync['RestorePoint'].get('params')):
+        for items in server.get_items(library['Id'], "BoxSet", False, self.sync['RestorePoint'].get('params')):
 
             with self.video_database_locks() as (videodb, jellyfindb):
                 obj = Movies(self.server, jellyfindb, videodb, self.direct_path, library)
@@ -480,7 +487,7 @@ class FullSync(object):
                                   message=boxset['Name'])
                     obj.boxset(boxset)
 
-    def refresh_boxsets(self):
+    def refresh_boxsets(self, library):
 
         ''' Delete all exisitng boxsets and re-add.
         '''
