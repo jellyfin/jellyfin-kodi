@@ -11,7 +11,7 @@ from dialogs import ServerConnect, UsersConnect, LoginManual, ServerManual
 from helper import settings, addon_id, event, api, window
 from jellyfin import Jellyfin
 from jellyfin.connection_manager import CONNECTION_STATE
-from jellyfin.exceptions import HTTPException
+from helper.exceptions import HTTPException
 from helper import LazyLogger
 
 ##################################################################################################

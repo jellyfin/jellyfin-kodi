@@ -10,8 +10,7 @@ from six import string_types, ensure_str
 
 from helper.utils import JsonDebugPrinter
 from helper import LazyLogger
-
-from .exceptions import HTTPException
+from helper.exceptions import HTTPException
 
 #################################################################################################
 

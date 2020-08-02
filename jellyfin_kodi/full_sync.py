@@ -12,9 +12,10 @@ import downloader as server
 import helper.xmls as xmls
 from objects import Movies, TVShows, MusicVideos, Music
 from database import Database, get_sync, save_sync, jellyfin_db
-from helper import translate, settings, window, progress, dialog, LibraryException
+from helper import translate, settings, window, progress, dialog
 from helper.utils import get_screensaver, set_screensaver
 from helper import LazyLogger
+from helper.exceptions import LibraryException, PathValidationException
 
 ##################################################################################################
 
@@ -239,14 +240,16 @@ class FullSync(object):
 
                 raise
 
+        except PathValidationException:
+            raise
+
         except Exception as error:
+            dialog("ok", "{jellyfin}", translate(33119))
+
+            LOG.error("full sync exited unexpectedly")
             LOG.exception(error)
 
-            if 'Failed to validate path' not in error:
-
-                dialog("ok", "{jellyfin}", translate(33119))
-                LOG.error("full sync exited unexpectedly")
-                save_sync(self.sync)
+            save_sync(self.sync)
 
             raise
 

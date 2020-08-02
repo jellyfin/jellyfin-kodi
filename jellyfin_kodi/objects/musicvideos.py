@@ -12,6 +12,7 @@ from kodi_six.utils import py2_encode
 from database import jellyfin_db, queries as QUEM
 from helper import api, stop, validate, library_check, jellyfin_item, values, Local
 from helper import LazyLogger
+from helper.exceptions import PathValidationException
 
 from .obj import Objects
 from .kodi import MusicVideos as KodiDb, queries as QU
@@ -38,9 +39,9 @@ class MusicVideos(KodiDb):
 
         KodiDb.__init__(self, videodb.cursor)
 
-    @stop()
-    @jellyfin_item()
-    @library_check()
+    @stop
+    @jellyfin_item
+    @library_check
     def musicvideo(self, item, e_item, library):
 
         ''' If item does not exist, entry will be added.
@@ -162,7 +163,7 @@ class MusicVideos(KodiDb):
         if self.direct_path:
 
             if not validate(obj['Path']):
-                raise Exception("Failed to validate path. User stopped.")
+                raise PathValidationException("Failed to validate path. User stopped.")
 
             obj['Path'] = obj['Path'].replace(obj['Filename'], "")
 
@@ -176,8 +177,8 @@ class MusicVideos(KodiDb):
             }
             obj['Filename'] = "%s?%s" % (obj['Path'], urlencode(params))
 
-    @stop()
-    @jellyfin_item()
+    @stop
+    @jellyfin_item
     def userdata(self, item, e_item):
 
         ''' This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
@@ -209,8 +210,8 @@ class MusicVideos(KodiDb):
         self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
         LOG.debug("USERDATA mvideo [%s/%s] %s: %s", obj['FileId'], obj['MvideoId'], obj['Id'], obj['Title'])
 
-    @stop()
-    @jellyfin_item()
+    @stop
+    @jellyfin_item
     def remove(self, item_id, e_item):
 
         ''' Remove mvideoid, fileid, pathid, jellyfin reference.

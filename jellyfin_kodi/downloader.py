@@ -14,7 +14,7 @@ import requests
 from helper import settings, stop, event, window, create_id
 from jellyfin import Jellyfin
 from jellyfin import api
-from jellyfin.exceptions import HTTPException
+from helper.exceptions import HTTPException
 from helper import LazyLogger
 
 #################################################################################################
@@ -235,7 +235,7 @@ def get_songs_by_artist(artist_id, basic=False):
         yield items
 
 
-@stop()
+@stop
 def _get_items(query, server_id=None):
 
     ''' query = {

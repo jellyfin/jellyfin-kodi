@@ -8,9 +8,11 @@ import datetime
 from database import jellyfin_db, queries as QUEM
 from helper import api, stop, validate, jellyfin_item, values, library_check, Local
 from helper import LazyLogger
+from helper.exceptions import PathValidationException
 
 from .obj import Objects
 from .kodi import Music as KodiDb, queries_music as QU
+
 ##################################################################################################
 
 LOG = LazyLogger(__name__)
@@ -33,9 +35,9 @@ class Music(KodiDb):
 
         KodiDb.__init__(self, musicdb.cursor)
 
-    @stop()
-    @jellyfin_item()
-    @library_check()
+    @stop
+    @jellyfin_item
+    @library_check
     def artist(self, item, e_item, library):
 
         ''' If item does not exist, entry will be added.
@@ -101,8 +103,8 @@ class Music(KodiDb):
         self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
         LOG.debug("UPDATE artist [%s] %s: %s", obj['ArtistId'], obj['Name'], obj['Id'])
 
-    @stop()
-    @jellyfin_item()
+    @stop
+    @jellyfin_item
     def album(self, item, e_item):
 
         ''' Update object to kodi.
@@ -207,9 +209,9 @@ class Music(KodiDb):
             self.link(*values(temp_obj, QU.update_link_obj))
             self.item_ids.append(temp_obj['Id'])
 
-    @stop()
-    @jellyfin_item()
-    @library_check()
+    @stop
+    @jellyfin_item
+    @library_check
     def song(self, item, e_item, library):
 
         ''' Update object to kodi.
@@ -325,7 +327,7 @@ class Music(KodiDb):
         if self.direct_path:
 
             if not validate(obj['Path']):
-                raise Exception("Failed to validate path. User stopped.")
+                raise PathValidationException("Failed to validate path. User stopped.")
 
             obj['Path'] = obj['Path'].replace(obj['Filename'], "")
 
@@ -400,8 +402,8 @@ class Music(KodiDb):
         obj['AlbumId'] = self.create_entry_album()
         self.add_single(*values(obj, QU.add_single_obj))
 
-    @stop()
-    @jellyfin_item()
+    @stop
+    @jellyfin_item
     def userdata(self, item, e_item):
 
         ''' This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
@@ -429,8 +431,8 @@ class Music(KodiDb):
         self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
         LOG.debug("USERDATA %s [%s] %s: %s", obj['Media'], obj['KodiId'], obj['Id'], obj['Title'])
 
-    @stop()
-    @jellyfin_item()
+    @stop
+    @jellyfin_item
     def remove(self, item_id, e_item):
 
         ''' This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
@@ -510,7 +512,7 @@ class Music(KodiDb):
         self.delete_song(kodi_id)
         LOG.debug("DELETE song [%s] %s", kodi_id, item_id)
 
-    @jellyfin_item()
+    @jellyfin_item
     def get_child(self, item_id, e_item):
 
         ''' Get all child elements from tv show jellyfin id.
