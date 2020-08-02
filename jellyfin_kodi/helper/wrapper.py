@@ -38,7 +38,6 @@ def progress(message=None):
             if item:
                 args = (item,) + args
 
-            LOG.debug({'self': self, 'dialog': dialog, 'args': args, 'kwargs': kwargs})
             result = func(self, dialog=dialog, *args, **kwargs)
             dialog.close()
 
@@ -63,7 +62,6 @@ def stop(func):
 
             raise LibraryException("StopCalled")
 
-        LOG.debug({'args': args, 'kwargs': kwargs})
         return func(*args, **kwargs)
 
     return wrapper
@@ -76,7 +74,6 @@ def jellyfin_item(func):
     def wrapper(self, item, *args, **kwargs):
         e_item = self.jellyfin_db.get_item_by_id(item['Id'] if type(item) == dict else item)
 
-        LOG.debug({'self': self, 'item': item, 'e_item': e_item, 'args': args, 'kwargs': kwargs})
         return func(self, item, e_item=e_item, *args, **kwargs)
 
     return wrapper
@@ -134,7 +131,6 @@ def library_check(func):
 
             kwargs['library'] = view
 
-        LOG.debug({'self': self, 'item': item, 'args': args, 'kwargs': kwargs})
         return func(self, item, *args, **kwargs)
 
     return wrapper
