@@ -18,5 +18,9 @@ class LibraryException(Exception):
 
 
 class PathValidationException(Exception):
-    # raise Exception("Failed to validate path. User stopped.")
+    """
+    Replacing generic `Exception`
+
+    TODO: Investigate the usage of this to see if it can be done better.
+    """
     pass
