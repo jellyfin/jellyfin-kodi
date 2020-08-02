@@ -611,25 +611,25 @@ class UpdateWorker(threading.Thread):
                     default_args = (self.server, jellyfindb, kodidb, self.direct_path, library)
                     try:
                         if item['Type'] == 'Movie':
-                            obj = Movies(*default_args).movie(item)
+                            Movies(*default_args).movie(item)
                         elif item['Type'] == 'BoxSet':
-                            obj = Movies(*default_args).boxset(item)
+                            Movies(*default_args).boxset(item)
                         elif item['Type'] == 'Series':
-                            obj = TVShows(*default_args).tvshow(item)
+                            TVShows(*default_args).tvshow(item)
                         elif item['Type'] == 'Season':
-                            obj = TVShows(*default_args).season(item)
+                            TVShows(*default_args).season(item)
                         elif item['Type'] == 'Episode':
-                            obj = TVShows(*default_args).episode(item)
+                            TVShows(*default_args).episode(item)
                         elif item['Type'] == 'MusicVideo':
-                            obj = MusicVideos(*default_args).musicvideo(item)
+                            MusicVideos(*default_args).musicvideo(item)
                         elif item['Type'] == 'MusicAlbum':
-                            obj = Music(*default_args).album(item)
+                            Music(*default_args).album(item)
                         elif item['Type'] == 'MusicArtist':
-                            obj = Music(*default_args).artist(item)
+                            Music(*default_args).artist(item)
                         elif item['Type'] == 'AlbumArtist':
-                            obj = Music(*default_args).albumartist(item)
+                            Music(*default_args).albumartist(item)
                         elif item['Type'] == 'Audio':
-                            obj = Music(*default_args).song(item)
+                            Music(*default_args).song(item)
 
                         if self.notify:
                             self.notify_output.put((item['Type'], api.API(item).get_naming()))
@@ -676,17 +676,17 @@ class UserDataWorker(threading.Thread):
                     default_args = (self.server, jellyfindb, kodidb, self.direct_path, library)
                     try:
                         if item['Type'] == 'Movie':
-                            Movies(self.args[0], jellyfindb, kodidb, self.args[1]).userdata(item)
+                            Movies(*default_args).userdata(item)
                         elif item['Type'] in ['Series', 'Season', 'Episode']:
-                            TVShows(self.args[0], jellyfindb, kodidb, self.args[1]).userdata(item)
+                            TVShows(*default_args).userdata(item)
                         elif item['Type'] == 'MusicAlbum':
-                            Music(self.args[0], jellyfindb, kodidb, self.args[1]).album(item)
+                            Music(*default_args).album(item)
                         elif item['Type'] == 'MusicArtist':
-                            Music(self.args[0], jellyfindb, kodidb, self.args[1]).artist(item)
+                            Music(*default_args).artist(item)
                         elif item['Type'] == 'AlbumArtist':
-                            Music(self.args[0], jellyfindb, kodidb, self.args[1]).albumartist(item)
+                            Music(*default_args).albumartist(item)
                         elif item['Type'] == 'Audio':
-                            Music(self.args[0], jellyfindb, kodidb, self.args[1]).song(item)
+                            Music(*default_args).song(item)
                     except LibraryException as error:
                         if error.status == 'StopCalled':
                             break
