@@ -32,7 +32,7 @@ class API(object):
 
     def get_naming(self):
 
-        if self.item['Type'] == 'Episode'and 'SeriesName' in self.item:
+        if self.item['Type'] == 'Episode' and 'SeriesName' in self.item:
             return "%s: %s" % (self.item['SeriesName'], self.item['Name'])
 
         elif self.item['Type'] == 'MusicAlbum' and 'AlbumArtist' in self.item:
