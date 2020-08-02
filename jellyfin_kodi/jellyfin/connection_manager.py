@@ -260,8 +260,8 @@ class ConnectionManager(object):
             }
 
             servers.append(info)
-        else:
-            return servers
+        
+        return servers
 
     # TODO: Make IPv6 compatable
     def _convert_endpoint_address_to_manual_address(self, info):

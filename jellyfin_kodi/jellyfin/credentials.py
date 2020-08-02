@@ -111,9 +111,9 @@ class Credentials(object):
                     existing['ConnectServerId'] = server['ConnectServerId']
 
                 return existing
-        else:
-            servers.append(server)
-            return server
+        
+        servers.append(server)
+        return server
 
     def _date_object(self, date):
         # Convert string to date
