@@ -100,9 +100,8 @@ class Objects(object):
                 elif obj is item and obj is not None:
                     obj = item.get(obj_param)
 
-                if obj_filters and obj:
-                    if not self.__filters__(obj, obj_filters):
-                        obj = None
+                if obj_filters and obj and not self.__filters__(obj, obj_filters):
+                    obj = None
 
                 if obj is None and len(params) != params.index(param):
                     continue

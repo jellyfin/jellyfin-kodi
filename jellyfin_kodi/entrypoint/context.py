@@ -158,15 +158,7 @@ class Context(object):
             self.delete_item()
 
     def delete_item(self):
-
-        delete = True
-
-        if not settings('skipContextMenu.bool'):
-
-            if not dialog("yesno", "{jellyfin}", translate(33015)):
-                delete = False
-
-        if delete:
+        if settings('skipContextMenu.bool') and dialog("yesno", "{jellyfin}", translate(33015)):
             TheVoid('DeleteItem', {'ServerId': self.server, 'Id': self.item['Id']})
 
     def transcode(self):
