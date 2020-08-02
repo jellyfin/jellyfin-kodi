@@ -16,7 +16,7 @@ from full_sync import FullSync
 from views import Views
 from downloader import GetItemWorker
 from helper import translate, api, stop, settings, window, dialog, event
-from helper.utils import split_list, set_screensaver, get_screensaver
+from helper.utils import split_list, set_screensaver, get_screensaver, find_library
 from helper.exceptions import LibraryException
 from jellyfin import Jellyfin
 from helper import LazyLogger
@@ -605,36 +605,39 @@ class UpdateWorker(threading.Thread):
                 except Queue.Empty:
                     break
 
-                default_args = (self.server, jellyfindb, kodidb, self.direct_path)
-                try:
-                    if item['Type'] == 'Movie':
-                        obj = Movies(*default_args).movie(item)
-                    elif item['Type'] == 'BoxSet':
-                        obj = Movies(*default_args).boxset(item)
-                    elif item['Type'] == 'Series':
-                        obj = TVShows(*default_args).tvshow(item)
-                    elif item['Type'] == 'Season':
-                        obj = TVShows(*default_args).season(item)
-                    elif item['Type'] == 'Episode':
-                        obj = TVShows(*default_args).episode(item)
-                    elif item['Type'] == 'MusicVideo':
-                        obj = MusicVideos(*default_args).musicvideo(item)
-                    elif item['Type'] == 'MusicAlbum':
-                        obj = Music(*default_args).album(item)
-                    elif item['Type'] == 'MusicArtist':
-                        obj = Music(*default_args).artist(item)
-                    elif item['Type'] == 'AlbumArtist':
-                        obj = Music(*default_args).albumartist(item)
-                    elif item['Type'] == 'Audio':
-                        obj = Music(*default_args).song(item)
+                # Verify that the updated item is in our local whitelist
+                library = find_library(self.server, item)
+                if library:
+                    default_args = (self.server, jellyfindb, kodidb, self.direct_path, library)
+                    try:
+                        if item['Type'] == 'Movie':
+                            obj = Movies(*default_args).movie(item)
+                        elif item['Type'] == 'BoxSet':
+                            obj = Movies(*default_args).boxset(item)
+                        elif item['Type'] == 'Series':
+                            obj = TVShows(*default_args).tvshow(item)
+                        elif item['Type'] == 'Season':
+                            obj = TVShows(*default_args).season(item)
+                        elif item['Type'] == 'Episode':
+                            obj = TVShows(*default_args).episode(item)
+                        elif item['Type'] == 'MusicVideo':
+                            obj = MusicVideos(*default_args).musicvideo(item)
+                        elif item['Type'] == 'MusicAlbum':
+                            obj = Music(*default_args).album(item)
+                        elif item['Type'] == 'MusicArtist':
+                            obj = Music(*default_args).artist(item)
+                        elif item['Type'] == 'AlbumArtist':
+                            obj = Music(*default_args).albumartist(item)
+                        elif item['Type'] == 'Audio':
+                            obj = Music(*default_args).song(item)
 
-                    if self.notify:
-                        self.notify_output.put((item['Type'], api.API(item).get_naming()))
-                except LibraryException as error:
-                    if error.status == 'StopCalled':
-                        break
-                except Exception as error:
-                    LOG.exception(error)
+                        if self.notify:
+                            self.notify_output.put((item['Type'], api.API(item).get_naming()))
+                    except LibraryException as error:
+                        if error.status == 'StopCalled':
+                            break
+                    except Exception as error:
+                        LOG.exception(error)
 
                 self.queue.task_done()
 
@@ -667,24 +670,28 @@ class UserDataWorker(threading.Thread):
                 except Queue.Empty:
                     break
 
-                try:
-                    if item['Type'] == 'Movie':
-                        Movies(self.args[0], jellyfindb, kodidb, self.args[1]).userdata(item)
-                    elif item['Type'] in ['Series', 'Season', 'Episode']:
-                        TVShows(self.args[0], jellyfindb, kodidb, self.args[1]).userdata(item)
-                    elif item['Type'] == 'MusicAlbum':
-                        Music(self.args[0], jellyfindb, kodidb, self.args[1]).album(item)
-                    elif item['Type'] == 'MusicArtist':
-                        Music(self.args[0], jellyfindb, kodidb, self.args[1]).artist(item)
-                    elif item['Type'] == 'AlbumArtist':
-                        Music(self.args[0], jellyfindb, kodidb, self.args[1]).albumartist(item)
-                    elif item['Type'] == 'Audio':
-                        Music(self.args[0], jellyfindb, kodidb, self.args[1]).song(item)
-                except LibraryException as error:
-                    if error.status == 'StopCalled':
-                        break
-                except Exception as error:
-                    LOG.exception(error)
+                # Verify that the updated item is in our local whitelist
+                library = find_library(self.server, item)
+                if library:
+                    default_args = (self.server, jellyfindb, kodidb, self.direct_path, library)
+                    try:
+                        if item['Type'] == 'Movie':
+                            Movies(self.args[0], jellyfindb, kodidb, self.args[1]).userdata(item)
+                        elif item['Type'] in ['Series', 'Season', 'Episode']:
+                            TVShows(self.args[0], jellyfindb, kodidb, self.args[1]).userdata(item)
+                        elif item['Type'] == 'MusicAlbum':
+                            Music(self.args[0], jellyfindb, kodidb, self.args[1]).album(item)
+                        elif item['Type'] == 'MusicArtist':
+                            Music(self.args[0], jellyfindb, kodidb, self.args[1]).artist(item)
+                        elif item['Type'] == 'AlbumArtist':
+                            Music(self.args[0], jellyfindb, kodidb, self.args[1]).albumartist(item)
+                        elif item['Type'] == 'Audio':
+                            Music(self.args[0], jellyfindb, kodidb, self.args[1]).song(item)
+                    except LibraryException as error:
+                        if error.status == 'StopCalled':
+                            break
+                    except Exception as error:
+                        LOG.exception(error)
 
                 self.queue.task_done()
 
@@ -765,13 +772,13 @@ class RemovedWorker(threading.Thread):
                     break
 
                 if item['Type'] == 'Movie':
-                    obj = Movies(self.args[0], jellyfindb, kodidb, self.args[1]).remove
+                    obj = Movies(self.args[0], jellyfindb, kodidb, self.args[1], library).remove
                 elif item['Type'] in ['Series', 'Season', 'Episode']:
-                    obj = TVShows(self.args[0], jellyfindb, kodidb, self.args[1]).remove
+                    obj = TVShows(self.args[0], jellyfindb, kodidb, self.args[1], library).remove
                 elif item['Type'] in ['MusicAlbum', 'MusicArtist', 'AlbumArtist', 'Audio']:
-                    obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).remove
+                    obj = Music(self.args[0], jellyfindb, kodidb, self.args[1], library).remove
                 elif item['Type'] == 'MusicVideo':
-                    obj = MusicVideos(self.args[0], jellyfindb, kodidb, self.args[1]).remove
+                    obj = MusicVideos(self.args[0], jellyfindb, kodidb, self.args[1], library).remove
 
                 try:
                     obj(item['Id'])

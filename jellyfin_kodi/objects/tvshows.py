@@ -11,7 +11,7 @@ from kodi_six.utils import py2_encode
 
 import downloader as server
 from database import jellyfin_db, queries as QUEM
-from helper import api, stop, validate, jellyfin_item, library_check, values, Local
+from helper import api, stop, validate, jellyfin_item, values, Local
 from helper import LazyLogger
 from helper.exceptions import PathValidationException
 
@@ -27,7 +27,7 @@ LOG = LazyLogger(__name__)
 
 class TVShows(KodiDb):
 
-    def __init__(self, server, jellyfindb, videodb, direct_path, update_library=False):
+    def __init__(self, server, jellyfindb, videodb, direct_path, library, update_library=False):
 
         self.server = server
         self.jellyfin = jellyfindb
@@ -38,13 +38,13 @@ class TVShows(KodiDb):
         self.jellyfin_db = jellyfin_db.JellyfinDatabase(jellyfindb.cursor)
         self.objects = Objects()
         self.item_ids = []
+        self.library = library
 
         KodiDb.__init__(self, videodb.cursor)
 
     @stop
     @jellyfin_item
-    @library_check
-    def tvshow(self, item, e_item, library):
+    def tvshow(self, item, e_item):
 
         ''' If item does not exist, entry will be added.
             If item exists, entry will be updated.
@@ -72,8 +72,8 @@ class TVShows(KodiDb):
                 LOG.info("ShowId %s missing from kodi. repairing the entry.", obj['ShowId'])
 
         obj['Path'] = API.get_file_path(obj['Path'])
-        obj['LibraryId'] = library['Id']
-        obj['LibraryName'] = library['Name']
+        obj['LibraryId'] = self.library['Id']
+        obj['LibraryName'] = self.library['Name']
         obj['Genres'] = obj['Genres'] or []
         obj['People'] = obj['People'] or []
         obj['Mpaa'] = API.get_mpaa(obj['Mpaa'])
@@ -411,7 +411,7 @@ class TVShows(KodiDb):
         if obj['ShowId'] is None:
 
             try:
-                self.tvshow(self.server.jellyfin.get_item(obj['SeriesId']), library=None)
+                self.tvshow(self.server.jellyfin.get_item(obj['SeriesId']))
                 obj['ShowId'] = self.jellyfin_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))[0]
             except (TypeError, KeyError) as error:
                 LOG.error("Unable to add series %s", obj['SeriesId'])
