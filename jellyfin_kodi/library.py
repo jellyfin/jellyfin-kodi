@@ -606,29 +606,29 @@ class UpdateWorker(threading.Thread):
                     break
 
                 default_args = (self.server, jellyfindb, kodidb, self.direct_path)
-                if item['Type'] == 'Movie':
-                    obj = Movies(*default_args).movie
-                elif item['Type'] == 'BoxSet':
-                    obj = Movies(*default_args).boxset
-                elif item['Type'] == 'Series':
-                    obj = TVShows(*default_args).tvshow
-                elif item['Type'] == 'Season':
-                    obj = TVShows(*default_args).season
-                elif item['Type'] == 'Episode':
-                    obj = TVShows(*default_args).episode
-                elif item['Type'] == 'MusicVideo':
-                    obj = MusicVideos(*default_args).musicvideo
-                elif item['Type'] == 'MusicAlbum':
-                    obj = Music(*default_args).album
-                elif item['Type'] == 'MusicArtist':
-                    obj = Music(*default_args).artist
-                elif item['Type'] == 'AlbumArtist':
-                    obj = Music(*default_args).albumartist
-                elif item['Type'] == 'Audio':
-                    obj = Music(*default_args).song
-
                 try:
-                    if obj(item) and self.notify:
+                    if item['Type'] == 'Movie':
+                        obj = Movies(*default_args).movie(item)
+                    elif item['Type'] == 'BoxSet':
+                        obj = Movies(*default_args).boxset(item)
+                    elif item['Type'] == 'Series':
+                        obj = TVShows(*default_args).tvshow(item)
+                    elif item['Type'] == 'Season':
+                        obj = TVShows(*default_args).season(item)
+                    elif item['Type'] == 'Episode':
+                        obj = TVShows(*default_args).episode(item)
+                    elif item['Type'] == 'MusicVideo':
+                        obj = MusicVideos(*default_args).musicvideo(item)
+                    elif item['Type'] == 'MusicAlbum':
+                        obj = Music(*default_args).album(item)
+                    elif item['Type'] == 'MusicArtist':
+                        obj = Music(*default_args).artist(item)
+                    elif item['Type'] == 'AlbumArtist':
+                        obj = Music(*default_args).albumartist(item)
+                    elif item['Type'] == 'Audio':
+                        obj = Music(*default_args).song(item)
+
+                    if self.notify:
                         self.notify_output.put((item['Type'], api.API(item).get_naming()))
                 except LibraryException as error:
                     if error.status == 'StopCalled':
