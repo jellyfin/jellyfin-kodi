@@ -407,36 +407,64 @@ class FullSync(object):
                 with Database('jellyfin') as jellyfindb:
                     obj = Music(self.server, jellyfindb, musicdb, self.direct_path)
 
-                    for items in server.get_artists(library['Id'], False, self.sync['RestorePoint'].get('params')):
+                    library_id = library['Id']
+                    artists_data = server.get_artists(library_id)
+                    artists = artists_data['Items']
+                    num_artists = artists_data['TotalRecordCount']
+                    albums = server.get_library_items(library_id, 'MusicAlbum')['Items']
+                    songs = server.get_library_items(library_id, 'Audio')['Items']
 
-                        self.sync['RestorePoint'] = items['RestorePoint']
-                        start_index = items['RestorePoint']['params']['StartIndex']
+                    for index, artist in enumerate(artists):
+                        artist_name = artist.get('Name')
 
-                        for index, artist in enumerate(items['Items']):
+                        percent = int((float(index) / float(num_artists)) * 100)
+                        message = artist_name
+                        dialog.update(percent, heading="%s: %s" % (translate('addon_name'), library['Name']), message=message)
 
-                            percent = int((float(start_index + index) / float(items['TotalRecordCount'])) * 100)
-                            message = artist['Name']
-                            dialog.update(percent, heading="%s: %s" % (translate('addon_name'), library['Name']), message=message)
-                            obj.artist(artist, library=library)
+                        obj.artist(artist, library=library)
+                        artist_albums = [ album for album in albums if artist_name in album.get('Artists') ]
+                        for album in artist_albums:
+                            obj.album(album)
+                            album_id = album.get('Id')
+                            album_songs = [ song for song in songs if album_id == song.get('AlbumId') ]
+                            for song in album_songs:
+                                dialog.update(percent,
+                                              message="%s/%s/%s" % (message, album['Name'][:7], song['Name'][:7]))
+                                obj.song(song)
 
-                            for albums in server.get_albums_by_artist(artist['Id']):
 
-                                for album in albums['Items']:
-                                    obj.album(album)
 
-                                    for songs in server.get_items(album['Id'], "Audio"):
-                                        for song in songs['Items']:
-
-                                            dialog.update(percent,
-                                                          message="%s/%s/%s" % (message, album['Name'][:7], song['Name'][:7]))
-                                            obj.song(song)
-
-                            for songs in server.get_songs_by_artist(artist['Id']):
-                                for song in songs['Items']:
-
-                                    dialog.update(percent, message="%s/%s" % (message, song['Name']))
-                                    obj.song(song)
-
+#                    for items in server.get_artists(library['Id'], False, self.sync['RestorePoint'].get('params')):
+#
+#                        self.sync['RestorePoint'] = items['RestorePoint']
+#                        start_index = items['RestorePoint']['params']['StartIndex']
+#
+#                        for index, artist in enumerate(items['Items']):
+#
+#                            percent = int((float(start_index + index) / float(items['TotalRecordCount'])) * 100)
+#                            message = artist['Name']
+#                            dialog.update(percent, heading="%s: %s" % (translate('addon_name'), library['Name']), message=message)
+#                            obj.artist(artist, library=library)
+#
+#                            import web_pdb; web_pdb.set_trace()
+#                            for albums in server.get_albums_by_artist(artist['Id']):
+#
+#                                for album in albums['Items']:
+#                                    obj.album(album)
+#
+#                                    for songs in server.get_items(album['Id'], "Audio"):
+#                                        for song in songs['Items']:
+#
+#                                            dialog.update(percent,
+#                                                          message="%s/%s/%s" % (message, album['Name'][:7], song['Name'][:7]))
+#                                            obj.song(song)
+#
+#                            for songs in server.get_songs_by_artist(artist['Id']):
+#                                for song in songs['Items']:
+#
+#                                    dialog.update(percent, message="%s/%s" % (message, song['Name']))
+#                                    obj.song(song)
+#
                     if self.update_library:
                         self.music_compare(library, obj, jellyfindb)
 
