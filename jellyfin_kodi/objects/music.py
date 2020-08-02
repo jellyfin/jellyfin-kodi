@@ -209,10 +209,9 @@ class Music(KodiDb):
             self.link(*values(temp_obj, QU.update_link_obj))
             self.item_ids.append(temp_obj['Id'])
 
-    @stop
-    @jellyfin_item
-    @library_check
-    def song(self, item, e_item, library):
+    @stop()
+    @jellyfin_item()
+    def song(self, item, e_item):
 
         ''' Update object to kodi.
         '''
