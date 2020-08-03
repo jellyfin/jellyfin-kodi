@@ -428,8 +428,7 @@ class FullSync(object):
 
                         # Update percentage dialog
                         percent = int((float(index) / float(num_artists)) * 100)
-                        message = artist_name
-                        dialog.update(percent, heading="%s: %s" % (translate('addon_name'), library['Name']), message=message)
+                        dialog.update(percent, heading="%s: %s" % (translate('addon_name'), library['Name']), message=artist_name)
 
                         # Add artist to database
                         obj.artist(artist)
@@ -444,7 +443,7 @@ class FullSync(object):
                             album_songs = [ song for song in songs if album_id == song.get('AlbumId') ]
                             for song in album_songs:
                                 dialog.update(percent,
-                                              message="%s/%s/%s" % (message, album['Name'][:7], song['Name'][:7]))
+                                              message="%s/%s/%s" % (artist_name, album['Name'][:7], song['Name'][:7]))
                                 # Add song to database
                                 obj.song(song)
 #
