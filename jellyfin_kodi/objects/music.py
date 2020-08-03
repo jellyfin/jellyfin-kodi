@@ -6,7 +6,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import datetime
 
 from database import jellyfin_db, queries as QUEM
-from helper import api, stop, validate, jellyfin_item, values, library_check, Local
+from helper import api, stop, validate, jellyfin_item, values, Local
 from helper import LazyLogger
 from helper.exceptions import PathValidationException
 
@@ -22,7 +22,7 @@ LOG = LazyLogger(__name__)
 
 class Music(KodiDb):
 
-    def __init__(self, server, jellyfindb, musicdb, direct_path):
+    def __init__(self, server, jellyfindb, musicdb, direct_path, library=None):
 
         self.server = server
         self.jellyfin = jellyfindb
@@ -32,13 +32,13 @@ class Music(KodiDb):
         self.jellyfin_db = jellyfin_db.JellyfinDatabase(jellyfindb.cursor)
         self.objects = Objects()
         self.item_ids = []
+        self.library = library
 
         KodiDb.__init__(self, musicdb.cursor)
 
     @stop
     @jellyfin_item
-    @library_check
-    def artist(self, item, e_item, library):
+    def artist(self, item, e_item):
 
         ''' If item does not exist, entry will be added.
             If item exists, entry will be updated.
@@ -60,8 +60,8 @@ class Music(KodiDb):
                 update = False
                 LOG.info("ArtistId %s missing from kodi. repairing the entry.", obj['ArtistId'])
 
-        obj['LibraryId'] = library['Id']
-        obj['LibraryName'] = library['Name']
+        obj['LibraryId'] = self.library['Id']
+        obj['LibraryName'] = self.library['Name']
         obj['LastScraped'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         obj['ArtistType'] = "MusicArtist"
         obj['Genre'] = " / ".join(obj['Genres'] or [])
@@ -199,7 +199,7 @@ class Music(KodiDb):
             except TypeError:
 
                 try:
-                    self.artist(self.server.jellyfin.get_item(temp_obj['Id']), library=None)
+                    self.artist(self.server.jellyfin.get_item(temp_obj['Id']))
                     temp_obj['ArtistId'] = self.jellyfin_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
                 except Exception as error:
                     LOG.exception(error)
@@ -211,8 +211,7 @@ class Music(KodiDb):
 
     @stop
     @jellyfin_item
-    @library_check
-    def song(self, item, e_item, library):
+    def song(self, item, e_item):
 
         ''' Update object to kodi.
         '''
@@ -354,7 +353,7 @@ class Music(KodiDb):
             except TypeError:
 
                 try:
-                    self.artist(self.server.jellyfin.get_item(temp_obj['Id']), library=None)
+                    self.artist(self.server.jellyfin.get_item(temp_obj['Id']))
                     temp_obj['ArtistId'] = self.jellyfin_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
                 except Exception as error:
                     LOG.exception(error)
@@ -388,7 +387,7 @@ class Music(KodiDb):
             except TypeError:
 
                 try:
-                    self.artist(self.server.jellyfin.get_item(temp_obj['Id']), library=None)
+                    self.artist(self.server.jellyfin.get_item(temp_obj['Id']))
                     temp_obj['ArtistId'] = self.jellyfin_db.get_item_by_id(*values(temp_obj, QUEM.get_item_obj))[0]
                 except Exception as error:
                     LOG.exception(error)

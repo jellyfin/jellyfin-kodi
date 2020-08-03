@@ -21,6 +21,7 @@ from kodi_six import xbmc, xbmcaddon, xbmcgui, xbmcvfs
 from . import LazyLogger
 from .translate import translate
 
+
 #################################################################################################
 
 LOG = LazyLogger(__name__)
@@ -535,3 +536,18 @@ def get_filesystem_encoding():
         enc = 'utf-8'
 
     return enc
+
+
+def find_library(server, item):
+    from database import get_sync
+
+    sync = get_sync()
+
+    ancestors = server.jellyfin.get_ancestors(item['Id'])
+    for ancestor in ancestors:
+        if ancestor['Id'] in sync['Whitelist']:
+            LOG.info('Ancestor Found')
+            return ancestor
+
+    LOG.error('No ancestor found, not syncing item with ID: {}'.format(item['Id']))
+    return {}

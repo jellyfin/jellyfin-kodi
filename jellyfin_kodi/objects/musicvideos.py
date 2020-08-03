@@ -10,7 +10,7 @@ from six.moves.urllib.parse import urlencode
 from kodi_six.utils import py2_encode
 
 from database import jellyfin_db, queries as QUEM
-from helper import api, stop, validate, library_check, jellyfin_item, values, Local
+from helper import api, stop, validate, jellyfin_item, values, Local
 from helper import LazyLogger
 from helper.exceptions import PathValidationException
 
@@ -26,7 +26,7 @@ LOG = LazyLogger(__name__)
 
 class MusicVideos(KodiDb):
 
-    def __init__(self, server, jellyfindb, videodb, direct_path):
+    def __init__(self, server, jellyfindb, videodb, direct_path, library=None):
 
         self.server = server
         self.jellyfin = jellyfindb
@@ -36,13 +36,13 @@ class MusicVideos(KodiDb):
         self.jellyfin_db = jellyfin_db.JellyfinDatabase(jellyfindb.cursor)
         self.objects = Objects()
         self.item_ids = []
+        self.library = library
 
         KodiDb.__init__(self, videodb.cursor)
 
     @stop
     @jellyfin_item
-    @library_check
-    def musicvideo(self, item, e_item, library):
+    def musicvideo(self, item, e_item):
 
         ''' If item does not exist, entry will be added.
             If item exists, entry will be updated.
@@ -70,8 +70,8 @@ class MusicVideos(KodiDb):
                 LOG.info("MvideoId %s missing from kodi. repairing the entry.", obj['MvideoId'])
 
         obj['Path'] = API.get_file_path(obj['Path'])
-        obj['LibraryId'] = library['Id']
-        obj['LibraryName'] = library['Name']
+        obj['LibraryId'] = self.library['Id']
+        obj['LibraryName'] = self.library['Name']
         obj['Genres'] = obj['Genres'] or []
         obj['ArtistItems'] = obj['ArtistItems'] or []
         obj['Studios'] = [API.validate_studio(studio) for studio in (obj['Studios'] or [])]
