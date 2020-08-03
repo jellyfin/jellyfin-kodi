@@ -213,6 +213,7 @@ class FullSync(object):
         }
         try:
             if library_id.startswith('Boxsets:'):
+                boxset_library = {}
 
                 libraries = self.get_libraries(library_id.split('Boxsets:')[1] if len(library_id) > len('Boxsets:') else None)
                 for entry in libraries:
