@@ -337,10 +337,8 @@ class Service(xbmc.Monitor):
             if self.library_thread is not None:
                 self.library_thread.fast_sync()
 
-        elif method == 'UserConfigurationUpdated':
-
-            if data.get('ServerId') is None:
-                Views().get_views()
+        elif method == 'UserConfigurationUpdated' and data.get('ServerId') is None:
+            Views().get_views()
 
     def onSettingsChanged(self):
 

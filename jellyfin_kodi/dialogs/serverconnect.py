@@ -87,16 +87,15 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
         if action in (ACTION_BACK, ACTION_PREVIOUS_MENU, ACTION_PARENT_DIR):
             self.close()
 
-        if action in (ACTION_SELECT_ITEM, ACTION_MOUSE_LEFT_CLICK):
+        if action in (ACTION_SELECT_ITEM, ACTION_MOUSE_LEFT_CLICK) and self.getFocusId() == LIST:
 
-            if self.getFocusId() == LIST:
-                server = self.list_.getSelectedItem()
-                selected_id = server.getProperty('id')
-                LOG.info('Server Id selected: %s', selected_id)
+            server = self.list_.getSelectedItem()
+            selected_id = server.getProperty('id')
+            LOG.info('Server Id selected: %s', selected_id)
 
-                if self._connect_server(selected_id):
-                    self.message_box.setVisibleCondition('false')
-                    self.close()
+            if self._connect_server(selected_id):
+                self.message_box.setVisibleCondition('false')
+                self.close()
 
     def onClick(self, control):
 

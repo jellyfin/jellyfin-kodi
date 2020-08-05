@@ -177,12 +177,6 @@ class Views(object):
 
         ''' Get the media folders. Add or remove them. Do not proceed if issue getting libraries.
         '''
-        media = {
-            'movies': "Movie",
-            'tvshows': "Series",
-            'musicvideos': "MusicVideo"
-        }
-
         try:
             libraries = self.get_libraries()
         except IndexError as error:
@@ -242,8 +236,8 @@ class Views(object):
                             temp_view['Media'] = media
                             self.add_playlist(playlist_path, temp_view, True)
                             self.add_nodes(node_path, temp_view, True)
-                        else:  # Compensate for the duplicate.
-                            index += 1
+                        
+                        index += 1 # Compensate for the duplicate.
                     else:
                         if view['Media'] in ('movies', 'tvshows', 'musicvideos'):
                             self.add_playlist(playlist_path, view)
@@ -743,9 +737,10 @@ class Views(object):
                                 temp_view['Name'] = "%s (%s)" % (view['Name'], translate(media))
                                 self.window_node(index, temp_view, *node)
                                 self.window_wnode(windex, temp_view, *node)
-                            else:  # Add one to compensate for the duplicate.
-                                index += 1
-                                windex += 1
+
+                            # Add one to compensate for the duplicate.
+                            index += 1
+                            windex += 1
                     else:
                         for node in NODES[view['Media']]:
 

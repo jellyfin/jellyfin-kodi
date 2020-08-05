@@ -82,9 +82,8 @@ class Credentials(object):
             if existing['Id'] == server['Id']:
 
                 # Merge the data
-                if server.get('DateLastAccessed'):
-                    if self._date_object(server['DateLastAccessed']) > self._date_object(existing['DateLastAccessed']):
-                        existing['DateLastAccessed'] = server['DateLastAccessed']
+                if server.get('DateLastAccessed') and self._date_object(server['DateLastAccessed']) > self._date_object(existing['DateLastAccessed']):
+                    existing['DateLastAccessed'] = server['DateLastAccessed']
 
                 if server.get('UserLinkType'):
                     existing['UserLinkType'] = server['UserLinkType']
@@ -112,9 +111,9 @@ class Credentials(object):
                     existing['ConnectServerId'] = server['ConnectServerId']
 
                 return existing
-        else:
-            servers.append(server)
-            return server
+        
+        servers.append(server)
+        return server
 
     def _date_object(self, date):
         # Convert string to date

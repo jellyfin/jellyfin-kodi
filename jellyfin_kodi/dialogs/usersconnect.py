@@ -70,19 +70,18 @@ class UsersConnect(xbmcgui.WindowXMLDialog):
         if action in (ACTION_BACK, ACTION_PREVIOUS_MENU, ACTION_PARENT_DIR):
             self.close()
 
-        if action in (ACTION_SELECT_ITEM, ACTION_MOUSE_LEFT_CLICK):
+        if action in (ACTION_SELECT_ITEM, ACTION_MOUSE_LEFT_CLICK) and self.getFocusId() == LIST:
 
-            if self.getFocusId() == LIST:
-                user = self.list_.getSelectedItem()
-                selected_id = user.getProperty('id')
-                LOG.info('User Id selected: %s', selected_id)
+            user = self.list_.getSelectedItem()
+            selected_id = user.getProperty('id')
+            LOG.info('User Id selected: %s', selected_id)
 
-                for user in self.users:
-                    if user['Id'] == selected_id:
-                        self._user = user
-                        break
+            for user in self.users:
+                if user['Id'] == selected_id:
+                    self._user = user
+                    break
 
-                self.close()
+            self.close()
 
     def onClick(self, control):
 

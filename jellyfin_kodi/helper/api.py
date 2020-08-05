@@ -32,20 +32,14 @@ class API(object):
 
     def get_naming(self):
 
-        if self.item['Type'] == 'Episode':
+        if self.item['Type'] == 'Episode' and 'SeriesName' in self.item:
+            return "%s: %s" % (self.item['SeriesName'], self.item['Name'])
 
-            if 'SeriesName' in self.item:
-                return "%s: %s" % (self.item['SeriesName'], self.item['Name'])
+        elif self.item['Type'] == 'MusicAlbum' and 'AlbumArtist' in self.item:
+            return "%s: %s" % (self.item['AlbumArtist'], self.item['Name'])
 
-        elif self.item['Type'] == 'MusicAlbum':
-
-            if 'AlbumArtist' in self.item:
-                return "%s: %s" % (self.item['AlbumArtist'], self.item['Name'])
-
-        elif self.item['Type'] == 'Audio':
-
-            if self.item.get('Artists'):
-                return "%s: %s" % (self.item['Artists'][0], self.item['Name'])
+        elif self.item['Type'] == 'Audio' and self.item.get('Artists'):
+            return "%s: %s" % (self.item['Artists'][0], self.item['Name'])
 
         return self.item['Name']
 
@@ -93,13 +87,11 @@ class API(object):
             if "msmpeg4" in track['codec']:
                 track['codec'] = "divx"
 
-            elif "mpeg4" in track['codec']:
-                if "simple profile" in track['profile'] or not track['profile']:
-                    track['codec'] = "xvid"
+            elif "mpeg4" in track['codec'] and ("simple profile" in track['profile'] or not track['profile']):
+                track['codec'] = "xvid"
 
-            elif "h264" in track['codec']:
-                if container in ('mp4', 'mov', 'm4v'):
-                    track['codec'] = "avc1"
+            elif "h264" in track['codec'] and container in ('mp4', 'mov', 'm4v'):
+                track['codec'] = "avc1"
 
             try:
                 width, height = self.item.get('AspectRatio', track.get('AspectRatio', "0")).split(':')

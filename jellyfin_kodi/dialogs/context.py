@@ -64,14 +64,13 @@ class ContextMenu(xbmcgui.WindowXMLDialog):
         if action in (ACTION_BACK, ACTION_PARENT_DIR, ACTION_PREVIOUS_MENU):
             self.close()
 
-        if action in (ACTION_SELECT_ITEM, ACTION_MOUSE_LEFT_CLICK):
+        if action in (ACTION_SELECT_ITEM, ACTION_MOUSE_LEFT_CLICK) and self.getFocusId() == LIST:
 
-            if self.getFocusId() == LIST:
-                option = self.list_.getSelectedItem()
-                self.selected_option = ensure_text(option.getLabel())
-                LOG.info('option selected: %s', self.selected_option)
+            option = self.list_.getSelectedItem()
+            self.selected_option = ensure_text(option.getLabel())
+            LOG.info('option selected: %s', self.selected_option)
 
-                self.close()
+            self.close()
 
     def _add_editcontrol(self, x, y, height, width, password=0):
 

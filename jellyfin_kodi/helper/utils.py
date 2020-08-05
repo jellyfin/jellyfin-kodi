@@ -215,8 +215,8 @@ def set_screensaver(value):
 
 class JSONRPC(object):
 
-    version = 1
-    jsonrpc = "2.0"
+    id = 1
+    jsonrpc_version = "2.0"
 
     def __init__(self, method, **kwargs):
 
@@ -228,8 +228,8 @@ class JSONRPC(object):
     def _query(self):
 
         query = {
-            'jsonrpc': self.jsonrpc,
-            'id': self.version,
+            'jsonrpc': self.jsonrpc_version,
+            'id': self.id,
             'method': self.method,
         }
         if self.params is not None:
