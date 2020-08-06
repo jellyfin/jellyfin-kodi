@@ -652,12 +652,14 @@ class UserDataWorker(threading.Thread):
 
     is_done = False
 
-    def __init__(self, queue, lock, database, *args):
+    def __init__(self, queue, lock, database, server, direct_path):
 
         self.queue = queue
         self.lock = lock
         self.database = Database(database)
-        self.args = args
+        self.server = server
+        self.direct_path = direct_path
+
         threading.Thread.__init__(self)
 
     def run(self):
