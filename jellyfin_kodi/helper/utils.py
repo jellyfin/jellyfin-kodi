@@ -546,7 +546,6 @@ def find_library(server, item):
     ancestors = server.jellyfin.get_ancestors(item['Id'])
     for ancestor in ancestors:
         if ancestor['Id'] in sync['Whitelist']:
-            LOG.info('Ancestor Found')
             return ancestor
 
     LOG.error('No ancestor found, not syncing item with ID: {}'.format(item['Id']))
