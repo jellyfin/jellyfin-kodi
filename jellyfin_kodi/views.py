@@ -166,7 +166,7 @@ class Views(object):
     def get_libraries(self):
 
         try:
-            libraries = self.server.jellyfin.get_views()['Items']
+            libraries = self.server.jellyfin.get_media_folders()['Items']
         except Exception as error:
             LOG.exception(error)
             raise IndexError("Unable to retrieve libraries: %s" % error)
@@ -236,8 +236,8 @@ class Views(object):
                             temp_view['Media'] = media
                             self.add_playlist(playlist_path, temp_view, True)
                             self.add_nodes(node_path, temp_view, True)
-                        
-                        index += 1 # Compensate for the duplicate.
+
+                        index += 1  # Compensate for the duplicate.
                     else:
                         if view['Media'] in ('movies', 'tvshows', 'musicvideos'):
                             self.add_playlist(playlist_path, view)
