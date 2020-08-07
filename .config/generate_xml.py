@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 import yaml
 import sys
 import os
+from datetime import datetime
 
 def indent(elem, level=0):
     '''
@@ -52,11 +53,12 @@ addon_version = data.get('version')
 root.attrib['version'] = f'{addon_version}-{py_version}'
 
 # Changelog
+date = datetime.today().strftime('%Y-%m-%d')
 changelog = data.get('changelog')
 for section in root.findall('extension'):
     news = section.findall('news')
     if news:
-        news[0].text = f'Changelog:\n{changelog}'
+        news[0].text = f'v{addon_version} ({date}):\n{changelog}'
 
 # Format xml tree
 indent(root)
