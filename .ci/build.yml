@@ -38,6 +38,6 @@ steps:
       displayName: 'Add to Kodi repo'
       inputs:
         sshEndpoint: repository
-        runOptions: 'inline'
-        inline: 'python3 /usr/local/bin/kodirepo add /srv/repository/incoming/kodi/plugin.video.jellyfin-${{ py_version }} --datadir /srv/repository/releases/client/kodi/${{ py_version }}'
+        runOptions: 'commands'
+        commands: 'sudo -n python3 /usr/local/bin/kodirepo add /srv/repository/incoming/kodi/plugin.video.jellyfin-${{ py_version }} --datadir /srv/repository/releases/client/kodi/${{ py_version }}'
       condition: startsWith(variables['Build.SourceBranch'], 'refs/tags')
