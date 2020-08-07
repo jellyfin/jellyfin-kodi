@@ -16,23 +16,28 @@ steps:
     - script: python3 jellyfin-kodi/.config/generate_xml.py ${{ py_version }}
       displayName: 'Create ${{ py_version }} addon.xml'
 
-    - script: zip -r plugin.video.jellyfin-${{ py_version }}.zip jellyfin-kodi
+    - task: ArchiveFiles@2
       displayName: 'Create ${{ py_version }} zip file'
-
-    - script: ls .
-      displayName: 'home dir 2'
+      inputs:
+        rootFolderOrFile: jellyfin-kodi
+        includeRootFolder: False
+        archiveType: 'zip'
+        tarCompression: 'none'
+        archiveFile: 'plugin.video.jellyfin-${{ py_version }}.zip'
 
     - task: CopyFilesOverSSH@0
       displayName: 'Upload to repo server'
       inputs:
         sshEndpoint: repository
         sourceFolder: '${Agent.BuildDirectory}'
-        contents: 'plugin.video.jellyfin*'
+        contents: 'plugin.video.jellyfin-${{ py-version }}.zip'
         targetFolder: '/srv/repository/incoming/kodi'
+      condition: startsWith(variables['Build.SourceBranch'], 'refs/tags')
 
     - task: SSH@0
       displayName: 'Add to Kodi repo'
       inputs:
         sshEndpoint: repository
         runOptions: 'inline'
-        inline: 'python3 /usr/local/bin/kodirepo add /srv/repository/incoming/kodi/plugin.video.jellyfin-version-${ py_version } --datadir /srv/repository/releases/client/kodi/${ py_version }'
+        inline: 'python3 /usr/local/bin/kodirepo add /srv/repository/incoming/kodi/plugin.video.jellyfin-${{ py_version }} --datadir /srv/repository/releases/client/kodi/${{ py_version }}'
+      condition: startsWith(variables['Build.SourceBranch'], 'refs/tags')
