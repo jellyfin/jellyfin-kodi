@@ -50,7 +50,7 @@ for dep in deps:
 
 # Update version string
 addon_version = data.get('version')
-root.attrib['version'] = f'{addon_version}-{py_version}'
+root.attrib['version'] = f'{addon_version}+{py_version}'
 
 # Changelog
 date = datetime.today().strftime('%Y-%m-%d')
