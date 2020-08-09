@@ -59,7 +59,7 @@ class ServerManual(xbmcgui.WindowXMLDialog):
         self.cancel_button = self.getControl(CANCEL)
         self.error_toggle = self.getControl(ERROR_TOGGLE)
         self.error_msg = self.getControl(ERROR_MSG)
-        self.host_field = self._add_editcontrol(755, 433, 40, 415)
+        self.host_field = self._add_editcontrol(755, 490, 40, 415)
 
         self.setFocus(self.host_field)
 

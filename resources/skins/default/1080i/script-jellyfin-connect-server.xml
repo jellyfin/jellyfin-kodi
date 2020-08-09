@@ -25,7 +25,7 @@
 				<centerleft>50%</centerleft>
 				<centertop>50%</centertop>
 				<width>520</width>
-				<height>525</height>
+				<height>470</height>
 				<control type="group">
 					<top>-30</top>
 					<control type="image">
@@ -45,14 +45,14 @@
 				</control>
 				<control type="image">
 					<width>100%</width>
-					<height>525</height>
+					<height>470</height>
 					<texture colordiffuse="ff222326" border="10">dialogs/dialog_back.png</texture>
 				</control>
 				<control type="group">
 					<centerleft>50%</centerleft>
 					<top>10</top>
 					<width>510</width>
-					<height>515</height>
+					<height>460</height>
 					<control type="grouplist" id="100">
 						<orientation>vertical</orientation>
 						<itemgap>0</itemgap>
@@ -199,7 +199,7 @@
 					</control>
 				</control>
 				<control type="group" id="202">
-					<top>525</top>
+					<top>470</top>
 					<visible>false</visible>
 					<control type="image">
 						<width>100%</width>
