@@ -387,7 +387,7 @@ class API(object):
             "data": data
         }
 
-        if not settings('sslverify'):
+        if not settings('sslverify.bool'):
             request_settings["verify"] = False
 
         LOG.info("Sending %s request to %s" % (method, path))
