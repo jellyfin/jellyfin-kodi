@@ -23,13 +23,19 @@ steps:
         includeRootFolder: False
         archiveType: 'zip'
         tarCompression: 'none'
-        archiveFile: 'plugin.video.jellyfin-${{ py_version }}.zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/plugin.video.jellyfin-${{ py_version }}.zip'
+
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish ${{ py_version }} artifact'
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)/plugin.video.jellyfin-${{ py_version }}.zip'
+        artifactName: 'plugin.video.jellyfin-${{ py_version }}-$(Build.BuildNumber).zip'
 
     - task: CopyFilesOverSSH@0
       displayName: 'Upload to repo server'
       inputs:
         sshEndpoint: repository
-        sourceFolder: '${Agent.BuildDirectory}'
+        sourceFolder: '$(Build.ArtifactStagingDirectory)'
         contents: 'plugin.video.jellyfin-${{ py_version }}.zip'
         targetFolder: '/srv/repository/incoming/kodi'
       condition: startsWith(variables['Build.SourceBranch'], 'refs/tags')
