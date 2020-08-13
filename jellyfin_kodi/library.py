@@ -672,28 +672,25 @@ class UserDataWorker(threading.Thread):
                 except Queue.Empty:
                     break
 
-                # Verify that the updated item is in our local whitelist
-                library = find_library(self.server, item)
-                if library:
-                    default_args = (self.server, jellyfindb, kodidb, self.direct_path, library)
-                    try:
-                        if item['Type'] == 'Movie':
-                            Movies(*default_args).userdata(item)
-                        elif item['Type'] in ['Series', 'Season', 'Episode']:
-                            TVShows(*default_args).userdata(item)
-                        elif item['Type'] == 'MusicAlbum':
-                            Music(*default_args).album(item)
-                        elif item['Type'] == 'MusicArtist':
-                            Music(*default_args).artist(item)
-                        elif item['Type'] == 'AlbumArtist':
-                            Music(*default_args).albumartist(item)
-                        elif item['Type'] == 'Audio':
-                            Music(*default_args).song(item)
-                    except LibraryException as error:
-                        if error.status == 'StopCalled':
-                            break
-                    except Exception as error:
-                        LOG.exception(error)
+                default_args = (self.server, jellyfindb, kodidb, self.direct_path)
+                try:
+                    if item['Type'] == 'Movie':
+                        Movies(*default_args).userdata(item)
+                    elif item['Type'] in ['Series', 'Season', 'Episode']:
+                        TVShows(*default_args).userdata(item)
+                    elif item['Type'] == 'MusicAlbum':
+                        Music(*default_args).album(item)
+                    elif item['Type'] == 'MusicArtist':
+                        Music(*default_args).artist(item)
+                    elif item['Type'] == 'AlbumArtist':
+                        Music(*default_args).albumartist(item)
+                    elif item['Type'] == 'Audio':
+                        Music(*default_args).userdata(item)
+                except LibraryException as error:
+                    if error.status == 'StopCalled':
+                        break
+                except Exception as error:
+                    LOG.exception(error)
 
                 self.queue.task_done()
 
