@@ -105,13 +105,9 @@ class JellyfinDatabase():
 
     def get_view_name(self, item_id):
 
-        try:
-            self.cursor.execute(QU.get_view_name, (item_id,))
+        self.cursor.execute(QU.get_view_name, (item_id,))
 
-            return self.cursor.fetchone()[0]
-        except Exception as error:
-            LOG.exception(error)
-            return
+        return self.cursor.fetchone()[0]
 
     def get_view(self, *args):
 
