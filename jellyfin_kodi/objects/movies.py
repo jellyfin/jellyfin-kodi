@@ -10,6 +10,7 @@ import downloader as server
 from database import jellyfin_db, queries as QUEM
 from helper import api, stop, validate, validate_bluray_dir, validate_dvd_dir, jellyfin_item, values, Local
 from helper import LazyLogger
+from helper.utils import find_library
 from helper.exceptions import PathValidationException
 
 from .obj import Objects
@@ -54,10 +55,20 @@ class Movies(KodiDb):
             obj['MovieId'] = e_item[0]
             obj['FileId'] = e_item[1]
             obj['PathId'] = e_item[2]
+            obj['LibraryId'] = e_item[6]
+            obj['LibraryName'] = self.jellyfin_db.get_view_name(obj['LibraryId'])
         except TypeError:
             update = False
             LOG.debug("MovieId %s not found", obj['Id'])
+
+            library = self.library or find_library(self.server, item)
+            if not library:
+                # This item doesn't belong to a whitelisted library
+                return
+
             obj['MovieId'] = self.create_entry()
+            obj['LibraryId'] = library['Id']
+            obj['LibraryName'] = library['Name']
         else:
             if self.get(*values(obj, QU.get_movie_obj)) is None:
 
@@ -65,8 +76,6 @@ class Movies(KodiDb):
                 LOG.info("MovieId %s missing from kodi. repairing the entry.", obj['MovieId'])
 
         obj['Path'] = API.get_file_path(obj['Path'])
-        obj['LibraryId'] = self.library['Id']
-        obj['LibraryName'] = self.library['Name']
         obj['Genres'] = obj['Genres'] or []
         obj['Studios'] = [API.validate_studio(studio) for studio in (obj['Studios'] or [])]
         obj['People'] = obj['People'] or []
