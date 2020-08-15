@@ -102,8 +102,8 @@ add_reference_pool_obj = ["{SeriesId}", "{ShowId}", None, "{PathId}", "Series", 
 add_reference_episode_obj = ["{Id}", "{EpisodeId}", "{FileId}", "{PathId}", "Episode", "episode", "{SeasonId}", "{Checksum}", None, "{JellyfinParentId}"]
 add_reference_mvideo_obj = ["{Id}", "{MvideoId}", "{FileId}", "{PathId}", "MusicVideo", "musicvideo", None, "{Checksum}", "{LibraryId}", "{JellyfinParentId}"]
 add_reference_artist_obj = ["{Id}", "{ArtistId}", None, None, "{ArtistType}", "artist", None, "{Checksum}", "{LibraryId}", "{JellyfinParentId}"]
-add_reference_album_obj = ["{Id}", "{AlbumId}", None, None, "MusicAlbum", "album", None, "{Checksum}", None, "{JellyfinParentId}"]
-add_reference_song_obj = ["{Id}", "{SongId}", None, "{PathId}", "Audio", "song", "{AlbumId}", "{Checksum}", None, "{JellyfinParentId}"]
+add_reference_album_obj = ["{Id}", "{AlbumId}", None, None, "MusicAlbum", "album", None, "{Checksum}", "{LibraryId}", "{JellyfinParentId}"]
+add_reference_song_obj = ["{Id}", "{SongId}", None, "{PathId}", "Audio", "song", "{AlbumId}", "{Checksum}", "{LibraryId}", "{JellyfinParentId}"]
 add_view = """
 INSERT OR REPLACE INTO      view(view_id, view_name, media_type)
 VALUES                      (?, ?, ?)
