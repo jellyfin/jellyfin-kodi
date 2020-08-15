@@ -17,7 +17,6 @@ from objects import PlaylistWorker, on_play, on_update, special_listener
 from helper import translate, settings, window, dialog, api, JSONRPC
 from helper.utils import JsonDebugPrinter
 from jellyfin import Jellyfin
-from webservice import WebService
 from helper import LazyLogger
 
 #################################################################################################
@@ -38,8 +37,6 @@ class Monitor(xbmc.Monitor):
         self.device_id = get_device_id()
         self.listener = Listener(self)
         self.listener.start()
-        self.webservice = WebService()
-        self.webservice.start()
         xbmc.Monitor.__init__(self)
 
     def onScanStarted(self, library):

@@ -427,6 +427,5 @@ class Service(xbmc.Monitor):
         if self.monitor is not None:
 
             self.monitor.listener.stop()
-            self.monitor.webservice.stop()
 
         LOG.info("---<<<[ %s ]", client.get_addon_name())
