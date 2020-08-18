@@ -607,7 +607,7 @@ class UpdateWorker(threading.Thread):
 
                 default_args = (self.server, jellyfindb, kodidb, self.direct_path)
                 try:
-                    LOG.info('{} - {}'.format(item['Type'], item['Name']))
+                    LOG.debug('{} - {}'.format(item['Type'], item['Name']))
                     if item['Type'] == 'Movie':
                         Movies(*default_args).movie(item)
                     elif item['Type'] == 'BoxSet':
