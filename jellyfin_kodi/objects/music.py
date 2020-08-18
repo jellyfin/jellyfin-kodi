@@ -8,6 +8,7 @@ import datetime
 from database import jellyfin_db, queries as QUEM
 from helper import api, stop, validate, jellyfin_item, values, Local
 from helper import LazyLogger
+from helper.utils import find_library
 from helper.exceptions import PathValidationException
 
 from .obj import Objects
@@ -50,9 +51,19 @@ class Music(KodiDb):
 
         try:
             obj['ArtistId'] = e_item[0]
+            obj['LibraryId'] = e_item[6]
+            obj['LibraryName'] = self.jellyfin_db.get_view_name(obj['LibraryId'])
         except TypeError:
             update = False
+
+            library = self.library or find_library(self.server, item)
+            if not library:
+                # This item doesn't belong to a whitelisted library
+                return
+
             obj['ArtistId'] = None
+            obj['LibraryId'] = library['Id']
+            obj['LibraryName'] = library['Name']
             LOG.debug("ArtistId %s not found", obj['Id'])
         else:
             if self.validate_artist(*values(obj, QU.get_artist_by_id_obj)) is None:
@@ -60,8 +71,6 @@ class Music(KodiDb):
                 update = False
                 LOG.info("ArtistId %s missing from kodi. repairing the entry.", obj['ArtistId'])
 
-        obj['LibraryId'] = self.library['Id']
-        obj['LibraryName'] = self.library['Name']
         obj['LastScraped'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         obj['ArtistType'] = "MusicArtist"
         obj['Genre'] = " / ".join(obj['Genres'] or [])
@@ -116,9 +125,19 @@ class Music(KodiDb):
 
         try:
             obj['AlbumId'] = e_item[0]
+            obj['LibraryId'] = e_item[6]
+            obj['LibraryName'] = self.jellyfin_db.get_view_name(obj['LibraryId'])
         except TypeError:
             update = False
+
+            library = self.library or find_library(self.server, item)
+            if not library:
+                # This item doesn't belong to a whitelisted library
+                return
+
             obj['AlbumId'] = None
+            obj['LibraryId'] = library['Id']
+            obj['LibraryName'] = library['Name']
             LOG.debug("AlbumId %s not found", obj['Id'])
         else:
             if self.validate_album(*values(obj, QU.get_album_by_id_obj)) is None:
@@ -224,9 +243,19 @@ class Music(KodiDb):
             obj['SongId'] = e_item[0]
             obj['PathId'] = e_item[2]
             obj['AlbumId'] = e_item[3]
+            obj['LibraryId'] = e_item[6]
+            obj['LibraryName'] = self.jellyfin_db.get_view_name(obj['LibraryId'])
         except TypeError:
             update = False
+
+            library = self.library or find_library(self.server, item)
+            if not library:
+                # This item doesn't belong to a whitelisted library
+                return
+
             obj['SongId'] = self.create_entry_song()
+            obj['LibraryId'] = library['Id']
+            obj['LibraryName'] = library['Name']
             LOG.debug("SongId %s not found", obj['Id'])
         else:
             if self.validate_song(*values(obj, QU.get_song_by_id_obj)) is None:

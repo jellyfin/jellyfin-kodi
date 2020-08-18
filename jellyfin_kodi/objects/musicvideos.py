@@ -12,6 +12,7 @@ from kodi_six.utils import py2_encode
 from database import jellyfin_db, queries as QUEM
 from helper import api, stop, validate, jellyfin_item, values, Local
 from helper import LazyLogger
+from helper.utils import find_library
 from helper.exceptions import PathValidationException
 
 from .obj import Objects
@@ -59,10 +60,20 @@ class MusicVideos(KodiDb):
             obj['MvideoId'] = e_item[0]
             obj['FileId'] = e_item[1]
             obj['PathId'] = e_item[2]
+            obj['LibraryId'] = e_item[6]
+            obj['LibraryName'] = self.jellyfin_db.get_view_name(obj['LibraryId'])
         except TypeError:
             update = False
+
+            library = self.library or find_library(self.server, item)
+            if not library:
+                # This item doesn't belong to a whitelisted library
+                return
+
             LOG.debug("MvideoId for %s not found", obj['Id'])
             obj['MvideoId'] = self.create_entry()
+            obj['LibraryId'] = library['Id']
+            obj['LibraryName'] = library['Name']
         else:
             if self.get(*values(obj, QU.get_musicvideo_obj)) is None:
 
