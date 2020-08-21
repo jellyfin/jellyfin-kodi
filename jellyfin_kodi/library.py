@@ -376,7 +376,7 @@ class Library(threading.Thread):
         include = []
         filters = ["tvshows", "boxsets", "musicvideos", "music", "movies"]
         sync = get_sync()
-        whitelist = [ x.replace('Mixed:', "") for x in sync['Whitelist'] ]
+        whitelist = [x.replace('Mixed:', "") for x in sync['Whitelist']]
         LOG.info("--[ retrieve changes ] %s", last_sync)
 
         # Get the item type of each synced library and build list of types to request
@@ -395,7 +395,7 @@ class Library(threading.Thread):
 
         try:
             # Get list of updates from server for synced library types and populate work queues
-            result = self.server.jellyfin.get_sync_queue(last_sync, ",".join([ x for x in query_filter ]))
+            result = self.server.jellyfin.get_sync_queue(last_sync, ",".join([x for x in query_filter]))
 
             if result is None:
                 return True

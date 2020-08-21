@@ -111,7 +111,7 @@ class Credentials(object):
                     existing['ConnectServerId'] = server['ConnectServerId']
 
                 return existing
-        
+
         servers.append(server)
         return server
 

@@ -56,7 +56,7 @@ class HTTP(object):
             else:
                 LOG.debug("Server address not set")
 
-        if '{UserId}'in string:
+        if '{UserId}' in string:
             if self.config.data.get('auth.user_id', None):
                 string = string.replace("{UserId}", self.config.data['auth.user_id'])
             else:

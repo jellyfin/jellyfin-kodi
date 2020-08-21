@@ -435,13 +435,13 @@ class FullSync(object):
                         obj.artist(artist)
 
                         # Get all albums for each artist
-                        artist_albums = [ album for album in albums if artist_name in album.get('Artists') ]
+                        artist_albums = [album for album in albums if artist_name in album.get('Artists')]
                         for album in artist_albums:
                             # Add album to database
                             obj.album(album)
                             album_id = album.get('Id')
                             # Get all songs in each album
-                            album_songs = [ song for song in songs if album_id == song.get('AlbumId') ]
+                            album_songs = [song for song in songs if album_id == song.get('AlbumId')]
                             for song in album_songs:
                                 dialog.update(percent,
                                               message="%s/%s/%s" % (artist_name, album['Name'][:7], song['Name'][:7]))
