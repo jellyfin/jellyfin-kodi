@@ -260,7 +260,7 @@ class ConnectionManager(object):
             }
 
             servers.append(info)
-        
+
         return servers
 
     # TODO: Make IPv6 compatable

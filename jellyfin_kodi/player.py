@@ -160,9 +160,9 @@ class Player(xbmc.Player):
 
     def set_audio_subs(self, audio=None, subtitle=None):
         if audio:
-            audio=int(audio)
+            audio = int(audio)
         if subtitle:
-            subtitle=int(subtitle)
+            subtitle = int(subtitle)
 
         ''' Only for after playback started
         '''

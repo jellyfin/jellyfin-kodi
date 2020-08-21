@@ -17,8 +17,8 @@ sys.path.insert(0, __base__)
 
 #################################################################################################
 
-from entrypoint import Context  # noqa: F402
-from helper import LazyLogger  # noqa: F402
+from entrypoint import Context  # noqa: E402
+from helper import LazyLogger  # noqa: E402
 
 #################################################################################################
 

@@ -18,9 +18,9 @@ sys.path.insert(0, __base__)
 
 #################################################################################################
 
-from entrypoint import Service  # noqa: F402
-from helper.utils import settings  # noqa: F402
-from helper import LazyLogger  # noqa: F402
+from entrypoint import Service  # noqa: E402
+from helper.utils import settings  # noqa: E402
+from helper import LazyLogger  # noqa: E402
 
 #################################################################################################
 

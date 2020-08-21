@@ -191,13 +191,13 @@ class Movies(KodiDb):
             if validate_dvd_dir(obj['Path'] + obj['Filename']):
                 obj['Path'] = obj['Path'] + obj['Filename'] + '/VIDEO_TS/'
                 obj['Filename'] = 'VIDEO_TS.IFO'
-                LOG.debug("DVD directry %s",obj['Path'])
+                LOG.debug("DVD directry %s", obj['Path'])
 
             '''check bluray directries and point it to ./BDMV/index.bdmv'''
             if validate_bluray_dir(obj['Path'] + obj['Filename']):
                 obj['Path'] = obj['Path'] + obj['Filename'] + '/BDMV/'
                 obj['Filename'] = 'index.bdmv'
-                LOG.debug("Bluray directry %s",obj['Path'])
+                LOG.debug("Bluray directry %s", obj['Path'])
 
         else:
             obj['Path'] = "plugin://plugin.video.jellyfin/%s/" % obj['LibraryId']

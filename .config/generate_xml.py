@@ -1,8 +1,10 @@
 import xml.etree.ElementTree as ET
-import yaml
 import sys
 import os
 from datetime import datetime
+
+import yaml
+
 
 def indent(elem, level=0):
     '''
@@ -22,6 +24,7 @@ def indent(elem, level=0):
     else:
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
+
 
 try:
     py_version = sys.argv[1]

@@ -1,0 +1,13 @@
+setuptools >= 44.1.1  # Old setuptools causes script.module.addon.signals to fail installing
+six >= 1.13
+python-dateutil >= 2.8.1
+requests >= 2.22
+futures >= 2.2; python_version < '3.0'
+git+https://github.com/oddstr13/Kodistubs@python3  # Kodistubs >= 18
+git+https://github.com/romanvm/kodi.six
+git+https://github.com/ruuk/script.module.addon.signals
+
+pytest >= 4.6.11
+coverage >= 5.2
+flake8 >= 3.8
+flake8-import-order >= 0.18
