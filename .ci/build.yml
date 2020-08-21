@@ -29,7 +29,7 @@ steps:
       displayName: 'Publish ${{ py_version }} artifact'
       inputs:
         targetPath: '$(Build.ArtifactStagingDirectory)/plugin.video.jellyfin-${{ py_version }}.zip'
-        artifactName: 'plugin.video.jellyfin-${{ py_version }}-$(Build.BuildNumber).zip'
+        artifactName: 'plugin.video.jellyfin-${{ py_version }}-$(Build.BuildNumber)'
 
     - task: CopyFilesOverSSH@0
       displayName: 'Upload to repo server'
