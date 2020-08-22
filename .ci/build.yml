@@ -24,8 +24,6 @@ steps:
           **/*
           !.ci
           !.config
-          !.editorconfig
-          !.env
           !.git
           !.github
           !.gitignore
