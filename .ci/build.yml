@@ -20,16 +20,12 @@ steps:
       displayName: 'Create clean addon directory'
       inputs:
         sourceFolder: 'jellyfin-kodi'
+        cleanTargetFolder: true
         contents: |
           **/*
-          !.ci
-          !.config
-          !.git
-          !.github
-          !.gitignore
-          !requirements-dev.txt
-          !tests
-          !tox.ini
+          !**/.ci/*
+          !**/.config/*
+          !**/.git**
         TargetFolder: '$(Build.ArtifactStagingDirectory)/plugin.video.jellyfin'
 
     - task: ArchiveFiles@2
