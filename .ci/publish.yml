@@ -1,0 +1,19 @@
+parameters:
+  python_version : []
+
+steps:
+  - ${{ each py_version in parameters.py_versions }}:
+    - task: CopyFilesOverSSH@0
+      displayName: 'Upload to repo server'
+      inputs:
+        sshEndpoint: repository
+        sourceFolder: '$(Build.ArtifactStagingDirectory)'
+        contents: 'plugin.video.jellyfin-${{ py_version }}.zip'
+        targetFolder: '/srv/repository/incoming/kodi'
+
+    - task: SSH@0
+      displayName: 'Add to Kodi repo'
+      inputs:
+        sshEndpoint: repository
+        runOptions: 'commands'
+        commands: 'sudo -n python3 /usr/local/bin/kodirepo add /srv/repository/incoming/kodi/plugin.video.jellyfin-${{ py_version }} --datadir /srv/repository/releases/client/kodi/${{ py_version }}'
