@@ -167,6 +167,11 @@ class Views(object):
 
         try:
             libraries = self.server.jellyfin.get_media_folders()['Items']
+            library_ids = [x['Id'] for x in libraries]
+            for view in self.server.jellyfin.get_views()['Items']:
+                if view['Id'] not in library_ids:
+                    libraries.append(view)
+
         except Exception as error:
             LOG.exception(error)
             raise IndexError("Unable to retrieve libraries: %s" % error)
