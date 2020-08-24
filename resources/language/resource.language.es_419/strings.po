@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-05-30 20:09+0000\n"
+"PO-Revision-Date: 2020-08-24 23:28+0000\n"
 "Last-Translator: WontTell <executor260@gmail.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.jellyfin.org/"
 "projects/jellyfin/jellyfin-kodi/es_419/>\n"
@@ -378,7 +378,7 @@ msgstr "Eliminar de Jellyfin"
 
 msgctxt "#30408"
 msgid "Settings"
-msgstr "Configuraciones"
+msgstr "Configuración"
 
 msgctxt "#30406"
 msgid "Remove from favorites"
