@@ -16,4 +16,4 @@ steps:
       inputs:
         sshEndpoint: repository
         runOptions: 'commands'
-        commands: 'sudo -n python3 /usr/local/bin/kodirepo add /srv/repository/incoming/kodi/plugin.video.jellyfin-${{ py_version }} --datadir /srv/repository/releases/client/kodi/${{ py_version }}'
+        commands: 'python3 /usr/local/bin/kodirepo add /srv/repository/incoming/kodi/plugin.video.jellyfin-${{ py_version }}.zip --datadir /srv/repository/releases/client/kodi/${{ py_version }}'
