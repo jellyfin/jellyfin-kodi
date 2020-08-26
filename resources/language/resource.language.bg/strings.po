@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-06-11 14:33+0000\n"
+"PO-Revision-Date: 2020-08-26 16:27+0000\n"
 "Last-Translator: Николай Иванов <nivanov@mail.bg>\n"
 "Language-Team: Bulgarian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/bg/>\n"
@@ -267,3 +267,115 @@ msgstr "Джелифин транскодиране"
 msgctxt "#30251"
 msgid "Recently added Home Videos"
 msgstr "Наскоро добавени домашни видеоклипове"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "Моля, впишете се"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "Ръчно добавяне на сървър"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "Свържи се към"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "Не е възможна връзка с избрания сървър"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "Полетата с потребителското име или парола не могат да бъдат празни"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "Избери основен сървър"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "Отмени"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "Вход"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "Парола"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "Покажи съобщение"
+
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "Включи сървъра за работа \"без интернет\""
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "Потребителско име или имейл"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "Влизане ръчно"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "Вход"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "Транскодирай Hi10P"
+
+msgctxt "#30536"
+msgid "Allow the screensaver during syncs"
+msgstr "Разреши скрийнсейвъра при синхронизация"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "Генерирай ново ИД за устройството"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "Уведомления (в секунди)"
+
+msgctxt "#30533"
+msgid "Duration of the music library pop up"
+msgstr "Продължителност при показване на музикалната библиотека"
+
+msgctxt "#30532"
+msgid "Duration of the video library pop up"
+msgstr "Продължителност при показване на видео библиотеката"
+
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "Включи новото съдържание"
+
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "Включи съобщението за рестартиране на сървъра"
+
+msgctxt "#30529"
+msgid "Startup delay (in seconds)"
+msgstr "Забавяне при стартиране (в секунди)"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "Постоянни потребители"
+
+msgctxt "#30527"
+msgid "Ignore specials in next episodes"
+msgstr "Игнорирай специалните епизоди в следващите епизоди"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "Транскодирай H265/HEVC"
+
+msgctxt "#30521"
+msgid "Jump back on resume (in seconds)"
+msgstr "Върни назад при възобновяване (в секунди)"
+
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr "Пропусни потвърждението при изтриване (Не се препоръчва)"
