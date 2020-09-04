@@ -120,7 +120,7 @@ def verify_kodi_defaults():
         dest_path = os.path.join(dest_base_path, relative_path)
 
         if not os.path.exists(dest_path):
-            os.mkdir(dest_path)
+            os.mkdir(os.path.normpath(dest_path))
 
         for file_name in files:
             dest_file = os.path.join(dest_path, file_name)
