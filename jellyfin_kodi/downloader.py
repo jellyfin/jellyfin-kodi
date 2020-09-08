@@ -235,41 +235,6 @@ def get_artists(parent_id=None):
         yield items
 
 
-def get_library_items(library_id, item_type):
-    url = "Users/{UserId}/Items"
-
-    params = {
-        'ParentId': library_id,
-        'IncludeItemTypes': item_type,
-        'SortBy': "SortName",
-        'SortOrder': "Ascending",
-        'Fields': api.info(),
-        'Recursive': True,
-    }
-
-    return _get(url, params)
-
-
-def get_albums_by_artist(artist_id, basic=False):
-
-    params = {
-        'SortBy': "DateCreated",
-        'ArtistIds': artist_id
-    }
-    for items in get_items(None, "MusicAlbum", basic, params):
-        yield items
-
-
-def get_songs_by_artist(artist_id, basic=False):
-
-    params = {
-        'SortBy': "DateCreated",
-        'ArtistIds': artist_id
-    }
-    for items in get_items(None, "Audio", basic, params):
-        yield items
-
-
 @stop
 def _get_items(query, server_id=None):
 
