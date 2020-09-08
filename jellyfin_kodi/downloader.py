@@ -212,8 +212,6 @@ def get_items(parent_id, item_type=None, basic=False, params=None):
 
 def get_artists(parent_id=None):
 
-    #url = "Artists"
-
     query = {
         'url': 'Artists',
         'params': {
