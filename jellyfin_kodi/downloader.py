@@ -164,6 +164,27 @@ def get_episode_by_season(show_id, season_id):
         yield items
 
 
+def get_item_count(parent_id, item_type=None, params=None):
+
+    url = "Users/{UserId}/Items"
+
+    query_params = {
+        'ParentId': parent_id,
+        'IncludeItemTypes': item_type,
+        'EnableTotalRecordCount': True,
+        'LocationTypes': "FileSystem,Remote,Offline",
+        'Recursive': True,
+        'Limit': 1
+    }
+    if params:
+        query_params['params'].update(params)
+
+    result = _get(url, query_params)
+
+    total = result.get('TotalRecordCount')
+
+    return total
+
 def get_items(parent_id, item_type=None, basic=False, params=None):
 
     query = {
@@ -191,23 +212,27 @@ def get_items(parent_id, item_type=None, basic=False, params=None):
 
 def get_artists(parent_id=None):
 
-    url = "Artists"
+    #url = "Artists"
 
-    params = {
-        'UserId': "{UserId}",
-        'ParentId': parent_id,
-        'SortBy': "SortName",
-        'SortOrder': "Ascending",
-        'Fields': api.music_info(),
-        'CollapseBoxSetItems': False,
-        'IsVirtualUnaired': False,
-        'EnableTotalRecordCount': False,
-        'LocationTypes': "FileSystem,Remote,Offline",
-        'IsMissing': False,
-        'Recursive': True
+    query = {
+        'url': 'Artists',
+        'params': {
+            'UserId': "{UserId}",
+            'ParentId': parent_id,
+            'SortBy': "SortName",
+            'SortOrder': "Ascending",
+            'Fields': api.music_info(),
+            'CollapseBoxSetItems': False,
+            'IsVirtualUnaired': False,
+            'EnableTotalRecordCount': False,
+            'LocationTypes': "FileSystem,Remote,Offline",
+            'IsMissing': False,
+            'Recursive': True
+        }
     }
 
-    return _get(url, params)
+    for items in _get_items(query):
+        yield items
 
 
 def get_library_items(library_id, item_type):
