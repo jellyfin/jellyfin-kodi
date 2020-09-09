@@ -435,8 +435,6 @@ class FullSync(object):
                             dialog.update(percent, message='Artist: {}'.format(item.get('Name')))
                             obj.artist(item)
                             count += 1
-                            # Delete item once it's been processed for memory management
-                            del item
 
                     albums = server.get_items(library_id, item_type='MusicAlbum', params={'SortBy': 'AlbumArtist'})
                     for batch in albums:
@@ -446,7 +444,6 @@ class FullSync(object):
                             dialog.update(percent, message='Album: {} - {}'.format(item.get('AlbumArtist', ''), item.get('Name')))
                             obj.album(item)
                             count += 1
-                            del item
 
                     songs = server.get_items(library_id, item_type='Audio', params={'SortBy': 'AlbumArtist'})
                     for batch in songs:
@@ -456,7 +453,6 @@ class FullSync(object):
                             dialog.update(percent, message='Track: {} - {}'.format(item.get('AlbumArtist', ''), item.get('Name')))
                             obj.song(item)
                             count += 1
-                            del item
 
                     if self.update_library:
                         self.music_compare(library, obj, jellyfindb)
