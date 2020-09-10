@@ -417,37 +417,43 @@ class FullSync(object):
 
                     library_id = library['Id']
 
-                    # Get all items in the library to process locally
-                    artists_data = server.get_artists(library_id)
-                    artists = artists_data['Items']
-                    num_artists = artists_data['TotalRecordCount']
-                    albums = server.get_library_items(library_id, 'MusicAlbum')['Items']
-                    songs = server.get_library_items(library_id, 'Audio')['Items']
+                    total_items = server.get_item_count(library_id, 'MusicArtist,MusicAlbum,Audio')
+                    count = 0
 
-                    for index, artist in enumerate(artists):
-                        artist_name = artist.get('Name')
+                    '''
+                    Music database syncing.  Artists must be in the database
+                    before albums, albums before songs.  Pulls batches of items
+                    in sizes of setting "Paging - Max items".  'artists',
+                    'albums', and 'songs' are generators containing a dict of
+                    api responses
+                    '''
+                    artists = server.get_artists(library_id)
+                    for batch in artists:
+                        for item in batch['Items']:
+                            LOG.debug('Artist: {}'.format(item.get('Name')))
+                            percent = int((float(count) / float(total_items)) * 100)
+                            dialog.update(percent, message='Artist: {}'.format(item.get('Name')))
+                            obj.artist(item)
+                            count += 1
 
-                        # Update percentage dialog
-                        percent = int((float(index) / float(num_artists)) * 100)
-                        dialog.update(percent, heading="%s: %s" % (translate('addon_name'), library['Name']), message=artist_name)
+                    albums = server.get_items(library_id, item_type='MusicAlbum', params={'SortBy': 'AlbumArtist'})
+                    for batch in albums:
+                        for item in batch['Items']:
+                            LOG.debug('Album: {}'.format(item.get('Name')))
+                            percent = int((float(count) / float(total_items)) * 100)
+                            dialog.update(percent, message='Album: {} - {}'.format(item.get('AlbumArtist', ''), item.get('Name')))
+                            obj.album(item)
+                            count += 1
 
-                        # Add artist to database
-                        obj.artist(artist)
+                    songs = server.get_items(library_id, item_type='Audio', params={'SortBy': 'AlbumArtist'})
+                    for batch in songs:
+                        for item in batch['Items']:
+                            LOG.debug('Song: {}'.format(item.get('Name')))
+                            percent = int((float(count) / float(total_items)) * 100)
+                            dialog.update(percent, message='Track: {} - {}'.format(item.get('AlbumArtist', ''), item.get('Name')))
+                            obj.song(item)
+                            count += 1
 
-                        # Get all albums for each artist
-                        artist_albums = [album for album in albums if artist_name in album.get('Artists')]
-                        for album in artist_albums:
-                            # Add album to database
-                            obj.album(album)
-                            album_id = album.get('Id')
-                            # Get all songs in each album
-                            album_songs = [song for song in songs if album_id == song.get('AlbumId')]
-                            for song in album_songs:
-                                dialog.update(percent,
-                                              message="%s/%s/%s" % (artist_name, album['Name'][:7], song['Name'][:7]))
-                                # Add song to database
-                                obj.song(song)
-#
                     if self.update_library:
                         self.music_compare(library, obj, jellyfindb)
 
