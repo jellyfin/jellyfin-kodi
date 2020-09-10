@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-06-07 23:18+0000\n"
-"Last-Translator: Hasan Cem Safa Ece <hasancemsafaece@gmail.com>\n"
+"PO-Revision-Date: 2020-09-11 02:20+0000\n"
+"Last-Translator: Deniz <denizgezgin365@gmail.com>\n"
 "Language-Team: Turkish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/tr/>\n"
 "Language: tr_tr\n"
@@ -113,7 +113,7 @@ msgstr "Manuel Giriş"
 
 msgctxt "#30539"
 msgid "Login"
-msgstr "Giriş"
+msgstr "Oturum aç"
 
 msgctxt "#30518"
 msgid "Enable cinema mode"
