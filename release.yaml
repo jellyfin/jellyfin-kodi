@@ -1,25 +1,7 @@
-version: '0.5.9'
+version: '0.6.0'
 changelog: |
-  - #325 Add support for music database format v74
-  - #330 Add support for BDMV movie directories in native playback mode
-  - #331 Don't process songs from unsynced libraries
-  - #334 DVD rip support
-  - #336 Azure pipeline + revamp release process
-  - #339 Handle empty list of updates from server
-  - #344 Fix music sync
-  - #345 A tiny bit of code cleanup
-  - #346 Get resume from Kodi arguments
-  - #348 Various fixes from sonarqube
-  - #349 Metadata syncing rework
-  - #351 Fix UserDataWorker
-  - #352 Use libraries rather than home-screen views
-  - #355 Fix variable name in pipeline
-  - #356 Remove whitespace in setup xbmcgui dialogs
-  - #359 SSL Verification Fix
-  - #362 Refactor metadata ancestor gathering
-  - #363 Publish artifacts in pipeline
-  - #364 Removed webservice
-  - #366 Filter keys containing None values from dictionaries returned from the server
-  - #367 Refactor pipeline
-  - #368 Clean copy the right files for building
-  - #371 Temporary workaround for #370
+  - #373 Use correct filename for kodirepo command
+  - #382 Handle empty XMLs in profile video
+  - #384 Add BDMV and DVD Rip support in TV Shows 
+  - #385 Normalize path for os.mkdir
+  - #387 Optimize music sync for large libraries
