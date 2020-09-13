@@ -17,3 +17,10 @@ steps:
         sshEndpoint: repository
         runOptions: 'commands'
         commands: 'python3 /usr/local/bin/kodirepo add /srv/repository/incoming/kodi/plugin.video.jellyfin-${{ py_version }}.zip --datadir /srv/repository/releases/client/kodi/${{ py_version }}'
+
+    - task: SSH@0
+      displayName: 'Clean up zip files'
+      inputs:
+        sshEndpoint: repository
+        runOptions: 'commands'
+        commands: 'rm /srv/repository/incoming/kodi/plugin.video.jellyfin-${{ py_version }}.zip'

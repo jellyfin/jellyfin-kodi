@@ -23,16 +23,17 @@ steps:
         cleanTargetFolder: true
         contents: |
           **/*
-          !**/.ci/*
-          !**/.config/*
-          !**/.git**
+          !.ci/*
+          !.config/*
+          !.git/**/*
+          !.github/*
         TargetFolder: '$(Build.ArtifactStagingDirectory)/plugin.video.jellyfin'
 
     - task: ArchiveFiles@2
       displayName: 'Create ${{ py_version }} zip file'
       inputs:
         rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/plugin.video.jellyfin'
-        includeRootFolder: False
+        includeRootFolder: True
         archiveType: 'zip'
         tarCompression: 'none'
         archiveFile: '$(Build.ArtifactStagingDirectory)/plugin.video.jellyfin-${{ py_version }}.zip'
