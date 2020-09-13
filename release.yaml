@@ -1,7 +1,8 @@
-version: '0.6.0'
+version: '0.6.1'
 changelog: |
   - #373 Use correct filename for kodirepo command
   - #382 Handle empty XMLs in profile video
-  - #384 Add BDMV and DVD Rip support in TV Shows 
+  - #384 Add BDMV and DVD Rip support in TV Shows
   - #385 Normalize path for os.mkdir
   - #387 Optimize music sync for large libraries
+  - #392 Fix the pipeline. Again.
