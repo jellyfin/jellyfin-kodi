@@ -1,4 +1,4 @@
-version: '0.6.1'
+version: '0.6.2'
 changelog: |
   - #373 Use correct filename for kodirepo command
   - #382 Handle empty XMLs in profile video
