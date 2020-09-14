@@ -241,15 +241,22 @@ class PlayUtils(object):
 
         if self.item['MediaType'] == 'Video':
             base, params = source['TranscodingUrl'].split('?')
+            url_parsed = params.split('&')
+            manual_tracks = ''
+
+            # manual bitrate
+            url_parsed = [p for p in url_parsed if 'AudioBitrate' not in p and 'VideoBitrate' not in p]
 
             if settings('skipDialogTranscode') != "3" and source.get('MediaStreams'):
-                url_parsed = params.split('&')
+                # manual tracks
+                url_parsed = [p for p in url_parsed if 'AudioStreamIndex' not in p and 'SubtitleStreamIndex' not in p]
+                manual_tracks = self.get_audio_subs(source, audio, subtitle)
 
-                for i in url_parsed:
-                    if 'AudioStreamIndex' in i or 'AudioBitrate' in i or 'SubtitleStreamIndex' in i:  # handle manually
-                        url_parsed.remove(i)
+            audio_bitrate = self.get_transcoding_audio_bitrate()
+            video_bitrate = self.get_max_bitrate() - audio_bitrate
 
-                params = "%s%s" % ('&'.join(url_parsed), self.get_audio_subs(source, audio, subtitle))
+            params = "%s%s" % ('&'.join(url_parsed), manual_tracks)
+            params += "&VideoBitrate=%s&AudioBitrate=%s" % (video_bitrate, audio_bitrate)
 
             video_type = 'live' if source['Protocol'] == 'LiveTV' else 'master'
             base = base.replace('stream' if 'stream' in base else 'master', video_type, 1)
@@ -643,7 +650,6 @@ class PlayUtils(object):
 
         self.info['AudioStreamIndex'] = audio_selected
         prefs += "&AudioStreamIndex=%s" % audio_selected
-        prefs += "&AudioBitrate=%d" % self.get_transcoding_audio_bitrate()
 
         if subtitle:
 
