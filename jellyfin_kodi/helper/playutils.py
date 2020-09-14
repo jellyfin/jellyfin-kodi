@@ -526,6 +526,23 @@ class PlayUtils(object):
 
         return path
 
+    def get_commercial_codec_name(self, codec, profile):
+        NAMES = {
+            'ac3': 'Dolby Digital',
+            'eac3': 'Dolby Digital+',
+            'truehd': 'Dolby TrueHD',
+            'dts': 'DTS'
+        }
+
+        if profile == 'DTS-HD MA':
+            return 'DTS-HD Master Audio'
+        if profile == 'DTS-HD HRA':
+            return 'DTS-HD High Resolution Audio'
+        if codec in NAMES:
+            return NAMES[codec]
+
+        return codec.upper()
+
     def get_audio_subs(self, source, audio=None, subtitle=None):
 
         ''' For transcoding only
@@ -546,22 +563,24 @@ class PlayUtils(object):
 
             if stream_type == 'Audio':
 
-                codec = stream['Codec']
-                channel = stream.get('ChannelLayout', "")
+                profile = stream['Profile'] if 'Profile' in stream else None
+                codec = self.get_commercial_codec_name(stream['Codec'], profile)
+                channel = stream.get('ChannelLayout', "").capitalize()
 
                 if 'Language' in stream:
-                    track = "%s - %s - %s %s" % (index, stream['Language'], codec, channel)
+                    track = "%s - %s %s" % (stream['Language'].capitalize(), codec, channel)
                 else:
-                    track = "%s - %s %s" % (index, codec, channel)
+                    track = "%s %s" % (codec, channel)
 
                 audio_streams[track] = index
 
             elif stream_type == 'Subtitle':
+                codec = self.get_commercial_codec_name(stream['Codec'], None)
 
                 if 'Language' in stream:
-                    track = "%s - %s" % (index, stream['Language'])
+                    track = "%s - %s" % (stream['Language'].capitalize(), codec)
                 else:
-                    track = "%s - %s" % (index, stream['Codec'])
+                    track = "%s" % codec
 
                 if stream['IsDefault']:
                     track = "%s - Default" % track
