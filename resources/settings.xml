@@ -38,12 +38,20 @@
 		<setting label="30519" id="askCinema" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
 		<setting label="30002" id="playFromStream" type="bool" default="true" />
 		<setting label="33179" id="playFromTranscode" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
-	    <setting label="30522" id="transcode_h265" type="bool" default="false" visible="eq(-1,false)" />
-	    <setting label="30537" id="transcodeHi10P" type="bool" default="false" visible="eq(-2,false)" />
+	    <setting label="30160" id="maxBitrate" type="enum" values="0.5 Mbps|1 Mbps|1.5 Mbps|2.0 Mbps|2.5 Mbps|3.0 Mbps|4.0 Mbps|5.0 Mbps|6.0 Mbps|7.0 Mbps|8.0 Mbps|9.0 Mbps|10.0 Mbps|12.0 Mbps|14.0 Mbps|16.0 Mbps|18.0 Mbps|20.0 Mbps|25.0 Mbps|30.0 Mbps|35.0 Mbps|40.0 Mbps|100.0 Mbps [default]|1000.0 Mbps" visible="true" default="22" />
 	    <setting label="33114" id="enableExternalSubs" type="bool" default="true" />
+
+		<setting type="sep" />
+		<setting label="33115" type="lsep" />
+	    <setting label="30537" id="transcodeHi10P" type="bool" default="false" visible="true" />
+	    <setting label="30522" id="transcode_h265" type="bool" default="false" visible="true" />
+	    <setting label="30523" id="transcode_mpeg2" type="bool" default="false" visible="true" />
+	    <setting label="30161" id="videoPreferredCodec" type="select" values="H264/AVC|H265/HEVC" visible="eq(-2,false)" default="H264/AVC" />
+	    <setting label="30162" id="audioPreferredCodec" type="select" values="AAC|AC3|MP3|Opus|FLAC|Vorbis" visible="true" default="AAC" />
+	    <setting label="30163" id="audioBitrate" type="enum" values="96|128|160|192|256|320|384" visible="true" default="4" />
+	    <setting label="30164" id="audioMaxChannels" type="slider" range="2,1,6" option="int" visible="true" default="6" />
 	    <setting label="33159" id="skipDialogTranscode" type="enum" lvalues="305|33157|33158|13106" visible="true" default="3" />
-	    <setting label="33115" type="lsep" />
-	    <setting label="30160" id="videoBitrate" type="enum" values="664 Kbps SD|996 Kbps HD|1.3 Mbps HD|2.0 Mbps HD|3.2 Mbps HD|4.7 Mbps HD|6.2 Mbps HD|7.7 Mbps HD|9.2 Mbps HD|10.7 Mbps HD|12.2 Mbps HD|13.7 Mbps HD|15.2 Mbps HD|16.7 Mbps HD|18.2 Mbps HD|20.0 Mbps HD|25.0 Mbps HD|30.0 Mbps HD|35.0 Mbps HD|40.0 Mbps HD|100.0 Mbps HD [default]|1000.0 Mbps HD" visible="true" default="20" />
+	    <setting label="30165" id="allowBurnedSubs" type="bool" visible="true" enable="true" default="true" />
 
 		<setting type="sep" />
 		<setting label="33112" type="lsep" />
