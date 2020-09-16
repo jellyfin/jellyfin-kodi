@@ -61,7 +61,7 @@ class LogHandler(logging.StreamHandler):
                 for token in self.sensitive['Token']:
                     string = string.replace(token or "{token}", "{jellyfin-token}")
 
-            xbmc.log(string, level=xbmc.LOGNOTICE)
+            xbmc.log(string, level=xbmc.LOGINFO)
 
     @classmethod
     def _get_log_level(cls, level):
