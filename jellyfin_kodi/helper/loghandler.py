@@ -14,6 +14,7 @@ import database
 from helper import get_filesystem_encoding
 
 from . import settings
+from . import kodi_version
 
 ##################################################################################################
 
@@ -49,6 +50,11 @@ class LogHandler(logging.StreamHandler):
 
         self.mask_info = settings('maskInfo.bool')
 
+        if kodi_version() > 18:
+            self.level = xbmc.LOGINFO
+        else:
+            self.level = xbmc.LOGNOTICE
+
     def emit(self, record):
 
         if self._get_log_level(record.levelno):
@@ -61,7 +67,7 @@ class LogHandler(logging.StreamHandler):
                 for token in self.sensitive['Token']:
                     string = string.replace(token or "{token}", "{jellyfin-token}")
 
-            xbmc.log(string, level=getattr(xbmc, 'LOGNOTICE', xbmc.LOGINFO))
+            xbmc.log(string, level=self.level)
 
 
     @classmethod
