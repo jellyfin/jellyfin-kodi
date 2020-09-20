@@ -468,14 +468,9 @@ class PlayUtils(object):
         kodi = 0
 
         for stream in source['MediaStreams']:
-
-            if stream['Type'] == 'Subtitle' and stream['IsExternal']:
+            if stream['Type'] == 'Subtitle' and stream['DeliveryMethod'] == 'External':
                 index = stream['Index']
-
-                if 'DeliveryUrl' in stream and stream['DeliveryUrl'].lower().startswith('/videos'):
-                    url = "%s/%s" % (self.info['ServerAddress'], stream['DeliveryUrl'])
-                else:
-                    url = self.get_subtitles(source, stream, index)
+                url = self.get_subtitles(source, stream, index)
 
                 if url is None:
                     continue
