@@ -301,6 +301,10 @@ msgctxt "#30523"
 msgid "Transcode MPEG2"
 msgstr "Transcode MPEG2"
 
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Transcode VC-1"
+
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
 msgstr "Ignore specials in next episodes"

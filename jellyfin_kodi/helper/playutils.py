@@ -319,6 +319,9 @@ class PlayUtils(object):
         if settings('transcode_mpeg2.bool'):
             codecs.remove('mpeg2video')
 
+        if settings('transcode_vc1.bool'):
+            codecs.remove('vc1')
+
         return ','.join(codecs)
 
     def get_transcoding_video_codec(self):
@@ -333,6 +336,9 @@ class PlayUtils(object):
 
         if settings('transcode_mpeg2.bool'):
             codecs.remove('mpeg2video')
+
+        if settings('transcode_vc1.bool'):
+            codecs.remove('vc1')
 
         return ','.join(codecs)
 
