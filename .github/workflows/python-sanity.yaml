@@ -1,6 +1,6 @@
 name: Python sanity
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   build:
@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [2.7, 3.6, 3.7, 3.8]
+        python-version: [2.7, 3.8]
 
     steps:
     - uses: actions/checkout@v2
@@ -26,7 +26,9 @@ jobs:
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 . --select=E9,F63,F7,F82 \
+        | awk -F: '{ gsub(/^[ \t]+/,"",$4); print "::error file=" $1 ",line=" $2 ",col=" $3 "::" $4 }'
+
         # exit-zero treats all errors as warnings.
         flake8 . --exit-zero \
         | awk -F: '{ gsub(/^[ \t]+/,"",$4); print "::error file=" $1 ",line=" $2 ",col=" $3 "::" $4 }'
