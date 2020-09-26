@@ -24,25 +24,38 @@ jobs:
         pip install -r requirements-dev.txt
 
     - name: Lint with flake8
+      id: flake8
       run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --select=E9,F63,F7,F82 \
-        | awk -F: '{ gsub(/^[ \t]+/,"",$4); print "::error file=" $1 ",line=" $2 ",col=" $3 "::" $4 }'
+        rm -f flake8.output
+        flake8 . --statistics --output-file=flake8.output \
+        && echo "::set-output name=lint::ok" \
+        || echo "::set-output name=lint::error"
+        cat flake8.output | awk -F: '{ if ($0 ~ /^\./) { gsub(/^[ \t]+/,"",$4); print "::error file=" $1 ",line=" $2 ",col=" $3 "::" $4 } else { print $0 } }'
 
-        # exit-zero treats all errors as warnings.
-        flake8 . --exit-zero \
-        | awk -F: '{ gsub(/^[ \t]+/,"",$4); print "::error file=" $1 ",line=" $2 ",col=" $3 "::" $4 }'
+        flake8 . --select=E9,F63,F7,F82 \
+        && echo "::set-output name=syntax::ok" \
+        || echo "::set-output name=syntax::error"
 
     - name: Run tests
+      id: tests
+      if: ${{ steps.flake8.outputs.syntax == 'ok' }}
       run: |
         coverage run
         coverage report
 
     - name: Upload coverage report to Codecov
+      if: ${{ steps.tests.conclusion == 'success' }}
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
         coverage xml
         bash <(curl -s https://codecov.io/bash) \
         || echo "::warning ::Codecov upload failed"
+
+    - name: Error on flake8
+      if: ${{ steps.flake8.outputs.lint != 'ok' }}
+      run: |
+        flake8 . --count --statistics --exit-zero --quiet
+        echo "::error ::Please correct flake8 warnings and errors"
+        exit 1
 
