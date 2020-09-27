@@ -35,10 +35,7 @@ class ContextMenu(xbmcgui.WindowXMLDialog):
         xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)
 
     def set_options(self, options=None):
-        if options is None:
-            self._options = []
-        else:
-            self._options = options
+        self._options = [] if options is None else options
 
     def is_selected(self):
         return bool(self.selected_option)

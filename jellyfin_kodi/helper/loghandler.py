@@ -51,10 +51,7 @@ class LogHandler(logging.StreamHandler):
 
         self.mask_info = settings('maskInfo.bool')
 
-        if kodi_version() > 18:
-            self.level = xbmc.LOGINFO
-        else:
-            self.level = xbmc.LOGNOTICE
+        self.level = xbmc.LOGINFO if kodi_version() > 18 else xbmc.LOGNOTICE
 
     def emit(self, record):
 
