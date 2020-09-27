@@ -832,17 +832,14 @@ class Views(object):
             window_prop = "Jellyfin.wnodes.%s" % index
             window('%s.index' % window_prop, path.replace('all.xml', ""))  # dir
             window('%s.title' % window_prop, view['Name'])
-            window('%s.content' % window_prop, path)
-
         elif node == 'browse':
 
             window_prop = "Jellyfin.wnodes.%s" % index
             window('%s.title' % window_prop, view['Name'])
-            window('%s.content' % window_prop, path)
         else:
             window_prop = "Jellyfin.wnodes.%s.%s" % (index, node)
             window('%s.title' % window_prop, node_label)
-            window('%s.content' % window_prop, path)
+        window('%s.content' % window_prop, path)
 
         window('%s.id' % window_prop, view['Id'])
         window('%s.path' % window_prop, window_path)
