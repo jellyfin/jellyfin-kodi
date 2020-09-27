@@ -35,12 +35,12 @@ except IndexError:
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 # Load template file
-with open(f'{dir_path}/template.xml', 'r') as f:
+with open('{dir_path}/template.xml'.format(**locals()), 'r') as f:
     tree = ET.parse(f)
     root = tree.getroot()
 
 # Load version dependencies
-with open(f'{dir_path}/{py_version}.yaml', 'r') as f:
+with open('{dir_path}/{py_version}.yaml'.format(**locals()), 'r') as f:
     deps = yaml.safe_load(f)
 
 # Load version and changelog
@@ -53,7 +53,7 @@ for dep in deps:
 
 # Update version string
 addon_version = data.get('version')
-root.attrib['version'] = f'{addon_version}+{py_version}'
+root.attrib['version'] = '{addon_version}+{py_version}'.format(**locals())
 
 # Changelog
 date = datetime.today().strftime('%Y-%m-%d')
@@ -61,7 +61,7 @@ changelog = data.get('changelog')
 for section in root.findall('extension'):
     news = section.findall('news')
     if news:
-        news[0].text = f'v{addon_version} ({date}):\n{changelog}'
+        news[0].text = 'v{addon_version} ({date}):\n{changelog}'.format(**locals())
 
 # Format xml tree
 indent(root)
