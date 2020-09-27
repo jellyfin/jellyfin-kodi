@@ -314,7 +314,7 @@ class Actions(object):
         obj['Artwork']['Backdrop'] = obj['Artwork']['Backdrop'] or []
         obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] or ""
 
-        if not intro and not obj['Type'] == 'Trailer':
+        if not intro and obj['Type'] != 'Trailer':
             obj['Artwork']['Primary'] = obj['Artwork']['Primary'] \
                 or "special://home/addons/plugin.video.jellyfin/resources/icon.png"
         else:
