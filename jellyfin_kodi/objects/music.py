@@ -437,8 +437,7 @@ class Music(KodiDb):
         ''' This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
             Poster with progress bar
         '''
-        server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
-        API = api.API(item, server_address)
+
         obj = self.objects.map(item, 'SongUserData')
 
         try:

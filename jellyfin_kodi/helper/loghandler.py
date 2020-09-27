@@ -69,7 +69,6 @@ class LogHandler(logging.StreamHandler):
 
             xbmc.log(string, level=self.level)
 
-
     @classmethod
     def _get_log_level(cls, level):
 

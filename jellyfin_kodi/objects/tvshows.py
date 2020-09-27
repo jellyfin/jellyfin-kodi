@@ -410,7 +410,7 @@ class TVShows(KodiDb):
                 raise PathValidationException("Failed to validate path. User stopped.")
 
             obj['Path'] = obj['Path'].replace(obj['Filename'], "")
-            
+
             '''check dvd directries and point it to ./VIDEO_TS/VIDEO_TS.IFO'''
             if validate_dvd_dir(obj['Path'] + obj['Filename']):
                 obj['Path'] = obj['Path'] + obj['Filename'] + '/VIDEO_TS/'
@@ -422,7 +422,7 @@ class TVShows(KodiDb):
                 obj['Path'] = obj['Path'] + obj['Filename'] + '/BDMV/'
                 obj['Filename'] = 'index.bdmv'
                 LOG.debug("Bluray directry %s", obj['Path'])
-            
+
         else:
             obj['Path'] = "plugin://plugin.video.jellyfin/%s/" % obj['SeriesId']
             params = {
