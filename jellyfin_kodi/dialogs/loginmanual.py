@@ -40,7 +40,7 @@ class LoginManual(xbmcgui.WindowXMLDialog):
             setattr(self, key, value)
 
     def is_logged_in(self):
-        return True if self._user else False
+        return bool(self._user)
 
     def get_user(self):
         return self._user

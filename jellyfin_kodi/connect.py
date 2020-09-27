@@ -46,7 +46,7 @@ class Connect(object):
                 if server['Id'] == server_id:
                     credentials['Servers'] = [server]
 
-        server_select = True if server_id is None and not settings('SyncInstallRunDone.bool') else False
+        server_select = server_id is None and not settings('SyncInstallRunDone.bool')
         new_credentials = self.register_client(credentials, options, server_id, server_select)
 
         for server in servers:

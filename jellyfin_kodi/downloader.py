@@ -69,7 +69,7 @@ def validate_view(library_id, item_id):
         LOG.exception(error)
         return False
 
-    return True if len(result['Items']) else False
+    return bool(len(result['Items']))
 
 
 def get_single_item(parent_id, media):

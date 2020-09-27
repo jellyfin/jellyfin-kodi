@@ -95,7 +95,7 @@ class Actions(object):
                 if choice is None:
                     raise Exception("User backed out of resume dialog.")
 
-                item["resumePlayback"] = False if not choice else True
+                item["resumePlayback"] = bool(choice)
 
         if settings('enableCinema.bool') and not item["resumePlayback"]:
             self._set_intros(item)
