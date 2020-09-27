@@ -185,10 +185,7 @@ def should_stop():
         LOG.info("exiiiiitttinggg")
         return True
 
-    if not window('jellyfin_online.bool'):
-        return True
-
-    return False
+    return not window('jellyfin_online.bool')
 
 
 def get_screensaver():
