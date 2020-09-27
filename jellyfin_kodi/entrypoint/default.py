@@ -267,7 +267,7 @@ def browse(media, view_id=None, folder=None, server_id=None, api_client=None):
 
         monitor = xbmc.Monitor()
 
-        for i in range(300):
+        for _ in range(300):
             if window('jellyfin_online.bool'):
                 break
             elif monitor.waitForAbort(0.1):
