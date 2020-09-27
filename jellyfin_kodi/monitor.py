@@ -255,19 +255,17 @@ class Monitor(xbmc.Monitor):
         if command in ('Mute', 'Unmute', 'SetVolume',
                        'SetSubtitleStreamIndex', 'SetAudioStreamIndex', 'SetRepeatMode'):
 
-            if command == 'Mute':
+            if command in ['Mute', 'Unmute']:
                 xbmc.executebuiltin('Mute')
-            elif command == 'Unmute':
-                xbmc.executebuiltin('Mute')
-            elif command == 'SetVolume':
-                xbmc.executebuiltin('SetVolume(%s[,showvolumebar])' % args['Volume'])
-            elif command == 'SetRepeatMode':
-                xbmc.executebuiltin('xbmc.PlayerControl(%s)' % args['RepeatMode'])
             elif command == 'SetAudioStreamIndex':
                 self.player.set_audio_subs(args['Index'])
+            elif command == 'SetRepeatMode':
+                xbmc.executebuiltin('xbmc.PlayerControl(%s)' % args['RepeatMode'])
             elif command == 'SetSubtitleStreamIndex':
                 self.player.set_audio_subs(None, args['Index'])
 
+            elif command == 'SetVolume':
+                xbmc.executebuiltin('SetVolume(%s[,showvolumebar])' % args['Volume'])
             # Kodi needs a bit of time to update it's current status
             xbmc.sleep(500)
             self.player.report_playback()
