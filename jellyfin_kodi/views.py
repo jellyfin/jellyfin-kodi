@@ -853,7 +853,7 @@ class Views(object):
         if not self.server.logged_in:
             window('%s.artwork' % prop, clear=True)
 
-        elif self.server.logged_in and self.media_folders is not None:
+        elif self.media_folders is not None:
             for library in self.media_folders:
 
                 if library['Id'] == view_id and 'Primary' in library.get('ImageTags', {}):
