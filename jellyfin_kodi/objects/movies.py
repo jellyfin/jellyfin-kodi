@@ -101,8 +101,7 @@ class Movies(KodiDb):
         if obj['Countries']:
             self.add_countries(*values(obj, QU.update_country_obj))
 
-        tags = []
-        tags.extend(obj['Tags'] or [])
+        tags = list(obj['Tags'] or [])
         tags.append(obj['LibraryName'])
 
         if obj['Favorite']:
