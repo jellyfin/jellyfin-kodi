@@ -61,14 +61,14 @@ jobs:
         coverage run
         coverage report
 
-    - name: Upload coverage report to Codecov
-      if: ${{ steps.tests.conclusion == 'success' }}
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      run: |
-        coverage xml
-        bash <(curl -s https://codecov.io/bash) \
-        || echo "::warning ::Codecov upload failed"
+#    - name: Upload coverage report to Codecov
+#      if: ${{ steps.tests.conclusion == 'success' }}
+#      env:
+#        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+#      run: |
+#        coverage xml
+#        bash <(curl -s https://codecov.io/bash) \
+#        || echo "::warning ::Codecov upload failed"
 
     - name: Error on flake8
       if: ${{ steps.flake8.outputs.lint != 'ok' }}
