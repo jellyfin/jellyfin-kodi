@@ -263,6 +263,11 @@ class API(object):
         if not settings('enableCoverArt.bool'):
             query += "&EnableImageEnhancers=false"
 
+        art_maxheight = [360, 480, 600, 720, 1080, -1]
+        maxheight = art_maxheight[int(settings('maxArtResolution') or 5)]
+        if maxheight != -1:
+            query += "&MaxHeight=%d" % maxheight
+
         all_artwork['Backdrop'] = self.get_backdrops(obj['Id'], obj['BackdropTags'] or [], query)
 
         for artwork in (obj['Tags'] or []):

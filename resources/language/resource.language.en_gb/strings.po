@@ -944,3 +944,7 @@ msgstr "Select the libraries to repair"
 msgctxt "#33200"
 msgid "Select the libraries to remove"
 msgstr "Select the libraries to remove"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "Max artwork resolution"

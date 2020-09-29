@@ -29,6 +29,7 @@
 		<setting label="33176" type="lsep" />
 		<setting label="30157" id="enableCoverArt" type="bool" default="true" />
 		<setting label="33116" id="compressArt" type="bool" default="false" />
+		<setting label="33201" id="maxArtResolution" type="enum" values="360|480|600|720|1080|Unlimited [default]" default="5" />
 		<setting id="enableMusic" visible="false" default="false" />
 	</category>
 	
