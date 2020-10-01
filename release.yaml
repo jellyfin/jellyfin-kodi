@@ -6,3 +6,30 @@ changelog: |
   - #385 Normalize path for os.mkdir
   - #387 Optimize music sync for large libraries
   - #392 Fix the pipeline. Again.
+
+build:
+  include:
+    - jellyfin_kodi/*
+    - resources/*
+    - default.py
+    - service.py
+    - context.py
+    - context_play.py
+    - addon.xml
+
+    - .config/*
+    - tests/*
+    - build.py
+    - requirements-dev.txt
+    - tox.ini
+    - .editorconfig
+    - .env
+
+    - README.md
+    - LICENSE.txt
+    - CONTRIBUTING.md
+
+  exclude:
+    - .gitignore
+    - "*.py[ocd]"
+    - "*/__pycache__"
