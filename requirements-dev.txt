@@ -13,3 +13,5 @@ flake8 >= 3.8
 flake8-import-order >= 0.18
 
 PyYAML >= 5.3
+click
+click-log

@@ -4,8 +4,15 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import os
 import zipfile
 from fnmatch import fnmatchcase as fnmatch
+import logging
 
 import yaml
+import click
+import click_log
+
+
+logger = logging.getLogger("build")
+click_log.basic_config(logger)
 
 
 def zip_items(file_name, items, base_path=None):
@@ -17,7 +24,7 @@ def zip_items(file_name, items, base_path=None):
 
     with zipfile.ZipFile(file_name, "w", zipfile.ZIP_DEFLATED) as z:
         for item, path, _pattern in items:
-            print(path)
+            logger.info(path)
             archive_path = os.path.join(base_path, path)
             if path not in ["."]:
                 z.write(item, archive_path)
@@ -33,12 +40,12 @@ def get_config(filename='release.yaml'):
 def match_item(item, include, exclude):
     for pattern in exclude:
         if fnmatch(item, pattern):
-            print('-', item, pattern)
+            logger.debug('Excluded: {!r} {!r}'.format(pattern, item))
             return False, pattern
 
     for pattern in include:
         if fnmatch(item, pattern):
-            print('+', item, pattern)
+            logger.debug('Included: {!r} {!r}'.format(pattern, item))
             return True, pattern
 
     return None, None
@@ -61,23 +68,34 @@ def get_items(include, exclude, basepath='.'):
                 yield file_path, normalized_file_path, pattern
 
 
-def main():
-    relpath = os.path.dirname(__file__) or '.'
+def build_filename(config, py3):
+    # type: (dict, bool) -> str
+    return "{}-{}+{}.zip".format(
+        config.get('id'),
+        config.get('version', '0.0.0'),
+        'py3' if py3 else 'py2'
+    )
 
-    config = get_config(os.path.join(relpath, 'release.yaml'))
-    build_config = config.get('build', {})
-    include = build_config.get('include', [])
-    exclude = build_config.get('exclude', [])
 
-    print("Relpath:", relpath)
-    print("Include:", include)
-    print("Exclude:", exclude)
-    print("Config:", config)
+@click.command()
+@click.option('-3/-2', '--py3/--py2', default=True, type=bool, help="Default is Python 3.")
+@click.option('--source', default='.', type=click.Path(exists=True, file_okay=False), help="Path to addon sources (current_dir).")
+@click.option('--output', default=None, type=click.Path(), help="Output file (current_dir/addon-version+py3.zip).")
+@click_log.simple_verbosity_option(logger)
+def main(py3, source, output):
+    config = get_config(os.path.join(source, 'release.yaml'))
+    config_build = config.get('build', {})
+    include = config_build.get('include', [])
+    exclude = config_build.get('exclude', [])
 
-    items = get_items(include, exclude, relpath)
+    if output is None:
+        output = build_filename(config, py3)
 
-    zip_file_name = zip_items('test.zip', items, base_path='plugin.video.jellyfin')
-    print(zip_file_name)
+    items = get_items(include, exclude, source)
+
+    zip_file_name = zip_items(output, items, base_path=config.get('id'))
+
+    click.echo(zip_file_name)
 
 
 if __name__ == "__main__":

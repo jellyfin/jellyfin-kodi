@@ -1,3 +1,4 @@
+id: 'plugin.video.jellyfin'
 version: '0.6.2'
 changelog: |
   - #373 Use correct filename for kodirepo command
@@ -31,5 +32,5 @@ build:
 
   exclude:
     - .gitignore
-    - "*.py[ocd]"
-    - "*/__pycache__"
+    - '*.py[ocd]'
+    - '*/__pycache__'
