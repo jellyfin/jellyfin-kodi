@@ -46,14 +46,16 @@ def create_addon_xml(config, py3=True, template='template.xml', output='addon.xm
     with open(template) as fh:
         soup = BeautifulSoup(fh, features='xml')
 
+    pyversion = 'py3' if py3 else 'py2'
+
     addon = soup.select_one('addon')
 
     addon['id'] = config.get('id')
     addon['name'] = config.get('name')
-    addon['version'] = config.get('version')
+    addon['version'] = "{}+{}".format(config.get('version'), pyversion)
     addon['provider-name'] = config.get('provider')
 
-    dependencies = config.get('dependencies', {}).get('py3' if py3 else 'py2')
+    dependencies = config.get('dependencies', {}).get(pyversion, [])
     xml_deps = addon.select_one('requires')  # type: Tag
 
     for dep in dependencies:

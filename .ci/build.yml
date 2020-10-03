@@ -10,37 +10,15 @@ steps:
     - checkout: self
       clean: true
 
-    - script: python3 -m pip install --user pyyaml
-      displayName: 'Install PyYaml'
+    - script: python3 -m pip install --user -r jellyfin-kodi/requirements-dev.txt
+      displayName: 'Install dev dependencies'
 
-    - script: python3 jellyfin-kodi/.config/generate_xml.py ${{ py_version }}
-      displayName: 'Create ${{ py_version }} addon.xml'
-
-    - task: CopyFiles@2
-      displayName: 'Create clean addon directory'
-      inputs:
-        sourceFolder: 'jellyfin-kodi'
-        cleanTargetFolder: true
-        contents: |
-          **/*
-          !.ci/*
-          !.config/*
-          !.git/**/*
-          !.github/*
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/plugin.video.jellyfin'
-
-    - task: ArchiveFiles@2
-      displayName: 'Create ${{ py_version }} zip file'
-      inputs:
-        rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/plugin.video.jellyfin'
-        includeRootFolder: True
-        archiveType: 'zip'
-        tarCompression: 'none'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/plugin.video.jellyfin-${{ py_version }}.zip'
+    - script: python3 jellyfin-kodi/build.py --${{ py_version }} --source=jellyfin-kodi --output=$(Build.ArtifactStagingDirectory)/plugin.video.jellyfin-${{ py_version }}.zip
+      displayName: 'Build ${{ py_version }} addon zip'
 
     - task: PublishPipelineArtifact@1
       displayName: 'Publish ${{ py_version }} artifact'
       inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)/plugin.video.jellyfin'
+        targetPath: '$(Build.ArtifactStagingDirectory)/plugin.video.jellyfin-${{ py_version }}.zip'
         artifactName: 'plugin.video.jellyfin-${{ py_version }}-$(Build.BuildNumber)'
 
