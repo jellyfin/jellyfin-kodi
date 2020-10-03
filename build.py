@@ -5,10 +5,12 @@ import os
 import zipfile
 from fnmatch import fnmatchcase as fnmatch
 import logging
+from datetime import datetime
 
 import yaml
 import click
 import click_log
+from bs4 import BeautifulSoup, Tag
 
 
 logger = logging.getLogger("build")
@@ -30,6 +32,42 @@ def zip_items(file_name, items, base_path=None):
                 z.write(item, archive_path)
 
         return file_name
+
+
+def format_changelog(version, changelog):
+    return 'v{addon_version} ({date}):\n{changelog}'.format(
+        addon_version=version,
+        date=datetime.today().strftime('%Y-%m-%d'),
+        changelog=changelog
+    )
+
+
+def create_addon_xml(config, py3=True, template='template.xml', output='addon.xml'):
+    with open(template) as fh:
+        soup = BeautifulSoup(fh, features='xml')
+
+    addon = soup.select_one('addon')
+
+    addon['id'] = config.get('id')
+    addon['name'] = config.get('name')
+    addon['version'] = config.get('version')
+    addon['provider-name'] = config.get('provider')
+
+    dependencies = config.get('dependencies', {}).get('py3' if py3 else 'py2')
+    xml_deps = addon.select_one('requires')  # type: Tag
+
+    for dep in dependencies:
+        tag = soup.new_tag('import', attrs=dep)
+        xml_deps.append(tag)
+
+    xml_news = addon.select_one("extension[point='xbmc.addon.metadata'] > news")  # type: Tag
+    xml_news.string = format_changelog(config.get('version'), config.get('changelog'))
+
+    soup.smooth()
+
+    with open(output, 'w', encoding='utf-8') as fh:
+        logging.debug(soup)
+        fh.write(soup.prettify())
 
 
 def get_config(filename='release.yaml'):
@@ -90,6 +128,13 @@ def main(py3, source, output):
 
     if output is None:
         output = build_filename(config, py3)
+
+    create_addon_xml(
+        config,
+        py3=py3,
+        template=os.path.join(source, 'template.xml'),
+        output=os.path.join(source, 'addon.xml')
+    )
 
     items = get_items(include, exclude, source)
 
