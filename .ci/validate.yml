@@ -1,0 +1,26 @@
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(python.version)'
+
+  - script: python -m pip install -r requirements-dev.txt
+    displayName: 'Install dev tools'
+
+  - script: |
+      rm flake8.output
+      flake8 . --statistics --output-file=flake8.output && echo "::set-output name=lint::ok" || echo "::set-output name=lint::error"
+      cat flake8.output | awk -F: '{ if ($0 ~ /^\./) { gsub(/^[ \t]+/,"",$4); print "::error file=" $1 ",line=" $2 ",col=" $3 "::" $4 } else { print $0 } }'
+    displayName: 'Run Linter'
+    failOnStderr: false
+
+  - script: |
+      rm ../test_results.xml
+      pytest --junitxml=../test_results.xml
+    displayName: 'Run Tests'
+    failOnStderr: false
+
+  - task: PublishTestResults@2
+    condition: succeededOrFailed()
+    inputs:
+      testResultsFiles: '../test_results.xml'
+      testRunTitle: 'Publish test results for Python $(python.version)'
