@@ -4,7 +4,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 #################################################################################################
 
 import os
-import shutil
 import xml.etree.ElementTree as etree
 
 from six.moves.urllib.parse import urlencode
