@@ -74,8 +74,28 @@ msgid "Enable enhanced artwork (i.e. cover art)"
 msgstr "Enable enhanced artwork (i.e. cover art)"
 
 msgctxt "#30160"
-msgid "Video quality"
-msgstr "Video quality"
+msgid "Max stream bitrate"
+msgstr "Max stream bitrate"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Preferred video codec"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Preferred audio codec"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Audio bitrate"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Audio max channels"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Allow burned subtitles"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
@@ -276,6 +296,14 @@ msgstr "Jump back on resume (in seconds)"
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
 msgstr "Transcode H265/HEVC"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Transcode MPEG2"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Transcode VC-1"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
@@ -613,8 +641,8 @@ msgid "Enable external subtitles"
 msgstr "Enable external subtitles"
 
 msgctxt "#33115"
-msgid "Adjust for remote connection"
-msgstr "Adjust for remote connection"
+msgid "Transcode options"
+msgstr "Transcode options"
 
 msgctxt "#33116"
 msgid "Compress artwork (reduces quality)"
