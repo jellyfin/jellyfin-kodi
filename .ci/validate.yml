@@ -7,20 +7,52 @@ steps:
     displayName: 'Install dev tools'
 
   - script: |
-      rm flake8.output
-      flake8 . --statistics --output-file=flake8.output && echo "::set-output name=lint::ok" || echo "::set-output name=lint::error"
-      cat flake8.output | awk -F: '{ if ($0 ~ /^\./) { gsub(/^[ \t]+/,"",$4); print "::error file=" $1 ",line=" $2 ",col=" $3 "::" $4 } else { print $0 } }'
+      # Azure pipelines: https://github.com/microsoft/azure-pipelines-tasks/blob/master/docs/authoring/commands.md
+      # GitHub actions: https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-commands-for-github-actions
+
+      rm -f flake8.output
+      flake8 . --statistics --output-file=flake8.output && {
+        echo "##vso[task.complete result=Succeeded;]"
+      } || {
+        echo "##vso[task.complete result=Failed;]"
+      }
+
+      cat flake8.output | awk -F: '{
+        if ($0 ~ /^\./) {
+          gsub(/^[ \t]+/,"",$4);
+          codesep=index($4, " ");
+          code=substr($4, 1, codesep-1);
+          msg=substr($4, codesep+1);
+          print "##vso[task.logissue type=error;sourcepath=" $1 ";linenumber=" $2 ";columnnumber=" $3 ";code=" code ";]" msg;
+        } else {
+          print $0
+        }
+      }'
     displayName: 'Run Linter'
     failOnStderr: false
 
   - script: |
-      rm ../test_results.xml
-      pytest --junitxml=../test_results.xml
+      rm -f test.xml coverage.xml
+      coverage run && {
+        echo "##vso[task.complete result=Succeeded;]"
+      } || {
+        echo "##vso[task.complete result=Failed;]"
+      }
+      coverage xml
+      coverage html
+      coverage report
     displayName: 'Run Tests'
     failOnStderr: false
+    condition: succeededOrFailed()
 
   - task: PublishTestResults@2
     condition: succeededOrFailed()
     inputs:
-      testResultsFiles: '../test_results.xml'
+      testResultsFiles: 'test.xml'
       testRunTitle: 'Publish test results for Python $(python.version)'
+
+  - task: PublishCodeCoverageResults@1
+    condition: succeededOrFailed()
+    inputs:
+      codeCoverageTool: 'cobertura'
+      summaryFileLocation: 'coverage.xml'
