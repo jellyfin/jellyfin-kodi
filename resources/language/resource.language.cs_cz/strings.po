@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-05-26 12:58+0000\n"
+"PO-Revision-Date: 2020-10-05 07:16+0000\n"
 "Last-Translator: Lukáš Kucharczyk <lukas@kucharczyk.xyz>\n"
 "Language-Team: Czech <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/cs/>\n"
@@ -944,3 +944,43 @@ msgstr "Povolit synchronizaci během přehrávání (může způsobit zpomalení
 msgctxt "#33161"
 msgid "Update password"
 msgstr "Aktualizovat heslo"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "Maximální rozlišení obrázků"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Možnosti překódování"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Překódovat VC-1"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Překódovat MPEG2"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Povolit vypálení titulků"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Maximální počet zvukových kanálů"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Datový tok audia"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Preferovaný audio kodek"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Preferovaný video kodek"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Maximální datový tok"
