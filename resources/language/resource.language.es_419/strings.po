@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-08-24 23:28+0000\n"
-"Last-Translator: WontTell <executor260@gmail.com>\n"
+"PO-Revision-Date: 2020-10-09 21:47+0000\n"
+"Last-Translator: Page Asgardius <hackerman@disroot.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.jellyfin.org/"
 "projects/jellyfin/jellyfin-kodi/es_419/>\n"
 "Language: es_419\n"
@@ -961,3 +961,39 @@ msgctxt "#33104"
 msgid "Find more info in the github wiki/Create-and-restore-from-backup."
 msgstr ""
 "Encuentra más información en GitHub wiki/Create-and-restore-from-backup."
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "Resolución máxima para carátulas"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Opciones de transcodificación"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Transcodificar VC-1"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Transcodificar MPEG2"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Tasa de bits de video"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Tasa de bits de audio"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Codec de audio preferido"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Codec de video preferido"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Tasa de bits máxima"
