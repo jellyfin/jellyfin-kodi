@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2020-10-09 23:10+0000\n"
+"PO-Revision-Date: 2020-10-10 00:18+0000\n"
 "Last-Translator: shakesac <miguel@drivewide.pt>\n"
 "Language-Team: Portuguese (Portugal) <https://translate.jellyfin.org/"
 "projects/jellyfin/jellyfin-kodi/pt_PT/>\n"
@@ -79,11 +79,11 @@ msgstr "Qualidade de Vídeo"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
-msgstr ""
+msgstr "Programas TV adicionados recentemente"
 
 msgctxt "#30171"
 msgid "In Progress TV Shows"
-msgstr ""
+msgstr "Programas TV em curso"
 
 msgctxt "#30174"
 msgid "Recently Added Movies"
@@ -119,19 +119,19 @@ msgstr "Episódios Favoritos"
 
 msgctxt "#30185"
 msgid "Boxsets"
-msgstr ""
+msgstr "Coleções"
 
 msgctxt "#30189"
 msgid "Unwatched Movies"
-msgstr ""
+msgstr "Filmes não vistos"
 
 msgctxt "#30229"
 msgid "Random Items"
-msgstr ""
+msgstr "Conteúdos Aleatórios"
 
 msgctxt "#30230"
 msgid "Recommended Items"
-msgstr ""
+msgstr "Conteúdo Recomendado"
 
 msgctxt "#30235"
 msgid "Interface"
@@ -139,31 +139,31 @@ msgstr "Interface"
 
 msgctxt "#30239"
 msgid "Reset local Kodi database"
-msgstr ""
+msgstr "Repor base de dados local do Kodi"
 
 msgctxt "#30249"
 msgid "Enable welcome message"
-msgstr ""
+msgstr "Ativar mensagem de boas-vindas"
 
 msgctxt "#30251"
 msgid "Recently added Home Videos"
-msgstr ""
+msgstr "Vídeos Caseiros adicionados recentemente"
 
 msgctxt "#30252"
 msgid "Recently added Photos"
-msgstr ""
+msgstr "Fotografias adicionadas recentemente"
 
 msgctxt "#30253"
 msgid "Favourite Home Videos"
-msgstr ""
+msgstr "Vídeos Caseiros favoritos"
 
 msgctxt "#30254"
 msgid "Favourite Photos"
-msgstr ""
+msgstr "Fotografias favoritas"
 
 msgctxt "#30255"
 msgid "Favourite Albums"
-msgstr ""
+msgstr "Álbuns favoritos"
 
 msgctxt "#30256"
 msgid "Recently added Music videos"
@@ -179,15 +179,15 @@ msgstr ""
 
 msgctxt "#30302"
 msgid "Movies"
-msgstr ""
+msgstr "Filmes"
 
 msgctxt "#30305"
 msgid "TV Shows"
-msgstr ""
+msgstr "Programas TV"
 
 msgctxt "#30401"
 msgid "Jellyfin options"
-msgstr ""
+msgstr "Opções do Jellyfin"
 
 msgctxt "#30402"
 msgid "Jellyfin transcode"
@@ -195,51 +195,52 @@ msgstr ""
 
 msgctxt "#30405"
 msgid "Add to favorites"
-msgstr ""
+msgstr "Adicionar aos favoritos"
 
 msgctxt "#30406"
 msgid "Remove from favorites"
-msgstr ""
+msgstr "Remover dos favoritos"
 
 msgctxt "#30408"
 msgid "Settings"
-msgstr ""
+msgstr "Definições"
 
 msgctxt "#30409"
 msgid "Delete from Jellyfin"
-msgstr ""
+msgstr "Remover do Jellyfin"
 
 msgctxt "#30410"
 msgid "Refresh this item"
-msgstr ""
+msgstr "Atualizar este item"
 
+#, fuzzy
 msgctxt "#30412"
 msgid "Transcode"
-msgstr ""
+msgstr "Transcode"
 
 msgctxt "#30500"
 msgid "Verify connection"
-msgstr ""
+msgstr "Verificar ligação"
 
 msgctxt "#30504"
 msgid "Use alternate device name"
-msgstr ""
+msgstr "Usar nome de dispositivo alternativo"
 
 msgctxt "#30506"
 msgid "Sync"
-msgstr ""
+msgstr "Sincronização"
 
 msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
-msgstr ""
+msgstr "Permitir notificação caso número de actualizações for superior a"
 
 msgctxt "#30509"
 msgid "Enable music library"
-msgstr ""
+msgstr "Ativar biblioteca de música"
 
 msgctxt "#30511"
 msgid "Playback mode"
-msgstr ""
+msgstr "Modo de reprodução"
 
 msgctxt "#30512"
 msgid "Enable artwork caching"
@@ -251,19 +252,19 @@ msgstr ""
 
 msgctxt "#30516"
 msgid "Playback"
-msgstr ""
+msgstr "Reprodução"
 
 msgctxt "#30517"
 msgid "Network credentials"
-msgstr ""
+msgstr "Credenciais de rede"
 
 msgctxt "#30518"
 msgid "Enable cinema mode"
-msgstr ""
+msgstr "Ativar modo de cinema"
 
 msgctxt "#30519"
 msgid "Ask to play trailers"
-msgstr ""
+msgstr "Pedir reprodução de trailers"
 
 msgctxt "#30520"
 msgid "Skip the delete confirmation (use at your own risk)"
@@ -271,11 +272,12 @@ msgstr ""
 
 msgctxt "#30521"
 msgid "Jump back on resume (in seconds)"
-msgstr ""
+msgstr "Atrasar ao resumir reprodução (em segundos)"
 
+#, fuzzy
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
-msgstr ""
+msgstr "Transcode H265/HEVC"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
@@ -283,19 +285,19 @@ msgstr ""
 
 msgctxt "#30528"
 msgid "Permanent users"
-msgstr ""
+msgstr "Utilizadores permanentes"
 
 msgctxt "#30529"
 msgid "Startup delay (in seconds)"
-msgstr ""
+msgstr "Atrasar arranque (em segundos)"
 
 msgctxt "#30530"
 msgid "Enable server restart message"
-msgstr ""
+msgstr "Ativar mensagem de reinício do servidor"
 
 msgctxt "#30531"
 msgid "Enable new content"
-msgstr ""
+msgstr "Ativar novo conteúdo"
 
 msgctxt "#30532"
 msgid "Duration of the video library pop up"
@@ -307,15 +309,15 @@ msgstr ""
 
 msgctxt "#30534"
 msgid "Notifications (in seconds)"
-msgstr ""
+msgstr "Notificações (em segundos)"
 
 msgctxt "#30535"
 msgid "Generate a new device Id"
-msgstr ""
+msgstr "Gerar novo ID do dispositivo"
 
 msgctxt "#30536"
 msgid "Allow the screensaver during syncs"
-msgstr ""
+msgstr "Permitir protetor de ecrã durante sincronia"
 
 msgctxt "#30537"
 msgid "Transcode Hi10P"
@@ -331,7 +333,7 @@ msgstr ""
 
 msgctxt "#30543"
 msgid "Username or email"
-msgstr ""
+msgstr "Nome de utilizador ou email"
 
 msgctxt "#30545"
 msgid "Enable server offline"
@@ -343,7 +345,7 @@ msgstr ""
 
 msgctxt "#30602"
 msgid "Password"
-msgstr ""
+msgstr "Senha"
 
 msgctxt "#30605"
 msgid "Sign in"
@@ -351,27 +353,27 @@ msgstr ""
 
 msgctxt "#30606"
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 msgctxt "#30607"
 msgid "Select main server"
-msgstr ""
+msgstr "Selecionar servidor principal"
 
 msgctxt "#30608"
 msgid "Username or password cannot be empty"
-msgstr ""
+msgstr "Nome de utilizador ou email não pode estar vazio"
 
 msgctxt "#30609"
 msgid "Unable to connect to the selected server"
-msgstr ""
+msgstr "Não foi possível ligar ao servidor selecionado"
 
 msgctxt "#30610"
 msgid "Connect to"
-msgstr ""
+msgstr "Ligar a"
 
 msgctxt "#30611"
 msgid "Manually add server"
-msgstr ""
+msgstr "Adicionar servidor manualmente"
 
 msgctxt "#30612"
 msgid "Please sign in"
@@ -383,7 +385,7 @@ msgstr ""
 
 msgctxt "#30614"
 msgid "Connect to server"
-msgstr ""
+msgstr "Ligar a servidor"
 
 msgctxt "#30615"
 msgid "Host"
@@ -391,43 +393,43 @@ msgstr ""
 
 msgctxt "#30616"
 msgid "Connect"
-msgstr ""
+msgstr "Ligar"
 
 msgctxt "#30617"
 msgid "Server or port cannot be empty"
-msgstr ""
+msgstr "Servidor ou porta não pode estar vazio"
 
 msgctxt "#33000"
 msgid "Welcome"
-msgstr ""
+msgstr "Bem-vindo"
 
 msgctxt "#33006"
 msgid "Server is restarting"
-msgstr ""
+msgstr "O servidor está a reiniciar"
 
 msgctxt "#33009"
 msgid "Invalid username or password"
-msgstr ""
+msgstr "Nome de utilizador ou senha inválidos"
 
 msgctxt "#33013"
 msgid "Choose the audio stream"
-msgstr ""
+msgstr "Escolher áudio"
 
 msgctxt "#33014"
 msgid "Choose the subtitles stream"
-msgstr ""
+msgstr "Escolher legendas"
 
 msgctxt "#33015"
 msgid "Delete file from Jellyfin?"
-msgstr ""
+msgstr "Eliminar ficheiro do Jellyfin?"
 
 msgctxt "#33016"
 msgid "Play trailers?"
-msgstr ""
+msgstr "Reproduzir trailers?"
 
 msgctxt "#33018"
 msgid "Gathering boxsets"
-msgstr ""
+msgstr "Reunir coleções"
 
 msgctxt "#33021"
 msgid "Gathering:"
@@ -435,31 +437,34 @@ msgstr ""
 
 msgctxt "#33025"
 msgid "Completed in:"
-msgstr ""
+msgstr "Terminado em:"
 
 msgctxt "#33033"
 msgid "A new device Id has been generated. Kodi will now restart."
-msgstr ""
+msgstr "Foi gerado um novo ID do dispositivo. Kodi irá reiniciar agora."
 
 msgctxt "#33035"
 msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
 msgstr ""
+"Cuidado! Caso escolha o Modo Nativo, algumas funcionalidades do Jellyfin "
+"estarão ausentes como: Jellyfin Modo de Cinema, reprodução direta/opções de "
+"transcodificação e controlo de acesso parental."
 
 msgctxt "#33036"
 msgid "Add-on (default)"
-msgstr ""
+msgstr "Add-on (padrão)"
 
 msgctxt "#33037"
 msgid "Native (direct paths)"
-msgstr ""
+msgstr "Nativo (caminhos diretos)"
 
 msgctxt "#33039"
 msgid "Enable music library?"
-msgstr ""
+msgstr "Ativar biblioteca de música?"
 
 msgctxt "#33047"
 msgid "Kodi can't locate file:"
-msgstr ""
+msgstr "O Kodi não consegue localizar:"
 
 msgctxt "#33048"
 msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
@@ -467,11 +472,11 @@ msgstr ""
 
 msgctxt "#33049"
 msgid "New"
-msgstr ""
+msgstr "Novo"
 
 msgctxt "#33054"
 msgid "Add user to session"
-msgstr ""
+msgstr "Adicionar utilizador à sessão"
 
 msgctxt "#33058"
 msgid "Perform local database reset"
@@ -483,23 +488,23 @@ msgstr ""
 
 msgctxt "#33061"
 msgid "Add/Remove user from the session"
-msgstr ""
+msgstr "Adicionar/Retirar utilizador da sessão"
 
 msgctxt "#33062"
 msgid "Add user"
-msgstr ""
+msgstr "Adicionar utilizador"
 
 msgctxt "#33063"
 msgid "Remove user"
-msgstr ""
+msgstr "Remover utilizador"
 
 msgctxt "#33064"
 msgid "Remove user from the session"
-msgstr ""
+msgstr "Retirar utilizador da sessão"
 
 msgctxt "#33074"
 msgid "Are you sure you want to reset your local Kodi database?"
-msgstr ""
+msgstr "Tem a certeza que deseja repor a sua base de dados local do Kodi?"
 
 msgctxt "#33086"
 msgid "Remove all cached artwork?"
@@ -507,31 +512,33 @@ msgstr ""
 
 msgctxt "#33087"
 msgid "Reset all Jellyfin add-on settings?"
-msgstr ""
+msgstr "Repor todas as definições do add-on Jellyfin?"
 
 msgctxt "#33088"
 msgid "Database reset has completed, Kodi will now restart to apply the changes."
 msgstr ""
+"Reposição da base de dados terminou, o Kodi irá reiniciar para aplicar as "
+"alterações."
 
 msgctxt "#33089"
 msgid "Enter folder name for backup"
-msgstr ""
+msgstr "Insira o nome da pasta para o backup"
 
 msgctxt "#33090"
 msgid "Replace existing backup?"
-msgstr ""
+msgstr "Substituir backup existente?"
 
 msgctxt "#33091"
 msgid "Created backup at:"
-msgstr ""
+msgstr "Backup criado a:"
 
 msgctxt "#33092"
 msgid "Create a backup"
-msgstr ""
+msgstr "Criar backup"
 
 msgctxt "#33093"
 msgid "Backup folder"
-msgstr ""
+msgstr "Backup pasta"
 
 msgctxt "#33097"
 msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
@@ -539,35 +546,41 @@ msgstr ""
 
 msgctxt "#33098"
 msgid "Refresh boxsets"
-msgstr ""
+msgstr "Atualizar coleções"
 
 msgctxt "#33099"
 msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
 msgstr ""
+"Instale o plugin Kodi Sync Queue no servidor para atualizar automaticamente "
+"alterações na biblioteca do Jellyfin ao iniciar. Esta definição pode ser "
+"encontrada em Definições > Sincronização > Ativar Kodi Sync Queue."
 
 msgctxt "#33101"
 msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
 msgstr ""
+"Visto estar a usar o modo de reprodução nativa com a música ativada, deseja "
+"importar as avaliações dos ficheiros?"
 
 msgctxt "#33102"
 msgid "Resume the previous sync?"
-msgstr ""
+msgstr "Resumir sincronismo anterior?"
 
 msgctxt "#33104"
 msgid "Find more info in the github wiki/Create-and-restore-from-backup."
-msgstr ""
+msgstr "Mais informação no Github wiki/Create-and-restore-from-backup."
 
 msgctxt "#33105"
 msgid "Enable the context menu"
-msgstr ""
+msgstr "Ativar menu de contexto"
 
 msgctxt "#33106"
 msgid "Enable the option to transcode"
-msgstr ""
+msgstr "Ativar opção de transcodificação"
 
 msgctxt "#33107"
 msgid "Users added to the session (no space between users). (eg username,username2)"
 msgstr ""
+"Utilizadores adicionados à sessão (sem espaços) (ex.: utilizador,utilizador2)"
 
 msgctxt "#33108"
 msgid "Notifications are delayed during video playback (except live tv)."
@@ -900,3 +913,20 @@ msgstr "Selecione as bibliotecas a reparar"
 msgctxt "#33198"
 msgid "Select the libraries to update"
 msgstr "Selecione as bibliotecas a atualizar"
+
+#, fuzzy
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Transcode MPEG2"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Permitir legendas embutidas no vídeo"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Codec de áudio preferencial"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Codec de vídeo preferencial"
