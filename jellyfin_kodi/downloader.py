@@ -281,7 +281,13 @@ def _get_items(query, server_id=None):
         # threads. Dont be a dummy.Pool, be a ThreadPoolExecutor
         p = concurrent.futures.ThreadPoolExecutor(DTHREADS)
 
-        results = p.map(lambda params: _get(url, params, server_id=server_id), query_params)
+        thread_buffer = threading.Semaphore(2 * LIMIT * DTHREADS)
+
+        def get_wrapper(params):
+            thread_buffer.acquire()
+            return _get(url, params, server_id=server_id)
+
+        results = p.map(get_wrapper, query_params)
 
         for params, result in zip(query_params, results):
             query['params'] = params
@@ -302,6 +308,7 @@ def _get_items(query, server_id=None):
             items['RestorePoint'] = query
             yield items
             del items['Items'][:]
+            thread_buffer.release()
 
 
 class GetItemWorker(threading.Thread):
