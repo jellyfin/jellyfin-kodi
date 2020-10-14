@@ -183,6 +183,7 @@ def get_item_count(parent_id, item_type=None, params=None):
 
     return result.get('TotalRecordCount', 1)
 
+
 def get_items(parent_id, item_type=None, basic=False, params=None):
 
     query = {
