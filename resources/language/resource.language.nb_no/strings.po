@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2020-06-04 21:31+0000\n"
-"Last-Translator: Marius Lindvall <marius@varden.info>\n"
+"PO-Revision-Date: 2020-10-16 05:02+0000\n"
+"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/nb_NO/>\n"
 "Language: nb_no\n"
@@ -955,3 +955,47 @@ msgstr "Velg bibliotekene du vil fjerne"
 msgctxt "#33161"
 msgid "Update password"
 msgstr "Endre passord"
+
+#, fuzzy
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "Maksimal omslagskunstoppløsning"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Transkodingsinnstillinger"
+
+#, fuzzy
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Transkod VC-1"
+
+#, fuzzy
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Transkod MPEG2"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Tillat brente undertekster"
+
+#, fuzzy
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Maksimalt antall lydkanaler"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Lyd-bitrate"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Foretrukket lydkodek"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Foretrukket videokodek"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Maksimal strøm-bitrate"
