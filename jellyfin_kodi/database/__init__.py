@@ -36,11 +36,11 @@ class Database(object):
     discovered = False
     discovered_file = None
 
-    def __init__(self, file=None, commit_close=True):
+    def __init__(self, db_file=None, commit_close=True):
 
         ''' file: jellyfin, texture, music, video, :memory: or path to file
         '''
-        self.db_file = file or "video"
+        self.db_file = db_file or "video"
         self.commit_close = commit_close
 
     def __enter__(self):
@@ -112,27 +112,27 @@ class Database(object):
         }
         database = types[database]
         dirs, files = xbmcvfs.listdir(databases)
-        modified = {'file': None, 'time': 0}
+        modified = {'db_file': None, 'time': 0}
 
-        for file in reversed(files):
+        for db_file in reversed(files):
 
-            if (file.startswith(database) and not file.endswith('-wal') and not file.endswith('-shm') and not file.endswith('db-journal')):
+            if (db_file.startswith(database) and not db_file.endswith('-wal') and not db_file.endswith('-shm') and not db_file.endswith('db-journal')):
 
-                st = xbmcvfs.Stat(databases + file)
+                st = xbmcvfs.Stat(databases + db_file)
                 modified_int = st.st_mtime()
-                LOG.debug("Database detected: %s time: %s", file, modified_int)
+                LOG.debug("Database detected: %s time: %s", db_file, modified_int)
 
                 if modified_int > modified['time']:
 
                     modified['time'] = modified_int
-                    modified['file'] = file
+                    modified['db_file'] = db_file
 
         LOG.debug("Discovered database: %s", modified)
-        self.discovered_file = modified['file']
+        self.discovered_file = modified['db_file']
 
-        return xbmc.translatePath("special://database/%s" % modified['file'])
+        return xbmc.translatePath("special://database/%s" % modified['db_file'])
 
-    def _sql(self, file):
+    def _sql(self, db_file):
 
         ''' Get the database path based on the file objects/obj_map.json
             Compatible check, in the event multiple db version are supported with the same Kodi version.
@@ -140,41 +140,18 @@ class Database(object):
         '''
         databases = obj.Objects().objects
 
-        if file not in ('video', 'music', 'texture') or databases.get('database_set%s' % file):
-            return self._get_database(databases[file], True)
+        if db_file not in ('video', 'music', 'texture') or databases.get('database_set%s' % db_file):
+            return self._get_database(databases[db_file], True)
 
-        discovered = self._discover_database(file) if not databases.get('database_set%s' % file) else None
+        discovered = self._discover_database(db_file) if not databases.get('database_set%s' % db_file) else None
 
-        try:
-            loaded = self._get_database(databases[file]) if file in databases else file
-        except Exception as error:
-            LOG.exception(error)
+        databases[db_file] = discovered
+        self.discovered = True
 
-            for i in range(1, 10):
-                alt_file = "%s-%s" % (file, i)
+        databases['database_set%s' % db_file] = True
+        LOG.info("Database locked in: %s", databases[db_file])
 
-                try:
-                    loaded = self._get_database(databases[alt_file])
-
-                    break
-                except KeyError:  # No other db options
-                    loaded = None
-
-                    break
-                except Exception as error:
-                    LOG.exception(error)
-
-        if discovered and discovered != loaded:
-
-            databases[file] = discovered
-            self.discovered = True
-        else:
-            databases[file] = loaded
-
-        databases['database_set%s' % file] = True
-        LOG.info("Database locked in: %s", databases[file])
-
-        return databases[file]
+        return databases[db_file]
 
     def __exit__(self, exc_type, exc_val, exc_tb):
 
