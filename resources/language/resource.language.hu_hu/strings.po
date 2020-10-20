@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-06-08 08:48+0000\n"
-"Last-Translator: Adam Bokor <bokoradam112@gmail.com>\n"
+"PO-Revision-Date: 2020-10-20 08:26+0000\n"
+"Last-Translator: Ákos Papp <pakosbotond@gmail.com>\n"
 "Language-Team: Hungarian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hu/>\n"
 "Language: hu_hu\n"
@@ -955,3 +955,23 @@ msgstr "Kedvenc műsorok"
 msgctxt "#33161"
 msgid "Update password"
 msgstr "Jelszó frissítése"
+
+#, fuzzy
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Átkódolási lehetőségek"
+
+#, fuzzy
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Égetett feliratok engedélyezése"
+
+#, fuzzy
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Előnyben részesített audiókodek"
+
+#, fuzzy
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Előnyben részesített videokodek"
