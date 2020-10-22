@@ -1,2 +1,84 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr ""
+"PO-Revision-Date: 2020-10-22 18:47+0000\n"
+"Last-Translator: hoanghuy309 <hoanghuy309@gmail.com>\n"
+"Language-Team: Vietnamese <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/vi/>\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 3.11.2\n"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Chương Trình TV Thêm Gần Đây"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Kênh âm thanh tối đa"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Tốc độ bit âm thanh"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Mã hóa âm thanh ưa thích"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Mã hóa video ưa thích"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Tốc độ bit tối đa của luồng phát"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Đối Với Phim"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Đối với các tập"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Đề nghị xóa sau khi phát xong"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Xác nhận xóa tệp"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Tên Đăng Nhập"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Nâng cao"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Tên thiết bị"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Phương thức đăng nhập"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "Bắt buộc phát qua HTTP"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Tên máy chủ"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Địa chỉ máy chủ"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Jellyfin dành cho Kodi"
