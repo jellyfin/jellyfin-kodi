@@ -1,8 +1,11 @@
-version: '0.6.2'
+version: '0.6.3'
 changelog: |
-  - #373 Use correct filename for kodirepo command
-  - #382 Handle empty XMLs in profile video
-  - #384 Add BDMV and DVD Rip support in TV Shows
-  - #385 Normalize path for os.mkdir
-  - #387 Optimize music sync for large libraries
-  - #392 Fix the pipeline. Again.
+  - #395 Add more transcoding options
+  - #398 Fix removed log level in Kodi 19
+  - #399 Fix extracted subtitle delivery for transcodes
+  - #401 Add an option to reduce max artwork resolution
+  - #403 Fix flake8 lints
+  - #406 Add linting to azure pipeline
+  - #408 Improve validation pipeline
+  - #412 Fix db error messages on startup
+  - #413 Fix need for restart/reboot for sync settings changes to take effect
