@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-10-23 11:59+0000\n"
+"PO-Revision-Date: 2020-10-24 05:36+0000\n"
 "Last-Translator: hoanghuy309 <hoanghuy309@gmail.com>\n"
 "Language-Team: Vietnamese <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/vi/>\n"
@@ -85,7 +85,7 @@ msgstr "Jellyfin dành cho Kodi"
 
 msgctxt "#30532"
 msgid "Duration of the video library pop up"
-msgstr "Thời lượng của thư viện video cửa sổ bật lên"
+msgstr "Thời gian cửa sổ bật lên của thư viện video"
 
 msgctxt "#30531"
 msgid "Enable new content"
@@ -302,3 +302,55 @@ msgstr "Phim Đã Thêm Gần Đây"
 msgctxt "#30171"
 msgid "In Progress TV Shows"
 msgstr "Chương Trình TV Đang Chiếu"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "Mật khẩu"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "Hiển thị thông báo"
+
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "Bật tính năng máy chủ ngoại tuyến"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "Tên đăng nhập hoặc thư điện tử"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "Đăng nhập thủ công"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "Đăng Nhập"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "Chuyển mã Hi10P"
+
+msgctxt "#30536"
+msgid "Allow the screensaver during syncs"
+msgstr "Cho phép trình bảo vệ màn hình trong khi đồng bộ"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "Tạo mã ID thiết bị mới"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Bật tính năng ảnh bìa minh họa nâng cao (ví dụ: ảnh kìa khổ rộng )"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "Thông báo (tính bằng giây)"
+
+msgctxt "#30533"
+msgid "Duration of the music library pop up"
+msgstr "Thời gian cửa sổ bật lên của thư viện nhạc"
+
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "Bật tính năng bộ nhớ đệm cho ảnh bìa minh họa"
