@@ -509,8 +509,13 @@ class PlayUtils(object):
         mapping = {}
         kodi = 0
 
+        server_settings = TheVoid('GetTranscodeOptions', {'ServerId': self.info['ServerId']}).get()
+
         for stream in source['MediaStreams']:
-            if stream['Type'] == 'Subtitle' and stream['DeliveryMethod'] == 'External':
+            if stream['SupportsExternalStream'] and stream['Type'] == 'Subtitle' and stream['DeliveryMethod'] == 'External':
+                if not stream['IsExternal'] and not server_settings['EnableSubtitleExtraction']:
+                    continue
+
                 index = stream['Index']
                 url = self.get_subtitles(source, stream, index)
 
