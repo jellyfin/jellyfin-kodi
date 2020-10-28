@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-10-24 05:36+0000\n"
+"PO-Revision-Date: 2020-10-28 14:07+0000\n"
 "Last-Translator: hoanghuy309 <hoanghuy309@gmail.com>\n"
 "Language-Team: Vietnamese <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/vi/>\n"
@@ -354,3 +354,250 @@ msgstr "Thời gian cửa sổ bật lên của thư viện nhạc"
 msgctxt "#30512"
 msgid "Enable artwork caching"
 msgstr "Bật tính năng bộ nhớ đệm cho ảnh bìa minh họa"
+
+msgctxt "#33111"
+msgid "Reset the local database to apply the playback mode change."
+msgstr "Đặt lại cơ sở dữ liệu cục bộ để áp dụng thay đổi chế độ phát lại."
+
+msgctxt "#33110"
+msgid "Restart Kodi to take effect."
+msgstr "Khởi động lại Kodi để có hiệu lực."
+
+msgctxt "#33109"
+msgid "Plugin"
+msgstr "Plugin"
+
+msgctxt "#33108"
+msgid "Notifications are delayed during video playback (except live tv)."
+msgstr ""
+"Thông báo bị trễ trong khi phát lại video (ngoại trừ truyền hình trực tiếp)."
+
+msgctxt "#33107"
+msgid "Users added to the session (no space between users). (eg username,username2)"
+msgstr ""
+"Người dùng được thêm vào phiên (không có khoảng trống giữa những người dùng) "
+"(ví dụ: username,username2)"
+
+msgctxt "#33106"
+msgid "Enable the option to transcode"
+msgstr "Bật tùy chọn để chuyển mã"
+
+msgctxt "#33105"
+msgid "Enable the context menu"
+msgstr "Bật menu ngữ cảnh"
+
+msgctxt "#33104"
+msgid "Find more info in the github wiki/Create-and-restore-from-backup."
+msgstr "Tìm thêm thông tin trong GitHub wiki / Create-and-restore-from-backup."
+
+msgctxt "#33102"
+msgid "Resume the previous sync?"
+msgstr "Tiếp tục đồng bộ hóa trước đó?"
+
+msgctxt "#33101"
+msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
+msgstr ""
+"Vì bạn đang sử dụng chế độ phát lại gốc có bật nhạc, bạn có muốn nhập xếp "
+"hạng nhạc từ tệp không?"
+
+msgctxt "#33099"
+msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
+msgstr ""
+"Cài đặt plugin máy chủ Kodi Sync Queue để tự động áp dụng các bản cập nhật "
+"thư viện Jellyfin khi khởi động. Bạn có thể tìm thấy cài đặt này trong cài "
+"đặt tiện ích bổ sung> tùy chọn đồng bộ hóa> Bật hàng đợi đồng bộ hóa Kodi."
+
+msgctxt "#33097"
+msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
+msgstr ""
+"Quan trọng, phần mềm dọn dẹp đã bị xóa trong cài đặt nâng cao của bạn để "
+"tránh xung đột với Jellyfin cho Kodi. Kodi sẽ khởi động lại ngay bây giờ."
+
+msgctxt "#33093"
+msgid "Backup folder"
+msgstr "Thư mục sao lưu"
+
+msgctxt "#33092"
+msgid "Create a backup"
+msgstr "Tạo một bản sao lưu"
+
+msgctxt "#33091"
+msgid "Created backup at:"
+msgstr "Đã tạo bản sao lưu tại:"
+
+msgctxt "#33090"
+msgid "Replace existing backup?"
+msgstr "Thay thế bản sao lưu hiện có?"
+
+msgctxt "#33089"
+msgid "Enter folder name for backup"
+msgstr "Nhập tên thư mục để sao lưu"
+
+msgctxt "#33088"
+msgid "Database reset has completed, Kodi will now restart to apply the changes."
+msgstr ""
+"Đặt lại cơ sở dữ liệu đã hoàn tất, Kodi bây giờ sẽ khởi động lại để áp dụng "
+"các thay đổi."
+
+msgctxt "#33087"
+msgid "Reset all Jellyfin add-on settings?"
+msgstr "Đặt lại tất cả cài đặt tiện ích bổ sung Jellyfin?"
+
+msgctxt "#33086"
+msgid "Remove all cached artwork?"
+msgstr "Xóa tất cả ảnh bìa minh họa đã lưu trong bộ nhớ cache?"
+
+msgctxt "#33074"
+msgid "Are you sure you want to reset your local Kodi database?"
+msgstr "Bạn có chắc chắn muốn đặt lại cơ sở dữ liệu Kodi cục bộ của mình không?"
+
+msgctxt "#33064"
+msgid "Remove user from the session"
+msgstr "Xóa người dùng khỏi phiên"
+
+msgctxt "#33063"
+msgid "Remove user"
+msgstr "Xóa người dùng"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "Thêm người dùng"
+
+msgctxt "#33061"
+msgid "Add/Remove user from the session"
+msgstr "Thêm / Xóa người dùng khỏi phiên"
+
+msgctxt "#33060"
+msgid "Sync theme media"
+msgstr "Đồng bộ hóa chủ đề phương tiện"
+
+msgctxt "#33058"
+msgid "Perform local database reset"
+msgstr "Thực hiện thiết lập lại cơ sở dữ liệu cục bộ"
+
+msgctxt "#33054"
+msgid "Add user to session"
+msgstr "Thêm người dùng vào phiên"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "Mới"
+
+msgctxt "#33048"
+msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
+msgstr ""
+"Bạn có thể cần phải xác minh thông tin đăng nhập mạng của mình trong cài đặt "
+"tiện ích bổ sung hoặc sử dụng thay thế đường dẫn Jellyfin để định dạng đường "
+"dẫn của bạn một cách chính xác (bảng điều khiển Jellyfin> thư viện). Dừng "
+"đồng bộ hóa?"
+
+msgctxt "#33047"
+msgid "Kodi can't locate file:"
+msgstr "Kodi không thể định vị tệp:"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "Bật thư viện nhạc?"
+
+msgctxt "#33037"
+msgid "Native (direct paths)"
+msgstr "Gốc (đường dẫn trực tiếp)"
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "Tiện ích bổ sung (mặc định)"
+
+msgctxt "#33035"
+msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
+msgstr ""
+"Thận trọng! Nếu bạn chọn chế độ Gốc, một số tính năng nhất định của Jellyfin "
+"sẽ bị thiếu, chẳng hạn như: chế độ rạp chiếu phim Jellyfin, các tùy chọn "
+"phát trực tiếp / chuyển mã và lịch truy cập của phụ huynh."
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr "ID thiết bị mới đã được tạo. Kodi bây giờ sẽ khởi động lại."
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "Hoàn thành trong:"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "Phát đoạn giới thiệu?"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "Xóa tệp khỏi Jellyfin?"
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr "Chọn luồng phụ đề"
+
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr "Chọn luồng phát âm thanh"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "Sai tên đăng nhập hoặc mật khẩu"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "Máy chủ đang khởi động lại"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "Chào mừng"
+
+msgctxt "#30617"
+msgid "Server or port cannot be empty"
+msgstr "Máy chủ hoặc cổng không được để trống"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "Kết nối"
+
+msgctxt "#30615"
+msgid "Host"
+msgstr "Máy chủ"
+
+msgctxt "#30614"
+msgid "Connect to server"
+msgstr "Kết nối với máy chủ"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "Thay đổi người dùng Kết nối Jellyfin"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "Hãy đăng nhập"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "Thêm máy chủ theo cách thủ công"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "Kết nối với"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "Không thể kết nối với máy chủ đã chọn"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "Tên người dùng hoặc mật khẩu không được để trống"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "Chọn máy chủ chính"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "Huỷ bỏ"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "Đăng nhập"
