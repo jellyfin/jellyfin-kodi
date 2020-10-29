@@ -11,12 +11,13 @@ from six.moves.urllib.parse import parse_qsl, urlencode
 from kodi_six import xbmc, xbmcvfs, xbmcgui, xbmcplugin, xbmcaddon
 
 import client
+import downloader
 from database import reset, get_sync, Database, jellyfin_db, get_credentials
 from objects import Objects, Actions
-from downloader import TheVoid
 from helper import translate, event, settings, window, dialog, api, JSONRPC
 from helper.utils import JsonDebugPrinter
 from helper import LazyLogger
+from jellyfin import Jellyfin
 
 #################################################################################################
 
@@ -49,6 +50,8 @@ class Events(object):
 
         mode = params.get('mode')
         server = params.get('server')
+        jellyfin_client = Jellyfin(server).get_client()
+        api_client = jellyfin_client.jellyfin
 
         if server == 'None':
             server = None
@@ -69,12 +72,16 @@ class Events(object):
 
         elif mode == 'play':
 
-            item = TheVoid('GetItem', {'Id': params['id'], 'ServerId': server}).get()
+            item = api_client.get_item(params['id'])
             item["resumePlayback"] = sys.argv[3].split(":")[1] == "true"
             Actions(server).play(item, params.get('dbid'), params.get('transcode') == 'true', playlist=params.get('playlist') == 'true')
 
         elif mode == 'playlist':
-            event('PlayPlaylist', {'Id': params['id'], 'ServerId': server})
+            api_client.post_session(jellyfin_client.config.data['app.session'], "Playing", {
+                'PlayCommand': "PlayNow",
+                'ItemIds': params['id'],
+                'StartPositionTicks': 0
+            })
         elif mode == 'deviceid':
             client.reset_device_id()
         elif mode == 'reset':
@@ -253,6 +260,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
             return
 
     folder = folder.lower() if folder else None
+    api_client = Jellyfin(server_id).get_client().jellyfin
 
     if folder is None and media in ('homevideos', 'movies', 'books', 'audiobooks'):
         return browse_subfolders(media, view_id, server_id)
@@ -262,7 +270,7 @@ def browse(media, view_id=None, folder=None, server_id=None):
 
     if view_id:
 
-        view = TheVoid('GetItem', {'ServerId': server_id, 'Id': view_id}).get()
+        view = api_client.get_item(view_id)
         xbmcplugin.setPluginCategory(PROCESS_HANDLE, view['Name'])
 
     content_type = "files"
@@ -277,47 +285,45 @@ def browse(media, view_id=None, folder=None, server_id=None):
         content_type = "artists"
 
     if folder == 'recentlyadded':
-        listing = TheVoid('RecentlyAdded', {'Id': view_id, 'ServerId': server_id}).get()
+        listing = api_client.get_recently_added(None, view_id, None)
     elif folder == 'genres':
-        listing = TheVoid('Genres', {'Id': view_id, 'ServerId': server_id}).get()
+        listing = api_client.get_genres(view_id)
     elif media == 'livetv':
-        listing = TheVoid('LiveTV', {'Id': view_id, 'ServerId': server_id}).get()
+        listing = api_client.get_channels()
     elif folder == 'unwatched':
-        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Filters': ['IsUnplayed']}).get()
+        listing = downloader.get_filtered_section(view_id, None, None, None, None, None, ['IsUnplayed'], None, server_id)
     elif folder == 'favorite':
-        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Filters': ['IsFavorite']}).get()
+        listing = downloader.get_filtered_section(view_id, None, None, None, None, None, ['IsFavorite'], None, server_id)
     elif folder == 'inprogress':
-        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Filters': ['IsResumable']}).get()
+        listing = downloader.get_filtered_section(view_id, None, None, None, None, None, ['IsResumable'], None, server_id)
     elif folder == 'boxsets':
-        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Media': get_media_type('boxsets'), 'Recursive': True}).get()
+        listing = downloader.get_filtered_section(view_id, get_media_type('boxsets'), None, True, None, None, None, None, server_id)
     elif folder == 'random':
-        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Media': get_media_type(content_type), 'Sort': "Random", 'Limit': 25, 'Recursive': True}).get()
+        listing = downloader.get_filtered_section(view_id, get_media_type(content_type), 25, True, "Random", None, None, None, server_id)
     elif (folder or "").startswith('firstletter-'):
-        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Media': get_media_type(content_type), 'Params': {'NameStartsWith': folder.split('-')[1]}}).get()
+        listing = downloader.get_filtered_section(view_id, get_media_type(content_type), None, None, None, None, None, {'NameStartsWith': folder.split('-')[1]}, server_id)
     elif (folder or "").startswith('genres-'):
-        listing = TheVoid('Browse', {'Id': view_id, 'ServerId': server_id, 'Media': get_media_type(content_type), 'Params': {'GenreIds': folder.split('-')[1]}}).get()
+        listing = downloader.get_filtered_section(view_id, get_media_type(content_type), None, None, None, None, None, {'GenreIds': folder.split('-')[1]}, server_id)
     elif folder == 'favepisodes':
-        listing = TheVoid('Browse', {'Media': get_media_type(content_type), 'ServerId': server_id, 'Limit': 25, 'Filters': ['IsFavorite']}).get()
+        listing = downloader.get_filtered_section(None, get_media_type(content_type), 25, None, None, None, ['IsFavorite'], None, server_id)
     elif folder and media == 'playlists':
-        listing = TheVoid('Browse', {'Id': folder, 'ServerId': server_id, 'Recursive': False, 'Sort': 'None'}).get()
+        listing = downloader.get_filtered_section(folder, get_media_type(content_type), None, False, 'None', None, None, None, server_id)
     elif media == 'homevideos':
-        listing = TheVoid('Browse', {'Id': folder or view_id, 'Media': get_media_type(content_type), 'ServerId': server_id, 'Recursive': False}).get()
-    elif media == 'movies':
-        listing = TheVoid('Browse', {'Id': folder or view_id, 'Media': get_media_type(content_type), 'ServerId': server_id, 'Recursive': True}).get()
+        listing = downloader.get_filtered_section(folder or view_id, get_media_type(content_type), None, False, None, None, None, None, server_id)
+    elif media in ['movies', 'episodes']:
+        listing = downloader.get_filtered_section(folder or view_id, get_media_type(content_type), None, True, None, None, None, None, server_id)
     elif media in ('boxset', 'library'):
-        listing = TheVoid('Browse', {'Id': folder or view_id, 'ServerId': server_id, 'Recursive': True}).get()
-    elif media == 'episodes':
-        listing = TheVoid('Browse', {'Id': folder or view_id, 'Media': get_media_type(content_type), 'ServerId': server_id, 'Recursive': True}).get()
+        listing = downloader.get_filtered_section(folder or view_id, None, None, True, None, None, None, None, server_id)
     elif media == 'boxsets':
-        listing = TheVoid('Browse', {'Id': folder or view_id, 'ServerId': server_id, 'Recursive': False, 'Filters': ["Boxsets"]}).get()
+        listing = downloader.get_filtered_section(folder or view_id, None, None, False, None, None, ['Boxsets'], None, server_id)
     elif media == 'tvshows':
-        listing = TheVoid('Browse', {'Id': folder or view_id, 'ServerId': server_id, 'Recursive': True, 'Media': get_media_type(content_type)}).get()
+        listing = downloader.get_filtered_section(folder or view_id, get_media_type(content_type), None, True, None, None, None, None, server_id)
     elif media == 'seasons':
-        listing = TheVoid('BrowseSeason', {'Id': folder, 'ServerId': server_id}).get()
+        listing = api_client.get_seasons(folder)
     elif media != 'files':
-        listing = TheVoid('Browse', {'Id': folder or view_id, 'ServerId': server_id, 'Recursive': False, 'Media': get_media_type(content_type)}).get()
+        listing = downloader.get_filtered_section(folder or view_id, get_media_type(content_type), None, False, None, None, None, None, server_id)
     else:
-        listing = TheVoid('Browse', {'Id': folder or view_id, 'ServerId': server_id, 'Recursive': False}).get()
+        listing = downloader.get_filtered_section(folder or view_id, None, None, False, None, None, None, None, server_id)
 
     if listing:
 
@@ -405,7 +411,7 @@ def browse_subfolders(media, view_id, server_id=None):
     '''
     from views import DYNNODES
 
-    view = TheVoid('GetItem', {'ServerId': server_id, 'Id': view_id}).get()
+    view = Jellyfin(server_id).get_client().jellyfin.get_item(view_id)
     xbmcplugin.setPluginCategory(PROCESS_HANDLE, view['Name'])
     nodes = DYNNODES[media]
 
@@ -431,7 +437,7 @@ def browse_letters(media, view_id, server_id=None):
     '''
     letters = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-    view = TheVoid('GetItem', {'ServerId': server_id, 'Id': view_id}).get()
+    view = Jellyfin(server_id).get_client().jellyfin.get_item(view_id)
     xbmcplugin.setPluginCategory(PROCESS_HANDLE, view['Name'])
 
     for node in letters:
@@ -501,12 +507,13 @@ def get_fanart(item_id, path, server_id=None):
     objects = Objects()
     list_li = []
     directory = xbmc.translatePath("special://thumbnails/jellyfin/%s/" % item_id)
-    server = TheVoid('GetServerAddress', {'ServerId': server_id}).get()
+    jellyfin_client = Jellyfin(server_id).get_client()
+    server = jellyfin_client.auth.get_server_info(self.server_id)['address']
 
     if not xbmcvfs.exists(directory):
 
         xbmcvfs.mkdirs(directory)
-        item = TheVoid('GetItem', {'ServerId': server_id, 'Id': item_id}).get()
+        item = jellyfin_client.jellyfin.get_item(item_id)
         obj = objects.map(item, 'Artwork')
         backdrops = api.API(item, server).get_all_artwork(obj)
         tags = obj['BackdropTags']
@@ -542,8 +549,8 @@ def get_video_extras(item_id, path, server_id=None):
     if not item_id:
         return
 
-    TheVoid('GetItem', {'ServerId': server_id, 'Id': item_id}).get()
-    # TODO: Investigate the void (issue #228)
+    # TODO implement????
+    # Jellyfin(server_id).get_client().jellyfin.get_item(item_id)
 
     """
     def getVideoFiles(jellyfinId,jellyfinPath):
@@ -737,8 +744,9 @@ def add_user():
     if not window('jellyfin_online.bool'):
         return
 
-    session = TheVoid('GetSession', {}).get()
-    users = TheVoid('GetUsers', {'IsDisabled': False, 'IsHidden': False}).get()
+    jellyfin_client = Jellyfin().get_client()
+    session = jellyfin_client.get_device(jellyfin_client.config.app.device_id)
+    users = jellyfin_client.jellyfin.get_users()
     current = session[0]['AdditionalUsers']
 
     result = dialog("select", translate(33061), [translate(33062), translate(33063)] if current else [translate(33062)])
@@ -796,18 +804,19 @@ def get_themes():
         views = [x[0] for x in all_views if x[2] in ('movies', 'tvshows', 'mixed')]
 
     items = {}
-    server = TheVoid('GetServerAddress', {'ServerId': None}).get()
-    token = TheVoid('GetToken', {'ServerId': None}).get()
+    jellyfin_client = Jellyfin().get_client()
+    server = jellyfin_client.auth.get_server_address()
+    token = jellyfin_client.auth.jellyfin_token()
 
     for view in views:
-        result = TheVoid('GetThemes', {'Type': "Video", 'Id': view}).get()
+        result = jellyfin_client.jellyfin.get_items_theme_video(view)
 
         for item in result['Items']:
 
             folder = normalize_string(item['Name'])
             items[item['Id']] = folder
 
-        result = TheVoid('GetThemes', {'Type': "Song", 'Id': view}).get()
+        result = jellyfin_client.jellyfin.get_items_theme_song(view)
 
         for item in result['Items']:
 
@@ -822,7 +831,7 @@ def get_themes():
         if not xbmcvfs.exists(nfo_path):
             xbmcvfs.mkdir(nfo_path)
 
-        themes = TheVoid('GetTheme', {'Id': item}).get()
+        themes = jellyfin_client.jellyfin.get_themes(item)
         paths = []
 
         for theme in themes['ThemeVideosResult']['Items'] + themes['ThemeSongsResult']['Items']:

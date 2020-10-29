@@ -204,6 +204,9 @@ class ConnectionManager(object):
             if server['Id'] == server_id:
                 return server
 
+    def get_server_address(self, server_id):
+        return self.get_server_info(server_id or self.server_id).get('address')
+
     def get_public_users(self):
         return self.client.jellyfin.get_public_users()
 

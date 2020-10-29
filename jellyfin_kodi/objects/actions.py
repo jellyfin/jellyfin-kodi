@@ -10,10 +10,10 @@ from datetime import timedelta
 from kodi_six import xbmc, xbmcgui, xbmcplugin, xbmcaddon
 
 import database
-from downloader import TheVoid
 from helper import translate, playutils, api, window, settings, dialog
 from dialogs import resume
 from helper import LazyLogger
+from jellyfin import Jellyfin
 
 from .obj import Objects
 
@@ -29,7 +29,9 @@ class Actions(object):
     def __init__(self, server_id=None):
 
         self.server_id = server_id or None
-        self.server = TheVoid('GetServerAddress', {'ServerId': self.server_id}).get()
+        client = Jellyfin(self.server_id).get_client()
+        self.api_client = client.jellyfin
+        self.server = client.auth.get_server_address(self.server_id)
         self.stack = []
 
     def get_playlist(self, item):
@@ -112,7 +114,7 @@ class Actions(object):
 
         ''' if we have any play them when the movie/show is not being resumed.
         '''
-        intros = TheVoid('GetIntros', {'ServerId': self.server_id, 'Id': item['Id']}).get()
+        intros = self.api_client.get_intros(item['Id'])
 
         if intros['Items']:
             enabled = True
@@ -145,8 +147,7 @@ class Actions(object):
 
         ''' Create listitems and add them to the stack of playlist.
         '''
-        parts = TheVoid('GetAdditionalParts', {'ServerId': self.server_id, 'Id': item_id}).get()
-
+        parts = self.api_client.get_additional_parts(item_id)
         for part in parts['Items']:
 
             listitem = xbmcgui.ListItem()
