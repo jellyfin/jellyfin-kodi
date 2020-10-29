@@ -11,8 +11,8 @@ from kodi_six import xbmc, xbmcvfs
 
 import client
 import requests
-from downloader import TheVoid
 from helper import LazyLogger
+from jellyfin import Jellyfin
 
 from . import translate, settings, window, dialog, api
 
@@ -60,23 +60,19 @@ class PlayUtils(object):
         '''
         self.item = item
         self.item['PlaybackInfo'] = {}
+        self.jellyfin_client = Jellyfin(server_id).get_client()
         self.info = {
             'ServerId': server_id,
             'ServerAddress': server,
             'ForceTranscode': force_transcode,
-            'Token': token or TheVoid('GetToken', {'ServerId': server_id}).get()
+            'Token': token or self.jellyfin_client.auth.jellyfin_token()
         }
 
     def get_sources(self, source_id=None):
 
         ''' Return sources based on the optional source_id or the device profile.
         '''
-        params = {
-            'ServerId': self.info['ServerId'],
-            'Id': self.item['Id'],
-            'Profile': self.get_device_profile()
-        }
-        info = TheVoid('GetPlaybackInfo', params).get()
+        info = self.jellyfin_client.jellyfin.get_play_info(self.item['Id'], self.get_device_profile())
         LOG.info(info)
         self.info['PlaySessionId'] = info['PlaySessionId']
         sources = []
@@ -217,14 +213,7 @@ class PlayUtils(object):
 
         ''' Get live stream media info.
         '''
-        params = {
-            'ServerId': self.info['ServerId'],
-            'Id': self.item['Id'],
-            'Profile': self.get_device_profile(),
-            'PlaySessionId': self.info['PlaySessionId'],
-            'Token': source['OpenToken']
-        }
-        info = TheVoid('GetLiveStream', params).get()
+        info = self.jellyfin_client.jellyfin.get_live_stream(self.item['Id'], self.info['PlaySessionId'], source['OpenToken'], self.get_device_profile())
         LOG.info(info)
 
         if info['MediaSource'].get('RequiresClosing'):
@@ -509,7 +498,7 @@ class PlayUtils(object):
         mapping = {}
         kodi = 0
 
-        server_settings = TheVoid('GetTranscodeOptions', {'ServerId': self.info['ServerId']}).get()
+        server_settings = self.jellyfin_client.jellyfin.get_transcode_settings()
 
         for stream in source['MediaStreams']:
             if stream['SupportsExternalStream'] and stream['Type'] == 'Subtitle' and stream['DeliveryMethod'] == 'External':
@@ -598,7 +587,7 @@ class PlayUtils(object):
         subs_streams = collections.OrderedDict()
         streams = source['MediaStreams']
 
-        server_settings = TheVoid('GetTranscodeOptions', {'ServerId': self.info['ServerId']}).get()
+        server_settings = self.jellyfin_client.jellyfin.get_transcode_settings()
         allow_burned_subs = settings('allowBurnedSubs.bool')
 
         for stream in streams:
@@ -665,6 +654,7 @@ class PlayUtils(object):
         if subtitle:
 
             index = subtitle
+            server_settings = self.jellyfin_client.jellyfin.get_transcode_settings()
             stream = streams[index]
 
             if server_settings['EnableSubtitleExtraction'] and stream['SupportsExternalStream']:
@@ -683,6 +673,8 @@ class PlayUtils(object):
                 index = subs_streams[selection[resp]] if resp > -1 else source.get('DefaultSubtitleStreamIndex')
 
                 if index is not None:
+
+                    server_settings = self.jellyfin_client.jellyfin.get_transcode_settings()
                     stream = streams[index]
 
                     if server_settings['EnableSubtitleExtraction'] and stream['SupportsExternalStream']:
