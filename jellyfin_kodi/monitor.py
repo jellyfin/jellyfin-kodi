@@ -10,7 +10,6 @@ import threading
 from kodi_six import xbmc
 
 import connect
-import downloader
 import player
 from client import get_device_id
 from objects import PlaylistWorker, on_play, on_update, special_listener
