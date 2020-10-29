@@ -9,7 +9,6 @@ from datetime import date
 
 from six.moves import range, queue as Queue, zip
 
-from kodi_six import xbmc
 import requests
 from helper import settings, stop, window
 from jellyfin import Jellyfin
