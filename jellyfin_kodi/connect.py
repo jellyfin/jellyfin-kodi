@@ -76,7 +76,7 @@ class Connect(object):
 
         ''' Get Jellyfin client.
         '''
-        client = Jellyfin(server_id)
+        client = Jellyfin(server_id).get_client()
         client.config.app("Kodi", self.info['Version'], self.info['DeviceName'], self.info['DeviceId'])
         client.config.data['http.user_agent'] = "Jellyfin-Kodi/%s" % self.info['Version']
         client.config.data['auth.ssl'] = self.get_ssl()

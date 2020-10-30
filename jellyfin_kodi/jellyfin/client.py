@@ -3,7 +3,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-from helper import LazyLogger, window, dialog, translate, settings
+from client import get_device_id
+from helper import LazyLogger, window, settings
 from helper import api as helper_api
 
 from . import api
@@ -11,7 +12,6 @@ from .configuration import Config
 from .http import HTTP
 from .ws_client import WSClient
 from .connection_manager import ConnectionManager, CONNECTION_STATE
-from client import get_device_id
 
 #################################################################################################
 

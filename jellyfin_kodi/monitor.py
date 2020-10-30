@@ -92,7 +92,7 @@ class Monitor(xbmc.Monitor):
 
             return
 
-        server = Jellyfin(data.get('ServerId')).server.get_client()
+        server = Jellyfin(data.get('ServerId')).get_client()
 
         if method == 'Play':
 
@@ -121,7 +121,7 @@ class Monitor(xbmc.Monitor):
             self.general_commands(data)
 
         elif method == 'LoadServer':
-            self.server_instance(data['ServerId'])
+            Jellyfin(data['ServerId']).get_client().register_client()
 
         elif method == 'AddUser':
             server.jellyfin.session_add_user(server.config.data['app.session'], data['Id'], data['Add'])

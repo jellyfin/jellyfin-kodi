@@ -15,6 +15,7 @@ LOG = LazyLogger()
 
 #################################################################################################
 
+
 class Jellyfin(object):
 
     ''' This is your Jellyfinclient, you can create more than one. The server_id is only a temporary thing
