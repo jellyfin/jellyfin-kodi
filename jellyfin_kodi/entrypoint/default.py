@@ -508,7 +508,7 @@ def get_fanart(item_id, path, server_id=None):
     list_li = []
     directory = xbmc.translatePath("special://thumbnails/jellyfin/%s/" % item_id)
     jellyfin_client = Jellyfin(server_id).get_client()
-    server = jellyfin_client.auth..get_server_address()
+    server = jellyfin_client.auth.get_server_address()
 
     if not xbmcvfs.exists(directory):
 
