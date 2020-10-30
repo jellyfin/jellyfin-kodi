@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-05-28 21:36+0000\n"
+"PO-Revision-Date: 2020-10-30 12:47+0000\n"
 "Last-Translator: 4d1m <silviu.dimulete@gmail.com>\n"
 "Language-Team: Romanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ro/>\n"
@@ -959,3 +959,43 @@ msgstr ""
 msgctxt "#33161"
 msgid "Update password"
 msgstr "Actualizați parola"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "Rezoluția maxima pentru artă"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Opțiuni de transcodare"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Transcodează VC-1"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Transcodează MPEG2"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Permite subtitrări imprimate"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Număr maxim de canale audio"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Debitul de biți audio"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Codec audio preferat"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Codec video preferat"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Debitul maxim al fluxului de biți"
