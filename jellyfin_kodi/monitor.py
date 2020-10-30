@@ -26,8 +26,6 @@ LOG = LazyLogger(__name__)
 
 
 class Monitor(xbmc.Monitor):
-
-    servers = []
     sleep = False
 
     def __init__(self):
@@ -95,28 +93,7 @@ class Monitor(xbmc.Monitor):
 
             return
 
-        try:
-            if not data.get('ServerId'):
-                server = Jellyfin()
-            else:
-                if method != 'LoadServer' and data['ServerId'] not in self.servers:
-
-                    try:
-                        connect.Connect().register(data['ServerId'])
-                        self.server_instance(data['ServerId'])
-                    except Exception as error:
-
-                        LOG.exception(error)
-                        dialog("ok", "{jellyfin}", translate(33142))
-
-                        return
-
-                server = Jellyfin(data['ServerId'])
-        except Exception as error:
-            LOG.exception(error)
-            server = Jellyfin()
-
-        server = server.get_client()
+        server = Jellyfin(data.get('ServerId')).server.get_client()
 
         if method == 'Play':
 
@@ -149,75 +126,13 @@ class Monitor(xbmc.Monitor):
 
         elif method == 'AddUser':
             server.jellyfin.session_add_user(server.config.data['app.session'], data['Id'], data['Add'])
-            self.additional_users(server)
+            Jellyfin.additional_users(server, self.device_id)
 
         elif method == 'Player.OnPlay':
             on_play(data, server)
 
         elif method == 'VideoLibrary.OnUpdate':
             on_update(data, server)
-
-    def server_instance(self, server_id=None):
-
-        server = Jellyfin(server_id).get_client()
-        self.post_capabilities(server)
-
-        if server_id is not None:
-            self.servers.append(server_id)
-        elif settings('additionalUsers'):
-
-            users = settings('additionalUsers').split(',')
-            all_users = server.jellyfin.get_users()
-
-            for additional in users:
-                for user in all_users:
-
-                    if user['Name'].lower() in additional.lower():
-                        server.jellyfin.session_add_user(server.config.data['app.session'], user['Id'], True)
-
-            self.additional_users(server)
-
-    def post_capabilities(self, server):
-        LOG.info("--[ post capabilities/%s ]", server.auth.server_id)
-
-        server.jellyfin.post_capabilities({
-            'PlayableMediaTypes': "Audio,Video",
-            'SupportsMediaControl': True,
-            'SupportedCommands': (
-                "MoveUp,MoveDown,MoveLeft,MoveRight,Select,"
-                "Back,ToggleContextMenu,ToggleFullscreen,ToggleOsdMenu,"
-                "GoHome,PageUp,NextLetter,GoToSearch,"
-                "GoToSettings,PageDown,PreviousLetter,TakeScreenshot,"
-                "VolumeUp,VolumeDown,ToggleMute,SendString,DisplayMessage,"
-                "SetAudioStreamIndex,SetSubtitleStreamIndex,"
-                "SetRepeatMode,"
-                "Mute,Unmute,SetVolume,"
-                "Play,Playstate,PlayNext,PlayMediaSource"
-            ),
-        })
-        session = server.jellyfin.get_device(self.device_id)
-        server.config.data['app.session'] = session[0]['Id']
-
-    def additional_users(self, server):
-
-        ''' Setup additional users images.
-        '''
-        for i in range(10):
-            window('JellyfinAdditionalUserImage.%s' % i, clear=True)
-
-        try:
-            session = server.jellyfin.get_device(self.device_id)
-        except Exception as error:
-            LOG.exception(error)
-
-            return
-
-        for index, user in enumerate(session[0]['AdditionalUsers']):
-
-            info = server.jellyfin.get_user(user['UserId'])
-            image = api.API(info, server.config.data['auth.server']).get_user_artwork(user['UserId'])
-            window('JellyfinAdditionalUserImage.%s' % index, image)
-            window('JellyfinAdditionalUserPosition.%s' % user['UserId'], str(index))
 
     def playstate(self, data):
 
