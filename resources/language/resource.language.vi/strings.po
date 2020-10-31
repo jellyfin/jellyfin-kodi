@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-10-28 14:07+0000\n"
-"Last-Translator: hoanghuy309 <hoanghuy309@gmail.com>\n"
+"PO-Revision-Date: 2020-10-31 23:35+0000\n"
+"Last-Translator: Khang Phan <henrypan16@gmail.com>\n"
 "Language-Team: Vietnamese <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/vi/>\n"
 "Language: vi\n"
@@ -601,3 +601,95 @@ msgstr "Huỷ bỏ"
 msgctxt "#30605"
 msgid "Sign in"
 msgstr "Đăng nhập"
+
+#, fuzzy
+msgctxt "#33124"
+msgid "Include people (slow)"
+msgstr "Bao gồm người dùng (chậm)"
+
+msgctxt "#33123"
+msgid "Sync library to Kodi"
+msgstr "Đồng bộ hóa thư viện với Kodi"
+
+msgctxt "#33122"
+msgid "Restart Kodi to resume where you left off."
+msgstr "Khởi động lại Kodi để tiếp tục."
+
+msgctxt "#33121"
+msgid "All"
+msgstr "Tất cả"
+
+msgctxt "#33120"
+msgid "Select the libraries to add"
+msgstr "Chọn thư viện để thêm"
+
+msgctxt "#33119"
+msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"Sự cố xảy ra trong quá trình đồng bộ hóa. Bạn có thể khôi phục là quá trình "
+"trong khi khởi động lại Kodi. Nếu sự cố vẫn tái diễn, hãy báo cáo tệp thông "
+"tin lỗi của Kodi trên diễn đàn Jellyfin dành cho Kodi."
+
+msgctxt "#33118"
+msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgstr ""
+"Bạn đã thay đổi chế độ phát. Kodi cần phải khởi động lại để áp dụng thay "
+"đổi, bạn có muốn tiến hành bây giờ?"
+
+msgctxt "#33116"
+msgid "Compress artwork (reduces quality)"
+msgstr "Nén hình ảnh (giảm chất lượng)"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Tùy chọn bộ giải mã"
+
+#, fuzzy
+msgctxt "#33114"
+msgid "Enable external subtitles"
+msgstr "Kích hoạt phụ đề ngoại"
+
+#, fuzzy
+msgctxt "#33113"
+msgid "Applies to Add-on playback mode only"
+msgstr "Chỉ áp dụng cho chế độ phát đính kèm"
+
+msgctxt "#33098"
+msgid "Refresh boxsets"
+msgstr "Làm mới hộp đĩa"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Hộp đĩa"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Cho phép phụ đề cứng"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "Độ phân giải hình ảnh tối đa"
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "Chọn thư viện để xóa"
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "Chọn thư viện để sửa chữa"
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "Chọn thư viện để cập nhật"
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr "Đồng bộ hóa hiện đang chạy, vui lòng chờ đến khi hoàn tất và thử lại."
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr "Tùy chọn nâng cao"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Phân loại log"
