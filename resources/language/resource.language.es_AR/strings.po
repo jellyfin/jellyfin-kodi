@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-10-04 18:37+0000\n"
-"Last-Translator: Page Asgardius <hackerman@disroot.org>\n"
+"PO-Revision-Date: 2020-10-19 18:22+0000\n"
+"Last-Translator: Franco Castillo <castillofrancodamian@gmail.com>\n"
 "Language-Team: Spanish (Argentina) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/es_AR/>\n"
 "Language: es_AR\n"
@@ -913,3 +913,87 @@ msgid "Find more info in the github wiki/Create-and-restore-from-backup."
 msgstr ""
 "Encuentra más información en el wiki de GitHub dentro de la sección \"Crear "
 "y restaurar desde copia de seguridad\"."
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "Resolución máxima de ilustraciones"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "Habilitar Jellyfin para Kodi"
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr ""
+"La Cola de sincronización de Kodi acelera la sincronización de inicio. Otras "
+"sincronizaciones se activan mediante eventos del servidor."
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "Habilitar la opción de reproducir con el modo cine"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "Reiniciando para aplicar el parche"
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr ""
+"Sugerencia de paginación: cada hilo de descarga solicita el valor máximo de "
+"artículos de Jellyfin al mismo tiempo."
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "Paginación - hilos de descarga (predeterminado: 3)"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "Por primera letra"
+
+msgctxt "#33153"
+msgid "Your Jellyfin theme media has been synced to Kodi"
+msgstr "Los medios de tu tema de Jellyfin se han sincronizado con Kodi"
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "Actualizando caja recopilatoria"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Opciones de transcodificación"
+
+msgctxt "#33098"
+msgid "Refresh boxsets"
+msgstr "Actualizar caja recopilatoria"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Transcodificar VC-1"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Transcodificar MPEG2"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Permitir subtítulos quemados"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Máximo de canales de audio"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Tasa de bits de audio"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Códec de audio preferido"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Códec de video preferido"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Tasa de bits de transmisión máxima"

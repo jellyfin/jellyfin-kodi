@@ -20,8 +20,6 @@ from helper import LazyLogger
 #################################################################################################
 
 LOG = LazyLogger(__name__)
-LIMIT = min(int(settings('limitIndex') or 50), 50)
-DTHREADS = int(settings('limitThreads') or 3)
 
 #################################################################################################
 
@@ -246,6 +244,9 @@ def _get_items(query, server_id=None):
         'RestorePoint': {}
     }
 
+    limit = min(int(settings('limitIndex') or 50), 50)
+    dthreads = int(settings('limitThreads') or 3)
+
     url = query['url']
     query.setdefault('params', {})
     params = query['params']
@@ -270,21 +271,21 @@ def _get_items(query, server_id=None):
             return params_copy
 
         query_params = [
-            get_query_params(params, offset, LIMIT)
+            get_query_params(params, offset, limit)
             for offset
-            in range(params['StartIndex'], items['TotalRecordCount'], LIMIT)
+            in range(params['StartIndex'], items['TotalRecordCount'], limit)
         ]
 
         # multiprocessing.dummy.Pool completes all requests in multiple threads but has to
         # complete all tasks before allowing any results to be processed. ThreadPoolExecutor
         # allows for completed tasks to be processed while other tasks are completed on other
         # threads. Dont be a dummy.Pool, be a ThreadPoolExecutor
-        with concurrent.futures.ThreadPoolExecutor(DTHREADS) as p:
+        with concurrent.futures.ThreadPoolExecutor(dthreads) as p:
             # dictionary for storing the jobs and their results
             jobs = {}
 
             # semaphore to avoid fetching complete library to memory
-            thread_buffer = threading.Semaphore(DTHREADS)
+            thread_buffer = threading.Semaphore(dthreads)
 
             # wrapper function for _get that uses a semaphore
             def get_wrapper(params):
