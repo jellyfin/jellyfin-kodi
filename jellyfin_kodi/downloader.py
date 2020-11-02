@@ -284,7 +284,7 @@ def _get_items(query, server_id=None):
             jobs = {}
 
             # semaphore to avoid fetching complete library to memory
-            thread_buffer = threading.Semaphore(LIMIT * DTHREADS)
+            thread_buffer = threading.Semaphore(DTHREADS)
 
             # wrapper function for _get that uses a semaphore
             def get_wrapper(params):
