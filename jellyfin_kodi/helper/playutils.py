@@ -509,8 +509,13 @@ class PlayUtils(object):
         mapping = {}
         kodi = 0
 
+        server_settings = TheVoid('GetTranscodeOptions', {'ServerId': self.info['ServerId']}).get()
+
         for stream in source['MediaStreams']:
-            if stream['Type'] == 'Subtitle' and stream['DeliveryMethod'] == 'External':
+            if stream['SupportsExternalStream'] and stream['Type'] == 'Subtitle' and stream['DeliveryMethod'] == 'External':
+                if not stream['IsExternal'] and not server_settings['EnableSubtitleExtraction']:
+                    continue
+
                 index = stream['Index']
                 url = self.get_subtitles(source, stream, index)
 
@@ -593,6 +598,7 @@ class PlayUtils(object):
         subs_streams = collections.OrderedDict()
         streams = source['MediaStreams']
 
+        server_settings = TheVoid('GetTranscodeOptions', {'ServerId': self.info['ServerId']}).get()
         allow_burned_subs = settings('allowBurnedSubs.bool')
 
         for stream in streams:
@@ -614,9 +620,13 @@ class PlayUtils(object):
                 audio_streams[track] = index
 
             elif stream_type == 'Subtitle':
-                downloadable = stream['IsTextSubtitleStream'] and stream['IsExternal'] and stream['SupportsExternalStream']
-                if not downloadable and not allow_burned_subs:
-                    continue
+                if stream['IsExternal']:
+                    if not stream['SupportsExternalStream'] and not allow_burned_subs:
+                        continue
+                else:
+                    avail_for_extraction = stream['SupportsExternalStream'] and server_settings['EnableSubtitleExtraction']
+                    if not avail_for_extraction and not allow_burned_subs:
+                        continue
 
                 codec = self.get_commercial_codec_name(stream['Codec'], None)
 
@@ -655,7 +665,6 @@ class PlayUtils(object):
         if subtitle:
 
             index = subtitle
-            server_settings = TheVoid('GetTranscodeOptions', {'ServerId': self.info['ServerId']}).get()
             stream = streams[index]
 
             if server_settings['EnableSubtitleExtraction'] and stream['SupportsExternalStream']:
@@ -674,8 +683,6 @@ class PlayUtils(object):
                 index = subs_streams[selection[resp]] if resp > -1 else source.get('DefaultSubtitleStreamIndex')
 
                 if index is not None:
-
-                    server_settings = TheVoid('GetTranscodeOptions', {'ServerId': self.info['ServerId']}).get()
                     stream = streams[index]
 
                     if server_settings['EnableSubtitleExtraction'] and stream['SupportsExternalStream']:
