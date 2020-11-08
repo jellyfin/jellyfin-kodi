@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-09-11 02:20+0000\n"
-"Last-Translator: Deniz <denizgezgin365@gmail.com>\n"
+"PO-Revision-Date: 2020-11-08 17:52+0000\n"
+"Last-Translator: Ekrem KANGAL <ekangal@gmail.com>\n"
 "Language-Team: Turkish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/tr/>\n"
 "Language: tr_tr\n"
@@ -300,10 +300,9 @@ msgctxt "#30512"
 msgid "Enable artwork caching"
 msgstr "Resimlerin önbelleğe alınmasını etkinleştir"
 
-#, fuzzy
 msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
-msgstr "Bildirimi etkinleştir, güncelleme sayısı şundan büyük ise"
+msgstr "Güncelleme sayısı şundan büyükse bildirimi etkinleştirin:"
 
 msgctxt "#30511"
 msgid "Playback mode"
@@ -351,10 +350,9 @@ msgctxt "#30534"
 msgid "Notifications (in seconds)"
 msgstr "Bildirimler (saniye)"
 
-#, fuzzy
 msgctxt "#30531"
 msgid "Enable new content"
-msgstr "Yeni içeriğe izin ver"
+msgstr "Yeni içeriği etkinleştirin"
 
 #, fuzzy
 msgctxt "#30529"
@@ -364,3 +362,91 @@ msgstr "Başlangıç gecikmesi (saniye)"
 msgctxt "#30528"
 msgid "Permanent users"
 msgstr "Daimi kullanıcılar"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Kutu setleri"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Geliştirilmiş resmi etkinleştirin (ör. Kapak resmi)"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Yazılmış altyazılara izin ver"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Maksimum ses kanalı"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Ses bit hızı"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Tercih edilen ses codec'i"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Tercih edilen video codec"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Maksimum akış bit hızı"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "Mesajı görüntüle"
+
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "Sunucuyu çevrimdışı olarak etkinleştir"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "Hi10P'yi dönüştürme"
+
+msgctxt "#30536"
+msgid "Allow the screensaver during syncs"
+msgstr "Senkronizasyon sırasında ekran koruyucuya izin ver"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "Yeni bir cihaz kimliği oluşturun"
+
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "Sunucu yeniden başlatma mesajını etkinleştir"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "VC-1 kodunu dönüştür"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "MPEG2 kodunu dönüştür"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "H265 / HEVC kod dönüştürme"
+
+msgctxt "#30521"
+msgid "Jump back on resume (in seconds)"
+msgstr "Devam ettirmeden geri atlayın (saniye olarak)"
+
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr "Silme onayını atlayın (riski size ait olacak şekilde kullanın)"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "Fragman oynamayı sor"
+
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "Sayfalama - Maksimum istek (öntanımlı: 15)"
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "Ağ kimlik bilgileri"
