@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-11-08 17:52+0000\n"
+"PO-Revision-Date: 2020-11-08 20:16+0000\n"
 "Last-Translator: Ekrem KANGAL <ekangal@gmail.com>\n"
 "Language-Team: Turkish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/tr/>\n"
@@ -295,14 +295,13 @@ msgctxt "#29999"
 msgid "Jellyfin for Kodi"
 msgstr "Kodi için Jellyfin"
 
-#, fuzzy
 msgctxt "#30512"
 msgid "Enable artwork caching"
 msgstr "Resimlerin önbelleğe alınmasını etkinleştir"
 
 msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
-msgstr "Güncelleme sayısı şundan büyükse bildirimi etkinleştirin:"
+msgstr "Güncelleme sayısı şundan büyükse bildirimi etkinleştirin"
 
 msgctxt "#30511"
 msgid "Playback mode"
@@ -340,12 +339,10 @@ msgctxt "#30002"
 msgid "Force HTTP playback"
 msgstr "HTTP den oynatmayı zorla"
 
-#, fuzzy
 msgctxt "#30614"
 msgid "Connect to server"
 msgstr "Sunucuya bağlan"
 
-#, fuzzy
 msgctxt "#30534"
 msgid "Notifications (in seconds)"
 msgstr "Bildirimler (saniye)"
@@ -354,7 +351,6 @@ msgctxt "#30531"
 msgid "Enable new content"
 msgstr "Yeni içeriği etkinleştirin"
 
-#, fuzzy
 msgctxt "#30529"
 msgid "Startup delay (in seconds)"
 msgstr "Başlangıç gecikmesi (saniye)"
@@ -450,3 +446,547 @@ msgstr "Sayfalama - Maksimum istek (öntanımlı: 15)"
 msgctxt "#30517"
 msgid "Network credentials"
 msgstr "Ağ kimlik bilgileri"
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "Kutu setleri yenileniyor"
+
+msgctxt "#33104"
+msgid "Find more info in the github wiki/Create-and-restore-from-backup."
+msgstr ""
+"Daha fazla bilgi bulunmak için GitHub wiki/Create-and-restore-from-backup."
+
+msgctxt "#33098"
+msgid "Refresh boxsets"
+msgstr "Kutu setlerini yenile"
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "Kutu setlerini toplama"
+
+msgctxt "#33132"
+msgid "Repair library"
+msgstr "Onarım kütüphanesi"
+
+msgctxt "#33129"
+msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
+msgstr ""
+"Jellyfin eklentisini> Kitaplık ekle'yi başlatarak kitaplıkları "
+"eşitleyebilirsiniz."
+
+msgctxt "#33124"
+msgid "Include people (slow)"
+msgstr "İnsanları dahil et (yavaş)"
+
+msgctxt "#33123"
+msgid "Sync library to Kodi"
+msgstr "Kitaplığı Kodi ile senkronize et"
+
+msgctxt "#33122"
+msgid "Restart Kodi to resume where you left off."
+msgstr "Kaldığınız yerden devam etmek için Kodi'yi yeniden başlatın."
+
+msgctxt "#33119"
+msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"Senkronizasyon sırasında bir şeyler ters gitti. Kodi'yi yeniden başlatırken "
+"ilerlemeyi geri yükleyebileceksiniz. Sorun devam ederse, lütfen Kodi "
+"günlüğünüzle Kodi forumları için Jellyfin'i bildirin."
+
+msgctxt "#33118"
+msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgstr ""
+"Oynatma modunu değiştirmişsinizdir. Değişikliği uygulamak için Kodi'nin "
+"sıfırlanması gerekiyor, bunu şimdi yapmak ister misiniz?"
+
+msgctxt "#33116"
+msgid "Compress artwork (reduces quality)"
+msgstr "Resmi sıkıştır (kaliteyi düşürür)"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Kod dönüştürme seçenekleri"
+
+msgctxt "#33113"
+msgid "Applies to Add-on playback mode only"
+msgstr "Yalnızca Eklenti oynatma modu için geçerlidir"
+
+msgctxt "#33112"
+msgid "Applies to Native and Add-on playback mode"
+msgstr "Yerel ve Eklenti oynatma modu için geçerlidir"
+
+msgctxt "#33111"
+msgid "Reset the local database to apply the playback mode change."
+msgstr ""
+"Oynatma modu değişikliğini uygulamak için yerel veritabanını sıfırlayın."
+
+msgctxt "#33108"
+msgid "Notifications are delayed during video playback (except live tv)."
+msgstr "Video oynatma sırasında bildirimler ertelenir (canlı TV hariç)."
+
+msgctxt "#33107"
+msgid "Users added to the session (no space between users). (eg username,username2)"
+msgstr ""
+"Oturuma eklenen kullanıcılar (kullanıcılar arasında boşluk yok) (ör. "
+"Kullanıcı adı, kullanıcı adı2)"
+
+msgctxt "#33106"
+msgid "Enable the option to transcode"
+msgstr "Kod dönüştürme seçeneğini etkinleştirin"
+
+msgctxt "#33105"
+msgid "Enable the context menu"
+msgstr "İçerik menüsünü etkinleştirin"
+
+msgctxt "#33102"
+msgid "Resume the previous sync?"
+msgstr "Önceki senkronizasyon devam ettirilsin mi?"
+
+msgctxt "#33101"
+msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
+msgstr ""
+"Müzik etkinken yerel oynatma modunu kullandığınız için, dosyalardan müzik "
+"derecelendirmesini içe aktarmak istiyor musunuz?"
+
+msgctxt "#33099"
+msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
+msgstr ""
+"Jellyfin kitaplığı güncellemelerini başlangıçta otomatik olarak uygulamak "
+"için sunucu eklentisi Kodi Sync Queue'yu kurun. Bu ayar, eklenti ayarları> "
+"senkronizasyon seçenekleri> Kodi Senkronizasyon Kuyruğunu Etkinleştir "
+"bölümünde bulunabilir."
+
+msgctxt "#33097"
+msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
+msgstr ""
+"Önemli, Jellyfin for Kodi ile çakışmayı önlemek için gelişmiş ayarlarınızdan "
+"temizleme güncellemesi kaldırılmıştır. Kodi şimdi yeniden başlayacak."
+
+msgctxt "#33092"
+msgid "Create a backup"
+msgstr "Bir yedek oluşturun"
+
+msgctxt "#33091"
+msgid "Created backup at:"
+msgstr "Yedek oluşturuldu:"
+
+msgctxt "#33090"
+msgid "Replace existing backup?"
+msgstr "Mevcut yedek değiştirilsin mi?"
+
+msgctxt "#33088"
+msgid "Database reset has completed, Kodi will now restart to apply the changes."
+msgstr ""
+"Veritabanı sıfırlaması tamamlandı, Kodi değişiklikleri uygulamak için şimdi "
+"yeniden başlayacak."
+
+msgctxt "#33087"
+msgid "Reset all Jellyfin add-on settings?"
+msgstr "Tüm Jellyfin eklenti ayarları sıfırlansın mı?"
+
+msgctxt "#33086"
+msgid "Remove all cached artwork?"
+msgstr "Önbelleğe alınmış tüm resimler kaldırılsın mı?"
+
+msgctxt "#33074"
+msgid "Are you sure you want to reset your local Kodi database?"
+msgstr "Yerel Kodi veritabanınızı sıfırlamak istediğinizden emin misiniz?"
+
+msgctxt "#33064"
+msgid "Remove user from the session"
+msgstr "Kullanıcıyı oturumdan kaldır"
+
+msgctxt "#33061"
+msgid "Add/Remove user from the session"
+msgstr "Oturuma kullanıcı ekle / kaldır"
+
+msgctxt "#33060"
+msgid "Sync theme media"
+msgstr "Tema medyasını senkronize et"
+
+msgctxt "#33058"
+msgid "Perform local database reset"
+msgstr "Yerel veritabanı sıfırlama gerçekleştirin"
+
+msgctxt "#33054"
+msgid "Add user to session"
+msgstr "Oturuma kullanıcı ekle"
+
+msgctxt "#33048"
+msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
+msgstr ""
+"Eklenti ayarlarında ağ kimlik bilgilerinizi doğrulamanız veya yolunuzu doğru "
+"şekilde biçimlendirmek için Jellyfin yolu ikamesini kullanmanız gerekebilir ("
+"Jellyfin kontrol paneli> kitaplık). Senkronizasyon durdurulsun mu?"
+
+msgctxt "#33047"
+msgid "Kodi can't locate file:"
+msgstr "Kodi şu dosyayı bulamıyor:"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "Müzik kitaplığı etkinleştirilsin mi?"
+
+msgctxt "#33037"
+msgid "Native (direct paths)"
+msgstr "Yerel (doğrudan yollar)"
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "Eklenti (varsayılan)"
+
+msgctxt "#33035"
+msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
+msgstr ""
+"Dikkat! Yerel modu seçerseniz, Jellyfin sinema modu, doğrudan akış / kod "
+"dönüştürme seçenekleri ve ebeveyn erişim planı gibi bazı Jellyfin "
+"özellikleri eksik olacaktır."
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr "Yeni bir cihaz kimliği oluşturuldu. Kodi şimdi yeniden başlayacak."
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "Tamamlandı:"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "Toplama:"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "Fragman oynatılsın mı?"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "Jellyfin'den dosya silinsin mi?"
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr "Altyazı akışını seçin"
+
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr "Ses akışını seçin"
+
+msgctxt "#30615"
+msgid "Host"
+msgstr "Ev sahibi"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "Jellyfin bağlı kullanıcısını değiştir"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "El ile sunucu ekle"
+
+msgctxt "#30533"
+msgid "Duration of the music library pop up"
+msgstr "Müzik kitaplığının op up süresi"
+
+msgctxt "#30532"
+msgid "Duration of the video library pop up"
+msgstr "Video kitaplığının pop up süresi"
+
+msgctxt "#30527"
+msgid "Ignore specials in next episodes"
+msgstr "Sonraki bölümlerdeki özel etkinlikleri yoksay"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "Banttan oynat"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "Maksimum resim çözünürlüğü"
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "Kaldırılacak kitaplıkları seçin"
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "Onarılacak kitaplıkları seçin"
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "Güncellenecek kitaplıkları seçin"
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr ""
+"Bir senkronizasyon zaten çalışıyor, lütfen tamamlanana kadar bekleyin ve "
+"tekrar deneyin."
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr "Gelişmiş seçenekler"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "Kodi için Jellyfin'i etkinleştirin"
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "Kitaplıkları yönetin"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "Yeniden başlatılıyor..."
+
+msgctxt "#33191"
+msgid "Restart Jellyfin for Kodi to apply this change?"
+msgstr ""
+"Bu değişikliği uygulamak için Kodi için Jellyfin yeniden başlatılsın mı?"
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr ""
+"Kodi Sync Queue, başlangıç senkronizasyonunu hızlandırır. Diğer "
+"senkronizasyonlar sunucu olayları tarafından tetiklenir."
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr ""
+"Oynatma sırasında senkronizasyonu etkinleştirin (bazı gecikmelere neden "
+"olabilir)"
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "Kitaplıkları kaldır"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "Sinema modu ile oynatma seçeneğini etkinleştirin"
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "Sinema modu ile oynatın"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "Yamayı uygulamak için yeniden başlatılıyor"
+
+msgctxt "#33180"
+msgid "Restart Jellyfin for Kodi"
+msgstr "Jellyfin'i Kodi için yeniden başlatın"
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "Kod dönüştürmeye zorla"
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr "Güncellemeler işleniyor"
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr "Güncelleme sayısı şu değerden fazlaysa ilerleme çubuğunu görüntüle"
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr ""
+"Aşağıdaki değişiklikleri uygulamak için kitaplıklarınızı güncelleyin veya "
+"onarın."
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr ""
+"Sayfalama ipucu: Her indirme işlememi, aynı anda Jellyfin'den maksimum öğe "
+"değerinizi ister."
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "Sayfalama - indirme işlemleri (varsayılan: 3)"
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "Önceki senkronizasyonu unuttunuz mu? Bu tavsiye edilmez."
+
+msgctxt "#33172"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
+msgstr ""
+"Bekleyen {number} güncellemeniz var. Yeni içeriğin görülmesi biraz zaman "
+"alabilir. Jellyfin eklentisini> güncelleme kitaplıklarını başlatarak "
+"kitaplıklarınızı güncellemek daha hızlı olabilir. Yine de devam edilsin mi?"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "İlk harfle"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "İzlenmemiş"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "Devam etmekte"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "Favoriler"
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "Son eklenen"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "(dinamik)"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "Yedek oluşturulamadı"
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr ""
+"Hassas bilgileri günlükte maskeleyin (Kodi günlüğü için geçerli değildir)"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "Müzik kitaplığı sıfırlansın mı?"
+
+msgctxt "#33161"
+msgid "Update password"
+msgstr "Şifre güncelle"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr ""
+"Hataları önlemek için lütfen Jellyfin for Kodi'yi sürümüne güncelleyin: "
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "Ses / altyazı seçimini etkinleştir"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "Yalnızca altyazılar"
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "Sadece ses"
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "Bir yama uygulandı!"
+
+msgctxt "#33155"
+msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
+msgstr ""
+"Kodi için Jellyfin için şu anda uygulanan yama bozulmuş! Bu sorun devam "
+"ederse lütfen Jellyfin for Kodi forumlarına gönderin. Bunun mümkün olan en "
+"kısa sürede düzeltilmesi gerekecek."
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "Kitaplık ekle"
+
+msgctxt "#33153"
+msgid "Your Jellyfin theme media has been synced to Kodi"
+msgstr "Jellyfin tema medyanız Kodi ile senkronize edildi"
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "Kodi'de TV Melodileri bulunamıyor."
+
+msgctxt "#33151"
+msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
+msgstr ""
+"Daha önce yüklenmiş olan aynı sunucuya yeniden bağlanın. Farklı bir sunucu "
+"kullanmak istiyorsanız, kullanıcı bilgileriniz dahil yerel veritabanınızı "
+"sıfırlayın."
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "Sunucu bilgilerini güncelleyin"
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "Bu sunucuya bağlanılamıyor."
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "Bu sunucuya erişiminiz kısıtlanmıştır."
+
+msgctxt "#33147"
+msgid "Your access to Jellyfin is restricted."
+msgstr "Jellyfin'e erişiminiz kısıtlanmıştır."
+
+msgctxt "#33146"
+msgid "Unable to connect to Jellyfin."
+msgstr "Jellyfin'e bağlanılamıyor."
+
+msgctxt "#33145"
+msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
+msgstr ""
+"Lütfen Jellyfin sunucunuzdaki Samba (smb) paylaşımınızın Kodi kurulumunuz "
+"için erişilebilir olduğundan ve sunucunuzda yol ikamesinin yapılandırılmış "
+"olduğundan emin olun. Aksi takdirde, Kodi dosyalarınızı bulamayabilir."
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "Kitaplığı kaldırma"
+
+msgctxt "#33143"
+msgid "Enable the option to delete"
+msgstr "Silme seçeneğini etkinleştirin"
+
+msgctxt "#33142"
+msgid "Something went wrong. Try again later."
+msgstr "Bir şeyler yanlış gitti. Daha sonra tekrar deneyin."
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "Sunucuyu kaldır"
+
+msgctxt "#33140"
+msgid "Repair libraries"
+msgstr "Kitaplıkları onar"
+
+msgctxt "#33139"
+msgid "Update libraries"
+msgstr "Kitaplıkları güncelleyin"
+
+msgctxt "#33138"
+msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
+msgstr ""
+"Sunucu eklentisi Kodi Sync Queue'ya güvenmek yerine kitaplığınızı manuel "
+"olarak güncelleyebilirsiniz. Eklentiyi başlatın ve kitaplıkları güncelleyin ("
+"veya kitaplık başına). İçeriği kaldırmak için kitaplığı onarmanız gerekir."
+
+msgctxt "#33137"
+msgid "Enable Kodi Sync Queue"
+msgstr "Kodi Senkronizasyon Sırasını Etkinleştir"
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "Kitaplığı güncelle"
+
+msgctxt "#33135"
+msgid "Kodi will now restart to apply a small patch for your Kodi version."
+msgstr ""
+"Kodi, Kodi sürümünüz için küçük bir yama uygulamak için şimdi yeniden "
+"başlayacak."
+
+msgctxt "#33134"
+msgid "Add server"
+msgstr "Sunucu Ekle"
+
+msgctxt "#33133"
+msgid "Remove library from Kodi"
+msgstr "Kitaplığı Kodi'den kaldır"
+
+msgctxt "#33130"
+msgid "Select the source"
+msgstr "Kaynağı seçin"
+
+msgctxt "#33128"
+msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"En son içerik güncellemeleri alınamadı. Kodi yeniden başlatılıncaya kadar "
+"hiçbir içerik güncellemesi uygulanmayacaktır. Bu sorun devam ederse, lütfen "
+"Kodi günlüğünüzle Kodi forumları için Jellyfin'i bildirin."
