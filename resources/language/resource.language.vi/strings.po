@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-10-31 23:35+0000\n"
-"Last-Translator: Khang Phan <henrypan16@gmail.com>\n"
+"PO-Revision-Date: 2020-11-09 06:01+0000\n"
+"Last-Translator: hoanghuy309 <hoanghuy309@gmail.com>\n"
 "Language-Team: Vietnamese <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/vi/>\n"
 "Language: vi\n"
@@ -602,10 +602,9 @@ msgctxt "#30605"
 msgid "Sign in"
 msgstr "Đăng nhập"
 
-#, fuzzy
 msgctxt "#33124"
 msgid "Include people (slow)"
-msgstr "Bao gồm người dùng (chậm)"
+msgstr "Bao gồm mọi người (chậm)"
 
 msgctxt "#33123"
 msgid "Sync library to Kodi"
@@ -644,15 +643,13 @@ msgctxt "#33115"
 msgid "Transcode options"
 msgstr "Tùy chọn bộ giải mã"
 
-#, fuzzy
 msgctxt "#33114"
 msgid "Enable external subtitles"
-msgstr "Kích hoạt phụ đề ngoại"
+msgstr "Bật phụ đề bên ngoài"
 
-#, fuzzy
 msgctxt "#33113"
 msgid "Applies to Add-on playback mode only"
-msgstr "Chỉ áp dụng cho chế độ phát đính kèm"
+msgstr "Chỉ áp dụng cho chế độ phát bổ trợ"
 
 msgctxt "#33098"
 msgid "Refresh boxsets"
@@ -693,3 +690,224 @@ msgstr "Tùy chọn nâng cao"
 msgctxt "#30004"
 msgid "Log level"
 msgstr "Phân loại log"
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr ""
+"Cập nhật hoặc sửa chữa thư viện của bạn để áp dụng các thay đổi bên dưới."
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr ""
+"Mẹo phân trang: Mỗi chủ đề tải xuống yêu cầu giá trị vật phẩm tối đa của bạn "
+"từ Jellyfin cùng một lúc."
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "Phân trang - tải xuống chủ đề (mặc định: 3)"
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "Quên về lần đồng bộ trước đó? Điều này không được khuyến khích."
+
+msgctxt "#33172"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
+msgstr ""
+"Bạn có {number} bản cập nhật đang chờ xử lý. Quá trình này có thể mất một "
+"chút thời gian trước khi xem nội dung mới. Cập nhật thư viện của bạn có thể "
+"nhanh hơn bằng cách khởi chạy tiện ích bổ sung Jellyfin> cập nhật thư viện. "
+"Vẫn tiếp tục?"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "Bằng kí tự đầu tiên"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "Chưa xem"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "Trong tiến trình"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "Yêu thích"
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "Đã thêm gần đây"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "(động)"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "Không tạo được bản sao lưu"
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr ""
+"Che thông tin nhạy cảm trong nhật ký (không áp dụng cho ghi nhật ký Kodi)"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "Đặt lại thư viện nhạc?"
+
+msgctxt "#33161"
+msgid "Update password"
+msgstr "Cập nhật mật khẩu"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr "Để tránh lỗi, vui lòng cập nhật Jellyfin cho Kodi lên phiên bản: "
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "Bật lựa chọn âm thanh / phụ đề"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "Chỉ phụ đề"
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "Chỉ có âm thanh"
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "Một bản vá đã được áp dụng!"
+
+msgctxt "#33155"
+msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
+msgstr ""
+"Bản vá hiện đang được áp dụng cho Jellyfin cho Kodi bị lỗi! Vui lòng đăng "
+"lên diễn đàn Jellyfin cho Kodi nếu sự cố này vẫn tiếp diễn. Điều này sẽ cần "
+"được khắc phục càng sớm càng tốt."
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "Thêm thư viện"
+
+msgctxt "#33153"
+msgid "Your Jellyfin theme media has been synced to Kodi"
+msgstr "Phương tiện chủ đề Jellyfin của bạn đã được đồng bộ hóa với Kodi"
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "Không thể định vị Giai điệu TV trong Kodi."
+
+msgctxt "#33151"
+msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
+msgstr ""
+"Kết nối lại với cùng một máy chủ đã được tải trước đó. Nếu bạn muốn sử dụng "
+"một máy chủ khác, hãy đặt lại cơ sở dữ liệu cục bộ, bao gồm cả thông tin "
+"người dùng của bạn."
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "Cập nhật thông tin máy chủ"
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "Không thể kết nối với máy chủ này."
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "Quyền truy cập của bạn vào máy chủ này bị hạn chế."
+
+msgctxt "#33147"
+msgid "Your access to Jellyfin is restricted."
+msgstr "Quyền truy cập của bạn vào Jellyfin bị hạn chế."
+
+msgctxt "#33146"
+msgid "Unable to connect to Jellyfin."
+msgstr "Không thể kết nối với Jellyfin."
+
+msgctxt "#33145"
+msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
+msgstr ""
+"Hãy đảm bảo rằng phần chia sẻ Samba (smb) của bạn trên máy chủ Jellyfin của "
+"bạn có thể truy cập được vào cài đặt Kodi của bạn và bạn đã định cấu hình "
+"thay thế đường dẫn trên máy chủ của mình. Nếu không, Kodi có thể không định "
+"vị được tệp của bạn."
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "Đang xóa thư viện"
+
+msgctxt "#33143"
+msgid "Enable the option to delete"
+msgstr "Bật tùy chọn để xóa"
+
+msgctxt "#33142"
+msgid "Something went wrong. Try again later."
+msgstr "Đã xảy ra lỗi. Thử lại sau."
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "Xóa máy chủ"
+
+msgctxt "#33140"
+msgid "Repair libraries"
+msgstr "Sửa chữa thư viện"
+
+msgctxt "#33139"
+msgid "Update libraries"
+msgstr "Cập nhật thư viện"
+
+msgctxt "#33138"
+msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
+msgstr ""
+"Bạn có thể cập nhật thư viện của mình theo cách thủ công thay vì dựa vào "
+"plugin máy chủ Kodi Xếp Hàng Đồng Bộ. Khởi chạy tiện ích bổ sung và cập nhật "
+"thư viện (hoặc mỗi thư viện). Để xóa nội dung, bạn cần sửa chữa thư viện."
+
+msgctxt "#33137"
+msgid "Enable Kodi Sync Queue"
+msgstr "Bật xếp hàng đồng bộ hóa Kodi"
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "Cập nhật thư viện"
+
+msgctxt "#33135"
+msgid "Kodi will now restart to apply a small patch for your Kodi version."
+msgstr ""
+"Kodi bây giờ sẽ khởi động lại để áp dụng một bản vá nhỏ cho phiên bản Kodi "
+"của bạn."
+
+msgctxt "#33134"
+msgid "Add server"
+msgstr "Thêm máy chủ"
+
+msgctxt "#33133"
+msgid "Remove library from Kodi"
+msgstr "Xóa thư viện khỏi Kodi"
+
+msgctxt "#33132"
+msgid "Repair library"
+msgstr "Sửa chữa thư viện"
+
+msgctxt "#33130"
+msgid "Select the source"
+msgstr "Chọn nguồn"
+
+msgctxt "#33129"
+msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
+msgstr ""
+"Bạn có thể đồng bộ thư viện bằng cách khởi chạy tiện ích bổ sung Jellyfin > "
+"Thêm thư viện."
+
+msgctxt "#33128"
+msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"Không thể truy xuất cập nhật nội dung mới nhất. Sẽ không có cập nhật nội "
+"dung nào được áp dụng cho đến khi Kodi được khởi động lại. Nếu sự cố này vẫn "
+"tiếp diễn, vui lòng báo cáo trên diễn đàn Jellyfin dành cho Kodi, với nhật "
+"ký Kodi của bạn."
+
+msgctxt "#33112"
+msgid "Applies to Native and Add-on playback mode"
+msgstr "Áp dụng cho chế độ phát Gốc và Bổ trợ"
