@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-11-09 06:01+0000\n"
+"PO-Revision-Date: 2020-11-12 13:09+0000\n"
 "Last-Translator: hoanghuy309 <hoanghuy309@gmail.com>\n"
 "Language-Team: Vietnamese <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/vi/>\n"
@@ -911,3 +911,61 @@ msgstr ""
 msgctxt "#33112"
 msgid "Applies to Native and Add-on playback mode"
 msgstr "Áp dụng cho chế độ phát Gốc và Bổ trợ"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "Bật Jellyfin cho Kodi"
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "Quản lý thư viện"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "Đang khởi động lại ..."
+
+msgctxt "#33191"
+msgid "Restart Jellyfin for Kodi to apply this change?"
+msgstr "Khởi động lại Jellyfin để Kodi áp dụng thay đổi này?"
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr ""
+"Hàng đợi Kodi Sync tăng tốc độ đồng bộ hóa khởi động. Đồng bộ hóa khác được "
+"kích hoạt bởi các sự kiện máy chủ."
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr "Bật đồng bộ hóa trong khi phát lại (có thể gây ra một số độ trễ)"
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "Xóa thư viện"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "Bật tùy chọn để phát với chế độ rạp chiếu phim"
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "Phát với chế độ rạp chiếu phim"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "Khởi động lại để áp dụng bản vá"
+
+msgctxt "#33180"
+msgid "Restart Jellyfin for Kodi"
+msgstr "Khởi động lại Jellyfin cho Kodi"
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "Bắt buộc chuyển mã"
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr "Đang xử lý các bản cập nhật"
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr "Hiển thị thanh tiến trình nếu số lượng cập nhật lớn hơn"
