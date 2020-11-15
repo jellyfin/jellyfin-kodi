@@ -213,11 +213,7 @@ class ConnectionManager(object):
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.settimeout(1.0)  # This controls the socket.timeout exception
-
-        sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 20)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        sock.setsockopt(socket.SOL_IP, socket.IP_MULTICAST_LOOP, 1)
-        sock.setsockopt(socket.IPPROTO_IP, socket.SO_REUSEADDR, 1)
 
         LOG.debug("MultiGroup      : %s", str(MULTI_GROUP))
         LOG.debug("Sending UDP Data: %s", MESSAGE)
@@ -232,6 +228,8 @@ class ConnectionManager(object):
             return servers
 
         while True:
+            data = None
+            addr = None
             try:
                 data, addr = sock.recvfrom(1024)  # buffer size
                 servers.append(json.loads(data))
@@ -239,6 +237,9 @@ class ConnectionManager(object):
             except socket.timeout:
                 LOG.info("Found Servers: %s", servers)
                 return servers
+
+            except json.JSONDecodeError:
+                LOG.warning("Unable to decode %r from %r.", data, addr)
 
             except Exception as e:
                 LOG.error(traceback.format_exc())
