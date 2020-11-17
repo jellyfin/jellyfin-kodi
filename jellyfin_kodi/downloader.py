@@ -33,13 +33,6 @@ def get_jellyfinserver_url(handler):
     return "{server}/%s" % handler
 
 
-def browse_info():
-    return (
-        "DateCreated,EpisodeCount,SeasonCount,Path,Genres,Studios,Taglines,MediaStreams,Overview,Etag,"
-        "ProductionLocations,Width,Height,RecursiveItemCount,ChildCount"
-    )
-
-
 def _http(action, url, request=None, server_id=None):
 
     if request is None:
@@ -86,42 +79,6 @@ def get_single_item(parent_id, media):
         'Limit': 1,
         'IncludeItemTypes': media
     })
-
-
-def get_filtered_section(parent_id=None, media=None, limit=None, recursive=None, sort=None, sort_order=None,
-                         filters=None, extra=None, server_id=None):
-
-    ''' Get dynamic listings.
-    '''
-    params = {
-        'ParentId': parent_id,
-        'IncludeItemTypes': media,
-        'IsMissing': False,
-        'Recursive': recursive if recursive is not None else True,
-        'Limit': limit,
-        'SortBy': sort or "SortName",
-        'SortOrder': sort_order or "Ascending",
-        'ImageTypeLimit': 1,
-        'IsVirtualUnaired': False,
-        'Fields': browse_info()
-    }
-    if filters:
-        if 'Boxsets' in filters:
-            filters.remove('Boxsets')
-            params['CollapseBoxSetItems'] = settings('groupedSets.bool')
-
-        params['Filters'] = ','.join(filters)
-
-    if settings('getCast.bool'):
-        params['Fields'] += ",People"
-
-    if media and 'Photo' in media:
-        params['Fields'] += ",Width,Height"
-
-    if extra is not None:
-        params.update(extra)
-
-    return _get("Users/{UserId}/Items", params, server_id)
 
 
 def get_movies_by_boxset(boxset_id):

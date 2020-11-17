@@ -26,12 +26,11 @@ LOG = LazyLogger(__name__)
 
 class Actions(object):
 
-    def __init__(self, server_id=None):
+    def __init__(self, server_id=None, api_client=None):
 
         self.server_id = server_id or None
-        client = Jellyfin(self.server_id).get_client()
-        self.api_client = client.jellyfin
-        self.server = client.auth.get_server_address(self.server_id)
+        self.api_client = api_client
+        self.server = self.api_client.config.data['auth.server']
         self.stack = []
 
     def get_playlist(self, item):
