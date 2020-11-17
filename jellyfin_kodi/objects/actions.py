@@ -51,7 +51,7 @@ class Actions(object):
 
         transcode = transcode or settings('playFromTranscode.bool')
         kodi_playlist = self.get_playlist(item)
-        play = playutils.PlayUtils(item, transcode, self.server_id, self.server)
+        play = playutils.PlayUtils(item, transcode, self.server_id, self.server, self.api_client)
         source = play.select_source(play.get_sources())
         play.set_external_subs(source, listitem)
 
