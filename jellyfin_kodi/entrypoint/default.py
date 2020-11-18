@@ -526,7 +526,7 @@ def get_fanart(item_id, path, server_id=None, api_client=None):
         xbmcvfs.mkdirs(directory)
         item = api_client.get_item(item_id)
         obj = objects.map(item, 'Artwork')
-        backdrops = api.API(item, server).get_all_artwork(obj)
+        backdrops = api.API(item).get_all_artwork(obj)
         tags = obj['BackdropTags']
 
         for index, backdrop in enumerate(backdrops):
