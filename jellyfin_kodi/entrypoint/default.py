@@ -815,7 +815,6 @@ def get_themes(api_client):
 
     items = {}
     server = api_client.config.data['auth.server']
-    token = api_client.config.data['auth.token']
 
     for view in views:
         result = api_client.get_items_theme_video(view)

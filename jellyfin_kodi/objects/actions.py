@@ -13,7 +13,6 @@ import database
 from helper import translate, playutils, api, window, settings, dialog
 from dialogs import resume
 from helper import LazyLogger
-from jellyfin import Jellyfin
 
 from .obj import Objects
 
