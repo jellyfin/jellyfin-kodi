@@ -17,7 +17,7 @@ import connect
 import client
 import library
 import monitor
-from views import Views, verify_kodi_defaults
+from views import Views
 from helper import translate, window, settings, event, dialog, set_addon_mode
 from helper.utils import JsonDebugPrinter
 from jellyfin import Jellyfin
@@ -66,8 +66,6 @@ class Service(xbmc.Monitor):
         LOG.info("Python Version: %s", sys.version)
         LOG.info("Using dynamic paths: %s", settings('useDirectPaths') == "0")
         LOG.info("Log Level: %s", self.settings['log_level'])
-
-        verify_kodi_defaults()
 
         window('jellyfin.connected.bool', True)
         settings('groupedSets.bool', objects.utils.get_grouped_set())
