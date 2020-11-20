@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-11-20 10:29+0000\n"
+"PO-Revision-Date: 2020-11-20 14:47+0000\n"
 "Last-Translator: Csaba <csab0825@gmail.com>\n"
 "Language-Team: Hungarian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hu/>\n"
@@ -956,7 +956,6 @@ msgctxt "#33161"
 msgid "Update password"
 msgstr "Jelszó frissítése"
 
-#, fuzzy
 msgctxt "#33115"
 msgid "Transcode options"
 msgstr "Átkódolási lehetőségek"
@@ -981,7 +980,6 @@ msgctxt "#30523"
 msgid "Transcode MPEG2"
 msgstr "MPEG2 átkódolása"
 
-#, fuzzy
 msgctxt "#30163"
 msgid "Audio bitrate"
 msgstr "Audio bitráta"
@@ -990,10 +988,9 @@ msgctxt "#30160"
 msgid "Max stream bitrate"
 msgstr "Maximális adatsebesség"
 
-#, fuzzy
 msgctxt "#33201"
 msgid "Max artwork resolution"
-msgstr "A képanyag maximális felbontása"
+msgstr "A borítókép maximális felbontása"
 
 msgctxt "#30164"
 msgid "Audio max channels"
