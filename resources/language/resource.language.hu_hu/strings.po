@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-11-07 20:16+0000\n"
-"Last-Translator: narancs93 <lajos.seyler@gmail.com>\n"
+"PO-Revision-Date: 2020-11-20 10:29+0000\n"
+"Last-Translator: Csaba <csab0825@gmail.com>\n"
 "Language-Team: Hungarian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hu/>\n"
 "Language: hu_hu\n"
@@ -961,20 +961,17 @@ msgctxt "#33115"
 msgid "Transcode options"
 msgstr "Átkódolási lehetőségek"
 
-#, fuzzy
 msgctxt "#30165"
 msgid "Allow burned subtitles"
 msgstr "Égetett feliratok engedélyezése"
 
-#, fuzzy
 msgctxt "#30162"
 msgid "Preferred audio codec"
-msgstr "Előnyben részesített audiókodek"
+msgstr "Preferált audiókodek(ek)"
 
-#, fuzzy
 msgctxt "#30161"
 msgid "Preferred video codec"
-msgstr "Előnyben részesített videokodek"
+msgstr "Preferált videokodek(ek)"
 
 msgctxt "#30524"
 msgid "Transcode VC-1"
@@ -992,3 +989,12 @@ msgstr "Audio bitráta"
 msgctxt "#30160"
 msgid "Max stream bitrate"
 msgstr "Maximális adatsebesség"
+
+#, fuzzy
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "A képanyag maximális felbontása"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Audió maximális csatornaszáma"
