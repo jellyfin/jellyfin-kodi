@@ -1,11 +1,5 @@
-version: '0.6.3'
+version: '0.6.4'
 changelog: |
-  - #395 Add more transcoding options
-  - #398 Fix removed log level in Kodi 19
-  - #399 Fix extracted subtitle delivery for transcodes
-  - #401 Add an option to reduce max artwork resolution
-  - #403 Fix flake8 lints
-  - #406 Add linting to azure pipeline
-  - #408 Improve validation pipeline
-  - #412 Fix db error messages on startup
-  - #413 Fix need for restart/reboot for sync settings changes to take effect
+  - #410 Use a semaphore to avoid fetching complete library to memory
+  - #417 Don't force-extract subs for transcoded content
+  - #424 Remove multicast socket options from autodiscovery
