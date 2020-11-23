@@ -135,6 +135,14 @@ class HTTP(object):
 
                         raise HTTPException("Unauthorized", error)
 
+                elif r.status_code == 400:
+                    LOG.warning(error)
+                    LOG.warning(data)
+                    try:
+                        LOG.warning(r.json())
+                    except Exception:
+                        pass
+
                 elif r.status_code == 500:  # log and ignore.
                     LOG.error("--[ 500 response ] %s", error)
 
