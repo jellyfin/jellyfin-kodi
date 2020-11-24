@@ -131,7 +131,7 @@ class Actions(object):
                     listitem = xbmcgui.ListItem()
                     LOG.info("[ intro/%s ] %s", intro['Id'], intro['Name'])
 
-                    play = playutils.PlayUtils(intro, False, self.server_id, self.server)
+                    play = playutils.PlayUtils(intro, False, self.server_id, self.server, self.api_client)
                     play.select_source(play.get_sources())
                     self.set_listitem(intro, listitem, intro=True)
                     listitem.setPath(intro['PlaybackInfo']['Path'])
