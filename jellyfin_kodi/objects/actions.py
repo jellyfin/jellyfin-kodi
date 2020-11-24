@@ -151,7 +151,7 @@ class Actions(object):
             listitem = xbmcgui.ListItem()
             LOG.info("[ part/%s ] %s", part['Id'], part['Name'])
 
-            play = playutils.PlayUtils(part, False, self.server_id, self.server)
+            play = playutils.PlayUtils(part, False, self.server_id, self.server, self.api_client)
             source = play.select_source(play.get_sources())
             play.set_external_subs(source, listitem)
             self.set_listitem(part, listitem)
@@ -182,7 +182,7 @@ class Actions(object):
         listitem = xbmcgui.ListItem()
         LOG.info("[ playlist/%s ] %s", item['Id'], item['Name'])
 
-        play = playutils.PlayUtils(item, False, self.server_id, self.server)
+        play = playutils.PlayUtils(item, False, self.server_id, self.server, self.api_client)
         source = play.select_source(play.get_sources())
         play.set_external_subs(source, listitem)
 
@@ -212,7 +212,7 @@ class Actions(object):
                 server_address, item['Id'], token)
             listitem.setPath(path)
 
-            play = playutils.PlayUtils(item, False, self.server_id, self.server)
+            play = playutils.PlayUtils(item, False, self.server_id, self.server, self.api_client)
             source = play.select_source(play.get_sources())
             play.set_external_subs(source, listitem)
 
