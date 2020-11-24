@@ -191,6 +191,10 @@ class Views(object):
         playlist_path = xbmc.translatePath("special://profile/playlists/video")
         index = 0
 
+        # Kodi 19 doesn't seem to create this directory on it's own
+        if not os.path.isdir(node_path):
+            os.makedirs(node_path)
+
         with Database('jellyfin') as jellyfindb:
             db = jellyfin_db.JellyfinDatabase(jellyfindb.cursor)
 
