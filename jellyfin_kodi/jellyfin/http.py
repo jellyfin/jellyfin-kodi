@@ -141,7 +141,7 @@ class HTTP(object):
                     try:
                         LOG.warning(r.json())
                     except Exception:
-                        pass
+                        LOG.warning(r.text)
 
                 elif r.status_code == 500:  # log and ignore.
                     LOG.error("--[ 500 response ] %s", error)
