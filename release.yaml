@@ -1,5 +1,3 @@
-version: '0.6.4'
+version: '0.6.5'
 changelog: |
-  - #410 Use a semaphore to avoid fetching complete library to memory
-  - #417 Don't force-extract subs for transcoded content
-  - #424 Remove multicast socket options from autodiscovery
+  - #426 Remove verify_kodi_defaults function
