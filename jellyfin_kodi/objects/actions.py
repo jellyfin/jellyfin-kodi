@@ -10,7 +10,6 @@ from datetime import timedelta
 from kodi_six import xbmc, xbmcgui, xbmcplugin, xbmcaddon
 
 import database
-from downloader import TheVoid
 from helper import translate, playutils, api, window, settings, dialog
 from dialogs import resume
 from helper import LazyLogger
@@ -26,10 +25,11 @@ LOG = LazyLogger(__name__)
 
 class Actions(object):
 
-    def __init__(self, server_id=None):
+    def __init__(self, server_id=None, api_client=None):
 
         self.server_id = server_id or None
-        self.server = TheVoid('GetServerAddress', {'ServerId': self.server_id}).get()
+        self.api_client = api_client
+        self.server = self.api_client.config.data['auth.server']
         self.stack = []
 
     def get_playlist(self, item):
@@ -50,7 +50,7 @@ class Actions(object):
 
         transcode = transcode or settings('playFromTranscode.bool')
         kodi_playlist = self.get_playlist(item)
-        play = playutils.PlayUtils(item, transcode, self.server_id, self.server)
+        play = playutils.PlayUtils(item, transcode, self.server_id, self.server, self.api_client)
         source = play.select_source(play.get_sources())
         play.set_external_subs(source, listitem)
 
@@ -112,7 +112,7 @@ class Actions(object):
 
         ''' if we have any play them when the movie/show is not being resumed.
         '''
-        intros = TheVoid('GetIntros', {'ServerId': self.server_id, 'Id': item['Id']}).get()
+        intros = self.api_client.get_intros(item['Id'])
 
         if intros['Items']:
             enabled = True
@@ -131,7 +131,7 @@ class Actions(object):
                     listitem = xbmcgui.ListItem()
                     LOG.info("[ intro/%s ] %s", intro['Id'], intro['Name'])
 
-                    play = playutils.PlayUtils(intro, False, self.server_id, self.server)
+                    play = playutils.PlayUtils(intro, False, self.server_id, self.server, self.api_client)
                     play.select_source(play.get_sources())
                     self.set_listitem(intro, listitem, intro=True)
                     listitem.setPath(intro['PlaybackInfo']['Path'])
@@ -145,14 +145,13 @@ class Actions(object):
 
         ''' Create listitems and add them to the stack of playlist.
         '''
-        parts = TheVoid('GetAdditionalParts', {'ServerId': self.server_id, 'Id': item_id}).get()
-
+        parts = self.api_client.get_additional_parts(item_id)
         for part in parts['Items']:
 
             listitem = xbmcgui.ListItem()
             LOG.info("[ part/%s ] %s", part['Id'], part['Name'])
 
-            play = playutils.PlayUtils(part, False, self.server_id, self.server)
+            play = playutils.PlayUtils(part, False, self.server_id, self.server, self.api_client)
             source = play.select_source(play.get_sources())
             play.set_external_subs(source, listitem)
             self.set_listitem(part, listitem)
@@ -183,7 +182,7 @@ class Actions(object):
         listitem = xbmcgui.ListItem()
         LOG.info("[ playlist/%s ] %s", item['Id'], item['Name'])
 
-        play = playutils.PlayUtils(item, False, self.server_id, self.server)
+        play = playutils.PlayUtils(item, False, self.server_id, self.server, self.api_client)
         source = play.select_source(play.get_sources())
         play.set_external_subs(source, listitem)
 
@@ -213,7 +212,7 @@ class Actions(object):
                 server_address, item['Id'], token)
             listitem.setPath(path)
 
-            play = playutils.PlayUtils(item, False, self.server_id, self.server)
+            play = playutils.PlayUtils(item, False, self.server_id, self.server, self.api_client)
             source = play.select_source(play.get_sources())
             play.set_external_subs(source, listitem)
 

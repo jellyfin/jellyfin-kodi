@@ -10,7 +10,6 @@ import threading
 from kodi_six import xbmc
 
 import connect
-import downloader
 import player
 from client import get_device_id
 from objects import PlaylistWorker, on_play, on_update, special_listener
@@ -53,12 +52,7 @@ class Monitor(xbmc.Monitor):
         if sender == 'plugin.video.jellyfin':
             method = method.split('.')[1]
 
-            if method not in ('GetItem', 'ReportProgressRequested', 'LoadServer', 'RandomItems', 'Recommended',
-                              'GetServerAddress', 'GetPlaybackInfo', 'Browse', 'GetImages', 'GetToken',
-                              'PlayPlaylist', 'Play', 'GetIntros', 'GetAdditionalParts', 'RefreshItem', 'Genres',
-                              'FavoriteItem', 'DeleteItem', 'AddUser', 'GetSession', 'GetUsers', 'GetThemes',
-                              'GetTheme', 'Playstate', 'GeneralCommand', 'GetTranscodeOptions', 'RecentlyAdded',
-                              'BrowseSeason', 'LiveTV', 'GetLiveStream'):
+            if method not in ('ReportProgressRequested', 'LoadServer', 'AddUser', 'PlayPlaylist', 'Play', 'Playstate', 'GeneralCommand'):
                 return
 
             data = json.loads(data)[0]
@@ -122,116 +116,17 @@ class Monitor(xbmc.Monitor):
             LOG.exception(error)
             server = Jellyfin()
 
-        if method == 'GetItem':
+        server = server.get_client()
 
-            item = server.jellyfin.get_item(data['Id'])
-            self.void_responder(data, item)
+        if method == 'Play':
 
-        elif method == 'GetAdditionalParts':
+            items = server.jellyfin.get_items(data['ItemIds'])
 
-            item = server.jellyfin.get_additional_parts(data['Id'])
-            self.void_responder(data, item)
+            PlaylistWorker(data.get('ServerId'), items, data['PlayCommand'] == 'PlayNow',
+                           data.get('StartPositionTicks', 0), data.get('AudioStreamIndex'),
+                           data.get('SubtitleStreamIndex')).start()
 
-        elif method == 'GetIntros':
-
-            item = server.jellyfin.get_intros(data['Id'])
-            self.void_responder(data, item)
-
-        elif method == 'GetImages':
-
-            item = server.jellyfin.get_images(data['Id'])
-            self.void_responder(data, item)
-
-        elif method == 'GetServerAddress':
-
-            server_address = server.auth.get_server_info(server.auth.server_id)['address']
-            self.void_responder(data, server_address)
-
-        elif method == 'GetPlaybackInfo':
-
-            sources = server.jellyfin.get_play_info(data['Id'], data['Profile'])
-            self.void_responder(data, sources)
-
-        elif method == 'GetLiveStream':
-
-            sources = server.jellyfin.get_live_stream(data['Id'], data['PlaySessionId'], data['Token'], data['Profile'])
-            self.void_responder(data, sources)
-
-        elif method == 'GetToken':
-
-            token = server.auth.jellyfin_token()
-            self.void_responder(data, token)
-
-        elif method == 'GetSession':
-
-            session = server.jellyfin.get_device(self.device_id)
-            self.void_responder(data, session)
-
-        elif method == 'GetUsers':
-
-            users = server.jellyfin.get_users()
-            self.void_responder(data, users)
-
-        elif method == 'GetTranscodeOptions':
-
-            result = server.jellyfin.get_transcode_settings()
-            self.void_responder(data, result)
-
-        elif method == 'GetThemes':
-
-            if data['Type'] == 'Video':
-                theme = server.jellyfin.get_items_theme_video(data['Id'])
-            else:
-                theme = server.jellyfin.get_items_theme_song(data['Id'])
-
-            self.void_responder(data, theme)
-
-        elif method == 'GetTheme':
-
-            theme = server.jellyfin.get_themes(data['Id'])
-            self.void_responder(data, theme)
-
-        elif method == 'Browse':
-
-            result = downloader.get_filtered_section(data.get('Id'), data.get('Media'), data.get('Limit'),
-                                                     data.get('Recursive'), data.get('Sort'), data.get('SortOrder'),
-                                                     data.get('Filters'), data.get('Params'), data.get('ServerId'))
-            self.void_responder(data, result)
-
-        elif method == 'BrowseSeason':
-
-            result = server.jellyfin.get_seasons(data['Id'])
-            self.void_responder(data, result)
-
-        elif method == 'LiveTV':
-
-            result = server.jellyfin.get_channels()
-            self.void_responder(data, result)
-
-        elif method == 'RecentlyAdded':
-
-            result = server.jellyfin.get_recently_added(data.get('Media'), data.get('Id'), data.get('Limit'))
-            self.void_responder(data, result)
-
-        elif method == 'Genres':
-
-            result = server.jellyfin.get_genres(data.get('Id'))
-            self.void_responder(data, result)
-
-        elif method == 'Recommended':
-
-            result = server.jellyfin.get_recommendation(data.get('Id'), data.get('Limit'))
-            self.void_responder(data, result)
-
-        elif method == 'RefreshItem':
-            server.jellyfin.refresh_item(data['Id'])
-
-        elif method == 'FavoriteItem':
-            server.jellyfin.favorite(data['Id'], data['Favorite'])
-
-        elif method == 'DeleteItem':
-            server.jellyfin.delete_item(data['Id'])
-
+        # TODO no clue if this is called by anything
         elif method == 'PlayPlaylist':
 
             server.jellyfin.post_session(server.config.data['app.session'], "Playing", {
@@ -239,14 +134,6 @@ class Monitor(xbmc.Monitor):
                 'ItemIds': data['Id'],
                 'StartPositionTicks': 0
             })
-
-        elif method == 'Play':
-
-            items = server.jellyfin.get_items(data['ItemIds'])
-
-            PlaylistWorker(data.get('ServerId'), items, data['PlayCommand'] == 'PlayNow',
-                           data.get('StartPositionTicks', 0), data.get('AudioStreamIndex'),
-                           data.get('SubtitleStreamIndex')).start()
 
         elif method in ('ReportProgressRequested', 'Player.OnAVChange'):
             self.player.report_playback(data.get('Report', True))
@@ -270,14 +157,9 @@ class Monitor(xbmc.Monitor):
         elif method == 'VideoLibrary.OnUpdate':
             on_update(data, server)
 
-    def void_responder(self, data, result):
-
-        window('jellyfin_%s.json' % data['VoidName'], result)
-        LOG.debug("--->[ nostromo/jellyfin_%s.json ] sent", data['VoidName'])
-
     def server_instance(self, server_id=None):
 
-        server = Jellyfin(server_id)
+        server = Jellyfin(server_id).get_client()
         self.post_capabilities(server)
 
         if server_id is not None:

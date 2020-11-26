@@ -54,6 +54,7 @@ class Jellyfin(object):
         self.server_id = server_id or "default"
 
     def get_client(self):
+        # type: () -> JellyfinClient
         return self.client[self.server_id]
 
     def close(self):

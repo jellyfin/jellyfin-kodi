@@ -9,9 +9,8 @@ from datetime import date
 
 from six.moves import range, queue as Queue
 
-from kodi_six import xbmc
 import requests
-from helper import settings, stop, event, window, create_id
+from helper import settings, stop, window
 from jellyfin import Jellyfin
 from jellyfin import api
 from helper.exceptions import HTTPException
@@ -32,13 +31,6 @@ def get_jellyfinserver_url(handler):
         LOG.info("handler starts with /: %s", handler)
 
     return "{server}/%s" % handler
-
-
-def browse_info():
-    return (
-        "DateCreated,EpisodeCount,SeasonCount,Path,Genres,Studios,Taglines,MediaStreams,Overview,Etag,"
-        "ProductionLocations,Width,Height,RecursiveItemCount,ChildCount"
-    )
 
 
 def _http(action, url, request=None, server_id=None):
@@ -87,42 +79,6 @@ def get_single_item(parent_id, media):
         'Limit': 1,
         'IncludeItemTypes': media
     })
-
-
-def get_filtered_section(parent_id=None, media=None, limit=None, recursive=None, sort=None, sort_order=None,
-                         filters=None, extra=None, server_id=None):
-
-    ''' Get dynamic listings.
-    '''
-    params = {
-        'ParentId': parent_id,
-        'IncludeItemTypes': media,
-        'IsMissing': False,
-        'Recursive': recursive if recursive is not None else True,
-        'Limit': limit,
-        'SortBy': sort or "SortName",
-        'SortOrder': sort_order or "Ascending",
-        'ImageTypeLimit': 1,
-        'IsVirtualUnaired': False,
-        'Fields': browse_info()
-    }
-    if filters:
-        if 'Boxsets' in filters:
-            filters.remove('Boxsets')
-            params['CollapseBoxSetItems'] = settings('groupedSets.bool')
-
-        params['Filters'] = ','.join(filters)
-
-    if settings('getCast.bool'):
-        params['Fields'] += ",People"
-
-    if media and 'Photo' in media:
-        params['Fields'] += ",Width,Height"
-
-    if extra is not None:
-        params.update(extra)
-
-    return _get("Users/{UserId}/Items", params, server_id)
 
 
 def get_movies_by_boxset(boxset_id):
@@ -381,43 +337,3 @@ class GetItemWorker(threading.Thread):
 
                 if window('jellyfin_should_stop.bool'):
                     break
-
-
-class TheVoid(object):
-
-    def __init__(self, method, data):
-
-        ''' If you call get, this will block until response is received.
-            This is used to communicate between entrypoints.
-        '''
-        if type(data) != dict:
-            raise Exception("unexpected data format")
-
-        data['VoidName'] = str(create_id())
-        LOG.info("---[ contact MU-TH-UR 6000/%s ]", method)
-        LOG.debug(data)
-
-        event(method, data)
-        self.method = method
-        self.data = data
-
-    def get(self):
-
-        while True:
-
-            response = window('jellyfin_%s.json' % self.data['VoidName'])
-
-            if response != "":
-
-                LOG.debug("--<[ nostromo/jellyfin_%s.json ]", self.data['VoidName'])
-                window('jellyfin_%s' % self.data['VoidName'], clear=True)
-
-                return response
-
-            if window('jellyfin_should_stop.bool'):
-                LOG.info("Abandon mission! A black hole just swallowed [ %s/%s ]", self.method, self.data['VoidName'])
-
-                return
-
-            xbmc.sleep(100)
-            LOG.info("--[ void/%s ]", self.data['VoidName'])

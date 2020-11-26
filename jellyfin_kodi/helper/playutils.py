@@ -11,7 +11,6 @@ from kodi_six import xbmc, xbmcvfs
 
 import client
 import requests
-from downloader import TheVoid
 from helper import LazyLogger
 
 from . import translate, settings, window, dialog, api
@@ -53,30 +52,26 @@ def set_properties(item, method, server_id=None):
 
 class PlayUtils(object):
 
-    def __init__(self, item, force_transcode=False, server_id=None, server=None, token=None):
+    def __init__(self, item, force_transcode=False, server_id=None, server=None, api_client=None):
 
         ''' Item will be updated with the property PlaybackInfo, which
             holds all the playback information.
         '''
         self.item = item
         self.item['PlaybackInfo'] = {}
+        self.api_client = api_client
         self.info = {
             'ServerId': server_id,
             'ServerAddress': server,
             'ForceTranscode': force_transcode,
-            'Token': token or TheVoid('GetToken', {'ServerId': server_id}).get()
+            'Token': api_client.config.data['auth.token']
         }
 
     def get_sources(self, source_id=None):
 
         ''' Return sources based on the optional source_id or the device profile.
         '''
-        params = {
-            'ServerId': self.info['ServerId'],
-            'Id': self.item['Id'],
-            'Profile': self.get_device_profile()
-        }
-        info = TheVoid('GetPlaybackInfo', params).get()
+        info = self.api_client.get_play_info(self.item['Id'], self.get_device_profile())
         LOG.info(info)
         self.info['PlaySessionId'] = info['PlaySessionId']
         sources = []
@@ -217,14 +212,7 @@ class PlayUtils(object):
 
         ''' Get live stream media info.
         '''
-        params = {
-            'ServerId': self.info['ServerId'],
-            'Id': self.item['Id'],
-            'Profile': self.get_device_profile(),
-            'PlaySessionId': self.info['PlaySessionId'],
-            'Token': source['OpenToken']
-        }
-        info = TheVoid('GetLiveStream', params).get()
+        info = self.api_client.get_live_stream(self.item['Id'], self.info['PlaySessionId'], source['OpenToken'], self.get_device_profile())
         LOG.info(info)
 
         if info['MediaSource'].get('RequiresClosing'):
@@ -509,7 +497,7 @@ class PlayUtils(object):
         mapping = {}
         kodi = 0
 
-        server_settings = TheVoid('GetTranscodeOptions', {'ServerId': self.info['ServerId']}).get()
+        server_settings = self.api_client.get_transcode_settings()
 
         for stream in source['MediaStreams']:
             if stream['SupportsExternalStream'] and stream['Type'] == 'Subtitle' and stream['DeliveryMethod'] == 'External':
@@ -598,7 +586,7 @@ class PlayUtils(object):
         subs_streams = collections.OrderedDict()
         streams = source['MediaStreams']
 
-        server_settings = TheVoid('GetTranscodeOptions', {'ServerId': self.info['ServerId']}).get()
+        server_settings = self.api_client.get_transcode_settings()
         allow_burned_subs = settings('allowBurnedSubs.bool')
 
         for stream in streams:
@@ -665,6 +653,7 @@ class PlayUtils(object):
         if subtitle:
 
             index = subtitle
+            server_settings = self.api_client.get_transcode_settings()
             stream = streams[index]
 
             if server_settings['EnableSubtitleExtraction'] and stream['SupportsExternalStream']:
@@ -683,6 +672,8 @@ class PlayUtils(object):
                 index = subs_streams[selection[resp]] if resp > -1 else source.get('DefaultSubtitleStreamIndex')
 
                 if index is not None:
+
+                    server_settings = self.api_client.get_transcode_settings()
                     stream = streams[index]
 
                     if server_settings['EnableSubtitleExtraction'] and stream['SupportsExternalStream']:

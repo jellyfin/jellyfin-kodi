@@ -11,8 +11,8 @@ from kodi_six import xbmc, xbmcaddon
 import database
 from dialogs import context
 from helper import translate, settings, dialog
-from downloader import TheVoid
 from helper import LazyLogger
+from jellyfin import Jellyfin
 
 #################################################################################################
 
@@ -39,10 +39,11 @@ class Context(object):
         try:
             self.kodi_id = sys.listitem.getVideoInfoTag().getDbId() or None
             self.media = self.get_media_type()
-            self.server = sys.listitem.getProperty('jellyfinserver') or None
+            self.server_id = sys.listitem.getProperty('jellyfinserver') or None
+            self.api_client = Jellyfin(self.server_id).get_client().jellyfin
             item_id = sys.listitem.getProperty('jellyfinid')
         except AttributeError:
-            self.server = None
+            self.server_id = None
 
             if xbmc.getInfoLabel('ListItem.Property(jellyfinid)'):
                 item_id = xbmc.getInfoLabel('ListItem.Property(jellyfinid)')
@@ -51,8 +52,8 @@ class Context(object):
                 self.media = xbmc.getInfoLabel('ListItem.DBTYPE')
                 item_id = None
 
-        if self.server or item_id:
-            self.item = TheVoid('GetItem', {'ServerId': self.server, 'Id': item_id}).get()
+        if self.server_id or item_id:
+            self.item = self.api_client.get_item(item_id)
         else:
             self.item = self.get_item_id()
 
@@ -143,13 +144,13 @@ class Context(object):
         selected = self._selected_option
 
         if selected == OPTIONS['Refresh']:
-            TheVoid('RefreshItem', {'ServerId': self.server, 'Id': self.item['Id']})
+            self.api_client.refresh_item(self.item['Id'])
 
         elif selected == OPTIONS['AddFav']:
-            TheVoid('FavoriteItem', {'ServerId': self.server, 'Id': self.item['Id'], 'Favorite': True})
+            self.api_client.favorite(self.item['Id'], True)
 
         elif selected == OPTIONS['RemoveFav']:
-            TheVoid('FavoriteItem', {'ServerId': self.server, 'Id': self.item['Id'], 'Favorite': False})
+            self.api_client.favorite(self.item['Id'], False)
 
         elif selected == OPTIONS['Addon']:
             xbmc.executebuiltin('Addon.OpenSettings(plugin.video.jellyfin)')
@@ -159,7 +160,7 @@ class Context(object):
 
     def delete_item(self):
         if settings('skipContextMenu.bool') and dialog("yesno", "{jellyfin}", translate(33015)):
-            TheVoid('DeleteItem', {'ServerId': self.server, 'Id': self.item['Id']})
+            self.api_client.delete_item(self.item['Id'])
 
     def transcode(self):
         filename = xbmc.getInfoLabel("ListItem.Filenameandpath")
