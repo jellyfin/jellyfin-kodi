@@ -3,9 +3,10 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
+import json
+
 from helper import LazyLogger
 from kodi_six.xbmc import translatePath
-import json
 
 from . import api
 from .configuration import Config
