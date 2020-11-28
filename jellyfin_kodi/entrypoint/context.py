@@ -159,7 +159,7 @@ class Context(object):
             self.delete_item()
 
     def delete_item(self):
-        if settings('skipContextMenu.bool') and dialog("yesno", "{jellyfin}", translate(33015)):
+        if settings('skipContextMenu.bool') or dialog("yesno", "{jellyfin}", translate(33015)):
             self.api_client.delete_item(self.item['Id'])
 
     def transcode(self):
