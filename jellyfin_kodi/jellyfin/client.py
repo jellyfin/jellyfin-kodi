@@ -4,6 +4,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 #################################################################################################
 
 from helper import LazyLogger
+from kodi_six.xbmc import translatePath
+import json
 
 from . import api
 from .configuration import Config
@@ -41,6 +43,19 @@ class JellyfinClient(object):
         self.jellyfin = api.API(self.http)
         self.callback_ws = callback
         self.callback = callback
+
+        addon_data = translatePath("special://profile/addon_data/plugin.video.jellyfin/data.json")
+        with open(addon_data, 'rb') as infile:
+            data = json.load(infile)
+
+        try:
+            server_data = data['Servers'][0]
+            self.jellyfin.config.data['auth.server'] = server_data.get('address')
+            self.jellyfin.config.data['auth.server-name'] = server_data.get('Name')
+            self.jellyfin.config.data['auth.user_id'] = server_data.get('UserId')
+            self.jellyfin.config.data['auth.token'] = server_data.get('AccessToken')
+        except Exception as e:
+            LOG.warning('Addon appears to not be configured yet: {}'.format(e))
 
     def set_credentials(self, credentials=None):
         self.auth.credentials.set_credentials(credentials or {})
