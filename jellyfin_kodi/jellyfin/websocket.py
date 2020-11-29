@@ -45,7 +45,7 @@ import threading
 import time
 import logging
 
-from six import text_type, string_types, iteritems, int2byte, indexbytes
+from six import text_type, string_types, int2byte, indexbytes
 from six.moves import range
 from six.moves.urllib.parse import urlparse
 
@@ -239,13 +239,7 @@ _MAX_CHAR_BYTE = (1 << 8) - 1
 
 def _create_sec_websocket_key():
     uid = uuid.uuid4()
-    return base64.encodestring(uid.bytes).strip()
-
-
-_HEADERS_TO_CHECK = {
-    "upgrade": "websocket",
-    "connection": "upgrade",
-}
+    return base64.b64encode(uid.bytes).strip()
 
 
 class ABNF(object):
@@ -536,24 +530,17 @@ class WebSocket(object):
         self.connected = True
 
     def _validate_header(self, headers, key):
-        for k, v in iteritems(_HEADERS_TO_CHECK):
-            r = headers.get(k, None)
-            if not r:
-                return False
-            r = r.lower()
-            if v != r:
-                return False
+        if headers.get("connection", "").lower() != "upgrade" or headers.get("upgrade", "").lower() != "websocket":
+            return False
 
-        result = headers.get("sec-websocket-accept", None)
+        result = headers.get("sec-websocket-accept")
         if not result:
             return False
-        result = result.lower()
 
         # https://tools.ietf.org/html/rfc6455#page-6
-        magic_string = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11".encode()
-        value = key + magic_string
-        hashed = base64.encodestring(hashlib.sha1(value).digest()).strip().lower().decode()
-        return hashed == result
+        magic_string = b"258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
+        hashed = base64.b64encode(hashlib.sha1(key + magic_string).digest())
+        return hashed.decode() == result
 
     def _read_headers(self):
         status = None
@@ -575,7 +562,7 @@ class WebSocket(object):
                 kv = line.split(":", 1)
                 if len(kv) == 2:
                     key, value = kv
-                    headers[key.lower()] = value.strip().lower()
+                    headers[key.lower()] = value.strip()
                 else:
                     raise WebSocketException("Invalid header")
 
