@@ -52,6 +52,19 @@ class Context(object):
                 self.media = xbmc.getInfoLabel('ListItem.DBTYPE')
                 item_id = None
 
+        addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/data.json")
+        with open(addon_data, 'rb') as infile:
+            data = json.load(infile)
+
+        try:
+            server_data = data['Servers'][0]
+            self.api_client.config.data['auth.server'] = server_data.get('address')
+            self.api_client.config.data['auth.server-name'] = server_data.get('Name')
+            self.api_client.config.data['auth.user_id'] = server_data.get('UserId')
+            self.api_client.config.data['auth.token'] = server_data.get('AccessToken')
+        except Exception as e:
+            LOG.warning('Addon appears to not be configured yet: {}'.format(e))
+
         if self.server_id or item_id:
             self.item = self.api_client.get_item(item_id)
         else:
