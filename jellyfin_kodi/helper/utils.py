@@ -13,7 +13,7 @@ from uuid import uuid4
 from distutils.version import LooseVersion
 
 from dateutil import tz, parser
-from six import text_type, string_types, iteritems
+from six import text_type, string_types, iteritems, ensure_text, ensure_binary
 from six.moves.urllib.parse import quote_plus
 
 from kodi_six import xbmc, xbmcaddon, xbmcgui, xbmcvfs
@@ -137,12 +137,13 @@ def event(method, data=None, sender=None, hexlify=False):
     sender = sender or "plugin.video.jellyfin"
 
     if hexlify:
-        data = '\\"[\\"{0}\\"]\\"'.format(binascii.hexlify(json.dumps(data)))
-    else:
-        data = '"[%s]"' % json.dumps(data).replace('"', '\\"')
+        data = ensure_text(binascii.hexlify(ensure_binary(json.dumps(data))))
+
+    data = '"[%s]"' % json.dumps(data).replace('"', '\\"')
+
+    LOG.debug("---[ event: %s/%s ] %s", sender, method, data)
 
     xbmc.executebuiltin('NotifyAll(%s, %s, %s)' % (sender, method, data))
-    LOG.debug("---[ event: %s/%s ] %s", sender, method, data)
 
 
 def dialog(dialog_type, *args, **kwargs):
