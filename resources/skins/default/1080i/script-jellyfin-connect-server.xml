@@ -75,7 +75,7 @@
 								<onup>noop</onup>
 								<onleft>close</onleft>
 								<onright>close</onright>
-								<ondown>205</ondown>
+								<ondown>206</ondown>
 								<itemlayout width="510" height="65">
 									<control type="group">
 										<left>20</left>
