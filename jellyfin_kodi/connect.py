@@ -176,6 +176,7 @@ class Connect(object):
             LOG.debug("Adding manual server")
             try:
                 self.manual_server()
+                return
             except RuntimeError:
                 pass
         else:
