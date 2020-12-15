@@ -58,10 +58,10 @@ class Events(object):
         api_client = jellyfin_client.jellyfin
 
         addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/data.json")
-        with open(addon_data, 'rb') as infile:
-            data = json.load(infile)
-
         try:
+            with open(addon_data, 'rb') as infile:
+                data = json.load(infile)
+
             server_data = data['Servers'][0]
             api_client.config.data['auth.server'] = server_data.get('address')
             api_client.config.data['auth.server-name'] = server_data.get('Name')
