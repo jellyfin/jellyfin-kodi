@@ -112,8 +112,7 @@ class Connect(object):
                 return state['Credentials']
 
             elif (server_selection or state['State'] == CONNECTION_STATE['ServerSelection'] or state['State'] == CONNECTION_STATE['Unavailable'] and not settings('SyncInstallRunDone.bool')):
-
-                self.select_servers(state)
+                state['Credentials']['Servers'] = [self.select_servers(state)]
 
             elif state['State'] == CONNECTION_STATE['ServerSignIn']:
                 if 'ExchangeToken' not in state['Servers'][0]:
@@ -170,12 +169,12 @@ class Connect(object):
 
         if dialog.is_server_selected():
             LOG.debug("Server selected: %s", dialog.get_server())
-            return
+            return dialog.get_server()
 
         elif dialog.is_manual_server():
             LOG.debug("Adding manual server")
             try:
-                self.manual_server()
+                return self.manual_server()
             except RuntimeError:
                 pass
         else:
