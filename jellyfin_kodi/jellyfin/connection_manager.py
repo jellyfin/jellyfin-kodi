@@ -318,6 +318,7 @@ class ConnectionManager(object):
                 self._update_server_info(server, system_info)
                 self.config.data['auth.user_id'] = server['UserId']
                 self.config.data['auth.token'] = server['AccessToken']
+                system_info['Status_Code'] = 200
 
                 return self._after_connect_validated(server, credentials, system_info, False, options)
 
