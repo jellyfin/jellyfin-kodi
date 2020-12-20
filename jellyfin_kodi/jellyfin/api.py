@@ -259,7 +259,7 @@ class API(object):
 
     def check_companion_installed(self):
         try:
-            self._get("/Jellyfin.Plugin.KodiSyncQueue/GetServerDateTime")
+            self._get("Jellyfin.Plugin.KodiSyncQueue/GetServerDateTime")
             return True
         except Exception:
             return False
