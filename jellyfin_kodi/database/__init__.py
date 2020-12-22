@@ -3,10 +3,10 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 #################################################################################################
 
 import datetime
-import logging
 import json
 import os
 import sqlite3
+import sys
 
 from kodi_six import xbmc, xbmcvfs
 from six import text_type
@@ -317,13 +317,15 @@ def reset_artwork():
 
 
 def get_sync():
+    if (3, 0) <= sys.version_info < (3, 6):
+        LOG.error("Python versions 3.0-3.5 are NOT supported.")
 
     if not xbmcvfs.exists(ADDON_DATA):
         xbmcvfs.mkdirs(ADDON_DATA)
 
     try:
         with open(os.path.join(ADDON_DATA, 'sync.json'), 'rb') as infile:
-            sync = json.load(infile, encoding='utf-8')
+            sync = json.load(infile)
     except Exception:
         sync = {}
 
@@ -350,23 +352,17 @@ def save_sync(sync):
 
 
 def get_credentials():
+    if (3, 0) <= sys.version_info < (3, 6):
+        LOG.error("Python versions 3.0-3.5 are NOT supported.")
 
     if not xbmcvfs.exists(ADDON_DATA):
         xbmcvfs.mkdirs(ADDON_DATA)
 
     try:
         with open(os.path.join(ADDON_DATA, 'data.json'), 'rb') as infile:
-            credentials = json.load(infile, encoding='utf8')
-    except Exception:
-
-        try:
-            with open(os.path.join(ADDON_DATA, 'data.txt'), 'rb') as infile:
-                credentials = json.load(infile, encoding='utf-8')
-                save_credentials(credentials)
-
-            xbmcvfs.delete(os.path.join(ADDON_DATA, 'data.txt'))
-        except Exception:
-            credentials = {}
+            credentials = json.load(infile)
+    except IOError:
+        credentials = {}
 
     credentials['Servers'] = credentials.get('Servers', [])
 
