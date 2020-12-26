@@ -688,7 +688,7 @@ class PlayUtils(object):
     def get_subtitles(self, source, stream, index):
 
         if stream['IsTextSubtitleStream'] and 'DeliveryUrl' in stream and stream['DeliveryUrl'].lower().startswith('/videos'):
-            url = "%s/%s" % (self.info['ServerAddress'], stream['DeliveryUrl'])
+            url = "%s%s" % (self.info['ServerAddress'], stream['DeliveryUrl'])
         else:
             url = "%s/Videos/%s/%s/Subtitles/%s/Stream.%s?api_key=%s" % (
                 self.info['ServerAddress'],
