@@ -215,7 +215,11 @@ class FullSync(object):
             if library_id.startswith('Boxsets:'):
                 boxset_library = {}
 
-                libraries = self.get_libraries(library_id.split('Boxsets:')[1] if len(library_id) > len('Boxsets:') else None)
+                if library_id and library_id == 'Boxsets:Refresh':
+                    libraries = self.get_libraries()
+                else:
+                    libraries = self.get_libraries(library_id.split('Bossets:')[1])
+                    #libraries = self.get_libraries(library_id.split('Boxsets:')[1] if len(library_id) > len('Boxsets:') else None)
                 for entry in libraries:
                     if entry[2] == 'boxsets':
                         boxset_library = {'Id': entry[0], 'Name': entry[1]}
@@ -501,7 +505,7 @@ class FullSync(object):
             obj = Movies(self.server, jellyfindb, videodb, self.direct_path, library)
             obj.boxsets_reset()
 
-        self.boxsets(None)
+        self.boxsets(library)
 
     @progress(translate(33144))
     def remove_library(self, library_id, dialog):
