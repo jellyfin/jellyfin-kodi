@@ -218,7 +218,7 @@ class FullSync(object):
                 if library_id and library_id == 'Boxsets:Refresh':
                     libraries = self.get_libraries()
                 else:
-                    libraries = self.get_libraries(library_id.split('Bossets:')[1])
+                    libraries = self.get_libraries(library_id.split('Boxsets:')[1])
                 for entry in libraries:
                     if entry[2] == 'boxsets':
                         boxset_library = {'Id': entry[0], 'Name': entry[1]}
