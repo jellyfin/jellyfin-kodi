@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2020-05-26 12:58+0000\n"
+"PO-Revision-Date: 2020-12-29 22:08+0000\n"
 "Last-Translator: nextlooper42 <nextlooper42@protonmail.com>\n"
 "Language-Team: Slovak <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sk/>\n"
@@ -957,3 +957,43 @@ msgstr "Vyberte knižnice na odstránenie"
 msgctxt "#33161"
 msgid "Update password"
 msgstr "Aktualizovať heslo"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "Maximálne rozlíšenie artworkov"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Možnosti prekódovania"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Prekódovať VC-1"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Prekódovať MPEG2"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Povoliť vypálenie tituliek"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Maximálny počet zvukových kanálov"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Dátový tok zvuku"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Preferovaný audio kodek"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Preferovaný video kodek"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Maximálny dátový tok streamu"
