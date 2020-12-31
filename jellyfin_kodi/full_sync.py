@@ -215,17 +215,23 @@ class FullSync(object):
             if library_id.startswith('Boxsets:'):
                 boxset_library = {}
 
-                if library_id and library_id == 'Boxsets:Refresh':
+                # Initial library sync is 'Boxsets:'
+                # Refresh from the addon menu is 'Boxsets:Refresh'
+                # Incremental syncs are 'Boxsets:$library_id'
+                sync_id = library_id.split(':')[1]
+
+                if not sync_id or sync_id == 'Refresh':
                     libraries = self.get_libraries()
                 else:
-                    libraries = self.get_libraries(library_id.split('Boxsets:')[1])
+                    libraries = self.get_libraries(sync_id)
+
                 for entry in libraries:
                     if entry[2] == 'boxsets':
                         boxset_library = {'Id': entry[0], 'Name': entry[1]}
                         break
 
                 if boxset_library:
-                    if library_id.endswith('Refresh'):
+                    if sync_id == 'Refresh':
                         self.refresh_boxsets(boxset_library)
                     else:
                         self.boxsets(boxset_library)
