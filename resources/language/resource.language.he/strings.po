@@ -1,2 +1,71 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr ""
+"PO-Revision-Date: 2021-01-01 18:39+0000\n"
+"Last-Translator: Doron Cohen <pelehacohen@gmail.com>\n"
+"Language-Team: Hebrew <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/he/>\n"
+"Language: he\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
+"n % 10 == 0) ? 2 : 3));\n"
+"X-Generator: Weblate 3.11.2\n"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "הפעל יצירת אמנות מועשרת"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "לסרטים"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "לפרקים"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "הצע מחיקה לאחר ניגון"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "אשר מחיקת קובץ"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "שם משתמש"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "מתקדם"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "שם מכשיר"
+
+#, fuzzy
+msgctxt "#30004"
+msgid "Log level"
+msgstr "רמת יומן"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "שיטת התחברות"
+
+#, fuzzy
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "ניגון HTTP בכוח"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "שם השרת"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "כתובת שרת"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "ג׳ליפין לקודי"
