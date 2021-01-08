@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-01-07 19:04+0000\n"
+"PO-Revision-Date: 2021-01-08 18:14+0000\n"
 "Last-Translator: Oatavandi <oatavandi@gmail.com>\n"
 "Language-Team: Tamil <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ta/>\n"
@@ -839,7 +839,7 @@ msgstr "ஆடியோ / வசனத் தேர்வை இயக்கவ�
 
 msgctxt "#33160"
 msgid "To avoid errors, please update Jellyfin for Kodi to version: "
-msgstr "பிழைகளைத் தவிர்க்க, கோடிக்கு ஜெல்லிஃபின் பதிப்பிற்கு புதுப்பிக்கவும்: "
+msgstr "பிழைகளைத் தவிர்க்க, கோடிக்கு ஜெல்லிஃபின் பதிப்பிற்கு புதுப்பிக்கவும்: "
 
 msgctxt "#33161"
 msgid "Update password"
