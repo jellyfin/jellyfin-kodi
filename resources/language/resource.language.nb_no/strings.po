@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2020-10-16 05:02+0000\n"
-"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"PO-Revision-Date: 2021-01-13 19:35+0000\n"
+"Last-Translator: Alexander Brissman <esmorun@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/nb_NO/>\n"
 "Language: nb_no\n"
@@ -215,7 +215,7 @@ msgstr "Oppdater dette elementet"
 
 msgctxt "#30412"
 msgid "Transcode"
-msgstr "Omkod"
+msgstr "Kode om"
 
 msgctxt "#30500"
 msgid "Verify connection"
@@ -275,7 +275,7 @@ msgstr "Hopp tilbake ved gjenopptakelse av avspilling (i sekunder)"
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
-msgstr "Omkod H265/HEVC"
+msgstr "Kode om H265/HEVC"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
@@ -319,7 +319,7 @@ msgstr "Tillat skjermsparer under synkronisering"
 
 msgctxt "#30537"
 msgid "Transcode Hi10P"
-msgstr "Omkod Hi10P"
+msgstr "Kode om Hi10P"
 
 msgctxt "#30539"
 msgid "Login"
@@ -881,7 +881,7 @@ msgstr "Behandler oppdateringer"
 
 msgctxt "#33179"
 msgid "Force transcode"
-msgstr "Tving omkoding"
+msgstr "Tvunget omkoding"
 
 msgctxt "#33180"
 msgid "Restart Jellyfin for Kodi"
@@ -956,24 +956,21 @@ msgctxt "#33161"
 msgid "Update password"
 msgstr "Endre passord"
 
-#, fuzzy
 msgctxt "#33201"
 msgid "Max artwork resolution"
-msgstr "Maksimal omslagskunstoppløsning"
+msgstr "Maksimal oppløsning på omslagsbilde"
 
 msgctxt "#33115"
 msgid "Transcode options"
-msgstr "Transkodingsinnstillinger"
+msgstr "Omkodingsinnstillinger"
 
-#, fuzzy
 msgctxt "#30524"
 msgid "Transcode VC-1"
-msgstr "Transkod VC-1"
+msgstr "Kode om VC-1"
 
-#, fuzzy
 msgctxt "#30523"
 msgid "Transcode MPEG2"
-msgstr "Transkod MPEG2"
+msgstr "Kode om MPEG2"
 
 msgctxt "#30165"
 msgid "Allow burned subtitles"
