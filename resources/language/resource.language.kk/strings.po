@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-11-26 22:40+0000\n"
+"PO-Revision-Date: 2021-01-22 22:25+0000\n"
 "Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Kazakh <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/kk/>\n"
@@ -18,3 +18,464 @@ msgstr "Kodi úshin Jellyfin"
 msgctxt "#30022"
 msgid "Advanced"
 msgstr "Keńeıtilgen"
+
+msgctxt "#33109"
+msgid "Plugin"
+msgstr "Plagın"
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "Tasyǵyshhanalardy ústeý"
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "Jıyntyqtardy jańǵyrtý"
+
+msgctxt "#33130"
+msgid "Select the source"
+msgstr "Qaınardy tańdaý"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Qaıta kodtaý opsıalary"
+
+msgctxt "#33114"
+msgid "Enable external subtitles"
+msgstr "Syrtqy sýbtıtrlerdi qosý"
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "Server aqparatyn jańartý"
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "Bul serverge qosylý múmkin emes."
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "Bul server úshin qoljetіmdіlіgińiz shektelgen."
+
+msgctxt "#33147"
+msgid "Your access to Jellyfin is restricted."
+msgstr "Jellyfin úshin qoljetіmdіlіgińiz shektelgen."
+
+msgctxt "#33146"
+msgid "Unable to connect to Jellyfin."
+msgstr "Jellyfin úshin qosylý múmkin emes."
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "Tasyǵyshhana alastalýda"
+
+msgctxt "#33143"
+msgid "Enable the option to delete"
+msgstr "Joıý úshin opsiany qosý"
+
+msgctxt "#33142"
+msgid "Something went wrong. Try again later."
+msgstr "Birdeńe durys bolmady. Keıin qaıtalańyz."
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "Serverdi alastaý"
+
+msgctxt "#33140"
+msgid "Repair libraries"
+msgstr "Tasyǵyshhanalardy jóndeý"
+
+msgctxt "#33139"
+msgid "Update libraries"
+msgstr "Tasyǵyshhanalardy jańartý"
+
+msgctxt "#33137"
+msgid "Enable Kodi Sync Queue"
+msgstr "Kodi úndestirý kezegin qosý"
+
+msgctxt "#33134"
+msgid "Add server"
+msgstr "Server ústeý"
+
+msgctxt "#33132"
+msgid "Repair library"
+msgstr "Tasyǵyshhanany jóndeý"
+
+msgctxt "#33124"
+msgid "Include people (slow)"
+msgstr "Adamdardy qosyp (baıaý)"
+
+msgctxt "#33123"
+msgid "Sync library to Kodi"
+msgstr "Tasyǵyshhanany Kodi qoldanbasymen úndestirý"
+
+msgctxt "#33121"
+msgid "All"
+msgstr "Bári"
+
+msgctxt "#33120"
+msgid "Select the libraries to add"
+msgstr "Ústeý úshin tasyǵyshhanalardy tańdaý"
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "Tasyǵyshhanany jańartý"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Oinatýdan keıin joıýdy usyný"
+
+msgctxt "#33063"
+msgid "Remove user"
+msgstr "Paıdalanýshy alastaý"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "Paıdalanýshy ústeý"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "Jańa"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "Muzykalyq tasyǵyshhanany qosamyz ba?"
+
+msgctxt "#33037"
+msgid "Native (direct paths)"
+msgstr "Negizgi (tikeleı joldar)"
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "Qondyrma (ádepki)"
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "Keıіn aıaqtaldy:"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "Jınaý:"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "Treılerlerdi oınatamyz ba?"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "Jellyfin ishinen joıamyz ba?"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "Jaramsyz paıdalanýshy aty ne paról"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "Server qaıta iske qosylýda"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "Qosh keldіńіz"
+
+msgctxt "#30617"
+msgid "Server or port cannot be empty"
+msgstr "Server ne port bos bolýy múmkin emes"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "Qosylý"
+
+msgctxt "#30615"
+msgid "Host"
+msgstr "Túıin"
+
+msgctxt "#30614"
+msgid "Connect to server"
+msgstr "Serverge qosylý"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "Jellyfin Connect paıdalanýshysyn aýystyrý"
+
+#, fuzzy
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "Kirińiz"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "Qolmen serverdi ústeý"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "Mynaǵan qosylý"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "Tańdalǵan serverge qosylý múmkin emes"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "Paıdalanýshy aty ne paról bos bolýy múmkin emes"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "Basqy serverdi tańdaý"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "Boldyrmaý"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "Kirý"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "Paról"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "Habardy beıneleý"
+
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "Serverdi jeliden tys qosý"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "Paıdalanýshy aty ne e-poshta"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "Qolmen kirý"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "Kirý"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "Hi10p qaıta kodtaý"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "Habarlandyrýlar, s"
+
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "Jańa mazmundy qosý"
+
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "Serverdi qaıta iske qosý habaryn qosý"
+
+msgctxt "#30529"
+msgid "Startup delay (in seconds)"
+msgstr "Iske qosýdy kidirtý, s"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "Turaqty paıdalanýshylar"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "VC-1 qaıta kodtaý"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "MPEG2 qaıta kodtaý"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "H265/HEVC qaıta kodtaý"
+
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "Kınoteatr rejimi qosý"
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "Jelilik tirkelgiler"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "Oınatý"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "Oınatý rejimi"
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "Muzykalyq tasyǵyshhanany qosý"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "Úndestirý"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "Qosylymdy rastaý"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "Qaıta kodtaý"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "Bul tarmaqty jańǵyrtý"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "Jellyfin ishinen joıý"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "Parametrler"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "Tańdaýlydan alastaý"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "Tańdaýlyǵa ústeý"
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "Jellyfin qaıta kodtaýy"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Jellyfin opsıalary"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "Kórsetimder"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "Fılmder"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "Qaralmaǵan mýzykalyq beıneler"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "Jýyqta ústelgen mýzyka beıneleri"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "Tańdaýly álbomdar"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "Tańdaýly fotolar"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Tańdaýly úı beıneleri"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "Jýyqta ústelgen fotolar"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Jýyqta ústelgen úı beıneleri"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "Interfeıs"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Usynylǵan tarmaqtar"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Kezdeısoq tarmaqtar"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Qaralmaǵan fılmder"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Jıyntyqtar"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Tańdaýly bólimder"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "Tańdaýly kórsetimder"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Tańdaýly fılmder"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Kelesi bólimder"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "Jýyqta ústelgen bólimder"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "Jýyqta ústelgen fılmder"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Jýyqta ústelgen kórsetimder"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Dybys qarqyny"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Dybys kodektiń teńshelimi"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Fılmder úshin"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Bólimder úshin"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Faıl joıýdy rastaý"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Paıdalanýshy aty"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Qurylǵy aty"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Tirkeý deńgeıi"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Kirý ádisi"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "HTTP-oınatýdy májbúrleý"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Server aty"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Server mekenjaıy"
