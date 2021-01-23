@@ -98,7 +98,7 @@ class ServerManual(xbmcgui.WindowXMLDialog):
     def _add_editcontrol(self, x, y, height, width):
 
         control = xbmcgui.ControlEdit(0, 0, 0, 0,
-                                      label="User",
+                                      label="",
                                       font="font13",
                                       textColor="FF00A4DC",
                                       disabledColor="FF888888",
