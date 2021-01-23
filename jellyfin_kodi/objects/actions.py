@@ -5,6 +5,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import threading
 import sys
+import json
 from datetime import timedelta
 
 from kodi_six import xbmc, xbmcgui, xbmcplugin, xbmcaddon
