@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-01-23 23:12+0000\n"
+"PO-Revision-Date: 2021-01-25 04:04+0000\n"
 "Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Kazakh <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/kk/>\n"
@@ -141,7 +141,7 @@ msgstr "Muzykalyq tasyǵyshhana qosylsyn ba?"
 
 msgctxt "#33037"
 msgid "Native (direct paths)"
-msgstr "Negizgi (tikeleı joldar)"
+msgstr "Ózindik (tikeleı joldar)"
 
 msgctxt "#33036"
 msgid "Add-on (default)"
@@ -787,3 +787,106 @@ msgstr "Eń joǵary aǵyndyq qarqyn"
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
 msgstr "Jaqsartylǵan óner týyndysyn qosý (mysaly, muqaba óneri )"
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr ""
+"Úndestirý burynnan jumys іsteýde, aıaqtalǵansha kútіp, qaıtalap kórіńіz."
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr "Oınatý kezіnde úndestirýdi qosý (birshama keshiktirýi múmkіn)"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "Kınoteatr rejimіmen oınatý opsıasyn qosý"
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr ""
+"Eger jańartýlar sany kelesіden úlkenіrek bolsa, oryndalý barysy jolaǵy "
+"beınelenedi"
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr ""
+"Tómendegі ózgerіsterdі qoldaný úshіn tasyǵyshhanalaryńyzdy jańartyńyz nemese "
+"jóndeńіz."
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr ""
+"Jýrnaldaǵy mańyzdy aqparatty búrkeý (Kodi jurnalyna tirkeý úshin "
+"qoldanylmaıdy)"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr ""
+"Qatelerden jaltarýǵa Kodi úshіn Jellyfin qoldanba nusqasyn kelesіge "
+"jańartyńyz: "
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "Túzetý qoldanyldy!"
+
+msgctxt "#33153"
+msgid "Your Jellyfin theme media has been synced to Kodi"
+msgstr "Jellyfin taqyryptyq tasyǵyshderekterińiz Kodi-men úndestiridi"
+
+msgctxt "#33129"
+msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
+msgstr ""
+"Jellyfin qondyrmasy > Tasyǵyshhanalardy ústeý arqyly іske qosýp "
+"tasyǵyshhanalardy úndestirýge bolady."
+
+msgctxt "#33112"
+msgid "Applies to Native and Add-on playback mode"
+msgstr "Ózindik jáne Qondyrma oinatý rejimderіnde qoldanylady"
+
+msgctxt "#33113"
+msgid "Applies to Add-on playback mode only"
+msgstr "Tek Qondyrma oinatý rejimіne qoldanylady"
+
+msgctxt "#33111"
+msgid "Reset the local database to apply the playback mode change."
+msgstr "Oınatý rejımі ózgerisin qoldaný úshіn jergіlіktі derekqordy ysyrý."
+
+msgctxt "#33088"
+msgid "Database reset has completed, Kodi will now restart to apply the changes."
+msgstr ""
+"Derekqor ysyrýy aıaqtaldy, endі Kodi ózgertýlerdі qoldaný úshіn qaıta іske "
+"qosylady."
+
+msgctxt "#33074"
+msgid "Are you sure you want to reset your local Kodi database?"
+msgstr "Shynymen jergіlіktі Kodi derekqory ysyrylsyn ba?"
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr "Qurylǵynyń jańa ıdentıfıkatory quryldy. Endі Kodi qaıta іske qosylady."
+
+msgctxt "#30533"
+msgid "Duration of the music library pop up"
+msgstr "Mýzykalyq tasyǵyshhananyń uzaqtyǵy qalqyp shyǵady"
+
+msgctxt "#30532"
+msgid "Duration of the video library pop up"
+msgstr "Beıne tasyǵyshhananyń uzaqtyǵy qalqyp shyǵady"
+
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr "Joıý rastaýyn ótkіzіp jіberý (paıdalaný óz táýekelіńіzde )"
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr ""
+"Betteý keńesі: Ár júkteletin aǵyny Jellyfin-den bіr ýaqytta eń kóp tarmaqtar "
+"mánіn saýal etedi."
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "Betteý - júktep alynatyn tizbekter (ádepkі: 3)"
+
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "Betteý - saýal etilgen eń kóp tarmaqtar (ádepkі: 15)"
