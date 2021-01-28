@@ -154,9 +154,14 @@ SET         strArtist = ?
 WHERE       idArtist = ?
 """
 update_artist_name_obj = ["{Name}", "{ArtistId}"]
-update_artist = """
+update_artist74 = """
 UPDATE      artist
 SET         strGenres = ?, strBiography = ?, strImage = ?, strFanart = ?, lastScraped = ?
+WHERE       idArtist = ?
+"""
+update_artist82 = """
+UPDATE      artist
+SET         strGenres = ?, strBiography = ?, strImage = ?, lastScraped = ?
 WHERE       idArtist = ?
 """
 update_link = """

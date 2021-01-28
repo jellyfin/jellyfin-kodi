@@ -99,7 +99,7 @@ class LoginManual(xbmcgui.WindowXMLDialog):
     def _add_editcontrol(self, x, y, height, width, password=False):
 
         kwargs = dict(
-            label="User",
+            label="",
             font="font13",
             textColor="FF00A4DC",
             disabledColor="FF888888",

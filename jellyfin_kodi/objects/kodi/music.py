@@ -88,7 +88,12 @@ class Music(Kodi):
         self.cursor.execute(QU.update_artist_name, args)
 
     def update(self, *args):
-        self.cursor.execute(QU.update_artist, args)
+        if self.version_id < 74:
+            self.cursor.execute(QU.update_artist74, args)
+        else:
+            # No field for backdrops in Kodi 19, so we need to omit that here
+            args = args[:3] + args[4:]
+            self.cursor.execute(QU.update_artist82, args)
 
     def link(self, *args):
         self.cursor.execute(QU.update_link, args)
