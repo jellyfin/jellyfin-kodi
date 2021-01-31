@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-01-31 13:21+0000\n"
+"PO-Revision-Date: 2021-01-31 16:30+0000\n"
 "Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Kazakh <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/kk/>\n"
@@ -349,7 +349,7 @@ msgstr "Jellyfin opsialary"
 
 msgctxt "#30305"
 msgid "TV Shows"
-msgstr "Körsetımder"
+msgstr "TD-körsetımder"
 
 msgctxt "#30302"
 msgid "Movies"
