@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-02-05 10:55+0000\n"
+"PO-Revision-Date: 2021-02-05 19:00+0000\n"
 "Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Kazakh <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/kk/>\n"
@@ -125,7 +125,7 @@ msgstr "Oınatudan keiın joiudy ūsynu"
 
 msgctxt "#33063"
 msgid "Remove user"
-msgstr "Paidalanuşy alastau"
+msgstr "Paidalanuşyny alastau"
 
 msgctxt "#33062"
 msgid "Add user"
