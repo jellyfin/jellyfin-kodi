@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-01-31 16:30+0000\n"
+"PO-Revision-Date: 2021-02-05 10:55+0000\n"
 "Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Kazakh <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/kk/>\n"
@@ -405,7 +405,7 @@ msgstr "Jiyntyqtar"
 
 msgctxt "#30182"
 msgid "Favorite Episodes"
-msgstr "Taŋdauly bölımder"
+msgstr "Taŋdauly telebölımder"
 
 msgctxt "#30181"
 msgid "Favorite Shows"
@@ -417,11 +417,11 @@ msgstr "Taŋdauly filmder"
 
 msgctxt "#30179"
 msgid "Next Episodes"
-msgstr "Kelesı bölımder"
+msgstr "Kelesı telebölımder"
 
 msgctxt "#30175"
 msgid "Recently Added Episodes"
-msgstr "Juyqta üstelgen bölımder"
+msgstr "Juyqta üstelıngen telebölımder"
 
 msgctxt "#30174"
 msgid "Recently Added Movies"
@@ -445,7 +445,7 @@ msgstr "Filmder üşın"
 
 msgctxt "#30115"
 msgid "For Episodes"
-msgstr "Bölımder üşın"
+msgstr "Telebölımder üşın"
 
 msgctxt "#30091"
 msgid "Confirm file deletion"
@@ -702,7 +702,7 @@ msgstr "Qūrylğynyŋ jaŋa identifıkatoryn qyru"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
-msgstr "Kelesı bölımder üşın arnaiylardy elemeu"
+msgstr "Kelesı telebölımder üşın arnaiylardy elemeu"
 
 msgctxt "#30521"
 msgid "Jump back on resume (in seconds)"
@@ -734,7 +734,7 @@ msgstr "Jergılıktı Kodi derekqoryn ysyru"
 
 msgctxt "#30178"
 msgid "In Progress Episodes"
-msgstr "Oryndaludağy bölımder"
+msgstr "Oryndaludağy telebölımder"
 
 msgctxt "#30177"
 msgid "In Progress Movies"
