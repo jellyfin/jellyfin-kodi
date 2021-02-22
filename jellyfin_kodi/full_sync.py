@@ -82,7 +82,7 @@ class FullSync(object):
             for selected in libraries:
 
                 if selected not in [x.replace('Mixed:', "") for x in self.sync['Libraries']]:
-                    library = self.get_libraries(selected)
+                    library = self.get_library(selected)
 
                     if library:
 
@@ -100,13 +100,13 @@ class FullSync(object):
         if not xmls.advanced_settings() and self.sync['Libraries']:
             self.start()
 
-    def get_libraries(self, library_id=None):
-
+    def get_libraries(self):
         with Database('jellyfin') as jellyfindb:
-            if library_id is None:
-                return jellyfin_db.JellyfinDatabase(jellyfindb.cursor).get_views()
-            else:
-                return jellyfin_db.JellyfinDatabase(jellyfindb.cursor).get_view(library_id)
+            return jellyfin_db.JellyfinDatabase(jellyfindb.cursor).get_views()
+
+    def get_library(self, library_id):
+        with Database('jellyfin') as jellyfindb:
+            return jellyfin_db.JellyfinDatabase(jellyfindb.cursor).get_view(library_id)
 
     def mapping(self):
 
@@ -223,7 +223,7 @@ class FullSync(object):
                 if not sync_id or sync_id == 'Refresh':
                     libraries = self.get_libraries()
                 else:
-                    libraries = self.get_libraries(sync_id)
+                    libraries = [self.get_library(sync_id)]
 
                 for entry in libraries:
                     if entry[2] == 'boxsets':
