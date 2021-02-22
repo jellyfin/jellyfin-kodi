@@ -223,7 +223,12 @@ class FullSync(object):
                 if not sync_id or sync_id == 'Refresh':
                     libraries = self.get_libraries()
                 else:
-                    libraries = [self.get_library(sync_id)]
+                    res = self.get_library(sync_id)
+                    if res is not None:
+                        # FIXME: This is a hack. Fix plz.
+                        libraries = [(sync_id,), res]
+                    else:
+                        libraries = []
 
                 for entry in libraries:
                     if entry[2] == 'boxsets':
