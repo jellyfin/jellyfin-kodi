@@ -36,6 +36,7 @@ except ImportError:
 
 
 import os
+import sys
 import array
 import struct
 import uuid
@@ -357,7 +358,11 @@ class ABNF(object):
         _d = array.array("B", data)
         for i in range(len(_d)):
             _d[i] ^= _m[i % 4]
-        return _d.tostring()
+
+        if sys.version_info >= (3, 2):
+            return _d.tobytes()
+        else:
+            return _d.tostring()
 
 
 class WebSocket(object):
