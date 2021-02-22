@@ -226,7 +226,7 @@ class FullSync(object):
                     res = self.get_library(sync_id)
                     if res is not None:
                         # FIXME: This is a hack. Fix plz.
-                        libraries = [(sync_id,), res]
+                        libraries = [(sync_id,) + res]
                     else:
                         libraries = []
 
