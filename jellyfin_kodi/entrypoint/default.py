@@ -811,7 +811,7 @@ def get_themes(api_client):
 
     with Database('jellyfin') as jellyfindb:
         all_views = jellyfin_db.JellyfinDatabase(jellyfindb.cursor).get_views()
-        views = [x[0] for x in all_views if x[2] in ('movies', 'tvshows', 'mixed')]
+        views = [x.view_id for x in all_views if x.media_type in ('movies', 'tvshows', 'mixed')]
 
     items = {}
     server = api_client.config.data['auth.server']

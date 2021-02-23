@@ -86,9 +86,9 @@ class FullSync(object):
 
                     if library:
 
-                        self.sync['Libraries'].append("Mixed:%s" % selected if library[1] == 'mixed' else selected)
+                        self.sync['Libraries'].append("Mixed:%s" % selected)
 
-                        if library[1] in ('mixed', 'movies'):
+                        if library.media_type in ('mixed', 'movies'):
                             self.sync['Libraries'].append('Boxsets:%s' % selected)
                     else:
                         self.sync['Libraries'].append(selected)
@@ -129,9 +129,8 @@ class FullSync(object):
             libraries = []
 
             for library in self.get_libraries():
-
-                if library[2] in ('movies', 'tvshows', 'musicvideos', 'music', 'mixed'):
-                    libraries.append({'Id': library[0], 'Name': library[1], 'Media': library[2]})
+                if library.media_type in ('movies', 'tvshows', 'musicvideos', 'music', 'mixed'):
+                    libraries.append({'Id': library.view_id, 'Name': library.view_name, 'Media': library.media_type})
 
             libraries = self.select_libraries(libraries)
 
@@ -223,16 +222,12 @@ class FullSync(object):
                 if not sync_id or sync_id == 'Refresh':
                     libraries = self.get_libraries()
                 else:
-                    res = self.get_library(sync_id)
-                    if res is not None:
-                        # FIXME: This is a hack. Fix plz.
-                        libraries = [(sync_id,) + res]
-                    else:
-                        libraries = []
+                    _lib = self.get_library(sync_id)
+                    libraries = [_lib] if _lib else []
 
                 for entry in libraries:
-                    if entry[2] == 'boxsets':
-                        boxset_library = {'Id': entry[0], 'Name': entry[1]}
+                    if entry.media_type == 'boxsets':
+                        boxset_library = {'Id': entry.view_id, 'Name': entry.view_name}
                         break
 
                 if boxset_library:
@@ -529,7 +524,7 @@ class FullSync(object):
             db = jellyfin_db.JellyfinDatabase(jellyfindb.cursor)
             library = db.get_view(library_id.replace('Mixed:', ""))
             items = db.get_item_by_media_folder(library_id.replace('Mixed:', ""))
-            media = 'music' if library[1] == 'music' else 'video'
+            media = 'music' if library.media_type == 'music' else 'video'
 
             if media == 'music':
                 settings('MusicRescan.bool', False)
@@ -540,7 +535,7 @@ class FullSync(object):
                 with self.library.music_database_lock if media == 'music' else self.library.database_lock:
                     with Database(media) as kodidb:
 
-                        if library[1] == 'mixed':
+                        if library.media_type == 'mixed':
 
                             movies = [x for x in items if x[1] == 'Movie']
                             tvshows = [x for x in items if x[1] == 'Series']
@@ -550,7 +545,7 @@ class FullSync(object):
                             for item in movies:
 
                                 obj(item[0])
-                                dialog.update(int((float(count) / float(len(items)) * 100)), heading="%s: %s" % (translate('addon_name'), library[0]))
+                                dialog.update(int((float(count) / float(len(items)) * 100)), heading="%s: %s" % (translate('addon_name'), library.view_name))
                                 count += 1
 
                             obj = TVShows(self.server, jellyfindb, kodidb, direct_path, library).remove
@@ -558,7 +553,7 @@ class FullSync(object):
                             for item in tvshows:
 
                                 obj(item[0])
-                                dialog.update(int((float(count) / float(len(items)) * 100)), heading="%s: %s" % (translate('addon_name'), library[0]))
+                                dialog.update(int((float(count) / float(len(items)) * 100)), heading="%s: %s" % (translate('addon_name'), library.view_name))
                                 count += 1
                         else:
                             default_args = (self.server, jellyfindb, kodidb, direct_path)

@@ -5,6 +5,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 from database import queries as QU
 from helper import LazyLogger
 
+from jellyfin.utils import sqlite_namedtuple_factory
+
 ##################################################################################################
 
 LOG = LazyLogger(__name__)
@@ -16,6 +18,7 @@ class JellyfinDatabase():
 
     def __init__(self, cursor):
         self.cursor = cursor
+        cursor.row_factory = sqlite_namedtuple_factory
 
     def get_item_by_id(self, *args):
         self.cursor.execute(QU.get_item, args)
@@ -124,8 +127,8 @@ class JellyfinDatabase():
     def remove_view(self, *args):
         self.cursor.execute(QU.delete_view, args)
 
-    def get_views(self, *args):
-        self.cursor.execute(QU.get_views, args)
+    def get_views(self):
+        self.cursor.execute(QU.get_views)
 
         return self.cursor.fetchall()
 

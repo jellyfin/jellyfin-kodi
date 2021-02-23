@@ -1,5 +1,6 @@
 from six import string_types
 from six.moves import collections_abc
+from collections import namedtuple
 
 
 def clean_none_dict_values(obj):
@@ -41,3 +42,15 @@ def clean_none_dict_values(obj):
                     queue.append(value)
 
     return obj
+
+
+def sqlite_namedtuple_factory(cursor, row):
+    """
+    Usage:
+    con.row_factory = namedtuple_factory
+
+    http://peter-hoffmann.com/2010/python-sqlite-namedtuple-factory.html
+    """
+    fields = [col[0] for col in cursor.description]
+    Row = namedtuple("Row", fields)
+    return Row(*row)

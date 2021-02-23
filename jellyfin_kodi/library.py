@@ -471,10 +471,10 @@ class Library(threading.Thread):
                 available = [x for x in sync['SortedViews'] if x not in whitelist]
 
                 for library in available:
-                    name, media = db.get_view(library)
+                    view = db.get_view(library)
 
-                    if media in ('movies', 'tvshows', 'musicvideos', 'mixed', 'music'):
-                        libraries.append({'Id': library, 'Name': name})
+                    if view.media_type in ('movies', 'tvshows', 'musicvideos', 'mixed', 'music'):
+                        libraries.append({'Id': view.view_id, 'Name': view.view_name})
 
         choices = [x['Name'] for x in libraries]
         choices.insert(0, translate(33121))

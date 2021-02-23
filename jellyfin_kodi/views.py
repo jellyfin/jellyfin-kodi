@@ -174,9 +174,8 @@ class Views(object):
             removed = []
 
             for view in views:
-
-                if view[0] not in self.sync['SortedViews']:
-                    removed.append(view[0])
+                if view.view_id not in self.sync['SortedViews']:
+                    removed.append(view.view_id)
 
             if removed:
                 event('RemoveLibrary', {'Id': ','.join(removed)})
@@ -204,7 +203,7 @@ class Views(object):
                 view = db.get_view(library)
 
                 if view:
-                    view = {'Id': library, 'Name': view[0], 'Tag': view[0], 'Media': view[1]}
+                    view = {'Id': library, 'Name': view.view_name, 'Tag': view.view_name, 'Media': view.media_type}
 
                     if view['Media'] == 'mixed':
                         for media in ('movies', 'tvshows'):
@@ -697,10 +696,10 @@ class Views(object):
         except IndexError as error:
             LOG.exception(error)
 
-        for library in (libraries or []):
-            view = {'Id': library[0], 'Name': library[1], 'Tag': library[1], 'Media': library[2]}
+        for library in libraries:
+            view = {'Id': library.view_id, 'Name': library.view_name, 'Tag': library.view_name, 'Media': library.media_type}
 
-            if library[0] in [x.replace('Mixed:', "") for x in self.sync['Whitelist']]:  # Synced libraries
+            if library.view_id in [x.replace('Mixed:', "") for x in self.sync['Whitelist']]:  # Synced libraries
 
                 if view['Media'] in ('movies', 'tvshows', 'musicvideos', 'mixed'):
 
