@@ -1,6 +1,7 @@
+from collections import namedtuple
+
 from six import string_types
 from six.moves import collections_abc
-from collections import namedtuple
 
 
 def clean_none_dict_values(obj):
