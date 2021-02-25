@@ -66,7 +66,7 @@ FROM        jellyfin
 WHERE       jellyfin_parent_id = ?
 """
 get_view = """
-SELECT      view_name, media_type
+SELECT      *
 FROM        view
 WHERE       view_id = ?
 """
