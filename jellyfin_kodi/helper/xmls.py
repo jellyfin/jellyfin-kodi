@@ -127,7 +127,7 @@ def advanced_settings():
             video.remove(cleanonupdate)
 
             tree = etree.ElementTree(xml)
-            tree.write(path)
+            tree.write(file)
 
             dialog("ok", "{jellyfin}", translate(33097))
             xbmc.executebuiltin('RestartApp')
