@@ -95,8 +95,6 @@ class FullSync(object):
         else:
             self.mapping()
 
-        xmls.sources()
-
         if not xmls.advanced_settings() and self.sync['Libraries']:
             self.start()
 
