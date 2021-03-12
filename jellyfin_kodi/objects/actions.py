@@ -692,21 +692,6 @@ class Actions(object):
 
         return True
 
-    def detect_widgets(self, item):
-
-        kodi_version = xbmc.getInfoLabel('System.BuildVersion')
-
-        if kodi_version and "Git:" in kodi_version and kodi_version.split('Git:')[1].split("-")[0] in ('20171119', 'a9a7a20'):
-            LOG.info("Build does not require workaround for widgets?")
-
-            return False
-
-        if (not xbmc.getCondVisibility('Window.IsMedia') and ((item['Type'] == 'Audio' and not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(music),1)')) or not xbmc.getCondVisibility('Integer.IsGreater(Playlist.Length(video),1)'))):
-
-            return True
-
-        return False
-
 
 class PlaylistWorker(threading.Thread):
 
