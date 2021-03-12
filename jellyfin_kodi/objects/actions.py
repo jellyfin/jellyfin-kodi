@@ -61,44 +61,22 @@ class Actions(object):
 
     def play(self, item, db_id=None, transcode=False, playlist=False):
 
-        ''' Play item based on if playback started from widget ot not.
-            To get everything to work together, play the first item in the stack with setResolvedUrl,
-            add the rest to the regular playlist.
+        ''' Play requested item
         '''
         listitem = xbmcgui.ListItem()
         LOG.info("[ play/%s ] %s", item['Id'], item['Name'])
 
         transcode = transcode or settings('playFromTranscode.bool')
-        kodi_playlist = self.get_playlist(item)
         play = playutils.PlayUtils(item, transcode, self.server_id, self.server, self.api_client)
         source = play.select_source(play.get_sources())
         play.set_external_subs(source, listitem)
 
         self.set_playlist(item, listitem, db_id, transcode)
-        index = max(kodi_playlist.getposition(), 0) + 1  # Can return -1
-        force_play = False
 
         self.stack[0][1].setPath(self.stack[0][0])
-        try:
-            if not playlist and self.detect_widgets(item):
-                LOG.info(" [ play/widget ]")
 
-                raise IndexError
-
+        if len(sys.argv) > 1:
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, self.stack[0][1])
-            self.stack.pop(0)
-        except IndexError:
-            force_play = True
-
-        for stack in self.stack:
-
-            kodi_playlist.add(url=stack[0], listitem=stack[1], index=index)
-            index += 1
-
-        if force_play:
-            if len(sys.argv) > 1:
-                xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, self.stack[0][1])
-            xbmc.Player().play(kodi_playlist, windowed=False)
 
     def set_playlist(self, item, listitem, db_id=None, transcode=False):
 
