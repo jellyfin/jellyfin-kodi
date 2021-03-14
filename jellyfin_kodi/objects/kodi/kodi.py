@@ -3,8 +3,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 ##################################################################################################
 
-from sqlite3 import IntegrityError
-
 from helper import values
 from helper import LazyLogger
 
@@ -163,21 +161,22 @@ class Kodi(object):
         return self.cursor.lastrowid
 
     def _get_person(self, *args):
-        try:
+        '''Retrieve person from the database, or add them if they don't exist
+        '''
+        resp = self.cursor.execute(QU.get_person, args).fetchone()
+        if len(resp) > 0:
+            return resp[0]
+        else:
             return self.add_person(*args)
-        except IntegrityError:
-            # The person already exists in the database
-            # Now we can do the expensive operation of fetching the id
-            self.cursor.execute(QU.get_person, args)
-            return self.cursor.fetchone()[0]
 
     def get_person(self, *args):
-        try:
-            return self._people_cache[args]
-        except KeyError:
+        '''Retrieve person from cache, else forward to db query
+        '''
+        person_id = self._people_cache.get(args)
+        if not person_id:
             person_id = self._get_person(*args)
             self._people_cache[args] = person_id
-            return person_id
+        return person_id
 
     def add_genres(self, genres, *args):
 
