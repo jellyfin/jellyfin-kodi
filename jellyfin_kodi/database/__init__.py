@@ -7,6 +7,7 @@ import json
 import os
 import sqlite3
 import sys
+import re
 
 from kodi_six import xbmc, xbmcvfs
 from six import text_type
@@ -112,25 +113,24 @@ class Database(object):
         }
         database = types[database]
         dirs, files = xbmcvfs.listdir(databases)
-        modified = {'db_file': None, 'time': 0}
+        target = {'db_file': '', 'version': 0}
 
         for db_file in reversed(files):
+            if (db_file.startswith(database) and not db_file.endswith('-wal')
+                and not db_file.endswith('-shm')
+                and not db_file.endswith('db-journal')):
 
-            if (db_file.startswith(database) and not db_file.endswith('-wal') and not db_file.endswith('-shm') and not db_file.endswith('db-journal')):
+                version_string = re.search('{}(.*).db'.format(database), db_file)
+                version = int(version_string.group(1))
 
-                st = xbmcvfs.Stat(databases + db_file)
-                modified_int = st.st_mtime()
-                LOG.debug("Database detected: %s time: %s", db_file, modified_int)
+                if version > target['version']:
+                    target['db_file'] = db_file
+                    target['version'] = version
 
-                if modified_int > modified['time']:
+        LOG.debug("Discovered database: %s", target)
+        self.discovered_file = target['db_file']
 
-                    modified['time'] = modified_int
-                    modified['db_file'] = db_file
-
-        LOG.debug("Discovered database: %s", modified)
-        self.discovered_file = modified['db_file']
-
-        return xbmc.translatePath("special://database/%s" % modified['db_file'])
+        return xbmc.translatePath("special://database/%s" % target['db_file'])
 
     def _sql(self, db_file):
 
