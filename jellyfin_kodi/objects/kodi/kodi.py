@@ -3,8 +3,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 ##################################################################################################
 
-from sqlite3 import IntegrityError
-
 from helper import values
 from helper import LazyLogger
 
