@@ -164,7 +164,7 @@ class Kodi(object):
         '''Retrieve person from the database, or add them if they don't exist
         '''
         resp = self.cursor.execute(QU.get_person, args).fetchone()
-        if len(resp) > 0:
+        if resp is not None:
             return resp[0]
         else:
             return self.add_person(*args)
