@@ -116,7 +116,8 @@ class Database(object):
         target = {'db_file': '', 'version': 0}
 
         for db_file in reversed(files):
-            if (db_file.startswith(database) and not db_file.endswith('-wal')
+            if (db_file.startswith(database)
+                    and not db_file.endswith('-wal')
                     and not db_file.endswith('-shm')
                     and not db_file.endswith('db-journal')):
 
