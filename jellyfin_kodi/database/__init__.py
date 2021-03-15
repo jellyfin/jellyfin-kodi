@@ -116,9 +116,10 @@ class Database(object):
         target = {'db_file': '', 'version': 0}
 
         for db_file in reversed(files):
-            if (db_file.startswith(database) and not db_file.endswith('-wal')
-                and not db_file.endswith('-shm')
-                and not db_file.endswith('db-journal')):
+            if (db_file.startswith(database)
+                    and not db_file.endswith('-wal')
+                    and not db_file.endswith('-shm')
+                    and not db_file.endswith('db-journal')):
 
                 version_string = re.search('{}(.*).db'.format(database), db_file)
                 version = int(version_string.group(1))
