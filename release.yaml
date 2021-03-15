@@ -1,15 +1,10 @@
-version: '0.7.0'
+version: '0.7.1'
 changelog: |
-  - #431 Fix some minor issues highlighted by 10.7
-  - #434 Delete items from addon
-  - #437 websocket - Remove deprecated base64.encodestring
-  - #438 Move api_client details to context.py
-  - #442 Pass hexlify bytes in helper.utils.event
-  - #444 Stop autodiscovered servers overriding manual input
-  - #446 Fix crash on addon load
-  - #447 Make sure status code gets returned in payload
-  - #452 Encoding parameter to json.load was removed in Python 3.9
-  - #455 Remove extra slash from subtitle URLs
-  - #456 Fix refresh boxsets function
-  - #458 Fix boxsets in full sync
-  - #462 Fixes for Matrix-RC2
+  - #474 Fix: array.array.tostring is removed in Python 3.9 
+  - #475 Fix: Get specific library vs list of libraries
+  - #476 Disable the cleanonupdate tag in advancedsettings.xml
+  - #482 Stop editing sources.xml
+  - #485 Fix integrity error in actor table during sync
+  - #486 Always use highest version database available
+  - #487 Fix full syncs with new actors
+  - #488 Fix formatting on multiline if statement
