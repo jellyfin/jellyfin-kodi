@@ -158,8 +158,10 @@ class Music(Kodi):
         album_id = album_id or self.create_entry_album()
         if self.version_id < 72:
             self.cursor.execute(QU.add_album, (album_id,) + args)
-        else:
+        elif self.version_id < 82:
             self.cursor.execute(QU.add_album72, (album_id,) + args)
+        else:
+            self.cursor.execute(QU.add_album82, (album_id,) + args)
         return album_id
 
     def update_album(self, *args):
