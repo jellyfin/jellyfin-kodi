@@ -54,7 +54,7 @@ FROM        album
 WHERE       strMusicBrainzAlbumID = ?
 """
 get_album_obj = ["{AlbumId}", "{Title}", "{UniqueId}", "{Artists}", "album"]
-get_album_obj82 = ["{AlbumId}", "{Title}", "{UniqueId}", "{Artists}", "album", "{dateAdded}"]
+get_album_obj82 = ["{AlbumId}", "{Title}", "{UniqueId}", "{Artists}", "album", "{DateAdded}"]
 get_album_by_name = """
 SELECT      idAlbum, strArtists
 FROM        album
@@ -102,7 +102,7 @@ INSERT INTO     album(idAlbum, strAlbum, strMusicBrainzAlbumID, strReleaseType, 
 VALUES          (?, ?, ?, ?, 1)
 """
 add_album82 = """
-INSERT INTO     album(idAlbum, strAlbum, strMusicBrainzAlbumID, strReleaseType, bScrapedMBID, dateAdded)
+INSERT INTO     album(idAlbum, strAlbum, strMusicBrainzAlbumID, strReleaseType, bScrapedMBID, DateAdded)
 VALUES          (?, ?, ?, ?, 1, ?)
 """
 add_single = """

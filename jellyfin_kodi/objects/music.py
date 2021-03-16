@@ -153,7 +153,7 @@ class Music(KodiDb):
         obj['Artists'] = " / ".join(obj['Artists'] or [])
         obj['Artwork'] = API.get_all_artwork(self.objects.map(item, 'ArtworkMusic'), True)
         obj['Thumb'] = obj['Artwork']['Primary']
-        obj['dateAdded'] = item.get('DateCreated')
+        obj['DateAdded'] = item.get('DateCreated')
 
         if obj['DateAdded']:
             obj['DateAdded'] = Local(obj['DateAdded']).split('.')[0].replace('T', " ")
