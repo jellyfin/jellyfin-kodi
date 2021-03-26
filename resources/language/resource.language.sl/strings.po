@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-06-12 18:40+0000\n"
-"Last-Translator: SaddFox <filip.rutar@gmail.com>\n"
+"PO-Revision-Date: 2021-03-26 14:16+0000\n"
+"Last-Translator: Gregor Gabrovšek <gregor@gabrovsek.si>\n"
 "Language-Team: Slovenian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sl/>\n"
 "Language: sl\n"
@@ -103,7 +103,6 @@ msgctxt "#30531"
 msgid "Enable new content"
 msgstr "Omogoči nove vsebine"
 
-#, fuzzy
 msgctxt "#30530"
 msgid "Enable server restart message"
 msgstr "Omogoči obvestilo o ponovnem zagonu strežnika"
@@ -156,7 +155,6 @@ msgctxt "#30515"
 msgid "Paging - max items requested (default: 15)"
 msgstr "Zahtevano maksimalno število poizvedb (privzeto: 15)"
 
-#, fuzzy
 msgctxt "#30512"
 msgid "Enable artwork caching"
 msgstr "Omogoči predpomnjenje slik"
@@ -193,7 +191,6 @@ msgctxt "#30410"
 msgid "Refresh this item"
 msgstr "Osveži to vsebino"
 
-#, fuzzy
 msgctxt "#30409"
 msgid "Delete from Jellyfin"
 msgstr "Izbriši iz Jellyfin strežnika"
@@ -231,10 +228,9 @@ msgctxt "#30258"
 msgid "Unwatched Music videos"
 msgstr "Neogledani glasbeni videoposnetki"
 
-#, fuzzy
 msgctxt "#30257"
 msgid "In progress Music videos"
-msgstr "Glasbeni videoposnetki med ogledom"
+msgstr "Glasbeni videoposnetki v teku"
 
 msgctxt "#30256"
 msgid "Recently added Music videos"
@@ -260,12 +256,10 @@ msgctxt "#30251"
 msgid "Recently added Home Videos"
 msgstr "Nedavno dodani domači videoposnetki"
 
-#, fuzzy
 msgctxt "#30249"
 msgid "Enable welcome message"
 msgstr "Omogoči sporočilo dobrodošlice"
 
-#, fuzzy
 msgctxt "#30239"
 msgid "Reset local Kodi database"
 msgstr "Ponastavi lokalno Kodi bazo podatkov"
@@ -274,17 +268,14 @@ msgctxt "#30235"
 msgid "Interface"
 msgstr "Vmesnik"
 
-#, fuzzy
 msgctxt "#30230"
 msgid "Recommended Items"
 msgstr "Priporočene vsebine"
 
-#, fuzzy
 msgctxt "#30229"
 msgid "Random Items"
 msgstr "Naključne vsebine"
 
-#, fuzzy
 msgctxt "#30189"
 msgid "Unwatched Movies"
 msgstr "Neogledani filmi"
@@ -305,15 +296,13 @@ msgctxt "#30179"
 msgid "Next Episodes"
 msgstr "Naslednje epizode"
 
-#, fuzzy
 msgctxt "#30178"
 msgid "In Progress Episodes"
-msgstr "Epizode med ogledom"
+msgstr "Epizode v teku"
 
-#, fuzzy
 msgctxt "#30177"
 msgid "In Progress Movies"
-msgstr "Filmi med ogledom"
+msgstr "Filmi v teku"
 
 msgctxt "#30175"
 msgid "Recently Added Episodes"
@@ -323,7 +312,6 @@ msgctxt "#30174"
 msgid "Recently Added Movies"
 msgstr "Nedavno dodani filmi"
 
-#, fuzzy
 msgctxt "#30171"
 msgid "In Progress TV Shows"
 msgstr "Trenutno gledane serije"
@@ -336,7 +324,6 @@ msgctxt "#30160"
 msgid "Video quality"
 msgstr "Kvaliteta videa"
 
-#, fuzzy
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
 msgstr "Omogoči izboljšane slike (npr. naslovne posterje)"
@@ -369,7 +356,6 @@ msgctxt "#30016"
 msgid "Device name"
 msgstr "Ime naprave"
 
-#, fuzzy
 msgctxt "#30004"
 msgid "Log level"
 msgstr "Nivo beleženja dnevnika"
@@ -912,3 +898,15 @@ msgstr "Za izogib težavam prosimo posodobite Jellyfin za Kodi na različico: "
 msgctxt "#33161"
 msgid "Update password"
 msgstr "Posodobi geslo"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Največje število zvočnih kanalov"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Bitna hitrost zvoka"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Največja bitna hitrost pretakanja"
