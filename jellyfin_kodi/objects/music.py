@@ -153,6 +153,10 @@ class Music(KodiDb):
         obj['Artists'] = " / ".join(obj['Artists'] or [])
         obj['Artwork'] = API.get_all_artwork(self.objects.map(item, 'ArtworkMusic'), True)
         obj['Thumb'] = obj['Artwork']['Primary']
+        obj['DateAdded'] = item.get('DateCreated')
+
+        if obj['DateAdded']:
+            obj['DateAdded'] = Local(obj['DateAdded']).split('.')[0].replace('T', " ")
 
         if obj['Thumb']:
             obj['Thumb'] = "<thumb>%s</thumb>" % obj['Thumb']
@@ -173,7 +177,11 @@ class Music(KodiDb):
 
         ''' Add object to kodi.
         '''
-        obj['AlbumId'] = self.get_album(*values(obj, QU.get_album_obj))
+        if self.version_id >= 82:
+            obj_values = values(obj, QU.get_album_obj82)
+        else:
+            obj_values = values(obj, QU.get_album_obj)
+        obj['AlbumId'] = self.get_album(*obj_values)
         self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_album_obj))
         LOG.debug("ADD album [%s] %s: %s", obj['AlbumId'], obj['Title'], obj['Id'])
 
