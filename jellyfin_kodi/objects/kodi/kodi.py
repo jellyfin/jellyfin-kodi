@@ -160,23 +160,24 @@ class Kodi(object):
         self.cursor.execute(QU.add_person, args)
         return self.cursor.lastrowid
 
-    def _get_person(self, *args):
+    def _get_person(self, name):
         '''Retrieve person from the database, or add them if they don't exist
         '''
-        resp = self.cursor.execute(QU.get_person, args).fetchone()
+        resp = self.cursor.execute(QU.get_person, (name,)).fetchone()
         if resp is not None:
             return resp[0]
         else:
-            return self.add_person(*args)
+            return self.add_person(name)
 
-    def get_person(self, *args):
+    def get_person(self, name):
         '''Retrieve person from cache, else forward to db query
         '''
-        person_id = self._people_cache.get(args)
-        if not person_id:
-            person_id = self._get_person(*args)
-            self._people_cache[args] = person_id
-        return person_id
+        if name in self._people_cache:
+            return self._people_cache[name]
+        else:
+            person_id = self._get_person(name)
+            self._people_cache[name] = person_id
+            return person_id
 
     def add_genres(self, genres, *args):
 
