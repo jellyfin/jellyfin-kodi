@@ -598,6 +598,18 @@ class UpdateWorker(threading.Thread):
 
     def run(self):
         with self.lock, self.database as kodidb, Database('jellyfin') as jellyfindb:
+            default_args = (self.server, jellyfindb, kodidb, self.direct_path)
+            if kodidb.db_file == "video":
+                movies = Movies(*default_args)
+                tvshows = TVShows(*default_args)
+                musicvideos = MusicVideos(*default_args)
+            elif kodidb.db_file == "music":
+                music = Music(*default_args)
+            else:
+                # this should not happen
+                LOG.error('"{}" is not a valid Kodi library type.'.format(kodidb.db_file))
+                return
+
             while True:
 
                 try:
@@ -605,29 +617,28 @@ class UpdateWorker(threading.Thread):
                 except Queue.Empty:
                     break
 
-                default_args = (self.server, jellyfindb, kodidb, self.direct_path)
                 try:
                     LOG.debug('{} - {}'.format(item['Type'], item['Name']))
                     if item['Type'] == 'Movie':
-                        Movies(*default_args).movie(item)
+                        movies.movie(item)
                     elif item['Type'] == 'BoxSet':
-                        Movies(*default_args).boxset(item)
+                        movies.boxset(item)
                     elif item['Type'] == 'Series':
-                        TVShows(*default_args).tvshow(item)
+                        tvshows.tvshow(item)
                     elif item['Type'] == 'Season':
-                        TVShows(*default_args).season(item)
+                        tvshows.season(item)
                     elif item['Type'] == 'Episode':
-                        TVShows(*default_args).episode(item)
+                        tvshows.episode(item)
                     elif item['Type'] == 'MusicVideo':
-                        MusicVideos(*default_args).musicvideo(item)
+                        musicvideos.musicvideo(item)
                     elif item['Type'] == 'MusicAlbum':
-                        Music(*default_args).album(item)
+                        music.album(item)
                     elif item['Type'] == 'MusicArtist':
-                        Music(*default_args).artist(item)
+                        music.artist(item)
                     elif item['Type'] == 'AlbumArtist':
-                        Music(*default_args).albumartist(item)
+                        music.albumartist(item)
                     elif item['Type'] == 'Audio':
-                        Music(*default_args).song(item)
+                        music.song(item)
 
                     if self.notify:
                         self.notify_output.put((item['Type'], api.API(item).get_naming()))
@@ -663,6 +674,17 @@ class UserDataWorker(threading.Thread):
     def run(self):
 
         with self.lock, self.database as kodidb, Database('jellyfin') as jellyfindb:
+            default_args = (self.server, jellyfindb, kodidb, self.direct_path)
+            if kodidb.db_file == "video":
+                movies = Movies(*default_args)
+                tvshows = TVShows(*default_args)
+            elif kodidb.db_file == "music":
+                music = Music(*default_args)
+            else:
+                # this should not happen
+                LOG.error('"{}" is not a valid Kodi library type.'.format(kodidb.db_file))
+                return
+
             while True:
 
                 try:
@@ -670,20 +692,19 @@ class UserDataWorker(threading.Thread):
                 except Queue.Empty:
                     break
 
-                default_args = (self.server, jellyfindb, kodidb, self.direct_path)
                 try:
                     if item['Type'] == 'Movie':
-                        Movies(*default_args).userdata(item)
+                        movies.userdata(item)
                     elif item['Type'] in ['Series', 'Season', 'Episode']:
-                        TVShows(*default_args).userdata(item)
+                        tvshows.userdata(item)
                     elif item['Type'] == 'MusicAlbum':
-                        Music(*default_args).album(item)
+                        music.album(item)
                     elif item['Type'] == 'MusicArtist':
-                        Music(*default_args).artist(item)
+                        music.artist(item)
                     elif item['Type'] == 'AlbumArtist':
-                        Music(*default_args).albumartist(item)
+                        music.albumartist(item)
                     elif item['Type'] == 'Audio':
-                        Music(*default_args).userdata(item)
+                        music.userdata(item)
                 except LibraryException as error:
                     if error.status == 'StopCalled':
                         break
@@ -750,17 +771,30 @@ class RemovedWorker(threading.Thread):
 
     is_done = False
 
-    def __init__(self, queue, lock, database, *args):
+    def __init__(self, queue, lock, database, server, direct_path):
 
         self.queue = queue
         self.lock = lock
         self.database = Database(database)
-        self.args = args
+        self.server = server
+        self.direct_path = direct_path
         threading.Thread.__init__(self)
 
     def run(self):
 
         with self.lock, self.database as kodidb, Database('jellyfin') as jellyfindb:
+            default_args = (self.server, jellyfindb, kodidb, self.direct_path)
+            if kodidb.db_file == "video":
+                movies = Movies(*default_args)
+                tvshows = TVShows(*default_args)
+                musicvideos = MusicVideos(*default_args)
+            elif kodidb.db_file == "music":
+                music = Music(*default_args)
+            else:
+                # this should not happen
+                LOG.error('"{}" is not a valid Kodi library type.'.format(kodidb.db_file))
+                return
+
             while True:
 
                 try:
@@ -769,13 +803,13 @@ class RemovedWorker(threading.Thread):
                     break
 
                 if item['Type'] == 'Movie':
-                    obj = Movies(self.args[0], jellyfindb, kodidb, self.args[1]).remove
+                    obj = movies.remove
                 elif item['Type'] in ['Series', 'Season', 'Episode']:
-                    obj = TVShows(self.args[0], jellyfindb, kodidb, self.args[1]).remove
+                    obj = tvshows.remove
                 elif item['Type'] in ['MusicAlbum', 'MusicArtist', 'AlbumArtist', 'Audio']:
-                    obj = Music(self.args[0], jellyfindb, kodidb, self.args[1]).remove
+                    obj = music.remove
                 elif item['Type'] == 'MusicVideo':
-                    obj = MusicVideos(self.args[0], jellyfindb, kodidb, self.args[1]).remove
+                    obj = musicvideos.remove
 
                 try:
                     obj(item['Id'])
@@ -784,8 +818,8 @@ class RemovedWorker(threading.Thread):
                         break
                 except Exception as error:
                     LOG.exception(error)
-
-                self.queue.task_done()
+                finally:
+                    self.queue.task_done()
 
                 if window('jellyfin_should_stop.bool'):
                     break
