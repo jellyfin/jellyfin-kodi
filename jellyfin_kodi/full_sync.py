@@ -77,21 +77,30 @@ class FullSync(object):
         self.sync = get_sync()
 
         if library_id:
-            libraries = library_id.split(',')
 
-            for selected in libraries:
+            # Look up library in local Jellyfin database
+            library = self.get_library(library_id)
 
-                if selected not in [x.replace('Mixed:', "") for x in self.sync['Libraries']]:
-                    library = self.get_library(selected)
-
-                    if library:
-
-                        self.sync['Libraries'].append("Mixed:%s" % selected)
-
-                        if library.media_type in ('mixed', 'movies'):
-                            self.sync['Libraries'].append('Boxsets:%s' % selected)
-                    else:
-                        self.sync['Libraries'].append(selected)
+            if library:
+                if library.media_type == 'mixed':
+                    self.sync['Libraries'].append("Mixed:%s" % library_id)
+                    # Include boxsets library
+                    libraries = self.get_libraries()
+                    boxsets = [row.view_id for row in libraries if row.media_type == 'boxsets']
+                    if boxsets:
+                        self.sync['Libraries'].append('Boxsets:%s' % boxsets[0])
+                elif library.media_type == 'movies':
+                    self.sync['Libraries'].append(library_id)
+                    # Include boxsets library
+                    libraries = self.get_libraries()
+                    boxsets = [row.view_id for row in libraries if row.media_type == 'boxsets']
+                    if boxsets:
+                        self.sync['Libraries'].append('Boxsets:%s' % boxsets[0])
+                else:
+                    # Only called if the library isn't already known about
+                    self.sync['Libraries'].append(library_id)
+            else:
+                self.sync['Libraries'].append(library_id)
         else:
             self.mapping()
 
