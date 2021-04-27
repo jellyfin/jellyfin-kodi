@@ -642,7 +642,7 @@ class PlayUtils(object):
 
                 selection = list(audio_streams.keys())
                 resp = dialog("select", translate(33013), selection)
-                audio_selected = audio_streams[selection[resp]] if resp else source['DefaultAudioStreamIndex']
+                audio_selected = audio_streams[selection[resp]] if resp > -1 else source['DefaultAudioStreamIndex']
             else:  # Only one choice
                 audio_selected = audio_streams[next(iter(audio_streams))]
         else:
