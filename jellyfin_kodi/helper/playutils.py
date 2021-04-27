@@ -349,6 +349,7 @@ class PlayUtils(object):
         '''
         profile = {
             "Name": "Kodi",
+            "MaxStaticBitrate": self.get_max_bitrate(),
             "MaxStreamingBitrate": self.get_max_bitrate(),
             "MusicStreamingTranscodingBitrate": 1280000,
             "TimelineOffsetSeconds": 5,
