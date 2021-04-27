@@ -12,7 +12,7 @@
 <!-- A clear and concise description of what you expected to happen. -->
 
 **Logs**
-<!-- Please paste any log errors. -->
+<!-- Please paste any log errors. https://kodi.wiki/view/Log_file/Easy -->
 
 **Screenshots**
 <!-- If applicable, add screenshots to help explain your problem. -->
