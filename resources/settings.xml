@@ -39,7 +39,7 @@
 		<setting label="30519" id="askCinema" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
 		<setting label="30002" id="playFromStream" type="bool" default="true" />
 		<setting label="33179" id="playFromTranscode" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
-	    <setting label="30160" id="maxBitrate" type="enum" values="0.5 Mbps|1 Mbps|1.5 Mbps|2.0 Mbps|2.5 Mbps|3.0 Mbps|4.0 Mbps|5.0 Mbps|6.0 Mbps|7.0 Mbps|8.0 Mbps|9.0 Mbps|10.0 Mbps|12.0 Mbps|14.0 Mbps|16.0 Mbps|18.0 Mbps|20.0 Mbps|25.0 Mbps|30.0 Mbps|35.0 Mbps|40.0 Mbps|100.0 Mbps [default]|1000.0 Mbps" visible="true" default="22" />
+	    <setting label="30160" id="maxBitrate" type="enum" values="0.5 Mbps|1 Mbps|1.5 Mbps|2.0 Mbps|2.5 Mbps|3.0 Mbps|4.0 Mbps|5.0 Mbps|6.0 Mbps|7.0 Mbps|8.0 Mbps|9.0 Mbps|10.0 Mbps|12.0 Mbps|14.0 Mbps|16.0 Mbps|18.0 Mbps|20.0 Mbps|25.0 Mbps|30.0 Mbps|35.0 Mbps|40.0 Mbps|100.0 Mbps|1000.0 Mbps [default]|Maximum" visible="true" default="23" />
 	    <setting label="33114" id="enableExternalSubs" type="bool" default="true" />
 
 		<setting type="sep" />
