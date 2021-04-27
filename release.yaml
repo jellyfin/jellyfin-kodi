@@ -1,10 +1,8 @@
-version: '0.7.1'
+version: '0.7.2'
 changelog: |
-  - #474 Fix: array.array.tostring is removed in Python 3.9 
-  - #475 Fix: Get specific library vs list of libraries
-  - #476 Disable the cleanonupdate tag in advancedsettings.xml
-  - #482 Stop editing sources.xml
-  - #485 Fix integrity error in actor table during sync
-  - #486 Always use highest version database available
-  - #487 Fix full syncs with new actors
-  - #488 Fix formatting on multiline if statement
+  - #490 Fix recently added albums in Kodi 19
+  - #494 Fix syncing libraries after initial sync is complete
+  - #500 Speed up sync process
+  - #503 Include link to kodi's log uploader in issue template
+  - #504 Fix transcoding of wrong audio channel
+  - #506 Increase maximum bitrate
