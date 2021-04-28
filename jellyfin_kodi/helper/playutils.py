@@ -557,23 +557,6 @@ class PlayUtils(object):
 
         return path
 
-    def get_commercial_codec_name(self, codec, profile):
-        NAMES = {
-            'ac3': 'Dolby Digital',
-            'eac3': 'Dolby Digital+',
-            'truehd': 'Dolby TrueHD',
-            'dts': 'DTS'
-        }
-
-        if profile == 'DTS-HD MA':
-            return 'DTS-HD Master Audio'
-        if profile == 'DTS-HD HRA':
-            return 'DTS-HD High Resolution Audio'
-        if codec in NAMES:
-            return NAMES[codec]
-
-        return codec.upper()
-
     def get_audio_subs(self, source, audio=None, subtitle=None):
 
         ''' For transcoding only
@@ -597,14 +580,7 @@ class PlayUtils(object):
 
             if stream_type == 'Audio':
 
-                profile = stream['Profile'] if 'Profile' in stream else None
-                codec = self.get_commercial_codec_name(stream['Codec'], profile)
-                channel = stream.get('ChannelLayout', "").capitalize()
-
-                if 'Language' in stream:
-                    track = "%s - %s %s" % (stream['Language'].capitalize(), codec, channel)
-                else:
-                    track = "%s %s" % (codec, channel)
+                track = stream['DisplayTitle']
 
                 audio_streams[track] = index
 
@@ -617,17 +593,7 @@ class PlayUtils(object):
                     if not avail_for_extraction and not allow_burned_subs:
                         continue
 
-                codec = self.get_commercial_codec_name(stream['Codec'], None)
-
-                if 'Language' in stream:
-                    track = "%s - %s" % (stream['Language'].capitalize(), codec)
-                else:
-                    track = "%s" % codec
-
-                if stream['IsDefault']:
-                    track = "%s - Default" % track
-                if stream['IsForced']:
-                    track = "%s - Forced" % track
+                track = stream['DisplayTitle']
 
                 subs_streams[track] = index
 
