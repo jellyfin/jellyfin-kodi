@@ -68,7 +68,7 @@ class FullSync(object):
 
         return self
 
-    def libraries(self, library_id=None, update=False):
+    def libraries(self, libraries=None, update=False):
 
         ''' Map the syncing process and start the sync. Ensure only one sync is running.
         '''
@@ -76,31 +76,33 @@ class FullSync(object):
         self.update_library = update
         self.sync = get_sync()
 
-        if library_id:
+        if libraries:
+            # Can be a single ID or a comma separated list
+            libraries = libraries.split(',')
+            for library_id in libraries:
+                # Look up library in local Jellyfin database
+                library = self.get_library(library_id)
 
-            # Look up library in local Jellyfin database
-            library = self.get_library(library_id)
-
-            if library:
-                if library.media_type == 'mixed':
-                    self.sync['Libraries'].append("Mixed:%s" % library_id)
-                    # Include boxsets library
-                    libraries = self.get_libraries()
-                    boxsets = [row.view_id for row in libraries if row.media_type == 'boxsets']
-                    if boxsets:
-                        self.sync['Libraries'].append('Boxsets:%s' % boxsets[0])
-                elif library.media_type == 'movies':
-                    self.sync['Libraries'].append(library_id)
-                    # Include boxsets library
-                    libraries = self.get_libraries()
-                    boxsets = [row.view_id for row in libraries if row.media_type == 'boxsets']
-                    if boxsets:
-                        self.sync['Libraries'].append('Boxsets:%s' % boxsets[0])
+                if library:
+                    if library.media_type == 'mixed':
+                        self.sync['Libraries'].append("Mixed:%s" % library_id)
+                        # Include boxsets library
+                        libraries = self.get_libraries()
+                        boxsets = [row.view_id for row in libraries if row.media_type == 'boxsets']
+                        if boxsets:
+                            self.sync['Libraries'].append('Boxsets:%s' % boxsets[0])
+                    elif library.media_type == 'movies':
+                        self.sync['Libraries'].append(library_id)
+                        # Include boxsets library
+                        libraries = self.get_libraries()
+                        boxsets = [row.view_id for row in libraries if row.media_type == 'boxsets']
+                        if boxsets:
+                            self.sync['Libraries'].append('Boxsets:%s' % boxsets[0])
+                    else:
+                        # Only called if the library isn't already known about
+                        self.sync['Libraries'].append(library_id)
                 else:
-                    # Only called if the library isn't already known about
                     self.sync['Libraries'].append(library_id)
-            else:
-                self.sync['Libraries'].append(library_id)
         else:
             self.mapping()
 
