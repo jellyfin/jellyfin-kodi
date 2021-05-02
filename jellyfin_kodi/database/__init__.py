@@ -335,6 +335,9 @@ def get_sync():
     sync['Whitelist'] = list(set(sync.get('Whitelist', [])))
     sync['SortedViews'] = sync.get('SortedViews', [])
 
+    # Temporary cleanup from #494/#511, remove in a future version
+    sync['Libraries'] = [lib_id for lib_id in sync['Libraries'] if ',' not in lib_id]
+
     return sync
 
 
