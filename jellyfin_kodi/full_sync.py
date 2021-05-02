@@ -96,7 +96,8 @@ class FullSync(object):
                         # Include boxsets library
                         libraries = self.get_libraries()
                         boxsets = [row.view_id for row in libraries if row.media_type == 'boxsets']
-                        if boxsets:
+                        # Verify we're only trying to sync boxsets once
+                        if boxsets and boxsets[0] not in self.sync['Libraries']:
                             self.sync['Libraries'].append('Boxsets:%s' % boxsets[0])
                     else:
                         # Only called if the library isn't already known about
