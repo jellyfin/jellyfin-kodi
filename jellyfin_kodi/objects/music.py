@@ -487,7 +487,7 @@ class Music(KodiDb):
         if obj['Media'] == 'song':
 
             self.remove_song(obj['KodiId'], obj['Id'])
-            self.jellyfin_db.remove_wild_item(obj['id'])
+            self.jellyfin_db.remove_wild_item(obj['Id'])
 
             for item in self.jellyfin_db.get_item_by_wild_id(*values(obj, QUEM.get_item_by_wild_obj)):
                 if item[1] == 'album':
