@@ -12,3 +12,5 @@
   version: '0.0.5'
 - addon: 'script.module.futures'
   version: '2.2.0'
+- addon: 'script.module.websocket'
+  version: '0.57.0'
