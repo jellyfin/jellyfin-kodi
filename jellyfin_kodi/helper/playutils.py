@@ -566,8 +566,8 @@ class PlayUtils(object):
             IsTextSubtitleStream if true, is available to download from server.
         '''
         prefs = ""
-        audio_streams = collections.OrderedDict()
-        subs_streams = collections.OrderedDict()
+        audio_streams = list()
+        subs_streams = list()
         streams = source['MediaStreams']
 
         server_settings = self.api_client.get_transcode_settings()
@@ -582,7 +582,7 @@ class PlayUtils(object):
 
                 track = stream['DisplayTitle']
 
-                audio_streams[track] = index
+                audio_streams.append(index)
 
             elif stream_type == 'Subtitle':
                 if stream['IsExternal']:
@@ -595,10 +595,13 @@ class PlayUtils(object):
 
                 track = stream['DisplayTitle']
 
-                subs_streams[track] = index
+                subs_streams.append(index)
 
         skip_dialog = int(settings('skipDialogTranscode') or 0)
         audio_selected = None
+
+        def get_track_title(trackIndex):
+            return streams[trackIndex]['DisplayTitle']
 
         if audio:
             audio_selected = audio
@@ -606,11 +609,11 @@ class PlayUtils(object):
         elif skip_dialog in (0, 1):
             if len(audio_streams) > 1:
 
-                selection = list(audio_streams.keys())
+                selection = list(map(get_track_title, audio_streams))
                 resp = dialog("select", translate(33013), selection)
-                audio_selected = audio_streams[selection[resp]] if resp > -1 else source['DefaultAudioStreamIndex']
-            else:  # Only one choice
-                audio_selected = audio_streams[next(iter(audio_streams))]
+                audio_selected = audio_streams[resp] if resp > -1 else source['DefaultAudioStreamIndex']
+            elif len(audio_streams) > 0:  # Only one choice
+                audio_selected = audio_streams[0]
         else:
             audio_selected = source['DefaultAudioStreamIndex']
 
@@ -632,11 +635,11 @@ class PlayUtils(object):
 
         elif skip_dialog in (0, 2) and len(subs_streams):
 
-            selection = list(['No subtitles']) + list(subs_streams.keys())
-            resp = dialog("select", translate(33014), selection)
+            selection = list(['No subtitles']) + list(map(get_track_title, subs_streams))
+            resp = dialog("select", translate(33014), selection) - 1
 
             if resp:
-                index = subs_streams[selection[resp]] if resp > -1 else source.get('DefaultSubtitleStreamIndex')
+                index = subs_streams[resp] if resp > -1 else source.get('DefaultSubtitleStreamIndex')
 
                 if index is not None:
 
