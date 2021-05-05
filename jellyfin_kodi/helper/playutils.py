@@ -5,7 +5,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import os
 from uuid import uuid4
-import collections
 
 from kodi_six import xbmc, xbmcvfs
 
