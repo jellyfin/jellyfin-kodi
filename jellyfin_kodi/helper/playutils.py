@@ -596,8 +596,8 @@ class PlayUtils(object):
         skip_dialog = int(settings('skipDialogTranscode') or 0)
         audio_selected = None
 
-        def get_track_title(trackIndex):
-            return streams[trackIndex]['DisplayTitle'] or ("Track %s" % trackIndex)
+        def get_track_title(track_index):
+            return streams[track_index]['DisplayTitle'] or ("Track %s" % track_index)
 
         if audio:
             audio_selected = audio
