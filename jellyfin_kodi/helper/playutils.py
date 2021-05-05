@@ -580,8 +580,6 @@ class PlayUtils(object):
 
             if stream_type == 'Audio':
 
-                track = stream['DisplayTitle']
-
                 audio_streams.append(index)
 
             elif stream_type == 'Subtitle':
@@ -593,15 +591,13 @@ class PlayUtils(object):
                     if not avail_for_extraction and not allow_burned_subs:
                         continue
 
-                track = stream['DisplayTitle']
-
                 subs_streams.append(index)
 
         skip_dialog = int(settings('skipDialogTranscode') or 0)
         audio_selected = None
 
         def get_track_title(trackIndex):
-            return streams[trackIndex]['DisplayTitle']
+            return streams[trackIndex]['DisplayTitle'] or ("Track %s" % trackIndex)
 
         if audio:
             audio_selected = audio
