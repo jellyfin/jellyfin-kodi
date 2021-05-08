@@ -1,8 +1,5 @@
-version: '0.7.2'
+version: '0.7.3'
 changelog: |
-  - #490 Fix recently added albums in Kodi 19
-  - #494 Fix syncing libraries after initial sync is complete
-  - #500 Speed up sync process
-  - #503 Include link to kodi's log uploader in issue template
-  - #504 Fix transcoding of wrong audio channel
-  - #506 Increase maximum bitrate
+  - #508 Use jellyfin's DisplayTitle for audio and subtitle streams
+  - #513 Fix subsequent syncs from the addon menu better
+  - #515 Allow multiple subtitles with identical names 
