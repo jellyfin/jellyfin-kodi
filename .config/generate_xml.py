@@ -44,7 +44,7 @@ with open('{dir_path}/{py_version}.yaml'.format(**locals()), 'r') as f:
     deps = yaml.safe_load(f)
 
 # Load version and changelog
-with open('jellyfin-kodi/release.yaml', 'r') as f:
+with open('release.yaml', 'r') as f:
     data = yaml.safe_load(f)
 
 # Populate xml template
@@ -67,4 +67,4 @@ for section in root.findall('extension'):
 indent(root)
 
 # Write addon.xml
-tree.write('jellyfin-kodi/addon.xml', encoding='utf-8', xml_declaration=True)
+tree.write('addon.xml', encoding='utf-8', xml_declaration=True)
