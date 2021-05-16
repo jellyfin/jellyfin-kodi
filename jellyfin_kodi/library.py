@@ -26,6 +26,7 @@ from helper import LazyLogger
 LOG = LazyLogger(__name__)
 LIMIT = int(settings('limitIndex') or 15)
 DTHREADS = int(settings('limitThreads') or 3)
+TARGET_DB_VERSION = 1
 
 ##################################################################################################
 
@@ -109,6 +110,18 @@ class Library(threading.Thread):
         '''
         with Database('video'), Database('music'):
             pass
+
+    def check_version(self):
+        '''
+        Checks database version and triggers any required data migrations
+        '''
+        with Database('jellyfin') as jellyfindb:
+            db = jellyfin_db.JellyfinDatabase(jellyfindb.cursor)
+            db_version = db.get_version()
+
+            if not db_version:
+                # Make sure we always have a version in the database
+                db.add_version((TARGET_DB_VERSION))
 
     @stop
     def service(self):
@@ -303,6 +316,7 @@ class Library(threading.Thread):
             Check for the server plugin.
         '''
         self.test_databases()
+        self.check_version()
 
         Views().get_views()
         Views().get_nodes()

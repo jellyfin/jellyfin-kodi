@@ -427,3 +427,4 @@ class Service(xbmc.Monitor):
             self.monitor.listener.stop()
 
         LOG.info("---<<<[ %s ]", client.get_addon_name())
+

@@ -144,3 +144,15 @@ class JellyfinDatabase():
 
     def remove_media_by_parent_id(self, *args):
         self.cursor.execute(QU.delete_media_by_parent_id, args)
+
+    def get_version(self):
+        self.cursor.execute(QU.get_version)
+
+        return self.cursor.fetchone()
+
+    def add_version(self, *args):
+        '''
+        We only ever want one value here, so erase the existing contents first
+        '''
+        self.cursor.execute(QU.delete_version)
+        self.cursor.execute(QU.add_version, args)
