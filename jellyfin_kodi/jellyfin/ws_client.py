@@ -12,9 +12,9 @@ from helper import LazyLogger
 
 # If numpy is installed, the websockets library tries to use it, and then
 # kodi hard crashes for reasons I don't even want to pretend to understand
-import sys
+import sys  # noqa: E402
 sys.modules['numpy'] = None
-import websocket
+import websocket  # noqa: E402
 
 ##################################################################################################
 
