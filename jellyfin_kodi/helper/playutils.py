@@ -633,8 +633,8 @@ class PlayUtils(object):
             selection = list(['No subtitles']) + list(map(get_track_title, subs_streams))
             resp = dialog("select", translate(33014), selection) - 1
 
-            if resp:
-                index = subs_streams[resp] if resp > -1 else source.get('DefaultSubtitleStreamIndex')
+            if resp > -1:
+                index = subs_streams[resp]
 
                 if index is not None:
 
