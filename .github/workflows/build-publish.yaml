@@ -28,19 +28,15 @@ jobs:
           python -m pip install pyyaml
 
       - name: Create ${{ matrix.py_version }} addon.xml
-        run: python .config/generate_xml.py ${{ matrix.py_version }}
+        run: python build.py --version ${{ matrix.py_version }}
 
-      - name: Publish Build Atrifact
+      - name: Publish Build Artifact
         uses: actions/upload-artifact@v2
         with:
           retention-days: 14
           name: ${{ matrix.py_version }}-build-artifact
           path: |
-            **/*
-            !.ci/*
-            !.config/*
-            !.git/**/*
-            !.github/*
+            *.zip
 
   publish:
     runs-on: ubuntu-latest
@@ -53,10 +49,6 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: ${{ matrix.py_version }}-build-artifact
-          path: plugin.video.jellyfin-${{ matrix.py_version }}
-
-      - name: Create release Zip
-        run: zip -rq plugin.video.jellyfin-${{ matrix.py_version }}.zip plugin.video.jellyfin-${{ matrix.py_version }}
 
       - name: Upload to repo server
         uses: burnett01/rsync-deployments@4.1
