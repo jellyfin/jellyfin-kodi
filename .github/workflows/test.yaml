@@ -58,13 +58,9 @@ jobs:
         run: |
           cat flake8.output | reviewdog -reporter=github-pr-check -f=flake8 -name="flake8"
 
-      - name: Publish Coverage to PR
-        uses: 5monkeys/cobertura-action@v8
-        if: ${{ env.PR_TRIGGERED == 'true' && matrix.py_version == '3.9' }}
-        with:
-          path: coverage.xml
-          repo_token: ${{ secrets.JF_BOT_TOKEN }}
-          minimum_coverage: 1
+      - name: Upload coverage
+        uses: codecov/codecov-action@v1
+        if: ${{ matrix.py_version == '3.9' }}
 
       - name: Publish Test Atrifact
         uses: actions/upload-artifact@v2
