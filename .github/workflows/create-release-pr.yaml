@@ -1,0 +1,66 @@
+name: Create Release PR
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create_pr:
+    name: "Create Pump Version PR"
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Update Draft
+        uses: release-drafter/release-drafter@v5.15.0
+        id: draft
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup YQ
+        uses: chrisdickinson/setup-yq@latest
+        with:
+          yq-version: v4.9.1
+
+      - name: Pars Changhelog
+        run: |
+          cat << EOF >> cl.md
+          ${{ steps.draft.outputs.body }}
+          EOF
+          TAG="${{ steps.draft.outputs.tag_name }}"
+          echo "VERSION=${TAG#v}" >> $GITHUB_ENV
+          echo "CHANGELOG=`cat cl.md | grep '*'`" >> $GITHUB_ENV
+          rm cl.md
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Update release.yaml
+        run: |
+          yq eval '.version = env(VERSION) | .changelog = strenv(CHANGELOG) | .changelog style="literal"' -i release.yaml
+
+      - name: Commit Changes
+        run: |
+          git config user.name "jellyfin-bot"
+          git config user.email "team@jellyfin.org"
+
+          git checkout -b prepare-${{ env.VERSION }}
+          git commit -am "bump version"
+
+          if [[ -z "$(git ls-remote --heads origin prepare-${{ env.VERSION }})" ]]; then
+            git push origin prepare-${{ env.VERSION }}
+          else
+            git push -f origin prepare-${{ env.VERSION }}
+          fi
+
+      - name: Create or Update PR
+        uses: k3rnels-actions/pr-update@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pr_title: Prepare for release ${{ steps.draft.outputs.tag_name }}
+          pr_source: prepare-${{ env.VERSION }}
+          pr_labels: 'release-prep,skip-changelog'
+          pr_body: |
+            :robot: This is a generated PR to bump the `release.yaml` version and update the changelog.
+
+            ---
+
+            ${{ env.CHANGELOG }}
