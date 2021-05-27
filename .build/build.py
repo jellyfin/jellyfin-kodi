@@ -35,7 +35,7 @@ def create_addon_xml(config: dict, source: str, py_version: str) -> None:
     Create addon.xml from template file
     """
     # Load template file
-    with open('{}/.config/template.xml'.format(source), 'r') as f:
+    with open('{}/.build/template.xml'.format(source), 'r') as f:
         tree = ET.parse(f)
         root = tree.getroot()
 
@@ -92,7 +92,7 @@ def folder_filter(folder_name: str) -> bool:
     return ('.ci' not in folder_name
             and '.git' not in folder_name
             and '.github' not in folder_name
-            and '.config' not in folder_name)
+            and '.build' not in folder_name)
 
 
 if __name__ == '__main__':

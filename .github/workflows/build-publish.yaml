@@ -28,7 +28,7 @@ jobs:
           python -m pip install pyyaml
 
       - name: Create ${{ matrix.py_version }} addon.xml
-        run: python build.py --version ${{ matrix.py_version }}
+        run: python .build/build.py --version ${{ matrix.py_version }} --source . --target .
 
       - name: Publish Build Artifact
         uses: actions/upload-artifact@v2
@@ -53,8 +53,8 @@ jobs:
       - name: Upload to repo server
         uses: burnett01/rsync-deployments@4.1
         with:
-          switches: -rltgoDzvO --delete --exclude='*' --include='**/*.apk' --include='*.txt'
-          path: plugin.video.jellyfin-${{ matrix.py_version }}.zip
+          switches: -vrptz
+          path: '*.zip'
           remote_path: /srv/repository/incoming/kodi
           remote_host: ${{ secrets.DEPLOY_HOST }}
           remote_user: ${{ secrets.DEPLOY_USER }}
@@ -69,5 +69,5 @@ jobs:
           envs: JELLYFIN_VERSION
           script_stop: true
           script: |
-            python3 /usr/local/bin/kodirepo add /srv/repository/incoming/kodi/plugin.video.jellyfin-${{ matrix.py_version }}.zip --datadir /srv/repository/releases/client/kodi/${{ matrix.py_version }};
-            rm /srv/repository/incoming/kodi/plugin.video.jellyfin-${{ matrix.py_version }}.zip;
+            python3 /usr/local/bin/kodirepo add /srv/repository/incoming/kodi/plugin.video.jellyfin+${{ matrix.py_version }}.zip --datadir /srv/repository/releases/client/kodi/${{ matrix.py_version }};
+            rm /srv/repository/incoming/kodi/plugin.video.jellyfin+${{ matrix.py_version }}.zip;
