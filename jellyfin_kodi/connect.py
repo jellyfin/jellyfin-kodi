@@ -118,7 +118,7 @@ class Connect(object):
                 if 'ExchangeToken' not in state['Servers'][0]:
                     self.login()
 
-            elif state['State'] == CONNECTION_STATE['Unavailable'] and state['Status_Code'] == 401:
+            elif state['State'] == CONNECTION_STATE['Unavailable'] and state.get('Status_Code', 0) == 401:
                 # If the saved credentials don't work, restart the addon to force the password dialog to open
                 window('jellyfin.restart', clear=True)
 
