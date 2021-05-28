@@ -173,6 +173,9 @@ class HTTP(object):
                     return clean_none_dict_values(response)
                 except ValueError:
                     return
+                except TypeError:
+                    # Empty json
+                    return
 
     def _request(self, data):
 

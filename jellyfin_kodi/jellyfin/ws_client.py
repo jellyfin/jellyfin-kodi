@@ -10,7 +10,11 @@ from kodi_six import xbmc
 
 from helper import LazyLogger
 
-import websocket
+# If numpy is installed, the websockets library tries to use it, and then
+# kodi hard crashes for reasons I don't even want to pretend to understand
+import sys  # noqa: E402,I100
+sys.modules['numpy'] = None
+import websocket  # noqa: E402,I201
 
 ##################################################################################################
 
