@@ -247,7 +247,7 @@ class PlayUtils(object):
 
             video_type = 'live' if source['Protocol'] == 'LiveTV' else 'master'
             base = base.replace('stream' if 'stream' in base else 'master', video_type, 1)
-            self.info['Path'] = "%s/%s?%s" % (self.info['ServerAddress'], base, params)
+            self.info['Path'] = "%s%s?%s" % (self.info['ServerAddress'], base, params)
             self.info['Path'] += "&maxWidth=%s&maxHeight=%s" % (self.get_resolution())
         else:
             self.info['Path'] = "%s/%s" % (self.info['ServerAddress'], source['TranscodingUrl'])
