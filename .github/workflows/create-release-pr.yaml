@@ -13,14 +13,14 @@ jobs:
         uses: release-drafter/release-drafter@v5.15.0
         id: draft
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.JF_BOT_TOKEN }}
 
       - name: Setup YQ
         uses: chrisdickinson/setup-yq@latest
         with:
           yq-version: v4.9.1
 
-      - name: Pars Changhelog
+      - name: Parse Changlog
         run: |
           cat << EOF >> cl.md
           ${{ steps.draft.outputs.body }}
@@ -43,7 +43,7 @@ jobs:
           git config user.email "team@jellyfin.org"
 
           git checkout -b prepare-${{ env.VERSION }}
-          git commit -am "bump version"
+          git commit -am "bump version to ${{ env.VERSION }}"
 
           if [[ -z "$(git ls-remote --heads origin prepare-${{ env.VERSION }})" ]]; then
             git push origin prepare-${{ env.VERSION }}
@@ -54,7 +54,7 @@ jobs:
       - name: Create or Update PR
         uses: k3rnels-actions/pr-update@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.JF_BOT_TOKEN }}
           pr_title: Prepare for release ${{ steps.draft.outputs.tag_name }}
           pr_source: prepare-${{ env.VERSION }}
           pr_labels: 'release-prep,skip-changelog'
