@@ -1,0 +1,22 @@
+_extends: jellyfin/jellyfin-meta-plugins
+
+name-template: "Release $RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
+version-template: "$MAJOR.$MINOR.$PATCH"
+
+version-resolver:
+  major:
+    labels:
+      - 'major'
+  minor:
+    labels:
+      - 'minor'
+  patch:
+    labels:
+      - 'patch'
+  default: patch
+
+template: |
+  ## :sparkles: What's New
+
+  $CHANGES

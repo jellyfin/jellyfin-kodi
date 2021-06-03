@@ -1,0 +1,64 @@
+name: Publish Jellyfin-Kodi
+
+on:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        py_version: [ 'py2', 'py3' ]
+    steps:
+      - name: Update Draft
+        uses: release-drafter/release-drafter@v5.15.0
+        with:
+          publish: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.JF_BOT_TOKEN }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pyyaml
+
+      - name: Create ${{ matrix.py_version }} addon.xml
+        run: python build.py --version ${{ matrix.py_version }}
+
+      - name: Publish Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          retention-days: 14
+          name: ${{ matrix.py_version }}-build-artifact
+          path: |
+            *.zip
+
+      - name: Upload to repo server
+        uses: burnett01/rsync-deployments@4.1
+        with:
+          switches: -vrptz
+          path: '*.zip'
+          remote_path: /srv/repository/incoming/kodi
+          remote_host: ${{ secrets.DEPLOY_HOST }}
+          remote_user: ${{ secrets.DEPLOY_USER }}
+          remote_key: ${{ secrets.DEPLOY_KEY }}
+
+      - name: Add to Kodi repo and clean up
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.DEPLOY_HOST  }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          envs: JELLYFIN_VERSION
+          script_stop: true
+          script: |
+            python3 /usr/local/bin/kodirepo add /srv/repository/incoming/kodi/plugin.video.jellyfin+${{ matrix.py_version }}.zip --datadir /srv/repository/releases/client/kodi/${{ matrix.py_version }};
+            rm /srv/repository/incoming/kodi/plugin.video.jellyfin+${{ matrix.py_version }}.zip;

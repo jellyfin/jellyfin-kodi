@@ -1,0 +1,39 @@
+name: Build Jellyfin-Kodi
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        py_version: [ 'py2', 'py3' ]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pyyaml
+
+      - name: Create ${{ matrix.py_version }} addon.xml
+        run: python build.py --version ${{ matrix.py_version }}
+
+      - name: Publish Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          retention-days: 14
+          name: ${{ matrix.py_version }}-build-artifact
+          path: |
+            *.zip

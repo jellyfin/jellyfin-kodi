@@ -1,0 +1,41 @@
+name: CodeQL Analysis
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  schedule:
+    - cron: '38 8 * * 6'
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    if: ${{ github.repository == 'jellyfin/jellyfin-kodi' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'python' ]
+        version: ['2.7', '3.9']
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: ${{ matrix.language }}
+          queries: +security-and-quality
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.version }}
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v1
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
