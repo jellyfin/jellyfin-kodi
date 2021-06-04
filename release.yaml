@@ -1,8 +1,6 @@
-version: '0.7.3'
-changelog: |
-  - #508 Use jellyfin's DisplayTitle for audio and subtitle streams
-  - #513 Fix subsequent syncs from the addon menu better
-  - #515 Allow multiple subtitles with identical names
+version: '0.7.7'
+changelog: |-
+  * No changes
 dependencies:
   py2:
     - addon: 'xbmc.python'
