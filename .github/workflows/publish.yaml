@@ -57,7 +57,6 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST  }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
-          envs: JELLYFIN_VERSION
           script_stop: true
           script: |
             python3 /usr/local/bin/kodirepo add /srv/repository/incoming/kodi/plugin.video.jellyfin+${{ matrix.py_version }}.zip --datadir /srv/repository/releases/client/kodi/${{ matrix.py_version }};
