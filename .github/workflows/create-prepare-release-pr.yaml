@@ -1,4 +1,4 @@
-name: Create Release PR
+name: Create Prepare-Release PR
 
 on:
   workflow_dispatch:
@@ -25,9 +25,12 @@ jobs:
           cat << EOF >> cl.md
           ${{ steps.draft.outputs.body }}
           EOF
+          sed -i cl.md -e 's/^*/-/'
           TAG="${{ steps.draft.outputs.tag_name }}"
           echo "VERSION=${TAG#v}" >> $GITHUB_ENV
-          echo "CHANGELOG=`cat cl.md | grep '*'`" >> $GITHUB_ENV
+          echo "CHANGELOG<<EOF" >> $GITHUB_ENV
+          cat cl.md | grep '^-' >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
           rm cl.md
 
       - name: Checkout repository
