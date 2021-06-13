@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-06-07 22:29+0000\n"
-"Last-Translator: Herman Andgart <herman8@andgart.se>\n"
+"PO-Revision-Date: 2021-06-21 11:43+0000\n"
+"Last-Translator: Gubb Jonas <jolnyx@gmail.com>\n"
 "Language-Team: Swedish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sv/>\n"
 "Language: sv\n"
@@ -202,3 +202,51 @@ msgstr "Nyligen Tillagda Avsnitt"
 msgctxt "#30177"
 msgid "In Progress Movies"
 msgstr "Pågående Filmer"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "Transcode"
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "Jellyfin-transcode"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Jellyfin-inställningar"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Favorit-hemvideos"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Nyligen tillagda hemvideos"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Osedda filmer"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Tillåt inbrända undertexter"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Maximalt antal ljudspår"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Ljud-bitrate"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Föredragen ljud-codec"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Föredragen video-codec"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Maximal strömbitrate"
