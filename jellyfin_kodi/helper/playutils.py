@@ -297,7 +297,7 @@ class PlayUtils(object):
         return int(xbmc.getInfoLabel('System.ScreenWidth')), int(xbmc.getInfoLabel('System.ScreenHeight'))
 
     def get_directplay_video_codec(self):
-        codecs = ['h264', 'hevc', 'h265', 'mpeg4', 'mpeg2video', 'vc1']
+        codecs = ['h264', 'hevc', 'h265', 'mpeg4', 'mpeg2video', 'vc1', 'vp9', 'av1']
 
         if settings('transcode_h265.bool'):
             codecs.remove('hevc')
@@ -308,6 +308,12 @@ class PlayUtils(object):
 
         if settings('transcode_vc1.bool'):
             codecs.remove('vc1')
+
+        if settings('transcode_vp9.bool'):
+            codecs.remove('vp9')
+
+        if settings('transcode_av1.bool'):
+            codecs.remove('av1')
 
         return ','.join(codecs)
 
