@@ -73,7 +73,7 @@ def zip_files(py_version: str, source: str, target: str, dev: bool) -> None:
         for root, dirs, files in os.walk(args.source):
             for filename in filter(file_filter, files):
                 file_path = os.path.join(root, filename)
-                if folder_filter(file_path) or dev:
+                if dev or folder_filter(file_path):
                     relative_path = os.path.join('plugin.video.jellyfin', os.path.relpath(file_path, source))
                     z.write(file_path, relative_path)
 
