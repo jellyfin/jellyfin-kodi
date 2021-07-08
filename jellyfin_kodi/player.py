@@ -426,7 +426,9 @@ class Player(xbmc.Player):
                 dirs, files = xbmcvfs.listdir(path)
 
                 for file in files:
-                    xbmcvfs.delete(os.path.join(path, file))
+                    # Only delete the cached files for the previous play session
+                    if item['Id'] in file:
+                        xbmcvfs.delete(os.path.join(path, file))
 
             result = item['Server'].jellyfin.get_item(item['Id']) or {}
 
