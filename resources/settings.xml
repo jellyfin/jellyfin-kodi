@@ -48,6 +48,8 @@
 	    <setting label="30522" id="transcode_h265" type="bool" default="false" visible="true" />
 	    <setting label="30523" id="transcode_mpeg2" type="bool" default="false" visible="true" />
 	    <setting label="30524" id="transcode_vc1" type="bool" default="false" visible="true" />
+		<setting label="30525" id="transcode_av1" type="bool" default="false" visible="true" />
+		<setting label="30526" id="transcode_vp9" type="bool" default="false" visible="true" />
 	    <setting label="30161" id="videoPreferredCodec" type="select" values="H264/AVC|H265/HEVC" visible="eq(-2,false)" default="H264/AVC" />
 	    <setting label="30162" id="audioPreferredCodec" type="select" values="AAC|AC3|MP3|Opus|FLAC|Vorbis" visible="true" default="AAC" />
 	    <setting label="30163" id="audioBitrate" type="enum" values="96|128|160|192|256|320|384" visible="true" default="4" />
