@@ -63,7 +63,7 @@ def create_addon_xml(config: dict, source: str, py_version: str) -> None:
     tree.write('{}/addon.xml'.format(source), encoding='utf-8', xml_declaration=True)
 
 
-def zip_files(py_version: str, source: str, target: str) -> None:
+def zip_files(py_version: str, source: str, target: str, dev: bool) -> None:
     """
     Create installable addon zip archive
     """
@@ -73,7 +73,7 @@ def zip_files(py_version: str, source: str, target: str) -> None:
         for root, dirs, files in os.walk(args.source):
             for filename in filter(file_filter, files):
                 file_path = os.path.join(root, filename)
-                if folder_filter(file_path):
+                if dev or folder_filter(file_path):
                     relative_path = os.path.join('plugin.video.jellyfin', os.path.relpath(file_path, source))
                     z.write(file_path, relative_path)
 
@@ -113,6 +113,9 @@ if __name__ == '__main__':
         type=Path,
         default=Path(__file__).absolute().parent)
 
+    parser.add_argument('--dev', dest='dev', action='store_true')
+    parser.set_defaults(dev=False)
+
     args = parser.parse_args()
 
     # Load config file
@@ -122,4 +125,4 @@ if __name__ == '__main__':
 
     create_addon_xml(release_config, args.source, args.version)
 
-    zip_files(args.version, args.source, args.target)
+    zip_files(args.version, args.source, args.target, args.dev)
