@@ -957,6 +957,14 @@ msgctxt "#30524"
 msgid "Transcode VC-1"
 msgstr "Transcode VC-1"
 
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "Transcode VP9"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "Transcode AV1"
+
 msgctxt "#30523"
 msgid "Transcode MPEG2"
 msgstr "Transcode MPEG2"
