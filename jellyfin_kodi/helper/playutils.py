@@ -3,6 +3,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
+import enum
 import os
 from uuid import uuid4
 
@@ -17,6 +18,12 @@ from . import translate, settings, window, dialog, api
 #################################################################################################
 
 LOG = LazyLogger(__name__)
+class Transcode(enum.IntEnum):
+    Enabled = 0
+    Audio = 1
+    Subtitle = 2
+    Disabled = 3
+    MediaDefault = 4
 
 #################################################################################################
 
@@ -234,7 +241,7 @@ class PlayUtils(object):
             # manual bitrate
             url_parsed = [p for p in url_parsed if 'AudioBitrate' not in p and 'VideoBitrate' not in p]
 
-            if settings('skipDialogTranscode') != "3" and source.get('MediaStreams'):
+            if settings('skipDialogTranscode') != Transcode.Enabled and source.get('MediaStreams'):
                 # manual tracks
                 url_parsed = [p for p in url_parsed if 'AudioStreamIndex' not in p and 'SubtitleStreamIndex' not in p]
                 manual_tracks = self.get_audio_subs(source, audio, subtitle)
@@ -598,61 +605,76 @@ class PlayUtils(object):
 
                 subs_streams.append(index)
 
-        skip_dialog = int(settings('skipDialogTranscode') or 0)
-        audio_selected = None
-
+        skip_dialog = Transcode(int(settings('skipDialogTranscode') or 0))
         def get_track_title(track_index):
             return streams[track_index]['DisplayTitle'] or ("Track %s" % track_index)
 
-        if audio:
+        # Select audio stream
+        audio_selected = None
+
+        if skip_dialog == Transcode.MediaDefault:
+            # NOTE: "DefaultAudioStreamIndex" is the default according to Jellyfin.
+            #       The media's default is marked by the "IsDefault" value.
+            for track_index in audio_streams:
+                if streams[track_index]['IsDefault']:
+                    audio = track_index
+                    break
+
+        # Compare to None in the off-chance the track index is 0.
+        if audio is not None:
             audio_selected = audio
 
-        elif skip_dialog in (0, 1):
+        elif skip_dialog in (Transcode.Enabled, Transcode.Audio):
             if len(audio_streams) > 1:
-
                 selection = list(map(get_track_title, audio_streams))
                 resp = dialog("select", translate(33013), selection)
-                audio_selected = audio_streams[resp] if resp > -1 else source['DefaultAudioStreamIndex']
-            elif len(audio_streams) > 0:  # Only one choice
+                if resp > -1:
+                    audio_selected = audio_streams[resp]
+                else:
+                    audio_selected = source['DefaultAudioStreamIndex']
+            elif audio_streams:
+                # Only one choice
                 audio_selected = audio_streams[0]
+
         else:
             audio_selected = source['DefaultAudioStreamIndex']
 
-        self.info['AudioStreamIndex'] = audio_selected
-        prefs += "&AudioStreamIndex=%s" % audio_selected
+        if audio_selected is not None:
+            self.info['AudioStreamIndex'] = audio_selected
+            prefs += "&AudioStreamIndex=%s" % audio_selected
 
-        if subtitle:
+        # Select audio stream
+        subtitle_selected = None
 
-            index = subtitle
-            server_settings = self.api_client.get_transcode_settings()
-            stream = streams[index]
+        if skip_dialog == Transcode.MediaDefault:
+            for track_index in subs_streams:
+                if streams[track_index]['IsDefault']:
+                    subtitle = track_index
+                    break
 
-            if server_settings['EnableSubtitleExtraction'] and stream['SupportsExternalStream']:
-                self.info['SubtitleUrl'] = self.get_subtitles(source, stream, index)
-                self.info['SubtitleStreamIndex'] = index
-            elif allow_burned_subs:
-                prefs += "&SubtitleStreamIndex=%s" % index
-                self.info['SubtitleStreamIndex'] = index
+        if subtitle is not None:
+            subtitle_selected = subtitle
 
-        elif skip_dialog in (0, 2) and len(subs_streams):
-
+        elif skip_dialog in (Transcode.Enabled, Transcode.Subtitle) and subs_streams:
             selection = list(['No subtitles']) + list(map(get_track_title, subs_streams))
             resp = dialog("select", translate(33014), selection) - 1
-
+            # Possible responses:
+            # >=0  Subtitle track
+            #  -1  No subtitles (Default)
+            #  -2  Dialog was cancelled
             if resp > -1:
-                index = subs_streams[resp]
+                track_index = subs_streams[resp]
+                subtitle_selected = track_index
 
-                if index is not None:
-
-                    server_settings = self.api_client.get_transcode_settings()
-                    stream = streams[index]
-
-                    if server_settings['EnableSubtitleExtraction'] and stream['SupportsExternalStream']:
-                        self.info['SubtitleUrl'] = self.get_subtitles(source, stream, index)
-                        self.info['SubtitleStreamIndex'] = index
-                    elif allow_burned_subs:
-                        prefs += "&SubtitleStreamIndex=%s" % index
-                        self.info['SubtitleStreamIndex'] = index
+        if subtitle_selected is not None:
+            server_settings = self.api_client.get_transcode_settings()
+            stream = streams[track_index]
+            if server_settings['EnableSubtitleExtraction'] and stream['SupportsExternalStream']:
+                self.info['SubtitleUrl'] = self.get_subtitles(source, stream, subtitle_selected)
+                self.info['SubtitleStreamIndex'] = subtitle_selected
+            elif allow_burned_subs:
+                prefs += "&SubtitleStreamIndex=%s" % subtitle_selected
+                self.info['SubtitleStreamIndex'] = subtitle_selected
 
         return prefs
 
