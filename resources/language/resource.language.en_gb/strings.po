@@ -833,6 +833,10 @@ msgctxt "#33159"
 msgid "Enable audio/subtitles selection"
 msgstr "Enable audio/subtitles selection"
 
+msgctxt "#33163"
+msgid "Disabled/Media default"
+msgstr "Disabled/Media default"
+
 msgctxt "#33160"
 msgid "To avoid errors, please update Jellyfin for Kodi to version: "
 msgstr "To avoid errors, please update Jellyfin for Kodi to version: "

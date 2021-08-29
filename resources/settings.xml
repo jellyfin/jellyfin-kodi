@@ -32,7 +32,7 @@
 		<setting label="33201" id="maxArtResolution" type="enum" values="360|480|600|720|1080|Unlimited [default]" default="5" />
 		<setting id="enableMusic" visible="false" default="false" />
 	</category>
-	
+
 	<category label="30516"><!-- Playback -->
 		<setting label="33113" type="lsep" />
 		<setting label="30518" id="enableCinema" type="bool" default="true" />
@@ -54,7 +54,7 @@
 	    <setting label="30162" id="audioPreferredCodec" type="select" values="AAC|AC3|MP3|Opus|FLAC|Vorbis" visible="true" default="AAC" />
 	    <setting label="30163" id="audioBitrate" type="enum" values="96|128|160|192|256|320|384" visible="true" default="4" />
 	    <setting label="30164" id="audioMaxChannels" type="slider" range="2,1,6" option="int" visible="true" default="6" />
-	    <setting label="33159" id="skipDialogTranscode" type="enum" lvalues="305|33157|33158|13106" visible="true" default="3" />
+	    <setting label="33159" id="skipDialogTranscode" type="enum" lvalues="305|33157|33158|13106|33163" visible="true" default="3" />
 	    <setting label="30165" id="allowBurnedSubs" type="bool" visible="true" enable="true" default="true" />
 
 		<setting type="sep" />
@@ -66,7 +66,7 @@
 
 	    <setting id="markPlayed" type="number" visible="false" default="90" />
 	</category>
-	
+
 	<category label="30235"><!-- Interface -->
 	    <setting label="33105" id="enableContext" type="bool" default="true" />
 	    <setting label="33106" id="enableContextTranscode" type="bool" visible="eq(-1,true)" default="true" subsetting="true" />
@@ -93,7 +93,7 @@
 		<setting id="ignoreSpecialsNextEpisodes" type="bool" label="30527" default="false" />
 		<setting id="getCast" type="bool" label="33124" default="false" />
 	</category>
-	
+
 	<category label="30022"><!-- Advanced -->
 		<setting label="30004" id="logLevel" type="enum" values="Disabled|Info|Debug" default="1" />
 		<setting label="33164" id="maskInfo" type="bool" default="true" />
@@ -104,7 +104,7 @@
 		<setting label="33180" type="action" action="RunPlugin(plugin://plugin.video.jellyfin?mode=restartservice)" option="close" />
 		<setting label="30529" id="startupDelay" type="number" default="0" option="int" />
 		<setting label="Developer mode" id="devMode" type="bool" default="false" />
-		
+
 		<setting type="sep" />
 		<setting label="33104" type="lsep"/>
 		<setting label="33093" type="folder" id="backupPath" option="writeable" />
