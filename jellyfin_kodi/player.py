@@ -420,7 +420,7 @@ class Player(xbmc.Player):
                 LOG.info("<[ transcode/%s ]", item['Id'])
                 item['Server'].jellyfin.close_transcode(item['DeviceId'])
 
-            path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/temp/")
+            path = xbmcvfs.translatePath("special://profile/addon_data/plugin.video.jellyfin/temp/")
 
             if xbmcvfs.exists(path):
                 dirs, files = xbmcvfs.listdir(path)

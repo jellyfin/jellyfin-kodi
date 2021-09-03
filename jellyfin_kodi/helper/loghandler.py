@@ -8,7 +8,7 @@ import logging
 import traceback
 
 from six import ensure_text
-from kodi_six import xbmc, xbmcaddon
+from kodi_six import xbmc, xbmcaddon, xbmcvfs
 
 import database
 from helper import get_filesystem_encoding
@@ -19,7 +19,7 @@ from . import kodi_version
 ##################################################################################################
 
 __addon__ = xbmcaddon.Addon(id='plugin.video.jellyfin')
-__pluginpath__ = xbmc.translatePath(__addon__.getAddonInfo('path'))
+__pluginpath__ = xbmcvfs.translatePath(__addon__.getAddonInfo('path'))
 
 ##################################################################################################
 

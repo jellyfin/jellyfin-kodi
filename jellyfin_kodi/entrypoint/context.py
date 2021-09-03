@@ -6,7 +6,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import json
 import sys
 
-from kodi_six import xbmc, xbmcaddon
+from kodi_six import xbmc, xbmcaddon, xbmcvfs
 
 import database
 from dialogs import context
@@ -52,7 +52,7 @@ class Context(object):
                 self.media = xbmc.getInfoLabel('ListItem.DBTYPE')
                 item_id = None
 
-        addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/data.json")
+        addon_data = xbmcvfs.translatePath("special://profile/addon_data/plugin.video.jellyfin/data.json")
         with open(addon_data, 'rb') as infile:
             data = json.load(infile)
 

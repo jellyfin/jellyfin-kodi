@@ -6,7 +6,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import os
 import xml.etree.ElementTree as etree
 
-from kodi_six import xbmc
+from kodi_six import xbmc, xbmcvfs
 
 from helper import LazyLogger
 
@@ -47,7 +47,7 @@ def advanced_settings():
     if settings('useDirectPaths') != "0":
         return
 
-    path = xbmc.translatePath("special://profile/")
+    path = xbmcvfs.translatePath("special://profile/")
     file = os.path.join(path, 'advancedsettings.xml')
 
     try:

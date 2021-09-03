@@ -6,12 +6,12 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import os
 import sys
 
-from kodi_six import xbmc, xbmcaddon
+from kodi_six import xbmcaddon, xbmcvfs
 
 #################################################################################################
 
 __addon__ = xbmcaddon.Addon(id='plugin.video.jellyfin')
-__base__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'jellyfin_kodi'))
+__base__ = xbmcvfs.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'jellyfin_kodi'))
 
 sys.path.insert(0, __base__)
 

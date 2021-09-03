@@ -8,7 +8,7 @@ import sys
 import json
 from datetime import timedelta
 
-from kodi_six import xbmc, xbmcgui, xbmcplugin, xbmcaddon
+from kodi_six import xbmc, xbmcgui, xbmcplugin, xbmcaddon, xbmcvfs
 
 import database
 from helper import translate, playutils, api, window, settings, dialog
@@ -34,7 +34,7 @@ class Actions(object):
             LOG.debug('No api client provided, attempting to use config file')
             jellyfin_client = Jellyfin(server_id).get_client()
             api_client = jellyfin_client.jellyfin
-            addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/data.json")
+            addon_data = xbmcvfs.translatePath("special://profile/addon_data/plugin.video.jellyfin/data.json")
             try:
                 with open(addon_data, 'rb') as infile:
                     data = json.load(infile)

@@ -9,7 +9,7 @@ from datetime import datetime
 
 # Workaround for threads using datetime: _striptime is locked
 import _strptime  # noqa:F401
-from kodi_six import xbmc, xbmcgui
+from kodi_six import xbmc, xbmcgui, xbmcvfs
 from six.moves import reload_module as reload
 
 import objects
@@ -44,7 +44,7 @@ class Service(xbmc.Monitor):
         window('jellyfin_should_stop', clear=True)
 
         self.settings['addon_version'] = client.get_version()
-        self.settings['profile'] = xbmc.translatePath('special://profile')
+        self.settings['profile'] = xbmcvfs.translatePath('special://profile')
         self.settings['mode'] = settings('useDirectPaths')
         self.settings['log_level'] = settings('logLevel') or "1"
         self.settings['auth_check'] = True
