@@ -356,9 +356,10 @@ class API(object):
             'LiveStreamId': live_id
         })
 
-    def close_transcode(self, device_id):
+    def close_transcode(self, device_id, play_id):
         return self._delete("Videos/ActiveEncodings", params={
-            'DeviceId': device_id
+            'DeviceId': device_id,
+            'PlaySessionId': play_id
         })
 
     def get_default_headers(self):

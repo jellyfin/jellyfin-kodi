@@ -418,7 +418,7 @@ class Player(xbmc.Player):
             elif item['PlayMethod'] == 'Transcode':
 
                 LOG.info("<[ transcode/%s ]", item['Id'])
-                item['Server'].jellyfin.close_transcode(item['DeviceId'])
+                item['Server'].jellyfin.close_transcode(item['DeviceId'], item['PlaySessionId'])
 
             path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/temp/")
 
