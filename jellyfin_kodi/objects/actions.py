@@ -180,6 +180,10 @@ class Actions(object):
         listitem = xbmcgui.ListItem()
         LOG.info("[ playlist/%s ] %s", item['Id'], item['Name'])
 
+        # Automatically resume if the item is in progress (casting from server)
+        resume = item['UserData'].get('PlaybackPositionTicks')
+        item["resumePlayback"] = True if resume else False
+
         play = playutils.PlayUtils(item, False, self.server_id, self.server, self.api_client)
         source = play.select_source(play.get_sources())
         play.set_external_subs(source, listitem)
