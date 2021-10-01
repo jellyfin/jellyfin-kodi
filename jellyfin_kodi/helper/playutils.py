@@ -198,7 +198,7 @@ class PlayUtils(object):
             LOG.info("--[ direct play ]")
             self.direct_play(source)
 
-        elif source['SupportsDirectStream']:
+        elif source['SupportsDirectStream'] or source['SupportsDirectPlay']:
 
             LOG.info("--[ direct stream ]")
             self.direct_url(source)
