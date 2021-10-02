@@ -9,6 +9,7 @@ import xml.etree.ElementTree as etree
 from kodi_six import xbmc
 
 from helper import LazyLogger
+from helper.utils import translate_path
 
 from . import translate, dialog, settings
 
@@ -47,7 +48,7 @@ def advanced_settings():
     if settings('useDirectPaths') != "0":
         return
 
-    path = xbmc.translatePath("special://profile/")
+    path = translate_path("special://profile/")
     file = os.path.join(path, 'advancedsettings.xml')
 
     try:

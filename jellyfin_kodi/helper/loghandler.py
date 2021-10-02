@@ -12,6 +12,7 @@ from kodi_six import xbmc, xbmcaddon
 
 import database
 from helper import get_filesystem_encoding
+from helper.utils import translate_path
 
 from . import settings
 from . import kodi_version
@@ -19,7 +20,7 @@ from . import kodi_version
 ##################################################################################################
 
 __addon__ = xbmcaddon.Addon(id='plugin.video.jellyfin')
-__pluginpath__ = xbmc.translatePath(__addon__.getAddonInfo('path'))
+__pluginpath__ = translate_path(__addon__.getAddonInfo('path'))
 
 ##################################################################################################
 

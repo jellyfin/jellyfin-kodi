@@ -15,7 +15,7 @@ import client
 from database import reset, get_sync, Database, jellyfin_db, get_credentials
 from objects import Objects, Actions
 from helper import translate, event, settings, window, dialog, api, JSONRPC
-from helper.utils import JsonDebugPrinter
+from helper.utils import JsonDebugPrinter, translate_path
 from helper import LazyLogger
 from jellyfin import Jellyfin
 
@@ -57,7 +57,7 @@ class Events(object):
         jellyfin_client = Jellyfin(server).get_client()
         api_client = jellyfin_client.jellyfin
 
-        addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/data.json")
+        addon_data = translate_path("special://profile/addon_data/plugin.video.jellyfin/data.json")
         try:
             with open(addon_data, 'rb') as infile:
                 data = json.load(infile)
@@ -519,7 +519,7 @@ def get_fanart(item_id, path, server_id=None, api_client=None):
     LOG.info("[ extra fanart ] %s", item_id)
     objects = Objects()
     list_li = []
-    directory = xbmc.translatePath("special://thumbnails/jellyfin/%s/" % item_id)
+    directory = translate_path("special://thumbnails/jellyfin/%s/" % item_id)
 
     if not xbmcvfs.exists(directory):
 
@@ -792,7 +792,7 @@ def get_themes(api_client):
     from helper.playutils import PlayUtils
     from helper.xmls import tvtunes_nfo
 
-    library = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/library")
+    library = translate_path("special://profile/addon_data/plugin.video.jellyfin/library")
     play = settings('useDirectPaths') == "1"
 
     if not xbmcvfs.exists(library + '/'):
@@ -886,7 +886,7 @@ def backup():
 
         delete_folder(backup)
 
-    addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin")
+    addon_data = translate_path("special://profile/addon_data/plugin.video.jellyfin")
     destination_data = os.path.join(backup, "addon_data", "plugin.video.jellyfin")
     destination_databases = os.path.join(backup, "Database")
 
@@ -901,18 +901,18 @@ def backup():
 
     databases = Objects().objects
 
-    db = xbmc.translatePath(databases['jellyfin'])
+    db = translate_path(databases['jellyfin'])
     xbmcvfs.copy(db, os.path.join(destination_databases, db.rsplit('\\', 1)[1]))
     LOG.info("copied jellyfin.db")
 
-    db = xbmc.translatePath(databases['video'])
+    db = translate_path(databases['video'])
     filename = db.rsplit('\\', 1)[1]
     xbmcvfs.copy(db, os.path.join(destination_databases, filename))
     LOG.info("copied %s", filename)
 
     if settings('enableMusic.bool'):
 
-        db = xbmc.translatePath(databases['music'])
+        db = translate_path(databases['music'])
         filename = db.rsplit('\\', 1)[1]
         xbmcvfs.copy(db, os.path.join(destination_databases, filename))
         LOG.info("copied %s", filename)
