@@ -19,7 +19,7 @@ import library
 import monitor
 from views import Views
 from helper import translate, window, settings, event, dialog, set_addon_mode
-from helper.utils import JsonDebugPrinter
+from helper.utils import JsonDebugPrinter, translate_path
 from jellyfin import Jellyfin
 from helper import LazyLogger
 
@@ -44,7 +44,7 @@ class Service(xbmc.Monitor):
         window('jellyfin_should_stop', clear=True)
 
         self.settings['addon_version'] = client.get_version()
-        self.settings['profile'] = xbmc.translatePath('special://profile')
+        self.settings['profile'] = translate_path('special://profile')
         self.settings['mode'] = settings('useDirectPaths')
         self.settings['log_level'] = settings('logLevel') or "1"
         self.settings['auth_check'] = True

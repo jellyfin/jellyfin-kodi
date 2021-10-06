@@ -15,6 +15,7 @@ from helper import translate, playutils, api, window, settings, dialog
 from dialogs import resume
 from helper import LazyLogger
 from jellyfin import Jellyfin
+from helper.utils import translate_path
 
 from .obj import Objects
 
@@ -34,7 +35,7 @@ class Actions(object):
             LOG.debug('No api client provided, attempting to use config file')
             jellyfin_client = Jellyfin(server_id).get_client()
             api_client = jellyfin_client.jellyfin
-            addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/data.json")
+            addon_data = translate_path("special://profile/addon_data/plugin.video.jellyfin/data.json")
             try:
                 with open(addon_data, 'rb') as infile:
                     data = json.load(infile)

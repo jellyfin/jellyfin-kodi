@@ -14,6 +14,7 @@ from six import text_type
 
 from database import jellyfin_db
 from helper import translate, settings, window, dialog
+from helper.utils import translate_path
 from objects import obj
 from helper import LazyLogger
 
@@ -21,7 +22,7 @@ from helper import LazyLogger
 
 LOG = LazyLogger(__name__)
 
-ADDON_DATA = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/")
+ADDON_DATA = translate_path("special://profile/addon_data/plugin.video.jellyfin/")
 
 #################################################################################################
 
@@ -77,7 +78,7 @@ class Database(object):
 
     def _get_database(self, path, silent=False):
 
-        path = xbmc.translatePath(path)
+        path = translate_path(path)
 
         if not silent:
 
@@ -105,7 +106,7 @@ class Database(object):
             xbmc.executebuiltin('UpdateLibrary(video)')
             xbmc.sleep(200)
 
-        databases = xbmc.translatePath("special://database/")
+        databases = translate_path("special://database/")
         types = {
             'video': "MyVideos",
             'music': "MyMusic",
@@ -131,7 +132,7 @@ class Database(object):
         LOG.debug("Discovered database: %s", target)
         self.discovered_file = target['db_file']
 
-        return xbmc.translatePath("special://database/%s" % target['db_file'])
+        return translate_path("special://database/%s" % target['db_file'])
 
     def _sql(self, db_file):
 
@@ -293,7 +294,7 @@ def reset_artwork():
 
     ''' Remove all existing texture.
     '''
-    thumbnails = xbmc.translatePath('special://thumbnails/')
+    thumbnails = translate_path('special://thumbnails/')
 
     if xbmcvfs.exists(thumbnails):
         dirs, ignore = xbmcvfs.listdir(thumbnails)

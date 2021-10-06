@@ -13,6 +13,7 @@ from database import Database, jellyfin_db, get_sync, save_sync
 from helper import translate, api, window, event
 from jellyfin import Jellyfin
 from helper import LazyLogger
+from helper.utils import translate_path
 
 #################################################################################################
 
@@ -186,8 +187,8 @@ class Views(object):
 
         ''' Set up playlists, video nodes, window prop.
         '''
-        node_path = xbmc.translatePath("special://profile/library/video")
-        playlist_path = xbmc.translatePath("special://profile/playlists/video")
+        node_path = translate_path("special://profile/library/video")
+        playlist_path = translate_path("special://profile/playlists/video")
         index = 0
 
         # Kodi 19 doesn't seem to create this directory on it's own
@@ -931,7 +932,7 @@ class Views(object):
 
         ''' Remove all jellyfin playlists.
         '''
-        path = xbmc.translatePath("special://profile/playlists/video/")
+        path = translate_path("special://profile/playlists/video/")
         _, files = xbmcvfs.listdir(path)
         for file in files:
             if file.startswith('jellyfin'):
@@ -941,7 +942,7 @@ class Views(object):
 
         ''' Remove playlist based based on view_id.
         '''
-        path = xbmc.translatePath("special://profile/playlists/video/")
+        path = translate_path("special://profile/playlists/video/")
         _, files = xbmcvfs.listdir(path)
         for file in files:
             file = file
@@ -958,7 +959,7 @@ class Views(object):
 
         ''' Remove node and children files.
         '''
-        path = xbmc.translatePath("special://profile/library/video/")
+        path = translate_path("special://profile/library/video/")
         dirs, files = xbmcvfs.listdir(path)
 
         for file in files:
@@ -980,7 +981,7 @@ class Views(object):
 
         ''' Remove node and children files based on view_id.
         '''
-        path = xbmc.translatePath("special://profile/library/video/")
+        path = translate_path("special://profile/library/video/")
         dirs, files = xbmcvfs.listdir(path)
 
         for directory in dirs:

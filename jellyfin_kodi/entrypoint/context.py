@@ -12,6 +12,7 @@ import database
 from dialogs import context
 from helper import translate, settings, dialog
 from helper import LazyLogger
+from helper.utils import translate_path
 from jellyfin import Jellyfin
 
 #################################################################################################
@@ -52,7 +53,7 @@ class Context(object):
                 self.media = xbmc.getInfoLabel('ListItem.DBTYPE')
                 item_id = None
 
-        addon_data = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/data.json")
+        addon_data = translate_path("special://profile/addon_data/plugin.video.jellyfin/data.json")
         with open(addon_data, 'rb') as infile:
             data = json.load(infile)
 

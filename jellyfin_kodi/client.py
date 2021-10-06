@@ -8,7 +8,7 @@ import os
 from kodi_six import xbmc, xbmcaddon, xbmcvfs
 
 from helper import translate, window, settings, addon_id, dialog
-from helper.utils import create_id
+from helper.utils import create_id, translate_path
 from helper import LazyLogger  # noqa: F402
 
 ##################################################################################################
@@ -85,7 +85,7 @@ def get_device_id(reset=False):
     if client_id:
         return client_id
 
-    directory = xbmc.translatePath('special://profile/addon_data/plugin.video.jellyfin/')
+    directory = translate_path('special://profile/addon_data/plugin.video.jellyfin/')
 
     if not xbmcvfs.exists(directory):
         xbmcvfs.mkdir(directory)

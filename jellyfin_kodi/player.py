@@ -11,6 +11,7 @@ from objects.obj import Objects
 from helper import translate, api, window, settings, dialog, event, JSONRPC
 from jellyfin import Jellyfin
 from helper import LazyLogger
+from helper.utils import translate_path
 
 #################################################################################################
 
@@ -420,7 +421,7 @@ class Player(xbmc.Player):
                 LOG.info("<[ transcode/%s ]", item['Id'])
                 item['Server'].jellyfin.close_transcode(item['DeviceId'], item['PlaySessionId'])
 
-            path = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/temp/")
+            path = translate_path("special://profile/addon_data/plugin.video.jellyfin/temp/")
 
             if xbmcvfs.exists(path):
                 dirs, files = xbmcvfs.listdir(path)

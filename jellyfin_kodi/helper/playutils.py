@@ -12,6 +12,7 @@ from kodi_six import xbmc, xbmcvfs
 import client
 import requests
 from helper import LazyLogger
+from helper.utils import translate_path
 
 from . import translate, settings, window, dialog, api
 
@@ -548,7 +549,7 @@ class PlayUtils(object):
         ''' Download external subtitles to temp folder
             to be able to have proper names to streams.
         '''
-        temp = xbmc.translatePath("special://profile/addon_data/plugin.video.jellyfin/temp/")
+        temp = translate_path("special://profile/addon_data/plugin.video.jellyfin/temp/")
 
         if not xbmcvfs.exists(temp):
             xbmcvfs.mkdir(temp)
