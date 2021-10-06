@@ -182,7 +182,7 @@ class Actions(object):
 
         # Automatically resume if the item is in progress (casting from server)
         resume = item['UserData'].get('PlaybackPositionTicks')
-        item["resumePlayback"] = True if resume else False
+        item["resumePlayback"] = bool(resume)
 
         play = playutils.PlayUtils(item, False, self.server_id, self.server, self.api_client)
         source = play.select_source(play.get_sources())
