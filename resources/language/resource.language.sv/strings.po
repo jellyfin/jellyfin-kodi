@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-06-21 11:43+0000\n"
-"Last-Translator: Gubb Jonas <jolnyx@gmail.com>\n"
+"PO-Revision-Date: 2021-10-11 19:31+0000\n"
+"Last-Translator: Herman Andgart <herman8@andgart.se>\n"
 "Language-Team: Swedish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sv/>\n"
 "Language: sv\n"
@@ -250,3 +250,289 @@ msgstr "Föredragen video-codec"
 msgctxt "#30160"
 msgid "Max stream bitrate"
 msgstr "Maximal strömbitrate"
+
+msgctxt "#33110"
+msgid "Restart Kodi to take effect."
+msgstr "Starta om Kodi för att träda i kraft."
+
+msgctxt "#33108"
+msgid "Notifications are delayed during video playback (except live tv)."
+msgstr "Notifikationer är fördröjda under videouppspelning (förutom live TV)."
+
+msgctxt "#33106"
+msgid "Enable the option to transcode"
+msgstr "Aktivera alternativet att omkoda"
+
+msgctxt "#33105"
+msgid "Enable the context menu"
+msgstr "Aktivera snabbmenyn"
+
+msgctxt "#33104"
+msgid "Find more info in the github wiki/Create-and-restore-from-backup."
+msgstr "Hitta mer info på Github wiki/Create-and-restore-from-backup."
+
+msgctxt "#33102"
+msgid "Resume the previous sync?"
+msgstr "Återuppta den föregående synkroniseringen?"
+
+msgctxt "#33093"
+msgid "Backup folder"
+msgstr "Säkerhetskopieringsmapp"
+
+msgctxt "#33092"
+msgid "Create a backup"
+msgstr "Skapa en säkerhetskopia"
+
+msgctxt "#33090"
+msgid "Replace existing backup?"
+msgstr "Ersätt befintlig säkerhetskopia?"
+
+msgctxt "#33089"
+msgid "Enter folder name for backup"
+msgstr "Ange mappnamn för säkerhetskopiering"
+
+msgctxt "#33088"
+msgid "Database reset has completed, Kodi will now restart to apply the changes."
+msgstr ""
+"Databasåterställningen har slutförts, Kodi startar nu om för att tillämpa "
+"ändringarna."
+
+msgctxt "#33087"
+msgid "Reset all Jellyfin add-on settings?"
+msgstr "Återställ alla Jellyfin-tilläggsinställningar?"
+
+msgctxt "#33086"
+msgid "Remove all cached artwork?"
+msgstr "Ta bort alla cachade konstverk?"
+
+msgctxt "#33074"
+msgid "Are you sure you want to reset your local Kodi database?"
+msgstr "Är du säker på att du vill återställa din lokala Kodi-databas?"
+
+msgctxt "#33064"
+msgid "Remove user from the session"
+msgstr "Ta bort användare från sessionen"
+
+msgctxt "#33063"
+msgid "Remove user"
+msgstr "Ta bort användare"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "Lägg till användare"
+
+msgctxt "#33061"
+msgid "Add/Remove user from the session"
+msgstr "Lägg till/ta bort användare från sessionen"
+
+msgctxt "#33060"
+msgid "Sync theme media"
+msgstr "Synkronisera temamedia"
+
+msgctxt "#33058"
+msgid "Perform local database reset"
+msgstr "Utför lokal databasåterställning"
+
+msgctxt "#33054"
+msgid "Add user to session"
+msgstr "Lägg till användare till sessionen"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "Ny"
+
+msgctxt "#33047"
+msgid "Kodi can't locate file:"
+msgstr "Kodi kan inte hitta filen:"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "Aktivera musikbibliotek?"
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "Tillägg (standard)"
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr "Ett nytt enhets-ID har genererats. Kodi startar nu om."
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "Slutförd om:"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "Samlar:"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "Spela trailers?"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "Ta bort fil från Jellyfin?"
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr "Välj undertextsström"
+
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr "Välj ljudström"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "Ogiltigt användarnamn eller lösenord"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "Servern startar om"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "Välkommen"
+
+msgctxt "#30617"
+msgid "Server or port cannot be empty"
+msgstr "Servern eller porten får inte vara tom"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "Anslut"
+
+msgctxt "#30615"
+msgid "Host"
+msgstr "Värd"
+
+msgctxt "#30614"
+msgid "Connect to server"
+msgstr "Anslut till servern"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "Lägg till server manuellt"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "Anslut till"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "Det gick inte att ansluta till den valda servern"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "Användarnamn eller lösenord får inte vara tomt"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "Välj huvudserver"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "Avbryt"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "Logga in"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "Lösenord"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "Visa meddelande"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "Användarnamn eller epost"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "Manuell inloggning"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "Logga in"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "Omkoda Hi10P"
+
+msgctxt "#30536"
+msgid "Allow the screensaver during syncs"
+msgstr "Tillåt skärmsläckaren under synkroniseringar"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "Skapa ett nytt enhets-ID"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "Notifikationer (i sekunder)"
+
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "Aktivera nytt innehåll"
+
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "Aktivera serveromstartsmeddelande"
+
+msgctxt "#30529"
+msgid "Startup delay (in seconds)"
+msgstr "Startfördröjning (i sekunder)"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "Permanenta användare"
+
+msgctxt "#30527"
+msgid "Ignore specials in next episodes"
+msgstr "Ignorera specialer i kommande avsnitt"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "Omkoda AV1"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "Omkoda VP9"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Omkoda VC-1"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Omkoda MPEG2"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "Omkoda H265/HEVC"
+
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr "Hoppa över raderingsbekräftelsen (använd på egen risk)"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "Fråga om att få spela trailers"
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "Nätverkinloggningsuppgifter"
+
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "Aktivera cachning av konstverk"
+
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "Aktivera notifikationer om antalet uppdateringar är större än"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Aktivera förbättrat konstverk (dvs. omslagsbild)"
