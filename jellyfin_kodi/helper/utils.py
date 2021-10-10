@@ -549,6 +549,7 @@ def find_library(server, item):
     LOG.error('No ancestor found, not syncing item with ID: {}'.format(item['Id']))
     return {}
 
+
 def translate_path(path):
     '''
     Use new library location for translate path starting in Kodi 19
@@ -559,4 +560,3 @@ def translate_path(path):
         return xbmcvfs.translatePath(path)
     else:
         return xbmc.translatePath(path)
-

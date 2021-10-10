@@ -19,6 +19,8 @@ from . import translate, settings, window, dialog, api
 #################################################################################################
 
 LOG = LazyLogger(__name__)
+
+
 class Transcode(enum.IntEnum):
     Enabled = 0
     Audio = 1
@@ -607,6 +609,7 @@ class PlayUtils(object):
                 subs_streams.append(index)
 
         skip_dialog = Transcode(int(settings('skipDialogTranscode') or 0))
+
         def get_track_title(track_index):
             return streams[track_index]['DisplayTitle'] or ("Track %s" % track_index)
 
