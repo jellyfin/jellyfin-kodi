@@ -5,14 +5,13 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 from kodi_six import xbmc, xbmcaddon
 
-import client
-from database import get_credentials, save_credentials
-from dialogs import ServerConnect, UsersConnect, LoginManual, ServerManual
-from helper import settings, addon_id, event, api, window
-from jellyfin import Jellyfin
-from jellyfin.connection_manager import CONNECTION_STATE
-from helper.exceptions import HTTPException
-from helper import LazyLogger
+from . import client
+from .database import get_credentials, save_credentials
+from .dialogs import ServerConnect, UsersConnect, LoginManual, ServerManual
+from .helper import settings, addon_id, event, api, window, LazyLogger
+from .jellyfin import Jellyfin
+from .jellyfin.connection_manager import CONNECTION_STATE
+from .helper.exceptions import HTTPException
 
 ##################################################################################################
 

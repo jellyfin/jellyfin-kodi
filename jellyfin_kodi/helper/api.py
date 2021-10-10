@@ -3,9 +3,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 ##################################################################################################
 
-from helper import LazyLogger
-
-from . import settings
+from . import settings, LazyLogger
 
 ##################################################################################################
 

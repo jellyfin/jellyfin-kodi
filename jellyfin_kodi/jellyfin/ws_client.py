@@ -8,7 +8,7 @@ import threading
 
 from kodi_six import xbmc
 
-from helper import LazyLogger
+from ..helper import LazyLogger
 
 # If numpy is installed, the websockets library tries to use it, and then
 # kodi hard crashes for reasons I don't even want to pretend to understand

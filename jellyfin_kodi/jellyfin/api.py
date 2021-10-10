@@ -5,8 +5,8 @@ import json
 
 import requests
 
-from helper.utils import settings
-from helper import LazyLogger
+from ..helper.utils import settings
+from ..helper import LazyLogger
 from six import ensure_str
 
 

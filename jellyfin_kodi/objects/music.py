@@ -5,11 +5,10 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import datetime
 
-from database import jellyfin_db, queries as QUEM
-from helper import api, stop, validate, jellyfin_item, values, Local
-from helper import LazyLogger
-from helper.utils import find_library
-from helper.exceptions import PathValidationException
+from ..database import jellyfin_db, queries as QUEM
+from ..helper import api, stop, validate, jellyfin_item, values, Local, LazyLogger
+from ..helper.utils import find_library
+from ..helper.exceptions import PathValidationException
 
 from .obj import Objects
 from .kodi import Music as KodiDb, queries_music as QU

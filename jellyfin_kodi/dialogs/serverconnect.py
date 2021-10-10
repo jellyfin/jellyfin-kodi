@@ -6,9 +6,9 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 from six import iteritems
 from kodi_six import xbmc, xbmcgui
 
-from helper import translate
-from jellyfin.connection_manager import CONNECTION_STATE
-from helper import LazyLogger
+from ..helper import translate
+from ..jellyfin.connection_manager import CONNECTION_STATE
+from ..helper import LazyLogger
 
 ##################################################################################################
 

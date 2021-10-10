@@ -537,7 +537,7 @@ def get_filesystem_encoding():
 
 
 def find_library(server, item):
-    from database import get_sync
+    from ..database import get_sync
 
     sync = get_sync()
 

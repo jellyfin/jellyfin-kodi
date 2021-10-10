@@ -3,9 +3,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import logging
-
-from helper import has_attribute, LazyLogger
+from ..helper import has_attribute, LazyLogger
 
 from .client import JellyfinClient
 
@@ -35,7 +33,7 @@ class Jellyfin(object):
     ''' This is your Jellyfinclient, you can create more than one. The server_id is only a temporary thing
         to communicate with the JellyfinClient().
 
-        from jellyfin import Jellyfin
+        from jellyfin_kodi.jellyfin import Jellyfin
 
         Jellyfin('123456').config.data['app']
 

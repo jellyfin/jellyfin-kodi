@@ -6,7 +6,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import time
 from datetime import datetime
 
-from helper import LazyLogger
+from ..helper import LazyLogger
 
 #################################################################################################
 

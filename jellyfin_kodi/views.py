@@ -9,11 +9,11 @@ import xml.etree.ElementTree as etree
 from six.moves.urllib.parse import urlencode
 from kodi_six import xbmcvfs
 
-from database import Database, jellyfin_db, get_sync, save_sync
-from helper import translate, api, window, event
-from jellyfin import Jellyfin
-from helper import LazyLogger
-from helper.utils import translate_path
+from .database import Database, jellyfin_db, get_sync, save_sync
+from .helper import translate, api, window, event
+from .jellyfin import Jellyfin
+from .helper import LazyLogger
+from .helper.utils import translate_path
 
 #################################################################################################
 

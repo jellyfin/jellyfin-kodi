@@ -8,14 +8,12 @@ import datetime
 
 from kodi_six import xbmc
 
-import downloader as server
-import helper.xmls as xmls
-from objects import Movies, TVShows, MusicVideos, Music
-from database import Database, get_sync, save_sync, jellyfin_db
-from helper import translate, settings, window, progress, dialog
-from helper.utils import get_screensaver, set_screensaver
-from helper import LazyLogger
-from helper.exceptions import LibraryException, PathValidationException
+from . import downloader as server
+from .objects import Movies, TVShows, MusicVideos, Music
+from .database import Database, get_sync, save_sync, jellyfin_db
+from .helper import translate, settings, window, progress, dialog, LazyLogger, xmls
+from .helper.utils import get_screensaver, set_screensaver
+from .helper.exceptions import LibraryException, PathValidationException
 
 ##################################################################################################
 

@@ -7,9 +7,9 @@ import threading
 
 from kodi_six import xbmc
 
-from entrypoint import Service  # noqa: E402
-from helper.utils import settings  # noqa: E402
-from helper import LazyLogger  # noqa: E402
+from jellyfin_kodi.entrypoint import Service
+from jellyfin_kodi.helper.utils import settings
+from jellyfin_kodi.helper import LazyLogger
 
 #################################################################################################
 

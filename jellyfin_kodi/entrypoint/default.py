@@ -11,13 +11,12 @@ from six import iteritems
 from six.moves.urllib.parse import parse_qsl, urlencode
 from kodi_six import xbmc, xbmcvfs, xbmcgui, xbmcplugin, xbmcaddon
 
-import client
-from database import reset, get_sync, Database, jellyfin_db, get_credentials
-from objects import Objects, Actions
-from helper import translate, event, settings, window, dialog, api, JSONRPC
-from helper.utils import JsonDebugPrinter, translate_path
-from helper import LazyLogger
-from jellyfin import Jellyfin
+from .. import client
+from ..database import reset, get_sync, Database, jellyfin_db, get_credentials
+from ..objects import Objects, Actions
+from ..helper import translate, event, settings, window, dialog, api, JSONRPC, LazyLogger
+from ..helper.utils import JsonDebugPrinter, translate_path
+from ..jellyfin import Jellyfin
 
 #################################################################################################
 
@@ -426,7 +425,7 @@ def browse_subfolders(media, view_id, server_id=None):
 
     ''' Display submenus for jellyfin views.
     '''
-    from views import DYNNODES
+    from ..views import DYNNODES
 
     view = Jellyfin(server_id).get_client().jellyfin.get_item(view_id)
     xbmcplugin.setPluginCategory(PROCESS_HANDLE, view['Name'])
@@ -792,9 +791,9 @@ def get_themes(api_client):
     ''' Add theme media locally, via strm. This is only for tv tunes.
         If another script is used, adjust this code.
     '''
-    from helper.utils import normalize_string
-    from helper.playutils import PlayUtils
-    from helper.xmls import tvtunes_nfo
+    from ..helper.utils import normalize_string
+    from ..helper.playutils import PlayUtils
+    from ..helper.xmls import tvtunes_nfo
 
     library = translate_path("special://profile/addon_data/plugin.video.jellyfin/library")
     play = settings('useDirectPaths') == "1"
@@ -863,7 +862,7 @@ def delete_item():
 
     ''' Delete keymap action.
     '''
-    import context
+    from . import context
 
     context.Context(delete=True)
 
@@ -872,7 +871,7 @@ def backup():
 
     ''' Jellyfin backup.
     '''
-    from helper.utils import delete_folder, copytree
+    from ..helper.utils import delete_folder, copytree
 
     path = settings('backupPath')
     folder_name = "Kodi%s.%s" % (xbmc.getInfoLabel('System.BuildVersion')[:2], xbmc.getInfoLabel('System.Date(dd-mm-yy)'))

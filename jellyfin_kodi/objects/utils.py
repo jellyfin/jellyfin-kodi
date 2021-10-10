@@ -3,8 +3,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-from helper import JSONRPC
-from helper import LazyLogger
+from ..helper import JSONRPC
+from ..helper import LazyLogger
 
 #################################################################################################
 

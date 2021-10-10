@@ -8,8 +8,8 @@ import os
 from kodi_six import xbmcgui, xbmcaddon
 from six import ensure_text
 
-from helper import window, addon_id
-from helper import LazyLogger
+from ..helper import window, addon_id
+from ..helper import LazyLogger
 
 ##################################################################################################
 

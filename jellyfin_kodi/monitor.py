@@ -9,14 +9,14 @@ import threading
 
 from kodi_six import xbmc
 
-import connect
-import player
-from client import get_device_id
-from objects import PlaylistWorker, on_play, on_update, special_listener
-from helper import translate, settings, window, dialog, api, JSONRPC
-from helper.utils import JsonDebugPrinter
-from jellyfin import Jellyfin
-from helper import LazyLogger
+from . import connect
+from . import player
+from .client import get_device_id
+from .objects import PlaylistWorker, on_play, on_update, special_listener
+from .helper import translate, settings, window, dialog, api, JSONRPC
+from .helper.utils import JsonDebugPrinter
+from .jellyfin import Jellyfin
+from .helper import LazyLogger
 
 #################################################################################################
 

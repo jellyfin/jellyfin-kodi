@@ -8,10 +8,10 @@ import time
 import requests
 from six import string_types, ensure_str
 
-from helper.utils import JsonDebugPrinter
-from helper import LazyLogger
-from helper.exceptions import HTTPException
-from jellyfin.utils import clean_none_dict_values
+from ..helper.utils import JsonDebugPrinter
+from ..helper import LazyLogger
+from ..helper.exceptions import HTTPException
+from .utils import clean_none_dict_values
 
 #################################################################################################
 

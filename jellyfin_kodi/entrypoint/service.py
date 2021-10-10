@@ -12,16 +12,15 @@ import _strptime  # noqa:F401
 from kodi_six import xbmc, xbmcgui
 from six.moves import reload_module as reload
 
-import objects
-import connect
-import client
-import library
-import monitor
-from views import Views
-from helper import translate, window, settings, event, dialog, set_addon_mode
-from helper.utils import JsonDebugPrinter, translate_path
-from jellyfin import Jellyfin
-from helper import LazyLogger
+from .. import objects
+from .. import connect
+from .. import client
+from .. import library
+from .. import monitor
+from ..views import Views
+from ..helper import translate, window, settings, event, dialog, set_addon_mode, LazyLogger
+from ..helper.utils import JsonDebugPrinter, translate_path
+from ..jellyfin import Jellyfin
 
 #################################################################################################
 

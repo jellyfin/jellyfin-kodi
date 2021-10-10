@@ -7,14 +7,13 @@ import enum
 import os
 from uuid import uuid4
 
+import requests
 from kodi_six import xbmc, xbmcvfs
 
-import client
-import requests
-from helper import LazyLogger
-from helper.utils import translate_path
+from .. import client
+from .utils import translate_path
 
-from . import translate, settings, window, dialog, api
+from . import translate, settings, window, dialog, api, LazyLogger
 
 #################################################################################################
 

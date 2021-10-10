@@ -3,8 +3,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-from entrypoint import Events  # noqa: E402
-from helper import LazyLogger  # noqa: E402
+from jellyfin_kodi.entrypoint import Events
+from jellyfin_kodi.helper import LazyLogger
 
 #################################################################################################
 

@@ -7,11 +7,11 @@ import os
 
 from kodi_six import xbmc, xbmcvfs
 
-from objects.obj import Objects
-from helper import translate, api, window, settings, dialog, event, JSONRPC
-from jellyfin import Jellyfin
-from helper import LazyLogger
-from helper.utils import translate_path
+from .objects.obj import Objects
+from .helper import translate, api, window, settings, dialog, event, JSONRPC
+from .jellyfin import Jellyfin
+from .helper import LazyLogger
+from .helper.utils import translate_path
 
 #################################################################################################
 
