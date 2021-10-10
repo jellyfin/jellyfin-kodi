@@ -144,6 +144,10 @@ class Events(object):
             backup()
         elif mode == 'restartservice':
             window('jellyfin.restart.bool', True)
+        elif mode is None and not params:
+            # Used when selecting "Browse" from a context menu, see #548
+            item_id = base_url.strip('/').split('/')[-1]
+            browse('', item_id, None, server, api_client)
         else:
             listing()
 
