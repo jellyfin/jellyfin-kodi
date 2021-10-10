@@ -62,7 +62,7 @@ class WSClient(threading.Thread):
 
             self.wsc.run_forever(ping_interval=10)
 
-            if monitor.waitForAbort(5):
+            if not self.stop and monitor.waitForAbort(5):
                 break
 
         LOG.info("---<[ websocket ]")
