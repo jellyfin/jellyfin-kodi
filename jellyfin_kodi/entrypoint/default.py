@@ -15,7 +15,7 @@ from .. import client
 from ..database import reset, get_sync, Database, jellyfin_db, get_credentials
 from ..objects import Objects, Actions
 from ..helper import translate, event, settings, window, dialog, api, JSONRPC, LazyLogger
-from ..helper.utils import JsonDebugPrinter, translate_path
+from ..helper.utils import JsonDebugPrinter, translate_path, kodi_version
 from ..jellyfin import Jellyfin
 
 #################################################################################################
@@ -874,7 +874,7 @@ def backup():
     from ..helper.utils import delete_folder, copytree
 
     path = settings('backupPath')
-    folder_name = "Kodi%s.%s" % (xbmc.getInfoLabel('System.BuildVersion')[:2], xbmc.getInfoLabel('System.Date(dd-mm-yy)'))
+    folder_name = "Kodi%s.%s" % (kodi_version(), xbmc.getInfoLabel('System.Date(dd-mm-yy)'))
     folder_name = dialog("input", heading=translate(33089), defaultt=folder_name)
 
     if not folder_name:

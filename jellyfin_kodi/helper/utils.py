@@ -34,7 +34,10 @@ def addon_id():
 
 
 def kodi_version():
-    return int(xbmc.getInfoLabel('System.BuildVersion').split('.')[0])
+    # Kodistubs returns empty string, causing Python 3 tests to choke on int()
+    # TODO: Make Kodistubs version configurable for testing purposes
+    version_string = xbmc.getInfoLabel('System.BuildVersion') or "19.1 (19.1.0) Git:20210509-85e05228b4"
+    return int(version_string.split(' ', 1)[0].split('.', 1)[0])
 
 
 def window(key, value=None, clear=False, window_id=10000):
