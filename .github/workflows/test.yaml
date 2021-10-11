@@ -11,9 +11,6 @@ on:
 env:
   PR_TRIGGERED: ${{ github.event_name == 'pull_request' && github.repository == 'jellyfin/jellyfin-kodi' }}
 
-permissions:
-  checks: write
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -29,12 +26,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.py_version }}
-
-      - name: Setup reviewdog
-        uses: reviewdog/action-setup@v1
-        if: ${{ env.PR_TRIGGERED == 'true' && matrix.py_version == '3.9' }}
-        with:
-          reviewdog_version: nightly
 
       - name: Install dependencies
         run: |
@@ -54,13 +45,6 @@ jobs:
           coverage run
           coverage xml
           coverage report
-
-      - name: Run reviewdog for PR checks-api
-        if: ${{ env.PR_TRIGGERED == 'true' && matrix.py_version == '3.9' }}
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          cat flake8.output | reviewdog -reporter=github-pr-check -f=flake8 -name="flake8"
 
       - name: Upload coverage
         uses: codecov/codecov-action@v2.1.0
