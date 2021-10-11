@@ -4,12 +4,15 @@ on:
   push:
     branches:
       - master
-  pull_request_target:
+  pull_request:
     branches:
       - master
 
 env:
   PR_TRIGGERED: ${{ github.event_name == 'pull_request' && github.repository == 'jellyfin/jellyfin-kodi' }}
+
+permissions:
+  checks: write
 
 jobs:
   test:
@@ -55,7 +58,7 @@ jobs:
       - name: Run reviewdog for PR checks-api
         if: ${{ env.PR_TRIGGERED == 'true' && matrix.py_version == '3.9' }}
         env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.JF_BOT_TOKEN }}
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cat flake8.output | reviewdog -reporter=github-pr-check -f=flake8 -name="flake8"
 
