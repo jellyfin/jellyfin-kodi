@@ -1,2 +1,145 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr ""
+"PO-Revision-Date: 2021-10-14 07:05+0000\n"
+"Last-Translator: lyaschuchenko <lyaschuchenko@gmail.com>\n"
+"Language-Team: Ukrainian <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/uk/>\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.5.2\n"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Випадкові елементи"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Непереглянуті фільми"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Коробки"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Улюблені серії"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "Улюблені шоу"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Улюблені фільми"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Наступні серії"
+
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "Епізоди в процесі виконання"
+
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "Фільми в стадії розробки"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "Нещодавно додані серії"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "Нещодавно додані фільми"
+
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "Триваючі телепередачі"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Нещодавно додані телешоу"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Дозволити записані субтитри"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Максимальна кількість аудіоканалів"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Бітрейт аудіо"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Бажаний аудіокодек"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Бажаний відеокодек"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Максимальний бітрейт потоку"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Увімкнути покращену ілюстрацію (тобто обкладинку)"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Для фільмів"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Для епізодів"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Запропонуйте видалити після відтворення"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Підтвердження видалення"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Користувач"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Розширені"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Ім'я пристрою"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Рівень журналювання"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Спосіб входу"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "Примусове відтворення HTTP"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Ім'я сервера"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Адреса сервера"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Jellyfin для Kodi"
