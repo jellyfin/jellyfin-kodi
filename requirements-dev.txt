@@ -3,7 +3,10 @@ six >= 1.13
 python-dateutil >= 2.8.1
 requests >= 2.22
 futures >= 2.2; python_version < '3.0'
-git+https://github.com/oddstr13/Kodistubs@python3  # Kodistubs >= 18
+
+Kodistubs ~= 18.0; python_version < '3.0'
+Kodistubs ~= 19.0; python_version >= '3.6'
+
 git+https://github.com/romanvm/kodi.six
 git+https://github.com/ruuk/script.module.addon.signals
 
