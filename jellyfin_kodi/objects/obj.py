@@ -8,7 +8,7 @@ import os
 
 from six import iteritems, ensure_text
 
-from helper import LazyLogger, get_filesystem_encoding
+from ..helper import LazyLogger, get_filesystem_encoding
 
 ##################################################################################################
 

@@ -3,8 +3,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 ##################################################################################################
 
-from helper import values
-from helper import LazyLogger
+from ...helper import values, LazyLogger
 
 from . import artwork
 from . import queries as QU

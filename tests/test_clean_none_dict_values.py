@@ -1,10 +1,6 @@
-import sys
-
 import pytest
 
-sys.path.insert(0, 'jellyfin_kodi')
-
-from jellyfin.utils import clean_none_dict_values  # noqa: E402
+from jellyfin_kodi.jellyfin.utils import clean_none_dict_values
 
 
 @pytest.mark.parametrize("obj,expected", [

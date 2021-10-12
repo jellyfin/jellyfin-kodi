@@ -6,9 +6,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 from six import iteritems
 from kodi_six import xbmcgui
 
-from helper import translate
-from helper import LazyLogger
-from helper import kodi_version
+from ..helper import translate, LazyLogger, kodi_version
 
 ##################################################################################################
 

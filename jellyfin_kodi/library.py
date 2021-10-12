@@ -10,16 +10,15 @@ from six.moves import queue as Queue
 
 from kodi_six import xbmc, xbmcgui
 
-from objects import Movies, TVShows, MusicVideos, Music
-from database import Database, jellyfin_db, get_sync, save_sync
-from full_sync import FullSync
-from views import Views
-from downloader import GetItemWorker
-from helper import translate, api, stop, settings, window, dialog, event
-from helper.utils import split_list, set_screensaver, get_screensaver
-from helper.exceptions import LibraryException
-from jellyfin import Jellyfin
-from helper import LazyLogger
+from .objects import Movies, TVShows, MusicVideos, Music
+from .database import Database, jellyfin_db, get_sync, save_sync
+from .full_sync import FullSync
+from .views import Views
+from .downloader import GetItemWorker
+from .helper import translate, api, stop, settings, window, dialog, event, LazyLogger
+from .helper.utils import split_list, set_screensaver, get_screensaver
+from .helper.exceptions import LibraryException
+from .jellyfin import Jellyfin
 
 ##################################################################################################
 

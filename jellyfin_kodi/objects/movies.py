@@ -6,12 +6,12 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 from six.moves.urllib.parse import urlencode
 from kodi_six.utils import py2_encode
 
-import downloader as server
-from database import jellyfin_db, queries as QUEM
-from helper import api, stop, validate, validate_bluray_dir, validate_dvd_dir, jellyfin_item, values, Local
-from helper import LazyLogger
-from helper.utils import find_library
-from helper.exceptions import PathValidationException
+from .. import downloader as server
+from ..database import jellyfin_db, queries as QUEM
+from ..helper import api, stop, validate, validate_bluray_dir, validate_dvd_dir, jellyfin_item, values, Local
+from ..helper import LazyLogger
+from ..helper.utils import find_library
+from ..helper.exceptions import PathValidationException
 
 from .obj import Objects
 from .kodi import Movies as KodiDb, queries as QU

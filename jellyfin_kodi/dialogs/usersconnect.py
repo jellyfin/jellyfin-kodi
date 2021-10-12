@@ -4,9 +4,10 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 ##################################################################################################
 
 from six import iteritems
-from kodi_six import xbmc, xbmcgui
+from kodi_six import xbmcgui
 
-from helper import LazyLogger
+from ..helper import LazyLogger
+from ..helper.utils import kodi_version
 
 ##################################################################################################
 
@@ -30,7 +31,7 @@ class UsersConnect(xbmcgui.WindowXMLDialog):
 
     def __init__(self, *args, **kwargs):
 
-        self.kodi_version = int(xbmc.getInfoLabel('System.BuildVersion')[:2])
+        self.kodi_version = kodi_version()
         xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)
 
     def set_args(self, **kwargs):

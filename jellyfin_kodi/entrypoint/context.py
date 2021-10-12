@@ -8,12 +8,11 @@ import sys
 
 from kodi_six import xbmc, xbmcaddon
 
-import database
-from dialogs import context
-from helper import translate, settings, dialog
-from helper import LazyLogger
-from helper.utils import translate_path
-from jellyfin import Jellyfin
+from .. import database
+from ..dialogs import context
+from ..helper import translate, settings, dialog, LazyLogger
+from ..helper.utils import translate_path
+from ..jellyfin import Jellyfin
 
 #################################################################################################
 

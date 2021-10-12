@@ -8,9 +8,9 @@ import re
 from six import iteritems
 from kodi_six import xbmcgui
 
-from helper import translate
-from jellyfin.connection_manager import CONNECTION_STATE
-from helper import LazyLogger
+from ..helper import translate
+from ..jellyfin.connection_manager import CONNECTION_STATE
+from ..helper import LazyLogger
 
 ##################################################################################################
 

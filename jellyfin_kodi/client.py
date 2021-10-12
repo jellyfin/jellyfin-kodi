@@ -7,9 +7,8 @@ import os
 
 from kodi_six import xbmc, xbmcaddon, xbmcvfs
 
-from helper import translate, window, settings, addon_id, dialog
-from helper.utils import create_id, translate_path
-from helper import LazyLogger  # noqa: F402
+from .helper import translate, window, settings, addon_id, dialog, LazyLogger
+from .helper.utils import create_id, translate_path
 
 ##################################################################################################
 

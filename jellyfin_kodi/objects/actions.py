@@ -10,12 +10,12 @@ from datetime import timedelta
 
 from kodi_six import xbmc, xbmcgui, xbmcplugin, xbmcaddon
 
-import database
-from helper import translate, playutils, api, window, settings, dialog
-from dialogs import resume
-from helper import LazyLogger
-from jellyfin import Jellyfin
-from helper.utils import translate_path
+from .. import database
+from ..helper import translate, playutils, api, window, settings, dialog
+from ..dialogs import resume
+from ..helper import LazyLogger
+from ..jellyfin import Jellyfin
+from ..helper.utils import translate_path
 
 from .obj import Objects
 

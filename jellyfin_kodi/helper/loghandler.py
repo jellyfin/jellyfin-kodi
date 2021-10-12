@@ -10,12 +10,9 @@ import traceback
 from six import ensure_text
 from kodi_six import xbmc, xbmcaddon
 
-import database
-from helper import get_filesystem_encoding
-from helper.utils import translate_path
-
-from . import settings
-from . import kodi_version
+from .. import database
+from . import get_filesystem_encoding, settings, kodi_version
+from .utils import translate_path
 
 ##################################################################################################
 

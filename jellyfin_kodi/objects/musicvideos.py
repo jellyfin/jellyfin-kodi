@@ -9,11 +9,10 @@ import re
 from six.moves.urllib.parse import urlencode
 from kodi_six.utils import py2_encode
 
-from database import jellyfin_db, queries as QUEM
-from helper import api, stop, validate, jellyfin_item, values, Local
-from helper import LazyLogger
-from helper.utils import find_library
-from helper.exceptions import PathValidationException
+from ..database import jellyfin_db, queries as QUEM
+from ..helper import api, stop, validate, jellyfin_item, values, Local, LazyLogger
+from ..helper.utils import find_library
+from ..helper.exceptions import PathValidationException
 
 from .obj import Objects
 from .kodi import MusicVideos as KodiDb, queries as QU

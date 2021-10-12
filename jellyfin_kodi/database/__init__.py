@@ -12,11 +12,11 @@ import re
 from kodi_six import xbmc, xbmcvfs
 from six import text_type
 
-from database import jellyfin_db
-from helper import translate, settings, window, dialog
-from helper.utils import translate_path
-from objects import obj
-from helper import LazyLogger
+from . import jellyfin_db
+from ..helper import translate, settings, window, dialog
+from ..helper.utils import translate_path
+from ..objects import obj
+from ..helper import LazyLogger
 
 #################################################################################################
 
@@ -200,7 +200,7 @@ def reset():
 
     ''' Reset both the jellyfin database and the kodi database.
     '''
-    from views import Views
+    from ..views import Views
     views = Views()
 
     if not dialog("yesno", "{jellyfin}", translate(33074)):

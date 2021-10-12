@@ -2,10 +2,10 @@
 from __future__ import division, absolute_import, print_function, unicode_literals
 #################################################################################################
 
-from database import queries as QU
-from helper import LazyLogger
+from . import queries as QU
+from ..helper import LazyLogger
 
-from jellyfin.utils import sqlite_namedtuple_factory
+from ..jellyfin.utils import sqlite_namedtuple_factory
 
 ##################################################################################################
 

@@ -34,7 +34,10 @@ def addon_id():
 
 
 def kodi_version():
-    return int(xbmc.getInfoLabel('System.BuildVersion').split('.')[0])
+    # Kodistubs returns empty string, causing Python 3 tests to choke on int()
+    # TODO: Make Kodistubs version configurable for testing purposes
+    version_string = xbmc.getInfoLabel('System.BuildVersion') or "19.1 (19.1.0) Git:20210509-85e05228b4"
+    return int(version_string.split(' ', 1)[0].split('.', 1)[0])
 
 
 def window(key, value=None, clear=False, window_id=10000):
@@ -537,7 +540,7 @@ def get_filesystem_encoding():
 
 
 def find_library(server, item):
-    from database import get_sync
+    from ..database import get_sync
 
     sync = get_sync()
 
@@ -549,6 +552,7 @@ def find_library(server, item):
     LOG.error('No ancestor found, not syncing item with ID: {}'.format(item['Id']))
     return {}
 
+
 def translate_path(path):
     '''
     Use new library location for translate path starting in Kodi 19
@@ -559,4 +563,3 @@ def translate_path(path):
         return xbmcvfs.translatePath(path)
     else:
         return xbmc.translatePath(path)
-

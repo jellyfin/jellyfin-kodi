@@ -14,6 +14,6 @@ class LazyLogger(object):
 
     def __getattr__(self, name):
         if self.__logger is None:
-            from helper.loghandler import getLogger
+            from .loghandler import getLogger
             self.__logger = getLogger(self.__logger_name)
         return getattr(self.__logger, name)

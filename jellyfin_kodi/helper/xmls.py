@@ -8,10 +8,8 @@ import xml.etree.ElementTree as etree
 
 from kodi_six import xbmc
 
-from helper import LazyLogger
-from helper.utils import translate_path
-
-from . import translate, dialog, settings
+from .utils import translate_path
+from . import translate, dialog, settings, LazyLogger
 
 #################################################################################################
 

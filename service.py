@@ -3,28 +3,13 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import os
 import threading
-import sys
 
-from kodi_six import xbmc, xbmcaddon, xbmcvfs
+from kodi_six import xbmc
 
-#################################################################################################
-
-kodi_version = int(xbmc.getInfoLabel('System.BuildVersion')[:2])
-__addon__ = xbmcaddon.Addon(id='plugin.video.jellyfin')
-if kodi_version > 18:
-    __base__ = xbmcvfs.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'jellyfin_kodi'))
-else:
-    __base__ = xbmc.translatePath(os.path.join(__addon__.getAddonInfo('path'), 'jellyfin_kodi'))
-
-sys.path.insert(0, __base__)
-
-#################################################################################################
-
-from entrypoint import Service  # noqa: E402
-from helper.utils import settings  # noqa: E402
-from helper import LazyLogger  # noqa: E402
+from jellyfin_kodi.entrypoint import Service
+from jellyfin_kodi.helper.utils import settings
+from jellyfin_kodi.helper import LazyLogger
 
 #################################################################################################
 

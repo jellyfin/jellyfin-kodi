@@ -11,7 +11,7 @@ import traceback
 
 import urllib3
 
-from helper import LazyLogger
+from ..helper import LazyLogger
 
 from .credentials import Credentials
 from .api import API

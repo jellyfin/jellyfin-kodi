@@ -10,11 +10,11 @@ from datetime import date
 from six.moves import range, queue as Queue
 
 import requests
-from helper import settings, stop, window
-from jellyfin import Jellyfin
-from jellyfin import api
-from helper.exceptions import HTTPException
-from helper import LazyLogger
+
+from .helper import settings, stop, window, LazyLogger
+from .jellyfin import Jellyfin
+from .jellyfin import api
+from .helper.exceptions import HTTPException
 
 #################################################################################################
 

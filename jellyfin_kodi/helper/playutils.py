@@ -7,18 +7,19 @@ import enum
 import os
 from uuid import uuid4
 
+import requests
 from kodi_six import xbmc, xbmcvfs
 
-import client
-import requests
-from helper import LazyLogger
-from helper.utils import translate_path
+from .. import client
+from .utils import translate_path
 
-from . import translate, settings, window, dialog, api
+from . import translate, settings, window, dialog, api, LazyLogger
 
 #################################################################################################
 
 LOG = LazyLogger(__name__)
+
+
 class Transcode(enum.IntEnum):
     Enabled = 0
     Audio = 1
@@ -607,6 +608,7 @@ class PlayUtils(object):
                 subs_streams.append(index)
 
         skip_dialog = Transcode(int(settings('skipDialogTranscode') or 0))
+
         def get_track_title(track_index):
             return streams[track_index]['DisplayTitle'] or ("Track %s" % track_index)
 
