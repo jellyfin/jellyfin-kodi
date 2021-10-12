@@ -48,7 +48,7 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
             setattr(self, key, value)
 
     def is_server_selected(self):
-        return True if self._selected_server else False
+        return bool(self._selected_server)
 
     def get_server(self):
         return self._selected_server

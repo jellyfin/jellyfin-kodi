@@ -95,7 +95,7 @@ class Actions(object):
                 if choice is None:
                     raise Exception("User backed out of resume dialog.")
 
-                item["resumePlayback"] = False if not choice else True
+                item["resumePlayback"] = bool(choice)
 
         if settings('enableCinema.bool') and not item["resumePlayback"]:
             self._set_intros(item)
@@ -314,7 +314,7 @@ class Actions(object):
         obj['Artwork']['Backdrop'] = obj['Artwork']['Backdrop'] or []
         obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] or ""
 
-        if not intro and not obj['Type'] == 'Trailer':
+        if not intro and obj['Type'] != 'Trailer':
             obj['Artwork']['Primary'] = obj['Artwork']['Primary'] \
                 or "special://home/addons/plugin.video.jellyfin/resources/icon.png"
         else:

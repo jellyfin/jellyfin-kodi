@@ -452,5 +452,4 @@ class API(object):
         returns the URL the server prefers to use
         '''
         response = self.send_request(server_address, "system/info/public")
-        url = response.url.replace('/system/info/public', '')
-        return url
+        return response.url.replace('/system/info/public', '')

@@ -341,20 +341,21 @@ class Library(threading.Thread):
 
                 return True
 
-            if settings('SyncInstallRunDone.bool'):
-                if settings('kodiCompanion.bool'):
+            if settings('SyncInstallRunDone.bool') and settings(
+                'kodiCompanion.bool'
+            ):
 
-                    if self.server.jellyfin.check_companion_installed():
+                if self.server.jellyfin.check_companion_installed():
 
-                        if not self.fast_sync():
-                            dialog("ok", "{jellyfin}", translate(33128))
+                    if not self.fast_sync():
+                        dialog("ok", "{jellyfin}", translate(33128))
 
-                            raise Exception("Failed to retrieve latest updates")
+                        raise Exception("Failed to retrieve latest updates")
 
-                        LOG.info("--<[ retrieve changes ]")
+                    LOG.info("--<[ retrieve changes ]")
 
-                    else:
-                        raise LibraryException('CompanionMissing')
+                else:
+                    raise LibraryException('CompanionMissing')
 
             return True
         except LibraryException as error:

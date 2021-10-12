@@ -340,13 +340,13 @@ class ConnectionManager(object):
         self.config.data['auth.server=id'] = server['Id']
         self.config.data['auth.ssl'] = options.get('ssl', self.config.data['auth.ssl'])
 
-        result = {
-            'Servers': [server]
-        }
-
-        result['State'] = CONNECTION_STATE['SignedIn'] if server.get('AccessToken') else CONNECTION_STATE['ServerSignIn']
         # Connected
-        return result
+        return {
+            'Servers': [server],
+            'State': CONNECTION_STATE['SignedIn']
+            if server.get('AccessToken')
+            else CONNECTION_STATE['ServerSignIn'],
+        }
 
     def _update_server_info(self, server, system_info):
 

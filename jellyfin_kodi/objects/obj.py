@@ -125,11 +125,10 @@ class Objects(object):
         obj = self.__recursive__(obj, first)
 
         if obj:
-            if rest:
-                for item in obj:
+            for item in obj:
+                if rest:
                     self.__recursiveloop__(item, rest)
-            else:
-                for item in obj:
+                else:
                     yield item
 
     def __recursive__(self, obj, keys):

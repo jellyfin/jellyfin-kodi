@@ -48,7 +48,7 @@ class ServerManual(xbmcgui.WindowXMLDialog):
             setattr(self, key, value)
 
     def is_connected(self):
-        return True if self._server else False
+        return bool(self._server)
 
     def get_server(self):
         return self._server

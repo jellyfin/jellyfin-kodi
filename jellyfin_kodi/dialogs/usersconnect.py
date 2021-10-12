@@ -39,7 +39,7 @@ class UsersConnect(xbmcgui.WindowXMLDialog):
             setattr(self, key, value)
 
     def is_user_selected(self):
-        return True if self._user else False
+        return bool(self._user)
 
     def get_user(self):
         return self._user

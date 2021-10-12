@@ -31,7 +31,7 @@ class ResumeDialog(xbmcgui.WindowXMLDialog):
         self._resume_point = time
 
     def is_selected(self):
-        return True if self.selected_option is not None else False
+        return self.selected_option is not None
 
     def get_selected(self):
         return self.selected_option
