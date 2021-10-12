@@ -26,7 +26,7 @@ def info():
         "Path,Genres,SortName,Studios,Writer,Taglines,LocalTrailerCount,"
         "OfficialRating,CumulativeRunTimeTicks,ItemCounts,"
         "Metascore,AirTime,DateCreated,People,Overview,"
-        "CriticRating,CriticRatingSummary,Etag,ShortOverview,ProductionLocations,"
+        "Etag,ShortOverview,ProductionLocations,"
         "Tags,ProviderIds,ParentId,RemoteTrailers,SpecialEpisodeNumbers,"
         "MediaSources,VoteCount,RecursiveItemCount,PrimaryImageAspectRatio"
     )

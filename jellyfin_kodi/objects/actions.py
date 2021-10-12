@@ -419,7 +419,6 @@ class Actions(object):
                 'imdbnumber': obj['UniqueId'],
                 'lastplayed': obj['DatePlayed'],
                 'duration': obj['Runtime'],
-                'userrating': obj['CriticRating']
             })
 
         elif obj['Type'] == 'MusicVideo':
