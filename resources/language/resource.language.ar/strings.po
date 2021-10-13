@@ -1,2 +1,49 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr ""
+"PO-Revision-Date: 2021-10-14 07:05+0000\n"
+"Last-Translator: ButterflyOfFire <butterflyoffire+jellyfin@protonmail.com>\n"
+"Language-Team: Arabic <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/ar/>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Weblate 4.5.2\n"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "الواجهة"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "الحلقات المفضلة"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "الأفلام المفضلة"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "اسم المستخدم"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "متقدم"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "اسم الجهاز"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "أسلوب الولوج"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "اسم الخادم"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "عنوان الخادم"
