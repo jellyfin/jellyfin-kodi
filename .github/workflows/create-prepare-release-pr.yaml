@@ -22,14 +22,17 @@ jobs:
 
       - name: Parse Changlog
         run: |
+          pip install emoji
           cat << EOF >> cl.md
           ${{ steps.draft.outputs.body }}
           EOF
-          sed -i cl.md -e 's/^*/-/'
           TAG="${{ steps.draft.outputs.tag_name }}"
           echo "VERSION=${TAG#v}" >> $GITHUB_ENV
+          echo "YAML_CHANGELOG<<EOF" >> $GITHUB_ENV
+          cat cl.md | python .github/tools/reformat_changelog.py --no-emoji >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
           echo "CHANGELOG<<EOF" >> $GITHUB_ENV
-          cat cl.md | grep '^-' >> $GITHUB_ENV
+          cat cl.md | python .github/tools/reformat_changelog.py --emoji --format='+ #{issue} by @{username}' >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           rm cl.md
 
@@ -38,7 +41,7 @@ jobs:
 
       - name: Update release.yaml
         run: |
-          yq eval '.version = env(VERSION) | .changelog = strenv(CHANGELOG) | .changelog style="literal"' -i release.yaml
+          yq eval '.version = env(VERSION) | .changelog = strenv(YAML_CHANGELOG) | .changelog style="literal"' -i release.yaml
 
       - name: Commit Changes
         run: |
