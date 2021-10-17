@@ -8,7 +8,7 @@ from typing import Dict, List, Pattern, Union, TypedDict
 from emoji.core import emojize, demojize, replace_emoji
 
 
-ITEM_FORMAT = "+ {title} ({issue}) @{username}"
+ITEM_FORMAT = "+ {title} (#{issue}) @{username}"
 OUTPUT_EMOJI = False
 
 ITEM_PATTERN: Pattern = re.compile(
