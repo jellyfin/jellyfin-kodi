@@ -82,17 +82,33 @@ def file_filter(file_name: str) -> bool:
     """
     True if file_name is meant to be included
     """
-    return 'plugin.video.jellyfin' not in file_name and 'pyo' not in file_name
+    return (
+        not (file_name.startswith('plugin.video.jellyfin') and file_name.endswith('.zip'))
+        and not file_name.endswith('.pyo')
+        and not file_name.endswith('.pyc')
+        and not file_name.endswith('.pyd')
+    )
 
 
 def folder_filter(folder_name: str) -> bool:
     """
     True if folder_name is meant to be included
     """
-    return ('.ci' not in folder_name
-            and '.git' not in folder_name
-            and '.github' not in folder_name
-            and '.build' not in folder_name)
+    filters = [
+        '.ci',
+        '.git',
+        '.github',
+        '.build',
+        '.mypy_cache',
+        '.pytest_cache',
+        '__pycache__',
+    ]
+    for f in filters:
+        if f in folder_name.split(os.path.sep):
+            return False
+
+    return True
+
 
 
 if __name__ == '__main__':
