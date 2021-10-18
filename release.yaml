@@ -1,12 +1,42 @@
-version: '0.7.4'
+version: '0.7.5'
 changelog: |-
-  - fix: create release pr workflow (#535) @h1dden-da3m0n
-  - ci: migrate Azure Pipelines to GitHub Actions (#523) @h1dden-da3m0n
-  - Remove double slash when transcoding with a baseurl (#529) @mcarlton00
-  - Fix playback crashes (#521) @mcarlton00
-  - Store a version parameter in the database for migrations (#528) @mcarlton00
-  - Don't fail if status_code doesn't exist on startup (#525) @mcarlton00
-  - Fix impossibility of choosing the first subtitle (#530) @venomousZealot
+  New features and improvements
+  -----------------------------
+  + Add transcode dialog skip option: "Media default" (#555) @jessbo
+  + Add option to transcode vp9 and av1 (#545) @mcarlton00
+
+  Bug Fixes
+  ---------
+  + Don't store CriticRating in the userrating db field (#581) @oddstr13
+  + Allow browsing to a show from the info menu (#576) @mcarlton00
+  + Resume media when possible during casting (#574) @mcarlton00
+  + Fix direct play when direct stream isn't allowed. (#573) @oddstr13
+  + Fixes #557 - Add missing "PlaySessionId" (#563) @jessbo
+  + Fix external sub conflict (#547) @mcarlton00
+
+  Dependency updates
+  ------------------
+  + Change from my Kodistubs py3 branch to the upstream v19 release (#580) @oddstr13
+  + Bump codecov/codecov-action from 2.0.3 to 2.1.0 (#568) @dependabot
+  + Bump codecov/codecov-action from 2.0.2 to 2.0.3 (#564) @dependabot
+  + Bump burnett01/rsync-deployments from 4.1 to 5.1 (#556) @dependabot
+  + Bump codecov/codecov-action from 1 to 2.0.2 (#551) @dependabot
+
+  CI & build changes
+  ------------------
+  + Checkout repo before using it's content, yea? (#586) @oddstr13
+  + Improve changelog formatting (#585) @oddstr13
+  + ci: fix dependabot labels (#582) @h1dden-da3m0n
+  + ci: fix incorrect test branch checkout (#579) @h1dden-da3m0n
+  + Don't fail fast on the py test matrix (#577) @oddstr13
+  + Add argument for dev mode to build script (#546) @mcarlton00
+  + fix: prevent dual GitHub release publish (#537) @h1dden-da3m0n
+
+  Code or Repo Maintenance
+  ------------------------
+  + Clean up sys.path manipulation in favor of proper imports (#578) @oddstr13
+  + Simplify code :hammer: (#402) @bpepple
+  + Migrate to new translatePath library (#575) @mcarlton00
 dependencies:
   py2:
     - addon: 'xbmc.python'
