@@ -20,6 +20,9 @@ jobs:
         with:
           yq-version: v4.9.1
 
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Parse Changlog
         run: |
           pip install emoji
@@ -35,9 +38,6 @@ jobs:
           cat cl.md | python .github/tools/reformat_changelog.py --emoji --format='+ #{issue} by @{username}' >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           rm cl.md
-
-      - name: Checkout repository
-        uses: actions/checkout@v2
 
       - name: Update release.yaml
         run: |
