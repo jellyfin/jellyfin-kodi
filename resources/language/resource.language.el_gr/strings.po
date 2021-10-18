@@ -1,20 +1,19 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-01-15 14:17+0000\n"
-"Last-Translator: Decoy7 <mikemike19991@gmail.com>\n"
+"PO-Revision-Date: 2021-10-19 19:25+0000\n"
+"Last-Translator: George Georgovassilis <g.georgovassilis@gmail.com>\n"
 "Language-Team: Greek <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/el/>\n"
-"Language: el\n"
+"Language: el_gr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.8\n"
+"X-Generator: Weblate 4.5.2\n"
 
-#, fuzzy
 msgctxt "#30002"
 msgid "Force HTTP playback"
-msgstr "Αναγκασμός αναπαραγωγής μεσώ HTTP"
+msgstr "Επιβολή αναπαραγωγής μεσώ HTTP"
 
 msgctxt "#30001"
 msgid "Server name"
@@ -23,3 +22,495 @@ msgstr "Όνομα Διακομιστή"
 msgctxt "#30000"
 msgid "Server address"
 msgstr "Διεύθυνση διακομιστή"
+
+msgctxt "#33060"
+msgid "Sync theme media"
+msgstr "Συγχρονισμός θεματικών μέσων"
+
+msgctxt "#33058"
+msgid "Perform local database reset"
+msgstr "Επαναφορά τοπικής βάσης"
+
+msgctxt "#33054"
+msgid "Add user to session"
+msgstr "Προσθήκη χρήστη στη συνεδρία"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "Νέο"
+
+msgctxt "#33048"
+msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
+msgstr ""
+"Ίσως πρέπει να επαληθεύσετε τα δικτυακά διαπιστευτήρια στις πρόσθετες "
+"επιλογές ή να χρησιμοποιήσετε την υποκατάσταση διαδρομών του Jellyfin για "
+"την ορθή διαμόρφωση των διαδρομών (Jellyfin ταμπλό -> βιβλιοθήκη). "
+"Τερματισμός του συγχρονισμού;"
+
+msgctxt "#33047"
+msgid "Kodi can't locate file:"
+msgstr "Το Kodi δεν εντόπισε το αρχείο:"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "Ενεργοποίηση μουσικοθήκης;"
+
+msgctxt "#33037"
+msgid "Native (direct paths)"
+msgstr "Εγγενές (άμεσες διαδρομές)"
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "Πρόσθετα (εξορισμού)"
+
+msgctxt "#33035"
+msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
+msgstr ""
+"Προσοχή! Η επιλογή του εγγενούς τρόπου λειτουργείς αφαιρεί κάποιες ιδιότητες "
+"του Jellyfin όπως: διεπαφή σινεμά, επιλογές απευθείας μετακωδικοποίησης και "
+"εκπομπής και τον παιδικό έλεγχο."
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr "Δημιουργήθηκε η νέα ταυτότητα συσκευής. Το Kodi θα επανεκκινήσει τώρα."
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "Τελείωσε σε:"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "Λήψη:"
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "Λήψη σετ"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "Αναπαραγωγή τρέιλερς;"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "Διαγραφή αρχείου από το Jellyfin;"
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr "Επιλέξτε την ροή υποτίτλων"
+
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr "Επιλέξτε την ηχητική ροή"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "Λάθος όνομα χρήστη ή συνθηματικό"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "Ο εξυπηρέτης επανεκκινεί"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "Κάλως ορίσατε"
+
+msgctxt "#30617"
+msgid "Server or port cannot be empty"
+msgstr "Ο εξυπηρέτης ή η θύρα δεν πρέπει να είναι κενά"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "Σύνδεση"
+
+msgctxt "#30615"
+msgid "Host"
+msgstr "Εξυπηρέτης"
+
+msgctxt "#30614"
+msgid "Connect to server"
+msgstr "Σύνδεση με εξυπηρέτη"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "Αλλαγή χρήστη σύνδεσης Jellyfin"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "Παρακαλώ συνδεθείτε"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "Μη αυτόματη προσθήκη εξυπηρέτη"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "Σύνεση με"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "Αδυναμία σύνδεσης στον επιλεγμένο εξυπηρέτη"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "Το όνομα χρήστη ή το συνθηματικό δεν πρέπει να είναι κενά"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "Επιλέξτε κύριο εξυπηρέτη"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "Είσοδος"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "Σύνθημα"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "Εμφάνιση μηνύματος"
+
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "Ενεργοποίηση εξυπηρέτη χωρίς σύνδεση"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "Όνομα χρήστη ή ηλεκτρονικό ταχυδρομείο"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "Μη αυτόματη είσοδος"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "Είσοδος"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "Μετακωδικοποίηση Hi10P"
+
+msgctxt "#30536"
+msgid "Allow the screensaver during syncs"
+msgstr "Να εμφανίζεται η προφύλαξη οθόνης κατά την διάρκεια του συγχρονισμού"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "Δημιουργία νέας ταυτότητας συσκευής"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "Ειδοποιήσεις (δευτερόλεπτα)"
+
+msgctxt "#30533"
+msgid "Duration of the music library pop up"
+msgstr "Διάρκεια εμφάνισης επικαλύμματος μουσικοθήκης"
+
+msgctxt "#30532"
+msgid "Duration of the video library pop up"
+msgstr "Διάρκεια εμφάνισης επικαλύμματος βιντεοθήκης"
+
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "Ενεργοποίηση νέου περιεχομένου"
+
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "Ενεργοποίηση μηνύματος επανεκκίνησης εξυπηρέτη"
+
+msgctxt "#30529"
+msgid "Startup delay (in seconds)"
+msgstr "Καθυστέρηση στην εκκίνηση (δευτερόλεπτα)"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "Μόνιμος χρήστης"
+
+msgctxt "#30527"
+msgid "Ignore specials in next episodes"
+msgstr "Παρέλειψε σπέσιαλς στο επόμενο επεισόδιο"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "Μετακωδικοποίηση AV1"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "Μετακωδικοποίηση VP9"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Μετακωδικοποίηση VC-1"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Μετακωδικοποίηση MPEG2"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "Μετακωδικοποίηση H265/HEVC"
+
+msgctxt "#30521"
+msgid "Jump back on resume (in seconds)"
+msgstr "Επιστροφή στην ανάληψη (σε δευτερόλεπτα)"
+
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr "Παράκαμψη επιβεβαίωση διαγραφής (χρήση με δική σας ευθύνη)"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "Να ζητήσει να παιχτεί τρέιλες"
+
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "Ενεργοποίηση εμφάνισης σινεμά"
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "Διαπιστευτήρια δικτύου"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "Αναπαραγωγή"
+
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "Σελιδοποίηση - μέγιστος ζητούμενος αριθμός (εξ ορισμού: 15)"
+
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "Ενεργοποίηση παρακράτησης καλλιτεχνίας"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "Τρόπος αναπαραγωγής"
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "Ενεργοποίηση μουσικοθήκης"
+
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "Ενεργοποίηση ειδοποιήσεων αν το πλήθος ενημερώσεων είναι μεγαλύτερο από"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "Συγχρονισμός"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "Χρήση εναλλακτικής ονομασίας συσκευής"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "Έλεγχος σύνδεσης"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "Μετακωδικοποίηση"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "Ανανέωση του στοιχείου"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "Διαγραφή από το Jellyfin"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "Αφαίρεση από τα αγαπημένα"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "Προσθήκη στα αγαπημένα"
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "Jellyfin μετακωδικοποίηση"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Επιλογές Jellyfin"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "Τηλεοπτικές σειρές"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "Ταινίες"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "Βίντεο μουσικής που δεν έχετε δει"
+
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "Μουσικά βίντεο σε εξέλιξη"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "Πρόσφατα προστιθέντα βίντεο μουσικής"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "Αγαπημένα άλμπουμ"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "Αγαπημένες φωτογραφίες"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Αγαπημένα βίντεό μου"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Προσφάτως προστιθέντα αρχικά βίντεο"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "Ενεργοποίηση μηνύματος καλωσορίσματος"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "Επαναφορά τοπικής βάσης Kodi"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "Διεπαφή"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Συνιστώμενα στοιχεία"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Τυχαία στοιχεία"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Ταινίες που δεν είδατε ακόμα"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Σετ ταινιών"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Αγαπημένα επεισόδια"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "Αγαπημένες σειρές"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Αγαπημένες ταινίες"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Επόμενο επεισόδιο"
+
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "Επεισόδια σε εξέλιξη"
+
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "Ταινίες σε εξέλιξη"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "Επεισόδια που προστέθηκαν πρόσφατα"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "Πρόσφατα προστηθείσες ταινίες"
+
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "Τηλεοπτικές σειρές σε εξέλιξη"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Προσφάτως προστηθείσες τηλεοπτικές σειρές"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Να επιτρέπονται ενσωματωμένοι υπότιτλοι"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Μέγιστος αριθμός καναλιών ήχου"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Ρυθμός δεδομένων ήχου"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Προτιμώμενη κωδικοποίηση ήχου"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Προτιμώμενη κωδικοποίηση βίντεο"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Μέγιστος ρυθμός δεδομένων"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Ενεργοποίηση περισσότερης καλλιτεχνίας (λχ. εξώφυλλο)"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Για ταινίες"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Για επεισόδια"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Να προταθεί διαγραφή μετά την αναπαραγωγή"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Επιβεβαίωση διαγραφής αρχείου"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Όνομα χρήστη"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Προχωρημένα"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Όνομα συσκευής"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Λεπτομέρεια διαγνωστικών μηνυμάτων"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Τρόπος σύνδεσης"
+
+#, fuzzy
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Jellyfin για το Kodi"
