@@ -3,7 +3,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-from jellyfin_kodi.entrypoint import Context
+from jellyfin_kodi.entrypoint.context import Context
 from jellyfin_kodi.helper import LazyLogger
 
 #################################################################################################

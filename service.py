@@ -7,7 +7,7 @@ import threading
 
 from kodi_six import xbmc
 
-from jellyfin_kodi.entrypoint import Service
+from jellyfin_kodi.entrypoint.service import Service
 from jellyfin_kodi.helper.utils import settings
 from jellyfin_kodi.helper import LazyLogger
 
