@@ -10,7 +10,6 @@ from datetime import timedelta
 
 from kodi_six import xbmc, xbmcgui, xbmcplugin, xbmcaddon
 
-from .. import database
 from ..helper import translate, playutils, api, window, settings, dialog
 from ..dialogs import resume
 from ..helper import LazyLogger
@@ -724,6 +723,7 @@ def on_update(data, server):
 
         return
 
+    from .. import database
     item = database.get_item(kodi_id, media)
 
     if item:
@@ -767,6 +767,7 @@ def on_play(data, server):
         return
 
     if settings('useDirectPaths') == '1' or media == 'song':
+        from .. import database
         item = database.get_item(kodi_id, media)
 
         if item:
