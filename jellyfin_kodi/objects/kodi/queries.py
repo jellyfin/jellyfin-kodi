@@ -286,7 +286,7 @@ VALUES          (?, ?, ?, ?)
 add_movie = """
 INSERT INTO     movie(idMovie, idFile, c00, c01, c02, c03, c04, c05, c06, c07,
                 c09, c10, c11, c12, c14, c15, c16, c18, c19, c21, premiered)
-VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 """
 add_movie_obj = ["{MovieId}", "{FileId}", "{Title}", "{Plot}", "{ShortPlot}", "{Tagline}",
                  "{Votes}", "{RatingId}", "{Writers}", "{Year}", "{Unique}", "{SortTitle}",
