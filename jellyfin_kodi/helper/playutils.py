@@ -558,7 +558,7 @@ class PlayUtils(object):
         path = os.path.join(temp, filename)
 
         try:
-            response = requests.get(src, stream=True, verify=False)
+            response = requests.get(src, stream=True, verify=settings('sslverify.bool'))
             response.raise_for_status()
         except Exception as error:
             LOG.exception(error)
