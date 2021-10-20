@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2020-06-29 19:17+0000\n"
-"Last-Translator: Vitorvlv <vitorlourovaladares@gmail.com>\n"
+"PO-Revision-Date: 2021-10-21 22:05+0000\n"
+"Last-Translator: BacalhauSalgado <ficoirado2@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/pt_BR/>\n"
 "Language: pt_br\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 3.11.2\n"
+"X-Generator: Weblate 4.5.2\n"
 
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
@@ -958,3 +958,52 @@ msgstr "Selecione as bibliotecas para atualizar"
 msgctxt "#33161"
 msgid "Update password"
 msgstr "Atualizar senha"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "Resolução máxima da arte"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Transcodificar opções"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "Transcodificar AV1"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "Transcodificar VP9"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Transcodificar VC-1"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Transcodificar MPEG2"
+
+#, fuzzy
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Permitir legendas gravadas"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Canais máximos de áudio"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Taxa de bits do áudio"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Codec de áudio preferido"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Codec de vídeo preferido"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Taxa máxima de bits do vídeo"
