@@ -1,8 +1,8 @@
-version: '0.7.6'
+version: '0.7.7'
 changelog: |-
   Bug Fixes
   ---------
-  + Avoid circular imports of database (#588) @oddstr13
+  + Remove enum dependency (#591) @oddstr13
 dependencies:
   py2:
     - addon: 'xbmc.python'
