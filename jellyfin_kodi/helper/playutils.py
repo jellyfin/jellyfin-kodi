@@ -3,7 +3,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
-import enum
 import os
 from uuid import uuid4
 
@@ -20,7 +19,7 @@ from . import translate, settings, window, dialog, api, LazyLogger
 LOG = LazyLogger(__name__)
 
 
-class Transcode(enum.IntEnum):
+class Transcode(object):
     Enabled = 0
     Audio = 1
     Subtitle = 2
@@ -607,7 +606,7 @@ class PlayUtils(object):
 
                 subs_streams.append(index)
 
-        skip_dialog = Transcode(int(settings('skipDialogTranscode') or 0))
+        skip_dialog = int(settings('skipDialogTranscode') or 0)
 
         def get_track_title(track_index):
             return streams[track_index]['DisplayTitle'] or ("Track %s" % track_index)
