@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-10-11 19:31+0000\n"
-"Last-Translator: Herman Andgart <herman8@andgart.se>\n"
+"PO-Revision-Date: 2021-10-21 22:05+0000\n"
+"Last-Translator: Gubb Jonas <jolnyx@gmail.com>\n"
 "Language-Team: Swedish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sv/>\n"
 "Language: sv\n"
@@ -536,3 +536,29 @@ msgstr "Aktivera notifikationer om antalet uppdateringar är större än"
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
 msgstr "Aktivera förbättrat konstverk (dvs. omslagsbild)"
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "Inhämtar samlingar"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "Ändra Jellyfin Connect-användare"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "Vänligen logga in"
+
+#, fuzzy
+msgctxt "#30521"
+msgid "Jump back on resume (in seconds)"
+msgstr "Backa vid återupptagen uppspelning (sekunder)"
+
+#, fuzzy
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "Paginering - max antal hämtade (standard: 15)"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Samlingar"
