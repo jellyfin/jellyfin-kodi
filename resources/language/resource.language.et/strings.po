@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-10-11 19:31+0000\n"
+"PO-Revision-Date: 2021-10-23 14:36+0000\n"
 "Last-Translator: rimasx <riks_12@hot.ee>\n"
 "Language-Team: Estonian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/et/>\n"
@@ -69,7 +69,7 @@ msgstr "Luba sünkroonimine taasesituse ajal (võib põhjustada hangumisi)"
 
 msgctxt "#33184"
 msgid "Remove libraries"
-msgstr "Eemalda meediakogud"
+msgstr "Eemalda meediakogusi"
 
 msgctxt "#33181"
 msgid "Restarting to apply the patch"
@@ -209,7 +209,7 @@ msgstr "Varukoopia loomine nurjus"
 
 msgctxt "#33164"
 msgid "Mask sensitive information in log (does not apply to kodi logging)"
-msgstr "Maskeerib logis tundlikku teavet (ei kehti Kodi logimise kohta)"
+msgstr "Maskeeri logis tundlikku teavet (ei kehti Kodi logimise kohta)"
 
 msgctxt "#33162"
 msgid "Reset the music library?"
@@ -350,7 +350,7 @@ msgstr ""
 
 msgctxt "#33116"
 msgid "Compress artwork (reduces quality)"
-msgstr "Tihendage pildid (vähendab kvaliteeti)"
+msgstr "Tihenda pildid (vähendab kvaliteeti)"
 
 msgctxt "#33112"
 msgid "Applies to Native and Add-on playback mode"
@@ -380,7 +380,7 @@ msgstr "Taasesitusrežiimi muudatuse rakendamiseks lähtesta kohalik andmebaas."
 
 msgctxt "#33110"
 msgid "Restart Kodi to take effect."
-msgstr "Jõustumiseks taaskäivita Kodi."
+msgstr "Jõustumiseks taaskäivita Kodi"
 
 msgctxt "#33109"
 msgid "Plugin"
@@ -412,7 +412,7 @@ msgstr ""
 
 msgctxt "#33098"
 msgid "Refresh boxsets"
-msgstr "Värskenda kogumikud"
+msgstr "Värskenda kogumikke"
 
 msgctxt "#33093"
 msgid "Backup folder"
@@ -474,7 +474,7 @@ msgstr "Lähtesta kohalik andmebaas"
 
 msgctxt "#33054"
 msgid "Add user to session"
-msgstr "Lisa kasutaja seansile"
+msgstr "Lisa seansile kasutaja"
 
 msgctxt "#33049"
 msgid "New"
@@ -519,7 +519,7 @@ msgstr "Lõpetatud ajaga:"
 
 msgctxt "#33018"
 msgid "Gathering boxsets"
-msgstr "Filmikomplektide korjamine"
+msgstr "Filmikogumike rühmitamine"
 
 msgctxt "#33021"
 msgid "Gathering:"
@@ -551,7 +551,7 @@ msgstr "Server taaskäivitub"
 
 msgctxt "#33000"
 msgid "Welcome"
-msgstr "Tere tulemast"
+msgstr "Tere"
 
 msgctxt "#30617"
 msgid "Server or port cannot be empty"
@@ -663,7 +663,7 @@ msgstr "Luba serveri taaskäivitamise teade"
 
 msgctxt "#30529"
 msgid "Startup delay (in seconds)"
-msgstr "Käivitamise viivitus (sekundites)"
+msgstr "Käivitamise viiteaeg (sekundites)"
 
 msgctxt "#30528"
 msgid "Permanent users"
@@ -671,7 +671,7 @@ msgstr "Püsivad kasutajad"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
-msgstr "Eira järgmistel episoodidel eriosad"
+msgstr "Jaotises 'Järgmised episoodid' eriepisoode ei kuvata"
 
 msgctxt "#30526"
 msgid "Transcode AV1"
@@ -831,7 +831,7 @@ msgstr "Vaatamata filmid"
 
 msgctxt "#30185"
 msgid "Boxsets"
-msgstr "Komplektid"
+msgstr "Kogumikud"
 
 msgctxt "#30182"
 msgid "Favorite Episodes"
@@ -940,3 +940,37 @@ msgstr "Serveri aadress"
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
 msgstr "Jellyfin Kodi"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "Luba võimalus esitada kinosaali režiimis"
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "Esita kinosaali režiimis"
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr ""
+"Näpunäide lehekülgede jaoks: iga allalaadimine nõuab Jellyfinilt samaaegselt "
+"üksuste maksimaalset väärtust."
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "Leheküljed - samaaegsed allalaadimised (vaikimisi: 3)"
+
+msgctxt "#33153"
+msgid "Your Jellyfin theme media has been synced to Kodi"
+msgstr "Temaatiline meedia sünkrooniti Kodiga"
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "TV Tunes lisamoodul puudub."
+
+msgctxt "#33060"
+msgid "Sync theme media"
+msgstr "Sünkrooni temaatiline meedia"
+
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "Leheküljed – maksimaalne taotletud üksuste arv (vaikimisi: 15)"
