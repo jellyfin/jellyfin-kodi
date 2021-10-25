@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2021-10-19 19:25+0000\n"
-"Last-Translator: Matthieu <ro9er78180@gmail.com>\n"
+"PO-Revision-Date: 2021-10-26 08:05+0000\n"
+"Last-Translator: De sousa John <johndesousa@hotmail.fr>\n"
 "Language-Team: French <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/fr/>\n"
 "Language: fr_fr\n"
@@ -916,7 +916,7 @@ msgstr "Oublier la synchronisation précédente ? Ceci n'est pas recommandé."
 
 msgctxt "#33174"
 msgid "Paging - download threads (default: 3)"
-msgstr "Pagination - téléchargements simultanés (par défaut: 3)"
+msgstr "Pagination - téléchargements simultanés (par défaut : 3)"
 
 msgctxt "#33175"
 msgid ""
@@ -1067,12 +1067,14 @@ msgctxt "#30160"
 msgid "Max stream bitrate"
 msgstr "Débit maximal du flux"
 
-#, fuzzy
 msgctxt "#30525"
 msgid "Transcode VP9"
-msgstr "Transcodage VP9"
+msgstr "Transcoder VP9"
 
-#, fuzzy
 msgctxt "#30526"
 msgid "Transcode AV1"
-msgstr "Transcodage AV1"
+msgstr "Transcoder AV1"
+
+msgctxt "#33163"
+msgid "Disabled/Media default"
+msgstr "Désactivé/Média par défaut"
