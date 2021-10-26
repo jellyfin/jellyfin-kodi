@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-10-23 14:36+0000\n"
-"Last-Translator: rimasx <riks_12@hot.ee>\n"
+"PO-Revision-Date: 2021-10-28 07:05+0000\n"
+"Last-Translator: Alan Azar <alanazar304@hotmail.com>\n"
 "Language-Team: Estonian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/et/>\n"
 "Language: et\n"
@@ -380,7 +380,7 @@ msgstr "Taasesitusrežiimi muudatuse rakendamiseks lähtesta kohalik andmebaas."
 
 msgctxt "#33110"
 msgid "Restart Kodi to take effect."
-msgstr "Jõustumiseks taaskäivita Kodi"
+msgstr "Jõustumiseks taaskäivita Kodi."
 
 msgctxt "#33109"
 msgid "Plugin"
