@@ -1,2 +1,328 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr ""
+"PO-Revision-Date: 2021-10-28 07:05+0000\n"
+"Last-Translator: WWWesten <wwwesten@gmail.com>\n"
+"Language-Team: Esperanto <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/eo/>\n"
+"Language: eo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.5.2\n"
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "Aldonu plurmeditekojn"
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "Forigante plurmeditekon"
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "Forigi servilon"
+
+msgctxt "#33140"
+msgid "Repair libraries"
+msgstr "Ripari plurmeditekojn"
+
+msgctxt "#33139"
+msgid "Update libraries"
+msgstr "Ĝisdatigu plurmeditekojn"
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "Ĝisdatigu plurmeditekon"
+
+msgctxt "#33134"
+msgid "Add server"
+msgstr "Aldonu servilon"
+
+msgctxt "#33132"
+msgid "Repair library"
+msgstr "Ripari plurmeditekon"
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "Refreŝigi kolektojn"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Transkodaj opcioj"
+
+msgctxt "#33098"
+msgid "Refresh boxsets"
+msgstr "Refreŝigi kolektojn"
+
+msgctxt "#33093"
+msgid "Backup folder"
+msgstr "Savkopia dosierujo"
+
+msgctxt "#33063"
+msgid "Remove user"
+msgstr "Forigi uzanton"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "Aldoni uzanton"
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "Aldonaĵo (defaŭlta)"
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "Kompletigita je:"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "Grupigo:"
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "Grupigi kolektojn"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "Ludi filmanoncojn?"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "Konekti al"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "Ensaluti"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "Montri mesaĝon"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "Mana ensaluto"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "Transkodigo Hi10P"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "Konstantaj uzantoj"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "Transkodigo AV1"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "Transkodigo VP9"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Transkodigo VC-1"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Transkodigo MPEG2"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "Transkodigo H265/HEVC"
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "Retaj identigiloj"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "Ludada reĝimo"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "Kontroli konekton"
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "Jellyfin transkodado"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Jellyfin opcioj"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "Favorataj Albumoj"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "Favorataj Fotoj"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Rekomendataj Aĵoj"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Hazardaj Aĵoj"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Nespektitaj Filmoj"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Favorataj Epizodoj"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "Favorataj Serioj"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Favorataj Filmoj"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Sekvaj Epizodoj"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "(dinamike)"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "Bonvenon"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Por Filmoj"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Por Epizodoj"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Proponi forigon post ludado"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Konfirmi forigon de dosiero"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Ĵurnalada nivelo"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Ensaluta metodo"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "Forci HTTP-ludadon"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Jellyfin por Kodi"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "TV-serioj"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Aŭda bitrapido"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Aparata nomo"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Servila nomo"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Servila adreso"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "Relanĉas…"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "Nespektita"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "Favoratoj"
+
+msgctxt "#33121"
+msgid "All"
+msgstr "Ĉiuj"
+
+msgctxt "#33109"
+msgid "Plugin"
+msgstr "Kromprogramo"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "Nova"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "Konektu"
+
+msgctxt "#30615"
+msgid "Host"
+msgstr "Gastigo"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "Rezignu"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "Pasvorto"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "Ensaluto"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "Ludado"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "Sinkronigo"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "Transkodado"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "Parametroj"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "Filmoj"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "Interfaco"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Kolektoj"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Uzantnomo"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Aldone"
