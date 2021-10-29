@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2020-11-10 23:49+0000\n"
-"Last-Translator: Ted van den Brink <ted@digistate.nl>\n"
+"PO-Revision-Date: 2021-10-30 23:05+0000\n"
+"Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Dutch <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/nl/>\n"
 "Language: nl_nl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.11.2\n"
+"X-Generator: Weblate 4.5.2\n"
 
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
@@ -971,9 +971,10 @@ msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
 msgstr "Jellyfin for Kodi opnieuw opstarten om de wijziging toe te passen?"
 
+#, fuzzy
 msgctxt "#33193"
 msgid "Restarting..."
-msgstr "Opnieuw opstarten..."
+msgstr "Opnieuw opstarten…"
 
 msgctxt "#33194"
 msgid "Manage libraries"
@@ -1022,18 +1023,22 @@ msgctxt "#30161"
 msgid "Preferred video codec"
 msgstr "Gewenste video codec"
 
+#, fuzzy
 msgctxt "#30524"
 msgid "Transcode VC-1"
 msgstr "Transcode VC-1"
 
+#, fuzzy
 msgctxt "#30523"
 msgid "Transcode MPEG2"
 msgstr "Transcode MPEG2"
 
+#, fuzzy
 msgctxt "#30164"
 msgid "Audio max channels"
 msgstr "Audio max channels"
 
+#, fuzzy
 msgctxt "#30160"
 msgid "Max stream bitrate"
 msgstr "Max stream bitrate"
