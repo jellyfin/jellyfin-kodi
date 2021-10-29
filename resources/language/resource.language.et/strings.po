@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-10-28 07:05+0000\n"
-"Last-Translator: Alan Azar <alanazar304@hotmail.com>\n"
+"PO-Revision-Date: 2021-10-30 23:05+0000\n"
+"Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Estonian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/et/>\n"
 "Language: et\n"
@@ -59,9 +59,10 @@ msgctxt "#33194"
 msgid "Manage libraries"
 msgstr "Halda meediakogusi"
 
+#, fuzzy
 msgctxt "#33193"
 msgid "Restarting..."
-msgstr "Taaskäivitamine..."
+msgstr "Taaskäivitamine…"
 
 msgctxt "#33185"
 msgid "Enable sync during playback (may cause some lag)"
