@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-10-11 19:31+0000\n"
-"Last-Translator: Lukáš Kucharczyk <lukas@kucharczyk.xyz>\n"
+"PO-Revision-Date: 2021-10-29 22:41+0000\n"
+"Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Czech <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/cs/>\n"
 "Language: cs_cz\n"
@@ -923,9 +923,10 @@ msgctxt "#33194"
 msgid "Manage libraries"
 msgstr "Spravovat knihovny"
 
+#, fuzzy
 msgctxt "#33193"
 msgid "Restarting..."
-msgstr "Restartování..."
+msgstr "Restartování.…"
 
 msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
