@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-10-28 07:05+0000\n"
-"Last-Translator: Oatavandi <oatavandi@gmail.com>\n"
+"PO-Revision-Date: 2021-10-30 23:05+0000\n"
+"Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Tamil <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ta/>\n"
 "Language: ta\n"
@@ -952,9 +952,10 @@ msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
 msgstr "இந்த மாற்றத்தைப் பயன்படுத்த கோடிக்கு ஜெல்லிஃபின் மறுதொடக்கம் செய்யவா?"
 
+#, fuzzy
 msgctxt "#33193"
 msgid "Restarting..."
-msgstr "மறுதொடக்கம் ..."
+msgstr "மறுதொடக்கம்…"
 
 msgctxt "#33194"
 msgid "Manage libraries"
