@@ -4,10 +4,10 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import json
 
 import requests
+from six import ensure_str
 
 from ..helper.utils import settings
 from ..helper import LazyLogger
-from six import ensure_str
 
 
 LOG = LazyLogger(__name__)
@@ -388,8 +388,7 @@ class API(object):
             "data": data
         }
 
-        if not settings('sslverify.bool'):
-            request_settings["verify"] = False
+        request_settings["verify"] = settings('sslverify.bool')
 
         LOG.info("Sending %s request to %s" % (method, path))
         LOG.debug(request_settings['timeout'])
