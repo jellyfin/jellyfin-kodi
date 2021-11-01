@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-10-30 23:05+0000\n"
+"PO-Revision-Date: 2021-11-01 21:05+0000\n"
 "Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Esperanto <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/eo/>\n"
@@ -984,4 +984,4 @@ msgstr "Maksimuma elsendflua bitrapido"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
-msgstr "Ebligi plibonigitan artaĵon (t.e. kovrilarton)"
+msgstr "Ebligi plibonigitan artaĵon (t.e. Cover Art)"
