@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-10-30 23:05+0000\n"
+"PO-Revision-Date: 2021-11-01 21:05+0000\n"
 "Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Kazakh <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/kk/>\n"
@@ -786,7 +786,7 @@ msgstr "Eŋ joğary ağyndyq qarqyn"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
-msgstr "Jaqsartylğan öner tuyndysyn qosu (mysaly, mūqaba önerı )"
+msgstr "Jaqsartylğan suretterdı qosu (mysaly, Cover Art )"
 
 msgctxt "#33197"
 msgid "A sync is already running, please wait until it completes and try again."
