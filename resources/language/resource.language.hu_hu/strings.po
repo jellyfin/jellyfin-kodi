@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-10-30 23:05+0000\n"
-"Last-Translator: WWWesten <wwwesten@gmail.com>\n"
+"PO-Revision-Date: 2021-11-04 08:56+0000\n"
+"Last-Translator: Csaba <csab0825@gmail.com>\n"
 "Language-Team: Hungarian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hu/>\n"
 "Language: hu_hu\n"
@@ -499,7 +499,6 @@ msgctxt "#33194"
 msgid "Manage libraries"
 msgstr "Könyvtárak kezelése"
 
-#, fuzzy
 msgctxt "#33193"
 msgid "Restarting..."
 msgstr "Újraindítás…"
