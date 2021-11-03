@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-10-30 23:05+0000\n"
+"PO-Revision-Date: 2021-11-04 08:56+0000\n"
 "Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Swedish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sv/>\n"
@@ -203,10 +203,9 @@ msgctxt "#30177"
 msgid "In Progress Movies"
 msgstr "Pågående Filmer"
 
-#, fuzzy
 msgctxt "#30412"
 msgid "Transcode"
-msgstr "Transcode"
+msgstr "(Omkoda)"
 
 msgctxt "#30402"
 msgid "Jellyfin transcode"
