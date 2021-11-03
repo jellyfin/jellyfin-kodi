@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-10-19 19:25+0000\n"
-"Last-Translator: George Georgovassilis <g.georgovassilis@gmail.com>\n"
+"PO-Revision-Date: 2021-11-04 08:56+0000\n"
+"Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Greek <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/el/>\n"
 "Language: el_gr\n"
@@ -510,7 +510,6 @@ msgctxt "#30003"
 msgid "Login method"
 msgstr "Τρόπος σύνδεσης"
 
-#, fuzzy
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
 msgstr "Jellyfin για το Kodi"
