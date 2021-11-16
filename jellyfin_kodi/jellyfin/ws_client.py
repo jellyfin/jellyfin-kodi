@@ -35,6 +35,7 @@ class WSClient(threading.Thread):
 
         self.client = client
         threading.Thread.__init__(self)
+        self.retry_count = 0
 
     def send(self, message, data=""):
 
@@ -49,7 +50,7 @@ class WSClient(threading.Thread):
         token = self.client.config.data['auth.token']
         device_id = self.client.config.data['app.device_id']
         server = self.client.config.data['auth.server']
-        server = server.replace('https', "wss") if server.startswith('https') else server.replace('http', "ws")
+        server = server.replace('https://', 'wss://') if server.startswith('https') else server.replace('http://', 'ws://')
         wsc_url = "%s/socket?api_key=%s&device_id=%s" % (server, token, device_id)
 
         LOG.info("Websocket url: %s", wsc_url)
@@ -59,17 +60,17 @@ class WSClient(threading.Thread):
                                           on_message=lambda ws, message: self.on_message(ws, message),
                                           on_error=lambda ws, error: self.on_error(ws, error))
 
-        retry_count = 0
         while not self.stop:
 
-            time.sleep(retry_count * 5)
+            time.sleep(self.retry_count * 5)
             self.wsc.run_forever(ping_interval=10)
 
             if not self.stop and monitor.waitForAbort(5):
                 break
 
-            if retry_count < 12:
-                retry_count += 1
+            # Wait a maximum of 60 seconds before retrying connection
+            if self.retry_count < 12:
+                self.retry_count += 1
 
         LOG.info("---<[ websocket ]")
 
@@ -93,6 +94,8 @@ class WSClient(threading.Thread):
                 "Play,Playstate,PlayNext,PlayMediaSource"
             ),
         })
+        # Reinitialize the retry counter after successful connection
+        self.retry_count = 0
 
     def on_message(self, ws, message):
 
