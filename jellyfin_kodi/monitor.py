@@ -160,7 +160,8 @@ class Monitor(xbmc.Monitor):
     def server_instance(self, server_id=None):
 
         server = Jellyfin(server_id).get_client()
-        self.post_capabilities(server)
+        session = server.jellyfin.get_device(self.device_id)
+        server.config.data['app.session'] = session[0]['Id']
 
         if server_id is not None:
             self.servers.append(server_id)
@@ -177,26 +178,6 @@ class Monitor(xbmc.Monitor):
 
             self.additional_users(server)
 
-    def post_capabilities(self, server):
-        LOG.info("--[ post capabilities/%s ]", server.auth.server_id)
-
-        server.jellyfin.post_capabilities({
-            'PlayableMediaTypes': "Audio,Video",
-            'SupportsMediaControl': True,
-            'SupportedCommands': (
-                "MoveUp,MoveDown,MoveLeft,MoveRight,Select,"
-                "Back,ToggleContextMenu,ToggleFullscreen,ToggleOsdMenu,"
-                "GoHome,PageUp,NextLetter,GoToSearch,"
-                "GoToSettings,PageDown,PreviousLetter,TakeScreenshot,"
-                "VolumeUp,VolumeDown,ToggleMute,SendString,DisplayMessage,"
-                "SetAudioStreamIndex,SetSubtitleStreamIndex,"
-                "SetRepeatMode,"
-                "Mute,Unmute,SetVolume,"
-                "Play,Playstate,PlayNext,PlayMediaSource"
-            ),
-        })
-        session = server.jellyfin.get_device(self.device_id)
-        server.config.data['app.session'] = session[0]['Id']
 
     def additional_users(self, server):
 

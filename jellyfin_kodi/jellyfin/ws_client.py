@@ -5,6 +5,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import json
 import threading
+import time
 
 from kodi_six import xbmc
 
@@ -34,6 +35,7 @@ class WSClient(threading.Thread):
 
         self.client = client
         threading.Thread.__init__(self)
+        self.retry_count = 0
 
     def send(self, message, data=""):
 
@@ -48,22 +50,27 @@ class WSClient(threading.Thread):
         token = self.client.config.data['auth.token']
         device_id = self.client.config.data['app.device_id']
         server = self.client.config.data['auth.server']
-        server = server.replace('https', "wss") if server.startswith('https') else server.replace('http', "ws")
+        server = server.replace('https://', 'wss://') if server.startswith('https') else server.replace('http://', 'ws://')
         wsc_url = "%s/socket?api_key=%s&device_id=%s" % (server, token, device_id)
 
         LOG.info("Websocket url: %s", wsc_url)
 
         self.wsc = websocket.WebSocketApp(wsc_url,
+                                          on_open=lambda ws: self.on_open(ws),
                                           on_message=lambda ws, message: self.on_message(ws, message),
                                           on_error=lambda ws, error: self.on_error(ws, error))
-        self.wsc.on_open = self.on_open
 
         while not self.stop:
 
+            time.sleep(self.retry_count * 5)
             self.wsc.run_forever(ping_interval=10)
 
             if not self.stop and monitor.waitForAbort(5):
                 break
+
+            # Wait a maximum of 60 seconds before retrying connection
+            if self.retry_count < 12:
+                self.retry_count += 1
 
         LOG.info("---<[ websocket ]")
 
@@ -72,6 +79,23 @@ class WSClient(threading.Thread):
 
     def on_open(self, ws):
         LOG.info("--->[ websocket ]")
+        self.client.jellyfin.post_capabilities({
+            'PlayableMediaTypes': "Audio,Video",
+            'SupportsMediaControl': True,
+            'SupportedCommands': (
+                "MoveUp,MoveDown,MoveLeft,MoveRight,Select,"
+                "Back,ToggleContextMenu,ToggleFullscreen,ToggleOsdMenu,"
+                "GoHome,PageUp,NextLetter,GoToSearch,"
+                "GoToSettings,PageDown,PreviousLetter,TakeScreenshot,"
+                "VolumeUp,VolumeDown,ToggleMute,SendString,DisplayMessage,"
+                "SetAudioStreamIndex,SetSubtitleStreamIndex,"
+                "SetRepeatMode,"
+                "Mute,Unmute,SetVolume,"
+                "Play,Playstate,PlayNext,PlayMediaSource"
+            ),
+        })
+        # Reinitialize the retry counter after successful connection
+        self.retry_count = 0
 
     def on_message(self, ws, message):
 
