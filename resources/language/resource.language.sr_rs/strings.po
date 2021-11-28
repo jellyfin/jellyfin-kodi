@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-10-30 23:05+0000\n"
+"PO-Revision-Date: 2021-11-30 06:05+0000\n"
 "Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Serbian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sr/>\n"
@@ -164,7 +164,6 @@ msgctxt "#33194"
 msgid "Manage libraries"
 msgstr "Управљање библиотекама"
 
-#, fuzzy
 msgctxt "#33193"
 msgid "Restarting..."
 msgstr "Поновно покретање…"
