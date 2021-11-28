@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-11-11 14:05+0000\n"
+"PO-Revision-Date: 2021-11-30 06:05+0000\n"
 "Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Kazakh <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/kk/>\n"
@@ -285,7 +285,7 @@ msgstr "MPEG2 qaita kodtau"
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
-msgstr "H265/HEVC qaita kodtau"
+msgstr "H.265/HEVC qaita kodtau"
 
 msgctxt "#30518"
 msgid "Enable cinema mode"
