@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-11-04 08:56+0000\n"
+"PO-Revision-Date: 2021-11-30 06:05+0000\n"
 "Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Swedish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sv/>\n"
@@ -511,7 +511,7 @@ msgstr "Omkoda MPEG2"
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
-msgstr "Omkoda H265/HEVC"
+msgstr "Omkoda H.265/HEVC"
 
 msgctxt "#30520"
 msgid "Skip the delete confirmation (use at your own risk)"
@@ -549,12 +549,10 @@ msgctxt "#30612"
 msgid "Please sign in"
 msgstr "Vänligen logga in"
 
-#, fuzzy
 msgctxt "#30521"
 msgid "Jump back on resume (in seconds)"
 msgstr "Backa vid återupptagen uppspelning (sekunder)"
 
-#, fuzzy
 msgctxt "#30515"
 msgid "Paging - max items requested (default: 15)"
 msgstr "Paginering - max antal hämtade (standard: 15)"
