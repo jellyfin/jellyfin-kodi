@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-10-30 23:05+0000\n"
+"PO-Revision-Date: 2021-11-30 06:05+0000\n"
 "Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Turkish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/tr/>\n"
@@ -133,7 +133,7 @@ msgstr "Bağlantıyı doğrula"
 
 msgctxt "#30412"
 msgid "Transcode"
-msgstr "Video Kodlama"
+msgstr "kod dönüştürme"
 
 msgctxt "#30410"
 msgid "Refresh this item"
@@ -157,7 +157,7 @@ msgstr "Favorilere ekle"
 
 msgctxt "#30402"
 msgid "Jellyfin transcode"
-msgstr "Jellyfin video kodlayıcı"
+msgstr "Jellyfin kod dönüştürme"
 
 msgctxt "#30401"
 msgid "Jellyfin options"
@@ -401,7 +401,7 @@ msgstr "Sunucuyu çevrimdışı olarak etkinleştir"
 
 msgctxt "#30537"
 msgid "Transcode Hi10P"
-msgstr "Hi10P'yi dönüştürme"
+msgstr "Hi10P kod dönüştürme"
 
 msgctxt "#30536"
 msgid "Allow the screensaver during syncs"
@@ -417,15 +417,15 @@ msgstr "Sunucu yeniden başlatma mesajını etkinleştir"
 
 msgctxt "#30524"
 msgid "Transcode VC-1"
-msgstr "VC-1 kodunu dönüştür"
+msgstr "VC-1 kod dönüştürme"
 
 msgctxt "#30523"
 msgid "Transcode MPEG2"
-msgstr "MPEG2 kodunu dönüştür"
+msgstr "MPEG2 kod dönüştürme"
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
-msgstr "H265 / HEVC kod dönüştürme"
+msgstr "H.265/HEVC kod dönüştürme"
 
 msgctxt "#30521"
 msgid "Jump back on resume (in seconds)"
@@ -694,10 +694,9 @@ msgctxt "#30527"
 msgid "Ignore specials in next episodes"
 msgstr "Sonraki bölümlerdeki özel etkinlikleri yoksay"
 
-#, fuzzy
 msgctxt "#30516"
 msgid "Playback"
-msgstr "Banttan oynat"
+msgstr "Oynatma"
 
 msgctxt "#33201"
 msgid "Max artwork resolution"
@@ -733,7 +732,6 @@ msgctxt "#33194"
 msgid "Manage libraries"
 msgstr "Kitaplıkları yönetin"
 
-#, fuzzy
 msgctxt "#33193"
 msgid "Restarting..."
 msgstr "Yeniden başlatılıyor…"
@@ -991,3 +989,11 @@ msgstr ""
 "En son içerik güncellemeleri alınamadı. Kodi yeniden başlatılıncaya kadar "
 "hiçbir içerik güncellemesi uygulanmayacaktır. Bu sorun devam ederse, lütfen "
 "Kodi günlüğünüzle Kodi forumları için Jellyfin'i bildirin."
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "VP9 kod dönüştürme"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "AV1 kod dönüştürme"
