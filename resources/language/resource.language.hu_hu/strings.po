@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-11-04 08:56+0000\n"
+"PO-Revision-Date: 2021-11-30 06:05+0000\n"
 "Last-Translator: Csaba <csab0825@gmail.com>\n"
 "Language-Team: Hungarian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hu/>\n"
@@ -786,7 +786,7 @@ msgstr "Válaszd ki a hozzáadandó könyvtárakat"
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
-msgstr "H265/HEVC átkódolása"
+msgstr "H.265/HEVC transzkódolása"
 
 msgctxt "#30521"
 msgid "Jump back on resume (in seconds)"
