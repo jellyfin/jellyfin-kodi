@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-10-14 07:05+0000\n"
-"Last-Translator: ButterflyOfFire <butterflyoffire+jellyfin@protonmail.com>\n"
+"PO-Revision-Date: 2021-12-06 17:05+0000\n"
+"Last-Translator: Mehyar <mashkuov@gmail.com>\n"
 "Language-Team: Arabic <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ar/>\n"
 "Language: ar\n"
@@ -47,3 +47,103 @@ msgstr "اسم الخادم"
 msgctxt "#30000"
 msgid "Server address"
 msgstr "عنوان الخادم"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "ملف ينصح به"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "ملف عشوائي"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "الأفلام التي لم تشاهد بعد"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "الغروض المفضلة"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "الحلقة القادمة"
+
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "الحلقات التي يتم مشاهدتها"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "الأفلام المضافة حديثاً"
+
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "الأفلام التي يتم مشاهدتها"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "الحلقات المضافة حديثاً"
+
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "برامج التلفاز التي يتم مشاهدتها"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "برامج التلفاز المضافة حديثاً"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "إسمح بالترجمات الملصقة على الفيديو"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "عدد قنوات الصوت الأقصى"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "جودة الصوت"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "الكودك المفضل للصوت"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "الكودك المفضل للفيديو"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "مستوى التدفق الأقصى"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "تفعيل الأغلفة المحسّنة"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "للافلام"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "للحلقات"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "عرض خيار الحذف بعد المشاهدة"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "تأكيد الحذف"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "مستوى تسجيل السجلات"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "أجبر استخدام HTTP"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "جيليفين لكودي"
