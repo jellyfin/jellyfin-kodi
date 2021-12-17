@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-11-09 17:45+0000\n"
+"PO-Revision-Date: 2021-12-18 16:05+0000\n"
 "Last-Translator: Oatavandi <oatavandi@gmail.com>\n"
 "Language-Team: Tamil <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ta/>\n"
@@ -294,7 +294,7 @@ msgstr "மீண்டும் தொடங்கவும் (நொடிக
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
-msgstr "டிரான்ஸ்கோட் H265 / HEVC"
+msgstr "டிரான்ஸ்கோட் H.265 / HEVC"
 
 msgctxt "#30523"
 msgid "Transcode MPEG2"
