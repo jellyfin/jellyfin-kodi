@@ -1,2 +1,1011 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr ""
+"PO-Revision-Date: 2021-12-21 12:05+0000\n"
+"Last-Translator: Kichirou Hoshino <devel.kp6ns@aleeas.com>\n"
+"Language-Team: Filipino <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/fil/>\n"
+"Language: fil\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1 && n != 2 && n != 3 && (n % 10 == 4 "
+"|| n % 10 == 6 || n % 10 == 9);\n"
+"X-Generator: Weblate 4.5.2\n"
+
+msgctxt "#33132"
+msgid "Repair library"
+msgstr "Ayusin ang library"
+
+msgctxt "#33130"
+msgid "Select the source"
+msgstr "Piliin ang pinagmulan"
+
+msgctxt "#33129"
+msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
+msgstr ""
+"Maaari mong i-sync ang mga Library sa pamamagitan ng paglulunsad ng Jellyfin "
+"add-on > Add libraries."
+
+msgctxt "#33128"
+msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"Nag-fail na makuha ang pinakabagong content update. Walang ilalapat na mga "
+"content update hanggang sa ma-restart ang Kodi. Kung magpapatuloy ang isyung "
+"ito, mangyaring mag-ulat sa mga forum ng Jellyfin for Kodi, kasama ang iyong "
+"Kodi log."
+
+msgctxt "#33124"
+msgid "Include people (slow)"
+msgstr "Isama ang mga tao (maaring bumagal)"
+
+msgctxt "#33123"
+msgid "Sync library to Kodi"
+msgstr "I-sync ang library sa Kodi"
+
+msgctxt "#33122"
+msgid "Restart Kodi to resume where you left off."
+msgstr "I-restart ang Kodi upang ipagpatuloy kung saan ka tumigil."
+
+msgctxt "#33121"
+msgid "All"
+msgstr "Lahat"
+
+msgctxt "#33120"
+msgid "Select the libraries to add"
+msgstr "Piliin ang mga library na idaragdag"
+
+msgctxt "#33119"
+msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"Nagkaproblema sa panahon ng pag-sync. Magagawa mong ibalik ang pag-unlad "
+"kapag na-restart ang Kodi. Kung magpapatuloy ang problema, mangyaring mag-"
+"ulat sa mga forum ng Jellyfin for Kodi, kasama ang iyong Kodi log."
+
+msgctxt "#33118"
+msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgstr ""
+"Binago mo ang playback mode. Kailangang i-reset ang Kodi upang mailapat ang "
+"pagbabago, gusto mo bang gawin ito ngayon?"
+
+msgctxt "#33116"
+msgid "Compress artwork (reduces quality)"
+msgstr "I-compress ang artwork (binabawasan ang kalidad)"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Mga pagpipilian sa transcode"
+
+msgctxt "#33114"
+msgid "Enable external subtitles"
+msgstr "I-enable ang mga external subtitle"
+
+msgctxt "#33113"
+msgid "Applies to Add-on playback mode only"
+msgstr "Nalalapat lang sa Add-on na playback mode"
+
+msgctxt "#33112"
+msgid "Applies to Native and Add-on playback mode"
+msgstr "Nalalapat sa Native at Add-on na playback mode"
+
+msgctxt "#33111"
+msgid "Reset the local database to apply the playback mode change."
+msgstr ""
+"I-reset ang lokal na database para ilapat ang pagbabago sa playback mode."
+
+msgctxt "#33110"
+msgid "Restart Kodi to take effect."
+msgstr "I-restart ang Kodi para magkabisa."
+
+msgctxt "#33109"
+msgid "Plugin"
+msgstr "Plugin"
+
+msgctxt "#33108"
+msgid "Notifications are delayed during video playback (except live tv)."
+msgstr ""
+"Naantala ang mga notification sa panahon ng pag-playback ng video (maliban "
+"sa live TV)."
+
+msgctxt "#33107"
+msgid "Users added to the session (no space between users). (eg username,username2)"
+msgstr ""
+"Mga user na idinagdag sa session (walang puwang sa pagitan ng mga user) ("
+"hal. username,username2)"
+
+msgctxt "#33106"
+msgid "Enable the option to transcode"
+msgstr "I-enable ang opsyong mag-transcode"
+
+msgctxt "#33105"
+msgid "Enable the context menu"
+msgstr "I-enable ang context menu"
+
+msgctxt "#33104"
+msgid "Find more info in the github wiki/Create-and-restore-from-backup."
+msgstr ""
+"Maghanap ng higit pang impormasyon sa GitHub wiki/Create-and-restore-from-"
+"backup."
+
+msgctxt "#33102"
+msgid "Resume the previous sync?"
+msgstr "Ipagpatuloy ang nakaraang pag-sync?"
+
+msgctxt "#33101"
+msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
+msgstr ""
+"Dahil gumagamit ka ng native playback mode na naka-enable ang musika, gusto "
+"mo bang mag-import ng rating ng musika mula sa mga file?"
+
+msgctxt "#33099"
+msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
+msgstr ""
+"I-install ang server plugin na Kodi Sync Queue para awtomatikong ilapat ang "
+"mga update sa Jellyfin library sa pag-startup. Ang setting na ito ay "
+"matatagpuan sa add-on settings > sync options > Enable Kodi Sync Queue."
+
+msgctxt "#33098"
+msgid "Refresh boxsets"
+msgstr "I-refresh ang mga boxset"
+
+msgctxt "#33097"
+msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
+msgstr ""
+"Mahalagang Impormasyon: inalis ang cleanonupdate sa iyong mga advanced na "
+"setting para maiwasan ang salungatan sa Jellyfin para sa Kodi. Magre-restart "
+"ngayon ang Kodi."
+
+msgctxt "#33093"
+msgid "Backup folder"
+msgstr "Backup na folder"
+
+msgctxt "#33092"
+msgid "Create a backup"
+msgstr "Gumawa ng backup"
+
+msgctxt "#33091"
+msgid "Created backup at:"
+msgstr "Gumawa ng backup sa:"
+
+msgctxt "#33090"
+msgid "Replace existing backup?"
+msgstr "Palitan ang kasalukuyang backup?"
+
+msgctxt "#33089"
+msgid "Enter folder name for backup"
+msgstr "Ilagay ang pangalan ng folder para sa backup"
+
+msgctxt "#33088"
+msgid "Database reset has completed, Kodi will now restart to apply the changes."
+msgstr ""
+"Nakumpleto na ang pag-reset ng database, magre-restart na ngayon ang Kodi "
+"para ilapat ang mga pagbabago."
+
+msgctxt "#33087"
+msgid "Reset all Jellyfin add-on settings?"
+msgstr "I-reset ang lahat ng Jellyfin add-on na setting?"
+
+msgctxt "#33086"
+msgid "Remove all cached artwork?"
+msgstr "Alisin ang lahat ng naka-cache na arkwork?"
+
+msgctxt "#33074"
+msgid "Are you sure you want to reset your local Kodi database?"
+msgstr ""
+"Sigurado ka bang gusto mong i-reset ang iyong lokal na database ng Kodi?"
+
+msgctxt "#33064"
+msgid "Remove user from the session"
+msgstr "Alisin ang user sa session"
+
+msgctxt "#33063"
+msgid "Remove user"
+msgstr "Alisin ang user"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "Magdagdag ng User"
+
+msgctxt "#33061"
+msgid "Add/Remove user from the session"
+msgstr "Magdagdag/Mag-alis ng user mula sa session"
+
+msgctxt "#33060"
+msgid "Sync theme media"
+msgstr "I-sync ang tema ng media"
+
+msgctxt "#33058"
+msgid "Perform local database reset"
+msgstr "Magsagawa ng lokal na pag-reset ng database"
+
+msgctxt "#33054"
+msgid "Add user to session"
+msgstr "Magdagdag ng user sa session"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "Bago"
+
+msgctxt "#33048"
+msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
+msgstr ""
+"Maaaring kailanganin mong i-verify ang iyong mga kredensyal sa network sa "
+"mga setting ng add-on o gamitin ang substitution ng Jellyfin path upang i-"
+"format nang tama ang iyong path (Jellyfin dashboard > library). Ihinto ang "
+"pag-sync?"
+
+msgctxt "#33047"
+msgid "Kodi can't locate file:"
+msgstr "Hindi mahanap ni Kodi ang file:"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "I-enable ang library ng musika?"
+
+msgctxt "#33037"
+msgid "Native (direct paths)"
+msgstr "Native (direktang path)"
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "Add-on (default)"
+
+msgctxt "#33035"
+msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
+msgstr ""
+"Mag-ingat! Kung pipiliin mo ang Native mode, mawawala ang ilang partikular "
+"na feature ng Jellyfin, gaya ng: Jellyfin cinema mode, mga opsyon sa "
+"direktang stream/transcode at iskedyul ng parental access."
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr "Isang bagong device ID ang nabuo. Magre-restart na ngayon ang Kodi."
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "Nakumpleto sa:"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "Pagtitipon:"
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "Pagtitipon ng mga boxset"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "Mag-play ng mga trailer?"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "Tanggalin ang file mula sa Jellyfin?"
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr "Piliin ang stream ng mga subtitle"
+
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr "Piliin ang audio stream"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "Di-wastong username o password"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "Nagre-restart ang server"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "Maligayang pagdating"
+
+msgctxt "#30617"
+msgid "Server or port cannot be empty"
+msgstr "Hindi maaaring walang laman ang server o port"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "Kumonekta"
+
+msgctxt "#30615"
+msgid "Host"
+msgstr "Host"
+
+msgctxt "#30614"
+msgid "Connect to server"
+msgstr "Kumonekta sa server"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "Baguhin ang user ng Jellyfin Connect"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "Mangyaring mag-sign in"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "Manu-manong magdagdag ng server"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "Kumonekta sa"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "Hindi makakonekta sa napiling server"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "Hindi maaaring walang laman ang username o password"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "Piliin ang pangunahing server"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "Kanselahin"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "Mag-sign in"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "Password"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "Display message"
+
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "I-enable ang server offline"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "Username o email"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "Manu-manong pag-log in"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "Mag log in"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "Mag-transcode ng Hi10P"
+
+msgctxt "#30536"
+msgid "Allow the screensaver during syncs"
+msgstr "Payagan ang screensaver habang nagsi-sync"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "Bumuo ng bagong device ID"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "Mga Notification (sa mga segundo)"
+
+msgctxt "#30532"
+msgid "Duration of the video library pop up"
+msgstr "Tagal ng pop up ng library ng video"
+
+msgctxt "#30533"
+msgid "Duration of the music library pop up"
+msgstr "Tagal ng pop up ng library ng musika"
+
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "I-enable ang makabagong content"
+
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "I-enable ang mensahe ng pag-restart ng server"
+
+msgctxt "#30529"
+msgid "Startup delay (in seconds)"
+msgstr "Delay sa pag-startup (sa mga segundo)"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "Mga permanenteng user"
+
+msgctxt "#30527"
+msgid "Ignore specials in next episodes"
+msgstr "Huwag pansinin ang mga special sa susunod na mga episode"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "Mag-transcode ng AV1"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "Mag-transcode ng VP9"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Mag-transcode VC-1"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Mag-transcode nf MPEG2"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "Mag-transcode ng H.265/HEVC"
+
+msgctxt "#30521"
+msgid "Jump back on resume (in seconds)"
+msgstr "Bumalik sa resume (sa mga segundo)"
+
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr "Laktawan ang kumpirmasyon sa pagtanggal (use at your own risk)"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "Hilingin na mag-play ng mga trailer"
+
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "I-enable ang cinema mode"
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "Mga kredensyal sa network"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "Pag-playback"
+
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "Paging - hiniling na max na mga item (default: 15)"
+
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "Paganahin ang pag-cache ng artwork"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "Mode ng Pag-playback"
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "I-enable ang library ng musika"
+
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "I-enable ang notification kung mas malaki ang bilang ng update kaysa"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "Sync"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "Gumamit ng kahaliling pangalan ng device"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "I-verify ang koneksyon"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "Transcode"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "I-refresh ang item na ito"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "Tanggalin mula sa Jellyfin"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "Mga setting"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "Alisin mula sa Mga Paborito"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "Idagdag sa mga Paborito"
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "Transcode ng Jellyfin"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Mga options ng Jellyfin"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "Mga Palabas sa TV"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "Mga pelikula"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "Hindi napanood na mga Music video"
+
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "Mga kasalukuyang nagaganap na Music Video"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "Kamakailang idinagdag na mga Music video"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "Mga Paboritong Album"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "Mga Paboritong Larawan"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "Max na resolution ng artwork"
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "Piliin ang mga library na aalisin"
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "Piliin ang mga library na ia-update"
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "Piliin ang mga library na aayusin"
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr ""
+"Ang isang pag-sync ay tumatakbo na, mangyaring maghintay hanggang sa "
+"makumpleto ito at subukang muli."
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr "Mga advanced na opsyon"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "I-enable ang Jellyfin for Kodi"
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "Pamahalaan ang mga Library"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "Nagre-restart…"
+
+msgctxt "#33191"
+msgid "Restart Jellyfin for Kodi to apply this change?"
+msgstr "I-restart ang Jellyfin para mailapat ng Kodi ang pagbabagong ito?"
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr ""
+"Ang Kodi Sync Queue ay nagpapabilis sa pagsisimula ng pag-sync. Ang iba pang "
+"mga pag-sync ay na-trigger ng mga kaganapan sa server."
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr ""
+"Paganahin ang pag-sync sa panahon ng pag-playback (maaaring magdulot ng "
+"ilang lag)"
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "Alisin ang mga Library"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "I-enable ang opsyong mag-play gamit ang cinema mode"
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "I-play gamit ang cinema mode"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "I-re-restart upang ilapat ang patch"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Jellyfin for Kodi"
+
+msgctxt "#33180"
+msgid "Restart Jellyfin for Kodi"
+msgstr "I-restart ang Jellyfin for Kodi"
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "Pilitin ang transcode"
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr "Pinoproseso ang mga update"
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr "Ipakita ang progress bar kung mas malaki ang bilang ng update kaysa"
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr ""
+"I-update o ayusin ang iyong mga library upang mailapat ang mga pagbabago sa "
+"ibaba."
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr ""
+"Tip sa paging: Ang bawat thread ng pag-download ay humihiling ng iyong max "
+"na value ng mga item mula sa Jellyfin sa parehong oras."
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "Paging - bilang ng download thread (default: 3)"
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "Kalimutan ang tungkol sa nakaraang pag-sync? Hindi ito inirerekomenda."
+
+msgctxt "#33172"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
+msgstr ""
+"Mayroon kang {number} mga update na nakabinbin. Maaaring tumagal ito ng "
+"ilang sandali bago makakita ng bagong nilalaman. Maaaring mas mabilis na i-"
+"update ang iyong mga library sa pamamagitan ng paglulunsad ng Jellyfin add-"
+"on > update libraries. Magpatuloy pa rin?"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "Sa pamamagitan ng unang titik"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "Hindi napanood"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "Kasalukuyang nagaganap"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "Mga paborito"
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "Kamakailang idinagdag"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "(dynamic)"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "Nabigong gumawa ng backup"
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr ""
+"I-mask ang sensitibong impormasyon sa log (hindi nalalapat sa pag-log ng "
+"Kodi)"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "I-reset ang library ng musika?"
+
+msgctxt "#33161"
+msgid "Update password"
+msgstr "I-update ang password"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr ""
+"Upang maiwasan ang mga error, mangyaring i-update ang Jellyfin for Kodi sa "
+"bersyon: "
+
+msgctxt "#33163"
+msgid "Disabled/Media default"
+msgstr "Naka-disable/default ng Media"
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "I-enable ang pagpili ng audio/subtitle"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "Mga subtitle lang"
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "Audio lang"
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "Ang isang patch ay inilapat!"
+
+msgctxt "#33155"
+msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
+msgstr ""
+"Ang kasalukuyang inilapat na patch para sa Jellyfin para sa Kodi ay sira! "
+"Mangyaring mag-post sa mga forum ng Jellyfin for Kodi kung magpapatuloy ang "
+"isyung ito. Ito ay kailangang ayusin sa lalong madaling panahon."
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "Magdagdag ng mga aklatan"
+
+msgctxt "#33153"
+msgid "Your Jellyfin theme media has been synced to Kodi"
+msgstr "Ang iyong Jellyfin theme media ay na-sync sa Kodi"
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "Hindi mahanap ang TV Tunes sa Kodi."
+
+msgctxt "#33151"
+msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
+msgstr ""
+"Kumonekta muli sa parehong server na dati nang na-load. Kung gusto mong "
+"gumamit ng ibang server, i-reset ang iyong lokal na database, kasama ang "
+"impormasyon ng iyong user."
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "I-update ang impormasyon ng server"
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "Hindi makakonekta sa server na ito."
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "Ang iyong pag-access sa server na ito ay pinaghihigpitan."
+
+msgctxt "#33147"
+msgid "Your access to Jellyfin is restricted."
+msgstr "Ang iyong access sa Jellyfin ay pinaghihigpitan."
+
+msgctxt "#33146"
+msgid "Unable to connect to Jellyfin."
+msgstr "Hindi makakonekta sa Jellyfin."
+
+msgctxt "#33145"
+msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
+msgstr ""
+"Pakitiyak na ang iyong Samba (smb) share ng iyong Jellyfin server ay naa-"
+"access sa iyong pag-install ng Kodi at mayroon kang path substitution na na-"
+"configure sa iyong server. Kung hindi, maaaring hindi mahanap ng Kodi ang "
+"iyong mga file."
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "Tinatanggal ang library"
+
+msgctxt "#33143"
+msgid "Enable the option to delete"
+msgstr "I-enable ang option sa pagtanggal"
+
+msgctxt "#33142"
+msgid "Something went wrong. Try again later."
+msgstr "May nangyaring mali. Subukan ulit mamaya."
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "Alisin ang server"
+
+msgctxt "#33139"
+msgid "Update libraries"
+msgstr "I-update ang mga library"
+
+msgctxt "#33140"
+msgid "Repair libraries"
+msgstr "I-repair ang mga library"
+
+msgctxt "#33138"
+msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
+msgstr ""
+"Maaari mong i-update nang manu-mano ang iyong library sa halip na umasa sa "
+"plugin ng server na Kodi Sync Queue. Ilunsad ang add-on at i-update ang mga "
+"library (o bawat library). Para mag-alis ng content, kakailanganin mong i-"
+"repair ang library."
+
+msgctxt "#33137"
+msgid "Enable Kodi Sync Queue"
+msgstr "I-enable ang Kodi Sync Queue"
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "I-update ang library"
+
+msgctxt "#33135"
+msgid "Kodi will now restart to apply a small patch for your Kodi version."
+msgstr ""
+"Magre-restart na ngayon ang Kodi para maglapat ng maliit na patch para sa "
+"iyong bersyon ng Kodi."
+
+msgctxt "#33134"
+msgid "Add server"
+msgstr "Magdagdag ng server"
+
+msgctxt "#33133"
+msgid "Remove library from Kodi"
+msgstr "Alisin ang library mula sa Kodi"
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "Nagre-refresh ng mga boxset"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Mga Paboritong Home Video"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "Kamakailang idinagdag na Mga Larawan"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Kamakailang idinagdag na Mga Home Video"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "I-enable ang welcome message"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "I-reset ang lokal na database ng Kodi"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "Interface"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Mga Inirerekomendang Item"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Mga Random na Item"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Mga Pelikulang Hindi Napanood"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Mga boxset"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Mga Paboritong Episode"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "Mga Paboritong Palabas"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Mga Paboritong Pelikula"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Mga susunod na Episode"
+
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "Mga kasalukuyang nagaganap na Episode"
+
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "Mga kasalukuyang nagaganap na Palabas sa TV"
+
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "Mga kasalukuyang nagaganap na Pelikula"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "Mga Kamakailang Idinagdag na Episode"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "Mga Kamakailang Idinagdag na Pelikula"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Kamakailang Idinagdag na Mga Palabas sa TV"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Payagan ang mga burned subtitle"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Pinakamadaming channel ng Audio"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Bitrate ng Audio"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Mas gustong audio codec"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Mas gustong video codec"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Pinakamataas na bitrate ng stream"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "I-enable ang enhanced artwork (halimbawa: cover art)"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Para sa mga Pelikula"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Para sa mga Episode"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "I-offer ang pagtanggal pagkatapos ng pag-playback"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Kumpirmahin ang pagtanggal ng file"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Username"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Advanced"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Pangalan ng device"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Antas ng log"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Paraan ng pag-login"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "Pilitin ang pag-playback ng HTTP"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Pangalan ng server"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Address ng server"
