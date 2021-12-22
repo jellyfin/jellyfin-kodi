@@ -51,7 +51,7 @@ class MusicVideos(KodiDb):
             from the sortname attribute.
         '''
         server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
-        API = api.API(item, server_address)
+        API = api.API(item, server_address, self.server.auth.jellyfin_token())
         obj = self.objects.map(item, 'MusicVideo')
         update = True
 
@@ -195,7 +195,7 @@ class MusicVideos(KodiDb):
             Poster with progress bar
         '''
         server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
-        API = api.API(item, server_address)
+        API = api.API(item, server_address, self.server.auth.jellyfin_token())
         obj = self.objects.map(item, 'MusicVideoUserData')
 
         try:

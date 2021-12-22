@@ -13,13 +13,14 @@ LOG = LazyLogger(__name__)
 
 
 class API(object):
-    def __init__(self, item, server=None):
+    def __init__(self, item, server=None, api_key=None):
 
         ''' Get item information in special cases.
             server is the server address, provide if your functions requires it.
         '''
         self.item = item
         self.server = server
+        self.api_key = api_key
 
     def get_playcount(self, played, playcount):
 
@@ -303,6 +304,8 @@ class API(object):
         for index, tag in enumerate(tags):
 
             artwork = "%s/Items/%s/Images/Backdrop/%s?Format=original&Tag=%s%s" % (self.server, item_id, index, tag, (query or ""))
+            if self.api_key is not None:
+                artwork += "&api_key=%s" % self.api_key
             backdrops.append(artwork)
 
         return backdrops
@@ -321,5 +324,8 @@ class API(object):
 
         if query is not None:
             url += query or ""
+
+        if self.api_key is not None:
+            url += "&api_key=%s" % self.api_key
 
         return url

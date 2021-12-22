@@ -655,7 +655,7 @@ class UpdateWorker(threading.Thread):
                         music.song(item)
 
                     if self.notify:
-                        self.notify_output.put((item['Type'], api.API(item).get_naming()))
+                        self.notify_output.put((item['Type'], api.API(item, None, self.server.auth.jellyfin_token()).get_naming()))
                 except LibraryException as error:
                     if error.status == 'StopCalled':
                         break

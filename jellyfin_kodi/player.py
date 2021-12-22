@@ -261,7 +261,7 @@ class Player(xbmc.Player):
 
                 break
         server_address = item['Server'].auth.get_server_info(item['Server'].auth.server_id)['address']
-        API = api.API(next_item, server_address)
+        API = api.API(next_item, server_address, item['Server'].auth.jellyfin_token())
         data = objects.map(next_item, "UpNext")
         artwork = API.get_all_artwork(objects.map(next_item, 'ArtworkParent'), True)
         data['art'] = {

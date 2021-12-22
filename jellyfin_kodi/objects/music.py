@@ -44,7 +44,7 @@ class Music(KodiDb):
             If item exists, entry will be updated.
         '''
         server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
-        API = api.API(item, server_address)
+        API = api.API(item, server_address, self.server.auth.jellyfin_token())
         obj = self.objects.map(item, 'Artist')
         update = True
 
@@ -118,7 +118,7 @@ class Music(KodiDb):
         ''' Update object to kodi.
         '''
         server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
-        API = api.API(item, server_address)
+        API = api.API(item, server_address, self.server.auth.jellyfin_token())
         obj = self.objects.map(item, 'Album')
         update = True
 
@@ -242,7 +242,7 @@ class Music(KodiDb):
         ''' Update object to kodi.
         '''
         server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
-        API = api.API(item, server_address)
+        API = api.API(item, server_address, self.server.auth.jellyfin_token())
         obj = self.objects.map(item, 'Song')
         update = True
 
