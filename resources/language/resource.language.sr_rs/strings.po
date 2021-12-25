@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-11-30 06:05+0000\n"
+"PO-Revision-Date: 2021-12-26 01:16+0000\n"
 "Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Serbian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sr/>\n"
@@ -825,7 +825,7 @@ msgstr "Транскодирај MPEG2"
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
-msgstr "Транскодирај H265/HEVC"
+msgstr "Транскодирај H.265/HEVC"
 
 msgctxt "#30521"
 msgid "Jump back on resume (in seconds)"
