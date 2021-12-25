@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-12-17 11:05+0000\n"
-"Last-Translator: Lukáš Kucharczyk <lukas@kucharczyk.xyz>\n"
+"PO-Revision-Date: 2021-12-26 13:10+0000\n"
+"Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Czech <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/cs/>\n"
 "Language: cs_cz\n"
@@ -235,7 +235,7 @@ msgstr "Ignorovat speciály v přehledu dalších epizod"
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
-msgstr "Překódování formátu H265/HEVC"
+msgstr "Překódování formátu H.265/HEVC"
 
 msgctxt "#30521"
 msgid "Jump back on resume (in seconds)"
