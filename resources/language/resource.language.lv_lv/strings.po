@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-11-28 11:49+0000\n"
+"PO-Revision-Date: 2021-12-26 18:05+0000\n"
 "Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Latvian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lv/>\n"
@@ -30,7 +30,7 @@ msgstr "Ignorēt speciālās epizodes nākamajās epizodēs"
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
-msgstr "Trans-kodēt H265/HVEC"
+msgstr "Trans-kodēt H.265/HVEC"
 
 msgctxt "#30520"
 msgid "Skip the delete confirmation (use at your own risk)"
