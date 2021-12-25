@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-10-14 07:05+0000\n"
+"PO-Revision-Date: 2021-12-26 18:05+0000\n"
 "Last-Translator: lyaschuchenko <lyaschuchenko@gmail.com>\n"
 "Language-Team: Ukrainian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/uk/>\n"
@@ -143,3 +143,408 @@ msgstr "Адреса сервера"
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
 msgstr "Jellyfin для Kodi"
+
+msgctxt "#33087"
+msgid "Reset all Jellyfin add-on settings?"
+msgstr "Скинути всі налаштування надбудови Jellyfin?"
+
+msgctxt "#33086"
+msgid "Remove all cached artwork?"
+msgstr "Видалити всі кешовані ілюстрації?"
+
+msgctxt "#33074"
+msgid "Are you sure you want to reset your local Kodi database?"
+msgstr "Ви впевнені, що хочете скинути локальну базу даних Kodi?"
+
+msgctxt "#33064"
+msgid "Remove user from the session"
+msgstr "Видалити користувача із сеансу"
+
+msgctxt "#33063"
+msgid "Remove user"
+msgstr "Видалити користувача"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "Додати користувача"
+
+msgctxt "#33061"
+msgid "Add/Remove user from the session"
+msgstr "Додати/Вилучити користувача з сеансу"
+
+msgctxt "#33060"
+msgid "Sync theme media"
+msgstr "Синхронізувати медіа теми"
+
+msgctxt "#33058"
+msgid "Perform local database reset"
+msgstr "Виконати скидання локальної бази даних"
+
+msgctxt "#33054"
+msgid "Add user to session"
+msgstr "Додати користувача до сеансу"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "Новий"
+
+msgctxt "#33048"
+msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
+msgstr ""
+"Можливо, вам знадобиться перевірити свої облікові дані мережі в "
+"налаштуваннях надбудови або використати заміну шляху Jellyfin, щоб правильно "
+"відформатувати шлях (інформаційна панель Jellyfin > бібліотека). Зупинити "
+"синхронізацію?"
+
+msgctxt "#33047"
+msgid "Kodi can't locate file:"
+msgstr "Kodi не може знайти файл:"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "Увімкнути музичну бібліотеку?"
+
+msgctxt "#33037"
+msgid "Native (direct paths)"
+msgstr "Рідні (прямі шляхи)"
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "Доповнення (за замовчуванням)"
+
+msgctxt "#33035"
+msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
+msgstr ""
+"Обережно! Якщо ви виберете «Нативний» режим, деякі функції Jellyfin будуть "
+"відсутні, як-от: режим кінотеатру Jellyfin, параметри прямого потоку/"
+"перекодування та розклад батьківського доступу."
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr "Створено новий ідентифікатор пристрою. Тепер Kodi перезапуститься."
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "Завершено в:"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "Збір:"
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "Збір бокс-сетів"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "ВІдтворити трейлер?"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "Видалити файл із Jellyfin?"
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr "Виберіть потік субтитрів"
+
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr "Виберіть звуковий потік"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "Неправильне ім'я користувача або пароль"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "Сервер перезавантажується"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "Ласкаво просимо"
+
+msgctxt "#30617"
+msgid "Server or port cannot be empty"
+msgstr "Сервер або порт не можуть бути пустими"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "Підключити"
+
+msgctxt "#30615"
+msgid "Host"
+msgstr "Хост"
+
+msgctxt "#30614"
+msgid "Connect to server"
+msgstr "Підключитися до сервера"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "Змінити користувача Jellyfin Connect"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "Будь ласка, увійдіть"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "Додати сервер вручну"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "Підключитися до"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "Не вдається підключитися до вибраного сервера"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "Ім’я користувача або пароль не може бути порожнім"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "Виберіть основний сервер"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "Скасувати"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "Увійти"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "Пароль"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "Відобразити повідомлення"
+
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "Увімкнути сервер офлайн"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "Ім'я користувача або адреса електронної пошти"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "Вхід вручну"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "Увійти"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "Перекодування Hi10P"
+
+msgctxt "#30536"
+msgid "Allow the screensaver during syncs"
+msgstr "Дозволити заставку під час синхронізації"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "Згенеруйте новий ідентифікатор пристрою"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "Сповіщення (в секундах)"
+
+msgctxt "#30533"
+msgid "Duration of the music library pop up"
+msgstr "Спливає тривалість музичної бібліотеки"
+
+msgctxt "#30532"
+msgid "Duration of the video library pop up"
+msgstr "Спливає тривалість відеотеки"
+
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "Увімкнути новий вміст"
+
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "Увімкнути повідомлення про перезавантаження сервера"
+
+msgctxt "#30529"
+msgid "Startup delay (in seconds)"
+msgstr "Затримка старту (у секундах)"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "Постійні користувачі"
+
+msgctxt "#30527"
+msgid "Ignore specials in next episodes"
+msgstr "Ігноруйте спецсерії в наступних епізодах"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "Перекодувати AV1"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "Перекодувати VP9"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Перекодувати VC-1"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Транскодування H.265/HEVC"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "Транскодування H.265/HEVC"
+
+msgctxt "#30521"
+msgid "Jump back on resume (in seconds)"
+msgstr "Перейти до продовження (в сек)"
+
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr ""
+"Пропустити підтвердження видалення (використовуйте на свій страх і ризик)"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "Ввімнеути відтворення трейлерів"
+
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "Увімкнути режим кінотеатру"
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "Облікові дані мережі"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "Відтворення"
+
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr ""
+"Пейджинг – максимальна кількість запитуваних елементів (за замовчуванням: 15)"
+
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "Увімкнути кешування ілюстрацій"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "Режим відтворення"
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "Увімкнути музичну бібліотеку"
+
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "Увімкнути сповіщення, якщо кількість оновлень більше ніж"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "Синхронізувати"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "Використовуйте альтернативну назву пристрою"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "Перевірте підключення"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "Перекодувати"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "Оновити цей елемент"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "Видалити з Jellyfin"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "Налаштування"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "Видалити з вибраного"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "Додати до вибраного"
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "Перекодування Jellyfin"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Опції Jellyfin"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "ТБ-шоу"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "Фільми"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "Непереглянуті музичні відео"
+
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "У процесі музичні відео"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "Нещодавно додані музичні відео"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "Улюблені альбоми"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "Улюблені фотографії"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Улюблені домашні відео"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "Нещодавно додані фотографії"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Нещодавно додані домашні відео"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "Увімкнути вітальне повідомлення"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "Скидання локальної бази даних Kodi"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "Інтерфейс"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Рекомендовані елементи"
