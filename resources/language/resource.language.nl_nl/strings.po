@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2021-12-06 17:05+0000\n"
-"Last-Translator: Remco Schrijver <remcoschrijv3r@gmail.com>\n"
+"PO-Revision-Date: 2021-12-26 18:05+0000\n"
+"Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Dutch <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/nl/>\n"
 "Language: nl_nl\n"
@@ -278,7 +278,7 @@ msgstr "Bij hervatten kort terug spoelen (in seconden)"
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
-msgstr "Transcoderen H265/HEVC"
+msgstr "Transcoderen H.265/HEVC"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
@@ -1022,22 +1022,18 @@ msgctxt "#30161"
 msgid "Preferred video codec"
 msgstr "Gewenste video codec"
 
-#, fuzzy
 msgctxt "#30524"
 msgid "Transcode VC-1"
-msgstr "Transcode VC-1"
+msgstr "Transcoderen VC-1"
 
-#, fuzzy
 msgctxt "#30523"
 msgid "Transcode MPEG2"
-msgstr "Transcode MPEG2"
+msgstr "Transcoderen MPEG2"
 
-#, fuzzy
 msgctxt "#30164"
 msgid "Audio max channels"
-msgstr "Audio max channels"
+msgstr "Audio max kanalen"
 
-#, fuzzy
 msgctxt "#30160"
 msgid "Max stream bitrate"
 msgstr "Max stream bitrate"
