@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-12-06 17:05+0000\n"
-"Last-Translator: Mehyar <mashkuov@gmail.com>\n"
+"PO-Revision-Date: 2021-12-30 05:05+0000\n"
+"Last-Translator: Fahad <alotaibifahadmm@gmail.com>\n"
 "Language-Team: Arabic <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ar/>\n"
 "Language: ar\n"
@@ -14,7 +14,7 @@ msgstr ""
 
 msgctxt "#30235"
 msgid "Interface"
-msgstr "الواجهة"
+msgstr "واجهه المستخدم"
 
 msgctxt "#30182"
 msgid "Favorite Episodes"
@@ -38,7 +38,7 @@ msgstr "اسم الجهاز"
 
 msgctxt "#30003"
 msgid "Login method"
-msgstr "أسلوب الولوج"
+msgstr "طريقة تسجيل الدخول"
 
 msgctxt "#30001"
 msgid "Server name"
@@ -50,11 +50,11 @@ msgstr "عنوان الخادم"
 
 msgctxt "#30230"
 msgid "Recommended Items"
-msgstr "ملف ينصح به"
+msgstr "ملفات ينصح بها"
 
 msgctxt "#30229"
 msgid "Random Items"
-msgstr "ملف عشوائي"
+msgstr "ملفات عشوائية"
 
 msgctxt "#30189"
 msgid "Unwatched Movies"
@@ -86,11 +86,11 @@ msgstr "الحلقات المضافة حديثاً"
 
 msgctxt "#30171"
 msgid "In Progress TV Shows"
-msgstr "برامج التلفاز التي يتم مشاهدتها"
+msgstr "المسلسلات التي يتم مشاهدتها"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
-msgstr "برامج التلفاز المضافة حديثاً"
+msgstr "المسلسلات المضافة حديثاً"
 
 msgctxt "#30165"
 msgid "Allow burned subtitles"
@@ -102,15 +102,15 @@ msgstr "عدد قنوات الصوت الأقصى"
 
 msgctxt "#30163"
 msgid "Audio bitrate"
-msgstr "جودة الصوت"
+msgstr "معدل البت الصوت"
 
 msgctxt "#30162"
 msgid "Preferred audio codec"
-msgstr "الكودك المفضل للصوت"
+msgstr "برنامج ترميز الصوت المفضل"
 
 msgctxt "#30161"
 msgid "Preferred video codec"
-msgstr "الكودك المفضل للفيديو"
+msgstr "برنامج ترميز الفيديو المفضل"
 
 msgctxt "#30160"
 msgid "Max stream bitrate"
@@ -118,7 +118,7 @@ msgstr "مستوى التدفق الأقصى"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
-msgstr "تفعيل الأغلفة المحسّنة"
+msgstr "تمكين العمل الفني المحسّن (أي صورة الغلاف)"
 
 msgctxt "#30116"
 msgid "For Movies"
