@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-12-26 18:05+0000\n"
-"Last-Translator: WWWesten <wwwesten@gmail.com>\n"
+"PO-Revision-Date: 2022-01-03 21:05+0000\n"
+"Last-Translator: SaddFox <filip.rutar@gmail.com>\n"
 "Language-Team: Slovenian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sl/>\n"
 "Language: sl\n"
@@ -52,12 +52,10 @@ msgctxt "#30602"
 msgid "Password"
 msgstr "Geslo"
 
-#, fuzzy
 msgctxt "#30547"
 msgid "Display message"
 msgstr "Pokaži sporočilo"
 
-#, fuzzy
 msgctxt "#30545"
 msgid "Enable server offline"
 msgstr "Omogoči strežnik brez povezave"
@@ -94,7 +92,6 @@ msgctxt "#30533"
 msgid "Duration of the music library pop up"
 msgstr "Trajanje pojavnega okna zvočne knjižnice"
 
-#, fuzzy
 msgctxt "#30532"
 msgid "Duration of the video library pop up"
 msgstr "Trajanje pojavnega okna video knjižnice"
@@ -111,15 +108,13 @@ msgctxt "#30529"
 msgid "Startup delay (in seconds)"
 msgstr "Zamik pri zagonu (v sekundah)"
 
-#, fuzzy
 msgctxt "#30528"
 msgid "Permanent users"
 msgstr "Stalni uporabniki"
 
-#, fuzzy
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
-msgstr "Ignoriraj posebne epizode pri naslednjih epizodah"
+msgstr "Ignoriraj bonus epizode pri naslednjih epizodah"
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
@@ -141,7 +136,6 @@ msgctxt "#30518"
 msgid "Enable cinema mode"
 msgstr "Omogoči kino način"
 
-#, fuzzy
 msgctxt "#30517"
 msgid "Network credentials"
 msgstr "Omrežne poverilnice"
@@ -150,10 +144,9 @@ msgctxt "#30516"
 msgid "Playback"
 msgstr "Predvajanje"
 
-#, fuzzy
 msgctxt "#30515"
 msgid "Paging - max items requested (default: 15)"
-msgstr "Zahtevano maksimalno število poizvedb (privzeto: 15)"
+msgstr "Največje število sočasnih poizvedb (privzeto: 15)"
 
 msgctxt "#30512"
 msgid "Enable artwork caching"
@@ -207,7 +200,6 @@ msgctxt "#30405"
 msgid "Add to favorites"
 msgstr "Dodaj med priljubljene"
 
-#, fuzzy
 msgctxt "#30402"
 msgid "Jellyfin transcode"
 msgstr "Jellyfin prekodiranje"
@@ -453,13 +445,12 @@ msgctxt "#33049"
 msgid "New"
 msgstr "Novo"
 
-#, fuzzy
 msgctxt "#33048"
 msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
 msgstr ""
 "Preveriti vaše omrežne poverilnice v nastavitvah dodatka ali uporabite "
 "Jellyfin zamenjavo poti za pravilno oblikovanje poti datotek (Jellyfin "
-"nadzorna plošča > Knjižnice). Želite preklicati sinhronizacijo?"
+"Nadzorna plošča > Knjižnice). Želite preklicati sinhronizacijo?"
 
 msgctxt "#33047"
 msgid "Kodi can't locate file:"
@@ -513,16 +504,14 @@ msgctxt "#33000"
 msgid "Welcome"
 msgstr "Dobrodošli"
 
-#, fuzzy
 msgctxt "#30617"
 msgid "Server or port cannot be empty"
-msgstr "Strežnik oziroma vrata ne morejo biti prazna"
+msgstr "Strežnik oziroma vrata ne smejo biti prazna"
 
 msgctxt "#30616"
 msgid "Connect"
 msgstr "Poveži"
 
-#, fuzzy
 msgctxt "#30615"
 msgid "Host"
 msgstr "Gostitelj"
@@ -910,3 +899,99 @@ msgstr "Bitna hitrost zvoka"
 msgctxt "#30160"
 msgid "Max stream bitrate"
 msgstr "Največja bitna hitrost pretakanja"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "Največja ločljivost slik"
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr ""
+"Nasvet: Vsak vzporeden prenos zahteva največje število sočasnih poizvedb iz "
+"Jellyfin strežnika."
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "Vzporedni prenosi (privzeto: 3)"
+
+#, fuzzy
+msgctxt "#33163"
+msgid "Disabled/Media default"
+msgstr "Onemogočeno/Privzeto"
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "TV Tunes dodatek ni najden."
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "Osveževanje zbirk"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Možnosti prekodiranja"
+
+msgctxt "#33113"
+msgid "Applies to Add-on playback mode only"
+msgstr "Velja samo za način dodatka"
+
+msgctxt "#33112"
+msgid "Applies to Native and Add-on playback mode"
+msgstr "Velja za neposredni način in način dodatka"
+
+msgctxt "#33101"
+msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
+msgstr ""
+"Ker uporabljate neposredni način predvajanja z omogočeno glasbo, ali želite "
+"uvoziti oceno skladb iz datotek?"
+
+msgctxt "#33098"
+msgid "Refresh boxsets"
+msgstr "Osveži zbirke"
+
+msgctxt "#33037"
+msgid "Native (direct paths)"
+msgstr "Neposredno (direktne poti)"
+
+msgctxt "#33035"
+msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
+msgstr ""
+"Pozor! Če izberete neposredni način določene Jellyfin funkcije ne bodo na "
+"voljo, kot na primer Kino način, možnosti neposrednega pretakanja/"
+"prekodiranja in možnosti starševskega nadzora."
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "Pridobivanje zbirk"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "Prekodiraj AV1"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "Prekodiraj VP9"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Prekodiraj VC-1"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Prekodiraj MPEG2"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Zbirke"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Dovoli vžgane podnapise"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Prednostni zvočni kodek"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Prednostni video kodek"
