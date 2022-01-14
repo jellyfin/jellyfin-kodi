@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-11-30 06:05+0000\n"
-"Last-Translator: WWWesten <wwwesten@gmail.com>\n"
+"PO-Revision-Date: 2022-01-15 01:13+0000\n"
+"Last-Translator: Theofilos Moupasiridis <theofiloshaf@gmail.com>\n"
 "Language-Team: Greek <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/el/>\n"
 "Language: el_gr\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.5.2\n"
+"X-Generator: Weblate 4.10.1\n"
 
 msgctxt "#30002"
 msgid "Force HTTP playback"
@@ -513,3 +513,100 @@ msgstr "Τρόπος σύνδεσης"
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
 msgstr "Jellyfin για το Kodi"
+
+msgctxt "#33116"
+msgid "Compress artwork (reduces quality)"
+msgstr "Συμπίεση εικονογραφήσεων (μειώνει την ποιότητα)"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Επιλογές διακωδικοποίησης"
+
+msgctxt "#33114"
+msgid "Enable external subtitles"
+msgstr "Ενεργοποίηση εξωτερικών υποτίτλων"
+
+msgctxt "#33111"
+msgid "Reset the local database to apply the playback mode change."
+msgstr ""
+"Επανεκκινήστε την τοπική βάση δεδομένων για να εφαρμοστούν οι αλλαγές της "
+"λειτουργίας αναπαραγωγής."
+
+msgctxt "#33110"
+msgid "Restart Kodi to take effect."
+msgstr "Επανεκκινήστε το Kodi για να εφαρμοστούν οι αλλαγές."
+
+msgctxt "#33108"
+msgid "Notifications are delayed during video playback (except live tv)."
+msgstr ""
+"Οι ειδοποιήσεις καθυστερούν λόγω της αναπαραγωγής βίντεο (εκτός της live TV)."
+
+msgctxt "#33106"
+msgid "Enable the option to transcode"
+msgstr "Ενεργοποίηση της ρύθμισης διακωδικοποίησης"
+
+msgctxt "#33102"
+msgid "Resume the previous sync?"
+msgstr "Συνέχιση του προηγούμενου συγχρονισμού;"
+
+msgctxt "#33099"
+msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
+msgstr ""
+"Εγκαταστήστε τον πρόσθετο διακοσμητή Kodi Sync Queue για να εφαρμόσετε "
+"αυτόματα τις ενημερώσεις της βιβλιοθήκης του Jellyfin κατά την εκκίνηση. "
+"Αυτή η ρύθμιση βρίσκεται στις ρυθμίσεις πρόσθετων>ρυθμίσεις "
+"συγχρονισμού>Ενεργοποίηση Kodi Sync Queue."
+
+msgctxt "#33093"
+msgid "Backup folder"
+msgstr "Φάκελος αντιγράφων ασφαλείας"
+
+msgctxt "#33092"
+msgid "Create a backup"
+msgstr "Δημιουργία αντιγράφων ασφαλείας"
+
+msgctxt "#33091"
+msgid "Created backup at:"
+msgstr "Δημιουργήθηκε αντίγραφο ασφαλείας στη θέση:"
+
+msgctxt "#33090"
+msgid "Replace existing backup?"
+msgstr "Αντικατάσταση των υπαρχόντων αντιγράφων ασφαλείας;"
+
+msgctxt "#33089"
+msgid "Enter folder name for backup"
+msgstr "Εισάγετε όνομα φακέλου για την δημιουργία αντιγράφων"
+
+msgctxt "#33088"
+msgid "Database reset has completed, Kodi will now restart to apply the changes."
+msgstr ""
+"Η επαναφορά της βάσης δεδομένων έχει ολοκληρωθεί, Το Kodi θα πραγματοποιήσει "
+"επανεκκίνηση για να εφαρμόσει τις αλλαγές."
+
+msgctxt "#33087"
+msgid "Reset all Jellyfin add-on settings?"
+msgstr "Επαναφορά όλων των ρυθμίσεων για τα πρόσθετα;"
+
+msgctxt "#33086"
+msgid "Remove all cached artwork?"
+msgstr "Αφαίρεση όλων των εικονογραφήσεων;"
+
+msgctxt "#33064"
+msgid "Remove user from the session"
+msgstr "Αφαίρεση χρήστη από τη συνεδρία"
+
+msgctxt "#33063"
+msgid "Remove user"
+msgstr "Αφαίρεση χρήστη"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "Προσθήκη χρήστη"
+
+msgctxt "#33061"
+msgid "Add/Remove user from the session"
+msgstr "Προσθήκη/Αφαίρεση χρήστη από τη συνεδρία"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "Φωτογραφίες που προστέθηκαν πρόσφατα"
