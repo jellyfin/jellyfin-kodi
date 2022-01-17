@@ -10,7 +10,7 @@ jobs:
     steps:
 
       - name: Update Draft
-        uses: release-drafter/release-drafter@v5.15.0
+        uses: release-drafter/release-drafter@v5.17.5
         id: draft
         env:
           GITHUB_TOKEN: ${{ secrets.JF_BOT_TOKEN }}

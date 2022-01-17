@@ -11,7 +11,7 @@ jobs:
         py_version: [ 'py2', 'py3' ]
     steps:
       - name: Update Draft
-        uses: release-drafter/release-drafter@v5.15.0
+        uses: release-drafter/release-drafter@v5.17.5
         if: ${{ matrix.py_version == 'py3' }}
         with:
           publish: true
