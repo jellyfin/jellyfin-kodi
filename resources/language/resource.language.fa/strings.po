@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-02-26 10:05+0000\n"
+"PO-Revision-Date: 2022-02-26 13:31+0000\n"
 "Last-Translator: Ali Dastpour <Erorr110@yahoo.com>\n"
 "Language-Team: Persian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/fa/>\n"
@@ -130,3 +130,35 @@ msgstr "نام کاربری"
 msgctxt "#30022"
 msgid "Advanced"
 msgstr "پیشرفته"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "موزیک ویدئو های اضافه شده اخیر"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "آلبوم های مورد علاقه"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "عکس های مورد علاقه"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "ویدیوهای خانگی مورد علاقه"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "عکس های اضافه شده اخیر"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "ویدیوهای خانگی اضافه شده اخیر"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "فعالسازی پیام خوش‌آمد گویی"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "بازنشانی پایگاه داده محلی Kodi"
