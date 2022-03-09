@@ -30,7 +30,7 @@ jobs:
           queries: +security-and-quality
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.version }}
 
