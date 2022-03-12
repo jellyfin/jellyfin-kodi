@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-03-02 11:13+0000\n"
+"PO-Revision-Date: 2022-03-12 20:33+0000\n"
 "Last-Translator: Oskari Lavinto <olavinto@protonmail.com>\n"
 "Language-Team: Finnish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/fi/>\n"
@@ -65,7 +65,7 @@ msgstr "Jellyfin-asetukset"
 
 msgctxt "#30305"
 msgid "TV Shows"
-msgstr "TV-sarjat"
+msgstr "Sarjat"
 
 msgctxt "#30302"
 msgid "Movies"
@@ -97,7 +97,7 @@ msgstr "Jellyfin for Kodi"
 
 msgctxt "#30257"
 msgid "In progress Music videos"
-msgstr "Kesken olevat musiikkivideot"
+msgstr "Keskeneräiset musiikkivideot"
 
 msgctxt "#30256"
 msgid "Recently added Music videos"
@@ -161,11 +161,11 @@ msgstr "Seuraavat jaksot"
 
 msgctxt "#30178"
 msgid "In Progress Episodes"
-msgstr "Kesken olevat jaksot"
+msgstr "Keskeneräiset jaksot"
 
 msgctxt "#30177"
 msgid "In Progress Movies"
-msgstr "Kesken olevat elokuvat"
+msgstr "Keskeneräiset elokuvat"
 
 msgctxt "#30175"
 msgid "Recently Added Episodes"
@@ -177,11 +177,11 @@ msgstr "Hiljattain lisätyt elokuvat"
 
 msgctxt "#30171"
 msgid "In Progress TV Shows"
-msgstr "Kesken olevat TV-sarjat"
+msgstr "Keskeneräiset sarjat"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
-msgstr "Hiljattain lisätyt TV-sarjat"
+msgstr "Viimeksi lisätyt sarjat"
 
 msgctxt "#30163"
 msgid "Audio bitrate"
@@ -304,7 +304,7 @@ msgstr "Käsitellään päivityksiä"
 
 msgctxt "#33177"
 msgid "Display the progress bar if update count greater than"
-msgstr "Näytä edistymispalkki, jos määrä on suurempi kuin"
+msgstr "Näytä edistymispalkki, jos päivitysmäärä on suurempi kuin"
 
 msgctxt "#33176"
 msgid "Update or repair your libraries to apply the changes below."
@@ -324,7 +324,7 @@ msgstr "Katsomattomat"
 
 msgctxt "#33169"
 msgid "In Progress"
-msgstr "Keskeneräiset"
+msgstr "Kesken"
 
 msgctxt "#33168"
 msgid "Favourites"
@@ -555,7 +555,7 @@ msgstr "Lisäosa"
 
 msgctxt "#33108"
 msgid "Notifications are delayed during video playback (except live tv)."
-msgstr "Ilmoitukset on keskeytetty videotoiston ajaksi (poislukien live TV)."
+msgstr "Ilmoitukset on keskeytetty videotoiston ajaksi (poislukien Live TV)."
 
 msgctxt "#33107"
 msgid "Users added to the session (no space between users). (eg username,username2)"
@@ -902,3 +902,10 @@ msgstr "Suoratoiston enimmäisbittivirta"
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
 msgstr "Käytä tehostettuja mediakuvituksia (eli kansikuvia yms.)"
+
+msgctxt "#33119"
+msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"Jotain meni synkronoinnissa pieleen. Voit jatkaa siitä mihin jäit "
+"käynnistämällä Kodin uudelleen. Jos ongelma jatkuu, ilmoita siitä Jellyfin "
+"for Kodi -lisäosan keskustelualueella ja liitä mukaan Kodin lokitiedosto."
