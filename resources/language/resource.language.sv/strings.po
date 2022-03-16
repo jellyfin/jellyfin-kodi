@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-11-30 06:05+0000\n"
-"Last-Translator: WWWesten <wwwesten@gmail.com>\n"
+"PO-Revision-Date: 2022-03-17 07:14+0000\n"
+"Last-Translator: Freethefire <Lilljebjornstrash@gmail.com>\n"
 "Language-Team: Swedish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sv/>\n"
 "Language: sv\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.5.2\n"
+"X-Generator: Weblate 4.10.1\n"
 
 msgctxt "#30116"
 msgid "For Movies"
@@ -560,3 +560,300 @@ msgstr "Paginering - max antal hämtade (standard: 15)"
 msgctxt "#30185"
 msgid "Boxsets"
 msgstr "Samlingar"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "Högsta bildupplösningen"
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "Välj vilka bibliotek att ta bort"
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "Välj vilka bibliotek som ska repareras"
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "Välj vilka bibliotek som ska uppdateras"
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr ""
+"En synkronisering utförs redan, var god vänta tills den är klar och försök "
+"igen."
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr "Avancerade inställningar"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "Aktivera 'Jellyfin for Kodi'"
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "Hantera bibliotek"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "Startar om…"
+
+msgctxt "#33191"
+msgid "Restart Jellyfin for Kodi to apply this change?"
+msgstr "Starta om 'Jellyfin for Kodi' för att tillämpa ändringen?"
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr "Aktivera synkronisering under uppspelning (kan orsaka lite lagg)"
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "Ta bort bibliotek"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "Aktivera för att spela med bioläge"
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "Spela med bioläge"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "Startar om för att applicera patchen"
+
+msgctxt "#33180"
+msgid "Restart Jellyfin for Kodi"
+msgstr "Starta om 'Jellyfin for Kodi'"
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "Tvinga omkodning"
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr "Bearbetar uppdateringar"
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr "Visa förloppsindikator om antalet uppdateringar är fler än"
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr ""
+"Uppdatera eller reparera dina bibliotek för att tillämpa ändringarna nedan."
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "Sidindelning - nedladdningstrådar (standard: 3)"
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "Förbise tidigare synkroniseringen? Detta är inte rekommenderat."
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "Alfabetiskt"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "Osett"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "Pågående"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "Favoriter"
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "Nyligen tillagt"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "(dynamisk)"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "MIsslyckades att skapa backup"
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr "Maskera känslig information i logfilen (gäller inte loggning i Kodi)"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "Vill du återställa musikbiblioteket?"
+
+msgctxt "#33161"
+msgid "Update password"
+msgstr "Uppdatera lösenord"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr ""
+"För att undvika fel, var god uppdatera 'Jellyfin for Kodi' till version: "
+
+msgctxt "#33163"
+msgid "Disabled/Media default"
+msgstr "Avstängd/Standardinställning för media"
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "Aktivera val av ljud/undertexter"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "Endast undertexter"
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "Endast ljud"
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "En patch har blivit applicerad!"
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "Lägg till bibliotek"
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "Kan inte hitta TV Tunes i Kodi."
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "Uppdatera serverinformationen"
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "Kan inte ansluta till den här servern."
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "Din åtkomst till servern är begränsad."
+
+msgctxt "#33147"
+msgid "Your access to Jellyfin is restricted."
+msgstr "Din tillgång till Jellyfin är begränsad."
+
+msgctxt "#33146"
+msgid "Unable to connect to Jellyfin."
+msgstr "Kan inte ansluta till Jellyfin."
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "Tar bort biobliotek"
+
+msgctxt "#33143"
+msgid "Enable the option to delete"
+msgstr "Aktivera möjligheten att radera"
+
+msgctxt "#33142"
+msgid "Something went wrong. Try again later."
+msgstr "Någonting gick fel. Prova igen senare."
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "Ta bort server"
+
+msgctxt "#33140"
+msgid "Repair libraries"
+msgstr "Reparera biblioteken"
+
+msgctxt "#33139"
+msgid "Update libraries"
+msgstr "Uppdatera biblioteken"
+
+msgctxt "#33137"
+msgid "Enable Kodi Sync Queue"
+msgstr "Aktivera Kodi Sync Queue"
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "Uppdatera bibliotek"
+
+msgctxt "#33134"
+msgid "Add server"
+msgstr "Lägg till server"
+
+msgctxt "#33133"
+msgid "Remove library from Kodi"
+msgstr "Ta bort biblioteket från Kodi"
+
+msgctxt "#33132"
+msgid "Repair library"
+msgstr "Reparera bibliotek"
+
+msgctxt "#33130"
+msgid "Select the source"
+msgstr "Välj källan"
+
+msgctxt "#33124"
+msgid "Include people (slow)"
+msgstr "Inkludera personer (långsamt)"
+
+#, fuzzy
+msgctxt "#33123"
+msgid "Sync library to Kodi"
+msgstr "Synkronisera biblioteket till Kodi"
+
+msgctxt "#33122"
+msgid "Restart Kodi to resume where you left off."
+msgstr "Starta om Kodi för att fortsätta där slutade sist."
+
+msgctxt "#33121"
+msgid "All"
+msgstr "Alla"
+
+msgctxt "#33120"
+msgid "Select the libraries to add"
+msgstr "Välj vilka bibliotek att lägga till"
+
+msgctxt "#33118"
+msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgstr ""
+"Du har ändrat uppspelningsläge. Kodi behöver startas om för att aktivera "
+"ändringen, vill du göra det nu?"
+
+msgctxt "#33116"
+msgid "Compress artwork (reduces quality)"
+msgstr "Komprimera bilder (reducerar kvaliteten)"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Alternativ för omkodning"
+
+msgctxt "#33114"
+msgid "Enable external subtitles"
+msgstr "Aktivera externa undertexter"
+
+msgctxt "#33111"
+msgid "Reset the local database to apply the playback mode change."
+msgstr ""
+"Återställ den lokala databasen för att tillämpa ändringen av "
+"uppspelningsläge."
+
+msgctxt "#33109"
+msgid "Plugin"
+msgstr "Tillägg"
+
+msgctxt "#33107"
+msgid "Users added to the session (no space between users). (eg username,username2)"
+msgstr ""
+"Användare tillagda till sessionen (inget mellanslag mellan användare) (ex. "
+"användare,användare1)"
+
+msgctxt "#33101"
+msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
+msgstr ""
+"Du använder det inbyggda uppspelningsläget med musik aktiverat, vill du "
+"importera musikbetygen från filerna?"
+
+msgctxt "#33091"
+msgid "Created backup at:"
+msgstr "Skapade säkerhetskopiering vid:"
