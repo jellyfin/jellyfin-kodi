@@ -92,7 +92,7 @@
 	<category label="33109"><!-- Plugin -->
 		<setting id="ignoreSpecialsNextEpisodes" type="bool" label="30527" default="false" />
 		<setting id="getCast" type="bool" label="33124" default="false" />
-		<setting id="remoteControl" type="bool" label="33124" default="true" />
+		<setting id="remoteControl" type="bool" label="33125" default="true" />
 	</category>
 
 	<category label="30022"><!-- Advanced -->
