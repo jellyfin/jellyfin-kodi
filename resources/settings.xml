@@ -46,6 +46,7 @@
 		<setting label="33115" type="lsep" />
 	    <setting label="30537" id="transcodeHi10P" type="bool" default="false" visible="true" />
 	    <setting label="30522" id="transcode_h265" type="bool" default="false" visible="true" />
+	    <setting label="33202" id="transcode_h265_rext" type="bool" default="false" visible="eq(-1,false)" />
 	    <setting label="30523" id="transcode_mpeg2" type="bool" default="false" visible="true" />
 	    <setting label="30524" id="transcode_vc1" type="bool" default="false" visible="true" />
 	    <setting label="30525" id="transcode_vp9" type="bool" default="false" visible="true" />

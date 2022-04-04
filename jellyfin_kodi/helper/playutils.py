@@ -480,6 +480,21 @@ class PlayUtils(object):
                 }
             )
 
+        if settings('transcode_h265_rext.bool'):
+            profile['CodecProfiles'].append(
+                {
+                    'Type': 'Video',
+                    'codec': 'h265,hevc',
+                    'Conditions': [
+                        {
+                            'Condition': "EqualsAny",
+                            'Property': "VideoProfile",
+                            'Value': "main|main 10"
+                        }
+                    ]
+                }
+            )
+
         if self.info['ForceTranscode']:
             profile['DirectPlayProfiles'] = []
 

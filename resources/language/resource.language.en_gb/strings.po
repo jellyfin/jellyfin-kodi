@@ -988,3 +988,7 @@ msgstr "Select the libraries to remove"
 msgctxt "#33201"
 msgid "Max artwork resolution"
 msgstr "Max artwork resolution"
+
+msgctxt "#33202"
+msgid "Transcode H265/HEVC RExt"
+msgstr "Transcode H265/HEVC RExt"
