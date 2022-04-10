@@ -353,7 +353,7 @@ class FullSync(object):
 
                         for episodes in server.get_episode_by_show(show['Id']):
                             for episode in episodes['Items']:
-                                if episode.get('Name'):
+                                if episode.get('Path'):
                                     dialog.update(percent, message="%s/%s" % (message, episode['Name'][:10]))
                                     obj.episode(episode)
                     processed_ids.append(show['Id'])
