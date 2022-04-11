@@ -35,7 +35,7 @@ jobs:
         run: python build.py --version ${{ matrix.py_version }}
 
       - name: Publish Build Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           retention-days: 14
           name: ${{ matrix.py_version }}-build-artifact
