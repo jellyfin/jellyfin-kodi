@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-12-26 18:05+0000\n"
-"Last-Translator: WWWesten <wwwesten@gmail.com>\n"
+"PO-Revision-Date: 2022-04-12 23:13+0000\n"
+"Last-Translator: Николай Иванов <nivanov@mail.bg>\n"
 "Language-Team: Bulgarian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/bg/>\n"
 "Language: bg\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.5.2\n"
+"X-Generator: Weblate 4.10.1\n"
 
 msgctxt "#30506"
 msgid "Sync"
@@ -953,3 +953,55 @@ msgstr "Свържи се със сървър"
 msgctxt "#30613"
 msgid "Change Jellyfin Connect user"
 msgstr "Смени потребителя на \"Джелифин конект\""
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "Максимална резолюция на изображенията"
+
+msgctxt "#33163"
+msgid "Disabled/Media default"
+msgstr "Изключено/Медиа по подразбиране"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Опции на транскодиране"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "Прекодирай AV1"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "Прекодирай VP9"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Прекодирай VC-1"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Транскодирай MPEG2"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Разреши вградени субтитри"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Максимален брой аудио канали"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Скорост на аудио потока"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Предпочитан аудио кодек"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Предпочитан видео кодек"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Максимална скорост на потока"
