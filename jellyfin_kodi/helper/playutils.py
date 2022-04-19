@@ -369,7 +369,8 @@ class PlayUtils(object):
             "TranscodingProfiles": [
                 {
                     "Type": "Video",
-                    "Container": "m3u8",
+                    "Container": "mp4",
+                    "Protocol": "hls",
                     "AudioCodec": self.get_transcoding_audio_codec(),
                     "VideoCodec": self.get_transcoding_video_codec(),
                     "MaxAudioChannels": settings('audioMaxChannels')
