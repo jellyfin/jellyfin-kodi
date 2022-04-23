@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-04-15 16:13+0000\n"
+"PO-Revision-Date: 2022-04-24 09:13+0000\n"
 "Last-Translator: Oskari Lavinto <olavinto@protonmail.com>\n"
 "Language-Team: Finnish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/fi/>\n"
@@ -555,7 +555,9 @@ msgstr "Lisäosa"
 
 msgctxt "#33108"
 msgid "Notifications are delayed during video playback (except live tv)."
-msgstr "Ilmoitukset on keskeytetty videotoiston ajaksi (poislukien Live TV)."
+msgstr ""
+"Ilmoitukset on keskeytetty videotoiston ajaksi (poislukien "
+"televisiolähetykset)."
 
 msgctxt "#33107"
 msgid "Users added to the session (no space between users). (eg username,username2)"
