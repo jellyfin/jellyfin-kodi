@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v1
+        uses: github/codeql-action/init@v2
         with:
           languages: ${{ matrix.language }}
           queries: +security-and-quality
@@ -35,7 +35,7 @@ jobs:
           python-version: ${{ matrix.version }}
 
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v1
+        uses: github/codeql-action/autobuild@v2
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v1
+        uses: github/codeql-action/analyze@v2
