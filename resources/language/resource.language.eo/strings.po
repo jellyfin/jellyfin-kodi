@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-04-15 16:13+0000\n"
+"PO-Revision-Date: 2022-05-04 07:13+0000\n"
 "Last-Translator: WWWesten <wwwesten@gmail.com>\n"
 "Language-Team: Esperanto <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/eo/>\n"
@@ -93,7 +93,7 @@ msgstr "Konekti al"
 
 msgctxt "#30605"
 msgid "Sign in"
-msgstr "Ensaluti"
+msgstr "Ensaluto"
 
 msgctxt "#30547"
 msgid "Display message"
