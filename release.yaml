@@ -1,8 +1,27 @@
-version: '0.7.7'
+version: '0.7.8'
 changelog: |-
+  New features and improvements
+  -----------------------------
+  + Add an option to transcode HEVC RExt (#631) @EdiTurn
+  + Attempt to re-establishe websocket communication if the connection fails (#598) @mcarlton00
+  + Verify ssl by default (#590) @oddstr13
+
   Bug Fixes
   ---------
-  + Remove enum dependency (#591) @oddstr13
+  + Skip syncing missing episodes (#628) @mcarlton00
+  + Fix opening the addon menu from the settings page (#630) @mcarlton00
+
+  CI & build changes
+  ------------------
+  + Bump codecov/codecov-action from 3.0.0 to 3.1.0 (#642) @dependabot
+  + Bump github/codeql-action from 1 to 2 (#641) @dependabot
+  + Bump codecov/codecov-action from 2.1.0 to 3.0.0 (#634) @dependabot
+  + Bump actions/upload-artifact from 2 to 3 (#633) @dependabot
+  + Bump release-drafter/release-drafter from 5.18.1 to 5.19.0 (#620) @dependabot
+  + Bump actions/checkout from 2 to 3 (#618) @dependabot
+  + Bump actions/setup-python from 2 to 3 (#617) @dependabot
+  + Bump release-drafter/release-drafter from 5.15.0 to 5.18.1 (#614) @dependabot
+  + Bump burnett01/rsync-deployments from 5.1 to 5.2 (#605) @dependabot
 dependencies:
   py2:
     - addon: 'xbmc.python'
