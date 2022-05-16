@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-04-01 18:13+0000\n"
+"PO-Revision-Date: 2022-05-17 19:13+0000\n"
 "Last-Translator: Franco Castillo <castillofrancodamian@gmail.com>\n"
 "Language-Team: Spanish (Argentina) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/es_AR/>\n"
@@ -1010,3 +1010,8 @@ msgstr "Transcodificar AV1"
 msgctxt "#30525"
 msgid "Transcode VP9"
 msgstr "Transcodificar VP9"
+
+#, fuzzy
+msgctxt "#33202"
+msgid "Transcode H265/HEVC RExt"
+msgstr "Transcodificar H265/HEVC RExt"
