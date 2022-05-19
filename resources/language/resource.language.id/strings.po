@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-11-30 06:05+0000\n"
-"Last-Translator: WWWesten <wwwesten@gmail.com>\n"
+"PO-Revision-Date: 2022-05-20 12:22+0000\n"
+"Last-Translator: liimee <git.taaa@fedora.email>\n"
 "Language-Team: Indonesian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/id/>\n"
 "Language: id\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.5.2\n"
+"X-Generator: Weblate 4.10.1\n"
 
 msgctxt "#30606"
 msgid "Cancel"
@@ -17,7 +17,7 @@ msgstr "Batal"
 
 msgctxt "#30602"
 msgid "Password"
-msgstr "Sandi"
+msgstr "Kata Sandi"
 
 msgctxt "#30539"
 msgid "Login"
@@ -38,3 +38,299 @@ msgstr "Pengaturan"
 msgctxt "#30024"
 msgid "Username"
 msgstr "Nama pengguna"
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr "Opsi lanjutan"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "Aktifkan Jellyfin untuk Kodi"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "Memulai ulang…"
+
+msgctxt "#33191"
+msgid "Restart Jellyfin for Kodi to apply this change?"
+msgstr "Mulai ulang Jellyfin untuk Kodi untuk menerapkan perubahan ini?"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "Aktifkan pilihan untuk memutar dengan mode bioskop"
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "Putar dengan mode bioskop"
+
+msgctxt "#33180"
+msgid "Restart Jellyfin for Kodi"
+msgstr "Mulai ulang Jellyfin untuk Kodi"
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr "Memproses pembaruan"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "Belum ditonton"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "Favorit"
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "Baru ditambahkan"
+
+msgctxt "#33161"
+msgid "Update password"
+msgstr "Perbarui kata sandi"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr "Untuk menghindari kesalahan, perbarui Jellyfin untuk Kodi ke versi: "
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "Aktifkan pemilihan audio/subtitel"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "Hanya subtitel"
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "Hanya audio"
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "Perbarui informasi server"
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "Tidak dapat menghubungi server ini."
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "Akses Anda ke server ini dibatasi."
+
+msgctxt "#33147"
+msgid "Your access to Jellyfin is restricted."
+msgstr "Akses Anda ke Jellyfin dibatasi."
+
+msgctxt "#33146"
+msgid "Unable to connect to Jellyfin."
+msgstr "Tidak dapat terhubung ke Jellyfin."
+
+msgctxt "#33142"
+msgid "Something went wrong. Try again later."
+msgstr "Terjadi kesalahan. Coba lagi nanti."
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "Hapus server"
+
+msgctxt "#33134"
+msgid "Add server"
+msgstr "Tambahkan server"
+
+msgctxt "#33121"
+msgid "All"
+msgstr "Semua"
+
+msgctxt "#33114"
+msgid "Enable external subtitles"
+msgstr "Aktifkan subtitel eksternal"
+
+msgctxt "#33063"
+msgid "Remove user"
+msgstr "Hapus pengguna"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "Tambahkan pengguna"
+
+msgctxt "#30614"
+msgid "Connect to server"
+msgstr "Hubungkan dengan server"
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr "ID perangkat baru telah dihasilkan. Kodi akan memulai ulang."
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "Selesai dalam:"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "Hapus berkas dari Jellyfin?"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "Nama pengguna atau kata sandi tidak valid"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "Server memulai ulang"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "Selamat Datang"
+
+msgctxt "#30617"
+msgid "Server or port cannot be empty"
+msgstr "Server atau port tidak boleh kosong"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "Hubungkan"
+
+msgctxt "#30615"
+msgid "Host"
+msgstr "Host"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "Harap masuk"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "Tidak dapat menghubungi server yang dipilih"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "Nama pengguna atau kata sandi tidak boleh kosong"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "Pilih server utama"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "Masuk"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "Nama pengguna atau surel"
+
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "Aktifkan mode bioskop"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "Mode pemutaran"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "Gunakan nama perangkat lain"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "Verifikasi koneksi"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "Muat ulang item ini"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "Hapus dari Jellyfin"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "Hapus dari favorit"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "Tambahkan ke favorit"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "Acara TV"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "Film"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "Video musik yang belum ditonton"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "Video musik yang baru ditambahkan"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "Album Favorit"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "Aktifkan pesan selamat datang"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "Antarmuka"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Item yang Disarankan"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Film yang Belum Ditonton"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Episode Favorit"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "Acara Favorit"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Film Favorit"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Episode Berikutnya"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "Episode yang Baru Ditambahkan"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "Film yang Baru Ditambahkan"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Acara TV yang Baru Ditambahkan"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Tawarkan penghapusan setelah pemutaran"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Konfirmasi penghapusan berkas"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Nama perangkat"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Nama server"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Alamat server"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Jellyfin untuk Kodi"
