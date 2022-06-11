@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-01-01 18:39+0000\n"
-"Last-Translator: Doron Cohen <pelehacohen@gmail.com>\n"
+"PO-Revision-Date: 2022-06-12 11:22+0000\n"
+"Last-Translator: Aragon <michael2210x@gmail.com>\n"
 "Language-Team: Hebrew <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/he/>\n"
 "Language: he\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Weblate 3.11.2\n"
+"X-Generator: Weblate 4.10.1\n"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
@@ -69,3 +69,51 @@ msgstr "כתובת שרת"
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
 msgstr "ג׳ליפין לקודי"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "מחק מ-Jellyfin"
+
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "הפעל מצב קולנוע"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "שאל אם להפעיל טריילר"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "סנכרון"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "הגדרות"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "אלבומים מועדפים"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "תמונות מועדפות"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "פרקים מועדפים"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "סדרות מועדפות"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "סרטים מועדפים"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "קידוד אודיו מועדף"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "קידוד וידאו מועדף"
