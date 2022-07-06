@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-07-04 21:06+0000\n"
+"PO-Revision-Date: 2022-07-07 17:22+0000\n"
 "Last-Translator: Fedir Smilianets <fedor.smile@gmail.com>\n"
 "Language-Team: Ukrainian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/uk/>\n"
@@ -26,15 +26,15 @@ msgstr "Колекції"
 
 msgctxt "#30182"
 msgid "Favorite Episodes"
-msgstr "Улюблені епізоди"
+msgstr "Обрані епізоди"
 
 msgctxt "#30181"
 msgid "Favorite Shows"
-msgstr "Улюблені шоу"
+msgstr "Обрані шоу"
 
 msgctxt "#30180"
 msgid "Favorite Movies"
-msgstr "Улюблені фільми"
+msgstr "Обрані фільми"
 
 msgctxt "#30179"
 msgid "Next Episodes"
@@ -191,9 +191,9 @@ msgstr "Новий"
 msgctxt "#33048"
 msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
 msgstr ""
-"Можливо, вам знадобиться перевірити свої облікові дані мережі в "
+"Можливо, вам знадобиться перевірити свої мережеві облікові дані в "
 "налаштуваннях надбудови або використати заміну шляху Jellyfin, щоб правильно "
-"відформатувати шлях (інформаційна панель Jellyfin > бібліотека). Зупинити "
+"відформатувати шлях (інформаційна панель Jellyfin > медіатека). Зупинити "
 "синхронізацію?"
 
 msgctxt "#33047"
@@ -202,7 +202,7 @@ msgstr "Kodi не може знайти файл:"
 
 msgctxt "#33039"
 msgid "Enable music library?"
-msgstr "Увімкнути музичну бібліотеку?"
+msgstr "Увімкнути музичну медіатеку?"
 
 msgctxt "#33037"
 msgid "Native (direct paths)"
@@ -357,11 +357,11 @@ msgstr "Сповіщення (в секундах)"
 
 msgctxt "#30533"
 msgid "Duration of the music library pop up"
-msgstr "Спливає тривалість музичної бібліотеки"
+msgstr "Спливаюче вікно загальної тривалості медіатеки з музикою"
 
 msgctxt "#30532"
 msgid "Duration of the video library pop up"
-msgstr "Спливає тривалість відеотеки"
+msgstr "Спливаюче вікно загальної тривалості медіатеки з відео"
 
 msgctxt "#30531"
 msgid "Enable new content"
@@ -443,7 +443,7 @@ msgstr "Режим відтворення"
 
 msgctxt "#30509"
 msgid "Enable music library"
-msgstr "Увімкнути музичну бібліотеку"
+msgstr "Увімкнути музичну медіатеку"
 
 msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
@@ -479,11 +479,11 @@ msgstr "Налаштування"
 
 msgctxt "#30406"
 msgid "Remove from favorites"
-msgstr "Видалити з вибраного"
+msgstr "Видалити з обраного"
 
 msgctxt "#30405"
 msgid "Add to favorites"
-msgstr "Додати до вибраного"
+msgstr "Додати до обраного"
 
 msgctxt "#30402"
 msgid "Jellyfin transcode"
@@ -621,7 +621,7 @@ msgctxt "#33099"
 msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
 msgstr ""
 "Встановіть плагін сервера Kodi Sync Queue для автоматичного застосування "
-"оновлень бібліотеки Jellyfin під час запуску. Це налаштування можна знайти в "
+"оновлень медіатеки Jellyfin під час запуску. Це налаштування можна знайти в "
 "налаштування надбудови > опції синхронізації > Увімкнути Kodi Sync Queue."
 
 msgctxt "#33195"
@@ -674,15 +674,15 @@ msgstr "Максимальне розширення ілюстрацій"
 
 msgctxt "#33200"
 msgid "Select the libraries to remove"
-msgstr "Оберіть бібліотеки для видалення"
+msgstr "Оберіть медіатеки для видалення"
 
 msgctxt "#33199"
 msgid "Select the libraries to repair"
-msgstr "Оберіть бібліотеки для полагоджування"
+msgstr "Оберіть медіатеки для полагоджування"
 
 msgctxt "#33198"
 msgid "Select the libraries to update"
-msgstr "Оберіть бібліотеки для оновлення"
+msgstr "Оберіть медіатеки для оновлення"
 
 msgctxt "#33197"
 msgid "A sync is already running, please wait until it completes and try again."
@@ -696,7 +696,7 @@ msgstr "Розширені настройки"
 
 msgctxt "#33194"
 msgid "Manage libraries"
-msgstr "Керувати бібліотеками"
+msgstr "Керувати медіатеками"
 
 msgctxt "#33193"
 msgid "Restarting..."
@@ -710,7 +710,7 @@ msgstr ""
 
 msgctxt "#33184"
 msgid "Remove libraries"
-msgstr "Прибрати бібліотеки"
+msgstr "Видалити медіатеки"
 
 msgctxt "#33181"
 msgid "Restarting to apply the patch"
@@ -727,8 +727,7 @@ msgstr "Показати індикатор виконання якщо кіль
 msgctxt "#33176"
 msgid "Update or repair your libraries to apply the changes below."
 msgstr ""
-"Оновіть або полагодьте ваші бібліотеки для застосування змін зазначених "
-"внизу."
+"Оновіть або полагодьте ваші медіатеки для застосування змін зазначених внизу."
 
 msgctxt "#33175"
 msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
@@ -748,8 +747,8 @@ msgctxt "#33172"
 msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
 msgstr ""
 "У вас {number} незастосованих оновлень. Новий вміст може зʼявитись не "
-"відразу. Бібліотеки можуть оновитись швидше якщо ви застосуєте опцію меню "
-"\"Надбудова Jellyfin\" > \"Оновити бібліотеки\". Всеодно продовжити?"
+"відразу. Медіатеки можуть оновитись швидше якщо ви застосуєте опцію меню "
+"\"Надбудова Jellyfin\" > \"Оновити медіатеки\". Всеодно продовжити?"
 
 msgctxt "#33171"
 msgid "By first letter"
@@ -785,7 +784,7 @@ msgstr "Маскувати чутливу інформацію в логах? (�
 
 msgctxt "#33162"
 msgid "Reset the music library?"
-msgstr "Скинути музичну бібліотеку?"
+msgstr "Скинути музичну медіатеки?"
 
 msgctxt "#33161"
 msgid "Update password"
@@ -813,7 +812,7 @@ msgstr "Патч успішно застосовано!"
 
 msgctxt "#33154"
 msgid "Add libraries"
-msgstr "Додати бібліотеки"
+msgstr "Додати медіатеки"
 
 msgctxt "#33153"
 msgid "Your Jellyfin theme media has been synced to Kodi"
@@ -859,7 +858,7 @@ msgstr ""
 
 msgctxt "#33144"
 msgid "Removing library"
-msgstr "Видаляємо бібліотеку"
+msgstr "Видаляємо медіатеку"
 
 msgctxt "#33143"
 msgid "Enable the option to delete"
@@ -871,22 +870,22 @@ msgstr "Щось пішло не так. Спробуйте знову пізн�
 
 msgctxt "#33141"
 msgid "Remove server"
-msgstr "Прибрати сервер"
+msgstr "Видалити сервер"
 
 msgctxt "#33140"
 msgid "Repair libraries"
-msgstr "Полагодити бібліотеки"
+msgstr "Полагодити медіатеки"
 
 msgctxt "#33139"
 msgid "Update libraries"
-msgstr "Оновити бібліотеки"
+msgstr "Оновити медіатеки"
 
 msgctxt "#33138"
 msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
 msgstr ""
-"Ви можете оновити вашу бібліотеку вручні, замість того аби покладатися на "
-"плагін Kodi Sync Queue. Запустіть надбудову і оновіть бібліотеки (або "
-"конкретну бібліотеку). Для прибирання змісту бібліотеки її необхідно буде "
+"Ви можете оновити вашу медіатеку вручну, замість того аби покладатися на "
+"плагін Kodi Sync Queue. Запустіть надбудову і оновіть медіатеки (або "
+"конкретну медіатеку). Для прибирання змісту медіатеки її необхідно буде "
 "полагодити."
 
 msgctxt "#33137"
@@ -895,7 +894,7 @@ msgstr "Включити Kodi Sync Queue (Черга синхронізації 
 
 msgctxt "#33136"
 msgid "Update library"
-msgstr "Оновити бібліотеку"
+msgstr "Оновити медіатеку"
 
 msgctxt "#33135"
 msgid "Kodi will now restart to apply a small patch for your Kodi version."
@@ -909,11 +908,11 @@ msgstr "Додати сервер"
 
 msgctxt "#33133"
 msgid "Remove library from Kodi"
-msgstr "Прибрати бібліотеку з Kodi"
+msgstr "Видалити медіатеку з Kodi"
 
 msgctxt "#33132"
 msgid "Repair library"
-msgstr "Полагодити бібліотеку"
+msgstr "Полагодити медіатеку"
 
 msgctxt "#33130"
 msgid "Select the source"
@@ -922,8 +921,8 @@ msgstr "Обрати джерело"
 msgctxt "#33129"
 msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
 msgstr ""
-"Ви можете синхронізувати бібліотеки, запустивши меню Надбудова Jellyfin > "
-"Додати бібліотеки."
+"Ви можете синхронізувати медіатеки, запустивши меню Надбудова Jellyfin > "
+"Додати медіатеки."
 
 msgctxt "#33124"
 msgid "Include people (slow)"
@@ -931,7 +930,7 @@ msgstr "Включаючи людей (повільно)"
 
 msgctxt "#33123"
 msgid "Sync library to Kodi"
-msgstr "Синхронізувати бібліотеку з Kodi"
+msgstr "Синхронізувати медіатеку з Kodi"
 
 msgctxt "#33122"
 msgid "Restart Kodi to resume where you left off."
@@ -943,7 +942,7 @@ msgstr "Усі"
 
 msgctxt "#33120"
 msgid "Select the libraries to add"
-msgstr "Оберіть бібліотеки для додавання"
+msgstr "Оберіть медіатеки для додавання"
 
 msgctxt "#33116"
 msgid "Compress artwork (reduces quality)"
