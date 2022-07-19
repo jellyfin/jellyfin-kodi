@@ -95,7 +95,10 @@ class WSClient(threading.Thread):
                 ),
             })
         else:
-            self.client.jellyfin.post_capabilities({})
+            self.client.jellyfin.post_capabilities({
+                "PlayableMediaTypes": "Audio, Video",
+                "SupportsMediaControl": False
+            })
         # Reinitialize the retry counter after successful connection
         self.retry_count = 0
 
