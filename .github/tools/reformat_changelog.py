@@ -23,7 +23,7 @@ class SectionType(TypedDict):
 
 def reformat(item_format: str, output_emoji: bool) -> None:
     data = [
-        emojize(x.strip(), use_aliases=True, variant="emoji_type")
+        emojize(x.strip(), variant="emoji_type")
         for x in sys.stdin.readlines()
         if x.strip()
     ]
