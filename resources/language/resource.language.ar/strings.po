@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-06-21 12:22+0000\n"
-"Last-Translator: Mehyar <mashkuov@gmail.com>\n"
+"PO-Revision-Date: 2022-08-02 17:09+0000\n"
+"Last-Translator: 0TTA <osamh735@gmail.com>\n"
 "Language-Team: Arabic <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ar/>\n"
 "Language: ar\n"
@@ -14,7 +14,7 @@ msgstr ""
 
 msgctxt "#30235"
 msgid "Interface"
-msgstr "واجهه المستخدم"
+msgstr "واجهة المستخدم"
 
 msgctxt "#30182"
 msgid "Favorite Episodes"
@@ -58,7 +58,7 @@ msgstr "ملفات عشوائية"
 
 msgctxt "#30189"
 msgid "Unwatched Movies"
-msgstr "الأفلام التي لم تشاهد بعد"
+msgstr "أفلام لم تُشاهد"
 
 msgctxt "#30181"
 msgid "Favorite Shows"
@@ -122,11 +122,11 @@ msgstr "تمكين العمل الفني المحسّن (أي صورة الغل�
 
 msgctxt "#30116"
 msgid "For Movies"
-msgstr "للافلام"
+msgstr "إلى الأفلام"
 
 msgctxt "#30115"
 msgid "For Episodes"
-msgstr "للحلقات"
+msgstr "إلى الحلقات"
 
 msgctxt "#30114"
 msgid "Offer delete after playback"
@@ -146,7 +146,7 @@ msgstr "أجبر استخدام HTTP"
 
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
-msgstr "جيليفين لكودي"
+msgstr "جيليفين الخاص في كودي"
 
 msgctxt "#30249"
 msgid "Enable welcome message"
@@ -177,15 +177,15 @@ msgid "Please make sure your Samba (smb) share of your Jellyfin server is access
 msgstr ""
 "يرجى التأكد من أن مشاركة Samba (smb) لخادم Jellyfin الخاص بك يمكن الوصول "
 "إليها من خلال تثبيت Kodi وأن لديك استبدال المسار الذي تم تكوينه على الخادم "
-"الخاص بك. خلاف ذلك ، قد يفشل Kodi في تحديد موقع ملفاتك."
+"الخاص بك. خلاف ذلك، قد يفشل Kodi في تحديد موقع ملفاتك."
 
 msgctxt "#33144"
 msgid "Removing library"
-msgstr "جاري ازالة المكتبه"
+msgstr "جاري إزالة المكتبة"
 
 msgctxt "#33143"
 msgid "Enable the option to delete"
-msgstr "قم بتمكين خيار الحذف"
+msgstr "فعل خيار الحذف"
 
 msgctxt "#33142"
 msgid "Something went wrong. Try again later."
@@ -193,11 +193,11 @@ msgstr "هناك خطأ ما. حاول مرة أخرى في وقت لاحق."
 
 msgctxt "#33141"
 msgid "Remove server"
-msgstr "ازالة الخادم"
+msgstr "إزالة الخادم"
 
 msgctxt "#33140"
 msgid "Repair libraries"
-msgstr "اصلاح المكتبات"
+msgstr "إصلاح المكتبات"
 
 msgctxt "#33139"
 msgid "Update libraries"
@@ -212,7 +212,7 @@ msgid "You can update your library manually rather than rely on the server plugi
 msgstr ""
 "يمكنك تحديث مكتبتك يدويًا بدلاً من الاعتماد على المكون الإضافي للخادم Kodi "
 "Sync Queue. قم بتشغيل الوظيفة الإضافية وتحديث المكتبات (أو لكل مكتبة). "
-"ولإزالة المحتوى ، سوف تحتاج إلى إصلاح المكتبة."
+"ولإزالة المحتوى، سوف تحتاج إلى إصلاح المكتبة."
 
 msgctxt "#33136"
 msgid "Update library"
@@ -232,11 +232,11 @@ msgstr "إزالة المكتبة من Kodi"
 
 msgctxt "#33132"
 msgid "Repair library"
-msgstr "اصلاح المكتبه"
+msgstr "إصلاح المكتبة"
 
 msgctxt "#33131"
 msgid "Refreshing boxsets"
-msgstr "اعادة تحميل مجموعات الصناديق"
+msgstr "إعادة تحميل مجموعات الصناديق"
 
 msgctxt "#33130"
 msgid "Select the source"
@@ -251,8 +251,8 @@ msgctxt "#33128"
 msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
 msgstr ""
 "فشل استرداد آخر تحديثات المحتوى. لن يتم تطبيق تحديثات المحتوى حتى يتم إعادة "
-"تشغيل Kodi. إذا استمرت هذه المشكلة ، من فضلك قم بعمل تقرير في منتديات "
-"Jellyfin لـ Kodi ، باستخدام سجل Kodi الخاص بك."
+"تشغيل Kodi. إذا استمرت هذه المشكلة، أنشئ تقريرا -من فضلك- في منتديات "
+"Jellyfin لـ Kodi، باستخدام سجل Kodi الخاص بك."
 
 msgctxt "#33124"
 msgid "Include people (slow)"
@@ -277,15 +277,15 @@ msgstr "حدد المكتبات المراد إضافتها"
 msgctxt "#33119"
 msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
 msgstr ""
-"حدث خطأ ما أثناء المزامنة. ستتمكن من استعادة التقدم عند إعادة تشغيل Kodi. "
-"إذا استمرت المشكلة ، قم من فضلك بعمل تقرير في منتديات Jellyfin لـ Kodi ، "
+"حدث خطأ ما في أثناء المزامنة. ستتمكن من استعادة التقدم عند إعادة تشغيل Kodi. "
+"إذا استمرت المشكلة، قم من فضلك بعمل تقرير في منتديات Jellyfin لـ Kodi، "
 "باستخدام سجل Kodi الخاص بك."
 
 msgctxt "#33118"
 msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
-"لقد قمت بتغيير وضع التشغيل. يجب إعادة تعيين Kodi لتطبيق التغيير ، هل ترغب في "
-"القيام بذلك الآن؟"
+"لقد غيرت وضع التشغيل. يجب إعادة تعيين Kodi لتطبيق التغيير، هل ترغب في القيام "
+"بذلك الآن؟"
 
 msgctxt "#33116"
 msgid "Compress artwork (reduces quality)"
@@ -317,7 +317,7 @@ msgstr "أعد تشغيل Kodi ليصبح ساري المفعول."
 
 msgctxt "#33109"
 msgid "Plugin"
-msgstr "اضافة"
+msgstr "إضافة"
 
 msgctxt "#33108"
 msgid "Notifications are delayed during video playback (except live tv)."
@@ -351,7 +351,7 @@ msgstr "استئناف المزامنة السابقة؟"
 msgctxt "#33101"
 msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
 msgstr ""
-"نظرًا لأنك تستخدم وضع التشغيل الأصلي مع تمكين الموسيقى ، هل تريد استيراد "
+"نظرًا لأنك تستخدم وضع التشغيل الأصلي مع تمكين الموسيقى، هل تريد استيراد "
 "تصنيف الموسيقى من الملفات؟"
 
 msgctxt "#33099"
@@ -368,7 +368,7 @@ msgstr "تحديث مجموعات الصندوق"
 msgctxt "#33097"
 msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
 msgstr ""
-"هام ، تمت إزالة Cleanonupdate في الإعدادات المتقدمة لمنع التعارض مع Jellyfin "
+"هام، تمت إزالة Cleanonupdate في الإعدادات المتقدمة لمنع التعارض مع Jellyfin "
 "ل Kodi. سيتم إعادة تشغيل Kodi الآن."
 
 msgctxt "#33093"
@@ -394,7 +394,7 @@ msgstr "أدخل اسم المجلد للنسخ الاحتياطي"
 msgctxt "#33088"
 msgid "Database reset has completed, Kodi will now restart to apply the changes."
 msgstr ""
-"اكتملت إعادة تعيين قاعدة البيانات ، ستتم إعادة تشغيل Kodi الآن لتطبيق "
+"اكتملت إعادة تعيين قاعدة البيانات، ستتم إعادة تشغيل Kodi الآن لتطبيق "
 "التغييرات."
 
 msgctxt "#33087"
@@ -403,7 +403,7 @@ msgstr "إعادة تعيين كافة إعدادات الوظيفة الإضا�
 
 msgctxt "#33086"
 msgid "Remove all cached artwork?"
-msgstr "إزالة كافة الأعمال الفنية المخزنة مؤقتًا؟"
+msgstr "أتود إزالة كافة الأعمال الفنية المخزنة مؤقتًا؟"
 
 msgctxt "#33074"
 msgid "Are you sure you want to reset your local Kodi database?"
@@ -415,11 +415,11 @@ msgstr "إزالة المستخدم من الجلسة"
 
 msgctxt "#33063"
 msgid "Remove user"
-msgstr "ازالة مستخدم"
+msgstr "إزاله مستخدم"
 
 msgctxt "#33062"
 msgid "Add user"
-msgstr "اضافة مستخدم"
+msgstr "إضافة مستخدم"
 
 msgctxt "#33061"
 msgid "Add/Remove user from the session"
@@ -532,7 +532,7 @@ msgstr "اتصل بالخادم"
 
 msgctxt "#30613"
 msgid "Change Jellyfin Connect user"
-msgstr "تغيير اتصال مستخدم jellyfin"
+msgstr "تغيير اتصال مستخدم Jellyfin"
 
 msgctxt "#30612"
 msgid "Please sign in"
@@ -556,11 +556,11 @@ msgstr "لا يمكن أن يكون اسم المستخدم أو كلمة الم
 
 msgctxt "#30607"
 msgid "Select main server"
-msgstr "حدد الخادم الرئيسي"
+msgstr "حدد الخادم الرئيس"
 
 msgctxt "#30606"
 msgid "Cancel"
-msgstr "الغاء"
+msgstr "إلغاء"
 
 msgctxt "#30605"
 msgid "Sign in"
@@ -576,11 +576,11 @@ msgstr "اعرض رسالة"
 
 msgctxt "#30545"
 msgid "Enable server offline"
-msgstr "تمكين الخادم في وضع عدم الاتصال بالانترنت"
+msgstr "تمكين الخادم في وضع عدم الاتصال بالإنترنت"
 
 msgctxt "#30543"
 msgid "Username or email"
-msgstr "اسم المستخدم او البريد الالكتروني"
+msgstr "اسم المستخدم أو البريد الإلكتروني"
 
 msgctxt "#30540"
 msgid "Manual login"
@@ -592,7 +592,7 @@ msgstr "تسجيل الدخول"
 
 msgctxt "#30537"
 msgid "Transcode Hi10P"
-msgstr "تحويل الكود Hi10P"
+msgstr "ترميز Hi10P"
 
 msgctxt "#30536"
 msgid "Allow the screensaver during syncs"
@@ -604,7 +604,7 @@ msgstr "قم بإنشاء معرف جهاز جديد"
 
 msgctxt "#30534"
 msgid "Notifications (in seconds)"
-msgstr "الاشعارات (بالثواني)"
+msgstr "الإشعارات (بالثواني)"
 
 msgctxt "#30532"
 msgid "Duration of the video library pop up"
@@ -636,23 +636,23 @@ msgstr "تجاهل العروض الخاصة في الحلقات القادمة"
 
 msgctxt "#30526"
 msgid "Transcode AV1"
-msgstr "تحويل AV1"
+msgstr "ترميز AV1"
 
 msgctxt "#30525"
 msgid "Transcode VP9"
-msgstr "تحويل VP9"
+msgstr "ترميز VP9"
 
 msgctxt "#30524"
 msgid "Transcode VC-1"
-msgstr "تحويل VC-1"
+msgstr "ترميز VC-1"
 
 msgctxt "#30523"
 msgid "Transcode MPEG2"
-msgstr "تحويل MPEG2"
+msgstr "ترميز MPEG2"
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
-msgstr "تحويل الكود H.265 / HEVC"
+msgstr "ترميز H.265 / HEVC"
 
 msgctxt "#30521"
 msgid "Jump back on resume (in seconds)"
@@ -664,7 +664,7 @@ msgstr "تخطي تأكيد الحذف (استخدم على مسؤوليتك)"
 
 msgctxt "#30519"
 msgid "Ask to play trailers"
-msgstr "اسئل لتشغيل العرض المختصر للفيلم"
+msgstr "اسأل لتشغيل العرض الترويجي"
 
 msgctxt "#30518"
 msgid "Enable cinema mode"
@@ -696,7 +696,7 @@ msgstr "تفعيل مكتبة الموسيقى"
 
 msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
-msgstr "قم بتفعيل الاشعار اذا كان التحديث اكبر من"
+msgstr "فعل الإشعار إذا كان التحديث أكبر من"
 
 msgctxt "#30506"
 msgid "Sync"
@@ -712,19 +712,19 @@ msgstr "التحقق من الاتصال"
 
 msgctxt "#30412"
 msgid "Transcode"
-msgstr "تحويل"
+msgstr "ترميز"
 
 msgctxt "#30410"
 msgid "Refresh this item"
-msgstr "اعادة تحميل هذا العنصر"
+msgstr "إعادة تحميل هذا العنصر"
 
 msgctxt "#30409"
 msgid "Delete from Jellyfin"
-msgstr "ازالة من jellyfin"
+msgstr "إزالة من Jellyfin"
 
 msgctxt "#30408"
 msgid "Settings"
-msgstr "اعدادات"
+msgstr "إعدادات"
 
 msgctxt "#30406"
 msgid "Remove from favorites"
@@ -732,7 +732,7 @@ msgstr "ازالة من المفضلة"
 
 msgctxt "#30405"
 msgid "Add to favorites"
-msgstr "إضافة الى المفضلة"
+msgstr "إضافة إلى المفضلة"
 
 msgctxt "#30402"
 msgid "Jellyfin transcode"
@@ -748,19 +748,19 @@ msgstr "العروض التلفزيونية"
 
 msgctxt "#30302"
 msgid "Movies"
-msgstr "افلام"
+msgstr "أفلام"
 
 msgctxt "#30258"
 msgid "Unwatched Music videos"
-msgstr "الفيديوهات الموسيقيه الغير مشغله"
+msgstr "فيديوهات الموسيقية لم تشاهد"
 
 msgctxt "#30257"
 msgid "In progress Music videos"
-msgstr "الفيديوهات الموسيقيه قيد التشغيل"
+msgstr "الفيديوهات الموسيقية قيد التشغيل"
 
 msgctxt "#30256"
 msgid "Recently added Music videos"
-msgstr "الفيديوهات الموسيقيه التي تمت اضافتها مؤخرا"
+msgstr "الفيديوهات الموسيقية التي أُضافت حديثًا"
 
 msgctxt "#30255"
 msgid "Favourite Albums"
@@ -790,8 +790,8 @@ msgctxt "#33151"
 msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
 msgstr ""
 "أعد الاتصال بنفس الخادم الذي تم تحميله مسبقًا. إذا كنت تريد استخدام خادم "
-"مختلف ، فأعد تعيين قاعدة البيانات المحلية ، بما في ذلك معلومات المستخدم "
-"الخاصة بك."
+"مختلف، فأعد تعيين قاعدة البيانات المحلية، بما في ذلك معلومات المستخدم الخاصة "
+"بك."
 
 msgctxt "#33150"
 msgid "Update server information"
@@ -823,3 +823,39 @@ msgstr "أضف مكتبات"
 msgctxt "#33153"
 msgid "Your Jellyfin theme media has been synced to Kodi"
 msgstr "تمت مزامنة موضوع الوسائط من Jellyfin مع Kodi"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "لم يشاهد"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "المفضلات"
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "الأحدث إضافة"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "(متغير)"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "فشلت عملية إنشاء نسخة احتياطية"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "أتود إعادة ضبط مكتبة الموسيقى؟"
+
+msgctxt "#33161"
+msgid "Update password"
+msgstr "حدث كلمة المرور"
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "فعل تحديد الصوت والترجمات"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "ترجمات فقط"
