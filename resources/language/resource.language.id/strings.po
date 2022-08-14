@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-05-20 12:22+0000\n"
-"Last-Translator: liimee <git.taaa@fedora.email>\n"
+"PO-Revision-Date: 2022-08-15 13:40+0000\n"
+"Last-Translator: Arief Hidayat <kekesed97@gmail.com>\n"
 "Language-Team: Indonesian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/id/>\n"
 "Language: id\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.13.1\n"
 
 msgctxt "#30606"
 msgid "Cancel"
@@ -334,3 +334,83 @@ msgstr "Alamat server"
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
 msgstr "Jellyfin untuk Kodi"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Video Rumahan yang baru ditambahkan"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "Setel ulang basis data Kodi lokal"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Item Acak"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Set kotak"
+
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "Episode Sedang Berlangsung"
+
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "Film Sedang Berlangsung"
+
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "Acara TV Sedang Berlangsung"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Izinkan hardsub"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Saluran audio maksimal"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Kodek video pilihan"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Bitrate Audio"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Kodek audio pilihan"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Kecepatan bit streaming maksimum"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Aktifkan karya seni yang disempurnakan (yaitu seni sampul)"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Untuk Film"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Untuk Episode"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Lanjutan"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Level Log"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Metode Login"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "Paksa Pemutaran HTTP"
