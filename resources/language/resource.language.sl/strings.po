@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-08-26 10:11+0000\n"
-"Last-Translator: jan <kukovicster@gmail.com>\n"
+"PO-Revision-Date: 2022-09-22 09:54+0000\n"
+"Last-Translator: SaddFox <filip.rutar@gmail.com>\n"
 "Language-Team: Slovenian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sl/>\n"
 "Language: sl\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
 "%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 4.13.1\n"
+"X-Generator: Weblate 4.14.1\n"
 
 msgctxt "#30613"
 msgid "Change Jellyfin Connect user"
@@ -114,7 +114,7 @@ msgstr "Stalni uporabniki"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
-msgstr "Ignoriraj bonus epizode pri naslednjih epizodah"
+msgstr "Prezri posebne epizode pri naslednjih epizodah"
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
@@ -386,7 +386,6 @@ msgctxt "#33092"
 msgid "Create a backup"
 msgstr "Ustvari varnostno kopijo"
 
-#, fuzzy
 msgctxt "#33091"
 msgid "Created backup at:"
 msgstr "Varnostna kopija ustvarjena v:"
@@ -914,7 +913,6 @@ msgctxt "#33174"
 msgid "Paging - download threads (default: 3)"
 msgstr "Vzporedni prenosi (privzeto: 3)"
 
-#, fuzzy
 msgctxt "#33163"
 msgid "Disabled/Media default"
 msgstr "Onemogočeno/Privzeto"
