@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-09-28 12:54+0000\n"
-"Last-Translator: Viktor Poslončec <viktor.posloncec@gmail.com>\n"
+"PO-Revision-Date: 2022-09-30 08:54+0000\n"
+"Last-Translator: Stjepan Mrgnaić <stjepan.mrganic@gmail.com>\n"
 "Language-Team: Croatian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hr/>\n"
 "Language: hr\n"
@@ -158,11 +158,11 @@ msgstr "Nedavno dodani filmovi"
 
 msgctxt "#30171"
 msgid "In Progress TV Shows"
-msgstr "Serije u tijeku"
+msgstr "TV Serije u tijeku"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
-msgstr "Nedavno dodane serije"
+msgstr "Nedavno dodane TV serije"
 
 msgctxt "#30160"
 msgid "Video quality"
@@ -272,3 +272,37 @@ msgstr "Omogući opciju kino prikaza"
 msgctxt "#33182"
 msgid "Play with cinema mode"
 msgstr "Pokreni u kino načinu rada"
+
+#, fuzzy
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Kolekcija stavki"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Maksimalni bitrate prijenosa"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Nasumučno odabrane stavke"
+
+#, fuzzy
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Dozvoli titlove ugravirane na video zapis"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Makimalni broj zvučnih kanala"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Bitrate zvuka"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Preferirani codec zvučnog zapisa"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Preferirani codec video zapisa"
