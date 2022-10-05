@@ -653,6 +653,10 @@ msgctxt "#33124"
 msgid "Include people (slow)"
 msgstr "Include people (slow)"
 
+msgctxt "#33125"
+msgid "Enable remote control"
+msgstr "Enable remote control"
+
 msgctxt "#33128"
 msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
 msgstr ""

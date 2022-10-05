@@ -9,7 +9,7 @@ import time
 
 from kodi_six import xbmc
 
-from ..helper import LazyLogger
+from ..helper import LazyLogger, settings
 
 # If numpy is installed, the websockets library tries to use it, and then
 # kodi hard crashes for reasons I don't even want to pretend to understand
@@ -79,21 +79,26 @@ class WSClient(threading.Thread):
 
     def on_open(self, ws):
         LOG.info("--->[ websocket ]")
-        self.client.jellyfin.post_capabilities({
-            'PlayableMediaTypes': "Audio,Video",
-            'SupportsMediaControl': True,
-            'SupportedCommands': (
-                "MoveUp,MoveDown,MoveLeft,MoveRight,Select,"
-                "Back,ToggleContextMenu,ToggleFullscreen,ToggleOsdMenu,"
-                "GoHome,PageUp,NextLetter,GoToSearch,"
-                "GoToSettings,PageDown,PreviousLetter,TakeScreenshot,"
-                "VolumeUp,VolumeDown,ToggleMute,SendString,DisplayMessage,"
-                "SetAudioStreamIndex,SetSubtitleStreamIndex,"
-                "SetRepeatMode,"
-                "Mute,Unmute,SetVolume,"
-                "Play,Playstate,PlayNext,PlayMediaSource"
-            ),
-        })
+        if settings('remoteControl.bool'):
+            self.client.jellyfin.post_capabilities({
+                'PlayableMediaTypes': "Audio,Video",
+                'SupportsMediaControl': True,
+                'SupportedCommands': (
+                    "MoveUp,MoveDown,MoveLeft,MoveRight,Select,"
+                    "Back,ToggleContextMenu,ToggleFullscreen,ToggleOsdMenu,"
+                    "GoHome,PageUp,NextLetter,GoToSearch,"
+                    "GoToSettings,PageDown,PreviousLetter,TakeScreenshot,"
+                    "VolumeUp,VolumeDown,ToggleMute,SendString,DisplayMessage,"
+                    "SetAudioStreamIndex,SetSubtitleStreamIndex,"
+                    "SetRepeatMode,Mute,Unmute,SetVolume,"
+                    "Play,Playstate,PlayNext,PlayMediaSource"
+                ),
+            })
+        else:
+            self.client.jellyfin.post_capabilities({
+                "PlayableMediaTypes": "Audio, Video",
+                "SupportsMediaControl": False
+            })
         # Reinitialize the retry counter after successful connection
         self.retry_count = 0
 
