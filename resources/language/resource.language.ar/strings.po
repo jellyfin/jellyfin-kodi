@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-08-02 17:09+0000\n"
-"Last-Translator: 0TTA <osamh735@gmail.com>\n"
+"PO-Revision-Date: 2022-10-09 12:54+0000\n"
+"Last-Translator: Alan Azar <alanazar304@hotmail.com>\n"
 "Language-Team: Arabic <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ar/>\n"
 "Language: ar\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.14.1\n"
 
 msgctxt "#30235"
 msgid "Interface"
@@ -859,3 +859,135 @@ msgstr "فعل تحديد الصوت والترجمات"
 msgctxt "#33158"
 msgid "Subtitles only"
 msgstr "ترجمات فقط"
+
+msgctxt "#33202"
+msgid "Transcode H265/HEVC RExt"
+msgstr "تحويل H265 / HEVC RExt"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "أقصى دقة للعمل الفني"
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "حدد المكتبات المراد إزالتها"
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "حدد المكتبات لإصلاحها"
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "حدد المكتبات لتحديثها"
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr ""
+"المزامنة قيد التشغيل بالفعل ، يرجى الانتظار حتى تكتمل والمحاولة مرة أخرى."
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr "خيارات متقدمة"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "قم بتمكين Jellyfin لـ Kodi"
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "إدارة المكتبات"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "يتم إعادة التشغيل …"
+
+msgctxt "#33191"
+msgid "Restart Jellyfin for Kodi to apply this change?"
+msgstr "هل تريد إعادة تشغيل Jellyfin لـ Kodi لتطبيق هذا التغيير؟"
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr ""
+"تعمل قائمة Kodi Sync Queue على تسريع مزامنة بدء التشغيل. يتم تشغيل عمليات "
+"المزامنة الأخرى بواسطة أحداث الخادم."
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr "تمكين المزامنة أثناء التشغيل (قد يسبب بعض التأخر)"
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "قم بإزالة المكتبات"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "قم بتمكين خيار اللعب مع وضع السينما"
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "العب مع وضع السينما"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "يتم إعادة تشغيل تطبيق التصحيح"
+
+msgctxt "#33180"
+msgid "Restart Jellyfin for Kodi"
+msgstr "أعد تشغيل Jellyfin لـ Kodi"
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "فرض تحويل الشفرة"
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr "التحديثات قيد المعالجة"
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr "اعرض شريط التقدم إذا كان عدد التحديثات أكبر من"
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr "قم بتحديث أو إصلاح مكتباتك لتطبيق التغييرات أدناه."
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr ""
+"نصيحة الترحيل: يطلب كل مؤشر ترابط تنزيل قيمة العناصر القصوى من Jellyfin في "
+"نفس الوقت."
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "الترحيل - تنزيل المواضيع (افتراضي: 3)"
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "هل تريد تجاهل المزامنة السابقة؟ لا ينصح بهذا."
+
+msgctxt "#33172"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
+msgstr ""
+"لديك {number} من التحديثات معلقة. قد يستغرق هذا بعض الوقت قبل مشاهدة محتوى "
+"جديد. قد يكون تحديث مكتباتك أسرع عن طريق تشغيل الوظيفة الإضافية Jellyfin> "
+"تحديث المكتبات. المتابعة على أية حال؟"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "بالحرف الأول"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "قيد الانجاز"
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr "إخفاء المعلومات الحساسة في السجل (لا ينطبق على تسجيل Kodi)"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr "لتجنب الأخطاء ، يرجى تحديث Jellyfin لـ Kodi إلى الإصدار: "
+
+msgctxt "#33163"
+msgid "Disabled/Media default"
+msgstr "معطل / الوسائط الافتراضية"
