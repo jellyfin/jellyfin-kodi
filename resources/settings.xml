@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
 
-	<category label="29999"><!-- Jellyfin -->
+	<category label="29999">
+		<!-- Jellyfin -->
 		<setting label="30003" id="idMethod" type="enum" values="Manual" default="0" enable="false" />
 		<setting label="30024" id="username" type="text" default="" visible="true" enable="false" />
 		<setting label="30001" id="serverName" type="text" default="" enable="false" />
@@ -14,10 +15,11 @@
 		<setting label="30016" id="deviceName" type="text" default="Kodi" visible="eq(-1,true)" subsetting="true" />
 	</category>
 
-	<category label="30506"><!-- Sync Options -->
+	<category label="30506">
+		<!-- Sync Options -->
 		<setting label="33186" type="lsep" />
 		<setting label="33137" id="kodiCompanion" type="bool" default="true" />
-		<setting label="30507" id="syncIndicator" type="number" default="999" visible="eq(-1,true)" subsetting="true"/>
+		<setting label="30507" id="syncIndicator" type="number" default="999" visible="eq(-1,true)" subsetting="true" />
 		<setting label="33185" id="syncDuringPlay" type="bool" default="true" />
 		<setting label="30536" id="dbSyncScreensaver" type="bool" default="true" />
 		<setting label="33111" type="lsep" />
@@ -33,30 +35,31 @@
 		<setting id="enableMusic" visible="false" default="false" />
 	</category>
 
-	<category label="30516"><!-- Playback -->
+	<category label="30516">
+		<!-- Playback -->
 		<setting label="33113" type="lsep" />
 		<setting label="30518" id="enableCinema" type="bool" default="false" />
 		<setting label="30519" id="askCinema" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
 		<setting label="30002" id="playFromStream" type="bool" default="true" />
 		<setting label="33179" id="playFromTranscode" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
-	    <setting label="30160" id="maxBitrate" type="enum" values="0.5 Mbps|1 Mbps|1.5 Mbps|2.0 Mbps|2.5 Mbps|3.0 Mbps|4.0 Mbps|5.0 Mbps|6.0 Mbps|7.0 Mbps|8.0 Mbps|9.0 Mbps|10.0 Mbps|12.0 Mbps|14.0 Mbps|16.0 Mbps|18.0 Mbps|20.0 Mbps|25.0 Mbps|30.0 Mbps|35.0 Mbps|40.0 Mbps|100.0 Mbps|1000.0 Mbps [default]|Maximum" visible="true" default="23" />
-	    <setting label="33114" id="enableExternalSubs" type="bool" default="true" />
+		<setting label="30160" id="maxBitrate" type="enum" values="0.5 Mbps|1 Mbps|1.5 Mbps|2.0 Mbps|2.5 Mbps|3.0 Mbps|4.0 Mbps|5.0 Mbps|6.0 Mbps|7.0 Mbps|8.0 Mbps|9.0 Mbps|10.0 Mbps|12.0 Mbps|14.0 Mbps|16.0 Mbps|18.0 Mbps|20.0 Mbps|25.0 Mbps|30.0 Mbps|35.0 Mbps|40.0 Mbps|100.0 Mbps|1000.0 Mbps [default]|Maximum" visible="true" default="23" />
+		<setting label="33114" id="enableExternalSubs" type="bool" default="true" />
 
 		<setting type="sep" />
 		<setting label="33115" type="lsep" />
-	    <setting label="30537" id="transcodeHi10P" type="bool" default="false" visible="true" />
-	    <setting label="30522" id="transcode_h265" type="bool" default="false" visible="true" />
-	    <setting label="33202" id="transcode_h265_rext" type="bool" default="false" visible="eq(-1,false)" />
-	    <setting label="30523" id="transcode_mpeg2" type="bool" default="false" visible="true" />
-	    <setting label="30524" id="transcode_vc1" type="bool" default="false" visible="true" />
-	    <setting label="30525" id="transcode_vp9" type="bool" default="false" visible="true" />
-	    <setting label="30526" id="transcode_av1" type="bool" default="false" visible="true" />
-	    <setting label="30161" id="videoPreferredCodec" type="select" values="H264/AVC|H265/HEVC" visible="eq(-2,false)" default="H264/AVC" />
-	    <setting label="30162" id="audioPreferredCodec" type="select" values="AAC|AC3|MP3|Opus|FLAC|Vorbis" visible="true" default="AAC" />
-	    <setting label="30163" id="audioBitrate" type="enum" values="96|128|160|192|256|320|384" visible="true" default="4" />
-	    <setting label="30164" id="audioMaxChannels" type="slider" range="2,1,6" option="int" visible="true" default="6" />
-	    <setting label="33159" id="skipDialogTranscode" type="enum" lvalues="305|33157|33158|13106|33163" visible="true" default="3" />
-	    <setting label="30165" id="allowBurnedSubs" type="bool" visible="true" enable="true" default="true" />
+		<setting label="30537" id="transcodeHi10P" type="bool" default="false" visible="true" />
+		<setting label="30522" id="transcode_h265" type="bool" default="false" visible="true" />
+		<setting label="33202" id="transcode_h265_rext" type="bool" default="false" visible="eq(-1,false)" />
+		<setting label="30523" id="transcode_mpeg2" type="bool" default="false" visible="true" />
+		<setting label="30524" id="transcode_vc1" type="bool" default="false" visible="true" />
+		<setting label="30525" id="transcode_vp9" type="bool" default="false" visible="true" />
+		<setting label="30526" id="transcode_av1" type="bool" default="false" visible="true" />
+		<setting label="30161" id="videoPreferredCodec" type="select" values="H264/AVC|H265/HEVC" visible="eq(-2,false)" default="H264/AVC" />
+		<setting label="30162" id="audioPreferredCodec" type="select" values="AAC|AC3|MP3|Opus|FLAC|Vorbis" visible="true" default="AAC" />
+		<setting label="30163" id="audioBitrate" type="enum" values="96|128|160|192|256|320|384" visible="true" default="4" />
+		<setting label="30164" id="audioMaxChannels" type="slider" range="2,1,6" option="int" visible="true" default="6" />
+		<setting label="33159" id="skipDialogTranscode" type="enum" lvalues="305|33157|33158|13106|33163" visible="true" default="3" />
+		<setting label="30165" id="allowBurnedSubs" type="bool" visible="true" enable="true" default="true" />
 
 		<setting type="sep" />
 		<setting label="33112" type="lsep" />
@@ -65,38 +68,41 @@
 		<setting label="30115" id="deleteTV" type="bool" visible="eq(-1,true)" default="false" subsetting="true" />
 		<setting label="30116" id="deleteMovies" type="bool" visible="eq(-2,true)" default="false" subsetting="true" />
 
-	    <setting id="markPlayed" type="number" visible="false" default="90" />
+		<setting id="markPlayed" type="number" visible="false" default="90" />
 	</category>
 
-	<category label="30235"><!-- Interface -->
-	    <setting label="33105" id="enableContext" type="bool" default="true" />
-	    <setting label="33106" id="enableContextTranscode" type="bool" visible="eq(-1,true)" default="true" subsetting="true" />
-	    <setting label="33143" id="enableContextDelete" type="bool" visible="eq(-2,true)" default="true" subsetting="true" />
-	    <setting label="30520" id="skipContextMenu" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
+	<category label="30235">
+		<!-- Interface -->
+		<setting label="33105" id="enableContext" type="bool" default="true" />
+		<setting label="33106" id="enableContextTranscode" type="bool" visible="eq(-1,true)" default="true" subsetting="true" />
+		<setting label="33143" id="enableContextDelete" type="bool" visible="eq(-2,true)" default="true" subsetting="true" />
+		<setting label="30520" id="skipContextMenu" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
 
-	    <setting label="33107" type="lsep" />
+		<setting label="33107" type="lsep" />
 		<setting label="30528" id="additionalUsers" type="text" default="" />
 
-		<setting type="sep"/>
+		<setting type="sep" />
 		<setting label="30534" type="lsep" />
 		<setting label="30249" id="connectMsg" type="bool" default="true" />
 		<setting label="30545" id="offlinetMsg" type="bool" default="true" />
 		<setting label="30530" id="restartMsg" type="bool" default="true" />
-        <setting label="30547" id="displayMessage" type="slider" default="4" range="4,1,20" option="int" />
-        <setting label="33108" type="lsep" />
-        <setting label="33177" id="syncProgress" type="number" default="15" visible="true" />
-        <setting label="30531" id="newContent" type="bool" default="false" />
-        <setting label="30532" id="newvideotime" type="number" visible="eq(-1,true)" default="5" option="int" subsetting="true" />
-        <setting label="30533" id="newmusictime" type="number" visible="eq(-2,true)" default="2" option="int" subsetting="true" />
+		<setting label="30547" id="displayMessage" type="slider" default="4" range="4,1,20" option="int" />
+		<setting label="33108" type="lsep" />
+		<setting label="33177" id="syncProgress" type="number" default="15" visible="true" />
+		<setting label="30531" id="newContent" type="bool" default="false" />
+		<setting label="30532" id="newvideotime" type="number" visible="eq(-1,true)" default="5" option="int" subsetting="true" />
+		<setting label="30533" id="newmusictime" type="number" visible="eq(-2,true)" default="2" option="int" subsetting="true" />
 	</category>
 
-	<category label="33109"><!-- Plugin -->
+	<category label="33109">
+		<!-- Plugin -->
 		<setting id="ignoreSpecialsNextEpisodes" type="bool" label="30527" default="false" />
 		<setting id="getCast" type="bool" label="33124" default="false" />
 		<setting id="remoteControl" type="bool" label="33125" default="true" />
 	</category>
 
-	<category label="30022"><!-- Advanced -->
+	<category label="30022">
+		<!-- Advanced -->
 		<setting label="30004" id="logLevel" type="enum" values="Disabled|Info|Debug" default="1" />
 		<setting label="33164" id="maskInfo" type="bool" default="true" />
 		<setting label="30239" type="action" action="RunPlugin(plugin://plugin.video.jellyfin?mode=reset)" option="close" />
@@ -107,7 +113,7 @@
 		<setting label="30529" id="startupDelay" type="number" default="0" option="int" />
 
 		<setting type="sep" />
-		<setting label="33104" type="lsep"/>
+		<setting label="33104" type="lsep" />
 		<setting label="33093" type="folder" id="backupPath" option="writeable" />
 		<setting label="33092" type="action" action="RunPlugin(plugin://plugin.video.jellyfin?mode=backup)" visible="!eq(-1,)" option="close" />
 	</category>
