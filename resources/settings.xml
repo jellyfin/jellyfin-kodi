@@ -35,7 +35,7 @@
 
 	<category label="30516"><!-- Playback -->
 		<setting label="33113" type="lsep" />
-		<setting label="30518" id="enableCinema" type="bool" default="true" />
+		<setting label="30518" id="enableCinema" type="bool" default="false" />
 		<setting label="30519" id="askCinema" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
 		<setting label="30002" id="playFromStream" type="bool" default="true" />
 		<setting label="33179" id="playFromTranscode" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
