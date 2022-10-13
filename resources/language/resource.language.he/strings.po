@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-06-12 11:22+0000\n"
-"Last-Translator: Aragon <michael2210x@gmail.com>\n"
+"PO-Revision-Date: 2022-10-15 01:50+0000\n"
+"Last-Translator: netanel <natanelhenya@gmail.com>\n"
 "Language-Team: Hebrew <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/he/>\n"
 "Language: he\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.14.1\n"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
@@ -53,10 +53,9 @@ msgctxt "#30003"
 msgid "Login method"
 msgstr "שיטת התחברות"
 
-#, fuzzy
 msgctxt "#30002"
 msgid "Force HTTP playback"
-msgstr "ניגון HTTP בכוח"
+msgstr "כפה ניגון HTTP"
 
 msgctxt "#30001"
 msgid "Server name"
@@ -117,3 +116,96 @@ msgstr "קידוד אודיו מועדף"
 msgctxt "#30161"
 msgid "Preferred video codec"
 msgstr "קידוד וידאו מועדף"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "פרקים שנוספו לאחרונה"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "פריטים אקראיים"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "אפס את מסד הנתונים המקומי של Kodi"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "סרטים"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "טלוויזיה"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "הסר מהמועדפים"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "אפשר כתוביות צרובות"
+
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "טלוויזיה"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "סרטים שנוספו לאחרונה"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "טלוויזיה"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "הפרקים הבאים"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "סרטים שלא נצפו"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "פריטים מומלצים"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "ממשק"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "תמונות שנוספו לאחרונה"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "סרטוני מוזיקה שנוספו לאחרונה"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "סרטוני מוזיקה שלא נצפו"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "הוסף למועדפים"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "רענן פריט זה"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "אמת את החיבור"
+
+msgctxt "#30527"
+msgid "Ignore specials in next episodes"
+msgstr "התעלם מספיישלים בפרקים הבאים"
+
+#, fuzzy
+msgctxt "#30529"
+msgid "Startup delay (in seconds)"
+msgstr "עיכוב בזמן הפעלה (בשניות)"
+
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "אפשר הודעת הפעלה מחדש של השרת"
