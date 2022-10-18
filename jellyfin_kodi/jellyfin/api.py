@@ -258,11 +258,37 @@ class API(object):
         return self._get("Plugins")
 
     def check_companion_installed(self):
+        """
+        None = Unknown
+        True = Installed, but possibly not loaded right now
+        False = Not installed, scheduled for uninstalling or disabled
+        """
         try:
-            self._get("Jellyfin.Plugin.KodiSyncQueue/GetServerDateTime")
-            return True
-        except Exception:
-            return False
+            res = self.get_plugins()  # type: requests.Response
+            if res.ok:
+                kodi_sync_queue = [
+                    x
+                    for x in res.json()
+                    if x.get("Id") == "771e19d653854cafb35c28a0e865cf63"
+                ]
+
+                LOG.debug("KodiSyncQueue Plugins result: %s", kodi_sync_queue)
+
+                kodi_sync_queue_filtered = [
+                    x
+                    for x in kodi_sync_queue
+                    if x.get("Status")
+                    in ["Active", "Restart", "Malfunctioned", "NotSupported"]
+                ]
+
+                if kodi_sync_queue_filtered:
+                    return True
+                else:
+                    return False
+        except requests.RequestException as e:
+            LOG.warning("Error checking companion installed state: %s", e)
+
+        return None
 
     def get_seasons(self, show_id):
         return self.shows("/%s/Seasons" % show_id, params={
