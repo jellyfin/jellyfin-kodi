@@ -343,8 +343,8 @@ class Library(threading.Thread):
             if settings('SyncInstallRunDone.bool') and settings(
                 'kodiCompanion.bool'
             ):
-
-                if self.server.jellyfin.check_companion_installed():
+                # None == Unknown
+                if self.server.jellyfin.check_companion_installed() is not False:
 
                     if not self.fast_sync():
                         dialog("ok", "{jellyfin}", translate(33128))
@@ -353,8 +353,11 @@ class Library(threading.Thread):
 
                     LOG.info("--<[ retrieve changes ]")
 
+                # is False
                 else:
-                    raise LibraryException('CompanionMissing')
+                    dialog("ok", "{jellyfin}", translate(33099))
+                    settings("kodiCompanion.bool", False)
+                    return True
 
             return True
         except LibraryException as error:
@@ -367,13 +370,6 @@ class Library(threading.Thread):
                 sync = get_sync()
                 sync['Libraries'] = []
                 save_sync(sync)
-
-                return True
-
-            elif error.status == 'CompanionMissing':
-
-                dialog("ok", "{jellyfin}", translate(33099))
-                settings('kodiCompanion.bool', False)
 
                 return True
 
