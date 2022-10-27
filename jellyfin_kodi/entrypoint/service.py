@@ -20,6 +20,7 @@ from .. import monitor
 from ..views import Views
 from ..helper import translate, window, settings, event, dialog, set_addon_mode, LazyLogger
 from ..helper.utils import JsonDebugPrinter, translate_path
+from ..helper.xmls import verify_kodi_defaults
 from ..jellyfin import Jellyfin
 
 #################################################################################################
@@ -65,6 +66,8 @@ class Service(xbmc.Monitor):
         LOG.info("Python Version: %s", sys.version)
         LOG.info("Using dynamic paths: %s", settings('useDirectPaths') == "0")
         LOG.info("Log Level: %s", self.settings['log_level'])
+
+        verify_kodi_defaults()
 
         window('jellyfin.connected.bool', True)
         settings('groupedSets.bool', objects.utils.get_grouped_set())

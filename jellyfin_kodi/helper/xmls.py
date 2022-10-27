@@ -6,7 +6,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import os
 import xml.etree.ElementTree as etree
 
-from kodi_six import xbmc
+from kodi_six import xbmc, xbmcvfs
 
 from .utils import translate_path
 from . import translate, dialog, settings, LazyLogger
@@ -71,3 +71,65 @@ def advanced_settings():
             xbmc.executebuiltin('RestartApp')
 
             return True
+
+def verify_kodi_defaults():
+    ''' Make sure we have the kodi default folder in place.
+    '''
+
+    source_base_path = translate_path("special://xbmc/system/library/video")
+    dest_base_path = translate_path("special://profile/library/video")
+
+    LOG.debug('XMLs source path: `%s`', source_base_path)
+
+    if not os.path.exists(source_base_path):
+        return False
+
+    # Make sure the files exist in the local profile.
+    # TODO: Investigate why this is needed.
+    # I would think Kodi pulls data from the default profile
+    # if we don't do this.
+    for source_path, dirs, files in os.walk(source_base_path):
+        relative_path = os.path.relpath(source_path, source_base_path)
+        dest_path = os.path.join(dest_base_path, relative_path)
+
+        if not os.path.exists(dest_path):
+            os.mkdir(os.path.normpath(dest_path))
+
+        for file_name in files:
+            dest_file = os.path.join(dest_path, file_name)
+            copy = False
+
+            if not os.path.exists(dest_file):
+                copy = True
+            elif os.path.splitext(file_name)[1].lower() == '.xml':
+                try:
+                    etree.parse(dest_file)
+                except etree.ParseError:
+                    LOG.warning("Unable to parse `{}`, recovering from default.".format(dest_file))
+                    copy = True
+
+            if copy:
+                source_file = os.path.join(source_path, file_name)
+                LOG.debug("Copying `{}` -> `{}`".format(source_file, dest_file))
+                xbmcvfs.copy(source_file, dest_file)
+
+    # This code seems to enforce a fixed ordering.
+    # Is it really desirable to force this on users?
+    # The default (system wide) order is [10, 20, 30] in Kodi 19.
+    for index, node in enumerate(['movies', 'tvshows', 'musicvideos']):
+        file_name = os.path.join(dest_base_path, node, "index.xml")
+
+        if xbmcvfs.exists(file_name):
+            try:
+                tree = etree.parse(file_name)
+            except etree.ParseError:
+                LOG.error("Unable to parse `{}`".format(file_name))
+                LOG.exception("We ensured the file was OK above, something is wrong!")
+
+            tree.getroot().set('order', str(17 + index))
+            tree.write(file_name)
+
+    playlist_path = translate_path("special://profile/playlists/video")
+
+    if not xbmcvfs.exists(playlist_path):
+        xbmcvfs.mkdirs(playlist_path)
