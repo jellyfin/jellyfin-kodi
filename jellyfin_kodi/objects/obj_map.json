@@ -13,6 +13,7 @@
 		"UniqueId": "ProviderIds/Imdb",
 		"Rating": "CommunityRating",
 		"Year": "ProductionYear",
+		"Premiere": "PremiereDate,ProductionYear",
 		"Votes": "VoteCount",
 		"Plot": "Overview",
 		"ShortPlot": "ShortOverview",

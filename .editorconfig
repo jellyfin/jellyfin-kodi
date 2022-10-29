@@ -26,3 +26,6 @@ indent_size = 2
 
 [resources/settings.xml]
 indent_style = tab
+
+[jellyfin_kodi/objects/obj_map.json]
+indent_style = tab
