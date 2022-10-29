@@ -291,7 +291,7 @@ VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 add_movie_obj = ["{MovieId}", "{FileId}", "{Title}", "{Plot}", "{ShortPlot}", "{Tagline}",
                  "{Votes}", "{RatingId}", "{Writers}", "{Year}", "{Unique}", "{SortTitle}",
                  "{Runtime}", "{Mpaa}", "{Genre}", "{Directors}", "{Title}", "{Studio}",
-                 "{Trailer}", "{Country}", "{Year}"]
+                 "{Trailer}", "{Country}", "{Premiere}"]
 add_rating = """
 INSERT INTO     rating(rating_id, media_id, media_type, rating_type, rating, votes)
 VALUES          (?, ?, ?, ?, ?, ?)
@@ -405,7 +405,7 @@ WHERE       idMovie = ?
 update_movie_obj = ["{Title}", "{Plot}", "{ShortPlot}", "{Tagline}", "{Votes}", "{RatingId}",
                     "{Writers}", "{Year}", "{Unique}", "{SortTitle}", "{Runtime}",
                     "{Mpaa}", "{Genre}", "{Directors}", "{Title}", "{Studio}", "{Trailer}",
-                    "{Country}", "{Year}", "{MovieId}"]
+                    "{Country}", "{Premiere}", "{MovieId}"]
 update_rating = """
 UPDATE      rating
 SET         media_id = ?, media_type = ?, rating_type = ?, rating = ?, votes = ?

@@ -94,6 +94,7 @@ class Movies(KodiDb):
         obj['Video'] = API.video_streams(obj['Video'] or [], obj['Container'])
         obj['Audio'] = API.audio_streams(obj['Audio'] or [])
         obj['Streams'] = API.media_streams(obj['Video'], obj['Audio'], obj['Subtitles'])
+        obj['Premiere'] = Local(obj['Premiere']).split('.')[0].replace('T', " ") or obj['Year']
 
         self.get_path_filename(obj)
         self.trailer(obj)
