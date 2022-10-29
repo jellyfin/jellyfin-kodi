@@ -81,12 +81,9 @@ def verify_kodi_defaults():
 
     if not os.path.exists(source_base_path):
         LOG.error("XMLs source path `%s` not found.", source_base_path)
-        return False
+        return
 
     # Make sure the files exist in the local profile.
-    # TODO: Investigate why this is needed.
-    # I would think Kodi pulls data from the default profile
-    # if we don't do this.
     for source_path, dirs, files in os.walk(source_base_path):
         relative_path = os.path.relpath(source_path, source_base_path)
         dest_path = os.path.join(dest_base_path, relative_path)
