@@ -79,9 +79,8 @@ def verify_kodi_defaults():
     source_base_path = translate_path("special://xbmc/system/library/video")
     dest_base_path = translate_path("special://profile/library/video")
 
-    LOG.debug('XMLs source path: `%s`', source_base_path)
-
     if not os.path.exists(source_base_path):
+        LOG.error("XMLs source path `%s` not found.", source_base_path)
         return False
 
     # Make sure the files exist in the local profile.
