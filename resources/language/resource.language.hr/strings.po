@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-09-30 08:54+0000\n"
-"Last-Translator: Stjepan Mrgnaić <stjepan.mrganic@gmail.com>\n"
+"PO-Revision-Date: 2022-11-06 11:50+0000\n"
+"Last-Translator: Logilype <logilype@gmail.com>\n"
 "Language-Team: Croatian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hr/>\n"
 "Language: hr\n"
@@ -171,7 +171,7 @@ msgstr "Kvaliteta videa"
 #, fuzzy
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
-msgstr "Omogući proširene ilustracije"
+msgstr "Omogući proširene ilustracije (napr. cover art)"
 
 msgctxt "#30116"
 msgid "For Movies"
@@ -289,7 +289,7 @@ msgstr "Nasumučno odabrane stavke"
 #, fuzzy
 msgctxt "#30165"
 msgid "Allow burned subtitles"
-msgstr "Dozvoli titlove ugravirane na video zapis"
+msgstr "Dozvoli titlove da budu ugravirane na videozapis"
 
 msgctxt "#30164"
 msgid "Audio max channels"
@@ -306,3 +306,73 @@ msgstr "Preferirani codec zvučnog zapisa"
 msgctxt "#30161"
 msgid "Preferred video codec"
 msgstr "Preferirani codec video zapisa"
+
+#, fuzzy
+msgctxt "#30521"
+msgid "Jump back on resume (in seconds)"
+msgstr "Vrati na zadnje stanje na nastavljanju (u sekundama)"
+
+#, fuzzy
+msgctxt "#30527"
+msgid "Ignore specials in next episodes"
+msgstr "Ignoriraj specijale u sljedećim epizodama"
+
+#, fuzzy
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "Zatraženi maksimalni broj stavki (zadane postavke: 15)"
+
+#, fuzzy
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "Mrežne vjerodajnice"
+
+#, fuzzy
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "Uključi kino način rada"
+
+#, fuzzy
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "Traži da se pusti najave (trailers)"
+
+#, fuzzy
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr "Preskoči potvrdu brisanja (koristi na vlastitu odgovornost)"
+
+#, fuzzy
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Transkodiraj MPEG2"
+
+#, fuzzy
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Transkodiraj VC-1"
+
+#, fuzzy
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "Transkodiraj VP9"
+
+#, fuzzy
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "Transkodiraj AV1"
+
+#, fuzzy
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "Stalni korisnici"
+
+#, fuzzy
+msgctxt "#30529"
+msgid "Startup delay (in seconds)"
+msgstr "Odgoda pokretanja (u sekundama)"
+
+#, fuzzy
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "Transkodiraj H.265/HEVC"
