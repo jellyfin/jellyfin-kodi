@@ -512,7 +512,7 @@ class FullSync(object):
 
     def refresh_boxsets(self, library):
 
-        ''' Delete all exisitng boxsets and re-add.
+        ''' Delete all existing boxsets and re-add.
         '''
         with self.video_database_locks() as (videodb, jellyfindb):
             obj = Movies(self.server, jellyfindb, videodb, self.direct_path, library)

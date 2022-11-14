@@ -274,7 +274,7 @@ def _get_items(query, server_id=None):
 
                 items['Items'].extend(result['Items'])
                 # Using items to return data and communicate a restore point back to the callee is
-                # a violation of the SRP. TODO: Seperate responsibilities.
+                # a violation of the SRP. TODO: Separate responsibilities.
                 items['RestorePoint'] = query
                 yield items
                 del items['Items'][:]
