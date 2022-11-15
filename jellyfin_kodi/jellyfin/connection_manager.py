@@ -94,7 +94,7 @@ class ConnectionManager(object):
             LOG.info("Failed to login as `"+username+"`")
             return {}
 
-        LOG.info("Succesfully logged in as %s" % (username))
+        LOG.info("Successfully logged in as %s" % (username))
         # TODO Change when moving to database storage of server details
         credentials = self.credentials.get()
 
@@ -267,7 +267,7 @@ class ConnectionManager(object):
 
         return servers
 
-    # TODO: Make IPv6 compatable
+    # TODO: Make IPv6 compatible
     def _convert_endpoint_address_to_manual_address(self, info):
 
         if info.get('Address') and info.get('EndpointAddress'):
