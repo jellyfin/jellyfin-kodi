@@ -1,6 +1,6 @@
 version: '0.7.9'
 changelog: |-
-  :tada: New features and improvements
+  New features and improvements
   ------------------------------------
   + Add option to disable remote control (#629) @mcarlton00
 
