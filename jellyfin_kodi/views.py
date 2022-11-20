@@ -858,7 +858,8 @@ class Views(object):
 
                 if library['Id'] == view_id and 'Primary' in library.get('ImageTags', {}):
                     server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
-                    artwork = api.API(None, server_address).get_artwork(view_id, 'Primary')
+                    api_key = self.server.auth.jellyfin_token()
+                    artwork = api.API(None, server_address, api_key).get_artwork(view_id, 'Primary')
                     window('%s.artwork' % prop, artwork)
 
                     break

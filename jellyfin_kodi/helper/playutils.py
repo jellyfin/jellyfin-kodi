@@ -212,7 +212,7 @@ class PlayUtils(object):
         self.info['SubtitleStreamIndex'] = self.info.get('SubtitleStreamIndex') or source.get('DefaultSubtitleStreamIndex')
         self.item['PlaybackInfo'].update(self.info)
 
-        API = api.API(self.item, self.info['ServerAddress'])
+        API = api.API(self.item, self.info['ServerAddress'], self.api_client.config.data['auth.token'])
         window('jellyfinfilename', value=API.get_file_path(source.get('Path')))
 
     def live_stream(self, source):
@@ -264,7 +264,7 @@ class PlayUtils(object):
 
     def direct_play(self, source):
 
-        API = api.API(self.item, self.info['ServerAddress'])
+        API = api.API(self.item, self.info['ServerAddress'], self.api_client.config.data['auth.token'])
         self.info['Method'] = "DirectPlay"
         self.info['Path'] = API.get_file_path(source.get('Path'))
 

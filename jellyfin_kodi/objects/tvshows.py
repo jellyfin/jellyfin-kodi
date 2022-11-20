@@ -55,7 +55,7 @@ class TVShows(KodiDb):
             Apply series pooling.
         '''
         server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
-        API = api.API(item, server_address)
+        API = api.API(item, server_address, self.server.auth.jellyfin_token())
         obj = self.objects.map(item, 'Series')
         update = True
 
@@ -219,7 +219,7 @@ class TVShows(KodiDb):
             If the show is empty, try to remove it.
         '''
         server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
-        API = api.API(item, server_address)
+        API = api.API(item, server_address, self.server.auth.jellyfin_token())
         obj = self.objects.map(item, 'Season')
 
         obj['ShowId'] = show_id
@@ -255,7 +255,7 @@ class TVShows(KodiDb):
             This is only required for plugin/episode.
         '''
         server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
-        API = api.API(item, server_address)
+        API = api.API(item, server_address, self.server.auth.jellyfin_token())
         obj = self.objects.map(item, 'Episode')
         update = True
 
@@ -464,7 +464,7 @@ class TVShows(KodiDb):
             Create additional entry for widgets. This is only required for plugin/episode.
         '''
         server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
-        API = api.API(item, server_address)
+        API = api.API(item, server_address, self.server.auth.jellyfin_token())
         obj = self.objects.map(item, 'EpisodeUserData')
 
         try:

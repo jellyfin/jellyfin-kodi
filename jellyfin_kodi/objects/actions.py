@@ -226,7 +226,7 @@ class Actions(object):
     def set_listitem(self, item, listitem, db_id=None, seektime=None, intro=False):
 
         objects = Objects()
-        API = api.API(item, self.server)
+        API = api.API(item, self.server, self.api_client.config.data["auth.token"])
 
         if item['Type'] in ('MusicArtist', 'MusicAlbum', 'Audio'):
 
@@ -284,7 +284,7 @@ class Actions(object):
 
         ''' Set listitem for video content. That also include streams.
         '''
-        API = api.API(item, self.server)
+        API = api.API(item, self.server, self.api_client.config.data["auth.token"])
         is_video = obj['MediaType'] in ('Video', 'Audio')  # audiobook
 
         obj['Genres'] = " / ".join(obj['Genres'] or [])
@@ -476,7 +476,7 @@ class Actions(object):
 
         ''' Set listitem for channel content.
         '''
-        API = api.API(item, self.server)
+        API = api.API(item, self.server, self.api_client.config.data["auth.token"])
 
         obj['Title'] = "%s - %s" % (obj['Title'], obj['ProgramName'])
         obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
@@ -519,7 +519,7 @@ class Actions(object):
         listitem.setContentLookup(False)
 
     def listitem_music(self, obj, listitem, item):
-        API = api.API(item, self.server)
+        API = api.API(item, self.server, self.api_client.config.data["auth.token"])
 
         obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
         obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount']) or 0
@@ -576,7 +576,7 @@ class Actions(object):
         listitem.setContentLookup(False)
 
     def listitem_photo(self, obj, listitem, item):
-        API = api.API(item, self.server)
+        API = api.API(item, self.server, self.api_client.config.data["auth.token"])
 
         obj['Overview'] = API.get_overview(obj['Overview'])
         obj['FileDate'] = "%s.%s.%s" % tuple(reversed(obj['FileDate'].split('T')[0].split('-')))

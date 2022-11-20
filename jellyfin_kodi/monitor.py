@@ -196,7 +196,7 @@ class Monitor(xbmc.Monitor):
         for index, user in enumerate(session[0]['AdditionalUsers']):
 
             info = server.jellyfin.get_user(user['UserId'])
-            image = api.API(info, server.config.data['auth.server']).get_user_artwork(user['UserId'])
+            image = api.API(info, server.config.data['auth.server'], server.config.data['auth.token']).get_user_artwork(user['UserId'])
             window('JellyfinAdditionalUserImage.%s' % index, image)
             window('JellyfinAdditionalUserPosition.%s' % user['UserId'], str(index))
 

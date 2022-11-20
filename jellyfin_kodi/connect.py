@@ -149,7 +149,8 @@ class Connect(object):
 
         if 'PrimaryImageTag' in self.user:
             server_address = client.auth.get_server_info(client.auth.server_id)['address']
-            window('JellyfinUserImage', api.API(self.user, server_address).get_user_artwork(self.user['Id']))
+            api_key = client.auth.jellyfin_token()
+            window('JellyfinUserImage', api.API(self.user, server_address, api_key).get_user_artwork(self.user['Id']))
 
     def select_servers(self, state=None):
 

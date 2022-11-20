@@ -47,7 +47,7 @@ class Movies(KodiDb):
             If item exists, entry will be updated.
         '''
         server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
-        API = api.API(item, server_address)
+        API = api.API(item, server_address, self.server.auth.jellyfin_token())
         obj = self.objects.map(item, 'Movie')
         update = True
 
@@ -221,7 +221,7 @@ class Movies(KodiDb):
             Process removals from boxset.
         '''
         server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
-        API = api.API(item, server_address)
+        API = api.API(item, server_address, self.server.auth.jellyfin_token())
         obj = self.objects.map(item, 'Boxset')
 
         obj['Overview'] = API.get_overview(obj['Overview'])
@@ -299,7 +299,7 @@ class Movies(KodiDb):
             Poster with progress bar
         '''
         server_address = self.server.auth.get_server_info(self.server.auth.server_id)['address']
-        API = api.API(item, server_address)
+        API = api.API(item, server_address, self.server.auth.jellyfin_token())
         obj = self.objects.map(item, 'MovieUserData')
 
         try:
