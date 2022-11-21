@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-11-06 11:50+0000\n"
-"Last-Translator: Logilype <logilype@gmail.com>\n"
+"PO-Revision-Date: 2022-11-22 23:51+0000\n"
+"Last-Translator: lukapiplica <github163007297@protonmail.com>\n"
 "Language-Team: Croatian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hr/>\n"
 "Language: hr\n"
@@ -168,10 +168,9 @@ msgctxt "#30160"
 msgid "Video quality"
 msgstr "Kvaliteta videa"
 
-#, fuzzy
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
-msgstr "Omogući proširene ilustracije (napr. cover art)"
+msgstr "Omogući poboljšanu sliku (tj. naslovnicu)"
 
 msgctxt "#30116"
 msgid "For Movies"
@@ -273,7 +272,6 @@ msgctxt "#33182"
 msgid "Play with cinema mode"
 msgstr "Pokreni u kino načinu rada"
 
-#, fuzzy
 msgctxt "#30185"
 msgid "Boxsets"
 msgstr "Kolekcija stavki"
@@ -286,10 +284,9 @@ msgctxt "#30229"
 msgid "Random Items"
 msgstr "Nasumučno odabrane stavke"
 
-#, fuzzy
 msgctxt "#30165"
 msgid "Allow burned subtitles"
-msgstr "Dozvoli titlove da budu ugravirane na videozapis"
+msgstr "Dozvoli titlove da budu ugravirani na videozapis"
 
 msgctxt "#30164"
 msgid "Audio max channels"
@@ -307,72 +304,650 @@ msgctxt "#30161"
 msgid "Preferred video codec"
 msgstr "Preferirani codec video zapisa"
 
-#, fuzzy
 msgctxt "#30521"
 msgid "Jump back on resume (in seconds)"
-msgstr "Vrati na zadnje stanje na nastavljanju (u sekundama)"
+msgstr "Povratak na nastavljanje (u sekundama)"
 
-#, fuzzy
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
 msgstr "Ignoriraj specijale u sljedećim epizodama"
 
-#, fuzzy
 msgctxt "#30515"
 msgid "Paging - max items requested (default: 15)"
-msgstr "Zatraženi maksimalni broj stavki (zadane postavke: 15)"
+msgstr "Paging - maksimalan broj traženih stavki (zadano: 15)"
 
-#, fuzzy
 msgctxt "#30517"
 msgid "Network credentials"
 msgstr "Mrežne vjerodajnice"
 
-#, fuzzy
 msgctxt "#30518"
 msgid "Enable cinema mode"
 msgstr "Uključi kino način rada"
 
-#, fuzzy
 msgctxt "#30519"
 msgid "Ask to play trailers"
-msgstr "Traži da se pusti najave (trailers)"
+msgstr "Zatražite reprodukciju najava"
 
-#, fuzzy
 msgctxt "#30520"
 msgid "Skip the delete confirmation (use at your own risk)"
-msgstr "Preskoči potvrdu brisanja (koristi na vlastitu odgovornost)"
+msgstr "Preskočite potvrdu brisanja (koristite na vlastitu odgovornost)"
 
-#, fuzzy
 msgctxt "#30523"
 msgid "Transcode MPEG2"
 msgstr "Transkodiraj MPEG2"
 
-#, fuzzy
 msgctxt "#30524"
 msgid "Transcode VC-1"
 msgstr "Transkodiraj VC-1"
 
-#, fuzzy
 msgctxt "#30525"
 msgid "Transcode VP9"
 msgstr "Transkodiraj VP9"
 
-#, fuzzy
 msgctxt "#30526"
 msgid "Transcode AV1"
 msgstr "Transkodiraj AV1"
 
-#, fuzzy
 msgctxt "#30528"
 msgid "Permanent users"
 msgstr "Stalni korisnici"
 
-#, fuzzy
 msgctxt "#30529"
 msgid "Startup delay (in seconds)"
-msgstr "Odgoda pokretanja (u sekundama)"
+msgstr "Kašnjenje pokretanja (u sekundama)"
 
-#, fuzzy
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
 msgstr "Transkodiraj H.265/HEVC"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "Ponovno pokretanje…"
+
+msgctxt "#30536"
+msgid "Allow the screensaver during syncs"
+msgstr "Dopusti čuvar zaslona tijekom sinkronizacije"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "Otkaži"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "Nije moguće spojiti se na odabrani server"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "Promjena Jellyfin Connect korisnika"
+
+msgctxt "#30617"
+msgid "Server or port cannot be empty"
+msgstr "Server ili port ne mogu biti prazni"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "Neispravno korisničko ime ili lozinka"
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr "Odaberite stream titlova"
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr "Generiran je novi ID uređaja. Kodi će se sada ponovno pokrenuti."
+
+msgctxt "#33035"
+msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
+msgstr ""
+"Oprez! Ako odaberete izvorni način rada, određene Jellyfin značajke će "
+"nedostajati, kao što su: Jellyfin kino način rada, opcije izravnog prijenosa/"
+"transkodiranja i raspored roditeljskog pristupa."
+
+msgctxt "#33097"
+msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
+msgstr ""
+"Važno, cleanonupdate je uklonjen u vašim naprednim postavkama kako bi se "
+"spriječio sukob s Jellyfin za Kodi. Kodi će se sada ponovno pokrenuti."
+
+msgctxt "#33107"
+msgid "Users added to the session (no space between users). (eg username,username2)"
+msgstr ""
+"Korisnici dodani u sesiju (bez razmaka između korisnika) (npr. korisničko "
+"ime, korisničko ime2)"
+
+msgctxt "#33112"
+msgid "Applies to Native and Add-on playback mode"
+msgstr "Primjenjuje se na izvorni i dodatni način reprodukcije"
+
+msgctxt "#33118"
+msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgstr ""
+"Promijenili ste način reprodukcije. Kodi se mora resetirati da bi se "
+"primijenila promjena, želite li to sada učiniti?"
+
+#, fuzzy
+msgctxt "#33119"
+msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"Nešto nije u redu tijekom sinkronizacije. Moći ćete vratiti napredak kada "
+"ponovno pokrenete Kodi. Ako se problem nastavi, prijavite se na Jellyfin for "
+"Kodi forumima, sa svojim Kodi zapisom."
+
+#, fuzzy
+msgctxt "#33128"
+msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"Dohvaćanje najnovijih ažuriranja sadržaja nije uspjelo. Nikakva ažuriranja "
+"sadržaja neće se primijeniti dok se Kodi ponovno ne pokrene. Ako se ovaj "
+"problem nastavi, prijavite se na Jellyfin for Kodi forumima, sa svojim Kodi "
+"zapisom."
+
+msgctxt "#33129"
+msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
+msgstr ""
+"Možete sinkronizirati biblioteke pokretanjem Jellyfin dodatka > Dodaj "
+"biblioteke."
+
+msgctxt "#33135"
+msgid "Kodi will now restart to apply a small patch for your Kodi version."
+msgstr ""
+"Kodi će se sada ponovno pokrenuti kako bi se primijenila mala zakrpa za vašu "
+"verziju Kodija."
+
+msgctxt "#33133"
+msgid "Remove library from Kodi"
+msgstr "Ukloni biblioteku iz Kodija"
+
+msgctxt "#33138"
+msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
+msgstr ""
+"Svoju biblioteku možete ažurirati ručno umjesto da se oslanjate na serverski "
+"dodatak Kodi Sync Queue. Pokrenite dodatak i ažurirajte biblioteke (ili po "
+"biblioteci). Da biste uklonili sadržaj, morat ćete popraviti biblioteku."
+
+msgctxt "#33151"
+msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
+msgstr ""
+"Ponovno se povežite s istim serverom koji je prethodno učitan. Ako želite "
+"koristiti drugi server, resetirajte svoju lokalnu bazu podataka, uključujući "
+"svoje korisničke podatke."
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "Favoriti"
+
+msgctxt "#33172"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
+msgstr ""
+"Imate {number} ažuriranja na čekanju. Ovo može potrajati neko vrijeme prije "
+"nego što vidite novi sadržaj. Možda bi bilo brže ažurirati svoje biblioteke "
+"pokretanjem Jellyfin dodatka > ažuriraj biblioteke. Svejedno nastavi?"
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "Zaboraviti na prethodnu sinkronizaciju? Ovo se ne preporučuje."
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr ""
+"Sinkronizacija je već pokrenuta, pričekajte dok ne završi i pokušajte ponovo."
+
+msgctxt "#33202"
+msgid "Transcode H265/HEVC RExt"
+msgstr "Transkodiranje H265/HEVC RExt"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr "Da biste izbjegli greške, ažurirajte Jellyfin for Kodi na verziju: "
+
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "Omogući poruku o ponovnom pokretanju servera"
+
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "Omogući novi sadržaj"
+
+msgctxt "#30532"
+msgid "Duration of the video library pop up"
+msgstr "Skočni prozor trajanja videoteke"
+
+msgctxt "#30533"
+msgid "Duration of the music library pop up"
+msgstr "Skočni prozor trajanja glazbene biblioteke"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "Obavijesti (u sekundama)"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "Generirajte novi ID uređaja"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "Transkodiraj Hi10P"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "Prijaviti se"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "Ručna prijava"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "Korisničko ime ili email"
+
+#, fuzzy
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "Omogući server izvan mreže"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "Prikaži poruku"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "Prijaviti se"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "Odaberite glavni server"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "Korisničko ime ili lozinka ne mogu biti prazni"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "Lozinka"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "Poveži se s"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "Ručno dodajte server"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "Molimo, prijavite se"
+
+msgctxt "#30614"
+msgid "Connect to server"
+msgstr "Spojite se na server"
+
+#, fuzzy
+msgctxt "#30615"
+msgid "Host"
+msgstr "Domaćin"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "Spoji se"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "Dobrodošli"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "Server se ponovno pokreće"
+
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr "Odaberite audio stream"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "Izbrišite datoteku iz Jellyfina?"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "Pustiti najave?"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "Prikupljanje:"
+
+#, fuzzy
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "Dovršeno u:"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "Omogućiti glazbenu biblioteku?"
+
+msgctxt "#33047"
+msgid "Kodi can't locate file:"
+msgstr "Kodi ne može locirati datoteku:"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "Novi"
+
+msgctxt "#33054"
+msgid "Add user to session"
+msgstr "Dodaj korisnika u sesiju"
+
+msgctxt "#33058"
+msgid "Perform local database reset"
+msgstr "Izvršite resetiranje lokalne baze podataka"
+
+msgctxt "#33060"
+msgid "Sync theme media"
+msgstr "Sinkronizacija tematskih medija"
+
+msgctxt "#33061"
+msgid "Add/Remove user from the session"
+msgstr "Dodaj/ukloni korisnika iz sesije"
+
+msgctxt "#33064"
+msgid "Remove user from the session"
+msgstr "Ukloni korisnika iz sesije"
+
+msgctxt "#33074"
+msgid "Are you sure you want to reset your local Kodi database?"
+msgstr "Jeste li sigurni da želite resetirati svoju lokalnu Kodi bazu podataka?"
+
+#, fuzzy
+msgctxt "#33086"
+msgid "Remove all cached artwork?"
+msgstr "Ukloniti sve predmemorirane ilustracije?"
+
+msgctxt "#33087"
+msgid "Reset all Jellyfin add-on settings?"
+msgstr "Resetirati sve postavke Jellyfin dodatka?"
+
+msgctxt "#33088"
+msgid "Database reset has completed, Kodi will now restart to apply the changes."
+msgstr ""
+"Resetiranje baze podataka je dovršeno, Kodi će se sada ponovno pokrenuti da "
+"primijeni promjene."
+
+msgctxt "#33089"
+msgid "Enter folder name for backup"
+msgstr "Unesite naziv mape za sigurnosnu kopiju"
+
+msgctxt "#33090"
+msgid "Replace existing backup?"
+msgstr "Zamijeniti postojeću sigurnosnu kopiju?"
+
+msgctxt "#33091"
+msgid "Created backup at:"
+msgstr "Stvorena sigurnosna kopija na:"
+
+msgctxt "#33101"
+msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
+msgstr ""
+"Budući da koristite izvorni način reprodukcije s omogućenom glazbom, želite "
+"li uvesti ocjenu glazbe iz datoteka?"
+
+msgctxt "#33102"
+msgid "Resume the previous sync?"
+msgstr "Nastaviti prethodnu sinkronizaciju?"
+
+msgctxt "#33104"
+msgid "Find more info in the github wiki/Create-and-restore-from-backup."
+msgstr ""
+"Pronađite više informacija u GitHub wiki/Create-and-restore-from-backup."
+
+#, fuzzy
+msgctxt "#33105"
+msgid "Enable the context menu"
+msgstr "Omogućite kontekstni izbornik"
+
+msgctxt "#33106"
+msgid "Enable the option to transcode"
+msgstr "Uključite opciju za transkodiranje"
+
+msgctxt "#33108"
+msgid "Notifications are delayed during video playback (except live tv)."
+msgstr "Obavijesti kasne tijekom reprodukcije videozapisa (osim TV-a uživo)."
+
+msgctxt "#33110"
+msgid "Restart Kodi to take effect."
+msgstr "Ponovno pokrenite Kodi da stupi na snagu."
+
+msgctxt "#33111"
+msgid "Reset the local database to apply the playback mode change."
+msgstr ""
+"Resetirajte lokalnu bazu podataka da biste primijenili promjenu načina "
+"reprodukcije."
+
+msgctxt "#33113"
+msgid "Applies to Add-on playback mode only"
+msgstr "Primjenjuje se samo na dodatni način reprodukcije"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Opcije transkodiranja"
+
+msgctxt "#33120"
+msgid "Select the libraries to add"
+msgstr "Odaberite biblioteke za dodavanje"
+
+msgctxt "#33122"
+msgid "Restart Kodi to resume where you left off."
+msgstr "Ponovno pokrenite Kodi da nastavite gdje ste stali."
+
+msgctxt "#33123"
+msgid "Sync library to Kodi"
+msgstr "Sinkronizirajte biblioteku s Kodijem"
+
+msgctxt "#33124"
+msgid "Include people (slow)"
+msgstr "Uključi osobe (sporo)"
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "Nije moguće spojiti se na ovaj server."
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "Ažurirajte podatke o serveru"
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "Nije moguće locirati TV Tunes u Kodiju."
+
+msgctxt "#33125"
+msgid "Enable remote control"
+msgstr "Omogući daljinsko upravljanje"
+
+msgctxt "#33130"
+msgid "Select the source"
+msgstr "Odaberite izvor"
+
+msgctxt "#33132"
+msgid "Repair library"
+msgstr "Popravka biblioteke"
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "Ažurirajte biblioteku"
+
+msgctxt "#33137"
+msgid "Enable Kodi Sync Queue"
+msgstr "Omogući Kodi Sync Queue"
+
+msgctxt "#33139"
+msgid "Update libraries"
+msgstr "Ažurirajte biblioteke"
+
+msgctxt "#33140"
+msgid "Repair libraries"
+msgstr "Popravi biblioteke"
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "Ukloni server"
+
+msgctxt "#33142"
+msgid "Something went wrong. Try again later."
+msgstr "Nešto je pošlo po zlu. Pokušajte ponovno kasnije."
+
+msgctxt "#33143"
+msgid "Enable the option to delete"
+msgstr "Uključite opciju za brisanje"
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "Uklanjanje biblioteke"
+
+msgctxt "#33145"
+msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
+msgstr ""
+"Provjerite je li vaš Samba (smb) share vašeg Jellyfin servera dostupan vašoj "
+"Kodi instalaciji i imate li konfiguriranu zamjenu putanje na vašem serveru. "
+"U protivnom Kodi možda neće uspjeti locirati vaše datoteke."
+
+msgctxt "#33146"
+msgid "Unable to connect to Jellyfin."
+msgstr "Nije moguće povezati se s Jellyfinom."
+
+msgctxt "#33147"
+msgid "Your access to Jellyfin is restricted."
+msgstr "Vaš pristup Jellyfinu je ograničen."
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "Vaš pristup ovom serveru je ograničen."
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "Dodajte biblioteke"
+
+msgctxt "#33155"
+msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
+msgstr ""
+"Trenutno primijenjena zakrpa za Jellyfin for Kodi je oštećena! Objavite na "
+"Jellyfin for Kodi forumima ako se problem nastavi pojavljivati. To će se "
+"morati popraviti što je prije moguće."
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "Zakrpa je primijenjena!"
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "Samo audio"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "Samo titlovi"
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "Omogući odabir zvuka/titlova"
+
+msgctxt "#33163"
+msgid "Disabled/Media default"
+msgstr "Onemogućeno/medijski zadani"
+
+msgctxt "#33161"
+msgid "Update password"
+msgstr "Ažurirajte lozinku"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "Resetirati glazbenu biblioteku?"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "Izrada sigurnosne kopije nije uspjela"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "(dinamičan)"
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "Nedavno dodano"
+
+#, fuzzy
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "Negledan"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "Po prvom slovu"
+
+#, fuzzy
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "Paging - preuzimanje niti (zadano: 3)"
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr ""
+"Ažurirajte ili popravite svoje biblioteke kako biste primijenili promjene u "
+"nastavku."
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr "Prikaži traku napretka ako je broj ažuriranja veći od"
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr "Obrada ažuriranja"
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "Prisilno transkodiraj"
+
+msgctxt "#33180"
+msgid "Restart Jellyfin for Kodi"
+msgstr "Ponovno pokrenite Jellyfin for Kodi"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "Ponovno pokretanje za primjenu zakrpe"
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "Uklonite biblioteke"
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr "Omogući sinkronizaciju tijekom reprodukcije (može uzrokovati kašnjenje)"
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr ""
+"Kodi Sync Queue ubrzava početnu sinkronizaciju. Druge sinkronizacije pokreću "
+"događaji na serveru."
+
+msgctxt "#33191"
+msgid "Restart Jellyfin for Kodi to apply this change?"
+msgstr "Ponovno pokrenuti Jellyfin for Kodi da primijeni ovu promjenu?"
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "Upravljanje bibliotekama"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "Omogući Jellyfin for Kodi"
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr "Napredne opcije"
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "Odaberite biblioteke za ažuriranje"
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "Odaberite biblioteke za popravak"
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "Odaberite biblioteke koje želite ukloniti"
