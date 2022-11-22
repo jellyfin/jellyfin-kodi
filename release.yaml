@@ -1,31 +1,8 @@
 version: '0.7.10'
 changelog: |-
-  :tada: New features and improvements
-  ------------------------------------
-  + Add option to disable remote control (#629) @mcarlton00
-
   Bug Fixes
   ---------
   + Fix syncing when Premiere attribute is an int (#694) @turley
-  + Properly apply Movie premiered date (#687) @oddstr13
-  + Add back verify_kodi_defaults from #426 (#684) @oddstr13
-  + Improve KodiSyncQueue presence test (#682) @oddstr13
-  + Disable cinema mode by default (#681) @oddstr13
-
-  Code or Repo Maintenance
-  ------------------------
-  + Fix typos (#691) @kianmeng
-  + Remove option: Developer mode (#644) @jessbo
-
-  CI & build changes
-  ------------------
-  + Bump release-drafter/release-drafter from 5.21.0 to 5.21.1 (#683) @dependabot
-  + Bump appleboy/ssh-action from 0.1.4 to 0.1.5 (#665) @dependabot
-  + Bump release-drafter/release-drafter from 5.20.0 to 5.21.0 (#678) @dependabot
-  + Bump codecov/codecov-action from 3.1.0 to 3.1.1 (#679) @dependabot
-  + CI - remove use_aliases from emoji command (#661) @mcarlton00
-  + Bump actions/setup-python from 3 to 4 (#656) @dependabot
-  + Bump release-drafter/release-drafter from 5.19.0 to 5.20.0 (#653) @dependabot
 dependencies:
   py2:
     - addon: 'xbmc.python'
