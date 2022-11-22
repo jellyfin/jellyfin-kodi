@@ -1,11 +1,12 @@
-version: '0.7.9'
+version: '0.7.10'
 changelog: |-
-  New features and improvements
+  :tada: New features and improvements
   ------------------------------------
   + Add option to disable remote control (#629) @mcarlton00
 
   Bug Fixes
   ---------
+  + Fix syncing when Premiere attribute is an int (#694) @turley
   + Properly apply Movie premiered date (#687) @oddstr13
   + Add back verify_kodi_defaults from #426 (#684) @oddstr13
   + Improve KodiSyncQueue presence test (#682) @oddstr13
