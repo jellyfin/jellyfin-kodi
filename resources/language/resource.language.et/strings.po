@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-11-13 14:50+0000\n"
+"PO-Revision-Date: 2022-11-28 14:51+0000\n"
 "Last-Translator: rimasx <riks_12@hot.ee>\n"
 "Language-Team: Estonian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/et/>\n"
@@ -193,7 +193,7 @@ msgstr "Viimati lisatud filmid"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
-msgstr "Viimati lisatud seriaalid"
+msgstr "Viimati lisatud sarjad"
 
 msgctxt "#33167"
 msgid "Recently added"
@@ -819,11 +819,11 @@ msgstr "Liides"
 
 msgctxt "#30230"
 msgid "Recommended Items"
-msgstr "Soovitatud üksused"
+msgstr "Soovitatud"
 
 msgctxt "#30229"
 msgid "Random Items"
-msgstr "Juhuslikud üksused"
+msgstr "Juhuslikud"
 
 msgctxt "#30189"
 msgid "Unwatched Movies"
@@ -859,7 +859,7 @@ msgstr "Käsilolevad filmid"
 
 msgctxt "#30171"
 msgid "In Progress TV Shows"
-msgstr "Käsilolevad seriaalid"
+msgstr "Käsilolevad sarjad"
 
 msgctxt "#30165"
 msgid "Allow burned subtitles"
