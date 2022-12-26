@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-10-09 12:54+0000\n"
-"Last-Translator: Alan Azar <alanazar304@hotmail.com>\n"
+"PO-Revision-Date: 2022-12-27 10:51+0000\n"
+"Last-Translator: 0TTA <osamh735@gmail.com>\n"
 "Language-Team: Arabic <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ar/>\n"
 "Language: ar\n"
@@ -830,7 +830,7 @@ msgstr "لم يشاهد"
 
 msgctxt "#33168"
 msgid "Favourites"
-msgstr "المفضلات"
+msgstr "المفضلة"
 
 msgctxt "#33167"
 msgid "Recently added"
@@ -991,3 +991,7 @@ msgstr "لتجنب الأخطاء ، يرجى تحديث Jellyfin لـ Kodi إل
 msgctxt "#33163"
 msgid "Disabled/Media default"
 msgstr "معطل / الوسائط الافتراضية"
+
+msgctxt "#33125"
+msgid "Enable remote control"
+msgstr "فعل خاصيّة التّحكّم عن بعد"
