@@ -79,6 +79,12 @@ class MusicVideos(KodiDb):
                 update = False
                 LOG.info("MvideoId %s missing from kodi. repairing the entry.", obj['MvideoId'])
 
+        if (obj.get('ProductionYear') or 0) > 9999:
+            obj['ProductionYear'] = int(str(obj['ProductionYear'])[:4])
+
+        if (obj.get('Year') or 0) > 9999:
+            obj['Year'] = int(str(obj['Year'])[:4])
+
         obj['Path'] = API.get_file_path(obj['Path'])
         obj['LibraryId'] = self.library['Id']
         obj['LibraryName'] = self.library['Name']
@@ -91,7 +97,7 @@ class MusicVideos(KodiDb):
         obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount'])
         obj['Resume'] = API.adjust_resume((obj['Resume'] or 0) / 10000000.0)
         obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
-        obj['Premiere'] = Local(obj['Premiere']) if obj['Premiere'] else datetime.date(obj['Year'] or 2021, 1, 1)
+        obj['Premiere'] = Local(obj['Premiere']) if obj['Premiere'] else datetime.date(obj['Year'] or 1970, 1, 1)
         obj['Genre'] = " / ".join(obj['Genres'])
         obj['Studio'] = " / ".join(obj['Studios'])
         obj['Artists'] = " / ".join(obj['Artists'] or [])
