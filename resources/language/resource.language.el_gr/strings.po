@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-10-27 20:50+0000\n"
-"Last-Translator: mikoman <mankonikos@gmail.com>\n"
+"PO-Revision-Date: 2023-01-08 17:51+0000\n"
+"Last-Translator: Retrial <giwrgosmant@gmail.com>\n"
 "Language-Team: Greek <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/el/>\n"
 "Language: el_gr\n"
@@ -67,7 +67,7 @@ msgctxt "#33035"
 msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
 msgstr ""
 "Προσοχή! Η επιλογή του εγγενούς τρόπου λειτουργείς αφαιρεί κάποιες ιδιότητες "
-"του Jellyfin όπως: διεπαφή σινεμά, επιλογές απευθείας μετακωδικοποίησης και "
+"του Jellyfin όπως: διεπαφή σινεμά, επιλογές απευθείας διακωδικοποίησης και "
 "εκπομπής και τον παιδικό έλεγχο."
 
 msgctxt "#33033"
@@ -192,7 +192,7 @@ msgstr "Είσοδος"
 
 msgctxt "#30537"
 msgid "Transcode Hi10P"
-msgstr "Μετακωδικοποίηση Hi10P"
+msgstr "Διακωδικοποίηση Hi10P"
 
 msgctxt "#30536"
 msgid "Allow the screensaver during syncs"
@@ -236,23 +236,23 @@ msgstr "Παρέλειψε σπέσιαλς στο επόμενο επεισόδ
 
 msgctxt "#30526"
 msgid "Transcode AV1"
-msgstr "Μετακωδικοποίηση AV1"
+msgstr "Διακωδικοποίηση AV1"
 
 msgctxt "#30525"
 msgid "Transcode VP9"
-msgstr "Μετακωδικοποίηση VP9"
+msgstr "Διακωδικοποίηση VP9"
 
 msgctxt "#30524"
 msgid "Transcode VC-1"
-msgstr "Μετακωδικοποίηση VC-1"
+msgstr "Διακωδικοποίηση VC-1"
 
 msgctxt "#30523"
 msgid "Transcode MPEG2"
-msgstr "Μετακωδικοποίηση MPEG2"
+msgstr "Διακωδικοποίηση MPEG2"
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
-msgstr "Μετακωδικοποίηση H.265/HEVC"
+msgstr "Διακωδικοποίηση H.265/HEVC"
 
 msgctxt "#30521"
 msgid "Jump back on resume (in seconds)"
@@ -312,7 +312,7 @@ msgstr "Έλεγχος σύνδεσης"
 
 msgctxt "#30412"
 msgid "Transcode"
-msgstr "Μετακωδικοποίηση"
+msgstr "Διακωδικοποίηση"
 
 msgctxt "#30410"
 msgid "Refresh this item"
@@ -336,7 +336,7 @@ msgstr "Προσθήκη στα αγαπημένα"
 
 msgctxt "#30402"
 msgid "Jellyfin transcode"
-msgstr "Jellyfin μετακωδικοποίηση"
+msgstr "Jellyfin διακωδικοποίηση"
 
 msgctxt "#30401"
 msgid "Jellyfin options"
@@ -705,3 +705,318 @@ msgid "You've change the playback mode. Kodi needs to be reset to apply the chan
 msgstr ""
 "Αλλάξατε τη μέθοδο αναπαραγωγής. Το Kodi πρεπεί να επανεκκινηθεί για να "
 "εφαρμοστεί η ρύθμιση. Επανεκκίνηση τώρα;"
+
+msgctxt "#33107"
+msgid "Users added to the session (no space between users). (eg username,username2)"
+msgstr ""
+"Χρήστες που προστέθηκαν στην περίοδο σύνδεσης (χωρίς κενό μεταξύ των χρηστών)"
+" (π.χ. όνομα χρήστη, όνομα χρήστη2)"
+
+msgctxt "#33128"
+msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"Απέτυχε η ανάκτηση των τελευταίων ενημερώσεων περιεχομένου. Δεν θα "
+"εφαρμοστούν ενημερώσεις περιεχομένου έως ότου γίνει επανεκκίνηση του Kodi. "
+"Εάν αυτό το ζήτημα επιμένει, αναφέρετε τα φόρουμ Jellyfin for Kodi, με το "
+"αρχείο καταγραφής του Kodi."
+
+msgctxt "#33129"
+msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
+msgstr ""
+"Μπορείτε να συγχρονίσετε βιβλιοθήκες εκκινώντας το πρόσθετο Jellyfin > "
+"Προσθήκη βιβλιοθηκών."
+
+msgctxt "#33138"
+msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
+msgstr ""
+"Μπορείτε να ενημερώσετε τη βιβλιοθήκη σας με μη αυτόματο τρόπο αντί να "
+"βασίζεστε στο πρόσθετο διακομιστή Kodi Sync Queue. Εκκινήστε το πρόσθετο και "
+"ενημερώστε τις βιβλιοθήκες (ή ανά βιβλιοθήκη). Για να καταργήσετε "
+"περιεχόμενο, θα χρειαστεί να επιδιορθώσετε τη βιβλιοθήκη."
+
+msgctxt "#33151"
+msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
+msgstr ""
+"Επανασυνδεθείτε στον ίδιο διακομιστή που είχε φορτωθεί προηγουμένως. Εάν "
+"θέλετε να χρησιμοποιήσετε διαφορετικό διακομιστή, επαναφέρετε την τοπική σας "
+"βάση δεδομένων, συμπεριλαμβανομένων των στοιχείων χρήστη σας."
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "Προστέθηκε πρόσφατα"
+
+msgctxt "#33172"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
+msgstr ""
+"Έχετε {number} ενημερώσεις σε εκκρεμότητα. Αυτό μπορεί να διαρκέσει λίγο "
+"πριν δείτε νέο περιεχόμενο. Ίσως είναι πιο γρήγορο να ενημερώσετε τις "
+"βιβλιοθήκες σας μέσω της εκκίνησης του πρόσθετου Jellyfin > ενημέρωση "
+"βιβλιοθηκών. Συνεχίστε όπως και να έχει;"
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr ""
+"Εμφάνιση της γραμμής προόδου εάν ο αριθμός των ενημερώσεων είναι μεγαλύτερος "
+"από"
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr ""
+"Το Kodi Sync Queue επιταχύνει τον συγχρονισμό εκκίνησης. Άλλοι συγχρονισμοί "
+"ενεργοποιούνται από συμβάντα διακομιστή."
+
+msgctxt "#33191"
+msgid "Restart Jellyfin for Kodi to apply this change?"
+msgstr "Επανεκκινήστε το Jellyfin για Kodi για να εφαρμοστεί αυτή η αλλαγή;"
+
+msgctxt "#33145"
+msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
+msgstr ""
+"Βεβαιωθείτε ότι το μερίδιο Samba (smb) του διακομιστή σας Jellyfin είναι "
+"προσβάσιμο στην εγκατάσταση Kodi και ότι έχετε ρυθμίσει τις παραμέτρους της "
+"αντικατάστασης διαδρομής στον διακομιστή σας. Διαφορετικά, το Kodi ενδέχεται "
+"να αποτύχει να εντοπίσει τα αρχεία σας."
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr ""
+"Συμβουλή σελιδοποίησης: Κάθε νήμα λήψης ζητά τη μέγιστη αξία των στοιχείων "
+"σας από το Jellyfin ταυτόχρονα."
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "Επανεκκίνηση…"
+
+msgctxt "#33202"
+msgid "Transcode H265/HEVC RExt"
+msgstr "Διακωδικοποίηση H265/HEVC RExt"
+
+msgctxt "#33109"
+msgid "Plugin"
+msgstr "Πρόσθετο"
+
+msgctxt "#33112"
+msgid "Applies to Native and Add-on playback mode"
+msgstr "Ισχύει για Εγγενή και Πρόσθετη λειτουργία αναπαραγωγής"
+
+msgctxt "#33113"
+msgid "Applies to Add-on playback mode only"
+msgstr "Ισχύει μόνο για τη λειτουργία αναπαραγωγής Πρόσθετων"
+
+msgctxt "#33119"
+msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"Κάτι πήγε στραβά κατά τη διάρκεια του συγχρονισμού. Θα μπορείτε να "
+"επαναφέρετε την πρόοδο κατά την επανεκκίνηση του Kodi. Εάν το πρόβλημα "
+"παραμένει, αναφέρετε τα φόρουμ Jellyfin for Kodi, με το αρχείο καταγραφής "
+"του Kodi."
+
+msgctxt "#33122"
+msgid "Restart Kodi to resume where you left off."
+msgstr "Επανεκκινήστε το Kodi για να συνεχίσετε από εκεί που σταματήσατε."
+
+msgctxt "#33143"
+msgid "Enable the option to delete"
+msgstr "Ενεργοποιήστε την επιλογή διαγραφής"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr ""
+"Για να αποφύγετε σφάλματα, ενημερώστε το Jellyfin για το Kodi στην έκδοση: "
+
+msgctxt "#33125"
+msgid "Enable remote control"
+msgstr "Ενεργοποίηση τηλεχειριστηρίου"
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "Ανανέωση κουτιών"
+
+msgctxt "#33135"
+msgid "Kodi will now restart to apply a small patch for your Kodi version."
+msgstr ""
+"Το Kodi θα επανεκκινήσει τώρα για να εφαρμόσει μια μικρή ενημέρωση κώδικα "
+"για την έκδοση Kodi."
+
+msgctxt "#33137"
+msgid "Enable Kodi Sync Queue"
+msgstr "Ενεργοποιήστε το Kodi Sync Queue"
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "Κατάργηση βιβλιοθήκης"
+
+msgctxt "#33147"
+msgid "Your access to Jellyfin is restricted."
+msgstr "Η πρόσβασή σας στο Jellyfin είναι περιορισμένη."
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "Η πρόσβασή σας σε αυτόν τον διακομιστή είναι περιορισμένη."
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "Δεν είναι δυνατή η σύνδεση σε αυτόν τον διακομιστή."
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "Ενημέρωση πληροφοριών διακομιστή"
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "Δεν είναι δυνατός ο εντοπισμός των TV Tunes στο Kodi."
+
+msgctxt "#33153"
+msgid "Your Jellyfin theme media has been synced to Kodi"
+msgstr "Τα θέματα πολυμέσων Jellyfin έχουν συγχρονιστεί με το Kodi"
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "Προσθήκη βιβλιοθηκών"
+
+msgctxt "#33155"
+msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
+msgstr ""
+"Η τρέχουσα ενημερωμένη έκδοση κώδικα για το Jellyfin για το Kodi είναι "
+"κατεστραμμένη! Αναρτήστε το στα φόρουμ Jellyfin για Kodi εάν αυτό το "
+"πρόβλημα παραμένει. Αυτό θα πρέπει να διορθωθεί το συντομότερο δυνατό."
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "Εφαρμόστηκε ένα patch!"
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "Μόνο ήχος"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "Μόνο υπότιτλοι"
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "Ενεργοποίηση επιλογής ήχου/υπότιτλων"
+
+msgctxt "#33163"
+msgid "Disabled/Media default"
+msgstr "Απενεργοποιημένο/Προεπιλογή Πολυμέσων"
+
+msgctxt "#33161"
+msgid "Update password"
+msgstr "Ενημέρωση κωδικού πρόσβασης"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "Επαναφορά της μουσικής βιβλιοθήκης;"
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr ""
+"Απόκρυψη ευαίσθητων πληροφοριών στο αρχείο καταγραφής (δεν ισχύει για την "
+"καταγραφή Kodi)"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "Αποτυχία δημιουργίας αντιγράφου ασφαλείας"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "(δυναμικό)"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "Αγαπημένα"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "Σε Εξέλιξη"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "Χωρίς παρακολούθηση"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "Με το πρώτο γράμμα"
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "Ξεχάστε τον προηγούμενο συγχρονισμό; Αυτό δεν συνιστάται."
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "Σελιδοποίηση - λήψη νημάτων (προεπιλογή: 3)"
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr ""
+"Ενημερώστε ή επιδιορθώστε τις βιβλιοθήκες σας για να εφαρμόσετε τις παρακάτω "
+"αλλαγές."
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr "Επεξεργασία ενημερώσεων"
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "Αναγκαστική διακωδικοποίηση"
+
+msgctxt "#33180"
+msgid "Restart Jellyfin for Kodi"
+msgstr "Επανεκκινήστε το Jellyfin για το Kodi"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "Επανεκκίνηση για να εφαρμοστεί το patch"
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "Αναπαραγωγή με τη λειτουργία κινηματογράφου"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "Ενεργοποιήστε την επιλογή αναπαραγωγής με τη λειτουργία κινηματογράφου"
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "Κατάργηση βιβλιοθηκών"
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr ""
+"Ενεργοποίηση συγχρονισμού κατά την αναπαραγωγή (μπορεί να προκαλέσει κάποια "
+"καθυστέρηση)"
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "Διαχείριση βιβλιοθηκών"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "Ενεργοποίηση Jellyfin για Kodi"
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr "Προχωρημένες επιλογές"
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr ""
+"Ένας συγχρονισμός εκτελείται ήδη, περιμένετε μέχρι να ολοκληρωθεί και "
+"δοκιμάστε ξανά."
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "Επιλέξτε τις βιβλιοθήκες για ενημέρωση"
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "Επιλέξτε τις βιβλιοθήκες για επισκευή"
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "Επιλέξτε τις βιβλιοθήκες προς κατάργηση"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "Μέγιστη ανάλυση έργων τέχνης"
