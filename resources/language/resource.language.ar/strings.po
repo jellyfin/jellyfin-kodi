@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-12-27 10:51+0000\n"
+"PO-Revision-Date: 2023-01-11 12:51+0000\n"
 "Last-Translator: 0TTA <osamh735@gmail.com>\n"
 "Language-Team: Arabic <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ar/>\n"
@@ -70,7 +70,7 @@ msgstr "الحلقة القادمة"
 
 msgctxt "#30178"
 msgid "In Progress Episodes"
-msgstr "الحلقات التي يتم مشاهدتها"
+msgstr "حلقات قيد المشاهدة"
 
 msgctxt "#30174"
 msgid "Recently Added Movies"
@@ -78,7 +78,7 @@ msgstr "الأفلام المضافة حديثاً"
 
 msgctxt "#30177"
 msgid "In Progress Movies"
-msgstr "الأفلام التي يتم مشاهدتها"
+msgstr "أفلام قيد المشاهدة"
 
 msgctxt "#30175"
 msgid "Recently Added Episodes"
@@ -86,7 +86,7 @@ msgstr "الحلقات المضافة حديثاً"
 
 msgctxt "#30171"
 msgid "In Progress TV Shows"
-msgstr "المسلسلات التي يتم مشاهدتها"
+msgstr "مسلسلات قيد المشاهدة"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
@@ -756,7 +756,7 @@ msgstr "فيديوهات الموسيقية لم تشاهد"
 
 msgctxt "#30257"
 msgid "In progress Music videos"
-msgstr "الفيديوهات الموسيقية قيد التشغيل"
+msgstr "مقاطع مرئية موسيقية قيد المشاهدة"
 
 msgctxt "#30256"
 msgid "Recently added Music videos"
@@ -978,7 +978,7 @@ msgstr "بالحرف الأول"
 
 msgctxt "#33169"
 msgid "In Progress"
-msgstr "قيد الانجاز"
+msgstr "قيد التقدم"
 
 msgctxt "#33164"
 msgid "Mask sensitive information in log (does not apply to kodi logging)"
