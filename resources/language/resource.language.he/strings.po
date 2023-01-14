@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-10-15 01:50+0000\n"
-"Last-Translator: netanel <natanelhenya@gmail.com>\n"
+"PO-Revision-Date: 2023-01-15 14:51+0000\n"
+"Last-Translator: dredstone1 <mayanpotu500@gmail.com>\n"
 "Language-Team: Hebrew <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/he/>\n"
 "Language: he\n"
@@ -209,3 +209,12 @@ msgstr "עיכוב בזמן הפעלה (בשניות)"
 msgctxt "#30530"
 msgid "Enable server restart message"
 msgstr "אפשר הודעת הפעלה מחדש של השרת"
+
+#, fuzzy
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "הפעל הודעת ברוך הבא"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "אפשרויות jellyfin"
