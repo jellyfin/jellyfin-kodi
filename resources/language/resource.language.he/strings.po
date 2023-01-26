@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2023-01-15 14:51+0000\n"
-"Last-Translator: dredstone1 <mayanpotu500@gmail.com>\n"
+"PO-Revision-Date: 2023-01-27 08:51+0000\n"
+"Last-Translator: moshiko kar <moshikokar@gmail.com>\n"
 "Language-Team: Hebrew <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/he/>\n"
 "Language: he\n"
@@ -44,10 +44,9 @@ msgctxt "#30016"
 msgid "Device name"
 msgstr "שם מכשיר"
 
-#, fuzzy
 msgctxt "#30004"
 msgid "Log level"
-msgstr "רמת יומן"
+msgstr "רמת תיעוד"
 
 msgctxt "#30003"
 msgid "Login method"
@@ -218,3 +217,27 @@ msgstr "הפעל הודעת ברוך הבא"
 msgctxt "#30401"
 msgid "Jellyfin options"
 msgstr "אפשרויות jellyfin"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "מאתחל…"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "Transcode H.265/HEVC"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "מקסימום קצב העברה"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "קצב שמע"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "השתמש בשם מכשיר אחר"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "מצב ניגון"
