@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2023-02-05 22:40+0000\n"
+"PO-Revision-Date: 2023-02-08 12:51+0000\n"
 "Last-Translator: rushmash <rushmash@gmail.com>\n"
 "Language-Team: Belarusian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/be/>\n"
@@ -12,846 +12,683 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 4.14.1\n"
 
-#, fuzzy
 msgctxt "#33049"
 msgid "New"
 msgstr "Новы"
 
-#, fuzzy
 msgctxt "#33054"
 msgid "Add user to session"
 msgstr "Дадаць карыстальніка ў сеанс"
 
-#, fuzzy
 msgctxt "#33109"
 msgid "Plugin"
-msgstr "Убудова"
+msgstr "Плагін"
 
-#, fuzzy
 msgctxt "#33121"
 msgid "All"
 msgstr "Усе"
 
-#, fuzzy
 msgctxt "#33136"
 msgid "Update library"
-msgstr "Абнаўленне бібліятэкі"
+msgstr "Абнавіць медыятэку"
 
-#, fuzzy
 msgctxt "#33137"
 msgid "Enable Kodi Sync Queue"
 msgstr "Уключыць чаргу сінхранізацыі Kodi"
 
-#, fuzzy
 msgctxt "#33140"
 msgid "Repair libraries"
-msgstr "Рамонт бібліятэк"
+msgstr "Выправіць медыятекі"
 
-#, fuzzy
 msgctxt "#33141"
 msgid "Remove server"
 msgstr "Выдаліць сервер"
 
-#, fuzzy
 msgctxt "#33169"
 msgid "In Progress"
 msgstr "У працэсе"
 
-#, fuzzy
 msgctxt "#33184"
 msgid "Remove libraries"
-msgstr "Выдаліць бібліятэкі"
+msgstr "Выдаліць медыятэкі"
 
-#, fuzzy
 msgctxt "#30000"
 msgid "Server address"
 msgstr "Адрас сервера"
 
-#, fuzzy
 msgctxt "#30001"
 msgid "Server name"
 msgstr "Імя сервера"
 
-#, fuzzy
 msgctxt "#30002"
 msgid "Force HTTP playback"
 msgstr "Прымусовае прайграванне HTTP"
 
-#, fuzzy
 msgctxt "#30003"
 msgid "Login method"
 msgstr "Метад ўваходу"
 
-#, fuzzy
 msgctxt "#30004"
 msgid "Log level"
-msgstr "Узровень лаг"
+msgstr "Узровень журналіравання"
 
-#, fuzzy
 msgctxt "#30016"
 msgid "Device name"
 msgstr "Назва прылады"
 
-#, fuzzy
 msgctxt "#30022"
 msgid "Advanced"
 msgstr "Пашыраны"
 
-#, fuzzy
 msgctxt "#30024"
 msgid "Username"
 msgstr "Імя карыстальніка"
 
-#, fuzzy
 msgctxt "#30091"
 msgid "Confirm file deletion"
 msgstr "Пацвердзіце выдаленне файла"
 
-#, fuzzy
 msgctxt "#30114"
 msgid "Offer delete after playback"
 msgstr "Прапанаваць выдаліць пасля прайгравання"
 
-#, fuzzy
 msgctxt "#30115"
 msgid "For Episodes"
 msgstr "Для эпізодаў"
 
-#, fuzzy
 msgctxt "#30116"
 msgid "For Movies"
 msgstr "Для фільмаў"
 
-#, fuzzy
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
-msgstr "Уключыць палепшаную вокладку (напрыклад, вокладку)"
+msgstr "Уключыць палепшаную ілюстрацыю (напрыклад, вокладку)"
 
-#, fuzzy
 msgctxt "#30160"
 msgid "Max stream bitrate"
 msgstr "Максімальны бітрэйт патоку"
 
-#, fuzzy
 msgctxt "#30161"
 msgid "Preferred video codec"
 msgstr "Пераважны відэакодэк"
 
-#, fuzzy
 msgctxt "#30162"
 msgid "Preferred audio codec"
 msgstr "Пераважны аўдыякодэк"
 
-#, fuzzy
 msgctxt "#30163"
 msgid "Audio bitrate"
 msgstr "Бітрэйт аўдыё"
 
-#, fuzzy
 msgctxt "#30164"
 msgid "Audio max channels"
-msgstr "Аўдыё максімум каналаў"
+msgstr "Максімум каналаў аўдыё"
 
-#, fuzzy
 msgctxt "#30165"
 msgid "Allow burned subtitles"
 msgstr "Дазволіць захаваныя субтытры"
 
-#, fuzzy
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
 msgstr "Нядаўна дададзеныя тэлешоу"
 
-#, fuzzy
 msgctxt "#30171"
 msgid "In Progress TV Shows"
-msgstr "Тэлешоу ў працэсе"
+msgstr "Бягучыя тэлеперадачы"
 
-#, fuzzy
 msgctxt "#30174"
 msgid "Recently Added Movies"
 msgstr "Нядаўна дададзеныя фільмы"
 
-#, fuzzy
 msgctxt "#30175"
 msgid "Recently Added Episodes"
-msgstr "Нядаўна дададзеныя серыі"
+msgstr "Нядаўна дададзеныя эпізоды"
 
-#, fuzzy
 msgctxt "#30177"
 msgid "In Progress Movies"
 msgstr "Фільмы ў працэсе"
 
-#, fuzzy
 msgctxt "#30178"
 msgid "In Progress Episodes"
 msgstr "Эпізоды ў працэсе"
 
-#, fuzzy
 msgctxt "#30179"
 msgid "Next Episodes"
-msgstr "Наступныя серыі"
+msgstr "Наступныя эпізоды"
 
-#, fuzzy
 msgctxt "#30180"
 msgid "Favorite Movies"
-msgstr "Любімыя фільмы"
+msgstr "Абраныя фільмы"
 
-#, fuzzy
 msgctxt "#30181"
 msgid "Favorite Shows"
-msgstr "Любімыя шоу"
+msgstr "Абраныя шоу"
 
-#, fuzzy
 msgctxt "#30182"
 msgid "Favorite Episodes"
-msgstr "Любімыя серыі"
+msgstr "Абраныя серыі"
 
-#, fuzzy
 msgctxt "#30185"
 msgid "Boxsets"
-msgstr "Боксэты"
+msgstr "Калекцыі"
 
-#, fuzzy
 msgctxt "#30189"
 msgid "Unwatched Movies"
 msgstr "Непрагледжаныя фільмы"
 
-#, fuzzy
 msgctxt "#30229"
 msgid "Random Items"
-msgstr "Выпадковыя прадметы"
+msgstr "Выпадковыя элементы"
 
-#, fuzzy
 msgctxt "#30230"
 msgid "Recommended Items"
 msgstr "Рэкамендуемыя тавары"
 
-#, fuzzy
 msgctxt "#30235"
 msgid "Interface"
 msgstr "Інтэрфейс"
 
-#, fuzzy
 msgctxt "#30239"
 msgid "Reset local Kodi database"
 msgstr "Скінуць лакальную базу дадзеных Kodi"
 
-#, fuzzy
 msgctxt "#30249"
 msgid "Enable welcome message"
 msgstr "Уключыць прывітальнае паведамленне"
 
-#, fuzzy
 msgctxt "#30251"
 msgid "Recently added Home Videos"
 msgstr "Нядаўна дададзеныя хатнія відэа"
 
-#, fuzzy
 msgctxt "#30252"
 msgid "Recently added Photos"
 msgstr "Нядаўна дададзеныя фатаграфіі"
 
-#, fuzzy
 msgctxt "#30253"
 msgid "Favourite Home Videos"
-msgstr "Любімыя хатнія відэа"
+msgstr "Абраныя хатнія відэа"
 
-#, fuzzy
 msgctxt "#30254"
 msgid "Favourite Photos"
-msgstr "Любімыя фатаграфіі"
+msgstr "Абраныя фатаграфіі"
 
-#, fuzzy
 msgctxt "#30255"
 msgid "Favourite Albums"
-msgstr "Любімыя альбомы"
+msgstr "Абраныя альбомы"
 
-#, fuzzy
 msgctxt "#30256"
 msgid "Recently added Music videos"
 msgstr "Нядаўна дададзеныя музычныя відэа"
 
-#, fuzzy
 msgctxt "#30257"
 msgid "In progress Music videos"
-msgstr "У працэсе Музычныя відэа"
+msgstr "У працэсе музычныя відэа"
 
-#, fuzzy
 msgctxt "#30258"
 msgid "Unwatched Music videos"
 msgstr "Непрагледжаныя музычныя кліпы"
 
-#, fuzzy
 msgctxt "#30302"
 msgid "Movies"
-msgstr "фільмы"
+msgstr "Фільмы"
 
-#, fuzzy
 msgctxt "#30305"
 msgid "TV Shows"
-msgstr "Тэлеперадачы"
+msgstr "ТБ-шоу"
 
-#, fuzzy
 msgctxt "#30401"
 msgid "Jellyfin options"
-msgstr "Желейные варыянты"
+msgstr "Опцыі Jellyfin"
 
-#, fuzzy
 msgctxt "#30402"
 msgid "Jellyfin transcode"
-msgstr "Перакадзіраваць Jellyfin"
+msgstr "Перакадзіраванне Jellyfin"
 
-#, fuzzy
 msgctxt "#30405"
 msgid "Add to favorites"
 msgstr "Дадаць у абранае"
 
-#, fuzzy
 msgctxt "#30406"
 msgid "Remove from favorites"
 msgstr "Выдаліць з абранага"
 
-#, fuzzy
 msgctxt "#30408"
 msgid "Settings"
 msgstr "Налады"
 
-#, fuzzy
 msgctxt "#30409"
 msgid "Delete from Jellyfin"
 msgstr "Выдаліць з Jellyfin"
 
-#, fuzzy
 msgctxt "#30410"
 msgid "Refresh this item"
 msgstr "Абнавіць гэты элемент"
 
-#, fuzzy
 msgctxt "#30412"
 msgid "Transcode"
 msgstr "Перакадзіраваць"
 
-#, fuzzy
 msgctxt "#30500"
 msgid "Verify connection"
 msgstr "Праверце злучэнне"
 
-#, fuzzy
 msgctxt "#30504"
 msgid "Use alternate device name"
 msgstr "Выкарыстоўвайце альтэрнатыўнае імя прылады"
 
-#, fuzzy
 msgctxt "#30506"
 msgid "Sync"
-msgstr "Сінхранізацыя"
+msgstr "Сінхранізіраваць"
 
-#, fuzzy
 msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
 msgstr "Уключыць апавяшчэнне, калі колькасць абнаўленняў перавышае"
 
-#, fuzzy
 msgctxt "#30509"
 msgid "Enable music library"
-msgstr "Уключыць музычную бібліятэку"
+msgstr "Уключыць музычную медыятэку"
 
-#, fuzzy
 msgctxt "#30511"
 msgid "Playback mode"
 msgstr "Рэжым прайгравання"
 
-#, fuzzy
 msgctxt "#30512"
 msgid "Enable artwork caching"
 msgstr "Уключыць кэшаванне ілюстрацыі"
 
-#, fuzzy
 msgctxt "#30515"
 msgid "Paging - max items requested (default: 15)"
 msgstr ""
 "Пейджінг - максімальная колькасць запытаных элементаў (па змаўчанні: 15)"
 
-#, fuzzy
 msgctxt "#30516"
 msgid "Playback"
 msgstr "Прайграванне"
 
-#, fuzzy
 msgctxt "#30517"
 msgid "Network credentials"
 msgstr "Сеткавыя ўліковыя даныя"
 
-#, fuzzy
 msgctxt "#30518"
 msgid "Enable cinema mode"
 msgstr "Уключыць рэжым кіно"
 
-#, fuzzy
 msgctxt "#30519"
 msgid "Ask to play trailers"
 msgstr "Папрасіце прайграць трэйлеры"
 
-#, fuzzy
 msgctxt "#30520"
 msgid "Skip the delete confirmation (use at your own risk)"
 msgstr ""
 "Прапусціць пацверджанне выдалення (выкарыстоўвайце на свой страх і рызыку)"
 
-#, fuzzy
 msgctxt "#30521"
 msgid "Jump back on resume (in seconds)"
 msgstr "Перайсці да рэзюмэ (за секунды)"
 
-#, fuzzy
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
 msgstr "Перакадзіраваць H.265/HEVC"
 
-#, fuzzy
 msgctxt "#30523"
 msgid "Transcode MPEG2"
 msgstr "Перакадзіраваць MPEG2"
 
-#, fuzzy
 msgctxt "#30524"
 msgid "Transcode VC-1"
 msgstr "Перакадзіраваць VC-1"
 
-#, fuzzy
 msgctxt "#30525"
 msgid "Transcode VP9"
 msgstr "Перакадзіраваць VP9"
 
-#, fuzzy
 msgctxt "#30526"
 msgid "Transcode AV1"
 msgstr "Перакадзіраваць AV1"
 
-#, fuzzy
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
-msgstr "Ігнараваць спецыяльныя прапановы ў наступных серыях"
+msgstr "Ігнараваць спецыяльныя эпізоды ў наступных серыях"
 
-#, fuzzy
 msgctxt "#30528"
 msgid "Permanent users"
 msgstr "Пастаянныя карыстальнікі"
 
-#, fuzzy
 msgctxt "#30529"
 msgid "Startup delay (in seconds)"
 msgstr "Затрымка запуску (у секундах)"
 
-#, fuzzy
 msgctxt "#30530"
 msgid "Enable server restart message"
 msgstr "Уключыць паведамленне аб перазапуску сервера"
 
-#, fuzzy
 msgctxt "#30531"
 msgid "Enable new content"
 msgstr "Уключыць новы кантэнт"
 
-#, fuzzy
 msgctxt "#30532"
 msgid "Duration of the video library pop up"
-msgstr "Усплывальнае акно Працягласць відэатэкі"
+msgstr "Працягласць відэатэкі ў усплывальным акне"
 
-#, fuzzy
 msgctxt "#30533"
 msgid "Duration of the music library pop up"
-msgstr "Усплывальнае акно працягласці музычнай бібліятэкі"
+msgstr "Усплывальнае акно працягласці музычнай медыятэкі"
 
-#, fuzzy
 msgctxt "#30534"
 msgid "Notifications (in seconds)"
 msgstr "Апавяшчэнні (у секундах)"
 
-#, fuzzy
 msgctxt "#30535"
 msgid "Generate a new device Id"
-msgstr "Стварыце новы ідэнтыфікатар прылады"
+msgstr "Стварыць новы ідэнтыфікатар прылады"
 
-#, fuzzy
 msgctxt "#30536"
 msgid "Allow the screensaver during syncs"
 msgstr "Дазволіць застаўку падчас сінхранізацыі"
 
-#, fuzzy
 msgctxt "#30537"
 msgid "Transcode Hi10P"
 msgstr "Перакадзіраваць Hi10P"
 
-#, fuzzy
 msgctxt "#30539"
 msgid "Login"
 msgstr "Увайсці"
 
-#, fuzzy
 msgctxt "#30540"
 msgid "Manual login"
 msgstr "Ручной ўваход"
 
-#, fuzzy
 msgctxt "#30543"
 msgid "Username or email"
 msgstr "Імя карыстальніка або адрас электроннай пошты"
 
-#, fuzzy
 msgctxt "#30545"
 msgid "Enable server offline"
 msgstr "Уключыць сервер у аўтаномным рэжыме"
 
-#, fuzzy
 msgctxt "#30547"
 msgid "Display message"
 msgstr "Паказаць паведамленне"
 
-#, fuzzy
 msgctxt "#30602"
 msgid "Password"
 msgstr "Пароль"
 
-#, fuzzy
 msgctxt "#30605"
 msgid "Sign in"
 msgstr "Увайсці"
 
-#, fuzzy
 msgctxt "#30606"
 msgid "Cancel"
 msgstr "Адмяніць"
 
-#, fuzzy
 msgctxt "#30607"
 msgid "Select main server"
-msgstr "Выберыце галоўны сервер"
+msgstr "Выбраць галоўны сервер"
 
-#, fuzzy
 msgctxt "#30608"
 msgid "Username or password cannot be empty"
 msgstr "Імя карыстальніка або пароль не могуць быць пустымі"
 
-#, fuzzy
 msgctxt "#30609"
 msgid "Unable to connect to the selected server"
 msgstr "Немагчыма падключыцца да абранага сервера"
 
-#, fuzzy
 msgctxt "#30610"
 msgid "Connect to"
 msgstr "Падключыцца да"
 
-#, fuzzy
 msgctxt "#30611"
 msgid "Manually add server"
 msgstr "Дадаць сервер уручную"
 
-#, fuzzy
 msgctxt "#30612"
 msgid "Please sign in"
 msgstr "Калі ласка, увайдзіце"
 
-#, fuzzy
 msgctxt "#30613"
 msgid "Change Jellyfin Connect user"
 msgstr "Змяніць карыстальніка Jellyfin Connect"
 
-#, fuzzy
 msgctxt "#30614"
 msgid "Connect to server"
 msgstr "Падключыцеся да сервера"
 
-#, fuzzy
 msgctxt "#30615"
 msgid "Host"
-msgstr "гаспадар"
+msgstr "Хост"
 
-#, fuzzy
 msgctxt "#30616"
 msgid "Connect"
 msgstr "Злучыцца"
 
-#, fuzzy
 msgctxt "#30617"
 msgid "Server or port cannot be empty"
 msgstr "Сервер або порт не могуць быць пустымі"
 
-#, fuzzy
 msgctxt "#33000"
 msgid "Welcome"
 msgstr "Сардэчна запрашаем"
 
-#, fuzzy
 msgctxt "#33006"
 msgid "Server is restarting"
 msgstr "Сервер перазапускаецца"
 
-#, fuzzy
 msgctxt "#33009"
 msgid "Invalid username or password"
 msgstr "Няправільнае імя карыстальніка або пароль"
 
-#, fuzzy
 msgctxt "#33013"
 msgid "Choose the audio stream"
-msgstr "Выберыце аўдыяструмень"
+msgstr "Выберыце аўдыё паток"
 
-#, fuzzy
 msgctxt "#33014"
 msgid "Choose the subtitles stream"
 msgstr "Выберыце паток субтытраў"
 
-#, fuzzy
 msgctxt "#33015"
 msgid "Delete file from Jellyfin?"
 msgstr "Выдаліць файл з Jellyfin?"
 
-#, fuzzy
 msgctxt "#33016"
 msgid "Play trailers?"
 msgstr "Прайграць трэйлеры?"
 
-#, fuzzy
 msgctxt "#33018"
 msgid "Gathering boxsets"
-msgstr "Збор бокссэтаў"
+msgstr "Збор калекцый"
 
-#, fuzzy
 msgctxt "#33021"
 msgid "Gathering:"
 msgstr "Збор:"
 
-#, fuzzy
 msgctxt "#33025"
 msgid "Completed in:"
 msgstr "Завершана ў:"
 
-#, fuzzy
 msgctxt "#33033"
 msgid "A new device Id has been generated. Kodi will now restart."
 msgstr "Новы ідэнтыфікатар прылады быў створаны. Зараз Kodi перазапусціцца."
 
-#, fuzzy
 msgctxt "#33035"
 msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
 msgstr ""
-"Асцярожна! Калі вы выбіраеце родны рэжым, некаторыя функцыі Jellyfin будуць "
-"адсутнічаць, напрыклад: рэжым кінатэатра Jellyfin, параметры прамой "
+"Асцярожна! Калі вы выбіраеце \"Натыўны\" рэжым, некаторыя функцыі Jellyfin "
+"будуць адсутнічаць, напрыклад: рэжым кінатэатра Jellyfin, параметры прамой "
 "трансляцыі/перакадзіравання і расклад бацькоўскага доступу."
 
-#, fuzzy
 msgctxt "#33036"
 msgid "Add-on (default)"
 msgstr "Надбудова (па змаўчанні)"
 
-#, fuzzy
 msgctxt "#33037"
 msgid "Native (direct paths)"
 msgstr "Родныя (прамыя шляхі)"
 
-#, fuzzy
 msgctxt "#33039"
 msgid "Enable music library?"
-msgstr "Уключыць музычную бібліятэку?"
+msgstr "Уключыць музычную медыятэку?"
 
-#, fuzzy
 msgctxt "#33047"
 msgid "Kodi can't locate file:"
 msgstr "Kodi не можа знайсці файл:"
 
-#, fuzzy
 msgctxt "#33048"
 msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
 msgstr ""
 "Магчыма, вам спатрэбіцца праверыць вашы сеткавыя ўліковыя даныя ў наладах "
 "надбудовы або выкарыстаць замену шляху Jellyfin, каб правільна адфарматаваць "
-"свой шлях (прыборная панэль Jellyfin > бібліятэка). Спыніць сінхранізацыю?"
+"свой шлях (\"Панэль кіравання Jellyfin\" > \"Медыятэка\"). Спыніць "
+"сінхранізацыю?"
 
-#, fuzzy
 msgctxt "#33058"
 msgid "Perform local database reset"
 msgstr "Выканайце скід лакальнай базы дадзеных"
 
-#, fuzzy
 msgctxt "#33060"
 msgid "Sync theme media"
 msgstr "Сінхранізацыя медыя-тэмы"
 
-#, fuzzy
 msgctxt "#33061"
 msgid "Add/Remove user from the session"
 msgstr "Дадаць/выдаліць карыстальніка з сесіі"
 
-#, fuzzy
 msgctxt "#33062"
 msgid "Add user"
 msgstr "Дадаць карыстальніка"
 
-#, fuzzy
 msgctxt "#33063"
 msgid "Remove user"
 msgstr "Выдаліць карыстальніка"
 
-#, fuzzy
 msgctxt "#33064"
 msgid "Remove user from the session"
 msgstr "Выдаліць карыстальніка з сесіі"
 
-#, fuzzy
 msgctxt "#33074"
 msgid "Are you sure you want to reset your local Kodi database?"
 msgstr "Вы ўпэўнены, што хочаце скінуць лакальную базу дадзеных Kodi?"
 
-#, fuzzy
 msgctxt "#33086"
 msgid "Remove all cached artwork?"
 msgstr "Выдаліць усе кэшаваныя ілюстрацыі?"
 
-#, fuzzy
 msgctxt "#33087"
 msgid "Reset all Jellyfin add-on settings?"
 msgstr "Скінуць усе налады дадатковага кампанента Jellyfin?"
 
-#, fuzzy
 msgctxt "#33088"
 msgid "Database reset has completed, Kodi will now restart to apply the changes."
 msgstr "Скід базы даных завершаны, Kodi перазапусціцца, каб прымяніць змены."
 
-#, fuzzy
 msgctxt "#33089"
 msgid "Enter folder name for backup"
 msgstr "Увядзіце імя папкі для рэзервовага капіявання"
 
-#, fuzzy
 msgctxt "#33090"
 msgid "Replace existing backup?"
 msgstr "Замяніць існуючую рэзервовую копію?"
 
-#, fuzzy
 msgctxt "#33091"
 msgid "Created backup at:"
 msgstr "Створана рэзервовая копія:"
 
-#, fuzzy
 msgctxt "#33092"
 msgid "Create a backup"
 msgstr "Стварыце рэзервовую копію"
 
-#, fuzzy
 msgctxt "#33093"
 msgid "Backup folder"
 msgstr "Рэзервовая тэчка"
 
-#, fuzzy
 msgctxt "#33097"
 msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
 msgstr ""
 "Важна, cleanonupdate быў выдалены ў вашых пашыраных наладах, каб прадухіліць "
 "канфлікт з Jellyfin для Kodi. Kodi зараз перазапусціцца."
 
-#, fuzzy
 msgctxt "#33098"
 msgid "Refresh boxsets"
 msgstr "Абнавіць скрынкі"
 
-#, fuzzy
 msgctxt "#33099"
 msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
 msgstr ""
 "Усталюйце серверны плагін Kodi Sync Queue, каб аўтаматычна прымяняць "
-"абнаўленні бібліятэкі Jellyfin пры запуску. Гэты параметр можна знайсці ў "
-"наладах надбудовы > параметры сінхранізацыі > Уключыць чаргу сінхранізацыі "
+"абнаўленні медыятэкі Jellyfin пры запуску. Гэты параметр можна знайсці ў "
+"Наладах надбудовы > Параметры сінхранізацыі > Уключыць чаргу сінхранізацыі "
 "Kodi."
 
-#, fuzzy
 msgctxt "#33101"
 msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
 msgstr ""
 "Паколькі вы выкарыстоўваеце ўласны рэжым прайгравання з уключанай музыкай, "
 "хочаце імпартаваць ацэнку музыкі з файлаў?"
 
-#, fuzzy
 msgctxt "#33102"
 msgid "Resume the previous sync?"
 msgstr "Аднавіць папярэднюю сінхранізацыю?"
 
-#, fuzzy
 msgctxt "#33104"
 msgid "Find more info in the github wiki/Create-and-restore-from-backup."
 msgstr ""
 "Знайдзіце дадатковую інфармацыю ў GitHub wiki/Create-and-restore-from-backup."
 
-#, fuzzy
 msgctxt "#33105"
 msgid "Enable the context menu"
 msgstr "Уключыць кантэкстнае меню"
 
-#, fuzzy
 msgctxt "#33106"
 msgid "Enable the option to transcode"
 msgstr "Уключыце опцыю перакадзіравання"
 
-#, fuzzy
 msgctxt "#33107"
 msgid "Users added to the session (no space between users). (eg username,username2)"
 msgstr ""
 "Карыстальнікі, дададзеныя ў сеанс (без прабелу паміж карыстальнікамі) ("
 "напрыклад, імя карыстальніка, імя карыстальніка2)"
 
-#, fuzzy
 msgctxt "#33108"
 msgid "Notifications are delayed during video playback (except live tv)."
 msgstr ""
 "Апавяшчэнні затрымліваюцца падчас прайгравання відэа (акрамя жывога "
 "тэлебачання)."
 
-#, fuzzy
 msgctxt "#33110"
 msgid "Restart Kodi to take effect."
 msgstr "Перазапусціце Kodi, каб уступіць у сілу."
 
-#, fuzzy
 msgctxt "#33111"
 msgid "Reset the local database to apply the playback mode change."
 msgstr ""
 "Скіньце лакальную базу дадзеных, каб прымяніць змяненне рэжыму прайгравання."
 
-#, fuzzy
 msgctxt "#33112"
 msgid "Applies to Native and Add-on playback mode"
 msgstr "Прымяняецца да ўласнага і дадатковага рэжымаў прайгравання"
 
-#, fuzzy
 msgctxt "#33113"
 msgid "Applies to Add-on playback mode only"
 msgstr "Прымяняецца толькі да дадатковага рэжыму прайгравання"
 
-#, fuzzy
 msgctxt "#33114"
 msgid "Enable external subtitles"
 msgstr "Уключыць знешнія субтытры"
 
-#, fuzzy
 msgctxt "#33115"
 msgid "Transcode options"
 msgstr "Параметры перакадзіравання"
 
-#, fuzzy
 msgctxt "#33116"
 msgid "Compress artwork (reduces quality)"
 msgstr "Сціснуць малюнак (зніжае якасць)"
 
-#, fuzzy
 msgctxt "#33118"
 msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Вы змянілі рэжым прайгравання. Для прымянення змяненняў трэба скінуць Kodi. "
 "Хочаце зрабіць гэта зараз?"
 
-#, fuzzy
 msgctxt "#33119"
 msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
 msgstr ""
@@ -859,32 +696,26 @@ msgstr ""
 "перазапуску Kodi. Калі праблема не знікне, паведаміце пра гэта на форумах "
 "Jellyfin for Kodi са сваім журналам Kodi."
 
-#, fuzzy
 msgctxt "#33120"
 msgid "Select the libraries to add"
-msgstr "Выберыце бібліятэкі для дадання"
+msgstr "Выберыце медыятэкі для дадання"
 
-#, fuzzy
 msgctxt "#33122"
 msgid "Restart Kodi to resume where you left off."
 msgstr "Перазапусціце Kodi, каб працягнуць працу там, дзе вы спыніліся."
 
-#, fuzzy
 msgctxt "#33123"
 msgid "Sync library to Kodi"
-msgstr "Сінхранізацыя бібліятэкі з Kodi"
+msgstr "Сінхранізацыя медыятэкі з Kodi"
 
-#, fuzzy
 msgctxt "#33124"
 msgid "Include people (slow)"
 msgstr "Уключыць людзей (павольна)"
 
-#, fuzzy
 msgctxt "#33125"
 msgid "Enable remote control"
 msgstr "Уключыць дыстанцыйнае кіраванне"
 
-#, fuzzy
 msgctxt "#33128"
 msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
 msgstr ""
@@ -893,73 +724,60 @@ msgstr ""
 "праблема не знікне, паведаміце пра гэта на форумах Jellyfin for Kodi са "
 "сваім журналам Kodi."
 
-#, fuzzy
 msgctxt "#33129"
 msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
 msgstr ""
-"Вы можаце сінхранізаваць бібліятэкі, запусціўшы надбудову Jellyfin > Дадаць "
-"бібліятэкі."
+"Вы можаце сінхранізаваць медыятэкі, запусціўшы \"Надбудова Jellyfin\" > "
+"\"Дадаць медыятэкі\"."
 
-#, fuzzy
 msgctxt "#33130"
 msgid "Select the source"
 msgstr "Выберыце крыніцу"
 
-#, fuzzy
 msgctxt "#33131"
 msgid "Refreshing boxsets"
-msgstr "Асвяжальныя бокссеты"
+msgstr "Асвяжальныя калекцыі"
 
-#, fuzzy
 msgctxt "#33132"
 msgid "Repair library"
-msgstr "Рамонтная бібліятэка"
+msgstr "Выправіць медыятэку"
 
-#, fuzzy
 msgctxt "#33133"
 msgid "Remove library from Kodi"
-msgstr "Выдаліць бібліятэку з Kodi"
+msgstr "Выдаліць медыятэку з Kodi"
 
-#, fuzzy
 msgctxt "#33134"
 msgid "Add server"
 msgstr "Дадаць сервер"
 
-#, fuzzy
 msgctxt "#33135"
 msgid "Kodi will now restart to apply a small patch for your Kodi version."
 msgstr ""
 "Зараз Kodi перазапусціцца, каб прымяніць невялікі патч для вашай версіі Kodi."
 
-#, fuzzy
 msgctxt "#33138"
 msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
 msgstr ""
-"Вы можаце абнавіць сваю бібліятэку ўручную, а не спадзявацца на серверны "
-"плагін Kodi Sync Queue. Запусціце дадатковы кампанент і абнавіце бібліятэкі ("
-"або кожную бібліятэку). Каб выдаліць кантэнт, трэба адрамантаваць бібліятэку."
+"Вы можаце абнавіць сваю медыятэку ўручную, а не спадзявацца на серверны "
+"плагін Kodi Sync Queue. Запусціце дадатковы кампанент і абнавіце медыятэкі ("
+"або кожную медыятэку). Каб выдаліць кантэнт, трэба адрамантаваць медыятэку."
 
-#, fuzzy
 msgctxt "#33139"
 msgid "Update libraries"
-msgstr "Абнаўленне бібліятэк"
+msgstr "Абнавіць медыятэкі"
 
-#, fuzzy
 msgctxt "#33142"
 msgid "Something went wrong. Try again later."
 msgstr "Нешта пайшло не так. Паўтарыце спробу пазней."
 
-#, fuzzy
 msgctxt "#33143"
 msgid "Enable the option to delete"
 msgstr "Уключыце опцыю выдалення"
 
-#, fuzzy
 msgctxt "#33144"
 msgid "Removing library"
-msgstr "Выдаленне бібліятэкі"
+msgstr "Выдаленне медыятекі"
 
-#, fuzzy
 msgctxt "#33145"
 msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
 msgstr ""
@@ -967,32 +785,26 @@ msgstr ""
 "даступная для вашай ўстаноўкі Kodi і што на вашым серверы наладжана замена "
 "шляху. У адваротным выпадку Kodi можа не знайсці вашы файлы."
 
-#, fuzzy
 msgctxt "#33146"
 msgid "Unable to connect to Jellyfin."
 msgstr "Немагчыма падключыцца да Jellyfin."
 
-#, fuzzy
 msgctxt "#33147"
 msgid "Your access to Jellyfin is restricted."
 msgstr "Ваш доступ да Jellyfin абмежаваны."
 
-#, fuzzy
 msgctxt "#33148"
 msgid "Your access to this server is restricted."
 msgstr "Ваш доступ да гэтага сервера абмежаваны."
 
-#, fuzzy
 msgctxt "#33149"
 msgid "Unable to connect to this server."
 msgstr "Немагчыма падключыцца да гэтага сервера."
 
-#, fuzzy
 msgctxt "#33150"
 msgid "Update server information"
 msgstr "Абнавіць інфармацыю аб серверы"
 
-#, fuzzy
 msgctxt "#33151"
 msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
 msgstr ""
@@ -1000,22 +812,18 @@ msgstr ""
 "хочаце выкарыстоўваць іншы сервер, скіньце вашу лакальную базу дадзеных, у "
 "тым ліку інфармацыю аб вашым карыстальніку."
 
-#, fuzzy
 msgctxt "#33152"
 msgid "Unable to locate TV Tunes in Kodi."
 msgstr "Немагчыма знайсці ТБ-мелодыі ў Kodi."
 
-#, fuzzy
 msgctxt "#33153"
 msgid "Your Jellyfin theme media has been synced to Kodi"
 msgstr "Ваш медыяфайл з тэмай Jellyfin быў сінхранізаваны з Kodi"
 
-#, fuzzy
 msgctxt "#33154"
 msgid "Add libraries"
-msgstr "Дадаць бібліятэкі"
+msgstr "Дадаць медыятэкі"
 
-#, fuzzy
 msgctxt "#33155"
 msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
 msgstr ""
@@ -1023,217 +831,178 @@ msgstr ""
 "паведамленне на форум Jellyfin для Kodi, калі праблема не знікне. Гэта трэба "
 "будзе выправіць як мага хутчэй."
 
-#, fuzzy
 msgctxt "#33156"
 msgid "A patch has been applied!"
-msgstr "Патч ужыты!"
+msgstr "Патч паспяхова ужыты!"
 
-#, fuzzy
 msgctxt "#33157"
 msgid "Audio only"
 msgstr "Толькі аўдыё"
 
-#, fuzzy
 msgctxt "#33158"
 msgid "Subtitles only"
 msgstr "Толькі субтытры"
 
-#, fuzzy
 msgctxt "#33159"
 msgid "Enable audio/subtitles selection"
-msgstr "Уключыць выбар аўдыя/субтытраў"
+msgstr "Уключыць выбар аўдыё/субтытраў"
 
-#, fuzzy
 msgctxt "#33163"
 msgid "Disabled/Media default"
 msgstr "Адключана/Медыя па змаўчанні"
 
-#, fuzzy
 msgctxt "#33160"
 msgid "To avoid errors, please update Jellyfin for Kodi to version: "
 msgstr "Каб пазбегнуць памылак, абнавіце Jellyfin для Kodi да версіі: "
 
-#, fuzzy
 msgctxt "#33161"
 msgid "Update password"
 msgstr "Абнавіць пароль"
 
-#, fuzzy
 msgctxt "#33162"
 msgid "Reset the music library?"
-msgstr "Скінуць музычную бібліятэку?"
+msgstr "Скінуць музычную медыятеку?"
 
-#, fuzzy
 msgctxt "#33164"
 msgid "Mask sensitive information in log (does not apply to kodi logging)"
 msgstr ""
 "Маскіруйце канфідэнцыйную інфармацыю ў журнале (не адносіцца да вядзення "
 "журналаў Kodi)"
 
-#, fuzzy
 msgctxt "#33165"
 msgid "Failed to create backup"
 msgstr "Не ўдалося стварыць рэзервовую копію"
 
-#, fuzzy
 msgctxt "#33166"
 msgid "(dynamic)"
 msgstr "(дынамічны)"
 
-#, fuzzy
 msgctxt "#33167"
 msgid "Recently added"
 msgstr "Нядаўна дададзены"
 
-#, fuzzy
 msgctxt "#33168"
 msgid "Favourites"
-msgstr "Выбранае"
+msgstr "Абранае"
 
-#, fuzzy
 msgctxt "#33170"
 msgid "Unwatched"
 msgstr "Непрагледжаны"
 
-#, fuzzy
 msgctxt "#33171"
 msgid "By first letter"
 msgstr "Па першай літары"
 
-#, fuzzy
 msgctxt "#33172"
 msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
 msgstr ""
 "У вас ёсць {number} абнаўленняў у чаканні. Гэта можа заняць некаторы час, "
-"перш чым вы ўбачыце новы кантэнт. Абнавіць свае бібліятэкі можа быць хутчэй, "
-"запусціўшы надбудову Jellyfin > абнавіць бібліятэкі. Усё роўна працягнуць?"
+"перш чым вы ўбачыце новы кантэнт. Абнавіць свае медыятэкі можа быць хутчэй, "
+"запусціўшы \"Надбудова Jellyfin\" > \"Абнавіць медыятэкі\". Усё роўна "
+"працягнуць?"
 
-#, fuzzy
 msgctxt "#33173"
 msgid "Forget about the previous sync? This is not recommended."
 msgstr "Забыць пра папярэднюю сінхранізацыю? Гэта не рэкамендуецца."
 
-#, fuzzy
 msgctxt "#33174"
 msgid "Paging - download threads (default: 3)"
 msgstr "Размяшчэнне па старонках - ланцужкі загрузкі (па змаўчанні: 3)"
 
-#, fuzzy
 msgctxt "#33175"
 msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
 msgstr ""
 "Падказка па падпампоўцы: кожны паток загрузкі адначасова запытвае "
 "максімальную колькасць элементаў у Jellyfin."
 
-#, fuzzy
 msgctxt "#33176"
 msgid "Update or repair your libraries to apply the changes below."
 msgstr ""
-"Абнавіце або адрамантуйце свае бібліятэкі, каб прымяніць прыведзеныя ніжэй "
+"Абнавіце або адрамантуйце свае медыятэкі, каб прымяніць прыведзеныя ніжэй "
 "змены."
 
-#, fuzzy
 msgctxt "#33177"
 msgid "Display the progress bar if update count greater than"
 msgstr "Адлюстроўваць панэль прагрэсу, калі колькасць абнаўленняў перавышае"
 
-#, fuzzy
 msgctxt "#33178"
 msgid "Processing updates"
 msgstr "Апрацоўка абнаўленняў"
 
-#, fuzzy
 msgctxt "#33179"
 msgid "Force transcode"
 msgstr "Прымусовае перакадзіраванне"
 
-#, fuzzy
 msgctxt "#33180"
 msgid "Restart Jellyfin for Kodi"
 msgstr "Перазапусціце Jellyfin для Kodi"
 
-#, fuzzy
 msgctxt "#33181"
 msgid "Restarting to apply the patch"
 msgstr "Перазапуск для прымянення патча"
 
-#, fuzzy
 msgctxt "#33182"
 msgid "Play with cinema mode"
-msgstr "Гуляйце ў рэжыме кіно"
+msgstr "Прайграваць у рэжыме кіназалы"
 
-#, fuzzy
 msgctxt "#33183"
 msgid "Enable the option to play with cinema mode"
-msgstr "Уключыце опцыю гульні ў рэжыме кінатэатра"
+msgstr "Уключыць опцыю прайгравання ў рэжыме кіназалы"
 
-#, fuzzy
 msgctxt "#33185"
 msgid "Enable sync during playback (may cause some lag)"
 msgstr ""
 "Уключыць сінхранізацыю падчас прайгравання (можа выклікаць некаторую "
 "затрымку)"
 
-#, fuzzy
 msgctxt "#33186"
 msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
 msgstr ""
 "Чарга сінхранізацыі Kodi паскарае сінхранізацыю пры запуску. Іншыя "
 "сінхранізацыі запускаюцца падзеямі сервера."
 
-#, fuzzy
 msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
 msgstr "Перазапусціць Jellyfin для Kodi, каб прымяніць гэта змяненне?"
 
-#, fuzzy
 msgctxt "#33193"
 msgid "Restarting..."
 msgstr "Перазапуск…"
 
-#, fuzzy
 msgctxt "#33194"
 msgid "Manage libraries"
-msgstr "Кіраванне бібліятэкамі"
+msgstr "Кіраванне медыятэкамі"
 
-#, fuzzy
 msgctxt "#33195"
 msgid "Enable Jellyfin for Kodi"
 msgstr "Уключыць Jellyfin для Kodi"
 
-#, fuzzy
 msgctxt "#33196"
 msgid "Advanced options"
 msgstr "Дадатковыя параметры"
 
-#, fuzzy
 msgctxt "#33197"
 msgid "A sync is already running, please wait until it completes and try again."
 msgstr ""
 "Сінхранізацыя ўжо запушчана, пачакайце, пакуль яна завершыцца, і паўтарыце "
 "спробу."
 
-#, fuzzy
 msgctxt "#33198"
 msgid "Select the libraries to update"
-msgstr "Выберыце бібліятэкі для абнаўлення"
+msgstr "Выберыце медыятэкі для абнаўлення"
 
-#, fuzzy
 msgctxt "#33199"
 msgid "Select the libraries to repair"
-msgstr "Выберыце бібліятэкі для рамонту"
+msgstr "Выберыце медыятэкі для рамонту"
 
-#, fuzzy
 msgctxt "#33200"
 msgid "Select the libraries to remove"
-msgstr "Выберыце бібліятэкі для выдалення"
+msgstr "Выберыце медыятэкі для выдалення"
 
-#, fuzzy
 msgctxt "#33201"
 msgid "Max artwork resolution"
-msgstr "Максімальнае дазвол твора"
+msgstr "Максімальнае дазвол ілюстрацыі"
 
-#, fuzzy
 msgctxt "#33202"
 msgid "Transcode H265/HEVC RExt"
 msgstr "Перакадзіраваць H265/HEVC RExt"
