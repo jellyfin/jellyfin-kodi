@@ -515,7 +515,7 @@ class PlayUtils(object):
 
     def set_external_subs(self, source, listitem):
 
-        ''' Try to download external subs locally so we can label them.
+        ''' Try to download external subs locally, so we can label them.
             Since Jellyfin returns all possible tracks together, sort them.
             IsTextSubtitleStream if true, is available to download from server.
         '''

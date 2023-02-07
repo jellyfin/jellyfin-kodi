@@ -191,7 +191,7 @@ class Views(object):
         playlist_path = translate_path("special://profile/playlists/video")
         index = 0
 
-        # Kodi 19 doesn't seem to create this directory on it's own
+        # Kodi 19 doesn't seem to create this directory on its own
         if not os.path.isdir(node_path):
             os.makedirs(node_path)
 
@@ -680,7 +680,7 @@ class Views(object):
     def window_nodes(self):
 
         ''' Just read from the database and populate based on SortedViews
-            Setup the window properties that reflect the jellyfin server views and more.
+            Set up the window properties that reflect the jellyfin server views and more.
         '''
         self.window_clear()
         self.window_clear('Jellyfin.wnodes')
@@ -937,7 +937,7 @@ class Views(object):
 
     def delete_playlist_by_id(self, view_id):
 
-        ''' Remove playlist based based on view_id.
+        ''' Remove playlist based on view_id.
         '''
         path = translate_path("special://profile/playlists/video/")
         _, files = xbmcvfs.listdir(path)

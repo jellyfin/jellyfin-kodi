@@ -210,7 +210,7 @@ class FullSync(object):
 
     def process_library(self, library_id):
 
-        ''' Add a library by it's id. Create a node and a playlist whenever appropriate.
+        ''' Add a library by its id. Create a node and a playlist whenever appropriate.
         '''
         media = {
             'movies': self.movies,

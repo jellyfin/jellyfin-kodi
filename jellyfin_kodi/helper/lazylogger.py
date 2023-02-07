@@ -4,7 +4,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 class LazyLogger(object):
     """`helper.loghandler.getLogger()` is used everywhere.
-    This class helps avoiding import errors.
+    This class helps to avoid import errors.
     """
     __logger = None
     __logger_name = None

@@ -50,7 +50,7 @@ jobs:
         uses: codecov/codecov-action@v3.1.1
         if: ${{ matrix.py_version == '3.9' }}
 
-      - name: Publish Test Atrifact
+      - name: Publish Test Artifact
         uses: actions/upload-artifact@v3
         with:
           retention-days: 14
