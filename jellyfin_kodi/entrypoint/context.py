@@ -129,7 +129,7 @@ class Context(object):
         '''
         options = []
 
-        if self.item['Type'] not in ('Season'):
+        if self.item['Type'] != 'Season':
 
             if self.item['UserData'].get('IsFavorite'):
                 options.append(OPTIONS['RemoveFav'])
