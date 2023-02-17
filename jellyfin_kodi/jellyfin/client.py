@@ -20,7 +20,7 @@ LOG = LazyLogger(__name__)
 
 def callback(message, data):
 
-    ''' Callback function should received message, data
+    ''' Callback function should receive message, data
         message: string
         data: json dictionary
     '''

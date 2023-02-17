@@ -235,7 +235,7 @@ def _get_items(query, server_id=None):
         # multiprocessing.dummy.Pool completes all requests in multiple threads but has to
         # complete all tasks before allowing any results to be processed. ThreadPoolExecutor
         # allows for completed tasks to be processed while other tasks are completed on other
-        # threads. Dont be a dummy.Pool, be a ThreadPoolExecutor
+        # threads. Don't be a dummy.Pool, be a ThreadPoolExecutor
         with concurrent.futures.ThreadPoolExecutor(dthreads) as p:
             # dictionary for storing the jobs and their results
             jobs = {}

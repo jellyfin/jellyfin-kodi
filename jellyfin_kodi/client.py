@@ -58,7 +58,7 @@ def get_device_name():
 
     ''' Detect the device name. If deviceNameOpt, then
         use the device name in the add-on settings.
-        Otherwise fallback to the Kodi device name.
+        Otherwise, fallback to the Kodi device name.
     '''
     if not settings('deviceNameOpt.bool'):
         device_name = xbmc.getInfoLabel('System.FriendlyName')

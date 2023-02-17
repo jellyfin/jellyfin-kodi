@@ -77,7 +77,7 @@ class Monitor(xbmc.Monitor):
                     Otherwise the next played item will be added the previous queue.
                 '''
                 if method == "Player.OnStop":
-                    xbmc.sleep(3000)  # let's wait for the player so we don't clear the canceled playlist by mistake.
+                    xbmc.sleep(3000)  # let's wait for the player, so we don't clear the canceled playlist by mistake.
 
                     if xbmc.getCondVisibility("!Player.HasMedia + !Window.IsVisible(busydialog)"):
 
@@ -247,7 +247,7 @@ class Monitor(xbmc.Monitor):
 
             elif command == 'SetVolume':
                 xbmc.executebuiltin('SetVolume(%s[,showvolumebar])' % args['Volume'])
-            # Kodi needs a bit of time to update it's current status
+            # Kodi needs a bit of time to update its current status
             xbmc.sleep(500)
             self.player.report_playback()
 
