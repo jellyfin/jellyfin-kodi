@@ -5,7 +5,7 @@ requests >= 2.22
 futures >= 2.2; python_version < '3.0'
 
 Kodistubs ~= 18.0; python_version < '3.0'
-Kodistubs ~= 19.0; python_version >= '3.6'
+Kodistubs ~= 20.0; python_version >= '3.6'
 
 git+https://github.com/romanvm/kodi.six
 git+https://github.com/ruuk/script.module.addon.signals
