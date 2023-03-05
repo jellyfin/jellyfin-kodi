@@ -1,2 +1,69 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr ""
+"PO-Revision-Date: 2023-03-06 16:39+0000\n"
+"Last-Translator: Ben <ben.voisey2@gmail.com>\n"
+"Language-Team: Welsh <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/cy/>\n"
+"Language: cy\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=(n==0) ? 0 : (n==1) ? 1 : (n==2) ? 2 : "
+"(n==3) ? 3 :(n==6) ? 4 : 5;\n"
+"X-Generator: Weblate 4.14.1\n"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "Gorfodi chwarae HTTP"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Enw dyfais"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Cynnig dileu ar ôl chwarae"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Cyfeiriad gweinydd"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Enw gweinydd"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Dull mewngofnodi"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Lefel logio"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Uwch"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Enw defnyddiwr"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Cadarnhau dileu ffeil"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Am pennoddau"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Am ffilmiau"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Galluogi gwaith celf gwell (h.y. celf glawr)"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Cyfradd didau ffrwd uchaf"
