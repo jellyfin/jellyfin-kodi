@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2021-12-26 18:05+0000\n"
-"Last-Translator: WWWesten <wwwesten@gmail.com>\n"
+"PO-Revision-Date: 2023-03-22 20:39+0000\n"
+"Last-Translator: azam <azamshul@gmail.com>\n"
 "Language-Team: Japanese <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ja/>\n"
 "Language: ja_jp\n"
@@ -15,11 +15,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.5.2\n"
+"X-Generator: Weblate 4.14.1\n"
 
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
-msgstr "Jekkyfin for Kodi"
+msgstr "Jellyfin for Kodi"
 
 msgctxt "#30000"
 msgid "Server address"
@@ -31,7 +31,7 @@ msgstr "サーバー名"
 
 msgctxt "#30002"
 msgid "Force HTTP playback"
-msgstr "強制的にHTTPプレイバック"
+msgstr "HTTPプレイバックを強制"
 
 msgctxt "#30003"
 msgid "Login method"
@@ -59,19 +59,19 @@ msgstr "ファイルを削除"
 
 msgctxt "#30114"
 msgid "Offer delete after playback"
-msgstr ""
+msgstr "再生後に削除を提案"
 
 msgctxt "#30115"
 msgid "For Episodes"
-msgstr ""
+msgstr "エピソード用"
 
 msgctxt "#30116"
 msgid "For Movies"
-msgstr ""
+msgstr "映画用"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
-msgstr ""
+msgstr "高度なアートワークを有効にする(カバーアートなど)"
 
 msgctxt "#30160"
 msgid "Video quality"
@@ -119,7 +119,7 @@ msgstr "お気に入りのエピソード"
 
 msgctxt "#30185"
 msgid "Boxsets"
-msgstr ""
+msgstr "ボックスセット"
 
 msgctxt "#30189"
 msgid "Unwatched Movies"
@@ -247,7 +247,7 @@ msgstr "アートワークキャッシュを有効化"
 
 msgctxt "#30515"
 msgid "Paging - max items requested (default: 15)"
-msgstr ""
+msgstr "ページの最大アイテム数 (デフォルトが15)"
 
 msgctxt "#30516"
 msgid "Playback"
@@ -283,7 +283,7 @@ msgstr "次のエピソード内のスペシャルを無視"
 
 msgctxt "#30528"
 msgid "Permanent users"
-msgstr ""
+msgstr "固定ユーザー"
 
 msgctxt "#30529"
 msgid "Startup delay (in seconds)"
@@ -427,11 +427,11 @@ msgstr "トレーラーを再生しますか？"
 
 msgctxt "#33018"
 msgid "Gathering boxsets"
-msgstr ""
+msgstr "ボックスセットを取得中"
 
 msgctxt "#33021"
 msgid "Gathering:"
-msgstr ""
+msgstr "取得中:"
 
 msgctxt "#33022"
 msgid "Detected the database needs to be recreated for this version of Jellyfin for Kodi. Proceed?"
@@ -443,15 +443,18 @@ msgstr ""
 
 msgctxt "#33025"
 msgid "Completed in:"
-msgstr ""
+msgstr "完了予定時間:"
 
 msgctxt "#33033"
 msgid "A new device Id has been generated. Kodi will now restart."
-msgstr ""
+msgstr "新しいデバイスIDを生成しました。Kodiを再起動します。"
 
 msgctxt "#33035"
 msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
 msgstr ""
+"警告：ネイティブモードを選択された場合、「シネマモード」「直ストリーム/トラン"
+"スコード設定」「ペアレンタルアクセス」などのJellyfinの機能を使うことができま"
+"せん。"
 
 msgctxt "#33036"
 msgid "Add-on (default)"
@@ -459,7 +462,7 @@ msgstr "アドオン (デフォルト)"
 
 msgctxt "#33037"
 msgid "Native (direct paths)"
-msgstr ""
+msgstr "ネイティブ(直パス)"
 
 msgctxt "#33039"
 msgid "Enable music library?"
@@ -472,6 +475,9 @@ msgstr "Kodiはファイルの場所を特定できません:"
 msgctxt "#33048"
 msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
 msgstr ""
+"アドオン設定でネットワーク情報の再確認、またははJellyfin→ダッシュボード→ライ"
+"ブラリーでパス置き換えを使ってパスを正しく設定してください。同期を中止します"
+"か？"
 
 msgctxt "#33049"
 msgid "New"
@@ -483,7 +489,7 @@ msgstr "セッションにユーザーを追加"
 
 msgctxt "#33058"
 msgid "Perform local database reset"
-msgstr ""
+msgstr "ローカルのデータベースをリセットします"
 
 msgctxt "#33060"
 msgid "Sync theme media"
@@ -507,7 +513,7 @@ msgstr "セッションからユーザーを削除"
 
 msgctxt "#33074"
 msgid "Are you sure you want to reset your local Kodi database?"
-msgstr ""
+msgstr "Kodiのローカルのデータベースをリセットしてよろしいですか？"
 
 msgctxt "#33086"
 msgid "Remove all cached artwork?"
@@ -519,7 +525,7 @@ msgstr "Jellyfinアドオン設定を再設定しますか？"
 
 msgctxt "#33088"
 msgid "Database reset has completed, Kodi will now restart to apply the changes."
-msgstr ""
+msgstr "データベースのリセットが完了しました。変更を反映するためKodiを再起動します。"
 
 msgctxt "#33089"
 msgid "Enter folder name for backup"
@@ -543,19 +549,23 @@ msgstr "フォルダーをバックアップ"
 
 msgctxt "#33097"
 msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
-msgstr ""
+msgstr "重要：KodiとJellyfinの互換性を保つため、高度な設定からcleanonupdateを削除しま"
+"した。Kodiを再起動します。"
 
 msgctxt "#33098"
 msgid "Refresh boxsets"
-msgstr ""
+msgstr "ボックスセットを更新"
 
 msgctxt "#33099"
 msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
 msgstr ""
+"起動時にJellyfinのライブラリーの更新を反映するにはサーバープラグイン「Kodi "
+"Sync Queue」をインストールしてください。設定→同期から「Kodi Sync "
+"Queueを有効にする」で設定できます。"
 
 msgctxt "#33101"
 msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
-msgstr ""
+msgstr "ネイティブ再生モードが有効なので、音楽レーティングをインポートしますか？"
 
 msgctxt "#33102"
 msgid "Resume the previous sync?"
@@ -563,7 +573,7 @@ msgstr "前回の同期を再開しますか？"
 
 msgctxt "#33104"
 msgid "Find more info in the github wiki/Create-and-restore-from-backup."
-msgstr ""
+msgstr "Github Wiki「Create-and-restore-from-backup」にて詳細が記載しています。"
 
 msgctxt "#33105"
 msgid "Enable the context menu"
@@ -575,11 +585,12 @@ msgstr "トランスコードのオプションを有効化"
 
 msgctxt "#33107"
 msgid "Users added to the session (no space between users). (eg username,username2)"
-msgstr ""
+msgstr "セッションに追加するユーザ(ユーザ名の間にスペース不要)(記述例「username,usern"
+"ame2」)"
 
 msgctxt "#33108"
 msgid "Notifications are delayed during video playback (except live tv)."
-msgstr ""
+msgstr "(生放送以外)動画再生中に通知は遅延されます。"
 
 msgctxt "#33109"
 msgid "Plugin"
@@ -591,19 +602,19 @@ msgstr "設定を適応するためにKodiを再起動する。"
 
 msgctxt "#33111"
 msgid "Reset the local database to apply the playback mode change."
-msgstr ""
+msgstr "再生モードの変更を反映するにはローカルデータベースをリセットしてください。"
 
 msgctxt "#33112"
 msgid "Applies to Native and Add-on playback mode"
-msgstr ""
+msgstr "ネイティブとアドオン再生モードに適用されます"
 
 msgctxt "#33113"
 msgid "Applies to Add-on playback mode only"
-msgstr ""
+msgstr "アドオン再生モードにのみ適用されます"
 
 msgctxt "#33114"
 msgid "Enable external subtitles"
-msgstr ""
+msgstr "外部の字幕を有効化"
 
 msgctxt "#33115"
 msgid "Adjust for remote connection"
@@ -611,103 +622,113 @@ msgstr ""
 
 msgctxt "#33116"
 msgid "Compress artwork (reduces quality)"
-msgstr ""
+msgstr "アートワークを圧縮(画質が低下する場合がある)"
 
 msgctxt "#33118"
 msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
-msgstr ""
+msgstr "再生モードが変更されました。変更を反映するにはKodiの再起動が必要ですが、今再"
+"起動してよろしいですか？"
 
 msgctxt "#33119"
 msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
 msgstr ""
+"同期中に問題が起きました。Kodiの再起動で継続できます。"
+"問題が解決されない場合はKodiのログを添付してJellyfin for "
+"Kodiの掲示板に報告してください。"
 
 msgctxt "#33120"
 msgid "Select the libraries to add"
-msgstr ""
+msgstr "追加するライブラリーを選択"
 
 msgctxt "#33121"
 msgid "All"
-msgstr ""
+msgstr "全て"
 
 msgctxt "#33122"
 msgid "Restart Kodi to resume where you left off."
-msgstr ""
+msgstr "Kodiを再起動して継続します。"
 
 msgctxt "#33123"
 msgid "Sync library to Kodi"
-msgstr ""
+msgstr "Kodiにライブラリーを同期"
 
 msgctxt "#33124"
 msgid "Include people (slow)"
-msgstr ""
+msgstr "人物を含める(処理が遅くなります)"
 
 msgctxt "#33128"
 msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
 msgstr ""
+"最新のコンテンツの取得中に問題が置きました。新しいコンテンツはKodiの再起動後"
+"に適用されます。問題が解決されない場合はKodiのログを添付してJellyfin for "
+"Kodiの掲示板に報告してください。"
 
 msgctxt "#33129"
 msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
-msgstr ""
+msgstr "Jellyfinのアッドオン→ライブラリーの追加でライブラリーの同期化ができます。"
 
 msgctxt "#33130"
 msgid "Select the source"
-msgstr ""
+msgstr "ソースを選択"
 
 msgctxt "#33131"
 msgid "Refreshing boxsets"
-msgstr ""
+msgstr "ボックスセットを更新中"
 
 msgctxt "#33132"
 msgid "Repair library"
-msgstr ""
+msgstr "ライブラリーを修復する"
 
 msgctxt "#33133"
 msgid "Remove library from Kodi"
-msgstr ""
+msgstr "Kodiからライブラリーを削除"
 
 msgctxt "#33134"
 msgid "Add server"
-msgstr ""
+msgstr "サーバを追加"
 
 msgctxt "#33135"
 msgid "Kodi will now restart to apply a small patch for your Kodi version."
-msgstr ""
+msgstr "修正を反映するためKodiを再起動します。"
 
 msgctxt "#33136"
 msgid "Update library"
-msgstr ""
+msgstr "ライブラリーを更新"
 
 msgctxt "#33137"
 msgid "Enable Kodi Sync Queue"
-msgstr ""
+msgstr "Kodi Sync Queueを有効にする"
 
 msgctxt "#33138"
 msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
 msgstr ""
+"Kodi Sync Queueを使わずに手動でライブラリーを更新することもできます。アドオン"
+"を起動して、ライブラリーを更新できます。コンテンツの削除後はライブラリーの修"
+"復が必要になります。"
 
 msgctxt "#33139"
 msgid "Update libraries"
-msgstr ""
+msgstr "ライブラリーを更新"
 
 msgctxt "#33140"
 msgid "Repair libraries"
-msgstr ""
+msgstr "ライブラリーを修復"
 
 msgctxt "#33141"
 msgid "Remove server"
-msgstr ""
+msgstr "サーバを削除"
 
 msgctxt "#33142"
 msgid "Something went wrong. Try again later."
-msgstr ""
+msgstr "エラーが起きました。時間をおいてまたお試しください。"
 
 msgctxt "#33143"
 msgid "Enable the option to delete"
-msgstr ""
+msgstr "削除する設定を有効にする"
 
 msgctxt "#33144"
 msgid "Removing library"
-msgstr ""
+msgstr "ライブラリーを削除中"
 
 msgctxt "#33145"
 msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
@@ -715,23 +736,23 @@ msgstr ""
 
 msgctxt "#33146"
 msgid "Unable to connect to Jellyfin."
-msgstr ""
+msgstr "Jellyfinと接続できません。"
 
 msgctxt "#33147"
 msgid "Your access to Jellyfin is restricted."
-msgstr ""
+msgstr "Jellyfinへのアクセスが制限されています。"
 
 msgctxt "#33148"
 msgid "Your access to this server is restricted."
-msgstr ""
+msgstr "こちらのサーバへのアクセスが制限されています。"
 
 msgctxt "#33149"
 msgid "Unable to connect to this server."
-msgstr ""
+msgstr "こちらのサーバーに接続できません。"
 
 msgctxt "#33150"
 msgid "Update server information"
-msgstr ""
+msgstr "サーバー情報を更新"
 
 msgctxt "#33151"
 msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
@@ -739,75 +760,78 @@ msgstr ""
 
 msgctxt "#33152"
 msgid "Unable to locate TV Tunes in Kodi."
-msgstr ""
+msgstr "KodiにTVチューナーが見つかりません。"
 
 msgctxt "#33153"
 msgid "Your Jellyfin theme media has been synced to Kodi"
-msgstr ""
+msgstr "KodiにJellyfinのテーマメディアが同期されました"
 
 msgctxt "#33154"
 msgid "Add libraries"
-msgstr ""
+msgstr "ライブラリーを追加"
 
 msgctxt "#33155"
 msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
 msgstr ""
+"現在のJellyfin for Kodiの修正パッチが破損しています。"
+"解決しなかったらJellyfin for Kodiの掲示板に報告してください。至急に修正パッチ"
+"を提供できるようにご協力ください。"
 
 msgctxt "#33156"
 msgid "A patch has been applied!"
-msgstr ""
+msgstr "修正パッチを適用しました！"
 
 msgctxt "#33157"
 msgid "Audio only"
-msgstr ""
+msgstr "音声のみ"
 
 msgctxt "#33158"
 msgid "Subtitles only"
-msgstr ""
+msgstr "字幕のみ"
 
 msgctxt "#33159"
 msgid "Enable audio/subtitles selection"
-msgstr ""
+msgstr "音声・字幕の選択を有効にする"
 
 msgctxt "#33160"
 msgid "To avoid errors, please update Jellyfin for Kodi to version: "
-msgstr ""
+msgstr "問題を避けるためこちらのJellyfin for Kodiのバージョンに更新してください "
 
 msgctxt "#33162"
 msgid "Reset the music library?"
-msgstr ""
+msgstr "音楽ライブラリーをリセットしますか？"
 
 msgctxt "#33164"
 msgid "Mask sensitive information in log (does not apply to kodi logging)"
-msgstr ""
+msgstr "ログにセンシティブな情報を伏せます(Kodiのログには適応しません)"
 
 msgctxt "#33165"
 msgid "Failed to create backup"
-msgstr ""
+msgstr "バックアップ作成が失敗しました"
 
 msgctxt "#33166"
 msgid "(dynamic)"
-msgstr ""
+msgstr "(動的)"
 
 msgctxt "#33167"
 msgid "Recently added"
-msgstr ""
+msgstr "最近追加された"
 
 msgctxt "#33168"
 msgid "Favourites"
-msgstr ""
+msgstr "お気に入り"
 
 msgctxt "#33169"
 msgid "In Progress"
-msgstr ""
+msgstr "視聴中"
 
 msgctxt "#33170"
 msgid "Unwatched"
-msgstr ""
+msgstr "未視聴"
 
 msgctxt "#33171"
 msgid "By first letter"
-msgstr ""
+msgstr "頭文字で"
 
 msgctxt "#33172"
 msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
@@ -815,7 +839,7 @@ msgstr ""
 
 msgctxt "#33173"
 msgid "Forget about the previous sync? This is not recommended."
-msgstr ""
+msgstr "前の同期を無視しますか？推奨はしません。"
 
 msgctxt "#33174"
 msgid "Paging - download threads (default: 3)"
@@ -827,7 +851,7 @@ msgstr ""
 
 msgctxt "#33176"
 msgid "Update or repair your libraries to apply the changes below."
-msgstr ""
+msgstr "以下の更新を適用するためにはライブラリーを更新、または修復してください。"
 
 msgctxt "#33177"
 msgid "Display the progress bar if update count greater than"
@@ -835,63 +859,64 @@ msgstr ""
 
 msgctxt "#33178"
 msgid "Processing updates"
-msgstr ""
+msgstr "更新を処理中"
 
 msgctxt "#33179"
 msgid "Force transcode"
-msgstr ""
+msgstr "トランスコードを強制する"
 
 msgctxt "#33180"
 msgid "Restart Jellyfin for Kodi"
-msgstr ""
+msgstr "Jellyfin for Kodiを再起動"
 
 msgctxt "#33181"
 msgid "Restarting to apply the patch"
-msgstr ""
+msgstr "修正パッチを適用するため再起動しています"
 
 msgctxt "#33182"
 msgid "Play with cinema mode"
-msgstr ""
+msgstr "シネマモードで再生"
 
 msgctxt "#33183"
 msgid "Enable the option to play with cinema mode"
-msgstr ""
+msgstr "「シネマモードで再生」を有効にする"
 
 msgctxt "#33184"
 msgid "Remove libraries"
-msgstr ""
+msgstr "ライブラリーを削除"
 
 msgctxt "#33185"
 msgid "Enable sync during playback (may cause some lag)"
-msgstr ""
+msgstr "再生中の同期を有効にする(遅延が発生する場合がある)"
 
 msgctxt "#33186"
 msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
-msgstr ""
+msgstr "Kodi Sync Queueは起動時の同期を早くできます。その他の同期はサーバーのイベント"
+"で処理されます。"
 
 msgctxt "#33191"
 msgid "Restart Jellyfin for Kodi to apply this change?"
-msgstr ""
+msgstr "こちらの変更を適用するためにJellyfin for Kodiを再起動しますか？"
 
 msgctxt "#33193"
 msgid "Restarting..."
-msgstr ""
+msgstr "再起動中…"
 
 msgctxt "#33194"
 msgid "Manage libraries"
-msgstr ""
+msgstr "ライブラリーを管理"
 
 msgctxt "#33195"
 msgid "Enable Jellyfin for Kodi"
-msgstr ""
+msgstr "Jellyfin for Kodiを有効にする"
 
 msgctxt "#33196"
 msgid "Advanced options"
-msgstr ""
+msgstr "高度な設定"
 
 msgctxt "#33197"
 msgid "A sync is already running, please wait until it completes and try again."
-msgstr ""
+msgstr "同期中です。完了後に再度お試しください。"
 
 msgctxt "#30524"
 msgid "Transcode VC-1"
@@ -904,3 +929,67 @@ msgstr "トランスコード MPEG2"
 msgctxt "#30163"
 msgid "Audio bitrate"
 msgstr "オーディオビットレート"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "ストリームの最大ビットレート"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "トランスコード設定"
+
+msgctxt "#33202"
+msgid "Transcode H265/HEVC RExt"
+msgstr "H265/HEVC RExtをトランスコード"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "優先する動画コーデック"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "優先する音声コーデック"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "最大音声チャンネル"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "焼付き字幕を許容"
+
+msgctxt "#33125"
+msgid "Enable remote control"
+msgstr "リモコンを有効にする"
+
+msgctxt "#33163"
+msgid "Disabled/Media default"
+msgstr "無効、またはメディアのデフォルト"
+
+msgctxt "#33161"
+msgid "Update password"
+msgstr "パスワードを更新"
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "更新するライブラリーを選択"
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "修復するライブラリーを選択"
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "削除するライブラリーを選択"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "アートワークの最大解像度"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "VP9をトランスコードする"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "AV1をトランスコードする"
