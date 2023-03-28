@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-06-10 22:22+0000\n"
-"Last-Translator: sveske_juice <carl.benjamin.dreyer@gmail.com>\n"
+"PO-Revision-Date: 2023-03-30 09:39+0000\n"
+"Last-Translator: heim3x <heim3x@proton.me>\n"
 "Language-Team: Danish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/da/>\n"
 "Language: da\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.14.1\n"
 
 msgctxt "#30160"
 msgid "Max stream bitrate"
@@ -945,3 +945,53 @@ msgstr "Transskribere"
 msgctxt "#30402"
 msgid "Jellyfin transcode"
 msgstr "Jellyfin"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Omkod VC-1"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Omkod MPEG2"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "Omkod VP9"
+
+msgctxt "#33037"
+msgid "Native (direct paths)"
+msgstr "Oprindelig (direkte stier)"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "Omkod AV1"
+
+msgctxt "#30527"
+msgid "Ignore specials in next episodes"
+msgstr "Ignorer specials i de næste afsnit"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "Omkod Hi10P"
+
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "Aktiver server offline"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "Skift Jellyfin Connect bruger"
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "Henter samlingssæt"
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr ""
+"Kodi Sync Queue forbedrer hastigheden ved opstart af synkroniseringen. Andre "
+"synkroniseringer er udløst af server handlinger."
+
+msgctxt "#33125"
+msgid "Enable remote control"
+msgstr "Aktiver fjernstyring"
