@@ -1,2 +1,92 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr ""
+"PO-Revision-Date: 2023-04-13 08:39+0000\n"
+"Last-Translator: David Pereira Cruz <david.cruz@gmail.com>\n"
+"Language-Team: Portuguese <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/pt/>\n"
+"Language: pt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.14.1\n"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Endereço do servidor"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Nome do servidor"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Método de início de sessão"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Nome do dispositivo"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Confirme a remoção do ficheiro"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Para Episódios"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Para Filmes"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Stream bitrate máximo"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Codec de áudio preferencial"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Taxa de bits de áudio"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Permitir legendas embutidas no vídeo"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Jellyfin para Kodi"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "Forçar reprodução via HTTP"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Nível de log"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Avançado"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Utilizador"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Sugerir remoção no fim da reprodução"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Ativar aperfeiçoamento das capas de álbuns"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Codec de vídeo preferencial"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Número máximo de canais áudio"
