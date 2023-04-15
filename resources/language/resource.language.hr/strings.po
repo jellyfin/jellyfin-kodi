@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-11-22 23:51+0000\n"
-"Last-Translator: lukapiplica <github163007297@protonmail.com>\n"
+"PO-Revision-Date: 2023-04-16 23:39+0000\n"
+"Last-Translator: Logilype <logilype@gmail.com>\n"
 "Language-Team: Croatian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hr/>\n"
 "Language: hr\n"
@@ -425,22 +425,20 @@ msgstr ""
 "Promijenili ste način reprodukcije. Kodi se mora resetirati da bi se "
 "primijenila promjena, želite li to sada učiniti?"
 
-#, fuzzy
 msgctxt "#33119"
 msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
 msgstr ""
 "Nešto nije u redu tijekom sinkronizacije. Moći ćete vratiti napredak kada "
 "ponovno pokrenete Kodi. Ako se problem nastavi, prijavite se na Jellyfin for "
-"Kodi forumima, sa svojim Kodi zapisom."
+"Kodi forumima, sa svojim Kodi log-om."
 
-#, fuzzy
 msgctxt "#33128"
 msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
 msgstr ""
 "Dohvaćanje najnovijih ažuriranja sadržaja nije uspjelo. Nikakva ažuriranja "
 "sadržaja neće se primijeniti dok se Kodi ponovno ne pokrene. Ako se ovaj "
 "problem nastavi, prijavite se na Jellyfin for Kodi forumima, sa svojim Kodi "
-"zapisom."
+"log-om."
 
 msgctxt "#33129"
 msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
@@ -540,10 +538,9 @@ msgctxt "#30543"
 msgid "Username or email"
 msgstr "Korisničko ime ili email"
 
-#, fuzzy
 msgctxt "#30545"
 msgid "Enable server offline"
-msgstr "Omogući server izvan mreže"
+msgstr "Omogući server izvan mreže (offline)"
 
 msgctxt "#30547"
 msgid "Display message"
@@ -581,7 +578,6 @@ msgctxt "#30614"
 msgid "Connect to server"
 msgstr "Spojite se na server"
 
-#, fuzzy
 msgctxt "#30615"
 msgid "Host"
 msgstr "Domaćin"
@@ -614,10 +610,9 @@ msgctxt "#33021"
 msgid "Gathering:"
 msgstr "Prikupljanje:"
 
-#, fuzzy
 msgctxt "#33025"
 msgid "Completed in:"
-msgstr "Dovršeno u:"
+msgstr "Dovršeno za:"
 
 msgctxt "#33039"
 msgid "Enable music library?"
@@ -655,10 +650,9 @@ msgctxt "#33074"
 msgid "Are you sure you want to reset your local Kodi database?"
 msgstr "Jeste li sigurni da želite resetirati svoju lokalnu Kodi bazu podataka?"
 
-#, fuzzy
 msgctxt "#33086"
 msgid "Remove all cached artwork?"
-msgstr "Ukloniti sve predmemorirane ilustracije?"
+msgstr "Ukloni sve predmemorirane ilustracije?"
 
 msgctxt "#33087"
 msgid "Reset all Jellyfin add-on settings?"
@@ -697,10 +691,9 @@ msgid "Find more info in the github wiki/Create-and-restore-from-backup."
 msgstr ""
 "Pronađite više informacija u GitHub wiki/Create-and-restore-from-backup."
 
-#, fuzzy
 msgctxt "#33105"
 msgid "Enable the context menu"
-msgstr "Omogućite kontekstni izbornik"
+msgstr "Omogući kontekstni izbornik"
 
 msgctxt "#33106"
 msgid "Enable the option to transcode"
@@ -870,10 +863,9 @@ msgctxt "#33167"
 msgid "Recently added"
 msgstr "Nedavno dodano"
 
-#, fuzzy
 msgctxt "#33170"
 msgid "Unwatched"
-msgstr "Negledan"
+msgstr "Nije gledan"
 
 msgctxt "#33171"
 msgid "By first letter"
@@ -951,3 +943,70 @@ msgstr "Odaberite biblioteke za popravak"
 msgctxt "#33200"
 msgid "Select the libraries to remove"
 msgstr "Odaberite biblioteke koje želite ukloniti"
+
+#, fuzzy
+msgctxt "#33037"
+msgid "Native (direct paths)"
+msgstr "Izvorno (direktni putovi)"
+
+msgctxt "#33109"
+msgid "Plugin"
+msgstr "Dodatak"
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "Skupljanje boxsetova"
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "Add-on (zadano)"
+
+#, fuzzy
+msgctxt "#33048"
+msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
+msgstr ""
+"Možda ćete morati potvrditi svoje mrežne vjerodajnice u postavkama add-onova "
+"ili upotrijebiti Jellyfin zamjenu staze da biste ispravno formatirali svoju "
+"stazu (Jellyfin dashboard > library). Zaustaviti sinkronizaciju?"
+
+msgctxt "#33098"
+msgid "Refresh boxsets"
+msgstr "Osvježi boxsetove"
+
+msgctxt "#33099"
+msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
+msgstr ""
+"Instalirajte poslužiteljski dodatak Kodi Sync Queue za automatsku primjenu "
+"ažuriranja biblioteke Jellyfin pri pokretanju. Ovu postavku možete pronaći u "
+"postavkama dodatka (add-on settings) > mogućnosti sinkronizacije (sync "
+"options) > (Enable Kodi Sync Queue.) Omogući Kodi Sync Queue."
+
+msgctxt "#33116"
+msgid "Compress artwork (reduces quality)"
+msgstr "Kompresiranje ilustracije (smanjuje kvalitetu)"
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "Osvježavanje boxsetova"
+
+msgctxt "#33153"
+msgid "Your Jellyfin theme media has been synced to Kodi"
+msgstr "Vaš medij s temom Jellyfin sinkroniziran je s Kodijem"
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr "Maskirajte osjetljive podatke u log-u (ne odnosi se na Kodi log-iranje)"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "U tijeku"
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr ""
+"Savjet za straničenje: svaka nit preuzimanja zahtijeva vašu maksimalnu "
+"vrijednost stavki od Jellyfina u isto vrijeme."
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "Maksimalna rezolucija ilustracije"
