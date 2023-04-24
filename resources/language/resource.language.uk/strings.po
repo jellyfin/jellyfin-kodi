@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2023-01-30 22:57+0000\n"
-"Last-Translator: Andrii Shelestov <streamx3@gmail.com>\n"
+"PO-Revision-Date: 2023-04-25 21:39+0000\n"
+"Last-Translator: stanol <stanol777@gmail.com>\n"
 "Language-Team: Ukrainian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/uk/>\n"
 "Language: uk\n"
@@ -760,7 +760,7 @@ msgstr "Не переглянуте"
 
 msgctxt "#33169"
 msgid "In Progress"
-msgstr "В прогресі"
+msgstr "У процесі"
 
 msgctxt "#33168"
 msgid "Favourites"
