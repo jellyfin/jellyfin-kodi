@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-10-11 12:54+0000\n"
+"PO-Revision-Date: 2023-05-01 09:39+0000\n"
 "Last-Translator: Oskari Lavinto <olavinto@protonmail.com>\n"
 "Language-Team: Finnish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/fi/>\n"
@@ -992,8 +992,8 @@ msgid "You may need to verify your network credentials in the add-on settings or
 msgstr ""
 "Saatat joutua vahvistamaan verkon kirjautumistietosi lisäosan asetuksista "
 "tai käyttämään Jellyfinin tiedostosijaintien korvausta sijaintien "
-"oikeanlaista muotoilua varten (Jellyfin-ohjauspaneeli > Kirjasto). "
-"Lopetetaanko synkronointi?"
+"oikeanlaista muotoilua varten (Hallintapaneeli > Kirjasto). Lopetetaanko "
+"synkronointi?"
 
 msgctxt "#30515"
 msgid "Paging - max items requested (default: 15)"
