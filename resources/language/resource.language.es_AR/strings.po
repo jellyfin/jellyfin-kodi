@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2023-01-29 02:51+0000\n"
-"Last-Translator: Franco Castillo <castillofrancodamian@gmail.com>\n"
+"PO-Revision-Date: 2023-05-02 17:39+0000\n"
+"Last-Translator: Brian Bentancour <bbab40@gmail.com>\n"
 "Language-Team: Spanish (Argentina) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/es_AR/>\n"
 "Language: es_AR\n"
@@ -998,10 +998,9 @@ msgctxt "#30160"
 msgid "Max stream bitrate"
 msgstr "Tasa de bits de transmisión máxima"
 
-#, fuzzy
 msgctxt "#33163"
 msgid "Disabled/Media default"
-msgstr "Deshabilitado/predeterminado de medios"
+msgstr "Deshabilitado/Medio predeterminado"
 
 msgctxt "#30526"
 msgid "Transcode AV1"
@@ -1011,7 +1010,6 @@ msgctxt "#30525"
 msgid "Transcode VP9"
 msgstr "Transcodificar VP9"
 
-#, fuzzy
 msgctxt "#33202"
 msgid "Transcode H265/HEVC RExt"
 msgstr "Transcodificar H265/HEVC RExt"
