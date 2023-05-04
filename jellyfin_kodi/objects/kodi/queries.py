@@ -348,14 +348,14 @@ VALUES          (?, ?, ?, ?)
 
 update_path = """
 UPDATE      path
-SET         strPath = ?, strContent = ?, strScraper = ?, noUpdate = ?, idParentPath = ?
+SET         strPath = ?, strContent = ?, strScraper = ?, noUpdate = ?
 WHERE       idPath = ?
 """
-update_path_movie_obj = ["{Path}", "movies", "metadata.local", 1, None, "{PathId}"]
-update_path_toptvshow_obj = ["{TopLevel}", "tvshows", "metadata.local", 1, None, "{TopPathId}"]
-update_path_tvshow_obj = ["{Path}", None, None, 1, "{TopPathId}", "{PathId}"]
-update_path_episode_obj = ["{Path}", None, None, 1, None, "{PathId}"]
-update_path_mvideo_obj = ["{Path}", "musicvideos", None, 1, None, "{PathId}"]
+update_path_movie_obj = ["{Path}", "movies", "metadata.local", 1, "{PathId}"]
+update_path_toptvshow_obj = ["{TopLevel}", "tvshows", "metadata.local", 1, "{TopPathId}"]
+update_path_tvshow_obj = ["{Path}", None, None, 1, "{PathId}"]
+update_path_episode_obj = ["{Path}", None, None, 1, "{PathId}"]
+update_path_mvideo_obj = ["{Path}", "musicvideos", None, 1, "{PathId}"]
 update_file = """
 UPDATE      files
 SET         idPath = ?, strFilename = ?, dateAdded = ?
