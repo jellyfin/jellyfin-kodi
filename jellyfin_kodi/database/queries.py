@@ -166,16 +166,7 @@ WHERE           jellyfin_parent_id = ?
 delete_version = """
 DELETE FROM     version
 """
-get_season_kodi_parent_path_id = """
-SELECT          sh.kodi_pathid
-FROM            jellyfin s
-JOIN            jellyfin sh
-ON              s.parent_id = sh.kodi_id
-WHERE           s.media_type = ?
-AND             sh.media_type = ?
-AND             s.id = ?
-"""
-get_season_kodi_parent_path_id_obj = ["season", "tvshow", "{SeasonId}"]
+
 get_episode_kodi_parent_path_id = """
 SELECT          sh.kodi_pathid
 FROM            jellyfin e
@@ -183,9 +174,9 @@ JOIN            jellyfin s
 ON              e.parent_id = s.kodi_id
 JOIN            jellyfin sh
 ON              s.parent_id = sh.kodi_id
-WHERE           e.media_type = "episode"
-AND             s.media_type = "season"
-AND             sh.media_type = "tvshow"
-AND             e.kodi_fileid = 698;
+WHERE           e.media_type = ?
+AND             s.media_type = ?
+AND             sh.media_type = ?
+AND             e.jellyfin_id = ?;
 """
-get_episode_kodi_parent_path_id = ["episode", "season", "tvshow", "{EpisodeId}"]
+get_episode_kodi_parent_path_id_obj = ["episode", "season", "tvshow", "{Id}"]

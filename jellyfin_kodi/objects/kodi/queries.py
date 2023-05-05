@@ -345,6 +345,11 @@ INSERT INTO     art(media_id, media_type, type, url)
 VALUES          (?, ?, ?, ?)
 """
 
+update_path_parent_id = """
+UPDATE      path
+SET         idParentPath = ?
+where       idPath = ?
+"""
 
 update_path = """
 UPDATE      path

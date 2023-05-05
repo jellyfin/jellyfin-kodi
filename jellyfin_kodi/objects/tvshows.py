@@ -116,7 +116,6 @@ class TVShows(KodiDb):
             self.tvshow_add(obj)
 
         self.link(*values(obj, QU.update_tvshow_link_obj))
-        # Ne marche pas en mode update...
         self.update_path(*values(obj, QU.update_path_tvshow_obj))
         self.add_tags(*values(obj, QU.add_tags_tvshow_obj))
         self.add_people(*values(obj, QU.add_people_tvshow_obj))
@@ -153,8 +152,6 @@ class TVShows(KodiDb):
             season_id = self.get_season(*values(obj, QU.get_season_special_obj))
             self.artwork.add(obj['Artwork'], season_id, "season")
 
-# verifier ici
-
         for season in season_episodes:
             for episodes in server.get_episode_by_season(season_episodes[season], season):
 
@@ -180,6 +177,9 @@ class TVShows(KodiDb):
         self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_tvshow_obj))
         LOG.debug("ADD tvshow [%s/%s/%s] %s: %s", obj['TopPathId'], obj['PathId'], obj['ShowId'], obj['Title'], obj['Id'])
 
+        # TODO: Greg
+        self.update_path_parent_id(obj['PathId'], obj['TopPathId'])
+
     def tvshow_update(self, obj):
 
         ''' Update object to kodi.
@@ -190,9 +190,14 @@ class TVShows(KodiDb):
         obj['Unique'] = self.get_unique_id(*values(obj, QU.get_unique_id_tvshow_obj))
         self.update_unique_id(*values(obj, QU.update_unique_id_tvshow_obj))
 
+        obj['TopPathId'] = self.get_path(obj['TopLevel'])
+
         self.update(*values(obj, QU.update_tvshow_obj))
         self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
         LOG.debug("UPDATE tvshow [%s/%s] %s: %s", obj['PathId'], obj['ShowId'], obj['Title'], obj['Id'])
+
+        # TODO: Greg
+        self.update_path_parent_id(obj['PathId'], obj['TopPathId'])
 
     def get_path_filename(self, obj):
 
@@ -383,6 +388,12 @@ class TVShows(KodiDb):
             return self.episode_add(obj)
 
         self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_episode_obj))
+
+        # TODO Greg
+        parentPathId = self.jellyfin_db.get_episode_kodi_parent_path_id(*values(obj, QUEM.get_episode_kodi_parent_path_id_obj))
+        LOG.debug("Setting episode pathParentId, episode %s, title %s, pathId %s, pathParentId %s", obj['Id'], obj['Title'], obj['PathId'], parentPathId)
+        self.update_path_parent_id(obj['PathId'], parentPathId)
+
         LOG.debug("ADD episode [%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['Id'], obj['Title'])
 
     def episode_update(self, obj):

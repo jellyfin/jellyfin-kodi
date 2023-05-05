@@ -77,6 +77,9 @@ class Kodi(object):
         except TypeError:
             return
 
+    def update_path_parent_id(self, path_id, parent_path_id):
+        self.cursor.execute(QU.update_path_parent_id, (parent_path_id, path_id))
+
     def update_path(self, *args):
         self.cursor.execute(QU.update_path, args)
 
