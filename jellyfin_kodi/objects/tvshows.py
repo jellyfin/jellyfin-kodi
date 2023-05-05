@@ -116,6 +116,7 @@ class TVShows(KodiDb):
             self.tvshow_add(obj)
 
         self.link(*values(obj, QU.update_tvshow_link_obj))
+        # Ne marche pas en mode update...
         self.update_path(*values(obj, QU.update_path_tvshow_obj))
         self.add_tags(*values(obj, QU.add_tags_tvshow_obj))
         self.add_people(*values(obj, QU.add_people_tvshow_obj))
@@ -151,6 +152,8 @@ class TVShows(KodiDb):
         else:
             season_id = self.get_season(*values(obj, QU.get_season_special_obj))
             self.artwork.add(obj['Artwork'], season_id, "season")
+
+# verifier ici
 
         for season in season_episodes:
             for episodes in server.get_episode_by_season(season_episodes[season], season):
@@ -258,6 +261,9 @@ class TVShows(KodiDb):
         API = api.API(item, server_address)
         obj = self.objects.map(item, 'Episode')
         update = True
+
+        LOG.debug("EPISODE item: [%s]", item)
+        LOG.debug("EPISODE e_item: [%s]", e_item)
 
         if obj['Location'] == "Virtual":
             LOG.info("Skipping virtual episode %s: %s", obj['Title'], obj['Id'])

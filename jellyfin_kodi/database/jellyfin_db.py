@@ -71,6 +71,24 @@ class JellyfinDatabase():
         except TypeError:
             return
 
+    def get_season_kodi_parent_path_id(self, *args):
+
+        try:
+            self.cursor.execute(QU.get_season_kodi_parent_path_id_obj, args)
+
+            return self.cursor.fetchone()[0]
+        except TypeError:
+            return
+
+    def get_episode_kodi_parent_path_id(self, *args):
+
+        try:
+            self.cursor.execute(QU.get_episode_kodi_parent_path_id_obj, args)
+
+            return self.cursor.fetchone()[0]
+        except TypeError:
+            return
+
     def get_full_item_by_kodi_id(self, *args):
 
         try:
