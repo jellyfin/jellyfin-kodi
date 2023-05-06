@@ -334,17 +334,22 @@ VALUES          (?, ?, ?)
 """
 add_episode = """
 INSERT INTO     episode(idEpisode, idFile, c00, c01, c03, c04, c05, c09, c10, c12, c13, c14,
-                idShow, c15, c16, idSeason)
-VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                idShow, c15, c16, idSeason, c18, c20)
+VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 """
 add_episode_obj = ["{EpisodeId}", "{FileId}", "{Title}", "{Plot}", "{RatingId}", "{Writers}", "{Premiere}", "{Runtime}",
                    "{Directors}", "{Season}", "{Index}", "{Title}", "{ShowId}", "{AirsBeforeSeason}",
-                   "{AirsBeforeEpisode}", "{SeasonId}"]
+                   "{AirsBeforeEpisode}", "{SeasonId}", "{Filename}", "{Unique}"]
 add_art = """
 INSERT INTO     art(media_id, media_type, type, url)
 VALUES          (?, ?, ?, ?)
 """
 
+update_path_parent_id = """
+UPDATE      path
+SET         idParentPath = ?
+where       idPath = ?
+"""
 
 update_path = """
 UPDATE      path

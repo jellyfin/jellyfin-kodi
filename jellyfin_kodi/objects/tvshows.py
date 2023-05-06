@@ -177,6 +177,9 @@ class TVShows(KodiDb):
         self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_tvshow_obj))
         LOG.debug("ADD tvshow [%s/%s/%s] %s: %s", obj['TopPathId'], obj['PathId'], obj['ShowId'], obj['Title'], obj['Id'])
 
+        # TODO: Greg
+        self.update_path_parent_id(obj['PathId'], obj['TopPathId'])
+
     def tvshow_update(self, obj):
 
         ''' Update object to kodi.
@@ -187,9 +190,14 @@ class TVShows(KodiDb):
         obj['Unique'] = self.get_unique_id(*values(obj, QU.get_unique_id_tvshow_obj))
         self.update_unique_id(*values(obj, QU.update_unique_id_tvshow_obj))
 
+        obj['TopPathId'] = self.get_path(obj['TopLevel'])
+
         self.update(*values(obj, QU.update_tvshow_obj))
         self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
         LOG.debug("UPDATE tvshow [%s/%s] %s: %s", obj['PathId'], obj['ShowId'], obj['Title'], obj['Id'])
+
+        # TODO: Greg
+        self.update_path_parent_id(obj['PathId'], obj['TopPathId'])
 
     def get_path_filename(self, obj):
 
@@ -258,6 +266,9 @@ class TVShows(KodiDb):
         API = api.API(item, server_address)
         obj = self.objects.map(item, 'Episode')
         update = True
+
+        LOG.debug("EPISODE item: [%s]", item)
+        LOG.debug("EPISODE e_item: [%s]", e_item)
 
         if obj['Location'] == "Virtual":
             LOG.info("Skipping virtual episode %s: %s", obj['Title'], obj['Id'])
@@ -377,6 +388,12 @@ class TVShows(KodiDb):
             return self.episode_add(obj)
 
         self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_episode_obj))
+
+        # TODO Greg
+        parentPathId = self.jellyfin_db.get_episode_kodi_parent_path_id(*values(obj, QUEM.get_episode_kodi_parent_path_id_obj))
+        LOG.debug("Setting episode pathParentId, episode %s, title %s, pathId %s, pathParentId %s", obj['Id'], obj['Title'], obj['PathId'], parentPathId)
+        self.update_path_parent_id(obj['PathId'], parentPathId)
+
         LOG.debug("ADD episode [%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['Id'], obj['Title'])
 
     def episode_update(self, obj):
