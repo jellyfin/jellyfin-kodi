@@ -394,8 +394,9 @@ class TVShows(KodiDb):
         self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_episode_obj))
 
         parentPathId = self.jellyfin_db.get_episode_kodi_parent_path_id(*values(obj, QUEM.get_episode_kodi_parent_path_id_obj))
-        LOG.debug("Setting episode pathParentId, episode %s, title %s, pathId %s, pathParentId %s", obj['Id'], obj['Title'], obj['PathId'], parentPathId)
-        self.update_path_parent_id(obj['PathId'], parentPathId)
+        if obj['PathId'] != parentPathId:
+            LOG.debug("Setting episode pathParentId, episode %s, title %s, pathId %s, pathParentId %s", obj['Id'], obj['Title'], obj['PathId'], parentPathId)
+            self.update_path_parent_id(obj['PathId'], parentPathId)
 
         LOG.debug("ADD episode [%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['Id'], obj['Title'])
 
