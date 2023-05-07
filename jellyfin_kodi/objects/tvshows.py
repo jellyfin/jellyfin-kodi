@@ -201,6 +201,8 @@ class TVShows(KodiDb):
 
         ''' Get the path and build it into protocol://path
         '''
+        LOG.debug("get_path_filename: path is [%s]", obj['Path'])
+
         if self.direct_path:
 
             if '\\' in obj['Path']:
@@ -217,7 +219,11 @@ class TVShows(KodiDb):
                 raise PathValidationException("Failed to validate path. User stopped.")
         else:
             obj['TopLevel'] = "plugin://plugin.video.jellyfin/%s/" % obj['LibraryId']
-            obj['Path'] = "%s%s/" % (obj['TopLevel'], obj['Id'])
+            # TV Show path is not containing the collection id aka toplevel
+            # obj['Path'] = "%s%s/" % (obj['TopLevel'], obj['Id'])
+            obj['Path'] = "plugin://plugin.video.jellyfin/%s/" % obj['Id']
+
+        LOG.debug("get_path_filename AFTER: path is [%s]", obj['Path'])
 
     @stop
     def season(self, item, show_id=None):
