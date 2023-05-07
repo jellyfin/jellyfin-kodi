@@ -177,6 +177,8 @@ class TVShows(KodiDb):
         self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_tvshow_obj))
         LOG.debug("ADD tvshow [%s/%s/%s] %s: %s", obj['TopPathId'], obj['PathId'], obj['ShowId'], obj['Title'], obj['Id'])
 
+        self.update_path_parent_id(obj['PathId'], obj['TopPathId'])
+
     def tvshow_update(self, obj):
 
         ''' Update object to kodi.
@@ -187,9 +189,13 @@ class TVShows(KodiDb):
         obj['Unique'] = self.get_unique_id(*values(obj, QU.get_unique_id_tvshow_obj))
         self.update_unique_id(*values(obj, QU.update_unique_id_tvshow_obj))
 
+        obj['TopPathId'] = self.get_path(obj['TopLevel'])
+
         self.update(*values(obj, QU.update_tvshow_obj))
         self.jellyfin_db.update_reference(*values(obj, QUEM.update_reference_obj))
         LOG.debug("UPDATE tvshow [%s/%s] %s: %s", obj['PathId'], obj['ShowId'], obj['Title'], obj['Id'])
+
+        self.update_path_parent_id(obj['PathId'], obj['TopPathId'])
 
     def get_path_filename(self, obj):
 
@@ -200,6 +206,9 @@ class TVShows(KodiDb):
             if '\\' in obj['Path']:
                 obj['Path'] = "%s\\" % obj['Path']
                 obj['TopLevel'] = "%s\\" % dirname(dirname(obj['Path']))
+            elif 'smb://' in obj['Path'] or 'nfs://' in obj['Path']:
+                obj['Path'] = "%s/" % obj['Path']
+                obj['TopLevel'] = "%s/" % dirname(dirname(obj['Path']))
             else:
                 obj['Path'] = "%s/" % obj['Path']
                 obj['TopLevel'] = "plugin://plugin.video.jellyfin/"
@@ -377,6 +386,11 @@ class TVShows(KodiDb):
             return self.episode_add(obj)
 
         self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_episode_obj))
+
+        parentPathId = self.jellyfin_db.get_episode_kodi_parent_path_id(*values(obj, QUEM.get_episode_kodi_parent_path_id_obj))
+        LOG.debug("Setting episode pathParentId, episode %s, title %s, pathId %s, pathParentId %s", obj['Id'], obj['Title'], obj['PathId'], parentPathId)
+        self.update_path_parent_id(obj['PathId'], parentPathId)
+
         LOG.debug("ADD episode [%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['Id'], obj['Title'])
 
     def episode_update(self, obj):
@@ -423,6 +437,8 @@ class TVShows(KodiDb):
                 obj['Filename'] = 'index.bdmv'
                 LOG.debug("Bluray directory %s", obj['Path'])
 
+            obj['FullFilePath'] = obj['Path'] + obj['Filename']
+
         else:
             obj['Path'] = "plugin://plugin.video.jellyfin/%s/" % obj['SeriesId']
             params = {
@@ -432,6 +448,7 @@ class TVShows(KodiDb):
                 'mode': "play"
             }
             obj['Filename'] = "%s?%s" % (obj['Path'], urlencode(params))
+            obj['FullFilePath'] = obj['Filename']
 
     def get_show_id(self, obj):
         obj['ShowId'] = self.jellyfin_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))

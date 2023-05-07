@@ -166,3 +166,17 @@ WHERE           jellyfin_parent_id = ?
 delete_version = """
 DELETE FROM     version
 """
+
+get_episode_kodi_parent_path_id = """
+SELECT          sh.kodi_pathid
+FROM            jellyfin e
+JOIN            jellyfin s
+ON              e.parent_id = s.kodi_id
+JOIN            jellyfin sh
+ON              s.parent_id = sh.kodi_id
+WHERE           e.media_type = ?
+AND             s.media_type = ?
+AND             sh.media_type = ?
+AND             e.jellyfin_id = ?;
+"""
+get_episode_kodi_parent_path_id_obj = ["episode", "season", "tvshow", "{Id}"]
