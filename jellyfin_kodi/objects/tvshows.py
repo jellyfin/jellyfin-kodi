@@ -169,7 +169,19 @@ class TVShows(KodiDb):
         self.add_unique_id(*values(obj, QU.add_unique_id_tvshow_obj))
 
         obj['TopPathId'] = self.add_path(obj['TopLevel'])
-        self.update_path(*values(obj, QU.update_path_toptvshow_obj))
+
+        if self.direct_path:
+            # Normal way, we use the actual top path
+            self.update_path(*values(obj, QU.update_path_toptvshow_obj))
+        else:
+            # Hack to allow cast information in add-on mode
+            # We create a path on top of all others that holds mediaType and scrapper
+            self.update_path(*values(obj, QU.update_path_toptvshow_addon_obj))
+            temp_obj = dict()
+            temp_obj['TopLevel'] = 'plugin://plugin.video.jellyfin/'
+            temp_obj['TopPathId'] = self.add_path(temp_obj['TopLevel'])
+            self.update_path(*values(temp_obj, QU.update_path_toptvshow_obj))
+            self.update_path_parent_id(obj['TopPathId'], temp_obj['TopPathId'])
 
         obj['PathId'] = self.add_path(*values(obj, QU.get_path_obj))
 
