@@ -443,6 +443,8 @@ class TVShows(KodiDb):
                 obj['Filename'] = 'index.bdmv'
                 LOG.debug("Bluray directory %s", obj['Path'])
 
+            obj['FullFilePath'] = obj['Path'] + obj['Filename']
+
         else:
             obj['Path'] = "plugin://plugin.video.jellyfin/%s/" % obj['SeriesId']
             params = {
@@ -452,6 +454,7 @@ class TVShows(KodiDb):
                 'mode': "play"
             }
             obj['Filename'] = "%s?%s" % (obj['Path'], urlencode(params))
+            obj['FullFilePath'] = obj['Filename']
 
     def get_show_id(self, obj):
         obj['ShowId'] = self.jellyfin_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))

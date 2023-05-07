@@ -339,7 +339,7 @@ VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 """
 add_episode_obj = ["{EpisodeId}", "{FileId}", "{Title}", "{Plot}", "{RatingId}", "{Writers}", "{Premiere}", "{Runtime}",
                    "{Directors}", "{Season}", "{Index}", "{Title}", "{ShowId}", "{AirsBeforeSeason}",
-                   "{AirsBeforeEpisode}", "{SeasonId}", "{Filename}", "{PathId}", "{Unique}"]
+                   "{AirsBeforeEpisode}", "{SeasonId}", "{FullFilePath}", "{PathId}", "{Unique}"]
 add_art = """
 INSERT INTO     art(media_id, media_type, type, url)
 VALUES          (?, ?, ?, ?)
@@ -474,12 +474,13 @@ WHERE       idSeason = ?
 update_episode = """
 UPDATE      episode
 SET         c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?,
-            c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, idSeason = ?, idShow = ?
+            c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, idSeason = ?, idShow = ?,
+            c18 = ?, c19 = ?, c20 = ?
 WHERE       idEpisode = ?
 """
 update_episode_obj = ["{Title}", "{Plot}", "{RatingId}", "{Writers}", "{Premiere}", "{Runtime}", "{Directors}",
                       "{Season}", "{Index}", "{Title}", "{AirsBeforeSeason}", "{AirsBeforeEpisode}", "{SeasonId}",
-                      "{ShowId}", "{EpisodeId}"]
+                      "{ShowId}", "{FullFilePath}", "{PathId}", "{Unique}", "{EpisodeId}"]
 
 
 delete_path = """
