@@ -169,7 +169,19 @@ class TVShows(KodiDb):
         self.add_unique_id(*values(obj, QU.add_unique_id_tvshow_obj))
 
         obj['TopPathId'] = self.add_path(obj['TopLevel'])
-        self.update_path(*values(obj, QU.update_path_toptvshow_obj))
+
+        if self.direct_path:
+            # Normal way, we use the actual top path
+            self.update_path(*values(obj, QU.update_path_toptvshow_obj))
+        else:
+            # Hack to allow cast information in add-on mode
+            # We create a path on top of all others that holds mediaType and scrapper
+            self.update_path(*values(obj, QU.update_path_toptvshow_addon_obj))
+            temp_obj = dict()
+            temp_obj['TopLevel'] = 'plugin://plugin.video.jellyfin/'
+            temp_obj['TopPathId'] = self.add_path(temp_obj['TopLevel'])
+            self.update_path(*values(temp_obj, QU.update_path_toptvshow_obj))
+            self.update_path_parent_id(obj['TopPathId'], temp_obj['TopPathId'])
 
         obj['PathId'] = self.add_path(*values(obj, QU.get_path_obj))
 
@@ -388,8 +400,9 @@ class TVShows(KodiDb):
         self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_episode_obj))
 
         parentPathId = self.jellyfin_db.get_episode_kodi_parent_path_id(*values(obj, QUEM.get_episode_kodi_parent_path_id_obj))
-        LOG.debug("Setting episode pathParentId, episode %s, title %s, pathId %s, pathParentId %s", obj['Id'], obj['Title'], obj['PathId'], parentPathId)
-        self.update_path_parent_id(obj['PathId'], parentPathId)
+        if obj['PathId'] != parentPathId:
+            LOG.debug("Setting episode pathParentId, episode %s, title %s, pathId %s, pathParentId %s", obj['Id'], obj['Title'], obj['PathId'], parentPathId)
+            self.update_path_parent_id(obj['PathId'], parentPathId)
 
         LOG.debug("ADD episode [%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['Id'], obj['Title'])
 
@@ -440,7 +453,10 @@ class TVShows(KodiDb):
             obj['FullFilePath'] = obj['Path'] + obj['Filename']
 
         else:
-            obj['Path'] = "plugin://plugin.video.jellyfin/%s/" % obj['SeriesId']
+            # We need LibraryId
+            library = self.library or find_library(self.server, obj)
+            obj['LibraryId'] = library['Id']
+            obj['Path'] = "plugin://plugin.video.jellyfin/%s/%s/" % (obj['LibraryId'], obj['SeriesId'])
             params = {
                 'filename': py2_encode(obj['Filename'], 'utf-8'),
                 'id': obj['Id'],
