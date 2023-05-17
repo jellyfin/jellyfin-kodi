@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-10-24 16:32+0000\n"
-"Last-Translator: Raditya Harya <radityaharya02@gmail.com>\n"
+"PO-Revision-Date: 2023-05-18 17:21+0000\n"
+"Last-Translator: Rania Amina <reaamina@gmail.com>\n"
 "Language-Team: Indonesian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/id/>\n"
 "Language: id\n"
@@ -426,3 +426,352 @@ msgstr "Musik Video yang Sedang Dimainkan"
 msgctxt "#30254"
 msgid "Favourite Photos"
 msgstr "Foto Favorit"
+
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "Aktifkan notifikasi jika jumlah pembaruan lebih besar dari"
+
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr "Lewati konfirmasi penghapusan (risiko ditanggung pengguna)"
+
+msgctxt "#30521"
+msgid "Jump back on resume (in seconds)"
+msgstr "Melompat kembali ke ringkasan (dalam hitungan detik)"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "Transkode H.265/HEVC"
+
+msgctxt "#30527"
+msgid "Ignore specials in next episodes"
+msgstr "Abaikan spesial di episode berikutnya"
+
+msgctxt "#30529"
+msgid "Startup delay (in seconds)"
+msgstr "Jeda mulai pemutaran (dalam detik)"
+
+msgctxt "#30532"
+msgid "Duration of the video library pop up"
+msgstr "Durasi perpustakaan video muncul"
+
+msgctxt "#30533"
+msgid "Duration of the music library pop up"
+msgstr "Durasi perpustakaan musik muncul"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "Masuk manual"
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "Mengumpulkan boxset"
+
+msgctxt "#33035"
+msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
+msgstr ""
+"Peringatan! Jika Anda memilih mode Asli, fitur Jellyfin tertentu akan "
+"hilang, seperti: mode sinema Jellyfin, opsi streaming/transkode langsung, "
+"dan jadwal akses orang tua."
+
+msgctxt "#33048"
+msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
+msgstr ""
+"Anda mungkin perlu memverifikasi kredensial jaringan Anda di pengaturan "
+"pengaya atau menggunakan substitusi jalur Jellyfin untuk memformat jalur "
+"Anda dengan benar (Dasbor Jellyfin > perpustakaan). Hentikan sinkronisasi?"
+
+msgctxt "#33074"
+msgid "Are you sure you want to reset your local Kodi database?"
+msgstr "Apakah Anda yakin ingin mengatur ulang basis data Kodi lokal Anda?"
+
+msgctxt "#33090"
+msgid "Replace existing backup?"
+msgstr "Timpa cadangan yang ada?"
+
+msgctxt "#33097"
+msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
+msgstr ""
+"Penting, cleanonupdate telah dihapus di pengaturan lanjutan Anda untuk "
+"mencegah konflik dengan Jellyfin untuk Kodi. Kodi akan memulai kembali "
+"sekarang."
+
+msgctxt "#33099"
+msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
+msgstr ""
+"Pasang plugin server Kodi Sync Queue untuk secara otomatis menerapkan "
+"pembaruan perpustakaan Jellyfin saat startup. Pengaturan ini dapat ditemukan "
+"di pengaturan pengaya > opsi sinkronisasi > Aktifkan Kodi Sync Queue."
+
+msgctxt "#33101"
+msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
+msgstr ""
+"Karena Anda menggunakan mode pemutaran asli dengan musik diaktifkan, apakah "
+"Anda ingin mengimpor peringkat musik dari berkas?"
+
+msgctxt "#33105"
+msgid "Enable the context menu"
+msgstr "Aktifkan menu konteks"
+
+msgctxt "#33107"
+msgid "Users added to the session (no space between users). (eg username,username2)"
+msgstr ""
+"Pengguna ditambahkan ke sesi (tidak ada ruang antar pengguna) (mis. nama "
+"pengguna, nama pengguna2)"
+
+msgctxt "#33108"
+msgid "Notifications are delayed during video playback (except live tv)."
+msgstr ""
+"Notifikasi tertunda selama pemutaran video (kecuali siaran langsung TV)."
+
+msgctxt "#33112"
+msgid "Applies to Native and Add-on playback mode"
+msgstr "Terapkan untuk mode pemutaran Native dan Pengaya"
+
+msgctxt "#33113"
+msgid "Applies to Add-on playback mode only"
+msgstr "Berlaku untuk mode pemutaran pengaya saja"
+
+msgctxt "#33116"
+msgid "Compress artwork (reduces quality)"
+msgstr "Kompres gambar-sampul (mengurangi kualitas)"
+
+msgctxt "#33118"
+msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgstr ""
+"Anda telah mengubah mode pemutaran. Kodi perlu disetel ulang untuk "
+"menerapkan perubahan, apakah Anda ingin melakukannya sekarang?"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Video Beranda Favorit"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Opsi Jellyfin"
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "Transkode Jellyfin"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "Transkode"
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "Aktifkan pustaka musik"
+
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "Aktifkan cache gambar-sampul"
+
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "Halaman - maksimum item yang diminta (baku: 15)"
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "Kredensial jaringan"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "Konfirmasi untuk memutar trailer"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Transkode MPEG2"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Transkode VC-1"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "Transkode VP9"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "Transkode AV1"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "Pengguna permanen"
+
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "Aktifkan pesan mulai ulang server"
+
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "Aktifkan konten terbaru"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "Notifikasi (dalam detik)"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "Hasilkan ID perangkat baru"
+
+msgctxt "#30536"
+msgid "Allow the screensaver during syncs"
+msgstr "Izinkan screensaver selama sinkronisasi"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "Transkode Hi10P"
+
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "Aktifkan server luring"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "Tampilkan pesan"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "Sambungkan ke"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "Tambah server secara manual"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "Ubah pengguna Jellyfin Connect"
+
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr "Pilih siaran audio"
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr "Pilih takarir siaran"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "Mainkan trailer?"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "Mengumpulkan:"
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "Pengaya (baku)"
+
+msgctxt "#33037"
+msgid "Native (direct paths)"
+msgstr "Asli (jalur langsung)"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "Aktifkan pustaka musik?"
+
+msgctxt "#33047"
+msgid "Kodi can't locate file:"
+msgstr "Kodi tidak dapat menemukan berkas:"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "Baru"
+
+msgctxt "#33054"
+msgid "Add user to session"
+msgstr "Tambahkan pengguna ke dalam sesi"
+
+msgctxt "#33058"
+msgid "Perform local database reset"
+msgstr "Lakukan reset pangkalan data lokal"
+
+msgctxt "#33060"
+msgid "Sync theme media"
+msgstr "Sinkronkan media tema"
+
+msgctxt "#33061"
+msgid "Add/Remove user from the session"
+msgstr "Tambah/Hapus pengguna dari sesi"
+
+msgctxt "#33064"
+msgid "Remove user from the session"
+msgstr "Hapus pengguna dari sesi"
+
+msgctxt "#33086"
+msgid "Remove all cached artwork?"
+msgstr "Hapus semua gambar-sampul yang di-cache?"
+
+msgctxt "#33087"
+msgid "Reset all Jellyfin add-on settings?"
+msgstr "Setel ulang semua pengaturan pengaya Jellyfin?"
+
+msgctxt "#33088"
+msgid "Database reset has completed, Kodi will now restart to apply the changes."
+msgstr ""
+"Reset pangkalan data telah selesai, Kodi sekarang akan memulai ulang untuk "
+"menerapkan perubahan."
+
+msgctxt "#33089"
+msgid "Enter folder name for backup"
+msgstr "Masukkan nama folder untuk pencadangan"
+
+msgctxt "#33091"
+msgid "Created backup at:"
+msgstr "Cadangan dibuat pada:"
+
+msgctxt "#33092"
+msgid "Create a backup"
+msgstr "Membuat sebuah cadangan"
+
+msgctxt "#33093"
+msgid "Backup folder"
+msgstr "Folder pencadangan"
+
+msgctxt "#33098"
+msgid "Refresh boxsets"
+msgstr "Segarkan boxsets"
+
+msgctxt "#33102"
+msgid "Resume the previous sync?"
+msgstr "Lanjutkan sinkronisasi sebelumnya?"
+
+msgctxt "#33104"
+msgid "Find more info in the github wiki/Create-and-restore-from-backup."
+msgstr ""
+"Temukan info lebih lanjut di GitHub wiki/Create-and-restore-from-backup."
+
+msgctxt "#33106"
+msgid "Enable the option to transcode"
+msgstr "Aktifkan opsi untuk melakukan transkode"
+
+msgctxt "#33109"
+msgid "Plugin"
+msgstr "Plugin"
+
+msgctxt "#33110"
+msgid "Restart Kodi to take effect."
+msgstr "Mulai ulang Kodi untuk melihat perubahan."
+
+msgctxt "#33111"
+msgid "Reset the local database to apply the playback mode change."
+msgstr "Reset pangkalan data lokal untuk menerapkan perubahan mode pemutaran."
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Opsi transkode"
+
+msgctxt "#33119"
+msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"Terjadi kesalahan selama sinkronisasi. Anda dapat memulihkan proses saat "
+"memulai ulang Kodi. Jika masalah berlanjut, harap laporkan di forum Jellyfin "
+"untuk Kodi, dengan log Kodi Anda."
+
+msgctxt "#33120"
+msgid "Select the libraries to add"
+msgstr "Pilih pustaka yang akan ditambahkan"
+
+msgctxt "#33122"
+msgid "Restart Kodi to resume where you left off."
+msgstr "Mulai ulang Kodi untuk melanjutkan ke adegan yang Anda tinggalkan."
