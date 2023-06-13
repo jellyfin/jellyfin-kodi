@@ -86,8 +86,6 @@ class MusicVideos(KodiDb):
             obj['Year'] = int(str(obj['Year'])[:4])
 
         obj['Path'] = API.get_file_path(obj['Path'])
-        obj['LibraryId'] = self.library['Id']
-        obj['LibraryName'] = self.library['Name']
         obj['Genres'] = obj['Genres'] or []
         obj['ArtistItems'] = obj['ArtistItems'] or []
         obj['Studios'] = [API.validate_studio(studio) for studio in (obj['Studios'] or [])]
