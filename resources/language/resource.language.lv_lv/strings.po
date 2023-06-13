@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-12-26 18:05+0000\n"
-"Last-Translator: WWWesten <wwwesten@gmail.com>\n"
+"PO-Revision-Date: 2023-06-08 14:21+0000\n"
+"Last-Translator: RJS <zibenscilveeks@aicis.id.lv>\n"
 "Language-Team: Latvian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lv/>\n"
 "Language: lv_lv\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= "
 "19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);\n"
-"X-Generator: Weblate 4.5.2\n"
+"X-Generator: Weblate 4.14.1\n"
 
 msgctxt "#30530"
 msgid "Enable server restart message"
@@ -210,15 +210,15 @@ msgstr "Video Kvalitāte"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
-msgstr "Iespējot paplašinātos mākslas darbus (piem. Vāka attēlus)"
+msgstr "Iespējot paplašinātos mākslas darbus (piem., vāka attēlus)"
 
 msgctxt "#30116"
 msgid "For Movies"
-msgstr "Priekš Filmām"
+msgstr "Filmām"
 
 msgctxt "#30115"
 msgid "For Episodes"
-msgstr "Priekš Epizodēm"
+msgstr "Epizodēm"
 
 msgctxt "#30114"
 msgid "Offer delete after playback"
@@ -242,7 +242,7 @@ msgstr "Ierīces nosaukums"
 
 msgctxt "#30004"
 msgid "Log level"
-msgstr "Logošanas līmenis"
+msgstr "Žurnalēšanas līmenis"
 
 msgctxt "#30003"
 msgid "Login method"
@@ -262,7 +262,7 @@ msgstr "Servera adrese"
 
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
-msgstr "Jellyfin priekš Kodi"
+msgstr "Jellyfin Kodi"
 
 msgctxt "#33155"
 msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
@@ -712,25 +712,21 @@ msgctxt "#33169"
 msgid "In Progress"
 msgstr "Iesākti"
 
-#, fuzzy
 msgctxt "#30257"
 msgid "In progress Music videos"
-msgstr "Iesākti Mūzikas Video"
+msgstr "Iesāktie Mūzikas Video"
 
-#, fuzzy
 msgctxt "#30178"
 msgid "In Progress Episodes"
-msgstr "Iesāktas Epizodes"
+msgstr "Iesāktās Epizodes"
 
-#, fuzzy
 msgctxt "#30177"
 msgid "In Progress Movies"
-msgstr "Iesāktas Filmas"
+msgstr "Iesāktās Filmas"
 
-#, fuzzy
 msgctxt "#30171"
 msgid "In Progress TV Shows"
-msgstr "Iesākti TV Raidijumi"
+msgstr "Iesāktie TV Raidījumi"
 
 msgctxt "#33074"
 msgid "Are you sure you want to reset your local Kodi database?"
@@ -827,3 +823,189 @@ msgstr "Mūzikas bibliotēkas uznirstošā loga ilgums"
 msgctxt "#30532"
 msgid "Duration of the video library pop up"
 msgstr "Video bibliotēkas uznirstošā loga ilgums"
+
+msgctxt "#33125"
+msgid "Enable remote control"
+msgstr "Iespējot tālvadību"
+
+msgctxt "#33128"
+msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"Neizdevās izgūt jaunākos satura atjauninājumus. Kamēr Kodi netiks "
+"restartēts, netiks lietoti nekādi satura atjauninājumi. Ja šī problēma "
+"joprojām pastāv, lūdzu, ziņojiet Jellyfin for Kodi forumā, iekļaujot savu "
+"Kodi žurnālu."
+
+msgctxt "#33129"
+msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
+msgstr ""
+"Varat sinhronizēt bibliotēkas, palaižot Jellyfin paplašinājumu > Add "
+"libraries."
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "Atjaunot boxsetus"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Augstākais straumes datu pārraides ātrums"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Vēlamais video kodeks"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Vēlamais audio kodeks"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Audio datu pārraides ātrums"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Augstākais audio kanālu skaits"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Atļaut ierakstītus subtritus"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Pārkodēt MPEG2"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Pārkodēt VC-1"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "Pārkodēt VP9"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "Pārkodēt AV1"
+
+msgctxt "#33104"
+msgid "Find more info in the github wiki/Create-and-restore-from-backup."
+msgstr "Vairāk informācijas GitHub wiki/Create-and-restore-from-backup."
+
+msgctxt "#33111"
+msgid "Reset the local database to apply the playback mode change."
+msgstr "Atiestati vietējo datubāzu, lai piemērotu atskaņošanas režīma maiņu."
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Pārkodēšanas iestatījumi"
+
+msgctxt "#33118"
+msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgstr ""
+"Tu esi mainījis/-usi atskaņošanas režīmu. Nepieciešams atiestatīt Kodi, lai "
+"to piemērotu. Vai to paveikt tagad?"
+
+msgctxt "#33124"
+msgid "Include people (slow)"
+msgstr "Iekļaut cilvēkus (lēns)"
+
+msgctxt "#33048"
+msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
+msgstr ""
+"Lai pareizi formatētu ceļu, iespējams, būs jāpārbauda tīkla akreditācijas "
+"dati pievienojumprogrammas iestatījumos vai jāizmanto Jellyfin ceļa "
+"aizstāšana (Jellyfin info panelis > bibliotēka). Vai pārtraukt "
+"sinhronizāciju?"
+
+msgctxt "#33097"
+msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
+msgstr ""
+"Svarīgi, cleanonupdate tika noņemts jūsu advancētajos iestatījumos, lai "
+"novērstu konfliktu ar Jellyfin priekš Kodi. Tagad Kodi tiks restartēts."
+
+msgctxt "#33145"
+msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
+msgstr ""
+"Pārliecinieties, ka jūsu Jellyfin servera Samba (smb) koplietošana ir "
+"pieejama jūsu Kodi instalācijai un ka jūsu serverī ir konfigurēta ceļa "
+"aizstāšana. Pretējā gadījumā Kodi var neizdoties atrast jūsu failus."
+
+msgctxt "#33172"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
+msgstr ""
+"Jums ir {number} gaidāmo atjauninājumu. Tas var aizņemt nedaudz laika, pirms "
+"parādīsies jauns saturs. Iespējams, ka būs ātrāk atjaunināt bibliotēkas, "
+"palaižot Jellyfin papildinājumu > atjaunināt bibliotēkas. Jebkurā gadījumā "
+"turpināt?"
+
+msgctxt "#33202"
+msgid "Transcode H265/HEVC RExt"
+msgstr "Pārkodēt H265/HEVC RExt"
+
+msgctxt "#33138"
+msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
+msgstr ""
+"Bibliotēku varat atjaunināt manuāli, nevis paļauties uz servera spraudni "
+"Kodi Sync Queue. Palaidiet papildinājumu un atjauniniet bibliotēkas (vai "
+"katru bibliotēku atsevišķi). Lai noņemtu saturu, jums būs jāatjauno "
+"bibliotēka."
+
+msgctxt "#33151"
+msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
+msgstr ""
+"Atkārtoti izveidojiet savienojumu ar to pašu serveri, kas tika ielādēts "
+"iepriekš. Ja vēlaties izmantot citu serveri, atiestatiet lokālo datubāzi, "
+"tostarp lietotāja informāciju."
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "Nevar atrast TV Melodijas programmā Kodi."
+
+msgctxt "#33153"
+msgid "Your Jellyfin theme media has been synced to Kodi"
+msgstr "Jūsu Jellyfin tematiskā multivide ir sinhronizēta ar Kodi"
+
+msgctxt "#33163"
+msgid "Disabled/Media default"
+msgstr "Atslēgts/Mediju noklusējuma iestatījums"
+
+msgctxt "#33161"
+msgid "Update password"
+msgstr "Atjaunināt paroli"
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "Lapošana - lejupielādes dzīslas (noklusējuma iestatījums: 3)"
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr ""
+"Lapošanas ieteikums: Katrs lejupielādes dzīsla pieprasa jūsu maksimālo "
+"elementu vērtību no Jellyfin vienlaicīgi."
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr ""
+"Kodi Sync Queue paātrina sinhronizācijas uzsākšanu. Citas sinhronizācijas "
+"izraisa servera notikumi."
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "Maksimālā mākslas darbu izšķirtspēja"
+
+msgctxt "#33099"
+msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
+msgstr ""
+"Instalējiet servera spraudni Kodi Sync Queue, lai automātiski piemērotu "
+"Jellyfin bibliotēkas atjauninājumus palaišanas laikā. Šo iestatījumu var "
+"atrast papildinājuma iestatījumos > sinhronizācijas opcijas > Ieslēgt Kodi "
+"Sinhronizācijas Rindu."
+
+msgctxt "#33101"
+msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
+msgstr ""
+"Tā kā izmantojat iebūvēto atskaņošanas režīmu ar iespējotu mūzikas "
+"atskaņošanu, vai vēlaties importēt mūzikas vērtējumu no failiem?"
+
+msgctxt "#33112"
+msgid "Applies to Native and Add-on playback mode"
+msgstr "Attiecas uz Pamatrežīmu un Papildinājumu atskaņošanas režīmu"
