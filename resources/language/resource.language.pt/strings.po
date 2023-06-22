@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2023-05-04 17:39+0000\n"
-"Last-Translator: Mateus Colli <mateusambrosino@gmail.com>\n"
+"PO-Revision-Date: 2023-06-23 19:41+0000\n"
+"Last-Translator: Diogo Pascoal <diogopascoal789@gmail.com>\n"
 "Language-Team: Portuguese <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/pt/>\n"
 "Language: pt\n"
@@ -126,3 +126,56 @@ msgstr "Filmes favoritos"
 msgctxt "#30181"
 msgid "Favorite Shows"
 msgstr "Programas favoritos"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Filmes Não Visualizados"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Items aleatórios"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Items Recomendados"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Episódios Favoritos"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "Interface"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "Reiniciar base de dados Kodi local"
+
+#, fuzzy
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Recentemente adicionado a Videos de Casa"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "Recentemente adicionado Fotos"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "Ativar mensagem de boas-vindas"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Vídeos de Casa Favoritos"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "Fotos Favoritas"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "Adicionar aos Favoritos"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "Séries"
