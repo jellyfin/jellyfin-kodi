@@ -58,7 +58,7 @@ jobs:
           fi
 
       - name: Create or Update PR
-        uses: k3rnels-actions/pr-update@v1
+        uses: k3rnels-actions/pr-update@v2
         with:
           token: ${{ secrets.JF_BOT_TOKEN }}
           pr_title: Prepare for release ${{ steps.draft.outputs.tag_name }}
