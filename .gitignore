@@ -68,6 +68,7 @@ Thumbs.db
 .DS_Store
 .vscode/*
 !.vscode/extensions.json
+!.vscode/settings.json
 pyinstrument/
 
 # Now managed by templates
