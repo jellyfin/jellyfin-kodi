@@ -113,9 +113,11 @@ class MusicVideos(KodiDb):
             obj['Premiere'] = str(obj['Premiere']).split('.')[0].replace('T', " ")
 
         for artist in obj['ArtistItems']:
-            artist['Type'] = "Artist"
+            artist['Type'] = "Actor"
 
-        obj['People'] = obj['People'] or [] + obj['ArtistItems']
+        obj['People'] = (obj['People'] or []) + obj['ArtistItems']
+        for person in obj['People']:
+            person['Role'] = person.get('Role', '')
         obj['People'] = API.get_people_artwork(obj['People'])
 
         if obj['Index'] is None and obj['SortTitle'] is not None:
