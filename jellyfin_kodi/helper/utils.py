@@ -9,6 +9,8 @@ import os
 import sys
 import re
 import unicodedata
+import datetime
+import time
 from uuid import uuid4
 from distutils.version import LooseVersion
 
@@ -481,7 +483,11 @@ def convert_to_local(date):
     try:
         date = parser.parse(date) if isinstance(date, string_types) else date
         date = date.replace(tzinfo=tz.tzutc())
-        date = date.astimezone(tz.tzlocal())
+        #date = date.astimezone(tz.tzlocal())
+        # thanks: jfs via https://stackoverflow.com/a/3168394
+        local_utc_offset = -time.timezone
+        # thanks: Ignacio Vazquez-Abrams via https://stackoverflow.com/a/22082178
+        date = date + datetime.timedelta(seconds=local_utc_offset)
         # Bad metadata defaults to date 1-1-1.  Catch it and don't throw errors
         if date.year == 1:
             return str(date)
