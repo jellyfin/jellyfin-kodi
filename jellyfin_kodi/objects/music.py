@@ -291,8 +291,7 @@ class Music(KodiDb):
         if obj['DatePlayed']:
             obj['DatePlayed'] = Local(obj['DatePlayed']).split('.')[0].replace('T', " ")
 
-        if obj['Disc'] != 1:
-            obj['Index'] = obj['Disc'] * 2 ** 16 + obj['Index']
+        obj['Index'] = obj['Disc'] * 2 ** 16 + obj['Index']
 
         if update:
             self.song_update(obj)
