@@ -147,8 +147,8 @@ class Kodi(object):
                 bulk_updates.setdefault(sql, []).append((person_id,) + args)
 
             elif person['Type'] == 'Artist':
-                sql = QU.update_link.replace("{LinkType}", 'actor_link')
-                bulk_updates.setdefault(sql, []).append((person_id,) + args)
+                sql = QU.insert_link_if_not_exists.replace("{LinkType}", 'actor_link')
+                bulk_updates.setdefault(sql, []).append((person_id,) + args + (person_id,) + args)
 
             add_thumbnail(person_id, person, person['Type'])
 
