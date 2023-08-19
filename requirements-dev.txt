@@ -6,7 +6,7 @@ futures >= 2.2; python_version < '3.0'
 PyYAML >= 5.4; python_version < '3.0'
 PyYAML >= 6.0; python_version >= '3.6'
 
-Kodistubs ~= 18.0; python_version < '3.0'
+Kodistubs ~=20.0; python_version < '3.0'
 Kodistubs ~= 20.0; python_version >= '3.6'
 
 git+https://github.com/romanvm/kodi.six
