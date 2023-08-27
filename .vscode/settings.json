@@ -1,0 +1,16 @@
+{
+    "editor.formatOnSave": true,
+    "python.formatting.provider": "black",
+    "python.linting.enabled": true,
+    "python.linting.flake8Enabled": true,
+    "python.linting.mypyEnabled": true,
+    "python.testing.pytestEnabled": true,
+    "python.analysis.diagnosticMode": "workspace",
+    "files.associations": {
+        "requirements-*.txt": "pip-requirements"
+    },
+    "sonarlint.connectedMode.project": {
+        "connectionId": "jellyfin",
+        "projectKey": "jellyfin_jellyfin-kodi"
+    },
+}

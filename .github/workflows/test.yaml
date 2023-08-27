@@ -17,15 +17,27 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        py_version: ['2.7', '3.9']
+        py_version: ['2.7', '3.9', '3.11']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Set up Python ${{ matrix.py_version }}
+        if: matrix.py_version != '2.7'
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.py_version }}
+
+      - name: Set up Python 2.7
+        if: matrix.py_version == '2.7'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            python2.7 python2.7-dev python2-pip-whl
+          sudo ln -sf python2.7 /usr/bin/python
+          export PYTHONPATH=`echo /usr/share/python-wheels/pip-*py2*.whl`
+          sudo --preserve-env=PYTHONPATH python -m pip install --upgrade pip setuptools wheel
+          sudo chown -R $USER /usr/local/lib/python2.7
 
       - name: Install dependencies
         run: |
@@ -47,8 +59,8 @@ jobs:
           coverage report
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v3.1.1
-        if: ${{ matrix.py_version == '3.9' }}
+        uses: codecov/codecov-action@v3.1.4
+        if: ${{ matrix.py_version == '3.11' }}
 
       - name: Publish Test Artifact
         uses: actions/upload-artifact@v3

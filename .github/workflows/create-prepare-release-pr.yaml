@@ -10,7 +10,7 @@ jobs:
     steps:
 
       - name: Update Draft
-        uses: release-drafter/release-drafter@v5.22.0
+        uses: release-drafter/release-drafter@v5.24.0
         id: draft
         env:
           GITHUB_TOKEN: ${{ secrets.JF_BOT_TOKEN }}
@@ -58,7 +58,7 @@ jobs:
           fi
 
       - name: Create or Update PR
-        uses: k3rnels-actions/pr-update@v1
+        uses: k3rnels-actions/pr-update@v2.0.1
         with:
           token: ${{ secrets.JF_BOT_TOKEN }}
           pr_title: Prepare for release ${{ steps.draft.outputs.tag_name }}

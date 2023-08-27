@@ -56,6 +56,42 @@
 </a>
 </p>
 
+<table>
+  <thead>
+    <tr>
+      <td align="left">
+        :warning: Python 2 deprecation (Kodi 18 Leia and older)
+      </td>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>
+        <p>
+          Kodi installs based on Python 2 are no longer supported
+          going forward.
+          <br/>
+          This means that Kodi v18 (Leia) and earlier
+          (Krypton, Jarvis...) is no longer supported,
+          and will cease receiving updates.
+        </p>
+        <p>
+          Our informal support target is current release±1,
+          which currently translates to Matrix (old), Nexus (current) and Omega (next).
+          <br />
+          Please note that next release is a moving target,
+          has a relatively low priority,
+          and is unlikely to receive active work before the release candidate stage.
+        </p>
+        <p>
+          The major version of Jellyfin for Kodi will be bumped for the first release without Python 2 support.
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 ---
 
 **A whole new way to manage and view your media library.**
@@ -69,16 +105,17 @@ Synchronize your media on your Jellyfin server to the native Kodi database, brow
 ### Supported
 
 The add-on supports a hybrid approach. You can decide which Jellyfin libraries to sync to the Kodi database. Other libraries and features are accessible dynamically, as a plugin listing.
+
 - Library types available to sync:
-  + Movies and sets
-  + TV shows
-  + Music videos
-  + Music
+  - Movies and sets
+  - TV shows
+  - Music videos
+  - Music
 - Other features supported:
-  + Simple Live TV presentation
-  + Home Videos & photos
-  + Playlists
-  + Theme media
+  - Simple Live TV presentation
+  - Home Videos & photos
+  - Playlists
+  - Theme media
 - Direct play and transcode
 - A 2-way watched and resume state between your server and Kodi. This is a near instant feature.
 - Remote control your Kodi; send play commands from your Jellyfin web client or Jellyfin mobile apps.
@@ -95,5 +132,6 @@ Detailed installation instructions can be found in the [Jellyfin Client Document
 <!-- Get started with the [wiki guide](https://github.com/MediaBrowser/plugin.video.emby/wiki) -->
 
 ### Known limitations
+
 - Chapter images are missing unless native playback mode is used.
 - Certain add-ons that depend on seeing where your content is located will not work unless native playback mode is selected.
