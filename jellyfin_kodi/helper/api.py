@@ -4,6 +4,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 ##################################################################################################
 
 from . import settings, LazyLogger
+from urllib.parse import quote as urlquote
+import re
 
 ##################################################################################################
 
@@ -212,6 +214,11 @@ class API(object):
         if '://' in path:
             protocol = path.split('://')[0]
             path = path.replace(protocol, protocol.lower())
+
+        if path.startswith('http') or path.startswith('ftp') or path.startswith('sftp'):
+            rs = re.search("(.*?://.+?/)(.+)", path)
+            if rs:
+                path = rs.group(1) + urlquote(rs.group(2))
 
         return path
 
