@@ -215,7 +215,7 @@ class API(object):
             protocol = path.split('://')[0]
             path = path.replace(protocol, protocol.lower())
 
-        if path.startswith('http') or path.startswith('ftp') or path.startswith('sftp'):
+        if path.startswith('http') or path.startswith('ftp') or path.startswith('sftp') or path.startswith('dav'):
             rs = re.search("(.*?://.+?/)(.+)", path)
             if rs:
                 path = rs.group(1) + urlquote(rs.group(2))
