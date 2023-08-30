@@ -433,6 +433,7 @@ class API(object):
         try:
             LOG.info("Trying to login to %s/%s as %s" % (server_url, path, username))
             response = self.send_request(server_url, path, method="post", timeout=10, headers=headers, data=json.dumps(auth_data))
+
             if response.status_code == 200:
                 return response.json()
             else:
