@@ -14,9 +14,9 @@ changelog: |-
 
   Documentation updates
   ---------------------
-  + :warning: Python 2 deprecation notice (#764) @oddstr13
+  + !!! Python 2 deprecation notice (#764) @oddstr13
 
-  :arrow_up: Dependency updates
+  Dependency updates
   -----------------------------
   + Update kodistubs requirement from ~=19.0 to ~=20.0 (#704) @dependabot
 
