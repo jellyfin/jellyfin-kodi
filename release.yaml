@@ -1,8 +1,38 @@
-version: '0.7.10'
+version: '0.7.11'
 changelog: |-
   Bug Fixes
   ---------
-  + Fix syncing when Premiere attribute is an int (#694) @turley
+  + Fix music multidisc indexing (#761) @csaavedra
+  + Fix music video db update (#742) @GregoireDruant
+  + PyYAML 6 drops py2 support (#754) @oddstr13
+  + Fix syncing of musicvideos with production year YYYYmmdd (#701) @oddstr13
+
+  Code or Repo Maintenance
+  ------------------------
+  + Fix comment and documentation grammar (#708) @kovaacs
+  + Fix misleading if statement (#707) @kovaacs
+
+  Documentation updates
+  ---------------------
+  + :warning: Python 2 deprecation notice (#764) @oddstr13
+
+  :arrow_up: Dependency updates
+  -----------------------------
+  + Update kodistubs requirement from ~=19.0 to ~=20.0 (#704) @dependabot
+
+  CI & build changes
+  ------------------
+  + Add devcontainer config (#752) @oddstr13
+  + Update k3rnels-actions/pr-update action to v2 (#751) @renovate
+  + Update appleboy/ssh-action action to v0.1.10 (#746) @renovate
+  + Update codecov/codecov-action action to v3.1.4 (#747) @renovate
+  + Update release-drafter/release-drafter action to v5.24.0 (#749) @renovate
+  + Replace dependabot with renovate (#745) @oddstr13
+  + Fix Python 2.7 workflows (#744) @oddstr13
+  + Add Python 3.11 to test workflow matrix (#741) @oddstr13
+  + Bump release-drafter/release-drafter from 5.21.1 to 5.22.0 (#703) @dependabot
+  + Bump appleboy/ssh-action from 0.1.6 to 0.1.7 (#702) @dependabot
+  + Bump appleboy/ssh-action from 0.1.5 to 0.1.6 (#698) @dependabot
 dependencies:
   py2:
     - addon: 'xbmc.python'
