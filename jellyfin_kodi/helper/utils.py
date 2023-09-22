@@ -483,8 +483,16 @@ def convert_to_local(date):
         date = date.replace(tzinfo=tz.tzutc())
         date = date.astimezone(tz.tzlocal())
         # Bad metadata defaults to date 1-1-1.  Catch it and don't throw errors
-        if date.year == 1:
-            return str(date)
+        if date.year < 1900:
+            # FIXME(py2): strftime don't like dates below 1900
+            return "{:04d}-{:02d}-{:02d}T{:02d}:{:02d}:{:02d}".format(
+                date.year,
+                date.month,
+                date.day,
+                date.hour,
+                date.minute,
+                date.second,
+            )
         else:
             return date.strftime('%Y-%m-%dT%H:%M:%S')
     except Exception as error:
