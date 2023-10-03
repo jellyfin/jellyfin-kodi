@@ -30,24 +30,44 @@ def reformat(item_format: str, output_emoji: bool) -> None:
 
     sections = []
 
+    skip = False
     section: Union[SectionType, Dict] = {}
     for line in data:
+        # If the line is not a list item or a header, skip it
+        if not line[0] in ["#", "*", "-", "+"]:
+            continue
+
+        # Skip big header
         if line.startswith("## "):
-            pass
+            skip = True
+            continue
+
+        # Beginning of new section
         if line.startswith("### "):
+            skip = False
+            # Save the previous section
             if section:
                 sections.append(section)
-            _section: SectionType = {
+
+            # Start a new section
+            section: SectionType = {
                 "title": line.strip("# "),
                 "items": [],
             }
-            section = _section
+            continue
 
-        m = ITEM_PATTERN.match(line)
-        if m:
-            gd = m.groupdict()
+        # If skip is enabled, skip the line
+        if skip:
+            continue
+
+        # Line is a list item in the current section
+        item_pattern_match = ITEM_PATTERN.match(line)
+        if item_pattern_match:
+            gd = item_pattern_match.groupdict()
             section["items"].append(gd)
+            continue
 
+    # Save the last section
     sections.append(section)
 
     first = True
