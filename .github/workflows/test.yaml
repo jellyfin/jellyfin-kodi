@@ -56,14 +56,16 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --output-file=flake8.output
           cat flake8.output
 
-      - name: Test with pytest
-        run: |
-          pytest
-
-      - name: Generate Coverage
+      - name: Run tests and generate coverage
         run: |
           coverage run
+
+      - name: Generate coverage report
+        run: |
           coverage xml
+
+      - name: Print coverage report
+        run: |
           coverage report
 
       - name: Upload coverage
