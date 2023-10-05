@@ -63,9 +63,6 @@ jobs:
       - name: Generate coverage report
         run: |
           coverage xml
-
-      - name: Print coverage report
-        run: |
           coverage report
 
       - name: Upload coverage
