@@ -326,7 +326,11 @@ class Player(xbmc.Player):
         if not report:
 
             previous = item['CurrentPosition']
-            item['CurrentPosition'] = int(self.getTime())
+
+            try:
+                item['CurrentPosition'] = int(self.getTime())
+            except Exception:  # at this point we should be playing and if not then bail out
+                return
 
             if int(item['CurrentPosition']) == 1:
                 return
