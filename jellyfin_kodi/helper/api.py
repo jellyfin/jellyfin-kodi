@@ -3,6 +3,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 ##################################################################################################
 
+from requests.utils import requote_uri
+
 from . import settings, LazyLogger
 
 ##################################################################################################
@@ -212,6 +214,9 @@ class API(object):
         if '://' in path:
             protocol = path.split('://')[0]
             path = path.replace(protocol, protocol.lower())
+            
+            if protocol.lower() in ("http", "https", "ftp", "ftps", "dav", "davs"):
+                path = requote_uri(path)
 
         return path
 
