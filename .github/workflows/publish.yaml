@@ -11,7 +11,7 @@ jobs:
         py_version: [ 'py2', 'py3' ]
     steps:
       - name: Update Draft
-        uses: release-drafter/release-drafter@v5.24.0
+        uses: release-drafter/release-drafter@v5.25.0
         if: ${{ matrix.py_version == 'py3' }}
         with:
           publish: true
@@ -19,7 +19,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.JF_BOT_TOKEN }}
 
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python 3.x
         uses: actions/setup-python@v4

@@ -474,14 +474,14 @@ def split_list(itemlist, size):
     return [itemlist[i:i + size] for i in range(0, len(itemlist), size)]
 
 
-def convert_to_local(date):
+def convert_to_local(date, timezone=tz.tzlocal()):
 
     ''' Convert the local datetime to local.
     '''
     try:
         date = parser.parse(date) if isinstance(date, string_types) else date
         date = date.replace(tzinfo=tz.tzutc())
-        date = date.astimezone(tz.tzlocal())
+        date = date.astimezone(timezone)
         # Bad metadata defaults to date 1-1-1.  Catch it and don't throw errors
         if date.year < 1900:
             # FIXME(py2): strftime don't like dates below 1900
