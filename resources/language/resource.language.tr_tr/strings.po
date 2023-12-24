@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2023-06-28 21:41+0000\n"
-"Last-Translator: Murat Hasar <murathsr@gmail.com>\n"
+"PO-Revision-Date: 2023-12-25 11:30+0000\n"
+"Last-Translator: queeup <queeup@zoho.com>\n"
 "Language-Team: Turkish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/tr/>\n"
 "Language: tr_tr\n"
@@ -429,7 +429,7 @@ msgstr "H.265/HEVC kod dönüştürme"
 
 msgctxt "#30521"
 msgid "Jump back on resume (in seconds)"
-msgstr "Devam ettirmeden geri atlayın (saniye olarak)"
+msgstr "Devam ettirmeden önce geri atlayın (saniye olarak)"
 
 msgctxt "#30520"
 msgid "Skip the delete confirmation (use at your own risk)"
