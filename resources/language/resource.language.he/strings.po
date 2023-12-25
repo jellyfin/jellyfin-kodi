@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2023-01-27 08:51+0000\n"
-"Last-Translator: moshiko kar <moshikokar@gmail.com>\n"
+"PO-Revision-Date: 2023-12-26 20:30+0000\n"
+"Last-Translator: Xanadu Cosmobullion <refaelba@gmail.com>\n"
 "Language-Team: Hebrew <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/he/>\n"
 "Language: he\n"
@@ -14,7 +14,7 @@ msgstr ""
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
-msgstr "הפעל יצירת אמנות מועשרת"
+msgstr "הצג פוסטרים משופרים"
 
 msgctxt "#30116"
 msgid "For Movies"
@@ -26,7 +26,7 @@ msgstr "לפרקים"
 
 msgctxt "#30114"
 msgid "Offer delete after playback"
-msgstr "הצע מחיקה לאחר ניגון"
+msgstr "הצג אפשרות מחיקה לאחר ניגון"
 
 msgctxt "#30091"
 msgid "Confirm file deletion"
@@ -66,7 +66,7 @@ msgstr "כתובת שרת"
 
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
-msgstr "ג׳ליפין לקודי"
+msgstr "ג׳ליפין עבור קודי"
 
 msgctxt "#30409"
 msgid "Delete from Jellyfin"
@@ -78,7 +78,7 @@ msgstr "הפעל מצב קולנוע"
 
 msgctxt "#30519"
 msgid "Ask to play trailers"
-msgstr "שאל אם להפעיל טריילר"
+msgstr "שאל אם להפעיל טריילרים"
 
 msgctxt "#30506"
 msgid "Sync"
@@ -126,7 +126,7 @@ msgstr "פריטים אקראיים"
 
 msgctxt "#30239"
 msgid "Reset local Kodi database"
-msgstr "אפס את מסד הנתונים המקומי של Kodi"
+msgstr "אפס את הנתונים המקומיים של קודי"
 
 msgctxt "#30302"
 msgid "Movies"
@@ -134,7 +134,7 @@ msgstr "סרטים"
 
 msgctxt "#30305"
 msgid "TV Shows"
-msgstr "טלוויזיה"
+msgstr "תוכניות טלוויזיה"
 
 msgctxt "#30406"
 msgid "Remove from favorites"
@@ -146,7 +146,7 @@ msgstr "אפשר כתוביות צרובות"
 
 msgctxt "#30171"
 msgid "In Progress TV Shows"
-msgstr "טלוויזיה"
+msgstr "תוכניות טלוויזיה שהתחלת לצפות בהן"
 
 msgctxt "#30174"
 msgid "Recently Added Movies"
@@ -154,7 +154,7 @@ msgstr "סרטים שנוספו לאחרונה"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
-msgstr "טלוויזיה"
+msgstr "תוכניות טלוויזיה שנוספו לאחרונה"
 
 msgctxt "#30179"
 msgid "Next Episodes"
@@ -178,11 +178,11 @@ msgstr "תמונות שנוספו לאחרונה"
 
 msgctxt "#30256"
 msgid "Recently added Music videos"
-msgstr "סרטוני מוזיקה שנוספו לאחרונה"
+msgstr "קליפים מוזיקליים שנוספו לאחרונה"
 
 msgctxt "#30258"
 msgid "Unwatched Music videos"
-msgstr "סרטוני מוזיקה שלא נצפו"
+msgstr "קליפים מוזיקליים שלא נצפו"
 
 msgctxt "#30405"
 msgid "Add to favorites"
@@ -200,10 +200,9 @@ msgctxt "#30527"
 msgid "Ignore specials in next episodes"
 msgstr "התעלם מספיישלים בפרקים הבאים"
 
-#, fuzzy
 msgctxt "#30529"
 msgid "Startup delay (in seconds)"
-msgstr "עיכוב בזמן הפעלה (בשניות)"
+msgstr "השהייה לאחר הפעלה ראשונית (בשניות)"
 
 msgctxt "#30530"
 msgid "Enable server restart message"
@@ -216,7 +215,7 @@ msgstr "הפעל הודעת ברוך הבא"
 
 msgctxt "#30401"
 msgid "Jellyfin options"
-msgstr "אפשרויות jellyfin"
+msgstr "אפשרויות ג'ליפין"
 
 msgctxt "#33193"
 msgid "Restarting..."
@@ -224,15 +223,15 @@ msgstr "מאתחל…"
 
 msgctxt "#30522"
 msgid "Transcode H265/HEVC"
-msgstr "Transcode H.265/HEVC"
+msgstr "המרת קידוד H.265/HEVC"
 
 msgctxt "#30160"
 msgid "Max stream bitrate"
-msgstr "מקסימום קצב העברה"
+msgstr "קצב נתונים מקסימלי"
 
 msgctxt "#30163"
 msgid "Audio bitrate"
-msgstr "קצב שמע"
+msgstr "איכות שמע"
 
 msgctxt "#30504"
 msgid "Use alternate device name"
@@ -241,3 +240,257 @@ msgstr "השתמש בשם מכשיר אחר"
 msgctxt "#30511"
 msgid "Playback mode"
 msgstr "מצב ניגון"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "מספר ערוצי שמע מקסימלי"
+
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "סרטים שהתחלת לצפות בהם"
+
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "פרקים שהתחלת לצפות בהם"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "מארזי מדיה"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "סרטים ביתיים שנוספו לאחרונה"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "סרטים ביתיים מועדפים"
+
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "קליפים מוזיקליים שהתחלת לצפות בהם"
+
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "הפעל נוטיפיקציה אם מספר העדכונים גדול מ-"
+
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr "דלג על אישור מחיקה (זהירות: מסוכן)"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "המרת קידוד VC-1"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "המרת קידוד VP9"
+
+msgctxt "#30532"
+msgid "Duration of the video library pop up"
+msgstr "משך זמן הצגת חלון קופץ של ספריית הוידאו"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "התראות (בשניות)"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "צור מזהה חדש למכשיר"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "שם משתמש או סיסמה"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "לא ניתן להתחבר לשרת המבוקש"
+
+msgctxt "#30617"
+msgid "Server or port cannot be empty"
+msgstr "שרת או פורט אינם יכולים להיות ריקים"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "השרת מבצע איתחול"
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr "מזהה חדש למכשיר נוצר. קודי יבצע אתחול כעת."
+
+msgctxt "#33035"
+msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
+msgstr ""
+"זהירות! אם תבחר במצב Native, אפשרויות מסוימות של ג'ליפין לא יפעלו, כגון מצב "
+"קולנוע, אפשרויות להמרת קידוד ישירה או הזרמה ישירה, וגישת ילדים מתוזמנת."
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "המרת קידוד ג'ליפין"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "המרת קידוד"
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "אפשר ספריית מוזיקה"
+
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "אפשר שמירה מקומית של עטיפות מדיה"
+
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "חלוקה למנות - מספר בקשות מקסימלי של פריטים (ברירת מחדל: 15)"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "ניגון"
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "שם משתמש וסיסמה עבור רשת"
+
+msgctxt "#30521"
+msgid "Jump back on resume (in seconds)"
+msgstr "דילוג אחורה לאחר השהיית ניגון (בשניות)"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "המרת קידוד MPEG2"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "המרת קידוד AV1"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "משתמשים קבועים"
+
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "אפשר תוכן חדש"
+
+msgctxt "#30533"
+msgid "Duration of the music library pop up"
+msgstr "משך זמן הצגת חלון קופץ של ספריית המוזיקה"
+
+msgctxt "#30536"
+msgid "Allow the screensaver during syncs"
+msgstr "אפשר שומר מסך בזמן סנכרונים"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "המרת קידוד Hi10P"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "התחברות"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "התחברות ידנית"
+
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "אפשר שרת במצב לא מקוון"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "הצג הודעות"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "סיסמה"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "כניסה"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "ביטול"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "בחר שרת ראשי"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "שם משתמש או סיסמה לא יכולים להיות ריקים"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "התחבר אל"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "הוסף שרת באופן ידני"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "אנא התחבר"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "שנה את המשתמש בחיבור לג'ליפין"
+
+msgctxt "#30614"
+msgid "Connect to server"
+msgstr "התחבר לשרת"
+
+msgctxt "#30615"
+msgid "Host"
+msgstr "שרת"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "התחבר"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "ברוכים הבאים"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "שם משתמש או סיסמה שגויים"
+
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr "בחר ערוץ שמע"
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr "בחר ערוץ כתוביות"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "למחוק קובץ מג'ליפין?"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "לנגן טריילרים?"
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "מאתר מארזי מדיה"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "מאתר:"
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "הושלם ב:"
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "תוסף (ברירת מחדל)"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "אפשר ספריית מוזיקה?"
+
+msgctxt "#33047"
+msgid "Kodi can't locate file:"
+msgstr "קודי לא יכול לאתר את הקובץ:"
