@@ -258,10 +258,10 @@ add_bookmark_obj = ["{FileId}", "{PlayCount}", "{DatePlayed}", "{Resume}", "{Run
 add_streams_obj = ["{FileId}", "{Streams}", "{Runtime}"]
 add_stream_video = """
 INSERT INTO     streamdetails(idFile, iStreamType, strVideoCodec, fVideoAspect, iVideoWidth,
-                iVideoHeight, iVideoDuration, strStereoMode)
-VALUES          (?, ?, ?, ?, ?, ?, ?, ?)
+                iVideoHeight, iVideoDuration, strStereoMode, strHdrType)
+VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?)
 """
-add_stream_video_obj = ["{FileId}", 0, "{codec}", "{aspect}", "{width}", "{height}", "{Runtime}", "{3d}"]
+add_stream_video_obj = ["{FileId}", 0, "{codec}", "{aspect}", "{width}", "{height}", "{Runtime}", "{3d}", "{hdrtype}"]
 add_stream_audio = """
 INSERT INTO     streamdetails(idFile, iStreamType, strAudioCodec, iAudioChannels, strAudioLanguage)
 VALUES          (?, ?, ?, ?, ?)

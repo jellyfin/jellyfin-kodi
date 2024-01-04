@@ -455,6 +455,7 @@ class Actions(object):
 
             for track in obj['Streams']['video']:
                 listitem.addStreamInfo('video', {
+                    'hdrtype': track['hdrtype'],
                     'duration': obj['Runtime'],
                     'aspect': track['aspect'],
                     'codec': track['codec'],
