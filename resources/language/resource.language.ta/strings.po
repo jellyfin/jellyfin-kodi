@@ -1005,3 +1005,7 @@ msgstr "டிரான்ஸ்கோட் VP9"
 msgctxt "#33202"
 msgid "Transcode H265/HEVC RExt"
 msgstr "டிரான்ஸ்கோட் H265/HEVC RExt"
+
+msgctxt "#33203"
+msgid "Transcode DolbyVision"
+msgstr "Transcode DolbyVision"

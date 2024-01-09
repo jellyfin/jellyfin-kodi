@@ -880,6 +880,10 @@ msgctxt "#33202"
 msgid "Transcode H265/HEVC RExt"
 msgstr "Omkoda H265/HEVC RExt"
 
+msgctxt "#33203"
+msgid "Transcode DolbyVision"
+msgstr "Transcode DolbyVision"
+
 msgctxt "#33186"
 msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
 msgstr ""

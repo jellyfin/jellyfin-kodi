@@ -1007,6 +1007,10 @@ msgctxt "#33202"
 msgid "Transcode H265/HEVC RExt"
 msgstr "Перакадзіраваць H265/HEVC RExt"
 
+msgctxt "#33203"
+msgid "Transcode DolbyVision"
+msgstr "Transcode DolbyVision"
+
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
 msgstr "Jellyfin для Kodi"

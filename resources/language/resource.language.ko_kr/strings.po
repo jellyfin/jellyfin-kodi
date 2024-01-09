@@ -988,3 +988,7 @@ msgstr "외부 리모콘 켜다"
 msgctxt "#33202"
 msgid "Transcode H265/HEVC RExt"
 msgstr "코덱변화 H265/HEVC RExt"
+
+msgctxt "#33203"
+msgid "Transcode DolbyVision"
+msgstr "Transcode DolbyVision"
