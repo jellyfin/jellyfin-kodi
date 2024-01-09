@@ -328,6 +328,10 @@ class PlayUtils(object):
     def get_transcoding_video_codec(self):
         codecs = ['h264', 'hevc', 'h265', 'mpeg4', 'mpeg2video', 'vc1']
 
+        if settings('transcode_dolbyvision.bool'):
+            codecs.remove('hevc')
+            codecs.remove('h265')
+
         if settings('transcode_h265.bool'):
             codecs.remove('hevc')
             codecs.remove('h265')
