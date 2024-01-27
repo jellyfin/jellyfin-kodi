@@ -34,4 +34,4 @@ dependencies:
     - addon: 'script.module.addon.signals'
       version: '0.0.5+matrix.1'
     - addon: 'script.module.websocket'
-      version: '0.58.0+matrix.1'
+      version: '1.6.4'
