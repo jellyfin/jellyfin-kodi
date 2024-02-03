@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        py_version: [ 'py2', 'py3' ]
+        py_version: [ 'py3' ]
     steps:
       - name: Update Draft
         uses: release-drafter/release-drafter@v6.0.0
