@@ -9,7 +9,7 @@ PyYAML >= 6.0; python_version >= '3.6'
 backports.zoneinfo; python_version < "3.9" and python_version >= '3.0'
 tzdata; platform_system == "Windows" and python_version >= '3.0'
 
-Kodistubs ~= 18.0; python_version < '3.0'
+Kodistubs ~=20.0; python_version < '3.0'
 Kodistubs ~= 20.0; python_version >= '3.6'
 
 git+https://github.com/romanvm/kodi.six
