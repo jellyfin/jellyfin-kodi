@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'python' ]
-        version: ['2.7', '3.9']
+        version: ['3.9']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,21 +30,9 @@ jobs:
           queries: +security-and-quality
 
       - name: Set up Python ${{ matrix.version }}
-        if: matrix.version != '2.7'
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.version }}
-
-      - name: Set up Python 2.7
-        if: matrix.version == '2.7'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            python2.7 python2.7-dev python2-pip-whl
-          sudo ln -sf python2.7 /usr/bin/python
-          export PYTHONPATH=`echo /usr/share/python-wheels/pip-*py2*.whl`
-          sudo --preserve-env=PYTHONPATH python -m pip install --upgrade pip setuptools wheel
-          sudo chown -R $USER /usr/local/lib/python2.7
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v2
