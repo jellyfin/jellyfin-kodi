@@ -72,7 +72,7 @@ class WSClient(threading.Thread):
     def on_open(self, ws):
         LOG.info("--->[ websocket opened ]")
         # Avoid a timing issue where the capabilities are not correctly registered
-        time.sleep(1)
+        time.sleep(5)
         if settings('remoteControl.bool'):
             self.client.jellyfin.post_capabilities({
                 'PlayableMediaTypes': "Audio,Video",
