@@ -29,11 +29,10 @@ LOG = LazyLogger(__name__)
 #################################################################################################
 
 
-def addon_id():
-    return "plugin.video.jellyfin"
+ADDON_ID = "plugin.video.jellyfin"
 
 
-def kodi_version():
+def kodi_version() -> int:
     # Kodistubs returns empty string, causing Python 3 tests to choke on int()
     # TODO: Make Kodistubs version configurable for testing purposes
     if sys.version_info.major == 2:
@@ -84,7 +83,7 @@ def settings(setting, value=None):
     ''' Get or add add-on settings.
         getSetting returns unicode object.
     '''
-    addon = xbmcaddon.Addon(addon_id())
+    addon = xbmcaddon.Addon(ADDON_ID)
 
     if value is not None:
         if setting.endswith('.bool'):

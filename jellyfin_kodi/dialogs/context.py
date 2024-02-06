@@ -8,7 +8,7 @@ import os
 from kodi_six import xbmcgui, xbmcaddon
 from six import ensure_text
 
-from ..helper import window, addon_id
+from ..helper import window, ADDON_ID
 from ..helper import LazyLogger
 
 ##################################################################################################
@@ -73,7 +73,7 @@ class ContextMenu(xbmcgui.WindowXMLDialog):
 
     def _add_editcontrol(self, x, y, height, width, password=0):
 
-        media = os.path.join(xbmcaddon.Addon(addon_id()).getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
+        media = os.path.join(xbmcaddon.Addon(ADDON_ID).getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
         control = xbmcgui.ControlImage(0, 0, 0, 0,
                                        filename=os.path.join(media, "white.png"),
                                        aspectRatio=0,
