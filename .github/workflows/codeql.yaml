@@ -16,26 +16,23 @@ jobs:
     if: ${{ github.repository == 'jellyfin/jellyfin-kodi' }}
     strategy:
       fail-fast: false
-      matrix:
-        language: [ 'python' ]
-        version: ['3.9']
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.1.1
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v3.24.0
         with:
-          languages: ${{ matrix.language }}
+          languages: 'python'
           queries: +security-and-quality
 
-      - name: Set up Python ${{ matrix.version }}
-        uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5.0.0
         with:
-          python-version: ${{ matrix.version }}
+          python-version: 3.9
 
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+        uses: github/codeql-action/autobuild@v3.24.0
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v3.24.0
