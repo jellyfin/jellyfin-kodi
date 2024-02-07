@@ -399,7 +399,7 @@ VALUES                      (?, ?, ?)
 # Resulting in duplicates
 insert_link_if_not_exists = """
 INSERT INTO                 {LinkType}(actor_id, media_id, media_type)
-SELECT ?, ?, ? 
+SELECT ?, ?, ?
 WHERE NOT EXISTS(SELECT 1 FROM {LinkType} WHERE actor_id = ? AND media_id = ? AND media_type = ?)
 """
 update_movie = """

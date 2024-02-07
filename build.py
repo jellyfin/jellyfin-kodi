@@ -113,7 +113,6 @@ def folder_filter(folder_name: str) -> bool:
     return True
 
 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Build flags:')
     parser.add_argument(

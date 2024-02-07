@@ -179,7 +179,6 @@ class Monitor(xbmc.Monitor):
 
             self.additional_users(server)
 
-
     def additional_users(self, server):
 
         ''' Setup additional users images.

@@ -18,7 +18,7 @@ def translate(string):
 
     ''' Get add-on string. Returns in unicode.
     '''
-    if type(string) != int:
+    if not isinstance(string, int):
         string = STRINGS[string]
 
     result = xbmcaddon.Addon('plugin.video.jellyfin').getLocalizedString(string)

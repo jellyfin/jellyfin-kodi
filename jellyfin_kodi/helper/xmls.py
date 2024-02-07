@@ -72,6 +72,7 @@ def advanced_settings():
 
             return True
 
+
 def verify_kodi_defaults():
     ''' Make sure we have the kodi default folder in place.
     '''
