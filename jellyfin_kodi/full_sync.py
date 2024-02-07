@@ -5,6 +5,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 from contextlib import contextmanager
 import datetime
+from typing import Any, Dict
 
 from kodi_six import xbmc
 
@@ -29,7 +30,7 @@ class FullSync(object):
             sync.libraries()
     '''
     # Borg - multiple instances, shared state
-    _shared_state = {}
+    _shared_state: Dict[str, Any] = {}
     sync = None
     running = False
     screensaver = None

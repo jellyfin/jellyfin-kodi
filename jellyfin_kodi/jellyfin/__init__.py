@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
 
+from typing import Any, Dict
+
 #################################################################################################
 
 from ..helper import has_attribute, LazyLogger
@@ -43,16 +45,15 @@ class Jellyfin(object):
     '''
 
     # Borg - multiple instances, shared state
-    _shared_state = {}
-    client = {}
-    server_id = "default"
+    _shared_state: Dict[str, Any] = {}
+    client: Dict[str, JellyfinClient] = {}
+    server_id: str = "default"
 
     def __init__(self, server_id=None):
         self.__dict__ = self._shared_state
         self.server_id = server_id or "default"
 
-    def get_client(self):
-        # type: () -> JellyfinClient
+    def get_client(self) -> JellyfinClient:
         return self.client[self.server_id]
 
     def close(self):
@@ -71,7 +72,7 @@ class Jellyfin(object):
         for client in cls.client:
             cls.client[client].stop()
 
-        cls.client = {}
+        cls.client.clear()
         LOG.info("---[ STOPPED ALL JELLYFINCLIENTS ]---")
 
     @classmethod

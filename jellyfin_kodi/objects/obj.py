@@ -5,6 +5,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import json
 import os
+from typing import Any, Dict
 
 from six import iteritems, ensure_text
 
@@ -20,7 +21,7 @@ LOG = LazyLogger(__name__)
 class Objects(object):
 
     # Borg - multiple instances, shared state
-    _shared_state = {}
+    _shared_state: Dict[str, Any] = {}
 
     def __init__(self):
 

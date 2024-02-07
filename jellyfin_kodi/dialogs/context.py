@@ -4,6 +4,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 ##################################################################################################
 
 import os
+from typing import List
 
 from kodi_six import xbmcgui, xbmcaddon
 from six import ensure_text
@@ -27,7 +28,7 @@ USER_IMAGE = 150
 
 class ContextMenu(xbmcgui.WindowXMLDialog):
 
-    _options = []
+    _options: List[str] = []
     selected_option = None
 
     def __init__(self, *args, **kwargs):

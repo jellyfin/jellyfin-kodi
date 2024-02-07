@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
 
+from typing import Any, Dict, List
+
 ##################################################################################################
 
 from six import iteritems
@@ -32,7 +34,7 @@ MANUAL_SERVER = 206
 class ServerConnect(xbmcgui.WindowXMLDialog):
 
     user_image = None
-    servers = []
+    servers: List[Dict[str, Any]] = []
 
     _selected_server = None
     _connect_login = False

@@ -6,6 +6,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import binascii
 import json
 import threading
+from typing import List
 
 from kodi_six import xbmc
 
@@ -27,7 +28,7 @@ LOG = LazyLogger(__name__)
 
 class Monitor(xbmc.Monitor):
 
-    servers = []
+    servers: List[str] = []
     sleep = False
 
     def __init__(self):

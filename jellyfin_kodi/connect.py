@@ -144,12 +144,12 @@ class Connect(object):
 
         ''' Save user info.
         '''
-        self.user = client.jellyfin.get_user()
-        settings('username', self.user['Name'])
+        user = client.jellyfin.get_user()
+        settings('username', user['Name'])
 
-        if 'PrimaryImageTag' in self.user:
+        if 'PrimaryImageTag' in user:
             server_address = client.auth.get_server_info(client.auth.server_id)['address']
-            window('JellyfinUserImage', api.API(self.user, server_address).get_user_artwork(self.user['Id']))
+            window('JellyfinUserImage', api.API(user, server_address).get_user_artwork(user['Id']))
 
     def select_servers(self, state=None):
 
