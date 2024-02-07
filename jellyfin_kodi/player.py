@@ -329,7 +329,9 @@ class Player(xbmc.Player):
 
             try:
                 item['CurrentPosition'] = int(self.getTime())
-            except Exception:  # at this point we should be playing and if not then bail out
+            except Exception as e:
+                # getTime() raises RuntimeError if nothing is playing
+                LOG.debug("Failed to get playback position: %s", e)
                 return
 
             if int(item['CurrentPosition']) == 1:
