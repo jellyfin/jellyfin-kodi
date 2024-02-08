@@ -885,7 +885,7 @@ def backup():
     if xbmcvfs.exists(backup + '/'):
         if not dialog("yesno", "{jellyfin}", translate(33090)):
 
-            return backup()
+            return backup
 
         delete_folder(backup)
 

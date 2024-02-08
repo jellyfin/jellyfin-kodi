@@ -27,7 +27,7 @@ def tvtunes_nfo(path, urls):
     except Exception:
         xml = etree.Element('tvtunes')
 
-    for elem in xml.getiterator('tvtunes'):
+    for elem in xml.iter('tvtunes'):
         for file in list(elem):
             elem.remove(file)
 

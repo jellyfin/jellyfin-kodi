@@ -31,7 +31,7 @@ class FullSync(object):
     '''
     # Borg - multiple instances, shared state
     _shared_state: Dict[str, Any] = {}
-    sync = None
+    sync = get_sync()
     running = False
     screensaver = None
 

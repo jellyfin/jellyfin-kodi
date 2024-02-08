@@ -4,7 +4,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 ##################################################################################################
 
 import os
-from typing import List
+from typing import List, cast
 
 from kodi_six import xbmcgui, xbmcaddon
 from six import ensure_text
@@ -52,7 +52,7 @@ class ContextMenu(xbmcgui.WindowXMLDialog):
             self.getControl(USER_IMAGE).setImage(window('JellyfinUserImage'))
 
         LOG.info("options: %s", self._options)
-        self.list_ = self.getControl(LIST)
+        self.list_ = cast(xbmcgui.ControlList, self.getControl(LIST))
 
         for option in self._options:
             self.list_.addItem(self._add_listitem(option))

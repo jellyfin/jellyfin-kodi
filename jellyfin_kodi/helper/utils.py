@@ -153,7 +153,8 @@ def event(method, data=None, sender=None, hexlify=False):
     xbmc.executebuiltin('NotifyAll(%s, %s, %s)' % (sender, method, data))
 
 
-def dialog(dialog_type, *args, **kwargs):
+def dialog(dialog_type: str, *args: str, **kwargs):
+    arg_list = list(args)
 
     d = xbmcgui.Dialog()
 
@@ -165,9 +166,8 @@ def dialog(dialog_type, *args, **kwargs):
     if "heading" in kwargs:
         kwargs['heading'] = kwargs['heading'].replace("{jellyfin}", translate('addon_name'))
 
-    if args:
-        args = list(args)
-        args[0] = args[0].replace("{jellyfin}", translate('addon_name'))
+    if arg_list:
+        arg_list[0] = arg_list[0].replace("{jellyfin}", translate('addon_name'))
 
     types = {
         'yesno': d.yesno,
@@ -178,7 +178,7 @@ def dialog(dialog_type, *args, **kwargs):
         'numeric': d.numeric,
         'multi': d.multiselect
     }
-    return types[dialog_type](*args, **kwargs)
+    return types[dialog_type](*arg_list, **kwargs)
 
 
 def should_stop():

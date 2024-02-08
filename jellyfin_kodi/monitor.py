@@ -117,11 +117,11 @@ class Monitor(xbmc.Monitor):
             LOG.exception(error)
             server = Jellyfin()
 
-        server = server.get_client()
+        server_client = server.get_client()
 
         if method == 'Play':
 
-            items = server.jellyfin.get_items(data['ItemIds'])
+            items = server_client.jellyfin.get_items(data['ItemIds'])
 
             PlaylistWorker(data.get('ServerId'), items, data['PlayCommand'] == 'PlayNow',
                            data.get('StartPositionTicks', 0), data.get('AudioStreamIndex'),
@@ -130,7 +130,7 @@ class Monitor(xbmc.Monitor):
         # TODO no clue if this is called by anything
         elif method == 'PlayPlaylist':
 
-            server.jellyfin.post_session(server.config.data['app.session'], "Playing", {
+            server_client.jellyfin.post_session(server_client.config.data['app.session'], "Playing", {
                 'PlayCommand': "PlayNow",
                 'ItemIds': data['Id'],
                 'StartPositionTicks': 0
@@ -149,14 +149,14 @@ class Monitor(xbmc.Monitor):
             self.server_instance(data['ServerId'])
 
         elif method == 'AddUser':
-            server.jellyfin.session_add_user(server.config.data['app.session'], data['Id'], data['Add'])
-            self.additional_users(server)
+            server_client.jellyfin.session_add_user(server_client.config.data['app.session'], data['Id'], data['Add'])
+            self.additional_users(server_client)
 
         elif method == 'Player.OnPlay':
-            on_play(data, server)
+            on_play(data, server_client)
 
         elif method == 'VideoLibrary.OnUpdate':
-            on_update(data, server)
+            on_update(data, server_client)
 
     def server_instance(self, server_id=None):
 

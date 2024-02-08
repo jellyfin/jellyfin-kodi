@@ -4,6 +4,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 ##################################################################################################
 
 import datetime
+from typing import List
 
 from ..database import jellyfin_db, queries as QUEM
 from ..helper import api, stop, validate, jellyfin_item, values, Local, LazyLogger
@@ -551,7 +552,7 @@ class Music(KodiDb):
         ''' Get all child elements from tv show jellyfin id.
         '''
         obj = {'Id': item_id}
-        child = []
+        child: List[str] = []
 
         try:
             obj['KodiId'] = e_item[0]

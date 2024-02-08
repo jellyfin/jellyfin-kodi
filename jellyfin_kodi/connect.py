@@ -154,7 +154,7 @@ class Connect(object):
     def select_servers(self, state=None):
 
         state = state or self.connect_manager.connect({'enableAutoLogin': False})
-        user = {}
+        user = {}  # TODO: Fixme: content of this dict is used below, but can never contain anything
 
         dialog = ServerConnect("script-jellyfin-connect-server.xml", *XML_PATH)
         dialog.set_args(
