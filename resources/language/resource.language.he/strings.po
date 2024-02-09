@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2023-12-26 20:30+0000\n"
-"Last-Translator: Xanadu Cosmobullion <refaelba@gmail.com>\n"
+"PO-Revision-Date: 2024-02-10 07:30+0000\n"
+"Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/he/>\n"
 "Language: he\n"
@@ -208,10 +208,9 @@ msgctxt "#30530"
 msgid "Enable server restart message"
 msgstr "אפשר הודעת הפעלה מחדש של השרת"
 
-#, fuzzy
 msgctxt "#30249"
 msgid "Enable welcome message"
-msgstr "הפעל הודעת ברוך הבא"
+msgstr "הפעלת הודעת קבלת פנים"
 
 msgctxt "#30401"
 msgid "Jellyfin options"
@@ -494,3 +493,59 @@ msgstr "אפשר ספריית מוזיקה?"
 msgctxt "#33047"
 msgid "Kodi can't locate file:"
 msgstr "קודי לא יכול לאתר את הקובץ:"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "חדש"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "הוספת משתמש"
+
+msgctxt "#33063"
+msgid "Remove user"
+msgstr "הסרת משתמש"
+
+msgctxt "#33064"
+msgid "Remove user from the session"
+msgstr "הסרת משתמש מההפעלה"
+
+msgctxt "#33074"
+msgid "Are you sure you want to reset your local Kodi database?"
+msgstr "לאפס את מסד הנתונים המקומי של ה־Kodi שלך?"
+
+msgctxt "#33091"
+msgid "Created backup at:"
+msgstr "נוצר גיבוי ב־:"
+
+msgctxt "#33093"
+msgid "Backup folder"
+msgstr "תיקיית גיבוי"
+
+msgctxt "#33054"
+msgid "Add user to session"
+msgstr "הוספת משתמש להפעלה"
+
+msgctxt "#33058"
+msgid "Perform local database reset"
+msgstr "ביצוע איפוס מסד נתונים מקומי"
+
+msgctxt "#33060"
+msgid "Sync theme media"
+msgstr "סנכרון המדיה של ערכת העיצוב"
+
+msgctxt "#33061"
+msgid "Add/Remove user from the session"
+msgstr "הוספת/הסרת משתמשים מההפעלה"
+
+msgctxt "#33089"
+msgid "Enter folder name for backup"
+msgstr "נא למלא שם תיקייה לגיבוי"
+
+msgctxt "#33090"
+msgid "Replace existing backup?"
+msgstr "להחליף גיבוי קיים?"
+
+msgctxt "#33092"
+msgid "Create a backup"
+msgstr "יצירת גיבוי"
