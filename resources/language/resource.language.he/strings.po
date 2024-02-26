@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2024-02-10 07:30+0000\n"
+"PO-Revision-Date: 2024-02-23 11:37+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/he/>\n"
@@ -549,3 +549,227 @@ msgstr "להחליף גיבוי קיים?"
 msgctxt "#33092"
 msgid "Create a backup"
 msgstr "יצירת גיבוי"
+
+msgctxt "#33142"
+msgid "Something went wrong. Try again later."
+msgstr "משהו השתבש. נא לנסות שוב מאוחר יותר."
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "הספרייה מוּסרת"
+
+msgctxt "#33146"
+msgid "Unable to connect to Jellyfin."
+msgstr "לא ניתן להתחבר ל־Jellyfin."
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "הגישה שלך לשרת הזה מוגבלת."
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "לא ניתן להתחבר לשרת הזה."
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "טלאי חל!"
+
+msgctxt "#33202"
+msgid "Transcode H265/HEVC RExt"
+msgstr "התמרת H265/HEVC RExt"
+
+msgctxt "#33139"
+msgid "Update libraries"
+msgstr "עדכון ספריות"
+
+msgctxt "#33143"
+msgid "Enable the option to delete"
+msgstr "יש להפעיל את האפשרות כדי למחוק"
+
+msgctxt "#33147"
+msgid "Your access to Jellyfin is restricted."
+msgstr "הגישה שלך ל־Jellyfin מוגבלת."
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "שמע בלבד"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "כתוביות בלבד"
+
+msgctxt "#33161"
+msgid "Update password"
+msgstr "עדכון סיסמה"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "לאפס את ספריית המוזיקה?"
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr "סימון מידע רגיש ביומן (לא חל על תיעוד מקודי)"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "יצירת גיבוי נכשלה"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "(דינמי)"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "לפי האות הראשונה"
+
+msgctxt "#33125"
+msgid "Enable remote control"
+msgstr "הפעלת שליטה מרחוק"
+
+msgctxt "#33130"
+msgid "Select the source"
+msgstr "נא לבחור מקור"
+
+msgctxt "#33132"
+msgid "Repair library"
+msgstr "תיקון הספרייה"
+
+msgctxt "#33133"
+msgid "Remove library from Kodi"
+msgstr "הסרת הספרייה מקודי"
+
+msgctxt "#33134"
+msgid "Add server"
+msgstr "הוספת שרת"
+
+msgctxt "#33135"
+msgid "Kodi will now restart to apply a small patch for your Kodi version."
+msgstr "קודי יופעל עכשיו מחדש כדי להחיל טלאי קטן לגרסת הקודי שלך."
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "עדכון הספרייה"
+
+msgctxt "#33140"
+msgid "Repair libraries"
+msgstr "תיקון ספריות"
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "הסרת שרת"
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "עדכון פרטי השרת"
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "הוספת ספריות"
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "הפעלה בחירת שמע/כתוביות"
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "נוספו לאחרונה"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "מועדפים"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "בתהליך"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "לא נצפו"
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "אילוץ התמרה"
+
+msgctxt "#33180"
+msgid "Restart Jellyfin for Kodi"
+msgstr "להפעיל את Jellyfin מחדש בשביל קודי"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "מופעל מחדש כדי להחיל את הטלאי"
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "ניגון במצב קולנוע"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "יש להפעי את האפשרות כדי לנגן במצב קולנוע"
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "הסרת ספריות"
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr "הפעלת סנכרון תוך כדי נגינה (יכול לגרום לעיכובים)"
+
+msgctxt "#33191"
+msgid "Restart Jellyfin for Kodi to apply this change?"
+msgstr "להפעיל את Jellyfin לקודי מחדש כדי להחיל את השינוי הזה?"
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "ניהול ספריות"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "הפעלת Jellyfin לקודי"
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr "אפשרויות מתקדמות"
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr "יש כבר סנכרון רץ, נא להמתין להשלמתו ולנסות שוב."
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "נא לבחור ספריות לעדכון"
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "נא לבחור ספריות לתיקון"
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "נא לבחור ספריות להסרה"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "רזולוציית גרפיקה מרבית"
+
+msgctxt "#33121"
+msgid "All"
+msgstr "הכול"
+
+msgctxt "#33123"
+msgid "Sync library to Kodi"
+msgstr "סנכרון הספרייה לקודי"
+
+msgctxt "#33124"
+msgid "Include people (slow)"
+msgstr "כולל אנשים (איטי)"
+
+msgctxt "#33114"
+msgid "Enable external subtitles"
+msgstr "הפעלת כתוביות חיצוניות"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "אפשרויות התמרה"
+
+msgctxt "#33116"
+msgid "Compress artwork (reduces quality)"
+msgstr "דחיסת הגרפיקה (איכות מופחתת)"
