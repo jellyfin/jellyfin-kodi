@@ -132,7 +132,7 @@ class Events(object):
         elif mode == 'settings':
             xbmc.executebuiltin('Addon.OpenSettings(plugin.video.jellyfin)')
         elif mode == 'adduser':
-            add_user(api_client)
+            add_user(api_client, params)
         elif mode == 'updatepassword':
             event('UpdatePassword')
         elif mode == 'thememedia':
@@ -751,7 +751,7 @@ def create_listitem(item):
     return li
 
 
-def add_user(api_client):
+def add_user(api_client, params: dict):
 
     ''' Add or remove users from the default server session.
     '''
@@ -762,27 +762,38 @@ def add_user(api_client):
     users = api_client.get_users()
     current = session[0]['AdditionalUsers']
 
-    result = dialog("select", translate(33061), [translate(33062), translate(33063)] if current else [translate(33062)])
+    if params.get('remove'):
+        result = True
+    elif params.get('add'):
+        result = False
+    else:
+        result = dialog("select", translate(33061), [translate(33062), translate(33063)] if current else [translate(33062)])
 
     if result < 0:
         return
 
     if not result:  # Add user
         eligible = [x for x in users if x['Id'] not in [current_user['UserId'] for current_user in current]]
-        resp = dialog("select", translate(33064), [x['Name'] for x in eligible])
+        if params.get('add'):
+            user = [x for x in current if x['UserName'] == params.get('add')][0]
+        else:
+            resp = dialog("select", translate(33064), [x['Name'] for x in eligible])
 
-        if resp < 0:
-            return
+            if resp < 0:
+                return
 
-        user = eligible[resp]
+            user = eligible[resp]
         event('AddUser', {'Id': user['Id'], 'Add': True})
     else:  # Remove user
-        resp = dialog("select", translate(33064), [x['UserName'] for x in current])
+        if params.get('remove'):
+            user = [x for x in current if x['UserName'] == params.get('remove')][0]
+        else:
+            resp = dialog("select", translate(33064), [x['UserName'] for x in current])
 
-        if resp < 0:
-            return
+            if resp < 0:
+                return
 
-        user = current[resp]
+            user = current[resp]
         event('AddUser', {'Id': user['UserId'], 'Add': False})
 
 
