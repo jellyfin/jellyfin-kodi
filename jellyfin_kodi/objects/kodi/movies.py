@@ -48,6 +48,11 @@ class Movies(Kodi):
     def add(self, *args):
         self.cursor.execute(QU.add_movie, args)
 
+    def add_videoversion(self, *args):
+        self.cursor.execute(QU.check_video_version)
+        if self.cursor.fetchone()[0]==1 : 
+            self.cursor.execute(QU.add_video_version, args)
+
     def update(self, *args):
         self.cursor.execute(QU.update_movie, args)
 
@@ -55,6 +60,11 @@ class Movies(Kodi):
 
         self.cursor.execute(QU.delete_movie, (kodi_id,))
         self.cursor.execute(QU.delete_file, (file_id,))
+        self.cursor.execute(QU.check_video_version)
+        if self.cursor.fetchone()[0]==1 : 
+            self.cursor.execute(QU.delete_video_version, (file_id,))
+
+
 
     def get_rating_id(self, *args):
 
