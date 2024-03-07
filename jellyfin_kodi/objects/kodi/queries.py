@@ -322,7 +322,7 @@ VALUES          (?, ?, ?, ?, ?)
 check_video_version = """
 SELECT COUNT(name) FROM sqlite_master WHERE type='table' AND name='videoversion'
 """
-add_video_version_obj = ["{FileId}","{MovieId}","movie","0",40400]
+add_video_version_obj = ["{FileId}", "{MovieId}", "movie", "0", 40400]
 add_musicvideo = """
 INSERT INTO     musicvideo(idMVideo, idFile, c00, c04, c05, c06, c07, c08, c09, c10,
                 c11, c12, premiered)
@@ -407,7 +407,7 @@ VALUES                      (?, ?, ?)
 # Resulting in duplicates
 insert_link_if_not_exists = """
 INSERT INTO                 {LinkType}(actor_id, media_id, media_type)
-SELECT ?, ?, ? 
+SELECT ?, ?, ?
 WHERE NOT EXISTS(SELECT 1 FROM {LinkType} WHERE actor_id = ? AND media_id = ? AND media_type = ?)
 """
 update_movie = """
@@ -580,4 +580,16 @@ DELETE FROM     art
 WHERE           media_id = ?
 AND             media_type = ?
 AND             type LIKE ?
+"""
+get_missing_versions = """
+SELECT          idFile,idMovie
+FROM            movie
+WHERE NOT EXISTS (
+    SELECT NULL FROM videoversion
+    WHERE       videoversion.idMedia = movie.idMovie
+)
+"""
+get_version = """
+SELECT      idVersion
+FROM        version
 """
