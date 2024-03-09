@@ -43,18 +43,18 @@ jobs:
         with:
           switches: -vrptz
           path: '*.zip'
-          remote_path: /srv/repository/incoming/kodi
-          remote_host: ${{ secrets.DEPLOY_HOST }}
-          remote_user: ${{ secrets.DEPLOY_USER }}
-          remote_key: ${{ secrets.DEPLOY_KEY }}
+          remote_path: /srv/incoming/kodi
+          remote_host: ${{ secrets.REPO_HOST }}
+          remote_user: ${{ secrets.REPO_USER }}
+          remote_key: ${{ secrets.REPO_KEY }}
 
       - name: Add to Kodi repo and clean up
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.DEPLOY_HOST  }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
+          host: ${{ secrets.REPO_HOST  }}
+          username: ${{ secrets.REPO_USER }}
+          key: ${{ secrets.REPO_KEY }}
           script_stop: true
           script: |
-            python3 /usr/local/bin/kodirepo add /srv/repository/incoming/kodi/plugin.video.jellyfin+py3.zip --datadir /srv/repository/releases/client/kodi/py3;
-            rm /srv/repository/incoming/kodi/plugin.video.jellyfin+py3.zip;
+            python3 /usr/local/bin/kodirepo add /srv/incoming/kodi/plugin.video.jellyfin+py3.zip --datadir /srv/repository/main/client/kodi/py3;
+            rm /srv/incoming/kodi/plugin.video.jellyfin+py3.zip;
