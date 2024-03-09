@@ -117,13 +117,18 @@ def verify_kodi_defaults():
 
         if xbmcvfs.exists(file_name):
             try:
-                tree = etree.parse(file_name)
+                with xbmcvfs.File(file_name) as f:
+                    b = f.read()
+                    tree = etree.ElementTree(etree.fromstring(b))
             except etree.ParseError:
                 LOG.error("Unable to parse `{}`".format(file_name))
                 LOG.exception("We ensured the file was OK above, something is wrong!")
+                tree = None
 
-            tree.getroot().set('order', str(17 + index))
-            tree.write(file_name)
+            if tree is not None:
+                tree.getroot().set('order', str(17 + index))
+                with xbmcvfs.File(file_name, 'w') as f:
+                    f.write(etree.tostring(tree.getroot()))
 
     playlist_path = translate_path("special://profile/playlists/video")
 
