@@ -11,6 +11,7 @@ from six.moves import queue as Queue
 from kodi_six import xbmc, xbmcgui
 
 from .objects import Movies, TVShows, MusicVideos, Music
+from .objects.kodi import Movies as KodiDb
 from .database import Database, jellyfin_db, get_sync, save_sync
 from .full_sync import FullSync
 from .views import Views
@@ -121,6 +122,14 @@ class Library(threading.Thread):
             if not db_version:
                 # Make sure we always have a version in the database
                 db.add_version((TARGET_DB_VERSION))
+
+        # Video Database Migrations
+        with Database('video') as videodb:
+            vid_db = KodiDb(videodb.cursor)
+            if vid_db.migrations():
+                LOG.info('changes detected, reloading skin')
+                xbmc.executebuiltin('UpdateLibrary(video)')
+                xbmc.executebuiltin('ReloadSkin()')
 
     @stop
     def service(self):
