@@ -4,6 +4,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 #################################################################################################
 
 import os
+from typing import Dict
 
 from kodi_six import xbmc, xbmcvfs
 
@@ -22,7 +23,7 @@ LOG = LazyLogger(__name__)
 
 class Player(xbmc.Player):
 
-    played = {}
+    played: Dict[str, dict] = {}
     up_next = False
 
     def __init__(self):

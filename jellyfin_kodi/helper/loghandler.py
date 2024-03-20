@@ -6,6 +6,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import os
 import logging
 import traceback
+from typing import Dict, List
 
 from six import ensure_text
 from kodi_six import xbmc, xbmcaddon
@@ -36,7 +37,7 @@ class LogHandler(logging.StreamHandler):
         logging.StreamHandler.__init__(self)
         self.setFormatter(MyFormatter())
 
-        self.sensitive = {'Token': [], 'Server': []}
+        self.sensitive: Dict[str, List[str]] = {'Token': [], 'Server': []}
 
         for server in database.get_credentials()['Servers']:
 

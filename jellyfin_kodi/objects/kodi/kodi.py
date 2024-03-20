@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
 
+from abc import ABCMeta
+from sqlite3 import Cursor
+
 ##################################################################################################
 
 from ...helper import values, LazyLogger
@@ -15,7 +18,8 @@ LOG = LazyLogger(__name__)
 ##################################################################################################
 
 
-class Kodi(object):
+class Kodi(metaclass=ABCMeta):
+    cursor: Cursor
 
     def __init__(self):
         self.artwork = artwork.Artwork(self.cursor)

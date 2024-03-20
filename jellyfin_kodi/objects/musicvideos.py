@@ -5,6 +5,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import datetime
 import re
+from typing import List
 
 from six.moves.urllib.parse import urlencode
 from kodi_six.utils import py2_encode
@@ -122,7 +123,7 @@ class MusicVideos(KodiDb):
             if search:
                 obj['Index'] = search.group()
 
-        tags = []
+        tags: List[str] = []
         tags.extend(obj['Tags'] or [])
         tags.append(obj['LibraryName'])
 

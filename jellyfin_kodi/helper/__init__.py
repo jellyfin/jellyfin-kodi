@@ -4,7 +4,7 @@ from .lazylogger import LazyLogger
 
 from .translate import translate
 
-from .utils import addon_id
+from .utils import ADDON_ID
 from .utils import window
 from .utils import settings
 from .utils import kodi_version

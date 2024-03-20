@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
+
+from sqlite3 import Cursor
+
 #################################################################################################
 
 from . import queries as QU
@@ -14,9 +17,10 @@ LOG = LazyLogger(__name__)
 ##################################################################################################
 
 
-class JellyfinDatabase():
+class JellyfinDatabase:
+    cursor: Cursor
 
-    def __init__(self, cursor):
+    def __init__(self, cursor: Cursor) -> None:
         self.cursor = cursor
         cursor.row_factory = sqlite_namedtuple_factory
 

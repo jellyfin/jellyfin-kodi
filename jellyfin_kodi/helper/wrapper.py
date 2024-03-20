@@ -27,7 +27,7 @@ def progress(message=None):
 
             dialog = xbmcgui.DialogProgressBG()
 
-            if item and type(item) == dict:
+            if item and isinstance(item, dict):
 
                 dialog.create(translate('addon_name'), "%s %s" % (translate('gathering'), item['Name']))
                 LOG.info("Processing %s: %s", item['Name'], item['Id'])
@@ -72,7 +72,7 @@ def jellyfin_item(func):
     ''' Wrapper to retrieve the jellyfin_db item.
     '''
     def wrapper(self, item, *args, **kwargs):
-        e_item = self.jellyfin_db.get_item_by_id(item['Id'] if type(item) == dict else item)
+        e_item = self.jellyfin_db.get_item_by_id(item['Id'] if isinstance(item, dict) else item)
 
         return func(self, item, e_item=e_item, *args, **kwargs)
 

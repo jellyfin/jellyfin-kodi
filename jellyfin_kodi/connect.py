@@ -8,7 +8,7 @@ from kodi_six import xbmc, xbmcaddon
 from . import client
 from .database import get_credentials, save_credentials
 from .dialogs import ServerConnect, UsersConnect, LoginManual, ServerManual
-from .helper import settings, addon_id, event, api, window, LazyLogger
+from .helper import settings, ADDON_ID, event, api, window, LazyLogger
 from .jellyfin import Jellyfin
 from .jellyfin.connection_manager import CONNECTION_STATE
 from .helper.exceptions import HTTPException
@@ -16,7 +16,7 @@ from .helper.exceptions import HTTPException
 ##################################################################################################
 
 LOG = LazyLogger(__name__)
-XML_PATH = (xbmcaddon.Addon(addon_id()).getAddonInfo('path'), "default", "1080i")
+XML_PATH = (xbmcaddon.Addon(ADDON_ID).getAddonInfo('path'), "default", "1080i")
 
 ##################################################################################################
 
@@ -129,7 +129,7 @@ class Connect(object):
         except RuntimeError as error:
 
             LOG.exception(error)
-            xbmc.executebuiltin('Addon.OpenSettings(%s)' % addon_id())
+            xbmc.executebuiltin('Addon.OpenSettings(%s)' % ADDON_ID)
 
             raise Exception('User sign in interrupted')
 
@@ -144,17 +144,17 @@ class Connect(object):
 
         ''' Save user info.
         '''
-        self.user = client.jellyfin.get_user()
-        settings('username', self.user['Name'])
+        user = client.jellyfin.get_user()
+        settings('username', user['Name'])
 
-        if 'PrimaryImageTag' in self.user:
+        if 'PrimaryImageTag' in user:
             server_address = client.auth.get_server_info(client.auth.server_id)['address']
-            window('JellyfinUserImage', api.API(self.user, server_address).get_user_artwork(self.user['Id']))
+            window('JellyfinUserImage', api.API(user, server_address).get_user_artwork(user['Id']))
 
     def select_servers(self, state=None):
 
         state = state or self.connect_manager.connect({'enableAutoLogin': False})
-        user = {}
+        user = {}  # TODO: Fixme: content of this dict is used below, but can never contain anything
 
         dialog = ServerConnect("script-jellyfin-connect-server.xml", *XML_PATH)
         dialog.set_args(

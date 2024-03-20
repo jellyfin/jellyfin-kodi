@@ -7,7 +7,7 @@ import os
 
 from kodi_six import xbmc, xbmcaddon, xbmcvfs
 
-from .helper import translate, window, settings, addon_id, dialog, LazyLogger
+from .helper import translate, window, settings, ADDON_ID, dialog, LazyLogger
 from .helper.utils import create_id, translate_path
 
 ##################################################################################################
@@ -21,11 +21,11 @@ def get_addon_name():
 
     ''' Used for logging.
     '''
-    return xbmcaddon.Addon(addon_id()).getAddonInfo('name').upper()
+    return xbmcaddon.Addon(ADDON_ID).getAddonInfo('name').upper()
 
 
 def get_version():
-    return xbmcaddon.Addon(addon_id()).getAddonInfo('version')
+    return xbmcaddon.Addon(ADDON_ID).getAddonInfo('version')
 
 
 def get_platform():

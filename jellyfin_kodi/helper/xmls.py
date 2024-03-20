@@ -27,7 +27,7 @@ def tvtunes_nfo(path, urls):
     except Exception:
         xml = etree.Element('tvtunes')
 
-    for elem in xml.getiterator('tvtunes'):
+    for elem in xml.iter('tvtunes'):
         for file in list(elem):
             elem.remove(file)
 
@@ -71,6 +71,7 @@ def advanced_settings():
             xbmc.executebuiltin('RestartApp')
 
             return True
+
 
 def verify_kodi_defaults():
     ''' Make sure we have the kodi default folder in place.

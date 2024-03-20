@@ -6,6 +6,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import json
 import sys
 from datetime import datetime
+from typing import Any, Dict
 
 # Workaround for threads using datetime: _striptime is locked
 import _strptime  # noqa:F401
@@ -37,7 +38,7 @@ class Service(xbmc.Monitor):
     monitor = None
     play_event = None
     warn = True
-    settings = {'last_progress': datetime.today(), 'last_progress_report': datetime.today()}
+    settings: Dict[str, Any] = {'last_progress': datetime.today(), 'last_progress_report': datetime.today()}
 
     def __init__(self):
 
@@ -264,17 +265,17 @@ class Service(xbmc.Monitor):
             window('jellyfin_should_stop.bool', True)
             self.running = False
 
-        elif method in ('SyncLibrarySelection', 'RepairLibrarySelection', 'AddLibrarySelection', 'RemoveLibrarySelection'):
+        elif self.library_thread is not None and method in ('SyncLibrarySelection', 'RepairLibrarySelection', 'AddLibrarySelection', 'RemoveLibrarySelection'):
             self.library_thread.select_libraries(method)
 
-        elif method == 'SyncLibrary':
+        elif self.library_thread is not None and method == 'SyncLibrary':
             if not data.get('Id'):
                 return
 
             self.library_thread.add_library(data['Id'], data.get('Update', False))
             xbmc.executebuiltin("Container.Refresh")
 
-        elif method == 'RepairLibrary':
+        elif self.library_thread is not None and method == 'RepairLibrary':
             if not data.get('Id'):
                 return
 
@@ -288,7 +289,7 @@ class Service(xbmc.Monitor):
             self.library_thread.add_library(data['Id'])
             xbmc.executebuiltin("Container.Refresh")
 
-        elif method == 'RemoveLibrary':
+        elif self.library_thread is not None and method == 'RemoveLibrary':
             libraries = data['Id'].split(',')
 
             for lib in libraries:
@@ -309,10 +310,11 @@ class Service(xbmc.Monitor):
                 self.library_thread = None
 
             Jellyfin.close_all()
-            self.monitor.server = []
-            self.monitor.sleep = True
+            if self.monitor is not None:
+                self.monitor.server = []
+                self.monitor.sleep = True
 
-        elif method == 'System.OnWake':
+        elif self.monitor is not None and method == 'System.OnWake':
 
             if not self.monitor.sleep:
                 LOG.warning("System.OnSleep was never called, skip System.OnWake")
@@ -365,7 +367,7 @@ class Service(xbmc.Monitor):
             self.settings['enable_context_transcode'] = settings('enableContextTranscode.bool')
             LOG.info("New context transcode setting: %s", self.settings['enable_context_transcode'])
 
-        if settings('useDirectPaths') != self.settings['mode'] and self.library_thread.started:
+        if self.library_thread is not None and settings('useDirectPaths') != self.settings['mode'] and self.library_thread.started:
 
             self.settings['mode'] = settings('useDirectPaths')
             LOG.info("New playback mode setting: %s", self.settings['mode'])

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
 
+from typing import Any, Dict, List
+
 ##################################################################################################
 
 from . import settings, LazyLogger
@@ -42,7 +44,7 @@ class API(object):
         return self.item['Name']
 
     def get_actors(self):
-        cast = []
+        cast: List[Dict[str, Any]] = []
 
         if 'People' in self.item:
             self.get_people_artwork(self.item['People'])
