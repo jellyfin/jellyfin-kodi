@@ -16,7 +16,7 @@ pytest >= 4.6.11
 coverage >= 5.2
 flake8 >= 3.8
 flake8-import-order >= 0.18
-websocket-client >= 0.57.0
+websocket-client >= 1.6.4
 
 types-requests >= 2.31
 types-PyYAML >= 6.0
