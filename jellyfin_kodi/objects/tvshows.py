@@ -412,13 +412,13 @@ class TVShows(KodiDb):
             obj['Path'] = obj['Path'].replace(obj['Filename'], "")
 
             '''check dvd directories and point it to ./VIDEO_TS/VIDEO_TS.IFO'''
-            if validate_dvd_dir(obj['Path'] + obj['Filename']):
+            if ('Container' not in obj or ('Container' in obj and obj['Container'] == 'dvd')) and validate_dvd_dir(obj['Path'] + obj['Filename']):
                 obj['Path'] = obj['Path'] + obj['Filename'] + '/VIDEO_TS/'
                 obj['Filename'] = 'VIDEO_TS.IFO'
                 LOG.debug("DVD directory %s", obj['Path'])
 
             '''check bluray directories and point it to ./BDMV/index.bdmv'''
-            if validate_bluray_dir(obj['Path'] + obj['Filename']):
+            if ('Container' not in obj or ('Container' in obj and obj['Container'] == 'bluray')) and validate_bluray_dir(obj['Path'] + obj['Filename']):
                 obj['Path'] = obj['Path'] + obj['Filename'] + '/BDMV/'
                 obj['Filename'] = 'index.bdmv'
                 LOG.debug("Bluray directory %s", obj['Path'])
