@@ -342,17 +342,22 @@ VALUES          (?, ?, ?)
 """
 add_episode = """
 INSERT INTO     episode(idEpisode, idFile, c00, c01, c03, c04, c05, c09, c10, c12, c13, c14,
-                idShow, c15, c16, idSeason)
-VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                idShow, c15, c16, idSeason, c18, c19, c20)
+VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 """
 add_episode_obj = ["{EpisodeId}", "{FileId}", "{Title}", "{Plot}", "{RatingId}", "{Writers}", "{Premiere}", "{Runtime}",
                    "{Directors}", "{Season}", "{Index}", "{Title}", "{ShowId}", "{AirsBeforeSeason}",
-                   "{AirsBeforeEpisode}", "{SeasonId}"]
+                   "{AirsBeforeEpisode}", "{SeasonId}", "{FullFilePath}", "{PathId}", "{Unique}"]
 add_art = """
 INSERT INTO     art(media_id, media_type, type, url)
 VALUES          (?, ?, ?, ?)
 """
 
+update_path_parent_id = """
+UPDATE      path
+SET         idParentPath = ?
+where       idPath = ?
+"""
 
 update_path = """
 UPDATE      path
@@ -361,9 +366,11 @@ WHERE       idPath = ?
 """
 update_path_movie_obj = ["{Path}", "movies", "metadata.local", 1, "{PathId}"]
 update_path_toptvshow_obj = ["{TopLevel}", "tvshows", "metadata.local", 1, "{TopPathId}"]
+update_path_toptvshow_addon_obj = ["{TopLevel}", None, None, 1, "{TopPathId}"]
 update_path_tvshow_obj = ["{Path}", None, None, 1, "{PathId}"]
 update_path_episode_obj = ["{Path}", None, None, 1, "{PathId}"]
-update_path_mvideo_obj = ["{Path}", "musicvideos", None, 1, "{PathId}"]
+update_path_mvideo_obj = ["{Path}", "musicvideos", "metadata.local", 1, "{PathId}"]
+
 update_file = """
 UPDATE      files
 SET         idPath = ?, strFilename = ?, dateAdded = ?
@@ -483,12 +490,13 @@ WHERE       idSeason = ?
 update_episode = """
 UPDATE      episode
 SET         c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?,
-            c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, idSeason = ?, idShow = ?
+            c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, idSeason = ?, idShow = ?,
+            c18 = ?, c19 = ?, c20 = ?
 WHERE       idEpisode = ?
 """
 update_episode_obj = ["{Title}", "{Plot}", "{RatingId}", "{Writers}", "{Premiere}", "{Runtime}", "{Directors}",
                       "{Season}", "{Index}", "{Title}", "{AirsBeforeSeason}", "{AirsBeforeEpisode}", "{SeasonId}",
-                      "{ShowId}", "{EpisodeId}"]
+                      "{ShowId}", "{FullFilePath}", "{PathId}", "{Unique}", "{EpisodeId}"]
 
 
 delete_path = """
