@@ -1,6 +1,6 @@
 version: '1.0.0'
 changelog: |-
-  :tada: New features and improvements
+  New features and improvements
   ------------------------------------
   + Fix #539 "cast not available" (#731) @GregoireDruant
   + Pass HDR library metadata to kodi to display logos (#804) @fezster
