@@ -1,24 +1,33 @@
-version: '0.7.12'
+version: '1.0.0'
 changelog: |-
+  New features and improvements
+  ------------------------------------
+  + Fix #539 "cast not available" (#731) @GregoireDruant
+  + Pass HDR library metadata to kodi to display logos (#804) @fezster
+
   Bug Fixes
   ---------
-  + Increase login timeout to 10s (#768) @disconn3ct
+  + Fix websocket automatic reconnection (#812) @smcmnz
+  + Add automatic database migration for Kodi Omega (#834) @mcarlton00
+  + Use xbmcvfs functions to read and write filesystem files (#803) @sy6sy2
+  + Fix movie database for Kodi 21 (#831) @AmonFlorian
+  + Fix syncing of mixed TV libraries (#774) @sonofsky2010
+  + Fix uncaught exception in Player.report_playback() (#791) @pdf
 
-  :white_check_mark: Tests
+  Code or Repo Maintenance
   ------------------------
-  + Fix convert_to_local tests on Windows (#785) @oddstr13
-  + Add tests for helper.utils.convert_to_local (#775) @oddstr13
+  + Update CI to new repository secrets and layout (#835) @joshuaboniface
+  + Remove py2 specific dependencies (#820) @oddstr13
+  + Pin CI versions and clean up after py2 (#819) @oddstr13
+  + Remove Python 2 support :fire: (#816) @oddstr13
 
   CI & build changes
   ------------------
-  + chore(deps): update release-drafter/release-drafter action to v6 (#814) @renovate
-  + Add Python 3.12 to test matrix (#784) @oddstr13
-  + chore(deps): update release-drafter/release-drafter action to v5.25.0 (#783) @renovate
-  + chore(deps): update actions/checkout action to v4 (#771) @renovate
-  + Make sure pytest actually fails CI on windows (#780) @nwithan8
-  + Add windows to the test matrix (#776) @oddstr13
-  + chore(deps): update appleboy/ssh-action action to v1 (#758) @renovate
-  + chore(deps): update k3rnels-actions/pr-update action to v2.1.0 (#755) @renovate
+  + Pin CI versions and clean up after py2 (#819) @oddstr13
+  + chore(deps): update actions/setup-python action to v5 (#795) @renovate
+  + chore(deps): update github/codeql-action action to v3 (#798) @renovate
+  + chore(deps): update appleboy/ssh-action action to v1.0.3 (#802) @renovate
+  + chore(deps): update codecov/codecov-action action to v4 (#813) @renovate
 dependencies:
   py3:
     - addon: 'xbmc.python'
