@@ -989,3 +989,7 @@ msgstr "Ebligi plibonigitan artaĵon (t.e. Cover Art)"
 msgctxt "#33202"
 msgid "Transcode H265/HEVC RExt"
 msgstr "Transkodigo H265/HEVC RExt"
+
+msgctxt "#33203"
+msgid "Transcode DolbyVision"
+msgstr "Transcode DolbyVision"

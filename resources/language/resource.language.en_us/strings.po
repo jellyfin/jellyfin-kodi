@@ -1004,3 +1004,7 @@ msgstr "Max stream bitrate"
 msgctxt "#33202"
 msgid "Transcode H265/HEVC RExt"
 msgstr "Transcode H265/HEVC RExt"
+
+msgctxt "#33203"
+msgid "Force transcode of DolbyVision"
+msgstr "Force transcode of DolbyVision"

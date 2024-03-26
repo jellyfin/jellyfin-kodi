@@ -494,6 +494,10 @@ msgctxt "#33202"
 msgid "Transcode H265/HEVC RExt"
 msgstr "Transkodiranje H265/HEVC RExt"
 
+msgctxt "#33203"
+msgid "Transcode DolbyVision"
+msgstr "Transcode DolbyVision"
+
 msgctxt "#33160"
 msgid "To avoid errors, please update Jellyfin for Kodi to version: "
 msgstr "Da biste izbjegli greške, ažurirajte Jellyfin for Kodi na verziju: "

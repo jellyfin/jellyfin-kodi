@@ -941,6 +941,10 @@ msgctxt "#33202"
 msgid "Transcode H265/HEVC RExt"
 msgstr "Pārkodēt H265/HEVC RExt"
 
+msgctxt "#33203"
+msgid "Transcode DolbyVision"
+msgstr "Transcode DolbyVision"
+
 msgctxt "#33138"
 msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
 msgstr ""

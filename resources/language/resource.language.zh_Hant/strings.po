@@ -35,6 +35,10 @@ msgctxt "#33202"
 msgid "Transcode H265/HEVC RExt"
 msgstr "輸入備份資料夾名稱"
 
+msgctxt "#33203"
+msgid "Transcode DolbyVision"
+msgstr "Transcode DolbyVision"
+
 msgctxt "#33128"
 msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
 msgstr ""

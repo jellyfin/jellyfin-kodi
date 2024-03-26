@@ -998,6 +998,10 @@ msgctxt "#33202"
 msgid "Transcode H265/HEVC RExt"
 msgstr "Transkodiraj H265/HEVC RExt"
 
+msgctxt "#33203"
+msgid "Transcode DolbyVision"
+msgstr "Transcode DolbyVision"
+
 msgctxt "#33153"
 msgid "Your Jellyfin theme media has been synced to Kodi"
 msgstr "Mediji tvoje teme so bili sinhronizirani s Kodi"

@@ -1001,6 +1001,10 @@ msgctxt "#33202"
 msgid "Transcode H265/HEVC RExt"
 msgstr "Překódovat H265/HEVC RExt"
 
+msgctxt "#33203"
+msgid "Transcode DolbyVision"
+msgstr "Transcode DolbyVision"
+
 msgctxt "#33125"
 msgid "Enable remote control"
 msgstr "Povolit vzdálené ovládání"

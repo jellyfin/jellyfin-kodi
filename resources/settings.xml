@@ -47,6 +47,7 @@
 
 		<setting type="sep" />
 		<setting label="33115" type="lsep" />
+		<setting label="33203" id="transcode_dolbyvision" type="bool" default="false" visible="true" />
 		<setting label="30537" id="transcodeHi10P" type="bool" default="false" visible="true" />
 		<setting label="30522" id="transcode_h265" type="bool" default="false" visible="true" />
 		<setting label="33202" id="transcode_h265_rext" type="bool" default="false" visible="eq(-1,false)" />

@@ -65,8 +65,8 @@ class Actions(object):
         '''
         listitem = xbmcgui.ListItem()
         LOG.info("[ play/%s ] %s", item['Id'], item['Name'])
-
-        transcode = transcode or settings('playFromTranscode.bool')
+        
+        transcode = transcode or settings('playFromTranscode.bool') or self.check_transcodeDolbyVision(item)
         play = playutils.PlayUtils(item, transcode, self.server_id, self.server, self.api_client)
         source = play.select_source(play.get_sources())
         play.set_external_subs(source, listitem)
@@ -77,6 +77,19 @@ class Actions(object):
 
         if len(sys.argv) > 1:
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, self.stack[0][1])
+
+    def check_transcodeDolbyVision(self, item):
+
+        API = api.API(item, self.server)
+        objects = Objects()
+        obj = objects.map(item, 'BrowseVideo')
+        obj['Video'] = API.video_streams(obj['Video'] or [], obj['Container'])
+
+        if settings('transcode_dolbyvision.bool') and obj['Video'][0]['hdrtype'] == 'dolbyvision':
+            
+            return True
+
+        return False
 
     def set_playlist(self, item, listitem, db_id=None, transcode=False):
 

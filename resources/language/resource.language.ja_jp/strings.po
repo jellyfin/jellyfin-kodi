@@ -942,6 +942,10 @@ msgctxt "#33202"
 msgid "Transcode H265/HEVC RExt"
 msgstr "H265/HEVC RExtをトランスコード"
 
+msgctxt "#33203"
+msgid "Transcode DolbyVision"
+msgstr "Transcode DolbyVision"
+
 msgctxt "#30161"
 msgid "Preferred video codec"
 msgstr "優先する動画コーデック"

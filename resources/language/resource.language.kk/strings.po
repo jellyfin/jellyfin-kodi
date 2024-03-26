@@ -1000,3 +1000,7 @@ msgstr "VP9 qaita kodtau"
 msgctxt "#33202"
 msgid "Transcode H265/HEVC RExt"
 msgstr "H265/HEVC RExt qaita kodtau"
+
+msgctxt "#33203"
+msgid "Transcode DolbyVision"
+msgstr "Transcode DolbyVision"

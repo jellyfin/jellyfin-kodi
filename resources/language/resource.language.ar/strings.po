@@ -864,6 +864,10 @@ msgctxt "#33202"
 msgid "Transcode H265/HEVC RExt"
 msgstr "تحويل H265 / HEVC RExt"
 
+msgctxt "#33203"
+msgid "Transcode DolbyVision"
+msgstr "Transcode DolbyVision"
+
 msgctxt "#33201"
 msgid "Max artwork resolution"
 msgstr "أقصى دقة للعمل الفني"
