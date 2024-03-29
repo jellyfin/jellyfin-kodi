@@ -1,33 +1,12 @@
-version: '1.0.0'
+version: '1.0.1'
 changelog: |-
-  New features and improvements
-  ------------------------------------
-  + Fix #539 "cast not available" (#731) @GregoireDruant
-  + Pass HDR library metadata to kodi to display logos (#804) @fezster
-
   Bug Fixes
   ---------
-  + Fix websocket automatic reconnection (#812) @smcmnz
-  + Add automatic database migration for Kodi Omega (#834) @mcarlton00
-  + Use xbmcvfs functions to read and write filesystem files (#803) @sy6sy2
-  + Fix movie database for Kodi 21 (#831) @AmonFlorian
-  + Fix syncing of mixed TV libraries (#774) @sonofsky2010
-  + Fix uncaught exception in Player.report_playback() (#791) @pdf
-
-  Code or Repo Maintenance
-  ------------------------
-  + Update CI to new repository secrets and layout (#835) @joshuaboniface
-  + Remove py2 specific dependencies (#820) @oddstr13
-  + Pin CI versions and clean up after py2 (#819) @oddstr13
-  + Remove Python 2 support :fire: (#816) @oddstr13
+  + Don't reset videoversiontype table (#843) @mcarlton00
 
   CI & build changes
   ------------------
-  + Pin CI versions and clean up after py2 (#819) @oddstr13
-  + chore(deps): update actions/setup-python action to v5 (#795) @renovate
-  + chore(deps): update github/codeql-action action to v3 (#798) @renovate
-  + chore(deps): update appleboy/ssh-action action to v1.0.3 (#802) @renovate
-  + chore(deps): update codecov/codecov-action action to v4 (#813) @renovate
+  + Use sudo for kodirepo command (#841) @joshuaboniface
 dependencies:
   py3:
     - addon: 'xbmc.python'
