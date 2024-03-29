@@ -255,7 +255,8 @@ def reset_kodi():
         for table in videodb.cursor.fetchall():
             name = table[0]
 
-            if name != 'version':
+            # These tables are populated by Kodi and we shouldn't wipe them
+            if name not in ['version', 'videoversiontype']:
                 videodb.cursor.execute("DELETE FROM " + name)
 
     if settings('enableMusic.bool') or dialog("yesno", "{jellyfin}", translate(33162)):
