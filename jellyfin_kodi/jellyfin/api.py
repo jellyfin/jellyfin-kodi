@@ -336,7 +336,7 @@ class API(object):
         return self.sessions("/Capabilities/Full", "POST", json=data)
 
     def session_add_user(self, session_id, user_id, option=True):
-        return self.sessions("/%s/Users/%s" % (session_id, user_id), "POST" if option else "DELETE")
+        return self.sessions("/%s/User/%s" % (session_id, user_id), "POST" if option else "DELETE")
 
     def session_playing(self, data):
         return self.sessions("/Playing", "POST", json=data)
