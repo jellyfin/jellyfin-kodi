@@ -3,7 +3,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 ##################################################################################################
 
-from ...helper import values, LazyLogger
+from ...helper import values, LazyLogger, kodi_version
 
 from . import artwork
 from . import queries as QU
@@ -241,7 +241,10 @@ class Kodi(object):
 
                 track['FileId'] = file_id
                 track['Runtime'] = runtime
-                self.add_stream_video(*values(track, QU.add_stream_video_obj))
+                if kodi_version() < 20:
+                    self.add_stream_video(*values(track, QU.add_stream_video_obj_19))
+                else:
+                    self.add_stream_video(*values(track, QU.add_stream_video_obj))
 
             for track in streams['audio']:
 
@@ -252,7 +255,10 @@ class Kodi(object):
                 self.add_stream_sub(*values({'language': track, 'FileId': file_id}, QU.add_stream_sub_obj))
 
     def add_stream_video(self, *args):
-        self.cursor.execute(QU.add_stream_video, args)
+        if kodi_version() < 20:
+            self.cursor.execute(QU.add_stream_video_19, args)
+        else:
+            self.cursor.execute(QU.add_stream_video, args)
 
     def add_stream_audio(self, *args):
         self.cursor.execute(QU.add_stream_audio, args)
