@@ -1,12 +1,10 @@
-version: '1.0.1'
+version: '1.0.2'
 changelog: |-
   Bug Fixes
   ---------
-  + Don't reset videoversiontype table (#843) @mcarlton00
-
-  CI & build changes
-  ------------------
-  + Use sudo for kodirepo command (#841) @joshuaboniface
+  + Add version gate to strHdrType field (#854) @oddstr13
+  + Gracefully handle missing VideoRangeType in stream tracks (#853) @oddstr13
+  + Call correct API endpoint when adding users to session (#851) @wildsands
 dependencies:
   py3:
     - addon: 'xbmc.python'
