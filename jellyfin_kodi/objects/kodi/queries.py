@@ -262,6 +262,13 @@ INSERT INTO     streamdetails(idFile, iStreamType, strVideoCodec, fVideoAspect, 
 VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?)
 """
 add_stream_video_obj = ["{FileId}", 0, "{codec}", "{aspect}", "{width}", "{height}", "{Runtime}", "{3d}", "{hdrtype}"]
+# strHdrType is new to Kodi 20
+add_stream_video_19 = """
+INSERT INTO     streamdetails(idFile, iStreamType, strVideoCodec, fVideoAspect, iVideoWidth,
+                iVideoHeight, iVideoDuration, strStereoMode)
+VALUES          (?, ?, ?, ?, ?, ?, ?, ?)
+"""
+add_stream_video_obj_19 = ["{FileId}", 0, "{codec}", "{aspect}", "{width}", "{height}", "{Runtime}", "{3d}"]
 add_stream_audio = """
 INSERT INTO     streamdetails(idFile, iStreamType, strAudioCodec, iAudioChannels, strAudioLanguage)
 VALUES          (?, ?, ?, ?, ?)
