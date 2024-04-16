@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2023-02-02 00:51+0000\n"
-"Last-Translator: Peyman M. <peymanr34@outlook.com>\n"
+"PO-Revision-Date: 2024-04-17 01:11+0000\n"
+"Last-Translator: blackcharon <blackcharon142@gmail.com>\n"
 "Language-Team: Persian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/fa/>\n"
 "Language: fa\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.14.1\n"
+"X-Generator: Weblate 5.4.2\n"
 
 msgctxt "#30016"
 msgid "Device name"
@@ -166,3 +166,334 @@ msgstr "بازنشانی پایگاه داده محلی Kodi"
 msgctxt "#30114"
 msgid "Offer delete after playback"
 msgstr "پیشنهاد حذف پس از پخش"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "لطفا وارد شوید"
+
+msgctxt "#30617"
+msgid "Server or port cannot be empty"
+msgstr "سرور یا پورت نمیتواند خالی باشد"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "نام کاربری یا کلمه عبور نامعتبر است"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "فعال کردن اثر های هنری بهتر (مثال: کاور هنری)"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "حداکثر نرخ بیت پخش متوالی"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "نرخ بیت صدا"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "مجموعه ها"
+
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "در حال پردازش موزیک ویدیو"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "موزیک ویدیو های تماشا نشده"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "فیلم ها"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "برنامه های تلویزیونی"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "گزینه های Jellyfin"
+
+#, fuzzy
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "پردازش تبدیل Jellyfin"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "افزودن به علاقه مندی ها"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "حذف کردن از علاقه مندی ها"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "تنظیمات"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "حذف از Jellyfin"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "تازه سازی این مورد"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "پردازش تبدیل"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "تایید اتصال"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "نام دستگاه دیگری را استفاده کنید"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "همگام سازی"
+
+#, fuzzy
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "فعالسازی اطلاع رسانی در صورتی که تعداد بروزرسانی ها بیشتر بود از"
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "فعالسازی کتابخانه موسیقی"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "حالت پخش"
+
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "فعالسازی ذخیره موقت اثر هنری"
+
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "صفحه بندی - حداکثر موارد قابل درخواست (پیشفرض: ۱۵)"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "پخش"
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "گواهی شبکه"
+
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "فعالسازی حالت سینما"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "درخواست پخش پیش پرده ها"
+
+#, fuzzy
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr "برداشتن تایید گرفتن برای حذف (با مسئولیت خودتان استفاده کنید)"
+
+msgctxt "#30521"
+msgid "Jump back on resume (in seconds)"
+msgstr "پرش به عقب هنگام ادامه تماشا کردن (به ثانیه)"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "پردازش تبدیل به H.264/HEVC"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "پردازش تبدیل به MPEG2"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "پردازش تبدیل به VC-1"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "پردازش تبدیل به VP9"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "پردازش تبدیل به AV1"
+
+msgctxt "#30527"
+msgid "Ignore specials in next episodes"
+msgstr "هنگام پخش قسمت بعد به ویژه برنامه ها توجه نکن"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "کاربران دائمی"
+
+msgctxt "#30529"
+msgid "Startup delay (in seconds)"
+msgstr "تأخیر پخش (به ثانیه)"
+
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "فعالسازی پیام راه اندازی مجدد سرور"
+
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "فعالسازی محتوای جدید"
+
+msgctxt "#30532"
+msgid "Duration of the video library pop up"
+msgstr "پنجره باز شو مدت زمان کتابخانه ویدیو"
+
+msgctxt "#30533"
+msgid "Duration of the music library pop up"
+msgstr "پنجره باز شو مدت زمان کتابخانه موسیقی"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "اطلاع رسانی ها (به ثانیه)"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "شناسه دستگاه جدید ایجاد کن"
+
+msgctxt "#30536"
+msgid "Allow the screensaver during syncs"
+msgstr "در حین همگام‌سازی‌ها به محافظ صفحه اجازه نمایش دهید"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "پردازش تبدیل به Hi10P"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "ورود"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "ورود دستی"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "نام کاربری یا ایمیل"
+
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "فعالسازی حالت آفلاین سرور"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "نمایش پیام"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "کلمه عبور"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "ورود"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "لغو"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "انتخاب سرور اصلی"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "نام کاربری یا کلمه عبور نمیتواند خالی باشد"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "اتصال به سرور انتخاب شده امکان پذیر نیست"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "اتصال به"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "افزودن دستی سرور"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "کاربر متصل Jellyfin را تغییر دهید"
+
+msgctxt "#30614"
+msgid "Connect to server"
+msgstr "اتصال به سرور"
+
+msgctxt "#30615"
+msgid "Host"
+msgstr "میزبان"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "اتصال"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "خوش آمدید"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "سرور در حال راه اندازی مجدد است"
+
+#, fuzzy
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr "منبع صوتی را انتخاب کنید"
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr "منبع زیرنویس ها را انتخاب کنید"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "آیا پرونده از Jellyfin حذف شود؟"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "آیا پیش پرده پخش ها شوند؟"
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "جمع آوری مجموعه ها"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "جمع آوری:"
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "تکمیل شده در:"
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr "شناسه دستگاه جدید ایجاد شده است. Kodi اکنون مجدداً راه اندازی می شود."
+
+msgctxt "#33035"
+msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
+msgstr ""
+"احتیاط! اگر حالت ساده (Native) را انتخاب کنید، برخی از ویژگی های Jellyfin "
+"وجود نخواهند داشت، مانند: حالت سینما Jellyfin، (ارسال متوالی/گزینه های "
+"پردازش تبدیل) مستقیم و برنامه دسترسی والدین."
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "افزونه (پیشفرض)"
+
+msgctxt "#33037"
+msgid "Native (direct paths)"
+msgstr "ساده (مسیر های مستقیم)"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "آیا کتابخانه موسیقی فعال شود؟"
+
+msgctxt "#33047"
+msgid "Kodi can't locate file:"
+msgstr "Kodi نمی تواند پرونده را پیدا کند:"
