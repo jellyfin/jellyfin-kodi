@@ -143,6 +143,7 @@ class Movies(KodiDb):
         obj['FileId'] = self.add_file(*values(obj, QU.add_file_obj))
 
         self.add(*values(obj, QU.add_movie_obj))
+        self.add_videoversion(*values(obj, QU.add_video_version_obj))
         self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_movie_obj))
         LOG.debug("ADD movie [%s/%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['MovieId'], obj['Id'], obj['Title'])
 

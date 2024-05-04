@@ -48,6 +48,11 @@ class Movies(Kodi):
     def add(self, *args):
         self.cursor.execute(QU.add_movie, args)
 
+    def add_videoversion(self, *args):
+        self.cursor.execute(QU.check_video_version)
+        if self.cursor.fetchone()[0] == 1:
+            self.cursor.execute(QU.add_video_version, args)
+
     def update(self, *args):
         self.cursor.execute(QU.update_movie, args)
 
@@ -55,6 +60,9 @@ class Movies(Kodi):
 
         self.cursor.execute(QU.delete_movie, (kodi_id,))
         self.cursor.execute(QU.delete_file, (file_id,))
+        self.cursor.execute(QU.check_video_version)
+        if self.cursor.fetchone()[0] == 1:
+            self.cursor.execute(QU.delete_video_version, (file_id,))
 
     def get_rating_id(self, *args):
 
@@ -131,3 +139,35 @@ class Movies(Kodi):
 
     def delete_boxset(self, *args):
         self.cursor.execute(QU.delete_set, args)
+
+    def migrations(self):
+        '''
+        Used to trigger required database migrations for new versions
+        '''
+        self.cursor.execute(QU.get_version)
+        version_id = self.cursor.fetchone()[0]
+        changes = False
+
+        # Will run every time Kodi starts, but will be fast enough on
+        # subsequent runs to not be a meaningful delay
+        if version_id >= 131:
+            changes = self.omega_migration()
+
+        return changes
+
+    def omega_migration(self):
+        '''
+        Adds a video version for all existing movies
+        '''
+        LOG.info('Starting migration for Omega database changes')
+        # Tracks if this migration made any changes
+        changes = False
+        self.cursor.execute(QU.get_missing_versions)
+
+        # Sets all existing movies without a version to standard version
+        for entry in self.cursor.fetchall():
+            self.add_videoversion(entry[0], entry[1], "movie", "0", 40400)
+            changes = True
+
+        LOG.info('Omega database migration is complete')
+        return changes

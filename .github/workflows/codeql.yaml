@@ -16,38 +16,23 @@ jobs:
     if: ${{ github.repository == 'jellyfin/jellyfin-kodi' }}
     strategy:
       fail-fast: false
-      matrix:
-        language: [ 'python' ]
-        version: ['2.7', '3.9']
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.1.1
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3.24.0
         with:
-          languages: ${{ matrix.language }}
+          languages: 'python'
           queries: +security-and-quality
 
-      - name: Set up Python ${{ matrix.version }}
-        if: matrix.version != '2.7'
-        uses: actions/setup-python@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5.0.0
         with:
-          python-version: ${{ matrix.version }}
-
-      - name: Set up Python 2.7
-        if: matrix.version == '2.7'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            python2.7 python2.7-dev python2-pip-whl
-          sudo ln -sf python2.7 /usr/bin/python
-          export PYTHONPATH=`echo /usr/share/python-wheels/pip-*py2*.whl`
-          sudo --preserve-env=PYTHONPATH python -m pip install --upgrade pip setuptools wheel
-          sudo chown -R $USER /usr/local/lib/python2.7
+          python-version: 3.9
 
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v2
+        uses: github/codeql-action/autobuild@v3.24.0
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3.24.0

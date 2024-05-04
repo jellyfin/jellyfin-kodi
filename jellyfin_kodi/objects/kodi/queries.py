@@ -258,10 +258,17 @@ add_bookmark_obj = ["{FileId}", "{PlayCount}", "{DatePlayed}", "{Resume}", "{Run
 add_streams_obj = ["{FileId}", "{Streams}", "{Runtime}"]
 add_stream_video = """
 INSERT INTO     streamdetails(idFile, iStreamType, strVideoCodec, fVideoAspect, iVideoWidth,
+                iVideoHeight, iVideoDuration, strStereoMode, strHdrType)
+VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?)
+"""
+add_stream_video_obj = ["{FileId}", 0, "{codec}", "{aspect}", "{width}", "{height}", "{Runtime}", "{3d}", "{hdrtype}"]
+# strHdrType is new to Kodi 20
+add_stream_video_19 = """
+INSERT INTO     streamdetails(idFile, iStreamType, strVideoCodec, fVideoAspect, iVideoWidth,
                 iVideoHeight, iVideoDuration, strStereoMode)
 VALUES          (?, ?, ?, ?, ?, ?, ?, ?)
 """
-add_stream_video_obj = ["{FileId}", 0, "{codec}", "{aspect}", "{width}", "{height}", "{Runtime}", "{3d}"]
+add_stream_video_obj_19 = ["{FileId}", 0, "{codec}", "{aspect}", "{width}", "{height}", "{Runtime}", "{3d}"]
 add_stream_audio = """
 INSERT INTO     streamdetails(idFile, iStreamType, strAudioCodec, iAudioChannels, strAudioLanguage)
 VALUES          (?, ?, ?, ?, ?)
@@ -315,6 +322,14 @@ INSERT INTO     sets(strSet, strOverview)
 VALUES          (?, ?)
 """
 add_set_obj = ["{Title}", "{Overview}"]
+add_video_version = """
+INSERT INTO     videoversion(idFile, idMedia, media_type, itemType, idType)
+VALUES          (?, ?, ?, ?, ?)
+"""
+check_video_version = """
+SELECT COUNT(name) FROM sqlite_master WHERE type='table' AND name='videoversion'
+"""
+add_video_version_obj = ["{FileId}", "{MovieId}", "movie", "0", 40400]
 add_musicvideo = """
 INSERT INTO     musicvideo(idMVideo, idFile, c00, c04, c05, c06, c07, c08, c09, c10,
                 c11, c12, premiered)
@@ -334,17 +349,22 @@ VALUES          (?, ?, ?)
 """
 add_episode = """
 INSERT INTO     episode(idEpisode, idFile, c00, c01, c03, c04, c05, c09, c10, c12, c13, c14,
-                idShow, c15, c16, idSeason)
-VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                idShow, c15, c16, idSeason, c18, c19, c20)
+VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 """
 add_episode_obj = ["{EpisodeId}", "{FileId}", "{Title}", "{Plot}", "{RatingId}", "{Writers}", "{Premiere}", "{Runtime}",
                    "{Directors}", "{Season}", "{Index}", "{Title}", "{ShowId}", "{AirsBeforeSeason}",
-                   "{AirsBeforeEpisode}", "{SeasonId}"]
+                   "{AirsBeforeEpisode}", "{SeasonId}", "{FullFilePath}", "{PathId}", "{Unique}"]
 add_art = """
 INSERT INTO     art(media_id, media_type, type, url)
 VALUES          (?, ?, ?, ?)
 """
 
+update_path_parent_id = """
+UPDATE      path
+SET         idParentPath = ?
+where       idPath = ?
+"""
 
 update_path = """
 UPDATE      path
@@ -353,9 +373,11 @@ WHERE       idPath = ?
 """
 update_path_movie_obj = ["{Path}", "movies", "metadata.local", 1, "{PathId}"]
 update_path_toptvshow_obj = ["{TopLevel}", "tvshows", "metadata.local", 1, "{TopPathId}"]
+update_path_toptvshow_addon_obj = ["{TopLevel}", None, None, 1, "{TopPathId}"]
 update_path_tvshow_obj = ["{Path}", None, None, 1, "{PathId}"]
 update_path_episode_obj = ["{Path}", None, None, 1, "{PathId}"]
-update_path_mvideo_obj = ["{Path}", "musicvideos", None, 1, "{PathId}"]
+update_path_mvideo_obj = ["{Path}", "musicvideos", "metadata.local", 1, "{PathId}"]
+
 update_file = """
 UPDATE      files
 SET         idPath = ?, strFilename = ?, dateAdded = ?
@@ -399,7 +421,7 @@ VALUES                      (?, ?, ?)
 # Resulting in duplicates
 insert_link_if_not_exists = """
 INSERT INTO                 {LinkType}(actor_id, media_id, media_type)
-SELECT ?, ?, ? 
+SELECT ?, ?, ?
 WHERE NOT EXISTS(SELECT 1 FROM {LinkType} WHERE actor_id = ? AND media_id = ? AND media_type = ?)
 """
 update_movie = """
@@ -475,12 +497,13 @@ WHERE       idSeason = ?
 update_episode = """
 UPDATE      episode
 SET         c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?,
-            c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, idSeason = ?, idShow = ?
+            c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?, idSeason = ?, idShow = ?,
+            c18 = ?, c19 = ?, c20 = ?
 WHERE       idEpisode = ?
 """
 update_episode_obj = ["{Title}", "{Plot}", "{RatingId}", "{Writers}", "{Premiere}", "{Runtime}", "{Directors}",
                       "{Season}", "{Index}", "{Title}", "{AirsBeforeSeason}", "{AirsBeforeEpisode}", "{SeasonId}",
-                      "{ShowId}", "{EpisodeId}"]
+                      "{ShowId}", "{FullFilePath}", "{PathId}", "{Unique}", "{EpisodeId}"]
 
 
 delete_path = """
@@ -530,6 +553,10 @@ DELETE FROM     movie
 WHERE           idMovie = ?
 """
 delete_movie_obj = ["{KodiId}", "{FileId}"]
+delete_video_version = """
+DELETE FROM     videoversion
+WHERE           idFile = ?
+"""
 delete_set = """
 DELETE FROM     sets
 WHERE           idSet = ?
@@ -568,4 +595,16 @@ DELETE FROM     art
 WHERE           media_id = ?
 AND             media_type = ?
 AND             type LIKE ?
+"""
+get_missing_versions = """
+SELECT          idFile,idMovie
+FROM            movie
+WHERE NOT EXISTS (
+    SELECT NULL FROM videoversion
+    WHERE       videoversion.idMedia = movie.idMovie
+)
+"""
+get_version = """
+SELECT      idVersion
+FROM        version
 """

@@ -75,7 +75,15 @@ class API(object):
 
         for track in tracks:
 
+            if "DvProfile" in track:
+                track['hdrtype'] = "dolbyvision"
+            elif track.get('VideoRangeType', '') in ["HDR10", "HDR10Plus"]:
+                track['hdrtype'] = "hdr10"
+            elif "HLG" in track.get('VideoRangeType', ''):
+                track['hdrtype'] = "hlg"
+
             track.update({
+                'hdrtype': track.get('hdrtype', "").lower(),
                 'codec': track.get('Codec', "").lower(),
                 'profile': track.get('Profile', "").lower(),
                 'height': track.get('Height'),

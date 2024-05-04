@@ -1,56 +1,11 @@
-version: '0.7.11'
+version: '1.0.2'
 changelog: |-
   Bug Fixes
   ---------
-  + Fix music multidisc indexing (#761) @csaavedra
-  + Fix music video db update (#742) @GregoireDruant
-  + PyYAML 6 drops py2 support (#754) @oddstr13
-  + Fix syncing of musicvideos with production year YYYYmmdd (#701) @oddstr13
-
-  Code or Repo Maintenance
-  ------------------------
-  + Fix comment and documentation grammar (#708) @kovaacs
-  + Fix misleading if statement (#707) @kovaacs
-
-  Documentation updates
-  ---------------------
-  + !!! Python 2 deprecation notice (#764) @oddstr13
-
-  Dependency updates
-  -----------------------------
-  + Update kodistubs requirement from ~=19.0 to ~=20.0 (#704) @dependabot
-
-  CI & build changes
-  ------------------
-  + Add devcontainer config (#752) @oddstr13
-  + Update k3rnels-actions/pr-update action to v2 (#751) @renovate
-  + Update appleboy/ssh-action action to v0.1.10 (#746) @renovate
-  + Update codecov/codecov-action action to v3.1.4 (#747) @renovate
-  + Update release-drafter/release-drafter action to v5.24.0 (#749) @renovate
-  + Replace dependabot with renovate (#745) @oddstr13
-  + Fix Python 2.7 workflows (#744) @oddstr13
-  + Add Python 3.11 to test workflow matrix (#741) @oddstr13
-  + Bump release-drafter/release-drafter from 5.21.1 to 5.22.0 (#703) @dependabot
-  + Bump appleboy/ssh-action from 0.1.6 to 0.1.7 (#702) @dependabot
-  + Bump appleboy/ssh-action from 0.1.5 to 0.1.6 (#698) @dependabot
+  + Add version gate to strHdrType field (#854) @oddstr13
+  + Gracefully handle missing VideoRangeType in stream tracks (#853) @oddstr13
+  + Call correct API endpoint when adding users to session (#851) @wildsands
 dependencies:
-  py2:
-    - addon: 'xbmc.python'
-      version: '2.25.0'
-    - addon: 'script.module.requests'
-      version: '2.22.0'
-    - addon: 'script.module.dateutil'
-      version: '2.8.1'
-    - addon: 'script.module.six'
-      version: '1.13.0'
-    - addon: 'script.module.kodi-six'
-      version: '0.0.7'
-    - addon: 'script.module.addon.signals'
-      version: '0.0.5'
-    - addon: 'script.module.futures'
-      version: '2.2.0'
-    - addon: 'script.module.websocket'
-      version: '0.57.0'
   py3:
     - addon: 'xbmc.python'
       version: '3.0.0'
@@ -65,4 +20,4 @@ dependencies:
     - addon: 'script.module.addon.signals'
       version: '0.0.5+matrix.1'
     - addon: 'script.module.websocket'
-      version: '0.58.0+matrix.1'
+      version: '1.6.4'

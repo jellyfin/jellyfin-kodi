@@ -6,23 +6,19 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        py_version: [ 'py2', 'py3' ]
     steps:
       - name: Update Draft
-        uses: release-drafter/release-drafter@v5.25.0
-        if: ${{ matrix.py_version == 'py3' }}
+        uses: release-drafter/release-drafter@v6.0.0
         with:
           publish: true
         env:
           GITHUB_TOKEN: ${{ secrets.JF_BOT_TOKEN }}
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.1.1
 
-      - name: Set up Python 3.x
-        uses: actions/setup-python@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5.0.0
         with:
           python-version: 3.9
 
@@ -31,34 +27,34 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install pyyaml
 
-      - name: Create ${{ matrix.py_version }} addon.xml
-        run: python build.py --version ${{ matrix.py_version }}
+      - name: Build addon
+        run: python build.py
 
       - name: Publish Build Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.3
         with:
           retention-days: 14
-          name: ${{ matrix.py_version }}-build-artifact
+          name: py3-build-artifact
           path: |
             *.zip
 
       - name: Upload to repo server
-        uses: burnett01/rsync-deployments@5.2
+        uses: burnett01/rsync-deployments@6.0.0
         with:
           switches: -vrptz
           path: '*.zip'
-          remote_path: /srv/repository/incoming/kodi
-          remote_host: ${{ secrets.DEPLOY_HOST }}
-          remote_user: ${{ secrets.DEPLOY_USER }}
-          remote_key: ${{ secrets.DEPLOY_KEY }}
+          remote_path: /srv/incoming/kodi
+          remote_host: ${{ secrets.REPO_HOST }}
+          remote_user: ${{ secrets.REPO_USER }}
+          remote_key: ${{ secrets.REPO_KEY }}
 
       - name: Add to Kodi repo and clean up
-        uses: appleboy/ssh-action@v1.0.0
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.DEPLOY_HOST  }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
+          host: ${{ secrets.REPO_HOST  }}
+          username: ${{ secrets.REPO_USER }}
+          key: ${{ secrets.REPO_KEY }}
           script_stop: true
           script: |
-            python3 /usr/local/bin/kodirepo add /srv/repository/incoming/kodi/plugin.video.jellyfin+${{ matrix.py_version }}.zip --datadir /srv/repository/releases/client/kodi/${{ matrix.py_version }};
-            rm /srv/repository/incoming/kodi/plugin.video.jellyfin+${{ matrix.py_version }}.zip;
+            sudo /usr/local/bin/kodirepo add /srv/incoming/kodi/plugin.video.jellyfin+py3.zip --datadir /srv/repository/main/client/kodi/py3
+            rm /srv/incoming/kodi/plugin.video.jellyfin+py3.zip

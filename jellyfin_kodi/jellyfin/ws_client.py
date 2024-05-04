@@ -35,7 +35,6 @@ class WSClient(threading.Thread):
 
         self.client = client
         threading.Thread.__init__(self)
-        self.retry_count = 0
 
     def send(self, message, data=""):
 
@@ -62,23 +61,18 @@ class WSClient(threading.Thread):
 
         while not self.stop:
 
-            time.sleep(self.retry_count * 5)
-            self.wsc.run_forever(ping_interval=10)
+            self.wsc.run_forever(ping_interval=10, reconnect=10)
 
             if not self.stop and monitor.waitForAbort(5):
                 break
-
-            # Wait a maximum of 60 seconds before retrying connection
-            if self.retry_count < 12:
-                self.retry_count += 1
-
-        LOG.info("---<[ websocket ]")
 
     def on_error(self, ws, error):
         LOG.error(error)
 
     def on_open(self, ws):
-        LOG.info("--->[ websocket ]")
+        LOG.info("--->[ websocket opened ]")
+        # Avoid a timing issue where the capabilities are not correctly registered
+        time.sleep(5)
         if settings('remoteControl.bool'):
             self.client.jellyfin.post_capabilities({
                 'PlayableMediaTypes': "Audio,Video",
@@ -99,8 +93,6 @@ class WSClient(threading.Thread):
                 "PlayableMediaTypes": "Audio, Video",
                 "SupportsMediaControl": False
             })
-        # Reinitialize the retry counter after successful connection
-        self.retry_count = 0
 
     def on_message(self, ws, message):
 
