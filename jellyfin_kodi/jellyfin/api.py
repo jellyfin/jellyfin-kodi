@@ -6,6 +6,7 @@ import json
 import requests
 from six import ensure_str
 
+from ..helper.exceptions import HTTPException
 from ..helper.utils import settings
 from ..helper import LazyLogger
 
@@ -267,6 +268,10 @@ class API(object):
         except requests.RequestException as e:
             LOG.warning("Error checking companion installed state: %s", e)
             if e.response.status_code == 404:
+                return False
+        except HTTPException as e:
+            LOG.warning("Error checking companion installed state: %s", e)
+            if e.status == 404:
                 return False
 
         return None
