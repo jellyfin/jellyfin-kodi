@@ -6,6 +6,7 @@ import json
 import requests
 from six import ensure_str
 
+from ..helper.exceptions import HTTPException
 from ..helper.utils import settings
 from ..helper import LazyLogger
 
@@ -254,37 +255,24 @@ class API(object):
             'ParentId': parent_id
         })
 
-    def get_plugins(self):
-        return self._get("Plugins")
-
-    def check_companion_installed(self):
+    def check_companion_enabled(self):
         """
+        True = Enabled
+        False = Not enabled
         None = Unknown
-        True = Installed, but possibly not loaded right now
-        False = Not installed, scheduled for uninstalling or disabled
         """
         try:
-            kodi_sync_queue = [
-                x
-                for x in self.get_plugins()
-                if x.get("Id") == "771e19d653854cafb35c28a0e865cf63"
-            ]
+            plugin_settings = self._get("Jellyfin.Plugin.KodiSyncQueue/GetPluginSettings") or {}
+            return plugin_settings.get('IsEnabled')
 
-            LOG.debug("KodiSyncQueue Plugins result: %s", kodi_sync_queue)
-
-            kodi_sync_queue_filtered = [
-                x
-                for x in kodi_sync_queue
-                if x.get("Status")
-                in ["Active", "Restart", "Malfunctioned", "NotSupported"]
-            ]
-
-            if kodi_sync_queue_filtered:
-                return True
-            else:
-                return False
         except requests.RequestException as e:
             LOG.warning("Error checking companion installed state: %s", e)
+            if e.response.status_code == 404:
+                return False
+        except HTTPException as e:
+            LOG.warning("Error checking companion installed state: %s", e)
+            if e.status == 404:
+                return False
 
         return None
 

@@ -353,7 +353,7 @@ class Library(threading.Thread):
                 'kodiCompanion.bool'
             ):
                 # None == Unknown
-                if self.server.jellyfin.check_companion_installed() is not False:
+                if self.server.jellyfin.check_companion_enabled() is not False:
 
                     if not self.fast_sync():
                         dialog("ok", "{jellyfin}", translate(33128))
