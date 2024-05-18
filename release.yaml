@@ -1,10 +1,8 @@
-version: '1.0.2'
+version: '1.0.3'
 changelog: |-
   Bug Fixes
   ---------
-  + Add version gate to strHdrType field (#854) @oddstr13
-  + Gracefully handle missing VideoRangeType in stream tracks (#853) @oddstr13
-  + Call correct API endpoint when adding users to session (#851) @wildsands
+  + Check for KodiSyncQueue GetPluginSettings endpoint (#862) @oddstr13
 dependencies:
   py3:
     - addon: 'xbmc.python'
