@@ -10,7 +10,7 @@ import sys
 import re
 import unicodedata
 from uuid import uuid4
-from distutils.version import LooseVersion
+from packaging.version import parse
 
 from dateutil import tz, parser
 from six import text_type, string_types, iteritems, ensure_text, ensure_binary
@@ -112,8 +112,8 @@ def compare_version(a, b):
         1 a is larger
         0 equal
     '''
-    a = LooseVersion(a)
-    b = LooseVersion(b)
+    a = parse(a)
+    b = parse(b)
 
     if a < b:
         return -1
