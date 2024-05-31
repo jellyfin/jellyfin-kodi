@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2024-02-04 11:30+0000\n"
-"Last-Translator: Lethargic806 <muhsulthanputrasyah@gmail.com>\n"
+"PO-Revision-Date: 2024-06-01 04:09+0000\n"
+"Last-Translator: Sultan Iskandar Maulana <sultan.ridita@gmail.com>\n"
 "Language-Team: Indonesian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/id/>\n"
 "Language: id\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.14.1\n"
+"X-Generator: Weblate 5.4.2\n"
 
 msgctxt "#30606"
 msgid "Cancel"
@@ -779,3 +779,225 @@ msgstr "Mulai ulang Kodi untuk melanjutkan ke adegan yang Anda tinggalkan."
 msgctxt "#33125"
 msgid "Enable remote control"
 msgstr "Nyalakan kontrol jarak jauh"
+
+msgctxt "#33123"
+msgid "Sync library to Kodi"
+msgstr "Sinkron pustaka ke Kodi"
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "Perbarui pustaka"
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "Menyegarkan boxset"
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "Tambah pustaka"
+
+msgctxt "#33128"
+msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"Gagal mengambil pembaruan konten terbaru. Tidak ada pembaruan konten yang "
+"akan diterapkan sebelum Kodi dimulai ulang. Jika masalah ini tetap "
+"berlangsung, mohon lapor ke forum Jellyfin for Kodi, dengan log Kodi Anda."
+
+msgctxt "#33138"
+msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
+msgstr ""
+"Anda dapat memperbarui pustaka Anda secara manual daripada bergantung dengan "
+"plugin server Kodi Sync Queue. Luncurkan add-on dan perbarui pustaka (atau "
+"tiap pustaka). Untuk menghapus konten, Anda perlu untuk memperbaiki pustaka."
+
+msgctxt "#33124"
+msgid "Include people (slow)"
+msgstr "Sertakan orang (lambat)"
+
+msgctxt "#33130"
+msgid "Select the source"
+msgstr "Pilih sumber"
+
+msgctxt "#33139"
+msgid "Update libraries"
+msgstr "Perbarui pustaka"
+
+msgctxt "#33140"
+msgid "Repair libraries"
+msgstr "Perbaiki pustaka"
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "Patch telah diterapkan!"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "Reset pustaka musik?"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "Gagal membuat cadangan"
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr "Perbarui atau perbaiki pustaka Anda untuk menerapkan perubahan berikut."
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "Paksa transkode"
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "Hapus pustaka"
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr "Aktifkan sinkronisasi saat pemutaran (dapat mengakibatkan lag)"
+
+msgctxt "#33145"
+msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
+msgstr ""
+"Mohon pastikan pembagian Samba (smb) pada server Jellyfin Anda dapat diakses "
+"di pemasangan Kodi Anda dan Anda telah mengatur substitusi path di server "
+"Anda. Jika tidak, Kodi mungkin dapat gagal menemukan file Anda."
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "Paging - thread unduh (default: 3)"
+
+msgctxt "#33155"
+msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
+msgstr ""
+"Patch yang saat ini diterapkan untuk Jellyfin untuk Kodi rusak. Silakan "
+"posting ke forum Jellyfin for Kodi jika masalah ini terus berlanjut. Masalah "
+"ini perlu diperbaiki sesegera mungkin."
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr ""
+"Sembunyikan informasi sensitif pada log (tidak dapat diterapkan pada logging "
+"Kodi)"
+
+msgctxt "#33172"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
+msgstr ""
+"Anda memiliki {number} pembaruan tertunda. Mungkin akan memerlukan beberapa "
+"saat sebelum dapat melihat konten baru. Memperbarui pustaka Anda melalui "
+"Jellyfin add-on > perbarui pustaka mungkin bisa lebih cepat. Tetap lanjutkan?"
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr ""
+"Tips Paging: Setiap unduh thread meminta nilai item maksimum Anda dari "
+"Jellyfin secara bersamaan."
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr ""
+"Sinkronisasi ada yang sedang berjalan, mohon tunggu hingga selesai dan coba "
+"kembali."
+
+msgctxt "#33202"
+msgid "Transcode H265/HEVC RExt"
+msgstr "Transkode H265/HEVC RExt"
+
+msgctxt "#33129"
+msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
+msgstr ""
+"Anda dapat menyinkronkan pustaka dengan meluncurkan add-on Jellyfin > Tambah "
+"Pustaka."
+
+msgctxt "#33132"
+msgid "Repair library"
+msgstr "Perbaiki pustaka"
+
+msgctxt "#33133"
+msgid "Remove library from Kodi"
+msgstr "Hapus pustaka dari Kodi"
+
+msgctxt "#33135"
+msgid "Kodi will now restart to apply a small patch for your Kodi version."
+msgstr ""
+"Kodi sekarang akan memulai ulang untuk menerapkan patch kecil untuk versi "
+"Kodi Anda."
+
+msgctxt "#33137"
+msgid "Enable Kodi Sync Queue"
+msgstr "Aktifkan Kodi Sync Queue"
+
+msgctxt "#33143"
+msgid "Enable the option to delete"
+msgstr "Aktifkan opsi untuk menghapus"
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "Menghapus pustaka"
+
+msgctxt "#33151"
+msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
+msgstr ""
+"Hubungkan kembali ke server yang sama dengan yang dimuat sebelumnya. Jika "
+"Anda ingin menggunakan server yang berbeda, reset database lokal Anda, "
+"termasuk informasi pengguna Anda."
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "Tidak dapat menemukan tuner TV di Kodi."
+
+msgctxt "#33153"
+msgid "Your Jellyfin theme media has been synced to Kodi"
+msgstr "Tema media Jellyfin Anda telah disinkronkan ke Kodi"
+
+msgctxt "#33163"
+msgid "Disabled/Media default"
+msgstr "Nonaktif/default Media"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "(dinamis)"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "Dalam Proses"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "Dari huruf awal"
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "Lupakan sinkron sebelumnya? Aksi ini tidak direkomendasi."
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr "Tampilkan batang kemajuan jika nilai pembaruan lebih dari"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "Memulai ulang untuk menerapkan patch"
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr ""
+"Kodi Sync Queue mempercepat sinkronisasi mulai. Sinkronisasi lainnya dipicu "
+"dari event server."
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "Kelola pustaka"
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "Pilih pustaka untuk diperbaiki"
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "Pilih pustaka untuk diperbarui"
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "Pilih pustaka untuk dihapus"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "Resolusi artwork maksimum"
