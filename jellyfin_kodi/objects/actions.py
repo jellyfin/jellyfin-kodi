@@ -166,13 +166,12 @@ class Actions(object):
         playlist = self.get_playlist(item)
         player = xbmc.Player()
 
-        # xbmc.executebuiltin("Playlist.Clear") # Clear playlist to remove the previous item from playlist position no.2
-
         if clear:
             if player.isPlaying():
                 player.stop()
 
             xbmc.executebuiltin('ActivateWindow(busydialognocancel)')
+            playlist.clear()
             index = 0
         else:
             index = max(playlist.getposition(), 0) + 1  # Can return -1
@@ -196,11 +195,12 @@ class Actions(object):
         playutils.set_properties(item, item['PlaybackInfo']['Method'], self.server_id)
 
         playlist.add(item['PlaybackInfo']['Path'], listitem, index)
-        index += 1
 
         if clear:
             xbmc.executebuiltin('Dialog.Close(busydialognocancel)')
-            player.play(playlist)
+            player.play(playlist, startpos=index)
+
+        index += 1
 
         server_address = item['PlaybackInfo']['ServerAddress']
         token = item['PlaybackInfo']['Token']
