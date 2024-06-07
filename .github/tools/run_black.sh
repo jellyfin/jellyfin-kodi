@@ -1,6 +1,8 @@
 #!/bin/bash
 # Exit on error, print commands
-set -ex
+set -o errexit
+set -o xtrace
+
 #
 # Copyright (c) Odd Stråbø, 2024
 # File-License: the Unlicense
