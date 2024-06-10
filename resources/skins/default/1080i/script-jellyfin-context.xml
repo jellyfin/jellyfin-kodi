@@ -15,11 +15,13 @@
 			</control>
 			<control type="group">
 				<animation type="WindowOpen" reversible="false">
-					<effect type="zoom" start="80" end="100" center="960,540" delay="160" tween="circle" easin="out" time="240" />
+					<effect type="zoom" start="80" end="100" center="960,540" delay="160" tween="circle"
+						easin="out" time="240" />
 					<effect type="fade" delay="160" end="100" time="240" />
 				</animation>
 				<animation type="WindowClose" reversible="false">
-					<effect type="zoom" start="100" end="80" center="960,540" easing="in" tween="circle" easin="out" time="240" />
+					<effect type="zoom" start="100" end="80" center="960,540" easing="in" tween="circle"
+						easin="out" time="240" />
 					<effect type="fade" start="100" end="0" time="240" />
 				</animation>
 				<centerleft>50%</centerleft>
