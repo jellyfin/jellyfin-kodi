@@ -37,6 +37,7 @@ def test_import_downloader():
 def test_import_entrypoint():
     import jellyfin_kodi.entrypoint
     import jellyfin_kodi.entrypoint.context
+
     # import jellyfin_kodi.entrypoint.default  # FIXME: Messes with sys.argv
     import jellyfin_kodi.entrypoint.service  # noqa: F401
 

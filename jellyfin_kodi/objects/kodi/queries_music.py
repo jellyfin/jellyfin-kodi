@@ -54,7 +54,14 @@ FROM        album
 WHERE       strMusicBrainzAlbumID = ?
 """
 get_album_obj = ["{AlbumId}", "{Title}", "{UniqueId}", "{Artists}", "album"]
-get_album_obj82 = ["{AlbumId}", "{Title}", "{UniqueId}", "{Artists}", "album", "{DateAdded}"]
+get_album_obj82 = [
+    "{AlbumId}",
+    "{Title}",
+    "{UniqueId}",
+    "{Artists}",
+    "album",
+    "{DateAdded}",
+]
 get_album_by_name = """
 SELECT      idAlbum, strArtists
 FROM        album
@@ -132,9 +139,24 @@ INSERT INTO     song(idSong, idAlbum, idPath, strArtistDisp, strGenres, strTitle
                 rating, comment, dateAdded)
 VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 """
-add_song_obj = ["{SongId}", "{AlbumId}", "{PathId}", "{Artists}", "{Genre}", "{Title}", "{Index}",
-                "{Runtime}", "{Year}", "{Filename}", "{UniqueId}", "{PlayCount}", "{DatePlayed}", "{Rating}",
-                "{Comment}", "{DateAdded}"]
+add_song_obj = [
+    "{SongId}",
+    "{AlbumId}",
+    "{PathId}",
+    "{Artists}",
+    "{Genre}",
+    "{Title}",
+    "{Index}",
+    "{Runtime}",
+    "{Year}",
+    "{Filename}",
+    "{UniqueId}",
+    "{PlayCount}",
+    "{DatePlayed}",
+    "{Rating}",
+    "{Comment}",
+    "{DateAdded}",
+]
 add_genre = """
 INSERT INTO     genre(idGenre, strGenre)
 VALUES          (?, ?)
@@ -197,7 +219,17 @@ SET         strArtistDisp = ?, strReleaseDate = ?, strGenres = ?, strReview = ?,
             iUserrating = ?, lastScraped = ?, bScrapedMBID = 1, strReleaseType = ?
 WHERE       idAlbum = ?
 """
-update_album_obj = ["{Artists}", "{Year}", "{Genre}", "{Bio}", "{Thumb}", "{Rating}", "{LastScraped}", "album", "{AlbumId}"]
+update_album_obj = [
+    "{Artists}",
+    "{Year}",
+    "{Genre}",
+    "{Bio}",
+    "{Thumb}",
+    "{Rating}",
+    "{LastScraped}",
+    "album",
+    "{AlbumId}",
+]
 update_album_artist = """
 UPDATE      album
 SET         strArtists = ?
@@ -229,9 +261,22 @@ SET         idAlbum = ?, strArtistDisp = ?, strGenres = ?, strTitle = ?, iTrack 
             rating = ?, comment = ?, dateAdded = ?
 WHERE       idSong = ?
 """
-update_song_obj = ["{AlbumId}", "{Artists}", "{Genre}", "{Title}", "{Index}", "{Runtime}", "{Year}",
-                                "{Filename}", "{PlayCount}", "{DatePlayed}", "{Rating}", "{Comment}",
-                                "{DateAdded}", "{SongId}"]
+update_song_obj = [
+    "{AlbumId}",
+    "{Artists}",
+    "{Genre}",
+    "{Title}",
+    "{Index}",
+    "{Runtime}",
+    "{Year}",
+    "{Filename}",
+    "{PlayCount}",
+    "{DatePlayed}",
+    "{Rating}",
+    "{Comment}",
+    "{DateAdded}",
+    "{SongId}",
+]
 update_song_artist = """
 INSERT OR REPLACE INTO      song_artist(idArtist, idSong, idRole, iOrder, strArtist)
 VALUES                      (?, ?, ?, ?, ?)
