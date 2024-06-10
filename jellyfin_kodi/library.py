@@ -5,6 +5,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import threading
 from datetime import datetime, timedelta
+from typing import Dict, List, Tuple
 
 from six.moves import queue as Queue
 
@@ -48,18 +49,18 @@ class Library(threading.Thread):
         self.monitor = monitor
         self.player = monitor.monitor.player
         self.server = Jellyfin().get_client()
-        self.updated_queue = Queue.Queue()
-        self.userdata_queue = Queue.Queue()
-        self.removed_queue = Queue.Queue()
+        self.updated_queue: Queue.Queue[str] = Queue.Queue()
+        self.userdata_queue: Queue.Queue[str] = Queue.Queue()
+        self.removed_queue: Queue.Queue[str] = Queue.Queue()
         self.updated_output = self.__new_queues__()
         self.userdata_output = self.__new_queues__()
         self.removed_output = self.__new_queues__()
-        self.notify_output = Queue.Queue()
+        self.notify_output: Queue.Queue[Tuple[str, str]] = Queue.Queue()
 
         self.jellyfin_threads = []
         self.download_threads = []
         self.notify_threads = []
-        self.writer_threads = {'updated': [], 'userdata': [], 'removed': []}
+        self.writer_threads: Dict[str, List[BaseWorker]] = {'updated': [], 'userdata': [], 'removed': []}
         self.database_lock = threading.Lock()
         self.music_database_lock = threading.Lock()
 
@@ -231,10 +232,10 @@ class Library(threading.Thread):
 
         ''' Get items from jellyfin and place them in the appropriate queues.
         '''
-        for queue in ((self.updated_queue, self.updated_output), (self.userdata_queue, self.userdata_output)):
-            if queue[0].qsize() and len(self.download_threads) < DTHREADS:
+        for input_queue, output_queue in ((self.updated_queue, self.updated_output), (self.userdata_queue, self.userdata_output)):
+            if input_queue.qsize() and len(self.download_threads) < DTHREADS:
 
-                new_thread = GetItemWorker(self.server, queue[0], queue[1])
+                new_thread = GetItemWorker(self.server, input_queue, output_queue)
                 new_thread.start()
                 LOG.info("-->[ q:download/%s ]", id(new_thread))
                 self.download_threads.append(new_thread)
@@ -600,7 +601,11 @@ class Library(threading.Thread):
         LOG.info("---[ removed:%s ]", len(data))
 
 
-class UpdateWorker(threading.Thread):
+class BaseWorker(threading.Thread):
+    is_done: bool
+
+
+class UpdateWorker(BaseWorker):
 
     is_done = False
 
@@ -676,7 +681,7 @@ class UpdateWorker(threading.Thread):
         self.is_done = True
 
 
-class UserDataWorker(threading.Thread):
+class UserDataWorker(BaseWorker):
 
     is_done = False
 
@@ -739,7 +744,7 @@ class UserDataWorker(threading.Thread):
         self.is_done = True
 
 
-class SortWorker(threading.Thread):
+class SortWorker(BaseWorker):
 
     is_done = False
 
@@ -786,7 +791,7 @@ class SortWorker(threading.Thread):
         self.is_done = True
 
 
-class RemovedWorker(threading.Thread):
+class RemovedWorker(BaseWorker):
 
     is_done = False
 
@@ -847,7 +852,7 @@ class RemovedWorker(threading.Thread):
         self.is_done = True
 
 
-class NotifyWorker(threading.Thread):
+class NotifyWorker(BaseWorker):
 
     is_done = False
 

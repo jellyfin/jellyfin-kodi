@@ -41,8 +41,11 @@ def create_addon_xml(config: dict, source: str, py_version: str) -> None:
 
     # Populate dependencies in template
     dependencies = config['dependencies'].get(py_version)
+    requires_el = root.find('requires')
+    assert isinstance(requires_el, ET.Element), "Unable to find requires element in template"
+
     for dep in dependencies:
-        ET.SubElement(root.find('requires'), 'import', attrib=dep)
+        ET.SubElement(requires_el, 'import', attrib=dep)
 
     # Populate version string
     addon_version = config.get('version')
@@ -108,7 +111,6 @@ def folder_filter(folder_name: str) -> bool:
             return False
 
     return True
-
 
 
 if __name__ == '__main__':

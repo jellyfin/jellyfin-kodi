@@ -33,7 +33,7 @@ def clean_none_dict_values(obj):
             if mutable:
                 # Remove keys with None value
                 for key in remove:
-                    item.pop(key)
+                    item.pop(key)  # typing: ignore [attr-defined]
 
         elif isinstance(item, collections_abc.Iterable):
             for value in item:

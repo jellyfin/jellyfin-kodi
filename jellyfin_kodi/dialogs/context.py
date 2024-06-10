@@ -4,11 +4,12 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 ##################################################################################################
 
 import os
+from typing import List, cast
 
 from kodi_six import xbmcgui, xbmcaddon
 from six import ensure_text
 
-from ..helper import window, addon_id
+from ..helper import window, ADDON_ID
 from ..helper import LazyLogger
 
 ##################################################################################################
@@ -27,7 +28,7 @@ USER_IMAGE = 150
 
 class ContextMenu(xbmcgui.WindowXMLDialog):
 
-    _options = []
+    _options: List[str] = []
     selected_option = None
 
     def __init__(self, *args, **kwargs):
@@ -51,7 +52,7 @@ class ContextMenu(xbmcgui.WindowXMLDialog):
             self.getControl(USER_IMAGE).setImage(window('JellyfinUserImage'))
 
         LOG.info("options: %s", self._options)
-        self.list_ = self.getControl(LIST)
+        self.list_ = cast(xbmcgui.ControlList, self.getControl(LIST))
 
         for option in self._options:
             self.list_.addItem(self._add_listitem(option))
@@ -73,7 +74,7 @@ class ContextMenu(xbmcgui.WindowXMLDialog):
 
     def _add_editcontrol(self, x, y, height, width, password=0):
 
-        media = os.path.join(xbmcaddon.Addon(addon_id()).getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
+        media = os.path.join(xbmcaddon.Addon(ADDON_ID).getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
         control = xbmcgui.ControlImage(0, 0, 0, 0,
                                        filename=os.path.join(media, "white.png"),
                                        aspectRatio=0,

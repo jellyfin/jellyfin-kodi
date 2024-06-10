@@ -5,6 +5,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import json
 import os
+from typing import Any, Dict
 
 from six import iteritems, ensure_text
 
@@ -20,7 +21,7 @@ LOG = LazyLogger(__name__)
 class Objects(object):
 
     # Borg - multiple instances, shared state
-    _shared_state = {}
+    _shared_state: Dict[str, Any] = {}
 
     def __init__(self):
 
@@ -107,7 +108,7 @@ class Objects(object):
                     continue
 
                 if obj_key:
-                    obj = [d[obj_key] for d in obj if d.get(obj_key)] if type(obj) == list else obj.get(obj_key)
+                    obj = [d[obj_key] for d in obj if d.get(obj_key)] if isinstance(obj, list) else obj.get(obj_key)
 
                 self.mapped_item[key] = obj
                 break

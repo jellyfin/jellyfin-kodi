@@ -29,11 +29,10 @@ LOG = LazyLogger(__name__)
 #################################################################################################
 
 
-def addon_id():
-    return "plugin.video.jellyfin"
+ADDON_ID = "plugin.video.jellyfin"
 
 
-def kodi_version():
+def kodi_version() -> int:
     # Kodistubs returns empty string, causing Python 3 tests to choke on int()
     # TODO: Make Kodistubs version configurable for testing purposes
     if sys.version_info.major == 2:
@@ -84,7 +83,7 @@ def settings(setting, value=None):
     ''' Get or add add-on settings.
         getSetting returns unicode object.
     '''
-    addon = xbmcaddon.Addon(addon_id())
+    addon = xbmcaddon.Addon(ADDON_ID)
 
     if value is not None:
         if setting.endswith('.bool'):
@@ -154,7 +153,8 @@ def event(method, data=None, sender=None, hexlify=False):
     xbmc.executebuiltin('NotifyAll(%s, %s, %s)' % (sender, method, data))
 
 
-def dialog(dialog_type, *args, **kwargs):
+def dialog(dialog_type: str, *args: str, **kwargs):
+    arg_list = list(args)
 
     d = xbmcgui.Dialog()
 
@@ -166,9 +166,8 @@ def dialog(dialog_type, *args, **kwargs):
     if "heading" in kwargs:
         kwargs['heading'] = kwargs['heading'].replace("{jellyfin}", translate('addon_name'))
 
-    if args:
-        args = list(args)
-        args[0] = args[0].replace("{jellyfin}", translate('addon_name'))
+    if arg_list:
+        arg_list[0] = arg_list[0].replace("{jellyfin}", translate('addon_name'))
 
     types = {
         'yesno': d.yesno,
@@ -179,7 +178,7 @@ def dialog(dialog_type, *args, **kwargs):
         'numeric': d.numeric,
         'multi': d.multiselect
     }
-    return types[dialog_type](*args, **kwargs)
+    return types[dialog_type](*arg_list, **kwargs)
 
 
 def should_stop():

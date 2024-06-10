@@ -8,6 +8,7 @@ import os
 import sqlite3
 import sys
 import re
+from typing import Any, Dict
 
 from kodi_six import xbmc, xbmcvfs
 from six import text_type
@@ -36,7 +37,7 @@ class Database(object):
     '''
     timeout = 120
     discovered = False
-    discovered_file = None
+    discovered_file: str = None
 
     def __init__(self, db_file=None, commit_close=True):
 
@@ -319,7 +320,7 @@ def reset_artwork():
     LOG.info("[ reset artwork ]")
 
 
-def get_sync():
+def get_sync() -> dict:
     if (3, 0) <= sys.version_info < (3, 6):
         LOG.error("Python versions 3.0-3.5 are NOT supported.")
 
@@ -343,7 +344,7 @@ def get_sync():
     return sync
 
 
-def save_sync(sync):
+def save_sync(sync: Dict[str, Any]):
 
     if not xbmcvfs.exists(ADDON_DATA):
         xbmcvfs.mkdirs(ADDON_DATA)

@@ -8,6 +8,7 @@ import socket
 from datetime import datetime
 from operator import itemgetter
 import traceback
+from typing import Optional
 
 import urllib3
 
@@ -31,8 +32,7 @@ CONNECTION_STATE = {
 
 class ConnectionManager(object):
 
-    user = {}
-    server_id = None
+    server_id: Optional[str] = None
 
     def __init__(self, client):
 

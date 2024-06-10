@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
 
+from typing import Optional
+
 ##################################################################################################
 
 from kodi_six import xbmc, xbmcgui
@@ -22,7 +24,7 @@ START_BEGINNING = 3011
 class ResumeDialog(xbmcgui.WindowXMLDialog):
 
     _resume_point = None
-    selected_option = None
+    selected_option: Optional[int] = None
 
     def __init__(self, *args, **kwargs):
         xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)

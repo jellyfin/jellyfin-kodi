@@ -5,6 +5,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import sqlite3
 from ntpath import dirname
+from typing import List
 
 from six.moves.urllib.parse import urlencode
 from kodi_six.utils import py2_encode
@@ -101,7 +102,7 @@ class TVShows(KodiDb):
         if obj['Premiere']:
             obj['Premiere'] = str(Local(obj['Premiere'])).split('.')[0].replace('T', " ")
 
-        tags = []
+        tags: List[str] = []
         tags.extend(obj['Tags'] or [])
         tags.append(obj['LibraryName'])
 
@@ -656,7 +657,7 @@ class TVShows(KodiDb):
         ''' Get all child elements from tv show jellyfin id.
         '''
         obj = {'Id': item_id}
-        child = []
+        child: List[str] = []
 
         try:
             obj['KodiId'] = e_item[0]
