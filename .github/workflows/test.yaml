@@ -22,7 +22,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.6
 
       - name: Set up Python ${{ matrix.py_version }}
         uses: actions/setup-python@v5.0.0
