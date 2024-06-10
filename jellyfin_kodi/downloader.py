@@ -126,7 +126,7 @@ def get_episode_by_season(show_id, season_id):
         yield items
 
 
-def get_item_count(parent_id, item_type=None, params=None):
+def get_item_count(parent_id, item_type=None):
 
     url = "Users/{UserId}/Items"
 
@@ -138,8 +138,6 @@ def get_item_count(parent_id, item_type=None, params=None):
         "Recursive": True,
         "Limit": 1,
     }
-    if params:
-        query_params["params"].update(params)
 
     result = _get(url, query_params)
 
