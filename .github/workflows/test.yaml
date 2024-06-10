@@ -64,3 +64,9 @@ jobs:
             flake8.output
             test.xml
             coverage.xml
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: psf/black@stable
