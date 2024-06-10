@@ -23,7 +23,8 @@
 				"GitHub.vscode-pull-request-github",
 				"hbenl.vscode-test-explorer",
 				"redhat.vscode-xml",
-				"ninoseki.vscode-pylens"
+				"ninoseki.vscode-pylens",
+				"ms-python.black-formatter"
 			]
 		}
 	}
