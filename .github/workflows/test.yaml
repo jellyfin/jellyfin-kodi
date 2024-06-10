@@ -59,7 +59,7 @@ jobs:
         uses: actions/upload-artifact@v4.3.3
         with:
           retention-days: 14
-          name: ${{ matrix.py_version }}-test-results
+          name: ${{ matrix.py_version }}-${{ matrix.os }}-test-results
           path: |
             flake8.output
             test.xml
