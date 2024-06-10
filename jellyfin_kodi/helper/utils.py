@@ -40,62 +40,59 @@ def kodi_version():
     else:
         default_versionstring = "19.1 (19.1.0) Git:20210509-85e05228b4"
 
-    version_string = xbmc.getInfoLabel('System.BuildVersion') or default_versionstring
-    return int(version_string.split(' ', 1)[0].split('.', 1)[0])
+    version_string = xbmc.getInfoLabel("System.BuildVersion") or default_versionstring
+    return int(version_string.split(" ", 1)[0].split(".", 1)[0])
 
 
 def window(key, value=None, clear=False, window_id=10000):
-
-    ''' Get or set window properties.
-    '''
+    """Get or set window properties."""
     window = xbmcgui.Window(window_id)
 
     if clear:
 
         LOG.debug("--[ window clear: %s ]", key)
-        window.clearProperty(key.replace('.json', "").replace('.bool', ""))
+        window.clearProperty(key.replace(".json", "").replace(".bool", ""))
     elif value is not None:
-        if key.endswith('.json'):
+        if key.endswith(".json"):
 
-            key = key.replace('.json', "")
+            key = key.replace(".json", "")
             value = json.dumps(value)
 
-        elif key.endswith('.bool'):
+        elif key.endswith(".bool"):
 
-            key = key.replace('.bool', "")
+            key = key.replace(".bool", "")
             value = "true" if value else "false"
 
         window.setProperty(key, value)
     else:
-        result = window.getProperty(key.replace('.json', "").replace('.bool', ""))
+        result = window.getProperty(key.replace(".json", "").replace(".bool", ""))
 
         if result:
-            if key.endswith('.json'):
+            if key.endswith(".json"):
                 result = json.loads(result)
-            elif key.endswith('.bool'):
+            elif key.endswith(".bool"):
                 result = result in ("true", "1")
 
         return result
 
 
 def settings(setting, value=None):
-
-    ''' Get or add add-on settings.
-        getSetting returns unicode object.
-    '''
+    """Get or add add-on settings.
+    getSetting returns unicode object.
+    """
     addon = xbmcaddon.Addon(addon_id())
 
     if value is not None:
-        if setting.endswith('.bool'):
+        if setting.endswith(".bool"):
 
-            setting = setting.replace('.bool', "")
+            setting = setting.replace(".bool", "")
             value = "true" if value else "false"
 
         addon.setSetting(setting, value)
     else:
-        result = addon.getSetting(setting.replace('.bool', ""))
+        result = addon.getSetting(setting.replace(".bool", ""))
 
-        if result and setting.endswith('.bool'):
+        if result and setting.endswith(".bool"):
             result = result in ("true", "1")
 
         return result
@@ -106,9 +103,7 @@ def create_id():
 
 
 def find(dict, item):
-
-    ''' Find value in dictionary.
-    '''
+    """Find value in dictionary."""
     if item in dict:
         return dict[item]
 
@@ -119,9 +114,7 @@ def find(dict, item):
 
 
 def event(method, data=None, sender=None, hexlify=False):
-
-    ''' Data is a dictionary.
-    '''
+    """Data is a dictionary."""
     data = data or {}
     sender = sender or "plugin.video.jellyfin"
 
@@ -132,7 +125,7 @@ def event(method, data=None, sender=None, hexlify=False):
 
     LOG.debug("---[ event: %s/%s ] %s", sender, method, data)
 
-    xbmc.executebuiltin('NotifyAll(%s, %s, %s)' % (sender, method, data))
+    xbmc.executebuiltin("NotifyAll(%s, %s, %s)" % (sender, method, data))
 
 
 def dialog(dialog_type, *args, **kwargs):
@@ -140,63 +133,58 @@ def dialog(dialog_type, *args, **kwargs):
     d = xbmcgui.Dialog()
 
     if "icon" in kwargs:
-        kwargs['icon'] = kwargs['icon'].replace(
+        kwargs["icon"] = kwargs["icon"].replace(
             "{jellyfin}",
-            "special://home/addons/plugin.video.jellyfin/resources/icon.png"
+            "special://home/addons/plugin.video.jellyfin/resources/icon.png",
         )
     if "heading" in kwargs:
-        kwargs['heading'] = kwargs['heading'].replace("{jellyfin}", translate('addon_name'))
+        kwargs["heading"] = kwargs["heading"].replace(
+            "{jellyfin}", translate("addon_name")
+        )
 
     if args:
         args = list(args)
-        args[0] = args[0].replace("{jellyfin}", translate('addon_name'))
+        args[0] = args[0].replace("{jellyfin}", translate("addon_name"))
 
     types = {
-        'yesno': d.yesno,
-        'ok': d.ok,
-        'notification': d.notification,
-        'input': d.input,
-        'select': d.select,
-        'numeric': d.numeric,
-        'multi': d.multiselect
+        "yesno": d.yesno,
+        "ok": d.ok,
+        "notification": d.notification,
+        "input": d.input,
+        "select": d.select,
+        "numeric": d.numeric,
+        "multi": d.multiselect,
     }
     return types[dialog_type](*args, **kwargs)
 
 
 def should_stop():
-
-    ''' Checkpoint during the sync process.
-    '''
+    """Checkpoint during the sync process."""
     if xbmc.Monitor().waitForAbort(0.00001):
         return True
 
-    if window('jellyfin_should_stop.bool'):
+    if window("jellyfin_should_stop.bool"):
         LOG.info("exiiiiitttinggg")
         return True
 
-    return not window('jellyfin_online.bool')
+    return not window("jellyfin_online.bool")
 
 
 def get_screensaver():
-
-    ''' Get the current screensaver value.
-    '''
-    result = JSONRPC('Settings.getSettingValue').execute({'setting': "screensaver.mode"})
+    """Get the current screensaver value."""
+    result = JSONRPC("Settings.getSettingValue").execute(
+        {"setting": "screensaver.mode"}
+    )
     try:
-        return result['result']['value']
+        return result["result"]["value"]
     except KeyError:
         return ""
 
 
 def set_screensaver(value):
-
-    ''' Toggle the screensaver
-    '''
-    params = {
-        'setting': "screensaver.mode",
-        'value': value
-    }
-    result = JSONRPC('Settings.setSettingValue').execute(params)
+    """Toggle the screensaver"""
+    params = {"setting": "screensaver.mode", "value": value}
+    result = JSONRPC("Settings.setSettingValue").execute(params)
     LOG.info("---[ screensaver/%s ] %s", value, result)
 
 
@@ -215,12 +203,12 @@ class JSONRPC(object):
     def _query(self):
 
         query = {
-            'jsonrpc': self.jsonrpc_version,
-            'id': self.id,
-            'method': self.method,
+            "jsonrpc": self.jsonrpc_version,
+            "id": self.id,
+            "method": self.method,
         }
         if self.params is not None:
-            query['params'] = self.params
+            query["params"] = self.params
 
         return json.dumps(query)
 
@@ -231,66 +219,68 @@ class JSONRPC(object):
 
 
 def validate(path):
-
-    ''' Verify if path is accessible.
-    '''
-    if window('jellyfin_pathverified.bool'):
+    """Verify if path is accessible."""
+    if window("jellyfin_pathverified.bool"):
         return True
 
     if not xbmcvfs.exists(path):
         LOG.info("Could not find %s", path)
 
-        if dialog("yesno", "{jellyfin}", "%s %s. %s" % (translate(33047), path, translate(33048))):
+        if dialog(
+            "yesno",
+            "{jellyfin}",
+            "%s %s. %s" % (translate(33047), path, translate(33048)),
+        ):
 
             return False
 
-    window('jellyfin_pathverified.bool', True)
+    window("jellyfin_pathverified.bool", True)
 
     return True
 
 
 def validate_bluray_dir(path):
+    """Verify if path/BDMV/ is accessible."""
 
-    ''' Verify if path/BDMV/ is accessible.
-    '''
-
-    path = path + '/BDMV/'
+    path = path + "/BDMV/"
 
     if not xbmcvfs.exists(path):
         return False
 
-    window('jellyfin_pathverified.bool', True)
+    window("jellyfin_pathverified.bool", True)
 
     return True
 
 
 def validate_dvd_dir(path):
+    """Verify if path/VIDEO_TS/ is accessible."""
 
-    ''' Verify if path/VIDEO_TS/ is accessible.
-    '''
-
-    path = path + '/VIDEO_TS/'
+    path = path + "/VIDEO_TS/"
 
     if not xbmcvfs.exists(path):
         return False
 
-    window('jellyfin_pathverified.bool', True)
+    window("jellyfin_pathverified.bool", True)
 
     return True
 
 
 def values(item, keys):
-
-    ''' Grab the values in the item for a list of keys {key},{key1}....
-        If the key has no brackets, the key will be passed as is.
-    '''
-    return (item[key.replace('{', "").replace('}', "")] if isinstance(key, text_type) and key.startswith('{') else key for key in keys)
+    """Grab the values in the item for a list of keys {key},{key1}....
+    If the key has no brackets, the key will be passed as is.
+    """
+    return (
+        (
+            item[key.replace("{", "").replace("}", "")]
+            if isinstance(key, text_type) and key.startswith("{")
+            else key
+        )
+        for key in keys
+    )
 
 
 def delete_folder(path):
-
-    ''' Delete objects from kodi cache
-    '''
+    """Delete objects from kodi cache"""
     LOG.debug("--[ delete folder ]")
     dirs, files = xbmcvfs.listdir(path)
 
@@ -305,9 +295,7 @@ def delete_folder(path):
 
 
 def delete_recursive(path, dirs):
-
-    ''' Delete files and dirs recursively.
-    '''
+    """Delete files and dirs recursively."""
     for directory in dirs:
         dirs2, files = xbmcvfs.listdir(os.path.join(path, directory))
 
@@ -319,11 +307,9 @@ def delete_recursive(path, dirs):
 
 
 def unzip(path, dest, folder=None):
-
-    ''' Unzip file. zipfile module seems to fail on android with badziperror.
-    '''
+    """Unzip file. zipfile module seems to fail on android with badziperror."""
     path = quote_plus(path)
-    root = "zip://" + path + '/'
+    root = "zip://" + path + "/"
 
     if folder:
 
@@ -360,9 +346,7 @@ def unzip_recursive(path, dirs, dest):
 
 
 def unzip_file(path, dest):
-
-    ''' Unzip specific file. Path should start with zip://
-    '''
+    """Unzip specific file. Path should start with zip://"""
     xbmcvfs.copy(path, dest)
     LOG.debug("unzip: %s to %s", path, dest)
 
@@ -381,9 +365,7 @@ def get_zip_directory(path, folder):
 
 
 def copytree(path, dest):
-
-    ''' Copy folder content from one to another.
-    '''
+    """Copy folder content from one to another."""
     dirs, files = xbmcvfs.listdir(path)
 
     if not xbmcvfs.exists(dest):
@@ -416,10 +398,8 @@ def copy_recursive(path, dirs, dest):
 
 
 def copy_file(path, dest):
-
-    ''' Copy specific file.
-    '''
-    if path.endswith('.pyo'):
+    """Copy specific file."""
+    if path.endswith(".pyo"):
         return
 
     xbmcvfs.copy(path, dest)
@@ -427,11 +407,10 @@ def copy_file(path, dest):
 
 
 def normalize_string(text):
-
-    ''' For theme media, do not modify unless modified in TV Tunes.
-        Remove dots from the last character as windows can not have directories
-        with dots at the end
-    '''
+    """For theme media, do not modify unless modified in TV Tunes.
+    Remove dots from the last character as windows can not have directories
+    with dots at the end
+    """
     text = text.replace(":", "")
     text = text.replace("/", "-")
     text = text.replace("\\", "-")
@@ -439,26 +418,24 @@ def normalize_string(text):
     text = text.replace(">", "")
     text = text.replace("*", "")
     text = text.replace("?", "")
-    text = text.replace('|', "")
+    text = text.replace("|", "")
     text = text.strip()
 
-    text = text.rstrip('.')
-    text = unicodedata.normalize('NFKD', text_type(text, 'utf-8')).encode('ascii', 'ignore')
+    text = text.rstrip(".")
+    text = unicodedata.normalize("NFKD", text_type(text, "utf-8")).encode(
+        "ascii", "ignore"
+    )
 
     return text
 
 
 def split_list(itemlist, size):
-
-    ''' Split up list in pieces of size. Will generate a list of lists
-    '''
-    return [itemlist[i:i + size] for i in range(0, len(itemlist), size)]
+    """Split up list in pieces of size. Will generate a list of lists"""
+    return [itemlist[i : i + size] for i in range(0, len(itemlist), size)]
 
 
 def convert_to_local(date, timezone=tz.tzlocal()):
-
-    ''' Convert the local datetime to local.
-    '''
+    """Convert the local datetime to local."""
     try:
         date = parser.parse(date) if isinstance(date, string_types) else date
         date = date.replace(tzinfo=tz.tzutc())
@@ -475,9 +452,9 @@ def convert_to_local(date, timezone=tz.tzlocal()):
                 date.second,
             )
         else:
-            return date.strftime('%Y-%m-%dT%H:%M:%S')
+            return date.strftime("%Y-%m-%dT%H:%M:%S")
     except Exception as error:
-        LOG.exception('Item date: {} --- {}'.format(str(date), error))
+        LOG.exception("Item date: {} --- {}".format(str(date), error))
 
         return str(date)
 
@@ -491,28 +468,27 @@ def has_attribute(obj, name):
 
 
 def set_addon_mode():
+    """Setup playback mode. If native mode selected, check network credentials."""
+    value = dialog(
+        "yesno",
+        translate("playback_mode"),
+        translate(33035),
+        nolabel=translate("addon_mode"),
+        yeslabel=translate("native_mode"),
+    )
 
-    ''' Setup playback mode. If native mode selected, check network credentials.
-    '''
-    value = dialog("yesno",
-                   translate('playback_mode'),
-                   translate(33035),
-                   nolabel=translate('addon_mode'),
-                   yeslabel=translate('native_mode'))
-
-    settings('useDirectPaths', value="1" if value else "0")
+    settings("useDirectPaths", value="1" if value else "0")
 
     if value:
         dialog("ok", "{jellyfin}", translate(33145))
 
-    LOG.info("Add-on playback: %s", settings('useDirectPaths') == "0")
+    LOG.info("Add-on playback: %s", settings("useDirectPaths") == "0")
 
 
 class JsonDebugPrinter(object):
-
-    ''' Helper class to defer converting data to JSON until it is needed.
+    """Helper class to defer converting data to JSON until it is needed.
     See: https://github.com/jellyfin/jellyfin-kodi/pull/193
-    '''
+    """
 
     def __init__(self, data):
         self.data = data
@@ -527,8 +503,8 @@ def get_filesystem_encoding():
     if not enc:
         enc = sys.getdefaultencoding()
 
-    if not enc or enc == 'ascii':
-        enc = 'utf-8'
+    if not enc or enc == "ascii":
+        enc = "utf-8"
 
     return enc
 
@@ -537,20 +513,20 @@ def find_library(server, item):
     from ..database import get_sync
 
     sync = get_sync()
-    whitelist = [x.replace('Mixed:', "") for x in sync['Whitelist']]
-    ancestors = server.jellyfin.get_ancestors(item['Id'])
+    whitelist = [x.replace("Mixed:", "") for x in sync["Whitelist"]]
+    ancestors = server.jellyfin.get_ancestors(item["Id"])
     for ancestor in ancestors:
-        if ancestor['Id'] in whitelist:
+        if ancestor["Id"] in whitelist:
             return ancestor
 
-    LOG.error('No ancestor found, not syncing item with ID: {}'.format(item['Id']))
+    LOG.error("No ancestor found, not syncing item with ID: {}".format(item["Id"]))
     return {}
 
 
 def translate_path(path):
-    '''
+    """
     Use new library location for translate path starting in Kodi 19
-    '''
+    """
     version = kodi_version()
 
     if version > 18:

@@ -41,7 +41,7 @@ class Credentials(object):
                 self.credentials = {}
 
             LOG.debug("credentials initialized with: %s", self.credentials)
-            self.credentials['Servers'] = self.credentials.setdefault('Servers', [])
+            self.credentials["Servers"] = self.credentials.setdefault("Servers", [])
 
     def get(self):
         self._ensure()
@@ -62,53 +62,55 @@ class Credentials(object):
 
     def add_update_user(self, server, user):
 
-        for existing in server.setdefault('Users', []):
-            if existing['Id'] == user['Id']:
+        for existing in server.setdefault("Users", []):
+            if existing["Id"] == user["Id"]:
                 # Merge the data
-                existing['IsSignedInOffline'] = True
+                existing["IsSignedInOffline"] = True
                 break
         else:
-            server['Users'].append(user)
+            server["Users"].append(user)
 
     def add_update_server(self, servers, server):
 
-        if server.get('Id') is None:
+        if server.get("Id") is None:
             raise KeyError("Server['Id'] cannot be null or empty")
 
         # Add default DateLastAccessed if doesn't exist.
-        server.setdefault('DateLastAccessed', "1970-01-01T00:00:00Z")
+        server.setdefault("DateLastAccessed", "1970-01-01T00:00:00Z")
 
         for existing in servers:
-            if existing['Id'] == server['Id']:
+            if existing["Id"] == server["Id"]:
 
                 # Merge the data
-                if server.get('DateLastAccessed') and self._date_object(server['DateLastAccessed']) > self._date_object(existing['DateLastAccessed']):
-                    existing['DateLastAccessed'] = server['DateLastAccessed']
+                if server.get("DateLastAccessed") and self._date_object(
+                    server["DateLastAccessed"]
+                ) > self._date_object(existing["DateLastAccessed"]):
+                    existing["DateLastAccessed"] = server["DateLastAccessed"]
 
-                if server.get('UserLinkType'):
-                    existing['UserLinkType'] = server['UserLinkType']
+                if server.get("UserLinkType"):
+                    existing["UserLinkType"] = server["UserLinkType"]
 
-                if server.get('AccessToken'):
-                    existing['AccessToken'] = server['AccessToken']
-                    existing['UserId'] = server['UserId']
+                if server.get("AccessToken"):
+                    existing["AccessToken"] = server["AccessToken"]
+                    existing["UserId"] = server["UserId"]
 
-                if server.get('ExchangeToken'):
-                    existing['ExchangeToken'] = server['ExchangeToken']
+                if server.get("ExchangeToken"):
+                    existing["ExchangeToken"] = server["ExchangeToken"]
 
-                if server.get('ManualAddress'):
-                    existing['ManualAddress'] = server['ManualAddress']
+                if server.get("ManualAddress"):
+                    existing["ManualAddress"] = server["ManualAddress"]
 
-                if server.get('LocalAddress'):
-                    existing['LocalAddress'] = server['LocalAddress']
+                if server.get("LocalAddress"):
+                    existing["LocalAddress"] = server["LocalAddress"]
 
-                if server.get('Name'):
-                    existing['Name'] = server['Name']
+                if server.get("Name"):
+                    existing["Name"] = server["Name"]
 
-                if server.get('LastConnectionMode') is not None:
-                    existing['LastConnectionMode'] = server['LastConnectionMode']
+                if server.get("LastConnectionMode") is not None:
+                    existing["LastConnectionMode"] = server["LastConnectionMode"]
 
-                if server.get('ConnectServerId'):
-                    existing['ConnectServerId'] = server['ConnectServerId']
+                if server.get("ConnectServerId"):
+                    existing["ConnectServerId"] = server["ConnectServerId"]
 
                 return existing
 

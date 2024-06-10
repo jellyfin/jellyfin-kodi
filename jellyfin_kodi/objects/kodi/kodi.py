@@ -89,7 +89,13 @@ class Kodi(object):
     def add_file(self, filename, path_id):
 
         try:
-            self.cursor.execute(QU.get_file, (filename, path_id,))
+            self.cursor.execute(
+                QU.get_file,
+                (
+                    filename,
+                    path_id,
+                ),
+            )
             file_id = self.cursor.fetchone()[0]
         except TypeError:
 
@@ -120,40 +126,49 @@ class Kodi(object):
 
         def add_thumbnail(person_id, person, person_type):
 
-            if person['imageurl']:
+            if person["imageurl"]:
 
                 art = person_type.lower()
                 if "writing" in art:
                     art = "writer"
 
-                self.artwork.update(person['imageurl'], person_id, art, "thumb")
+                self.artwork.update(person["imageurl"], person_id, art, "thumb")
 
         cast_order = 1
 
         bulk_updates = {}
 
         for person in people:
-            person_id = self.get_person(person['Name'])
+            person_id = self.get_person(person["Name"])
 
-            if person['Type'] == 'Actor':
+            if person["Type"] == "Actor":
                 sql = QU.update_actor
-                role = person.get('Role')
-                bulk_updates.setdefault(sql, []).append((person_id,) + args + (role, cast_order,))
+                role = person.get("Role")
+                bulk_updates.setdefault(sql, []).append(
+                    (person_id,)
+                    + args
+                    + (
+                        role,
+                        cast_order,
+                    )
+                )
                 cast_order += 1
 
-            elif person['Type'] == 'Director':
-                sql = QU.update_link.replace("{LinkType}", 'director_link')
+            elif person["Type"] == "Director":
+                sql = QU.update_link.replace("{LinkType}", "director_link")
                 bulk_updates.setdefault(sql, []).append((person_id,) + args)
 
-            elif person['Type'] == 'Writer':
-                sql = QU.update_link.replace("{LinkType}", 'writer_link')
+            elif person["Type"] == "Writer":
+                sql = QU.update_link.replace("{LinkType}", "writer_link")
                 bulk_updates.setdefault(sql, []).append((person_id,) + args)
 
-            elif person['Type'] == 'Artist':
-                sql = QU.insert_link_if_not_exists.replace("{LinkType}", 'actor_link')
-                bulk_updates.setdefault(sql, []).append((person_id,) + args + (person_id,) + args)
+            elif person["Type"] == "Artist":
+                sql = QU.insert_link_if_not_exists.replace("{LinkType}", "actor_link")
+                bulk_updates.setdefault(sql, []).append(
+                    (person_id,) + args + (person_id,) + args
+                )
 
-            add_thumbnail(person_id, person, person['Type'])
+            add_thumbnail(person_id, person, person["Type"])
 
         for sql, parameters in bulk_updates.items():
             self.cursor.executemany(sql, parameters)
@@ -163,8 +178,7 @@ class Kodi(object):
         return self.cursor.lastrowid
 
     def _get_person(self, name):
-        '''Retrieve person from the database, or add them if they don't exist
-        '''
+        """Retrieve person from the database, or add them if they don't exist"""
         resp = self.cursor.execute(QU.get_person, (name,)).fetchone()
         if resp is not None:
             return resp[0]
@@ -172,8 +186,7 @@ class Kodi(object):
             return self.add_person(name)
 
     def get_person(self, name):
-        '''Retrieve person from cache, else forward to db query
-        '''
+        """Retrieve person from cache, else forward to db query"""
         if name in self._people_cache:
             return self._people_cache[name]
         else:
@@ -182,9 +195,7 @@ class Kodi(object):
             return person_id
 
     def add_genres(self, genres, *args):
-
-        ''' Delete current genres first for clean slate.
-        '''
+        """Delete current genres first for clean slate."""
         self.cursor.execute(QU.delete_genres, args)
 
         for genre in genres:
@@ -230,29 +241,32 @@ class Kodi(object):
             return self.add_studio(*args)
 
     def add_streams(self, file_id, streams, runtime):
-
-        ''' First remove any existing entries
-            Then re-add video, audio and subtitles.
-        '''
+        """First remove any existing entries
+        Then re-add video, audio and subtitles.
+        """
         self.cursor.execute(QU.delete_streams, (file_id,))
 
         if streams:
-            for track in streams['video']:
+            for track in streams["video"]:
 
-                track['FileId'] = file_id
-                track['Runtime'] = runtime
+                track["FileId"] = file_id
+                track["Runtime"] = runtime
                 if kodi_version() < 20:
                     self.add_stream_video(*values(track, QU.add_stream_video_obj_19))
                 else:
                     self.add_stream_video(*values(track, QU.add_stream_video_obj))
 
-            for track in streams['audio']:
+            for track in streams["audio"]:
 
-                track['FileId'] = file_id
+                track["FileId"] = file_id
                 self.add_stream_audio(*values(track, QU.add_stream_audio_obj))
 
-            for track in streams['subtitle']:
-                self.add_stream_sub(*values({'language': track, 'FileId': file_id}, QU.add_stream_sub_obj))
+            for track in streams["subtitle"]:
+                self.add_stream_sub(
+                    *values(
+                        {"language": track, "FileId": file_id}, QU.add_stream_sub_obj
+                    )
+                )
 
     def add_stream_video(self, *args):
         if kodi_version() < 20:
@@ -267,17 +281,24 @@ class Kodi(object):
         self.cursor.execute(QU.add_stream_sub, args)
 
     def add_playstate(self, file_id, playcount, date_played, resume, *args):
-
-        ''' Delete the existing resume point.
-            Set the watched count.
-        '''
+        """Delete the existing resume point.
+        Set the watched count.
+        """
         self.cursor.execute(QU.delete_bookmark, (file_id,))
         self.set_playcount(playcount, date_played, file_id)
 
         if resume:
 
             bookmark_id = self.create_entry_bookmark()
-            self.cursor.execute(QU.add_bookmark, (bookmark_id, file_id, resume,) + args)
+            self.cursor.execute(
+                QU.add_bookmark,
+                (
+                    bookmark_id,
+                    file_id,
+                    resume,
+                )
+                + args,
+            )
 
     def set_playcount(self, *args):
         self.cursor.execute(QU.update_playcount, args)

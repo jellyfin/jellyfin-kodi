@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
+
 #################################################################################################
 
 from . import queries as QU
@@ -14,7 +15,7 @@ LOG = LazyLogger(__name__)
 ##################################################################################################
 
 
-class JellyfinDatabase():
+class JellyfinDatabase:
 
     def __init__(self, cursor):
         self.cursor = cursor
@@ -32,9 +33,7 @@ class JellyfinDatabase():
         self.cursor.execute(QU.update_reference, args)
 
     def update_parent_id(self, *args):
-
-        ''' Parent_id is the parent Kodi id.
-        '''
+        """Parent_id is the parent Kodi id."""
         self.cursor.execute(QU.update_parent, args)
 
     def get_item_id_by_parent_id(self, *args):
@@ -160,8 +159,8 @@ class JellyfinDatabase():
         return self.cursor.fetchone()
 
     def add_version(self, *args):
-        '''
+        """
         We only ever want one value here, so erase the existing contents first
-        '''
+        """
         self.cursor.execute(QU.delete_version)
         self.cursor.execute(QU.add_version, args)

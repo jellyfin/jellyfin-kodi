@@ -1,9 +1,9 @@
 from __future__ import division, absolute_import, print_function, unicode_literals
 
-''' Queries for the Kodi database. obj reflect key/value to retrieve from jellyfin items.
+""" Queries for the Kodi database. obj reflect key/value to retrieve from jellyfin items.
     Some functions require additional information, therefore obj do not always reflect
     the Kodi database query values.
-'''
+"""
 create_path = """
 SELECT      coalesce(max(idPath), 0)
 FROM        path
@@ -254,21 +254,48 @@ add_bookmark = """
 INSERT INTO     bookmark(idBookmark, idFile, timeInSeconds, totalTimeInSeconds, player, type)
 VALUES          (?, ?, ?, ?, ?, ?)
 """
-add_bookmark_obj = ["{FileId}", "{PlayCount}", "{DatePlayed}", "{Resume}", "{Runtime}", "DVDPlayer", 1]
+add_bookmark_obj = [
+    "{FileId}",
+    "{PlayCount}",
+    "{DatePlayed}",
+    "{Resume}",
+    "{Runtime}",
+    "DVDPlayer",
+    1,
+]
 add_streams_obj = ["{FileId}", "{Streams}", "{Runtime}"]
 add_stream_video = """
 INSERT INTO     streamdetails(idFile, iStreamType, strVideoCodec, fVideoAspect, iVideoWidth,
                 iVideoHeight, iVideoDuration, strStereoMode, strHdrType)
 VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?)
 """
-add_stream_video_obj = ["{FileId}", 0, "{codec}", "{aspect}", "{width}", "{height}", "{Runtime}", "{3d}", "{hdrtype}"]
+add_stream_video_obj = [
+    "{FileId}",
+    0,
+    "{codec}",
+    "{aspect}",
+    "{width}",
+    "{height}",
+    "{Runtime}",
+    "{3d}",
+    "{hdrtype}",
+]
 # strHdrType is new to Kodi 20
 add_stream_video_19 = """
 INSERT INTO     streamdetails(idFile, iStreamType, strVideoCodec, fVideoAspect, iVideoWidth,
                 iVideoHeight, iVideoDuration, strStereoMode)
 VALUES          (?, ?, ?, ?, ?, ?, ?, ?)
 """
-add_stream_video_obj_19 = ["{FileId}", 0, "{codec}", "{aspect}", "{width}", "{height}", "{Runtime}", "{3d}"]
+add_stream_video_obj_19 = [
+    "{FileId}",
+    0,
+    "{codec}",
+    "{aspect}",
+    "{width}",
+    "{height}",
+    "{Runtime}",
+    "{3d}",
+]
 add_stream_audio = """
 INSERT INTO     streamdetails(idFile, iStreamType, strAudioCodec, iAudioChannels, strAudioLanguage)
 VALUES          (?, ?, ?, ?, ?)
@@ -295,24 +322,82 @@ INSERT INTO     movie(idMovie, idFile, c00, c01, c02, c03, c04, c05, c06, c07,
                 c09, c10, c11, c12, c14, c15, c16, c18, c19, c21, premiered)
 VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 """
-add_movie_obj = ["{MovieId}", "{FileId}", "{Title}", "{Plot}", "{ShortPlot}", "{Tagline}",
-                 "{Votes}", "{RatingId}", "{Writers}", "{Year}", "{Unique}", "{SortTitle}",
-                 "{Runtime}", "{Mpaa}", "{Genre}", "{Directors}", "{Title}", "{Studio}",
-                 "{Trailer}", "{Country}", "{Premiere}"]
+add_movie_obj = [
+    "{MovieId}",
+    "{FileId}",
+    "{Title}",
+    "{Plot}",
+    "{ShortPlot}",
+    "{Tagline}",
+    "{Votes}",
+    "{RatingId}",
+    "{Writers}",
+    "{Year}",
+    "{Unique}",
+    "{SortTitle}",
+    "{Runtime}",
+    "{Mpaa}",
+    "{Genre}",
+    "{Directors}",
+    "{Title}",
+    "{Studio}",
+    "{Trailer}",
+    "{Country}",
+    "{Premiere}",
+]
 add_rating = """
 INSERT INTO     rating(rating_id, media_id, media_type, rating_type, rating, votes)
 VALUES          (?, ?, ?, ?, ?, ?)
 """
-add_rating_movie_obj = ["{RatingId}", "{MovieId}", "movie", "default", "{Rating}", "{Votes}"]
-add_rating_tvshow_obj = ["{RatingId}", "{ShowId}", "tvshow", "default", "{Rating}", "{Votes}"]
-add_rating_episode_obj = ["{RatingId}", "{EpisodeId}", "episode", "default", "{Rating}", "{Votes}"]
+add_rating_movie_obj = [
+    "{RatingId}",
+    "{MovieId}",
+    "movie",
+    "default",
+    "{Rating}",
+    "{Votes}",
+]
+add_rating_tvshow_obj = [
+    "{RatingId}",
+    "{ShowId}",
+    "tvshow",
+    "default",
+    "{Rating}",
+    "{Votes}",
+]
+add_rating_episode_obj = [
+    "{RatingId}",
+    "{EpisodeId}",
+    "episode",
+    "default",
+    "{Rating}",
+    "{Votes}",
+]
 add_unique_id = """
 INSERT INTO     uniqueid(uniqueid_id, media_id, media_type, value, type)
 VALUES          (?, ?, ?, ?, ?)
 """
-add_unique_id_movie_obj = ["{Unique}", "{MovieId}", "movie", "{UniqueId}", "{ProviderName}"]
-add_unique_id_tvshow_obj = ["{Unique}", "{ShowId}", "tvshow", "{UniqueId}", "{ProviderName}"]
-add_unique_id_episode_obj = ["{Unique}", "{EpisodeId}", "episode", "{UniqueId}", "{ProviderName}"]
+add_unique_id_movie_obj = [
+    "{Unique}",
+    "{MovieId}",
+    "movie",
+    "{UniqueId}",
+    "{ProviderName}",
+]
+add_unique_id_tvshow_obj = [
+    "{Unique}",
+    "{ShowId}",
+    "tvshow",
+    "{UniqueId}",
+    "{ProviderName}",
+]
+add_unique_id_episode_obj = [
+    "{Unique}",
+    "{EpisodeId}",
+    "episode",
+    "{UniqueId}",
+    "{ProviderName}",
+]
 add_country = """
 INSERT INTO     country(name)
 VALUES          (?)
@@ -335,14 +420,40 @@ INSERT INTO     musicvideo(idMVideo, idFile, c00, c04, c05, c06, c07, c08, c09, 
                 c11, c12, premiered)
 VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 """
-add_musicvideo_obj = ["{MvideoId}", "{FileId}", "{Title}", "{Runtime}", "{Directors}", "{Studio}", "{Year}",
-                      "{Plot}", "{Album}", "{Artists}", "{Genre}", "{Index}", "{Premiere}"]
+add_musicvideo_obj = [
+    "{MvideoId}",
+    "{FileId}",
+    "{Title}",
+    "{Runtime}",
+    "{Directors}",
+    "{Studio}",
+    "{Year}",
+    "{Plot}",
+    "{Album}",
+    "{Artists}",
+    "{Genre}",
+    "{Index}",
+    "{Premiere}",
+]
 add_tvshow = """
 INSERT INTO     tvshow(idShow, c00, c01, c02, c04, c05, c08, c09, c10, c12, c13, c14, c15)
 VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 """
-add_tvshow_obj = ["{ShowId}", "{Title}", "{Plot}", "{Status}", "{RatingId}", "{Premiere}", "{Genre}", "{Title}",
-                  "disintegrate browse bug", "{Unique}", "{Mpaa}", "{Studio}", "{SortTitle}"]
+add_tvshow_obj = [
+    "{ShowId}",
+    "{Title}",
+    "{Plot}",
+    "{Status}",
+    "{RatingId}",
+    "{Premiere}",
+    "{Genre}",
+    "{Title}",
+    "disintegrate browse bug",
+    "{Unique}",
+    "{Mpaa}",
+    "{Studio}",
+    "{SortTitle}",
+]
 add_season = """
 INSERT INTO     seasons(idSeason, idShow, season)
 VALUES          (?, ?, ?)
@@ -352,9 +463,27 @@ INSERT INTO     episode(idEpisode, idFile, c00, c01, c03, c04, c05, c09, c10, c1
                 idShow, c15, c16, idSeason, c18, c19, c20)
 VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 """
-add_episode_obj = ["{EpisodeId}", "{FileId}", "{Title}", "{Plot}", "{RatingId}", "{Writers}", "{Premiere}", "{Runtime}",
-                   "{Directors}", "{Season}", "{Index}", "{Title}", "{ShowId}", "{AirsBeforeSeason}",
-                   "{AirsBeforeEpisode}", "{SeasonId}", "{FullFilePath}", "{PathId}", "{Unique}"]
+add_episode_obj = [
+    "{EpisodeId}",
+    "{FileId}",
+    "{Title}",
+    "{Plot}",
+    "{RatingId}",
+    "{Writers}",
+    "{Premiere}",
+    "{Runtime}",
+    "{Directors}",
+    "{Season}",
+    "{Index}",
+    "{Title}",
+    "{ShowId}",
+    "{AirsBeforeSeason}",
+    "{AirsBeforeEpisode}",
+    "{SeasonId}",
+    "{FullFilePath}",
+    "{PathId}",
+    "{Unique}",
+]
 add_art = """
 INSERT INTO     art(media_id, media_type, type, url)
 VALUES          (?, ?, ?, ?)
@@ -372,7 +501,13 @@ SET         strPath = ?, strContent = ?, strScraper = ?, noUpdate = ?
 WHERE       idPath = ?
 """
 update_path_movie_obj = ["{Path}", "movies", "metadata.local", 1, "{PathId}"]
-update_path_toptvshow_obj = ["{TopLevel}", "tvshows", "metadata.local", 1, "{TopPathId}"]
+update_path_toptvshow_obj = [
+    "{TopLevel}",
+    "tvshows",
+    "metadata.local",
+    1,
+    "{TopPathId}",
+]
 update_path_toptvshow_addon_obj = ["{TopLevel}", None, None, 1, "{TopPathId}"]
 update_path_tvshow_obj = ["{Path}", None, None, 1, "{PathId}"]
 update_path_episode_obj = ["{Path}", None, None, 1, "{PathId}"]
@@ -431,26 +566,83 @@ SET         c00 = ?, c01 = ?, c02 = ?, c03 = ?, c04 = ?, c05 = ?, c06 = ?,
             c16 = ?, c18 = ?, c19 = ?, c21 = ?, premiered = ?
 WHERE       idMovie = ?
 """
-update_movie_obj = ["{Title}", "{Plot}", "{ShortPlot}", "{Tagline}", "{Votes}", "{RatingId}",
-                    "{Writers}", "{Year}", "{Unique}", "{SortTitle}", "{Runtime}",
-                    "{Mpaa}", "{Genre}", "{Directors}", "{Title}", "{Studio}", "{Trailer}",
-                    "{Country}", "{Premiere}", "{MovieId}"]
+update_movie_obj = [
+    "{Title}",
+    "{Plot}",
+    "{ShortPlot}",
+    "{Tagline}",
+    "{Votes}",
+    "{RatingId}",
+    "{Writers}",
+    "{Year}",
+    "{Unique}",
+    "{SortTitle}",
+    "{Runtime}",
+    "{Mpaa}",
+    "{Genre}",
+    "{Directors}",
+    "{Title}",
+    "{Studio}",
+    "{Trailer}",
+    "{Country}",
+    "{Premiere}",
+    "{MovieId}",
+]
 update_rating = """
 UPDATE      rating
 SET         media_id = ?, media_type = ?, rating_type = ?, rating = ?, votes = ?
 WHERE       rating_id = ?
 """
-update_rating_movie_obj = ["{MovieId}", "movie", "default", "{Rating}", "{Votes}", "{RatingId}"]
-update_rating_tvshow_obj = ["{ShowId}", "tvshow", "default", "{Rating}", "{Votes}", "{RatingId}"]
-update_rating_episode_obj = ["{EpisodeId}", "episode", "default", "{Rating}", "{Votes}", "{RatingId}"]
+update_rating_movie_obj = [
+    "{MovieId}",
+    "movie",
+    "default",
+    "{Rating}",
+    "{Votes}",
+    "{RatingId}",
+]
+update_rating_tvshow_obj = [
+    "{ShowId}",
+    "tvshow",
+    "default",
+    "{Rating}",
+    "{Votes}",
+    "{RatingId}",
+]
+update_rating_episode_obj = [
+    "{EpisodeId}",
+    "episode",
+    "default",
+    "{Rating}",
+    "{Votes}",
+    "{RatingId}",
+]
 update_unique_id = """
 UPDATE      uniqueid
 SET         media_id = ?, media_type = ?, value = ?, type = ?
 WHERE       uniqueid_id = ?
 """
-update_unique_id_movie_obj = ["{MovieId}", "movie", "{UniqueId}", "{ProviderName}", "{Unique}"]
-update_unique_id_tvshow_obj = ["{ShowId}", "tvshow", "{UniqueId}", "{ProviderName}", "{Unique}"]
-update_unique_id_episode_obj = ["{EpisodeId}", "episode", "{UniqueId}", "{ProviderName}", "{Unique}"]
+update_unique_id_movie_obj = [
+    "{MovieId}",
+    "movie",
+    "{UniqueId}",
+    "{ProviderName}",
+    "{Unique}",
+]
+update_unique_id_tvshow_obj = [
+    "{ShowId}",
+    "tvshow",
+    "{UniqueId}",
+    "{ProviderName}",
+    "{Unique}",
+]
+update_unique_id_episode_obj = [
+    "{EpisodeId}",
+    "episode",
+    "{UniqueId}",
+    "{ProviderName}",
+    "{Unique}",
+]
 update_country = """
 INSERT OR REPLACE INTO      country_link(country_id, media_id, media_type)
 VALUES                      (?, ?, ?)
@@ -474,16 +666,41 @@ SET         c00 = ?, c04 = ?, c05 = ?, c06 = ?, c07 = ?, c08 = ?, c09 = ?, c10 =
             c11 = ?, c12 = ?, premiered = ?
 WHERE       idMVideo = ?
 """
-update_musicvideo_obj = ["{Title}", "{Runtime}", "{Directors}", "{Studio}", "{Year}", "{Plot}", "{Album}",
-                         "{Artists}", "{Genre}", "{Index}", "{Premiere}", "{MvideoId}"]
+update_musicvideo_obj = [
+    "{Title}",
+    "{Runtime}",
+    "{Directors}",
+    "{Studio}",
+    "{Year}",
+    "{Plot}",
+    "{Album}",
+    "{Artists}",
+    "{Genre}",
+    "{Index}",
+    "{Premiere}",
+    "{MvideoId}",
+]
 update_tvshow = """
 UPDATE      tvshow
 SET         c00 = ?, c01 = ?, c02 = ?, c04 = ?, c05 = ?, c08 = ?, c09 = ?, c10 = ?,
             c12 = ?, c13 = ?, c14 = ?, c15 = ?
 WHERE       idShow = ?
 """
-update_tvshow_obj = ["{Title}", "{Plot}", "{Status}", "{RatingId}", "{Premiere}", "{Genre}", "{Title}",
-                                "disintegrate browse bug", "{Unique}", "{Mpaa}", "{Studio}", "{SortTitle}", "{ShowId}"]
+update_tvshow_obj = [
+    "{Title}",
+    "{Plot}",
+    "{Status}",
+    "{RatingId}",
+    "{Premiere}",
+    "{Genre}",
+    "{Title}",
+    "disintegrate browse bug",
+    "{Unique}",
+    "{Mpaa}",
+    "{Studio}",
+    "{SortTitle}",
+    "{ShowId}",
+]
 update_tvshow_link = """
 INSERT OR REPLACE INTO      tvshowlinkpath(idShow, idPath)
 VALUES                      (?, ?)
@@ -501,9 +718,26 @@ SET         c00 = ?, c01 = ?, c03 = ?, c04 = ?, c05 = ?, c09 = ?, c10 = ?,
             c18 = ?, c19 = ?, c20 = ?
 WHERE       idEpisode = ?
 """
-update_episode_obj = ["{Title}", "{Plot}", "{RatingId}", "{Writers}", "{Premiere}", "{Runtime}", "{Directors}",
-                      "{Season}", "{Index}", "{Title}", "{AirsBeforeSeason}", "{AirsBeforeEpisode}", "{SeasonId}",
-                      "{ShowId}", "{FullFilePath}", "{PathId}", "{Unique}", "{EpisodeId}"]
+update_episode_obj = [
+    "{Title}",
+    "{Plot}",
+    "{RatingId}",
+    "{Writers}",
+    "{Premiere}",
+    "{Runtime}",
+    "{Directors}",
+    "{Season}",
+    "{Index}",
+    "{Title}",
+    "{AirsBeforeSeason}",
+    "{AirsBeforeEpisode}",
+    "{SeasonId}",
+    "{ShowId}",
+    "{FullFilePath}",
+    "{PathId}",
+    "{Unique}",
+    "{EpisodeId}",
+]
 
 
 delete_path = """

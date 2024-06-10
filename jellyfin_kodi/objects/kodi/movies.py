@@ -74,15 +74,11 @@ class Movies(Kodi):
             return None
 
     def add_ratings(self, *args):
-
-        ''' Add ratings, rating type and votes.
-        '''
+        """Add ratings, rating type and votes."""
         self.cursor.execute(QU.add_rating, args)
 
     def update_ratings(self, *args):
-
-        ''' Update rating by rating_id.
-        '''
+        """Update rating by rating_id."""
         self.cursor.execute(QU.update_rating, args)
 
     def get_unique_id(self, *args):
@@ -95,15 +91,11 @@ class Movies(Kodi):
             return
 
     def add_unique_id(self, *args):
-
-        ''' Add the provider id, imdb, tvdb.
-        '''
+        """Add the provider id, imdb, tvdb."""
         self.cursor.execute(QU.add_unique_id, args)
 
     def update_unique_id(self, *args):
-
-        ''' Update the provider id, imdb, tvdb.
-        '''
+        """Update the provider id, imdb, tvdb."""
         self.cursor.execute(QU.update_unique_id, args)
 
     def add_countries(self, countries, *args):
@@ -141,9 +133,9 @@ class Movies(Kodi):
         self.cursor.execute(QU.delete_set, args)
 
     def migrations(self):
-        '''
+        """
         Used to trigger required database migrations for new versions
-        '''
+        """
         self.cursor.execute(QU.get_version)
         version_id = self.cursor.fetchone()[0]
         changes = False
@@ -156,10 +148,10 @@ class Movies(Kodi):
         return changes
 
     def omega_migration(self):
-        '''
+        """
         Adds a video version for all existing movies
-        '''
-        LOG.info('Starting migration for Omega database changes')
+        """
+        LOG.info("Starting migration for Omega database changes")
         # Tracks if this migration made any changes
         changes = False
         self.cursor.execute(QU.get_missing_versions)
@@ -169,5 +161,5 @@ class Movies(Kodi):
             self.add_videoversion(entry[0], entry[1], "movie", "0", 40400)
             changes = True
 
-        LOG.info('Omega database migration is complete')
+        LOG.info("Omega database migration is complete")
         return changes
