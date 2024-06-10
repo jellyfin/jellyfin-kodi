@@ -23,19 +23,13 @@ indent_size = 2
 # XML indentation
 [*.xml]
 indent_size = 2
-
-[resources/settings.xml]
 indent_style = tab
 
-[resources/skins/**.xml]
+# JSON indentation
+[*.json]
+indent_size = 2
 indent_style = tab
 
-
-[jellyfin_kodi/objects/obj_map.json]
-indent_style = tab
-
-[.devcontainer/Python 3.11/devcontainer.json]
-indent_style = tab
 
 [README.md]
 indent_size = 2
