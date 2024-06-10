@@ -7,6 +7,7 @@ repos:
       - id: trailing-whitespace
       - id: check-yaml
       - id: check-added-large-files
+      - id: no-commit-to-branch
 
   # - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
   #   rev: "2.7.3"
