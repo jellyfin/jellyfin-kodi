@@ -10,7 +10,6 @@ import sys
 import re
 import unicodedata
 from uuid import uuid4
-from distutils.version import LooseVersion
 
 from dateutil import tz, parser
 from six import text_type, string_types, iteritems, ensure_text, ensure_binary
@@ -104,24 +103,6 @@ def settings(setting, value=None):
 
 def create_id():
     return uuid4()
-
-
-def compare_version(a, b):
-
-    ''' -1 a is smaller
-        1 a is larger
-        0 equal
-    '''
-    a = LooseVersion(a)
-    b = LooseVersion(b)
-
-    if a < b:
-        return -1
-
-    if a > b:
-        return 1
-
-    return 0
 
 
 def find(dict, item):
