@@ -619,7 +619,7 @@ def browse(media, view_id=None, folder=None, server_id=None, api_client=None):
 
         actions = Actions(server_id, api_client)
         list_li = []
-        listing = listing if type(listing) == list else listing.get("Items", [])
+        listing = listing if isinstance(listing, list) else listing.get("Items", [])
 
         for item in listing:
 

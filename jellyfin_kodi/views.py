@@ -444,7 +444,7 @@ class Views(object):
             etree.SubElement(xml, "content")
 
         label = xml.find("label")
-        label.text = str(name) if type(name) == int else name
+        label.text = str(name) if isinstance(name, int) else name
 
         content = xml.find("content")
         content.text = view["Media"]
@@ -847,7 +847,9 @@ class Views(object):
         else:
             window_path = "ActivateWindow(Videos,%s,return)" % path
 
-        node_label = translate(node_label) if type(node_label) == int else node_label
+        node_label = (
+            translate(node_label) if isinstance(node_label, int) else node_label
+        )
         node_label = node_label or view["Name"]
 
         if node in ("all", "music"):
@@ -896,7 +898,9 @@ class Views(object):
         else:
             window_path = "ActivateWindow(Videos,%s,return)" % path
 
-        node_label = translate(node_label) if type(node_label) == int else node_label
+        node_label = (
+            translate(node_label) if isinstance(node_label, int) else node_label
+        )
         node_label = node_label or view["Name"]
 
         if node == "all":
