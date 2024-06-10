@@ -12,6 +12,7 @@ Kodistubs ~=21.0
 git+https://github.com/romanvm/kodi.six
 git+https://github.com/ruuk/script.module.addon.signals
 
+pre-commit >= 3.7.1
 pytest >= 4.6.11
 coverage >= 5.2
 flake8 >= 3.8
