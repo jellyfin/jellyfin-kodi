@@ -1,14 +1,14 @@
 from collections import namedtuple
+from collections.abc import Iterable, Mapping, MutableMapping
 
 from six import string_types
-from six.moves import collections_abc
 
 
 def clean_none_dict_values(obj):
     """
     Recursively remove keys with a value of None
     """
-    if not isinstance(obj, collections_abc.Iterable) or isinstance(obj, string_types):
+    if not isinstance(obj, Iterable) or isinstance(obj, string_types):
         return obj
 
     queue = [obj]
@@ -16,8 +16,8 @@ def clean_none_dict_values(obj):
     while queue:
         item = queue.pop()
 
-        if isinstance(item, collections_abc.Mapping):
-            mutable = isinstance(item, collections_abc.MutableMapping)
+        if isinstance(item, Mapping):
+            mutable = isinstance(item, MutableMapping)
             remove = []
 
             for key, value in item.items():
@@ -27,7 +27,7 @@ def clean_none_dict_values(obj):
                 elif isinstance(value, string_types):
                     continue
 
-                elif isinstance(value, collections_abc.Iterable):
+                elif isinstance(value, Iterable):
                     queue.append(value)
 
             if mutable:
@@ -35,11 +35,11 @@ def clean_none_dict_values(obj):
                 for key in remove:
                     item.pop(key)
 
-        elif isinstance(item, collections_abc.Iterable):
+        elif isinstance(item, Iterable):
             for value in item:
                 if value is None or isinstance(value, string_types):
                     continue
-                elif isinstance(value, collections_abc.Iterable):
+                elif isinstance(value, Iterable):
                     queue.append(value)
 
     return obj
