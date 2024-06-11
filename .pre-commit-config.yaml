@@ -9,11 +9,11 @@ repos:
       - id: check-added-large-files
       - id: no-commit-to-branch
 
-  # - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-  #   rev: "2.7.3"
-  #   hooks:
-  #     - id: editorconfig-checker
-  #       exclude: '^LICENSE\.txt$'
+  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+    rev: "2.7.3"
+    hooks:
+      - id: editorconfig-checker
+        exclude: '^(LICENSE\.txt|resources/language/.*\.po)$'
 
   - repo: https://github.com/psf/black
     rev: "24.4.2"

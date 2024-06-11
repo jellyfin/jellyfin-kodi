@@ -44,7 +44,7 @@ class Objects(object):
         "?": split filters and key name from the query part, i.e. MediaSources/0?$Name
         "$": lead the key name with $. Only one key value can be requested per element.
         ":": indicates it's a list of elements [], i.e. MediaSources/0/MediaStreams:?$Name
-             MediaStreams is a list.
+            MediaStreams is a list.
         "/": indicates where to go directly
         """
         self.mapped_item = {}

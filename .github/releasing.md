@@ -1,7 +1,7 @@
 # Releasing a new Version via GitHub Actions
 
 0. (optional) label the PRs you want to include in this release (if you want to group them in the GH release based on topics). \
-   Supported labels can be found in the Release Drafter [config-file](https://github.com/jellyfin/jellyfin-meta-plugins/blob/master/.github/release-drafter.yml) (currently inherited from `jellyfin/jellyfin-meta-plugins`)
+    Supported labels can be found in the Release Drafter [config-file](https://github.com/jellyfin/jellyfin-meta-plugins/blob/master/.github/release-drafter.yml) (currently inherited from `jellyfin/jellyfin-meta-plugins`)
 1. ensure you have merged the PRs you want to include in the release and that the so far drafted GitHub release has captured them
 2. Create a `release-prep` PR by manually triggering the 'Create Prepare-Release PR' Workflow from the Actions tab on GitHub
 3. check the newly created `Prepare for release vx.y.z` PR if updated the `release.yaml` properly (update it manually if need be)
