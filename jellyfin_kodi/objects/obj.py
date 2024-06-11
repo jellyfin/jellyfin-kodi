@@ -104,7 +104,7 @@ class Objects(object):
                 if obj_key:
                     obj = (
                         [d[obj_key] for d in obj if d.get(obj_key)]
-                        if type(obj) == list
+                        if isinstance(obj, list)
                         else obj.get(obj_key)
                     )
 
