@@ -6,11 +6,11 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import json
 import sys
 from datetime import datetime
+from importlib import reload
 
 # Workaround for threads using datetime: _striptime is locked
 import _strptime  # noqa:F401
 from kodi_six import xbmc, xbmcgui
-from six.moves import reload_module as reload
 
 from .. import objects
 from .. import connect
