@@ -3,7 +3,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 ##################################################################################################
 
-from six.moves.urllib.parse import urlencode
+from urllib.parse import urlencode
+
 from kodi_six.utils import py2_encode
 
 from .. import downloader as server

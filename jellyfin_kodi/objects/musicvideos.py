@@ -5,8 +5,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import datetime
 import re
+from urllib.parse import urlencode
 
-from six.moves.urllib.parse import urlencode
 from kodi_six.utils import py2_encode
 
 from ..database import jellyfin_db, queries as QUEM

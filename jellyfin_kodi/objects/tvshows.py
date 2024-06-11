@@ -5,8 +5,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import sqlite3
 from ntpath import dirname
+from urllib.parse import urlencode
 
-from six.moves.urllib.parse import urlencode
 from kodi_six.utils import py2_encode
 
 from .. import downloader as server

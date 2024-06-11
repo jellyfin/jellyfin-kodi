@@ -6,8 +6,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import json
 import sys
 import os
+from urllib.parse import parse_qsl, urlencode
 
-from six.moves.urllib.parse import parse_qsl, urlencode
 from kodi_six import xbmc, xbmcvfs, xbmcgui, xbmcplugin, xbmcaddon
 
 from .. import client

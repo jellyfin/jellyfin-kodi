@@ -10,10 +10,10 @@ import sys
 import re
 import unicodedata
 from uuid import uuid4
+from urllib.parse import quote_plus
 
 from dateutil import tz, parser
 from six import text_type, string_types, ensure_text, ensure_binary
-from six.moves.urllib.parse import quote_plus
 
 from kodi_six import xbmc, xbmcaddon, xbmcgui, xbmcvfs
 
