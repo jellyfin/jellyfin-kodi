@@ -6,7 +6,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import time
 
 import requests
-from six import string_types, ensure_str
 
 from ..helper.utils import JsonDebugPrinter
 from ..helper import LazyLogger
@@ -218,7 +217,7 @@ class HTTP(object):
             if isinstance(value, dict):
                 self._process_params(value)
 
-            if isinstance(value, string_types):
+            if isinstance(value, str):
                 params[key] = self._replace_user_info(value)
 
     def _get_header(self, data):
@@ -257,14 +256,14 @@ class HTTP(object):
         )
         auth += "Version=%s" % self.config.data.get("app.version", "0.0.0")
 
-        data["headers"].update({"x-emby-authorization": ensure_str(auth, "utf-8")})
+        data["headers"].update({"x-emby-authorization": auth})
 
         if self.config.data.get("auth.token") and self.config.data.get("auth.user_id"):
 
             auth += ", UserId=%s" % self.config.data.get("auth.user_id")
             data["headers"].update(
                 {
-                    "x-emby-authorization": ensure_str(auth, "utf-8"),
+                    "x-emby-authorization": auth,
                     "X-MediaBrowser-Token": self.config.data.get("auth.token"),
                 }
             )

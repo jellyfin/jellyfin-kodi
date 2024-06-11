@@ -13,7 +13,6 @@ from uuid import uuid4
 from urllib.parse import quote_plus
 
 from dateutil import tz, parser
-from six import text_type, string_types, ensure_text, ensure_binary
 
 from kodi_six import xbmc, xbmcaddon, xbmcgui, xbmcvfs
 
@@ -120,7 +119,7 @@ def event(method, data=None, sender=None, hexlify=False):
     sender = sender or "plugin.video.jellyfin"
 
     if hexlify:
-        data = ensure_text(binascii.hexlify(ensure_binary(json.dumps(data))))
+        data = str(binascii.hexlify(json.dumps(data).encode()))
 
     data = '"[%s]"' % json.dumps(data).replace('"', '\\"')
 
@@ -273,7 +272,7 @@ def values(item, keys):
     return (
         (
             item[key.replace("{", "").replace("}", "")]
-            if isinstance(key, text_type) and key.startswith("{")
+            if isinstance(key, str) and key.startswith("{")
             else key
         )
         for key in keys
@@ -423,9 +422,7 @@ def normalize_string(text):
     text = text.strip()
 
     text = text.rstrip(".")
-    text = unicodedata.normalize("NFKD", text_type(text, "utf-8")).encode(
-        "ascii", "ignore"
-    )
+    text = unicodedata.normalize("NFKD", str(text, "utf-8")).encode("ascii", "ignore")
 
     return text
 
@@ -438,7 +435,7 @@ def split_list(itemlist, size):
 def convert_to_local(date, timezone=tz.tzlocal()):
     """Convert the local datetime to local."""
     try:
-        date = parser.parse(date) if isinstance(date, string_types) else date
+        date = parser.parse(date) if isinstance(date, str) else date
         date = date.replace(tzinfo=tz.tzutc())
         date = date.astimezone(timezone)
         # Bad metadata defaults to date 1-1-1.  Catch it and don't throw errors
