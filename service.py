@@ -5,7 +5,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import threading
 
-from kodi_six import xbmc
+import xbmc
 
 from jellyfin_kodi.entrypoint.service import Service
 from jellyfin_kodi.helper.utils import settings

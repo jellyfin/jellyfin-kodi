@@ -7,7 +7,8 @@ import os
 from uuid import uuid4
 
 import requests
-from kodi_six import xbmc, xbmcvfs
+import xbmc
+import xbmcvfs
 
 from .. import client
 from .utils import translate_path

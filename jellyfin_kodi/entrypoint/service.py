@@ -10,7 +10,8 @@ from importlib import reload
 
 # Workaround for threads using datetime: _striptime is locked
 import _strptime  # noqa:F401
-from kodi_six import xbmc, xbmcgui
+import xbmc
+import xbmcgui
 
 from .. import objects
 from .. import connect

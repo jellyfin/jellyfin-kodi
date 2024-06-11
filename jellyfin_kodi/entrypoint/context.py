@@ -6,7 +6,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import json
 import sys
 
-from kodi_six import xbmc, xbmcaddon
+import xbmc
+import xbmcaddon
 
 from .. import database
 from ..dialogs import context

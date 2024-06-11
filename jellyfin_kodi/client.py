@@ -5,7 +5,9 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import os
 
-from kodi_six import xbmc, xbmcaddon, xbmcvfs
+import xbmc
+import xbmcaddon
+import xbmcvfs
 
 from .helper import translate, window, settings, addon_id, dialog, LazyLogger
 from .helper.utils import create_id, translate_path

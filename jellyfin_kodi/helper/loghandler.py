@@ -7,7 +7,8 @@ import os
 import logging
 import traceback
 
-from kodi_six import xbmc, xbmcaddon
+import xbmc
+import xbmcaddon
 
 from .. import database
 from . import settings, kodi_version

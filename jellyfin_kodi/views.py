@@ -7,7 +7,7 @@ import os
 import xml.etree.ElementTree as etree
 from urllib.parse import urlencode
 
-from kodi_six import xbmcvfs
+import xbmcvfs
 
 from .database import Database, jellyfin_db, get_sync, save_sync
 from .helper import translate, api, window, event

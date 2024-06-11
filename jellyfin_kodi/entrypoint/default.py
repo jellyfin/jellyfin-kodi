@@ -8,7 +8,11 @@ import sys
 import os
 from urllib.parse import parse_qsl, urlencode
 
-from kodi_six import xbmc, xbmcvfs, xbmcgui, xbmcplugin, xbmcaddon
+import xbmc
+import xbmcvfs
+import xbmcgui
+import xbmcplugin
+import xbmcaddon
 
 from .. import client
 from ..database import reset, get_sync, Database, jellyfin_db, get_credentials

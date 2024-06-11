@@ -7,7 +7,7 @@ import json
 import threading
 import time
 
-from kodi_six import xbmc
+import xbmc
 
 from ..helper import LazyLogger, settings
 

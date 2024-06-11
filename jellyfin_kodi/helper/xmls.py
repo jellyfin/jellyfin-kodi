@@ -6,7 +6,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import os
 import xml.etree.ElementTree as etree
 
-from kodi_six import xbmc, xbmcvfs
+import xbmc
+import xbmcvfs
 
 from .utils import translate_path
 from . import translate, dialog, settings, LazyLogger

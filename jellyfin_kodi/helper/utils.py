@@ -14,7 +14,10 @@ from urllib.parse import quote_plus
 
 from dateutil import tz, parser
 
-from kodi_six import xbmc, xbmcaddon, xbmcgui, xbmcvfs
+import xbmc
+import xbmcaddon
+import xbmcgui
+import xbmcvfs
 
 from . import LazyLogger
 from .translate import translate

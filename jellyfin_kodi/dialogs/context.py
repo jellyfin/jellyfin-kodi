@@ -5,7 +5,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import os
 
-from kodi_six import xbmcgui, xbmcaddon
+import xbmcgui
+import xbmcaddon
 
 from ..helper import window, addon_id
 from ..helper import LazyLogger

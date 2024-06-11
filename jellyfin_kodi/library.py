@@ -8,7 +8,8 @@ from datetime import datetime, timedelta
 
 import queue
 
-from kodi_six import xbmc, xbmcgui
+import xbmc
+import xbmcgui
 
 from .objects import Movies, TVShows, MusicVideos, Music
 from .objects.kodi import Movies as KodiDb

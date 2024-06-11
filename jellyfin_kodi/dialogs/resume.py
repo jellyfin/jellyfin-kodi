@@ -3,7 +3,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 ##################################################################################################
 
-from kodi_six import xbmc, xbmcgui
+import xbmc
+import xbmcgui
 
 from ..helper import LazyLogger
 

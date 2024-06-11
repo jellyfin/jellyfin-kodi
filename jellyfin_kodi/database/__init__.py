@@ -10,7 +10,8 @@ import sqlite3
 import sys
 import re
 
-from kodi_six import xbmc, xbmcvfs
+import xbmc
+import xbmcvfs
 
 from . import jellyfin_db
 from ..helper import translate, settings, window, dialog
