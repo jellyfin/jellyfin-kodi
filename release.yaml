@@ -11,8 +11,6 @@ dependencies:
       version: '2.22.0+matrix.1'
     - addon: 'script.module.dateutil'
       version: '2.8.1+matrix.1'
-    - addon: 'script.module.six'
-      version: '1.14.0+matrix.2'
     - addon: 'script.module.kodi-six'
       version: '0.1.3+1'
     - addon: 'script.module.addon.signals'
