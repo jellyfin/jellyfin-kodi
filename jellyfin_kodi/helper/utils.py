@@ -425,7 +425,7 @@ def normalize_string(text):
     text = text.strip()
 
     text = text.rstrip(".")
-    text = unicodedata.normalize("NFKD", str(text, "utf-8")).encode("ascii", "ignore")
+    text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore")
 
     return text
 
