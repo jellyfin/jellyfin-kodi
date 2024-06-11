@@ -7,8 +7,6 @@ import sqlite3
 from ntpath import dirname
 from urllib.parse import urlencode
 
-from kodi_six.utils import py2_encode
-
 from .. import downloader as server
 from ..database import jellyfin_db, queries as QUEM
 from ..helper import (
@@ -535,7 +533,7 @@ class TVShows(KodiDb):
                 obj["SeriesId"],
             )
             params = {
-                "filename": py2_encode(obj["Filename"], "utf-8"),
+                "filename": obj["Filename"],
                 "id": obj["Id"],
                 "dbid": obj["EpisodeId"],
                 "mode": "play",
