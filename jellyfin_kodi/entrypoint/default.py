@@ -7,7 +7,6 @@ import json
 import sys
 import os
 
-from six import iteritems
 from six.moves.urllib.parse import parse_qsl, urlencode
 from kodi_six import xbmc, xbmcvfs, xbmcgui, xbmcplugin, xbmcaddon
 
@@ -1073,7 +1072,7 @@ def create_listitem(item):
     li.setProperty("dbid", str(item["episodeid"]))
     li.setProperty("fanart_image", item["art"].get("tvshow.fanart", ""))
 
-    for key, value in iteritems(item["streamdetails"]):
+    for key, value in item["streamdetails"].items():
         for stream in value:
             li.addStreamInfo(key, stream)
 

@@ -3,7 +3,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 ##################################################################################################
 
-from six import iteritems
 from kodi_six import xbmc, xbmcgui
 
 from ..helper import translate
@@ -44,7 +43,7 @@ class ServerConnect(xbmcgui.WindowXMLDialog):
 
     def set_args(self, **kwargs):
         # connect_manager, user_image, servers
-        for key, value in iteritems(kwargs):
+        for key, value in kwargs.items():
             setattr(self, key, value)
 
     def is_server_selected(self):

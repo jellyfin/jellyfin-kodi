@@ -12,7 +12,7 @@ import unicodedata
 from uuid import uuid4
 
 from dateutil import tz, parser
-from six import text_type, string_types, iteritems, ensure_text, ensure_binary
+from six import text_type, string_types, ensure_text, ensure_binary
 from six.moves.urllib.parse import quote_plus
 
 from kodi_six import xbmc, xbmcaddon, xbmcgui, xbmcvfs
@@ -103,11 +103,12 @@ def create_id():
 
 
 def find(dict, item):
+    # FIXME: dead code
     """Find value in dictionary."""
     if item in dict:
         return dict[item]
 
-    for key, value in sorted(iteritems(dict), key=lambda kv: (kv[1], kv[0])):
+    for key, value in sorted(dict.items(), key=lambda kv: (kv[1], kv[0])):
 
         if re.match(key, item, re.I):
             return dict[key]
