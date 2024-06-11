@@ -8,7 +8,6 @@ tzdata; platform_system == "Windows"
 
 Kodistubs ~=21.0
 
-git+https://github.com/romanvm/kodi.six
 git+https://github.com/ruuk/script.module.addon.signals
 
 pre-commit >= 3.7.1
