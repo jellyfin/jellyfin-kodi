@@ -7,7 +7,7 @@ import threading
 import concurrent.futures
 from datetime import date
 
-from six.moves import range, queue as Queue
+import queue
 
 import requests
 
@@ -308,7 +308,7 @@ class GetItemWorker(threading.Thread):
             while True:
                 try:
                     item_ids = self.queue.get(timeout=1)
-                except Queue.Empty:
+                except queue.Empty:
 
                     self.is_done = True
                     LOG.info("--<[ q:download/%s ]", id(self))
