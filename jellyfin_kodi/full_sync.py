@@ -6,7 +6,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 from contextlib import contextmanager
 import datetime
 
-from kodi_six import xbmc
+import xbmc
 
 from . import downloader as server
 from .objects import Movies, TVShows, MusicVideos, Music

@@ -5,8 +5,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import re
 
-from six import iteritems
-from kodi_six import xbmcgui
+import xbmcgui
 
 from ..helper import translate
 from ..jellyfin.connection_manager import CONNECTION_STATE
@@ -41,7 +40,7 @@ class ServerManual(xbmcgui.WindowXMLDialog):
 
     def set_args(self, **kwargs):
         # connect_manager, user_image, servers, jellyfin_connect
-        for key, value in iteritems(kwargs):
+        for key, value in kwargs.items():
             setattr(self, key, value)
 
     def is_connected(self):

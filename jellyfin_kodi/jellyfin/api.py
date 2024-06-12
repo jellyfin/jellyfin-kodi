@@ -4,7 +4,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import json
 
 import requests
-from six import ensure_str
 
 from ..helper.exceptions import HTTPException
 from ..helper.utils import settings
@@ -416,7 +415,7 @@ class API(object):
             "User-Agent": self.config.data["http.user_agent"]
             or "%s/%s"
             % (self.config.data["app.name"], self.config.data["app.version"]),
-            "x-emby-authorization": ensure_str(auth, "utf-8"),
+            "x-emby-authorization": auth,
         }
 
     def send_request(

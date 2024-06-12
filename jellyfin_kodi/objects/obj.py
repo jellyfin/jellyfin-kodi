@@ -6,9 +6,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import json
 import os
 
-from six import iteritems, ensure_text
-
-from ..helper import LazyLogger, get_filesystem_encoding
+from ..helper import LazyLogger
 
 ##################################################################################################
 
@@ -29,7 +27,7 @@ class Objects(object):
 
     def mapping(self):
         """Load objects mapping."""
-        file_dir = os.path.dirname(ensure_text(__file__, get_filesystem_encoding()))
+        file_dir = os.path.dirname(__file__)
 
         with open(os.path.join(file_dir, "obj_map.json")) as infile:
             self.objects = json.load(infile)
@@ -54,7 +52,7 @@ class Objects(object):
 
         mapping = self.objects[mapping_name]
 
-        for key, value in iteritems(mapping):
+        for key, value in mapping.items():
 
             self.mapped_item[key] = None
             params = value.split(",")
@@ -151,7 +149,7 @@ class Objects(object):
 
         result = False
 
-        for key, value in iteritems(filters):
+        for key, value in filters.items():
 
             inverse = False
 

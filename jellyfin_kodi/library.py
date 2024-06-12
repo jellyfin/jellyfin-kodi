@@ -6,9 +6,10 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import threading
 from datetime import datetime, timedelta
 
-from six.moves import queue as Queue
+import queue
 
-from kodi_six import xbmc, xbmcgui
+import xbmc
+import xbmcgui
 
 from .objects import Movies, TVShows, MusicVideos, Music
 from .objects.kodi import Movies as KodiDb
@@ -48,13 +49,13 @@ class Library(threading.Thread):
         self.monitor = monitor
         self.player = monitor.monitor.player
         self.server = Jellyfin().get_client()
-        self.updated_queue = Queue.Queue()
-        self.userdata_queue = Queue.Queue()
-        self.removed_queue = Queue.Queue()
+        self.updated_queue = queue.Queue()
+        self.userdata_queue = queue.Queue()
+        self.removed_queue = queue.Queue()
         self.updated_output = self.__new_queues__()
         self.userdata_output = self.__new_queues__()
         self.removed_output = self.__new_queues__()
-        self.notify_output = Queue.Queue()
+        self.notify_output = queue.Queue()
 
         self.jellyfin_threads = []
         self.download_threads = []
@@ -67,16 +68,16 @@ class Library(threading.Thread):
 
     def __new_queues__(self):
         return {
-            "Movie": Queue.Queue(),
-            "BoxSet": Queue.Queue(),
-            "MusicVideo": Queue.Queue(),
-            "Series": Queue.Queue(),
-            "Season": Queue.Queue(),
-            "Episode": Queue.Queue(),
-            "MusicAlbum": Queue.Queue(),
-            "MusicArtist": Queue.Queue(),
-            "AlbumArtist": Queue.Queue(),
-            "Audio": Queue.Queue(),
+            "Movie": queue.Queue(),
+            "BoxSet": queue.Queue(),
+            "MusicVideo": queue.Queue(),
+            "Series": queue.Queue(),
+            "Season": queue.Queue(),
+            "Episode": queue.Queue(),
+            "MusicAlbum": queue.Queue(),
+            "MusicArtist": queue.Queue(),
+            "AlbumArtist": queue.Queue(),
+            "Audio": queue.Queue(),
         }
 
     def run(self):
@@ -271,13 +272,13 @@ class Library(threading.Thread):
 
     def worker_downloads(self):
         """Get items from jellyfin and place them in the appropriate queues."""
-        for queue in (
+        for work_queue in (
             (self.updated_queue, self.updated_output),
             (self.userdata_queue, self.userdata_output),
         ):
-            if queue[0].qsize() and len(self.download_threads) < DTHREADS:
+            if work_queue[0].qsize() and len(self.download_threads) < DTHREADS:
 
-                new_thread = GetItemWorker(self.server, queue[0], queue[1])
+                new_thread = GetItemWorker(self.server, work_queue[0], work_queue[1])
                 new_thread.start()
                 LOG.info("-->[ q:download/%s ]", id(new_thread))
                 self.download_threads.append(new_thread)
@@ -722,7 +723,7 @@ class UpdateWorker(threading.Thread):
 
                 try:
                     item = self.queue.get(timeout=1)
-                except Queue.Empty:
+                except queue.Empty:
                     break
 
                 try:
@@ -801,7 +802,7 @@ class UserDataWorker(threading.Thread):
 
                 try:
                     item = self.queue.get(timeout=1)
-                except Queue.Empty:
+                except queue.Empty:
                     break
 
                 try:
@@ -852,7 +853,7 @@ class SortWorker(threading.Thread):
 
                 try:
                     item_id = self.queue.get(timeout=1)
-                except Queue.Empty:
+                except queue.Empty:
                     break
 
                 try:
@@ -918,7 +919,7 @@ class RemovedWorker(threading.Thread):
 
                 try:
                     item = self.queue.get(timeout=1)
-                except Queue.Empty:
+                except queue.Empty:
                     break
 
                 if item["Type"] == "Movie":
@@ -970,7 +971,7 @@ class NotifyWorker(threading.Thread):
 
             try:
                 item = self.queue.get(timeout=3)
-            except Queue.Empty:
+            except queue.Empty:
                 break
 
             time = self.music_time if item[0] == "Audio" else self.video_time

@@ -10,8 +10,8 @@ import sqlite3
 import sys
 import re
 
-from kodi_six import xbmc, xbmcvfs
-from six import text_type
+import xbmc
+import xbmcvfs
 
 from . import jellyfin_db
 from ..helper import translate, settings, window, dialog
@@ -362,7 +362,7 @@ def save_sync(sync):
 
     with open(os.path.join(ADDON_DATA, "sync.json"), "wb") as outfile:
         data = json.dumps(sync, sort_keys=True, indent=4, ensure_ascii=False)
-        if isinstance(data, text_type):
+        if isinstance(data, str):
             data = data.encode("utf-8")
         outfile.write(data)
 
@@ -411,7 +411,7 @@ def save_credentials(credentials):
     try:
         with open(os.path.join(ADDON_DATA, "data.json"), "wb") as outfile:
             data = json.dumps(credentials, sort_keys=True, indent=4, ensure_ascii=False)
-            if isinstance(data, text_type):
+            if isinstance(data, str):
                 data = data.encode("utf-8")
             outfile.write(data)
     except Exception:

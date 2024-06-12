@@ -5,9 +5,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import datetime
 import re
-
-from six.moves.urllib.parse import urlencode
-from kodi_six.utils import py2_encode
+from urllib.parse import urlencode
 
 from ..database import jellyfin_db, queries as QUEM
 from ..helper import api, stop, validate, jellyfin_item, values, Local, LazyLogger
@@ -210,7 +208,7 @@ class MusicVideos(KodiDb):
         else:
             obj["Path"] = "plugin://plugin.video.jellyfin/%s/" % obj["LibraryId"]
             params = {
-                "filename": py2_encode(obj["Filename"], "utf-8"),
+                "filename": obj["Filename"],
                 "id": obj["Id"],
                 "dbid": obj["MvideoId"],
                 "mode": "play",

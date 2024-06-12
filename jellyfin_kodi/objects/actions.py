@@ -8,7 +8,10 @@ import sys
 import json
 from datetime import timedelta
 
-from kodi_six import xbmc, xbmcgui, xbmcplugin, xbmcaddon
+import xbmc
+import xbmcgui
+import xbmcplugin
+import xbmcaddon
 
 from ..helper import translate, playutils, api, window, settings, dialog
 from ..dialogs import resume

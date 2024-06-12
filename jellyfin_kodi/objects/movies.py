@@ -3,8 +3,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 ##################################################################################################
 
-from six.moves.urllib.parse import urlencode
-from kodi_six.utils import py2_encode
+from urllib.parse import urlencode
 
 from .. import downloader as server
 from ..database import jellyfin_db, queries as QUEM
@@ -240,7 +239,7 @@ class Movies(KodiDb):
         else:
             obj["Path"] = "plugin://plugin.video.jellyfin/%s/" % obj["LibraryId"]
             params = {
-                "filename": py2_encode(obj["Filename"], "utf-8"),
+                "filename": obj["Filename"],
                 "id": obj["Id"],
                 "dbid": obj["MovieId"],
                 "mode": "play",

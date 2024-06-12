@@ -6,10 +6,13 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import json
 import sys
 import os
+from urllib.parse import parse_qsl, urlencode
 
-from six import iteritems
-from six.moves.urllib.parse import parse_qsl, urlencode
-from kodi_six import xbmc, xbmcvfs, xbmcgui, xbmcplugin, xbmcaddon
+import xbmc
+import xbmcvfs
+import xbmcgui
+import xbmcplugin
+import xbmcaddon
 
 from .. import client
 from ..database import reset, get_sync, Database, jellyfin_db, get_credentials
@@ -1073,7 +1076,7 @@ def create_listitem(item):
     li.setProperty("dbid", str(item["episodeid"]))
     li.setProperty("fanart_image", item["art"].get("tvshow.fanart", ""))
 
-    for key, value in iteritems(item["streamdetails"]):
+    for key, value in item["streamdetails"].items():
         for stream in value:
             li.addStreamInfo(key, stream)
 

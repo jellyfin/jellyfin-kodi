@@ -7,7 +7,7 @@ import binascii
 import json
 import threading
 
-from kodi_six import xbmc
+import xbmc
 
 from . import connect
 from . import player

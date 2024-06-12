@@ -5,7 +5,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import os
 
-from kodi_six import xbmc, xbmcvfs
+import xbmc
+import xbmcvfs
 
 from .objects.obj import Objects
 from .helper import translate, api, window, settings, dialog, event, JSONRPC
