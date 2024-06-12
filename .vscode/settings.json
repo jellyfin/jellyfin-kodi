@@ -1,9 +1,5 @@
 {
 	"editor.formatOnSave": true,
-	"python.formatting.provider": "black",
-	"python.linting.enabled": true,
-	"python.linting.flake8Enabled": true,
-	"python.linting.mypyEnabled": true,
 	"python.testing.pytestEnabled": true,
 	"python.analysis.diagnosticMode": "workspace",
 	"files.associations": {
@@ -13,4 +9,9 @@
 		"connectionId": "jellyfin",
 		"projectKey": "jellyfin_jellyfin-kodi"
 	},
+	"[python]": {
+		"editor.defaultFormatter": "ms-python.black-formatter"
+	},
+	"flake8.importStrategy": "fromEnvironment",
+	"black-formatter.importStrategy": "fromEnvironment",
 }
