@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.1.6
+        uses: actions/checkout@v4.1.7
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3.25.8
