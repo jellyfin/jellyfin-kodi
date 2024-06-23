@@ -15,7 +15,7 @@ changelog: |-
   + Add pre-commit config (#873) @oddstr13
   + Remove unused function compare_version (#874) @oddstr13
 
-  :arrow_up: Dependency updates
+  Dependency updates
   -----------------------------
   + chore(deps): update dependency kodistubs to v21 (#850) @renovate
 
