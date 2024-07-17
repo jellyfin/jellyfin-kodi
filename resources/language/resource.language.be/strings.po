@@ -1,16 +1,16 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2023-02-08 12:51+0000\n"
-"Last-Translator: rushmash <rushmash@gmail.com>\n"
+"PO-Revision-Date: 2024-07-17 12:12+0000\n"
+"Last-Translator: Troja <d.iwowi.b@gmail.com>\n"
 "Language-Team: Belarusian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/be/>\n"
 "Language: be\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.14.1\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.4.2\n"
 
 msgctxt "#33049"
 msgid "New"
@@ -432,11 +432,11 @@ msgstr "Імя карыстальніка або пароль не могуць 
 
 msgctxt "#30609"
 msgid "Unable to connect to the selected server"
-msgstr "Немагчыма падключыцца да абранага сервера"
+msgstr "Немагчыма падлучыцца да абранага сервера"
 
 msgctxt "#30610"
 msgid "Connect to"
-msgstr "Падключыцца да"
+msgstr "Падлучыцца да"
 
 msgctxt "#30611"
 msgid "Manually add server"
@@ -452,7 +452,7 @@ msgstr "Змяніць карыстальніка Jellyfin Connect"
 
 msgctxt "#30614"
 msgid "Connect to server"
-msgstr "Падключыцеся да сервера"
+msgstr "Падлучыцца да сервера"
 
 msgctxt "#30615"
 msgid "Host"
@@ -460,7 +460,7 @@ msgstr "Хост"
 
 msgctxt "#30616"
 msgid "Connect"
-msgstr "Злучыцца"
+msgstr "Падлучыцца"
 
 msgctxt "#30617"
 msgid "Server or port cannot be empty"
@@ -787,7 +787,7 @@ msgstr ""
 
 msgctxt "#33146"
 msgid "Unable to connect to Jellyfin."
-msgstr "Немагчыма падключыцца да Jellyfin."
+msgstr "Немагчыма падлучыцца да Jellyfin."
 
 msgctxt "#33147"
 msgid "Your access to Jellyfin is restricted."
@@ -799,7 +799,7 @@ msgstr "Ваш доступ да гэтага сервера абмежаван�
 
 msgctxt "#33149"
 msgid "Unable to connect to this server."
-msgstr "Немагчыма падключыцца да гэтага сервера."
+msgstr "Немагчыма падлучыцца да гэтага сервера."
 
 msgctxt "#33150"
 msgid "Update server information"
@@ -808,7 +808,7 @@ msgstr "Абнавіць інфармацыю аб серверы"
 msgctxt "#33151"
 msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
 msgstr ""
-"Паўторна падключыцеся да таго ж сервера, які быў загружаны раней. Калі вы "
+"Паўторна падлучыцеся да таго ж сервера, які быў загружаны раней. Калі вы "
 "хочаце выкарыстоўваць іншы сервер, скіньце вашу лакальную базу дадзеных, у "
 "тым ліку інфармацыю аб вашым карыстальніку."
 
