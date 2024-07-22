@@ -54,6 +54,8 @@
 <a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
 <img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=security_rating" alt="Security Rating" />
 </a>
+<br />
+<a href="https://codecov.io/github/jellyfin/jellyfin-kodi"><img src="https://codecov.io/github/jellyfin/jellyfin-kodi/graph/badge.svg" alt="Code coverage" /></a>
 </p>
 
 <table>
