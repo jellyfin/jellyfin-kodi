@@ -122,7 +122,7 @@ def event(method, data=None, sender=None, hexlify=False):
     sender = sender or "plugin.video.jellyfin"
 
     if hexlify:
-        data = str(binascii.hexlify(json.dumps(data).encode()))
+        data = str(binascii.hexlify(json.dumps(data).encode()), "utf-8")
 
     data = '"[%s]"' % json.dumps(data).replace('"', '\\"')
 
