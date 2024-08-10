@@ -363,11 +363,10 @@ class PlayUtils(object):
         )
 
     def get_directplay_video_codec(self):
-        codecs = ["h264", "hevc", "h265", "mpeg4", "mpeg2video", "vc1", "vp9", "av1"]
+        codecs = ["h264", "hevc", "mpeg4", "mpeg2video", "vc1", "vp9", "av1"]
 
         if settings("transcode_h265.bool"):
             codecs.remove("hevc")
-            codecs.remove("h265")
 
         if settings("transcode_mpeg2.bool"):
             codecs.remove("mpeg2video")
@@ -384,14 +383,12 @@ class PlayUtils(object):
         return ",".join(codecs)
 
     def get_transcoding_video_codec(self):
-        codecs = ["h264", "hevc", "h265", "mpeg4", "mpeg2video", "vc1"]
+        codecs = ["h264", "mpeg4", "mpeg2video", "vc1"]
 
-        if settings("transcode_h265.bool"):
-            codecs.remove("hevc")
-            codecs.remove("h265")
-        else:
-            if settings("videoPreferredCodec") == "H265/HEVC":
-                codecs.insert(2, codecs.pop(codecs.index("h264")))
+        if settings("videoPreferredCodec") == "H265/HEVC":
+            codecs.insert(0, "hevc")
+        elif not settings("transcode_h265.bool"):
+            codecs.insert(1, "hevc")
 
         if settings("transcode_mpeg2.bool"):
             codecs.remove("mpeg2video")
@@ -480,7 +477,7 @@ class PlayUtils(object):
             profile["CodecProfiles"].append(
                 {
                     "Type": "Video",
-                    "codec": "h265,hevc",
+                    "codec": "hevc",
                     "Conditions": [
                         {
                             "Condition": "EqualsAny",
