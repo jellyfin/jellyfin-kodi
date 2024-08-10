@@ -34,6 +34,7 @@ class PatchedSettings:
             setting = setting.replace(".bool", "")
             value = bool(value)
         cls.settings[setting] = value
+        return None
 
     @classmethod
     def clear(cls):

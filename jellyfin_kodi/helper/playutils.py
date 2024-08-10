@@ -385,13 +385,10 @@ class PlayUtils(object):
     def get_transcoding_video_codec(self):
         codecs = ["h264", "mpeg4", "mpeg2video", "vc1"]
 
-        if not settings("transcode_h265.bool"):
-            codecs.insert(1, "hevc")  # Add HEVC if transcoding is not forced
-
         if settings("videoPreferredCodec") == "H265/HEVC":
-            if "hevc" in codecs:
-                codecs.remove("hevc")
-            codecs.insert(0, "hevc")  # Add HEVC at the beginning if preferred
+            codecs.insert(0, "hevc")
+        elif not settings("transcode_h265.bool"):
+            codecs.insert(1, "hevc")
 
         if settings("transcode_mpeg2.bool"):
             codecs.remove("mpeg2video")
