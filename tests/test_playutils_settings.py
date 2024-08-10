@@ -56,18 +56,27 @@ def mock_settings(monkeypatch):
 
 
 @pytest.mark.parametrize(
-    "transcode_h265, preferred_codec, expected_result",
+    "transcode_h265, transcode_av1, preferred_codec, expected_result",
     [
-        (False, "H265/HEVC", "hevc,h264,mpeg4,mpeg2video,vc1"),
-        (True, "H265/HEVC", "hevc,h264,mpeg4,mpeg2video,vc1"),
-        (False, "H264/AVC", "h264,hevc,mpeg4,mpeg2video,vc1"),
-        (True, "H264/AVC", "h264,mpeg4,mpeg2video,vc1"),
+        (False, True, "AV1", "av1,h264,hevc,mpeg4,mpeg2video,vc1"),
+        (False, False, "AV1", "av1,h264,hevc,mpeg4,mpeg2video,vc1"),
+        (True, True, "AV1", "av1,h264,mpeg4,mpeg2video,vc1"),
+        (True, False, "AV1", "av1,h264,mpeg4,mpeg2video,vc1"),
+        (False, True, "H265/HEVC", "hevc,h264,mpeg4,mpeg2video,vc1"),
+        (False, False, "H265/HEVC", "hevc,h264,mpeg4,mpeg2video,vc1,av1"),
+        (True, True, "H265/HEVC", "hevc,h264,mpeg4,mpeg2video,vc1"),
+        (True, False, "H265/HEVC", "hevc,h264,mpeg4,mpeg2video,vc1,av1"),
+        (False, True, "H264/AVC", "h264,hevc,mpeg4,mpeg2video,vc1"),
+        (False, False, "H264/AVC", "h264,hevc,mpeg4,mpeg2video,vc1,av1"),
+        (True, True, "H264/AVC", "h264,mpeg4,mpeg2video,vc1"),
+        (True, False, "H264/AVC", "h264,mpeg4,mpeg2video,vc1,av1"),
     ],
 )
 def test_get_transcoding_video_codec_settings(
-    play_utils, transcode_h265, preferred_codec, expected_result
+    play_utils, transcode_h265, transcode_av1, preferred_codec, expected_result
 ):
     playutils.settings("transcode_h265", transcode_h265)
+    playutils.settings("transcode_av1", transcode_av1)
     playutils.settings("videoPreferredCodec", preferred_codec)
 
     result = play_utils.get_transcoding_video_codec()
@@ -77,10 +86,10 @@ def test_get_transcoding_video_codec_settings(
 @pytest.mark.parametrize(
     "transcode_mpeg2, transcode_vc1, expected_result",
     [
-        (False, False, "h264,hevc,mpeg4,mpeg2video,vc1"),
-        (True, False, "h264,hevc,mpeg4,vc1"),
-        (False, True, "h264,hevc,mpeg4,mpeg2video"),
-        (True, True, "h264,hevc,mpeg4"),
+        (False, False, "h264,hevc,mpeg4,mpeg2video,vc1,av1"),
+        (True, False, "h264,hevc,mpeg4,vc1,av1"),
+        (False, True, "h264,hevc,mpeg4,mpeg2video,av1"),
+        (True, True, "h264,hevc,mpeg4,av1"),
     ],
 )
 def test_get_transcoding_video_codec_transcode_options(
@@ -109,28 +118,37 @@ def test_get_transcoding_video_codec_order(
 
 
 @pytest.mark.parametrize(
-    "preferred_codec, transcode_h265",
+    "preferred_codec, transcode_h265, transcode_av1",
     [
-        ("H265/HEVC", True),
-        ("H265/HEVC", False),
-        ("H264/AVC", True),
-        ("H264/AVC", False),
+        ("H265/HEVC", True, True),
+        ("H265/HEVC", True, False),
+        ("H265/HEVC", False, True),
+        ("H265/HEVC", False, False),
+        ("H264/AVC", True, True),
+        ("H264/AVC", True, False),
+        ("H264/AVC", False, True),
+        ("H264/AVC", False, False),
+        ("AV1", True, True),
+        ("AV1", True, False),
+        ("AV1", False, True),
+        ("AV1", False, False),
     ],
 )
 def test_get_transcoding_video_codec_no_duplicates(
-    play_utils, preferred_codec, transcode_h265
+    play_utils, preferred_codec, transcode_h265, transcode_av1
 ):
     playutils.settings("videoPreferredCodec", preferred_codec)
     playutils.settings("transcode_h265", transcode_h265)
+    playutils.settings("transcode_av1", transcode_av1)
     result = play_utils.get_transcoding_video_codec().split(",")
     assert len(result) == len(set(result))
 
 
 @pytest.mark.parametrize(
-    "transcode_h265, preferred_codec, transcode_mpeg2, transcode_vc1, expected_result",
+    "transcode_h265, preferred_codec, transcode_mpeg2, transcode_vc1, transcode_av1, expected_result",
     [
-        (True, "H264/AVC", True, True, "h264,mpeg4"),
-        (False, "H265/HEVC", False, False, "hevc,h264,mpeg4,mpeg2video,vc1"),
+        (True, "H264/AVC", True, True, True, "h264,mpeg4"),
+        (False, "H265/HEVC", False, False, False, "hevc,h264,mpeg4,mpeg2video,vc1,av1"),
     ],
 )
 def test_get_transcoding_video_codec_combined_settings(
@@ -139,12 +157,14 @@ def test_get_transcoding_video_codec_combined_settings(
     preferred_codec,
     transcode_mpeg2,
     transcode_vc1,
+    transcode_av1,
     expected_result,
 ):
     playutils.settings("transcode_h265", transcode_h265)
     playutils.settings("videoPreferredCodec", preferred_codec)
     playutils.settings("transcode_mpeg2", transcode_mpeg2)
     playutils.settings("transcode_vc1", transcode_vc1)
+    playutils.settings("transcode_av1", transcode_av1)
 
     result = play_utils.get_transcoding_video_codec()
     assert result == expected_result
