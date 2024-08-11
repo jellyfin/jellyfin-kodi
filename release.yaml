@@ -1,38 +1,36 @@
-version: '1.0.4'
+version: '1.0.5'
 changelog: |-
+  New features and improvements
+  ------------------------------------
+  + Add AV1 as a preferred codec option (#892) @Insprill
+
   Bug Fixes
   ---------
-  + Clear playlist if clear flag is set (UpNext) (#871) @CeruleanRed
+  + Fix transcode settings visibility logic (#902) @oddstr13
+  + Improve HEVC codec handling in transcoding profiles (#895) @peterlodri92
+  + Specify encoding when converting hex-bytestring to string (#899) @oddstr13
+
+  Tests
+  ------------------------
+  + Improve HEVC codec handling in transcoding profiles (#895) @peterlodri92
 
   Code or Repo Maintenance
   ------------------------
-  + Update devcontainer and vscode config (#881) @oddstr13
-  + Remove dependency on six (#880) @oddstr13
-  + Enable flake8 pre-commit (#879) @oddstr13
-  + Editorconfig pre-commit and indentation adjustment (#878) @oddstr13
-  + Fix sonarcloud lint (#877) @oddstr13
-  + Run the black formatter (#869) @oddstr13
-  + Add pre-commit config (#873) @oddstr13
-  + Remove unused function compare_version (#874) @oddstr13
+  + Disable delete option in context menu by default (#903) @oddstr13
 
-  Dependency updates
-  -----------------------------
-  + chore(deps): update dependency kodistubs to v21 (#850) @renovate
+  Documentation updates
+  ---------------------
+  + Add Codecov config and update readme badges (#894) @oddstr13
 
   CI & build changes
   ------------------
-  + Update github/codeql-action action to v3.25.10 (#882) @renovate
-  + Update actions/checkout action to v4.1.7 (#883) @renovate
-  + Update codecov/codecov-action action to v4.5.0 (#884) @renovate
-  + chore(deps): update actions/checkout action to v4 (#876) @renovate
-  + Add black to CI, pre-commit and devcontainer (#875) @oddstr13
-  + chore(deps): update actions/upload-artifact action to v4 (#823) @renovate
-  + chore(deps): update burnett01/rsync-deployments action to v7 (#832) @renovate
-  + chore(deps): update codecov/codecov-action action to v4.4.1 (#826) @renovate
-  + chore(deps): update github/codeql-action action to v3.25.8 (#822) @renovate
-  + chore(deps): update actions/setup-python action to v5.1.0 (#842) @renovate
-  + chore(deps): update actions/checkout action to v4.1.6 (#857) @renovate
-  + Add tool to run black on the whole project (#868) @oddstr13
+  + Update actions/upload-artifact action to v4.3.6 (#898) @renovate
+  + Update github/codeql-action action to v3.26.0 (#896) @renovate
+  + Add Codecov config and update readme badges (#894) @oddstr13
+  + Update github/codeql-action action to v3.25.13 (#891) @renovate
+  + Update actions/setup-python action to v5.1.1 (#889) @renovate
+  + Update actions/upload-artifact action to v4.3.4 (#888) @renovate
+  + Update github/codeql-action action to v3.25.12 (#886) @renovate
 dependencies:
   py3:
     - addon: 'xbmc.python'
