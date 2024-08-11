@@ -75,7 +75,7 @@
 		<!-- Interface -->
 		<setting label="33105" id="enableContext" type="bool" default="true" />
 		<setting label="33106" id="enableContextTranscode" type="bool" visible="eq(-1,true)" default="true" subsetting="true" />
-		<setting label="33143" id="enableContextDelete" type="bool" visible="eq(-2,true)" default="true" subsetting="true" />
+		<setting label="33143" id="enableContextDelete" type="bool" visible="eq(-2,true)" default="false" subsetting="true" />
 		<setting label="30520" id="skipContextMenu" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
 
 		<setting label="33107" type="lsep" />
