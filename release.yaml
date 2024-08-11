@@ -1,6 +1,6 @@
 version: '1.0.5'
 changelog: |-
-  :tada: New features and improvements
+  New features and improvements
   ------------------------------------
   + Add AV1 as a preferred codec option (#892) @Insprill
 
@@ -10,7 +10,7 @@ changelog: |-
   + Improve HEVC codec handling in transcoding profiles (#895) @peterlodri92
   + Specify encoding when converting hex-bytestring to string (#899) @oddstr13
 
-  :white_check_mark: Tests
+  Tests
   ------------------------
   + Improve HEVC codec handling in transcoding profiles (#895) @peterlodri92
 
