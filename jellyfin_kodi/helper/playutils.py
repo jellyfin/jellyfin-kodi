@@ -390,6 +390,11 @@ class PlayUtils(object):
         elif not settings("transcode_h265.bool"):
             codecs.insert(1, "hevc")
 
+        if settings("videoPreferredCodec") == "AV1":
+            codecs.insert(0, "av1")
+        elif not settings("transcode_av1.bool"):
+            codecs.append("av1")
+
         if settings("transcode_mpeg2.bool"):
             codecs.remove("mpeg2video")
 
