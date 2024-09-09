@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2024-09-06 07:41+0000\n"
+"PO-Revision-Date: 2024-09-10 19:41+0000\n"
 "Last-Translator: Hoomaane79 <Hoomaanebrahimi@yahoo.com>\n"
 "Language-Team: Persian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/fa/>\n"
@@ -255,7 +255,6 @@ msgctxt "#30506"
 msgid "Sync"
 msgstr "همگام سازی"
 
-#, fuzzy
 msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
 msgstr "فعالسازی اطلاع رسانی در صورتی که تعداد بروزرسانی ها بیشتر بود از"
@@ -647,3 +646,36 @@ msgstr "حالت‌های رمزگردانی"
 msgctxt "#33116"
 msgid "Compress artwork (reduces quality)"
 msgstr "فشرده کردن عکس (کیفیت پایین می‌آید)"
+
+msgctxt "#33120"
+msgid "Select the libraries to add"
+msgstr "کتاب‌خانه هایی که می‌خواهید اضافه کنید را انتخاب کنید"
+
+msgctxt "#33121"
+msgid "All"
+msgstr "همه"
+
+msgctxt "#33123"
+msgid "Sync library to Kodi"
+msgstr "همگام سازی کتاب‌خانه با Kodi"
+
+msgctxt "#33125"
+msgid "Enable remote control"
+msgstr "فعال کردن دسترسی از راه دور"
+
+msgctxt "#33118"
+msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgstr ""
+"شما حالت بازپخش را تغییر دادید. Kodi برای اعمال تغییرات باید ریستارت شود٫ "
+"آیا تمایل به انجام آن دارید؟"
+
+msgctxt "#33122"
+msgid "Restart Kodi to resume where you left off."
+msgstr "برای ادامه از همان جایی که رها کرده بودید٫ Kodi را ریستارت کنید."
+
+msgctxt "#33119"
+msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"مشکلی در هنگام همگام سازی پیش آمده. می‌توانید پروسه را موقع ریستارت کردن "
+"Kodi احیا کنید٫ اگر مشکل تکرار شد٫ لطفا به فروم Jellyfin for Kodi به همراه "
+"گزارش Kodi اطلاع رسانی کنید."
