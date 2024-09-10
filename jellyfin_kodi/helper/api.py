@@ -4,6 +4,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 ##################################################################################################
 
 from requests.utils import requote_uri
+import re
 
 from . import settings, LazyLogger
 
@@ -233,6 +234,11 @@ class API(object):
             
             if protocol.lower() in ("http", "https", "ftp", "ftps", "dav", "davs"):
                 path = requote_uri(path)
+                pattern = "%[A-Z,0-9][A-Z,0-9]"
+                result = set(re.findall(pattern,path))
+                
+                for r in result:
+                    path = path.replace(r,r.lower())
 
         return path
 
