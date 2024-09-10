@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2024-04-17 19:58+0000\n"
+"PO-Revision-Date: 2024-05-20 21:36+0000\n"
 "Last-Translator: Blackspirits <blackspirits@gmail.com>\n"
 "Language-Team: Portuguese <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/pt/>\n"
@@ -739,7 +739,7 @@ msgstr ""
 
 msgctxt "#33054"
 msgid "Add user to session"
-msgstr "Adicionar usuário à sessão"
+msgstr "Adicionar utilizador à sessão"
 
 msgctxt "#33058"
 msgid "Perform local database reset"
@@ -747,11 +747,11 @@ msgstr "Execute a redefinição do banco de dados local"
 
 msgctxt "#33061"
 msgid "Add/Remove user from the session"
-msgstr "Adicionar/remover usuário da sessão"
+msgstr "Adicionar/remover utilizador da sessão"
 
 msgctxt "#33062"
 msgid "Add user"
-msgstr "Adicionar usuário"
+msgstr "Adicionar utilizador"
 
 msgctxt "#33064"
 msgid "Remove user from the session"

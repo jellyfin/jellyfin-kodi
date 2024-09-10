@@ -3,8 +3,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 ##################################################################################################
 
-from six import iteritems
-from kodi_six import xbmcgui
+import xbmcgui
 
 from ..helper import translate, LazyLogger, kodi_version
 
@@ -18,7 +17,7 @@ SIGN_IN = 200
 CANCEL = 201
 ERROR_TOGGLE = 202
 ERROR_MSG = 203
-ERROR = {'Invalid': 1, 'Empty': 2}
+ERROR = {"Invalid": 1, "Empty": 2}
 
 ##################################################################################################
 
@@ -34,7 +33,7 @@ class LoginManual(xbmcgui.WindowXMLDialog):
 
     def set_args(self, **kwargs):
         # connect_manager, user_image, servers
-        for key, value in iteritems(kwargs):
+        for key, value in kwargs.items():
             setattr(self, key, value)
 
     def is_logged_in(self):
@@ -76,7 +75,7 @@ class LoginManual(xbmcgui.WindowXMLDialog):
 
             if not user:
                 # Display error
-                self._error(ERROR['Empty'], translate('empty_user'))
+                self._error(ERROR["Empty"], translate("empty_user"))
                 LOG.error("Username cannot be null")
 
             elif self._login(user, password):
@@ -88,7 +87,7 @@ class LoginManual(xbmcgui.WindowXMLDialog):
 
     def onAction(self, action):
 
-        if self.error == ERROR['Empty'] and self.user_field.getText():
+        if self.error == ERROR["Empty"] and self.user_field.getText():
             self._disable_error()
 
         if action in (ACTION_BACK, ACTION_PARENT_DIR, ACTION_PREVIOUS_MENU):
@@ -102,12 +101,12 @@ class LoginManual(xbmcgui.WindowXMLDialog):
             textColor="FF00A4DC",
             disabledColor="FF888888",
             focusTexture="-",
-            noFocusTexture="-"
+            noFocusTexture="-",
         )
 
         # TODO: Kodi 17 compat removal cleanup
         if kodi_version() < 18:
-            kwargs['isPassword'] = password
+            kwargs["isPassword"] = password
 
         control = xbmcgui.ControlEdit(0, 0, 0, 0, **kwargs)
 
@@ -126,11 +125,13 @@ class LoginManual(xbmcgui.WindowXMLDialog):
 
     def _login(self, username, password):
 
-        server = self.connect_manager.get_server_info(self.connect_manager.server_id)['address']
+        server = self.connect_manager.get_server_info(self.connect_manager.server_id)[
+            "address"
+        ]
         result = self.connect_manager.login(server, username, password)
 
         if not result:
-            self._error(ERROR['Invalid'], translate('invalid_auth'))
+            self._error(ERROR["Invalid"], translate("invalid_auth"))
             return False
         else:
             self._user = result
@@ -140,9 +141,9 @@ class LoginManual(xbmcgui.WindowXMLDialog):
 
         self.error = state
         self.error_msg.setLabel(message)
-        self.error_toggle.setVisibleCondition('true')
+        self.error_toggle.setVisibleCondition("true")
 
     def _disable_error(self):
 
         self.error = None
-        self.error_toggle.setVisibleCondition('false')
+        self.error_toggle.setVisibleCondition("false")

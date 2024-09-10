@@ -5,8 +5,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import re
 
-from six import iteritems
-from kodi_six import xbmcgui
+import xbmcgui
 
 from ..helper import translate
 from ..jellyfin.connection_manager import CONNECTION_STATE
@@ -22,10 +21,7 @@ CONNECT = 200
 CANCEL = 201
 ERROR_TOGGLE = 202
 ERROR_MSG = 203
-ERROR = {
-    'Invalid': 1,
-    'Empty': 2
-}
+ERROR = {"Invalid": 1, "Empty": 2}
 
 # https://stackoverflow.com/a/17871737/1035647
 _IPV6_PATTERN = r"^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$"
@@ -44,7 +40,7 @@ class ServerManual(xbmcgui.WindowXMLDialog):
 
     def set_args(self, **kwargs):
         # connect_manager, user_image, servers, jellyfin_connect
-        for key, value in iteritems(kwargs):
+        for key, value in kwargs.items():
             setattr(self, key, value)
 
     def is_connected(self):
@@ -77,7 +73,7 @@ class ServerManual(xbmcgui.WindowXMLDialog):
 
             if not server:
                 # Display error
-                self._error(ERROR['Empty'], translate('empty_server'))
+                self._error(ERROR["Empty"], translate("empty_server"))
                 LOG.error("Server cannot be null")
 
             elif self._connect_to_server(server):
@@ -89,7 +85,7 @@ class ServerManual(xbmcgui.WindowXMLDialog):
 
     def onAction(self, action):
 
-        if self.error == ERROR['Empty'] and self.host_field.getText():
+        if self.error == ERROR["Empty"] and self.host_field.getText():
             self._disable_error()
 
         if action in (ACTION_BACK, ACTION_PARENT_DIR, ACTION_PREVIOUS_MENU):
@@ -97,13 +93,18 @@ class ServerManual(xbmcgui.WindowXMLDialog):
 
     def _add_editcontrol(self, x, y, height, width):
 
-        control = xbmcgui.ControlEdit(0, 0, 0, 0,
-                                      label="",
-                                      font="font13",
-                                      textColor="FF00A4DC",
-                                      disabledColor="FF888888",
-                                      focusTexture="-",
-                                      noFocusTexture="-")
+        control = xbmcgui.ControlEdit(
+            0,
+            0,
+            0,
+            0,
+            label="",
+            font="font13",
+            textColor="FF00A4DC",
+            disabledColor="FF888888",
+            focusTexture="-",
+            noFocusTexture="-",
+        )
         control.setPosition(x, y)
         control.setHeight(height)
         control.setWidth(width)
@@ -118,25 +119,25 @@ class ServerManual(xbmcgui.WindowXMLDialog):
         self._message("%s %s..." % (translate(30610), server))
         result = self.connect_manager.connect_to_address(server)
 
-        if result['State'] == CONNECTION_STATE['Unavailable']:
+        if result["State"] == CONNECTION_STATE["Unavailable"]:
             self._message(translate(30609))
             return False
         else:
-            self._server = result['Servers'][0]
+            self._server = result["Servers"][0]
             return True
 
     def _message(self, message):
 
         self.error_msg.setLabel(message)
-        self.error_toggle.setVisibleCondition('true')
+        self.error_toggle.setVisibleCondition("true")
 
     def _error(self, state, message):
 
         self.error = state
         self.error_msg.setLabel(message)
-        self.error_toggle.setVisibleCondition('true')
+        self.error_toggle.setVisibleCondition("true")
 
     def _disable_error(self):
 
         self.error = None
-        self.error_toggle.setVisibleCondition('false')
+        self.error_toggle.setVisibleCondition("false")

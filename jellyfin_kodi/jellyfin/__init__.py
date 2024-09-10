@@ -25,22 +25,22 @@ def ensure_client():
             return func(self, *args, **kwargs)
 
         return wrapper
+
     return decorator
 
 
 class Jellyfin(object):
+    """This is your Jellyfinclient, you can create more than one. The server_id is only a temporary thing
+    to communicate with the JellyfinClient().
 
-    ''' This is your Jellyfinclient, you can create more than one. The server_id is only a temporary thing
-        to communicate with the JellyfinClient().
+    from jellyfin_kodi.jellyfin import Jellyfin
 
-        from jellyfin_kodi.jellyfin import Jellyfin
+    Jellyfin('123456').config.data['app']
 
-        Jellyfin('123456').config.data['app']
-
-        # Permanent client reference
-        client = Jellyfin('123456').get_client()
-        client.config.data['app']
-    '''
+    # Permanent client reference
+    client = Jellyfin('123456').get_client()
+    client.config.data['app']
+    """
 
     # Borg - multiple instances, shared state
     _shared_state = {}
@@ -94,7 +94,7 @@ class Jellyfin(object):
 
         self.client[self.server_id] = JellyfinClient()
 
-        if self.server_id == 'default':
+        if self.server_id == "default":
             LOG.info("---[ START JELLYFINCLIENT ]---")
         else:
             LOG.info("---[ START JELLYFINCLIENT: %s ]---", self.server_id)

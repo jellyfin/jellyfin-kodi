@@ -7,17 +7,17 @@ import os
 import logging
 import traceback
 
-from six import ensure_text
-from kodi_six import xbmc, xbmcaddon
+import xbmc
+import xbmcaddon
 
 from .. import database
-from . import get_filesystem_encoding, settings, kodi_version
+from . import settings, kodi_version
 from .utils import translate_path
 
 ##################################################################################################
 
-__addon__ = xbmcaddon.Addon(id='plugin.video.jellyfin')
-__pluginpath__ = translate_path(__addon__.getAddonInfo('path'))
+__addon__ = xbmcaddon.Addon(id="plugin.video.jellyfin")
+__pluginpath__ = translate_path(__addon__.getAddonInfo("path"))
 
 ##################################################################################################
 
@@ -36,17 +36,17 @@ class LogHandler(logging.StreamHandler):
         logging.StreamHandler.__init__(self)
         self.setFormatter(MyFormatter())
 
-        self.sensitive = {'Token': [], 'Server': []}
+        self.sensitive = {"Token": [], "Server": []}
 
-        for server in database.get_credentials()['Servers']:
+        for server in database.get_credentials()["Servers"]:
 
-            if server.get('AccessToken'):
-                self.sensitive['Token'].append(server['AccessToken'])
+            if server.get("AccessToken"):
+                self.sensitive["Token"].append(server["AccessToken"])
 
-            if server.get('address'):
-                self.sensitive['Server'].append(server['address'].split('://')[1])
+            if server.get("address"):
+                self.sensitive["Server"].append(server["address"].split("://")[1])
 
-        self.mask_info = settings('maskInfo.bool')
+        self.mask_info = settings("maskInfo.bool")
 
         if kodi_version() > 18:
             self.level = xbmc.LOGINFO
@@ -59,10 +59,10 @@ class LogHandler(logging.StreamHandler):
             string = self.format(record)
 
             if self.mask_info:
-                for server in self.sensitive['Server']:
+                for server in self.sensitive["Server"]:
                     string = string.replace(server or "{server}", "{jellyfin-server}")
 
-                for token in self.sensitive['Token']:
+                for token in self.sensitive["Token"]:
                     string = string.replace(token or "{token}", "{jellyfin-token}")
 
             xbmc.log(string, level=self.level)
@@ -74,10 +74,10 @@ class LogHandler(logging.StreamHandler):
             logging.ERROR: 0,
             logging.WARNING: 0,
             logging.INFO: 1,
-            logging.DEBUG: 2
+            logging.DEBUG: 2,
         }
         try:
-            log_level = int(settings('logLevel'))
+            log_level = int(settings("logLevel"))
         except ValueError:
             log_level = 2  # If getting settings fail, we probably want debug logging.
 
@@ -86,13 +86,12 @@ class LogHandler(logging.StreamHandler):
 
 class MyFormatter(logging.Formatter):
 
-    def __init__(self, fmt='%(name)s -> %(levelname)s::%(relpath)s:%(lineno)s %(message)s'):
+    def __init__(
+        self, fmt="%(name)s -> %(levelname)s::%(relpath)s:%(lineno)s %(message)s"
+    ):
         logging.Formatter.__init__(self, fmt)
 
     def format(self, record):
-        if record.pathname:
-            record.pathname = ensure_text(record.pathname, get_filesystem_encoding())
-
         self._gen_rel_path(record)
 
         # Call the original formatter class to do the grunt work
@@ -105,8 +104,6 @@ class MyFormatter(logging.Formatter):
         res = []
 
         for o in traceback.format_exception(*exc_info):
-            o = ensure_text(o, get_filesystem_encoding())
-
             if o.startswith('  File "'):
                 # If this split can't handle your file names, you should seriously consider renaming your files.
                 fn = o.split('  File "', 2)[1].split('", line ', 1)[0]
@@ -116,14 +113,14 @@ class MyFormatter(logging.Formatter):
 
             res.append(o)
 
-        return ''.join(res)
+        return "".join(res)
 
     def _gen_rel_path(self, record):
         if record.pathname:
             record.relpath = os.path.relpath(record.pathname, __pluginpath__)
 
 
-__LOGGER = logging.getLogger('JELLYFIN')
+__LOGGER = logging.getLogger("JELLYFIN")
 for handler in __LOGGER.handlers:
     __LOGGER.removeHandler(handler)
 

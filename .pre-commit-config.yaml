@@ -1,0 +1,43 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: no-commit-to-branch
+
+  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+    rev: "2.7.3"
+    hooks:
+      - id: editorconfig-checker
+        exclude: '^(LICENSE\.txt|resources/language/.*\.po)$'
+
+  - repo: https://github.com/psf/black
+    rev: "24.4.2"
+    hooks:
+      - id: black
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        additional_dependencies:
+          - flake8-import-order
+
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: v1.9.0
+  #   hooks:
+  #     - id: mypy
+  #       exclude: ^(docs/conf.py|scripts/generate_schema.py)$
+  #       args: []
+  #       additional_dependencies: &mypy_deps
+  #         - pytest
+  #         - types-requests >= 2.31
+  #         - types-PyYAML >= 6.0
+  #         - types-python-dateutil >= 2.8.1
+  #         - types-setuptools >= 44.1.1
+  #         - types-Pygments
+  #         - types-colorama

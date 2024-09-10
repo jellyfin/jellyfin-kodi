@@ -6,6 +6,7 @@ class LazyLogger(object):
     """`helper.loghandler.getLogger()` is used everywhere.
     This class helps to avoid import errors.
     """
+
     __logger = None
     __logger_name = None
 
@@ -15,5 +16,6 @@ class LazyLogger(object):
     def __getattr__(self, name):
         if self.__logger is None:
             from .loghandler import getLogger
+
             self.__logger = getLogger(self.__logger_name)
         return getattr(self.__logger, name)

@@ -7,53 +7,28 @@
 <img alt="Logo Banner" src="https://raw.githubusercontent.com/jellyfin/jellyfin-ux/master/branding/SVG/banner-logo-solid.svg?sanitize=true"/>
 <br/>
 <br/>
-<a href="https://github.com/jellyfin/jellyfin-kodi">
-<img src="https://img.shields.io/github/license/jellyfin/jellyfin-kodi" alt="GPL 3.0 License" />
-</a>
-<a href="https://github.com/jellyfin/jellyfin-kodi/releases">
-<img src="https://img.shields.io/github/v/release/jellyfin/jellyfin-kodi" alt="GitHub release (latest SemVer)" />
-</a>
-<a href="https://matrix.to/#/+jellyfin:matrix.org">
-<img alt="Chat on Matrix" src="https://img.shields.io/matrix/jellyfin:matrix.org.svg?logo=matrix"/>
-</a>
+<a href="https://github.com/jellyfin/jellyfin-kodi"><img src="https://img.shields.io/github/license/jellyfin/jellyfin-kodi" alt="GPL 3.0 License" /></a>
+<a href="https://github.com/jellyfin/jellyfin-kodi/releases"><img src="https://img.shields.io/github/v/release/jellyfin/jellyfin-kodi" alt="GitHub release (latest SemVer)" /></a>
+<a href="https://matrix.to/#/+jellyfin:matrix.org"><img alt="Chat on Matrix" src="https://img.shields.io/matrix/jellyfin:matrix.org.svg?logo=matrix"/></a>
 <br />
-<a href="https://translate.jellyfin.org/engage/jellyfin/?utm_source=widget">
-<img src="https://translate.jellyfin.org/widgets/jellyfin/-/jellyfin-kodi/svg-badge.svg" alt="Translation status" />
-</a>
-<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
-<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=alert_status" alt="Quality Gate Status" />
-</a>
-<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
-<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=sqale_index" alt="Technical Debt" />
-</a>
+<a href="https://translate.jellyfin.org/engage/jellyfin/?utm_source=widget"><img src="https://translate.jellyfin.org/widgets/jellyfin/-/jellyfin-kodi/svg-badge.svg" alt="Translation status" /></a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi"><img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=alert_status" alt="Quality Gate Status" /></a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi"><img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=sqale_index" alt="Technical Debt" /></a>
 <br />
-<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
-<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=code_smells" alt="Code Smells" />
-</a>
-<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
-<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=bugs" alt="Bugs" />
-</a>
-<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
-<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=vulnerabilities" alt="Vulnerabilities" />
-</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi"><img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=code_smells" alt="Code Smells" /></a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi"><img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=bugs" alt="Bugs" /></a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi"><img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=vulnerabilities" alt="Vulnerabilities" /></a>
 <br />
 <img src="https://img.shields.io/github/languages/code-size/jellyfin/jellyfin-kodi" alt="GitHub code size in bytes" />
-<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
-<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=ncloc" alt="Lines of Code" />
-</a>
-<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
-<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=duplicated_lines_density" alt="Duplicated Lines (%)" />
-</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi"><img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=ncloc" alt="Lines of Code" /></a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi"><img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=duplicated_lines_density" alt="Duplicated Lines (%)" /></a>
 <br />
-<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
-<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=sqale_rating" alt="Maintainability Rating" />
-</a>
-<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
-<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=reliability_rating" alt="Reliability Rating" />
-</a>
-<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi">
-<img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=security_rating" alt="Security Rating" />
-</a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi"><img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=sqale_rating" alt="Maintainability Rating" /></a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi"><img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=reliability_rating" alt="Reliability Rating" /></a>
+<a href="https://sonarcloud.io/dashboard?id=jellyfin_jellyfin-kodi"><img src="https://sonarcloud.io/api/project_badges/measure?project=jellyfin_jellyfin-kodi&metric=security_rating" alt="Security Rating" /></a>
+<br />
+<a href="https://codecov.io/github/jellyfin/jellyfin-kodi"><img src="https://codecov.io/github/jellyfin/jellyfin-kodi/graph/badge.svg" alt="Code coverage" /></a>
+<a href="https://github.com/jellyfin/jellyfin-kodi/actions/workflows/codeql.yaml"><img alt="CodeQL Analysis" src="https://github.com/jellyfin/jellyfin-kodi/actions/workflows/codeql.yaml/badge.svg" /></a>
 </p>
 
 <table>

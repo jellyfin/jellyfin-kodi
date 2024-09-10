@@ -5,8 +5,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import os
 
-from kodi_six import xbmcgui, xbmcaddon
-from six import ensure_text
+import xbmcgui
+import xbmcaddon
 
 from ..helper import window, addon_id
 from ..helper import LazyLogger
@@ -47,8 +47,8 @@ class ContextMenu(xbmcgui.WindowXMLDialog):
 
     def onInit(self):
 
-        if window('JellyfinUserImage'):
-            self.getControl(USER_IMAGE).setImage(window('JellyfinUserImage'))
+        if window("JellyfinUserImage"):
+            self.getControl(USER_IMAGE).setImage(window("JellyfinUserImage"))
 
         LOG.info("options: %s", self._options)
         self.list_ = self.getControl(LIST)
@@ -63,21 +63,35 @@ class ContextMenu(xbmcgui.WindowXMLDialog):
         if action in (ACTION_BACK, ACTION_PARENT_DIR, ACTION_PREVIOUS_MENU):
             self.close()
 
-        if action in (ACTION_SELECT_ITEM, ACTION_MOUSE_LEFT_CLICK) and self.getFocusId() == LIST:
+        if (
+            action in (ACTION_SELECT_ITEM, ACTION_MOUSE_LEFT_CLICK)
+            and self.getFocusId() == LIST
+        ):
 
             option = self.list_.getSelectedItem()
-            self.selected_option = ensure_text(option.getLabel())
-            LOG.info('option selected: %s', self.selected_option)
+            self.selected_option = option.getLabel()
+            LOG.info("option selected: %s", self.selected_option)
 
             self.close()
 
     def _add_editcontrol(self, x, y, height, width, password=0):
 
-        media = os.path.join(xbmcaddon.Addon(addon_id()).getAddonInfo('path'), 'resources', 'skins', 'default', 'media')
-        control = xbmcgui.ControlImage(0, 0, 0, 0,
-                                       filename=os.path.join(media, "white.png"),
-                                       aspectRatio=0,
-                                       colorDiffuse="ff111111")
+        media = os.path.join(
+            xbmcaddon.Addon(addon_id()).getAddonInfo("path"),
+            "resources",
+            "skins",
+            "default",
+            "media",
+        )
+        control = xbmcgui.ControlImage(
+            0,
+            0,
+            0,
+            0,
+            filename=os.path.join(media, "white.png"),
+            aspectRatio=0,
+            colorDiffuse="ff111111",
+        )
         control.setPosition(x, y)
         control.setHeight(height)
         control.setWidth(width)

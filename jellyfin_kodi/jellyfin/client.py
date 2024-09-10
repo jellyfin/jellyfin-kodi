@@ -19,11 +19,10 @@ LOG = LazyLogger(__name__)
 
 
 def callback(message, data):
-
-    ''' Callback function should receive message, data
-        message: string
-        data: json dictionary
-    '''
+    """Callback function should receive message, data
+    message: string
+    data: json dictionary
+    """
     pass
 
 
@@ -53,13 +52,13 @@ class JellyfinClient(object):
         self.set_credentials(credentials or {})
         state = self.auth.connect(options or {})
 
-        if state['State'] == CONNECTION_STATE['SignedIn']:
+        if state["State"] == CONNECTION_STATE["SignedIn"]:
 
             LOG.info("User is authenticated.")
             self.logged_in = True
-            self.callback("ServerOnline", {'Id': self.auth.server_id})
+            self.callback("ServerOnline", {"Id": self.auth.server_id})
 
-        state['Credentials'] = self.get_credentials()
+        state["Credentials"] = self.get_credentials()
 
         return state
 

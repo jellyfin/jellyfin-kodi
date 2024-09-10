@@ -7,7 +7,7 @@ import threading
 import concurrent.futures
 from datetime import date
 
-from six.moves import range, queue as Queue
+import queue
 
 import requests
 
@@ -25,7 +25,7 @@ LOG = LazyLogger(__name__)
 
 def get_jellyfinserver_url(handler):
 
-    if handler.startswith('/'):
+    if handler.startswith("/"):
 
         handler = handler[1:]
         LOG.info("handler starts with /: %s", handler)
@@ -38,47 +38,55 @@ def _http(action, url, request=None, server_id=None):
     if request is None:
         request = {}
 
-    request.update({'url': url, 'type': action})
+    request.update({"url": url, "type": action})
     return Jellyfin(server_id).http.request(request)
 
 
 def _get(handler, params=None, server_id=None):
-    return _http("GET", get_jellyfinserver_url(handler), {'params': params}, server_id)
+    return _http("GET", get_jellyfinserver_url(handler), {"params": params}, server_id)
 
 
 def _post(handler, json=None, params=None, server_id=None):
-    return _http("POST", get_jellyfinserver_url(handler), {'params': params, 'json': json}, server_id)
+    return _http(
+        "POST",
+        get_jellyfinserver_url(handler),
+        {"params": params, "json": json},
+        server_id,
+    )
 
 
 def _delete(handler, params=None, server_id=None):
-    return _http("DELETE", get_jellyfinserver_url(handler), {'params': params}, server_id)
+    return _http(
+        "DELETE", get_jellyfinserver_url(handler), {"params": params}, server_id
+    )
 
 
 def validate_view(library_id, item_id):
-
-    ''' This confirms a single item from the library matches the view it belongs to.
-        Used to detect grouped libraries.
-    '''
+    """This confirms a single item from the library matches the view it belongs to.
+    Used to detect grouped libraries.
+    """
     try:
-        result = _get("Users/{UserId}/Items", {
-            'ParentId': library_id,
-            'Recursive': True,
-            'Ids': item_id
-        })
+        result = _get(
+            "Users/{UserId}/Items",
+            {"ParentId": library_id, "Recursive": True, "Ids": item_id},
+        )
     except Exception as error:
         LOG.exception(error)
         return False
 
-    return bool(len(result['Items']))
+    return bool(len(result["Items"]))
 
 
 def get_single_item(parent_id, media):
-    return _get("Users/{UserId}/Items", {
-        'ParentId': parent_id,
-        'Recursive': True,
-        'Limit': 1,
-        'IncludeItemTypes': media
-    })
+    return _get(
+        "Users/{UserId}/Items",
+        {
+            "ParentId": parent_id,
+            "Recursive": True,
+            "Limit": 1,
+            "IncludeItemTypes": media,
+        },
+    )
 
 
 def get_movies_by_boxset(boxset_id):
@@ -90,13 +98,13 @@ def get_movies_by_boxset(boxset_id):
 def get_episode_by_show(show_id):
 
     query = {
-        'url': "Shows/%s/Episodes" % show_id,
-        'params': {
-            'EnableUserData': True,
-            'EnableImages': True,
-            'UserId': "{UserId}",
-            'Fields': api.info()
-        }
+        "url": "Shows/%s/Episodes" % show_id,
+        "params": {
+            "EnableUserData": True,
+            "EnableImages": True,
+            "UserId": "{UserId}",
+            "Fields": api.info(),
+        },
     }
     for items in _get_items(query):
         yield items
@@ -105,59 +113,57 @@ def get_episode_by_show(show_id):
 def get_episode_by_season(show_id, season_id):
 
     query = {
-        'url': "Shows/%s/Episodes" % show_id,
-        'params': {
-            'SeasonId': season_id,
-            'EnableUserData': True,
-            'EnableImages': True,
-            'UserId': "{UserId}",
-            'Fields': api.info()
-        }
+        "url": "Shows/%s/Episodes" % show_id,
+        "params": {
+            "SeasonId": season_id,
+            "EnableUserData": True,
+            "EnableImages": True,
+            "UserId": "{UserId}",
+            "Fields": api.info(),
+        },
     }
     for items in _get_items(query):
         yield items
 
 
-def get_item_count(parent_id, item_type=None, params=None):
+def get_item_count(parent_id, item_type=None):
 
     url = "Users/{UserId}/Items"
 
     query_params = {
-        'ParentId': parent_id,
-        'IncludeItemTypes': item_type,
-        'EnableTotalRecordCount': True,
-        'LocationTypes': "FileSystem,Remote,Offline",
-        'Recursive': True,
-        'Limit': 1
+        "ParentId": parent_id,
+        "IncludeItemTypes": item_type,
+        "EnableTotalRecordCount": True,
+        "LocationTypes": "FileSystem,Remote,Offline",
+        "Recursive": True,
+        "Limit": 1,
     }
-    if params:
-        query_params['params'].update(params)
 
     result = _get(url, query_params)
 
-    return result.get('TotalRecordCount', 1)
+    return result.get("TotalRecordCount", 1)
 
 
 def get_items(parent_id, item_type=None, basic=False, params=None):
 
     query = {
-        'url': "Users/{UserId}/Items",
-        'params': {
-            'ParentId': parent_id,
-            'IncludeItemTypes': item_type,
-            'SortBy': "SortName",
-            'SortOrder': "Ascending",
-            'Fields': api.basic_info() if basic else api.info(),
-            'CollapseBoxSetItems': False,
-            'IsVirtualUnaired': False,
-            'EnableTotalRecordCount': False,
-            'LocationTypes': "FileSystem,Remote,Offline",
-            'IsMissing': False,
-            'Recursive': True
-        }
+        "url": "Users/{UserId}/Items",
+        "params": {
+            "ParentId": parent_id,
+            "IncludeItemTypes": item_type,
+            "SortBy": "SortName",
+            "SortOrder": "Ascending",
+            "Fields": api.basic_info() if basic else api.info(),
+            "CollapseBoxSetItems": False,
+            "IsVirtualUnaired": False,
+            "EnableTotalRecordCount": False,
+            "LocationTypes": "FileSystem,Remote,Offline",
+            "IsMissing": False,
+            "Recursive": True,
+        },
     }
     if params:
-        query['params'].update(params)
+        query["params"].update(params)
 
     for items in _get_items(query):
         yield items
@@ -166,20 +172,20 @@ def get_items(parent_id, item_type=None, basic=False, params=None):
 def get_artists(parent_id=None):
 
     query = {
-        'url': 'Artists',
-        'params': {
-            'UserId': "{UserId}",
-            'ParentId': parent_id,
-            'SortBy': "SortName",
-            'SortOrder': "Ascending",
-            'Fields': api.music_info(),
-            'CollapseBoxSetItems': False,
-            'IsVirtualUnaired': False,
-            'EnableTotalRecordCount': False,
-            'LocationTypes': "FileSystem,Remote,Offline",
-            'IsMissing': False,
-            'Recursive': True
-        }
+        "url": "Artists",
+        "params": {
+            "UserId": "{UserId}",
+            "ParentId": parent_id,
+            "SortBy": "SortName",
+            "SortOrder": "Ascending",
+            "Fields": api.music_info(),
+            "CollapseBoxSetItems": False,
+            "IsVirtualUnaired": False,
+            "EnableTotalRecordCount": False,
+            "LocationTypes": "FileSystem,Remote,Offline",
+            "IsMissing": False,
+            "Recursive": True,
+        },
     }
 
     for items in _get_items(query):
@@ -188,48 +194,49 @@ def get_artists(parent_id=None):
 
 @stop
 def _get_items(query, server_id=None):
-
-    ''' query = {
-            'url': string,
-            'params': dict -- opt, include StartIndex to resume
-        }
-    '''
-    items = {
-        'Items': [],
-        'TotalRecordCount': 0,
-        'RestorePoint': {}
+    """query = {
+        'url': string,
+        'params': dict -- opt, include StartIndex to resume
     }
+    """
+    items = {"Items": [], "TotalRecordCount": 0, "RestorePoint": {}}
 
-    limit = min(int(settings('limitIndex') or 50), 50)
-    dthreads = int(settings('limitThreads') or 3)
+    limit = min(int(settings("limitIndex") or 50), 50)
+    dthreads = int(settings("limitThreads") or 3)
 
-    url = query['url']
-    query.setdefault('params', {})
-    params = query['params']
+    url = query["url"]
+    query.setdefault("params", {})
+    params = query["params"]
 
     try:
         test_params = dict(params)
-        test_params['Limit'] = 1
-        test_params['EnableTotalRecordCount'] = True
+        test_params["Limit"] = 1
+        test_params["EnableTotalRecordCount"] = True
 
-        items['TotalRecordCount'] = _get(url, test_params, server_id=server_id)['TotalRecordCount']
+        items["TotalRecordCount"] = _get(url, test_params, server_id=server_id)[
+            "TotalRecordCount"
+        ]
 
     except Exception as error:
-        LOG.exception("Failed to retrieve the server response %s: %s params:%s", url, error, params)
+        LOG.exception(
+            "Failed to retrieve the server response %s: %s params:%s",
+            url,
+            error,
+            params,
+        )
 
     else:
-        params.setdefault('StartIndex', 0)
+        params.setdefault("StartIndex", 0)
 
         def get_query_params(params, start, count):
             params_copy = dict(params)
-            params_copy['StartIndex'] = start
-            params_copy['Limit'] = count
+            params_copy["StartIndex"] = start
+            params_copy["Limit"] = count
             return params_copy
 
         query_params = [
             get_query_params(params, offset, limit)
-            for offset
-            in range(params['StartIndex'], items['TotalRecordCount'], limit)
+            for offset in range(params["StartIndex"], items["TotalRecordCount"], limit)
         ]
 
         # multiprocessing.dummy.Pool completes all requests in multiple threads but has to
@@ -257,27 +264,29 @@ def _get_items(query, server_id=None):
             # process complete jobs
             for job in concurrent.futures.as_completed(jobs):
                 # get the result
-                result = job.result() or {'Items': []}
-                query['params'] = jobs[job]
+                result = job.result() or {"Items": []}
+                query["params"] = jobs[job]
 
                 # free job memory
                 del jobs[job]
                 del job
 
                 # Mitigates #216 till the server validates the date provided is valid
-                if result['Items'][0].get('ProductionYear'):
+                if result["Items"][0].get("ProductionYear"):
                     try:
-                        date(result['Items'][0]['ProductionYear'], 1, 1)
+                        date(result["Items"][0]["ProductionYear"], 1, 1)
                     except ValueError:
-                        LOG.info('#216 mitigation triggered. Setting ProductionYear to None')
-                        result['Items'][0]['ProductionYear'] = None
+                        LOG.info(
+                            "#216 mitigation triggered. Setting ProductionYear to None"
+                        )
+                        result["Items"][0]["ProductionYear"] = None
 
-                items['Items'].extend(result['Items'])
+                items["Items"].extend(result["Items"])
                 # Using items to return data and communicate a restore point back to the callee is
                 # a violation of the SRP. TODO: Separate responsibilities.
-                items['RestorePoint'] = query
+                items["RestorePoint"] = query
                 yield items
-                del items['Items'][:]
+                del items["Items"][:]
 
                 # release the semaphore again
                 thread_buffer.release()
@@ -299,7 +308,7 @@ class GetItemWorker(threading.Thread):
             while True:
                 try:
                     item_ids = self.queue.get(timeout=1)
-                except Queue.Empty:
+                except queue.Empty:
 
                     self.is_done = True
                     LOG.info("--<[ q:download/%s ]", id(self))
@@ -307,25 +316,25 @@ class GetItemWorker(threading.Thread):
                     return
 
                 request = {
-                    'type': "GET",
-                    'handler': "Users/{UserId}/Items",
-                    'params': {
-                        'Ids': ','.join(str(x) for x in item_ids),
-                        'Fields': api.info()
-                    }
+                    "type": "GET",
+                    "handler": "Users/{UserId}/Items",
+                    "params": {
+                        "Ids": ",".join(str(x) for x in item_ids),
+                        "Fields": api.info(),
+                    },
                 }
 
                 try:
                     result = self.server.http.request(request, s)
 
-                    for item in result['Items']:
+                    for item in result["Items"]:
 
-                        if item['Type'] in self.output:
-                            self.output[item['Type']].put(item)
+                        if item["Type"] in self.output:
+                            self.output[item["Type"]].put(item)
                 except HTTPException as error:
                     LOG.error("--[ http status: %s ]", error.status)
 
-                    if error.status == 'ServerUnreachable':
+                    if error.status == "ServerUnreachable":
                         self.is_done = True
 
                         break
@@ -335,5 +344,5 @@ class GetItemWorker(threading.Thread):
 
                 self.queue.task_done()
 
-                if window('jellyfin_should_stop.bool'):
+                if window("jellyfin_should_stop.bool"):
                     break

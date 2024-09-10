@@ -6,7 +6,6 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import time
 
 import requests
-from six import string_types, ensure_str
 
 from ..helper.utils import JsonDebugPrinter
 from ..helper import LazyLogger
@@ -34,9 +33,13 @@ class HTTP(object):
 
         self.session = requests.Session()
 
-        max_retries = self.config.data['http.max_retries']
-        self.session.mount("http://", requests.adapters.HTTPAdapter(max_retries=max_retries))
-        self.session.mount("https://", requests.adapters.HTTPAdapter(max_retries=max_retries))
+        max_retries = self.config.data["http.max_retries"]
+        self.session.mount(
+            "http://", requests.adapters.HTTPAdapter(max_retries=max_retries)
+        )
+        self.session.mount(
+            "https://", requests.adapters.HTTPAdapter(max_retries=max_retries)
+        )
 
     def stop_session(self):
 
@@ -51,43 +54,44 @@ class HTTP(object):
 
     def _replace_user_info(self, string):
 
-        if '{server}' in string:
-            if self.config.data.get('auth.server', None):
-                string = string.replace("{server}", self.config.data['auth.server'])
+        if "{server}" in string:
+            if self.config.data.get("auth.server", None):
+                string = string.replace("{server}", self.config.data["auth.server"])
             else:
                 LOG.debug("Server address not set")
 
-        if '{UserId}' in string:
-            if self.config.data.get('auth.user_id', None):
-                string = string.replace("{UserId}", self.config.data['auth.user_id'])
+        if "{UserId}" in string:
+            if self.config.data.get("auth.user_id", None):
+                string = string.replace("{UserId}", self.config.data["auth.user_id"])
             else:
                 LOG.debug("UserId is not set.")
 
         return string
 
     def request(self, data, session=None):
-
-        ''' Give a chance to retry the connection. Jellyfin sometimes can be slow to answer back
-            data dictionary can contain:
-            type: GET, POST, etc.
-            url: (optional)
-            handler: not considered when url is provided (optional)
-            params: request parameters (optional)
-            json: request body (optional)
-            headers: (optional),
-            verify: ssl certificate, True (verify using device built-in library) or False
-        '''
+        """Give a chance to retry the connection. Jellyfin sometimes can be slow to answer back
+        data dictionary can contain:
+        type: GET, POST, etc.
+        url: (optional)
+        handler: not considered when url is provided (optional)
+        params: request parameters (optional)
+        json: request body (optional)
+        headers: (optional),
+        verify: ssl certificate, True (verify using device built-in library) or False
+        """
         if not data:
             raise AttributeError("Request cannot be empty")
 
         data = self._request(data)
         LOG.debug("--->[ http ] %s", JsonDebugPrinter(data))
-        retry = data.pop('retry', 5)
+        retry = data.pop("retry", 5)
 
         while True:
 
             try:
-                r = self._requests(session or self.session or requests, data.pop('type', "GET"), **data)
+                r = self._requests(
+                    session or self.session or requests, data.pop("type", "GET"), **data
+                )
                 r.content  # release the connection
 
                 if not self.keep_alive and self.session is not None:
@@ -104,7 +108,10 @@ class HTTP(object):
                     continue
 
                 LOG.error(error)
-                self.client.callback("ServerUnreachable", {'ServerId': self.config.data['auth.server-id']})
+                self.client.callback(
+                    "ServerUnreachable",
+                    {"ServerId": self.config.data["auth.server-id"]},
+                )
 
                 raise HTTPException("ServerUnreachable", error)
 
@@ -125,12 +132,18 @@ class HTTP(object):
 
                 if r.status_code == 401:
 
-                    if 'X-Application-Error-Code' in r.headers:
-                        self.client.callback("AccessRestricted", {'ServerId': self.config.data['auth.server-id']})
+                    if "X-Application-Error-Code" in r.headers:
+                        self.client.callback(
+                            "AccessRestricted",
+                            {"ServerId": self.config.data["auth.server-id"]},
+                        )
 
                         raise HTTPException("AccessRestricted", error)
                     else:
-                        self.client.callback("Unauthorized", {'ServerId': self.config.data['auth.server-id']})
+                        self.client.callback(
+                            "Unauthorized",
+                            {"ServerId": self.config.data["auth.server-id"]},
+                        )
                         self.client.auth.revoke_token()
 
                         raise HTTPException("Unauthorized", error)
@@ -160,11 +173,13 @@ class HTTP(object):
 
             except requests.exceptions.MissingSchema as error:
                 LOG.error("Request missing Schema. " + str(error))
-                raise HTTPException("MissingSchema", {'Id': self.config.data.get('auth.server', "None")})
+                raise HTTPException(
+                    "MissingSchema", {"Id": self.config.data.get("auth.server", "None")}
+                )
 
             else:
                 try:
-                    self.config.data['server-time'] = r.headers['Date']
+                    self.config.data["server-time"] = r.headers["Date"]
                     elapsed = int(r.elapsed.total_seconds() * 1000)
                     response = r.json()
                     LOG.debug("---<[ http ][%s ms]", elapsed)
@@ -179,15 +194,18 @@ class HTTP(object):
 
     def _request(self, data):
 
-        if 'url' not in data:
-            data['url'] = "%s/%s" % (self.config.data.get("auth.server", ""), data.pop('handler', ""))
+        if "url" not in data:
+            data["url"] = "%s/%s" % (
+                self.config.data.get("auth.server", ""),
+                data.pop("handler", ""),
+            )
 
         self._get_header(data)
-        data['timeout'] = data.get('timeout') or self.config.data['http.timeout']
-        data['verify'] = data.get('verify') or self.config.data.get('auth.ssl', False)
-        data['url'] = self._replace_user_info(data['url'])
-        self._process_params(data.get('params') or {})
-        self._process_params(data.get('json') or {})
+        data["timeout"] = data.get("timeout") or self.config.data["http.timeout"]
+        data["verify"] = data.get("verify") or self.config.data.get("auth.ssl", False)
+        data["url"] = self._replace_user_info(data["url"])
+        self._process_params(data.get("params") or {})
+        self._process_params(data.get("json") or {})
 
         return data
 
@@ -199,22 +217,29 @@ class HTTP(object):
             if isinstance(value, dict):
                 self._process_params(value)
 
-            if isinstance(value, string_types):
+            if isinstance(value, str):
                 params[key] = self._replace_user_info(value)
 
     def _get_header(self, data):
 
-        data['headers'] = data.setdefault('headers', {})
+        data["headers"] = data.setdefault("headers", {})
 
-        if not data['headers']:
-            data['headers'].update({
-                'Content-type': "application/json",
-                'Accept-Charset': "UTF-8,*",
-                'Accept-encoding': "gzip",
-                'User-Agent': self.config.data['http.user_agent'] or "%s/%s" % (self.config.data.get('app.name', 'Jellyfin for Kodi'), self.config.data.get('app.version', "0.0.0"))
-            })
+        if not data["headers"]:
+            data["headers"].update(
+                {
+                    "Content-type": "application/json",
+                    "Accept-Charset": "UTF-8,*",
+                    "Accept-encoding": "gzip",
+                    "User-Agent": self.config.data["http.user_agent"]
+                    or "%s/%s"
+                    % (
+                        self.config.data.get("app.name", "Jellyfin for Kodi"),
+                        self.config.data.get("app.version", "0.0.0"),
+                    ),
+                }
+            )
 
-        if 'x-emby-authorization' not in data['headers']:
+        if "x-emby-authorization" not in data["headers"]:
             self._authorization(data)
 
         return data
@@ -222,19 +247,26 @@ class HTTP(object):
     def _authorization(self, data):
 
         auth = "MediaBrowser "
-        auth += "Client=%s, " % self.config.data.get('app.name', "Jellyfin for Kodi")
-        auth += "Device=%s, " % self.config.data.get('app.device_name', 'Unknown Device')
-        auth += "DeviceId=%s, " % self.config.data.get('app.device_id', 'Unknown Device id')
-        auth += "Version=%s" % self.config.data.get('app.version', '0.0.0')
+        auth += "Client=%s, " % self.config.data.get("app.name", "Jellyfin for Kodi")
+        auth += "Device=%s, " % self.config.data.get(
+            "app.device_name", "Unknown Device"
+        )
+        auth += "DeviceId=%s, " % self.config.data.get(
+            "app.device_id", "Unknown Device id"
+        )
+        auth += "Version=%s" % self.config.data.get("app.version", "0.0.0")
 
-        data['headers'].update({'x-emby-authorization': ensure_str(auth, 'utf-8')})
+        data["headers"].update({"x-emby-authorization": auth})
 
-        if self.config.data.get('auth.token') and self.config.data.get('auth.user_id'):
+        if self.config.data.get("auth.token") and self.config.data.get("auth.user_id"):
 
-            auth += ', UserId=%s' % self.config.data.get('auth.user_id')
-            data['headers'].update({
-                'x-emby-authorization': ensure_str(auth, 'utf-8'),
-                'X-MediaBrowser-Token': self.config.data.get('auth.token')})
+            auth += ", UserId=%s" % self.config.data.get("auth.user_id")
+            data["headers"].update(
+                {
+                    "x-emby-authorization": auth,
+                    "X-MediaBrowser-Token": self.config.data.get("auth.token"),
+                }
+            )
 
         return data
 

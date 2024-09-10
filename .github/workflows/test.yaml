@@ -22,10 +22,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.7
 
       - name: Set up Python ${{ matrix.py_version }}
-        uses: actions/setup-python@v5.0.0
+        uses: actions/setup-python@v5.1.1
         with:
           python-version: ${{ matrix.py_version }}
 
@@ -52,15 +52,21 @@ jobs:
           coverage report
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v4.0.1
+        uses: codecov/codecov-action@v4.5.0
         if: ${{ matrix.py_version == '3.11' }}
 
       - name: Publish Test Artifact
-        uses: actions/upload-artifact@v3.1.3
+        uses: actions/upload-artifact@v4.3.6
         with:
           retention-days: 14
-          name: ${{ matrix.py_version }}-test-results
+          name: ${{ matrix.py_version }}-${{ matrix.os }}-test-results
           path: |
             flake8.output
             test.xml
             coverage.xml
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: psf/black@stable

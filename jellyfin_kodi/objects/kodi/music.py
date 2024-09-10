@@ -25,10 +25,9 @@ class Music(Kodi):
         Kodi.__init__(self)
 
     def create_entry(self):
-
-        ''' Krypton has a dummy first entry
-            idArtist: 1  strArtist: [Missing Tag]  strMusicBrainzArtistID: Artist Tag Missing
-        '''
+        """Krypton has a dummy first entry
+        idArtist: 1  strArtist: [Missing Tag]  strMusicBrainzArtistID: Artist Tag Missing
+        """
         self.cursor.execute(QU.create_artist)
 
         return self.cursor.fetchone()[0] + 1
@@ -55,9 +54,7 @@ class Music(Kodi):
         self.cursor.execute(QU.update_role, args)
 
     def get(self, artist_id, name, musicbrainz):
-
-        ''' Get artist or create the entry.
-        '''
+        """Get artist or create the entry."""
         try:
             self.cursor.execute(QU.get_artist, (musicbrainz,))
             result = self.cursor.fetchone()
@@ -72,15 +69,20 @@ class Music(Kodi):
         return artist_id_res
 
     def add_artist(self, artist_id, name, *args):
-
-        ''' Safety check, when musicbrainz does not exist
-        '''
+        """Safety check, when musicbrainz does not exist"""
         try:
             self.cursor.execute(QU.get_artist_by_name, (name,))
             artist_id_res = self.cursor.fetchone()[0]
         except TypeError:
             artist_id_res = artist_id or self.create_entry()
-            self.cursor.execute(QU.add_artist, (artist_id, name,) + args)
+            self.cursor.execute(
+                QU.add_artist,
+                (
+                    artist_id,
+                    name,
+                )
+                + args,
+            )
 
         return artist_id_res
 
@@ -141,7 +143,7 @@ class Music(Kodi):
                     self.cursor.execute(QU.get_album_by_name72, (name,))
                 album = self.cursor.fetchone()
 
-                if album[1] and album[1].split(' / ')[0] not in artists.split(' / '):
+                if album[1] and album[1].split(" / ")[0] not in artists.split(" / "):
                     LOG.info("Album found, but artist doesn't match?")
                     LOG.info("Album [ %s/%s ] %s", name, album[1], artists)
 
@@ -149,7 +151,14 @@ class Music(Kodi):
 
             album_id = (album or self.cursor.fetchone())[0]
         except TypeError:
-            album_id = self.add_album(*(album_id, name, musicbrainz,) + args)
+            album_id = self.add_album(
+                *(
+                    album_id,
+                    name,
+                    musicbrainz,
+                )
+                + args
+            )
 
         return album_id
 
@@ -225,11 +234,10 @@ class Music(Kodi):
         self.cursor.execute(QU.update_song_rating, args)
 
     def add_genres(self, kodi_id, genres, media):
-
-        ''' Add genres, but delete current genres first.
-            Album_genres was removed in kodi 18
-        '''
-        if media == 'album' and self.version_id < 72:
+        """Add genres, but delete current genres first.
+        Album_genres was removed in kodi 18
+        """
+        if media == "album" and self.version_id < 72:
             self.cursor.execute(QU.delete_genres_album, (kodi_id,))
 
             for genre in genres:
@@ -237,7 +245,7 @@ class Music(Kodi):
                 genre_id = self.get_genre(genre)
                 self.cursor.execute(QU.update_genre_album, (genre_id, kodi_id))
 
-        if media == 'song':
+        if media == "song":
             self.cursor.execute(QU.delete_genres_song, (kodi_id,))
 
             for genre in genres:

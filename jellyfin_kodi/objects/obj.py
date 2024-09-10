@@ -6,9 +6,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import json
 import os
 
-from six import iteritems, ensure_text
-
-from ..helper import LazyLogger, get_filesystem_encoding
+from ..helper import LazyLogger
 
 ##################################################################################################
 
@@ -23,35 +21,30 @@ class Objects(object):
     _shared_state = {}
 
     def __init__(self):
-
-        ''' Hold all persistent data here.
-        '''
+        """Hold all persistent data here."""
 
         self.__dict__ = self._shared_state
 
     def mapping(self):
+        """Load objects mapping."""
+        file_dir = os.path.dirname(__file__)
 
-        ''' Load objects mapping.
-        '''
-        file_dir = os.path.dirname(ensure_text(__file__, get_filesystem_encoding()))
-
-        with open(os.path.join(file_dir, 'obj_map.json')) as infile:
+        with open(os.path.join(file_dir, "obj_map.json")) as infile:
             self.objects = json.load(infile)
 
     def map(self, item, mapping_name):
+        """Syntax to traverse the item dictionary.
+        This of the query almost as a url.
 
-        ''' Syntax to traverse the item dictionary.
-            This of the query almost as a url.
+        Item is the Jellyfin item json object structure
 
-            Item is the Jellyfin item json object structure
-
-            ",": each element will be used as a fallback until a value is found.
-            "?": split filters and key name from the query part, i.e. MediaSources/0?$Name
-            "$": lead the key name with $. Only one key value can be requested per element.
-            ":": indicates it's a list of elements [], i.e. MediaSources/0/MediaStreams:?$Name
-                 MediaStreams is a list.
-            "/": indicates where to go directly
-        '''
+        ",": each element will be used as a fallback until a value is found.
+        "?": split filters and key name from the query part, i.e. MediaSources/0?$Name
+        "$": lead the key name with $. Only one key value can be requested per element.
+        ":": indicates it's a list of elements [], i.e. MediaSources/0/MediaStreams:?$Name
+            MediaStreams is a list.
+        "/": indicates where to go directly
+        """
         self.mapped_item = {}
 
         if not mapping_name:
@@ -59,10 +52,10 @@ class Objects(object):
 
         mapping = self.objects[mapping_name]
 
-        for key, value in iteritems(mapping):
+        for key, value in mapping.items():
 
             self.mapped_item[key] = None
-            params = value.split(',')
+            params = value.split(",")
 
             for param in params:
 
@@ -71,19 +64,19 @@ class Objects(object):
                 obj_key = ""
                 obj_filters = {}
 
-                if '?' in obj_param:
+                if "?" in obj_param:
 
-                    if '$' in obj_param:
-                        obj_param, obj_key = obj_param.rsplit('$', 1)
+                    if "$" in obj_param:
+                        obj_param, obj_key = obj_param.rsplit("$", 1)
 
-                    obj_param, filters = obj_param.rsplit('?', 1)
+                    obj_param, filters = obj_param.rsplit("?", 1)
 
                     if filters:
-                        for filter in filters.split('&'):
-                            filter_key, filter_value = filter.split('=')
+                        for filter in filters.split("&"):
+                            filter_key, filter_value = filter.split("=")
                             obj_filters[filter_key] = filter_value
 
-                if ':' in obj_param:
+                if ":" in obj_param:
                     result = []
 
                     for d in self.__recursiveloop__(obj, obj_param):
@@ -94,7 +87,7 @@ class Objects(object):
                     obj = result
                     obj_filters = {}
 
-                elif '/' in obj_param:
+                elif "/" in obj_param:
                     obj = self.__recursive__(obj, obj_param)
 
                 elif obj is item and obj is not None:
@@ -107,21 +100,31 @@ class Objects(object):
                     continue
 
                 if obj_key:
-                    obj = [d[obj_key] for d in obj if d.get(obj_key)] if type(obj) == list else obj.get(obj_key)
+                    obj = (
+                        [d[obj_key] for d in obj if d.get(obj_key)]
+                        if isinstance(obj, list)
+                        else obj.get(obj_key)
+                    )
 
                 self.mapped_item[key] = obj
                 break
 
-        if not mapping_name.startswith('Browse') and not mapping_name.startswith('Artwork') and not mapping_name.startswith('UpNext'):
+        if (
+            not mapping_name.startswith("Browse")
+            and not mapping_name.startswith("Artwork")
+            and not mapping_name.startswith("UpNext")
+        ):
 
-            self.mapped_item['ProviderName'] = self.objects.get('%sProviderName' % mapping_name)
-            self.mapped_item['Checksum'] = json.dumps(item['UserData'])
+            self.mapped_item["ProviderName"] = self.objects.get(
+                "%sProviderName" % mapping_name
+            )
+            self.mapped_item["Checksum"] = json.dumps(item["UserData"])
 
         return self.mapped_item
 
     def __recursiveloop__(self, obj, keys):
 
-        first, rest = keys.split(':', 1)
+        first, rest = keys.split(":", 1)
         obj = self.__recursive__(obj, first)
 
         if obj:
@@ -133,7 +136,7 @@ class Objects(object):
 
     def __recursive__(self, obj, keys):
 
-        for string in keys.split('/'):
+        for string in keys.split("/"):
 
             if not obj:
                 return
@@ -146,14 +149,14 @@ class Objects(object):
 
         result = False
 
-        for key, value in iteritems(filters):
+        for key, value in filters.items():
 
             inverse = False
 
-            if value.startswith('!'):
+            if value.startswith("!"):
 
                 inverse = True
-                value = value.split('!', 1)[1]
+                value = value.split("!", 1)[1]
 
             if value.lower() == "null":
                 value = None

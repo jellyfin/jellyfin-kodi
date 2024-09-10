@@ -6,7 +6,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import os
 import xml.etree.ElementTree as etree
 
-from kodi_six import xbmc, xbmcvfs
+import xbmc
+import xbmcvfs
 
 from .utils import translate_path
 from . import translate, dialog, settings, LazyLogger
@@ -19,45 +20,42 @@ LOG = LazyLogger(__name__)
 
 
 def tvtunes_nfo(path, urls):
-
-    ''' Create tvtunes.nfo
-    '''
+    """Create tvtunes.nfo"""
     try:
         xml = etree.parse(path).getroot()
     except Exception:
-        xml = etree.Element('tvtunes')
+        xml = etree.Element("tvtunes")
 
-    for elem in xml.getiterator('tvtunes'):
+    for elem in xml.getiterator("tvtunes"):
         for file in list(elem):
             elem.remove(file)
 
     for url in urls:
-        etree.SubElement(xml, 'file').text = url
+        etree.SubElement(xml, "file").text = url
 
     tree = etree.ElementTree(xml)
     tree.write(path)
 
 
 def advanced_settings():
-
-    ''' Track the existence of <cleanonupdate>true</cleanonupdate>
-        It is incompatible with plugin paths.
-    '''
-    if settings('useDirectPaths') != "0":
+    """Track the existence of <cleanonupdate>true</cleanonupdate>
+    It is incompatible with plugin paths.
+    """
+    if settings("useDirectPaths") != "0":
         return
 
     path = translate_path("special://profile/")
-    file = os.path.join(path, 'advancedsettings.xml')
+    file = os.path.join(path, "advancedsettings.xml")
 
     try:
         xml = etree.parse(file).getroot()
     except Exception:
         return
 
-    video = xml.find('videolibrary')
+    video = xml.find("videolibrary")
 
     if video is not None:
-        cleanonupdate = video.find('cleanonupdate')
+        cleanonupdate = video.find("cleanonupdate")
 
         if cleanonupdate is not None and cleanonupdate.text == "true":
 
@@ -68,13 +66,13 @@ def advanced_settings():
             tree.write(file)
 
             dialog("ok", "{jellyfin}", translate(33097))
-            xbmc.executebuiltin('RestartApp')
+            xbmc.executebuiltin("RestartApp")
 
             return True
 
+
 def verify_kodi_defaults():
-    ''' Make sure we have the kodi default folder in place.
-    '''
+    """Make sure we have the kodi default folder in place."""
 
     source_base_path = translate_path("special://xbmc/system/library/video")
     dest_base_path = translate_path("special://profile/library/video")
@@ -97,11 +95,15 @@ def verify_kodi_defaults():
 
             if not os.path.exists(dest_file):
                 copy = True
-            elif os.path.splitext(file_name)[1].lower() == '.xml':
+            elif os.path.splitext(file_name)[1].lower() == ".xml":
                 try:
                     etree.parse(dest_file)
                 except etree.ParseError:
-                    LOG.warning("Unable to parse `{}`, recovering from default.".format(dest_file))
+                    LOG.warning(
+                        "Unable to parse `{}`, recovering from default.".format(
+                            dest_file
+                        )
+                    )
                     copy = True
 
             if copy:
@@ -112,7 +114,7 @@ def verify_kodi_defaults():
     # This code seems to enforce a fixed ordering.
     # Is it really desirable to force this on users?
     # The default (system wide) order is [10, 20, 30] in Kodi 19.
-    for index, node in enumerate(['movies', 'tvshows', 'musicvideos']):
+    for index, node in enumerate(["movies", "tvshows", "musicvideos"]):
         file_name = os.path.join(dest_base_path, node, "index.xml")
 
         if xbmcvfs.exists(file_name):
@@ -126,8 +128,8 @@ def verify_kodi_defaults():
                 tree = None
 
             if tree is not None:
-                tree.getroot().set('order', str(17 + index))
-                with xbmcvfs.File(file_name, 'w') as f:
+                tree.getroot().set("order", str(17 + index))
+                with xbmcvfs.File(file_name, "w") as f:
                     f.write(etree.tostring(tree.getroot()))
 
     playlist_path = translate_path("special://profile/playlists/video")

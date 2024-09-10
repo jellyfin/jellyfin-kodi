@@ -1,12 +1,10 @@
 from sqlite3 import Cursor
 from typing import Any, List, Optional, NamedTuple
 
-
 class ViewRow(NamedTuple):
     view_id: str
     view_name: str
     media_type: str
-
 
 class JellyfinDatabase:
     cursor: Cursor = ...
