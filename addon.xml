@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<addon id="plugin.video.jellyfin" name="Jellyfin" version="1.0.2+py3" provider-name="Omelette for DediDL">
+<addon id="plugin.video.jellyfin" name="Jellyfin" version="1.0.5a+py3" provider-name="Omelette for DediDL">
   <requires>
     <import addon="xbmc.python" version="3.0.0" />
     <import addon="script.module.requests" version="2.22.0+matrix.1" />
@@ -42,7 +42,7 @@ Jellyfin for Kodi is the absolute best way to enjoy the incredible Kodi playback
 * Instant synchronization with the Jellyfin server
 * Full support for Movie, TV and Music collections
 * Jellyfin Server direct stream and transcoding support - use Kodi when you are away from home!</description>
-    <news>v1.0.5a (2024-04-09):
+    <news>v1.0.5a (2024-09-10):
 Bug Fixes
 ---------
 + Add url encoding lower case for WebDAV special characters</news>
