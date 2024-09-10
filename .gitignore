@@ -71,7 +71,4 @@ Thumbs.db
 !.vscode/settings.json
 pyinstrument/
 
-# Now managed by templates
-addon.xml
-
 *.log
