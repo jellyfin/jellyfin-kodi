@@ -179,7 +179,12 @@ class HTTP(object):
 
             else:
                 try:
-                    self.config.data["server-time"] = r.headers["Date"]
+                    # Prefer custom Server-Time header in ISO 8601 format
+                    # TODO: Clean up once the probability of most users having
+                    #       the updated server-side plugin is high.
+                    self.config.data["server-time"] = r.headers.get(
+                        "Server-Time", r.headers.get("Date")
+                    )
                     elapsed = int(r.elapsed.total_seconds() * 1000)
                     response = r.json()
                     LOG.debug("---<[ http ][%s ms]", elapsed)
