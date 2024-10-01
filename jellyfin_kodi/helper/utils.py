@@ -470,19 +470,8 @@ def has_attribute(obj, name):
 
 def set_addon_mode():
     """Setup playback mode. If native mode selected, check network credentials."""
-    value = dialog(
-        "yesno",
-        translate("playback_mode"),
-        translate(33035),
-        nolabel=translate("addon_mode"),
-        yeslabel=translate("native_mode"),
-    )
 
-    settings("useDirectPaths", value="1" if value else "0")
-
-    if value:
-        dialog("ok", "{jellyfin}", translate(33145))
-
+    settings("useDirectPaths", value="0")
     LOG.info("Add-on playback: %s", settings("useDirectPaths") == "0")
 
 
