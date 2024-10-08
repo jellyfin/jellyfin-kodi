@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2024-10-05 22:41+0000\n"
+"PO-Revision-Date: 2024-10-09 22:41+0000\n"
 "Last-Translator: Roi Gabay <roigby@gmail.com>\n"
 "Language-Team: Hebrew <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/he/>\n"
@@ -853,3 +853,127 @@ msgstr "נא לרסט אצ Kodi כדי שהשינויים ישפיעו."
 msgctxt "#33111"
 msgid "Reset the local database to apply the playback mode change."
 msgstr "אתחול מבנה הנתונים המקומי על מנת לאפשר את שינוי מוד הניגון."
+
+msgctxt "#33163"
+msgid "Disabled/Media default"
+msgstr "מושבת/מדיית ברירת המחדל"
+
+msgctxt "#33129"
+msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
+msgstr "ניתן לסנכרן ספריות על ידי לחיצה על תוספי ג'ליפין > הוספת ספריות."
+
+msgctxt "#33151"
+msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
+msgstr ""
+"מתחבר מחדש לאותו שרת שכבר נטען. אם ברצונך להתחבר לשרת אחר, יש לרסט את מסד "
+"הנתונים המקומי, כולל את מידע המשתמש שלך."
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "לא ניתן למצוא מנגינות טלויזיה בקודי."
+
+msgctxt "#33153"
+msgid "Your Jellyfin theme media has been synced to Kodi"
+msgstr "ערכת הנושא של ג'ליפין שלך הסתנכרנה עם קודי"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr "כדי להימנע משגיאות, נא לעדכן את ג'ליפין לקודי לגרסא: "
+
+msgctxt "#33138"
+msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
+msgstr ""
+"ניתן לעדכן את הספריה ידנית במקום להסתמך על התוסף תור הסנכרון של קודי. יש "
+"להפעיל את התוסף ולעדכן ספריות (או כל ספריה בנפרד). כדי להסיר תוכן, יש לתקן "
+"את הספריה."
+
+msgctxt "#33145"
+msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
+msgstr ""
+"נא לוודא שהשיתוף של Samba (smb) של שרת ג'ליפין שלך נגיש להתקנת קודי "
+"ושמוגדרים החלפות נתיבים על השרת שלך. אחרת, קודי עלול להיכשל המציאת הקבצים "
+"שלך."
+
+msgctxt "#33128"
+msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"איסוף עדכוני התוכן נכשל. לא יתבצעו עדכוני תוכן עד שקודי יתרסט. אם בעיה זו "
+"ממשיה, נא לדווח בפורום ג'ליפין לקודי, עם לוג קודי שלך."
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "עדכון תיבות"
+
+msgctxt "#33137"
+msgid "Enable Kodi Sync Queue"
+msgstr "הפעלת תור הסנכרון של קודי"
+
+msgctxt "#33155"
+msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
+msgstr ""
+"הטלאי שהוחל עכשיו על ג'ליפין לקודי שגוי! נא לדווח בפורום ג'ליפין לקודי אם "
+"בעיה זו נמשכת. יש לתקן זאת מוקדם ככל האפשר."
+
+msgctxt "#33172"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
+msgstr ""
+"יש {number} עדכונים ממתינים. הצגת תוכן חדש עלולה לקחת זמן מה. עדכון הספריות "
+"עשוי להיות מהיר יותר דרך תוספי ג'ליפין > עדכון ספריות. האם להמשיך למרות זאת?"
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "דפדוף - חוטי הורדה (ברירת מחדל: 3)"
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr ""
+"טיפ לדפדוף: כל חוט הורדה מבקש את כמות הפריטים המקסימלית מג'ליפין בו זמנית."
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr "יש לעדכן או לתקן את הספריות שלך כדי להחיל את השינויים הבאים."
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr "הצג התקדמות אם מספר העדכונים גדול מ-"
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr "מטפל בעדכונים"
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr ""
+"תור הסנכרון של קודי מאיץ את סנכרון העלייה. סנכרונים אחרים מופעלים מאירועים "
+"בשרת."
+
+msgctxt "#33118"
+msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgstr ""
+"שינית את מצב הניגון. יש לרסט את קודי כדי להחיל את השינויים, לעשות זאת עכשיו?"
+
+msgctxt "#33119"
+msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"משהו השתבש במהלך הסנכרון. ניתן לשחזר את ההתקדמות אחרי ריסוט קודי. אם הבעיה "
+"נמשכת, נא לדווח בפורום ג'ליפין לקודי, עם לוג קודי שלך."
+
+msgctxt "#33120"
+msgid "Select the libraries to add"
+msgstr "נא לבחור את הספריות להוסיף"
+
+msgctxt "#33122"
+msgid "Restart Kodi to resume where you left off."
+msgstr "יש לרסט את קודי כדי להמשיך מאיפה שעזבת."
+
+msgctxt "#33112"
+msgid "Applies to Native and Add-on playback mode"
+msgstr "חל על מצב ניגון רגיל ודרך תוסף"
+
+msgctxt "#33113"
+msgid "Applies to Add-on playback mode only"
+msgstr "חל על ניגון דרך תוסף בלבד"
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "שכחת את העדכון הקודם? זה לא מומלץ."
