@@ -24,6 +24,16 @@
 		<setting label="30536" id="dbSyncScreensaver" type="bool" default="true" />
 		<setting label="33111" type="lsep" />
 		<setting label="30511" id="useDirectPaths" type="enum" lvalues="33036|33037" default="1" />
+		<setting label="33203" id="directPathReplace1" type="text" default="" />
+		<setting label="33204" id="directPathReplaceWith1" type="folder" source="" default="" />
+		<setting label="33205" id="directPathReplace2" type="text" default="" />
+		<setting label="33206" id="directPathReplaceWith2" type="folder" source="" default="" />
+		<setting label="33207" id="directPathReplace3" type="text" default="" />
+		<setting label="33208" id="directPathReplaceWith3" type="folder" source="" default="" />
+		<setting label="33209" id="directPathReplace4" type="text" default="" />
+		<setting label="33210" id="directPathReplaceWith4" type="folder" source="" default="" />
+		<setting label="33211" id="directPathReplace5" type="text" default="" />
+		<setting label="33212" id="directPathReplaceWith5" type="folder" source="" default="" />
 
 		<setting label="33175" type="lsep" />
 		<setting label="30515" id="limitIndex" type="slider" default="15" range="1, 1, 100" option="int" />

@@ -996,3 +996,43 @@ msgstr "Max artwork resolution"
 msgctxt "#33202"
 msgid "Transcode H265/HEVC RExt"
 msgstr "Transcode H265/HEVC RExt"
+
+msgctxt "#33203"
+msgid "Native path replace 1"
+msgstr "Native path replace 1"
+
+msgctxt "#33204"
+msgid "Native path replace with 1"
+msgstr "Native path replace with 1"
+
+msgctxt "#33205"
+msgid "Native path replace 2"
+msgstr "Native path replace 2"
+
+msgctxt "#33206"
+msgid "Native path replace with 2"
+msgstr "Native path replace with 2"
+
+msgctxt "#33207"
+msgid "Native path replace 3"
+msgstr "Native path replace 3"
+
+msgctxt "#33208"
+msgid "Native path replace with 3"
+msgstr "Native path replace with 3"
+
+msgctxt "#33209"
+msgid "Native path replace 4"
+msgstr "Native path replace 4"
+
+msgctxt "#33210"
+msgid "Native path replace with 4"
+msgstr "Native path replace with 4"
+
+msgctxt "#33211"
+msgid "Native path replace 5"
+msgstr "Native path replace 5"
+
+msgctxt "#33212"
+msgid "Native path replace with 5"
+msgstr "Native path replace with 5"
