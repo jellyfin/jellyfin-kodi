@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2023-05-27 14:21+0000\n"
-"Last-Translator: pranelio <pramanauskas@icloud.com>\n"
+"PO-Revision-Date: 2024-10-19 12:41+0000\n"
+"Last-Translator: JP <tylquest.sh@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
 "Language: lt\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n % 10 == 1 && (n % 100 < 11 || n % 100 > "
 "19)) ? 0 : ((n % 10 >= 2 && n % 10 <= 9 && (n % 100 < 11 || n % 100 > 19)) ? "
 "1 : 2);\n"
-"X-Generator: Weblate 4.14.1\n"
+"X-Generator: Weblate 5.7.2\n"
 
 msgctxt "#30002"
 msgid "Force HTTP playback"
@@ -300,3 +300,143 @@ msgstr "Numatytas video kodekas"
 msgctxt "#30162"
 msgid "Preferred audio codec"
 msgstr "Numatytas garso kodekas"
+
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "Žiūrimi Muzikos Vaizdo Įrašai"
+
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "Įjungti naują turinį"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "Perkoduoti Hi10P"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "Prisijungti"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "Rankinis prisijungimas"
+
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "Įjungti serveris išjungtas"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "Rodoma žinutė"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "Slaptažodis"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "Prisijungti"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "Atšaukti"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "Nepavyko prisijungti prie pasirinkto serverio"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "Pridėti serverį rankiniu budu"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "Prašau prisijungti"
+
+msgctxt "#30614"
+msgid "Connect to server"
+msgstr "Prisijungti prie serverio"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "Sveiki"
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr "Pasirinkti titrų takelį"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "Ištrinti failą iš Jellyfin?"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "Ar groti kino anonsus?"
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "Renkami rinkiniai"
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "Pabaigta:"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "Vartotojo vardas ar e-paštas"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "Keisti Jellyfin Prisijungimo vartotoją"
+
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "Puslapiuojama - maksimalus elementų skaičius (numatyta: 15)"
+
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "Įjungti serverio perkrovimo pranešimą"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "Pranešimai (sekundemis)"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "Vartotojo vardas arba slaptažodis negali būti tušti"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "Sugeneruoti naują įrenginio ID"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "Pasirinkti pagrindinį serverį"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "Prisijungti prie"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "Prisijungti"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "Serveris persikrauna"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "Neteisingas vartotojo vardas arba slaptažodis"
+
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr "Pasirinkti garso takelį"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "Renkami:"
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr "Naujas irenginio ID buvo sugeneruotas. Kodi dabar bus perkrautas."
