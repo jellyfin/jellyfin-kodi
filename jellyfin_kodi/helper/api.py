@@ -198,6 +198,14 @@ class API(object):
 
         return mpaa
 
+    def get_native_path_mappings(self):
+        return {
+            replace: replace_with
+            for i in range(1, 6)
+            if (replace := settings(f"directPathReplace{i}"))
+            and (replace_with := settings(f"directPathReplaceWith{i}"))
+        }
+
     def get_file_path(self, path=None):
 
         if path is None:
@@ -205,6 +213,11 @@ class API(object):
 
         if not path:
             return ""
+
+        native_mappings = self.get_native_path_mappings()
+        for replace, replace_with in native_mappings.items():
+            if path.startswith(replace):
+                path = path.replace(replace, replace_with, 1)
 
         if path.startswith("\\\\"):
             path = (
