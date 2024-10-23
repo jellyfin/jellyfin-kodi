@@ -21,7 +21,7 @@ jobs:
           yq-version: v4.9.1
 
       - name: Checkout repository
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4.2.2
 
       - name: Parse Changelog
         run: |
