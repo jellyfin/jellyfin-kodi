@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2024-10-19 12:41+0000\n"
+"PO-Revision-Date: 2024-10-31 22:41+0000\n"
 "Last-Translator: Roi Gabay <roigby@gmail.com>\n"
 "Language-Team: Hebrew <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/he/>\n"
@@ -508,7 +508,7 @@ msgstr "הסרת משתמש"
 
 msgctxt "#33064"
 msgid "Remove user from the session"
-msgstr "הסרת משתמש מההפעלה"
+msgstr "הסרת משתמש מהסשן"
 
 msgctxt "#33074"
 msgid "Are you sure you want to reset your local Kodi database?"
@@ -524,7 +524,7 @@ msgstr "תיקיית גיבוי"
 
 msgctxt "#33054"
 msgid "Add user to session"
-msgstr "הוספת משתמש להפעלה"
+msgstr "הוספת משתמש לסשן"
 
 msgctxt "#33058"
 msgid "Perform local database reset"
@@ -536,7 +536,7 @@ msgstr "סנכרון המדיה של ערכת העיצוב"
 
 msgctxt "#33061"
 msgid "Add/Remove user from the session"
-msgstr "הוספת/הסרת משתמשים מההפעלה"
+msgstr "הוספת/הסרת משתמשים מהסשן"
 
 msgctxt "#33089"
 msgid "Enter folder name for backup"
@@ -840,7 +840,7 @@ msgstr "אפשר את האפשרות להמיר קידוד"
 
 msgctxt "#33107"
 msgid "Users added to the session (no space between users). (eg username,username2)"
-msgstr "משתמשים נוספו לסשן (אין רווח בין משתמשים) (למשל משתמש1, משתמש2)"
+msgstr "משתמשים נוספו לסשן (אין רווח בין משתמשים) (למשל משתמש1,משתמש2)"
 
 msgctxt "#33109"
 msgid "Plugin"
