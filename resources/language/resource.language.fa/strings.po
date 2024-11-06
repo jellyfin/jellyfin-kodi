@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2024-09-10 19:41+0000\n"
-"Last-Translator: Hoomaane79 <Hoomaanebrahimi@yahoo.com>\n"
+"PO-Revision-Date: 2024-11-08 00:00+0000\n"
+"Last-Translator: Kamran Imami <kamran.imani@gmail.com>\n"
 "Language-Team: Persian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/fa/>\n"
 "Language: fa\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.4.2\n"
+"X-Generator: Weblate 5.7.2\n"
 
 msgctxt "#30016"
 msgid "Device name"
@@ -679,3 +679,242 @@ msgstr ""
 "مشکلی در هنگام همگام سازی پیش آمده. می‌توانید پروسه را موقع ریستارت کردن "
 "Kodi احیا کنید٫ اگر مشکل تکرار شد٫ لطفا به فروم Jellyfin for Kodi به همراه "
 "گزارش Kodi اطلاع رسانی کنید."
+
+msgctxt "#33128"
+msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"دریافت آخرین به‌روزرسانی‌های محتوا با شکست مواجه شد. هیچ به‌روزرسانی محتوایی تا "
+"زمانی که Kodi دوباره راه‌اندازی نشود، اعمال نخواهد شد. اگر این مشکل ادامه "
+"پیدا کرد، لطفاً در انجمن‌های Jellyfin برای Kodi گزارش دهید و لاگ Kodi خود را "
+"ارسال کنید."
+
+msgctxt "#33138"
+msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
+msgstr ""
+"شما می‌توانید کتابخانه خود را به‌صورت دستی به‌روزرسانی کنید به جای اینکه به "
+"پلاگین سرور Kodi Sync Queue وابسته باشید. افزونه را راه‌اندازی کرده و کتابخانه‌"
+"ها (یا هر کتابخانه به‌طور جداگانه) را به‌روزرسانی کنید. برای حذف محتوا، نیاز "
+"به تعمیر کتابخانه خواهید داشت."
+
+msgctxt "#33145"
+msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
+msgstr ""
+"لطفاً اطمینان حاصل کنید که به اشتراک‌گذاری Samba (smb) سرور Jellyfin شما برای "
+"نصب Kodi قابل دسترسی است و همچنین جایگزینی مسیرها را در سرور خود پیکربندی "
+"کرده‌اید. در غیر این صورت، Kodi ممکن است نتواند فایل‌های شما را پیدا کند."
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "اطلاعات سرور به‌روزرسانی شود"
+
+msgctxt "#33151"
+msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
+msgstr ""
+"به سروری که قبلاً بارگذاری شده بود دوباره متصل شوید. اگر می‌خواهید از سرور "
+"دیگری استفاده کنید، باید پایگاه داده محلی خود را بازنشانی کنید، از جمله "
+"اطلاعات کاربری‌تان را"
+
+msgctxt "#33155"
+msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
+msgstr ""
+"پچ اعمال‌شده کنونی برای Jellyfin برای Kodi خراب است! لطفاً اگر این مشکل ادامه "
+"داشت، آن را در انجمن‌های Jellyfin برای Kodi گزارش دهید. این مشکل باید هر چه "
+"سریع‌تر برطرف شود."
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr ""
+"برای جلوگیری از خطاها، لطفاً Jellyfin برای Kodi را به این نسخه به‌روزرسانی "
+"کنید: "
+
+msgctxt "#33172"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
+msgstr ""
+"شما {number} به‌روزرسانی معلق دارید. ممکن است مدتی طول بکشد تا محتوای جدید را "
+"مشاهده کنید. ممکن است سریع‌تر باشد که کتابخانه‌های خود را از طریق راه‌اندازی "
+"افزونه Jellyfin > به‌روزرسانی کتابخانه‌ها به‌روزرسانی کنید. آیا با این حال "
+"ادامه دهیم؟"
+
+msgctxt "#33130"
+msgid "Select the source"
+msgstr "منبع را انتخاب کنید."
+
+msgctxt "#33133"
+msgid "Remove library from Kodi"
+msgstr "کتابخانه از Kodi حذف شود."
+
+msgctxt "#33134"
+msgid "Add server"
+msgstr "سرور اضافه شود."
+
+msgctxt "#33135"
+msgid "Kodi will now restart to apply a small patch for your Kodi version."
+msgstr ""
+"Kodi حالا برای اعمال یک پچ کوچک برای نسخه Kodi شما راه‌اندازی مجدد خواهد شد."
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "کتابخانه به‌روزرسانی شود"
+
+msgctxt "#33137"
+msgid "Enable Kodi Sync Queue"
+msgstr "صف همگام‌سازی Kodi فعال شود"
+
+msgctxt "#33139"
+msgid "Update libraries"
+msgstr "کتابخانه‌ها به‌روزرسانی شوند"
+
+msgctxt "#33140"
+msgid "Repair libraries"
+msgstr "کتابخانه‌ها تعمیر شوند"
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "سرور حذف شود"
+
+msgctxt "#33142"
+msgid "Something went wrong. Try again later."
+msgstr "چیزی اشتباه پیش رفت. لطفاً بعداً دوباره تلاش کنید."
+
+msgctxt "#33143"
+msgid "Enable the option to delete"
+msgstr "گزینه حذف فعال شود"
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "در حال حذف کتابخانه"
+
+msgctxt "#33146"
+msgid "Unable to connect to Jellyfin."
+msgstr "امکان اتصال به Jellyfin وجود ندارد."
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "امکان اتصال به این سرور وجود ندارد."
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "کتابخانه‌ها اضافه شوند"
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr "در حال پردازش به‌روزرسانی‌ها"
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "ترانسکد اجباری شود"
+
+msgctxt "#33129"
+msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
+msgstr ""
+"شما می‌توانید کتابخانه‌ها را با راه‌اندازی افزونه Jellyfin و انتخاب گزینه \"Add "
+"libraries\" همگام‌سازی کنید."
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "در حال بروزرسانی مجموعه‌ها"
+
+msgctxt "#33132"
+msgid "Repair library"
+msgstr "کتابخانه تعمیر شود."
+
+msgctxt "#33147"
+msgid "Your access to Jellyfin is restricted."
+msgstr "دسترسی شما به Jellyfin محدود است."
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "دسترسی شما به این سرور محدود است."
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "امکان یافتن TV Tunes در Kodi وجود ندارد."
+
+msgctxt "#33153"
+msgid "Your Jellyfin theme media has been synced to Kodi"
+msgstr "رسانه‌های تم Jellyfin شما به Kodi همگام‌سازی شده است"
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "پچی اعمال شده است!"
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "فقط صدا"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "فقط زیرنویس"
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "انتخاب صدا/زیرنویس فعال شود"
+
+msgctxt "#33163"
+msgid "Disabled/Media default"
+msgstr "غیرفعال/پیش‌فرض رسانه"
+
+msgctxt "#33161"
+msgid "Update password"
+msgstr "گذرواژه به‌روزرسانی شود"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "کتابخانه موسیقی بازنشانی شود؟"
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr ""
+"اطلاعات حساس در لاگ مخفی شود (این تنظیمات برای لاگ‌های Kodi اعمال نمی‌شود)"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "ایجاد پشتیبان با شکست مواجه شد"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "(پویا)"
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "اخیراً اضافه‌شده"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "علاقه‌مندی‌ها"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "در حال انجام"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "دیده‌نشده"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "بر اساس حرف اول"
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "همگام‌سازی قبلی فراموش شود؟ این کار توصیه نمی‌شود."
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "صفحه‌بندی - رشته‌های دانلود (پیش‌فرض: ۳)"
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr ""
+"نکته صفحه‌بندی: هر رشته دانلود همزمان مقدار حداکثر آیتم‌های شما را از Jellyfin "
+"درخواست می‌کند."
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr ""
+"کتابخانه‌های خود را به‌روزرسانی یا تعمیر کنید تا تغییرات زیر اعمال شوند."
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr ""
+"اگر تعداد به‌روزرسانی بیشتر از این تعداد باشد آنگاه نوار پیشرفت نمایش یابد"
