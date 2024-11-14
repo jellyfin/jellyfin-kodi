@@ -285,7 +285,9 @@ def listing():
             )
 
     directory(translate(33194), "plugin://plugin.video.jellyfin/?mode=managelibs", True)
-    directory(translate(33203), "plugin://plugin.video.jellyfin/?mode=managepaths", True)
+    directory(
+        translate(33203), "plugin://plugin.video.jellyfin/?mode=managepaths", True
+    )
     directory(translate(33134), "plugin://plugin.video.jellyfin/?mode=addserver", False)
     directory(translate(33054), "plugin://plugin.video.jellyfin/?mode=adduser", False)
     directory(translate(5), "plugin://plugin.video.jellyfin/?mode=settings", False)
