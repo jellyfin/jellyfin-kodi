@@ -27,7 +27,12 @@ from ..helper import (
     JSONRPC,
     LazyLogger,
 )
-from ..helper.utils import JsonDebugPrinter, translate_path, kodi_version, path_replacements
+from ..helper.utils import (
+    JsonDebugPrinter,
+    translate_path,
+    kodi_version,
+    path_replacements
+)
 from ..jellyfin import Jellyfin
 
 #################################################################################################

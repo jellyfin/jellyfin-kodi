@@ -493,7 +493,7 @@ def path_replacements():
 
     # Retrieve existing stored paths
     credentials = get_credentials()
-    if credentials['Servers']:
+    if credentials["Servers"]:
         paths = credentials["Servers"][0].get("paths", {})
     else:
         paths = {}
@@ -501,7 +501,7 @@ def path_replacements():
 
     # 0 is Finish, -1 is Cancel
     while selected_path not in [0, -1]:
-        replace_paths = [ f'{x} : {paths[x]}' for x in paths.keys() ]
+        replace_paths = [f"{x} : {paths[x]}" for x in paths.keys()]
         # Insert a "Finish" entry first, and an "Add" entry second
         replace_paths.insert(0, translate(33204))
         replace_paths.insert(1, translate(33205))
@@ -516,6 +516,8 @@ def path_replacements():
             # Edit an existing path replacement
             edit_remote_path = list(paths.keys())[selected_path - 2]
             edit_local_path = paths[edit_remote_path]
+            # Deleting the existing path
+            del paths[edit_remote_path]
             # Prepopulate the text box with the existing value
             remote_path = dialog("input", translate(33206), defaultt=edit_remote_path)
             local_path = dialog("input", translate(33207), defaultt=edit_local_path)

@@ -32,7 +32,6 @@ class API(object):
         except Exception as e:
             LOG.warning("Addon appears to not be configured yet: {}".format(e))
 
-
     def get_playcount(self, played, playcount):
         """Convert Jellyfin played/playcount into
         the Kodi equivalent. The playcount is tied to the watch status.
