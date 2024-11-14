@@ -31,7 +31,7 @@ from ..helper.utils import (
     JsonDebugPrinter,
     translate_path,
     kodi_version,
-    path_replacements
+    path_replacements,
 )
 from ..jellyfin import Jellyfin
 
