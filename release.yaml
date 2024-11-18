@@ -1,36 +1,22 @@
-version: '1.0.5'
+version: '1.0.6'
 changelog: |-
   New features and improvements
   ------------------------------------
-  + Add AV1 as a preferred codec option (#892) @Insprill
-
-  Bug Fixes
-  ---------
-  + Fix transcode settings visibility logic (#902) @oddstr13
-  + Improve HEVC codec handling in transcoding profiles (#895) @peterlodri92
-  + Specify encoding when converting hex-bytestring to string (#899) @oddstr13
-
-  Tests
-  ------------------------
-  + Improve HEVC codec handling in transcoding profiles (#895) @peterlodri92
-
-  Code or Repo Maintenance
-  ------------------------
-  + Disable delete option in context menu by default (#903) @oddstr13
-
-  Documentation updates
-  ---------------------
-  + Add Codecov config and update readme badges (#894) @oddstr13
+  + Reimplement native mode to function client side (#938) @mcarlton00
 
   CI & build changes
   ------------------
-  + Update actions/upload-artifact action to v4.3.6 (#898) @renovate
-  + Update github/codeql-action action to v3.26.0 (#896) @renovate
-  + Add Codecov config and update readme badges (#894) @oddstr13
-  + Update github/codeql-action action to v3.25.13 (#891) @renovate
-  + Update actions/setup-python action to v5.1.1 (#889) @renovate
-  + Update actions/upload-artifact action to v4.3.4 (#888) @renovate
-  + Update github/codeql-action action to v3.25.12 (#886) @renovate
+  + Update appleboy/ssh-action action to v1.2.0 (#927) @renovate
+  + Update github/codeql-action action to v3.27.4 (#921) @renovate
+  + Update actions/checkout action to v4.2.2 (#922) @renovate
+  + Update actions/upload-artifact action to v4.4.3 (#928) @renovate
+  + Update codecov/codecov-action action to v5 (#939) @renovate
+  + Update actions/setup-python action to v5.3.0 (#933) @renovate
+  + Update github/codeql-action action to v3.26.8 (#909) @renovate
+  + Update actions/upload-artifact action to v4.4.0 (#911) @renovate
+  + Update actions/setup-python action to v5.2.0 (#910) @renovate
+  + Update github/codeql-action action to v3.26.3 (#908) @renovate
+  + Update github/codeql-action action to v3.26.2 (#906) @renovate
 dependencies:
   py3:
     - addon: 'xbmc.python'
