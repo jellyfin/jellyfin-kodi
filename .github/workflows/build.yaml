@@ -28,7 +28,7 @@ jobs:
         run: python build.py
 
       - name: Publish Build Artifact
-        uses: actions/upload-artifact@v4.4.0
+        uses: actions/upload-artifact@v4.4.3
         with:
           retention-days: 14
           name: py3-build-artifact
