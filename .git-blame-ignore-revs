@@ -4,3 +4,5 @@
 be8333a80c2650c75444281a9b720da438b2b6d0
 # Change indentation of XML and JSON files
 7c0e986bd283c764cc16f0c756a03a04e4073ad0
+# Tool: black
+df4994bef23a1f7175d47ff4632084e153d6077f

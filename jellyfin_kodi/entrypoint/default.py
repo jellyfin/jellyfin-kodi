@@ -27,7 +27,12 @@ from ..helper import (
     JSONRPC,
     LazyLogger,
 )
-from ..helper.utils import JsonDebugPrinter, translate_path, kodi_version
+from ..helper.utils import (
+    JsonDebugPrinter,
+    translate_path,
+    kodi_version,
+    path_replacements,
+)
 from ..jellyfin import Jellyfin
 
 #################################################################################################
@@ -167,6 +172,8 @@ class Events(object):
             get_themes(api_client)
         elif mode == "managelibs":
             manage_libraries()
+        elif mode == "managepaths":
+            path_replacements()
         elif mode == "backup":
             backup()
         elif mode == "restartservice":
@@ -278,6 +285,9 @@ def listing():
             )
 
     directory(translate(33194), "plugin://plugin.video.jellyfin/?mode=managelibs", True)
+    directory(
+        translate(33203), "plugin://plugin.video.jellyfin/?mode=managepaths", True
+    )
     directory(translate(33134), "plugin://plugin.video.jellyfin/?mode=addserver", False)
     directory(translate(33054), "plugin://plugin.video.jellyfin/?mode=adduser", False)
     directory(translate(5), "plugin://plugin.video.jellyfin/?mode=settings", False)

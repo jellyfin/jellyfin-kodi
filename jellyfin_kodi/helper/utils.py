@@ -482,8 +482,50 @@ def set_addon_mode():
 
     if value:
         dialog("ok", "{jellyfin}", translate(33145))
+        path_replacements()
 
     LOG.info("Add-on playback: %s", settings("useDirectPaths") == "0")
+
+
+def path_replacements():
+    # UI to display and manage path replacements for native mode
+    from ..database import get_credentials, save_credentials
+
+    # Retrieve existing stored paths
+    credentials = get_credentials()
+    if credentials["Servers"]:
+        paths = credentials["Servers"][0].get("paths", {})
+    else:
+        paths = {}
+    selected_path = 1
+
+    # 0 is Finish, -1 is Cancel
+    while selected_path not in [0, -1]:
+        replace_paths = [f"{x} : {paths[x]}" for x in paths.keys()]
+        # Insert a "Finish" entry first, and an "Add" entry second
+        replace_paths.insert(0, translate(33204))
+        replace_paths.insert(1, translate(33205))
+        selected_path = dialog("select", translate(33203), replace_paths)
+        if selected_path == 1:
+            # Add a new path replacement
+            remote_path = dialog("input", translate(33206))
+            local_path = dialog("input", translate(33207))
+            if remote_path and local_path:
+                paths[remote_path] = local_path
+        elif selected_path > 1:
+            # Edit an existing path replacement
+            edit_remote_path = list(paths.keys())[selected_path - 2]
+            edit_local_path = paths[edit_remote_path]
+            # Deleting the existing path
+            del paths[edit_remote_path]
+            # Prepopulate the text box with the existing value
+            remote_path = dialog("input", translate(33206), defaultt=edit_remote_path)
+            local_path = dialog("input", translate(33207), defaultt=edit_local_path)
+            if remote_path and local_path:
+                paths[remote_path] = local_path
+
+    credentials["Servers"][0]["paths"] = paths
+    save_credentials(credentials)
 
 
 class JsonDebugPrinter(object):

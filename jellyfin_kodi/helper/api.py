@@ -4,6 +4,8 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 ##################################################################################################
 
 from . import settings, LazyLogger
+from .utils import translate_path
+import json
 
 ##################################################################################################
 
@@ -19,6 +21,16 @@ class API(object):
         """
         self.item = item
         self.server = server
+
+        addon_data = translate_path(
+            "special://profile/addon_data/plugin.video.jellyfin/data.json"
+        )
+        try:
+            with open(addon_data, "rb") as infile:
+                data = json.load(infile)
+            self.path_data = data["Servers"][0].get("paths", {})
+        except Exception as e:
+            LOG.warning("Addon appears to not be configured yet: {}".format(e))
 
     def get_playcount(self, played, playcount):
         """Convert Jellyfin played/playcount into
@@ -228,6 +240,11 @@ class API(object):
         if "://" in path:
             protocol = path.split("://")[0]
             path = path.replace(protocol, protocol.lower())
+
+        # Loop through configured path replacements searching for a match
+        for local_path in self.path_data.keys():
+            if local_path in path:
+                path = path.replace(local_path, self.path_data[local_path])
 
         return path
 
