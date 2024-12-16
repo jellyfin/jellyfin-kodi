@@ -10,7 +10,7 @@ import sys
 import re
 import unicodedata
 from uuid import uuid4
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, urlparse, urlunparse
 
 from dateutil import tz, parser
 
@@ -157,6 +157,7 @@ def dialog(dialog_type, *args, **kwargs):
         "select": d.select,
         "numeric": d.numeric,
         "multi": d.multiselect,
+        "browse": d.browse,
     }
     return types[dialog_type](*args, **kwargs)
 
@@ -487,6 +488,13 @@ def set_addon_mode():
     LOG.info("Add-on playback: %s", settings("useDirectPaths") == "0")
 
 
+def strip_credentials(url):
+    parsed = urlparse(url)
+    netloc = parsed.netloc.split("@")[-1]  # Remove credentials
+    stripped_url = urlunparse(parsed._replace(netloc=netloc))
+    return stripped_url
+
+
 def path_replacements():
     # UI to display and manage path replacements for native mode
     from ..database import get_credentials, save_credentials
@@ -509,7 +517,9 @@ def path_replacements():
         if selected_path == 1:
             # Add a new path replacement
             remote_path = dialog("input", translate(33206))
-            local_path = dialog("input", translate(33207))
+            local_path = strip_credentials(
+                dialog("browse", type=0, heading=translate(33207), shares="")
+            )
             if remote_path and local_path:
                 paths[remote_path] = local_path
         elif selected_path > 1:
@@ -520,7 +530,15 @@ def path_replacements():
             del paths[edit_remote_path]
             # Prepopulate the text box with the existing value
             remote_path = dialog("input", translate(33206), defaultt=edit_remote_path)
-            local_path = dialog("input", translate(33207), defaultt=edit_local_path)
+            local_path = strip_credentials(
+                dialog(
+                    "browse",
+                    type=0,
+                    heading=translate(33207),
+                    shares="",
+                    defaultt=edit_local_path,
+                )
+            )
             if remote_path and local_path:
                 paths[remote_path] = local_path
 
