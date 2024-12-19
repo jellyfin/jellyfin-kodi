@@ -1,0 +1,101 @@
+name: "Bug Report [new]"
+description: "Report an issue with the software."
+title: "[BUG] "
+labels: ["type:bug", "bug"]
+body:
+  - type: markdown
+    content: |
+      Please provide the following information to help us diagnose the problem.
+  
+  - type: input
+    id: summary
+    attributes:
+      label: "Summary"
+      description: "Provide a short description of the issue."
+      placeholder: "e.g., App crashes when opening a file"
+  
+  - type: dropdown
+    id: os
+    attributes:
+      label: "Operating System"
+      description: "Select your operating system."
+      options:
+        - "Windows"
+        - "Debuntu"
+        - "Kodi specific distros"
+        - "Other Linux"
+        - "Mac"
+        - "Xbox"
+        - "Other"
+  
+  - type: dropdown
+    id: jellyfin_version
+    attributes:
+      label: "Jellyfin Server Version"
+      description: "Select the Jellyfin server version."
+      options:
+        - "10.7"
+        - "10.8"
+        - "10.9"
+        - "10.10"
+        - "Other"
+  
+  - type: dropdown
+    id: kodi_version
+    attributes:
+      label: "Kodi Version"
+      description: "Select the Kodi version."
+      options:
+        - "19"
+        - "20"
+        - "21"
+        - "Other"
+  
+  - type: dropdown
+    id: addon_mode
+    attributes:
+      label: "Addon Mode"
+      description: "Select how you are using the addon."
+      options:
+        - "Addon-mode"
+        - "Direct-path mode ('native')"
+  
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: "Steps to Reproduce"
+      description: "Provide detailed steps to reproduce the issue."
+      placeholder: "e.g., 1. Do this. 2. Then do that."
+  
+  - type: file-upload
+    id: logs
+    attributes:
+      label: "Logs"
+      description: "Upload logs to help with debugging."
+      multiple: true
+      filetypes: [".log", ".txt"]
+  
+  - type: file-upload
+    id: screenshots
+    attributes:
+      label: "Screenshots (optional)"
+      description: "Upload screenshots that show the issue."
+      multiple: true
+      filetypes: [".png", ".jpg", ".jpeg", ".gif"]
+      optional: true
+  
+  - type: file-upload
+    id: server_logs
+    attributes:
+      label: "Server Logs (optional)"
+      description: "Upload server logs if available."
+      multiple: true
+      filetypes: [".log", ".txt"]
+      optional: true
+  
+  - type: textarea
+    id: additional_info
+    attributes:
+      label: "Additional Information (optional)"
+      description: "Provide any other relevant information."
+      optional: true
