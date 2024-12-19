@@ -8,7 +8,7 @@ body:
     attributes:
       label: "Summary"
       description: "Provide a short description of the issue."
-      placeholder: "e.g., App crashes when opening a file"
+      placeholder: "When playing a movie via the «Resume from» context menu, I get the error message «xyz»"
     validations:
       required: true
 
@@ -18,9 +18,8 @@ body:
       label: "Steps to Reproduce"
       description: "Provide detailed steps to reproduce the issue."
       placeholder: |
-        e.g., 
         1. Open the app.
-        2. Click on the file.
+        2. Click on a movie.
         3. The app crashes.
     validations:
       required: true
@@ -33,7 +32,7 @@ body:
       placeholder: "e.g., Ubuntu 24.04"
       
   - type: input
-    id: jellyfin_server
+    id: jellyfin_server_version
     attributes:
       label: "Jellyfin Server Version"
       description: "Specify the version of the Jellyfin server you're using. If you're using an unstable build, please include the commit hash."
@@ -52,6 +51,7 @@ body:
       label: "Addon Mode"
       description: "Select how you're using the addon."
       options:
+        - "Please Select..."
         - "Addon-mode"
         - "Direct-path mode ('native')"
     validations:
@@ -62,8 +62,8 @@ body:
     attributes:
       label: "Logs"
       description: "Please provide the logs."
-      placeholder: "Paste your logs here..."
-      render: "bash"
+      placeholder: "Paste your Kodi logs here..."
+      render: "python"
     validations:
       required: true
 
@@ -71,9 +71,9 @@ body:
     id: server_logs
     attributes:
       label: "Server Logs"
-      description: "Please provide the server logs."
+      description: "Please provide server logs (if relevant)."
       placeholder: "Paste your server logs here..."
-      render: "bash"
+      render: "csharp"
     validations:
       required: false
 
@@ -82,6 +82,6 @@ body:
     attributes:
       label: "Additional Information"
       description: "Provide any other relevant information."
-      placeholder: "e.g., Additional context or setup details"
+      placeholder: "Additional context, setup details or screenshots"
     validations:
       required: false
