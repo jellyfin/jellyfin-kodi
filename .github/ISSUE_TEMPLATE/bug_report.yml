@@ -1,4 +1,4 @@
-name: "Bug Report [NEW]"
+name: "Bug Report"
 description: "Report an issue with the software."
 title: "[Bug]: "
 labels: ["bug"]
