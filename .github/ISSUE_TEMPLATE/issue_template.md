@@ -1,3 +1,12 @@
+---
+name: Bug report [old template]
+about: Create a report to help us improve
+title: ''
+labels: bug
+assignees: ''
+
+---
+
 **Describe the bug**
 <!-- A clear and concise description of what the bug is. -->
 
@@ -18,6 +27,7 @@
 <!-- If applicable, add screenshots to help explain your problem. -->
 
 **System (please complete the following information):**
+
 - OS: [e.g. Android, Debian, Windows]
 - Jellyfin Version: [e.g. 10.0.1]
 - Kodi Version: [e.g. 18.3]
