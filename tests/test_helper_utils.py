@@ -78,6 +78,7 @@ def test_values(item, keys, expected):
 def test_convert_to_local(utctime, timezone, expected):
     assert convert_to_local(utctime, timezone=zoneinfo.ZoneInfo(timezone)) == expected
 
+
 @pytest.mark.parametrize(
     "url,expected",
     [
