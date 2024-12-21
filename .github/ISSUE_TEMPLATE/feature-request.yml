@@ -21,11 +21,7 @@ body:
     attributes:
       label: User Story
       description: |
-        Please provide a user story for the feature. A user story follows the format:
-
-        "As a [type of user], I want [a goal] so that [benefit]."
-
-        Example: "As a user, I want a dark mode setting so that I can use the application comfortably at night."
+        Please provide a user story for the feature.
       placeholder: |
         "As a [type of user], I want [a goal] so that [benefit]."
 
