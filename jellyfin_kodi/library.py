@@ -526,24 +526,16 @@ class Library(threading.Thread):
 
     def save_last_sync(self):
         _raw_time = self.server.config.data["server-time"]
-        # The ISO 8601 header always end with Z
-        if _raw_time and _raw_time[-1] == "Z":
-            time_now = datetime.strptime(_raw_time, "%Y-%m-%dT%H:%M:%SZ")
-        else:
-            try:
-                # TODO: Clean up once the probability of most users having
-                #       the updated server-side plugin is high.
-                LOG.warning(
-                    "Server time not in ISO 8601 format, using fallback (update KodiSyncQueue)."
-                )
-                import email.utils
 
-                time_now = email.utils.parsedate_to_datetime(_raw_time)
+        try:
+            import email.utils
 
-            except Exception as error:
-                LOG.warning(error)
-                LOG.warning("Failed to parse server time, falling back to client time.")
-                time_now = datetime.utcnow()
+            time_now = email.utils.parsedate_to_datetime(_raw_time)
+
+        except Exception as error:
+            LOG.warning(error)
+            LOG.warning("Failed to parse server time, falling back to client time.")
+            time_now = datetime.utcnow()
 
         # Add some tolerance in case time is out of sync with server
         time_now -= timedelta(minutes=2)
