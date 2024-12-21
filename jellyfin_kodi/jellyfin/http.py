@@ -179,7 +179,7 @@ class HTTP(object):
 
             else:
                 try:
-                    self.config.data["server-time"] = r.headers["Date"]
+                    self.config.data["server-time"] = r.headers.get("Date")
                     elapsed = int(r.elapsed.total_seconds() * 1000)
                     response = r.json()
                     LOG.debug("---<[ http ][%s ms]", elapsed)

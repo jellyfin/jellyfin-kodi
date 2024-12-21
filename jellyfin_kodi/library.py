@@ -525,18 +525,22 @@ class Library(threading.Thread):
         return True
 
     def save_last_sync(self):
+        _raw_time = self.server.config.data["server-time"]
 
         try:
-            time_now = datetime.strptime(
-                self.server.config.data["server-time"].split(", ", 1)[1],
-                "%d %b %Y %H:%M:%S GMT",
-            ) - timedelta(minutes=2)
+            import email.utils
+
+            time_now = email.utils.parsedate_to_datetime(_raw_time)
+
         except Exception as error:
+            LOG.warning(error)
+            LOG.warning("Failed to parse server time, falling back to client time.")
+            time_now = datetime.utcnow()
 
-            LOG.exception(error)
-            time_now = datetime.utcnow() - timedelta(minutes=2)
+        # Add some tolerance in case time is out of sync with server
+        time_now -= timedelta(minutes=2)
 
-        last_sync = time_now.strftime("%Y-%m-%dT%H:%M:%Sz")
+        last_sync = time_now.strftime("%Y-%m-%dT%H:%M:%SZ")
         settings("LastIncrementalSync", value=last_sync)
         LOG.info("--[ sync/%s ]", last_sync)
 
