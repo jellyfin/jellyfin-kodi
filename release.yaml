@@ -1,6 +1,6 @@
 version: '1.0.7'
 changelog: |-
-  :tada: New features and improvements
+  New features and improvements
   ------------------------------------
   + Use file browser dialog for local path (#951) @sundermann
 
