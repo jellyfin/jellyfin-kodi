@@ -15,7 +15,7 @@ else:
 
 import pytest
 
-from jellyfin_kodi.helper.utils import values, convert_to_local
+from jellyfin_kodi.helper.utils import values, convert_to_local, strip_credentials
 
 item1 = {"foo": 123, "bar": 456, "baz": 789}
 
@@ -77,3 +77,24 @@ def test_values(item, keys, expected):
 )
 def test_convert_to_local(utctime, timezone, expected):
     assert convert_to_local(utctime, timezone=zoneinfo.ZoneInfo(timezone)) == expected
+
+
+@pytest.mark.parametrize(
+    "url,expected",
+    [
+        ("smb://user:pass@server.test/media", "smb://server.test/media"),
+        ("smb://server.test/media", "smb://server.test/media"),
+        ("smb://user:pass@192.0.2.1/media", "smb://192.0.2.1/media"),
+        ("smb://user@192.0.2.1/media", "smb://192.0.2.1/media"),
+        ("nfs://server.test/media", "nfs://server.test/media"),
+        ("sftp://user:pass@server.test/media", "sftp://server.test/media"),
+        ("file://media/movies", "file://media/movies"),
+        ("/media/movies", "/media/movies"),
+        ("http://user:pass@server.test/media", "http://server.test/media"),
+        ("https://user:pass@server.test/media", "https://server.test/media"),
+        ("http://server.test/media", "http://server.test/media"),
+        ("https://server.test/media", "https://server.test/media"),
+    ],
+)
+def test_strip_credentials(url, expected):
+    assert strip_credentials(url) == expected
