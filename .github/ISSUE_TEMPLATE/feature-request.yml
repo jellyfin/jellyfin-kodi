@@ -1,5 +1,5 @@
 name: Feature Request
-about: Suggest a feature or enhancement for the project
+description: Suggest a feature or enhancement for the project
 labels: enhancement
 body:
   - type: markdown
@@ -30,7 +30,7 @@ body:
         "As a [type of user], I want [a goal] so that [benefit]."
 
         Acceptance Criteria:
-          [List of measurable criteria to ensure the feature works as intended.]
+        [List of measurable criteria to ensure the feature works as intended.]
     validations:
       required: true
 
