@@ -1,0 +1,60 @@
+name: Feature Request
+description: Suggest a feature or enhancement for the project
+labels: enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a new feature! Please take a moment to fill out the following details to help us understand your idea better.
+
+  - type: input
+    id: short-description
+    attributes:
+      label: Short Description
+      description: A brief summary of the feature you are requesting.
+      placeholder: "Add a short, descriptive title for your feature request."
+    validations:
+      required: true
+
+  - type: textarea
+    id: user-story
+    attributes:
+      label: User Story
+      description: |
+        Please provide a user story for the feature.
+      placeholder: |
+        "As a [type of user], I want [a goal] so that [benefit]."
+
+        Acceptance Criteria:
+        [List of measurable criteria to ensure the feature works as intended.]
+    validations:
+      required: true
+
+  - type: textarea
+    id: why-needed
+    attributes:
+      label: Why is this feature needed?
+      description: Explain why this feature would be beneficial and how it improves the project.
+      placeholder: "Describe why this feature would be useful."
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Provide any other details or resources (like screenshots, designs, or links) that might help us understand your request.
+      placeholder: "Add any additional information here."
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: agreement
+    attributes:
+      label: Agreement
+      description: Please confirm the following before submitting.
+      options:
+        - label: I have searched the existing issues to ensure this feature has not been requested before.
+          required: true
+        - label: I have provided enough detail to explain the value of this feature.
+          required: true
