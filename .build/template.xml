@@ -36,15 +36,7 @@
 		<website>https://jellyfin.org/</website>
 		<source>https://github.com/jellyfin/jellyfin-kodi</source>
 		<summary lang="en"></summary>
-		<description lang="en">Welcome to Jellyfin for Kodi!&#10;A whole new way to manage and view your
-			media library. The Jellyfin addon for Kodi combines the best of Kodi - ultra smooth
-			navigation, beautiful UIs and playback of any file under the sun, and Jellyfin - the most
-			powerful fully open source multi-client media metadata indexer and server.&#10;&#10;Jellyfin
-			for Kodi is the absolute best way to enjoy the incredible Kodi playback engine combined with
-			the power of Jellyfin's centralized database. Features:&#10;* Direct integration with the Kodi
-			library for native Kodi speed&#10;* Instant synchronization with the Jellyfin server&#10;*
-			Full support for Movie, TV and Music collections&#10;* Jellyfin Server direct stream and
-			transcoding support - use Kodi when you are away from home!</description>
+		<description lang="en">Welcome to Jellyfin for Kodi!&#10;A whole new way to manage and view your media library. The Jellyfin addon for Kodi combines the best of Kodi - ultra smooth navigation, beautiful UIs and playback of any file under the sun, and Jellyfin - the most powerful fully open source multi-client media metadata indexer and server.&#10;&#10;Jellyfin for Kodi is the absolute best way to enjoy the incredible Kodi playback engine combined with the power of Jellyfin's centralized database. Features:&#10;* Direct integration with the Kodi library for native Kodi speed&#10;* Instant synchronization with the Jellyfin server&#10;* Full support for Movie, TV and Music collections&#10;* Jellyfin Server direct stream and transcoding support - use Kodi when you are away from home!</description>
 		<news>
 		</news>
 		<assets>
