@@ -52,7 +52,7 @@ jobs:
           coverage report
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v5.1.2
+        uses: codecov/codecov-action@v5.3.1
         if: ${{ matrix.py_version == '3.11' }}
 
       - name: Publish Test Artifact
