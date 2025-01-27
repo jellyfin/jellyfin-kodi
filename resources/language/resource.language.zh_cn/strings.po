@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2025-01-11 18:01+0000\n"
-"Last-Translator: NtskwK <natsukawa247@outlook.com>\n"
+"PO-Revision-Date: 2025-01-28 08:01+0000\n"
+"Last-Translator: 刘汉源 <lhy2871@126.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.jellyfin."
 "org/projects/jellyfin/jellyfin-kodi/zh_Hans/>\n"
 "Language: zh_cn\n"
@@ -447,11 +447,11 @@ msgstr "谨慎！如果选择本机模式，某些 Jellyfin 功能将丢失，�
 
 msgctxt "#33036"
 msgid "Add-on (default)"
-msgstr "加载项（默认）"
+msgstr "插件模式（默认）"
 
 msgctxt "#33037"
 msgid "Native (direct paths)"
-msgstr "本机（直接路径）"
+msgstr "原生（直接路径）"
 
 msgctxt "#33039"
 msgid "Enable music library?"
@@ -962,3 +962,23 @@ msgstr "转码 H265/HEVC Rext"
 msgctxt "#33125"
 msgid "Enable remote control"
 msgstr "启用远程控制"
+
+msgctxt "#33203"
+msgid "Manage path replacements"
+msgstr "管理路径替换"
+
+msgctxt "#33204"
+msgid "Finish"
+msgstr "完成"
+
+msgctxt "#33206"
+msgid "Remote Path"
+msgstr "远程路径"
+
+msgctxt "#33205"
+msgid "New Path Replacement"
+msgstr "新建路径替换"
+
+msgctxt "#33207"
+msgid "Local Path"
+msgstr "本地路径"
