@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2025-01-31 21:01+0000\n"
-"Last-Translator: Giulio Compagnone <giulio.compagnone@gmail.com>\n"
+"PO-Revision-Date: 2025-02-23 12:01+0000\n"
+"Last-Translator: millallo <millallo@tiscali.it>\n"
 "Language-Team: Italian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/it/>\n"
 "Language: it_it\n"
@@ -38,7 +38,7 @@ msgstr "Forza riproduzione HTTP"
 
 msgctxt "#30003"
 msgid "Login method"
-msgstr "Metodo di accesso"
+msgstr "Modalità di accesso"
 
 msgctxt "#30004"
 msgid "Log level"
@@ -82,7 +82,7 @@ msgstr "Qualità video"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
-msgstr "Serie TV Aggiunte Di Recente"
+msgstr "Serie TV aggiunte di recente"
 
 msgctxt "#30171"
 msgid "In Progress TV Shows"
@@ -90,11 +90,11 @@ msgstr "Serie TV In Corso"
 
 msgctxt "#30174"
 msgid "Recently Added Movies"
-msgstr "Film Aggiunti Di Recente"
+msgstr "Film aggiunti di recente"
 
 msgctxt "#30175"
 msgid "Recently Added Episodes"
-msgstr "Episodi Aggiunti Di Recente"
+msgstr "Episodi aggiunti di recente"
 
 msgctxt "#30177"
 msgid "In Progress Movies"
@@ -178,7 +178,7 @@ msgstr "Video Musicali In Corso"
 
 msgctxt "#30258"
 msgid "Unwatched Music videos"
-msgstr "Video Musicali Non Visti"
+msgstr "Video Musicali non visti"
 
 msgctxt "#30302"
 msgid "Movies"
@@ -202,7 +202,7 @@ msgstr "Aggiungi ai preferiti"
 
 msgctxt "#30406"
 msgid "Remove from favorites"
-msgstr "Rimuovi dai favoriti"
+msgstr "Rimuovi dai preferiti"
 
 msgctxt "#30408"
 msgid "Settings"
@@ -230,7 +230,7 @@ msgstr "Usa nome dispositivo alternativo"
 
 msgctxt "#30506"
 msgid "Sync"
-msgstr "Sincronizzazione"
+msgstr "Sincronizza"
 
 msgctxt "#30507"
 msgid "Enable notification if update count is greater than"
@@ -306,7 +306,7 @@ msgstr "Durata pop up libreria video"
 
 msgctxt "#30533"
 msgid "Duration of the music library pop up"
-msgstr "Durata pop up libreria musicale"
+msgstr "Durata popup libreria musicale"
 
 msgctxt "#30534"
 msgid "Notifications (in seconds)"
@@ -1055,15 +1055,15 @@ msgstr "Bitrate audio"
 
 msgctxt "#30164"
 msgid "Audio max channels"
-msgstr "Massimi canali audio"
+msgstr "Massimo numero canali audio"
 
 msgctxt "#30165"
 msgid "Allow burned subtitles"
-msgstr "Consenti sottotitoli a video"
+msgstr "Consenti sottotitoli permanenti"
 
 msgctxt "#30160"
 msgid "Max stream bitrate"
-msgstr "Massimo bitrate di stream"
+msgstr "Massimo bitrate dello stream"
 
 msgctxt "#33163"
 msgid "Disabled/Media default"
