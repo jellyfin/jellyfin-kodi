@@ -382,7 +382,7 @@ class Player(xbmc.Player):
             "IsPaused": item["Paused"],
             "IsMuted": item["Muted"],
             "PlaySessionId": item["PlaySessionId"],
-            "AudioStreamIndex": item["AudioStreamIndex"],
+            "AudioStreamIndex": (item["AudioStreamIndex"] + 1),
             "SubtitleStreamIndex": item["SubtitleStreamIndex"],
         }
         item["Server"].jellyfin.session_progress(data)
