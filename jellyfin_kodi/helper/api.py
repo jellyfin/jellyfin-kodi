@@ -6,7 +6,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 from . import settings, LazyLogger
 from .utils import translate_path
 import json
-
+import urllib.parse
 ##################################################################################################
 
 LOG = LazyLogger(__name__)
@@ -245,7 +245,20 @@ class API(object):
         for local_path in self.path_data.keys():
             if local_path in path:
                 path = path.replace(local_path, self.path_data[local_path])
-
+        # URL standardization
+        if (
+            "davs://" in path.lower()
+            or "dav://" in path.lower()
+            or "http://" in path.lower()
+            or "https://" in path.lower()
+        ):
+            protocol, rest = path.split("://", 1)
+            if "/" in rest:
+                host, path_part = rest.split("/", 1)
+                path_part = "/".join(
+                    urllib.parse.quote(segment) for segment in path_part.split("/")
+                )
+                path = f"{protocol}://{host}/{path_part}"
         return path
 
     def get_user_artwork(self, user_id):
