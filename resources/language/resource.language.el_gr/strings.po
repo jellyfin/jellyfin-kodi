@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-03-12 10:53+0000\n"
+"PO-Revision-Date: 2025-03-13 11:47+0000\n"
 "Last-Translator: Thunderstrike116 <thunderstrike116@gmail.com>\n"
 "Language-Team: Greek <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/el/>\n"
@@ -104,7 +104,7 @@ msgstr "Επιλέξτε την ηχητική ροή"
 
 msgctxt "#33009"
 msgid "Invalid username or password"
-msgstr "Λάθος όνομα χρήστη ή συνθηματικό"
+msgstr "Λάθος όνομα χρήστη ή κωδικός πρόσβασης"
 
 msgctxt "#33006"
 msgid "Server is restarting"
@@ -152,7 +152,7 @@ msgstr "Αδυναμία σύνδεσης στον επιλεγμένο εξυπ
 
 msgctxt "#30608"
 msgid "Username or password cannot be empty"
-msgstr "Το όνομα χρήστη ή το συνθηματικό δεν πρέπει να είναι κενά"
+msgstr "Το όνομα χρήστη ή ο κωδικός πρόσβασης δεν πρέπει να είναι κενά"
 
 msgctxt "#30607"
 msgid "Select main server"
