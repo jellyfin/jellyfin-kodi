@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-03-13 11:47+0000\n"
-"Last-Translator: Thunderstrike116 <thunderstrike116@gmail.com>\n"
+"PO-Revision-Date: 2025-03-19 18:01+0000\n"
+"Last-Translator: Akis <akis@parxaridis.gr>\n"
 "Language-Team: Greek <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/el/>\n"
 "Language: el_gr\n"
@@ -1020,3 +1020,15 @@ msgstr "Επιλέξτε τις βιβλιοθήκες προς κατάργησ
 msgctxt "#33201"
 msgid "Max artwork resolution"
 msgstr "Μέγιστη ανάλυση έργων τέχνης"
+
+msgctxt "#33204"
+msgid "Finish"
+msgstr "Ολοκλήρωση"
+
+msgctxt "#33206"
+msgid "Remote Path"
+msgstr "Απομακρυσμένη διαδρομή"
+
+msgctxt "#33207"
+msgid "Local Path"
+msgstr "Τοπική διαδρομή"
