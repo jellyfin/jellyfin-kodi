@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2024-11-08 00:00+0000\n"
-"Last-Translator: Kamran Imami <kamran.imani@gmail.com>\n"
+"PO-Revision-Date: 2025-04-08 15:01+0000\n"
+"Last-Translator: Canopus <sohilj23@yahoo.com>\n"
 "Language-Team: Persian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/fa/>\n"
 "Language: fa\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.7.2\n"
+"X-Generator: Weblate 5.10.4\n"
 
 msgctxt "#30016"
 msgid "Device name"
@@ -737,15 +737,15 @@ msgstr ""
 
 msgctxt "#33130"
 msgid "Select the source"
-msgstr "منبع را انتخاب کنید."
+msgstr "منبع را انتخاب کنید"
 
 msgctxt "#33133"
 msgid "Remove library from Kodi"
-msgstr "کتابخانه از Kodi حذف شود."
+msgstr "حذف کتابخانه از Kodi"
 
 msgctxt "#33134"
 msgid "Add server"
-msgstr "سرور اضافه شود."
+msgstr "اضافه کردن سرور"
 
 msgctxt "#33135"
 msgid "Kodi will now restart to apply a small patch for your Kodi version."
@@ -816,7 +816,7 @@ msgstr "در حال بروزرسانی مجموعه‌ها"
 
 msgctxt "#33132"
 msgid "Repair library"
-msgstr "کتابخانه تعمیر شود."
+msgstr "تعمیر کتابخانه"
 
 msgctxt "#33147"
 msgid "Your access to Jellyfin is restricted."
@@ -918,3 +918,103 @@ msgctxt "#33177"
 msgid "Display the progress bar if update count greater than"
 msgstr ""
 "اگر تعداد به‌روزرسانی بیشتر از این تعداد باشد آنگاه نوار پیشرفت نمایش یابد"
+
+msgctxt "#33204"
+msgid "Finish"
+msgstr "پایان"
+
+msgctxt "#33207"
+msgid "Local Path"
+msgstr "مسیر داخلی"
+
+msgctxt "#33202"
+msgid "Transcode H265/HEVC RExt"
+msgstr "ترنسکد به H265/HEVC RExt"
+
+msgctxt "#33180"
+msgid "Restart Jellyfin for Kodi"
+msgstr "ریستارت کردن Jellyfin برای Kodi"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "در حال ریستارت برای اعمال پچ"
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "حذف کتابخانه ها"
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr "فعال سازی همگام سازی موقع بازپخش (ممکن است کمی تاخیر ایجاد کند)"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "در حال ریستارت…"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "حداکثر رزولوشن برای تصاویر"
+
+msgctxt "#33124"
+msgid "Include people (slow)"
+msgstr "شامل کردن افراد (آهسته)"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "فعال کردن گزینه پخش با حالت سینمایی"
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr ""
+"صف همگام‌ سازی Kodi، همگام‌ سازی اولیه را سریع‌تر می‌کند. سایر همگام‌ سازی‌ها توسط "
+"رویدادهای سرور فعال می‌شوند."
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr ""
+"همگام سازی در حال اجرا می باشد، لطفا برای تکمیل آن کمی صبر کرده و مجدداً تلاش "
+"کنید."
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "کتابخانه های مورد نظر برای تعمیر را انتخاب کنید"
+
+msgctxt "#33203"
+msgid "Manage path replacements"
+msgstr "مدیریت جایگزینی مسیر"
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "کتابخانه های مورد نظر برای حذف را انتخاب کنید"
+
+msgctxt "#33205"
+msgid "New Path Replacement"
+msgstr "جایگزینی مسیر جدید"
+
+msgctxt "#33206"
+msgid "Remote Path"
+msgstr "مسیر راه دور"
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "پخش با حالت سینمایی"
+
+msgctxt "#33191"
+msgid "Restart Jellyfin for Kodi to apply this change?"
+msgstr "ریستارت Jellyfin برای اعمال تغییرات در Kodi؟"
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "مدیریت کتابخانه ها"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "فعال سازی Jellyfin برای Kodi"
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr "تنظیمات پیشرفته"
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "کتابخانه های مورد نظر برای آپدیت را انتخاب کنید"
