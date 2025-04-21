@@ -158,7 +158,7 @@ class Movies(Kodi):
 
         # Sets all existing movies without a version to standard version
         for entry in self.cursor.fetchall():
-            self.add_videoversion(entry[0], entry[1], "movie", "0", 40400)
+            self.add_videoversion(entry[0], entry[1], "movie", "1", 40400)
             changes = True
 
         LOG.info("Omega database migration is complete")
