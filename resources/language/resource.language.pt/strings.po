@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-04-29 09:42+0000\n"
+"PO-Revision-Date: 2025-05-04 15:01+0000\n"
 "Last-Translator: Blackspirits <blackspirits@gmail.com>\n"
 "Language-Team: Portuguese <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/pt/>\n"
@@ -97,7 +97,7 @@ msgstr "Episódios em andamento"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
-msgstr "Programas de TV adicionados recentemente"
+msgstr "Séries adicionadas recentemente"
 
 msgctxt "#30171"
 msgid "In Progress TV Shows"
@@ -153,11 +153,11 @@ msgstr "Reiniciar base de dados Kodi local"
 
 msgctxt "#30251"
 msgid "Recently added Home Videos"
-msgstr "Recentemente adicionado a Videos Caseiros"
+msgstr "Vídeos caseiros adicionados recentemente"
 
 msgctxt "#30252"
 msgid "Recently added Photos"
-msgstr "Fotos adicionadas recentemente"
+msgstr "Fotografias adicionadas recentemente"
 
 msgctxt "#30249"
 msgid "Enable welcome message"
@@ -673,7 +673,7 @@ msgstr "Alterar usuário do Jellyfin Connect"
 
 msgctxt "#30605"
 msgid "Sign in"
-msgstr "Inscrever-se"
+msgstr "Iniciar sessão"
 
 msgctxt "#30615"
 msgid "Host"
