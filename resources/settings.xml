@@ -96,6 +96,7 @@
 
 	<category label="33109">
 		<!-- Plugin -->
+		<setting id="maxDaysInNextEpisodes" label="30538" type="slider" default="365" range="0, 1, 1000" option="int" />
 		<setting id="ignoreSpecialsNextEpisodes" type="bool" label="30527" default="false" />
 		<setting id="getCast" type="bool" label="33124" default="false" />
 		<setting id="remoteControl" type="bool" label="33125" default="true" />
