@@ -701,9 +701,10 @@ class PlayUtils(object):
         if subtitle_selected_index is not None:
             server_settings = self.api_client.get_transcode_settings()
             stream = streams[subtitle_selected_index]
+
             if (
-                server_settings["EnableSubtitleExtraction"]
-                and stream["SupportsExternalStream"]
+                stream["SupportsExternalStream"]
+                and (stream['IsExternal'] or server_settings["EnableSubtitleExtraction"])
             ):
                 self.info["SubtitleUrl"] = self.get_subtitles(
                     source, stream, subtitle_selected_index
