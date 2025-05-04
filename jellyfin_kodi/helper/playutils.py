@@ -686,7 +686,10 @@ class PlayUtils(object):
         if subtitle is not None:
             subtitle_selected_index = subtitle
 
-        elif skip_dialog in (Transcode.Enabled, Transcode.Subtitle) and subs_stream_indexes:
+        elif (
+            skip_dialog in (Transcode.Enabled, Transcode.Subtitle)
+            and subs_stream_indexes
+        ):
             selection = list(["No subtitles"]) + list(
                 map(get_track_title, subs_stream_indexes)
             )
@@ -702,9 +705,8 @@ class PlayUtils(object):
             server_settings = self.api_client.get_transcode_settings()
             stream = streams[subtitle_selected_index]
 
-            if (
-                stream["SupportsExternalStream"]
-                and (stream['IsExternal'] or server_settings["EnableSubtitleExtraction"])
+            if stream["SupportsExternalStream"] and (
+                stream["IsExternal"] or server_settings["EnableSubtitleExtraction"]
             ):
                 self.info["SubtitleUrl"] = self.get_subtitles(
                     source, stream, subtitle_selected_index
