@@ -920,15 +920,15 @@ def get_next_episodes(item_id, limit):
         if not library:
             return
 
-    maxDaysInNextEpisodes = settings('maxDaysInNextEpisodes')
-    if maxDaysInNextEpisodes != 0:
+    max_days = settings('maxDaysInNextEpisodes')
+    if max_days != 0:
         params = {
             "sort": {"order": "descending", "method": "lastplayed"},
             "filter": {
                 "and": [
                     {"operator": "true", "field": "inprogress", "value": ""},
                     {"operator": "is", "field": "tag", "value": "%s" % library},
-                    {"operator": "inthelast", "field": "lastplayed", "value": "%s days" % maxDaysInNextEpisodes},
+                    {"operator": "inthelast", "field": "lastplayed", "value": "%s days" % max_days},
                 ]
             },
             "properties": ["title", "studio", "mpaa", "file", "art"],
