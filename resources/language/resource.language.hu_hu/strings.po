@@ -429,10 +429,6 @@ msgctxt "#30537"
 msgid "Transcode Hi10P"
 msgstr "Hi10P átkódolása"
 
-msgctxt "#30538"
-msgid "Max days in next episodes"
-msgstr "Maximális napok száma a következő epizódoknál"
-
 msgctxt "#30536"
 msgid "Allow the screensaver during syncs"
 msgstr "Képernyőkímélő engedélyezése szinkronizálás közben"

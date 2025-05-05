@@ -321,10 +321,6 @@ msgctxt "#30537"
 msgid "Transcode Hi10P"
 msgstr "Transcode Hi10P"
 
-msgctxt "#30538"
-msgid "Max days in next episodes"
-msgstr "Max days in next episodes"
-
 msgctxt "#30539"
 msgid "Login"
 msgstr "Login"

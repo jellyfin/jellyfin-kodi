@@ -920,30 +920,25 @@ def get_next_episodes(item_id, limit):
         if not library:
             return
 
-    max_days = settings('maxDaysInNextEpisodes')
+    max_days = settings("maxDaysInNextEpisodes")
+    params = {
+        "sort": {"order": "descending", "method": "lastplayed"},
+        "filter": {
+            "and": [
+                {"operator": "true", "field": "inprogress", "value": ""},
+                {"operator": "is", "field": "tag", "value": "%s" % library},
+            ]
+        },
+        "properties": ["title", "studio", "mpaa", "file", "art"],
+    }
     if max_days != 0:
-        params = {
-            "sort": {"order": "descending", "method": "lastplayed"},
-            "filter": {
-                "and": [
-                    {"operator": "true", "field": "inprogress", "value": ""},
-                    {"operator": "is", "field": "tag", "value": "%s" % library},
-                    {"operator": "inthelast", "field": "lastplayed", "value": "%s days" % max_days},
-                ]
-            },
-            "properties": ["title", "studio", "mpaa", "file", "art"],
-        }
-    else:
-        params = {
-            "sort": {"order": "descending", "method": "lastplayed"},
-            "filter": {
-                "and": [
-                    {"operator": "true", "field": "inprogress", "value": ""},
-                    {"operator": "is", "field": "tag", "value": "%s" % library},
-                ]
-            },
-            "properties": ["title", "studio", "mpaa", "file", "art"],
-        }
+        params["filter"]["and"].append(
+            {
+                "operator": "inthelast",
+                "field": "lastplayed",
+                "value": "%s days" % max_days,
+            }
+        )
 
     result = JSONRPC("VideoLibrary.GetTVShows").execute(params)
 
