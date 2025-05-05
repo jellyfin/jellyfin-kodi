@@ -148,7 +148,7 @@ class API(object):
     def get_items(self, item_ids):
         all_results = []
         for i in range(0, len(item_ids), 150):
-            chunk = item_ids[i:i + 150]
+            chunk = item_ids[i : i + 150]
             response = self.users(
                 "/Items",
                 params={"Ids": ",".join(str(x) for x in chunk), "Fields": info()},
@@ -156,7 +156,6 @@ class API(object):
             if response:
                 all_results.extend(response.get("Items", []))
         return {"Items": all_results}
-
 
     def get_sessions(self):
         return self.sessions(params={"ControllableByUserId": "{UserId}"})
