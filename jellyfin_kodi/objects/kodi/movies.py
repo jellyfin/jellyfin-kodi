@@ -142,8 +142,11 @@ class Movies(Kodi):
 
         # Will run every time Kodi starts, but will be fast enough on
         # subsequent runs to not be a meaningful delay
-        if version_id >= 131:
+        if 131 <= version_id < 134:
             changes = self.omega_migration()
+        
+        if version_id >= 134:
+            changes = self.piers_migration()
 
         return changes
 
@@ -158,8 +161,25 @@ class Movies(Kodi):
 
         # Sets all existing movies without a version to standard version
         for entry in self.cursor.fetchall():
-            self.add_videoversion(entry[0], entry[1], "movie", "1", 40400)
+            self.add_videoversion(entry[0], entry[1], "movie", "0", 40400)
             changes = True
 
         LOG.info("Omega database migration is complete")
+        return changes
+
+    def piers_migration(self):
+        """
+        Adds a video version for all existing movies
+        """
+        LOG.info("Starting migration for Piers database changes")
+        # Tracks if this migration made any changes
+        changes = False
+        self.cursor.execute(QU.get_missing_versions)
+
+        # Sets all existing movies without a version to standard version
+        for entry in self.cursor.fetchall():
+            self.add_videoversion(entry[0], entry[1], "movie", "1", 40400)
+            changes = True
+
+        LOG.info("Piers database migration is complete")
         return changes
