@@ -254,7 +254,7 @@ class API(object):
             or "https://" in path.lower()
         ):
             protocol, rest = path.split("://", 1)
-            ends_with_slash = rest.endswith("/")  # 记录是否以/结尾
+            ends_with_slash = rest.endswith("/") 
             if "/" in rest:
                 host, path_part = rest.split("/", 1)
                 path_part = "/".join(
