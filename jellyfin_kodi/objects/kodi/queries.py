@@ -409,12 +409,12 @@ VALUES          (?, ?)
 add_set_obj = ["{Title}", "{Overview}"]
 add_video_version = """
 INSERT INTO     videoversion(idFile, idMedia, media_type, itemType, idType)
-VALUES          (?, ?, ?, ?, ?)
+VALUES          (?, ?, ?, (SELECT itemType FROM videoversiontype WHERE id = ?), ?)
 """
 check_video_version = """
 SELECT COUNT(name) FROM sqlite_master WHERE type='table' AND name='videoversion'
 """
-add_video_version_obj = ["{FileId}", "{MovieId}", "movie", "1", 40400]
+add_video_version_obj = ["{FileId}", "{MovieId}", "movie", 40400, 40400]
 add_musicvideo = """
 INSERT INTO     musicvideo(idMVideo, idFile, c00, c04, c05, c06, c07, c08, c09, c10,
                 c11, c12, premiered)

@@ -144,7 +144,7 @@ class Movies(Kodi):
         # subsequent runs to not be a meaningful delay
         if 131 <= version_id < 134:
             changes = self.omega_migration()
-        
+
         if version_id >= 134:
             changes = self.piers_migration()
 
@@ -178,7 +178,7 @@ class Movies(Kodi):
 
         # Sets all existing movies without a version to standard version
         for entry in self.cursor.fetchall():
-            self.add_videoversion(entry[0], entry[1], "movie", "1", 40400)
+            self.add_videoversion(entry[0], entry[1], "movie", 40400, 40400)
             changes = True
 
         LOG.info("Piers database migration is complete")
