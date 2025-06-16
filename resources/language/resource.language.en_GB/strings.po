@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-04-26 01:56+0000\n"
-"Last-Translator: Andi Chandler <andi@gowling.com>\n"
+"PO-Revision-Date: 2025-06-17 00:01+0000\n"
+"Last-Translator: Mathieu Funk <mathieu.funk@gmail.com>\n"
 "Language-Team: English (United Kingdom) <https://translate.jellyfin.org/"
 "projects/jellyfin/jellyfin-kodi/en_GB/>\n"
 "Language: en_GB\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10.4\n"
+"X-Generator: Weblate 5.11.4\n"
 
 msgctxt "#30001"
 msgid "Server name"
@@ -26,3 +26,147 @@ msgstr "Server address"
 msgctxt "#30002"
 msgid "Force HTTP playback"
 msgstr "Force HTTP playback"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Login method"
+
+#, fuzzy
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Log level"
+
+#, fuzzy
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Device name"
+
+#, fuzzy
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Advanced"
+
+#, fuzzy
+msgctxt "#30024"
+msgid "Username"
+msgstr "Username"
+
+#, fuzzy
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Confirm file deletion"
+
+#, fuzzy
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Offer delete after playback"
+
+#, fuzzy
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "For Episodes"
+
+#, fuzzy
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "For Movies"
+
+#, fuzzy
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Max stream bitrate"
+
+#, fuzzy
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Preferred video codec"
+
+#, fuzzy
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Audio bitrate"
+
+#, fuzzy
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Audio max channels"
+
+#, fuzzy
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Allow burned subtitles"
+
+#, fuzzy
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "Recently Added Movies"
+
+#, fuzzy
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Next Episodes"
+
+#, fuzzy
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Favourite Movies"
+
+#, fuzzy
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "Favourite Shows"
+
+#, fuzzy
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Favourite Episodes"
+
+#, fuzzy
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Boxsets"
+
+#, fuzzy
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Unwatched Movies"
+
+#, fuzzy
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Random Items"
+
+#, fuzzy
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Recently Added TV Shows"
+
+#, fuzzy
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Enable enhanced artwork (i.e. cover art)"
+
+#, fuzzy
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Preferred audio codec"
+
+#, fuzzy
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "Recently Added Episodes"
+
+#, fuzzy
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "In Progress TV Shows"
+
+#, fuzzy
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "In Progress Movies"
+
+#, fuzzy
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "In Progress Episodes"
