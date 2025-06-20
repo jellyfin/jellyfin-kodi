@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-06-17 00:01+0000\n"
-"Last-Translator: Mathieu Funk <mathieu.funk@gmail.com>\n"
+"PO-Revision-Date: 2025-06-20 03:12+0000\n"
+"Last-Translator: Cooper D'Andilly <thesaltyseadog@icloud.com>\n"
 "Language-Team: English (United Kingdom) <https://translate.jellyfin.org/"
 "projects/jellyfin/jellyfin-kodi/en_GB/>\n"
 "Language: en_GB\n"
@@ -106,15 +106,13 @@ msgctxt "#30179"
 msgid "Next Episodes"
 msgstr "Next Episodes"
 
-#, fuzzy
 msgctxt "#30180"
 msgid "Favorite Movies"
-msgstr "Favourite Movies"
+msgstr "Favorite Movies"
 
-#, fuzzy
 msgctxt "#30181"
 msgid "Favorite Shows"
-msgstr "Favourite Shows"
+msgstr "Favorite Shows"
 
 #, fuzzy
 msgctxt "#30182"
