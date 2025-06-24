@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-06-14 16:01+0000\n"
-"Last-Translator: Gargotaire <gargots@gmail.com>\n"
+"PO-Revision-Date: 2025-06-24 20:01+0000\n"
+"Last-Translator: Pere <pere.ortiz@proton.me>\n"
 "Language-Team: Catalan <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ca/>\n"
 "Language: ca\n"
@@ -269,7 +269,7 @@ msgstr "Contrasenya"
 
 msgctxt "#30605"
 msgid "Sign in"
-msgstr "Inici de sessió"
+msgstr "Iniciar sessió"
 
 msgctxt "#30606"
 msgid "Cancel"
@@ -403,7 +403,7 @@ msgstr "Directori de la còpia de seguretat"
 
 msgctxt "#33098"
 msgid "Refresh boxsets"
-msgstr "Actualitza col·leccions"
+msgstr "Actualitzar col·leccions"
 
 msgctxt "#33106"
 msgid "Enable the option to transcode"
@@ -439,7 +439,7 @@ msgstr "Seleccioneu l'origen"
 
 msgctxt "#33131"
 msgid "Refreshing boxsets"
-msgstr "Actualitza col·leccions"
+msgstr "Actualitzant col·leccions"
 
 msgctxt "#33132"
 msgid "Repair library"
