@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-06-24 20:01+0000\n"
-"Last-Translator: Pere <pere.ortiz@proton.me>\n"
+"PO-Revision-Date: 2025-06-29 16:35+0000\n"
+"Last-Translator: Gargotaire <gargots@gmail.com>\n"
 "Language-Team: Catalan <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ca/>\n"
 "Language: ca\n"
@@ -341,7 +341,7 @@ msgstr "Desitgeu reproduir els tràilers?"
 
 msgctxt "#33018"
 msgid "Gathering boxsets"
-msgstr "S'estan recopilant les col·leccions"
+msgstr "S'estan recopilant els cofres"
 
 msgctxt "#33021"
 msgid "Gathering:"
@@ -403,7 +403,7 @@ msgstr "Directori de la còpia de seguretat"
 
 msgctxt "#33098"
 msgid "Refresh boxsets"
-msgstr "Actualitzar col·leccions"
+msgstr "Actualitza els cofres"
 
 msgctxt "#33106"
 msgid "Enable the option to transcode"
@@ -439,7 +439,7 @@ msgstr "Seleccioneu l'origen"
 
 msgctxt "#33131"
 msgid "Refreshing boxsets"
-msgstr "Actualitzant col·leccions"
+msgstr "S'estan actualitzant els cofres"
 
 msgctxt "#33132"
 msgid "Repair library"
