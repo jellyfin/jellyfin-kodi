@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-06-29 16:35+0000\n"
+"PO-Revision-Date: 2025-07-09 18:51+0000\n"
 "Last-Translator: Gargotaire <gargots@gmail.com>\n"
 "Language-Team: Catalan <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ca/>\n"
@@ -269,7 +269,7 @@ msgstr "Contrasenya"
 
 msgctxt "#30605"
 msgid "Sign in"
-msgstr "Iniciar sessió"
+msgstr "Inici de sessió"
 
 msgctxt "#30606"
 msgid "Cancel"
