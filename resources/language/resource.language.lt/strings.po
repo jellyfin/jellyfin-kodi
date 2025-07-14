@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-07-14 13:43+0000\n"
+"PO-Revision-Date: 2025-07-14 20:06+0000\n"
 "Last-Translator: sharanchius <sharanchius@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -43,7 +43,7 @@ msgstr "Neseniai pridėti epizodai"
 
 msgctxt "#30253"
 msgid "Favourite Home Videos"
-msgstr "Mėgstamiausi Naminiai Vaizdai"
+msgstr "Mėgstamiausi Naminiai įrašai"
 
 msgctxt "#30255"
 msgid "Favourite Albums"
@@ -143,7 +143,7 @@ msgstr "Leisti įdiegtus subtitrus"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
-msgstr "Neseniai pridėtos TV Laidos"
+msgstr "Neseniai pridėtos TV laidos"
 
 msgctxt "#30177"
 msgid "In Progress Movies"
@@ -171,7 +171,7 @@ msgstr "Mėgstamiausi Epizodai"
 
 msgctxt "#30185"
 msgid "Boxsets"
-msgstr "Komplektai"
+msgstr "Rinkiniai"
 
 msgctxt "#30189"
 msgid "Unwatched Movies"
@@ -179,11 +179,11 @@ msgstr "Nežiūrėti Filmai"
 
 msgctxt "#30229"
 msgid "Random Items"
-msgstr "Atsitiktiniai Elementai"
+msgstr "Atsitiktiniai elementai"
 
 msgctxt "#30230"
 msgid "Recommended Items"
-msgstr "Rekomenduojami Elementai"
+msgstr "Rekomenduojami elementai"
 
 msgctxt "#30235"
 msgid "Interface"
@@ -195,7 +195,7 @@ msgstr "Įjungti pradžios žinutę"
 
 msgctxt "#30251"
 msgid "Recently added Home Videos"
-msgstr "Neseniai pridėti Naminiai Vaizdai"
+msgstr "Neseniai pridėti Namų įrašai"
 
 msgctxt "#30252"
 msgid "Recently added Photos"
@@ -255,7 +255,7 @@ msgstr "Atkūrimo rėžimas"
 
 msgctxt "#30512"
 msgid "Enable artwork caching"
-msgstr "Įjungti meno talpinimą"
+msgstr "Įjungti paveikslų talpinimą"
 
 msgctxt "#30516"
 msgid "Playback"
@@ -287,7 +287,7 @@ msgstr "Transkoduoti VC-1"
 
 msgctxt "#30528"
 msgid "Permanent users"
-msgstr "Amžini vartotojai"
+msgstr "Nuolatiniai naudotojai"
 
 msgctxt "#30529"
 msgid "Startup delay (in seconds)"
@@ -323,7 +323,7 @@ msgstr "Rankinis prisijungimas"
 
 msgctxt "#30545"
 msgid "Enable server offline"
-msgstr "Įjungti serveris išjungtas"
+msgstr "Įjungti serverį neprisijungus prie interneto"
 
 msgctxt "#30547"
 msgid "Display message"
@@ -347,7 +347,7 @@ msgstr "Nepavyko prisijungti prie pasirinkto serverio"
 
 msgctxt "#30611"
 msgid "Manually add server"
-msgstr "Pridėti serverį rankiniu budu"
+msgstr "Pridėti serverį rankiniu būdu"
 
 msgctxt "#30612"
 msgid "Please sign in"
@@ -383,11 +383,11 @@ msgstr "Pabaigta:"
 
 msgctxt "#30543"
 msgid "Username or email"
-msgstr "Vartotojo vardas ar e-paštas"
+msgstr "Naudotojo vardas ar e-paštas"
 
 msgctxt "#30613"
 msgid "Change Jellyfin Connect user"
-msgstr "Keisti Jellyfin Prisijungimo vartotoją"
+msgstr "Keisti Jellyfin prisijungimo naudotoją"
 
 msgctxt "#30515"
 msgid "Paging - max items requested (default: 15)"
@@ -403,7 +403,7 @@ msgstr "Pranešimai (sekundemis)"
 
 msgctxt "#30608"
 msgid "Username or password cannot be empty"
-msgstr "Vartotojo vardas arba slaptažodis negali būti tušti"
+msgstr "Prisijungimo vardas arba slaptažodis negali būti tušti"
 
 msgctxt "#30535"
 msgid "Generate a new device Id"
@@ -427,7 +427,7 @@ msgstr "Serveris persikrauna"
 
 msgctxt "#33009"
 msgid "Invalid username or password"
-msgstr "Neteisingas vartotojo vardas arba slaptažodis"
+msgstr "Neteisingas prisijungimo vardas arba slaptažodis"
 
 msgctxt "#33013"
 msgid "Choose the audio stream"
@@ -494,7 +494,7 @@ msgstr "Vietinis (tiesioginiai keliai)"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
-msgstr "Nepaisyti specialiųjų epizodų nustatant kitą epizodą"
+msgstr "Nepaisyti papildomų epizodų nustatant kitą epizodą"
 
 msgctxt "#33047"
 msgid "Kodi can't locate file:"
@@ -920,7 +920,7 @@ msgstr "Įjungti perkodavimo parinktį"
 msgctxt "#33107"
 msgid "Users added to the session (no space between users). (eg username,username2)"
 msgstr ""
-"Vartotojai, įtraukti į sesiją (be tarpo tarp vartotojų) (pvz., "
+"Naudotojai, įtraukti į sesiją (be tarpo tarp naudotojų) (pvz., "
 "username,username2)"
 
 msgctxt "#33115"
