@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-07-14 09:38+0000\n"
+"PO-Revision-Date: 2025-07-14 13:43+0000\n"
 "Last-Translator: sharanchius <sharanchius@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 
 msgctxt "#30002"
 msgid "Force HTTP playback"
-msgstr "Priversti HTTP atkūrimą"
+msgstr "Priverstinis HTTP atkūrimas"
 
 msgctxt "#30022"
 msgid "Advanced"
@@ -35,11 +35,11 @@ msgstr "Žiūrimos TV Laidos"
 
 msgctxt "#30174"
 msgid "Recently Added Movies"
-msgstr "Neseniai pridėti Filmai"
+msgstr "Neseniai pridėti filmai"
 
 msgctxt "#30175"
 msgid "Recently Added Episodes"
-msgstr "Neseniai pridėti Epizodai"
+msgstr "Neseniai pridėti epizodai"
 
 msgctxt "#30253"
 msgid "Favourite Home Videos"
@@ -95,7 +95,7 @@ msgstr "Jellyfin skirtas Kodi"
 
 msgctxt "#30000"
 msgid "Server address"
-msgstr "Serverio Adresas"
+msgstr "Serverio adresas"
 
 msgctxt "#30001"
 msgid "Server name"
@@ -115,7 +115,7 @@ msgstr "Įrenginio pavadinimas"
 
 msgctxt "#30024"
 msgid "Username"
-msgstr "Naudotojo Vardas"
+msgstr "Prisijungimo vardas"
 
 msgctxt "#30091"
 msgid "Confirm file deletion"
@@ -466,7 +466,7 @@ msgstr ""
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
-msgstr "Įgalinti patobulintą meno kūrinį (t. y. viršelio apipavidalinimą)"
+msgstr "Įgalinti patobulintą paveikslą (t. y. viršelio apipavidalinimą)"
 
 msgctxt "#30532"
 msgid "Duration of the video library pop up"
