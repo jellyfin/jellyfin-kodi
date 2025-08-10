@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-06-20 03:12+0000\n"
-"Last-Translator: Cooper D'Andilly <thesaltyseadog@icloud.com>\n"
+"PO-Revision-Date: 2025-08-10 01:54+0000\n"
+"Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://translate.jellyfin.org/"
 "projects/jellyfin/jellyfin-kodi/en_GB/>\n"
 "Language: en_GB\n"
@@ -31,17 +31,14 @@ msgctxt "#30003"
 msgid "Login method"
 msgstr "Login method"
 
-#, fuzzy
 msgctxt "#30004"
 msgid "Log level"
 msgstr "Log level"
 
-#, fuzzy
 msgctxt "#30016"
 msgid "Device name"
 msgstr "Device name"
 
-#, fuzzy
 msgctxt "#30022"
 msgid "Advanced"
 msgstr "Advanced"
