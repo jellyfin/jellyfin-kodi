@@ -15,7 +15,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.JF_BOT_TOKEN }}
 
       - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4.3.0
 
       - name: Set up Python
         uses: actions/setup-python@v5.6.0
