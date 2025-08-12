@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-08-10 01:54+0000\n"
-"Last-Translator: Andi Chandler <andi@gowling.com>\n"
+"PO-Revision-Date: 2025-08-12 11:25+0000\n"
+"Last-Translator: Aniol Juanola <anjuanolavil@gmx.com>\n"
 "Language-Team: English (United Kingdom) <https://translate.jellyfin.org/"
 "projects/jellyfin/jellyfin-kodi/en_GB/>\n"
 "Language: en_GB\n"
@@ -165,3 +165,39 @@ msgstr "In Progress Movies"
 msgctxt "#30178"
 msgid "In Progress Episodes"
 msgstr "In Progress Episodes"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Recommended Items"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "Interface"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "Reset local Kodi database"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "Enable welcome message"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Favourite Home Videos"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "Favourite Albums"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Recently added Home Videos"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "Recently added Photos"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "Favourite Photos"
