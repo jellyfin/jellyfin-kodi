@@ -605,21 +605,21 @@ class PlayUtils(object):
         IsTextSubtitleStream if true, is available to download from server.
         """
         prefs = ""
-        audio_streams = list()
-        subs_streams = list()
-        streams = source["MediaStreams"]
+        audio_stream_indexes = list()
+        subs_stream_indexes = list()
+        streams = dict()
 
         server_settings = self.api_client.get_transcode_settings()
         allow_burned_subs = settings("allowBurnedSubs.bool")
 
-        for stream in streams:
-
+        for stream in source["MediaStreams"]:
             index = stream["Index"]
             stream_type = stream["Type"]
 
-            if stream_type == "Audio":
+            streams[index] = stream
 
-                audio_streams.append(index)
+            if stream_type == "Audio":
+                audio_stream_indexes.append(index)
 
             elif stream_type == "Subtitle":
                 if stream["IsExternal"]:
@@ -633,7 +633,7 @@ class PlayUtils(object):
                     if not avail_for_extraction and not allow_burned_subs:
                         continue
 
-                subs_streams.append(index)
+                subs_stream_indexes.append(index)
 
         skip_dialog = int(settings("skipDialogTranscode") or 0)
 
@@ -641,54 +641,57 @@ class PlayUtils(object):
             return streams[track_index]["DisplayTitle"] or ("Track %s" % track_index)
 
         # Select audio stream
-        audio_selected = None
+        audio_selected_index = None
 
         if skip_dialog == Transcode.MediaDefault:
             # NOTE: "DefaultAudioStreamIndex" is the default according to Jellyfin.
             #       The media's default is marked by the "IsDefault" value.
-            for track_index in audio_streams:
+            for track_index in audio_stream_indexes:
                 if streams[track_index]["IsDefault"]:
                     audio = track_index
                     break
 
         # Compare to None in the off-chance the track index is 0.
         if audio is not None:
-            audio_selected = audio
+            audio_selected_index = audio
 
         elif skip_dialog in (Transcode.Enabled, Transcode.Audio):
-            if len(audio_streams) > 1:
-                selection = list(map(get_track_title, audio_streams))
+            if len(audio_stream_indexes) > 1:
+                selection = list(map(get_track_title, audio_stream_indexes))
                 resp = dialog("select", translate(33013), selection)
                 if resp > -1:
-                    audio_selected = audio_streams[resp]
+                    audio_selected_index = audio_stream_indexes[resp]
                 else:
-                    audio_selected = source["DefaultAudioStreamIndex"]
-            elif audio_streams:
+                    audio_selected_index = source["DefaultAudioStreamIndex"]
+            elif audio_stream_indexes:
                 # Only one choice
-                audio_selected = audio_streams[0]
+                audio_selected_index = audio_stream_indexes[0]
 
         else:
-            audio_selected = source["DefaultAudioStreamIndex"]
+            audio_selected_index = source["DefaultAudioStreamIndex"]
 
-        if audio_selected is not None:
-            self.info["AudioStreamIndex"] = audio_selected
-            prefs += "&AudioStreamIndex=%s" % audio_selected
+        if audio_selected_index is not None:
+            self.info["AudioStreamIndex"] = audio_selected_index
+            prefs += "&AudioStreamIndex=%s" % audio_selected_index
 
         # Select audio stream
-        subtitle_selected = None
+        subtitle_selected_index = None
 
         if skip_dialog == Transcode.MediaDefault:
-            for track_index in subs_streams:
+            for track_index in subs_stream_indexes:
                 if streams[track_index]["IsDefault"]:
                     subtitle = track_index
                     break
 
         if subtitle is not None:
-            subtitle_selected = subtitle
+            subtitle_selected_index = subtitle
 
-        elif skip_dialog in (Transcode.Enabled, Transcode.Subtitle) and subs_streams:
+        elif (
+            skip_dialog in (Transcode.Enabled, Transcode.Subtitle)
+            and subs_stream_indexes
+        ):
             selection = list(["No subtitles"]) + list(
-                map(get_track_title, subs_streams)
+                map(get_track_title, subs_stream_indexes)
             )
             resp = dialog("select", translate(33014), selection) - 1
             # Possible responses:
@@ -696,23 +699,25 @@ class PlayUtils(object):
             #  -1  No subtitles (Default)
             #  -2  Dialog was cancelled
             if resp > -1:
-                track_index = subs_streams[resp]
-                subtitle_selected = track_index
+                subtitle_selected_index = subs_stream_indexes[resp]
 
-        if subtitle_selected is not None:
+        if subtitle_selected_index is not None:
             server_settings = self.api_client.get_transcode_settings()
-            stream = streams[track_index]
-            if (
-                server_settings["EnableSubtitleExtraction"]
-                and stream["SupportsExternalStream"]
+            stream = streams[subtitle_selected_index]
+
+            if stream["SupportsExternalStream"] and (
+                stream["IsExternal"] or server_settings["EnableSubtitleExtraction"]
             ):
                 self.info["SubtitleUrl"] = self.get_subtitles(
-                    source, stream, subtitle_selected
+                    source, stream, subtitle_selected_index
                 )
-                self.info["SubtitleStreamIndex"] = subtitle_selected
+                self.info["SubtitleStreamIndex"] = subtitle_selected_index
             elif allow_burned_subs:
-                prefs += "&SubtitleStreamIndex=%s" % subtitle_selected
-                self.info["SubtitleStreamIndex"] = subtitle_selected
+                prefs += "&SubtitleStreamIndex=%s" % subtitle_selected_index
+                self.info["SubtitleStreamIndex"] = subtitle_selected_index
+
+                prefs += "&SubtitleMethod=Encode"
+                self.info["SubtitleMethod"] = "Encode"
 
         return prefs
 
