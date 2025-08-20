@@ -1,6 +1,6 @@
 {
 	"extends": [
-		"config:base",
+		"config:recommended",
 		":dependencyDashboard",
 		":timezone(Etc/UTC)",
 		":preserveSemverRanges"
@@ -30,8 +30,8 @@
 		}
 	],
 	"pip_requirements": {
-		"fileMatch": [
-			"requirements(-[a-z0-9]+)?\\.txt$"
+		"managerFilePatterns": [
+			"/requirements(-[a-z0-9]+)?\\.txt$/"
 		]
 	}
 }
