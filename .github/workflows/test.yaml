@@ -18,6 +18,9 @@ jobs:
       matrix:
         py_version: ['3.9', '3.11', '3.12']
         os: [ubuntu-latest, windows-latest]
+        include:
+          - py_version: '3.8.15'
+            os: windows-latest
 
     runs-on: ${{ matrix.os }}
     steps:
