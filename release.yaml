@@ -1,6 +1,6 @@
 version: '1.0.8'
 changelog: |-
-  :tada: New features and improvements
+  New features and improvements
   ------------------------------------
   + Add maximum days in next episodes configuration parameter (#995) @mkavalecz
 
