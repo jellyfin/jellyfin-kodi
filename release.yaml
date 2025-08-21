@@ -1,25 +1,43 @@
-version: '1.0.7'
+version: '1.0.8'
 changelog: |-
   New features and improvements
   ------------------------------------
-  + Use file browser dialog for local path (#951) @sundermann
+  + Add maximum days in next episodes configuration parameter (#995) @mkavalecz
 
   Bug Fixes
   ---------
-  + Use email.utils for parsing server time (#918) @oddstr13
+  + Fix indexing of media streams in subtitle dialog (#996) @Electry
+  + Fix missing quote in translation file (#1008) @oddstr13
+  + Add paging to API/get_items (#979) @sgroen8
 
   Code or Repo Maintenance
   ------------------------
-  + Update Issue Forms (#959) @BotBlake
-  + Update Issue Template (#957) @BotBlake
+  + Fix lint (#997) @oddstr13
+  + Fix description formatting (#968) @theguymadmax
 
   CI & build changes
   ------------------
-  + Update github/codeql-action action to v3.28.0 (#958) @renovate
-  + Update codecov/codecov-action action to v5.1.2 (#955) @renovate
-  + Update actions/upload-artifact action to v4.5.0 (#954) @renovate
-  + Update github/codeql-action action to v3.27.9 (#944) @renovate
-  + Update codecov/codecov-action action to v5.1.1 (#943) @renovate
+  + Test matrix additions (#1020) @oddstr13
+  + Update dependency python to 3.13 (#1014) @[renovate[bot]](https://github.com/apps/renovate)
+  + Migrate renovate config (#1019) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update codecov/codecov-action action to v5.5.0 (#1018) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update github/codeql-action action to v3.29.10 (#1009) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update actions/checkout action to v5 (#1016) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update github/codeql-action action to v3.29.0 (#1007) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update github/codeql-action action to v3.28.18 (#1001) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update codecov/codecov-action action to v5.4.3 (#1000) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update actions/setup-python action to v5.6.0 (#985) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update actions/upload-artifact action to v4.6.2 (#978) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update appleboy/ssh-action action to v1.2.2 (#977) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update codecov/codecov-action action to v5.4.2 (#981) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update github/codeql-action action to v3.28.17 (#976) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update actions/setup-python action to v5.4.0 (#974) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update github/codeql-action action to v3.28.8 (#973) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update actions/upload-artifact action to v4.6.0 (#964) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update github/codeql-action action to v3.28.5 (#965) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update burnett01/rsync-deployments action to v7.0.2 (#970) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update release-drafter/release-drafter action to v6.1.0 (#971) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update codecov/codecov-action action to v5.3.1 (#972) @[renovate[bot]](https://github.com/apps/renovate)
 dependencies:
   py3:
     - addon: 'xbmc.python'
