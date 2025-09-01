@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-07-08 08:57+0000\n"
+"PO-Revision-Date: 2025-09-02 06:43+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hr/>\n"
@@ -1012,3 +1012,23 @@ msgstr "Maksimalna rezolucija ilustracije"
 msgctxt "#30538"
 msgid "Max days in next episodes"
 msgstr "Maks. broj dana u sljedećim epizodama"
+
+msgctxt "#33204"
+msgid "Finish"
+msgstr "Završi"
+
+msgctxt "#33203"
+msgid "Manage path replacements"
+msgstr "Upravljaj zamjenama putanja"
+
+msgctxt "#33205"
+msgid "New Path Replacement"
+msgstr "Zamjena nove putanje"
+
+msgctxt "#33206"
+msgid "Remote Path"
+msgstr "Udaljena putanja"
+
+msgctxt "#33207"
+msgid "Local Path"
+msgstr "Lokalna putanja"
