@@ -128,7 +128,7 @@ def test_langcode_country(dir: str):
 
 
 def parse_language_headers(file):
-    with open(file, "rt") as fh:
+    with open(file, "rt", encoding="utf-8") as fh:
         sections = {}
         section = None
         for line in fh:
