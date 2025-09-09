@@ -1,0 +1,1041 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2025-07-19 16:52+0000\n"
+"Last-Translator: Gargotaire <gargots@gmail.com>\n"
+"Language-Team: Catalan <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/ca/>\n"
+"Language: ca_es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.11.4\n"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Adreça del servidor"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Jellyfin per a Kodi"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Nom del servidor"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "Força la reproducció per HTTP"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Avançat"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Nom d'usuari"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Còdec d'àudio preferit"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Límit de canals d'àudio"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Permet subtítols permanents"
+
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "Sèries en curs"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "Pel·lícules afegides recentment"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "Episodis afegits recentment"
+
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "Episodis en curs"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Pel·lícules preferides"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "Sèries preferides"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Episodis preferits"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Col·leccions"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Pel·lícules no vistes"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Elements aleatoris"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "Habilita el missatge de benvinguda"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Vídeos personals afegits recentment"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Vídeos personals preferits"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "Fotografies preferides"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "Àlbums preferits"
+
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "Videoclips en progrés"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "Videoclips no vistos"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "Pel·lícules"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "Sèries"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Opcions de Jellyfin"
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "Transcodificació de Jellyfin"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "Afegeix a preferits"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "Elimina dels preferits"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "Configuració"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "Elimina de Jellyfin"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "Actualitza aquest element"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "Transcodifica"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "Verifica la connexió"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "Fes servir un nom alternatiu del dispositiu"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "Sincronitza"
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "Habilita la fonoteca"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "Mode de reproducció"
+
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "Habilita la memòria cau d'imatges"
+
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "Paginació - màxim d'elements sol·licitats (15 per defecte)"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "Reproducció"
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "Credencials de xarxa"
+
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "Habilita el mode cinema"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "Pregunta abans de reproduir tràilers"
+
+msgctxt "#30521"
+msgid "Jump back on resume (in seconds)"
+msgstr "Retrocedeix en reprendre (en segons)"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "Transcodifica H.256/HEVC"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Transcodifica MPEG2"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Transcodifica VC-1"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "Transcodifica VP9"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "Transcodifica AV1"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "Usuaris permanents"
+
+msgctxt "#30529"
+msgid "Startup delay (in seconds)"
+msgstr "Retard d'inici (en segons)"
+
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "Habilita les notificacions de reinici del servidor"
+
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "Habilita contingut nou"
+
+msgctxt "#30532"
+msgid "Duration of the video library pop up"
+msgstr "Avís emergent de la duració de la filmoteca"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "Transcodifica Hi10P"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "Inici de sessió"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "Inici manual de sessió"
+
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "Habilita servidor fora de línia"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "Mostra les notificacions"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "Contrasenya"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "Inici de sessió"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "Cancel·la"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "Selecciona el servidor principal"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "No es pot connectar al servidor seleccionat"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "Connecta amb"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "Afegiu manualment el servidor"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "Inicieu la sessió"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "Canvia l'usuari de connexió de Jellyfin"
+
+msgctxt "#30614"
+msgid "Connect to server"
+msgstr "Connecta amb el servidor"
+
+msgctxt "#30615"
+msgid "Host"
+msgstr "Amfitrió"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "Connecta"
+
+msgctxt "#30617"
+msgid "Server or port cannot be empty"
+msgstr "El servidor o el port no poden estar buits"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "Us donem la benvinguda"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "El servidor s'està reiniciant"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "Usuari o contrasenya incorrectes"
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr "Seleccioneu el flux de subtítols"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "Desitgeu esborrar el fitxer de Jellyfin?"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "Desitgeu reproduir els tràilers?"
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "S'estan recopilant els cofres"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "S'està recopilant:"
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "Completat en:"
+
+msgctxt "#33037"
+msgid "Native (direct paths)"
+msgstr "Nadiu (rutes directes)"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "Desitgeu habilitar la fonoteca?"
+
+msgctxt "#33058"
+msgid "Perform local database reset"
+msgstr "Restableix la base de dades local"
+
+msgctxt "#33060"
+msgid "Sync theme media"
+msgstr "Sincronitza el tema multimèdia"
+
+msgctxt "#33061"
+msgid "Add/Remove user from the session"
+msgstr "Afegeix/Elimina l'usuari de la sessió"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "Afegeix l'usuari"
+
+msgctxt "#33063"
+msgid "Remove user"
+msgstr "Elimina l'usuari"
+
+msgctxt "#33086"
+msgid "Remove all cached artwork?"
+msgstr "Desitgeu eliminar la memòria cau d'imatges?"
+
+msgctxt "#33088"
+msgid "Database reset has completed, Kodi will now restart to apply the changes."
+msgstr ""
+"S'ha completat el restabliment de la base de dades i Kodi es reiniciarà per "
+"a aplicar els canvis."
+
+msgctxt "#33091"
+msgid "Created backup at:"
+msgstr "Còpia de seguretat creada al:"
+
+msgctxt "#33092"
+msgid "Create a backup"
+msgstr "Crea una còpia de seguretat"
+
+msgctxt "#33093"
+msgid "Backup folder"
+msgstr "Directori de la còpia de seguretat"
+
+msgctxt "#33098"
+msgid "Refresh boxsets"
+msgstr "Actualitza els cofres"
+
+msgctxt "#33106"
+msgid "Enable the option to transcode"
+msgstr "Habilita l'opció de transcodificar"
+
+msgctxt "#33109"
+msgid "Plugin"
+msgstr "Connector"
+
+msgctxt "#33110"
+msgid "Restart Kodi to take effect."
+msgstr "Reinicia Kodi perquè tingui efecte."
+
+msgctxt "#33114"
+msgid "Enable external subtitles"
+msgstr "Habilita els subtítols externs"
+
+msgctxt "#33120"
+msgid "Select the libraries to add"
+msgstr "Seleccioneu les mediateques a afegir"
+
+msgctxt "#33123"
+msgid "Sync library to Kodi"
+msgstr "Sincronitza la mediateca amb Kodi"
+
+msgctxt "#33125"
+msgid "Enable remote control"
+msgstr "Habilita el control remot"
+
+msgctxt "#33130"
+msgid "Select the source"
+msgstr "Seleccioneu l'origen"
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "S'estan actualitzant els cofres"
+
+msgctxt "#33132"
+msgid "Repair library"
+msgstr "Repara la mediateca"
+
+msgctxt "#33133"
+msgid "Remove library from Kodi"
+msgstr "Esborra la mediateca de Kodi"
+
+msgctxt "#33134"
+msgid "Add server"
+msgstr "Afegeix un servidor"
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "Actualitza la mediateca"
+
+msgctxt "#33140"
+msgid "Repair libraries"
+msgstr "Repara les mediateques"
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "El vostre accés a aquest servidor està restringit."
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "Actualitza la informació del servidor"
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "No s'ha pogut localitzar TV Tunes a Kodi."
+
+msgctxt "#33153"
+msgid "Your Jellyfin theme media has been synced to Kodi"
+msgstr ""
+"Els vostres temes de continguts multimèdia de Jellyfin han estat "
+"sincronitzats amb Kodi"
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "Afegeix mediateques"
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "S'ha aplicat un pedaç!"
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "Només àudio"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "Només subtítols"
+
+msgctxt "#33163"
+msgid "Disabled/Media default"
+msgstr "Deshabilitat/Multimèdia per defecte"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr "Per a evitar errors, actualitzeu Jellyfin per a Kodi a la versió: "
+
+msgctxt "#33161"
+msgid "Update password"
+msgstr "Actualitzeu la contrasenya"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "(dinàmic)"
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "Afegits recentment"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "Preferits"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "En progrés"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "Pendents de veure"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "Per la inicial"
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "Paginació - processos de descàrrega (predeterminat: 3)"
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr ""
+"Actualitza o repara les mediateques per, a continuació, aplicar els canvis."
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr "S'estan processant canvis"
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "Força la transcodificació"
+
+msgctxt "#33180"
+msgid "Restart Jellyfin for Kodi"
+msgstr "Reinicia Jellyfin per a Kodi"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "Reinicia per a aplicar el pedaç"
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "Reprodueix en mode cinema"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "Habilita l'opció per a reproduir en mode cinema"
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "Elimina les mediateques"
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr ""
+"Habilita la sincronització durant la reproducció (pot provocar algun "
+"endarreriment)"
+
+msgctxt "#33191"
+msgid "Restart Jellyfin for Kodi to apply this change?"
+msgstr "Desitgeu reiniciar Jellyfin per a Kodi per a aplicar aquest canvi?"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "S'està reiniciant…"
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "Administra les mediateques"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "Habilita Jellyfin per a Kodi"
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr "Opcions avançades"
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "Seleccioneu les mediateques a actualitzar"
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "Seleccioneu les mediateques a reparar"
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "Seleccioneu les mediateques a eliminar"
+
+msgctxt "#33202"
+msgid "Transcode H265/HEVC RExt"
+msgstr "Transcodifica H265/HEVC RExt"
+
+msgctxt "#33128"
+msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"No s'han pogut recuperar les actualitzacions de contingut més recents. No "
+"s'aplicaran actualitzacions de contingut fins que es reiniciï Kodi. Si "
+"aquest problema persisteix, notifiqueu-ho al fòrum de Jellyfin per a Kodi, "
+"amb el seu registre (log) de Kodi."
+
+msgctxt "#33129"
+msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
+msgstr ""
+"Podeu sincronitzar les mediateques iniciant el complement Jellyfin > Afegeix "
+"mediateques."
+
+msgctxt "#33135"
+msgid "Kodi will now restart to apply a small patch for your Kodi version."
+msgstr ""
+"Es reiniciarà Kodi per a aplicar un petit pedaç per a la vostra versió de "
+"Kodi."
+
+msgctxt "#33137"
+msgid "Enable Kodi Sync Queue"
+msgstr "Habilita Kodi Sync Queue"
+
+msgctxt "#33138"
+msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
+msgstr ""
+"Podeu actualitzar manualment la vostra mediateca, en comptes de confiar en "
+"el complement del servidor Kodi Sync Queue. Inicieu el complement i "
+"actualitzeu les mediateques (o cadascuna). Per a suprimir el contingut, "
+"caldrà reparar la mediateca."
+
+msgctxt "#33139"
+msgid "Update libraries"
+msgstr "Actualitza les mediateques"
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "Elimina el servidor"
+
+msgctxt "#33142"
+msgid "Something went wrong. Try again later."
+msgstr "Alguna cosa ha sortit malament. Proveu-ho de nou més tard."
+
+msgctxt "#33143"
+msgid "Enable the option to delete"
+msgstr "Habilita l'opció d'eliminació"
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "S'està eliminant la mediateca"
+
+msgctxt "#33145"
+msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
+msgstr ""
+"Si us plau, assegureu-vos que l'accés compartit Samba (smb) del vostre "
+"servidor Jellyfin sigui accessible des de la instal·lació de Kodi i que "
+"tingui la substitució de camí configurada al vostre servidor. Altrament, "
+"Kodi podria no localitzar els vostres fitxers."
+
+msgctxt "#33146"
+msgid "Unable to connect to Jellyfin."
+msgstr "No s'ha pogut connectar amb Jellyfin."
+
+msgctxt "#33147"
+msgid "Your access to Jellyfin is restricted."
+msgstr "El vostre accés a Jellyfin està restringit."
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "No s'ha pogut connectar amb aquest servidor."
+
+msgctxt "#33151"
+msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
+msgstr ""
+"Torna a connectar al mateix servidor connectar anteriorment. Si desitgeu "
+"utilitzar un servidor diferent, restabliu la base de dades local, incloent-"
+"hi la informació d'usuari."
+
+msgctxt "#33155"
+msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
+msgstr ""
+"El pedaç de Jellyfin per a Kodi aplicat actualment està danyat. Si aquest "
+"problema persisteix, comuniqueu-ho al fòrum Jellyfin for Kodi. El problema "
+"serà solucionat tan aviat com sigui possible."
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Mètode d'identificació"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Nivell de registre"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Nom del dispositiu"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Confirmeu l'eliminació del fitxer"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Ofereix l'eliminació després de la reproducció"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Per a episodis"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Per a pel·lícules"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Activa il·lustracions millorades (ex. portada)"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Taxa de bits màxima"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Còdec de vídeo preferit"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Taxa de bits d'àudio"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Sèries afegides recentment"
+
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "Pel·lícules en curs"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Episodis següents"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Elements recomanats"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "Interfície"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "Restableix la base de dades local de Kodi"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "Fotografies afegides recentment"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "Videoclips afegits recentment"
+
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "Activa les notificacions si el comptador d'actualitzacions és major a"
+
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr ""
+"Omet la confirmació d'eliminació (empreu-ho sota la vostra responsabilitat)"
+
+msgctxt "#30527"
+msgid "Ignore specials in next episodes"
+msgstr "Ignora els especials en els següents episodis"
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "Habilita la selecció d'àudio/subtítols"
+
+msgctxt "#30533"
+msgid "Duration of the music library pop up"
+msgstr "Avís emergent de la duració de la fonoteca"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "Notificacions (en segons)"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "Genera un nou identificador de dispositiu"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "Desitgeu reinicialitzar la fonoteca?"
+
+msgctxt "#30536"
+msgid "Allow the screensaver during syncs"
+msgstr "Permet l'estalvi de pantalles durant la sincronització"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "Nom d'usuari o email"
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr ""
+"Emmascara la informació delicada en el registre (no s'aplica al registre de "
+"Kodi)"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "No s'ha pogut crear la còpia de seguretat"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "El nom d'usuari i la contrasenya no poden estar buits"
+
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr "Seleccioneu el flux d'àudio"
+
+msgctxt "#33172"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
+msgstr ""
+"Teniu {number} actualitzacions pendents. Això pot trigar una estona abans de "
+"poder veure el contingut nou. És possible que sigui més ràpid actualitzar "
+"les mediateques mitjançant el complement de Jellyfin > actualitza les "
+"mediateques. Desitgeu procedir de totes maneres?"
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "Desitgeu oblidar la sincronització anterior? No us ho recomanem."
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr ""
+"Consell de paginació: cada procés de descàrrega sol·licita el valor màxim "
+"dels elements de Jellyfin a la vegada."
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr "Mostra la barra de progrés si el nombre de canvis és superior a"
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr ""
+"Kodi Sync Queue accelera la sincronització inicial. Altres sincronitzacions "
+"es desencadenen mitjançant esdeveniments del servidor."
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr ""
+"Ja hi ha una sincronització en procés. Espereu fins que es completi per a "
+"intentar-ho de nou."
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "Resolució màxima per a les imatges"
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr "S'ha generat un nou identificador de dispositiu. Kodi es reiniciarà."
+
+msgctxt "#33048"
+msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
+msgstr ""
+"És possible que necessiteu verificar les credencials de la xarxa a la "
+"configuració del complement o fer servir la substitució de camí de Jellyfin "
+"per a formatar correctament la vostra camí (tauler de Jellyfin > Mediateca). "
+"Desitgeu aturar la sincronització?"
+
+msgctxt "#33035"
+msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
+msgstr ""
+"Precaució: Si escolliu el mode nadiu, algunes funcions de Jellyfin no "
+"estaran disponibles, com: mode Jellyfin de cinema, opcions de transmissió "
+"directa/transcodificació i horari parental."
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "Complement (predeterminat)"
+
+msgctxt "#33047"
+msgid "Kodi can't locate file:"
+msgstr "Kodi no pot localitzar el fitxer:"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "Nou"
+
+msgctxt "#33054"
+msgid "Add user to session"
+msgstr "Afegeix l'usuari a la sessió"
+
+msgctxt "#33064"
+msgid "Remove user from the session"
+msgstr "Elimina l'usuari de la sessió"
+
+msgctxt "#33074"
+msgid "Are you sure you want to reset your local Kodi database?"
+msgstr "N'esteu segur, que voleu restablir la base de dades local de Kodi?"
+
+msgctxt "#33087"
+msgid "Reset all Jellyfin add-on settings?"
+msgstr "Desitgeu restablir tots els paràmetres dels complements de Jellyfin?"
+
+msgctxt "#33089"
+msgid "Enter folder name for backup"
+msgstr "Introduïu el nom del directori per a la còpia de seguretat"
+
+msgctxt "#33090"
+msgid "Replace existing backup?"
+msgstr "Desitgeu substituir la còpia de seguretat existent?"
+
+msgctxt "#33097"
+msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
+msgstr ""
+"Important. Per a prevenir conflictes amb Jellyfin per a Kodi, s'ha eliminat "
+"la funció de Netejar en actualitzar (cleanonupdate) de la vostra "
+"configuració avançada. Kodi es reiniciarà."
+
+msgctxt "#33099"
+msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
+msgstr ""
+"Instal·la el complement del servidor Kodi Sync Queue per a aplicar "
+"automàticament les actualitzacions de la mediateca de Jellyfin en engegar-"
+"se. Aquesta configuració es pot trobar a la configuració del complement > "
+"Opcions de sincronització > Habilita Kodi Sync Queue."
+
+msgctxt "#33101"
+msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
+msgstr ""
+"Com que esteu fent servir el mode de reproducció nativa amb música "
+"habilitada, voleu importar la classificació de música dels fitxers?"
+
+msgctxt "#33102"
+msgid "Resume the previous sync?"
+msgstr "Desitgeu continuar la sincronització anterior?"
+
+msgctxt "#33104"
+msgid "Find more info in the github wiki/Create-and-restore-from-backup."
+msgstr "Trobareu més informació a GitHub wiki/Create-and-restore-from-backup."
+
+msgctxt "#33105"
+msgid "Enable the context menu"
+msgstr "Habilita el menú contextual"
+
+msgctxt "#33107"
+msgid "Users added to the session (no space between users). (eg username,username2)"
+msgstr ""
+"Usuaris afegits a la sessió (sense espai entre usuaris). (p. ex.: "
+"usuari1,usuari2)"
+
+msgctxt "#33108"
+msgid "Notifications are delayed during video playback (except live tv)."
+msgstr ""
+"Les notificacions es posposaran durant la reproducció de vídeo (excepte TV "
+"en directe)."
+
+msgctxt "#33111"
+msgid "Reset the local database to apply the playback mode change."
+msgstr ""
+"Restableix la base de dades local per a aplicar el canvi de mode de "
+"reproducció."
+
+msgctxt "#33112"
+msgid "Applies to Native and Add-on playback mode"
+msgstr "S'aplica als modes de reproducció nativa i complements"
+
+msgctxt "#33113"
+msgid "Applies to Add-on playback mode only"
+msgstr "Aplica només al mode de reproducció de complements"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "Opcions de transcodificació"
+
+msgctxt "#33116"
+msgid "Compress artwork (reduces quality)"
+msgstr "Comprimeix les imatges (reduint la qualitat)"
+
+msgctxt "#33118"
+msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgstr ""
+"Heu canviat el mode de reproducció. Kodi necessita reiniciar la configuració "
+"per a aplicar el canvi. Desitgeu fer-ho ara?"
+
+msgctxt "#33119"
+msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"Alguna cosa ha anat malament durant la sincronització. Podreu restaurar el "
+"progrés després de reiniciar Kodi. Si el problema persisteix, notifiqueu-ho "
+"en el fòrum de Jellyfin per a Kodi, amb el registre (log) de Kodi."
+
+msgctxt "#33121"
+msgid "All"
+msgstr "Tot"
+
+msgctxt "#33122"
+msgid "Restart Kodi to resume where you left off."
+msgstr "Reinicia Kodi per a continuar des d'on ho vau deixar."
+
+msgctxt "#33124"
+msgid "Include people (slow)"
+msgstr "Inclou persones (lent)"
+
+msgctxt "#33203"
+msgid "Manage path replacements"
+msgstr "Administra els substituts de rutes"
+
+msgctxt "#33205"
+msgid "New Path Replacement"
+msgstr "Nova substitut de camí"
+
+msgctxt "#33206"
+msgid "Remote Path"
+msgstr "Camí remot"
+
+msgctxt "#33204"
+msgid "Finish"
+msgstr "Finalitza"
+
+msgctxt "#33207"
+msgid "Local Path"
+msgstr "Camí local"
+
+msgctxt "#30538"
+msgid "Max days in next episodes"
+msgstr "Màxim de dies a Episodis següents"

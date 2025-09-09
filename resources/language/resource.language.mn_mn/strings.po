@@ -1,0 +1,36 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2025-06-11 20:01+0000\n"
+"Last-Translator: Battseren Badral <bbattseren88@gmail.com>\n"
+"Language-Team: Mongolian <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/mn/>\n"
+"Language: mn_mn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.11.4\n"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Серверийн нэр"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Нэвтрэх арга"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "HTTP хүчээр тоглуулахыг идэвхжүүлэх"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Kodi-д зориулсан Jellyfin"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Server-н хаяг"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Бүртгэлийн түвшин"
