@@ -21,6 +21,7 @@ class Movies(Kodi):
 
         self.cursor = cursor
         Kodi.__init__(self)
+        self.itemtype = self.cursor.execute(QU.get_videoversion_itemtype, [40400])
 
     def create_entry_unique_id(self):
         self.cursor.execute(QU.create_unique_id)
@@ -165,7 +166,7 @@ class Movies(Kodi):
 
         # Sets all existing movies without a version to standard version
         for entry in self.cursor.fetchall():
-            self.add_videoversion(entry[0], entry[1], "movie", 40400, 40400)
+            self.add_videoversion(entry[0], entry[1], "movie", self.itemtype, 40400)
             changes = True
 
         LOG.info("Omega database migration is complete")
