@@ -23,7 +23,7 @@ changelog: |-
 dependencies:
   py3:
     - addon: 'xbmc.python'
-      version: '3.0.1'
+      version: '3.0.0'
     - addon: 'script.module.requests'
       version: '2.22.0+matrix.1'
     - addon: 'script.module.dateutil'
