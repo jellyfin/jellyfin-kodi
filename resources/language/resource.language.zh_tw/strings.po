@@ -729,7 +729,7 @@ msgid "Compress artwork (reduces quality)"
 msgstr "壓縮圖稿（降低品質）"
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr "您已更改播放模式。 Kodi 需要重設才能套用更改，您現在要這樣做嗎？"
 
 msgctxt "#33119"

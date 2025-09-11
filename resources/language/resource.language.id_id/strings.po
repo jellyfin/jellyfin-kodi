@@ -537,7 +537,7 @@ msgid "Compress artwork (reduces quality)"
 msgstr "Kompres gambar-sampul (mengurangi kualitas)"
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Anda telah mengubah mode pemutaran. Kodi perlu disetel ulang untuk "
 "menerapkan perubahan, apakah Anda ingin melakukannya sekarang?"

@@ -400,7 +400,7 @@ msgstr ""
 "kaj horaro de gepatra aliro."
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Vi ŝanĝis la ludadan reĝimon. Kodi devas esti relanĉigita por apliki la "
 "ŝanĝon, ĉu vi ŝatus fari tion nun?"

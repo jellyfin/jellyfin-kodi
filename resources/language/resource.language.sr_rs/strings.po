@@ -459,7 +459,7 @@ msgstr ""
 "на форуме Jellyfin за Коди са својим Коди записником."
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Променили сте начин репродукције. Коди треба ресетовати да би применио "
 "промену, да ли желите да то урадите сада?"

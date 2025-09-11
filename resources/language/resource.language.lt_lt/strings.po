@@ -585,7 +585,7 @@ msgid "Enable external subtitles"
 msgstr "Įjungti išorinius subtitrus"
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Pakeitėte atkūrimo režimą. Norint pritaikyti pakeitimą reikia iš naujo "
 "nustatyti „Kodi“, ar norėtumėte tai padaryti dabar?"

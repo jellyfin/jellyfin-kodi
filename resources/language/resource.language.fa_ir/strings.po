@@ -664,7 +664,7 @@ msgid "Enable remote control"
 msgstr "فعال کردن دسترسی از راه دور"
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "شما حالت بازپخش را تغییر دادید. Kodi برای اعمال تغییرات باید ریستارت شود٫ "
 "آیا تمایل به انجام آن دارید؟"

@@ -627,7 +627,7 @@ msgid "Compress artwork (reduces quality)"
 msgstr "Komprimovať artworky (redukuje kvalitu)"
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Zmenili ste režim prehrávania. Kodi musí byť reštartované pre aplikovanie "
 "zmien, chceli by ste to vykonať teraz?"

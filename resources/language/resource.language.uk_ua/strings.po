@@ -592,7 +592,7 @@ msgid "Play with cinema mode"
 msgstr "Відтворювати в режимі кінотеатру"
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Ви змінили режим відтворення. Kodi необхідно скинути для застосування зміни, "
 "чи бажаєте ви це зробити зараз?"

@@ -899,7 +899,7 @@ msgid "Transcode options"
 msgstr "Pārkodēšanas iestatījumi"
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Tu esi mainījis/-usi atskaņošanas režīmu. Nepieciešams atiestatīt Kodi, lai "
 "to piemērotu. Vai to paveikt tagad?"

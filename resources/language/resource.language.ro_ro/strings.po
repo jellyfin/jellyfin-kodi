@@ -598,7 +598,7 @@ msgid "Jellyfin for Kodi"
 msgstr "Jellyfin pentru Kodi"
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Ați schimbat modul de redare. Kodi trebuie resetat pentru a aplica "
 "modificarea, doriți să faceți acest lucru acum?"
