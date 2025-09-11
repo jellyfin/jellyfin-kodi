@@ -1,122 +1,692 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<settings>
+<?xml version="1.0" ?>
+<settings version="1">
+	<section id="plugin.video.jellyfin">
+		<category id="jellyfin for kodi" label="29999" help="">
+			<group id="1">
+				<setting id="username" type="string" label="30024" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<enable>false</enable>
+					<control type="edit" format="string">
+						<heading>30024</heading>
+					</control>
+				</setting>
+				<setting id="serverName" type="string" label="30001" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<enable>false</enable>
+					<control type="edit" format="string">
+						<heading>30001</heading>
+					</control>
+				</setting>
+				<setting id="server" type="string" label="30000" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<enable>false</enable>
+					<control type="edit" format="string">
+						<heading>30000</heading>
+					</control>
+				</setting>
+				<setting id="sslverify" type="boolean" label="30500" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+				</setting>
+			</group>
+			<group id="2"/>
+			<group id="3" label="33110">
+				<setting id="deviceNameOpt" type="boolean" label="30504" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="deviceName" type="string" label="30016" help="" parent="deviceNameOpt">
+					<level>0</level>
+					<default>Kodi</default>
+					<constraints>
+						<allowempty>false</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="deviceNameOpt">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="string">
+						<heading>30016</heading>
+					</control>
+				</setting>
+			</group>
+		</category>
+		<category id="sync" label="30506" help="">
+			<group id="1" label="33186">
+				<setting id="kodiCompanion" type="boolean" label="33137" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="syncIndicator" type="integer" label="30507" help="" parent="kodiCompanion">
+					<level>0</level>
+					<default>999</default>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="kodiCompanion">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="integer">
+						<heading>30507</heading>
+					</control>
+				</setting>
+				<setting id="syncDuringPlay" type="boolean" label="33185" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="dbSyncScreensaver" type="boolean" label="30536" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+				</setting>
+			</group>
+			<group id="2" label="33111">
+				<setting id="useDirectPaths" type="integer" label="30511" help="">
+					<level>0</level>
+					<default>1</default>
+					<constraints>
+						<options>
+							<option label="33036">0</option>
+							<option label="33037">1</option>
+						</options>
+					</constraints>
+					<control type="spinner" format="string"/>
+				</setting>
+			</group>
+			<group id="3" label="33175">
+				<setting id="limitIndex" type="integer" label="30515" help="">
+					<level>0</level>
+					<default>15</default>
+					<constraints>
+						<minimum>1</minimum>
+						<step> 1</step>
+						<maximum> 100</maximum>
+					</constraints>
+					<control type="slider" format="integer">
+						<popup>false</popup>
+					</control>
+				</setting>
+				<setting id="limitThreads" type="integer" label="33174" help="">
+					<level>0</level>
+					<default>3</default>
+					<constraints>
+						<minimum>1</minimum>
+						<step> 1</step>
+						<maximum> 50</maximum>
+					</constraints>
+					<control type="slider" format="integer">
+						<popup>false</popup>
+					</control>
+				</setting>
+			</group>
+			<group id="4" label="33176">
+				<setting id="enableCoverArt" type="boolean" label="30157" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="compressArt" type="boolean" label="33116" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="maxArtResolution" type="integer" label="33201" help="">
+					<level>0</level>
+					<default>5</default>
+					<constraints>
+						<options>
+							<option label="33208">0</option>
+							<option label="33209">1</option>
+							<option label="33210">2</option>
+							<option label="33211">3</option>
+							<option label="33212">4</option>
+							<option label="33213">5</option>
+						</options>
+					</constraints>
+					<control type="spinner" format="string"/>
+				</setting>
+				<setting id="enableMusic" type="string" help="">
+					<level>0</level>
+					<default>false</default>
+					<visible>false</visible>
+					<control type="edit" format="string">
+						<heading/>
+					</control>
+				</setting>
+			</group>
+		</category>
+		<category id="playback" label="30516" help="">
+			<group id="1" label="33113">
+				<setting id="enableCinema" type="boolean" label="30518" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="askCinema" type="boolean" label="30519" help="" parent="enableCinema">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="enableCinema">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
+				<setting id="playFromStream" type="boolean" label="30002" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="playFromTranscode" type="boolean" label="33179" help="" parent="playFromStream">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="playFromStream">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
+				<setting id="maxBitrate" type="integer" label="30160" help="">
+					<level>0</level>
+					<default>23</default>
+					<constraints>
+						<options>
+							<option label="33214">0</option>
+							<option label="33215">1</option>
+							<option label="33216">2</option>
+							<option label="33217">3</option>
+							<option label="33218">4</option>
+							<option label="33219">5</option>
+							<option label="33220">6</option>
+							<option label="33221">7</option>
+							<option label="33222">8</option>
+							<option label="33223">9</option>
+							<option label="33224">10</option>
+							<option label="33225">11</option>
+							<option label="33226">12</option>
+							<option label="33227">13</option>
+							<option label="33228">14</option>
+							<option label="33229">15</option>
+							<option label="33230">16</option>
+							<option label="33231">17</option>
+							<option label="33232">18</option>
+							<option label="33233">19</option>
+							<option label="33234">20</option>
+							<option label="33235">21</option>
+							<option label="33236">22</option>
+							<option label="33237">23</option>
+							<option label="33238">24</option>
+						</options>
+					</constraints>
+					<control type="spinner" format="string"/>
+				</setting>
+				<setting id="enableExternalSubs" type="boolean" label="33114" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+				</setting>
+			</group>
+			<group id="2"/>
+			<group id="3" label="33115">
+				<setting id="videoPreferredCodec" type="string" label="30161" help="">
+					<level>0</level>
+					<default>H264/AVC</default>
+					<constraints>
+						<options>
+							<option>H264/AVC</option>
+							<option>H265/HEVC</option>
+							<option>AV1</option>
+						</options>
+					</constraints>
+					<control type="list" format="string">
+						<heading>30161</heading>
+					</control>
+				</setting>
+				<setting id="transcode_h265" type="boolean" label="30522" help="">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="!is" setting="videoPreferredCodec">H265/HEVC</condition>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
+				<setting id="transcode_h265_rext" type="boolean" label="33202" help="" parent="transcode_h265">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="visible">
+							<or>
+								<condition operator="is" setting="transcode_h265">false</condition>
+								<condition operator="is" setting="videoPreferredCodec">H265/HEVC</condition>
+							</or>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
+				<setting id="transcodeHi10P" type="boolean" label="30537" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="transcode_mpeg2" type="boolean" label="30523" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="transcode_vc1" type="boolean" label="30524" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="transcode_vp9" type="boolean" label="30525" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="transcode_av1" type="boolean" label="30526" help="">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="!is" setting="videoPreferredCodec">AV1</condition>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
+				<setting id="audioPreferredCodec" type="string" label="30162" help="">
+					<level>0</level>
+					<default>AAC</default>
+					<constraints>
+						<options>
+							<option>AAC</option>
+							<option>AC3</option>
+							<option>MP3</option>
+							<option>Opus</option>
+							<option>FLAC</option>
+							<option>Vorbis</option>
+						</options>
+					</constraints>
+					<control type="list" format="string">
+						<heading>30162</heading>
+					</control>
+				</setting>
+				<setting id="audioBitrate" type="integer" label="30163" help="">
+					<level>0</level>
+					<default>4</default>
+					<constraints>
+						<options>
+							<option label="33239">0</option>
+							<option label="33240">1</option>
+							<option label="33241">2</option>
+							<option label="33242">3</option>
+							<option label="33243">4</option>
+							<option label="33244">5</option>
+							<option label="33245">6</option>
+						</options>
+					</constraints>
+					<control type="spinner" format="string"/>
+				</setting>
+				<setting id="audioMaxChannels" type="integer" label="30164" help="">
+					<level>0</level>
+					<default>6</default>
+					<constraints>
+						<minimum>2</minimum>
+						<step>1</step>
+						<maximum>6</maximum>
+					</constraints>
+					<control type="slider" format="integer">
+						<popup>false</popup>
+					</control>
+				</setting>
+				<setting id="skipDialogTranscode" type="integer" label="33159" help="">
+					<level>0</level>
+					<default>3</default>
+					<constraints>
+						<options>
+							<option label="305">0</option>
+							<option label="33157">1</option>
+							<option label="33158">2</option>
+							<option label="13106">3</option>
+							<option label="33163">4</option>
+						</options>
+					</constraints>
+					<control type="spinner" format="string"/>
+				</setting>
+				<setting id="allowBurnedSubs" type="boolean" label="30165" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+				</setting>
+			</group>
+			<group id="4"/>
+			<group id="5" label="33112">
+				<setting id="resumeJumpBack" type="integer" label="30521" help="">
+					<level>0</level>
+					<default>10</default>
+					<constraints>
+						<minimum>0</minimum>
+						<step>1</step>
+						<maximum>120</maximum>
+					</constraints>
+					<control type="slider" format="integer">
+						<popup>false</popup>
+					</control>
+				</setting>
+				<setting id="offerDelete" type="boolean" label="30114" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="deleteTV" type="boolean" label="30115" help="" parent="offerDelete">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="offerDelete">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
+				<setting id="deleteMovies" type="boolean" label="30116" help="" parent="offerDelete">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="offerDelete">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
+				<setting id="markPlayed" type="integer" help="">
+					<level>0</level>
+					<default>90</default>
+					<visible>false</visible>
+					<control type="edit" format="integer">
+						<heading/>
+					</control>
+				</setting>
+			</group>
+		</category>
+		<category id="interface" label="30235" help="">
+			<group id="1">
+				<setting id="enableContext" type="boolean" label="33105" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="enableContextTranscode" type="boolean" label="33106" help="" parent="enableContext">
+					<level>0</level>
+					<default>true</default>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="enableContext">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
+				<setting id="enableContextDelete" type="boolean" label="33143" help="" parent="enableContext">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="enableContext">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
+				<setting id="skipContextMenu" type="boolean" label="30520" help="" parent="enableContext">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="enableContextDelete">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
+			</group>
+			<group id="2" label="33107">
+				<setting id="additionalUsers" type="string" label="30528" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<control type="edit" format="string">
+						<heading>30528</heading>
+					</control>
+				</setting>
+			</group>
+			<group id="3"/>
+			<group id="4" label="30534">
+				<setting id="connectMsg" type="boolean" label="30249" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="offlinetMsg" type="boolean" label="30545" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="restartMsg" type="boolean" label="30530" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="displayMessage" type="integer" label="30547" help="">
+					<level>0</level>
+					<default>4</default>
+					<constraints>
+						<minimum>4</minimum>
+						<step>1</step>
+						<maximum>20</maximum>
+					</constraints>
+					<control type="slider" format="integer">
+						<popup>false</popup>
+					</control>
+				</setting>
+			</group>
+			<group id="5" label="33108">
+				<setting id="syncProgress" type="integer" label="33177" help="">
+					<level>0</level>
+					<default>15</default>
+					<control type="edit" format="integer">
+						<heading>33177</heading>
+					</control>
+				</setting>
+				<setting id="newContent" type="boolean" label="30531" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="newvideotime" type="integer" label="30532" help="" parent="newContent">
+					<level>0</level>
+					<default>5</default>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="newContent">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="integer">
+						<heading>30532</heading>
+					</control>
+				</setting>
+				<setting id="newmusictime" type="integer" label="30533" help="" parent="newContent">
+					<level>0</level>
+					<default>2</default>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="newContent">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="edit" format="integer">
+						<heading>30533</heading>
+					</control>
+				</setting>
+			</group>
+		</category>
+		<category id="plugin" label="33109" help="">
+			<group id="1">
+				<setting id="ignoreSpecialsNextEpisodes" type="boolean" label="30527" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="getCast" type="boolean" label="33124" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="remoteControl" type="boolean" label="33125" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+				</setting>
+			</group>
+		</category>
+		<category id="advanced" label="30022" help="">
+			<group id="1">
+				<setting id="logLevel" type="integer" label="30004" help="">
+					<level>0</level>
+					<default>1</default>
+					<constraints>
+						<options>
+							<option label="Disabled">0</option>
+							<option label="Info">1</option>
+							<option label="Debug">2</option>
+						</options>
+					</constraints>
+					<control type="spinner" format="string"/>
+				</setting>
+				<setting id="maskInfo" type="boolean" label="33164" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="resetLocalKodiDatabase" type="action" label="30239" help="">
+					<level>0</level>
+					<data>RunPlugin(plugin://plugin.video.jellyfin?mode=reset)</data>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<control type="button" format="action">
+						<close>true</close>
+					</control>
+				</setting>
+				<setting id="generateNewDeviceId" type="action" label="30535" help="">
+					<level>0</level>
+					<data>RunPlugin(plugin://plugin.video.jellyfin?mode=deviceid)</data>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<control type="button" format="action">
+						<close>true</close>
+					</control>
+				</setting>
+			</group>
+			<group id="2" label="33196">
+				<setting id="enableAddon" type="boolean" label="33195" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle"/>
+				</setting>
+				<setting id="restartJellyfinForKodi" type="action" label="33180" help="">
+					<level>0</level>
+					<data>RunPlugin(plugin://plugin.video.jellyfin?mode=restartservice)</data>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<control type="button" format="action">
+						<close>true</close>
+					</control>
+				</setting>
+				<setting id="startupDelay" type="integer" label="30529" help="">
+					<level>0</level>
+					<default>0</default>
+					<control type="edit" format="integer">
+						<heading>30529</heading>
+					</control>
+				</setting>
+			</group>
+			<group id="3"/>
+			<group id="4" label="33104">
+				<setting id="backupPath" type="path" label="33093" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<control type="button" format="path">
+						<heading>33093</heading>
+					</control>
+				</setting>
+				<setting id="createBackup" type="action" label="33092" help="">
+					<level>0</level>
+					<data>RunPlugin(plugin://plugin.video.jellyfin?mode=backup)</data>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="!is" setting="backupPath"/>
+						</dependency>
+					</dependencies>
+					<control type="button" format="action">
+						<close>true</close>
+					</control>
+				</setting>
+			</group>
+			<!-- Hidden settings, used by Jellyfin for Kodi for storage	(listing here quiets the log warnings) -->
+			<group id="5">
+				<visible>false</visible>
+				<setting id="LastIncrementalSync" type="string" label="" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<control type="edit" format="string" />
+				</setting>
+				<setting id="SyncInstallRunDone" type="boolean" label="32008" help="">
+					<level>0</level>
+					<default>false</default>
+					<control type="toggle" />
+				</setting>
+				<setting id="groupedSets" type="boolean" label="32008" help="">
+					<level>0</level>
+					<default>true</default>
+					<control type="toggle" />
+				</setting>
+				<setting id="platformDetected" type="string" label="" help="">
+					<level>0</level>
+					<default/>
+					<constraints>
+						<allowempty>true</allowempty>
+					</constraints>
+					<control type="edit" format="string" />
+				</setting>
+			</group>
+		</category>
 
-	<category label="29999">
-		<!-- Jellyfin -->
-		<setting label="30003" id="idMethod" type="enum" values="Manual" default="0" enable="false" />
-		<setting label="30024" id="username" type="text" default="" visible="true" enable="false" />
-		<setting label="30001" id="serverName" type="text" default="" enable="false" />
-		<setting label="30000" id="server" type="text" default="" visible="true" enable="false" />
-		<setting label="30500" id="sslverify" type="bool" default="true" visible="true" />
-
-		<setting type="sep" />
-		<setting label="33110" type="lsep" />
-		<setting label="30504" id="deviceNameOpt" type="bool" default="false" />
-		<setting label="30016" id="deviceName" type="text" default="Kodi" visible="eq(-1,true)" subsetting="true" />
-	</category>
-
-	<category label="30506">
-		<!-- Sync Options -->
-		<setting label="33186" type="lsep" />
-		<setting label="33137" id="kodiCompanion" type="bool" default="true" />
-		<setting label="30507" id="syncIndicator" type="number" default="999" visible="eq(-1,true)" subsetting="true" />
-		<setting label="33185" id="syncDuringPlay" type="bool" default="true" />
-		<setting label="30536" id="dbSyncScreensaver" type="bool" default="true" />
-		<setting label="33111" type="lsep" />
-		<setting label="30511" id="useDirectPaths" type="enum" lvalues="33036|33037" default="1" />
-
-		<setting label="33175" type="lsep" />
-		<setting label="30515" id="limitIndex" type="slider" default="15" range="1, 1, 100" option="int" />
-		<setting label="33174" id="limitThreads" type="slider" default="3" range="1, 1, 50" option="int" />
-		<setting label="33176" type="lsep" />
-		<setting label="30157" id="enableCoverArt" type="bool" default="true" />
-		<setting label="33116" id="compressArt" type="bool" default="false" />
-		<setting label="33201" id="maxArtResolution" type="enum" values="360|480|600|720|1080|Unlimited [default]" default="5" />
-		<setting id="enableMusic" visible="false" default="false" />
-	</category>
-
-	<category label="30516">
-		<!-- Playback -->
-		<setting label="33113" type="lsep" />
-		<setting label="30518" id="enableCinema" type="bool" default="false" />
-		<setting label="30519" id="askCinema" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
-		<setting label="30002" id="playFromStream" type="bool" default="true" />
-		<setting label="33179" id="playFromTranscode" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
-		<setting label="30160" id="maxBitrate" type="enum" values="0.5 Mbps|1 Mbps|1.5 Mbps|2.0 Mbps|2.5 Mbps|3.0 Mbps|4.0 Mbps|5.0 Mbps|6.0 Mbps|7.0 Mbps|8.0 Mbps|9.0 Mbps|10.0 Mbps|12.0 Mbps|14.0 Mbps|16.0 Mbps|18.0 Mbps|20.0 Mbps|25.0 Mbps|30.0 Mbps|35.0 Mbps|40.0 Mbps|100.0 Mbps|1000.0 Mbps [default]|Maximum" visible="true" default="23" />
-		<setting label="33114" id="enableExternalSubs" type="bool" default="true" />
-
-		<setting type="sep" />
-		<setting label="33115" type="lsep" />
-		<setting label="30161" id="videoPreferredCodec" type="select" values="H264/AVC|H265/HEVC|AV1" visible="true" default="H264/AVC" />
-		<setting label="30522" id="transcode_h265" type="bool" default="false" visible="!eq(-1,H265/HEVC)" />
-		<setting label="33202" id="transcode_h265_rext" type="bool" default="false" visible="eq(-1,false)|eq(-2,H265/HEVC)" subsetting="true" />
-		<setting label="30537" id="transcodeHi10P" type="bool" default="false" visible="true" />
-		<setting label="30523" id="transcode_mpeg2" type="bool" default="false" visible="true" />
-		<setting label="30524" id="transcode_vc1" type="bool" default="false" visible="true" />
-		<setting label="30525" id="transcode_vp9" type="bool" default="false" visible="true" />
-		<setting label="30526" id="transcode_av1" type="bool" default="false" visible="!eq(-7,AV1)" />
-		<setting label="30162" id="audioPreferredCodec" type="select" values="AAC|AC3|MP3|Opus|FLAC|Vorbis" visible="true" default="AAC" />
-		<setting label="30163" id="audioBitrate" type="enum" values="96|128|160|192|256|320|384" visible="true" default="4" />
-		<setting label="30164" id="audioMaxChannels" type="slider" range="2,1,6" option="int" visible="true" default="6" />
-		<setting label="33159" id="skipDialogTranscode" type="enum" lvalues="305|33157|33158|13106|33163" visible="true" default="3" />
-		<setting label="30165" id="allowBurnedSubs" type="bool" visible="true" enable="true" default="true" />
-
-		<setting type="sep" />
-		<setting label="33112" type="lsep" />
-		<setting label="30521" id="resumeJumpBack" type="slider" default="10" range="0,1,120" option="int" />
-		<setting label="30114" id="offerDelete" type="bool" default="false" />
-		<setting label="30115" id="deleteTV" type="bool" visible="eq(-1,true)" default="false" subsetting="true" />
-		<setting label="30116" id="deleteMovies" type="bool" visible="eq(-2,true)" default="false" subsetting="true" />
-
-		<setting id="markPlayed" type="number" visible="false" default="90" />
-	</category>
-
-	<category label="30235">
-		<!-- Interface -->
-		<setting label="33105" id="enableContext" type="bool" default="true" />
-		<setting label="33106" id="enableContextTranscode" type="bool" visible="eq(-1,true)" default="true" subsetting="true" />
-		<setting label="33143" id="enableContextDelete" type="bool" visible="eq(-2,true)" default="false" subsetting="true" />
-		<setting label="30520" id="skipContextMenu" type="bool" default="false" visible="eq(-1,true)" subsetting="true" />
-
-		<setting label="33107" type="lsep" />
-		<setting label="30528" id="additionalUsers" type="text" default="" />
-
-		<setting type="sep" />
-		<setting label="30534" type="lsep" />
-		<setting label="30249" id="connectMsg" type="bool" default="true" />
-		<setting label="30545" id="offlinetMsg" type="bool" default="true" />
-		<setting label="30530" id="restartMsg" type="bool" default="true" />
-		<setting label="30547" id="displayMessage" type="slider" default="4" range="4,1,20" option="int" />
-		<setting label="33108" type="lsep" />
-		<setting label="33177" id="syncProgress" type="number" default="15" visible="true" />
-		<setting label="30531" id="newContent" type="bool" default="false" />
-		<setting label="30532" id="newvideotime" type="number" visible="eq(-1,true)" default="5" option="int" subsetting="true" />
-		<setting label="30533" id="newmusictime" type="number" visible="eq(-2,true)" default="2" option="int" subsetting="true" />
-	</category>
-
-	<category label="33109">
-		<!-- Plugin -->
-		<setting id="maxDaysInNextEpisodes" label="30538" type="slider" default="366" range="0, 1, 732" option="int" />
-		<setting id="ignoreSpecialsNextEpisodes" type="bool" label="30527" default="false" />
-		<setting id="getCast" type="bool" label="33124" default="false" />
-		<setting id="remoteControl" type="bool" label="33125" default="true" />
-	</category>
-
-	<category label="30022">
-		<!-- Advanced -->
-		<setting label="30004" id="logLevel" type="enum" values="Disabled|Info|Debug" default="1" />
-		<setting label="33164" id="maskInfo" type="bool" default="true" />
-		<setting label="30239" type="action" action="RunPlugin(plugin://plugin.video.jellyfin?mode=reset)" option="close" />
-		<setting label="30535" type="action" action="RunPlugin(plugin://plugin.video.jellyfin?mode=deviceid)" option="close" />
-		<setting label="33196" type="lsep" />
-		<setting label="33195" id="enableAddon" type="bool" default="true" />
-		<setting label="33180" type="action" action="RunPlugin(plugin://plugin.video.jellyfin?mode=restartservice)" option="close" />
-		<setting label="30529" id="startupDelay" type="number" default="0" option="int" />
-
-		<setting type="sep" />
-		<setting label="33104" type="lsep" />
-		<setting label="33093" type="folder" id="backupPath" option="writeable" />
-		<setting label="33092" type="action" action="RunPlugin(plugin://plugin.video.jellyfin?mode=backup)" visible="!eq(-1,)" option="close" />
-	</category>
-
+	</section>
 </settings>
