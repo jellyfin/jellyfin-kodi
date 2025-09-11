@@ -679,7 +679,7 @@ msgid "Compress artwork (reduces quality)"
 msgstr "Comhbhrúigh saothar ealaíne (laghdaíonn sé cáilíocht)"
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Tá an modh athsheinm athraithe agat. Ní mór Kodi a athshocrú chun an t-athrú "
 "a chur i bhfeidhm, ar mhaith leat é seo a dhéanamh anois?"

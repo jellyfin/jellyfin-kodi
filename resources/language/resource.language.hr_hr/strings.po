@@ -420,7 +420,7 @@ msgid "Applies to Native and Add-on playback mode"
 msgstr "Primjenjuje se na izvorni i dodatni način reprodukcije"
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Promijenili ste način reprodukcije. Kodi se mora resetirati da bi se "
 "primijenila promjena, želite li to sada učiniti?"

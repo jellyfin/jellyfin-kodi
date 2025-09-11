@@ -734,7 +734,7 @@ msgstr ""
 "Jellyfin para Kodi, adjunte su log de Kodi."
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Ha cambiado el modo de reproducción. Kodi necesita ser restablecido para "
 "aplicar el cambio, ¿te gustaría hacer esto ahora?"

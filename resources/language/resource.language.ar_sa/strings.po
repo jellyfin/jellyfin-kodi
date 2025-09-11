@@ -282,7 +282,7 @@ msgstr ""
 "باستخدام سجل Kodi الخاص بك."
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "لقد غيرت وضع التشغيل. يجب إعادة تعيين Kodi لتطبيق التغيير، هل ترغب في القيام "
 "بذلك الآن؟"

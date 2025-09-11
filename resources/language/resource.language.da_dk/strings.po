@@ -585,7 +585,7 @@ msgstr ""
 "Kodi forummer, med din Kodi logfil."
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Du har ændret afspilningstilstanden. Kodi er nødt til at genstarte for at "
 "anvende ændringerne, vil du gøre det nu?"

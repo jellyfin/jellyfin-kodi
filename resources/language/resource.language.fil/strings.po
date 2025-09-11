@@ -62,7 +62,7 @@ msgstr ""
 "ulat sa mga forum ng Jellyfin for Kodi, kasama ang iyong Kodi log."
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Binago mo ang playback mode. Kailangang i-reset ang Kodi upang mailapat ang "
 "pagbabago, gusto mo bang gawin ito ngayon?"

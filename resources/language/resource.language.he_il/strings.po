@@ -947,7 +947,7 @@ msgstr ""
 "בשרת."
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "שינית את מצב הניגון. יש להפעיל מחדש את Kodi כדי להחיל את השינויים, לעשות זאת "
 "עכשיו?"

@@ -111,7 +111,7 @@ msgstr ""
 "kérjük, jelezd a Jellyfin Kodi bővítmény fórumán, a Kodi naplóval."
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Megváltoztattad a lejátszási módot. A Kodit alaphelyzetbe kell állítani a "
 "változás alkalmazásához. Szeretnéd ezt most megtenni?"

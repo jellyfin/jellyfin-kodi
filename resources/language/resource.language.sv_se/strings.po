@@ -814,7 +814,7 @@ msgid "Select the libraries to add"
 msgstr "Välj vilka bibliotek att lägga till"
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Du har ändrat uppspelningsläge. Kodi behöver startas om för att aktivera "
 "ändringen, vill du göra det nu?"

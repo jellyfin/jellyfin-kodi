@@ -492,7 +492,7 @@ msgid "Select the libraries to add"
 msgstr "Valitse lisättävät kirjastot"
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Olet vaihtanut toistotilaa ja muutoksen käyttöönottamiseksi paikallinen Kodi-"
 "tietokanta on tyhjennettävä. Haluatko tehdä tämän nyt?"

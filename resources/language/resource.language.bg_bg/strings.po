@@ -704,7 +704,7 @@ msgstr ""
 "форумите на Коди,като приложите лог файла от добавката."
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Променихте режима на възпроизвеждане.Необходимо е нулиране на Коди ,за да "
 "влязат промените в сила.Искате ли да направите това сега?"

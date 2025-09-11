@@ -695,7 +695,7 @@ msgstr ""
 "na fóru \"Jellyfin for Kodi\" s přiloženým logem z Kodi."
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Změnili jste režim přehrávání. Aby bylo možné tuto změnu použít, je třeba "
 "restartovat Kodi. Chcete to udělat nyní?"

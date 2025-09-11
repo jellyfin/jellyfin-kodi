@@ -701,7 +701,7 @@ msgid "Select the libraries to add"
 msgstr "Επιλέξτε βιβλιοθήκη για προσθήκη"
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Αλλάξατε τη μέθοδο αναπαραγωγής. Το Kodi πρεπεί να επανεκκινηθεί για να "
 "εφαρμοστεί η ρύθμιση. Επανεκκίνηση τώρα;"

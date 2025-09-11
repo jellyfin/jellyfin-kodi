@@ -629,7 +629,7 @@ msgstr ""
 "tin lỗi của Kodi trên diễn đàn Jellyfin dành cho Kodi."
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Bạn đã thay đổi chế độ phát. Kodi cần phải khởi động lại để áp dụng thay "
 "đổi, bạn có muốn tiến hành bây giờ?"

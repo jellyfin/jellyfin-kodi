@@ -891,7 +891,7 @@ msgid "Paging - max items requested (default: 15)"
 msgstr "Betteu - saual etılgen eñ köp tarmaqtar (ädepkі: 15)"
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Sіz oinatu rejımіn özgerttіñіz. Özgerıstı qoldanu üşın Kodi ysyrudy talap "
 "etedı, būl endı ıstelsın be?"

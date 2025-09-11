@@ -655,7 +655,7 @@ msgid "Compress artwork (reduces quality)"
 msgstr "கலைப்படைப்புகளை சுருக்கவும் (தரத்தை குறைக்கிறது)"
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "பின்னணி பயன்முறையை மாற்றியுள்ளீர்கள். மாற்றத்தைப் பயன்படுத்த கோடியை மீட்டமைக்"
 "க வேண்டும், இதை இப்போது செய்ய விரும்புகிறீர்களா?"
