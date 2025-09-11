@@ -386,14 +386,6 @@
 				<setting id="allowBurnedSubs" type="boolean" label="30165" help="">
 					<level>0</level>
 					<default>true</default>
-					<dependencies>
-						<dependency type="enable">
-							<condition on="property" name="InfoBool">true</condition>
-						</dependency>
-						<dependency type="visible">
-							<condition on="property" name="InfoBool">true</condition>
-						</dependency>
-					</dependencies>
 					<control type="toggle"/>
 				</setting>
 			</group>
