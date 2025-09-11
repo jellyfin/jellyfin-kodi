@@ -12,11 +12,7 @@
 						</options>
 						<allowempty>false</allowempty>
 					</constraints>
-					<dependencies>
-						<dependency type="enable">
-							<condition on="property" name="InfoBool">false</condition>
-						</dependency>
-					</dependencies>
+					<enable>false</enable>
 					<control type="spinner" format="string"/>
 				</setting>
 				<setting id="username" type="string" label="30024" help="">
@@ -25,14 +21,7 @@
 					<constraints>
 						<allowempty>true</allowempty>
 					</constraints>
-					<dependencies>
-						<dependency type="enable">
-							<condition on="property" name="InfoBool">false</condition>
-						</dependency>
-						<dependency type="visible">
-							<condition on="property" name="InfoBool">true</condition>
-						</dependency>
-					</dependencies>
+					<enable>false</enable>
 					<control type="edit" format="string">
 						<heading>30024</heading>
 					</control>
@@ -43,11 +32,7 @@
 					<constraints>
 						<allowempty>true</allowempty>
 					</constraints>
-					<dependencies>
-						<dependency type="enable">
-							<condition on="property" name="InfoBool">false</condition>
-						</dependency>
-					</dependencies>
+					<enable>false</enable>
 					<control type="edit" format="string">
 						<heading>30001</heading>
 					</control>
@@ -58,14 +43,7 @@
 					<constraints>
 						<allowempty>true</allowempty>
 					</constraints>
-					<dependencies>
-						<dependency type="enable">
-							<condition on="property" name="InfoBool">false</condition>
-						</dependency>
-						<dependency type="visible">
-							<condition on="property" name="InfoBool">true</condition>
-						</dependency>
-					</dependencies>
+					<enable>false</enable>
 					<control type="edit" format="string">
 						<heading>30000</heading>
 					</control>
@@ -73,11 +51,6 @@
 				<setting id="sslverify" type="boolean" label="30500" help="">
 					<level>0</level>
 					<default>true</default>
-					<dependencies>
-						<dependency type="visible">
-							<condition on="property" name="InfoBool">true</condition>
-						</dependency>
-					</dependencies>
 					<control type="toggle"/>
 				</setting>
 			</group>
@@ -203,11 +176,6 @@
 				<setting id="enableMusic" type="string" help="">
 					<level>0</level>
 					<default>false</default>
-					<dependencies>
-						<dependency type="visible">
-							<condition on="property" name="InfoBool">false</condition>
-						</dependency>
-					</dependencies>
 					<visible>false</visible>
 					<control type="edit" format="string">
 						<heading/>
@@ -279,11 +247,6 @@
 							<option label="33238">24</option>
 						</options>
 					</constraints>
-					<dependencies>
-						<dependency type="visible">
-							<condition on="property" name="InfoBool">true</condition>
-						</dependency>
-					</dependencies>
 					<control type="spinner" format="string"/>
 				</setting>
 				<setting id="enableExternalSubs" type="boolean" label="33114" help="">
@@ -304,11 +267,6 @@
 							<option>AV1</option>
 						</options>
 					</constraints>
-					<dependencies>
-						<dependency type="visible">
-							<condition on="property" name="InfoBool">true</condition>
-						</dependency>
-					</dependencies>
 					<control type="list" format="string">
 						<heading>30161</heading>
 					</control>
@@ -339,41 +297,21 @@
 				<setting id="transcodeHi10P" type="boolean" label="30537" help="">
 					<level>0</level>
 					<default>false</default>
-					<dependencies>
-						<dependency type="visible">
-							<condition on="property" name="InfoBool">true</condition>
-						</dependency>
-					</dependencies>
 					<control type="toggle"/>
 				</setting>
 				<setting id="transcode_mpeg2" type="boolean" label="30523" help="">
 					<level>0</level>
 					<default>false</default>
-					<dependencies>
-						<dependency type="visible">
-							<condition on="property" name="InfoBool">true</condition>
-						</dependency>
-					</dependencies>
 					<control type="toggle"/>
 				</setting>
 				<setting id="transcode_vc1" type="boolean" label="30524" help="">
 					<level>0</level>
 					<default>false</default>
-					<dependencies>
-						<dependency type="visible">
-							<condition on="property" name="InfoBool">true</condition>
-						</dependency>
-					</dependencies>
 					<control type="toggle"/>
 				</setting>
 				<setting id="transcode_vp9" type="boolean" label="30525" help="">
 					<level>0</level>
 					<default>false</default>
-					<dependencies>
-						<dependency type="visible">
-							<condition on="property" name="InfoBool">true</condition>
-						</dependency>
-					</dependencies>
 					<control type="toggle"/>
 				</setting>
 				<setting id="transcode_av1" type="boolean" label="30526" help="">
@@ -399,11 +337,6 @@
 							<option>Vorbis</option>
 						</options>
 					</constraints>
-					<dependencies>
-						<dependency type="visible">
-							<condition on="property" name="InfoBool">true</condition>
-						</dependency>
-					</dependencies>
 					<control type="list" format="string">
 						<heading>30162</heading>
 					</control>
@@ -422,11 +355,6 @@
 							<option label="33245">6</option>
 						</options>
 					</constraints>
-					<dependencies>
-						<dependency type="visible">
-							<condition on="property" name="InfoBool">true</condition>
-						</dependency>
-					</dependencies>
 					<control type="spinner" format="string"/>
 				</setting>
 				<setting id="audioMaxChannels" type="integer" label="30164" help="">
@@ -437,11 +365,6 @@
 						<step>1</step>
 						<maximum>6</maximum>
 					</constraints>
-					<dependencies>
-						<dependency type="visible">
-							<condition on="property" name="InfoBool">true</condition>
-						</dependency>
-					</dependencies>
 					<control type="slider" format="integer">
 						<popup>false</popup>
 					</control>
@@ -458,11 +381,6 @@
 							<option label="33163">4</option>
 						</options>
 					</constraints>
-					<dependencies>
-						<dependency type="visible">
-							<condition on="property" name="InfoBool">true</condition>
-						</dependency>
-					</dependencies>
 					<control type="spinner" format="string"/>
 				</setting>
 				<setting id="allowBurnedSubs" type="boolean" label="30165" help="">
@@ -521,11 +439,7 @@
 				<setting id="markPlayed" type="integer" help="">
 					<level>0</level>
 					<default>90</default>
-					<dependencies>
-						<dependency type="visible">
-							<condition on="property" name="InfoBool">false</condition>
-						</dependency>
-					</dependencies>
+					<visible>false</visible>
 					<control type="edit" format="integer">
 						<heading/>
 					</control>
@@ -616,11 +530,6 @@
 				<setting id="syncProgress" type="integer" label="33177" help="">
 					<level>0</level>
 					<default>15</default>
-					<dependencies>
-						<dependency type="visible">
-							<condition on="property" name="InfoBool">true</condition>
-						</dependency>
-					</dependencies>
 					<control type="edit" format="integer">
 						<heading>33177</heading>
 					</control>
