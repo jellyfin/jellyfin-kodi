@@ -3,18 +3,6 @@
 	<section id="plugin.video.jellyfin">
 		<category id="jellyfin for kodi" label="29999" help="">
 			<group id="1">
-				<setting id="idMethod" type="integer" label="30003" help="">
-					<level>0</level>
-					<default>0</default>
-					<constraints>
-						<options>
-							<option label="Manual">0</option>
-						</options>
-						<allowempty>false</allowempty>
-					</constraints>
-					<enable>false</enable>
-					<control type="spinner" format="string"/>
-				</setting>
 				<setting id="username" type="string" label="30024" help="">
 					<level>0</level>
 					<default/>
