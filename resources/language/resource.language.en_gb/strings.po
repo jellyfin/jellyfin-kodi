@@ -1130,8 +1130,8 @@ msgid "35.0 Mbps"
 msgstr "35.0 Mbps"
 
 msgctxt "#33235"
-msgid "40 Mbps"
-msgstr "40 Mbps"
+msgid "40.0 Mbps"
+msgstr "40.0 Mbps"
 
 msgctxt "#33236"
 msgid "100.0 Mbps"
