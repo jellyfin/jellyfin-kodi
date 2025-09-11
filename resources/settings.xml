@@ -9,8 +9,8 @@
 					<constraints>
 						<options>
 							<option label="Manual">0</option>
-							<allowempty>false</allowempty>
 						</options>
+						<allowempty>false</allowempty>
 					</constraints>
 					<dependencies>
 						<dependency type="enable">
