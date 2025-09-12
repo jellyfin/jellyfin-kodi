@@ -4,6 +4,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 #################################################################################################
 
 import time
+from urllib.parse import quote
 
 import requests
 
@@ -247,20 +248,24 @@ class HTTP(object):
     def _authorization(self, data):
 
         auth = "MediaBrowser "
-        auth += "Client=%s, " % self.config.data.get("app.name", "Jellyfin for Kodi")
-        auth += "Device=%s, " % self.config.data.get(
-            "app.device_name", "Unknown Device"
+        auth += "Client=%s, " % quote(
+            self.config.data.get("app.name", "Jellyfin for Kodi"), safe=""
         )
-        auth += "DeviceId=%s, " % self.config.data.get(
-            "app.device_id", "Unknown Device id"
+        auth += "Device=%s, " % quote(
+            self.config.data.get("app.device_name", "Unknown Device"), safe=""
         )
-        auth += "Version=%s" % self.config.data.get("app.version", "0.0.0")
+        auth += "DeviceId=%s, " % quote(
+            self.config.data.get("app.device_id", "Unknown Device id"), safe=""
+        )
+        auth += "Version=%s" % quote(
+            self.config.data.get("app.version", "0.0.0"), safe=""
+        )
 
         data["headers"].update({"x-emby-authorization": auth})
 
         if self.config.data.get("auth.token") and self.config.data.get("auth.user_id"):
 
-            auth += ", UserId=%s" % self.config.data.get("auth.user_id")
+            auth += ", UserId=%s" % quote(self.config.data.get("auth.user_id"), safe="")
             data["headers"].update(
                 {
                     "x-emby-authorization": auth,
