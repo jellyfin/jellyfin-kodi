@@ -249,21 +249,23 @@ class HTTP(object):
 
         auth = "MediaBrowser "
         auth += "Client=%s, " % quote(
-            self.config.data.get("app.name", "Jellyfin for Kodi")
+            self.config.data.get("app.name", "Jellyfin for Kodi"), safe=""
         )
         auth += "Device=%s, " % quote(
-            self.config.data.get("app.device_name", "Unknown Device")
+            self.config.data.get("app.device_name", "Unknown Device"), safe=""
         )
         auth += "DeviceId=%s, " % quote(
-            self.config.data.get("app.device_id", "Unknown Device id")
+            self.config.data.get("app.device_id", "Unknown Device id"), safe=""
         )
-        auth += "Version=%s" % quote(self.config.data.get("app.version", "0.0.0"))
+        auth += "Version=%s" % quote(
+            self.config.data.get("app.version", "0.0.0"), safe=""
+        )
 
         data["headers"].update({"x-emby-authorization": auth})
 
         if self.config.data.get("auth.token") and self.config.data.get("auth.user_id"):
 
-            auth += ", UserId=%s" % quote(self.config.data.get("auth.user_id"))
+            auth += ", UserId=%s" % quote(self.config.data.get("auth.user_id"), safe="")
             data["headers"].update(
                 {
                     "x-emby-authorization": auth,

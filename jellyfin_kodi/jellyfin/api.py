@@ -407,10 +407,10 @@ class API(object):
 
     def get_default_headers(self):
         auth = "MediaBrowser "
-        auth += "Client=%s, " % quote(self.config.data["app.name"])
-        auth += "Device=%s, " % quote(self.config.data["app.device_name"])
-        auth += "DeviceId=%s, " % quote(self.config.data["app.device_id"])
-        auth += "Version=%s" % quote(self.config.data["app.version"])
+        auth += "Client=%s, " % quote(self.config.data["app.name"], safe="")
+        auth += "Device=%s, " % quote(self.config.data["app.device_name"], safe="")
+        auth += "DeviceId=%s, " % quote(self.config.data["app.device_id"], safe="")
+        auth += "Version=%s" % quote(self.config.data["app.version"], safe="")
 
         return {
             "Accept": "application/json",
