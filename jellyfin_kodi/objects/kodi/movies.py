@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
 
+from sqlite3 import DatabaseError
+
 ##################################################################################################
 
 from ...helper import LazyLogger
@@ -17,11 +19,18 @@ LOG = LazyLogger(__name__)
 
 class Movies(Kodi):
 
+    itemtype: int
+
     def __init__(self, cursor):
 
         self.cursor = cursor
         Kodi.__init__(self)
-        self.itemtype = self.cursor.execute(QU.get_videoversion_itemtype, [40400])
+        try:
+            self.cursor.execute(QU.get_videoversion_itemtype, [40400])
+            self.itemtype = self.cursor.fetchone()[0]
+        except (IndexError, DatabaseError, TypeError) as e:
+            LOG.warning("Unable to fetch videoversion itemtype: %s", e)
+            self.itemtype = 0
 
     def create_entry_unique_id(self):
         self.cursor.execute(QU.create_unique_id)
