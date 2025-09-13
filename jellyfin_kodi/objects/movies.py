@@ -156,6 +156,7 @@ class Movies(KodiDb):
 
         obj["PathId"] = self.add_path(*values(obj, QU.add_path_obj))
         obj["FileId"] = self.add_file(*values(obj, QU.add_file_obj))
+        obj["VideoVersionItemType"] = self.itemtype
 
         self.add(*values(obj, QU.add_movie_obj))
         self.add_videoversion(*values(obj, QU.add_video_version_obj))

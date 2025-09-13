@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
 
+from sqlite3 import DatabaseError
+
 ##################################################################################################
 
 from ...helper import LazyLogger
@@ -17,10 +19,18 @@ LOG = LazyLogger(__name__)
 
 class Movies(Kodi):
 
+    itemtype: int
+
     def __init__(self, cursor):
 
         self.cursor = cursor
         Kodi.__init__(self)
+        try:
+            self.cursor.execute(QU.get_videoversion_itemtype, [40400])
+            self.itemtype = self.cursor.fetchone()[0]
+        except (IndexError, DatabaseError, TypeError) as e:
+            LOG.warning("Unable to fetch videoversion itemtype: %s", e)
+            self.itemtype = 0
 
     def create_entry_unique_id(self):
         self.cursor.execute(QU.create_unique_id)
@@ -150,6 +160,13 @@ class Movies(Kodi):
     def omega_migration(self):
         """
         Adds a video version for all existing movies
+
+        For Omega: video_version_id = 0
+        For Piers: video_version_id = 1
+
+        Migration from Nexus to Omega adds video version with id 0
+        Migration from Nexus to Peirs adds video version with id 1
+        Migration from Omega to Piers this does nothing and is handled by kodi itself
         """
         LOG.info("Starting migration for Omega database changes")
         # Tracks if this migration made any changes
@@ -158,7 +175,7 @@ class Movies(Kodi):
 
         # Sets all existing movies without a version to standard version
         for entry in self.cursor.fetchall():
-            self.add_videoversion(entry[0], entry[1], "movie", "0", 40400)
+            self.add_videoversion(entry[0], entry[1], "movie", self.itemtype, 40400)
             changes = True
 
         LOG.info("Omega database migration is complete")
