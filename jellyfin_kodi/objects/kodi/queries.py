@@ -411,11 +411,17 @@ add_video_version = """
 INSERT INTO     videoversion(idFile, idMedia, media_type, itemType, idType)
 VALUES          (?, ?, ?, ?, ?)
 """
-add_video_version_obj = ["{FileId}", "{MovieId}", "movie", "{VideoVersionItemType}", 40400]
+add_video_version_obj = [
+    "{FileId}",
+    "{MovieId}",
+    "movie",
+    "{VideoVersionItemType}",
+    40400,
+]
 get_videoversion_itemtype = """
 SELECT itemType FROM videoversiontype WHERE id = ?
 """
-get_videoversion_itemtype_obj = [ "{VideoVersionId}" ]
+get_videoversion_itemtype_obj = ["{VideoVersionId}"]
 check_video_version = """
 SELECT COUNT(name) FROM sqlite_master WHERE type='table' AND name='videoversion'
 """
