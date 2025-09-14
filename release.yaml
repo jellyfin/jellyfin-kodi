@@ -5,7 +5,7 @@ changelog: |-
   + Fix movies sync for Kodi 22 Piers (#993) @JeroenED
   + Properly encode device name and related parameters (#1036) @oddstr13
 
-  :white_check_mark: Tests
+  Tests
   ------------------------
   + Fix translation file naming (#1032) @oddstr13
 
