@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-09-12 18:44+0000\n"
-"Last-Translator: Leverpastej <zstenroos@gmail.com>\n"
+"PO-Revision-Date: 2025-09-14 20:06+0000\n"
+"Last-Translator: Ärik <kwakz4life@gmail.com>\n"
 "Language-Team: Swedish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sv/>\n"
 "Language: sv_se\n"
@@ -1113,3 +1113,71 @@ msgstr "9.0 Mbps"
 msgctxt "#33216"
 msgid "1.5 Mbps"
 msgstr "1.5 Mbps"
+
+msgctxt "#33238"
+msgid "Maximum"
+msgstr "Maximal"
+
+msgctxt "#33243"
+msgid "256"
+msgstr "256"
+
+msgctxt "#33229"
+msgid "16.0 Mbps"
+msgstr "16.0 Mbps"
+
+msgctxt "#33230"
+msgid "18.0 Mbps"
+msgstr "18.0 Mbps"
+
+msgctxt "#33231"
+msgid "20.0 Mbps"
+msgstr "20.0 Mbps"
+
+msgctxt "#33232"
+msgid "25.0 Mbps"
+msgstr "25.0 Mbps"
+
+msgctxt "#33233"
+msgid "30.0 Mbps"
+msgstr "30.0 Mbps"
+
+msgctxt "#33234"
+msgid "35.0 Mbps"
+msgstr "35.0 Mbps"
+
+msgctxt "#33235"
+msgid "40.0 Mbps"
+msgstr "40.0 Mbps"
+
+msgctxt "#33236"
+msgid "100.0 Mbps"
+msgstr "100.0 Mbps"
+
+msgctxt "#33237"
+msgid "1000.0 Mbps [default]"
+msgstr "1000.0 Mbps [standard]"
+
+msgctxt "#33239"
+msgid "96"
+msgstr "96"
+
+msgctxt "#33240"
+msgid "128"
+msgstr "128"
+
+msgctxt "#33241"
+msgid "160"
+msgstr "160"
+
+msgctxt "#33242"
+msgid "192"
+msgstr "192"
+
+msgctxt "#33244"
+msgid "320"
+msgstr "320"
+
+msgctxt "#33245"
+msgid "384"
+msgstr "384"
