@@ -4,11 +4,12 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 #################################################################################################
 
 import xbmcgui
+import xbmc
 
 from . import LazyLogger
 
-from .utils import should_stop
-from .exceptions import LibraryException
+from .utils import window
+from .exceptions import LibraryExitException
 from .translate import translate
 
 #################################################################################################
@@ -55,14 +56,15 @@ def stop(func):
 
     def wrapper(*args, **kwargs):
 
-        try:
-            if should_stop():  # ??? TODO: Fixme
-                raise Exception
+        if xbmc.Monitor().waitForAbort(0.00001):
+            raise LibraryExitException("Kodi aborted, exiting...")
 
-        except Exception as error:
-            LOG.exception(error)
+        if window("jellyfin_should_stop.bool"):
+            LOG.info("exiiiiitttinggg")
+            raise LibraryExitException("Should stop flag raised, exiting...")
 
-            raise LibraryException("StopCalled")
+        if not window("jellyfin_online.bool"):
+            raise LibraryExitException("Jellyfin not online, exiting...")
 
         return func(*args, **kwargs)
 

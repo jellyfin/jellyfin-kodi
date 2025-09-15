@@ -162,18 +162,6 @@ def dialog(dialog_type, *args, **kwargs):
     return types[dialog_type](*args, **kwargs)
 
 
-def should_stop():
-    """Checkpoint during the sync process."""
-    if xbmc.Monitor().waitForAbort(0.00001):
-        return True
-
-    if window("jellyfin_should_stop.bool"):
-        LOG.info("exiiiiitttinggg")
-        return True
-
-    return not window("jellyfin_online.bool")
-
-
 def get_screensaver():
     """Get the current screensaver value."""
     result = JSONRPC("Settings.getSettingValue").execute(
