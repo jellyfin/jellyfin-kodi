@@ -271,35 +271,46 @@ class ConnectionManager(object):
         return servers
 
     def _convert_endpoint_address_to_manual_address(self, info):
+
         addr = info.get("Address")
         endpoint = info.get("EndpointAddress")
         if not addr or not endpoint:
             return None
-        # Getting the host from EndpointAddress checking for IPv6 formatting
+
+        # Host from EndpointAddress - IPv6 friendly
         if endpoint.startswith('['):
-            rb = endpoint.find(']')
-            if rb != -1:
-                host = endpoint[1:rb]  
+            right_bracket = endpoint.find(']')
+            if right_bracket != -1:
+                host = endpoint[1:right_bracket]
             else:
-                return None  
+                return None
         else:
             if endpoint.count(':') > 1:
+                # Raw IPv6
                 host = endpoint
             else:
+                # IPv4 hostname strip option
                 host = endpoint.rsplit(':', 1)[0] if ':' in endpoint else endpoint
 
+        # Getting the port from the address
         port = None
         if addr.startswith('['):
-            rb = addr.find(']')
-            if rb != -1 and rb + 1 < len(addr) and addr[rb + 1] == ':':
-                ps = addr[rb + 2:]
-                if ps.isdigit():
-                    port = int(ps)
+            right_bracket = addr.find(']')
+            has_port = (
+                right_bracket != -1
+                and right_bracket + 1 < len(addr)
+                and addr[right_bracket + 1] == ':'
+            )
+            if has_port:
+                port_str = addr[right_bracket + 2:]
+                if port_str.isdigit():
+                    port = int(port_str)
         else:
+            # Non-bracketed: allow exactly one colon for host:port
             if addr.count(':') == 1:
-                ps = addr.rsplit(':', 1)[1]
-                if ps.isdigit():
-                    port = int(ps)
+                port_str = addr.rsplit(':', 1)[1]
+                if port_str.isdigit():
+                    port = int(port_str)
 
         if port is None:
             return None
