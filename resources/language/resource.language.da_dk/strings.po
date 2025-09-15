@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-07-26 10:41+0000\n"
-"Last-Translator: TheLostDims <mailtilmark@gmail.com>\n"
+"PO-Revision-Date: 2025-09-15 08:02+0000\n"
+"Last-Translator: Centauri <lillelau4@gmail.com>\n"
 "Language-Team: Danish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/da/>\n"
 "Language: da_dk\n"
@@ -1027,3 +1027,47 @@ msgstr "Fjern sti"
 msgctxt "#30538"
 msgid "Max days in next episodes"
 msgstr "Maksimalt antal dage for kommende episoder"
+
+msgctxt "#33220"
+msgid "4.0 Mbps"
+msgstr "4,0 Mbps"
+
+msgctxt "#33221"
+msgid "5.0 Mbps"
+msgstr "5,0 Mbps"
+
+msgctxt "#33222"
+msgid "6.0 Mbps"
+msgstr "6,0 Mbps"
+
+msgctxt "#33218"
+msgid "2.5 Mbps"
+msgstr "2,5 Mbps"
+
+msgctxt "#33216"
+msgid "1.5 Mbps"
+msgstr "1,5 Mbps"
+
+msgctxt "#33208"
+msgid "360"
+msgstr "360"
+
+msgctxt "#33217"
+msgid "2.0 Mbps"
+msgstr "2,0 Mbps"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "Uendelig [standard]"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0,5 Mbps"
+
+msgctxt "#33215"
+msgid "1.0 Mbps"
+msgstr "1,0 Mbps"
+
+msgctxt "#33219"
+msgid "3.0 Mbps"
+msgstr "3,0 Mbps"
