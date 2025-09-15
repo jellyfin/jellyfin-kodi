@@ -270,24 +270,43 @@ class ConnectionManager(object):
 
         return servers
 
-    # TODO: Make IPv6 compatible
     def _convert_endpoint_address_to_manual_address(self, info):
+        addr = info.get("Address")
+        endpoint = info.get("EndpointAddress")
+        if not addr or not endpoint:
+            return None
+        # Getting the host from EndpointAddress checking for IPv6 formatting
+        if endpoint.startswith('['):
+            rb = endpoint.find(']')
+            if rb != -1:
+                host = endpoint[1:rb]  
+            else:
+                return None  
+        else:
+            if endpoint.count(':') > 1:
+                host = endpoint
+            else:
+                host = endpoint.rsplit(':', 1)[0] if ':' in endpoint else endpoint
 
-        if info.get("Address") and info.get("EndpointAddress"):
-            address = info["EndpointAddress"].split(":")[0]
+        port = None
+        if addr.startswith('['):
+            rb = addr.find(']')
+            if rb != -1 and rb + 1 < len(addr) and addr[rb + 1] == ':':
+                ps = addr[rb + 2:]
+                if ps.isdigit():
+                    port = int(ps)
+        else:
+            if addr.count(':') == 1:
+                ps = addr.rsplit(':', 1)[1]
+                if ps.isdigit():
+                    port = int(ps)
 
-            # Determine the port, if any
-            parts = info["Address"].split(":")
-            if len(parts) > 1:
-                port_string = parts[len(parts) - 1]
+        if port is None:
+            return None
 
-                try:
-                    address += ":%s" % int(port_string)
-                    return self._normalize_address(address)
-                except ValueError:
-                    pass
+        combined = f"[{host}]:{port}" if ':' in host else f"{host}:{port}"
+        return self._normalize_address(combined)
 
-        return None
 
     def _normalize_address(self, address):
         # TODO: Try HTTPS first, then HTTP if that fails.
