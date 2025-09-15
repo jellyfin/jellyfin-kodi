@@ -278,46 +278,45 @@ class ConnectionManager(object):
             return None
 
         # Host from EndpointAddress - IPv6 friendly
-        if endpoint.startswith('['):
-            right_bracket = endpoint.find(']')
+        if endpoint.startswith("["):
+            right_bracket = endpoint.find("]")
             if right_bracket != -1:
                 host = endpoint[1:right_bracket]
             else:
                 return None
         else:
-            if endpoint.count(':') > 1:
+            if endpoint.count(":") > 1:
                 # Raw IPv6
                 host = endpoint
             else:
                 # IPv4 hostname strip option
-                host = endpoint.rsplit(':', 1)[0] if ':' in endpoint else endpoint
+                host = endpoint.rsplit(":", 1)[0] if ":" in endpoint else endpoint
 
         # Getting the port from the address
         port = None
-        if addr.startswith('['):
-            right_bracket = addr.find(']')
+        if addr.startswith("["):
+            right_bracket = addr.find("]")
             has_port = (
                 right_bracket != -1
                 and right_bracket + 1 < len(addr)
-                and addr[right_bracket + 1] == ':'
+                and addr[right_bracket + 1] == ":"
             )
             if has_port:
-                port_str = addr[right_bracket + 2:]
+                port_str = addr[right_bracket + 2 :]
                 if port_str.isdigit():
                     port = int(port_str)
         else:
             # Non-bracketed: allow exactly one colon for host:port
-            if addr.count(':') == 1:
-                port_str = addr.rsplit(':', 1)[1]
+            if addr.count(":") == 1:
+                port_str = addr.rsplit(":", 1)[1]
                 if port_str.isdigit():
                     port = int(port_str)
 
         if port is None:
             return None
 
-        combined = f"[{host}]:{port}" if ':' in host else f"{host}:{port}"
+        combined = f"[{host}]:{port}" if ":" in host else f"{host}:{port}"
         return self._normalize_address(combined)
-
 
     def _normalize_address(self, address):
         # TODO: Try HTTPS first, then HTTP if that fails.
