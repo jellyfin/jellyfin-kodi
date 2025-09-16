@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-07-16 14:41+0000\n"
-"Last-Translator: madman38 <madman3838@proton.me>\n"
+"PO-Revision-Date: 2025-09-16 19:51+0000\n"
+"Last-Translator: CilginImamm <instaicinmail1@proton.me>\n"
 "Language-Team: Turkish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/tr/>\n"
 "Language: tr_tr\n"
@@ -1033,3 +1033,23 @@ msgstr "Yeni Yol Değişikliği"
 msgctxt "#30538"
 msgid "Max days in next episodes"
 msgstr "Sıradaki bölümler için maksimum gün sayısı"
+
+msgctxt "#33212"
+msgid "1080"
+msgstr "1080"
+
+msgctxt "#33209"
+msgid "480"
+msgstr "480"
+
+msgctxt "#33208"
+msgid "360"
+msgstr "360"
+
+msgctxt "#33211"
+msgid "720"
+msgstr "720"
+
+msgctxt "#33210"
+msgid "600"
+msgstr "600"
