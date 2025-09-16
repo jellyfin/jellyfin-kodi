@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
 
+import json
+
 ##################################################################################################
 
 from . import settings, LazyLogger
 from .utils import translate_path
-import json
 
 ##################################################################################################
 
