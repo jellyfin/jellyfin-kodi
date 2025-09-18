@@ -180,7 +180,7 @@ class FullSync(object):
         elif not selection:
             LOG.info("Nothing was selected.")
 
-            raise LibrarySyncLaterException("No libraries where selected, sync later.")
+            raise LibrarySyncLaterException("No libraries were selected, sync later.")
 
         if 0 in selection:
             selection = list(range(1, len(libraries) + 1))
