@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
 
+from functools import wraps
+
 #################################################################################################
 
 import xbmcgui
@@ -23,6 +25,7 @@ def progress(message=None):
     """Will start and close the progress dialog."""
 
     def decorator(func):
+        @wraps(func)
         def wrapper(self, item=None, *args, **kwargs):
 
             dialog = xbmcgui.DialogProgressBG()
@@ -54,6 +57,7 @@ def progress(message=None):
 def stop(func):
     """Wrapper to catch exceptions and return using catch"""
 
+    @wraps(func)
     def wrapper(*args, **kwargs):
 
         if xbmc.Monitor().waitForAbort(0.00001):
@@ -74,6 +78,7 @@ def stop(func):
 def jellyfin_item(func):
     """Wrapper to retrieve the jellyfin_db item."""
 
+    @wraps(func)
     def wrapper(self, item, *args, **kwargs):
         e_item = self.jellyfin_db.get_item_by_id(
             item["Id"] if isinstance(item, dict) else item
