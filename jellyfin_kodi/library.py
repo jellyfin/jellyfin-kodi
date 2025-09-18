@@ -19,7 +19,11 @@ from .views import Views
 from .downloader import GetItemWorker
 from .helper import translate, api, stop, settings, window, dialog, event, LazyLogger
 from .helper.utils import split_list, set_screensaver, get_screensaver
-from .helper.exceptions import LibraryException
+from .helper.exceptions import (
+    LibraryException,
+    LibraryExitException,
+    LibrarySyncLaterException,
+)
 from .jellyfin import Jellyfin
 
 ##################################################################################################
@@ -93,7 +97,8 @@ class Library(threading.Thread):
 
             try:
                 self.service()
-            except LibraryException:
+            except LibraryException as error:
+                LOG.warning(error)
                 break
             except Exception as error:
                 LOG.exception(error)
@@ -438,18 +443,19 @@ class Library(threading.Thread):
                     return True
 
             return True
+
+        except LibrarySyncLaterException as error:
+            LOG.error(error)
+            dialog("ok", "{jellyfin}", translate(33129))
+            settings("SyncInstallRunDone.bool", True)
+            sync = get_sync()
+            sync["Libraries"] = []
+            save_sync(sync)
+
+            return True
+
         except LibraryException as error:
-            LOG.error(error.status)
-
-            if error.status in "SyncLibraryLater":
-
-                dialog("ok", "{jellyfin}", translate(33129))
-                settings("SyncInstallRunDone.bool", True)
-                sync = get_sync()
-                sync["Libraries"] = []
-                save_sync(sync)
-
-                return True
+            LOG.error(error)
 
         except Exception as error:
             LOG.exception(error)
@@ -758,8 +764,12 @@ class UpdateWorker(threading.Thread):
                             (item["Type"], api.API(item).get_naming())
                         )
                 except LibraryException as error:
-                    if error.status == "StopCalled":
+                    # TODO: Fixme; We're catching all LibraryException here,
+                    # but silently ignoring any that isn't the exit condition.
+                    # Investigate what would be appropriate behavior here.
+                    if isinstance(error, LibraryExitException):
                         break
+                    LOG.warning("Ignoring exception %s", error)
                 except Exception as error:
                     LOG.exception(error)
 
@@ -823,8 +833,12 @@ class UserDataWorker(threading.Thread):
                     elif item["Type"] == "Audio":
                         music.userdata(item)
                 except LibraryException as error:
-                    if error.status == "StopCalled":
+                    # TODO: Fixme; We're catching all LibraryException here,
+                    # but silently ignoring any that isn't the exit condition.
+                    # Investigate what would be appropriate behavior here.
+                    if isinstance(error, LibraryExitException):
                         break
+                    LOG.warning("Ignoring exception %s", error)
                 except Exception as error:
                     LOG.exception(error)
 
@@ -943,8 +957,12 @@ class RemovedWorker(threading.Thread):
                 try:
                     obj(item["Id"])
                 except LibraryException as error:
-                    if error.status == "StopCalled":
+                    # TODO: Fixme; We're catching all LibraryException here,
+                    # but silently ignoring any that isn't the exit condition.
+                    # Investigate what would be appropriate behavior here.
+                    if isinstance(error, LibraryExitException):
                         break
+                    LOG.warning("Ignoring exception %s", error)
                 except Exception as error:
                     LOG.exception(error)
                 finally:

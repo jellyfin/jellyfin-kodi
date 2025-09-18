@@ -70,6 +70,7 @@ Thumbs.db
 !.vscode/extensions.json
 !.vscode/settings.json
 pyinstrument/
+.venv/
 
 # Now managed by templates
 addon.xml
