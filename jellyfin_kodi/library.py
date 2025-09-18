@@ -445,7 +445,7 @@ class Library(threading.Thread):
             return True
 
         except LibrarySyncLaterException as error:
-            LOG.error(error.status)
+            LOG.error(error)
             dialog("ok", "{jellyfin}", translate(33129))
             settings("SyncInstallRunDone.bool", True)
             sync = get_sync()
@@ -455,7 +455,7 @@ class Library(threading.Thread):
             return True
 
         except LibraryException as error:
-            LOG.error(error.status)
+            LOG.error(error)
 
         except Exception as error:
             LOG.exception(error)
