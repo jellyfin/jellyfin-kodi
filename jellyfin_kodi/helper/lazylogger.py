@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
 
+from typing import TYPE_CHECKING
+
 
 class LazyLogger(object):
     """
@@ -26,80 +28,82 @@ class LazyLogger(object):
     # Please ensure any actually functional code is above this comment. #
     #####################################################################
 
-    def setLevel(self, level):
-        """
-        Set the logging level of this logger.  level must be an int or a str.
-        """
-        ...
+    if TYPE_CHECKING:
 
-    def debug(self, msg, *args, **kwargs):
-        """
-        Log 'msg % args' with severity 'DEBUG'.
+        def setLevel(self, level):
+            """
+            Set the logging level of this logger.  level must be an int or a str.
+            """
+            ...
 
-        To pass exception information, use the keyword argument exc_info with
-        a true value, e.g.
+        def debug(self, msg, *args, **kwargs):
+            """
+            Log 'msg % args' with severity 'DEBUG'.
 
-        logger.debug("Houston, we have a %s", "thorny problem", exc_info=1)
-        """
-        ...
+            To pass exception information, use the keyword argument exc_info with
+            a true value, e.g.
 
-    def info(self, msg, *args, **kwargs):
-        """
-        Log 'msg % args' with severity 'INFO'.
+            logger.debug("Houston, we have a %s", "thorny problem", exc_info=1)
+            """
+            ...
 
-        To pass exception information, use the keyword argument exc_info with
-        a true value, e.g.
+        def info(self, msg, *args, **kwargs):
+            """
+            Log 'msg % args' with severity 'INFO'.
 
-        logger.info("Houston, we have a %s", "interesting problem", exc_info=1)
-        """
-        ...
+            To pass exception information, use the keyword argument exc_info with
+            a true value, e.g.
 
-    def warning(self, msg, *args, **kwargs):
-        """
-        Log 'msg % args' with severity 'WARNING'.
+            logger.info("Houston, we have a %s", "interesting problem", exc_info=1)
+            """
+            ...
 
-        To pass exception information, use the keyword argument exc_info with
-        a true value, e.g.
+        def warning(self, msg, *args, **kwargs):
+            """
+            Log 'msg % args' with severity 'WARNING'.
 
-        logger.warning("Houston, we have a %s", "bit of a problem", exc_info=1)
-        """
-        ...
+            To pass exception information, use the keyword argument exc_info with
+            a true value, e.g.
 
-    def error(self, msg, *args, **kwargs):
-        """
-        Log 'msg % args' with severity 'ERROR'.
+            logger.warning("Houston, we have a %s", "bit of a problem", exc_info=1)
+            """
+            ...
 
-        To pass exception information, use the keyword argument exc_info with
-        a true value, e.g.
+        def error(self, msg, *args, **kwargs):
+            """
+            Log 'msg % args' with severity 'ERROR'.
 
-        logger.error("Houston, we have a %s", "major problem", exc_info=1)
-        """
-        ...
+            To pass exception information, use the keyword argument exc_info with
+            a true value, e.g.
 
-    def exception(self, msg, *args, exc_info=True, **kwargs):
-        """
-        Convenience method for logging an ERROR with exception information.
-        """
-        ...
+            logger.error("Houston, we have a %s", "major problem", exc_info=1)
+            """
+            ...
 
-    def critical(self, msg, *args, **kwargs):
-        """
-        Log 'msg % args' with severity 'CRITICAL'.
+        def exception(self, msg, *args, exc_info=True, **kwargs):
+            """
+            Convenience method for logging an ERROR with exception information.
+            """
+            ...
 
-        To pass exception information, use the keyword argument exc_info with
-        a true value, e.g.
+        def critical(self, msg, *args, **kwargs):
+            """
+            Log 'msg % args' with severity 'CRITICAL'.
 
-        logger.critical("Houston, we have a %s", "major disaster", exc_info=1)
-        """
-        ...
+            To pass exception information, use the keyword argument exc_info with
+            a true value, e.g.
 
-    def log(self, level, msg, *args, **kwargs):
-        """
-        Log 'msg % args' with the integer severity 'level'.
+            logger.critical("Houston, we have a %s", "major disaster", exc_info=1)
+            """
+            ...
 
-        To pass exception information, use the keyword argument exc_info with
-        a true value, e.g.
+        def log(self, level, msg, *args, **kwargs):
+            """
+            Log 'msg % args' with the integer severity 'level'.
 
-        logger.log(level, "We have a %s", "mysterious problem", exc_info=1)
-        """
-        ...
+            To pass exception information, use the keyword argument exc_info with
+            a true value, e.g.
+
+            logger.log(level, "We have a %s", "mysterious problem", exc_info=1)
+            """
+            ...
