@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-09-18 04:11+0000\n"
-"Last-Translator: Arnau Galofré <arnau@nuclimedia.com>\n"
+"PO-Revision-Date: 2025-09-22 16:33+0000\n"
+"Last-Translator: Fran <narfzepol12@gmail.com>\n"
 "Language-Team: Catalan <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ca/>\n"
 "Language: ca_es\n"
@@ -1084,12 +1084,10 @@ msgctxt "#33221"
 msgid "5.0 Mbps"
 msgstr "5,0 Mbps"
 
-#, fuzzy
 msgctxt "#33209"
 msgid "480"
 msgstr "480"
 
-#, fuzzy
 msgctxt "#33211"
 msgid "720"
 msgstr "720"
@@ -1186,12 +1184,10 @@ msgctxt "#33213"
 msgid "Unlimited [default]"
 msgstr "Sense límits [per defecte]"
 
-#, fuzzy
 msgctxt "#33212"
 msgid "1080"
 msgstr "1080"
 
-#, fuzzy
 msgctxt "#33210"
 msgid "600"
 msgstr "600"
