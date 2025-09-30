@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-09-29 05:10+0000\n"
+"PO-Revision-Date: 2025-09-30 09:40+0000\n"
 "Last-Translator: jim608 <a065997293@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://"
 "translate.jellyfin.org/projects/jellyfin/jellyfin-kodi/zh_Hant/>\n"
@@ -969,3 +969,15 @@ msgstr "選擇要修復的媒體庫"
 msgctxt "#30538"
 msgid "Max days in next episodes"
 msgstr "下一集的最大天數"
+
+msgctxt "#33203"
+msgid "Manage path replacements"
+msgstr "管理路徑替換"
+
+msgctxt "#33205"
+msgid "New Path Replacement"
+msgstr "新增路徑替換"
+
+msgctxt "#33204"
+msgid "Finish"
+msgstr "完成"
