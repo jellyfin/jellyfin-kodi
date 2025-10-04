@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-09-30 09:40+0000\n"
+"PO-Revision-Date: 2025-10-05 11:21+0000\n"
 "Last-Translator: jim608 <a065997293@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://"
 "translate.jellyfin.org/projects/jellyfin/jellyfin-kodi/zh_Hant/>\n"
@@ -981,3 +981,39 @@ msgstr "新增路徑替換"
 msgctxt "#33204"
 msgid "Finish"
 msgstr "完成"
+
+msgctxt "#33208"
+msgid "360"
+msgstr "360"
+
+msgctxt "#33209"
+msgid "480"
+msgstr "480"
+
+msgctxt "#33210"
+msgid "600"
+msgstr "600"
+
+msgctxt "#33211"
+msgid "720"
+msgstr "720"
+
+msgctxt "#33212"
+msgid "1080"
+msgstr "1080"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "不限（預設）"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0.5 Mbps"
+
+msgctxt "#33206"
+msgid "Remote Path"
+msgstr "遠端路徑"
+
+msgctxt "#33207"
+msgid "Local Path"
+msgstr "本機路徑"
