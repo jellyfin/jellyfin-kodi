@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-11-28 14:51+0000\n"
+"PO-Revision-Date: 2025-10-07 05:37+0000\n"
 "Last-Translator: rimasx <riks_12@hot.ee>\n"
 "Language-Team: Estonian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/et/>\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.1\n"
+"X-Generator: Weblate 5.11.4\n"
 
 msgctxt "#33186"
 msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
@@ -992,3 +992,31 @@ msgstr "Transkoodi H265/HEVC RExt"
 msgctxt "#33125"
 msgid "Enable remote control"
 msgstr "Luba kaugjuhtimine"
+
+msgctxt "#33210"
+msgid "600"
+msgstr "600"
+
+msgctxt "#33208"
+msgid "360"
+msgstr "360"
+
+msgctxt "#33209"
+msgid "480"
+msgstr "480"
+
+msgctxt "#33211"
+msgid "720"
+msgstr "720"
+
+msgctxt "#33212"
+msgid "1080"
+msgstr "1080"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "Piiramatu [default]"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0.5 Mbps"
