@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-10-07 08:19+0000\n"
+"PO-Revision-Date: 2025-10-09 12:39+0000\n"
 "Last-Translator: rimasx <riks_12@hot.ee>\n"
 "Language-Team: Estonian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/et/>\n"
@@ -671,7 +671,7 @@ msgstr "Püsivad kasutajad"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
-msgstr "Jaotises 'Järgmised episoodid' eriepisoode ei kuvata"
+msgstr "Ära kuva jaotises 'Järgmised episoodid' lisamaterjali"
 
 msgctxt "#30526"
 msgid "Transcode AV1"
@@ -1015,7 +1015,7 @@ msgstr "1080"
 
 msgctxt "#33213"
 msgid "Unlimited [default]"
-msgstr "Piiramatu [default]"
+msgstr "Piiramatu [vaikimisi]"
 
 msgctxt "#33214"
 msgid "0.5 Mbps"
