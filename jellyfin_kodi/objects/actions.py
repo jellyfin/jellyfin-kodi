@@ -508,9 +508,6 @@ class Actions(object):
 
             if obj["Resume"] and item.get("resumePlayback"):
                 listitem.setProperty("resumetime", str(obj["Resume"]))
-                listitem.setProperty(
-                    "StartPercent", str(((obj["Resume"] / obj["Runtime"]) * 100) - 0.40)
-                )
             else:
                 listitem.setProperty("resumetime", "0")
                 listitem.setProperty("StartPercent", "0")
