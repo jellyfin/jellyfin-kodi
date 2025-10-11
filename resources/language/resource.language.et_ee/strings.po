@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-10-09 12:39+0000\n"
+"PO-Revision-Date: 2025-10-11 11:46+0000\n"
 "Last-Translator: rimasx <riks_12@hot.ee>\n"
 "Language-Team: Estonian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/et/>\n"
@@ -779,7 +779,7 @@ msgstr "Jellyfini valikud"
 
 msgctxt "#30305"
 msgid "TV Shows"
-msgstr "Seriaalid"
+msgstr "Sarjad"
 
 msgctxt "#30302"
 msgid "Movies"
@@ -839,7 +839,7 @@ msgstr "Lemmikepisoodid"
 
 msgctxt "#30181"
 msgid "Favorite Shows"
-msgstr "Lemmikseriaalid"
+msgstr "Lemmiksarjad"
 
 msgctxt "#30180"
 msgid "Favorite Movies"
