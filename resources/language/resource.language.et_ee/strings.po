@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-10-11 11:46+0000\n"
+"PO-Revision-Date: 2025-10-12 18:15+0000\n"
 "Last-Translator: rimasx <riks_12@hot.ee>\n"
 "Language-Team: Estonian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/et/>\n"
@@ -393,7 +393,7 @@ msgstr ""
 
 msgctxt "#33106"
 msgid "Enable the option to transcode"
-msgstr "Lubage transkoodimise võimalus"
+msgstr "Luba transkoodimise valik"
 
 msgctxt "#33105"
 msgid "Enable the context menu"
