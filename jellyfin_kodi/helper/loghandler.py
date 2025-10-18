@@ -65,6 +65,10 @@ class LogHandler(logging.StreamHandler):
                 for token in self.sensitive["Token"]:
                     string = string.replace(token or "{token}", "{jellyfin-token}")
 
+            # Kodi chokes on null-characters in log output, escape it.
+            if "\x00" in string:
+                string = string.replace("\x00", "\ufffdx00\ufffd")
+
             xbmc.log(string, level=self.level)
 
     @classmethod
