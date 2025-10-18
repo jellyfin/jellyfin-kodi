@@ -2,7 +2,7 @@
 <addon id="plugin.video.jellyfin"
 	name="Jellyfin"
 	version=""
-	provider-name="Jellyfin Contributors, angelblue05">
+	provider-name="Jellyfin Contributors">
 	<requires>
 	</requires>
 	<extension point="xbmc.python.pluginsource"
