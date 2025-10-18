@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-10-12 18:15+0000\n"
+"PO-Revision-Date: 2025-10-18 11:54+0000\n"
 "Last-Translator: rimasx <riks_12@hot.ee>\n"
 "Language-Team: Estonian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/et/>\n"
@@ -863,7 +863,7 @@ msgstr "Käsilolevad sarjad"
 
 msgctxt "#30165"
 msgid "Allow burned subtitles"
-msgstr "Luba manustatud subtiitrid"
+msgstr "Luba sissepõletatud subtiitrid"
 
 msgctxt "#30164"
 msgid "Audio max channels"
