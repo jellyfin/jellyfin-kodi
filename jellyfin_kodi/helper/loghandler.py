@@ -44,7 +44,7 @@ class LogHandler(logging.StreamHandler):
                 self.sensitive["Token"].append(server["AccessToken"])
 
             if server.get("address"):
-                self.sensitive["Server"].append(server["address"].split("://")[1])
+                self.sensitive["Server"].append(server["address"].split("://", 1)[-1])
 
         self.mask_info = settings("maskInfo.bool")
 
