@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-09-16 08:48+0000\n"
-"Last-Translator: Serhii Almazov <almazik@gmail.com>\n"
+"PO-Revision-Date: 2025-10-22 06:07+0000\n"
+"Last-Translator: Rostyslav <rostyslav.fridman@gmail.com>\n"
 "Language-Team: Ukrainian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/uk/>\n"
 "Language: uk_ua\n"
@@ -1039,7 +1039,7 @@ msgstr "160"
 
 msgctxt "#33237"
 msgid "1000.0 Mbps [default]"
-msgstr "1000.0 Мбіт/с [по замовченню]"
+msgstr "1000,0 Мбіт/с [за замовчуванням]"
 
 msgctxt "#33239"
 msgid "96"
@@ -1064,3 +1064,119 @@ msgstr "320"
 msgctxt "#33245"
 msgid "384"
 msgstr "384"
+
+msgctxt "#33210"
+msgid "600"
+msgstr "600"
+
+msgctxt "#33216"
+msgid "1.5 Mbps"
+msgstr "1,5 Мбіт/с"
+
+msgctxt "#33208"
+msgid "360"
+msgstr "360"
+
+msgctxt "#33209"
+msgid "480"
+msgstr "480"
+
+msgctxt "#33211"
+msgid "720"
+msgstr "720"
+
+msgctxt "#33212"
+msgid "1080"
+msgstr "1080"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "Необмежений [за замовчуванням]"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0,5 Мбіт/с"
+
+msgctxt "#33215"
+msgid "1.0 Mbps"
+msgstr "1,0 Мбіт/с"
+
+msgctxt "#33217"
+msgid "2.0 Mbps"
+msgstr "2,0 Мбіт/с"
+
+msgctxt "#33218"
+msgid "2.5 Mbps"
+msgstr "2,5 Мбіт/с"
+
+msgctxt "#33219"
+msgid "3.0 Mbps"
+msgstr "3,0 Мбіт/с"
+
+msgctxt "#33220"
+msgid "4.0 Mbps"
+msgstr "4,0 Мбіт/с"
+
+msgctxt "#33221"
+msgid "5.0 Mbps"
+msgstr "5,0 Мбіт/с"
+
+msgctxt "#33222"
+msgid "6.0 Mbps"
+msgstr "6,0 Мбіт/с"
+
+msgctxt "#33223"
+msgid "7.0 Mbps"
+msgstr "7,0 Мбіт/с"
+
+msgctxt "#33224"
+msgid "8.0 Mbps"
+msgstr "8,0 Мбіт/с"
+
+msgctxt "#33225"
+msgid "9.0 Mbps"
+msgstr "9,0 Мбіт/с"
+
+msgctxt "#33226"
+msgid "10.0 Mbps"
+msgstr "10,0 Мбіт/с"
+
+msgctxt "#33227"
+msgid "12.0 Mbps"
+msgstr "12,0 Мбіт/с"
+
+msgctxt "#33228"
+msgid "14.0 Mbps"
+msgstr "14,0 Мбіт/с"
+
+msgctxt "#33229"
+msgid "16.0 Mbps"
+msgstr "16,0 Мбіт/с"
+
+msgctxt "#33230"
+msgid "18.0 Mbps"
+msgstr "18,0 Мбіт/с"
+
+msgctxt "#33231"
+msgid "20.0 Mbps"
+msgstr "20,0 Мбіт/с"
+
+msgctxt "#33232"
+msgid "25.0 Mbps"
+msgstr "25,0 Мбіт/с"
+
+msgctxt "#33233"
+msgid "30.0 Mbps"
+msgstr "30,0 Мбіт/с"
+
+msgctxt "#33234"
+msgid "35.0 Mbps"
+msgstr "35,0 Мбіт/с"
+
+msgctxt "#33235"
+msgid "40.0 Mbps"
+msgstr "40,0 Мбіт/с"
+
+msgctxt "#33236"
+msgid "100.0 Mbps"
+msgstr "100,0 Мбіт/с"
