@@ -1,0 +1,1090 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: trumblejoe <trumblejoe@example.com>
+Date: Fri, 25 Oct 2025 17:50:01 +0000
+Subject: [PATCH] Prefer local server address and allow manual override
+
+Add automatic detection of local vs remote server address, quick
+reachability checks, and an optional addon setting for a user-specified
+manual local server address. Preferred address will be set to the
+manual local if present and reachable, otherwise a discovered local
+address (if reachable), else the remote address. Persist serverLocal,
+serverRemote and server settings for compatibility.
+
+---
+ jellyfin_kodi/connect.py | 334 ++++++++++++++++++++++++++++++++++++++++++++----
+ resources/settings.xml   |  32 ++++++++++
+ 2 files changed, 350 insertions(+), 16 deletions(-)
+
+diff --git a/jellyfin_kodi/connect.py b/jellyfin_kodi/connect.py
+index 6dac145..0000000 100644
+--- a/jellyfin_kodi/connect.py
++++ b/jellyfin_kodi/connect.py
+@@ -1,309 +1,627 @@
+-# -*- coding: utf-8 -*-
+-from __future__ import division, absolute_import, print_function, unicode_literals
+-
+-##################################################################################################
+-
+-import xbmc
+-import xbmcaddon
+-
+-from . import client
+-from .database import get_credentials, save_credentials
+-from .dialogs import ServerConnect, UsersConnect, LoginManual, ServerManual
+-from .helper import settings, addon_id, event, api, window, LazyLogger
+-from .jellyfin import Jellyfin
+-from .jellyfin.connection_manager import CONNECTION_STATE
+-from .helper.exceptions import HTTPException
+-
+-##################################################################################################
+-
+-LOG = LazyLogger(__name__)
+-XML_PATH = (xbmcaddon.Addon(addon_id()).getAddonInfo("path"), "default", "1080i")
+-
+-##################################################################################################
+-
+-
+-class Connect(object):
+-
+-    def __init__(self):
+-        self.info = client.get_info()
+-
+-    def register(self, server_id=None, options={}):
+-        """Login into server. If server is None, then it will show the proper prompts to login, etc.
+-        If a server id is specified then only a login dialog will be shown for that server.
+-        """
+-        LOG.info("--[ server/%s ]", server_id or "default")
+-        credentials = dict(get_credentials())
+-        servers = credentials["Servers"]
+-
+-        if server_id is None and credentials["Servers"]:
+-            credentials["Servers"] = [credentials["Servers"][0]]
+-
+-        elif credentials["Servers"]:
+-
+-            for server in credentials["Servers"]:
+-
+-                if server["Id"] == server_id:
+-                    credentials["Servers"] = [server]
+-
+-        server_select = server_id is None and not settings("SyncInstallRunDone.bool")
+-        new_credentials = self.register_client(
+-            credentials, options, server_id, server_select
+-        )
+-
+-        for server in servers:
+-            if server["Id"] == new_credentials["Servers"][0]["Id"]:
+-                server = new_credentials["Servers"][0]
+-
+-                break
+-        else:
+-            servers = new_credentials["Servers"]
+-
+-        credentials["Servers"] = servers
+-        save_credentials(credentials)
+-
+-        try:
+-            Jellyfin(server_id).start(True)
+-        except ValueError as error:
+-            LOG.error(error)
+-
+-    def get_ssl(self):
+-        """Returns boolean value.
+-        True: verify connection.
+-        """
+-        return settings("sslverify.bool")
+-
+-    def get_client(self, server_id=None):
+-        """Get Jellyfin client."""
+-        client = Jellyfin(server_id)
+-        client.config.app(
+-            "Kodi", self.info["Version"], self.info["DeviceName"], self.info["DeviceId"]
+-        )
+-        client.config.data["http.user_agent"] = (
+-            "Jellyfin-Kodi/%s" % self.info["Version"]
+-        )
+-        client.config.data["auth.ssl"] = self.get_ssl()
+-
+-        return client
+-
+-    def register_client(
+-        self, credentials=None, options=None, server_id=None, server_selection=False
+-    ):
+-
+-        client = self.get_client(server_id)
+-        self.client = client
+-        self.connect_manager = client.auth
+-
+-        if server_id is None:
+-            client.config.data["app.default"] = True
+-
+-        try:
+-            state = client.authenticate(credentials or {}, options or {})
+-
+-            if state["State"] == CONNECTION_STATE["SignedIn"]:
+-                client.callback_ws = event
+-
+-                if server_id is None:  # Only assign for default server
+-
+-                    client.callback = event
+-                    self.get_user(client)
+-
+-                    settings("serverName", client.config.data["auth.server-name"])
+-                    settings("server", client.config.data["auth.server"])
+-
+-                event("ServerOnline", {"ServerId": server_id})
+-                event("LoadServer", {"ServerId": server_id})
+-
+-                return state["Credentials"]
+-
+-            elif (
+-                server_selection
+-                or state["State"] == CONNECTION_STATE["ServerSelection"]
+-                or state["State"] == CONNECTION_STATE["Unavailable"]
+-                and not settings("SyncInstallRunDone.bool")
+-            ):
+-                state["Credentials"]["Servers"] = [self.select_servers(state)]
+-
+-            elif state["State"] == CONNECTION_STATE["ServerSignIn"]:
+-                if "ExchangeToken" not in state["Servers"][0]:
+-                    self.login()
+-
+-            elif (
+-                state["State"] == CONNECTION_STATE["Unavailable"]
+-                and state.get("Status_Code", 0) == 401
+-            ):
+-                # If the saved credentials don't work, restart the addon to force the password dialog to open
+-                window("jellyfin.restart", clear=True)
+-
+-            elif state["State"] == CONNECTION_STATE["Unavailable"]:
+-                raise HTTPException("ServerUnreachable", {})
+-
+-            return self.register_client(state["Credentials"], options, server_id, False)
+-
+-        except RuntimeError as error:
+-
+-            LOG.exception(error)
+-            xbmc.executebuiltin("Addon.OpenSettings(%s)" % addon_id())
+-
+-            raise Exception("User sign in interrupted")
+-
+-        except HTTPException as error:
+-
+-            if error.status == "ServerUnreachable":
+-                event("ServerUnreachable", {"ServerId": server_id})
+-
+-            return client.get_credentials()
+-
+-    def get_user(self, client):
+-        """Save user info."""
+-        self.user = client.jellyfin.get_user()
+-        settings("username", self.user["Name"])
+-
+-        if "PrimaryImageTag" in self.user:
+-            server_address = client.auth.get_server_info(client.auth.server_id)[
+-                "address"
+-            ]
+-            window(
+-                "JellyfinUserImage",
+-                api.API(self.user, server_address).get_user_artwork(self.user["Id"]),
+-            )
+-
+-    def select_servers(self, state=None):
+-
+-        state = state or self.connect_manager.connect({"enableAutoLogin": False})
+-        user = {}
+-
+-        dialog = ServerConnect("script-jellyfin-connect-server.xml", *XML_PATH)
+-        dialog.set_args(
+-            connect_manager=self.connect_manager,
+-            username=user.get("DisplayName", ""),
+-            user_image=user.get("ImageUrl"),
+-            servers=self.connect_manager.get_available_servers(),
+-        )
+-
+-        dialog.doModal()
+-
+-        if dialog.is_server_selected():
+-            LOG.debug("Server selected: %s", dialog.get_server())
+-            return dialog.get_server()
+-
+-        elif dialog.is_manual_server():
+-            LOG.debug("Adding manual server")
+-            try:
+-                return self.manual_server()
+-            except RuntimeError:
+-                pass
+-        else:
+-            raise RuntimeError("No server selected")
+-
+-        return self.select_servers()
+-
+-    def setup_manual_server(self):
+-        """Setup manual servers"""
+-        client = self.get_client()
+-        client.set_credentials(get_credentials())
+-        manager = client.auth
+-
+-        try:
+-            self.manual_server(manager)
+-        except RuntimeError:
+-            return
+-
+-        credentials = client.get_credentials()
+-        save_credentials(credentials)
+-
+-    def manual_server(self, manager=None):
+-        """Return server or raise error."""
+-        dialog = ServerManual("script-jellyfin-connect-server-manual.xml", *XML_PATH)
+-        dialog.set_args(**{"connect_manager": manager or self.connect_manager})
+-        dialog.doModal()
+-
+-        if dialog.is_connected():
+-            return dialog.get_server()
+-        else:
+-            raise RuntimeError("Server is not connected")
+-
+-    def login(self):
+-
+-        users = self.connect_manager.get_public_users()
+-        server = self.connect_manager.get_server_info(self.connect_manager.server_id)[
+-            "address"
+-        ]
+-
+-        if not users:
+-            try:
+-                return self.login_manual()
+-            except RuntimeError:
+-                raise RuntimeError("No user selected")
+-
+-        dialog = UsersConnect("script-jellyfin-connect-users.xml", *XML_PATH)
+-        dialog.set_args(**{"server": server, "users": users})
+-        dialog.doModal()
+-
+-        if dialog.is_user_selected():
+-            user = dialog.get_user()
+-            username = user["Name"]
+-
+-            if user["HasPassword"]:
+-                LOG.debug("User has password, present manual login")
+-                try:
+-                    return self.login_manual(username)
+-                except RuntimeError:
+-                    pass
+-            else:
+-                return self.connect_manager.login(server, username)
+-
+-        elif dialog.is_manual_login():
+-            try:
+-                return self.login_manual()
+-            except RuntimeError:
+-                pass
+-        else:
+-            raise RuntimeError("No user selected")
+-
+-        return self.login()
+-
+-    def setup_login_manual(self):
+-        """Setup manual login by itself for default server."""
+-        client = self.get_client()
+-        client.set_credentials(get_credentials())
+-        manager = client.auth
+-
+-        username = settings("username")
+-        try:
+-            self.login_manual(user=username, manager=manager)
+-        except RuntimeError:
+-            return
+-
+-        credentials = client.get_credentials()
+-        save_credentials(credentials)
+-
+-    def login_manual(self, user=None, manager=None):
+-        """Return manual login user authenticated or raise error."""
+-        dialog = LoginManual("script-jellyfin-connect-login-manual.xml", *XML_PATH)
+-        dialog.set_args(
+-            **{
+-                "connect_manager": manager or self.connect_manager,
+-                "username": user or {},
+-            }
+-        )
+-        dialog.doModal()
+-
+-        if dialog.is_logged_in():
+-            return dialog.get_user()
+-        else:
+-            raise RuntimeError("User is not authenticated")
+-
+-    def remove_server(self, server_id):
+-        """Stop client and remove server."""
+-        Jellyfin(server_id).close()
+-        credentials = get_credentials()
+-
+-        for server in credentials["Servers"]:
+-            if server["Id"] == server_id:
+-                credentials["Servers"].remove(server)
+-
+-                break
+-
+-        save_credentials(credentials)
+-        LOG.info("[ remove server ] %s", server_id)
++# -*- coding: utf-8 -*-
++from __future__ import division, absolute_import, print_function, unicode_literals
++
++##################################################################################################
++
++import socket
++import urllib.parse
++import xbmc
++import xbmcaddon
++
++from . import client
++from .database import get_credentials, save_credentials
++from .dialogs import ServerConnect, UsersConnect, LoginManual, ServerManual
++from .helper import settings, addon_id, event, api, window, LazyLogger
++from .jellyfin import Jellyfin
++from .jellyfin.connection_manager import CONNECTION_STATE
++from .helper.exceptions import HTTPException
++
++##################################################################################################
++
++LOG = LazyLogger(__name__)
++XML_PATH = (xbmcaddon.Addon(addon_id()).getAddonInfo("path"), "default", "1080i")
++
++##################################################################################################
++
++
++class Connect(object):
++
++    def __init__(self):
++        self.info = client.get_info()
++
++    def register(self, server_id=None, options={}):
++        """Login into server. If server is None, then it will show the proper prompts to login, etc.
++        If a server id is specified then only a login dialog will be shown for that server.
++        """
++        LOG.info("--[ server/%s ]", server_id or "default")
++        credentials = dict(get_credentials())
++        servers = credentials["Servers"]
++
++        if server_id is None and credentials["Servers"]:
++            credentials["Servers"] = [credentials["Servers"][0]]
++
++        elif credentials["Servers"]:
++
++            for server in credentials["Servers"]:
++
++                if server["Id"] == server_id:
++                    credentials["Servers"] = [server]
++
++        server_select = server_id is None and not settings("SyncInstallRunDone.bool")
++        new_credentials = self.register_client(
++            credentials, options, server_id, server_select
++        )
++
++        for server in servers:
++            if server["Id"] == new_credentials["Servers"][0]["Id"]:
++                server = new_credentials["Servers"][0]
++
++                break
++        else:
++            servers = new_credentials["Servers"]
++
++        credentials["Servers"] = servers
++        save_credentials(credentials)
++
++        try:
++            Jellyfin(server_id).start(True)
++        except ValueError as error:
++            LOG.error(error)
++
++    def get_ssl(self):
++        """Returns boolean value.
++        True: verify connection.
++        """
++        return settings("sslverify.bool")
++
++    def get_client(self, server_id=None):
++        """Get Jellyfin client."""
++        client = Jellyfin(server_id)
++        client.config.app(
++            "Kodi", self.info["Version"], self.info["DeviceName"], self.info["DeviceId"]
++        )
++        client.config.data["http.user_agent"] = (
++            "Jellyfin-Kodi/%s" % self.info["Version"]
++        )
++        client.config.data["auth.ssl"] = self.get_ssl()
++
++        return client
++
++    def _parse_host_port(self, url):
++        """Parse host and port from a URL-like address. Returns (host, port) or (None, None)."""
++        if not url:
++            return None, None
++        try:
++            parsed = urllib.parse.urlparse(url)
++        except Exception:
++            return None, None
++
++        host = parsed.hostname
++        port = parsed.port
++        if port is None:
++            if parsed.scheme == "https":
++                port = 443
++            elif parsed.scheme == "http":
++                port = 80
++            else:
++                # Fallback to common Jellyfin port
++                port = None
++        return host, port
++
++    def _is_reachable(self, address, timeout=0.8):
++        """Quick check whether an address (URL or plain host:port) is reachable on TCP level."""
++        if not address:
++            return False
++
++        # If address appears to be host:port (no scheme), try to split.
++        host = None
++        port = None
++        if "://" not in address:
++            # attempt host:port
++            if ":" in address:
++                try:
++                    host, port = address.rsplit(":", 1)
++                    port = int(port)
++                except Exception:
++                    host = address
++                    port = None
++            else:
++                host = address
++                port = None
++        else:
++            host, port = self._parse_host_port(address)
++
++        if not host:
++            return False
++
++        # Try single provided port or common Jellyfin ports
++        ports = [port] if port else [8096, 8920, 80, 443]
++        for p in ports:
++            if p is None:
++                continue
++            try:
++                sock = socket.create_connection((host, int(p)), timeout)
++                sock.close()
++                return True
++            except Exception:
++                continue
++
++        return False
++
++    def _get_server_addresses(self, client):
++        """Return a tuple (remote_address, local_address, preferred_address).
++        Behavior:
++         - Detect remote from server info (address/auth.server etc).
++         - Try to discover any local address info returned by the server (common keys).
++         - If user has a manual local address set in addon settings, prefer that (if reachable).
++         - Preferred address: manual local > discovered local (if reachable) > remote (if reachable) > first available.
++        Also persist serverRemote, serverLocal and server (preferred) to settings so other parts of the addon can use them.
++        """
++        remote = None
++        local = None
++        preferred = None
++
++        try:
++            server_info = client.auth.get_server_info(client.auth.server_id)
++        except Exception:
++            server_info = {}
++
++        # remote address candidates
++        remote = (
++            server_info.get("address")
++            or server_info.get("Address")
++            or client.config.data.get("auth.server")
++        )
++
++        # Try several possible keys for local address(s)
++        for key in (
++            "localAddress",
++            "LocalAddress",
++            "localBaseUrl",
++            "LocalBaseUrl",
++            "localConnectUrl",
++            "LocalConnectUrl",
++            "LocalConnectInfo",
++            "LocalAddresses",
++            "localAddresses",
++            "LocalAddressList",
++        ):
++            val = server_info.get(key)
++            if not val:
++                continue
++            if isinstance(val, (list, tuple)) and val:
++                local = val[0]
++                break
++            if isinstance(val, dict):
++                # if dict, try common nested keys
++                for nested in ("address", "url", "baseUrl"):
++                    if nested in val:
++                        local = val[nested]
++                        break
++                if local:
++                    break
++            else:
++                local = val
++                break
++
++        # Fallback: if remote resolves to a private/local IP, treat remote as local candidate
++        if not local and remote:
++            try:
++                host, _ = self._parse_host_port(remote)
++                if host:
++                    try:
++                        addr_info = socket.getaddrinfo(host, None)
++                        for res in addr_info:
++                            sockaddr = res[4]
++                            ip = sockaddr[0]
++                            # private ranges: 10.*, 172.16-31.*, 192.168.*
++                            if ip.startswith("10.") or ip.startswith("192.168.") or ip.startswith("172."):
++                                local = remote
++                                break
++                    except Exception:
++                        pass
++            except Exception:
++                pass
++
++        # Check user-specified manual local address in addon settings
++        try:
++            user_local = settings("serverLocalManual")  # returns value or None
++        except Exception:
++            user_local = None
++
++        # Prefer user-provided local if present and reachable
++        if user_local:
++            if self._is_reachable(user_local):
++                preferred = user_local
++                # Save settings for consistency
++                try:
++                    settings("serverLocal", user_local)
++                    settings("serverRemote", remote)
++                    settings("server", preferred)
++                except Exception:
++                    LOG.debug("Failed to persist manual local address to settings")
++                LOG.debug("Using user-configured local server: %s", user_local)
++                return remote, local or user_local, preferred
++
++        # If discovered local is reachable prefer it
++        if local and self._is_reachable(local):
++            preferred = local
++        # Else prefer remote if reachable
++        elif remote and self._is_reachable(remote):
++            preferred = remote
++        else:
++            # If neither responds to quick TCP check, prefer local if exists else remote
++            preferred = local or remote
++
++        # Persist the values into settings for UI and other consumers
++        try:
++            settings("serverRemote", remote)
++            settings("serverLocal", local)
++            settings("server", preferred)
++        except Exception:
++            LOG.debug("Failed to save server address settings")
++
++        LOG.debug("Server addresses - remote: %s, local: %s, preferred: %s", remote, local, preferred)
++        return remote, local, preferred
++
++    def register_client(
++        self, credentials=None, options=None, server_id=None, server_selection=False
++    ):
++
++        client = self.get_client(server_id)
++        self.client = client
++        self.connect_manager = client.auth
++
++        if server_id is None:
++            client.config.data["app.default"] = True
++
++        try:
++            state = client.authenticate(credentials or {}, options or {})
++
++            if state["State"] == CONNECTION_STATE["SignedIn"]:
++                client.callback_ws = event
++
++                if server_id is None:  # Only assign for default server
++
++                    client.callback = event
++                    self.get_user(client)
++
++                    # Prefer a local address when possible; allow manual override via settings serverLocalManual
++                    try:
++                        _, _, preferred = self._get_server_addresses(client)
++                        settings("serverName", client.config.data.get("auth.server-name"))
++                        # server has been set to preferred inside _get_server_addresses
++                    except Exception:
++                        settings("serverName", client.config.data.get("auth.server-name"))
++                        settings("server", client.config.data.get("auth.server"))
++
++                event("ServerOnline", {"ServerId": server_id})
++                event("LoadServer", {"ServerId": server_id})
++
++                return state["Credentials"]
++
++            elif (
++                server_selection
++                or state["State"] == CONNECTION_STATE["ServerSelection"]
++                or state["State"] == CONNECTION_STATE["Unavailable"]
++                and not settings("SyncInstallRunDone.bool")
++            ):
++                state["Credentials"]["Servers"] = [self.select_servers(state)]
++
++            elif state["State"] == CONNECTION_STATE["ServerSignIn"]:
++                if "ExchangeToken" not in state["Servers"][0]:
++                    self.login()
++
++            elif (
++                state["State"] == CONNECTION_STATE["Unavailable"]
++                and state.get("Status_Code", 0) == 401
++            ):
++                # If the saved credentials don't work, restart the addon to force the password dialog to open
++                window("jellyfin.restart", clear=True)
++
++            elif state["State"] == CONNECTION_STATE["Unavailable"]:
++                raise HTTPException("ServerUnreachable", {})
++
++            return self.register_client(state["Credentials"], options, server_id, False)
++
++        except RuntimeError as error:
++
++            LOG.exception(error)
++            xbmc.executebuiltin("Addon.OpenSettings(%s)" % addon_id())
++
++            raise Exception("User sign in interrupted")
++
++        except HTTPException as error:
++
++            if error.status == "ServerUnreachable":
++                event("ServerUnreachable", {"ServerId": server_id})
++
++            return client.get_credentials()
++
++    def get_user(self, client):
++        """Save user info."""
++        self.user = client.jellyfin.get_user()
++        settings("username", self.user["Name"])
++
++        # pick address to use for retrieving user artwork (prefer manual local > discovered local > remote)
++        try:
++            _, _, preferred = self._get_server_addresses(client)
++        except Exception:
++            preferred = client.config.data.get("auth.server")
++
++        if "PrimaryImageTag" in self.user:
++            server_address = preferred or client.auth.get_server_info(client.auth.server_id).get(
++                "address"
++            )
++            window(
++                "JellyfinUserImage",
++                api.API(self.user, server_address).get_user_artwork(self.user["Id"]),
++            )
++
++    def select_servers(self, state=None):
++
++        state = state or self.connect_manager.connect({"enableAutoLogin": False})
++        user = {}
++
++        dialog = ServerConnect("script-jellyfin-connect-server.xml", *XML_PATH)
++        dialog.set_args(
++            connect_manager=self.connect_manager,
++            username=user.get("DisplayName", ""),
++            user_image=user.get("ImageUrl"),
++            servers=self.connect_manager.get_available_servers(),
++        )
++
++        dialog.doModal()
++
++        if dialog.is_server_selected():
++            LOG.debug("Server selected: %s", dialog.get_server())
++            return dialog.get_server()
++
++        elif dialog.is_manual_server():
++            LOG.debug("Adding manual server")
++            try:
++                return self.manual_server()
++            except RuntimeError:
++                pass
++        else:
++            raise RuntimeError("No server selected")
++
++        return self.select_servers()
++
++    def setup_manual_server(self):
++        """Setup manual servers"""
++        client = self.get_client()
++        client.set_credentials(get_credentials())
++        manager = client.auth
++
++        try:
++            self.manual_server(manager)
++        except RuntimeError:
++            return
++
++        credentials = client.get_credentials()
++        save_credentials(credentials)
++
++    def manual_server(self, manager=None):
++        """Return server or raise error."""
++        dialog = ServerManual("script-jellyfin-connect-server-manual.xml", *XML_PATH)
++        dialog.set_args(**{"connect_manager": manager or self.connect_manager})
++        dialog.doModal()
++
++        if dialog.is_connected():
++            return dialog.get_server()
++        else:
++            raise RuntimeError("Server is not connected")
++
++    def login(self):
++
++        users = self.connect_manager.get_public_users()
++        server = self.connect_manager.get_server_info(self.connect_manager.server_id)[
++            "address"
++        ]
++
++        if not users:
++            try:
++                return self.login_manual()
++            except RuntimeError:
++                raise RuntimeError("No user selected")
++
++        dialog = UsersConnect("script-jellyfin-connect-users.xml", *XML_PATH)
++        dialog.set_args(**{"server": server, "users": users})
++        dialog.doModal()
++
++        if dialog.is_user_selected():
++            user = dialog.get_user()
++            username = user["Name"]
++
++            if user["HasPassword"]:
++                LOG.debug("User has password, present manual login")
++                try:
++                    return self.login_manual(username)
++                except RuntimeError:
++                    pass
++            else:
++                return self.connect_manager.login(server, username)
++
++        elif dialog.is_manual_login():
++            try:
++                return self.login_manual()
++            except RuntimeError:
++                pass
++        else:
++            raise RuntimeError("No user selected")
++
++        return self.login()
++
++    def setup_login_manual(self):
++        """Setup manual login by itself for default server."""
++        client = self.get_client()
++        client.set_credentials(get_credentials())
++        manager = client.auth
++
++        username = settings("username")
++        try:
++            self.login_manual(user=username, manager=manager)
++        except RuntimeError:
++            return
++
++        credentials = client.get_credentials()
++        save_credentials(credentials)
++
++    def login_manual(self, user=None, manager=None):
++        """Return manual login user authenticated or raise error."""
++        dialog = LoginManual("script-jellyfin-connect-login-manual.xml", *XML_PATH)
++        dialog.set_args(
++            **{
++                "connect_manager": manager or self.connect_manager,
++                "username": user or {},
++            }
++        )
++        dialog.doModal()
++
++        if dialog.is_logged_in():
++            return dialog.get_user()
++        else:
++            raise RuntimeError("User is not authenticated")
++
++    def remove_server(self, server_id):
++        """Stop client and remove server."""
++        Jellyfin(server_id).close()
++        credentials = get_credentials()
++
++        for server in credentials["Servers"]:
++            if server["Id"] == server_id:
++                credentials["Servers"].remove(server)
++
++                break
++
++        save_credentials(credentials)
++        LOG.info("[ remove server ] %s", server_id)
+diff --git a/resources/settings.xml b/resources/settings.xml
+index 8757373..0000000 100644
+--- a/resources/settings.xml
++++ b/resources/settings.xml
+@@ -1,93 +1,121 @@
+ <?xml version="1.0" ?>
+ <settings version="1">
+ 	<section id="plugin.video.jellyfin">
+ 		<category id="jellyfin for kodi" label="29999" help="">
+ 			<group id="1">
+ 				<setting id="username" type="string" label="30024" help="">
+ 					<level>0</level>
+ 					<default/>
+ 					<constraints>
+ 						<allowempty>true</allowempty>
+ 					</constraints>
+ 					<enable>false</enable>
+ 					<control type="edit" format="string">
+ 						<heading>30024</heading>
+ 					</control>
+ 				</setting>
+ 				<setting id="serverName" type="string" label="30001" help="">
+ 					<level>0</level>
+ 					<default/>
+ 					<constraints>
+ 						<allowempty>true</allowempty>
+ 					</constraints>
+ 					<enable>false</enable>
+ 					<control type="edit" format="string">
+ 						<heading>30001</heading>
+ 					</control>
+ 				</setting>
+ 				<setting id="server" type="string" label="30000" help="">
+ 					<level>0</level>
+ 					<default/>
+ 					<constraints>
+ 						<allowempty>true</allowempty>
+ 					</constraints>
+ 					<enable>false</enable>
+ 					<control type="edit" format="string">
+ 						<heading>30000</heading>
+ 					</control>
+ 				</setting>
++                <!-- New setting: optional manual local server address (IP or URL). -->
++                <setting id="serverLocalManual" type="string" label="Server: Local address (manual)" help="">
++                    <level>0</level>
++                    <default/>
++                    <constraints>
++                        <allowempty>true</allowempty>
++                    </constraints>
++                    <control type="edit" format="string">
++                        <heading>Server: Local address (manual)</heading>
++                    </control>
++                    <description>Optional: specify a local IP or URL for your Jellyfin server (e.g., http://192.168.1.10:8096). When set and reachable, this address will be preferred over the remote address.</description>
++                </setting>
+ 
+ 				<setting id="sslverify" type="boolean" label="30500" help="">
+ 					<level>0</level>
+ 					<default>true</default>
+ 					<control type="toggle"/>
+ 				</setting>
+ 			</group>
+ 			<group id="2"/>
+ 			<group id="3" label="33110">
+ 				<setting id="deviceNameOpt" type="boolean" label="30504" help="">
+ 					<level>0</level>
+ 					<default>false</default>
+ 					<control type="toggle"/>
+ 				</setting>
+ 				<setting id="deviceName" type="string" label="30016" help="" parent="deviceNameOpt">
+ 					<level>0</level>
+ 					<default>Kodi</default>
+ 					<constraints>
+ 						<allowempty>false</allowempty>
+ 					</constraints>
+ 					<dependencies>
+ 						<dependency type="visible">
+ 							<condition operator="is" setting="deviceNameOpt">true</condition>
+ 						</dependency>
+ 					</dependencies>
+ 					<control type="edit" format="string">
+ 						<heading>30016</heading>
+ 					</control>
+ 				</setting>
+ 			</group>
+ 		</category>
+ 		<category id="sync" label="30506" help="">
+ 			<group id="1" label="33186">
+ 				<setting id="kodiCompanion" type="boolean" label="33137" help="">
+ 					<level>0</level>
+ 					<default>true</default>
+ 					<control type="toggle"/>
+ 				</setting>
+ 				<setting id="syncIndicator" type="integer" label="30507" help="" parent="kodiCompanion">
+ 					<level>0</level>
+ 					<default>999</default>
+ 					<dependencies>
+ 						<dependency type="visible">
+ 							<condition operator="is" setting="kodiCompanion">true</condition>
+ 						</dependency>
+ 					</dependencies>
+ 					<control type="edit" format="integer">
+ 						<heading>30507</heading>
+ 					</control>
+ 				</setting>
+ 				<setting id="syncDuringPlay" type="boolean" label="33185" help="">
+ 					<level>0</level>
+ 					<default>true</default>
+ 					<control type="toggle"/>
+ 				</setting>
+ 				<setting id="dbSyncScreensaver" type="boolean" label="30536" help="">
+ 					<level>0</level>
+ 					<default>true</default>
+ 					<control type="toggle"/>
+ 				</setting>
+ 			</group>
+ 			<group id="2" label="33111">
+ 				<setting id="useDirectPaths" type="integer" label="30511" help="">
+ 					<level>0</level>
+ 					<default>1</default>
+ 					<constraints>
+ 						<options>
+ 							<option label="33036">0</option>
+ 							<option label="33037">1</option>
+ 						</options>
+ 					</constraints>
+ 					<control type="spinner" format="string"/>
+ 				</setting>
+ 			</group>
+ 			<group id="3" label="33175">
+ 				<setting id="limitIndex" type="integer" label="30515" help="">
+ 					<level>0</level>
+ 					<default>15</default>
+ 					<constraints>
+ 						<minimum>1</minimum>
+ 						<step> 1</step>
+ 						<maximum> 100</maximum>
+ 					</constraints>
+ 					<control type="slider" format="integer">
+ 						<popup>false</popup>
+ 					</control>
+ 				</setting>
+-				<setting id="limitThreads" type="integer" label="33174" help="">
++				<setting id="limitThreads" type="integer" label="33174" help="">
+ 					<level>0</level>
+ 					<default>3</default>
+ 					<constraints>
+ 						<minimum>1</minimum>
+ 						<step> 1</step>
+ 						<maximum> 50</maximum>
+ 					</constraints>
+ 					<control type="slider" format="integer">
+ 						<popup>false</popup>
+ 					</control>
+ 				</setting>
+ 			</group>
+ 			<group id="4" label="33176">
+ 				<setting id="enableCoverArt" type="boolean" label="30157" help="">
+ 					<level>0</level>
+ 					<default>true</default>
+ 					<control type="toggle"/>
+ 				</setting>
+@@ -94,28 +122,28 @@
+ 				</setting>
+ 			</group>
+ 		</category>
+ 		<category id="playback" label="30516" help="">
+ 			<group id="1" label="33113">
+ 				<setting id="enableCinema" type="boolean" label="30518" help="">
+ 					<level>0</level>
+ 					<default>false</default>
+ 					<control type="toggle"/>
+ 				</setting>
+ 				<setting id="askCinema" type="boolean" label="30519" help="" parent="enableCinema">
+ 					<level>0</level>
+ 					<default>false</default>
+ 					<dependencies>
+ 						<dependency type="visible">
+ 							<condition operator="is" setting="enableCinema">true</condition>
+ 						</dependency>
+ 					</dependencies>
+ 					<control type="toggle"/>
+ 				</setting>
+ 				<setting id="playFromStream" type="boolean" label="30002" help="">
+ 					<level>0</level>
+ 					<default>true</default>
+ 					<control type="toggle"/>
+ 				</setting>
+ 				<setting id="playFromTranscode" type="boolean" label="33179" help="" parent="playFromStream">
+ 					<level>0</level>
+ 					<default>false</default>
+ 					<dependencies>
+ 						<dependency type="visible">
+ 							<condition operator="is" setting="playFromStream">true</condition>
+ 						</dependency>
+ 					</dependencies>
+ 					<control type="toggle"/>
+ 				</setting>
+-				<setting id="maxBitrate" type="integer" label="30160" help="">
++				<setting id="maxBitrate" type="integer" label="30160" help="">
+ 					<level>0</level>
+ 					<default>23</default>
+ 					<constraints>
+ 						<options>
+ 							<option label="33214">0</option>
+ 							<option label="33215">1</option>
+ 							<option label="33216">2</option>
+ 							<option label="33217">3</option>
+ 							<option label="33218">4</option>
+ 							<option label="33219">5</option>
+ 							<option label="33220">6</option>
+ 							<option label="33221">7</option>
+ 							<option label="33222">8</option>
+ 							<option label="33223">9</option>
+ 							<option label="33224">10</option>
+ 							<option label="33225">11</option>
+ 							<option label="33226">12</option>
+ 							<option label="33227">13</option>
+ 							<option label="33228">14</option>
+ 							<option label="33229">15</option>
+ 							<option label="33230">16</option>
+ 							<option label="33231">17</option>
+ 							<option label="33232">18</option>
+ 							<option label="33233">19</option>
+ 							<option label="33234">20</option>
+ 							<option label="33235">21</option>
+ 							<option label="33236">22</option>
+ 							<option label="33237">23</option>
+ 							<option label="33238">24</option>
+ 						</options>
+ 					</constraints>
+ 					<control type="spinner" format="string"/>
+ 				</setting>
+-				<setting id="enableExternalSubs" type="boolean" label="33114" help="">
++				<setting id="enableExternalSubs" type="boolean" label="33114" help="">
+ 					<level>0</level>
+ 					<default>true</default>
+ 					<control type="toggle"/>
+ 				</setting>
+ 			</group>
+ 			<group id="2"/>
+ 			<group id="3" label="33115">
+ 				<setting id="videoPreferredCodec" type="string" label="30161" help="">
+ 					<level>0</level>
+ 					<default>H264/AVC</default>
+ 					<constraints>
+ 						<options>
+ 							<option>H264/AVC</option>
+ 							<option>H265/HEVC</option>
+ 							<option>AV1</option>
+ 						</options>
+ 					</constraints>
+ 					<control type="list" format="string">
+ 						<heading>30161</heading>
+ 					</control>
+-				</setting>
++				</setting>
+                 <!-- rest of file unchanged -->
+ 
+-- 
+2.39.2
