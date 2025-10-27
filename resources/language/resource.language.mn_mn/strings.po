@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-10-25 21:55+0000\n"
-"Last-Translator: Battseren Badral <bbattseren88@gmail.com>\n"
+"PO-Revision-Date: 2025-10-27 09:41+0000\n"
+"Last-Translator: kreaxv <kreaxv@gmail.com>\n"
 "Language-Team: Mongolian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/mn/>\n"
 "Language: mn_mn\n"
@@ -163,3 +163,43 @@ msgstr "Тавтай морилно уу мессежийг идэвхжүүлэ
 msgctxt "#30251"
 msgid "Recently added Home Videos"
 msgstr "Саяхан нэмэгдсэн нүүр видеонууд"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "Саяхан нэмэгдсэн зурагнууд"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Дуртай гэрийн бичлэгүүд"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "Дуртай зургууд"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "Дуртай цомгууд"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "Саяхан нэмэгдсэн хөгжмийн видеонууд"
+
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "Үргэлжилж буй хөгжмийн видеонууд"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "Үзээгүй хөгжмийн видеонууд"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "Кинонууд"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "Цуварлууд"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Jellyfin-ийн тохиргоо"
