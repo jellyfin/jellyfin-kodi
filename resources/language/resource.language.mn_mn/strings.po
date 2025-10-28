@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-10-27 09:41+0000\n"
-"Last-Translator: kreaxv <kreaxv@gmail.com>\n"
+"PO-Revision-Date: 2025-10-29 00:03+0000\n"
+"Last-Translator: Battseren Badral <bbattseren88@gmail.com>\n"
 "Language-Team: Mongolian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/mn/>\n"
 "Language: mn_mn\n"
@@ -94,7 +94,7 @@ msgstr "Шатаасан хадмалийг зөвшөөрөх"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
-msgstr "Саяхан нэмэгдсэн ТВ цувралууд"
+msgstr "Саяхан нэмэгдсэн ТВ нэвтрүүлэгүүд"
 
 msgctxt "#30171"
 msgid "In Progress TV Shows"
@@ -126,7 +126,7 @@ msgstr "Дуртай кинонууд"
 
 msgctxt "#30181"
 msgid "Favorite Shows"
-msgstr "Дуртай цувралууд"
+msgstr "Дуртай нэвтрүүлгүүд"
 
 msgctxt "#30182"
 msgid "Favorite Episodes"
@@ -198,7 +198,7 @@ msgstr "Кинонууд"
 
 msgctxt "#30305"
 msgid "TV Shows"
-msgstr "Цуварлууд"
+msgstr "ТВ нэвтрүүлгүүд"
 
 msgctxt "#30401"
 msgid "Jellyfin options"
