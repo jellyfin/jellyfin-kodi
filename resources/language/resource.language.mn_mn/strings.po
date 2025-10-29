@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-10-29 00:03+0000\n"
+"PO-Revision-Date: 2025-10-29 21:52+0000\n"
 "Last-Translator: Battseren Badral <bbattseren88@gmail.com>\n"
 "Language-Team: Mongolian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/mn/>\n"
@@ -43,7 +43,6 @@ msgctxt "#30022"
 msgid "Advanced"
 msgstr "Нарийвчилсан"
 
-#, fuzzy
 msgctxt "#30024"
 msgid "Username"
 msgstr "Хэрэглэгчийн нэр"
@@ -203,3 +202,83 @@ msgstr "ТВ нэвтрүүлгүүд"
 msgctxt "#30401"
 msgid "Jellyfin options"
 msgstr "Jellyfin-ийн тохиргоо"
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "Jellyfin хувиргалт"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "Дуртай жагсаалтад нэмэх"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "Дуртай жагсаалтаас хасах"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "Тохиргоо"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "Jellyfin-с устгах"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "Дахин уншуулах"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "Хувиргах"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "Холболт баталгаажуулах"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "Өөр төхөөрөмжийн нэр ашиглах"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "Синхрончлох"
+
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "Шинэчлэлтийн тооноос их бол мэдэгдэл идэвхжүүлэх"
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "Хөгжмийн санг идэвхжүүлэх"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "Тоглуулах горим"
+
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "Зургийн кэшлэлт идэвхжүүлэх"
+
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "Хуудаслалт – хүсэх дээд зүйлсийн тоо (анхдагч: 15)"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "Тоглуулах"
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "Сүлжээний нууц үг/нэр"
+
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "Кино театрын горимыг идэвхжүүлэх"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "Трейлэр тоглуулахыг асуух"
+
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr "Устгах баталгаажуулалтыг алгасах (эрсдлээ тооцож ашиглана уу)"
