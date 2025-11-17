@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-01-23 15:29+0000\n"
-"Last-Translator: Justin Tamblyn <just1689@gmail.com>\n"
+"PO-Revision-Date: 2025-11-17 19:23+0000\n"
+"Last-Translator: Neil de Villiers <ndevilliers94@gmail.com>\n"
 "Language-Team: Afrikaans <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/af/>\n"
 "Language: af_za\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 5.14\n"
 
 msgctxt "#30091"
 msgid "Confirm file deletion"
@@ -50,3 +50,56 @@ msgstr "Server adres"
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
 msgstr "Jellyfin vir Kodi"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Vir Episodes"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Vir Films"
+
+#, fuzzy
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Aktiveer verbetering in kunswerk (i.e. omslagkuns)"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Maksimum stroom bitsnelheid"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Voorkeur video kodek"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Voorkeur oudio kodek"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Oudio bitsnelheid"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Oudio maksimum kanale"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Laat gebrande byskifte toe"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Onlangs bygevoegde TV-programme"
+
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "TV-Programme aan die gang"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "Onlangs Bygevoegde Films"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "Onlangs Bygevoegde Episodes"
