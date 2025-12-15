@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-11-17 22:39+0000\n"
-"Last-Translator: Neil de Villiers <ndevilliers94@gmail.com>\n"
+"PO-Revision-Date: 2025-12-15 05:07+0000\n"
+"Last-Translator: Francois Pienaar <fpienaar@pm.me>\n"
 "Language-Team: Afrikaans <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/af/>\n"
 "Language: af_za\n"
@@ -111,3 +111,79 @@ msgstr "Films aan die gang"
 msgctxt "#30178"
 msgid "In Progress Episodes"
 msgstr "Episodes aan die gang"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Volgende Episodes"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Gunsteling Flieks"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "Gunsteling Programme"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Gunsteling Episodes"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Boksstelle"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Ongekykte Films"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Willekeurige Items"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "Koppelvlak"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "Aktiveer welkom boodskap"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Onlangs bygevoegde Tuisvideo's"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "Onlangs bygevoegde Foto's"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Gunsteling Tuisvideo's"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "Gunsteling Foto's"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "Gunsteling Albums"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "Onlangs bygevoegde Musiekvideo's"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "Ongekykte Musiekvideo's"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "Films"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "TV-Programme"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Jellyfin opsies"
