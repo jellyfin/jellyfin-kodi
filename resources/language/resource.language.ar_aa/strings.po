@@ -1,2 +1,86 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr ""
+"PO-Revision-Date: 2025-12-26 01:04+0000\n"
+"Last-Translator: Translation expert "
+"<apk2000@users.noreply.translate.jellyfin.org>\n"
+"Language-Team: Arabic <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/ar/>\n"
+"Language: ar_aa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Weblate 5.15.1\n"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Jellyfin لـ Kodi"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "عنوان خادم"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "اسم خادم"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "إجبار تشغيل HTTP"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "طريقة الولوج"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "مستوى السجل"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "اسم الجهاز"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "متقدم"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "اسم المستخدم"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "تأكيد حذف الملف"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "عرض الحذف بعد التشغيل"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "للحلقات"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "للأفلام"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "تفعيل الفنّيات المحسّنة(مثل الغلاف الفني)"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "أعلى معدل بث"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "ترميز فيديو مفضل"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "ترميز صوت مفضل"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "معدل صوت"
