@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-12-27 02:16+0000\n"
+"PO-Revision-Date: 2025-12-29 04:50+0000\n"
 "Last-Translator: Translation expert "
 "<apk2000@users.noreply.translate.jellyfin.org>\n"
 "Language-Team: Arabic <https://translate.jellyfin.org/projects/jellyfin/"
@@ -533,3 +533,75 @@ msgstr "يكتمل في:"
 msgctxt "#33033"
 msgid "A new device Id has been generated. Kodi will now restart."
 msgstr "تم إنشاء معرف جهاز جديد. سيتم إعادة تشغيل Kodi الآن."
+
+msgctxt "#33035"
+msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
+msgstr ""
+"تحذير! إذا اخترت الوضع الأصلي ، فستفقد بعض ميزات Jellyfin ، مثل: وضع سينما "
+"Jellyfin وخيارات البث المباشر و التحويل وجدولة وصول الوالدين."
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "إضافات (افتراضي)"
+
+msgctxt "#33037"
+msgid "Native (direct paths)"
+msgstr "أصلي (مسارات مباشرة)"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "تمكين مكتبة الموسيقى؟"
+
+msgctxt "#33047"
+msgid "Kodi can't locate file:"
+msgstr "لا يستطيع Kodi تحديد موقع الملف:"
+
+msgctxt "#33048"
+msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
+msgstr ""
+"قد تحتاج للتحقق من بيانات اعتماد شبكتك في إعدادات الإضافات أو استخدام استبدال "
+"مسار Jellyfin لتهيئة المسار الخاص بك بشكل صحيح (لوحة معلومات Jellyfin> مكتبة)"
+". إيقاف المزامنة؟"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "جديد"
+
+msgctxt "#33091"
+msgid "Created backup at:"
+msgstr "تم إنشاء نسخة احتياطية في:"
+
+msgctxt "#33092"
+msgid "Create a backup"
+msgstr "إنشاء نسخة احتياطية"
+
+msgctxt "#33093"
+msgid "Backup folder"
+msgstr "مجلد النسخ الاحتياطي"
+
+msgctxt "#33097"
+msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
+msgstr ""
+"هام، تمت إزالة Cleanonupdate في الإعدادات المتقدمة لتجنب التعارض مع Jellyfin "
+"ل Kodi. سيتم إعادة تشغيل Kodi الآن."
+
+msgctxt "#33098"
+msgid "Refresh boxsets"
+msgstr "تحديث مجموعات الصندوق"
+
+msgctxt "#33099"
+msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
+msgstr ""
+"ثبّت إضافة خادم Kodi Sync Queue لتطبيق تحديثات مكتبة Jellyfin تلقائيًا عند بدء "
+"التشغيل. يمكن العثور على هذا الإعداد في إعدادات الإضافات> خيارات المزامنة> "
+"تفعيل Kodi Sync Queue."
+
+msgctxt "#33101"
+msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
+msgstr ""
+"نظرًا لأنك تستخدم وضع التشغيل الأصلي مع تمكين الموسيقى، هل تريد استيراد تصنيف "
+"الموسيقى من الملفات؟"
+
+msgctxt "#33102"
+msgid "Resume the previous sync?"
+msgstr "استئناف المزامنة السابقة؟"
