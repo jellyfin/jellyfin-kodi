@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-12-29 04:50+0000\n"
+"PO-Revision-Date: 2025-12-30 11:32+0000\n"
 "Last-Translator: Translation expert "
 "<apk2000@users.noreply.translate.jellyfin.org>\n"
 "Language-Team: Arabic <https://translate.jellyfin.org/projects/jellyfin/"
@@ -605,3 +605,37 @@ msgstr ""
 msgctxt "#33102"
 msgid "Resume the previous sync?"
 msgstr "استئناف المزامنة السابقة؟"
+
+msgctxt "#33104"
+msgid "Find more info in the github wiki/Create-and-restore-from-backup."
+msgstr "المزيد من المعلومات في موقع GitHub wiki/Create-and-restore-from-backup."
+
+msgctxt "#33105"
+msgid "Enable the context menu"
+msgstr "تمكين لائحة المحتويات"
+
+msgctxt "#33106"
+msgid "Enable the option to transcode"
+msgstr "تمكين اختيار الترميز"
+
+msgctxt "#33107"
+msgid "Users added to the session (no space between users). (eg username,username2)"
+msgstr ""
+"المستخدمين المضافين للجلسة (لا توجد مسافة بين المستخدمين) (على سبيل المثال "
+"اسم المستخدم,اسم المستخدم2)"
+
+msgctxt "#33108"
+msgid "Notifications are delayed during video playback (except live tv)."
+msgstr "الإشعارات تتأخر أثناء تشغيل الفيديو (باستثناء البث التلفزيوني المباشر)."
+
+msgctxt "#33109"
+msgid "Plugin"
+msgstr "إضافات"
+
+msgctxt "#33110"
+msgid "Restart Kodi to take effect."
+msgstr "أعد تشغيل Kodi ليسري التأثير."
+
+msgctxt "#33111"
+msgid "Reset the local database to apply the playback mode change."
+msgstr "أعد تعيين قاعدة البيانات المحلية لتطبيق تغيير وضع التشغيل."
