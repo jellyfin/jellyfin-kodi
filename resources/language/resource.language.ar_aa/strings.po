@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-12-30 11:32+0000\n"
+"PO-Revision-Date: 2025-12-31 02:15+0000\n"
 "Last-Translator: Translation expert "
 "<apk2000@users.noreply.translate.jellyfin.org>\n"
 "Language-Team: Arabic <https://translate.jellyfin.org/projects/jellyfin/"
@@ -639,3 +639,23 @@ msgstr "أعد تشغيل Kodi ليسري التأثير."
 msgctxt "#33111"
 msgid "Reset the local database to apply the playback mode change."
 msgstr "أعد تعيين قاعدة البيانات المحلية لتطبيق تغيير وضع التشغيل."
+
+msgctxt "#33112"
+msgid "Applies to Native and Add-on playback mode"
+msgstr "ينطبق على نمط تشغيل الاصلي والإضافي"
+
+msgctxt "#33113"
+msgid "Applies to Add-on playback mode only"
+msgstr "ينطبق على نمط تشغيل الاضافات فقط"
+
+msgctxt "#33114"
+msgid "Enable external subtitles"
+msgstr "تفعيل الترجمات الخارجية"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "اختيارات الترميز"
+
+msgctxt "#33116"
+msgid "Compress artwork (reduces quality)"
+msgstr "ضغط عمل فني (يقلل الجودة)"
