@@ -522,15 +522,13 @@ class Player(xbmc.Player):
                 pass
             self.skip_dialog = None
 
-        segments = item["Server"].jellyfin.get_intro_skipper_segments(item_id)
-        if not segments:
-            segments = item["Server"].jellyfin.get_media_segments(item_id)
-            if segments:
-                segments = self._convert_media_segments(segments)
+        segments = item["Server"].jellyfin.get_media_segments(item_id)
+        if segments:
+            segments = self._convert_media_segments(segments)
 
         if segments:
             self.skip_segments[item_id] = segments
-            LOG.info("Loaded intro-skipper segments for %s: %s", item_id, list(segments.keys()))
+            LOG.info("Loaded media segments for %s: %s", item_id, list(segments.keys()))
 
     def _convert_media_segments(self, response):
         if not response or "Items" not in response:

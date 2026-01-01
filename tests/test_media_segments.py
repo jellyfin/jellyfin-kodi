@@ -4,45 +4,9 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import pytest
 
 
-class TestIntroSkipperSegmentParsing:
-
-    def test_parse_intro_skipper_response(self):
-        response = {
-            "Introduction": {
-                "EpisodeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-                "Start": 42.5,
-                "End": 122.0
-            },
-            "Credits": {
-                "EpisodeId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-                "Start": 2458.0,
-                "End": 2520.0
-            }
-        }
-        assert "Introduction" in response
-        assert "Credits" in response
-        assert response["Introduction"]["Start"] == 42.5
-        assert response["Introduction"]["End"] == 122.0
-
-    def test_parse_empty_response(self):
-        response = {}
-        assert len(response) == 0
-
-    def test_parse_partial_response(self):
-        response = {
-            "Introduction": {
-                "EpisodeId": "test-id",
-                "Start": 10.0,
-                "End": 60.0
-            }
-        }
-        assert "Introduction" in response
-        assert "Credits" not in response
-
-
 class TestMediaSegmentsConversion:
 
-    def test_convert_media_segments_to_intro_skipper_format(self):
+    def test_convert_media_segments_response(self):
         media_segments_response = {
             "Items": [
                 {

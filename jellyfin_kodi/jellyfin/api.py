@@ -508,27 +508,13 @@ class API(object):
         response = self.send_request(server_address, "system/info/public")
         return response.url.replace("/system/info/public", "")
 
-    def get_intro_skipper_segments(self, item_id):
-        """Get intro-skipper plugin segments (Introduction, Credits, Recap, Preview)."""
-        try:
-            return self._get("Episode/%s/IntroSkipperSegments" % item_id)
-        except HTTPException as e:
-            if e.status == 404:
-                LOG.debug("Intro-skipper plugin not installed or no segments for %s", item_id)
-            else:
-                LOG.warning("Error fetching intro-skipper segments: %s", e)
-            return None
-        except Exception as e:
-            LOG.warning("Error fetching intro-skipper segments: %s", e)
-            return None
-
     def get_media_segments(self, item_id):
-        """Get native Media Segments API data (Jellyfin 10.10+ fallback)."""
+        """Get media segments for an item (Jellyfin 10.10+)."""
         try:
-            return self._get("MediaSegments", params={"itemId": item_id})
+            return self._get("MediaSegments/%s" % item_id)
         except HTTPException as e:
             if e.status == 404:
-                LOG.debug("Media Segments API not available for %s", item_id)
+                LOG.debug("Media Segments not available for %s", item_id)
             else:
                 LOG.warning("Error fetching media segments: %s", e)
             return None

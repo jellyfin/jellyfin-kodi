@@ -1,14 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
-
-##################################################################################################
-
 import xbmcgui
-
 from ..helper import LazyLogger
 from ..helper.translate import translate
-
-##################################################################################################
 
 LOG = LazyLogger(__name__)
 
@@ -31,8 +25,6 @@ SEGMENT_LABELS = {
     "Preview": "Preview",
     "Commercial": "Ad",
 }
-
-##################################################################################################
 
 
 class SkipDialog(xbmcgui.WindowXMLDialog):

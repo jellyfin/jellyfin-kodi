@@ -1174,12 +1174,12 @@ msgid "384"
 msgstr "384"
 
 msgctxt "#33246"
-msgid "Intro Skipper"
-msgstr "Intro Skipper"
+msgid "Segment Skipping"
+msgstr "Segment Skipping"
 
 msgctxt "#33247"
-msgid "Enable intro/outro skipping"
-msgstr "Enable intro/outro skipping"
+msgid "Enable segment skipping"
+msgstr "Enable segment skipping"
 
 msgctxt "#33248"
 msgid "Skip mode"
