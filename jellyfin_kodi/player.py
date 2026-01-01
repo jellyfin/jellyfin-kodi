@@ -25,6 +25,9 @@ class Player(xbmc.Player):
 
     played = {}
     up_next = False
+    skip_segments = {}
+    skip_prompted = set()
+    skip_dialog = None
 
     def __init__(self):
         xbmc.Player.__init__(self)
@@ -116,6 +119,8 @@ class Player(xbmc.Player):
         }
         item["Server"].jellyfin.session_playing(data)
         window("jellyfin.skip.%s.bool" % item["Id"], True)
+
+        self._fetch_skip_segments(item)
 
         if monitor.waitForAbort(2):
             return
@@ -387,6 +392,9 @@ class Player(xbmc.Player):
         }
         item["Server"].jellyfin.session_progress(data)
 
+        if settings("introSkipEnabled.bool"):
+            self.check_skip_segments(item, item["CurrentPosition"])
+
     def onPlayBackStopped(self):
         """Will be called when user stops playing a file."""
         window("jellyfin_play", clear=True)
@@ -472,3 +480,160 @@ class Player(xbmc.Player):
             window("jellyfin.external_check", clear=True)
 
         self.played.clear()
+
+    def _fetch_skip_segments(self, item):
+        if not settings("introSkipEnabled.bool"):
+            return
+
+        item_id = item["Id"]
+        self.skip_segments.pop(item_id, None)
+        self.skip_prompted = set()
+
+        if self.skip_dialog:
+            try:
+                self.skip_dialog.close()
+            except Exception:
+                pass
+            self.skip_dialog = None
+
+        segments = item["Server"].jellyfin.get_intro_skipper_segments(item_id)
+        if not segments:
+            segments = item["Server"].jellyfin.get_media_segments(item_id)
+            if segments:
+                segments = self._convert_media_segments(segments)
+
+        if segments:
+            self.skip_segments[item_id] = segments
+            LOG.info("Loaded intro-skipper segments for %s: %s", item_id, list(segments.keys()))
+
+    def _convert_media_segments(self, response):
+        if not response or "Items" not in response:
+            return None
+
+        type_map = {
+            "Intro": "Introduction",
+            "Outro": "Credits",
+            "Recap": "Recap",
+            "Preview": "Preview",
+            "Commercial": "Commercial",
+        }
+
+        segments = {}
+        for item in response["Items"]:
+            seg_type = type_map.get(item.get("Type"))
+            if seg_type:
+                segments[seg_type] = {
+                    "EpisodeId": item.get("ItemId"),
+                    "Start": item.get("StartTicks", 0) / 10000000.0,
+                    "End": item.get("EndTicks", 0) / 10000000.0,
+                }
+        return segments if segments else None
+
+    def check_skip_segments(self, item, current_position):
+        item_id = item["Id"]
+        segments = self.skip_segments.get(item_id)
+        if not segments:
+            return
+
+        for segment_type, segment in segments.items():
+            if not self._is_segment_enabled(segment_type):
+                continue
+
+            start = segment.get("Start", 0)
+            end = segment.get("End", 0)
+            if not start or not end or end <= start:
+                continue
+
+            if start <= current_position <= start + 5:
+                segment_key = "%s:%s" % (item_id, segment_type)
+                if segment_key in self.skip_prompted:
+                    continue
+
+                self.skip_prompted.add(segment_key)
+
+                if segment_type == "Credits" and not self.up_next:
+                    self.up_next = True
+                    self.next_up()
+
+                self._handle_skip_segment(segment_type, start, end)
+                break
+
+    def _is_segment_enabled(self, segment_type):
+        setting_map = {
+            "Introduction": "skipIntroduction.bool",
+            "Credits": "skipCredits.bool",
+            "Recap": "skipRecap.bool",
+            "Preview": "skipPreview.bool",
+            "Commercial": "skipCommercial.bool",
+        }
+        setting_key = setting_map.get(segment_type)
+        if not setting_key:
+            return False
+        return settings(setting_key)
+
+    def _handle_skip_segment(self, segment_type, start, end):
+        mode = settings("introSkipMode")
+
+        if mode == 0:
+            self.seekTime(end)
+            LOG.info("Auto-skipped %s to %.1f", segment_type, end)
+
+        elif mode == 1:
+            self._show_skip_button(segment_type, end - start, end)
+
+        elif mode == 2:
+            if dialog("yesno", "{jellyfin}", translate(33257), autoclose=5000):
+                self.seekTime(end)
+                LOG.info("User skipped %s to %.1f", segment_type, end)
+
+    def _show_skip_button(self, segment_type, duration, end_time):
+        from .dialogs.skip import SkipDialog
+        from .helper.utils import translate_path
+
+        if self.skip_dialog:
+            try:
+                self.skip_dialog.close()
+            except Exception:
+                pass
+
+        addon_path = translate_path("special://home/addons/plugin.video.jellyfin/resources/skins/")
+
+        self.skip_dialog = SkipDialog(
+            "script-jellyfin-skip.xml",
+            addon_path,
+            "default",
+            "1080i",
+        )
+        self.skip_dialog.set_skip_info(segment_type, duration)
+        self.skip_dialog.show()
+
+        self._skip_end_time = end_time
+        self._monitor_skip_dialog()
+
+    def _monitor_skip_dialog(self):
+        monitor = xbmc.Monitor()
+        while self.skip_dialog and not monitor.abortRequested():
+            if not self.skip_dialog.isActive():
+                break
+
+            if self.skip_dialog.skip_requested:
+                self.seekTime(self._skip_end_time)
+                LOG.info("User clicked skip button, seeking to %.1f", self._skip_end_time)
+                break
+
+            try:
+                current_pos = self.getTime()
+                if current_pos >= self._skip_end_time:
+                    break
+            except Exception:
+                break
+
+            if monitor.waitForAbort(0.2):
+                break
+
+        if self.skip_dialog:
+            try:
+                self.skip_dialog.close()
+            except Exception:
+                pass
+            self.skip_dialog = None

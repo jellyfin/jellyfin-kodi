@@ -1173,3 +1173,63 @@ msgctxt "#33245"
 msgid "384"
 msgstr "384"
 
+msgctxt "#33246"
+msgid "Intro Skipper"
+msgstr "Intro Skipper"
+
+msgctxt "#33247"
+msgid "Enable intro/outro skipping"
+msgstr "Enable intro/outro skipping"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Skip mode"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Auto skip"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Show skip button"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Ask every time"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Introduction"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Credits"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Recap"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Preview"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Skip"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Skip intro?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Skip credits?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Commercial"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Press SELECT to skip"
+
