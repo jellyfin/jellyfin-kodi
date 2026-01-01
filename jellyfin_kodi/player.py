@@ -125,6 +125,14 @@ class Player(xbmc.Player):
 
         self._fetch_skip_segments(item)
 
+        # Immediate skip check for segments starting at 0:00
+        if settings("introSkipEnabled.bool"):
+            try:
+                current_pos = int(self.getTime())
+                self.check_skip_segments(item, current_pos)
+            except Exception:
+                pass  # Player may not be ready yet
+
         if monitor.waitForAbort(2):
             return
 
@@ -324,6 +332,16 @@ class Player(xbmc.Player):
             self.report_playback()
             LOG.info("--[ seek ]")
 
+            # Check skip segments immediately after seek
+            if settings("introSkipEnabled.bool"):
+                try:
+                    current_file = self.get_playing_file()
+                    item = self.get_file_info(current_file)
+                    current_pos = int(self.getTime())
+                    self.check_skip_segments(item, current_pos)
+                except Exception:
+                    pass
+
     def report_playback(self, report=True):
         """Report playback progress to jellyfin server.
         Check if the user seek.
@@ -366,6 +384,10 @@ class Player(xbmc.Player):
                 self.up_next = True
                 self.next_up()
 
+            # Always check skip segments on every poll (every ~10s from service loop)
+            if settings("introSkipEnabled.bool"):
+                self.check_skip_segments(item, item["CurrentPosition"])
+
             if (item["CurrentPosition"] - previous) < 30:
 
                 return
@@ -395,6 +417,7 @@ class Player(xbmc.Player):
         }
         item["Server"].jellyfin.session_progress(data)
 
+        # Also check after full progress report (handles report=True calls)
         if settings("introSkipEnabled.bool"):
             self.check_skip_segments(item, item["CurrentPosition"])
 
