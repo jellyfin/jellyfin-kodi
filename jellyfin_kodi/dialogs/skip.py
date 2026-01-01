@@ -79,11 +79,11 @@ class SkipDialog(xbmcgui.WindowXMLDialog):
         self.setProperty('segment_type', segment_type or '')
         self.setProperty('duration', duration_text)
         
-        LOG.info("SkipDialog: set_skip_info segment=%s, label=%s", segment_type, button_label)
+        LOG.debug("SkipDialog: set_skip_info segment=%s, label=%s", segment_type, button_label)
 
     def onInit(self):
         """Initialize the dialog controls."""
-        LOG.info("SkipDialog.onInit called")
+        LOG.debug("SkipDialog.onInit called")
         
         # Try to set button label directly as well
         try:
@@ -91,14 +91,14 @@ class SkipDialog(xbmcgui.WindowXMLDialog):
             label = self.getProperty('skip_label')
             if label:
                 button.setLabel(label)
-                LOG.info("SkipDialog.onInit: set button label to '%s'", label)
+                LOG.debug("SkipDialog.onInit: set button label to '%s'", label)
         except Exception as e:
-            LOG.warning("Could not set skip button label: %s", e)
+            LOG.debug("Could not set skip button label: %s", e)
 
     def onAction(self, action):
         """Handle user actions."""
         action_id = action.getId()
-        LOG.info("SkipDialog.onAction: action_id=%s", action_id)
+        LOG.debug("SkipDialog.onAction: action_id=%s", action_id)
         
         if action_id in (ACTION_BACK, ACTION_PARENT_DIR, ACTION_PREVIOUS_MENU, ACTION_NAV_BACK):
             self.cancel_requested = True
@@ -106,14 +106,14 @@ class SkipDialog(xbmcgui.WindowXMLDialog):
 
     def onClick(self, control_id):
         """Handle control clicks."""
-        LOG.info("SkipDialog.onClick: control_id=%s", control_id)
+        LOG.debug("SkipDialog.onClick: control_id=%s", control_id)
         
         if control_id == SKIP_BUTTON:
-            LOG.info("Skip button clicked for %s", self._segment_type)
+            LOG.debug("Skip button clicked for %s", self._segment_type)
             self.skip_requested = True
             self.close()
         elif control_id == CLOSE_BUTTON:
-            LOG.info("Close button clicked")
+            LOG.debug("Close button clicked")
             self.cancel_requested = True
             self.close()
 
