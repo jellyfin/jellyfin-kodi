@@ -1,75 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Skip Intro/Credits OSD overlay button for Jellyfin -->
-<window id="3302" type="dialog">
-	<defaultcontrol always="true">3020</defaultcontrol>
+<!-- Based on service.upnext popup pattern -->
+<window>
+	<defaultcontrol always="true">3012</defaultcontrol>
+	<onload>Dialog.Close(fullscreeninfo,true)</onload>
 	<controls>
-		<!-- Semi-transparent background overlay (bottom right corner) -->
 		<control type="group">
-			<animation effect="fade" end="100" time="300">WindowOpen</animation>
-			<animation effect="fade" start="100" end="0" time="300">WindowClose</animation>
+			<!-- Slide in from right, positioned bottom-right -->
 			<animation type="WindowOpen" reversible="false">
-				<effect type="slide" start="100,0" end="0,0" time="300" tween="cubic" easing="out" />
+				<effect type="fade" start="0" end="100" time="300" />
+				<effect type="slide" start="400,0" end="0,0" time="300" tween="cubic" easing="out"/>
 			</animation>
 			<animation type="WindowClose" reversible="false">
-				<effect type="slide" start="0,0" end="100,0" time="300" tween="cubic" easing="in" />
+				<effect type="fade" start="100" end="0" time="300" />
+				<effect type="slide" start="0,0" end="400,0" time="300" tween="cubic" easing="in"/>
 			</animation>
-			<!-- Position in bottom right, above the progress bar area -->
-			<left>1480</left>
-			<top>880</top>
-			<width>400</width>
-			<height>80</height>
-			<!-- Background panel -->
-			<control type="image">
-				<left>0</left>
-				<top>0</top>
-				<width>400</width>
+			<!-- Position bottom right -->
+			<left>1420</left>
+			<top>920</top>
+			<control type="group">
+				<width>460</width>
 				<height>80</height>
-				<texture colordiffuse="E6000000">white.png</texture>
-				<aspectratio>stretch</aspectratio>
-				<bordersize>2</bordersize>
-				<bordertexture colordiffuse="FF00A4DC">white.png</bordertexture>
-			</control>
-			<!-- Jellyfin logo icon -->
-			<control type="image">
-				<left>15</left>
-				<top>20</top>
-				<width>40</width>
-				<height>40</height>
-				<texture>logo-white.png</texture>
-				<aspectratio>keep</aspectratio>
-			</control>
-			<!-- Skip button -->
-			<control type="button" id="3020">
-				<left>65</left>
-				<top>10</top>
-				<width>320</width>
-				<height>60</height>
-				<align>center</align>
-				<aligny>center</aligny>
-				<font>font13</font>
-				<textcolor>ffffffff</textcolor>
-				<focusedcolor>ff000000</focusedcolor>
-				<shadowcolor>66000000</shadowcolor>
-				<disabledcolor>FF404040</disabledcolor>
-				<texturefocus colordiffuse="FF00A4DC">white.png</texturefocus>
-				<texturenofocus colordiffuse="33ffffff">white.png</texturenofocus>
-				<label>Skip</label>
-				<onclick>close</onclick>
-				<onleft>noop</onleft>
-				<onright>noop</onright>
-				<onup>noop</onup>
-				<ondown>noop</ondown>
-			</control>
-			<!-- Countdown timer display -->
-			<control type="label" id="3021">
-				<left>0</left>
-				<top>65</top>
-				<width>400</width>
-				<height>20</height>
-				<align>center</align>
-				<font>font10</font>
-				<textcolor>99ffffff</textcolor>
-				<label></label>
+				<!-- Background -->
+				<control type="image">
+					<left>0</left>
+					<top>0</top>
+					<width>460</width>
+					<height>80</height>
+					<texture colordiffuse="E6000000">white.png</texture>
+					<aspectratio>stretch</aspectratio>
+				</control>
+				<!-- Accent bar on left -->
+				<control type="image">
+					<left>0</left>
+					<top>0</top>
+					<width>4</width>
+					<height>80</height>
+					<texture colordiffuse="FF00A4DC">white.png</texture>
+				</control>
+				<!-- Button group -->
+				<control type="group">
+					<left>15</left>
+					<top>12</top>
+					<control type="grouplist">
+						<orientation>horizontal</orientation>
+						<height>56</height>
+						<itemgap>10</itemgap>
+						<!-- Skip button -->
+						<control type="button" id="3012">
+							<label>$INFO[Window.Property(skip_label)]</label>
+							<height>56</height>
+							<width min="250">auto</width>
+							<font>font13</font>
+							<textoffsetx>20</textoffsetx>
+							<textcolor>FFFFFFFF</textcolor>
+							<focusedcolor>FF000000</focusedcolor>
+							<shadowcolor>66000000</shadowcolor>
+							<aligny>center</aligny>
+							<align>center</align>
+							<texturefocus colordiffuse="FF00A4DC">white.png</texturefocus>
+							<texturenofocus colordiffuse="33FFFFFF">white.png</texturenofocus>
+							<pulseonselect>no</pulseonselect>
+						</control>
+						<!-- Close button -->
+						<control type="button" id="3013">
+							<label>Close</label>
+							<height>56</height>
+							<width min="60">auto</width>
+							<font>font13</font>
+							<textoffsetx>15</textoffsetx>
+							<textcolor>FFFFFFFF</textcolor>
+							<focusedcolor>FF000000</focusedcolor>
+							<shadowcolor>66000000</shadowcolor>
+							<aligny>center</aligny>
+							<align>center</align>
+							<texturefocus colordiffuse="FF00A4DC">white.png</texturefocus>
+							<texturenofocus colordiffuse="33FFFFFF">white.png</texturenofocus>
+							<pulseonselect>no</pulseonselect>
+						</control>
+					</control>
+				</control>
 			</control>
 		</control>
 	</controls>

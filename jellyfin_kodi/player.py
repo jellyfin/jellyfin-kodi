@@ -117,7 +117,10 @@ class Player(xbmc.Player):
             "AudioStreamIndex": item["AudioStreamIndex"],
             "SubtitleStreamIndex": item["SubtitleStreamIndex"],
         }
-        item["Server"].jellyfin.session_playing(data)
+        try:
+            item["Server"].jellyfin.session_playing(data)
+        except Exception as e:
+            LOG.warning("Failed to report session playing: %s", e)
         window("jellyfin.skip.%s.bool" % item["Id"], True)
 
         self._fetch_skip_segments(item)
@@ -539,17 +542,25 @@ class Player(xbmc.Player):
             if not self._is_segment_enabled(segment_type):
                 continue
 
-            start = segment.get("Start", 0)
-            end = segment.get("End", 0)
-            if not start or not end or end <= start:
+            start = segment.get("Start")
+            end = segment.get("End")
+            if start is None or end is None or end <= start:
                 continue
 
-            if start <= current_position <= start + 5:
+            # Debug: log position check (using INFO to ensure visibility)
+            LOG.info("Skip check: pos=%.1f, %s start=%.1f end=%.1f, in_segment=%s",
+                     current_position, segment_type, start, end, start <= current_position <= end)
+
+            # Trigger if we're anywhere within the segment (not just the first 5 seconds)
+            if start <= current_position <= end:
                 segment_key = "%s:%s" % (item_id, segment_type)
+                LOG.info("Skip check: IN WINDOW! segment_key=%s, already_prompted=%s", 
+                         segment_key, segment_key in self.skip_prompted)
                 if segment_key in self.skip_prompted:
                     continue
 
                 self.skip_prompted.add(segment_key)
+                LOG.info("Skip check: Triggering _handle_skip_segment for %s", segment_type)
 
                 if segment_type == "Credits" and not self.up_next:
                     self.up_next = True
@@ -572,7 +583,9 @@ class Player(xbmc.Player):
         return settings(setting_key)
 
     def _handle_skip_segment(self, segment_type, start, end):
-        mode = settings("introSkipMode")
+        mode = int(settings("introSkipMode") or 1)
+        LOG.info("_handle_skip_segment: type=%s, mode=%d, start=%.1f, end=%.1f", 
+                 segment_type, mode, start, end)
 
         if mode == 0:
             self.seekTime(end)
@@ -587,43 +600,60 @@ class Player(xbmc.Player):
                 LOG.info("User skipped %s to %.1f", segment_type, end)
 
     def _show_skip_button(self, segment_type, duration, end_time):
-        from .dialogs.skip import SkipDialog
-        from .helper.utils import translate_path
+        LOG.info("_show_skip_button: type=%s, duration=%.1f, end_time=%.1f", 
+                 segment_type, duration, end_time)
+        try:
+            import xbmcaddon
+            from .dialogs.skip import SkipDialog
 
-        if self.skip_dialog:
-            try:
-                self.skip_dialog.close()
-            except Exception:
-                pass
+            if self.skip_dialog:
+                try:
+                    self.skip_dialog.close()
+                except Exception:
+                    pass
 
-        addon_path = translate_path("special://home/addons/plugin.video.jellyfin/resources/skins/")
+            addon_path = xbmcaddon.Addon("plugin.video.jellyfin").getAddonInfo("path")
+            LOG.info("_show_skip_button: addon_path=%s", addon_path)
 
-        self.skip_dialog = SkipDialog(
-            "script-jellyfin-skip.xml",
-            addon_path,
-            "default",
-            "1080i",
-        )
-        self.skip_dialog.set_skip_info(segment_type, duration)
-        self.skip_dialog.show()
+            self.skip_dialog = SkipDialog(
+                "script-jellyfin-skip.xml",
+                addon_path,
+                "default",
+                "1080i",
+            )
+            self.skip_dialog.set_skip_info(segment_type, duration)
+            LOG.info("_show_skip_button: calling show()")
+            self.skip_dialog.show()
+            LOG.info("_show_skip_button: show() completed")
 
-        self._skip_end_time = end_time
-        self._monitor_skip_dialog()
+            self._skip_end_time = end_time
+            self._monitor_skip_dialog()
+        except Exception as e:
+            LOG.error("_show_skip_button error: %s", e, exc_info=True)
 
     def _monitor_skip_dialog(self):
+        """Monitor the skip dialog and handle user input or timeout."""
+        LOG.info("_monitor_skip_dialog: starting, end_time=%.1f", self._skip_end_time)
         monitor = xbmc.Monitor()
+        
+        # Monitor loop - check for user input or end of segment
         while self.skip_dialog and not monitor.abortRequested():
-            if not self.skip_dialog.isActive():
-                break
-
-            if self.skip_dialog.skip_requested:
+            # Check if user clicked skip
+            if self.skip_dialog.is_skip():
                 self.seekTime(self._skip_end_time)
                 LOG.info("User clicked skip button, seeking to %.1f", self._skip_end_time)
                 break
+            
+            # Check if user cancelled
+            if self.skip_dialog.is_cancel():
+                LOG.info("User cancelled skip dialog")
+                break
 
+            # Check if we've passed the segment end time
             try:
                 current_pos = self.getTime()
                 if current_pos >= self._skip_end_time:
+                    LOG.info("_monitor_skip_dialog: passed end_time %.1f, closing", self._skip_end_time)
                     break
             except Exception:
                 break
@@ -631,6 +661,7 @@ class Player(xbmc.Player):
             if monitor.waitForAbort(0.2):
                 break
 
+        LOG.info("_monitor_skip_dialog: exiting loop")
         if self.skip_dialog:
             try:
                 self.skip_dialog.close()
