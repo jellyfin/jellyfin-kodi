@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-12-31 02:15+0000\n"
+"PO-Revision-Date: 2026-01-01 16:05+0000\n"
 "Last-Translator: Translation expert "
 "<apk2000@users.noreply.translate.jellyfin.org>\n"
 "Language-Team: Arabic <https://translate.jellyfin.org/projects/jellyfin/"
@@ -659,3 +659,141 @@ msgstr "اختيارات الترميز"
 msgctxt "#33116"
 msgid "Compress artwork (reduces quality)"
 msgstr "ضغط عمل فني (يقلل الجودة)"
+
+msgctxt "#33118"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgstr ""
+"قمت بتغيير وضع التشغيل. يجب إعادة تعيين Kodi لتطبيق التغيير، هل ترغب في "
+"القيام بذلك الآن؟"
+
+msgctxt "#33119"
+msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"حدث خطأ ما في أثناء المزامنة. ستتمكن من استعادة التقدم عند إعادة تشغيل Kodi. "
+"إذا استمرت المشكلة، قم من فضلك بكتابة تقرير في منتديات Jellyfin لـ Kodi، "
+"باستخدام سجلك في Kodi."
+
+msgctxt "#33120"
+msgid "Select the libraries to add"
+msgstr "حدد المكتبات لإضافتها"
+
+msgctxt "#33121"
+msgid "All"
+msgstr "الكل"
+
+msgctxt "#33122"
+msgid "Restart Kodi to resume where you left off."
+msgstr "أعد تشغيل Kodi للاستئناف من حيث توقفت."
+
+msgctxt "#33123"
+msgid "Sync library to Kodi"
+msgstr "مزامنة المكتبة مع Kodi"
+
+msgctxt "#33124"
+msgid "Include people (slow)"
+msgstr "تضمين الناس (بطيء)"
+
+msgctxt "#33125"
+msgid "Enable remote control"
+msgstr "تفعيل التّحكّم عن بعد"
+
+msgctxt "#33128"
+msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"فشل استرداد أحدث تحديثات المحتوى. لن يتم تطبيق تحديثات المحتوى حتى يتم إعادة "
+"تشغيل Kodi. إذا استمرت هذه المشكلة، يرجى أنشاء تقرير في منتديات Jellyfin لـ "
+"Kodi، باستخدام سجلك في Kodi."
+
+msgctxt "#33129"
+msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
+msgstr "يمكنك مزامنة المكتبات عن طريق تشغيل إضافات Jellyfin> إضافة مكتبات."
+
+msgctxt "#33130"
+msgid "Select the source"
+msgstr "اختر المصدر"
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "إعادة تحميل مجموعات الصناديق"
+
+msgctxt "#33132"
+msgid "Repair library"
+msgstr "إصلاح المكتبة"
+
+msgctxt "#33133"
+msgid "Remove library from Kodi"
+msgstr "إزالة المكتبة من Kodi"
+
+msgctxt "#33134"
+msgid "Add server"
+msgstr "إضافة خادم"
+
+msgctxt "#33135"
+msgid "Kodi will now restart to apply a small patch for your Kodi version."
+msgstr "ستتم إعادة تشغيل Kodi الآن لتطبيق التصحيح الخاص بإصدار Kodi."
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "تحديث المكتبة"
+
+msgctxt "#33137"
+msgid "Enable Kodi Sync Queue"
+msgstr "تفعيل Kodi Sync Queue"
+
+msgctxt "#33138"
+msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
+msgstr ""
+"يمكنك تحديث مكتبتك يدويًا بدلاً من الاعتماد على إضافات الخادم Kodi Sync Queue. "
+"شغّل الإضافة وحدّث المكتبات (أو لكل مكتبة). لإزالة المحتوى، ستحتاج إلى إصلاح "
+"المكتبة."
+
+msgctxt "#33139"
+msgid "Update libraries"
+msgstr "تحديث المكتبات"
+
+msgctxt "#33140"
+msgid "Repair libraries"
+msgstr "إصلاح المكتبات"
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "إزالة الخادم"
+
+msgctxt "#33142"
+msgid "Something went wrong. Try again later."
+msgstr "حدث خطأ ما. حاول مرة أخرى لاحقا."
+
+msgctxt "#33143"
+msgid "Enable the option to delete"
+msgstr "تفعيل خيار الحذف"
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "تتم إزالة المكتبة"
+
+msgctxt "#33145"
+msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
+msgstr ""
+"يرجى التأكد من أن مشاركة Samba (smb) لخادم Jellyfin الخاص بك يمكن الوصول "
+"إليها عن طريق تثبيت Kodi وأن لديك استبدال المسار مكوّن على الخادم الخاص بك. "
+"خلاف ذلك، قد يفشل Kodi في تحديد موقع ملفاتك."
+
+msgctxt "#33146"
+msgid "Unable to connect to Jellyfin."
+msgstr "تعذر الاتصال بـ Jellyfin."
+
+msgctxt "#33147"
+msgid "Your access to Jellyfin is restricted."
+msgstr "وصولك إلى Jellyfin مقيّد."
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "وصولك إلى هذا الخادم مقيّد."
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "تعذر الاتصال بهذا الخادم."
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "تحديث معلومات الخادم"
