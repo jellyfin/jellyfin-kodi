@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-07-28 16:45+0000\n"
-"Last-Translator: \"Troj@\" <d.iwowi.b@gmail.com>\n"
+"PO-Revision-Date: 2026-01-02 11:39+0000\n"
+"Last-Translator: Dzmitry Zubialevich <dzmitry.zubialevich@gmail.com>\n"
 "Language-Team: Belarusian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/be/>\n"
 "Language: be_by\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.11.4\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#33049"
 msgid "New"
@@ -126,7 +126,7 @@ msgstr "Максімум каналаў аўдыё"
 
 msgctxt "#30165"
 msgid "Allow burned subtitles"
-msgstr "Дазволіць захаваныя субтытры"
+msgstr "Дазволіць убудаваныя субцітры"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
@@ -142,7 +142,7 @@ msgstr "Нядаўна дададзеныя фільмы"
 
 msgctxt "#30175"
 msgid "Recently Added Episodes"
-msgstr "Нядаўна дададзеныя эпізоды"
+msgstr "Нядаўна дададзеныя серыі"
 
 msgctxt "#30177"
 msgid "In Progress Movies"
@@ -198,7 +198,7 @@ msgstr "Уключыць прывітальнае паведамленне"
 
 msgctxt "#30251"
 msgid "Recently added Home Videos"
-msgstr "Нядаўна дададзеныя хатнія відэа"
+msgstr "Нядаўна дададзеныя дамашнія відэа"
 
 msgctxt "#30252"
 msgid "Recently added Photos"
@@ -484,7 +484,7 @@ msgstr "Выберыце аўдыё паток"
 
 msgctxt "#33014"
 msgid "Choose the subtitles stream"
-msgstr "Выберыце паток субтытраў"
+msgstr "Выбраць паток субцітраў"
 
 msgctxt "#33015"
 msgid "Delete file from Jellyfin?"
@@ -673,7 +673,7 @@ msgstr "Прымяняецца толькі да дадатковага рэжы
 
 msgctxt "#33114"
 msgid "Enable external subtitles"
-msgstr "Уключыць знешнія субтытры"
+msgstr "Уключыць знешнія субцітры"
 
 msgctxt "#33115"
 msgid "Transcode options"
@@ -841,11 +841,11 @@ msgstr "Толькі аўдыё"
 
 msgctxt "#33158"
 msgid "Subtitles only"
-msgstr "Толькі субтытры"
+msgstr "Толькі субцітры"
 
 msgctxt "#33159"
 msgid "Enable audio/subtitles selection"
-msgstr "Уключыць выбар аўдыё/субтытраў"
+msgstr "Уключыць выбар аўдыя/субцітраў"
 
 msgctxt "#33163"
 msgid "Disabled/Media default"
@@ -907,7 +907,7 @@ msgstr "Забыць пра папярэднюю сінхранізацыю? Г�
 
 msgctxt "#33174"
 msgid "Paging - download threads (default: 3)"
-msgstr "Размяшчэнне па старонках - ланцужкі загрузкі (па змаўчанні: 3)"
+msgstr "Разбіццё на старонкі - патокі спампоўвання (прадвызначана: 3)"
 
 msgctxt "#33175"
 msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
@@ -1034,3 +1034,155 @@ msgstr "Лакальны шлях"
 msgctxt "#30538"
 msgid "Max days in next episodes"
 msgstr "Максімальная колькасць дзён для \"Наступных эпізодаў\""
+
+msgctxt "#33208"
+msgid "360"
+msgstr "360"
+
+msgctxt "#33209"
+msgid "480"
+msgstr "480"
+
+msgctxt "#33210"
+msgid "600"
+msgstr "600"
+
+msgctxt "#33211"
+msgid "720"
+msgstr "720"
+
+msgctxt "#33212"
+msgid "1080"
+msgstr "1080"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "Неабмежаваны [прадвызначана]"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0,5 Мбіт/с"
+
+msgctxt "#33215"
+msgid "1.0 Mbps"
+msgstr "1,0 Мбіт/с"
+
+msgctxt "#33216"
+msgid "1.5 Mbps"
+msgstr "1,5 Мбіт/с"
+
+msgctxt "#33217"
+msgid "2.0 Mbps"
+msgstr "2,0 Мбіт/с"
+
+msgctxt "#33218"
+msgid "2.5 Mbps"
+msgstr "2,5 Мбіт/с"
+
+msgctxt "#33219"
+msgid "3.0 Mbps"
+msgstr "3,0 Мбіт/с"
+
+msgctxt "#33220"
+msgid "4.0 Mbps"
+msgstr "4,0 Мбіт/с"
+
+msgctxt "#33221"
+msgid "5.0 Mbps"
+msgstr "5,0 Мбіт/с"
+
+msgctxt "#33222"
+msgid "6.0 Mbps"
+msgstr "6,0 Мбіт/с"
+
+msgctxt "#33223"
+msgid "7.0 Mbps"
+msgstr "7,0 Мбіт/с"
+
+msgctxt "#33224"
+msgid "8.0 Mbps"
+msgstr "8,0 Мбіт/с"
+
+msgctxt "#33225"
+msgid "9.0 Mbps"
+msgstr "9,0 Мбіт/с"
+
+msgctxt "#33226"
+msgid "10.0 Mbps"
+msgstr "10,0 Мбіт/с"
+
+msgctxt "#33227"
+msgid "12.0 Mbps"
+msgstr "12,0 Мбіт/с"
+
+msgctxt "#33228"
+msgid "14.0 Mbps"
+msgstr "14,0 Мбіт/с"
+
+msgctxt "#33229"
+msgid "16.0 Mbps"
+msgstr "16,0 Мбіт/с"
+
+msgctxt "#33230"
+msgid "18.0 Mbps"
+msgstr "18,0 Мбіт/с"
+
+msgctxt "#33231"
+msgid "20.0 Mbps"
+msgstr "20,0 Мбіт/с"
+
+msgctxt "#33232"
+msgid "25.0 Mbps"
+msgstr "25,0 Мбіт/с"
+
+msgctxt "#33233"
+msgid "30.0 Mbps"
+msgstr "30,0 Мбіт/с"
+
+msgctxt "#33234"
+msgid "35.0 Mbps"
+msgstr "35,0 Мбіт/с"
+
+msgctxt "#33235"
+msgid "40.0 Mbps"
+msgstr "40,0 Мбіт/с"
+
+msgctxt "#33236"
+msgid "100.0 Mbps"
+msgstr "100,0 Мбіт/с"
+
+msgctxt "#33237"
+msgid "1000.0 Mbps [default]"
+msgstr "1000,0 Мбіт/с [прадвызначана]"
+
+msgctxt "#33238"
+msgid "Maximum"
+msgstr "Максімум"
+
+msgctxt "#33239"
+msgid "96"
+msgstr "96"
+
+msgctxt "#33240"
+msgid "128"
+msgstr "128"
+
+msgctxt "#33241"
+msgid "160"
+msgstr "160"
+
+msgctxt "#33242"
+msgid "192"
+msgstr "192"
+
+msgctxt "#33243"
+msgid "256"
+msgstr "256"
+
+msgctxt "#33244"
+msgid "320"
+msgstr "320"
+
+msgctxt "#33245"
+msgid "384"
+msgstr "384"
