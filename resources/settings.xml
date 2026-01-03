@@ -547,6 +547,18 @@
 		</category>
 		<category id="plugin" label="33109" help="">
 			<group id="1">
+				<setting id="maxDaysInNextEpisodes" type="integer" label="30538" help="">
+					<level>0</level>
+					<default>366</default>
+					<constraints>
+						<minimum>0</minimum>
+						<maximum>732</maximum>
+						<step>1</step>
+					</constraints>
+					<control type="slider" format="integer">
+						<formatlabel>30538</formatlabel>
+					</control>
+				</setting>
 				<setting id="ignoreSpecialsNextEpisodes" type="boolean" label="30527" help="">
 					<level>0</level>
 					<default>false</default>
