@@ -507,3 +507,17 @@ class API(object):
         """
         response = self.send_request(server_address, "system/info/public")
         return response.url.replace("/system/info/public", "")
+
+    def get_media_segments(self, item_id):
+        """Get media segments for an item (Jellyfin 10.10+)."""
+        try:
+            return self._get("MediaSegments/%s" % item_id)
+        except HTTPException as e:
+            if e.status == 404:
+                LOG.debug("Media Segments not available for %s", item_id)
+            else:
+                LOG.warning("Error fetching media segments: %s", e)
+            return None
+        except Exception as e:
+            LOG.warning("Error fetching media segments: %s", e)
+            return None
