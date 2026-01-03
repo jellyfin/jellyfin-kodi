@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-01-01 16:05+0000\n"
+"PO-Revision-Date: 2026-01-03 04:41+0000\n"
 "Last-Translator: Translation expert "
 "<apk2000@users.noreply.translate.jellyfin.org>\n"
 "Language-Team: Arabic <https://translate.jellyfin.org/projects/jellyfin/"
@@ -797,3 +797,373 @@ msgstr "تعذر الاتصال بهذا الخادم."
 msgctxt "#33150"
 msgid "Update server information"
 msgstr "تحديث معلومات الخادم"
+
+msgctxt "#33151"
+msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
+msgstr ""
+"أعادة الاتصال بنفس الخادم الذي تم تحميله مسبقًا. إذا كنت تريد استخدام خادم "
+"مختلف، فأعد تعيين قاعدة البيانات المحلية، بما في ذلك معلومات المستخدم الخاصة "
+"بك."
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "تعذر تحديد مكان مولف التلفاز في Kodi."
+
+msgctxt "#33153"
+msgid "Your Jellyfin theme media has been synced to Kodi"
+msgstr "تمت مزامنة سمة الوسائط في Jellyfin مع Kodi"
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "أضف مكتبات"
+
+msgctxt "#33155"
+msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
+msgstr ""
+"التصحيح المطبق حاليًا لـ Jellyfin لـ Kodi تالف! يرجى النشر في منتديات "
+"Jellyfin لـ Kodi إذا استمرت هذه المشكلة. سيحتاج هذا إلى الإصلاح في أقرب وقت "
+"ممكن."
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "تم تطبيق التصحيح!"
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "صوت فقط"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "ترجمات فقط"
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "تمكين اختيار الصوت /الترجمات"
+
+msgctxt "#33163"
+msgid "Disabled/Media default"
+msgstr "تعطل/ الوسائط الافتراضية"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr "لتجنب الأخطاء ، يرجى تحديث Jellyfin لـ Kodi إلى الإصدار: "
+
+msgctxt "#33161"
+msgid "Update password"
+msgstr "تحديث كلمة المرور"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "إعادة ضبط مكتبة الموسيقى؟"
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr "إخفاء المعلومات الحساسة في السجل (لا ينطبق على تسجيل Kodi)"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "فشل إنشاء نسخة احتياطية"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "(متغير)"
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "مضاف مؤخرا"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "المفضلات"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "قيد التقدم"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "لم يشاهد"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "بالحرف الأول"
+
+msgctxt "#33172"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
+msgstr ""
+"لديك عدد {number} تحديثات معلقة. قد يستغرق بعض الوقت قبل مشاهدة محتوى جديد. "
+"قد يكون تحديث مكتباتك بتشغيل إضافات Jellyfin> تحديث المكتبات. متابعة على أي "
+"حال؟"
+
+msgctxt "#33244"
+msgid "320"
+msgstr "320"
+
+msgctxt "#33243"
+msgid "256"
+msgstr "256"
+
+msgctxt "#33242"
+msgid "192"
+msgstr "192"
+
+msgctxt "#33241"
+msgid "160"
+msgstr "160"
+
+msgctxt "#33240"
+msgid "128"
+msgstr "128"
+
+msgctxt "#33239"
+msgid "96"
+msgstr "96"
+
+msgctxt "#33238"
+msgid "Maximum"
+msgstr "أقصى"
+
+msgctxt "#33237"
+msgid "1000.0 Mbps [default]"
+msgstr "1000.0 م ب ث [افتراضي]"
+
+msgctxt "#33236"
+msgid "100.0 Mbps"
+msgstr "100.0 م ب ث"
+
+msgctxt "#33235"
+msgid "40.0 Mbps"
+msgstr "40.0 م ب ث"
+
+msgctxt "#33234"
+msgid "35.0 Mbps"
+msgstr "35.0 م ب ث"
+
+msgctxt "#33233"
+msgid "30.0 Mbps"
+msgstr "30.0 م ب ث"
+
+msgctxt "#33232"
+msgid "25.0 Mbps"
+msgstr "25.0 م ب ث"
+
+msgctxt "#33231"
+msgid "20.0 Mbps"
+msgstr "20.0 م ب ث"
+
+msgctxt "#33230"
+msgid "18.0 Mbps"
+msgstr "18.0 م ب ث"
+
+msgctxt "#33229"
+msgid "16.0 Mbps"
+msgstr "16.0 م ب ث"
+
+msgctxt "#33228"
+msgid "14.0 Mbps"
+msgstr "14.0 م ب ث"
+
+msgctxt "#33227"
+msgid "12.0 Mbps"
+msgstr "12.0 م ب ث"
+
+msgctxt "#33226"
+msgid "10.0 Mbps"
+msgstr "10.0 م ب ث"
+
+msgctxt "#33225"
+msgid "9.0 Mbps"
+msgstr "9.0 م ب ث"
+
+msgctxt "#33224"
+msgid "8.0 Mbps"
+msgstr "8.0 م ب ث"
+
+msgctxt "#33223"
+msgid "7.0 Mbps"
+msgstr "7.0 م ب ث"
+
+msgctxt "#33222"
+msgid "6.0 Mbps"
+msgstr "6.0 م ب ث"
+
+msgctxt "#33221"
+msgid "5.0 Mbps"
+msgstr "5.0 م ب ث"
+
+msgctxt "#33220"
+msgid "4.0 Mbps"
+msgstr "4.0 م ب ث"
+
+msgctxt "#33219"
+msgid "3.0 Mbps"
+msgstr "3.0 م ب ث"
+
+msgctxt "#33218"
+msgid "2.5 Mbps"
+msgstr "2.5 م ب ث"
+
+msgctxt "#33217"
+msgid "2.0 Mbps"
+msgstr "2.0 م ب ث"
+
+msgctxt "#33216"
+msgid "1.5 Mbps"
+msgstr "1.5 م ب ث"
+
+msgctxt "#33215"
+msgid "1.0 Mbps"
+msgstr "1.0 م ب ث"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0.5 م ب ث"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "غير محدود [افتراضي]"
+
+msgctxt "#33212"
+msgid "1080"
+msgstr "1080"
+
+msgctxt "#33211"
+msgid "720"
+msgstr "720"
+
+msgctxt "#33210"
+msgid "600"
+msgstr "600"
+
+msgctxt "#33209"
+msgid "480"
+msgstr "480"
+
+msgctxt "#33208"
+msgid "360"
+msgstr "360"
+
+msgctxt "#33207"
+msgid "Local Path"
+msgstr "مسار محلي"
+
+msgctxt "#33206"
+msgid "Remote Path"
+msgstr "مسار عن بٌعد"
+
+msgctxt "#33205"
+msgid "New Path Replacement"
+msgstr "بديل مسار جديد"
+
+msgctxt "#33204"
+msgid "Finish"
+msgstr "انتهاء"
+
+msgctxt "#33203"
+msgid "Manage path replacements"
+msgstr "إدارة استبدالات المسار"
+
+msgctxt "#33202"
+msgid "Transcode H265/HEVC RExt"
+msgstr "ترميز H265 / HEVC RExt"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "أقصى دقة للعمل الفني"
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "حدد المكتبات المراد إزالتها"
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "النسيان عن المزامنة السابقة؟هذا غير محبذ."
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "اختيار المكتبات لإصلاحها"
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "اختيار المكتبات لتحديثها"
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr ""
+"المزامنة قيد التشغيل بالفعل ، يرجى الانتظار حتى تكتمل والمحاولة مرة أخرى."
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr "خيارات متقدمة"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "تمكين Jellyfin لـ Kodi"
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "إدارة المكتبات"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "إعادة التشغيل …"
+
+msgctxt "#33191"
+msgid "Restart Jellyfin for Kodi to apply this change?"
+msgstr "إعادة تشغيل Jellyfin لـ Kodi لتطبيق هذا التغيير؟"
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr "تمكين المزامنة أثناء التشغيل (قد يسبب بعض التأخر)"
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr ""
+"رتل مزامنة Kodi يسرّع البدء بالمزامنة.عمليات المزامنة الأخرى تنطلق بواسطة "
+"أحداث الخادم."
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "إزالة المكتبات"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "تمكين خيار التشغيل في وضع السينما"
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "التشغيل في وضع السينما"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "يتم إعادة تشغيل لتطبيق التصحيح"
+
+msgctxt "#33180"
+msgid "Restart Jellyfin for Kodi"
+msgstr "أعادة تشغيل Jellyfin لـ Kodi"
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "فرض الترميز"
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr "التحديثات قيد المعالجة"
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr "اعرض شريط التقدم إذا كان عدد التحديثات أكبر من"
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr "تحديث أو إصلاح مكتباتك لتطبيق التغييرات أدناه."
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr ""
+"نصيحة الترحيل: كل مؤشر ترابط يطلب قيمة عناصرك القصوى من Jellyfin في نفس "
+"الوقت."
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "الترحيل - تنزيل المواضيع (افتراضي: 3)"
