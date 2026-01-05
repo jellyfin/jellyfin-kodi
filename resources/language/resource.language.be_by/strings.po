@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-01-02 11:39+0000\n"
+"PO-Revision-Date: 2026-01-05 13:51+0000\n"
 "Last-Translator: Dzmitry Zubialevich <dzmitry.zubialevich@gmail.com>\n"
 "Language-Team: Belarusian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/be/>\n"
@@ -94,7 +94,7 @@ msgstr "Прапанаваць выдаліць пасля прайграван�
 
 msgctxt "#30115"
 msgid "For Episodes"
-msgstr "Для эпізодаў"
+msgstr "Для серый"
 
 msgctxt "#30116"
 msgid "For Movies"
@@ -150,11 +150,11 @@ msgstr "Фільмы ў працэсе"
 
 msgctxt "#30178"
 msgid "In Progress Episodes"
-msgstr "Эпізоды ў працэсе"
+msgstr "Серыі ў працэсе прагляду"
 
 msgctxt "#30179"
 msgid "Next Episodes"
-msgstr "Наступныя эпізоды"
+msgstr "Наступныя серыі"
 
 msgctxt "#30180"
 msgid "Favorite Movies"
@@ -348,7 +348,7 @@ msgstr "Перакадзіраваць AV1"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
-msgstr "Ігнараваць спецыяльныя эпізоды ў наступных серыях"
+msgstr "Ігнараваць спецыяльныя выпускі ў наступных серыях"
 
 msgctxt "#30528"
 msgid "Permanent users"
@@ -599,7 +599,7 @@ msgstr "Стварыце рэзервовую копію"
 
 msgctxt "#33093"
 msgid "Backup folder"
-msgstr "Рэзервовая тэчка"
+msgstr "Папка для рэзервовага капіявання"
 
 msgctxt "#33097"
 msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
@@ -1033,7 +1033,7 @@ msgstr "Лакальны шлях"
 
 msgctxt "#30538"
 msgid "Max days in next episodes"
-msgstr "Максімальная колькасць дзён для \"Наступных эпізодаў\""
+msgstr "Максімальная колькасць дзён у раздзеле \"Наступная серыя\""
 
 msgctxt "#33208"
 msgid "360"
