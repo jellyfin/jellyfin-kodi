@@ -86,7 +86,7 @@ class Kodi(object):
     def remove_path(self, *args):
         self.cursor.execute(QU.delete_path, args)
 
-    def add_file(self, filename, path_id):
+    def add_file(self, path_id, filename):
 
         try:
             self.cursor.execute(
