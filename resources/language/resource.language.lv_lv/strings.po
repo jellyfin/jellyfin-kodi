@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-01-14 11:45+0000\n"
+"PO-Revision-Date: 2026-01-14 11:46+0000\n"
 "Last-Translator: Berto <jurgisbums@gmail.com>\n"
 "Language-Team: Latvian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lv/>\n"
@@ -1149,3 +1149,23 @@ msgstr "40.0 Mbps"
 msgctxt "#33236"
 msgid "100.0 Mbps"
 msgstr "100.0 Mbps"
+
+msgctxt "#33237"
+msgid "1000.0 Mbps [default]"
+msgstr "1000.0 Mbps [noklusējuma]"
+
+msgctxt "#33238"
+msgid "Maximum"
+msgstr "maksimums"
+
+msgctxt "#33239"
+msgid "96"
+msgstr "96"
+
+msgctxt "#33240"
+msgid "128"
+msgstr "128"
+
+msgctxt "#33241"
+msgid "160"
+msgstr "160"
