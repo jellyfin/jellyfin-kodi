@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-01-14 11:46+0000\n"
+"PO-Revision-Date: 2026-01-14 11:49+0000\n"
 "Last-Translator: Berto <jurgisbums@gmail.com>\n"
 "Language-Team: Latvian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lv/>\n"
@@ -1169,3 +1169,19 @@ msgstr "128"
 msgctxt "#33241"
 msgid "160"
 msgstr "160"
+
+msgctxt "#33242"
+msgid "192"
+msgstr "192"
+
+msgctxt "#33243"
+msgid "256"
+msgstr "256"
+
+msgctxt "#33244"
+msgid "320"
+msgstr "320"
+
+msgctxt "#33245"
+msgid "384"
+msgstr "384"
