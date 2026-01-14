@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-01-03 18:29+0000\n"
-"Last-Translator: Andris Steins <andris.steins@gmail.com>\n"
+"PO-Revision-Date: 2026-01-14 11:45+0000\n"
+"Last-Translator: Berto <jurgisbums@gmail.com>\n"
 "Language-Team: Latvian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lv/>\n"
 "Language: lv_lv\n"
@@ -1113,3 +1113,39 @@ msgstr "20.0 Mbps"
 msgctxt "#33232"
 msgid "25.0 Mbps"
 msgstr "25.0 Mbps"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "bezgalīgi"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0.5 Mbps"
+
+msgctxt "#33215"
+msgid "1.0 Mbps"
+msgstr "1.0 Mbps"
+
+msgctxt "#33216"
+msgid "1.5 Mbps"
+msgstr "1.5 Mbps"
+
+msgctxt "#33217"
+msgid "2.0 Mbps"
+msgstr "2.0 Mbps"
+
+msgctxt "#33233"
+msgid "30.0 Mbps"
+msgstr "30.0 Mbps"
+
+msgctxt "#33234"
+msgid "35.0 Mbps"
+msgstr "35.0 Mbps"
+
+msgctxt "#33235"
+msgid "40.0 Mbps"
+msgstr "40.0 Mbps"
+
+msgctxt "#33236"
+msgid "100.0 Mbps"
+msgstr "100.0 Mbps"
