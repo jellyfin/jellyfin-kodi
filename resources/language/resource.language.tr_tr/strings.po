@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-01-25 10:04+0000\n"
+"PO-Revision-Date: 2026-01-25 12:33+0000\n"
 "Last-Translator: queeup <queeup@zoho.com>\n"
 "Language-Team: Turkish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/tr/>\n"
@@ -361,7 +361,7 @@ msgstr "Daimi kullanıcılar"
 
 msgctxt "#30185"
 msgid "Boxsets"
-msgstr "Kutu setleri"
+msgstr "Film serileri"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
@@ -449,7 +449,7 @@ msgstr "Ağ kimlik bilgileri"
 
 msgctxt "#33131"
 msgid "Refreshing boxsets"
-msgstr "Kutu setleri yenileniyor"
+msgstr "Film serileri yenileniyor"
 
 msgctxt "#33104"
 msgid "Find more info in the github wiki/Create-and-restore-from-backup."
@@ -458,11 +458,11 @@ msgstr ""
 
 msgctxt "#33098"
 msgid "Refresh boxsets"
-msgstr "Kutu setlerini yenile"
+msgstr "Film serilerini yenile"
 
 msgctxt "#33018"
 msgid "Gathering boxsets"
-msgstr "Kutu setleri alınıyor"
+msgstr "Film serileri alınıyor"
 
 msgctxt "#33132"
 msgid "Repair library"
@@ -684,11 +684,11 @@ msgstr "El ile sunucu ekle"
 
 msgctxt "#30533"
 msgid "Duration of the music library pop up"
-msgstr "Müzik kitaplığının op up süresi"
+msgstr "Müzik kitaplığının açılır pencere süresi"
 
 msgctxt "#30532"
 msgid "Duration of the video library pop up"
-msgstr "Video kitaplığının pop up süresi"
+msgstr "Video kitaplığının açılır pencere süresi"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
