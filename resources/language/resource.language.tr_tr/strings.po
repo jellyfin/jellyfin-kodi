@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-01-25 00:25+0000\n"
+"PO-Revision-Date: 2026-01-25 10:04+0000\n"
 "Last-Translator: queeup <queeup@zoho.com>\n"
 "Language-Team: Turkish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/tr/>\n"
@@ -21,7 +21,7 @@ msgstr "Tümü"
 
 msgctxt "#33114"
 msgid "Enable external subtitles"
-msgstr "Harici alt yazıları aktif et"
+msgstr "Harici altyazıları etkinleştir"
 
 msgctxt "#33110"
 msgid "Restart Kodi to take effect."
@@ -664,7 +664,7 @@ msgstr "Jellyfin'den dosya silinsin mi?"
 
 msgctxt "#33014"
 msgid "Choose the subtitles stream"
-msgstr "Alt yazı akışını seçin"
+msgstr "Altyazı akışını seçin"
 
 msgctxt "#33013"
 msgid "Choose the audio stream"
@@ -860,11 +860,11 @@ msgstr ""
 
 msgctxt "#33159"
 msgid "Enable audio/subtitles selection"
-msgstr "Ses / alt yazı seçimini etkinleştir"
+msgstr "Ses / altyazı seçimini etkinleştir"
 
 msgctxt "#33158"
 msgid "Subtitles only"
-msgstr "Yalnızca alt yazılar"
+msgstr "Yalnızca altyazılar"
 
 msgctxt "#33157"
 msgid "Audio only"
