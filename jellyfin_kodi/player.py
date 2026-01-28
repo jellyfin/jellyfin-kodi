@@ -20,6 +20,8 @@ LOG = LazyLogger(__name__)
 
 #################################################################################################
 
+SETTING_INTRO_SKIP_ENABLED = "introSkipEnabled.bool"
+
 
 class Player(xbmc.Player):
 
@@ -126,7 +128,7 @@ class Player(xbmc.Player):
         self._fetch_skip_segments(item)
 
         # Immediate skip check for segments starting at 0:00
-        if settings("introSkipEnabled.bool"):
+        if settings(SETTING_INTRO_SKIP_ENABLED):
             try:
                 current_pos = int(self.getTime())
                 self.check_skip_segments(item, current_pos)
@@ -333,7 +335,7 @@ class Player(xbmc.Player):
             LOG.info("--[ seek ]")
 
             # Check skip segments immediately after seek
-            if settings("introSkipEnabled.bool"):
+            if settings(SETTING_INTRO_SKIP_ENABLED):
                 try:
                     current_file = self.get_playing_file()
                     item = self.get_file_info(current_file)
@@ -341,6 +343,37 @@ class Player(xbmc.Player):
                     self.check_skip_segments(item, current_pos)
                 except Exception:
                     pass
+
+    def _should_skip_full_report(self, item):
+        """Check position and handle skip segments. Returns True if full report should be skipped."""
+        previous = item["CurrentPosition"]
+
+        try:
+            item["CurrentPosition"] = int(self.getTime())
+        except Exception as e:
+            LOG.debug("Failed to get playback position: %s", e)
+            return None  # Signal to return from caller
+
+        if int(item["CurrentPosition"]) == 1:
+            return None  # Signal to return from caller
+
+        try:
+            played = (
+                float(item["CurrentPosition"] * 10000000)
+                / int(item["Runtime"])
+                * 100
+            )
+        except ZeroDivisionError:
+            played = 0
+
+        if played > 2.0 and not self.up_next:
+            self.up_next = True
+            self.next_up()
+
+        if settings(SETTING_INTRO_SKIP_ENABLED):
+            self.check_skip_segments(item, item["CurrentPosition"])
+
+        return (item["CurrentPosition"] - previous) < 30
 
     def report_playback(self, report=True):
         """Report playback progress to jellyfin server.
@@ -357,39 +390,8 @@ class Player(xbmc.Player):
             return
 
         if not report:
-
-            previous = item["CurrentPosition"]
-
-            try:
-                item["CurrentPosition"] = int(self.getTime())
-            except Exception as e:
-                # getTime() raises RuntimeError if nothing is playing
-                LOG.debug("Failed to get playback position: %s", e)
-                return
-
-            if int(item["CurrentPosition"]) == 1:
-                return
-
-            try:
-                played = (
-                    float(item["CurrentPosition"] * 10000000)
-                    / int(item["Runtime"])
-                    * 100
-                )
-            except ZeroDivisionError:  # Runtime is 0.
-                played = 0
-
-            if played > 2.0 and not self.up_next:
-
-                self.up_next = True
-                self.next_up()
-
-            # Always check skip segments on every poll (every ~10s from service loop)
-            if settings("introSkipEnabled.bool"):
-                self.check_skip_segments(item, item["CurrentPosition"])
-
-            if (item["CurrentPosition"] - previous) < 30:
-
+            skip_result = self._should_skip_full_report(item)
+            if skip_result is None or skip_result:
                 return
 
         result = JSONRPC("Application.GetProperties").execute(
@@ -417,8 +419,7 @@ class Player(xbmc.Player):
         }
         item["Server"].jellyfin.session_progress(data)
 
-        # Also check after full progress report (handles report=True calls)
-        if settings("introSkipEnabled.bool"):
+        if settings(SETTING_INTRO_SKIP_ENABLED):
             self.check_skip_segments(item, item["CurrentPosition"])
 
     def onPlayBackStopped(self):
@@ -508,7 +509,7 @@ class Player(xbmc.Player):
         self.played.clear()
 
     def _fetch_skip_segments(self, item):
-        if not settings("introSkipEnabled.bool"):
+        if not settings(SETTING_INTRO_SKIP_ENABLED):
             return
 
         item_id = item["Id"]
@@ -553,6 +554,35 @@ class Player(xbmc.Player):
                 }
         return segments if segments else None
 
+    def _process_segment(self, item_id, segment_type, segment, current_position):
+        """Process a single segment and return True if skip was triggered."""
+        start = segment.get("Start")
+        end = segment.get("End")
+        if start is None or end is None or end <= start:
+            return False
+
+        LOG.debug("Skip check: pos=%.1f, %s start=%.1f end=%.1f, in_segment=%s",
+                 current_position, segment_type, start, end, start <= current_position <= end)
+
+        if not (start <= current_position <= end):
+            return False
+
+        segment_key = "%s:%s" % (item_id, segment_type)
+        LOG.debug("Skip check: IN WINDOW! segment_key=%s, already_prompted=%s",
+                 segment_key, segment_key in self.skip_prompted)
+        if segment_key in self.skip_prompted:
+            return False
+
+        self.skip_prompted.add(segment_key)
+        LOG.debug("Skip check: Triggering _handle_skip_segment for %s", segment_type)
+
+        if segment_type == "Credits" and not self.up_next:
+            self.up_next = True
+            self.next_up()
+
+        self._handle_skip_segment(segment_type, start, end)
+        return True
+
     def check_skip_segments(self, item, current_position):
         item_id = item["Id"]
         segments = self.skip_segments.get(item_id)
@@ -563,31 +593,7 @@ class Player(xbmc.Player):
             if not self._is_segment_enabled(segment_type):
                 continue
 
-            start = segment.get("Start")
-            end = segment.get("End")
-            if start is None or end is None or end <= start:
-                continue
-
-            # Debug: log position check
-            LOG.debug("Skip check: pos=%.1f, %s start=%.1f end=%.1f, in_segment=%s",
-                     current_position, segment_type, start, end, start <= current_position <= end)
-
-            # Trigger if we're anywhere within the segment (not just the first 5 seconds)
-            if start <= current_position <= end:
-                segment_key = "%s:%s" % (item_id, segment_type)
-                LOG.debug("Skip check: IN WINDOW! segment_key=%s, already_prompted=%s", 
-                         segment_key, segment_key in self.skip_prompted)
-                if segment_key in self.skip_prompted:
-                    continue
-
-                self.skip_prompted.add(segment_key)
-                LOG.debug("Skip check: Triggering _handle_skip_segment for %s", segment_type)
-
-                if segment_type == "Credits" and not self.up_next:
-                    self.up_next = True
-                    self.next_up()
-
-                self._handle_skip_segment(segment_type, start, end)
+            if self._process_segment(item_id, segment_type, segment, current_position):
                 break
 
     def _is_segment_enabled(self, segment_type):

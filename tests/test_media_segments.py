@@ -44,10 +44,10 @@ class TestMediaSegmentsConversion:
 
         assert "Introduction" in segments
         assert "Credits" in segments
-        assert segments["Introduction"]["Start"] == 42.5
-        assert segments["Introduction"]["End"] == 122.0
-        assert segments["Credits"]["Start"] == 2458.0
-        assert segments["Credits"]["End"] == 2520.0
+        assert segments["Introduction"]["Start"] == pytest.approx(42.5)
+        assert segments["Introduction"]["End"] == pytest.approx(122.0)
+        assert segments["Credits"]["Start"] == pytest.approx(2458.0)
+        assert segments["Credits"]["End"] == pytest.approx(2520.0)
 
     def test_convert_empty_media_segments(self):
         response = {"Items": []}
