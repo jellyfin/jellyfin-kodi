@@ -416,7 +416,7 @@ add_video_version_obj = [
     "{MovieId}",
     "movie",
     "{VideoVersionItemType}",
-    40400,
+    "{VideoVersionTypeId}",
 ]
 get_videoversion_itemtype = """
 SELECT itemType FROM videoversiontype WHERE id = ?
@@ -424,6 +424,15 @@ SELECT itemType FROM videoversiontype WHERE id = ?
 get_videoversion_itemtype_obj = ["{VideoVersionId}"]
 check_video_version = """
 SELECT COUNT(name) FROM sqlite_master WHERE type='table' AND name='videoversion'
+"""
+get_video_version_type = """
+SELECT id FROM videoversiontype WHERE name = ?
+"""
+add_video_version_type = """
+INSERT INTO videoversiontype(name, owner, itemType) VALUES (?, ?, ?)
+"""
+get_max_video_version_type = """
+SELECT MAX(id) FROM videoversiontype
 """
 add_musicvideo = """
 INSERT INTO     musicvideo(idMVideo, idFile, c00, c04, c05, c06, c07, c08, c09, c10,

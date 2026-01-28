@@ -127,6 +127,7 @@ class Movies(KodiDb):
             tags.append("Favorite movies")
 
         obj["Tags"] = tags
+        obj["media_sources"] = item.get("MediaSources")
 
         if update:
             self.movie_update(obj)
@@ -143,8 +144,26 @@ class Movies(KodiDb):
         self.add_streams(*values(obj, QU.add_streams_obj))
         self.artwork.add(obj["Artwork"], obj["MovieId"], "movie")
         self.item_ids.append(obj["Id"])
+        self.add_versions(API, obj)
 
         return not update
+
+    def add_versions(self, API, obj):
+        """Add all additional media sources as Kodi versions."""
+        for source in obj["media_sources"][1:]:
+            version = dict(obj)
+            version["Path"] = API.get_file_path(source["Path"])
+            self.get_path_filename(version)
+
+            # Find the correct version name for this source
+            version_name = source.get("Name")
+            version_type_id = self.get_or_create_videoversiontype(version_name, version["Filename"])
+            version["VideoVersionTypeId"] = version_type_id
+            version["VideoVersionItemType"] = self.itemtype
+
+            # Add the version file and version type
+            version["FileId"] = self.add_file(*values(version, QU.add_file_obj))
+            self.add_videoversion(*values(version, QU.add_video_version_obj))
 
     def movie_add(self, obj):
         """Add object to kodi."""
@@ -157,6 +176,10 @@ class Movies(KodiDb):
         obj["PathId"] = self.add_path(*values(obj, QU.add_path_obj))
         obj["FileId"] = self.add_file(*values(obj, QU.add_file_obj))
         obj["VideoVersionItemType"] = self.itemtype
+
+        version_name = obj["media_sources"][0].get("Name")
+        version_type_id = self.get_or_create_videoversiontype(version_name, obj["Filename"])
+        obj["VideoVersionTypeId"] = version_type_id
 
         self.add(*values(obj, QU.add_movie_obj))
         self.add_videoversion(*values(obj, QU.add_video_version_obj))

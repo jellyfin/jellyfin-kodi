@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
 
+import os
+import re
 from sqlite3 import DatabaseError
 
 ##################################################################################################
@@ -62,6 +64,42 @@ class Movies(Kodi):
         self.cursor.execute(QU.check_video_version)
         if self.cursor.fetchone()[0] == 1:
             self.cursor.execute(QU.add_video_version, args)
+
+    def get_or_create_videoversiontype(self, name, filepath):
+        """Retrieve or create a video version type based on the Jellyfin version name or filename."""
+        # Get the filename without extension
+        filename = os.path.splitext(os.path.basename(filepath))[0]
+
+        # Remove Jellyfin-added suffixes--may need to add others
+        test_name = re.sub(r"/(3D|DVD|Bluray)$", "", name)
+
+        # If the Jellyfin version name matches the filename completely, a good version name
+        # wasn't created automatically, so extract it, or set to Standard Edition
+        if test_name == filename:
+            # Check for ' - XXXX' at end of the name to use for version name
+            match = re.search(r" - (.+)$", name)
+            if match:
+                name = match.group(1).strip()
+            else:
+                name = None
+
+        # Set Standard Edition for empty names or DVD/Bluray folders
+        if not name or filename.lower() in ("index", "video_ts"):
+            return 40400
+
+        # Remove */3D suffixes that Jellyfin adds (ie '.mvc/3D') as long as 3D in the name already
+        if '3D' in name[:-2]:
+            name = re.sub(r'\.\w{3,4}/3D$', '', name)
+
+        # Check if this version type already exists and return it
+        self.cursor.execute(QU.get_video_version_type, (name,))
+        row = self.cursor.fetchone()
+        if row:
+            return row[0]
+
+        # Create a new version type and return the id
+        self.cursor.execute(QU.add_video_version_type, (name, 0, self.itemtype))
+        return self.cursor.lastrowid
 
     def update(self, *args):
         self.cursor.execute(QU.update_movie, args)
