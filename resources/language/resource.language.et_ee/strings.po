@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-10-18 11:54+0000\n"
+"PO-Revision-Date: 2026-01-22 11:35+0000\n"
 "Last-Translator: rimasx <riks_12@hot.ee>\n"
 "Language-Team: Estonian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/et/>\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.11.4\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#33186"
 msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
@@ -523,7 +523,7 @@ msgstr "Filmikogumike rühmitamine"
 
 msgctxt "#33021"
 msgid "Gathering:"
-msgstr "Korjamine:"
+msgstr "Kogumine:"
 
 msgctxt "#33016"
 msgid "Play trailers?"
@@ -563,7 +563,7 @@ msgstr "Ühendu"
 
 msgctxt "#30615"
 msgid "Host"
-msgstr "Peremeesmasin"
+msgstr "Server"
 
 msgctxt "#30614"
 msgid "Connect to server"
@@ -791,7 +791,7 @@ msgstr "Vaatamata muusikavideod"
 
 msgctxt "#30257"
 msgid "In progress Music videos"
-msgstr "Käsilolevad muusikavideod"
+msgstr "Pooleli muusikavideod"
 
 msgctxt "#30255"
 msgid "Favourite Albums"
@@ -851,15 +851,15 @@ msgstr "Järgmised episoodid"
 
 msgctxt "#30178"
 msgid "In Progress Episodes"
-msgstr "Käsilolevad episoodid"
+msgstr "Pooleli episoodid"
 
 msgctxt "#30177"
 msgid "In Progress Movies"
-msgstr "Käsilolevad filmid"
+msgstr "Pooleli filmid"
 
 msgctxt "#30171"
 msgid "In Progress TV Shows"
-msgstr "Käsilolevad sarjad"
+msgstr "Pooleli sarjad"
 
 msgctxt "#30165"
 msgid "Allow burned subtitles"
@@ -927,7 +927,7 @@ msgstr "Sisselogimise meetod"
 
 msgctxt "#30002"
 msgid "Force HTTP playback"
-msgstr "Sunnitud HTTP taasesitus"
+msgstr "Sunni HTTP taasesitus"
 
 msgctxt "#30001"
 msgid "Server name"

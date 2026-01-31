@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-09-21 10:45+0000\n"
+"PO-Revision-Date: 2026-01-25 12:33+0000\n"
 "Last-Translator: queeup <queeup@zoho.com>\n"
 "Language-Team: Turkish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/tr/>\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.11.4\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#33120"
 msgid "Select the libraries to add"
@@ -21,7 +21,7 @@ msgstr "Tümü"
 
 msgctxt "#33114"
 msgid "Enable external subtitles"
-msgstr "Harici alt yazıları aktif et"
+msgstr "Harici altyazıları etkinleştir"
 
 msgctxt "#33110"
 msgid "Restart Kodi to take effect."
@@ -133,7 +133,7 @@ msgstr "Bağlantıyı doğrula"
 
 msgctxt "#30412"
 msgid "Transcode"
-msgstr "kod dönüştürme"
+msgstr "Kod dönüştürme"
 
 msgctxt "#30410"
 msgid "Refresh this item"
@@ -361,7 +361,7 @@ msgstr "Daimi kullanıcılar"
 
 msgctxt "#30185"
 msgid "Boxsets"
-msgstr "Kutu setleri"
+msgstr "Film serileri"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
@@ -369,7 +369,7 @@ msgstr "Geliştirilmiş resmi etkinleştirin (ör. Kapak resmi)"
 
 msgctxt "#30165"
 msgid "Allow burned subtitles"
-msgstr "Yazılmış alt yazılara izin ver"
+msgstr "Gömülü altyazılara izin ver"
 
 msgctxt "#30164"
 msgid "Audio max channels"
@@ -449,7 +449,7 @@ msgstr "Ağ kimlik bilgileri"
 
 msgctxt "#33131"
 msgid "Refreshing boxsets"
-msgstr "Kutu setleri yenileniyor"
+msgstr "Film serileri yenileniyor"
 
 msgctxt "#33104"
 msgid "Find more info in the github wiki/Create-and-restore-from-backup."
@@ -458,11 +458,11 @@ msgstr ""
 
 msgctxt "#33098"
 msgid "Refresh boxsets"
-msgstr "Kutu setlerini yenile"
+msgstr "Film serilerini yenile"
 
 msgctxt "#33018"
 msgid "Gathering boxsets"
-msgstr "Kutu setlerini toplama"
+msgstr "Film serileri alınıyor"
 
 msgctxt "#33132"
 msgid "Repair library"
@@ -616,8 +616,8 @@ msgctxt "#33048"
 msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
 msgstr ""
 "Eklenti ayarlarında ağ kimlik bilgilerinizi doğrulamanız veya yolunuzu doğru "
-"şekilde biçimlendirmek için Jellyfin yolu ikamesini kullanmanız gerekebilir ("
-"Jellyfin kontrol paneli> kitaplık). Senkronizasyon durdurulsun mu?"
+"şekilde biçimlendirmek için Jellyfin yolu ikamesini kullanmanız gerekebilir "
+"(Jellyfin yönetim paneli> kitaplık). Senkronizasyon durdurulsun mu?"
 
 msgctxt "#33047"
 msgid "Kodi can't locate file:"
@@ -652,7 +652,7 @@ msgstr "Tamamlandı:"
 
 msgctxt "#33021"
 msgid "Gathering:"
-msgstr "Toplama:"
+msgstr "Alınıyor:"
 
 msgctxt "#33016"
 msgid "Play trailers?"
@@ -664,7 +664,7 @@ msgstr "Jellyfin'den dosya silinsin mi?"
 
 msgctxt "#33014"
 msgid "Choose the subtitles stream"
-msgstr "Alt yazı akışını seçin"
+msgstr "Altyazı akışını seçin"
 
 msgctxt "#33013"
 msgid "Choose the audio stream"
@@ -684,11 +684,11 @@ msgstr "El ile sunucu ekle"
 
 msgctxt "#30533"
 msgid "Duration of the music library pop up"
-msgstr "Müzik kitaplığının op up süresi"
+msgstr "Müzik kitaplığının açılır pencere süresi"
 
 msgctxt "#30532"
 msgid "Duration of the video library pop up"
-msgstr "Video kitaplığının pop up süresi"
+msgstr "Video kitaplığının açılır pencere süresi"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
@@ -860,11 +860,11 @@ msgstr ""
 
 msgctxt "#33159"
 msgid "Enable audio/subtitles selection"
-msgstr "Ses / alt yazı seçimini etkinleştir"
+msgstr "Ses / altyazı seçimini etkinleştir"
 
 msgctxt "#33158"
 msgid "Subtitles only"
-msgstr "Yalnızca alt yazılar"
+msgstr "Yalnızca altyazılar"
 
 msgctxt "#33157"
 msgid "Audio only"

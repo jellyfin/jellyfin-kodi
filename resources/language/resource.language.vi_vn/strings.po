@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2024-08-30 05:41+0000\n"
-"Last-Translator: Nguyen Thanh <congquynh284@yahoo.com>\n"
+"PO-Revision-Date: 2026-01-12 01:50+0000\n"
+"Last-Translator: CaRotNamAnh_2k11 <namanhcarot@gmail.com>\n"
 "Language-Team: Vietnamese <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/vi/>\n"
 "Language: vi_vn\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.4.2\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
@@ -1000,3 +1000,179 @@ msgstr "Chuyển mã sang H265/HEVC RExt"
 msgctxt "#33125"
 msgid "Enable remote control"
 msgstr "Bật điều khiển từ xa"
+
+msgctxt "#30538"
+msgid "Max days in next episodes"
+msgstr "Số ngày tối đa cho “Tập tiếp theo”"
+
+msgctxt "#33203"
+msgid "Manage path replacements"
+msgstr "Quản lý sự thay thế đường dẫn"
+
+msgctxt "#33204"
+msgid "Finish"
+msgstr "Hoàn Thành"
+
+msgctxt "#33205"
+msgid "New Path Replacement"
+msgstr "Đường Dẫn Được Thay Thế Mới"
+
+msgctxt "#33206"
+msgid "Remote Path"
+msgstr "Đường Dẫn Từ Xa"
+
+msgctxt "#33207"
+msgid "Local Path"
+msgstr "Đường Dẫn Cục Bộ"
+
+msgctxt "#33208"
+msgid "360"
+msgstr "360"
+
+msgctxt "#33209"
+msgid "480"
+msgstr "480"
+
+msgctxt "#33210"
+msgid "600"
+msgstr "600"
+
+msgctxt "#33211"
+msgid "720"
+msgstr "720"
+
+msgctxt "#33212"
+msgid "1080"
+msgstr "1080"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "Không Giới Hạn [mặc định]"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0.5 Megabit/giây"
+
+msgctxt "#33215"
+msgid "1.0 Mbps"
+msgstr "1.0 Megabit/giây"
+
+msgctxt "#33216"
+msgid "1.5 Mbps"
+msgstr "1.5 Megabit/giây"
+
+msgctxt "#33217"
+msgid "2.0 Mbps"
+msgstr "2.0 Megabit/giây"
+
+msgctxt "#33218"
+msgid "2.5 Mbps"
+msgstr "2.5 Megabit/giây"
+
+msgctxt "#33219"
+msgid "3.0 Mbps"
+msgstr "3.0 Megabit/giây"
+
+msgctxt "#33220"
+msgid "4.0 Mbps"
+msgstr "4.0 Megabit/giây"
+
+msgctxt "#33221"
+msgid "5.0 Mbps"
+msgstr "5.0 Megabit/giây"
+
+msgctxt "#33222"
+msgid "6.0 Mbps"
+msgstr "6.0 Megabit/giây"
+
+msgctxt "#33223"
+msgid "7.0 Mbps"
+msgstr "7.0 Megiabit/giây"
+
+msgctxt "#33224"
+msgid "8.0 Mbps"
+msgstr "8.0 Megabit/giây"
+
+msgctxt "#33225"
+msgid "9.0 Mbps"
+msgstr "9.0 Megabit/giây"
+
+msgctxt "#33226"
+msgid "10.0 Mbps"
+msgstr "10.0 Megabit/giây"
+
+msgctxt "#33227"
+msgid "12.0 Mbps"
+msgstr "12.0 Megabit/giây"
+
+msgctxt "#33228"
+msgid "14.0 Mbps"
+msgstr "14.0 Megabit/giây"
+
+msgctxt "#33229"
+msgid "16.0 Mbps"
+msgstr "16.0 Megabit/giây"
+
+msgctxt "#33230"
+msgid "18.0 Mbps"
+msgstr "18.0 Megabit/giây"
+
+msgctxt "#33231"
+msgid "20.0 Mbps"
+msgstr "20.0 Megabit/giây"
+
+msgctxt "#33232"
+msgid "25.0 Mbps"
+msgstr "25.0 Megabit/giây"
+
+msgctxt "#33233"
+msgid "30.0 Mbps"
+msgstr "30.0 Megabit/giây"
+
+msgctxt "#33234"
+msgid "35.0 Mbps"
+msgstr "35.0 Megabit/giây"
+
+msgctxt "#33235"
+msgid "40.0 Mbps"
+msgstr "40.0 Megabit/giây"
+
+msgctxt "#33236"
+msgid "100.0 Mbps"
+msgstr "100.0 Megabit/giây"
+
+msgctxt "#33237"
+msgid "1000.0 Mbps [default]"
+msgstr "1000.0 Megabit/giây [mặc định]"
+
+msgctxt "#33238"
+msgid "Maximum"
+msgstr "Tối Đa"
+
+msgctxt "#33239"
+msgid "96"
+msgstr "96"
+
+msgctxt "#33240"
+msgid "128"
+msgstr "128"
+
+msgctxt "#33241"
+msgid "160"
+msgstr "160"
+
+msgctxt "#33242"
+msgid "192"
+msgstr "192"
+
+msgctxt "#33243"
+msgid "256"
+msgstr "256"
+
+msgctxt "#33244"
+msgid "320"
+msgstr "320"
+
+msgctxt "#33245"
+msgid "384"
+msgstr "384"
