@@ -65,6 +65,10 @@ class Movies(Kodi):
         if self.cursor.fetchone()[0] == 1:
             self.cursor.execute(QU.add_video_version, args)
 
+    def check_videoversion(self, *args):
+        self.cursor.execute(QU.count_video_version, args)
+        return self.cursor.fetchone()[0]
+
     def get_or_create_videoversiontype(self, name, filepath):
         """Retrieve or create a video version type based on the Jellyfin version name or filename."""
         # Get the filename without extension
@@ -110,7 +114,32 @@ class Movies(Kodi):
         self.cursor.execute(QU.delete_file, (file_id,))
         self.cursor.execute(QU.check_video_version)
         if self.cursor.fetchone()[0] == 1:
+            # Cleanup version types
+            versions = self.get_videoversions(kodi_id)
+            type_id = next((row[0] for row in versions if row[1] == file_id), None)
             self.cursor.execute(QU.delete_video_version, (file_id,))
+            self.delete_unused_version_type(type_id)
+
+            # Remove all other versions; Jellyfin creates a new base entry if other versions are left
+            for row in versions:
+                self.delete_video_version(row[1], row[0])
+
+    def delete_video_version(self, file_id, type_id):
+        """Remove video version file and cleanup version type if unused."""
+        self.cursor.execute(QU.delete_file, (file_id,))
+        self.cursor.execute(QU.delete_video_version, (file_id,))
+        self.delete_unused_version_type(type_id)
+
+    def delete_unused_version_type(self, type_id):
+        """Delete video version type if no references exist, and its not a builtin type."""
+        if type_id and type_id > 40800:
+            self.cursor.execute(QU.count_video_version_type, (type_id,))
+            if self.cursor.fetchone()[0] == 0:
+                self.cursor.execute(QU.delete_video_version_type, (type_id,))
+
+    def get_videoversions(self, kodi_id):
+        self.cursor.execute(QU.get_video_versions, (kodi_id,))
+        return [row for row in self.cursor.fetchall()]
 
     def get_rating_id(self, *args):
 

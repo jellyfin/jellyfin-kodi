@@ -418,6 +418,16 @@ add_video_version_obj = [
     "{VideoVersionItemType}",
     "{VideoVersionTypeId}",
 ]
+count_video_version = """
+SELECT COUNT(*) FROM videoversion WHERE idMedia = ? AND idType = ? AND media_type = 'movie'
+"""
+count_video_version_obj = ["{MovieId}", "{VideoVersionTypeId}"]
+count_video_version_type = """
+SELECT COUNT(*) FROM videoversion WHERE idType = ?
+"""
+get_video_versions = """
+SELECT DISTINCT idType, idFile FROM videoversion WHERE idMedia = ?
+"""
 get_videoversion_itemtype = """
 SELECT itemType FROM videoversiontype WHERE id = ?
 """
@@ -809,6 +819,10 @@ delete_movie_obj = ["{KodiId}", "{FileId}"]
 delete_video_version = """
 DELETE FROM     videoversion
 WHERE           idFile = ?
+"""
+delete_video_version_type = """
+DELETE FROM     videoversiontype
+WHERE           id = ?
 """
 delete_set = """
 DELETE FROM     sets
