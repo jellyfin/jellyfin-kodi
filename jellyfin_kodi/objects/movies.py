@@ -150,8 +150,13 @@ class Movies(KodiDb):
 
     def add_versions(self, API, obj):
         """Add all additional media sources as Kodi versions."""
+        current_type_ids = set()
         for source in obj["media_sources"][1:]:
-            version = dict(obj)
+            version = {}
+            version["Id"] = source["Id"]
+            version["MovieId"] = obj["MovieId"]
+            version["PathId"] = obj["PathId"]
+            version["LibraryId"] = obj["LibraryId"]
             version["Path"] = API.get_file_path(source["Path"])
             self.get_path_filename(version)
 
@@ -160,10 +165,23 @@ class Movies(KodiDb):
             version_type_id = self.get_or_create_videoversiontype(version_name, version["Filename"])
             version["VideoVersionTypeId"] = version_type_id
             version["VideoVersionItemType"] = self.itemtype
+            current_type_ids.add(version_type_id)
+
+            if self.check_videoversion(*values(version, QU.count_video_version_obj)):
+                # Version already exists
+                continue
 
             # Add the version file and version type
             version["FileId"] = self.add_file(*values(version, QU.add_file_obj))
             self.add_videoversion(*values(version, QU.add_video_version_obj))
+
+        # Cleanup versions that are no longer in Jellyfin
+        versions = self.get_videoversions(obj["MovieId"])
+        for row in versions:
+            type_id = row[0]
+            file_id = row[1]
+            if type_id not in current_type_ids:
+                self.delete_video_version(file_id, type_id)
 
     def movie_add(self, obj):
         """Add object to kodi."""
