@@ -555,7 +555,7 @@ class Player(xbmc.Player):
         return segments if segments else None
 
     def _process_segment(self, item_id, segment_type, segment, current_position, skip_mode):
-        """Process a single segment and return True if skip was triggered."""
+        """Check if current position is within segment bounds. Returns (start, end) tuple, None if outside bounds, or False if invalid."""
         start = segment.get("Start")
         end = segment.get("End")
         if start is None or end is None or end <= start:
@@ -568,23 +568,6 @@ class Player(xbmc.Player):
             return None
 
         return (start, end)
-            return False
-
-        segment_key = "%s:%s" % (item_id, segment_type)
-        LOG.debug("Skip check: IN WINDOW! segment_key=%s, already_prompted=%s",
-                 segment_key, segment_key in self.skip_prompted)
-        if segment_key in self.skip_prompted:
-            return False
-
-        self.skip_prompted.add(segment_key)
-        LOG.debug("Skip check: Triggering _handle_skip_segment for %s", segment_type)
-
-        if segment_type == "Credits" and not self.up_next:
-            self.up_next = True
-            self.next_up()
-
-        self._handle_skip_segment(segment_type, start, end, skip_mode)
-        return True
 
     def check_skip_segments(self, item, current_position):
         item_id = item["Id"]
@@ -593,8 +576,12 @@ class Player(xbmc.Player):
             return
 
         for segment_type, segment in segments.items():
-            bounds = self._should_process_segment(segment_type, segment, current_position)
-            if bounds is None:
+            skip_mode = self._get_segment_skip_mode(segment_type)
+            if skip_mode == 0:  # Off
+                continue
+
+            bounds = self._process_segment(item_id, segment_type, segment, current_position, skip_mode)
+            if not bounds:
                 continue
 
             start, end = bounds
@@ -611,14 +598,8 @@ class Player(xbmc.Player):
                 self.up_next = True
                 self.next_up()
 
-            self._handle_skip_segment(segment_type, start, end)
+            self._handle_skip_segment(segment_type, start, end, skip_mode)
             break
-            skip_mode = self._get_segment_skip_mode(segment_type)
-            if skip_mode == 0:  # Off
-                continue
-
-            if self._process_segment(item_id, segment_type, segment, current_position, skip_mode):
-                break
 
     def _get_segment_skip_mode(self, segment_type):
         """Get the skip mode for a segment type. Returns 0=Off, 1=Auto, 2=Button."""
@@ -634,8 +615,6 @@ class Player(xbmc.Player):
             return 0
         return int(settings(setting_key) or 0)
 
-    def _handle_skip_segment(self, segment_type, start, end):
-        mode = int(settings("introSkipMode") or 1)
     def _handle_skip_segment(self, segment_type, start, end, mode):
         LOG.debug("_handle_skip_segment: type=%s, mode=%d, start=%.1f, end=%.1f",
                  segment_type, mode, start, end)
@@ -643,6 +622,9 @@ class Player(xbmc.Player):
         if mode == 1:  # Auto skip
             self.seekTime(end)
             LOG.info("Auto-skipped %s to %.1f", segment_type, end)
+            # Show notification
+            message = "Skipped %s" % segment_type
+            dialog("notification", heading="Jellyfin", message=message, icon="{jellyfin}", time=3000)
 
         elif mode == 2:  # Show skip button
             self._show_skip_button(segment_type, end - start, end)
