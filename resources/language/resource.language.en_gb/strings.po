@@ -1233,3 +1233,7 @@ msgctxt "#33260"
 msgid "Press SELECT to skip"
 msgstr "Press SELECT to skip"
 
+msgctxt "#33261"
+msgid "Off"
+msgstr "Off"
+

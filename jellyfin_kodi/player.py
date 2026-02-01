@@ -20,7 +20,7 @@ LOG = LazyLogger(__name__)
 
 #################################################################################################
 
-SETTING_INTRO_SKIP_ENABLED = "introSkipEnabled.bool"
+SETTING_MEDIA_SEGMENTS_ENABLED = "mediaSegmentsEnabled.bool"
 
 
 class Player(xbmc.Player):
@@ -128,7 +128,7 @@ class Player(xbmc.Player):
         self._fetch_skip_segments(item)
 
         # Immediate skip check for segments starting at 0:00
-        if settings(SETTING_INTRO_SKIP_ENABLED):
+        if settings(SETTING_MEDIA_SEGMENTS_ENABLED):
             try:
                 current_pos = int(self.getTime())
                 self.check_skip_segments(item, current_pos)
@@ -335,7 +335,7 @@ class Player(xbmc.Player):
             LOG.info("--[ seek ]")
 
             # Check skip segments immediately after seek
-            if settings(SETTING_INTRO_SKIP_ENABLED):
+            if settings(SETTING_MEDIA_SEGMENTS_ENABLED):
                 try:
                     current_file = self.get_playing_file()
                     item = self.get_file_info(current_file)
@@ -370,7 +370,7 @@ class Player(xbmc.Player):
             self.up_next = True
             self.next_up()
 
-        if settings(SETTING_INTRO_SKIP_ENABLED):
+        if settings(SETTING_MEDIA_SEGMENTS_ENABLED):
             self.check_skip_segments(item, item["CurrentPosition"])
 
         return (item["CurrentPosition"] - previous) < 30
@@ -419,7 +419,7 @@ class Player(xbmc.Player):
         }
         item["Server"].jellyfin.session_progress(data)
 
-        if settings(SETTING_INTRO_SKIP_ENABLED):
+        if settings(SETTING_MEDIA_SEGMENTS_ENABLED):
             self.check_skip_segments(item, item["CurrentPosition"])
 
     def onPlayBackStopped(self):
@@ -509,7 +509,7 @@ class Player(xbmc.Player):
         self.played.clear()
 
     def _fetch_skip_segments(self, item):
-        if not settings(SETTING_INTRO_SKIP_ENABLED):
+        if not settings(SETTING_MEDIA_SEGMENTS_ENABLED):
             return
 
         item_id = item["Id"]
@@ -554,7 +554,7 @@ class Player(xbmc.Player):
                 }
         return segments if segments else None
 
-    def _process_segment(self, item_id, segment_type, segment, current_position):
+    def _process_segment(self, item_id, segment_type, segment, current_position, skip_mode):
         """Process a single segment and return True if skip was triggered."""
         start = segment.get("Start")
         end = segment.get("End")
@@ -580,7 +580,7 @@ class Player(xbmc.Player):
             self.up_next = True
             self.next_up()
 
-        self._handle_skip_segment(segment_type, start, end)
+        self._handle_skip_segment(segment_type, start, end, skip_mode)
         return True
 
     def check_skip_segments(self, item, current_position):
@@ -590,41 +590,37 @@ class Player(xbmc.Player):
             return
 
         for segment_type, segment in segments.items():
-            if not self._is_segment_enabled(segment_type):
+            skip_mode = self._get_segment_skip_mode(segment_type)
+            if skip_mode == 0:  # Off
                 continue
 
-            if self._process_segment(item_id, segment_type, segment, current_position):
+            if self._process_segment(item_id, segment_type, segment, current_position, skip_mode):
                 break
 
-    def _is_segment_enabled(self, segment_type):
+    def _get_segment_skip_mode(self, segment_type):
+        """Get the skip mode for a segment type. Returns 0=Off, 1=Auto, 2=Button."""
         setting_map = {
-            "Introduction": "skipIntroduction.bool",
-            "Credits": "skipCredits.bool",
-            "Recap": "skipRecap.bool",
-            "Preview": "skipPreview.bool",
-            "Commercial": "skipCommercial.bool",
+            "Introduction": "skipIntroductionMode",
+            "Credits": "skipCreditsMode",
+            "Recap": "skipRecapMode",
+            "Preview": "skipPreviewMode",
+            "Commercial": "skipCommercialMode",
         }
         setting_key = setting_map.get(segment_type)
         if not setting_key:
-            return False
-        return settings(setting_key)
+            return 0
+        return int(settings(setting_key) or 0)
 
-    def _handle_skip_segment(self, segment_type, start, end):
-        mode = int(settings("introSkipMode") or 1)
-        LOG.debug("_handle_skip_segment: type=%s, mode=%d, start=%.1f, end=%.1f", 
+    def _handle_skip_segment(self, segment_type, start, end, mode):
+        LOG.debug("_handle_skip_segment: type=%s, mode=%d, start=%.1f, end=%.1f",
                  segment_type, mode, start, end)
 
-        if mode == 0:
+        if mode == 1:  # Auto skip
             self.seekTime(end)
             LOG.info("Auto-skipped %s to %.1f", segment_type, end)
 
-        elif mode == 1:
+        elif mode == 2:  # Show skip button
             self._show_skip_button(segment_type, end - start, end)
-
-        elif mode == 2:
-            if dialog("yesno", "{jellyfin}", translate(33257), autoclose=5000):
-                self.seekTime(end)
-                LOG.info("User skipped %s to %.1f", segment_type, end)
 
     def _show_skip_button(self, segment_type, duration, end_time):
         LOG.debug("_show_skip_button: type=%s, duration=%.1f, end_time=%.1f", 

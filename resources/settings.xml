@@ -426,77 +426,95 @@
 				</setting>
 			</group>
 			<group id="6" label="33246">
-				<setting id="introSkipEnabled" type="boolean" label="33247" help="">
+				<setting id="mediaSegmentsEnabled" type="boolean" label="33247" help="">
 					<level>0</level>
 					<default>true</default>
 					<control type="toggle"/>
 				</setting>
-				<setting id="introSkipMode" type="integer" label="33248" help="" parent="introSkipEnabled">
+				<setting id="skipIntroductionMode" type="integer" label="33252" help="" parent="mediaSegmentsEnabled">
 					<level>0</level>
-					<default>1</default>
+					<default>2</default>
 					<constraints>
 						<options>
-							<option label="33249">0</option>
-							<option label="33250">1</option>
-							<option label="33251">2</option>
+							<option label="33261">0</option>
+							<option label="33249">1</option>
+							<option label="33250">2</option>
 						</options>
 					</constraints>
 					<dependencies>
 						<dependency type="visible">
-							<condition operator="is" setting="introSkipEnabled">true</condition>
+							<condition operator="is" setting="mediaSegmentsEnabled">true</condition>
 						</dependency>
 					</dependencies>
 					<control type="spinner" format="string"/>
 				</setting>
-				<setting id="skipIntroduction" type="boolean" label="33252" help="" parent="introSkipEnabled">
+				<setting id="skipCreditsMode" type="integer" label="33253" help="" parent="mediaSegmentsEnabled">
 					<level>0</level>
-					<default>true</default>
+					<default>2</default>
+					<constraints>
+						<options>
+							<option label="33261">0</option>
+							<option label="33249">1</option>
+							<option label="33250">2</option>
+						</options>
+					</constraints>
 					<dependencies>
 						<dependency type="visible">
-							<condition operator="is" setting="introSkipEnabled">true</condition>
+							<condition operator="is" setting="mediaSegmentsEnabled">true</condition>
 						</dependency>
 					</dependencies>
-					<control type="toggle"/>
+					<control type="spinner" format="string"/>
 				</setting>
-				<setting id="skipCredits" type="boolean" label="33253" help="" parent="introSkipEnabled">
+				<setting id="skipRecapMode" type="integer" label="33254" help="" parent="mediaSegmentsEnabled">
 					<level>0</level>
-					<default>true</default>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="33261">0</option>
+							<option label="33249">1</option>
+							<option label="33250">2</option>
+						</options>
+					</constraints>
 					<dependencies>
 						<dependency type="visible">
-							<condition operator="is" setting="introSkipEnabled">true</condition>
+							<condition operator="is" setting="mediaSegmentsEnabled">true</condition>
 						</dependency>
 					</dependencies>
-					<control type="toggle"/>
+					<control type="spinner" format="string"/>
 				</setting>
-				<setting id="skipRecap" type="boolean" label="33254" help="" parent="introSkipEnabled">
+				<setting id="skipPreviewMode" type="integer" label="33255" help="" parent="mediaSegmentsEnabled">
 					<level>0</level>
-					<default>false</default>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="33261">0</option>
+							<option label="33249">1</option>
+							<option label="33250">2</option>
+						</options>
+					</constraints>
 					<dependencies>
 						<dependency type="visible">
-							<condition operator="is" setting="introSkipEnabled">true</condition>
+							<condition operator="is" setting="mediaSegmentsEnabled">true</condition>
 						</dependency>
 					</dependencies>
-					<control type="toggle"/>
+					<control type="spinner" format="string"/>
 				</setting>
-				<setting id="skipPreview" type="boolean" label="33255" help="" parent="introSkipEnabled">
+				<setting id="skipCommercialMode" type="integer" label="33259" help="" parent="mediaSegmentsEnabled">
 					<level>0</level>
-					<default>false</default>
+					<default>0</default>
+					<constraints>
+						<options>
+							<option label="33261">0</option>
+							<option label="33249">1</option>
+							<option label="33250">2</option>
+						</options>
+					</constraints>
 					<dependencies>
 						<dependency type="visible">
-							<condition operator="is" setting="introSkipEnabled">true</condition>
+							<condition operator="is" setting="mediaSegmentsEnabled">true</condition>
 						</dependency>
 					</dependencies>
-					<control type="toggle"/>
-				</setting>
-				<setting id="skipCommercial" type="boolean" label="33259" help="" parent="introSkipEnabled">
-					<level>0</level>
-					<default>false</default>
-					<dependencies>
-						<dependency type="visible">
-							<condition operator="is" setting="introSkipEnabled">true</condition>
-						</dependency>
-					</dependencies>
-					<control type="toggle"/>
+					<control type="spinner" format="string"/>
 				</setting>
 			</group>
 		</category>
