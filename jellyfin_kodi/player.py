@@ -565,6 +565,9 @@ class Player(xbmc.Player):
                  current_position, segment_type, start, end, start <= current_position <= end)
 
         if not (start <= current_position <= end):
+            return None
+
+        return (start, end)
             return False
 
         segment_key = "%s:%s" % (item_id, segment_type)
@@ -590,6 +593,26 @@ class Player(xbmc.Player):
             return
 
         for segment_type, segment in segments.items():
+            bounds = self._should_process_segment(segment_type, segment, current_position)
+            if bounds is None:
+                continue
+
+            start, end = bounds
+            segment_key = "%s:%s" % (item_id, segment_type)
+            LOG.debug("Skip check: IN WINDOW! segment_key=%s, already_prompted=%s",
+                     segment_key, segment_key in self.skip_prompted)
+            if segment_key in self.skip_prompted:
+                continue
+
+            self.skip_prompted.add(segment_key)
+            LOG.debug("Skip check: Triggering _handle_skip_segment for %s", segment_type)
+
+            if segment_type == "Credits" and not self.up_next:
+                self.up_next = True
+                self.next_up()
+
+            self._handle_skip_segment(segment_type, start, end)
+            break
             skip_mode = self._get_segment_skip_mode(segment_type)
             if skip_mode == 0:  # Off
                 continue
@@ -611,6 +634,8 @@ class Player(xbmc.Player):
             return 0
         return int(settings(setting_key) or 0)
 
+    def _handle_skip_segment(self, segment_type, start, end):
+        mode = int(settings("introSkipMode") or 1)
     def _handle_skip_segment(self, segment_type, start, end, mode):
         LOG.debug("_handle_skip_segment: type=%s, mode=%d, start=%.1f, end=%.1f",
                  segment_type, mode, start, end)
@@ -623,7 +648,7 @@ class Player(xbmc.Player):
             self._show_skip_button(segment_type, end - start, end)
 
     def _show_skip_button(self, segment_type, duration, end_time):
-        LOG.debug("_show_skip_button: type=%s, duration=%.1f, end_time=%.1f", 
+        LOG.debug("_show_skip_button: type=%s, duration=%.1f, end_time=%.1f",
                  segment_type, duration, end_time)
         try:
             import xbmcaddon
@@ -658,7 +683,7 @@ class Player(xbmc.Player):
         """Monitor the skip dialog and handle user input or timeout."""
         LOG.debug("_monitor_skip_dialog: starting, end_time=%.1f", self._skip_end_time)
         monitor = xbmc.Monitor()
-        
+
         # Monitor loop - check for user input or end of segment
         while self.skip_dialog and not monitor.abortRequested():
             # Check if user clicked skip
@@ -666,7 +691,7 @@ class Player(xbmc.Player):
                 self.seekTime(self._skip_end_time)
                 LOG.info("User skipped to %.1f", self._skip_end_time)
                 break
-            
+
             # Check if user cancelled
             if self.skip_dialog.is_cancel():
                 LOG.debug("User cancelled skip dialog")
