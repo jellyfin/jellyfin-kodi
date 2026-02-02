@@ -81,6 +81,7 @@ class Service(xbmc.Monitor):
         LOG.info("Platform: %s", settings("platformDetected"))
         LOG.info("Python Version: %s", sys.version)
         LOG.info("Using dynamic paths: %s", settings("useDirectPaths") == "0")
+        LOG.info("Syncing video versions: %s", settings("useVersions") == "true")
         LOG.info("Log Level: %s", self.settings["log_level"])
 
         verify_kodi_defaults()
