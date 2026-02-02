@@ -265,7 +265,7 @@ def reset_kodi():
 
             # Delete the custom videoversiontype entries
             if name == "videoversiontype":
-                videodb.cursor.execute("DELETE from videoversiontype WHERE id > 40800")
+                videodb.cursor.execute("DELETE from videoversiontype WHERE id > 40800 AND owner = 1")
 
     if settings("enableMusic.bool") or dialog("yesno", "{jellyfin}", translate(33162)):
 
