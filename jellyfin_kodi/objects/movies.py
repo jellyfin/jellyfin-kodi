@@ -161,7 +161,7 @@ class Movies(KodiDb):
 
             # Find the correct version name for this source
             version_name = source.get("Name")
-            version_type_id = self.get_or_create_videoversiontype(version_name, version["Filename"])
+            version_type_id = self.get_or_create_videoversiontype(version_name, version["SourceFilename"])
             version["VideoVersionTypeId"] = version_type_id
             version["VideoVersionItemType"] = self.itemtype
             current_type_ids.add(version_type_id)
@@ -179,7 +179,7 @@ class Movies(KodiDb):
         for row in versions:
             type_id = row[0]
             file_id = row[1]
-            if type_id not in current_type_ids:
+            if file_id != obj["FileId"] and type_id not in current_type_ids:
                 self.delete_video_version(file_id, type_id)
 
     def movie_add(self, obj):
@@ -195,7 +195,7 @@ class Movies(KodiDb):
         obj["VideoVersionItemType"] = self.itemtype
 
         version_name = obj["media_sources"][0].get("Name")
-        version_type_id = self.get_or_create_videoversiontype(version_name, obj["Filename"])
+        version_type_id = self.get_or_create_videoversiontype(version_name, obj["SourceFilename"])
         obj["VideoVersionTypeId"] = version_type_id
 
         self.add(*values(obj, QU.add_movie_obj))
@@ -257,6 +257,7 @@ class Movies(KodiDb):
             if "\\" in obj["Path"]
             else obj["Path"].rsplit("/", 1)[1]
         )
+        obj["SourceFilename"] = obj["Filename"]
 
         if self.direct_path:
 
@@ -277,6 +278,7 @@ class Movies(KodiDb):
                 obj["Filename"] = "index.bdmv"
                 LOG.debug("Bluray directory %s", obj["Path"])
 
+            obj["SourceFilename"] = obj["Filename"]
         else:
             obj["Path"] = "plugin://plugin.video.jellyfin/%s/" % obj["LibraryId"]
             params = {
