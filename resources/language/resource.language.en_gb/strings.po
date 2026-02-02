@@ -1285,5 +1285,9 @@ msgctxt "#33269"
 msgid "Enable UpNext add-on integration"
 msgstr "Enable UpNext add-on integration"
 
+msgctxt "#30900"
+msgid "Sync video versions"
+msgstr "Sync video versions"
+
 #. 33263 is currently unused
 # Please use it next.
