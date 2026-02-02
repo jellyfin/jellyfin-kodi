@@ -823,6 +823,7 @@ WHERE           idFile = ?
 delete_video_version_type = """
 DELETE FROM     videoversiontype
 WHERE           id = ?
+AND             owner = 1
 """
 delete_set = """
 DELETE FROM     sets

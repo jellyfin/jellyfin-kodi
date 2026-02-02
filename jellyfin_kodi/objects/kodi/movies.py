@@ -102,7 +102,7 @@ class Movies(Kodi):
             return row[0]
 
         # Create a new version type and return the id
-        self.cursor.execute(QU.add_video_version_type, (name, 0, self.itemtype))
+        self.cursor.execute(QU.add_video_version_type, (name, 1, self.itemtype))
         return self.cursor.lastrowid
 
     def update(self, *args):
