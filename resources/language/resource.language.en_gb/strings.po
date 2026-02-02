@@ -1257,3 +1257,6 @@ msgctxt "#33261"
 msgid "Off"
 msgstr "Off"
 
+msgctxt "#30900"
+msgid "Sync video versions"
+msgstr "Sync video versions"
