@@ -1180,3 +1180,7 @@ msgstr "16.0 Mbps"
 msgctxt "#33239"
 msgid "96"
 msgstr "96"
+
+msgctxt "#30900"
+msgid "Sync video versions"
+msgstr "Sync video versions"

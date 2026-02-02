@@ -1330,3 +1330,7 @@ msgstr "Annuncio pubblicitario"
 msgctxt "#33254"
 msgid "Recap"
 msgstr "Riepilogo"
+
+msgctxt "#30900"
+msgid "Sync video versions"
+msgstr "Sincronizzare le versioni video"

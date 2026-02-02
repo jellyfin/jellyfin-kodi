@@ -1261,3 +1261,7 @@ msgstr "Comercial"
 msgctxt "#33260"
 msgid "Press SELECT to skip"
 msgstr "Pulsa SELECT para omitir"
+
+msgctxt "#30900"
+msgid "Sync video versions"
+msgstr "Sincronizar versiones de vídeo"

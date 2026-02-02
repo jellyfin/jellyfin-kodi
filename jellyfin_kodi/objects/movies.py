@@ -16,6 +16,7 @@ from ..helper import (
     jellyfin_item,
     values,
     Local,
+    settings,
 )
 from ..helper import LazyLogger
 from ..helper.utils import find_library
@@ -150,6 +151,9 @@ class Movies(KodiDb):
 
     def add_versions(self, API, obj):
         """Add all additional media sources as Kodi versions."""
+        if settings("useVersions") != "true":
+            return
+
         current_type_ids = set()
         for source in obj["media_sources"][1:]:
             version = {}

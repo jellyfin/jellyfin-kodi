@@ -7,7 +7,7 @@ from sqlite3 import DatabaseError
 
 ##################################################################################################
 
-from ...helper import LazyLogger
+from ...helper import LazyLogger, settings
 
 from .kodi import Kodi
 from . import queries as QU
@@ -71,6 +71,10 @@ class Movies(Kodi):
 
     def get_or_create_videoversiontype(self, name, filepath):
         """Retrieve or create a video version type based on the Jellyfin version name or filename."""
+        # If versions are disabled, always return the standard edition
+        if settings("useVersions") != "true":
+            return 40400
+
         # Get the filename without extension
         filename = os.path.splitext(os.path.basename(filepath))[0]
 
