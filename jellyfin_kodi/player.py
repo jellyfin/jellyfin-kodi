@@ -125,11 +125,10 @@ class Player(xbmc.Player):
             LOG.warning("Failed to report session playing: %s", e)
         window("jellyfin.skip.%s.bool" % item["Id"], True)
 
-        self._fetch_skip_segments(item)
-
         # Immediate skip check for segments starting at 0:00
         if settings(SETTING_MEDIA_SEGMENTS_ENABLED):
             try:
+                self._fetch_skip_segments(item)
                 current_pos = int(self.getTime())
                 self.check_skip_segments(item, current_pos)
             except Exception:
@@ -562,7 +561,7 @@ class Player(xbmc.Player):
             return False
 
         LOG.debug("Skip check: pos=%.1f, %s start=%.1f end=%.1f, in_segment=%s",
-                 current_position, segment_type, start, end, start <= current_position <= end)
+                  current_position, segment_type, start, end, start <= current_position <= end)
 
         if not (start <= current_position <= end):
             return None
@@ -587,7 +586,7 @@ class Player(xbmc.Player):
             start, end = bounds
             segment_key = "%s:%s" % (item_id, segment_type)
             LOG.debug("Skip check: IN WINDOW! segment_key=%s, already_prompted=%s",
-                     segment_key, segment_key in self.skip_prompted)
+                      segment_key, segment_key in self.skip_prompted)
             if segment_key in self.skip_prompted:
                 continue
 
@@ -617,7 +616,7 @@ class Player(xbmc.Player):
 
     def _handle_skip_segment(self, segment_type, start, end, mode):
         LOG.debug("_handle_skip_segment: type=%s, mode=%d, start=%.1f, end=%.1f",
-                 segment_type, mode, start, end)
+                  segment_type, mode, start, end)
 
         if mode == 1:  # Auto skip
             self.seekTime(end)
@@ -631,7 +630,7 @@ class Player(xbmc.Player):
 
     def _show_skip_button(self, segment_type, duration, end_time):
         LOG.debug("_show_skip_button: type=%s, duration=%.1f, end_time=%.1f",
-                 segment_type, duration, end_time)
+                  segment_type, duration, end_time)
         try:
             import xbmcaddon
             from .dialogs.skip import SkipDialog
