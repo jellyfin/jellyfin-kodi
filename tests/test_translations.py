@@ -3,7 +3,6 @@ from pathlib import Path
 
 import pytest
 
-
 BASEDIR = Path(__file__).parent.parent
 TRANSLATIONS_BASE = BASEDIR / "resources" / "language"
 
