@@ -281,7 +281,7 @@ class Actions(object):
             LOG.info("[ playlist/%s ] %s", item["Id"], item["Name"])
 
             self.set_listitem(item, listitem, None, False)
-            path = "{}/Audio/{}/stream.mp3?static=true&api_key={}".format(
+            path = "{}/Audio/{}/stream.mp3?static=true&ApiKey={}".format(
                 server_address, item["Id"], token
             )
             listitem.setPath(path)

@@ -55,7 +55,7 @@ class WSClient(threading.Thread):
             if server.startswith("https")
             else server.replace("http://", "ws://")
         )
-        wsc_url = "%s/socket?api_key=%s&device_id=%s" % (server, token, device_id)
+        wsc_url = "%s/socket?ApiKey=%s&device_id=%s" % (server, token, device_id)
 
         LOG.info("Websocket url: %s", wsc_url)
 
