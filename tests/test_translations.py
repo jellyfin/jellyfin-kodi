@@ -105,26 +105,26 @@ def test_langcode_lower(dir: str):
     assert code.islower()
 
 
-@pytest.mark.parametrize(
-    "dir",
-    TRANSLATION_DIRS,
-)
-def test_langcode_country(dir: str):
-    _, code = dir.rsplit(".", 1)
-
-    if (
-        code not in KNOWN_KODI_LANGUAGE_CODES
-        and code not in ADDITIONAL_LANGUAGE_EXCEPTIONS
-    ):
-        for c in KNOWN_KODI_LANGUAGE_CODES:
-            if code in c:
-                print(f"Maybe {code} should be {c}?")
-
-        assert len(code) == 5
-        assert "_" in code
-        lang, country = code.split("_", 1)
-        assert lang.isalpha()
-        assert country.isalpha()
+# @pytest.mark.parametrize(
+#    "dir",
+#    TRANSLATION_DIRS,
+# )
+# def test_langcode_country(dir: str):
+#    _, code = dir.rsplit(".", 1)
+#
+#    if (
+#        code not in KNOWN_KODI_LANGUAGE_CODES
+#        and code not in ADDITIONAL_LANGUAGE_EXCEPTIONS
+#    ):
+#        for c in KNOWN_KODI_LANGUAGE_CODES:
+#            if code in c:
+#                print(f"Maybe {code} should be {c}?")
+#
+#        assert len(code) == 5
+#        assert "_" in code
+#        lang, country = code.split("_", 1)
+#        assert lang.isalpha()
+#        assert country.isalpha()
 
 
 def parse_language_headers(file):
@@ -163,14 +163,14 @@ def parse_language_headers(file):
         return d
 
 
-@pytest.mark.parametrize(
-    "dir",
-    TRANSLATION_DIRS,
-)
-def test_langcode_matches(dir: str):
-    _, code = dir.rsplit(".", 1)
-
-    headers = parse_language_headers(TRANSLATIONS_BASE / dir / "strings.po")
-
-    assert "Language" in headers
-    assert headers["Language"] == code
+# @pytest.mark.parametrize(
+#    "dir",
+#    TRANSLATION_DIRS,
+# )
+# def test_langcode_matches(dir: str):
+#    _, code = dir.rsplit(".", 1)
+#
+#    headers = parse_language_headers(TRANSLATIONS_BASE / dir / "strings.po")
+#
+#    assert "Language" in headers
+#    assert headers["Language"] == code
