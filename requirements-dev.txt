@@ -1,4 +1,4 @@
 -r requirements-test.txt
 
 pre-commit >= 3.7.1
-black >= 24.4.2
+black >= 26.1.0
