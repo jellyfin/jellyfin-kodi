@@ -20,8 +20,6 @@ LOG = LazyLogger(__name__)
 
 #################################################################################################
 
-SETTING_MEDIA_SEGMENTS_ENABLED = "mediaSegmentsEnabled.bool"
-
 
 class Player(xbmc.Player):
 
@@ -125,11 +123,10 @@ class Player(xbmc.Player):
             LOG.warning("Failed to report session playing: %s", e)
         window("jellyfin.skip.%s.bool" % item["Id"], True)
 
-        self._fetch_skip_segments(item)
-
         # Immediate skip check for segments starting at 0:00
-        if settings(SETTING_MEDIA_SEGMENTS_ENABLED):
+        if settings("mediaSegmentsEnabled.bool"):
             try:
+                self._fetch_skip_segments(item)
                 current_pos = int(self.getTime())
                 self.check_skip_segments(item, current_pos)
             except Exception:
@@ -335,7 +332,7 @@ class Player(xbmc.Player):
             LOG.info("--[ seek ]")
 
             # Check skip segments immediately after seek
-            if settings(SETTING_MEDIA_SEGMENTS_ENABLED):
+            if settings("mediaSegmentsEnabled.bool"):
                 try:
                     current_file = self.get_playing_file()
                     item = self.get_file_info(current_file)
@@ -343,37 +340,6 @@ class Player(xbmc.Player):
                     self.check_skip_segments(item, current_pos)
                 except Exception:
                     pass
-
-    def _should_skip_full_report(self, item):
-        """Check position and handle skip segments. Returns True if full report should be skipped."""
-        previous = item["CurrentPosition"]
-
-        try:
-            item["CurrentPosition"] = int(self.getTime())
-        except Exception as e:
-            LOG.debug("Failed to get playback position: %s", e)
-            return None  # Signal to return from caller
-
-        if int(item["CurrentPosition"]) == 1:
-            return None  # Signal to return from caller
-
-        try:
-            played = (
-                float(item["CurrentPosition"] * 10000000)
-                / int(item["Runtime"])
-                * 100
-            )
-        except ZeroDivisionError:
-            played = 0
-
-        if played > 2.0 and not self.up_next:
-            self.up_next = True
-            self.next_up()
-
-        if settings(SETTING_MEDIA_SEGMENTS_ENABLED):
-            self.check_skip_segments(item, item["CurrentPosition"])
-
-        return (item["CurrentPosition"] - previous) < 30
 
     def report_playback(self, report=True):
         """Report playback progress to jellyfin server.
@@ -390,8 +356,36 @@ class Player(xbmc.Player):
             return
 
         if not report:
-            skip_result = self._should_skip_full_report(item)
-            if skip_result is None or skip_result:
+            previous = item["CurrentPosition"]
+
+            try:
+                item["CurrentPosition"] = int(self.getTime())
+            except Exception as e:
+                # getTime() raises RuntimeError if nothing is playing
+                LOG.debug("Failed to get playback position: %s", e)
+                return
+
+            if int(item["CurrentPosition"]) == 1:
+                return
+
+            try:
+                played = (
+                    float(item["CurrentPosition"] * 10000000)
+                    / int(item["Runtime"])
+                    * 100
+                )
+            except ZeroDivisionError:  # Runtime is 0.
+                played = 0
+
+            if played > 2.0 and not self.up_next:
+
+                self.up_next = True
+                self.next_up()
+
+            if settings("mediaSegmentsEnabled.bool"):
+                self.check_skip_segments(item, item["CurrentPosition"])
+
+            if (item["CurrentPosition"] - previous) < 30:
                 return
 
         result = JSONRPC("Application.GetProperties").execute(
@@ -419,7 +413,7 @@ class Player(xbmc.Player):
         }
         item["Server"].jellyfin.session_progress(data)
 
-        if settings(SETTING_MEDIA_SEGMENTS_ENABLED):
+        if settings("mediaSegmentsEnabled.bool"):
             self.check_skip_segments(item, item["CurrentPosition"])
 
     def onPlayBackStopped(self):
@@ -509,7 +503,7 @@ class Player(xbmc.Player):
         self.played.clear()
 
     def _fetch_skip_segments(self, item):
-        if not settings(SETTING_MEDIA_SEGMENTS_ENABLED):
+        if not settings("mediaSegmentsEnabled.bool"):
             return
 
         item_id = item["Id"]
@@ -562,7 +556,7 @@ class Player(xbmc.Player):
             return False
 
         LOG.debug("Skip check: pos=%.1f, %s start=%.1f end=%.1f, in_segment=%s",
-                 current_position, segment_type, start, end, start <= current_position <= end)
+                  current_position, segment_type, start, end, start <= current_position <= end)
 
         if not (start <= current_position <= end):
             return None
@@ -587,7 +581,7 @@ class Player(xbmc.Player):
             start, end = bounds
             segment_key = "%s:%s" % (item_id, segment_type)
             LOG.debug("Skip check: IN WINDOW! segment_key=%s, already_prompted=%s",
-                     segment_key, segment_key in self.skip_prompted)
+                      segment_key, segment_key in self.skip_prompted)
             if segment_key in self.skip_prompted:
                 continue
 
@@ -617,7 +611,7 @@ class Player(xbmc.Player):
 
     def _handle_skip_segment(self, segment_type, start, end, mode):
         LOG.debug("_handle_skip_segment: type=%s, mode=%d, start=%.1f, end=%.1f",
-                 segment_type, mode, start, end)
+                  segment_type, mode, start, end)
 
         if mode == 1:  # Auto skip
             self.seekTime(end)
@@ -631,7 +625,7 @@ class Player(xbmc.Player):
 
     def _show_skip_button(self, segment_type, duration, end_time):
         LOG.debug("_show_skip_button: type=%s, duration=%.1f, end_time=%.1f",
-                 segment_type, duration, end_time)
+                  segment_type, duration, end_time)
         try:
             import xbmcaddon
             from .dialogs.skip import SkipDialog
