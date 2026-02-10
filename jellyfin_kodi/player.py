@@ -355,6 +355,9 @@ class Player(xbmc.Player):
         if window("jellyfin.external.bool"):
             return
 
+        if settings("mediaSegmentsEnabled.bool"):
+            self.check_skip_segments(item, item["CurrentPosition"])
+
         if not report:
             previous = item["CurrentPosition"]
 
@@ -381,9 +384,6 @@ class Player(xbmc.Player):
 
                 self.up_next = True
                 self.next_up()
-
-            if settings("mediaSegmentsEnabled.bool"):
-                self.check_skip_segments(item, item["CurrentPosition"])
 
             if (item["CurrentPosition"] - previous) < 30:
                 return
@@ -412,9 +412,6 @@ class Player(xbmc.Player):
             "SubtitleStreamIndex": item["SubtitleStreamIndex"],
         }
         item["Server"].jellyfin.session_progress(data)
-
-        if settings("mediaSegmentsEnabled.bool"):
-            self.check_skip_segments(item, item["CurrentPosition"])
 
     def onPlayBackStopped(self):
         """Will be called when user stops playing a file."""
