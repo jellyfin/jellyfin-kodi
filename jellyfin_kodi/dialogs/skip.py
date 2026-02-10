@@ -65,11 +65,13 @@ class SkipDialog(xbmcgui.WindowXMLDialog):
         button_label = "Skip {0} ({1})".format(segment_label, duration_text)
 
         # Use setProperty so it's available to the skin
-        self.setProperty('skip_label', button_label)
-        self.setProperty('segment_type', segment_type or '')
-        self.setProperty('duration', duration_text)
+        self.setProperty("skip_label", button_label)
+        self.setProperty("segment_type", segment_type or "")
+        self.setProperty("duration", duration_text)
 
-        LOG.debug("SkipDialog: set_skip_info segment=%s, label=%s", segment_type, button_label)
+        LOG.debug(
+            "SkipDialog: set_skip_info segment=%s, label=%s", segment_type, button_label
+        )
 
     def onInit(self):
         """Initialize the dialog controls."""
@@ -78,7 +80,7 @@ class SkipDialog(xbmcgui.WindowXMLDialog):
         # Try to set button label directly as well
         try:
             button = self.getControl(SKIP_BUTTON)
-            label = self.getProperty('skip_label')
+            label = self.getProperty("skip_label")
             if label:
                 button.setLabel(label)
                 LOG.debug("SkipDialog.onInit: set button label to '%s'", label)
@@ -90,7 +92,12 @@ class SkipDialog(xbmcgui.WindowXMLDialog):
         action_id = action.getId()
         LOG.debug("SkipDialog.onAction: action_id=%s", action_id)
 
-        if action_id in (ACTION_BACK, ACTION_PARENT_DIR, ACTION_PREVIOUS_MENU, ACTION_NAV_BACK):
+        if action_id in (
+            ACTION_BACK,
+            ACTION_PARENT_DIR,
+            ACTION_PREVIOUS_MENU,
+            ACTION_NAV_BACK,
+        ):
             self.cancel_requested = True
             self.close()
 

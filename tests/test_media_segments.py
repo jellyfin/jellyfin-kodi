@@ -13,14 +13,14 @@ class TestMediaSegmentsConversion:
                     "ItemId": "test-item-id",
                     "Type": "Intro",
                     "StartTicks": 425000000,
-                    "EndTicks": 1220000000
+                    "EndTicks": 1220000000,
                 },
                 {
                     "ItemId": "test-item-id",
                     "Type": "Outro",
                     "StartTicks": 24580000000,
-                    "EndTicks": 25200000000
-                }
+                    "EndTicks": 25200000000,
+                },
             ]
         }
 
@@ -71,7 +71,9 @@ class TestSegmentDetection:
             (100.0, 42.5, 122.0, False),
         ],
     )
-    def test_segment_detection_window(self, current_position, segment_start, segment_end, expected_in_window):
+    def test_segment_detection_window(
+        self, current_position, segment_start, segment_end, expected_in_window
+    ):
         in_window = segment_start <= current_position <= segment_start + 5
         assert in_window == expected_in_window
 
