@@ -59,7 +59,7 @@ jobs:
         if: ${{ matrix.py_version == '3.11' }}
 
       - name: Publish Test Artifact
-        uses: actions/upload-artifact@v5.0.0
+        uses: actions/upload-artifact@v6.0.0
         with:
           retention-days: 14
           name: ${{ matrix.py_version }}-${{ matrix.os }}-test-results
