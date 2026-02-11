@@ -545,15 +545,23 @@ class Player(xbmc.Player):
                 }
         return segments if segments else None
 
-    def _process_segment(self, item_id, segment_type, segment, current_position, skip_mode):
+    def _process_segment(
+        self, item_id, segment_type, segment, current_position, skip_mode
+    ):
         """Check if current position is within segment bounds. Returns (start, end) tuple, None if outside bounds, or False if invalid."""
         start = segment.get("Start")
         end = segment.get("End")
         if start is None or end is None or end <= start:
             return False
 
-        LOG.debug("Skip check: pos=%.1f, %s start=%.1f end=%.1f, in_segment=%s",
-                  current_position, segment_type, start, end, start <= current_position <= end)
+        LOG.debug(
+            "Skip check: pos=%.1f, %s start=%.1f end=%.1f, in_segment=%s",
+            current_position,
+            segment_type,
+            start,
+            end,
+            start <= current_position <= end,
+        )
 
         if not (start <= current_position <= end):
             return None
@@ -571,19 +579,26 @@ class Player(xbmc.Player):
             if skip_mode == 0:  # Off
                 continue
 
-            bounds = self._process_segment(item_id, segment_type, segment, current_position, skip_mode)
+            bounds = self._process_segment(
+                item_id, segment_type, segment, current_position, skip_mode
+            )
             if not bounds:
                 continue
 
             start, end = bounds
             segment_key = "%s:%s" % (item_id, segment_type)
-            LOG.debug("Skip check: IN WINDOW! segment_key=%s, already_prompted=%s",
-                      segment_key, segment_key in self.skip_prompted)
+            LOG.debug(
+                "Skip check: IN WINDOW! segment_key=%s, already_prompted=%s",
+                segment_key,
+                segment_key in self.skip_prompted,
+            )
             if segment_key in self.skip_prompted:
                 continue
 
             self.skip_prompted.add(segment_key)
-            LOG.debug("Skip check: Triggering _handle_skip_segment for %s", segment_type)
+            LOG.debug(
+                "Skip check: Triggering _handle_skip_segment for %s", segment_type
+            )
 
             if segment_type == "Credits" and not self.up_next:
                 self.up_next = True
@@ -607,22 +622,37 @@ class Player(xbmc.Player):
         return int(settings(setting_key) or 0)
 
     def _handle_skip_segment(self, segment_type, start, end, mode):
-        LOG.debug("_handle_skip_segment: type=%s, mode=%d, start=%.1f, end=%.1f",
-                  segment_type, mode, start, end)
+        LOG.debug(
+            "_handle_skip_segment: type=%s, mode=%d, start=%.1f, end=%.1f",
+            segment_type,
+            mode,
+            start,
+            end,
+        )
 
         if mode == 1:  # Auto skip
             self.seekTime(end)
             LOG.info("Auto-skipped %s to %.1f", segment_type, end)
             # Show notification
             message = "Skipped %s" % segment_type
-            dialog("notification", heading="Jellyfin", message=message, icon="{jellyfin}", time=3000)
+            dialog(
+                "notification",
+                heading="Jellyfin",
+                message=message,
+                icon="{jellyfin}",
+                time=3000,
+            )
 
         elif mode == 2:  # Show skip button
             self._show_skip_button(segment_type, end - start, end)
 
     def _show_skip_button(self, segment_type, duration, end_time):
-        LOG.debug("_show_skip_button: type=%s, duration=%.1f, end_time=%.1f",
-                  segment_type, duration, end_time)
+        LOG.debug(
+            "_show_skip_button: type=%s, duration=%.1f, end_time=%.1f",
+            segment_type,
+            duration,
+            end_time,
+        )
         try:
             import xbmcaddon
             from .dialogs.skip import SkipDialog
@@ -674,7 +704,10 @@ class Player(xbmc.Player):
             try:
                 current_pos = self.getTime()
                 if current_pos >= self._skip_end_time:
-                    LOG.debug("_monitor_skip_dialog: passed end_time %.1f, closing", self._skip_end_time)
+                    LOG.debug(
+                        "_monitor_skip_dialog: passed end_time %.1f, closing",
+                        self._skip_end_time,
+                    )
                     break
             except Exception:
                 break

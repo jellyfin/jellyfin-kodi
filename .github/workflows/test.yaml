@@ -16,10 +16,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        py_version: ['3.9', '3.11', '3.12', '3.13', '3.14']
+        py_version: ["3.9", "3.11", "3.12", "3.13", "3.14"]
         os: [ubuntu-latest, windows-latest]
         include:
-          - py_version: '3.8'
+          - py_version: "3.8"
             os: windows-latest
 
     runs-on: ${{ matrix.os }}
@@ -73,3 +73,5 @@ jobs:
     steps:
       - uses: actions/checkout@v5.0.0
       - uses: psf/black@stable
+        with:
+          version: "26.1.0"
