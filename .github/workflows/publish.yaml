@@ -49,7 +49,7 @@ jobs:
           remote_key: ${{ secrets.REPO_KEY }}
 
       - name: Add to Kodi repo and clean up
-        uses: appleboy/ssh-action@v1.2.3
+        uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.REPO_HOST  }}
           username: ${{ secrets.REPO_USER }}
