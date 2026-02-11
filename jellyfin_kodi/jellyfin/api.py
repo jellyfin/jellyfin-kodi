@@ -421,7 +421,7 @@ class API(object):
             "User-Agent": self.config.data["http.user_agent"]
             or "%s/%s"
             % (self.config.data["app.name"], self.config.data["app.version"]),
-            "x-emby-authorization": auth,
+            "Authorization": auth,
         }
 
     def send_request(
@@ -480,9 +480,10 @@ class API(object):
         return {}
 
     def validate_authentication_token(self, server):
-        auth_token_header = {"X-MediaBrowser-Token": server["AccessToken"]}
         headers = self.get_default_headers()
-        headers.update(auth_token_header)
+        auth_header = headers.get("Authorization", "")
+        auth_header += ", Token=%s" % quote(server["AccessToken"])
+        headers.update({"Authorization": auth_header})
 
         response = self.send_request(server["address"], "system/info", headers=headers)
 

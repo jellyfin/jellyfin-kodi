@@ -307,7 +307,7 @@ class PlayUtils(object):
         self.info["Method"] = "DirectStream"
 
         if self.item["Type"] == "Audio":
-            self.info["Path"] = "%s/Audio/%s/stream.%s?static=true&api_key=%s" % (
+            self.info["Path"] = "%s/Audio/%s/stream.%s?static=true&ApiKey=%s" % (
                 self.info["ServerAddress"],
                 self.item["Id"],
                 source.get("Container", "mp4").split(",")[0],
@@ -315,7 +315,7 @@ class PlayUtils(object):
             )
         else:
             self.info["Path"] = (
-                "%s/Videos/%s/stream?static=true&MediaSourceId=%s&api_key=%s"
+                "%s/Videos/%s/stream?static=true&MediaSourceId=%s&ApiKey=%s"
                 % (
                     self.info["ServerAddress"],
                     self.item["Id"],
@@ -732,7 +732,7 @@ class PlayUtils(object):
         ):
             url = "%s%s" % (self.info["ServerAddress"], stream["DeliveryUrl"])
         else:
-            url = "%s/Videos/%s/%s/Subtitles/%s/Stream.%s?api_key=%s" % (
+            url = "%s/Videos/%s/%s/Subtitles/%s/Stream.%s?ApiKey=%s" % (
                 self.info["ServerAddress"],
                 self.item["Id"],
                 source["Id"],
