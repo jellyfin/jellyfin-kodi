@@ -39,7 +39,7 @@ jobs:
             *.zip
 
       - name: Upload to repo server
-        uses: burnett01/rsync-deployments@7.1.0
+        uses: burnett01/rsync-deployments@8.0.4
         with:
           switches: -vrptz
           path: '*.zip'
