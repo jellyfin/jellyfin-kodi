@@ -280,6 +280,9 @@ class PlayUtils(object):
                 audio_bitrate,
             )
 
+            if "av1" in self.get_transcoding_video_codec():
+                params += "&SegmentContainer=mp4"
+
             video_type = "live" if source["Protocol"] == "LiveTV" else "master"
             base = base.replace(
                 "stream" if "stream" in base else "master", video_type, 1
