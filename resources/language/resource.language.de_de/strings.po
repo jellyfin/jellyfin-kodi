@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2025-12-29 17:50+0000\n"
+"PO-Revision-Date: 2026-02-16 03:36+0000\n"
 "Last-Translator: MrPlow <joachim.huffer@gmail.com>\n"
 "Language-Team: German <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/de/>\n"
@@ -1283,3 +1283,67 @@ msgstr "100,0 Mbps"
 msgctxt "#33237"
 msgid "1000.0 Mbps [default]"
 msgstr "1000,0 Mbps [Standard]"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Überspringen von Segmenten"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Überspringen von Segmenten aktivieren"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Überspringmodus"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Automatisches Überspringen"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Überspringen-Knopf anzeigen"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Jedes Mal fragen"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Einführung"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Credits"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Zusammenfassung"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Vorschau"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Überspringen"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Intro überspringen?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Credits überspringen?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Werbung"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "WÄHLEN drücken zum Überspringen"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Aus"
