@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2025-09-22 16:33+0000\n"
-"Last-Translator: Fran <narfzepol12@gmail.com>\n"
+"PO-Revision-Date: 2026-02-16 17:19+0000\n"
+"Last-Translator: Luis Chirlaque <hernandezchirlaque@gmail.com>\n"
 "Language-Team: Spanish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/es/>\n"
 "Language: es_es\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.11.4\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
@@ -1201,3 +1201,63 @@ msgstr "1000.0 Mbps [por defecto]"
 msgctxt "#33233"
 msgid "30.0 Mbps"
 msgstr "30.0 Mbps"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Omitir segmento"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Habilitar omisión de segmentos"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Modo omitir"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Omisión automática"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Mostrar botón de omisión"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Preguntar siempre"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Introducción"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Créditos"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Resumen"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Vista previa"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Omitir"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "¿Omitir introducción?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "¿Omitir créditos?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Comercial"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Pulsa SELECT para omitir"
