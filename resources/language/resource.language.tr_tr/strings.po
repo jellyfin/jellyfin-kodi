@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-01-25 12:33+0000\n"
-"Last-Translator: queeup <queeup@zoho.com>\n"
+"PO-Revision-Date: 2026-02-16 13:40+0000\n"
+"Last-Translator: ilker <isaglam@gmail.com>\n"
 "Language-Team: Turkish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/tr/>\n"
 "Language: tr_tr\n"
@@ -1185,3 +1185,67 @@ msgstr "320"
 msgctxt "#33245"
 msgid "384"
 msgstr "384"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Segment Atlama"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Segment atlamayı etkinleştir"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Atlama modu"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Otomatik atlama"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Atla düğmesini göster"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Her seferinde sor"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Açılış"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Jenerik"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Özet"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Önizleme"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Atla"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Girişi atla?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Jeneriği atla?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Reklam"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Geçmek için SELECT tuşuna basın"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Kapalı"
