@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2026-02-09 11:37+0000\n"
+"PO-Revision-Date: 2026-02-16 09:54+0000\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/it/>\n"
@@ -1266,3 +1266,67 @@ msgstr "320"
 msgctxt "#33245"
 msgid "384"
 msgstr "384"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Spento"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Salto segmenti"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Abilita il salto dei segmenti"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Modalità di salto"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Salto automatico"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Mostra il pulsante di salto"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Chiedi ogni volta"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Introduzione"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Riconoscimenti"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Anteprima"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Salta"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Saltare l'introduzione?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Saltare i riconoscimenti?"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Premi SELECT per saltare"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Annuncio pubblicitario"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Riepilogo"
