@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-01-19 10:38+0000\n"
+"PO-Revision-Date: 2026-02-16 13:40+0000\n"
 "Last-Translator: Dzmitry Zubialevich <dzmitry.zubialevich@gmail.com>\n"
 "Language-Team: Belarusian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/be/>\n"
@@ -1186,3 +1186,67 @@ msgstr "320"
 msgctxt "#33245"
 msgid "384"
 msgstr "384"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Пропуск сегментаў"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Уключыць пропуск сегментаў"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Рэжым пропуску"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Аўтаматычны пропуск"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Паказваць кнопку пропуску"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Кожны раз пытаць"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Уступ"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Фінальныя цітры"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Перадпрагляд"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Прапусціць"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Прапусціць уступ?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Прапусціць фінальныя цітры?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Рэклама"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Націсніце SELECT для пропуску"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Выкл."
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Кароткі змест"
