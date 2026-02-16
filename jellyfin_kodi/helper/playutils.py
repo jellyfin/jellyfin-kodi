@@ -215,9 +215,10 @@ class PlayUtils(object):
             LOG.info("--[ transcode ]")
             self.transcode(source, audio, subtitle)
 
-        self.info["AudioStreamIndex"] = self.info.get("AudioStreamIndex") or source.get(
-            "DefaultAudioStreamIndex"
+        self.info["AudioStreamIndex"] = self.info.get("AudioStreamIndex") or (
+            source.get("DefaultAudioStreamIndex", 0) - 1
         )
+
         self.info["SubtitleStreamIndex"] = self.info.get(
             "SubtitleStreamIndex"
         ) or source.get("DefaultSubtitleStreamIndex")
