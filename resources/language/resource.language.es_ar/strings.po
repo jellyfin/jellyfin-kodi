@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-02-16 15:30+0000\n"
+"PO-Revision-Date: 2026-02-16 17:19+0000\n"
 "Last-Translator: Augusto <tasken@gmail.com>\n"
 "Language-Team: Spanish (Argentina) <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/es_AR/>\n"
@@ -1225,3 +1225,35 @@ msgstr "Introducción"
 msgctxt "#33251"
 msgid "Ask every time"
 msgstr "Preguntar cada vez"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Mostrar el botón de salto"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Salto automático"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Modalidad del salto"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Habilitar el salto de segmentos"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Salto de segmentos"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "¿Saltar créditos?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Comercial"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Apretá SELECT para saltar"
