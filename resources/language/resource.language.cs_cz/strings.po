@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-09-12 18:09+0000\n"
+"PO-Revision-Date: 2026-02-17 14:36+0000\n"
 "Last-Translator: Helak <adamhavra@seznam.cz>\n"
 "Language-Team: Czech <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/cs/>\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 5.11.4\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#33074"
 msgid "Are you sure you want to reset your local Kodi database?"
@@ -1180,3 +1180,67 @@ msgstr "18.0 Mbps"
 msgctxt "#33238"
 msgid "Maximum"
 msgstr "Maximální"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Přeskočení segmentu"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Povolit přeskočení segmentu"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Režim Přeskočit"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Automatické přeskočení"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Zobrazit tlačítko Přeskočit"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Ptát se pokaždé"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Úvod"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Titulky"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Shrnutí"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Náhled"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Přeskočit"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Přeskočit úvod?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Přeskočit titulky?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Reklama"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Stiskněte VYBRAT pro přeskočení"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Vypnout"
