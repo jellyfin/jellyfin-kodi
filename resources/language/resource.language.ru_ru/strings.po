@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2025-09-22 16:33+0000\n"
+"PO-Revision-Date: 2026-02-18 10:28+0000\n"
 "Last-Translator: Dan Tsivinsky <daniil@tsivinsky.com>\n"
 "Language-Team: Russian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ru/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.11.4\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
@@ -1197,3 +1197,25 @@ msgstr "320"
 msgctxt "#33227"
 msgid "12.0 Mbps"
 msgstr "12.0 мбит/с"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Пропуск видеофрагментов"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Включить пропуск видеофрагментов"
+
+#, fuzzy
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Авто-пропуск"
+
+#, fuzzy
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Показывать кнопку пропуска"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Спрашивать каждый раз"
