@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-12-28 01:44+0000\n"
-"Last-Translator: Jonne Saloranta <saloranta.jonne@gmail.com>\n"
+"PO-Revision-Date: 2026-02-18 16:19+0000\n"
+"Last-Translator: John Doe <diefor-93@hotmail.com>\n"
 "Language-Team: Finnish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/fi/>\n"
 "Language: fi_fi\n"
@@ -1182,3 +1182,67 @@ msgstr "320"
 msgctxt "#33245"
 msgid "384"
 msgstr "384"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Osioiden ohittaminen"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Ota osioiden ohittaminen käyttöön"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Lopputekstit"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Kertaus"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Esikatselu"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Ohita"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Ohita intro?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Ohita lopputekstit?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Mainos"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Paina SELECT ohittaaksesi"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Ohita automaattisesti"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Näytä ohituspainike"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Kysy aina"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "intro"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Ohituskäytäntö"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Pois"
