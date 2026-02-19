@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2026-02-16 13:40+0000\n"
-"Last-Translator: Yohann Nizon <ynizon@gmail.com>\n"
+"PO-Revision-Date: 2026-02-19 18:28+0000\n"
+"Last-Translator: ID Games <iliangshow@yahoo.com>\n"
 "Language-Team: French <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/fr/>\n"
 "Language: fr_fr\n"
@@ -1273,7 +1273,57 @@ msgctxt "#33260"
 msgid "Press SELECT to skip"
 msgstr "Appuyer sur SELECT pour passer"
 
-#, fuzzy
 msgctxt "#33261"
 msgid "Off"
-msgstr "Eteint"
+msgstr "Éteint"
+
+#, fuzzy
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Mode Sauter"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Saut Automatique"
+
+#, fuzzy
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Afficher le Bouton Sauter"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Demander à chaque fois"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Introduction"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Générique"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Récapitulatif"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Aperçu"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Sauter"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Sauter l'intro ?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Passer le générique ?"
+
+#, fuzzy
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Commercial(e)"
