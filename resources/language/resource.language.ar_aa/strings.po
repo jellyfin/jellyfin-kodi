@@ -1,8 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-01-03 04:41+0000\n"
-"Last-Translator: Translation expert "
-"<apk2000@users.noreply.translate.jellyfin.org>\n"
+"PO-Revision-Date: 2026-02-20 14:57+0000\n"
+"Last-Translator: Translation expert <eleceng4ever@hotmail.com>\n"
 "Language-Team: Arabic <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ar/>\n"
 "Language: ar_aa\n"
@@ -1167,3 +1166,59 @@ msgstr ""
 msgctxt "#33174"
 msgid "Paging - download threads (default: 3)"
 msgstr "الترحيل - تنزيل المواضيع (افتراضي: 3)"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "تجوز الشريحة"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "تفعيل تجاوز الشريحة"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "نمط التجاوز"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "تجاوز تلقائي"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "اظهار زر التجاوز"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "اسأل كل مرة"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "مدخل"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "شارات"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "تجاوز"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "تجاوز المقدمة؟"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "تجاوز الشارات؟"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "تجاري"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "اضغط اختيار للتجاوز"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "اطفئ"
