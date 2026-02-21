@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-02-21 18:54+0000\n"
-"Last-Translator: Jure <jure@agentmail.to>\n"
+"PO-Revision-Date: 2026-02-21 20:44+0000\n"
+"Last-Translator: Jure S <jure@agentmail.to>\n"
 "Language-Team: Slovenian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sl/>\n"
 "Language: sl_si\n"
@@ -1070,12 +1070,10 @@ msgctxt "#33221"
 msgid "5.0 Mbps"
 msgstr "5.0 Mbps"
 
-#, fuzzy
 msgctxt "#33222"
 msgid "6.0 Mbps"
 msgstr "6.0 Mbps"
 
-#, fuzzy
 msgctxt "#33223"
 msgid "7.0 Mbps"
 msgstr "7.0 Mbps"
@@ -1104,7 +1102,6 @@ msgctxt "#33229"
 msgid "16.0 Mbps"
 msgstr "16.0 Mbps"
 
-#, fuzzy
 msgctxt "#33230"
 msgid "18.0 Mbps"
 msgstr "18.0 Mbps"
@@ -1133,17 +1130,14 @@ msgctxt "#33236"
 msgid "100.0 Mbps"
 msgstr "100.0 Mbps"
 
-#, fuzzy
 msgctxt "#33237"
 msgid "1000.0 Mbps [default]"
-msgstr "1000.0 Mbps [default]"
+msgstr "1000.0 Mbps [privzeto]"
 
-#, fuzzy
 msgctxt "#33238"
 msgid "Maximum"
-msgstr "Največje"
+msgstr "Naj"
 
-#, fuzzy
 msgctxt "#33239"
 msgid "96"
 msgstr "96"
@@ -1200,7 +1194,6 @@ msgctxt "#33247"
 msgid "Enable segment skipping"
 msgstr "Vključi preskok segmentov"
 
-#, fuzzy
 msgctxt "#33248"
 msgid "Skip mode"
 msgstr "Način preskoka"
@@ -1220,3 +1213,39 @@ msgstr "Pritisni IZBERI za preskok"
 msgctxt "#33261"
 msgid "Off"
 msgstr "Izključi"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Prikaži gumb za preskok"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Vedno vprašaj"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Uvod"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Špica"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Povzetek"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Napovednik"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Preskoči"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Preskoči uvod?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Preskoči špico?"
