@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-02-15 16:06+0000\n"
-"Last-Translator: Grag <nikoladjukic978@gmail.com>\n"
+"PO-Revision-Date: 2026-02-21 18:54+0000\n"
+"Last-Translator: Jure <jure@agentmail.to>\n"
 "Language-Team: Slovenian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sl/>\n"
 "Language: sl_si\n"
@@ -1080,32 +1080,26 @@ msgctxt "#33223"
 msgid "7.0 Mbps"
 msgstr "7.0 Mbps"
 
-#, fuzzy
 msgctxt "#33224"
 msgid "8.0 Mbps"
 msgstr "8.0 Mbps"
 
-#, fuzzy
 msgctxt "#33225"
 msgid "9.0 Mbps"
 msgstr "9.0 Mbps"
 
-#, fuzzy
 msgctxt "#33226"
 msgid "10.0 Mbps"
 msgstr "10.0 Mbps"
 
-#, fuzzy
 msgctxt "#33227"
 msgid "12.0 Mbps"
 msgstr "12.0 Mbps"
 
-#, fuzzy
 msgctxt "#33228"
 msgid "14.0 Mbps"
 msgstr "14.0 Mbps"
 
-#, fuzzy
 msgctxt "#33229"
 msgid "16.0 Mbps"
 msgstr "16.0 Mbps"
@@ -1115,32 +1109,26 @@ msgctxt "#33230"
 msgid "18.0 Mbps"
 msgstr "18.0 Mbps"
 
-#, fuzzy
 msgctxt "#33231"
 msgid "20.0 Mbps"
 msgstr "20.0 Mbps"
 
-#, fuzzy
 msgctxt "#33232"
 msgid "25.0 Mbps"
 msgstr "25.0 Mbps"
 
-#, fuzzy
 msgctxt "#33233"
 msgid "30.0 Mbps"
 msgstr "30.0 Mbps"
 
-#, fuzzy
 msgctxt "#33234"
 msgid "35.0 Mbps"
 msgstr "35.0 Mbps"
 
-#, fuzzy
 msgctxt "#33235"
 msgid "40.0 Mbps"
 msgstr "40.0 Mbps"
 
-#, fuzzy
 msgctxt "#33236"
 msgid "100.0 Mbps"
 msgstr "100.0 Mbps"
@@ -1153,39 +1141,82 @@ msgstr "1000.0 Mbps [default]"
 #, fuzzy
 msgctxt "#33238"
 msgid "Maximum"
-msgstr "Maximum"
+msgstr "Največje"
 
 #, fuzzy
 msgctxt "#33239"
 msgid "96"
 msgstr "96"
 
-#, fuzzy
 msgctxt "#33240"
 msgid "128"
 msgstr "128"
 
-#, fuzzy
 msgctxt "#33241"
 msgid "160"
 msgstr "160"
 
-#, fuzzy
 msgctxt "#33242"
 msgid "192"
 msgstr "192"
 
-#, fuzzy
 msgctxt "#33243"
 msgid "256"
 msgstr "256"
 
-#, fuzzy
 msgctxt "#33244"
 msgid "320"
 msgstr "320"
 
-#, fuzzy
 msgctxt "#33245"
 msgid "384"
 msgstr "384"
+
+msgctxt "#33208"
+msgid "360"
+msgstr "360"
+
+msgctxt "#33209"
+msgid "480"
+msgstr "480"
+
+msgctxt "#33210"
+msgid "600"
+msgstr "600"
+
+msgctxt "#33211"
+msgid "720"
+msgstr "720"
+
+msgctxt "#33212"
+msgid "1080"
+msgstr "1080"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Preskok segmenta"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Vključi preskok segmentov"
+
+#, fuzzy
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Način preskoka"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Avtomatski preskok"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Reklama"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Pritisni IZBERI za preskok"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Izključi"
