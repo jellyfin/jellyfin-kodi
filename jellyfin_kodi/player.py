@@ -103,6 +103,8 @@ class Player(xbmc.Player):
         window("jellyfin_play.json", items)
 
         self.set_item(current_file, item)
+        # Detect current audio/subtitle state from Kodi player
+        self.detect_audio_subs(item)
         data = {
             "QueueableMediaTypes": "Video,Audio",
             "CanSeek": True,
