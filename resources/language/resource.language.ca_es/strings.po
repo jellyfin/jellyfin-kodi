@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-01-30 00:09+0000\n"
+"PO-Revision-Date: 2026-02-22 21:43+0000\n"
 "Last-Translator: Gargotaire <gargots@gmail.com>\n"
 "Language-Team: Catalan <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ca/>\n"
@@ -1191,3 +1191,67 @@ msgstr "1080"
 msgctxt "#33210"
 msgid "600"
 msgstr "600"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Deslliga"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Pitgeu SELECCIONA per a saltar"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Anunci publicitari"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Desitgeu saltar els crèdits?"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Desitgeu saltar la introducció?"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Salta"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Vista prèvia"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Resum"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Crèdits"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Introducció"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Demana-ho cada vegada"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Mostra el botó de saltar"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Salt automàtic"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Mode de salt"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Habilita el salt del segment"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Salta el segment"
