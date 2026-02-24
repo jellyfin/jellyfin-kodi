@@ -431,3 +431,17 @@ def get_item(kodi_id, media):
             return
 
     return item
+
+def get_item_by_file_id(file_id, media):
+    """Get jellyfin item based on kodi file id and media."""
+    with Database("jellyfin") as jellyfindb:
+        item = jellyfin_db.JellyfinDatabase(jellyfindb.cursor).get_item_by_file_id(
+            file_id, media
+        )
+
+        if not item:
+            LOG.debug("Not an jellyfin item")
+
+            return
+
+    return item
