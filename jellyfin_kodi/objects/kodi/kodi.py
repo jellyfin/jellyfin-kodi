@@ -113,6 +113,15 @@ class Kodi(object):
         if path_id is not None:
             self.cursor.execute(QU.delete_file_by_path, (path_id,) + args)
 
+    def get_file(self, *args):
+
+        try:
+            self.cursor.execute(QU.get_file, args)
+
+            return self.cursor.fetchone()[0]
+        except TypeError:
+            return ""
+
     def get_filename(self, *args):
 
         try:
