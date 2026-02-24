@@ -155,12 +155,29 @@ class Movies(KodiDb):
             return
 
         current_type_ids = set()
-        for source in obj["media_sources"][1:]:
-            version = {}
-            version["Id"] = source["Id"]
+        for source in obj["media_sources"]:
+            if obj["Id"] == source["Id"]:
+                # Found primary version, so skip
+                continue
+
+            jfitem = self.server.jellyfin.get_item(source["Id"])
+            version = self.objects.map(jfitem, "Movie")
             version["MovieId"] = obj["MovieId"]
             version["PathId"] = obj["PathId"]
             version["LibraryId"] = obj["LibraryId"]
+            version["JellyfinParentId"] = obj["Id"]
+
+            # Version specific metadata
+            version["DateAdded"] = Local(version["DateAdded"]).split(".")[0].replace("T", " ")
+            version["Resume"] = API.adjust_resume((version["Resume"] or 0) / 10000000.0)
+            version["Runtime"] = round(float((version["Runtime"] or 0) / 10000000.0), 6)
+            version["PlayCount"] = API.get_playcount(version["Played"], version["PlayCount"])
+            version["Video"] = API.video_streams(version["Video"] or [], version["Container"])
+            version["Audio"] = API.audio_streams(version["Audio"] or [])
+            version["Streams"] = API.media_streams(version["Video"], version["Audio"], version["Subtitles"])
+            if version["DatePlayed"]:
+                version["DatePlayed"] = Local(version["DatePlayed"]).split(".")[0].replace("T", " ")
+
             version["Path"] = API.get_file_path(source["Path"])
             self.get_path_filename(version)
 
@@ -173,11 +190,17 @@ class Movies(KodiDb):
 
             if self.check_videoversion(*values(version, QU.count_video_version_obj)):
                 # Version already exists
-                continue
+                version["FileId"] = self.get_file(*values(version, QU.get_file_obj))
+                self.jellyfin_db.update_reference(*values(version, QUEM.update_reference_obj))
+            else:
+                # Add the version file and version type
+                version["FileId"] = self.add_file(*values(version, QU.add_file_obj))
+                self.add_videoversion(*values(version, QU.add_video_version_obj))
+                self.jellyfin_db.add_reference(*values(version, QUEM.add_reference_movie_obj))
 
-            # Add the version file and version type
-            version["FileId"] = self.add_file(*values(version, QU.add_file_obj))
-            self.add_videoversion(*values(version, QU.add_video_version_obj))
+            self.update_file(*values(version, QU.update_file_obj))
+            self.add_playstate(*values(version, QU.add_bookmark_obj))
+            self.add_streams(*values(version, QU.add_streams_obj))
 
         # Cleanup versions that are no longer in Jellyfin
         versions = self.get_videoversions(obj["MovieId"])
@@ -199,7 +222,11 @@ class Movies(KodiDb):
         obj["FileId"] = self.add_file(*values(obj, QU.add_file_obj))
         obj["VideoVersionItemType"] = self.itemtype
 
-        version_name = obj["media_sources"][0].get("Name")
+        for source in obj["media_sources"]:
+            # First media source isn't always the main version, so find the correct version name for the primary
+            if obj["Id"] == source["Id"]:
+                version_name = source.get("Name")
+                break
         version_type_id = self.get_or_create_videoversiontype(version_name, obj["SourceFilename"])
         obj["VideoVersionTypeId"] = version_type_id
 
@@ -271,15 +298,16 @@ class Movies(KodiDb):
 
             obj["Path"] = obj["Path"].replace(obj["Filename"], "")
 
+            sl = "\\" if "\\" in obj["Path"] else "/"
             """check dvd directories and point it to ./VIDEO_TS/VIDEO_TS.IFO"""
             if validate_dvd_dir(obj["Path"] + obj["Filename"]):
-                obj["Path"] = obj["Path"] + obj["Filename"] + "/VIDEO_TS/"
+                obj["Path"] = obj["Path"] + obj["Filename"] + sl + "VIDEO_TS" + sl
                 obj["Filename"] = "VIDEO_TS.IFO"
                 LOG.debug("DVD directory %s", obj["Path"])
 
             """check bluray directories and point it to ./BDMV/index.bdmv"""
             if validate_bluray_dir(obj["Path"] + obj["Filename"]):
-                obj["Path"] = obj["Path"] + obj["Filename"] + "/BDMV/"
+                obj["Path"] = obj["Path"] + obj["Filename"] + sl + "BDMV" + sl
                 obj["Filename"] = "index.bdmv"
                 LOG.debug("Bluray directory %s", obj["Path"])
 
