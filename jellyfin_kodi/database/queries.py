@@ -39,6 +39,12 @@ FROM        jellyfin
 WHERE       jellyfin_id LIKE ?
 """
 get_item_by_wild_obj = ["{Id}"]
+get_item_by_file_id = """
+SELECT      jellyfin_id, parent_id, media_folder, jellyfin_type, checksum
+FROM        jellyfin
+WHERE       kodi_fileid = ?
+AND         media_type = ?
+"""
 get_item_by_kodi = """
 SELECT      jellyfin_id, parent_id, media_folder, jellyfin_type, checksum
 FROM        jellyfin
