@@ -95,7 +95,7 @@ class PlayUtils(object):
 
                     break
 
-        elif not self.is_selection(info) or len(info["MediaSources"]) == 1:
+        elif not self.is_selection(info) or len(info["MediaSources"]) == 1 or settings("useVersions") == "true":
 
             LOG.info("Skip source selection.")
             sources.append(info["MediaSources"][0])

@@ -97,7 +97,7 @@ class Movies(Kodi):
 
         # Remove */3D suffixes that Jellyfin adds (ie '.mvc/3D') as long as 3D in the name already
         if '3D' in name[:-2]:
-            name = re.sub(r'\.\w{3,4}/3D$', '', name)
+            name = re.sub(r'\.(\w{3,4})/3D$', lambda m: ' ' + m.group(1).upper(), name)
 
         # Check if this version type already exists and return it
         self.cursor.execute(QU.get_video_version_type, (name,))
