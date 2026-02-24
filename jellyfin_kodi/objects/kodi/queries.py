@@ -70,12 +70,13 @@ FROM        files
 WHERE       idPath = ?
 AND         strFilename = ?
 """
-get_file_obj = ["{FileId}"]
+get_file_obj = ["{PathId}", "{Filename}"]
 get_filename = """
 SELECT      strFilename
 FROM        files
 WHERE       idFile = ?
 """
+get_filename_obj = ["{FileId}"]
 get_all_people = """
 SELECT      name, actor_id
 FROM        actor
