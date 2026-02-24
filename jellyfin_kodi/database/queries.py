@@ -23,7 +23,7 @@ WHERE       parent_id = ?
 AND         media_type = ?
 """
 get_item_by_media_folder = """
-SELECT      jellyfin_id, jellyfin_type
+SELECT      jellyfin_id, jellyfin_type, jellyfin_parent_id
 FROM        jellyfin
 WHERE       media_folder = ?
 """

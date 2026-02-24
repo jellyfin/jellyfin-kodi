@@ -359,7 +359,9 @@ class FullSync(object):
 
         for x in items:
             if x[0] not in current and x[1] == "Movie":
-                obj.remove(x[0])
+                # Parent ID tied to main version so check it before removing
+                if x[2] not in current:
+                    obj.remove(x[0])
 
     @progress()
     def tvshows(self, library, dialog):
