@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2026-02-18 10:28+0000\n"
-"Last-Translator: Dan Tsivinsky <daniil@tsivinsky.com>\n"
+"PO-Revision-Date: 2026-03-02 13:00+0000\n"
+"Last-Translator: Gallyam Biktashev <gallyamb@gmail.com>\n"
 "Language-Team: Russian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ru/>\n"
 "Language: ru_ru\n"
@@ -1206,12 +1206,10 @@ msgctxt "#33247"
 msgid "Enable segment skipping"
 msgstr "Включить пропуск видеофрагментов"
 
-#, fuzzy
 msgctxt "#33249"
 msgid "Auto skip"
-msgstr "Авто-пропуск"
+msgstr "Пропускать автоматически"
 
-#, fuzzy
 msgctxt "#33250"
 msgid "Show skip button"
 msgstr "Показывать кнопку пропуска"
@@ -1219,3 +1217,47 @@ msgstr "Показывать кнопку пропуска"
 msgctxt "#33251"
 msgid "Ask every time"
 msgstr "Спрашивать каждый раз"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Режим пропуска"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Заставка"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Титры"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Краткий обзор"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Предпросмотр"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Пропустить"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Пропустить заставку?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Пропустить титры?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Реклама"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Нажмите ВЫБРАТЬ для пропуска"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Отключить"
