@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-09-17 20:34+0000\n"
+"PO-Revision-Date: 2026-03-02 13:00+0000\n"
 "Last-Translator: nenadsuperzmaj <nenadsuperzmaj@gmail.com>\n"
 "Language-Team: Serbian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sr/>\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.11.4\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#30252"
 msgid "Recently added Photos"
@@ -1190,3 +1190,67 @@ msgstr "1000.0 Mbps [подразумевано]"
 msgctxt "#30538"
 msgid "Max days in next episodes"
 msgstr "Највише дана у следећим епизодама"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Прескакање сегмента"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Омогући прескакање сегмента"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Режим прескакања"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Аутоматско прескакање"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Прикажи дугме за прескакање"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Питај сваки пут"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Увод"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Заслуге"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Сажетак"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Преглед"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Прескочи"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Прескочи увод?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Прескочи заслуге?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Реклама"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Притисни ИЗАБЕРИ да прескочиш"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Искључено"
