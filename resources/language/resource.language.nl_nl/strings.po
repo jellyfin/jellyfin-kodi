@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2026-02-17 07:03+0000\n"
+"PO-Revision-Date: 2026-03-02 21:44+0000\n"
 "Last-Translator: Danian Jansen <danianjansen@gmail.com>\n"
 "Language-Team: Dutch <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/nl/>\n"
@@ -1259,3 +1259,43 @@ msgstr "Segment"
 msgctxt "#33247"
 msgid "Enable segment skipping"
 msgstr "Segment"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Automatisch overslaan"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Altijd vragen"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Introductie"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Samenvatting"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Voorbeeld"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Overslaan"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Intro overslaan?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Reclame"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Klik SELECTEREN om over te slaan"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Uit"
