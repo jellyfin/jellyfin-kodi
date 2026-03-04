@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-12-15 05:07+0000\n"
-"Last-Translator: Francois Pienaar <fpienaar@pm.me>\n"
+"PO-Revision-Date: 2026-03-04 23:20+0000\n"
+"Last-Translator: Eugene <eugclass@gmail.com>\n"
 "Language-Team: Afrikaans <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/af/>\n"
 "Language: af_za\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#30091"
 msgid "Confirm file deletion"
@@ -187,3 +187,119 @@ msgstr "TV-Programme"
 msgctxt "#30401"
 msgid "Jellyfin options"
 msgstr "Jellyfin opsies"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Bied skrap na afspeel"
+
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "Aan die gang Musiek videos"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "Voeg by gunsteling"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "Skrap van gunsteling"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "Instellings"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "Skrap van Jellyfin"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "Verfris die item"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "Verifieer konneksie"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "Gebruik alternatiewe toestel naam"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "Sinchroniseer"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "Vra om lokprente te speel"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "Permanente gebruikers"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "Kennisgewings (in sekondes)"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "Genereer n nuwe toestel ID"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "Meld aan"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "Gebruikersnaam of epos"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "Vertoon boodskap"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "Wagwoord"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "Teken aan"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "Kanseleer"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "Kies hoof bediener"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "Gebruikersnaam of wagwoord kan nie leeg wees nie"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "Meld asseblief aan"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "Welkom"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "Skrap lêer van Jellyfin?"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "Speel lokprente?"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "Nuwe"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "Voeg gebruiker by"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Aanbeveelde Items"
