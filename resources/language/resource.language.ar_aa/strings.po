@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-03-02 21:44+0000\n"
-"Last-Translator: Emad Aljohani <Emad.Aljohani@gmail.com>\n"
+"PO-Revision-Date: 2026-03-08 09:42+0000\n"
+"Last-Translator: Jack Ward <jack200114@hotmail.com>\n"
 "Language-Team: Arabic <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ar/>\n"
 "Language: ar_aa\n"
@@ -14,7 +14,7 @@ msgstr ""
 
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
-msgstr "Jellyfin لـ Kodi"
+msgstr "جيليفين لبرنامج كودي"
 
 msgctxt "#30000"
 msgid "Server address"
