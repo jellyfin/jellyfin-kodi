@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-03-04 23:20+0000\n"
-"Last-Translator: Eugene <eugclass@gmail.com>\n"
+"PO-Revision-Date: 2026-03-11 00:42+0000\n"
+"Last-Translator: Peet Janse van Vuuren <peetjvv93@gmail.com>\n"
 "Language-Team: Afrikaans <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/af/>\n"
 "Language: af_za\n"
@@ -303,3 +303,23 @@ msgstr "Voeg gebruiker by"
 msgctxt "#30230"
 msgid "Recommended Items"
 msgstr "Aanbeveelde Items"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "Transkodeer H.265/HEVC"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Transkodeer MPEG2"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Transkodeer VC-1"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "Transkodeer VP9"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "Transkodeer AV1"
