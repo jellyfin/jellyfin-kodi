@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-09-15 10:50+0000\n"
-"Last-Translator: Leverpastej <zstenroos@gmail.com>\n"
+"PO-Revision-Date: 2026-03-11 20:25+0000\n"
+"Last-Translator: aniara001 <qwert352@hotmail.com>\n"
 "Language-Team: Swedish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sv/>\n"
 "Language: sv_se\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.11.4\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#30116"
 msgid "For Movies"
@@ -1181,3 +1181,46 @@ msgstr "320"
 msgctxt "#33245"
 msgid "384"
 msgstr "384"
+
+#, fuzzy
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Överhoppningsläge"
+
+#, fuzzy
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Hoppa över automatiskt"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Fråga varje gång"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Introduktion"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Förhandsvisning"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Hoppa över"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Hoppa över intro?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Hoppa över eftertexter?"
+
+#, fuzzy
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Kommersiell"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Av"
