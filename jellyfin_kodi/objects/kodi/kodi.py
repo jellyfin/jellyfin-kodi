@@ -86,21 +86,13 @@ class Kodi(object):
     def remove_path(self, *args):
         self.cursor.execute(QU.delete_path, args)
 
-    def add_file(self, path_id, filename):
+    def add_file(self, *args):
+        file_id = self.get_file(*args)
 
-        try:
-            self.cursor.execute(
-                QU.get_file,
-                (
-                    filename,
-                    path_id,
-                ),
-            )
-            file_id = self.cursor.fetchone()[0]
-        except TypeError:
+        if file_id is None:
 
             file_id = self.create_entry_file()
-            self.cursor.execute(QU.add_file, (file_id, path_id, filename))
+            self.cursor.execute(QU.add_file, (file_id,) + args)
 
         return file_id
 
@@ -120,7 +112,7 @@ class Kodi(object):
 
             return self.cursor.fetchone()[0]
         except TypeError:
-            return ""
+            return
 
     def get_filename(self, *args):
 
