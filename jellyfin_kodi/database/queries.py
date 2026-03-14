@@ -28,6 +28,7 @@ FROM        jellyfin
 WHERE       media_folder = ?
 """
 get_item_by_parent_movie_obj = ["{KodiId}", "movie"]
+get_item_by_parent_extra_obj = ["{KodiId}", "extra"]
 get_item_by_parent_tvshow_obj = ["{ParentId}", "tvshow"]
 get_item_by_parent_season_obj = ["{ParentId}", "season"]
 get_item_by_parent_episode_obj = ["{ParentId}", "episode"]
@@ -102,6 +103,18 @@ add_reference_movie_obj = [
     "Movie",
     "movie",
     None,
+    "{Checksum}",
+    "{LibraryId}",
+    "{JellyfinParentId}",
+]
+add_reference_extra_obj = [
+    "{Id}",
+    "{ExtraId}",
+    "{FileId}",
+    "{PathId}",
+    "Extra",
+    "extra",
+    "{MovieId}",
     "{Checksum}",
     "{LibraryId}",
     "{JellyfinParentId}",

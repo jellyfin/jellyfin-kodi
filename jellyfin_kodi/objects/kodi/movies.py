@@ -47,10 +47,21 @@ class Movies(Kodi):
 
         return self.cursor.fetchone()[0] + 1
 
-    def get(self, *args):
+    def create_entry_extra(self):
+        self.cursor.execute(QU.create_extra)
 
+        return self.cursor.fetchone()[0] + 1
+
+    def get(self, *args):
         try:
             self.cursor.execute(QU.get_movie, args)
+            return self.cursor.fetchone()[0]
+        except TypeError:
+            return
+
+    def get_extra(self, *args):
+        try:
+            self.cursor.execute(QU.get_extra, args)
             return self.cursor.fetchone()[0]
         except TypeError:
             return
@@ -65,6 +76,18 @@ class Movies(Kodi):
 
     def update(self, *args):
         self.cursor.execute(QU.update_movie, args)
+
+    def update_extra(self, *args):
+        self.cursor.execute(QU.update_video_version_extra, args)
+
+    def update_video_version_type_extra(self, *args):
+        self.cursor.execute(QU.update_video_version_type_extra, args)
+
+    def delete_extra(self, kodi_id, file_id):
+        self.cursor.execute(QU.delete_video_version_extra, (kodi_id,))
+        self.cursor.execute(QU.delete_video_version_type_extra, (kodi_id,))
+        self.cursor.execute(QU.delete_file, (file_id,))
+        self.cursor.execute(QU.delete_streams, (file_id,))
 
     def delete(self, kodi_id, file_id):
 
