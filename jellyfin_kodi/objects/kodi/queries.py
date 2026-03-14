@@ -40,6 +40,11 @@ create_movie = """
 SELECT      coalesce(max(idMovie), 0)
 FROM        movie
 """
+# Kodi extras start at id 40801
+create_extra = """
+SELECT      coalesce(max(id), 40800)
+FROM        videoversiontype
+"""
 create_musicvideo = """
 SELECT      coalesce(max(idMVideo), 0)
 FROM        musicvideo
@@ -120,6 +125,12 @@ FROM        movie
 WHERE       idMovie = ?
 """
 get_movie_obj = ["{MovieId}"]
+get_extra = """
+SELECT      *
+FROM        videoversiontype
+WHERE       id = ?
+"""
+get_extra_obj = ["{ExtraId}"]
 get_rating = """
 SELECT      rating_id
 FROM        rating
@@ -418,6 +429,17 @@ add_video_version_obj = [
     "{VideoVersionItemType}",
     40400,
 ]
+update_video_version_extra = """
+INSERT OR REPLACE INTO   videoversion(idFile, idMedia, media_type, itemType, idType)
+VALUES                   (?, ?, ?, ?, ?)
+"""
+update_video_version_extra_obj = [
+    "{FileId}",
+    "{MovieId}",
+    "movie",
+    "1",
+    "{VideoVersionIdType}",
+]
 get_videoversion_itemtype = """
 SELECT itemType FROM videoversiontype WHERE id = ?
 """
@@ -653,6 +675,16 @@ update_unique_id_episode_obj = [
     "{ProviderName}",
     "{Unique}",
 ]
+update_video_version_type_extra = """
+INSERT OR REPLACE INTO      videoversiontype(id, name, owner, itemType)
+VALUES                      (?, ?, ?, ?)
+"""
+update_video_version_type_extra_obj = [
+    "{VideoVersionIdType}",
+    "{Title}",
+    "1",
+    "1",
+]
 update_country = """
 INSERT OR REPLACE INTO      country_link(country_id, media_id, media_type)
 VALUES                      (?, ?, ?)
@@ -797,6 +829,7 @@ DELETE FROM     movie
 WHERE           idMovie = ?
 """
 delete_movie_obj = ["{KodiId}", "{FileId}"]
+delete_extra_obj = ["{KodiId}", "{FileId}"]
 delete_video_version = """
 DELETE FROM     videoversion
 WHERE           idFile = ?
@@ -839,6 +872,16 @@ DELETE FROM     art
 WHERE           media_id = ?
 AND             media_type = ?
 AND             type LIKE ?
+"""
+delete_video_version_extra = """
+DELETE FROM     videoversion
+WHERE           idType = ?
+AND             itemType = 1
+"""
+delete_video_version_type_extra = """
+DELETE FROM     videoversiontype
+WHERE           id = ?
+AND             itemType = 1
 """
 get_missing_versions = """
 SELECT          idFile,idMovie
