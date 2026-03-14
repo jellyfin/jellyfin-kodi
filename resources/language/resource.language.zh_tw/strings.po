@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-03-14 17:47+0000\n"
+"PO-Revision-Date: 2026-03-14 20:30+0000\n"
 "Last-Translator: Lofuuzi <lather0519@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://"
 "translate.jellyfin.org/projects/jellyfin/jellyfin-kodi/zh_Hant/>\n"
@@ -1169,3 +1169,39 @@ msgstr "每次都問"
 msgctxt "#33252"
 msgid "Introduction"
 msgstr "介紹"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "幕後功臣"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "劇情提要"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "預覽"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "跳過"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "跳過片頭？"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "跳過幕後功臣？"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "廣告"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "按「選擇」鍵跳過"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "關閉"
