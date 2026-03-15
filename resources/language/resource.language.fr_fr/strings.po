@@ -1336,3 +1336,7 @@ msgstr "Activer le saut de segment"
 msgctxt "#30900"
 msgid "Sync video versions"
 msgstr "Synchroniser les versions vidéo"
+
+msgctxt "#30901"
+msgid "Sync video extras"
+msgstr "Synchroniser les extras vidéo"

@@ -420,9 +420,9 @@ add_video_version_obj = [
     "{VideoVersionTypeId}",
 ]
 count_video_version = """
-SELECT COUNT(*) FROM videoversion WHERE idMedia = ? AND idType = ? AND media_type = 'movie'
+SELECT COUNT(*) FROM videoversion WHERE idFile = ? AND idMedia = ? AND idType = ?
 """
-count_video_version_obj = ["{MovieId}", "{VideoVersionTypeId}"]
+count_video_version_obj = ["{FileId}", "{MovieId}", "{VideoVersionTypeId}"]
 count_video_version_type = """
 SELECT COUNT(*) FROM videoversion WHERE idType = ?
 """
@@ -437,7 +437,7 @@ check_video_version = """
 SELECT COUNT(name) FROM sqlite_master WHERE type='table' AND name='videoversion'
 """
 get_video_version_type = """
-SELECT id FROM videoversiontype WHERE name = ?
+SELECT id FROM videoversiontype WHERE name = ? and itemType = ?
 """
 add_video_version_type = """
 INSERT INTO videoversiontype(name, owner, itemType) VALUES (?, ?, ?)

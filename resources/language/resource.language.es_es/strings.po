@@ -1265,3 +1265,7 @@ msgstr "Pulsa SELECT para omitir"
 msgctxt "#30900"
 msgid "Sync video versions"
 msgstr "Sincronizar versiones de vídeo"
+
+msgctxt "#30901"
+msgid "Sync video extras"
+msgstr "Sincronizar extras de vídeo"

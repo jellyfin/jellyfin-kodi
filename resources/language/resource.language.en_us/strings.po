@@ -1184,3 +1184,7 @@ msgstr "96"
 msgctxt "#30900"
 msgid "Sync video versions"
 msgstr "Sync video versions"
+
+msgctxt "#30901"
+msgid "Sync video extras"
+msgstr "Sync video extras"

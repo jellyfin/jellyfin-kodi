@@ -69,11 +69,14 @@ class Movies(Kodi):
         self.cursor.execute(QU.count_video_version, args)
         return self.cursor.fetchone()[0]
 
-    def get_or_create_videoversiontype(self, name, filepath):
+    def get_or_create_videoversiontype(self, name, filepath, extra=False):
         """Retrieve or create a video version type based on the Jellyfin version name or filename."""
         # If versions are disabled, always return the standard edition
         if settings("useVersions") != "true":
             return 40400
+
+        # Change itemtype for extras. If other types added in the future, need to adjust.
+        itemtype = self.itemtype + 1 if extra else self.itemtype
 
         # Get the filename without extension
         filename = os.path.splitext(os.path.basename(filepath))[0]
@@ -83,7 +86,7 @@ class Movies(Kodi):
 
         # If the Jellyfin version name matches the filename completely, a good version name
         # wasn't created automatically, so extract it, or set to Standard Edition
-        if test_name == filename:
+        if not extra and test_name == filename:
             # Check for ' - XXXX' at end of the name to use for version name
             match = re.search(r" - (.+)$", name)
             if match:
@@ -100,13 +103,13 @@ class Movies(Kodi):
             name = re.sub(r'\.(\w{3,4})/3D$', lambda m: ' ' + m.group(1).upper(), name)
 
         # Check if this version type already exists and return it
-        self.cursor.execute(QU.get_video_version_type, (name,))
+        self.cursor.execute(QU.get_video_version_type, (name, itemtype,))
         row = self.cursor.fetchone()
         if row:
             return row[0]
 
         # Create a new version type and return the id
-        self.cursor.execute(QU.add_video_version_type, (name, 1, self.itemtype))
+        self.cursor.execute(QU.add_video_version_type, (name, 1, itemtype))
         return self.cursor.lastrowid
 
     def update(self, *args):
