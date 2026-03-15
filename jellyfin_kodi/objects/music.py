@@ -38,7 +38,7 @@ class Music(KodiDb):
 
     @stop
     @jellyfin_item
-    def artist(self, item, e_item):
+    def artist(self, item, e_item, library=None):
         """If item does not exist, entry will be added.
         If item exists, entry will be updated.
         """
@@ -56,7 +56,7 @@ class Music(KodiDb):
         except TypeError:
             update = False
 
-            library = self.library or find_library(self.server, item)
+            library = library or self.library or find_library(self.server, item)
             if not library:
                 # This item doesn't belong to a whitelisted library
                 return
@@ -426,7 +426,10 @@ class Music(KodiDb):
             except TypeError:
 
                 try:
-                    self.artist(self.server.jellyfin.get_item(temp_obj["Id"]))
+                    self.artist(
+                        self.server.jellyfin.get_item(temp_obj["Id"]),
+                        library={"Id": obj["LibraryId"], "Name": obj["LibraryName"]},
+                    )
                     temp_obj["ArtistId"] = self.jellyfin_db.get_item_by_id(
                         *values(temp_obj, QUEM.get_item_obj)
                     )[0]
@@ -463,7 +466,10 @@ class Music(KodiDb):
             except TypeError:
 
                 try:
-                    self.artist(self.server.jellyfin.get_item(temp_obj["Id"]))
+                    self.artist(
+                        self.server.jellyfin.get_item(temp_obj["Id"]),
+                        library={"Id": obj["LibraryId"], "Name": obj["LibraryName"]},
+                    )
                     temp_obj["ArtistId"] = self.jellyfin_db.get_item_by_id(
                         *values(temp_obj, QUEM.get_item_obj)
                     )[0]
