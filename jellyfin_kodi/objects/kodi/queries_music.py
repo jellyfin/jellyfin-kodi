@@ -203,23 +203,24 @@ VALUES                      (?, ?, ?)
 update_discography_obj = ["{ArtistId}", "{Title}", "{Year}"]
 update_album = """
 UPDATE      album
-SET         strArtists = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?,
+SET         strAlbum = ?, strArtists = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?,
             iUserrating = ?, lastScraped = ?, strReleaseType = ?
 WHERE       idAlbum = ?
 """
 update_album72 = """
 UPDATE      album
-SET         strArtistDisp = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?,
+SET         strAlbum = ?, strArtistDisp = ?, iYear = ?, strGenres = ?, strReview = ?, strImage = ?,
             iUserrating = ?, lastScraped = ?, bScrapedMBID = 1, strReleaseType = ?
 WHERE       idAlbum = ?
 """
 update_album74 = """
 UPDATE      album
-SET         strArtistDisp = ?, strReleaseDate = ?, strGenres = ?, strReview = ?, strImage = ?,
+SET         strAlbum = ?, strArtistDisp = ?, strReleaseDate = ?, strGenres = ?, strReview = ?, strImage = ?,
             iUserrating = ?, lastScraped = ?, bScrapedMBID = 1, strReleaseType = ?
 WHERE       idAlbum = ?
 """
 update_album_obj = [
+    "{Title}",
     "{Artists}",
     "{Year}",
     "{Genre}",
