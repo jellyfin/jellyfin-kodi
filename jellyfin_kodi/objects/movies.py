@@ -144,26 +144,30 @@ class Movies(KodiDb):
         self.add_people(*values(obj, QU.add_people_movie_obj))
         self.add_streams(*values(obj, QU.add_streams_obj))
         self.artwork.add(obj["Artwork"], obj["MovieId"], "movie")
+        self.artwork.add(obj["Artwork"], obj["FileId"], "videoversion")
         self.item_ids.append(obj["Id"])
+        self.current_type_ids = set()
         self.add_versions(API, obj)
+        self.add_versions(API, obj, True) # Add extras as versions
+        self.cleanup_versions(obj)
 
         return not update
 
-    def add_versions(self, API, obj):
+    def add_versions(self, API, obj, extra=False):
         """Add all additional media sources as Kodi versions."""
-        if settings("useVersions") != "true":
+        if settings("useVersions") != "true" or (extra and settings("useExtras") != "true"):
             return
 
-        current_type_ids = set()
-        for source in obj["media_sources"]:
+        sources = self.server.jellyfin.get_extras(obj["Id"]) if extra else obj["media_sources"]
+        for source in sources:
             if obj["Id"] == source["Id"]:
                 # Found primary version, so skip
                 continue
 
-            jfitem = self.server.jellyfin.get_item(source["Id"])
+            # Extras already in the right format from get_extras, but versions need to be pulled
+            jfitem = source if extra else self.server.jellyfin.get_item(source["Id"])
             version = self.objects.map(jfitem, "Movie")
             version["MovieId"] = obj["MovieId"]
-            version["PathId"] = obj["PathId"]
             version["LibraryId"] = obj["LibraryId"]
             version["JellyfinParentId"] = obj["Id"]
 
@@ -175,39 +179,41 @@ class Movies(KodiDb):
             version["Video"] = API.video_streams(version["Video"] or [], version["Container"])
             version["Audio"] = API.audio_streams(version["Audio"] or [])
             version["Streams"] = API.media_streams(version["Video"], version["Audio"], version["Subtitles"])
+            version["Artwork"] = API.get_all_artwork(self.objects.map(jfitem, "Artwork"))
             if version["DatePlayed"]:
                 version["DatePlayed"] = Local(version["DatePlayed"]).split(".")[0].replace("T", " ")
 
-            version["Path"] = API.get_file_path(source["Path"])
+            version["Path"] = API.get_file_path(version["Path"])
             self.get_path_filename(version)
+            version["PathId"] = self.add_path(*values(version, QU.add_path_obj))
 
             # Find the correct version name for this source
-            version_name = source.get("Name")
-            version_type_id = self.get_or_create_videoversiontype(version_name, version["SourceFilename"])
+            version_type_id = self.get_or_create_videoversiontype(version["Title"], version["SourceFilename"], extra)
             version["VideoVersionTypeId"] = version_type_id
-            version["VideoVersionItemType"] = self.itemtype
-            current_type_ids.add(version_type_id)
+            version["VideoVersionItemType"] = self.itemtype + 1 if extra else self.itemtype
+            self.current_type_ids.add(version_type_id)
 
+            version["FileId"] = self.add_file(*values(version, QU.add_file_obj))
             if self.check_videoversion(*values(version, QU.count_video_version_obj)):
                 # Version already exists
-                version["FileId"] = self.get_file(*values(version, QU.get_file_obj))
                 self.jellyfin_db.update_reference(*values(version, QUEM.update_reference_obj))
             else:
                 # Add the version file and version type
-                version["FileId"] = self.add_file(*values(version, QU.add_file_obj))
                 self.add_videoversion(*values(version, QU.add_video_version_obj))
                 self.jellyfin_db.add_reference(*values(version, QUEM.add_reference_movie_obj))
 
             self.update_file(*values(version, QU.update_file_obj))
             self.add_playstate(*values(version, QU.add_bookmark_obj))
             self.add_streams(*values(version, QU.add_streams_obj))
+            self.artwork.add(version["Artwork"], version["FileId"], "videoversion")
 
-        # Cleanup versions that are no longer in Jellyfin
+    def cleanup_versions(self, obj):
+        """Cleanup versions that are no longer in Jellyfin"""
         versions = self.get_videoversions(obj["MovieId"])
         for row in versions:
             type_id = row[0]
             file_id = row[1]
-            if file_id != obj["FileId"] and type_id not in current_type_ids:
+            if file_id != obj["FileId"] and type_id not in self.current_type_ids:
                 self.delete_video_version(file_id, type_id)
 
     def movie_add(self, obj):
