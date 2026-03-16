@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-09-15 19:15+0000\n"
+"PO-Revision-Date: 2026-03-17 00:49+0000\n"
 "Last-Translator: Aindriú Mac Giolla Eoin <aindriu80@gmail.com>\n"
 "Language-Team: Irish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ga/>\n"
@@ -8,9 +8,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=5; plural=n==1 ? 0 : n==2 ? 1 : (n>2 && n<7) ? 2 :("
-"n>6 && n<11) ? 3 : 4;\n"
-"X-Generator: Weblate 5.11.4\n"
+"Plural-Forms: nplurals=5; plural=n==1 ? 0 : n==2 ? 1 : (n>2 && n<7) ? 2 :(n>"
+"6 && n<11) ? 3 : 4;\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
@@ -1189,3 +1189,67 @@ msgstr "16.0 Mbps"
 msgctxt "#33230"
 msgid "18.0 Mbps"
 msgstr "18.0 Mbps"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Scipeáil Deighleog"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Cumasaigh scipeáil deighleog"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Mód scipeála"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Scipeáil go huathoibríoch"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Taispeáin an cnaipe scipeála"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Iarr gach uair"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Réamhrá"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Creidmheasanna"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Achoimre"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Réamhamharc"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Scipeáil"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Réamhrá a scipeáil?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Creidmheasanna a scipeáil?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Tráchtála"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Brúigh ROGHNAIGH chun scipeáil"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "As"
