@@ -198,12 +198,14 @@ class Movies(KodiDb):
             version["VideoVersionItemType"] = self.itemtype + 1 if extra else self.itemtype
             self.current_type_ids.add(version_type_id)
 
-            version["FileId"] = self.add_file(*values(version, QU.add_file_obj))
-            if self.check_videoversion(*values(version, QU.count_video_version_obj)):
+            version["FileId"] = self.get_file(*values(version, QU.get_file_obj))
+            if version["FileId"]:
                 # Version already exists
+                self.update_videoversion(*values(version, QU.update_video_version_obj))
                 self.jellyfin_db.update_reference(*values(version, QUEM.update_reference_obj))
             else:
                 # Add the version file and version type
+                version["FileId"] = self.add_file(*values(version, QU.add_file_obj))
                 self.add_videoversion(*values(version, QU.add_video_version_obj))
                 self.jellyfin_db.add_reference(*values(version, QUEM.add_reference_movie_obj))
 

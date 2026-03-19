@@ -419,6 +419,18 @@ add_video_version_obj = [
     "{VideoVersionItemType}",
     "{VideoVersionTypeId}",
 ]
+update_video_version = """
+UPDATE      videoversion
+SET         idMedia = ?, media_type = ?, itemType = ?, idType = ?
+WHERE       idFile = ?
+"""
+update_video_version_obj = [
+    "{MovieId}",
+    "movie",
+    "{VideoVersionItemType}",
+    "{VideoVersionTypeId}",
+    "{FileId}",
+]
 count_video_version = """
 SELECT COUNT(*) FROM videoversion WHERE idFile = ? AND idMedia = ? AND idType = ?
 """
