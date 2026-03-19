@@ -65,6 +65,11 @@ class Movies(Kodi):
         if self.cursor.fetchone()[0] == 1:
             self.cursor.execute(QU.add_video_version, args)
 
+    def update_videoversion(self, *args):
+        self.cursor.execute(QU.check_video_version)
+        if self.cursor.fetchone()[0] == 1:
+            self.cursor.execute(QU.update_video_version, args)
+
     def check_videoversion(self, *args):
         self.cursor.execute(QU.count_video_version, args)
         return self.cursor.fetchone()[0]
