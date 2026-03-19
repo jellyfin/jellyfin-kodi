@@ -445,6 +445,9 @@ INSERT INTO videoversiontype(name, owner, itemType) VALUES (?, ?, ?)
 get_max_video_version_type = """
 SELECT MAX(id) FROM videoversiontype
 """
+check_movie_file_primary = """
+SELECT 1 FROM movie WHERE idMovie = ? AND idFile = ? LIMIT 1
+"""
 add_musicvideo = """
 INSERT INTO     musicvideo(idMVideo, idFile, c00, c04, c05, c06, c07, c08, c09, c10,
                 c11, c12, premiered)

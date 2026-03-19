@@ -67,6 +67,11 @@ class Movies(KodiDb):
             obj["PathId"] = e_item[2]
             obj["LibraryId"] = e_item[6]
             obj["LibraryName"] = self.jellyfin_db.get_view_name(obj["LibraryId"])
+
+            if settings("useVersions") == "true":
+                # Only process primary movie files, not versions and extras; those are processed in add_versions.
+                if not self.check_movie_file_primary(obj["MovieId"], obj["FileId"]):
+                    return
         except TypeError:
             update = False
             LOG.debug("MovieId %s not found", obj["Id"])

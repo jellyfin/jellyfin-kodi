@@ -146,7 +146,14 @@ class Movies(Kodi):
 
     def get_videoversions(self, kodi_id):
         self.cursor.execute(QU.get_video_versions, (kodi_id,))
-        return [row for row in self.cursor.fetchall()]
+        return self.cursor.fetchall()
+
+    def check_movie_file_primary(self, kodi_id, file_id):
+        """Return True if the movie row with idMovie matches the provided idFile."""
+        self.cursor.execute(QU.check_movie_file_primary, (kodi_id, file_id))
+        row = self.cursor.fetchone()
+
+        return row is not None
 
     def get_rating_id(self, *args):
 
