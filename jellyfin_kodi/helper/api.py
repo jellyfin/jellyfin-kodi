@@ -57,8 +57,8 @@ class API(object):
 
         if "People" in self.item:
             self.get_people_artwork(self.item["People"])
-            
-            # Define which types of people are considered "actors" in a "cast".
+
+            # Define the types of people considered "actors" in a "cast".
             cast_types = ["Actor", "GuestStar"]
 
             for person in self.item["People"]:

@@ -137,8 +137,8 @@ class Kodi(object):
         cast_order = 1
 
         bulk_updates = {}
-        
-        # Define which types of people are considered "actors" in a "cast".
+
+        # Define the types of people considered "actors" in a "cast".
         cast_types = ["Actor", "GuestStar"]
 
         for person in people:
