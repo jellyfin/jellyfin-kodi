@@ -55,11 +55,11 @@ jobs:
           coverage report
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v5.5.2
+        uses: codecov/codecov-action@v5.5.3
         if: ${{ matrix.py_version == '3.11' }}
 
       - name: Publish Test Artifact
-        uses: actions/upload-artifact@v6.0.0
+        uses: actions/upload-artifact@v7.0.0
         with:
           retention-days: 14
           name: ${{ matrix.py_version }}-${{ matrix.os }}-test-results
