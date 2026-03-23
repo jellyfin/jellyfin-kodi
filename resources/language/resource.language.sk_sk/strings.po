@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2025-09-13 19:19+0000\n"
+"PO-Revision-Date: 2026-03-10 11:11+0000\n"
 "Last-Translator: nextlooper42 <nextlooper42@protonmail.com>\n"
 "Language-Team: Slovak <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sk/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 5.11.4\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
@@ -1193,3 +1193,67 @@ msgstr "256"
 msgctxt "#33245"
 msgid "384"
 msgstr "384"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Preskakovanie segmentov"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Povoliť preskakovanie segmentov"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Režim Preskočiť"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Automatické preskočenie"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Zobraziť tlačidlo Preskočiť"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Vždy sa opýtať"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Úvod"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Titulky"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Zhrnutie"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Náhľad"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Preskočiť"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Preskočiť intro?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Preskočiť titulky?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Reklama"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Stlačte VYBRAŤ pre preskočenie"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Vypnúť"

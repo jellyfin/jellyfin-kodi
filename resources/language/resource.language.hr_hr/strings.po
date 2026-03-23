@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-12-13 20:24+0000\n"
-"Last-Translator: Dino Horvat <contact@tremmert.org>\n"
+"PO-Revision-Date: 2026-02-17 10:28+0000\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hr/>\n"
 "Language: hr_hr\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.14\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#30001"
 msgid "Server name"
@@ -1184,3 +1184,55 @@ msgstr "320"
 msgctxt "#33245"
 msgid "384"
 msgstr "384"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Preskakanje segmenata"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Aktiviraj preskakanje segmenata"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Modus preskakanja"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Automatski preskoči"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Prikaži gumb preskakanja"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Pitaj svaki puta"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Uvod"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Zasluge"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Sažetak"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Pregled"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Preskoči"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Preskočiti uvod?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Preskočiti zasluge?"

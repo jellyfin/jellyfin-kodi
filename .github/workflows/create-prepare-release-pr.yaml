@@ -10,7 +10,7 @@ jobs:
     steps:
 
       - name: Update Draft
-        uses: release-drafter/release-drafter@v6.1.0
+        uses: release-drafter/release-drafter@v6.4.0
         id: draft
         env:
           GITHUB_TOKEN: ${{ secrets.JF_BOT_TOKEN }}
@@ -21,7 +21,7 @@ jobs:
           yq-version: v4.9.1
 
       - name: Checkout repository
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.2
 
       - name: Parse Changelog
         run: |

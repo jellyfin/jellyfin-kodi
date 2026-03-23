@@ -8,17 +8,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Update Draft
-        uses: release-drafter/release-drafter@v6.1.0
+        uses: release-drafter/release-drafter@v6.4.0
         with:
           publish: true
         env:
           GITHUB_TOKEN: ${{ secrets.JF_BOT_TOKEN }}
 
       - name: Checkout repository
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.2
 
       - name: Set up Python
-        uses: actions/setup-python@v6.0.0
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: 3.14
 
@@ -31,7 +31,7 @@ jobs:
         run: python build.py
 
       - name: Publish Build Artifact
-        uses: actions/upload-artifact@v5.0.0
+        uses: actions/upload-artifact@v7.0.0
         with:
           retention-days: 14
           name: py3-build-artifact
@@ -39,7 +39,7 @@ jobs:
             *.zip
 
       - name: Upload to repo server
-        uses: burnett01/rsync-deployments@7.1.0
+        uses: burnett01/rsync-deployments@8.0.4
         with:
           switches: -vrptz
           path: '*.zip'
@@ -49,7 +49,7 @@ jobs:
           remote_key: ${{ secrets.REPO_KEY }}
 
       - name: Add to Kodi repo and clean up
-        uses: appleboy/ssh-action@v1.2.3
+        uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.REPO_HOST  }}
           username: ${{ secrets.REPO_USER }}

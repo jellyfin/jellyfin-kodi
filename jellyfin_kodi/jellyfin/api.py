@@ -10,7 +10,6 @@ from ..helper.exceptions import HTTPException
 from ..helper.utils import settings
 from ..helper import LazyLogger
 
-
 LOG = LazyLogger(__name__)
 
 
@@ -422,7 +421,7 @@ class API(object):
             "User-Agent": self.config.data["http.user_agent"]
             or "%s/%s"
             % (self.config.data["app.name"], self.config.data["app.version"]),
-            "x-emby-authorization": auth,
+            "Authorization": auth,
         }
 
     def send_request(
@@ -481,9 +480,10 @@ class API(object):
         return {}
 
     def validate_authentication_token(self, server):
-        auth_token_header = {"X-MediaBrowser-Token": server["AccessToken"]}
         headers = self.get_default_headers()
-        headers.update(auth_token_header)
+        auth_header = headers.get("Authorization", "")
+        auth_header += ", Token=%s" % quote(server["AccessToken"])
+        headers.update({"Authorization": auth_header})
 
         response = self.send_request(server["address"], "system/info", headers=headers)
 
@@ -507,3 +507,17 @@ class API(object):
         """
         response = self.send_request(server_address, "system/info/public")
         return response.url.replace("/system/info/public", "")
+
+    def get_media_segments(self, item_id):
+        """Get media segments for an item (Jellyfin 10.10+)."""
+        try:
+            return self._get("MediaSegments/%s" % item_id)
+        except HTTPException as e:
+            if e.status == 404:
+                LOG.debug("Media Segments not available for %s", item_id)
+            else:
+                LOG.warning("Error fetching media segments: %s", e)
+            return None
+        except Exception as e:
+            LOG.warning("Error fetching media segments: %s", e)
+            return None
