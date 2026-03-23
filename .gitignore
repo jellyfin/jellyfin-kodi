@@ -76,6 +76,3 @@ pyinstrument/
 addon.xml
 
 *.log
-
-# build
-plugin.video.jellyfin+py3.zip
