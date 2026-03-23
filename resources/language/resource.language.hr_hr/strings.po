@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-02-17 10:28+0000\n"
+"PO-Revision-Date: 2026-03-24 01:00+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hr/>\n"
@@ -1236,3 +1236,15 @@ msgstr "Preskočiti uvod?"
 msgctxt "#33258"
 msgid "Skip credits?"
 msgstr "Preskočiti zasluge?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Komercionalno"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Pritisni ODABERI za preskakanje"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Isključeno"
