@@ -16,19 +16,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        py_version: ['3.9', '3.11', '3.12', '3.13', '3.14']
+        py_version: ["3.9", "3.11", "3.12", "3.13", "3.14"]
         os: [ubuntu-latest, windows-latest]
         include:
-          - py_version: '3.8'
+          - py_version: "3.8"
             os: windows-latest
 
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.2
 
       - name: Set up Python ${{ matrix.py_version }}
-        uses: actions/setup-python@v6.0.0
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: ${{ matrix.py_version }}
 
@@ -55,11 +55,11 @@ jobs:
           coverage report
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v5.5.1
+        uses: codecov/codecov-action@v5.5.3
         if: ${{ matrix.py_version == '3.11' }}
 
       - name: Publish Test Artifact
-        uses: actions/upload-artifact@v5.0.0
+        uses: actions/upload-artifact@v7.0.0
         with:
           retention-days: 14
           name: ${{ matrix.py_version }}-${{ matrix.os }}-test-results
@@ -71,5 +71,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@v6.0.2
       - uses: psf/black@stable
+        with:
+          version: "26.1.0"

@@ -1,23 +1,42 @@
-version: '1.1.1'
+version: '2.0.0'
 changelog: |-
+  :tada: New features and improvements
+  ------------------------------------
+  + feature: mediasegments skip (#1089) @ticoombs
+
   Bug Fixes
   ---------
-  + Escape null character in log output (#1055) @oddstr13
-  + Remove setting of (#1051) @bossanova808
+  + Select mp4 container when transcoding to AV1 (#1094) @kontell
+  + Migrate to current auth methods (#1097) @mcarlton00
+  + Don't assume Path always exists in playback objects (#1096) @mcarlton00
+  + Add "Jellyfin transcode" context menu item to Live TV section (#1095) @kontell
+  + fix: strm file with local file path fails to play (#1085) @VergilGao
+  + Fix: Cinema mode with playlist method (#1077) @hjpaul7
+  + Fix: Next Episodes (maxDaysInNextEpisodes) (#1075) @hjpaul7
+
+  :white_check_mark: Tests
+  ------------------------
+  + Fix lints and tests (#1098) @oddstr13
+  + Add Python 3.14 to test matrix (#1064) @oddstr13
 
   Code or Repo Maintenance
   ------------------------
-  + Remove angelblue05 from the plugin provider name (#1054) @oddstr13
-  + Split and index in a way that gracefully falls back to no split (#1053) @oddstr13
-  + Misc cleanup and refractoring (#1045) @oddstr13
-
-  Documentation updates
-  ---------------------
-  + Remove angelblue05 from the plugin provider name (#1054) @oddstr13
+  + Fix lints and tests (#1098) @oddstr13
 
   CI & build changes
   ------------------
-  + Update github/codeql-action action to v4 (#1050) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update burnett01/rsync-deployments action to v8 (#1078) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update appleboy/ssh-action action to v1.2.5 (#1074) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update github/codeql-action action to v4.32.2 (#1065) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update actions/upload-artifact action to v6 (#1081) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update codecov/codecov-action action to v5.5.2 (#1080) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update actions/checkout action to v6 (#1069) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update actions/setup-python action to v6.2.0 (#1071) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update release-drafter/release-drafter action to v6.2.0 (#1092) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update dependency python to 3.14 (#1049) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update github/codeql-action action to v4.31.2 (#1052) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update actions/upload-artifact action to v5 (#1059) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update appleboy/ssh-action action to v1.2.3 (#1062) @[renovate[bot]](https://github.com/apps/renovate)
 dependencies:
   py3:
     - addon: 'xbmc.python'

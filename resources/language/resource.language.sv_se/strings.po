@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-09-15 10:50+0000\n"
-"Last-Translator: Leverpastej <zstenroos@gmail.com>\n"
+"PO-Revision-Date: 2026-03-14 00:53+0000\n"
+"Last-Translator: aniara001 <qwert352@hotmail.com>\n"
 "Language-Team: Swedish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sv/>\n"
 "Language: sv_se\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.11.4\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#30116"
 msgid "For Movies"
@@ -1181,3 +1181,67 @@ msgstr "320"
 msgctxt "#33245"
 msgid "384"
 msgstr "384"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Skippningsläge"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Hoppa över automatiskt"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Fråga varje gång"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Introduktion"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Förhandsvisning"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Hoppa över"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Hoppa över intro?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Hoppa över eftertexter?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Reklam"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Av"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Segmentskippning"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Aktivera Segmentskippning"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Visa skippningsknapp"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Eftertexter"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Sammanfattning"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Tryck SELECT för att hoppa över"

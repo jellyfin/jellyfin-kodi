@@ -166,7 +166,9 @@ class PlayUtils(object):
 
     def is_strm(self, source):
 
-        if source.get("Container") == "strm" or self.item["Path"].endswith(".strm"):
+        if source.get("Container") == "strm" or self.item.get("Path", "").endswith(
+            ".strm"
+        ):
             LOG.info("strm detected")
 
             return True
@@ -194,17 +196,17 @@ class PlayUtils(object):
         if (
             source.get("Protocol") == "Http"
             or source["SupportsDirectPlay"]
-            and (
-                self.is_strm(source)
-                or not settings("playFromStream.bool")
-                and self.is_file_exists(source)
-            )
+            and (not settings("playFromStream.bool") and self.is_file_exists(source))
         ):
 
             LOG.info("--[ direct play ]")
             self.direct_play(source)
 
-        elif source["SupportsDirectStream"] or source["SupportsDirectPlay"]:
+        elif (
+            self.is_strm(source)
+            or source["SupportsDirectStream"]
+            or source["SupportsDirectPlay"]
+        ):
 
             LOG.info("--[ direct stream ]")
             self.direct_url(source)
@@ -278,6 +280,9 @@ class PlayUtils(object):
                 audio_bitrate,
             )
 
+            if "av1" in self.get_transcoding_video_codec():
+                params += "&SegmentContainer=mp4"
+
             video_type = "live" if source["Protocol"] == "LiveTV" else "master"
             base = base.replace(
                 "stream" if "stream" in base else "master", video_type, 1
@@ -305,7 +310,7 @@ class PlayUtils(object):
         self.info["Method"] = "DirectStream"
 
         if self.item["Type"] == "Audio":
-            self.info["Path"] = "%s/Audio/%s/stream.%s?static=true&api_key=%s" % (
+            self.info["Path"] = "%s/Audio/%s/stream.%s?static=true&ApiKey=%s" % (
                 self.info["ServerAddress"],
                 self.item["Id"],
                 source.get("Container", "mp4").split(",")[0],
@@ -313,7 +318,7 @@ class PlayUtils(object):
             )
         else:
             self.info["Path"] = (
-                "%s/Videos/%s/stream?static=true&MediaSourceId=%s&api_key=%s"
+                "%s/Videos/%s/stream?static=true&MediaSourceId=%s&ApiKey=%s"
                 % (
                     self.info["ServerAddress"],
                     self.item["Id"],
@@ -730,7 +735,7 @@ class PlayUtils(object):
         ):
             url = "%s%s" % (self.info["ServerAddress"], stream["DeliveryUrl"])
         else:
-            url = "%s/Videos/%s/%s/Subtitles/%s/Stream.%s?api_key=%s" % (
+            url = "%s/Videos/%s/%s/Subtitles/%s/Stream.%s?ApiKey=%s" % (
                 self.info["ServerAddress"],
                 self.item["Id"],
                 source["Id"],

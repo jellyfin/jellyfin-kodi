@@ -1,16 +1,16 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-10-27 20:22+0000\n"
-"Last-Translator: czlevi7 <czlevi7@gmail.com>\n"
+"PO-Revision-Date: 2026-02-16 22:15+0000\n"
+"Last-Translator: Gabriel S <jellyfin.sensitize624@passmail.net>\n"
 "Language-Team: Romanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ro/>\n"
 "Language: ro_ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : "
-"(n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.14\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#33110"
 msgid "Restart Kodi to take effect."
@@ -1195,3 +1195,67 @@ msgstr "320"
 msgctxt "#33245"
 msgid "384"
 msgstr "384"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Activează omiterea segmentelor"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Întreabă de fiecare dată"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Introducere"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Rezumat"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Previzualizare"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Reclamă"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Omitere Segment"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Mod omitere"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Omitere automată"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Arată butonul de omitere"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Omite"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Omite intro?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Omite genericul?"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Apasă SELECT pentru omitere"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Oprit"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Generic"

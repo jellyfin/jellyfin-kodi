@@ -22,7 +22,6 @@ import xbmcvfs
 from . import LazyLogger
 from .translate import translate
 
-
 #################################################################################################
 
 LOG = LazyLogger(__name__)

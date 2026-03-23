@@ -240,7 +240,7 @@ class HTTP(object):
                 }
             )
 
-        if "x-emby-authorization" not in data["headers"]:
+        if "Authorization" not in data["headers"]:
             self._authorization(data)
 
         return data
@@ -261,15 +261,15 @@ class HTTP(object):
             self.config.data.get("app.version", "0.0.0"), safe=""
         )
 
-        data["headers"].update({"x-emby-authorization": auth})
+        data["headers"].update({"Authorization": auth})
 
         if self.config.data.get("auth.token") and self.config.data.get("auth.user_id"):
 
             auth += ", UserId=%s" % quote(self.config.data.get("auth.user_id"), safe="")
+            auth += ", Token=%s" % quote(self.config.data.get("auth.token"), safe="")
             data["headers"].update(
                 {
-                    "x-emby-authorization": auth,
-                    "X-MediaBrowser-Token": self.config.data.get("auth.token"),
+                    "Authorization": auth,
                 }
             )
 
