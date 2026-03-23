@@ -1,0 +1,37 @@
+from __future__ import division, absolute_import, print_function, unicode_literals
+
+import threading
+import time
+from .helper import LazyLogger, settings
+
+LOG = LazyLogger(__name__)
+
+
+class SegmentChecker(threading.Thread):
+    stop_thread = False
+
+    def __init__(self, player):
+        self.player = player
+
+        threading.Thread.__init__(self)
+
+    def stop(self):
+        self.stop_thread = True
+
+    def run(self):
+        LOG.info("--->[ segment checker ]")
+
+        while not self.stop_thread:
+            try:
+                if settings("mediaSegmentsEnabled.bool"):
+                    current_file = self.player.get_playing_file()
+                    item = self.player.get_file_info(current_file)
+                    current_pos = int(self.player.getTime())
+                    self.player.check_skip_segments(item, current_pos)
+
+            except Exception as e:
+                LOG.error("Error in segment checker loop: %s", e)
+
+            time.sleep(0.2)
+
+        LOG.info("---<[ segment checker ]")
