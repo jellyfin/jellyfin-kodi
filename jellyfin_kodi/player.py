@@ -13,6 +13,7 @@ from .helper import translate, api, window, settings, dialog, event, JSONRPC
 from .jellyfin import Jellyfin
 from .helper import LazyLogger
 from .helper.utils import translate_path
+from .segments import SegmentChecker
 
 #################################################################################################
 
@@ -28,9 +29,12 @@ class Player(xbmc.Player):
     skip_segments = {}
     skip_prompted = set()
     skip_dialog = None
+    segment_checker = None
 
     def __init__(self):
         xbmc.Player.__init__(self)
+        self.segment_checker = SegmentChecker(player=self)
+        self.segment_checker.start()
 
     def get_playing_file(self):
         try:
@@ -357,9 +361,6 @@ class Player(xbmc.Player):
         if window("jellyfin.external.bool"):
             return
 
-        if settings("mediaSegmentsEnabled.bool"):
-            self.check_skip_segments(item, item["CurrentPosition"])
-
         if not report:
             previous = item["CurrentPosition"]
 
@@ -430,6 +431,9 @@ class Player(xbmc.Player):
         """Stop all playback. Check for external player for positionticks."""
         if not self.played:
             return
+
+        if self.segment_checker:
+            self.segment_checker.stop()
 
         LOG.info("Played info: %s", self.played)
 
