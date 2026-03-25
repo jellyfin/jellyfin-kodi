@@ -138,10 +138,14 @@ class Kodi(object):
 
         bulk_updates = {}
 
+        # Define the types of people considered "actors" in a "cast".
+        cast_types = ["Actor", "GuestStar"]
+
         for person in people:
             person_id = self.get_person(person["Name"])
+            person_type = person["Type"]
 
-            if person["Type"] == "Actor":
+            if person_type in cast_types:
                 sql = QU.update_actor
                 role = person.get("Role")
                 bulk_updates.setdefault(sql, []).append(
@@ -154,21 +158,21 @@ class Kodi(object):
                 )
                 cast_order += 1
 
-            elif person["Type"] == "Director":
+            elif person_type == "Director":
                 sql = QU.update_link.replace("{LinkType}", "director_link")
                 bulk_updates.setdefault(sql, []).append((person_id,) + args)
 
-            elif person["Type"] == "Writer":
+            elif person_type == "Writer":
                 sql = QU.update_link.replace("{LinkType}", "writer_link")
                 bulk_updates.setdefault(sql, []).append((person_id,) + args)
 
-            elif person["Type"] == "Artist":
+            elif person_type == "Artist":
                 sql = QU.insert_link_if_not_exists.replace("{LinkType}", "actor_link")
                 bulk_updates.setdefault(sql, []).append(
                     (person_id,) + args + (person_id,) + args
                 )
 
-            add_thumbnail(person_id, person, person["Type"])
+            add_thumbnail(person_id, person, person_type)
 
         for sql, parameters in bulk_updates.items():
             self.cursor.executemany(sql, parameters)
