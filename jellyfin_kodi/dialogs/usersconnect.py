@@ -19,6 +19,7 @@ ACTION_MOUSE_LEFT_CLICK = 100
 LIST = 155
 MANUAL = 200
 CANCEL = 201
+QUICK_CONNECT = 202
 
 ##################################################################################################
 
@@ -27,6 +28,7 @@ class UsersConnect(xbmcgui.WindowXMLDialog):
 
     _user = None
     _manual_login = False
+    _quick_connect = False
 
     def __init__(self, *args, **kwargs):
 
@@ -46,6 +48,9 @@ class UsersConnect(xbmcgui.WindowXMLDialog):
 
     def is_manual_login(self):
         return self._manual_login
+
+    def is_quick_connect(self):
+        return self._quick_connect
 
     def onInit(self):
 
@@ -93,6 +98,10 @@ class UsersConnect(xbmcgui.WindowXMLDialog):
 
         if control == MANUAL:
             self._manual_login = True
+            self.close()
+
+        elif control == QUICK_CONNECT:
+            self._quick_connect = True
             self.close()
 
         elif control == CANCEL:

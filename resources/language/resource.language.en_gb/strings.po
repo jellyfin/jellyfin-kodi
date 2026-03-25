@@ -437,6 +437,26 @@ msgctxt "#30617"
 msgid "Server or port cannot be empty"
 msgstr "Server or port cannot be empty"
 
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Quick Connect"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Enter this code in the Jellyfin app or web interface:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "Waiting for authorization..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "Quick Connect is not available on this server"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "Quick Connect timed out. Please try again."
+
 msgctxt "#33000"
 msgid "Welcome"
 msgstr "Welcome"

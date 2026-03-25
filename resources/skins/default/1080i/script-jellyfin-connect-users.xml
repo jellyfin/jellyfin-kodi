@@ -25,7 +25,7 @@
 				<centerleft>50%</centerleft>
 				<centertop>50%</centertop>
 				<width>920</width>
-				<height>605</height>
+				<height>670</height>
 				<control type="group">
 					<top>-30</top>
 					<control type="image">
@@ -38,14 +38,14 @@
 				</control>
 				<control type="image">
 					<width>100%</width>
-					<height>605</height>
+					<height>670</height>
 					<texture colordiffuse="ff222326" border="10">dialogs/dialog_back.png</texture>
 				</control>
 				<control type="group">
 					<centerleft>50%</centerleft>
 					<top>10</top>
 					<width>908</width>
-					<height>580</height>
+					<height>645</height>
 					<control type="grouplist" id="100">
 						<orientation>vertical</orientation>
 						<itemgap>0</itemgap>
@@ -176,6 +176,24 @@
 						</control>
 						<control type="button" id="200">
 							<label>[B]$ADDON[plugin.video.jellyfin 30540][/B]</label>
+							<width>874</width>
+							<height>65</height>
+							<font>font13</font>
+							<textcolor>ffe1e1e1</textcolor>
+							<focusedcolor>white</focusedcolor>
+							<selectedcolor>ffe1e1e1</selectedcolor>
+							<shadowcolor>66000000</shadowcolor>
+							<textoffsetx>20</textoffsetx>
+							<aligny>center</aligny>
+							<align>center</align>
+							<texturefocus border="10" colordiffuse="FF00A4DC">buttons/shadow_smallbutton.png</texturefocus>
+							<texturenofocus border="10" colordiffuse="ff464646">buttons/shadow_smallbutton.png</texturenofocus>
+							<pulseonselect>no</pulseonselect>
+							<onup>155</onup>
+							<animation effect="slide" time="0" end="17,0" condition="true">Conditional</animation>
+						</control>
+						<control type="button" id="202">
+							<label>[B]$ADDON[plugin.video.jellyfin 30618][/B]</label>
 							<width>874</width>
 							<height>65</height>
 							<font>font13</font>
