@@ -193,7 +193,7 @@ class Movies(KodiDb):
             version["PathId"] = self.add_path(*values(version, QU.add_path_obj))
 
             # Find the correct version name for this source
-            version_type_id = self.get_or_create_videoversiontype(version["Title"], version["SourceFilename"], extra)
+            version_type_id = self.get_or_create_videoversiontype(source.get("Name"), version["SourceFilename"], extra)
             version["VideoVersionTypeId"] = version_type_id
             version["VideoVersionItemType"] = self.itemtype + 1 if extra else self.itemtype
             self.current_type_ids.add(version_type_id)
