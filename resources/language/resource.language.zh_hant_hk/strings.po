@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-03-30 13:47+0000\n"
+"PO-Revision-Date: 2026-03-30 18:45+0000\n"
 "Last-Translator: Lofuuzi <lather0519@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script, Hong Kong) <https://"
 "translate.jellyfin.org/projects/jellyfin/jellyfin-kodi/zh_Hant_HK/>\n"
@@ -82,3 +82,383 @@ msgstr "音訊最高聲道數"
 msgctxt "#30165"
 msgid "Allow burned subtitles"
 msgstr "允許燒錄字幕"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "近日新增嘅電視劇"
+
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "未睇完嘅電視劇"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "近日新增嘅電影"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "近日新增嘅集數"
+
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "未睇完嘅電影"
+
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "未睇完嘅集數"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "下一集"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "心水嘅電影"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "心水嘅節目"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "心水嘅集數"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "合集"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "未睇過嘅電影"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Jellyfin 設定"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "隨機播放"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "為你推薦"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "介面"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "重設本地 Kodi 資料庫"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "啟用歡迎訊息"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "近日新增嘅家庭影片"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "近日新增嘅相片"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "心水嘅家庭影片"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "心水嘅相片"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "強制使用 HTTP 播放"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "開啟增強型美工效果（例如封面圖案）"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "心水嘅專輯"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "近日新增 MV"
+
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "未睇完嘅 MV"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "未睇嘅 MV"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "電影"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "電視劇"
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "Jellyfin 轉碼"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "加入心水"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "心水"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "唔再心水"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "設定"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "響 Jellyfin 剷咗佢"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "重新整理呢個項目"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "轉碼"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "檢查連線"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "用另一個裝置名"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "同步"
+
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "如果更新多過呢個數就開通知："
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "啟用音樂庫"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "播放模式"
+
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "啟用封面快取"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "播放"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "登入"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "手動登入"
+
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "分頁 - 請求項目上限 (預設: 15)"
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "網路登入憑證"
+
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "啟用電影模式"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "播放預告片前先詢問"
+
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr "跳過刪除確認 (後果自負)"
+
+msgctxt "#30521"
+msgid "Jump back on resume (in seconds)"
+msgstr "接續播放嗰陣回退 (秒)"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "轉碼 H.265/HEVC"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "轉碼 MPEG2"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "轉碼 VC-1"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "轉碼 VP9"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "轉碼 AV1"
+
+msgctxt "#30527"
+msgid "Ignore specials in next episodes"
+msgstr "喺「下一集」忽略特輯"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "永久使用者"
+
+msgctxt "#30529"
+msgid "Startup delay (in seconds)"
+msgstr "啟動延遲 (秒)"
+
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "啟用伺服器重啟訊息"
+
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "啟用新內容"
+
+msgctxt "#30532"
+msgid "Duration of the video library pop up"
+msgstr "影片庫彈出視窗嘅顯示時長"
+
+msgctxt "#30533"
+msgid "Duration of the music library pop up"
+msgstr "音樂庫彈出視窗嘅顯示時長"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "通知顯示時間 (秒)"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "產生新嘅裝置 ID"
+
+msgctxt "#30536"
+msgid "Allow the screensaver during syncs"
+msgstr "同步期間准許啟動螢幕保護裝置"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "轉碼 Hi10P"
+
+msgctxt "#30538"
+msgid "Max days in next episodes"
+msgstr "「下一集」顯示嘅最大天數"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "用戶名或電郵"
+
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "啟用伺服器離線模式"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "顯示訊息"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "密碼"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "登入"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "取消"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "揀主伺服器"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "用戶名同密碼唔可以漏空"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "連唔到去你揀嘅伺服器"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "連線到"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "手動加伺服器"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "請登入"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "換一個 Jellyfin Connect 用家"
+
+msgctxt "#30614"
+msgid "Connect to server"
+msgstr "連線到伺服器"
+
+msgctxt "#30615"
+msgid "Host"
+msgstr "主機"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "連線"
+
+msgctxt "#30617"
+msgid "Server or port cannot be empty"
+msgstr "伺服器或者連接埠唔可以漏空"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "歡迎"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "伺服器重啟緊"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "用戶名或者密碼錯咗"
+
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr "揀邊條聲軌"
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr "揀邊條字幕"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "喺 Jellyfin 剷咗個檔案？"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "播唔播預告片？"
