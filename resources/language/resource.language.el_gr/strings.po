@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-10-20 23:19+0000\n"
-"Last-Translator: Thunderstrike116 <thunderstrike116@gmail.com>\n"
+"PO-Revision-Date: 2026-03-31 03:07+0000\n"
+"Last-Translator: bladestech <techblade47@gmail.com>\n"
 "Language-Team: Greek <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/el/>\n"
 "Language: el_gr\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.11.4\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#30002"
 msgid "Force HTTP playback"
@@ -1196,3 +1196,67 @@ msgstr "20.0 Mbps"
 msgctxt "#33234"
 msgid "35.0 Mbps"
 msgstr "35.0 Mbps"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Παράλειψη τμήματος"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Ενεργοποίηση παράλειψης τμήματος"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Λειτουργία παράλειψης"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Αυτόματη παράλειψη"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Εμφάνιση κουμπιού παράλειψης"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Ερώτηση κάθε φορά"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Καλωσόρισμα"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Συντελεστές"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Προεπισκόπηση"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Παράλειψη"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Παράλειψη εισαγωγής;"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Παράλειψη συντελεστών;"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Διαφήμιση"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Σε συντομία"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Ανενεργό"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Πάτα ΕΠΕΛΕΞΕ για παράλειψη"
