@@ -1,2 +1,84 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr ""
+"PO-Revision-Date: 2026-03-30 13:47+0000\n"
+"Last-Translator: Lofuuzi <lather0519@gmail.com>\n"
+"Language-Team: Chinese (Traditional Han script, Hong Kong) <https://"
+"translate.jellyfin.org/projects/jellyfin/jellyfin-kodi/zh_Hant_HK/>\n"
+"Language: zh_hant_hk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.15.1\n"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "適用Kodi嘅Jellyfin"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "伺服器位址"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "伺服器名稱"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "登入方式"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "日誌等級"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "裝置名稱"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "進階設定"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "使用者名稱"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "確認刪除檔案"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "播放後提示刪除"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "針對集數"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "針對電影"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "最高串流位元率"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "偏好影片編碼"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "偏好音訊編碼"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "音訊位元率"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "音訊最高聲道數"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "允許燒錄字幕"
