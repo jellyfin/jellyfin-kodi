@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-03-30 18:45+0000\n"
+"PO-Revision-Date: 2026-03-31 16:00+0000\n"
 "Last-Translator: Lofuuzi <lather0519@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script, Hong Kong) <https://"
 "translate.jellyfin.org/projects/jellyfin/jellyfin-kodi/zh_Hant_HK/>\n"
@@ -253,7 +253,7 @@ msgstr "如果更新多過呢個數就開通知："
 
 msgctxt "#30509"
 msgid "Enable music library"
-msgstr "啟用音樂庫"
+msgstr "啟用音樂櫃"
 
 msgctxt "#30511"
 msgid "Playback mode"
@@ -341,11 +341,11 @@ msgstr "啟用新內容"
 
 msgctxt "#30532"
 msgid "Duration of the video library pop up"
-msgstr "影片庫彈出視窗嘅顯示時長"
+msgstr "影片櫃彈出視窗嘅顯示時長"
 
 msgctxt "#30533"
 msgid "Duration of the music library pop up"
-msgstr "音樂庫彈出視窗嘅顯示時長"
+msgstr "音樂櫃彈出視窗嘅顯示時長"
 
 msgctxt "#30534"
 msgid "Notifications (in seconds)"
@@ -462,3 +462,140 @@ msgstr "喺 Jellyfin 剷咗個檔案？"
 msgctxt "#33016"
 msgid "Play trailers?"
 msgstr "播唔播預告片？"
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "執緊合集 (Boxsets)"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "執緊："
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "完成用時："
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr "已經產生咗新嘅裝置 ID。Kodi 而家會重新啟動。"
+
+msgctxt "#33035"
+msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
+msgstr ""
+"注意！如果你揀「原生模式」(Native mode)，部分 Jellyfin 功能會用唔到，例如："
+"Jellyfin 電影模式、直接串流/轉碼選項，同埋家長監控存取排程。"
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "外掛程式（預設）"
+
+msgctxt "#33037"
+msgid "Native (direct paths)"
+msgstr "原生（直接路徑）"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "啟用音樂櫃？"
+
+msgctxt "#33047"
+msgid "Kodi can't locate file:"
+msgstr "Kodi 搵唔到個檔案："
+
+msgctxt "#33048"
+msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
+msgstr ""
+"你可能需要喺外掛程式設定度檢查網路登入憑證，或者用 Jellyfin 路徑替換功能嚟修"
+"正路徑格式（Jellyfin 管理台 > 媒體櫃）。係咪要停止同步？"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "新"
+
+msgctxt "#33054"
+msgid "Add user to session"
+msgstr "加使用者入呢個對話度"
+
+msgctxt "#33058"
+msgid "Perform local database reset"
+msgstr "重設本地資料庫"
+
+msgctxt "#33060"
+msgid "Sync theme media"
+msgstr "同步主題多媒體"
+
+msgctxt "#33061"
+msgid "Add/Remove user from the session"
+msgstr "喺呢個對話入面新增/移除用家"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "新增使用者"
+
+msgctxt "#33063"
+msgid "Remove user"
+msgstr "移除使用者"
+
+msgctxt "#33064"
+msgid "Remove user from the session"
+msgstr "喺呢個對話入面移除用家"
+
+msgctxt "#33074"
+msgid "Are you sure you want to reset your local Kodi database?"
+msgstr "你肯定要重設本地 Kodi 資料庫？"
+
+msgctxt "#33086"
+msgid "Remove all cached artwork?"
+msgstr "剷晒所有封面快取？"
+
+msgctxt "#33087"
+msgid "Reset all Jellyfin add-on settings?"
+msgstr "重設所有 Jellyfin 外掛程式設定？"
+
+msgctxt "#33088"
+msgid "Database reset has completed, Kodi will now restart to apply the changes."
+msgstr "資料庫重設完成，Kodi 而家會重新啟動嚟套用改動。"
+
+msgctxt "#33089"
+msgid "Enter folder name for backup"
+msgstr "輸入備份資料夾名稱"
+
+msgctxt "#33090"
+msgid "Replace existing backup?"
+msgstr "覆蓋現有備份？"
+
+msgctxt "#33091"
+msgid "Created backup at:"
+msgstr "備份建立喺："
+
+msgctxt "#33092"
+msgid "Create a backup"
+msgstr "建立備份"
+
+msgctxt "#33093"
+msgid "Backup folder"
+msgstr "備份資料夾"
+
+msgctxt "#33097"
+msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
+msgstr ""
+"重要提示：你進階設定入面嘅 cleanonupdate 已經被移除，以免同「適用Kodi嘅"
+"Jellyfin」有衝突。Kodi 而家會重新啟動。"
+
+msgctxt "#33098"
+msgid "Refresh boxsets"
+msgstr "重新整理合集"
+
+msgctxt "#33099"
+msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
+msgstr ""
+"唔該安裝伺服器外掛「Kodi Sync Queue」，以便喺啟動嗰陣自動同步 Jellyfin 媒體櫃"
+"更新。你喺「外掛程式設定 > 同步選項 > 啟用 Kodi 同步佇列」度可以搵到呢個設定"
+"。"
+
+msgctxt "#33137"
+msgid "Enable Kodi Sync Queue"
+msgstr "啟用 Kodi 同步佇列"
+
+msgctxt "#33101"
+msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
+msgstr "既然你用緊原生播放模式兼且啟用咗音樂功能，想唔想由檔案度匯入音樂評分？"
