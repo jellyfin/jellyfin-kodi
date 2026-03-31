@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2026-02-16 03:36+0000\n"
-"Last-Translator: MrPlow <joachim.huffer@gmail.com>\n"
+"PO-Revision-Date: 2026-04-01 09:15+0000\n"
+"Last-Translator: getQueryString <fi.l@tutanota.com>\n"
 "Language-Team: German <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/de/>\n"
 "Language: de_de\n"
@@ -82,13 +82,15 @@ msgctxt "#30160"
 msgid "Video quality"
 msgstr "Videoqualität"
 
+#, fuzzy
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
-msgstr "Kürzlich hinzugefügte Serien"
+msgstr "Kürzlich hinzugefügte TV-Serien"
 
+#, fuzzy
 msgctxt "#30171"
 msgid "In Progress TV Shows"
-msgstr "Begonnene Serien"
+msgstr "Begonnene TV-Serien"
 
 msgctxt "#30174"
 msgid "Recently Added Movies"
