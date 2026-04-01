@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-03-31 16:00+0000\n"
+"PO-Revision-Date: 2026-04-01 18:51+0000\n"
 "Last-Translator: Lofuuzi <lather0519@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script, Hong Kong) <https://"
 "translate.jellyfin.org/projects/jellyfin/jellyfin-kodi/zh_Hant_HK/>\n"
@@ -13,7 +13,7 @@ msgstr ""
 
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
-msgstr "適用Kodi嘅Jellyfin"
+msgstr "適用 Kodi 嘅 Jellyfin"
 
 msgctxt "#30000"
 msgid "Server address"
@@ -487,7 +487,7 @@ msgstr ""
 
 msgctxt "#33036"
 msgid "Add-on (default)"
-msgstr "外掛程式（預設）"
+msgstr "擴充功能（預設）"
 
 msgctxt "#33037"
 msgid "Native (direct paths)"
@@ -504,8 +504,8 @@ msgstr "Kodi 搵唔到個檔案："
 msgctxt "#33048"
 msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
 msgstr ""
-"你可能需要喺外掛程式設定度檢查網路登入憑證，或者用 Jellyfin 路徑替換功能嚟修"
-"正路徑格式（Jellyfin 管理台 > 媒體櫃）。係咪要停止同步？"
+"你可能需要喺「擴充功能設定」度檢查網路登入憑證，或者用 Jellyfin 路徑替換功能"
+"嚟修正路徑格式（Jellyfin 管理台 > 媒體櫃）。係咪要停止同步？"
 
 msgctxt "#33049"
 msgid "New"
@@ -549,7 +549,7 @@ msgstr "剷晒所有封面快取？"
 
 msgctxt "#33087"
 msgid "Reset all Jellyfin add-on settings?"
-msgstr "重設所有 Jellyfin 外掛程式設定？"
+msgstr "重設所有 Jellyfin 擴充功能設定？"
 
 msgctxt "#33088"
 msgid "Database reset has completed, Kodi will now restart to apply the changes."
@@ -578,7 +578,7 @@ msgstr "備份資料夾"
 msgctxt "#33097"
 msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
 msgstr ""
-"重要提示：你進階設定入面嘅 cleanonupdate 已經被移除，以免同「適用Kodi嘅"
+"重要提示：你進階設定入面嘅 cleanonupdate 已經被移除，以免同「適用 Kodi 嘅 "
 "Jellyfin」有衝突。Kodi 而家會重新啟動。"
 
 msgctxt "#33098"
@@ -588,9 +588,9 @@ msgstr "重新整理合集"
 msgctxt "#33099"
 msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
 msgstr ""
-"唔該安裝伺服器外掛「Kodi Sync Queue」，以便喺啟動嗰陣自動同步 Jellyfin 媒體櫃"
-"更新。你喺「外掛程式設定 > 同步選項 > 啟用 Kodi 同步佇列」度可以搵到呢個設定"
-"。"
+"唔該安裝伺服器外掛程式「Kodi Sync Queue」，以便喺啟動嗰陣自動同步 Jellyfin 媒"
+"體櫃更新。你喺「擴充功能設定 > 同步選項 > 啟用 Kodi 同步佇列」度可以搵到呢個"
+"設定。"
 
 msgctxt "#33137"
 msgid "Enable Kodi Sync Queue"
@@ -599,3 +599,256 @@ msgstr "啟用 Kodi 同步佇列"
 msgctxt "#33101"
 msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
 msgstr "既然你用緊原生播放模式兼且啟用咗音樂功能，想唔想由檔案度匯入音樂評分？"
+
+msgctxt "#33102"
+msgid "Resume the previous sync?"
+msgstr "繼續上次未完嘅同步？"
+
+msgctxt "#33104"
+msgid "Find more info in the github wiki/Create-and-restore-from-backup."
+msgstr "喺 GitHub wiki/Create-and-restore-from-backup 搵更多資訊。"
+
+msgctxt "#33105"
+msgid "Enable the context menu"
+msgstr "啟用右鍵選單 (Context Menu)"
+
+msgctxt "#33106"
+msgid "Enable the option to transcode"
+msgstr "啟用轉碼選項"
+
+msgctxt "#33107"
+msgid "Users added to the session (no space between users). (eg username,username2)"
+msgstr "加入對話嘅用家（使用者名稱之間唔好留空格，例如：阿三,阿四）"
+
+msgctxt "#33108"
+msgid "Notifications are delayed during video playback (except live tv)."
+msgstr "播片期間通知會延遲顯示（電視直播除外）。"
+
+msgctxt "#33109"
+msgid "Plugin"
+msgstr "外掛程式 (Plugin)"
+
+msgctxt "#33110"
+msgid "Restart Kodi to take effect."
+msgstr "重新啟動 Kodi 嚟生效。"
+
+msgctxt "#33111"
+msgid "Reset the local database to apply the playback mode change."
+msgstr "重設本地資料庫嚟套用播放模式變更。"
+
+msgctxt "#33112"
+msgid "Applies to Native and Add-on playback mode"
+msgstr "適用於「原生」同「擴充」播放模式"
+
+msgctxt "#33113"
+msgid "Applies to Add-on playback mode only"
+msgstr "只適用於「擴充」播放模式"
+
+msgctxt "#33114"
+msgid "Enable external subtitles"
+msgstr "啟用外掛字幕"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "轉碼選項"
+
+msgctxt "#33116"
+msgid "Compress artwork (reduces quality)"
+msgstr "壓縮封面圖 (會降低畫質)"
+
+msgctxt "#33118"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgstr "你改咗播放模式。Kodi 需要重設先至可以套用變更，係咪而家整？"
+
+msgctxt "#33119"
+msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"同步期間出咗事。你重新啟動 Kodi 之後可以恢復進度。如果問題仲喺度，請帶埋你份 "
+"Kodi 日誌去 Jellyfin for Kodi 論壇反映。"
+
+msgctxt "#33120"
+msgid "Select the libraries to add"
+msgstr "揀要加入嘅媒體櫃"
+
+msgctxt "#33121"
+msgid "All"
+msgstr "全部"
+
+msgctxt "#33122"
+msgid "Restart Kodi to resume where you left off."
+msgstr "重新啟動 Kodi 嚟接返頭先嘅進度。"
+
+msgctxt "#33123"
+msgid "Sync library to Kodi"
+msgstr "同步媒體櫃去 Kodi"
+
+msgctxt "#33124"
+msgid "Include people (slow)"
+msgstr "包括演職人員（慢）"
+
+msgctxt "#33125"
+msgid "Enable remote control"
+msgstr "啟用遠端控制"
+
+msgctxt "#33128"
+msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"攞唔到最新嘅內容更新。喺重新啟動 Kodi 之前，唔會套用任何內容更新。如果問題持"
+"續，請帶埋你份 Kodi 日誌去Jellyfin for Kodi 論壇反映。"
+
+msgctxt "#33129"
+msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
+msgstr "你可以開啟 Jellyfin 「擴充功能」 > 「加入媒體櫃」嚟同步媒體櫃。"
+
+msgctxt "#33130"
+msgid "Select the source"
+msgstr "揀來源"
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "重新整理緊合集"
+
+msgctxt "#33132"
+msgid "Repair library"
+msgstr "修復媒體櫃"
+
+msgctxt "#33133"
+msgid "Remove library from Kodi"
+msgstr "喺 Kodi 剷走媒體櫃"
+
+msgctxt "#33134"
+msgid "Add server"
+msgstr "加伺服器"
+
+msgctxt "#33135"
+msgid "Kodi will now restart to apply a small patch for your Kodi version."
+msgstr "Kodi 而家會重新啟動嚟套用一個針對你個 Kodi 版本嘅小補丁。"
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "更新媒體櫃"
+
+msgctxt "#33138"
+msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
+msgstr ""
+"你可以手動更新媒體櫃，而唔係淨係靠「Kodi 同步佇列」伺服器外掛程式。開啟「擴充"
+"功能」之後更新媒體櫃（或者逐個媒體櫃更新）。如果要移除內容，你需要修復媒體櫃"
+"。"
+
+msgctxt "#33139"
+msgid "Update libraries"
+msgstr "更新多個媒體櫃"
+
+msgctxt "#33140"
+msgid "Repair libraries"
+msgstr "修復多個媒體櫃"
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "移除伺服器"
+
+msgctxt "#33142"
+msgid "Something went wrong. Try again later."
+msgstr "出咗啲問題。遲啲再試過。"
+
+msgctxt "#33143"
+msgid "Enable the option to delete"
+msgstr "啟用刪除選項"
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "移除緊媒體櫃"
+
+msgctxt "#33145"
+msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
+msgstr ""
+"請確保你部 Kodi 睇到 Jellyfin 伺服器嘅 Samba (SMB) 分享資料夾，兼且你喺伺服器"
+"度設定好路徑替換。如果唔係，Kodi 可能會搵唔到你啲檔案。"
+
+msgctxt "#33146"
+msgid "Unable to connect to Jellyfin."
+msgstr "連唔到去 Jellyfin。"
+
+msgctxt "#33147"
+msgid "Your access to Jellyfin is restricted."
+msgstr "你冇權限存取 Jellyfin。"
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "你冇權限存取呢個伺服器。"
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "連唔到去呢個伺服器。"
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "更新伺服器資訊"
+
+msgctxt "#33151"
+msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
+msgstr ""
+"重新連線去返之前載入嗰個伺服器。如果你想用另一個伺服器，請重設本地資料庫（包"
+"括你個用家資訊）。"
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "喺 Kodi 搵唔到 TV Tunes。"
+
+msgctxt "#33153"
+msgid "Your Jellyfin theme media has been synced to Kodi"
+msgstr "你嘅 Jellyfin 主題多媒體已經同步咗去 Kodi"
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "加入媒體櫃"
+
+msgctxt "#33155"
+msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
+msgstr ""
+"目前套用緊適用 Kodi 嘅 Jellyfin 補丁毀損咗！如果問題持續，唔該去 Jellyfin "
+"for Kodi 論壇反映。呢個問題需要盡快修復。"
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "補丁已套用！"
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "淨係聲軌"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "淨係字幕"
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "啟用聲軌/字幕選擇"
+
+msgctxt "#33163"
+msgid "Disabled/Media default"
+msgstr "停用/多媒體預設"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr "為咗避免出錯，請將 Jellyfin for Kodi 更新到版本： "
+
+msgctxt "#33161"
+msgid "Update password"
+msgstr "更新密碼"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "重設音樂櫃？"
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr "喺日誌入面隱藏敏感資訊（唔適用於 Kodi 本身嘅記錄）"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "建立備份失敗"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "（動態）"
