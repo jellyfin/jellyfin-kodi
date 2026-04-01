@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-01-12 01:50+0000\n"
-"Last-Translator: CaRotNamAnh_2k11 <namanhcarot@gmail.com>\n"
+"PO-Revision-Date: 2026-04-01 09:15+0000\n"
+"Last-Translator: Đinh Mạnh Tưởng <prism9x@gmail.com>\n"
 "Language-Team: Vietnamese <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/vi/>\n"
 "Language: vi_vn\n"
@@ -1176,3 +1176,67 @@ msgstr "320"
 msgctxt "#33245"
 msgid "384"
 msgstr "384"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Bỏ qua đoạn giới thiệu"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Bật bỏ qua đoạn giới thiệu"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Chế độ bỏ qua"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Tự động bỏ qua"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Hiển thị nút bỏ qua bên dưới"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Hỏi mỗi lần"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Phần giới thiệu"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Tài khoản"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Tóm tắt"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Xem trước"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Bỏ qua"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Bỏ qua đoạn giới thiệu?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Bỏ qua thanh toán?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Đoạn quảng cáo"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Vui lòng CHỌN để bỏ qua"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Tắt"
