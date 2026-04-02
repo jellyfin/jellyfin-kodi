@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-01 18:51+0000\n"
+"PO-Revision-Date: 2026-04-02 04:48+0000\n"
 "Last-Translator: Lofuuzi <lather0519@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script, Hong Kong) <https://"
 "translate.jellyfin.org/projects/jellyfin/jellyfin-kodi/zh_Hant_HK/>\n"
@@ -85,7 +85,7 @@ msgstr "允許燒錄字幕"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
-msgstr "近日新增嘅電視劇"
+msgstr "近排新增嘅電視劇"
 
 msgctxt "#30171"
 msgid "In Progress TV Shows"
@@ -93,11 +93,11 @@ msgstr "未睇完嘅電視劇"
 
 msgctxt "#30174"
 msgid "Recently Added Movies"
-msgstr "近日新增嘅電影"
+msgstr "近排新增嘅電影"
 
 msgctxt "#30175"
 msgid "Recently Added Episodes"
-msgstr "近日新增嘅集數"
+msgstr "近排新增嘅集數"
 
 msgctxt "#30177"
 msgid "In Progress Movies"
@@ -129,7 +129,7 @@ msgstr "合集"
 
 msgctxt "#30189"
 msgid "Unwatched Movies"
-msgstr "未睇過嘅電影"
+msgstr "未睇嘅電影"
 
 msgctxt "#30401"
 msgid "Jellyfin options"
@@ -157,11 +157,11 @@ msgstr "啟用歡迎訊息"
 
 msgctxt "#30251"
 msgid "Recently added Home Videos"
-msgstr "近日新增嘅家庭影片"
+msgstr "近排新增嘅家庭影片"
 
 msgctxt "#30252"
 msgid "Recently added Photos"
-msgstr "近日新增嘅相片"
+msgstr "近排新增嘅相片"
 
 msgctxt "#30253"
 msgid "Favourite Home Videos"
@@ -185,7 +185,7 @@ msgstr "心水嘅專輯"
 
 msgctxt "#30256"
 msgid "Recently added Music videos"
-msgstr "近日新增 MV"
+msgstr "近排新增 MV"
 
 msgctxt "#30257"
 msgid "In progress Music videos"
@@ -749,7 +749,7 @@ msgstr "移除伺服器"
 
 msgctxt "#33142"
 msgid "Something went wrong. Try again later."
-msgstr "出咗啲問題。遲啲再試過。"
+msgstr "出咗啲問題。遲啲再試。"
 
 msgctxt "#33143"
 msgid "Enable the option to delete"
@@ -852,3 +852,361 @@ msgstr "建立備份失敗"
 msgctxt "#33166"
 msgid "(dynamic)"
 msgstr "（動態）"
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "近排新增"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "進行緊"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "未睇"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "按首字母排序"
+
+msgctxt "#33172"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
+msgstr ""
+"你宜家有 {number} 個更新等緊處理，可能要等一陣先見到新內容。開啟 Jellyfin 擴"
+"充功能 > 「更新媒體櫃」可能會快啲。係咪點都繼續？"
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "唔要之前個同步紀錄？唔建議咁做。"
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "分頁 - 下載線程（預設: 3）"
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr "分頁提示：每條下載線程都會同時向 Jellyfin 請求你設定嘅項目上限值。"
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr "更新或者修復你嘅媒體櫃嚟套用以下變更。"
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr "如果更新數量多過呢個數就顯示進度條"
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr "處理緊更新"
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "強制轉碼"
+
+msgctxt "#33180"
+msgid "Restart Jellyfin for Kodi"
+msgstr "重新啟動「適用於 Kodi 嘅 Jellyfin」"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "重新啟動嚟套用補丁"
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "以電影模式播放"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "啟用電影模式播放選項"
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "移除多個媒體櫃"
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr "播片期間啟用同步（可能導致窒機）"
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr "Kodi 同步佇列可以加速啟動時嘅同步。其他同步會由伺服器事件觸發。"
+
+msgctxt "#33191"
+msgid "Restart Jellyfin for Kodi to apply this change?"
+msgstr "重新啟動「適用於 Kodi 嘅 Jellyfin」嚟套用變更？"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "重新啟動緊…"
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "管理媒體櫃"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "啟用「適用於 Kodi 嘅 Jellyfin」"
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr "進階選項"
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr "同步進行緊，唔該等佢完成咗再試。"
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "揀要更新嘅媒體櫃"
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "揀要修復嘅媒體櫃"
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "揀要移除嘅媒體櫃"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "封面圖最高解像度"
+
+msgctxt "#33202"
+msgid "Transcode H265/HEVC RExt"
+msgstr "轉碼 H265/HEVC RExt"
+
+msgctxt "#33203"
+msgid "Manage path replacements"
+msgstr "管理路徑替換"
+
+msgctxt "#33204"
+msgid "Finish"
+msgstr "完成"
+
+msgctxt "#33205"
+msgid "New Path Replacement"
+msgstr "新增路徑替換"
+
+msgctxt "#33206"
+msgid "Remote Path"
+msgstr "遠端路徑"
+
+msgctxt "#33207"
+msgid "Local Path"
+msgstr "本地路徑"
+
+msgctxt "#33208"
+msgid "360"
+msgstr "360"
+
+msgctxt "#33209"
+msgid "480"
+msgstr "480"
+
+msgctxt "#33210"
+msgid "600"
+msgstr "600"
+
+msgctxt "#33211"
+msgid "720"
+msgstr "720"
+
+msgctxt "#33212"
+msgid "1080"
+msgstr "1080"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "唔限 [預設]"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0.5 Mbps"
+
+msgctxt "#33215"
+msgid "1.0 Mbps"
+msgstr "1.0 Mbps"
+
+msgctxt "#33216"
+msgid "1.5 Mbps"
+msgstr "1.5 Mbps"
+
+msgctxt "#33217"
+msgid "2.0 Mbps"
+msgstr "2.0 Mbps"
+
+msgctxt "#33218"
+msgid "2.5 Mbps"
+msgstr "2.5 Mbps"
+
+msgctxt "#33219"
+msgid "3.0 Mbps"
+msgstr "3.0 Mbps"
+
+msgctxt "#33220"
+msgid "4.0 Mbps"
+msgstr "4.0 Mbps"
+
+msgctxt "#33221"
+msgid "5.0 Mbps"
+msgstr "5.0 Mbps"
+
+msgctxt "#33222"
+msgid "6.0 Mbps"
+msgstr "6.0 Mbps"
+
+msgctxt "#33223"
+msgid "7.0 Mbps"
+msgstr "7.0 Mbps"
+
+msgctxt "#33224"
+msgid "8.0 Mbps"
+msgstr "8.0 Mbps"
+
+msgctxt "#33226"
+msgid "10.0 Mbps"
+msgstr "10.0 Mbps"
+
+msgctxt "#33225"
+msgid "9.0 Mbps"
+msgstr "9.0 Mbps"
+
+msgctxt "#33227"
+msgid "12.0 Mbps"
+msgstr "12.0 Mbps"
+
+msgctxt "#33228"
+msgid "14.0 Mbps"
+msgstr "14.0 Mbps"
+
+msgctxt "#33229"
+msgid "16.0 Mbps"
+msgstr "16.0 Mbps"
+
+msgctxt "#33230"
+msgid "18.0 Mbps"
+msgstr "18.0 Mbps"
+
+msgctxt "#33231"
+msgid "20.0 Mbps"
+msgstr "20.0 Mbps"
+
+msgctxt "#33232"
+msgid "25.0 Mbps"
+msgstr "25.0 Mbps"
+
+msgctxt "#33233"
+msgid "30.0 Mbps"
+msgstr "30.0 Mbps"
+
+msgctxt "#33234"
+msgid "35.0 Mbps"
+msgstr "35.0 Mbps"
+
+msgctxt "#33235"
+msgid "40.0 Mbps"
+msgstr "40.0 Mbps"
+
+msgctxt "#33236"
+msgid "100.0 Mbps"
+msgstr "100.0 Mbps"
+
+msgctxt "#33237"
+msgid "1000.0 Mbps [default]"
+msgstr "1000.0 Mbps [預設]"
+
+msgctxt "#33239"
+msgid "96"
+msgstr "96"
+
+msgctxt "#33240"
+msgid "128"
+msgstr "128"
+
+msgctxt "#33241"
+msgid "160"
+msgstr "160"
+
+msgctxt "#33242"
+msgid "192"
+msgstr "192"
+
+msgctxt "#33243"
+msgid "256"
+msgstr "256"
+
+msgctxt "#33244"
+msgid "320"
+msgstr "320"
+
+msgctxt "#33245"
+msgid "384"
+msgstr "384"
+
+msgctxt "#33238"
+msgid "Maximum"
+msgstr "最高"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "片段跳過"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "啟用片段跳過"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "跳過模式"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "自動跳過"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "顯示「跳過」掣"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "跳過前都問"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "片頭 (Intro)"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "片尾 (Credits)"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "前情提要"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "下集預告"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "跳過"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "跳過片頭？"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "跳過片尾？"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "廣告"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "撳「選擇（SELECT）」掣跳過"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "關閉"
