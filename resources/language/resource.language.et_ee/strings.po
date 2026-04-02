@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-01-22 11:35+0000\n"
+"PO-Revision-Date: 2026-04-02 12:28+0000\n"
 "Last-Translator: rimasx <riks_12@hot.ee>\n"
 "Language-Team: Estonian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/et/>\n"
@@ -1168,3 +1168,67 @@ msgstr "384"
 msgctxt "#30538"
 msgid "Max days in next episodes"
 msgstr "Maksimaalne päevade arv jaotises „Järgmised episoodid”"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Lõikude vahelejätmine"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Luba lõikude vahelejätmine"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Vahelejätmise režiim"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Automaatne vahelejätmine"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Kuva vahelejätmise nupp"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Küsi iga kord"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Sissejuhatus"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Lõputiitrid"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Kokkuvõte"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Eelvaade"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Jäta vahele"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Jäta sissejuhatus vahele?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Jäta lõputiitrid vahele?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Reklaam"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Vahelejätmiseks vajuta VALI"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Väljas"
