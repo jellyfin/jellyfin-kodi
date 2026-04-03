@@ -131,6 +131,9 @@ class Kodi(object):
                 art = person_type.lower()
                 if "writing" in art:
                     art = "writer"
+                elif "gueststar" in art:
+                    # Kodi doesn't differentiate gueststars from actors like Jellyfin does.
+                    art = "actor"
 
                 self.artwork.update(person["imageurl"], person_id, art, "thumb")
 
