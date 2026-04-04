@@ -1159,9 +1159,9 @@ def get_themes(api_client):
     if not xbmcvfs.exists(library + "/"):
         xbmcvfs.mkdir(library)
 
-    if xbmc.getCondVisibility("System.HasAddon(script.tvtunes)"):
+    if xbmc.getCondVisibility("System.HasAddon(service.tvtunes)"):
 
-        tvtunes = xbmcaddon.Addon(id="script.tvtunes")
+        tvtunes = xbmcaddon.Addon(id="service.tvtunes")
         tvtunes.setSetting("custom_path_enable", "true")
         tvtunes.setSetting("custom_path", library)
         LOG.info("TV Tunes custom path is enabled and set.")
