@@ -6,8 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2025-09-11 23:31+0000\n"
-"Last-Translator: Odd Stråbø <oddstr13@openshell.no>\n"
+"PO-Revision-Date: 2026-04-05 22:08+0000\n"
+"Last-Translator: Daniel Aleksander Martinsen "
+"<192.168.50.2.batch394@passinbox.com>\n"
 "Language-Team: Norwegian Bokmål <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/nb_NO/>\n"
 "Language: nb_no\n"
@@ -15,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.11.4\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
@@ -1191,3 +1192,67 @@ msgstr "256"
 msgctxt "#33236"
 msgid "100.0 Mbps"
 msgstr "100.0 Mbps"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Segmenthopping"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Aktiver segmenthopping"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Hopp over modus"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Automatisk hopp over"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Vis hopp over-knappen"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Spør hver gang"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Introduksjon"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Rulletekst"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Oppsummering"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Forhåndsvis"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Hopp over"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Hopp over intro?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Hopp over rulleteksten?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Reklame"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Velg SELECT for å hoppe over"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Av"
