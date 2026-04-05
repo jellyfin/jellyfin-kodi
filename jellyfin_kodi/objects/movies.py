@@ -235,6 +235,7 @@ class Movies(KodiDb):
         obj["FileId"] = self.add_file(*values(obj, QU.add_file_obj))
         obj["VideoVersionItemType"] = self.itemtype
 
+        version_name = None
         for source in obj["media_sources"]:
             # First media source isn't always the main version, so find the correct version name for the primary
             if obj["Id"] == source["Id"]:

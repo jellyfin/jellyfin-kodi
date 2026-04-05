@@ -1349,11 +1349,3 @@ msgstr "WÄHLEN drücken zum Überspringen"
 msgctxt "#33261"
 msgid "Off"
 msgstr "Aus"
-
-msgctxt "#30900"
-msgid "Sync video versions"
-msgstr "Videoversionen synchronisieren"
-
-msgctxt "#30901"
-msgid "Sync video extras"
-msgstr "Synchronisierung von video-extras"
