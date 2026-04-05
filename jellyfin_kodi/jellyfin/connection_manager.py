@@ -100,30 +100,7 @@ class ConnectionManager(object):
 
         LOG.info("Successfully logged in as %s" % (username))
         # TODO Change when moving to database storage of server details
-        credentials = self.credentials.get()
-
-        self.config.data["auth.user_id"] = data["User"]["Id"]
-        self.config.data["auth.token"] = data["AccessToken"]
-
-        for server in credentials["Servers"]:
-            if server["Id"] == data["ServerId"]:
-                found_server = server
-                break
-        else:
-            return {}  # No server found
-
-        found_server["DateLastAccessed"] = datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
-        found_server["UserId"] = data["User"]["Id"]
-        found_server["AccessToken"] = data["AccessToken"]
-
-        self.credentials.add_update_server(credentials["Servers"], found_server)
-
-        info = {"Id": data["User"]["Id"], "IsSignedInOffline": True}
-        self.credentials.add_update_user(server, info)
-
-        self.credentials.set_credentials(credentials)
-
-        return data
+        return self._save_auth_credentials(data)
 
     def connect_to_address(self, address, options={}):
 
@@ -356,6 +333,49 @@ class ConnectionManager(object):
                 else CONNECTION_STATE["ServerSignIn"]
             ),
         }
+
+    def login_quick_connect(self, server_url, secret):
+        """Exchange a Quick Connect secret for an authenticated session."""
+        if not server_url:
+            raise AttributeError("server url cannot be empty")
+        if not secret:
+            raise AttributeError("secret cannot be empty")
+
+        data = self.API.quick_connect_authenticate(server_url, secret)
+
+        if not data:
+            LOG.info("Quick Connect authentication failed")
+            return {}
+
+        LOG.info("Successfully logged in via Quick Connect as %s", data["User"]["Name"])
+        return self._save_auth_credentials(data)
+
+    def _save_auth_credentials(self, data):
+        """Persist auth token and user info after a successful login."""
+        credentials = self.credentials.get()
+
+        self.config.data["auth.user_id"] = data["User"]["Id"]
+        self.config.data["auth.token"] = data["AccessToken"]
+
+        for server in credentials["Servers"]:
+            if server["Id"] == data["ServerId"]:
+                found_server = server
+                break
+        else:
+            return {}
+
+        found_server["DateLastAccessed"] = datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+        found_server["UserId"] = data["User"]["Id"]
+        found_server["AccessToken"] = data["AccessToken"]
+
+        self.credentials.add_update_server(credentials["Servers"], found_server)
+
+        info = {"Id": data["User"]["Id"], "IsSignedInOffline": True}
+        self.credentials.add_update_user(found_server, info)
+
+        self.credentials.set_credentials(credentials)
+
+        return data
 
     def _update_server_info(self, server, system_info):
 

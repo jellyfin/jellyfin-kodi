@@ -521,3 +521,53 @@ class API(object):
         except Exception as e:
             LOG.warning("Error fetching media segments: %s", e)
             return None
+
+    def quick_connect_initiate(self, server_url):
+        """Initiate Quick Connect and return {Secret, Code, Authenticated}."""
+        headers = self.get_default_headers()
+        headers.update({"Content-type": "application/json"})
+        try:
+            response = self.send_request(
+                server_url, "QuickConnect/Initiate", method="post",
+                timeout=10, headers=headers, data=json.dumps({})
+            )
+            if response.status_code == 200:
+                return response.json()
+            LOG.error("Quick Connect initiate failed with status %s", response.status_code)
+            return {}
+        except Exception as e:
+            LOG.error("Quick Connect initiate error: %s", e)
+            return {}
+
+    def quick_connect_connect(self, server_url, secret):
+        """Check Quick Connect authorization status."""
+        headers = self.get_default_headers()
+        try:
+            response = self.send_request(
+                server_url, "QuickConnect/Connect?Secret=%s" % quote(secret),
+                method="get", timeout=10, headers=headers
+            )
+            if response.status_code == 200:
+                return response.json()
+            LOG.error("Quick Connect check failed with status %s", response.status_code)
+            return {}
+        except Exception as e:
+            LOG.error("Quick Connect check error: %s", e)
+            return {}
+
+    def quick_connect_authenticate(self, server_url, secret):
+        """Exchange a Quick Connect secret for an auth token."""
+        headers = self.get_default_headers()
+        headers.update({"Content-type": "application/json"})
+        try:
+            response = self.send_request(
+                server_url, "Users/AuthenticateWithQuickConnect", method="post",
+                timeout=10, headers=headers, data=json.dumps({"Secret": secret})
+            )
+            if response.status_code == 200:
+                return response.json()
+            LOG.error("Quick Connect authenticate failed with status %s", response.status_code)
+            return {}
+        except Exception as e:
+            LOG.error("Quick Connect authenticate error: %s", e)
+            return {}
