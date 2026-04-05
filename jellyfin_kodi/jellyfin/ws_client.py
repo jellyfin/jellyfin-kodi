@@ -36,6 +36,7 @@ class WSClient(threading.Thread):
 
         self.client = client
         threading.Thread.__init__(self)
+        self.keepalive = None
 
     def send(self, message, data=""):
 
@@ -115,6 +116,10 @@ class WSClient(threading.Thread):
             self.client.jellyfin.post_capabilities(
                 {"PlayableMediaTypes": "Audio, Video", "SupportsMediaControl": False}
             )
+        if self.keepalive is not None:
+            self.keepalive.stop()
+        self.keepalive = KeepAlive(self, ws)
+        self.keepalive.start()
 
     def on_message(self, ws, message):
 
@@ -135,5 +140,27 @@ class WSClient(threading.Thread):
 
         self.stop = True
 
+        if self.keepalive is not None:
+            self.keepalive.stop()
+
         if self.wsc is not None:
             self.wsc.close()
+
+
+class KeepAlive(threading.Thread):
+    def __init__(self, timeout, ws):
+        self.halt = threading.Event()
+        self.ws = ws
+
+        threading.Thread.__init__(self)
+
+    def stop(self):
+        self.halt.set()
+        self.join()
+
+    def run(self):
+        while not self.halt.is_set():
+            if self.halt.wait(30):
+                break
+            else:
+                self.ws.send(json.dumps({"MessageType": "KeepAlive", "Data": 30}))
