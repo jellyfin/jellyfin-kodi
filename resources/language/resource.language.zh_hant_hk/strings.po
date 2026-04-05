@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-05 09:36+0000\n"
+"PO-Revision-Date: 2026-04-05 15:52+0000\n"
 "Last-Translator: Lofuuzi <lather0519@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script, Hong Kong) <https://"
 "translate.jellyfin.org/projects/jellyfin/jellyfin-kodi/zh_Hant_HK/>\n"
@@ -867,7 +867,7 @@ msgstr "未睇"
 
 msgctxt "#33171"
 msgid "By first letter"
-msgstr "按首字母排序"
+msgstr "以首字母排序"
 
 msgctxt "#33172"
 msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
