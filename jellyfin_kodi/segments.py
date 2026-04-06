@@ -22,9 +22,10 @@ class SegmentChecker(threading.Thread):
         LOG.info("--->[ segment checker ]")
 
         while not self.stop_thread:
-            item = self._getCurrentPlayingItem()
-            if item and settings("mediaSegmentsEnabled.bool"):
+            if self.player.isPlaying() and settings("mediaSegmentsEnabled.bool"):
                 try:
+                    current_file = self.player.get_playing_file()
+                    item = self.player.get_file_info(current_file)
                     current_pos = int(self.player.getTime())
                     self.player.check_skip_segments(item, current_pos)
 
@@ -34,11 +35,3 @@ class SegmentChecker(threading.Thread):
             xbmc.sleep(1000)
 
         LOG.info("---<[ segment checker ]")
-
-    def _getCurrentPlayingItem(self):
-        try:
-            current_file = self.player.get_playing_file()
-            item = self.player.get_file_info(current_file)
-            return item
-        except Exception:
-            return None
