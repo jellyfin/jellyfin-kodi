@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-02 12:28+0000\n"
+"PO-Revision-Date: 2026-04-06 08:50+0000\n"
 "Last-Translator: rimasx <riks_12@hot.ee>\n"
 "Language-Team: Estonian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/et/>\n"
@@ -1232,3 +1232,23 @@ msgstr "Vahelejätmiseks vajuta VALI"
 msgctxt "#33261"
 msgid "Off"
 msgstr "Väljas"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Kiirühendus"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Sisesta see kood Jellyfini rakendusse või veebiliidesesse:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "Autoriseerimise ootel..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "Kiirühendus pole selles serveris saadaval"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "Kiirühenduse ajalõpp. Palun proovi uuesti."
