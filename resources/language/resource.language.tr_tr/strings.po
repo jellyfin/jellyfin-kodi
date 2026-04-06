@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "PO-Revision-Date: 2026-04-06 08:50+0000\n"
-"Last-Translator: Bora Kafadar <borakafadar@gmail.com>\n"
+"Last-Translator: Yusuf Soyipek <yusuf@soyipek.com>\n"
 "Language-Team: Turkish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/tr/>\n"
 "Language: tr_tr\n"
@@ -1252,7 +1252,7 @@ msgstr "Kapalı"
 
 msgctxt "#30622"
 msgid "Quick Connect timed out. Please try again."
-msgstr "Hızlı bağlanma zaman aşımına uğradı. Lütfen tekrar deneyin."
+msgstr "Hızlı bağlanma süresi doldu. Lütfen tekrar deneyin."
 
 msgctxt "#30618"
 msgid "Quick Connect"
