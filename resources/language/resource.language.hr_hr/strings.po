@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-03-24 01:00+0000\n"
+"PO-Revision-Date: 2026-04-06 11:28+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hr/>\n"
@@ -871,10 +871,9 @@ msgctxt "#33171"
 msgid "By first letter"
 msgstr "Po prvom slovu"
 
-#, fuzzy
 msgctxt "#33174"
 msgid "Paging - download threads (default: 3)"
-msgstr "Paging - dretve za preuzimanje (zadano: 3)"
+msgstr "Straničenje – broj niti za preuzimanje (zadano: 3)"
 
 msgctxt "#33176"
 msgid "Update or repair your libraries to apply the changes below."
@@ -1248,3 +1247,23 @@ msgstr "Pritisni ODABERI za preskakanje"
 msgctxt "#33261"
 msgid "Off"
 msgstr "Isključeno"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Brzo povezivanje"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Unesi ovaj kod u aplikaciju Jellyfin ili u web sučelje:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "Čekanje na autorizaciju..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "Brzo povezivanje nije dostupno na ovom poslužitelju"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "Brzo povezivanje je predugo trajalo. Pokušaj ponovo."
