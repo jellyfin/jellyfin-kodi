@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-02-16 13:40+0000\n"
-"Last-Translator: ilker <isaglam@gmail.com>\n"
+"PO-Revision-Date: 2026-04-06 08:50+0000\n"
+"Last-Translator: Bora Kafadar <borakafadar@gmail.com>\n"
 "Language-Team: Turkish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/tr/>\n"
 "Language: tr_tr\n"
@@ -1249,3 +1249,23 @@ msgstr "Geçmek için SELECT tuşuna basın"
 msgctxt "#33261"
 msgid "Off"
 msgstr "Kapalı"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "Hızlı bağlanma zaman aşımına uğradı. Lütfen tekrar deneyin."
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Hızlı Bağlan"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Jellyfin uygulamasında ya da web arayüzünde bu kodu girin:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "Onay bekleniyor..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "Hızlı Bağlan bu sunucuda kullanılamıyor"
