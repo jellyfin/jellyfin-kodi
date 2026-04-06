@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-02-22 21:43+0000\n"
+"PO-Revision-Date: 2026-04-06 08:50+0000\n"
 "Last-Translator: Gargotaire <gargots@gmail.com>\n"
 "Language-Team: Catalan <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ca/>\n"
@@ -1255,3 +1255,23 @@ msgstr "Habilita el salt del segment"
 msgctxt "#33246"
 msgid "Segment Skipping"
 msgstr "Salta el segment"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Quick Connect"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "A l'espera d'autorització..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "Quick Connect no es troba disponible en aquest servidor"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Entreu aquest codi a l'aplicació de Jellyfin o a la interfície web:"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "S'ha esgotat el temps d'espera de Quick Connect. Torneu-ho a provar."
