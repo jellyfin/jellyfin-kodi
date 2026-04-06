@@ -33,8 +33,6 @@ class Player(xbmc.Player):
 
     def __init__(self):
         xbmc.Player.__init__(self)
-        self.segment_checker = SegmentChecker(player=self)
-        self.segment_checker.start()
 
     def get_playing_file(self):
         try:
@@ -56,13 +54,15 @@ class Player(xbmc.Player):
         Accounts for scenario where Kodi starts playback and exits immediately.
         First, ensure previous playback terminated correctly in Jellyfin.
         """
+
         self.stop_playback()
-        self.up_next = False
+        self._reset_state()
         count = 0
         monitor = xbmc.Monitor()
 
         try:
             current_file = self.getPlayingFile()
+
         except Exception:
 
             while count < 5:
@@ -728,3 +728,27 @@ class Player(xbmc.Player):
             except Exception:
                 pass
             self.skip_dialog = None
+
+    def _reset_state(self):
+        self._reset_segment_checker()
+        self._reset_skip_dialog()
+
+        self.up_next = False
+        self.skip_segments = {}
+        self.skip_prompted = set()
+
+    def _reset_segment_checker(self):
+        if self.segment_checker:
+            self.segment_checker.stop()
+
+        self.segment_checker = SegmentChecker(player=self)
+        self.segment_checker.start()
+
+    def _reset_skip_dialog(self):
+        if self.skip_dialog:
+            try:
+                self.skip_dialog.close()
+            except Exception:
+                pass
+
+        self.skip_dialog = None
