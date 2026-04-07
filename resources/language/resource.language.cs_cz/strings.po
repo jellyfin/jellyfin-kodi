@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-02-17 14:36+0000\n"
-"Last-Translator: Helak <adamhavra@seznam.cz>\n"
+"PO-Revision-Date: 2026-04-07 20:29+0000\n"
+"Last-Translator: Fjuro <fjuro@users.noreply.translate.jellyfin.org>\n"
 "Language-Team: Czech <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/cs/>\n"
 "Language: cs_cz\n"
@@ -1244,3 +1244,23 @@ msgstr "Stiskněte VYBRAT pro přeskočení"
 msgctxt "#33261"
 msgid "Off"
 msgstr "Vypnout"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Rychlé připojení"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Zadejte tento kód do aplikace nebo webového rozhraní Jellyfin:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "Čekání na schválení…"
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "Rychlé připojení není na tomto serveru k dispozici"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "Rychlé připojení vypršelo. Zkuste to prosím znovu."
