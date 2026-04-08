@@ -36,6 +36,7 @@ class WSClient(threading.Thread):
 
         self.client = client
         threading.Thread.__init__(self)
+        self.keepalive = None
 
     def send(self, message, data=""):
 
@@ -47,20 +48,34 @@ class WSClient(threading.Thread):
     def run(self):
 
         monitor = xbmc.Monitor()
-        token = self.client.config.data["auth.token"]
-        device_id = self.client.config.data["app.device_id"]
         server = self.client.config.data["auth.server"]
         server = (
             server.replace("https://", "wss://")
             if server.startswith("https")
             else server.replace("http://", "ws://")
         )
-        wsc_url = "%s/socket?ApiKey=%s&device_id=%s" % (server, token, device_id)
+        wsc_url = "%s/socket" % server
+        # Build authorization header for websocket connection
+        auth_params = {}
+        if "app.device_name" in self.client.config.data:
+            auth_params.update(
+                {
+                    "Client": self.client.config.data["app.name"],
+                    "Device": self.client.config.data["app.device_name"],
+                    "DeviceId": self.client.config.data["app.device_id"],
+                    "Version": self.client.config.data["app.version"],
+                }
+            )
+        if "auth.token" in self.client.config.data:
+            auth_params["Token"] = self.client.config.data["auth.token"]
+        auth_line = ", ".join(f'{k}="{v}"' for k, v in auth_params.items())
+        ws_headers = {"Authorization": f"MediaBrowser {auth_line}"}
 
         LOG.info("Websocket url: %s", wsc_url)
 
         self.wsc = websocket.WebSocketApp(
             wsc_url,
+            header=ws_headers,
             on_open=lambda ws: self.on_open(ws),
             on_message=lambda ws, message: self.on_message(ws, message),
             on_error=lambda ws, error: self.on_error(ws, error),
@@ -101,6 +116,10 @@ class WSClient(threading.Thread):
             self.client.jellyfin.post_capabilities(
                 {"PlayableMediaTypes": "Audio, Video", "SupportsMediaControl": False}
             )
+        if self.keepalive is not None:
+            self.keepalive.stop()
+        self.keepalive = KeepAlive(self, ws)
+        self.keepalive.start()
 
     def on_message(self, ws, message):
 
@@ -121,5 +140,27 @@ class WSClient(threading.Thread):
 
         self.stop = True
 
+        if self.keepalive is not None:
+            self.keepalive.stop()
+
         if self.wsc is not None:
             self.wsc.close()
+
+
+class KeepAlive(threading.Thread):
+    def __init__(self, timeout, ws):
+        self.halt = threading.Event()
+        self.ws = ws
+
+        threading.Thread.__init__(self)
+
+    def stop(self):
+        self.halt.set()
+        self.join()
+
+    def run(self):
+        while not self.halt.is_set():
+            if self.halt.wait(30):
+                break
+            else:
+                self.ws.send(json.dumps({"MessageType": "KeepAlive", "Data": 30}))
