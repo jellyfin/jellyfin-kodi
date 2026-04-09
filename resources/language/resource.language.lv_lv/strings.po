@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-01-14 11:49+0000\n"
-"Last-Translator: Berto <jurgisbums@gmail.com>\n"
+"PO-Revision-Date: 2026-04-09 15:05+0000\n"
+"Last-Translator: Anrijs Vitolins <salixzs@gmail.com>\n"
 "Language-Team: Latvian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lv/>\n"
 "Language: lv_lv\n"
@@ -1185,3 +1185,23 @@ msgstr "320"
 msgctxt "#33245"
 msgid "384"
 msgstr "384"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "Iestājās noilgums Quick Connect pieslēgumam. Mēģiniet vēlreiz."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "Quick Connect nav pieejams uz šī servera"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "Gaida autorizāciju..."
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Ievadiet šo kodu Jellyfin programmā vai Web vietnē:"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Quick Connect"
