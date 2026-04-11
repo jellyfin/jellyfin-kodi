@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-06 08:50+0000\n"
-"Last-Translator: Gargotaire <gargots@gmail.com>\n"
+"PO-Revision-Date: 2026-04-11 11:34+0000\n"
+"Last-Translator: Kisnov <gabrielmarfil0@gmail.com>\n"
 "Language-Team: Catalan <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ca/>\n"
 "Language: ca_es\n"
@@ -1258,7 +1258,7 @@ msgstr "Salta el segment"
 
 msgctxt "#30618"
 msgid "Quick Connect"
-msgstr "Quick Connect"
+msgstr "Connexió ràpida"
 
 msgctxt "#30620"
 msgid "Waiting for authorization..."
