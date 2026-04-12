@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-03-08 09:42+0000\n"
-"Last-Translator: Jack Ward <jack200114@hotmail.com>\n"
+"PO-Revision-Date: 2026-04-12 20:21+0000\n"
+"Last-Translator: Translation expert <eleceng4ever@hotmail.com>\n"
 "Language-Team: Arabic <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ar/>\n"
 "Language: ar_aa\n"
@@ -1230,3 +1230,23 @@ msgstr "مشاهدة"
 msgctxt "#33254"
 msgid "Recap"
 msgstr "تلخيص"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "اتصال سريع"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "ادخل هذا الرمز في تطبيق Jellyfin أو واجهة الويب:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "في انتظار التصريح..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "الاتصال السريع غير متاح في هذا الخادم"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "انقضى وقت الاتصال السريع. يرجى المحاولة مجددا."
