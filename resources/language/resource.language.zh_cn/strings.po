@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2026-04-13 06:24+0000\n"
+"PO-Revision-Date: 2026-04-13 06:33+0000\n"
 "Last-Translator: DyingSlacker <2391773977@outlook.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://"
 "translate.jellyfin.org/projects/jellyfin/jellyfin-kodi/zh_Hans/>\n"
@@ -1154,3 +1154,43 @@ msgstr "正在等待授权..."
 msgctxt "#30621"
 msgid "Quick Connect is not available on this server"
 msgstr "快速连接在该服务器上不可用"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "快速连接超时，请重试。"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "片段跳过"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "启用片段跳过"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "跳过模式"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "自动跳过"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "显示跳过按钮"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "每次都询问"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "片头"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "片尾"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "前情提要"
