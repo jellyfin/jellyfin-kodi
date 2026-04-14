@@ -70,12 +70,13 @@ FROM        files
 WHERE       idPath = ?
 AND         strFilename = ?
 """
-get_file_obj = ["{FileId}"]
+get_file_obj = ["{PathId}", "{Filename}"]
 get_filename = """
 SELECT      strFilename
 FROM        files
 WHERE       idFile = ?
 """
+get_filename_obj = ["{FileId}"]
 get_all_people = """
 SELECT      name, actor_id
 FROM        actor
@@ -416,14 +417,48 @@ add_video_version_obj = [
     "{MovieId}",
     "movie",
     "{VideoVersionItemType}",
-    40400,
+    "{VideoVersionTypeId}",
 ]
+update_video_version = """
+UPDATE      videoversion
+SET         idMedia = ?, media_type = ?, itemType = ?, idType = ?
+WHERE       idFile = ?
+"""
+update_video_version_obj = [
+    "{MovieId}",
+    "movie",
+    "{VideoVersionItemType}",
+    "{VideoVersionTypeId}",
+    "{FileId}",
+]
+count_video_version = """
+SELECT COUNT(*) FROM videoversion WHERE idFile = ? AND idMedia = ? AND idType = ?
+"""
+count_video_version_obj = ["{FileId}", "{MovieId}", "{VideoVersionTypeId}"]
+count_video_version_type = """
+SELECT COUNT(*) FROM videoversion WHERE idType = ?
+"""
+get_video_versions = """
+SELECT DISTINCT idType, idFile FROM videoversion WHERE idMedia = ?
+"""
 get_videoversion_itemtype = """
 SELECT itemType FROM videoversiontype WHERE id = ?
 """
 get_videoversion_itemtype_obj = ["{VideoVersionId}"]
 check_video_version = """
 SELECT COUNT(name) FROM sqlite_master WHERE type='table' AND name='videoversion'
+"""
+get_video_version_type = """
+SELECT id FROM videoversiontype WHERE name = ? and itemType = ?
+"""
+add_video_version_type = """
+INSERT INTO videoversiontype(name, owner, itemType) VALUES (?, ?, ?)
+"""
+get_max_video_version_type = """
+SELECT MAX(id) FROM videoversiontype
+"""
+check_movie_file_primary = """
+SELECT 1 FROM movie WHERE idMovie = ? AND idFile = ? LIMIT 1
 """
 add_musicvideo = """
 INSERT INTO     musicvideo(idMVideo, idFile, c00, c04, c05, c06, c07, c08, c09, c10,
@@ -800,6 +835,11 @@ delete_movie_obj = ["{KodiId}", "{FileId}"]
 delete_video_version = """
 DELETE FROM     videoversion
 WHERE           idFile = ?
+"""
+delete_video_version_type = """
+DELETE FROM     videoversiontype
+WHERE           id = ?
+AND             owner = 1
 """
 delete_set = """
 DELETE FROM     sets

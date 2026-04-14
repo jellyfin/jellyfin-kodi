@@ -616,7 +616,7 @@ class TVShows(KodiDb):
 
                 temp_obj = dict(obj)
                 temp_obj["Filename"] = self.get_filename(
-                    *values(temp_obj, QU.get_file_obj)
+                    *values(temp_obj, QU.get_filename_obj)
                 )
                 temp_obj["Path"] = "plugin://plugin.video.jellyfin/"
                 self.remove_file(*values(temp_obj, QU.delete_file_obj))
@@ -625,7 +625,7 @@ class TVShows(KodiDb):
 
                 temp_obj = dict(obj)
                 temp_obj["Filename"] = self.get_filename(
-                    *values(temp_obj, QU.get_file_obj)
+                    *values(temp_obj, QU.get_filename_obj)
                 )
                 temp_obj["PathId"] = self.get_path("plugin://plugin.video.jellyfin/")
                 temp_obj["FileId"] = self.add_file(*values(temp_obj, QU.add_file_obj))

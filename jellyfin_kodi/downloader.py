@@ -328,7 +328,9 @@ class GetItemWorker(threading.Thread):
                     result = self.server.http.request(request, s)
 
                     for item in result["Items"]:
-
+                        # Force Jellyfin to treat version as a movie to get the right metadata
+                        if settings("useVersions") == "true" and item["Type"] == "Video":
+                            item["Type"] = "Movie"
                         if item["Type"] in self.output:
                             self.output[item["Type"]].put(item)
                 except HTTPException as error:

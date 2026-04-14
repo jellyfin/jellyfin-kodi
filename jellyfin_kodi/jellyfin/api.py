@@ -142,6 +142,9 @@ class API(object):
     def get_media_folders(self):
         return self.users("/Items")
 
+    def get_extras(self, item_id):
+        return self.users("/Items/%s/SpecialFeatures" % item_id)
+
     def get_item(self, item_id):
         return self.users("/Items/%s" % item_id)
 

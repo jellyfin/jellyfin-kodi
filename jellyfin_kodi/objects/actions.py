@@ -3,6 +3,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 #################################################################################################
 
+import os
 import threading
 import sys
 import json
@@ -935,6 +936,29 @@ def on_play(data, server):
                 return
 
             item = server.jellyfin.get_item(item[0])
+
+            # If using Video Versions, need to match the actual file as the kodi_id is always the primary
+            if settings("useVersions") == "true":
+                # Addon Mode matches the jellyfin_id's properly automatically
+                # This may need to be done elsewhere as well until Kodi exposes versions properly
+
+                # Check the playing file against the primary file; if no match get the right one
+                playing_file = os.path.basename(file)
+                primary_file = os.path.basename(item["Path"])
+                if playing_file != primary_file:
+                    from .kodi import Movies
+
+                    # If not, search kodi database for the filename and get kodi fileid
+                    with database.Database("video") as videodb:
+                        path_id = Movies(videodb.cursor).get_path(file.replace(playing_file, ""))
+                        file_id = Movies(videodb.cursor).get_file(path_id, playing_file)
+
+                    # Get the proper jellyfin_id for this file
+                    newitem = database.get_item_by_file_id(file_id, media)
+
+                    # Get the correct item now with the new id
+                    item = server.jellyfin.get_item(newitem)
+
             item["PlaybackInfo"] = {"Path": file}
             playutils.set_properties(
                 item,
