@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-07 18:35+0000\n"
-"Last-Translator: Szumutku Ádám <adam.szumu@gmail.com>\n"
+"PO-Revision-Date: 2026-04-14 11:38+0000\n"
+"Last-Translator: Szilki077 <szilkimappa@gmail.com>\n"
 "Language-Team: Hungarian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hu/>\n"
 "Language: hu_hu\n"
@@ -1212,3 +1212,67 @@ msgstr "A gyors csatlakozás nem elérhető ezen a szerveren"
 msgctxt "#30622"
 msgid "Quick Connect timed out. Please try again."
 msgstr "A Quick Connect időtúllépett. Kérjük, próbálja meg újra."
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Szegmens kihagyása"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Szegmens átugrásának engedélyezése"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Kihagyás mód"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Automatikus kihagyás"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Kihagyás gomb megjelenítése"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Kérdezd meg minden alkalommal"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Bevezetés"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Kredit"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Újrafutóz"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Előnézet"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Kihagyás"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Kihagyja a bevezetőt?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Kihagyja a krediteket?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Kereskedelmi"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Nyomja meg a KIVÁLASZTÁS gombot a kihagyáshoz"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Ki"
