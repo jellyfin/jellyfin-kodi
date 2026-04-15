@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-15 14:20+0000\n"
+"PO-Revision-Date: 2026-04-15 14:25+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hr/>\n"
@@ -508,11 +508,11 @@ msgstr "Omogući novi sadržaj"
 
 msgctxt "#30532"
 msgid "Duration of the video library pop up"
-msgstr "Skočni prozor trajanja videoteke"
+msgstr "Trajanje skočnog prozora biblioteke videa"
 
 msgctxt "#30533"
 msgid "Duration of the music library pop up"
-msgstr "Skočni prozor trajanja glazbene biblioteke"
+msgstr "Trajanje skočnog prozora biblioteke glazbe"
 
 msgctxt "#30534"
 msgid "Notifications (in seconds)"
