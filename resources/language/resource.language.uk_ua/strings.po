@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-15 11:35+0000\n"
+"PO-Revision-Date: 2026-04-15 11:39+0000\n"
 "Last-Translator: kscop-n1 <karpenko.serhii@outlook.com>\n"
 "Language-Team: Ukrainian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/uk/>\n"
@@ -1216,3 +1216,19 @@ msgstr "Режим пропуску"
 msgctxt "#33249"
 msgid "Auto skip"
 msgstr "Авто пропуск"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Показати кнопку пропуску"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Питати щоразу"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Вступна частина"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Титри"
