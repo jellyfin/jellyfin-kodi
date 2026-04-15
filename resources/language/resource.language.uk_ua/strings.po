@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-15 11:32+0000\n"
+"PO-Revision-Date: 2026-04-15 11:34+0000\n"
 "Last-Translator: kscop-n1 <karpenko.serhii@outlook.com>\n"
 "Language-Team: Ukrainian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/uk/>\n"
@@ -1192,3 +1192,19 @@ msgstr "Введіть цей код у програму Jellyfin або веб-
 msgctxt "#30620"
 msgid "Waiting for authorization..."
 msgstr "Очікування авторизації..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "Швидке підключення не доступно на цьому сервері"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "Час очікування швидкого підключення минув. Спробуйте ще раз."
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Пропуск Сегментів"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Включити пропуск сегментів"
