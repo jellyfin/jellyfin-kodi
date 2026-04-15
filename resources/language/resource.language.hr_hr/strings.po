@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-15 14:27+0000\n"
+"PO-Revision-Date: 2026-04-15 14:32+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hr/>\n"
@@ -759,7 +759,7 @@ msgstr "Odaberite izvor"
 
 msgctxt "#33132"
 msgid "Repair library"
-msgstr "Popravka biblioteke"
+msgstr "Popravi biblioteku"
 
 msgctxt "#33136"
 msgid "Update library"
@@ -975,8 +975,8 @@ msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin
 msgstr ""
 "Instalirajte poslužiteljski dodatak Kodi Sync Queue za automatsku primjenu "
 "ažuriranja biblioteke Jellyfin pri pokretanju. Ovu postavku možete pronaći u "
-"postavkama dodatka (add-on settings) > mogućnosti sinkronizacije (sync "
-"options) > (Enable Kodi Sync Queue.) Omogući Kodi Sync Queue."
+"postavkama dodatka > opcije sinkronizacije > Uključi red čekanja Kodi "
+"sinkronizacije."
 
 msgctxt "#33116"
 msgid "Compress artwork (reduces quality)"
