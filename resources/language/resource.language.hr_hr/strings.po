@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-06 11:28+0000\n"
+"PO-Revision-Date: 2026-04-15 13:24+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hr/>\n"
@@ -66,7 +66,7 @@ msgstr "Jellyfin opcije"
 
 msgctxt "#30305"
 msgid "TV Shows"
-msgstr "Serije"
+msgstr "TV emisije"
 
 msgctxt "#30302"
 msgid "Movies"
@@ -254,7 +254,7 @@ msgstr "Sve"
 
 msgctxt "#33114"
 msgid "Enable external subtitles"
-msgstr "Omogući vanjske prijevode"
+msgstr "Uključi eksterne titlove"
 
 msgctxt "#33093"
 msgid "Backup folder"
@@ -399,7 +399,7 @@ msgstr "Generiran je novi ID uređaja. Kodi će se sada ponovno pokrenuti."
 msgctxt "#33035"
 msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
 msgstr ""
-"Oprez! Ako odaberete izvorni način rada, određene Jellyfin značajke će "
+"Oprez! Ako odaberete izvorni način rada, određene Jellyfin funkcije će "
 "nedostajati, kao što su: Jellyfin kino način rada, opcije izravnog prijenosa/"
 "transkodiranja i raspored roditeljskog pristupa."
 
@@ -837,7 +837,7 @@ msgstr "Samo titlovi"
 
 msgctxt "#33159"
 msgid "Enable audio/subtitles selection"
-msgstr "Omogući odabir zvuka/titlova"
+msgstr "Uključi odabir zvuka/titlova"
 
 msgctxt "#33163"
 msgid "Disabled/Media default"
