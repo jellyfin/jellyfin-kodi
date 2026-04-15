@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-15 14:25+0000\n"
+"PO-Revision-Date: 2026-04-15 14:27+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hr/>\n"
@@ -616,7 +616,7 @@ msgstr "Dovršeno za:"
 
 msgctxt "#33039"
 msgid "Enable music library?"
-msgstr "Omogućiti glazbenu biblioteku?"
+msgstr "Uključiti biblioteku medija?"
 
 msgctxt "#33047"
 msgid "Kodi can't locate file:"
@@ -964,7 +964,7 @@ msgid "You may need to verify your network credentials in the add-on settings or
 msgstr ""
 "Možda ćete morati potvrditi svoje mrežne vjerodajnice u postavkama dodatka "
 "ili koristiti Jellyfin zamjenu putanje da biste ispravno formatirali svoju "
-"putanju (Jellyfin dashboard > library). Zaustaviti sinkronizaciju?"
+"putanju (Jellyfin nadzorna ploča > biblioteka). Zaustaviti sinkronizaciju?"
 
 msgctxt "#33098"
 msgid "Refresh boxsets"
