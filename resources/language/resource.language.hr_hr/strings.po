@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-15 13:24+0000\n"
+"PO-Revision-Date: 2026-04-15 14:20+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: Croatian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hr/>\n"
@@ -314,7 +314,7 @@ msgstr "Ignoriraj specijale u sljedećim epizodama"
 
 msgctxt "#30515"
 msgid "Paging - max items requested (default: 15)"
-msgstr "Paging - maksimalan broj traženih stavki (zadano: 15)"
+msgstr "Paging – maksimalan broj traženih stavki (zadano: 15)"
 
 msgctxt "#30517"
 msgid "Network credentials"
@@ -957,7 +957,7 @@ msgstr "Skupljanje boxsetova"
 
 msgctxt "#33036"
 msgid "Add-on (default)"
-msgstr "Add-on (zadano)"
+msgstr "Dodatak(zadano)"
 
 msgctxt "#33048"
 msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
