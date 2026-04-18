@@ -4,9 +4,9 @@ Verifies the parent-cascade guard that prevents a single-item deletion from
 wiping an entire library when the removed ID is an unrecognized folder that
 happens to be the shared jellyfin_parent_id of every item in a library section.
 
-Real-world trigger: Jellyfin reports the ToWatchList subfolder
-(Type=Folder, not in the view table) as removed. The old code fell through
-to get_media_by_parent_id, which returned every music video in the library.
+Real-world trigger: Jellyfin reports a media subfolder (Type=Folder, not in the
+view table) as removed. The old code fell through to get_media_by_parent_id,
+which returned every item in that section and wiped the entire library.
 """
 
 import queue
@@ -42,13 +42,13 @@ def _make_db():
     # view table only knows about the top-level library section
     conn.execute(
         "INSERT INTO view VALUES (?, ?, ?)",
-        ("lib-view-id", "Music Videos", "musicvideos"),
+        ("lib-view-id", "Movies", "movies"),
     )
-    # all 5 music videos share a common subfolder parent (not in view table)
+    # all 5 items share a common subfolder parent (not in view table)
     for i in range(1, 6):
         conn.execute(
             "INSERT INTO jellyfin VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (f"mv-{i:03d}", "subfolder-id", "MusicVideo", i, i, 1, 1, "musicvideos", "abc"),
+            (f"item-{i:03d}", "subfolder-id", "Movie", i, i, 1, 1, "movies", "abc"),
         )
     conn.commit()
     return conn
@@ -89,16 +89,16 @@ class TestSortWorkerDeletion(unittest.TestCase):
 
     def test_direct_item_found(self):
         """A known item ID routes only that one item, no cascade."""
-        queued = _dispatch("mv-001", self.db)
+        queued = _dispatch("item-001", self.db)
         self.assertEqual(len(queued), 1)
-        self.assertEqual(queued[0]["Id"], "mv-001")
-        self.assertEqual(queued[0]["Type"], "MusicVideo")
+        self.assertEqual(queued[0]["Id"], "item-001")
+        self.assertEqual(queued[0]["Type"], "Movie")
 
     def test_subfolder_id_not_in_view_queues_nothing(self):
         """The prod bug case: subfolder is parent of all items but not a view.
 
         Before the fix, get_media_by_parent_id('subfolder-id') returned all 5
-        music videos and wiped the library. The guard must block this cascade.
+        items and wiped the entire library section. The guard must block this.
         """
         queued = _dispatch("subfolder-id", self.db)
         self.assertEqual(queued, [], "Subfolder ID must not cascade when not in view table")
@@ -120,14 +120,14 @@ class TestSortWorkerDeletion(unittest.TestCase):
         """
         # Re-parent one item directly to the view ID to exercise the cascade
         self.conn.execute(
-            "UPDATE jellyfin SET jellyfin_parent_id = 'lib-view-id' WHERE jellyfin_id = 'mv-001'"
+            "UPDATE jellyfin SET jellyfin_parent_id = 'lib-view-id' WHERE jellyfin_id = 'item-001'"
         )
         self.conn.commit()
         self.db = jellyfin_db.JellyfinDatabase(self.conn.cursor())
 
         queued = _dispatch("lib-view-id", self.db)
         self.assertEqual(len(queued), 1)
-        self.assertEqual(queued[0]["Id"], "mv-001")
+        self.assertEqual(queued[0]["Id"], "item-001")
 
 
 if __name__ == "__main__":

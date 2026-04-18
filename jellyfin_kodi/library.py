@@ -882,8 +882,8 @@ class SortWorker(threading.Thread):
                         # Only cascade to children if this ID is a known library
                         # view/folder. Without this guard, any unrecognized ID
                         # triggers a parent lookup that can wipe every item sharing
-                        # the same jellyfin_parent_id (e.g., all music videos in a
-                        # library when only one was deleted).
+                        # the same jellyfin_parent_id (e.g., an entire library
+                        # section when only one item was deleted).
                         view = database.get_view(item_id)
                         if view is None:
                             LOG.info(
