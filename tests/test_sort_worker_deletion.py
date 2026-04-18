@@ -1,14 +1,17 @@
 """Tests for SortWorker deletion logic.
 
-Verifies the parent-cascade guard introduced to prevent a single-item deletion
-from wiping an entire library when the removed ID is a library folder, not an
-individual media item.
+Verifies the parent-cascade guard that prevents a single-item deletion from
+wiping an entire library when the removed ID is an unrecognized folder that
+happens to be the shared jellyfin_parent_id of every item in a library section.
+
+Real-world trigger: Jellyfin reports the ToWatchList subfolder
+(Type=Folder, not in the view table) as removed. The old code fell through
+to get_media_by_parent_id, which returned every music video in the library.
 """
 
 import queue
 import sqlite3
 import unittest
-from unittest.mock import MagicMock, patch
 
 from jellyfin_kodi.database import jellyfin_db
 
@@ -18,8 +21,8 @@ def _make_db():
     conn = sqlite3.connect(":memory:")
     conn.execute("""
         CREATE TABLE view (
-            view_id   TEXT PRIMARY KEY,
-            view_name TEXT,
+            view_id    TEXT PRIMARY KEY,
+            view_name  TEXT,
             media_type TEXT
         )
     """)
@@ -36,95 +39,95 @@ def _make_db():
             checksum           TEXT
         )
     """)
+    # view table only knows about the top-level library section
     conn.execute(
         "INSERT INTO view VALUES (?, ?, ?)",
-        ("lib-folder-id", "Music Videos", "musicvideos"),
+        ("lib-view-id", "Music Videos", "musicvideos"),
     )
+    # all 5 music videos share a common subfolder parent (not in view table)
     for i in range(1, 6):
         conn.execute(
             "INSERT INTO jellyfin VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (f"mv-{i:03d}", "lib-folder-id", "MusicVideo", i, i, 1, 1, "musicvideos", "abc"),
+            (f"mv-{i:03d}", "subfolder-id", "MusicVideo", i, i, 1, 1, "musicvideos", "abc"),
         )
     conn.commit()
     return conn
 
 
-def _run_sort_worker(item_id, conn):
-    """Exercise the SortWorker.run() logic directly against a real in-memory DB."""
-    from jellyfin_kodi.library import SortWorker
-
-    media_types = ["Movie", "BoxSet", "MusicVideo", "MusicAlbum", "MusicArtist",
-                   "Audio", "Episode", "Season", "Show"]
+def _dispatch(item_id, db):
+    """Run the SortWorker dispatch logic for one ID and return queued items."""
+    media_types = [
+        "Movie", "BoxSet", "MusicVideo", "MusicAlbum",
+        "MusicArtist", "Audio", "Episode", "Season", "Show",
+    ]
     output = {m: queue.Queue() for m in media_types}
 
-    q = queue.Queue()
-    q.put(item_id)
-
-    worker = SortWorker.__new__(SortWorker)
-    worker.queue = q
-    worker.output = output
-    worker.args = ()
-
-    db = jellyfin_db.JellyfinDatabase(conn.cursor())
-
-    # Replay the inner loop body once (avoids needing a real Database context)
-    try:
-        iid = worker.queue.get(timeout=1)
-    except queue.Empty:
-        return output
-
-    media = db.get_media_by_id(iid)
+    media = db.get_media_by_id(item_id)
     if media:
-        worker.output[media].put({"Id": iid, "Type": media})
+        output[media].put({"Id": item_id, "Type": media})
     else:
-        view = db.get_view(iid)
-        if view is None:
-            pass  # logged in production code
-        else:
-            items = db.get_media_by_parent_id(iid)
-            for item in items:
-                worker.output[item[1]].put({"Id": item[0], "Type": item[1]})
+        view = db.get_view(item_id)
+        if view is not None:
+            for item in db.get_media_by_parent_id(item_id):
+                output[item[1]].put({"Id": item[0], "Type": item[1]})
 
-    worker.queue.task_done()
-    return output
+    result = []
+    for q in output.values():
+        while not q.empty():
+            result.append(q.get_nowait())
+    return result
 
 
 class TestSortWorkerDeletion(unittest.TestCase):
 
     def setUp(self):
         self.conn = _make_db()
+        self.db = jellyfin_db.JellyfinDatabase(self.conn.cursor())
 
     def tearDown(self):
         self.conn.close()
 
-    def _queued(self, output):
-        """Return list of (Id, Type) tuples across all output queues."""
-        result = []
-        for q in output.values():
-            while not q.empty():
-                item = q.get_nowait()
-                result.append((item["Id"], item["Type"]))
-        return result
-
     def test_direct_item_found(self):
-        """A known item ID routes only that one item."""
-        output = _run_sort_worker("mv-001", self.conn)
-        queued = self._queued(output)
-        self.assertEqual(queued, [("mv-001", "MusicVideo")])
+        """A known item ID routes only that one item, no cascade."""
+        queued = _dispatch("mv-001", self.db)
+        self.assertEqual(len(queued), 1)
+        self.assertEqual(queued[0]["Id"], "mv-001")
+        self.assertEqual(queued[0]["Type"], "MusicVideo")
+
+    def test_subfolder_id_not_in_view_queues_nothing(self):
+        """The prod bug case: subfolder is parent of all items but not a view.
+
+        Before the fix, get_media_by_parent_id('subfolder-id') returned all 5
+        music videos and wiped the library. The guard must block this cascade.
+        """
+        queued = _dispatch("subfolder-id", self.db)
+        self.assertEqual(queued, [], "Subfolder ID must not cascade when not in view table")
 
     def test_unknown_id_not_a_view_queues_nothing(self):
-        """An unrecognized ID that is not a view must not cascade."""
-        output = _run_sort_worker("totally-unknown-id", self.conn)
-        queued = self._queued(output)
-        self.assertEqual(queued, [], "Unknown non-view ID must not trigger a parent cascade")
+        """A completely unrecognized ID must not cascade."""
+        queued = _dispatch("totally-unknown-id", self.db)
+        self.assertEqual(queued, [])
 
     def test_view_id_cascades_children(self):
-        """A known view/folder ID cascades removal of all its children."""
-        output = _run_sort_worker("lib-folder-id", self.conn)
-        queued = self._queued(output)
-        ids = {item[0] for item in queued}
-        self.assertEqual(ids, {"mv-001", "mv-002", "mv-003", "mv-004", "mv-005"})
-        self.assertTrue(all(t == "MusicVideo" for _, t in queued))
+        """A top-level view/folder ID correctly cascades all its direct children.
+
+        Note: in practice the view table stores top-level library sections.
+        Children of those sections use subfolder IDs (not view IDs) as their
+        jellyfin_parent_id, so a cascade on the view ID itself will usually
+        return zero rows and be a no-op. This test covers the code path for
+        completeness and for configurations where items ARE parented directly
+        to the view ID.
+        """
+        # Re-parent one item directly to the view ID to exercise the cascade
+        self.conn.execute(
+            "UPDATE jellyfin SET jellyfin_parent_id = 'lib-view-id' WHERE jellyfin_id = 'mv-001'"
+        )
+        self.conn.commit()
+        self.db = jellyfin_db.JellyfinDatabase(self.conn.cursor())
+
+        queued = _dispatch("lib-view-id", self.db)
+        self.assertEqual(len(queued), 1)
+        self.assertEqual(queued[0]["Id"], "mv-001")
 
 
 if __name__ == "__main__":
