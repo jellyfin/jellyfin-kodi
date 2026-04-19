@@ -104,7 +104,28 @@ class Events(object):
         elif mode == "play":
 
             item = api_client.get_item(params["id"])
-            item["resumePlayback"] = sys.argv[3].split(":")[1] == "true"
+            timestamp = params.get("timestamp")
+
+            if timestamp is not None:
+                player = xbmc.Player()
+                if player.isPlayingVideo():
+                    try:
+                        playing_file = player.getPlayingFile()
+                        if params["id"] in playing_file:
+                            player.seekTime(float(timestamp))
+                            return
+                    except Exception:
+                        pass
+
+                item["UserData"] = item.get("UserData", {})
+                item["UserData"]["PlaybackPositionTicks"] = int(float(timestamp) * 10000000)
+                item["resumePlayback"] = True
+            else:
+                try:
+                    item["resumePlayback"] = sys.argv[3].split(":")[1] == "true"
+                except IndexError:
+                    item["resumePlayback"] = False
+
             Actions(server, api_client).play(
                 item,
                 params.get("dbid"),
