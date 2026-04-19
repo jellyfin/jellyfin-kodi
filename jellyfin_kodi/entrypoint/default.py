@@ -105,20 +105,35 @@ class Events(object):
 
             item = api_client.get_item(params["id"])
             timestamp = params.get("timestamp")
-
+            # check that timestamp is a float
+            try:
+                timestamp = float(timestamp)
+            except (TypeError, ValueError):
+                timestamp = None
+            # a timestamp of 0.0 is false-y so check for None
             if timestamp is not None:
+                is_current = False
                 player = xbmc.Player()
                 if player.isPlayingVideo():
                     try:
                         playing_file = player.getPlayingFile()
-                        if params["id"] in playing_file:
-                            player.seekTime(float(timestamp))
+                        if settings( "useDirectPaths" ) == "0":
+                            is_current = params["id"] in playing_file
+                        else:
+                            queue = json.loads(window("jellyfin_play.json") or "[]")
+                            for item in queue:
+                                if item.get("Path") == playing_file:
+                                    if item.get("Id") == params["id"]:
+                                        is_current = True
+                                        break
+                        if is_current:
+                            player.seekTime(timestamp)
                             return
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        LOG.debug("Failed to check playing file: %s", e)
 
                 item["UserData"] = item.get("UserData", {})
-                item["UserData"]["PlaybackPositionTicks"] = int(float(timestamp) * 10000000)
+                item["UserData"]["PlaybackPositionTicks"] = int(timestamp * 10000000.0)
                 item["resumePlayback"] = True
             else:
                 try:
