@@ -121,9 +121,9 @@ class Events(object):
                             is_current = params["id"] in playing_file
                         else:
                             queue = json.loads(window("jellyfin_play.json") or "[]")
-                            for item in queue:
-                                if item.get("Path") == playing_file:
-                                    if item.get("Id") == params["id"]:
+                            for p_item in queue:
+                                if p_item.get("Path") == playing_file:
+                                    if p_item.get("Id") == params["id"]:
                                         is_current = True
                                         break
                         if is_current:
