@@ -738,6 +738,11 @@ def browse(media, view_id=None, folder=None, server_id=None, api_client=None):
         xbmcplugin.addSortMethod(PROCESS_HANDLE, xbmcplugin.SORT_METHOD_DATE)
         xbmcplugin.addSortMethod(PROCESS_HANDLE, xbmcplugin.SORT_METHOD_VIDEO_RATING)
         xbmcplugin.addSortMethod(PROCESS_HANDLE, xbmcplugin.SORT_METHOD_VIDEO_RUNTIME)
+    elif media in ("boxset", "library"):
+        xbmcplugin.addSortMethod(PROCESS_HANDLE, xbmcplugin.SORT_METHOD_DATE)
+        xbmcplugin.addSortMethod(PROCESS_HANDLE, xbmcplugin.SORT_METHOD_VIDEO_YEAR)
+        xbmcplugin.addSortMethod(PROCESS_HANDLE, xbmcplugin.SORT_METHOD_VIDEO_ORIGINAL_TITLE)
+        xbmcplugin.addSortMethod(PROCESS_HANDLE, xbmcplugin.SORT_METHOD_VIDEO_TITLE)
 
     xbmcplugin.setContent(PROCESS_HANDLE, content_type)
     xbmcplugin.endOfDirectory(PROCESS_HANDLE)
