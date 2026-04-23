@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-03-10 05:22+0000\n"
-"Last-Translator: Denislav Denev <denislavkdenev@gmail.com>\n"
+"PO-Revision-Date: 2026-04-24 01:29+0000\n"
+"Last-Translator: aleks <alexboom519@gmail.com>\n"
 "Language-Team: Bulgarian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/bg/>\n"
 "Language: bg_bg\n"
@@ -1253,3 +1253,23 @@ msgstr "Изключено"
 msgctxt "#33260"
 msgid "Press SELECT to skip"
 msgstr "Натиснете SELECT за да пропуснете"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Бърза връзка"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Въведете кода в Jellyfin приложение или уеб интерфейс:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "Изчакване на упълномощаване..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "Бърза Връзка не е налична на този сървър"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "Времето за Бърна Връзка изтече. Моля, опитайте отново."
