@@ -623,18 +623,65 @@ class Player(xbmc.Player):
             return 0
         return int(settings(setting_key) or 0)
 
+    def _get_runtime_for_seek(self):
+        try:
+            total_time = float(self.getTotalTime())
+            if total_time > 0:
+                return total_time
+        except Exception:
+            pass
+
+        try:
+            current_file = self.get_playing_file()
+            if current_file and self.is_playing_file(current_file):
+                item = self.get_file_info(current_file)
+                runtime = float(item.get("Runtime") or 0)
+                if runtime > 0:
+                    return runtime
+        except Exception:
+            pass
+
+        return 0.0
+
+    def _get_safe_seek_time(self, seek_time, margin=1.0):
+        try:
+            safe_seek_time = max(0.0, float(seek_time))
+        except (TypeError, ValueError):
+            return None
+
+        runtime = self._get_runtime_for_seek()
+        if runtime > 0:
+            max_seek_time = runtime - margin
+            if max_seek_time <= 0:
+                max_seek_time = runtime
+            safe_seek_time = min(safe_seek_time, max_seek_time)
+
+        try:
+            current_position = float(self.getTime())
+            if safe_seek_time <= current_position:
+                return None
+        except Exception:
+            pass
+
+        return safe_seek_time
+
     def _handle_skip_segment(self, segment_type, start, end, mode):
+        safe_end = self._get_safe_seek_time(end)
+        if safe_end is None or safe_end <= start:
+            return
+
         LOG.debug(
-            "_handle_skip_segment: type=%s, mode=%d, start=%.1f, end=%.1f",
+            "_handle_skip_segment: type=%s, mode=%d, start=%.1f, end=%.1f, safe_end=%.1f",
             segment_type,
             mode,
             start,
             end,
+            safe_end,
         )
 
         if mode == 1:  # Auto skip
-            self.seekTime(end)
-            LOG.info("Auto-skipped %s to %.1f", segment_type, end)
+            self.seekTime(safe_end)
+            LOG.info("Auto-skipped %s to %.1f", segment_type, safe_end)
             # Show notification
             message = "Skipped %s" % segment_type
             dialog(
@@ -646,7 +693,7 @@ class Player(xbmc.Player):
             )
 
         elif mode == 2:  # Show skip button
-            self._show_skip_button(segment_type, end - start, end)
+            self._show_skip_button(segment_type, safe_end - start, safe_end)
 
     def _show_skip_button(self, segment_type, duration, end_time):
         LOG.debug(
