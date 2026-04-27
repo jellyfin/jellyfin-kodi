@@ -80,6 +80,22 @@ class Artwork(object):
             elif artwork.get(art):
                 self.update(*(artwork[art],) + args + (KODI[art],))
 
+    def add_extra(self, artwork, *args):
+        """Add all artworks."""
+        KODI = {
+            "Thumb": ["landscape", "thumb", "poster"],
+            "Primary": ["landscape", "thumb", "poster"],
+        }
+
+        for art in KODI:
+            if art == "Primary":
+                for kodi_image in KODI["Primary"]:
+                    self.update(*(artwork["Primary"],) + args + (kodi_image,))
+
+            elif art == "Thumb":
+                for kodi_image in KODI["Thumb"]:
+                    self.update(*(artwork["Thumb"],) + args + (kodi_image,))
+
     def delete(self, *args):
         """Delete artwork from kodi database"""
         self.cursor.execute(QU.delete_art, args)
