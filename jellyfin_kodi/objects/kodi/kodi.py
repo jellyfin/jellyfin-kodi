@@ -83,8 +83,14 @@ class Kodi(object):
     def update_path(self, *args):
         self.cursor.execute(QU.update_path, args)
 
-    def remove_path(self, *args):
-        self.cursor.execute(QU.delete_path, args)
+    def remove_path(self, path_id):
+        # Only delete path if no other files reference it.
+        # Multiple items can share one path record (e.g. all music videos under
+        # the same SMB directory).  Deleting it while other files still point to
+        # it makes every dependent view-join return 0 rows.
+        self.cursor.execute("SELECT count(*) FROM files WHERE idPath = ?", (path_id,))
+        if self.cursor.fetchone()[0] == 0:
+            self.cursor.execute(QU.delete_path, (path_id,))
 
     def add_file(self, filename, path_id):
 
