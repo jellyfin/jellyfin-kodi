@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-03-14 00:53+0000\n"
-"Last-Translator: aniara001 <qwert352@hotmail.com>\n"
+"PO-Revision-Date: 2026-04-24 15:24+0000\n"
+"Last-Translator: Maltavius <marten@voxberg.se>\n"
 "Language-Team: Swedish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sv/>\n"
 "Language: sv_se\n"
@@ -1245,3 +1245,23 @@ msgstr "Sammanfattning"
 msgctxt "#33260"
 msgid "Press SELECT to skip"
 msgstr "Tryck SELECT för att hoppa över"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Snabbinloggning"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Skriv in denna kod i Jellyfin-appen eller webbgränssnittet:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "Väntar på tillstånd..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "Snabbkoppling är inte tillgängligt på denna server"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "Snabbkopplingen fick slut på tid. Vänligen försök igen."
