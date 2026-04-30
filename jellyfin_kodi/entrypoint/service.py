@@ -10,6 +10,7 @@ from importlib import reload
 
 # Workaround for threads using datetime: _striptime is locked
 import _strptime  # noqa:F401
+
 import xbmc
 import xbmcgui
 

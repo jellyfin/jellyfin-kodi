@@ -2,7 +2,7 @@
 <addon id="plugin.video.jellyfin"
 	name="Jellyfin"
 	version=""
-	provider-name="Jellyfin Contributors, angelblue05">
+	provider-name="Jellyfin Contributors">
 	<requires>
 	</requires>
 	<extension point="xbmc.python.pluginsource"
@@ -23,6 +23,7 @@
 				<label>30402</label>
 				<visible>[[!String.IsEmpty(ListItem.DBID) + !String.IsEqual(ListItem.DBID,-1) |
 					!String.IsEmpty(ListItem.Property(jellyfinid))] + [String.IsEqual(ListItem.DBTYPE,movie) |
+					String.Contains(Container.FolderPath,livetv) |
 					String.IsEqual(ListItem.DBTYPE,episode)]] +
 					!String.IsEmpty(Window(10000).Property(jellyfin_context_transcode))</visible>
 			</item>

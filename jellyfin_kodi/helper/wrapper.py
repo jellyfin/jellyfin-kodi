@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
 
+from functools import wraps
+
 #################################################################################################
 
 import xbmcgui
+import xbmc
 
 from . import LazyLogger
 
-from .utils import should_stop
-from .exceptions import LibraryException
+from .utils import window
+from .exceptions import LibraryExitException
 from .translate import translate
 
 #################################################################################################
@@ -22,6 +25,7 @@ def progress(message=None):
     """Will start and close the progress dialog."""
 
     def decorator(func):
+        @wraps(func)
         def wrapper(self, item=None, *args, **kwargs):
 
             dialog = xbmcgui.DialogProgressBG()
@@ -53,16 +57,18 @@ def progress(message=None):
 def stop(func):
     """Wrapper to catch exceptions and return using catch"""
 
+    @wraps(func)
     def wrapper(*args, **kwargs):
 
-        try:
-            if should_stop():  # ??? TODO: Fixme
-                raise Exception
+        if xbmc.Monitor().waitForAbort(0.00001):
+            raise LibraryExitException("Kodi aborted, exiting...")
 
-        except Exception as error:
-            LOG.exception(error)
+        if window("jellyfin_should_stop.bool"):
+            LOG.info("exiiiiitttinggg")
+            raise LibraryExitException("Should stop flag raised, exiting...")
 
-            raise LibraryException("StopCalled")
+        if not window("jellyfin_online.bool"):
+            raise LibraryExitException("Jellyfin not online, exiting...")
 
         return func(*args, **kwargs)
 
@@ -72,6 +78,7 @@ def stop(func):
 def jellyfin_item(func):
     """Wrapper to retrieve the jellyfin_db item."""
 
+    @wraps(func)
     def wrapper(self, item, *args, **kwargs):
         e_item = self.jellyfin_db.get_item_by_id(
             item["Id"] if isinstance(item, dict) else item

@@ -5,11 +5,12 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import xbmc
 import xbmcaddon
+import xbmcgui
 
 from . import client
 from .database import get_credentials, save_credentials
 from .dialogs import ServerConnect, UsersConnect, LoginManual, ServerManual
-from .helper import settings, addon_id, event, api, window, LazyLogger
+from .helper import settings, addon_id, event, api, window, LazyLogger, translate
 from .jellyfin import Jellyfin
 from .jellyfin.connection_manager import CONNECTION_STATE
 from .helper.exceptions import HTTPException
@@ -230,9 +231,22 @@ class Connect(object):
         ]
 
         if not users:
-            try:
-                return self.login_manual()
-            except RuntimeError:
+            options = [
+                translate(30540),
+                translate(30618),
+            ]  # "Manual login", "Quick Connect"
+            idx = xbmcgui.Dialog().select(translate(30612), options)
+            if idx == 1:  # Quick Connect
+                try:
+                    return self.login_quick_connect()
+                except RuntimeError:
+                    raise RuntimeError("No user selected")
+            elif idx == 0:  # Manual login
+                try:
+                    return self.login_manual()
+                except RuntimeError:
+                    raise RuntimeError("No user selected")
+            else:
                 raise RuntimeError("No user selected")
 
         dialog = UsersConnect("script-jellyfin-connect-users.xml", *XML_PATH)
@@ -252,6 +266,12 @@ class Connect(object):
             else:
                 return self.connect_manager.login(server, username)
 
+        elif dialog.is_quick_connect():
+            try:
+                return self.login_quick_connect()
+            except RuntimeError:
+                pass
+
         elif dialog.is_manual_login():
             try:
                 return self.login_manual()
@@ -261,6 +281,53 @@ class Connect(object):
             raise RuntimeError("No user selected")
 
         return self.login()
+
+    def login_quick_connect(self):
+        """Show Quick Connect code and wait for authorization via polling."""
+        server = self.connect_manager.get_server_info(self.connect_manager.server_id)[
+            "address"
+        ]
+        result = self.connect_manager.API.quick_connect_initiate(server)
+
+        if not result or "Code" not in result:
+            xbmcgui.Dialog().ok(translate(30618), translate(30621))
+            raise RuntimeError("Quick Connect not available")
+
+        code = result["Code"]
+        secret = result["Secret"]
+
+        progress = xbmcgui.DialogProgress()
+        progress.create(
+            translate(30618),
+            "%s [B]%s[/B]" % (translate(30619), code),
+        )
+
+        max_polls = 60
+        for i in range(max_polls):
+            if progress.iscanceled():
+                progress.close()
+                raise RuntimeError("Quick Connect cancelled")
+
+            xbmc.sleep(5000)
+
+            if progress.iscanceled():
+                progress.close()
+                raise RuntimeError("Quick Connect cancelled")
+
+            status = self.connect_manager.API.quick_connect_connect(server, secret)
+
+            if status.get("Authenticated"):
+                progress.close()
+                auth = self.connect_manager.login_quick_connect(server, secret)
+                if auth:
+                    return auth
+                raise RuntimeError("Quick Connect authentication failed")
+
+            progress.update(int((i + 1) * 100 / max_polls))
+
+        progress.close()
+        xbmcgui.Dialog().ok(translate(30618), translate(30622))
+        raise RuntimeError("Quick Connect timed out")
 
     def setup_login_manual(self):
         """Setup manual login by itself for default server."""

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
 
+import json
+
 ##################################################################################################
 
 from . import settings, LazyLogger
@@ -58,9 +60,12 @@ class API(object):
         if "People" in self.item:
             self.get_people_artwork(self.item["People"])
 
+            # Define the types of people considered "actors" in a "cast".
+            cast_types = ["Actor", "GuestStar"]
+
             for person in self.item["People"]:
 
-                if person["Type"] == "Actor":
+                if person["Type"] in cast_types:
                     cast.append(
                         {
                             "name": person["Name"],

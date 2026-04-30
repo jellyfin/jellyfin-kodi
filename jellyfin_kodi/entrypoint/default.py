@@ -920,18 +920,27 @@ def get_next_episodes(item_id, limit):
         if not library:
             return
 
-    result = JSONRPC("VideoLibrary.GetTVShows").execute(
-        {
-            "sort": {"order": "descending", "method": "lastplayed"},
-            "filter": {
-                "and": [
-                    {"operator": "true", "field": "inprogress", "value": ""},
-                    {"operator": "is", "field": "tag", "value": "%s" % library},
-                ]
-            },
-            "properties": ["title", "studio", "mpaa", "file", "art"],
-        }
-    )
+    max_days = settings("maxDaysInNextEpisodes")
+    params = {
+        "sort": {"order": "descending", "method": "lastplayed"},
+        "filter": {
+            "and": [
+                {"operator": "true", "field": "inprogress", "value": ""},
+                {"operator": "is", "field": "tag", "value": "%s" % library},
+            ]
+        },
+        "properties": ["title", "studio", "mpaa", "file", "art"],
+    }
+    if max_days != 0:
+        params["filter"]["and"].append(
+            {
+                "operator": "inthelast",
+                "field": "lastplayed",
+                "value": "%s days" % max_days,
+            }
+        )
+
+    result = JSONRPC("VideoLibrary.GetTVShows").execute(params)
 
     try:
         items = result["result"]["tvshows"]

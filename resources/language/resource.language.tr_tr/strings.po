@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-01-14 18:37+0000\n"
-"Last-Translator: Stronger Shakur <sakir.sek@gmail.com>\n"
+"PO-Revision-Date: 2026-04-06 08:50+0000\n"
+"Last-Translator: Yusuf Soyipek <yusuf@soyipek.com>\n"
 "Language-Team: Turkish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/tr/>\n"
 "Language: tr_tr\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.7.2\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#33120"
 msgid "Select the libraries to add"
@@ -21,7 +21,7 @@ msgstr "Tümü"
 
 msgctxt "#33114"
 msgid "Enable external subtitles"
-msgstr "Harici alt yazıları aktif et"
+msgstr "Harici altyazıları etkinleştir"
 
 msgctxt "#33110"
 msgid "Restart Kodi to take effect."
@@ -37,7 +37,7 @@ msgstr "Yedekleme klasörü"
 
 msgctxt "#33089"
 msgid "Enter folder name for backup"
-msgstr "Yedeklemeler için klasör ismi girin"
+msgstr "Yedek için klasör ismi girin"
 
 msgctxt "#33063"
 msgid "Remove user"
@@ -133,7 +133,7 @@ msgstr "Bağlantıyı doğrula"
 
 msgctxt "#30412"
 msgid "Transcode"
-msgstr "kod dönüştürme"
+msgstr "Kod dönüştürme"
 
 msgctxt "#30410"
 msgid "Refresh this item"
@@ -361,7 +361,7 @@ msgstr "Daimi kullanıcılar"
 
 msgctxt "#30185"
 msgid "Boxsets"
-msgstr "Kutu setleri"
+msgstr "Film serileri"
 
 msgctxt "#30157"
 msgid "Enable enhanced artwork (i.e. cover art)"
@@ -369,7 +369,7 @@ msgstr "Geliştirilmiş resmi etkinleştirin (ör. Kapak resmi)"
 
 msgctxt "#30165"
 msgid "Allow burned subtitles"
-msgstr "Yazılmış altyazılara izin ver"
+msgstr "Gömülü altyazılara izin ver"
 
 msgctxt "#30164"
 msgid "Audio max channels"
@@ -449,7 +449,7 @@ msgstr "Ağ kimlik bilgileri"
 
 msgctxt "#33131"
 msgid "Refreshing boxsets"
-msgstr "Kutu setleri yenileniyor"
+msgstr "Film serileri yenileniyor"
 
 msgctxt "#33104"
 msgid "Find more info in the github wiki/Create-and-restore-from-backup."
@@ -458,11 +458,11 @@ msgstr ""
 
 msgctxt "#33098"
 msgid "Refresh boxsets"
-msgstr "Kutu setlerini yenile"
+msgstr "Film serilerini yenile"
 
 msgctxt "#33018"
 msgid "Gathering boxsets"
-msgstr "Kutu setlerini toplama"
+msgstr "Film serileri alınıyor"
 
 msgctxt "#33132"
 msgid "Repair library"
@@ -494,7 +494,7 @@ msgstr ""
 "günlüğünüzle Kodi forumları için Jellyfin'i bildirin."
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Oynatma modunu değiştirmişsinizdir. Değişikliği uygulamak için Kodi'nin "
 "sıfırlanması gerekiyor, bunu şimdi yapmak ister misiniz?"
@@ -616,8 +616,8 @@ msgctxt "#33048"
 msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
 msgstr ""
 "Eklenti ayarlarında ağ kimlik bilgilerinizi doğrulamanız veya yolunuzu doğru "
-"şekilde biçimlendirmek için Jellyfin yolu ikamesini kullanmanız gerekebilir ("
-"Jellyfin kontrol paneli> kitaplık). Senkronizasyon durdurulsun mu?"
+"şekilde biçimlendirmek için Jellyfin yolu ikamesini kullanmanız gerekebilir "
+"(Jellyfin yönetim paneli> kitaplık). Senkronizasyon durdurulsun mu?"
 
 msgctxt "#33047"
 msgid "Kodi can't locate file:"
@@ -652,7 +652,7 @@ msgstr "Tamamlandı:"
 
 msgctxt "#33021"
 msgid "Gathering:"
-msgstr "Toplama:"
+msgstr "Alınıyor:"
 
 msgctxt "#33016"
 msgid "Play trailers?"
@@ -684,11 +684,11 @@ msgstr "El ile sunucu ekle"
 
 msgctxt "#30533"
 msgid "Duration of the music library pop up"
-msgstr "Müzik kitaplığının op up süresi"
+msgstr "Müzik kitaplığının açılır pencere süresi"
 
 msgctxt "#30532"
 msgid "Duration of the video library pop up"
-msgstr "Video kitaplığının pop up süresi"
+msgstr "Video kitaplığının açılır pencere süresi"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
@@ -1029,3 +1029,243 @@ msgstr "Yol değişikliklerini yönet"
 msgctxt "#33205"
 msgid "New Path Replacement"
 msgstr "Yeni Yol Değişikliği"
+
+msgctxt "#30538"
+msgid "Max days in next episodes"
+msgstr "Sıradaki bölümler için maksimum gün sayısı"
+
+msgctxt "#33212"
+msgid "1080"
+msgstr "1080"
+
+msgctxt "#33209"
+msgid "480"
+msgstr "480"
+
+msgctxt "#33208"
+msgid "360"
+msgstr "360"
+
+msgctxt "#33211"
+msgid "720"
+msgstr "720"
+
+msgctxt "#33210"
+msgid "600"
+msgstr "600"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "Sınırsız [varsayılan]"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0.5 Mbps"
+
+msgctxt "#33215"
+msgid "1.0 Mbps"
+msgstr "1.0 Mbps"
+
+msgctxt "#33216"
+msgid "1.5 Mbps"
+msgstr "1.5 Mbps"
+
+msgctxt "#33217"
+msgid "2.0 Mbps"
+msgstr "2.0 Mbps"
+
+msgctxt "#33218"
+msgid "2.5 Mbps"
+msgstr "2.5 Mbps"
+
+msgctxt "#33219"
+msgid "3.0 Mbps"
+msgstr "3.0 Mbps"
+
+msgctxt "#33220"
+msgid "4.0 Mbps"
+msgstr "4.0 Mbps"
+
+msgctxt "#33221"
+msgid "5.0 Mbps"
+msgstr "5.0 Mbps"
+
+msgctxt "#33222"
+msgid "6.0 Mbps"
+msgstr "6.0 Mbps"
+
+msgctxt "#33223"
+msgid "7.0 Mbps"
+msgstr "7.0 Mbps"
+
+msgctxt "#33224"
+msgid "8.0 Mbps"
+msgstr "8.0 Mbps"
+
+msgctxt "#33225"
+msgid "9.0 Mbps"
+msgstr "9.0 Mbps"
+
+msgctxt "#33226"
+msgid "10.0 Mbps"
+msgstr "10.0 Mbps"
+
+msgctxt "#33227"
+msgid "12.0 Mbps"
+msgstr "12.0 Mbps"
+
+msgctxt "#33228"
+msgid "14.0 Mbps"
+msgstr "14.0 Mbps"
+
+msgctxt "#33229"
+msgid "16.0 Mbps"
+msgstr "16.0 Mbps"
+
+msgctxt "#33230"
+msgid "18.0 Mbps"
+msgstr "18.0 Mbps"
+
+msgctxt "#33231"
+msgid "20.0 Mbps"
+msgstr "20.0 Mbps"
+
+msgctxt "#33232"
+msgid "25.0 Mbps"
+msgstr "25.0 Mbps"
+
+msgctxt "#33233"
+msgid "30.0 Mbps"
+msgstr "30.0 Mbps"
+
+msgctxt "#33234"
+msgid "35.0 Mbps"
+msgstr "35.0 Mbps"
+
+msgctxt "#33235"
+msgid "40.0 Mbps"
+msgstr "40.0 Mbps"
+
+msgctxt "#33236"
+msgid "100.0 Mbps"
+msgstr "100.0 Mbps"
+
+msgctxt "#33237"
+msgid "1000.0 Mbps [default]"
+msgstr "1000.0 Mbps [varsayılan]"
+
+msgctxt "#33238"
+msgid "Maximum"
+msgstr "Maksimum"
+
+msgctxt "#33239"
+msgid "96"
+msgstr "96"
+
+msgctxt "#33240"
+msgid "128"
+msgstr "128"
+
+msgctxt "#33241"
+msgid "160"
+msgstr "160"
+
+msgctxt "#33242"
+msgid "192"
+msgstr "192"
+
+msgctxt "#33243"
+msgid "256"
+msgstr "256"
+
+msgctxt "#33244"
+msgid "320"
+msgstr "320"
+
+msgctxt "#33245"
+msgid "384"
+msgstr "384"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Segment Atlama"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Segment atlamayı etkinleştir"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Atlama modu"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Otomatik atlama"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Atla düğmesini göster"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Her seferinde sor"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Açılış"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Jenerik"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Özet"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Önizleme"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Atla"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Girişi atla?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Jeneriği atla?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Reklam"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Geçmek için SELECT tuşuna basın"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Kapalı"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "Hızlı bağlanma süresi doldu. Lütfen tekrar deneyin."
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Hızlı Bağlan"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Jellyfin uygulamasında ya da web arayüzünde bu kodu girin:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "Onay bekleniyor..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "Hızlı Bağlan bu sunucuda kullanılamıyor"

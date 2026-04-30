@@ -1,0 +1,1232 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2026-04-06 08:50+0000\n"
+"Last-Translator: Lofuuzi <lather0519@gmail.com>\n"
+"Language-Team: Chinese (Traditional Han script, Hong Kong) <https://"
+"translate.jellyfin.org/projects/jellyfin/jellyfin-kodi/zh_Hant_HK/>\n"
+"Language: zh_hant_hk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.15.1\n"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "適用 Kodi 嘅 Jellyfin"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "伺服器位址"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "伺服器名稱"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "登入方式"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "日誌等級"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "裝置名稱"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "進階設定"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "使用者名稱"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "確認刪走檔案"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "播放後提示刪走"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "針對集數"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "針對電影"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "最高串流位元率"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "偏好影片編碼"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "偏好音訊編碼"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "音訊位元率"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "音訊最高聲道數"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "允許燒錄字幕"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "近排新增嘅電視劇"
+
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "未睇完嘅電視劇"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "近排新增嘅電影"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "近排新增嘅集數"
+
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "未睇完嘅電影"
+
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "未睇完嘅集數"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "下一集"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "心水嘅電影"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "心水嘅節目"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "心水嘅集數"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "合集"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "未睇嘅電影"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Jellyfin 設定"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "隨機播放"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "為你推薦"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "介面"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "重設本地 Kodi 資料庫"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "啟用歡迎訊息"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "近排新增嘅家庭影片"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "近排新增嘅相片"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "心水嘅家庭影片"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "心水嘅相片"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "強制使用 HTTP 播放"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "開啟增強型美工效果（例如封面圖案）"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "心水嘅專輯"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "近排新增 MV"
+
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "未睇完嘅 MV"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "未睇嘅 MV"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "電影"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "電視劇"
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "Jellyfin 轉碼"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "加入心水"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "心水"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "唔再心水"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "設定"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "響 Jellyfin 剷咗佢"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "重新整理呢個項目"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "轉碼"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "check吓連線"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "用另一個裝置名"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "同步"
+
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "如果更新多過呢個數就開通知："
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "啟用音樂櫃"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "播放模式"
+
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "啟用封面快取"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "播放"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "登入"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "手動登入"
+
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "分頁 - 請求項目上限 (預設: 15)"
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "網路登入憑證"
+
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "啟用電影模式"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "播放預告片前先詢問"
+
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr "跳過刪走確認 (後果自負)"
+
+msgctxt "#30521"
+msgid "Jump back on resume (in seconds)"
+msgstr "接續播放嗰陣回退 (秒)"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "轉碼 H.265/HEVC"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "轉碼 MPEG2"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "轉碼 VC-1"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "轉碼 VP9"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "轉碼 AV1"
+
+msgctxt "#30527"
+msgid "Ignore specials in next episodes"
+msgstr "喺「下一集」忽略特輯"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "永久使用者"
+
+msgctxt "#30529"
+msgid "Startup delay (in seconds)"
+msgstr "啟動延遲 (秒)"
+
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "啟用伺服器重啟訊息"
+
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "啟用新內容"
+
+msgctxt "#30532"
+msgid "Duration of the video library pop up"
+msgstr "影片櫃彈出視窗嘅顯示時長"
+
+msgctxt "#30533"
+msgid "Duration of the music library pop up"
+msgstr "音樂櫃彈出視窗嘅顯示時長"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "通知顯示時間 (秒)"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "產生新嘅裝置 ID"
+
+msgctxt "#30536"
+msgid "Allow the screensaver during syncs"
+msgstr "同步期間准許啟動螢幕保護裝置"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "轉碼 Hi10P"
+
+msgctxt "#30538"
+msgid "Max days in next episodes"
+msgstr "「下一集」顯示嘅最大天數"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "使用者名稱或電郵"
+
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "啟用伺服器離線模式"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "顯示訊息"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "密碼"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "登入"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "取消"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "揀主伺服器"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "使用者名稱同密碼唔可以漏空"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "連唔到去你揀嘅伺服器"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "連線到"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "手動加伺服器"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "請登入"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "換一個 Jellyfin Connect 用家"
+
+msgctxt "#30614"
+msgid "Connect to server"
+msgstr "連線到伺服器"
+
+msgctxt "#30615"
+msgid "Host"
+msgstr "主機"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "連線"
+
+msgctxt "#30617"
+msgid "Server or port cannot be empty"
+msgstr "伺服器或者連線埠唔可以漏空"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "歡迎"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "伺服器重啟緊"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "使用者名稱或者密碼錯咗"
+
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr "揀邊條聲軌"
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr "揀邊條字幕"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "喺 Jellyfin 剷咗個檔案？"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "播唔播預告片？"
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "執緊合集 (Boxsets)"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "執緊："
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "完成用時："
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr "已經產生咗新嘅裝置 ID。Kodi 而家會重新啟動。"
+
+msgctxt "#33035"
+msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
+msgstr ""
+"因住！如果你揀「原生模式」(Native mode)，部分 Jellyfin 功能會用唔到，例如："
+"Jellyfin 電影模式、直接串流/轉碼選項，同埋家長監控嘅存取時間排程。"
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "擴充功能（預設）"
+
+msgctxt "#33037"
+msgid "Native (direct paths)"
+msgstr "原生（直接路徑）"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "啟用音樂櫃？"
+
+msgctxt "#33047"
+msgid "Kodi can't locate file:"
+msgstr "Kodi 搵唔到個檔案："
+
+msgctxt "#33048"
+msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
+msgstr ""
+"你可能需要喺「擴充功能設定」度check吓網路登入憑證，或者用 Jellyfin 路徑替換功"
+"能嚟修正路徑格式（Jellyfin 管理台 > 媒體櫃）。係咪要停止同步？"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "新"
+
+msgctxt "#33054"
+msgid "Add user to session"
+msgstr "加使用者入呢個對話度"
+
+msgctxt "#33058"
+msgid "Perform local database reset"
+msgstr "重設本地資料庫"
+
+msgctxt "#33060"
+msgid "Sync theme media"
+msgstr "同步主題多媒體"
+
+msgctxt "#33061"
+msgid "Add/Remove user from the session"
+msgstr "喺呢個對話入面新增/移除用家"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "新增使用者"
+
+msgctxt "#33063"
+msgid "Remove user"
+msgstr "移除使用者"
+
+msgctxt "#33064"
+msgid "Remove user from the session"
+msgstr "喺呢個對話入面移除用家"
+
+msgctxt "#33074"
+msgid "Are you sure you want to reset your local Kodi database?"
+msgstr "你肯定要重設本地 Kodi 資料庫？"
+
+msgctxt "#33086"
+msgid "Remove all cached artwork?"
+msgstr "剷晒所有封面快取？"
+
+msgctxt "#33087"
+msgid "Reset all Jellyfin add-on settings?"
+msgstr "重設所有 Jellyfin 擴充功能設定？"
+
+msgctxt "#33088"
+msgid "Database reset has completed, Kodi will now restart to apply the changes."
+msgstr "資料庫重設完成，Kodi 而家會重新啟動嚟套用改動。"
+
+msgctxt "#33089"
+msgid "Enter folder name for backup"
+msgstr "輸入備份資料夾名稱"
+
+msgctxt "#33090"
+msgid "Replace existing backup?"
+msgstr "覆蓋現有備份？"
+
+msgctxt "#33091"
+msgid "Created backup at:"
+msgstr "備份建立喺："
+
+msgctxt "#33092"
+msgid "Create a backup"
+msgstr "建立備份"
+
+msgctxt "#33093"
+msgid "Backup folder"
+msgstr "備份資料夾"
+
+msgctxt "#33097"
+msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
+msgstr ""
+"重要提示：你進階設定入面嘅 cleanonupdate 已經被移除，以免同「適用 Kodi 嘅 "
+"Jellyfin」有衝突。Kodi 而家會重新啟動。"
+
+msgctxt "#33098"
+msgid "Refresh boxsets"
+msgstr "重新整理合集"
+
+msgctxt "#33099"
+msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
+msgstr ""
+"唔該安裝伺服器外掛程式「Kodi Sync Queue」，以便喺啟動嗰陣自動同步 Jellyfin 媒"
+"體櫃更新。你喺「擴充功能設定 > 同步選項 > 啟用 Kodi 同步佇列」度可以搵到呢個"
+"設定。"
+
+msgctxt "#33137"
+msgid "Enable Kodi Sync Queue"
+msgstr "啟用 Kodi 同步佇列"
+
+msgctxt "#33101"
+msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
+msgstr "既然你用緊原生播放模式兼且啟用咗音樂功能，想唔想由檔案度匯入音樂評分？"
+
+msgctxt "#33102"
+msgid "Resume the previous sync?"
+msgstr "繼續上次未完嘅同步？"
+
+msgctxt "#33104"
+msgid "Find more info in the github wiki/Create-and-restore-from-backup."
+msgstr "喺 GitHub wiki/Create-and-restore-from-backup 搵更多資訊。"
+
+msgctxt "#33105"
+msgid "Enable the context menu"
+msgstr "啟用右鍵選單 (Context Menu)"
+
+msgctxt "#33106"
+msgid "Enable the option to transcode"
+msgstr "啟用轉碼選項"
+
+msgctxt "#33107"
+msgid "Users added to the session (no space between users). (eg username,username2)"
+msgstr "加入對話嘅用家（使用者名稱之間唔好留空格，例如：阿三,阿四）"
+
+msgctxt "#33108"
+msgid "Notifications are delayed during video playback (except live tv)."
+msgstr "播片期間通知會延遲顯示（電視直播除外）。"
+
+msgctxt "#33109"
+msgid "Plugin"
+msgstr "外掛程式 (Plugin)"
+
+msgctxt "#33110"
+msgid "Restart Kodi to take effect."
+msgstr "重新啟動 Kodi 嚟生效。"
+
+msgctxt "#33111"
+msgid "Reset the local database to apply the playback mode change."
+msgstr "重設本地資料庫嚟套用播放模式變更。"
+
+msgctxt "#33112"
+msgid "Applies to Native and Add-on playback mode"
+msgstr "適用於「原生」同「擴充」播放模式"
+
+msgctxt "#33113"
+msgid "Applies to Add-on playback mode only"
+msgstr "只適用於「擴充」播放模式"
+
+msgctxt "#33114"
+msgid "Enable external subtitles"
+msgstr "啟用外掛字幕"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "轉碼選項"
+
+msgctxt "#33116"
+msgid "Compress artwork (reduces quality)"
+msgstr "壓縮封面圖 (會降低畫質)"
+
+msgctxt "#33118"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgstr "你改咗播放模式。Kodi 需要重設先至可以套用變更，係咪而家整？"
+
+msgctxt "#33119"
+msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"同步期間出咗事。你重新啟動 Kodi 之後可以恢復進度。如果問題仲喺度，唔該帶埋你"
+"份 Kodi 日誌去 Jellyfin for Kodi 論壇反映。"
+
+msgctxt "#33120"
+msgid "Select the libraries to add"
+msgstr "揀要加入嘅媒體櫃"
+
+msgctxt "#33121"
+msgid "All"
+msgstr "全部"
+
+msgctxt "#33122"
+msgid "Restart Kodi to resume where you left off."
+msgstr "重新啟動 Kodi 嚟接返頭先嘅進度。"
+
+msgctxt "#33123"
+msgid "Sync library to Kodi"
+msgstr "同步媒體櫃去 Kodi"
+
+msgctxt "#33124"
+msgid "Include people (slow)"
+msgstr "包括演職人員（慢）"
+
+msgctxt "#33125"
+msgid "Enable remote control"
+msgstr "啟用遠端控制"
+
+msgctxt "#33128"
+msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"攞唔到最新嘅內容更新。喺重新啟動 Kodi 之前，唔會套用任何內容更新。如果問題持"
+"續，唔該帶埋你份 Kodi 日誌去Jellyfin for Kodi 論壇反映。"
+
+msgctxt "#33129"
+msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
+msgstr "你可以開啟 Jellyfin 「擴充功能」 > 「加入媒體櫃」嚟同步媒體櫃。"
+
+msgctxt "#33130"
+msgid "Select the source"
+msgstr "揀來源"
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "重新整理緊合集"
+
+msgctxt "#33132"
+msgid "Repair library"
+msgstr "修復媒體櫃"
+
+msgctxt "#33133"
+msgid "Remove library from Kodi"
+msgstr "喺 Kodi 剷走媒體櫃"
+
+msgctxt "#33134"
+msgid "Add server"
+msgstr "加伺服器"
+
+msgctxt "#33135"
+msgid "Kodi will now restart to apply a small patch for your Kodi version."
+msgstr "Kodi 而家會重新啟動嚟套用一個針對你個 Kodi 版本嘅小補丁。"
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "更新媒體櫃"
+
+msgctxt "#33138"
+msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
+msgstr ""
+"你可以手動更新媒體櫃，而唔係淨係靠「Kodi 同步佇列」伺服器外掛程式。開啟「擴充"
+"功能」之後更新媒體櫃（或者逐個媒體櫃更新）。如果要移除內容，你需要修復媒體櫃"
+"。"
+
+msgctxt "#33139"
+msgid "Update libraries"
+msgstr "更新多個媒體櫃"
+
+msgctxt "#33140"
+msgid "Repair libraries"
+msgstr "修復多個媒體櫃"
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "移除伺服器"
+
+msgctxt "#33142"
+msgid "Something went wrong. Try again later."
+msgstr "出咗啲問題。遲啲再試。"
+
+msgctxt "#33143"
+msgid "Enable the option to delete"
+msgstr "啟用刪走選項"
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "移除緊媒體櫃"
+
+msgctxt "#33145"
+msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
+msgstr ""
+"請確保你部 Kodi 睇到 Jellyfin 伺服器嘅 Samba (SMB) 分享資料夾，兼且你喺伺服器"
+"度設定好路徑替換。如果唔係，Kodi 可能會搵唔到你啲檔案。"
+
+msgctxt "#33146"
+msgid "Unable to connect to Jellyfin."
+msgstr "連唔到去 Jellyfin。"
+
+msgctxt "#33147"
+msgid "Your access to Jellyfin is restricted."
+msgstr "你冇權限存取 Jellyfin。"
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "你冇權限存取呢個伺服器。"
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "連唔到去呢個伺服器。"
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "更新伺服器資訊"
+
+msgctxt "#33151"
+msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
+msgstr ""
+"重新連線去返之前載入嗰個伺服器。如果你想用另一個伺服器，唔該重設本地資料庫（"
+"包括你個用家資訊）。"
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "喺 Kodi 搵唔到 TV Tunes。"
+
+msgctxt "#33153"
+msgid "Your Jellyfin theme media has been synced to Kodi"
+msgstr "你嘅 Jellyfin 主題多媒體已經同步咗去 Kodi"
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "加入媒體櫃"
+
+msgctxt "#33155"
+msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
+msgstr ""
+"目前套用緊適用 Kodi 嘅 Jellyfin 補丁毀損咗！如果問題持續，唔該去 Jellyfin "
+"for Kodi 論壇反映。呢個問題需要盡快修復。"
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "補丁已套用！"
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "淨係聲軌"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "淨係字幕"
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "啟用聲軌/字幕選擇"
+
+msgctxt "#33163"
+msgid "Disabled/Media default"
+msgstr "停用/多媒體預設"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr "為咗避免出錯，唔該將 Jellyfin for Kodi 更新到版本： "
+
+msgctxt "#33161"
+msgid "Update password"
+msgstr "更新密碼"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "重設音樂櫃？"
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr "喺日誌入面隱藏敏感資訊（唔適用於 Kodi 本身嘅記錄）"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "建立備份失敗"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "（動態）"
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "近排新增"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "進行緊"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "未睇"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "以首字母排序"
+
+msgctxt "#33172"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
+msgstr ""
+"你宜家有 {number} 個更新等緊處理，可能要等一陣先見到新內容。開啟 Jellyfin 擴"
+"充功能 > 「更新媒體櫃」可能會快啲。係咪點都繼續？"
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "唔要之前個同步紀錄？唔建議咁做。"
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "分頁 - 下載線程（預設: 3）"
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr "分頁提示：每條下載線程都會同時向 Jellyfin 請求你設定嘅項目上限值。"
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr "更新或者修復你嘅媒體櫃嚟套用以下變更。"
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr "如果更新數量多過呢個數就顯示進度條"
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr "處理緊更新"
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "強制轉碼"
+
+msgctxt "#33180"
+msgid "Restart Jellyfin for Kodi"
+msgstr "重新啟動「適用於 Kodi 嘅 Jellyfin」"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "重新啟動嚟套用補丁"
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "以電影模式播放"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "啟用電影模式播放選項"
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "移除多個媒體櫃"
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr "播片期間啟用同步（可能導致窒機）"
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr "Kodi 同步佇列可以加速啟動時嘅同步。其他同步會由伺服器事件觸發。"
+
+msgctxt "#33191"
+msgid "Restart Jellyfin for Kodi to apply this change?"
+msgstr "重新啟動「適用於 Kodi 嘅 Jellyfin」嚟套用變更？"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "重新啟動緊…"
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "管理媒體櫃"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "啟用「適用於 Kodi 嘅 Jellyfin」"
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr "進階選項"
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr "同步進行緊，唔該等佢完成咗再試。"
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "揀要更新嘅媒體櫃"
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "揀要修復嘅媒體櫃"
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "揀要移除嘅媒體櫃"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "封面圖最高解像度"
+
+msgctxt "#33202"
+msgid "Transcode H265/HEVC RExt"
+msgstr "轉碼 H265/HEVC RExt"
+
+msgctxt "#33203"
+msgid "Manage path replacements"
+msgstr "管理路徑替換"
+
+msgctxt "#33204"
+msgid "Finish"
+msgstr "完成"
+
+msgctxt "#33205"
+msgid "New Path Replacement"
+msgstr "新增路徑替換"
+
+msgctxt "#33206"
+msgid "Remote Path"
+msgstr "遠端路徑"
+
+msgctxt "#33207"
+msgid "Local Path"
+msgstr "本地路徑"
+
+msgctxt "#33208"
+msgid "360"
+msgstr "360"
+
+msgctxt "#33209"
+msgid "480"
+msgstr "480"
+
+msgctxt "#33210"
+msgid "600"
+msgstr "600"
+
+msgctxt "#33211"
+msgid "720"
+msgstr "720"
+
+msgctxt "#33212"
+msgid "1080"
+msgstr "1080"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "唔限 [預設]"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0.5 Mbps"
+
+msgctxt "#33215"
+msgid "1.0 Mbps"
+msgstr "1.0 Mbps"
+
+msgctxt "#33216"
+msgid "1.5 Mbps"
+msgstr "1.5 Mbps"
+
+msgctxt "#33217"
+msgid "2.0 Mbps"
+msgstr "2.0 Mbps"
+
+msgctxt "#33218"
+msgid "2.5 Mbps"
+msgstr "2.5 Mbps"
+
+msgctxt "#33219"
+msgid "3.0 Mbps"
+msgstr "3.0 Mbps"
+
+msgctxt "#33220"
+msgid "4.0 Mbps"
+msgstr "4.0 Mbps"
+
+msgctxt "#33221"
+msgid "5.0 Mbps"
+msgstr "5.0 Mbps"
+
+msgctxt "#33222"
+msgid "6.0 Mbps"
+msgstr "6.0 Mbps"
+
+msgctxt "#33223"
+msgid "7.0 Mbps"
+msgstr "7.0 Mbps"
+
+msgctxt "#33224"
+msgid "8.0 Mbps"
+msgstr "8.0 Mbps"
+
+msgctxt "#33226"
+msgid "10.0 Mbps"
+msgstr "10.0 Mbps"
+
+msgctxt "#33225"
+msgid "9.0 Mbps"
+msgstr "9.0 Mbps"
+
+msgctxt "#33227"
+msgid "12.0 Mbps"
+msgstr "12.0 Mbps"
+
+msgctxt "#33228"
+msgid "14.0 Mbps"
+msgstr "14.0 Mbps"
+
+msgctxt "#33229"
+msgid "16.0 Mbps"
+msgstr "16.0 Mbps"
+
+msgctxt "#33230"
+msgid "18.0 Mbps"
+msgstr "18.0 Mbps"
+
+msgctxt "#33231"
+msgid "20.0 Mbps"
+msgstr "20.0 Mbps"
+
+msgctxt "#33232"
+msgid "25.0 Mbps"
+msgstr "25.0 Mbps"
+
+msgctxt "#33233"
+msgid "30.0 Mbps"
+msgstr "30.0 Mbps"
+
+msgctxt "#33234"
+msgid "35.0 Mbps"
+msgstr "35.0 Mbps"
+
+msgctxt "#33235"
+msgid "40.0 Mbps"
+msgstr "40.0 Mbps"
+
+msgctxt "#33236"
+msgid "100.0 Mbps"
+msgstr "100.0 Mbps"
+
+msgctxt "#33237"
+msgid "1000.0 Mbps [default]"
+msgstr "1000.0 Mbps [預設]"
+
+msgctxt "#33239"
+msgid "96"
+msgstr "96"
+
+msgctxt "#33240"
+msgid "128"
+msgstr "128"
+
+msgctxt "#33241"
+msgid "160"
+msgstr "160"
+
+msgctxt "#33242"
+msgid "192"
+msgstr "192"
+
+msgctxt "#33243"
+msgid "256"
+msgstr "256"
+
+msgctxt "#33244"
+msgid "320"
+msgstr "320"
+
+msgctxt "#33245"
+msgid "384"
+msgstr "384"
+
+msgctxt "#33238"
+msgid "Maximum"
+msgstr "最高"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "片段跳過"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "啟用片段跳過"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "跳過模式"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "自動跳過"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "顯示「跳過」掣"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "跳過前都問"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "片頭 (Intro)"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "片尾 (Credits)"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "前情提要"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "下集預告"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "跳過"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "跳過片頭？"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "跳過片尾？"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "廣告"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "撳「選擇（SELECT）」掣跳過"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "關閉"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "快速連線"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "喺 Jellyfin 應用程式或者網頁介面輸入呢組冧把："
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "等緊授權..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "呢個伺服器用唔到快速連線"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "快速連線逾時，唔該再試過。"

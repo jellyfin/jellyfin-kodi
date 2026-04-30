@@ -184,16 +184,12 @@ def jellyfin_tables(cursor):
     """Create the tables for the jellyfin database.
     jellyfin, view, version
     """
-    cursor.execute(
-        """CREATE TABLE IF NOT EXISTS jellyfin(
+    cursor.execute("""CREATE TABLE IF NOT EXISTS jellyfin(
         jellyfin_id TEXT UNIQUE, media_folder TEXT, jellyfin_type TEXT, media_type TEXT,
         kodi_id INTEGER, kodi_fileid INTEGER, kodi_pathid INTEGER, parent_id INTEGER,
-        checksum INTEGER, jellyfin_parent_id TEXT)"""
-    )
-    cursor.execute(
-        """CREATE TABLE IF NOT EXISTS view(
-        view_id TEXT UNIQUE, view_name TEXT, media_type TEXT)"""
-    )
+        checksum INTEGER, jellyfin_parent_id TEXT)""")
+    cursor.execute("""CREATE TABLE IF NOT EXISTS view(
+        view_id TEXT UNIQUE, view_name TEXT, media_type TEXT)""")
     cursor.execute("CREATE TABLE IF NOT EXISTS version(idVersion TEXT)")
 
     columns = cursor.execute("SELECT * FROM jellyfin")

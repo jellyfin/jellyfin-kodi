@@ -2,13 +2,13 @@
 from __future__ import division, absolute_import, print_function, unicode_literals
 
 import json
+from urllib.parse import quote
 
 import requests
 
 from ..helper.exceptions import HTTPException
 from ..helper.utils import settings
 from ..helper import LazyLogger
-
 
 LOG = LazyLogger(__name__)
 
@@ -146,10 +146,16 @@ class API(object):
         return self.users("/Items/%s" % item_id)
 
     def get_items(self, item_ids):
-        return self.users(
-            "/Items",
-            params={"Ids": ",".join(str(x) for x in item_ids), "Fields": info()},
-        )
+        all_results = []
+        for i in range(0, len(item_ids), 150):
+            chunk = item_ids[i : i + 150]
+            response = self.users(
+                "/Items",
+                params={"Ids": ",".join(str(x) for x in chunk), "Fields": info()},
+            )
+            if response:
+                all_results.extend(response.get("Items", []))
+        return {"Items": all_results}
 
     def get_sessions(self):
         return self.sessions(params={"ControllableByUserId": "{UserId}"})
@@ -400,10 +406,10 @@ class API(object):
 
     def get_default_headers(self):
         auth = "MediaBrowser "
-        auth += "Client=%s, " % self.config.data["app.name"]
-        auth += "Device=%s, " % self.config.data["app.device_name"]
-        auth += "DeviceId=%s, " % self.config.data["app.device_id"]
-        auth += "Version=%s" % self.config.data["app.version"]
+        auth += "Client=%s, " % quote(self.config.data["app.name"], safe="")
+        auth += "Device=%s, " % quote(self.config.data["app.device_name"], safe="")
+        auth += "DeviceId=%s, " % quote(self.config.data["app.device_id"], safe="")
+        auth += "Version=%s" % quote(self.config.data["app.version"], safe="")
 
         return {
             "Accept": "application/json",
@@ -415,7 +421,7 @@ class API(object):
             "User-Agent": self.config.data["http.user_agent"]
             or "%s/%s"
             % (self.config.data["app.name"], self.config.data["app.version"]),
-            "x-emby-authorization": auth,
+            "Authorization": auth,
         }
 
     def send_request(
@@ -474,9 +480,10 @@ class API(object):
         return {}
 
     def validate_authentication_token(self, server):
-        auth_token_header = {"X-MediaBrowser-Token": server["AccessToken"]}
         headers = self.get_default_headers()
-        headers.update(auth_token_header)
+        auth_header = headers.get("Authorization", "")
+        auth_header += ", Token=%s" % quote(server["AccessToken"])
+        headers.update({"Authorization": auth_header})
 
         response = self.send_request(server["address"], "system/info", headers=headers)
 
@@ -500,3 +507,82 @@ class API(object):
         """
         response = self.send_request(server_address, "system/info/public")
         return response.url.replace("/system/info/public", "")
+
+    def get_media_segments(self, item_id):
+        """Get media segments for an item (Jellyfin 10.10+)."""
+        try:
+            return self._get("MediaSegments/%s" % item_id)
+        except HTTPException as e:
+            if e.status == 404:
+                LOG.debug("Media Segments not available for %s", item_id)
+            else:
+                LOG.warning("Error fetching media segments: %s", e)
+            return None
+        except Exception as e:
+            LOG.warning("Error fetching media segments: %s", e)
+            return None
+
+    def quick_connect_initiate(self, server_url):
+        """Initiate Quick Connect and return {Secret, Code, Authenticated}."""
+        headers = self.get_default_headers()
+        headers.update({"Content-type": "application/json"})
+        try:
+            response = self.send_request(
+                server_url,
+                "QuickConnect/Initiate",
+                method="post",
+                timeout=10,
+                headers=headers,
+                data=json.dumps({}),
+            )
+            if response.status_code == 200:
+                return response.json()
+            LOG.error(
+                "Quick Connect initiate failed with status %s", response.status_code
+            )
+            return {}
+        except Exception as e:
+            LOG.error("Quick Connect initiate error: %s", e)
+            return {}
+
+    def quick_connect_connect(self, server_url, secret):
+        """Check Quick Connect authorization status."""
+        headers = self.get_default_headers()
+        try:
+            response = self.send_request(
+                server_url,
+                "QuickConnect/Connect?Secret=%s" % quote(secret),
+                method="get",
+                timeout=10,
+                headers=headers,
+            )
+            if response.status_code == 200:
+                return response.json()
+            LOG.error("Quick Connect check failed with status %s", response.status_code)
+            return {}
+        except Exception as e:
+            LOG.error("Quick Connect check error: %s", e)
+            return {}
+
+    def quick_connect_authenticate(self, server_url, secret):
+        """Exchange a Quick Connect secret for an auth token."""
+        headers = self.get_default_headers()
+        headers.update({"Content-type": "application/json"})
+        try:
+            response = self.send_request(
+                server_url,
+                "Users/AuthenticateWithQuickConnect",
+                method="post",
+                timeout=10,
+                headers=headers,
+                data=json.dumps({"Secret": secret}),
+            )
+            if response.status_code == 200:
+                return response.json()
+            LOG.error(
+                "Quick Connect authenticate failed with status %s", response.status_code
+            )
+            return {}
+        except Exception as e:
+            LOG.error("Quick Connect authenticate error: %s", e)
+            return {}

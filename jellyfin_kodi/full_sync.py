@@ -13,7 +13,12 @@ from .objects import Movies, TVShows, MusicVideos, Music
 from .database import Database, get_sync, save_sync, jellyfin_db
 from .helper import translate, settings, window, progress, dialog, LazyLogger, xmls
 from .helper.utils import get_screensaver, set_screensaver
-from .helper.exceptions import LibraryException, PathValidationException
+from .helper.exceptions import (
+    LibraryException,
+    LibraryExitException,
+    LibrarySyncLaterException,
+    PathValidationException,
+)
 
 ##################################################################################################
 
@@ -169,11 +174,13 @@ class FullSync(object):
         selection = dialog("multi", translate(33120), choices)
 
         if selection is None:
-            raise LibraryException("LibrarySelection")
+            # TODO: Why are we handling these two differently?
+            # presumably one means the dialog got aborted, the other means that we just pressed ok without selecting any libraries
+            raise LibraryException("Library selection dialog returned None.")
         elif not selection:
             LOG.info("Nothing was selected.")
 
-            raise LibraryException("SyncLibraryLater")
+            raise LibrarySyncLaterException("No libraries were selected, sync later.")
 
         if 0 in selection:
             selection = list(range(1, len(libraries) + 1))
@@ -275,11 +282,13 @@ class FullSync(object):
 
                 media[library["CollectionType"]](library)
         except LibraryException as error:
-
-            if error.status == "StopCalled":
+            # TODO: Fixme; We're catching all LibraryException here,
+            # but silently ignoring any that isn't the exit condition.
+            # Investigate what would be appropriate behavior here.
+            if isinstance(error, LibraryExitException):
                 save_sync(self.sync)
-
                 raise
+            LOG.warning("Ignoring exception %s", error)
 
         except PathValidationException:
             raise

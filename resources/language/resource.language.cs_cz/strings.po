@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-01-24 12:01+0000\n"
-"Last-Translator: DJSweder <djsweder@gmail.com>\n"
+"PO-Revision-Date: 2026-04-07 20:29+0000\n"
+"Last-Translator: Fjuro <fjuro@users.noreply.translate.jellyfin.org>\n"
 "Language-Team: Czech <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/cs/>\n"
 "Language: cs_cz\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 5.7.2\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#33074"
 msgid "Are you sure you want to reset your local Kodi database?"
@@ -695,7 +695,7 @@ msgstr ""
 "na fóru \"Jellyfin for Kodi\" s přiloženým logem z Kodi."
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Změnili jste režim přehrávání. Aby bylo možné tuto změnu použít, je třeba "
 "restartovat Kodi. Chcete to udělat nyní?"
@@ -1024,3 +1024,243 @@ msgstr "Lokální umístění"
 msgctxt "#33206"
 msgid "Remote Path"
 msgstr "Vzdálené umístění"
+
+msgctxt "#30538"
+msgid "Max days in next episodes"
+msgstr "Max. dní v dalších epizodách"
+
+msgctxt "#33210"
+msgid "600"
+msgstr "600"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0.5 Mbps"
+
+msgctxt "#33215"
+msgid "1.0 Mbps"
+msgstr "1.0 Mbps"
+
+msgctxt "#33216"
+msgid "1.5 Mbps"
+msgstr "1.5 Mbps"
+
+msgctxt "#33217"
+msgid "2.0 Mbps"
+msgstr "2.0 Mbps"
+
+msgctxt "#33219"
+msgid "3.0 Mbps"
+msgstr "3.0 Mbps"
+
+msgctxt "#33220"
+msgid "4.0 Mbps"
+msgstr "4.0 Mbps"
+
+msgctxt "#33221"
+msgid "5.0 Mbps"
+msgstr "5.0 Mbps"
+
+msgctxt "#33222"
+msgid "6.0 Mbps"
+msgstr "6.0 Mbps"
+
+msgctxt "#33224"
+msgid "8.0 Mbps"
+msgstr "8.0 Mbps"
+
+msgctxt "#33225"
+msgid "9.0 Mbps"
+msgstr "9.0 Mbps"
+
+msgctxt "#33227"
+msgid "12.0 Mbps"
+msgstr "12.0 Mbps"
+
+msgctxt "#33228"
+msgid "14.0 Mbps"
+msgstr "14.0 Mbps"
+
+msgctxt "#33229"
+msgid "16.0 Mbps"
+msgstr "16.0 Mbps"
+
+msgctxt "#33231"
+msgid "20.0 Mbps"
+msgstr "20.0 Mbps"
+
+msgctxt "#33232"
+msgid "25.0 Mbps"
+msgstr "25.0 Mbps"
+
+msgctxt "#33233"
+msgid "30.0 Mbps"
+msgstr "30.0 Mbps"
+
+msgctxt "#33235"
+msgid "40.0 Mbps"
+msgstr "40.0 Mbps"
+
+msgctxt "#33236"
+msgid "100.0 Mbps"
+msgstr "100.0 Mbps"
+
+msgctxt "#33237"
+msgid "1000.0 Mbps [default]"
+msgstr "1000.0 Mbps [výchozí]"
+
+msgctxt "#33239"
+msgid "96"
+msgstr "96"
+
+msgctxt "#33240"
+msgid "128"
+msgstr "128"
+
+msgctxt "#33241"
+msgid "160"
+msgstr "160"
+
+msgctxt "#33243"
+msgid "256"
+msgstr "256"
+
+msgctxt "#33244"
+msgid "320"
+msgstr "320"
+
+msgctxt "#33245"
+msgid "384"
+msgstr "384"
+
+msgctxt "#33226"
+msgid "10.0 Mbps"
+msgstr "10.0 Mbps"
+
+msgctxt "#33234"
+msgid "35.0 Mbps"
+msgstr "35.0 Mbps"
+
+msgctxt "#33208"
+msgid "360"
+msgstr "360"
+
+msgctxt "#33218"
+msgid "2.5 Mbps"
+msgstr "2.5 Mbps"
+
+msgctxt "#33209"
+msgid "480"
+msgstr "480"
+
+msgctxt "#33211"
+msgid "720"
+msgstr "720"
+
+msgctxt "#33212"
+msgid "1080"
+msgstr "1080"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "Neomezené [výchozí]"
+
+msgctxt "#33223"
+msgid "7.0 Mbps"
+msgstr "7.0 Mbps"
+
+msgctxt "#33242"
+msgid "192"
+msgstr "192"
+
+msgctxt "#33230"
+msgid "18.0 Mbps"
+msgstr "18.0 Mbps"
+
+msgctxt "#33238"
+msgid "Maximum"
+msgstr "Maximální"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Přeskočení segmentu"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Povolit přeskočení segmentu"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Režim Přeskočit"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Automatické přeskočení"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Zobrazit tlačítko Přeskočit"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Ptát se pokaždé"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Úvod"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Titulky"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Shrnutí"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Náhled"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Přeskočit"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Přeskočit úvod?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Přeskočit titulky?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Reklama"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Stiskněte VYBRAT pro přeskočení"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Vypnout"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Rychlé připojení"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Zadejte tento kód do aplikace nebo webového rozhraní Jellyfin:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "Čekání na schválení…"
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "Rychlé připojení není na tomto serveru k dispozici"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "Rychlé připojení vypršelo. Zkuste to prosím znovu."

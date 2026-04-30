@@ -63,8 +63,6 @@ def get_device_name():
         device_name = xbmc.getInfoLabel("System.FriendlyName")
     else:
         device_name = settings("deviceName")
-        device_name = device_name.replace('"', "_")
-        device_name = device_name.replace("/", "_")
 
     return device_name
 

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2023-01-08 17:51+0000\n"
-"Last-Translator: Retrial <giwrgosmant@gmail.com>\n"
+"PO-Revision-Date: 2026-03-31 03:07+0000\n"
+"Last-Translator: bladestech <techblade47@gmail.com>\n"
 "Language-Team: Greek <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/el/>\n"
 "Language: el_gr\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.1\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#30002"
 msgid "Force HTTP playback"
@@ -66,9 +66,9 @@ msgstr "Πρόσθετα (εξορισμού)"
 msgctxt "#33035"
 msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
 msgstr ""
-"Προσοχή! Η επιλογή του εγγενούς τρόπου λειτουργείς αφαιρεί κάποιες ιδιότητες "
-"του Jellyfin όπως: διεπαφή σινεμά, επιλογές απευθείας διακωδικοποίησης και "
-"εκπομπής και τον παιδικό έλεγχο."
+"Προσοχή! Η επιλογή του εγγενούς τρόπου λειτουργείας αφαιρεί κάποιες "
+"ιδιότητες του Jellyfin όπως: λειτουργία σινεμά, επιλογές απευθείας ροής/"
+"διακωδικοποίησης και προγραμματισμός γονικού ελέγχου."
 
 msgctxt "#33033"
 msgid "A new device Id has been generated. Kodi will now restart."
@@ -104,7 +104,7 @@ msgstr "Επιλέξτε την ηχητική ροή"
 
 msgctxt "#33009"
 msgid "Invalid username or password"
-msgstr "Λάθος όνομα χρήστη ή συνθηματικό"
+msgstr "Λάθος όνομα χρήστη ή κωδικός πρόσβασης"
 
 msgctxt "#33006"
 msgid "Server is restarting"
@@ -152,7 +152,7 @@ msgstr "Αδυναμία σύνδεσης στον επιλεγμένο εξυπ
 
 msgctxt "#30608"
 msgid "Username or password cannot be empty"
-msgstr "Το όνομα χρήστη ή το συνθηματικό δεν πρέπει να είναι κενά"
+msgstr "Το όνομα χρήστη ή ο κωδικός πρόσβασης δεν πρέπει να είναι κενά"
 
 msgctxt "#30607"
 msgid "Select main server"
@@ -168,7 +168,7 @@ msgstr "Είσοδος"
 
 msgctxt "#30602"
 msgid "Password"
-msgstr "Σύνθημα"
+msgstr "Κωδικός πρόσβασης"
 
 msgctxt "#30547"
 msgid "Display message"
@@ -701,7 +701,7 @@ msgid "Select the libraries to add"
 msgstr "Επιλέξτε βιβλιοθήκη για προσθήκη"
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Αλλάξατε τη μέθοδο αναπαραγωγής. Το Kodi πρεπεί να επανεκκινηθεί για να "
 "εφαρμοστεί η ρύθμιση. Επανεκκίνηση τώρα;"
@@ -1020,3 +1020,243 @@ msgstr "Επιλέξτε τις βιβλιοθήκες προς κατάργησ
 msgctxt "#33201"
 msgid "Max artwork resolution"
 msgstr "Μέγιστη ανάλυση έργων τέχνης"
+
+msgctxt "#33204"
+msgid "Finish"
+msgstr "Ολοκλήρωση"
+
+msgctxt "#33206"
+msgid "Remote Path"
+msgstr "Απομακρυσμένη διαδρομή"
+
+msgctxt "#33207"
+msgid "Local Path"
+msgstr "Τοπική διαδρομή"
+
+msgctxt "#33205"
+msgid "New Path Replacement"
+msgstr "Αντικατάσταση προορισμού"
+
+msgctxt "#33203"
+msgid "Manage path replacements"
+msgstr "Διαχείριση αντικατάστασης προορισμού"
+
+msgctxt "#30538"
+msgid "Max days in next episodes"
+msgstr "Μέγιστος αριθμός ημερών στα επόμενα επεισόδια"
+
+msgctxt "#33208"
+msgid "360"
+msgstr "360"
+
+msgctxt "#33209"
+msgid "480"
+msgstr "480"
+
+msgctxt "#33210"
+msgid "600"
+msgstr "600"
+
+msgctxt "#33211"
+msgid "720"
+msgstr "720"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0.5 Mbps"
+
+msgctxt "#33215"
+msgid "1.0 Mbps"
+msgstr "1.0 Mbps"
+
+msgctxt "#33216"
+msgid "1.5 Mbps"
+msgstr "1.5 Mbps"
+
+msgctxt "#33217"
+msgid "2.0 Mbps"
+msgstr "2.0 Mbps"
+
+msgctxt "#33218"
+msgid "2.5 Mbps"
+msgstr "2.5 Mbps"
+
+msgctxt "#33219"
+msgid "3.0 Mbps"
+msgstr "3.0 Mbps"
+
+msgctxt "#33220"
+msgid "4.0 Mbps"
+msgstr "4.0 Mbps"
+
+msgctxt "#33223"
+msgid "7.0 Mbps"
+msgstr "7.0 Mbps"
+
+msgctxt "#33224"
+msgid "8.0 Mbps"
+msgstr "8.0 Mbps"
+
+msgctxt "#33225"
+msgid "9.0 Mbps"
+msgstr "9.0 Mbps"
+
+msgctxt "#33226"
+msgid "10.0 Mbps"
+msgstr "10.0 Mbps"
+
+msgctxt "#33227"
+msgid "12.0 Mbps"
+msgstr "12.0 Mbps"
+
+msgctxt "#33228"
+msgid "14.0 Mbps"
+msgstr "14.0 Mbps"
+
+msgctxt "#33229"
+msgid "16.0 Mbps"
+msgstr "16.0 Mbps"
+
+msgctxt "#33230"
+msgid "18.0 Mbps"
+msgstr "18.0 Mbps"
+
+msgctxt "#33232"
+msgid "25.0 Mbps"
+msgstr "25.0 Mbps"
+
+msgctxt "#33233"
+msgid "30.0 Mbps"
+msgstr "30.0 Mbps"
+
+msgctxt "#33235"
+msgid "40.0 Mbps"
+msgstr "40.0 Mbps"
+
+msgctxt "#33237"
+msgid "1000.0 Mbps [default]"
+msgstr "1000.0 Mbps [προεπιλογή]"
+
+msgctxt "#33238"
+msgid "Maximum"
+msgstr "Μέγιστο"
+
+msgctxt "#33239"
+msgid "96"
+msgstr "96"
+
+msgctxt "#33240"
+msgid "128"
+msgstr "128"
+
+msgctxt "#33241"
+msgid "160"
+msgstr "160"
+
+msgctxt "#33242"
+msgid "192"
+msgstr "192"
+
+msgctxt "#33243"
+msgid "256"
+msgstr "256"
+
+msgctxt "#33244"
+msgid "320"
+msgstr "320"
+
+msgctxt "#33245"
+msgid "384"
+msgstr "384"
+
+msgctxt "#33212"
+msgid "1080"
+msgstr "1080"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "Απεριόριστο [προεπιλογή]"
+
+msgctxt "#33236"
+msgid "100.0 Mbps"
+msgstr "100.0 Mbps"
+
+msgctxt "#33221"
+msgid "5.0 Mbps"
+msgstr "5.0 Mbps"
+
+msgctxt "#33222"
+msgid "6.0 Mbps"
+msgstr "6.0 Mbps"
+
+msgctxt "#33231"
+msgid "20.0 Mbps"
+msgstr "20.0 Mbps"
+
+msgctxt "#33234"
+msgid "35.0 Mbps"
+msgstr "35.0 Mbps"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Παράλειψη τμήματος"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Ενεργοποίηση παράλειψης τμήματος"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Λειτουργία παράλειψης"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Αυτόματη παράλειψη"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Εμφάνιση κουμπιού παράλειψης"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Ερώτηση κάθε φορά"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Καλωσόρισμα"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Συντελεστές"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Προεπισκόπηση"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Παράλειψη"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Παράλειψη εισαγωγής;"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Παράλειψη συντελεστών;"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Διαφήμιση"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Σε συντομία"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Ανενεργό"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Πάτα ΕΠΕΛΕΞΕ για παράλειψη"

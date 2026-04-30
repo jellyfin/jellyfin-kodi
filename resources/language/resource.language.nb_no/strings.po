@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2025-01-13 19:44+0000\n"
-"Last-Translator: Lars Christian Gamborg <larscg@gmail.com>\n"
+"PO-Revision-Date: 2026-04-15 11:44+0000\n"
+"Last-Translator: Emre Sanden <emresanden@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <https://translate.jellyfin.org/projects/"
 "jellyfin/jellyfin-kodi/nb_NO/>\n"
 "Language: nb_no\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.7.2\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
@@ -626,7 +626,7 @@ msgid "Compress artwork (reduces quality)"
 msgstr "Komprimer omslagsbilder (reduserer kvaliteten)"
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Du har endret avspillingsmodusen. Kodi må startes på nytt for at endringen "
 "skal tre i kraft, vil du gjøre dette nå?"
@@ -1035,3 +1035,243 @@ msgstr "lokal sti"
 msgctxt "#33204"
 msgid "Finish"
 msgstr "Fullføre"
+
+msgctxt "#30538"
+msgid "Max days in next episodes"
+msgstr "Maks antall dager i Neste episoder"
+
+msgctxt "#33209"
+msgid "480"
+msgstr "480"
+
+msgctxt "#33211"
+msgid "720"
+msgstr "720"
+
+msgctxt "#33212"
+msgid "1080"
+msgstr "1080"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "Ubegrenset [standard]"
+
+msgctxt "#33215"
+msgid "1.0 Mbps"
+msgstr "1.0 Mbps"
+
+msgctxt "#33216"
+msgid "1.5 Mbps"
+msgstr "1.5 Mbps"
+
+msgctxt "#33217"
+msgid "2.0 Mbps"
+msgstr "2.0 Mbps"
+
+msgctxt "#33222"
+msgid "6.0 Mbps"
+msgstr "6.0 Mbps"
+
+msgctxt "#33223"
+msgid "7.0 Mbps"
+msgstr "7.0 Mbps"
+
+msgctxt "#33224"
+msgid "8.0 Mbps"
+msgstr "8.0 Mbps"
+
+msgctxt "#33226"
+msgid "10.0 Mbps"
+msgstr "10.0 Mbps"
+
+msgctxt "#33227"
+msgid "12.0 Mbps"
+msgstr "12.0 Mbps"
+
+msgctxt "#33228"
+msgid "14.0 Mbps"
+msgstr "14.0 Mbps"
+
+msgctxt "#33230"
+msgid "18.0 Mbps"
+msgstr "18.0 Mbps"
+
+msgctxt "#33232"
+msgid "25.0 Mbps"
+msgstr "25.0 Mbps"
+
+msgctxt "#33233"
+msgid "30.0 Mbps"
+msgstr "30.0 Mbps"
+
+msgctxt "#33234"
+msgid "35.0 Mbps"
+msgstr "35.0 Mbps"
+
+msgctxt "#33237"
+msgid "1000.0 Mbps [default]"
+msgstr "1000.0 Mbps [standard]"
+
+msgctxt "#33238"
+msgid "Maximum"
+msgstr "Maksimum"
+
+msgctxt "#33239"
+msgid "96"
+msgstr "96"
+
+msgctxt "#33241"
+msgid "160"
+msgstr "160"
+
+msgctxt "#33242"
+msgid "192"
+msgstr "192"
+
+msgctxt "#33244"
+msgid "320"
+msgstr "320"
+
+msgctxt "#33245"
+msgid "384"
+msgstr "384"
+
+msgctxt "#33208"
+msgid "360"
+msgstr "360"
+
+msgctxt "#33235"
+msgid "40.0 Mbps"
+msgstr "40.0 Mbps"
+
+msgctxt "#33210"
+msgid "600"
+msgstr "600"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0.5 Mbps"
+
+msgctxt "#33218"
+msgid "2.5 Mbps"
+msgstr "2.5 Mbps"
+
+msgctxt "#33219"
+msgid "3.0 Mbps"
+msgstr "3.0 Mbps"
+
+msgctxt "#33220"
+msgid "4.0 Mbps"
+msgstr "4.0 Mbps"
+
+msgctxt "#33221"
+msgid "5.0 Mbps"
+msgstr "5.0 Mbps"
+
+msgctxt "#33240"
+msgid "128"
+msgstr "128"
+
+msgctxt "#33225"
+msgid "9.0 Mbps"
+msgstr "9.0 Mbps"
+
+msgctxt "#33229"
+msgid "16.0 Mbps"
+msgstr "16.0 Mbps"
+
+msgctxt "#33231"
+msgid "20.0 Mbps"
+msgstr "20.0 Mbps"
+
+msgctxt "#33243"
+msgid "256"
+msgstr "256"
+
+msgctxt "#33236"
+msgid "100.0 Mbps"
+msgstr "100.0 Mbps"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Segmenthopping"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Aktiver segmenthopping"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Hopp over modus"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Automatisk hopp over"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Vis hopp over-knappen"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Spør hver gang"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Introduksjon"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Rulletekst"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Oppsummering"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Forhåndsvis"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Hopp over"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Hopp over intro?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Hopp over rulleteksten?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Reklame"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Velg SELECT for å hoppe over"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Av"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Enkel Tilkobling"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Skriv inn denne koden i Jellyfin app eller web appen:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "Venter på autorisering..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "Quick Connect er ikke tilgjengelig på denne serveren"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "Quick Connect fikk et tidsavbrudd. Prøv på nytt."

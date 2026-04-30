@@ -1,0 +1,284 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2025-10-29 21:52+0000\n"
+"Last-Translator: Battseren Badral <bbattseren88@gmail.com>\n"
+"Language-Team: Mongolian <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/mn/>\n"
+"Language: mn_mn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14\n"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Серверийн нэр"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Нэвтрэх арга"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "HTTP хүчээр тоглуулахыг идэвхжүүлэх"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Kodi-д зориулсан Jellyfin"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Server-н хаяг"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Бүртгэлийн түвшин"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Төхөөрөмжийн нэр"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Нарийвчилсан"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Хэрэглэгчийн нэр"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Файл устгахыг баталгаажуулах"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Тоглуулсны дараа устгах санал болгох"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Ангиудын хувьд"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Кинонуудын хувьд"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Сайжруулсан зураг (жишээ нь: нүүрний зураг) идэвхжүүлэх"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Дээд хэмжээний урсгалын битрейт"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Тавигдсан видео кодек"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Тавигдсан аудио кодек"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Аудио битрейт"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Дээд хэмжээний аудио сувгууд"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Шатаасан хадмалийг зөвшөөрөх"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Саяхан нэмэгдсэн ТВ нэвтрүүлэгүүд"
+
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "Гарч байгаа ТВ цувралууд"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "Сүүлд нэмэгдсэн кино"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "Сүүлд нэмэгдсэн ангиуд"
+
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "Гарч байгаа кинонууд"
+
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "Гарч байгаа ангиуд"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Дараагийн ангиуд"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Дуртай кинонууд"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "Дуртай нэвтрүүлгүүд"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Дуртай Ангиуд"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Багц цуврал"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Үзээгүй кинонууд"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Санамсаргүй зүйлс"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Санал болгох зүйлс"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "Интерфейс"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "Local Kodi өгөгдлийн санг дахин тохируулах"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "Тавтай морилно уу мессежийг идэвхжүүлэх"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Саяхан нэмэгдсэн нүүр видеонууд"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "Саяхан нэмэгдсэн зурагнууд"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Дуртай гэрийн бичлэгүүд"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "Дуртай зургууд"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "Дуртай цомгууд"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "Саяхан нэмэгдсэн хөгжмийн видеонууд"
+
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "Үргэлжилж буй хөгжмийн видеонууд"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "Үзээгүй хөгжмийн видеонууд"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "Кинонууд"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "ТВ нэвтрүүлгүүд"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Jellyfin-ийн тохиргоо"
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "Jellyfin хувиргалт"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "Дуртай жагсаалтад нэмэх"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "Дуртай жагсаалтаас хасах"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "Тохиргоо"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "Jellyfin-с устгах"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "Дахин уншуулах"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "Хувиргах"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "Холболт баталгаажуулах"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "Өөр төхөөрөмжийн нэр ашиглах"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "Синхрончлох"
+
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "Шинэчлэлтийн тооноос их бол мэдэгдэл идэвхжүүлэх"
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "Хөгжмийн санг идэвхжүүлэх"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "Тоглуулах горим"
+
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "Зургийн кэшлэлт идэвхжүүлэх"
+
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "Хуудаслалт – хүсэх дээд зүйлсийн тоо (анхдагч: 15)"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "Тоглуулах"
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "Сүлжээний нууц үг/нэр"
+
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "Кино театрын горимыг идэвхжүүлэх"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "Трейлэр тоглуулахыг асуух"
+
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr "Устгах баталгаажуулалтыг алгасах (эрсдлээ тооцож ашиглана уу)"

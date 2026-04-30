@@ -44,7 +44,7 @@ class LogHandler(logging.StreamHandler):
                 self.sensitive["Token"].append(server["AccessToken"])
 
             if server.get("address"):
-                self.sensitive["Server"].append(server["address"].split("://")[1])
+                self.sensitive["Server"].append(server["address"].split("://", 1)[-1])
 
         self.mask_info = settings("maskInfo.bool")
 
@@ -64,6 +64,10 @@ class LogHandler(logging.StreamHandler):
 
                 for token in self.sensitive["Token"]:
                     string = string.replace(token or "{token}", "{jellyfin-token}")
+
+            # Kodi chokes on null-characters in log output, escape it.
+            if "\x00" in string:
+                string = string.replace("\x00", "\ufffdx00\ufffd")
 
             xbmc.log(string, level=self.level)
 

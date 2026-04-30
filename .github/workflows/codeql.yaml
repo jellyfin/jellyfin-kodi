@@ -18,21 +18,21 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.2
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3.28.8
+        uses: github/codeql-action/init@v4.35.1
         with:
           languages: 'python'
           queries: +security-and-quality
 
       - name: Set up Python
-        uses: actions/setup-python@v5.4.0
+        uses: actions/setup-python@v6.2.0
         with:
-          python-version: 3.9
+          python-version: 3.14
 
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v3.28.8
+        uses: github/codeql-action/autobuild@v4.35.1
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3.28.8
+        uses: github/codeql-action/analyze@v4.35.1

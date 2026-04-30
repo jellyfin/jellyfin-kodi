@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2022-10-11 12:54+0000\n"
-"Last-Translator: Csaba <csab0825@gmail.com>\n"
+"PO-Revision-Date: 2026-04-14 11:38+0000\n"
+"Last-Translator: Szilki077 <szilkimappa@gmail.com>\n"
 "Language-Team: Hungarian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/hu/>\n"
 "Language: hu_hu\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.1\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#30180"
 msgid "Favorite Movies"
@@ -107,11 +107,11 @@ msgctxt "#33119"
 msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
 msgstr ""
 "Valami nem sikerült a szinkronizálás közben. A Kodi újraindításakor "
-"visszaállíthatod az előrehaladást. Ha a probléma továbbra is fennáll, "
-"kérjük, jelezd a Jellyfin Kodi bővítmény fórumán, a Kodi naplóval."
+"visszaállíthatod az előző állapotot. Ha a probléma továbbra is fennáll, "
+"jelezd a Jellyfin Kodi bővítmény fórumán, a Kodi loggal mellékelve."
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Megváltoztattad a lejátszási módot. A Kodit alaphelyzetbe kell állítani a "
 "változás alkalmazásához. Szeretnéd ezt most megtenni?"
@@ -143,7 +143,7 @@ msgstr ""
 
 msgctxt "#33110"
 msgid "Restart Kodi to take effect."
-msgstr "A Kodi újraindítása a változtatások érvényesítéséhez."
+msgstr "Indítsd újra a Kodit a változtatások érvényesítéséhez."
 
 msgctxt "#33109"
 msgid "Plugin"
@@ -240,7 +240,7 @@ msgstr "Törlöd az összes gyorsítótárazott grafikát?"
 
 msgctxt "#33074"
 msgid "Are you sure you want to reset your local Kodi database?"
-msgstr "Biztosan visszaállítod a helyi Kodi adatbázist?"
+msgstr "Biztos vagy benne, hogy visszaállítod a helyi Kodi adatbázist?"
 
 msgctxt "#33064"
 msgid "Remove user from the session"
@@ -331,11 +331,11 @@ msgstr "Törlöd a fájlt a Jellyfinből?"
 
 msgctxt "#33014"
 msgid "Choose the subtitles stream"
-msgstr "Válaszd ki a feliratsávot"
+msgstr "Válassz feliratsávot"
 
 msgctxt "#33013"
 msgid "Choose the audio stream"
-msgstr "Válaszd ki az audiostreamet"
+msgstr "Válassz hang sávot"
 
 msgctxt "#33009"
 msgid "Invalid username or password"
@@ -343,7 +343,7 @@ msgstr "Hibás felhasználónév vagy jelszó"
 
 msgctxt "#33006"
 msgid "Server is restarting"
-msgstr "A szerver újraindul"
+msgstr "A szerver jelenleg újraindul"
 
 msgctxt "#33000"
 msgid "Welcome"
@@ -762,7 +762,8 @@ msgid "Failed to retrieve latest content updates. No content updates will be app
 msgstr ""
 "A legfrissebb tartalmi frissítések letöltése nem sikerült. A Kodi "
 "újraindításáig nem kerülnek frissítésre tartalmak. Ha a probléma továbbra is "
-"fennáll, kérjük, jelezd a Jellyfin Kodi bővítmény fórumán, a Kodi naplóval."
+"fennáll, kérjük, jelezd a Jellyfin Kodi bővítmény fórumán, a Kodi logot is "
+"csatold."
 
 msgctxt "#33124"
 msgid "Include people (slow)"
@@ -1015,3 +1016,263 @@ msgstr "H265/HEVC RExt átkódolás"
 msgctxt "#33125"
 msgid "Enable remote control"
 msgstr "Távirányító engedélyezése"
+
+msgctxt "#33204"
+msgid "Finish"
+msgstr "Befejezés"
+
+msgctxt "#33203"
+msgid "Manage path replacements"
+msgstr "Elérési útvonalak cseréjének kezelése"
+
+msgctxt "#33206"
+msgid "Remote Path"
+msgstr "Távoli elérési útvonal"
+
+msgctxt "#30538"
+msgid "Max days in next episodes"
+msgstr "Maximális napok a következő epizódok megjelenéséig"
+
+msgctxt "#33205"
+msgid "New Path Replacement"
+msgstr "Új elérési útvonal csere"
+
+msgctxt "#33207"
+msgid "Local Path"
+msgstr "Helyi elérési út"
+
+msgctxt "#33208"
+msgid "360"
+msgstr "360"
+
+msgctxt "#33209"
+msgid "480"
+msgstr "480"
+
+msgctxt "#33222"
+msgid "6.0 Mbps"
+msgstr "6.0 Mbps"
+
+msgctxt "#33223"
+msgid "7.0 Mbps"
+msgstr "7.0 Mbps"
+
+msgctxt "#33225"
+msgid "9.0 Mbps"
+msgstr "9.0 Mbps"
+
+msgctxt "#33227"
+msgid "12.0 Mbps"
+msgstr "12.0 Mbps"
+
+msgctxt "#33230"
+msgid "18.0 Mbps"
+msgstr "18.0 Mbps"
+
+msgctxt "#33232"
+msgid "25.0 Mbps"
+msgstr "25.0 Mbps"
+
+msgctxt "#33236"
+msgid "100.0 Mbps"
+msgstr "100.0 Mbps"
+
+msgctxt "#33242"
+msgid "192"
+msgstr "192"
+
+msgctxt "#33245"
+msgid "384"
+msgstr "384"
+
+msgctxt "#33237"
+msgid "1000.0 Mbps [default]"
+msgstr "1000.0 Mbps [alapértelmezett]"
+
+msgctxt "#33210"
+msgid "600"
+msgstr "600"
+
+msgctxt "#33211"
+msgid "720"
+msgstr "720"
+
+msgctxt "#33212"
+msgid "1080"
+msgstr "1080"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0.5 Mbps"
+
+msgctxt "#33215"
+msgid "1.0 Mbps"
+msgstr "1.0 Mbps"
+
+msgctxt "#33216"
+msgid "1.5 Mbps"
+msgstr "1.5 Mbps"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "Korlátlan [alapértelmezett]"
+
+msgctxt "#33217"
+msgid "2.0 Mbps"
+msgstr "2.0 Mbps"
+
+msgctxt "#33218"
+msgid "2.5 Mbps"
+msgstr "2.5 Mbps"
+
+msgctxt "#33219"
+msgid "3.0 Mbps"
+msgstr "3.0 Mbps"
+
+msgctxt "#33220"
+msgid "4.0 Mbps"
+msgstr "4.0 Mbps"
+
+msgctxt "#33221"
+msgid "5.0 Mbps"
+msgstr "5.0 Mbps"
+
+msgctxt "#33224"
+msgid "8.0 Mbps"
+msgstr "8.0 Mbps"
+
+msgctxt "#33226"
+msgid "10.0 Mbps"
+msgstr "10.0 Mbps"
+
+msgctxt "#33228"
+msgid "14.0 Mbps"
+msgstr "14.0 Mbps"
+
+msgctxt "#33229"
+msgid "16.0 Mbps"
+msgstr "16.0 Mbps"
+
+msgctxt "#33231"
+msgid "20.0 Mbps"
+msgstr "20.0 Mbps"
+
+msgctxt "#33233"
+msgid "30.0 Mbps"
+msgstr "30.0 Mbps"
+
+msgctxt "#33234"
+msgid "35.0 Mbps"
+msgstr "35.0 Mbps"
+
+msgctxt "#33235"
+msgid "40.0 Mbps"
+msgstr "40.0 Mbps"
+
+msgctxt "#33238"
+msgid "Maximum"
+msgstr "Maximális"
+
+msgctxt "#33239"
+msgid "96"
+msgstr "96"
+
+msgctxt "#33240"
+msgid "128"
+msgstr "128"
+
+msgctxt "#33241"
+msgid "160"
+msgstr "160"
+
+msgctxt "#33243"
+msgid "256"
+msgstr "256"
+
+msgctxt "#33244"
+msgid "320"
+msgstr "320"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Gyors csatlakozás"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Írja be ezt a kódot a Jellyfin alkalmazásba vagy a webes felületre:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "Várakozás az engedélyezésre..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "A gyors csatlakozás nem elérhető ezen a szerveren"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "A Quick Connect időtúllépett. Kérjük, próbálja meg újra."
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Szegmens kihagyása"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Szegmens átugrásának engedélyezése"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Kihagyás mód"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Automatikus kihagyás"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Kihagyás gomb megjelenítése"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Kérdezd meg minden alkalommal"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Bevezetés"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Kredit"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Újrafutóz"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Előnézet"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Kihagyás"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Kihagyja a bevezetőt?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Kihagyja a krediteket?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Kereskedelmi"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Nyomja meg a KIVÁLASZTÁS gombot a kihagyáshoz"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Ki"

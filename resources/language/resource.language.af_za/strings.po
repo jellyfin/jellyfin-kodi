@@ -1,0 +1,325 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2026-03-11 00:42+0000\n"
+"Last-Translator: Peet Janse van Vuuren <peetjvv93@gmail.com>\n"
+"Language-Team: Afrikaans <https://translate.jellyfin.org/projects/jellyfin/"
+"jellyfin-kodi/af/>\n"
+"Language: af_za\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15.1\n"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "Bevestig lêeruitvee"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "Gebruikernaam"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "Gevorderde"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "Toestel naam"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "Log vlak"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "Teken aan metode"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "Forseer HTTP afspeel"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "Server naam"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "Server adres"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Jellyfin vir Kodi"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "Vir Episodes"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "Vir Films"
+
+#, fuzzy
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "Aktiveer verbetering in kunswerk (i.e. omslagkuns)"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "Maksimum stroom bitsnelheid"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "Voorkeur video kodek"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "Voorkeur oudio kodek"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "Oudio bitsnelheid"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "Oudio maksimum kanale"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "Laat gebrande byskifte toe"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "Onlangs bygevoegde TV-programme"
+
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "TV-Programme aan die gang"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "Onlangs Bygevoegde Films"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "Onlangs Bygevoegde Episodes"
+
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "Films aan die gang"
+
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "Episodes aan die gang"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "Volgende Episodes"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "Gunsteling Flieks"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "Gunsteling Programme"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "Gunsteling Episodes"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "Boksstelle"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "Ongekykte Films"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "Willekeurige Items"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "Koppelvlak"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "Aktiveer welkom boodskap"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "Onlangs bygevoegde Tuisvideo's"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "Onlangs bygevoegde Foto's"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "Gunsteling Tuisvideo's"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "Gunsteling Foto's"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "Gunsteling Albums"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "Onlangs bygevoegde Musiekvideo's"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "Ongekykte Musiekvideo's"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "Films"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "TV-Programme"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "Jellyfin opsies"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "Bied skrap na afspeel"
+
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "Aan die gang Musiek videos"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "Voeg by gunsteling"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "Skrap van gunsteling"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "Instellings"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "Skrap van Jellyfin"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "Verfris die item"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "Verifieer konneksie"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "Gebruik alternatiewe toestel naam"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "Sinchroniseer"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "Vra om lokprente te speel"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "Permanente gebruikers"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "Kennisgewings (in sekondes)"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "Genereer n nuwe toestel ID"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "Meld aan"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "Gebruikersnaam of epos"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "Vertoon boodskap"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "Wagwoord"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "Teken aan"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "Kanseleer"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "Kies hoof bediener"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "Gebruikersnaam of wagwoord kan nie leeg wees nie"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "Meld asseblief aan"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "Welkom"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "Skrap lêer van Jellyfin?"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "Speel lokprente?"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "Nuwe"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "Voeg gebruiker by"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "Aanbeveelde Items"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "Transkodeer H.265/HEVC"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "Transkodeer MPEG2"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "Transkodeer VC-1"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "Transkodeer VP9"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "Transkodeer AV1"

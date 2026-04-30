@@ -1,0 +1,1155 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2025-10-12 23:00+0000\n"
+"Last-Translator: MFride1 <maayanf2004@gmail.com>\n"
+"Language-Team: Hebrew (Israel) <https://translate.jellyfin.org/projects/"
+"jellyfin/jellyfin-kodi/he_IL/>\n"
+"Language: he_il\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
+"n % 10 == 0) ? 2 : 3));\n"
+"X-Generator: Weblate 5.11.4\n"
+
+msgctxt "#30157"
+msgid "Enable enhanced artwork (i.e. cover art)"
+msgstr "הצג פוסטרים משופרים"
+
+msgctxt "#30116"
+msgid "For Movies"
+msgstr "לסרטים"
+
+msgctxt "#30115"
+msgid "For Episodes"
+msgstr "לפרקים"
+
+msgctxt "#30114"
+msgid "Offer delete after playback"
+msgstr "הצג אפשרות מחיקה לאחר ניגון"
+
+msgctxt "#30091"
+msgid "Confirm file deletion"
+msgstr "אשר מחיקת קובץ"
+
+msgctxt "#30024"
+msgid "Username"
+msgstr "שם משתמש"
+
+msgctxt "#30022"
+msgid "Advanced"
+msgstr "מתקדם"
+
+msgctxt "#30016"
+msgid "Device name"
+msgstr "שם מכשיר"
+
+msgctxt "#30004"
+msgid "Log level"
+msgstr "רמת תיעוד"
+
+msgctxt "#30003"
+msgid "Login method"
+msgstr "שיטת התחברות"
+
+msgctxt "#30002"
+msgid "Force HTTP playback"
+msgstr "כפה ניגון HTTP"
+
+msgctxt "#30001"
+msgid "Server name"
+msgstr "שם השרת"
+
+msgctxt "#30000"
+msgid "Server address"
+msgstr "כתובת שרת"
+
+msgctxt "#29999"
+msgid "Jellyfin for Kodi"
+msgstr "Jellyfin ל-Kodi"
+
+msgctxt "#30409"
+msgid "Delete from Jellyfin"
+msgstr "מחיקה מ-Jellyfin"
+
+msgctxt "#30518"
+msgid "Enable cinema mode"
+msgstr "הפעל מצב קולנוע"
+
+msgctxt "#30519"
+msgid "Ask to play trailers"
+msgstr "שאל אם להפעיל טריילרים"
+
+msgctxt "#30506"
+msgid "Sync"
+msgstr "סנכרון"
+
+msgctxt "#30408"
+msgid "Settings"
+msgstr "הגדרות"
+
+msgctxt "#30255"
+msgid "Favourite Albums"
+msgstr "אלבומים מועדפים"
+
+msgctxt "#30254"
+msgid "Favourite Photos"
+msgstr "תמונות מועדפות"
+
+msgctxt "#30182"
+msgid "Favorite Episodes"
+msgstr "פרקים מועדפים"
+
+msgctxt "#30181"
+msgid "Favorite Shows"
+msgstr "סדרות מועדפות"
+
+msgctxt "#30180"
+msgid "Favorite Movies"
+msgstr "סרטים מועדפים"
+
+msgctxt "#30162"
+msgid "Preferred audio codec"
+msgstr "קידוד אודיו מועדף"
+
+msgctxt "#30161"
+msgid "Preferred video codec"
+msgstr "קידוד וידאו מועדף"
+
+msgctxt "#30175"
+msgid "Recently Added Episodes"
+msgstr "פרקים שנוספו לאחרונה"
+
+msgctxt "#30229"
+msgid "Random Items"
+msgstr "פריטים אקראיים"
+
+msgctxt "#30239"
+msgid "Reset local Kodi database"
+msgstr "אפס את הנתונים המקומיים של Kodi"
+
+msgctxt "#30302"
+msgid "Movies"
+msgstr "סרטים"
+
+msgctxt "#30305"
+msgid "TV Shows"
+msgstr "תוכניות טלוויזיה"
+
+msgctxt "#30406"
+msgid "Remove from favorites"
+msgstr "הסר מהמועדפים"
+
+msgctxt "#30165"
+msgid "Allow burned subtitles"
+msgstr "אפשר כתוביות צרובות"
+
+msgctxt "#30171"
+msgid "In Progress TV Shows"
+msgstr "תוכניות טלוויזיה שהתחלת לצפות בהן"
+
+msgctxt "#30174"
+msgid "Recently Added Movies"
+msgstr "סרטים שנוספו לאחרונה"
+
+msgctxt "#30170"
+msgid "Recently Added TV Shows"
+msgstr "תוכניות טלוויזיה שנוספו לאחרונה"
+
+msgctxt "#30179"
+msgid "Next Episodes"
+msgstr "הפרקים הבאים"
+
+msgctxt "#30189"
+msgid "Unwatched Movies"
+msgstr "סרטים שלא נצפו"
+
+msgctxt "#30230"
+msgid "Recommended Items"
+msgstr "פריטים מומלצים"
+
+msgctxt "#30235"
+msgid "Interface"
+msgstr "ממשק"
+
+msgctxt "#30252"
+msgid "Recently added Photos"
+msgstr "תמונות שנוספו לאחרונה"
+
+msgctxt "#30256"
+msgid "Recently added Music videos"
+msgstr "קליפים מוזיקליים שנוספו לאחרונה"
+
+msgctxt "#30258"
+msgid "Unwatched Music videos"
+msgstr "קליפים מוזיקליים שלא נצפו"
+
+msgctxt "#30405"
+msgid "Add to favorites"
+msgstr "הוסף למועדפים"
+
+msgctxt "#30410"
+msgid "Refresh this item"
+msgstr "רענן פריט זה"
+
+msgctxt "#30500"
+msgid "Verify connection"
+msgstr "אמת את החיבור"
+
+msgctxt "#30527"
+msgid "Ignore specials in next episodes"
+msgstr "התעלם מספיישלים בפרקים הבאים"
+
+msgctxt "#30529"
+msgid "Startup delay (in seconds)"
+msgstr "השהייה לאחר הפעלה ראשונית (בשניות)"
+
+msgctxt "#30530"
+msgid "Enable server restart message"
+msgstr "אפשר הודעת הפעלה מחדש של השרת"
+
+msgctxt "#30249"
+msgid "Enable welcome message"
+msgstr "הפעלת הודעת קבלת פנים"
+
+msgctxt "#30401"
+msgid "Jellyfin options"
+msgstr "אפשרויות Jellyfin"
+
+msgctxt "#33193"
+msgid "Restarting..."
+msgstr "מאתחל…"
+
+msgctxt "#30522"
+msgid "Transcode H265/HEVC"
+msgstr "המרת קידוד H.265/HEVC"
+
+msgctxt "#30160"
+msgid "Max stream bitrate"
+msgstr "קצב נתונים מקסימלי"
+
+msgctxt "#30163"
+msgid "Audio bitrate"
+msgstr "איכות שמע"
+
+msgctxt "#30504"
+msgid "Use alternate device name"
+msgstr "השתמש בשם מכשיר אחר"
+
+msgctxt "#30511"
+msgid "Playback mode"
+msgstr "מצב ניגון"
+
+msgctxt "#30164"
+msgid "Audio max channels"
+msgstr "מספר ערוצי שמע מקסימלי"
+
+msgctxt "#30177"
+msgid "In Progress Movies"
+msgstr "סרטים שהתחלת לצפות בהם"
+
+msgctxt "#30178"
+msgid "In Progress Episodes"
+msgstr "פרקים שהתחלת לצפות בהם"
+
+msgctxt "#30185"
+msgid "Boxsets"
+msgstr "מארזי מדיה"
+
+msgctxt "#30251"
+msgid "Recently added Home Videos"
+msgstr "סרטים ביתיים שנוספו לאחרונה"
+
+msgctxt "#30253"
+msgid "Favourite Home Videos"
+msgstr "סרטים ביתיים מועדפים"
+
+msgctxt "#30257"
+msgid "In progress Music videos"
+msgstr "קליפים מוזיקליים שהתחלת לצפות בהם"
+
+msgctxt "#30507"
+msgid "Enable notification if update count is greater than"
+msgstr "הפעל נוטיפיקציה אם מספר העדכונים גדול מ-"
+
+msgctxt "#30520"
+msgid "Skip the delete confirmation (use at your own risk)"
+msgstr "דלג על אישור מחיקה (זהירות: מסוכן)"
+
+msgctxt "#30524"
+msgid "Transcode VC-1"
+msgstr "המרת קידוד VC-1"
+
+msgctxt "#30525"
+msgid "Transcode VP9"
+msgstr "המרת קידוד VP9"
+
+msgctxt "#30532"
+msgid "Duration of the video library pop up"
+msgstr "משך זמן הצגת חלון קופץ של ספריית הוידאו"
+
+msgctxt "#30534"
+msgid "Notifications (in seconds)"
+msgstr "התראות (בשניות)"
+
+msgctxt "#30535"
+msgid "Generate a new device Id"
+msgstr "צור מזהה חדש למכשיר"
+
+msgctxt "#30543"
+msgid "Username or email"
+msgstr "שם משתמש או סיסמה"
+
+msgctxt "#30609"
+msgid "Unable to connect to the selected server"
+msgstr "לא ניתן להתחבר לשרת המבוקש"
+
+msgctxt "#30617"
+msgid "Server or port cannot be empty"
+msgstr "שרת או פורט אינם יכולים להיות ריקים"
+
+msgctxt "#33006"
+msgid "Server is restarting"
+msgstr "השרת מבצע איתחול"
+
+msgctxt "#33033"
+msgid "A new device Id has been generated. Kodi will now restart."
+msgstr "מזהה חדש למכשיר נוצר. Kodi יבצע אתחול כעת."
+
+msgctxt "#33035"
+msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
+msgstr ""
+"זהירות! אם תבחר במצב Native, אפשרויות מסוימות של Jellyfin לא יפעלו, כגון מצב "
+"קולנוע, אפשרויות להמרת קידוד ישירה או הזרמה ישירה וגישת הורים מתוזמנת."
+
+msgctxt "#30402"
+msgid "Jellyfin transcode"
+msgstr "המרת קידוד Jellyfin"
+
+msgctxt "#30412"
+msgid "Transcode"
+msgstr "המרת קידוד"
+
+msgctxt "#30509"
+msgid "Enable music library"
+msgstr "אפשר ספריית מוזיקה"
+
+msgctxt "#30512"
+msgid "Enable artwork caching"
+msgstr "אפשר שמירה מקומית של עטיפות מדיה"
+
+msgctxt "#30515"
+msgid "Paging - max items requested (default: 15)"
+msgstr "חלוקה למנות - מספר בקשות מקסימלי של פריטים (ברירת מחדל: 15)"
+
+msgctxt "#30516"
+msgid "Playback"
+msgstr "ניגון"
+
+msgctxt "#30517"
+msgid "Network credentials"
+msgstr "שם משתמש וסיסמה עבור רשת"
+
+msgctxt "#30521"
+msgid "Jump back on resume (in seconds)"
+msgstr "דילוג אחורה לאחר השהיית ניגון (בשניות)"
+
+msgctxt "#30523"
+msgid "Transcode MPEG2"
+msgstr "המרת קידוד MPEG2"
+
+msgctxt "#30526"
+msgid "Transcode AV1"
+msgstr "המרת קידוד AV1"
+
+msgctxt "#30528"
+msgid "Permanent users"
+msgstr "משתמשים קבועים"
+
+msgctxt "#30531"
+msgid "Enable new content"
+msgstr "אפשר תוכן חדש"
+
+msgctxt "#30533"
+msgid "Duration of the music library pop up"
+msgstr "משך זמן הצגת חלון קופץ של ספריית המוזיקה"
+
+msgctxt "#30536"
+msgid "Allow the screensaver during syncs"
+msgstr "אפשר שומר מסך בזמן סנכרונים"
+
+msgctxt "#30537"
+msgid "Transcode Hi10P"
+msgstr "המרת קידוד Hi10P"
+
+msgctxt "#30539"
+msgid "Login"
+msgstr "התחברות"
+
+msgctxt "#30540"
+msgid "Manual login"
+msgstr "התחברות ידנית"
+
+msgctxt "#30545"
+msgid "Enable server offline"
+msgstr "אפשר שרת במצב לא מקוון"
+
+msgctxt "#30547"
+msgid "Display message"
+msgstr "הצג הודעות"
+
+msgctxt "#30602"
+msgid "Password"
+msgstr "סיסמה"
+
+msgctxt "#30605"
+msgid "Sign in"
+msgstr "כניסה"
+
+msgctxt "#30606"
+msgid "Cancel"
+msgstr "ביטול"
+
+msgctxt "#30607"
+msgid "Select main server"
+msgstr "בחר שרת ראשי"
+
+msgctxt "#30608"
+msgid "Username or password cannot be empty"
+msgstr "שם משתמש או סיסמה לא יכולים להיות ריקים"
+
+msgctxt "#30610"
+msgid "Connect to"
+msgstr "התחבר אל"
+
+msgctxt "#30611"
+msgid "Manually add server"
+msgstr "הוסף שרת באופן ידני"
+
+msgctxt "#30612"
+msgid "Please sign in"
+msgstr "אנא התחבר"
+
+msgctxt "#30613"
+msgid "Change Jellyfin Connect user"
+msgstr "שינוי המשתמש בחיבור ל-Jellyfin"
+
+msgctxt "#30614"
+msgid "Connect to server"
+msgstr "התחבר לשרת"
+
+msgctxt "#30615"
+msgid "Host"
+msgstr "שרת"
+
+msgctxt "#30616"
+msgid "Connect"
+msgstr "התחבר"
+
+msgctxt "#33000"
+msgid "Welcome"
+msgstr "ברוכים הבאים"
+
+msgctxt "#33009"
+msgid "Invalid username or password"
+msgstr "שם משתמש או סיסמה שגויים"
+
+msgctxt "#33013"
+msgid "Choose the audio stream"
+msgstr "בחר ערוץ שמע"
+
+msgctxt "#33014"
+msgid "Choose the subtitles stream"
+msgstr "בחר ערוץ כתוביות"
+
+msgctxt "#33015"
+msgid "Delete file from Jellyfin?"
+msgstr "למחוק קובץ מ-Jellyfin?"
+
+msgctxt "#33016"
+msgid "Play trailers?"
+msgstr "לנגן טריילרים?"
+
+msgctxt "#33018"
+msgid "Gathering boxsets"
+msgstr "מאתר מארזי מדיה"
+
+msgctxt "#33021"
+msgid "Gathering:"
+msgstr "מאתר:"
+
+msgctxt "#33025"
+msgid "Completed in:"
+msgstr "הושלם ב:"
+
+msgctxt "#33036"
+msgid "Add-on (default)"
+msgstr "תוסף (ברירת מחדל)"
+
+msgctxt "#33039"
+msgid "Enable music library?"
+msgstr "אפשר ספריית מוזיקה?"
+
+msgctxt "#33047"
+msgid "Kodi can't locate file:"
+msgstr "Kodi לא יכול לאתר את הקובץ:"
+
+msgctxt "#33049"
+msgid "New"
+msgstr "חדש"
+
+msgctxt "#33062"
+msgid "Add user"
+msgstr "הוספת משתמש"
+
+msgctxt "#33063"
+msgid "Remove user"
+msgstr "הסרת משתמש"
+
+msgctxt "#33064"
+msgid "Remove user from the session"
+msgstr "הסרת משתמש מהסשן"
+
+msgctxt "#33074"
+msgid "Are you sure you want to reset your local Kodi database?"
+msgstr "לאפס את מסד הנתונים המקומי של ה־Kodi שלך?"
+
+msgctxt "#33091"
+msgid "Created backup at:"
+msgstr "נוצר גיבוי ב־:"
+
+msgctxt "#33093"
+msgid "Backup folder"
+msgstr "תיקיית גיבוי"
+
+msgctxt "#33054"
+msgid "Add user to session"
+msgstr "הוספת משתמש לסשן"
+
+msgctxt "#33058"
+msgid "Perform local database reset"
+msgstr "ביצוע איפוס מסד נתונים מקומי"
+
+msgctxt "#33060"
+msgid "Sync theme media"
+msgstr "סנכרון המדיה של ערכת העיצוב"
+
+msgctxt "#33061"
+msgid "Add/Remove user from the session"
+msgstr "הוספת/הסרת משתמשים מהסשן"
+
+msgctxt "#33089"
+msgid "Enter folder name for backup"
+msgstr "נא למלא שם תיקייה לגיבוי"
+
+msgctxt "#33090"
+msgid "Replace existing backup?"
+msgstr "להחליף גיבוי קיים?"
+
+msgctxt "#33092"
+msgid "Create a backup"
+msgstr "יצירת גיבוי"
+
+msgctxt "#33142"
+msgid "Something went wrong. Try again later."
+msgstr "משהו השתבש. נא לנסות שוב מאוחר יותר."
+
+msgctxt "#33144"
+msgid "Removing library"
+msgstr "הספרייה מוּסרת"
+
+msgctxt "#33146"
+msgid "Unable to connect to Jellyfin."
+msgstr "לא ניתן להתחבר ל-Jellyfin."
+
+msgctxt "#33148"
+msgid "Your access to this server is restricted."
+msgstr "הגישה שלך לשרת הזה מוגבלת."
+
+msgctxt "#33149"
+msgid "Unable to connect to this server."
+msgstr "לא ניתן להתחבר לשרת הזה."
+
+msgctxt "#33156"
+msgid "A patch has been applied!"
+msgstr "טלאי חל!"
+
+msgctxt "#33202"
+msgid "Transcode H265/HEVC RExt"
+msgstr "התמרת H265/HEVC RExt"
+
+msgctxt "#33139"
+msgid "Update libraries"
+msgstr "עדכון ספריות"
+
+msgctxt "#33143"
+msgid "Enable the option to delete"
+msgstr "יש להפעיל את האפשרות כדי למחוק"
+
+msgctxt "#33147"
+msgid "Your access to Jellyfin is restricted."
+msgstr "הגישה ל-Jellyfin מוגבלת."
+
+msgctxt "#33157"
+msgid "Audio only"
+msgstr "שמע בלבד"
+
+msgctxt "#33158"
+msgid "Subtitles only"
+msgstr "כתוביות בלבד"
+
+msgctxt "#33161"
+msgid "Update password"
+msgstr "עדכון סיסמה"
+
+msgctxt "#33162"
+msgid "Reset the music library?"
+msgstr "לאפס את ספריית המוזיקה?"
+
+msgctxt "#33164"
+msgid "Mask sensitive information in log (does not apply to kodi logging)"
+msgstr "הסתר מידע רגיש ביומן (לא חל על תיעוד מ-Kodi)"
+
+msgctxt "#33165"
+msgid "Failed to create backup"
+msgstr "יצירת גיבוי נכשלה"
+
+msgctxt "#33166"
+msgid "(dynamic)"
+msgstr "(דינמי)"
+
+msgctxt "#33171"
+msgid "By first letter"
+msgstr "לפי האות הראשונה"
+
+msgctxt "#33125"
+msgid "Enable remote control"
+msgstr "הפעלת שליטה מרחוק"
+
+msgctxt "#33130"
+msgid "Select the source"
+msgstr "נא לבחור מקור"
+
+msgctxt "#33132"
+msgid "Repair library"
+msgstr "תיקון הספרייה"
+
+msgctxt "#33133"
+msgid "Remove library from Kodi"
+msgstr "הסרת הספרייה מ-Kodi"
+
+msgctxt "#33134"
+msgid "Add server"
+msgstr "הוספת שרת"
+
+msgctxt "#33135"
+msgid "Kodi will now restart to apply a small patch for your Kodi version."
+msgstr "Kodi יופעל עכשיו מחדש כדי להחיל טלאי קטן לגרסת ה-Kodi שלך."
+
+msgctxt "#33136"
+msgid "Update library"
+msgstr "עדכון הספרייה"
+
+msgctxt "#33140"
+msgid "Repair libraries"
+msgstr "תיקון ספריות"
+
+msgctxt "#33141"
+msgid "Remove server"
+msgstr "הסרת שרת"
+
+msgctxt "#33150"
+msgid "Update server information"
+msgstr "עדכון פרטי השרת"
+
+msgctxt "#33154"
+msgid "Add libraries"
+msgstr "הוספת ספריות"
+
+msgctxt "#33159"
+msgid "Enable audio/subtitles selection"
+msgstr "הפעלה בחירת שמע/כתוביות"
+
+msgctxt "#33167"
+msgid "Recently added"
+msgstr "נוספו לאחרונה"
+
+msgctxt "#33168"
+msgid "Favourites"
+msgstr "מועדפים"
+
+msgctxt "#33169"
+msgid "In Progress"
+msgstr "בתהליך"
+
+msgctxt "#33170"
+msgid "Unwatched"
+msgstr "לא נצפו"
+
+msgctxt "#33179"
+msgid "Force transcode"
+msgstr "אילוץ התמרה"
+
+msgctxt "#33180"
+msgid "Restart Jellyfin for Kodi"
+msgstr "להפעיל מחדש את Jellyfin ל-Kodi"
+
+msgctxt "#33181"
+msgid "Restarting to apply the patch"
+msgstr "מופעל מחדש כדי להחיל את הטלאי"
+
+msgctxt "#33182"
+msgid "Play with cinema mode"
+msgstr "ניגון במצב קולנוע"
+
+msgctxt "#33183"
+msgid "Enable the option to play with cinema mode"
+msgstr "יש להפעי את האפשרות כדי לנגן במצב קולנוע"
+
+msgctxt "#33184"
+msgid "Remove libraries"
+msgstr "הסרת ספריות"
+
+msgctxt "#33185"
+msgid "Enable sync during playback (may cause some lag)"
+msgstr "הפעלת סנכרון תוך כדי נגינה (יכול לגרום לעיכובים)"
+
+msgctxt "#33191"
+msgid "Restart Jellyfin for Kodi to apply this change?"
+msgstr "להפעיל מחדש את Jellyfin ל-Kodi כדי להחיל את השינוי הזה?"
+
+msgctxt "#33194"
+msgid "Manage libraries"
+msgstr "ניהול ספריות"
+
+msgctxt "#33195"
+msgid "Enable Jellyfin for Kodi"
+msgstr "הפעלת Jellyfin ל-Kodi"
+
+msgctxt "#33196"
+msgid "Advanced options"
+msgstr "אפשרויות מתקדמות"
+
+msgctxt "#33197"
+msgid "A sync is already running, please wait until it completes and try again."
+msgstr "יש כבר סנכרון רץ, נא להמתין להשלמתו ולנסות שוב."
+
+msgctxt "#33198"
+msgid "Select the libraries to update"
+msgstr "נא לבחור ספריות לעדכון"
+
+msgctxt "#33199"
+msgid "Select the libraries to repair"
+msgstr "נא לבחור ספריות לתיקון"
+
+msgctxt "#33200"
+msgid "Select the libraries to remove"
+msgstr "נא לבחור ספריות להסרה"
+
+msgctxt "#33201"
+msgid "Max artwork resolution"
+msgstr "רזולוציית גרפיקה מרבית"
+
+msgctxt "#33121"
+msgid "All"
+msgstr "הכול"
+
+msgctxt "#33123"
+msgid "Sync library to Kodi"
+msgstr "סנכרון הספרייה ל-Kodi"
+
+msgctxt "#33124"
+msgid "Include people (slow)"
+msgstr "כולל אנשים (איטי)"
+
+msgctxt "#33114"
+msgid "Enable external subtitles"
+msgstr "הפעלת כתוביות חיצוניות"
+
+msgctxt "#33115"
+msgid "Transcode options"
+msgstr "אפשרויות התמרה"
+
+msgctxt "#33116"
+msgid "Compress artwork (reduces quality)"
+msgstr "דחיסת הגרפיקה (איכות מופחתת)"
+
+msgctxt "#33037"
+msgid "Native (direct paths)"
+msgstr "מקומי (כתובת ישירה)"
+
+msgctxt "#33048"
+msgid "You may need to verify your network credentials in the add-on settings or use the Jellyfin path substitution to format your path correctly (Jellyfin dashboard > library). Stop syncing?"
+msgstr ""
+"ייתכן שתצטרך לאמת את אישורי הרשת שלך בהגדרות התוסף או להשתמש בנתיב החלופי של "
+"Jellyfin כדי לערוך את הנתיב שלך בצורה נכונה (לוח המחוונים של Jellyfin > "
+"ספרייה). להפסיק לסנכרן?"
+
+msgctxt "#33087"
+msgid "Reset all Jellyfin add-on settings?"
+msgstr "לאתחל את כל הגדרות התוספים ב-Jellyfin?"
+
+msgctxt "#33086"
+msgid "Remove all cached artwork?"
+msgstr "למחוק את כל הartwork השמור?"
+
+msgctxt "#33088"
+msgid "Database reset has completed, Kodi will now restart to apply the changes."
+msgstr "בסיס הנתונים אותחל בהצלחה, Kodi יעשה אתחול בכדי להחיל את השינויים."
+
+msgctxt "#33108"
+msgid "Notifications are delayed during video playback (except live tv)."
+msgstr "ההתראות נדחות במהלך ניגון וידיאו (למעט טלוויזיה)."
+
+msgctxt "#33097"
+msgid "Important, cleanonupdate was removed in your advanced settings to prevent conflict with Jellyfin for Kodi. Kodi will restart now."
+msgstr ""
+"חשוב, פעולת ניקוי בעדכון הוסרה בהגדרות המתקדמות כדי למנוע התנגשות עם "
+"Jellyfin עבור Kodi. ה-Kodi יבצע אתחול עכשיו."
+
+msgctxt "#33098"
+msgid "Refresh boxsets"
+msgstr "מעדכן אוספים"
+
+msgctxt "#33099"
+msgid "Install the server plugin Kodi Sync Queue to automatically apply Jellyfin library updates at startup. This setting can be found in the add-on settings > sync options > Enable Kodi Sync Queue."
+msgstr ""
+"התקנת התוסף לשרת Kodi Sync Queue תאפשר להחיל עדכוני ספריית Jellyfin בהפעלה. "
+"ההגדרה נמצאת תחת הגדרות תוספים > הגדרות סנכרון > הפעלת Kodi Sync Queue."
+
+msgctxt "#33101"
+msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
+msgstr ""
+"לאור שימושך במוד ניגון עם מוזיקה, האם ברצונך לייבא ביקורת מוזיקה מקבצים?"
+
+msgctxt "#33102"
+msgid "Resume the previous sync?"
+msgstr "המשכת הסנכרון הקודם?"
+
+msgctxt "#33104"
+msgid "Find more info in the github wiki/Create-and-restore-from-backup."
+msgstr "עוד מידע נמצא בויקי גיטהאב/יצירה-ושחזור-מגיבוי."
+
+msgctxt "#33105"
+msgid "Enable the context menu"
+msgstr "אפשר את תפריט ההקשר"
+
+msgctxt "#33106"
+msgid "Enable the option to transcode"
+msgstr "אפשר את האפשרות להמיר קידוד"
+
+msgctxt "#33107"
+msgid "Users added to the session (no space between users). (eg username,username2)"
+msgstr "משתמשים נוספו לסשן (אין רווח בין משתמשים) (למשל משתמש1,משתמש2)"
+
+msgctxt "#33109"
+msgid "Plugin"
+msgstr "תוסף"
+
+msgctxt "#33110"
+msgid "Restart Kodi to take effect."
+msgstr "נא לרסט אצ Kodi כדי שהשינויים ישפיעו."
+
+msgctxt "#33111"
+msgid "Reset the local database to apply the playback mode change."
+msgstr "אתחול מבנה הנתונים המקומי על מנת לאפשר את שינוי מוד הניגון."
+
+msgctxt "#33163"
+msgid "Disabled/Media default"
+msgstr "מושבת/מדיית ברירת המחדל"
+
+msgctxt "#33129"
+msgid "You can sync libraries by launching the Jellyfin add-on > Add libraries."
+msgstr "ניתן לסנכרן ספריות על ידי לחיצה על תוספי Jellyfin > הוספת ספריות."
+
+msgctxt "#33151"
+msgid "Reconnect to the same server that was previously loaded. If you want to use a different server, reset your local database, including your user information."
+msgstr ""
+"מתחבר מחדש לאותו שרת שכבר נטען. אם ברצונך להתחבר לשרת אחר, יש לרסט את מסד "
+"הנתונים המקומי, כולל את מידע המשתמש שלך."
+
+msgctxt "#33152"
+msgid "Unable to locate TV Tunes in Kodi."
+msgstr "לא ניתן למצוא TV Tunes ב-Kodi."
+
+msgctxt "#33153"
+msgid "Your Jellyfin theme media has been synced to Kodi"
+msgstr "ערכת הנושא של Jellyfin שלך הסתנכרנה עם Kodi"
+
+msgctxt "#33160"
+msgid "To avoid errors, please update Jellyfin for Kodi to version: "
+msgstr "כדי להימנע משגיאות, נא לעדכן את Jellyfin ל-Kodi לגרסה: "
+
+msgctxt "#33138"
+msgid "You can update your library manually rather than rely on the server plugin Kodi Sync Queue. Launch the add-on and update libraries (or per library). To remove content, you'll need to repair the library."
+msgstr ""
+"ניתן לעדכן את הספרייה ידנית במקום להסתמך על תוסף תור הסנכרון של Kodi. יש "
+"להפעיל את התוסף ולעדכן ספריות (או כל ספרייה בנפרד). כדי להסיר תוכן, יש לתקן "
+"את הספרייה."
+
+msgctxt "#33145"
+msgid "Please make sure your Samba (smb) share of your Jellyfin server is accessible to your Kodi installation and that you have path substitution configured on your server. Otherwise, Kodi may fail to locate your files."
+msgstr ""
+"נא לוודא שהשיתוף של Samba (smb) של שרת ה-Jellyfin שלך נגיש להתקנת Kodi "
+"ושמוגדרים החלפות נתיבים על השרת שלך. אחרת Kodi עלול להיכשל במציאת הקבצים שלך."
+
+msgctxt "#33128"
+msgid "Failed to retrieve latest content updates. No content updates will be applied until Kodi is restarted. If this issue persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"איסוף עדכוני התוכן נכשל. לא יתבצעו עדכוני תוכן עד ש-Kodi יופעל מחדש. אם בעיה "
+"זו ממשיכה, נא לדווח בפורום Jellyfin ל-Kodi, עם לוגים מה-Kodi שלך."
+
+msgctxt "#33131"
+msgid "Refreshing boxsets"
+msgstr "עדכון תיבות"
+
+msgctxt "#33137"
+msgid "Enable Kodi Sync Queue"
+msgstr "הפעלת תור הסנכרון של Kodi"
+
+msgctxt "#33155"
+msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
+msgstr ""
+"הטלאי שהוחל עכשיו על Jellyfin ל-Kodi פגום! נא לדווח בפורום Jellyfin ל-Kodi "
+"אם בעיה זו נמשכת. יש לתקן זאת מוקדם ככל האפשר."
+
+msgctxt "#33172"
+msgid "You have {number} updates pending. This may take a little while before seeing new content. It might be faster to update your libraries via launching the Jellyfin add-on > update libraries. Proceed anyway?"
+msgstr ""
+"יש {number} עדכונים ממתינים. הצגת תוכן חדש עלולה לקחת זמן מה. עדכון הספריות "
+"עשוי להיות מהיר יותר דרך תוספי Jellyfin > עדכון ספריות. האם להמשיך למרות זאת?"
+
+msgctxt "#33174"
+msgid "Paging - download threads (default: 3)"
+msgstr "דפדוף - חוטי הורדה (ברירת מחדל: 3)"
+
+msgctxt "#33175"
+msgid "Paging tip: Each download thread requests your max items value from Jellyfin at the same time."
+msgstr ""
+"טיפ לדפדוף: כל חוט הורדה מבקש את כמות הפריטים המקסימלית מ-Jellyfin בו זמנית."
+
+msgctxt "#33176"
+msgid "Update or repair your libraries to apply the changes below."
+msgstr "יש לעדכן או לתקן את הספריות שלך כדי להחיל את השינויים הבאים."
+
+msgctxt "#33177"
+msgid "Display the progress bar if update count greater than"
+msgstr "הצג התקדמות אם מספר העדכונים גדול מ-"
+
+msgctxt "#33178"
+msgid "Processing updates"
+msgstr "מטפל בעדכונים"
+
+msgctxt "#33186"
+msgid "The Kodi Sync Queue speeds up the start up sync. Other syncs are triggered by server events."
+msgstr ""
+"תור הסנכרון של Kodi מאיץ את סנכרון העלייה. סנכרונים אחרים מופעלים מאירועים "
+"בשרת."
+
+msgctxt "#33118"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgstr ""
+"שינית את מצב הניגון. יש להפעיל מחדש את Kodi כדי להחיל את השינויים, לעשות זאת "
+"עכשיו?"
+
+msgctxt "#33119"
+msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
+msgstr ""
+"משהו השתבש במהלך הסנכרון. ניתן לשחזר את ההתקדמות אחרי הפעלה מחדש של Kodi. אם "
+"הבעיה נמשכת, נא לדווח בפורום Jellyfin ל-Kodi עם לוגים מה-Kodi שלך."
+
+msgctxt "#33120"
+msgid "Select the libraries to add"
+msgstr "נא לבחור את הספריות להוסיף"
+
+msgctxt "#33122"
+msgid "Restart Kodi to resume where you left off."
+msgstr "יש להפעיל מחדש את Kodi כדי להמשיך מאיפה שהפסקת."
+
+msgctxt "#33112"
+msgid "Applies to Native and Add-on playback mode"
+msgstr "חל על מצב ניגון רגיל ודרך תוסף"
+
+msgctxt "#33113"
+msgid "Applies to Add-on playback mode only"
+msgstr "חל על ניגון דרך תוסף בלבד"
+
+msgctxt "#33173"
+msgid "Forget about the previous sync? This is not recommended."
+msgstr "שכחת את העדכון הקודם? זה לא מומלץ."
+
+msgctxt "#33203"
+msgid "Manage path replacements"
+msgstr "ניהול החלפות נתיבים"
+
+msgctxt "#33204"
+msgid "Finish"
+msgstr "סיום"
+
+msgctxt "#33205"
+msgid "New Path Replacement"
+msgstr "החלפת נתיבים חדשה"
+
+msgctxt "#33206"
+msgid "Remote Path"
+msgstr "נתיב מרוחק"
+
+msgctxt "#33207"
+msgid "Local Path"
+msgstr "נתיב מקומי"
+
+msgctxt "#30538"
+msgid "Max days in next episodes"
+msgstr "מקסימום ימים בפרקים הבאים"
+
+msgctxt "#33223"
+msgid "7.0 Mbps"
+msgstr "7.0 מגה ביט לשנייה"
+
+msgctxt "#33227"
+msgid "12.0 Mbps"
+msgstr "12.0 מגה ביט לשנייה"
+
+msgctxt "#33228"
+msgid "14.0 Mbps"
+msgstr "14.0 מגה ביט לשנייה"
+
+msgctxt "#33233"
+msgid "30.0 Mbps"
+msgstr "30.0 מגה ביט לשנייה"
+
+msgctxt "#33208"
+msgid "360"
+msgstr "360"
+
+msgctxt "#33209"
+msgid "480"
+msgstr "480"
+
+msgctxt "#33210"
+msgid "600"
+msgstr "600"
+
+msgctxt "#33211"
+msgid "720"
+msgstr "720"
+
+msgctxt "#33212"
+msgid "1080"
+msgstr "1080"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "לא מוגבל [ברירת מחדל]"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0.5 מגה ביט לשנייה"
+
+msgctxt "#33215"
+msgid "1.0 Mbps"
+msgstr "1.0 מגה ביט לשנייה"
+
+msgctxt "#33216"
+msgid "1.5 Mbps"
+msgstr "1.5 מגה ביט לשנייה"
+
+msgctxt "#33217"
+msgid "2.0 Mbps"
+msgstr "2.0 מגה ביט לשנייה"
+
+msgctxt "#33218"
+msgid "2.5 Mbps"
+msgstr "2.5 מגה ביט לשנייה"
+
+msgctxt "#33219"
+msgid "3.0 Mbps"
+msgstr "3.0 מגה ביט לשנייה"
+
+msgctxt "#33220"
+msgid "4.0 Mbps"
+msgstr "4.0 מגה ביט לשנייה"
+
+msgctxt "#33221"
+msgid "5.0 Mbps"
+msgstr "5.0 מגה ביט לשנייה"
+
+msgctxt "#33222"
+msgid "6.0 Mbps"
+msgstr "6.0 מגה ביט לשנייה"
+
+msgctxt "#33224"
+msgid "8.0 Mbps"
+msgstr "8.0 מגה ביט לשנייה"
+
+msgctxt "#33225"
+msgid "9.0 Mbps"
+msgstr "9.0 מגה ביט לשנייה"
+
+msgctxt "#33226"
+msgid "10.0 Mbps"
+msgstr "10.0 מגה ביט לשנייה"
+
+msgctxt "#33229"
+msgid "16.0 Mbps"
+msgstr "16.0 מגה ביט לשנייה"
+
+msgctxt "#33230"
+msgid "18.0 Mbps"
+msgstr "18.0 מגה ביט לשנייה"
+
+msgctxt "#33231"
+msgid "20.0 Mbps"
+msgstr "20.0 מגה ביט לשנייה"
+
+msgctxt "#33232"
+msgid "25.0 Mbps"
+msgstr "25.0 מגה ביט לשנייה"
+
+msgctxt "#33234"
+msgid "35.0 Mbps"
+msgstr "35.0 מגה ביט לשנייה"
+
+msgctxt "#33235"
+msgid "40.0 Mbps"
+msgstr "40.0 מגה ביט לשנייה"
+
+msgctxt "#33236"
+msgid "100.0 Mbps"
+msgstr "100.0 מגה ביט לשנייה"
+
+msgctxt "#33237"
+msgid "1000.0 Mbps [default]"
+msgstr "1000.0 מגה ביט לשנייה [ברירת מחדל]"
+
+msgctxt "#33238"
+msgid "Maximum"
+msgstr "מקסימום"
+
+msgctxt "#33239"
+msgid "96"
+msgstr "96"
+
+msgctxt "#33240"
+msgid "128"
+msgstr "128"
+
+msgctxt "#33241"
+msgid "160"
+msgstr "160"
+
+msgctxt "#33242"
+msgid "192"
+msgstr "192"
+
+msgctxt "#33243"
+msgid "256"
+msgstr "256"
+
+msgctxt "#33244"
+msgid "320"
+msgstr "320"
+
+msgctxt "#33245"
+msgid "384"
+msgstr "384"

@@ -53,7 +53,7 @@
         </p>
         <p>
           Our informal support target is current release±1,
-          which currently translates to Matrix (old), Nexus (current) and Omega (next).
+          which currently translates to Nexus (old), Omega (current) and Piers (next).
           <br />
           Please note that next release is a moving target,
           has a relatively low priority,

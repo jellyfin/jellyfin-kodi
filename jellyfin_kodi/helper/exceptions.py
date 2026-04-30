@@ -19,9 +19,15 @@ class HTTPException(Exception):
 
 
 class LibraryException(Exception):
-    # Jellyfin library sync exception
-    def __init__(self, status):
-        self.status = status
+    pass
+
+
+class LibraryExitException(LibraryException):
+    "Exception raised to propagate application exit."
+
+
+class LibrarySyncLaterException(LibraryException):
+    "Raised when no libraries are selected for sync."
 
 
 class PathValidationException(Exception):
@@ -30,5 +36,3 @@ class PathValidationException(Exception):
 
     TODO: Investigate the usage of this to see if it can be done better.
     """
-
-    pass

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2025-02-26 10:01+0000\n"
+"PO-Revision-Date: 2026-04-06 18:59+0000\n"
 "Last-Translator: Blackspirits <blackspirits@gmail.com>\n"
 "Language-Team: Portuguese (Portugal) <https://translate.jellyfin.org/"
 "projects/jellyfin/jellyfin-kodi/pt_PT/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.7.2\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
@@ -79,7 +79,7 @@ msgstr "Qualidade de Vídeo"
 
 msgctxt "#30170"
 msgid "Recently Added TV Shows"
-msgstr "Programas TV adicionados recentemente"
+msgstr "Séries adicionadas recentemente"
 
 msgctxt "#30171"
 msgid "In Progress TV Shows"
@@ -87,7 +87,7 @@ msgstr "Programas TV em curso"
 
 msgctxt "#30174"
 msgid "Recently Added Movies"
-msgstr "Filmes Adicionados Recentemente"
+msgstr "Filmes adicionados recentemente"
 
 msgctxt "#30175"
 msgid "Recently Added Episodes"
@@ -103,7 +103,7 @@ msgstr "Episódios Em Progresso"
 
 msgctxt "#30179"
 msgid "Next Episodes"
-msgstr "Próximos Episódios"
+msgstr "Próximos episódios"
 
 msgctxt "#30180"
 msgid "Favorite Movies"
@@ -119,7 +119,7 @@ msgstr "Episódios Favoritos"
 
 msgctxt "#30185"
 msgid "Boxsets"
-msgstr "Boxsets"
+msgstr "Box sets"
 
 msgctxt "#30189"
 msgid "Unwatched Movies"
@@ -147,7 +147,7 @@ msgstr "Ativar mensagem de boas-vindas"
 
 msgctxt "#30251"
 msgid "Recently added Home Videos"
-msgstr "Vídeos Caseiros adicionados recentemente"
+msgstr "Vídeos caseiros adicionados recentemente"
 
 msgctxt "#30252"
 msgid "Recently added Photos"
@@ -183,7 +183,7 @@ msgstr "Filmes"
 
 msgctxt "#30305"
 msgid "TV Shows"
-msgstr "Programas TV"
+msgstr "Séries"
 
 msgctxt "#30401"
 msgid "Jellyfin options"
@@ -279,7 +279,7 @@ msgstr "Transcodificar H.265/HEVC"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
-msgstr "Ignorar Espaciais ao usar Próximo Episódio"
+msgstr "Ignorar especiais na secção \"Próximos episódios\""
 
 msgctxt "#30528"
 msgid "Permanent users"
@@ -343,7 +343,7 @@ msgstr "Mostrar mensagem"
 
 msgctxt "#30602"
 msgid "Password"
-msgstr "Senha"
+msgstr "Palavra-passe"
 
 msgctxt "#30605"
 msgid "Sign in"
@@ -359,7 +359,7 @@ msgstr "Selecionar servidor principal"
 
 msgctxt "#30608"
 msgid "Username or password cannot be empty"
-msgstr "Nome de utilizador ou email não pode estar vazio"
+msgstr "O nome de utilizador ou a palavra-passe não pode estar vazio"
 
 msgctxt "#30609"
 msgid "Unable to connect to the selected server"
@@ -624,7 +624,7 @@ msgid "Compress artwork (reduces quality)"
 msgstr "Comprimir imagens de capas (reduz qualidade)"
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
 "Alterou o modo de reprodução. O Kodi tem que reiniciar para aplicar as "
 "alterações. Deseja fazê-lo agora?"
@@ -1032,3 +1032,243 @@ msgstr "Caminho local"
 msgctxt "#33206"
 msgid "Remote Path"
 msgstr "Caminho remoto"
+
+msgctxt "#30538"
+msgid "Max days in next episodes"
+msgstr "Número máximo de dias na secção \"Próximos episódios\""
+
+msgctxt "#33208"
+msgid "360"
+msgstr "360"
+
+msgctxt "#33217"
+msgid "2.0 Mbps"
+msgstr "2.0 Mbps"
+
+msgctxt "#33220"
+msgid "4.0 Mbps"
+msgstr "4.0 Mbps"
+
+msgctxt "#33233"
+msgid "30.0 Mbps"
+msgstr "30.0 Mbps"
+
+msgctxt "#33238"
+msgid "Maximum"
+msgstr "Máximo"
+
+msgctxt "#33209"
+msgid "480"
+msgstr "480"
+
+msgctxt "#33210"
+msgid "600"
+msgstr "600"
+
+msgctxt "#33211"
+msgid "720"
+msgstr "720"
+
+msgctxt "#33212"
+msgid "1080"
+msgstr "1080"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "Ilimitado [predefinição]"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0.5 Mbps"
+
+msgctxt "#33215"
+msgid "1.0 Mbps"
+msgstr "1.0 Mbps"
+
+msgctxt "#33216"
+msgid "1.5 Mbps"
+msgstr "1.5 Mbps"
+
+msgctxt "#33218"
+msgid "2.5 Mbps"
+msgstr "2.5 Mbps"
+
+msgctxt "#33219"
+msgid "3.0 Mbps"
+msgstr "3.0 Mbps"
+
+msgctxt "#33221"
+msgid "5.0 Mbps"
+msgstr "5.0 Mbps"
+
+msgctxt "#33222"
+msgid "6.0 Mbps"
+msgstr "6.0 Mbps"
+
+msgctxt "#33223"
+msgid "7.0 Mbps"
+msgstr "7.0 Mbps"
+
+msgctxt "#33224"
+msgid "8.0 Mbps"
+msgstr "8.0 Mbps"
+
+msgctxt "#33225"
+msgid "9.0 Mbps"
+msgstr "9.0 Mbps"
+
+msgctxt "#33226"
+msgid "10.0 Mbps"
+msgstr "10.0 Mbps"
+
+msgctxt "#33227"
+msgid "12.0 Mbps"
+msgstr "12.0 Mbps"
+
+msgctxt "#33228"
+msgid "14.0 Mbps"
+msgstr "14.0 Mbps"
+
+msgctxt "#33229"
+msgid "16.0 Mbps"
+msgstr "16.0 Mbps"
+
+msgctxt "#33230"
+msgid "18.0 Mbps"
+msgstr "18.0 Mbps"
+
+msgctxt "#33231"
+msgid "20.0 Mbps"
+msgstr "20.0 Mbps"
+
+msgctxt "#33232"
+msgid "25.0 Mbps"
+msgstr "25.0 Mbps"
+
+msgctxt "#33234"
+msgid "35.0 Mbps"
+msgstr "35.0 Mbps"
+
+msgctxt "#33235"
+msgid "40.0 Mbps"
+msgstr "40.0 Mbps"
+
+msgctxt "#33236"
+msgid "100.0 Mbps"
+msgstr "100.0 Mbps"
+
+msgctxt "#33237"
+msgid "1000.0 Mbps [default]"
+msgstr "1000.0 Mbps [predefinição]"
+
+msgctxt "#33239"
+msgid "96"
+msgstr "96"
+
+msgctxt "#33240"
+msgid "128"
+msgstr "128"
+
+msgctxt "#33241"
+msgid "160"
+msgstr "160"
+
+msgctxt "#33242"
+msgid "192"
+msgstr "192"
+
+msgctxt "#33243"
+msgid "256"
+msgstr "256"
+
+msgctxt "#33244"
+msgid "320"
+msgstr "320"
+
+msgctxt "#33245"
+msgid "384"
+msgstr "384"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Salto de Segmento"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Ativar salto de segmentos"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Modo de salto"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Auto-salto"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Mostrar botão de salto"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Perguntar sempre"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Introdução"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Créditos"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Recapitulo"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Pré-visualizar"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Saltar"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Saltar introdução?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Saltar créditos?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Publicidade"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Pressione SELECIONAR para saltar"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Desligar"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Ligação Rápida"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Introduz este código na aplicação Jellyfin ou na interface web:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "A aguardar autorização..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "Ligação rápida não disponível neste servidor"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "Ligação rápida expirou. Por favor tente de novo."

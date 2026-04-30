@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2025-01-22 22:26+0000\n"
-"Last-Translator: serg <knyazphobos@gmail.com>\n"
+"PO-Revision-Date: 2026-04-13 08:30+0000\n"
+"Last-Translator: Gallyam Biktashev <gallyamb@gmail.com>\n"
 "Language-Team: Russian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ru/>\n"
 "Language: ru_ru\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.7.2\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#29999"
 msgid "Jellyfin for Kodi"
@@ -629,10 +629,10 @@ msgid "Compress artwork (reduces quality)"
 msgstr "Сжать иллюстрации (качество снижается)"
 
 msgctxt "#33118"
-msgid "You've change the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
+msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
 msgstr ""
-"Вы изменили режим воспроизведения. Kodi необходимо сбросить, чтобы применить "
-"изменения, вы хотели бы сделать это сейчас?"
+"Вы изменили режим воспроизведения. Для применения изменений Kodi необходимо "
+"сбросить. Хотите сделать это сейчас?"
 
 msgctxt "#33119"
 msgid "Something went wrong during the sync. You'll be able to restore progress when restarting Kodi. If the problem persists, please report on the Jellyfin for Kodi forums, with your Kodi log."
@@ -1041,3 +1041,239 @@ msgstr "Удалённый путь"
 msgctxt "#33207"
 msgid "Local Path"
 msgstr "Локальный путь"
+
+msgctxt "#30538"
+msgid "Max days in next episodes"
+msgstr "Максимальное количество дней в разделе 'Следующее'"
+
+msgctxt "#33210"
+msgid "600"
+msgstr "600"
+
+msgctxt "#33211"
+msgid "720"
+msgstr "720"
+
+msgctxt "#33213"
+msgid "Unlimited [default]"
+msgstr "Не ограничено [по умолчанию]"
+
+msgctxt "#33245"
+msgid "384"
+msgstr "384"
+
+msgctxt "#33209"
+msgid "480"
+msgstr "480"
+
+msgctxt "#33212"
+msgid "1080"
+msgstr "1080"
+
+msgctxt "#33208"
+msgid "360"
+msgstr "360"
+
+msgctxt "#33214"
+msgid "0.5 Mbps"
+msgstr "0.5 мбит/с"
+
+msgctxt "#33215"
+msgid "1.0 Mbps"
+msgstr "1.0 мбит/с"
+
+msgctxt "#33216"
+msgid "1.5 Mbps"
+msgstr "1.5 мбит/с"
+
+msgctxt "#33217"
+msgid "2.0 Mbps"
+msgstr "2.0 мбит/с"
+
+msgctxt "#33218"
+msgid "2.5 Mbps"
+msgstr "2.5 мбит/с"
+
+msgctxt "#33219"
+msgid "3.0 Mbps"
+msgstr "3.0 мбит/с"
+
+msgctxt "#33220"
+msgid "4.0 Mbps"
+msgstr "4.0 мбит/с"
+
+msgctxt "#33221"
+msgid "5.0 Mbps"
+msgstr "5.0 мбит/с"
+
+msgctxt "#33222"
+msgid "6.0 Mbps"
+msgstr "6.0 мбит/с"
+
+msgctxt "#33223"
+msgid "7.0 Mbps"
+msgstr "7.0 мбит/с"
+
+msgctxt "#33224"
+msgid "8.0 Mbps"
+msgstr "8.0 мбит/с"
+
+msgctxt "#33225"
+msgid "9.0 Mbps"
+msgstr "9.0 мбит/с"
+
+msgctxt "#33226"
+msgid "10.0 Mbps"
+msgstr "10.0 мбит/с"
+
+msgctxt "#33228"
+msgid "14.0 Mbps"
+msgstr "14.0 мбит/с"
+
+msgctxt "#33229"
+msgid "16.0 Mbps"
+msgstr "16.0 мбит/с"
+
+msgctxt "#33230"
+msgid "18.0 Mbps"
+msgstr "18.0 мбит/с"
+
+msgctxt "#33231"
+msgid "20.0 Mbps"
+msgstr "20.0 мбит/с"
+
+msgctxt "#33232"
+msgid "25.0 Mbps"
+msgstr "25.0 мбит/с"
+
+msgctxt "#33233"
+msgid "30.0 Mbps"
+msgstr "30.0 мбит/с"
+
+msgctxt "#33234"
+msgid "35.0 Mbps"
+msgstr "35.0 мбит/с"
+
+msgctxt "#33235"
+msgid "40.0 Mbps"
+msgstr "40.0 мбит/с"
+
+msgctxt "#33236"
+msgid "100.0 Mbps"
+msgstr "100.0 мбит/с"
+
+msgctxt "#33237"
+msgid "1000.0 Mbps [default]"
+msgstr "1000.0 мбит/с [по умолчанию]"
+
+msgctxt "#33238"
+msgid "Maximum"
+msgstr "Максимум"
+
+msgctxt "#33239"
+msgid "96"
+msgstr "96"
+
+msgctxt "#33240"
+msgid "128"
+msgstr "128"
+
+msgctxt "#33241"
+msgid "160"
+msgstr "160"
+
+msgctxt "#33242"
+msgid "192"
+msgstr "192"
+
+msgctxt "#33243"
+msgid "256"
+msgstr "256"
+
+msgctxt "#33244"
+msgid "320"
+msgstr "320"
+
+msgctxt "#33227"
+msgid "12.0 Mbps"
+msgstr "12.0 мбит/с"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Пропуск видеофрагментов"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Включить пропуск видеофрагментов"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Пропускать автоматически"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Показывать кнопку пропуска"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Спрашивать каждый раз"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Режим пропуска"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Заставка"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Титры"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Краткий обзор"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Предпросмотр"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Пропустить"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Пропустить заставку?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Пропустить титры?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Реклама"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Нажмите ВЫБРАТЬ для пропуска"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Отключить"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Быстрое подключение"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Введите этот код в приложении Jellyfin или веб интерфейсе:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "Ожидание авторизации..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "Быстрое подключение недоступно на этом сервере"
