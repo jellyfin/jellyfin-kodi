@@ -56,7 +56,7 @@ class Player(xbmc.Player):
         """
 
         self.stop_playback()
-        self._reset_state()
+        self._reset_state(restart=True)
         count = 0
         monitor = xbmc.Monitor()
 
@@ -432,8 +432,7 @@ class Player(xbmc.Player):
         if not self.played:
             return
 
-        if self.segment_checker:
-            self.segment_checker.stop()
+        self._reset_state()
 
         LOG.info("Played info: %s", self.played)
 
@@ -513,12 +512,7 @@ class Player(xbmc.Player):
         self.skip_segments.pop(item_id, None)
         self.skip_prompted = set()
 
-        if self.skip_dialog:
-            try:
-                self.skip_dialog.close()
-            except Exception:
-                pass
-            self.skip_dialog = None
+        self._reset_skip_dialog()
 
         segments = item["Server"].jellyfin.get_media_segments(item_id)
         if segments:
@@ -710,11 +704,7 @@ class Player(xbmc.Player):
             import xbmcaddon
             from .dialogs.skip import SkipDialog
 
-            if self.skip_dialog:
-                try:
-                    self.skip_dialog.close()
-                except Exception:
-                    pass
+            self._reset_skip_dialog()
 
             addon_path = xbmcaddon.Addon("plugin.video.jellyfin").getAddonInfo("path")
             LOG.debug("_show_skip_button: addon_path=%s", addon_path)
@@ -769,27 +759,23 @@ class Player(xbmc.Player):
                 break
 
         LOG.debug("_monitor_skip_dialog: exiting loop")
-        if self.skip_dialog:
-            try:
-                self.skip_dialog.close()
-            except Exception:
-                pass
-            self.skip_dialog = None
+        self._reset_skip_dialog()
 
-    def _reset_state(self):
-        self._reset_segment_checker()
+    def _reset_state(self, restart=False):
+        self._reset_segment_checker(restart)
         self._reset_skip_dialog()
 
         self.up_next = False
         self.skip_segments = {}
         self.skip_prompted = set()
 
-    def _reset_segment_checker(self):
+    def _reset_segment_checker(self, restart=False):
         if self.segment_checker:
             self.segment_checker.stop()
 
-        self.segment_checker = SegmentChecker(player=self)
-        self.segment_checker.start()
+        if restart:
+            self.segment_checker = SegmentChecker(player=self)
+            self.segment_checker.start()
 
     def _reset_skip_dialog(self):
         if self.skip_dialog:
