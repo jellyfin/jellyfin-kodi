@@ -25,9 +25,12 @@ class SegmentChecker(threading.Thread):
             if self.player.isPlaying() and settings("mediaSegmentsEnabled.bool"):
                 try:
                     current_file = self.player.get_playing_file()
-                    item = self.player.get_file_info(current_file)
-                    current_pos = int(self.player.getTime())
-                    self.player.check_skip_segments(item, current_pos)
+                    if self.player.is_playing_file(current_file):
+                        item = self.player.get_file_info(current_file)
+                        current_pos = int(self.player.getTime())
+                        self.player.check_skip_segments(item, current_pos)
+                    else:
+                        LOG.info("Current file is not yet playing: %s", current_file)
 
                 except Exception as e:
                     LOG.exception("Error in segment checker loop: %s", e)
