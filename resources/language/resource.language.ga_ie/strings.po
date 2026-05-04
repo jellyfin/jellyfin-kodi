@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-03-17 00:49+0000\n"
+"PO-Revision-Date: 2026-05-04 16:06+0000\n"
 "Last-Translator: Aindriú Mac Giolla Eoin <aindriu80@gmail.com>\n"
 "Language-Team: Irish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ga/>\n"
@@ -1253,3 +1253,23 @@ msgstr "Brúigh ROGHNAIGH chun scipeáil"
 msgctxt "#33261"
 msgid "Off"
 msgstr "As"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Ceangal Tapa"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Cuir isteach an cód seo san aip Jellyfin nó sa chomhéadan gréasáin:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "Ag fanacht le húdarú..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "Níl an Ceangal Tapa ar fáil ar an bhfreastalaí seo"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "Chuaigh an t-am isteach don Cheangal Tapa. Déan iarracht arís."
