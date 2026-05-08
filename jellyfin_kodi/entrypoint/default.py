@@ -110,6 +110,10 @@ class Events(object):
                 timestamp = float(timestamp)
             except (TypeError, ValueError):
                 timestamp = None
+            # if we are playing the requested file and no timestamp is provided
+            # then seek to the beginning of the file (0.0).
+            if params["id"] == window("jellyfin_playing_id") and timestamp is None:
+                timestamp = 0.0
             # a timestamp of 0.0 is false-y so check for None
             if timestamp is not None:
                 player = xbmc.Player()
