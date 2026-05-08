@@ -112,21 +112,10 @@ class Events(object):
                 timestamp = None
             # a timestamp of 0.0 is false-y so check for None
             if timestamp is not None:
-                is_current = False
                 player = xbmc.Player()
                 if player.isPlayingVideo():
                     try:
-                        playing_file = player.getPlayingFile()
-                        if settings( "useDirectPaths" ) == "0":
-                            is_current = params["id"] in playing_file
-                        else:
-                            queue = json.loads(window("jellyfin_play.json") or "[]")
-                            for p_item in queue:
-                                if p_item.get("Path") == playing_file:
-                                    if p_item.get("Id") == params["id"]:
-                                        is_current = True
-                                        break
-                        if is_current:
+                        if params["id"] == window("jellyfin_playing_id"):
                             player.seekTime(timestamp)
                             return
                     except Exception as e:
