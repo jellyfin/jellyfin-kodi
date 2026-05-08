@@ -231,7 +231,10 @@ class Connect(object):
         ]
 
         if not users:
-            options = [translate(30540), translate(30618)]  # "Manual login", "Quick Connect"
+            options = [
+                translate(30540),
+                translate(30618),
+            ]  # "Manual login", "Quick Connect"
             idx = xbmcgui.Dialog().select(translate(30612), options)
             if idx == 1:  # Quick Connect
                 try:

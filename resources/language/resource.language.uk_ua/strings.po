@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-15 11:44+0000\n"
+"PO-Revision-Date: 2026-04-20 19:15+0000\n"
 "Last-Translator: kscop-n1 <karpenko.serhii@outlook.com>\n"
 "Language-Team: Ukrainian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/uk/>\n"
@@ -1236,3 +1236,31 @@ msgstr "Титри"
 msgctxt "#33254"
 msgid "Recap"
 msgstr "Стислий переказ"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Попередній перегляд"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Пропуск"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Пропустити вступ?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Пропустити титри?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Реклама"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Натисніть ВИБРАТИ, щоб пропустити"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Виключити"
