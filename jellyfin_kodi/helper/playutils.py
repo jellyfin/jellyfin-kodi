@@ -280,7 +280,8 @@ class PlayUtils(object):
                 audio_bitrate,
             )
 
-            if "av1" in self.get_transcoding_video_codec():
+            # Use mp4 container sparingly due to ffmpeg 6.0.1 seeking bug #7359
+            if settings("videoPreferredCodec") == "AV1":
                 params += "&SegmentContainer=mp4"
 
             video_type = "live" if source["Protocol"] == "LiveTV" else "master"
