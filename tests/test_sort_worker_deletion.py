@@ -19,14 +19,17 @@ from jellyfin_kodi.database import jellyfin_db
 def _make_db():
     """Return an in-memory SQLite connection with the jellyfin schema."""
     conn = sqlite3.connect(":memory:")
-    conn.execute("""
+    conn.execute(
+        """
         CREATE TABLE view (
             view_id    TEXT PRIMARY KEY,
             view_name  TEXT,
             media_type TEXT
         )
-    """)
-    conn.execute("""
+    """
+    )
+    conn.execute(
+        """
         CREATE TABLE jellyfin (
             jellyfin_id        TEXT PRIMARY KEY,
             jellyfin_parent_id TEXT,
@@ -38,7 +41,8 @@ def _make_db():
             media_type         TEXT,
             checksum           TEXT
         )
-    """)
+    """
+    )
     # view table only knows about the top-level library section
     conn.execute(
         "INSERT INTO view VALUES (?, ?, ?)",
@@ -57,8 +61,15 @@ def _make_db():
 def _dispatch(item_id, db):
     """Run the SortWorker dispatch logic for one ID and return queued items."""
     media_types = [
-        "Movie", "BoxSet", "MusicVideo", "MusicAlbum",
-        "MusicArtist", "Audio", "Episode", "Season", "Show",
+        "Movie",
+        "BoxSet",
+        "MusicVideo",
+        "MusicAlbum",
+        "MusicArtist",
+        "Audio",
+        "Episode",
+        "Season",
+        "Show",
     ]
     output = {m: queue.Queue() for m in media_types}
 
@@ -101,7 +112,9 @@ class TestSortWorkerDeletion(unittest.TestCase):
         items and wiped the entire library section. The guard must block this.
         """
         queued = _dispatch("subfolder-id", self.db)
-        self.assertEqual(queued, [], "Subfolder ID must not cascade when not in view table")
+        self.assertEqual(
+            queued, [], "Subfolder ID must not cascade when not in view table"
+        )
 
     def test_unknown_id_not_a_view_queues_nothing(self):
         """A completely unrecognized ID must not cascade."""

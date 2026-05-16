@@ -64,7 +64,9 @@ class TestRemovePathGuard(unittest.TestCase):
         self.db.remove_path(1)
 
         row = self.conn.execute("SELECT idPath FROM path WHERE idPath = 1").fetchone()
-        self.assertIsNotNone(row, "Path must not be deleted while files 2 and 3 still reference it")
+        self.assertIsNotNone(
+            row, "Path must not be deleted while files 2 and 3 still reference it"
+        )
 
     def test_path_deleted_when_no_files_remain(self):
         """Path must be cleaned up once the last referencing file is gone."""
