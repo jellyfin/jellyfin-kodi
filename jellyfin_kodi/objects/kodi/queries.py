@@ -446,8 +446,8 @@ add_musicvideo_obj = [
     "{Premiere}",
 ]
 add_tvshow = """
-INSERT INTO     tvshow(idShow, c00, c01, c02, c04, c05, c08, c09, c10, c12, c13, c14, c15)
-VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+INSERT INTO     tvshow(idShow, c00, c01, c02, c04, c05, c08, c09, c10, c12, c13, c14, c15, c16)
+VALUES          (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 """
 add_tvshow_obj = [
     "{ShowId}",
@@ -463,6 +463,7 @@ add_tvshow_obj = [
     "{Mpaa}",
     "{Studio}",
     "{SortTitle}",
+    "{Trailer}",
 ]
 add_season = """
 INSERT INTO     seasons(idSeason, idShow, season)
@@ -693,7 +694,7 @@ update_musicvideo_obj = [
 update_tvshow = """
 UPDATE      tvshow
 SET         c00 = ?, c01 = ?, c02 = ?, c04 = ?, c05 = ?, c08 = ?, c09 = ?, c10 = ?,
-            c12 = ?, c13 = ?, c14 = ?, c15 = ?
+            c12 = ?, c13 = ?, c14 = ?, c15 = ?, c16 = ?
 WHERE       idShow = ?
 """
 update_tvshow_obj = [
@@ -709,6 +710,7 @@ update_tvshow_obj = [
     "{Mpaa}",
     "{Studio}",
     "{SortTitle}",
+    "{Trailer}",
     "{ShowId}",
 ]
 update_tvshow_link = """
