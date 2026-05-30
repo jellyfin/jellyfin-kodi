@@ -123,3 +123,33 @@ class SkipDialog(xbmcgui.WindowXMLDialog):
     def is_cancel(self):
         """Return whether the user cancelled."""
         return self.cancel_requested
+
+    def update_duration(self, remaining):
+        """Update the remaining duration and label properties dynamically."""
+        if remaining < 0:
+            remaining = 0
+        self._duration = remaining
+
+        # Format duration text
+        minutes = int(remaining // 60)
+        seconds = int(remaining % 60)
+        if minutes > 0:
+            duration_text = "{0}m {1}s".format(minutes, seconds)
+        else:
+            duration_text = "{0}s".format(seconds)
+
+        # Get short segment type label
+        segment_label = SEGMENT_LABELS.get(self._segment_type, self._segment_type or "Segment")
+
+        # Set button label: "Skip Intro (1m 40s)"
+        button_label = "Skip {0} ({1})".format(segment_label, duration_text)
+
+        # Use setProperty so it's available to the skin
+        self.setProperty("skip_label", button_label)
+        self.setProperty("duration", duration_text)
+
+        try:
+            button = self.getControl(SKIP_BUTTON)
+            button.setLabel(button_label)
+        except Exception:
+            pass

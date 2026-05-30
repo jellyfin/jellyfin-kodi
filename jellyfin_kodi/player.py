@@ -31,6 +31,8 @@ class Player(xbmc.Player):
 
     def __init__(self):
         xbmc.Player.__init__(self)
+        self._segment_thread = None
+        self._segment_thread_active = False
 
     def get_playing_file(self):
         try:
@@ -133,6 +135,11 @@ class Player(xbmc.Player):
                 self.check_skip_segments(item, current_pos)
             except Exception:
                 pass  # Player may not be ready yet
+
+            try:
+                self._start_segment_monitor(item)
+            except Exception as e:
+                LOG.warning("Failed to start segment monitor thread: %s", e)
 
         if monitor.waitForAbort(2):
             return
@@ -428,6 +435,11 @@ class Player(xbmc.Player):
 
     def stop_playback(self):
         """Stop all playback. Check for external player for positionticks."""
+        try:
+            self._stop_segment_monitor()
+        except Exception as e:
+            LOG.warning("Failed to stop segment monitor thread: %s", e)
+
         if not self.played:
             return
 
@@ -735,6 +747,7 @@ class Player(xbmc.Player):
         """Monitor the skip dialog and handle user input or timeout."""
         LOG.debug("_monitor_skip_dialog: starting, end_time=%.1f", self._skip_end_time)
         monitor = xbmc.Monitor()
+        last_remaining = -1
 
         # Monitor loop - check for user input or end of segment
         while self.skip_dialog and not monitor.abortRequested():
@@ -758,7 +771,14 @@ class Player(xbmc.Player):
                         self._skip_end_time,
                     )
                     break
-            except Exception:
+
+                # Dynamic countdown update
+                remaining = int(self._skip_end_time - current_pos)
+                if remaining != last_remaining:
+                    self.skip_dialog.update_duration(remaining)
+                    last_remaining = remaining
+            except Exception as e:
+                LOG.debug("_monitor_skip_dialog error: %s", e)
                 break
 
             if monitor.waitForAbort(0.2):
@@ -771,3 +791,37 @@ class Player(xbmc.Player):
             except Exception:
                 pass
             self.skip_dialog = None
+
+    def _start_segment_monitor(self, item):
+        if not settings("mediaSegmentsEnabled.bool"):
+            return
+        self._stop_segment_monitor()
+        self._segment_thread_active = True
+        import threading
+        self._segment_thread = threading.Thread(
+            target=self._monitor_segments_loop,
+            args=(item,),
+            name="JellyfinSegmentMonitor"
+        )
+        self._segment_thread.daemon = True
+        self._segment_thread.start()
+        LOG.debug("Segment monitor thread started")
+
+    def _stop_segment_monitor(self):
+        self._segment_thread_active = False
+        self._segment_thread = None
+
+    def _monitor_segments_loop(self, item):
+        monitor = xbmc.Monitor()
+        while self._segment_thread_active and not monitor.abortRequested():
+            if not self.isPlaying():
+                break
+            try:
+                if self.isPlayingVideo() and not self.getTime() == 0:
+                    if not self.skip_dialog:
+                        current_pos = int(self.getTime())
+                        self.check_skip_segments(item, current_pos)
+            except Exception as e:
+                LOG.debug("Error in segment monitor loop: %s", e)
+            if monitor.waitForAbort(1):
+                break
