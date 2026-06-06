@@ -740,6 +740,8 @@ class UpdateWorker(threading.Thread):
                     LOG.debug("{} - {}".format(item["Type"], item["Name"]))
                     if item["Type"] == "Movie":
                         movies.movie(item)
+                        movies.remove_extras(item)
+                        movies.add_extras(item)
                     elif item["Type"] == "BoxSet":
                         movies.boxset(item)
                     elif item["Type"] == "Series":

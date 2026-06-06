@@ -189,6 +189,172 @@ class Movies(KodiDb):
             obj["Title"],
         )
 
+    def add_extras(self, item):
+        for extras in server.get_extra_by_movie(item["Id"]):
+            for extra in extras["Items"]:
+                LOG.debug("Extras: {}".format(extra))
+                extra["MovieId"] = item["Id"]
+                if extra.get("Path"):
+                    self.extra(extra)
+
+    @stop
+    @jellyfin_item
+    def extra(self, item, e_item):
+        """If item does not exist, entry will be added.
+        If item exists, entry will be updated.
+
+        Create additional entry for widgets.
+        """
+        server_address = self.server.auth.get_server_info(self.server.auth.server_id)[
+            "address"
+        ]
+        API = api.API(item, server_address)
+        obj = self.objects.map(item, "Extra")
+        update = True
+
+        if "Location" in obj and obj["Location"] == "Virtual":
+            LOG.info("Skipping virtual item %s: %s", obj["Title"], obj["Id"])
+            return
+
+        try:
+            obj["ExtraId"] = e_item[0]
+            obj["FileId"] = e_item[1]
+            obj["PathId"] = e_item[2]
+            obj["LibraryId"] = e_item[6]
+            obj["LibraryName"] = self.jellyfin_db.get_view_name(obj["LibraryId"])
+        except TypeError:
+            update = False
+            LOG.debug("ExtraId %s not found", obj["Id"])
+
+            temp_obj = dict(obj)
+            temp_obj["Id"] = obj["MovieId"]
+
+            library = self.library or find_library(self.server, temp_obj)
+            if not library:
+                # This item doesn't belong to a whitelisted library
+                return
+
+            obj["ExtraId"] = self.create_entry_extra()
+            obj["LibraryId"] = library["Id"]
+            obj["LibraryName"] = library["Name"]
+
+        else:
+            if self.get_extra(*values(obj, QU.get_extra_obj)) is None:
+
+                update = False
+                LOG.info(
+                    "ExtraId %s missing from kodi. repairing the entry.",
+                    obj["ExtraId"],
+                )
+
+        try:
+            temp_obj = dict(obj)
+            temp_obj["Id"] = obj["MovieId"]
+            temp_obj["MovieId"] = self.jellyfin_db.get_item_by_id(
+                *values(temp_obj, QUEM.get_item_obj)
+            )[0]
+        except TypeError:
+            LOG.info("Failed to process extra %s to movie.", temp_obj["Title"])
+
+            return update
+
+        obj["Path"] = API.get_file_path(obj["Path"])
+        obj["Index"] = obj["Index"] or -1
+        obj["Resume"] = API.adjust_resume((obj["Resume"] or 0) / 10000000.0)
+        obj["Runtime"] = round(float((obj["Runtime"] or 0) / 10000000.0), 6)
+        obj["DateAdded"] = Local(obj["DateAdded"]).split(".")[0].replace("T", " ")
+        obj["DatePlayed"] = (
+            None
+            if not obj["DatePlayed"]
+            else Local(obj["DatePlayed"]).split(".")[0].replace("T", " ")
+        )
+        obj["PlayCount"] = API.get_playcount(obj["Played"], obj["PlayCount"])
+        obj["Artwork"] = API.get_all_artwork(
+            self.objects.map(item, "ArtworkParent"), True
+        )
+        obj["Video"] = API.video_streams(obj["Video"] or [], obj["Container"])
+        obj["Audio"] = API.audio_streams(obj["Audio"] or [])
+        obj["Streams"] = API.media_streams(obj["Video"], obj["Audio"], obj["Subtitles"])
+
+        self.get_path_filename(obj)
+
+        obj["MovieId"] = temp_obj["MovieId"]
+
+        if obj["Countries"]:
+            self.add_countries(*values(obj, QU.update_country_obj))
+
+        tags = list(obj["Tags"] or [])
+        tags.append(obj["LibraryName"])
+
+        if obj["Favorite"]:
+            tags.append("Favorite extras")
+
+        obj["Tags"] = tags
+
+        self.extra_add(obj)
+
+        self.update_file(*values(obj, QU.update_file_obj))
+        self.add_playstate(*values(obj, QU.add_bookmark_obj))
+        self.add_streams(*values(obj, QU.add_streams_obj))
+        self.artwork.add_extra(obj["Artwork"], obj["FileId"], "videoversion")
+        self.item_ids.append(obj["Id"])
+
+        return not update
+
+    def extra_add(self, obj):
+        """Add object to kodi."""
+        obj["PathId"] = self.add_path(*values(obj, QU.add_path_obj))
+        obj["FileId"] = self.add_file(*values(obj, QU.add_file_obj))
+        obj["VideoVersionIdType"] = obj["ExtraId"]
+
+        self.update_extra(*values(obj, QU.update_video_version_extra_obj))
+        self.update_video_version_type_extra(
+            *values(obj, QU.update_video_version_type_extra_obj)
+        )
+        self.jellyfin_db.add_reference(*values(obj, QUEM.add_reference_extra_obj))
+
+        LOG.debug(
+            "ADD extra [%s/%s/%s] %s: %s",
+            obj["PathId"],
+            obj["FileId"],
+            obj["ExtraId"],
+            obj["Id"],
+            obj["Title"],
+        )
+
+    @stop
+    @jellyfin_item
+    def remove_extras(self, item, e_item):
+        """Remove movieid, fileid, jellyfin reference.
+        Remove artwork, boxset
+        """
+
+        try:
+            item["KodiId"] = e_item[0]
+            item["FileId"] = e_item[1]
+            item["Media"] = e_item[4]
+        except TypeError:
+            return
+
+        for extra in self.jellyfin_db.get_item_by_parent_id(
+            *values(item, QUEM.get_item_by_parent_extra_obj)
+        ):
+            temp_obj = dict()
+            temp_obj["Id"] = extra[0]
+            temp_obj["KodiId"] = extra[1]
+            temp_obj["FileId"] = extra[2]
+
+            self.delete_extra(*values(temp_obj, QU.delete_extra_obj))
+
+            self.jellyfin_db.remove_item(*values(temp_obj, QUEM.delete_item_obj))
+
+            LOG.debug(
+                "DELETE Extra [%s/%s] %s",
+                temp_obj["FileId"],
+                temp_obj["KodiId"],
+                temp_obj["Id"],
+            )
+
     def trailer(self, obj):
 
         try:
