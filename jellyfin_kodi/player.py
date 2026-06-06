@@ -13,6 +13,7 @@ from .helper import translate, api, window, settings, dialog, event, JSONRPC
 from .jellyfin import Jellyfin
 from .helper import LazyLogger
 from .helper.utils import translate_path
+from .segments import SegmentChecker
 
 #################################################################################################
 
@@ -28,6 +29,7 @@ class Player(xbmc.Player):
     skip_segments = {}
     skip_prompted = set()
     skip_dialog = None
+    segment_checker = None
 
     def __init__(self):
         xbmc.Player.__init__(self)
@@ -52,13 +54,15 @@ class Player(xbmc.Player):
         Accounts for scenario where Kodi starts playback and exits immediately.
         First, ensure previous playback terminated correctly in Jellyfin.
         """
+
         self.stop_playback()
-        self.up_next = False
+        self._reset_state(restart=True)
         count = 0
         monitor = xbmc.Monitor()
 
         try:
             current_file = self.getPlayingFile()
+
         except Exception:
 
             while count < 5:
@@ -358,9 +362,6 @@ class Player(xbmc.Player):
         if window("jellyfin.external.bool"):
             return
 
-        if settings("mediaSegmentsEnabled.bool"):
-            self.check_skip_segments(item, item["CurrentPosition"])
-
         if not report:
             previous = item["CurrentPosition"]
 
@@ -431,6 +432,8 @@ class Player(xbmc.Player):
         """Stop all playback. Check for external player for positionticks."""
         if not self.played:
             return
+
+        self._reset_state()
 
         LOG.info("Played info: %s", self.played)
 
@@ -511,12 +514,7 @@ class Player(xbmc.Player):
         self.skip_segments.pop(item_id, None)
         self.skip_prompted = set()
 
-        if self.skip_dialog:
-            try:
-                self.skip_dialog.close()
-            except Exception:
-                pass
-            self.skip_dialog = None
+        self._reset_skip_dialog()
 
         segments = item["Server"].jellyfin.get_media_segments(item_id)
         if segments:
@@ -708,11 +706,7 @@ class Player(xbmc.Player):
             import xbmcaddon
             from .dialogs.skip import SkipDialog
 
-            if self.skip_dialog:
-                try:
-                    self.skip_dialog.close()
-                except Exception:
-                    pass
+            self._reset_skip_dialog()
 
             addon_path = xbmcaddon.Addon("plugin.video.jellyfin").getAddonInfo("path")
             LOG.debug("_show_skip_button: addon_path=%s", addon_path)
@@ -767,9 +761,29 @@ class Player(xbmc.Player):
                 break
 
         LOG.debug("_monitor_skip_dialog: exiting loop")
+        self._reset_skip_dialog()
+
+    def _reset_state(self, restart=False):
+        self._reset_segment_checker(restart)
+        self._reset_skip_dialog()
+
+        self.up_next = False
+        self.skip_segments = {}
+        self.skip_prompted = set()
+
+    def _reset_segment_checker(self, restart=False):
+        if self.segment_checker:
+            self.segment_checker.stop()
+
+        if restart:
+            self.segment_checker = SegmentChecker(player=self)
+            self.segment_checker.start()
+
+    def _reset_skip_dialog(self):
         if self.skip_dialog:
             try:
                 self.skip_dialog.close()
             except Exception:
                 pass
-            self.skip_dialog = None
+
+        self.skip_dialog = None
