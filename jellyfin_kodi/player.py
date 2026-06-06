@@ -176,6 +176,7 @@ class Player(xbmc.Player):
         )
 
         self.played[file] = item
+        window("jellyfin_playing_id", item["Id"])
         LOG.info("-->[ play/%s ] %s", item["Id"], item)
 
     def set_audio_subs(self, audio=None, subtitle=None):
@@ -500,6 +501,7 @@ class Player(xbmc.Player):
             window("jellyfin.external_check", clear=True)
 
         self.played.clear()
+        window("jellyfin_playing_id", clear=True)
 
     def _fetch_skip_segments(self, item):
         if not settings("mediaSegmentsEnabled.bool"):
