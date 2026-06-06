@@ -112,6 +112,7 @@ class TVShows(KodiDb):
         obj["Plot"] = API.get_overview(obj["Plot"])
         obj["Studio"] = " / ".join(obj["Studios"])
         obj["Artwork"] = API.get_all_artwork(self.objects.map(item, "Artwork"))
+        self.trailer(obj)
 
         if obj["Status"] != "Ended":
             obj["Status"] = None
@@ -247,6 +248,26 @@ class TVShows(KodiDb):
         )
 
         self.update_path_parent_id(obj["PathId"], obj["TopPathId"])
+
+    def trailer(self, obj):
+        """Resolve the trailer URL, preferring a locally stored Jellyfin trailer
+        over a remote one.  Mirrors Movies.trailer().
+        """
+        try:
+            if obj["LocalTrailer"]:
+                trailer = self.server.jellyfin.get_local_trailers(obj["Id"])
+                obj["Trailer"] = (
+                    "plugin://plugin.video.jellyfin/trailer?id=%s&mode=play"
+                    % trailer[0]["Id"]
+                )
+            elif obj["Trailer"]:
+                obj["Trailer"] = (
+                    "plugin://plugin.video.youtube/play/?video_id=%s"
+                    % obj["Trailer"].rsplit("=", 1)[1]
+                )
+        except Exception as error:
+            LOG.exception("Failed to get trailer for tvshow %s: %s", obj["Id"], error)
+            obj["Trailer"] = None
 
     def get_path_filename(self, obj):
         """Get the path and build it into protocol://path"""

@@ -207,7 +207,7 @@ class Movies(KodiDb):
                 )
         except Exception as error:
 
-            LOG.exception("Failed to get trailer: %s", error)
+            LOG.exception("Failed to get trailer for movie %s: %s", obj["Id"], error)
             obj["Trailer"] = None
 
     def get_path_filename(self, obj):
