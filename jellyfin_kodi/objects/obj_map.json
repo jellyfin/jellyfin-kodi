@@ -79,7 +79,9 @@
 		"Favorite": "UserData/IsFavorite",
 		"RecursiveCount": "RecursiveItemCount",
 		"JellyfinParentId": "ParentId",
-		"Status": "Status"
+		"Status": "Status",
+		"LocalTrailer": "LocalTrailerCount",
+		"Trailer": "RemoteTrailers/0/Url"
 	},
 	"Season": {
 		"Id": "Id",

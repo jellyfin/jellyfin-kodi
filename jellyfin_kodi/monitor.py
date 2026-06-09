@@ -192,6 +192,12 @@ class Monitor(xbmc.Monitor):
 
         server = Jellyfin(server_id).get_client()
         session = server.jellyfin.get_device(self.device_id)
+        if not session:
+            LOG.info(
+                "No session yet for device %s; skipping server_instance setup",
+                self.device_id,
+            )
+            return
         server.config.data["app.session"] = session[0]["Id"]
 
         if server_id is not None:
