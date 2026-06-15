@@ -35,6 +35,6 @@ class SegmentChecker(threading.Thread):
                 except Exception as e:
                     LOG.exception("Error in segment checker loop: %s", e)
 
-            xbmc.sleep(1000)
+            xbmc.sleep(500)
 
         LOG.info("---<[ segment checker ]")

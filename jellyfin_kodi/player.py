@@ -263,7 +263,7 @@ class Player(xbmc.Player):
         else:
             item["SubtitleStreamIndex"] = subs + tracks + 1
 
-    def next_up(self):
+    def next_up(self, start):
 
         item = self.get_file_info(self.get_playing_file())
         objects = Objects()
@@ -308,6 +308,7 @@ class Player(xbmc.Player):
             },
             "current_episode": item["CurrentEpisode"],
             "next_episode": data,
+            "notification_offset": start
         }
 
         LOG.info("--[ next up ] %s", next_info)
@@ -348,7 +349,7 @@ class Player(xbmc.Player):
                 except Exception:
                     pass
 
-    def report_playback(self, report=True):
+    def report_playback(self, report=True, finish=False):
         """Report playback progress to jellyfin server.
         Check if the user seek.
         """
@@ -359,7 +360,7 @@ class Player(xbmc.Player):
 
         item = self.get_file_info(current_file)
 
-        if window("jellyfin.external.bool"):
+        if window("jellyfin.external.bool") or self.up_next:
             return
 
         if not report:
@@ -384,11 +385,6 @@ class Player(xbmc.Player):
             except ZeroDivisionError:  # Runtime is 0.
                 played = 0
 
-            if played > 2.0 and not self.up_next:
-
-                self.up_next = True
-                self.next_up()
-
             if (item["CurrentPosition"] - previous) < 30:
                 return
 
@@ -400,6 +396,10 @@ class Player(xbmc.Player):
         item["Muted"] = result.get("muted")
         item["CurrentPosition"] = int(self.getTime())
         self.detect_audio_subs(item)
+
+        if finish == True:
+            self.up_next = True
+            item["CurrentPosition"] = int(self._get_safe_seek_time(int(item["Runtime"]), 5))
 
         data = {
             "QueueableMediaTypes": "Video,Audio",
@@ -415,7 +415,12 @@ class Player(xbmc.Player):
             "AudioStreamIndex": item["AudioStreamIndex"],
             "SubtitleStreamIndex": item["SubtitleStreamIndex"],
         }
-        item["Server"].jellyfin.session_progress(data)
+
+        try:
+            item["Server"].jellyfin.session_progress(data)
+        except Exception:
+            LOG.info("--[ report playback ] %s", data)
+            pass
 
     def onPlayBackStopped(self):
         """Will be called when user stops playing a file."""
@@ -603,8 +608,9 @@ class Player(xbmc.Player):
             )
 
             if segment_type == "Credits" and not self.up_next:
+                self.report_playback(True, True)
                 self.up_next = True
-                self.next_up()
+                self.next_up(start)
 
             self._handle_skip_segment(segment_type, start, end, skip_mode)
             break
@@ -693,7 +699,8 @@ class Player(xbmc.Player):
             )
 
         elif mode == 2:  # Show skip button
-            self._show_skip_button(segment_type, safe_end - start, safe_end)
+            if segment_type != "Credits":
+                self._show_skip_button(segment_type, safe_end - start, safe_end)
 
     def _show_skip_button(self, segment_type, duration, end_time):
         LOG.debug(
