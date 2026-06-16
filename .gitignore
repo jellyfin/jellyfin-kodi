@@ -72,7 +72,4 @@ Thumbs.db
 pyinstrument/
 .venv/
 
-# Now managed by templates
-addon.xml
-
 *.log

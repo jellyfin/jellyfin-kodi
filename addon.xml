@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='utf-8'?>
+<addon id="plugin.video.jellyfin" name="Jellyfin" version="2.0.0+py3" provider-name="Jellyfin Contributors">
+  <requires>
+    <import addon="xbmc.python" version="3.0.0" />
+    <import addon="script.module.requests" version="2.22.0+matrix.1" />
+    <import addon="script.module.dateutil" version="2.8.1+matrix.1" />
+    <import addon="script.module.addon.signals" version="0.0.5+matrix.1" />
+    <import addon="script.module.websocket" version="1.6.4" />
+    <import addon="script.module.web-pdb" version="2.0.1" />
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+    <provides>video audio image</provides>
+  </extension>
+  <extension point="xbmc.service" library="service.py" start="login">
+	</extension>
+  <extension point="kodi.context.item">
+    <menu id="kodi.core.main">
+      <item library="context.py">
+        <label>30401</label>
+        <visible>[!String.IsEmpty(ListItem.DBID) + !String.IsEqual(ListItem.DBID,-1) |
+					!String.IsEmpty(ListItem.Property(jellyfinid))] +
+					!String.IsEmpty(Window(10000).Property(jellyfin_context))</visible>
+      </item>
+      <item library="context_play.py">
+        <label>30402</label>
+        <visible>[[!String.IsEmpty(ListItem.DBID) + !String.IsEqual(ListItem.DBID,-1) |
+					!String.IsEmpty(ListItem.Property(jellyfinid))] + [String.IsEqual(ListItem.DBTYPE,movie) |
+					String.Contains(Container.FolderPath,livetv) |
+					String.IsEqual(ListItem.DBTYPE,episode)]] +
+					!String.IsEmpty(Window(10000).Property(jellyfin_context_transcode))</visible>
+      </item>
+    </menu>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <platform>all</platform>
+    <language>en</language>
+    <license>GNU GENERAL PUBLIC LICENSE. Version 3, 29 June 2007</license>
+    <forum>https://forum.jellyfin.org</forum>
+    <website>https://jellyfin.org/</website>
+    <source>https://github.com/jellyfin/jellyfin-kodi</source>
+    <summary lang="en" />
+    <description lang="en">Welcome to Jellyfin for Kodi!
+A whole new way to manage and view your media library. The Jellyfin addon for Kodi combines the best of Kodi - ultra smooth navigation, beautiful UIs and playback of any file under the sun, and Jellyfin - the most powerful fully open source multi-client media metadata indexer and server.
+
+Jellyfin for Kodi is the absolute best way to enjoy the incredible Kodi playback engine combined with the power of Jellyfin's centralized database. Features:
+* Direct integration with the Kodi library for native Kodi speed
+* Instant synchronization with the Jellyfin server
+* Full support for Movie, TV and Music collections
+* Jellyfin Server direct stream and transcoding support - use Kodi when you are away from home!</description>
+    <news>v2.0.0 (2026-06-16):
+:tada: New features and improvements
+------------------------------------
++ feature: mediasegments skip (#1089) @ticoombs
+
+Bug Fixes
+---------
++ Select mp4 container when transcoding to AV1 (#1094) @kontell
++ Migrate to current auth methods (#1097) @mcarlton00
++ Don't assume Path always exists in playback objects (#1096) @mcarlton00
++ Add "Jellyfin transcode" context menu item to Live TV section (#1095) @kontell
++ fix: strm file with local file path fails to play (#1085) @VergilGao
++ Fix: Cinema mode with playlist method (#1077) @hjpaul7
++ Fix: Next Episodes (maxDaysInNextEpisodes) (#1075) @hjpaul7
+
+:white_check_mark: Tests
+------------------------
++ Fix lints and tests (#1098) @oddstr13
++ Add Python 3.14 to test matrix (#1064) @oddstr13
+
+Code or Repo Maintenance
+------------------------
++ Fix lints and tests (#1098) @oddstr13
+
+CI &amp; build changes
+------------------
++ Update burnett01/rsync-deployments action to v8 (#1078) @[renovate[bot]](https://github.com/apps/renovate)
++ Update appleboy/ssh-action action to v1.2.5 (#1074) @[renovate[bot]](https://github.com/apps/renovate)
++ Update github/codeql-action action to v4.32.2 (#1065) @[renovate[bot]](https://github.com/apps/renovate)
++ Update actions/upload-artifact action to v6 (#1081) @[renovate[bot]](https://github.com/apps/renovate)
++ Update codecov/codecov-action action to v5.5.2 (#1080) @[renovate[bot]](https://github.com/apps/renovate)
++ Update actions/checkout action to v6 (#1069) @[renovate[bot]](https://github.com/apps/renovate)
++ Update actions/setup-python action to v6.2.0 (#1071) @[renovate[bot]](https://github.com/apps/renovate)
++ Update release-drafter/release-drafter action to v6.2.0 (#1092) @[renovate[bot]](https://github.com/apps/renovate)
++ Update dependency python to 3.14 (#1049) @[renovate[bot]](https://github.com/apps/renovate)
++ Update github/codeql-action action to v4.31.2 (#1052) @[renovate[bot]](https://github.com/apps/renovate)
++ Update actions/upload-artifact action to v5 (#1059) @[renovate[bot]](https://github.com/apps/renovate)
++ Update appleboy/ssh-action action to v1.2.3 (#1062) @[renovate[bot]](https://github.com/apps/renovate)</news>
+    <assets>
+      <icon>resources/icon.png</icon>
+      <fanart>resources/fanart.png</fanart>
+    </assets>
+  </extension>
+</addon>

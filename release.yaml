@@ -49,3 +49,5 @@ dependencies:
       version: '0.0.5+matrix.1'
     - addon: 'script.module.websocket'
       version: '1.6.4'
+    - addon: 'script.module.web-pdb'
+      version: '2.0.1'
