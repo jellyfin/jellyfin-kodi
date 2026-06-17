@@ -231,6 +231,12 @@ update_album_obj = [
     "album",
     "{AlbumId}",
 ]
+update_album_duration = """
+UPDATE      album
+SET         iAlbumDuration = ?
+WHERE       idAlbum = ?
+"""
+update_album_duration_obj = ["{Runtime}", "{AlbumId}"]
 update_album_artist = """
 UPDATE      album
 SET         strArtists = ?
