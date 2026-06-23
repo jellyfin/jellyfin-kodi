@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-02-16 22:15+0000\n"
-"Last-Translator: Gabriel S <jellyfin.sensitize624@passmail.net>\n"
+"PO-Revision-Date: 2026-06-23 13:56+0000\n"
+"Last-Translator: Vasile Cristian-Ilie <ilievasilec@gmail.com>\n"
 "Language-Team: Romanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ro/>\n"
 "Language: ro_ro\n"
@@ -1259,3 +1259,23 @@ msgstr "Oprit"
 msgctxt "#33253"
 msgid "Credits"
 msgstr "Generic"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Conectare rapidă"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Introduceți acest cod în aplicația Jellyfin sau în interfața web:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "Se așteaptă autorizație..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "Conectarea rapidă nu este disponibilă pe acest server"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "Conectarea rapidă a expirat. Vă rugăm să încercați din nou."
