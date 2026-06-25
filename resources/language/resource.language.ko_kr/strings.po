@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Jellyfin for Kodi\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2026-05-03 14:57+0000\n"
-"Last-Translator: Yunseo Jung <samsunghappytree123@naver.com>\n"
+"PO-Revision-Date: 2026-06-25 08:09+0000\n"
+"Last-Translator: cloudharps <cloudharps@gmail.com>\n"
 "Language-Team: Korean <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ko/>\n"
 "Language: ko_kr\n"
@@ -1181,3 +1181,71 @@ msgstr "인증을 위해 기다려주세요..."
 msgctxt "#30621"
 msgid "Quick Connect is not available on this server"
 msgstr "퀵 커넥트는 이 서버에서 사용할 수 없습니다"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "퀵 커넥트 연결 시간이 초과되었습니다. 다시 시도해 주세요."
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "구간 건너뛰기"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "구간 건너뛰기 사용"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "뛰어넘기 모드"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "자동 뛰어넘기"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "뛰어넘기 버튼 보이기"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "매번 물어보기"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "소개"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "크레딧"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "리캡"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "미리보기"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "건너뛰기"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "인트로 건너뛰기?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "크레딧 건너뛰기?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "광고"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "SELECT를 눌러 건너뛰기"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "종료"
