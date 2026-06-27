@@ -158,6 +158,7 @@ class Music(KodiDb):
 
         obj["Rating"] = 0
         obj["LastScraped"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        obj["Runtime"] = (obj["Runtime"] or 0) / 10000000.0
         obj["Genres"] = obj["Genres"] or []
         obj["Genre"] = " / ".join(obj["Genres"])
         obj["Bio"] = API.get_overview(obj["Bio"])
@@ -182,6 +183,7 @@ class Music(KodiDb):
         self.artist_link(obj)
         self.artist_discography(obj)
         self.update_album(*values(obj, QU.update_album_obj))
+        self.update_album_duration(*values(obj, QU.update_album_duration_obj))
         self.add_genres(*values(obj, QU.add_genres_obj))
         self.artwork.add(obj["Artwork"], obj["AlbumId"], "album")
         self.item_ids.append(obj["Id"])

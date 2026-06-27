@@ -181,6 +181,11 @@ class Music(Kodi):
         else:
             self.cursor.execute(QU.update_album74, args)
 
+    def update_album_duration(self, *args):
+        # iAlbumDuration column was added to the album table in music db schema 80
+        if self.version_id >= 80:
+            self.cursor.execute(QU.update_album_duration, args)
+
     def get_album_artist(self, album_id, artists):
 
         try:

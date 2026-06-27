@@ -190,6 +190,7 @@
 		"Year": "ProductionYear",
 		"Genres": "Genres",
 		"Bio": "Overview",
+		"Runtime": "RunTimeTicks,CumulativeRunTimeTicks",
 		"AlbumArtists": "AlbumArtists",
 		"Artists": "AlbumArtists:?$Name",
 		"ArtistItems": "ArtistItems",
