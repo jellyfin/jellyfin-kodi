@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-03-31 03:07+0000\n"
-"Last-Translator: bladestech <techblade47@gmail.com>\n"
+"PO-Revision-Date: 2026-07-01 17:59+0000\n"
+"Last-Translator: Thunderstrike116 <thunderstrike116@gmail.com>\n"
 "Language-Team: Greek <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/el/>\n"
 "Language: el_gr\n"
@@ -1260,3 +1260,23 @@ msgstr "Ανενεργό"
 msgctxt "#33260"
 msgid "Press SELECT to skip"
 msgstr "Πάτα ΕΠΕΛΕΞΕ για παράλειψη"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "Το χρονικό όριο της Γρήγορης Σύνδεσης έληξε. Παρακαλώ δοκιμάστε ξανά."
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Γρήγορη Σύνδεση"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Εισάγετε αυτόν τον κωδικό στην εφαρμογή Jellyfin ή στη διεπαφή ιστού:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "Αναμονή για έλεγχο ταυτότητας..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "Η Γρήγορη Σύνδεση δεν είναι διαθέσιμη σε αυτόν τον server"
