@@ -25,6 +25,22 @@ LOG = LazyLogger(__name__)
 #################################################################################################
 
 
+def order_from_start_index(items, item_ids, start_index):
+    """Order a remote Play command's items to match the requested ItemIds,
+    beginning at StartIndex.
+
+    ``get_items`` (``/Items?Ids=``) does not preserve the requested order, and a
+    remote Play command carries a ``StartIndex`` selecting which item to begin
+    with. Reorder the fetched items to the requested ``item_ids`` sequence and
+    drop everything before ``start_index`` so the chosen item plays first,
+    rather than always playing the first item that was fetched.
+    """
+    by_id = {item["Id"]: item for item in items}
+    ordered = [by_id[item_id] for item_id in item_ids if item_id in by_id]
+
+    return ordered[start_index:]
+
+
 class Monitor(xbmc.Monitor):
 
     servers = []
@@ -141,6 +157,12 @@ class Monitor(xbmc.Monitor):
         if method == "Play":
 
             items = server.jellyfin.get_items(data["ItemIds"])
+            # StartIndex is optional: music queues send it, but video casts omit
+            # it (they send StartPositionTicks / stream indices instead). Absent
+            # means start at the first item.
+            items["Items"] = order_from_start_index(
+                items["Items"], data["ItemIds"], data.get("StartIndex", 0)
+            )
 
             PlaylistWorker(
                 data.get("ServerId"),
