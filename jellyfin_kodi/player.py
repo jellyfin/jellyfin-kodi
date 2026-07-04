@@ -157,7 +157,7 @@ class Player(xbmc.Player):
                 LOG.info("Runtime is missing, Using Zero")
 
         try:
-            seektime = self.getTime()
+            self.getTime()  # confirm the player is ready; bail out if it isn't
         except Exception:  # at this point we should be playing and if not then bail out
             return
 
@@ -171,7 +171,12 @@ class Player(xbmc.Player):
         item.update(
             {
                 "File": file,
-                "CurrentPosition": item.get("CurrentPosition") or int(seektime),
+                # A fresh playback start is at 0 (or the resume point, which is
+                # already in item["CurrentPosition"]). Do NOT fall back to the live
+                # player clock here: on a track change getTime() still returns the
+                # previous track's position, which would report the new track as
+                # starting mid-way and stop clients resetting their progress bar.
+                "CurrentPosition": item.get("CurrentPosition") or 0,
                 "Muted": muted,
                 "Volume": volume,
                 "Server": Jellyfin(item["ServerId"]).get_client(),
