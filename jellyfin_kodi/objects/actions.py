@@ -244,8 +244,12 @@ class Actions(object):
         listitem = xbmcgui.ListItem()
         LOG.info("[ playlist/%s ] %s", item["Id"], item["Name"])
 
-        # Automatically resume if the item is in progress (casting from server)
-        resume = item["UserData"].get("PlaybackPositionTicks")
+        # Resume from the cast command's StartPositionTicks (seektime) when it is
+        # given, otherwise the item's stored server-side position. Casting
+        # "continue from X" sends StartPositionTicks and must honor it, rather
+        # than the item's saved position (which may be stale or empty).
+        resume = seektime or item["UserData"].get("PlaybackPositionTicks")
+        item["UserData"]["PlaybackPositionTicks"] = resume
         item["resumePlayback"] = bool(resume)
 
         play = playutils.PlayUtils(
@@ -555,14 +559,19 @@ class Actions(object):
 
         if is_video:
 
-            listitem.setProperty("totaltime", str(obj["Runtime"]))
             listitem.setProperty("IsPlayable", "true")
             listitem.setProperty("IsFolder", "false")
 
+            # setResumePoint records the resume metadata (replaces the deprecated
+            # resumetime/totaltime properties). StartOffset is what actually makes
+            # the player begin at the resume position: it feeds the player start
+            # time (CApplication) and is honored for playlist/cast playback too.
+            tag = listitem.getVideoInfoTag()
+            tag.setResumePoint(obj["Resume"] or 0, obj["Runtime"] or 0)
             if obj["Resume"] and item.get("resumePlayback"):
-                listitem.setProperty("resumetime", str(obj["Resume"]))
+                listitem.setProperty("StartOffset", str(obj["Resume"]))
             else:
-                listitem.setProperty("resumetime", "0")
+                listitem.setProperty("StartOffset", "0")
                 listitem.setProperty("StartPercent", "0")
 
             for track in obj["Streams"]["video"]:
