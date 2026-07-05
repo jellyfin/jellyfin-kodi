@@ -1,42 +1,41 @@
-version: '2.0.0'
+version: '2.1.0'
 changelog: |-
   :tada: New features and improvements
   ------------------------------------
-  + feature: mediasegments skip (#1089) @ticoombs
+  + fix(music): populate album duration on sync (#1147) @kontell
+  + Decouple segment checking from playback reporting (#1116) @CeruleanRed
+  + feat(entrypoint): accept timestamp (#1133) @Rijul-A
+  + Add support for TV show trailers (#1138) @bossanova808
+  + fix(browse): add sort methods inside collections (#1134) @Rijul-A
+  + Add Quick Connect support (#1117) @mkopec
+  + Support "GuestStar" person type in TV episode actors (#1111) @ErwinBr
 
   Bug Fixes
   ---------
-  + Select mp4 container when transcoding to AV1 (#1094) @kontell
-  + Migrate to current auth methods (#1097) @mcarlton00
-  + Don't assume Path always exists in playback objects (#1096) @mcarlton00
-  + Add "Jellyfin transcode" context menu item to Live TV section (#1095) @kontell
-  + fix: strm file with local file path fails to play (#1085) @VergilGao
-  + Fix: Cinema mode with playlist method (#1077) @hjpaul7
-  + Fix: Next Episodes (maxDaysInNextEpisodes) (#1075) @hjpaul7
-
-  :white_check_mark: Tests
-  ------------------------
-  + Fix lints and tests (#1098) @oddstr13
-  + Add Python 3.14 to test matrix (#1064) @oddstr13
+  + Honor the cast command's StartPositionTicks as the resume position (#1154) @jeremiahrose
+  + Report a track's start position as 0, not the stale player clock (#1153) @jeremiahrose
+  + Honor StartIndex in remote Play commands so the selected track plays (#1152) @jeremiahrose
+  + Fix: Only transcode with mp4 container when the preferred codec is av1 to avoid seeking failure (#1136) @nkestrel
+  + fix(monitor): skip server_instance setup when get_device returns no sessions (#1141) @SAY-5
+  + Clamp media segment skip targets before EOF (#1114) @penggongkui-job
+  + Fix websocket authentication (#1121) @mcarlton00
+  + Fix: Correct missing thumbnails for Guest Star actors in TV Shows (#1124) @ErwinBr
+  + fix(player): re-detect audio and subs (#1115) @Rijul-A
+  + queries_music: update album title when album updated in jellyfin (#1108) @csaavedra
+  + music.py: fix addition of song artist different from album artist (#1107) @csaavedra
 
   Code or Repo Maintenance
   ------------------------
-  + Fix lints and tests (#1098) @oddstr13
+  + Run the black formatter (#1127) @oddstr13
 
   CI & build changes
   ------------------
-  + Update burnett01/rsync-deployments action to v8 (#1078) @[renovate[bot]](https://github.com/apps/renovate)
-  + Update appleboy/ssh-action action to v1.2.5 (#1074) @[renovate[bot]](https://github.com/apps/renovate)
-  + Update github/codeql-action action to v4.32.2 (#1065) @[renovate[bot]](https://github.com/apps/renovate)
-  + Update actions/upload-artifact action to v6 (#1081) @[renovate[bot]](https://github.com/apps/renovate)
-  + Update codecov/codecov-action action to v5.5.2 (#1080) @[renovate[bot]](https://github.com/apps/renovate)
-  + Update actions/checkout action to v6 (#1069) @[renovate[bot]](https://github.com/apps/renovate)
-  + Update actions/setup-python action to v6.2.0 (#1071) @[renovate[bot]](https://github.com/apps/renovate)
-  + Update release-drafter/release-drafter action to v6.2.0 (#1092) @[renovate[bot]](https://github.com/apps/renovate)
-  + Update dependency python to 3.14 (#1049) @[renovate[bot]](https://github.com/apps/renovate)
-  + Update github/codeql-action action to v4.31.2 (#1052) @[renovate[bot]](https://github.com/apps/renovate)
-  + Update actions/upload-artifact action to v5 (#1059) @[renovate[bot]](https://github.com/apps/renovate)
-  + Update appleboy/ssh-action action to v1.2.3 (#1062) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update github/codeql-action action to v4.35.1 (#1120) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update codecov/codecov-action action to v6 (#1119) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update actions/upload-artifact action to v7 (#1101) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update codecov/codecov-action action to v5.5.3 (#1112) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update release-drafter/release-drafter action to v6.4.0 (#1102) @[renovate[bot]](https://github.com/apps/renovate)
+  + Update github/codeql-action action to v4.34.1 (#1099) @[renovate[bot]](https://github.com/apps/renovate)
 dependencies:
   py3:
     - addon: 'xbmc.python'
