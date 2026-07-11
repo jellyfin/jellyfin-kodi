@@ -14,6 +14,7 @@ class SegmentChecker(threading.Thread):
         self.player = player
 
         threading.Thread.__init__(self)
+        self.daemon = True
 
     def stop(self):
         self.stop_thread = True
@@ -21,7 +22,9 @@ class SegmentChecker(threading.Thread):
     def run(self):
         LOG.info("--->[ segment checker ]")
 
-        while not self.stop_thread:
+        monitor = xbmc.Monitor()
+
+        while not self.stop_thread and not monitor.abortRequested():
             if self.player.isPlaying() and settings("mediaSegmentsEnabled.bool"):
                 try:
                     current_file = self.player.get_playing_file()
@@ -35,6 +38,7 @@ class SegmentChecker(threading.Thread):
                 except Exception as e:
                     LOG.exception("Error in segment checker loop: %s", e)
 
-            xbmc.sleep(1000)
+            if monitor.waitForAbort(1):
+                break
 
         LOG.info("---<[ segment checker ]")
