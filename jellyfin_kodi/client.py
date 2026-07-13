@@ -6,11 +6,10 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 import os
 
 import xbmc
-import xbmcaddon
 import xbmcvfs
 
-from .helper import translate, window, settings, addon_id, dialog, LazyLogger
-from .helper.utils import create_id, translate_path
+from .helper import translate, window, settings, dialog, LazyLogger
+from .helper.utils import create_id, get_addon, translate_path
 
 ##################################################################################################
 
@@ -21,11 +20,15 @@ LOG = LazyLogger(__name__)
 
 def get_addon_name():
     """Used for logging."""
-    return xbmcaddon.Addon(addon_id()).getAddonInfo("name").upper()
+    addon = get_addon()
+
+    return addon.getAddonInfo("name").upper() if addon else "JELLYFIN"
 
 
 def get_version():
-    return xbmcaddon.Addon(addon_id()).getAddonInfo("version")
+    addon = get_addon()
+
+    return addon.getAddonInfo("version") if addon else ""
 
 
 def get_platform():
