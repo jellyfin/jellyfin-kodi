@@ -435,10 +435,12 @@ class Player(xbmc.Player):
 
     def stop_playback(self):
         """Stop all playback. Check for external player for positionticks."""
+        # Playback we never tracked (live TV, another addon's file) still
+        # started a segment checker, so tear down state before the guard.
+        self._reset_state()
+
         if not self.played:
             return
-
-        self._reset_state()
 
         LOG.info("Played info: %s", self.played)
 
@@ -779,6 +781,7 @@ class Player(xbmc.Player):
     def _reset_segment_checker(self, restart=False):
         if self.segment_checker:
             self.segment_checker.stop()
+            self.segment_checker = None
 
         if restart:
             self.segment_checker = SegmentChecker(player=self)
