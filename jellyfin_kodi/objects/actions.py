@@ -606,23 +606,23 @@ class Actions(object):
 
                     try:
                         video_detail.setAspect(float(track.get("aspect") or 0))
-                    except Exception:
-                        pass
+                    except Exception as error:
+                        LOG.debug("Unable to set video aspect: %s", error)
 
                     try:
                         video_detail.setStereoMode(track.get("3d") or "")
-                    except Exception:
-                        pass
+                    except Exception as error:
+                        LOG.debug("Unable to set video stereo mode: %s", error)
 
                     if hdr_type:
                         try:
                             video_detail.setHDRType(hdr_type)
-                        except Exception:
-                            pass
+                        except Exception as error:
+                            LOG.debug("Unable to set video HDR type: %s", error)
 
                     tag.addVideoStream(video_detail)
-                except Exception:
-                    pass
+                except Exception as error:
+                    LOG.debug("Unable to add video stream details: %s", error)
 
             for track in obj["Streams"]["audio"]:
                 listitem.addStreamInfo(
@@ -634,8 +634,8 @@ class Actions(object):
                     audio_detail.setCodec(track.get("codec") or "")
                     audio_detail.setChannels(int(track.get("channels") or 0))
                     tag.addAudioStream(audio_detail)
-                except Exception:
-                    pass
+                except Exception as error:
+                    LOG.debug("Unable to add audio stream details: %s", error)
 
             for track in obj["Streams"]["subtitle"]:
                 listitem.addStreamInfo("subtitle", {"language": track})
@@ -644,8 +644,8 @@ class Actions(object):
                     subtitle_detail = xbmc.SubtitleStreamDetail()
                     subtitle_detail.setLanguage(track or "")
                     tag.addSubtitleStream(subtitle_detail)
-                except Exception:
-                    pass
+                except Exception as error:
+                    LOG.debug("Unable to add subtitle stream details: %s", error)
 
         listitem.setLabel(obj["Title"])
         listitem.setInfo("video", metadata)
