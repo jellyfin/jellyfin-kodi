@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-03-14 20:30+0000\n"
-"Last-Translator: Lofuuzi <lather0519@gmail.com>\n"
+"PO-Revision-Date: 2026-07-18 12:21+0000\n"
+"Last-Translator: CHO-HSUN-TE <ousi4706@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://"
 "translate.jellyfin.org/projects/jellyfin/jellyfin-kodi/zh_Hant/>\n"
 "Language: zh_tw\n"
@@ -1205,3 +1205,23 @@ msgstr "按「選擇」鍵跳過"
 msgctxt "#33261"
 msgid "Off"
 msgstr "關閉"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "快速連接"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "在Jellyfin應用程式或是網頁介面輸入這段代碼:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "等待驗證..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "此伺服器不支援快速連結"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "快速連結逾時，請再試一次。"

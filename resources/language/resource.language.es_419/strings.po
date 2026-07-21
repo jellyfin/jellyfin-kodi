@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2025-12-21 01:05+0000\n"
-"Last-Translator: Warper <warper@ymail.com>\n"
+"PO-Revision-Date: 2026-07-16 23:11+0000\n"
+"Last-Translator: Fabián Sanhueza <sanhuesoft@gmail.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.jellyfin.org/"
 "projects/jellyfin/jellyfin-kodi/es_419/>\n"
 "Language: es_419\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14\n"
+"X-Generator: Weblate 5.15.1\n"
 
 msgctxt "#33102"
 msgid "Resume the previous sync?"
@@ -1197,3 +1197,83 @@ msgstr "320"
 msgctxt "#33245"
 msgid "384"
 msgstr "384"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Conexión rápida"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Ingresa este código en la app de Jellyfin o en su interfaz web:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "Esperando autorización..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "La Conexión Rápida no está disponible en este servidor"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "Se agotó el tiempo de espera de Conexión Rápida. Inténtelo nuevamente."
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Salto de segmentos"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Activar el salto de segmentos"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Modo de omisión"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Saltar automáticamente"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Mostrar el botón para omitir"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Preguntar cada vez"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Introducción"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Créditos"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Recapitulación"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Vista previa"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Omitir"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "¿Omitir la intro?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "¿Omitir los créditos?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Comercial"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Presione SELECCIONAR para omitir"
