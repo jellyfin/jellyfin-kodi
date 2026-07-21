@@ -12,6 +12,9 @@ from .utils import translate_path
 
 LOG = LazyLogger(__name__)
 
+HDR10_PLUS = "hdr10plus"
+HDR10_PLUS_SYMBOL = "hdr10+"
+
 ##################################################################################################
 
 
@@ -108,12 +111,12 @@ class API(object):
             ]
 
             text = " ".join([_as_text(value) for value in values]).lower()
-            text = text.replace("hdr 10+", "hdr10+")
-            text = text.replace("hdr-10+", "hdr10+")
-            text = text.replace("hdr_10+", "hdr10+")
-            text = text.replace("hdr 10 plus", "hdr10plus")
-            text = text.replace("hdr-10-plus", "hdr10plus")
-            text = text.replace("hdr_10_plus", "hdr10plus")
+            text = text.replace("hdr 10+", HDR10_PLUS_SYMBOL)
+            text = text.replace("hdr-10+", HDR10_PLUS_SYMBOL)
+            text = text.replace("hdr_10+", HDR10_PLUS_SYMBOL)
+            text = text.replace("hdr 10 plus", HDR10_PLUS)
+            text = text.replace("hdr-10-plus", HDR10_PLUS)
+            text = text.replace("hdr_10_plus", HDR10_PLUS)
 
             dv_profile = track.get("DvProfile")
             has_dv_profile = dv_profile not in (None, "", 0, "0", "None", "none")
@@ -131,12 +134,12 @@ class API(object):
                 return "dolbyvision"
 
             if (
-                "hdr10plus" in text
-                or "hdr10+" in text
+                HDR10_PLUS in text
+                or HDR10_PLUS_SYMBOL in text
                 or "hdrplus" in text
                 or "hdr+" in text
             ):
-                return "hdr10plus"
+                return HDR10_PLUS
 
             if "hlg" in text or "arib-std-b67" in text:
                 return "hlg"
