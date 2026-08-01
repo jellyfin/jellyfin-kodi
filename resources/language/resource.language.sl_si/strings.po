@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-02-21 20:44+0000\n"
-"Last-Translator: Jure S <jure@agentmail.to>\n"
+"PO-Revision-Date: 2026-08-01 17:49+0000\n"
+"Last-Translator: FenomenaGaga <fenomenalna.gaga@gmail.com>\n"
 "Language-Team: Slovenian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/sl/>\n"
 "Language: sl_si\n"
@@ -1249,3 +1249,23 @@ msgstr "Preskoči uvod?"
 msgctxt "#33258"
 msgid "Skip credits?"
 msgstr "Preskoči špico?"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "Hitra povezava"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "Vpišite sledečo kodo v aplikacijo Jellyfin ali spletni vmesnik:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "Čakanje na avtorizacijo..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "Funkcija Hitra povezava ni omogočena na strežniku"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr "Čas je potekel. Prosimo poskusite ponovno."
