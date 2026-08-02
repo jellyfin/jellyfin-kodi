@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-06-25 01:26+0000\n"
+"PO-Revision-Date: 2026-08-02 18:29+0000\n"
 "Last-Translator: Gargotaire <gargots@gmail.com>\n"
 "Language-Team: Catalan <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ca/>\n"
@@ -177,7 +177,7 @@ msgstr "Mode de reproducció"
 
 msgctxt "#30512"
 msgid "Enable artwork caching"
-msgstr "Habilita la memòria cau d'imatges"
+msgstr "Habilita la memòria cau de les il·lustracions"
 
 msgctxt "#30515"
 msgid "Paging - max items requested (default: 15)"
@@ -381,7 +381,7 @@ msgstr "Elimina l'usuari"
 
 msgctxt "#33086"
 msgid "Remove all cached artwork?"
-msgstr "Desitgeu eliminar la memòria cau d'imatges?"
+msgstr "Desitgeu eliminar la memòria cau de les il·lustracions?"
 
 msgctxt "#33088"
 msgid "Database reset has completed, Kodi will now restart to apply the changes."
@@ -867,7 +867,7 @@ msgstr ""
 
 msgctxt "#33201"
 msgid "Max artwork resolution"
-msgstr "Resolució màxima per a les imatges"
+msgstr "Resolució màxima per a les il·lustracions"
 
 msgctxt "#33033"
 msgid "A new device Id has been generated. Kodi will now restart."
@@ -989,7 +989,7 @@ msgstr "Opcions de transcodificació"
 
 msgctxt "#33116"
 msgid "Compress artwork (reduces quality)"
-msgstr "Comprimeix les imatges (reduint la qualitat)"
+msgstr "Comprimeix les il·lustracions (reduint la qualitat)"
 
 msgctxt "#33118"
 msgid "You've changed the playback mode. Kodi needs to be reset to apply the change, would you like to do this now?"
