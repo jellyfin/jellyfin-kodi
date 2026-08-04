@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-08-04 00:35+0000\n"
+"PO-Revision-Date: 2026-08-04 22:40+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -518,11 +518,11 @@ msgstr "Sinchronizuoti temos mediją"
 
 msgctxt "#33061"
 msgid "Add/Remove user from the session"
-msgstr "Pridėti / pašalinti naudotoją iš sesijos"
+msgstr "Pridėti / pašalinti vartotoją iš sesijos"
 
 msgctxt "#33062"
 msgid "Add user"
-msgstr "Pridėti naudotoją"
+msgstr "Pridėti vartotoją"
 
 msgctxt "#33063"
 msgid "Remove user"
@@ -715,7 +715,7 @@ msgstr "Vykdoma"
 
 msgctxt "#33170"
 msgid "Unwatched"
-msgstr "Nežiūrėta"
+msgstr "Nežiūrėtas"
 
 msgctxt "#33171"
 msgid "By first letter"
@@ -901,7 +901,7 @@ msgstr ""
 
 msgctxt "#33054"
 msgid "Add user to session"
-msgstr "Pridėti naudotoją prie sesijos"
+msgstr "Pridėti vartotoją prie sesijos"
 
 msgctxt "#33101"
 msgid "Since you are using native playback mode with music enabled, do you want to import music rating from files?"
@@ -920,8 +920,8 @@ msgstr "Įjungti perkodavimo parinktį"
 msgctxt "#33107"
 msgid "Users added to the session (no space between users). (eg username,username2)"
 msgstr ""
-"Naudotojai, įtraukti į sesiją (be tarpo tarp naudotojų) (pvz., "
-"username,username2)"
+"Prie sesijos pridėti vartotojai (be tarpų tarp vartotojų) (pvz., vartotojo "
+"vardas, vartotojo vardas2)"
 
 msgctxt "#33115"
 msgid "Transcode options"
@@ -1046,7 +1046,6 @@ msgctxt "#33238"
 msgid "Maximum"
 msgstr "Maksimalus"
 
-#, fuzzy
 msgctxt "#30618"
 msgid "Quick Connect"
 msgstr "Quick Connect"
