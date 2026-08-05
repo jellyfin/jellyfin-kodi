@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-08-04 22:40+0000\n"
+"PO-Revision-Date: 2026-08-05 22:41+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -315,7 +315,7 @@ msgstr "Perkoduoti Hi10P"
 
 msgctxt "#30539"
 msgid "Login"
-msgstr "Prisijungti"
+msgstr "Prisijungimas"
 
 msgctxt "#30540"
 msgid "Manual login"
@@ -419,7 +419,7 @@ msgstr "Prisijungti prie"
 
 msgctxt "#30616"
 msgid "Connect"
-msgstr "Prisijungti"
+msgstr "Jungtis"
 
 msgctxt "#33006"
 msgid "Server is restarting"
