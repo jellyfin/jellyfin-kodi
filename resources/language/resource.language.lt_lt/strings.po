@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-08-06 09:43+0000\n"
+"PO-Revision-Date: 2026-08-06 19:11+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -59,7 +59,7 @@ msgstr "Jellyfin transkodavimas"
 
 msgctxt "#30406"
 msgid "Remove from favorites"
-msgstr "Pašalinti iš mėgstamiausių"
+msgstr "Pašalinti iš mėgstamų"
 
 msgctxt "#30408"
 msgid "Settings"
@@ -159,15 +159,15 @@ msgstr "Kiti Epizodai"
 
 msgctxt "#30180"
 msgid "Favorite Movies"
-msgstr "Mėgstamiausi Filmai"
+msgstr "Mėgstami Filmai"
 
 msgctxt "#30181"
 msgid "Favorite Shows"
-msgstr "Mėgstamiausios TV Laidos"
+msgstr "Mėgstamos TV Laidos"
 
 msgctxt "#30182"
 msgid "Favorite Episodes"
-msgstr "Mėgstamiausi Epizodai"
+msgstr "Mėgstami Epizodai"
 
 msgctxt "#30185"
 msgid "Boxsets"
@@ -223,7 +223,7 @@ msgstr "Jellyfin nustatymai"
 
 msgctxt "#30405"
 msgid "Add to favorites"
-msgstr "Pridėti prie mėgstamiausių"
+msgstr "Pridėti prie mėgstamų"
 
 msgctxt "#30409"
 msgid "Delete from Jellyfin"
@@ -494,7 +494,7 @@ msgstr "Vietinis (tiesioginiai keliai)"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
-msgstr "Nepaisyti papildomų epizodų nustatant kitą epizodą"
+msgstr "Ignoruoti specialius epizodus kituose epizoduose"
 
 msgctxt "#33047"
 msgid "Kodi can't locate file:"
@@ -964,7 +964,7 @@ msgstr "Jūsų „Jellyfin“ temos medija sinchronizuota su \"Kodi\""
 
 msgctxt "#33154"
 msgid "Add libraries"
-msgstr "Įtraukti bibliotekų"
+msgstr "Pridėti bibliotekas"
 
 msgctxt "#33155"
 msgid "The currently applied patch for Jellyfin for Kodi is corrupted! Please post to the Jellyfin for Kodi forums if this issue persists. This will need to be fixed as soon as possible."
@@ -1205,3 +1205,67 @@ msgstr "320"
 msgctxt "#33245"
 msgid "384"
 msgstr "384"
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "Segmentų praleidimas"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "Įgalinti segmentų praleidimą"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "Praleidimo režimas"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "Automatinis praleidimas"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "Rodyti praleidimo mygtuką"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "Klauskite kiekvieną kartą"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "Įžanga"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "Titrai"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "Praleisti titrus?"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "Santrauka"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "Išjungta"
+
+msgctxt "#33255"
+msgid "Preview"
+msgstr "Peržiūra"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "Praleisti"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "Praleisti įžangą?"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "Paspauskite Pasirinkti, kad praleistumėte"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "Reklama"
