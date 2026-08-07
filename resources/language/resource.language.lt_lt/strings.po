@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-08-07 07:15+0000\n"
+"PO-Revision-Date: 2026-08-07 19:25+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -494,7 +494,7 @@ msgstr "Vietinis (tiesioginiai keliai)"
 
 msgctxt "#30527"
 msgid "Ignore specials in next episodes"
-msgstr "Ignoruoti specialius epizodus kituose epizoduose"
+msgstr "Ignoruoti specialius epizodus sekančiose epizoduose"
 
 msgctxt "#33047"
 msgid "Kodi can't locate file:"
@@ -891,7 +891,7 @@ msgstr "Nuotolinis kelias"
 
 msgctxt "#30538"
 msgid "Max days in next episodes"
-msgstr "Maksimalus dienų skaičius kituose epizoduose"
+msgstr "Maksimalus dienų skaičius sekančiose epizoduose"
 
 msgctxt "#33035"
 msgid "Caution! If you choose Native mode, certain Jellyfin features will be missing, such as: Jellyfin cinema mode, direct stream/transcode options and parental access schedule."
