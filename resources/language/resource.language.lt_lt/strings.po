@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-08-07 19:25+0000\n"
+"PO-Revision-Date: 2026-08-08 02:48+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -780,7 +780,7 @@ msgstr "Pasirinkite norimas pašalinti bibliotekas"
 
 msgctxt "#33201"
 msgid "Max artwork resolution"
-msgstr "Maksimali paveikslo raiška"
+msgstr "Maksimali atvaizdo raiška"
 
 msgctxt "#33088"
 msgid "Database reset has completed, Kodi will now restart to apply the changes."
@@ -930,7 +930,7 @@ msgstr "Transkodavimo parinktys"
 
 msgctxt "#33116"
 msgid "Compress artwork (reduces quality)"
-msgstr "Suspausti paveikslą (sumažėja kokybė)"
+msgstr "Suspausti atvaizdą (sumažėja kokybė)"
 
 msgctxt "#33125"
 msgid "Enable remote control"
