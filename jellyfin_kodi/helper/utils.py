@@ -33,6 +33,20 @@ def addon_id():
     return "plugin.video.jellyfin"
 
 
+def get_addon():
+    """Kodi unregisters the add-on for a moment while it is installed over the
+    running copy, and xbmcaddon.Addon() raises RuntimeError('Unknown addon id')
+    for the whole of that window. settings() is reached from the log handler on
+    every record, so an uncaught one kills whichever thread happened to log --
+    including the service's own shutdown path, which then misses Kodi's five
+    second deadline and gets killed with its threads still running.
+    """
+    try:
+        return xbmcaddon.Addon(addon_id())
+    except RuntimeError:
+        return None
+
+
 def kodi_version():
     # Kodistubs returns empty string, causing Python 3 tests to choke on int()
     # TODO: Make Kodistubs version configurable for testing purposes
@@ -81,7 +95,13 @@ def settings(setting, value=None):
     """Get or add add-on settings.
     getSetting returns unicode object.
     """
-    addon = xbmcaddon.Addon(addon_id())
+    addon = get_addon()
+
+    if addon is None:
+        # Unregistered, see get_addon(). "" is what Kodi returns for a setting
+        # that was never set, so readers already cope with it; a write is lost
+        # either way, because the settings file is being replaced.
+        return ""
 
     if value is not None:
         if setting.endswith(".bool"):

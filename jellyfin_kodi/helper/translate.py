@@ -20,7 +20,13 @@ def translate(string):
     if not isinstance(string, int):
         string = STRINGS[string]
 
-    result = xbmcaddon.Addon("plugin.video.jellyfin").getLocalizedString(string)
+    try:
+        result = xbmcaddon.Addon("plugin.video.jellyfin").getLocalizedString(string)
+    except RuntimeError:
+        # Add-on briefly unregistered while it is installed over the running
+        # copy. Fall through to Kodi's own strings rather than take down the
+        # thread that wanted the text.
+        result = ""
 
     if not result:
         result = xbmc.getLocalizedString(string)
