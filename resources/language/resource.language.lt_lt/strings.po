@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-08-08 21:55+0000\n"
+"PO-Revision-Date: 2026-08-12 23:27+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -371,7 +371,7 @@ msgstr "Ištrinti failą iš Jellyfin?"
 
 msgctxt "#33016"
 msgid "Play trailers?"
-msgstr "Ar groti kino anonsus?"
+msgstr "Paleisti kino anonsus?"
 
 msgctxt "#33018"
 msgid "Gathering boxsets"
@@ -743,7 +743,7 @@ msgstr "Paleisti kino režimu"
 
 msgctxt "#33183"
 msgid "Enable the option to play with cinema mode"
-msgstr "Įjungti galimybę leisti kino režimu"
+msgstr "Įjungti galimybę paleisti kino režimu"
 
 msgctxt "#33184"
 msgid "Remove libraries"
