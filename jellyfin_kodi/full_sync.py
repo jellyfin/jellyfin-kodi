@@ -129,16 +129,7 @@ class FullSync(object):
         This allows us to restore a previous sync.
         """
         if self.sync["Libraries"]:
-
-            if not dialog("yesno", "{jellyfin}", translate(33102)):
-
-                if not dialog("yesno", "{jellyfin}", translate(33173)):
-                    dialog("ok", "{jellyfin}", translate(33122))
-
-                    raise LibraryException("ProgressStopped")
-                else:
-                    self.sync["Libraries"] = []
-                    self.sync["RestorePoint"] = {}
+            LOG.info("Resuming previous sync automatically.")
         else:
             LOG.info("generate full sync")
             libraries = []
