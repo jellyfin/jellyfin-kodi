@@ -597,16 +597,16 @@ class Player(xbmc.Player):
                 continue
 
             start, end = bounds
-            segment_key = segment_id
+            
             LOG.debug(
                 "Skip check: IN WINDOW! segment_key=%s, already_prompted=%s",
-                segment_key,
-                segment_key in self.skip_prompted,
+                segment_id,
+                segment_id in self.skip_prompted,
             )
-            if segment_key in self.skip_prompted:
+            if segment_id in self.skip_prompted:
                 continue
 
-            self.skip_prompted.add(segment_key)
+            self.skip_prompted.add(segment_id)
             LOG.debug(
                 "Skip check: Triggering _handle_skip_segment for %s", segment_type
             )
