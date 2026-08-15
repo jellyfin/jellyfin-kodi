@@ -879,18 +879,34 @@ class SortWorker(threading.Thread):
                     if media:
                         self.output[media].put({"Id": item_id, "Type": media})
                     else:
-                        items = database.get_media_by_parent_id(item_id)
-
-                        if not items:
+                        # Only cascade to children if this ID is a known library
+                        # view/folder. Without this guard, any unrecognized ID
+                        # triggers a parent lookup that can wipe every item sharing
+                        # the same jellyfin_parent_id (e.g., an entire library
+                        # section when only one item was deleted).
+                        view = database.get_view(item_id)
+                        if view is None:
                             LOG.info(
                                 "Could not find media %s in the jellyfin database.",
                                 item_id,
                             )
                         else:
-                            for item in items:
-                                self.output[item[1]].put(
-                                    {"Id": item[0], "Type": item[1]}
+                            items = database.get_media_by_parent_id(item_id)
+                            if not items:
+                                LOG.info(
+                                    "Could not find children for view %s in the jellyfin database.",
+                                    item_id,
                                 )
+                            else:
+                                LOG.debug(
+                                    "Cascading removal of %d children for view %s.",
+                                    len(items),
+                                    item_id,
+                                )
+                                for item in items:
+                                    self.output[item[1]].put(
+                                        {"Id": item[0], "Type": item[1]}
+                                    )
                 except Exception as error:
                     LOG.exception(error)
 
