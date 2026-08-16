@@ -341,6 +341,8 @@ class FullSync(object):
                         message=movie["Name"],
                     )
                     obj.movie(movie)
+                    obj.add_extras(movie)
+
                     processed_ids.append(movie["Id"])
 
         with self.video_database_locks() as (videodb, jellyfindb):
