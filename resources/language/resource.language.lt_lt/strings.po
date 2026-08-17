@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-08-17 17:57+0000\n"
+"PO-Revision-Date: 2026-08-17 21:29+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -135,7 +135,7 @@ msgstr "Garso kokybė"
 
 msgctxt "#30164"
 msgid "Audio max channels"
-msgstr "Maksimalus garso takelių kiekis"
+msgstr "Maksimalus garso kanalų skaičius"
 
 msgctxt "#30165"
 msgid "Allow burned subtitles"
@@ -219,7 +219,7 @@ msgstr "TV Laidos"
 
 msgctxt "#30401"
 msgid "Jellyfin options"
-msgstr "Jellyfin nustatymai"
+msgstr "Jellyfin parinktys"
 
 msgctxt "#30405"
 msgid "Add to favorites"
@@ -431,7 +431,7 @@ msgstr "Neteisingas vartotojo vardas arba slaptažodis"
 
 msgctxt "#33013"
 msgid "Choose the audio stream"
-msgstr "Pasirinkti garso takelį"
+msgstr "Pasirinkite garso srautą"
 
 msgctxt "#33021"
 msgid "Gathering:"
