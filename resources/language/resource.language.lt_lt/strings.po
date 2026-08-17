@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-08-12 23:27+0000\n"
+"PO-Revision-Date: 2026-08-17 17:57+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -115,7 +115,7 @@ msgstr "Įrenginio pavadinimas"
 
 msgctxt "#30024"
 msgid "Username"
-msgstr "Prisijungimo vardas"
+msgstr "Vartotojo vardas"
 
 msgctxt "#30091"
 msgid "Confirm file deletion"
@@ -383,7 +383,7 @@ msgstr "Pabaigta:"
 
 msgctxt "#30543"
 msgid "Username or email"
-msgstr "Naudotojo vardas ar e-paštas"
+msgstr "Vartotojo vardas ar e-paštas"
 
 msgctxt "#30613"
 msgid "Change Jellyfin Connect user"
@@ -403,7 +403,7 @@ msgstr "Pranešimai (sekundemis)"
 
 msgctxt "#30608"
 msgid "Username or password cannot be empty"
-msgstr "Prisijungimo vardas arba slaptažodis negali būti tušti"
+msgstr "Vartotojo vardas arba slaptažodis negali būti tušti"
 
 msgctxt "#30535"
 msgid "Generate a new device Id"
@@ -427,7 +427,7 @@ msgstr "Serveris persikrauna"
 
 msgctxt "#33009"
 msgid "Invalid username or password"
-msgstr "Neteisingas prisijungimo vardas arba slaptažodis"
+msgstr "Neteisingas vartotojo vardas arba slaptažodis"
 
 msgctxt "#33013"
 msgid "Choose the audio stream"
