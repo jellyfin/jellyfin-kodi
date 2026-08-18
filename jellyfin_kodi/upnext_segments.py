@@ -34,4 +34,8 @@ def build_segment_payload(item, segment_type, start, end):
 
 def broadcast_segment(item, segment_type, start, end):
     """Broadcast a segment using Up Next's normal integration protocol."""
-    event("upnext_data", build_segment_payload(item, segment_type, start, end), hexlify=True)
+    event(
+        "upnext_data",
+        build_segment_payload(item, segment_type, start, end),
+        hexlify=True,
+    )

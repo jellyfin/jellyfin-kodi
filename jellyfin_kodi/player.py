@@ -773,9 +773,7 @@ class Player(xbmc.Player):
                 profile.get("Interval"),
                 location["index"],
             )
-            image_path = download_thumbnail(
-                server, item["Id"], profile, location
-            )
+            image_path = download_thumbnail(server, item["Id"], profile, location)
             LOG.info(
                 "Trickplay thumbnail prepared for item %s: sheet=%s tile=%s",
                 item["Id"],

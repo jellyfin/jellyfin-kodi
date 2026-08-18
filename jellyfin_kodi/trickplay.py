@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Helpers for selecting Jellyfin trickplay thumbnails."""
+
 from __future__ import division, absolute_import, print_function, unicode_literals
 
 import os
@@ -11,6 +12,7 @@ TRICKPLAY_CACHE_MAX_BYTES = 64 * 1024 * 1024
 
 def trickplay_profiles(item):
     """Return trickplay profiles from the several server response shapes."""
+
     def flatten(value):
         if isinstance(value, list):
             profiles = []
@@ -99,9 +101,7 @@ def download_thumbnail(server, item_id, profile, location):
 
     prefix = "%s_%s_%s" % (item_id, profile["Width"], location["sheet"])
     sheet_path = os.path.join(cache_dir, "sheet_%s.jpg" % prefix)
-    image_path = os.path.join(
-        cache_dir, "thumb_%s_%s.jpg" % (prefix, location["tile"])
-    )
+    image_path = os.path.join(cache_dir, "thumb_%s_%s.jpg" % (prefix, location["tile"]))
     if os.path.exists(image_path):
         return image_path
 
