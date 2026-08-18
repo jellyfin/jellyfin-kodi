@@ -1257,3 +1257,6 @@ msgctxt "#33261"
 msgid "Off"
 msgstr "Off"
 
+msgctxt "#33262"
+msgid "Enable UpNext add-on integration"
+msgstr "Enable UpNext add-on integration"

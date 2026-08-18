@@ -49,6 +49,12 @@ class Player(xbmc.Player):
     def is_playing_file(self, file):
         return file in self.played
 
+    @staticmethod
+    def _upnext_enabled():
+        """Keep Up Next enabled for upgrades without the new setting yet."""
+        value = settings("enableUpNext.bool")
+        return value in ("", True, "true", "1")
+
     def onPlayBackStarted(self):
         """We may need to wait for info to be set in kodi monitor.
         Accounts for scenario where Kodi starts playback and exits immediately.
@@ -392,7 +398,8 @@ class Player(xbmc.Player):
             if played > 2.0 and not self.up_next:
 
                 self.up_next = True
-                self.next_up()
+                if self._upnext_enabled():
+                    self.next_up()
 
             if (item["CurrentPosition"] - previous) < 30:
                 return
@@ -609,7 +616,8 @@ class Player(xbmc.Player):
 
             if segment_type == "Credits" and not self.up_next:
                 self.up_next = True
-                self.next_up()
+                if self._upnext_enabled():
+                    self.next_up()
 
             self._handle_skip_segment(segment_type, start, end, skip_mode)
             break
