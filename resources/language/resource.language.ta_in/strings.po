@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-08-18 18:37+0000\n"
+"PO-Revision-Date: 2026-08-18 22:07+0000\n"
 "Last-Translator: deepak r <deepak.r232629@gmail.com>\n"
 "Language-Team: Tamil <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/ta/>\n"
@@ -1189,3 +1189,84 @@ msgstr "384"
 msgctxt "#33255"
 msgid "Preview"
 msgstr "முன்காட்சி"
+
+msgctxt "#30618"
+msgid "Quick Connect"
+msgstr "துரித இணைப்பு"
+
+msgctxt "#30619"
+msgid "Enter this code in the Jellyfin app or web interface:"
+msgstr "இந்தக் குறியீட்டை Jellyfin செயலி அல்லது இணைய இடைமுகத்தில் உள்ளிடவும்:"
+
+msgctxt "#30620"
+msgid "Waiting for authorization..."
+msgstr "அங்கீகாரத்திற்காகக் காத்திருக்கிறது..."
+
+msgctxt "#30621"
+msgid "Quick Connect is not available on this server"
+msgstr "இந்தச் சேவையகத்தில் 'துரித இணைப்பு' வசதி இல்லை"
+
+msgctxt "#30622"
+msgid "Quick Connect timed out. Please try again."
+msgstr ""
+"துரித இணைப்பு-இன் காலாவதி நேரம் முடிந்துவிட்டது. தயவுசெய்து மீண்டும் முயற்சிக்கவும்."
+
+msgctxt "#33246"
+msgid "Segment Skipping"
+msgstr "பகுதித்தாவல்"
+
+msgctxt "#33247"
+msgid "Enable segment skipping"
+msgstr "பகுதித்தாவல் செயல்படுத்த"
+
+msgctxt "#33248"
+msgid "Skip mode"
+msgstr "தவிர்க்கும் முறை"
+
+msgctxt "#33249"
+msgid "Auto skip"
+msgstr "தானாகத் தவிர்க்கவும்"
+
+msgctxt "#33250"
+msgid "Show skip button"
+msgstr "தவிர்க்கும் பொத்தானைக் காட்டு"
+
+msgctxt "#33251"
+msgid "Ask every time"
+msgstr "ஒவ்வொரு முறையும் கேளுங்கள்"
+
+msgctxt "#33252"
+msgid "Introduction"
+msgstr "அறிமுகம்"
+
+msgctxt "#33253"
+msgid "Credits"
+msgstr "பங்களிப்பாளர்கள்"
+
+msgctxt "#33254"
+msgid "Recap"
+msgstr "மீள்பார்வை"
+
+msgctxt "#33256"
+msgid "Skip"
+msgstr "தவிர்க்க"
+
+msgctxt "#33257"
+msgid "Skip intro?"
+msgstr "அறிமுகப் பகுதியைத் தவிர்க்கவா?"
+
+msgctxt "#33258"
+msgid "Skip credits?"
+msgstr "கிரிடிட்ஸைத் தவிர்க்கவா?"
+
+msgctxt "#33259"
+msgid "Commercial"
+msgstr "வணிக ரீதியான"
+
+msgctxt "#33260"
+msgid "Press SELECT to skip"
+msgstr "தவிர்க்க SELECT-ஐ அழுத்தவும்"
+
+msgctxt "#33261"
+msgid "Off"
+msgstr "அணை"
