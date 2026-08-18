@@ -14,6 +14,7 @@ from .jellyfin import Jellyfin
 from .helper import LazyLogger
 from .helper.utils import translate_path
 from .segments import SegmentChecker
+from .trickplay import download_thumbnail, select_profile, thumbnail_location
 
 #################################################################################################
 
@@ -30,6 +31,7 @@ class Player(xbmc.Player):
     skip_prompted = set()
     skip_dialog = None
     segment_checker = None
+    next_episode_artwork = None
 
     def __init__(self):
         xbmc.Player.__init__(self)
@@ -304,6 +306,8 @@ class Player(xbmc.Player):
         }
         if artwork["Backdrop"]:
             data["art"]["tvshow.fanart"] = artwork["Backdrop"][0]
+
+        self.next_episode_artwork = data["art"].get("thumb")
 
         next_info = {
             "play_info": {
@@ -611,7 +615,7 @@ class Player(xbmc.Player):
                 self.up_next = True
                 self.next_up()
 
-            self._handle_skip_segment(segment_type, start, end, skip_mode)
+            self._handle_skip_segment(item, segment_type, start, end, skip_mode)
             break
 
     def _get_segment_skip_mode(self, segment_type):
@@ -670,7 +674,7 @@ class Player(xbmc.Player):
 
         return safe_seek_time
 
-    def _handle_skip_segment(self, segment_type, start, end, mode):
+    def _handle_skip_segment(self, item, segment_type, start, end, mode):
         safe_end = self._get_safe_seek_time(end)
         if safe_end is None or safe_end <= start:
             return
@@ -698,9 +702,9 @@ class Player(xbmc.Player):
             )
 
         elif mode == 2:  # Show skip button
-            self._show_skip_button(segment_type, safe_end - start, safe_end)
+            self._show_skip_button(item, segment_type, safe_end - start, safe_end)
 
-    def _show_skip_button(self, segment_type, duration, end_time):
+    def _show_skip_button(self, item, segment_type, duration, end_time):
         LOG.debug(
             "_show_skip_button: type=%s, duration=%.1f, end_time=%.1f",
             segment_type,
@@ -722,7 +726,12 @@ class Player(xbmc.Player):
                 "default",
                 "1080i",
             )
-            self.skip_dialog.set_skip_info(segment_type, duration)
+            segment_image = ""
+            if segment_type == "Credits":
+                segment_image = self.next_episode_artwork or ""
+            else:
+                segment_image = self._get_trickplay_image(item, end_time)
+            self.skip_dialog.set_skip_info(segment_type, duration, segment_image)
             LOG.debug("_show_skip_button: calling show()")
             self.skip_dialog.show()
             LOG.debug("_show_skip_button: show() completed")
@@ -731,6 +740,56 @@ class Player(xbmc.Player):
             self._monitor_skip_dialog()
         except Exception as e:
             LOG.error("_show_skip_button error: %s", e, exc_info=True)
+
+    def _get_trickplay_image(self, item, segment_end):
+        """Return an authenticated trickplay tile URL, or an empty fallback."""
+        try:
+            if not settings("segmentTrickplayArtwork.bool"):
+                return ""
+
+            server = item["Server"]
+            metadata = server.jellyfin.get_item(item["Id"], fields="Trickplay")
+            profile = select_profile(metadata or {})
+            if not profile:
+                LOG.info(
+                    "Trickplay unavailable for item %s; using episode artwork",
+                    item["Id"],
+                )
+                return ""
+
+            location = thumbnail_location(profile, segment_end)
+            if location is None:
+                LOG.info(
+                    "No trickplay thumbnail after %.1fs for item %s; using episode artwork",
+                    segment_end,
+                    item["Id"],
+                )
+                return ""
+
+            LOG.info(
+                "Trickplay selected for item %s: width=%s interval=%sms index=%s",
+                item["Id"],
+                profile.get("Width"),
+                profile.get("Interval"),
+                location["index"],
+            )
+            image_path = download_thumbnail(
+                server, item["Id"], profile, location
+            )
+            LOG.info(
+                "Trickplay thumbnail prepared for item %s: sheet=%s tile=%s",
+                item["Id"],
+                location["sheet"],
+                location["tile"],
+            )
+            return image_path
+        except Exception as error:
+            LOG.info(
+                "Trickplay lookup failed for item %s; using episode artwork: %s",
+                item.get("Id", "unknown"),
+                error,
+            )
+            return ""
 
     def _monitor_skip_dialog(self):
         """Monitor the skip dialog and handle user input or timeout."""
@@ -773,6 +832,7 @@ class Player(xbmc.Player):
         self._reset_skip_dialog()
 
         self.up_next = False
+        self.next_episode_artwork = None
         self.skip_segments = {}
         self.skip_prompted = set()
 

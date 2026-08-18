@@ -431,6 +431,16 @@
 					<default>true</default>
 					<control type="toggle"/>
 				</setting>
+				<setting id="segmentTrickplayArtwork" type="boolean" label="33262" help="" parent="mediaSegmentsEnabled">
+					<level>0</level>
+					<default>false</default>
+					<dependencies>
+						<dependency type="visible">
+							<condition operator="is" setting="mediaSegmentsEnabled">true</condition>
+						</dependency>
+					</dependencies>
+					<control type="toggle"/>
+				</setting>
 				<setting id="skipIntroductionMode" type="integer" label="33252" help="" parent="mediaSegmentsEnabled">
 					<level>0</level>
 					<default>2</default>
