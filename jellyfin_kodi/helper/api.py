@@ -12,6 +12,9 @@ from .utils import translate_path
 
 LOG = LazyLogger(__name__)
 
+HDR10_PLUS = "hdr10plus"
+HDR10_PLUS_SYMBOL = "hdr10+"
+
 ##################################################################################################
 
 
@@ -83,18 +86,77 @@ class API(object):
         if container:
             container = container.split(",")[0]
 
-        for track in tracks:
+        def _as_text(value):
+            if value is None:
+                return ""
 
-            if "DvProfile" in track:
-                track["hdrtype"] = "dolbyvision"
-            elif track.get("VideoRangeType", "") in ["HDR10", "HDR10Plus"]:
-                track["hdrtype"] = "hdr10"
-            elif "HLG" in track.get("VideoRangeType", ""):
-                track["hdrtype"] = "hlg"
+            try:
+                return str(value)
+            except Exception:
+                return ""
+
+        def _normalize_hdr_type(track):
+            values = [
+                track.get("hdrtype"),
+                track.get("HdrType"),
+                track.get("hdr_type"),
+                track.get("VideoRangeType"),
+                track.get("VideoRange"),
+                track.get("DisplayTitle"),
+                track.get("Profile"),
+                track.get("CodecTag"),
+                track.get("ColorTransfer"),
+                track.get("ColorPrimaries"),
+                track.get("ColorSpace"),
+            ]
+
+            text = " ".join([_as_text(value) for value in values]).lower()
+            text = text.replace("hdr 10+", HDR10_PLUS_SYMBOL)
+            text = text.replace("hdr-10+", HDR10_PLUS_SYMBOL)
+            text = text.replace("hdr_10+", HDR10_PLUS_SYMBOL)
+            text = text.replace("hdr 10 plus", HDR10_PLUS)
+            text = text.replace("hdr-10-plus", HDR10_PLUS)
+            text = text.replace("hdr_10_plus", HDR10_PLUS)
+
+            dv_profile = track.get("DvProfile")
+            has_dv_profile = dv_profile not in (None, "", 0, "0", "None", "none")
+
+            if (
+                has_dv_profile
+                or "dolbyvision" in text
+                or "dolby vision" in text
+                or "dovi" in text
+                or "dvhe" in text
+                or "dvh1" in text
+                or "doviwithhdr10" in text
+                or "doviwithhlg" in text
+            ):
+                return "dolbyvision"
+
+            if (
+                HDR10_PLUS in text
+                or HDR10_PLUS_SYMBOL in text
+                or "hdrplus" in text
+                or "hdr+" in text
+            ):
+                return HDR10_PLUS
+
+            if "hlg" in text or "arib-std-b67" in text:
+                return "hlg"
+
+            if "hdr10" in text or "smpte2084" in text:
+                return "hdr10"
+
+            if "hdr" in text and "sdr" not in text:
+                return "hdr"
+
+            return ""
+
+        for track in tracks:
 
             track.update(
                 {
-                    "hdrtype": track.get("hdrtype", "").lower(),
+                    "hdrtype": _normalize_hdr_type(track),
                     "codec": track.get("Codec", "").lower(),
                     "profile": track.get("Profile", "").lower(),
                     "height": track.get("Height"),
