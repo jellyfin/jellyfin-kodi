@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-07-15 19:00+0000\n"
-"Last-Translator: Lofuuzi <lather0519@gmail.com>\n"
+"PO-Revision-Date: 2026-08-20 02:51+0000\n"
+"Last-Translator: Jacky He <hekinghung@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script, Hong Kong) <https://"
 "translate.jellyfin.org/projects/jellyfin/jellyfin-kodi/zh_Hant_HK/>\n"
 "Language: zh_hant_hk\n"
@@ -1180,7 +1180,7 @@ msgstr "片尾 (Credits)"
 
 msgctxt "#33254"
 msgid "Recap"
-msgstr "前情提要"
+msgstr "劇情回顧"
 
 msgctxt "#33255"
 msgid "Preview"
