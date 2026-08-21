@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-08-17 21:29+0000\n"
+"PO-Revision-Date: 2026-08-19 10:01+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -371,7 +371,7 @@ msgstr "Ištrinti failą iš Jellyfin?"
 
 msgctxt "#33016"
 msgid "Play trailers?"
-msgstr "Paleisti kino anonsus?"
+msgstr "Paleisti anonsus?"
 
 msgctxt "#33018"
 msgid "Gathering boxsets"

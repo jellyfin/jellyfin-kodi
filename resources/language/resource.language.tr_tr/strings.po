@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-04-06 08:50+0000\n"
-"Last-Translator: Yusuf Soyipek <yusuf@soyipek.com>\n"
+"PO-Revision-Date: 2026-08-19 13:29+0000\n"
+"Last-Translator: Ömür Ege Kiraz <omrkrz0678@gmail.com>\n"
 "Language-Team: Turkish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/tr/>\n"
 "Language: tr_tr\n"
@@ -277,7 +277,7 @@ msgstr "Cihaz ismi"
 
 msgctxt "#30004"
 msgid "Log level"
-msgstr "Log seviyesi"
+msgstr "Günlük kaydı seviyesi"
 
 msgctxt "#30003"
 msgid "Login method"
