@@ -1185,3 +1185,7 @@ msgstr "96"
 msgctxt "#30618"
 msgid "Quick Connect"
 msgstr "Quick Connect"
+
+msgctxt "#33262"
+msgid "Enable UpNext add-on integration"
+msgstr "Enable UpNext add-on integration"

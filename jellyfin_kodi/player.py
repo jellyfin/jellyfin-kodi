@@ -49,6 +49,11 @@ class Player(xbmc.Player):
     def is_playing_file(self, file):
         return file in self.played
 
+    @staticmethod
+    def _upnext_enabled():
+        # `utils.settings` normalises it if the setting is absent.
+        return settings("enableUpNext.bool")
+
     def onPlayBackStarted(self):
         """We may need to wait for info to be set in kodi monitor.
         Accounts for scenario where Kodi starts playback and exits immediately.
@@ -353,6 +358,33 @@ class Player(xbmc.Player):
                 except Exception:
                     pass
 
+    def _should_report_playback(self, item):
+        previous = item["CurrentPosition"]
+
+        try:
+            item["CurrentPosition"] = int(self.getTime())
+        except Exception as e:
+            # getTime() raises RuntimeError if nothing is playing
+            LOG.debug("Failed to get playback position: %s", e)
+            return False
+
+        if int(item["CurrentPosition"]) == 1:
+            return False
+
+        try:
+            played = (
+                float(item["CurrentPosition"] * 10000000) / int(item["Runtime"]) * 100
+            )
+        except ZeroDivisionError:  # Runtime is 0.
+            played = 0
+
+        if played > 2.0 and not self.up_next:
+            self.up_next = True
+            if self._upnext_enabled():
+                self.next_up()
+
+        return (item["CurrentPosition"] - previous) >= 30
+
     def report_playback(self, report=True):
         """Report playback progress to jellyfin server.
         Check if the user seek.
@@ -367,35 +399,8 @@ class Player(xbmc.Player):
         if window("jellyfin.external.bool"):
             return
 
-        if not report:
-            previous = item["CurrentPosition"]
-
-            try:
-                item["CurrentPosition"] = int(self.getTime())
-            except Exception as e:
-                # getTime() raises RuntimeError if nothing is playing
-                LOG.debug("Failed to get playback position: %s", e)
-                return
-
-            if int(item["CurrentPosition"]) == 1:
-                return
-
-            try:
-                played = (
-                    float(item["CurrentPosition"] * 10000000)
-                    / int(item["Runtime"])
-                    * 100
-                )
-            except ZeroDivisionError:  # Runtime is 0.
-                played = 0
-
-            if played > 2.0 and not self.up_next:
-
-                self.up_next = True
-                self.next_up()
-
-            if (item["CurrentPosition"] - previous) < 30:
-                return
+        if not report and not self._should_report_playback(item):
+            return
 
         result = JSONRPC("Application.GetProperties").execute(
             {"properties": ["volume", "muted"]}
@@ -609,7 +614,8 @@ class Player(xbmc.Player):
 
             if segment_type == "Credits" and not self.up_next:
                 self.up_next = True
-                self.next_up()
+                if self._upnext_enabled():
+                    self.next_up()
 
             self._handle_skip_segment(segment_type, start, end, skip_mode)
             break
