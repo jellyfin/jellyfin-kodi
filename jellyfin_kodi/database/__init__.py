@@ -116,16 +116,11 @@ class Database(object):
         database = types[database]
         dirs, files = xbmcvfs.listdir(databases)
         target = {"db_file": "", "version": 0}
+        database_pattern = re.compile(r"{}(\d+)\.db".format(re.escape(database)))
 
         for db_file in reversed(files):
-            if (
-                db_file.startswith(database)
-                and not db_file.endswith("-wal")
-                and not db_file.endswith("-shm")
-                and not db_file.endswith("db-journal")
-            ):
-
-                version_string = re.search("{}(.*).db".format(database), db_file)
+            version_string = database_pattern.fullmatch(db_file)
+            if version_string:
                 version = int(version_string.group(1))
 
                 if version > target["version"]:
