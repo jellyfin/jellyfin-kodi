@@ -47,7 +47,7 @@ class SkipDialog(xbmcgui.WindowXMLDialog):
 
         xbmcgui.WindowXMLDialog.__init__(self, *args)
 
-    def set_skip_info(self, segment_type, duration):
+    def set_skip_info(self, segment_type, duration, segment_image=""):
         """Set the skip segment information."""
         self._segment_type = segment_type
         self._duration = duration
@@ -70,6 +70,7 @@ class SkipDialog(xbmcgui.WindowXMLDialog):
         self.setProperty("skip_label", button_label)
         self.setProperty("segment_type", segment_type or "")
         self.setProperty("duration", duration_text)
+        self.setProperty("segment_image", segment_image or "")
 
         LOG.debug(
             "SkipDialog: set_skip_info segment=%s, label=%s", segment_type, button_label

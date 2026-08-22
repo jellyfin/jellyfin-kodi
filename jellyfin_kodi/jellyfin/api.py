@@ -142,8 +142,19 @@ class API(object):
     def get_media_folders(self):
         return self.users("/Items")
 
-    def get_item(self, item_id):
-        return self.users("/Items/%s" % item_id)
+    def get_item(self, item_id, fields=None):
+        params = {"Fields": fields} if fields else None
+        return self.users("/Items/%s" % item_id, params=params)
+
+    def trickplay_sheet_url(self, item_id, width, index):
+        token = self.config.data.get("auth.token")
+        url = jellyfin_url(
+            self.client,
+            "Videos/%s/Trickplay/%s/%s.jpg" % (item_id, width, index),
+        )
+        if token:
+            url += "?api_key=%s" % quote(str(token), safe="")
+        return url
 
     def get_items(self, item_ids):
         all_results = []

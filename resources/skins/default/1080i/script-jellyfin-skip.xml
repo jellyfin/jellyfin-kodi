@@ -4,6 +4,15 @@
 <window>
 	<defaultcontrol always="true">3012</defaultcontrol>
 	<onload>Dialog.Close(fullscreeninfo,true)</onload>
+	<variable name="SegmentImage">
+		<value condition="!String.IsEmpty(Window.Property(segment_image))">$INFO[Window.Property(segment_image)]</value>
+		<value condition="!String.IsEmpty(Player.Art(thumb))">$INFO[Player.Art(thumb)]</value>
+		<value condition="!String.IsEmpty(Player.Art(season.landscape))">$INFO[Player.Art(season.landscape)]</value>
+		<value condition="!String.IsEmpty(Player.Art(tvshow.landscape))">$INFO[Player.Art(tvshow.landscape)]</value>
+		<value condition="!String.IsEmpty(Player.Art(season.poster))">$INFO[Player.Art(season.poster)]</value>
+		<value condition="!String.IsEmpty(Player.Art(tvshow.poster))">$INFO[Player.Art(tvshow.poster)]</value>
+		<value condition="!String.IsEmpty(Player.Art(tvshow.fanart))">$INFO[Player.Art(tvshow.fanart)]</value>
+	</variable>
 	<controls>
 		<control type="group">
 			<!-- Slide in from right, positioned bottom-right -->
@@ -38,9 +47,19 @@
 					<height>80</height>
 					<texture colordiffuse="FF00A4DC">white.png</texture>
 				</control>
+				<!-- Trickplay thumbnail, when available -->
+				<control type="image">
+					<left>15</left>
+					<top>10</top>
+					<width>106</width>
+					<height>60</height>
+					<texture>$VAR[SegmentImage]</texture>
+					<aspectratio>keep</aspectratio>
+					<visible>!String.IsEmpty($VAR[SegmentImage])</visible>
+				</control>
 				<!-- Button group -->
 				<control type="group">
-					<left>15</left>
+					<left>125</left>
 					<top>12</top>
 					<control type="grouplist">
 						<orientation>horizontal</orientation>

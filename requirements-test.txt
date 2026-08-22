@@ -1,6 +1,7 @@
 setuptools >= 44.1.1  # Old setuptools causes script.module.addon.signals to fail installing
 python-dateutil >= 2.8.1
 requests >= 2.22
+Pillow >= 5.1.0
 PyYAML >= 6.0
 
 backports.zoneinfo; python_version < "3.9"
