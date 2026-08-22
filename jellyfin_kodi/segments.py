@@ -20,8 +20,9 @@ class SegmentChecker(threading.Thread):
 
     def run(self):
         LOG.info("--->[ segment checker ]")
+        monitor = xbmc.Monitor()
 
-        while not self.stop_thread:
+        while not self.stop_thread and not monitor.abortRequested():
             if self.player.isPlaying() and settings("mediaSegmentsEnabled.bool"):
                 try:
                     current_file = self.player.get_playing_file()
