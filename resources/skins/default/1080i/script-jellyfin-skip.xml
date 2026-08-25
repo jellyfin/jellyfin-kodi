@@ -4,15 +4,6 @@
 <window>
 	<defaultcontrol always="true">3012</defaultcontrol>
 	<onload>Dialog.Close(fullscreeninfo,true)</onload>
-	<variable name="SegmentImage">
-		<value condition="!String.IsEmpty(Window.Property(segment_image))">$INFO[Window.Property(segment_image)]</value>
-		<value condition="!String.IsEmpty(Player.Art(thumb))">$INFO[Player.Art(thumb)]</value>
-		<value condition="!String.IsEmpty(Player.Art(season.landscape))">$INFO[Player.Art(season.landscape)]</value>
-		<value condition="!String.IsEmpty(Player.Art(tvshow.landscape))">$INFO[Player.Art(tvshow.landscape)]</value>
-		<value condition="!String.IsEmpty(Player.Art(season.poster))">$INFO[Player.Art(season.poster)]</value>
-		<value condition="!String.IsEmpty(Player.Art(tvshow.poster))">$INFO[Player.Art(tvshow.poster)]</value>
-		<value condition="!String.IsEmpty(Player.Art(tvshow.fanart))">$INFO[Player.Art(tvshow.fanart)]</value>
-	</variable>
 	<controls>
 		<control type="group">
 			<!-- Slide in from right, positioned bottom-right -->
@@ -26,16 +17,16 @@
 			</animation>
 			<!-- Position bottom right -->
 			<left>1420</left>
-			<top>920</top>
+			<top>707</top>
 			<control type="group">
 				<width>460</width>
-				<height>80</height>
+				<height>333</height>
 				<!-- Background -->
 				<control type="image">
 					<left>0</left>
 					<top>0</top>
 					<width>460</width>
-					<height>80</height>
+					<height>333</height>
 					<texture colordiffuse="E6000000">white.png</texture>
 					<aspectratio>stretch</aspectratio>
 				</control>
@@ -44,23 +35,77 @@
 					<left>0</left>
 					<top>0</top>
 					<width>4</width>
-					<height>80</height>
+					<height>333</height>
 					<texture colordiffuse="FF00A4DC">white.png</texture>
 				</control>
-				<!-- Trickplay thumbnail, when available -->
+				<!-- Segment artwork fallback: Trickplay, episode, then series art. -->
 				<control type="image">
 					<left>15</left>
-					<top>10</top>
-					<width>106</width>
-					<height>60</height>
-					<texture>$VAR[SegmentImage]</texture>
+					<top>15</top>
+					<width>430</width>
+					<height>242</height>
+					<texture>$INFO[Window.Property(segment_image)]</texture>
 					<aspectratio>keep</aspectratio>
-					<visible>!String.IsEmpty($VAR[SegmentImage])</visible>
+					<visible>!String.IsEmpty(Window.Property(segment_image))</visible>
+				</control>
+				<control type="image">
+					<left>15</left>
+					<top>15</top>
+					<width>430</width>
+					<height>242</height>
+					<texture>$INFO[Player.Art(thumb)]</texture>
+					<aspectratio>keep</aspectratio>
+					<visible>String.IsEmpty(Window.Property(segment_image)) + !String.IsEmpty(Player.Art(thumb))</visible>
+				</control>
+				<control type="image">
+					<left>15</left>
+					<top>15</top>
+					<width>430</width>
+					<height>242</height>
+					<texture>$INFO[Player.Art(season.landscape)]</texture>
+					<aspectratio>keep</aspectratio>
+					<visible>String.IsEmpty(Window.Property(segment_image)) + String.IsEmpty(Player.Art(thumb)) + !String.IsEmpty(Player.Art(season.landscape))</visible>
+				</control>
+				<control type="image">
+					<left>15</left>
+					<top>15</top>
+					<width>430</width>
+					<height>242</height>
+					<texture>$INFO[Player.Art(tvshow.landscape)]</texture>
+					<aspectratio>keep</aspectratio>
+					<visible>String.IsEmpty(Window.Property(segment_image)) + String.IsEmpty(Player.Art(thumb)) + String.IsEmpty(Player.Art(season.landscape)) + !String.IsEmpty(Player.Art(tvshow.landscape))</visible>
+				</control>
+				<control type="image">
+					<left>15</left>
+					<top>15</top>
+					<width>430</width>
+					<height>242</height>
+					<texture>$INFO[Player.Art(season.poster)]</texture>
+					<aspectratio>keep</aspectratio>
+					<visible>String.IsEmpty(Window.Property(segment_image)) + String.IsEmpty(Player.Art(thumb)) + String.IsEmpty(Player.Art(season.landscape)) + String.IsEmpty(Player.Art(tvshow.landscape)) + !String.IsEmpty(Player.Art(season.poster))</visible>
+				</control>
+				<control type="image">
+					<left>15</left>
+					<top>15</top>
+					<width>430</width>
+					<height>242</height>
+					<texture>$INFO[Player.Art(tvshow.poster)]</texture>
+					<aspectratio>keep</aspectratio>
+					<visible>String.IsEmpty(Window.Property(segment_image)) + String.IsEmpty(Player.Art(thumb)) + String.IsEmpty(Player.Art(season.landscape)) + String.IsEmpty(Player.Art(tvshow.landscape)) + String.IsEmpty(Player.Art(season.poster)) + !String.IsEmpty(Player.Art(tvshow.poster))</visible>
+				</control>
+				<control type="image">
+					<left>15</left>
+					<top>15</top>
+					<width>430</width>
+					<height>242</height>
+					<texture>$INFO[Player.Art(tvshow.fanart)]</texture>
+					<aspectratio>keep</aspectratio>
+					<visible>String.IsEmpty(Window.Property(segment_image)) + String.IsEmpty(Player.Art(thumb)) + String.IsEmpty(Player.Art(season.landscape)) + String.IsEmpty(Player.Art(tvshow.landscape)) + String.IsEmpty(Player.Art(season.poster)) + String.IsEmpty(Player.Art(tvshow.poster)) + !String.IsEmpty(Player.Art(tvshow.fanart))</visible>
 				</control>
 				<!-- Button group -->
 				<control type="group">
-					<left>125</left>
-					<top>12</top>
+					<left>15</left>
+					<top>267</top>
 					<control type="grouplist">
 						<orientation>horizontal</orientation>
 						<height>56</height>
@@ -69,7 +114,7 @@
 						<control type="button" id="3012">
 							<label>$INFO[Window.Property(skip_label)]</label>
 							<height>56</height>
-							<width min="250">auto</width>
+							<width>310</width>
 							<font>font13</font>
 							<textoffsetx>20</textoffsetx>
 							<textcolor>FFFFFFFF</textcolor>
@@ -85,7 +130,7 @@
 						<control type="button" id="3013">
 							<label>Close</label>
 							<height>56</height>
-							<width min="60">auto</width>
+							<width>110</width>
 							<font>font13</font>
 							<textoffsetx>15</textoffsetx>
 							<textcolor>FFFFFFFF</textcolor>
