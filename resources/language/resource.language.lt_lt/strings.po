@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-08-19 10:01+0000\n"
+"PO-Revision-Date: 2026-08-24 09:45+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -19,7 +19,7 @@ msgstr "Priverstinis HTTP atkūrimas"
 
 msgctxt "#30022"
 msgid "Advanced"
-msgstr "Papildomi"
+msgstr "Išplėstiniai"
 
 msgctxt "#30115"
 msgid "For Episodes"
@@ -510,7 +510,7 @@ msgstr "Leisti ekrano užsklandą sinchronizavimo metu"
 
 msgctxt "#33049"
 msgid "New"
-msgstr "Naujas"
+msgstr "Nauja"
 
 msgctxt "#33060"
 msgid "Sync theme media"
@@ -522,7 +522,7 @@ msgstr "Pridėti / pašalinti vartotoją iš sesijos"
 
 msgctxt "#33062"
 msgid "Add user"
-msgstr "Pridėti vartotoją"
+msgstr "Pridėti naudotoją"
 
 msgctxt "#33063"
 msgid "Remove user"
