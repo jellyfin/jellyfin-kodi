@@ -1,21 +1,28 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
 
+from jellyfin_kodi.player import Player
+
 import pytest
 
+@pytest.fixture
+def player():
+    return Player()
 
 class TestMediaSegmentsConversion:
 
-    def test_convert_media_segments_response(self):
+    def test_convert_media_segments_response(self, player):
         media_segments_response = {
             "Items": [
                 {
+                    "Id": "id-1",
                     "ItemId": "test-item-id",
                     "Type": "Intro",
                     "StartTicks": 425000000,
                     "EndTicks": 1220000000,
                 },
                 {
+                    "Id": "id-2",
                     "ItemId": "test-item-id",
                     "Type": "Outro",
                     "StartTicks": 24580000000,
@@ -24,38 +31,68 @@ class TestMediaSegmentsConversion:
             ]
         }
 
-        type_map = {
-            "Intro": "Introduction",
-            "Outro": "Credits",
-            "Recap": "Recap",
-            "Preview": "Preview",
-            "Commercial": "Commercial",
+        segments = player._convert_media_segments(media_segments_response)
+
+        assert "id-1" in segments
+        assert "id-2" in segments
+        assert segments["id-1"]["Start"] == pytest.approx(42.5)
+        assert segments["id-1"]["End"] == pytest.approx(122.0)
+        assert segments["id-2"]["Start"] == pytest.approx(2458.0)
+        assert segments["id-2"]["End"] == pytest.approx(2520.0)
+
+
+    def test_convert_media_segments_response_allows_multiple_of_same_type(self, player):
+        media_segments_response = {
+            "Items": [
+                {
+                    "Id": "id-1",
+                    "ItemId": "test-item-id",
+                    "Type": "Commercial",
+                    "StartTicks": 425000000,
+                    "EndTicks": 1220000000,
+                },
+                {
+                    "Id": "id-2",
+                    "ItemId": "test-item-id",
+                    "Type": "Commercial",
+                    "StartTicks": 1400000000,
+                    "EndTicks": 1500000000,
+                },
+                {
+                    "Id": "id-3",
+                    "ItemId": "test-item-id",
+                    "Type": "Outro",
+                    "StartTicks": 24580000000,
+                    "EndTicks": 25200000000,
+                },
+            ]
         }
 
-        segments = {}
-        for item in media_segments_response["Items"]:
-            seg_type = type_map.get(item.get("Type"))
-            if seg_type:
-                segments[seg_type] = {
-                    "EpisodeId": item.get("ItemId"),
-                    "Start": item.get("StartTicks", 0) / 10000000.0,
-                    "End": item.get("EndTicks", 0) / 10000000.0,
-                }
+        segments = player._convert_media_segments(media_segments_response)
 
-        assert "Introduction" in segments
-        assert "Credits" in segments
-        assert segments["Introduction"]["Start"] == pytest.approx(42.5)
-        assert segments["Introduction"]["End"] == pytest.approx(122.0)
-        assert segments["Credits"]["Start"] == pytest.approx(2458.0)
-        assert segments["Credits"]["End"] == pytest.approx(2520.0)
+        assert "id-1" in segments
+        assert "id-2" in segments
+        assert "id-3" in segments
+        assert segments["id-1"]["Start"] == pytest.approx(42.5)
+        assert segments["id-1"]["End"] == pytest.approx(122.0)
+        assert segments["id-2"]["Start"] == pytest.approx(140.0)
+        assert segments["id-2"]["End"] == pytest.approx(150.0)
+        assert segments["id-3"]["Start"] == pytest.approx(2458.0)
+        assert segments["id-3"]["End"] == pytest.approx(2520.0)
 
-    def test_convert_empty_media_segments(self):
+    def test_convert_empty_media_segments(self, player):
         response = {"Items": []}
-        assert len(response["Items"]) == 0
+        
+        segments = player._convert_media_segments(response)
 
-    def test_convert_media_segments_missing_items(self):
+        assert segments is None
+
+    def test_convert_media_segments_missing_items(self, player):
         response = {}
-        assert "Items" not in response
+        
+        segments = player._convert_media_segments(response)
+
+        assert segments is None
 
 
 class TestSegmentDetection:
@@ -77,15 +114,9 @@ class TestSegmentDetection:
         in_window = segment_start <= current_position <= segment_start + 5
         assert in_window == expected_in_window
 
-    def test_segment_key_generation(self):
-        item_id = "a1b2c3d4"
-        segment_type = "Introduction"
-        segment_key = "%s:%s" % (item_id, segment_type)
-        assert segment_key == "a1b2c3d4:Introduction"
-
     def test_skip_prompted_tracking(self):
         skip_prompted = set()
-        segment_key = "item123:Introduction"
+        segment_key = "id-1"
 
         assert segment_key not in skip_prompted
 
