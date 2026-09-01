@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function, unicode_literals
-
 from jellyfin_kodi.player import Player
+from unittest.mock import Mock
 
+import jellyfin_kodi.player as player_module
 import pytest
 
 @pytest.fixture
@@ -97,82 +98,109 @@ class TestMediaSegmentsConversion:
 
 class TestSegmentDetection:
 
-    @pytest.mark.parametrize(
-        "current_position,segment_start,segment_end,expected_in_window",
+    def test_segment_skip_can_only_be_prompted_once_for_the_same_segment(self, monkeypatch, player):
+        
+        player.skip_prompted = set()
+
+        skip_mode = 1
+        settings = Mock(return_value=skip_mode)
+        monkeypatch.setattr(player_module, "settings", settings)
+
+        item = {"Id": "test-item-id"}
+
+        segments = {
+            "aa1": {
+                "EpisodeId": "test-item-id",
+                "Type": "Commercial",
+                "Start": 10,
+                "End": 20,
+            }
+        }
+
+        player.skip_segments["test-item-id"] = segments
+        
+        player.check_skip_segments(item, 11)
+        player.check_skip_segments(item, 12)
+
+        assert "aa1" in player.skip_prompted
+        assert len(player.skip_prompted) == 1
+
+    @pytest.mark.parametrize("current_position,segment_start,segment_end,should_skip",
         [
             (42.5, 42.5, 122.0, True),
             (45.0, 42.5, 122.0, True),
-            (47.5, 42.5, 122.0, True),
-            (48.0, 42.5, 122.0, False),
-            (40.0, 42.5, 122.0, False),
-            (100.0, 42.5, 122.0, False),
+            (122.0, 42.5, 122.0, True),
+            (41.0, 42.5, 122.0, False),
+            (123.0, 42.5, 122.0, False)
         ],
     )
-    def test_segment_detection_window(
-        self, current_position, segment_start, segment_end, expected_in_window
-    ):
-        in_window = segment_start <= current_position <= segment_start + 5
-        assert in_window == expected_in_window
+    def test_segment_detection_window(self, monkeypatch, player, current_position, segment_start, segment_end, should_skip):
+        
+        player.skip_prompted = set()
 
-    def test_skip_prompted_tracking(self):
-        skip_prompted = set()
-        segment_id = "id-1"
+        skip_mode = 1
+        settings = Mock(return_value=skip_mode)
+        monkeypatch.setattr(player_module, "settings", settings)
 
-        assert segment_id not in skip_prompted
+        item = {"Id": "test-item-id"}
 
-        skip_prompted.add(segment_id)
-        assert segment_id in skip_prompted
-
-        skip_prompted.add(segment_id)
-        assert len(skip_prompted) == 1
-
-
-class TestSkipModes:
-
-    def test_skip_mode_values(self):
-        AUTO_SKIP = 0
-        SHOW_BUTTON = 1
-        ASK_EVERY_TIME = 2
-
-        assert AUTO_SKIP == 0
-        assert SHOW_BUTTON == 1
-        assert ASK_EVERY_TIME == 2
-
-    def test_segment_type_settings_map(self):
-        setting_map = {
-            "Introduction": "skipIntroduction.bool",
-            "Credits": "skipCredits.bool",
-            "Recap": "skipRecap.bool",
-            "Preview": "skipPreview.bool",
-            "Commercial": "skipCommercial.bool",
+        segments = {
+            "aa1": {
+                "EpisodeId": "test-item-id",
+                "Type": "Commercial",
+                "Start": segment_start,
+                "End": segment_end,
+            }
         }
 
-        assert "Introduction" in setting_map
-        assert "Credits" in setting_map
-        assert "Recap" in setting_map
-        assert "Preview" in setting_map
-        assert "Commercial" in setting_map
-        assert setting_map["Introduction"] == "skipIntroduction.bool"
+        player.skip_segments["test-item-id"] = segments
+        
+        player.check_skip_segments(item, current_position)
+
+        if should_skip:
+            assert "aa1" in player.skip_prompted
+            assert len(player.skip_prompted) == 1
+        else:
+            assert len(player.skip_prompted) == 0
 
 
-class TestDurationFormatting:
-
-    @pytest.mark.parametrize(
-        "duration_seconds,expected_text",
+    @pytest.mark.parametrize("segment_type,should_skip",
         [
-            (30, "30s"),
-            (60, "1m 0s"),
-            (90, "1m 30s"),
-            (120, "2m 0s"),
-            (150, "2m 30s"),
-            (0, "0s"),
+            ("Introduction", True),
+            ("Credits", True),
+            ("Recap", True),
+            ("Preview", True),
+            ("Commercial", True),
+            ("Unknown", False)
         ],
     )
-    def test_duration_formatting(self, duration_seconds, expected_text):
-        minutes = int(duration_seconds // 60)
-        seconds = int(duration_seconds % 60)
-        if minutes > 0:
-            duration_text = "%dm %ds" % (minutes, seconds)
+    def test_only_mapped_segments_skipped(self, monkeypatch, player, segment_type, should_skip):
+        
+        player.skip_prompted = set()
+
+        player.played = {"":{"Type": "Episode"}} # "Credits" type falls into next_up() which requires this value to be set (and an empty string is the default stub filename)
+        
+        skip_mode = 1
+        settings = Mock(return_value=skip_mode)
+        monkeypatch.setattr(player_module, "settings", settings)
+
+        item = {"Id": "test-item-id"}
+
+        segments = {
+            "aa1": {
+                "EpisodeId": "test-item-id",
+                "Type": segment_type,
+                "Start": 10,
+                "End": 20,
+            }
+        }
+
+        player.skip_segments["test-item-id"] = segments
+        
+        player.check_skip_segments(item, 11)
+
+        if should_skip:
+            assert "aa1" in player.skip_prompted
+            assert len(player.skip_prompted) == 1
         else:
-            duration_text = "%ds" % seconds
-        assert duration_text == expected_text
+            assert len(player.skip_prompted) == 0
