@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-08-24 09:45+0000\n"
+"PO-Revision-Date: 2026-09-01 14:41+0000\n"
 "Last-Translator: Vitalijus <vitalijus.n@gmail.com>\n"
 "Language-Team: Lithuanian <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/lt/>\n"
@@ -43,11 +43,11 @@ msgstr "Neseniai pridėti epizodai"
 
 msgctxt "#30253"
 msgid "Favourite Home Videos"
-msgstr "Mėgstamiausi Naminiai įrašai"
+msgstr "Mėgstami Naminiai įrašai"
 
 msgctxt "#30255"
 msgid "Favourite Albums"
-msgstr "Mėgstamiausi Albumai"
+msgstr "Mėgstami Albumai"
 
 msgctxt "#30302"
 msgid "Movies"
@@ -203,7 +203,7 @@ msgstr "Neseniai pridėtos Nuotraukos"
 
 msgctxt "#30254"
 msgid "Favourite Photos"
-msgstr "Mėgstamiausios Nuotraukos"
+msgstr "Mėgstamos Nuotraukos"
 
 msgctxt "#30256"
 msgid "Recently added Music videos"
@@ -707,7 +707,7 @@ msgstr "(dinaminis)"
 
 msgctxt "#33168"
 msgid "Favourites"
-msgstr "Mėgstamiausi"
+msgstr "Mėgstami"
 
 msgctxt "#33169"
 msgid "In Progress"
