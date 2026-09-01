@@ -116,14 +116,14 @@ class TestSegmentDetection:
 
     def test_skip_prompted_tracking(self):
         skip_prompted = set()
-        segment_key = "id-1"
+        segment_id = "id-1"
 
-        assert segment_key not in skip_prompted
+        assert segment_id not in skip_prompted
 
-        skip_prompted.add(segment_key)
-        assert segment_key in skip_prompted
+        skip_prompted.add(segment_id)
+        assert segment_id in skip_prompted
 
-        skip_prompted.add(segment_key)
+        skip_prompted.add(segment_id)
         assert len(skip_prompted) == 1
 
 
