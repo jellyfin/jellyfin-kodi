@@ -1,0 +1,57 @@
+###############################################################################
+# Auto Label — centralized release-drafter autolabeler
+#
+# This caller delegates to the reusable workflow maintained in
+# jellyfin/jellyfin-meta-plugins. That workflow pins the v7.7.0 autolabeler
+# action and reads the shared `autolabeler:` rules from the global config.
+# Keeping the implementation centralized prevents every Jellyfin repository
+# from independently copying security-sensitive labeling logic.
+#
+# WHY pull_request_target
+#   `pull_request` cannot label fork PRs: its token is read-only for forks,
+#   so a matching label write receives 403 and the PR remains unlabeled.
+#   `pull_request_target` runs the base repository workflow for both same-repo
+#   and fork PRs and grants the narrowly scoped pull-requests: write token.
+#
+# WHY THIS CALLER IS SAFE AS WRITTEN
+#   The workflow file is read from the base branch, not the PR. The called
+#   workflow performs API-only metadata/file matching and adds labels; it does
+#   not check out the PR, execute PR code, run shell commands, or interpolate
+#   PR-controlled strings into a shell. The caller passes the ephemeral
+#   github.token, not JF_BOT_TOKEN or another broad repository credential.
+#
+# !! DO NOT ADD STEPS, CHECKOUTS, OR SHELL COMMANDS HERE !!
+#   pull_request_target has access to repository secrets. Adding a checkout of
+#   github.event.pull_request.head.sha, a build/test command, or a run: block
+#   containing github.event.pull_request.* would turn attacker-controlled PR
+#   data/code into a privileged execution path. Keep PR builds/tests in a
+#   separate plain `pull_request` workflow with no secrets. Keep other
+#   privileged PR automation in separate minimal reusable workflows.
+#
+# The reusable workflow is pinned to a commit for supply-chain stability.
+# Update that pin only after reviewing the corresponding upstream workflow.
+###############################################################################
+
+name: Auto Label
+
+on:
+  pull_request_target:
+    branches:
+      - master
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: autolabel-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  autolabel:
+    uses: jellyfin/jellyfin-meta-plugins/.github/workflows/autolabel.yaml@2d1d8651c878e11ce83de5ecdbedb31e70ebc6f0
+    with:
+      repository-name: jellyfin/jellyfin-kodi
+    secrets:
+      token: ${{ github.token }}
