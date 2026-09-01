@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-07-05 21:03+0000\n"
-"Last-Translator: Ulrik <ulrik.johansen@me.com>\n"
+"PO-Revision-Date: 2026-08-25 01:53+0000\n"
+"Last-Translator: Centauri <lillelau4@gmail.com>\n"
 "Language-Team: Danish <https://translate.jellyfin.org/projects/jellyfin/"
 "jellyfin-kodi/da/>\n"
 "Language: da_dk\n"
@@ -1191,7 +1191,7 @@ msgstr "Indtast denne kode i Jellyfin-appen eller webbrugerfladen:"
 
 msgctxt "#30620"
 msgid "Waiting for authorization..."
-msgstr "Venter på godkendelse…"
+msgstr "Venter på tilladelse…"
 
 msgctxt "#30621"
 msgid "Quick Connect is not available on this server"
