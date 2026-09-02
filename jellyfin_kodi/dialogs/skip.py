@@ -3,7 +3,7 @@ from __future__ import division, absolute_import, print_function, unicode_litera
 
 import xbmcgui
 
-from ..helper import LazyLogger
+from ..helper import LazyLogger, translate
 
 LOG = LazyLogger(__name__)
 
@@ -17,13 +17,13 @@ ACTION_NAV_BACK = 92
 SKIP_BUTTON = 3012
 CLOSE_BUTTON = 3013
 
-# String IDs for segment types - using shorter labels
-SEGMENT_LABELS = {
-    "Introduction": "Intro",
-    "Credits": "Outro",
-    "Recap": "Recap",
-    "Preview": "Preview",
-    "Commercial": "Ad",
+# Localized short label IDs for known segment types
+SEGMENT_LABEL_IDS = {
+    "Introduction": 33266,
+    "Credits": 33267,
+    "Recap": 33254,
+    "Preview": 33255,
+    "Commercial": 33268,
 }
 
 
@@ -56,15 +56,18 @@ class SkipDialog(xbmcgui.WindowXMLDialog):
         minutes = int(duration // 60)
         seconds = int(duration % 60)
         if minutes > 0:
-            duration_text = "{0}m {1}s".format(minutes, seconds)
+            duration_text = translate(33264).format(minutes, seconds)
         else:
-            duration_text = "{0}s".format(seconds)
+            duration_text = translate(33265).format(seconds)
 
         # Get short segment type label
-        segment_label = SEGMENT_LABELS.get(segment_type, segment_type or "Segment")
+        segment_label_id = SEGMENT_LABEL_IDS.get(segment_type)
+        segment_label = (
+            translate(segment_label_id) if segment_label_id else translate(33269)
+        )
 
         # Set button label: "Skip Intro (1m 40s)"
-        button_label = "Skip {0} ({1})".format(segment_label, duration_text)
+        button_label = translate(33262).format(segment_label, duration_text)
 
         # Use setProperty so it's available to the skin
         self.setProperty("skip_label", button_label)
