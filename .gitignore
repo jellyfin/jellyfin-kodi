@@ -76,3 +76,6 @@ pyinstrument/
 addon.xml
 
 *.log
+
+# Addon build files
+*.zip
