@@ -74,7 +74,7 @@ class Service(xbmc.Monitor):
         if self.settings["enable_context_transcode"]:
             window("jellyfin_context_transcode.bool", True)
 
-        LOG.info("--->>>[ %s ]", client.get_addon_name())
+        LOG.info("--->>>[ JELLYFIN ]")
         LOG.info("Version: %s", client.get_version())
         LOG.info("KODI Version: %s", xbmc.getInfoLabel("System.BuildVersion"))
         LOG.info("Platform: %s", settings("platformDetected"))
@@ -532,4 +532,4 @@ class Service(xbmc.Monitor):
 
             self.monitor.listener.stop()
 
-        LOG.info("---<<<[ %s ]", client.get_addon_name())
+        LOG.info("---<<<[ JELLYFIN ]")

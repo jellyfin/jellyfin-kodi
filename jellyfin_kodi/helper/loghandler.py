@@ -82,8 +82,11 @@ class LogHandler(logging.StreamHandler):
         }
         try:
             log_level = int(settings("logLevel"))
-        except ValueError:
-            log_level = 2  # If getting settings fail, we probably want debug logging.
+        except (ValueError, RuntimeError):
+            # If getting settings fail, we probably want debug logging.
+            # ValueError happens if the result is not a number
+            # RuntimeError happens if the addon is being re-installed
+            log_level = 2
 
         return log_level >= levels[level]
 
