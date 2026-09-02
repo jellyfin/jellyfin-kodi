@@ -1284,3 +1284,7 @@ msgstr "Outro"
 msgctxt "#33268"
 msgid "Ad"
 msgstr "Ad"
+
+msgctxt "#33269"
+msgid "Enable UpNext add-on integration"
+msgstr "Enable UpNext add-on integration"
